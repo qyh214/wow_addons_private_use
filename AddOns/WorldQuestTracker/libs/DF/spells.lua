@@ -1030,6 +1030,8 @@ DF.CrowdControlSpells = {
 	[183752] = "DEMONHUNTER", --Disrupt
 	
 	[331866] = "COVENANT|VENTHYR", --Agent of Chaos (Nadia soulbind)
+	
+	[372245] = "EVOKER", --Terror of the Skies
 }
 
 -- additionals for classic
@@ -1393,16 +1395,16 @@ elseif (DF.IsWotLKWow()) then
 	}
 	
 	DF.PotionIDs = {
-		[40093] = true, --Indestructable Potion
-		[40211] = true, --Potion of Speed
-		[40212] = true, --Potion of Wild Magic
-		[40081] = true, --Potion of Nightmares
-		[33447] = true, -- Runic Healing Potion
-		[41166] = true, -- Runic Healing Injector
-		[40087] = true, -- Powerful Rejuvenation Potion
-		[40077] = true, -- Crazy Alchemist's Potion
-		[33448] = true, -- Runic Mana Potion
-		[42545] = true, -- Runic Mana Injector
+		[53762] = true, --Indestructable Potion
+		[53908] = true, --Potion of Speed
+		[53909] = true, --Potion of Wild Magic
+		[53753] = true, --Potion of Nightmares
+		[43185] = true, -- Runic Healing Potion
+		[67489] = true, -- Runic Healing Injector
+		[53761] = true, -- Powerful Rejuvenation Potion
+		[53750] = true, -- Crazy Alchemist's Potion
+		[43186] = true, -- Runic Mana Potion
+		[67490] = true, -- Runic Mana Injector
 	}
 	DF.FeastIDs = {}
 	DF.RuneIDs = {}

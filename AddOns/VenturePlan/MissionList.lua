@@ -271,9 +271,14 @@ local function CheckRewardCache()
 end
 
 local function QueueListSync()
-	if S[MissionList]:IsShown() and not MissionList.dirty then
+	if CovenantMissionFrame:IsShown() and S[MissionList]:IsShown() and not MissionList.dirty then
 		MissionList.dirty = true
 		C_Timer.After(0, UpdateMissions)
+	end
+end
+local function FilteredQueueListSync(_, gfid)
+	if gfid == 123 then
+		return QueueListSync()
 	end
 end
 local function UBSync(e, o)
@@ -338,8 +343,8 @@ function EV:I_ADVENTURES_UI_LOADED()
 		CovenantMissionFrameFollowers:Hide()
 		UpdateMissions()
 	end)
-	EV.GARRISON_MISSION_LIST_UPDATE = QueueListSync
-	EV.GARRISON_MISSION_FINISHED = QueueListSync
+	EV.GARRISON_MISSION_LIST_UPDATE = FilteredQueueListSync
+	EV.GARRISON_MISSION_FINISHED = FilteredQueueListSync
 	EV.I_MISSION_LIST_UPDATE = QueueListSync
 	EV.I_DELAYED_START_UPDATE = QueueListSync
 	EV.GET_ITEM_INFO_RECEIVED = CheckRewardCache

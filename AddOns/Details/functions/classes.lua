@@ -1,7 +1,8 @@
 --[[ Declare all Details classes and container indexes ]]
 
-do 
+do
 	local _detalhes = 	_G._detalhes
+	local addonName, Details222 = ...
 	local setmetatable = setmetatable
 	-------- container que armazena o cache de pets
 		_detalhes.container_pets = {}
@@ -180,14 +181,36 @@ do
 	function _detalhes:GetFlag (actor)
 		return self.flag_original or actor and actor.flag_original
 	end
+
+	function _detalhes:GetSpells()
+		return self.spells._ActorTable
+	end
 	function _detalhes:GetActorSpells()
 		return self.spells._ActorTable
 	end
-	function _detalhes:GetSpell (spellid)
+
+	function _detalhes:GetSpell(spellid)
 		return self.spells._ActorTable [spellid]
 	end
+
+	---return an array of pet names
+	---@return table
+	function _detalhes:GetPets()
+		return self.pets
+	end
+
+	---return an array of pet names
+	---@return table
 	function _detalhes:Pets()
 		return self.pets
+	end
+
+	function _detalhes:GetSpec(actor)
+		return self.spec or actor and actor.spec
+	end
+
+	function _detalhes:Spec(actor)
+		return self.spec or actor and actor.spec
 	end
 	
 	--inherits to all actors without placing it on _detalhes namespace.

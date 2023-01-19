@@ -1341,7 +1341,11 @@ L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[Отрегулируйте масшт
 |cFFFFFF00Текущий|r: %s]=]
 L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Цвет оболочки"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
+
+|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
+
+|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Общие настройки окна"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Эти параметры управляют внешним видом выбранного окна."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Интервал обновления"
@@ -1677,4 +1681,3 @@ L["STRING_WIPE_ERROR1"] = "Уже было сказано: Ложимся!"
 L["STRING_WIPE_ERROR2"] = "Вы не находитесь в рейдовом сражении."
 L["STRING_WIPE_ERROR3"] = "не удалось закончить сражение."
 L["STRING_YES"] = "Да"
-

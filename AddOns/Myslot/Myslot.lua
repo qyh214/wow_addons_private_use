@@ -17,7 +17,7 @@ local MYSLOT_ALLOW_VER = {MYSLOT_VER, 24, 23, 22}
 
 -- local MYSLOT_IS_DEBUG = true
 local MYSLOT_LINE_SEP = IsWindowsClient() and "\r\n" or "\n"
-local MYSLOT_MAX_ACTIONBAR = 132
+local MYSLOT_MAX_ACTIONBAR = 180
 
 -- {{{ SLOT TYPE
 local MYSLOT_SPELL = _MySlot.Slot.SlotType.SPELL
@@ -212,6 +212,19 @@ function MySlot:GetBindingInfo(index)
 end
 -- }}}
 
+local function GetTalentTreeString()
+    ClassTalentFrame_LoadUI()
+    if (ClassTalentFrame) and (ClassTalentFrame.TalentsTab) and (ClassTalentFrame.TalentsTab.GetLoadoutExportString) then
+        if ClassTalentFrame.TalentsTab.GetConfigID and ClassTalentFrame.TalentsTab.GetTalentTreeID then
+            if (not ClassTalentFrame.TalentsTab:GetConfigID()) or (not ClassTalentFrame.TalentsTab:GetTalentTreeID()) then
+                return nil
+            end
+        end
+        ClassTalentFrame.TalentsTab:UpdateTreeInfo()
+        
+        return ClassTalentFrame.TalentsTab:GetLoadoutExportString()
+    end
+end
 
 function MySlot:Export(opt)
     -- ver nop nop nop crc32 crc32 crc32 crc32
@@ -275,11 +288,16 @@ function MySlot:Export(opt)
     -- }}}
     
     -- {{{ OUTPUT
+    local talent = GetTalentTreeString()
+
     local s = ""
     s = "@ --------------------" .. MYSLOT_LINE_SEP .. s
     s = "@ " .. L["Feedback"] .. "  farmer1992@gmail.com" .. MYSLOT_LINE_SEP .. s
     s = "@ " .. MYSLOT_LINE_SEP .. s
     s = "@ " .. LEVEL .. ":" ..UnitLevel("player") .. MYSLOT_LINE_SEP .. s
+    if talent then
+        s = "@ " .. TALENTS .. ":" .. talent .. MYSLOT_LINE_SEP .. s
+    end
     s = "@ " .. SPECIALIZATION ..":" .. ( GetSpecialization() and select(2, GetSpecializationInfo(GetSpecialization())) or NONE_CAPS ) .. MYSLOT_LINE_SEP .. s
     s = "@ " .. CLASS .. ":" ..UnitClass("player") .. MYSLOT_LINE_SEP .. s
     s = "@ " .. PLAYER ..":" ..UnitName("player") .. MYSLOT_LINE_SEP .. s
@@ -419,7 +437,6 @@ function MySlot:FindOrCreateMacro(macroInfo)
 end
 -- }}}
 
-
 function MySlot:RecoverData(msg, opt)
 
     -- {{{ Cache Spells
@@ -467,12 +484,9 @@ function MySlot:RecoverData(msg, opt)
     local mounts = {}
 
     for i = 1, C_MountJournal.GetNumMounts() do
-        ClearCursor()
-        C_MountJournal.Pickup(i)
-        local _, mount_id = GetCursorInfo()
-
-        if mount_id then
-            mounts[mount_id] = i
+        local _, _, _, _, _, _, _, _, _, _, isCollected, mountId = C_MountJournal.GetDisplayedMountInfo(i)
+        if isCollected then
+            mounts[mountId] = i
         end
     end
 

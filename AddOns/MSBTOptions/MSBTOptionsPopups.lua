@@ -32,6 +32,10 @@ local ConvertType = MSBTTriggers.ConvertType
 local fonts = MSBTMedia.fonts
 local sounds = MSBTMedia.sounds
 
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+local IsVanillaClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+
+
 
 -------------------------------------------------------------------------------
 -- Private constants.
@@ -1175,13 +1179,20 @@ end
 -- Class color frame functions.
 -------------------------------------------------------------------------------
 
+local classString = "DEATHKNIGHT DRUID HUNTER MAGE MONK PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR DEMONHUNTER EVOKER"
+if IsWrathClassic then
+	classString = "DEATHKNIGHT DRUID HUNTER MAGE PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR"
+elseif IsVanillaClassic then
+	classString = "DRUID HUNTER MAGE PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR"
+end
+
 -- ****************************************************************************
 -- Creates the popup class colors frame.
 -- ****************************************************************************
 local function CreateClassColors()
 	local frame = CreatePopup()
 	frame:SetWidth(260)
-	frame:SetHeight(300)
+	frame:SetHeight(350)
 
 	-- Close button.
 	local button = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
@@ -1204,7 +1215,7 @@ local function CreateClassColors()
 	local anchor = checkbox
 	local globalStringSchoolIndex = 0
 	local colorswatch, fontString
-	for class in string.gmatch("DEATHKNIGHT DRUID HUNTER MAGE MONK PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR DEMONHUNTER", "[^%s]+") do
+	for class in string.gmatch(classString, "[^%s]+") do
 		colorswatch = MSBTControls.CreateColorswatch(frame)
 		colorswatch:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", anchor == checkbox and 20 or 0, anchor == checkbox and -10 or -5)
 		colorswatch:SetColorChangedHandler(
@@ -1251,7 +1262,7 @@ local function ShowClassColors(configTable)
 	frame.colorCheckbox:SetChecked(not MSBTProfiles.currentProfile.classColoringDisabled)
 
 	local profileEntry
-	for class in string.gmatch("DEATHKNIGHT DRUID HUNTER MAGE MONK PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR DEMONHUNTER", "[^%s]+") do
+	for class in string.gmatch(classString, "[^%s]+") do
 		profileEntry = MSBTProfiles.currentProfile[class]
 		frame[class .. "Colorswatch"]:SetColor(profileEntry.colorR, profileEntry.colorG, profileEntry.colorB)
 		frame[class .. "Checkbox"]:SetChecked(not profileEntry.disabled)
@@ -2359,7 +2370,7 @@ local function CreateClasses()
 	frame.allClassesCheckbox = checkbox
 
 	local anchor = checkbox
-	for class in string.gmatch("DEATHKNIGHT DRUID HUNTER MAGE MONK PALADIN PRIEST ROGUE SHAMAN WARLOCK WARRIOR", "[^ ]+") do
+	for class in string.gmatch(classString, "[^ ]+") do
 		checkbox = MSBTControls.CreateCheckbox(frame)
 		checkbox:Configure(24, CLASS_NAMES[class], nil)
 		checkbox:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", anchor == frame.allClassesCheckbox and 20 or 0, anchor == frame.allClassesCheckbox and -10 or 0)

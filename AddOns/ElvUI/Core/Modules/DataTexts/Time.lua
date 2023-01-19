@@ -2,7 +2,7 @@ local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule('DataTexts')
 
 local _G = _G
-local gsub, next, pairs, unpack = gsub, next, pairs, unpack
+local next, unpack = next, unpack
 local format, strjoin = format, strjoin
 local sort, tinsert = sort, tinsert
 local date, utf8sub = date, string.utf8sub
@@ -22,19 +22,19 @@ local GetWorldPVPAreaInfo = GetWorldPVPAreaInfo
 local RequestRaidInfo = RequestRaidInfo
 local SecondsToTime = SecondsToTime
 local InCombatLockdown = InCombatLockdown
-local C_Map_GetAreaInfo = C_Map.GetAreaInfo
+
 local QUEUE_TIME_UNAVAILABLE = QUEUE_TIME_UNAVAILABLE
 local TIMEMANAGER_TOOLTIP_LOCALTIME = TIMEMANAGER_TOOLTIP_LOCALTIME
 local TIMEMANAGER_TOOLTIP_REALMTIME = TIMEMANAGER_TOOLTIP_REALMTIME
 local VOICE_CHAT_BATTLEGROUND = VOICE_CHAT_BATTLEGROUND
 local WINTERGRASP_IN_PROGRESS = WINTERGRASP_IN_PROGRESS
 local WORLD_BOSSES_TEXT = RAID_INFO_WORLD_BOSS
-local C_AreaPoiInfo_GetAreaPOIInfo = C_AreaPoiInfo.GetAreaPOIInfo
-local C_QuestLog_IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
-local C_UIWidgetManager_GetTextWithStateWidgetVisualizationInfo = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo
+local WEEKLY_RESET = format('%s %s', WEEKLY, RESET)
+
+local C_Map_GetAreaInfo = C_Map.GetAreaInfo
 local C_DateAndTime_GetCurrentCalendarTime = C_DateAndTime.GetCurrentCalendarTime
 local C_DateAndTime_GetSecondsUntilDailyReset = C_DateAndTime.GetSecondsUntilDailyReset
-local AVAILABLE = AVAILABLE
+local C_DateAndTime_GetSecondsUntilWeeklyReset = C_DateAndTime.GetSecondsUntilWeeklyReset
 
 local APM = { _G.TIMEMANAGER_PM, _G.TIMEMANAGER_AM }
 local ukDisplayFormat, europeDisplayFormat = '', ''
@@ -46,35 +46,18 @@ local formatBattleGroundInfo = '%s: '
 local lockoutColorExtended, lockoutColorNormal = { r=0.3,g=1,b=0.3 }, { r=.8,g=.8,b=.8 }
 local enteredFrame = false
 
-local OnUpdate, lastPanel
-
--- Torghast
-local TorghastWidgets, TorghastInfo = {
-	{nameID = 2925, levelID = 2930}, -- Fracture Chambers
-	{nameID = 2926, levelID = 2932}, -- Skoldus Hall
-	{nameID = 2924, levelID = 2934}, -- Soulforges
-	{nameID = 2927, levelID = 2936}, -- Coldheart Interstitia
-	{nameID = 2928, levelID = 2938}, -- Mort'regar
-	{nameID = 2929, levelID = 2940}, -- The Upper Reaches
-}
+local OnUpdate
 
 local function ToTime(start, seconds)
 	return SecondsToTime(start, not seconds, nil, 3)
 end
 
-local function CleanupLevelName(text)
-	return gsub(text, "|n", "")
-end
-
-local function ValueColorUpdate(hex)
+local function ValueColorUpdate(self, hex)
 	europeDisplayFormat = strjoin('', '%02d', hex, ':|r%02d')
 	ukDisplayFormat = strjoin('', '', '%d', hex, ':|r%02d', hex, ' %s|r')
 
-	if lastPanel ~= nil then
-		OnUpdate(lastPanel, 20000)
-	end
+	OnUpdate(self, 20000)
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 local function ConvertTime(h, m)
 	local AmPm
@@ -127,6 +110,8 @@ if E.locale == 'deDE' then -- O.O
 	InstanceNameByID[1041] = 'Königsruh'				-- 'Die Königsruh'
 	InstanceNameByID[1021] = 'Kronsteiganwesen'			-- 'Das Kronsteiganwesen'
 	InstanceNameByID[1186] = 'Spitzen des Aufstiegs'	-- 'Die Spitzen des Aufstiegs'
+	InstanceNameByID[1198] = 'Angriff der Nokhud'		-- 'Der Angriff der Nokhud'
+	InstanceNameByID[1203] = 'Azurblaues Gewölbe'		-- 'Das Azurblaue Gewölbe'
 end
 
 local instanceIconByName = {}
@@ -300,32 +285,6 @@ local function OnEnter()
 				DT.tooltip:AddDoubleLine(name, ToTime(reset), 1, 1, 1, 0.8, 0.8, 0.8)
 			end
 		end
-
-		-- Torghast
-		if not TorghastInfo then
-			TorghastInfo = C_AreaPoiInfo_GetAreaPOIInfo(1543, 6640)
-		end
-
-		if TorghastInfo and C_QuestLog_IsQuestFlaggedCompleted(60136) then
-			local torghastHeader
-			for _, value in pairs(TorghastWidgets) do
-				local nameInfo = C_UIWidgetManager_GetTextWithStateWidgetVisualizationInfo(value.nameID)
-				if nameInfo and nameInfo.shownState == 1 then
-					if not torghastHeader then
-						if DT.tooltip:NumLines() > 0 then
-							DT.tooltip:AddLine(' ')
-						end
-						DT.tooltip:AddLine(TorghastInfo.name)
-						torghastHeader = true
-					end
-					local nameText = CleanupLevelName(nameInfo.text)
-					local levelInfo = C_UIWidgetManager_GetTextWithStateWidgetVisualizationInfo(value.levelID)
-					local levelText = AVAILABLE
-					if levelInfo and levelInfo.shownState == 1 then levelText = CleanupLevelName(levelInfo.text) end
-					DT.tooltip:AddDoubleLine(nameText, levelText)
-				end
-			end
-		end
 	end
 
 	local Hr, Min, AmPm = CalculateTimeValues(true)
@@ -336,6 +295,11 @@ local function OnEnter()
 	local dailyReset = C_DateAndTime_GetSecondsUntilDailyReset()
 	if dailyReset then
 		DT.tooltip:AddDoubleLine(L["Daily Reset"], ToTime(dailyReset), 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)
+	end
+
+	local weeklyReset = C_DateAndTime_GetSecondsUntilWeeklyReset()
+	if weeklyReset then
+		DT.tooltip:AddDoubleLine(WEEKLY_RESET, ToTime(weeklyReset), 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)
 	end
 
 	if AmPm == -1 then
@@ -379,8 +343,6 @@ function OnUpdate(self, t)
 	else
 		self.text:SetFormattedText(ukDisplayFormat, Hr, Min, APM[AmPm])
 	end
-
-	lastPanel = self
 end
 
 DT:RegisterDatatext('Time', nil, { 'UPDATE_INSTANCE_INFO', 'LOADING_SCREEN_ENABLED' }, OnEvent, OnUpdate, OnClick, OnEnter, OnLeave, nil, nil, ValueColorUpdate)

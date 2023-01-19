@@ -248,7 +248,7 @@ eventFrame:RegisterEvent("BAG_UPDATE")
 eventFrame:SetScript("OnEvent", function(self, event, arg)
 	if event == "ADDON_LOADED" and arg == "Blizzard_ChallengesUI" then
 		hasAngryKeystones = IsAddOnLoaded("AngryKeystones")
-		hooksecurefunc("ChallengesFrame_Update", UpdateGuildBest)
+		hooksecurefunc(ChallengesFrame, "Update", UpdateGuildBest)
 		ChallengesFrame.WeeklyInfo.Child.WeeklyChest:HookScript("OnEnter", keystoneInfo_WeeklyRuns)
 		keystoneInfo_Create()
 

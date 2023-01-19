@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20221230022007")
 mod:SetCreatureID(23863)
 mod:SetEncounterID(1194)
 mod:SetUsedIcons(8)
@@ -63,7 +63,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.ClawRageIcon then
 			self:SetIcon(args.destName, 8, 5)
 		end
-	elseif args.spellId == 97497 and args:IsPlayer() and self:IsInCombat() and self:AntiSpam(3, 1) then
+	elseif args.spellId == 97497 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnFlameBreath:Show()
 		specWarnFlameBreath:Play("watchfeet")
 	elseif args.spellId == 42402 then

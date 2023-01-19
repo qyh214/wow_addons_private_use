@@ -20,12 +20,12 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	timerShadowConductorCast	= "Отсчет времени применения заклинания $spell:92053",
-	timerArcaneLockout			= "Отсчет времени блокировки $spell:91542",
+	timerShadowConductorCast	= "Отсчет времени применения заклинания $spell:92048",
+	timerArcaneLockout			= "Отсчет времени блокировки $spell:79710",
 	timerArcaneBlowbackCast		= "Отсчет времени применения заклинания $spell:91879",
 	timerNefAblity				= "Отсчет времени восстановления баффа (героический режим)",
 	SpecWarnActivated			= "Спецпредупреждение при активации нового босса",
-	specWarnGenerator			= "Спецпредупреждение, когда босс стоит в $spell:91557",
+	specWarnGenerator			= "Спецпредупреждение, когда босс стоит в $spell:79629",
 	AcquiringTargetIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79501),
 	ConductorIcon				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79888),
 	ShadowConductorIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92053),
@@ -42,11 +42,11 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(170)
 
 L:SetWarningLocalization({
-	SpecWarnInferno	= "Появляется Пыляющее костяное создание! (~4сек)"
+	SpecWarnInferno	= "Появляется Пыляющее костяное создание! (~4 сек)"
 })
 
 L:SetOptionLocalization({
-	SpecWarnInferno	= "Предупреждать заранее о $spell:92190 (~4сек)",
+	SpecWarnInferno	= "Предупреждать заранее о $spell:92190 (~4 сек)",
 	RangeFrame		= "Показывать окно проверки дистанции на второй фазе (5м)"
 })
 
@@ -62,7 +62,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(171)
 
 L:SetOptionLocalization({
-	InfoFrame				= "Показывать информационное окно для уровня звуков",
+	InfoFrame				= "Показывать информационное окно для $journal:3072",
 	TrackingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(78092)
 })
 
@@ -102,9 +102,9 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	WarnPhase			= "Предупреждать о переходе фаз",
 	TimerPhase			= "Показывать таймер до следующей фазы",
-	RangeFrame			= "В ходе синей фазы, показывать окно проверки дистанции (6м)",
+	RangeFrame			= "Показывать окно проверки дистанции (6м) во время синей фазы",
 	SetTextures			= "Автоматически отключить \"Проецирование текстур\" в темной фазе<br/>(включается обратно при выходе из фазы)",
-	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92979),
+	FlashFreezeIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(77699),
 	BitingChillIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(77760),
 	ConsumingFlamesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(77786)
 })
@@ -141,20 +141,20 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	OnyTailSwipe		= "Предупреждение для $spell:77827 Ониксии",
 	NefTailSwipe		= "Предупреждение для $spell:77827 Нефариана",
-	OnyBreath			= "Предупреждение для $spell:94124 Ониксии",
-	NefBreath			= "Предупреждение для $spell:94124 Нефариана",
+	OnyBreath			= "Предупреждение для $spell:77826 Ониксии",
+	NefBreath			= "Предупреждение для $spell:77826 Нефариана",
 	specWarnCinderMove	= "Спецпредупреждение за 5 секунд до взрыва $spell:79339",
 	warnShadowblazeSoon	= "Отсчитывать время до $spell:81031 (за 5 секунд до каста)<br/>(Отсчет пойдет только после первой синхронизации с эмоцией босса)",
 	specWarnShadowblazeSoon	= "Предупреждать заранее о $spell:81031<br/>(За 5 секунд до первого каста, за 1 секунду до каждого следующего)",
 	timerNefLanding		= "Отсчет времени до приземления Нефариана",
 	OnySwipeTimer		= "Отсчет времени до восстановления $spell:77827 Ониксии",
 	NefSwipeTimer		= "Отсчет времени до восстановления $spell:77827 Нефариана",
-	OnyBreathTimer		= "Отсчет времени до восстановления $spell:94124 Ониксии",
-	NefBreathTimer		= "Отсчет времени до восстановления $spell:94124 Нефариана",
-	InfoFrame			= "Показывать информационное окно для Электрического заряда Ониксии",
+	OnyBreathTimer		= "Отсчет времени до восстановления $spell:77826 Ониксии",
+	NefBreathTimer		= "Отсчет времени до восстановления $spell:77826 Нефариана",
+	InfoFrame			= "Показывать информационное окно для $journal:3284",
 	SetWater			= "Автоматически отключать настройку Брызги воды<br/>(Включается обратно при выходе из боя)",
 	SetIconOnCinder		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(79339),
-	RangeFrame			= "Окно проверки дистанции (10м) для $spell:79339<br/>(Если на вас дебафф - показывает всех, иначе только игроков с метками)"
+	RangeFrame			= "Окно проверки дистанции (10м) для $spell:79339<br/>(Если на Вас дебафф - показывает всех, иначе только игроков с метками)"
 })
 
 L:SetMiscLocalization({

@@ -14,6 +14,7 @@ not work with Blizzard's IsSpellInRange function whatsoever; this limitation is 
 
 *   Allows ranged checking based on both spell name and spellID.
 *   Works correctly with replacement spells that will not work using Blizzard's IsSpellInRange method alone.
+*   Attempts to works with pet spells via the action bar API, which as of some indeterminate recent WoW version no longer work with IsSpellInRange.
 
 ### `SpellRange.IsSpellInRange(spell, unit)` - Improved `IsSpellInRange`
 

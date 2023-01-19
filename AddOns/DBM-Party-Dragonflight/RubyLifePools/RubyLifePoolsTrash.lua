@@ -1,38 +1,96 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220803233609")
+mod:SetRevision("20230117042742")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
---mod:RegisterEvents(
---	"SPELL_CAST_START",
---	"SPELL_AURA_APPLIED",
---	"SPELL_AURA_APPLIED_DOSE 339528",
---	"SPELL_AURA_REMOVED 339525"
---)
+mod:RegisterEvents(
+	"SPELL_CAST_START 372087 391726 391723 373614 392395 372696 384194 392486",
+	"SPELL_AURA_APPLIED 373693 392641 373972 391050",
+--	"SPELL_AURA_APPLIED_DOSE",
+	"SPELL_AURA_REMOVED 373693"
+)
 
---TODO, icon mark shared suffering? Maybe when they fix ENCOUNTER_START, for now I don't want to risk trash mod messing with a boss mods icon marking
+--TODO, can Blazing Rush be target scanned? upgrade to special announce?
 --Lady's Trash, minus bottled anima, which will need a unit event to detect it looks like
---local warnConcentrateAnima					= mod:NewTargetNoFilterAnnounce(339525, 3)
+local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3)
+local warnBurnout							= mod:NewCastAnnounce(373614, 4)
+local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3)
 
---local specWarnConcentrateAnima				= mod:NewSpecialWarningMoveAway(310780, nil, nil, nil, 1, 2)
---local yellConcentrateAnima					= mod:NewYell(339525)
---local yellConcentrateAnimaFades				= mod:NewShortFadesYell(339525)
+local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
+local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2)
+local specWarnTempestStormshield			= mod:NewSpecialWarningSwitch(391050, nil, nil, nil, 1, 2)
+local specWarnLivingBomb					= mod:NewSpecialWarningMoveAway(373693, nil, nil, nil, 1, 2)
+local yellLivingBomb						= mod:NewShortYell(373693)
+local yellLivingBombFades					= mod:NewShortFadesYell(373693)
+local specWarnBlazingRush					= mod:NewSpecialWarningDodge(372087, nil, nil, nil, 2, 2)
+local specWarnStormBreath					= mod:NewSpecialWarningDodge(391726, nil, nil, nil, 2, 2)
+local yellStormBreath						= mod:NewShortYell(391726)
+local specWarnFlameBreath					= mod:NewSpecialWarningDodge(391723, nil, nil, nil, 2, 2)
+local yellFlameBreath						= mod:NewShortYell(391723)
+local specWarnExcavatingBlast				= mod:NewSpecialWarningDodge(372696, nil, nil, nil, 2, 2)
+local specWarnBurnout						= mod:NewSpecialWarningRun(373614, "Melee", nil, nil, 4, 2)
+local specWarnThunderJaw					= mod:NewSpecialWarningDefensive(392395, nil, nil, nil, 1, 2)
 --local specWarnSharedSuffering				= mod:NewSpecialWarningYou(339607, nil, nil, nil, 1, 2)
---local specWarnDirgefromBelow				= mod:NewSpecialWarningInterrupt(310839, "HasInterrupt", nil, nil, 1, 2)
+local specWarnCinderbolt					= mod:NewSpecialWarningInterrupt(384194, "HasInterrupt", nil, nil, 1, 2)
 
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
---[[
+
+function mod:StormBreathTarget(targetname)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		yellStormBreath:Yell()
+	end
+end
+
+function mod:FlameBreathTarget(targetname)
+	if not targetname then return end
+	if targetname == UnitName("player") then
+		yellFlameBreath:Yell()
+	end
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 310780 and self:AntiSpam(5, 2) then
-
-	elseif spellId == 310839 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnDirgefromBelow:Show(args.sourceName)
-		specWarnDirgefromBelow:Play("kickcast")
+	if spellId == 372087 and self:AntiSpam(3, 2) then
+		specWarnBlazingRush:Show()
+		specWarnBlazingRush:Play("chargemove")
+	elseif spellId == 391726 then
+		if self:AntiSpam(3, 2) then
+			specWarnStormBreath:Show()
+			specWarnStormBreath:Play("breathsoon")
+		end
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "StormBreathTarget", 0.1, 8)
+	elseif spellId == 391723 then
+		if self:AntiSpam(3, 2) then
+			specWarnFlameBreath:Show()
+			specWarnFlameBreath:Play("breathsoon")
+		end
+		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "FlameBreathTarget", 0.1, 8)
+	elseif spellId == 373614 and self:AntiSpam(3, 1) then
+		if self.Options.SpecWarn373614run then
+			specWarnBurnout:Show()
+			specWarnBurnout:Play("justrun")
+		else
+			warnBurnout:Show()
+		end
+	elseif spellId == 372696 and self:AntiSpam(3, 2) then
+		specWarnExcavatingBlast:Show()
+		specWarnExcavatingBlast:Play("watchstep")
+	elseif spellId == 392395 then
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
+			specWarnThunderJaw:Show()
+			specWarnThunderJaw:Play("carefly")
+		end
+	elseif spellId == 384194 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnCinderbolt:Show(args.sourceName)
+		specWarnCinderbolt:Play("kickcast")
+	elseif spellId == 392486 and self:AntiSpam(3, 4) then
+		specWarnLightningStorm:Show()
+		specWarnLightningStorm:Play("aesoon")
 	end
 end
 
@@ -40,16 +98,29 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 339525 then
-
+	if spellId == 373693 then
+		warnLivingBomb:CombinedShow(0.3, args.destName)
+		if args:IsPlayer() then
+			specWarnLivingBomb:Show()
+			specWarnLivingBomb:Play("runout")
+			yellLivingBomb:Yell()
+			yellLivingBombFades:Countdown(spellId)
+		end
+	elseif spellId == 392641 then
+		warnRollingThunder:CombinedShow(0.3, args.destName)
+	elseif spellId == 373972 and self:AntiSpam(3, 4) then
+		specWarnBlazeofGlory:Show()
+		specWarnBlazeofGlory:Play("aesoon")
+	elseif spellId == 391050 then
+		specWarnTempestStormshield:Show()
+		specWarnTempestStormshield:Play("attackshield")
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+--mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	local spellId = args.spellId
-	if spellId == 339525 and args:IsPlayer() then
-
+	if spellId == 373693 and args:IsPlayer() then
+		yellLivingBombFades:Cancel()
 	end
 end
---]]

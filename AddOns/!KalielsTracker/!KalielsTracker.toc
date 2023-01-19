@@ -1,12 +1,14 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: Kaliel's Tracker
 ## Notes: Improved Blizzard Objective Tracker
-## Version: 5.0.0
+## Version: 6.0.2
 ## Author: Kaliel (Marouan Sabbagh)
 
 ## SavedVariables: KalielsTrackerDB
-## Dependencies: Blizzard_ObjectiveTracker
+## Dependencies: Blizzard_UIWidgets, Blizzard_MawBuffs, Blizzard_Professions
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibSink-2.0, MSA-DropDownMenu-1.0, Masque, PetTracker, TomTom
+
+Core.xml
 
 Libs.xml
 Media.lua

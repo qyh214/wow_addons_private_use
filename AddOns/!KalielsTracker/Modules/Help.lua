@@ -174,15 +174,14 @@ local function SetupTutorials()
 			text = cTitle.."Active Button|r\n\n"..
 					"Active Button is for a better use of quest items. Displays quest item button for CLOSEST quest as Extra Action Button (like Draenor zone ability).\n\n"..
 					"Features:\n"..
-					"- Auto show Active Button when you approach the place of performance"..
+					"- "..cBold.."Auto display|r of Active Button, when you approach the place of performance"..
 					offs.."of the quest.\n"..
+					"- "..cBold.."Manual display|r of Active Button, when selecting the quest using the POI"..
+					offs.."button on the Map or in the Tracker.\n"..
 					"- You can set "..cBold.."[key bind]|r to use quest item. Key set up in "..KT.title..
 					offs.."Options. Active Button uses the same key bind as the Extra Action Button.\n"..
-					"- Button is movable using:"..
-					offs.."  - own mover (free move) - see Options > section \"Quest item buttons\""..
-					offs2.."  > button \"Unlock\","..
-					offs.."  - some addons (move with Extra Action Button) - Bartender4, Dominos,"..
-					offs2.."  ElvUI, Tukui.\n\n"..
+					"- Button is movable using own mover. See Options > section \"Quest item"..
+					offs.."buttons\" > button \"Unlock\".\n\n"..
 					cWarning.."Warning:|r\n"..
 					"- Active Button works only for tracked quests.\n"..
 					"- When tracker is collapsed, Active Button feature is paused.",
@@ -235,40 +234,52 @@ local function SetupTutorials()
 			shineRight = 11,
 		},
 		{	-- 11
-			text = cTitle.."LFG Hack|r\n\n"..
+			text = cTitle.."         Hacks|r\n\n"..
+					cWarning.."Warning:|r Hacks may affect other addons!\n\n"..
+					cTitle.."LFG Hack|r\n\n"..
 					cBold.."Affects the small Eye buttons|r for finding groups inside the tracker. When the hack is active, "..
 					"the buttons work without errors. When hack is inactive, the buttons are not available.\n\n"..
-					cWarning2.."Negative|r impacts:|r\n"..
+					cWarning2.."Negative|r impacts:\n"..
 					"- Inside the dialog for create Premade Group is hidden item \"Goal\".\n"..
 					"- Tooltips of items in the list of Premade Groups have a hidden 2nd (green) row"..
 					offs.."with \"Goal\".\n"..
 					"- Inside the dialog for create Premade Group, no automatically set the \"Title\","..
 					offs.."e.g. keystone level for Mythic+.\n\n"..
-					"LFG Hack is enabled by default, you can disable it in "..KT.title.." Options (section \"Hacks\").\n\n"..
-					cWarning.."Warning:|r Hacks may affect other addons!",
+					"LFG Hack is enabled by default, you can disable it in "..KT.title.." Options (section \"Hacks\").",
+			textY = -20,
 		},
 		{	-- 12
-			text = cTitle.."         What's NEW in version |r|cffffffff5.0.0|r\n\n"..
-					"- ADDED - Support for WoW 10.0.0\n"..
-					"- UPDATED - Help - Supporters (Patreon)\n"..
-					"- UPDATED - Libs\n"..
-					"- "..cBold.."Note:|r Addons support will be updated later!\n\n"..
+			text = cTitle.."         What's New|r\n\n"..
+					cTitle.."Version 6.0.2|r\n"..
+					"- FIXED - Quests - Active Button - green mover is not over the button\n"..
+					"- FIXED - Profession - Tracked Recipes are not displayed, when they are the only"..
+					offs.."active module\n"..
+					"- ADDED - Support for WoW 10.0.2\n"..
+					"- IMPROVED - Quests - Active Button - Hides the button when Blizzard displays"..
+					offs.."its own\n"..
+					"- IMPROVED - Quests - Active Button - Stored position was moved from"..
+					offs.."character settings to profile settings\n"..
+					"- IMPROVED - Profession - Recipe dropdown menu and tooltip with result item\n"..
+					"- IMPROVED - Addon support - TomTom\n"..
+					"- UPDATED - Addon support - Masque 10.0.2\n"..
+					"- UPDATED - Addon support - TomTom 3.3.5-release\n"..
+					"- UPDATED - Addon support - ElvUI 13.06, Tukui 20.341\n"..
+					"- UPDATED - Help - Supporters (Patreon)\n\n"..
 
-					cTitle.."WoW 10.0.0 - Known issues w/o solution|r\n"..
+					cTitle.."WoW 10.0.2 - Known issues w/o solution|r\n"..
 					"- Clicking on tracked quests or achievements has no response during combat.\n"..
 					"- Header buttons Q and A don't work during combat.\n\n"..
 
 					cTitle.."Issue reporting|r\n"..
 					"For reporting please use "..cBold.."Tickets|r instead of Comments on CurseForge.\n\n\n\n"..
 
-					cWarning.."Before reporting of error, please deactivate all other addons and make sure the bug is not caused by a collision with another addon.|r\n\n"..
-					cWarning2.."All error reports with general information \"addon does not work\" or only with an error log without a description, I ignore|r ... Please don't waste my time.",
+					cWarning.."Before reporting of error, please deactivate all other addons and make sure the bug is not caused by a collision with another addon.|r",
 			textY = -20,
 			editbox = {
 				{
 					text = "https://www.curseforge.com/wow/addons/kaliels-tracker/issues",
 					width = 450,
-					bottom = 75,
+					bottom = 40,
 				}
 			},
 			shine = KTF,
@@ -289,7 +300,7 @@ local function SetupTutorials()
 				end
 			elseif i == 3 then
 				local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(1)
-				local block = QUEST_TRACKER_MODULE:GetExistingBlock(questID)
+				local block = KT_QUEST_TRACKER_MODULE:GetExistingBlock(questID)
 				if block then
 					self[i].shine = block
 				end
@@ -298,9 +309,9 @@ local function SetupTutorials()
 			elseif i == 10 then
 				for j=1, C_QuestLog.GetNumQuestWatches() do
 					local questID = C_QuestLog.GetQuestIDForQuestWatchIndex(j)
-					local block = QUEST_TRACKER_MODULE:GetExistingBlock(questID)
+					local block = KT_QUEST_TRACKER_MODULE:GetExistingBlock(questID)
 					if block and (QuestHasPOIInfo(questID) or block.questCompleted) then
-						self[i].shine = QuestPOI_FindButton(ObjectiveTrackerFrame.BlocksFrame, questID)
+						self[i].shine = QuestPOI_FindButton(KT_ObjectiveTrackerFrame.BlocksFrame, questID)
 						break
 					end
 				end
@@ -329,8 +340,11 @@ local function SetupTutorials()
 					cTitle.."Patrons|r\n"..
 					SetFormatedPatronName("Legendary", "Zayah", "Vek'nilash")..
 					SetFormatedPatronName("Epic", "Squishses", "Area 52")..
+					SetFormatedPatronName("Uncommon", "Charles Howarth")..
 					SetFormatedPatronName("Uncommon", "Flex (drantor)")..
 					SetFormatedPatronName("Uncommon", "Kyle Fuller")..
+					SetFormatedPatronName("Uncommon", "Pablo Sebastián Molina Silva")..
+					SetFormatedPatronName("Uncommon", "Semy", "Ravencrest")..
 					SetFormatedPatronName("Uncommon", "Torresman", "Drak'thul")..
 					SetFormatedPatronName("Uncommon", "Xeelee", "Razorfen")..
 					SetFormatedPatronName("Common", "Darren Divecha")..

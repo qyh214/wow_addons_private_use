@@ -2,6 +2,7 @@
 	local _detalhes = 		_G._detalhes
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local _
+	local addonName, Details222 = ...
 
 --[[global]] DETAILS_TOTALS_ONLYGROUP = true
 
@@ -83,6 +84,10 @@
 
 	function combate:GetDifficulty()
 		return self.is_boss and self.is_boss.diff
+	end
+
+	function combate:GetEncounterCleuID()
+		return self.is_boss and self.is_boss.id
 	end
 
 	function combate:GetBossInfo()

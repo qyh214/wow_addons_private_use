@@ -236,7 +236,7 @@ mainFrame.start:SetScript("OnClick", function(self)
 end)
 
 mainFrame.start.html = mainFrame.start:CreateFontString(nil,"ARTWORK","GameFontWhite")
-mainFrame.start.html:SetFont(ExRT.F.defFont, 10)
+mainFrame.start.html:SetFont(ExRT.F.defFont, 10, "")
 mainFrame.start.html:SetAllPoints()
 mainFrame.start.html:SetJustifyH("CENTER")
 mainFrame.start.html:SetText(L.marksbarstart)
@@ -267,7 +267,7 @@ mainFrame.del:SetScript("OnClick", function(self)
 end)
 
 mainFrame.del.html = mainFrame.del:CreateFontString(nil,"ARTWORK","GameFontWhite")
-mainFrame.del.html:SetFont(ExRT.F.defFont, 10)
+mainFrame.del.html:SetFont(ExRT.F.defFont, 10, "")
 mainFrame.del.html:SetAllPoints()
 mainFrame.del.html:SetJustifyH("CENTER")
 mainFrame.del.html:SetText(L.marksbardel)
@@ -311,7 +311,7 @@ do
 		frame:SetScript("OnLeave",MainFrameWMOnLeave)
 		
 		if i < 9 then
-			frame:RegisterForClicks("AnyDown")
+			frame:RegisterForClicks("AnyDown", "AnyUp")
 			frame:SetAttribute("type", "macro")
 			frame:SetAttribute("macrotext1", format("/wm %d", i))
 			frame:SetAttribute("macrotext2", format("/cwm %d", i))
@@ -380,7 +380,7 @@ for i=1,9 do
 	frame:SetScript("OnLeave", MainFrameWMKind2OnLeave)
 
 	if i < 9 then
-		frame:RegisterForClicks("AnyDown")
+		frame:RegisterForClicks("AnyDown", "AnyUp")
 		frame:SetAttribute("type", "macro")
 		frame:SetAttribute("macrotext1", format("/wm %d", i))
 		frame:SetAttribute("macrotext2", format("/cwm %d", i))
@@ -415,7 +415,7 @@ mainFrame.readyCheck:SetScript("OnClick", function(self)
 end)
 
 mainFrame.readyCheck.html = mainFrame.readyCheck:CreateFontString(nil,"ARTWORK","GameFontWhite")
-mainFrame.readyCheck.html:SetFont(ExRT.F.defFont, 10)
+mainFrame.readyCheck.html:SetFont(ExRT.F.defFont, 10, "")
 mainFrame.readyCheck.html:SetAllPoints()
 mainFrame.readyCheck.html:SetJustifyH("CENTER")
 mainFrame.readyCheck.html:SetText(L.marksbarrc)
@@ -440,7 +440,7 @@ mainFrame.pull:SetScript("OnMouseDown", function(self,button)
 end)
 
 mainFrame.pull.html = mainFrame.pull:CreateFontString(nil,"ARTWORK","GameFontWhite")
-mainFrame.pull.html:SetFont(ExRT.F.defFont, 10)
+mainFrame.pull.html:SetFont(ExRT.F.defFont, 10, "")
 mainFrame.pull.html:SetAllPoints()
 mainFrame.pull.html:SetJustifyH("CENTER")
 mainFrame.pull.html:SetText(L.marksbarpull)

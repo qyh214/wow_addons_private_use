@@ -1,10 +1,10 @@
 # AddOnSkins
 
-## [4.60](https://github.com/Azilroka/AddOnSkins/tree/4.60) (2022-09-03)
-[Full Changelog](https://github.com/Azilroka/AddOnSkins/compare/4.59...4.60) [Previous Releases](https://github.com/Azilroka/AddOnSkins/releases)
+## [4.62](https://github.com/Azilroka/AddOnSkins/tree/4.62) (2022-12-24)
+[Full Changelog](https://github.com/Azilroka/AddOnSkins/compare/4.61...4.62) [Previous Releases](https://github.com/Azilroka/AddOnSkins/releases)
 
-- Test the packager  
-- CHange BigWigs Packager  
-- Merge pull request #63 from DlargeX/main  
-    Update German.lua  
-- Update German.lua  
+- 4.62  
+- Fix Encoding on this XML.  
+- Immersion Skin Changes  
+- Remove this custom accept frame  
+- Remove the BarberShop UI Skin.. No longer needed.  

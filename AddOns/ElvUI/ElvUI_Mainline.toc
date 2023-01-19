@@ -1,15 +1,15 @@
 ## Title: |cff1784d1ElvUI|r
 ## Notes: User Interface Replacement
 ## Author: Elv, Simpy
-## Version: 12.95
+## Version: 13.20
 ## SavedVariables: ElvDB, ElvPrivateDB
 ## SavedVariablesPerCharacter: ElvCharacterDB
-## OptionalDeps: SharedMedia, Tukui, Masque, Blizzard_PetJournal
-## Interface: 100000
-## X-Interface: 100000
-## X-oUF: ElvUF
-
-Mainline\Libs.xml
+## OptionalDeps: SharedMedia, Tukui, Masque
+## RequiredDeps: ElvUI_Libraries
+## Interface: 100002
+## X-Interface: 100002
+## X-Tukui-ProjectID: -2
+## X-Tukui-ProjectFolders: ElvUI, ElvUI_Libraries, ElvUI_Options
 
 Core\Load.xml
 

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220217050005")
+mod:SetRevision("20221109183906")
 mod:SetCreatureID(59479)
 mod:SetEncounterID(1414)
 
@@ -27,7 +27,7 @@ local warnCarbonation		= mod:NewSpellAnnounce(115003, 4)
 
 local specWarnBloat			= mod:NewSpecialWarningYou(106546, nil, nil, nil, 1, 2)
 local specWarnBlackoutBrew	= mod:NewSpecialWarningKeepMove(106851, nil, nil, nil, 1, 2)--Moving clears this debuff, it should never increase unless you're doing fight wrong (think Hodir)
-local specWarnFizzyBubbles	= mod:NewSpecialWarning("SpecWarnFizzyBubbles", nil, nil, nil, 1)
+local specWarnFizzyBubbles	= mod:NewSpecialWarning("SpecWarnFizzyBubbles", nil, nil, nil, 1, 2)
 
 local timerBloatCD			= mod:NewCDTimer(13.3, 106546, nil, nil, nil, 3)
 local timerBloat			= mod:NewBuffFadesTimer(30, 106546, nil, nil, nil, 5)

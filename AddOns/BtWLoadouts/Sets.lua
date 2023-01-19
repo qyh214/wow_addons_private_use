@@ -374,7 +374,7 @@ Internal.Filters = {
 				elseif includeOther and index == #tbl + 1 then
 					return index, 0, L["Other"]
 				end
-			end, C_Covenants.GetCovenantIDs(), 0
+			end, {1, 2, 3, 4}, 0
 		end,
 	},
 	race = {

@@ -500,8 +500,7 @@ local function Predictor_ShowResult(self, sim, incompleteModel, recoverUntil, re
 	local res = sim.res
 	local rngModel = res.hadDrops or (res.hadWins and res.hadLosses)
 	local inProgress = not res.isFinished and not rngModel
-	local oodBuild = not GetBuildInfo():match("^9%.2%.")
-	local hprefix = (oodBuild or incompleteModel) and "|TInterface/EncounterJournal/UI-EJ-WarningTextIcon:0|t " or ""
+	local hprefix = (incompleteModel) and "|TInterface/EncounterJournal/UI-EJ-WarningTextIcon:0|t " or ""
 	if inProgress then
 		hprefix = hprefix .. "|cffff3300" .. L"Preliminary:" .. "|r "
 	end
@@ -514,8 +513,6 @@ local function Predictor_ShowResult(self, sim, incompleteModel, recoverUntil, re
 
 	if incompleteModel then
 		GameTooltip:AddLine(L"Not all abilities have been taken into account.", 0.9,0.25,0.15)
-	elseif oodBuild then
-		GameTooltip:AddLine(L"The Guide may be out of date.", 0.9,0.25,0.15)
 	end
 	if inProgress then
 		GameTooltip:AddLine(L"Not all outcomes have been examined.", 0.9, 0.25, 0.15, 1)

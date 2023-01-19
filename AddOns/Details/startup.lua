@@ -1,16 +1,23 @@
 
-
 local UnitGroupRolesAssigned = _G.DetailsFramework.UnitGroupRolesAssigned
 local wipe = _G.wipe
 local C_Timer = _G.C_Timer
 local CreateFrame = _G.CreateFrame
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
+local _
+local tocName, Details222 = ...
 
 --start funtion
 function Details:StartMeUp() --I'll never stop!
 	--set default time for arena and bg to be the Details! load time in case the client loads mid event
 	Details.lastArenaStartTime = GetTime()
 	Details.lastBattlegroundStartTime = GetTime()
+
+	--save the time when the addon finished loading
+	Details.AddOnStartTime = GetTime()
+	function Details.GetStartupTime()
+		return Details.AddOnStartTime or GetTime()
+	end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --row single click, this determines what happen when the user click on a bar
@@ -47,19 +54,6 @@ function Details:StartMeUp() --I'll never stop!
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
-	C_Timer.After(2, function()
-		--test libOpenRaid deprecated code
-		--[=[
-		local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-		openRaidLib.playerInfoManager.GetPlayerInfo()
-		openRaidLib.RequestAllPlayersInfo()
-		openRaidLib.playerInfoManager.GetAllPlayersInfo()
-		openRaidLib.gearManager.GetAllPlayersGear()
-		openRaidLib.gearManager.GetPlayerGear()
-		openRaidLib.cooldownManager.GetAllPlayersCooldown()
-		openRaidLib.cooldownManager.GetPlayerCooldowns()
-		--]=]
-	end)
 
 	--plugin container
 	self:CreatePluginWindowContainer()
@@ -229,7 +223,7 @@ function Details:StartMeUp() --I'll never stop!
 	self.ultima_coleta = 0
 	self.intervalo_coleta = 720
 	self.intervalo_memoria = 180
-	self.garbagecollect = Details.Schedules.NewTicker(self.intervalo_coleta, Details.IniciarColetaDeLixo, Details)
+	self.garbagecollect = Details.Schedules.NewTicker(self.intervalo_coleta, Details.RestartInternalGarbageCollector, Details)
 	self.next_memory_check = _G.time() + self.intervalo_memoria
 
 	--player role
@@ -259,6 +253,8 @@ function Details:StartMeUp() --I'll never stop!
 		self.listener:RegisterEvent("ROLE_CHANGED_INFORM")
 
 		self.listener:RegisterEvent("UNIT_FACTION")
+
+		self.listener:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 		if (not DetailsFramework.IsTimewalkWoW()) then
 			self.listener:RegisterEvent("PET_BATTLE_OPENING_START")
@@ -341,12 +337,10 @@ function Details:StartMeUp() --I'll never stop!
 		local lowerInstanceId = Details:GetLowerInstanceNumber()
 		if (lowerInstanceId) then
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
-
 			if (lowerInstanceId) then
 				--check if there's changes in the size of the news string
-				if (Details.last_changelog_size < #Loc["STRING_VERSION_LOG"]) then
+				if (Details.last_changelog_size ~= #Loc["STRING_VERSION_LOG"]) then
 					Details.last_changelog_size = #Loc["STRING_VERSION_LOG"]
-
 					if (Details.auto_open_news_window) then
 						C_Timer.After(5, function()
 							Details.OpenNewsWindow()
@@ -441,6 +435,33 @@ function Details:StartMeUp() --I'll never stop!
 	Details:LoadFramesForBroadcastTools()
 	Details:BrokerTick()
 
+	--build trinket data
+	function Details:GetTrinketData()
+		return Details.trinket_data
+	end
+
+	local customSpellList = Details:GetDefaultCustomSpellsList()
+	local trinketData = Details:GetTrinketData()
+	for spellId, trinketTable in pairs(customSpellList) do
+		if (trinketTable.isPassive) then
+			if (not trinketData[spellId]) then
+				local thisTrinketData = {
+					itemName = C_Item.GetItemNameByID(trinketTable.itemId),
+					spellName = GetSpellInfo(spellId) or "spell not found",
+					lastActivation = 0,
+					lastPlayerName = "",
+					totalCooldownTime = 0,
+					activations = 0,
+					lastCombatId = 0,
+					minTime = 9999999,
+					maxTime = 0,
+					averageTime = 0,
+				}
+				trinketData[spellId] = thisTrinketData
+			end
+		end
+	end
+
 	--register boss mobs callbacks (DBM and BigWigs) -> functions/bossmods.lua
 	Details.Schedules.NewTimer(5, Details.BossModsLink, Details)
 
@@ -464,12 +485,6 @@ function Details:StartMeUp() --I'll never stop!
 
 	--embed windows on the chat window
 	Details.chat_embed:CheckChatEmbed(true)
-
-	--save the time when the addon finished loading
-	Details.AddOnStartTime = GetTime()
-	function Details.GetStartupTime()
-		return Details.AddOnStartTime or GetTime()
-	end
 
 	if (Details.player_details_window.skin ~= "ElvUI") then
 		local setDefaultSkinOnPlayerBreakdownWindow = function()
@@ -507,25 +522,26 @@ function Details:StartMeUp() --I'll never stop!
 
 	Details:InstallHook("HOOK_DEATH", Details.Coach.Client.SendMyDeath)
 
-	local sentMessageOnStartup = false
-
-	if (math.random(20) == 1) then
-		Details:Msg("use '/details me' macro to open the player breakdown for you!")
-		sentMessageOnStartup = true
+	if (not Details.slash_me_used) then
+		if (math.random(25) == 1) then
+			--Details:Msg("use '/details me' macro to open the player breakdown for you!")
+		end
 	end
 
 	if (not DetailsFramework.IsTimewalkWoW()) then
 		Details.cached_specs[UnitGUID("player")] = GetSpecializationInfo(GetSpecialization() or 0)
 	end
 
-	if (not Details.data_wipes_exp["9"]) then
-		wipe(Details.encounter_spell_pool or {})
-		wipe(Details.boss_mods_timers or {})
-		wipe(Details.spell_school_cache or {})
-		wipe(Details.spell_pool or {})
-		wipe(Details.npcid_pool or {})
-		wipe(Details.current_exp_raid_encounters or {})
-		Details.data_wipes_exp["9"] = true
+	if (GetExpansionLevel() == 9) then
+		if (not Details.data_wipes_exp["10"]) then
+			wipe(Details.encounter_spell_pool or {})
+			wipe(Details.boss_mods_timers or {})
+			wipe(Details.spell_school_cache or {})
+			wipe(Details.spell_pool or {})
+			wipe(Details.npcid_pool or {})
+			wipe(Details.current_exp_raid_encounters or {})
+			Details.data_wipes_exp["10"] = true
+		end
 	end
 
 	Details.boss_mods_timers.encounter_timers_dbm = Details.boss_mods_timers.encounter_timers_dbm or {}
@@ -539,7 +555,7 @@ function Details:StartMeUp() --I'll never stop!
 	if (not DetailsFramework.IsTimewalkWoW()) then
 		--wipe overall on torghast - REMOVE ON 10.0
 		local torghastTracker = CreateFrame("frame")
-		torghastTracker:RegisterEvent("JAILERS_TOWER_LEVEL_UPDATE")
+		torghastTracker:RegisterEvent("JAILERS_TOWER_LEVEL_UPDATE") --shadowlands tower challenge
 		torghastTracker:SetScript("OnEvent", function(self, event, level, towerType)
 			if (level == 1) then
 				if (Details.overall_clear_newtorghast) then
@@ -557,20 +573,15 @@ function Details:StartMeUp() --I'll never stop!
 		end
 	end)
 
-	--[=[ --survey for cooldown types are done
-	if (DetailsFramework.IsDragonflight()) then
-		DetailsFramework.Schedules.NewTimer(5, Details.RegisterDragonFlightEditMode)
-		--run only on beta, remove on 10.0 launch
-		if (Details.Survey.GetTargetCharacterForRealm()) then
-			Details.Survey.InitializeSpellCategoryFeedback()
-			if (not sentMessageOnStartup) then
-				if (math.random(5) == 1) then
-					Details:Msg("use '/details survey' to help on identifying cooldown spells (Dragonflight Beta).")
-				end
-			end
-		end
+	--to ignore this, use /run _G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Original or add to any script that run on login
+	--also the slash command "/details stopperfcheck" stop it as well
+	if (Details.check_stuttering) then
+		_G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Custom
 	end
-	--]=]
+
+	pcall(Details222.EJCache.MakeCache)
+
+	pcall(Details222.ClassCache.MakeCache)
 
 	function Details:InstallOkey()
 		return true
@@ -583,13 +594,6 @@ function Details:StartMeUp() --I'll never stop!
 	--shutdown the old OnDeathMenu
 	--cleanup: this line can be removed after the first month of dragonflight
 	Details.on_death_menu = false
-
-	--reset to default the evoker color
-	local defaultEvokerColor = _detalhes.default_profile.class_colors.EVOKER
-	local currentEvokerColorTable = _detalhes.class_colors.EVOKER
-	currentEvokerColorTable[1] = defaultEvokerColor[1]
-	currentEvokerColorTable[2] = defaultEvokerColor[2]
-	currentEvokerColorTable[3] = defaultEvokerColor[3]
 end
 
 Details.AddOnLoadFilesTime = _G.GetTime()

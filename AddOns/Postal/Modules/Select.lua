@@ -72,6 +72,17 @@ local function printTooMuchMail()
 
 end
 
+-- WoW 10.0 Release Show/Hide Frame Handlers
+function Postal_Select:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then Postal_Select:MAIL_SHOW() end
+end
+
+function Postal_Select:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then Postal_Select:MAIL_CLOSED() end
+end
+
 function Postal_Select:OnEnable()
 	--create the open button
 	if not openButton then
@@ -105,7 +116,7 @@ function Postal_Select:OnEnable()
 	--now create the checkboxes
 	for i = 1, 7 do
 		if not _G["PostalInboxCB"..i] then
-			local CB = CreateFrame("CheckButton", "PostalInboxCB"..i, _G["MailItem"..i], "OptionsCheckButtonTemplate")
+			local CB = CreateFrame("CheckButton", "PostalInboxCB"..i, _G["MailItem"..i], "InterfaceOptionsCheckButtonTemplate")
 			CB:SetID(i)
 			CB:SetPoint("RIGHT", "MailItem"..i, "LEFT", 1, -5)
 			CB:SetWidth(24)
@@ -120,7 +131,11 @@ function Postal_Select:OnEnable()
 	end
 
 	self:RawHook("InboxFrame_Update", true)
-	self:RegisterEvent("MAIL_SHOW")
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		self:RegisterEvent("MAIL_SHOW")
+	else
+		Postal_Select:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+	end
 
 	-- Don't show that silly "Not all of your mail could be delivered. Please delete some
 	-- mail to make room." message under our Open and Return buttons. Print it to chat instead.
@@ -152,10 +167,17 @@ function Postal_Select:OnDisable()
 end
 
 function Postal_Select:MAIL_SHOW()
-	self:RegisterEvent("MAIL_CLOSED", "Reset")
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		self:RegisterEvent("MAIL_CLOSED", "Reset")
+	else
+		Postal_Select:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", "Reset")
+	end
 	self:RegisterEvent("PLAYER_LEAVING_WORLD", "Reset")
 	self:RegisterEvent("MAIL_INBOX_UPDATE")
 	self:BuildUniqueIDs()
+end
+
+function Postal_Select:MAIL_CLOSED()
 end
 
 function Postal_Select:ToggleMail(frame)
@@ -327,7 +349,12 @@ function Postal_Select:ProcessNext()
 			if attachIndex > 0 and not invFull and Postal.db.profile.Select.KeepFreeSpace > 0 then
 				local free = 0
 				for bag = 0, NUM_BAG_SLOTS do
-					local bagFree, bagFam = GetContainerNumFreeSlots(bag)
+					local bagFree, bagFam
+					if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+						bagFree, bagFam = GetContainerNumFreeSlots(bag)
+					else
+						bagFree, bagFam = C_Container.GetContainerNumFreeSlots(bag)
+					end
 					if bagFam == 0 then
 						free = free + bagFree
 					end
@@ -350,8 +377,27 @@ function Postal_Select:ProcessNext()
 				local stackSize = select(8, GetItemInfo(link))
 				if itemID and stackSize and GetItemCount(itemID) > 0 then
 					for bag = 0, NUM_BAG_SLOTS do
-						for slot = 1, GetContainerNumSlots(bag) do
-							local texture2, count2, locked2, quality2, readable2, lootable2, link2 = GetContainerItemInfo(bag, slot)
+						local ContainerNumSlots
+						if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+							ContainerNumSlots = GetContainerNumSlots(bag)
+						else
+							ContainerNumSlots = C_Container.GetContainerNumSlots(bag)
+						end
+						for slot = 1, ContainerNumSlots do
+							local count2, link2
+							if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+								count2 = select(2, GetContainerItemInfo(bag, slot))
+								link2 = select(7, GetContainerItemInfo(bag, slot))
+							else
+								if C_Container and C_Container.GetContainerItemInfo(bag, slot) then
+									local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
+									count2 = itemInfo.stackCount
+									link2 = itemInfo.hyperlink
+								else
+									count2 = 0
+									link2 = nil
+								end
+							end
 							if link2 then
 								local itemID2 = strmatch(link2, "item:(%d+)")
 								if itemID == itemID2 and count + count2 <= stackSize then
@@ -492,7 +538,7 @@ function Postal_Select:MAIL_INBOX_UPDATE()
 	end
 end
 
-function Postal_Select:Reset(event)
+function Postal_Select:Reset(event, ...)
 	if not self:IsHooked("InboxFrame_Update") then self:RawHook("InboxFrame_Update", true) end
 
 	updateFrame:Hide()
@@ -508,8 +554,13 @@ function Postal_Select:Reset(event)
 	returnButton:Show()
 	lastCheck = nil
 	currentMode = nil
-	if event == "MAIL_CLOSED" or event == "PLAYER_LEAVING_WORLD" then
-		self:UnregisterEvent("MAIL_CLOSED")
+	local paneType = ...
+	if event == "MAIL_CLOSED" or event == "PLAYER_LEAVING_WORLD" or (event == "PLAYER_INTERACTION_MANAGER_FRAME_HIDE" and paneType == Enum.PlayerInteractionType.MailInfo) then
+		if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+			self:UnregisterEvent("MAIL_CLOSED")
+		else
+			self:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+		end
 		self:UnregisterEvent("PLAYER_LEAVING_WORLD")
 		self:UnregisterEvent("MAIL_INBOX_UPDATE")
 	end

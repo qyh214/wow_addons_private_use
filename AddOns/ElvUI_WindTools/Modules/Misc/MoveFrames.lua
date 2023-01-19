@@ -18,6 +18,7 @@ local BlizzardFrames = {
     "AddonList",
     "AudioOptionsFrame",
     "BankFrame",
+    "BonusRollFrame",
     "ChatConfigFrame",
     "CinematicFrame",
     "ContainerFrameCombinedBags",
@@ -44,6 +45,7 @@ local BlizzardFrames = {
     "RaidBrowserFrame",
     "RaidParentFrame",
     "ReadyCheckFrame",
+    "RecruitAFriendRewardsFrame",
     "ReportCheatingDialog",
     "SettingsPanel",
     "SpellBookFrame",
@@ -64,8 +66,11 @@ local BlizzardFrames = {
     },
     ["MailFrame"] = {
         "SendMailFrame",
-        "OpenMailFrame",
-        "OpenMailSender"
+        "MailFrameInset",
+        ["OpenMailFrame"] = {
+            "OpenMailFrame.OpenMailSender",
+            "OpenMailFrame.OpenMailFrameInset"
+        }
     },
     ["WorldMapFrame"] = {
         "QuestMapFrame"
@@ -144,10 +149,10 @@ local BlizzardFramesOnDemand = {
     ["Blizzard_Communities"] = {
         "ClubFinderGuildFinderFrame.RequestToJoinFrame",
         "ClubFinderCommunityAndGuildFinderFrame.RequestToJoinFrame",
-        -- ["CommunitiesFrame"] = {
-        --     "CommunitiesFrame.GuildMemberDetailFrame",
-        --     "CommunitiesFrame.NotificationSettingsDialog"
-        -- }
+        ["CommunitiesFrame"] = {
+            "CommunitiesFrame.GuildMemberDetailFrame",
+            "CommunitiesFrame.NotificationSettingsDialog"
+        },
         "CommunitiesFrame.RecruitmentDialog",
         "CommunitiesSettingsDialog",
         "CommunitiesGuildLogFrame",
@@ -263,7 +268,10 @@ local BlizzardFramesOnDemand = {
         "PlayerChoiceFrame"
     },
     ["Blizzard_Professions"] = {
-        "ProfessionsFrame"
+        ["ProfessionsFrame"] = {
+            "ProfessionsFrame.CraftingPage.CraftingOutputLog",
+            "ProfessionsFrame.CraftingPage.CraftingOutputLog.ScrollBox"
+        }
     },
     ["Blizzard_ProfessionsCustomerOrders"] = {
         ["ProfessionsCustomerOrdersFrame"] = {
@@ -315,6 +323,10 @@ local BlizzardFramesOnDemand = {
     }
 }
 
+local temporarilyMovingFrame = {
+    ["BonusRollFrame"] = true
+}
+
 local function removeBlizzardFrames(name)
     for i, n in pairs(BlizzardFrames) do
         if n == name then
@@ -329,8 +341,12 @@ function MF:Remember(frame)
         return
     end
 
+    if temporarilyMovingFrame[frame.windFrameName] then
+        return
+    end
+
     local numPoints = frame:GetNumPoints()
-    if numPoints then
+    if numPoints and numPoints > 0 then
         self.db.framePositions[frame.windFrameName] = {}
         for index = 1, numPoints do
             local anchorPoint, relativeFrame, relativePoint, offX, offY = frame:GetPoint(index)
@@ -358,13 +374,20 @@ function MF:Reposition(frame, anchorPoint, relativeFrame, relativePoint, offX, o
         return
     end
 
+    if temporarilyMovingFrame[frame.windFrameName] then
+        self.db.framePositions[frame.windFrameName] = nil
+        return
+    end
+
     if not frame.isChangingPoint then
         frame.isChangingPoint = true
         local points = self.db.framePositions[frame.windFrameName]
+
         frame:ClearAllPoints()
         for _, point in pairs(points) do
-            frame:Point(point.anchorPoint, point.relativeFrame, point.relativePoint, point.offX, point.offY)
+            frame:__SetPoint(point.anchorPoint, point.relativeFrame, point.relativePoint, point.offX, point.offY)
         end
+
         frame.isChangingPoint = nil
     end
 end
@@ -443,19 +466,18 @@ function MF:HandleFrame(frameName, mainFrameName)
 
     -- 注册调整位置的钩子
     if not self:IsHooked(frame.MoveFrame, "SetPoint") then
+        frame.MoveFrame.__SetPoint = frame.MoveFrame.SetPoint
         self:SecureHook(frame.MoveFrame, "SetPoint", "Reposition")
     end
 end
 
-function MF:HandleFramesWithTable(table)
-    for key, value in pairs(table) do
-        if type(key) == "number" and type(value) == "string" then
-            self:HandleFrame(value)
-        elseif type(key) == "string" and type(value) == "table" then
-            self:HandleFrame(key)
-            for _, subFrameName in pairs(value) do
-                self:HandleFrame(subFrameName, key)
-            end
+function MF:HandleFramesWithTable(table, parent)
+    for _key1, _frame1 in pairs(table) do
+        if type(_key1) == "number" and type(_frame1) == "string" then
+            self:HandleFrame(_frame1, parent)
+        elseif type(_key1) == "string" and type(_frame1) == "table" then
+            self:HandleFrame(_key1, parent)
+            self:HandleFramesWithTable(_frame1, _key1)
         end
     end
 end
@@ -486,6 +508,12 @@ function MF:HandleAddon(_, addon)
         self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion1.reward, "OnEnter", replacement)
         self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion2.reward, "OnEnter", replacement)
         self:RawHookScript(_G.EncounterJournal.suggestFrame.Suggestion3.reward, "OnEnter", replacement)
+    elseif addon == "Blizzard_Communities" then
+        local dialog = _G.CommunitiesFrame.NotificationSettingsDialog
+        if dialog then
+            dialog:ClearAllPoints()
+            dialog:SetAllPoints()
+        end
     end
 end
 
@@ -582,6 +610,12 @@ function MF:Initialize()
         removeBlizzardFrames("MerchantFrame")
     end
 
+    -- ElvUI Mail Frame Speical Handling
+    if _G.MailFrameInset then
+        _G.OpenMailFrameInset:SetParent(_G.OpenMailFrame)
+        _G.MailFrameInset:SetParent(_G.MailFrame)
+    end
+
     -- 全局变量中已经存在的窗体
     self:HandleFramesWithTable(BlizzardFrames)
 
@@ -596,6 +630,29 @@ function MF:Initialize()
     end
 
     self:HandleElvUIBag()
+
+    if _G.BattlefieldFrame and _G.PVPParentFrame then
+        _G.BattlefieldFrame:SetParent(_G.PVPParentFrame)
+        _G.BattlefieldFrame:ClearAllPoints()
+        _G.BattlefieldFrame:SetAllPoints()
+    end
+
+    local skipHook = false
+    self:SecureHook(
+        _G.ContainerFrameSettingsManager,
+        "GetBagsShown",
+        function()
+            if skipHook then
+                return
+            end
+            skipHook = true
+            local bags = _G.ContainerFrameSettingsManager:GetBagsShown()
+            for _, bag in pairs(bags or {}) do
+                bag:ClearAllPoints()
+            end
+            skipHook = false
+        end
+    )
 end
 
 W:RegisterModule(MF:GetName())

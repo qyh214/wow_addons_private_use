@@ -1,32 +1,46 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local D = E:GetModule("Distributor")
-local LibCompress = E.Libs.Compress
-local LibBase64 = E.Libs.Base64
+local LibDeflate = E.Libs.Deflate
 
 local format = format
+local next = next
+local type = type
 
 F.Profiles = {}
 
+local generatedKeys = {
+    profile = {
+        item = {
+            extraItemsBar = {
+                customList = true,
+                blackList = true
+            }
+        }
+    },
+    private = {}
+}
+
 function F.Profiles.GenerateString(data)
     local exportString = D:Serialize(data)
-    local compressedData = LibCompress:Compress(exportString)
-    local encodedData = LibBase64:Encode(compressedData)
+    local compressedData = LibDeflate:CompressDeflate(exportString, LibDeflate.compressLevel)
+    local encodedData = LibDeflate:EncodeForPrint(compressedData)
     return encodedData
 end
 
 function F.Profiles.ExactString(dataString)
-    local decodedData = LibBase64:Decode(dataString)
-    local decompressedData, decompressedMessage = LibCompress:Decompress(decodedData)
+    local decodedData = LibDeflate:DecodeForPrint(dataString)
+    local decompressed = LibDeflate:DecompressDeflate(decodedData)
 
-    if not decompressedData then
-        F.Print("Error decompressing data:", decompressedMessage)
+    if not decompressed then
+        F.Print("Error decompressing data.")
         return
     end
 
-    decompressedData = format("%s%s", decompressedData, "^^")
-    local success, data = D:Deserialize(decompressedData)
+    decompressed = format("%s%s", decompressed, "^^")
+    local success, data = D:Deserialize(decompressed)
 
     if not success then
+        F.Print("Error deserializing:", data)
         return
     end
 
@@ -37,12 +51,12 @@ function F.Profiles.GetOutputString(profile, private)
     local profileData = {}
     if profile then
         profileData = E:CopyTable(profileData, E.db.WT)
-        profileData = E:RemoveTableDuplicates(profileData, P)
+        profileData = E:RemoveTableDuplicates(profileData, P, generatedKeys.profile)
     end
 
     local privateData = {}
     if private then
-        local privateData = E:CopyTable(privateData, E.private.WT)
+        local privateData = E:CopyTable(privateData, E.private.WT, generatedKeys.private)
         privateData = E:RemoveTableDuplicates(privateData, V)
     end
 
@@ -58,9 +72,13 @@ function F.Profiles.ImportByString(importString)
     local profileData = F.Profiles.ExactString(profileString)
     local privateData = F.Profiles.ExactString(privateString)
 
-    E:CopyTable(E.db.WT, P)
-    E:CopyTable(E.db.WT, profileData)
+    if type(next(profileData)) ~= "nil" then
+        E:CopyTable(E.db.WT, P)
+        E:CopyTable(E.db.WT, profileData)
+    end
 
-    E:CopyTable(E.private.WT, V)
-    E:CopyTable(E.private.WT, privateData)
+    if type(next(privateData)) ~= "nil" then
+        E:CopyTable(E.private.WT, V)
+        E:CopyTable(E.private.WT, privateData)
+    end
 end

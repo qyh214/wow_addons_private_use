@@ -593,28 +593,41 @@ options.chatLink = {
                 level = {
                     order = 1,
                     type = "toggle",
-                    name = L["Level"]
+                    name = L["Level"],
+                    desc = L["Display the level of the item on the item link."],
+                    width = 1.5
                 },
-                translateItem = {
+                numbericalQualityTier = {
                     order = 2,
                     type = "toggle",
-                    name = L["Translate Item"],
-                    desc = L["Translate the name in item links into your language."]
+                    name = L["Numberical Quality Tier"],
+                    desc = L["Use numberical quality tier rather the icon on the item link."],
+                    width = 1.5
                 },
-                icon = {
+                translateItem = {
                     order = 3,
                     type = "toggle",
-                    name = L["Icon"]
+                    name = L["Translate Item"],
+                    desc = L["Translate the name in item links into your language."],
+                    width = 1.5
                 },
-                armorCategory = {
+                icon = {
                     order = 4,
                     type = "toggle",
-                    name = L["Armor Category"]
+                    name = L["Icon"],
+                    width = 1.5
                 },
-                weaponCategory = {
+                armorCategory = {
                     order = 5,
                     type = "toggle",
-                    name = L["Weapon Category"]
+                    name = L["Armor Category"],
+                    width = 1.5
+                },
+                weaponCategory = {
+                    order = 6,
+                    type = "toggle",
+                    name = L["Weapon Category"],
+                    width = 1.5
                 }
             }
         }
@@ -628,6 +641,12 @@ do
     icons = icons .. E:TextureString(W.Media.Icons.ffxivHealer, ":16:16") .. " "
     icons = icons .. E:TextureString(W.Media.Icons.ffxivDPS, ":16:16")
     SampleStrings.ffxiv = icons
+
+    icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.philModTank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.philModHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.philModDPS, ":16:16")
+    SampleStrings.philMod = icons
 
     icons = ""
     icons = icons .. E:TextureString(W.Media.Icons.hexagonTank, ":16:16") .. " "
@@ -741,6 +760,7 @@ do
                         desc = L["Change the icons that indicate the role."],
                         values = {
                             HEXAGON = SampleStrings.hexagon,
+                            PHILMOD = SampleStrings.philMod,
                             FFXIV = SampleStrings.ffxiv,
                             SUNUI = SampleStrings.sunui,
                             LYNUI = SampleStrings.lynui,

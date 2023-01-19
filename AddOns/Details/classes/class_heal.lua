@@ -1,6 +1,13 @@
 
+local _detalhes = 		_G._detalhes
+local _
+local addonName, Details222 = ...
+
+local AceLocale = LibStub("AceLocale-3.0")
+local Loc = AceLocale:GetLocale ( "Details" )
+local Translit = LibStub("LibTranslit-1.0")
+
 --lua locals
-local _cstr = string.format
 local _math_floor = math.floor
 local setmetatable = setmetatable
 local pairs = pairs
@@ -10,7 +17,6 @@ local type = type
 local _table_sort = table.sort
 local _cstr = string.format
 local tinsert = table.insert
-local _bit_band = bit.band
 local _math_min = math.min
 local _math_ceil = math.ceil
 --api locals
@@ -18,19 +24,11 @@ local GetSpellInfo = GetSpellInfo
 local _GetSpellInfo = _detalhes.getspellinfo
 local IsInRaid = IsInRaid
 local IsInGroup = IsInGroup
-local _UnitName = UnitName
-local GetNumGroupMembers = GetNumGroupMembers
 
 local _string_replace = _detalhes.string.replace --details api
-
-local _detalhes = 		_G._detalhes
-local _
-
-local AceLocale = LibStub("AceLocale-3.0")
-local Loc = AceLocale:GetLocale ( "Details" )
-local Translit = LibStub("LibTranslit-1.0")
-
 local gump = 			_detalhes.gump
+
+local detailsFramework = DetailsFramework
 
 local alvo_da_habilidade = 	_detalhes.alvo_da_habilidade
 local container_habilidades = 	_detalhes.container_habilidades
@@ -69,12 +67,10 @@ local info = _detalhes.playerDetailWindow
 local keyName
 
 function atributo_heal:NovaTabela (serial, nome, link)
-
 	local alphabetical = _detalhes:GetOrderNumber(nome)
 
 	--constructor
-	local _new_healActor = {
-
+	local thisActor = {
 		tipo = class_type, --atributo 2 = cura
 
 		total = alphabetical,
@@ -112,9 +108,10 @@ function atributo_heal:NovaTabela (serial, nome, link)
 		targets_absorbs = {}
 	}
 
-	setmetatable(_new_healActor, atributo_heal)
+	detailsFramework:Mixin(thisActor, Details222.Mixins.ActorMixin)
+	setmetatable(thisActor, atributo_heal)
 
-	return _new_healActor
+	return thisActor
 end
 
 
@@ -2379,6 +2376,66 @@ function atributo_heal:MontaDetalhesHealingDone (spellid, barra)
 			t3[6] = ""
 			t3[7] = ""
 			t3[8] = _detalhes:comma_value (esta_magia.anti_heal) .. " / " .. _cstr ("%.1f", porcentagem_anti_heal) .. "%"
+
+		--empowered
+		elseif (esta_magia.e_total and esta_magia.e_heal) then
+			local empowerLevelSum = esta_magia.e_total --total sum of empower levels
+			local empowerAmount = esta_magia.e_amt --amount of casts with empower
+			local empowerAmountPerLevel = esta_magia.e_lvl --{[1] = 4; [2] = 9; [3] = 15}
+			local empowerHealPerLevel = esta_magia.e_heal --{[1] = 54548745, [2] = 74548745}
+
+			data[3] = t3
+
+			local level1AverageHeal = "0"
+			local level2AverageHeal = "0"
+			local level3AverageHeal = "0"
+			local level4AverageHeal = "0"
+			local level5AverageHeal = "0"
+
+			if (empowerHealPerLevel[1]) then
+				level1AverageHeal = Details:ToK(empowerHealPerLevel[1] / empowerAmountPerLevel[1])
+			end
+			if (empowerHealPerLevel[2]) then
+				level2AverageHeal = Details:ToK(empowerHealPerLevel[2] / empowerAmountPerLevel[2])
+			end
+			if (empowerHealPerLevel[3]) then
+				level3AverageHeal = Details:ToK(empowerHealPerLevel[3] / empowerAmountPerLevel[3])
+			end
+			if (empowerHealPerLevel[4]) then
+				level4AverageHeal = Details:ToK(empowerHealPerLevel[4] / empowerAmountPerLevel[4])
+			end
+			if (empowerHealPerLevel[5]) then
+				level5AverageHeal = Details:ToK(empowerHealPerLevel[5] / empowerAmountPerLevel[5])
+			end
+
+			t3[1] = 0
+			t3[2] = {p = 100, c = {0.282353, 0.239216, 0.545098, 0.6}}
+			t3[3] = "Spell Empower Average Level: " .. format("%.2f", empowerLevelSum / empowerAmount)
+			t3[4] = ""
+			t3[5] = ""
+			t3[6] = ""
+			t3[10] = ""
+			t3[11] = ""
+
+			if (level1AverageHeal ~= "0") then
+				t3[4] = "Level 1 Average: " .. level1AverageHeal .. " (" .. (empowerAmountPerLevel[1] or 0) .. ")"
+			end
+
+			if (level2AverageHeal ~= "0") then
+				t3[6] = "Level 2 Average: " .. level2AverageHeal .. " (" .. (empowerAmountPerLevel[2] or 0) .. ")"
+			end
+
+			if (level3AverageHeal ~= "0") then
+				t3[11] = "Level 3 Average: " .. level3AverageHeal .. " (" .. (empowerAmountPerLevel[3] or 0) .. ")"
+			end
+
+			if (level4AverageHeal ~= "0") then
+				t3[10] = "Level 4 Average: " .. level4AverageHeal .. " (" .. (empowerAmountPerLevel[4] or 0) .. ")"
+			end
+
+			if (level5AverageHeal ~= "0") then
+				t3[5] = "Level 5 Average: " .. level5AverageHeal .. " (" .. (empowerAmountPerLevel[5] or 0) .. ")"
+			end
 		end
 
 --	for i = #data+1, 3 do --para o overheal aparecer na ultima barra
@@ -2688,6 +2745,13 @@ end
 								end
 
 							end
+						elseif(key == "e_heal" or key == "e_lvl") then
+							if (not habilidade_shadow[key]) then
+								habilidade_shadow[key] = {}
+							end
+							for empowermentLevel, empowermentValue in pairs(habilidade[key]) do 
+								habilidade_shadow[key][empowermentLevel] = empowermentValue
+							end
 						end
 					end
 
@@ -2795,6 +2859,13 @@ atributo_heal.__add = function(tabela1, tabela2)
 						else
 							habilidade_tabela1 [key] = habilidade_tabela1 [key] + value
 						end
+					end
+				elseif(key == "e_heal" or key == "e_lvl") then
+					if (not habilidade_tabela1[key]) then
+						habilidade_tabela1[key] = {}
+					end
+					for empowermentLevel, empowermentValue in pairs(habilidade[key]) do 
+						habilidade_tabela1[key][empowermentLevel] = habilidade_tabela1[key][empowermentValue] or 0 + empowermentValue
 					end
 				end
 			end
@@ -2913,11 +2984,12 @@ atributo_heal.__sub = function(tabela1, tabela2)
 	return tabela1
 end
 
-function _detalhes.refresh:r_atributo_heal (este_jogador, shadow)
-	setmetatable(este_jogador, atributo_heal)
-	este_jogador.__index = atributo_heal
+function _detalhes.refresh:r_atributo_heal(thisActor, shadow)
+	setmetatable(thisActor, atributo_heal)
+	thisActor.__index = atributo_heal
+	detailsFramework:Mixin(thisActor, Details222.Mixins.ActorMixin)
 
-	_detalhes.refresh:r_container_habilidades (este_jogador.spells, shadow and shadow.spells)
+	_detalhes.refresh:r_container_habilidades(thisActor.spells, shadow and shadow.spells)
 end
 
 function _detalhes.clear:c_atributo_heal (este_jogador)

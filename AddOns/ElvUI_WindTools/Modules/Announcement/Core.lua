@@ -53,7 +53,11 @@ function A:SendMessage(text, channel, raidWarning, whisperTarget)
     end
 
     if channel == "EMOTE" then
-        text = ": " .. text
+        if self.db and self.db.emoteFormat then
+            text = format(self.db.emoteFormat, text)
+        else
+            text = ": " .. text
+        end
     end
 
     if channel == "RAID" and raidWarning and IsInRaid(LE_PARTY_CATEGORY_HOME) then
@@ -137,6 +141,10 @@ function A:Initialize()
         return
     end
 
+    if self.db.interrupt.enable and E.db.general.interruptAnnounce ~= "NONE" then
+        E.db.general.interruptAnnounce = "NONE"
+    end
+
     for _, event in pairs(self.EventList) do
         A:RegisterEvent(event)
     end
@@ -151,6 +159,10 @@ end
 function A:ProfileUpdate()
     self:Initialize()
     self:UpdateBlizzardQuestAnnouncement()
+
+    if self.db.interrupt.enable and E.db.general.interruptAnnounce ~= "NONE" then
+        E.db.general.interruptAnnounce = "NONE"
+    end
 
     if self.db.enable or not self.initialized then
         return

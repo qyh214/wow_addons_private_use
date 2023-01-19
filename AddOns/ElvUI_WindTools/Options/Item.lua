@@ -1,5 +1,6 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local options = W.options.item.args
+local async = W.Utilities.Async
 local LSM = E.Libs.LSM
 
 local DI = W:GetModule("DeleteItem")
@@ -12,15 +13,20 @@ local IS = W:GetModule("Inspect")
 local IL = W:GetModule("ItemLevel")
 local EMP = W:GetModule("ExtendMerchantPages")
 
+local error = error
 local format = format
 local pairs = pairs
+local pcall = pcall
 local print = print
 local select = select
 local strlower = strlower
+local strrep = strrep
 local tinsert = tinsert
 local tonumber = tonumber
 local tremove = tremove
-local GetItemInfo = GetItemInfo
+
+local C_Item_GetItemIconByID = C_Item.GetItemIconByID
+local C_Item_GetItemNameByID = C_Item.GetItemNameByID
 
 local customListSelected1
 local customListSelected2
@@ -29,7 +35,7 @@ local function ImportantColorString(string)
     return F.CreateColorString(string, {r = 0.204, g = 0.596, b = 0.859})
 end
 
-local function FormatDesc(code, helpText)
+local function desc(code, helpText)
     return ImportantColorString(code) .. " = " .. helpText
 end
 
@@ -81,12 +87,11 @@ options.extraItemsBar = {
                     end,
                     set = function(_, value)
                         local itemID = tonumber(value)
-                        local itemName = select(1, GetItemInfo(itemID))
-                        if itemName then
+                        if async.WithItemID(itemID) then
                             tinsert(E.db.WT.item.extraItemsBar.customList, itemID)
                             EB:UpdateBars()
                         else
-                            print(L["The item ID is invalid."])
+                            F.Print(L["The item ID is invalid."])
                         end
                     end
                 },
@@ -104,7 +109,14 @@ options.extraItemsBar = {
                         local list = E.db.WT.item.extraItemsBar.customList
                         local result = {}
                         for key, value in pairs(list) do
-                            result[key] = select(1, GetItemInfo(value))
+                            async.WithItemID(
+                                value,
+                                function(item)
+                                    local name = item:GetItemName() or L["Unknown"]
+                                    local tex = item:GetItemIcon()
+                                    result[key] = F.GetIconString(tex, 14, 18, true) .. " " .. name
+                                end
+                            )
                         end
                         return result
                     end
@@ -141,12 +153,11 @@ options.extraItemsBar = {
                     end,
                     set = function(_, value)
                         local itemID = tonumber(value)
-                        local itemName = select(1, GetItemInfo(itemID))
-                        if itemName then
-                            E.db.WT.item.extraItemsBar.blackList[itemID] = itemName
+                        if async.WithItemID(itemID) then
+                            E.db.WT.item.extraItemsBar.blackList[itemID] = true
                             EB:UpdateBars()
                         else
-                            print(L["The item ID is invalid."])
+                            F.Print(L["The item ID is invalid."])
                         end
                     end
                 },
@@ -163,7 +174,14 @@ options.extraItemsBar = {
                     values = function()
                         local result = {}
                         for key, value in pairs(E.db.WT.item.extraItemsBar.blackList) do
-                            result[key] = value
+                            async.WithItemID(
+                                key,
+                                function(item)
+                                    local name = item:GetItemName() or L["Unknown"]
+                                    local tex = item:GetItemIcon()
+                                    result[key] = F.GetIconString(tex, 14, 18, true) .. " " .. name
+                                end
+                            )
                         end
                         return result
                     end
@@ -349,8 +367,47 @@ do -- Add options for bars
                     max = 12,
                     step = 1
                 },
-                countFont = {
+                qualityTier = {
                     order = 12,
+                    type = "group",
+                    inline = true,
+                    name = L["Crafting Quality Tier"],
+                    get = function(info)
+                        return E.db.WT.item.extraItemsBar["bar" .. i][info[#info - 1]][info[#info]]
+                    end,
+                    set = function(info, value)
+                        E.db.WT.item.extraItemsBar["bar" .. i][info[#info - 1]][info[#info]] = value
+                        EB:UpdateBar(i)
+                    end,
+                    args = {
+                        size = {
+                            order = 3,
+                            name = L["Size"],
+                            type = "range",
+                            min = 5,
+                            max = 60,
+                            step = 1
+                        },
+                        xOffset = {
+                            order = 4,
+                            name = L["X-Offset"],
+                            type = "range",
+                            min = -100,
+                            max = 100,
+                            step = 1
+                        },
+                        yOffset = {
+                            order = 5,
+                            name = L["Y-Offset"],
+                            type = "range",
+                            min = -100,
+                            max = 100,
+                            step = 1
+                        }
+                    }
+                },
+                countFont = {
+                    order = 13,
                     type = "group",
                     inline = true,
                     name = L["Counter"],
@@ -393,16 +450,16 @@ do -- Add options for bars
                             order = 4,
                             name = L["X-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         yOffset = {
                             order = 5,
                             name = L["Y-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         color = {
@@ -424,7 +481,7 @@ do -- Add options for bars
                     }
                 },
                 bindFont = {
-                    order = 13,
+                    order = 14,
                     type = "group",
                     inline = true,
                     name = L["Key Binding"],
@@ -467,16 +524,16 @@ do -- Add options for bars
                             order = 4,
                             name = L["X-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         yOffset = {
                             order = 5,
                             name = L["Y-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         color = {
@@ -498,28 +555,36 @@ do -- Add options for bars
                     }
                 },
                 include = {
-                    order = 14,
+                    order = 15,
                     type = "input",
                     name = L["Button Groups"],
                     desc = format(
-                        "%s %s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s",
+                        "%s %s\n" .. strrep("\n%s", 20),
                         L["Set the type and order of button groups."],
                         L["You can separate the groups with a comma."],
-                        FormatDesc("QUEST", L["Quest Items"]),
-                        FormatDesc("EQUIP", L["Equipments"]),
-                        FormatDesc("POTION", L["Potions"]),
-                        FormatDesc("POTIONSL", format("%s (%s)", L["Potions"], L["Shadowlands"])),
-                        FormatDesc("FLASK", L["Flasks"]),
-                        FormatDesc("FLASKSL", format("%s (%s)", L["Flasks"], L["Shadowlands"])),
-                        FormatDesc("TORGHAST", L["Torghast Items"]),
-                        FormatDesc("FOOD", L["Food"]),
-                        FormatDesc("FOODSL", format("%s (%s)", L["Food"], L["Shadowlands"])),
-                        FormatDesc("FOODVENDOR", format("%s (%s)", L["Food"], L["Sold by vendor"])),
-                        FormatDesc("MAGEFOOD", format("%s (%s)", L["Food"], L["Crafted by mage"])),
-                        FormatDesc("BANNER", L["Banners"]),
-                        FormatDesc("UTILITY", L["Utilities"]),
-                        FormatDesc("OPENABLE", L["Openable Items"]),
-                        FormatDesc("CUSTOM", L["Custom Items"])
+                        desc("QUEST", L["Quest Items"]),
+                        desc("EQUIP", L["Equipments"]),
+                        desc("POTION", L["Potions"]),
+                        desc("POTIONSL", format("%s |cffffdd57[%s]|r", L["Potions"], L["Shadowlands"])),
+                        desc("POTIONDF", format("%s |cffffdd57[%s]|r", L["Potions"], L["Dragonflight"])),
+                        desc("FLASK", L["Flasks"]),
+                        desc("FLASKSL", format("%s |cffffdd57[%s]|r", L["Flasks"], L["Shadowlands"])),
+                        desc("FLASKDF", format("%s |cffffdd57[%s]|r", L["Flasks"], L["Dragonflight"])),
+                        desc("RUNE", L["Runes"]),
+                        desc("RUNEDF", format("%s |cffffdd57[%s]|r", L["Runes"], L["Dragonflight"])),
+                        desc("FOOD", L["Crafted Food"]),
+                        desc("FOODSL", format("%s |cffffdd57[%s]|r", L["Crafted Food"], L["Shadowlands"])),
+                        desc("FOODDF", format("%s |cffffdd57[%s]|r", L["Crafted Food"], L["Dragonflight"])),
+                        desc(
+                            "FOODVENDOR",
+                            format("%s (%s) |cffffdd57[%s]|r", L["Food"], L["Sold by vendor"], L["Dragonflight"])
+                        ),
+                        desc("MAGEFOOD", format("%s (%s)|r", L["Food"], L["Crafted by mage"])),
+                        desc("BANNER", L["Banners"]),
+                        desc("UTILITY", L["Utilities"]),
+                        desc("OPENABLE", L["Openable Items"]),
+                        desc("PROF", L["Profession Items"]),
+                        desc("CUSTOM", L["Custom Items"])
                     ),
                     width = "full"
                 }
@@ -810,6 +875,7 @@ do
                 order = 1,
                 type = "select",
                 name = L["Alt List"],
+                width = 1.5,
                 get = function()
                     return selectedKey
                 end,
@@ -1323,16 +1389,16 @@ options.itemLevel = {
                             order = 4,
                             name = L["X-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         yOffset = {
                             order = 5,
                             name = L["Y-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         }
                     }
@@ -1462,16 +1528,16 @@ options.itemLevel = {
                             order = 4,
                             name = L["X-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         },
                         yOffset = {
                             order = 5,
                             name = L["Y-Offset"],
                             type = "range",
-                            min = -50,
-                            max = 50,
+                            min = -100,
+                            max = 100,
                             step = 1
                         }
                     }

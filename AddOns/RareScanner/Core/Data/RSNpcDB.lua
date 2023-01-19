@@ -51,6 +51,15 @@ function RSNpcDB.SetNpcKilled(npcID, respawnTime)
 		else
 			private.dbchar.rares_killed[npcID] = respawnTime
 		end
+		
+		if (RSConstants.DEBUG_MODE) then
+			local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
+			if (npcInfo and npcInfo.questID) then
+				for _, id in ipairs(npcInfo.questID) do
+					RSLogger:PrintDebugMessage(string.format("SetNpcKilled[%s]: Con questID [%s]", npcID, id))
+				end
+			end
+		end
 	end
 end
 
@@ -231,8 +240,23 @@ end
 function RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
 	if (npcID and mapID) then
 		if (RSNpcDB.IsInternalNpcMultiZone(npcID)) then
+			-- First check if there is a matching mapID in the database
 			for internalMapID, zoneInfo in pairs (RSNpcDB.GetInternalNpcInfo(npcID).zoneID) do
-				if (internalMapID == mapID or RSMapDB.IsMapInParentMap(mapID, internalMapID)) then
+				if (internalMapID == mapID) then
+					local npcInfo = {}
+					RSUtils.CloneTable(RSNpcDB.GetInternalNpcInfo(npcID), npcInfo)
+					npcInfo.zoneID = internalMapID
+					npcInfo.x = zoneInfo.x
+					npcInfo.y = zoneInfo.y
+					npcInfo.artID = zoneInfo.artID
+					npcInfo.overlay = zoneInfo.overlay
+					return npcInfo
+				end
+			end
+			
+			-- Then check if there is a matching subMapID in the database
+			for internalMapID, zoneInfo in pairs (RSNpcDB.GetInternalNpcInfo(npcID).zoneID) do
+				if (RSMapDB.IsMapInParentMap(mapID, internalMapID)) then
 					local npcInfo = {}
 					RSUtils.CloneTable(RSNpcDB.GetInternalNpcInfo(npcID), npcInfo)
 					npcInfo.zoneID = internalMapID
@@ -272,6 +296,43 @@ function RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
 	end
 
 	return nil
+end
+
+function RSNpcDB.GetBestInternalNpcCoordinates(npcID, mapID)
+	-- It finds the closest known coordinate to the current player position
+	local playerMapPosition = C_Map.GetPlayerMapPosition(mapID, "player")
+	local x, y
+	if (playerMapPosition) then
+		x, y = playerMapPosition:GetXY()
+	end
+	
+	if (not x or not y) then
+		return RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
+	end
+	
+	local overlay = RSNpcDB.GetInternalNpcOverlay(npcID, mapID)
+	if (overlay) then
+		local distances = {}
+		local coords = {}
+		for _, coordinates in ipairs (overlay) do
+			local xo, yo = strsplit("-", coordinates)
+			local distance = RSUtils.DistanceBetweenCoords(x, xo, y, yo);
+			if (distance >= 0 and distance <= 0.02) then
+				tinsert(distances, distance)
+				coords[distance] = {}
+				coords[distance].x = xo
+				coords[distance].y = yo
+			end
+		end
+		
+		-- Get the smallest
+		if (RSUtils.GetTableLength(distances) > 0) then
+			local minDistance = min(unpack(distances))
+			x, y = coords[minDistance].x, coords[minDistance].y
+		end
+	end
+	
+	return x, y
 end
 
 function RSNpcDB.GetInternalNpcOverlay(npcID, mapID)
@@ -353,12 +414,20 @@ end
 ---============================================================================
 
 function RSNpcDB.GetAllInteralNpcLoot()
-	return private.NPC_LOOT
+	local internalNpcLoot = private.NPC_LOOT
+	local customNpcLoot = RSNpcDB.GetAllCustomNpcLoot()
+	if (customNpcLoot) then
+		for npcID, items in pairs(customNpcLoot) do
+			internalNpcLoot[npcID] = items
+		end
+	end
+	
+	return internalNpcLoot
 end
 
 function RSNpcDB.GetInteralNpcLoot(npcID)
 	if (npcID) then
-		return RSNpcDB.GetAllInteralNpcLoot()[npcID]
+		return private.NPC_LOOT[npcID]
 	end
 
 	return nil
@@ -367,7 +436,7 @@ end
 function RSNpcDB.GetNpcLoot(npcID)
 	if (npcID) then
 		RSLogger:PrintDebugMessageEntityID(npcID, string.format("NPC [%s]: Obeniendo su loot.", npcID))
-		return RSUtils.JoinTables(RSUtils.JoinTables(RSNpcDB.GetInteralNpcLoot(npcID), RSNpcDB.GetNpcLootFound(npcID)), RSNpcDB.GetCustomNpcLoot(npcID))
+		return RSUtils.JoinTables(RSUtils.JoinTables(private.NPC_LOOT[npcID], RSNpcDB.GetNpcLootFound(npcID)), RSNpcDB.GetCustomNpcLoot(npcID))
 	end
 
 	return nil
@@ -377,6 +446,10 @@ end
 -- Custom NPC loot database
 ----- Stores custom NPC loot
 ---============================================================================
+
+function RSNpcDB.GetAllCustomNpcLoot()
+	return private.dbglobal.custom_loot
+end
 
 function RSNpcDB.GetCustomNpcLoot(npcID)
 	if (npcID and private.dbglobal.custom_loot) then
@@ -463,13 +536,19 @@ end
 ---============================================================================
 
 function RSNpcDB.InitNpcQuestIdFoundDB()
-	if (not private.dbglobal.npc_quest_ids) then
+	if (RSConstants.DEBUG_MODE and not private.dbglobal.npc_quest_ids) then
 		private.dbglobal.npc_quest_ids = {}
 	end
 end
 
-function RSNpcDB.GetAllNpcQuestIdsFound()
-	return private.dbglobal.npc_quest_ids
+function RSNpcDB.ResetNpcQuestIdFoundDB()
+	if (private.dbglobal.npc_quest_ids) then
+		if (RSConstants.DEBUG_MODE) then
+			private.dbglobal.npc_quest_ids = {}
+		else
+			private.dbglobal.npc_quest_ids = nil
+		end
+	end
 end
 
 function RSNpcDB.SetNpcQuestIdFound(npcID, questID)

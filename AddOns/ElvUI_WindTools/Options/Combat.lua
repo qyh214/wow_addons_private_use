@@ -3,65 +3,15 @@ local LSM = E.Libs.LSM
 local C = W:GetModule("CombatAlert")
 local RM = W:GetModule("RaidMarkers")
 local QK = W:GetModule("QuickKeystone")
-local CH = W:GetModule("CovenantHelper")
+local CH = W:GetModule("ClassHelper")
 
 local format = format
-local ipairs = ipairs
-local next = next
-local strjoin = strjoin
-local tinsert = tinsert
+local select = select
 local unpack = unpack
 
-local GetNumSpecializations = GetNumSpecializations
-local GetSpecializationInfo = GetSpecializationInfo
-local GetSpellInfo = GetSpellInfo
+local UnitClass = UnitClass
 
 local options = W.options.combat.args
-
-local envs = {
-    covenantHelper = {
-        specializations = {},
-        covenants = {
-            [1] = "|cff72cff8" .. L["Kyrian"] .. "|r",
-            [2] = "|cff971243" .. L["Venthyr"] .. "|r",
-            [3] = "|cff1e88e5" .. L["NightFae"] .. "|r",
-            [4] = "|cff00897b" .. L["Necrolord"] .. "|r"
-        },
-        soulbind = {
-            tempSoulbindData = nil,
-            selectedSpecialization = nil,
-            selectedCovenant = nil,
-            selectedSoulbind = nil
-        },
-        soulbindData = {}
-    }
-}
-
-local function getSoulbindData(covenantID)
-    local data = envs.covenantHelper.soulbindData
-    if not data[covenantID] then
-        data[covenantID] = CH:GetSoulbindData(covenantID)
-    end
-    return data[covenantID]
-end
-
-local function getSpecilizations()
-    if not next(envs.covenantHelper.specializations) then
-        for i = 1, GetNumSpecializations() do
-            local id, name, _, icon = GetSpecializationInfo(i)
-
-            tinsert(
-                envs.covenantHelper.specializations,
-                {
-                    id = id,
-                    name = F.GetIconString(icon, 12, 12) .. " " .. name
-                }
-            )
-        end
-    end
-
-    return envs.covenantHelper.specializations
-end
 
 options.raidMarkers = {
     order = 1,
@@ -217,6 +167,7 @@ options.raidMarkers = {
             set = function(info, value)
                 E.db.WT.combat.raidMarkers[info[#info]] = value
                 RM:UpdateBar()
+                RM:UpdateCountDownButton()
             end,
             disabled = function()
                 return not E.db.WT.combat.raidMarkers.enable
@@ -318,7 +269,7 @@ options.raidMarkers = {
                     max = 5,
                     step = 0.01,
                     width = 1.2
-                },
+                }
             }
         }
     }
@@ -533,15 +484,20 @@ options.quickKeystone = {
     }
 }
 
-options.covenantHelper = {
+local function addClassIcon(text, class)
+    return F.GetClassIconStringWithStyle(class, "flat", 16, 16) .. " " .. text
+end
+
+options.classHelper = {
     order = 4,
-    name = L["Covenant Helper"],
+    name = L["Class Helper"],
     type = "group",
     get = function(info)
-        return E.db.WT.combat.covenantHelper[info[#info]]
+        return E.db.WT.combat.classHelper[info[#info]]
     end,
     set = function(info, value)
-        E.db.WT.combat.covenantHelper[info[#info]] = value
+        E.db.WT.combat.classHelper[info[#info]] = value
+        CH:ProfileUpdate()
     end,
     args = {
         desc = {
@@ -553,7 +509,7 @@ options.covenantHelper = {
                 feature = {
                     order = 1,
                     type = "description",
-                    name = L["Change the spells in action bars and the soulbind when you changing covenant."],
+                    name = L["This module contains small features for each classes."],
                     fontSize = "medium"
                 }
             }
@@ -562,330 +518,121 @@ options.covenantHelper = {
             order = 2,
             type = "toggle",
             name = L["Enable"],
-            set = function(info, value)
-                E.db.WT.combat.covenantHelper[info[#info]] = value
-                CH:ProfileUpdate()
-            end,
             width = "full"
         },
-        replaceSpells = {
+        deathStrikeEstimator = {
             order = 3,
+            name = addClassIcon(L["DS Estimator"], "DEATHKNIGHT"),
             type = "group",
-            inline = true,
-            name = L["Replace Spells"],
+            disabled = function()
+                local class = select(2, UnitClass("player"))
+                return E.myclass ~= "DEATHKNIGHT"
+            end,
             get = function(info)
-                return E.db.WT.combat.covenantHelper[info[#info - 1]][info[#info]]
+                return E.db.WT.combat.classHelper[info[#info - 1]][info[#info]]
             end,
             set = function(info, value)
-                E.db.WT.combat.covenantHelper[info[#info - 1]][info[#info]] = value
-            end,
-            args = {
-                enable = {
-                    order = 1,
-                    type = "toggle",
-                    name = L["Enable"],
-                    desc = L["Replace covenant spells on action bars after changing covenant."],
-                    width = 0.8
-                },
-                example = {
-                    order = 2,
-                    type = "description",
-                    name = function()
-                        local name, rank, icon = GetSpellInfo(324739)
-                        local kyrian = F.GetIconString(icon, 12, 12) .. " " .. name
-
-                        name, rank, icon = GetSpellInfo(310143)
-                        local nightfae = F.GetIconString(icon, 12, 12) .. " " .. name
-
-                        return L["Example"] .. ": " .. kyrian .. " > " .. nightfae
-                    end,
-                    fontSize = "medium",
-                    width = 2.5
-                }
-            }
-        },
-        soulbind = {
-            order = 4,
-            type = "group",
-            inline = true,
-            name = L["Soulbind"],
-            get = function(info)
-                return E.db.WT.combat.covenantHelper[info[#info - 1]][info[#info]]
-            end,
-            set = function(info, value)
-                E.db.WT.combat.covenantHelper[info[#info - 1]][info[#info]] = value
+                E.db.WT.combat.classHelper[info[#info - 1]][info[#info]] = value
+                CH:UpdateHelper(info[#info - 1])
             end,
             args = {
                 desc = {
                     order = 1,
                     type = "group",
                     inline = true,
-                    name = F.CreateColorString(L["Tips"], E.db.general.valuecolor),
+                    name = L["Description"],
                     args = {
-                        desc = {
+                        feature = {
                             order = 1,
                             type = "description",
-                            name = format(
-                                "1. %s\n2. %s\n",
-                                L["The soulbind will be activate automatically if you set the rule of the character."],
-                                L["If the rule not set, it will display a popup to remind you of changing soulbind."]
-                            )
+                            name = L["Add a bar on unitframe to show the estimated heal of Death Strike."],
+                            fontSize = "medium"
+                        },
+                        requirement = {
+                            order = 1,
+                            type = "description",
+                            name = L["You need enable ElvUI Player Unitframe to use it."],
+                            fontSize = "medium"
                         }
                     }
                 },
-                autoActivate = {
+                enable = {
                     order = 2,
                     type = "toggle",
-                    name = L["Auto Activate"],
-                    desc = L["Automatically activate the soulbind when you changing covenant."]
+                    name = L["Enable"],
+                    width = 1.2
                 },
-                showReminder = {
+                onlyInCombat = {
                     order = 3,
                     type = "toggle",
-                    name = L["Show Reminder"],
-                    desc = format(
-                        "%s\n|cffff3860%s|r",
-                        L["Show reminder after you changing covenant."],
-                        L["If you set auto activate rule for current player, it will not be displayed."]
-                    )
+                    name = L["Only In Combat"],
+                    width = 1.2
                 },
-                rule = {
+                hideIfTheBarOutside = {
                     order = 4,
-                    type = "group",
-                    inline = true,
-                    name = L["Rules"],
-                    args = {
-                        tip = {
-                            order = 1,
-                            type = "description",
-                            name = function()
-                                local result = {}
-                                local db = E.global.WT.combat.covenantHelper.soulbindRules.characters
-                                local covenantTable = envs.covenantHelper.covenants
-                                local specializationTable = getSpecilizations()
-                                if db and db[E.myname] then
-                                    for specIndex, specData in ipairs(specializationTable) do
-                                        local specRecords = {}
-                                        for covenantID, covenantName in ipairs(covenantTable) do
-                                            if db[E.myname][specIndex] then
-                                                local soulbindIndex = db[E.myname][specIndex][covenantID]
-                                                if soulbindIndex then
-                                                    local soudbindData = getSoulbindData(covenantID)
-                                                    tinsert(
-                                                        specRecords,
-                                                        format(
-                                                            "%s (%s)",
-                                                            covenantName,
-                                                            soudbindData[soulbindIndex].name
-                                                        )
-                                                    )
-                                                end
-                                            end
-                                        end
-
-                                        if next(specRecords) then
-                                            tinsert(result, specData.name .. ": ")
-                                            tinsert(result, strjoin(" / ", unpack(specRecords)) .. "\n\n")
-                                        end
-                                    end
-                                end
-
-                                if next(result) then
-                                    return "|cff00d1b2" ..
-                                        L["Current Rules"] .. "|r\n\n" .. strjoin("", unpack(result)) .. "\n"
-                                else
-                                    return "|cff00d1b2" .. L["Current Rules"] .. "|r: " .. L["No Rules"] .. "\n\n"
-                                end
-                            end
-                        },
-                        specialization = {
-                            order = 2,
-                            type = "select",
-                            name = L["Specialization"],
-                            get = function(info)
-                                return envs.covenantHelper.soulbind.selectedSpecialization
-                            end,
-                            set = function(_, value)
-                                envs.covenantHelper.soulbind.selectedSpecialization = value
-                                envs.covenantHelper.soulbind.selectedCovenant = nil
-                            end,
-                            values = function()
-                                local result = {}
-                                local specializationTable = getSpecilizations()
-                                for specIndex, specData in ipairs(specializationTable) do
-                                    result[specIndex] = specData.name
-                                end
-                                return result
-                            end
-                        },
-                        covenant = {
-                            order = 3,
-                            type = "select",
-                            name = L["Covenant"],
-                            hidden = function()
-                                return not envs.covenantHelper.soulbind.selectedSpecialization
-                            end,
-                            get = function(info)
-                                return envs.covenantHelper.soulbind.selectedCovenant
-                            end,
-                            set = function(_, value)
-                                envs.covenantHelper.soulbind.selectedSoulbind = nil
-                                envs.covenantHelper.soulbind.selectedCovenant = value
-                                envs.covenantHelper.soulbind.tempSoulbindData = getSoulbindData(value)
-                            end,
-                            values = function()
-                                return envs.covenantHelper.covenants
-                            end
-                        },
-                        soulbind = {
-                            order = 4,
-                            type = "select",
-                            name = L["Soulbind"],
-                            hidden = function()
-                                return not envs.covenantHelper.soulbind.tempSoulbindData
-                            end,
-                            get = function(info)
-                                return envs.covenantHelper.soulbind.selectedSoulbind
-                            end,
-                            set = function(_, value)
-                                envs.covenantHelper.soulbind.selectedSoulbind = value
-                            end,
-                            values = function()
-                                local valueTable = {
-                                    [99] = "|cffff3860" .. L["Remove Rule"] .. "|r"
-                                }
-                                for index, soulbind in ipairs(envs.covenantHelper.soulbind.tempSoulbindData) do
-                                    valueTable[index] = soulbind.name
-                                end
-                                return valueTable
-                            end
-                        },
-                        addButton = {
-                            order = 5,
-                            type = "execute",
-                            hidden = function()
-                                return not envs.covenantHelper.soulbind.selectedSoulbind
-                            end,
-                            disabled = function()
-                                local db = E.global.WT.combat.covenantHelper.soulbindRules.characters
-                                local spec = envs.covenantHelper.soulbind.selectedSpecialization
-                                local covenant = envs.covenantHelper.soulbind.selectedCovenant
-                                local soulbind = envs.covenantHelper.soulbind.selectedSoulbind
-
-                                if db and db[E.myname] and db[E.myname][spec] then
-                                    if db[E.myname][spec][covenant] and db[E.myname][spec][covenant] == soulbind then
-                                        return true
-                                    end
-                                end
-                                return false
-                            end,
-                            name = function()
-                                local db = E.global.WT.combat.covenantHelper.soulbindRules.characters
-                                local spec = envs.covenantHelper.soulbind.selectedSpecialization
-                                local covenant = envs.covenantHelper.soulbind.selectedCovenant
-                                local soulbind = envs.covenantHelper.soulbind.selectedSoulbind
-
-                                local buttonName = L["Add"]
-
-                                if soulbind == 99 then
-                                    buttonName = L["Remove"]
-                                else
-                                    if db and db[E.myname] and db[E.myname][spec] then
-                                        if db[E.myname][spec][covenant] and soulbind then
-                                            buttonName = L["Update"]
-                                        end
-                                    end
-                                end
-
-                                return buttonName
-                            end,
-                            func = function()
-                                local db = E.global.WT.combat.covenantHelper.soulbindRules.characters
-                                local spec = envs.covenantHelper.soulbind.selectedSpecialization
-                                local covenant = envs.covenantHelper.soulbind.selectedCovenant
-                                local soulbind = envs.covenantHelper.soulbind.selectedSoulbind
-
-                                if not db[E.myname] then
-                                    db[E.myname] = {}
-                                end
-
-                                if not db[E.myname][spec] then
-                                    db[E.myname][spec] = {}
-                                end
-
-                                if soulbind == 99 then
-                                    db[E.myname][spec][covenant] = nil
-                                else
-                                    db[E.myname][spec][covenant] = soulbind
-                                end
-                            end
-                        }
-                    }
+                    type = "toggle",
+                    name = L["Hide If The Bar Outside"],
+                    width = 1.2
                 },
-                remindText = {
+                betterAlign = {
+                    order = 5,
+                    type = "description",
+                    name = " "
+                },
+                width = {
                     order = 6,
-                    type = "group",
-                    inline = true,
-                    name = L["Remind Text"],
+                    type = "range",
+                    name = L["Width"],
+                    min = 1,
+                    max = 20,
+                    step = 1
+                },
+                height = {
+                    order = 7,
+                    type = "range",
+                    name = L["Height"],
+                    min = 1,
+                    max = 300,
+                    step = 1
+                },
+                yOffset = {
+                    order = 8,
+                    type = "range",
+                    name = L["Y-Offset"],
+                    min = -300,
+                    max = 300,
+                    step = 1
+                },
+                color = {
+                    order = 9,
+                    type = "color",
+                    name = L["Color"],
+                    hasAlpha = true,
                     get = function(info)
-                        return E.db.WT.combat.covenantHelper[info[#info - 2]][info[#info - 1]][info[#info]]
+                        local db = E.db.WT.combat.classHelper[info[#info - 1]][info[#info]]
+                        local default = P.combat.classHelper[info[#info - 1]][info[#info]]
+                        return db.r, db.g, db.b, db.a, default.r, default.g, default.b, default.a
                     end,
-                    set = function(info, value)
-                        E.db.WT.combat.covenantHelper[info[#info - 2]][info[#info - 1]][info[#info]] = value
-                    end,
-                    args = {
-                        name = {
-                            order = 1,
-                            type = "select",
-                            dialogControl = "LSM30_Font",
-                            name = L["Font"],
-                            values = LSM:HashTable("font")
-                        },
-                        style = {
-                            order = 2,
-                            type = "select",
-                            name = L["Outline"],
-                            values = {
-                                NONE = L["None"],
-                                OUTLINE = L["OUTLINE"],
-                                MONOCHROME = L["MONOCHROME"],
-                                MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
-                                THICKOUTLINE = L["THICKOUTLINE"]
-                            }
-                        },
-                        size = {
-                            order = 3,
-                            name = L["Size"],
-                            type = "range",
-                            min = 5,
-                            max = 60,
-                            step = 1
-                        },
-                        xOffset = {
-                            order = 4,
-                            name = L["X-Offset"],
-                            type = "range",
-                            min = -50,
-                            max = 50,
-                            step = 1
-                        },
-                        yOffset = {
-                            order = 5,
-                            name = L["Y-Offset"],
-                            type = "range",
-                            min = -50,
-                            max = 50,
-                            step = 1
-                        },
-                        test = {
-                            order = 6,
-                            type = "execute",
-                            name = L["Test"],
-                            func = function()
-                                CH:ShowReminder(L["Confirm your choice of the soulbind"])
-                            end
-                        }
-                    }
+                    set = function(info, r, g, b, a)
+                        local db = E.db.WT.combat.classHelper[info[#info - 1]][info[#info]]
+                        db.r, db.g, db.b, db.a = r, g, b, a
+                        CH:UpdateHelper(info[#info - 1])
+                    end
+                },
+                sparkTexture = {
+                    order = 10,
+                    type = "toggle",
+                    name = L["Use Spark Texture"]
+                },
+                texture = {
+                    order = 11,
+                    type = "select",
+                    name = L["Texture"],
+                    dialogControl = "LSM30_Statusbar",
+                    values = LSM:HashTable("statusbar"),
+                    hidden = function()
+                        return E.db.WT.combat.classHelper.deathStrikeEstimator.sparkTexture
+                    end
                 }
             }
         }

@@ -1,10 +1,10 @@
-lightweight tag e658e9a348984bc7dcf534cd30f14fac59304687 v1.4.2
+lightweight tag 08d41f8547e51bc3c20e7fc0fe45e13338f00200 v1.4.5
 Author:	Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:	Thu Mar 17 10:47:11 2022 -0400
+Date:	Mon Dec 26 09:40:00 2022 -0500
 
-commit e658e9a348984bc7dcf534cd30f14fac59304687
+commit 08d41f8547e51bc3c20e7fc0fe45e13338f00200
 Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Thu Mar 17 10:47:11 2022 -0400
+Date:   Mon Dec 26 09:40:00 2022 -0500
 
-    Add addonVersion to debugTable
+    Fix #22, conflict with Details
 

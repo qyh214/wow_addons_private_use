@@ -2,9 +2,9 @@ local E, L, V, P, G = unpack(ElvUI)
 local DB = E:GetModule('DataBars')
 local LSM = E.Libs.LSM
 
-local error = error
-local type, pairs = type, pairs
-local min, format = min, format
+local min, type, format = min, type, format
+local pairs, error = pairs, error
+
 local CreateFrame = CreateFrame
 local GetXPExhaustion = GetXPExhaustion
 local GetQuestLogRewardXP = GetQuestLogRewardXP
@@ -14,10 +14,10 @@ local GetQuestLogTitle = GetQuestLogTitle
 local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 local GameTooltip = GameTooltip
 
+local C_QuestLog_GetQuestWatchType = C_QuestLog.GetQuestWatchType
 local C_QuestLog_GetNumQuestLogEntries = C_QuestLog.GetNumQuestLogEntries
 local C_QuestLog_ReadyForTurnIn = C_QuestLog.ReadyForTurnIn
 local C_QuestLog_GetInfo = C_QuestLog.GetInfo
-local C_QuestLog_GetQuestWatchType = C_QuestLog.GetQuestWatchType
 
 local CurrentXP, XPToLevel, PercentRested, PercentXP, RemainXP, RemainTotal, RemainBars
 local RestedXP, QuestLogXP = 0, 0
@@ -166,6 +166,19 @@ function DB:ExperienceBar_QuestXP()
 	end
 end
 
+function DB:RegisterCustomQuestXPWatcher(name, func)
+	if not name or not func or type(name) ~= 'string' or type(func) ~= 'function' then
+		error('Usage: DB:RegisterCustomQuestXPWatcher(name [string], func [function])')
+		return
+	end
+
+	if not DB.CustomQuestXPWatchers then
+		DB.CustomQuestXPWatchers = {}
+	end
+
+	DB.CustomQuestXPWatchers[name] = func
+end
+
 function DB:ExperienceBar_OnEnter()
 	if self.db.mouseover then
 		E:UIFrameFadeIn(self, 0.4, self:GetAlpha(), 1)
@@ -180,16 +193,16 @@ function DB:ExperienceBar_OnEnter()
 
 	if CurrentXP then
 		GameTooltip:AddLine(' ')
-		GameTooltip:AddDoubleLine(L["XP:"], format(' %d / %d (%.2f%%)', CurrentXP, XPToLevel, PercentXP), 1, 1, 1)
+		GameTooltip:AddDoubleLine(L["XP:"], format(' %s / %s (%.2f%%)', E:ShortValue(CurrentXP), E:ShortValue(XPToLevel), PercentXP), 1, 1, 1)
 	end
 	if RemainXP then
-		GameTooltip:AddDoubleLine(L["Remaining:"], format(' %s (%.2f%% - %d '..L["Bars"]..')', RemainXP, RemainTotal, RemainBars), 1, 1, 1)
+		GameTooltip:AddDoubleLine(L["Remaining:"], format(' %s (%.2f%% - %.2f '..L["Bars"]..')', RemainXP, RemainTotal, RemainBars), 1, 1, 1)
 	end
 	if QuestLogXP > 0 then
 		GameTooltip:AddDoubleLine(L["Quest Log XP:"], format(' %d (%.2f%%)', QuestLogXP, (QuestLogXP / XPToLevel) * 100), 1, 1, 1)
 	end
 	if RestedXP > 0 then
-		GameTooltip:AddDoubleLine(L["Rested:"], format('%d (%.2f%%)', RestedXP, PercentRested), 1, 1, 1)
+		GameTooltip:AddDoubleLine(L["Rested:"], format('+%s (%.2f%%)', E:ShortValue(RestedXP), PercentRested), 1, 1, 1)
 	end
 
 	GameTooltip:Show()
@@ -270,14 +283,4 @@ function DB:ExperienceBar()
 	DB:RegisterEvent('DISABLE_XP_GAIN', 'ExperienceBar_Toggle')
 	DB:RegisterEvent('ENABLE_XP_GAIN', 'ExperienceBar_Toggle')
 	DB:ExperienceBar_Toggle()
-end
-
-function DB:RegisterCustomQuestXPWatcher(name, func)
-	if not name or not func or type(name) ~= "string" or type(func) ~= "function" then
-		error("Usage: DB:RegisterCustomQuestXPWatcher(name [string], func [function])")
-		return
-	end
-
-	DB.CustomQuestXPWatchers = DB.CustomQuestXPWatchers or {}
-	DB.CustomQuestXPWatchers[name] = func
 end

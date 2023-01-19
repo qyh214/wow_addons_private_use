@@ -160,7 +160,9 @@ L["STRING_CUSTOM_TARGET"] = "Bersaglio:"
 L["STRING_CUSTOM_TARGET_DESC"] = "Questo è il bersaglio della sorgente. Il pulsante in basso a destra mostra una lista degli npcs dagli incontri raid."
 L["STRING_CUSTOM_TEMPORARILY"] = "(|cFFFFC000temporaneo|r)"
 --[[Translation missing --]]
---[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[To load a texture file in the World of Warcraft client you need a file in .TGA format and its width and height must be multiples of 8.
+
+Place the texture inside /WoW Install Folder/retail/Interface/]=]
 L["STRING_DAMAGE"] = "Danno"
 L["STRING_DAMAGE_DPS_IN"] = "DPS ricevuto da"
 L["STRING_DAMAGE_FROM"] = "Ha subito danni da"
@@ -387,19 +389,19 @@ L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Attiva o Disattiva l'uso di un frame di 
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Scegli quale modello verrà utilizzato sulla barra del modello superiore."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzate"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Aligned Text Columns"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alignment"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "The alignment is done automatically based on the length of each text"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disable brackets and separators and align bars texts in vertical columns"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Offset"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Offset from right border"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "is enabled, separators and brackets aren't used"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Nascondimento Automatico:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usa Su Tutti i Personaggi"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Lo stesso profilo viene usato su tutti i personaggi. Potresti dover sovrascrivere questo su tutti i personaggi selezionando un altro profilo esistente."
@@ -584,13 +586,13 @@ L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Prompt"
 L["STRING_OPTIONS_ED3"] = "Auto"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Edit Custom Text"
 L["STRING_OPTIONS_EDITIMAGE"] = "Modifica Immagine"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Modifica Finestra:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Cancella Grafici"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante il logout, tutti i dati di combattimento raccolti per creare i grafici vengono cancellati."
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Export Profile"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Widget Esterni"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Queste opzioni controllano il comportamento di molti widget esterni."
 L["STRING_OPTIONS_GENERAL"] = "Impostazioni Generali"
@@ -613,11 +615,11 @@ L["STRING_OPTIONS_ILVL_TRACKER"] = "Tracker del Livello Oggetti:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Quando attivo e fuori dal combattimento, l'addon indaga e traccia il livello oggetti dei giocatori nell'incursione. Se disattivato, esso leggerà comunque il livello oggetti dai queries degli altri addon o quando ispezioni manualmente un altro player."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Attivato"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Import Profile"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Insert a Name for the New Profile"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Import Profile (paste string)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Texture di Sfondo"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = "Seleziona la texture di sfondo usata da questa finestra. Sfondo |cFFFFFF00Predefinito|r: Details."
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Auto Scambio Ad Attuale"
@@ -710,7 +712,7 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = "Imposta un nickname per te. I nickname veng
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor Righe di Testo"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Apri Editor di Testo"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
+L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Tutti i Segmenti"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Tutti i segmenti vengono aggiunti ai dati complessivi."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Dati Complessivi:"
@@ -996,7 +998,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = "Aggiungi una funzione per formatta
 L["STRING_OPTIONS_TIMEMEASURE"] = "Misura del Tempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = "|cFFFFFF00Attività|r: il timer di ogni membro dell'istanza viene messo in attesa se la loro attività viene interrotta e torna a contare quando riprende, modo comune di misurare DPS e HPS.|cFFFFFF00Effettivo|r: utilizzato nelle classifiche, questo metodo utilizza il tempo di combattimento trascorso per misurare il DPS e l'HPS di tutti i membri del raid."
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Buttons and Menu Settings"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Impostazioni dei Pulsanti della Barra del Titolo"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Queste opzioni modificano il menu principale nella parte superiore della finestra."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Barra del Titolo nella Lato Superiore"
@@ -1094,15 +1096,19 @@ L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Ancore:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignora il Toggle di Massa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Quando è abilitata, questa finestra non viene influenzata quando si nascondono, mostrano o si alternano tutte le finestre."
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Scala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Regola la scala della finestra. |cFFFFFF00Consiglio|r: tasto destro per scrivere il tipo di valore. |cFFFFFF00Attuale|r: %s"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Color"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
+
+|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
+
+|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Titolo mostrato nell'intestazione di Finestre: Impostazioni generali"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Queste opzioni controllano l'aspetto della finestra della finestra selezionata."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Intervallo Aggiornamento"
@@ -1385,4 +1391,3 @@ L["STRING_WIPE_ERROR1"] = "un wipe è stato già chiamato."
 L["STRING_WIPE_ERROR2"] = "non siamo in un incontro incursione."
 L["STRING_WIPE_ERROR3"] = "non potevo terminare l'incontro."
 L["STRING_YES"] = "Si"
-

@@ -1678,4 +1678,3 @@ L["STRING_WIPE_ERROR1"] = "ein Wipe wurde bereits ausgerufen."
 L["STRING_WIPE_ERROR2"] = "wir sind in keiner Schlachtzugsbegegnung."
 L["STRING_WIPE_ERROR3"] = "konnten die Begegnung nicht beenden."
 L["STRING_YES"] = "Ja"
-

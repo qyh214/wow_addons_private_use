@@ -276,6 +276,7 @@ obj["ENERGY_AMOUNT"]		= "%a - 기력.\n"
 --obj["CHI_AMOUNT"]			= "%a - Amount of chi you have.\n"
 obj["CP_AMOUNT"]			= "%a - 연계 점수.\n"
 obj["HOLY_POWER_AMOUNT"]	= "%a - 보유한 신성한 힘.\n"
+obj["ESSENCE_AMOUNT"]		= "%a - 보유한 정수.\n"
 --obj["SHADOW_ORBS_AMOUNT"]	= "%a - Amount of shadow orbs you have.\n"
 obj["HONOR_AMOUNT"]			= "%a - 명예 점수.\n"
 obj["REP_AMOUNT"]			= "%a - 평판 수치.\n"
@@ -465,12 +466,14 @@ obj["NOTIFICATION_POWER_GAIN"]			= { label="마력 (마나/분노 등) 획득", 
 obj["NOTIFICATION_POWER_LOSS"]			= { label="마력 (마나/분노 등) 손실", tooltip="유출에 의한 마나, 분노, 기력, 룬 마력 손실을 알려줍니다."}
 --obj["NOTIFICATION_ALT_POWER_GAIN"]		= { label="Alternate Power Gains", tooltip="Enable when you gain alternate power such as sound level on Atramedes."}
 --obj["NOTIFICATION_ALT_POWER_LOSS"]		= { label="Alternate Power Losses", tooltip="Enable when you lose alternate power from drains."}
---obj["NOTIFICATION_CHI_CHANGE"]			= { label="Chi Changes", tooltip="Enable when you change chi."}
---obj["NOTIFICATION_CHI_FULL"]			= { label="Chi Full", tooltip="Enable when you attain full chi."}
+obj["NOTIFICATION_CHI_CHANGE"]			= { label="기 변경", tooltip="기가 변경될 때 알려줍니다."}
+obj["NOTIFICATION_CHI_FULL"]			= { label="기 최대", tooltip="최대 기에 도달하면 알려줍니다."}
 obj["NOTIFICATION_CP_GAIN"]				= { label="연계 점수 획득", tooltip="연계 점수 획득을 알려줍니다."}
 obj["NOTIFICATION_CP_FULL"]				= { label="연계 점수 마무리", tooltip="연계 점수가 절정 (5 포인트)에 도달했음을 알려줍니다."}
-obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="신성한 힘 변환", tooltip="신성한 힘이 변환되면 알려줍니다."}
+obj["NOTIFICATION_HOLY_POWER_CHANGE"]	= { label="신성한 힘 변경", tooltip="신성한 힘이 변경되면 알려줍니다."}
 obj["NOTIFICATION_HOLY_POWER_FULL"]		= { label="신성한 힘 최대", tooltip="최대 신성한 힘에 도달하면 알려줍니다."}
+obj["NOTIFICATION_ESSENCE_CHANGE"]	= { label="정수 변경", tooltip="정수가 변경될 때 알려줍니다."}
+obj["NOTIFICATION_ESSENCE_FULL"]		= { label="정수 최대", tooltip="최대 정수에 도달하면 알려줍니다."}
 obj["NOTIFICATION_HONOR_GAIN"]			= { label="명예 획득", tooltip="명예 점수 획득을 알려줍니다.."}
 obj["NOTIFICATION_REP_GAIN"]			= { label="평판 상승", tooltip="평판 수치 획득을 알려줍니다.."}
 obj["NOTIFICATION_REP_LOSS"]			= { label="평판 하락", tooltip="평판 수치 감소를 알려줍니다."}

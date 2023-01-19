@@ -1,32 +1,56 @@
-# Version: 2.55
-2022/10/27 Released
+# Version: 3.20
+2023/01/18 Released
 ## ❗ Important
-- Due to Blizzard's bug, if you encounter the button can't be clicked, please try to change the [Button Fix] option in WindTools Options - Info - Help.
+- Compatible with ElvUI 13.18.
+- Minimum ElvUI version changed to 13.18.
+- [Event Tracker] Use a new logic to fix the inaccurate time of fishing net.
+- [Event Tracker] If you think the bonus fishing net cannot be recorded correctly, please use the command '/wtet findNet' near the fishing net, and send the output to me via Discord.
+## ✳️ New
+- Add [Class Helper] module, which provides some class-related features. Currently only Death Strike Estimator for BDK.
 ## 💪 Improvement
-- [Square Minimap] Fix the function.
+- [Paragon Reputation] Update data for Dragonflight.
+- [Announcement] Disable ElvUI's interrupt announcement when interrupt announcement is enabled.
 
 ------
-# 版本: 2.55
-2022/10/27 发布
+# 版本: 3.20
+2023/01/18 发布
 ## ❗ 重要
-- 由于暴雪的 Bug, 如果你遇到了按钮无法点击的情况, 请尝试在设定 - 信息 - 帮助中修改 [按钮修复] 选项.
+- 适配 ElvUI 13.18 版本改动.
+- 最低 ElvUI 支持版本更改为 13.18.
+- [事件追踪器] 使用一个新的逻辑以解决渔网的时间不准确的问题.
+- [事件追踪器] 如果你遇到额外渔网无法被正确记录, 请在渔网附近使用 '/wtet findNet' 命令, 并将输出内容通过 Discord 发送给我.
+## ✳️ 新增
+- 新增 [职业助手] 模块, 用于提供一些职业相关的功能. 暂时只有鲜血死亡骑士的灵打治疗量预估功能.
 ## 💪 改善
-- [矩形小地图] 功能修复.
+- [巅峰声望] 更新巨龙时代版本数据.
+- [通告] 在启用打断通告的情况下, 自动关闭 ElvUI 的打断通告.
 
 ------
-# 版本: 2.55
-2022/10/27 發布
+# 版本: 3.20
+2023/01/18 發布
 ## ❗ 重要
-- 由於暴雪的 Bug, 如果你遇到了按鍵無法點擊的情況, 請嘗試在設定 - 資訊 - 幫助中修改 [按鍵修復] 選項.
+- 適配 ElvUI 13.18 版本改動.
+- 最低 ElvUI 支援版本更改為 13.18.
+- [事件追蹤器] 使用一個新的邏輯以解決漁網的時間不準確的問題.
+- [事件追蹤器] 如果你遇到額外漁網無法被正確記錄, 請在漁網旁使用 '/wtet findNet' 命令, 並將輸出內容透過 Discord 發送給我.
+## ✳️ 新增
+- 新增 [職業助手] 模組, 用於提供一些職業相關的功能. 暫時只有血魄死亡騎士的死打治療量預估功能.
 ## 💪 改善
-- [矩形小地圖] 功能修復.
+- [巔峰聲望] 更新巨龍崛起版本資料.
+- [通告] 在啟用打斷通告的情況下, 自動關閉 ElvUI 的打斷通告.
 
 ------
-# 버전: 2.55
-2022/10/27 Released
+# 버전: 3.20
+2023/01/18 Released
 ## ❗ 중요 사항
-- Due to Blizzard's bug, if you encounter the button can't be clicked, please try to change the [Button Fix] option in WindTools Options - Info - Help.
+- Compatible with ElvUI 13.18.
+- Minimum ElvUI version changed to 13.18.
+- [Event Tracker] Use a new logic to fix the inaccurate time of fishing net.
+- [Event Tracker] If you think the bonus fishing net cannot be recorded correctly, please use the command '/wtet findNet' near the fishing net, and send the output to me via Discord.
+## ✳️ 신규 사항
+- Add [Class Helper] module, which provides some class-related features. Currently only Death Strike Estimator for BDK.
 ## 💪 개선 사항
-- [Square Minimap] Fix the function.
+- [Paragon Reputation] Update data for Dragonflight.
+- [Announcement] Disable ElvUI's interrupt announcement when interrupt announcement is enabled.
 
 ------

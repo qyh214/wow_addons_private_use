@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("BSMTrash", "DBM-Party-WoD", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20230117063410")
 --mod:SetModelID(47785)
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED 164597 151548 151697 151965 151558 151581",
-	"SPELL_CAST_START 152298 151447 151545"
+	"SPELL_AURA_APPLIED 164597 151548 151697 151965",
+	"SPELL_CAST_START 152298 151447 151545 151558 151581"
 )
 local warnCinderSplash					= mod:NewSpellAnnounce(152298, 3)
 
@@ -47,7 +47,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 151447 then
 		specWarnCrush:Show()
 		specWarnCrush:Play("shockwave")
-	elseif spellId == 151545 and self:IsValidWarning(args.sourceGUID) and self:CheckInterruptFilter(args.sourceGUID, false, true) then--Antispam
+	elseif spellId == 151545 and self:IsValidWarning(args.sourceGUID) and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnRoar:Show(args.sourceName)
 		specWarnRoar:Play("kickcast")
 	elseif spellId == 151558 and self:IsValidWarning(args.sourceGUID) and self:CheckInterruptFilter(args.sourceGUID, false, true) then

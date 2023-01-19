@@ -4,41 +4,31 @@ local pairs, next, type, ipairs, setmetatable, mfloor, mmax = pairs, next, type,
 local CreateFrame, GameFontNormalSmall = CreateFrame, GameFontNormalSmall
 local DBM = DBM
 
-local isDragonflight = DBM:GetTOC() >= 100000
+local isModernAPI = DBM:GetTOC() > 30400
 
 local defaultFont, defaultFontSize = GameFontHighlightSmall:GetFont()
 
-local hack = OptionsList_OnLoad
-function OptionsList_OnLoad(self, ...)
-	if self:GetName() ~= "DBM_GUI_DropDown" then
-		hack(self, ...)
-	end
-end
-
-local tabFrame1
-if isDragonflight then
-	tabFrame1 = CreateFrame("ScrollFrame", "DBM_GUI_DropDown", _G["DBM_GUI_OptionsFrame"], "BackdropTemplate,UIPanelScrollFrameTemplate")
-else
-	-- Temporary hack, till I get both versions running smoothly on the new system
-	tabFrame1 = CreateFrame("Frame", "DBM_GUI_DropDown", _G["DBM_GUI_OptionsFrame"], "BackdropTemplate,OptionsFrameListTemplate")
-end
-tabFrame1:Hide()
-tabFrame1:SetFrameStrata("TOOLTIP")
-tabFrame1.offset = 0
+local tabFrame1 = CreateFrame("ScrollFrame", "DBM_GUI_DropDown", _G["DBM_GUI_OptionsFrame"], "DBM_GUI_DropDownTemplate")
 tabFrame1.backdropInfo = {
-	--bgFile		= "Interface\\ChatFrame\\ChatFrameBackground", -- 130937
+	bgFile		= "Interface\\ChatFrame\\ChatFrameBackground", -- 130937
 	edgeFile	= "Interface\\Tooltips\\UI-Tooltip-Border", -- 137057
 	tile		= true,
 	tileSize	= 16,
 	edgeSize	= 16,
 	insets		= { left = 3, right = 3, top = 5, bottom = 3 }
 }
+if not isModernAPI then
+	tabFrame1.backdropInfo.bgFile = nil
+end
+tabFrame1:Hide()
+tabFrame1:SetFrameStrata("TOOLTIP")
+tabFrame1.offset = 0
 tabFrame1:ApplyBackdrop()
 tabFrame1:SetBackdropColor(0.1, 0.1, 0.1, 0.6)
 tabFrame1:SetBackdropBorderColor(0.4, 0.4, 0.4)
 
 -- Temporary hack, till I get both versions running smoothly on the new system
-local tabFrame1List = isDragonflight and tabFrame1 or _G[tabFrame1:GetName() .. "List"]
+local tabFrame1List = _G[tabFrame1:GetName() .. "List"]
 tabFrame1List:SetScript("OnVerticalScroll", function(self, offset)
 	local scrollbar = _G[self:GetName() .. "ScrollBar"]
 	local _, max = scrollbar:GetMinMaxValues()
@@ -178,19 +168,11 @@ function tabFrame1:Refresh()
 	end
 	self:SetHeight(#self.buttons * 16 + 8)
 	if #self.dropdown.values > #self.buttons then
-		if isDragonflight then
-			tabFrame1ScrollBar:Show()
-		else
-			tabFrame1List:Show()
-		end
+		tabFrame1List:Show()
 		tabFrame1ScrollBar:SetMinMaxValues(0, valuesWOButtons)
 	else
 		if #self.dropdown.values < #self.buttons then
-			if isDragonflight then
-				tabFrame1ScrollBar:Hide()
-			else
-				tabFrame1List:Hide()
-			end
+			tabFrame1List:Hide()
 			self:SetHeight(#self.dropdown.values * 16 + 8)
 		end
 		tabFrame1ScrollBar:SetValue(0)

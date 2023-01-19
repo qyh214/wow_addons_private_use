@@ -767,6 +767,7 @@ local function GetCompleteItemData(itemLink)
     local data, anyMatch;
     local tex, texID;
     local gemName, gemLink, gemEffect, lineIndex;
+    local requestSubData;
 
     for i = 1, 3 do
         tex = _G["NarciVirtualTooltipTexture"..i];
@@ -792,6 +793,11 @@ local function GetCompleteItemData(itemLink)
                 data.socketInfo = {};
             end
             data.socketInfo[i] = {texID, gemName, gemLink, gemEffect};
+            if gemLink and not requestSubData then
+                if gemEffect and gemEffect == "" then
+                    requestSubData = true;
+                end
+            end
         end
     end
 
@@ -992,7 +998,7 @@ local function GetCompleteItemData(itemLink)
         end
     end
 
-    return data
+    return data, requestSubData
 end
 
 local function ClearTooltipTexture()
@@ -1362,6 +1368,31 @@ local function GetPvpTalentTooltip(talentID, isInspecting, specGroupIndex, slotI
 end
 
 NarciAPI.GetPvpTalentTooltip = GetPvpTalentTooltip;
+
+
+local function VoidFunc()
+end
+
+NarciAPI.GetBagItemSubText = VoidFunc;
+NarciAPI.GetBagItemSubText = VoidFunc;
+
+
+local function GetDominationShardEffect(item)
+    if not item then return end;
+
+    if type(item) == "number" then
+        TP:SetItemByID(item);
+    else
+        TP:SetHyperlink(item);
+    end
+
+    local line = _G["NarciVirtualTooltipTextLeft5"];
+    if line then
+        return line:GetText();
+    end
+end
+
+NarciAPI.GetDominationShardEffect = GetDominationShardEffect;
 
 
 --[[

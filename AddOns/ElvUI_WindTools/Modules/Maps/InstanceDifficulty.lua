@@ -1,5 +1,5 @@
 local W, F, E, L = unpack(select(2, ...))
-local ID = W:NewModule("InstanceDifficulty", "AceEvent-3.0")
+local ID = W:NewModule("InstanceDifficulty", "AceEvent-3.0", "AceHook-3.0")
 local M = E:GetModule("Minimap")
 
 local _G = _G
@@ -9,6 +9,7 @@ local select = select
 
 local CreateFrame = CreateFrame
 local GetInstanceInfo = GetInstanceInfo
+local MinimapCluster = MinimapCluster
 local IsInInstance = IsInInstance
 
 local C_ChallengeMode_GetActiveKeystoneInfo = C_ChallengeMode.GetActiveKeystoneInfo
@@ -78,11 +79,7 @@ function ID:UpdateFrame()
         self.frame.text:SetText("")
     end
 
-    if not inInstance then
-        self.frame:Hide()
-    else
-        self.frame:Show()
-    end
+    self.frame:SetShown(inInstance)
 end
 
 function ID:ConstructFrame()
@@ -92,7 +89,7 @@ function ID:ConstructFrame()
 
     local frame = CreateFrame("Frame", "WTInstanceDifficultyFrame", _G.Minimap)
     frame:Size(30, 20)
-    frame:Point("TOPLEFT", M.holder, "TOPLEFT", 10, -10)
+    frame:Point("TOPLEFT", M.MapHolder, "TOPLEFT", 10, -10)
 
     local text = frame:CreateFontString(nil, "OVERLAY")
     F.SetFontWithDB(text, self.db.font)
@@ -116,22 +113,12 @@ function ID:ConstructFrame()
     self.frame = frame
 end
 
-function ID:UpdateBlizzardDifficulty()
-    if not self or not self.db or not self.db.hideBlizzard then
+function ID:HideBlizzardDifficulty(difficultyFrame, isShown)
+    if not self.db or not self.db.hideBlizzard or not isShown then
         return
     end
 
-    local frames = {
-        "MiniMapInstanceDifficulty",
-        "GuildInstanceDifficulty",
-        "MiniMapChallengeMode"
-    }
-
-    for _, v in pairs(frames) do
-        if _G[v] then
-            _G[v]:Kill()
-        end
-    end
+    difficultyFrame:Hide()
 end
 
 function ID:Initialize()
@@ -142,7 +129,18 @@ function ID:Initialize()
     end
 
     self:ConstructFrame()
-    self:UpdateBlizzardDifficulty()
+
+    local difficulty = MinimapCluster.InstanceDifficulty
+    local instanceFrame = difficulty.Instance
+    local guildFrame = difficulty.Guild
+    local challengeModeFrame = difficulty.ChallengeMode
+
+    for _, frame in pairs({instanceFrame, guildFrame, challengeModeFrame}) do
+        if frame then
+            frame:Hide()
+            self:SecureHook(frame, "SetShown", "HideBlizzardDifficulty")
+        end
+    end
 
     self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateFrame")
     self:RegisterEvent("CHALLENGE_MODE_START", "UpdateFrame")

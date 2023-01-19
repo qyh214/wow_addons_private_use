@@ -131,9 +131,10 @@ O.information = {
                 format(L["Thank you for using %s!"], L["Wind Dungeon Helper"]),
                 format(L["%s is a plugin designed for dungeon combats."], L["Wind Dungeon Helper"]),
                 format(
-                    L["You can send your suggestions or bugs via %s, %s, %s, and the thread in %s."],
+                    L["You can send your suggestions or bugs via %s, %s, %s, %s and the thread in %s."],
                     L["QQ Group"],
                     L["Discord"],
+                    L["KOOK"],
                     L["Github"],
                     L["NGA.cn"]
                 )
@@ -193,7 +194,7 @@ O.information = {
                             "https://nga.178.com/read.php?tid=15265896"
                         )
                     end,
-                    width = 0.7
+                    width = 0.6
                 },
                 discord = {
                     order = 2,
@@ -208,7 +209,7 @@ O.information = {
                             discordURL
                         )
                     end,
-                    width = 0.7
+                    width = 0.6
                 },
                 qq = {
                     order = 3,
@@ -223,10 +224,25 @@ O.information = {
                             "336069019"
                         )
                     end,
-                    width = 0.7
+                    width = 0.6
+                },
+                kook = {
+                    order = 4,
+                    type = "execute",
+                    name = L["KOOK"],
+                    image = W.Media.Icons.kook,
+                    func = function()
+                        StaticPopup_Show(
+                            "WIND_DUNGEON_HELPER_EDITBOX",
+                            L["Wind Dungeon Helper"] .. " - " .. L["KOOK"],
+                            nil,
+                            "https://kook.top/1wJrBo"
+                        )
+                    end,
+                    width = 0.6
                 },
                 github = {
-                    order = 4,
+                    order = 5,
                     type = "execute",
                     name = L["Github"],
                     image = W.Media.Icons.github,
@@ -238,7 +254,7 @@ O.information = {
                             "https://github.com/fang2hou/WindDungeonHelper/issues"
                         )
                     end,
-                    width = 0.7
+                    width = 0.6
                 }
             }
         }

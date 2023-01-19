@@ -167,6 +167,8 @@ do
 	local g_color = { .5, .5, .5, .6 }
 
 	-- Frame methods
+	-- https://www.wowace.com/projects/xloot/issues/205 is not reproducible, but user gets error reliably
+	local alphaworks = false
 	local function SetBorderColor(self, r, g, b, a)
 		for i, x in pairs(self._skin_borders) do
 			x:SetVertexColor(r, g, b, a or 1)
@@ -178,7 +180,7 @@ do
 	end
 
 	local function SetGradientColor(self, r, g, b, a)
-		self.gradient:SetGradientAlpha('VERTICAL', .1, .1, .1, 0, r, g, b, a)
+		self.gradient:SetGradient('VERTICAL', CreateColor(0.1, 0.1, 0.1, 0), CreateColor(r, g, b, a))
 	end
 
 	function lib:Gradient(frame)

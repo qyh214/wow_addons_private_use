@@ -1,4 +1,6 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
+local C = W.Utilities.Color
+local async = W.Utilities.Async
 local options = W.options.misc.args
 local LSM = E.Libs.LSM
 local M = W.Modules.Misc
@@ -7,6 +9,7 @@ local CT = W:GetModule("ChatText")
 local GB = W:GetModule("GameBar")
 local AM = W:GetModule("Automation")
 local SA = W:GetModule("SpellActivationAlert")
+local LL = W:GetModule("LFGList")
 
 local format = format
 local select = select
@@ -16,8 +19,6 @@ local tostring = tostring
 local GetClassColor = GetClassColor
 local GetClassInfo = GetClassInfo
 local GetNumClasses = GetNumClasses
-local Item = Item
-local Spell = Spell
 
 local C_CVar_GetCVar = C_CVar.GetCVar
 local C_CVar_GetCVarBool = C_CVar.GetCVarBool
@@ -73,20 +74,32 @@ options.general = {
                 M:SkipCutScene()
             end
         },
-        autoScreenshot = {
+        onlyStopWatched = {
             order = 5,
+            type = "toggle",
+            name = L["Only Watched"],
+            desc = L["Only skip watched cut scene. (some cut scene can't be skipped)"],
+            hidden = function()
+                return not E.private.WT.misc.skipCutScene
+            end,
+            set = function(info, value)
+                E.private.WT.misc[info[#info]] = value
+            end
+        },
+        autoScreenshot = {
+            order = 6,
             type = "toggle",
             name = L["Auto Screenshot"],
             desc = L["Screenshot after you earned an achievement automatically."]
         },
         moveSpeed = {
-            order = 6,
+            order = 7,
             type = "toggle",
             name = L["Move Speed"],
             desc = L["Show move speed in character panel."]
         },
         hideCrafter = {
-            order = 7,
+            order = 8,
             type = "toggle",
             name = L["Hide Crafter"],
             desc = L["Hide crafter name in the item tooltip."],
@@ -98,7 +111,7 @@ options.general = {
             end
         },
         noLootPanel = {
-            order = 8,
+            order = 9,
             type = "toggle",
             name = L["No Loot Panel"],
             desc = L["Disable Blizzard loot info which auto showing after combat overed."],
@@ -111,7 +124,7 @@ options.general = {
             end
         },
         hotKeyAboveCD = {
-            order = 9,
+            order = 10,
             type = "toggle",
             name = L["HotKey Above CD"],
             desc = format(
@@ -122,7 +135,7 @@ options.general = {
             )
         },
         guildNewsItemLevel = {
-            order = 10,
+            order = 11,
             type = "toggle",
             name = L["Guild News IL"],
             desc = L["Show item level of each item in guild news."]
@@ -318,21 +331,8 @@ options.cvars = {
                 }
             }
         },
-        tooltips = {
-            order = 4,
-            type = "group",
-            inline = true,
-            name = L["Tooltips"],
-            args = {
-                alwaysCompareItems = {
-                    order = 1,
-                    type = "toggle",
-                    name = L["Auto Compare"]
-                }
-            }
-        },
         mouse = {
-            order = 5,
+            order = 4,
             type = "group",
             inline = true,
             name = L["Mouse"],
@@ -354,7 +354,7 @@ options.cvars = {
             }
         },
         nameplate = {
-            order = 6,
+            order = 5,
             type = "group",
             inline = true,
             name = L["Nameplate"],
@@ -398,6 +398,26 @@ options.cvars = {
                     type = "toggle",
                     width = 1.5,
                     name = L["Stack Nameplates"]
+                }
+            }
+        },
+        misc = {
+            order = 6,
+            type = "group",
+            inline = true,
+            name = L["Misc"],
+            args = {
+                alwaysCompareItems = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Auto Compare"],
+                    width = 1.5
+                },
+                autoOpenLootHistory = {
+                    order = 2,
+                    type = "toggle",
+                    name = L["Auto Open Loot History"],
+                    width = 1.5
                 }
             }
         }
@@ -580,6 +600,20 @@ options.mute = {
                     desc = L["Mute crying sounds of all races."] ..
                         "\n|cffff3860" .. L["It will affect the cry emote sound."] .. "|r",
                     width = 1.3
+                },
+                ["Dragon"] = {
+                    order = 3,
+                    type = "toggle",
+                    name = L["Dragon"],
+                    desc = L["Mute the sound of dragons."],
+                    width = 1.3
+                },
+                ["Jewelcrafting"] = {
+                    order = 4,
+                    type = "toggle",
+                    name = L["Jewelcrafting"],
+                    desc = L["Mute the sound of jewelcrafting."],
+                    width = 1.3
                 }
             }
         }
@@ -588,9 +622,9 @@ options.mute = {
 
 do
     for id in pairs(V.misc.mute.mount) do
-        local spell = Spell:CreateFromSpellID(id)
-        spell:ContinueOnSpellLoad(
-            function()
+        async.WithSpellID(
+            id,
+            function(spell)
                 local icon = spell:GetSpellTexture()
                 local name = spell:GetSpellName()
 
@@ -618,9 +652,9 @@ do
     }
 
     for name, data in pairs(itemList) do
-        local item = Item:CreateFromItemID(data.id)
-        item:ContinueOnItemLoad(
-            function()
+        async.WithItemID(
+            data.id,
+            function(item)
                 local icon = item:GetItemIcon()
                 local name = item:GetItemName()
                 local color = item:GetItemQualityColor()
@@ -678,6 +712,7 @@ do
     local examples = {}
 
     examples.health = {
+        order = 1,
         name = L["Health"],
         absorbsLong = {
             order = 1,
@@ -742,6 +777,7 @@ do
     }
 
     examples.power = {
+        order = 2,
         name = L["Power"],
         noSign = {
             tag = "[power:percent-nosign]",
@@ -758,6 +794,7 @@ do
     }
 
     examples.range = {
+        order = 3,
         name = L["Range"],
         normal = {
             tag = "[range]",
@@ -770,6 +807,7 @@ do
     }
 
     examples.color = {
+        order = 4,
         name = L["Color"],
         player = {
             order = 0,
@@ -804,28 +842,74 @@ do
         }
     end
 
-    local index = 11
+    for index, style in pairs(F.GetClassIconStyleList()) do
+        examples["classIcon_" .. style] = {
+            order = 5 + index,
+            name = L["Class Icon"] .. " - " .. style,
+            ["PLAYER_ICON"] = {
+                order = 1,
+                type = "description",
+                image = function()
+                    return F.GetClassIconWithStyle(E.myclass, style), 64, 64
+                end,
+                width = 1
+            },
+            ["PLAYER_TAG"] = {
+                order = 2,
+                text = L["The class icon of the player's class"],
+                tag = "[classicon-" .. style .. "]",
+                width = 1.5
+            }
+        }
+
+        for i = 1, GetNumClasses() do
+            local upperText = select(2, GetClassInfo(i))
+            local coloredClassName = GetClassColorString(upperText) .. className[upperText] .. "|r"
+            examples["classIcon_" .. style][upperText .. "_ALIGN"] = {
+                order = 3 * i,
+                type = "description"
+            }
+            examples["classIcon_" .. style][upperText .. "_ICON"] = {
+                order = 3 * i + 1,
+                type = "description",
+                image = function()
+                    return F.GetClassIconWithStyle(upperText, style), 64, 64
+                end,
+                width = 1
+            }
+            examples["classIcon_" .. style][upperText .. "_TAG"] = {
+                order = 3 * i + 2,
+                text = coloredClassName,
+                tag = "[classicon-" .. style .. ":" .. strlower(upperText) .. "]",
+                width = 1.5
+            }
+        end
+    end
+
     for cat, catTable in pairs(examples) do
         options.tags.args[cat] = {
-            order = index,
+            order = catTable.order,
             type = "group",
             name = catTable.name,
             args = {}
         }
-        index = index + 1
 
         local subIndex = 1
         for key, data in pairs(catTable) do
-            if key ~= "name" then
+            if not F.In(key, {"name", "order"}) then
                 options.tags.args[cat].args[key] = {
                     order = data.order or subIndex,
-                    type = "input",
-                    width = "full",
-                    name = data.text,
+                    type = data.type or "input",
+                    width = data.width or "full",
+                    name = data.text or "",
                     get = function()
                         return data.tag
                     end
                 }
+
+                if data.image then
+                    options.tags.args[cat].args[key].image = data.image
+                end
                 subIndex = subIndex + 1
             end
         end
@@ -1273,8 +1357,32 @@ options.gameBar = {
                 }
             }
         },
-        home = {
+        friends = {
             order = 13,
+            type = "group",
+            name = L["Friends"],
+            disabled = function()
+                return not E.db.WT.misc.gameBar.enable
+            end,
+            get = function(info)
+                return E.db.WT.misc.gameBar.friends[info[#info]]
+            end,
+            set = function(info, value)
+                E.db.WT.misc.gameBar.friends[info[#info]] = value
+                GB:UpdateHomeButton()
+                GB:UpdateButtons()
+            end,
+            args = {
+                showAllFriends = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Show All Friends"],
+                    desc = L["Show all friends rather than only friends who currently playing WoW."]
+                }
+            }
+        },
+        home = {
+            order = 14,
             type = "group",
             name = L["Home"],
             disabled = function()
@@ -1291,7 +1399,7 @@ options.gameBar = {
             args = {}
         },
         leftButtons = {
-            order = 14,
+            order = 15,
             type = "group",
             name = L["Left Panel"],
             disabled = function()
@@ -1372,6 +1480,12 @@ do
     SampleStrings.ffxiv = icons
 
     icons = ""
+    icons = icons .. E:TextureString(W.Media.Icons.philModTank, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.philModHealer, ":16:16") .. " "
+    icons = icons .. E:TextureString(W.Media.Icons.philModDPS, ":16:16")
+    SampleStrings.philMod = icons
+
+    icons = ""
     icons = icons .. E:TextureString(W.Media.Icons.hexagonTank, ":16:16") .. " "
     icons = icons .. E:TextureString(W.Media.Icons.hexagonHealer, ":16:16") .. " "
     icons = icons .. E:TextureString(W.Media.Icons.hexagonDPS, ":16:16")
@@ -1417,7 +1531,16 @@ options.lfgList = {
                 feature = {
                     order = 1,
                     type = "description",
-                    name = L["Reskinning the role icons."],
+                    name = function()
+                        if LL.StopRunning then
+                            return format(
+                                "|cffff3860" .. L["Because of %s, this module will not be loaded."] .. "|r",
+                                LL.StopRunning
+                            )
+                        else
+                            return L["QoLs for LFG list."]
+                        end
+                    end,
                     fontSize = "medium"
                 }
             }
@@ -1442,14 +1565,20 @@ options.lfgList = {
                 E:StaticPopup_Show("PRIVATE_RL")
             end,
             args = {
-                reskin = {
+                leader = {
                     order = 1,
+                    type = "toggle",
+                    name = L["Leader"],
+                    desc = L["Add an indicator for the leader."]
+                },
+                reskin = {
+                    order = 2,
                     type = "toggle",
                     name = L["Reskin Icon"],
                     desc = L["Change role icons."]
                 },
                 pack = {
-                    order = 2,
+                    order = 3,
                     type = "select",
                     name = L["Style"],
                     desc = L["Change the icons that indicate the role."],
@@ -1457,6 +1586,7 @@ options.lfgList = {
                         return not E.private.WT.misc.lfgList.icon.reskin
                     end,
                     values = {
+                        SPEC = L["Specialization"],
                         SQUARE = L["Square"],
                         HEXAGON = SampleStrings.hexagon,
                         FFXIV = SampleStrings.ffxiv,
@@ -1466,12 +1596,12 @@ options.lfgList = {
                     }
                 },
                 border = {
-                    order = 3,
+                    order = 4,
                     type = "toggle",
                     name = L["Border"]
                 },
                 size = {
-                    order = 4,
+                    order = 5,
                     type = "range",
                     name = L["Size"],
                     min = 1,
@@ -1479,7 +1609,7 @@ options.lfgList = {
                     step = 1
                 },
                 alpha = {
-                    order = 5,
+                    order = 6,
                     type = "range",
                     name = L["Alpha"],
                     min = 0,
@@ -1491,7 +1621,7 @@ options.lfgList = {
         line = {
             order = 4,
             type = "group",
-            name = L["Line"],
+            name = L["Class Line"],
             disabled = function()
                 return not E.private.WT.misc.lfgList.enable
             end,
@@ -1557,9 +1687,68 @@ options.lfgList = {
                     step = 0.01
                 }
             }
+        },
+        additionalText = {
+            order = 5,
+            type = "group",
+            name = L["Additional Text"],
+            disabled = function()
+                return not E.private.WT.misc.lfgList.enable
+            end,
+            get = function(info)
+                return E.private.WT.misc.lfgList.additionalText[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc.lfgList.additionalText[info[#info]] = value
+                E:StaticPopup_Show("PRIVATE_RL")
+            end,
+            args = {
+                enable = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Enable"],
+                    desc = L["Add some additional informaiton into title or description."],
+                    width = "full"
+                },
+                target = {
+                    order = 2,
+                    type = "select",
+                    name = L["Target"],
+                    values = {
+                        TITLE = L["Title"],
+                        DESC = L["Description"]
+                    },
+                    width = 0.8
+                },
+                shortenDescription = {
+                    order = 3,
+                    type = "toggle",
+                    name = L["Shorten Description"],
+                    desc = L["Remove useless part from description."],
+                    width = 1.5
+                },
+                template = {
+                    order = 4,
+                    type = "input",
+                    name = L["Template"],
+                    desc = function()
+                        return format(
+                            "%s = %s\n%s = %s\n%s = %s",
+                            C.StringByTemplate("{{score}}", "primary"),
+                            L["Leader Score"],
+                            C.StringByTemplate("{{best}}", "primary"),
+                            L["Leader Best Run"],
+                            C.StringByTemplate("{{text}}", "primary"),
+                            L["Original Text"]
+                        )
+                    end,
+                    width = "full"
+                }
+            }
         }
     }
 }
+
 options.spellActivationAlert = {
     order = 9,
     type = "group",

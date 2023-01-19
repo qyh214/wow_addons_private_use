@@ -1,16 +1,16 @@
 --[[
 Name: LibChatHandler-1.0
-Revision: $Revision: 18 $
-Date: $Date: 2016-07-19 14:36:20 +0000 (Tue, 19 Jul 2016) $
+Revision: r25
+Date: 2022-11-21T21:48:34Z
 Author: Pazza <Bronzebeard> (johnlangone@gmail.com)
 Website: http://www.wimaddon.com
 Documentation: http://www.wimaddon.com/wiki/LibChatHandler-1.0
-svn: svn://svn.curseforge.net/wow/libchathandler/mainline/trunk
+svn: https://github.com/Pazza/LibChatHandler-1.0/
 Description: Event Model Control View (MCV) for handling chat events.
 License: LGPL v2.1
 ]]
 
-local MAJOR, MINOR = "LibChatHandler-1.0", tonumber(("$Revision: 18 $"):match("(%d+)"));
+local MAJOR, MINOR = "LibChatHandler-1.0", tonumber(("r25"):match("(%d+)"));
 -- check if lib is already loaded and check versioning -- update as needed.
 local prevLib = LibStub:GetLibrary("LibChatHandler-1.0", 1); -- load library silently.
 local prevDelegatedEvents;

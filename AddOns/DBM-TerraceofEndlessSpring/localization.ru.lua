@@ -14,15 +14,20 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnGroupOrder		= "Объявлять ротацию для $spell:118191<br/>(Опция расчитана на стратегию для 25-ппл: 5,2,2,2, и т.д.)",
-	specWarnYourGroup	= "Спец-предупреждение, когда ваша группа должна получить<br/>$spell:118191 (только для 25-ппл)",
-	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Показывает всех, если на вас дебафф, иначе только игроков с дебаффом)"
+	warnGroupOrder		= "Объявлять ротацию для $spell:118191<br/>(Опция расчитана на стратегию для 25 человек: 5,2,2,2, и т.д.)",
+	specWarnYourGroup	= "Спецпредупреждение, когда Ваша группа должна получить<br/>$spell:118191 (только для 25 человек)",
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(Показывает всех, если на Вас дебафф, иначе только игроков с дебаффом)",
+	SetIconOnPrison		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(117436)
 })
 
 ------------
 -- Tsulong --
 ------------
 L = DBM:GetModLocalization(742)
+
+L:SetOptionLocalization({
+	warnLightOfDay	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(123716)
+})
 
 L:SetMiscLocalization{
 	Victory	= "Спасибо вам, незнакомцы. Я свободен."
@@ -38,12 +43,12 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerSpecialCD	= "Восст. Спец-способность (%d)"
+	timerSpecialCD	= "Восст. Спецспособность (%d)"
 })
 
 L:SetOptionLocalization({
 	warnHideOver	= "Предупреждение о появлении босса после $spell:123244",
-	timerSpecialCD	= "Отсчет времени до следующей спец-способности",
+	timerSpecialCD	= "Отсчет времени до следующей спецспособности",
 	RangeFrame		= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(Показывает всех во время $spell:123244, иначе только танков)"
 })
 
@@ -64,15 +69,18 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	timerSpecialAbilityCD	= "Следующая спец-способность",
+	timerSpecialAbilityCD	= "Следующая спецспособность",
 	timerSpoHudCD			= "Восст. Страх / Изводень",
 	timerSpoStrCD			= "Восст. Изводень / Клив",
 	timerHudStrCD			= "Восст. Страх / Клив"
 })
 
 L:SetOptionLocalization({
-	warnBreathOnPlatform		= "Предупреждать о $spell:119414 когда вы на платформе<br/>(не рекомендуется, для рейд лидера)",
-	specWarnBreathOfFearSoon	= "Предупреждать заранее о $spell:119414, если на вас нет баффа $spell:117964",
-	specWarnMovement			= "Спец-предупреждение куда двигаться при выстрелах $spell:120047",
-	timerSpecialAbility			= "Отсчет времени до следующей спец-способности на второй фазе"
+	warnThrash					= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
+	warnBreathOnPlatform		= "Предупреждать о $spell:119414, когда Вы на платформе<br/>(не рекомендуется, для рейд лидера)",
+	specWarnBreathOfFearSoon	= "Предупреждать заранее о $spell:119414, если на Вас нет баффа $spell:117964",
+	specWarnMovement			= "Спецпредупреждение, куда двигаться при выстрелах $spell:120047",
+	timerSpecialAbility			= "Отсчет времени до следующей спецспособности на второй фазе",
+	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(2, 119519),
+	SetIconOnHuddle				= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(120629)
 })

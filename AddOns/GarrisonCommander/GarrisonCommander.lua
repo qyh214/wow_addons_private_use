@@ -122,13 +122,12 @@ local GSF=GSF
 local GMFRewardPage=								GMF.MissionComplete
 local GMFMissions=									GMF.MissionTab.MissionList
 local GMFRewardSplash=								GMF.MissionTab.MissionList.CompleteDialog
-local GMFMissionsListScrollFrame=					GMF.MissionTab.MissionList.listScroll
-local GMFMissionListButtons=						GMF.MissionTab.MissionList.listScroll.buttons
-local GMFMissionsListScrollFrameScrollChild=		GMF.MissionTab.MissionList.listScroll.scrollChild
+local GMFMissionsListScrollFrame=					GMF.MissionTab.MissionList.ScropllBox
+local GMFMissionsListScrollFrameScrollChild=		GMF.MissionTab.MissionList.ScrollBox.scrollChild
 local GMFFollowers=									GMF.FollowerList
 local GMFMissionFrameFollowers=						GMFFollowers
 local GMFFollowersListScrollFrame=					GMFFollowers.listScroll
-local GMFFollowersListScrollFrameScrollChild=		GMFFollowers.listScroll.scrollChild
+local GMFFollowersListScrollFrameScrollChild=		GMFFollowers.ScrollBox.scrollChild
 local GMFMissionPage=								GMF.MissionTab.MissionPage
 --dictionary
 local IGNORE_UNAIVALABLE_FOLLOWERS=IGNORE.. ' ' .. UNAVAILABLE
@@ -400,7 +399,7 @@ function addon:OnInitialized()
 	self:SafeRegisterEvent("GARRISON_MISSION_NPC_CLOSED")
 	self:SafeRegisterEvent("GARRISON_MISSION_STARTED")
 	self:SafeRegisterEvent("QUEST_TURNED_IN")
-	for _,b in ipairs(GMF.MissionTab.MissionList.listScroll.buttons) do
+	for _,b in GMF.MissionTab.MissionList.ScrollBox:EnumerateFrames() do
 		local scale=0.8
 		local f,h,s=b.Title:GetFont()
 		b.Title:SetFont(f,h*scale,s)
@@ -1055,6 +1054,7 @@ end
 
 local helpwindow -- pseudo static
 function addon:ShowHelpWindow(button)
+  print("hewlp")
 	addon:Help()
 end
 function addon:Toggle(button)
@@ -3107,9 +3107,9 @@ function addon:GarrisonMissionFrame_SelectTab(frame,tab)
 	print(frame,tab)
 --@end-debug@]===]
 	addon:RefreshFollowerStatus()
-	for i=1,#GMFMissionListButtons do
-		GMFMissionListButtons.lastMissionID=nil
-	end
+	--for i=1,#GMFMissionListButtons do
+	--	GMFMissionListButtons.lastMissionID=nil
+	--end
 	lastTab=tab
 	if (HD) then addon:ResetSinks() end
 	if GMF.tabMC then

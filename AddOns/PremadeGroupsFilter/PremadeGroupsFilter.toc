@@ -1,6 +1,6 @@
-## Interface: 100000
+## Interface: 100002
 ## Title: Premade Groups Filter
-## Version: 3.0.1
+## Version: 3.5.0
 ## Notes: Allows filtering of premade groups using an UI or advanced filter expressions.
 ## Notes-deDE: Ermöglicht das Filtern organisierter Gruppen mithilfe der Benutzeroberfläche oder erweiterter Filterausdrücke.
 ## Notes-frFR: Permet de filtrer des groupes prédéfinis à l'aide d'une interface utilisateur ou d'expressions de filtre avancées.
@@ -10,7 +10,7 @@
 ## Notes-zhCN: 允许使用用户界面或高级过滤器表达式过滤预制组。
 ## Notes-zhTW: 允許使用用戶界面或高級過濾器表達式過濾預製組。
 ## Author: Elotheon-Arthas-EU
-## SavedVariables:
+## SavedVariables: PremadeGroupsFilterSettings
 ## SavedVariablesPerCharacter: PremadeGroupsFilterState
 
 Init.lua
@@ -22,16 +22,27 @@ Localization\zhCN.lua
 Localization\zhTW.lua
 Localization\ruRU.lua
 Localization\esES.lua
-FixGetPlaystyleString.lua
+Fixes\FixGetPlaystyleString.lua
+Fixes\FixReportAdvertisement.lua
+StaticPopup\StaticPopup.xml
+StaticPopup\StaticPopup.lua
 Modules\Util.lua
 Modules\Difficulty.lua
 Modules\Lockout.lua
 Modules\Expression.lua
 Modules\PlayerInfo.lua
 Modules\Macro.lua
+Modules\GroupTooltip.lua
+Modules\RoleIndicators.lua
+Modules\RatingInfo.lua
+Modules\OneClickSignUp.lua
+Modules\PersistSignUpNote.lua
+Modules\SignUpOnEnter.lua
 Main.lua
 Plugins\PremadeRegions.lua
 Plugins\RaiderIO.lua
+Settings\Settings.xml
+Settings\Settings.lua
 Dialog\PopupMenu.xml
 Dialog\PopupMenu.lua
 Dialog\Help.lua

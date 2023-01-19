@@ -268,6 +268,17 @@ function frame:PLAYER_LOGIN(...)
 
     frame:RegisterEvent("PLAYER_TALENT_UPDATE");
 
+    if (BtWLoadoutsSets.actionbars.version or 0) < 1 then
+        for _,set in pairs(BtWLoadoutsSets.actionbars) do
+            if type(set) == "table" then
+                for slot=121,181 do
+                    set.ignored[slot] = true
+                end
+            end
+        end
+        BtWLoadoutsSets.actionbars.version = 1
+    end
+
     for _,set in pairs(BtWLoadoutsSets.conditions) do
         if type(set) == "table" then
             if set.difficultyID ~= 8 then
@@ -454,9 +465,12 @@ function frame:EQUIPMENT_SETS_CHANGED(...)
                     local previousLocation = set.locations[inventorySlotId]
                     set.locations[inventorySlotId] = locations[inventorySlotId] -- Only update if the item has a location
 
-                    set.equipment[inventorySlotId] = Internal.GetItemLinkByLocation(location)
-                    set.extras[inventorySlotId] = Internal.GetExtrasForLocation(location, set.extras[inventorySlotId] or {})
-                    set.data[inventorySlotId] = Internal.EncodeItemData(set.equipment[inventorySlotId], set.extras[inventorySlotId] and set.extras[inventorySlotId].azerite)
+                    local itemLink = Internal.GetItemLinkByLocation(location)
+                    if itemLink then
+                        set.equipment[inventorySlotId] = itemLink
+                        set.extras[inventorySlotId] = Internal.GetExtrasForLocation(location, set.extras[inventorySlotId] or {})
+                        set.data[inventorySlotId] = Internal.EncodeItemData(itemLink, set.extras[inventorySlotId] and set.extras[inventorySlotId].azerite)
+                    end
 
                     if not isNewSet then
                         -- We force update because the blizzard manager should be correct

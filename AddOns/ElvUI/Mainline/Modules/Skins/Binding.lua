@@ -14,7 +14,7 @@ local function HandleScrollChild(self)
 		local icon = child.Icon
 		if icon and not icon.IsSkinned then
 			S:HandleIcon(icon)
-			icon:SetPoint('LEFT', 3, 0)
+			icon:Point('LEFT', 3, 0)
 
 			child.Background:Hide()
 			child:CreateBackdrop(nil, nil, nil, true, nil, nil, nil, true)
@@ -31,6 +31,24 @@ local function HandleScrollChild(self)
 			icon.IsSkinned = true
 		end
 	end
+end
+
+local function UpdateButtonColor(button, isSelected)
+	if isSelected then
+		button.Portrait.backdrop:SetBackdropBorderColor(1, .8, 0)
+	else
+		button.Portrait.backdrop:SetBackdropBorderColor(0, 0, 0)
+	end
+end
+
+local function HandlePortraitIcon(button, texture)
+	button:StripTextures()
+	button.Portrait:SetTexture(texture)
+	S:HandleIcon(button.Portrait, true)
+	button.Portrait.backdrop:SetBackdropColor(0, 0, 0)
+	button.Highlight:SetColorTexture(1, 1, 1, .25)
+	button.Highlight:SetInside(button.Portrait.backdrop)
+	hooksecurefunc(button, 'SetSelectedState', UpdateButtonColor)
 end
 
 function S:Blizzard_ClickBindingUI()
@@ -60,7 +78,12 @@ function S:Blizzard_ClickBindingUI()
 		titleBG:Hide()
 	end
 
-	S:HandleCloseButton(tutorial.CloseButton)
+	HandlePortraitIcon(frame.SpellbookPortrait, 136830)
+	HandlePortraitIcon(frame.MacrosPortrait, 136377)
+
+	if frame.EnableMouseoverCastCheckbox then
+		S:HandleCheckBox(frame.EnableMouseoverCastCheckbox)
+	end
 end
 
 S:AddCallbackForAddon('Blizzard_ClickBindingUI')

@@ -25,6 +25,7 @@ local GetInstanceInfo = GetInstanceInfo
 local GetAreaInfo = C_Map.GetAreaInfo
 local IsEncounterComplete = C_EncounterJournal.IsEncounterComplete
 
+local dungeonNonMythicPlus = {1,2,23};
 local dungeonDifficultiesAll = {1,2,23,8};
 local raidDifficultiesAll = {17,14,15,16};
 -- local raidDifficultiesAll = {3,4,5,6,79,14,15,16,17,33};
@@ -210,9 +211,28 @@ local instanceDifficulties = {
     [2296] = raidDifficultiesAll, -- Castle Nathria
     [2450] = raidDifficultiesAll, -- Sanctum of Domination
 }
-if select(4, GetBuildInfo()) >= 90200 then
+if Internal.IsEternitysEndPatch then
     instanceDifficulties[2441] = { 2,  8, 23} -- Tazavesh, the Veiled Market
     instanceDifficulties[2481] = raidDifficultiesAll -- Sepulcher of the First Ones
+end
+if Internal.IsDragonflightPatch then
+    instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
+    instanceDifficulties[2520] = dungeonNonMythicPlus -- Brackenhide Hollow
+    instanceDifficulties[2527] = dungeonNonMythicPlus -- Halls of Infusion
+    instanceDifficulties[2451] = dungeonNonMythicPlus -- Uldaman: Legacy of Tyr
+
+    instanceDifficulties[2515] = dungeonDifficultiesAll -- The Azure Vault
+    instanceDifficulties[2516] = dungeonDifficultiesAll -- The Nokhud Offensive
+    instanceDifficulties[2521] = dungeonDifficultiesAll -- Ruby Life Pools
+    instanceDifficulties[2526] = dungeonDifficultiesAll -- Algeth'ar Academy
+
+    -- Season 1 M+
+    instanceDifficulties[ 960] = { 8 } -- Temple of the Jade Serpent
+    instanceDifficulties[1176] = { 8 } -- Shadowmoon Burial Grounds
+    instanceDifficulties[1477] = { 8 } -- Halls of Valor
+    instanceDifficulties[1571] = { 8 } -- Court of Stars
+
+    instanceDifficulties[2522] = raidDifficultiesAll -- Vault of the Incarnates
 end
 Internal.dungeonDifficultiesAll = dungeonDifficultiesAll;
 Internal.raidDifficultiesAll = raidDifficultiesAll;
@@ -379,6 +399,29 @@ local dungeonInfo = {
         }
     },
 }
+if Internal.IsDragonflightPatch then
+    dungeonInfo[#dungeonInfo+1] = {
+        name = L["Dragonflight"],
+        instances = {
+            2519, -- Neltharus
+            2520, -- Brackenhide Hollow
+            2527, -- Halls of Infusion
+            2451, -- Uldaman: Legacy of Tyr
+
+            -- M+
+            2515, -- The Azure Vault
+            2516, -- The Nokhud Offensive
+            2521, -- Ruby Life Pools
+            2526, -- Algeth'ar Academy
+
+            -- Season 1 M+
+             960, -- Temple of the Jade Serpent
+            1176, -- Shadowmoon Burial Grounds
+            1477, -- Halls of Valor
+            1571, -- Court of Stars
+        }
+    }
+end
 local raidInfo = {
     {
         name = L["Classic"],
@@ -473,8 +516,16 @@ local raidInfo = {
         }
     },
 }
-if select(4, GetBuildInfo()) >= 90200 then
+if Internal.IsEternitysEndPatch then
     tinsert(raidInfo[9].instances, 2481) -- Sepulcher of the First Ones
+end
+if Internal.IsDragonflightPatch then
+    raidInfo[#raidInfo+1] = {
+        name = L["Dragonflight"],
+        instances = {
+            2522, -- Vault of the Incarnates
+        }
+    }
 end
 local scenarioInfo = {
 	{
@@ -534,6 +585,12 @@ local scenarioInfo = {
 		},
 	}
 };
+if Internal.IsDragonflightPatch then
+    scenarioInfo[#scenarioInfo+1] = {
+        name = L["Dragonflight"],
+        instances = { }
+    }
+end
 local battlegroundInfo = {
 	{
 		name = L["Classic"],
@@ -593,9 +650,29 @@ local battlegroundInfo = {
 			1803, -- Seething Shore
 			2245, -- Deepwind Gorge
 		},
+	},
+	{
+		name = L["Dragonflight"],
+		instances = {
+			2106, -- Warsong Gulch
+			2107, -- Arathi Basin
+			30,   -- Alterac Valley
+			566,  -- Eye of the Storm
+            968,  -- Rated Eye of the Storm
+			628,  -- Isle of Conquest
+			761,  -- The Battle for Gilneas
+			2118, -- Battle for Wintergrasp
+			1191, -- Ashran
+			726,  -- Twin Peaks
+			727,  -- Silvershard Mines
+			998,  -- Temple of Kotmogu
+			1803, -- Seething Shore
+			2245, -- Deepwind Gorge
+		},
 	}
 };
 -- List of bosses within an instance
+-- InstanceID to JournalInstanceID[]
 local instanceBosses = {
     -- Classic
     [  48] = { -- Blackfathom Deeps
@@ -1834,9 +1911,7 @@ local instanceBosses = {
         2440, -- Kel'Thuzad
         2441, -- Sylvanas Windrunner
     },
-}
-if select(4, GetBuildInfo()) >= 90200 then
-    instanceBosses[2481] = { -- Sepulcher of the First Ones
+    [2481] = { -- Sepulcher of the First Ones
         2458, -- Vigilant Guardian
         2465, -- Skolex, the Insatiable Ravener
         2470, -- Artificer Xy'mox
@@ -1848,9 +1923,69 @@ if select(4, GetBuildInfo()) >= 90200 then
         2457, -- Lords of Dread
         2467, -- Rygelon
         2464, -- The Jailer, Zovaal
-    }
-end
--- A map of npc ids to boss ids, this might not be the bosses npc id,
+    },
+
+    -- Dragonflight
+    [2520] = { -- Brackenhide Hollow
+        2471, -- Hackclaw's War-Band
+        2473, -- Treemouth
+        2472, -- Gutshot
+        2474, -- Decatriarch Wratheye
+    },
+    [2451] = { -- Uldaman: Legacy of Tyr
+        2475, -- The Lost Dwarves
+        2487, -- Bromach
+        2484, -- Sentinel Talondras
+        2476, -- Emberon
+        2479, -- Chrono-Lord Deios
+    },
+    [2516] = { -- The Nokhud Offensive
+        2498, -- Granyth
+        2497, -- The Raging Tempest
+        2478, -- Teera and Maruuk
+        2477, -- Balakar Khan
+    },
+    [2519] = { -- Neltharus
+        2490, -- Chargath, Bane of Scales
+        2489, -- Forgemaster Gorek
+        2494, -- Magmatusk
+        2501, -- Warlord Sargha
+    },
+    [2526] = { -- Algeth'ar Academy
+        2509, -- Vexamus
+        2512, -- Overgrown Ancient
+        2495, -- Crawth
+        2514, -- Echo of Doragosa
+    },
+    [2515] = { -- The Azure Vault
+        2492, -- Leymor
+        2505, -- Azureblade
+        2483, -- Telash Greywing
+        2508, -- Umbrelskul
+    },
+    [2521] = { -- Ruby Life Pools
+        2488, -- Melidrussa Chillworn
+        2485, -- Kokia Blazehoof
+        2503, -- Kyrakka and Erkhart Stormvein
+    },
+    [2527] = { -- Halls of Infusion
+        2504, -- Watcher Irideus
+        2507, -- Gulping Goliath
+        2510, -- Khajin the Unyielding
+        2511, -- Primal Tsunami
+    },
+    [2522] = { -- Vault of the Incarnates
+        2480, -- Eranog
+        2500, -- Terros
+        2486, -- The Primal Council
+        2482, -- Sennarth, the Cold Breath
+        2502, -- Dathea, Ascended
+        2491, -- Kurog Grimtotem
+        2493, -- Broodkeeper Diurna
+        2499, -- Raszageth the Storm-Eater
+    },
+}
+-- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
 -- just something that signifies the boss
 local npcIDToBossID = {
 	-- Shrine of the Storm
@@ -1903,25 +2038,38 @@ local npcIDToBossID = {
     [175559] = 2440, -- Kel'Thuzad
     [175732] = 2441, -- Sylvanas Windrunner
     [180828] = 2441, -- Sylvanas Windrunner
-};
-if select(4, GetBuildInfo()) >= 90200 then
+    
     -- Sepulcher of the First Ones
-    npcIDToBossID[184522] = 2458 -- Vigilant Guardian (Vigilant Custodian)
-    npcIDToBossID[181395] = 2465 -- Skolex, the Insatiable Ravener
-    npcIDToBossID[183501] = 2470 -- Artificer Xy'mox
-    npcIDToBossID[181224] = 2459 -- Dausegne, the Fallen Oracle
-    npcIDToBossID[181546] = 2460 -- Prototype Pantheon
-    npcIDToBossID[181548] = 2460 -- Prototype Pantheon
-    npcIDToBossID[181549] = 2460 -- Prototype Pantheon
-    npcIDToBossID[181551] = 2460 -- Prototype Pantheon
-    npcIDToBossID[182169] = 2461 -- Lihuvim, Principal Architect
-    npcIDToBossID[180906] = 2463 -- Halondrus the Reclaimer
-    npcIDToBossID[181954] = 2469 -- Anduin Wrynn
-    npcIDToBossID[181398] = 2457 -- Lords of Dread
-    npcIDToBossID[181399] = 2457 -- Lords of Dread
-    npcIDToBossID[182777] = 2467 -- Rygelon
-    npcIDToBossID[180990] = 2464 -- The Jailer, Zovaal
-end
+    [184522] = 2458, -- Vigilant Guardian (Vigilant Custodian)
+    [181395] = 2465, -- Skolex, the Insatiable Ravener
+    [183501] = 2470, -- Artificer Xy'mox
+    [181224] = 2459, -- Dausegne, the Fallen Oracle
+    [181546] = 2460, -- Prototype Pantheon
+    [181548] = 2460, -- Prototype Pantheon
+    [181549] = 2460, -- Prototype Pantheon
+    [181551] = 2460, -- Prototype Pantheon
+    [182169] = 2461, -- Lihuvim, Principal Architect
+    [180906] = 2463, -- Halondrus the Reclaimer
+    [181954] = 2469, -- Anduin Wrynn
+    [181398] = 2457, -- Lords of Dread
+    [181399] = 2457, -- Lords of Dread
+    [182777] = 2467, -- Rygelon
+    [180990] = 2464, -- The Jailer, Zovaal
+
+    --Dragonflight
+    -- Vault of the Incarnates
+    [184972] = 2480, -- Eranog
+    [190496] = 2500, -- Terros
+    [187768] = 2486, -- The Primal Council
+    [187767] = 2486, -- The Primal Council
+    [187771] = 2486, -- The Primal Council
+    [187772] = 2486, -- The Primal Council
+    [187967] = 2482, -- Sennarth, The Cold Breath
+    [189813] = 2502, -- Dathea, Ascended
+    [184986] = 2491, -- Kurog Grimtotem
+    [190245] = 2493, -- Broodkeeper Diurna
+    [189492] = 2499, -- Raszageth the Storm-Eater
+};
 -- Although area ids are unique we map them with instance ids so we can translate
 -- area names by instance. We translate them because we cant get the area id where
 -- the player is so we map area names to area ids and compare with the minimap text
@@ -1980,9 +2128,7 @@ local InstanceAreaIDToBossID = {
     [2296] = { -- Castle Nathria
         [13435] = 2424, -- Sire Denathrius
     },
-};
-if select(4, GetBuildInfo()) >= 90200 then
-    InstanceAreaIDToBossID[2481] = { -- Sepulcher of the First Ones
+    [2481] = { -- Sepulcher of the First Ones
         [13957] = 2458, -- Vigilant Guardian
         [13962] = 2465, -- Skolex, the Insatiable Ravener
         [13963] = 2470, -- Artificer Xy'mox
@@ -1994,8 +2140,8 @@ if select(4, GetBuildInfo()) >= 90200 then
         -- [] = 2457, -- Lords of Dread
         -- [] = 2467, -- Rygelon
         -- [] = 2464, -- The Jailer, Zovaal
-    }
-end
+    },
+};
 -- This is for bosses that have their own unique world map
 local uiMapIDToBossID = {
     -- Classic
@@ -2301,14 +2447,40 @@ local uiMapIDToBossID = {
     -- Sanctum of Domination
     [1998] = 2435, -- The Tarragrue
     [2002] = 2441, -- Sylvanas Windrunner
-}
-if select(4, GetBuildInfo()) >= 90200 then
     -- Sepulcher of the First Ones
-    uiMapIDToBossID[2047] = 2458 -- Vigilant Guardian
-    uiMapIDToBossID[2048] = 2459 -- Dausegne, the Fallen Oracle
-    uiMapIDToBossID[2050] = 2469 -- Anduin Wrynn
-    uiMapIDToBossID[2051] = 2464 -- The Jailer
-end
+    [2047] = 2458, -- Vigilant Guardian
+    [2048] = 2459, -- Dausegne, the Fallen Oracle
+    [2050] = 2469, -- Anduin Wrynn
+    [2051] = 2464, -- The Jailer
+
+    -- Dragonflight
+    -- Brackenhide Hollow
+    [2106] = 2474, -- Decatriarch Wratheye
+    -- Uldaman: Legacy of Tyr
+    [2072] = 2479, -- Chrono-Lord Deios
+    -- Neltharus
+    [2081] = 2489, -- Forgemaster Gorek
+    -- Algeth'ar Academy
+    [2098] = 2495, -- Crawth
+    [2099] = 2514, -- Echo of Doragosa
+    -- The Azure Vault
+    [2073] = 2492, -- Leymor
+    [2075] = 2505, -- Azureblade
+    [2076] = 2483, -- Telash Greywing
+    [2077] = 2508, -- Umbrelskul
+    -- Ruby Life Pools
+    [2095] = 2488, -- Melidrussa Chillworn
+    -- Halls of Infusion
+    [2082] = 2504, -- Watcher Irideus
+    -- Vault of the Incarnates
+    [2119] = 2480, -- Eranog
+    [2120] = 2486, -- The Primal Council
+    [2121] = 2502, -- Dathea, Ascended
+    [2122] = {2500, 2482}, -- Terros, Sennarth, the Cold Breath
+    [2124] = 2491, -- Kurog Grimtotem
+    [2126] = 2493, -- Broodkeeper Diurna
+    [2125] = 2499, -- Raszageth the Storm-Eater
+}
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
 Internal.raidInfo = raidInfo;
@@ -2331,19 +2503,49 @@ function Internal.AffixesLevels()
 	return ipairs(affixLevels)
 end
 local affixesByLevel
-if GetExpansionLevel() ~= 8 then
+if Internal.IsDragonflight then
+    affixesByLevel = {
+        [2] = {10, 9},
+        [4] = {7, 11, 6, 8, 123},
+        [7] = {13, 12, 14, 124, 3},
+        [10] = {132},
+    }
+elseif Internal.IsShadowlands then
+    if Internal.IsShadowlandsSeason4 then
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {11, 8, 122, 6, 123, 7},
+            [7] = {124, 12, 13, 14, 3, 4},
+            [10] = {131},
+        }
+    elseif Internal.IsShadowlandsSeason3 then
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {11, 8, 122, 6, 123, 7},
+            [7] = {124, 12, 13, 14, 3, 4},
+            [10] = {130},
+        }
+    elseif Internal.IsShadowlandsSeason2 then
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {11, 8, 122, 6, 123, 7},
+            [7] = {124, 12, 13, 14, 3, 4},
+            [10] = {128},
+        }
+    else
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {11, 8, 122, 6, 123, 7},
+            [7] = {124, 12, 13, 14, 3, 4},
+            [10] = {121},
+        }
+    end
+else
     affixesByLevel = {
         [2] = {10, 9},
         [4] = {7, 6, 8, 5, 11},
         [7] = {12, 13, 3, 2, 4, 14},
         [10] = {120},
-    }
-else
-    affixesByLevel = {
-        [2] = {10, 9},
-        [4] = {11, 8, 122, 6, 123, 7},
-        [7] = {124, 12, 13, 14, 3, 4},
-        [10] = {121},
     }
 end
 function Internal.Affixes(level)
@@ -2446,22 +2648,9 @@ local function GetAffixesForID(id)
 end
 Internal.GetAffixesForID = GetAffixesForID
 local affixRotation
-if GetExpansionLevel() ~= 8 then
-    affixRotation = {
-        GetAffixesInfo(10, 7, 12, 120), -- Fortified, 	Bolstering, Grievous, 	Awakened
-        GetAffixesInfo(9, 6, 13, 120), 	-- Tyrannical, 	Raging, 	Explosive, 	Awakened
-        GetAffixesInfo(10, 8, 12, 120), -- Fortified, 	Sanguine, 	Grievous, 	Awakened
-        GetAffixesInfo(9, 5, 3, 120), 	-- Tyrannical, 	Teeming, 	Volcanic, 	Awakened
-        GetAffixesInfo(10, 7, 2, 120), 	-- Fortified, 	Bolstering, Skittish, 	Awakened
-        GetAffixesInfo(9, 11, 4, 120), 	-- Tyrannical, 	Bursting, 	Necrotic, 	Awakened
-        GetAffixesInfo(10, 8, 14, 120),	-- Fortified, 	Sanguine, 	Quaking, 	Awakened
-        GetAffixesInfo(9, 7, 13, 120), 	-- Tyrannical, 	Bolstering, Explosive, 	Awakened
-        GetAffixesInfo(10, 11, 3, 120),	-- Fortified, 	Bursting, 	Volcanic, 	Awakened
-        GetAffixesInfo(9, 6, 4, 120),	-- Tyrannical, 	Raging, 	Necrotic, 	Awakened
-        GetAffixesInfo(10, 5, 14, 120),	-- Fortified, 	Teeming, 	Quaking, 	Awakened
-        GetAffixesInfo(9, 11, 2, 120),	-- Tyrannical, 	Bursting, 	Skittish, 	Awakened
-    };
-else
+if Internal.IsDragonflight then
+    affixRotation = {}
+elseif Internal.IsShadowlands then
     affixRotation = {
         GetAffixesInfo(10, 11, 124, 121),   -- Fortified, 	Bursting,   Storming,	Prideful
         GetAffixesInfo(9, 8, 12, 121),      -- Tyrannical, 	Sanguine,   Grievous,	Prideful
@@ -2475,6 +2664,21 @@ else
         GetAffixesInfo(9, 6, 13, 121), 	    -- Tyrannical, 	Raging, 	Explosive, 	Prideful
         GetAffixesInfo(10, 123, 3, 121),	-- Fortified, 	Spiteful, 	Volcanic, 	Prideful
         GetAffixesInfo(9, 7, 4, 121), 	    -- Tyrannical, 	Bolstering, Necrotic, 	Prideful
+    };
+else
+    affixRotation = {
+        GetAffixesInfo(10, 7, 12, 120), -- Fortified, 	Bolstering, Grievous, 	Awakened
+        GetAffixesInfo(9, 6, 13, 120), 	-- Tyrannical, 	Raging, 	Explosive, 	Awakened
+        GetAffixesInfo(10, 8, 12, 120), -- Fortified, 	Sanguine, 	Grievous, 	Awakened
+        GetAffixesInfo(9, 5, 3, 120), 	-- Tyrannical, 	Teeming, 	Volcanic, 	Awakened
+        GetAffixesInfo(10, 7, 2, 120), 	-- Fortified, 	Bolstering, Skittish, 	Awakened
+        GetAffixesInfo(9, 11, 4, 120), 	-- Tyrannical, 	Bursting, 	Necrotic, 	Awakened
+        GetAffixesInfo(10, 8, 14, 120),	-- Fortified, 	Sanguine, 	Quaking, 	Awakened
+        GetAffixesInfo(9, 7, 13, 120), 	-- Tyrannical, 	Bolstering, Explosive, 	Awakened
+        GetAffixesInfo(10, 11, 3, 120),	-- Fortified, 	Bursting, 	Volcanic, 	Awakened
+        GetAffixesInfo(9, 6, 4, 120),	-- Tyrannical, 	Raging, 	Necrotic, 	Awakened
+        GetAffixesInfo(10, 5, 14, 120),	-- Fortified, 	Teeming, 	Quaking, 	Awakened
+        GetAffixesInfo(9, 11, 2, 120),	-- Tyrannical, 	Bursting, 	Skittish, 	Awakened
     };
 end
 function Internal.AffixRotation()
@@ -2523,6 +2727,7 @@ end
 -- until other bosses are dead, see Lady Ashvane in The Eternal Palace
 
 -- Which bosses have to be dead for the other boss to be available
+-- JournalInstanceID to JournalInstanceID[]
 local bossRequirements = {
 	[2354] = {2347, 2353}, -- Lady Ashvane, requires Blackwater Behemoth and Radiance of Azshara
 	[2370] = {2377}, -- Vexiona, requires Dark Inquisitor Xanesh
@@ -2530,6 +2735,9 @@ local bossRequirements = {
 
     [2417] = {2401, 2390, 2389}, -- Mordretha, the Endless Empress, requires Gorechop, Xav the Unfallen, Kul'tharok
     [2410] = {2408, 2409, 2398}, -- Mueh'zala, requires Hakkar the Soulflayer, The Manastorms, and Dealer Xy'exa
+
+    [2482] = {2639}, -- Sennarth, the Cold Breath, requires Terros
+    [2491] = {2500, 2482}, -- Kurog Grimtotem, requires Terros and Sennarth, the Cold Breath
 }
 function Internal.BossAvailable(bossID)
 	if IsEncounterComplete(bossID) then

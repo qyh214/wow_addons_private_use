@@ -49,7 +49,7 @@ local function CompareSets(a, b)
 end
 -- Unlike others, imported sets lack ignored values so need a slightly different comparison function
 local function CompareImportSets(set, import)
-    for slot = 1,120 do
+    for slot = 1,181 do
         if set.ignored[slot] ~= import.ignored[slot] then
             return false
         end
@@ -63,7 +63,7 @@ local function CompareImportSets(set, import)
 end
 
 -- Track changes to macros
-do
+if false then
     local mapCreated = false
     local macros = setmetatable({}, {
         __index = function (self, key)
@@ -532,7 +532,7 @@ local function PickupActionTable(tbl, test, settings, activating)
                         end
                     end
                 elseif tbl.subType == "spell" then
-                    if IsSpellKnown(tbl.id, false) then
+                    if IsSpellKnown(tbl.id, false) or IsPlayerSpell(tbl.id) then
                         success = true
                         if not test then
                             PickupSpell(tbl.id)
@@ -670,7 +670,10 @@ local function SetActon(slot, tbl)
 end
 
 local function IsActionBarSetActive(set)
-    for slot=1,120 do
+    for slot = 121,144 do
+        set.ignored[slot] = true
+    end
+    for slot=1,181 do
         if not set.ignored[slot] then
             local action = set.actions[slot]
             local available = PickupActionTable(action, true, set.settings)
@@ -684,8 +687,11 @@ local function IsActionBarSetActive(set)
     return true;
 end
 local function ActivateActionBarSet(set, state)
+    for slot = 121,144 do
+        set.ignored[slot] = true
+    end
     local complete = true
-    for slot=1,120 do
+    for slot=1,181 do
         if not set.ignored[slot] then
             local action = set.actions[slot]
 
@@ -702,7 +708,10 @@ end
 local function RefreshActionBarSet(set)
     local actions = set.actions or {}
 
-    for slot = 1,120 do
+    for slot = 121,144 do
+        set.ignored[slot] = true
+    end
+    for slot = 1,181 do
         actions[slot] = GetActionInfoTable(slot)
     end
 
@@ -715,7 +724,7 @@ local function AddActionBarSet()
     local name = format(L["New Set"]);
 
     local actions, ignored = {}, {}
-    for slot = 1,120 do
+    for slot = 1,181 do
         actions[slot] = GetActionInfoTable(slot)
     end
 
@@ -725,7 +734,7 @@ local function AddActionBarSet()
     elseif classFile == "DRUID" then
         ignoredStart = 121 -- After Form Bars
     end
-    for slot = ignoredStart,120 do
+    for slot = ignoredStart,132 do
         ignored[slot] = true
     end
 
@@ -753,14 +762,14 @@ local function CombineActionBarSets(result, state, ...)
     result.ignored = result.ignored or {}
 
     wipe(result.actions)
-    for slot=1,120 do
+    for slot=1,181 do
         result.ignored[slot] = true
     end
 
 	for i=1,select('#', ...) do
 		local set = select(i, ...);
         if Internal.AreRestrictionsValidForPlayer(set.restrictions) then
-            for slot=1,120 do
+            for slot=1,181 do
                 if not set.ignored[slot] then
                     result.ignored[slot] = false
                     if PickupActionTable(set.actions[slot], true, set.settings, state ~= nil) or result.actions[slot] == nil then
@@ -885,12 +894,15 @@ Internal.AddLoadoutSegment({
 })
 
 BtWLoadoutsActionButtonMixin = {}
+function BtWLoadoutsActionButtonMixin:GetActionBarFrame()
+	return self:GetParent():GetParent():GetParent()
+end
 function BtWLoadoutsActionButtonMixin:OnClick(...)
 	local cursorType = GetCursorInfo()
 	if cursorType then
 		self:SetActionToCursor(GetCursorInfo())
     elseif IsModifiedClick("CTRL") then
-        local set = self:GetParent().set;
+        local set = self:GetActionBarFrame().set;
         local slot = self:GetID();
         local tbl = set.actions[slot];
         if tbl.type == "macro" then
@@ -901,7 +913,7 @@ function BtWLoadoutsActionButtonMixin:OnClick(...)
         end
         BtWLoadoutsFrame:Update()
 	elseif IsModifiedClick("SHIFT") then
-		local set = self:GetParent().set;
+		local set = self:GetActionBarFrame().set;
 		self:SetIgnored(not set.ignored[self:GetID()]);
 	else
 		self:SetAction(nil);
@@ -909,7 +921,7 @@ function BtWLoadoutsActionButtonMixin:OnClick(...)
 end
 function BtWLoadoutsActionButtonMixin:OnReceiveDrag()
 	local cursorType = GetCursorInfo()
-	if self:GetParent().set and cursorType then
+	if self:GetActionBarFrame().set and cursorType then
 		self:SetActionToCursor(GetCursorInfo())
 	end
 end
@@ -960,7 +972,7 @@ function BtWLoadoutsActionButtonMixin:SetActionToCursor(...)
 	end
 end
 function BtWLoadoutsActionButtonMixin:SetAction(actionType, ...)
-	local set = self:GetParent().set;
+	local set = self:GetActionBarFrame().set;
 	if actionType == nil then -- Clearing slot
 		set.actions[self:GetID()] = nil;
 
@@ -976,12 +988,12 @@ function BtWLoadoutsActionButtonMixin:SetAction(actionType, ...)
 	end
 end
 function BtWLoadoutsActionButtonMixin:SetIgnored(ignored)
-	local set = self:GetParent().set;
+	local set = self:GetActionBarFrame().set;
 	set.ignored[self:GetID()] = ignored and true or nil;
 	self:Update();
 end
 function BtWLoadoutsActionButtonMixin:Update()
-	local set = self:GetParent().set;
+	local set = self:GetActionBarFrame().set;
 	local slot = self:GetID();
 	local errors = nil
 	local ignored = set and set.ignored[slot];
@@ -1044,20 +1056,54 @@ function BtWLoadoutsActionButtonMixin:Update()
 	self.ignoreTexture:SetShown(ignored);
 end
 function BtWLoadoutsActionButtonMixin:OnEnter()
-	if self.errors then
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:SetText(string.format(L["Slot %d"], self:GetID()), 1, 1, 1)
-		GameTooltip:AddLine(format("\n|cffff0000%s|r", self.errors))
-		GameTooltip:Show()
-	end
+	local set = self:GetActionBarFrame().set;
+    local tbl = set and set.actions[self:GetID()]
+
+    if tbl and tbl.type == "macro" then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddDoubleLine(tbl.name or L["Macro"], string.format(L["Slot %d"], self:GetID()), 1, 1, 1, 1, 1, 1)
+        for line in string.gmatch(tbl.macroText, "([^\r\n]*)\r?\n?") do
+            if #line > 40 then
+                local first = true
+                local section = "";
+                for item,separator in string.gmatch(line, "([^%s;%]]*)(%]?;?%s?)") do
+                    section = section .. item .. separator;
+                    if #section > 40 then
+                        GameTooltip:AddLine((first and "" or "    ") .. section)
+                        first = false
+                        section = ""
+                    end
+                end
+                if section ~= "" then
+                    GameTooltip:AddLine("    " .. section)
+                end
+            else
+                GameTooltip:AddLine(line)
+            end
+        end
+        if self.errors then
+            GameTooltip:AddLine(format("\n|cffff0000%s|r", self.errors))
+        end
+        GameTooltip:Show()
+    else
+        if self.errors then
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText(string.format(L["Slot %d"], self:GetID()))
+            GameTooltip:AddLine(format("\n|cffff0000%s|r", self.errors))
+            GameTooltip:Show()
+        end
+    end
 end
 function BtWLoadoutsActionButtonMixin:OnLeave()
 	GameTooltip:Hide();
 end
 
 BtWLoadoutsIgnoreActionBarMixin = {}
+function BtWLoadoutsIgnoreActionBarMixin:GetActionBarFrame()
+	return self:GetParent():GetParent():GetParent()
+end
 function BtWLoadoutsIgnoreActionBarMixin:OnClick()
-	local set = self:GetParent().set;
+	local set = self:GetActionBarFrame().set;
 	local setIgnored = true
 	for id=self.startID,self.endID do
 		if set.ignored[id] then
@@ -1285,7 +1331,7 @@ function BtWLoadoutsActionBarsMixin:Update()
 			self.Name:SetText(set.name or "");
 		end
 
-        for slot,item in pairs(self.Slots) do
+        for slot,item in pairs(self.Scroll:GetScrollChild().Slots) do
             item:SetID(slot)
             item:Update();
 
@@ -1310,7 +1356,7 @@ function BtWLoadoutsActionBarsMixin:Update()
 	else
 		self.Name:SetText(L["New Set"]);
 
-        for slot,item in pairs(self.Slots) do
+        for slot,item in pairs(self.Scroll:GetScrollChild().Slots) do
             item:SetID(slot)
             item:Update();
 		end

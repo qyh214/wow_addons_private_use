@@ -520,7 +520,7 @@ local function POI_SetOptions(frame, type, poi)
       GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
       GameTooltip_SetTitle(GameTooltip, botOptions[poi.botType].text .. " " .. poi.botTypeIndex)
       GameTooltip:AddTexture(botOptions[poi.botType].textureId)
-      GameTooltip:AddSpellByID(botOptions[poi.botType].spellId)
+      GameTooltip:SetSpellByID(botOptions[poi.botType].spellId)
       GameTooltip:Show()
       frame.HighlightTexture:Show()
     end)
@@ -605,6 +605,39 @@ local function POI_SetOptions(frame, type, poi)
     frame.Texture:SetTexture([[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_]] .. poi.index .. [[.blp]])
     frame.HighlightTexture:SetSize(18, 18)
     frame.HighlightTexture:SetTexture([[Interface\TARGETINGFRAME\UI-RaidTargetingIcon_]] .. poi.index .. [[.blp]])
+  end
+
+  if type == "zoom" then
+    local size = 14
+    frame:SetSize(size, size)
+    frame.Texture:SetAtlas("communities-icon-searchmagnifyingglass")
+    frame.Texture:SetSize(size, size)
+    frame.HighlightTexture:SetAtlas("communities-icon-searchmagnifyingglass")
+    frame.HighlightTexture:SetSize(size, size)
+
+    local function shouldZoomIn()
+      local currentScale = MDTMapPanelFrame:GetScale()
+      return currentScale < poi.index
+    end
+
+    frame:SetScript("OnClick", function()
+      if shouldZoomIn() then
+        MDT:SetViewPortPosition(poi.value1, poi.value2, poi.value3)
+      else
+        MDT:ZoomMapToDefault()
+      end
+    end)
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:AddLine("Zoom " .. (shouldZoomIn() and "in" or "out"), 1, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+
   end
 
   --fullscreen sizes

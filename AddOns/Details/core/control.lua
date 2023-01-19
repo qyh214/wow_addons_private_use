@@ -5,6 +5,7 @@
 	local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 	local _tempo = time()
 	local _
+	local addonName, Details222 = ...
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local pointers
@@ -364,6 +365,8 @@
 			Details:CatchRaidDebuffUptime ("DEBUFF_UPTIME_IN")
 			Details:UptadeRaidMembersCache()
 
+			Details222.TimeCapture.StartCombatTimer(Details.tabela_vigente)
+
 			--we already have boss information? build .is_boss table
 			if (Details.encounter_table.id and Details.encounter_table ["start"] >= GetTime() - 3 and not Details.encounter_table ["end"]) then
 				local encounter_table = Details.encounter_table
@@ -478,6 +481,8 @@
 			Details:CatchRaidBuffUptime ("BUFF_UPTIME_OUT")
 			Details:CatchRaidDebuffUptime ("DEBUFF_UPTIME_OUT")
 			Details:CloseEnemyDebuffsUptime()
+
+			Details222.TimeCapture.StopCombat()
 
 			--check if this isn't a boss and try to find a boss in the segment
 			if (not Details.tabela_vigente.is_boss) then
@@ -1584,14 +1589,38 @@
 			Details.tooltip.icon_size.W = Details.tooltip.line_height
 			Details.tooltip.icon_size.H = Details.tooltip.line_height
 
+			--[[spark options
+			["SparkTexture"] = true,
+			["SparkHeightOffset"] = true,
+			["SparkWidthOffset"] = true,
+			["SparkHeight"] = true,
+			["SparkWidth"] = true,
+			["SparkAlpha"] = true,
+			["SparkColor"] = true,
+			["SparkPositionXOffset"] = true,
+			["SparkPositionYOffset"] = true,
+			--]]
+
+			useSpark = true
+			--GameCooltip:SetOption("SparkHeightOffset", 6)
+			GameCooltip:SetOption("SparkTexture", [[Interface\Buttons\WHITE8X8]])
+			GameCooltip:SetOption("SparkWidth", 1)
+			GameCooltip:SetOption("SparkHeight", 20)
+			GameCooltip:SetOption("SparkColor", Details.tooltip.divisor_color)
+			GameCooltip:SetOption("SparkAlpha", 0.15)
+			GameCooltip:SetOption("SparkPositionXOffset", 5)
+			--GameCooltip:SetOption("SparkAlpha", 0.3)
+			--GameCooltip:SetOption("SparkPositionXOffset", -2)
+
 			value = value or 100
 
 			if (not side) then
-				local r, g, b, a = unpack(Details.tooltip.background)
-				GameCooltip:AddStatusBar (value, 1, r, g, b, a, useSpark, {value = 100, color = {.21, .21, .21, 0.8}, texture = [[Interface\AddOns\Details\images\bar_serenity]]})
+				local r, g, b, a = unpack(Details.tooltip.bar_color)
+				local rBG, gBG, bBG, aBG = unpack(Details.tooltip.background)
+				GameCooltip:AddStatusBar (value, 1, r, g, b, a, useSpark, {value = 100, color = {rBG, gBG, bBG, aBG}, texture = [[Interface\AddOns\Details\images\bar_serenity]]})
 
 			else
-				GameCooltip:AddStatusBar (value, 2, unpack(Details.tooltip.background))
+				GameCooltip:AddStatusBar (value, 2, unpack(Details.tooltip.bar_color))
 			end
 		end
 
@@ -1602,12 +1631,14 @@
 
 -- /run local a,b=Details.tooltip.header_statusbar,0.3;a[1]=b;a[2]=b;a[3]=b;a[4]=0.8;
 
-		function Details:AddTooltipSpellHeaderText (headerText, headerColor, amount, iconTexture, L, R, T, B, separator)
-
+		function Details:AddTooltipSpellHeaderText (headerText, headerColor, amount, iconTexture, L, R, T, B, separator, iconSize)
 			if (separator and separator == true) then
 				GameCooltip:AddLine ("", "", nil, nil, 1, 1, 1, 1, 8)
-
 				return
+			end
+
+			if (type(iconSize) ~= "number") then
+				iconSize = 14
 			end
 
 			if (Details.tooltip.show_amount) then
@@ -1617,7 +1648,7 @@
 			end
 
 			if (iconTexture) then
-				GameCooltip:AddIcon (iconTexture, 1, 1, 14, 14, L or 0, R or 1, T or 0, B or 1)
+				GameCooltip:AddIcon (iconTexture, 1, 1, iconSize, iconSize, L or 0, R or 1, T or 0, B or 1)
 			end
 		end
 
@@ -1629,7 +1660,7 @@
 			GameCooltip:Reset()
 			GameCooltip:SetType ("tooltip")
 
-			GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background]])
+			GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background_dark_withline]])
 
 			GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
 			GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)
@@ -1698,16 +1729,10 @@
 					local avatar = NickTag:GetNicknameTable (objeto.serial, true)
 					if (avatar and not Details.ignore_nicktag) then
 						if (avatar [2] and avatar [4] and avatar [1]) then
-							GameCooltip:SetBannerImage (1, avatar [2], 80, 40, avatarPoint, avatarTexCoord, nil) --overlay [2] avatar path
-							GameCooltip:SetBannerImage (2, avatar [4], 200, 55, backgroundPoint, avatar [5], avatar [6]) --background
-							GameCooltip:SetBannerText (1, (not Details.ignore_nicktag and avatar [1]) or objeto.nome, textPoint, avatarTextColor, 14, SharedMedia:Fetch ("font", Details.tooltip.fontface)) --text [1] nickname
+							GameCooltip:SetBannerImage (1, 1, avatar [2], 80, 40, avatarPoint, avatarTexCoord, nil) --overlay [2] avatar path
+							GameCooltip:SetBannerImage (1, 2, avatar [4], 200, 55, backgroundPoint, avatar [5], avatar [6]) --background
+							GameCooltip:SetBannerText (1, 1, (not Details.ignore_nicktag and avatar [1]) or objeto.nome, textPoint, avatarTextColor, 14, SharedMedia:Fetch ("font", Details.tooltip.fontface)) --text [1] nickname
 						end
-					else
-						--if (Details.remove_realm_from_name and objeto.displayName:find("%*")) then
-						--	GameCooltip:SetBannerImage (1, [[Interface\AddOns\Details\images\background]], 20, 30, avatarPoint, avatarTexCoord, {0, 0, 0, 0}) --overlay [2] avatar path
-						--	GameCooltip:SetBannerImage (2, [[Interface\PetBattles\Weather-BurntEarth]], 160, 30, {{"bottomleft", "topleft", 0, -5}, {"bottomright", "topright", 0, -5}}, {0.12, 0.88, 1, 0}, {0, 0, 0, 0.1}) --overlay [2] avatar path {0, 0, 0, 0}
-						--	GameCooltip:SetBannerText (1, objeto.nome, {"left", "left", 11, -8}, {1, 1, 1, 0.7}, 10, SharedMedia:Fetch ("font", Details.tooltip.fontface)) --text [1] nickname
-						--end
 					end
 				end
 

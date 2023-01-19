@@ -1585,6 +1585,7 @@ if IsClassic then
 		WARLOCK			= CreateClassSettingsTable("WARLOCK"),
 		WARRIOR			= CreateClassSettingsTable("WARRIOR"),
 		DEMONHUNTER		= CreateClassSettingsTable("DEMONHUNTER"),
+		EVOKER			= CreateClassSettingsTable("EVOKER"),
 
 
 		-- Throttle settings.
@@ -2541,6 +2542,18 @@ else
 				alwaysSticky	= true,
 				fontSize		= 26,
 			},
+			NOTIFICATION_ESSENCE_CHANGE = {
+				colorG		= 0.5,
+				colorB		= 0,
+				message		= "%a " .. L.MSG_ESSENCE,
+			},
+			NOTIFICATION_ESSENCE_FULL = {
+				colorG			= 0.5,
+				colorB			= 0,
+				message			= L.MSG_ESSENCE_FULL .. "!",
+				alwaysSticky	= true,
+				fontSize		= 26,
+			},
 			NOTIFICATION_HONOR_GAIN = {
 				colorR		= 0.5,
 				colorG		= 0.5,
@@ -3049,6 +3062,7 @@ else
 		WARLOCK			= CreateClassSettingsTable("WARLOCK"),
 		WARRIOR			= CreateClassSettingsTable("WARRIOR"),
 		DEMONHUNTER		= CreateClassSettingsTable("DEMONHUNTER"),
+		EVOKER			= CreateClassSettingsTable("EVOKER"),
 
 
 		-- Throttle settings.
@@ -3251,13 +3265,12 @@ local function SetupBlizzardOptions()
 	frame.name = "MikScrollingBattleText"
 
 	-- Create an option button in the center of the frame to launch MSBT's options.
-	local button = CreateFrame("Button", nil, frame, "OptionsButtonTemplate")
+	local button = CreateFrame("Button", nil, frame, IsClassic and "OptionsButtonTemplate" or "UIPanelButtonTemplate")
+	button:SetSize(100, 24)
 	button:SetPoint("CENTER")
 	button:SetText(MikSBT.COMMAND)
 	button:SetScript("OnClick",
 		function (this)
-			InterfaceOptionsFrameCancel_OnClick()
-			HideUIPanel(GameMenuFrame)
 			ShowOptions()
 		end
 	)

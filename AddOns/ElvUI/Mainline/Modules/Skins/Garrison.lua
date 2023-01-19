@@ -71,6 +71,46 @@ local function UpdateSpellAbilities(spell, followerInfo)
 	end
 end
 
+local function ReskinMissionButton(button)
+	if not button.IsSkinned then
+		local rareOverlay = button.RareOverlay
+		local rareText = button.RareText
+
+		button.LocBG:SetDrawLayer('BACKGROUND')
+		if button.ButtonBG then button.ButtonBG:Hide() end
+		button:StripTextures()
+		button:CreateBackdrop('Transparent')
+		button.Highlight:SetColorTexture(.6, .8, 1, .15)
+		button.Highlight:SetAllPoints()
+
+		if button.CompleteCheck then
+			button.CompleteCheck:SetAtlas('Adventures-Checkmark')
+		end
+		if rareText then
+			rareText:ClearAllPoints()
+			rareText:SetPoint('BOTTOMLEFT', button, 20, 10)
+		end
+		if rareOverlay then
+			rareOverlay:SetDrawLayer('BACKGROUND')
+			rareOverlay:SetTexture('Interface\\ChatFrame\\ChatFrameBackground')
+			rareOverlay:SetAllPoints()
+			rareOverlay:SetVertexColor(.098, .537, .969, .2)
+		end
+		if button.Overlay and button.Overlay.Overlay then
+			button.Overlay.Overlay:SetAllPoints()
+		end
+
+		button.IsSkinned = true
+	end
+end
+
+local function ReskinMissionList(frame)
+	for i = 1, frame.ScrollTarget:GetNumChildren() do
+		local button = select(i, frame.ScrollTarget:GetChildren())
+		ReskinMissionButton(button)
+	end
+end
+
 local function ReskinMissionComplete(frame)
 	local missionComplete = frame.MissionComplete
 	local bonusRewards = missionComplete.BonusRewards
@@ -94,8 +134,8 @@ local function ReskinMissionComplete(frame)
 		end
 
 		missionComplete:CreateBackdrop('Transparent')
-		missionComplete.backdrop:SetPoint("TOPLEFT", 3, 2)
-		missionComplete.backdrop:SetPoint("BOTTOMRIGHT", -3, -10)
+		missionComplete.backdrop:Point('TOPLEFT', 3, 2)
+		missionComplete.backdrop:Point('BOTTOMRIGHT', -3, -10)
 
 		if E.private.skins.parchmentRemoverEnable then
 			missionComplete.CompleteFrame:StripTextures()
@@ -132,11 +172,17 @@ local function SkinMissionFrame(frame, strip)
 		frame:CreateBackdrop('Transparent')
 	end
 
-	frame.CloseButton:StripTextures()
-	S:HandleCloseButton(frame.CloseButton)
+	if frame.CloseButton then
+		frame.CloseButton:StripTextures()
+		S:HandleCloseButton(frame.CloseButton)
+	end
 
 	if frame.GarrCorners then frame.GarrCorners:Hide() end
 	if frame.OverlayElements then frame.OverlayElements:SetAlpha(0) end
+	if frame.TitleScroll then
+		frame.TitleScroll:StripTextures()
+		select(4, frame.TitleScroll:GetRegions()):SetTextColor(1, .8, 0)
+	end
 
 	for i = 1, 3 do
 		local tab = _G[frame:GetName()..'Tab'..i]
@@ -147,9 +193,17 @@ local function SkinMissionFrame(frame, strip)
 		frame.MapTab.ScrollContainer.Child.TiledBackground:Hide()
 	end
 
+	local missionList = frame.MissionTab.MissionList
+	missionList:StripTextures()
+
+	S:HandleTrimScrollBar(missionList.ScrollBar)
+
+	hooksecurefunc(missionList.ScrollBox, 'Update', ReskinMissionList)
+
 	ReskinMissionComplete(frame)
 	SkinMissionItems(frame.FollowerTab)
 
+	hooksecurefunc(missionList.ScrollBox, 'Update', ReskinMissionList)
 	hooksecurefunc(frame.FollowerTab, 'UpdateCombatantStats', UpdateSpellAbilities)
 end
 
@@ -249,7 +303,7 @@ function S:Blizzard_GarrisonUI()
 				Reagent.NameFrame:SetTexture()
 				Reagent.Icon:SetDrawLayer('ARTWORK')
 				Reagent.Icon:ClearAllPoints()
-				Reagent.Icon:SetPoint('TOPLEFT', 1, -1)
+				Reagent.Icon:Point('TOPLEFT', 1, -1)
 				S:HandleIcon(Reagent.Icon)
 			end
 		end
@@ -269,6 +323,8 @@ function S:Blizzard_GarrisonUI()
 	GarrisonMissionFrame:SetTemplate('Transparent')
 	S:HandleCloseButton(GarrisonMissionFrame.CloseButton, GarrisonMissionFrame.backdrop)
 	_G.GarrisonMissionFrameMissions:CreateBackdrop('Transparent')
+
+	SkinMissionFrame(GarrisonMissionFrame, E.private.skins.parchmentRemoverEnable) -- OG Garrison
 
 	for i = 1,2 do
 		S:HandleTab(_G['GarrisonMissionFrameTab'..i])
@@ -296,6 +352,7 @@ function S:Blizzard_GarrisonUI()
 	local MissionTab = GarrisonMissionFrame.MissionTab
 	local MissionList = MissionTab.MissionList
 	local MissionPage = GarrisonMissionFrame.MissionTab.MissionPage
+
 	MissionList:DisableDrawLayer('BORDER')
 	S:HandleTrimScrollBar(_G.GarrisonMissionFrameMissions.ScrollBar)
 	S:HandleCloseButton(MissionPage.CloseButton)
@@ -312,8 +369,16 @@ function S:Blizzard_GarrisonUI()
 	S:HandleTab(_G.GarrisonLandingPageTab1)
 	S:HandleTab(_G.GarrisonLandingPageTab2)
 	S:HandleTab(_G.GarrisonLandingPageTab3)
-	_G.GarrisonLandingPageTab1:ClearAllPoints()
-	_G.GarrisonLandingPageTab1:Point('TOPLEFT', GarrisonLandingPage, 'BOTTOMLEFT', 70, 2)
+
+	-- Reposition Tabs
+	hooksecurefunc('PanelTemplates_UpdateTabs', function()
+		_G.GarrisonLandingPageTab1:ClearAllPoints()
+		_G.GarrisonLandingPageTab2:ClearAllPoints()
+		_G.GarrisonLandingPageTab3:ClearAllPoints()
+		_G.GarrisonLandingPageTab1:Point('TOPLEFT', _G.GarrisonLandingPage, 'BOTTOMLEFT', -3, 0)
+		_G.GarrisonLandingPageTab2:Point('TOPLEFT', _G.GarrisonLandingPageTab1, 'TOPRIGHT', -5, 0)
+		_G.GarrisonLandingPageTab3:Point('TOPLEFT', _G.GarrisonLandingPageTab2, 'TOPRIGHT', -5, 0)
+	end)
 
 	if E.private.skins.parchmentRemoverEnable then
 		GarrisonLandingPage:StripTextures()
@@ -376,8 +441,8 @@ function S:Blizzard_GarrisonUI()
 			if not button.IsSkinned then
 				button.BG:Hide()
 				button:CreateBackdrop('Transparent')
-				button.backdrop:SetPoint('TOPLEFT')
-				button.backdrop:SetPoint('BOTTOMRIGHT', 0, 1)
+				button.backdrop:Point('TOPLEFT')
+				button.backdrop:Point('BOTTOMRIGHT', 0, 1)
 
 				for _, reward in pairs(button.Rewards) do
 					reward:GetRegions():Hide()
@@ -400,9 +465,9 @@ function S:Blizzard_GarrisonUI()
 	hooksecurefunc(FollowerList, 'ShowFollower', showFollower)
 	hooksecurefunc('GarrisonFollowerButton_AddAbility', function(s, index)
 		local ability = s.Abilities[index]
-		if not ability.styled then
+		if not ability.IsSkinned then
 			S:HandleIcon(ability.Icon, ability)
-			ability.styled = true
+			ability.IsSkinned = true
 		end
 	end)
 
@@ -459,6 +524,8 @@ function S:Blizzard_GarrisonUI()
 	OrderHallMissionFrame:StripTextures()
 	OrderHallMissionFrame:CreateBackdrop('Transparent')
 	S:HandleCloseButton(OrderHallMissionFrame.CloseButton)
+
+	SkinMissionFrame(OrderHallMissionFrame, E.private.skins.parchmentRemoverEnable)
 
 	for i = 1, 3 do
 		S:HandleTab(_G['OrderHallMissionFrameTab' .. i])
@@ -520,7 +587,8 @@ function S:Blizzard_GarrisonUI()
 	MissionFrame.OverlayElements:Hide()
 	MissionFrame.TitleScroll:Hide()
 
-	S:HandleCloseButton(MissionFrame.CloseButton)
+	SkinMissionFrame(MissionFrame, E.private.skins.parchmentRemoverEnable)
+
 	S:HandleButton(MissionFrame.MissionComplete.NextMissionButton)
 
 	for i = 1, 3 do
@@ -568,6 +636,11 @@ function S:Blizzard_GarrisonUI()
 	if CovenantMissionFrame.RaisedBorder then
 		CovenantMissionFrame.RaisedBorder:SetAlpha(0)
 	end
+
+	-- This is needed if we use StripTextures on the Covenant Frames
+	hooksecurefunc(CovenantMissionFrame, 'SetupTabs', function(frame)
+		frame.MapTab:SetShown(not frame.Tab2:IsShown())
+	end)
 
 	-- Complete Missions
 	_G.CombatLog.ElevatedFrame:SetAlpha(0)

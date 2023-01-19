@@ -14,8 +14,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon		= "Спец-предупреждение перед насыщением",
-	specWarnBreakJasperChains	= "Спец-предупреждение, когда можно разорвать $spell:130395",
+	SpecWarnOverloadSoon		= "Спецпредупреждение перед насыщением",
+	specWarnBreakJasperChains	= "Спецпредупреждение, когда можно разорвать $spell:130395",
 	InfoFrame					= "Показывать информационное окно с энергией боссов, окаменением игроков и какой босс кастует окаменение"
 })
 
@@ -35,8 +35,10 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarnPhase			= "Объявлять смену фаз",
-	specWarnBarrierNow	= "Спец-предупреждение когда Вам необходимо использовать $spell:115817 (только для Поиска Рейдов)",
-	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " во время аркан-фазы"
+	specWarnBarrierNow	= "Спецпредупреждение, когда Вам необходимо использовать $spell:115817 (только для Поиска Рейдов)",
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " во время аркан-фазы",
+	SetIconOnWS			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116784),
+	SetIconOnAR			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -50,6 +52,10 @@ L:SetMiscLocalization({
 -- Gara'jal the Spiritbinder --
 -------------------------------
 L = DBM:GetModLocalization(682)
+
+L:SetOptionLocalization({
+	SetIconOnVoodoo	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122151)
+})
 
 L:SetMiscLocalization({
 	Pull	= "Пора умирать!"
@@ -71,7 +77,9 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	DarknessSoon	= "Производить 5-секундный отсчет для $spell:117697",
-	timerUSRevive	= "Отсчет времени до формирования $spell:117506"
+	timerUSRevive	= "Отсчет времени до формирования $spell:117506",
+	timerRainOfArrowsCD = DBM_CORE_L.AUTO_TIMER_OPTIONS.cd:format(118122),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8")
 })
 
 ------------
@@ -88,8 +96,9 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnDespawnFloor	= "Спец-предупреждение перед исчезновением пола",
-	timerDespawnFloor		= "Отсчет времени до исчезновения пола"
+	specWarnDespawnFloor	= "Спецпредупреждение перед исчезновением пола",
+	timerDespawnFloor		= "Отсчет времени до исчезновения пола",
+	SetIconOnDestabilized	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(132222)
 })
 
 ------------
@@ -99,14 +108,14 @@ L = DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Показывать информационное окно для игроков с $spell:116525",
-	CountOutCombo	= "Отсчитывать количество кастов $journal:5673",
-	ArrowOnCombo	= "Показывать стрелку DBM во время $journal:5673<br/>Подразумевается, что танк стоит перед боссом, а все остальные - позади."
+	CountOutCombo	= "Отсчитывать количество кастов $journal:5673<br/>Примечание: в настоящее время доступен только женский голос.",
+	ArrowOnCombo	= "Показывать стрелку DBM во время $journal:5673<br/>Примечание: подразумевается, что танк стоит перед боссом, а все остальные - позади."
 })
 
 L:SetMiscLocalization({
-	Pull		= "Машина гудит, возвращаясь к жизни. Спуститесь на нижний уровень!",--Emote
-	Rage		= "Ярость императора эхом звучит среди холмов.",--Yell
-	Strength	= "Сила императора сжимает эти земли в железных тисках.",--Emote
-	Courage		= "Смелость императора безгранична.",--Emote
-	Boss		= "Бессмертная армия сокрушит врагов императора."--Emote
+	Pull		= "Машина гудит, возвращаясь к жизни. Спуститесь на нижний уровень!",--Эмоция
+	Rage		= "Ярость императора эхом звучит среди холмов.",--Крик
+	Strength	= "Сила императора сжимает эти земли в железных тисках.",--Эмоция
+	Courage		= "Смелость императора безгранична.",--Эмоция
+	Boss		= "Бессмертная армия сокрушит врагов императора."--Эмоция
 })

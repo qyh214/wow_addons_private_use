@@ -103,6 +103,10 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Наступление клана Нокхуд"
 })
 
+L:SetMiscLocalization({
+	Soul = "Душа"
+})
+
 -----------------------
 -- <<<Neltharus >>> --
 -----------------------
@@ -146,17 +150,25 @@ L:SetGeneralLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
---L= DBM:GetModLocalization(2509)
+L= DBM:GetModLocalization(2509)
+
+L:SetMiscLocalization({
+	VexRP		= "Кхе-кхе... Итак... давным-давно синие драконы случайно подвергли чародейский элементаль перегрузке, создав могучего Вексама, который сразу же принялся сеять разрушения!"
+})
 
 -----------------------
--- Accidental Amalgamation --
+-- Overgrown Ancient --
 -----------------------
---L= DBM:GetModLocalization(2512)
+L= DBM:GetModLocalization(2512)
+
+L:SetMiscLocalization({
+	TreeRP	= "Превосходно, мы как раз собирались... стой, Ихистраз! Магии жизни слишком много! Что ты делаешь?"
+})
 
 -----------------------
--- Headmaster --
+-- Echo of Doragosa --
 -----------------------
---L= DBM:GetModLocalization(2513)
+--L= DBM:GetModLocalization(2514)
 
 ---------
 --Trash--
@@ -165,6 +177,10 @@ L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
 	name =	"Трэш мобы Академия Алгет'ар"
+})
+
+L:SetOptionLocalization({
+	AGBuffs		= "Автоматический выбор диалога для активации баффов при взаимодействии с драконьими NPC"
 })
 
 -----------------------
@@ -199,6 +215,10 @@ L:SetGeneralLocalization({
 	name =	"Трэш мобы Лазурное хранилище"
 })
 
+L:SetOptionLocalization({
+	AGBook			= "Автоматический выбор диалога для телепортации при взаимодействии с книгами"
+})
+
 -----------------------
 -- <<<Ruby Life Pools>>> --
 -----------------------
@@ -215,7 +235,14 @@ L:SetGeneralLocalization({
 -----------------------
 -- Kyrakka and Erkhart Stormvein --
 -----------------------
---L= DBM:GetModLocalization(2503)
+L= DBM:GetModLocalization(2503)
+
+L:SetMiscLocalization({
+	North	= "На север",
+	West	= "На запад",
+	South	= "На юг",
+	East	= "На восток"
+})
 
 ---------
 --Trash--

@@ -1,7 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 
 local CopyTable = CopyTable -- Our function doesn't exist yet.
-local format = format
 local next = next
 
 P.gridSize = 64
@@ -177,6 +176,7 @@ P.general = {
 		statusBarTexture = 'ElvUI Norm',
 		leftButtons = false,
 		qualityName = false,
+		qualityItemLevel = false,
 		qualityStatusBar = true,
 		qualityStatusBarBackdrop = true,
 		statusBarColor = { r = 0, g = .4, b = 1 },
@@ -203,8 +203,8 @@ P.databars = {
 		useCustomFactionColors = false,
 		petExperience = { r = 1, g = 1, b = .41, a = .8 },
 		experience = { r = 0, g = .4, b = 1, a = .8 },
-		rested = { r = 1, g = 0, b = 1, a = .4},
-		quest = { r = 0, g = 1, b = 0, a = .4},
+		rested = { r = 1, g = 0, b = 1, a = .4 },
+		quest = { r = 0, g = 1, b = 0, a = .4 },
 		honor = { r = .94, g = .45, b = .25, a = 1 },
 		azerite = { r = .901, g = .8, b = .601, a = 1 },
 		factionColors = {
@@ -324,29 +324,31 @@ P.bags = {
 	showAssignedIcon = true,
 	colors = {
 		profession = {
-			ammoPouch = { r = 1, g = 0.69, b = 0.41 },
-			cooking = { r = .87, g = .05, b = .25 },
-			enchanting = { r = .76, g = .02, b = .8 },
-			engineering = { r = .91, g = .46, b = .18 },
-			fishing = { r = .42, g = .59, b = 1 },
-			gems = { r = .03, g = .71, b = .81 },
-			herbs = { r = .07, g = .71, b = .13 },
-			inscription = { r = .29, g = .30, b = .88 },
-			keyring = { r = 1, g = .96, b = .41 },
-			leatherworking = { r = .88, g = .73, b = .29 },
-			mining = { r = .54, g = .40, b = .04 },
-			quiver = { r = 1, g = 0.69, b = 0.41 },
-			soulBag = { r = 1, g = 0.69, b = 0.41 },
+			reagent			= { r = 0.18, g = 0.75, b = 0.50 },
+			ammoPouch		= { r = 1.00, g = 0.69, b = 0.41 },
+			cooking			= { r = 0.74, g = 0.05, b = 0.21 },
+			enchanting		= { r = 0.72, g = 0.22, b = 0.74 },
+			engineering		= { r = 0.91, g = 0.46, b = 0.18 },
+			fishing			= { r = 0.22, g = 0.46, b = 0.90 },
+			gems			= { r = 0.03, g = 0.65, b = 0.75 },
+			herbs			= { r = 0.28, g = 0.74, b = 0.07 },
+			inscription		= { r = 0.32, g = 0.34, b = 0.98 },
+			keyring			= { r = 0.67, g = 0.87, b = 0.37 },
+			leatherworking	= { r = 0.74, g = 0.55, b = 0.20 },
+			mining			= { r = 0.54, g = 0.40, b = 0.04 },
+			quiver			= { r = 1.00, g = 0.69, b = 0.41 },
+			soulBag			= { r = 1.00, g = 0.69, b = 0.41 },
 		},
 		assignment = {
-			equipment = { r = 0, g = .50, b = .47 },
-			consumables = { r = .57, g = .95, b = .66 },
-			tradegoods = { r = 1, g = .32, b = .66 },
-			junk = { r = .99, g = .23, b = .21 },
+			equipment		= { r = 0.00, g = 0.50, b = 0.47 },
+			consumables		= { r = 0.45, g = 0.74, b = 0.52 },
+			tradegoods		= { r = 0.74, g = 0.23, b = 0.49 },
+			quest			= { r = 0.60, g = 0.20, b = 0.20 },
+			junk			= { r = 0.26, g = 0.26, b = 0.26 },
 		},
 		items = {
-			questStarter = { r = 1, g = .96, b = .41 },
-			questItem = { r = 1, g = 0.30, b = 0.30 },
+			questStarter	= { r = 1.00, g = 0.96, b = 0.41 },
+			questItem		= { r = 0.90, g = 0.30, b = 0.30 },
 		}
 	},
 	vendorGrays = {
@@ -360,17 +362,6 @@ P.bags = {
 		bankSpacing = 5,
 		player = false,
 		bank = false,
-		bag1 = false,
-		bag2 = false,
-		bag3 = false,
-		bag4 = false,
-		bag5 = false,
-		bag6 = false,
-		bag7 = false,
-		bag8 = false,
-		bag9 = false,
-		bag10 = false,
-		bag11 = false,
 	},
 	shownBags = {},
 	autoToggle = {
@@ -400,8 +391,13 @@ P.bags = {
 	},
 }
 
-for i = -3, 11 do
-	P.bags.shownBags['bag'..i] = true
+for i = -3, 12 do
+	local name = 'bag'..i
+	P.bags.shownBags[name] = true
+
+	if i >= 1 then
+		P.bags.split[name] = false
+	end
 end
 
 local NP_Auras = {
@@ -720,16 +716,22 @@ P.nameplates = {
 			[ 9] = {r = 0.60, g = 0.60, b = 0.60}, -- DEAD
 			[13] = {r = 0.10, g = 0.58, b = 0.28}, -- BATTLEGROUND_FRIENDLY_PVP
 		},
+		empoweredCast = {
+			{r = 1.00, g = 0.26, b = 0.20, a = 0.3}, -- red
+			{r = 1.00, g = 0.80, b = 0.26, a = 0.3}, -- orange
+			{r = 1.00, g = 1.00, b = 0.26, a = 0.3}, -- yellow
+			{r = 0.66, g = 1.00, b = 0.40, a = 0.3}, -- green
+		},
 		classResources = {
 			chargedComboPoint = { r = 0.16, g = 0.64, b = 1.0 },
 			comboPoints = {
-				{r = .69, g = .31, b = .31},
-				{r = .65, g = .42, b = .31},
-				{r = .65, g = .63, b = .35},
-				{r = .46, g = .63, b = .35},
-				{r = .33, g = .63, b = .33},
-				{r = .33, g = .63, b = .33},
-				{r = .33, g = .63, b = .33},
+				{r = 0.75, g = 0.31, b = 0.31},
+				{r = 0.78, g = 0.56, b = 0.31},
+				{r = 0.81, g = 0.81, b = 0.31},
+				{r = 0.56, g = 0.78, b = 0.31},
+				{r = 0.43, g = 0.76, b = 0.31},
+				{r = 0.31, g = 0.75, b = 0.31},
+				{r = 0.36, g = 0.81, b = 0.54},
 			},
 			DEATHKNIGHT = {
 				[-1] = {r = 0.5, g = 0.5, b = 0.5},
@@ -739,15 +741,29 @@ P.nameplates = {
 				{r = 0.25, g = 1, b = 0.25},
 				{r = 0.8, g = 0.4, b = 1}
 			},
-			PALADIN = { r = 0.89, g = 0.88, b = 0.06},
-			MAGE = { r = 0, g = 0.62, b = 1},
+			PALADIN = {r = 0.89, g = 0.88, b = 0.06},
+			MAGE = {r = 0, g = 0.62, b = 1.00},
+			EVOKER = {
+				{r = 0.10, g = 0.92, b = 1.00},
+				{r = 0.17, g = 0.94, b = 0.84},
+				{r = 0.24, g = 0.96, b = 0.69},
+				{r = 0.31, g = 0.98, b = 0.53},
+				{r = 0.34, g = 0.99, b = 0.45},
+				{r = 0.38, g = 1.00, b = 0.38},
+			},
 			MONK = {
-				{r = .57, g = .63, b = .35},
-				{r = .47, g = .63, b = .35},
-				{r = .37, g = .63, b = .35},
-				{r = .27, g = .63, b = .33},
-				{r = .17, g = .63, b = .33},
-				{r = 0.05, g = 0.57, b = 0.23}
+				{r = 0.71, g = 0.76, b = 0.32},
+				{r = 0.58, g = 0.73, b = 0.36},
+				{r = 0.49, g = 0.71, b = 0.39},
+				{r = 0.39, g = 0.69, b = 0.42},
+				{r = 0.27, g = 0.66, b = 0.46},
+				{r = 0.14, g = 0.63, b = 0.50}
+			},
+			SHAMAN = {
+				{r = .23, g = .45, b = .13}, -- earth
+				{r = .58, g = .23, b = .10}, -- fire
+				{r = .19, g = .48, b = .60}, -- water
+				{r = .42, g = .18, b = .74}, -- air
 			},
 			WARLOCK = {r = 0.58, g = 0.51, b = 0.79}
 		},
@@ -1169,6 +1185,7 @@ P.tooltip = {
 	headerFontSize = 13,
 	smallTextFontSize = 12,
 	colorAlpha = 0.8,
+	fadeOut = true,
 	visibility = {
 		bags = 'SHOW',
 		unitFrames = 'SHOW',
@@ -1700,43 +1717,6 @@ P.unitframe = {
 			additional = {r = 1, g = 1, b = 1, a = 1},
 			color = {r = 1, g = 1, b = 1, a = 1},
 		},
-		classResources = {
-			chargedComboPoint = { r = 0.16, g = 0.64, b = 1.0 },
-			comboPoints = {
-				{r = .69, g = .31, b = .31},
-				{r = .65, g = .42, b = .31},
-				{r = .65, g = .63, b = .35},
-				{r = .46, g = .63, b = .35},
-				{r = .33, g = .63, b = .33},
-				{r = .33, g = .63, b = .33},
-				{r = .33, g = .63, b = .33},
-			},
-			DEATHKNIGHT = {
-				[-1] = {r = 0.5, g = 0.5, b = 0.5},
-				[0] = {r = 0.8, g = 0.1, b = 0.28},
-				{r = 1, g = 0.25, b = 0.25},
-				{r = 0.25, g = 1, b = 1},
-				{r = 0.25, g = 1, b = 0.25},
-				{r = 0.8, g = 0.4, b = 1}
-			},
-			PALADIN = {r = 0.89, g = 0.88, b = 0.06},
-			MAGE = {r = 0, g = 0.62, b = 1.00},
-			MONK = {
-				{r = .57, g = .63, b = .35},
-				{r = .47, g = .63, b = .35},
-				{r = .37, g = .63, b = .35},
-				{r = .27, g = .63, b = .33},
-				{r = .17, g = .63, b = .33},
-				{r = 0.05, g = 0.57, b = 0.23}
-			},
-			SHAMAN = {
-				{r = .23, g = .45, b = .13}, -- earth
-				{r = .58, g = .23, b = .10}, -- fire
-				{r = .19, g = .48, b = .60}, -- water
-				{r = .42, g = .18, b = .74}, -- air
-			},
-			WARLOCK = {r = 0.58, g = 0.51, b = 0.79}
-		},
 		frameGlow = {
 			mainGlow = {
 				enable = false,
@@ -2072,6 +2052,9 @@ P.unitframe = {
 	},
 }
 
+P.unitframe.colors.classResources = CopyTable(P.nameplates.colors.classResources)
+P.unitframe.colors.empoweredCast = CopyTable(P.nameplates.colors.empoweredCast)
+
 P.unitframe.units.player.aurabar.enemyAuraType = 'HARMFUL'
 P.unitframe.units.player.aurabar.friendlyAuraType = 'HELPFUL'
 P.unitframe.units.player.aurabar.maxDuration = 120
@@ -2245,6 +2228,7 @@ P.unitframe.units.arena.buffs.priority = 'Blacklist,TurtleBuffs,PlayerBuffs,Disp
 P.unitframe.units.arena.buffs.sizeOverride = 27
 P.unitframe.units.arena.buffs.yOffset = 16
 P.unitframe.units.arena.castbar.width = 256
+P.unitframe.units.arena.castbar.positionsGroup = {anchorPoint = 'BOTTOM', xOffset = 0, yOffset = 0}
 P.unitframe.units.arena.debuffs.enable = true
 P.unitframe.units.arena.debuffs.anchorPoint = 'LEFT'
 P.unitframe.units.arena.debuffs.maxDuration = 300
@@ -2272,7 +2256,7 @@ P.unitframe.units.party.buffs.priority = 'Blacklist,TurtleBuffs'
 P.unitframe.units.party.buffIndicator.enable = true
 P.unitframe.units.party.castbar.enable = false
 P.unitframe.units.party.castbar.width = 256
-P.unitframe.units.party.castbar.positionsGroup = { anchorPoint = 'BOTTOM', xOffset = 0, yOffset = 0}
+P.unitframe.units.party.castbar.positionsGroup = {anchorPoint = 'BOTTOM', xOffset = 0, yOffset = 0}
 P.unitframe.units.party.CombatIcon.enable = false
 P.unitframe.units.party.debuffs.enable = true
 P.unitframe.units.party.debuffs.anchorPoint = 'RIGHT'
@@ -2436,7 +2420,6 @@ local ACTION_SLOTS = _G.NUM_PET_ACTION_SLOTS or 10
 local STANCE_SLOTS = _G.NUM_STANCE_SLOTS or 10
 
 P.actionbar = {
-	addNewSpells = false,
 	chargeCooldown = false,
 	colorSwipeLOC = { r = 0.25, g = 0, b = 0, a = 0.8 },
 	colorSwipeNormal = { r = 0, g = 0, b = 0, a = 0.8 },
@@ -2523,6 +2506,7 @@ P.actionbar = {
 	microbar = {
 		enabled = false,
 		mouseover = false,
+		useIcons = true,
 		buttonsPerRow = 11,
 		buttonSize = 20,
 		keepSizeRatio = false,
@@ -2620,6 +2604,14 @@ for i = 1, 10 do
 		useMacroColor = false,
 		frameStrata = 'LOW',
 		frameLevel = 1,
+		professionQuality = {
+			enable = true,
+			point = 'TOPLEFT',
+			xOffset = 14,
+			yOffset = -12,
+			scale = 0.5,
+			alpha = 1
+		},
 	}
 
 	if E.Retail then
@@ -2674,7 +2666,7 @@ P.actionbar.bar1.visibility = E.Retail and '[petbattle] hide; show' or 'show'
 
 P.actionbar.bar1.paging.ROGUE = '[bonusbar:1] 7;'..(E.Wrath and ' [bonusbar:2] 8;' or '')
 P.actionbar.bar1.paging.WARLOCK = E.Wrath and '[form:1] 7;' or nil
-P.actionbar.bar1.paging.DRUID = format('[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 8; [bonusbar:2] %d; [bonusbar:3] 9; [bonusbar:4] 10;', E.Retail and 10 or 8) -- No idea why tho
+P.actionbar.bar1.paging.DRUID = '[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 8; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10;'
 P.actionbar.bar1.paging.EVOKER = '[bonusbar:1] 7;'
 P.actionbar.bar1.paging.PRIEST = '[bonusbar:1] 7;'
 P.actionbar.bar1.paging.WARRIOR = '[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;'
@@ -2747,16 +2739,16 @@ E.LayoutMoverPositions = {
 		ObjectiveFrameMover = 'TOPRIGHT,ElvUIParent,TOPRIGHT,-163,-325',
 		SocialMenuMover = 'TOPLEFT,ElvUIParent,TOPLEFT,4,-187',
 		VehicleSeatMover = 'TOPLEFT,ElvUIParent,TOPLEFT,4,-4',
-		DurabilityFrameMover = "TOPLEFT,ElvUIParent,TOPLEFT,141,-4",
-		ThreatBarMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-4,4",
-		PetAB = "RIGHT,ElvUIParent,RIGHT,-4,0",
-		ShiftAB = "BOTTOM,ElvUIParent,BOTTOM,0,58",
-		ElvUF_Raid3Mover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269",
-		ElvUF_Raid2Mover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269",
-		ElvUF_Raid1Mover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269",
-		ElvUF_PartyMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269",
-		HonorBarMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-2,-251",
-		ReputationBarMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-2,-243"
+		DurabilityFrameMover = 'TOPLEFT,ElvUIParent,TOPLEFT,141,-4',
+		ThreatBarMover = 'BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-4,4',
+		PetAB = 'RIGHT,ElvUIParent,RIGHT,-4,0',
+		ShiftAB = 'BOTTOM,ElvUIParent,BOTTOM,0,58',
+		ElvUF_Raid3Mover = 'BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269',
+		ElvUF_Raid2Mover = 'BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269',
+		ElvUF_Raid1Mover = 'BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269',
+		ElvUF_PartyMover = 'BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,269',
+		HonorBarMover = 'TOPRIGHT,ElvUIParent,TOPRIGHT,-2,-251',
+		ReputationBarMover = 'TOPRIGHT,ElvUIParent,TOPRIGHT,-2,-243'
 	},
 	dpsCaster = {
 		ElvUF_PlayerCastbarMover = 'BOTTOM,ElvUIParent,BOTTOM,0,243',

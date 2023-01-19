@@ -24,7 +24,7 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	SpecialPursueWarnYou	= "Спецпредупреждение, когда на вас $spell:62374",
+	SpecialPursueWarnYou	= "Спецпредупреждение, когда на Вас $spell:62374",
 	PursueWarn				= "Объявлять цели заклинания $spell:62374",
 	warnNextPursueSoon		= "Предупреждать заранее о следующем $spell:62374",
 	warnWardofLife			= "Спецпредупреждение для призыва Защитника жизни"
@@ -37,6 +37,10 @@ L = DBM:GetModLocalization("Ignis")
 
 L:SetGeneralLocalization{
 	name = "Повелитель Горнов Игнис"
+}
+
+L:SetOptionLocalization{
+	SlagPotIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(63477)
 }
 
 ------------------
@@ -62,7 +66,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	warnTurretsReadySoon		= "Пред-предупреждение для пушек",
+	warnTurretsReadySoon		= "Предварительное предупреждение для пушек",
 	warnTurretsReady			= "Предупреждение для пушек",
 	timerTurret1				= "Отсчет времени до пушки 1",
 	timerTurret2				= "Отсчет времени до пушки 2",
@@ -121,7 +125,6 @@ L:SetTimerLocalization{
 }
 
 L:SetWarningLocalization{
-	WarningPhasePunch		= "Фазовый удар на |3-5(>%s<) - cтак %d",
 	WarnPhase2Soon			= "Скоро фаза 2",
 	warnStarLow				= "У Вспыхивающей звезды мало здоровья"
 }
@@ -212,7 +215,8 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	YellKill	= "Наконец-то я... свободен от его оков…"
+	Pull		= "Вы будете наказаны за это вторжение!",
+	YellKill	= "Наконец-то я... свободен от его оков..."
 }
 
 --------------
@@ -290,8 +294,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	MagneticCore		= "Магнитное ядро у |3-1(>%s<)",
-	WarningShockBlast	= "Шоковый удар - бегите",
+	MagneticCore		= "Магнитное ядро у >%s<",
 	WarnBombSpawn		= "Бомбот"
 }
 
@@ -308,9 +311,7 @@ L:SetOptionLocalization{
 	TimeToPhase4			= "Отсчет времени для фазы 4",
 	MagneticCore			= "Объявлять подобравших Магнитное ядро",
 	WarnBombSpawn			= "Предупреждение о Бомботах",
-	TimerHardmode			= "Отсчет времени для сложного режима",
-	ShockBlastWarningInP1	= "Спецпредупреждение для $spell:63631 в фазе 1",
-	ShockBlastWarningInP4	= "Спецпредупреждение для $spell:63631 в фазе 4"
+	TimerHardmode			= "Отсчет времени для сложного режима"
 }
 
 L:SetMiscLocalization{
@@ -331,22 +332,17 @@ L:SetGeneralLocalization{
 	name = "Генерал Везакс"
 }
 
-L:SetTimerLocalization{
-	hardmodeSpawn = "Саронитовый враг"
+L:SetWarningLocalization{
+	specWarnAnimus 	= "Саронитовый анимус - смените цель"
 }
 
-L:SetWarningLocalization{
-	SpecialWarningShadowCrash		= "Темное сокрушение на Вас - отбегите",
-	SpecialWarningShadowCrashNear	= "Темное сокрушение около Вас - остерегайтесь",
-	SpecialWarningLLNear			= "Вытягивание жизни на |3-5(%s) около Вас"
+L:SetTimerLocalization{
+	hardmodeSpawn = "Саронитовый анимус"
 }
 
 L:SetOptionLocalization{
-	SpecialWarningShadowCrash		= "Спецпредупреждение для $spell:62660<br/>(должен быть в цели или фокусе хотя бы у одного члена рейда)",
-	SpecialWarningShadowCrashNear	= "Спецпредупреждение о $spell:62660 около Вас",
-	SpecialWarningLLNear			= "Спецпредупреждение о $spell:63276 около Вас",
-	hardmodeSpawn					= "Отсчет времени до появления Саронитового врага (сложный режим)",
-	CrashArrow						= "Показывать стрелку, когда $spell:62660 около Вас"
+	specWarnAnimus 	= "Спецпредупреждение для переключения целей на Саронитового анимуса",
+	hardmodeSpawn	= "Показать таймер появления Саронитового анимуса (сложный режим)"
 }
 
 L:SetMiscLocalization{
@@ -362,39 +358,33 @@ L:SetGeneralLocalization{
 	name = "Йогг-Сарон"
 }
 
+L:SetWarningLocalization{
+	WarningGuardianSpawned 			= "Появился Страж %d",
+	WarningCrusherTentacleSpawned	= "Появилось Тяжелое щупальце",
+	WarningSanity 					= "Осталось %d Здравомыслия",
+	SpecWarnSanity 					= "Осталось %d Здравомыслия",
+	SpecWarnMadnessOutNow			= "Доведение до помешательства заканчивается - выбегайте",
+	WarnBrainPortalSoon				= "Портал Разума через 3 секунды",
+	specWarnBrainPortalSoon			= "Скоро Портал Разума"
+}
+
+L:SetTimerLocalization{
+	NextPortal	= "Портал Разума"
+}
+
+L:SetOptionLocalization{
+	WarningGuardianSpawned			= "Показывать предупреждение о появлении Стража",
+	WarningCrusherTentacleSpawned	= "Показывать предупреждение о появлении Тяжелого щупальца",
+	WarningSanity					= "Показывать предупреждение, когда у Вас мало $spell:63050",
+	SpecWarnSanity					= "Спецпредупреждение, когда у Вас очень мало $spell:63050",
+	WarnBrainPortalSoon				= "Предупреждать заранее о Портале Разума",
+	SpecWarnMadnessOutNow			= "Спецпредупреждение незадолго до окончания $spell:64059",
+	specWarnBrainPortalSoon			= "Спецпредупреждение о следующем Портале Разума",
+	NextPortal						= "Отсчет времени до следующего Портала Разума"
+}
+
 L:SetMiscLocalization{
 	YellPull 			= "Скоро мы сразимся с главарем этих извергов! Обратите гнев и ненависть против его прислужников!",
 	YellPhase2	 		= "Я – это сон наяву.",
 	Sara 				= "Сара"
-}
-
-L:SetWarningLocalization{
-	WarningGuardianSpawned 			= "Страж %d",
-	WarningCrusherTentacleSpawned	= "Тяжелое щупальце",
-	WarningSanity 					= "Осталось %d Здравомыслия",
-	SpecWarnSanity 					= "Осталось %d Здравомыслия",
-	SpecWarnGuardianLow				= "Прекратите атаковать этого Стража",
-	SpecWarnMadnessOutNow			= "Доведение до помешательства заканчивается - выбегайте",
-	WarnBrainPortalSoon				= "Провал Безумия через 3 секунды",
-	SpecWarnFervor					= "Рвение Сары на Вас",
-	SpecWarnFervorCast				= "Рвение Сары накладывается на Вас",
-	specWarnBrainPortalSoon			= "Скоро Провал Безумия"
-}
-
-L:SetTimerLocalization{
-	NextPortal	= "Провал Безумия"
-}
-
-L:SetOptionLocalization{
-	WarningGuardianSpawned			= "Предупреждение о появлении Стража",
-	WarningCrusherTentacleSpawned	= "Предупреждение о появлении Тяжелого щупальца",
-	WarningSanity					= "Предупреждение, когда у Вас мало $spell:63050",
-	SpecWarnSanity					= "Спецпредупреждение, когда у Вас очень мало $spell:63050",
-	SpecWarnGuardianLow				= "Спецпредупреждение, когда у Стража (в фазе 1) мало здоровья (для бойцов)",
-	WarnBrainPortalSoon				= "Предупреждать заранее о Провале Безумия",
-	SpecWarnMadnessOutNow			= "Спецпредупреждение незадолго до окончания $spell:64059",
-	SpecWarnFervorCast				= "Спецпредупреждение, когда на Вас накладывается $spell:63138<br/>(должна быть в цели или фокусе хотя бы у одного члена рейда)",
-	specWarnBrainPortalSoon			= "Спецпредупреждение о следующем Провале Безумия",
-	NextPortal						= "Отсчет времени до следующего Провала Безумия",
-	MaladyArrow						= "Показывать стрелку, когда $spell:63881 около Вас"
 }

@@ -24,15 +24,24 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 62
-RSConstants.CURRENT_LOOT_DB_VERSION = 75
+RSConstants.CURRENT_DB_VERSION = 81
+RSConstants.CURRENT_LOOT_DB_VERSION = 91
 
 ---============================================================================
 -- Current maps (newer)
 ---============================================================================
 
-RSConstants.CURRENT_MAP_ID = 1550 --Shadowlands
-RSConstants.CURRENT_SUBMAP_ID = 1970 --Zereth Mortis
+RSConstants.CURRENT_MAP_ID = 1978 --Dragon Isles
+RSConstants.CURRENT_SUBMAP_ID = 2022 --The Waking Shores
+
+---============================================================================
+-- Default filtered entities by version
+---============================================================================
+
+RSConstants.DEFAULT_FILTERED_ENTITIES = {
+	version = 67,
+	containers = {382029, 383733, 383734, 383735, 376386, 376587}
+}
 
 ---============================================================================
 -- Special events
@@ -54,7 +63,6 @@ RSConstants.CACHE_ALL_COMPLETED_QUEST_IDS_TIMER = 60 --1 minute
 RSConstants.FIND_HIDDEN_QUESTS_TIMER = 5 --5 seconds after killing a NPC or opening a container
 RSConstants.CHECK_RESPAWN_BY_QUEST_TIMER = 150 --2.5 minutes
 RSConstants.CHECK_RESPAWNING_BY_LASTSEEN_TIMER = 60 --1 minute
-RSConstants.FIND_BETTER_COORDINATES_WITH_RANGE_TIMER = 1; -- 1 seconds
 RSConstants.CHECK_RESET_NOTIFICATIONS_TIMER = 10 --10 seconds
 
 ---============================================================================
@@ -90,6 +98,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanOnTaxi = true,
 			scanOnPetBattle = true,
 			scanWorldmapVignette = false,
+			ignoreCompletedEntities = true,
 			filteredRares = {},
 			filteredContainers = {},
 			filteredEvents = {},
@@ -133,7 +142,8 @@ RSConstants.PROFILE_DEFAULTS = {
 		},
 		containerFilters = {
 			filtersToggled = true,
-			filterOnlyMap = false
+			filterOnlyMap = false,
+			filterOnlyAlerts = true,
 		},
 		eventFilters = {
 			filtersToggled = true,
@@ -157,7 +167,10 @@ RSConstants.PROFILE_DEFAULTS = {
 		},
 		map = {
 			displayNpcIcons = true,
+			displayHuntingPartyRaresNpcIcons = true,
+			displayPrimalStormRaresNpcIcons = true,
 			displayContainerIcons = true,
+			displayNotTrackeableContainerIcons = true,
 			displayEventIcons = true,
 			disableLastSeenFilter = false,
 			displayFriendlyNpcIcons = false,
@@ -206,15 +219,16 @@ RSConstants.PROFILE_DEFAULTS = {
 			displayLootOnMap = true,
 			lootTooltipPosition = "ANCHOR_LEFT",
 			lootMinQuality = 0,
-			filterNotEquipableItems = false,
-			showOnlyTransmogItems = false,
-			filterCollectedItems = true,
 			filterItemsCompletedQuest = true,
 			filterNotMatchingClass = false,
 			filterNotMatchingFaction = true,
 			filterAnimaItems = true,
 			filterConduitItems = true,
 			filterByExplorerResults = false,
+			showingMissingMounts = true,
+			showingMissingPets = true,
+			showingMissingToys = true,
+			showingMissingAppearances = true,
 			numItems = 10,
 			numItemsPerRow = 10,
 			tooltipsCommands = true,
@@ -259,6 +273,7 @@ RSConstants.CMD_TOGGLE_TREASURES_ALERTS = "tta"
 RSConstants.CMD_TOGGLE_SCANNING_WORLD_MAP_VIGNETTES = "swmv"
 RSConstants.CMD_TOMTOM_WAYPOINT = "waypoint"
 RSConstants.CMD_TOGGLE_DRAGON_GLYPHS = "tdg"
+RSConstants.CMD_OPEN_EXPLORER = "explorer"
 
 ---============================================================================
 -- AtlasNames
@@ -273,7 +288,7 @@ RSConstants.NPC_TORMENTORS_VIGNETTE = "Tormentors-Boss"
 
 RSConstants.CONTAINER_VIGNETTE = "VignetteLoot"
 RSConstants.CONTAINER_ELITE_VIGNETTE = "VignetteLootElite"
-RSConstants.CONTAINER_ZERETH_FIRIM_VIGNETTE = "QuestObjective"
+RSConstants.CONTAINER_LOCKED_VIGNETTE = "vignetteloot-locked"
 
 RSConstants.EVENT_VIGNETTE = "VignetteEvent"
 RSConstants.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
@@ -325,6 +340,10 @@ RSConstants.THEATER_PAIN_NPCS = { 168147, 168148 }
 RSConstants.DAPPERDEW_NPCS = { 168135, 164415, 166135, 166138, 166139, 166140, 166142, 166145, 166146 }
 RSConstants.ASCENDED_COUNCIL_NPCS = { 170832, 170833, 170834, 170835, 170836 }
 RSConstants.FOUR_PEOPLE_NPCS = { 170301, 169827, 170301, 170302 }
+RSConstants.FIRE_STORM_EVENTS_NPCS = { 193650, 193648, 193675, 193686, 193687 }
+RSConstants.WATER_STORM_EVENTS_NPCS = { 193645, 193655, 193682, 193677, 193678, 193679 }
+RSConstants.AIR_STORM_EVENTS_NPCS = { 193653, 193647, 193684, 193674, 193685 }
+RSConstants.EARTH_STORM_EVENTS_NPCS = { 193644, 193654, 193652, 193680 }
 RSConstants.BOUNDING_SHRROM_CONTAINERS = { 349793, 349797, 353330 }
 RSConstants.RIPE_PURIAN_CONTAINERS = { 353643, 353503, 353205, 353500, 352754, 353516, 353325, 353019, 353252, 353314, 352998 }
 RSConstants.RIFT_HIDDEN_ENTITIES = { 179883, 368645, 368646, 368647, 368648, 368649, 368650 }
@@ -337,6 +356,11 @@ RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 
 RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
 RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
 RSConstants.DISTURBED_DIRT = { 382029, 376386, 383733, 383734, 383735 }
+RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228 }
+RSConstants.OMINOUS_CONCHS_NPCS = { 193735, 193634, 193710, 197371, 193708, 193706 } --197411
+RSConstants.CONTAINERS_WITHOUT_VIGNETTE = { 376582, 376583, 376585, 376579, 376584, 377587, 378010, 376580 }
+RSConstants.MAGIC_BOUND_CHEST = { 376426, 385075, 385074 }
+RSConstants.CONTAINER_WITH_NPC_VIGNETTE = { 192243 }
 
 -- NPCs that spawn after completing an event
 RSConstants.NPCS_WITH_PRE_EVENT = {
@@ -406,6 +430,7 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[193166] = 187559;
 	-- The Azure Span
 	[192747] = 192749;
+	[190971] = 189822;
 }
 
 -- Contains that spawn after completing an event
@@ -425,6 +450,8 @@ RSConstants.CONTAINERS_WITH_PRE_EVENT = {
 	[79805] = 230664;
 	-- Frostfire Ridge
 	[229366] = 229367;
+	-- Dragonflight
+	[191861] = 385074;
 }
 
 -- NPCs that spawn after killing another NPC
@@ -437,12 +464,12 @@ RSConstants.NPCS_WITH_PRE_NPCS = {
 	
 -- 156480 Next door entity inside Torghast
 -- 155660 Summons from the Depths
-RSConstants.IGNORED_VIGNETTES = { 156480, 155660, 163373, 370467, 370466, 182160, 182668, 182667, 185261 }
+RSConstants.IGNORED_VIGNETTES = { 156480, 155660, 163373, 370467, 370466, 182160, 182668, 182667, 185261, 376210, 200002, 190034, 191125 }
 RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 72156, 154154, 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460, 179851, 179735, 169827 }
 RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
 RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }
-RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290, 376587, 382029, 376386, 383733, 383734, 383735 }
+RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290, 376587, 382029, 376386, 383733, 383734, 383735, 383732 }
 RSConstants.FIRIM_EXILE_OBJECTS = { 375973, 375982, 375983, 375984, 375985, 375986, 375987 }
 
 ---============================================================================
@@ -517,6 +544,10 @@ RSConstants.GUIDE_STEP7_FILE = "Number7"
 RSConstants.GUIDE_STEP8_FILE = "Number8"
 RSConstants.GUIDE_STEP9_FILE = "Number9"
 RSConstants.DRAGON_GLYFH_FILE = "DragonGlyphSmall"
+RSConstants.FIRE_STORM_ATLAS = "ElementalStorm-Lesser-Fire"
+RSConstants.AIR_STORM_ATLAS = "ElementalStorm-Lesser-Air"
+RSConstants.EARTH_STORM_ATLAS = "ElementalStorm-Lesser-Earth"
+RSConstants.WATER_STORM_ATLAS = "ElementalStorm-Lesser-Water"
 
 RSConstants.NORMAL_NPC_TEXTURE = string.format(RSConstants.TEXTURE_PATH, RSConstants.NORMAL_NPC_TEXTURE_FILE);
 RSConstants.GROUP_NORMAL_NPC_T_TEXTURE = string.format(RSConstants.TEXTURE_PATH, string.format("%s%s", RSConstants.NORMAL_NPC_TEXTURE_FILE, RSConstants.GROUP_TOP_TEXTURE_FILE));
@@ -633,6 +664,7 @@ RSConstants.STEP7 = "7"
 
 RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS = "RARESCANNER_APPLY_COLLECTIONS_LOOT_FILTERS"
 RSConstants.EXPLORER_FILTERING_DIALOG = "RARESCANNER_EXPLORER_FILTERING_DIALOG"
+RSConstants.EXPLORER_SCAN_NOT_DONE = "RARESCANNER_EXPLORER_SCAN_NOT_DONE"
 
 ---============================================================================
 -- Explorer filters
@@ -652,7 +684,7 @@ RSConstants.EXPLORER_FILTER_WITHOUT_COLLECTIBLES = 8
 ---============================================================================
 
 RSConstants.RAID_WARNING_SHOWING_TIME = 3
-RSConstants.MINIMUM_DISTANCE_PINS_WORLD_MAP = 0.015
+RSConstants.MINIMUM_DISTANCE_PINS_WORLD_MAP = 0.005
 RSConstants.TOOLTIP_MAX_WIDTH = 300
 
 ---============================================================================
@@ -672,5 +704,5 @@ function RSConstants.IsNpcAtlas(atlasName)
 end
 
 function RSConstants.IsContainerAtlas(atlasName)
-	return atlasName == RSConstants.CONTAINER_VIGNETTE or atlasName == RSConstants.CONTAINER_ELITE_VIGNETTE
+	return atlasName == RSConstants.CONTAINER_VIGNETTE or atlasName == RSConstants.CONTAINER_ELITE_VIGNETTE or atlasName == RSConstants.CONTAINER_LOCKED_VIGNETTE
 end

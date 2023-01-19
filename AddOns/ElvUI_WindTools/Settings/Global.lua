@@ -1,10 +1,12 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 
 G.core = {
-    logLevel = 2,
     compatibilityCheck = true,
+    cvarAlert = false,
+    fixPlaystyle = true,
+    logLevel = 2,
     loginMessage = true,
-    buttonFix = "AnyUp"
+    noDuplicatedParty = false
 }
 
 G.item = {
@@ -20,4 +22,17 @@ G.combat = {
             characters = {}
         }
     }
+}
+
+G.misc = {
+    gameBar = {
+        covenantCache = {}
+    },
+    watched = {
+        movies = {}
+    }
+}
+
+G.maps = {
+    eventTracker = {}
 }

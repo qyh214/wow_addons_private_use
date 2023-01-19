@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2480, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221021185029")
+mod:SetRevision("20230115051456")
 mod:SetCreatureID(184972)
 mod:SetEncounterID(2587)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(20221013000000)
-mod:SetMinSyncRevision(20221013000000)
+mod:SetHotfixNoticeRev(20221215000000)
+mod:SetMinSyncRevision(20221215000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -16,19 +16,16 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 394917 396022",
 	"SPELL_AURA_APPLIED 370597 371562 390715 394906 396094",
 	"SPELL_AURA_APPLIED_DOSE 394906",
-	"SPELL_AURA_REMOVED 370597 371562 390715 396094",
+	"SPELL_AURA_REMOVED 370597 371562 390715 396094 370307",
 	"SPELL_PERIODIC_DAMAGE 370648",
 	"SPELL_PERIODIC_MISSED 370648",
 	"UNIT_DIED"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
---TODO, adjust tank debuff check code for tank debuff to match CD and correct stack swap count based on the math
---TODO, continue to review auto stopping timers after x casts. need to see normal and LFR first to make sure not cutting timers off that should't be on them yet
---TODO, initial big add timers on mythic if it matters enough, but it's first boss so meh
 --[[
 (ability.id = 370307 or ability.id = 390715 or ability.id = 394917 or ability.id = 370615 or ability.id = 396023) and type = "begincast"
- or ability.id = 394917 and type = "cast"
+ or (ability.id = 396022 or ability.id = 394917) and type = "cast"
  or ability.id = 370307 and type = "removebuff"
  or ability.id = 390715 and type = "applydebuff"
 --]]
@@ -48,10 +45,10 @@ local specWarnIncineratingRoar					= mod:NewSpecialWarningCount(396023, nil, nil
 local specWarnMoltenSpikes						= mod:NewSpecialWarningDodgeCount(396022, nil, nil, nil, 2, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(370648, nil, nil, nil, 1, 8)
 
-local timerMoltenCleaveCD						= mod:NewCDCountTimer(30.2, 370615, nil, nil, nil, 3)
-local timerFlameriftCD							= mod:NewCDCountTimer(30.2, 390715, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
-local timerIncineratingRoarCD					= mod:NewCDCountTimer(26.9, 396023, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerMoltenSpikesCD						= mod:NewCDCountTimer(48.4, 396022, nil, nil, nil, 3)
+local timerMoltenCleaveCD						= mod:NewCDCountTimer(29.9, 370615, nil, nil, nil, 3)
+local timerFlameriftCD							= mod:NewCDCountTimer(28.9, 390715, nil, nil, nil, 3, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerIncineratingRoarCD					= mod:NewCDCountTimer(23.9, 396023, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerMoltenSpikesCD						= mod:NewCDCountTimer(21.4, 396022, nil, nil, nil, 3)
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
 --mod:AddInfoFrameOption(361651, true)
@@ -94,11 +91,11 @@ function mod:OnCombatStart(delay)
 	self.vb.riftCount = 0
 	self.vb.roarCount = 0
 	self.vb.spikesCount = 0
-	timerIncineratingRoarCD:Start(2.1-delay, 1)
-	timerMoltenCleaveCD:Start(7.6-delay, 1)
-	timerFlameriftCD:Start(11.6-delay, 1)
+	timerIncineratingRoarCD:Start(9.8-delay, 1)
+	timerFlameriftCD:Start(13.9-delay, 1)
+	timerMoltenCleaveCD:Start(37.9-delay, 1)
 	if self:IsHard() then
-		timerMoltenSpikesCD:Start(14.2-delay, 1)
+		timerMoltenSpikesCD:Start(21.8-delay, 1)
 	end
 	timerCollapsingArmyCD:Start(91.7-delay, 1)
 	if self.Options.NPAuraOnKillOrder or self.Options.NPAuraOnRampage then
@@ -130,23 +127,25 @@ function mod:SPELL_CAST_START(args)
 		timerMoltenSpikesCD:Stop()
 	elseif spellId == 390715 then
 		self.vb.riftCount = self.vb.riftCount + 1
---		if self.vb.riftCount < 3 then--Cast 2 to 3x per rotation
+		if self.vb.riftCount < 3 then--Cast 3x per rotation
 			timerFlameriftCD:Start(nil, self.vb.riftCount+1)
---		end
+		end
 	elseif spellId == 394917 then
 		warnLeapingFlames:Show()
 	elseif spellId == 370615 then
 		self.vb.cleaveCount = self.vb.cleaveCount + 1
 		specWarnMoltenCleave:Show(self.vb.cleaveCount)
 		specWarnMoltenCleave:Play("shockwave")
-		timerMoltenCleaveCD:Start(nil, self.vb.cleaveCount+1)
+		if self.vb.cleaveCount == 1 then--Only 2x per rotation
+			timerMoltenCleaveCD:Start(nil, 2)
+		end
 	elseif spellId == 396023 then
 		self.vb.roarCount = self.vb.roarCount + 1
 		specWarnIncineratingRoar:Show(self.vb.roarCount)
 		specWarnIncineratingRoar:Play("aesoon")
---		if self.vb.roarCount < 4 then
+		if self.vb.roarCount < 4 then--4 per rotation
 			timerIncineratingRoarCD:Start(nil, self.vb.roarCount+1)
---		end
+		end
 	elseif spellId == 396040 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
@@ -158,16 +157,8 @@ function mod:SPELL_CAST_START(args)
 		local count = castsPerGUID[args.sourceGUID]
 		if self:CheckInterruptFilter(args.sourceGUID, false, false) then--Count interrupt, so cooldown is not checked
 			specWarnPyroBlast:Show(args.sourceName, count)
-			if count == 1 then
-				specWarnPyroBlast:Play("kick1r")
-			elseif count == 2 then
-				specWarnPyroBlast:Play("kick2r")
-			elseif count == 3 then
-				specWarnPyroBlast:Play("kick3r")
-			elseif count == 4 then
-				specWarnPyroBlast:Play("kick4r")
-			elseif count == 5 then
-				specWarnPyroBlast:Play("kick5r")
+			if count < 6 then
+				specWarnPyroBlast:Play("kick"..count.."r")
 			else
 				specWarnPyroBlast:Play("kickcast")
 			end
@@ -181,10 +172,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerLeapingFlamesCD:Start(nil, args.sourceGUID)
 	elseif spellId == 396022 then
 		self.vb.spikesCount = self.vb.spikesCount + 1
-		specWarnMoltenSpikes:Show()
+		specWarnMoltenSpikes:Show(self.vb.spikesCount)
 		specWarnMoltenSpikes:Play(self.vb.spikesCount)
-		if self.vb.spikesCount == 1 then
-			timerMoltenSpikesCD:Start(nil, 2)
+		if self.vb.spikesCount < 3 then
+			timerMoltenSpikesCD:Start(nil, self.vb.spikesCount+1)
 		end
 	end
 end
@@ -223,18 +214,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFlamerift:CombinedShow(0.5, args.destName)
 	elseif spellId == 394906 then
 		local amount = args.amount or 1
-		if (amount % 3 == 0) then
+		if amount >= 3 and self:AntiSpam(3, 1) then
 			if amount >= 6 then
 				if args:IsPlayer() then
 					specWarnBurningWound:Show(amount)
 					specWarnBurningWound:Play("stackhigh")
 				else
-					local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-					local remaining
-					if expireTime then
-						remaining = expireTime-GetTime()
-					end
-					if (not remaining or remaining and remaining < 10.9) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
+					if not DBM:UnitDebuff("player", spellId) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
 						specWarnBurningWoundTaunt:Show(args.destName)
 						specWarnBurningWoundTaunt:Play("tauntboss")
 					else
@@ -273,18 +259,18 @@ function mod:SPELL_AURA_REMOVED(args)
 		self.vb.cleaveCount = 0
 		self.vb.riftCount = 0
 		self.vb.spikesCount = 0
-		timerIncineratingRoarCD:Start(3.1, 1)
-		timerMoltenCleaveCD:Start(11.6, 1)
-		timerFlameriftCD:Start(15.6, 1)
+		timerIncineratingRoarCD:Start(10, 1)
+		timerFlameriftCD:Start(13.9, 1)
+		timerMoltenCleaveCD:Start(38, 1)
 		if self:IsHard() then
-			timerMoltenSpikesCD:Start(19, 1)
+			timerMoltenSpikesCD:Start(22, 1)
 		end
-		timerCollapsingArmyCD:Start(94, self.vb.armyCount+1)
+		timerCollapsingArmyCD:Start(93, self.vb.armyCount+1)
 	end
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 370648 and destGUID == UnitGUID("player") and self:AntiSpam(2, 4) then
+	if spellId == 370648 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

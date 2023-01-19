@@ -135,14 +135,19 @@ function XLoot:OnEnable()
 			DisableAddOn(name)
 			wprint(("|c2244dd22XLoot|r now includes |c2244dd22%s|r - the old version will be disabled on next load, and no longer needs to be installed."):format(name))
 		end
-	end	
+	end
 
 	-- Create option stub
-	local stub = CreateFrame("Frame", "XLootConfigPanel", UIParent)
-	stub.name = "XLoot"
-	stub:Hide()
-	InterfaceOptions_AddCategory(stub)
-	stub:SetScript("OnShow", function() self:ShowOptionPanel(self) end)
+	if Settings then
+		EnableAddOn("XLoot_Options")
+		LoadAddOn("XLoot_Options")
+	else
+		local stub = CreateFrame("Frame", "XLootConfigPanel", UIParent)
+		stub.name = "XLoot"
+		stub:Hide()
+		InterfaceOptions_AddCategory(stub)
+		stub:SetScript("OnShow", function() self:ShowOptionPanel(self) end)
+	end
 	self:SetSlashCommand("xloot", function() self:ShowOptionPanel(self) end)
 end
 

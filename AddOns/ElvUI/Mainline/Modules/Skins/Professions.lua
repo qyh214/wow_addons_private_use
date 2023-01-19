@@ -25,22 +25,84 @@ end
 
 local function ReskinSlotButton(button)
 	if button and not button.isSkinned then
+		local texture = button.Icon:GetTexture()
 		button:StripTextures()
 		button:SetNormalTexture(E.ClearTexture)
 		button:SetPushedTexture(E.ClearTexture)
 
 		S:HandleIcon(button.Icon, true)
 		S:HandleIconBorder(button.IconBorder, button.Icon.backdrop)
+		button.Icon:SetOutside(button)
+		button.Icon:SetTexture(texture)
 
 		local hl = button:GetHighlightTexture()
 		hl:SetColorTexture(1, 1, 1, .25)
-		hl:SetInside(button.bg)
+		hl:SetOutside(button)
+
 		if button.SlotBackground then
 			button.SlotBackground:Hide()
 		end
 
 		button.isSkinned = true
 	end
+end
+
+local function HandleOutputButtons(frame)
+	for _, child in next, { frame.ScrollTarget:GetChildren() } do
+		if not child.isSkinned then
+			local itemContainer = child.ItemContainer
+			if itemContainer then
+				local item = itemContainer.Item
+				item:SetNormalTexture(E.ClearTexture)
+				item:SetPushedTexture(E.ClearTexture)
+				item:SetHighlightTexture(E.ClearTexture)
+
+				local icon = item:GetRegions()
+				S:HandleIcon(icon, true)
+				S:HandleIconBorder(item.IconBorder, icon.backdrop)
+
+				itemContainer.CritFrame:SetAlpha(0)
+				itemContainer.BorderFrame:Hide()
+				itemContainer.HighlightNameFrame:SetAlpha(0)
+				itemContainer.PushedNameFrame:SetAlpha(0)
+				itemContainer.HighlightNameFrame:CreateBackdrop('Transparent')
+			end
+
+			local bonus = child.CreationBonus
+			if bonus then
+				local item = bonus.Item
+				item:StripTextures()
+				local icon = item:GetRegions()
+				S:HandleIcon(icon)
+			end
+
+			child.isSkinned = true
+		end
+
+		local itemContainer = child.ItemContainer
+		if itemContainer then
+			itemContainer.Item.IconBorder:SetAlpha(0)
+
+			local itemBG = itemContainer.backdrop
+			if itemBG then
+				if itemContainer.CritFrame:IsShown() then
+					itemBG:SetBackdropBorderColor(1, .8, 0)
+				else
+					itemBG:SetBackdropBorderColor(0, 0, 0)
+				end
+			end
+		end
+	end
+end
+
+local function ReskinOutputLog(outputlog)
+	outputlog:StripTextures()
+	outputlog:SetTemplate('Transparent')
+
+	S:HandleCloseButton(outputlog.ClosePanelButton)
+	S:HandleTrimScrollBar(outputlog.ScrollBar, true)
+
+	hooksecurefunc(outputlog.ScrollBox, 'Update', HandleOutputButtons)
 end
 
 function S:Blizzard_Professions()
@@ -50,16 +112,22 @@ function S:Blizzard_Professions()
 	S:HandlePortraitFrame(ProfessionsFrame)
 
 	local CraftingPage = ProfessionsFrame.CraftingPage
-	CraftingPage.TutorialButton.Ring:Hide()
 	S:HandleButton(CraftingPage.CreateButton)
 	S:HandleButton(CraftingPage.CreateAllButton)
 	S:HandleButton(CraftingPage.ViewGuildCraftersButton)
 	HandleInputBox(CraftingPage.CreateMultipleInputBox)
 
-	local RankBar = CraftingPage.RankBar
-	RankBar.Border:Hide()
-	RankBar.Background:Hide()
-	RankBar.Fill:CreateBackdrop()
+	if E.global.general.disableTutorialButtons then
+		CraftingPage.TutorialButton:Kill()
+	else
+		CraftingPage.TutorialButton.Ring:Hide()
+	end
+
+	local CraftingRankBar = CraftingPage.RankBar
+	CraftingRankBar.Border:Hide()
+	CraftingRankBar.Background:Hide()
+	CraftingRankBar.Fill:CreateBackdrop()
+	CraftingRankBar.Rank.Text:FontTemplate()
 
 	local LinkButton = CraftingPage.LinkButton
 	LinkButton:GetNormalTexture():SetTexCoord(0.25, 0.7, 0.37, 0.75)
@@ -89,26 +157,55 @@ function S:Blizzard_Professions()
 		end
 	end
 
-	local RecipeList = CraftingPage.RecipeList
-	RecipeList:StripTextures()
-	S:HandleTrimScrollBar(RecipeList.ScrollBar, true)
-	if RecipeList.BackgroundNineSlice then RecipeList.BackgroundNineSlice:Hide() end
-	RecipeList:CreateBackdrop('Transparent')
-	RecipeList.backdrop:SetInside()
-	S:HandleEditBox(RecipeList.SearchBox)
-	S:HandleButton(RecipeList.FilterButton)
-	S:HandleCloseButton(RecipeList.FilterButton.ResetButton)
+	local CraftList = CraftingPage.RecipeList
+	CraftList:StripTextures()
+	S:HandleTrimScrollBar(CraftList.ScrollBar, true)
+
+	if CraftList.BackgroundNineSlice then
+		if E.private.skins.parchmentRemoverEnable then
+			CraftList.BackgroundNineSlice:Hide()
+		else
+			CraftList.BackgroundNineSlice:SetAlpha(.25)
+		end
+	end
+
+	CraftList:CreateBackdrop('Transparent')
+	CraftList.backdrop:SetInside()
+	S:HandleEditBox(CraftList.SearchBox)
+	S:HandleButton(CraftList.FilterButton)
+	S:HandleCloseButton(CraftList.FilterButton.ResetButton)
 
 	local SchematicForm = CraftingPage.SchematicForm
 	SchematicForm:StripTextures()
-	SchematicForm.Background:SetAlpha(0)
+
+	if E.private.skins.parchmentRemoverEnable then
+		SchematicForm.Background:SetAlpha(0)
+	else
+		SchematicForm.Background:SetAlpha(.25)
+	end
 	SchematicForm:CreateBackdrop('Transparent')
 	SchematicForm.backdrop:SetInside()
 
-	local Track = SchematicForm.TrackRecipeCheckBox
-	if Track then
-		S:HandleCheckBox(Track)
-		Track:SetSize(24, 24)
+	hooksecurefunc(SchematicForm, 'Init', function(frame)
+		for slot in frame.reagentSlotPool:EnumerateActive() do
+			ReskinSlotButton(slot.Button)
+		end
+
+		local salvageSlot = SchematicForm.salvageSlot
+		if salvageSlot then
+			ReskinSlotButton(salvageSlot.Button)
+		end
+
+		local enchantSlot = SchematicForm.enchantSlot
+		if enchantSlot then
+			ReskinSlotButton(enchantSlot.Button)
+		end
+	end)
+
+	local TrackRecipeCheckBox = SchematicForm.TrackRecipeCheckBox
+	if TrackRecipeCheckBox then
+		S:HandleCheckBox(TrackRecipeCheckBox)
+		TrackRecipeCheckBox:SetSize(24, 24)
 	end
 
 	local QualityCheckBox = SchematicForm.AllocateBestQualityCheckBox
@@ -130,16 +227,13 @@ function S:Blizzard_Professions()
 		ReskinQualityContainer(QualityDialog.Container3)
 	end
 
-	hooksecurefunc(SchematicForm, 'Init', function(frame)
-		for slot in frame.reagentSlotPool:EnumerateActive() do
-			ReskinSlotButton(slot.Button)
-		end
-
-		local slot = SchematicForm.salvageSlot
-		if slot then
-			ReskinSlotButton(slot.Button)
-		end
-	end)
+	local OutputIcon = SchematicForm.OutputIcon
+	if OutputIcon then
+		S:HandleIcon(OutputIcon.Icon, true)
+		S:HandleIconBorder(OutputIcon.IconBorder, OutputIcon.Icon.backdrop)
+		OutputIcon:GetHighlightTexture():Hide()
+		OutputIcon.CircleMask:Hide()
+	end
 
 	local SpecPage = ProfessionsFrame.SpecPage
 	S:HandleButton(SpecPage.UnlockTabButton)
@@ -148,6 +242,7 @@ function S:Blizzard_Professions()
 	SpecPage.TreeView.Background:Hide()
 	SpecPage.TreeView:CreateBackdrop('Transparent')
 	SpecPage.TreeView.backdrop:SetInside()
+	SpecPage.PanelFooter:StripTextures()
 
 	hooksecurefunc(SpecPage, 'UpdateTabs', function(frame)
 		for tab in frame.tabsPool:EnumerateActive() do
@@ -166,58 +261,99 @@ function S:Blizzard_Professions()
 	S:HandleButton(DetailedView.SpendPointsButton)
 	S:HandleIcon(DetailedView.UnspentPoints.Icon)
 
-	local OutputLog = CraftingPage.CraftingOutputLog
-	OutputLog:StripTextures()
-	OutputLog:CreateBackdrop()
-	S:HandleCloseButton(OutputLog.ClosePanelButton)
-	S:HandleTrimScrollBar(OutputLog.ScrollBar, true)
+	ReskinOutputLog(CraftingPage.CraftingOutputLog)
 
-	hooksecurefunc(OutputLog.ScrollBox, 'Update', function(frame)
-		for _, child in next, { frame.ScrollTarget:GetChildren() } do
-			if not child.isSkinned then
-				local itemContainer = child.ItemContainer
-				if itemContainer then
-					local item = itemContainer.Item
-					item:SetNormalTexture(E.ClearTexture)
-					item:SetPushedTexture(E.ClearTexture)
-					item:SetHighlightTexture(E.ClearTexture)
+	local Orders = ProfessionsFrame.OrdersPage
+	S:HandleTab(Orders.BrowseFrame.PublicOrdersButton)
+	S:HandleTab(Orders.BrowseFrame.GuildOrdersButton)
+	S:HandleTab(Orders.BrowseFrame.PersonalOrdersButton)
 
-					local icon = item:GetRegions()
-					S:HandleIcon(icon, true)
-					S:HandleIconBorder(item.IconBorder, icon.backdrop)
-					itemContainer.CritFrame:SetAlpha(0)
-					itemContainer.BorderFrame:Hide()
-					itemContainer.HighlightNameFrame:SetAlpha(0)
-					itemContainer.PushedNameFrame:SetAlpha(0)
-					itemContainer.HighlightNameFrame:CreateBackdrop('Transparent')
-				end
+	local BrowseFrame = Orders.BrowseFrame
+	BrowseFrame.OrdersRemainingDisplay:StripTextures()
+	BrowseFrame.OrdersRemainingDisplay:CreateBackdrop('Transparent')
+	S:HandleButton(BrowseFrame.SearchButton)
+	S:HandleButton(BrowseFrame.FavoritesSearchButton)
+	BrowseFrame.FavoritesSearchButton:Size(22)
 
-				local bonus = child.CreationBonus
-				if bonus then
-					local item = bonus.Item
-					item:StripTextures()
-					local icon = item:GetRegions()
-					S:HandleIcon(icon)
-				end
+	local BrowseList = Orders.BrowseFrame.RecipeList
+	BrowseList:StripTextures()
+	S:HandleTrimScrollBar(BrowseList.ScrollBar, true)
+	S:HandleEditBox(BrowseList.SearchBox)
+	S:HandleButton(BrowseList.FilterButton)
+	BrowseList.BackgroundNineSlice:SetTemplate('Transparent')
 
-				child.isSkinned = true
-			end
+	local OrderList = Orders.BrowseFrame.OrderList
+	OrderList:StripTextures()
+	S:HandleTrimScrollBar(OrderList.ScrollBar, true)
 
-			local itemContainer = child.ItemContainer
-			if itemContainer then
-				itemContainer.Item.IconBorder:SetAlpha(0)
+	local OrderView = Orders.OrderView
+	local OrderRankBar = OrderView.RankBar
+	OrderRankBar.Border:Hide()
+	OrderRankBar.Background:Hide()
+	OrderRankBar.Fill:CreateBackdrop()
+	OrderRankBar.Rank.Text:FontTemplate()
 
-				local itemBG = itemContainer.backdrop
-				if itemBG then
-					if itemContainer.CritFrame:IsShown() then
-						itemBG:SetBackdropBorderColor(1, .8, 0)
-					else
-						itemBG:SetBackdropBorderColor(0, 0, 0)
-					end
-				end
-			end
+	ReskinOutputLog(OrderView.CraftingOutputLog)
+
+	S:HandleButton(OrderView.CreateButton)
+	S:HandleButton(OrderView.StartRecraftButton)
+	S:HandleButton(OrderView.CompleteOrderButton)
+
+	local OrderInfo = OrderView.OrderInfo
+	OrderInfo:StripTextures()
+	OrderInfo:CreateBackdrop('Transparent')
+	S:HandleButton(OrderInfo.BackButton)
+	S:HandleButton(OrderInfo.IgnoreButton)
+	S:HandleButton(OrderInfo.StartOrderButton)
+	S:HandleButton(OrderInfo.DeclineOrderButton)
+	S:HandleButton(OrderInfo.ReleaseOrderButton)
+	S:HandleEditBox(OrderInfo.NoteBox)
+	if OrderInfo.NoteBox.backdrop then
+		OrderInfo.NoteBox.backdrop:SetTemplate('Transparent')
+	end
+
+	local OrderDetails = OrderView.OrderDetails
+	OrderDetails:StripTextures()
+	OrderDetails:CreateBackdrop('Transparent')
+	OrderDetails.Background:ClearAllPoints()
+	OrderDetails.Background:SetInside(OrderDetails.backdrop)
+	OrderDetails.Background:SetAlpha(.5)
+
+	local OrderSchematicForm = OrderDetails.SchematicForm
+	S:HandleCheckBox(OrderSchematicForm.AllocateBestQualityCheckBox)
+
+	hooksecurefunc(OrderSchematicForm, 'Init', function(frame)
+		for slot in frame.reagentSlotPool:EnumerateActive() do
+			ReskinSlotButton(slot.Button)
+		end
+
+		local slot = OrderSchematicForm.salvageSlot
+		if slot then
+			ReskinSlotButton(slot.Button)
 		end
 	end)
+
+	local OrderOutputIcon = OrderSchematicForm.OutputIcon
+	if OrderOutputIcon then
+		S:HandleIcon(OrderOutputIcon.Icon, true)
+		S:HandleIconBorder(OrderOutputIcon.IconBorder, OrderOutputIcon.Icon.backdrop)
+		OrderOutputIcon:GetHighlightTexture():Hide()
+		OrderOutputIcon.CircleMask:Hide()
+	end
+
+	local FulfillmentForm = OrderDetails.FulfillmentForm
+	S:HandleEditBox(FulfillmentForm.NoteEditBox)
+	if FulfillmentForm.NoteEditBox.backdrop then
+		FulfillmentForm.NoteEditBox.backdrop:SetTemplate('Transparent')
+	end
+
+	local OrderItemIcon = OrderDetails.FulfillmentForm.ItemIcon
+	if OrderItemIcon then
+		S:HandleIcon(OrderItemIcon.Icon, true)
+		S:HandleIconBorder(OrderItemIcon.IconBorder, OrderItemIcon.Icon.backdrop)
+		OrderItemIcon:GetHighlightTexture():Hide()
+		OrderItemIcon.CircleMask:Hide()
+	end
 end
 
 S:AddCallbackForAddon('Blizzard_Professions')

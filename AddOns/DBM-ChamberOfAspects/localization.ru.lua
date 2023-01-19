@@ -61,13 +61,13 @@ L:SetOptionLocalization({
 	TimerTenebron			= "Отсчет времени до прибытия Тенеброна",
 	TimerShadron			= "Отсчет времени до прибытия Шадрона",
 	TimerVesperon			= "Отсчет времени до прибытия Весперона",
-	WarningFireWall			= "Cпец-предупреждение для Огненной стены",
+	WarningFireWall			= "Cпецпредупреждение для Огненной стены",
 	WarningTenebron			= "Объявлять прибытие Тенеброна",
 	WarningShadron			= "Объявлять прибытие Шадрона",
 	WarningVesperon			= "Объявлять прибытие Весперона",
-	WarningTenebronPortal	= "Cпец-предупреждение для порталов Тенеброна",
-	WarningShadronPortal	= "Cпец-предупреждение для порталов Шадрона",
-	WarningVesperonPortal	= "Cпец-предупреждение для порталов Весперона"
+	WarningTenebronPortal	= "Cпецпредупреждение для порталов Тенеброна",
+	WarningShadronPortal	= "Cпецпредупреждение для порталов Шадрона",
+	WarningVesperonPortal	= "Cпецпредупреждение для порталов Весперона"
 })
 
 L:SetMiscLocalization({
@@ -121,7 +121,7 @@ L:SetGeneralLocalization({
 
 L:SetWarningLocalization({
 	WarnAdds	= "Новые помощники",
-	warnCleaveArmor	= "%s на |3-5(>%s<) (%s)"		-- Cleave Armor on >args.destName< (args.amount)
+	warnCleaveArmor	= "%s on >%s< (%s)"
 })
 
 L:SetTimerLocalization({
@@ -130,7 +130,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	WarnAdds		= "Объявлять новых помощников",
-	TimerAdds		= "Отсчет времени до новых помощников"
+	TimerAdds		= "Отсчет времени до новых помощников",
+	warnCleaveArmor	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(74367)
 })
 
 L:SetMiscLocalization({
@@ -151,7 +152,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	TwilightCutterCast		= "Предупреждать о применении заклинания $spell:77844",
+	TwilightCutterCast		= "Предупреждать о применении заклинания $spell:74769",
 	AnnounceAlternatePhase	= "Показывать предупреждения и таймеры для обоих миров"
 })
 

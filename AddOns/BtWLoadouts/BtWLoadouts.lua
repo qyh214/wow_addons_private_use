@@ -56,6 +56,24 @@ BTWLOADOUTS_IMPORT = L["Import"]
 BTWLOADOUTS_EXPORT = L["Export"]
 BTWLOADOUTS_ZONE_NAME = L["Zone Name"]
 
+BTWLOADOUTS_PAGE_1 = L["Page 1"];
+BTWLOADOUTS_PAGE_2 = L["Page 2"];
+
+BTWLOADOUTS_ACTION_BAR_2 = L["Action Bar 2"];
+BTWLOADOUTS_ACTION_BAR_3 = L["Action Bar 3"];
+BTWLOADOUTS_ACTION_BAR_4 = L["Action Bar 4"];
+BTWLOADOUTS_ACTION_BAR_5 = L["Action Bar 5"];
+BTWLOADOUTS_ACTION_BAR_6 = L["Action Bar 6"];
+BTWLOADOUTS_ACTION_BAR_7 = L["Action Bar 7"];
+BTWLOADOUTS_ACTION_BAR_8 = L["Action Bar 8"];
+
+BTWLOADOUTS_STANCE_BAR_1 = L["Stance Bar 1"];
+BTWLOADOUTS_STANCE_BAR_2 = L["Stance Bar 2"];
+BTWLOADOUTS_STANCE_BAR_3 = L["Stance Bar 3"];
+BTWLOADOUTS_STANCE_BAR_4 = L["Stance Bar 4"];
+
+BTWLOADOUTS_POSSESS_BAR = L["Possess Bar"];
+
 BINDING_HEADER_BTWLOADOUTS = L["BtWLoadouts"]
 BINDING_NAME_TOGGLE_BTWLOADOUTS = L["Toggle BtWLoadouts"]
 
@@ -167,6 +185,11 @@ local Settings = SettingsCreate({
         end,
         default = true,
     },
+	{
+		name = L["Show Settings in Loadouts menu"],
+		key = "showSettingsInMenu",
+        default = true,
+	}
 });
 Internal.Settings = Settings;
 

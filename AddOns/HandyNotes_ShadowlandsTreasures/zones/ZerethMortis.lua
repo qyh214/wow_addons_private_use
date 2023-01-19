@@ -499,6 +499,7 @@ ns.RegisterPoints(1970, { -- Zereth Mortis
     note="Multiple spawn points. Mount is a very low drop rate.",
     texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=0.5,a=1,scale=0.9}),
     group="mawsworncache",
+    vignette=4969,
 })
 
 ns.RegisterPoints(1970, { -- Zereth Mortis

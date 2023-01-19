@@ -41,6 +41,8 @@ L["Aka'ali the Conqueror"] = "征服者阿卡阿里"
 L["Alarm-o-Bot"] = "报警机器人"
 L["Alcruux"] = "阿尔克鲁克斯"
 --[[Translation missing --]]
+--[[ L["Algeth'ar Echoknight"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Algeth'ar Educator"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Enforcer"] = ""--]] 
@@ -48,12 +50,10 @@ L["Alcruux"] = "阿尔克鲁克斯"
 --[[ L["Algeth'ar Nurse"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Algeth'ar Security"] = ""--]] 
---[[Translation missing --]]
---[[ L["AlgetharAcademy"] = ""--]] 
+L["AlgetharAcademy"] = "阿爾蓋薩學院"
 --[[Translation missing --]]
 --[[ L["Alpha Eagle"] = ""--]] 
---[[Translation missing --]]
---[[ L["AltarOfShadow"] = ""--]] 
+L["AltarOfShadow"] = "暗影祭壇"
 L["Amalgam of Souls"] = "融合之魂"
 L["Amarth"] = "阿玛厄斯"
 L["Ancient Captain"] = "上古队长"
@@ -130,9 +130,15 @@ L["Azules"] = "阿祖勒斯"
 --[[ L["Azureblade"] = ""--]] 
 L["Baalgar the Watchful"] = "警惕的巴尔戈"
 L["Backup Singer"] = "替补歌手"
+--[[Translation missing --]]
+--[[ L["Balakar Khan"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Balara"] = ""--]] 
 L["Banish"] = "放逐"
 L["Banquet Steward"] = "宴会招待员"
 L["Barbed Spiderling"] = "倒钩小蜘蛛"
+--[[Translation missing --]]
+--[[ L["Batak"] = ""--]] 
 L["Battle for Azeroth"] = "決戰艾澤拉斯"
 L["Battlefield Ritualist"] = "战场祭师"
 --[[Translation missing --]]
@@ -193,10 +199,14 @@ L["Bloodtainted Fury"] = "污血之怒"
 L["Bolstering"] = "激勵"
 L["Bomb Tonk"] = "炸弹坦克"
 L["Bone Magus"] = "白骨魔导师"
+--[[Translation missing --]]
+--[[ L["Bonemaw"] = ""--]] 
 L["Borka the Brute"] = "野蛮的波尔卡"
 L["Bottom Feeder"] = "食泥蟹"
 L["Bound Energy"] = "被束缚的能量"
 L["Bound Voidlord"] = "被束缚的空灵领主"
+--[[Translation missing --]]
+--[[ L["Bounty Hunter"] = ""--]] 
 L[ [=[Bounty stacks 
 after this pull]=] ] = [=[這波拉怪後
 連帶幾堆]=]
@@ -271,7 +281,15 @@ L["Cordana Felsong"] = "科达娜·邪歌"
 L["Corpse Collector"] = "尸体采集者"
 L["Corpse Harvester"] = "尸体收割者"
 --[[Translation missing --]]
+--[[ L["Corpse Skitterling"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Corrupt Droplet"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Corrupt Living Water"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Corrupted Manafiend"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Corrupted Scroll"] = ""--]] 
 L["Corsair Officer"] = "海盗船军官"
 L["Corstilax"] = "科蒂拉克斯"
 L["Court of Stars"] = "眾星之廷"
@@ -291,14 +309,12 @@ L["Create a new preset"] = "建立新的路線"
 --[[Translation missing --]]
 --[[ L["Creepy Crawler"] = ""--]] 
 L["Critter"] = "小動物"
---[[Translation missing --]]
---[[ L["CryptOfTheAncients"] = ""--]] 
+L["CryptOfTheAncients"] = "先祖墓穴"
 --[[Translation missing --]]
 --[[ L["Crystal Fury"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Crystal Thrasher"] = ""--]] 
---[[Translation missing --]]
---[[ L["CrystalChamber"] = ""--]] 
+L["CrystalChamber"] = "水晶之廳"
 L["Cursed Falke"] = "被诅咒的飞鹰"
 L["Cursed Spire of Ny'alotha"] = "受诅之尼奥罗萨尖塔"
 L["Custom"] = "自訂"
@@ -335,6 +351,8 @@ L["Defense Bot Mk III"] = "防御机器人MkIII型"
 --[[Translation missing --]]
 --[[ L["Defier Draghar"] = ""--]] 
 L["Defiled Spire of Ny'alotha"] = "亵渎之尼奥罗萨尖塔"
+--[[Translation missing --]]
+--[[ L["Defiled Spirit"] = ""--]] 
 L["Defunct Dental Drill"] = "失灵的牙钻"
 L["Delete"] = "刪除"
 L["Delete %s?"] = "是否確定要刪除 %s?"
@@ -351,8 +369,14 @@ L["Demon"] = "惡魔"
 L["Depraved Collector"] = "堕落的搜集者"
 L["Depraved Darkblade"] = "堕落的黑暗剑士"
 L["Depraved Houndmaster"] = "堕落的驯犬者"
+--[[Translation missing --]]
+--[[ L["Depraved Mistweaver"] = ""--]] 
 L["Depraved Obliterator"] = "堕落的歼灭者"
 L["Depths Warden"] = "深渊狱卒"
+--[[Translation missing --]]
+--[[ L["Desecrated Bakar"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Desecrated Ohuna"] = ""--]] 
 L["Despondent Scallywag"] = "沮丧的水手"
 L["Dessia the Decapitator"] = "斩首者德茜雅"
 L["Detention Block"] = "拘留所"
@@ -380,10 +404,8 @@ L["Domina Venomblade"] = "多米娜·毒刃"
 --[[Translation missing --]]
 --[[ L["Draconic Image"] = ""--]] 
 L["Drag the bottom right edge to resize MDT."] = "拖曳右下角邊緣來調整 MDT 的大小。"
---[[Translation missing --]]
---[[ L["Dragonflight Season 1"] = ""--]] 
---[[Translation missing --]]
---[[ L["Dragonflight Season 2"] = ""--]] 
+L["Dragonflight Season 1"] = "巨龍崛起第1季"
+L["Dragonflight Season 2"] = "巨龍崛起第2季"
 L["Dragonkin"] = "龍類"
 --[[Translation missing --]]
 --[[ L["Drakonid Breaker"] = ""--]] 
@@ -419,6 +441,8 @@ L["Dungeon Data Missing"] = "缺少地城資料"
 L["Dungeon Level"] = "地城層數"
 L["Duskwatch Arcanist"] = "暮色卫队奥术师"
 L["Duskwatch Guard"] = "暮色卫队卫兵"
+--[[Translation missing --]]
+--[[ L["Duskwatch Reinforcement"] = ""--]] 
 L["Duskwatch Sentry"] = "暮色卫队哨兵"
 L["Earlier Version"] = "你有這個路線較早期的版本，名稱為 '%s'%s請問要更新原有的，還是複製成另一個新的版本?%s%s%s"
 L["Earthrager"] = "地怒者"
@@ -426,8 +450,7 @@ L["Ebonclaw Worg"] = "黑爪座狼"
 L["Echelon"] = "艾谢朗"
 --[[Translation missing --]]
 --[[ L["Echo of Doragosa"] = ""--]] 
---[[Translation missing --]]
---[[ L["EdgeOfReality"] = ""--]] 
+L["EdgeOfReality"] = "真實之緣"
 L["Edit"] = "編輯"
 L["Efficiency Score"] = "效率分數"
 L["EfficiencyScoreTip"] = "效率分數表示 NPC 的小怪%與其血量相比的得分。"
@@ -467,8 +490,12 @@ L["Eredar Chaosbringer"] = "艾瑞达混沌使者"
 --[[ L["Erkhart Stormvein"] = ""--]] 
 L["Erudite Slayer"] = "艾瑞迪特屠杀者"
 L["Etherdiver"] = "以太俯冲者"
+--[[Translation missing --]]
+--[[ L["Ethereal Restorer"] = ""--]] 
 L["Executioner Varruth"] = "刽子手瓦卢斯"
 L["Executor Tarvold"] = "执行者塔沃德"
+--[[Translation missing --]]
+--[[ L["Exhumed Spirit"] = ""--]] 
 L["Expand the top toolbar to gain access to drawing and note features."] = "展開最上方的工具列來使用繪圖和註記的功能。"
 --[[Translation missing --]]
 --[[ L["Experimental Sludge"] = ""--]] 
@@ -485,6 +512,8 @@ L["Faceless Corruptor"] = "无面腐蚀者"
 L["Faceless Maiden"] = "无面女仆"
 L["Faithless Tender"] = "无信护卵员"
 L["Fallen Deathspeaker"] = "堕落的亡语者"
+--[[Translation missing --]]
+--[[ L["Fallen Waterspeaker"] = ""--]] 
 L["Famished Broken"] = "饥饿的破碎者"
 L["Famished Tick"] = "饥饿的虱子"
 L["Fanatical Headhunter"] = "狂热的猎头者"
@@ -603,6 +632,8 @@ L["Gorestained Piglet"] = "血渍小猪"
 L["Grand Overseer"] = "大监督者"
 L["Grand Proctor Beryllia"] = "大学监贝律莉娅"
 L["Grand Shadow-Weaver"] = "大织影者"
+--[[Translation missing --]]
+--[[ L["Granyth"] = ""--]] 
 L["Graveyard"] = "墓地"
 L["Grease Bot"] = "油滋滋"
 L["Grievous"] = "兇殘"
@@ -670,6 +701,8 @@ L["Hatecoil Warrior"] = "积怨战士"
 L["Hatecoil Wavebinder"] = "积怨缚潮者"
 L["Hatecoil Wrangler"] = "积怨牧鱼者"
 L["Hatespawn Slime"] = "怨嗣软泥怪"
+--[[Translation missing --]]
+--[[ L["Haunting Sha"] = ""--]] 
 L["Head Custodian Javlin"] = "首席管理者加弗林"
 L["Head Machinist Sparkflux"] = "首席机械师闪流"
 L["Headless Client"] = "无头的终端机"
@@ -727,6 +760,8 @@ L["Incapacitate"] = "癱瘓"
 L["Incinerator Arkolath"] = "焚化者阿寇拉斯"
 L["Increase Brush Size"] = "加大筆刷"
 L["Infected Peasant"] = "被感染的农夫"
+--[[Translation missing --]]
+--[[ L["Infernal Imp"] = ""--]] 
 L["Infested"] = "寄生"
 L["Infused Pyromancer"] = "灌魔炎术士"
 L["Infused Quill-feather"] = "注能的羽翎"
@@ -734,10 +769,8 @@ L["Infused Quill-feather"] = "注能的羽翎"
 --[[ L["Infused Whelp"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["InfusersRotunda"] = ""--]] 
---[[Translation missing --]]
---[[ L["Infusion Chambers"] = ""--]] 
---[[Translation missing --]]
---[[ L["InfusionChamber"] = ""--]] 
+L["Infusion Chambers"] = "注入之廳"
+L["InfusionChamber"] = "注入之廳"
 L["Ingra Maloch"] = "英格拉·马洛克"
 L["Inquisitor Sigar"] = "审判官西加尔"
 L["Inquisitor Tormentorum"] = "审判官托蒙托鲁姆"
@@ -752,6 +785,8 @@ L["Iron Infantry"] = "钢铁步兵"
 --[[Translation missing --]]
 --[[ L["Iron Star"] = ""--]] 
 L["IronDocks"] = "鋼鐵碼頭"
+--[[Translation missing --]]
+--[[ L["ironDocksIronStar"] = ""--]] 
 L["Ironhull Apprentice"] = "铁舟学徒"
 L["Irontide Bonesaw"] = "铁潮锯骨者"
 L["Irontide Buccaneer"] = "铁潮冒险家"
@@ -775,6 +810,8 @@ L["Ivanyr"] = "伊凡尔"
 L["Jagged Hound"] = "锯齿猎犬"
 L["Jazshariu"] = "加兹沙尤"
 L["Jes Howlis"] = "杰斯·豪里斯"
+--[[Translation missing --]]
+--[[ L["Jiang"] = ""--]] 
 L["Join"] = "加入"
 L["Join Crew"] = "加入幫會"
 L["Join Live Session"] = "加入即時連線:%s%s: %s - %s"
@@ -828,12 +865,16 @@ L["LargePresetWarning"] = "你正嘗試分享非常龐大的路線 (%d 個字元
 L["Lashing Voidling"] = "鞭笞虚空幼体"
 L["Legion"] = "軍臨天下"
 L["Legion Hound"] = "军团猎犬"
+--[[Translation missing --]]
+--[[ L["Lesser Sha"] = ""--]] 
 L["Level %d %s"] = "等級 %d %s"
 L["Levels below 10 will hide enemies related to seasonal affixes"] = "10 層以下會隱藏季詞綴相關的敵人"
 --[[Translation missing --]]
 --[[ L["Leymor"] = ""--]] 
 L["Library Floor"] = "圖書館底層"
 L["Link Spells"] = "發送到聊天"
+--[[Translation missing --]]
+--[[ L["Liu Flameheart"] = ""--]] 
 L["Live"] = "即時連線"
 L["Live Session"] = "即時連線"
 L["Living Current"] = "活体激流"
@@ -848,8 +889,7 @@ L["Lord Stormsong"] = "斯托颂勋爵"
 L["Lord Waycrest"] = "维克雷斯勋爵"
 L["Lost Soul"] = "失落的灵魂"
 L["Lower Broken Stair"] = "破碎樓梯下層"
---[[Translation missing --]]
---[[ L["LowerChamber"] = ""--]] 
+L["LowerChamber"] = "下層大廳"
 L["Loyal Creation"] = "忠诚的造物"
 L["Loyal Stoneborn"] = "忠诚的石裔魔"
 L["Lubricator"] = "润滑器"
@@ -870,6 +910,8 @@ L["Mana Confluence"] = "魔力聚合体"
 L["Mana Devourer"] = "魔力吞噬者"
 L["Mana Saber"] = "魔刃豹"
 L["Mana Wyrm"] = "法力浮龙"
+--[[Translation missing --]]
+--[[ L["manaDevourerNote"] = ""--]] 
 L["Mana-Gorged Wyrm"] = "暴食的法力浮龙"
 L["Maniacal Soulbinder"] = "狂热的缚魂者"
 --[[Translation missing --]]
@@ -877,12 +919,13 @@ L["Maniacal Soulbinder"] = "狂热的缚魂者"
 L["Margrave Stradama"] = "斯特拉达玛侯爵"
 L["Marked Sister"] = "显眼的女巫"
 L["Market Peacekeeper"] = "集市维和者"
+--[[Translation missing --]]
+--[[ L["Maruuk"] = ""--]] 
 L["Master's Terrace"] = "塔主露臺"
 L["Matron Alma"] = "主母阿尔玛"
 L["Matron Bryndle"] = "主母布琳德尔"
 L["Mature Krolusk"] = "成年三叶虫"
---[[Translation missing --]]
---[[ L["MausoleumOfLegends"] = ""--]] 
+L["MausoleumOfLegends"] = "傳說陵墓"
 L["Maw of Souls"] = "靈魂之喉"
 L["Mchimba the Embalmer"] = "殓尸者姆沁巴"
 L["MDI Mode"] = "MDI 模式"
@@ -918,6 +961,8 @@ L["Mind Control"] = "心靈控制"
 L["Mindshattered Screecher"] = "精神错乱的尖啸夜枭"
 L["Mine Rat"] = "矿井鼠"
 L["minecartNote"] = "礦車%s玩家可使用"
+--[[Translation missing --]]
+--[[ L["Minion of Doubt"] = ""--]] 
 L["Minion of Zul"] = "祖尔的爪牙"
 L["Mire Soldier"] = "泽地士兵"
 L["Mistcaller"] = "唤雾者"
@@ -936,6 +981,8 @@ L["mlGraveyardNote2"] = "搭乘到礦車的終點後開放"
 L["mlGraveyardNote3"] = "擊敗芮克莎·熔焰後開放"
 L["mlJockeyNote"] = "Mech Jockey 21 和 22 在他們的 Peacekeepers 被摧毀時必須被選為目標"
 L["Mogul Razdunk"] = "商业大亨拉兹敦克"
+--[[Translation missing --]]
+--[[ L["Monstrous Corpse Spider"] = ""--]] 
 L["Monzumi"] = "蒙祖米"
 L["Mordretha, the Endless Empress"] = "无尽女皇莫德蕾莎"
 L["Moroes"] = "莫罗斯"
@@ -965,12 +1012,16 @@ L["Neltharion's Lair"] = "奈薩里奧巢穴"
 L["Neltharion's Lair Sublevel"] = "奈薩里奧巢穴"
 --[[Translation missing --]]
 --[[ L["Neltharus"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ner'zhul"] = ""--]] 
 L["Netherspace"] = "虛空空間"
 L["New"] = "新增"
 L["New NPC at Cursor Position"] = "新增游標位置的NPC"
 L["New Patrol Waypoint at Cursor Position"] = "新增游標位置的傳送路線"
 L["New Preset"] = "新的路線"
 L["Next to the NPC"] = "NPC 旁"
+--[[Translation missing --]]
+--[[ L["Nhallish"] = ""--]] 
 L["Night Watch Mariner"] = "守夜水手"
 L["Nightborne Reclaimer"] = "夜之子复国者"
 L["Nightborne Spellsword"] = "夜之子魔剑士"
@@ -980,6 +1031,36 @@ L["Noble Skirmisher"] = "贵族散兵"
 L["noDungeonData1"] = "尚未有地城資料。"
 L["noDungeonData2"] = "輸入 /mdt devmode 來建立你自己的資料"
 L["noDungeonData3"] = "或是學習如何取得選擇性的地城資料:"
+--[[Translation missing --]]
+--[[ L["Nokhud Beastmaster"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Defender"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Hornsounder"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Houndsman"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Lancemaster"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Longbow"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Neophyte"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Plainstomper"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Saboteur"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Stormcaster"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Thunderfist"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Villager"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Warhound"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Warsmith"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Nokhud Warspear"] = ""--]] 
 L["Not specified"] = "未分類"
 L["Note Text:"] = "註記文字:"
 --[[Translation missing --]]
@@ -1021,6 +1102,8 @@ L["Pallid Gorger"] = "苍白吞噬者"
 L["Patchwerk Soldier"] = "帕奇维克士兵"
 L["Path of Illumination"] = "神啟之徑"
 L["Patrol Captain Gerdo"] = "巡逻队长加多"
+--[[Translation missing --]]
+--[[ L["Peril"] = ""--]] 
 L["Pestilence Slime"] = "传染软泥"
 L["Pestilent Harvester"] = "致命的收割者"
 L["Phantom Crew"] = "幻影员工"
@@ -1039,6 +1122,8 @@ L["Plagueborer"] = "钻凋者"
 L["Plaguebound"] = "凋缚者"
 L["Plaguebound Devoted"] = "凋缚狂热者"
 L["Plaguebound Fallen"] = "凋缚陨落者"
+--[[Translation missing --]]
+--[[ L["Plagued Bat"] = ""--]] 
 L["Plagued Rat"] = "天灾鼠"
 L["Plaguefall"] = "瘟疫之臨"
 --[[Translation missing --]]
@@ -1060,17 +1145,27 @@ L["Preset Name"] = "路線名稱"
 L["Priestess Alun'za"] = "女祭司阿伦扎"
 L["Priestess of Misery"] = "痛苦女祭司"
 --[[Translation missing --]]
+--[[ L["Primal Gust"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Primal Juggernaut"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Primal Stormshield"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Primal Terrasentry"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Primal Thundercloud"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Primalist Arcblade"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Primalist Cinderweaver"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Primalist Flamedancer"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Primalist Shockcaster"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Primalist Stormspeaker"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Primalist Thunderbeast"] = ""--]] 
 L["Prison Bars"] = "鐵窗"
 L["Prison Gate"] = "鐵門"
 L["Pull Drop Clear Pull"] = "清空拉怪"
@@ -1104,6 +1199,8 @@ L["Rampaging Clefthoof"] = "狂怒的裂蹄牛"
 L["Rancid Gasbag"] = "腐臭的气囊怪"
 L["Rat"] = "老鼠"
 L["Ravenous Dreadbat"] = "贪婪的恐惧蝠"
+--[[Translation missing --]]
+--[[ L["Ravenous Wolf"] = ""--]] 
 L["Ravenshold"] = "玄鴉堡據點"
 --[[Translation missing --]]
 --[[ L["Reanimated Crossbowman"] = ""--]] 
@@ -1111,6 +1208,8 @@ L["Reanimated Guardian"] = "复活的护卫"
 L["Reanimated Honor Guard"] = "复活的荣誉卫士"
 --[[Translation missing --]]
 --[[ L["Reanimated Mage"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Reanimated Ritual Bones"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Reanimated Warrior"] = ""--]] 
 L["Reanimation Totem"] = "复生图腾"
@@ -1156,10 +1255,16 @@ L["Risen Bonesoldier"] = "复生的骷髅战士"
 L["Risen Companion"] = "复活的小伙伴"
 L["Risen Cultist"] = "复生的祭师"
 L["Risen Lancer"] = "复活的长枪兵"
+--[[Translation missing --]]
+--[[ L["Risen Mystic"] = ""--]] 
 L["Risen Scout"] = "复活的斥候"
 L["Risen Soul"] = "复生之魂"
 L["Risen Swordsman"] = "复活的剑士"
 L["Risen Warlord"] = "复生的督军"
+--[[Translation missing --]]
+--[[ L["Risen Warrior"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ritual of Bones"] = ""--]] 
 L["Ritualist Lesha"] = "祭祀者勒莎"
 L["Rixxa Fluxflame"] = "瑞克莎·流火"
 L["Rockback Gnasher"] = "岩背啮咬者"
@@ -1180,10 +1285,8 @@ L["Rotspew"] = "烂吐"
 L["Rotspew Leftovers"] = "烂吐残渣"
 L["Rotting Slimeclaw"] = "腐烂的粘液之爪"
 L["Rowdy Reveler"] = "吵闹的狂欢者"
---[[Translation missing --]]
---[[ L["Ruby Overlook"] = ""--]] 
---[[Translation missing --]]
---[[ L["RubyLifePools"] = ""--]] 
+L["Ruby Overlook"] = "晶紅瞰臺"
+L["RubyLifePools"] = "晶紅生命之池"
 L["Ruin's Descent"] = "荒滅之淪"
 --[[Translation missing --]]
 --[[ L["Rune Seal Keeper"] = ""--]] 
@@ -1193,6 +1296,8 @@ L["Runestag Elderhorn"] = "大角符文牡鹿"
 L["Runic Disciple"] = "符文信徒"
 L["Sacrificial Pits"] = "獻祭陵園"
 L["Sacristy of Elune"] = "伊露恩聖器室"
+--[[Translation missing --]]
+--[[ L["Sadana Bloodfury"] = ""--]] 
 L["Safety Shark"] = "护卫鲨鱼"
 L["Saltscale Lurker"] = "盐鳞潜藏者"
 L["Saltscale Skulker"] = "盐鳞潜伏者"
@@ -1245,6 +1350,8 @@ L["Serpentrix"] = "瑟芬崔斯克"
 L["Settings"] = "設定"
 L["Sewer Gate"] = "下水道門"
 L["Sewer Vicejaw"] = "下水道钳嘴鳄"
+--[[Translation missing --]]
+--[[ L["Sha of Doubt"] = ""--]] 
 L["Shackle Undead"] = "束縛不死生物"
 L["Shackled Soul"] = "桎梏之魂"
 L["Shade of Medivh"] = "麦迪文之影"
@@ -1266,17 +1373,30 @@ L["Shadowguard Voidbender"] = "影卫缚灵师"
 L["Shadowlands"] = "暗影之境"
 L["Shadowlands Season 4"] = "暗影之境第4季"
 --[[Translation missing --]]
---[[ L["ShadowmoonBurialGrounds"] = ""--]] 
+--[[ L["Shadowmoon Bone-Mender"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Shadowmoon Enslaver"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Shadowmoon Exhumer"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Shadowmoon Loyalist"] = ""--]] 
+L["ShadowmoonBurialGrounds"] = "影月墓地"
 L["Shady Dealer"] = "神秘卖家"
 L["Shalebiter"] = "页岩啃噬者"
 L["Shambling Arbalest"] = "蹒跚的弩手"
+--[[Translation missing --]]
+--[[ L["Shambling Infester"] = ""--]] 
 L["Shard of Halkias"] = "哈尔吉亚斯的碎片"
 L["Share"] = "分享"
 L["Share the preset with your party members"] = "和隊友分享路線"
 --[[Translation missing --]]
+--[[ L["Sha-Touched Guardian"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Shattered Visage"] = ""--]] 
 L["Shieldbearer of Zul"] = "祖尔的持盾卫士"
 L["Shift-Click to delete all presets for this dungeon"] = "Shift+左鍵點擊來刪除此地城全部的路線"
+--[[Translation missing --]]
+--[[ L["Shikaar Ranger"] = ""--]] 
 L["Shiprat"] = "船舱鼠"
 L["Shock Bot"] = "觸電"
 L["Shortcut"] = "捷徑"
@@ -1341,6 +1461,14 @@ L["Solsten"] = "索斯坦"
 L["Soul Essence"] = "灵魂精华"
 L["Soulbound Goliath"] = "魂缚巨像"
 L["Soulforged Bonereaver"] = "魂铸白骨编织者"
+--[[Translation missing --]]
+--[[ L["Soulharvester Duuren"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Soulharvester Galtmaa"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Soulharvester Mandakh"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Soulharvester Tumen"] = ""--]] 
 L["Soul-Torn Champion"] = "失魂的勇士"
 L["Spare Parts"] = "备用部件"
 L["Spark Channeler"] = "火花引导者"
@@ -1352,6 +1480,8 @@ L["Spectral Brute"] = "幽魂蛮兵"
 L["Spectral Charger"] = "鬼灵战马"
 L["Spectral Headhunter"] = "幽魂猎头者"
 L["Spectral Hex Priest"] = "鬼灵妖术祭司"
+--[[Translation missing --]]
+--[[ L["Spectral Invoker"] = ""--]] 
 L["Spectral Journeyman"] = "鬼灵短工"
 L["Spectral Patron"] = "鬼灵顾客"
 L["Spectral Retainer"] = "鬼灵家仆"
@@ -1397,15 +1527,29 @@ L["Stonewall Gargon"] = "石墙加尔贡"
 L["Storm Drake"] = "风暴幼龙"
 --[[Translation missing --]]
 --[[ L["Storm Warrior"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Stormcaller Arynga"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Stormcaller Boroo"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Stormcaller Solongo"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Stormcaller Zarii"] = ""--]] 
 L["Stormforged Guardian"] = "雷铸守护者"
 L["Stormforged Sentinel"] = "雷铸斥候"
 --[[Translation missing --]]
 --[[ L["Storming"] = ""--]] 
 L["Storm's End"] = "風暴之末"
+--[[Translation missing --]]
+--[[ L["Stormsurge Totem"] = ""--]] 
 L["Stormwake Hydra"] = "唤雷多头蛇"
 L["Stranglevine Lasher"] = "绞藤鞭笞者"
 L["Strider Tonk"] = "陆行鸟坦克"
+--[[Translation missing --]]
+--[[ L["Strife"] = ""--]] 
 L["Stun"] = "擊昏"
+--[[Translation missing --]]
+--[[ L["Subjugated Soul"] = ""--]] 
 L["Sunken Denizen"] = "沉落的居民"
 L["Support Officer"] = "支援警官"
 L["Surgeon Stitchflesh"] = "外科医生缝肉"
@@ -1439,6 +1583,8 @@ L["TDPrisonKeyText"] = "被遺棄的牢房鑰匙%s可能的重生位置%s可以�
 L["tdWardenFightingNote"] = "G23 正在戰鬥，最後一定會殺死 Block Warden 1"
 L["Teeming"] = "擁擠"
 --[[Translation missing --]]
+--[[ L["Teera"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Telash Greywing"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Tempest Channeler"] = ""--]] 
@@ -1448,8 +1594,7 @@ L["Temple of Sethraliss Sublevel"] = "瑟沙利斯神廟"
 L["templeEyeNote"] = "瑟沙利斯之眼%s將兩個眼球帶到瑟沙利斯的骸骨%s每放入一個眼球都會給予 12 敵方部隊的獎勵"
 L["templeGraveyardNote1"] = "擊敗莫芮克莎後開放"
 L["templeGraveyardNote2"] = "完成瑟沙利斯的骸骨事件後開放"
---[[Translation missing --]]
---[[ L["TempleOfTheJadeSerpent"] = ""--]] 
+L["TempleOfTheJadeSerpent"] = "玉蛟寺"
 L["Territorial Bladebeak"] = "领地刃喙鹤"
 --[[Translation missing --]]
 --[[ L["Territorial Eagle"] = ""--]] 
@@ -1460,10 +1605,14 @@ L["The Balconies"] = "陽台"
 L["The Banquet Hall"] = "宴會大廳"
 L["The Brig"] = "禁閉室"
 L["The Cellar"] = "地窖"
+--[[Translation missing --]]
+--[[ L["The Crybaby Hozen"] = ""--]] 
 L["The Curator"] = "馆长"
 L["The Drain"] = "排水口"
 L["The Emerald Archives"] = "翡翠圖書館"
 L["The Festering Sanctum"] = "膿瘡聖所"
+--[[Translation missing --]]
+--[[ L["The Golden Beetle"] = ""--]] 
 L["The Golden Serpent"] = "黄金风蛇"
 L["The Grand Foyer"] = "迎賓大廳"
 L["The Grand Hall"] = "大廳"
@@ -1477,8 +1626,12 @@ L["The MOTHERLODE!!"] = "晶喜鎮！"
 L["The MOTHERLODE!! Sublevel"] = "晶喜鎮！"
 L["The Naglfar"] = "奈格法號"
 L["The Necrotic Wake"] = "死靈戰地"
+--[[Translation missing --]]
+--[[ L["The Nodding Tiger"] = ""--]] 
 L["The Platinum Pummeler"] = "白金拳手"
 L["The preset will continuously synchronize between all party members participating in the Live Session"] = "所有參與即時連線的隊友都會持續地同步路線"
+--[[Translation missing --]]
+--[[ L["The Raging Tempest"] = ""--]] 
 L["The Raven's Crown"] = "玄鴉堡之頂"
 L["The Ravenscrypt"] = "玄鴉墓室"
 L["The Robodrome"] = "超爆機械鬥場"
@@ -1489,12 +1642,15 @@ L["The selected affixes are not the ones of the current week"] = "選擇的不�
 L["The selected dungeon level is below 10"] = "選擇的地城層數低於 10"
 L["The selected level will affect displayed npc health"] = "選擇的層數會影響顯示的 NPC 血量"
 L["The Servant's Quarters"] = "佣人區"
+--[[Translation missing --]]
+--[[ L["The Songbird Queen"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["The Talking Fish"] = ""--]] 
 L["The Under Junk"] = "廢料底層"
 L["The Underrot"] = "幽腐深窟"
 L["The Underrot Sublevel"] = "幽腐深窟"
 L["The Warden's Court"] = "看守者之廷"
---[[Translation missing --]]
---[[ L["TheArcaneConservatory"] = ""--]] 
+L["TheArcaneConservatory"] = "祕法存護所"
 L["Theater of Pain"] = "苦痛劇場"
 L["theaterOfPain_miniBossNote"] = "只有一位決鬥者會存活。"
 L["TheaterOfPainFloor1"] = "苦痛劇場"
@@ -1502,8 +1658,7 @@ L["TheaterOfPainFloor2"] = "征戰之聽"
 L["TheaterOfPainFloor3"] = "痛苦祭壇"
 L["TheaterOfPainFloor4"] = "血肉戮穴上層"
 L["TheaterOfPainFloor5"] = "血肉戮穴下層"
---[[Translation missing --]]
---[[ L["TheAzureVault"] = ""--]] 
+L["TheAzureVault"] = "蒼藍密庫"
 --[[Translation missing --]]
 --[[ L["TheBurningCauldron"] = ""--]] 
 --[[Translation missing --]]
@@ -1511,12 +1666,9 @@ L["TheaterOfPainFloor5"] = "血肉戮穴下層"
 L["TheNecroticWakeFloor1"] = "死靈戰地"
 L["TheNecroticWakeFloor2"] = "縫合作坊"
 L["TheNecroticWakeFloor3"] = "佐拉慕斯"
---[[Translation missing --]]
---[[ L["TheNokhudOffensive"] = ""--]] 
---[[Translation missing --]]
---[[ L["ThePitch"] = ""--]] 
---[[Translation missing --]]
---[[ L["TheScrollkeepersSanctum"] = ""--]] 
+L["TheNokhudOffensive"] = "諾庫德進攻據點"
+L["ThePitch"] = "運動場"
+L["TheScrollkeepersSanctum"] = "藏卷閣"
 --[[Translation missing --]]
 --[[ L["TheVaultOfTyr"] = ""--]] 
 L["Thistle Acolyte"] = "棘刺助祭"
@@ -1524,6 +1676,8 @@ L["Thornguard"] = "荆棘卫士"
 L["Thrashbite the Scornful"] = "轻蔑的萨什比特"
 --[[Translation missing --]]
 --[[ L["Thunderhead"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Thundering"] = ""--]] 
 L["Thunderlord Wrangler"] = "雷神驯兽师"
 L["Tidesage Enforcer"] = "海贤执行者"
 L["Tidesage Initiate"] = "海贤新兵"
@@ -1552,6 +1706,14 @@ L["Trothak"] = "托萨克"
 L["Troubled Soul"] = "烦恼的灵魂"
 L["Twilight Grove"] = "暮光森林"
 L["Tyrannical"] = "暴君"
+--[[Translation missing --]]
+--[[ L["Ukhel Beastcaller"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ukhel Corruptor"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ukhel Deathspeaker"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Ukhel Willcrusher"] = ""--]] 
 L["Ularogg Cragshaper"] = "乌拉罗格·塑山"
 --[[Translation missing --]]
 --[[ L["UldamanLegacyOfTyr"] = ""--]] 
@@ -1582,13 +1744,14 @@ L["Unstable Canister"] = "不稳定的罐子"
 --[[ L["Unstable Curator"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["Unstable Larva"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["Unstable Squall"] = ""--]] 
 L["Unyielding Contender"] = "不屈的参赛者"
 L["Update"] = "更新"
 L["Upper Broken Stair"] = "破碎樓梯上層"
 L["Upper Library"] = "圖書館上層"
 L["Upper Livery Stables"] = "獸欄上層"
---[[Translation missing --]]
---[[ L["UpperChamber"] = ""--]] 
+L["UpperChamber"] = "上層大廳"
 L["Upstairs"] = "上層"
 L["Urg'roth, Breaker of Heroes"] = "乌尔格斯，勇士噬灭者"
 L["Urh Relic"] = "尤型圣物"
@@ -1631,6 +1794,8 @@ L["Viceroy Nezhar"] = "总督奈扎尔"
 L["Vicious Gargon"] = "邪恶的加尔贡"
 L["Vicious Manafang"] = "邪恶的魔牙蛛"
 --[[Translation missing --]]
+--[[ L["Vigilant Duskwatch"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["Vile Lasher"] = ""--]] 
 L["Vilebark Walker"] = "邪皮行者"
 L["Vileshard Chunk"] = "邪裂巨人"
@@ -1644,6 +1809,8 @@ L["Virulax Blightweaver"] = "维鲁拉克斯魔药编织者"
 L["Viz'aduum the Watcher"] = "监视者维兹艾德姆"
 L["Void Discharge"] = "虚空溢出物"
 L["Void Flayer"] = "剥灵者"
+--[[Translation missing --]]
+--[[ L["Void Spawn"] = ""--]] 
 L["Void-Touched Emissary"] = "虚触使者"
 L["Voidweaver Mal'thir"] = "纺虚者玛熙尔"
 L["Volatile Memory"] = "不稳定的内存器"
@@ -1655,6 +1822,8 @@ L["Vol'zith the Whisperer"] = "低语者沃尔兹斯"
 L["Vy Relic"] = "维型圣物"
 L["Wandering Shellback"] = "游荡的硬壳龟"
 L["Wanton Sapper"] = "暴虐的工兵"
+--[[Translation missing --]]
+--[[ L["War Ohuna"] = ""--]] 
 L["Warlord Parjesh"] = "督军帕杰什"
 L["Warp Shade"] = "迁跃之影"
 L["Warp Stalker"] = "迁跃兽"
@@ -1672,6 +1841,8 @@ L["Welding Bot"] = "焊接"
 L["Wholesome Hostess"] = "保守的女招待"
 L["Wicked Oppressor"] = "邪恶的镇压者"
 L["Windspeaker Heldis"] = "风语者海蒂丝"
+--[[Translation missing --]]
+--[[ L["Wise Mari"] = ""--]] 
 L["Withered Fiend"] = "枯法魔"
 L["Withered Manawraith"] = "枯法法力怨灵"
 L["Wo Relic"] = "沃型圣物"
@@ -1685,6 +1856,8 @@ L["Wretched Plagueborer"] = "卑鄙的钻凋者"
 L["Wyrmtongue Scavenger"] = "虫语清道夫"
 L["Wyrmtongue Trickster"] = "虫语欺诈者"
 L["Xav the Unfallen"] = "无堕者哈夫"
+--[[Translation missing --]]
+--[[ L["Xiang"] = ""--]] 
 L["Xira the Underhanded"] = "卑劣的席拉"
 L["Yazma"] = "亚兹玛"
 L["Ymiron, the Fallen King"] = "堕落君王伊米隆"
@@ -1693,6 +1866,8 @@ L["You can always return to the current Live Session preset by clicking the 'Ret
 L["You can choose from different color palettes in the automatic pull coloring settings menu."] = "可以在自動著色拉怪的設定選單中選擇不同的色盤。"
 L["You can cycle through different floors by holding CTRL and using the mousewheel."] = "按住 CTRL 時滾動滑鼠滾輪來循環切換不同的樓層。"
 L["You can cycle through dungeons by holding ALT and using the mousewheel."] = "按住 ALT 時滾動滑鼠滾輪來循環切換地城。"
+--[[Translation missing --]]
+--[[ L["Yu'lon"] = ""--]] 
 L["Zanazal the Wise"] = "智者扎纳扎尔"
 L["Zanchuli Witch-Doctor"] = "赞枢利巫医"
 L["Zoggosh"] = "佐格什"

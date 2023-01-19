@@ -1,4 +1,31 @@
-﻿v3.5.8
+﻿v3.5.16
+- Fix error that occured when not all bag slots were equipped with bags
+
+v3.5.15
+- Update french localisation file (thanks to KarlitosVII on GitHub)
+
+v3.5.14
+- Fix detection of partial stacks
+- Fix detection of Unique items, which should bypass the BuyEmAll dialog entirely
+
+v3.5.13
+- Support for WoW Dragonflight 10.0.2
+
+v3.5.12
+-Support for WoW Dragonflight 10.0.0
+-Fix code for calculating free bag space, as bag IDs have changed in Dragonflight
+
+v3.5.11
+-bump toc file to 9.2.5
+
+v3.5.10
+-Addon toc has been updated to WoW 9.1.0
+-Fixed error that would occur when trying to purchase items that are completely free but would normally cost currency to purchase (fixing a bug that probably only happens on tournament and beta realms, where items are sometimes available for free, but blizzard does not or forgets to remove the associated currency cost info from the item)
+
+v3.5.9
+-Fixed bug that caused an error when buying a currency with another currency.
+
+v3.5.8
 -BuyEmAll now supports Shadowlands
 -BuyEmAll now uses the new CurrencyInfo API introduced in Shadowlands
 -Fixed a small issue where the calculated amount of buyable items was wrong when buying a currency with another currency.

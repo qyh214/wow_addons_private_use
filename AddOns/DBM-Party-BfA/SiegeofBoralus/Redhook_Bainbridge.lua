@@ -7,7 +7,7 @@ end
 local mod	= DBM:NewMod(dungeonID, "DBM-Party-BfA", 5, 1001)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230117063410")
 mod:SetCreatureID(creatureID)
 mod:SetEncounterID(encounterID)
 
@@ -51,8 +51,6 @@ local specWarnCannonBarrage			= mod:NewSpecialWarningDodge(257540, nil, nil, nil
 --local timerIronGazeCD				= mod:NewCDTimer(13, 260954, nil, nil, nil, 3)
 --local timerSteelTempestCD			= mod:NewCDTimer(13, 260924, nil, nil, nil, 3)
 --local timerHangmansNooseCD			= mod:NewCDTimer(13, 261428, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-
---mod:AddRangeFrameOption(5, 194966)
 
 function mod:OnCombatStart()
 	if dungeonID == 2132 then--Redhook
@@ -116,7 +114,7 @@ function mod:SPELL_CAST_START(args)
 		--timerSteelTempestCD:Start()
 	elseif spellId == 261428 then
 		--timerHangmansNooseCD:Start()
-	elseif spellId == 260954 then
+--	elseif spellId == 260954 then
 		--timerIronGazeCD:Start()
 	end
 end

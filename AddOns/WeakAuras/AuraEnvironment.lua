@@ -32,7 +32,8 @@ end
 if WeakAuras.IsClassic() then
   local WA_GetUnitAuraBase = WA_GetUnitAura
   WA_GetUnitAura = function(unit, spell, filter)
-    local name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = WA_GetUnitAuraBase(unit, spell, filter)
+    local name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId,
+          canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod = WA_GetUnitAuraBase(unit, spell, filter)
     if spellId then
       local durationNew, expirationTimeNew = LCD:GetAuraDurationByUnit(unit, spellId, source, name)
       if duration == 0 and durationNew then
@@ -40,7 +41,8 @@ if WeakAuras.IsClassic() then
           expirationTime = expirationTimeNew
       end
     end
-    return name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
+    return name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId,
+           canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod
   end
 end
 
@@ -467,9 +469,12 @@ local FakeWeakAurasMixin = {
     -- Note these shouldn't exist in the WeakAuras namespace, but moving them takes a bit of effort,
     -- so for now just block them and clean them up later
     genericTriggerTypes = true,
-    newFeatureString = true,
     spellCache = true,
     StopMotion = true,
+    -- We block the loaded table, even though it doesn't exist anymore,
+    -- because some versions of ZT Tracker overwrote region:Collpase() and
+    -- checked for WeakAuras.loaded in there
+    loaded = true
   },
   override = {
     me = GetUnitName("player", true),
@@ -528,7 +533,7 @@ local exec_env_custom = setmetatable({},
                               or C_Timer
     elseif blockedFunctions[k] then
       blocked(k)
-      return function() end
+      return function(_) end
     elseif blockedTables[k] then
       blocked(k)
       return {}
@@ -574,7 +579,7 @@ local exec_env_builtin = setmetatable({},
       return PrivateForBuiltIn
     elseif blockedFunctions[k] then
       blocked(k)
-      return function() end
+      return function(_) end
     elseif blockedTables[k] then
       blocked(k)
       return {}
@@ -616,6 +621,7 @@ local function CreateFunctionCache(exec_env)
       if errorString then
         print(errorString)
       else
+        --- @cast loadedFunction -nil
         setfenv(loadedFunction, exec_env)
         local success, func = pcall(assert(loadedFunction))
         if success then

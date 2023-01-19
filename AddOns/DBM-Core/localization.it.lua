@@ -18,7 +18,7 @@ L.LOAD_MOD_TOC_MISMATCH		= "%s non può essere caricata in quanto è sviluppata 
 L.LOAD_MOD_DISABLED			= "%s è installata ma disabilitata. Questa mod non sarà caricata finchè non la abiliterai."
 L.LOAD_MOD_DISABLED_PLURAL	= "%s sono installati ma disabilitati. Queste mod non saranno caricate finché non le abiliterai."
 
-L.COPY_URL_DIALOG					= "Copia Indirizzo"
+L.COPY_URL_DIALOG					= "Copia URL"
 
 --Post Patch 7.1
 L.NO_RANGE					= "Il Radar Distanziometro non può essere utilizzato nelle istanze. Verrà utilizzato il precedente riquadro testuale"
@@ -29,7 +29,7 @@ L.DYNAMIC_DIFFICULTY_CLUMP	= "DBM ha disabilitato il riquadro distanziometro per
 L.DYNAMIC_ADD_COUNT			= "DBM ha disabilitato gli avvisi sulla quantità degli add per questo combattimento per insufficienti informazioni sul numero di add presenti con un gruppo di queste dimensioni."
 L.DYNAMIC_MULTIPLE			= "DBM ha disabilitato diverse funzionalità per questo combattimento per insufficienti informazioni su alcune meccaniche con un gruppo di queste dimensioni."
 
-L.LOOT_SPEC_REMINDER			= "La tua spec è %s. Il bottino selezionato è %s."
+L.LOOT_SPEC_REMINDER			= "La tua specializzazione è %s. La tua preferenza per il bottino è %s."
 
 L.BIGWIGS_ICON_CONFLICT		= "DBM ha rilevato l'abilitazione delle icone incursioni sia in BigWigs che in DBM. Disabilita le icone in uno dei due per evitare conflitti"
 
@@ -235,7 +235,7 @@ L.SLASHCMD_HELP				= {
 	"/dbm timer: Avvia temporizzatore DBM personalizzato, vedi '/dbm timer' per dettagli.",
 	"/dbm arrow: Mostra la freccia DBM, vedi '/dbm arrow help' per dettagli.",
 	"/dbm hud: Mostra l'HUD DBM, vedi '/dbm hud' per dettagli.",
-	"/dbm help2: Mostra i comandi per gestione incursione"
+	"/dbm help2: Mostra i comandi per gestione incursione."
 }
 L.SLASHCMD_HELP2				= {
 	"Comandi Disponibili:",
@@ -243,9 +243,9 @@ L.SLASHCMD_HELP2				= {
 	"/dbm pull <sec>: Avvia un temporizzatore per pull di <sec> secondi all'incursione (richiede assist. alias: pull).",
 	"/dbm break <min>: Avvia un temporizzatore per pause di <min> minuti all'incursione (richiede assist. alias: break).",
 	"/dbm version: Verifica la versione delle boss mod (alias: ver).",
-	"/dbm version2: Verifica la versione delle boss mod e invia un messaggio a quelli con versioni obsolete(alias: ver2).",
-	"/dbm lag: Esegue il controllo di latenza sull'incursione.",
-	"/dbm durability: Esegue il controllo stato equip sull'incursione."
+	"/dbm version2: Verifica la versione delle boss mod e invia un messaggio a quelli con versioni obsolete (alias: ver2).",
+	"/dbm lag: Controlla la latenza di tutti i giocatori nell'incursione.",
+	"/dbm durability: Controlla l'integrità dell'equipaggiamento di tutti i giocatori nell'incursione."
 }
 L.TIMER_USAGE	= {
 	"Comandi Temporizzatore DBM:",
@@ -263,14 +263,14 @@ L.BREAK_START				= "Inizia la pausa -- hai %s! (Iniziata da %s)"
 L.BREAK_MIN					= "La pausa termina tra %s minuto/i!"
 L.BREAK_SEC					= "La pausa termina tra %s secondi!"
 L.TIMER_BREAK				= "Ora della pausa!"
-L.ANNOUNCE_BREAK_OVER		= "La pausa è finita dopo %s"
+L.ANNOUNCE_BREAK_OVER		= "La pausa è finita dopo %s."
 
 L.TIMER_PULL					= "Ingaggio"
-L.ANNOUNCE_PULL				= "Ingaggio tra %d s (Iniziato da %s)"
+L.ANNOUNCE_PULL				= "Ingaggio tra %d s. (Iniziato da %s)"
 L.ANNOUNCE_PULL_NOW			= "Ingaggia ora!"
 L.ANNOUNCE_PULL_TARGET		= "Ingaggio di %s tra %d s. (Iniziato da %s)"
 L.ANNOUNCE_PULL_NOW_TARGET	= "Ingaggia %s ora!"
-L.GEAR_WARNING				= "Avviso: Controllo equip. L'ilvl equipaggiato è inferiore a quello in borsa"
+L.GEAR_WARNING				= "Avviso: Controlla l'equipaggiamento. Il livello oggetti equipaggiato è %d meno di quello in borsa."
 L.GEAR_WARNING_WEAPON		= "Avviso: Controlla di aver equipaggiato l'arma corretta."
 L.GEAR_FISHING_POLE			= "Canna da Pesca"
 
@@ -345,7 +345,7 @@ L.AUTO_SPEC_WARN_TEXTS.taunt				= "%s su >%%s< - tauntalo subito"
 L.AUTO_SPEC_WARN_TEXTS.close				= "%s su >%%s< vicino a te"
 L.AUTO_SPEC_WARN_TEXTS.move				= "%s - spostati"
 L.AUTO_SPEC_WARN_TEXTS.keepmove			= "%s - continua a muoverti"
-L.AUTO_SPEC_WARN_TEXTS.stopmove			= "%s - fermo"
+L.AUTO_SPEC_WARN_TEXTS.stopmove			= "%s - fermati"
 L.AUTO_SPEC_WARN_TEXTS.dodge				= "%s - evita l'attacco"
 L.AUTO_SPEC_WARN_TEXTS.dodgecount		= "%s (%%s) - evita l'attacco"
 L.AUTO_SPEC_WARN_TEXTS.dodgeloc			= "%s - evita da %%s"
@@ -355,9 +355,9 @@ L.AUTO_SPEC_WARN_TEXTS.moveto			= "%s - spostati a >%%s<"
 L.AUTO_SPEC_WARN_TEXTS.soak				= "%s - entraci"
 L.AUTO_SPEC_WARN_TEXTS.jump				= "%s - salta"
 L.AUTO_SPEC_WARN_TEXTS.run				= "%s - scappa"
-L.AUTO_SPEC_WARN_TEXTS.cast				= "%s - interrompi il cast"
+L.AUTO_SPEC_WARN_TEXTS.cast				= "%s - non castare"
 L.AUTO_SPEC_WARN_TEXTS.lookaway			= "%s su %%s - distogli lo sguardo"
-L.AUTO_SPEC_WARN_TEXTS.reflect			= "%s su >%%s< - interrompi l'attacco"
+L.AUTO_SPEC_WARN_TEXTS.reflect			= "%s su >%%s< - non attaccare"
 L.AUTO_SPEC_WARN_TEXTS.count				= "%s! (%%s)"
 L.AUTO_SPEC_WARN_TEXTS.stack				= "%%d stack di %s su di te"
 L.AUTO_SPEC_WARN_TEXTS.switch			= "%s - cambio bersaglio"
@@ -378,7 +378,7 @@ L.AUTO_SPEC_WARN_OPTIONS.sooncount		= "Mostra preavviso speciale (con conteggio)
 L.AUTO_SPEC_WARN_OPTIONS.bait			= "Mostra preavviso speciale (per attirare) per $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.prewarn 		= "Mostra preavviso speciale di %s secondi prima di $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.dispel 			= "Mostra avviso speciale per dispel di $spell:%s"
-L.AUTO_SPEC_WARN_OPTIONS.interrupt		= "Mostra avviso speciale per interruzione di $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.interrupt		= "Mostra avviso speciale per interrompere $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.interruptcount	= "Mostra avviso speciale (con conteggio) per interrompere $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.you 			= "Mostra avviso speciale quando affetto da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.youcount		= "Mostra avviso speciale (con conteggio) quando affetto da $spell:%s"
@@ -386,8 +386,8 @@ L.AUTO_SPEC_WARN_OPTIONS.youpos			= "Mostra avviso speciale (con posizione) quan
 L.AUTO_SPEC_WARN_OPTIONS.soakpos			= "Mostra avviso speciale (con posizione) per entrare dagli affetti da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.target 			= "Mostra avviso speciale quando qualcuno è affetto da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.targetcount 	= "Mostra avviso speciale (con conteggio) quando qualcuno è affetto da $spell:%s"
-L.AUTO_SPEC_WARN_OPTIONS.defensive 		= "Mostra avviso speciale per usare i difensivi con $spell:%s"
-L.AUTO_SPEC_WARN_OPTIONS.taunt 			= "Mostra avviso speciale per tautare quando l'altro difensore è affetto da $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.defensive 		= "Mostra avviso speciale per usare abilità difensive per $spell:%s"
+L.AUTO_SPEC_WARN_OPTIONS.taunt 			= "Mostra avviso speciale per tauntare quando l'altro difensore è affetto da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.close 			= "Mostra avviso speciale quando qualcuno vicino è affetto da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.move 			= "Mostra avviso speciale per spostarti da $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.keepmove 		= "Mostra avviso speciale per continuare a muoverti con $spell:%s"
@@ -401,9 +401,9 @@ L.AUTO_SPEC_WARN_OPTIONS.moveto			= "Mostra avviso speciale per muoverti verso q
 L.AUTO_SPEC_WARN_OPTIONS.soak			= "Mostra avviso speciale per entrare in $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.jump			= "Mostra avviso speciale per muoverti per saltare per $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.run 			= "Mostra avviso speciale per sfuggire da $spell:%s"
-L.AUTO_SPEC_WARN_OPTIONS.cast 			= "Mostra avviso speciale per interrompere il cast per $spell:%s" -- Interruzione Abilità
+L.AUTO_SPEC_WARN_OPTIONS.cast 			= "Mostra avviso speciale per non castare per $spell:%s" -- Interruzione Abilità
 L.AUTO_SPEC_WARN_OPTIONS.lookaway		= "Mostra avviso speciale per distogliere lo sguardo da $spell:%s"
-L.AUTO_SPEC_WARN_OPTIONS.reflect 		= "Mostra avviso speciale per interrompere gli attacchi con $spell:%s" -- Riflesso Abilità
+L.AUTO_SPEC_WARN_OPTIONS.reflect 		= "Mostra avviso speciale per non attaccare per $spell:%s" -- Riflesso Abilità
 L.AUTO_SPEC_WARN_OPTIONS.count 			= "Mostra avviso speciale (con conteggio) per $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.stack 			= "Mostra avviso speciale quando affetto da >= %d stack di $spell:%s"
 L.AUTO_SPEC_WARN_OPTIONS.switch			= "Mostra avviso speciale per cambiare bersaglio con $spell:%s"
@@ -518,7 +518,7 @@ L.HUD_USAGE	= {
 	"/dbm hud <tipo> <bersaglio> <durata>: Crea un HUD che punta al giocatore per la durata desiderata",
 	"Tipi validi: arrow, dot, red, blue, green, yellow, icon (richiede un bersaglio con icona incursione)",
 	"Bersagli validi: target, focus, <nomegiocatore>",
-	"Durate valide: qualsiasi numero (in secondi). Se in bianco, verranno impostati 20min.",
+	"Durate valide: qualsiasi numero (in secondi). Se in bianco, verranno impostati 20 minuti.",
 	"/dbm hud hide:  disabilita e nasconde l'HUD"
 }
 
@@ -542,14 +542,14 @@ L.TIMER_RESPAWN		= "Respawn %s"
 
 L.LAG_CHECKING				= "Analisi Latenza incursione..."
 L.LAG_HEADER					= "Deadly Boss Mods - Risultati Latenza"
-L.LAG_ENTRY					= "%s: Mondo [%d ms] / Locale [%d ms]"
+L.LAG_ENTRY					= "%s: Reame [%d ms] / Locale [%d ms]"
 L.LAG_FOOTER					= "Nessuna Risposta: %s"
 
 L.DUR_CHECKING				= "Analisi Stato Equipaggiamento Incursione..."
 L.DUR_HEADER					= "Deadly Boss Mods - Risultati Stato Equipaggiamento"
-L.DUR_ENTRY					= "%s: Durata [%d percento] / Equip rotto [%s]"
+L.DUR_ENTRY					= "%s: Durata [%d percento] / Equipaggiamento rotto [%s]"
 L.LAG_FOOTER					= "Nessuna Risposta: %s"
 
 --LDB
-L.LDB_TOOLTIP_HELP1	= "Click SX per aprire DBM"
-L.LDB_TOOLTIP_HELP2	= "Click DX per aprire la configurazione"
+L.LDB_TOOLTIP_HELP1	= "Clicca per aprire DBM"
+L.LDB_TOOLTIP_HELP2	= "Clicca col tasto destro per aprire la configurazione"

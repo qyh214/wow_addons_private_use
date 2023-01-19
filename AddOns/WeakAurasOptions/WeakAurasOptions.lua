@@ -179,6 +179,7 @@ end
 local frame;
 local db;
 local odb;
+--- @type boolean?
 local reopenAfterCombat = false;
 local loadedFrame = CreateFrame("Frame");
 loadedFrame:RegisterEvent("ADDON_LOADED");
@@ -298,8 +299,6 @@ local function CreateNewGroupFromSelection(regionType, resetChildPositions)
     local oldParentData = WeakAuras.GetData(oldParent)
     if (oldParent) then
       local oldIndex = childButton:GetGroupOrder()
-      print("CHILD ID", childId, "OLD PARENT", oldParent, "OLD INDEX", oldIndex)
-      print("###", oldParentData.controlledChildren[oldIndex])
 
       tremove(oldParentData.controlledChildren, oldIndex)
       WeakAuras.Add(oldParentData)
@@ -893,7 +892,7 @@ function OptionsPrivate.ConvertDisplay(data, newType)
   local visibility = displayButtons[id]:GetVisibility();
   displayButtons[id]:PriorityHide(2);
 
-  if OptionsPrivate.Private.regions[id] then
+  if OptionsPrivate.Private.regions[id] and OptionsPrivate.Private.regions[id].region then
     OptionsPrivate.Private.regions[id].region:Collapse()
   end
   OptionsPrivate.Private.CollapseAllClones(id);
@@ -1314,7 +1313,10 @@ function OptionsPrivate.StartGrouping(data)
     end
 
     for id, button in pairs(displayButtons) do
-      button:StartGrouping({data.id}, data.id == id, data.regionType == "dynamicgroup" or data.regionType == "group", children[id]);
+      button:StartGrouping({data.id},
+                           data.id == id,
+                           data.regionType == "dynamicgroup" or data.regionType == "group",
+                           children[id]);
     end
   end
 end
@@ -1561,8 +1563,8 @@ function WeakAuras.UpdateThumbnail(data)
   button:UpdateThumbnail()
 end
 
-function OptionsPrivate.OpenTexturePicker(baseObject, path, properties, textures, SetTextureFunc)
-  frame.texturePicker:Open(baseObject, path, properties, textures, SetTextureFunc)
+function OptionsPrivate.OpenTexturePicker(baseObject, path, properties, textures, SetTextureFunc, adjustSize)
+  frame.texturePicker:Open(baseObject, path, properties, textures, SetTextureFunc, adjustSize)
 end
 
 function OptionsPrivate.OpenIconPicker(baseObject, paths, groupIcon)
@@ -1758,7 +1760,8 @@ function OptionsPrivate.MoveCollapseDataUp(id, namespace, path)
   collapsedOptions[id] = collapsedOptions[id] or {}
   collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
   if type(path) ~= "table" then
-    collapsedOptions[id][namespace][path], collapsedOptions[id][namespace][path - 1] = collapsedOptions[id][namespace][path - 1], collapsedOptions[id][namespace][path]
+    collapsedOptions[id][namespace][path], collapsedOptions[id][namespace][path - 1]
+      = collapsedOptions[id][namespace][path - 1], collapsedOptions[id][namespace][path]
   else
     local tmp = collapsedOptions[id][namespace]
     local lastKey = tremove(path)
@@ -1774,7 +1777,8 @@ function OptionsPrivate.MoveCollapseDataDown(id, namespace, path)
   collapsedOptions[id] = collapsedOptions[id] or {}
   collapsedOptions[id][namespace] = collapsedOptions[id][namespace] or {}
   if type(path) ~= "table" then
-    collapsedOptions[id][namespace][path], collapsedOptions[id][namespace][path + 1] = collapsedOptions[id][namespace][path + 1], collapsedOptions[id][namespace][path]
+    collapsedOptions[id][namespace][path], collapsedOptions[id][namespace][path + 1]
+      = collapsedOptions[id][namespace][path + 1], collapsedOptions[id][namespace][path]
   else
     local tmp = collapsedOptions[id][namespace]
     local lastKey = tremove(path)
@@ -1869,7 +1873,8 @@ function OptionsPrivate.DuplicateCollapseData(id, namespace, path)
   end
 end
 
-function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden, withoutColor, index, total)
+function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, hidden, setHidden,
+                                            withoutColor, index, total)
   local headerOption
   if withHeader and (not index or index == 1) then
     headerOption =  {

@@ -1,17 +1,19 @@
 local mod	= DBM:NewMod(1488, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230103192955")
 mod:SetCreatureID(95675)
 mod:SetEncounterID(1808)
+mod:SetHotfixNoticeRev(20221127000000)
+--mod:SetMinSyncRevision(20221108000000)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 202711",
-	"SPELL_AURA_REMOVED 193826",
 	"SPELL_CAST_START 193659 193668 193826 194112",
 	"SPELL_CAST_SUCCESS 193659",
+	"SPELL_AURA_APPLIED 193783",
+	"SPELL_AURA_REMOVED 193826",
 	"SPELL_PERIODIC_DAMAGE 193702",
 	"SPELL_PERIODIC_MISSED 193702"
 )
@@ -20,10 +22,16 @@ mod:RegisterEvents(
 )
 
 --TODO, longer/more pulls, a timer sequence may be better than on fly timer correction.
-local warnAegis						= mod:NewTargetAnnounce(202711, 1)
-local warnFelblazeRush				= mod:NewTargetAnnounce(193659, 2)
+--TODO, Fix Savage blade, which sometimes doesn't reset after ragnarok?
+--[[
+(ability.id = 193659 or ability.id = 193668 or ability.id = 193826 or ability.id = 194112) and type = "begincast"
+ or type = "dungeonencounterstart" or type = "dungeonencounterend"
+--]]
+local warnAegis						= mod:NewTargetNoFilterAnnounce(193783, 1)
+local warnFelblazeRush				= mod:NewTargetNoFilterAnnounce(193659, 2)
 local warnClaimAegis				= mod:NewSpellAnnounce(194112, 2)
 
+local specWarnFelRush				= mod:NewSpecialWarningYou(193659, nil, nil, nil, 1, 2)
 local yellFelblazeRush				= mod:NewYell(193659)
 local specWarnSavageBlade			= mod:NewSpecialWarningDefensive(193668, "Tank", nil, nil, 1, 2)
 local specWarnRagnarok				= mod:NewSpecialWarningMoveTo(193826, nil, nil, nil, 3, 2)
@@ -32,40 +40,22 @@ local specWarnFlames				= mod:NewSpecialWarningMove(193702, nil, nil, nil, 1, 2)
 local timerRP						= mod:NewRPTimer(34.4)
 local timerRushCD					= mod:NewCDTimer(11, 193659, nil, nil, nil, 3)--11-13 unless delayed by claim aegis or ragnarok
 local timerSavageBladeCD			= mod:NewCDTimer(19, 193668, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)--23 unless delayed by claim aegis or ragnarok
-local timerRagnarokCD				= mod:NewCDTimer(51, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--60 now? or maybe health based?
+local timerRagnarokCD				= mod:NewCDTimer(63.1, 193826, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 
 function mod:FelblazeRushTarget(targetname, uId)
 	if not targetname then return end
-	warnFelblazeRush:Show(targetname)
 	if targetname == UnitName("player") then
+		specWarnFelRush:Show()
+		specWarnFelRush:Play("targetyou")
 		yellFelblazeRush:Yell()
+	else
+		warnFelblazeRush:Show(targetname)
 	end
 end
 
 function mod:OnCombatStart(delay)
 	timerRushCD:Start(7.1-delay)
 	timerRagnarokCD:Start(11-delay)
-end
-
-function mod:SPELL_AURA_APPLIED(args)
-	local spellId = args.spellId
-	if spellId == 202711 and args:IsDestTypePlayer() then
-		warnAegis:Show(args.destName)
-	end
-end
-
-function mod:SPELL_AURA_REMOVED(args)
-	local spellId = args.spellId
-	if spellId == 193826 then
-		timerRagnarokCD:Start()
-		--timerRushCD:Start(25)--Verify
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 193659 then
-		self:BossUnitTargetScannerAbort()
-	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -96,11 +86,31 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 193826 then
 		specWarnRagnarok:Show(SHIELDSLOT)
 		specWarnRagnarok:Play("findshield")
-		timerRushCD:Stop()
-		timerSavageBladeCD:Stop()
-		timerSavageBladeCD:Start(12)
+		timerRushCD:Restart(12)
+--		timerSavageBladeCD:Restart(29.9)--Needs New Review
 	elseif spellId == 194112 then
 		warnClaimAegis:Show()
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 193659 then
+		self:BossUnitTargetScannerAbort()
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 193783 and args:IsDestTypePlayer() then
+		warnAegis:Show(args.destName)
+	end
+end
+
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
+	if spellId == 193826 then
+		timerRagnarokCD:Start()
+		--timerRushCD:Start(25)--Verify
 	end
 end
 

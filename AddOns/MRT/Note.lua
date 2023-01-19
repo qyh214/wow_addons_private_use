@@ -1303,7 +1303,7 @@ function module.options:Load()
 
 				local c = 0.05 * (self.t > 2 and (4-self.t) or self.t)
 
-				if MRT.is10 then
+				if MRT.is10 or MRT.isLK1 then
 					self.Texture:SetGradient("VERTICAL",CreateColor(0.0+c,0.06+c,0.0+c,1), CreateColor(0.05+c,0.21+c,0.05+c,1))
 				else
 					self.Texture:SetGradientAlpha("VERTICAL",0.0+c,0.06+c,0.0+c,1, 0.05+c,0.21+c,0.05+c,1)
@@ -1311,7 +1311,7 @@ function module.options:Load()
 			end)
 		else
 			self:SetScript("OnUpdate",nil)
-			if MRT.is10 then
+			if MRT.is10 or MRT.isLK1 then
 				self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
 			else
 				self.Texture:SetGradientAlpha("VERTICAL",0.05,0.06,0.09,1, 0.20,0.21,0.25,1)
@@ -1923,7 +1923,7 @@ module.frame:SetScript("OnDragStop", function(self)
 end)
 module.frame:SetFrameStrata("HIGH")
 module.frame:SetResizable(true)
-if MRT.is10 then
+if MRT.is10 or MRT.isLK1 then
 	module.frame:SetResizeBounds(30, 30, 2000, 2000)
 else
 	module.frame:SetMinResize(30, 30)
@@ -1950,7 +1950,7 @@ module.frame.sf:Hide()
 
 ELib:FixPreloadFont(module.frame,function() 
 	if VMRT then
-		module.frame.text:SetFont(GameFontWhite:GetFont(),11)
+		module.frame.text:SetFont(GameFontWhite:GetFont(),11,"")
 		module.frame:UpdateFont() 
 		return true
 	end
@@ -1959,7 +1959,7 @@ end)
 function module.frame:UpdateFont()
 	local font = VMRT and VMRT.Note and VMRT.Note.FontName or MRT.F.defFont
 	local size = VMRT and VMRT.Note and VMRT.Note.FontSize or 12
-	local outline = VMRT and VMRT.Note and VMRT.Note.Outline and "OUTLINE"
+	local outline = VMRT and VMRT.Note and VMRT.Note.Outline and "OUTLINE" or ""
 	local isValidFont = self.text:SetFont(font,size,outline)
 	if not isValidFont then 
 		self.text:SetFont(GameFontNormal:GetFont(),size,outline)
@@ -2035,7 +2035,7 @@ end)
 
 
 module.frame.text = module.frame:CreateFontString(nil,"ARTWORK")
-module.frame.text:SetFont(MRT.F.defFont, 12)
+module.frame.text:SetFont(MRT.F.defFont, 12, "")
 module.frame.text:SetPoint("TOPLEFT",5,-5)
 module.frame.text:SetPoint("BOTTOMRIGHT",-5,5)
 module.frame.text:SetJustifyH("LEFT")

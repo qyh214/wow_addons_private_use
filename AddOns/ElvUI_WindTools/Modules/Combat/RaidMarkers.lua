@@ -5,6 +5,7 @@ local S = W.Modules.Skins
 local _G = _G
 local GameTooltip = _G.GameTooltip
 
+local abs = abs
 local format = format
 local gsub = gsub
 local strupper = strupper
@@ -236,6 +237,24 @@ function RM:CreateBar()
 	)
 end
 
+function RM:UpdateCountDownButton()
+	if not (self.db and self.bar and self.bar.buttons and self.bar.buttons[11]) then
+		return
+	end
+
+	local button = self.bar.buttons[11]
+	if IsAddOnLoaded("BigWigs") then
+		button:SetAttribute("macrotext1", "/pull " .. self.db.countDownTime)
+		button:SetAttribute("macrotext2", "/pull 0")
+	elseif IsAddOnLoaded("DBM-Core") then
+		button:SetAttribute("macrotext1", "/dbm pull " .. self.db.countDownTime)
+		button:SetAttribute("macrotext2", "/dbm pull 0")
+	else
+		button:SetAttribute("macrotext1", _G.SLASH_COUNTDOWN1 .. " " .. self.db.countDownTime)
+		button:SetAttribute("macrotext2", _G.SLASH_COUNTDOWN1 .. " " .. -1)
+	end
+end
+
 function RM:CreateButtons()
 	self.modifierString = self.db.modifier:gsub("^%l", strupper)
 
@@ -262,17 +281,7 @@ function RM:CreateButtons()
 			button:SetAttribute("type*", "macro")
 			button:SetAttribute(format("%s-type*", self.db.modifier), "macro")
 
-			if not self.db.inverse then
-				button:SetAttribute("macrotext1", format("/tm %d", i))
-				button:SetAttribute("macrotext2", "/tm 9")
-				button:SetAttribute(format("%s-macrotext1", self.db.modifier), format("/wm %d", TargetToWorld[i]))
-				button:SetAttribute(format("%s-macrotext2", self.db.modifier), format("/cwm %d", TargetToWorld[i]))
-			else
-				button:SetAttribute("macrotext1", format("/wm %d", TargetToWorld[i]))
-				button:SetAttribute("macrotext2", format("/cwm %d", TargetToWorld[i]))
-				button:SetAttribute(format("%s-macrotext1", self.db.modifier), format("/tm %d", i))
-				button:SetAttribute(format("%s-macrotext2", self.db.modifier), "/tm 9")
-			end
+			self:UpdateCountDownButton()
 
 			button.isMarkButton = true
 		elseif i == 9 then -- 清除按钮
@@ -335,7 +344,7 @@ function RM:CreateButtons()
 			end
 		end
 
-		button:RegisterForClicks(E.global.WT.core.buttonFix)
+		button:RegisterForClicks(W.UseKeyDown and "AnyDown" or "AnyUp")
 
 		-- 鼠标提示
 		local tooltipText = ""
@@ -409,9 +418,9 @@ function RM:CreateButtons()
 			"OnEnter",
 			function(self)
 				if RM.db.buttonAnimation then
-					local progress = animGroup:GetProgress()
-					local currentScale = tex:GetScale()
-					if progress ~= 0 then
+					local progress = F.Or(animGroup:GetProgress(), 0)
+					local currentScale = F.Or(tex:GetScale(), 1)
+					if abs(progress) > 0.002 and tex.__fromScale and tex.__toScale then
 						currentScale = tex.__fromScale + (tex.__toScale - tex.__fromScale) * progress
 					end
 					animGroup:Stop()
@@ -419,9 +428,7 @@ function RM:CreateButtons()
 					tex.__toScale = RM.db.buttonAnimationScale
 					scaleAnim:SetScaleFrom(currentScale, currentScale)
 					scaleAnim:SetScaleTo(RM.db.buttonAnimationScale, RM.db.buttonAnimationScale)
-					scaleAnim:SetDuration(
-						(RM.db.buttonAnimationScale - currentScale) / (RM.db.buttonAnimationScale - 1) * RM.db.buttonAnimationDuration
-					)
+					scaleAnim:SetDuration((tex.__toScale - currentScale) / (tex.__toScale - 1) * RM.db.buttonAnimationDuration)
 					animGroup:Play()
 				end
 
@@ -440,9 +447,9 @@ function RM:CreateButtons()
 			"OnLeave",
 			function(self)
 				if RM.db.buttonAnimation then
-					local progress = animGroup:GetProgress()
-					local currentScale = tex:GetScale()
-					if progress ~= 0 then
+					local progress = F.Or(animGroup:GetProgress(), 0)
+					local currentScale = F.Or(tex:GetScale(), 1)
+					if abs(progress) > 0.002 and tex.__fromScale and tex.__toScale then
 						currentScale = tex.__fromScale + (tex.__toScale - tex.__fromScale) * progress
 					end
 					animGroup:Stop()

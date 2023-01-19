@@ -78,10 +78,9 @@ local function SkinItemDisplay(frame)
 	local ItemButton = ItemDisplay.ItemButton
 	ItemButton.CircleMask:Hide()
 
-	-- We skin the new IconBorder from the AH, it looks really cool tbh.
-	ItemButton.Icon:SetTexCoord(.08, .92, .08, .92)
-	ItemButton.Icon:Size(44)
-	ItemButton.IconBorder:SetTexCoord(.08, .92, .08, .92)
+	S:HandleIcon(ItemButton.Icon, true)
+	S:HandleIconBorder(ItemButton.IconBorder, ItemButton.Icon.backdrop)
+	ItemButton:GetHighlightTexture():Hide()
 end
 
 local function HandleHeaders(frame)
@@ -119,7 +118,6 @@ local function HandleSellFrame(frame)
 
 	local ItemButton = ItemDisplay.ItemButton
 	if ItemButton.IconMask then ItemButton.IconMask:Hide() end
-	if ItemButton.IconBorder then ItemButton.IconBorder:Kill() end
 
 	ItemButton.EmptyBackground:Hide()
 	ItemButton:SetPushedTexture(E.ClearTexture)
@@ -131,6 +129,10 @@ local function HandleSellFrame(frame)
 	S:HandleButton(frame.QuantityInput.MaxButton)
 	S:HandleEditBox(frame.PriceInput.MoneyInputFrame.GoldBox)
 	S:HandleEditBox(frame.PriceInput.MoneyInputFrame.SilverBox)
+
+	if ItemButton.IconBorder then
+		S:HandleIconBorder(ItemButton.IconBorder, ItemButton.Icon.backdrop)
+	end
 
 	if frame.SecondaryPriceInput then
 		S:HandleEditBox(frame.SecondaryPriceInput.MoneyInputFrame.GoldBox)
@@ -155,7 +157,6 @@ local function HandleTokenSellFrame(frame)
 
 	local ItemButton = ItemDisplay.ItemButton
 	if ItemButton.IconMask then ItemButton.IconMask:Hide() end
-	if ItemButton.IconBorder then ItemButton.IconBorder:Kill() end
 
 	ItemButton.EmptyBackground:Hide()
 	ItemButton:SetPushedTexture(E.ClearTexture)
@@ -163,6 +164,10 @@ local function HandleTokenSellFrame(frame)
 	ItemButton.Highlight:SetAllPoints(ItemButton.Icon)
 
 	S:HandleIcon(ItemButton.Icon, true)
+
+	if ItemButton.IconBorder then
+		S:HandleIconBorder(ItemButton.IconBorder, ItemButton.Icon.backdrop)
+	end
 
 	S:HandleButton(frame.PostButton)
 	HandleAuctionButtons(frame.DummyRefreshButton)
@@ -184,8 +189,8 @@ local function HandleSellList(frame, hasHeader, fitScrollBar)
 
 	if fitScrollBar then
 		frame.ScrollBar:ClearAllPoints()
-		frame.ScrollBar:Point('TOPLEFT', frame, 'TOPRIGHT', 1, -16)
-		frame.ScrollBar:Point('BOTTOMLEFT', frame, 'BOTTOMRIGHT', 1, 16)
+		frame.ScrollBar:Point('TOPRIGHT', frame, 1, -16)
+		frame.ScrollBar:Point('BOTTOMRIGHT', frame, 1, 16)
 	end
 
 	if hasHeader then
@@ -197,6 +202,31 @@ local function HandleSellList(frame, hasHeader, fitScrollBar)
 	end
 end
 
+local function HandleTabs(arg1)
+	local frame = _G.AuctionHouseFrame
+	if not arg1 or arg1 ~= frame then return end
+
+	local lastTab = _G.AuctionHouseFrameBuyTab
+	for index, tab in next, frame.Tabs do
+		-- we can move addon tabs but only skin the blizzard ones (AddonSkins handles the rest)
+		local blizzTab = tab == _G.AuctionHouseFrameBuyTab or tab == _G.AuctionHouseFrameSellTab or tab == _G.AuctionHouseFrameAuctionsTab
+		if blizzTab and not tab.backdrop then
+			S:HandleTab(tab)
+		end
+
+		-- tab positions
+		tab:ClearAllPoints()
+
+		if index == 1 then
+			tab:Point('BOTTOMLEFT', frame, 'BOTTOMLEFT', -3, -32)
+		else -- skinned ones can be closer together
+			tab:Point('TOPLEFT', lastTab, 'TOPRIGHT', (tab.backdrop or tab.Backdrop) and -5 or 0, 0)
+		end
+
+		lastTab = tab
+	end
+end
+
 local function LoadSkin()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.auctionhouse) then return end
 
@@ -204,20 +234,9 @@ local function LoadSkin()
 	local Frame = _G.AuctionHouseFrame
 	S:HandlePortraitFrame(Frame)
 
-	local AuctionHouseTabs = {
-		_G.AuctionHouseFrameBuyTab,
-		_G.AuctionHouseFrameSellTab,
-		_G.AuctionHouseFrameAuctionsTab,
-	}
-
-	for _, tab in pairs(AuctionHouseTabs) do
-		if tab then
-			S:HandleTab(tab)
-		end
-	end
-
-	_G.AuctionHouseFrameBuyTab:ClearAllPoints()
-	_G.AuctionHouseFrameBuyTab:Point('BOTTOMLEFT', Frame, 'BOTTOMLEFT', 0, -30)
+	-- handle tab spacing
+	hooksecurefunc('PanelTemplates_SetNumTabs', HandleTabs)
+	HandleTabs(Frame) -- call it once to setup our tabs
 
 	-- SearchBar Frame
 	HandleSearchBarFrame(Frame.SearchBar)
@@ -227,7 +246,8 @@ local function LoadSkin()
 	--[[ Categorie List ]]--
 	local Categories = Frame.CategoriesList
 	Categories:StripTextures()
-	Categories:SetTemplate('Transparent')
+	Categories.NineSlice:SetTemplate('Transparent')
+	Categories.NineSlice:SetInside(Categories)
 	S:HandleTrimScrollBar(Categories.ScrollBar)
 
 	hooksecurefunc('AuctionHouseFilterButton_SetUp', function(button)
@@ -246,8 +266,8 @@ local function LoadSkin()
 	S:HandleTrimScrollBar(BrowseList.ScrollBar)
 	BrowseList:SetTemplate('Transparent')
 	BrowseList.ScrollBar:ClearAllPoints()
-	BrowseList.ScrollBar:Point('TOPLEFT', BrowseList, 'TOPRIGHT', 1, -16)
-	BrowseList.ScrollBar:Point('BOTTOMLEFT', BrowseList, 'BOTTOMRIGHT', 1, 16)
+	BrowseList.ScrollBar:Point('TOPRIGHT', BrowseList, 1, -16)
+	BrowseList.ScrollBar:Point('BOTTOMRIGHT', BrowseList, 1, 16)
 
 	--[[ BuyOut Frame]]
 	local CommoditiesBuyFrame = Frame.CommoditiesBuyFrame
@@ -377,6 +397,8 @@ local function LoadSkin()
 	local ItemButton = Token.ItemButton
 	S:HandleIcon(ItemButton.Icon, true)
 	ItemButton.Icon.backdrop:SetBackdropBorderColor(0, .8, 1)
+	ItemButton:GetHighlightTexture():Hide()
+	ItemButton.CircleMask:Hide()
 	ItemButton.IconBorder:Kill()
 
 	--WoW Token Tutorial Frame

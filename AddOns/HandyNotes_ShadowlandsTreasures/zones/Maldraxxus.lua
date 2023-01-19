@@ -649,7 +649,7 @@ ns.RegisterPoints(1536, {
             184288, -- Ruthless Warlord's Barrier
         },
         level=60,
-        note="At the top of the tower",
+        note="At the bottom of the tower",
     },
     [28965138] = { -- Zargox the Reborn
         achievement=14308, criteria=48864,

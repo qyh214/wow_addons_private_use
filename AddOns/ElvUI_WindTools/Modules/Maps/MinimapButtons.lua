@@ -34,7 +34,6 @@ local IgnoreList = {
 		"HelpOpenTicketButton",
 		"ElvUI_MinimapHolder",
 		"DroodFocusMinimapButton",
-		"QueueStatusMinimapButton",
 		"TimeManagerClockButton",
 		"MinimapZoneTextButton"
 	},
@@ -53,7 +52,9 @@ local IgnoreList = {
 		"NauticusMiniIcon",
 		"WestPointer",
 		"Cork",
-		"DugisArrowMinimapPoint"
+		"DugisArrowMinimapPoint",
+		"TTMinimapButton",
+		"QueueStatusButton"
 	},
 	partial = {
 		"Node",
@@ -87,6 +88,7 @@ do
 		if not icon then
 			return
 		end
+		icon:SetIgnoreParentScale(true)
 		icon:SetScale(E.uiscale)
 
 		local box = _G.GarrisonLandingPageTutorialBox
@@ -235,18 +237,16 @@ function MB:SkinButton(frame)
 		end
 	end
 
-	if name ~= "ExpansionLandingPageMinimapButton" and tmp ~= 2 then
-		frame:SetPushedTexture("")
-		frame:SetDisabledTexture("")
-		frame:SetHighlightTexture("")
-	elseif name == "DBMMinimapButton" then
+	if name == "DBMMinimapButton" then
 		frame:SetNormalTexture("Interface\\Icons\\INV_Helmet_87")
 	elseif name == "SmartBuff_MiniMapButton" then
 		frame:SetNormalTexture(select(3, GetSpellInfo(12051)))
-	elseif name == "ExpansionLandingPageMinimapButton" and self.db.garrison then
-		if not frame.isWindMinimapButton then
-			frame.isWindMinimapButton = true
-			self:UpdateExpansionLandingPageMinimapIcon(_G.ExpansionLandingPageMinimapButton)
+	elseif name == "ExpansionLandingPageMinimapButton" then
+		if self.db.garrison then
+			if not frame.isWindMinimapButton then
+				frame.isWindMinimapButton = true
+				self:UpdateExpansionLandingPageMinimapIcon(_G.ExpansionLandingPageMinimapButton)
+			end
 		end
 	elseif name == "GRM_MinimapButton" then
 		frame.GRM_MinimapButtonBorder:Hide()
@@ -259,6 +259,14 @@ function MB:SkinButton(frame)
 			frame.OldSetScript = frame.SetScript
 			frame.SetScript = E.noop
 		end
+	elseif strsub(name, 1, strlen("TomCats-")) == "TomCats-" then
+		frame:SetPushedTexture("")
+		frame:SetDisabledTexture("")
+		frame:GetHighlightTexture():Kill()
+	elseif tmp ~= 2 then
+		frame:SetPushedTexture("")
+		frame:SetDisabledTexture("")
+		frame:SetHighlightTexture("")
 	end
 
 	if not frame.isSkinned then
@@ -313,6 +321,13 @@ function MB:SkinButton(frame)
 						region.SetPoint = E.noop
 					end
 				end
+			end
+		end
+
+		if frame.backdrop then
+			if name == "LibDBIcon10_Musician" then
+				frame.backdrop:Kill()
+				frame.backdrop = nil
 			end
 		end
 
@@ -447,7 +462,7 @@ function MB:UpdateLayout()
 			frame:SetPoint(anchor, self.bar, anchor, offsetX, offsetY)
 		end
 
-		if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow then
+		if E.private.WT.skins.enable and E.private.WT.skins.windtools and E.private.WT.skins.shadow and frame.backdrop.shadow then
 			if not self.db.backdrop then
 				frame.backdrop.shadow:Show()
 			else
@@ -546,7 +561,7 @@ function MB:CreateFrames()
 	end
 
 	local frame = CreateFrame("Frame", nil, E.UIParent, "BackdropTemplate")
-	frame:SetPoint("TOPRIGHT", EM.holder, "BOTTOMRIGHT", 0, -5)
+	frame:SetPoint("TOPRIGHT", EM.MapHolder, "BOTTOMRIGHT", 0, -5)
 	frame:SetFrameStrata("BACKGROUND")
 	self.barAnchor = frame
 

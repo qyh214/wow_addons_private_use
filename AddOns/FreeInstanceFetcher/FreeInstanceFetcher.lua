@@ -17,6 +17,7 @@ local database = {
         ['羔羊公益之忘-金色平原'] = {true, '9', '0'},
         ['羔羊公益之初-瓦里安'] = {true, '9', '0'},
         ['羔羊公益之牢-金色平原'] = {true, '9', '0'},
+        ['咩咩的圣骑-冰霜之刃'] = {true, '9', '0'},
         ['想当坦公益-安苏'] = {true, '9', '0'},
         ['怜姐姐的术士-塞拉摩'] = {true, '9', '0'},
         ['怜姐姐的萨满-塞拉摩'] = {true, '9', '0'},
@@ -162,7 +163,7 @@ F.addonPrefix = "\124cFF70B8FF" .. addonName .. "\124r: "
 F.addonLocaleName = "\124cFF70B8FF便利CD获取\124r: "
 F.addonVersion = GetAddOnMetadata(addonName, 'Version')
 --[==[@debug@
-if F.addonVersion == 'v10.0.0' then
+if F.addonVersion == 'v10.0.2' then
     F.addonVersion = 'Dev'
 end
 --@end-debug@]==]
@@ -293,7 +294,7 @@ do
 end
 
 do
-    local interval = 1
+    local interval = 2
 
     local timeFrame = CreateFrame('Frame')
     timeFrame:Hide()

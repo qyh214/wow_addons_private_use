@@ -43,10 +43,30 @@ local function Hack_LFG()
 
         LFGListEntryCreation_SetTitleFromActivityInfo = function() end
     else
-        function QuestObjectiveSetupBlockButton_FindGroup(block, questID)
+        function KT_QuestObjectiveSetupBlockButton_FindGroup(block, questID)
             return false
         end
     end
+end
+
+-- Edit Mode
+-- Affects Edit Mode and remove errors.
+-- No negative impacts.
+local function Hack_EditMode()
+    if not ObjectiveTrackerFrame:IsInDefaultPosition() then
+        ShowUIPanel(EditModeManagerFrame)
+        ObjectiveTrackerFrame:ResetToDefaultPosition()
+        EditModeManagerFrame:SaveLayouts()
+        HideUIPanel(EditModeManagerFrame)
+    end
+
+    GameMenuButtonEditMode:HookScript("PreClick", function()
+        -- Clean DropDownList
+        local dropdown = LFDQueueFrameTypeDropDown
+        local parent = dropdown:GetParent()
+        dropdown:SetParent(nil)
+        dropdown:SetParent(parent)
+    end)
 end
 
 function M:OnInitialize()
@@ -57,4 +77,5 @@ end
 function M:OnEnable()
     _DBG("|cff00ff00Enable|r - "..self:GetName(), true)
     Hack_LFG()
+    Hack_EditMode()
 end

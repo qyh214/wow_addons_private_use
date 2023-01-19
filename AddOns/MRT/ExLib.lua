@@ -162,7 +162,7 @@ CheckButton	ExRTRadioButtonModernTemplate
 local GlobalAddonName, ExRT = ...
 local isExRT = GlobalAddonName == "MRT"
 
-local libVersion = 42
+local libVersion = 43
 
 if type(ELib)=='table' and type(ELib.V)=='number' and ELib.V > libVersion then return end
 
@@ -725,7 +725,7 @@ function Templates:ExRTButtonModernTemplate(parent,isSecure)
 
 	self.Texture = self:CreateTexture(nil,"BACKGROUND")
 	self.Texture:SetColorTexture(1,1,1,1)
-	if ExRT.is10 then
+	if ExRT.is10 or ExRT.isLK1 then
 		self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
 	else
 		self.Texture:SetGradientAlpha("VERTICAL",0.05,0.06,0.09,1, 0.20,0.21,0.25,1)
@@ -1530,7 +1530,7 @@ do
 		return self
 	end
 	local function Widget_Gradient(self,...)
-		if ExRT.is10 then
+		if ExRT.is10 or ExRT.isLK1 then
 			self:SetGradient(...,CreateColor(select(2,...)), CreateColor(select(6,...)))
 		else
 			self:SetGradientAlpha(...)
@@ -1811,9 +1811,9 @@ do
 			self._Size = self.Size
 			self.Size = Widget_Size
 
-			self.text:SetFont(self.text:GetFont(),10)
-			self.Low:SetFont(self.Low:GetFont(),10)
-			self.High:SetFont(self.High:GetFont(),10)
+			self.text:SetFont(self.text:GetFont(),10,"")
+			self.Low:SetFont(self.Low:GetFont(),10,"")
+			self.High:SetFont(self.High:GetFont(),10,"")
 		end
 
 		return self
@@ -2156,7 +2156,7 @@ do
 
 		tip.gradientTexture = tip:CreateTexture()
 		tip.gradientTexture:SetColorTexture(1,1,1,1)
-		if ExRT.is10 then
+		if ExRT.is10 or ExRT.isLK1 then
 			tip.gradientTexture:SetGradient("VERTICAL",CreateColor(0,0,0,0), CreateColor(.8,.8,.8,.2))
 		else
 			tip.gradientTexture:SetGradientAlpha("VERTICAL",0,0,0,0,.8,.8,.8,.2)
@@ -2635,7 +2635,7 @@ do
 		if template and size then
 			local filename = self:GetFont()
 			if filename then
-				self:SetFont(filename,size)
+				self:SetFont(filename,size,"")
 			end
 		end
 		self:SetJustifyH("LEFT")
@@ -2801,7 +2801,7 @@ do
 		local self = ELib:Template(template,parent) or CreateFrame("EditBox",nil,parent,template or (BackdropTemplateMixin and "BackdropTemplate"))
 		if not template then
 			local GameFontNormal_Font = GameFontNormal:GetFont()
-			if ExRT.is10 then
+			if ExRT.is10 or ExRT.isLK1 then
 				self:SetFont(GameFontNormal_Font,12,"")
 			else
 				self:SetFont(GameFontNormal_Font,12)
@@ -3097,12 +3097,12 @@ do
 	end
 	local function Widget_SetFontSize(self,size)
 		local obj = self:GetFontString()
-		obj:SetFont(obj:GetFont(),size)
+		obj:SetFont(obj:GetFont(),size,"")
 
 		return self
 	end
 	local function Widget_SetVertical(self)
-		if ExRT.is10 then
+		if ExRT.is10 or ExRT.isLK1 then
 			self.Texture:SetGradient("HORIZONTAL",CreateColor(0.20,0.21,0.25,1), CreateColor(0.05,0.06,0.09,1))
 		else
 			self.Texture:SetGradientAlpha("HORIZONTAL",0.20,0.21,0.25,1, 0.05,0.06,0.09,1)
@@ -3211,7 +3211,7 @@ do
 		return self
 	end
 	local function Widget_TextSize(self,size)
-		self.text:SetFont(self.text:GetFont(),size)
+		self.text:SetFont(self.text:GetFont(),size,"")
 		return self
 	end
 
@@ -3869,12 +3869,12 @@ do
 		self.fontSize = size
 		if not self.T then
 			for i=1,#self.List do
-				self.List[i].text:SetFont(self.List[i].text:GetFont(),size)
+				self.List[i].text:SetFont(self.List[i].text:GetFont(),size,"")
 			end
 		else
 			for i=1,#self.List do
 				for j=1,#self.T do
-					self.List[i]['text'..j]:SetFont(self.List[i]['text'..j]:GetFont(),size)
+					self.List[i]['text'..j]:SetFont(self.List[i]['text'..j]:GetFont(),size,"")
 				end
 			end
 		end
@@ -3885,12 +3885,12 @@ do
 		self.fontName = fontName
 		if not self.T then
 			for i=1,#self.List do
-				self.List[i].text:SetFont(fontName,fontSize)
+				self.List[i].text:SetFont(fontName,fontSize,"")
 			end
 		else
 			for i=1,#self.List do
 				for j=1,#self.T do
-					self.List[i]['text'..j]:SetFont(fontName,fontSize)
+					self.List[i]['text'..j]:SetFont(fontName,fontSize,"")
 				end
 			end
 		end
@@ -4092,7 +4092,7 @@ do
 		self:SetBackdrop({edgeFile = DEFAULT_BORDER, edgeSize = 8})
 
 		self:SetScript("OnEnter",function ()
-			self:SetBackdropBorderColor(0.5,1,0,5,1)
+			self:SetBackdropBorderColor(0.5,1,0.5,1)
 		end)
 		self:SetScript("OnLeave",function ()
 		  	self:SetBackdropBorderColor(1,1,1,1)
@@ -4478,7 +4478,7 @@ function ELib.ScrollDropDown:Reload(level)
 						if not font then
 							font = CreateFont(GlobalAddonName.."DropDownListFont"..now)
 						end
-						font:SetFont(data.font,12)
+						font:SetFont(data.font,12,"")
 						font:SetShadowOffset(1,-1)
 						font:SetShadowColor(0,0,0)
 						button:SetNormalFontObject(font)
@@ -5564,13 +5564,16 @@ do
 	local function MultilineEditBoxOnFrameClick(self)
 		self:GetParent().EditBox:SetFocus()
 	end
-	local function Widget_Font(self,font,size,...)
+	local function Widget_Font(self,font,size,params,...)
 		if font == 'x' then
 			font = self.EditBox:GetFont() or DEFAULT_FONT
 		end
-		self.EditBox:SetFont(font,size,...)
+		if not params then
+			params = ""
+		end
+		self.EditBox:SetFont(font,size,params,...)
 		if self.EditBox.ColoredText then
-			self.EditBox.ColoredText:SetFont(font,size,...)
+			self.EditBox.ColoredText:SetFont(font,size,params,...)
 		end
 		return self
 	end
@@ -5809,7 +5812,7 @@ do
 		self.posText:SetJustifyH("RIGHT")
 		self.posText:SetJustifyV("BOTTOM")
 		self.posText:SetPoint("BOTTOMRIGHT",-22,2)
-		self.posText:SetFont(self.posText:GetFont(),8)
+		self.posText:SetFont(self.posText:GetFont(),8,"")
 		self.posText:SetAlpha(0.4)
 
 		self.OnPosText = function(self)
@@ -6002,7 +6005,7 @@ function ELib:FixPreloadFont(parent,fontObj,font,size,params)
 				self:Hide()
 			end
 		else
-			fontObj:SetFont(GameFontWhite:GetFont(), size - 1)
+			fontObj:SetFont(GameFontWhite:GetFont(), size - 1,"")
 			fontObj:SetFont(font, size, params)
 			self:SetScript("OnUpdate",nil)
 			self:Hide()
@@ -6218,7 +6221,7 @@ function ELib:DecorationLine(parent,isGradient,layer,layerCounter)
 
 	if isGradient then
 		self:SetColorTexture(1,1,1,1)
-		if ExRT.is10 then
+		if ExRT.is10 or ExRT.isLK1 then
 			self:SetGradient("VERTICAL",CreateColor(.24,.25,.30,1), CreateColor(.27,.28,.33,1))
 		else
 			self:SetGradientAlpha("VERTICAL",.24,.25,.30,1,.27,.28,.33,1)

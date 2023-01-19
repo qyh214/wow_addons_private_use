@@ -11,6 +11,25 @@ L:SetGeneralLocalization{
 	name = "Чудовища Нордскола"
 }
 
+L:SetWarningLocalization{
+	WarningSnobold		= "Снобольд-вассал появился на >%s<"
+}
+
+L:SetTimerLocalization{
+	TimerNextBoss		= "Следующий босс",
+	TimerEmerge			= "Появление",
+	TimerSubmerge		= "Зарывание"
+}
+
+L:SetOptionLocalization{
+	WarningSnobold				= "Предупреждение о призыве Снобольда-вассала",
+	ClearIconsOnIceHowl			= "Снимать все иконки перед Топотом",
+	TimerNextBoss				= "Отсчет времени до появления следующего противника",
+	TimerEmerge					= "Отсчет времени до появления",
+	TimerSubmerge				= "Отсчет времени до зарывания",
+	IcehowlArrow				= "Показывать стрелку, когда Ледяной Рев готовится сделать рывок на цель рядом с Вами"
+}
+
 L:SetMiscLocalization{
 	Charge		= "^%%s глядит на (%S+) и испускает гортанный вой!",
 	CombatStart	= "Из самых глубоких и темных пещер Грозовой Гряды был призван Гормок Пронзающий Бивень! В бой, герои!",
@@ -20,25 +39,6 @@ L:SetMiscLocalization{
 	Acidmaw		= "Кислотная Утроба",
 	Dreadscale	= "Жуткая Чешуя",
 	Icehowl		= "Ледяной Рев"
-}
-
-L:SetOptionLocalization{
-	WarningSnobold				= "Предупреждение о призыве Снобольда-вассала",
-	ClearIconsOnIceHowl			= "Снимать все иконки перед Топотом",
-	TimerNextBoss				= "Отсчет времени до появления следующего противника",
-	TimerEmerge					= "Отсчет времени до появления",
-	TimerSubmerge				= "Отсчет времени до зарывания",
-	IcehowlArrow				= "Показывать стрелку, когда Ледяной Рев готовится сделать рывок на цель рядом с вами"
-}
-
-L:SetTimerLocalization{
-	TimerNextBoss		= "Прибытие следующего босса",
-	TimerEmerge			= "Появление",
-	TimerSubmerge		= "Зарывание"
-}
-
-L:SetWarningLocalization{
-	WarningSnobold				= "Призыв Снобольда-вассала"
 }
 
 ---------------------
@@ -70,8 +70,7 @@ L:SetGeneralLocalization{
 
 L:SetMiscLocalization{
 	AllianceVictory		= "СЛАВА АЛЬЯНСУ!",
-	HordeVictory		= "Не щадите никого, герои Орды! ЛОК'ТАР ОГАР!",
-	YellKill			= "Пустая и горькая победа. После сегодняшних потерь мы стали слабее как целое. Кто еще, кроме Короля-лича, выиграет от подобной глупости? Пали великие воины. И ради чего? Истинная опасность еще впереди – нас ждет битва с  Королем-личом."
+	HordeVictory		= "Не щадите никого, герои Орды! ЛОК'ТАР ОГАР!"
 }
 
 ---------------------
@@ -92,9 +91,8 @@ L:SetWarningLocalization{
 	SpecWarnSpecial				= "Смена цвета",
 	SpecWarnSwitchTarget		= "Смена цели",
 	SpecWarnKickNow				= "Прерывание",
-	WarningTouchDebuff			= "Отрицательный эффект на |3-5(>%s<)",
-	WarningPoweroftheTwins2		= "Сила близнецов - больше исцеления на |3-3(>%s<)",
-	SpecWarnPoweroftheTwins		= "Сила близнецов"
+	WarningTouchDebuff			= "Отрицательный эффект на >%s<",
+	WarningPoweroftheTwins2		= "Сила близнецов - больше исцеления на >%s<",
 }
 
 L:SetMiscLocalization{
@@ -156,6 +154,6 @@ L:SetOptionLocalization{
 	timerAdds				= "Отсчет времени до призыва помощников",
 	TimerEmerge				= "Отсчет времени до появления",
 	TimerSubmerge			= "Отсчет времени до закапывания",
-	AnnouncePColdIcons		= "Объявлять метки целей заклинания $spell:68510 в рейд-чат<br/>(требуются права лидера или помощника)",
-	AnnouncePColdIconsRemoved	= "Объявлять также о снятии меток с целей заклинания $spell:68510<br/>(требуется предыдущая опция)"
+	AnnouncePColdIcons		= "Объявлять метки целей заклинания $spell:66013 в рейд-чат<br/>(требуются права лидера или помощника)",
+	AnnouncePColdIconsRemoved	= "Объявлять также о снятии меток с целей заклинания $spell:66013<br/>(требуются права лидера или помощника)"
 }

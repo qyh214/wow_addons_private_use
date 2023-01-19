@@ -3,49 +3,47 @@ local DT = E:GetModule('DataTexts')
 local TT = E:GetModule('Tooltip')
 local LDB = E.Libs.LDB
 local LSM = E.Libs.LSM
+-- GLOBALS: ElvDB
 
 local _G = _G
-local tostring, format, type, pcall, unpack = tostring, format, type, pcall, unpack
-local tinsert, ipairs, pairs, wipe, sort = tinsert, ipairs, pairs, wipe, sort
-local next, strfind, strlen, strsplit = next, strfind, strlen, strsplit
+local next, format, type, pcall, unpack = next, format, type, pcall, unpack
+local tinsert, ipairs, pairs, wipe, sort, gsub = tinsert, ipairs, pairs, wipe, sort, gsub
+local tostring, strfind, strlen, strsplit, strlower = tostring, strfind, strlen, strsplit, strlower
 local hooksecurefunc = hooksecurefunc
 
 local CloseDropDownMenus = CloseDropDownMenus
 local CreateFrame = CreateFrame
 local EasyMenu = EasyMenu
-local GetBackpackCurrencyInfo = GetBackpackCurrencyInfo or C_CurrencyInfo.GetBackpackCurrencyInfo
-local GetCurrencyListSize = GetCurrencyListSize or C_CurrencyInfo.GetCurrencyListSize
+local GetCurrencyInfo = GetCurrencyInfo
+local GetCurrencyListInfo = GetCurrencyListInfo
 local GetNumSpecializations = GetNumSpecializations
 local GetSpecializationInfo = GetSpecializationInfo
 local InCombatLockdown = InCombatLockdown
 local IsInInstance = IsInInstance
-local MISCELLANEOUS = MISCELLANEOUS
 local MouseIsOver = MouseIsOver
 local RegisterStateDriver = RegisterStateDriver
 local UnregisterStateDriver = UnregisterStateDriver
 
---Retail
+local C_ClassTalents_GetActiveConfigID = C_ClassTalents and C_ClassTalents.GetActiveConfigID
+local C_CurrencyInfo_ExpandCurrencyList = C_CurrencyInfo.ExpandCurrencyList
+local C_CurrencyInfo_GetCurrencyIDFromLink = C_CurrencyInfo.GetCurrencyIDFromLink
 local C_CurrencyInfo_GetCurrencyInfo = C_CurrencyInfo.GetCurrencyInfo
 local C_CurrencyInfo_GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo
 local C_CurrencyInfo_GetCurrencyListLink = C_CurrencyInfo.GetCurrencyListLink
-local C_CurrencyInfo_GetCurrencyIDFromLink = C_CurrencyInfo.GetCurrencyIDFromLink
-local C_CurrencyInfo_ExpandCurrencyList = C_CurrencyInfo.ExpandCurrencyList
+local GetBackpackCurrencyInfo = GetBackpackCurrencyInfo or C_CurrencyInfo.GetBackpackCurrencyInfo
+local GetCurrencyListSize = GetCurrencyListSize or C_CurrencyInfo.GetCurrencyListSize
 
---Wrath
-local GetCurrencyInfo = GetCurrencyInfo
-local GetCurrencyListInfo = GetCurrencyListInfo
-
+local MISCELLANEOUS = MISCELLANEOUS
 local LFG_TYPE_DUNGEON = LFG_TYPE_DUNGEON
 local expansion = _G['EXPANSION_NAME'..GetExpansionLevel()]
-local ActivateHyperMode
-local HyperList = {}
+local QuickList = {}
 
 local iconString = '|T%s:16:16:0:0:64:64:4:60:4:60|t'
 
 DT.tooltip = CreateFrame('GameTooltip', 'DataTextTooltip', E.UIParent, 'GameTooltipTemplate')
 
 DT.SelectedDatatext = nil
-DT.HyperList = HyperList
+DT.QuickList = QuickList
 DT.RegisteredPanels = {}
 DT.RegisteredDataTexts = {}
 DT.DataTextList = {}
@@ -70,46 +68,14 @@ DT.UnitEvents = {
 
 DT.SPECIALIZATION_CACHE = {}
 
---> [HyperDT Credits] <--
---> Original Work: Nihilistzsche
---> Modified by Azilroka! :)
-
-function DT:SingleHyperMode(_, key, active)
+function DT:QuickDTMode(_, key, active)
 	if DT.SelectedDatatext and (key == 'LALT' or key == 'RALT') then
 		if active == 1 and MouseIsOver(DT.SelectedDatatext) then
 			DT:OnLeave()
 			E:SetEasyMenuAnchor(E.EasyMenu, DT.SelectedDatatext)
-			EasyMenu(HyperList, E.EasyMenu, nil, nil, nil, 'MENU')
+			EasyMenu(QuickList, E.EasyMenu, nil, nil, nil, 'MENU')
 		elseif _G.DropDownList1:IsShown() and not _G.DropDownList1:IsMouseOver() then
 			CloseDropDownMenus()
-		end
-	end
-end
-
-function DT:HyperClick()
-	DT.SelectedDatatext = self
-	E:SetEasyMenuAnchor(E.EasyMenu, DT.SelectedDatatext)
-	EasyMenu(HyperList, E.EasyMenu, nil, nil, nil, 'MENU')
-end
-
-function DT:EnableHyperMode(Panel)
-	DT:OnLeave()
-
-	if Panel then
-		for _, dt in pairs(Panel.dataPanels) do
-			dt.overlay:Show()
-			dt:SetScript('OnEnter', nil)
-			dt:SetScript('OnLeave', nil)
-			dt:SetScript('OnClick', DT.HyperClick)
-		end
-	else
-		for _, panel in pairs(DT.RegisteredPanels) do
-			for _, dt in pairs(panel.dataPanels) do
-				dt.overlay:Show()
-				dt:SetScript('OnEnter', nil)
-				dt:SetScript('OnLeave', nil)
-				dt:SetScript('OnClick', DT.HyperClick)
-			end
 		end
 	end
 end
@@ -227,9 +193,8 @@ function DT:BuildPanelFrame(name, fromInit)
 	end
 end
 
-local LDBhex, LDBna = '|cffFFFFFF', {['N/A'] = true, ['n/a'] = true, ['N/a'] = true}
 function DT:BuildPanelFunctions(name, obj)
-	local panel
+	local hex, text = '|cffFFFFFF'
 
 	local function OnEnter(dt)
 		DT.tooltip:ClearLines()
@@ -249,35 +214,42 @@ function DT:BuildPanelFunctions(name, obj)
 	end
 
 	local function UpdateText(_, Name, _, Value)
-		if not Value or (strlen(Value) >= 3) or (Value == Name or LDBna[Value]) then
-			panel.text:SetText((not LDBna[Value] and Value) or Name)
+		if not Value or Value == Name or strlower(Value) == 'n/a' then
+			text:SetText(Name)
+		elseif strlen(Value) >= 3 then
+			text:SetText(Value)
 		else
-			panel.text:SetFormattedText('%s: %s%s|r', Name, LDBhex, Value)
+			text:SetFormattedText('%s: %s%s|r', Name, hex, Value)
 		end
 	end
 
-	local function OnCallback(Hex)
+	local function UpdateColor(_, Hex)
 		if name and obj then
-			LDBhex = Hex
+			hex = Hex
 			LDB.callbacks:Fire('LibDataBroker_AttributeChanged_'..name..'_text', name, nil, obj.text, obj)
 		end
 	end
 
 	local function OnEvent(dt)
-		panel = dt
+		text = dt.text
 		LDB:RegisterCallback('LibDataBroker_AttributeChanged_'..name..'_text', UpdateText)
 		LDB:RegisterCallback('LibDataBroker_AttributeChanged_'..name..'_value', UpdateText)
-		OnCallback(LDBhex)
+		UpdateColor(dt, hex)
 	end
 
-	return OnEnter, OnLeave, OnClick, OnCallback, OnEvent, UpdateText
+	return OnEnter, OnLeave, OnClick, UpdateColor, OnEvent, UpdateText
 end
 
 function DT:SetupObjectLDB(name, obj)
+	if DT.RegisteredDataTexts['LDB_'..name] then return end
+
 	local onEnter, onLeave, onClick, onCallback, onEvent = DT:BuildPanelFunctions(name, obj)
-	local data = DT:RegisterDatatext(name, 'Data Broker', nil, onEvent, nil, onClick, onEnter, onLeave)
-	E.valueColorUpdateFuncs[onCallback] = true
+	local data = DT:RegisterDatatext('LDB_'..name, 'Data Broker', nil, onEvent, nil, onClick, onEnter, onLeave, 'LDB: '..name, nil, onCallback)
 	data.isLibDataBroker = true
+
+	if self ~= DT then -- This checks to see if we are calling it or the callback.
+		DT:UpdateQuickDT()
+	end
 end
 
 function DT:RegisterLDB()
@@ -295,8 +267,8 @@ function DT:GetDataPanelPoint(panel, i, numPoints, vertical)
 			point, relativePoint, xOffset, yOffset = 'TOP', i == 1 and 'TOP' or 'BOTTOM', 0, -4
 		end
 
-		local lastPanel = (i == 1 and panel) or panel.dataPanels[i - 1]
-		return point, lastPanel, relativePoint, xOffset, yOffset
+		local previous = (i == 1 and panel) or panel.dataPanels[i - 1]
+		return point, previous, relativePoint, xOffset, yOffset
 	end
 end
 
@@ -373,6 +345,10 @@ function DT:AssignPanelToDataText(dt, data, event, ...)
 		end
 	end
 
+	if data.colorUpdate then -- has to be before event function
+		data.colorUpdate(dt, E.media.hexvaluecolor)
+	end
+
 	local ev = event or 'ELVUI_FORCE_UPDATE'
 	if data.eventFunc then
 		if not data.objectEvent then
@@ -407,7 +383,7 @@ function DT:ForceUpdate_DataText(name)
 	for dtSlot, dtInfo in pairs(DT.AssignedDatatexts) do
 		if dtInfo.name == name then
 			if dtInfo.colorUpdate then
-				dtInfo.colorUpdate(hex, r, g, b)
+				dtInfo.colorUpdate(dtSlot, hex, r, g, b)
 			end
 			if dtInfo.eventFunc then
 				dtInfo.eventFunc(dtSlot, 'ELVUI_FORCE_UPDATE')
@@ -415,6 +391,15 @@ function DT:ForceUpdate_DataText(name)
 		end
 	end
 end
+
+function DT:UpdateHexColors(hex, r, g, b)
+	for dtSlot, dtInfo in pairs(DT.AssignedDatatexts) do
+		if dtInfo.colorUpdate then
+			dtInfo.colorUpdate(dtSlot, hex, r, g, b)
+		end
+	end
+end
+E.valueColorUpdateFuncs.DataTexts = DT.UpdateHexColors
 
 function DT:GetTextAttributes(panel, db)
 	local panelWidth, panelHeight = panel:GetSize()
@@ -464,12 +449,6 @@ function DT:UpdatePanelInfo(panelName, panel, ...)
 			dt.text = text
 			DT.FontStrings[text] = true
 
-			local overlay = dt:CreateTexture(nil, 'OVERLAY')
-			overlay:SetTexture(E.media.blankTex)
-			overlay:SetVertexColor(0.3, 0.9, 0.3, .3)
-			overlay:SetAllPoints()
-			dt.overlay = overlay
-
 			panel.dataPanels[i] = dt
 		end
 	end
@@ -500,7 +479,6 @@ function DT:UpdatePanelInfo(panelName, panel, ...)
 		wipe(dt.MouseEnters)
 		wipe(dt.MouseLeaves)
 
-		dt.overlay:Hide()
 		dt.pointIndex = i
 		dt.parent = panel
 		dt.parentName = panelName
@@ -604,7 +582,7 @@ function DT:UpdatePanelAttributes(name, db, fromLoad)
 end
 
 function DT:GetMenuListCategory(category)
-	for i, info in ipairs(HyperList) do
+	for i, info in ipairs(QuickList) do
 		if info.text == category then
 			return i
 		end
@@ -631,41 +609,6 @@ do
 	end
 end
 
-function DT:HyperDT()
-	if ActivateHyperMode then
-		ActivateHyperMode = nil
-		DT:LoadDataTexts()
-	else
-		ActivateHyperMode = true
-		DT:EnableHyperMode()
-	end
-end
-
-function DT:RegisterHyperDT()
-	for name, info in pairs(DT.RegisteredDataTexts) do
-		local category = DT:GetMenuListCategory(info.category or MISCELLANEOUS)
-		if not category then
-			category = #HyperList + 1
-			tinsert(HyperList, { order = 0, text = info.category or MISCELLANEOUS, notCheckable = true, hasArrow = true, menuList = {} } )
-		end
-
-		tinsert(HyperList[category].menuList, {
-			text = info.localizedName or name,
-			checked = function() return E.EasyMenu.MenuGetItem(DT.SelectedDatatext, name) end,
-			func = function() E.EasyMenu.MenuSetItem(DT.SelectedDatatext, name) end
-		})
-	end
-
-	tinsert(HyperList, {
-		order = 100, text = L["None"],
-		checked = function() return E.EasyMenu.MenuGetItem(DT.SelectedDatatext, '') end,
-		func = function() E.EasyMenu.MenuSetItem(DT.SelectedDatatext, '') end
-	})
-
-	DT:SortMenuList(HyperList)
-	DT:RegisterEvent('MODIFIER_STATE_CHANGED', 'SingleHyperMode')
-end
-
 do
 	local function hasName(tbl, name)
 		for _, data in pairs(tbl) do
@@ -675,24 +618,32 @@ do
 		end
 	end
 
-	function DT:UpdateHyperDT()
+	function DT:UpdateQuickDT()
+		wipe(QuickList)
+
 		for name, info in pairs(DT.RegisteredDataTexts) do
 			local category = DT:GetMenuListCategory(info.category or MISCELLANEOUS)
 			if not category then
-				category = #HyperList + 1
-				tinsert(HyperList, { order = 0, text = info.category or MISCELLANEOUS, notCheckable = true, hasArrow = true, menuList = {} })
+				category = #QuickList + 1
+				tinsert(QuickList, { order = 0, text = info.category or MISCELLANEOUS, notCheckable = true, hasArrow = true, menuList = {} })
 			end
 
-			if not hasName(HyperList[category].menuList, info.localizedName or name) then
-				tinsert(HyperList[category].menuList, {
-					text = info.localizedName or name,
+			if not hasName(QuickList[category].menuList, info.localizedName or name) then
+				tinsert(QuickList[category].menuList, {
+					text = gsub(info.localizedName or name, '^LDB: ', ''),
 					checked = function() return E.EasyMenu.MenuGetItem(DT.SelectedDatatext, name) end,
 					func = function() E.EasyMenu.MenuSetItem(DT.SelectedDatatext, name) end
 				})
 			end
 		end
 
-		DT:SortMenuList(HyperList)
+		tinsert(QuickList, {
+			order = 100, text = L["None"],
+			checked = function() return E.EasyMenu.MenuGetItem(DT.SelectedDatatext, '') end,
+			func = function() E.EasyMenu.MenuSetItem(DT.SelectedDatatext, '') end
+		})
+
+		DT:SortMenuList(QuickList)
 	end
 end
 
@@ -799,19 +750,37 @@ function DT:PLAYER_ENTERING_WORLD()
 	DT:LoadDataTexts()
 end
 
+function DT:BuildTables()
+	local db = ElvDB
+	if not db then db = {} ElvDB = db end
+
+	if not db.gold then db.gold = {} end
+	db.gold[E.myrealm] = db.gold[E.myrealm] or {}
+
+	if not db.class then db.class = {} end
+	db.class[E.myrealm] = db.class[E.myrealm] or {}
+	db.class[E.myrealm][E.myname] = E.myclass
+
+	if not db.faction then db.faction = {} end
+	db.faction[E.myrealm] = db.faction[E.myrealm] or {}
+	db.faction[E.myrealm][E.myname] = E.myfaction
+
+	if not db.serverID then db.serverID = {} end
+	db.serverID[E.serverID] = db.serverID[E.serverID] or {}
+	db.serverID[E.serverID][E.myrealm] = true
+end
+
 function DT:Initialize()
 	DT.Initialized = true
 	DT.db = E.db.datatexts
+
+	DT:BuildTables()
 
 	E.EasyMenu:SetClampedToScreen(true)
 	E.EasyMenu:EnableMouse(true)
 	E.EasyMenu.MenuSetItem = function(dt, value)
 		DT.db.panels[dt.parentName][dt.pointIndex] = value
 		DT:UpdatePanelInfo(dt.parentName, dt.parent)
-
-		if ActivateHyperMode then
-			DT:EnableHyperMode(dt.parent)
-		end
 
 		DT.SelectedDatatext = nil
 		CloseDropDownMenus()
@@ -831,14 +800,19 @@ function DT:Initialize()
 	_G.DataTextTooltipTextLeft1:FontTemplate(font, textSize, fontOutline)
 	_G.DataTextTooltipTextRight1:FontTemplate(font, textSize, fontOutline)
 
-	LDB.RegisterCallback(E, 'LibDataBroker_DataObjectCreated', DT.SetupObjectLDB)
-	DT:RegisterLDB() -- LibDataBroker
-
 	if E.Retail or E.Wrath then
 		DT:RegisterCustomCurrencyDT() -- Register all the user created currency datatexts from the 'CustomCurrency' DT.
 
 		if E.Retail then
 			hooksecurefunc(_G.C_CurrencyInfo, 'SetCurrencyBackpack', function() DT:ForceUpdate_DataText('Currencies') end)
+
+			hooksecurefunc(_G.C_ClassTalents, 'UpdateLastSelectedSavedConfigID', function(_, newConfigID)
+				if not newConfigID then return end
+				if DT.ClassTalentsID and newConfigID == C_ClassTalents_GetActiveConfigID() then return end
+				DT.ClassTalentsID = newConfigID
+
+				DT:ForceUpdate_DataText('Talent/Loot Specialization')
+			end)
 		else
 			hooksecurefunc('SetCurrencyBackpack', function() DT:ForceUpdate_DataText('Currencies') end)
 		end
@@ -855,7 +829,11 @@ function DT:Initialize()
 	DT.BattleStats.LEFT.panel = _G.LeftChatDataPanel.dataPanels
 	DT.BattleStats.RIGHT.panel = _G.RightChatDataPanel.dataPanels
 
-	DT:RegisterHyperDT()
+	LDB.RegisterCallback(E, 'LibDataBroker_DataObjectCreated', DT.SetupObjectLDB)
+	DT:RegisterLDB() -- LibDataBroker
+	DT:UpdateQuickDT()
+
+	DT:RegisterEvent('MODIFIER_STATE_CHANGED', 'QuickDTMode')
 	DT:RegisterEvent('PLAYER_ENTERING_WORLD')
 end
 

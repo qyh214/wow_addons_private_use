@@ -9,7 +9,6 @@ local L
 L = DBM:GetModLocalization(745)
 
 L:SetWarningLocalization({
-	warnAttenuation		= "%s у %s (%s)",
 	warnEcho			= "Появилось эхо!",
 	warnEchoDown		= "Эхо повержено",
 	specwarnAttenuation	= "%s у %s (%s)",
@@ -17,10 +16,12 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnEcho			= "Объявлять о появлении эха",
-	warnEchoDown		= "Объявлять о смерти эха",
-	specwarnPlatform	= "Спец-предупреждение, когда босс меняет платформу",
-	ArrowOnAttenuation	= "Показывать стрелку DBM во время $spell:127834, чтобы<br/>указать в каком направлении двигаться"
+	warnEcho			= "Объявлять о появлении Эха",
+	warnEchoDown		= "Объявлять, когда Эхо будет побеждено",
+	specwarnAttenuation	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
+	specwarnPlatform	= "Спецпредупреждение, когда босс меняет платформу",
+	ArrowOnAttenuation	= "Показывать стрелку DBM во время $spell:127834, чтобы<br/>указать в каком направлении двигаться",
+	MindControlIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122740)
 })
 
 L:SetMiscLocalization({
@@ -33,6 +34,10 @@ L:SetMiscLocalization({
 ------------
 L = DBM:GetModLocalization(744)
 
+L:SetOptionLocalization({
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 123175)
+})
+
 -------------------------------
 -- Garalon --
 -------------------------------
@@ -44,7 +49,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specwarnUnder	= "Спец-предупреждение, когда вы стоите под боссом",
+	warnCrush		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
+	specwarnUnder	= "Спецпредупреждение, когда Вы стоите под боссом",
+	PheromonesIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(122835)
 })
 
 L:SetMiscLocalization({
@@ -56,6 +63,11 @@ L:SetMiscLocalization({
 -- Wind Lord Mel'jarak --
 ----------------------
 L = DBM:GetModLocalization(741)
+
+L:SetOptionLocalization({
+	AmberPrisonIcons		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(121885),
+	specWarnReinforcements	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6554")
+})
 
 ------------
 -- Amber-Shaper Un'sok --
@@ -71,8 +83,8 @@ L:SetWarningLocalization({
 	warnWillPower				= "Текущая сила воли: %s",
 	specwarnWillPower			= "Низкая сила воли! - выйдите или поглотите лужу",
 	specwarnAmberExplosionYou	= "Сбейте СВОЙ %s!",--Struggle for Control interrupt.
-	specwarnAmberExplosionAM	= "%s: Interrupt %s!",--Amber Montrosity
-	specwarnAmberExplosionOther	= "%s: Interrupt %s!"--Mutated Construct
+	specwarnAmberExplosionAM	= "%s: Прервать %s!",--Amber Montrosity
+	specwarnAmberExplosionOther	= "%s: Прервать %s!"--Mutated Construct
 })
 
 L:SetTimerLocalization{
@@ -81,17 +93,20 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization({
+	warnReshapeLife				= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(122784),
 	warnReshapeLifeTutor		= "Показывать назначение способностей у мутировавшего организма",
 	warnAmberExplosion			= "Предупреждение (с указанием источника) о начале применения $spell:122398",
 	warnAmberExplosionAM		= "Персональное предупреждение о начале применения $spell:122398 (для прерывания)",
 	warnInterruptsAvailable		= "Показывать кто может сбить $spell:122402",
 	warnWillPower				= "Предупреждать об уровне силы воли на 80, 50, 30, 10 и 4.",
-	specwarnWillPower			= "Спец-предупреждение, когда уровень силы воли слишком низок",
-	specwarnAmberExplosionYou	= "Спец-предупреждение для прерывания своего $spell:122398",
-	specwarnAmberExplosionAM	= "Спец-предупреждение для прерывания $spell:122402 у Янтарного чудовища",
-	specwarnAmberExplosionOther	= "Спец-предупреждение для прерывания $spell:122398 у Мутировавшего организма",
+	specwarnWillPower			= "Спецпредупреждение, когда уровень силы воли слишком низок",
+	specwarnAmberExplosionYou	= "Спецпредупреждение для прерывания своего $spell:122398",
+	specwarnAmberExplosionAM	= "Спецпредупреждение для прерывания $spell:122402 у Янтарного чудовища",
+	specwarnAmberExplosionOther	= "Спецпредупреждение для прерывания $spell:122398 у Мутировавшего организма",
+	timerDestabalize			= DBM_CORE_L.AUTO_TIMER_OPTIONS.target:format(123059),
 	timerAmberExplosionAMCD		= "Отсчет времени до следующего $spell:122402 у Янтарного чудовища",
-	InfoFrame					= "Информационное окно для игроков с низким уровнем силы воли"
+	InfoFrame					= "Показывать информационное окно для игроков с низким уровнем силы воли",
+	FixNameplates				= "Автоматическое отключение мешающих неймплейтов во время построения<br/>(восстанавливает настройки после выхода из боя)"
 })
 
 L:SetMiscLocalization({
@@ -109,7 +124,10 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnAmberTrap	= "Отображать прогресс создания $spell:125826",
-	InfoFrame		= "Информационное окно для игроков с $spell:125390"
+	InfoFrame		= "Показывать информационное окно для игроков с $spell:125390",
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 123735),
+	StickyResinIcons	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(124097),
+	HeartOfFearIcon		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(123845)
 })
 
 L:SetMiscLocalization({

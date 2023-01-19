@@ -9,32 +9,6 @@ local function HandleTabs(tab)
 	if tab then tab:StripTextures(true) end
 end
 
-local function ReskinDropDownArrow(button, direction)
-	button.NormalTexture:SetAlpha(0)
-	button.PushedTexture:SetAlpha(0)
-	button:GetHighlightTexture():SetAlpha(0)
-
-	local dis = button:GetDisabledTexture()
-	--S:HandleNextPrevButton(dis, direction) -- ToDo: WoW10
-	dis:SetVertexColor(0, 0, 0, .7)
-	dis:SetDrawLayer('OVERLAY')
-	dis:SetInside(button, 4, 4)
-
-	local tex = button:CreateTexture(nil, 'ARTWORK')
-	tex:SetInside(button, 4, 4)
-	--S:HandleNextPrevButton(tex, direction) -- ToDo: WoW10
-end
-
-local function ReskinOptionDropDown(option)
-	local button = option.Button
-	S:HandleButton(button)
-	button.NormalTexture:SetAlpha(0)
-	button.HighlightTexture:SetAlpha(0)
-
-	ReskinDropDownArrow(option.DecrementButton, 'left')
-	ReskinDropDownArrow(option.IncrementButton, 'right')
-end
-
 local function UpdateKeybindButtons(self)
 	if not self.bindingsPool then return end
 	for panel in self.bindingsPool:EnumerateActive() do
@@ -51,6 +25,27 @@ local function UpdateHeaderExpand(self, expanded)
 	self.collapseTex:SetAtlas(expanded and 'Soulbinds_Collection_CategoryHeader_Collapse' or 'Soulbinds_Collection_CategoryHeader_Expand', true)
 
 	UpdateKeybindButtons(self)
+end
+
+local function HandleCheckbox(checkbox)
+	checkbox:CreateBackdrop()
+	checkbox.backdrop:SetInside(nil, 4, 4)
+
+	for _, region in next, { checkbox:GetRegions() } do
+		if region:IsObjectType('Texture') then
+			if region:GetAtlas() == 'checkmark-minimal' then
+				if E.private.skins.checkBoxSkin then
+					region:SetTexture(E.Media.Textures.Melli)
+
+					local checkedTexture = checkbox:GetCheckedTexture()
+					checkedTexture:SetVertexColor(1, .82, 0, 0.8)
+					checkedTexture:SetInside(checkbox.backdrop)
+				end
+			else
+				region:SetTexture('')
+			end
+		end
+	end
 end
 
 function S:SettingsPanel()
@@ -78,12 +73,12 @@ function S:SettingsPanel()
 				if child.Background then
 					child.Background:SetAlpha(0)
 					child.Background:CreateBackdrop('Transparent')
-					child.Background.backdrop:SetPoint('TOPLEFT', 5, -5)
-					child.Background.backdrop:SetPoint('BOTTOMRIGHT', -5, 0)
+					child.Background.backdrop:Point('TOPLEFT', 5, -5)
+					child.Background.backdrop:Point('BOTTOMRIGHT', -5, 0)
 				end
 
 				local toggle = child.Toggle
-				if toggle then -- ToDo Handle the toggle. WoW10
+				if toggle then -- ToDo Handle the toggle. DF
 					toggle:GetPushedTexture():SetAlpha(0)
 				end
 
@@ -101,23 +96,7 @@ function S:SettingsPanel()
 		for _, child in next, { frame.ScrollTarget:GetChildren() } do
 			if not child.isSkinned then
 				if child.CheckBox then
-					S:HandleCheckBox(child.CheckBox)
-				end
-
-				--[[if child.DropDown then
-					ReskinOptionDropDown(child.DropDown)
-				end
-				if child.ColorBlindFilterDropDown then
-					ReskinOptionDropDown(child.ColorBlindFilterDropDown)
-				end]]
-
-				for j = 1, 13 do
-					local control = child['Control'..j]
-					if control then
-						if control.DropDown then
-							ReskinOptionDropDown(control.DropDown)
-						end
-					end
+					HandleCheckbox(child.CheckBox) -- this is atlas shit, so S.HandleCheckBox wont work right now
 				end
 
 				if child.Button then
@@ -127,8 +106,8 @@ function S:SettingsPanel()
 						child.Button:StripTextures()
 						child.Button.Right:SetAlpha(0)
 						child.Button:CreateBackdrop('Transparent')
-						child.Button.backdrop:SetPoint('TOPLEFT', 2, -1)
-						child.Button.backdrop:SetPoint('BOTTOMRIGHT', -2, 3)
+						child.Button.backdrop:Point('TOPLEFT', 2, -1)
+						child.Button.backdrop:Point('BOTTOMRIGHT', -2, 3)
 
 						child.Button.hl = child.Button:CreateTexture(nil, 'HIGHLIGHT')
 						child.Button.hl:SetColorTexture(0.8, 0.8, 0, 0.6)
@@ -136,7 +115,7 @@ function S:SettingsPanel()
 						child.Button.hl:SetBlendMode('ADD')
 
 						child.collapseTex = child.Button.backdrop:CreateTexture(nil, 'OVERLAY')
-						child.collapseTex:SetPoint('RIGHT', -10, 0)
+						child.collapseTex:Point('RIGHT', -10, 0)
 
 						UpdateHeaderExpand(child, false)
 						hooksecurefunc(child, 'EvaluateVisibility', UpdateHeaderExpand)

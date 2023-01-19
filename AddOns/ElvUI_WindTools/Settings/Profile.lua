@@ -5,6 +5,7 @@ local GetLocale = GetLocale
 
 P.announcement = {
     enable = true,
+    emoteFormat = ": %s",
     combatResurrection = {
         enable = true,
         onlySourceIsPlayer = false,
@@ -18,7 +19,7 @@ P.announcement = {
         }
     },
     goodbye = {
-        enable = true,
+        enable = false,
         text = L["Thanks all!"],
         delay = 3,
         channel = {
@@ -119,7 +120,7 @@ P.announcement = {
         player = {
             player = {
                 enable = true,
-                provokeAllText = L["I taunted all enemies in 10 yards!"],
+                tauntAllText = L["I taunted all enemies!"],
                 successText = L["I taunted %target% successfully!"],
                 failedText = L["I failed on taunting %target%!"],
                 channel = {
@@ -144,7 +145,7 @@ P.announcement = {
         others = {
             player = {
                 enable = true,
-                provokeAllText = L["%player% taunted all enemies in 10 yards!"],
+                tauntAllText = L["%player% taunted all enemies!"],
                 successText = L["%player% taunted %target% successfully!"],
                 failedText = L["%player% failed on taunting %target%!"],
                 channel = {
@@ -166,7 +167,7 @@ P.announcement = {
         }
     },
     thanks = {
-        enable = true,
+        enable = false,
         resurrection = true,
         enhancement = true,
         resurrectionText = L["%target%, thank you for using %spell% to revive me. :)"],
@@ -230,6 +231,13 @@ P.announcement = {
                 raidWarning = false,
                 text = L["%player% used %spell%"]
             },
+            ["376664"] = {
+                -- 歐胡納鷹棲所
+                enable = true,
+                includePlayer = true,
+                raidWarning = false,
+                text = L["%player% used %spell%"]
+            },
             ["195782"] = {
                 -- 召喚月羽雕像
                 enable = true,
@@ -275,11 +283,26 @@ P.announcement = {
         text = L["My new keystone is %keystone%."],
         channel = {
             party = "PARTY"
-        }
+        },
+        command = true
     }
 }
 
 P.combat = {
+    classHelper = {
+        enable = false,
+        deathStrikeEstimator = {
+            enable = false,
+            width = 4,
+            height = 30,
+            yOffset = 0,
+            sparkTexture = false,
+            texture = "ElvUI Blank",
+            color = {r = 1, g = 0.2, b = 0.2, a = 1},
+            onlyInCombat = false,
+            hideIfTheBarOutside = false
+        }
+    },
     combatAlert = {
         enable = true,
         speed = 1,
@@ -318,23 +341,6 @@ P.combat = {
     },
     quickKeystone = {
         enable = true
-    },
-    covenantHelper = {
-        enable = true,
-        replaceSpells = {
-            enable = false
-        },
-        soulbind = {
-            autoActivate = true,
-            showReminder = true,
-            remindText = {
-                name = E.db.general.font,
-                size = 26,
-                style = "OUTLINE",
-                xOffset = 0,
-                yOffset = 0
-            }
-        }
     }
 }
 
@@ -370,7 +376,9 @@ P.item = {
         enable = true,
         customList = {},
         blackList = {
-            [183040] = true
+            [183040] = true, -- 恆冬符咒
+            [193757] = true, -- 晶紅幼龍之殼
+            [200563] = true -- 洪荒儀式龜殼
         },
         bar1 = {
             enable = true,
@@ -388,6 +396,11 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             tooltip = true,
+            qualityTier = {
+                size = 16,
+                xOffset = 0,
+                yOffset = 0
+            },
             countFont = {
                 name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
@@ -412,7 +425,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "QUEST,BANNER,EQUIP,TORGHAST,OPENABLE"
+            include = "QUEST,BANNER,EQUIP,PROF,OPENABLE"
         },
         bar2 = {
             enable = true,
@@ -430,6 +443,11 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             tooltip = true,
+            qualityTier = {
+                size = 16,
+                xOffset = 0,
+                yOffset = 0
+            },
             countFont = {
                 name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
@@ -454,7 +472,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "POTIONSL,FLASKSL,UTILITY"
+            include = "POTIONDF,FLASKDF,UTILITY"
         },
         bar3 = {
             enable = true,
@@ -472,6 +490,11 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             tooltip = true,
+            qualityTier = {
+                size = 16,
+                xOffset = 0,
+                yOffset = 0
+            },
             countFont = {
                 name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
@@ -496,7 +519,7 @@ P.item = {
                     b = 1
                 }
             },
-            include = "MAGEFOOD,FOODVENDOR,FOODSL,CUSTOM"
+            include = "MAGEFOOD,FOODVENDOR,FOODDF,RUNE,CUSTOM"
         },
         bar4 = {
             enable = false,
@@ -514,6 +537,11 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             tooltip = true,
+            qualityTier = {
+                size = 16,
+                xOffset = 0,
+                yOffset = 0
+            },
             countFont = {
                 name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
@@ -556,6 +584,11 @@ P.item = {
             anchor = "TOPLEFT",
             spacing = 3,
             tooltip = true,
+            qualityTier = {
+                size = 16,
+                xOffset = 0,
+                yOffset = 0
+            },
             countFont = {
                 name = F.GetCompatibleFont("Montserrat"),
                 size = 12,
@@ -650,6 +683,45 @@ P.item = {
 }
 
 P.maps = {
+    eventTracker = {
+        enable = true,
+        spacing = 10,
+        height = 38,
+        yOffset = -3,
+        backdrop = true,
+        font = {
+            name = E.db.general.font,
+            scale = 1,
+            outline = "OUTLINE"
+        },
+        communityFeast = {
+            enable = true,
+            desaturate = false,
+            alert = true,
+            sound = true,
+            soundFile = "OnePlus Surprise",
+            second = 600,
+            stopAlertIfCompleted = true,
+            stopAlertIfPlayerNotEnteredDragonlands = true
+        },
+        siegeOnDragonbaneKeep = {
+            enable = true,
+            desaturate = false,
+            alert = true,
+            sound = true,
+            soundFile = "OnePlus Surprise",
+            second = 600,
+            stopAlertIfCompleted = true,
+            stopAlertIfPlayerNotEnteredDragonlands = true
+        },
+        iskaaranFishingNet = {
+            enable = true,
+            alert = true,
+            sound = true,
+            soundFile = "OnePlus Surprise",
+            disableAlertAfterHours = 48
+        }
+    },
     rectangleMinimap = {
         enable = false,
         heightPercentage = 0.8
@@ -784,6 +856,7 @@ P.social = {
     },
     chatLink = {
         enable = true,
+        numbericalQualityTier = false,
         translateItem = true,
         level = true,
         icon = true,
@@ -902,6 +975,7 @@ P.tooltips = {
         enable = true,
         title = true,
         mode = "NORMAL",
+        classIconStyle = "flat",
         template = "{{classIcon:18}} {{specIcon:14,18}} {{classColorStart}}{{className}} ({{specName}}){{classColorEnd}}{{amountStart}} x {{amount}}{{amountEnd}}"
     }
 }
@@ -944,6 +1018,9 @@ P.misc = {
         notification = true,
         visibility = "[petbattle] hide; show",
         tooltipsAnchor = "ANCHOR_BOTTOM",
+        friends = {
+            showAllFriends = false
+        },
         time = {
             localTime = true,
             twentyFour = true,

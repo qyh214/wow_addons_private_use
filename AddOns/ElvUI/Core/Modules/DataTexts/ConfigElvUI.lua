@@ -10,10 +10,8 @@ local ReloadUI = ReloadUI
 local displayString = ''
 local configText = 'ElvUI'
 local reloadText = RELOADUI
-local lastPanel
 
 local function OnEvent(self)
-	lastPanel = self
 	self.text:SetFormattedText(displayString, E.global.datatexts.settings.ElvUI.Label ~= '' and E.global.datatexts.settings.ElvUI.Label or configText)
 end
 
@@ -41,19 +39,16 @@ local function OnClick(_, button)
 	if InCombatLockdown() then _G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT) return end
 
 	if button == 'LeftButton' then
-		E:ToggleOptionsUI()
+		E:ToggleOptions()
 	elseif button == 'RightButton' and IsShiftKeyDown() then
 		ReloadUI()
 	end
 end
 
-local function ValueColorUpdate(hex)
+local function ValueColorUpdate(self, hex)
 	displayString = strjoin('', hex, '%s|r')
 
-	if lastPanel then
-		OnEvent(lastPanel, 'ELVUI_COLOR_UPDATE')
-	end
+	OnEvent(self)
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 DT:RegisterDatatext('ElvUI', nil, nil, OnEvent, nil, OnClick, OnEnter, nil, L["ElvUI Config"], nil, ValueColorUpdate)

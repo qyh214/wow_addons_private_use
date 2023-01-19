@@ -69,18 +69,20 @@ if IsAddOnLoaded("Auctionator") then
     -- Function hooks     --
     ------------------------
 
-    function AuctionatorFrame_CIMIOnValueChanged()
+    function AuctionatorFrame_CIMIOnValueChanged(_, elapsed)
         -- Some other addons *coughTSMcough* prevent this frame from loading.
         if _G["AuctionatorShoppingFrame"] == nil then return end
-        local buttons = _G["AuctionatorShoppingFrame"].ResultsListing.ScrollFrame.buttons
+        if not CanIMogIt.FrameShouldUpdate("AuctionatorShopping", elapsed or 1) then return end
+        local buttons = _G["AuctionatorShoppingFrame"].ResultsListing.ScrollArea.ScrollBox:GetFrames()
         if buttons == nil then
             return
         end
-
         for i, button in pairs(buttons) do
-            -- This has a timer because it seems to have a race condition with the updating
-            -- scroll frames.
-            C_Timer.After(.1, function() AuctionatorFrame_CIMIUpdateIcon(button.CanIMogItOverlay) end)
+            if button then
+                button.CIMI_index = i
+                CIMI_AddToFrame(button, AuctionatorFrame_CIMIUpdateIcon, "AuctionatorShoppingList"..i, "AUCTIONATOR")
+                AuctionatorFrame_CIMIUpdateIcon(button.CanIMogItOverlay)
+            end
         end
     end
 
@@ -89,30 +91,23 @@ if IsAddOnLoaded("Auctionator") then
     -- Begin adding to frames --
     ----------------------------
 
-    local function HookOverlayAuctionator(event)
-        if event ~= "AUCTION_HOUSE_SHOW" then return end
+    local function HookOverlay()
         -- Some other addons *coughTSMcough* prevent this frame from loading.
         if _G["AuctionatorShoppingFrame"] == nil then return end
-        -- Add hook for the Auction House frames.
-        local buttons = _G["AuctionatorShoppingFrame"].ResultsListing.ScrollFrame.buttons
-        if buttons == nil then
-            return
-        end
-        for i, button in pairs(buttons) do
-            local frame = button
-            frame.CIMI_index = i
-            if frame then
-                CIMI_AddToFrame(frame, AuctionatorFrame_CIMIUpdateIcon, "AuctionatorShoppingList"..i, "AUCTIONATOR")
-            end
-        end
-        local scrollBar = _G["AuctionatorShoppingFrame"].ResultsListing.ScrollFrame.scrollBar
-        scrollBar:HookScript("OnValueChanged", AuctionatorFrame_CIMIOnValueChanged)
+
+        local scrollArea = _G["AuctionatorShoppingFrame"].ResultsListing.ScrollArea
+        scrollArea:HookScript("OnUpdate", AuctionatorFrame_CIMIOnValueChanged)
 
         -- This GetChildren returns an _unpacked_ value for some reason, so we have to pack it in a table.
         local headers = {AuctionatorShoppingFrame.ResultsListing.HeaderContainer:GetChildren()}
         for i, header in ipairs(headers) do
             header:HookScript("OnClick", AuctionatorFrame_CIMIOnValueChanged)
         end
+    end
+
+    local function HookOverlayAuctionator(event)
+        if event ~= "AUCTION_HOUSE_SHOW" then return end
+        C_Timer.After(.1, function () HookOverlay() end)
     end
 
     CanIMogIt.frame:AddEventFunction(HookOverlayAuctionator)
@@ -122,12 +117,10 @@ if IsAddOnLoaded("Auctionator") then
     ------------------------
 
     local function AuctionatorUpdateEvents(event, ...)
-        if event ~= "AUCTION_HOUSE_NEW_RESULTS_RECEIVED" then return end
+        if event ~= "AUCTION_HOUSE_BROWSE_RESULTS_UPDATED" then return end
         C_Timer.After(.1, AuctionatorFrame_CIMIOnValueChanged)
     end
 
     CanIMogIt.frame:AddEventFunction(AuctionatorUpdateEvents)
-
-
 
 end

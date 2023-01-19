@@ -130,6 +130,21 @@ function CT:ShowContextText(button)
             }
         )
     else
+        if button.dType and button.dType == "alt" then
+            tinsert(
+                menu,
+                {
+                    text = L["Remove This Alt"],
+                    func = function()
+                        E.global.WT.item.contacts.alts[button.realm][button.faction][button.name] = nil
+                        self:BuildAltsData()
+                        self:UpdatePage(currentPageIndex)
+                    end,
+                    notCheckable = true
+                }
+            )
+        end
+
         tinsert(
             menu,
             {
@@ -162,7 +177,7 @@ function CT:ConstructFrame()
     S:MerathilisUISkin(frame.backdrop)
 
     -- Register move frames
-    if E.private.WT.misc.moveFrames.enable then
+    if E.private.WT.misc.moveFrames.enable and not W.Modules.MoveFrames.StopRunning then
         local MF = W.Modules.MoveFrames
         MF:HandleFrame("WTContacts", "MailFrame")
     end
@@ -443,6 +458,7 @@ function CT:UpdatePage(pageIndex)
             local temp = data[(pageIndex - 1) * 14 + i]
             local button = self.frame.nameButtons[i]
             if temp then
+                button.dType = temp.dType
                 if temp.memberIndex then -- Only get guild member info if needed
                     local fullname, _, _, _, _, _, _, _, _, _, className = GetGuildRosterInfo(temp.memberIndex)
                     local name, realm = F.Strings.Split(fullname, "-")
@@ -462,6 +478,7 @@ function CT:UpdatePage(pageIndex)
                 button:SetText(button.class and F.CreateClassColorString(button.name, button.class) or button.name)
                 button:Show()
             else
+                button.dType = nil
                 button:Hide()
             end
         end
@@ -526,7 +543,8 @@ function CT:BuildAltsData()
                             name = name,
                             realm = realm,
                             class = class,
-                            faction = faction
+                            faction = faction,
+                            dType = "alt"
                         }
                     )
                 end
@@ -550,7 +568,8 @@ function CT:BuildFriendsData()
                 {
                     name = name,
                     realm = realm,
-                    class = GetNonLocalizedClass(info.className)
+                    class = GetNonLocalizedClass(info.className),
+                    dType = "friend"
                 }
             )
             tempKey[name .. "-" .. realm] = true
@@ -579,7 +598,8 @@ function CT:BuildFriendsData()
                                 name = gameAccountInfo.characterName,
                                 realm = gameAccountInfo.realmName,
                                 class = GetNonLocalizedClass(gameAccountInfo.className),
-                                BNName = accountInfo.accountName
+                                BNName = accountInfo.accountName,
+                                dType = "bnfriend"
                             }
                         )
                     end
@@ -598,7 +618,8 @@ function CT:BuildFriendsData()
                         name = accountInfo.gameAccountInfo.characterName,
                         realm = accountInfo.gameAccountInfo.realmName,
                         class = GetNonLocalizedClass(accountInfo.gameAccountInfo.className),
-                        BNName = accountInfo.accountName
+                        BNName = accountInfo.accountName,
+                        dType = "bnfriend"
                     }
                 )
             end
@@ -608,13 +629,20 @@ end
 
 function CT:BuildGuildData()
     data = {}
+
     if not IsInGuild() then
         return
     end
 
     local totalMembers = GetNumGuildMembers()
     for i = 1, totalMembers do
-        tinsert(data, {memberIndex = i})
+        tinsert(
+            data,
+            {
+                memberIndex = i,
+                dType = "guild"
+            }
+        )
     end
 end
 
@@ -627,7 +655,8 @@ function CT:BuildFavoriteData()
             data,
             {
                 name = name,
-                realm = realm
+                realm = realm,
+                dType = "favorite"
             }
         )
     end

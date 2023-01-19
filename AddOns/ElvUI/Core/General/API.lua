@@ -8,15 +8,14 @@ local _G = _G
 local wipe, max, next = wipe, max, next
 local type, ipairs, pairs, unpack = type, ipairs, pairs, unpack
 local strfind, strlen, tonumber, tostring = strfind, strlen, tonumber, tostring
+local hooksecurefunc = hooksecurefunc
 
 local CreateFrame = CreateFrame
 local GetAddOnEnableState = GetAddOnEnableState
 local GetBattlefieldArenaFaction = GetBattlefieldArenaFaction
 local GetInstanceInfo = GetInstanceInfo
 local GetNumGroupMembers = GetNumGroupMembers
-local GetSpecialization = (E.Classic or E.TBC or E.Wrath and LCS.GetSpecialization) or GetSpecialization
-local GetSpecializationRole = (E.Classic or E.TBC or E.Wrath and LCS.GetSpecializationRole) or GetSpecializationRole
-local hooksecurefunc = hooksecurefunc
+local HideUIPanel = HideUIPanel
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInRaid = IsInRaid
@@ -38,10 +37,8 @@ local UnitInRaid = UnitInRaid
 local UnitIsMercenary = UnitIsMercenary
 local UnitIsUnit = UnitIsUnit
 
-local HideUIPanel = HideUIPanel
-local GameMenuButtonAddons = GameMenuButtonAddons
-local GameMenuButtonLogout = GameMenuButtonLogout
-local GameMenuFrame = GameMenuFrame
+local GetSpecialization = (E.Classic or E.Wrath and LCS.GetSpecialization) or GetSpecialization
+local GetSpecializationRole = (E.Classic or E.Wrath and LCS.GetSpecializationRole) or GetSpecializationRole
 
 local C_MountJournal_GetMountIDs = C_MountJournal and C_MountJournal.GetMountIDs
 local C_MountJournal_GetMountInfoByID = C_MountJournal and C_MountJournal.GetMountInfoByID
@@ -53,7 +50,14 @@ local ERR_NOT_IN_COMBAT = ERR_NOT_IN_COMBAT
 local FACTION_ALLIANCE = FACTION_ALLIANCE
 local FACTION_HORDE = FACTION_HORDE
 local PLAYER_FACTION_GROUP = PLAYER_FACTION_GROUP
+
+local GameMenuButtonAddons = GameMenuButtonAddons
+local GameMenuButtonLogout = GameMenuButtonLogout
+local GameMenuFrame = GameMenuFrame
 -- GLOBALS: ElvDB, ElvUF
+
+E.MountIDs = {}
+E.MountText = {}
 
 function E:ClassColor(class, usePriestColor)
 	if not class then return end
@@ -76,7 +80,7 @@ end
 
 function E:InverseClassColor(class, usePriestColor, forceCap)
 	local color = E:CopyTable({}, E:ClassColor(class, usePriestColor))
-	local capColor = class == "PRIEST" or forceCap
+	local capColor = class == 'PRIEST' or forceCap
 
 	color.r = capColor and max(1-color.r,0.35) or (1-color.r)
 	color.g = capColor and max(1-color.g,0.35) or (1-color.g)
@@ -156,7 +160,7 @@ do
 			return ...
 		else
 			index = index + 1
-			FindAura(value, key, unit, index, filter, UnitAura(unit, index, filter))
+			return FindAura(key, value, unit, index, filter, UnitAura(unit, index, filter))
 		end
 	end
 
@@ -172,7 +176,7 @@ end
 function E:GetThreatStatusColor(status, nothreat)
 	local color = ElvUF.colors.threat[status]
 	if color then
-		return color[1], color[2], color[3], color[4] or 1
+		return color.r, color.g, color.b, color.a or 1
 	elseif nothreat then
 		if status == -1 then -- how or why?
 			return 1, 1, 1, 1
@@ -469,17 +473,17 @@ function E:PLAYER_ENTERING_WORLD(_, initLogin, isReload)
 end
 
 function E:PLAYER_REGEN_ENABLED()
-	if E.ShowOptionsUI then
-		E:ToggleOptionsUI()
+	if E.ShowOptions then
+		E:ToggleOptions()
 
-		E.ShowOptionsUI = nil
+		E.ShowOptions = nil
 	end
 end
 
 function E:PLAYER_REGEN_DISABLED()
 	local err
 
-	if IsAddOnLoaded('ElvUI_OptionsUI') then
+	if IsAddOnLoaded('ElvUI_Options') then
 		local ACD = E.Libs.AceConfigDialog
 		if ACD and ACD.OpenFrames and ACD.OpenFrames.ElvUI then
 			ACD:Close('ElvUI')
@@ -579,6 +583,26 @@ function E:PLAYER_LEVEL_UP(_, level)
 	E.mylevel = level
 end
 
+function E:ClickGameMenu()
+	E:ToggleOptions() -- we already prevent it from opening in combat
+
+	if not InCombatLockdown() then
+		HideUIPanel(GameMenuFrame)
+	end
+end
+
+function E:SetupGameMenu()
+	local button = CreateFrame('Button', nil, GameMenuFrame, 'GameMenuButtonTemplate')
+	button:SetScript('OnClick', E.ClickGameMenu)
+	GameMenuFrame[E.name] = button
+
+	if not E:IsAddOnEnabled('ConsolePortUI_Menu') then
+		button:Size(GameMenuButtonLogout:GetWidth(), GameMenuButtonLogout:GetHeight())
+		button:Point('TOPLEFT', GameMenuButtonAddons, 'BOTTOMLEFT', 0, -1)
+		hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', E.PositionGameMenuButton)
+	end
+end
+
 function E:LoadAPI()
 	E:RegisterEvent('PLAYER_LEVEL_UP')
 	E:RegisterEvent('PLAYER_ENTERING_WORLD')
@@ -586,8 +610,7 @@ function E:LoadAPI()
 	E:RegisterEvent('PLAYER_REGEN_DISABLED')
 	E:RegisterEvent('UI_SCALE_CHANGED', 'PixelScaleChanged')
 
-	E.MountIDs = {}
-	E.MountText = {}
+	E:SetupGameMenu()
 
 	if E.Retail then
 		for _, mountID in next, C_MountJournal_GetMountIDs() do
@@ -640,20 +663,5 @@ function E:LoadAPI()
 				Frame:UnregisterEvent(event)
 			end
 		end)
-	end
-
-	local GameMenuButton = CreateFrame('Button', nil, GameMenuFrame, 'GameMenuButtonTemplate')
-	GameMenuButton:SetScript('OnClick', function()
-		E:ToggleOptionsUI() --We already prevent it from opening in combat
-		if not InCombatLockdown() then
-			HideUIPanel(GameMenuFrame)
-		end
-	end)
-	GameMenuFrame[E.name] = GameMenuButton
-
-	if not E:IsAddOnEnabled('ConsolePortUI_Menu') then
-		GameMenuButton:Size(GameMenuButtonLogout:GetWidth(), GameMenuButtonLogout:GetHeight())
-		GameMenuButton:Point('TOPLEFT', GameMenuButtonAddons, 'BOTTOMLEFT', 0, -1)
-		hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', E.PositionGameMenuButton)
 	end
 end

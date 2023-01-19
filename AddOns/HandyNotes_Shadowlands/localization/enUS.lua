@@ -13,9 +13,9 @@ L['anima_channeled'] = 'anima channeled to %s.'
 --------------------------------- SHADOWLANDS ---------------------------------
 -------------------------------------------------------------------------------
 
-L['squirrels_note'] = 'You must use the emote /love on critters not battle pets'
+L['squirrels_note'] = 'You must use the emote /love on critters not battle pets.'
 L['options_icons_squirrels'] = '{achievement:14731}'
-L['options_icons_squirrels_desc'] = 'Critter locations for {achievement:14731}'
+L['options_icons_squirrels_desc'] = 'Display the locations of critters for {achievement:14731} achievement.'
 
 -------------------------------------------------------------------------------
 --------------------------------- ARDENWEALD ----------------------------------
@@ -691,6 +691,7 @@ L['nexus_cave_forlorn'] = 'Inside the Forlorn Respite cavern.'
 L['nexus_cave_howl_outside'] = 'On the ground outside the Death\'s Howl cavern'
 L['nexus_cave_howl'] = 'Inside the Death\'s Howl cavern'
 L['nexus_cave_roar'] = 'Inside the Death\'s Roar cavern'
+L['nexus_cave_roar_outside'] = 'Outside the Death\'s Roar cavern'
 L['nexus_cave_ledge'] = 'In a small cave below a ledge'
 L['nexus_cave_prodigum'] = 'In a small cave in the Prodigum'
 L['nexus_cave_soulstained'] = 'In a small cave in the Soulstained Fields'
@@ -700,6 +701,7 @@ L['nexus_npc_akros'] = 'Atop the stairs next to {npc:170787}'
 L['nexus_npc_dekaris'] = 'At the top of the peak where {npc:157964} resides'
 L['nexus_npc_dolos'] = 'On the ground behind {npc:170711}'
 L['nexus_npc_ekphoras'] = 'Next to {npc:169827}\'s platform'
+L['nexus_npc_eternas'] = 'On the ground behind {npc:154330}'
 L['nexus_npc_incinerator'] = 'On a small ledge below {npc:156203}'
 L['nexus_npc_orophea'] = 'On the ground next to {npc:172577}'
 L['nexus_npc_orrholyn'] = 'Found below {npc:162845}\'s platform'
@@ -791,6 +793,7 @@ L['options_icons_covenant_assaults_desc'] = 'Rewards for covenant assaults'
 L['assault_sublabel_US'] = 'Assaults change on Tuesday at 8 AM PDT and Friday at 8 PM PDT'
 L['assault_sublabel_EU'] = 'Assaults change on Wednesday at 8 AM CET and Saturday at 8 PM CET'
 L['assault_sublabel_CN'] = 'Assaults change on Thursday at 7 AM CST and Sunday at 7 PM CST'
+L['assault_sublabel_AS'] = 'Assaults change on Thursday at 8 AM KST and Sunday at 8 PM KST'
 
 L['necrolord_assault'] = '{quest:63543}'
 L['necrolord_assault_note'] = 'The {item:185992} can be looted once per assault'

@@ -44,7 +44,8 @@ local default = {
   user_y = 0,
   crop_x = 0.41,
   crop_y = 0.41,
-  rotation = 0,
+  rotation = 0, -- Uses tex coord rotation, called "legacy rotation" in the ui and texRotation in code everywhere else
+  auraRotation = 0, -- Uses texture:SetRotation
   selfPoint = "CENTER",
   anchorPoint = "CENTER",
   anchorFrameType = "SCREEN",
@@ -108,6 +109,15 @@ local properties = {
     type = "list",
     values = Private.orientation_with_circle_types
   },
+  auraRotation = {
+    display = L["Rotation"],
+    setter = "SetAuraRotation",
+    type = "number",
+    min = 0,
+    max = 360,
+    step = 10,
+    default = 0
+  },
   inverse = {
     display = L["Inverse"],
     setter = "SetInverse",
@@ -116,7 +126,16 @@ local properties = {
   mirror = {
     display = L["Mirror"],
     setter = "SetMirror",
-    type = "bool"
+    type = "bool",
+  },
+  rotation = {
+    display = L["Texture Rotation"],
+    setter = "SetTexRotation",
+    type = "number",
+    min = 0,
+    max = 360,
+    bigStep = 1,
+    default = 0
   }
 }
 
@@ -143,6 +162,12 @@ local function GetProperties(data)
 end
 
 local spinnerFunctions = {};
+
+function spinnerFunctions.SetAuraRotation(self, radians)
+  for i = 1, 3 do
+    self.textures[i]:SetRotation(radians)
+  end
+end
 
 function spinnerFunctions.SetTextureOrAtlas(self, texture)
   for i = 1, 3 do
@@ -193,7 +218,7 @@ function spinnerFunctions.SetProgress(self, region, angle1, angle2)
 
   local crop_x = region.crop_x or 1;
   local crop_y = region.crop_y or 1;
-  local rotation = region.rotation or 0;
+  local texRotation = region.effectiveTexRotation or 0
   local mirror_h = region.mirror_h or false;
   if region.mirror then
     mirror_h = not mirror_h
@@ -206,7 +231,7 @@ function spinnerFunctions.SetProgress(self, region, angle1, angle2)
   if (angle2 - angle1 >= 360) then
     -- SHOW everything
     self.coords[1]:SetFull();
-    self.coords[1]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[1]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[1]:Show();
 
     self.coords[2]:Hide();
@@ -225,18 +250,18 @@ function spinnerFunctions.SetProgress(self, region, angle1, angle2)
 
   if (index1 + 1 >= index2) then
     self.coords[1]:SetAngle(width, height, angle1, angle2);
-    self.coords[1]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[1]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[1]:Show();
     self.coords[2]:Hide();
     self.coords[3]:Hide();
   elseif(index1 + 3 >= index2) then
     local firstEndAngle = (index1 + 1) * 90 + 45;
     self.coords[1]:SetAngle(width, height, angle1, firstEndAngle);
-    self.coords[1]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[1]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[1]:Show();
 
     self.coords[2]:SetAngle(width, height, firstEndAngle, angle2);
-    self.coords[2]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[2]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[2]:Show();
 
     self.coords[3]:Hide();
@@ -245,15 +270,15 @@ function spinnerFunctions.SetProgress(self, region, angle1, angle2)
     local secondEndAngle = firstEndAngle + 180;
 
     self.coords[1]:SetAngle(width, height, angle1, firstEndAngle);
-    self.coords[1]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[1]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[1]:Show();
 
     self.coords[2]:SetAngle(width, height, firstEndAngle, secondEndAngle);
-    self.coords[2]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[2]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[2]:Show();
 
     self.coords[3]:SetAngle(width, height, secondEndAngle, angle2);
-    self.coords[3]:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v);
+    self.coords[3]:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v)
     self.coords[3]:Show();
   end
 end
@@ -416,13 +441,13 @@ local function createTexCoord(texture)
     if (edge1 == edge2) then
       self:MoveCorner(width, height, endCorner1, angleToCoord(angle2));
     else
-      self:MoveCorner(width, height, endCorner1, defaultTexCoord[endCorner1 .. "x"], defaultTexCoord[endCorner1 .. "y"]);
+      self:MoveCorner(width, height, endCorner1, defaultTexCoord[endCorner1 .. "x"], defaultTexCoord[endCorner1 .. "y"])
     end
 
     self:MoveCorner(width, height, endCorner2, angleToCoord(angle2));
   end
 
-  local function TransformPoint(x, y, scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y)
+  local function TransformPoint(x, y, scalex, scaley, texRotation, mirror_h, mirror_v, user_x, user_y)
     -- 1) Translate texture-coords to user-defined center
     x = x - 0.5
     y = y - 0.5
@@ -444,8 +469,8 @@ local function createTexCoord(texture)
       y = -y
     end
 
-    local cos_rotation = cos(rotation);
-    local sin_rotation = sin(rotation);
+    local cos_rotation = cos(texRotation)
+    local sin_rotation = sin(texRotation)
 
     -- 5) Rotate texture by user-defined value
     x, y = cos_rotation * x - sin_rotation * y, sin_rotation * x + cos_rotation * y
@@ -460,11 +485,15 @@ local function createTexCoord(texture)
     return x, y
   end
 
-  function coord:Transform(scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y)
-    coord.ULx, coord.ULy = TransformPoint(coord.ULx, coord.ULy, scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y);
-    coord.LLx, coord.LLy = TransformPoint(coord.LLx, coord.LLy, scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y);
-    coord.URx, coord.URy = TransformPoint(coord.URx, coord.URy, scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y);
-    coord.LRx, coord.LRy = TransformPoint(coord.LRx, coord.LRy, scalex, scaley, rotation, mirror_h, mirror_v, user_x, user_y);
+  function coord:Transform(scalex, scaley, texRotation, mirror_h, mirror_v, user_x, user_y)
+      coord.ULx, coord.ULy = TransformPoint(coord.ULx, coord.ULy, scalex, scaley,
+                                            texRotation, mirror_h, mirror_v, user_x, user_y)
+      coord.LLx, coord.LLy = TransformPoint(coord.LLx, coord.LLy, scalex, scaley,
+                                            texRotation, mirror_h, mirror_v, user_x, user_y)
+      coord.URx, coord.URy = TransformPoint(coord.URx, coord.URy, scalex, scaley,
+                                            texRotation, mirror_h, mirror_v, user_x, user_y)
+      coord.LRx, coord.LRy = TransformPoint(coord.LRx, coord.LRy, scalex, scaley,
+                                            texRotation, mirror_h, mirror_v, user_x, user_y)
   end
 
   return coord;
@@ -621,7 +650,8 @@ local textureFunctions = {
   end,
 
   SetOrientation = function(self, orientation, compress, slanted, slant, slantFirst, slantMode)
-    self.SetValueFunction = slanted and self.SetValueFunctionsSlanted[orientation] or self.SetValueFunctions[orientation];
+    self.SetValueFunction = slanted and self.SetValueFunctionsSlanted[orientation]
+                            or self.SetValueFunctions[orientation]
     self.compress = compress;
     self.slanted = slanted;
     self.slant = slant;
@@ -666,7 +696,7 @@ local textureFunctions = {
     local region = self.region;
     local crop_x = region.crop_x or 1;
     local crop_y = region.crop_y or 1;
-    local rotation = region.rotation or 0;
+    local texRotation = region.effectiveTexRotation or 0
     local mirror_h = region.mirror_h or false;
     if region.mirror then
       mirror_h = not mirror_h
@@ -675,7 +705,7 @@ local textureFunctions = {
     local user_x = region.user_x;
     local user_y = region.user_y;
 
-    self.coord:Transform(crop_x, crop_y, rotation, mirror_h, mirror_v, user_x, user_y);
+    self.coord:Transform(crop_x, crop_y, texRotation, mirror_h, mirror_v, user_x, user_y);
     self.coord:Apply();
   end,
 
@@ -694,6 +724,8 @@ local function createTexture(region, layer, drawlayer)
   for k, v in pairs(textureFunctions) do
     texture[k] = v;
   end
+
+  texture.SetAuraRotation = texture.SetRotation
 
   texture.coord  = createTexCoord(texture);
   texture.region = region;
@@ -762,16 +794,17 @@ local function ensureExtraTextures(region, count)
     WeakAuras.SetTextureOrAtlas(extraTexture, region.currentTexture, region.textureWrapMode, region.textureWrapMode)
     extraTexture:SetBlendMode(region.foreground:GetBlendMode());
     extraTexture:SetOrientation(region.orientation, region.compress, region.slanted, region.slant, region.slantFirst, region.slantMode);
+    extraTexture:SetAuraRotation(region.auraRotation / 180 * math.pi)
     region.extraTextures[i] = extraTexture;
   end
 end
 
 local function ensureExtraSpinners(region, count)
-  local parent = region:GetParent();
   for i = #region.extraSpinners + 1, count do
     local extraSpinner = createSpinner(region, "OVERLAY", min(i, 7));
     extraSpinner:SetTextureOrAtlas(region.currentTexture);
     extraSpinner:SetBlendMode(region.foreground:GetBlendMode());
+    extraSpinner:SetAuraRotation(region.auraRotation / 180 * math.pi)
     region.extraSpinners[i] = extraSpinner;
   end
 end
@@ -955,8 +988,6 @@ local function SetOrientation(region, orientation)
 end
 
 local function create(parent)
-  local font = "GameFontHighlight";
-
   local region = CreateFrame("Frame", nil, parent);
   region.regionType = "progresstexture"
   region:SetMovable(true);
@@ -1060,7 +1091,8 @@ local function modify(parent, region, data)
   region.mirror = data.mirror
   region.crop_x = 1 + (data.crop_x or 0.41);
   region.crop_y = 1 + (data.crop_y or 0.41);
-  region.rotation = data.rotation or 0;
+  region.texRotation = data.rotation or 0
+  region.auraRotation = data.auraRotation or 0
   region.user_x = -1 * (data.user_x or 0);
   region.user_y = data.user_y or 0;
 
@@ -1144,6 +1176,26 @@ local function modify(parent, region, data)
     end
   end
 
+  DoPosition(region)
+
+  function region:SetAuraRotation(auraRotation)
+    region.auraRotation = auraRotation
+    local auraRotationRadians = region.auraRotation / 180 * math.pi
+    region.foregroundSpinner:SetAuraRotation(auraRotationRadians)
+    region.backgroundSpinner:SetAuraRotation(auraRotationRadians)
+    for i = 1, #region.extraSpinners do
+      region.extraSpinners[i]:SetAuraRotation(auraRotationRadians)
+    end
+
+    region.background:SetAuraRotation(auraRotationRadians)
+    region.foreground:SetAuraRotation(auraRotationRadians)
+    for _, extraTexture in ipairs(region.extraTextures) do
+      extraTexture:SetAuraRotation(auraRotationRadians)
+    end
+  end
+
+  region:SetAuraRotation(data.auraRotation)
+
   function region:Scale(scalex, scaley)
     if(scalex < 0) then
       region.mirror_h = true;
@@ -1166,8 +1218,8 @@ local function modify(parent, region, data)
     DoPosition(region)
   end
 
-  function region:Rotate(angle)
-    region.rotation = angle or 0;
+  function region:UpdateEffectiveRotation()
+    region.effectiveTexRotation = region.texAnimationRotation or region.texRotation
     if (data.orientation == "CLOCKWISE" or data.orientation == "ANTICLOCKWISE") then
       region.foregroundSpinner:UpdateSize();
       region.backgroundSpinner:UpdateSize();
@@ -1183,8 +1235,20 @@ local function modify(parent, region, data)
     end
   end
 
-  function region:GetRotation()
-    return region.rotation;
+  function region:SetAnimRotation(angle)
+    region.texAnimationRotation = angle
+    region:UpdateEffectiveRotation()
+  end
+
+  function region:SetTexRotation(angle)
+    region.texRotation = angle
+    region:UpdateEffectiveRotation()
+  end
+
+  region:SetTexRotation(data.rotation)
+
+  function region:GetBaseRotation()
+    return region.texRotation
   end
 
   function region:Color(r, g, b, a)
@@ -1255,6 +1319,15 @@ local function modify(parent, region, data)
     end
   end
 
+  if data.smoothProgress then
+    region.PreShow = function()
+      region.smoothProgress:ResetSmoothedValue();
+    end
+  else
+    region.PreShow = nil
+  end
+
+  region.TimerTick = nil
   function region:Update()
     local state = region.state
 
@@ -1267,7 +1340,7 @@ local function modify(parent, region, data)
         end
         if region.TimerTick then
           region.TimerTick = nil
-          region:UpdateRegionHasTimerTick()
+          region.subRegionEvents:RemoveSubscriber("TimerTick", region)
         end
         expirationTime = GetTime() + (state.remaining or 0)
       else
@@ -1276,7 +1349,7 @@ local function modify(parent, region, data)
         end
         if not region.TimerTick then
           region.TimerTick = TimerTick
-          region:UpdateRegionHasTimerTick()
+          region.subRegionEvents:AddSubscriber("TimerTick", region, true)
         end
         expirationTime = state.expirationTime and state.expirationTime > 0 and state.expirationTime or math.huge;
       end
@@ -1322,7 +1395,7 @@ local function modify(parent, region, data)
       region:SetValue(value - adjustMin, max - adjustMin);
       if region.TimerTick then
         region.TimerTick = nil
-        region:UpdateRegionHasTimerTick()
+        region.subRegionEvents:RemoveSubscriber("TimerTick", region)
       end
     else
       if region.paused then
@@ -1331,7 +1404,7 @@ local function modify(parent, region, data)
       region:SetTime(0, math.huge)
       if region.TimerTick then
         region.TimerTick = nil
-        region:UpdateRegionHasTimerTick()
+        region.subRegionEvents:RemoveSubscriber("TimerTick", region)
       end
     end
 

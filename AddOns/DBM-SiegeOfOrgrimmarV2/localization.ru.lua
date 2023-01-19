@@ -18,7 +18,6 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(849)
 
 L:SetWarningLocalization({
-	warnCalamity		= "%s",
 	specWarnCalamity	= "%s",
 	specWarnMeasures	= "Скоро Крайние меры (%s)!"
 })
@@ -57,8 +56,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnTowerOpen		= "Объявлять когда башня открывается",
-	warnTowerGrunt		= "Объявлять когда появляется новый Рубака у башни",
+	warnTowerOpen		= "Объявлять, когда башня открывается",
+	warnTowerGrunt		= "Объявлять, когда появляется новый Рубака у башни",
 	timerTowerCD		= "Отсчет времени до следующего нападения на башню",
 	timerTowerGruntCD	= "Отсчет времени до следующего Рубаки у башни"
 })
@@ -74,6 +73,17 @@ L:SetMiscLocalization({
 	newForces4		= "Следующий отряд!",
 	tower			= "Дверь "--Дверь южной/северной башни разбита!
 })
+
+--------------------
+--Iron Juggernaut --
+--------------------
+L = DBM:GetModLocalization(864)
+
+L:SetOptionLocalization({
+	timerAssaultModeCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej8177"),
+	timerSiegeModeCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej8178")
+})
+
 
 --------------------------
 -- Kor'kron Dark Shaman --
@@ -91,6 +101,10 @@ L = DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
 	warnDefensiveStanceSoon	= "Оборонительная стойка через %d сек."
+})
+
+L:SetOptionLocalization({
+	warnDefensiveStanceSoon	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
 })
 
 L:SetMiscLocalization({
@@ -120,7 +134,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(851)
 
 L:SetOptionLocalization({
-	RangeFrame	= "Показывать динамическое окно проверки дистанции (10)<br/>(Это умное окно проверки дистанции, которое появляется когда вы достигаете порога Бешенства)"
+	RangeFrame	= "Показывать динамическое окно проверки дистанции (10м.)<br/>(Это умное окно проверки дистанции, которое появляется, когда Вы достигаете порога Бешенства)"
 })
 
 ----------------------------
@@ -144,8 +158,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnActivatedVulnerable	= "Спец-предупреждение когда вы уязвимы к активирующимся идеалам",
-	specWarnMoreParasites		= "Спец-предупреждение когда вам нужно больше паразитов"
+	warnToxicCatalyst			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej8036"),
+	specWarnActivatedVulnerable	= "Спецпредупреждение, когда Вы уязвимы к активирующимся идеалам",
+	specWarnMoreParasites		= "Спецпредупреждение, когда Вам нужно больше паразитов",
+	yellToxicCatalyst			= DBM_CORE_L.AUTO_YELL_OPTION_TEXT.yell:format("ej8036")
 })
 
 L:SetMiscLocalization({
@@ -173,15 +189,22 @@ L:SetMiscLocalization({
 ------------------------
 L = DBM:GetModLocalization(869)
 
+L:SetTimerLocalization({
+	timerRoleplay	= GUILD_INTEREST_RP
+})
+
 L:SetOptionLocalization({
-	RangeFrame			= "Показывать динамическое окно проверки дистанции (8)<br/>(Это умное окно проверки дистанции, которое появляется когда вы достигаете порога $spell:147126)",
-	InfoFrame			= "Информационное окно для игроков без снижения урона на переходной фазе",
-	yellMaliceFading	= "Кричать когда $spell:147209 спадает"
+	timerRoleplay		= "Показывать таймер для Гарроша/Тралла (ролевая игра)",
+	RangeFrame			= "Показывать динамическое окно проверки дистанции (8м.)<br/>(Это умное окно проверки дистанции, которое появляется, когда Вы достигаете порога $spell:147126)",
+	InfoFrame			= "Показывать информационное окно для игроков без снижения урона на переходной фазе",
+	yellMaliceFading	= "Кричать, когда $spell:147209 спадает"
 })
 
 L:SetMiscLocalization({
+	wasteOfTime		= "Еще не поздно, Гаррош. Сними с себя мантию вождя. Мы можем закончить все здесь и сейчас.",
 	NoReduce		= "Нет снижения урона",
-	MaliceFadeYell	= "Злоба спадает с %s (%d)"
+	MaliceFadeYell	= "Злоба спадает с %s (%d)",
+	phase3End		= "Думаете, вы победили? Слепцы. Я раскрою вам глаза!"
 })
 
 -------------

@@ -29,12 +29,11 @@ local PlaySound = PlaySound
 local UnitGUID = UnitGUID
 
 local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
-local SOUNDKIT_IG_CREATURE_AGGRO_SELECT = SOUNDKIT.IG_CREATURE_AGGRO_SELECT
-local SOUNDKIT_IG_CHARACTER_NPC_SELECT = SOUNDKIT.IG_CHARACTER_NPC_SELECT
-local SOUNDKIT_IG_CREATURE_NEUTRAL_SELECT = SOUNDKIT.IG_CREATURE_NEUTRAL_SELECT
-local SOUNDKIT_INTERFACE_SOUND_LOST_TARGET_UNIT = SOUNDKIT.INTERFACE_SOUND_LOST_TARGET_UNIT
+local SELECT_AGGRO = SOUNDKIT.IG_CREATURE_AGGRO_SELECT
+local SELECT_NPC = SOUNDKIT.IG_CHARACTER_NPC_SELECT
+local SELECT_NEUTRAL = SOUNDKIT.IG_CREATURE_NEUTRAL_SELECT
+local SELECT_LOST = SOUNDKIT.INTERFACE_SOUND_LOST_TARGET_UNIT
 local POWERTYPE_ALTERNATE = Enum.PowerType.Alternate or 10
-local MAX_BOSS_FRAMES = 8
 
 -- GLOBALS: Arena_LoadUI
 
@@ -63,6 +62,7 @@ UF.classMaxResourceBar = { -- match to NP ClassPower MAX_POINTS
 	DEATHKNIGHT = 6,
 	PALADIN = 5,
 	WARLOCK = 5,
+	EVOKER = 6,
 	MONK = 6,
 	MAGE = 4,
 	ROGUE = 7,
@@ -406,19 +406,32 @@ function UF:UpdateColors()
 	end
 	ElvUF.colors.selection[13] = E:SetColorTable(ElvUF.colors.selection[13], db.selection[13])
 
-	if not ElvUF.colors.ComboPoints then ElvUF.colors.ComboPoints = {} end
-	for i=1, 6 do
+	if not ElvUF.colors.ComboPoints then
+		ElvUF.colors.ComboPoints = {}
+	end
+
+	for i = 1, 7 do
 		ElvUF.colors.ComboPoints[i] = E:SetColorTable(ElvUF.colors.ComboPoints[i], db.classResources.comboPoints[i])
 	end
 
-	--Monk, Mage, Paladin and Warlock, Death Knight
+	if not ElvUF.colors.empoweredCast then
+		ElvUF.colors.empoweredCast = {}
+	end
+
+	for i = 1, 4 do
+		ElvUF.colors.empoweredCast[i] = E:SetColorTable(ElvUF.colors.empoweredCast[i], db.empoweredCast[i])
+	end
+
+	--Evoker, Monk, Mage, Paladin and Warlock, Death Knight
 	if not ElvUF.colors.ClassBars then ElvUF.colors.ClassBars = {} end
 	ElvUF.colors.ClassBars.PALADIN = E:SetColorTable(ElvUF.colors.ClassBars.PALADIN, db.classResources.PALADIN)
 	ElvUF.colors.ClassBars.MAGE = E:SetColorTable(ElvUF.colors.ClassBars.MAGE, db.classResources.MAGE)
 	ElvUF.colors.ClassBars.WARLOCK = E:SetColorTable(ElvUF.colors.ClassBars.WARLOCK, db.classResources.WARLOCK)
 
+	if not ElvUF.colors.ClassBars.EVOKER then ElvUF.colors.ClassBars.EVOKER = {} end
 	if not ElvUF.colors.ClassBars.MONK then ElvUF.colors.ClassBars.MONK = {} end
 	for i=1, 6 do
+		ElvUF.colors.ClassBars.EVOKER[i] = E:SetColorTable(ElvUF.colors.ClassBars.EVOKER[i], db.classResources.EVOKER[i])
 		ElvUF.colors.ClassBars.MONK[i] = E:SetColorTable(ElvUF.colors.ClassBars.MONK[i], db.classResources.MONK[i])
 	end
 
@@ -511,32 +524,34 @@ function UF:Construct_Fader()
 end
 
 function UF:Configure_Fader(frame)
-	if frame.db and frame.db.enable and (frame.db.fader and frame.db.fader.enable) then
+	local db = frame.db and frame.db.enable and frame.db.fader
+	if db and db.enable then
 		if not frame:IsElementEnabled('Fader') then
 			frame:EnableElement('Fader')
 		end
 
-		frame.Fader:SetOption('Hover', frame.db.fader.hover)
-		frame.Fader:SetOption('Combat', frame.db.fader.combat)
-		frame.Fader:SetOption('PlayerTarget', frame.db.fader.playertarget)
-		frame.Fader:SetOption('Focus', frame.db.fader.focus)
-		frame.Fader:SetOption('Health', frame.db.fader.health)
-		frame.Fader:SetOption('Power', frame.db.fader.power)
-		frame.Fader:SetOption('Vehicle', frame.db.fader.vehicle)
-		frame.Fader:SetOption('Casting', frame.db.fader.casting)
-		frame.Fader:SetOption('MinAlpha', frame.db.fader.minAlpha)
-		frame.Fader:SetOption('MaxAlpha', frame.db.fader.maxAlpha)
+		local fader = frame.Fader
+		fader:SetOption('Hover', db.hover)
+		fader:SetOption('Combat', db.combat)
+		fader:SetOption('PlayerTarget', db.playertarget)
+		fader:SetOption('Focus', db.focus)
+		fader:SetOption('Health', db.health)
+		fader:SetOption('Power', db.power)
+		fader:SetOption('Vehicle', db.vehicle)
+		fader:SetOption('Casting', db.casting)
+		fader:SetOption('MinAlpha', db.minAlpha)
+		fader:SetOption('MaxAlpha', db.maxAlpha)
 
 		if frame ~= _G.ElvUF_Player then
-			frame.Fader:SetOption('Range', frame.db.fader.range)
-			frame.Fader:SetOption('UnitTarget', frame.db.fader.unittarget)
+			fader:SetOption('Range', db.range)
+			fader:SetOption('UnitTarget', db.unittarget)
 		end
 
-		frame.Fader:SetOption('Smooth', (frame.db.fader.smooth > 0 and frame.db.fader.smooth) or nil)
-		frame.Fader:SetOption('Delay', (frame.db.fader.delay > 0 and frame.db.fader.delay) or nil)
+		fader:SetOption('Smooth', (db.smooth > 0 and db.smooth) or nil)
+		fader:SetOption('Delay', (db.delay > 0 and db.delay) or nil)
 
-		frame.Fader:ClearTimers()
-		frame.Fader.configTimer = E:ScheduleTimer(frame.Fader.ForceUpdate, 0.25, frame.Fader, true)
+		fader:ClearTimers()
+		fader.configTimer = E:ScheduleTimer(fader.ForceUpdate, 0.25, fader, true)
 	elseif frame:IsElementEnabled('Fader') then
 		frame:DisableElement('Fader')
 		E:UIFrameFadeIn(frame, 1, frame:GetAlpha(), 1)
@@ -567,24 +582,31 @@ function UF:Update_AllFrames()
 	UF:Update_StatusBars()
 
 	for unit, frame in pairs(UF.units) do
-		if UF.db.units[unit].enable then
-			frame:Enable()
+		local enabled = UF.db.units[unit].enable
+		frame:SetEnabled(enabled)
+
+		if enabled then
 			frame:Update()
 			E:EnableMover(frame.mover.name)
 		else
-			frame:Disable()
 			E:DisableMover(frame.mover.name)
 		end
 	end
 
 	for unit, group in pairs(UF.groupunits) do
 		local frame = UF[unit]
-		if UF.db.units[group].enable then
-			frame:Enable()
+
+		local enabled = UF.db.units[group].enable
+		if group == 'arena' then
+			frame:SetAttribute('oUF-enableArenaPrep', enabled)
+		end
+
+		frame:SetEnabled(enabled)
+
+		if enabled then
 			frame:Update()
 			E:EnableMover(frame.mover.name)
 		else
-			frame:Disable()
 			E:DisableMover(frame.mover.name)
 		end
 
@@ -619,16 +641,17 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 			end
 		end
 
+		local enabled = UF.db.units[group].enable
 		if group == 'arena' then
-			frame:SetAttribute('oUF-enableArenaPrep', UF.db.units[group].enable)
+			frame:SetAttribute('oUF-enableArenaPrep', enabled)
 		end
 
-		if UF.db.units[group].enable then
-			frame:Enable()
+		frame:SetEnabled(enabled)
+
+		if enabled then
 			frame:Update()
 			E:EnableMover(frame.mover.name)
 		else
-			frame:Disable()
 			E:DisableMover(frame.mover.name)
 		end
 
@@ -787,14 +810,12 @@ function UF.groupPrototype:AdjustVisibility(Header)
 		for i, group in ipairs(Header.groups) do
 			if i <= numGroups and ((Header.db.raidWideSorting and i <= 1) or not Header.db.raidWideSorting) then
 				group:Show()
+			elseif group.forceShow then
+				group:Hide()
+				group:SetAttribute('startingIndex', 1)
+				UF:UnshowChildUnits(group, group:GetChildren())
 			else
-				if group.forceShow then
-					group:Hide()
-					group:SetAttribute('startingIndex', 1)
-					UF:UnshowChildUnits(group, group:GetChildren())
-				else
-					group:Reset()
-				end
+				group:Reset()
 			end
 		end
 	end
@@ -824,14 +845,14 @@ function UF.headerPrototype:Update(isForced)
 	UF[self.UpdateHeader](UF, self, db, isForced)
 
 	local i = 1
-	local child = self:GetAttribute('child' .. i)
+	local child = self:GetAttribute('child'..i)
 	local func = UF[self.UpdateFrames]
 
 	while child do
 		self:UpdateChild(func, child, db)
 
 		i = i + 1
-		child = self:GetAttribute('child' .. i)
+		child = self:GetAttribute('child'..i)
 	end
 end
 
@@ -1029,12 +1050,13 @@ function UF:CreateAndUpdateUF(unit)
 		end
 	end
 
-	if UF.db.units[unit].enable then
-		frame:Enable()
+	local enabled = UF.db.units[unit].enable
+	frame:SetEnabled(enabled)
+
+	if enabled then
 		frame:Update()
 		E:EnableMover(frame.mover.name)
 	else
-		frame:Disable()
 		E:DisableMover(frame.mover.name)
 	end
 end
@@ -1094,14 +1116,61 @@ function UF:UpdateAllHeaders(skip)
 end
 
 function UF:DisableBlizzard()
-	if (not E.private.unitframe.disabledBlizzardFrames.raid) and (not E.private.unitframe.disabledBlizzardFrames.party) then return end
-	if not CompactRaidFrameManager_SetSetting then
-		E:StaticPopup_Show('WARNING_BLIZZARD_ADDONS')
-	else
-		CompactRaidFrameManager_SetSetting('IsShown', '0')
+	local disable = E.private.unitframe.disabledBlizzardFrames
+	if disable.party or disable.raid then
+		-- calls to UpdateRaidAndPartyFrames, which as of writing this is used to show/hide the
+		-- Raid Utility and update Party frames via PartyFrame.UpdatePartyFrames not raid frames.
 		_G.UIParent:UnregisterEvent('GROUP_ROSTER_UPDATE')
-		_G.CompactRaidFrameManager:UnregisterAllEvents()
-		_G.CompactRaidFrameManager:SetParent(E.HiddenFrame)
+	end
+
+	-- shutdown monk stagger bar background updates
+	if disable.player and _G.MonkStaggerBar then
+		_G.MonkStaggerBar:UnregisterAllEvents()
+	end
+
+	-- shutdown some background updates on party unitframes
+	if disable.party and _G.CompactPartyFrame then
+		_G.CompactPartyFrame:UnregisterAllEvents()
+	end
+
+	-- also handle it for background raid frames and the raid utility
+	if disable.raid then
+		if _G.CompactRaidFrameContainer then
+			_G.CompactRaidFrameContainer:UnregisterAllEvents()
+		end
+
+		-- Raid Utility
+		if not CompactRaidFrameManager_SetSetting then
+			E:StaticPopup_Show('WARNING_BLIZZARD_ADDONS')
+		else
+			CompactRaidFrameManager_SetSetting('IsShown', '0')
+		end
+
+		if _G.CompactRaidFrameManager then
+			_G.CompactRaidFrameManager:UnregisterAllEvents()
+			_G.CompactRaidFrameManager:SetParent(E.HiddenFrame)
+		end
+	end
+
+	-- handle arena ones as well
+	if disable.arena then
+		if _G.UnitFrameThreatIndicator_Initialize then
+			UF:SecureHook('UnitFrameThreatIndicator_Initialize')
+		end
+
+		if E.Retail then
+			ElvUF:DisableBlizzard('arena')
+		else
+			Arena_LoadUI = E.noop
+			-- Blizzard_ArenaUI should not be loaded, called on PLAYER_ENTERING_WORLD if in pvp or arena
+			-- this noop happens normally in oUF.DisableBlizzard but we have our own ElvUF.DisableBlizzard
+
+			if IsAddOnLoaded('Blizzard_ArenaUI') then
+				ElvUF:DisableBlizzard('arena')
+			else
+				UF:RegisterEvent('ADDON_LOADED')
+			end
+		end
 	end
 end
 
@@ -1161,156 +1230,164 @@ do
 end
 
 do
-	local disabledPlates = {}
-	local isPartyHooked = false
+	local MAX_PARTY = _G.MEMBERS_PER_RAID_GROUP or _G.MAX_PARTY_MEMBERS or 5
+	local MAX_ARENA_ENEMIES = _G.MAX_ARENA_ENEMIES or 5
+	local MAX_BOSS_FRAMES = 8
 
-	local function HandleFrame(baseName, doNotReparent)
-		local frame
-		if type(baseName) == 'string' then
-			frame = _G[baseName]
-		else
-			frame = baseName
+	local disabledPlates = {}
+	local lockedFrames = {}
+
+	-- lock Boss, Party, and Arena
+	local function LockParent(frame, parent)
+		if parent ~= E.HiddenFrame then
+			frame:SetParent(E.HiddenFrame)
+		end
+	end
+
+	local function HandleFrame(frame, doNotReparent)
+		if type(frame) == 'string' then
+			frame = _G[frame]
 		end
 
-		if frame then
-			frame:UnregisterAllEvents()
-			frame:Hide()
+		if not frame then return end
 
-			if not doNotReparent then
-				frame:SetParent(E.HiddenFrame)
-			end
+		local lockParent = doNotReparent == 1
+		if lockParent or not doNotReparent then
+			frame:SetParent(E.HiddenFrame)
 
-			local health = frame.healthBar or frame.healthbar or frame.HealthBar
-			if health then
-				health:UnregisterAllEvents()
+			if lockParent and not lockedFrames[frame] then
+				hooksecurefunc(frame, 'SetParent', LockParent)
+				lockedFrames[frame] = true
 			end
+		end
 
-			local power = frame.manabar or frame.ManaBar
-			if power then
-				power:UnregisterAllEvents()
-			end
+		frame:UnregisterAllEvents()
+		frame:Hide()
 
-			local spell = frame.castBar or frame.spellbar
-			if spell then
-				spell:UnregisterAllEvents()
-			end
-
-			local altpowerbar = frame.powerBarAlt or frame.PowerBarAlt
-			if altpowerbar then
-				altpowerbar:UnregisterAllEvents()
-			end
-
-			local buffFrame = frame.BuffFrame
-			if buffFrame then
-				buffFrame:UnregisterAllEvents()
-			end
-
-			local petFrame = frame.PetFrame
-			if petFrame then
-				petFrame:UnregisterAllEvents()
-			end
+		for _, child in next, {
+			frame.petFrame or frame.PetFrame,
+			frame.healthBar or frame.healthbar or frame.HealthBar,
+			frame.manabar or frame.ManaBar,
+			frame.castBar or frame.spellbar,
+			frame.powerBarAlt or frame.PowerBarAlt,
+			frame.totFrame,
+			frame.BuffFrame
+		} do
+			child:UnregisterAllEvents()
 		end
 	end
 
 	function ElvUF:DisableBlizzard(unit)
 		if not unit then return end
 
-		if unit == 'player' then
-			if E.private.unitframe.disabledBlizzardFrames.player then
-				local PlayerFrame = _G.PlayerFrame
-				HandleFrame(PlayerFrame)
-
-				-- For the damn vehicle support:
-				PlayerFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
-				PlayerFrame:RegisterEvent('UNIT_ENTERING_VEHICLE')
-				PlayerFrame:RegisterEvent('UNIT_ENTERED_VEHICLE')
-				PlayerFrame:RegisterEvent('UNIT_EXITING_VEHICLE')
-				PlayerFrame:RegisterEvent('UNIT_EXITED_VEHICLE')
-
-				-- User placed frames don't animate
-				PlayerFrame:SetMovable(true)
-				PlayerFrame:SetUserPlaced(true)
-				PlayerFrame:SetDontSavePosition(true)
-			end
-
-			if E.Retail then
-				if E.private.unitframe.disabledBlizzardFrames.castbar then
-					HandleFrame(_G.PlayerCastingBarFrame)
-					HandleFrame(_G.PetCastingBarFrame)
-				end
-			elseif E.private.unitframe.disabledBlizzardFrames.castbar or (UF.db.units.player.enable and UF.db.units.player.castbar.enable) then
-				CastingBarFrame_SetUnit(_G.CastingBarFrame)
-				CastingBarFrame_SetUnit(_G.PetCastingBarFrame)
-			else
-				CastingBarFrame_OnLoad(_G.CastingBarFrame, 'player', true, false)
-				PetCastingBarFrame_OnLoad(_G.PetCastingBarFrame)
-			end
-		elseif unit == 'pet' and E.private.unitframe.disabledBlizzardFrames.player then
-			HandleFrame(_G.PetFrame)
-		elseif unit == 'target' and E.private.unitframe.disabledBlizzardFrames.target then
-			HandleFrame(_G.TargetFrame)
-			HandleFrame(_G.ComboFrame)
-		elseif unit == 'focus' and E.private.unitframe.disabledBlizzardFrames.focus then
-			HandleFrame(_G.FocusFrame)
-			HandleFrame(_G.TargetofFocusFrame)
-		elseif unit == 'targettarget' and E.private.unitframe.disabledBlizzardFrames.target then
-			HandleFrame(_G.TargetFrameToT)
-		elseif strmatch(unit, 'boss%d?$') and E.private.unitframe.disabledBlizzardFrames.boss then
-			local id = strmatch(unit, 'boss(%d)')
-			if id then
-				HandleFrame('Boss' .. id .. 'TargetFrame')
-			else
-				for i = 1, MAX_BOSS_FRAMES do
-					HandleFrame(format('Boss%dTargetFrame', i))
-				end
-			end
-		elseif strmatch(unit, 'party%d?$') and E.private.unitframe.disabledBlizzardFrames.party then
-			if E.Retail then
-				if isPartyHooked then return end
-				isPartyHooked = true
-
-				_G.PartyFrame:UnregisterAllEvents()
-
-				for frame in _G.PartyFrame.PartyMemberFramePool:EnumerateActive() do
+		if E.private.unitframe.enable then
+			local disable = E.private.unitframe.disabledBlizzardFrames
+			if unit == 'player' then
+				if disable.player then
+					local frame = _G.PlayerFrame
 					HandleFrame(frame)
+
+					-- For the damn vehicle support:
+					frame:RegisterEvent('PLAYER_ENTERING_WORLD')
+					frame:RegisterEvent('UNIT_ENTERING_VEHICLE')
+					frame:RegisterEvent('UNIT_ENTERED_VEHICLE')
+					frame:RegisterEvent('UNIT_EXITING_VEHICLE')
+					frame:RegisterEvent('UNIT_EXITED_VEHICLE')
+
+					-- User placed frames don't animate
+					frame:SetMovable(true)
+					frame:SetUserPlaced(true)
+					frame:SetDontSavePosition(true)
 				end
-			else
-				local id = strmatch(unit, 'party(%d)')
-				if id then
-					HandleFrame('PartyMemberFrame' .. id)
-					HandleFrame('CompactPartyMemberFrame' .. id)
+
+				if E.Retail then
+					if disable.castbar then
+						HandleFrame(_G.PlayerCastingBarFrame)
+						HandleFrame(_G.PetCastingBarFrame)
+					end
+				elseif disable.castbar or (UF.db.units.player.enable and UF.db.units.player.castbar.enable) then
+					CastingBarFrame_SetUnit(_G.CastingBarFrame)
+					CastingBarFrame_SetUnit(_G.PetCastingBarFrame)
 				else
-					for i = 1, _G.MAX_PARTY_MEMBERS do
-						HandleFrame(format('PartyMemberFrame%d', i))
-						HandleFrame(format('CompactPartyMemberFrame%d', i))
+					CastingBarFrame_OnLoad(_G.CastingBarFrame, 'player', true, false)
+					PetCastingBarFrame_OnLoad(_G.PetCastingBarFrame)
+				end
+			elseif disable.player and unit == 'pet' then
+				HandleFrame(_G.PetFrame)
+			elseif disable.target and unit == 'target' then
+				HandleFrame(_G.TargetFrame)
+				HandleFrame(_G.ComboFrame)
+			elseif disable.focus and unit == 'focus' then
+				HandleFrame(_G.FocusFrame)
+				HandleFrame(_G.TargetofFocusFrame)
+			elseif disable.target and unit == 'targettarget' then
+				HandleFrame(_G.TargetFrameToT)
+			elseif disable.boss and strmatch(unit, 'boss%d?$') then
+				HandleFrame(_G.BossTargetFrameContainer, 1)
+
+				local id = strmatch(unit, 'boss(%d)')
+				if id then
+					HandleFrame('Boss'..id..'TargetFrame', true)
+				else
+					for i = 1, MAX_BOSS_FRAMES do
+						HandleFrame('Boss'..i..'TargetFrame', true)
 					end
 				end
+			elseif disable.party and strmatch(unit, 'party%d?$') then
+				local frame = _G.PartyFrame
+				if frame then -- Retail
+					HandleFrame(frame, 1)
 
-				HandleFrame(_G.PartyMemberBackground)
-			end
-		elseif strmatch(unit, 'arena%d?$') and E.private.unitframe.disabledBlizzardFrames.arena then
-			local id = strmatch(unit, 'arena(%d)')
-			if id then
-				HandleFrame('ArenaEnemyFrame' .. id)
-			else
-				for i = 1, _G.MAX_ARENA_ENEMIES do
-					HandleFrame(format('ArenaEnemyFrame%d', i))
+					for child in frame.PartyMemberFramePool:EnumerateActive() do
+						HandleFrame(child, true)
+					end
+				else
+					HandleFrame(_G.PartyMemberBackground)
+				end
+
+				local id = strmatch(unit, 'party(%d)')
+				if id then
+					HandleFrame('PartyMemberFrame'..id)
+					HandleFrame('CompactPartyFrameMember'..id)
+				else
+					for i = 1, MAX_PARTY do
+						HandleFrame('PartyMemberFrame'..i)
+						HandleFrame('CompactPartyFrameMember'..i)
+					end
+				end
+			elseif disable.arena and strmatch(unit, 'arena%d?$') then
+				if _G.ArenaEnemyFramesContainer then -- Retail
+					HandleFrame(_G.ArenaEnemyFramesContainer, 1)
+					HandleFrame(_G.ArenaEnemyPrepFramesContainer, 1)
+					HandleFrame(_G.ArenaEnemyMatchFramesContainer, 1)
+				elseif _G.ArenaEnemyFrames then
+					_G.ArenaEnemyFrames:UnregisterAllEvents()
+					_G.ArenaPrepFrames:UnregisterAllEvents()
+					_G.ArenaEnemyFrames:Hide()
+					_G.ArenaPrepFrames:Hide()
+
+					-- reference on oUF and clear the global frame reference, to fix ClearAllPoints taint
+					ElvUF.ArenaEnemyFrames = _G.ArenaEnemyFrames
+					ElvUF.ArenaPrepFrames = _G.ArenaPrepFrames
+					_G.ArenaEnemyFrames = nil
+					_G.ArenaPrepFrames = nil
+				end
+
+				-- actually handle the sub frames now
+				local id = strmatch(unit, 'arena(%d)')
+				if id then
+					HandleFrame('ArenaEnemyMatchFrame'..id, true)
+					HandleFrame('ArenaEnemyPrepFrame'..id, true)
+				else
+					for i = 1, MAX_ARENA_ENEMIES do
+						HandleFrame('ArenaEnemyMatchFrame'..i, true)
+						HandleFrame('ArenaEnemyPrepFrame'..i, true)
+					end
 				end
 			end
+		end
 
-			if _G.ArenaEnemyFrames then
-				_G.ArenaEnemyFrames:UnregisterAllEvents()
-				_G.ArenaPrepFrames:UnregisterAllEvents()
-				_G.ArenaEnemyFrames:Hide()
-				_G.ArenaPrepFrames:Hide()
-
-				-- reference on oUF and clear the global frame reference, to fix ClearAllPoints taint
-				ElvUF.ArenaEnemyFrames = _G.ArenaEnemyFrames
-				ElvUF.ArenaPrepFrames = _G.ArenaPrepFrames
-				_G.ArenaEnemyFrames = nil
-				_G.ArenaPrepFrames = nil
-			end
-		elseif strmatch(unit, 'nameplate%d+$') then
+		if E.private.nameplates.enable and strmatch(unit, 'nameplate%d+$') then
 			local frame = C_NamePlate_GetNamePlateForUnit(unit)
 			local plate = frame and frame.UnitFrame
 			if plate and not disabledPlates[plate] then
@@ -1336,14 +1413,17 @@ function UF:UnitFrameThreatIndicator_Initialize(_, unitFrame)
 end
 
 function UF:ResetUnitSettings(unit)
-	E:CopyTable(UF.db.units[unit], P.unitframe.units[unit])
+	local db = UF.db.units[unit]
+	local defaults = P.unitframe.units[unit]
 
-	if UF.db.units[unit].buffs and UF.db.units[unit].buffs.sizeOverride then
-		UF.db.units[unit].buffs.sizeOverride = P.unitframe.units[unit].buffs.sizeOverride or 0
+	E:CopyTable(db, defaults)
+
+	if db.buffs and db.buffs.sizeOverride then
+		db.buffs.sizeOverride = defaults.buffs.sizeOverride or 0
 	end
 
-	if UF.db.units[unit].debuffs and UF.db.units[unit].debuffs.sizeOverride then
-		UF.db.units[unit].debuffs.sizeOverride = P.unitframe.units[unit].debuffs.sizeOverride or 0
+	if db.debuffs and db.debuffs.sizeOverride then
+		db.debuffs.sizeOverride = defaults.debuffs.sizeOverride or 0
 	end
 
 	UF:Update_AllFrames()
@@ -1495,17 +1575,28 @@ function UF:ToggleTransparentStatusBar(isTransparent, statusBar, backdropTex, ad
 	end
 end
 
-function UF:TargetSound(unit)
-	if UnitExists(unit) and not IsReplacingUnit() then
-		if UnitIsEnemy(unit, 'player') then
-			PlaySound(SOUNDKIT_IG_CREATURE_AGGRO_SELECT)
-		elseif UnitIsFriend(unit, 'player') then
-			PlaySound(SOUNDKIT_IG_CHARACTER_NPC_SELECT)
-		else
-			PlaySound(SOUNDKIT_IG_CREATURE_NEUTRAL_SELECT)
+do
+	local playID
+	function UF:SOUNDKIT_FINISHED(_, soundID)
+		if playID == soundID then
+			playID = nil
 		end
-	else
-		PlaySound(SOUNDKIT_INTERFACE_SOUND_LOST_TARGET_UNIT)
+	end
+
+	function UF:TargetSound(unit, _)
+		if playID then
+			return -- dont play more
+		elseif not UnitExists(unit) then
+			_, playID = PlaySound(SELECT_LOST, nil, nil, true)
+		elseif not IsReplacingUnit() then
+			if UnitIsEnemy(unit, 'player') then
+				_, playID = PlaySound(SELECT_AGGRO, nil, nil, true)
+			elseif UnitIsFriend(unit, 'player') then
+				_, playID = PlaySound(SELECT_NPC, nil, nil, true)
+			else
+				_, playID = PlaySound(SELECT_NEUTRAL, nil, nil, true)
+			end
+		end
 	end
 end
 
@@ -1570,10 +1661,12 @@ function UF:AfterStyleCallback()
 	-- calling an update onto assist or tank in the styleFunc is before the `EnableElement`
 	-- that would cause the auras to be shown when a new frame is spawned (tank2, assist2)
 	-- even when they are disabled. this makes sure the update happens after so its proper.
-	if self.unitframeType == 'tank' or self.unitframeType == 'tanktarget' then
+
+	local unit = self.unitframeType
+	if unit == 'tank' or unit == 'tanktarget' then
 		UF:Update_TankFrames(self, UF.db.units.tank)
 		UF:Update_FontStrings()
-	elseif self.unitframeType == 'assist' or self.unitframeType == 'assisttarget' then
+	elseif unit == 'assist' or unit == 'assisttarget' then
 		UF:Update_AssistFrames(self, UF.db.units.assist)
 		UF:Update_FontStrings()
 	end
@@ -1609,31 +1702,11 @@ function UF:Initialize()
 	UF:RegisterEvent('PLAYER_ENTERING_WORLD')
 	UF:RegisterEvent('PLAYER_TARGET_CHANGED')
 	UF:RegisterEvent('PLAYER_FOCUS_CHANGED')
-
-	if E.private.unitframe.disabledBlizzardFrames.party and E.private.unitframe.disabledBlizzardFrames.raid then
-		UF:DisableBlizzard()
-	end
-
-	if (not E.private.unitframe.disabledBlizzardFrames.party) and (not E.private.unitframe.disabledBlizzardFrames.raid) then
-		E.RaidUtility.Initialize = E.noop
-	end
+	UF:RegisterEvent('SOUNDKIT_FINISHED')
+	UF:DisableBlizzard()
 
 	if _G.Clique and _G.Clique.BLACKLIST_CHANGED then
 		hooksecurefunc(_G.Clique, 'BLACKLIST_CHANGED', UF.UpdateRegisteredClicks)
-	end
-
-	if E.private.unitframe.disabledBlizzardFrames.arena then
-		if E.Retail then UF:SecureHook('UnitFrameThreatIndicator_Initialize') end
-
-		Arena_LoadUI = E.noop
-		-- Blizzard_ArenaUI should not be loaded, called on PLAYER_ENTERING_WORLD if in pvp or arena
-		-- this noop happens normally in oUF.DisableBlizzard but we have our own ElvUF.DisableBlizzard
-
-		if E.Retail or IsAddOnLoaded('Blizzard_ArenaUI') then
-			ElvUF:DisableBlizzard('arena')
-		else
-			UF:RegisterEvent('ADDON_LOADED')
-		end
 	end
 
 	local ORD = E.oUF_RaidDebuffs or _G.oUF_RaidDebuffs

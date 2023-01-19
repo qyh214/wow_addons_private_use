@@ -6,6 +6,7 @@ local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 local gump = 			_detalhes.gump
 local _
+local addonName, Details222 = ...
 --lua locals
 --local _string_len = string.len
 local _math_floor = math.floor
@@ -65,6 +66,14 @@ info.currentTabsInUse =  {}
 --self = instancia
 --jogador = classe_damage ou classe_heal
 
+do
+	local gradientStartColor = Details222.ColorScheme.GetColorFor("gradient-background")
+	local gradientUp = DetailsFramework:CreateTexture(info, {gradient = "vertical", fromColor = "transparent", toColor = gradientStartColor}, 1, 300, "artwork", {0, 1, 0, 1})
+	gradientUp:SetPoint("tops", 1, 1)
+	local gradientDown = DetailsFramework:CreateTexture(info, {gradient = "vertical", fromColor = gradientStartColor, toColor = "transparent"}, 1, 50, "artwork", {0, 1, 0, 1})
+	gradientDown:SetPoint("bottoms")
+end
+
 function Details:GetBreakdownTabsInUse()
 	return info.currentTabsInUse
 end
@@ -105,7 +114,7 @@ end
 
 --english alias
 --window object from Details:GetWindow(n) and playerObject from Details:GetPlayer(playerName, attribute)
-function Details:OpenPlayerBreakdown (windowObject, playerObject)
+function Details:OpenPlayerBreakdown (windowObject, playerObject) --windowObject = instanceObject
 	windowObject:AbreJanelaInfo (playerObject)
 end
 
@@ -150,6 +159,78 @@ function _detalhes:AbreJanelaInfo (jogador, from_att_change, refresh, ShiftKeyDo
 			barra.icone:SetTexture("")
 			barra.icone:SetTexCoord(0, 1, 0, 1)
 		end
+	end
+
+	if (not info.bHasInitialized) then
+		local infoNumPoints = info:GetNumPoints()
+		for i = 1, infoNumPoints do
+			local point1, anchorObject, point2, x, y = info:GetPoint(i)
+			if (not anchorObject) then
+				info:ClearAllPoints()
+			end
+		end
+
+		local okay = pcall(function()
+			info:SetPoint("center", _G.UIParent, "center", 0, 0)
+		end)
+
+		if (not okay) then
+			info:ClearAllPoints()
+			info:SetPoint("center", _G.UIParent, "center", 0, 0)
+		end
+
+		info:SetUserPlaced(false)
+		info:SetDontSavePosition(true)
+		info.bHasInitialized = true
+	end
+
+	if (not info.RightSideBar) then
+		info.RightSideBar = CreateFrame("frame", nil, info, "BackdropTemplate")
+		info.RightSideBar:SetWidth(20)
+		info.RightSideBar:SetPoint("topleft", info, "topright", 1, 0)
+		info.RightSideBar:SetPoint("bottomleft", info, "bottomright", 1, 0)
+		local rightSideBarAlpha = 0.75
+
+		DetailsFramework:ApplyStandardBackdrop(info.RightSideBar)
+
+		local toggleMergePlayerSpells = function()
+			Details.merge_player_abilities = not Details.merge_player_abilities
+			local playerObject = Details:GetPlayerObjectFromBreakdownWindow()
+			local instanceObject = Details:GetActiveWindowFromBreakdownWindow()
+			Details:OpenPlayerBreakdown(instanceObject, playerObject) --toggle
+			Details:OpenPlayerBreakdown(instanceObject, playerObject)
+		end
+		local mergePlayerSpellsCheckbox = DetailsFramework:CreateSwitch(info, toggleMergePlayerSpells, Details.merge_player_abilities, _, _, _, _, _, _, _, _, _, _, DetailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_BRIGHT_TEMPLATE"))
+		mergePlayerSpellsCheckbox:SetAsCheckBox()
+		mergePlayerSpellsCheckbox:SetPoint("bottom", info.RightSideBar, "bottom", 0, 2)
+
+		local mergePlayerSpellsLabel = info.RightSideBar:CreateFontString(nil, "overlay", "GameFontNormal")
+		mergePlayerSpellsLabel:SetText("Merge Player Spells")
+		DetailsFramework:SetFontRotation(mergePlayerSpellsLabel, 90)
+		mergePlayerSpellsLabel:SetPoint("center", mergePlayerSpellsCheckbox.widget, "center", -6, mergePlayerSpellsCheckbox:GetHeight()/2 + mergePlayerSpellsLabel:GetStringWidth() / 2)
+
+		--
+
+		local toggleMergePetSpells = function()
+			Details.merge_pet_abilities = not Details.merge_pet_abilities
+			local playerObject = Details:GetPlayerObjectFromBreakdownWindow()
+			local instanceObject = Details:GetActiveWindowFromBreakdownWindow()
+			Details:OpenPlayerBreakdown(instanceObject, playerObject) --toggle
+			Details:OpenPlayerBreakdown(instanceObject, playerObject)
+		end
+		local mergePetSpellsCheckbox = DetailsFramework:CreateSwitch(info, toggleMergePetSpells, Details.merge_pet_abilities, _, _, _, _, _, _, _, _, _, _, DetailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_BRIGHT_TEMPLATE"))
+		mergePetSpellsCheckbox:SetAsCheckBox(true)
+		mergePetSpellsCheckbox:SetPoint("bottom", info.RightSideBar, "bottom", 0, 160)
+
+		local mergePetSpellsLabel = info.RightSideBar:CreateFontString(nil, "overlay", "GameFontNormal")
+		mergePetSpellsLabel:SetText("Merge Pet Spells")
+		DetailsFramework:SetFontRotation(mergePetSpellsLabel, 90)
+		mergePetSpellsLabel:SetPoint("center", mergePetSpellsCheckbox.widget, "center", -6, mergePetSpellsCheckbox:GetHeight()/2 + mergePetSpellsLabel:GetStringWidth() / 2)
+
+		mergePlayerSpellsCheckbox:SetAlpha(rightSideBarAlpha)
+		mergePlayerSpellsLabel:SetAlpha(rightSideBarAlpha)
+		mergePetSpellsCheckbox:SetAlpha(rightSideBarAlpha)
+		mergePetSpellsLabel:SetAlpha(rightSideBarAlpha)
 	end
 
 	--passar os par�metros para dentro da tabela da janela.
@@ -609,11 +690,18 @@ local detalhes_inforeport_onleave = function(self)
 	Details.FadeHandler.Fader(self, "IN")
 end
 
+local getFrameFromDetailInfoBlock = function(self)
+	return self.bg
+end
+
 function gump:CriaDetalheInfo(index)
 	local spellInfoBlock = {}
+	spellInfoBlock.GetFrame = getFrameFromDetailInfoBlock
 
 	spellInfoBlock.bg = CreateFrame("StatusBar", "DetailsPlayerDetailsWindow_DetalheInfoBG" .. index, _detalhes.playerDetailWindow.container_detalhes, "BackdropTemplate")
-	spellInfoBlock.bg:SetStatusBarTexture("Interface\\AddOns\\Details\\images\\bar_detalhes2")
+	--spellInfoBlock.bg:SetStatusBarTexture("")  --Interface\\AddOns\\Details\\images\\bar_detalhes2
+	--bar_detalhes2 bar_background
+	spellInfoBlock.bg:SetStatusBarTexture("Interface\\AddOns\\Details\\images\\bar_background")  --Interface\\AddOns\\Details\\images\\bar_detalhes2
 	spellInfoBlock.bg:SetStatusBarColor(1, 1, 1, .84)
 	spellInfoBlock.bg:SetMinMaxValues(0, 100)
 	spellInfoBlock.bg:SetValue(100)
@@ -628,6 +716,7 @@ function gump:CriaDetalheInfo(index)
 
 	spellInfoBlock.middleStringUp = spellInfoBlock.bg:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 	spellInfoBlock.middleStringDown = spellInfoBlock.bg:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	spellInfoBlock.middleStringMiddle = spellInfoBlock.bg:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 
 	spellInfoBlock.bg.overlay = spellInfoBlock.bg:CreateTexture("DetailsPlayerDetailsWindow_DetalheInfoBG_Overlay" .. index, "ARTWORK")
 	spellInfoBlock.bg.overlay:SetTexture("Interface\\AddOns\\Details\\images\\overlay_detalhes")
@@ -648,7 +737,7 @@ function gump:CriaDetalheInfo(index)
 	spellInfoBlock.bg.reportar:SetScript("OnLeave", detalhes_inforeport_onleave)
 
 	spellInfoBlock.bg_end = spellInfoBlock.bg:CreateTexture("DetailsPlayerDetailsWindow_DetalheInfoBG_bg_end" .. index, "BACKGROUND")
-	spellInfoBlock.bg_end:SetHeight(47)
+	spellInfoBlock.bg_end:SetHeight(40)
 	spellInfoBlock.bg_end:SetTexture("Interface\\AddOns\\Details\\images\\bar_detalhes2_end")
 
 	_detalhes.playerDetailWindow.grupos_detalhes[index] = spellInfoBlock
@@ -673,6 +762,12 @@ end
 
 --determina qual a pocis�o que a barra de detalhes vai ocupar
 ------------------------------------------------------------------------------------------------------------------------------
+--namespace
+Details222.BreakdownWindow = {}
+function Details222.BreakdownWindow.GetBlockIndex(index)
+	return Details.playerDetailWindow.grupos_detalhes[index]
+end
+
 function gump:SetaDetalheInfoAltura(index, xmod, ymod)
 	local spellInfoBlock = _detalhes.playerDetailWindow.grupos_detalhes[index]
 	--local janela =  _detalhes.playerDetailWindow.container_detalhes
@@ -719,22 +814,24 @@ function gump:SetaDetalheInfoAltura(index, xmod, ymod)
 	spellInfoBlock.dano:SetPoint("TOPLEFT", background, "TOPLEFT", xOffset, yOffset + (-24))
 	spellInfoBlock.dano_media:SetPoint("TOPLEFT", background, "TOPLEFT", xOffset, yOffset + (-44))
 
-	spellInfoBlock.nome2:SetPoint("TOPRIGHT", background, "TOPRIGHT", -xOffset + right,  yOffset + (-2))
+	spellInfoBlock.nome2:SetPoint("TOPRIGHT", background, "TOPRIGHT", -xOffset + right,  yOffset + (-4))
 	spellInfoBlock.dano_porcento:SetPoint("TOPRIGHT", background, "TOPRIGHT", -xOffset + right, yOffset + (-24))
 	spellInfoBlock.dano_dps:SetPoint("TOPRIGHT", background, "TOPRIGHT", -xOffset + right, yOffset + (-44))
 
 	spellInfoBlock.middleStringUp:SetPoint("center", background, "center", 0, 0)
-	spellInfoBlock.middleStringUp:SetPoint("top", background, "top", 0, -2)
+	spellInfoBlock.middleStringUp:SetPoint("top", background, "top", 0, -7)
 
 	spellInfoBlock.middleStringDown:SetPoint("center", background, "center", 0, 0)
-	spellInfoBlock.middleStringDown:SetPoint("bottom", background, "bottom", 0, 2)
+	spellInfoBlock.middleStringDown:SetPoint("bottom", background, "bottom", 0, 19)
+
+	spellInfoBlock.middleStringMiddle:SetPoint("center", background, "center", 0, 6)
 
 	spellInfoBlock.bg:SetPoint("TOPLEFT", background, "TOPLEFT", 1, -1)
 	spellInfoBlock.bg:SetHeight(background:GetHeight() - 2)
 	spellInfoBlock.bg:SetWidth(background:GetWidth())
 
 	spellInfoBlock.bg_end:SetPoint("LEFT", spellInfoBlock.bg, "LEFT", spellInfoBlock.bg:GetValue()*2.19, 0)
-	spellInfoBlock.bg_end:SetHeight(background:GetHeight()+2)
+	spellInfoBlock.bg_end:SetHeight(background:GetHeight()-2)
 	spellInfoBlock.bg_end:SetWidth(6)
 	spellInfoBlock.bg_end:SetAlpha(.75)
 
@@ -746,7 +843,7 @@ end
 
 --seta o conte�do da barra de detalhes
 ------------------------------------------------------------------------------------------------------------------------------
-function gump:SetaDetalheInfoTexto(index, data, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
+function gump:SetaDetalheInfoTexto(index, data, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
 	local spellInfoBlock = _detalhes.playerDetailWindow.grupos_detalhes[index]
 
 	if (data) then
@@ -808,6 +905,12 @@ function gump:SetaDetalheInfoTexto(index, data, arg1, arg2, arg3, arg4, arg5, ar
 		spellInfoBlock.middleStringDown:SetText("")
 	end
 
+	if (arg9) then
+		spellInfoBlock.middleStringMiddle:SetText(arg9)
+	else
+		spellInfoBlock.middleStringMiddle:SetText("")
+	end
+
 	spellInfoBlock.nome:Show()
 	spellInfoBlock.dano:Show()
 	spellInfoBlock.dano_porcento:Show()
@@ -816,6 +919,8 @@ function gump:SetaDetalheInfoTexto(index, data, arg1, arg2, arg3, arg4, arg5, ar
 	spellInfoBlock.nome2:Show()
 	spellInfoBlock.middleStringUp:Show()
 	spellInfoBlock.middleStringDown:Show()
+	spellInfoBlock.middleStringDown:Show()
+	spellInfoBlock.middleStringMiddle:Show()
 end
 
 --cria as 5 caixas de detalhes infos que ser�o usados
@@ -1188,7 +1293,7 @@ local default_skin = function()
 	end
 
 	--info container
-	info:SetDetailInfoConfigs("Interface\\AddOns\\Details\\images\\bar_detalhes2", {1, 1, 1, 0.5}, 0, 0)
+	info:SetDetailInfoConfigs("Interface\\AddOns\\Details\\images\\bar_background_dark_dark", {1, 1, 1, 0.5}, 0, 0)
 
 	window.bg1_sec_texture:SetPoint("topleft", window.bg1, "topleft", 348, -86)
 	window.bg1_sec_texture:SetHeight(262)
@@ -1418,7 +1523,7 @@ local elvui_skin = function()
 	end
 
 	--seta configs dos 5 blocos da direita
-	info:SetDetailInfoConfigs("Interface\\AddOns\\Details\\images\\bar_serenity", {1, 1, 1, 0.35}, -6 + 100, 0)
+	info:SetDetailInfoConfigs("Interface\\AddOns\\Details\\images\\bar_background_dark", {1, 1, 1, 0.35}, -6 + 100, 0)
 
 	window.bg1_sec_texture:SetPoint("topleft", window.bg1, "topleft", 446, -86)
 	window.bg1_sec_texture:SetWidth(337)
@@ -1634,9 +1739,6 @@ function gump:CriaJanelaInfo()
 	--fehcar com o esc
 	tinsert(UISpecialFrames, este_gump:GetName())
 
-	--propriedades da janela
-	este_gump:SetPoint("CENTER", UIParent)
-
 	este_gump:SetWidth(PLAYER_DETAILS_WINDOW_WIDTH)
 	este_gump:SetHeight(PLAYER_DETAILS_WINDOW_HEIGHT)
 
@@ -1795,6 +1897,9 @@ function gump:CriaJanelaInfo()
 			right_background1:SetSize(220, 43)
 			Details.gump:ApplyStandardBackdrop(right_background1)
 			este_gump ["right_background" .. i] = right_background1
+
+			local gradientDown = DetailsFramework:CreateTexture(right_background1, {gradient = "vertical", fromColor = {0, 0, 0, 0.1}, toColor = "transparent"}, 1, 43, "artwork", {0, 1, 0, 1})
+			gradientDown:SetPoint("bottoms")
 		end
 
 	-- fundos especiais de friendly fire e outros
@@ -2904,6 +3009,11 @@ function gump:CriaJanelaInfo()
 		DF:ReskinSlider(debuffScroll)
 
 		tab.DebuffScroll = debuffScroll
+
+		if (not frame.__background) then
+			DetailsFramework:ApplyStandardBackdrop(frame)
+			frame.__background:SetAlpha(0.6)
+		end
 	end
 
 	local auras_tab_fill = function(tab, player, combat)
@@ -2915,6 +3025,10 @@ function gump:CriaJanelaInfo()
 			if (miscActor and miscActor.buff_uptime_spells) then
 				for spellID, spellObject in pairs(miscActor.buff_uptime_spells._ActorTable) do
 					local spellName, _, spellIcon = GetSpellInfo(spellID)
+					if (not spellObject.uptime) then
+						--print(_GetSpellInfo(spellID))
+						--dumpt(spellObject)
+					end
 					tinsert(newAuraTable, {spellIcon, spellName, spellObject.uptime, spellObject.appliedamt, spellObject.refreshamt, spellObject.uptime/combatTime*100, spellID = spellID})
 				end
 			end

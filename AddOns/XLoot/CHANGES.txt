@@ -1,10 +1,10 @@
-lightweight tag 4a23354ca94eb54937edb9349c2bf7f478ef37bc 9.2.7-1
+lightweight tag 2c2b701b13c3c83a74350f4fa9dfd5afc34d4c29 10.0.2-2
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Sat Sep 10 07:09:20 2022 -0400
+Date:	Wed Dec 21 16:54:21 2022 -0500
 
-commit 4a23354ca94eb54937edb9349c2bf7f478ef37bc
+commit 2c2b701b13c3c83a74350f4fa9dfd5afc34d4c29
 Author: Xuerian <xuerian@gmail.com>
-Date:   Sat Sep 10 07:09:20 2022 -0400
+Date:   Wed Dec 21 16:54:21 2022 -0500
 
-    Attempt TOC version bump (No issues reported)
+    Group: Potential hover issue workaround
 

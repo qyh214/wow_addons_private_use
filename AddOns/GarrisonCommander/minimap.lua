@@ -5,7 +5,7 @@ local gc,gb="GarrisonCommander","GarrisonCommander-Broker"
 if (me ==  gc and  not IsAddOnLoaded(gb) or
     me ==  gb and  not IsAddOnLoaded(gc)
 ) then
-     GarrisonLandingPageMinimapButton:HookScript("OnEnter",
+     ExpansionLandingPageMinimapButton:HookScript("OnEnter",
      function(this)
         if this.description==MINIMAP_ORDER_HALL_LANDING_PAGE_TOOLTIP or
            this.description == GARRISON_TYPE_8_0_LANDING_PAGE_TOOLTIP then
@@ -15,7 +15,7 @@ if (me ==  gc and  not IsAddOnLoaded(gb) or
         GameTooltip:Show()
     end
     )
-    GarrisonLandingPageMinimapButton:HookScript("OnClick",
+    ExpansionLandingPageMinimapButton:HookScript("OnClick",
       function (this,button)
          local shown=GarrisonLandingPage:IsShown()
          local actual=GarrisonLandingPage.garrTypeID

@@ -43,6 +43,7 @@ L['trinket'] = '飾品'
 L['activation_unknown'] = '啟動條件未知'
 L['requirement_not_found'] = '所需位置未知'
 L['multiple_spawns'] = '可能出現在多個位置'
+L['shared_drops'] = nil
 
 L['Requires'] = '需要'
 L['ranked_research'] = '%s (等級 %d/%d)'
@@ -59,10 +60,11 @@ L['daily'] = '每日'
 L['weekly'] = '每週'
 L['normal'] = '普通'
 L['hard'] = '困難'
+L['heirloom'] = '傳家寶'
 L['mount'] = '坐騎'
 L['pet'] = '戰寵'
 L['spell'] = '法術'
-L['title'] = nil
+L['title'] = '稱號'
 L['toy'] = '玩具'
 L['rep'] = '聲望'
 L['completed'] = '已完成'
@@ -73,10 +75,11 @@ L['unobtainable'] = '無法獲得'
 L['unlearnable'] = '無法解鎖'
 L['defeated'] = '已擊敗'
 L['undefeated'] = '未擊敗'
+L['elite'] = nil
 
-L['follower_type_follower'] = nil
-L['follower_type_champion'] = nil
-L['follower_type_companion'] = nil
+L['follower_type_follower'] = '追隨者'
+L['follower_type_champion'] = '勇士'
+L['follower_type_companion'] = '夥伴'
 
 -------------------------------------------------------------------------------
 --------------------------------- CONTEXT MENU --------------------------------
@@ -84,6 +87,7 @@ L['follower_type_companion'] = nil
 
 L['context_menu_set_waypoint'] = '設定地圖路徑點'
 L['context_menu_add_tomtom'] = '加入到TomTom'
+L['context_menu_add_group_tomtom'] = nil
 L['context_menu_hide_node'] = '隱藏此節點'
 L['context_menu_restore_hidden_nodes'] = '恢復所有隱藏節點'
 
@@ -177,6 +181,8 @@ L['options_toggle_show_notes_desc'] = '在可用的工具提示中加入有用�
 --------------------------------- DEVELOPMENT ---------------------------------
 
 L['options_dev_settings'] = '開發'
+L['options_toggle_show_debug_currency'] = nil
+L['options_toggle_show_debug_currency_desc'] = nil
 L['options_toggle_show_debug_map'] = '偵錯地圖ID'
 L['options_toggle_show_debug_map_desc'] = '顯示地圖的偵錯資訊'
 L['options_toggle_show_debug_quest'] = '偵錯任務ID'

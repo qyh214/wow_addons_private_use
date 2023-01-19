@@ -146,7 +146,11 @@ end
 
 function Achievement:GetText()
     local _, name, _, _, _, _, _, _, _, icon = GetAchievementInfo(self.id)
-    return Icon(icon) .. ACHIEVEMENT_COLOR_CODE .. '[' .. name .. ']|r'
+    local text = Icon(icon) .. ACHIEVEMENT_COLOR_CODE .. '[' .. name .. ']|r'
+    if self.note then
+        text = text .. ns.color.White('\n(' .. self.note .. ')')
+    end
+    return text
 end
 
 function Achievement:GetStatus()
@@ -246,7 +250,7 @@ end
 
 function Follower:IsObtained()
     local followers = C_Garrison.GetFollowers(self:GetType('enum'))
-    for i = 1, #followers do
+    for i = 1, followers and #followers or 0 do
         local followerID = followers[i].followerID
         if (self.id == followerID) then return false end
     end
@@ -312,6 +316,19 @@ function Item:GetStatus()
         local completed = C_QuestLog.IsQuestFlaggedCompleted(self.weekly)
         return completed and Green(L['weekly']) or Red(L['weekly'])
     end
+end
+
+-------------------------------------------------------------------------------
+----------------------------------- HEIRLOOM ----------------------------------
+-------------------------------------------------------------------------------
+
+local Heirloom = Class('Heirloom', Item, {type = L['heirloom']})
+
+function Heirloom:IsObtained() return C_Heirloom.PlayerHasHeirloom(self.item) end
+
+function Heirloom:GetStatus()
+    local collected = C_Heirloom.PlayerHasHeirloom(self.item)
+    return collected and Green(L['known']) or Red(L['missing'])
 end
 
 -------------------------------------------------------------------------------
@@ -552,6 +569,7 @@ ns.reward = {
     Currency = Currency,
     Follower = Follower,
     Item = Item,
+    Heirloom = Heirloom,
     Mount = Mount,
     Pet = Pet,
     Quest = Quest,

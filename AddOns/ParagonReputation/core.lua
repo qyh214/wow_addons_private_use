@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.43 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.44 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -152,12 +152,15 @@ function ParagonReputation:CreateBarOverlay(factionBar)
 	local overlay = CreateFrame("FRAME",nil,factionBar)
 	overlay:SetAllPoints(factionBar)
 	overlay:SetFrameLevel(factionBar:GetFrameLevel())
-	overlay.bar = overlay:CreateTexture(nil,"ARTWORK",nil,-1)
-	overlay.bar:SetTexture((ElvUI and ElvUI[1].private and ElvUI[1].private.skins and ElvUI[1].private.skins.blizzard and ElvUI[1].private.skins.blizzard.enable and ElvUI[1].private.skins.blizzard.character and ElvUI[1].media and ElvUI[1].media.normTex) or "Interface\\TARGETINGFRAME\\UI-StatusBar") -- Checks for ElvUI and it's values in case they are skinning the Character Frame.
+	overlay.bar = overlay:CreateTexture(nil,"ARTWORK",nil)
+	local texture = factionBar:GetStatusBarTexture():GetTexture()
+	factionBar.LeftTexture:SetDrawLayer("ARTWORK",1)
+	factionBar.RightTexture:SetDrawLayer("ARTWORK",1)
+	overlay.bar:SetTexture(texture == 136570 and "Interface\\TARGETINGFRAME\\UI-StatusBar" or texture)
 	overlay.bar:SetPoint("TOP",overlay)
 	overlay.bar:SetPoint("BOTTOM",overlay)
 	overlay.bar:SetPoint("LEFT",overlay)
-	overlay.edge = overlay:CreateTexture(nil,"ARTWORK",nil,-1)
+	overlay.edge = overlay:CreateTexture(nil,"ARTWORK",nil)
 	overlay.edge:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 	overlay.edge:SetPoint("CENTER",overlay.bar,"RIGHT")
 	overlay.edge:SetBlendMode("ADD")
@@ -196,7 +199,7 @@ hooksecurefunc("ReputationFrame_InitReputationRow",function(factionRow)
 			factionRow.Container.ReputationBar.ParagonOverlay:Show()
 			factionRow.Container.ReputationBar.ParagonOverlay.bar:SetWidth(factionRow.Container.ReputationBar.ParagonOverlay:GetWidth()*over)
 			factionRow.Container.ReputationBar.ParagonOverlay.bar:SetVertexColor(r+.15,g+.15,b+.15)
-			factionRow.Container.ReputationBar.ParagonOverlay.edge:SetVertexColor(r+.2,g+.2,b+.2,(over > .05 and .75) or 0)
+			factionRow.Container.ReputationBar.ParagonOverlay.edge:SetVertexColor(r+.25,g+.25,b+.25,(over > .05 and .75) or 0)
 			value = value+threshold
 		else
 			if factionRow.Container.ReputationBar.ParagonOverlay then factionRow.Container.ReputationBar.ParagonOverlay:Hide() end

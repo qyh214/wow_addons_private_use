@@ -1,34 +1,22 @@
-lightweight tag 1459dd879d10c8455b22099a220be690435e9087 v5.8.2-v10.0.0
+lightweight tag eff39e3a7f8ebe62ddd4461c1d6047537b7396c2 v5.9.0-v10.0.2
 Author:	Boshi Lian <farmer1992@gmail.com>
-Date:	Wed Oct 26 23:36:52 2022 -0700
+Date:	Mon Dec 5 02:21:21 2022 -0800
 
-commit 1459dd879d10c8455b22099a220be690435e9087
+commit eff39e3a7f8ebe62ddd4461c1d6047537b7396c2
 Author: Boshi Lian <farmer1992@gmail.com>
-Date:   Wed Oct 26 23:36:52 2022 -0700
+Date:   Mon Dec 5 02:21:21 2022 -0800
 
-    Squashed commit of the following:
-    
-    commit 4199f88c38541f278ac73b556461bacd70a88d57
-    Author: Boshi Lian <farmer1992@gmail.com>
-    Date:   Mon Sep 5 04:35:03 2022 -0700
-    
-        fix weird totem err
-    
-    commit 8da2d8bf1ea7b0aeffbda4713145a9f29a9c0068
-    Author: Boshi Lian <farmer1992@gmail.com>
-    Date:   Sun Oct 16 02:22:32 2022 -0700
-    
-        fix flyout nil format
-    
-    commit 86fffafddd61482c6cf4e00a4f4495b26fd17974
-    Author: Boshi Lian <farmer1992@gmail.com>
-    Date:   Sun Oct 16 02:04:40 2022 -0700
-    
-        fix highlight text err
-    
-    commit 7060103f2b96226e31cbbc1573fcb06fb5b8bd96
-    Author: Boshi Lian <farmer1992@gmail.com>
-    Date:   Sun Oct 16 02:04:28 2022 -0700
-    
-        bump ver 10
+    bump ver
+
+commit b4160d921662d106bc3dcd24733f7c673f73cdbe
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Mon Oct 31 04:42:12 2022 -0700
+
+    add talent in export comments
+
+commit 7954ed633dd2e4c6385bb28ae16a340ea0123e74
+Author: Boshi Lian <farmer1992@gmail.com>
+Date:   Thu Oct 27 16:29:57 2022 -0700
+
+    Create LICENSE
 

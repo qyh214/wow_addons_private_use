@@ -1006,13 +1006,13 @@ options.taunt = {
                         }
                     }
                 },
-                provokeAll = {
+                tauntAll = {
                     order = 3,
                     type = "group",
                     inline = true,
-                    name = L["Provoke all(Monk)"],
+                    name = L["Taunt All"],
                     args = {
-                        provokeAllText = {
+                        tauntAllText = {
                             order = 1,
                             type = "input",
                             name = L["Text"],
@@ -1027,8 +1027,8 @@ options.taunt = {
                             order = 2,
                             type = "execute",
                             func = function()
-                                E.db.WT.announcement.taunt.player.player.provokeAllText =
-                                    P.announcement.taunt.player.player.provokeAllText
+                                E.db.WT.announcement.taunt.player.player.tauntAllText =
+                                    P.announcement.taunt.player.player.tauntAllText
                             end,
                             name = L["Default Text"]
                         },
@@ -1036,9 +1036,8 @@ options.taunt = {
                             order = 3,
                             type = "description",
                             name = function()
-                                local message = E.db.WT.announcement.taunt.player.player.provokeAllText
+                                local message = E.db.WT.announcement.taunt.player.player.tauntAllText
                                 message = gsub(message, "%%player%%", E.myname)
-                                message = gsub(message, "%%target%%", L["Sylvanas"])
                                 message = gsub(message, "%%spell%%", GetSpellLink(20484))
                                 return "\n" .. ImportantColorString(L["Example"]) .. ": " .. message .. "\n\n"
                             end
@@ -1387,13 +1386,13 @@ options.taunt = {
                         }
                     }
                 },
-                provokeAll = {
+                tauntAll = {
                     order = 3,
                     type = "group",
                     inline = true,
-                    name = L["Provoke all(Monk)"],
+                    name = L["Taunt All"],
                     args = {
-                        provokeAllText = {
+                        tauntAllText = {
                             order = 1,
                             type = "input",
                             name = L["Text"],
@@ -1408,8 +1407,8 @@ options.taunt = {
                             order = 2,
                             type = "execute",
                             func = function()
-                                E.db.WT.announcement.taunt.others.player.provokeAllText =
-                                    P.announcement.taunt.others.player.provokeAllText
+                                E.db.WT.announcement.taunt.others.player.tauntAllText =
+                                    P.announcement.taunt.others.player.tauntAllText
                             end,
                             name = L["Default Text"]
                         },
@@ -1417,9 +1416,8 @@ options.taunt = {
                             order = 3,
                             type = "description",
                             name = function()
-                                local message = E.db.WT.announcement.taunt.others.player.provokeAllText
+                                local message = E.db.WT.announcement.taunt.others.player.tauntAllText
                                 message = gsub(message, "%%player%%", E.myname)
-                                message = gsub(message, "%%target%%", L["Sylvanas"])
                                 message = gsub(message, "%%spell%%", GetSpellLink(20484))
                                 return "\n" .. ImportantColorString(L["Example"]) .. ": " .. message .. "\n\n"
                             end
@@ -2657,7 +2655,7 @@ options.keystone = {
                 feature = {
                     order = 1,
                     type = "description",
-                    name = L["Announce the new mythic keystone."],
+                    name = L["Announce your mythic keystone."],
                     fontSize = "medium"
                 }
             }
@@ -2667,15 +2665,27 @@ options.keystone = {
             type = "toggle",
             name = L["Enable"]
         },
-        text = {
+        command = {
             order = 3,
+            type = "toggle",
+            name = L["!keys Command"],
+            desc = L["Send the keystone to party or guild chat when someone use !keys command."]
+        },
+        betterAlign = {
+            order = 4,
+            type = "description",
+            name = " ",
+            width = "full"
+        },
+        text = {
+            order = 5,
             type = "input",
             name = L["Text"],
             desc = FormatDesc("%keystone%", L["Keystone"]),
             width = 2
         },
         useDefaultText = {
-            order = 4,
+            order = 6,
             type = "execute",
             func = function(info)
                 E.db.WT.announcement.keystone.text = P.announcement.keystone.text
@@ -2683,7 +2693,7 @@ options.keystone = {
             name = L["Default Text"]
         },
         channel = {
-            order = 5,
+            order = 7,
             name = L["Channel"],
             type = "group",
             inline = true,
@@ -2708,6 +2718,28 @@ options.keystone = {
                     }
                 }
             }
+        }
+    }
+}
+
+options.general = {
+    order = 14,
+    type = "group",
+    name = L["General"],
+    get = function(info)
+        return E.db.WT.announcement[info[#info]]
+    end,
+    set = function(info, value)
+        E.db.WT.announcement[info[#info]] = value
+    end,
+    args = {
+        emoteFormat = {
+            order = 1,
+            type = "input",
+            name = L["Emote Format"],
+            desc = L["The text template used in emote channel."] ..
+                "\n" .. format(L["Default is %s."], W.Utilities.Color.StringByTemplate(": %s", "info")),
+            width = 2
         }
     }
 }

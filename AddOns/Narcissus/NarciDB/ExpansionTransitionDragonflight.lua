@@ -14,6 +14,9 @@ end
 
 
 local CreateColor = CreateColor;
+local WantsAlteredForm = C_UnitAuras.WantsAlteredForm;
+local UnitRace = UnitRace;
+local C_Minimap = C_Minimap;
 local type = type;
 
 local SharedVector3D = CreateVector3D(0, 0, 0);
@@ -55,15 +58,7 @@ function TransitionAPI.HookSocketInventoryItem(callback)     --#4
 end
 
 function TransitionAPI.IsTrackingPets()      --#5
-    local GetTrackingInfo = C_Minimap.GetTrackingInfo;
-    local numTypes = C_Minimap.GetNumTrackingTypes();
-    local _, active, spellID;
-    for i = 1, numTypes do
-        _, _, active, _, _, spellID = GetTrackingInfo(i);
-        if spellID == 122026 then
-            return active
-        end
-    end
+    return C_Minimap.IsTrackingBattlePets();
 end
 
 function TransitionAPI.SetTrackingPets(state)      --#6
@@ -147,8 +142,14 @@ function TransitionAPI.SetModelPosition(model, x, y, z)     --#12
     model:SetPosition(x, y, z);
 end
 
-function TransitionAPI.SetModelByUnit(model, unit)      --#13
-	model:SetUnit(unit, true);
+function TransitionAPI.SetModelByUnit(model, unit)    --#13
+    local _, raceFileName = UnitRace(unit);
+    if raceFileName == "Dracthyr" or raceFileName == "Worgen" then
+        local arg = WantsAlteredForm(unit);
+        model:SetUnit(unit, true, arg);
+    else
+        model:SetUnit(unit, true);
+    end
     model.unit = unit;
 end
 
@@ -157,16 +158,11 @@ function TransitionAPI.IsPlayerInAlteredForm()      --#14
 end
 
 do
-    local _, raceFilename = UnitRace("player");
-    if raceFilename == "Dracthyr" or raceFilename == "Worgen" then
-        function TransitionAPI.SetModelByUnit(model, unit)
-            local arg = C_UnitAuras.WantsAlteredForm(unit);
-            model:SetUnit(unit, true, arg);
-            model.unit = unit;
-        end
+    local _, RACE_FILE_NAME = UnitRace("player");
 
+    if RACE_FILE_NAME == "Dracthyr" or RACE_FILE_NAME == "Worgen" then
         function TransitionAPI.IsPlayerInAlteredForm()      --#15
-            if C_UnitAuras.WantsAlteredForm("player") then
+            if WantsAlteredForm("player") then
                 return
             else
                 return true

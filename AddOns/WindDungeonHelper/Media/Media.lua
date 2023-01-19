@@ -60,14 +60,48 @@ do
 	end
 end
 
+function F.GetClassIconStyleList()
+	return {"flat", "flatborder", "flatborder2", "round", "square", "warcraftflat"}
+end
+
+function F.GetClassIconWithStyle(class, style)
+	if not class or not F.In(strupper(class), _G.CLASS_SORT_ORDER) then
+		return
+	end
+
+	if not style or not F.In(style, F.GetClassIconStyleList()) then
+		return
+	end
+
+	return MediaPath .. "Icons/ClassIcon/" .. strlower(class) .. "_" .. style .. ".tga"
+end
+
+function F.GetClassIconStringWithStyle(class, style, width, height)
+	local path = F.GetClassIconWithStyle(class, style)
+	if not path then
+		return
+	end
+
+	if not width and not height then
+		return format("|T%s:0|t", path)
+	end
+
+	if not height then
+		height = width
+	end
+
+	return format("|T%s:%d:%d:0:0:64:64:0:64:0:64|t", path, height, width)
+end
+
 AddMedia("sunUITank", "SunUI/Tank.tga", "Icons")
 AddMedia("sunUIHealer", "SunUI/Healer.tga", "Icons")
 AddMedia("sunUIDPS", "SunUI/DPS.tga", "Icons")
 
 AddMedia("discord", "Discord.tga", "Icons")
-AddMedia("qq", "QQ.tga", "Icons")
 AddMedia("github", "Github.tga", "Icons")
 AddMedia("nga", "NGA.tga", "Icons")
+AddMedia("qq", "QQ.tga", "Icons")
+AddMedia("kook", "KOOK.tga", "Icons")
 
 AddMedia("donateKofi", "Ko-fi.tga", "Icons")
 AddMedia("donateAiFaDian", "AiFaDian.tga", "Icons")

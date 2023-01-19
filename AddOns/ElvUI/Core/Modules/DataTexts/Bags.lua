@@ -3,18 +3,21 @@ local DT = E:GetModule('DataTexts')
 
 local format = format
 local strjoin = strjoin
-local GetBagName = GetBagName
 local ToggleAllBags = ToggleAllBags
-local GetContainerNumFreeSlots = GetContainerNumFreeSlots
-local GetContainerNumSlots = GetContainerNumSlots
 local GetInventoryItemQuality = GetInventoryItemQuality
 local GetInventoryItemTexture = GetInventoryItemTexture
 local GetItemQualityColor = GetItemQualityColor
+
+local GetBagName = GetBagName or (C_Container and C_Container.GetBagName)
+local GetContainerNumFreeSlots = GetContainerNumFreeSlots or (C_Container and C_Container.GetContainerNumFreeSlots)
+local GetContainerNumSlots = GetContainerNumSlots or (C_Container and C_Container.GetContainerNumSlots)
+local ContainerIDToInventoryID = ContainerIDToInventoryID or (C_Container and C_Container.ContainerIDToInventoryID)
+
 local MAX_WATCHED_TOKENS = MAX_WATCHED_TOKENS or 3
-local NUM_BAG_SLOTS = NUM_BAG_SLOTS
+local NUM_BAG_SLOTS = NUM_BAG_SLOTS + (E.Retail and 1 or 0) -- add the profession bag
 local CURRENCY = CURRENCY
 
-local displayString, lastPanel = ''
+local displayString = ''
 local iconString = '|T%s:14:14:0:0:64:64:4:60:4:60|t  %s'
 local BAG_TYPES = {
 	[0x0001] = 'Quiver',
@@ -23,8 +26,6 @@ local BAG_TYPES = {
 }
 
 local function OnEvent(self)
-	lastPanel = self
-
 	local free, total = 0, 0
 	for i = 0, NUM_BAG_SLOTS do
 		local freeSlots, bagType = GetContainerNumFreeSlots(i)
@@ -57,7 +58,7 @@ local function OnEnter()
 		if bagName then
 			local numSlots = GetContainerNumSlots(i)
 			local freeSlots, bagType = GetContainerNumFreeSlots(i)
-			local usedSlots, invID = numSlots - freeSlots, 19 + i
+			local usedSlots = numSlots - freeSlots
 			local r, g, b, r2, g2, b2, icon
 
 			if BAG_TYPES[bagType] then -- reverse for ammo bags
@@ -67,8 +68,9 @@ local function OnEnter()
 			end
 
 			if i > 0 then
-				r, g, b = GetItemQualityColor(GetInventoryItemQuality('player', invID) or 1)
-				icon = GetInventoryItemTexture('player', invID)
+				local id = ContainerIDToInventoryID(i)
+				r, g, b = GetItemQualityColor(GetInventoryItemQuality('player', id) or 1)
+				icon = GetInventoryItemTexture('player', id)
 			end
 
 			DT.tooltip:AddDoubleLine(format(iconString, icon or E.Media.Textures.Backpack, bagName), format('%d / %d', usedSlots, numSlots), r or 1, g or 1, b or 1, r2, g2, b2)
@@ -95,15 +97,14 @@ local function OnEnter()
 	DT.tooltip:Show()
 end
 
-local function ValueColorUpdate(hex)
+local function ValueColorUpdate(self, hex)
 	local textFormat = E.global.datatexts.settings.Bags.textFormat
 	local noLabel = E.global.datatexts.settings.Bags.NoLabel and ''
 	local labelString = noLabel or (E.global.datatexts.settings.Bags.Label ~= '' and E.global.datatexts.settings.Bags.Label) or strjoin('', L["Bags"], ': ')
 
 	displayString = strjoin('', labelString, hex, (textFormat == 'FREE' or textFormat == 'USED') and '%d|r' or '%d/%d|r')
 
-	if lastPanel then OnEvent(lastPanel) end
+	OnEvent(self)
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 DT:RegisterDatatext('Bags', nil, {'BAG_UPDATE'}, OnEvent, nil, OnClick, OnEnter, nil, L["Bags"], nil, ValueColorUpdate)

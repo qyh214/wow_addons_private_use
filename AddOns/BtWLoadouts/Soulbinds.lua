@@ -2,7 +2,6 @@ local ADDON_NAME,Internal = ...
 local L = Internal.L
 
 local GetActiveCovenantID = C_Covenants.GetActiveCovenantID
-local GetCovenantIDs = C_Covenants.GetCovenantIDs
 local GetCovenantData = C_Covenants.GetCovenantData
 local ActivateSoulbind = C_Soulbinds.ActivateSoulbind
 local GetActiveSoulbindID = C_Soulbinds.GetActiveSoulbindID
@@ -51,7 +50,7 @@ function BtWLoadoutsSoulbindDropDownMixin:Init(level, menuList)
 			UIDropDownMenu_AddButton(info, level);
 		end
 
-        for _,covenantID in ipairs(GetCovenantIDs()) do
+        for covenantID = 1,4 do
             local covenantData = GetCovenantData(covenantID)
 
             info.text = covenantData.name;
@@ -314,7 +313,7 @@ local function CheckErrors(errorState, set)
 end
 
 local genericSoulbindSets = {}
-for _,covenantID in ipairs(GetCovenantIDs()) do
+for covenantID = 1,4 do
     local covenantData = GetCovenantData(covenantID)
     for index,soulbindID in ipairs(covenantData.soulbindIDs) do
         local soulbindData = GetSoulbindData(soulbindID)
@@ -2817,7 +2816,7 @@ function BtWLoadoutsConduitListMixin:OnLoad()
 			return (#elementData.conduitDatas * buttonHeight) + expandedExtent;
 		end
 	end);
-    if Internal.IsDragonflight() then
+    if Internal.IsDragonflightPatch then
         view:SetElementInitializer("BtWLoadoutsConduitListSectionTemplate", function(list, elementData)
             list:Init(self.owner, elementData);
         end);

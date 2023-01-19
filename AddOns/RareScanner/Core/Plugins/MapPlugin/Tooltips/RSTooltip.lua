@@ -52,6 +52,7 @@ end
 function cellPrototype:SetupCell(cell, args)
 	local parentPin, POI, groupTooltip = unpack(args)
 	self.pin = pinFramePool:Acquire()
+	self.pin.dataProvider = parentPin.dataProvider
 	self.pin:SetParent(self)
 	self.pin:SetAllPoints(self)
 	function self.pin:GetMap()
@@ -74,9 +75,8 @@ function cellPrototype:SetupCell(cell, args)
 	end)
 	self.pin.POI = POI
 	self.pin.Texture:SetTexture(POI.Texture)
-	--self.pin.Texture:SetScale(RSConfigDB.GetIconsWorldMapScale() - 0.3)
-	-- So far leave the scale static, lets see what people think
 	self.pin.Texture:SetScale(0.7)
+	--MapPinHighlight_CheckHighlightPin(self.pin:GetHighlightType(), self.pin, self.pin.Texture, AREAPOI_HIGHLIGHT_PARAMS);
 	self.pin:Show()
 	return self.pin:GetWidth(), self.pin:GetHeight()
 end
@@ -125,7 +125,6 @@ local function showItemComparationTooltip(cell)
 		ItemToolTipComp2:SetScale(RSConfigDB.GetWorldMapLootAchievTooltipsScale())
 		ItemToolTipComp1:SetFrameLevel(2100)
 		ItemToolTipComp2:SetFrameLevel(2100)
-		GameTooltip_OnTooltipSetShoppingItem(ItemToolTip)
 		GameTooltip_ShowCompareItem(ItemToolTip)
 		cell:SetPropagateKeyboardInput(false)
 	else
@@ -282,7 +281,7 @@ local function AddAchievementTooltip(tooltip, pin, addSeparator)
 		end
 
 		-- fill with white spaces
-		if (j < 9) then
+		if (j <= 9) then
 			tooltip:SetCell(line, j+1, " ", nil, "LEFT", 10-j, nil, nil, nil, nil, 30 * (10 - j), 30 * (10 - j))
 		end
 		
@@ -364,7 +363,7 @@ local function AddLootTooltip(tooltip, pin)
 			end
 
 			-- fill with white spaces
-			if (j < 9) then
+			if (j <= 9) then
 				tooltip:SetCell(line, j+1, " ", nil, "LEFT", 10-j, nil, nil, nil, nil, 30 * (10 - j), 30 * (10 - j))
 			end
 
@@ -482,8 +481,8 @@ local function AddFilterTooltip(tooltip, pin, addSeparator)
 		return false
 	end
 	
-	-- Skip if worldmap icon
-	if (pin.POI.worldmap) then
+	-- Skip if dragon glyph
+	if (pin.POI.isDragonGlyph) then
 		return false
 	end
 	

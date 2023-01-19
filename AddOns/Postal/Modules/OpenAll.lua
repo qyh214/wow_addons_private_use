@@ -22,6 +22,17 @@ local invFull, invAlmostFull
 local openAllOverride
 local firstMailDaysLeft
 
+-- WoW 10.0 Release Show/Hide Frame Handlers
+function Postal_OpenAll:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then Postal_OpenAll:MAIL_SHOW() end
+end
+
+function Postal_OpenAll:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then Postal_OpenAll:MAIL_CLOSED() end
+end
+
 -- Frame to process opening mail
 local updateFrame = CreateFrame("Frame")
 updateFrame:Hide()
@@ -113,7 +124,11 @@ function Postal_OpenAll:OnEnable()
 		Postal_OpenAllMenuButton:SetFrameLevel(Postal_OpenAllMenuButton:GetFrameLevel() + 1)
 	end
 
-	self:RegisterEvent("MAIL_SHOW")
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		self:RegisterEvent("MAIL_SHOW")
+	else
+		Postal_OpenAll:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+	end
 	-- For enabling after a disable
 	OpenAllMail:Hide() -- hide Blizzard's Open All button
 	button:Show()
@@ -130,8 +145,15 @@ function Postal_OpenAll:OnDisable()
 end
 
 function Postal_OpenAll:MAIL_SHOW()
-	self:RegisterEvent("MAIL_CLOSED", "Reset")
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		self:RegisterEvent("MAIL_CLOSED", "Reset")
+	else
+		Postal_OpenAll:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", "Reset")
+	end
 	self:RegisterEvent("PLAYER_LEAVING_WORLD", "Reset")
+end
+
+function Postal_OpenAll:MAIL_CLOSED()
 end
 
 function Postal_OpenAll:OpenAll(isRecursive)
@@ -257,7 +279,12 @@ function Postal_OpenAll:ProcessNext()
 		if attachIndex > 0 and not invFull and Postal.db.profile.OpenAll.KeepFreeSpace>0 then
 			local free=0
 			for bag=0,NUM_BAG_SLOTS do
-				local bagFree,bagFam = GetContainerNumFreeSlots(bag)
+				local bagFree, bagFam
+				if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+					bagFree, bagFam = GetContainerNumFreeSlots(bag)
+				else
+					bagFree, bagFam = C_Container.GetContainerNumFreeSlots(bag)
+				end
 				if bagFam==0 then
 					free = free + bagFree
 				end
@@ -280,8 +307,27 @@ function Postal_OpenAll:ProcessNext()
 			local stackSize = select(8, GetItemInfo(link))
 			if itemID and stackSize and GetItemCount(itemID) > 0 then
 				for bag = 0, NUM_BAG_SLOTS do
-					for slot = 1, GetContainerNumSlots(bag) do
-						local texture2, count2, locked2, quality2, readable2, lootable2, link2 = GetContainerItemInfo(bag, slot)
+					local ContainerNumSlots
+					if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+						ContainerNumSlots = GetContainerNumSlots(bag)
+					else
+						ContainerNumSlots = C_Container.GetContainerNumSlots(bag)
+					end
+					for slot = 1, ContainerNumSlots do
+						local count2, link2
+						if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+							count2 = select(2, GetContainerItemInfo(bag, slot))
+							link2 = select(7, GetContainerItemInfo(bag, slot))
+						else
+							if C_Container and C_Container.GetContainerItemInfo(bag, slot) then
+								local itemInfo = C_Container.GetContainerItemInfo(bag, slot)
+								count2 = itemInfo.stackCount
+								link2 = itemInfo.hyperlink
+							else
+								count2 = 0
+								link2 = nil
+							end
+						end
 						if link2 then
 							local itemID2 = strmatch(link2, "item:(%d+)")
 							if itemID == itemID2 and count + count2 <= stackSize then
@@ -353,8 +399,12 @@ function Postal_OpenAll:Reset(event)
 	button:SetText(L["Open All"])
 	Postal:DisableInbox()
 	InboxFrame_Update()
-	if event == "MAIL_CLOSED" or event == "PLAYER_LEAVING_WORLD" then
-		self:UnregisterEvent("MAIL_CLOSED")
+	if event == "MAIL_CLOSED" or event == "PLAYER_LEAVING_WORLD" or (event == "PLAYER_INTERACTION_MANAGER_FRAME_HIDE" and paneType == Enum.PlayerInteractionType.MailInfo) then
+		if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+			self:UnregisterEvent("MAIL_CLOSED")
+		else
+			self:UnregisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+		end
 		self:UnregisterEvent("PLAYER_LEAVING_WORLD")
 	end
 end

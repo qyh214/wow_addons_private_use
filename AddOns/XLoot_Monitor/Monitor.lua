@@ -100,7 +100,7 @@ end
 
 local events = {}
 function events.item(player, link, num)
-	if link and link:match("|Hitem:") then -- Proper items	
+	if link and link:match("|Hitem:") then -- Proper items
 		local name, _, quality, level, _, _, _, _, _, icon = GetItemInfo(link)
 		if not name or type(quality) ~= "number" then
 			print(name and "Quality is not a number" or "Name is nil")

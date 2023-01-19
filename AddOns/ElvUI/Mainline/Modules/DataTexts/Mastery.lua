@@ -7,8 +7,9 @@ local GetSpecialization = GetSpecialization
 local GetSpecializationMasterySpells = GetSpecializationMasterySpells
 local STAT_CATEGORY_ENHANCEMENTS = STAT_CATEGORY_ENHANCEMENTS
 local STAT_MASTERY = STAT_MASTERY
+local CreateBaseTooltipInfo = CreateBaseTooltipInfo
 
-local displayString, lastPanel = ''
+local displayString = ''
 
 local function OnEnter()
 	DT.tooltip:ClearLines()
@@ -17,11 +18,24 @@ local function OnEnter()
 	if primaryTalentTree then
 		local masterySpell, masterySpell2 = GetSpecializationMasterySpells(primaryTalentTree)
 		if masterySpell then
-			DT.tooltip:AddSpellByID(masterySpell)
+			if CreateBaseTooltipInfo then
+				local tooltipInfo = CreateBaseTooltipInfo('GetSpellByID', masterySpell)
+				tooltipInfo.append = true
+				DT.tooltip:ProcessInfo(tooltipInfo)
+			else
+				DT.tooltip:AddSpellByID(masterySpell)
+			end
 		end
 		if masterySpell2 then
 			DT.tooltip:AddLine(' ')
-			DT.tooltip:AddSpellByID(masterySpell2)
+
+			if CreateBaseTooltipInfo then
+				local tooltipInfo = CreateBaseTooltipInfo('GetSpellByID', masterySpell2)
+				tooltipInfo.append = true
+				DT.tooltip:ProcessInfo(tooltipInfo)
+			else
+				DT.tooltip:AddSpellByID(masterySpell2)
+			end
 		end
 
 		DT.tooltip:Show()
@@ -29,8 +43,6 @@ local function OnEnter()
 end
 
 local function OnEvent(self)
-	lastPanel = self
-
 	local masteryRating = GetMasteryEffect()
 	if E.global.datatexts.settings.Mastery.NoLabel then
 		self.text:SetFormattedText(displayString, masteryRating)
@@ -39,11 +51,10 @@ local function OnEvent(self)
 	end
 end
 
-local function ValueColorUpdate(hex)
+local function ValueColorUpdate(self, hex)
 	displayString = strjoin('', E.global.datatexts.settings.Mastery.NoLabel and '' or '%s', hex, '%.'..E.global.datatexts.settings.Mastery.decimalLength..'f%%|r')
 
-	if lastPanel then OnEvent(lastPanel) end
+	OnEvent(self)
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 DT:RegisterDatatext('Mastery', STAT_CATEGORY_ENHANCEMENTS, {'MASTERY_UPDATE'}, OnEvent, nil, nil, OnEnter, nil, STAT_MASTERY, nil, ValueColorUpdate)

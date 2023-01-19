@@ -22,7 +22,7 @@ local function SkinRewardIcon(itemFrame)
 	if not itemFrame.IsSkinned then
 		itemFrame:CreateBackdrop('Transparent')
 		itemFrame:DisableDrawLayer('BORDER')
-		itemFrame.Icon:SetPoint('LEFT', 6, 0)
+		itemFrame.Icon:Point('LEFT', 6, 0)
 		S:HandleIcon(itemFrame.Icon, true)
 		itemFrame.backdrop:SetBackdropBorderColor(IconColor.r, IconColor.g, IconColor.b)
 		itemFrame.IsSkinned = true
@@ -71,10 +71,16 @@ function S:Blizzard_WeeklyRewards()
 
 	if E.private.skins.parchmentRemoverEnable then
 		frame:StripTextures()
+		frame.NineSlice:Kill()
+		frame.BackgroundTile:SetAlpha(0)
 		frame:SetTemplate('Transparent')
 
 		header:StripTextures()
 		header:SetTemplate('Transparent')
+		header.Left:SetAlpha(0)
+		header.Center:SetAlpha(0)
+		header.Right:SetAlpha(0)
+		header.Middle:SetAlpha(0)
 		header:ClearAllPoints()
 		header:Point('TOP', 1, -42)
 	end

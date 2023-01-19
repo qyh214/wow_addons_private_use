@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local EEL = E:GetModule('ElvuiEnhancedAgain')
 local M = E:GetModule('Minimap')
 local ML = E:NewModule('MinimapLocation', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
@@ -6,6 +6,7 @@ local ML = E:NewModule('MinimapLocation', 'AceHook-3.0', 'AceEvent-3.0', 'AceTim
 
 local init = false
 local cluster, panel, location, xMap, yMap
+local mmScale = E.db.general.minimap.scale
 
 local digits ={
 	[0] = { .5, '%.0f' },
@@ -35,34 +36,34 @@ local function CreateEnhancedMaplocation()
 
 	panel = CreateFrame('Frame', 'EnhancedLocationPanel', _G['MinimapCluster'], 'BackdropTemplate')
 	panel:SetFrameStrata("BACKGROUND")
-	panel:Point("CENTER", E.UIParent, "CENTER", 0, 0)
-	panel:Size(206, 22)
+	panel:Point("CENTER", M.MapHolder, "CENTER", 0, 0)
+	panel:Size(220, 22)
 
 	xMap = CreateFrame('Frame', "MapCoordinatesX", panel, 'BackdropTemplate')
 	xMap:SetTemplate('Transparent')
-	xMap:Point('LEFT', panel, 'LEFT', 2, 0)
-	xMap:Size(40, 22)
+	xMap:Point('LEFT', panel, 'LEFT', 0, 0)
+	xMap:Size(36 , 22 / mmScale)
 	
 	xMap.text = xMap:CreateFontString(nil, "OVERLAY")
-	xMap.text:FontTemplate(E.media.font, 12, "OUTLINE")
+	xMap.text:FontTemplate(E.media.font, 12 / mmScale, "OUTLINE")
 	xMap.text:SetAllPoints(xMap)
 
 	location = CreateFrame('Frame', "EnhancedLocationText", panel, 'BackdropTemplate')
 	location:SetTemplate('Transparent')
 	location:Point('CENTER', panel, 'CENTER', 0, 0)
-	location:Size(126, 22)
+	location:Size(150, 22 / mmScale)
 	
 	location.text = location:CreateFontString(nil, "OVERLAY")
-	location.text:FontTemplate(E.media.font, 12, "OUTLINE")
+	location.text:FontTemplate(E.media.font, 12 / mmScale, "OUTLINE")
 	location.text:SetAllPoints(location)
 
 	yMap = CreateFrame('Frame', "MapCoordinatesY", panel, 'BackdropTemplate')
 	yMap:SetTemplate('Transparent')
-	yMap:Point('RIGHT', panel, 'RIGHT', -2.5, 0)
-	yMap:Size(40, 22)
+	yMap:Point('RIGHT', panel, 'RIGHT', 0, 0)
+	yMap:Size(36, 22 / mmScale)
 
 	yMap.text = yMap:CreateFontString(nil, "OVERLAY")
-	yMap.text:FontTemplate(E.media.font, 12, "OUTLINE")
+	yMap.text:FontTemplate(E.media.font, 12 / mmScale, "OUTLINE")
 	yMap.text:SetAllPoints(yMap)	
 end
 
@@ -108,11 +109,12 @@ function ML:CreateFrame()
 		M:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end
 
-	local holder = _G['MMHolder']
-	panel:SetPoint('BOTTOMLEFT', holder, 'TOPLEFT', -(E.PixelMode and 3 or 4), -(E.PixelMode and 3 or 2))
-	panel:Size(holder:GetWidth() + (E.PixelMode and 5 or 7), 22) 
+	--local holder = _G['MMHolder']
+	local holder = M.MapHolder
+	panel:SetPoint('BOTTOMLEFT', holder, 'TOPLEFT', 0, 0)
+	panel:Size(holder:GetWidth() / mmScale, 22 / mmScale) 
 	panel:Show()
-	location:Width(holder:GetWidth() - 77)
+	location:Width(panel:GetWidth() - 70)
 
 	local point, relativeTo, relativePoint, xOfs, yOfs = holder:GetPoint()
 
@@ -125,7 +127,7 @@ function ML:CreateFrame()
 		holder:SetPoint(point, relativeTo, relativePoint, 0, 0)
 		panel:SetScript('OnUpdate', nil)
 		panel:Hide()
-	end
+	end	
 end
 
 local function StartHooks()

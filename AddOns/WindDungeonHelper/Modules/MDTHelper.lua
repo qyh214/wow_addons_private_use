@@ -12,14 +12,19 @@ local ReloadUI = ReloadUI
 local C_Timer_After = C_Timer.After
 
 local currentPatchMaps = {
-    [9] = true, -- Return to Karazhan: Lower
-    [10] = true, -- Return to Karazhan: Upper
-    [25] = true, -- Operation: Mechagon - Junkyard
-    [26] = true, -- Operation: Mechagon - Workshop
-    [37] = true, -- Tazavesh: Streets of Wonder
-    [38] = true, -- Tazavesh: So'leah's Gambit
-    [40] = true, -- Grimrail Depot
-    [41] = true -- Iron Docks
+    -- Dragonflight
+    [3] = true, -- Court of Stars
+    [6] = true, -- Halls of Valor
+    [42] = true, -- Ruby Life Pools
+    [43] = true, -- The Nokhud Offensive
+    [44] = true, -- The Azure Vault
+    [45] = true, -- Algeth’ar Academy
+    [46] = true, -- Shadowmoon Burial Grounds
+    [47] = true, -- Temple of the Jade Serpent
+    [48] = true, -- Brackenhide Hollow
+    [49] = true, -- Halls of Infusion
+    [50] = true, -- Neltharus
+    [51] = true, -- Uldaman: Legacy of Tyr
 }
 
 function MH:Translate()

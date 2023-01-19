@@ -20,11 +20,11 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	warnSpecial			= "Сообщить о применении Урагана/Зефира/Вихря стали",--Special abilities hurricane, sleet storm, zephyr(which are on shared cast/CD)
-	specWarnSpecial		= "Спец-предупреждение о применении особых способностя",
+	specWarnSpecial		= "Спецпредупреждение о применении особых способностя",
 	timerSpecial		= "Отсчет времени до восстановления особых способностей",
 	timerSpecialActive	= "Отсчет времени действия особых способностей",
 	warnSpecialSoon		= "Показывать предупреждение за 10 секунд до применения особых способностей",
-	OnlyWarnforMyTarget	= "Показывать только таймеры/предупреждения для текуйщей цели и фокуса<br/>(Скрывает все остальное. ВКЛЮЧАЯ ПУЛЛ)"
+	OnlyWarnforMyTarget	= "Показывать только таймеры/предупреждения для текущей цели и фокуса<br/>(Скрывает все остальное. ВКЛЮЧАЯ ПУЛЛ)"
 })
 
 L:SetMiscLocalization({
@@ -43,5 +43,5 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	LightningRodIcon= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(89668),
 	TimerFeedback	= "Отсчет времени действия $spell:87904",
-	RangeFrame		= "Показывать окно проверки дистанции (20), когда на вас $spell:89668"
+	RangeFrame		= "Показывать окно проверки дистанции (20м), когда на Вас $spell:89668"
 })

@@ -1,44 +1,110 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RSA", "koKR")
 if not L then return end
-L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = "메세지를 추가하고 싶으면, 아래에 있는 |cffFFD100새 메세지 추가|r 부분에 추가하세요. 만약 메세지가 하나도 없다면, 해당 주문의 알림이 표시되지 않습니다."
-L[" is Missing!"] = " 사라짐!"
-L[" Refreshed!"] = " 재활성됨!"
-L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = " RSA는 이 부분에서 무작위로 메시지를 선택합니다. 메시지를 제거하려면 내용을 지우고 엔터키를 누르세요. 메시지가 없으면, 이 부분에 대해 아무것도 알리지 않습니다."
+L[" If you wish to add a message for this section, enter it above in the |cffFFD100Add New Message|r box. As no messages exist, nothing will be announced for this section."] = "메세지를 추가하고 싶으면, 아래에 있는 |cffFFD100새로운 메세지 추가|r 부분에서 추가하세요. 만약 메세지가 하나도 없다면, 해당 주문의 알림이 표시되지 않습니다."
+L[" RSA will choose a message from this section at random, if you wish to remove a message, delete the contents and press enter. If no messages exist, nothing will be announced for this section."] = " RSA는 작성된 메시지 중 무작위로 선택하여 알립니다. 메시지를 제거하려면 내용을 지우고 엔터키를 누르세요. 메시지가 없으면, 아무것도 알리지 않습니다."
 L["%s can only function inside instances since 8.2.5."] = "%s는 8.2.5이후 인스턴스 안에서만 작동합니다."
-L["%s is disabled. If you want to configure RSA, you need to enable it."] = "%s는 비활성화 상태입니다. RSA 설정을 변경하고 싶다면 활성화하십시오."
-L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r - 누군가에게 귓속말이 올 경우 이것으로 대체됩니다."
-L["|cff91BE0F/instance|r if you're in an instance group such as when in LFR or Battlegrounds."] = "|cff91BE0F/instance|r - 공격대찾기나 전장같은 인스턴스 그룹"
+--[[Translation missing --]]
+L["%s only while grouped"] = "%s only while grouped"
+L["|c5500DBBD[TARGET]|r will be replaced with this when whispering someone."] = "|c5500DBBD[TARGET]|r - 누군가에게 귓속말할 경우 이것으로 대체됩니다."
+L["|cff91BE0F/instance|r if you're in an instance group such as when in LFR or Battlegrounds."] = "|cff91BE0F/instance|r - 공격대 찾기나 전장과 같은 인스턴스 그룹"
 L["|cff91BE0F/party|r if you're in a manually formed group."] = "|cff91BE0F/party|r - 직접 형성된 파티"
 L["|cff91BE0F/raid|r if you're in a manually formed raid."] = "|cff91BE0F/raid|r - 직접 형성된 공격대"
 L["|cffFFCC00Whispers|r the target of the spell."] = "|cffFFCC00Whispers|r - 주문 대상에게 귓속말을 합니다."
-L["AcceptedRess"] = "대상 수락"
-L["Add New Message"] = "새 메시지 추가"
+--[[Translation missing --]]
+L["A custom description for this announcement in the options menu. Leave blank to use the spell name for the spell in the Spell ID field."] = "A custom description for this announcement in the options menu. Leave blank to use the spell name for the spell in the Spell ID field."
+--[[Translation missing --]]
+L["A custom name for this announcement in the options menu. Leave blank to use the spell name for the spell in the Spell ID field."] = "A custom name for this announcement in the options menu. Leave blank to use the spell name for the spell in the Spell ID field."
+--[[Translation missing --]]
+L["A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Immune."] = "A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Immune."
+--[[Translation missing --]]
+L["A Fake event supplied by RSA to that occurs when a player accepts a ressurect."] = "A Fake event supplied by RSA to that occurs when a player accepts a ressurect."
+--[[Translation missing --]]
+L["A Fake event supplied by RSA to trigger an announcement after a set number of seconds. Useful when a spell doesn't have an appropriate combat log event to track when it expires. You can modify the duration in the Spell Setup tab."] = "A Fake event supplied by RSA to trigger an announcement after a set number of seconds. Useful when a spell doesn't have an appropriate combat log event to track when it expires. You can modify the duration in the Spell Setup tab."
+--[[Translation missing --]]
+L["Accepted Resurrect"] = "Accepted Resurrect"
+--[[Translation missing --]]
+L["Add a Spell"] = "Add a Spell"
+--[[Translation missing --]]
+L["Add Announcement"] = "Add Announcement"
+--[[Translation missing --]]
+L["Add Event"] = "Add Event"
+L["Add New Message"] = "새로운 메시지 추가"
+--[[Translation missing --]]
+L["Additional Spell IDs"] = "Additional Spell IDs"
+--[[Translation missing --]]
+L["Advanced Mode"] = "Advanced Mode"
+--[[Translation missing --]]
+L["Allow announcements if you are in combat."] = "Allow announcements if you are in combat."
+--[[Translation missing --]]
+L["Allow announcements if you are not in combat."] = "Allow announcements if you are not in combat."
+--[[Translation missing --]]
+L["Allow announcements in /%s only when you are in a group."] = "Allow announcements in /%s only when you are in a group."
+--[[Translation missing --]]
+L["Allows whispers to ignore the %s and %s location options on this page. Does not ignore %s."] = "Allows whispers to ignore the %s and %s location options on this page. Does not ignore %s."
 L["Always allow Whispers"] = "항상 귓속말 허용"
-L["Always allow whispers to be sent, ignoring the PvP and PvE Options on this page."] = "이 페이지에서 PvP 및 PvE 옵션을 무시하고 항상 귓속말을 보내도록 허용하십시오."
 L["Always uses spell target's name"] = "항상 대상의 이름을 사용합니다."
-L["Announce to custom channels only while you are in a manually formed group."] = "사용자 구성 그룹에 있는 동안에만 사설 채널에 알립니다."
+--[[Translation missing --]]
+L["Announcements"] = "Announcements"
+--[[Translation missing --]]
+L["Are you sure you want to remove this spell ID?"] = "Are you sure you want to remove this spell ID?"
+--[[Translation missing --]]
+L["Aura Applied"] = "Aura Applied"
+--[[Translation missing --]]
+L["Aura Removed"] = "Aura Removed"
+--[[Translation missing --]]
+L["Basic Spell Settings"] = "Basic Spell Settings"
+--[[Translation missing --]]
+L["Cannot configure while in combat."] = "Cannot configure while in combat."
 L["Cast"] = "시전"
+--[[Translation missing --]]
+L["Caster & Target Settings"] = "Caster & Target Settings"
 L["Cauldrons"] = "가마솥"
+--[[Translation missing --]]
+L["CC Broken"] = "CC Broken"
 L["Channel Name"] = "채널 이름"
-L["Class Abilities"] = "직업 능력"
-L["Configuring"] = "구성 중"
-L["Corpse of "] = "의 시체"
-L["Couldn't find target for Soulstone."] = "영혼석의 대상을 찾을 수 없음."
+--[[Translation missing --]]
+L["Channel Options"] = "Channel Options"
+--[[Translation missing --]]
+L["Combat Log Events"] = "Combat Log Events"
+--[[Translation missing --]]
+L["Configure each spell's announcement settings, such as what channels to announce in and what messages to send."] = "Configure each spell's announcement settings, such as what channels to announce in and what messages to send."
+--[[Translation missing --]]
+L["Configure how this spell functions."] = "Configure how this spell functions."
+--[[Translation missing --]]
+L["Configuring:|r %s"] = "Configuring:|r %s"
+--[[Translation missing --]]
+L["Control the areas of the game that RSA is allowed announce in."] = "Control the areas of the game that RSA is allowed announce in."
+--[[Translation missing --]]
+L["Control the areas of the game this spell is allowed to be announced."] = "Control the areas of the game this spell is allowed to be announced."
+--[[Translation missing --]]
+L["Current Messages:"] = "Current Messages:"
 L["Current Version: %s"] = "현재 버전: %s"
 L["Curseforge"] = true
-L["Custom Channel"] = "사설 채널"
+--[[Translation missing --]]
+L["Custom Caster"] = "Custom Caster"
+--[[Translation missing --]]
+L["Custom Description"] = "Custom Description"
+--[[Translation missing --]]
+L["Custom Name"] = "Custom Name"
+--[[Translation missing --]]
+L["Custom Target"] = "Custom Target"
 L["Damage"] = "피해"
-L["DamageAbsorb"] = "흡수한 피해"
-L["Debuff"] = "약화 효과"
+--[[Translation missing --]]
+L["Damage Absorb"] = "Damage Absorb"
+--[[Translation missing --]]
+L["Disabled Channels"] = "Disabled Channels"
 L["Discord"] = "디스코드"
 L["Dispel"] = "해제"
+--[[Translation missing --]]
+L["Dispel Resist"] = "Dispel Resist"
 L["Does not affect Immune, Immune will always use its own replacement."] = "면역에 영향을 미치지 않습니다. 면역은 항상 고유 대체어를 사용할 것입니다."
 L["Drums"] = "산의 북"
-L["EffectAbsorb"] = "흡수한 약화 효과"
-L["Emote"] = "감정 표현"
-L["Enable Buff Reminder Module"] = "버프 유지 확인 모듈 사용"
+--[[Translation missing --]]
+L["Duration"] = "Duration"
 L["Enable in Arenas"] = "투기장에서 사용"
 L["Enable in Battlegrounds"] = "전장에서 사용"
+--[[Translation missing --]]
+L["Enable in Combat"] = "Enable in Combat"
 L["Enable in Dungeons"] = "던전에서 사용"
 L["Enable in Group Finder Dungeons"] = "던전 찾기 그룹에서 사용"
 L["Enable in Group Finder Raids"] = "공격대 찾기 그룹에서 사용"
@@ -47,109 +113,193 @@ L["Enable in manually formed raid groups."] = "사용자 구성 공격대에서 
 L["Enable in Raid Instances"] = "공격대 인스턴스에서 사용"
 L["Enable in scenario instances."] = "시나리오 인스턴스에서 사용합니다."
 L["Enable in Scenarios"] = "시나리오에서 사용"
-L["Enable in the non-instanced world area when playing with War Mode disabled."] = "전쟁 모드를 끈 채로 플레이 중인 경우 비인스턴스 필드 영역에서 사용합니다."
+--[[Translation missing --]]
+L["Enable in the non-instanced world area when playing with PvP %s."] = "Enable in the non-instanced world area when playing with PvP %s."
+--[[Translation missing --]]
+L["Enable in the non-instanced world area when playing with War Mode %s."] = "Enable in the non-instanced world area when playing with War Mode %s."
 L["Enable in the World"] = "필드에서 사용"
-L["Enable in the world area if you have War Mode active."] = "전쟁 모드가 활성화 중이면 필드 영역에서 사용합니다."
 L["Enable in War Mode"] = "전쟁 모드에서 사용"
-L["Enable Only in Combat"] = "전투 중에만 사용"
+--[[Translation missing --]]
+L["Enable out of Combat"] = "Enable out of Combat"
 L["End"] = "끝"
+--[[Translation missing --]]
+L["Environments"] = "Environments"
+--[[Translation missing --]]
+L["Event unique spell ID"] = "Event unique spell ID"
+--[[Translation missing --]]
+L["Exposes more options to allow custom setup of spells."] = "Exposes more options to allow custom setup of spells."
 L["Failed"] = "실패"
 L["Feasts"] = "푸짐한 선장의 잔칫상"
 L["Feedback"] = "피드백"
-L["General"] = "일반"
 L["General Replacement"] = "일반 대체어"
+--[[Translation missing --]]
+L["Group Announcement"] = "Group Announcement"
 L["Heal"] = "치유"
+--[[Translation missing --]]
+L["How long before this fake event triggers after any other event for this spell has been processed."] = "How long before this fake event triggers after any other event for this spell has been processed."
 L["If selected, |c5500DBBD[MISSTYPE]|r will always use the General Replacement set below."] = "선택하면, |c5500DBBD[MISSTYPE]|r은 항상 아래 일반 대체어를 사용합니다."
 L["If selected, |c5500DBBD[TARGET]|r will always use the spell target's name, rather than using the input below for whispers."] = "선택하면, |c5500DBBD[TARGET]|r은 귓속말에 아래 입력을 사용하지 않고 항상 주문 대상의 이름을 사용합니다."
-L["Immune"] = "면역"
-L["Instance"] = "인스턴스"
+--[[Translation missing --]]
+L["If this event uses a different spell ID to the primary one, enter it here."] = "If this event uses a different spell ID to the primary one, enter it here."
+--[[Translation missing --]]
+L["If this spell can trigger multiple events at the same time, such as if it is an AoE spell, you can start the event tracker when you trigger the spell, and set it to end on all events where you want to prevent subsequent announcements. Where multiple events can trigger the final message, you should select Spell Ends on both events."] = "If this spell can trigger multiple events at the same time, such as if it is an AoE spell, you can start the event tracker when you trigger the spell, and set it to end on all events where you want to prevent subsequent announcements. Where multiple events can trigger the final message, you should select Spell Ends on both events."
+--[[Translation missing --]]
+L["If this spell has multiple spell IDs, such as if you are trying to announce different Portals, or if it is modified by a talent which changes its Spell ID, you can enter those additional IDs here. Entering an ID already in the list will prompt you to remove it."] = "If this spell has multiple spell IDs, such as if you are trying to announce different Portals, or if it is modified by a talent which changes its Spell ID, you can enter those additional IDs here. Entering an ID already in the list will prompt you to remove it."
 L["Interrupt"] = "차단"
 L["Invite Link"] = "초대 링크"
-L["Local"] = "개인"
+--[[Translation missing --]]
+L["Killed"] = "Killed"
+--[[Translation missing --]]
+L["List of Additional Spell IDs"] = "List of Additional Spell IDs"
 L["Local Message Output Area"] = "개인 메시지 출력 영역"
-L["Message Announce Area"] = "메시지 알림 영역"
-L["Message Texts"] = "메시지 내용"
-L["missed"] = "빗나감"
+--[[Translation missing --]]
+L["Local Output"] = "Local Output"
+--[[Translation missing --]]
+L["Manage Announcements"] = "Manage Announcements"
+--[[Translation missing --]]
+L["Missing options. Please report this!"] = "Missing options. Please report this!"
 L["Module Settings"] = "모듈 설정"
-L["Only announce if you are in combat."] = "전투 중에만 알립니다."
-L["Only announce in /emote while you are in a group."] = "그룹에 있는 동안 감정 표현( /emote )에만 알립니다."
-L["Only announce in /say while you are in a group."] = "그룹에 있는 동안 일반 대화( /say )에만 알립니다."
-L["Only announce in /yell while you are in a group."] = "그룹에 있는 동안 외침( /yell )에만 알립니다."
-L["Only usable for player created channels, do not use for Blizzard channels such as |cff91BE0F/party|r."] = "사설 채널에서만 사용 가능. |cff91BE0F/파티 (/party)|r와 같은 블리자드 채널에서는 사용 금지."
+--[[Translation missing --]]
+L["No tracking required"] = "No tracking required"
 L["Open Configuration Panel"] = "설정창 열기"
-L["OptionsClass"] = "이 직업에 RSA를 사용하려면, 모듈을 활성화하세요."
-L["OptionsDisabled"] = "모듈이 사용 중지되었습니다."
-L["OptionsMissing"] = "모듈을 찾을 수 없습니다. RSA 폴더를 삭제하고 다운로드하여 다시 설치하세요."
 L["Other Options"] = "기타 옵션"
-L["Party"] = "파티"
-L["Pet Dispels"] = "소환수 해제"
-L["Placed"] = "놓임"
+--[[Translation missing --]]
+L["Prevent duplicate announcements"] = "Prevent duplicate announcements"
+--[[Translation missing --]]
+L["Prevents multiple announcements from occuring within this duration. Useful for abilities that can affect multiple targets at the same time. Select 0 to disable."] = "Prevents multiple announcements from occuring within this duration. Useful for abilities that can affect multiple targets at the same time. Select 0 to disable."
+--[[Translation missing --]]
+L["Prevents multiple RSA users from announcing this spell."] = "Prevents multiple RSA users from announcing this spell."
+--[[Translation missing --]]
+L["Primary spell ID"] = "Primary spell ID"
+--[[Translation missing --]]
+L["Purgatory Cooldown"] = "Purgatory Cooldown"
+--[[Translation missing --]]
+L["PvE"] = "PvE"
 L["PvE Options"] = "PvE 옵션"
+--[[Translation missing --]]
+L["PvP"] = "PvP"
 L["PvP Options"] = "PvP 옵션"
 L["Racials"] = "종족"
-L["Raid"] = "공격대"
+--[[Translation missing --]]
+L["racials"] = "Racials"
+--[[Translation missing --]]
+L["Remove a Spell"] = "Remove a Spell"
 L["Remove Server Names"] = "서버 이름 제거"
+--[[Translation missing --]]
+L["Remove Spell"] = "Remove Spell"
 L["Removes server name from |c5500DBBD[TARGET]|r tags."] = "|c5500DBBD[TARGET]|r 태그에서 서버 이름을 제거합니다"
 L["Repair Bots"] = "야전수리로봇 110G"
 L["Replacement"] = "대체어"
-L["Resist"] = "저항"
-L["Respec Codex"] = "고요한 정신의 전서"
+--[[Translation missing --]]
+L["Resurrect"] = "Resurrect"
+--[[Translation missing --]]
+L["RSA takes the name and description for this to show in the configuration panel if a custom name & description are not set."] = "RSA takes the name and description for this to show in the configuration panel if a custom name & description are not set."
 L["Say"] = "일반 대화"
-L["Send to player created channel."] = "플레이어가 만든 채널로 보냅니다."
 L["Sends a message locally only visible to you. To choose which part of the UI this is displayed in go to the |cff00B2FALocal Message Output Area|r in the General options."] = "자신에게만 보이는 개인 메시지로 보냅니다. UI의 어느 부분에 표시할지 선택하려면 일반 옵션의 |cff00B2FA개인 메시지 출력 영역|r으로 가세요."
 L["Sends a message to one of the following channels in order of priority:"] = "우선 순위에 따라 다음 채널 중 하나에 메시지를 보냅니다:"
 L["Sleeping Mana Potions"] = "원기회복의 물약"
-L["Smart Channel Options"] = "스마트 채널 옵션"
-L["Smart Custom Channel"] = "스마트 사설 채널"
-L["Smart Emote"] = "스마트 감정 표현"
-L["Smart Group Channel"] = "스마트 그룹 채널"
-L["Smart Say"] = "스마트 일반 대화"
-L["Smart Yell"] = "스마트 외침"
-L["Spells"] = "주문"
+--[[Translation missing --]]
+L["Smart Group"] = "Smart Group"
+--[[Translation missing --]]
+L["Spell Ends"] = "Spell Ends"
+--[[Translation missing --]]
+L["Spell ID"] = "Spell ID"
+--[[Translation missing --]]
+L["Spell Setup"] = "Spell Setup"
+--[[Translation missing --]]
+L["Spell Setup for this spell is locked."] = "Spell Setup for this spell is locked."
+--[[Translation missing --]]
+L["Spell Starts"] = "Spell Starts"
+--[[Translation missing --]]
+L["Spell Stolen"] = "Spell Stolen"
 L["Start"] = "시작"
-L["StatueOfTheBlackOx"] = "흑우 광역 조롱"
-L["Success"] = "성공"
+--[[Translation missing --]]
+L["Summon"] = "Summon"
 L["Tag Options"] = "태그 옵션"
-L["The following tags are available for use with this spell:"] = "다음 태그를 이 주문에 사용할 수 있습니다:"
-L["This section requires LibResInfo-1.0 to work. As you don't have it, nothing from this section will announce."] = "이 부분은 작동하는 LibResInfo-1.0 이 필요합니다. 없으므로 이 부분에서는 아무것도 알리지 않습니다."
-L["This setting also does not follow the global announcement settings, and will, if checked, announce regardless of those settings."] = "이 설정은 또한 전역 알림 설정을 따르지 않으며, 체크한 경우 해당 설정과 상관없이 알립니다."
-L["Unknown"] = "알 수 없음"
+--[[Translation missing --]]
+L["Tags"] = "Tags"
+--[[Translation missing --]]
+L["This event is not currently supported by RSA or is not a valid event."] = "This event is not currently supported by RSA or is not a valid event."
+--[[Translation missing --]]
+L["Throttle Duration"] = "Throttle Duration"
+--[[Translation missing --]]
+L["turned off"] = "turned off"
+--[[Translation missing --]]
+L["turned on"] = "turned on"
+--[[Translation missing --]]
+L["Unlock setup"] = "Unlock setup"
 L["URL"] = true
+--[[Translation missing --]]
+L["Use Global Environment Settings"] = "Use Global Environment Settings"
 L["Use Single Replacement"] = "공통 대체어 사용"
+--[[Translation missing --]]
+L["Use the global settings to determine where it can be announced."] = "Use the global settings to determine where it can be announced."
 L["Utilities"] = "유틸기"
-L["When reporting an issue, please also post the revision number above. Thanks!"] = "문제를 보고할 때, 위 개정판 번호도 올려주세요. 감사합니다!"
-L["When someone accepts the resurrect you cast on them."] = "누군가 당신이 그들에게 시전한 부활을 받았을 때입니다."
-L["When the spell ends."] = "주문이 끝났을 때입니다."
-L["When the spell failed."] = "주문이 실패했을 때입니다."
+--[[Translation missing --]]
+L["Valid Tags:"] = "Valid Tags:"
+--[[Translation missing --]]
+L["WARNING: This spell is included with RSA by default and my cease to function correctly if you unlock and alter these settings."] = "WARNING: This spell is included with RSA by default and my cease to function correctly if you unlock and alter these settings."
+--[[Translation missing --]]
+L["When disabled, use the Environments tab below to configure where this spell is allowed to announce. Affects all events this spell can announce."] = "When disabled, use the Environments tab below to configure where this spell is allowed to announce. Affects all events this spell can announce."
+--[[Translation missing --]]
+L["When reporting an issue, please also post the version number above. Thanks!"] = "When reporting an issue, please also post the version number above. Thanks!"
+--[[Translation missing --]]
+L["When the casting of this spell begins."] = "When the casting of this spell begins."
+--[[Translation missing --]]
+L["When the spell's usual duration ends."] = "When the spell's usual duration ends."
 L["When the target absorbs your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 흡수하면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target blocks your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 방패로 막으면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target deflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 튕겨내면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target dodges your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 회피하면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target evades your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 벗어나면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target is immune to your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 당신의 주문에 면역인 경우 |c5500DBBD[MISSTYPE]|r은 이걸로 대체됩니다."
+L["When the target blocks your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 방패로 막으면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target deflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 튕겨내면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target dodges your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 회피하면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target evades your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문의 효과에서 벗어나면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target is immune to your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 해당 주문에 면역인 경우 |c5500DBBD[MISSTYPE]|r은 이 것으로 대체됩니다."
 L["When the target is immune to your spell."] = "대상이 주문에 면역인 경우입니다."
-L["When the target parries your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 무기로 막으면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target reflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 반사하면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문에 저항하면 |c5500DBBD[MISSTYPE]|r이 이걸로 대체됩니다."
-L["When you absorb a debuff."] = "약화 효과를 흡수할 때입니다."
-L["When you absorb damage."] = "피해를 흡수할 때입니다."
-L["When you cast Provoke on your Statue of the Black Ox."] = "흑우 조각상에 조롱을 시전할 때입니다."
-L["When you cast this spell."] = "이 주문을 시전할 때입니다."
-L["When you deal damage."] = "피해를 입힐 때입니다."
-L["When you debuff a unit."] = "유닛에 약화 효과를 입힐 때입니다."
-L["When you dispel a buff or debuff."] = "강화 효과나 약화 효과를 해제할 때입니다."
-L["When you have placed this in the world."] = "이것을 필드에 놓았을 때입니다."
-L["When you heal."] = "치유할 때입니다."
-L["When you interrupt a spell cast."] = "주문 시전을 차단했을 때입니다."
-L["When you start casting this spell or when this spell starts."] = "이 주문을 시전하기 시작하거나 이 주문이 시작될 때입니다."
-L["When your spell is resisted."] = "주문이 저항당했을 때입니다."
+--[[Translation missing --]]
+L["When the target of this spell accepts the resurrection."] = "When the target of this spell accepts the resurrection."
+L["When the target parries your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 무기로 막으면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target reflects your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문을 반사하면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+L["When the target resists your spell |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "대상이 주문에 저항하면 |c5500DBBD[MISSTYPE]|r이 이 것으로 대체됩니다."
+--[[Translation missing --]]
+L["When this buff or debuff is applied to a target."] = "When this buff or debuff is applied to a target."
+--[[Translation missing --]]
+L["When this buff or debuff is expires."] = "When this buff or debuff is expires."
+--[[Translation missing --]]
+L["When this CC ability is broken prematurely by another spell."] = "When this CC ability is broken prematurely by another spell."
+--[[Translation missing --]]
+L["When this resurrection spell finishes, giving the target the option to return to life."] = "When this resurrection spell finishes, giving the target the option to return to life."
+--[[Translation missing --]]
+L["When this spell absorbs damage or effects."] = "When this spell absorbs damage or effects."
+--[[Translation missing --]]
+L["When this spell captures a buff from the target."] = "When this spell captures a buff from the target."
+--[[Translation missing --]]
+L["When this spell causes damage."] = "When this spell causes damage."
+--[[Translation missing --]]
+L["When this spell causes healing."] = "When this spell causes healing."
+--[[Translation missing --]]
+L["When this spell fails to connect with the target. See the Tag Options to configure what the [MISSTYPE] tag will turn into when used."] = "When this spell fails to connect with the target. See the Tag Options to configure what the [MISSTYPE] tag will turn into when used."
+--[[Translation missing --]]
+L["When this spell instantly kills the target."] = "When this spell instantly kills the target."
+--[[Translation missing --]]
+L["When this spell interrupts another spell cast."] = "When this spell interrupts another spell cast."
+--[[Translation missing --]]
+L["When this spell is cast. If the spell has a cast-time, this is when you finish the cast. If the spell is instant, this is when the spell begins its effect."] = "When this spell is cast. If the spell has a cast-time, this is when you finish the cast. If the spell is instant, this is when the spell begins its effect."
+--[[Translation missing --]]
+L["When this spell is resisted by the target."] = "When this spell is resisted by the target."
+--[[Translation missing --]]
+L["When this spell removes a buff or debuff."] = "When this spell removes a buff or debuff."
+--[[Translation missing --]]
+L["When this spell spawns another creature or object in the world."] = "When this spell spawns another creature or object in the world."
 L["When your spell misses the target |c5500DBBD[MISSTYPE]|r will be replaced with this."] = "주문이 타켓을 놓친 경우|c5500DBBD[MISSTYPE]|r (으)로 대체됩니다."
 L["Whether the target blocks, dodges, absorbs etc. your attack, |c5500DBBD[MISSTYPE]|r will be replaced to this."] = "대상이 공격을 방패로 막든지, 피하든지, 흡수하든지  |c5500DBBD[MISSTYPE]|r은 이걸로 대체됩니다."
-L["Whisper"] = "귓속말"
 L["Yell"] = "외침"
-L["You"] = "당신"
-L["You have %d message for this section."] = "당신은 이 부분에 %d개의 메시지를 갖고 있습니다."
-L["You have %d messages for this section."] = "당신은 이 부분에 %d개의 메시지를 갖고 있습니다."
-L["You have no messages for this section."] = "이 부분에 대한 메시지가 없습니다."
+--[[Translation missing --]]
+L["You can click a spell in this list to remove it."] = "You can click a spell in this list to remove it."
+L["You have %d message for this section."] = "%d개의 메시지가 있습니다."
+L["You have %d messages for this section."] = "%d개의 메시지가 있습니다."
+L["You have no messages for this section."] = "메시지가 없습니다."
+--[[Translation missing --]]
+L["You must enter a number."] = "You must enter a number."
+--[[Translation missing --]]
+L["You must enter a valid Spell ID."] = "You must enter a valid Spell ID."
 L["Your message must contain at least one number or letter!"] = "메시지에는 최소한 하나의 숫자 또는 문자가 포함되어야 합니다!"
-L["Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"] = "사용 중인 RSA가 구버전입니다. https://www.curseforge.com/wow/addons/rsa 에서 최신 버전을 구할 수 있습니다."
+L["Your version of RSA is out of date. You may want to grab the latest version from https://www.curseforge.com/wow/addons/rsa"] = "사용 중인 RSA가 구버전입니다. https://www.curseforge.com/wow/addons/rsa 에서 최신 버전으로 업데이트 할 수 있습니다."

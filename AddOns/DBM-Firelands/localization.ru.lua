@@ -99,8 +99,8 @@ L= DBM:GetModLocalization(198)
 
 L:SetWarningLocalization({
 	warnRageRagnarosSoon	= "%s на %s через 5 секунд",--Spellname on targetname
-	warnSplittingBlow		= "%s %s",--Spellname in Location
-	warnEngulfingFlame		= "%s %s",--Spellname in Location
+	warnSplittingBlow		= "%s через %s",--Spellname in Location
+	warnEngulfingFlame		= "%s через %s",--Spellname in Location
 	warnEmpoweredSulf		= "%s через 5 секунд"--The spell has a 5 second channel, but tooltip doesn't reflect it so cannot auto localize
 })
 
@@ -111,11 +111,11 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	warnRageRagnarosSoon		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.prewarn:format(101109),
-	warnSplittingBlow			= "Предупреждение для $spell:100877",
-	warnEngulfingFlame			= "Предупреждение для $spell:99171",
+	warnSplittingBlow			= "Предупреждение для $spell:98951",
+	warnEngulfingFlame			= "Предупреждение для $spell:99171 (в обычном режиме)",
 	WarnEngulfingFlameHeroic	= "Предупреждение о появлении $spell:99171 (в героическом режиме)",
 	warnSeedsLand				= "Отсчитывать время до появления $spell:98520, а не до их появления в воздухе",
-	warnEmpoweredSulf			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(100997),
+	warnEmpoweredSulf			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.cast:format(100604),
 	timerRageRagnaros			= DBM_CORE_L.AUTO_TIMER_OPTIONS.cast:format(101109),
 	TimerPhaseSons				= "Отсчет времени до окончания \"фазы Сыновей пламени\"",
 	InfoHealthFrame				= "Информационное окно для игроков с низким уровнем здоровья (<100к)",
@@ -145,7 +145,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("FirelandsTrash")
 
 L:SetGeneralLocalization({
-	name = "Треш-мобы"
+	name = "Трэш мобы Огненные Просторы"
 })
 
 ----------------

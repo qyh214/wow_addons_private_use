@@ -9,13 +9,13 @@ local function insert_keystone()
 
   -- search for the key in the bags
   for bag = 0, NUM_BAG_SLOTS do
-    local slots = GetContainerNumSlots(bag)
+    local slots = C_Container.GetContainerNumSlots(bag)
     for slot = 1, slots do
       -- check if item at slot is the key
-      local item_id = GetContainerItemID(bag, slot)
+      local item_id = C_Container.GetContainerItemID(bag, slot)
       if item_id == 180653 or item_id == 158923 or item_id == 151086 then
         -- pickup item and insert it
-        PickupContainerItem(bag, slot)
+        C_Container.PickupContainerItem(bag, slot)
         if (CursorHasItem()) then
           C_ChallengeMode.SlotKeystone()
         end

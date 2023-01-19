@@ -1,6 +1,6 @@
 # World Quest Tracker
 
-## [v10.0.0.450](https://github.com/Tercioo/World-Quest-Tracker/tree/v10.0.0.450) (2022-10-27)
-[Full Changelog](https://github.com/Tercioo/World-Quest-Tracker/compare/v9.2.7.448...v10.0.0.450) 
+## [v10.0.2.460](https://github.com/Tercioo/World-Quest-Tracker/tree/v10.0.2.460) (2022-12-31)
+[Full Changelog](https://github.com/Tercioo/World-Quest-Tracker/compare/v10.0.2.459...v10.0.2.460) 
 
-- 10.0 Update  
+- More fixes  

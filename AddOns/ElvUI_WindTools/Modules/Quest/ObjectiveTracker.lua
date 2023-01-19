@@ -182,6 +182,28 @@ function OT:HandleTitleText(text)
     SetTextColorHook(text)
 end
 
+function OT:HandleMenuText(text)
+    if not self.db.menuTitle.enable then
+        return
+    end
+
+    F.SetFontWithDB(text, self.db.menuTitle.font)
+    local height = text:GetStringHeight() + 2
+    if height ~= text:GetHeight() then
+        text:SetHeight(height)
+    end
+
+    if not text.windHooked then
+        text.windHooked = true
+        if self.db.menuTitle.classColor then
+            text:SetTextColor(C.ExtractColorFromTable(W.ClassColor))
+        else
+            text:SetTextColor(C.ExtractColorFromTable(self.db.menuTitle.color))
+        end
+        text.SetTextColor = E.noop
+    end
+end
+
 function OT:HandleInfoText(text)
     self:ColorfulProgression(text)
     F.SetFontWithDB(text, self.db.info)
@@ -342,7 +364,8 @@ function OT:Initialize()
             _G.WORLD_QUEST_TRACKER_MODULE,
             _G.CAMPAIGN_QUEST_TRACKER_MODULE,
             _G.QUEST_TRACKER_MODULE,
-            _G.ACHIEVEMENT_TRACKER_MODULE
+            _G.ACHIEVEMENT_TRACKER_MODULE,
+            _G.PROFESSION_RECIPE_TRACKER_MODULE
         }
 
         for _, module in pairs(trackerModules) do
@@ -365,6 +388,10 @@ function OT:Initialize()
             end
         end
     )
+
+    if _G.ObjectiveTrackerFrame.HeaderMenu then
+        self:HandleMenuText(_G.ObjectiveTrackerFrame.HeaderMenu.Title)
+    end
 
     ObjectiveTracker_Update()
 end

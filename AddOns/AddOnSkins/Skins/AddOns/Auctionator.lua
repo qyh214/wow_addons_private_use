@@ -68,26 +68,20 @@ local function SkinMoneyInput(editbox, height)
 end
 
 local function SkinMainFrames()
-	local list = _G.AuctionatorShoppingListFrame
+	local list = _G.AuctionatorShoppingFrame
 	local config = _G.AuctionatorConfigFrame
 	local selling = _G.AuctionatorSellingFrame
 	local cancelling = _G.AuctionatorCancellingFrame
-	local recentList = list.ScrollListRecents
-	local shoppingList = list.ScrollListShoppingList
-	local shopTabs = list.RecentsTabsContainer
 
 	AS:StripTextures(list)
 	AS:SetTemplate(list)
 	AS:SetTemplate(list.ResultsListing.ScrollFrame, 'Transparent')
 
-	AS:StripTextures(config)
-	AS:SetTemplate(config, 'Transparent')
-
 	if AS.Retail then
 		AS:StripTextures(cancelling.ResultsListing)
 		AS:SetTemplate(cancelling.ResultsListing.ScrollFrame, 'Transparent')
 		cancelling.ResultsListing.ScrollFrame:SetPoint('TOPLEFT', cancelling.ResultsListing.HeaderContainer, 'BOTTOMLEFT', 16, -6)
-		--selling.CurrentItemListing.ScrollFrame:SetPoint('TOPLEFT', selling.CurrentItemListing.HeaderContainer, 'BOTTOMLEFT', -3, -4)
+		selling.CurrentPricesListing.ScrollFrame:SetPoint('TOPLEFT', selling.CurrentPricesListing.HeaderContainer, 'BOTTOMLEFT', -3, -4)
 		selling.HistoricalPriceListing.ScrollFrame:SetPoint('TOPLEFT', selling.HistoricalPriceListing.HeaderContainer, 'BOTTOMLEFT', -3, -4)
 		list.ResultsListing.ScrollFrame:SetPoint('TOPLEFT', list.ResultsListing.HeaderContainer, 'BOTTOMLEFT', 15, -4)
 		list.ListDropdown:ClearAllPoints()
@@ -106,20 +100,11 @@ local function SkinMainFrames()
 	list.Export:Point('RIGHT', list.Import, 'LEFT', -3, 0)
 
 	if AS.Retail then
-		recentList.InsetFrame:StripTextures()
-		recentList.InsetFrame:Point('TOPLEFT', recentList, 'TOPLEFT', 3, 0)
-		shoppingList.InsetFrame:StripTextures()
-		shoppingList.InsetFrame:Point('TOPLEFT', shoppingList, 'TOPLEFT', 3, 0)
-		AS:StripTextures(shoppingList.ScrollFrame)
-		AS:SetTemplate(shoppingList.ScrollFrame, 'Transparent')
 		AS:StripTextures(selling.HistoricalPriceInset)
 		AS:SetTemplate(selling.HistoricalPriceInset, 'Transparent')
 		selling.HistoricalPriceInset:SetPoint('TOPLEFT', selling.HistoricalPriceListing, 'TOPLEFT', -7, -25)
 		selling.HistoricalPriceInset:SetPoint('BOTTOMRIGHT', selling.HistoricalPriceListing, 'BOTTOMRIGHT', -2, 0)
-		--AS:StripTextures(selling.CurrentItemInset)
-		--AS:SetTemplate(selling.CurrentItemInset, 'Transparent')
-		--selling.CurrentItemInset:SetPoint('TOPLEFT', selling.CurrentItemListing, 'TOPLEFT', -7, -25)
-		--selling.CurrentItemInset:SetPoint('BOTTOMRIGHT', selling.CurrentItemListing, 'BOTTOMRIGHT', -2, 0)
+
 		AS:StripTextures(selling.BagInset)
 		AS:StripTextures(selling.BagListing.ScrollFrame)
 		AS:CreateBackdrop(selling.BagListing.ScrollFrame, 'Transparent')
@@ -138,7 +123,7 @@ local function SkinMainFrames()
 
 	for _, button in next, {
 		-- Shopping
-		_G.AuctionatorShoppingLists_AddItem,
+		--_G.AuctionatorShoppingLists_AddItem,
 		list.ManualSearch,
 		list.ExportCSV,
 		list.Rename,
@@ -164,12 +149,10 @@ local function SkinMainFrames()
 	local scrollBars = {
 		_G.AuctionatorSellingFrameScrollBar,
 		cancelling.ResultsListing.ScrollFrame.scrollBar,
-		recentList.ScrollFrame.scrollBar,
-		shoppingList.ScrollFrame.scrollBar,
 		list.ResultsListing.ScrollFrame.scrollBar,
 	}
 	if AS.Retail then
-		--tinsert(scrollBars, selling.CurrentItemListing.ScrollFrame.scrollBar)
+		tinsert(scrollBars, selling.CurrentPricesListing.ScrollFrame.scrollBar)
 		tinsert(scrollBars, selling.HistoricalPriceListing.ScrollFrame.scrollBar)
 		tinsert(scrollBars, selling.ResultsListing.ScrollFrame.scrollBar)
 	end
@@ -182,9 +165,6 @@ local function SkinMainFrames()
 		if scrollbar == _G.AuctionatorSellingFrameScrollBar then
 			scrollbar:Point('TOPLEFT', nil, 'TOPRIGHT', 7, -14)
 			scrollbar:Point('BOTTOMLEFT', nil, 'BOTTOMRIGHT', 7, 14)
-		elseif scrollbar == recentList.ScrollFrame.scrollBar or scrollbar == shoppingList.ScrollFrame.scrollBar then
-			scrollbar:Point('TOPLEFT', nil, 'TOPRIGHT', 2, -9)
-			scrollbar:Point('BOTTOMLEFT', nil, 'BOTTOMRIGHT', 2, 16)
 		else
 			scrollbar:Point('TOPLEFT', nil, 'TOPRIGHT', 1, -16)
 			scrollbar:Point('BOTTOMLEFT', nil, 'BOTTOMRIGHT', 1, 16)
@@ -192,17 +172,19 @@ local function SkinMainFrames()
 	end
 
 	local tabs = {
+		_G.AuctionatorTabs_Shopping,
 		_G.AuctionatorTabs_Auctionator,
 		_G.AuctionatorTabs_Cancelling,
+		_G.AuctionatorTabs_Shopping,
 		_G.AuctionatorTabs_Selling,
-		_G.AuctionatorTabs_ShoppingLists,
-		shopTabs.ListTab,
-		shopTabs.RecentsTab,
 	}
-	--if AS.Retail then
-		--tinsert(tabs, selling.HistoryTabsContainer.RealmHistoryTab)
-		--tinsert(tabs, selling.HistoryTabsContainer.YourHistoryTab)
-	--end
+	if AS.Retail then
+		if tabs then
+			tinsert(tabs, selling.PricesTabsContainer.CurrentPricesTab)
+			tinsert(tabs, selling.PricesTabsContainer.RealmHistoryTab)
+			tinsert(tabs, selling.PricesTabsContainer.YourHistoryTab)
+		end
+	end
 
 	for _, tab in next, tabs do
 		AS:SkinTab(tab)
@@ -250,7 +232,7 @@ local function SkinMainFrames()
 		cancelling.ResultsListing.HeaderContainer,
 	}
 	if AS.Retail then
-		--tinsert(headers, selling.CurrentItemListing.HeaderContainer)
+		tinsert(headers, selling.CurrentPricesListing.HeaderContainer)
 		tinsert(headers, selling.HistoricalPriceListing.HeaderContainer)
 		tinsert(headers, selling.ResultsListing.HeaderContainer)
 	end
@@ -299,26 +281,13 @@ local function SkinMainFrames()
 
 	-- Classic / TBC Skin
 	if not AS.Retail then
-		AS:SkinDropDownBox(AuctionatorShoppingListFrame.ListDropdown, 200)
-	end
-
-	-- create list backdrop
-	for _, frame in next, {recentList, shoppingList} do
-		for i = 1, frame:GetNumRegions() do
-			local region = select(i, frame:GetRegions())
-			if region:IsObjectType('Texture') and region:GetTexture() == 3054898 then
-				AS:StripTextures(region)
-				AS:CreateBackdrop(region, 'Transparent')
-				--if region.Backdrop then
-					AS:SetOutside(region.Backdrop, frame.InsetFrame)
-				--end
-			end
-		end
+		AS:SkinDropDownBox(_G.AuctionatorShoppingFrame.ListDropdown, 200)
 	end
 end
 
 local function SkinOptions()
 	for _, frame in next, {
+		_G.AuctionatorConfigSellingAllItemsFrame,
 		_G.AuctionatorConfigBasicOptionsFrame,
 		_G.AuctionatorConfigQuantitiesFrame,
 		_G.AuctionatorConfigTooltipsFrame,
@@ -470,9 +439,9 @@ local function SkinItemFrame(frame)
 end
 
 local function HandleLostThings()
-	AS:StripTextures(_G.AuctionatorShoppingListFrame.ScrollListRecents.InsetFrame)
+	AS:StripTextures(_G.AuctionatorShoppingFrame.ScrollListRecents.InsetFrame)
 
-	AS:StripTextures(_G.AuctionatorShoppingListFrame.ScrollListShoppingList.InsetFrame)
+	--AS:StripTextures(_G.AuctionatorShoppingFrame.ScrollListShoppingList.InsetFrame)
 	AS:StripTextures(_G.AuctionatorSellingFrame.AuctionatorSaleItem.Icon.IconBorder)
 	AS:StripTextures(_G.AuctionatorSellingFrame.BagListing.ScrollFrame)
 	AS:StripTextures(_G.AuctionatorSellingFrame.BagListing)
@@ -494,21 +463,23 @@ local function HandleLostThings()
 	AS:SkinScrollBar(_G.AuctionatorSellingFrame.ResultsListing.ScrollFrame.scrollBar)
 end
 
+local function StartSkinning()
+	SkinMainFrames()
+	SkinImportExport()
+	SkinItemFrame(_G.AuctionatorShoppingItemFrame)
+	--SkinItemFrame(_G.AuctionatorAddItemFrame)
+	--SkinItemFrame(_G.AuctionatorEditItemFrame)
+	HandleLostThings()
+end
+
 function AS:Auctionator(event)
 	if event == 'PLAYER_ENTERING_WORLD' then
 		SkinOptions()
 	end
 
 	if event == 'AUCTION_HOUSE_SHOW' then
-		SkinMainFrames()
-		SkinImportExport()
-		SkinItemFrame(_G.AuctionatorShoppingItemFrame)
-		--SkinItemFrame(_G.AuctionatorAddItemFrame)
-		--SkinItemFrame(_G.AuctionatorEditItemFrame)
-
-		HandleLostThings()
-
-		AS:UnregisterSkinEvent('Auctionator', event)
+		hooksecurefunc(_G.AuctionatorTabContainerMixin, 'HookTabs', StartSkinning)
+		hooksecurefunc(_G.AuctionatorConfigTabMixin, 'OnLoad', StartSkinning)
 	end
 end
 

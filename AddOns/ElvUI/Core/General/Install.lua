@@ -152,12 +152,12 @@ function E:SetupCVars(noDisplayMsg)
 	SetCVar('threatWarning', 3)
 	SetCVar('alwaysShowActionBars', 1)
 	SetCVar('lockActionBars', 1)
+	SetCVar('ActionButtonUseKeyDown', 1)
 	SetCVar('fstack_preferParentKeys', 0) -- Add back the frame names via fstack!
 
 	if E.Retail then
 		SetCVar('cameraDistanceMaxZoomFactor', 2.6) -- This has a setting on classic/tbc
 	else
-		SetCVar('ActionButtonUseKeyDown', 1) -- dont set this for retail because of aura right click issue
 		SetCVar('chatClassColorOverride', 0)
 	end
 
@@ -255,6 +255,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 
 		--Shared base layout, tweaks to individual layouts will be below
 		E:ResetMovers()
+
 		if not E.db.movers then
 			E.db.movers = {}
 		end
@@ -319,18 +320,17 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.general.totems.size = 50
 			E.db.general.totems.spacing = 8
 			E.db.general.autoTrackReputation = true
-			E.db.general.bonusObjectivePosition = "AUTO"
 		--Movers
 			for mover, position in pairs(E.LayoutMoverPositions.ALL) do
 				E.db.movers[mover] = position
 				E:SaveMoverDefaultPosition(mover)
 			end
+
 		--Tooltip
-			E.db.tooltip.healthBar.fontOutline = 'MONOCHROMEOUTLINE'
-			E.db.tooltip.healthBar.height = 12
 			E.db.movers.TooltipMover = nil --ensure that this mover gets completely reset.. yes E:ResetMover call above doesn't work.
-			E.db.tooltip.healthBar.font = "PT Sans Narrow"
-			E.db.tooltip.healthBar.fontOutline = "NONE"
+			E.db.tooltip.healthBar.height = 12
+			E.db.tooltip.healthBar.font = 'PT Sans Narrow'
+			E.db.tooltip.healthBar.fontOutline = 'NONE'
 			E.db.tooltip.healthBar.fontSize = 12
 		--Nameplates
 			E.db.nameplates.colors.castNoInterruptColor = {r = 0.78, g=0.25, b=0.25}
@@ -342,11 +342,11 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.nameplates.colors.threat.badColor = {r = 0.78, g=0.25, b=0.25}
 			E.db.nameplates.colors.threat.goodColor = {r = 0.29, g=0.67, b=0.30}
 			E.db.nameplates.colors.threat.goodTransition = {r = 0.85, g=0.76, b=0.36}
-			E.db.nameplates.units.ENEMY_NPC.health.text.format = ""
-			E.db.nameplates.units.ENEMY_PLAYER.health.text.format = ""
+			E.db.nameplates.units.ENEMY_NPC.health.text.format = ''
+			E.db.nameplates.units.ENEMY_PLAYER.health.text.format = ''
 			E.db.nameplates.units.ENEMY_PLAYER.portrait.classicon = false
 			E.db.nameplates.units.ENEMY_PLAYER.portrait.enable = true
-			E.db.nameplates.units.ENEMY_PLAYER.portrait.position = "LEFT"
+			E.db.nameplates.units.ENEMY_PLAYER.portrait.position = 'LEFT'
 			E.db.nameplates.units.ENEMY_PLAYER.portrait.xOffset = 0
 			E.db.nameplates.units.ENEMY_PLAYER.portrait.yOffset = 0
 		--UnitFrames
@@ -549,11 +549,11 @@ function E:SetupReset()
 	_G.InstallSlider:SetScript('OnValueChanged', nil)
 	_G.InstallSlider:SetScript('OnMouseUp', nil)
 
-	ElvUIInstallFrame.SubTitle:SetText('')
-	ElvUIInstallFrame.Desc1:SetText('')
-	ElvUIInstallFrame.Desc2:SetText('')
-	ElvUIInstallFrame.Desc3:SetText('')
-	ElvUIInstallFrame:Size(550, 400)
+	E.InstallFrame.SubTitle:SetText('')
+	E.InstallFrame.Desc1:SetText('')
+	E.InstallFrame.Desc2:SetText('')
+	E.InstallFrame.Desc3:SetText('')
+	E.InstallFrame:Size(550, 400)
 end
 
 function E:SetPage(PageNum)
@@ -564,19 +564,10 @@ function E:SetPage(PageNum)
 	_G.InstallStatus.anim.progress:Play()
 	_G.InstallStatus.text:SetText(CURRENT_PAGE..' / '..MAX_PAGE)
 
-	if PageNum == MAX_PAGE then
-		_G.InstallNextButton:Disable()
-	else
-		_G.InstallNextButton:Enable()
-	end
+	_G.InstallNextButton:SetEnabled(PageNum ~= MAX_PAGE)
+	_G.InstallPrevButton:SetEnabled(PageNum ~= 1)
 
-	if PageNum == 1 then
-		_G.InstallPrevButton:Disable()
-	else
-		_G.InstallPrevButton:Enable()
-	end
-
-	local f = ElvUIInstallFrame
+	local f = E.InstallFrame
 	local InstallOption1Button = _G.InstallOption1Button
 	local InstallOption2Button = _G.InstallOption2Button
 	local InstallOption3Button = _G.InstallOption3Button
@@ -750,7 +741,7 @@ function E:SetPage(PageNum)
 		InstallOption2Button:Show()
 		InstallOption2Button:SetScript('OnClick', function() E:SetupComplete(true) end)
 		InstallOption2Button:SetText(L["Finished"])
-		ElvUIInstallFrame:Size(550, 350)
+		E.InstallFrame:Size(550, 350)
 	end
 end
 
@@ -817,7 +808,7 @@ function E:Install()
 	end
 
 	--Create Frame
-	if not ElvUIInstallFrame then
+	if not E.InstallFrame then
 		local f = CreateFrame('Button', 'ElvUIInstallFrame', E.UIParent)
 		f.SetPage = E.SetPage
 		f:Size(550, 400)
@@ -970,9 +961,11 @@ function E:Install()
 		logo2:SetTexture(E.Media.Textures.LogoBottom)
 		logo2:Point('BOTTOM', 0, 70)
 		f.tutorialImage2 = logo2
+
+		E.InstallFrame = f
 	end
 
-	ElvUIInstallFrame.tutorialImage:SetVertexColor(unpack(E.media.rgbvaluecolor))
-	ElvUIInstallFrame:Show()
+	E.InstallFrame.tutorialImage:SetVertexColor(unpack(E.media.rgbvaluecolor))
+	E.InstallFrame:Show()
 	E:NextPage()
 end

@@ -56,15 +56,15 @@ function DB:ReputationBar_Update()
 			curValue = C_MajorFactions_HasMaximumRenown(factionID) and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
 			label = format('%s%s|r %s', renownHex, RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
 		end
-	elseif C_Reputation_IsFactionParagon(factionID) then
+	end
+
+	if not label and C_Reputation_IsFactionParagon(factionID) then
 		local current, threshold
 		current, threshold, _, rewardPending = C_Reputation_GetFactionParagonInfo(factionID)
 
 		if current and threshold then
 			label, minValue, maxValue, curValue, reaction = L["Paragon"], 0, threshold, current % threshold, 9
 		end
-
-		bar.Reward:SetPoint('CENTER', bar, DB.db.reputation.rewardPosition)
 	end
 
 	if not label then
@@ -74,12 +74,14 @@ function DB:ReputationBar_Update()
 	local customColors = DB.db.colors.useCustomFactionColors
 	local customReaction = reaction == 9 or reaction == 10 -- 9 is paragon, 10 is renown
 	local color = (customColors or customReaction) and DB.db.colors.factionColors[reaction] or _G.FACTION_BAR_COLORS[reaction]
-	local alpha = not customColors and DB.db.colors.reputationAlpha
+	local alpha = (customColors and color.a) or DB.db.colors.reputationAlpha
 
-	bar:SetStatusBarColor(color.r, color.g, color.b, alpha or color.a or 1)
+	bar:SetStatusBarColor(color.r or 1, color.g or 1, color.b or 1, alpha or 1)
 	bar:SetMinMaxValues(minValue, maxValue)
 	bar:SetValue(curValue)
 
+	bar.Reward:ClearAllPoints()
+	bar.Reward:SetPoint('CENTER', bar, DB.db.reputation.rewardPosition)
 	bar.Reward:SetShown(rewardPending and DB.db.reputation.showReward)
 
 	local current, maximum, percent, capped = GetValues(curValue, minValue, maxValue)
@@ -127,7 +129,12 @@ function DB:ReputationBar_OnEnter()
 		GameTooltip:AddLine(' ')
 
 		local friendID, friendTextLevel, _
-		if E.Retail and factionID then friendID, _, _, _, _, _, friendTextLevel = GetFriendshipReputation(factionID) end
+		if E.Retail and factionID then
+			friendID, _, _, _, _, _, friendTextLevel = GetFriendshipReputation(factionID)
+			if friendID and friendID.friendshipFactionID > 0 then
+				standing = friendID.reaction
+			end
+		end
 
 		local isMajorFaction = E.Retail and factionID and C_Reputation_IsMajorFaction(factionID)
 		if not isMajorFaction then

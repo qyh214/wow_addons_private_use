@@ -20,6 +20,7 @@
 
 PremadeGroupsFilter = {}
 PremadeGroupsFilterState = PremadeGroupsFilterState or {}
+PremadeGroupsFilterSettings = PremadeGroupsFilterSettings or {}
 
 local PGFAddonName = select(1, ...)
 local PGF = select(2, ...)
@@ -40,16 +41,19 @@ C.ARENA2V2   = 5
 C.ARENA3V3   = 6
 
 -- corresponds to the third parameter of C_LFGList.GetActivityInfoTable().categoryID
-C.TYPE_QUESTING = 1
-C.TYPE_DUNGEON  = 2
-C.TYPE_RAID     = 3
-C.TYPE_ARENA    = 4
-C.TYPE_SCENARIO = 5
-C.TYPE_CUSTOM   = 6
-C.TYPE_SKIRMISH = 7
-C.TYPE_BG       = 8
-C.TYPE_RBG      = 9
-C.TYPE_ASHRAN   = 10
+C.CATEGORY_ID = {
+    QUESTING           = 1,
+    DUNGEON            = 2,
+    RAID               = 3,
+    ARENA              = 4,
+    SCENARIO           = 5,
+    CUSTOM             = 6, -- both PvE and PvP
+    SKIRMISH           = 7,
+    BATTLEGROUND       = 8,
+    RATED_BATTLEGROUND = 9,
+    ASHRAN             = 10,
+    THORGAST           = 113,
+}
 
 C.DIFFICULTY_STRING = {
     [1] = "normal",
@@ -61,16 +65,16 @@ C.DIFFICULTY_STRING = {
 }
 
 -- Translates tier enum values into normalized values - check via /dump PVPUtil.GetTierName(1)
-C.TIER_MAP = {
-    [0] = 0, -- Unranked
-    [1] = 1, -- Combatant I
-    [2] = 3, -- Challenger I
-    [3] = 5, -- Rival I
-    [4] = 7, -- Duelist
-    [5] = 8, -- Elite
-    [6] = 2, -- Combatant II
-    [7] = 4, -- Challenger II
-    [8] = 6, -- Rival II
+C.PVP_TIER_MAP = {
+    [0] = { tier = 0, minRating =    0, quality = 0, }, -- Unranked
+    [1] = { tier = 1, minRating = 1000, quality = 1, }, -- Combatant I
+    [2] = { tier = 3, minRating = 1400, quality = 2, }, -- Challenger I
+    [3] = { tier = 5, minRating = 1800, quality = 3, }, -- Rival I
+    [4] = { tier = 7, minRating = 2100, quality = 4, }, -- Duelist
+    [5] = { tier = 8, minRating = 2400, quality = 5, }, -- Elite
+    [6] = { tier = 2, minRating = 1200, quality = 1, }, -- Combatant II
+    [7] = { tier = 4, minRating = 1600, quality = 2, }, -- Challenger II
+    [8] = { tier = 6, minRating = 1950, quality = 3, }, -- Rival II
 }
 
 C.COLOR_ENTRY_NEW       = { R = 0.3, G = 1.0, B = 0.3 } -- green
@@ -99,6 +103,7 @@ C.DPS_CLASS_TYPE = {
     ["DEATHKNIGHT"] = { range = false, melee = true,  armor = "plate"   },
     ["DEMONHUNTER"] = { range = false, melee = true,  armor = "leather" },
     ["DRUID"]       = { range = true,  melee = true,  armor = "leather" },
+    ["EVOKER"]      = { range = true,  melee = false, armor = "mail"    },
     ["HUNTER"]      = { range = true,  melee = true,  armor = "mail"    },
     ["PALADIN"]     = { range = false, melee = true,  armor = "plate"   },
     ["PRIEST"]      = { range = true,  melee = false, armor = "cloth"   },
@@ -111,12 +116,27 @@ C.DPS_CLASS_TYPE = {
 }
 
 C.SETTINGS_DEFAULT = {
-    version = 3,
-    expert = false,
+    version = 1,
+    dialogMovable = true,
+    classNamesInTooltip = true,
+    coloredGroupTexts = true,
+    ratingInfo = true,
+    classCircle = true,
+    classBar = false,
+    leaderCrown = false,
+    oneClickSignUp = true,
+    persistSignUpNote = true,
+    signupOnEnter = false,
+    skipSignUpDialog = false,
+}
+
+C.STATE_DEFAULT = {
+    version = 4,
 }
 
 C.MODEL_DEFAULT = {
     enabled = true,
+    expert = false,
     expression = "",
     sorting = "",
     difficulty = {
@@ -160,7 +180,7 @@ C.MODEL_DEFAULT = {
     },
 }
 
-function PGF.Migrate_State_V2()
+function PGF.MigrateStateV2()
     -- check if migration from 1.10 to 1.11 is necessary
     if PremadeGroupsFilterState.enabled ~= nil then
         local stateV110 = PremadeGroupsFilterState
@@ -170,34 +190,55 @@ function PGF.Migrate_State_V2()
     end
 end
 
-function PGF.Migrate_State_V3()
+function PGF.MigrateStateV3()
     if PremadeGroupsFilterState.version == nil then
-        PremadeGroupsFilterState["moveable"] = nil
+        PremadeGroupsFilterState.moveable = nil
         for k, v in pairs(PremadeGroupsFilterState) do
             if type(v) == "table" then
-                v["ilvl"] = nil
-                v["noilvl"] = nil
+                v.ilvl = nil
+                v.noilvl = nil
             end
         end
+        PremadeGroupsFilterState.version = 3
         print(string.format(L["message.settingsupgraded"], "3"))
     end
 end
 
-function PGF.Update_State_Defaults()
-    PGF.Table_UpdateWithDefaults(PremadeGroupsFilterState, PGF.C.SETTINGS_DEFAULT)
+function PGF.MigrateStateV4()
+    if PremadeGroupsFilterState.version < 4 then
+        for k, v in pairs(PremadeGroupsFilterState) do
+            if type(v) == "table" then
+                v.expert = PremadeGroupsFilterState.expert
+            end
+        end
+        PremadeGroupsFilterState.expert = nil
+        PremadeGroupsFilterState.version = 4
+        print(string.format(L["message.settingsupgraded"], "4"))
+    end
+end
+
+function PGF.UpdateStateWithDefaults()
+    PGF.Table_UpdateWithDefaults(PremadeGroupsFilterState, PGF.C.STATE_DEFAULT)
     -- update all state tables with the current set of defaults
     for k, v in pairs(PremadeGroupsFilterState) do
-        if k ~= "version" and k ~= "expert" then
+        if type(v) == "table" then
             PGF.Table_UpdateWithDefaults(v, PGF.C.MODEL_DEFAULT)
         end
     end
 end
 
+function PGF.UpdateSettingsWithDefaults()
+    PGF.Table_UpdateWithDefaults(PremadeGroupsFilterSettings, PGF.C.SETTINGS_DEFAULT)
+end
+
 function PGF.OnAddonLoaded(name)
     if name == PGFAddonName then
-        PGF.Migrate_State_V2()
-        PGF.Migrate_State_V3()
-        PGF.Update_State_Defaults()
+        PGF.UpdateSettingsWithDefaults()
+
+        PGF.MigrateStateV2()
+        PGF.MigrateStateV3()
+        PGF.MigrateStateV4()
+        PGF.UpdateStateWithDefaults()
 
         -- request various player information from the server
         RequestRaidInfo()
@@ -208,6 +249,8 @@ end
 
 function PGF.OnPlayerLogin()
     PGF.FixGetPlaystyleStringIfPlayerAuthenticated()
+    PGF.FixReportAdvertisement()
+    PGF.PersistSignUpNote()
 end
 
 function PGF.OnEvent(self, event, ...)

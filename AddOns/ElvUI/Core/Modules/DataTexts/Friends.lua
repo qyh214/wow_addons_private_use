@@ -122,7 +122,7 @@ local friendTable, BNTable, tableList = {}, {}, {}
 local friendOnline, friendOffline = gsub(_G.ERR_FRIEND_ONLINE_SS,'|Hplayer:%%s|h%[%%s%]|h',''), gsub(_G.ERR_FRIEND_OFFLINE_S,'%%s','')
 local wowString = _G.BNET_CLIENT_WOW
 local retailID, classicID, tbcID = _G.WOW_PROJECT_MAINLINE, _G.WOW_PROJECT_CLASSIC, _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5
-local dataValid, lastPanel = false
+local dataValid = false
 local statusTable = {
 	AFK = ' |cffFFFFFF[|r|cffFF9900'..L["AFK"]..'|r|cffFFFFFF]|r',
 	DND = ' |cffFFFFFF[|r|cffFF3333'..L["DND"]..'|r|cffFFFFFF]|r'
@@ -144,13 +144,14 @@ local clientList = {
 	RTRO =	{ index = 11, tag = 'AC',	name = 'Arcade Collection'},
 	WLBY =	{ index = 12, tag = 'CB4',	name = 'Crash Bandicoot 4'},
 	VIPR =	{ index = 13, tag = 'BO4',	name = 'COD: Black Ops 4'},
-	ODIN =	{ index = 14, tag = 'MW',	name = 'COD: Modern Warfare'},
-	LAZR =	{ index = 15, tag = 'MW2',	name = 'COD: Modern Warfare 2'},
-	ZEUS =	{ index = 16, tag = 'CW',	name = 'COD: Cold War'},
-	FORE =	{ index = 17, tag = 'VG',	name = 'COD: Vanguard'},
-	GRY = 	{ index = 18, tag = 'AR',	name = 'Warcraft Arclight Rumble'},
-	App =	{ index = 19, tag = 'App',	name = 'App'},
-	BSAp =	{ index = 20, tag = L["Mobile"], name = L["Mobile"]}
+	ODIN =	{ index = 14, tag = 'WZ',	name = 'COD: Warzone'},
+	AUKS =	{ index = 15, tag = 'WZ2',	name = 'COD: Warzone 2'},
+	LAZR =	{ index = 16, tag = 'MW2',	name = 'COD: Modern Warfare 2'},
+	ZEUS =	{ index = 17, tag = 'CW',	name = 'COD: Cold War'},
+	FORE =	{ index = 18, tag = 'VG',	name = 'COD: Vanguard'},
+	GRY = 	{ index = 19, tag = 'AR',	name = 'Warcraft Arclight Rumble'},
+	App =	{ index = 20, tag = 'App',	name = 'App'},
+	BSAp =	{ index = 21, tag = L["Mobile"], name = L["Mobile"]}
 }
 
 DT.clientFullName = {}
@@ -569,17 +570,12 @@ local function OnEvent(self, event, message)
 	else
 		self.text:SetFormattedText(displayString, E.global.datatexts.settings.Friends.Label ~= '' and E.global.datatexts.settings.Friends.Label or _G.FRIENDS..': ', onlineFriends + numBNetOnline)
 	end
-
-	lastPanel = self
 end
 
-local function ValueColorUpdate(hex)
+local function ValueColorUpdate(self, hex)
 	displayString = strjoin('', E.global.datatexts.settings.Friends.NoLabel and '' or '%s', hex, '%d|r')
 
-	if lastPanel then
-		OnEvent(lastPanel, 'ELVUI_COLOR_UPDATE')
-	end
+	OnEvent(self)
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 DT:RegisterDatatext('Friends', _G.SOCIAL_LABEL, {'BN_FRIEND_ACCOUNT_ONLINE', 'BN_FRIEND_ACCOUNT_OFFLINE', 'BN_FRIEND_INFO_CHANGED', 'FRIENDLIST_UPDATE', 'CHAT_MSG_SYSTEM', 'MODIFIER_STATE_CHANGED'}, OnEvent, nil, Click, OnEnter, nil, _G.FRIENDS, nil, ValueColorUpdate)

@@ -19,10 +19,10 @@ L= DBM:GetModLocalization(157)
 
 L:SetOptionLocalization({
 	TBwarnWhileBlackout		= "Предупреждение о $spell:92898, когда активно $spell:86788",
-	TwilightBlastArrow		= "Показывать стрелку DBM, когда $spell:92898 около вас",
+	TwilightBlastArrow		= "Показывать стрелку DBM, когда $spell:92898 около Вас",
 	RangeFrame				= "Показывать окно проверки дистанции (10м)",
 	BlackoutShieldFrame		= "Показывать полоску здоровья для $spell:92878",
-	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(92878),
+	BlackoutIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(86788),
 	EngulfingIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(86622)
 })
 
@@ -51,7 +51,7 @@ L:SetOptionLocalization({
 	SpecWarnGrounded		= "Спецпредупреждение, когда у Вас не хватает ауры $spell:83581<br/>(~10сек перед началом применения)",
 	SpecWarnSearingWinds	= "Спецпредупреждение, когда у Вас не хватает ауры $spell:83500<br/>(~10сек перед началом применения)",
 	timerTransition			= "Показывать таймер перехода в другую фазу",
-	RangeFrame				= "Автоматически показывать окно проверки дистанции при надобности",
+	RangeFrame				= "Автоматически показывать окно проверки дистанции при необходимости",
 	yellScrewed				= "Кричать, когда на Вас одновременно $spell:83099 и $spell:92307",
 	InfoFrame				= "Показывать игроков без $spell:83581 или $spell:83500",
 	HeartIceIcon			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(82665),
@@ -64,7 +64,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Quake					= "Земля уходит у вас из-под ног...", -- Yell string: Земля поглатит вас!
+	Quake					= "Земля уходит у вас из-под ног...", -- Yell string: Земля поглотит вас!
 	Thundershock			= "Воздух потрескивает от скопившейся энергии...", -- Yell string: Ветер, явись на мой зов!
 	Switch					= "Закончим этот фарс!",--"We will handle them!" comes 3 seconds after this one
 	Phase3					= "Ваше упорство...",--"BEHOLD YOUR DOOM!" is about 13 seconds after
@@ -79,9 +79,9 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(167)
 
 L:SetOptionLocalization({
-	CorruptingCrashArrow	= "Показывать стрелку DBM, когда $spell:93178 около вас",
+	CorruptingCrashArrow	= "Показывать стрелку DBM, когда $spell:81685 около Вас",
 	InfoFrame				= "Показывать информационное окно для $journal:3165",
-	RangeFrame				= "Показывать окно проверки дистанции (5м) для $spell:82235",
+	RangeFrame				= "Показывать окно проверки дистанции (5м) для $journal:3165",
 	SetIconOnWorship		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(91317)
 })
 
@@ -95,7 +95,7 @@ L:SetWarningLocalization({
 	SpecWarnOrbs		= "Скоро появятся сферы!",
 	warnWrackJump		= "%s прыгнуло на >%s<",
 	warnAggro			= "На >%s< АГРО (возможные цели сфер)",
-	SpecWarnAggroOnYou	= "На вас АГРО! Смотрите за сферами!"
+	SpecWarnAggroOnYou	= "На Вас АГРО! Смотрите за сферами!"
 })
 
 L:SetTimerLocalization({
@@ -105,10 +105,10 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	WarnOrbSoon			= "Предупреждение о появлении сфер (за 5с до начала, каждую 1с)<br/>Предупреждение может быть неточным!",
+	WarnOrbSoon			= "Предупреждение о появлении сфер (за 5с до начала, каждую 1с)<br/>Предупреждение может быть неточным. Может быть спамом.",
 	warnWrackJump		= "Показывать цели, на которые прыгает $spell:92955",
 	warnAggro			= "Показывать игроков, имеющих агро от сфер (возможные цели сфер)",
-	SpecWarnAggroOnYou	= "Спецпредупреждение, если на вас есть агро при появлении сфер",
+	SpecWarnAggroOnYou	= "Спецпредупреждение, если на Вас есть агро при появлении сфер",
 	SpecWarnOrbs		= "Спецпредупреждение при появлении сфер<br/>Предупреждение может быть неточным",
 	TimerEggWeakening	= "Отсчет времени до снятия $spell:87654",
 	TimerEggWeaken		= "Отсчет времени восстановления $spell:87654",
@@ -129,5 +129,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("BoTrash")
 
 L:SetGeneralLocalization({
-	name =	"Трэш мобы Сумеречного бастион"
+	name =	"Трэш мобы Сумеречный бастион"
 })

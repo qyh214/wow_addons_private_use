@@ -68,7 +68,10 @@ local FeastList = {
     [307157] = true, -- 永恆大鍋
     [308458] = true, -- 意外可口盛宴
     [308462] = true, -- 暴食享樂盛宴
-    [359336] = true -- 石頭湯之壺
+    [359336] = true, -- 石頭湯之壺
+    [382423] = true, -- 雨莎的澎湃燉肉
+    [382427] = true, -- 卡魯耶克的豪華盛宴
+    [383063] = true -- 龍族佳餚大餐
 }
 
 local PortalList = {
@@ -98,7 +101,8 @@ local PortalList = {
     [53142] = true, -- 傳送門：達拉然－北裂境
     [120146] = true, -- 遠古傳送門：達拉然
     [224871] = true, -- 傳送門：達拉然－破碎群島
-    [344597] = true -- 傳送門：奧睿博司
+    [344597] = true, -- 傳送門：奧睿博司
+    [395289] = true -- 傳送門：沃卓肯
 }
 
 local ToyList = {
@@ -175,6 +179,9 @@ function A:Utility(event, sourceName, spellId)
         if TryAnnounce(spellId, sourceName, 261602) then
             return
         end -- 凱蒂的郵哨
+        if TryAnnounce(spellId, sourceName, 376664) then
+            return
+        end -- 歐胡納鷹棲所
         if TryAnnounce(spellId, sourceName, 195782) then
             return
         end -- 召喚月羽雕像

@@ -144,7 +144,7 @@ function NP:SetCVars()
 
 	NP:SetCVar('nameplateMotion', NP.db.motionType == 'STACKED' and 1 or 0)
 
-	if E.TBC or E.Wrath then
+	if E.Wrath then
 		NP:SetCVar('nameplateMaxDistance', NP.db.loadDistance)
 	end
 
@@ -450,7 +450,7 @@ function NP:GetClassAnchor()
 end
 
 function NP:SetupTarget(nameplate, removed)
-	if not NP.db.units then return end
+	if not (NP.db.units and NP.db.units.TARGET) then return end
 
 	local TCP = _G.ElvNP_TargetClassPower
 	local cp = NP.db.units.TARGET.classpower
@@ -505,7 +505,12 @@ function NP:Update_StatusBars()
 	for bar in pairs(NP.StatusBars) do
 		local sf = NP:StyleFilterChanges(bar:GetParent())
 		if not sf.HealthTexture then
-			bar:SetStatusBarTexture(LSM:Fetch('statusbar', NP.db.statusbar) or E.media.normTex)
+			local texture = LSM:Fetch('statusbar', NP.db.statusbar) or E.media.normTex
+			if bar.SetStatusBarTexture then
+				bar:SetStatusBarTexture(texture)
+			else
+				bar:SetTexture(texture)
+			end
 		end
 	end
 end
@@ -545,12 +550,12 @@ function NP:ToggleStaticPlate()
 	local isStatic = NP.db.units.PLAYER.useStaticPosition
 
 	if playerEnabled and isStatic then
-		E:EnableMover('ElvNP_PlayerMover')
+		E:EnableMover(_G.ElvNP_Player.mover.name)
 		_G.ElvNP_Player:Enable()
 		_G.ElvNP_StaticSecure:Show()
 	else
 		NP:DisablePlate(_G.ElvNP_Player)
-		E:DisableMover('ElvNP_PlayerMover')
+		E:DisableMover(_G.ElvNP_Player.mover.name)
 		_G.ElvNP_Player:Disable()
 		_G.ElvNP_StaticSecure:Hide()
 	end
@@ -634,7 +639,7 @@ function NP:PlateFade(nameplate, timeToFade, startAlpha, endAlpha)
 	end
 end
 
-function NP:UnitNPCID(unit)
+function NP:UnitNPCID(unit) -- also used by Bags.lua
 	local guid = UnitGUID(unit)
 	return guid and select(6, strsplit('-', guid)), guid
 end
@@ -743,6 +748,12 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 		NP:UpdatePlateType(nameplate)
 		NP:UpdatePlateSize(nameplate)
 
+		nameplate.softTargetFrame = nameplate.blizzPlate and nameplate.blizzPlate.SoftTargetFrame
+		if nameplate.softTargetFrame then
+			nameplate.softTargetFrame:SetParent(nameplate)
+			nameplate.softTargetFrame:SetIgnoreParentAlpha(true)
+		end
+
 		if nameplate.widgetsOnly then
 			NP:DisablePlate(nameplate)
 
@@ -750,7 +761,7 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 				nameplate.RaisedElement:Hide()
 			end
 
-			nameplate.widgetContainer = nameplate.blizzPlate.WidgetContainer
+			nameplate.widgetContainer = nameplate.blizzPlate and nameplate.blizzPlate.WidgetContainer
 			if nameplate.widgetContainer then
 				nameplate.widgetContainer:SetParent(nameplate)
 				nameplate.widgetContainer:ClearAllPoints()
@@ -789,6 +800,11 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 			NP:UpdatePlateGUID(nameplate)
 		end
 
+		if nameplate.softTargetFrame then
+			nameplate.softTargetFrame:SetParent(nameplate.blizzPlate)
+			nameplate.softTargetFrame:SetIgnoreParentAlpha(false)
+		end
+
 		if not nameplate.widgetsOnly then
 			NP:BossMods_UpdateIcon(nameplate, true)
 
@@ -798,6 +814,13 @@ function NP:NamePlateCallBack(nameplate, event, unit)
 			nameplate.widgetContainer:SetParent(nameplate.blizzPlate)
 			nameplate.widgetContainer:ClearAllPoints()
 			nameplate.widgetContainer:SetPoint('TOP', nameplate.blizzPlate.castBar, 'BOTTOM')
+		end
+
+		-- these can appear on SoftTarget nameplates and they aren't
+		-- from NAME_PLATE_UNIT_ADDED which means, they will still be shown
+		-- in some cases when the plate previously had the element
+		if nameplate.QuestIcons then
+			nameplate.QuestIcons:Hide()
 		end
 
 		-- vars that we need to keep in a nonstale state
@@ -817,7 +840,7 @@ local optionsTable = {
 	'ShowAll'
 }
 
-if E.TBC or E.Wrath then
+if E.Wrath then
 	tinsert(optionsTable, 'NameplateMaxDistanceSlider')
 end
 
@@ -825,7 +848,7 @@ function NP:HideInterfaceOptions()
 	for _, x in pairs(optionsTable) do
 		local o = _G['InterfaceOptionsNamesPanelUnitNameplates' .. x]
 		if o then
-			o:SetSize(0.0001, 0.0001)
+			o:SetSize(0.00001, 0.00001)
 			o:SetAlpha(0)
 			o:Hide()
 		end

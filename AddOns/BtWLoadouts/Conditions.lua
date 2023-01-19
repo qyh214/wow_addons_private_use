@@ -33,7 +33,6 @@ local dungeonInfo = Internal.dungeonInfo;
 local raidInfo = Internal.raidInfo;
 local npcIDToBossID = Internal.npcIDToBossID;
 local InstanceAreaIDToBossID = Internal.InstanceAreaIDToBossID;
-local uiMapIDToBossID = Internal.uiMapIDToBossID;
 
 local CONDITION_TYPE_WORLD = "none";
 local CONDITION_TYPE_DUNGEONS = "party";
@@ -399,6 +398,10 @@ function Internal.UpdateConditionsForBoss(unitId)
 
 	return bossID
 end
+-- Get the current boss id for conditions
+function Internal.GetConditionBossID()
+	return previousConditionInfo.bossID
+end
 function Internal.UpdateConditionsForAffixes()
 	-- local affixesID;
 	local affixIDs = {}
@@ -757,10 +760,12 @@ local function InstanceDropDown_OnClick(self, arg1, arg2, checked)
 
 	set.instanceID = arg1;
 	set.bossID = nil;
-	if set.difficultyID ~= nil then
-		local supportsDifficulty = (set.instanceID == nil);
+
+	if set.instanceID ~= nil then
+		local supportedDifficulties = instanceDifficulties[set.instanceID]
+		local supportsDifficulty = false;
 		if not supportsDifficulty then
-			for _,difficultyID in ipairs(instanceDifficulties[set.instanceID]) do
+			for _,difficultyID in ipairs(supportedDifficulties) do
 				if difficultyID == set.difficultyID then
 					supportsDifficulty = true;
 					break;
@@ -769,21 +774,15 @@ local function InstanceDropDown_OnClick(self, arg1, arg2, checked)
 		end
 
 		if not supportsDifficulty then
-			set.difficultyID = nil;
+			set.difficultyID = #supportedDifficulties == 1 and supportedDifficulties[1] or nil;
 		end
+	end
 
-		if set.difficultyID ~= 8 then
-			set.affixesID = nil;
-		end
-	else
+	if set.difficultyID ~= 8 then
 		set.affixesID = nil;
 	end
 
 	BtWLoadoutsFrame:Update();
-end
-local CURRENT_EXPANSION = 9
-if GetExpansionLevel() ~= 8 then
-	CURRENT_EXPANSION = 8
 end
 local function InstanceDropDownInit(self, level, menuList)
 	local info = UIDropDownMenu_CreateInfo();
@@ -807,7 +806,7 @@ local function InstanceDropDownInit(self, level, menuList)
 		-- 		UIDropDownMenu_AddButton(info, level);
 		-- 	end
 		-- else
-			for _,instanceID in ipairs(dungeonInfo[CURRENT_EXPANSION].instances) do
+			for _,instanceID in ipairs(dungeonInfo[GetExpansionLevel()+1].instances) do
 				info.text = GetRealZoneText(instanceID);
 				info.arg1 = instanceID;
 				info.func = InstanceDropDown_OnClick;
@@ -830,7 +829,7 @@ local function InstanceDropDownInit(self, level, menuList)
 		-- 		UIDropDownMenu_AddButton(info, level);
 		-- 	end
 		-- else
-			for _,instanceID in ipairs(raidInfo[CURRENT_EXPANSION].instances) do
+			for _,instanceID in ipairs(raidInfo[GetExpansionLevel()+1].instances) do
 				info.text = GetRealZoneText(instanceID);
 				info.arg1 = instanceID;
 				info.func = InstanceDropDown_OnClick;
@@ -895,12 +894,16 @@ local function DifficultyDropDownInit(self, level, menuList)
 		end
 	else
 		if (level or 1) == 1 then
-			info.text = L["Any"];
-			info.func = DifficultyDropDown_OnClick;
-			info.checked = selected == nil;
-			UIDropDownMenu_AddButton(info, level);
+			local difficulies = instanceDifficulties[instanceID]
 
-			for _,difficultyID in ipairs(instanceDifficulties[instanceID]) do
+			if #difficulies ~= 1 then
+				info.text = L["Any"];
+				info.func = DifficultyDropDown_OnClick;
+				info.checked = selected == nil;
+				UIDropDownMenu_AddButton(info, level);
+			end
+
+			for _,difficultyID in ipairs(difficulies) do
 				info.text = GetDifficultyInfo(difficultyID);
 				info.arg1 = difficultyID;
 				info.func = DifficultyDropDown_OnClick;
@@ -979,7 +982,7 @@ local function ScenarioDropDownInit(self, level, menuList)
 	-- 		UIDropDownMenu_AddButton(info, level);
 	-- 	end
 	-- else
-		for _,details in ipairs(scenarioInfo[CURRENT_EXPANSION].instances) do
+		for _,details in ipairs(scenarioInfo[GetExpansionLevel()+1].instances) do
 			info.text = details[3];
 			info.arg1 = details[1];
 			info.arg2 = details[2];
@@ -1021,7 +1024,7 @@ local function BattlegroundDropDownInit(self, level, menuList)
 	-- 		UIDropDownMenu_AddButton(info, level);
 	-- 	end
 	-- else
-		for _,details in ipairs(battlegroundInfo[CURRENT_EXPANSION].instances) do
+		for _,details in ipairs(battlegroundInfo[GetExpansionLevel()+1].instances) do
 			info.text = GetRealZoneText(details);
 			info.arg1 = details;
 			info.func = BattlegroundDropDown_OnClick;
@@ -1432,7 +1435,7 @@ function BtWLoadoutsConditionsMixin:Update()
 			UIDropDownMenu_SetText(self.ScenarioDropDown, L["Any"]);
 		else
 			-- This isnt a good way to do this, but it'll work
-			for _,details in ipairs(scenarioInfo[CURRENT_EXPANSION].instances) do
+			for _,details in ipairs(scenarioInfo[GetExpansionLevel()+1].instances) do
 				if (set.instanceID == details[1]) and (set.difficultyID == details[2]) then
 					UIDropDownMenu_SetText(self.ScenarioDropDown, details[3]);
 				end

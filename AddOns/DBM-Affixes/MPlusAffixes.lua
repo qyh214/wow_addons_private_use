@@ -1,70 +1,65 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221016081320")
+mod:SetRevision("20230116010542")
 --mod:SetModelID(47785)
-mod:SetZone(2441, 2097, 1651, 1208, 1195)--All of the S4 SL M+ Dungeons
+mod:SetZone(2516, 2526, 2515, 2521, 1477, 1571, 1176, 960)--All of the S1 DF M+ Dungeons
 
 mod.isTrashMod = true
 mod.isTrashModBossFightAllowed = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 373513 240446 373513 373429 373370",
-	"SPELL_CAST_SUCCESS 373370",
-	"SPELL_AURA_APPLIED 240447 226512 373552 373509 350209",
-	"SPELL_AURA_APPLIED_DOSE 373509",
-	"SPELL_AURA_REMOVED 373724",
+	"SPELL_CAST_START 240446",
+--	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 240447 226512 350209 396369 396364",
+--	"SPELL_AURA_APPLIED_DOSE",
+	"SPELL_AURA_REMOVED 396369 396364",
 	"SPELL_DAMAGE 209862",
-	"SPELL_MISSED 209862",
-	"UNIT_DIED"
+	"SPELL_MISSED 209862"
+--	"UNIT_DIED"
 )
 
 --TODO, fine tune tank stacks/throttle?
 --[[
-(ability.id = 373552 or ability.id = 373724) and type = "cast" or (ability.id = 373513 or ability.id = 373370 or ability.id = 373429) and type = "begincast"
+(ability.id = 240446) and type = "begincast"
 --]]
 local warnExplosion							= mod:NewCastAnnounce(240446, 4)
-local warnNightmareCloud					= mod:NewCastAnnounce(373370, 4)--S4
-local warnHypnosisBat						= mod:NewTargetNoFilterAnnounce(373552, 3)--S4
-local warnBloodBarrier						= mod:NewTargetNoFilterAnnounce(373724, 4)--S4
-local warnShadowClaws						= mod:NewStackAnnounce(373509, 2, nil, "Tank|Healer")--S4
+local warnThunderingFades					= mod:NewFadesAnnounce(396363, 1)
 
 local specWarnQuake							= mod:NewSpecialWarningMoveAway(240447, nil, nil, nil, 1, 2)
 local specWarnSpitefulFixate				= mod:NewSpecialWarningYou(350209, nil, nil, nil, 1, 2)
---local yellSharedAgony						= mod:NewYell(327401)
+local specWarnPositiveCharge				= mod:NewSpecialWarningYou(396369, nil, 391990, nil, 1, 13)--Short name is using Positive Charge instead of Mark of Lightning
+local specWarnNegativeCharge				= mod:NewSpecialWarningYou(396364, nil, 391991, nil, 1, 13)--Short name is using Netative Charge instead of Mark of Winds
+local yellThundering						= mod:NewIconRepeatYell(396363, DBM_CORE_L.AUTO_YELL_ANNOUNCE_TEXT.shortyell)--15-5
+local yellThunderingFades					= mod:NewIconFadesYell(396363, nil, nil, nil, "YELL")--5 too 0
 local specWarnGTFO							= mod:NewSpecialWarningGTFO(209862, nil, nil, nil, 1, 8)--Volcanic and Sanguine
-local specWarnCarrionSwarm					= mod:NewSpecialWarningDodge(373429, nil, nil, nil, 2, 2)--S4
-local specWarnShadowEruption				= mod:NewSpecialWarningDodge(373513, nil, nil, nil, 2, 2)--S4
-local specWarnBloodSiphon					= mod:NewSpecialWarningInterrupt(373729, nil, nil, nil, 1, 2)--S4
 
-local timerCarrionSwarmCD					= mod:NewCDTimer(23, 373429, nil, nil, nil, 3)--S4, 23-27
-local timerNightmareCloudCD					= mod:NewCDTimer(32.5, 373370, nil, nil, nil, 3)--S4, 32-36
-local timerShadowEruptionCD					= mod:NewCDTimer(24, 373729, nil, nil, nil, 2)
+local timerPositiveCharge					= mod:NewBuffFadesTimer(15, 396369, 391990, nil, 2, 5, nil, nil, nil, 1, 4)
+local timerNegativeCharge					= mod:NewBuffFadesTimer(15, 396364, 391991, nil, 2, 5, nil, nil, nil, 1, 4)
+mod:GroupSpells(396363, 396369, 396364)--Thundering with the two charge spells
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 gtfo, 8 personal aggregated alert
+
+local thunderingTotal = 0
+local playerThundering = false
+
+local function yellRepeater(self, text, total)
+	total = total + 1
+	if total < 7 then
+		yellThundering:Yell(text)
+		self:Schedule(1.5, yellRepeater, self, text, total)
+	end
+end
 
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 373429 then
-		if self:AntiSpam(3, 2) then
-			specWarnCarrionSwarm:Show()
-			specWarnCarrionSwarm:Play("shockwave")
-		end
-		timerCarrionSwarmCD:Start(nil, args.sourceGUID)
-	elseif spellId == 373513 then
-		if self:AntiSpam(3, 2) then
-			specWarnShadowEruption:Show()
-			specWarnShadowEruption:Play("watchstep")
-		end
-		timerShadowEruptionCD:Start()
-	elseif spellId == 240446 and self:AntiSpam(3, 6) then
+	if spellId == 240446 and self:AntiSpam(3, 6) then
 		warnExplosion:Show()
-	elseif spellId == 373370 then
-		warnNightmareCloud:Show()
 	end
 end
 
+--[[
 function mod:SPELL_CAST_SUCCESS(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
@@ -72,6 +67,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerNightmareCloudCD:Start(30.5, args.sourceGUID)
 	end
 end
+--]]
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
@@ -84,21 +80,33 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 226512 and args:IsPlayer() and self:AntiSpam(3, 7) then
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 373552 then
-		warnHypnosisBat:Show(args.destName)
-	elseif spellId == 373724 then
-		warnBloodBarrier:Show(args.destName)
-	elseif spellId == 373509 then
-		local uId = DBM:GetRaidUnitId(args.destName)
-		if self:IsTanking(uId) then
-			local amount = args.amount or 1
-			if amount >= 3 and self:AntiSpam(5, 5) then
-				warnShadowClaws:Show(args.destName, amount)
-			end
-		end
 	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(3, 8) then
 		specWarnSpitefulFixate:Show()
 		specWarnSpitefulFixate:Play("targetyou")
+	elseif spellId == 396369 or spellId == 396364 then
+		if self:AntiSpam(30, 1) then
+			thunderingTotal = 0
+		end
+		thunderingTotal = thunderingTotal + 1
+		if args:IsPlayer() then
+			playerThundering = true
+			self:Unschedule(yellRepeater)
+			local icon
+			if spellId == 396364 then
+				specWarnNegativeCharge:Show()
+				specWarnNegativeCharge:Play("negative")
+				timerNegativeCharge:Start()
+				icon = 7
+			else
+				specWarnPositiveCharge:Show()
+				specWarnPositiveCharge:Play("positive")
+				timerPositiveCharge:Start()
+				icon = 6
+			end
+			local formatedIcon = DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION:format(icon, "")
+			yellRepeater(self, formatedIcon, 0)
+			yellThunderingFades:Countdown(15, 5, icon)--Start icon spam with count at 5 remaining
+		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
@@ -106,9 +114,20 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 function mod:SPELL_AURA_REMOVED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 373724 and self:CheckInterruptFilter(args.destGUID, false, true) then
-		specWarnBloodSiphon:Show(args.destName)
-		specWarnBloodSiphon:Play("kickcast")
+	if spellId == 396369 or spellId == 396364 then
+		thunderingTotal = thunderingTotal - 1
+		--Your debuff is gone, OR all debuffs but one are gone and you're the one with it
+		if args:IsPlayer() or (thunderingTotal == 1 and DBM:UnitDebuff("player", 396369, 396364)) then
+			if playerThundering then--Because it's still possible to get double clear messages/yells
+				warnThunderingFades:Show()
+				playerThundering = false
+				yellThundering:Yell(DBM_COMMON_L.CLEAR)
+			end
+			timerPositiveCharge:Stop()
+			timerNegativeCharge:Stop()
+			self:Unschedule(yellRepeater)
+			yellThunderingFades:Cancel()
+		end
 	end
 end
 
@@ -120,12 +139,13 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
+--[[
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 190128 then--Zul'gamux
-		timerShadowEruptionCD:Stop()
-	elseif cid == 189878 then--Nathrezim Infiltrator
-		timerCarrionSwarmCD:Stop(args.destGUID)
-		timerNightmareCloudCD:Stop(args.destGUID)
+	if cid == 190128 then
+
+	elseif cid == 189878 then
+
 	end
 end
+--]]

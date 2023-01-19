@@ -563,14 +563,14 @@ L['inquisitor_note'] = 'Сдайте 100 {currency:1816} у {npc:160248}, что
 L['options_icons_inquisitors'] = 'Инквизиторы'
 L['options_icons_inquisitors_desc'] = 'Показать местоположения инквизиторов для достижения {achievement:14276}.'
 
-L['bell_of_shame_note'] = nil
-L['atonement_crypt_label'] = nil
-L['atonement_crypt_note'] = nil
-L['atonement_crypts_opened'] = nil
+L['bell_of_shame_note'] = 'Каждые 30 минут рядом с {npc:176006}.\n\nЧините {npc:176056} за 30 {currency:1820} а затем позвоните в колокол, чтобы получить бафф от активного призрака.\n\nОдин из призраков, {npc:176043}, дает {spell:346708} что обеспечивает повышенный дроп {item:172957} на территории |cFFFFFD00Чертогов Покаяния|r.'
+L['atonement_crypt_label'] = 'Склеп Покаяния'
+L['atonement_crypt_note'] = 'Откройте |cFFFFFD00Склеп Покаяния|r используя {item:172957}.'
+L['atonement_crypts_opened'] = 'Склепы Покаяния открыты'
 L['atonement_crypt_key_label'] = '{item:172957}'
-L['atonement_crypt_key_note'] = nil
+L['atonement_crypt_key_note'] = '{item:172957} может выпасть из большинства монстров на территории |cFFFFFD00Чертогов Покаяния|r.\n\n{npc:158902}\n{npc:176109}\n{npc:158894}\n{npc:156911}\n{npc:158910}\n{npc:176121}\n{npc:176114}\n{npc:156909}\n{npc:156256}\n{npc:176124}\n{npc:156260}\n{npc:159027}\n{npc:158897}\n{npc:176116}\n{npc:158908}\n{npc:176122}\n\nСамый высокий процент выпадения из {npc:158892}.'
 L['options_icons_crypt_kicker'] = '{achievement:14273}'
-L['options_icons_crypt_kicker_desc'] = nil
+L['options_icons_crypt_kicker_desc'] = 'Отображает места для достижения {achievement:14273}.'
 
 L['broken_mirror'] = 'Сломанные зеркала'
 L['broken_mirror_note'] = 'Группа из трех разбитых зеркал будет активна каждый день. Используйте {item:181363}, чтобы починить каждое зеркало и открыть |cFFFFFD00Позабытый сундук|r внутри.'
@@ -584,9 +584,20 @@ L['broken_mirror_61827'] = 'В маленькой комнате.'
 L['options_icons_broken_mirror'] = 'Сломанные зеркала'
 L['options_icons_broken_mirror_desc'] = 'Показать расположение сломанных зеркал.'
 
-L['soulshape_chicken_note'] = nil
+L['soulshape_chicken_note'] = [[
+1. Соберите {item:187811} в |cffffff00Темном Приюте|r
+2. Взять в цель {npc:181660} и используйте эмоцию /цып
+3. |cFFFF8C00Потерянная душа жадно кудахчет вам.|r
+4. Взять в цель {npc:181660} и использовать {item:187811}
+]]
 L['spectral_feed_label'] = '{item:187811}'
-L['spectral_feed_note'] = nil
+L['spectral_feed_note'] = [[
+{item:187811} используется для кормления {npc:181660} в |cffffff00Ревендрете|r для {item:187813}
+
+{item:187811} используется для кормления {npc:182093} в |cFFFFFF00Арденвельде|r для |cFF00FF00[Сытой кошачьей души]|r
+
+|cFFFF8C00{item:187811} имеет 10-минутный таймер и 60-минутное возрождение|r
+]]
 
 -------------------------------------------------------------------------------
 ----------------------------------- THE MAW -----------------------------------
@@ -677,6 +688,7 @@ L['nexus_cave_forlorn'] = 'Внутри пещеры Тоскливый Прию
 L['nexus_cave_howl_outside'] = 'На земле за пределами пещеры Вой Смерти.'
 L['nexus_cave_howl'] = 'Внутри пещеры Вой Смерти'
 L['nexus_cave_roar'] = 'Внутри пещеры Рев Смерти'
+L['nexus_cave_roar_outside'] = nil
 L['nexus_cave_ledge'] = 'В маленькой пещере под уступом'
 L['nexus_cave_prodigum'] = 'В маленькой пещере в Продигум'
 L['nexus_cave_soulstained'] = 'В маленькой пещере в Полях Оскверненных Душ'
@@ -686,6 +698,7 @@ L['nexus_npc_akros'] = 'Наверху лестницы рядом с {npc:17078
 L['nexus_npc_dekaris'] = 'На вершине пика, где находится {npc:157964}'
 L['nexus_npc_dolos'] = 'На земле позади {npc:170711}'
 L['nexus_npc_ekphoras'] = 'Рядом с платформой {npc:169827}'
+L['nexus_npc_eternas'] = nil
 L['nexus_npc_incinerator'] = 'На небольшом выступе под {npc:156203}'
 L['nexus_npc_orophea'] = 'На земле рядом с {npc:172577}'
 L['nexus_npc_orrholyn'] = 'Найдено ниже платформы {npc:162845}'
@@ -774,66 +787,67 @@ L['mawsworn_blackguard_note'] = 'Easily target a stealthed {npc:183173}:'
 L['options_icons_covenant_assaults'] = 'Covenant Assaults'
 L['options_icons_covenant_assaults_desc'] = 'Rewards for covenant assaults'
 
-L['assault_sublabel_US'] = nil
-L['assault_sublabel_EU'] = nil
-L['assault_sublabel_CN'] = nil
+L['assault_sublabel_US'] = 'Нападения меняются во вторник в 8:00 AM PDT и в пятницу в 20:00 PM PDT.'
+L['assault_sublabel_EU'] = 'Нападения меняются в среду в 9:00 по Московскому времени и в субботу в 21:00 по Московскому времени.'
+L['assault_sublabel_CN'] = 'Нападения меняются в четверг в 7:00 CST и в воскресенье в 19:00 CST.'
+L['assault_sublabel_AS'] = 'Нападения меняются в четверг в 8:00 AM KST и в воскресенье в 20:00 PM KST.'
 
 L['necrolord_assault'] = '{quest:63543}'
-L['necrolord_assault_note'] = nil
-L['necrolord_assault_quantity_note'] = nil
+L['necrolord_assault_note'] = '{item:185992} можно получить один раз за нападение'
+L['necrolord_assault_quantity_note'] = 'Открыть Тайник Верных Утробе'
 L['venthyr_assault'] = '{quest:63822}'
-L['venthyr_assault_note'] = nil
-L['venthyr_assault_quantity_note'] = nil
+L['venthyr_assault_note'] = '{item:185990} можно получить один раз за нападение'
+L['venthyr_assault_quantity_note'] = 'Используемые предметы'
 L['night_fae_assault'] = '{quest:63823}'
-L['night_fae_assault_note'] = nil
-L['night_fae_assault_quantity_note'] = nil
+L['night_fae_assault_note'] = '{item:185991} можно получить один раз за нападение'
+L['night_fae_assault_quantity_note'] = 'Открыть Тайник разлома'
 L['kyrian_assault'] = '{quest:63824}'
-L['kyrian_assault_note'] = nil
-L['kyrian_assault_quantity_note1'] = nil
-L['kyrian_assault_quantity_note2'] = nil
+L['kyrian_assault_note'] = '{item:185993} можно получить один раз за нападение'
+L['kyrian_assault_quantity_note1'] = 'Патрик найден'
+L['kyrian_assault_quantity_note2'] = 'Танцы возле кузниц'
 
 -------------------------------------------------------------------------------
 ---------------------- TORGHAST, THE TOWER OF THE DAMNED ----------------------
 -------------------------------------------------------------------------------
 
-L['torghast_the_tower_of_the_damned'] = nil
-L['torghast_reward_sublabel'] = nil
-L['torghast_boss_note'] = nil
-L['torghast_vendor_note'] = nil
-L['torghast_reward_note'] = nil
-L['torghast_soulshape_note'] = nil
-L['colossal_umbrahide_mawrat_note'] = nil
+L['torghast_the_tower_of_the_damned'] = 'Торгаст, Башня Проклятых'
+L['torghast_reward_sublabel'] = '|cFFFF8C00Награды распределяются между большинством крыльев|r'
+L['torghast_boss_note'] = 'Выпадает из разных боссов в |cffffff00Торгаст, Башня Проклятых|r '
+L['torghast_vendor_note'] = 'Продается у торговцев {npc:152594} и {npc:170257} за 300 {currency:1728} или 1,000 {currency:1728}'
+L['torghast_reward_note'] = 'Награды в |cffffff00Торгаст, Башня Проклятых|r '
+L['torghast_soulshape_note'] = 'Этаж 12+'
+L['colossal_umbrahide_mawrat_note'] = 'Этаж 13+'
 
-L['skoldus_hall'] = nil
-L['fracture_chambers'] = nil
-L['the_soulforges'] = nil
-L['coldheart_interstitia'] = nil
-L['mortregar'] = nil
-L['the_upper_reaches'] = nil
-L['adamant_vaults'] = nil
-L['twisting_corridors'] = nil
-L['the_jailers_gauntlet'] = nil
+L['skoldus_hall'] = 'Чертоги Скольда'
+L['fracture_chambers'] = 'Костоломни'
+L['the_soulforges'] = 'Кузни душ'
+L['coldheart_interstitia'] = 'Междумирье Бессердечных'
+L['mortregar'] = 'Морт\'регар'
+L['the_upper_reaches'] = 'Верхний ярус'
+L['adamant_vaults'] = 'Адамантовые хранилища'
+L['twisting_corridors'] = 'Извилистые коридоры'
+L['the_jailers_gauntlet'] = 'Испытание Тюремщика'
 
-L['torghast_layer1'] = nil
-L['torghast_layer2'] = nil
-L['torghast_layer3'] = nil
-L['torghast_layer4'] = nil
-L['torghast_layer6'] = nil
-L['torghast_layer8'] = nil
+L['torghast_layer1'] = 'Завершить уровень 1'
+L['torghast_layer2'] = 'Завершить уровень 2'
+L['torghast_layer3'] = 'Завершить уровень 3'
+L['torghast_layer4'] = 'Завершить уровень 4'
+L['torghast_layer6'] = 'Завершить уровень 6'
+L['torghast_layer8'] = 'Завершить уровень 8'
 
-L['phantasma_note'] = nil
-L['bloating_fodder_note'] = nil
-L['flawless_master_note'] = nil
-L['tower_ranger_note'] = nil
+L['phantasma_note'] = 'Фантазма'
+L['bloating_fodder_note'] = 'Взрыв падали'
+L['flawless_master_note'] = 'Завершите |cffffff00[{achievement:15322}]|r'
+L['tower_ranger_note'] = 'Завершите |cffffff00[{achievement:15324}]|r'
 
-L['the_jailers_gauntlet_note'] = nil
+L['the_jailers_gauntlet_note'] = '|cFFFF8C00Боссы не засчитываются|r |cffffff00{achievement:14498}|r'
 
-L['the_box_of_many_things'] = nil
-L['the_box_of_many_things_note'] = nil
-L['many_many_things_section'] = nil
+L['the_box_of_many_things'] = 'Шкатулка многих тайн'
+L['the_box_of_many_things_note'] = 'Разблокируйте дополнительные способности с помощью {currency:1904}'
+L['many_many_things_section'] = 'Завершите |cffffff00[{achievement:15079}]|r'
 
 L['the_runecarver'] = '{npc:164937}'
-L['clearing_the_fog_suffix'] = nil
+L['clearing_the_fog_suffix'] = 'Воспоминания разблокированы'
 
 -------------------------------------------------------------------------------
 -------------------------------- ZERETH MORTIS --------------------------------
@@ -1073,4 +1087,4 @@ L['options_icons_shrouded_cyphers_desc'] = 'Показать возможные 
 L['options_icons_mawsworn_supply_cache'] = 'Тайник Верных Утробе'
 L['options_icons_mawsworn_supply_cache_desc'] = 'Показать возможные места для тайников Верных Утробе.'
 L['options_icons_coreless_automa'] = '{achievement:15542}'
-L['options_icons_coreless_automa_desc'] = 'Coreless automa locations for the {achievement:15542} achievement.'
+L['options_icons_coreless_automa_desc'] = 'Расположение пустых автоматов для достижения {achievement:15542}.'

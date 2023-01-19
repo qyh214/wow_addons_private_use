@@ -16,7 +16,7 @@ local IsAddOnLoaded = IsAddOnLoaded
 
 function W:ConstructCompatibilityFrame()
     local frame = CreateFrame("Frame", "WTCompatibilityFrame", E.UIParent)
-    frame:Size(550, 500)
+    frame:SetSize(550, 500)
     frame:SetPoint("CENTER")
     frame:CreateBackdrop("Transparent")
     S:CreateShadowModule(frame.backdrop)
@@ -78,7 +78,7 @@ function W:ConstructCompatibilityFrame()
     largeTip:SetPoint("TOPLEFT", desc, "BOTTOMLEFT", 0, -10)
 
     local tex = frame:CreateTexture("WTCompatibilityFrameIllustration", "ARTWORK")
-    tex:Size(64)
+    tex:SetSize(64, 64)
     tex:SetTexture(W.Media.Textures.illMurloc1)
     tex:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -20, -25)
 
@@ -103,7 +103,7 @@ function W:ConstructCompatibilityFrame()
     completeButton.Text:SetJustifyH("CENTER")
     completeButton.Text:SetJustifyV("CENTER")
     F.SetFontOutline(completeButton.Text, E.db.general.font, "4")
-    completeButton:Size(350, 35)
+    completeButton:SetSize(350, 35)
     completeButton:SetPoint("BOTTOM", bottomDesc, "TOP", 0, 10)
     S:ESProxy("HandleButton", completeButton)
     completeButton:SetScript(
@@ -145,7 +145,7 @@ local function AddButtonToCompatibilityFrame(data)
     leftButton.Text:SetJustifyH("CENTER")
     leftButton.Text:SetJustifyV("CENTER")
     F.SetFontOutline(leftButton.Text, E.db.general.font)
-    leftButton:Size(220, 40)
+    leftButton:SetSize(220, 40)
     leftButton:SetPoint("TOPLEFT", frame.scrollFrame, "TOPLEFT", 5, -frame.numModules * 50 + 45)
     S:ESProxy("HandleButton", leftButton)
     leftButton:SetScript(
@@ -165,7 +165,7 @@ local function AddButtonToCompatibilityFrame(data)
     local middleTexture =
         frame.scrollFrame:CreateTexture("WTCompatibilityFrameMiddleTexture" .. frame.numModules, "ARTWORK")
     middleTexture:SetPoint("CENTER")
-    middleTexture:Size(20)
+    middleTexture:SetSize(20, 20)
     middleTexture:SetTexture(W.Media.Icons.convert)
     middleTexture:SetVertexColor(1, 1, 1)
     middleTexture:SetPoint("CENTER", frame.scrollFrame, "TOP", 0, -frame.numModules * 50 + 25)
@@ -181,7 +181,7 @@ local function AddButtonToCompatibilityFrame(data)
     rightButton.Text:SetJustifyH("CENTER")
     rightButton.Text:SetJustifyV("CENTER")
     F.SetFontOutline(rightButton.Text, E.db.general.font)
-    rightButton:Size(220, 40)
+    rightButton:SetSize(220, 40)
     rightButton:SetPoint("TOPRIGHT", frame.scrollFrame, "TOPRIGHT", -5, -frame.numModules * 50 + 45)
     S:ESProxy("HandleButton", rightButton)
     rightButton:SetScript(
@@ -285,21 +285,7 @@ function W:CheckCompatibility()
         "db.mui.tooltip.tooltipIcon"
     )
 
-    CheckMerathilisUI(
-        format("%s-%s", L["Tooltip"], L["Domination Rank"]),
-        format("%s-%s", L["Tooltip"], L["Domination Rank"]),
-        "private.WT.tooltips.dominationRank",
-        "db.mui.tooltip.dominationRank"
-    )
-
     CheckMerathilisUI(L["Group Info"], L["LFG Info"], "db.WT.tooltips.groupInfo.enable", "db.mui.misc.lfgInfo.enable")
-
-    CheckMerathilisUI(
-        L["Paragon Reputation"],
-        L["Paragon Reputation"],
-        "db.WT.quest.paragonReputation.enable",
-        "db.mui.misc.paragon.enable"
-    )
 
     CheckMerathilisUI(
         L["Role Icon"],
@@ -352,13 +338,6 @@ function W:CheckCompatibility()
         L["Hide Player Brackets"],
         "db.WT.social.chatText.removeBrackets",
         "db.mui.chat.hidePlayerBrackets"
-    )
-
-    CheckMerathilisUI(
-        format("%s-%s", L["Talent Manager"], L["Item Buttons"]),
-        L["Codex Buttons"],
-        "private.WT.combat.talentManager.itemButtons",
-        "db.mui.misc.respec"
     )
 
     CheckMerathilisUI(
@@ -436,6 +415,15 @@ function W:CheckCompatibility()
         L["WeakAuras Options"],
         "private.WT.skins.addons.weakAurasOptions",
         "private.mui.skins.addonSkins.waOptions"
+    )
+
+    CheckMerathilisUI(L["Announcement"], L["Announcement"], "db.WT.announcement.enable", "db.mui.announcement.enable")
+
+    CheckMerathilisUI(
+        L["Event Tracker"],
+        L["Event Tracker"],
+        "db.WT.maps.eventTracker.enable",
+        "db.mui.maps.eventTracker.enable"
     )
 
     -- S&L

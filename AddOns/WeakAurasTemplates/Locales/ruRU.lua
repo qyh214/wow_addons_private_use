@@ -43,8 +43,7 @@ local L = WeakAuras.L
 	L["Charge Tracking"] = "Отслеживание заряда"
 	L["cooldown"] = "(восстановление)"
 	L["Cooldown Tracking"] = "Отслеживание восстановления"
-	--[[Translation missing --]]
-	L["Cooldowns"] = "Cooldowns"
+	L["Cooldowns"] = "Перезарядки"
 	L["Create Auras"] = "Создать"
 	L["debuff"] = "(дебафф)"
 	L["Debuffs"] = "Дебаффы"

@@ -13,7 +13,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnWaterMove	= "Спец-предупреждение, если вы стоите в $spell:138470<br/>(В случае, если скоро $spell:137313 или спадает дебафф $spell:138732)"
+	specWarnWaterMove	= "Спецпредупреждение, если Вы стоите в $spell:138470<br/>(В случае, если скоро $spell:137313 или спадает дебафф $spell:138732)",
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/4")
 })
 
 --------------
@@ -33,12 +34,14 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnAdds				= "Объявлять когда спрыгивают новые адды",
+	warnAdds				= "Объявлять, когда спрыгивают новые адды",
 	warnOrbofControl		= "Предупреждение о появлении $journal:7092",
-	specWarnOrbofControl	= "Спец-предупреждение о появлении $journal:7092",
+	specWarnOrbofControl	= "Спецпредупреждение о появлении $journal:7092",
 	timerDoor				= "Отсчёт времени до следующей фазы ворот племени",
 	timerAdds				= "Отсчёт времени до спрыгивания следующих аддов",
-	SetIconOnAdds			= "Устанавливать метки на аддов, спрыгивающих с балкона"
+	SetIconOnAdds			= "Устанавливать метки на аддов, спрыгивающих с балкона",
+	RangeFrame				= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(5, 136480),
+	SetIconOnCharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136769)
 })
 
 L:SetMiscLocalization({
@@ -56,7 +59,12 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	AnnounceCooldowns	= "Отсчитывать (до 3) какой сейчас каст $spell:137166 для рейдовых кулдаунов"
+	warnPossessed		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.target:format(136442),
+	specWarnPossessed	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
+	AnnounceCooldowns	= "Отсчитывать (до 3), какой сейчас каст $spell:137166 для рейдовых кулдаунов",
+	SetIconOnBitingCold	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136992),
+	SetIconOnFrostBite	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136922)
 })
 
 ------------
@@ -70,10 +78,11 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnCrystalShell	= "Спец-предупреждение, когда на Вас нет дебаффа $spell:137633 и более 90% здоровья",
-	InfoFrame				= "Информационное окно для игроков без $spell:137633",
+	warnKickShell			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(134031),
+	specWarnCrystalShell	= "Спецпредупреждение, когда на Вас нет дебаффа $spell:137633 и более 90% здоровья",
+	InfoFrame				= "Показывать информационное окно для игроков без $spell:137633",
 	ClearIconOnTurtles		= "Убирать метки с $journal:7129, когда активируется $spell:133971",
-	AnnounceCooldowns		= "Отсчитывать какой сейчас каст $spell:134920 для рейдовых кулдаунов"
+	AnnounceCooldowns		= "Отсчитывать, какой сейчас каст $spell:134920 для рейдовых кулдаунов"
 })
 
 L:SetMiscLocalization({
@@ -91,13 +100,15 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	timerBreaths			= "Отсчёт времени до следующего дыхания",
+	SetIconOnCinders		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139822),
+	SetIconOnTorrentofIce	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(139889),
 	AnnounceCooldowns		= "Отсчитывать какой сейчас каст Буйство для рейдовых кулдаунов",
 	Never					= "Никогда",
 	Every					= "Каждый (последовательно)",
-	EveryTwo				= "Кулдауны каждый 2",
-	EveryThree				= "Кулдауны каждый 3",
-	EveryTwoExcludeDiff		= "Кулдауны каждый 2 (искл. Диффузия)",
-	EveryThreeExcludeDiff	= "Кулдауны каждый 3 (искл. Диффузия)"
+	EveryTwo				= "Кулдауны, каждый 2",
+	EveryThree				= "Кулдауны, каждый 3",
+	EveryTwoExcludeDiff		= "Кулдауны, каждый 2 (искл. Диффузия)",
+	EveryThreeExcludeDiff	= "Кулдауны, каждый 3 (искл. Диффузия)"
 })
 
 L:SetMiscLocalization({
@@ -121,6 +132,12 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
+	warnFlock			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
+	specWarnFlock		= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
+	specWarnBigBird		= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.switch:format("ej7827"),
+	specWarnBigBirdSoon	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.soon:format("ej7827"),
+	timerFlockCD		= DBM_CORE_L.AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT:format(10, 138923),
 	ShowNestArrows	= "Показывать стрелку DBM при активации гнезд",
 	Never			= "Никогда",
 	Northeast		= "Синий - Низ & Верх СВ",
@@ -164,8 +181,13 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	warnBeam			= "Объявлять цели лучей",
 	warnAddsLeft		= "Объявлять сколько осталось туманов",
-	specWarnFogRevealed	= "Спец-предупреждение при обнаружении туманов",
+	specWarnFogRevealed	= "Спецпредупреждение при обнаружении туманов",
+	specWarnBlueBeam			= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
+	specWarnDisintegrationBeam	= DBM_CORE_L.AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
 	ArrowOnBeam			= "Показывать стрелку DBM во время $journal:6882, чтобы указать, в каком направлении двигаться",
+	SetIconRays					= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format("ej6891"),
+	SetIconLifeDrain			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133795),
+	SetIconOnParasite			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(133597),
 	InfoFrame			= "Информационное окно для кол-ва стаков $spell:133795",
 	SetParticle			= "Автоматически устанавливать минимальную плотность частиц на пулле<br/>(Настройка восстановится после выхода из боя)"
 })
@@ -185,6 +207,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnDebuffCount		= "Показывать предупреждения о числе дебаффов, когда Вы поглощаете лужи",
+	RangeFrame			= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
 	SetIconOnBigOoze	= "Устанавливать метки на $journal:6969"
 })
 
@@ -198,7 +221,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnMatterSwapped	= "Объявлять цели, измененные $spell:138618"
+	warnMatterSwapped	= "Объявлять цели, измененные $spell:138618",
+	SetIconOnFont		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -215,8 +239,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	RangeFrame	= "Показывать динамическое окно проверки дистанции (10 м)",
-	InfoFrame	= "Информационное окно для игроков с $spell:136193"
+	warnDeadZone			= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
+	SetIconOnLightningStorm	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136192),
+	RangeFrame	= "Показывать динамическое окно проверки дистанции (10м.)",
+	InfoFrame	= "Показывать информационное окно для игроков с $spell:136193"
 })
 
 -------------------
@@ -233,6 +259,15 @@ L:SetWarningLocalization({
 L:SetTimerLocalization({
 	timerDayCD	= "След. дневная фаза",
 	timerDuskCD	= "След. фаза сумерек"
+})
+
+L:SetOptionLocalization({
+	warnNight	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
+	warnDay		= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
+	warnDusk	= DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
+	timerDayCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej7645"),
+	timerDuskCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format("ej7633"),
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
 })
 
 L:SetMiscLocalization({
@@ -254,11 +289,14 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnIntermissionSoon	= "Спец-предупреждение перед началом промежуточной фазы",
+	specWarnIntermissionSoon	= "Спецпредупреждение перед началом промежуточной фазы",
 	warnDiffusionChainSpread	= "Объявлять цели распространения $spell:135991",
 	timerConduitCD				= "Отсчет времени до восстановления способности первого проводника",
+	RangeFrame					= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--Для двух разных заклинаний
 	StaticShockArrow			= "Показывать стрелку DBM, когда на ком-то $spell:135695",
-	OverchargeArrow				= "Показывать стрелку DBM, когда на ком-то $spell:136295"
+	OverchargeArrow				= "Показывать стрелку DBM, когда на ком-то $spell:136295",
+	SetIconOnOvercharge			= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(136295),
+	SetIconOnStaticShock		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(135695)
 })
 
 L:SetMiscLocalization({
@@ -271,11 +309,11 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump	= "Нестабильная жизнь перепрыгнула на вас!"
+	specWarnUnstablVitaJump	= "Нестабильная жизнь перепрыгнула на Вас!"
 })
 
 L:SetOptionLocalization({
-	specWarnUnstablVitaJump	= "Спец-предупреждение когда $spell:138297 перепрыгивает на вас",
+	specWarnUnstablVitaJump	= "Спецпредупреждение, когда $spell:138297 перепрыгивает на Вас",
 	SetIconsOnVita			= "Устанавливать метки на игрока с дебаффом $spell:138297 и самого дальнего от него игрока"
 })
 
@@ -290,4 +328,8 @@ L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
 	name	= "Трэш мобы Престола Гроз"
+})
+
+L:SetOptionLocalization({
+	RangeFrame	= DBM_CORE_L.AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--Для 3-х разных заклинаний
 })

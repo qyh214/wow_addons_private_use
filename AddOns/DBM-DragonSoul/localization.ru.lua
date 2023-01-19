@@ -7,7 +7,7 @@ local L
 L= DBM:GetModLocalization(311)
 
 L:SetWarningLocalization({
-	KohcromWarning	= "%s: %s"--Bossname, spellname. At least with this we can get boss name from casts in this one, unlike a timer started off the previous bosses casts.
+	KohcromWarning	= "%s: %s"
 })
 
 L:SetTimerLocalization({
@@ -94,7 +94,7 @@ L:SetOptionLocalization({
 	SetIconOnFrostTomb		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(104451),
 	SetIconOnFrostflake		= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(109325),
 	SpecialCount			= "Звуковой отсчет для $spell:105256 или $spell:105465",
-	SetBubbles				= "Автоматически отключать сообщения в облачках когда $spell:104451 доступен<br/>(возвращает их в исходное после боя)"
+	SetBubbles				= "Автоматически отключать сообщения в облачках, когда $spell:104451 доступен<br/>(возвращает их в исходное после боя)"
 })
 
 L:SetMiscLocalization({
@@ -107,7 +107,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(331)
 
 L:SetWarningLocalization({
-	specWarnHourofTwilightN		= "%s (%%d)"--spellname Count
+	specWarnHourofTwilightN		= "%s (%%d)"
 })
 
 L:SetTimerLocalization({
@@ -127,7 +127,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull				= "Я чувствую приближение Хаоса… Мой разум не в силах этого выдержать!!"
+	Pull				= "Я чувствую приближение Хаоса... Мой разум не в силах этого выдержать!"
 })
 
 -------------------------
@@ -186,7 +186,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(333)
 
 L:SetOptionLocalization({
-	RangeFrame			= "Динамическое окно проверки дистанции используя статус дебафа<br/>$spell:108649 на героическом уровне сложности",
+	RangeFrame			= "Динамическое окно проверки дистанции, используя статус дебафа<br/>$spell:108649 на героическом уровне сложности",
 	SetIconOnParasite	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(108649)
 })
 
@@ -200,7 +200,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("DSTrash")
 
 L:SetGeneralLocalization({
-	name =	"Dragonsoul Trash"
+	name =	"Трэш мобы Душа Дракона"
 })
 
 L:SetWarningLocalization({

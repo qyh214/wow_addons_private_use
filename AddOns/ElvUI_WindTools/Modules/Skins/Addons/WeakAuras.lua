@@ -8,6 +8,8 @@ local pairs = pairs
 local strfind = strfind
 local unpack = unpack
 
+local WeakAuras = _G.WeakAuras
+
 function S:WeakAuras_PrintProfile()
     local frame = _G.WADebugEditBox.Background
 
@@ -24,7 +26,7 @@ function S:WeakAuras_PrintProfile()
                 child:StripTextures()
                 local subChild = child:GetChildren()
                 subChild:ClearAllPoints()
-                subChild:Point("TOPRIGHT", frame, "TOPRIGHT", 3, 7)
+                subChild:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 3, 7)
                 self:ESProxy("HandleCloseButton", subChild)
             end
         end
@@ -45,11 +47,14 @@ function S:ProfilingWindow_UpdateButtons(frame)
             local normalTextureID = button:GetNormalTexture():GetTexture()
             if normalTextureID == 252125 then
                 button:StripTextures()
+                button.SetNormalTexture = E.noop
+                button.SetPushedTexture = E.noop
+                button.SetHighlightTexture = E.noop
 
                 button.Texture = button:CreateTexture(nil, "OVERLAY")
-                button.Texture:Point("CENTER")
+                button.Texture:SetPoint("CENTER")
                 button.Texture:SetTexture(E.Media.Textures.ArrowUp)
-                button.Texture:Size(14, 14)
+                button.Texture:SetSize(14, 14)
 
                 button:HookScript(
                     "OnEnter",
@@ -72,8 +77,6 @@ function S:ProfilingWindow_UpdateButtons(frame)
                 button:HookScript(
                     "OnClick",
                     function(self)
-                        self:SetNormalTexture("")
-                        self:SetPushedTexture("")
                         self.Texture:Show("")
                         if self:GetParent():GetParent().minimized then
                             button.Texture:SetRotation(ES.ArrowRotation["down"])
@@ -84,11 +87,11 @@ function S:ProfilingWindow_UpdateButtons(frame)
                 )
 
                 button:SetHitRectInsets(6, 6, 7, 7)
-                button:Point("TOPRIGHT", frame.titleFrame, "TOPRIGHT", -19, 3)
+                button:SetPoint("TOPRIGHT", frame.titleFrame, "TOPRIGHT", -19, 3)
             else
                 self:ESProxy("HandleCloseButton", button)
                 button:ClearAllPoints()
-                button:Point("TOPRIGHT", frame.titleFrame, "TOPRIGHT", 3, 5)
+                button:SetPoint("TOPRIGHT", frame.titleFrame, "TOPRIGHT", 3, 1)
             end
 
             button.__windSkin = true
@@ -97,9 +100,6 @@ function S:ProfilingWindow_UpdateButtons(frame)
 end
 
 local function Skin_WeakAuras(f, fType)
-    -- Modified from NDui WeakAuras Skins
-    -- 1. Use ElvUI Skins functions
-    -- 2. Fix the TexCoords
     if fType == "icon" then
         if not f.__windSkin then
             f.icon.SetTexCoordOld = f.icon.SetTexCoord
@@ -184,48 +184,29 @@ function S:WeakAuras()
     end
 
     -- Handle the options region type registration
-    if _G.WeakAuras and _G.WeakAuras.RegisterRegionOptions then
-        self:RawHook(_G.WeakAuras, "RegisterRegionOptions", "WeakAuras_RegisterRegionOptions")
+    if WeakAuras and WeakAuras.RegisterRegionOptions then
+        self:RawHook(WeakAuras, "RegisterRegionOptions", "WeakAuras_RegisterRegionOptions")
     end
 
-    local regionTypes = _G.WeakAuras.regionTypes
-    local Create_Icon, Modify_Icon = regionTypes.icon.create, regionTypes.icon.modify
-    local Create_AuraBar, Modify_AuraBar = regionTypes.aurabar.create, regionTypes.aurabar.modify
-
-    regionTypes.icon.create = function(parent, data)
-        local region = Create_Icon(parent, data)
-        Skin_WeakAuras(region, "icon")
-        return region
+    -- Handle the options region type registration
+    -- from NDui
+    local function OnPrototypeCreate(region)
+        Skin_WeakAuras(region, region.regionType)
     end
 
-    regionTypes.aurabar.create = function(parent)
-        local region = Create_AuraBar(parent)
-        Skin_WeakAuras(region, "aurabar")
-        return region
+    local function OnPrototypeModifyFinish(_, region)
+        Skin_WeakAuras(region, region.regionType)
     end
 
-    regionTypes.icon.modify = function(parent, region, data)
-        Modify_Icon(parent, region, data)
-        Skin_WeakAuras(region, "icon")
-    end
+    self:SecureHook(WeakAuras.regionPrototype, "create", OnPrototypeCreate)
+    self:SecureHook(WeakAuras.regionPrototype, "modifyFinish", OnPrototypeModifyFinish)
 
-    regionTypes.aurabar.modify = function(parent, region, data)
-        Modify_AuraBar(parent, region, data)
-        Skin_WeakAuras(region, "aurabar")
-    end
-
-    for weakAura, regions in pairs(_G.WeakAuras.regions) do
-        if regions.regionType == "icon" or regions.regionType == "aurabar" then
-            Skin_WeakAuras(regions.region, regions.regionType)
-        end
-    end
-
-    -- 效能分析
-    local profilingWindow = _G.WeakAuras.frames["RealTime Profiling Window"]
+    -- Real Time Profiling Window
+    local profilingWindow = WeakAuras.RealTimeProfilingWindow
     if profilingWindow then
         self:CreateShadow(profilingWindow)
         self:SecureHook(profilingWindow, "UpdateButtons", "ProfilingWindow_UpdateButtons")
-        self:SecureHook(_G.WeakAuras, "PrintProfile", "WeakAuras_PrintProfile")
+        self:SecureHook(WeakAuras, "PrintProfile", "WeakAuras_PrintProfile")
     end
 end
 

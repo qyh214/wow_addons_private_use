@@ -28,7 +28,7 @@ PGF.currentSearchExpression = ""
 PGF.previousSearchLeaders = {}
 PGF.currentSearchLeaders = {}
 PGF.declinedGroups = {}
-PGF.searchIdEnvironments = {}
+PGF.searchResultIDInfo = {}
 
 function PGF.ResetSearchEntries()
     -- make sure to wait at least some time between two resets
@@ -37,7 +37,7 @@ function PGF.ResetSearchEntries()
         PGF.currentSearchLeaders = {}
         PGF.previousSearchExpression = PGF.currentSearchExpression
         PGF.lastSearchEntryReset = time()
-        PGF.searchIdEnvironments = {}
+        PGF.searchResultIDInfo = {}
     end
 end
 
@@ -131,17 +131,17 @@ end
 
 function PGF.SortByExpression(searchResultID1, searchResultID2)
     local sortTableSize, sortTable = PGF.GetSortTableFromModel()
-    local env1 = PGF.searchIdEnvironments[searchResultID1]
-    local env2 = PGF.searchIdEnvironments[searchResultID2]
-    if sortTableSize == 0 or not env1 or not env2 then
+    local info1 = PGF.searchResultIDInfo[searchResultID1]
+    local info2 = PGF.searchResultIDInfo[searchResultID2]
+    if sortTableSize == 0 or not info1 or not info2 then
         return PGF.SortByFriendsAndAge(searchResultID1, searchResultID2)
     end
     for k, v in pairs(sortTable) do
-        if env1[k] ~= env2[k] then -- works with unknown 'k' as 'nil ~= nil' is false (or 'nil == nil' is true)
+        if info1.env[k] ~= info2.env[k] then -- works with unknown 'k' as 'nil ~= nil' is false (or 'nil == nil' is true)
             if v == "desc" then
-                return env1[k] > env2[k]
+                return info1.env[k] > info2.env[k]
             else -- works with unknown 'v', in this case sort ascending by default
-                return env1[k] < env2[k]
+                return info1.env[k] < info2.env[k]
             end
         end
     end
@@ -155,44 +155,32 @@ local roleRemainingKeyLookup = {
     ["DAMAGER"] = "DAMAGER_REMAINING",
 }
 
-local function HasRemainingSlotsForLocalPlayerRole(lfgSearchResultID)
-    local roles = C_LFGList.GetSearchResultMemberCounts(lfgSearchResultID)
+local function HasRemainingSlotsForLocalPlayerRole(memberCounts)
     local playerRole = GetSpecializationRole(GetSpecialization())
-    return roles[roleRemainingKeyLookup[playerRole]] > 0
+    return memberCounts[roleRemainingKeyLookup[playerRole]] > 0
 end
 
-function PGF.HasRemainingSlotsForLocalPlayerPartyRoles(lfgSearchResultID)
+function PGF.HasRemainingSlotsForLocalPlayerPartyRoles(memberCounts)
     local numGroupMembers = GetNumGroupMembers()
 
     if numGroupMembers == 0 then
         -- not in a group
-        return HasRemainingSlotsForLocalPlayerRole(lfgSearchResultID)
+        return HasRemainingSlotsForLocalPlayerRole(memberCounts)
     end
 
-    local partyRoles = {["TANK"] = 0, ["HEALER"] = 0, ["DAMAGER"] = 0}
+    local partyRoles = { ["TANK"] = 0, ["HEALER"] = 0, ["DAMAGER"] = 0 }
 
     for i = 1, numGroupMembers do
-        local unit
-
-        if i == 1 then
-            unit = "player"
-        else
-            unit = "party" .. (i - 1)
-        end
+        local unit = (i == 1) and "player" or ("party" .. (i - 1))
 
         local groupMemberRole = UnitGroupRolesAssigned(unit)
-
-        if groupMemberRole == "NONE" then
-            groupMemberRole = "DAMAGER"
-        end
+        if groupMemberRole == "NONE" then groupMemberRole = "DAMAGER" end
 
         partyRoles[groupMemberRole] = partyRoles[groupMemberRole] + 1
     end
 
-    local roles = C_LFGList.GetSearchResultMemberCounts(lfgSearchResultID)
-
     for role, remainingKey in pairs(roleRemainingKeyLookup) do
-        if roles[remainingKey] < partyRoles[role] then
+        if memberCounts[remainingKey] < partyRoles[role] then
             return false
         end
     end
@@ -201,11 +189,24 @@ function PGF.HasRemainingSlotsForLocalPlayerPartyRoles(lfgSearchResultID)
 end
 
 function PGF.SortByFriendsAndAge(searchResultID1, searchResultID2)
-    local searchResultInfo1 = C_LFGList.GetSearchResultInfo(searchResultID1)
-    local searchResultInfo2 = C_LFGList.GetSearchResultInfo(searchResultID2)
+    if not searchResultID1 or not searchResultID2 then return false end -- race condition
 
-    local hasRemainingRole1 = HasRemainingSlotsForLocalPlayerRole(searchResultID1)
-    local hasRemainingRole2 = HasRemainingSlotsForLocalPlayerRole(searchResultID2)
+    -- look-up via table should be faster
+    local info1 = PGF.searchResultIDInfo[searchResultID1]
+    local info2 = PGF.searchResultIDInfo[searchResultID2]
+    if not info1 or not info2 then return false end -- race condition
+
+    -- sort applications to the top
+    local isApplication1 = info1.env.appstatus ~= "none" or info1.env.pendingstatus or false
+    local isApplication2 = info2.env.appstatus ~= "none" or info2.env.pendingstatus or false
+    if isApplication1 ~= isApplication2 then return isApplication1 end
+    if info1.env.appduration ~= info2.env.appduration then return info1.env.appduration > info2.env.appduration end
+
+    local searchResultInfo1 = info1.searchResultInfo
+    local searchResultInfo2 = info2.searchResultInfo
+
+    local hasRemainingRole1 = HasRemainingSlotsForLocalPlayerRole(info1.memberCounts)
+    local hasRemainingRole2 = HasRemainingSlotsForLocalPlayerRole(info2.memberCounts)
 
     if hasRemainingRole1 ~= hasRemainingRole2 then return hasRemainingRole1 end
 
@@ -330,6 +331,8 @@ function PGF.DoFilterSearchResults(results)
         local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
         -- /dump C_LFGList.GetSearchResultInfo(select(2, C_LFGList.GetSearchResults())[1])
         -- name and comment are now protected strings like "|Ks1969|k0000000000000000|k" which can only be printed
+        local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID)
+        -- /dump C_LFGList.GetApplicationInfo(select(2, C_LFGList.GetSearchResults())[1])
         local memberCounts = C_LFGList.GetSearchResultMemberCounts(resultID)
         local numGroupDefeated, numPlayerDefeated, maxBosses,
               matching, groupAhead, groupBehind = PGF.GetLockoutInfo(searchResultInfo.activityID, resultID)
@@ -353,7 +356,7 @@ function PGF.DoFilterSearchResults(results)
         env.heals = memberCounts.HEALER
         env.healers = memberCounts.HEALER
         env.dps = memberCounts.DAMAGER + memberCounts.NOROLE
-        env.partyfit = PGF.HasRemainingSlotsForLocalPlayerPartyRoles(resultID)
+        env.partyfit = PGF.HasRemainingSlotsForLocalPlayerPartyRoles(memberCounts)
         env.defeated = numGroupDefeated
         env.normal     = difficulty == C.NORMAL
         env.heroic     = difficulty == C.HEROIC
@@ -401,15 +404,21 @@ function PGF.DoFilterSearchResults(results)
             env.pvpactivityname = searchResultInfo.leaderPvpRatingInfo.activityName
             env.pvprating       = searchResultInfo.leaderPvpRatingInfo.rating
             env.pvptierx        = searchResultInfo.leaderPvpRatingInfo.tier
-            env.pvptier         = C.TIER_MAP[searchResultInfo.leaderPvpRatingInfo.tier]
+            env.pvptier         = C.PVP_TIER_MAP[searchResultInfo.leaderPvpRatingInfo.tier].tier
             env.pvptiername     = PVPUtil.GetTierName(searchResultInfo.leaderPvpRatingInfo.tier)
         end
         env.horde = searchResultInfo.leaderFactionGroup == 0
         env.alliance = searchResultInfo.leaderFactionGroup == 1
         env.crossfaction = searchResultInfo.crossFactionListing or false
+        env.appstatus = appStatus
+        env.pendingstatus = pendingStatus
+        env.appduration = appDuration
 
         PGF.PutSearchResultMemberInfos(resultID, searchResultInfo, env)
         PGF.PutEncounterNames(resultID, env)
+        env.haslust = env.shamans > 0 or env.evokers > 0 or env.hunters > 0 or env.mages > 0
+        env.hashero = env.haslust
+        env.hasbl = env.haslust
 
         env.myilvl = playerInfo.avgItemLevelEquipped
         env.myilvlpvp = playerInfo.avgItemLevelPvp
@@ -532,10 +541,8 @@ function PGF.DoFilterSearchResults(results)
         local dfdungeon = env.aa or env.bh or env.hoi or env.nt or env.rlp or env.av or env.no or env.lot -- all Dragonflight dungeons
 
         -- Dragonflight Season 1 dungeons
-        env.sbg = aID == 9999 -- Shadowmoon Burial Grounds (Warlords) -- TODO 185? also Difficulty.lua and PlayerInfo.lua
-        -- /run for i=1,5000 do local info = C_LFGList.GetActivityInfoTable(i); if info and info.fullName:find("Burial") then print(i, info.fullName) end end
-        env.tjs = aID == 9999 -- Temple of the Jade Serpent (Warlords) -- TODO also Difficulty.lua and PlayerInfo.lua
-        -- /run for i=1,5000 do local info = C_LFGList.GetActivityInfoTable(i); if info and info.fullName:find("Jade") then print(i, info.fullName) end end
+        env.sbg = aID == 1193 -- Shadowmoon Burial Grounds (Warlords)
+        env.tjs = aID == 1192 -- Temple of the Jade Serpent (Warlords)
         env.hov = aID == 461 -- Halls of Valor (Legion)
         env.cos = aID == 466 -- Court of Stars (Legion)
         env.dfs1 = env.rlp or env.no or env.av or env.aa or env.hov or env.cos or env.sbg or env.tjs
@@ -558,7 +565,12 @@ function PGF.DoFilterSearchResults(results)
             PGF.PutPremadeRegionInfo(env, searchResultInfo.leaderName)
         end
 
-        PGF.searchIdEnvironments[resultID] = env
+        PGF.searchResultIDInfo[resultID] = {
+            env = env,
+            searchResultInfo = searchResultInfo,
+            memberCounts = memberCounts,
+            activityInfo = activityInfo,
+        }
         if PGF.DoesPassThroughFilter(env, exp) then
             -- leaderName is usually still nil at this point if the group is new, but we can live with that
             if searchResultInfo.leaderName then PGF.currentSearchLeaders[searchResultInfo.leaderName] = true end
@@ -566,7 +578,7 @@ function PGF.DoFilterSearchResults(results)
             table.remove(results, idx)
         end
     end
-    -- sort by age
+
     table.sort(results, PGF.SortByExpression)
     LFGListFrame.SearchPanel.totalResults = #results
     return true
@@ -608,8 +620,9 @@ function PGF.OnLFGListApplicationStatusUpdated(id, newStatus)
     end
 end
 
-function PGF.OnLFGListSearchEntryUpdate(self)
-    local searchResultInfo = C_LFGList.GetSearchResultInfo(self.resultID)
+function PGF.ColorGroupTexts(self, searchResultInfo)
+    if not PremadeGroupsFilterSettings.coloredGroupTexts then return end
+
     -- try once again to update the leaderName (this information is not immediately available)
     if searchResultInfo.leaderName then PGF.currentSearchLeaders[searchResultInfo.leaderName] = true end
     -- self.ActivityName:SetText("[" .. searchResultInfo.activityID .. "/" .. self.resultID .. "] " .. self.ActivityName:GetText()) -- DEBUG
@@ -641,41 +654,12 @@ function PGF.OnLFGListSearchEntryUpdate(self)
     end
 end
 
-function PGF.OnLFGListUtilSetSearchEntryTooltip(tooltip, resultID, autoAcceptOption)
-    local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
-    local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
-
-    -- do not show members where Blizzard already does that
-    if activityInfo.displayType == LE_LFG_LIST_DISPLAY_TYPE_CLASS_ENUMERATE then return end
-    if searchResultInfo.isDelisted or not tooltip:IsShown() then return end
-    tooltip:AddLine(" ")
-    tooltip:AddLine(CLASS_ROLES)
-
-    local roles = {}
-    local classInfo = {}
-    for i = 1, searchResultInfo.numMembers do
-        local role, class, classLocalized = C_LFGList.GetSearchResultMemberInfo(resultID, i)
-        classInfo[class] = {
-            name = classLocalized,
-            color = RAID_CLASS_COLORS[class] or NORMAL_FONT_COLOR
-        }
-        if not roles[role] then roles[role] = {} end
-        if not roles[role][class] then roles[role][class] = 0 end
-        roles[role][class] = roles[role][class] + 1
-    end
-
-    for role, classes in pairs(roles) do
-        tooltip:AddLine(_G[role]..": ")
-        for class, count in pairs(classes) do
-            local text = "   "
-            if count > 1 then text = text .. count .. " " else text = text .. "   " end
-            text = text .. "|c" .. classInfo[class].color.colorStr ..  classInfo[class].name .. "|r "
-            tooltip:AddLine(text)
-        end
-    end
-    tooltip:Show()
+function PGF.OnLFGListSearchEntryUpdate(self)
+    local searchResultInfo = C_LFGList.GetSearchResultInfo(self.resultID)
+    PGF.ColorGroupTexts(self, searchResultInfo)
+    PGF.AddRoleIndicators(self, searchResultInfo)
+    PGF.AddRatingInfo(self, searchResultInfo)
 end
 
 hooksecurefunc("LFGListSearchEntry_Update", PGF.OnLFGListSearchEntryUpdate)
-hooksecurefunc("LFGListUtil_SetSearchEntryTooltip", PGF.OnLFGListUtilSetSearchEntryTooltip)
 hooksecurefunc("LFGListUtil_SortSearchResults", PGF.DoFilterSearchResults)

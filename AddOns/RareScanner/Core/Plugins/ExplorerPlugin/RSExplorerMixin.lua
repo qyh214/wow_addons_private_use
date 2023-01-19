@@ -85,6 +85,7 @@ end
 local function PopulateContinentDropDown(mainFrame, continentDropDown)
 	local collectionsLoot = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC]
 	
+	local _, _, classIndex = UnitClass("player");
 	currentContinentDropDownValues = { }
 	local continentDropDownValuesNotSorted = { }
 	if (RSUtils.GetTableLength(filters) > 0) then
@@ -114,7 +115,7 @@ local function PopulateContinentDropDown(mainFrame, continentDropDown)
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
 				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_TOYS] and collectionsLoot and collectionsLoot[npcID] and RSUtils.GetTableLength(collectionsLoot[npcID][RSConstants.ITEM_TYPE.TOY]) > 0) then
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
-				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_APPEARANCES] and collectionsLoot and collectionsLoot[npcID] and RSUtils.GetTableLength(collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE]) > 0) then
+				elseif (filters[RSConstants.EXPLORER_FILTER_DROP_APPEARANCES] and collectionsLoot and collectionsLoot[npcID] and collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE] and RSUtils.GetTableLength(collectionsLoot[npcID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex]) > 0) then
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
 				elseif (filters[RSConstants.EXPLORER_FILTER_PART_ACHIEVEMENT] and RSAchievementDB.GetNotCompletedAchievementLink(npcID)) then
 					AddContinentDropDownValue(npcID, npcInfo, continentDropDownValuesNotSorted)
@@ -508,7 +509,7 @@ function RSExplorerRareList:UpdateRareList()
 	
 	-- Load list
 	for npcID, npcName in pairs(RSNpcDB.GetAllNpcNames()) do
-		if (RSNpcDB.IsInternalNpcInMap(npcID, self.mapID, true)) then
+		if (RSNpcDB.IsInternalNpcInMap(npcID, self.mapID, false)) then
 			local npcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, self.mapID)
 			
 			if (npcInfo and npcInfo.displayID) then
@@ -1108,7 +1109,10 @@ function RSExplorerControl:ApplyFilters(self, button)
 	local data = {
 		callback = function()
 			mainFrame:Refresh()
-			LibDialog:Spawn(RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS)
+			local subdata = {
+				filters = filters
+			}
+			LibDialog:Spawn(RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS, subdata)
 		end,
 		filters = filters
 	}

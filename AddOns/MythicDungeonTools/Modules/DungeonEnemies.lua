@@ -529,7 +529,7 @@ function MDT:DisplayBlipTooltip(blip, shown)
       "\n" .. string.format(L["%s HP"], MDT:FormatEnemyHealth(health)) .. "\n"
   local count = MDT:IsCurrentPresetTeeming() and data.teemingCount or data.count
   text = text .. L["Forces"] .. ": " .. MDT:FormatEnemyForces(count)
-  -- text = text .. "\n" .. L["Efficiency Score"] .. ": " .. MDT:GetEfficiencyScoreString(count, data.health)
+  text = text .. "\n" .. L["Efficiency Score"] .. ": " .. MDT:GetEfficiencyScoreString(count, data.health)
   local reapingText
   if blip.data.reaping and db.MDI.enabled and preset.mdi.beguiling == 13 then
     local reapingIcon = CreateTextureMarkup(MDT.reapingStatic[tostring(blip.data.reaping)].iconTexture, 32, 32, 16, 16, 0
@@ -605,7 +605,7 @@ end
 
 function MDT:GetEfficiencyScoreString(count, health)
   local totalCount = MDT.dungeonTotalCount[db.currentDungeonIdx].normal
-  local score = 2.5 * (count / totalCount) * 300 / (health / 100000)
+  local score = 2.5 * (count / totalCount) * 300 / (health / 500000)
   local formattedScore = MDT:Round(score, 1)
   local value = score / 10
   --https://stackoverflow.com/a/7947812/17380548
@@ -751,7 +751,8 @@ function MDTDungeonEnemyMixin:SetUp(data, clone)
   end
   self:SetFrameLevel(raise)
   self.fontstring_Text1:SetFontObject("GameFontNormal")
-  self.fontstring_Text1:SetFont(self.fontstring_Text1:GetFont(), 10 * self.normalScale, "OUTLINE", "")
+  local textScale = math.max(0.2, self.normalScale * 10)
+  self.fontstring_Text1:SetFont(self.fontstring_Text1:GetFont(), textScale, "OUTLINE", "")
   self.fontstring_Text1:SetText((clone.isBoss and data.count == 0 and "") or data.count)
   self.texture_MouseHighlight:SetAlpha(0.4)
   self.texture_SelectedHighlight:SetVertexColor(unpack(selectedGreen))

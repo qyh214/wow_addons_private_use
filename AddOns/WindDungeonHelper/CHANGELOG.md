@@ -1,7 +1,8 @@
 # Wind Dungeon Helper
 
-## [1.8.5](https://github.com/fang2hou/WindDungeonHelper/tree/1.8.5) (2022-08-25)
-[Full Changelog](https://github.com/fang2hou/WindDungeonHelper/compare/1.8.4...1.8.5) [Previous Releases](https://github.com/fang2hou/WindDungeonHelper/releases)
+## [1.9.8](https://github.com/fang2hou/WindDungeonHelper/tree/1.9.8) (2023-01-14)
+[Full Changelog](https://github.com/fang2hou/WindDungeonHelper/compare/1.9.7...1.9.8) [Previous Releases](https://github.com/fang2hou/WindDungeonHelper/releases)
 
-- 1.8.5  
-- add some karazhan upper ids  
+- toc: bump version to 1.9.8  
+- docs(readme): 1.9.8  
+- fix(ad): spiteful affix in df  

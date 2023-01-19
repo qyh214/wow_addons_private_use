@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("z30", "DBM-PvP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20210519214524")
+mod:SetRevision("20230110015611")
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 mod:RegisterEvents(
 	"LOADING_SCREEN_DISABLED",
@@ -80,7 +80,7 @@ do
 	}
 
 	function mod:GOSSIP_SHOW()
-		if not self.Options.AutoTurnIn then
+		if not self.Options.AutoTurnIn or DBM.Options.DontAutoGossip then
 			return
 		end
 		local quest = quests[self:GetCIDFromGUID(UnitGUID("target") or "") or 0]

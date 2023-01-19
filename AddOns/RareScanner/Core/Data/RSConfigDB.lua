@@ -283,6 +283,14 @@ function RSConfigDB.SetScanningWorldMapVignettes(value)
 	private.db.general.scanWorldmapVignette = value
 end
 
+function RSConfigDB.IsIgnoringCompletedEntities()
+	return private.db.general.ignoreCompletedEntities
+end
+
+function RSConfigDB.SetIgnoringCompletedEntities(value)
+	private.db.general.ignoreCompletedEntities = value
+end
+
 function RSConfigDB.IsScanningForNpcs()
 	return private.db.general.scanRares
 end
@@ -426,7 +434,7 @@ end
 
 function RSConfigDB.IsNpcFiltered(npcID)
 	if (npcID) then
-		return private.db.general.filteredRares[npcID] == false
+		return private.db.general.filteredRares[npcID]
 	end
 
 	return false
@@ -435,10 +443,10 @@ end
 function RSConfigDB.GetNpcFiltered(npcID)
 	if (npcID) then
 		local value = private.db.general.filteredRares[npcID]
-		if (value == nil) then
+		if (not value) then
 			return true
 		else
-			return value
+			return false
 		end
 	end
 end
@@ -446,7 +454,7 @@ end
 function RSConfigDB.SetNpcFiltered(npcID, value)
 	if (npcID) then
 		if (value == false) then
-			private.db.general.filteredRares[npcID] = false
+			private.db.general.filteredRares[npcID] = true
 		else
 			private.db.general.filteredRares[npcID] = nil
 		end
@@ -540,6 +548,22 @@ function RSConfigDB.SetMaxSeenTimeFilter(value, clearBak)
 	end
 end
 
+function RSConfigDB.IsShowingHuntingPartyRareNPCs()
+	return private.db.map.displayHuntingPartyRaresNpcIcons
+end
+
+function RSConfigDB.SetShowingHuntingPartyRareNPCs(value)
+	private.db.map.displayHuntingPartyRaresNpcIcons = value
+end
+
+function RSConfigDB.IsShowingPrimalStormRareNPCs()
+	return private.db.map.displayPrimalStormRaresNpcIcons
+end
+
+function RSConfigDB.SetShowingPrimalStormNPCs(value)
+	private.db.map.displayPrimalStormRaresNpcIcons = value
+end
+
 ---============================================================================
 -- Container filters database
 ---============================================================================
@@ -554,7 +578,7 @@ end
 
 function RSConfigDB.IsContainerFiltered(containerID)
 	if (containerID) then
-		return private.db.general.filteredContainers[containerID] == false
+		return private.db.general.filteredContainers[containerID]
 	end
 
 	return false
@@ -563,10 +587,10 @@ end
 function RSConfigDB.GetContainerFiltered(containerID)
 	if (containerID) then
 		local value = private.db.general.filteredContainers[containerID]
-		if (value == nil) then
+		if (not value) then
 			return true
 		else
-			return value
+			return false
 		end
 	end
 end
@@ -574,7 +598,7 @@ end
 function RSConfigDB.SetContainerFiltered(containerID, value)
 	if (containerID) then
 		if (value == false) then
-			private.db.general.filteredContainers[containerID] = value
+			private.db.general.filteredContainers[containerID] = true
 		else
 			private.db.general.filteredContainers[containerID] = nil
 		end
@@ -604,6 +628,14 @@ end
 
 function RSConfigDB.SetContainerFilteredOnlyOnWorldMap(value)
 	private.db.containerFilters.filterOnlyMap = value
+end
+
+function RSConfigDB.IsContainerFilteredOnlyOnAlerts()
+	return private.db.containerFilters.filterOnlyAlerts
+end
+
+function RSConfigDB.SetContainerFilteredOnlyOnAlerts(value)
+	private.db.containerFilters.filterOnlyAlerts = value
 end
 
 function RSConfigDB.IsShowingGarrisonCache()
@@ -658,6 +690,14 @@ function RSConfigDB.SetMaxSeenContainerTimeFilter(value, clearBak)
 	if (clearBak) then
 		private.db.map.maxSeenContainerTimeBak = nil
 	end
+end
+
+function RSConfigDB.IsShowingNotTrackeableContainers()
+	return private.db.map.displayNotTrackeableContainerIcons
+end
+
+function RSConfigDB.SetShowingNotTrackeableContainers(value)
+	private.db.map.displayNotTrackeableContainerIcons = value
 end
 
 ---============================================================================
@@ -728,7 +768,7 @@ end
 
 function RSConfigDB.IsEventFiltered(eventID)
 	if (eventID) then
-		return private.db.general.filteredEvents[eventID] == false
+		return private.db.general.filteredEvents[eventID]
 	end
 
 	return false
@@ -737,10 +777,10 @@ end
 function RSConfigDB.GetEventFiltered(eventID)
 	if (eventID) then
 		local value = private.db.general.filteredEvents[eventID]
-		if (value == nil) then
+		if (not value) then
 			return true
 		else
-			return value
+			return false
 		end
 	end
 end
@@ -748,7 +788,7 @@ end
 function RSConfigDB.SetEventFiltered(eventID, value)
 	if (eventID) then
 		if (value == false) then
-			private.db.general.filteredEvents[eventID] = false
+			private.db.general.filteredEvents[eventID] = true
 		else
 			private.db.general.filteredEvents[eventID] = nil
 		end
@@ -893,14 +933,6 @@ function RSConfigDB.SetFilteringLootByCompletedQuest(value)
 	private.db.loot.filterItemsCompletedQuest = value
 end
 
-function RSConfigDB.IsFilteringLootByNotEquipableItems()
-	return private.db.loot.filterNotEquipableItems
-end
-
-function RSConfigDB.SetFilteringLootByNotEquipableItems(value)
-	private.db.loot.filterNotEquipableItems = value
-end
-
 function RSConfigDB.IsFilteringLootByNotMatchingClass()
 	return private.db.loot.filterNotMatchingClass
 end
@@ -915,22 +947,6 @@ end
 
 function RSConfigDB.SetFilteringLootByNotMatchingFaction(value)
 	private.db.loot.filterNotMatchingFaction = value
-end
-
-function RSConfigDB.IsFilteringLootByTransmog()
-	return private.db.loot.showOnlyTransmogItems
-end
-
-function RSConfigDB.SetFilteringLootByTransmog(value)
-	private.db.loot.showOnlyTransmogItems = value
-end
-
-function RSConfigDB.IsFilteringByCollected()
-	return private.db.loot.filterCollectedItems
-end
-
-function RSConfigDB.SetFilteringByCollected(value)
-	private.db.loot.filterCollectedItems = value
 end
 
 function RSConfigDB.IsFilteringAnimaItems()
@@ -955,6 +971,38 @@ end
 
 function RSConfigDB.SetFilteringByExplorerResults(value)
 	private.db.loot.filterByExplorerResults = value
+end
+
+function RSConfigDB.IsShowingMissingMounts()
+	return private.db.loot.showingMissingMounts
+end
+
+function RSConfigDB.SetShowingMissingMounts(value)
+	private.db.loot.showingMissingMounts = value
+end
+
+function RSConfigDB.IsShowingMissingPets()
+	return private.db.loot.showingMissingPets
+end
+
+function RSConfigDB.SetShowingMissingPets(value)
+	private.db.loot.showingMissingPets = value
+end
+
+function RSConfigDB.IsShowingMissingToys()
+	return private.db.loot.showingMissingToys
+end
+
+function RSConfigDB.SetShowingMissingToys(value)
+	private.db.loot.showingMissingToys = value
+end
+
+function RSConfigDB.IsShowingMissingAppearances()
+	return private.db.loot.showingMissingAppearances
+end
+
+function RSConfigDB.SetShowingMissingAppearances(value)
+	private.db.loot.showingMissingAppearances = value
 end
 
 ---============================================================================
@@ -1061,9 +1109,7 @@ function RSConfigDB.ResetLootFilters()
 	end
 	
 	-- Custom filters
-	RSConfigDB.SetFilteringLootByNotEquipableItems(false)
-	RSConfigDB.SetFilteringLootByTransmog(false)
-	RSConfigDB.SetFilteringByCollected(true)
+	RSConfigDB.SetFilteringByExplorerResults(false)
 	RSConfigDB.SetFilteringLootByNotMatchingClass(false)
 	RSConfigDB.SetFilteringLootByNotMatchingFaction(true)
 	RSConfigDB.SetFilteringByExplorerResults(false)
@@ -1130,19 +1176,19 @@ function RSConfigDB.SetAddingWaypointsAutomatically(value)
 end
 
 function RSConfigDB.IsTomtomSupportEnabled()
-	return private.db.general.enableTomtomSupport
+	return TomTom and private.db.general.enableTomtomSupport
 end
 
 function RSConfigDB.SetTomtomSupportEnabled(value)
-	private.db.general.enableTomtomSupport = value
+	private.db.general.enableTomtomSupport = TomTom and value
 end
 
 function RSConfigDB.IsAddingTomtomWaypointsAutomatically()
-	return private.db.general.autoTomtomWaypoints
+	return TomTom and private.db.general.autoTomtomWaypoints
 end
 
 function RSConfigDB.SetAddingTomtomWaypointsAutomatically(value)
-	private.db.general.autoTomtomWaypoints = value
+	private.db.general.autoTomtomWaypoints = TomTom and value
 end
 
 ---============================================================================
@@ -1170,11 +1216,11 @@ end
 ---============================================================================
 
 function RSConfigDB.IsAddingWorldMapTomtomWaypoints()
-	return private.db.map.waypointTomtom
+	return TomTom and private.db.map.waypointTomtom
 end
 
 function RSConfigDB.SetAddingWorldMapTomtomWaypoints(value)
-	private.db.map.waypointTomtom = value
+	private.db.map.waypointTomtom = TomTom and value
 end
 
 function RSConfigDB.IsAddingWorldMapIngameWaypoints()

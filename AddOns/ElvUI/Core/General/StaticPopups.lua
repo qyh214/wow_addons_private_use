@@ -114,7 +114,7 @@ E.PopupDialogs.ELVUI_EDITBOX = {
 }
 
 E.PopupDialogs.CLIENT_UPDATE_REQUEST = {
-	text = L["Detected that your ElvUI OptionsUI addon is out of date. This may be a result of your Tukui Client being out of date. Please visit our download page and update your Tukui Client, then reinstall ElvUI. Not having your ElvUI OptionsUI addon up to date will result in missing options."],
+	text = L["Detected that your ElvUI Options addon is out of date. This may be a result of your Tukui Client being out of date. Please visit our download page and update your Tukui Client, then reinstall ElvUI. Not having your ElvUI Options addon up to date will result in missing options."],
 	button1 = OKAY,
 	OnAccept = E.noop,
 	showAlert = 1,
@@ -217,7 +217,7 @@ E.PopupDialogs.RESET_UF_UNIT = {
 				UF:CreateAndUpdateHeaderGroup(data.unit, nil, nil, true)
 			end
 
-			if IsAddOnLoaded('ElvUI_OptionsUI') then
+			if IsAddOnLoaded('ElvUI_Options') then
 				local ACD = E.Libs.AceConfigDialog
 				if ACD and ACD.OpenFrames and ACD.OpenFrames.ElvUI then
 					ACD:SelectGroup('ElvUI', 'unitframe', data.unit)
@@ -396,13 +396,6 @@ E.PopupDialogs.SCRIPT_PROFILE = {
 	hideOnEscape = false,
 }
 
-E.PopupDialogs.ELVUI_CONFIG_FOUND = {
-	text = L["You still have ElvUI_Config installed. ElvUI_Config has been renamed to ElvUI_OptionsUI, please remove it."],
-	button1 = ACCEPT,
-	whileDead = 1,
-	hideOnEscape = false,
-}
-
 local MAX_STATIC_POPUPS = 4
 function E:StaticPopup_OnShow()
 	PlaySound(850) --IG_MAINMENU_OPEN
@@ -422,7 +415,7 @@ function E:StaticPopup_OnShow()
 	end
 
 	-- boost static popups over ace gui
-	if IsAddOnLoaded('ElvUI_OptionsUI') then
+	if IsAddOnLoaded('ElvUI_Options') then
 		local ACD = E.Libs.AceConfigDialog
 		if ACD and ACD.OpenFrames and ACD.OpenFrames.ElvUI then
 			self.frameStrataIncreased = true
@@ -592,8 +585,10 @@ function E:StaticPopup_OnUpdate(elapsed)
 
 	if self.acceptDelay then
 		self.acceptDelay = self.acceptDelay - elapsed
-		if self.acceptDelay <= 0 then
-			button1:Enable()
+		local enabled = self.acceptDelay <= 0
+		button1:SetEnabled(enabled)
+
+		if enabled then
 			button1:SetText(info.button1)
 
 			self.acceptDelay = nil
@@ -602,7 +597,6 @@ function E:StaticPopup_OnUpdate(elapsed)
 				info.OnAcceptDelayExpired(self, self.data)
 			end
 		else
-			button1:Disable()
 			button1:SetText(ceil(self.acceptDelay))
 		end
 	end

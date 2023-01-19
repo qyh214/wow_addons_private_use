@@ -29,6 +29,7 @@ function AB:ExtraButtons_BossStyle(frame)
 
 		button.HotKey:SetText(GetBindingKey(button.commandName))
 		AB:FixKeybindText(button)
+		AB:FixKeybindColor(button)
 
 		AB:ExtraButtons_BossAlpha(button)
 
@@ -169,6 +170,8 @@ function AB:SetupExtraButton()
 
 	-- try to shutdown the container movement and taints
 	ExtraAbilityContainer.SetSize = E.noop
+	ExtraAbilityContainer.SetPoint = E.noop
+	ExtraAbilityContainer:KillEditMode()
 
 	AB:ExtraButtons_Reparent()
 
@@ -216,5 +219,6 @@ function AB:UpdateExtraBindings()
 	for _, button in pairs(ExtraButtons) do
 		button.HotKey:SetText(GetBindingKey(button.commandName))
 		AB:FixKeybindText(button)
+		AB:FixKeybindColor(button)
 	end
 end

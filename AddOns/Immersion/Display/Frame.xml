@@ -202,8 +202,8 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="Overlay" alpha="1" setAllPoints="true"/>
-			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true"/>
+			<Frame parentKey="Overlay" alpha="1" setAllPoints="true" frameLevel="2"/>
+			<Frame parentKey="Hilite" alpha="0.01" setAllPoints="true" frameLevel="3"/>
 		</Frames>
 		<HighlightTexture parentKey="HighlightTexture" file="Interface\PVPFrame\PvPMegaQueue" alphaMode="ADD">
 			<TexCoords left="0.00195313" right="0.63867188" top="0.70703125" bottom="0.76757813"/>
@@ -274,13 +274,13 @@
 					self.NineSlice:SetCenterColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
 				end
 			</OnLoad>
-			<OnTooltipSetItem>
+			<OnShow>
 				-- Readjust tooltip size to fit the icon
 				C_Timer.After(0, function()
 					local width, height = self:GetSize()
 					self:SetSize(width + 30, height + 4)
 				end)
-			</OnTooltipSetItem>
+			</OnShow>
 		</Scripts>
 	</GameTooltip>
 
@@ -1079,42 +1079,6 @@
 								</Texture>
 							</Layer>
 						</Layers>
-						<Scripts>
-							<OnLoad>
-								self:SetStatusBarTexture(1, 1, 1, "BORDER", -1);
-
-								local minColor = CreateColor(8/255, 93/255, 72/255, 1);
-								local maxColor = CreateColor(11/255, 136/255, 105/255, 1);
-								ImmersionAPI.SetGradient(self:GetStatusBarTexture(), 'VERTICAL', minColor, maxColor);
-
-								self:SetStatusBarColor(0.5, 0.7, 1);
-							</OnLoad>
-							<OnEnter>
-								ShowFriendshipReputationTooltip(nil, self, "ANCHOR_BOTTOMRIGHT");
-							</OnEnter>
-							<OnLeave>
-								GameTooltip:Hide();
-							</OnLeave>
-							<OnShow>
-								local id, rep, maxRep, name, text, texture, reaction, threshold, nextThreshold = ImmersionAPI:GetFriendshipReputation();
-								if ( id and id > 0 ) then
-									-- if max rank, make it look like a full bar
-									if ( not nextThreshold ) then
-										threshold, nextThreshold, rep = 0, 1, 1;
-									end
-									if ( texture ) then
-										self.icon:SetTexture(texture);
-									else
-										self.icon:SetTexture("Interface\\Common\\friendship-heart");
-									end
-									self:SetMinMaxValues(threshold, nextThreshold);
-									self:SetValue(rep);
-									self:Show();
-								else
-									self:Hide();
-								end
-							</OnShow>
-						</Scripts>
 					</StatusBar>
 				</Frames>
 			</Button>

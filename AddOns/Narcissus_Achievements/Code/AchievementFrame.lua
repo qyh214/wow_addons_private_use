@@ -256,6 +256,11 @@ animFlyIn:SetScript("OnUpdate", function(self, elapsed)
     if self.total >= 0.2 then
         scale = 1;
         local textAlpha = outQuart(self.total - 0.2, 0, 1, 0.2);
+        if textAlpha > 1 then
+            textAlpha = 1;
+        elseif textAlpha < 0 then
+            textAlpha = 0;
+        end
         self.header:SetAlpha(textAlpha);
         self.description:SetAlpha(textAlpha);
         self.date:SetAlpha(textAlpha);
@@ -272,6 +277,12 @@ animFlyIn:SetScript("OnUpdate", function(self, elapsed)
         self.date:SetAlpha(1);
         self.reward:SetAlpha(1);
         self:Hide();
+    end
+
+    if alpha > 1 then
+        alpha = 1;
+    elseif alpha < 0 then
+        alpha = 0;
     end
     self.background:SetAlpha(alpha);
     self.ObjectiveFrame:SetAlpha(alpha);
@@ -2537,6 +2548,8 @@ end
 NarciAchievementTooltipMixin = {};
 
 function NarciAchievementTooltipMixin:OnLoad()
+    NarciAPI.NineSliceUtil.SetUpBorder(self.FrameBorder, "whiteBorder", -12, 0.67, 0.67, 0.67);
+
     local animFade = NarciAPI_CreateAnimationFrame(0.25);
     self.animFade = animFade;
     animFade:SetScript("OnUpdate", function(frame, elapsed)
@@ -2589,7 +2602,8 @@ end
 
 function NarciAchievementTooltipMixin:ResizeAndShow()
     self:SetHeight( self.name:GetHeight() + self.description:GetHeight() + 4 + 24 );
-    
+    self:SetWidth( max(self.name:GetWrappedWidth() + (self.points:IsShown() and 48 or 0), self.description:GetWrappedWidth() + (self.date:IsShown() and 88 or 0) ) + 24);
+
     if not self:IsShown() then
         self.animFade.toAlpha = 1;
         self.showDelay:Show();
@@ -2611,9 +2625,11 @@ function NarciAchievementTooltipMixin:SetAchievement(id)
             self.name:SetTextColor(1, 0.91, 0.647);
         end
         self.date:SetText( FormatDate(day, month, year) );
+        self.date:Show();
     else
         self.name:SetTextColor(0.8, 0.8, 0.8);
         self.date:SetText("");
+        self.date:Hide();
     end
 
     if points == 0 then
@@ -3303,9 +3319,6 @@ local function InitializeFrame(frame)
     CreateTabButtons();
     NarciAchievement_SelectTheme(NarciAchievementOptions.Theme or 1);
 
-    --
-    tinsert(UISpecialFrames, frame:GetName());
-
     frame:Show();
     UpdateSummaryFrame();
 
@@ -3349,6 +3362,15 @@ function NarciAchievementFrameMixin:OnLoad()
     self:SetAttribute("nodeignore", true);  --ConsolePort: Ignore this frame
 end
 
+local function AchievementFrame_OnKeyDown(self, key)
+    if key == "ESCAPE" then
+        self:SetPropagateKeyboardInput(false);
+        self:Hide();
+    else
+        self:SetPropagateKeyboardInput(true);
+    end
+end
+
 function NarciAchievementFrameMixin:OnShow()
     if self.pendingCategoryID then
         SelectCategory(self.pendingCategoryID);
@@ -3360,10 +3382,12 @@ function NarciAchievementFrameMixin:OnShow()
     self:RegisterDynamicEvent(true);
     RefreshInspection();
     StatCardController:UpdateList();
+    self:SetScript("OnKeyDown", AchievementFrame_OnKeyDown);
 end
 
 function NarciAchievementFrameMixin:OnHide()
     self:RegisterDynamicEvent(false);
+    self:SetScript("OnKeyDown", nil);
 end
 
 function NarciAchievementFrameMixin:RegisterDynamicEvent(state)
@@ -3668,6 +3692,12 @@ function NarciAchievement_SelectTheme(index)
     local CloseButton = MainFrame.CloseButton;
     CloseButton:ClearAllPoints();
     CloseButton:SetPoint("TOPRIGHT", MainFrame, "TOPRIGHT", -11, -11 + offsetY);
+    CloseButton.texture:SetTexture(texturePrefix.."CloseButton");
+    if index == 2 then
+        CloseButton:SetSize(39, 26);
+    else
+        CloseButton:SetSize(36, 26);
+    end
 
     local SearchBox = HeaderFrame.SearchBox
     SearchBox:ClearAllPoints();
@@ -3682,14 +3712,6 @@ function NarciAchievement_SelectTheme(index)
         reference:SetHeight(35);
     else
         reference:SetHeight(32);
-    end
-
-    local CloseButton = MainFrame.CloseButton;
-    CloseButton.texture:SetTexture(texturePrefix.."CloseButton");
-    if index == 2 then
-        CloseButton:SetSize(39, 26);
-    else
-        CloseButton:SetSize(36, 26);
     end
 
     SummaryButton:ClearAllPoints();

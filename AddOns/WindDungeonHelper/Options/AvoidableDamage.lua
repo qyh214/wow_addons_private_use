@@ -67,6 +67,13 @@ O.avoidableDamage = {
                         AD:SendMyLevel(true)
                         W:RefreshOptionsAfter(1)
                     end
+                },
+                alwaysOutputToChat = {
+                    order = 3,
+                    type = "toggle",
+                    width = 1.5,
+                    name = L["Always Output to Chat"],
+                    desc = L["Even you are not the active user, you can also get avoidable damage messages in chat."]
                 }
             }
         },

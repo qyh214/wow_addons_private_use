@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1432, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116041913")
+mod:SetRevision("20230117065128")
 mod:SetCreatureID(92142, 92144, 92146)--Blademaster Jubei'thos (92142). Dia Darkwhisper (92144). Gurthogg Bloodboil (92146)
 mod:SetEncounterID(1778)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -11,7 +11,7 @@ mod:SetBossHPInfoToHighest()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 184657 184476",
+	"SPELL_CAST_START 184657 184476 184355",
 	"SPELL_CAST_SUCCESS 183480 184357 184355 184476",
 	"SPELL_AURA_APPLIED 183701 184847 184360 184365 184449 184450 185065 185066 184652 184355",
 	"SPELL_AURA_APPLIED_DOSE 184847 184355",

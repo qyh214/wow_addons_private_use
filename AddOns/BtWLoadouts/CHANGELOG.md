@@ -1,3 +1,55 @@
+# v1.9.2
+
+- Added some debug data to the minimap tooltip when holding Shift
+- Fixed conditions not working correctly for multiple Vault of the Incarnates bosses
+- Fixed an error when reading Blizzard equipment sets
+- Fixed an issue with imported talent sets not being activatable
+
+# v1.9.1
+
+- Disable tracking macro changes to due to bug that was overwriting macros
+- Updated action bar tab tooltips to show macro name and text
+
+# v1.9.0
+
+- Added an option to hide settings from showing in the loadouts menu
+- Updated conditions for Dragonflight release
+
+# v1.8.13
+
+- Fixed an error clearing inventory slot with equipment sets
+
+# v1.8.12
+
+- Fixed trying to cache Dragonflight talent data while on characters that have not unlocked talents
+- Fixed Shadowlands Covenants restrictions and Soulbinds trying to including Dragonflight Major Factions
+- Fixed a bug with the Demon Hunter talents layout
+
+# v1.8.11
+
+- Updated talent data for 10.0.2
+
+# v1.8.10
+
+- Updated for 10.0.2
+
+# v1.8.9
+
+- Fixed not correctly switching to Default Loadout when activating talents on 10.0.2
+- Updated Action Bars sets with the 3 new action bars
+- Updated available talent points to better match the maximum level of the account
+
+# v1.8.8
+
+- Fixed trying to load pvp talents that are higher level than the player
+- Updated talent and pvp talen data
+
+# v1.8.7
+
+- Fixed a bug where the Blizzard talent tree may not always update correctly after activating a talent set
+- Fixed treating some spells as unknown even though they are available
+- Fixed error updating equipement manager sets when an item link is unavailable
+
 # v1.8.6
 
 - Fixed some errors reading talent trees for some specs

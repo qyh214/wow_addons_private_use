@@ -47,6 +47,8 @@ langs.enUS = {
 	currentKeystoneText = "Current: |cFFFFFFFF%s|r",
 	config_announceKeystones = "Announce newly acquired Mythic Keystones to your party",
 	config_schedule = "Display keystone schedule and party keystones (requires reload UI)",
+	["dungeon_Shadowmoon Burial Grounds"] = "Shadowmoon",
+	["dungeon_Temple of the Jade Serpent"] = "Jade Serpent",
 }
 langs.enGB = langs.enUS
 
@@ -255,6 +257,7 @@ langs.zhCN = {
 	newKeystoneAnnounce = "新钥石：%s",
 	currentKeystoneText = "当前钥石：|cFFFFFFFF%s|r",
 	config_announceKeystones = "在队伍里通报获得的新钥石",
+	config_schedule = "显示钥石等级和队伍钥石 (需要重载界面)",
 }
 langs.zhTW = {
 	config_characterConfig = "為角色進行獨立的配置",

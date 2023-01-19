@@ -91,7 +91,7 @@ function SO:UpdateBagInformation(clear)
 	self:BuildEquipmentMap(clear)
 	for _, container in pairs(containers) do
 		for _, bagID in ipairs(container.BagIDs) do
-			for slotID = 1, GetContainerNumSlots(bagID) do			
+			for slotID = 1, C_Container.GetContainerNumSlots(bagID) do			
 				self:UpdateContainerFrame(container.Bags[bagID][slotID], bagID, slotID)
 			end
 		end

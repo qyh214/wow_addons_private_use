@@ -1,6 +1,7 @@
 # Immersion
 
-## [1.4.10](https://github.com/seblindfors/Immersion/tree/1.4.10) (2022-10-26)
-[Full Changelog](https://github.com/seblindfors/Immersion/compare/1.4.9...1.4.10) [Previous Releases](https://github.com/seblindfors/Immersion/releases)
+## [1.4.19](https://github.com/seblindfors/Immersion/tree/1.4.19) (2023-01-16)
+[Full Changelog](https://github.com/seblindfors/Immersion/compare/1.4.18...1.4.19) [Previous Releases](https://github.com/seblindfors/Immersion/releases)
 
-- Added support for closing on different interaction types  
+- Fix gossip options being in the wrong order on retail  
+- Explicitly remove hidden frames from panel manager  

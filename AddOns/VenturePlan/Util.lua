@@ -165,6 +165,85 @@ local FormatAbilityDescriptionOverride do
 	end
 end
 
+do -- SetProxyHelpTips
+	local HelpTipC = Mixin({}, HelpTip) do
+		local PROXY_SUPRESS_KEY, proxyTips, proxyAutoClearArmed = "VenturePlanProxy", false, false
+		HelpTipC.supressHelpTips = {}
+		HelpTipC.framePool = CreateFramePool("FRAME", nil, "HelpTipTemplate", HelpTip.framePool.resetterFunc)
+		hooksecurefunc(HelpTip.framePool, "Release", function(_, o)
+			HelpTipC.framePool:Release(o)
+		end)
+		hooksecurefunc(HelpTip, "Show", function(self, ...)
+			if proxyTips then
+				for k,v in pairs(self.supressHelpTips) do
+					if k ~= PROXY_SUPRESS_KEY and not v then
+						return
+					end
+				end
+				HelpTipC:Show(...)
+			end
+		end)
+		for m in ("Hide HideAll Acknowledge"):gmatch("%S+") do
+			hooksecurefunc(HelpTip, m, function(_, ...)
+				if HelpTipC.framePool.numActiveObjects ~= 0 then
+					return HelpTipC[m](HelpTipC, ...)
+				end
+			end)
+		end
+		local function autoClearHelpProxy()
+			HelpTip.supressHelpTips[PROXY_SUPRESS_KEY] = nil
+			proxyTips, proxyAutoClearArmed = false, false
+		end
+		function HelpTipC:SetProxyEnabled(doProxy)
+			local ov = proxyTips
+			if doProxy and not proxyTips then
+				proxyTips, HelpTip.supressHelpTips[PROXY_SUPRESS_KEY] = true, false
+				if not proxyAutoClearArmed then
+					proxyAutoClearArmed = true
+					C_Timer.After(0, autoClearHelpProxy)
+				end
+			elseif proxyTips and not doProxy then
+				proxyTips, HelpTip.supressHelpTips[PROXY_SUPRESS_KEY] = false, nil
+			end
+			return ov
+		end
+	end
+	
+	function U.SetProxyHelpTips(doProxy)
+		if VP_FORBID_PROXY_HELPTIPS then return end
+		return HelpTipC:SetProxyEnabled(doProxy)
+	end
+	local function restoreAndReturn(ov, ok, ...)
+		U.SetProxyHelpTips(ov)
+		if not ok then error("control flow abort") end
+		return ...
+	end
+	local function prefixReturns(f, ...)
+		return true, f(...)
+	end
+	function U.CallWithProxiedHelpTip(f, ...)
+		local ov = U.SetProxyHelpTips(true)
+		return restoreAndReturn(ov, securecall(prefixReturns, f, ...))
+	end
+	local function wrapInProxyHT(t, k)
+		local of = t[k]
+		t[k] = function(...)
+			return U.CallWithProxiedHelpTip(of, ...)
+		end
+	end
+	function EV.I_ADVENTURES_UI_LOADED()
+		local of1 = CovenantMissionFrame.ProcessTutorials
+		function CovenantMissionFrame.ProcessTutorials(...)
+			if not HelpTipC:IsShowingAnyInSystem("CovenantMissionStrategy") then
+				return U.CallWithProxiedHelpTip(of1, ...)
+			end
+		end
+		wrapInProxyHT(CovenantMissionFrameMissions, "ShowAdventureSelectTutorial")
+		wrapInProxyHT(CovenantMissionFrameMissions, "SetupShowMissionTutorials")
+		wrapInProxyHT(CovenantMissionFrameFollowers.followerTab, "ShowHealFollowerTutorial")
+	end
+end
+
 do -- Tentative Groups
 	local groups, followerMissionID = {}, {}
 	local autoTroops = {["0xFFFFFFFFFFFFFFFF"]=1, ["0xFFFFFFFFFFFFFFFE"]=1}
@@ -204,7 +283,7 @@ do -- Tentative Groups
 			end
 		end
 	end
-	function U.SetMissionBoard(g)
+	local function SetMissionBoard(g)
 		local MPB = CovenantMissionFrame.MissionTab.MissionPage.Board
 		for i=0,4 do
 			if MPB.framesByBoardIndex[i]:GetFollowerGUID() then
@@ -219,6 +298,9 @@ do -- Tentative Groups
 		end
 		StopBoardAnimations(MPB)
 	end
+	function U.SetMissionBoard(g)
+		return U.CallWithProxiedHelpTip(SetMissionBoard, g)
+	end
 	function U.ShowMission(mid, listFrame, overGroup)
 		local mi, mi2, g = C_Garrison.GetMissionDeploymentInfo(mid), C_Garrison.GetBasicMissionInfo(mid), groups[mid]
 		if mi and mi2 then
@@ -232,10 +314,12 @@ do -- Tentative Groups
 				followerMissionID[g[i] or 0] = nil
 			end
 			groups[mid], followerMissionID[0] = nil
+			local htProxy = U.SetProxyHelpTips(true)
 			CovenantMissionFrame.MissionTab.MissionPage:Show()
 			CovenantMissionFrame:ShowMission(mi)
 			listFrame:Hide()
-			U.SetMissionBoard(overGroup or g)
+			SetMissionBoard(overGroup or g)
+			U.SetProxyHelpTips(htProxy)
 		end
 	end
 	function U.StoreMissionGroup(mid, gt, disbandGroups)

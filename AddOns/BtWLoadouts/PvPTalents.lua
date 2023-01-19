@@ -144,11 +144,14 @@ local function IsPvPTalentSetActive(set)
 end
 local function ActivatePvPTalentSet(set, state)
 	local success, complete = true, true;
+	local playerLevel = UnitLevel("player")
 	local talents = {};
 	local usedSlots = {};
 
 	for talentID in pairs(set.talents) do
-		talents[talentID] = true;
+		if GetPvpTalentUnlockLevel(talentID) <= playerLevel then
+			talents[talentID] = true;
+		end
 	end
 
 	local index = 1

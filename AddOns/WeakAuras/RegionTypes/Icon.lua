@@ -118,25 +118,32 @@ local function GetProperties(data)
   return result
 end
 
-local function GetTexCoord(region, texWidth, aspectRatio)
+local function GetTexCoord(region, texWidth, aspectRatio, xOffset, yOffset)
   region.currentCoord = region.currentCoord or {}
   local usesMasque = false
   if region.MSQGroup then
     local db = region.MSQGroup.db
     if db and not db.Disabled then
       usesMasque = true
-      region.currentCoord[1], region.currentCoord[2], region.currentCoord[3], region.currentCoord[4], region.currentCoord[5], region.currentCoord[6], region.currentCoord[7], region.currentCoord[8] = region.icon:GetTexCoord()
+      region.currentCoord[1], region.currentCoord[2], region.currentCoord[3], region.currentCoord[4],
+        region.currentCoord[5], region.currentCoord[6], region.currentCoord[7], region.currentCoord[8]
+        = region.icon:GetTexCoord()
     end
   end
   if (not usesMasque) then
-    region.currentCoord[1], region.currentCoord[2], region.currentCoord[3], region.currentCoord[4], region.currentCoord[5], region.currentCoord[6], region.currentCoord[7], region.currentCoord[8] = 0, 0, 0, 1, 1, 0, 1, 1;
+    region.currentCoord[1], region.currentCoord[2], region.currentCoord[3], region.currentCoord[4],
+      region.currentCoord[5], region.currentCoord[6], region.currentCoord[7], region.currentCoord[8]
+      = 0, 0, 0, 1, 1, 0, 1, 1;
   end
 
   local xRatio = aspectRatio < 1 and aspectRatio or 1;
   local yRatio = aspectRatio > 1 and 1 / aspectRatio or 1;
   for i, coord in ipairs(region.currentCoord) do
-    local aspectRatio = (i % 2 == 1) and xRatio or yRatio;
-    region.currentCoord[i] = (coord - 0.5) * texWidth * aspectRatio + 0.5;
+    if(i % 2 == 1) then
+      region.currentCoord[i] = (coord - 0.5) * texWidth * xRatio + 0.5 - xOffset;
+    else
+      region.currentCoord[i] = (coord - 0.5) * texWidth * yRatio + 0.5 - yOffset;
+    end
   end
 
   return unpack(region.currentCoord)
@@ -144,7 +151,8 @@ end
 
 local function AnchorSubRegion(self, subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
   if anchorType == "area" then
-    WeakAuras.regionPrototype.AnchorSubRegion(selfPoint == "region" and self or self.icon, subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
+    WeakAuras.regionPrototype.AnchorSubRegion(selfPoint == "region" and self or self.icon,
+                    subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
   else
     subRegion:ClearAllPoints()
     anchorPoint = anchorPoint or "CENTER"
@@ -241,7 +249,8 @@ local function create(parent, data)
   icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark");
 
   --This section creates a unique frame id for the cooldown frame so that it can be created with a global reference
-  --The reason is so that WeakAuras cooldown frames can interact properly with OmniCC (i.e., put on its ignore list for timer overlays)
+  --The reason is so that WeakAuras cooldown frames can interact properly with OmniCC
+  -- (i.e., put on its ignore list for timer overlays)
   local id = data.id;
   local frameId = id:lower():gsub(" ", "_");
   if(_G["WeakAurasCooldown"..frameId]) then
@@ -260,6 +269,12 @@ local function create(parent, data)
   cooldown:SetDrawBling(false)
   cooldown.SetDrawSwipeOrg = cooldown.SetDrawSwipe
   cooldown.SetDrawSwipe = function() end
+
+  if not OmniCC and ElvUI and ElvUI[1] and ElvUI[1].CooldownEnabled
+     and ElvUI[1].RegisterCooldown and ElvUI[1]:CooldownEnabled()
+  then
+    ElvUI[1]:RegisterCooldown(cooldown, "WeakAuras");
+  end
 
   local SetFrameLevel = region.SetFrameLevel;
 
@@ -337,7 +352,8 @@ local function modify(parent, region, data)
       region.MSQGroup:ReSkin(button)
     end
 
-    local ulx, uly, llx, lly, urx, ury, lrx, lry = GetTexCoord(region, texWidth, aspectRatio)
+    local ulx, uly, llx, lly, urx, ury, lrx, lry
+      = GetTexCoord(region, texWidth, aspectRatio, region.texXOffset, -region.texYOffset)
 
     if(mirror_h) then
       if(mirror_v) then
@@ -360,6 +376,8 @@ local function modify(parent, region, data)
   region.scaley = 1;
   region.keepAspectRatio = data.keepAspectRatio;
   region.zoom = data.zoom;
+  region.texXOffset = data.texXOffset or 0
+  region.texYOffset = data.texYOffset or 0
   region:UpdateSize()
 
   icon:SetDesaturated(data.desaturate);
@@ -385,6 +403,10 @@ local function modify(parent, region, data)
     cooldown:SetHideCountdownNumbers(cooldownTextDisabled);
     if OmniCC and OmniCC.Cooldown and OmniCC.Cooldown.SetNoCooldownCount then
       OmniCC.Cooldown.SetNoCooldownCount(cooldown, cooldownTextDisabled)
+    elseif ElvUI and ElvUI[1] and ElvUI[1].CooldownEnabled
+           and ElvUI[1].ToggleCooldown and ElvUI[1]:CooldownEnabled()
+    then
+      ElvUI[1]:ToggleCooldown(cooldown, not cooldownTextDisabled);
     end
   end
   region:SetHideCountdownNumbers(data.cooldownTextDisabled)
@@ -397,7 +419,8 @@ local function modify(parent, region, data)
     if (r or g or b) then
       a = a or 1;
     end
-    icon:SetVertexColor(region.color_anim_r or r, region.color_anim_g or g, region.color_anim_b or b, region.color_anim_a or a);
+    icon:SetVertexColor(region.color_anim_r or r, region.color_anim_g or g,
+                        region.color_anim_b or b, region.color_anim_a or a)
     if region.button then
       region.button:SetAlpha(region.color_anim_a or a or 1);
     end
@@ -546,7 +569,9 @@ local function modify(parent, region, data)
     function region:PreShow()
       if (cooldown.duration and cooldown.duration > 0.01) then
         cooldown:Show();
-        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration, cooldown.duration, cooldown.useCooldownModRate and cooldown.modRate or nil);
+        cooldown:SetCooldown(cooldown.expirationTime - cooldown.duration,
+                             cooldown.duration,
+                             cooldown.useCooldownModRate and cooldown.modRate or nil);
         cooldown:Resume()
       end
     end

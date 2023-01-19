@@ -3,7 +3,8 @@ local AB = E:GetModule('ActionBars')
 
 local _G = _G
 local gsub = gsub
-local format, ipairs = format, ipairs
+local ipairs = ipairs
+local format = format
 local CreateFrame = CreateFrame
 local GetBindingKey = GetBindingKey
 local GetNumShapeshiftForms = GetNumShapeshiftForms
@@ -137,7 +138,7 @@ function AB:PositionAndSizeBarShapeShift()
 		end
 
 		if i > numButtons then
-			button:SetScale(0.0001)
+			button:SetScale(0.00001)
 			button:SetAlpha(0)
 			button.handleBackdrop = nil
 		else
@@ -227,6 +228,7 @@ function AB:UpdateStanceBindings()
 
 		button.HotKey:SetText(GetBindingKey('SHAPESHIFTBUTTON'..i))
 		AB:FixKeybindText(button)
+		AB:FixKeybindColor(button)
 	end
 end
 

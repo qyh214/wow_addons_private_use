@@ -15,12 +15,13 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.9.9";
+version = "3.10.7";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
-local buildNumber = select(4, _G.GetBuildInfo())
+local buildNumber = select(4, _G.GetBuildInfo());
 isShadowlands = buildNumber >= 90001;
+isModernApi = buildNumber >= 30401
 isDragonflight = buildNumber >= 100000;
 
 -- is Private Server?
@@ -63,6 +64,10 @@ local Events = {};
     workerFrame:RegisterEvent("VARIABLES_LOADED");
     workerFrame:RegisterEvent("ADDON_LOADED");
 
+-- import libraries.
+libs.SML = _G.LibStub:GetLibrary("LibSharedMedia-3.0");
+libs.ChatHandler = _G.LibStub:GetLibrary("LibChatHandler-1.0");
+libs.DropDownMenu = _G.LibStub:GetLibrary("LibDropDownMenu");
 
 -- called when WIM is first loaded into memory but after variables are loaded.
 local function initialize()
@@ -90,10 +95,6 @@ local function initialize()
 				_G.C_GuildInfo.GuildRoster();
 			end
         end
-
-    -- import libraries.
-    libs.SML = _G.LibStub:GetLibrary("LibSharedMedia-3.0");
-    libs.ChatHandler = _G.LibStub:GetLibrary("LibChatHandler-1.0");
 
     isInitialized = true;
 

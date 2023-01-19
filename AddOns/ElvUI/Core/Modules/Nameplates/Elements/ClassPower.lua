@@ -1,5 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local NP = E:GetModule('NamePlates')
+local UF = E:GetModule('UnitFrames')
 local LSM = E.Libs.LSM
 
 local _G = _G
@@ -16,6 +17,7 @@ local MAX_POINTS = { -- match to UF.classMaxResourceBar
 	MONK		= max(6, MAX_COMBO_POINTS),
 	MAGE		= max(4, MAX_COMBO_POINTS),
 	ROGUE		= max(7, MAX_COMBO_POINTS),
+	EVOKER		= max(6, MAX_COMBO_POINTS),
 	DRUID		= max(5, MAX_COMBO_POINTS)
 }
 
@@ -34,13 +36,13 @@ function NP:ClassPower_UpdateColor(powerType, rune)
 	local colors = NP.db.colors.classResources
 	local fallback = NP.db.colors.power[powerType]
 
-	if isRunes and E.Retail and NP.db.colors.chargingRunes then
-		NP:Runes_UpdateCharged(self)
+	if isRunes and NP.db.colors.chargingRunes then
+		NP:Runes_UpdateCharged(self, rune)
 	elseif isRunes and rune and not classPower then
 		local color = colors.DEATHKNIGHT[rune.runeType or 0]
 		NP:ClassPower_SetBarColor(rune, color.r, color.g, color.b)
 	else
-		local classColor = not classPower and ((isRunes and colors.DEATHKNIGHT) or (powerType == 'COMBO_POINTS' and colors.comboPoints) or (powerType == 'CHI' and colors.MONK))
+		local classColor = not classPower and ((isRunes and colors.DEATHKNIGHT) or (powerType == 'COMBO_POINTS' and colors.comboPoints) or (powerType == 'ESSENCE' and colors.EVOKER) or (powerType == 'CHI' and colors.MONK))
 		for i, bar in ipairs(self) do
 			local color = classPower or (isRunes and classColor[bar.runeType or 0]) or (classColor and classColor[i]) or colors[E.myclass] or fallback
 			NP:ClassPower_SetBarColor(bar, color.r, color.g, color.b)
@@ -175,21 +177,30 @@ function NP:Update_ClassPower(nameplate)
 	end
 end
 
-function NP:Runes_UpdateCharged(runes)
-	local classPower = runes.classColor
+function NP:Runes_UpdateCharged(runes, rune)
 	local colors = NP.db.colors.classResources.DEATHKNIGHT
-	for _, bar in ipairs(runes) do
-		local value = bar:GetValue()
-		local color = (value == 1 and classPower) or colors[(value and value ~= 1 and -1) or bar.runeType or 0]
-		NP:ClassPower_SetBarColor(bar, color.r, color.g, color.b)
+	local classColor = (runes and runes.classColor) or (rune and rune.__owner and rune.__owner.classColor)
+
+	if rune then
+		NP:ClassPower_SetBarColor(rune, UF:Runes_GetColor(rune, colors, classColor))
+	elseif runes then
+		for _, bar in ipairs(runes) do
+			NP:ClassPower_SetBarColor(bar, UF:Runes_GetColor(bar, colors, classColor))
+		end
 	end
 end
 
 function NP:Runes_PostUpdate()
 	self:SetShown(not UnitHasVehicleUI('player'))
 
-	if E.Retail and NP.db.colors.chargingRunes then
+	if NP.db.colors.chargingRunes then
 		NP:Runes_UpdateCharged(self)
+	end
+end
+
+function NP:Runes_UpdateChargedColor()
+	if NP.db.colors.chargingRunes then
+		NP:Runes_UpdateCharged(nil, self)
 	end
 end
 
@@ -215,6 +226,8 @@ function NP:Construct_Runes(nameplate)
 		local rune = CreateFrame('StatusBar', frameName..'Runes'..i, Runes)
 		rune:SetStatusBarTexture(texture)
 		rune:SetStatusBarColor(color.r, color.g, color.b)
+		rune.PostUpdateColor = NP.Runes_UpdateChargedColor
+		rune.__owner = Runes
 		NP.StatusBars[rune] = true
 
 		rune.bg = rune:CreateTexture(frameName..'Runes'..i..'bg', 'BORDER')

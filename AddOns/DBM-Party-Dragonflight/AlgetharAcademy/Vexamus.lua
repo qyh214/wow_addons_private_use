@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2509, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221016053146")
+mod:SetRevision("20230117042742")
 mod:SetCreatureID(194181)
 mod:SetEncounterID(2562)
 --mod:SetUsedIcons(1, 2, 3)
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 388537 386173 385958",
-	"SPELL_CAST_SUCCESS 387691",
+	"SPELL_CAST_SUCCESS 387691 388537",
 	"SPELL_AURA_APPLIED 386181",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 386181",
@@ -22,13 +22,17 @@ mod:RegisterEventsInCombat(
 	"SPELL_ENERGIZE 386088"
 --	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_SAY"
+)
 
---TODO, arcane fissure is not timer based, it's energy. Boss passive energy gains plus orbs reaching boss. Maybe a base timer that's auto corrective?
 --TODO, find a log where orb actually hits boss to see affect on all timers, not just fissure
+--TODO, review energy updating. it doesn't check out quite right. boss got 20 energy from 1 orb, timere reduced by 5.6 seconds (should have been 8)
+--TODO, review a long heroic pull again without M0 or + mechanics involved to see true CDs with less spell queuing?
 --[[
 (ability.id = 388537 or ability.id = 386173 or ability.id = 385958) and type = "begincast"
- or ability.id = 387691
- or ability.id = 386088
+ or ability.id = 387691 and type = "cast"
+ or ability.id = 386088 and not type = "damage"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnArcaneOrbs							= mod:NewCountAnnounce(385974, 3)
@@ -41,6 +45,7 @@ local yellManaBombFades							= mod:NewShortFadesYell(386181)
 local specWarnArcaneExpulsion					= mod:NewSpecialWarningDefensive(385958, nil, nil, nil, 1, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(386201, nil, nil, nil, 1, 8)
 
+local timerRP									= mod:NewRPTimer(19.8)
 local timerArcaneOrbsCD							= mod:NewCDCountTimer(16.8, 385974, nil, nil, nil, 5)
 local timerArcaneFissureCD						= mod:NewCDTimer(40.7, 388537, nil, nil, nil, 3)
 local timerManaBombsCD							= mod:NewCDCountTimer(19.4, 386173, nil, nil, nil, 3)
@@ -61,8 +66,8 @@ function mod:OnCombatStart(delay)
 	self.vb.orbCount = 0
 	self.vb.manaCount = 0
 	timerArcaneOrbsCD:Start(2.1-delay, 1)
-	timerArcaneExpulsionCD:Start(13-delay)
-	timerManaBombsCD:Start(25.1-delay)
+	timerArcaneExpulsionCD:Start(12.1-delay)
+	timerManaBombsCD:Start(23.9-delay)
 	timerArcaneFissureCD:Start(40.7-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(391977))
@@ -88,11 +93,17 @@ function mod:SPELL_CAST_START(args)
 		--It seems to hold so far though, and if they are also energy based it would make sense since he doesn't gain energy for 3 seccond cast
 		--Of course if they are energy based, it also means the timers need to be corrected by SPELL_ENERGIZE as well :\
 		timerManaBombsCD:AddTime(3.5, self.vb.manaCount+1)
-		timerArcaneExpulsionCD:Addtime(3.5)
+		timerArcaneExpulsionCD:AddTime(3.5)
 	elseif spellId == 386173 then
-		--25.1, 23, 19.4, 23
+		--23.9, 26.7, 23, 26.7, 23
+		--24.3, 26.7, 23, 26.7, 26.7
 		self.vb.manaCount = self.vb.manaCount + 1
-		timerManaBombsCD:Start(nil, self.vb.manaCount+1)
+		--Timers only perfect alternate if boss execution is perfect, if any orbs hit boss alternation is broken
+--		if self.vb.manaCount % 2 == 0 then
+			timerManaBombsCD:Start(23, self.vb.manaCount+1)
+--		else
+--			timerManaBombsCD:Start(26.7, self.vb.manaCount+1)
+--		end
 	elseif spellId == 385958 then
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnArcaneExpulsion:Show()
@@ -107,7 +118,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 387691 then
 		self.vb.orbCount = self.vb.orbCount + 1
 		warnArcaneOrbs:Show(self.vb.orbCount)
-		timerArcaneOrbsCD:Start(nil, self.vb.orbCount+1)
+		--2, 21, 24.2, 20.6, 23.6, 20, 24.3
+		--Timers only perfect alternate if boss execution is perfect, if any orbs hit boss alternation is broken
+--		if self.vb.orbCount % 2 == 0 then
+			timerArcaneOrbsCD:Start(20, self.vb.orbCount+1)
+--		else
+--			timerArcaneOrbsCD:Start(23.6, self.vb.orbCount+1)
+--		end
 	elseif spellId == 388537 then
 		timerArcaneFissureCD:Start()
 	end
@@ -156,6 +173,23 @@ function mod:SPELL_ENERGIZE(_, _, _, _, destGUID, _, _, _, spellId, _, _, amount
 		else
 			timerArcaneFissureCD:Stop()
 		end
+	end
+end
+
+
+--"<35.27 21:00:04> [CHAT_MSG_MONSTER_SAY] Ah! Here we are! Ahem--long ago, members of the blue dragonflight accidentally overloaded an arcane elemental and created a powerful construct named Vexamus that quickly started to wreak havoc!#Professor Maxdormu
+--"<55.05 21:00:23> [ENCOUNTER_START] 2562#Vexamus#8#5", -- [268]
+--<38.95 21:51:16> [CHAT_MSG_MONSTER_SAY] Perfect, we are just about--wait, Ichistrasz! There is too much life magic! What are you doing?#Professor Mystakria###Omegal##0#0##0#3723#nil#0#fa
+--<56.01 21:51:33> [DBM_Debug] ENCOUNTER_START event fired: 2563 Overgrown Ancient 8 5#nil", -- [250]
+function mod:CHAT_MSG_MONSTER_SAY(msg)
+	if (msg == L.VexRP or msg:find(L.VexRP)) then
+		self:SendSync("VexRP")--Syncing to help unlocalized clients
+	end
+end
+
+function mod:OnSync(msg, targetname)
+	if msg == "VexRP" and self:AntiSpam(10, 2) then
+		timerRP:Start()
 	end
 end
 

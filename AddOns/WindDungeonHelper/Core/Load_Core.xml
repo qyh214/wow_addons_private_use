@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file='Core.lua'/>
-	<Script file='Functions.lua'/>
+	<Include file='Functions\Load_Functions.xml'/>
+	<Include file='Utilities\Load_Utilities.xml'/>
 </Ui>

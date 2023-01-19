@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface: 100002
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Dragonflight)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
@@ -23,11 +23,11 @@
 ## X-DBM-Mod-Sort: 215
 ## X-DBM-Mod-MapID: 2520, 2451, 2516, 2519, 2526, 2515, 2521, 2527
 ## X-DBM-Mod-MinCoreRevision: 17286
-## X-DBM-Mod-MinExpansion: 9
+## X-DBM-Mod-MinExpansion: 8
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
 ## X-Wago-ID: xZKxZENk
-## Version: r42
+## Version: r59
 
 localization.en.lua
 localization.kr.lua

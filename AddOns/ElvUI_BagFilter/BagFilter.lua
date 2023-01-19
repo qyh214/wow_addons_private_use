@@ -6,13 +6,21 @@ local B = E:GetModule('Bags');
 local AddOnName, U = ...;
 local L = {};
 
+local isRetail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE;
+local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC;
+
 local function SetSlotFilter(self, bagID, slotID)
-    local f = B:GetContainerFrame(bagID > NUM_BAG_SLOTS or bagID == BANK_CONTAINER);
+    local f = B:GetContainerFrame(bagID > (NUM_TOTAL_EQUIPPED_BAG_SLOTS or NUM_BAG_SLOTS) or bagID == BANK_CONTAINER);
     if not (f and f.FilterHolder) then return; end
 
     if f.FilterHolder.active and self.Bags[bagID] and self.Bags[bagID][slotID] then
-        local link = GetContainerItemLink(bagID, slotID);
         local location = { bagID = bagID, slotIndex = slotID };
+        local link;
+        if isRetail then
+            link = C_Container.GetContainerItemLink(bagID, slotID);
+        else
+            link = GetContainerItemLink(bagID, slotID);
+        end
         if not link or f.FilterHolder[f.FilterHolder.active].filter(location, link, select(12, GetItemInfo(link))) then
             self.Bags[bagID][slotID].searchOverlay:Hide();
         else
@@ -70,7 +78,7 @@ local function AddFilterButtons(f, isBank)
         if not f.FilterHolder[i] then
             local name, icon, func = unpack(filter);
 
-            if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+            if isClassic then
                 f.FilterHolder[i] = CreateFrame('CheckButton', nil, f.FilterHolder);
             else
                 f.FilterHolder[i] = CreateFrame('CheckButton', nil, f.FilterHolder, 'BackdropTemplate');
@@ -113,7 +121,7 @@ local function AddMenuButton(isBank)
     local f = B:GetContainerFrame(isBank);
 
     if not f or f.FilterHolder then return; end
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if isClassic then
         f.FilterHolder = CreateFrame('Button', nil, f);
     else
         f.FilterHolder = CreateFrame('Button', nil, f, 'BackdropTemplate');
@@ -122,7 +130,7 @@ local function AddMenuButton(isBank)
     f.FilterHolder:SetTemplate('Transparent');
     f.FilterHolder:Hide();
 
-    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    if isClassic then
         f.filterButton = CreateFrame('Button', nil, f.holderFrame);
     else
         f.filterButton = CreateFrame('Button', nil, f.holderFrame, 'BackdropTemplate');
@@ -218,7 +226,7 @@ do
         }
     };
 
-    if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    if isRetail then
         table.insert(U.Filters, table.getn(U.Filters),
             { L.BattlePets, 'Interface/Icons/INV_Pet_BattlePetTraining',
               function(location, link, type, subType)

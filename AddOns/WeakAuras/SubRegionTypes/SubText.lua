@@ -193,24 +193,6 @@ local function modify(parent, region, parentData, data, first)
   region:SetParent(parent)
   local text = region.text;
 
-  -- Legacy members in icon
-  -- Can we remove them with 9.0 ?
-  if parentData.regionType == "icon" then
-    if not parent.stacks then
-      parent.stacks = text
-    elseif not parent.text2 then
-      parent.text2 = text
-    end
-  elseif parentData.regionType == "aurabar" then
-    if not parent.timer then
-      parent.timer = text
-    elseif not parent.text then
-      parent.text = text
-    elseif not parent.stacks then
-      parent.stacks = text
-    end
-  end
-
   local fontPath = SharedMedia:Fetch("font", data.text_font);
   text:SetFont(fontPath, data.text_fontSize, data.text_fontType);
   if not text:GetFont() then -- Font invalid, set the font but keep the setting
@@ -259,6 +241,7 @@ local function modify(parent, region, parentData, data, first)
       parent.customTextFunc = nil
     end
     parent.values.custom = nil
+    parent.values.lastCustomTextUpdate = nil
   end
 
   local UpdateText
@@ -283,16 +266,13 @@ local function modify(parent, region, parentData, data, first)
   end
 
   local Update
-  if first and parent.customTextFunc then
-    if UpdateText then
-      Update = function()
+  if parent.customTextFunc and UpdateText then
+    Update = function()
+      if parent.values.lastCustomTextUpdate ~= GetTime() then
         parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
-        UpdateText()
+        parent.values.lastCustomTextUpdate = GetTime()
       end
-    else
-      Update = function()
-        parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
-      end
+      UpdateText()
     end
   else
     Update = UpdateText
@@ -305,20 +285,13 @@ local function modify(parent, region, parentData, data, first)
 
   local FrameTick
   if parent.customTextFunc and parentData.customTextUpdate == "update" then
-    if first then
-      if Private.ContainsCustomPlaceHolder(data.text_text) then
-        FrameTick = function()
+    if Private.ContainsCustomPlaceHolder(data.text_text) then
+      FrameTick = function()
+        if parent.values.lastCustomTextUpdate ~= GetTime() then
           parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
-          UpdateText()
+          parent.values.lastCustomTextUpdate = GetTime()
         end
-      else
-        FrameTick = function()
-          parent.values.custom = Private.RunCustomTextFunc(parent, parent.customTextFunc)
-        end
-      end
-    else
-      if Private.ContainsCustomPlaceHolder(data.text_text) then
-        FrameTick = UpdateText
+        UpdateText()
       end
     end
   end
@@ -326,18 +299,6 @@ local function modify(parent, region, parentData, data, first)
   region.Update = Update
   region.FrameTick = FrameTick
   region.TimerTick = TimerTick
-
-  if Update then
-    parent.subRegionEvents:AddSubscriber("Update", region)
-  end
-
-  if FrameTick then
-    parent.subRegionEvents:AddSubscriber("FrameTick", region)
-  end
-
-  if TimerTick then
-    parent.subRegionEvents:AddSubscriber("TimerTick", region)
-  end
 
   if not UpdateText then
     if text:GetFont() then
@@ -355,10 +316,9 @@ local function modify(parent, region, parentData, data, first)
     if (r or g or b) then
       a = a or 1;
     end
-    text:SetTextColor(region.color_anim_r or r, region.color_anim_g or g, region.color_anim_b or b, region.color_anim_a or a);
+    text:SetTextColor(region.color_anim_r or r, region.color_anim_g or g,
+                      region.color_anim_b or b, region.color_anim_a or a)
   end
-
-  region:Color(data.text_color[1], data.text_color[2], data.text_color[3], data.text_color[4]);
 
   function region:SetTextHeight(size)
     local fontPath = SharedMedia:Fetch("font", data.text_font);
@@ -374,12 +334,35 @@ local function modify(parent, region, parentData, data, first)
   function region:SetVisible(visible)
     if visible then
       self:Show()
+      if self.Update then
+        parent.subRegionEvents:AddSubscriber("Update", region)
+      end
+
+      if self.FrameTick then
+        parent.subRegionEvents:AddSubscriber("FrameTick", region)
+      end
+
+      if self.TimerTick then
+        parent.subRegionEvents:AddSubscriber("TimerTick", region)
+      end
+      if self.Update and parent.state then
+        self:Update()
+      end
     else
+      if self.Update then
+        parent.subRegionEvents:RemoveSubscriber("Update", region)
+      end
+
+      if self.FrameTick then
+        parent.subRegionEvents:RemoveSubscriber("FrameTick", region)
+      end
+
+      if self.TimerTick then
+        parent.subRegionEvents:RemoveSubscriber("TimerTick", region)
+      end
       self:Hide()
     end
   end
-
-  region:SetVisible(data.text_visible)
 
   local selfPoint = data.text_selfPoint
   if selfPoint == "AUTO" then
@@ -413,11 +396,9 @@ local function modify(parent, region, parentData, data, first)
 
   region.UpdateAnchor = function(self)
     local xo, yo = getRotateOffset(text, textDegrees, selfPoint)
-    parent:AnchorSubRegion(text, "point", selfPoint, data.text_anchorPoint, (self.text_anchorXOffset or 0) + xo, (self.text_anchorYOffset or 0) + yo)
+    parent:AnchorSubRegion(text, "point", selfPoint, data.text_anchorPoint,
+                           (self.text_anchorXOffset or 0) + xo, (self.text_anchorYOffset or 0) + yo)
   end
-
-  region:UpdateAnchor()
-  animRotate(text, textDegrees, selfPoint)
 
   if textDegrees == 0 then
     region.UpdateAnchorOnTextChange = function() end
@@ -440,6 +421,11 @@ local function modify(parent, region, parentData, data, first)
     self.text_anchorYOffset = yOffset
     self:UpdateAnchor()
   end
+
+  region:Color(data.text_color[1], data.text_color[2], data.text_color[3], data.text_color[4]);
+  region:SetVisible(data.text_visible)
+  region:UpdateAnchor()
+  animRotate(text, textDegrees, selfPoint)
 end
 
 local function addDefaultsForNewAura(data)
@@ -519,4 +505,5 @@ local function supports(regionType)
          or regionType == "aurabar"
 end
 
-WeakAuras.RegisterSubRegionType("subtext", L["Text"], supports, create, modify, onAcquire, onRelease, default, addDefaultsForNewAura, properties);
+WeakAuras.RegisterSubRegionType("subtext", L["Text"], supports, create, modify, onAcquire, onRelease,
+                                default, addDefaultsForNewAura, properties)

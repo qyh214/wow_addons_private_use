@@ -15,12 +15,12 @@ local default = {
   model_y = 0,
   model_z = 0,
   -- SetTransform
-  model_st_tx = 0,
+  model_st_tx = 40,
   model_st_ty = 0,
   model_st_tz = 0,
-  model_st_rx = 270,
+  model_st_rx = 90,
   model_st_ry = 0,
-  model_st_rz = 0,
+  model_st_rz = 90,
   model_st_us = 40,
   width = 200,
   height = 200,
@@ -108,12 +108,12 @@ end
 
 function Private.ModelSetTransformFixed(self, tx, ty, tz, rx, ry, rz, s)
   -- In Dragonflight the api changed, this converts to the new api
-  self:SetTransform(CreateVector3D(tx, ty, tz), CreateVector3D(rx, ry, rz), s)
+  self:SetTransform(CreateVector3D(tx, ty, tz), CreateVector3D(rx, ry, rz), -s)
 end
 
 local function CreateModel()
   local frame = CreateFrame("PlayerModel", nil, UIParent)
-  frame.SetTransformFixed = WeakAuras.IsDragonflight() and  Private.ModelSetTransformFixed or frame.SetTransform
+  frame.SetTransformFixed = frame.GetResizeBounds and Private.ModelSetTransformFixed or frame.SetTransform -- TODO change test to WeakAuras.IsWrathOrRetail() after 3.4.1 release
   return frame
 end
 
@@ -162,6 +162,11 @@ local function ConfigureModel(region, model, data)
       Private.StartProfileSystem("model");
       if (event ~= "UNIT_MODEL_CHANGED" or UnitIsUnit(unitId, unit)) then
         WeakAuras.SetModel(model, data.model_path, data.model_fileId, data.modelIsUnit, data.modelDisplayInfo)
+        if(data.advance and model:HasAnimation(data.sequence)) then
+          model:SetAnimation(data.sequence)
+        else
+          model:SetAnimation(0)
+        end
       end
       Private.StopProfileSystem("model");
     end
@@ -274,27 +279,37 @@ local function modify(parent, region, data)
   end
 
   -- Rotate model
-  function region:Rotate(degrees)
-    region.rotation = degrees;
+  function region:SetAnimRotation(degrees)
+    region.animRotation = degrees
+    region:UpdateEffectiveRotation()
+  end
+
+  function region:SetRotation(degrees)
+    region.rotation = degrees
+    region:UpdateEffectiveRotation()
+  end
+
+  function region:UpdateEffectiveRotation()
+    region.effectiveRotation = region.animRotation or region.rotation
     if region.model then
       if data.api then
         region.model:SetTransformFixed(data.model_st_tx / 1000, data.model_st_ty / 1000, data.model_st_tz / 1000,
-          rad(data.model_st_rx), rad(data.model_st_ry), rad(degrees), data.model_st_us / 1000);
+          rad(data.model_st_rx), rad(data.model_st_ry), rad(region.effectiveRotation), data.model_st_us / 1000)
       else
-        region.model:SetFacing(rad(region.rotation));
+        region.model:SetFacing(rad(region.effectiveRotation))
       end
     end
   end
 
   if data.api then
-    region:Rotate(data.model_st_rz);
+    region:SetRotation(data.model_st_rz)
   else
-    region:Rotate(data.rotation);
+    region:SetRotation(data.rotation)
   end
 
   -- Get model rotation
-  function region:GetRotation()
-    return region.rotation;
+  function region:GetBaseRotation()
+    return region.rotation
   end
 
   function region:PreShow()
@@ -321,7 +336,7 @@ do
     Private.StartProfileSystem("model");
     for id, data in pairs(Private.regions) do
       Private.StartProfileAura(id);
-      if data.region.toShow then
+      if data.region and data.region.toShow then
         if (data.regionType == "model") then
           data.region:PreShow();
         end

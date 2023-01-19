@@ -44,6 +44,14 @@ XLootFrame.addon = addon
 -- Grab locals
 local mouse_focus, opt
 
+-- Because forking the API is a great idea
+local LOOT_SLOT_NONE = LOOT_SLOT_NONE or Enum.LootSlotType.None
+local LOOT_SLOT_ITEM = LOOT_SLOT_ITEM or Enum.LootSlotType.Item
+local LOOT_SLOT_MONEY = LOOT_SLOT_MONEY or Enum.LootSlotType.Money
+local LOOT_SLOT_CURRENCY = LOOT_SLOT_CURRENCY or Enum.LootSlotType.Currency
+
+local GetContainerNumFreeSlots = C_Container and C_Container.GetContainerNumFreeSlots or GetContainerNumFreeSlots
+
 -- Chat output
 local print, wprint = print, print
 local function xprint(text)
@@ -521,8 +529,12 @@ do
 		if not XLootButtonOnClick(self, button) then
 			if IsModifiedClick() then
 				HandleModifiedItemClick(GetLootSlotLink(self.slot))
+			elseif LootButton_OnClick then
+				LootButton_OnClick(self, button)
 			else
-	 			LootButton_OnClick(self, button)
+				StaticPopup_Hide("CONFIRM_LOOT_DISTRIBUTION")
+				LootSlot(self.slot)
+				EventRegistry:TriggerEvent("LootFrame.ItemLooted")
 			end
 		end
 	end
@@ -649,8 +661,10 @@ do
 			if opt.loot_texts_info then -- This is a bit gnarly
 				local equip = slotData.typeName == ENCHSLOT_WEAPON and ENCHSLOT_WEAPON or slotData.equipLoc ~= '' and _G[slotData.equipLoc] or ''
 				local itemtype = (slotData.subTypeName == 'Junk' and slotData.quality > 0) and MISCELLANEOUS or slotData.subTypeName
-				text_info = ((type(equip) == 'string' and equip ~= '') and equip..', ' or '') .. itemtype
-				layout = 'detailed'
+				if itemtype then
+					text_info = ((type(equip) == 'string' and equip ~= '') and equip..', ' or '') .. itemtype
+					layout = 'detailed'
+				end
 			end
 
 			if opt.loot_texts_bind and slotData.bindType then
@@ -889,7 +903,7 @@ do
 	-- Bottom buttons
 	local function BottomButton(frame, name, text, justify)
 		local b = CreateFrame('Button', name, frame)
-		b.text = b:CreateFontString(name..'Text', 'DIALOG')--, 'GameFontNormalSmall')
+		b.text = b:CreateFontString(name..'Text', 'OVERLAY')
 		b.text:SetFont(frame.opt.font, frame.opt.font_size_bottombuttons)
 		b.text:SetText('|c22AAAAAA'..text)
 		b.text:SetJustifyH(justify)
@@ -950,7 +964,8 @@ do
 
 		-- Color frame
 		if self.opt.quality_color_frame then
-			self.overlay:SetBorderColor(GetItemQualityColor(max_quality))
+			local r, g, b = GetItemQualityColor(max_quality)
+			self.overlay:SetBorderColor(r, g, b, 1)
 		end
 	end
 

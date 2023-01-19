@@ -1,12 +1,12 @@
-tag a8ce817bb6d0421a7d346031ffddb9d80e9d1ef1 4.1.1
+tag d960dd4873beeda254fcf7ddd02de01c6166d8b8 4.1.5
 Author:	Tevoll <git@bockmeulen.nl>
-Date:	Wed Oct 26 13:52:57 2022 +0200
+Date:	Tue Dec 13 21:14:20 2022 +0100
 
-commit d128511188525d6756a6fb1e700d38a0efa22285
+commit 98585b0ebc9a1c47c050c89e41c9fcc733802c68
 Author: Tevoll <git@bockmeulen.nl>
-Date:   Wed Oct 26 13:52:44 2022 +0200
+Date:   Tue Dec 13 19:04:55 2022 +0100
 
-    10.0 fix
+    Equipment Set Overlay fix
     
-    - Disabled skinning of covenant button for now.
+    Thanks XelnorOne
 

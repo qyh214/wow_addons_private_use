@@ -25,7 +25,7 @@ V.maps = {
         noLimit = false,
         noUnit = true,
         autoTrackWaypoint = true,
-        rightClickToClear = true,
+        middleClickToClear = true,
         distanceText = {
             enable = true,
             name = E.db.general.font,
@@ -37,6 +37,7 @@ V.maps = {
             enable = true,
             worldMapInput = true,
             command = true,
+            virtualTomTom = true,
             commandKeys = {
                 ["wtgo"] = true,
                 ["goto"] = true
@@ -76,6 +77,7 @@ V.misc = {
     noKanjiMath = false,
     pauseToSlash = true,
     skipCutScene = false,
+    onlyStopWatched = true,
     tags = true,
     hotKeyAboveCD = false,
     guildNewsItemLevel = true,
@@ -98,12 +100,15 @@ V.misc = {
             ["Crying"] = false,
             ["Tortollan"] = false,
             ["Smolderheart"] = false,
-            ["Elegy of the Eternals"] = false
+            ["Elegy of the Eternals"] = false,
+            ["Dragon"] = false,
+            ["Jewelcrafting"] = false
         }
     },
     lfgList = {
         enable = true,
         icon = {
+            leader = true,
             reskin = true,
             pack = "SQUARE",
             size = 16,
@@ -118,6 +123,12 @@ V.misc = {
             offsetX = 0,
             offsetY = -1,
             alpha = 1
+        },
+        additionalText = {
+            enable = true,
+            target = "DESC",
+            shortenDescription = true,
+            template = "{{score}} {{text}}"
         }
     }
 }
@@ -178,6 +189,16 @@ V.quest = {
             classColor = false,
             customColorNormal = {r = 0.000, g = 0.659, b = 1.000},
             customColorHighlight = {r = 0.282, g = 0.859, b = 0.984}
+        },
+        menuTitle = {
+            enable = true,
+            classColor = true,
+            color = {r = 0.000, g = 0.659, b = 1.000},
+            font = {
+                name = E.db.general.font,
+                size = E.db.general.fontSize,
+                style = "OUTLINE"
+            }
         }
     }
 }
@@ -190,6 +211,38 @@ V.skins = {
     shadow = true,
     weakAurasShadow = true,
     increasedSize = 0,
+    rollResult = {
+        name = F.GetCompatibleFont("Accidental Presidency"),
+        size = 13,
+        style = "OUTLINE"
+    },
+    bigWigsSkin = {
+        queueTimer = {
+            smooth = true,
+            spark = true,
+            colorLeft = {r = 0.32941, g = 0.52157, b = 0.93333, a = 1},
+            colorRight = {r = 0.25882, g = 0.84314, b = 0.86667, a = 1},
+            countDown = {
+                name = F.GetCompatibleFont("Montserrat"),
+                size = 16,
+                style = "OUTLINE"
+            }
+        },
+        normalBar = {
+            smooth = true,
+            spark = true,
+            colorOverride = true,
+            colorLeft = {r = 0.32941, g = 0.52157, b = 0.93333, a = 1},
+            colorRight = {r = 0.25882, g = 0.84314, b = 0.86667, a = 1}
+        },
+        emphasizedBar = {
+            smooth = true,
+            spark = true,
+            colorOverride = true,
+            colorLeft = {r = 0.92549, g = 0.00000, b = 0.54902, a = 1},
+            colorRight = {r = 0.98824, g = 0.40392, b = 0.40392, a = 1}
+        }
+    },
     color = {
         r = 0,
         g = 0,
@@ -325,8 +378,8 @@ V.skins = {
     addons = {
         ace3 = true,
         ace3DropdownBackdrop = true,
+        adiBags = true,
         angryKeystones = true,
-        azerothAutoPilot = true,
         bigWigs = true,
         bigWigsQueueTimer = true,
         bugSack = true,
@@ -335,9 +388,13 @@ V.skins = {
         meetingStone = true,
         myslot = true,
         mythicDungeonTools = true,
+        omniCD = true,
+        omniCDIcon = true,
+        omniCDStatusBar = true,
         premadeGroupsFilter = true,
-        rehack = true,
+        raiderIO = true,
         rematch = true,
+        simulationcraft = true,
         tinyInspect = true,
         tldrMissions = true,
         tomCats = true,
@@ -357,6 +414,7 @@ V.skins = {
         azerite = true,
         azeriteEssence = true,
         azeriteRespec = true,
+        bags = true,
         barberShop = true,
         binding = true,
         blackMarket = true,
@@ -369,16 +427,19 @@ V.skins = {
         clickBinding = true,
         collections = true,
         communities = true,
-        covenantRenown = true,
         covenantPreview = true,
+        covenantRenown = true,
         covenantSanctum = true,
         debugTools = true,
         dressingRoom = true,
+        editModeManager = true,
         encounterJournal = true,
         eventTrace = true,
+        expansionLandingPage = true,
         flightMap = true,
         friends = true,
         garrison = true,
+        genericTraits = true,
         gossip = true,
         guild = true,
         guildBank = true,
@@ -393,6 +454,7 @@ V.skins = {
         lossOfControl = true,
         macro = true,
         mail = true,
+        majorFactions = true,
         merchant = true,
         microButtons = true,
         mirrorTimers = true,
@@ -402,6 +464,7 @@ V.skins = {
         petBattle = true,
         playerChoice = true,
         professions = true,
+        professionsCustomerOrders = true,
         quest = true,
         raidInfo = true,
         scenario = true,
@@ -432,32 +495,32 @@ V.skins = {
         auras = true,
         bags = true,
         castBars = true,
+        chatCopyFrame = true,
         chatDataPanels = true,
         chatPanels = true,
-        chatCopyFrame = true,
         chatVoicePanel = true,
         classBars = true,
         dataBars = true,
         dataPanels = true,
+        lootRoll = true,
         miniMap = true,
         option = true,
         panels = true,
         raidUtility = true,
         staticPopup = true,
         statusReport = true,
-        totemBar = true,
+        totemTracker = true,
         unitFrames = true
     }
 }
 
 V.tooltips = {
+    modifier = "SHIFT",
     icon = true,
     factionIcon = true,
     petIcon = true,
     petId = true,
     tierSet = true,
-    covenant = true,
-    dominationRank = true,
     objectiveProgress = true,
     objectiveProgressAccuracy = 1,
     progression = {
@@ -465,29 +528,25 @@ V.tooltips = {
         header = "TEXTURE",
         raids = {
             enable = true,
-            ["Castle Nathria"] = true,
-            ["Sanctum of Domination"] = true,
-            ["Sepulcher of the First Ones"] = true
+            ["Vault of the Incarnates"] = true
         },
         special = {
             enable = true,
-            ["Shadowlands Keystone Master: Season One"] = false,
-            ["Shadowlands Keystone Master: Season Two"] = false,
-            ["Shadowlands Keystone Master: Season Three"] = true,
-            ["Shadowlands Keystone Master: Season Four"] = true
+            ["Dragonflight Keystone Master: Season One"] = true,
+            ["Dragonflight Keystone Hero: Season One"] = true
         },
         mythicDungeons = {
             enable = true,
             markHighestScore = true,
             showNoRecord = true,
-            ["Grimrail Depot"] = true,
-            ["Iron Docks"] = true,
-            ["Operation: Mechagon - Junkyard"] = true,
-            ["Operation: Mechagon - Workshop"] = true,
-            ["Return to Karazhan: Lower"] = true,
-            ["Return to Karazhan: Upper"] = true,
-            ["Tazavesh: So'leah's Gambit"] = true,
-            ["Tazavesh: Streets of Wonder"] = true
+            ["Temple of the Jade Serpent"] = true,
+            ["Shadowmoon Burial Grounds"] = true,
+            ["Halls of Valor"] = true,
+            ["Court of Stars"] = true,
+            ["Ruby Life Pools"] = true,
+            ["The Nokhud Offensive"] = true,
+            ["The Azure Vault"] = true,
+            ["Algeth'ar Academy"] = true
         }
     }
 }

@@ -1,9 +1,15 @@
-## Interface: 70000
+## Interface: 100002
+## Interface-Classic: 11403
+## Interface-BCC: 20504
+## Interface-Wrath: 30400
+
+## X-Curse-Project-ID: 18152
 
 ## Title: LibChatHandler-1.0
+## Version: r25
 ## Notes: Chat Event Model Control View (MCV)
 ## Author: Pazza <Bronzebeard> johnlangone@gmail.com
-## X-Website: http://www.wimaddon.com
+## X-Website: https://github.com/Pazza/LibChatHandler-1.0
 ## X-Category: Library
 ## X-License: LGPL v2.1
 

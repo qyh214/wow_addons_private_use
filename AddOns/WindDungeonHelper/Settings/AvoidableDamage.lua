@@ -2,6 +2,7 @@ local W, F, L, P = unpack(select(2, ...))
 
 P.avoidableDamage = {
     enable = true,
+    alwaysOutputToChat = false,
     notification = {
         enable = true,
         channel = "PARTY",

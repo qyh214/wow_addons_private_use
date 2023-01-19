@@ -5,6 +5,7 @@ local Details = _G.Details
 local DF = _G.DetailsFramework
 local C_Timer = _G.C_Timer
 local unpack = _G.unpack
+local addonName, Details222 = ...
 
 --make a namespace for schedules
 Details.Schedules = {}
@@ -18,9 +19,9 @@ local triggerScheduledTick = function(tickerObject)
     local payload = tickerObject.payload
     local callback = tickerObject.callback
 
-    local result, errortext = xpcall(callback, errorHandler, unpack(payload))
+    local result, errortext = xpcall(callback, geterrorhandler(), unpack(payload))
     if (not result) then
-        Details:Msg("Error:", errortext, tickerObject.name or "")
+        --Details:Msg("Error:", errortext, tickerObject.name or "")
     end
     return result
 end

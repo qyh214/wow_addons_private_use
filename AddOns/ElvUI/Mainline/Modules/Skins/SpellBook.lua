@@ -82,6 +82,8 @@ function S:SpellBookFrame()
 
 	if E.global.general.disableTutorialButtons then
 		_G.SpellBookFrameTutorialButton:Kill()
+	else
+		_G.SpellBookFrameTutorialButton.Ring:Hide()
 	end
 
 	if E.private.skins.parchmentRemoverEnable then
@@ -231,7 +233,10 @@ function S:SpellBookFrame()
 	end)
 
 	hooksecurefunc('UpdateProfessionButton', function(button)
-		local spellIndex = button:GetID() + button:GetParent().spellOffset
+		local parent = button:GetParent()
+		if not parent or not parent.spellOffset then return end
+
+		local spellIndex = button:GetID() + parent.spellOffset
 		local isPassive = IsPassiveSpell(spellIndex, SpellBookFrame.bookType)
 		if isPassive then
 			button.highlightTexture:SetColorTexture(1, 1, 1, 0)
@@ -255,14 +260,29 @@ function S:SpellBookFrame()
 		end
 	end)
 
-	--Bottom Tabs
+	-- Bottom Tabs
 	for i = 1, 5 do
 		S:HandleTab(_G['SpellBookFrameTabButton'..i])
 	end
 
-	_G.SpellBookFrameTabButton1:ClearAllPoints()
-	_G.SpellBookFrameTabButton1:Point('TOPLEFT', SpellBookFrame, 'BOTTOMLEFT', 0, 2)
+	-- Reposition Tabs
+	hooksecurefunc('SpellBookFrame_Update', function()
+		local tab = _G.SpellBookFrameTabButton1
+		local index, lastTab = 1, tab
+		while tab do
+			tab:ClearAllPoints()
 
+			if index == 1 then
+				tab:Point('TOPLEFT', _G.SpellBookFrame, 'BOTTOMLEFT', -3, 0)
+			else
+				tab:Point('TOPLEFT', lastTab, 'TOPRIGHT', -5, 0)
+				lastTab = tab
+			end
+
+			index = index + 1
+			tab = _G['SpellBookFrameTabButton'..index]
+		end
+	end)
 end
 
 S:AddCallback('SpellBookFrame')

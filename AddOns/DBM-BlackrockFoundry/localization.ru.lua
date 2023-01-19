@@ -94,8 +94,8 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	specWarnReturnBase	= "Спецпредупреждение, когда игрок на борту может безопасно вернуться на причал",
-	filterBladeDash3	= "Не показывать спецпредупреждения для $spell:155794 когда на ком-то $spell:170395",
-	filterBloodRitual3	= "Не показывать спецпредупреждения для $spell:158078 когда на ком-то $spell:170405"
+	filterBladeDash3	= "Не показывать спецпредупреждения для $spell:155794, когда на ком-то $spell:170395",
+	filterBloodRitual3	= "Не показывать спецпредупреждения для $spell:158078, когда на ком-то $spell:170405"
 })
 
 L:SetMiscLocalization({

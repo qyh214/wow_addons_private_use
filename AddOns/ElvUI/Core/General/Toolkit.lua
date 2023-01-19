@@ -39,7 +39,7 @@ local function DisablePixelSnap(frame)
 			frame:SetTexelSnappingBias(0)
 		elseif frame.GetStatusBarTexture then
 			local texture = frame:GetStatusBarTexture()
-			if texture and texture.SetSnapToPixelGrid then
+			if type(texture) == 'table' and texture.SetSnapToPixelGrid then
 				texture:SetSnapToPixelGrid(false)
 				texture:SetTexelSnappingBias(0)
 			end
@@ -294,6 +294,11 @@ local StripTexturesBlizzFrames = {
 	'ScrollFrameBorder',
 }
 
+local function KillEditMode(object)
+	object.HighlightSystem = E.noop
+	object.ClearHighlight = E.noop
+end
+
 local function Kill(object)
 	if object.UnregisterAllEvents then
 		object:UnregisterAllEvents()
@@ -371,9 +376,9 @@ local function FontTemplate(fs, font, size, style, skip)
 	end
 
 	-- convert because of bad values between versions
-	if style == 'NONE' and E.Retail then
+	if style == 'NONE' and not E.Classic then
 		style = ''
-	elseif style == '' and not E.Retail then
+	elseif style == '' and E.Classic then
 		style = 'NONE'
 	end
 
@@ -459,6 +464,7 @@ local function addapi(object)
 	if not object.SetTemplate then mk.SetTemplate = SetTemplate end
 	if not object.CreateBackdrop then mk.CreateBackdrop = CreateBackdrop end
 	if not object.CreateShadow then mk.CreateShadow = CreateShadow end
+	if not object.KillEditMode then mk.KillEditMode = KillEditMode end
 	if not object.Kill then mk.Kill = Kill end
 	if not object.Width then mk.Width = Width end
 	if not object.Height then mk.Height = Height end

@@ -79,7 +79,7 @@ end
 local function CreateModel()
   local model =  CreateFrame("PlayerModel", nil, UIParent)
   model.PreShow = PreShow;
-  model.SetTransformFixed = WeakAuras.IsDragonflight() and  Private.ModelSetTransformFixed or model.SetTransform
+  model.SetTransformFixed = model.GetResizeBounds and Private.ModelSetTransformFixed or model.SetTransform  -- TODO change test to WeakAuras.IsWrathOrRetail() after 3.4.1 release
   return model
 end
 
@@ -234,7 +234,7 @@ local function modify(parent, region, parentData, data, first)
   local anchor
   if parentData.regionType == "aurabar" then
     if data.bar_model_clip then
-      anchor = parent.bar.fgFrame
+      anchor = parent.bar.fgMask
     else
       anchor = parent.bar
     end

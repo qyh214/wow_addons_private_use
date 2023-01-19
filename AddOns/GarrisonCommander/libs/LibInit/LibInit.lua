@@ -1,17 +1,20 @@
 --- Main methods directly available in your addon
 -- @module lib
 -- @author Alar of Runetotem
--- @release 66
+-- @release 72
 -- @set sort=true
 -- @usage
 -- -- Create a new addon this way:
 -- local me,ns=... -- Wow engine passes you your addon name and a private table to use
 -- addon=LibStub("LibInit"):newAddon(ns,me)
 -- -- Since now, all LibInit methods are available on self
+--@debug@
+-- Check
+--@end-debug@
 local me, ns = ...
 local __FILE__=tostring(debugstack(1,2,0):match("(.*):12:")) -- Always check line number in regexp and file
 local MAJOR_VERSION = "LibInit"
-local MINOR_VERSION = 66
+local MINOR_VERSION = 72
 local LibStub=LibStub
 local dprint=function() end
 local encapsulate  = function ()
@@ -75,8 +78,10 @@ local GetTime = GetTime
 local gcinfo = gcinfo
 local unpack = unpack
 local geterrorhandler = geterrorhandler
-local GetContainerNumSlots=GetContainerNumSlots
-local GetContainerItemID=GetContainerItemID
+local GetContainerNumSlots=C_Container.GetContainerNumSlots
+local GetContainerItemID=C_Container.GetContainerItemID
+local GetContainerItemLink=C_Container.GetContainerItemLink
+local GetContainerNumFreeSlots=C_Container.GetContainerNumFreeSlots
 local GetItemInfo=GetItemInfo
 local UnitHealth=UnitHealth
 local UnitHealthMax=UnitHealthMax
@@ -1002,10 +1007,11 @@ function lib:OnInitialize(...)
 	end
 	if (type(self.LoadHelp)=="function") then self:LoadHelp() end
 	local main=options.name
+  local _
 	BuildHelp(self)
 	if AceConfig and not options.nogui then
 		AceConfig:RegisterOptionsTable(main,self.OptionsTable,{main,strlower(options.ID)})
-		self.CfgDlg=AceConfigDialog:AddToBlizOptions(main,main )
+		_,self.CfgDlg=AceConfigDialog:AddToBlizOptions(main,main )
 		if (not ignoreProfile and not options.noswitch) then
 			if (AceDBOptions) then
 				local profileOpts=AceDBOptions:GetOptionsTable(self.db)
@@ -1034,7 +1040,7 @@ function lib:OnInitialize(...)
 		self.OptionsTable.args.gui=nil
 	end
 	if (self.help[RELNOTES]~='') then
-		self.CfgRel=AceConfigDialog:AddToBlizOptions(main..RELNOTES,titles.RELNOTES,main)
+		_,self.CfgRel=AceConfigDialog:AddToBlizOptions(main..RELNOTES,titles.RELNOTES,main)
 	end
 	if AceDB then
 		self:UpdateVersion()
@@ -1784,27 +1790,26 @@ local function _GetMethod(target,prefix,func)
 			return "_" .. prefix
 	end
 end
-
-local neveropened=true
+local neveropened=false
 function lib:Gui(info)
 	if (AceConfigDialog and AceGUI) then
-		if (neveropened) then
-			InterfaceAddOnsList_Update()
-			neveropened=false
-		end
-		InterfaceOptionsFrame_OpenToCategory(self.CfgDlg)
+		Settings.OpenToCategory(self.CfgDlg)
+    if neveropened then
+      Settings.OpenToCategory(self.CfgDlg)
+      neveropened=false
+    end
 	else
 		self:Print("No GUI available")
 	end
 end
-
 function lib:Help(info)
 	if (AceConfigDialog and AceGUI) then
-		if (neveropened) then
-			InterfaceAddOnsList_Update()
-			neveropened=false
-		end
-		InterfaceOptionsFrame_OpenToCategory(self.CfgRel)
+    self:Print("Opening help")
+		Settings.OpenToCategory(self.CfgRel)
+    if neveropened then
+      Settings.OpenToCategory(self.CfgRel)
+      neveropened=false
+    end
 	else
 		self:Print("No GUI available")
 	end
@@ -1870,7 +1875,7 @@ end
 -- Anything I define here is immediately available to newAddon method and in addon right after creation
 function lib:Embed(target)
 	-- All methods are pulled in via metatable in order to not pollute addon table
-	local mt=getmetatable(target)
+	local mt=getmetatable(target)  
 	if not mt then mt={__tostring=function(me) return me.name end} end
 	mt.__index=lib.mixins
 	setmetatable(target,mt)

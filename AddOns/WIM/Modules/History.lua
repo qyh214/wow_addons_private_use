@@ -9,6 +9,8 @@ local date = date;
 local time = time;
 local select = select;
 
+local DDM = WIM.libs.DropDownMenu;
+
 --set namespace
 setfenv(1, WIM);
 
@@ -279,7 +281,7 @@ function ChatHistory:OnEnable()
 end
 
 function ChatHistory:OnDisable()
-    if(db.modules.HistoryChat.enabled) then
+    if(modules.HistoryChat.enabled) then
         return;
     end
     for widget in Widgets("history") do
@@ -299,7 +301,6 @@ local function recordChannelChat(recordAs, ChannelType, ...)
         local history = getPlayerHistoryTable(recordAs);
         history.info.chat = true;
         history.info.channelNumber = channelNumber;
-        _G.test = history;
         table.insert(history, {
             event = ChannelType,
             channelName = recordAs,
@@ -452,9 +453,10 @@ local function createHistoryViewer()
     win.nav:SetPoint("TOPLEFT", 18, -47);
     win.nav:SetPoint("BOTTOMLEFT", 18, 18);
     win.nav:SetWidth(200);
-    win.nav.user = CreateFrame("Frame", "WIM3_HistoryUserMenu", win.nav, "UIDropDownMenuTemplate");
+	win.nav.user = DDM.Create_DropDownMenu("WIM3_HistoryUserMenu", win.nav)
+	win.nav.user:SetParent(win.nav)
     win.nav.user:SetPoint("TOPLEFT", -15, 0);
-    _G.UIDropDownMenu_SetWidth(win.nav.user, win.nav:GetWidth() - 25);
+    DDM.UIDropDownMenu_SetWidth(win.nav.user, win.nav:GetWidth() - 25);
 
     win.nav.user.list = {};
     win.nav.user.getUserList = function(self)
@@ -481,7 +483,7 @@ local function createHistoryViewer()
             local self = win.nav.user;
             local list = self:getUserList();
             for i=1, #list do
-                local info = _G.UIDropDownMenu_CreateInfo();
+                local info = {};
                 info.text = list[i];
                 info.value = list[i];
                 info.func = function(self)
@@ -490,14 +492,14 @@ local function createHistoryViewer()
                         win.CONVO = "";
                         win.FILTER = "";
                         win.UpdateUserList();
-                        _G.UIDropDownMenu_SetSelectedValue(win.nav.user, self.value);
+                        DDM.UIDropDownMenu_SetSelectedValue(win.nav.user, self.value);
                     end;
-                _G.UIDropDownMenu_AddButton(info, _G.UIDROPDOWNMENU_MENU_LEVEL);
+                DDM.UIDropDownMenu_AddButton(info, DDM.UIDropDownMenu_MENU_LEVEL);
             end
         end
     win.nav.user:SetScript("OnShow", function(self)
-            _G.UIDropDownMenu_Initialize(self, self.init);
-            _G.UIDropDownMenu_SetSelectedValue(self, win.USER);
+            DDM.UIDropDownMenu_Initialize(self, self.init);
+            DDM.UIDropDownMenu_SetSelectedValue(self, win.USER);
         end);
     win.nav.filters = CreateFrame("Frame", nil, win.nav);
     win.nav.filters:SetPoint("BOTTOMLEFT");

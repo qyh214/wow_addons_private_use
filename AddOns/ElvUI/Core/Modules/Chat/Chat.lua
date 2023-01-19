@@ -180,7 +180,7 @@ else -- cause it doesnt exist on tbc or classic
 	local getDeprecatedAccountInfo = function(accountInfo)
 		if accountInfo then
 			local wowProjectID = accountInfo.gameAccountInfo.wowProjectID or 0
-			local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= "" and accountInfo.gameAccountInfo.clientProgram or nil
+			local clientProgram = accountInfo.gameAccountInfo.clientProgram ~= '' and accountInfo.gameAccountInfo.clientProgram or nil
 			return	accountInfo.bnetAccountID, accountInfo.accountName, accountInfo.battleTag, accountInfo.isBattleTagFriend,
 					accountInfo.gameAccountInfo.characterName, accountInfo.gameAccountInfo.gameAccountID, clientProgram,
 					accountInfo.gameAccountInfo.isOnline, accountInfo.lastOnlineTime, accountInfo.isAFK, accountInfo.isDND, accountInfo.customMessage, accountInfo.note, accountInfo.isFriend,
@@ -191,19 +191,19 @@ else -- cause it doesnt exist on tbc or classic
 	local getDeprecatedGameAccountInfo = function(gameAccountInfo, accountInfo)
 		if gameAccountInfo and accountInfo then
 			local wowProjectID = gameAccountInfo.wowProjectID or 0
-			local characterName = gameAccountInfo.characterName or ""
-			local realmName = gameAccountInfo.realmName or ""
+			local characterName = gameAccountInfo.characterName or ''
+			local realmName = gameAccountInfo.realmName or ''
 			local realmID = gameAccountInfo.realmID or 0
-			local factionName = gameAccountInfo.factionName or ""
-			local raceName = gameAccountInfo.raceName or ""
-			local className = gameAccountInfo.className or ""
-			local areaName = gameAccountInfo.areaName or ""
-			local characterLevel = gameAccountInfo.characterLevel or ""
-			local richPresence = gameAccountInfo.richPresence or ""
+			local factionName = gameAccountInfo.factionName or ''
+			local raceName = gameAccountInfo.raceName or ''
+			local className = gameAccountInfo.className or ''
+			local areaName = gameAccountInfo.areaName or ''
+			local characterLevel = gameAccountInfo.characterLevel or ''
+			local richPresence = gameAccountInfo.richPresence or ''
 			local gameAccountID = gameAccountInfo.gameAccountID or 0
 			local playerGuid = gameAccountInfo.playerGuid or 0
 			return	gameAccountInfo.hasFocus, characterName, gameAccountInfo.clientProgram,
-					realmName, realmID, factionName, raceName, className, "", areaName, characterLevel,
+					realmName, realmID, factionName, raceName, className, '', areaName, characterLevel,
 					richPresence, accountInfo.customMessage, accountInfo.customMessageTime,
 					gameAccountInfo.isOnline, gameAccountID, accountInfo.bnetAccountID, gameAccountInfo.isGameAFK, gameAccountInfo.isGameBusy,
 					playerGuid, wowProjectID, gameAccountInfo.isWowMobile
@@ -284,7 +284,7 @@ do --this can save some main file locals
 		(a = a - (b and 1 or -1) if (b and a == 1 or a == 0) or a == #c then b = not b end return c[a])
 	]]
 
-	local itsElv, itsMis, itsSimpy, itsMel, itsThradex, itsNihilistzsche
+	local itsElv, itsMis, itsSimpy, itsMel, itsThradex
 	do	--Simpy Chaos: super cute text coloring function that ignores hyperlinks and keywords
 		local e, f, g = {'||','|Helvmoji:.-|h.-|h','|[Cc].-|[Rr]','|[TA].-|[ta]','|H.-|h.-|h'}, {}, {}
 		local prettify = function(t,...) return gsub(gsub(E:TextGradient(gsub(gsub(t,'%%%%','\27'),'\124\124','\26'),...),'\27','%%%%'),'\26','||') end
@@ -293,25 +293,22 @@ do --this can save some main file locals
 			if next(g) then if #g > 1 then sort(g) end for n in gmatch(t, '\24') do local _, v = next(g) t = gsub(t, n, f[v], 1) tremove(g, 1) f[v] = nil end end return t
 		end
 
-		--Simpys: original rainbow
-		local SimpyColors = function(t) return specialText(t, 0.99,0.24,0.26, 0.99,0.59,0.28, 1,0.87,0.29, 0.42,0.99,0.39, 0.32,0.76,0.98, 0.63,0.36,0.98, 0.77,0.47,0.98) end
+		--Simpys: Spring Green (2EFF7E), Vivid Sky Blue (52D9FF), Medium Purple (8D63DB), Ticke Me Pink (FF8EB6), Yellow Orange (FFAF53)
+		local SimpyColors = function(t) return specialText(t, 0.18,1.00,0.49, 0.32,0.85,1.00, 0.55,0.38,0.85, 1.00,0.55,0.71, 1.00,0.68,0.32) end
 		--Detroit Lions: Honolulu Blue to Silver [Elv: I stoles it @Simpy]
 		local ElvColors = function(t) return specialText(t, 0,0.42,0.69, 0.61,0.61,0.61) end
 		--Rainbow: FD3E44, FE9849, FFDE4B, 6DFD65, 54C4FC, A35DFA, C679FB, FE81C1
 		local MisColors = function(t) return specialText(t, 0.99,0.24,0.26, 0.99,0.59,0.28, 1,0.87,0.29, 0.42,0.99,0.39, 0.32,0.76,0.98, 0.63,0.36,0.98, 0.77,0.47,0.98, 0.99,0.5,0.75) end
-		--Mels: fiery rose (f94f6d), saffron (f7c621), emerald (4fc16d), medium slate blue (7c7af7), cyan process (11afea)
+		--Mels: Fiery Rose (F94F6D), Saffron (F7C621), Emerald (4FC16D), Medium Slate Blue (7C7AF7), Cyan Process (11AFEA)
 		local MelColors = function(t) return specialText(t, 0.98,0.31,0.43, 0.97,0.78,0.13, 0.31,0.76,0.43, 0.49,0.48,0.97, 0.07,0.69,0.92) end
 		--Thradex: summer without you
 		local ThradexColors = function(t) return specialText(t, 0.00,0.60,0.09, 0.22,0.65,0.90, 0.22,0.65,0.90, 1.00,0.74,0.27, 1.00,0.66,0.00, 1.00,0.50,0.20, 0.92,0.31,0.23) end
-		--Nihilistzsche: Class Normal to Negative (Orange->Blue, Red->Cyan, etc)
-		local NihiColors = function(class) local c = E:ClassColor(class, true); local n = E:InverseClassColor(class, true, true); local c1,c2,c3, n1,n2,n3 = c.r,c.g,c.b, n.r,n.g,n.b; return function(t) return specialText(t, c1,c2,c3, n1,n2,n3, c1,c2,c3, n1,n2,n3) end end
 
 		itsSimpy = function() return ElvSimpy, SimpyColors end
 		itsElv = function() return ElvBlue, ElvColors end
 		itsMel = function() return Hibiscus, MelColors end
 		itsMis = function() return Rainbow, MisColors end
 		itsThradex = function() return PalmTree, ThradexColors end
-		itsNihilistzsche = function(class) local icon, prettyText = E:TextureString(E.Media.ChatLogos['Fox'..class],x), NihiColors(strupper(class)) return function() return icon, prettyText end end
 	end
 
 	local z = {}
@@ -320,26 +317,21 @@ do --this can save some main file locals
 	if E.Classic then
 		-- Simpy
 		z['Simpy-Myzrael']			= itsSimpy -- Warlock
-		-- Luckyone Season of Mastery
-		z['Luckyone-Dreadnaught']	= ElvGreen -- Hunter
 	elseif E.Wrath then
 		-- Simpy
 		z['Cutepally-Myzrael']		= itsSimpy -- Paladin
 		z['Kalline-Myzrael']		= itsSimpy -- Shaman
 		z['Imsojelly-Myzrael']		= itsSimpy -- [Horde] DK
 		-- Luckyone
-		z['Luckyone-Gehennas']		= ElvBlue -- Hunter H
-		z['Luckyd-Golemagg']		= ElvBlue -- Druid H
-		z['Luckyp-Golemagg']		= ElvBlue -- Priest H
-		z['Luckysh-Golemagg']		= ElvBlue -- Shaman H
-		z["Luckyone-Jin'do"]		= ElvBlue -- Shaman H
-		z['Luckyone-Everlook']		= ElvBlue -- Druid A
-		z['Luckypriest-Everlook']	= ElvBlue -- Priest A
-		z['Luckydk-Everlook']		= ElvBlue -- DK
-		z['Luckyrogue-Everlook']	= ElvBlue -- Rogue
-		z['Luckyhunter-Everlook']	= ElvBlue -- Hunter A
-		z['Luckykek-Everlook']		= ElvBlue -- Shaman A
-		z['Luckyone-Giantstalker']	= ElvBlue -- Paladin
+		z['Luckyone-Gehennas']		= ElvRed -- [Horde] Hunter
+		z['Luckygrip-Gehennas']		= ElvRed -- [Horde] DK
+		z['Luckyone-Everlook']		= ElvRed -- [Alliance] Druid
+		z['Luckypriest-Everlook']	= ElvRed -- [Alliance] Priest
+		z['Luckyrogue-Everlook']	= ElvRed -- [Alliance] Rogue
+		z['Luckyhunter-Everlook']	= ElvRed -- [Alliance] Hunter
+		z['Luckydk-Everlook']		= ElvRed -- [Alliance] DK
+		z['Luckykek-Everlook']		= ElvRed -- [Alliance] Shaman
+		z['Luckyone-Giantstalker']	= ElvRed -- [Alliance] Paladin
 		-- Repooc
 		z['Poocsdk-Mankrik']		= ElvBlue -- [Horde] DK
 		z['Repooc-Mankrik']			= ElvBlue
@@ -370,37 +362,41 @@ do --this can save some main file locals
 		z['Merathilis-Shattrath']	= ElvOrange	-- [Alliance] Druid
 		z['Merathilîs-Shattrath']	= ElvBlue	-- [Alliance] Shaman
 		z['Róhal-Shattrath']		= ElvGreen	-- [Alliance] Hunter
+		z['Meravoker-Shattrath']	= ElvGreen	-- [Alliance] Hunter
 		-- Luckyone
-		z['Luckyone-LaughingSkull']		= ElvBlue -- Druid H
-		z['Luckypriest-LaughingSkull']	= ElvBlue -- Priest
-		z['Luckymonkas-LaughingSkull']	= ElvBlue -- Monk
-		z['Luckydk-LaughingSkull']		= ElvBlue -- DK
-		z['Luckyhunter-LaughingSkull']	= ElvBlue -- Hunter
-		z['Unluckyone-LaughingSkull']	= ElvBlue -- Shaman
-		z['Notlucky-LaughingSkull']		= ElvBlue -- Warrior
-		z['Luckymage-LaughingSkull']	= ElvBlue -- Mage
-		z['Luckydh-LaughingSkull']		= ElvBlue -- DH
-		z['Luckywl-LaughingSkull']		= ElvBlue -- Warlock
-		z['Luckyrogue-LaughingSkull']	= ElvBlue -- Rogue
-		z['Luckypala-LaughingSkull']	= ElvBlue -- Paladin
-		z['Luckydruid-LaughingSkull']	= ElvBlue -- Druid A
-		z['Luckyevoker-LaughingSkull']	= ElvBlue -- Evoker
+		z['Luckyone-LaughingSkull']		= ElvRed -- [Horde] Druid
+		z['Luckypriest-LaughingSkull']	= ElvRed -- [Horde] Priest
+		z['Luckymonkas-LaughingSkull']	= ElvRed -- [Horde] Monk
+		z['Luckyhunter-LaughingSkull']	= ElvRed -- [Horde] Hunter
+		z['Luckydh-LaughingSkull']		= ElvRed -- [Horde] DH
+		z['Luckymage-LaughingSkull']	= ElvRed -- [Horde] Mage
+		z['Luckypala-LaughingSkull']	= ElvRed -- [Horde] Paladin
+		z['Luckyrogue-LaughingSkull']	= ElvRed -- [Horde] Rogue
+		z['Luckywl-LaughingSkull']		= ElvRed -- [Horde] Warlock
+		z['Luckydk-LaughingSkull']		= ElvRed -- [Horde] DK
+		z['Luckyevoker-LaughingSkull']	= ElvRed -- [Horde] Evoker
+		z['Notlucky-LaughingSkull']		= ElvRed -- [Horde] Warrior
+		z['Unluckyone-LaughingSkull']	= ElvRed -- [Horde] Shaman
+		z['Luckydruid-LaughingSkull']	= ElvRed -- [Alliance] Druid
 		-- Repooc
 		z['Sifpooc-Stormrage']			= ElvBlue	-- DH
 		z['Fragmented-Stormrage']		= ElvBlue	-- Warlock
 		z['Dapooc-Stormrage']			= ElvOrange	-- Druid
+		z['Poocvoker-Stormrage']		= ElvGreen	-- Evoker
 		z['Sifupooc-Spirestone']		= ElvBlue	-- Monk
 		z['Repooc-Spirestone']			= ElvBlue	-- Paladin
 		-- Simpy
 		z['Arieva-Cenarius']			= itsSimpy -- Hunter
 		z['Buddercup-Cenarius']			= itsSimpy -- Rogue
 		z['Cutepally-Cenarius']			= itsSimpy -- Paladin
+		z['Cuddle-Cenarius']			= itsSimpy -- Mage
 		z['Ezek-Cenarius']				= itsSimpy -- DK
 		z['Glice-Cenarius']				= itsSimpy -- Warrior
 		z['Kalline-Cenarius']			= itsSimpy -- Shaman
 		z['Puttietat-Cenarius']			= itsSimpy -- Druid
 		z['Simpy-Cenarius']				= itsSimpy -- Warlock
 		z['Twigly-Cenarius']			= itsSimpy -- Monk
+		z['Imsofire-Cenarius']			= itsSimpy -- [Horde] Evoker
 		z['Imsobeefy-Cenarius']			= itsSimpy -- [Horde] Shaman
 		z['Imsocheesy-Cenarius']		= itsSimpy -- [Horde] Priest
 		z['Imsojelly-Cenarius']			= itsSimpy -- [Horde] DK
@@ -412,6 +408,7 @@ do --this can save some main file locals
 		z['Imsotasty-Cenarius']			= itsSimpy -- [Horde] Monk
 		z['Imsosaucy-Cenarius']			= itsSimpy -- [Horde] Warlock
 		z['Imsodrippy-Cenarius']		= itsSimpy -- [Horde] Rogue
+		z['Lumee-CenarionCircle']		= itsSimpy -- [RP] Evoker
 		z['Bunne-CenarionCircle']		= itsSimpy -- [RP] Warrior
 		z['Loppie-CenarionCircle']		= itsSimpy -- [RP] Monk
 		z['Loppybunny-CenarionCircle']	= itsSimpy -- [RP] Mage
@@ -440,11 +437,19 @@ do --this can save some main file locals
 		z['Alysneaks-Cenarius']		= itsMel -- [Horde] Rogue
 		z['Alytotes-Cenarius']		= itsMel -- [Horde] Shaman
 		-- Thradex (Simpys Buddy)
-		z['Foam-Area52']			= itsThradex
+		z['Foam-Area52']			= itsThradex -- Horde
+		z['Gur-Area52']				= itsThradex -- Horde
+		z['Archmage-Area52']		= itsThradex -- Horde
+		z['Counselor-Area52']		= itsThradex -- Horde
+		z['Monk-CenarionCircle']	= itsThradex
+		z['Thradex-Stormrage']		= itsThradex
+		z['Wrecked-Stormrage']		= itsThradex
+		z['Tb-Stormrage']			= itsThradex
 		-- AcidWeb
 		z['Livarax-BurningLegion']		= Gem
 		z['Filevandrel-BurningLegion']	= Gem
 		z['Akavaya-BurningLegion']		= Gem
+		z['Athyneos-BurningLegion']		= Gem
 		-- Affinity
 		z['Affinichi-Illidan']	= Bathrobe
 		z['Affinitii-Illidan']	= Bathrobe
@@ -462,43 +467,19 @@ do --this can save some main file locals
 		z['Twunkie-Area52']			= itsMis
 		z['Misoracle-Area52']		= itsMis
 		z['Mismayhem-Area52']		= itsMis
-		z['Misdîrect-Spirestone']	= itsMis
+		z['Misdîrect-Area52']		= itsMis
+		z['Misdecay-Area52']		= itsMis
+		z['Mislust-Area52'] 		= itsMis
+		z['Misdivine-Area52']		= itsMis
+		z['Mislight-Area52']		= itsMis
 		z['Misillidan-Spirestone']	= itsMis
 		z['Mispel-Spirestone']		= itsMis
-		z['Misdecay-Spirestone']	= itsMis
-		z['Mislust-Spirestone'] 	= itsMis
-		z['Misdivine-Spirestone']	= itsMis
-		z['Mislight-Spirestone']	= itsMis
 		--Bladesdruid
 		z['Bladedemonz-Spirestone']	= SuperBear
 		z['Bladesdruid-Spirestone']	= SuperBear
 		z['Rollerblade-Spirestone']	= SuperBear
 		--Bozaum
 		z['Bozaum-Spirestone']	= Beer
-		-- Nihilistzsche
-		z['Dirishia-WyrmrestAccord']	= itsNihilistzsche('Warlock')
-		z['Xanikani-WyrmrestAccord']	= itsNihilistzsche('Mage')
-		z['Rikanza-WyrmrestAccord']		= itsNihilistzsche('Monk')
-		z['Onaguda-WyrmrestAccord']		= itsNihilistzsche('Druid')
-		z['Cerishia-WyrmrestAccord']	= itsNihilistzsche('Priest')
-		z['Vellilara-WyrmrestAccord']	= itsNihilistzsche('DemonHunter')
-		z['Sayalia-WyrmrestAccord']		= itsNihilistzsche('DeathKnight')
-		z['Alledarisa-WyrmrestAccord']	= itsNihilistzsche('Paladin')
-		z['Orlyrala-WyrmrestAccord']	= itsNihilistzsche('Shaman')
-		z['Scerila-WyrmrestAccord']		= itsNihilistzsche('Rogue')
-		z['Ralaniki-WyrmrestAccord']	= itsNihilistzsche('Hunter')
-		z['Moyanza-WyrmrestAccord']		= itsNihilistzsche('Warrior')
-		z['Erasaya-WyrmrestAccord']		= itsNihilistzsche('DeathKnight')
-		z['Linabla-WyrmrestAccord']		= itsNihilistzsche('Druid')
-		z['Dirikoa-WyrmrestAccord']		= itsNihilistzsche('Hunter')
-		z['Elaedarel-WyrmrestAccord']	= itsNihilistzsche('Warlock')
-		z['Alydrer-WyrmrestAccord']		= itsNihilistzsche('Warlock')
-		z['Issia-WyrmrestAccord']		= itsNihilistzsche('Priest')
-		z['Leitara-WyrmrestAccord']		= itsNihilistzsche('Warrior')
-		z['Cherlyth-WyrmrestAccord']	= itsNihilistzsche('Druid')
-		z['Tokashami-WyrmrestAccord']	= itsNihilistzsche('Shaman')
-		z['Millop-WyrmrestAccord']		= itsNihilistzsche('Hunter')
-		z['Aeondalew-WyrmrestAccord']	= itsNihilistzsche('DeathKnight')
 	end
 end
 
@@ -549,8 +530,8 @@ function CH:InsertEmotions(msg)
 		local pattern = E:EscapeString(word)
 		local emoji = CH.Smileys[pattern]
 		if emoji and strmatch(msg, '[%s%p]-'..pattern..'[%s%p]*') then
-			local base64 = E.Libs.Base64:Encode(word) -- btw keep `|h|cFFffffff|r|h` as it is
-			msg = gsub(msg, '([%s%p]-)'..pattern..'([%s%p]*)', (base64 and ('%1|Helvmoji:%%'..base64..'|h|cFFffffff|r|h') or '%1')..emoji..'%2')
+			local encode = E.Libs.Deflate:EncodeForPrint(word) -- btw keep `|h|cFFffffff|r|h` as it is
+			msg = gsub(msg, '([%s%p]-)'..pattern..'([%s%p]*)', (encode and ('%1|Helvmoji:%%'..encode..'|h|cFFffffff|r|h') or '%1')..emoji..'%2')
 		end
 	end
 
@@ -952,7 +933,7 @@ do
 	local stripTextureFunc = function(w, x, y) if x=='' then return (w~='' and w) or (y~='' and y) or '' end end
 	local hyperLinkFunc = function(w, x, y) if w~='' then return end
 		local emoji = (x~='' and x) and strmatch(x, 'elvmoji:%%(.+)')
-		return (emoji and E.Libs.Base64:Decode(emoji)) or y
+		return (emoji and E.Libs.Deflate:DecodeForPrint(emoji)) or y
 	end
 	local fourString = function(v, w, x, y)
 		return format('%s%s%s', v, w, (v and v == '1' and x) or y)
@@ -1240,6 +1221,12 @@ function CH:UpdateChatTab(chat)
 			CH:HandleFadeTabs(chat, CH.db.fadeUndockedTabs and CH:IsUndocked(chat, docker))
 		end
 	end
+
+	-- reparenting chat changes the strata of the resize button
+	if chat.EditModeResizeButton then
+		chat.EditModeResizeButton:SetFrameStrata('HIGH')
+		chat.EditModeResizeButton:SetFrameLevel(6)
+	end
 end
 
 function CH:UpdateChatTabs()
@@ -1301,6 +1288,14 @@ function CH:SnappingChanged(chat)
 	else
 		CH:PositionChat(chat)
 	end
+end
+
+function CH:ResnapDock(event, arg1, arg2)
+	if event == 'PLAYER_ENTERING_WORLD' and (arg1 or arg2) then
+		return -- initLogin or isReload
+	end
+
+	CH:SnappingChanged(_G.GeneralDockManager.primary)
 end
 
 function CH:ShowBackground(background, show)
@@ -1400,7 +1395,7 @@ function CH:UpdateChatTabColors()
 		CH:FCFTab_UpdateColors(tab, tab.selected)
 	end
 end
-E.valueColorUpdateFuncs[CH.UpdateChatTabColors] = true
+E.valueColorUpdateFuncs.Chat = CH.UpdateChatTabColors
 
 function CH:ScrollToBottom(frame)
 	frame:ScrollToBottom()
@@ -1742,7 +1737,7 @@ local function GetPFlag(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, ar
 		end
 	end
 
-	return ""
+	return ''
 end
 
 -- copied from ChatFrame.lua
@@ -2732,7 +2727,7 @@ function CH:FCFDock_ScrollToSelectedTab(dock)
 	local logchat, logchattab = CH:GetCombatLog()
 	dock.scrollFrame:ClearAllPoints()
 	dock.scrollFrame:Point('RIGHT', dock.overflowButton, 'LEFT')
-	dock.scrollFrame:Point('TOPLEFT', (logchat.isDocked and logchattab) or CH:GetTab(dock.primary), 'TOPRIGHT')
+	dock.scrollFrame:Point('TOPLEFT', (logchat and logchat.isDocked and logchattab) or CH:GetTab(dock.primary), 'TOPRIGHT')
 end
 
 function CH:FCF_SetWindowAlpha(frame, alpha)
@@ -3596,6 +3591,7 @@ function CH:Initialize()
 
 	if E.Retail then
 		CH:RegisterEvent('SOCIAL_QUEUE_UPDATE', 'SocialQueueEvent')
+		CH:SecureHook(_G.EditModeManagerFrame, 'UpdateLayoutInfo', 'ResnapDock')
 
 		if E.private.general.voiceOverlay then
 			CH:RegisterEvent('VOICE_CHAT_CHANNEL_MEMBER_SPEAKING_STATE_CHANGED', 'VoiceOverlay')
@@ -3607,6 +3603,8 @@ function CH:Initialize()
 			CH:RegisterEvent('VOICE_CHAT_CHANNEL_DEACTIVATED', 'VoiceOverlay')
 			_G.VoiceActivityManager:UnregisterAllEvents()
 		end
+	else
+		CH:RegisterEvent('PLAYER_ENTERING_WORLD', 'ResnapDock')
 	end
 
 	if _G.WIM then

@@ -1,0 +1,50 @@
+## Interface: 100002
+## Title: HandyNotes: Dragonflight Treasures
+## Notes: Where are the hidden treasures in the Dragon Isles?
+## Author: Kemayo
+## Version: v41
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## X-Curse-Project-ID: 615651
+## X-Wago-ID: ME6gxnK1
+## SavedVariables: HandyNotes_DragonflightTreasuresDB
+## RequiredDeps: HandyNotes
+## OptionalDeps: !LibUIDropDownMenu
+
+lib\LibUIDropDownMenu\LibUIDropDownMenu.xml
+
+handler\handler.xml
+
+dragonflight.lua
+
+zones\DragonIsles.lua
+zones\AzureSpan.lua
+zones\ForbiddenReach.lua
+zones\OhnahranPlains.lua
+zones\Thaldraszus.lua
+zones\WakingShores.lua
+
+shared\ExpeditionScoutsPack.lua
+shared\DisturbedDirt.lua
+shared\MagicBoundChest.lua
+shared\TuskarrChests.lua
+shared\WarSupplyChest.lua
+shared\GrandHunts.lua
+shared\Recipes.lua
+
+achievements\FragmentsOfHistory.lua
+achievements\HighestPeaks.lua
+achievements\DragonGlyphs.lua
+achievements\Races.lua
+achievements\SELFIE.lua
+
+profession_knowledge\Masters.lua
+profession_knowledge\Alchemy.lua
+profession_knowledge\Blacksmithing.lua
+profession_knowledge\Enchanting.lua
+profession_knowledge\Engineering.lua
+profession_knowledge\Inscription.lua
+profession_knowledge\Jewelcrafting.lua
+profession_knowledge\Leatherworking.lua
+profession_knowledge\Tailoring.lua

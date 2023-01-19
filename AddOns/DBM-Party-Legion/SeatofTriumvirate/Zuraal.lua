@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1979, "DBM-Party-Legion", 13, 945)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116185401")
+mod:SetRevision("20230117063410")
 mod:SetCreatureID(124871)
 mod:SetEncounterID(2065)
 mod:SetUsedIcons(1)
@@ -10,7 +10,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 246134 244579",
-	"SPELL_CAST_SUCCESS 244433",
+	"SPELL_CAST_SUCCESS 244602",
 	"SPELL_AURA_APPLIED 244657 244621",
 	"SPELL_AURA_REMOVED 244657 244621",
 	"SPELL_DAMAGE 244433",
@@ -33,7 +33,7 @@ local specWarnFixate					= mod:NewSpecialWarningRun(244657, nil, nil, nil, 4, 2)
 
 local timerNullPalmCD					= mod:NewCDTimer(10.9, 246134, nil, nil, nil, 3)
 local timerDeciminateCD					= mod:NewCDTimer(12.1, 244579, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
-local timerCoalescedVoidCD				= mod:NewCDTimer(12.1, 244579, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerCoalescedVoidCD				= mod:NewCDTimer(12.1, 244602, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerUmbraShiftCD					= mod:NewCDTimer(12, 244433, nil, nil, nil, 6)
 local timerVoidTear						= mod:NewBuffActiveTimer(20, 244621, nil, nil, nil, 6)
 

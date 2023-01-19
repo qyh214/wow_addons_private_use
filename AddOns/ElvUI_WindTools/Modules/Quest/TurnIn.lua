@@ -6,9 +6,11 @@ local format = format
 local ipairs = ipairs
 local next = next
 local select = select
+local strfind = strfind
 local strlen = strlen
 local strmatch = strmatch
 local strupper = strupper
+local tinsert = tinsert
 local tonumber = tonumber
 
 local AcceptQuest = AcceptQuest
@@ -16,11 +18,16 @@ local AcknowledgeAutoAcceptQuest = AcknowledgeAutoAcceptQuest
 local AutoQuestPopupTracker_RemovePopUp = AutoQuestPopupTracker_RemovePopUp
 local CloseQuest = CloseQuest
 local CompleteQuest = CompleteQuest
+local GetActiveQuestID = GetActiveQuestID
+local GetActiveTitle = GetActiveTitle
 local GetAutoQuestPopUp = GetAutoQuestPopUp
+local GetAvailableQuestInfo = GetAvailableQuestInfo
 local GetInstanceInfo = GetInstanceInfo
 local GetItemInfo = GetItemInfo
 local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
+local GetNumActiveQuests = GetNumActiveQuests
 local GetNumAutoQuestPopUps = GetNumAutoQuestPopUps
+local GetNumAvailableQuests = GetNumAvailableQuests
 local GetNumQuestChoices = GetNumQuestChoices
 local GetNumQuestItems = GetNumQuestItems
 local GetQuestID = GetQuestID
@@ -35,6 +42,8 @@ local IsShiftKeyDown = IsShiftKeyDown
 local QuestGetAutoAccept = QuestGetAutoAccept
 local QuestInfoItem_OnClick = QuestInfoItem_OnClick
 local QuestIsFromAreaTrigger = QuestIsFromAreaTrigger
+local SelectActiveQuest = SelectActiveQuest
+local SelectAvailableQuest = SelectAvailableQuest
 local ShowQuestComplete = ShowQuestComplete
 local ShowQuestOffer = ShowQuestOffer
 local StaticPopup_Hide = StaticPopup_Hide
@@ -48,7 +57,6 @@ local C_GossipInfo_GetActiveQuests = C_GossipInfo.GetActiveQuests
 local C_GossipInfo_GetAvailableQuests = C_GossipInfo.GetAvailableQuests
 local C_GossipInfo_GetNumActiveQuests = C_GossipInfo.GetNumActiveQuests
 local C_GossipInfo_GetNumAvailableQuests = C_GossipInfo.GetNumAvailableQuests
-local C_GossipInfo_GetNumOptions = C_GossipInfo.GetNumOptions
 local C_GossipInfo_GetOptions = C_GossipInfo.GetOptions
 local C_GossipInfo_SelectActiveQuest = C_GossipInfo.SelectActiveQuest
 local C_GossipInfo_SelectAvailableQuest = C_GossipInfo.SelectAvailableQuest
@@ -212,14 +220,6 @@ local itemBlacklist = {
     [88604] = true -- 納特的釣魚手冊
 }
 
-local autoGossipTypes = {
-    ["taxi"] = true,
-    ["gossip"] = true,
-    ["banker"] = true,
-    ["vendor"] = true,
-    ["trainer"] = true
-}
-
 local ignoreInstances = {
     [1571] = true, -- 枯法者
     [1626] = true -- 群星庭院
@@ -266,7 +266,12 @@ do
             return true
         end
 
-        return modiferFunctionTable[self.db.pauseModifier]()
+        local func = modiferFunctionTable[self.db.pauseModifier]
+        if func and func() then
+            return true
+        end
+
+        return false
     end
 end
 
@@ -285,22 +290,26 @@ function TI:QUEST_GREETING()
         return
     end
 
-    if C_GossipInfo_GetNumActiveQuests() > 0 then
-        for index, gossipQuestUIInfo in ipairs(C_GossipInfo_GetActiveQuests()) do
-            local isWorldQuest = gossipQuestUIInfo.questID and C_QuestLog_IsWorldQuest(gossipQuestUIInfo.questID)
-            if gossipQuestUIInfo.isComplete and not isWorldQuest then
+    local active = GetNumActiveQuests()
+    if active > 0 then
+        for index = 1, active do
+            local _, isComplete = GetActiveTitle(index)
+            local questID = GetActiveQuestID(index)
+            if isComplete and not C_QuestLog_IsWorldQuest(questID) then
                 if not self:IsPaused("COMPLETE") then
-                    C_GossipInfo_SelectActiveQuest(index)
+                    SelectActiveQuest(index)
                 end
             end
         end
     end
 
-    if C_GossipInfo_GetNumAvailableQuests() > 0 then
-        for index, gossipQuestUIInfo in ipairs(C_GossipInfo_GetAvailableQuests()) do
-            if not gossipQuestUIInfo.isTrivial or IsTrackingHidden() then
+    local available = GetNumAvailableQuests()
+    if available > 0 then
+        for index = 1, available do
+            local isTrivial = GetAvailableQuestInfo(index)
+            if not isTrivial or IsTrackingHidden() then
                 if not self:IsPaused("ACCEPT") then
-                    C_GossipInfo_SelectAvailableQuest(index)
+                    SelectAvailableQuest(index)
                 end
             end
         end
@@ -361,14 +370,27 @@ function TI:GOSSIP_SHOW()
 
             local _, instance, _, _, _, _, _, mapID = GetInstanceInfo()
             if instance ~= "raid" and not ignoreGossipNPC[npcID] and not ignoreInstances[mapID] then
-                local gossipInfoTable = C_GossipInfo_GetOptions()
-                local gType = gossipInfoTable[1] and gossipInfoTable[1].type
-                if gType and autoGossipTypes[gType] then
+                local status = gossipOptions[1] and gossipOptions[1].status
+                if status and status == 0 then
                     return C_GossipInfo_SelectOption(firstGossipOptionID)
                 end
             end
-        elseif self.db and self.db.followerAssignees and followerAssignees[npcID] and numOptions > 1 then
+        elseif self.db and self.db.followerAssignees and followerAssignees[npcID] and numGossipOptions > 1 then
             return C_GossipInfo_SelectOption(firstGossipOptionID)
+        elseif numGossipOptions > 1 then
+            local maybeQuestIndexes = {}
+            for index, gossipOption in ipairs(gossipOptions) do
+                if gossipOption.name and strfind(gossipOption.name, "^|cFF0000FF") then
+                    tinsert(maybeQuestIndexes, index)
+                end
+            end
+            if #maybeQuestIndexes == 1 then
+                local index = maybeQuestIndexes[1]
+                local status = gossipOptions[index] and gossipOptions[index].status
+                if status and status == 0 then
+                    return C_GossipInfo_SelectOption(gossipOptions[index].gossipOptionID)
+                end
+            end
         end
     end
 end
@@ -469,7 +491,7 @@ function TI:QUEST_COMPLETE()
     if choices <= 1 then
         GetQuestReward(1)
     elseif choices > 1 and self.db and self.db.selectReward then
-        local bestSellPrice, bestIndex = 0, nil
+        local bestSellPrice, bestIndex = 0
 
         for index = 1, choices do
             local link = GetQuestItemLink("choice", index)
@@ -486,12 +508,9 @@ function TI:QUEST_COMPLETE()
             end
         end
 
-        if bestIndex then
-            if self.db and self.db.getBestReward then
-                GetQuestReward(bestIndex)
-            else
-                QuestInfoItem_OnClick(_G.QuestInfoRewardsFrame.RewardButtons[bestIndex])
-            end
+        local button = bestIndex and _G.QuestInfoRewardsFrame.RewardButtons[bestIndex]
+        if button then
+            QuestInfoItem_OnClick(button)
         end
     end
 end

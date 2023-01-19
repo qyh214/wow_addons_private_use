@@ -5,7 +5,7 @@
 local ADDON_NAME,Internal = ...
 local L = Internal.L
 
-BTWLOADOUTS_DF_TALENTS_ACTIVE = Internal.IsDragonflight()
+BTWLOADOUTS_DF_TALENTS_ACTIVE = Internal.IsDragonflightPatch
 
 --@NOTE Copying parts of the original talents code over. Dont want to use wrong mixin
 local BtWLoadoutsTalentsMixin = false
@@ -70,6 +70,9 @@ local function RefreshSet(set)
     if specID == set.specID then
         wipe(nodes);
         local configID = C_ClassTalents.GetActiveConfigID();
+        if not configID then
+            return
+        end
         local configInfo = C_Traits.GetConfigInfo(configID);
         local treeID = configInfo.treeIDs[1];
 
@@ -210,6 +213,10 @@ local function SetRequirements(set)
     local isActive, waitForCooldown = true, false
 
     local configID = C_ClassTalents.GetActiveConfigID();
+    if not configID then
+        return
+    end
+
     local configInfo = C_Traits.GetConfigInfo(configID);
     local nodeIDs = C_Traits.GetTreeNodes(configInfo.treeIDs[1]);
     
@@ -281,8 +288,19 @@ local function ActivateSet(set, state)
     elseif not IsSetActive(set) and not state.dfTalentsAttempted then
         complete = false;
 
-        local configID = C_ClassTalents.GetActiveConfigID();
         local specID = GetSpecializationInfo(GetSpecialization());
+
+        if ClassTalentFrame then
+            ClassTalentFrame.TalentsTab:ClearLastSelectedConfigID();
+            ClassTalentFrame.TalentsTab:MarkTreeDirty();
+        end
+        C_ClassTalents.UpdateLastSelectedSavedConfigID(specID, 0) -- Set active loadout to "Default Loadout"
+
+        local configID = C_ClassTalents.GetActiveConfigID();
+        if not configID then
+            return
+        end
+
         local configInfo = C_Traits.GetConfigInfo(configID);
         C_Traits.ResetTree(configID, configInfo.treeIDs[1]);
 
@@ -341,11 +359,12 @@ local function ActivateSet(set, state)
     end
 
     if complete then
-        C_ClassTalents.UpdateLastSelectedSavedConfigID(260, nil) -- Set active loadout to "Default Loadout"
+        local specID = GetSpecializationInfo(GetSpecialization());
         if ClassTalentFrame then
-            ClassTalentFrame.TalentsTab.LoadoutDropDown:ClearSelection() -- Make the loadout dropdown show "Default Loadout" if its already loaded
+            ClassTalentFrame.TalentsTab:ClearLastSelectedConfigID();
             ClassTalentFrame.TalentsTab:MarkTreeDirty();
         end
+        C_ClassTalents.UpdateLastSelectedSavedConfigID(specID, 0) -- Set active loadout to "Default Loadout"
     end
 
     return complete
@@ -386,6 +405,7 @@ Internal.AddLoadoutSegment({
         return {
             version = 1,
             name = set.name,
+            classID = set.classID,
             specID = set.specID,
             treeID = set.treeID,
             nodes = set.nodes,
@@ -395,8 +415,12 @@ Internal.AddLoadoutSegment({
     import = function (source, version, name, ...)
         assert(version == 1)
 
-        local specID = source.specID or ...
+        local specID, classID = ...
+        specID = source.specID or specID
+        classID = source.classID or classID
+
         return Internal.AddSet("dftalents", UpdateSetFilters({
+            classID = classID,
             specID = specID,
             treeID = source.treeID,
             name = name or source.name,
@@ -409,10 +433,19 @@ Internal.AddLoadoutSegment({
         return Internal.GetSetByValue(BtWLoadoutsSets.dftalents, set, CompareSets)
     end,
     verify = function (source, ...)
-        local specID = source.specID or ...
+        local specID, classID = ...
+
+        specID = source.specID or specID
         if not specID or not GetSpecializationInfoByID(specID) then
             return false, L["Invalid specialization"]
         end
+
+        classID = source.classID or classID
+        local classFile = select(6, GetSpecializationInfoByID(specID))
+        if not classID or Internal.GetClassID(classFile) ~= classID then
+            return false, L["Invalid class"]
+        end
+
         local nodes = C_Traits.GetTreeNodes(source.treeID)
         if next(nodes) == nil then
             return false, L["Invalid talent tree"]
@@ -744,6 +777,11 @@ function BtWLoadoutsDFTalentsMixin:Update(updatePosition, skipUpdateTree)
         local classID = set.classID
         local specID = set.specID
         local treeID = set.treeID
+        if not classID then
+            local classInfo = Internal.GetClassInfoBySpecID(specID)
+            set.classID = classInfo.classID
+            classID = classInfo.classID
+        end
 
         UpdateSetFilters(set)
         sidebar:Update()
@@ -773,7 +811,7 @@ function BtWLoadoutsDFTalentsMixin:Update(updatePosition, skipUpdateTree)
         local rect = {left = 65536, right = 0, top = 65536, bottom = 0}
         for _,nodeID in ipairs(nodes) do
             local nodeInfo = self:GetAndCacheNodeInfo(nodeID); -- /tinspect C_Traits.GetNodeInfo(C_ClassTalents.GetActiveConfigID(), 61086)
-            if nodeInfo then
+            if nodeInfo and nodeInfo.posY > 0 then
                 if rect.left > nodeInfo.posX then
                     rect.left = nodeInfo.posX
                 end
@@ -796,7 +834,7 @@ function BtWLoadoutsDFTalentsMixin:Update(updatePosition, skipUpdateTree)
         local rightSide = {left = 65536, right = 0, top = 65536, bottom = 0}
         for _,nodeID in ipairs(nodes) do
             local nodeInfo = self:GetAndCacheNodeInfo(nodeID); -- /tinspect C_Traits.GetNodeInfo(C_ClassTalents.GetActiveConfigID(), 61086)
-            if nodeInfo then
+            if nodeInfo and nodeInfo.posY > 0 then
                 if nodeInfo.posX < center then
                     if leftSide.left > nodeInfo.posX then
                         leftSide.left = nodeInfo.posX
@@ -924,7 +962,7 @@ function BtWLoadoutsDFTalentsMixin:UpdateTreeCurrencyInfo(skipButtonUpdates)
     
 	self.treeCurrencyInfoMap = {};
     for _,currency in ipairs(treeInfo.currencies) do
-        if Internal.IsDragonflightPrepatch() then
+        if GetMaxLevelForPlayerExpansion() == 60 then
             self.treeCurrencyInfoMap[currency.traitCurrencyID] = {
                 traitCurrencyID = currency.traitCurrencyID,
                 maxQuantity = currency.maxQuantity - 5,

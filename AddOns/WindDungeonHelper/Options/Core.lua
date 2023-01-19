@@ -8,8 +8,7 @@ local LDB = LibStub("LibDataBroker-1.1")
 local LDBI = LibStub("LibDBIcon-1.0")
 
 local CreateFrame = CreateFrame
-local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
-local InterfaceOptionsFrame_Show = InterfaceOptionsFrame_Show
+local Settings = Settings
 
 local C_Timer_After = C_Timer.After
 
@@ -56,7 +55,7 @@ function W:BuildOptions()
     options.args.profiles.order = 1000
 
     ACR:RegisterOptionsTable(name, options)
-    self.OptionFrame = ACD:AddToBlizOptions(name, W.AddonName)
+    self.OptionFrame, self.OptionName = ACD:AddToBlizOptions(name, W.AddonName)
     self.DataBroker =
         LDB:NewDataObject(
         L["Wind Dungeon Helper"],
@@ -78,8 +77,7 @@ function W:BuildOptions()
 end
 
 function W:ShowOptions()
-    InterfaceOptionsFrame_Show()
-    InterfaceOptionsFrame_OpenToCategory(self.OptionFrame)
+    Settings.OpenToCategory(self.OptionName)
 end
 
 function W:RefreshOptions()

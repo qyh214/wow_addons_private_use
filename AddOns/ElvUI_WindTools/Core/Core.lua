@@ -18,6 +18,7 @@ local GetMaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 
+local C_CVar_GetCVarBool = C_CVar.GetCVarBool
 local C_LFGList = C_LFGList
 
 local ACCEPT = _G.ACCEPT
@@ -28,11 +29,13 @@ W.PlainTitle = gsub(W.Title, "|c........([^|]+)|r", "%1")
 W.Locale = GetLocale()
 W.ChineseLocale = strsub(W.Locale, 0, 2) == "zh"
 W.MaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion()
-W.SupportElvUIVersion = 12.92
+W.SupportElvUIVersion = 13.18
 W.ClassColor = _G.RAID_CLASS_COLORS[E.myclass]
 
 W.RegisteredModules = {}
 W.Changelog = {}
+
+W.UseKeyDown = C_CVar_GetCVarBool("ActionButtonUseKeyDown")
 
 -- Alerts
 E.PopupDialogs.WINDTOOLS_ELVUI_OUTDATED = {
@@ -50,9 +53,21 @@ E.PopupDialogs.WINDTOOLS_OPEN_CHANGELOG = {
     button1 = L["Open Changelog"],
     button2 = CANCEL,
     OnAccept = function(self)
-        E:ToggleOptionsUI("WindTools,information,changelog")
+        E:ToggleOptions("WindTools,information,changelog")
     end,
     hideOnEscape = 1
+}
+
+E.PopupDialogs.WINDTOOLS_BUTTON_FIX_RELOAD = {
+    text = format(
+        "%s\n%s\n\n|cffaaaaaa%s|r",
+        format(L["%s detects CVar %s has been changed."], W.Title, "|cff209ceeActionButtonUseKeyDown|r"),
+        L["It will cause some buttons not work properly before UI reloading."],
+        format(L["You can disable this alert in [%s]-[%s]-[%s]"], W.Title, L["Advanced"], L["Game Fix"])
+    ),
+    button1 = L["Reload UI"],
+    button2 = CANCEL,
+    OnAccept = _G.ReloadUI
 }
 
 -- Keybinds
@@ -132,7 +147,7 @@ end
 function W:GameFixing()
     -- -- fix duplicated party in lfg frame
     -- -- from: https://wago.io/tWVx_hIx3/4
-    do
+    if E.global.WT.core.noDuplicatedParty then
         if not _G["ShowLFGRemoveDuplicates"] and not IsAddOnLoaded("LFMPlus") then
             hooksecurefunc(
                 "LFGListUtil_SortSearchResults",
@@ -173,7 +188,8 @@ function W:GameFixing()
 
     -- fix playstyle string
     -- from Premade Groups Filter & LFMPlus
-    do
+
+    if E.global.WT.core.fixPlaystyle then
         if C_LFGList.IsPlayerAuthenticatedForLFG(703) then
             function C_LFGList.GetPlaystyleString(playstyle, activityInfo)
                 if
@@ -198,5 +214,16 @@ function W:GameFixing()
             _G.LFGListEntryCreation_SetTitleFromActivityInfo = function(_)
             end
         end
+    end
+
+    if E.global.WT.core.cvarAlert then
+        self:RegisterEvent(
+            "CVAR_UPDATE",
+            function(_, cvar, value)
+                if cvar == "ActionButtonUseKeyDown" and W.UseKeyDown ~= (value == "1") then
+                    E:StaticPopup_Show("WINDTOOLS_BUTTON_FIX_RELOAD")
+                end
+            end
+        )
     end
 end

@@ -442,6 +442,7 @@ ns.RegisterPoints(1533, {
             182759, -- Functioning Anima Core
         },
         note="Bring a {item:180651}, found hidden behind debris nearby, to the {npc:171300}",
+        vignette=4340,
     },
     [27803015] = { -- Dark Watcher
         achievement=14307, criteria=50603,
@@ -543,10 +544,11 @@ ns.RegisterPoints(1533, {
         quest=58320,
         npc=160985,
         loot={
-            183608, -- Evernote Vesper
+            174038, -- Chime of Celerity
         },
         level=60,
         note="Need three players to trigger",
+        vignette=4571,
     },
     [22452285] = { -- Orstus and Sotiros
         achievement=14307, criteria=50618,
@@ -608,6 +610,7 @@ ns.RegisterPoints(1533, {
             -- {174445, toy=true}, -- Glimmerfly Cocoon
         },
         note="Beasts of Bastion; talk to {npc:161441} to summon",
+        vignette=4032,
     },
     [53508870] = { -- The Ascended Council
         achievement=14307, criteria=50619,
@@ -625,6 +628,7 @@ ns.RegisterPoints(1533, {
             {53508870, 39152040, highlightOnly=true,},
             {53508870, 32151775, highlightOnly=true,},
         },
+        vignette=4320,
     },
     -- Rallying Cry of the Ascended
     -- TODO: are there questids for these? Doing if off the Council would be inaccurate...

@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.43 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.44 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -510,5 +510,23 @@ PR.PARAGON_DATA = {
 					itemID = 186552,
 				},
 			},
+		},
+	
+	--Dragonflight
+		[66156] = { -- Dragonscale Expedition
+			factionID = 2507,
+			cache = 199472,
+		}, 
+		[66511] = { -- Iskaara Tuskarr
+			factionID = 2511,
+			cache = 199473,
+		}, 
+		[65606] = { -- Maruuk Centaur
+			factionID = 2503,
+			cache = 199474,
+		}, 
+		[71023] = { -- Valdrakken Accord
+			factionID = 2510,
+			cache = 199475,
 		},
 }

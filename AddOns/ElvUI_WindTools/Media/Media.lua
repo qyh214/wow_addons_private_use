@@ -1,8 +1,11 @@
 local W, F, E, L, V, P, G = unpack(select(2, ...))
 local LSM = E.Libs.LSM
 
+local _G = _G
 local ceil = ceil
 local format = format
+local strlower = strlower
+local strupper = strupper
 local unpack = unpack
 
 local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
@@ -155,6 +158,74 @@ do
 end
 
 do
+	AddMedia("widgetsTips", "WidgetsTips.tga", "Textures")
+
+	local texTable = {
+		texWidth = 2048,
+		texHeight = 1024,
+		tipWidth = 512,
+		tipHeight = 170,
+		languages = {
+			zhCN = 0,
+			zhTW = 170,
+			enUS = 340
+		},
+		type = {
+			button = {0, 0},
+			checkBox = {512, 0},
+			tab = {1024, 0},
+			treeGroupButton = {1536, 0},
+			slider = {0, 510}
+		}
+	}
+
+	function F.GetWidgetTips(widgetType)
+		if not texTable.type[widgetType] then
+			return
+		end
+		local offsetY = texTable.languages[E.global.general.locale] or texTable.languages["enUS"]
+		if not offsetY then
+			return
+		end
+
+		local xStart = texTable.type[widgetType][1]
+		local yStart = texTable.type[widgetType][2] + offsetY
+		local xEnd = xStart + texTable.tipWidth
+		local yEnd = yStart + texTable.tipHeight
+
+		return {xStart / texTable.texWidth, xEnd / texTable.texWidth, yStart / texTable.texHeight, yEnd / texTable.texHeight}
+	end
+
+	function F.GetWidgetTipsString(widgetType)
+		if not texTable.type[widgetType] then
+			return
+		end
+		local offsetY = texTable.languages[E.global.general.locale] or texTable.languages["enUS"]
+		if not offsetY then
+			return
+		end
+
+		local xStart = texTable.type[widgetType][1]
+		local yStart = texTable.type[widgetType][2] + offsetY
+		local xEnd = xStart + texTable.tipWidth
+		local yEnd = yStart + texTable.tipHeight
+
+		return format(
+			"|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d:255:255:255|t",
+			W.Media.Textures.widgetsTips,
+			ceil(texTable.tipHeight * 0.4),
+			ceil(texTable.tipWidth * 0.4),
+			texTable.texWidth,
+			texTable.texHeight,
+			xStart,
+			xEnd,
+			yStart,
+			yEnd
+		)
+	end
+end
+
+do
 	function F.GetRoleTexCoord(role)
 		if role == "TANK" then
 			return .32 / 9.03, 2.04 / 9.03, 2.65 / 9.03, 4.3 / 9.03
@@ -176,12 +247,37 @@ do
 	AddMedia("ROLES", "UI-LFG-ICON-ROLES.blp", "Textures")
 end
 
-do
-	function F.GetClassTexCoord(role)
-		return unpack(CLASS_ICON_TCOORDS[role])
+function F.GetClassIconStyleList()
+	return {"flat", "flatborder", "flatborder2", "round", "square", "warcraftflat"}
+end
+
+function F.GetClassIconWithStyle(class, style)
+	if not class or not F.In(strupper(class), _G.CLASS_SORT_ORDER) then
+		return
 	end
 
-	AddMedia("CLASSES", "UI-CLASSES-CIRCLES.blp", "Textures")
+	if not style or not F.In(style, F.GetClassIconStyleList()) then
+		return
+	end
+
+	return MediaPath .. "Icons/ClassIcon/" .. strlower(class) .. "_" .. style .. ".tga"
+end
+
+function F.GetClassIconStringWithStyle(class, style, width, height)
+	local path = F.GetClassIconWithStyle(class, style)
+	if not path then
+		return
+	end
+
+	if not width and not height then
+		return format("|T%s:0|t", path)
+	end
+
+	if not height then
+		height = width
+	end
+
+	return format("|T%s:%d:%d:0:0:64:64:0:64:0:64|t", path, height, width)
 end
 
 AddMedia("vignetting", "Vignetting.tga", "Textures")
@@ -189,6 +285,8 @@ AddMedia("sword", "Sword.tga", "Textures")
 AddMedia("shield", "Shield.tga", "Textures")
 AddMedia("smallLogo", "WindToolsSmall.tga", "Textures")
 AddMedia("arrowDown", "ArrowDown.tga", "Textures")
+
+AddMedia("leader", "Leader.tga", "Icons")
 
 AddMedia("complete", "Complete.tga", "Icons")
 AddMedia("accept", "Accept.tga", "Icons")
@@ -199,6 +297,10 @@ AddMedia("donateAiFaDian", "AiFaDian.tga", "Icons")
 AddMedia("ffxivTank", "FFXIV/Tank.tga", "Icons")
 AddMedia("ffxivDPS", "FFXIV/DPS.tga", "Icons")
 AddMedia("ffxivHealer", "FFXIV/Healer.tga", "Icons")
+
+AddMedia("philModTank", "PhilMod/Tank.tga", "Icons")
+AddMedia("philModDPS", "PhilMod/DPS.tga", "Icons")
+AddMedia("philModHealer", "PhilMod/Healer.tga", "Icons")
 
 AddMedia("hexagonTank", "Hexagon/Tank.tga", "Icons")
 AddMedia("hexagonDPS", "Hexagon/DPS.tga", "Icons")
@@ -212,19 +314,18 @@ AddMedia("lynUITank", "LynUI/Tank.tga", "Icons")
 AddMedia("lynUIDPS", "LynUI/DPS.tga", "Icons")
 AddMedia("lynUIHealer", "LynUI/Healer.tga", "Icons")
 
-AddMedia("announcement", "Announcement.tga", "Icons")
-AddMedia("calendar", "Calendar.tga", "Icons")
-AddMedia("chat", "Chat.tga", "Icons")
-AddMedia("combat", "Combat.tga", "Icons")
-AddMedia("information", "Information.tga", "Icons")
-AddMedia("item", "Item.tga", "Icons")
-AddMedia("map", "Map.tga", "Icons")
-AddMedia("misc", "Misc.tga", "Icons")
-AddMedia("quest", "Quest.tga", "Icons")
-AddMedia("skins", "Skins.tga", "Icons")
-AddMedia("tools", "Hammer.tga", "Icons")
-AddMedia("tooltips", "Tooltips.tga", "Icons")
-AddMedia("unitFrames", "UnitFrames.tga", "Icons")
+AddMedia("announcement", "Categories/Announcement.tga", "Icons")
+AddMedia("advanced", "Categories/Advanced.tga", "Icons")
+AddMedia("social", "Categories/Social.tga", "Icons")
+AddMedia("combat", "Categories/Combat.tga", "Icons")
+AddMedia("information", "Categories/Information.tga", "Icons")
+AddMedia("item", "Categories/Item.tga", "Icons")
+AddMedia("map", "Categories/Map.tga", "Icons")
+AddMedia("misc", "Categories/Misc.tga", "Icons")
+AddMedia("quest", "Categories/Quest.tga", "Icons")
+AddMedia("skins", "Categories/Skins.tga", "Icons")
+AddMedia("tooltips", "Categories/Tooltips.tga", "Icons")
+AddMedia("unitFrames", "Categories/UnitFrames.tga", "Icons")
 
 AddMedia("covenantKyrian", "Covenants/Kyrian.tga", "Icons")
 AddMedia("covenantNecrolord", "Covenants/Necrolord.tga", "Icons")
@@ -235,6 +336,7 @@ AddMedia("discord", "Discord.tga", "Icons")
 AddMedia("github", "Github.tga", "Icons")
 AddMedia("nga", "NGA.tga", "Icons")
 AddMedia("qq", "QQ.tga", "Icons")
+AddMedia("kook", "KOOK.tga", "Icons")
 
 AddMedia("convert", "Convert.tga", "Icons")
 AddMedia("favorite", "Favorite.tga", "Icons")
@@ -297,6 +399,13 @@ end
 LSM:Register("statusbar", "WindTools Glow", MediaPath .. "Textures/StatusbarGlow.tga")
 LSM:Register("statusbar", "WindTools Flat", MediaPath .. "Textures/StatusbarFlat.blp")
 LSM:Register("statusbar", "WindTools Light", MediaPath .. "Textures/StatusbarLight.tga")
+
+LSM:Register("statusbar", "ToxiUI Clean", MediaPath .. "Textures/ToxiUI/ToxiUI-clean.tga")
+LSM:Register("statusbar", "ToxiUI Dark", MediaPath .. "Textures/ToxiUI/ToxiUI-dark.tga")
+LSM:Register("statusbar", "ToxiUI Gradient 1", MediaPath .. "Textures/ToxiUI/ToxiUI-g1.tga")
+LSM:Register("statusbar", "ToxiUI Gradient 2", MediaPath .. "Textures/ToxiUI/ToxiUI-g2.tga")
+LSM:Register("statusbar", "ToxiUI Gradient 3", MediaPath .. "Textures/ToxiUI/ToxiUI-grad.tga")
+LSM:Register("statusbar", "ToxiUI Half", MediaPath .. "Textures/ToxiUI/ToxiUI-half.tga")
 
 LSM:Register("sound", "OnePlus Light", MediaPath .. "Sounds/OnePlusLight.ogg")
 LSM:Register("sound", "OnePlus Surprise", MediaPath .. "Sounds/OnePlusSurprise.ogg")

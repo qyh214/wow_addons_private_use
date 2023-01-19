@@ -324,7 +324,7 @@ local function EmptyInventorySlot(inventorySlotId, reason)
     local foundSlot = false
     local containerId, slotId
 	for i = NUM_BAG_SLOTS, 0, -1 do
-        local _, bagType = GetContainerNumFreeSlots(i)
+        local _, bagType = C_Container.GetContainerNumFreeSlots(i)
 		local freeSlots = freeSlotsCache[i]
 		if #freeSlots > 0 and (bit.band(bagType, itemBagType) > 0 or bagType == 0) then
             foundSlot = true
@@ -2266,7 +2266,7 @@ do
 							-- Item is in blizzard manager set, they know the knew location
 							local locations = C_EquipmentSet.GetItemLocations(set.managerID)
 							
-							if locations[setSlot] and locations[setSlot] > -1 then
+							if locations and locations[setSlot] and locations[setSlot] > -1 then
 								newLocationItems[locations[setSlot]] = locationItems[location]
 								newLocationSets[locations[setSlot]] = locationSets[location]
 

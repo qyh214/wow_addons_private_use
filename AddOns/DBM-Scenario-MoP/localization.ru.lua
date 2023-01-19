@@ -116,6 +116,10 @@ L = DBM:GetModLocalization("d492")
 --------------
 L = DBM:GetModLocalization("Landfall")
 
+L:SetGeneralLocalization({
+	name = C_LFGInfo.GetDungeonInfo(UnitFactionGroup("player") == "Alliance" and 590 or 595).name
+})
+
 L:SetWarningLocalization({
 	WarnAchFiveAlive	= "Достижение \"Неубиваемая пятерка\" провалено"
 })
@@ -164,8 +168,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnLostSouls		= "Спец-предупреждение, когда появляются Заблудшие души",
-	specWarnEnslavePitLord	= "Спец-предупреждение поработить демона, когда Властитель преисподней активируется/освобождается",
+	specWarnLostSouls		= "Спецпредупреждение, когда появляются Заблудшие души",
+	specWarnEnslavePitLord	= "Спецпредупреждение поработить демона, когда Властитель преисподней активируется/освобождается",
 	timerLostSoulsCD		= "Отсчет времени до появления следующих Заблудших душ"
 })
 
@@ -179,5 +183,5 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization("d745")
 
 L:SetMiscLocalization({
-	Clear	= "Well done!"
+	Clear	= "Неплохо!"
 })

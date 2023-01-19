@@ -43,7 +43,7 @@ function ST:ReskinDistanceText()
 end
 
 function ST:HookPin()
-    if not self.db or not self.db.rightClickToClear then
+    if not self.db or not self.db.middleClickToClear then
         return
     end
 
@@ -54,7 +54,7 @@ function ST:HookPin()
                     pin,
                     "OnMouseClickAction",
                     function(_, button)
-                        if button == "RightButton" then
+                        if button == "MiddleButton" then
                             C_Map_ClearUserWaypoint()
                         end
                     end
@@ -76,12 +76,16 @@ function ST:HookDistanceText()
             end
 
             -- Fix the distance text if distance > 1000
-            if self.db.noLimit and strmatch(text, ".%d+") then
-                text = gsub(text, "%.%d+", "")
+            if self.db.noLimit and strmatch(text, "%d%d%d%d.%d+") then
+                text = gsub(text, "(%d+)%.%d+", "%1")
             end
 
             if self.db.noUnit then
-                text = gsub(text, "[^0-9].*$", "")
+                local after, isChanged = gsub(text, "(.*)%s.*$", "%1")
+                if isChanged == 0 then
+                    after = gsub(text, "[^0-9%.].*$", "")
+                end
+                text = after
             end
 
             frame:__WindSetText(text)
@@ -241,6 +245,11 @@ function ST:WaypointParse()
         for k, _ in pairs(self.db.waypointParse.commandKeys) do
             tinsert(keys, k)
         end
+        if self.db.waypointParse.virtualTomTom then
+            if not IsAddOnLoaded("TomTom") and not _G.SLASH_TOMTOM_WAY1 then
+                tinsert(keys, "way")
+            end
+        end
         W:AddCommand("SUPER_TRACKER", keys, self.commandHandler)
     end
 
@@ -346,11 +355,11 @@ function ST:Initialize()
         return
     end
 
-    if self.db.rightClickToClear then
+    if self.db.middleClickToClear then
         self:SecureHook(_G.WorldMapFrame, "Show", "HookPin")
     end
 
-    if self.db.autoTrackWaypoint or self.db.rightClickToClear then
+    if self.db.autoTrackWaypoint or self.db.middleClickToClear then
         self:RegisterEvent("USER_WAYPOINT_UPDATED")
         self:USER_WAYPOINT_UPDATED()
     end

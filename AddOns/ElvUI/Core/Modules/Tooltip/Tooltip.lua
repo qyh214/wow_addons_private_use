@@ -70,6 +70,11 @@ local UnitRace = UnitRace
 local UnitReaction = UnitReaction
 local UnitRealmRelationship = UnitRealmRelationship
 local UnitSex = UnitSex
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+
+local TooltipDataType = Enum.TooltipDataType
+local AddTooltipPostCall = TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall
 
 local GameTooltip, GameTooltipStatusBar = GameTooltip, GameTooltipStatusBar
 local C_QuestLog_GetQuestIDForLogIndex = C_QuestLog.GetQuestIDForLogIndex
@@ -123,13 +128,11 @@ function TT:GameTooltip_SetDefaultAnchor(tt, parent)
 			statusBar:ClearAllPoints()
 			statusBar:Point('TOPLEFT', tt, 'BOTTOMLEFT', E.Border, -spacing)
 			statusBar:Point('TOPRIGHT', tt, 'BOTTOMRIGHT', -E.Border, -spacing)
-			statusBar.text:Point('CENTER', statusBar, 0, 0)
 			statusBar.anchoredToTop = nil
 		elseif position == 'TOP' and not statusBar.anchoredToTop then
 			statusBar:ClearAllPoints()
 			statusBar:Point('BOTTOMLEFT', tt, 'TOPLEFT', E.Border, spacing)
 			statusBar:Point('BOTTOMRIGHT', tt, 'TOPRIGHT', -E.Border, spacing)
-			statusBar.text:Point('CENTER', statusBar, 0, 0)
 			statusBar.anchoredToTop = true
 		end
 	end
@@ -178,9 +181,11 @@ function TT:RemoveTrashLines(tt)
 
 	for i = 3, tt:NumLines() do
 		local tiptext = _G['GameTooltipTextLeft'..i]
-		local linetext = tiptext:GetText()
+		local linetext = tiptext and tiptext:GetText()
 
-		if linetext == _G.PVP or linetext == _G.FACTION_ALLIANCE or linetext == _G.FACTION_HORDE then
+		if not linetext then
+			break
+		elseif linetext == _G.PVP or linetext == _G.FACTION_ALLIANCE or linetext == _G.FACTION_HORDE then
 			tiptext:SetText('')
 			tiptext:Hide()
 		end
@@ -523,13 +528,13 @@ function TT:AddMythicInfo(tt, unit)
 	end
 end
 
-function TT:GameTooltip_OnTooltipSetUnit(tt)
-	if tt:IsForbidden() or not TT.db.visibility then return end
+function TT:GameTooltip_OnTooltipSetUnit(data)
+	if self ~= GameTooltip or self:IsForbidden() or not TT.db.visibility then return end
 
-	local _, unit = tt:GetUnit()
+	local _, unit = self:GetUnit()
 	local isPlayerUnit = UnitIsPlayer(unit)
-	if tt:GetOwner() ~= _G.UIParent and not TT:IsModKeyDown(TT.db.visibility.unitFrames) then
-		tt:Hide()
+	if self:GetOwner() ~= _G.UIParent and not TT:IsModKeyDown(TT.db.visibility.unitFrames) then
+		self:Hide()
 		return
 	end
 
@@ -542,59 +547,63 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 		end
 	end
 
-	TT:RemoveTrashLines(tt) --keep an eye on this may be buggy
+	TT:RemoveTrashLines(self) --keep an eye on this may be buggy
 
 	local isShiftKeyDown = IsShiftKeyDown()
 	local isControlKeyDown = IsControlKeyDown()
-	local color = TT:SetUnitText(tt, unit, isPlayerUnit)
+	local color = TT:SetUnitText(self, unit, isPlayerUnit)
 
 	if TT.db.targetInfo and not isShiftKeyDown and not isControlKeyDown then
-		TT:AddTargetInfo(tt, unit)
+		TT:AddTargetInfo(self, unit)
 	end
 
 	if E.Retail then
 		if TT.db.role then
-			TT:AddRoleInfo(tt, unit)
+			TT:AddRoleInfo(self, unit)
 		end
 
 		if not InCombatLockdown() then
 			if not isShiftKeyDown and (isPlayerUnit and unit ~= 'player') and TT.db.showMount and E.Retail then
-				TT:AddMountInfo(tt, unit)
+				TT:AddMountInfo(self, unit)
 			end
 
 			if TT.db.mythicDataEnable then
-				TT:AddMythicInfo(tt, unit)
+				TT:AddMythicInfo(self, unit)
 			end
 
 			if isShiftKeyDown and color and TT.db.inspectDataEnable then
-				TT:AddInspectInfo(tt, unit, 0, color.r, color.g, color.b)
+				TT:AddInspectInfo(self, unit, 0, color.r, color.g, color.b)
 			end
 		end
 	end
 
 	if unit and not isPlayerUnit and TT:IsModKeyDown() and not (E.Retail and C_PetBattles_IsInBattle()) then
-		local guid = UnitGUID(unit) or ''
+		local guid = (data and data.guid) or UnitGUID(unit) or ''
 		local id = tonumber(strmatch(guid, '%-(%d-)%-%x-$'), 10)
 		if id then -- NPC ID's
-			tt:AddLine(format(IDLine, _G.ID, id))
+			self:AddLine(format(IDLine, _G.ID, id))
 		end
 	end
 
+	local statusBar = self.StatusBar
 	if color then
-		tt.StatusBar:SetStatusBarColor(color.r, color.g, color.b)
+		statusBar:SetStatusBarColor(color.r, color.g, color.b)
 	else
-		tt.StatusBar:SetStatusBarColor(0.6, 0.6, 0.6)
+		statusBar:SetStatusBarColor(0.6, 0.6, 0.6)
 	end
 
-	local textWidth = tt.StatusBar.text:GetStringWidth()
-	if textWidth then
-		tt:SetMinimumWidth(textWidth)
+	if statusBar.text then
+		local textWidth = statusBar.text:GetStringWidth()
+		if textWidth then
+			self:SetMinimumWidth(textWidth)
+		end
 	end
 end
 
 function TT:GameTooltipStatusBar_OnValueChanged(tt, value)
 	if tt:IsForbidden() or not value or not tt.text or not TT.db.healthBar.text then return end
 
+	-- try to get ahold of the unit token
 	local _, unit = tt:GetParent():GetUnit()
 	if not unit then
 		local frame = GetMouseFocus()
@@ -603,14 +612,23 @@ function TT:GameTooltipStatusBar_OnValueChanged(tt, value)
 		end
 	end
 
-	local _, max = tt:GetMinMaxValues()
-	if value > 0 and max == 1 then
-		tt.text:SetFormattedText('%d%%', floor(value * 100))
-		tt:SetStatusBarColor(TAPPED_COLOR.r, TAPPED_COLOR.g, TAPPED_COLOR.b) --most effeciant?
-	elseif value == 0 or (unit and UnitIsDeadOrGhost(unit)) then
+	-- check if dead
+	if value == 0 or (unit and UnitIsDeadOrGhost(unit)) then
 		tt.text:SetText(_G.DEAD)
 	else
-		tt.text:SetText(E:ShortValue(value)..' / '..E:ShortValue(max))
+		local MAX, _
+		if unit then -- try to get the real health values if possible
+			value, MAX = UnitHealth(unit), UnitHealthMax(unit)
+		else
+			_, MAX = tt:GetMinMaxValues()
+		end
+
+		-- return what we got
+		if value > 0 and MAX == 1 then
+			tt.text:SetFormattedText('%d%%', floor(value * 100))
+		else
+			tt.text:SetText(E:ShortValue(value)..' / '..E:ShortValue(MAX))
+		end
 	end
 end
 
@@ -659,61 +677,69 @@ function TT:EmbeddedItemTooltip_QuestReward(tt)
 	end
 end
 
-function TT:GameTooltip_OnTooltipSetItem(tt)
-	if tt:IsForbidden() or not TT.db.visibility then return end
+function TT:GameTooltip_OnTooltipSetItem(data)
+	if self ~= GameTooltip or self:IsForbidden() or not TT.db.visibility then return end
 
-	local owner = tt:GetOwner()
+	local owner = self:GetOwner()
 	local ownerName = owner and owner.GetName and owner:GetName()
 	if ownerName and (strfind(ownerName, 'ElvUI_Container') or strfind(ownerName, 'ElvUI_BankContainer')) and not TT:IsModKeyDown(TT.db.visibility.bags) then
-		tt:Hide()
+		self:Hide()
 		return
 	end
 
-	local name, link = tt:GetItem()
-
-	if not E.Retail and name == '' and _G.CraftFrame and _G.CraftFrame:IsShown() then
-		local reagentIndex = ownerName and tonumber(strmatch(ownerName, 'Reagent(%d+)'))
-		if reagentIndex then link = GetCraftReagentItemLink(GetCraftSelectionIndex(), reagentIndex) end
-	end
-
-	if not link then return end
-
-	local modKey = TT:IsModKeyDown()
 	local itemID, bagCount, bankCount
-	if TT.db.itemQuality then
-		local _, _, quality = GetItemInfo(link)
-		if quality and quality > 1 then
-			local r, g, b = GetItemQualityColor(quality)
-			if tt.NineSlice then
-				tt.NineSlice:SetBorderColor(r, g, b)
-			else
-				tt:SetBackdropBorderColor(r, g, b)
+	local modKey = TT:IsModKeyDown()
+
+	if self.GetItem then -- Some tooltips don't have this func. Example - compare tooltip
+		local name, link = self:GetItem()
+
+		if not E.Retail and name == '' and _G.CraftFrame and _G.CraftFrame:IsShown() then
+			local reagentIndex = ownerName and tonumber(strmatch(ownerName, 'Reagent(%d+)'))
+			if reagentIndex then link = GetCraftReagentItemLink(GetCraftSelectionIndex(), reagentIndex) end
+		end
+
+		if not link then return end
+
+		if TT.db.itemQuality then
+			local _, _, quality = GetItemInfo(link)
+			if quality and quality > 1 then
+				local r, g, b = GetItemQualityColor(quality)
+				if self.NineSlice then
+					self.NineSlice:SetBorderColor(r, g, b)
+				else
+					self:SetBackdropBorderColor(r, g, b)
+				end
+
+				self.qualityChanged = true
 			end
+		end
 
-			tt.qualityChanged = true
+		if modKey then
+			itemID = format('|cFFCA3C3C%s|r %s', _G.ID, (data and data.id) or strmatch(link, ':(%w+)'))
+		end
+
+		if TT.db.itemCount ~= 'NONE' and (not TT.db.modifierCount or modKey) then
+			local count = GetItemCount(link)
+			local total = GetItemCount(link, true)
+			if TT.db.itemCount == 'BAGS_ONLY' then
+				bagCount = format(IDLine, L["Count"], count)
+			elseif TT.db.itemCount == 'BANK_ONLY' then
+				bankCount = format(IDLine, L["Bank"], total - count)
+			elseif TT.db.itemCount == 'BOTH' then
+				bagCount = format(IDLine, L["Count"], count)
+				bankCount = format(IDLine, L["Bank"], total - count)
+			end
+		end
+	elseif modKey then
+		local id = data and data.id
+		if id then
+			itemID = format('|cFFCA3C3C%s|r %s', _G.ID, id)
 		end
 	end
 
-	if modKey then
-		itemID = format('|cFFCA3C3C%s|r %s', _G.ID, strmatch(link, ':(%w+)'))
-	end
-
-	if TT.db.itemCount ~= 'NONE' and (not TT.db.modifierCount or modKey) then
-		local count = GetItemCount(link)
-		local total = GetItemCount(link, true)
-		if TT.db.itemCount == 'BAGS_ONLY' then
-			bagCount = format(IDLine, L["Count"], count)
-		elseif TT.db.itemCount == 'BANK_ONLY' then
-			bankCount = format(IDLine, L["Bank"], total - count)
-		elseif TT.db.itemCount == 'BOTH' then
-			bagCount = format(IDLine, L["Count"], count)
-			bankCount = format(IDLine, L["Bank"], total - count)
-		end
-	end
-
-	if itemID or bagCount or bankCount then tt:AddLine(' ') end
-	if itemID or bagCount then tt:AddDoubleLine(itemID or ' ', bagCount or ' ') end
-	if bankCount then tt:AddDoubleLine(' ', bankCount) end
+	if itemID or bagCount or bankCount then self:AddLine(' ') end
+	if itemID or bagCount then self:AddDoubleLine(itemID or ' ', bagCount or ' ') end
+	if bankCount then self:AddDoubleLine(' ', bankCount) end
 end
 
 function TT:GameTooltip_AddQuestRewardsToTooltip(tt, questID)
@@ -767,7 +793,11 @@ function TT:MODIFIER_STATE_CHANGED()
 	if not GameTooltip:IsForbidden() and GameTooltip:IsShown() then
 		local owner = GameTooltip:GetOwner()
 		if owner == _G.UIParent and UnitExists('mouseover') then
-			GameTooltip:SetUnit('mouseover')
+			if E.Retail then
+				GameTooltip:RefreshData()
+			else
+				GameTooltip:SetUnit('mouseover')
+			end
 		elseif owner and owner:GetParent() == _G.SpellBookSpellIconsFrame then
 			AB.SpellButtonOnEnter(owner, nil, GameTooltip)
 		end
@@ -812,14 +842,14 @@ function TT:SetUnitAura(tt, unit, index, filter)
 	tt:Show()
 end
 
-function TT:GameTooltip_OnTooltipSetSpell(tt)
-	if tt:IsForbidden() or not TT:IsModKeyDown() then return end
+function TT:GameTooltip_OnTooltipSetSpell(data)
+	if (self ~= GameTooltip and self ~= _G.ElvUISpellBookTooltip) or self:IsForbidden() or not TT:IsModKeyDown() then return end
 
-	local _, id = tt:GetSpell()
+	local id = (data and data.id) or select(2, self:GetSpell())
 	if not id then return end
 
 	local ID = format(IDLine, _G.ID, id)
-	for i = 3, tt:NumLines() do
+	for i = 3, self:NumLines() do
 		local line = _G[format('GameTooltipTextLeft%d', i)]
 		local text = line and line:GetText()
 		if text and strfind(text, ID) then
@@ -827,8 +857,8 @@ function TT:GameTooltip_OnTooltipSetSpell(tt)
 		end
 	end
 
-	tt:AddLine(ID)
-	tt:Show()
+	self:AddLine(ID)
+	self:Show()
 end
 
 function TT:SetItemRef(link)
@@ -935,18 +965,44 @@ function TT:SetTooltipFonts()
 	end
 end
 
+function TT:GameTooltip_Hide()
+	if GameTooltip:IsForbidden() then return end
+
+	local statusBar = GameTooltip.StatusBar
+	if statusBar and statusBar:IsShown() then
+		statusBar:Hide()
+	end
+end
+
+function TT:WorldCursorTooltipUpdate(_, state)
+	if GameTooltip:IsForbidden() or TT.db.cursorAnchor then return end
+
+	-- recall this, something called Show and stopped it (now with refade option)
+	-- cursor anchor is always hidden right away regardless
+	if state == 0 then
+		if TT.db.fadeOut then
+			GameTooltip:FadeOut()
+		else
+			GameTooltip:Hide()
+		end
+	end
+end
+
 function TT:Initialize()
 	TT.db = E.db.tooltip
 
 	if not E.private.tooltip.enable then return end
 	TT.Initialized = true
 
-	GameTooltip.StatusBar = GameTooltipStatusBar
-	GameTooltip.StatusBar:Height(TT.db.healthBar.height)
-	GameTooltip.StatusBar:SetScript('OnValueChanged', nil) -- Do we need to unset this?
-	GameTooltip.StatusBar.text = GameTooltip.StatusBar:CreateFontString(nil, 'OVERLAY')
-	GameTooltip.StatusBar.text:Point('CENTER', GameTooltip.StatusBar, 0, 0)
-	GameTooltip.StatusBar.text:FontTemplate(LSM:Fetch('font', TT.db.healthBar.font), TT.db.healthBar.fontSize, TT.db.healthBar.fontOutline)
+	local statusBar = GameTooltipStatusBar
+	statusBar:Height(TT.db.healthBar.height)
+	statusBar:SetScript('OnValueChanged', nil) -- Do we need to unset this?
+	GameTooltip.StatusBar = statusBar
+
+	local statusText = statusBar:CreateFontString(nil, 'OVERLAY')
+	statusText:FontTemplate(LSM:Fetch('font', TT.db.healthBar.font), TT.db.healthBar.fontSize, TT.db.healthBar.fontOutline)
+	statusText:Point('CENTER', statusBar, 0, 0)
+	statusBar.text = statusText
 
 	--Tooltip Fonts
 	if not GameTooltip.hasMoney then
@@ -972,23 +1028,39 @@ function TT:Initialize()
 	TT:SecureHook(GameTooltip, 'SetUnitAura')
 	TT:SecureHook(GameTooltip, 'SetUnitBuff', 'SetUnitAura')
 	TT:SecureHook(GameTooltip, 'SetUnitDebuff', 'SetUnitAura')
-	TT:SecureHookScript(GameTooltip, 'OnTooltipSetSpell', 'GameTooltip_OnTooltipSetSpell')
 	TT:SecureHookScript(GameTooltip, 'OnTooltipCleared', 'GameTooltip_OnTooltipCleared')
-	TT:SecureHookScript(GameTooltip, 'OnTooltipSetItem', 'GameTooltip_OnTooltipSetItem')
-	TT:SecureHookScript(GameTooltip, 'OnTooltipSetUnit', 'GameTooltip_OnTooltipSetUnit')
 	TT:SecureHookScript(GameTooltip.StatusBar, 'OnValueChanged', 'GameTooltipStatusBar_OnValueChanged')
-	TT:SecureHookScript(_G.ElvUISpellBookTooltip, 'OnTooltipSetSpell', 'GameTooltip_OnTooltipSetSpell')
+
+	if AddTooltipPostCall then
+		AddTooltipPostCall(TooltipDataType.Spell, TT.GameTooltip_OnTooltipSetSpell)
+		AddTooltipPostCall(TooltipDataType.Item, TT.GameTooltip_OnTooltipSetItem)
+		AddTooltipPostCall(TooltipDataType.Unit, TT.GameTooltip_OnTooltipSetUnit)
+
+		TT:SecureHook(GameTooltip, 'Hide', 'GameTooltip_Hide') -- dont use OnHide use Hide directly
+	else
+		TT:SecureHookScript(GameTooltip, 'OnTooltipSetSpell', TT.GameTooltip_OnTooltipSetSpell)
+		TT:SecureHookScript(GameTooltip, 'OnTooltipSetItem', TT.GameTooltip_OnTooltipSetItem)
+		TT:SecureHookScript(GameTooltip, 'OnTooltipSetUnit', TT.GameTooltip_OnTooltipSetUnit)
+		TT:SecureHookScript(_G.ElvUISpellBookTooltip, 'OnTooltipSetSpell', TT.GameTooltip_OnTooltipSetSpell)
+
+		if not E.Classic then -- what's the replacement in DF
+			TT:SecureHook(GameTooltip, 'SetCurrencyTokenByID')
+		end
+	end
+
 	TT:RegisterEvent('MODIFIER_STATE_CHANGED')
 
 	if E.Retail then
+		TT:RegisterEvent('WORLD_CURSOR_TOOLTIP_UPDATE', 'WorldCursorTooltipUpdate')
 		TT:SecureHook('EmbeddedItemTooltip_SetSpellWithTextureByID', 'EmbeddedItemTooltip_ID')
 		TT:SecureHook(GameTooltip, 'SetToyByItemID')
 		TT:SecureHook(GameTooltip, 'SetCurrencyToken')
-		--TT:SecureHook(GameTooltip, 'SetCurrencyTokenByID') -- WoW10
 		TT:SecureHook(GameTooltip, 'SetBackpackToken')
 		TT:SecureHook('BattlePetToolTip_Show', 'AddBattlePetID')
 		TT:SecureHook('QuestMapLogTitleButton_OnEnter', 'AddQuestID')
 		TT:SecureHook('TaskPOI_OnEnter', 'AddQuestID')
+
+		_G.GameTooltipDefaultContainer:KillEditMode()
 	end
 end
 

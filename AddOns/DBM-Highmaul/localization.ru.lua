@@ -9,11 +9,11 @@ local L
 L = DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerSweeperCD	= DBM_CORE_L.AUTO_TIMER_TEXTS.next:format("Чистильщик арены")
+	timerSweeperCD	= "Следующий Чистильщик арены"
 })
 
 L:SetOptionLocalization({
-	timerSweeperCD		= "Отсчет времени до следующего Чистильщика арены"
+	timerSweeperCD	= DBM_CORE_L.AUTO_TIMER_OPTIONS.next:format(177776)
 })
 
 ---------------------------
@@ -45,8 +45,8 @@ L = DBM:GetModLocalization(1148)
 L:SetOptionLocalization({
 	PhemosSpecial		= "Звуковой обратный отсчет для кулдаунов Фем'а",
 	PolSpecial			= "Звуковой обратный отсчет для кулдаунов Пол'а",
-	PhemosSpecialVoice	= "Звуковые оповещения для способностей Фем'а используя выбранный звуковой пакет",
-	PolSpecialVoice		= "Звуковые оповещения для способностей Пол'а используя выбранный звуковой пакет"
+	PhemosSpecialVoice	= "Звуковые оповещения для способностей Фем'а, используя выбранный звуковой пакет",
+	PolSpecialVoice		= "Звуковые оповещения для способностей Пол'а, используя выбранный звуковой пакет"
 })
 
 --------------------
@@ -59,7 +59,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnExpelMagicFelFades	= "Спец-предупреждение двигаться в начальную точку когда $spell:172895 спадает"
+	specWarnExpelMagicFelFades	= "Спецпредупреждение о переходе в исходное положение, когда $spell:172895 спадает"
 })
 
 L:SetMiscLocalization({

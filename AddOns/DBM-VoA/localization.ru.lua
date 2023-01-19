@@ -12,7 +12,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarningGrab	= "Аркавон хватает |3-1(>%s<)"
+	WarningGrab	= "Аркавон хватает >%s<"
 })
 
 L:SetTimerLocalization({

@@ -215,8 +215,6 @@ function WorldQuestTracker:OnInit()
 	
 	C_Timer.After (3, save_player_name)
 	C_Timer.After (10, save_player_name)
-	C_Timer.After (11, WorldQuestTracker.RequestRares)
-	C_Timer.After (12, WorldQuestTracker.CheckForOldRareFinderData)
 	
 	local canLoad = C_QuestLog.IsQuestFlaggedCompleted(WORLD_QUESTS_AVAILABLE_QUEST_ID)
 	
@@ -656,6 +654,10 @@ end
 	
 	--pega a lista de quests que o jogador tem dispon�vel
 	function WorldQuestTracker.SavedQuestList_GetList()
+		if (type(WorldQuestTracker.dbChr) ~= "table") then
+			WorldQuestTracker:Msg("WorldQuestTracker.SavedQuestList_GetList failed: invalid dbChr, type: ", type(WorldQuestTracker.dbChr))
+			return
+		end
 		return WorldQuestTracker.dbChr.ActiveQuests
 	end
 	-- ~saved ~pool ~data ~allquests �ll

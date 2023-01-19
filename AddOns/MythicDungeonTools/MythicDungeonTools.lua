@@ -119,7 +119,7 @@ end
 local defaultSavedVars = {
   global = {
     toolbarExpanded = true,
-    currentSeason = 9,
+    currentSeason = 8,
     scale = 1,
     nonFullscreenScale = 1.3,
     enemyForcesFormat = 2,
@@ -183,9 +183,7 @@ do
       if not db.minimap.hide then
         minimapIcon:Show("MythicDungeonTools")
       end
-      local version = GetAddOnMetadata(AddonName, "Version")
-      local isAlpha = string.find(version, "Alpha")
-      if db.newDataCollectionActive or isAlpha then
+      if db.newDataCollectionActive or MDT:IsOnBetaServer() then
         MDT.DataCollection:Init()
         MDT.DataCollection:InitHealthTrack()
       end
@@ -259,18 +257,16 @@ end
 --https://www.wowhead.com/affixes
 --lvl 4 affix, lvl 7 affix, tyrannical/fortified, seasonal affix
 local affixWeeks = {
-  [1] = { 122, 14, 9, 131 },
-  [2] = { 8, 12, 10, 131 },
-  [3] = { 7, 13, 9, 131 },
-  [4] = { 11, 124, 10, 131 },
-  [5] = { 6, 3, 9, 131 },
-  [6] = { 122, 12, 10, 131 },
-  [7] = { 123, 4, 9, 131 },
-  [8] = { 7, 14, 10, 131 },
-  [9] = { 8, 124, 9, 131 },
-  [10] = { 6, 13, 10, 131 },
-  [11] = { 11, 3, 9, 131 },
-  [12] = { 123, 4, 10, 131 },
+  [1] = { 6, 14, 10, 132 },
+  [2] = { 11, 12, 9, 132 },
+  [3] = { 8, 3, 10, 132 },
+  [4] = { 6, 124, 9, 132 },
+  [5] = { 123, 12, 10, 132 },
+  [6] = { 8, 13, 9, 132 },
+  [7] = { 7, 124, 10, 132 },
+  [8] = { 123, 14, 9, 132 },
+  [9] = { 11, 13, 10, 132 },
+  [10] = { 7, 3, 9, 132 },
 }
 
 function MDT:UpdateAffixWeeks()
@@ -355,6 +351,11 @@ MDT.dungeonList = {
   [28] = "-",
   [39] = "-",
 }
+
+function MDT:IsOnBetaServer()
+  local realm = GetRealmName()
+  return realm == "Valdrakken"
+end
 
 function MDT:GetNumDungeons() return #MDT.dungeonList - 1 end
 
@@ -933,6 +934,7 @@ function MDT:MakeSidePanel(frame)
     MDT:SetUniqueID(preset)
     preset.mdiEnabled = db.MDI.enabled
     preset.difficulty = db.currentDifficulty
+    preset.addonVersion = db.version
     local export = MDT:TableToString(preset, true, 5)
     MDT:HideAllDialogs()
     MDT.main_frame.ExportFrame:Show()
@@ -1174,7 +1176,7 @@ function MDT:MakeSidePanel(frame)
     for week, affixes in ipairs(affixWeeks) do
       tinsert(affixWeekMarkups, makeAffixString(week, affixes))
     end
-    local order = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
+    local order = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
     affixDropdown:SetList(affixWeekMarkups, order)
     --mouseover list items
     for itemIdx, item in ipairs(affixDropdown.pullout.items) do
@@ -1397,11 +1399,13 @@ function MDT:DisplayMDISelector()
     local widget = MDT.MDISelector.frame
     function frame:Hide(...)
       widget:Hide()
+      ---@diagnostic disable-next-line: redundant-parameter
       return originalHide(self, ...)
     end
 
     function frame:Show(...)
       if db.MDI.enabled then widget:Show() end
+      ---@diagnostic disable-next-line: redundant-parameter
       return originalShow(self, ...)
     end
 
@@ -1653,6 +1657,17 @@ function MDT:ExportCurrentZoomPanSettings()
   MDT.main_frame.ExportFrameEditbox:HighlightText(0, string.len(output))
   MDT.main_frame.ExportFrameEditbox:SetFocus()
   MDT.main_frame.ExportFrameEditbox:SetLabel("Current pan/zoom settings");
+end
+
+function MDT:SetViewPortPosition(zoomScale, horizontalPan, verticalPan)
+  local scaledSizeX = MDTMapPanelFrame:GetWidth() * zoomScale
+  local scaledSizeY = MDTMapPanelFrame:GetHeight() * zoomScale
+  MDTScrollFrame.maxX = (scaledSizeX - MDTMapPanelFrame:GetWidth()) / zoomScale
+  MDTScrollFrame.maxY = (scaledSizeY - MDTMapPanelFrame:GetHeight()) / zoomScale
+  MDTScrollFrame.zoomedIn = abs(zoomScale - 1) > 0.02
+  MDTMapPanelFrame:SetScale(zoomScale)
+  MDTScrollFrame:SetHorizontalScroll(horizontalPan * MDT:GetScale())
+  MDTScrollFrame:SetVerticalScroll(verticalPan * MDT:GetScale())
 end
 
 function MDT:ZoomMapToDefault()
@@ -1977,6 +1992,10 @@ function MDT:IsCurrentPresetTyrannical()
   return not MDT:IsCurrentPresetFortified()
 end
 
+function MDT:IsCurrentPresetThundering()
+  return affixWeeks[self:GetCurrentPreset().week][4] == 132
+end
+
 function MDT:MouseDownHook()
 
 end
@@ -2259,19 +2278,36 @@ end
 function MDT:CalculateEnemyHealth(boss, baseHealth, level, ignoreFortified)
   local fortified = MDT:IsCurrentPresetFortified()
   local tyrannical = MDT:IsCurrentPresetTyrannical()
+  local thundering = MDT:IsCurrentPresetThundering()
   local mult = 1
   if boss == false and fortified == true and (not ignoreFortified) then mult = 1.2 end
   if boss == true and tyrannical == true then mult = 1.3 end
-  mult = round((1.08 ^ math.max(level - 2, 0)) * mult, 2)
+  if thundering == true then mult = mult * 1.05 end
+
+  -- https://www.wowhead.com/news/impact-of-new-mythic-scaling-in-dragonflight-10-scaling-starting-at-keystone-11-329269
+  -- the part of lvl 10 and below -  8% gain per level
+  local levelsTenBelow = math.min(level, 10)
+  mult = round((1.08 ^ math.max(levelsTenBelow - 2, 0)) * mult, 2)
+  -- the part of lvl 11 and above -  10% gain per level
+  local levelsElevenAbove = math.max(level - 10, 0)
+  mult = round((1.1 ^ levelsElevenAbove) * mult, 2)
+
   return round(mult * baseHealth, 0)
 end
 
-function MDT:ReverseCalcEnemyHealth(health, level, boss, fortified)
+function MDT:ReverseCalcEnemyHealth(health, level, boss, fortified, tyrannical, thundering)
   local mult = 1
-  local tyrannical = not fortified
   if boss == false and fortified == true then mult = 1.2 end
   if boss == true and tyrannical == true then mult = 1.3 end
-  mult = round((1.08 ^ math.max(level - 2, 0)) * mult, 2)
+  if thundering then mult = mult * 1.05 end
+
+  -- the part of lvl 10 and below -  8% gain per level
+  local levelsTenBelow = math.min(level, 10)
+  mult = round((1.08 ^ math.max(levelsTenBelow - 2, 0)) * mult, 2)
+  -- the part of lvl 11 and above -  10% gain per level
+  local levelsElevenAbove = math.max(level - 10, 0)
+  mult = round((1.1 ^ levelsElevenAbove) * mult, 2)
+
   local baseHealth = round(health / mult, 0)
   return baseHealth
 end
@@ -2402,7 +2438,7 @@ function MDT:EnsureDBTables()
     db.selectedDungeonList = defaultSavedVars.global.selectedDungeonList
   end
   local preset = MDT:GetCurrentPreset()
-  if preset.week and (preset.week < 1 or preset.week > 12) then preset.week = nil end
+  if preset.week and (preset.week < 1 or preset.week > 10) then preset.week = nil end
   preset.week = preset.week or MDT:GetCurrentAffixWeek()
   db.currentPreset[db.currentDungeonIdx] = db.currentPreset[db.currentDungeonIdx] or 1
   db.presets[db.currentDungeonIdx][db.currentPreset[db.currentDungeonIdx]].value.currentDungeonIdx = db.currentDungeonIdx
@@ -4416,6 +4452,7 @@ function MDT:PrintCurrentAffixes()
     [128] = L["Tormented"],
     [130] = L["Encrypted"],
     [131] = L["Shrouded"],
+    [132] = L["Thundering"],
   }
   local affixIds = C_MythicPlus.GetCurrentAffixes()
   for idx, data in ipairs(affixIds) do
@@ -4454,7 +4491,7 @@ function MDT:DropIndicator()
     indicator:SetHeight(4)
     indicator:SetFrameStrata("FULLSCREEN")
 
-    local texture = indicator:CreateTexture(nil, "FULLSCREEN", nil, 0)
+    local texture = indicator:CreateTexture(nil, "OVERLAY", nil, 0)
     texture:SetBlendMode("ADD")
     texture:SetAllPoints(indicator)
     texture:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-Highlight")

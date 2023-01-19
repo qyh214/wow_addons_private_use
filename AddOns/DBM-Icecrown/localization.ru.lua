@@ -36,10 +36,7 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
-	YellReanimatedFanatic	= "Восстань и обрети истинную форму!",
-	Fanatic1				= "Фанатик культа",
-	Fanatic2				= "Кособокий фанатик",
-	Fanatic3				= "Воскрешенный фанатик"
+	YellReanimatedFanatic	= "Восстань и обрети истинную форму!"
 }
 
 ----------------------
@@ -66,13 +63,13 @@ L:SetTimerLocalization{
 
 L:SetMiscLocalization{
 	PullAlliance	= "Запускайте двигатели! Летим навстречу судьбе.",
-	KillAlliance	= "Ну не говорите потом, что я не предупреждал. В атаку, братья и сестры!",
 	PullHorde		= "Воспряньте, сыны и дочери Орды! Сегодня мы будем биться со смертельным врагом! ЛОК'ТАР ОГАР!",
-	KillHorde		= "Альянс повержен. Вперед, к Королю-личу!",
 	AddsAlliance	= "Разрушители, сержанты, в бой!",
-	AddsHorde		= "Marines, Sergeants, attack",
-	MageAlliance	= "We're taking hull damage, get a battle-mage out here to shut down those cannons!",
-	MageHorde		= "We're taking hull damage, get a sorcerer out here to shut down those cannons!"
+	AddsHorde		= "Пехота, сержанты, в бой!",
+	MageAlliance	= "Корабль под обстрелом! Боевого мага сюда, пусть заткнет эти пушки!",
+	MageHorde		= "Корабль под обстрелом! Заклинателя сюда, пусть заткнет эти пушки!",
+	Hammer 			= "Orgrim's Hammer",--Need to check in detail
+	Skybreaker		= "Skybreaker"--Need to check in detail
 }
 
 -----------------------------
@@ -85,12 +82,10 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	RangeFrame				= "Показывать окно проверки дистанции (12 м)",
 	RunePowerFrame			= "Показывать здоровье босса + индикатор для $spell:72371"
 }
 
 L:SetMiscLocalization{
-	RunePower			= "Сила крови",
 	PullAlliance		= "Все павшие воины Орды, все дохлые псы Альянса – все пополнят армию Короля-лича. Даже сейчас валь'киры воскрешают ваших покойников, чтобы те стали частью Плети!",
 	PullHorde			= "Кор'крон, выдвигайтесь! Герои, будьте начеку. Плеть только что..."
 }
@@ -105,7 +100,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetOptionLocalization{
-	RangeFrame			= "Показывать окно проверки дистанции (8 м)",
 	AnnounceSporeIcons	= "Объявлять метки целей заклинания $spell:69279 в рейд-чат<br/>(требуются права помощника)",
 	AchievementCheck	= "Объявлять о провале достижения 'Масок нет!' в рейд-чат<br/>(требуются права помощника)"
 }
@@ -126,18 +120,17 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{
 	WarnOozeSpawn				= "Малый слизнюк",
-	SpecWarnLittleOoze			= "Малый слизнюк атакует вас - бегите"--creatureid 36897
+	SpecWarnLittleOoze			= "Малый слизнюк атакует вас - бегите"
 }
 
 L:SetOptionLocalization{
 	WarnOozeSpawn				= "Предупреждение при появлении Малого слизнюка",
-	SpecWarnLittleOoze			= "Спец-предупреждение, когда вас атакует Малый слизнюк",--creatureid 36897
-	RangeFrame					= "Показывать окно проверки дистанции (8 м)"
+	SpecWarnLittleOoze			= "Спецпредупреждение, когда Вас атакует Малый слизнюк",
 }
 
 L:SetMiscLocalization{
-	YellSlimePipes1	= "Отличные новости, народ! Я починил трубы для подачи ядовитой слизи!",	-- Professor Putricide
-	YellSlimePipes2	= "Отличные новости, народ! Слизь снова потекла!"	-- Professor Putricide
+	YellSlimePipes1	= "Отличные новости, народ! Я починил трубы для подачи ядовитой слизи!",	-- Профессор Мерзоцид
+	YellSlimePipes2	= "Отличные новости, народ! Слизь снова потекла!"	-- Профессор Мерзоцид
 }
 
 ---------------------------
@@ -147,10 +140,6 @@ L = DBM:GetModLocalization("Putricide")
 
 L:SetGeneralLocalization{
 	name = "Профессор Мерзоцид"
-}
-
-L:SetOptionLocalization{
-	MalleableGooIcon			= "Устанавливать метку на первую цель заклинания $spell:72295"
 }
 
 ----------------------------
@@ -172,11 +161,10 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	WarnTargetSwitch		= "Предупреждение о смене цели",-- Warn when another Prince needs to be damaged
-	WarnTargetSwitchSoon	= "Предупреждать заранее о смене цели",-- Every ~47 secs, you have to dps a different Prince
+	WarnTargetSwitch		= "Предупреждение о смене цели",-- Предупреждать, когда нужно нанести урон другому принцу
+	WarnTargetSwitchSoon	= "Предупреждать заранее о смене цели",-- Каждые ~47 секунд вы должны дпсить другого принца
 	TimerTargetSwitch		= "Отсчет времени до смены цели",
 	ActivePrinceIcon		= "Устанавливать метку на наполненного силой Принца (череп)",
-	RangeFrame				= "Показывать окно проверки дистанции (12 м)"
 }
 
 L:SetMiscLocalization{
@@ -193,10 +181,6 @@ L = DBM:GetModLocalization("Lanathel")
 
 L:SetGeneralLocalization{
 	name = "Королева Лана'тель"
-}
-
-L:SetOptionLocalization{
-	RangeFrame				= "Показывать окно проверки дистанции (8 м)"
 }
 
 L:SetMiscLocalization{
@@ -219,21 +203,21 @@ L:SetWarningLocalization{
 
 L:SetTimerLocalization{
 	TimerPortalsOpen		= "Открытие порталов",
+	TimerPortalsClose		= "Закрытие порталов",
 	TimerBlazingSkeleton	= "Исторгающий пламя скелет",
-	TimerAbom				= "След. поганище?"
+	TimerAbom				= "След. поганище"
 }
 
 L:SetOptionLocalization{
 	SetIconOnBlazingSkeleton	= "Устанавливать метку на Исторгающего пламя скелета (череп)",
 	WarnPortalOpen				= "Предупреждение об открытии порталов",
-	TimerPortalsOpen			= "Отсчет времени для открытия порталов",
+	TimerPortalsOpen			= "Отсчет времени до открытия порталов",
+	TimerPortalsClose			= "Отсчет времени до закрытия порталов",
 	TimerBlazingSkeleton		= "Отсчет времени до Исторгающего пламя скелета",
 	TimerAbom					= "Отсчет времени до след. Прожорливого поганища (экспериментальный)"
 }
 
 L:SetMiscLocalization{
-	YellPull		= "Чужаки ворвались во внутренние покои. Уничтожьте зеленого дракона! Пусть останутся лишь кости и прах для воскрешения!",
-	YellKill		= "Я ИЗЛЕЧИЛАСЬ! Изера, даруй мне силу покончить с этими нечестивыми тварями.",
 	YellPortals		= "Я открыла портал в Изумрудный Сон. Там вы найдете спасение, герои..."
 }
 
@@ -265,7 +249,6 @@ L:SetOptionLocalization{
 	AnnounceFrostBeaconIcons= "Объявлять метки целей заклинания $spell:70126 в рейд-чат<br/>(требуются права помощника)",
 	ClearIconsOnAirphase	= "Снимать все метки перед воздушной фазой",
 	AchievementCheck		= "Объявлять предупреждения для достижения 'Таинственная дама'<br/>в рейд-чат (требуются права помощника)",
-	RangeFrame				= "Показывать игроков с метками в окне проверки дистанции (10 норм., 20 гер.)"
 }
 
 L:SetMiscLocalization{
@@ -288,28 +271,28 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	ValkyrWarning			= "|3-3(>%s<) схватили!",
+	ValkyrWarning			= ">%s< был схвачен!",
 	SpecWarnYouAreValkd		= "Вас схватили",
-	WarnNecroticPlagueJump	= "Мертвящая чума перепрыгнула на |3-3(>%s<)",
+	WarnNecroticPlagueJump	= "Мертвящая чума перепрыгнула на >%s<",
 	SpecWarnValkyrLow		= "У Валь'киры меньше 55%"
 }
 
 L:SetTimerLocalization{
-	TimerRoleplay		= "Представление",
+	TimerRoleplay		= "Ролевая игра",
 	PhaseTransition		= "Переходная фаза",
 	TimerNecroticPlagueCleanse = "Очищение Мертвящей чумы"
 }
 
 L:SetOptionLocalization{
-	TimerRoleplay			= "Отсчет времени для представления",
-	WarnNecroticPlagueJump	= "Объявлять цели прыжков $spell:73912",
+	TimerRoleplay			= "Отсчет времени для ролевой игры",
+	WarnNecroticPlagueJump	= "Объявлять цели прыжков $spell:70337",
 	TimerNecroticPlagueCleanse	= "Отсчет времени для очищения Мертвящей чумы до первого тика",
 	PhaseTransition			= "Отсчет времени для переходной фазы",
 	ValkyrWarning			= "Объявлять, кого схватили Валь'киры",
-	SpecWarnYouAreValkd		= "Спец-предупреждение, когда вас схватила Валь'кира",
+	SpecWarnYouAreValkd		= "Спецпредупреждение, когда Вас схватила Валь'кира",
 	AnnounceValkGrabs		= "Объявлять игроков, схваченных Валь'кирами, в рейд-чат<br/>(требуются права помощника)",
-	SpecWarnValkyrLow		= "Спец-предупреждение, когда у Валь'киры меньше 55% HP",
-	AnnouncePlagueStack		= "Объявлять стаки заклинания $spell:73912 в рейд-чат (10<br/>стаков, далее каждые 5) (требуются права помощника)"
+	SpecWarnValkyrLow		= "Спецпредупреждение, когда у Валь'киры меньше 55% HP",
+	AnnouncePlagueStack		= "Объявлять стаки заклинания $spell:70337 в рейд-чат (10 стаков, далее каждые 5)<br/>(требуются права помощника)"
 }
 
 L:SetMiscLocalization{
@@ -327,7 +310,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("ICCTrash")
 
 L:SetGeneralLocalization{
-	name = "Icecrown Trash"
+	name = "Трэш мобы Ледяной Короны"
 }
 
 L:SetWarningLocalization{
@@ -337,9 +320,9 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	SpecWarnTrapL		= "Спец-предупреждение для активации ловушки",
-	SpecWarnTrapP		= "Спец-предупреждение для активации ловушки",
-	SpecWarnGosaEvent	= "Спец-предупреждение для активации защитников Синдрагосы"
+	SpecWarnTrapL		= "Спецпредупреждение для активации ловушки",
+	SpecWarnTrapP		= "Спецпредупреждение для активации ловушки",
+	SpecWarnGosaEvent	= "Спецпредупреждение для активации защитников Синдрагосы"
 }
 
 L:SetMiscLocalization{

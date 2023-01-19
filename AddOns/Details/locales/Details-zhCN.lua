@@ -163,8 +163,7 @@ L["STRING_CUSTOM_TARGET"] = "目标："
 L["STRING_CUSTOM_TARGET_DESC"] = [=[这是来源的目标。
 在右侧的按钮显示团队副本战斗中的NPC名单。]=]
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000临时|r)"
---[[Translation missing --]]
---[[ L["STRING_CUSTOM_TEXTURE_GUIDE"] = ""--]] 
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "要在魔兽世界客户端中加载纹理文件，您需要一个.TGA格式的文件。并且其宽度和高度必须是8的倍数。将纹理文件放在 /WoW Install Folder/retail/Interface/ 下。"
 L["STRING_DAMAGE"] = "伤害"
 L["STRING_DAMAGE_DPS_IN"] = "DPS来自"
 L["STRING_DAMAGE_FROM"] = "伤害来自"
@@ -396,20 +395,13 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "较高3D模型："
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "启用或禁用计量条后面的3D模型框架"
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "选择哪个模型将被用于在较高的模型栏。"
 L["STRING_OPTIONS_ADVANCED"] = "进阶"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = ""--]] 
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "对齐的文本列"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "自动对齐"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "对齐是根据每个文本的长度自动完成的"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "禁用括号和分隔符并对齐垂直列中的条形文本"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "文本 %d 偏移"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "从侧右边界偏移"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "已开启。未使用分隔符和括号。"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "自动隐藏："
 L["STRING_OPTIONS_ALWAYS_USE"] = "所有角色通用"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "勾选此项时，所有角色都使用此配置。否则将显示一个面板供选择。"
@@ -651,14 +643,12 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00手动|r：用户需要手动点击�
 L["STRING_OPTIONS_ED1"] = "手动"
 L["STRING_OPTIONS_ED2"] = "询问"
 L["STRING_OPTIONS_ED3"] = "自动"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = ""--]] 
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "编辑自定义文本"
 L["STRING_OPTIONS_EDITIMAGE"] = "编辑图片"
 L["STRING_OPTIONS_EDITINSTANCE"] = "编辑窗口："
 L["STRING_OPTIONS_ERASECHARTDATA"] = "删除图表"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "注销时，所有的战斗收集的数据创建的图表将被删除。"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_EXPORT_PROFILE"] = ""--]] 
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "导出配置"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "外部小工具"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "这些选项控制外部小工具的行为。"
 L["STRING_OPTIONS_GENERAL"] = "一般设置"
@@ -684,12 +674,9 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "当启用时，公会成员设置的�
 L["STRING_OPTIONS_ILVL_TRACKER"] = "物品等级跟踪："
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "当启用并在非战斗状态，此插件查询并追踪团队内玩家的物品等级"
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "启用"
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = ""--]] 
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "导入配置"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "为新配置输入一个名字"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! 导入配置（粘贴字符串）"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "背景纹理"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = [=[选择使用此窗口的背景纹理。
 |cFFFFFF00默认|r：Details 背景.]=]
@@ -795,7 +782,7 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = [=[为您设置一个昵称。
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "行文字编辑器"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "打开文本编辑器"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_OPENBROKER"] = ""--]] 
+L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
 L["STRING_OPTIONS_OVERALL_ALL"] = "所有片段"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "所有片段会被添加到总体数据。"
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "总体数据:"
@@ -1127,8 +1114,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = [=[添加一个函数来格式化�
 L["STRING_OPTIONS_TIMEMEASURE"] = "时间测量"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFF00活动|r：如果活动停止，每个团队成员的计时器将被暂停，并且当恢复时，每个团队成员的计时器将再次计数，常用的测量方法Dps和Hps
 |cFFFFFF00有效|r：用于排名，此方法使用经过的战斗时间来测量所有团队成员的Dps和Hps]=]
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = ""--]] 
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "按键与菜单设定"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "左边的菜单设置"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "这些选项更改在窗口顶部的主菜单。"
 L["STRING_OPTIONS_TOOLBARSIDE"] = "工具栏锚点"
@@ -1242,17 +1228,20 @@ L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "锚点:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "忽略品质切换"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "启用后，隐藏，显示或切换所有窗口时，此窗口不受影响"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "尺度"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[调整窗口的比例
 |cFFFFFF00贴士|r：右键单击以键入值
 |cFFFFFF00当前|r：%s]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "皮肤颜色"
 --[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = ""--]] 
---[[Translation missing --]]
---[[ L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = ""--]] 
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
+
+|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
+
+|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
 L["STRING_OPTIONS_WINDOW_TITLE"] = "窗口设置"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "这些选项控制选择窗口的窗口外观。"
 L["STRING_OPTIONS_WINDOWSPEED"] = "更新间隔"
@@ -1561,4 +1550,3 @@ L["STRING_WIPE_ERROR1"] = "已经发送了一个清除指令。"
 L["STRING_WIPE_ERROR2"] = "不在团队中。"
 L["STRING_WIPE_ERROR3"] = "无法停止遇敌。"
 L["STRING_YES"] = "是"
-

@@ -4,10 +4,16 @@ local ES = E.Skins
 local TT = E:GetModule("Tooltip")
 
 local _G = _G
+
 local pairs = pairs
+local select = select
+local strsplit = strsplit
+local tonumber = tonumber
 local unpack = unpack
 
 local GetItemQualityColor = GetItemQualityColor
+local MerchantFrame = MerchantFrame
+local UnitGUID = UnitGUID
 
 local atlasToQuality = {
     ["auctionhouse-itemicon-border-gray"] = 0,
@@ -22,14 +28,15 @@ local atlasToQuality = {
 
 function S:TomCats_Config()
     self:ESProxy("HandleButton", _G.TomCats_Config.discoveriesButton)
-    self:ESProxy("HandleButton", _G.TomCats_ConfigDiscoveries.discoveriesButton)
-    self:ESProxy("HandleButton", _G.TomCats_ConfigDiscoveries.discoveriesResetCounterButton)
     self:ESProxy("HandleSliderFrame", _G.TomCats_ConfigIconSizeSlider)
-    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_betaFeatures)
-    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_loveIsInTheAirMinimapButton)
-    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_lunarFestivalMinimapButton)
-    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_mapIconAnimation)
     self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_minimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_betaFeatures)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_mapIconAnimation)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_lunarFestivalMinimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_loveIsInTheAirMinimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_hallowsEndMinimapButton)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_hallowsEndArrow)
+    self:ESProxy("HandleCheckBox", _G.TomCats_Config.checkBox_hallowsEndAutomated)
 end
 
 function S:TomCats_HandleTomCatsIcon(icon)
@@ -52,7 +59,8 @@ function S:TomCats_HandleTomCatsIcon(icon)
     local quality = atlas and atlasToQuality[atlas]
 
     if quality then
-        icon.Icon.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
+        local r, g, b = GetItemQualityColor(quality)
+        icon.Icon.backdrop:SetBackdropBorderColor(r, g, b)
     else
         icon.Icon.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
     end
@@ -97,14 +105,13 @@ function S:TomCats()
     self:TomCats_Config()
     TT:SetStyle(_G.TomCatsVignetteTooltip)
     self:SecureHook(_G.TomCatsVignetteTooltip, "SetOwner", "TomCats_SkinTooltipItems")
-
     if _G.TomCatsVignettesSection and _G.TomCatsVignettesSection.Header then
         local header = _G.TomCatsVignettesSection.Header
         self:RawHook(header, "SetNormalAtlas", "TomCats_HeaderCollapseButton_SetNormalAtlas", true)
         self:RawHook(header, "SetPushedAtlas", "TomCats_HeaderCollapseButton_SetPushedAtlas", true)
         header:SetHighlightTexture("Interface\\Buttons\\UI-PlusButton-Hilight")
         header.SetHighlightTexture = E.noop
-        header:Size(16, 16)
+        header:SetSize(16, 16)
         header.topPadding = 16
         F.SetFontOutline(header.text)
     end

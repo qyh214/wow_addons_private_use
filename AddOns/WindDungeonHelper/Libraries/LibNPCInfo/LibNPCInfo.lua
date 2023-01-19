@@ -1,6 +1,6 @@
 local _G = _G
 local major = "LibNPCInfo"
-local minor = 1
+local minor = 3
 
 local lib = _G.LibStub:NewLibrary(major, minor)
 if not lib then
@@ -17,30 +17,45 @@ local CreateFrame = CreateFrame
 local GetTime = GetTime
 
 local C_Timer_After = C_Timer.After
+local TooltipDataProcessor_AddTooltipPostCall = TooltipDataProcessor.AddTooltipPostCall
+
+local Enum_TooltipDataType_Unit = Enum.TooltipDataType.Unit
 
 local SCAN_TIMEOUT = 0.34
 local cache = {}
 local scanQueue = {}
 local scanTooltipsPool = {}
 
-local function FetchDataOnTooltipSetUnit(self)
-    local tooltipName = self:GetName()
-    local topLeftText = _G[tooltipName .. "TextLeft1"]:GetText()
+local function DataHandler(self, data)
+    if not self.__LIBNPCINFO or not data or not data.guid then
+        return
+    end
 
-    if topLeftText then
-        cache[self.npcID] = {
-            id = self.npcID,
-            name = topLeftText,
-            desc = _G[tooltipName .. "TextLeft2"]:GetText()
-        }
+    local npcID = select(6, strsplit("-", data.guid))
 
-        if self.callback then
-            self.callback(cache[self.npcID])
+    if not npcID or npcID == "" then
+        return
+    end
+
+    if data.lines and #data.lines >= 2 then
+        local name = data.lines[1].leftText
+        local desc = data.lines[2].leftText
+
+        if name and desc and name ~= "" then
+            cache[npcID] = {
+                id = tonumber(npcID),
+                name = name,
+                desc = desc
+            }
+
+            if self.callback then
+                self.callback(cache[npcID])
+            end
         end
     end
 
     scanQueue[self.npcID] = nil
-    self:SetScript("OnTooltipSetUnit", nil)
+    self.__LIBNPCINFO = nil
     self.callback = nil
     self.npcID = nil
 end
@@ -65,6 +80,8 @@ local function GetNewTooltip()
 
     tt:Show()
     tt:SetHyperlink("unit:")
+
+    TooltipDataProcessor_AddTooltipPostCall(Enum_TooltipDataType_Unit, DataHandler)
 
     tinsert(scanTooltipsPool, tt)
     return tt
@@ -106,7 +123,7 @@ function lib.GetNPCInfoByID(npcID, callback, failedCallback)
     scanQueue[npcID] = tt
 
     tt:SetOwner(_G.UIParent, "ANCHOR_NONE")
-    tt:SetScript("OnTooltipSetUnit", FetchDataOnTooltipSetUnit)
+    tt.__LIBNPCINFO = true
 
     -- once
     tt:SetHyperlink(format("unit:Creature-0-0-0-0-%d-0", npcID))
@@ -128,13 +145,22 @@ function lib.GetNPCInfoByID(npcID, callback, failedCallback)
         function()
             if tt.npcID == npcID then
                 scanQueue[npcID] = nil
-                tt:SetScript("OnTooltipSetUnit", nil)
+                tt.__LIBNPCINFO = nil
 
-                if failedCallback then
-                    failedCallback(npcID)
-                else
-                    print("LibNPCInfo.GetNPCInfoByID: failed to fetch data for npcID " .. npcID)
-                end
+                C_Timer_After(
+                    0.01,
+                    function()
+                        if cache[npcID] then
+                            return callback and callback(cache[npcID]) or cache[npcID]
+                        end
+
+                        if failedCallback then
+                            failedCallback(npcID)
+                        else
+                            print("LibNPCInfo.GetNPCInfoByID: failed to fetch data for npcID " .. npcID)
+                        end
+                    end
+                )
 
                 tt.callback = nil
                 tt.npcID = nil

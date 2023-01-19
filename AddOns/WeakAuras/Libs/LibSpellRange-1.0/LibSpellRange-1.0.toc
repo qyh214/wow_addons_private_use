@@ -1,5 +1,5 @@
-## Interface: 90001
-## Version: 1.0.15
+## Interface: 100001
+## Version: 1.0.17
 ## X-CompatibleWith: 80000
 ## Title: Lib: SpellRange-1.0
 ## Notes: Provides enhanced spell range checking functionality

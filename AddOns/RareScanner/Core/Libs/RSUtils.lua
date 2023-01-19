@@ -31,10 +31,12 @@ end
 
 function RSUtils.JoinTables(table1, table2)
 	local joinedTable = {}
+	local joined = false
 	if (table1 and type(table1) == "table") then
 		for _, value in ipairs (table1) do
 			if (not RSUtils.Contains(joinedTable, value)) then
 				tinsert(joinedTable, value)
+				joined = true
 			end
 		end
 	end
@@ -43,14 +45,15 @@ function RSUtils.JoinTables(table1, table2)
 		for _, value in ipairs (table2) do
 			if (not RSUtils.Contains(joinedTable, value)) then
 				tinsert(joinedTable, value)
+				joined = true
 			end
 		end
 	end
 
-	if (next(joinedTable) ~= nil) then
+	if (joined) then
 		return joinedTable
 	end
-
+	
 	return nil
 end
 
@@ -134,9 +137,13 @@ end
 ---============================================================================
 
 function RSUtils.DistanceBetweenCoords(x1, x2, y1, y2)
-	local dx = RSUtils.FixCoord(x1) - RSUtils.FixCoord(x2)
-	local dy = RSUtils.FixCoord(y1) - RSUtils.FixCoord(y2)
-	return math.sqrt ( (dx * dx) + (dy * dy) )
+	if (x1 and x2 and y1 and y2) then
+		local dx = RSUtils.FixCoord(x1) - RSUtils.FixCoord(x2)
+		local dy = RSUtils.FixCoord(y1) - RSUtils.FixCoord(y2)
+		return math.sqrt ( (dx * dx) + (dy * dy) )
+	else
+		return -1;
+	end
 end
 
 function RSUtils.Distance(POIa, POIb)

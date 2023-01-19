@@ -44,6 +44,12 @@ local function SkinNavBarButtons(self)
 	end
 end
 
+local function ClearSetTexture(texture, tex)
+	if tex ~= nil then
+		texture:SetTexture()
+	end
+end
+
 function S:BlizzardMiscFrames()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.misc) then return end
 
@@ -114,7 +120,7 @@ function S:BlizzardMiscFrames()
 			frame.TanksFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			frame.DamagersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
 		end
-	end)]] -- WoW10
+	end)]] -- DF
 
 	-- reskin all esc/menu buttons
 	if not E:IsAddOnEnabled('ConsolePortUI_Menu') then
@@ -255,10 +261,7 @@ function S:BlizzardMiscFrames()
 		local normTex = itemFrame:GetNormalTexture()
 		if normTex then
 			normTex:SetTexture()
-
-			hooksecurefunc(normTex, 'SetTexture', function(s, tex)
-				if tex ~= nil then s:SetTexture() end
-			end)
+			hooksecurefunc(normTex, 'SetTexture', ClearSetTexture)
 		end
 	end
 

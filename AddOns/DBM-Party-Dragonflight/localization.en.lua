@@ -102,6 +102,10 @@ L:SetGeneralLocalization({
 	name =	"Nokhud Offensive Trash"
 })
 
+L:SetMiscLocalization({
+	Soul = "Soul"
+})
+
 -----------------------
 -- <<<Neltharus >>> --
 -----------------------
@@ -145,12 +149,21 @@ L:SetGeneralLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
---L= DBM:GetModLocalization(2509)
+L= DBM:GetModLocalization(2509)
+
+L:SetMiscLocalization({
+	VexRP		= "Ah! Here we are! Ahem--long ago, members of the blue dragonflight accidentally overloaded an arcane elemental and created a powerful construct named Vexamus that quickly started to wreak havoc!"
+})
+
 
 -----------------------
 -- Overgrown Ancient --
 -----------------------
---L= DBM:GetModLocalization(2512)
+L= DBM:GetModLocalization(2512)
+
+L:SetMiscLocalization({
+	TreeRP	= "Perfect, we are just about--wait, Ichistrasz! There is too much life magic! What are you doing?"
+})
 
 -----------------------
 -- Echo of Doragosa --
@@ -164,6 +177,10 @@ L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
 	name =	"Algeth'ar Academy Trash"
+})
+
+L:SetOptionLocalization({
+	AGBuffs		= "Auto select gossip to activate buffs when interacting with dragonflight npcs"
 })
 
 -----------------------
@@ -198,6 +215,10 @@ L:SetGeneralLocalization({
 	name =	"Azure Vault Trash"
 })
 
+L:SetOptionLocalization({
+	AGBook			= "Auto select gossip to teleport interacting with books"
+})
+
 -----------------------
 -- <<<Ruby Life Pools>>> --
 -----------------------
@@ -214,7 +235,14 @@ L:SetGeneralLocalization({
 -----------------------
 -- Kyrakka and Erkhart Stormvein --
 -----------------------
---L= DBM:GetModLocalization(2503)
+L= DBM:GetModLocalization(2503)
+
+L:SetMiscLocalization({
+	North	= "Toward North",
+	West	= "Toward West",
+	South	= "Toward South",
+	East	= "Toward East"
+})
 
 ---------
 --Trash--

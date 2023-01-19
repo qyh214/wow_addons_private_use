@@ -8,6 +8,8 @@ local module = {}
 local moduleName = "Main"
 MSBTOptions[moduleName] = module
 
+local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+
 
 -------------------------------------------------------------------------------
 -- Imports.
@@ -274,7 +276,11 @@ local function CreateMainFrame()
 
 	-- Close Button.
 	local frame = CreateFrame("Button", nil, mainFrame, "UIPanelCloseButton")
-	frame:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", -3, -8)
+	if IsClassic then
+		frame:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", -3, -8)
+	else
+		frame:SetPoint("TOPRIGHT", mainFrame, "TOPRIGHT", -7, -12)
+	end
 
 
 	-- Setup the tabs listbox.
@@ -298,7 +304,7 @@ local function CreateMainFrame()
 
 	-- Insert the frame name into the UISpecialFrames array so it closes when
 	-- the escape key is pressed.
-	table.insert(UISpecialFrames, mainFrame:GetName())
+	--table.insert(UISpecialFrames, mainFrame:GetName())
 end
 
 

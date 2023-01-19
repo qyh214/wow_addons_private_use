@@ -123,7 +123,6 @@ local EVENTS = {
     "BLACK_MARKET_ITEM_UPDATE",
     "BLACK_MARKET_CLOSE",
     "CHAT_MSG_LOOT",
-    "GUILDBANKFRAME_OPENED",
     "UNIT_INVENTORY_CHANGED",
     "PLAYER_SPECIALIZATION_CHANGED",
     "BAG_UPDATE",
@@ -144,6 +143,7 @@ local EVENTS = {
     "PLAYERREAGENTBANKSLOTS_CHANGED",
     "LOADING_SCREEN_ENABLED",
     "LOADING_SCREEN_DISABLED",
+    "TRADE_SKILL_SHOW",
 }
 
 for i, event in pairs(EVENTS) do
@@ -232,12 +232,13 @@ local changesSavedStack = {}
 local function changesSavedText()
     local frame = CreateFrame("Frame", "CanIMogIt_ChangesSaved", CanIMogIt.frame)
     local text = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    text:SetJustifyH("RIGHT")
     text:SetText(CanIMogIt.YELLOW .. L["Changes saved!"])
 
     text:SetAllPoints()
 
     frame:SetPoint("BOTTOMRIGHT", -20, 10)
-    frame:SetSize(100, 20)
+    frame:SetSize(200, 20)
     frame:SetShown(false)
     CanIMogIt.frame.changesSavedText = frame
 end

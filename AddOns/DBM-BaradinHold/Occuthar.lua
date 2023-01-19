@@ -1,17 +1,18 @@
 local mod	= DBM:NewMod(140, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116034430")
+mod:SetRevision("20230117064753")
 mod:SetCreatureID(52363)
 mod:SetEncounterID(1250)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_PERIODIC_DAMAGE",
+	"SPELL_CAST_START 96920 96913",
+	"SPELL_CAST_SUCCESS 96884",
+	"SPELL_DAMAGE 97212",
+	"SPELL_MISSED 97212",
+	"SPELL_PERIODIC_DAMAGE 97212",
 	"RANGE_DAMAGE",
 	"SWING_DAMAGE"
 )

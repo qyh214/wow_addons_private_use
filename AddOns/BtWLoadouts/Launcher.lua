@@ -38,6 +38,17 @@ function Internal.CreateLauncher()
                     tooltip:AddLine(L["Activating Loadout"], 1, 1, 1);
                     tooltip:AddLine(Internal.GetWaitReason())
                 end
+
+                if IsShiftKeyDown() then
+                    local bossID = Internal.GetConditionBossID()
+                    tooltip:AddLine(" ");
+                    if bossID then
+                        tooltip:AddLine(format(L["Current Condition Boss: %s (%d)"], EJ_GetEncounterInfo(bossID) or "Unknown", bossID), 1, 1, 1);
+                    else
+                        tooltip:AddLine(format(L["Current Condition Boss: %s (%d)"], "None", 0), 1, 1, 1);
+                    end
+                end
+
                 tooltip:Show()
             end,
         })

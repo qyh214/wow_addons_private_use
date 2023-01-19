@@ -232,6 +232,11 @@ local rtypes = { [0] = 'pass', 'need', 'greed', 'disenchant' } -- Tekkub. Writin
 
 function addon:START_LOOT_ROLL(id, length, uid, ongoing)
 	local icon, name, count, quality, bop, need, greed, de, reason_need, reason_greed, reason_de, de_skill = GetLootRollItemInfo(id)
+	-- LootFrame.lua includes this sanity check
+	if name == nil then
+		print('XLoot Group: Ignoring START_LOOT_ROLL with no name')
+		return
+	end
 	local link = GetLootRollItemLink(id)
 	local r, g, b = GetItemQualityColor(quality)
 
@@ -663,8 +668,10 @@ do
 	end
 
 	local function AddIneligibleReason(button, r, g, b)
-		GameTooltip:AddLine(string_format(_G["LOOT_ROLL_INELIGIBLE_REASON"..button.reason], button.skill), r or .6, g or .6, b or .6)
-		GameTooltip:Show()
+		if button.reason and _G["LOOT_ROLL_INELIGIBLE_REASON"..button.reason] then
+			GameTooltip:AddLine(string_format(_G["LOOT_ROLL_INELIGIBLE_REASON"..button.reason], button.skill), r or .6, g or .6, b or .6)
+			GameTooltip:Show()
+		end
 	end
 
 	local function AddTooltipLines(self, show_all, show)

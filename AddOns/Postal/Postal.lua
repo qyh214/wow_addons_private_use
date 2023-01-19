@@ -57,6 +57,7 @@ local defaults = {
 			EnableBag2 = true,
 			EnableBag3 = true,
 			EnableBag4 = true,
+			EnableBag5 = true,
 		},
 	},
 	global = {
@@ -102,6 +103,10 @@ local function subjectHoverOut(self)
 	GameTooltip:Hide()
 end
 
+function Postal:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(eventName, ...)
+	local paneType = ...
+	if paneType ==  Enum.PlayerInteractionType.MailInfo then Postal:MAIL_CLOSED() end
+end
 
 ---------------------------
 -- Postal Core Functions --
@@ -138,13 +143,18 @@ function Postal:OnInitialize()
 	end
 
 	-- Register events
-	self:RegisterEvent("MAIL_CLOSED")
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		self:RegisterEvent("MAIL_CLOSED")
+	else
+		self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_HIDE")
+	end
 
 	-- Create the Menu Button
 	local Postal_ModuleMenuButton = CreateFrame("Button", "Postal_ModuleMenuButton", MailFrame)
 	Postal_ModuleMenuButton:SetWidth(25)
 	Postal_ModuleMenuButton:SetHeight(25)
 	Postal_ModuleMenuButton:SetPoint("TOPRIGHT", -22, 2)
+	if Postal.WOWRetail then Postal_ModuleMenuButton:SetFrameLevel(501) end -- Seems like a Blizzard bug to need this to make Postal menu visible.
 	Postal_ModuleMenuButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
 	Postal_ModuleMenuButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Round")
 	Postal_ModuleMenuButton:SetDisabledTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
@@ -193,7 +203,11 @@ function Postal:MAIL_CLOSED()
 	for i = 1, GetInboxNumItems() do
 		if not select(9, GetInboxHeaderInfo(i)) then return end
 	end
-	MiniMapMailFrame:Hide()
+	if Postal.WOWClassic or Postal.WOWBCClassic or Postal.WOWWotLKClassic then
+		MiniMapMailFrame:Hide()
+	else
+		MinimapCluster.MailFrame:Hide()
+	end
 end
 
 function Postal:Print(...)

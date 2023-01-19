@@ -189,11 +189,16 @@ end
 
 local function GenericGlow(conditions, trigger, regionType, check)
   if regionType == "icon" then
-    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("glow", regionType), changes("white", regionType)}));
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType),
+                                                        changes("glow", regionType),
+                                                        changes("white", regionType)}));
   elseif regionType == "aurabar" then
-    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("glow", regionType), changes("yellow", regionType)}));
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType),
+                                                        changes("glow", regionType),
+                                                        changes("yellow", regionType)}));
   elseif regionType == "progresstexture" then
-    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType), changes("yellow", regionType)}));
+    tinsert(conditions, buildCondition(trigger, check, {changes("inverse", regionType),
+                                                        changes("yellow", regionType)}));
   else
     tinsert(conditions, buildCondition(trigger, check, {changes("yellow", regionType)}));
   end
@@ -371,6 +376,7 @@ local function createAbilityTrigger(triggers, position, item, genericShowOn)
       spellName = item.spell,
       use_genericShowOn = true,
       genericShowOn = genericShowOn,
+      use_exact_spellName = item.exactSpellId
     }
   };
   if genericShowOn == "showOnReady" then
@@ -1722,7 +1728,9 @@ function WeakAuras.CreateTemplateView(Private, frame)
         newViewScroll:AddChild(specSelector);
         newViewScroll:AddChild(createSpacer());
       end
-      if (TemplatePrivate.triggerTemplates.class[newView.class] and TemplatePrivate.triggerTemplates.class[newView.class][newView.spec]) then
+      if TemplatePrivate.triggerTemplates.class[newView.class]
+         and TemplatePrivate.triggerTemplates.class[newView.class][newView.spec]
+      then
         createTriggerButtons(TemplatePrivate.triggerTemplates.class[newView.class][newView.spec], selectedItem);
       end
       local classHeader = AceGUI:Create("Heading");

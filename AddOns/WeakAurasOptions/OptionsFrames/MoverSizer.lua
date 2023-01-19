@@ -383,7 +383,7 @@ local function BuildAlignLines(mover)
 
   for k, v in pairs(OptionsPrivate.displayButtons) do
     local region = WeakAuras.GetRegion(v.data.id)
-    if not skipIds[k] and v.view.visibility ~= 0 and region then
+    if not skipIds[k] and v.view.visibility ~= 0 and region and not region:IsAnchoringRestricted() then
       local scale = region:GetEffectiveScale() / UIParent:GetEffectiveScale()
       if not IsControlKeyDown() then
         tinsert(x, (region:GetLeft() or 0) * scale)
@@ -519,11 +519,13 @@ local function ConstructMoverSizer(parent)
     if data.regionType == "group" then
       mover:SetWidth((region.trx - region.blx) * scale)
       mover:SetHeight((region.try - region.bly) * scale)
-      mover:SetPoint("BOTTOMLEFT", mover.anchor or UIParent, mover.anchorPoint or "CENTER", (xOff + region.blx) * scale, (yOff + region.bly) * scale)
+      mover:SetPoint("BOTTOMLEFT", mover.anchor or UIParent, mover.anchorPoint or "CENTER",
+                     (xOff + region.blx) * scale, (yOff + region.bly) * scale)
     else
       mover:SetWidth(region:GetWidth() * scale)
       mover:SetHeight(region:GetHeight() * scale)
-      mover:SetPoint(mover.selfPoint or "CENTER", mover.anchor or UIParent, mover.anchorPoint or "CENTER", xOff * scale, yOff * scale)
+      mover:SetPoint(mover.selfPoint or "CENTER", mover.anchor or UIParent, mover.anchorPoint or "CENTER",
+                     xOff * scale, yOff * scale)
     end
     frame:SetPoint("BOTTOMLEFT", mover, "BOTTOMLEFT", -8, -8)
     frame:SetPoint("TOPRIGHT", mover, "TOPRIGHT", 8, 8)
@@ -635,7 +637,7 @@ local function ConstructMoverSizer(parent)
         data.yOffset = dY / scale
       end
       region:ResetPosition()
-      WeakAuras.Add(data, nil, true)
+      WeakAuras.Add(data)
       WeakAuras.UpdateThumbnail(data)
       local xOff, yOff
       mover.selfPoint, mover.anchor, mover.anchorPoint, xOff, yOff = region:GetPoint(1)
@@ -643,7 +645,8 @@ local function ConstructMoverSizer(parent)
       if data.regionType == "group" then
         mover:SetWidth((region.trx - region.blx) * scale)
         mover:SetHeight((region.try - region.bly) * scale)
-        mover:SetPoint("BOTTOMLEFT", mover.anchor, mover.anchorPoint, (xOff + region.blx) * scale, (yOff + region.bly) * scale)
+        mover:SetPoint("BOTTOMLEFT", mover.anchor, mover.anchorPoint,
+                       (xOff + region.blx) * scale, (yOff + region.bly) * scale)
       else
         mover:SetWidth(region:GetWidth() * scale)
         mover:SetHeight(region:GetHeight() * scale)

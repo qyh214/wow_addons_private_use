@@ -177,23 +177,27 @@ function BtWLoadoutsMinimapMenu_Init(self, level, menuList)
                 UIDropDownMenu_AddButton(info, level);
             end
 
-            info.isTitle, info.disabled, info.notCheckable = true, true, true;
-            info.func, info.arg1 = nil, nil;
-            info.text = L["Settings"];
+            if Settings.showSettingsInMenu then
+                info.isTitle, info.disabled, info.notCheckable = true, true, true;
+                info.func, info.arg1 = nil, nil;
+                info.text = L["Settings"];
 
-            UIDropDownMenu_AddButton(info, level);
+                UIDropDownMenu_AddButton(info, level);
+            end
         end
 
-        info.isTitle, info.disabled, info.notCheckable = false, false, false;
-        info.func = function (self, key)
-            Settings[key] = not Settings[key];
-        end
-        for i, entry in ipairs(Settings) do
-            info.text = entry.name;
-            info.arg1 = entry.key;
-            info.checked = Settings[entry.key];
+        if Settings.showSettingsInMenu then
+            info.isTitle, info.disabled, info.notCheckable = false, false, false;
+            info.func = function (self, key)
+                Settings[key] = not Settings[key];
+            end
+            for i, entry in ipairs(Settings) do
+                info.text = entry.name;
+                info.arg1 = entry.key;
+                info.checked = Settings[entry.key];
 
-            UIDropDownMenu_AddButton(info, level);
+                UIDropDownMenu_AddButton(info, level);
+            end
         end
     end
 end

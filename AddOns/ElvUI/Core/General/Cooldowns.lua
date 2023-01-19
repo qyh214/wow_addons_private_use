@@ -30,18 +30,19 @@ function E:Cooldown_BelowScale(cd)
 end
 
 function E:Cooldown_OnUpdate(elapsed)
-	if self.paused then return end
+	if self.paused then return 0 end
 
 	local forced = elapsed == -1
 	if forced then
 		self.nextUpdate = 0
 	elseif self.nextUpdate > 0 then
 		self.nextUpdate = self.nextUpdate - elapsed
-		return
+		return 1
 	end
 
 	if not E:Cooldown_TimerEnabled(self) then
 		E:Cooldown_TimerStop(self)
+		return 2
 	else
 		local now = GetTime()
 
@@ -115,8 +116,10 @@ function E:Cooldown_TimerEnabled(timer)
 end
 
 function E:Cooldown_TimerUpdate(timer)
-	E.Cooldown_OnUpdate(timer, -1)
-	timer:Show()
+	local status = E.Cooldown_OnUpdate(timer, -1)
+	if not status then
+		timer:Show()
+	end
 end
 
 function E:Cooldown_TimerStop(timer)
@@ -362,6 +365,7 @@ end
 do
 	local function RGB(db) return E:CopyTable({r = 1, g = 1, b = 1}, db) end
 	local function HEX(db) return E:RGBToHex(db.r, db.g, db.b) end
+	local dummy9th = '|cFFffffff'
 
 	function E:GetCooldownColors(db)
 		if not db then db = E.db.cooldown end -- just incase someone calls this without a first arg use the global
@@ -379,7 +383,7 @@ do
 		RGB(db.modRateColor),
 		RGB(ab.targetAuraColor),
 		RGB(ab.expiringAuraColor),
-		--> text colors (0 - 8) <--
+		--> text colors (0 - 9) <--
 		HEX(db.daysIndicator),
 		HEX(db.hoursIndicator),
 		HEX(db.minutesIndicator),
@@ -388,7 +392,8 @@ do
 		HEX(db.mmssColorIndicator),
 		HEX(db.hhmmColorIndicator),
 		HEX(ab.targetAuraIndicator),
-		HEX(ab.expiringAuraIndicator)
+		HEX(ab.expiringAuraIndicator),
+		dummy9th -- this shouldn't happen but ya know :)
 	end
 end
 
@@ -399,9 +404,9 @@ function E:UpdateCooldownSettings(module)
 	-- global is the main call from config, all is the core file calls
 	local isModule = module and (module ~= 'global' and module ~= 'all') and E.db[module] and E.db[module].cooldown
 	if isModule then
-		if not E.TimeColors[module] then E.TimeColors[module] = {} end
-		if not E.TimeIndicatorColors[module] then E.TimeIndicatorColors[module] = {} end
-		db, timeColors, textColors = E.db[module].cooldown, E.TimeColors[module], E.TimeIndicatorColors[module]
+		if not timeColors[module] then timeColors[module] = {} end
+		if not textColors[module] then textColors[module] = {} end
+		db, timeColors, textColors = E.db[module].cooldown, timeColors[module], textColors[module]
 	end
 
 	--> color for TIME that has X remaining <--
@@ -425,6 +430,7 @@ function E:UpdateCooldownSettings(module)
 	textColors[6], -- hhmmColorIndicator
 	textColors[7], -- targetAuraIndicator
 	textColors[8], -- expiringAuraIndicator
+	textColors[9], -- dummy9th
 	_ = E:GetCooldownColors(db)
 
 	if module == 'actionbar' then	-- special population for target aura as they only have 2 colors (expiring or not)

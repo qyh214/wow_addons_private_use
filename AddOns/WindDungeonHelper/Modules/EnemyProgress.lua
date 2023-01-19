@@ -17,24 +17,29 @@ local UnitGUID = UnitGUID
 
 local C_QuestLog_GetInfo = C_QuestLog.GetInfo
 local C_QuestLog_GetLogIndexForQuestID = C_QuestLog.GetLogIndexForQuestID
+local TooltipDataProcessor_AddTooltipPostCall = TooltipDataProcessor.AddTooltipPostCall
 
-local function CheckElvUIWindTools()
+local Enum_TooltipDataType_Unit = Enum.TooltipDataType.Unit
+
+local function isWindToolsLoaded()
 	if IsAddOnLoaded("ElvUI_WindTools") then
 		local E = _G.ElvUI and _G.ElvUI[1]
-		if E and E.private.WT.tooltips.objectiveProgress then
+		if E and E.private and E.private.WT and E.private.WT.tooltips and E.private.WT.tooltips.objectiveProgress then
 			return true
 		end
 	end
 end
 
-function EP:AddObjectiveProgress(tt)
-	if not tt or not tt.NumLines or tt:NumLines() == 0 or CheckElvUIWindTools() then
+function EP:AddObjectiveProgress(tt, data)
+	if not self.db or not self.db.enable then
 		return
 	end
 
-	local name, unit = tt:GetUnit()
-	local GUID = unit and UnitGUID(unit)
-	local npcID = GUID and select(6, ("-"):split(GUID))
+	if isWindToolsLoaded() or not tt or not tt == _G.GameTooltip and not tt.NumLines or tt:NumLines() == 0 then
+		return
+	end
+
+	local npcID = select(6, strsplit("-", data.guid))
 
 	if not npcID or npcID == "" then
 		return
@@ -60,13 +65,12 @@ function EP:ProfileUpdate()
 	self.db = W.db.enemyProgress
 
 	if self.db and self.db.enable then
-		if not self:IsHooked(GameTooltip, "OnTooltipSetUnit") then
-			self:SecureHookScript(GameTooltip, "OnTooltipSetUnit", "AddObjectiveProgress")
-		end
-	else
-		if self:IsHooked(GameTooltip, "OnTooltipSetUnit") then
-			self:Unhook(GameTooltip, "OnTooltipSetUnit")
-		end
+		TooltipDataProcessor_AddTooltipPostCall(
+			Enum_TooltipDataType_Unit,
+			function(...)
+				self:AddObjectiveProgress(...)
+			end
+		)
 	end
 end
 

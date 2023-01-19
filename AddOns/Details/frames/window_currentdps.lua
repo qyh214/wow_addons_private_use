@@ -3,6 +3,7 @@
 local Details = _G.Details
 local libwindow = LibStub("LibWindow-1.1")
 local DF = DetailsFramework
+local isDragonflight = DF.IsDragonflight()
 
 local green_team_color
 local yellow_team_color
@@ -20,6 +21,7 @@ function Details:OpenCurrentRealDPSOptions(from_options_panel)
 		f:SetPoint("center", UIParent, "center")
 		f:SetScript("OnMouseDown", nil)
 		f:SetScript("OnMouseUp", nil)
+		DF:ApplyStandardBackdrop(f)
 
 		--scale bar
 		local scaleBar = DF:CreateScaleBar(f, _detalhes.realtime_dps_meter.options_frame)
@@ -102,6 +104,12 @@ function Details:OpenCurrentRealDPSOptions(from_options_panel)
 				set = function(self, fixedparam, value)
 					Details.realtime_dps_meter.enabled = not Details.realtime_dps_meter.enabled
 					Details:LoadFramesForBroadcastTools()
+					C_Timer.After(0, function()
+						if (value) then
+							Details:UpdateTheRealCurrentDPSFrame(testUsing)
+							DetailsCurrentDpsMeter:StartForArenaMatch()
+						end
+					end)
 				end,
 				desc = "Enabled",
 				name = "Enabled",
@@ -390,19 +398,21 @@ function Details:CreateCurrentDpsFrame(parent, name)
 			--LibWindow.SavePosition(f)
 		end)
 
-		GhostFrame:HookScript("OnShow", function(ghostFrame)
-			if (f:IsShown()) then
-				local p1, p2, p3, p4, p5 = ghostFrame:GetPoint(1)
-				f.GhostFrameY = f.GhostFrameY or 0
-				if (DF:IsNearlyEqual(p5, f.GhostFrameY, 0.1)) then
-					return
-				end
+		if(isDragonflight) then
+			GhostFrame:HookScript("OnShow", function(ghostFrame)
+				if (f:IsShown()) then
+					local p1, p2, p3, p4, p5 = ghostFrame:GetPoint(1)
+					f.GhostFrameY = f.GhostFrameY or 0
+					if (DF:IsNearlyEqual(p5, f.GhostFrameY, 0.1)) then
+						return
+					end
 
-				local newY = p5-45
-				ghostFrame:SetPoint(p1, p2, p3, p4, newY)
-				f.GhostFrameY = newY
-			end
-		end)
+					local newY = p5-45
+					ghostFrame:SetPoint(p1, p2, p3, p4, newY)
+					f.GhostFrameY = newY
+				end
+			end)
+		end
 
 	--arena dps bars
 		--code for the dps bars shown in arenas
@@ -543,7 +553,7 @@ function Details:CreateCurrentDpsFrame(parent, name)
 
 			if (not _detalhes.realtime_dps_meter.enabled) then
 				f:Hide()
-				print("D! debug currentdps.lua > !realtime_dps_meter.enabled")
+				--print("D! debug currentdps.lua > !realtime_dps_meter.enabled")
 				return
 			end
 
@@ -750,6 +760,9 @@ function Details:CreateCurrentDpsFrame(parent, name)
 
 						--a percenntagem na barra esta sendo setada corretamente, porem a animação não esta funcrtionando ainda
 						local percentValue = teamGreenDps / totalDamage
+						percentValue = Saturate(percentValue)
+
+						--print(percentValue)
 						DetailsArenaDpsBars.splitBar:SetValueWithAnimation(percentValue)
 						DetailsArenaDpsBars:Show()
 

@@ -7,6 +7,7 @@ local LibStub = _G.LibStub
 
 local RareScanner = LibStub("AceAddon-3.0"):GetAddon("RareScanner")
 local AL = LibStub("AceLocale-3.0"):GetLocale("RareScanner", false)
+local LibDialog = LibStub("LibDialog-1.0")
 
 -- RareScanner database libraries
 local RSNpcDB = private.ImportLib("RareScannerNpcDB")
@@ -94,57 +95,6 @@ private.ITEM_CLASSES = {
 	--[Enum.ItemClass.Glyph] = { 0 }, --glyphs
 	[Enum.ItemClass.Battlepet] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, --battle pets
 	--[Enum.ItemClass.WowToken] = { 0 }, --wow token
-}
-
-private.CLASS_PROFICIENCIES = {
-	[1] = { --Warrior
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[2] = { --Paladin
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[3] = { --Hunter
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[4] = { --Rogue
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[5] = { --Priest
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[6] = { --DeathKnight
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[7] = { --Shaman
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Shield, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[8] = { --Mage
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[9] = { --Warlock
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Wand },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[10] = { --Monk
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[11] = { --Druid
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
-	[12] = { --Demon Hunter
-		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Fishingpole, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Warglaive, Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Generic },
-		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather, Enum.ItemArmorSubclass.Cosmetic, Enum.ItemArmorSubclass.Generic, Enum.ItemArmorSubclass.Relic }
-	};
 }
 
 local DEFAULT_MAIN_CATEGORY = 0
@@ -314,8 +264,19 @@ local function GetGeneralOptions()
 					end,
 					width = "full",
 				},
-				showMaker = {
+				ignoreCompletedEntities = {
 					order = 10,
+					name = AL["IGNORE_SCAN_COMPLETED_ENTITIES"],
+					desc = AL["IGNORE_SCAN_COMPLETED_ENTITIES_DESC"],
+					type = "toggle",
+					get = function() return RSConfigDB.IsIgnoringCompletedEntities() end,
+					set = function(_, value)
+						RSConfigDB.SetIgnoringCompletedEntities(value)
+					end,
+					width = "full",
+				},
+				showMaker = {
+					order = 11,
 					name = AL["ENABLE_MARKER"],
 					desc = AL["ENABLE_MARKER_DESC"],
 					type = "toggle",
@@ -326,7 +287,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				marker = {
-					order = 11,
+					order = 12,
 					type = "select",
 					dialogControl = 'RS_Markers',
 					name = AL["MARKER"],
@@ -340,12 +301,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingMarkerOnTarget() end,
 				},
 				separatorIngameWaypoints = {
-					order = 12,
+					order = 13,
 					type = "header",
 					name = AL["INGAME_WAYPOINTS"],
 				},
 				enableIngameWaypoints = {
-					order = 13,
+					order = 14,
 					name = AL["ENABLE_WAYPOINTS_SUPPORT"],
 					desc = AL["ENABLE_WAYPOINTS_SUPPORT_DESC"],
 					type = "toggle",
@@ -356,7 +317,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				autoIngameWaypoints = {
-					order = 14,
+					order = 15,
 					name = AL["ENABLE_AUTO_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -368,12 +329,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsWaypointsSupportEnabled() end,
 				},
 				separatorTomtomWaypoints = {
-					order = 15,
+					order = 16,
 					type = "header",
 					name = AL["TOMTOM_WAYPOINTS"],
 				},
 				enableTomtomSupport = {
-					order = 16,
+					order = 17,
 					name = AL["ENABLE_TOMTOM_SUPPORT"],
 					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
 					type = "toggle",
@@ -385,7 +346,7 @@ local function GetGeneralOptions()
 					disabled = function() return not TomTom end,
 				},
 				autoTomtomWaypoints = {
-					order = 17,
+					order = 18,
 					name = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -490,7 +451,6 @@ local function GetSoundOptions()
 						type = "execute",
 						func = function()
 							if (RSConfigDB.GetCustomSound(name)) then
-								print(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(name)))
 								PlaySoundFile(string.format(RSConstants.EXTERNAL_SOUND_FOLDER, RSConfigDB.GetCustomSoundsFolder(), RSConfigDB.GetCustomSound(name)), "Master")
 							end
 						end,
@@ -1358,9 +1318,13 @@ local function GetCustomNpcOptions()
 									tinsert(itemIDs, tonumber(itemID))
 								end
 								RSNpcDB.SetCustomNpcLoot(npcID, itemIDs)
+								RSCollectionsDB.UpdateEntityCollectibles(tonumber(npcID), itemIDs, RSConstants.ITEM_SOURCE.NPC)
 							else
 								RSNpcDB.SetCustomNpcLoot(npcID, nil)
+								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC][tonumber(npcID)] = nil
 							end
+							
+							RSExplorerFrame:Refresh()
 						end,
 						validate = function(_, value)
 							-- Skips if empty
@@ -1397,6 +1361,10 @@ local function GetCustomNpcOptions()
 							custom_npcs_options.args[npcID] = nil
 							RSNpcDB.DeleteCustomNpcInfo(npcID)
 							RSGeneralDB.RemoveAlreadyFoundEntity(tonumber(npcID))
+							if (RSCollectionsDB.GetAllEntitiesCollectionsLoot() and RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC] and RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC][tonumber(npcID)]) then
+								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[RSConstants.ITEM_SOURCE.NPC][tonumber(npcID)] = nil
+								RSExplorerFrame:Refresh()
+							end
 						end,
 						width = "normal",
 					},
@@ -1589,12 +1557,30 @@ local function GetContainerFilterOptions()
 					get = function() return RSConfigDB.IsContainerFilteredOnlyOnWorldMap() end,
 					set = function(_, value)
 						RSConfigDB.SetContainerFilteredOnlyOnWorldMap(value)
+						if (value) then
+							RSConfigDB.SetContainerFilteredOnlyOnAlerts(false)
+						end
+						RSMinimap.RefreshAllData(true)
+					end,
+					width = "full",
+				},
+				filterOnlyAlerts = {
+					order = 2,
+					type = "toggle",
+					name = AL["FILTER_ONLY_ALERTS"],
+					desc = AL["FILTER_CONTAINERS_ONLY_ALERTS_DESC"],
+					get = function() return RSConfigDB.IsContainerFilteredOnlyOnAlerts() end,
+					set = function(_, value)
+						RSConfigDB.SetContainerFilteredOnlyOnAlerts(value)
+						if (value) then
+							RSConfigDB.SetContainerFilteredOnlyOnWorldMap(false)
+						end
 						RSMinimap.RefreshAllData(true)
 					end,
 					width = "full",
 				},
 				containerFiltersSearch = {
-					order = 2,
+					order = 3,
 					type = "input",
 					name = AL["FILTERS_SEARCH"],
 					desc = AL["FILTERS_CONTAINERS_SEARCH_DESC"],
@@ -1612,7 +1598,7 @@ local function GetContainerFilterOptions()
 					width = "full",
 				},
 				continents = {
-					order = 3.1,
+					order = 4.1,
 					type = "select",
 					name = AL["FILTER_CONTINENT"],
 					desc = AL["FILTER_CONTINENT_DESC"],
@@ -1645,7 +1631,7 @@ local function GetContainerFilterOptions()
 					width = 1.0,
 				},
 				subzones = {
-					order = 3.2,
+					order = 4.2,
 					type = "select",
 					name = AL["FILTER_ZONE"],
 					desc = AL["FILTER_ZONE_DESC"],
@@ -1668,7 +1654,7 @@ local function GetContainerFilterOptions()
 					disabled = function() return (next(container_filter_options.args.subzones.values) == nil) end,
 				},
 				containerFiltersClear = {
-					order = 3.3,
+					order = 4.3,
 					name = AL["CLEAR_FILTERS_SEARCH"],
 					desc = AL["CLEAR_FILTERS_SEARCH_DESC"],
 					type = "execute",
@@ -1686,12 +1672,12 @@ local function GetContainerFilterOptions()
 					width = 0.5,
 				},
 				separator = {
-					order = 4,
+					order = 5,
 					type = "header",
 					name = AL["CONTAINER_FILTER"],
 				},
 				containerFiltersToogleAll = {
-					order = 5,
+					order = 6,
 					name = AL["TOGGLE_FILTERS"],
 					desc = AL["TOGGLE_FILTERS_DESC"],
 					type = "execute",
@@ -1712,7 +1698,7 @@ local function GetContainerFilterOptions()
 					width = "full",
 				},
 				containerFilters = {
-					order = 6,
+					order = 7,
 					type = "multiselect",
 					name = AL["FILTER_CONTAINER_LIST"],
 					desc = AL["FILTER_CONTAINER_LIST_DESC"],
@@ -2295,12 +2281,64 @@ local function GetLootFilterOptions()
 							desc = AL["LOOT_EXPLORER_FILTER_DESC"],
 							get = function() return RSConfigDB.IsFilteringByExplorerResults() end,
 							set = function(_, value)
-								RSConfigDB.SetFilteringByExplorerResults(value)
+								if (value and RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()) == 0) then
+									LibDialog:Spawn(RSConstants.EXPLORER_SCAN_NOT_DONE)
+								else
+									RSConfigDB.SetFilteringByExplorerResults(value)
+								end
 							end,
 							width = "full"
 						},
-						open_explorer = {
+						show_mounts = {
 							order = 4,
+							type = "toggle",
+							name = AL["LOOT_EXPLORER_SHOW_MISSING_MOUNTS"],
+							desc = AL["LOOT_EXPLORER_SHOW_MISSING_MOUNTS_DESC"],
+							get = function() return RSConfigDB.IsShowingMissingMounts() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingMissingMounts(value)
+							end,
+							width = "full",
+							disabled = function() return (not RSConfigDB.IsFilteringByExplorerResults()) end,
+						},
+						show_pets = {
+							order = 5,
+							type = "toggle",
+							name = AL["LOOT_EXPLORER_SHOW_MISSING_PETS"],
+							desc = AL["LOOT_EXPLORER_SHOW_MISSING_PETS_DESC"],
+							get = function() return RSConfigDB.IsShowingMissingPets() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingMissingPets(value)
+							end,
+							width = "full",
+							disabled = function() return (not RSConfigDB.IsFilteringByExplorerResults()) end,
+						},
+						show_toys = {
+							order = 6,
+							type = "toggle",
+							name = AL["LOOT_EXPLORER_SHOW_MISSING_TOYS"],
+							desc = AL["LOOT_EXPLORER_SHOW_MISSING_TOYS_DESC"],
+							get = function() return RSConfigDB.IsShowingMissingToys() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingMissingToys(value)
+							end,
+							width = "full",
+							disabled = function() return (not RSConfigDB.IsFilteringByExplorerResults()) end,
+						},
+						show_appearances = {
+							order = 7,
+							type = "toggle",
+							name = AL["LOOT_EXPLORER_SHOW_MISSING_APPEARANCES"],
+							desc = AL["LOOT_EXPLORER_SHOW_MISSING_APPEARANCES_DESC"],
+							get = function() return RSConfigDB.IsShowingMissingAppearances() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingMissingAppearances(value)
+							end,
+							width = "full",
+							disabled = function() return (not RSConfigDB.IsFilteringByExplorerResults()) end,
+						},
+						open_explorer = {
+							order = 8,
 							name = AL["LOOT_EXPLORER_OPEN"],
 							desc = AL["LOOT_EXPLORER_OPEN"],
 							type = "execute",
@@ -2310,12 +2348,12 @@ local function GetLootFilterOptions()
 							width = "normal",
 						},
 						separator_reset = {
-							order = 5,
+							order = 9,
 							type = "header",
 							name = AL["LOOT_RESET"],
 						},
 						reset = {
-							order = 6,
+							order = 10,
 							name = AL["LOOT_RESET"],
 							desc = AL["LOOT_RESET_DESC"],
 							type = "execute",
@@ -2327,7 +2365,7 @@ local function GetLootFilterOptions()
 						},
 						category_filters = {
 							type = "group",
-							order = 7,
+							order = 11,
 							name = AL["LOOT_CATEGORY_FILTERS"],
 							handler = RareScanner,
 							desc = AL["LOOT_CATEGORY_FILTERS_DESC"],
@@ -2356,7 +2394,7 @@ local function GetLootFilterOptions()
 										loadSubCategory(key)
 									end,
 									width = "normal",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								separator = {
 									order = 2,
@@ -2380,7 +2418,7 @@ local function GetLootFilterOptions()
 										end
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								lootFilters = {
 									order = 4,
@@ -2393,13 +2431,14 @@ local function GetLootFilterOptions()
 										RSLogger:PrintDebugMessage(string.format("Cambiando el valor de ClassID [%s], SubClassID [%s]", mainCategoryID, key))
 										RSConfigDB.SetLootFilterByCategory(mainCategoryID, key, value);
 									end,
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								}
 							},
+							disabled = function() return (RSConfigDB.IsFilteringByExplorerResults()) end,
 						},
 						individual = {
 							type = "group",
-							order = 8,
+							order = 12,
 							name = AL["LOOT_INDIVIDUAL_FILTERS"],
 							handler = RareScanner,
 							desc = AL["LOOT_INDIVIDUAL_FILTERS_DESC"],
@@ -2417,7 +2456,7 @@ local function GetLootFilterOptions()
 										searchItem(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filteredItems = {
 									order = 2,
@@ -2429,13 +2468,13 @@ local function GetLootFilterOptions()
 									set = function(_, itemID, value)
 										RSConfigDB.SetItemFiltered(itemID, value)
 									end,
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								}
 							}
 						},
 						other_filters = {
 							type = "group",
-							order = 9,
+							order = 13,
 							name = AL["LOOT_OTHER_FILTERS"],
 							handler = RareScanner,
 							desc = AL["LOOT_OTHER_FILTERS_DESC"],
@@ -2451,46 +2490,10 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetLootFilterMinQuality(value)
 									end,
 									width = "double",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
-								},
-								filterNotEquipableItems = {
-									order = 2,
-									type = "toggle",
-									name = AL["LOOT_FILTER_NOT_EQUIPABLE"],
-									desc = AL["LOOT_FILTER_NOT_EQUIPABLE_DESC"],
-									get = function() return RSConfigDB.IsFilteringLootByNotEquipableItems() end,
-									set = function(_, value)
-										RSConfigDB.SetFilteringLootByNotEquipableItems(value)
-									end,
-									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
-								},
-								showOnlyTransmogItems = {
-									order = 3,
-									type = "toggle",
-									name = AL["LOOT_FILTER_NOT_TRANSMOG"],
-									desc = AL["LOOT_FILTER_NOT_TRANSMOG_DESC"],
-									get = function() return RSConfigDB.IsFilteringLootByTransmog() end,
-									set = function(_, value)
-										RSConfigDB.SetFilteringLootByTransmog(value)
-									end,
-									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
-								},
-								filterCollectedItems = {
-									order = 4,
-									type = "toggle",
-									name = AL["LOOT_FILTER_COLLECTED"],
-									desc = AL["LOOT_FILTER_COLLECTED_DESC"],
-									get = function() return RSConfigDB.IsFilteringByCollected() end,
-									set = function(_, value)
-										RSConfigDB.SetFilteringByCollected(value)
-									end,
-									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filterItemsCompletedQuest = {
-									order = 5,
+									order = 2,
 									type = "toggle",
 									name = AL["LOOT_FILTER_COMPLETED_QUEST"],
 									desc = AL["LOOT_FILTER_COMPLETED_QUEST_DESC"],
@@ -2499,10 +2502,10 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetFilteringLootByCompletedQuest(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filterNotMatchingClass = {
-									order = 6,
+									order = 3,
 									type = "toggle",
 									name = AL["LOOT_FILTER_NOT_MATCHING_CLASS"],
 									desc = AL["LOOT_FILTER_NOT_MATCHING_CLASS_DESC"],
@@ -2511,10 +2514,10 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetFilteringLootByNotMatchingClass(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filterNotMatchingFaction = {
-									order = 7,
+									order = 4,
 									type = "toggle",
 									name = AL["LOOT_FILTER_NOT_MATCHING_FACTION"],
 									desc = AL["LOOT_FILTER_NOT_MATCHING_FACTION_DESC"],
@@ -2523,10 +2526,10 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetFilteringLootByNotMatchingFaction(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filterAnimaItems = {
-									order = 8,
+									order = 5,
 									type = "toggle",
 									name = AL["LOOT_FILTER_ANIMA_ITEMS"],
 									desc = AL["LOOT_FILTER_ANIMA_ITEMS_DESC"],
@@ -2535,10 +2538,10 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetFilteringAnimaItems(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 								filterNotUsableConduits = {
-									order = 9,
+									order = 6,
 									type = "toggle",
 									name = AL["LOOT_FILTER_CONDUIT_ITEMS"],
 									desc = AL["LOOT_FILTER_CONDUIT_ITEMS_DESC"],
@@ -2547,7 +2550,7 @@ local function GetLootFilterOptions()
 										RSConfigDB.SetFilteringConduitItems(value)
 									end,
 									width = "full",
-									disabled = function() return RSConfigDB.IsFilteringByExplorerResults() or (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
+									disabled = function() return (not RSConfigDB.IsDisplayingLootBar() and not RSConfigDB.IsShowingLootOnWorldMap()) end,
 								},
 							},
 						},
@@ -3097,7 +3100,7 @@ function RareScanner:SetupOptions()
 	RSAC:RegisterOptionsTable("RareScanner Map", GetMapOptions)
 	RSAC:RegisterOptionsTable("RareScanner Profiles", RareScanner:GetOptionsTable())
 
-	local RSACD = LibStub("AceConfigDialogRSmod-3.0")
+	local RSACD = LibStub("AceConfigDialog-3.0-RSmod")
 	RSACD:AddToBlizOptions("RareScanner General", _G.GENERAL_LABEL, "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Sound", AL["SOUND"], "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Display", AL["DISPLAY"], "RareScanner")

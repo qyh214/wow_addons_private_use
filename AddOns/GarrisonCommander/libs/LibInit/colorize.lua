@@ -176,7 +176,7 @@ local mt={
 				return tostring(t1) .. tostring(t2)
 		end,
 		__call=function(table,...)
-				return unpack(table)
+				return table[1],table[2],table[3]
 		end
 
 }

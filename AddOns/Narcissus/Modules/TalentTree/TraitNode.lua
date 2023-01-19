@@ -10,6 +10,26 @@ local IsPassiveSpell = IsPassiveSpell;
 
 local select = select;
 
+local Handler;
+
+local NodeUtil = {};
+addon.TalentTreeNodeUtil = NodeUtil;
+
+function NodeUtil:SetModeNormal()
+    self.clickable = false;
+end
+
+NodeUtil:SetModeNormal();
+
+function NodeUtil:SetModePickIcon()
+    self.clickable = true;
+end
+
+function NodeUtil:AssignHandler(frame)
+    Handler = frame;
+end
+
+
 NarciTalentTreeNodeMixin = {};
 
 local function SetNodeIcon(node, definitionInfo, overrideSpellID)
@@ -44,7 +64,7 @@ function NarciTalentTreeNodeMixin:SetNodeType(typeID, ranksPurchased)
             self.IconMask:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\TalentTree\\NodeMaskCircle");
             self.IconBorder:SetTexCoord(0.25, 0.5, 0, 0.5);
             self.Symbol:SetTexCoord(0, 0.25, 0.25, 0.5);
-        else
+        else    --2
             self.IconMask:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\TalentTree\\NodeMaskOctagon");
             self.Symbol:SetTexCoord(0.75, 1, 0, 0.25);
             self.IconBorder:SetTexCoord(0, 0.25, 0.5, 1);
@@ -130,7 +150,11 @@ end
 
 
 function NarciTalentTreeNodeMixin:OnEnter()
-    --print("definitionID: "..self.definitionID)
+    if NodeUtil.clickable then
+        Handler:HighlightButton(self);
+        return
+    end
+
     OnEnterDelay:WatchButton(self);
     ClassTalentTooltipUtil:UpdateCursorDelta();
 end
@@ -144,8 +168,18 @@ function NarciTalentTreeNodeMixin:OnEnterCallback()
 end
 
 function NarciTalentTreeNodeMixin:OnLeave()
+    if NodeUtil.clickable then
+        Handler:HighlightButton();
+    end
+
     OnEnterDelay:ClearWatch();
     ClassTalentTooltipUtil.HideTooltip();
+end
+
+function NarciTalentTreeNodeMixin:OnMouseDown()
+    if NodeUtil.clickable then
+        Handler:SetSecondaryIcon(self.Icon:GetTexture(), true);
+    end
 end
 
 function NarciTalentTreeNodeMixin:SetPvPTalent(talentID)
@@ -255,10 +289,18 @@ function NarciTalentTreeNodeMixin:SetComparison(typeID, targetRank, playerRank)
                 else    --right
                     self.IconBorder:SetTexCoord(0.125, 0.25, 0.25, 0.5);
                 end
-            elseif targetRank == 1 then --left,right
-                self.IconBorder:SetTexCoord(0.5, 0.625, 0.25, 0.5);
-            else    --right,left
-                self.IconBorder:SetTexCoord(0.625, 0.75, 0.25, 0.5);
+            elseif targetRank == 1 then
+                if playerRank == 0 then
+                    self.IconBorder:SetTexCoord(0.125, 0.25, 0.75, 1);
+                else --left,right
+                    self.IconBorder:SetTexCoord(0.5, 0.625, 0.25, 0.5);
+                end
+            else
+                if playerRank == 0 then
+                    self.IconBorder:SetTexCoord(0.25, 0.375, 0.75, 1);
+                else --left,right
+                    self.IconBorder:SetTexCoord(0.625, 0.75, 0.25, 0.5);
+                end
             end
         end
     end

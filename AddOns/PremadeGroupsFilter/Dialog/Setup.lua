@@ -42,7 +42,8 @@ function PGF.Dialog_LoadMinMaxFromModel(dialog, model, key)
     dialog[key].Max:SetText(model[key:lower()].max)
 end
 
-function PGF.Dialog_LoadFromModel(dialog)
+function PGF.Dialog_OnShow(dialog)
+    RequestRaidInfo() -- need the dungeon/raid lockout information later for filtering
     local model = PGF.GetModel()
     PGF.UsePFGButton:SetChecked(model.enabled)
     PGF.previousSearchExpression = model.expression
@@ -57,19 +58,16 @@ function PGF.Dialog_LoadFromModel(dialog)
     dialog.Sorting.SortingExpression:SetText(model.sorting)
     dialog.Difficulty.Act:SetChecked(model.difficulty.act)
     dialog.Difficulty.DropDown.Text:SetText(DIFFICULTY_TEXT[model.difficulty.val])
-end
-
-function PGF.Dialog_OnShow(dialog)
-    RequestRaidInfo() -- need the dungeon/raid lockout information later for filtering
-    PGF.Dialog_LoadFromModel(dialog)
-    PGF.Dialog_AdjustToMode()
+    PGF.Dialog_AdjustToMode(model.expert)
 end
 
 function PGF.Dialog_OnMouseDown(self, button)
+    if not PremadeGroupsFilterSettings.dialogMovable then return end
     PremadeGroupsFilterDialog:StartMoving()
 end
 
 function PGF.Dialog_OnMouseUp(self, button)
+    if not PremadeGroupsFilterSettings.dialogMovable then return end
     PremadeGroupsFilterDialog:StopMovingOrSizing()
     if button == "RightButton" then
         PGF.Dialog_ResetPosition()
@@ -81,9 +79,10 @@ function PGF.Dialog_MinimizeButton_OnClick(self, button, down)
         PGF.ignoreNextMaximizeMinimizeCallback = false
         return
     end
-    PremadeGroupsFilterState.expert = true
+    local model = PGF.GetModel()
+    model.expert = true
     PGF.Dialog_Reset(true)
-    PGF.Dialog_AdjustToMode()
+    PGF.Dialog_AdjustToMode(model.expert)
 end
 
 function PGF.Dialog_MaximizeButton_OnClick(self, button, down)
@@ -91,15 +90,16 @@ function PGF.Dialog_MaximizeButton_OnClick(self, button, down)
         PGF.ignoreNextMaximizeMinimizeCallback = false
         return
     end
-    PremadeGroupsFilterState.expert = false
+    local model = PGF.GetModel()
+    model.expert = false
     PGF.Dialog_Reset(true)
-    PGF.Dialog_AdjustToMode()
+    PGF.Dialog_AdjustToMode(model.expert)
 end
 
-function PGF.Dialog_AdjustToMode()
-    local dialog = PremadeGroupsFilterDialog
+function PGF.Dialog_AdjustToMode(expert)
     PGF.ignoreNextMaximizeMinimizeCallback = true
-    if PremadeGroupsFilterState.expert then
+    local dialog = PremadeGroupsFilterDialog
+    if expert then
     	dialog.MaximizeMinimizeFrame:Minimize()
         dialog.Difficulty:Hide()
         dialog.MPRating:Hide()

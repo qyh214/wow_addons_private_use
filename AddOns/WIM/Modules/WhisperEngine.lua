@@ -754,10 +754,10 @@ GetWhisperWindowByUser = getWhisperWindowByUser;
 
 
 -- define context menu
-local info = _G.UIDropDownMenu_CreateInfo();
+local info = {};
 info.text = "MENU_MSGBOX";
 local msgBoxMenu = AddContextMenu(info.text, info);
-        info = _G.UIDropDownMenu_CreateInfo();
+        info = {};
         info.text = WIM.L["Recently Sent Messages"];
         info.notCheckable = true;
         msgBoxMenu:AddSubItem(AddContextMenu("RECENT_LIST", info), 1);
@@ -768,7 +768,7 @@ local msgBoxMenu = AddContextMenu(info.text, info);
                 end
         end
         for i=1, maxRecent do
-            info = GetContextMenu("RECENT_LIST"..i) or _G.UIDropDownMenu_CreateInfo();
+            info = GetContextMenu("RECENT_LIST"..i) or {};
             info.txt = " ";
             info.hidden = true;
             info.notCheckable = true;
@@ -776,7 +776,7 @@ local msgBoxMenu = AddContextMenu(info.text, info);
         end
 
 local function recentMenuClick(self)
-        _G.CloseDropDownMenus();
+        libs.DropDownMenu.CloseDropDownMenus();
         if(MSG_CONTEXT_MENU_EDITBOX) then
                 if(_G.IsShiftKeyDown()) then
                         MSG_CONTEXT_MENU_EDITBOX:Insert(self.value);

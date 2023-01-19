@@ -44,10 +44,11 @@ aura_env.updateData()
 
 local LibGlow = LibStub("LibCustomGlow-1.0")
 
-local backdrop = { bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 } }
-local backdrop2 = { bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16, edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 2 }
 local fontMain = "Interface\\Addons\\ZerethMortisPuzzleHelper\\Media\\Fonts\\FiraMono-Medium.ttf" --dont change.
 local pathToMedia = "Interface\\Addons\\ZerethMortisPuzzleHelper\\Media\\"
+local backdrop = { bgFile = pathToMedia.."Textures\\UI-Tooltip-Background.blp", edgeFile = pathToMedia.."Textures\\UI-Tooltip-Border.blp", tile = 1, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 } }
+local backdrop2 = { bgFile = pathToMedia.."Textures\\UI-Tooltip-Background.blp", tile = true, tileSize = 16, edgeFile = pathToMedia.."Textures\\WHITE8X8.BLP", edgeSize = 2 }
+
 
 if aura_env.frame then
     aura_env.frame:Hide()
@@ -238,7 +239,7 @@ sliderHeadText:SetText("SCALE")
 
 local optionsVersionText =  aura_env.settingsFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 optionsVersionText:SetPoint("BOTTOM",  aura_env.settingsFrame, "BOTTOM", 0, 10)
-optionsVersionText:SetText("ZMPH 1.6.0")
+optionsVersionText:SetText("ZMPH 1.6.2")
 optionsVersionText:SetFont(fontMain, 12, "OUTLINE")
 
 local groupEnabled = CreateFrame('Frame', nil, aura_env.settingsFrame, 'BackdropTemplate')

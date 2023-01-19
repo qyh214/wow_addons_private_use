@@ -6,6 +6,7 @@ local format = format
 local pairs = pairs
 local strmatch = strmatch
 local strsplit = strsplit
+local strupper = strupper
 
 local BNConnected = BNConnected
 local BNet_GetClientAtlas = BNet_GetClientAtlas
@@ -16,15 +17,20 @@ local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 local C_ClassColor_GetClassColor = C_ClassColor.GetClassColor
 local C_FriendList_GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
 
-local FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND = FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND
-local FRIENDS_TEXTURE_OFFLINE, FRIENDS_TEXTURE_ONLINE = FRIENDS_TEXTURE_OFFLINE, FRIENDS_TEXTURE_ONLINE
-local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
-local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
-
+local BNET_FRIEND_TOOLTIP_WOW_CLASSIC = BNET_FRIEND_TOOLTIP_WOW_CLASSIC
+local FRIENDS_BUTTON_TYPE_BNET = FRIENDS_BUTTON_TYPE_BNET
 local FRIENDS_BUTTON_TYPE_DIVIDER = FRIENDS_BUTTON_TYPE_DIVIDER
 local FRIENDS_BUTTON_TYPE_WOW = FRIENDS_BUTTON_TYPE_WOW
-local FRIENDS_BUTTON_TYPE_BNET = FRIENDS_BUTTON_TYPE_BNET
-local BNET_FRIEND_TOOLTIP_WOW_CLASSIC = BNET_FRIEND_TOOLTIP_WOW_CLASSIC
+local FRIENDS_TEXTURE_AFK = FRIENDS_TEXTURE_AFK
+local FRIENDS_TEXTURE_DND = FRIENDS_TEXTURE_DND
+local FRIENDS_TEXTURE_OFFLINE = FRIENDS_TEXTURE_OFFLINE
+local FRIENDS_TEXTURE_ONLINE = FRIENDS_TEXTURE_ONLINE
+local LOCALIZED_CLASS_NAMES_FEMALE = LOCALIZED_CLASS_NAMES_FEMALE
+local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
+local WOW_PROJECT_BURNING_CRUSADE_CLASSIC = 5
+local WOW_PROJECT_CLASSIC = 2
+local WOW_PROJECT_MAINLINE = WOW_PROJECT_MAINLINE
+local WOW_PROJECT_WRATH_CLASSIC = 11
 
 local MediaPath = "Interface\\Addons\\ElvUI_WindTools\\Media\\FriendList\\"
 
@@ -127,7 +133,7 @@ for code, name in pairs(projectCodes) do
 end
 
 local expansionData = {
-    [1] = {
+    [WOW_PROJECT_MAINLINE] = {
         name = "Retail",
         suffix = nil,
         maxLevel = W.MaxLevelForPlayerExpansion,
@@ -136,7 +142,7 @@ local expansionData = {
             blizzard = BNet_GetClientAtlas("Battlenet-ClientIcon-", "WoW")
         }
     },
-    [2] = {
+    [WOW_PROJECT_CLASSIC] = {
         name = "Classic",
         suffix = "Classic",
         maxLevel = 60,
@@ -145,7 +151,7 @@ local expansionData = {
             blizzard = BNet_GetClientAtlas("Battlenet-ClientIcon-", "WoW")
         }
     },
-    [5] = {
+    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
         name = "TBC",
         suffix = "TBC",
         maxLevel = 70,
@@ -154,7 +160,7 @@ local expansionData = {
             blizzard = BNet_GetClientAtlas("Battlenet-ClientIcon-", "WoW")
         }
     },
-    [11] = {
+    [WOW_PROJECT_WRATH_CLASSIC] = {
         name = "WotLK",
         suffix = "WotLK",
         maxLevel = 80,
@@ -166,8 +172,8 @@ local expansionData = {
 }
 
 local factionIcons = {
-    ["Alliance"] = MediaPath .. "Alliance",
-    ["Horde"] = MediaPath .. "Horde"
+    ["Alliance"] = MediaPath .. "GameIcons\\Alliance",
+    ["Horde"] = MediaPath .. "GameIcons\\Horde"
 }
 
 local statusIcons = {
@@ -275,7 +281,7 @@ function FL:UpdateFriendButton(button)
             note = friendAccountInfo.note
 
             local gameAccountInfo = friendAccountInfo.gameAccountInfo
-            game = gameAccountInfo.clientProgram
+            gameCode = gameAccountInfo.clientProgram
             gameName = projectCodes[strupper(gameAccountInfo.clientProgram)]
 
             if gameAccountInfo.isOnline then
@@ -301,9 +307,8 @@ function FL:UpdateFriendButton(button)
                 isInCurrentRegion = gameAccountInfo.isInCurrentRegion or false
                 regionID = gameAccountInfo.regionID or false
 
-                if wowID and wowID ~= 1 then
-                    local expansion = expansionData[wowID]
-                    local suffix = expansion.suffix and " (" .. expansion.suffix .. ")" or ""
+                if wowID and wowID ~= 1 and expansionData[wowID] then
+                    local suffix = expansionData[wowID].suffix and " (" .. expansionData[wowID].suffix .. ")" or ""
                     local serverStrings = {strsplit(" - ", gameAccountInfo.richPresence)}
                     server = (serverStrings[#serverStrings] or BNET_FRIEND_TOOLTIP_WOW_CLASSIC .. suffix) .. "*"
                 else
@@ -315,10 +320,16 @@ function FL:UpdateFriendButton(button)
 
     -- Status icon
     if status then
-        button.status:SetTexture(statusIcons[self.db.textures.status][status])
+        local pack = self.db.textures.status
+        if statusIcons[pack] then
+            button.status:SetTexture(statusIcons[pack][status])
+        end
     end
 
-    if game and game ~= "" then
+    -- reset game icon with elvui style
+    button.gameIcon:SetTexCoord(.17, .83, .17, .83)
+
+    if gameName then
         local buttonTitle, buttonText
 
         -- override Real ID or name with note
@@ -331,7 +342,7 @@ function FL:UpdateFriendButton(button)
         end
 
         -- real ID
-        local clientColor = self.db.useClientColor and clientData[game] and clientData[game].color
+        local clientColor = self.db.useClientColor and clientData[gameName] and clientData[gameName].color
         local realIDString = realID and clientColor and F.CreateColorString(realID, clientColor) or realID
 
         -- name
@@ -372,6 +383,11 @@ function FL:UpdateFriendButton(button)
             button.info:SetText(buttonText)
         end
 
+        -- temporary fix for upgrading db from old version
+        if self.db.textures.client ~= "blizzard" then
+            self.db.textures.client = "modern"
+        end
+
         -- game icon
         local texOrAtlas = clientData[gameName] and clientData[gameName]["icon"][self.db.textures.client]
 
@@ -390,8 +406,8 @@ function FL:UpdateFriendButton(button)
                 button.gameIcon:SetAtlas(texOrAtlas)
             else
                 button.gameIcon:SetTexture(texOrAtlas)
+                button.gameIcon:SetTexCoord(.1, .9, .1, .9)
             end
-            button.gameIcon:SetAlpha(1)
         end
     else
         if self.db.useNoteAsName and note and note ~= "" then

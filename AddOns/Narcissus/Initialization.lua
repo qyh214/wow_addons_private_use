@@ -1,7 +1,7 @@
-NARCI_VERSION_INFO = "1.3.1";
+local NARCI_VERSION_INFO = "1.3.7";
 
-local VERSION_DATE = 1666856017;
-local CURRENT_VERSION = 10301;
+local VERSION_DATE = 1670851916;
+local CURRENT_VERSION = 10307;
 local PREVIOUS_VERSION = CURRENT_VERSION;
 local TIME_SINCE_LAST_UPDATE = 0;
 
@@ -74,7 +74,10 @@ local DefaultValues = {
     MissingEnchantAlert = false,                --Show alert if the item isn't enchanted
     TalentTreeForInspection = true,
     TalentTreeForPaperDoll = false,              --True on Beta for testing
+    TalentTreeForEquipmentManager = true,
+    TalentTreeAnchor = 1,                        --Relative Position 1.Right 2.Bottom
     TalentTreeUseClassBackground = false,
+    TalentTreeBiggerUI = false,
 
     --# NPC
     SearchRelatives = false,                    --Search for NPCs with the same last name
@@ -233,6 +236,13 @@ local function LoadSettings()
 end
 
 
+local CallbackList = {};
+local function AddFunctionToCallbackList(callback)
+    table.insert(CallbackList, callback);
+end
+addon.AddInitializationCallback = AddFunctionToCallbackList;
+
+
 local Initialization = CreateFrame("Frame");
 Initialization:RegisterEvent("ADDON_LOADED");
 Initialization:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -248,11 +258,20 @@ Initialization:SetScript("OnEvent",function(self,event,...)
         self:UnregisterEvent(event);
         self:SetScript("OnEvent", nil);
         LoadSettings();
+
+        for i, callback in ipairs(CallbackList) do
+            callback();
+        end
+        CallbackList = nil;
     end
 end);
 
 
-local function GetAddOnVersionInfo()
+local function GetAddOnVersionInfo(versionOnly)
+    if versionOnly then
+        return NARCI_VERSION_INFO
+    end
+
     local dateString;
     local timeString = date("%d %m %y", VERSION_DATE);
     local day, month, year = string.split(" ", timeString);

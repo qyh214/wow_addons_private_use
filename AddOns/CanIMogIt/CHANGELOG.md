@@ -1,8 +1,74 @@
+10.0.2v1.45 - 2022/12/02
+
+* [#290](https://gitlab.com/toreltwiddler/CanIMogIt/issues/290) Fixed bug with new databases trying to update.
+
+*****
+
+10.0.2v1.44 - 2022/11/29
+
+* [#292](https://gitlab.com/toreltwiddler/CanIMogIt/issues/292) Fixed error on Sets window.
+
+*****
+
+10.0.2v1.43 - 2022/11/27
+
+* [#291](https://gitlab.com/toreltwiddler/CanIMogIt/issues/291) Added a throttling to overlay OnUpdate functions.
+
+*****
+
+10.0.2v1.42 - 2022/11/16
+
+* [#289](https://gitlab.com/toreltwiddler/CanIMogIt/issues/289) Fixed Auctionator shopping tab not displaying CIMI icons.
+
+*****
+
+10.0.2v1.41 - 2022/11/16
+
+* [#287](https://gitlab.com/toreltwiddler/CanIMogIt/issues/287) Fixed Sets not displaying count correctly.
+
+*****
+
+10.0.2v1.40 - 2022/11/16
+
+* [#286](https://gitlab.com/toreltwiddler/CanIMogIt/issues/286) Fixed errors that occur when playing Evoker.
+
+*****
+
+10.0.2v1.39 - 2022/11/15
+
+* [#268](https://gitlab.com/toreltwiddler/CanIMogIt/issues/268) Fixed multiple issues related to how tooltips are handled.
+* [#269](https://gitlab.com/toreltwiddler/CanIMogIt/issues/269) Added overlay to the new Professions UI.
+* [#273](https://gitlab.com/toreltwiddler/CanIMogIt/issues/273) Fixed sets display in collection frame.
+* [#277](https://gitlab.com/toreltwiddler/CanIMogIt/issues/277) Fixed Guild bank overlay not loading.
+* [#281](https://gitlab.com/toreltwiddler/CanIMogIt/issues/281) Options now update all overlays immediately.
+* [#282](https://gitlab.com/toreltwiddler/CanIMogIt/issues/282) Fixed overlay not displaying on BMAH.
+
+*****
+
+10.0.0v1.38 - 2022/11/12
+
+* [#276](https://gitlab.com/toreltwiddler/CanIMogIt/issues/276) Actually fixes shopping frame error (my bad).
+
+*****
+
+10.0.0v1.37 - 2022/11/11
+
+* [#276](https://gitlab.com/toreltwiddler/CanIMogIt/issues/276) Fixes Shopping frame error with Auctionator (thanks to Reselsnark!)
+
+*****
+
+10.0.0v1.36 - 2022/10/29
+
+* [#267](https://gitlab.com/toreltwiddler/CanIMogIt/issues/267) Adventure Journal loot windows now work!.
+* [#269](https://gitlab.com/toreltwiddler/CanIMogIt/issues/269) Prevented the Trade Skill error, still a WIP.
+* [#271](https://gitlab.com/toreltwiddler/CanIMogIt/issues/271) Fixed small Saved Changes frame (thanks to dartraiden!).
+
+*****
+
 10.0.0v1.35 - 2022/10/25
 
 * [#267](https://gitlab.com/toreltwiddler/CanIMogIt/issues/267) Fixed AuctionHouse not error and display.
 * Also fixed the Sets window and Encounter Journal from erroring.
-
 
 *****
 

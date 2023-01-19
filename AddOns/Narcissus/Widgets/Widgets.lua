@@ -1248,6 +1248,13 @@ function NarciScrollEditBoxMixin:PostLoad()
     NarciAPI_SmoothScroll_Initialization(self.ScrollFrame, nil, nil, 2, 0.14);
 end
 
+function NarciScrollEditBoxMixin:SetFontObject(fontObject)
+    self.ScrollFrame.EditBox:SetFontObject(fontObject);
+end
+
+function NarciScrollEditBoxMixin:SetFontColor(r, g, b)
+    self.ScrollFrame.EditBox:SetTextColor(r, g, b);
+end
 
 --------------------------------------------------------------------------------------------------
 --Notes: Hide the frame if user clicks anywhere other than the frame itself or the switch used to open that frame.
@@ -1728,7 +1735,7 @@ function NarciGenericKeyBindingButtonMixin:VerifyKey(override)
     else
         local action = GetBindingAction(key);
         if (action and action ~= "" and action ~= self.actionName) and not override then
-            AnchorOverlayToBindingButton(self, 2, NARCI_OVERRIDE.." "..GetBindingName(action).." ?");
+            AnchorOverlayToBindingButton(self, 2, Narci.L["Override"].." "..GetBindingName(action).." ?");
             return true
         else
             ClearBindingKey(self.actionName);

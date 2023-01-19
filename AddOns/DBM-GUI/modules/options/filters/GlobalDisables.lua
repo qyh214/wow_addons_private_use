@@ -37,6 +37,7 @@ spamMisc:CreateCheckButton(L.SpamBlockNoHudMap, true, nil, "DontShowHudMap2")
 spamMisc:CreateCheckButton(L.SpamBlockNoNameplate, true, nil, "DontShowNameplateIcons")
 spamMisc:CreateCheckButton(L.SpamBlockNoYells, true, nil, "DontSendYells")
 spamMisc:CreateCheckButton(L.SpamBlockNoNoteSync, true, nil, "BlockNoteShare")
+spamMisc:CreateCheckButton(L.SpamBlockAutoGossip, true, nil, "DontAutoGossip")
 
 local spamRestoreArea = spamPanel:CreateArea(L.Area_Restore)
 spamRestoreArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
@@ -62,7 +63,7 @@ local interruptOptions = {
 local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
 	DBM.Options.FilterInterrupt2 = value
 end, 410)
-interruptDropDown:SetPoint("TOPLEFT", _G[FilterInterruptNote:GetName() .. "Text"], "BOTTOMLEFT", -26, -5)
+interruptDropDown:SetPoint("TOPLEFT", FilterInterruptNote, "BOTTOMLEFT", -15, -25)
 interruptDropDown.myheight = 50
 
 local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer)

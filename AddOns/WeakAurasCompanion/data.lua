@@ -1,6 +1,28 @@
-WeakAurasCompanionWagoData = {
-["ids"] = {  },
-["slugs"] = {  },
-["uids"] = {  },
-
+-- file generated automatically
+WeakAurasCompanion = {
+  slugs = {
+    ["TargetedSpells"] = {
+      name = [=[Targeted Spells]=],
+      author = [=[Buds]=],
+      encoded = [=[!WA:2!TMZwVTXXvhjMln02T2YjQUbPbBjALfRLzSKJvBuRBHOUzMilQSKYYP6ZLCVmK7gTC3nZSlLOdCbQqrqEw)eeq7lffOqiaTp0N0dPpvGPcb57Twa9urVGcOFb9CMz3LCfPODkkfe5SNZmN5C)CMzhPXyTgZCm2mlsApM5N820oLB0Grcg5uMhn4ED0P2Mv10DiJ7NRQgTjjGyQuXN44WuAq9AP0wJA7fYucDTdywhA72WJ2slW2ZDc)Rz301Jsk7JpYwQnXnyjk1JYQFimldIacR(PAUgwE0LPATiv74t0RSG6slT2(AU2sknBXwA2Ulxmaqw01ZLCSzivGPgcIYigEUMS9iAmbb4x6iCyLakXTzG1lPYc0OblZVi)s8Vk)RXVm87vEj9g2U2mRZcw1XULDWf2NrCASUNTBG(clTw1LuNjK64Ryfe4ZM7nFZD0A6vW27nJ1jsvYBEN91OgRk21FX4(x1iKf41AEH4ToHUbOJg1)YHmskq1P7gP01rYwAX9F)BUY7w6d(W128qDpQjHUGNJh9DgzKrYCGeWsMnj(xPYhgQrjklh64OSPLDaH2gugGA5c7b7XQOCyrLArI1XAHbWEgzmYotOT5HKoR9W2ZVsRLRERdAauzbBQHdP(bbEgru6AJ8XhCSwVC7(BSwPQlRo)9xAVMOZbOVZPUOoybAy3m7bSqDvstXweXRvSFm5fOGjOztcDKC2MNEghjvMVMbzeDMxi4uOB3YhC9k2K6TZb3RSAPFs51Qo)QNcwcc1vZ5bsg7j6sQBTh1lq4laeG0cyB1PlmDHzorIUOMX2MupF)lx0X(XpwJAQu1ZZjW2xLzO5qYCKCEsdWlVpksBABgyDbGU7ubzSmfXqb(LoSb6GcovAbAx6aQqirP)iZoUATSnago0xNQzAhY(fx8a0L0wQRp0WZjSLRKAundb0zlcUFbz5JLLF1ShgPIr)n(4rw9sUalLPOJNMzd6Jb3(sMSrlY8jgJR2keKHSfzGUDC(6zvnC0ymCKEaivUb4W9bNGAcewQAoqSiF89cO2OzG9AtSFOB0dzPrd(49yObb2MS8lQQbXyZueJR19D06akwcgVQFpIMtG1bMe9Wgnqfa9ElT66lVXQNa2EXuQaiS39WAlmFLQ1QuDE1QjOwNsauQvwFPvxvfuBew2tanf4D4gSmOz8O6QZVyPnQSVqDwcWDTrF(GJ1JSJYiHmzYSEMBv4ohyqqVcHp4QQJ1(ZF4ygV2NCd(OJaShtlaZsqS4VWe8x0I)sw8flAdeKNDw(foBypFS(GC1Zc50Tje)5rdqGk6YzXVn)ToYa8Nm92XfJjToa3Gkch5x)54V(i854)aEH5gNFXJbvakfOC5A(f730XBNePjJ4XvTDjSRuehADey8wjEk13dHHI5X6HbbEULb)CWMCSaSLTX2Wczz4xKcBcc7ab5e5HEvX4IYGfX2ur44Fio89Js8iE4HrpiO6YuYhgsCn6S(ZFRcZCNp519)wbKDdQj(sMJVMFTa7wKA(uIHngtMX)B03CmIgWVK)vfWH0qEyADdrywX5HhpqectQcOlUw51wkkHtm)maQ6hnqfzatFLZJ1A5zwd9bQFCes3aHhB5nQUAP1wYFmbyMLMzxDXrcyTbjck7v3)BFE02H0uZOtTgoEEuRtLtWExIm9Xp3)n6BDGtUX2SU6J(fRUi3pHF9V8Yu7hR8EHAMyMhLQvLm4ha1wSB0HpUu02bmWBs183BZObNifT4QyfNFJQLhatfjmYNgz)e85(ogrMHy9I)L7rz1TIue4EsGDeODxsTwXYvRw((hiWAK4Ol9rrG(5ppMjkHAnO6fHzbrxDszOs8tt0ryjMRUxCGyDDlIDtRG88BoXbYwqQaQH671GAtCnD6yX)M83qTlp5pgeSTq0QVVNPkM1W)vIPh6xUOnd7cYSo)79KIp2ZR1iQ7G25883Lpop3f4FD(14tCy736NuUzd7snFp)IOJEDiXRVLwg(cz4o1p00MHPsJZQXx51Mq1WIyS9Y6IFyV2Y588ZD37YFyM9WoRW9KgLuwTTMtirF63(7FN3(o8ho1Zfn1dZvwLAyP52KWMBI98HSKeAqhSsCHzkGXY8pT(e8F3PDbiSE8p9DYmY9(Xhng(5pKbMXrioqyf1z5F6dezfQjRxvemeY0kXgZ79J9V8LvEUN7gjdYCcwXP7CQFQySOUPOtn(nejGKJBFGS9iu96xTrORyFMS2uD)tgXKpRc8XUHI8rfnxZ4H)iLPvcSiUkucKS3ngmyLZc)FCSfSYo2(K688y3muBxS3gOSW9BWxBuEzSuj)9eFRk(UssXtxOMf1IxAw(7mHUKBhDFtVAYHw8XML)zJsbaIu28)Of)QtCILTjPMMJJaiRoc9b)(xC0j4BML)WVGVf))7u56FqKbMT7iZ(rczmUTwL7Qeqdjtjas213wcUkeCKcvK42lixFJsMaejbfev60bWYTMVHsPfZnvco0qGiCdBPtOriEseXLUDNhTe9U9mskrVB0qO1tqCppcwQ3jnacRdgZyYk(o7t4141HA0FgxJRZ)SDh7pL4fb6)kynf2ukI(oMsjQhN1cBLmwoJe3lXevUlSvLxVAPYRvjNW3kHrC8GcNkT02f4giBLvbO3AtVwtE78kjZbsKPyd4NEkXen9sW0Lc9yL7LmtFN8PMCIiSvGhd4y3MtAN)rP0EXFWM0qvKSpTE0DXFsCu6DdNnF)tShElEy)tQppYvib4OjZRCJHSmS1iu1C7zMz6z6hnK4QjKVNvnYElkTpazbZREpiglLBFkHfYuDUiLjknhi(N01oIzqIhhLBbNVmG0Hra3LUouOpJRTJcy73KOT98GgGvOel6OwL9jUGMjLRKKKz7DNYkLnQwnIB7cX9Pd8z)WG95JEYGN)wD5k0vzbp)oIJVp5aC5fFDZBc(eBtu0GJZdfBvcWzR41qzhlTGU(GOsn0XurxQcKoYEHb(HOJxe3Go)NBygKeqXxZMYMSpMoFVXjir2M0j9Q7U40YXzdWU5nFa4z2CrsB8uE1M30CrONPulAkWZQNhNlxHcD55cfYHBoce(j)acELhsDdzaxVeQqxmdkMNWcg0IIHpODkj)B6Trco1cWAJD5lS(4aPlIyseAj311GweMmEw5rxkjcvnBZbaNHFNaFQKun5Z3)oKyFL3jqH42UqI56ferWLfqNmjNvpsWGikUWZs4U92LM0cE9zGWPcjhKzELnkTiO)XLIdNShkDoRd1qNDvjAZ(Zi2O3nk2UjEyG8wFohZeiUkL3LGvqJGvOqmrg26frv3nkeER(i3Jg4Ab(f1YYfFUCy3DjUze4uiWzMNCwWweaTZ6aMNRFZRpvVcpyaV(1ZN)Cj45YOdSG4akoM47o0jl5imT7hTvxU7rrLlEYtzXXvzN(PmVKi7OrdF6r1ntLfaHn8vLQxYEZ4CU1NhAj(u0in2Htjdnwquj9u0ig(tr2ptNJPvc9IC40j2tmWt2F6KcaI8B3A4R8zTTKVuTO8m3UssRjded2jY5UKEdwJkoXs5tlo4eu)NTTTpoB4zH1szhnMc0MKjCEx5L8R5Q4bytQU)0IcoNn8UD7H6PS44aPupEdLPhUVsJH5LQ8dJO2zap00yPzRVmbfpJK8PfLo8GuxZSFzXni4NfwVphpo(3ZPdlz6zOVa5G0DvLFyRSNtQLlz8GxVuNXeU1qdHrTFUJTJd0xk0tDlV2KKgr3EkL290ZzmLt1Yy7cT0OBVShvvS2EDq7kVkH(My9UUCxoypdSumXRJteFej1qVg4nedNudOd4YkBJ22WkMXT0mXyjjb7PrAn3olioxcWbn0IdQrPOV6Dtfj2NPTyjWucx3ZpoWIMdfD3ty0FlddBHzt7DFwTlEijqHA65E9Gi7fCWdjH3bZgzhCDg2aUIntAHbH6mSr3dW1vtfRTAytCmb7oErzNv3i45(oWaKZqSiLFgKAxMRkxsIrz)Lr9eiN3aBHdP8wc0pcPJC7p38kPME0Sh4etFu1)RIAJ4Wyk1hpjntdzJ61ZmfY(ZlOGx8vSNElBgdJdaJqoHvm3xQatGNpBSzF8E7crvot7hir9)gr6zpHLIwJa84qdDHXBmUW4Xrlj6ogsaJxFj3GBkFRzm)RuvT0kRSK6CZm3TN7TM7oZnl)r8FkNK9q5DjkUs1dfkFz2f(7NL)B5pAc(MJZ3AF8nTbNhca)WVyV4AlJnT)44TC65UHyjy3XYxnBD8I1W3HCTqX7No0vWg8Fds1T4)5O3SONlPo)rfxa6zGFraoElCKSiBNCzN6YCdi98VI42HjUeQTrfW0v2To)ZRVVilYAadoYXPqEct8t89YJ7WXifsMpS38)FXD3xttN5rfVzY77zsQFsxyINpMcyQKSpc2xKHUUKrBd8bFl1gEGYejQ4Ef)R15)f82f3Q35uu3J9uMIQgL4Q1)CWB))de3pzBYmGH2)kAIXvL15qgnd)78DBxeoPIH)1qLGODmgMVKOO3rr8kr5)6mZazi5)k(f1d8A20HqbXzryn1lIM5Jflm(m3utsdTqNaR28)M)RSOiXRiSb0OsQd0J)35)sGd)h8)zD()6WsYSE4XQ5)765Sn5pp)v5JZ)k8xgFVj)N)]=],
+      wagoVersion = [=[5]=],
+      wagoSemver = [=[1.1.2-5]=],
+      versionNote = [=[Fix Spell condition not working, added Thunderous Bolt from HoV as an example]=],
+    },
+  },
+  uids = {
+    ["eyNXvAGmFT0"] = [=[TargetedSpells]=],
+  },
+  ids = {
+    ["DL Dungeon - Targeted Spells"] = [=[TargetedSpells]=],
+    ["Targeted Spells from various units"] = [=[TargetedSpells]=],
+  },
+  stash = { },
+  Plater = {
+    slugs = {
+    },
+    uids = { },
+    ids = {
+    }
+  }
 }

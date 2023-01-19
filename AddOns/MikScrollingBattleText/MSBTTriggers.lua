@@ -883,6 +883,7 @@ powerTypes["INSANITY"] = Enum.PowerType.Insanity
 powerTypes["ARCANE_CHARGES"] = Enum.PowerType.ArcaneCharges
 powerTypes["FURY"] = Enum.PowerType.Fury
 powerTypes["PAIN"] = Enum.PowerType.Pain
+powerTypes["ESSENCE"] = Enum.PowerType.Essence
 
 -------------------------------------------------------------------------------
 -- Module interface.

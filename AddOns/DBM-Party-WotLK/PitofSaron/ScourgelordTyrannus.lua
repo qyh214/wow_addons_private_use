@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20220119220635")
+mod:SetRevision("20230117063410")
 mod:SetCreatureID(36658, 36661)
 mod:SetEncounterID(2000)
 mod:DisableESCombatDetection()
@@ -21,6 +21,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 69167",
 	"SPELL_CAST_SUCCESS 69155",
 	"SPELL_AURA_APPLIED 69172",
+	"SPELL_AURA_REMOVED 69172",
 	"SPELL_PERIODIC_DAMAGE 69238",
 	"SPELL_PERIODIC_MISSED 69238",
 	"CHAT_MSG_RAID_BOSS_EMOTE",

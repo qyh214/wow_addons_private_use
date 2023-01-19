@@ -2,6 +2,11 @@ if not WeakAuras.IsLibsOK() then return end
 local AddonName, OptionsPrivate = ...
 
 local L = WeakAuras.L
+local GetAtlasInfo = C_Texture and C_Texture.GetAtlasInfo or GetAtlasInfo
+
+local function IsAtlas(input)
+  return type(input) == "string" and GetAtlasInfo(input) ~= nil
+end
 
 local function createOptions(id, data)
   local options = {
@@ -22,94 +27,77 @@ local function createOptions(id, data)
         OptionsPrivate.OpenTexturePicker(data, {}, {
           texture = "texture",
           color = "color",
-          rotate = "rotate",
-          discrete_rotation = "discrete_rotation",
-          rotation = "rotation",
           mirror = "mirror",
           blendMode = "blendMode"
-        }, OptionsPrivate.Private.texture_types);
+        }, OptionsPrivate.Private.texture_types, nil, true)
       end,
       imageWidth = 24,
       imageHeight = 24,
       control = "WeakAurasIcon",
       image = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\browse",
     },
-    desaturate = {
-      type = "toggle",
-      width = WeakAuras.normalWidth,
-      name = L["Desaturate"],
-      order = 2,
-    },
-    space2 = {
-      type = "execute",
-      name = "",
-      width = WeakAuras.normalWidth,
-      order = 5,
-      image = function() return "", 0, 0 end,
-    },
     color = {
       type = "color",
       width = WeakAuras.normalWidth,
       name = L["Color"],
       hasAlpha = true,
-      order = 10
+      order = 2
+    },
+    desaturate = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = L["Desaturate"],
+      order = 3,
+    },
+    alpha = {
+      type = "range",
+      control = "WeakAurasSpinBox",
+      width = WeakAuras.normalWidth,
+      name = L["Alpha"],
+      order = 4,
+      min = 0,
+      max = 1,
+      bigStep = 0.01,
+      isPercent = true
     },
     blendMode = {
       type = "select",
       width = WeakAuras.normalWidth,
       name = L["Blend Mode"],
-      order = 12,
+      order = 5,
       values = OptionsPrivate.Private.blend_types
     },
     mirror = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Mirror"],
-      order = 20
+      order = 6
     },
-    alpha = {
-      type = "range",
+    textureWrapMode = {
+      type = "select",
       width = WeakAuras.normalWidth,
-      name = L["Alpha"],
-      order = 25,
-      min = 0,
-      max = 1,
-      bigStep = 0.01,
-      isPercent = true
+      name = L["Texture Wrap"],
+      order = 7,
+      values = OptionsPrivate.Private.texture_wrap_types,
+      hidden = IsAtlas(data.texture)
     },
     rotate = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Allow Full Rotation"],
-      order = 30
+      order = 8,
+      hidden = IsAtlas(data.texture)
     },
     rotation = {
       type = "range",
+      control = "WeakAurasSpinBox",
       width = WeakAuras.normalWidth,
       name = L["Rotation"],
       min = 0,
       max = 360,
       step = 1,
       bigStep = 3,
-      order = 35,
-      hidden = function() return not data.rotate end
-    },
-    discrete_rotation = {
-      type = "range",
-      width = WeakAuras.normalWidth,
-      name = L["Discrete Rotation"],
-      min = 0,
-      max = 360,
-      step = 90,
-      order = 35,
-      hidden = function() return data.rotate end
-    },
-    textureWrapMode = {
-      type = "select",
-      width = WeakAuras.normalWidth,
-      name = L["Texture Wrap"],
-      order = 36,
-      values = OptionsPrivate.Private.texture_wrap_types
+      order = 9,
     },
     endHeader = {
       type = "header",
@@ -141,6 +129,16 @@ local function createThumbnail()
   return borderframe;
 end
 
+local SQRT2 = sqrt(2)
+local function GetRotatedPoints(degrees, scaleForFullRotate)
+  local angle = rad(135 - degrees);
+  local factor = scaleForFullRotate and 1 or SQRT2
+  local vx = math.cos(angle) / factor
+  local vy = math.sin(angle) / factor
+
+  return 0.5+vx,0.5-vy , 0.5-vy,0.5-vx , 0.5+vy,0.5+vx , 0.5-vx,0.5+vy
+end
+
 local function modifyThumbnail(parent, region, data, fullModify, size)
   size = size or 30;
   local scale;
@@ -158,24 +156,7 @@ local function modifyThumbnail(parent, region, data, fullModify, size)
   region.texture:SetVertexColor(data.color[1], data.color[2], data.color[3], data.color[4]);
   region.texture:SetBlendMode(data.blendMode);
 
-  local ulx,uly , llx,lly , urx,ury , lrx,lry;
-  if(data.rotate) then
-    local angle = rad(135 - data.rotation);
-    local vx = math.cos(angle);
-    local vy = math.sin(angle);
-
-    ulx,uly , llx,lly , urx,ury , lrx,lry = 0.5+vx,0.5-vy , 0.5-vy,0.5-vx , 0.5+vy,0.5+vx , 0.5-vx,0.5+vy;
-  else
-    if(data.discrete_rotation == 0 or data.discrete_rotation == 360) then
-      ulx,uly , llx,lly , urx,ury , lrx,lry = 0,0 , 0,1 , 1,0 , 1,1;
-    elseif(data.discrete_rotation == 90) then
-      ulx,uly , llx,lly , urx,ury , lrx,lry = 1,0 , 0,0 , 1,1 , 0,1;
-    elseif(data.discrete_rotation == 180) then
-      ulx,uly , llx,lly , urx,ury , lrx,lry = 1,1 , 1,0 , 0,1 , 0,0;
-    elseif(data.discrete_rotation == 270) then
-      ulx,uly , llx,lly , urx,ury , lrx,lry = 0,1 , 1,1 , 0,0 , 1,0;
-    end
-  end
+  local ulx,uly , llx,lly , urx,ury , lrx,lry = GetRotatedPoints(data.rotation, data.rotate)
   if(data.mirror) then
     region.texture:SetTexCoord(urx,ury , lrx,lry , ulx,uly , llx,lly);
   else
@@ -252,4 +233,5 @@ if WeakAuras.IsClassic() then
   table.remove(templates, 2)
 end
 
-WeakAuras.RegisterRegionOptions("texture", createOptions, createIcon, L["Texture"], createThumbnail, modifyThumbnail, L["Shows a custom texture"], templates);
+WeakAuras.RegisterRegionOptions("texture", createOptions, createIcon, L["Texture"], createThumbnail, modifyThumbnail,
+                                L["Shows a custom texture"], templates);

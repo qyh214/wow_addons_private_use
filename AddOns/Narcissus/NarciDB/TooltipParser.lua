@@ -148,6 +148,21 @@ local PATTERN_CLASS_REQUIREMENT = Pattern_WrapSpace(ITEM_CLASSES_ALLOWED);
 local PATTERN_AMMO_DPS = gsub(AMMO_DAMAGE_TEMPLATE, "%%s", "([%%d.]+)");
 local PATTERN_PROFESSION_QUALITY = Pattern_WrapSpace(PROFESSIONS_CRAFTING_QUALITY or "Quality: %s");
 
+local SOCKET_TYPE_TEXTURE =	{
+    Yellow = "Yellow",
+    Red = "Red",
+    Blue = "Blue",
+    Hydraulic = "HYDRAULIC",
+    Cogwheel = "COGWHEEL",
+    Meta = "meta",
+    Prismatic = "prismatic",
+    PunchcardRed = "PunchcardRed",
+    PunchcardYellow = "PunchcardYellow",
+    PunchcardBlue = "PunchcardBlue",
+    Domination = "Domination",
+    Cypher = "META",
+    Tinker = "PunchcardRed",
+};
 
 do
     if TEXT_LOCALE == "zhCN" then
@@ -463,7 +478,7 @@ local function GetItemEnchantText(itemLink, colorized)
                     if colorized then
                         enchantText = "|cff5fbd6b"..enchantText.."|r";
                     end
-                    return enchantText
+                    return ReformatCraftingQualityText(enchantText)
                 end
             end
         else
@@ -760,6 +775,7 @@ local function GetGemBonusFromGem(gem)
     requiredItemLevel = tonumber(requiredItemLevel);
 
     if bonusText then
+        bonusText = ReformatCraftingQualityText(bonusText);
         GEM_BONUS_CACHE[gem] = {bonusText, requiredItemLevel};
     end
 
@@ -870,6 +886,7 @@ local function GetCompleteItemData(tooltipData, itemLink)
     local data, anyMatch;
     local socketOrderID = 0;
     local qualityFound;
+    local requestSubData;
 
     for i = 2, numLines do
         if not processed[i] then
@@ -899,7 +916,6 @@ local function GetCompleteItemData(tooltipData, itemLink)
                         end
                     end
                 end
-
 
                 if i >= 4 and not anyMatch then
                     --effects
@@ -997,12 +1013,20 @@ local function GetCompleteItemData(tooltipData, itemLink)
                                 gemEffect = lines[i].args[2].stringVal;
                                 gemEffect = RemoveColorString(gemEffect);
                                 gemEffect = ReformatCraftingQualityText(gemEffect, true);
+                                if not requestSubData then
+                                    if gemEffect and gemEffect == "" then
+                                        requestSubData = true;
+                                    end
+                                end
                             else
-                                icon = "Interface\\ItemSocketingFrame\\UI-EmptySocket-"..socketType;
+                                local textureKit = SOCKET_TYPE_TEXTURE[socketType] or "Prismatic";
+                                icon = "Interface\\ItemSocketingFrame\\UI-EmptySocket-"..textureKit;
                                 gemName = lines[i].args[2].stringVal;   --Empty X Socket
                                 gemEffect = gemName;
                             end
                             data.socketInfo[socketOrderID] = {icon, gemName, gemLink, gemEffect};
+
+                            DT = lines[i]
                         end
                     end
                 end
@@ -1092,7 +1116,7 @@ local function GetCompleteItemData(tooltipData, itemLink)
         end
     end
 
-    return data
+    return data, requestSubData
 end
 
 local function ClearTooltipTexture()
@@ -1262,10 +1286,12 @@ local function GetItemSocketInfo(itemLink)
             if not socektInfo then
                 socektInfo = {};
             end
+            socketType = lines[i].args[4].stringVal;
             if not socektInfo[gemOrderID] then
-                socketType = lines[i].args[4].stringVal;
                 socketName = lines[i].args[2].stringVal;
-                socektInfo[gemOrderID] = {socketName, "Interface\\ItemSocketingFrame\\UI-EmptySocket-"..socketType};
+                socektInfo[gemOrderID] = {socketName, "Interface\\ItemSocketingFrame\\UI-EmptySocket-"..socketType, nil, socketType};
+            else
+                socektInfo[gemOrderID][4] = socketType;
             end
         end
     end
@@ -1458,6 +1484,46 @@ local function GetPvpTalentTooltip(talentID, isInspecting, specGroupIndex, slotI
 end
 
 NarciAPI.GetPvpTalentTooltip = GetPvpTalentTooltip;
+
+
+local function GetBagItemSubText(bag, slot)
+    if not (bag and slot) then return end;
+
+    local tooltipData = GetInfoByBagItem(bag, slot);
+    if tooltipData then
+        return GetLineText(tooltipData.lines, 2) or ""
+    end
+end
+
+NarciAPI.GetBagItemSubText = GetBagItemSubText;
+
+
+local function GetCreatureName(creatureID)
+    if not creatureID then return end;
+    local tooltipData = GetInfoByHyperlink("unit:Creature-0-0-0-0-"..creatureID);
+    if tooltipData then
+        return GetLineText(tooltipData.lines, 1);
+    end
+end
+
+NarciAPI.GetCreatureName = GetCreatureName;
+
+local function GetDominationShardEffect(item)
+    if not item then return end;
+
+    local tooltipData;
+    if type(item) == "number" then
+        tooltipData = GetInfoByItemID(item);
+    else
+        tooltipData = GetInfoByHyperlink(item);
+    end
+    DT = tooltipData
+    if tooltipData then
+        return GetLineText(tooltipData.lines, 5);
+    end
+end
+
+NarciAPI.GetDominationShardEffect = GetDominationShardEffect;
 
 
 --]]

@@ -67,7 +67,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("UldamanLegacyofTyrTrash")
 
 L:SetGeneralLocalization({
-	name =	"울다만: 유산 일반몹"
+	name =	"울다만: 티르의 유산 일반몹"
 })
 
 -----------------------
@@ -101,6 +101,10 @@ L = DBM:GetModLocalization("TheNokhudOffensiveTrash")
 
 L:SetGeneralLocalization({
 	name =	"노쿠드 공격대 일반몹"
+})
+
+L:SetMiscLocalization({
+	Soul = "영혼"
 })
 
 -----------------------
@@ -146,12 +150,21 @@ L:SetGeneralLocalization({
 -----------------------
 -- Vexamus --
 -----------------------
---L= DBM:GetModLocalization(2509)
+L= DBM:GetModLocalization(2509)
+
+L:SetMiscLocalization({
+	VexRP		= "아! 수업 자료가 여기 있었네. 어흠! 아주 먼 옛날, 푸른용군단의 구성원들이 실수로 비전 정령을 과부하시킨 적 있었답니다. 그 결과 벡사무스라는 강력한 피조물이 탄생해 난동을 부리기 시작했죠!"
+})
+
 
 -----------------------
 -- Overgrown Ancient --
 -----------------------
---L= DBM:GetModLocalization(2512)
+L= DBM:GetModLocalization(2512)
+
+L:SetMiscLocalization({
+	TreeRP	= "완벽해요. 이제 곧... 잠깐, 이치스트라즈 님! 생명 마법이 너무 과하잖아요! 뭐 하시는 거예요?"
+})
 
 -----------------------
 -- Echo of Doragosa --
@@ -164,7 +177,11 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("AlgetharAcademyTrash")
 
 L:SetGeneralLocalization({
-	name =	"알게스라 대학 일반몹"
+	name =	"알게타르 대학 일반몹"
+})
+
+L:SetOptionLocalization({
+	AGBuffs		= "용군단 NPC에게 말을 걸면 버프 받기 대화 자동 선택"
 })
 
 -----------------------
@@ -199,6 +216,10 @@ L:SetGeneralLocalization({
 	name =	"하늘빛 보관소 일반몹"
 })
 
+L:SetOptionLocalization({
+	AGBook			= "책을 클릭하면 순간이동 대화 자동 선택"
+})
+
 -----------------------
 -- <<<Ruby Life Pools>>> --
 -----------------------
@@ -215,7 +236,14 @@ L:SetGeneralLocalization({
 -----------------------
 -- Kyrakka and Erkhart Stormvein --
 -----------------------
---L= DBM:GetModLocalization(2503)
+L= DBM:GetModLocalization(2503)
+
+L:SetMiscLocalization({
+	North	= "북쪽",
+	West	= "서쪽",
+	South	= "남쪽",
+	East	= "동쪽"
+})
 
 ---------
 --Trash--

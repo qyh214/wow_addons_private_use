@@ -45,7 +45,7 @@ L:SetMiscLocalization({
 L = DBM:GetModLocalization(857)
 
 L:SetOptionLocalization({
-	BeaconArrow	= "Показывать стрелку DBM когда на ком-то $spell:144473"
+	BeaconArrow	= "Показывать стрелку DBM, когда на ком-то $spell:144473"
 })
 
 L:SetMiscLocalization({
