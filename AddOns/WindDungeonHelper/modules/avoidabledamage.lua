@@ -708,14 +708,19 @@ function AD:OnInitialize()
 end
 
 function AD:PLAYER_ENTERING_WORLD(event, isLogin, isReload)
-    if isLogin or isReload then
-        C_Timer_After(
-            5,
-            function()
-                self:ResetAuthority()
-            end
-        )
-    end
+    C_Timer_After(
+        4,
+        function()
+            self:ResetAuthority()
+        end
+    )
+
+    C_Timer_After(
+        10,
+        function()
+            self:ResetAuthority()
+        end
+    )
 end
 
 function AD:ZONE_CHANGED_NEW_AREA()

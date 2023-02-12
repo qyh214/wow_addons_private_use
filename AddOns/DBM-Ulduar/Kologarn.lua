@@ -1,9 +1,13 @@
 local mod	= DBM:NewMod("Kologarn", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701215737")
+mod:SetRevision("20230120193044")
 mod:SetCreatureID(32930)--, 32933, 32934
-mod:SetEncounterID(1137)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1137)
+else
+	mod:SetEncounterID(749)
+end
 mod:SetModelID(28638)
 mod:SetUsedIcons(5, 6, 7, 8)
 mod:SetMinSyncRevision(20191109000000)
@@ -19,7 +23,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 63783 63982 63346 63976",
 	"RAID_BOSS_WHISPER",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
 --NOTE: Two crunch armors are setup to appear in gui twice on purpose, because they are very different mechanically. One is meant to be ignored and one is meant to be tank swap
@@ -31,7 +35,6 @@ local specWarnCrunchArmor2		= mod:NewSpecialWarningStack(64002, nil, 2, nil, 2, 
 local specWarnEyebeam			= mod:NewSpecialWarningRun(63346, nil, nil, nil, 4, 2)
 local yellBeam					= mod:NewYell(63346)
 
-local timerCrunch10             = mod:NewTargetTimer(6, 63355)
 local timerNextSmash			= mod:NewCDTimer(20.4, 64003, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerNextShockwave		= mod:NewCDTimer(15.9, 63982, nil, nil, nil, 2)--15.9-20
 local timerNextEyebeam			= mod:NewCDTimer(18.2, 63346, nil, nil, nil, 3)
@@ -59,6 +62,9 @@ function mod:OnCombatStart(delay)
 	timerNextSmash:Start(10-delay)
 	timerNextEyebeam:Start(11-delay)
 	timerNextShockwave:Start(15.7-delay)
+	if self:IsClassic() then
+		DBM:AddMsg("Note: Eye beam targetting is disabled by Blizzard in classic, the settings for these features will not function in pre nerf state")
+	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
@@ -122,7 +128,7 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if (spellId == 63346 or spellId == 63976) and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
+	if (spellId == 63346 or spellId == 63976) and destGUID == UnitGUID("player") and self:AntiSpam(2, 3) then
 		specWarnEyebeam:Show()
 	end
 end
@@ -151,8 +157,17 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 63983 then--Arm Sweep
-		timerNextShockwave:Start()
+		self:SendSync("Shockwave")
 	elseif spellId == 63342 then--Focused Eyebeam Summon Trigger
+		self:SendSync("Eyebeam")
+	end
+end
+
+function mod:OnSync(event, args)
+	if not self:IsInCombat() then return end
+	if event == "Shockwave" then
+		timerNextShockwave:Start()
+	elseif event == "Eyebeam" then
 		timerNextEyebeam:Start()
 	end
 end

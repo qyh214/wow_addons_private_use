@@ -116,7 +116,7 @@ do
         188892, 188894, 188896, 188893, 188898,     --DH
         188847, 188853, 188851, 188848, 188849,     --Druid
         188859, 188861, 188860, 188856, 188858,     --Hunter
-        188844, 188845, 188839, 188842, 188843,     --Mage
+        188844, 188845, 188839, 188842, 188843,     --Magepi
         188916, 188911, 188910, 188914, 188912,     --Monk
         188933, 188931, 188932, 188929, 188928,     --Paladin
         188880, 188879, 188881, 188875, 188878,     --Priest
@@ -141,10 +141,80 @@ end
 NarciAPI.GetBorderArtByItemID = GetBorderArtByItemID;
 
 
---------------------------------------------------------------------------------------------------
-local pi = math.pi;
+---- Gem Border ----
+local gemBorderTexture = {
+    filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Dark/",
+	[0]  = "White",			--Empty
+	[1]  = "Primary",	--Kraken's Eye
+	[2]  = "Green",
+	[3]  = "Primary",	--Prismatic
+	[4]  = "Primary",	--Meta
+	[5]  = "Orange",	--Orange
+	[6]  = "Purple",
+    [7]  = "Yellow",	--Yellow
+	[8]  = "Blue",		--Blue
+	[9]  = "Black",	--(Other Type)
+	[10] = "Red",		--Red
+	[11] = "White",			--Artifact
+    [12] = "Crystallic",
+};
 
---ModelScene for Item Borders
+local specialGemBoder = {
+    [153714] = 10,
+    [173125] = 10,
+    [153715] = 2,
+    [169220] = 2,
+    [173126] = 2,
+    [168636] = 1,
+    [168637] = 1,
+    [168638] = 1,
+    [153707] = 1,
+    [153708] = 1,
+    [153709] = 1,
+    [189723] = 12,
+    [189722] = 12,
+    [189732] = 12,
+    [189560] = 12,
+    [189763] = 12,
+    [189724] = 12,
+    [189725] = 12,
+    [189726] = 12,
+    [189762] = 12,
+    [189727] = 12,
+    [189728] = 12,
+    [189729] = 12,
+    [189730] = 12,
+    [189731] = 12,
+    [189764] = 12,
+    [189733] = 12,
+    [189734] = 12,
+    [189760] = 12,
+    [189761] = 12,
+    [189735] = 12,
+};
+
+local function GetGemBorderTexture(itemSubClassID, itemID)
+    local index = (itemID and specialGemBoder[itemID]) or itemSubClassID or 0;
+    return gemBorderTexture.filePrefix..gemBorderTexture[index], index
+end
+
+local function SetBorderTheme(theme)
+    --1.1.2 Override
+    theme = "Dark";
+
+    if theme == "Bright" then
+        gemBorderTexture.filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Bright/";
+    elseif theme == "Dark" then
+        gemBorderTexture.filePrefix = "Interface/AddOns/Narcissus/Art/GemBorder/Dark/";
+    end
+end
+
+NarciAPI.SetBorderTheme = SetBorderTheme;
+NarciAPI.GetGemBorderTexture = GetGemBorderTexture;
+
+
+---- Item Border Visual (ModelScene) ----
+local PI = math.pi;
 local VFXContainer = CreateFrame("Frame", "NarciItemVFXContainer");
 
 function VFXContainer:AcquireAndSetModelScene(parentFrame, effectName)
@@ -306,25 +376,25 @@ function NarciItemVFXMixin:SetUp(modelSceneInfo, useCustomPosition)
     local actorPitch, actorYaw = 0, 0;
     if view then
         if type(view) == "string" then
-            view = strupper(view);
+            view = string.upper(view);
             if view == "FRONT" then
                 actorPitch = 0;
-                actorYaw = pi;
+                actorYaw = PI;
             elseif view == "BACK" then
                 actorPitch = 0;
                 actorYaw = 0;
             elseif view == "TOP" then
-                actorPitch = pi/2;
-                actorYaw = pi; 
+                actorPitch = PI/2;
+                actorYaw = PI; 
             elseif view == "BOTTOM" then
-                actorPitch = -pi/2;
-                actorYaw = pi;
+                actorPitch = -PI/2;
+                actorYaw = PI;
             elseif view == "LEFT" then
                 actorPitch = 0;
-                actorYaw = -pi/2;
+                actorYaw = -PI/2;
             elseif view == "RIGHT" then
                 actorPitch = 0;
-                actorYaw = pi/2;
+                actorYaw = PI/2;
             end
         elseif type(view) == "table" then
             actorPitch = view[1] or actorPitch;

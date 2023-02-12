@@ -1,44 +1,10 @@
 ------------------------------------------------------------------------
-r565 | Zimzarina | 2022-11-28 17:46:59 +0000 (Mon, 28 Nov 2022) | 1 line
+r571 | Zimzarina | 2023-01-25 02:55:57 +0000 (Wed, 25 Jan 2023) | 2 lines
 Changed paths:
-   M /trunk/Modules/Rake.lua
+   M /trunk/Postal.lua
+   M /trunk/Postal.toc
 
-Added comment.
-------------------------------------------------------------------------
-r564 | Zimzarina | 2022-11-28 17:46:17 +0000 (Mon, 28 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/TradeBlock.lua
-
-Added comment.
-------------------------------------------------------------------------
-r563 | Zimzarina | 2022-11-28 17:37:00 +0000 (Mon, 28 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/BlackBook.lua
-
-Moved BlackBook.lua to fully use the new event system in WoW 10.0 release.
-------------------------------------------------------------------------
-r562 | Zimzarina | 2022-11-28 17:20:42 +0000 (Mon, 28 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/Express.lua
-
-Moved Express.lua to fully use the new event system in WoW 10.0 release.
-------------------------------------------------------------------------
-r561 | Zimzarina | 2022-11-28 17:06:05 +0000 (Mon, 28 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/Select.lua
-
-Added comments
-------------------------------------------------------------------------
-r560 | Zimzarina | 2022-11-28 07:15:59 +0000 (Mon, 28 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/OpenAll.lua
-
-Moved OpenAll.lua to fully use the new event system in WoW 10.0 release.
-------------------------------------------------------------------------
-r559 | Zimzarina | 2022-11-27 20:10:08 +0000 (Sun, 27 Nov 2022) | 1 line
-Changed paths:
-   M /trunk/Modules/Select.lua
-
-Moved Select.lua to fully use the new event system in WoW 10.0 release.
+TOC update for Retail
+Fixed MiniMap issue caused by Blizzard object name change (Issue #328)
 ------------------------------------------------------------------------
 

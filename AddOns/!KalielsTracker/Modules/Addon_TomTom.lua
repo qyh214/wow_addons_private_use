@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -175,7 +175,7 @@ local function SetSuperTrackedQuestWaypoint(questID, force)
 	if questID ~= superTrackedQuestID or force then
 		RemoveWaypoint(superTrackedQuestID)
 		if QuestUtils_IsQuestWatched(questID) or KT.activeTasks[questID] then
-			if AddWaypoint(questID) then
+			if AddWaypoint(questID, force) then
 				superTrackedQuestID = questID
 			end
 		end
@@ -273,8 +273,10 @@ local function SetFrames()
 				self:UnregisterEvent(event)
 			elseif event == "QUEST_WATCH_UPDATE" then
 				local questID = ...
-				if questID == superTrackedQuestID and questID == C_SuperTrack.GetSuperTrackedQuestID() then
-					SetSuperTrackedQuestWaypoint(questID, true)
+				if questID == C_SuperTrack.GetSuperTrackedQuestID() then
+					C_Timer.After(0, function()
+						SetSuperTrackedQuestWaypoint(questID, true)
+					end)
 				end
 			end
 		end)
@@ -290,10 +292,10 @@ end
 function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
-	self.isLoaded = (KT:CheckAddOn("TomTom", "3.3.5-release") and db.addonTomTom)
+	self.isLoaded = (KT:CheckAddOn("TomTom", "v3.3.5-release") and db.addonTomTom)
 
 	if self.isLoaded then
-		KT:Alert_IncompatibleAddon("TomTom", "3.3.5-release")
+		KT:Alert_IncompatibleAddon("TomTom", "v3.3.5-release")
 	end
 
 	local defaults = KT:MergeTables({

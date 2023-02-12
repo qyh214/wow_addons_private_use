@@ -38,6 +38,8 @@ local function IsArtifactRelic(item)
 end
 
 --[[
+    Enum.TooltipDataLineType
+
     GameTooltip Color Scheme
     1, 0.13, 0.13  --red
     0, 1, 0     --green
@@ -137,6 +139,7 @@ local TEXT_SPELL_PASSIVE = SPELL_PASSIVE or "Passive";
 local TEXT_SPELL_COOLDOWN = L["Find Cooldown"];
 local TEXT_SPELL_RECHARGE = L["Find Recharge"];
 local TEXT_REPLACES_SPELL = TrimWhiteSpace(REPLACES_SPELL or "Replaces %s");
+local TEXT_COSMETIC = ITEM_COSMETIC or "Cosmetic";
 
 local SET_BONUS = TrimWhiteSpace(ITEM_SET_BONUS);          --"Set: %s"     --SET_BONUS_GRAY
 local SOCKET_BONUS = TrimWhiteSpace(ITEM_SOCKET_BONUS);    --Socket Bonus: %s
@@ -147,6 +150,7 @@ local PATTERN_ITEM_SET_NAME = "(.+) %((%d+)/(%d+)%)";   --Pattern_WrapNumber( Pa
 local PATTERN_CLASS_REQUIREMENT = Pattern_WrapSpace(ITEM_CLASSES_ALLOWED);
 local PATTERN_AMMO_DPS = gsub(AMMO_DAMAGE_TEMPLATE, "%%s", "([%%d.]+)");
 local PATTERN_PROFESSION_QUALITY = Pattern_WrapSpace(PROFESSIONS_CRAFTING_QUALITY or "Quality: %s");
+local PATTERN_ITEM_LEVEL = ITEM_LEVEL or "Item Level";
 
 local SOCKET_TYPE_TEXTURE =	{
     Yellow = "Yellow",
@@ -464,23 +468,30 @@ local function GetItemEnchantText(itemLink, colorized)
 
     local lines = tooltipData.lines;
     local numLines = #lines;
+
+    if numLines < 5 then return end;
+
     local lineText;
     local enchantText;
     local enchantFormat = ITEM_ENCHANT_FORMAT;
+
     for i = 5, numLines do
-        lineText = GetLineText(lines, i);
-        if lineText then
-            enchantText = match(lineText, enchantFormat);
-            if enchantText then
-                enchantText = strtrim(enchantText);
-                if enchantText ~= "" then
-                    --print(enchantText)
-                    if colorized then
-                        enchantText = "|cff5fbd6b"..enchantText.."|r";
+        if lines[i][4] and lines[i][4].field == "enchantID" then
+            lineText = GetLineText(lines, i);
+            if lineText then
+                enchantText = match(lineText, enchantFormat);
+                if enchantText then
+                    enchantText = strtrim(enchantText);
+                    if enchantText ~= "" then
+                        print(enchantText)
+                        if colorized then
+                            enchantText = "|cff5fbd6b"..enchantText.."|r";
+                        end
+                        return ReformatCraftingQualityText(enchantText)
                     end
-                    return ReformatCraftingQualityText(enchantText)
                 end
             end
+            return
         else
             return
         end
@@ -503,11 +514,11 @@ local function GetEnchantTextByItemLink(itemLink, colorized, isRight)
 
     local _, _, _, linkType, linkID, enchantID = split(":|H", itemLink);
 
-    if enchantID then
+    if enchantID and enchantID ~= "" then
         local tooltipData = GetInfoByHyperlink("item:2092:"..enchantID);
         if not tooltipData then return end;
 
-        local enchantText = GetLineText(tooltipData.lines, 7);
+        local enchantText = GetLineText(tooltipData.lines, 8);  --DF:Moved to line #8
         if enchantText and enchantText ~= "" then
             --remove "Enchanted:"
             local effect = match(enchantText, ITEM_ENCHANT_FORMAT);
@@ -1025,8 +1036,6 @@ local function GetCompleteItemData(tooltipData, itemLink)
                                 gemEffect = gemName;
                             end
                             data.socketInfo[socketOrderID] = {icon, gemName, gemLink, gemEffect};
-
-                            DT = lines[i]
                         end
                     end
                 end
@@ -1229,6 +1238,8 @@ local function IsItemSocketable(itemLink, socketID)
     return nil, nil;
 end
 NarciAPI.IsItemSocketable = IsItemSocketable;
+
+
 
 --[[
     --Interface / SharedXML / Tooltip / TooltipDataRules.lua
@@ -1517,7 +1528,7 @@ local function GetDominationShardEffect(item)
     else
         tooltipData = GetInfoByHyperlink(item);
     end
-    DT = tooltipData
+
     if tooltipData then
         return GetLineText(tooltipData.lines, 5);
     end
@@ -1525,12 +1536,89 @@ end
 
 NarciAPI.GetDominationShardEffect = GetDominationShardEffect;
 
+local function SurfaceItemArgs(item)
+    if not item then return end;
 
---]]
+    local tooltipData;
+    if type(item) == "number" then
+        tooltipData = GetInfoByItemID(item);
+    else
+        tooltipData = GetInfoByHyperlink(item);
+    end
+
+    if not tooltipData then return end;
+
+    local surfaceArgs = {};
+
+    for i, lineData in ipairs(tooltipData.lines) do
+        surfaceArgs[i] = {};
+        for j, arg in ipairs(lineData.args) do
+		    surfaceArgs[i][arg.field] = arg.stringVal or arg.intVal or arg.floatVal or arg.boolVal or arg.colorVal or arg.guidVal;
+        end
+	end
+
+    return surfaceArgs
+end
+
+local ITEM_REQUIREMENT_INCLUDE_LINES = {
+    [21] = true,    --Enum.TooltipDataLineType.RestrictedRaceClass
+    [22] = true,    --Enum.TooltipDataLineType.RestrictedFaction
+    [23] = true,    --Enum.TooltipDataLineType.RestrictedSkill
+    [24] = true,    --Enum.TooltipDataLineType.RestrictedPvPMedal
+    [25] = true,    --Enum.TooltipDataLineType.RestrictedReputation
+    --[26] = true,      --Enum.TooltipDataLineType.RestrictedSpellKnown Already Known
+    [27] = true,    --Enum.TooltipDataLineType.RestrictedLevel
+    [28] = true,    --Enum.TooltipDataLineType.EquipSlot
+};
+
+
+local function GetItemRequirement(item)
+    local surfaceArgs = SurfaceItemArgs(item);
+
+    if surfaceArgs then
+        local data = {};
+        local index = 0;
+        local leftText, rightText;
+        local lineTypeEquipSlot = 28;   --Enum.TooltipDataLineType.EquipSlot
+
+        for i, arg in ipairs(surfaceArgs) do
+            if ITEM_REQUIREMENT_INCLUDE_LINES[arg.type] then
+                leftText = arg.leftText;
+                if leftText then
+                    --print(arg.type, leftText)
+                    rightText = arg.rightText;
+                    if arg.type == lineTypeEquipSlot and ( not (arg.isValidInvSlot and arg.isValidItemType) ) and rightText then
+                        leftText = "|cffff2121"..leftText.."|r";
+                        rightText = "|cffff2121"..rightText.."|r";
+                    else
+                        if arg.leftColor then
+                            leftText = arg.leftColor:WrapTextInColorCode(leftText);
+                        end
+
+                        if rightText and arg.rightColor then
+                            rightText = arg.leftColor:WrapTextInColorCode(rightText);
+                        end
+                    end
+
+                    if rightText then
+                        leftText = leftText .. " " .. rightText;
+                    end
+
+                    index = index + 1;
+                    data[index] = leftText;
+                end
+            end
+        end
+
+        return data
+    end
+end
+
+NarciAPI.GetItemRequirement = GetItemRequirement;
+
+
 
 --[[
-Dragflight: C_TooltipInfo Performance Test
-
 function Professions.GetIconForQuality(quality, small)
     if small then
         return ("Professions-Icon-Quality-Tier%d-Small"):format(quality);

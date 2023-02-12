@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220724003246")
+mod:SetRevision("20230120193044")
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
@@ -49,9 +49,8 @@ local surgeTargets = {}
 local function buildGuidTable()
 	table.wipe(guids)
 	for uId in DBM:GetGroupMembers() do
-		local name, server = UnitName(uId)
-		local fullName = name .. (server and server ~= "" and ("-" .. server) or "")
-		guids[UnitGUID(uId.."pet") or "none"] = fullName
+		local name = DBM:GetUnitFullName(uId)
+		guids[UnitGUID(uId.."pet") or "none"] = name
 	end
 	tableBuild = true
 end

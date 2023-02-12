@@ -51,6 +51,7 @@ KT_OBJECTIVE_TRACKER_UPDATE_MODULE_ACHIEVEMENT			= 0x08000;
 KT_OBJECTIVE_TRACKER_UPDATE_SCENARIO_SPELLS				= 0x10000;
 KT_OBJECTIVE_TRACKER_UPDATE_MODULE_UI_WIDGETS			= 0x20000;
 KT_OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE	= 0x40000;
+KT_OBJECTIVE_TRACKER_UPDATE_MODULE_MONTHLY_ACTIVITIES	= 0x100000;  -- fix Blizz bug (0x80000)
 
 -- special updates
 KT_OBJECTIVE_TRACKER_UPDATE_STATIC						= 0x0000;
@@ -440,22 +441,25 @@ function KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButt
 end
 
 function KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderEnter(block)
-	block.isHighlighted = true;
-	if ( block.HeaderText ) then
-		local headerColorStyle = KT_OBJECTIVE_TRACKER_COLOR["HeaderHighlight"];
-		block.HeaderText:SetTextColor(headerColorStyle.r, headerColorStyle.g, headerColorStyle.b);
-		block.HeaderText.colorStyle = headerColorStyle;
-	end
-	for objectiveKey, line in pairs(block.lines) do
-		local colorStyle = line.Text.colorStyle.reverse;
-		if ( colorStyle ) then
-			line.Text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b);
-			line.Text.colorStyle = colorStyle;
-			if ( line.Dash ) then
-				line.Dash:SetTextColor(KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].r, KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].g, KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].b);
+	--block.isHighlighted = true;  -- MSA
+	if not block.isHighlighted then  -- MSA
+		if ( block.HeaderText ) then
+			local headerColorStyle = KT_OBJECTIVE_TRACKER_COLOR["HeaderHighlight"];
+			block.HeaderText:SetTextColor(headerColorStyle.r, headerColorStyle.g, headerColorStyle.b);
+			block.HeaderText.colorStyle = headerColorStyle;
+		end
+		for objectiveKey, line in pairs(block.lines) do
+			local colorStyle = line.Text.colorStyle.reverse;
+			if ( colorStyle ) then
+				line.Text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b);
+				line.Text.colorStyle = colorStyle;
+				if ( line.Dash ) then
+					line.Dash:SetTextColor(KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].r, KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].g, KT_OBJECTIVE_TRACKER_COLOR["NormalHighlight"].b);
+				end
 			end
 		end
-	end
+		block.isHighlighted = true;  -- MSA
+	end  -- MSA
 end
 
 function KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderLeave(block)
@@ -807,6 +811,7 @@ function KT_ObjectiveTracker_Initialize(self)
 						KT_QUEST_TRACKER_MODULE,
 						KT_ACHIEVEMENT_TRACKER_MODULE,
 						KT_PROFESSION_RECIPE_TRACKER_MODULE,
+						KT_MONTHLY_ACTIVITIES_TRACKER_MODULE,
 	};
 	self.MODULES_UI_ORDER = {	KT_SCENARIO_CONTENT_TRACKER_MODULE,
 								KT_UI_WIDGET_TRACKER_MODULE,
@@ -816,10 +821,13 @@ function KT_ObjectiveTracker_Initialize(self)
 								KT_WORLD_QUEST_TRACKER_MODULE,
 								KT_ACHIEVEMENT_TRACKER_MODULE,
 								KT_PROFESSION_RECIPE_TRACKER_MODULE,
+								KT_MONTHLY_ACTIVITIES_TRACKER_MODULE,
 	};
 
 	self:RegisterEvent("QUEST_LOG_UPDATE");
 	self:RegisterEvent("TRACKED_ACHIEVEMENT_LIST_CHANGED");
+	self:RegisterEvent("PERKS_ACTIVITIES_TRACKED_UPDATED");
+	self:RegisterEvent("PERKS_ACTIVITY_COMPLETED");
 	self:RegisterEvent("QUEST_WATCH_LIST_CHANGED");
 	self:RegisterEvent("QUEST_AUTOCOMPLETE");
 	self:RegisterEvent("QUEST_ACCEPTED");
@@ -856,6 +864,10 @@ function KT_ObjectiveTracker_OnEvent(self, event, ...)
 		KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_QUEST);
 	elseif ( event == "TRACKED_ACHIEVEMENT_UPDATE" ) then
 		KT_AchievementObjectiveTracker_OnAchievementUpdate(...);
+	elseif ( event == "PERKS_ACTIVITIES_TRACKED_UPDATED" ) then
+		KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_MONTHLY_ACTIVITIES);
+	elseif ( event == "PERKS_ACTIVITY_COMPLETED" ) then
+		KT_MonthlyActivitiesObjectiveTracker_OnActivityCompleted(...);
 	elseif ( event == "QUEST_ACCEPTED" ) then
 		local questID = ...;
 		if ( not C_QuestLog.IsQuestBounty(questID) ) then

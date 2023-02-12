@@ -52,6 +52,10 @@ L['magicbound_chest'] = '마법결속 보관함'
 L['options_icons_magicbound_chest'] = '마법결속 보관함'
 L['options_icons_magicbound_chest_desc'] = '마법결속 보관함의 위치를 표시합니다.'
 
+L['tuskarr_tacklebox'] = nil
+L['options_icons_tuskarr_tacklebox'] = nil
+L['options_icons_tuskarr_tacklebox_desc'] = nil
+
 L['dr_best'] = '개인 최고 기록:\n - 일반: %.3f초\n - 고급: %.3f초'
 L['dr_best_dash'] = '개인 최고 기록:\n - %.3f초'
 L['dr_note'] = '목표 시간:\n - 일반: %s초 / %s초\n - 고급: %s초 / %s초'
@@ -86,7 +90,7 @@ L['signal_transmitter_note'] = nil
 L['options_icons_signal_transmitter'] = '지룡 구멍 생성기 신호 송신기'
 L['options_icons_signal_transmitter_desc'] = '{item:198156}를 이용하기 위한 {object:비활성화된 신호 송신기} 위치를 표시합니다.'
 
-L['spawns_hourly'] = '매시각 정시에 출몰할 가능성이 있습니다.'
+L['spawns_periodically'] = '매시각 정시에 출몰할 가능성이 있습니다.'
 L['spawns_at_night'] = '저녁에만 출몰합니다. (서버 시각 기준 18:30)'
 
 L['elemental_storm'] = nil
@@ -120,6 +124,7 @@ L['options_icons_elemental_storm_desc'] = nil
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
 
+L['bisquis_note'] = '{location:이스카라} 의 공동체 잔치에서 전설의 수프를 요리한 후 {npc:197557} 처치'
 L['blightfur_note'] = '{npc:193633}에게 말을 걸어 소환합니다.'
 L['brackenhide_rare_note'] = '{npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} 순서로 10분 단위로 젠됩니다.'
 L['fisherman_tinnak_note'] = '{object:망가진 낚싯대}, {object:찢어진 낚시 그물}, {object:오래된 작살}을 모두 수집하면 생성됩니다.'
@@ -169,17 +174,19 @@ L['snowclaw_cub_note_end'] = nil
 
 L['tome_of_polymoph_duck'] = nil
 
-L['temperamental_skyclaw_note'] = [[
-다음을 수집하세요. (경매장에서 거래 가능):
-
-{item:201420} 20개
-{item:201421} 20개
-{item:201422} 20개
-
-{npc:190892}에게 말을 걸어 안장을 얹은 슬라이번에 대해 물어보고 수집한 "간식"을 줍니다.
-]]
+L['temperamental_skyclaw_note_start'] = '다음을 수집하세요. (경매장에서 거래 가능):'
+L['temperamental_skyclaw_note_end'] = '{npc:190892}에게 말을 걸어 안장을 얹은 슬라이번에 대해 물어보고 수집한 "간식"을 줍니다.'
 
 L['elder_poa_note'] = '{item:200071}을 반납하여 {faction:2511} 평판을 획득합니다.'
+
+L['artists_easel_note_step1'] = nil
+L['artists_easel_note_step2'] = nil
+L['artists_easel_note_step3'] = nil
+L['artists_easel_note_step4'] = nil
+
+L['somewhat_stabilized_arcana_note'] = nil
+
+L['stranded_soul_note'] = nil
 
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
@@ -203,14 +210,30 @@ L['porta_the_overgrown_note'] = nil
 L['scaleseeker_mezeri_note'] = nil
 L['shade_of_grief_note'] = '{npc:193166}를 클릭하면 소환됩니다.'
 L['windscale_the_stormborn_note'] = nil
+L['windseeker_avash_note'] = '주변의 {npc:195742} 또는 {npc:187916}를 잡다보면 소환됩니다.'
 L['zarizz_note'] = '{npc:193169} 네마리가 있는 상태에서 {emote:/야유} 하면 소환됩니다.'
 
-L['gold_swong_coin_note'] = '동굴 안 {npc:191608} 오른편에 있음'
+L['aylaag_outpost_note'] = nil
+L['eaglewatch_outpost_note'] = nil
+L['river_camp_note'] = nil
 
+L['defend_clan_aylaag'] = nil
+L['defend_clan_aylaag_note'] = nil
+
+L['gold_swong_coin_note'] = '동굴 안 {npc:191608} 오른편에 있음'
 L['nokhud_warspear_note'] = '{item:194540}은 {object:원정대 정찰병의 짐} 또는 {object:흐트러진 흙}에서 얻을 수 있습니다.'
 L['slightly_chewed_duck_egg_note'] = '{npc:192997}를 찾아 쓰다듬으면 {item:195453}를 얻게 되는데 이를 사용합니다. {item:199171}은 3일이 지나면 {item:199172}로 부화합니다.'
 L['yennus_boat'] = '투스카르 장난감 배'
 L['yennus_boat_note'] = '{object:투스카르 장난감 배}를 클릭하여 {item:200876}를 습득하면, 이를 {npc:195252}에게 돌려주는 {quest:72063} 퀘스트를 시작할 수 있게 됩니다.'
+
+L['forgotten_dragon_treasure_label'] = nil
+L['forgotten_dragon_treasure_step1'] = nil
+L['forgotten_dragon_treasure_step2'] = nil
+L['forgotten_dragon_treasure_step3'] = nil
+L['forgotten_dragon_treasure_step4'] = nil
+L['fdt_crystalline_flower'] = nil
+L['fdt_ancient_stone'] = nil
+L['fdt_emerald_chest'] = nil
 
 L['pm_ench_shalasar_glimmerdusk'] = '부서진 탑의 2층에 있습니다.'
 L['pm_herb_hua_greenpaw'] = nil
@@ -268,6 +291,8 @@ L['options_icons_nokhud_do_it_desc'] = nil
 
 L['chest_of_the_flood'] = nil
 
+L['aylaag_camp_note'] = nil
+
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
 -------------------------------------------------------------------------------
@@ -323,6 +348,13 @@ L['lillian_brightmoon_note'] = '{item:201412}을 반납하여 {faction:2507} 평
 
 L['chest_of_the_elements'] = nil
 
+L['hoard_of_draconic_delicacies_note_start'] = nil
+L['hoard_of_draconic_delicacies_note_end'] = nil
+
+L['brendormi_note_start'] = nil
+L['brendormi_note_item'] = nil
+L['brendormi_note_currency'] = nil
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -341,6 +373,10 @@ L['bubble_drifter_note'] = '{item:199061}는 {object:원정대 정찰병의 짐}
 L['dead_mans_chestplate_note'] = '탑 내부 중간층에 있음'
 L['fullsails_supply_chest_note'] = nil
 L['golden_dragon_goblet_note'] = nil
+L['lost_obsidian_cache'] = nil
+L['lost_obsidian_cache_step1'] = nil
+L['lost_obsidian_cache_step2'] = nil
+L['lost_obsidian_cache_step3'] = nil
 L['misty_treasure_chest_note'] = nil
 L['onyx_gem_cluster_note'] = nil
 L['torn_riding_pack_note'] = '폭포 꼭대기에 위치.'
@@ -350,9 +386,9 @@ L['fullsails_supply_chest'] = '풀세일 보급품 상자'
 L['hidden_hornswog_hoard_note'] = [[
 {npc:192362} 주변에 있는 {object:"관찰의 수수께끼: 현장 지침서"}에 적힌 세가지 아이템을 구하여 {item:200063}을 조합한 후 먹이로 줍니다. 간식을 먹고나면 옆으로 비켜줘서 전리품을 획득할 수 있게 됩니다.
 
-{item:200064}
-{item:200065}
-{item:200066}
+{item:200064}{dot:Yellow}
+{item:200065}{dot:Blue}
+{item:200066}{dot:White}
 ]]
 
 L['pm_alch_grigori_vialtry'] = '{location:섬광서리 강습지}가 내려다보이는 난간에 있음.'
@@ -423,3 +459,21 @@ L['options_icons_safari_desc'] = '{achievement:16519} 업적을 위한 전투애
 L['shyfly_note'] = '{npc:189102}를 보려면 {quest:70853} 퀘스트 중이어야 합니다.'
 
 L['cataloger_jakes_note'] = '{item:192055}을 반납하여 {faction:2507} 평판을 획득합니다.'
+
+L['snack_attack_suffix'] = nil
+L['snack_attack_note'] = nil
+L['options_icons_snack_attack'] = '{achievement:16410}'
+L['options_icons_snack_attack_desc'] = nil
+
+L['loyal_magmammoth_step_1'] = nil
+L['loyal_magmammoth_step_2'] = nil
+L['loyal_magmammoth_step_3'] = nil
+L['loyal_magmammoth_true_friend'] = nil
+L['loyal_magmammoth_wrathion_quatermaster_note'] = nil
+L['loyal_magmammoth_sabellian_quatermaster_note'] = nil
+L['loyal_magmammoth_harness_note'] = nil
+L['loyal_magmammoth_taming_note'] = nil
+
+L['djaradin_cache'] = nil
+L['options_icons_djaradin_cache'] = nil
+L['options_icons_djaradin_cache_desc'] = nil

@@ -1,9 +1,13 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701220005")
+mod:SetRevision("20230120193044")
 mod:SetCreatureID(33293)
-mod:SetEncounterID(1142)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1142)
+else
+	mod:SetEncounterID(747)
+end
 mod:SetModelID(28611)
 mod:SetUsedIcons(1, 2)
 
@@ -46,7 +50,7 @@ mod:AddSetIconOption("SetIconOnLightBombTarget", 65121, true, true, {1})
 mod:AddSetIconOption("SetIconOnGravityBombTarget", 64234, true, true, {2})
 
 function mod:OnCombatStart(delay)
-	enrageTimer:Start(-delay)
+	enrageTimer:Start(self:IsClassic() and 360 or 600-delay)
 	timerAchieve:Start()
 	timerTympanicTantrumCD:Start(30-delay)
 
@@ -65,7 +69,7 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 62776 then	-- Tympanic Tantrum
-		timerTympanicTantrum:Start()
+		timerTympanicTantrum:Start(self:IsClassic() and 12 or 8)
 	elseif args:IsSpellID(63018, 65121) then 	-- Light Bomb
 		if args:IsPlayer() then
 			specWarnLightBomb:Show()

@@ -433,57 +433,91 @@ function RSConfigDB.SetShowingNpcs(value)
 end
 
 function RSConfigDB.IsNpcFiltered(npcID)
-	if (npcID) then
-		return private.db.general.filteredRares[npcID]
+	local filterType = RSConfigDB.GetNpcFiltered(npcID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALL) then
+		return true
 	end
+	
+	return false
+end
 
+function RSConfigDB.IsNpcFilteredOnlyWorldmap(npcID)
+	local filterType = RSConfigDB.GetNpcFiltered(npcID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_WORLDMAP) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsNpcFilteredOnlyAlerts(npcID)
+	local filterType = RSConfigDB.GetNpcFiltered(npcID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALERTS) then
+		return true
+	end
+	
 	return false
 end
 
 function RSConfigDB.GetNpcFiltered(npcID)
+	if (npcID and private.db.rareFilters.filteredNpcs and private.db.rareFilters.filteredNpcs[npcID]) then
+		return private.db.rareFilters.filteredNpcs[npcID]
+	end
+	
+	return nil
+end
+
+function RSConfigDB.SetNpcFiltered(npcID, filterType)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.SetNpcFiltered [%s][%s]", npcID, filterType or ""))
+	if (not private.db.rareFilters.filteredNpcs) then
+		private.db.rareFilters.filteredNpcs = {}
+	end
+	
 	if (npcID) then
-		local value = private.db.general.filteredRares[npcID]
-		if (not value) then
-			return true
+		if (filterType) then
+			private.db.rareFilters.filteredNpcs[npcID] = filterType
 		else
-			return false
+			private.db.rareFilters.filteredNpcs[npcID] = RSConfigDB.GetDefaultNpcFilter()
 		end
 	end
 end
 
-function RSConfigDB.SetNpcFiltered(npcID, value)
-	if (npcID) then
-		if (value == false) then
-			private.db.general.filteredRares[npcID] = true
-		else
-			private.db.general.filteredRares[npcID] = nil
-		end
+function RSConfigDB.DeleteNpcFiltered(npcID)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.DeleteNpcFiltered [%s]", npcID))
+	if (npcID and private.db.rareFilters.filteredNpcs and private.db.rareFilters.filteredNpcs[npcID]) then
+		private.db.rareFilters.filteredNpcs[npcID] = nil
+	end
+	
+	if (RSUtils.GetTableLength(private.db.rareFilters.filteredNpcs) == 0) then
+		private.db.rareFilters.filteredNpcs = nil
 	end
 end
 
-function RSConfigDB.FilterAllNPCs(routines, routineTextOutput)
-	local filterAllNPCsRoutine = RSRoutines.LoopRoutineNew()
-	filterAllNPCsRoutine:Init(RSNpcDB.GetAllInternalNpcInfo, 500, 
+function RSConfigDB.SetDefaultNpcFilter(filterType)
+	if (filterType) then
+		private.db.rareFilters.defaultNpcFilterType = filterType
+	end
+end
+
+function RSConfigDB.GetDefaultNpcFilter()
+	return private.db.rareFilters.defaultNpcFilterType
+end
+
+function RSConfigDB.FilterAllNpcs(routines, routineTextOutput)
+	local filterAllNpcsRoutine = RSRoutines.LoopRoutineNew()
+	filterAllNpcsRoutine:Init(RSNpcDB.GetAllInternalNpcInfo, 500, 
 		function(context, npcID, _)
-			RSConfigDB.SetNpcFiltered(npcID, false)
+			RSConfigDB.SetNpcFiltered(npcID)
 		end,
 		function(context)
-			RSLogger:PrintDebugMessage("FilterAllNPCs. Filtrados todos los NPCs")
+			RSLogger:PrintDebugMessage("FilterAllNpcs. Filtrados todos los NPCs")
 			
 			if (routineTextOutput) then
 				routineTextOutput:SetText(AL["EXPLORER_FILTERING_NPCS"])
 			end
 		end
 	)
-	table.insert(routines, filterAllNPCsRoutine)
-end
-
-function RSConfigDB.IsNpcFilteredOnlyOnWorldMap()
-	return private.db.rareFilters.filterOnlyMap
-end
-
-function RSConfigDB.SetNpcFilteredOnlyOnWorldMap(value)
-	private.db.rareFilters.filterOnlyMap = value
+	table.insert(routines, filterAllNpcsRoutine)
 end
 
 function RSConfigDB.IsShowingFriendlyNpcs()
@@ -577,39 +611,81 @@ function RSConfigDB.SetShowingContainers(value)
 end
 
 function RSConfigDB.IsContainerFiltered(containerID)
-	if (containerID) then
-		return private.db.general.filteredContainers[containerID]
+	local filterType = RSConfigDB.GetContainerFiltered(containerID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALL) then
+		return true
 	end
+	
+	return false
+end
 
+function RSConfigDB.IsContainerFilteredOnlyWorldmap(containerID)
+	local filterType = RSConfigDB.GetContainerFiltered(containerID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_WORLDMAP) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsContainerFilteredOnlyAlerts(containerID)
+	local filterType = RSConfigDB.GetContainerFiltered(containerID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALERTS) then
+		return true
+	end
+	
 	return false
 end
 
 function RSConfigDB.GetContainerFiltered(containerID)
+	if (containerID and private.db.containerFilters.filteredContainers and private.db.containerFilters.filteredContainers[containerID]) then
+		return private.db.containerFilters.filteredContainers[containerID]
+	end
+	
+	return nil
+end
+
+function RSConfigDB.SetContainerFiltered(containerID, filterType)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.SetContainerFiltered [%s][%s]", containerID, filterType or ""))
+	if (not private.db.containerFilters.filteredContainers) then
+		private.db.containerFilters.filteredContainers = {}
+	end
+	
 	if (containerID) then
-		local value = private.db.general.filteredContainers[containerID]
-		if (not value) then
-			return true
+		if (filterType) then
+			private.db.containerFilters.filteredContainers[containerID] = filterType
 		else
-			return false
+			private.db.containerFilters.filteredContainers[containerID] = RSConfigDB.GetDefaultContainerFilter()
 		end
 	end
 end
 
-function RSConfigDB.SetContainerFiltered(containerID, value)
-	if (containerID) then
-		if (value == false) then
-			private.db.general.filteredContainers[containerID] = true
-		else
-			private.db.general.filteredContainers[containerID] = nil
-		end
+function RSConfigDB.DeleteContainerFiltered(containerID)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.DeleteContainerFiltered [%s]", containerID))
+	if (containerID and private.db.containerFilters.filteredContainers and private.db.containerFilters.filteredContainers[containerID]) then
+		private.db.containerFilters.filteredContainers[containerID] = nil
 	end
+	
+	if (RSUtils.GetTableLength(private.db.containerFilters.filteredContainers) == 0) then
+		private.db.containerFilters.filteredContainers = nil
+	end
+end
+
+function RSConfigDB.SetDefaultContainerFilter(filterType)
+	if (filterType) then
+		private.db.containerFilters.defaultContainerFilterType = filterType
+	end
+end
+
+function RSConfigDB.GetDefaultContainerFilter()
+	return private.db.containerFilters.defaultContainerFilterType
 end
 
 function RSConfigDB.FilterAllContainers(routines, routineTextOutput)
 	local filterAllContainersRoutine = RSRoutines.LoopRoutineNew()
 	filterAllContainersRoutine:Init(RSContainerDB.GetAllInternalContainerInfo, 500, 
 		function(context, containerID, _)
-			RSConfigDB.SetContainerFiltered(containerID, false)
+			RSConfigDB.SetContainerFiltered(containerID)
 		end,
 		function(context)
 			RSLogger:PrintDebugMessage("FilterAllContainers. Filtrados todos los contenedores")
@@ -620,22 +696,6 @@ function RSConfigDB.FilterAllContainers(routines, routineTextOutput)
 		end
 	)
 	table.insert(routines, filterAllContainersRoutine)
-end
-
-function RSConfigDB.IsContainerFilteredOnlyOnWorldMap()
-	return private.db.containerFilters.filterOnlyMap
-end
-
-function RSConfigDB.SetContainerFilteredOnlyOnWorldMap(value)
-	private.db.containerFilters.filterOnlyMap = value
-end
-
-function RSConfigDB.IsContainerFilteredOnlyOnAlerts()
-	return private.db.containerFilters.filterOnlyAlerts
-end
-
-function RSConfigDB.SetContainerFilteredOnlyOnAlerts(value)
-	private.db.containerFilters.filterOnlyAlerts = value
 end
 
 function RSConfigDB.IsShowingGarrisonCache()
@@ -712,14 +772,6 @@ function RSConfigDB.SetShowingEvents(value)
 	private.db.map.displayEventIcons = value
 end
 
-function RSConfigDB.IsEventFilteredOnlyOnWorldMap()
-	return private.db.eventFilters.filterOnlyMap
-end
-
-function RSConfigDB.SetEventFilteredOnlyOnWorldMap(value)
-	private.db.eventFilters.filterOnlyMap = value
-end
-
 function RSConfigDB.IsShowingCompletedEvents()
 	return private.db.map.keepShowingAfterCompleted
 end
@@ -767,32 +819,74 @@ function RSConfigDB.SetMaxSeenEventTimeFilter(value, clearBak)
 end
 
 function RSConfigDB.IsEventFiltered(eventID)
-	if (eventID) then
-		return private.db.general.filteredEvents[eventID]
+	local filterType = RSConfigDB.GetEventFiltered(eventID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALL) then
+		return true
 	end
+	
+	return false
+end
 
+function RSConfigDB.IsEventFilteredOnlyWorldmap(eventID)
+	local filterType = RSConfigDB.GetEventFiltered(eventID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_WORLDMAP) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsEventFilteredOnlyAlerts(eventID)
+	local filterType = RSConfigDB.GetEventFiltered(eventID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALERTS) then
+		return true
+	end
+	
 	return false
 end
 
 function RSConfigDB.GetEventFiltered(eventID)
+	if (eventID and private.db.eventFilters.filteredEvents and private.db.eventFilters.filteredEvents[eventID]) then
+		return private.db.eventFilters.filteredEvents[eventID]
+	end
+	
+	return nil
+end
+
+function RSConfigDB.SetEventFiltered(eventID, filterType)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.SetEventFiltered [%s][%s]", eventID, filterType or ""))
+	if (not private.db.eventFilters.filteredEvents) then
+		private.db.eventFilters.filteredEvents = {}
+	end
+	
 	if (eventID) then
-		local value = private.db.general.filteredEvents[eventID]
-		if (not value) then
-			return true
+		if (filterType) then
+			private.db.eventFilters.filteredEvents[eventID] = filterType
 		else
-			return false
+			private.db.eventFilters.filteredEvents[eventID] = RSConfigDB.GetDefaultEventFilter()
 		end
 	end
 end
 
-function RSConfigDB.SetEventFiltered(eventID, value)
-	if (eventID) then
-		if (value == false) then
-			private.db.general.filteredEvents[eventID] = true
-		else
-			private.db.general.filteredEvents[eventID] = nil
-		end
+function RSConfigDB.DeleteEventFiltered(eventID)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.DeleteEventFiltered [%s]", eventID))
+	if (eventID and private.db.eventFilters.filteredEvents and private.db.eventFilters.filteredEvents[eventID]) then
+		private.db.eventFilters.filteredEvents[eventID] = nil
 	end
+	
+	if (RSUtils.GetTableLength(private.db.eventFilters.filteredEvents) == 0) then
+		private.db.eventFilters.filteredEvents = nil
+	end
+end
+
+function RSConfigDB.SetDefaultEventFilter(filterType)
+	if (filterType) then
+		private.db.eventFilters.defaultEventFilterType = filterType
+	end
+end
+
+function RSConfigDB.GetDefaultEventFilter()
+	return private.db.eventFilters.defaultEventFilterType
 end
 
 ---============================================================================
@@ -1005,6 +1099,14 @@ function RSConfigDB.SetShowingMissingAppearances(value)
 	private.db.loot.showingMissingAppearances = value
 end
 
+function RSConfigDB.IsShowingMissingDrakewatcher()
+	return private.db.loot.showingMissingDrakewatcher
+end
+
+function RSConfigDB.SetShowingMissingDrakewatcher(value)
+	private.db.loot.showingMissingDrakewatcher = value
+end
+
 ---============================================================================
 -- Collection filters
 ---============================================================================
@@ -1055,6 +1157,14 @@ end
 
 function RSConfigDB.IsSearchingAppearances()
 	return private.db.collections.searchingAppearances
+end
+
+function RSConfigDB.SetSearchingDrakewatcher(value)
+	private.db.collections.searchingDrakewatcher = value
+end
+
+function RSConfigDB.IsSearchingDrakewatcher()
+	return private.db.collections.searchingDrakewatcher
 end
 
 function RSConfigDB.SetShowFiltered(value)

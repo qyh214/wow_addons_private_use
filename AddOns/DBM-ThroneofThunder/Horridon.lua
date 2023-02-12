@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(819, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150900")
+mod:SetRevision("20230124054540")
 mod:SetCreatureID(68476)
 mod:SetEncounterID(1575)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 136741 136770 137458 136587",
 	"SPELL_CAST_SUCCESS 136797",
-	"SPELL_AURA_APPLIED 136767 136817 138621 137327 137240 136840 136465 140946 136512",
+	"SPELL_AURA_APPLIED 136767 136817 138621 137327 137240 136840 136465 140946 136512 136821 137237 136480",
 	"SPELL_AURA_APPLIED_DOSE 136767 136817 137240",
 	"SPELL_AURA_REMOVED 136767",
 	"SPELL_DAMAGE 136723 136646 136573 136490",
@@ -31,7 +31,7 @@ local warnAdds					= mod:NewAnnounce("warnAdds", 2, 43712)--Some random troll ic
 local warnOrbofControl			= mod:NewAnnounce("warnOrbofControl", 4, "134333")
 local warnCrackedShell			= mod:NewStackAnnounce(137240, 2)
 local warnBestialCry			= mod:NewStackAnnounce(136817, 3)
-local warnRampage				= mod:NewTargetAnnounce(136821, 4, nil, "Tank|Healer")
+local warnRampage				= mod:NewTargetNoFilterAnnounce(136821, 4, nil, "Tank|Healer")
 local warnDireFixate			= mod:NewTargetAnnounce(140946, 4)
 
 local specWarnCharge			= mod:NewSpecialWarningYou(136769)--Maybe add a near warning later. person does have 3.4 seconds to react though and just move out of group.
@@ -51,7 +51,6 @@ local specWarnFrozenBolt		= mod:NewSpecialWarningMove(136573)--Debuff used by Fr
 local specWarnLightningNova		= mod:NewSpecialWarningMove(136490)--Mainly for LFR or normal. On heroic you're going to die.
 local specWarnHex				= mod:NewSpecialWarningYou(136512)
 local specWarnJalak				= mod:NewSpecialWarningSwitch("ej7087", "Tank")--To pick him up (and maybe dps to switch, depending on strat)
-local specWarnRampage			= mod:NewSpecialWarningTarget(136821, "Tank|Healer")--Dog is pissed master died, need more heals and cooldowns. Maybe warn dps too? his double swipes and charges will be 100% worse too.
 local specWarnDireCall			= mod:NewSpecialWarningCount(137458, nil, nil, nil, 2)--Heroic
 local specWarnDireFixate		= mod:NewSpecialWarningRun(140946, nil, nil, nil, 4)--Heroic
 
@@ -181,10 +180,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerBestialCryCD:Start(10, amount+1)
 	elseif spellId == 136821 then
 		warnRampage:Show(args.destName)
-		specWarnRampage:Show(args.destName)
 	elseif spellId == 137237 then
-		warnOrbofControl:Show()
-		specWarnOrbofControl:Show()
+		if self.Options.specWarnOrbofControl then
+			specWarnOrbofControl:Show()
+		else
+			warnOrbofControl:Show()
+		end
 	elseif spellId == 137240 then
 		warnCrackedShell:Show(args.destName, args.amount or 1)
 	elseif spellId == 136480 then

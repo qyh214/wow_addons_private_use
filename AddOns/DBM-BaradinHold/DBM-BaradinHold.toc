@@ -1,4 +1,4 @@
-## Interface: 100002
+## Interface: 100005
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Baradin Hold|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Baradinfestung|r
@@ -21,7 +21,7 @@
 ## X-DBM-Mod-Sort: 806
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 3
-## Version: r223
+## Version: r224
 
 localization.en.lua
 localization.de.lua

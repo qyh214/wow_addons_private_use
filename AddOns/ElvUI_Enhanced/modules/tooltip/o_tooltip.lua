@@ -12,8 +12,9 @@ P["eel"]["progression"] = {
         ["ep"] = false,
         ["nya"] = false,
         ["nathria"] = false,
-        ["sanctum"] = true,
-        ["sepul"] = true,
+        ["sanctum"] = false,
+        ["sepul"] = false,
+        ["vault"] = true,
     },
 }
 
@@ -90,6 +91,18 @@ local function ConfigTable()
                             nathria = { order = -40, type = "toggle", name = "Castle Nathria" },
                             sanctum = { order = -39, type = "toggle", name = "Sanctum of Domination" },
                             sepul = { order = -38, type = "toggle", name = "Sepulcher of the First Ones" },
+                        }
+                    },
+                    dfl = {
+                        order = 8,
+                        type = "group",
+                        name = "Dragonflight",
+                        guiInline = true,
+                        get = function(info) return E.db.eel.progression.raids[ info[#info] ] end,
+                        set = function(info, value) E.db.eel.progression.raids[ info[#info] ] = value end,
+                        disabled = function() return not E.db.eel.progression.enable end,
+                        args = {
+                            vault = { order = -37, type = "toggle", name = "Vault of the Incarnates" },
                         }
                     }
                 },

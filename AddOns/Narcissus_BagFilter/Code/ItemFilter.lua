@@ -30,7 +30,7 @@ do
 		local tempTbl = {};
 		function IsContainerItemFiltered(bag, slot)
 			tempTbl = GetContainerItemInfo(bag, slot);
-			return tempTbl.isFiltered
+			return tempTbl and tempTbl.isFiltered
 		end
 	else
 		GetContainerItemInfo = GetContainerItemInfo;

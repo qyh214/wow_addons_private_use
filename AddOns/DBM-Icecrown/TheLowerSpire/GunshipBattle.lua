@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701192851")
+mod:SetRevision("20230121204455")
 local addsIcon
 local bossID
---mod:SetEncounterID(1099)--No ES fires this combat
+--mod:SetEncounterID(mod:IsClassic() and 847 or 1099)--No ES fires this combat
 mod:RegisterCombat("combat")
 mod:SetCreatureID(37215, 37540) -- Orgrim's Hammer, The Skybreaker
 mod:SetMinSyncRevision(119)

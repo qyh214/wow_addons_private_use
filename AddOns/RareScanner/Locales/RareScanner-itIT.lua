@@ -63,8 +63,6 @@ if AL then
 	AL["FILTER"] = "Filtri PNG"
 	AL["FILTER_CONTINENT"] = "Continente/Categoria"
 	AL["FILTER_CONTINENT_DESC"] = "Nome continente o categoria"
-	AL["FILTER_RARE_LIST"] = "Filtra ricerca per i PNG rari"
-	AL["FILTER_RARE_LIST_DESC"] = "Attiva/Disattiva la ricerca per questo PNG raro. Se disattivato, non si riceverà alcun avviso quando verrà trovato questo PNG."
 	AL["FILTER_ZONE"] = "Zona"
 	AL["FILTER_ZONE_DESC"] = "Zona dentro un continente o categoria"
 	AL["FILTER_ZONES_LIST"] = "Elenco zona"

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221102102546")
+mod:SetRevision("20230112033438")
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
 mod:SetEncounterID(1570)
 mod:SetUsedIcons(7, 6)
@@ -284,7 +284,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			--Swap timer back
 			local elapsed, total  = timerFrostBiteCD:GetTime()
 			timerFrostBiteCD:Cancel()
-			if elapsed and total then
+			if elapsed and total and total ~= 0 then
 				timerBitingColdCD:Update(elapsed, total)
 			end
 		elseif args:GetDestCreatureID() == 69134 then--Kazra'jin

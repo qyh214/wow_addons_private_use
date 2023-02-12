@@ -1,9 +1,13 @@
 local mod	= DBM:NewMod("Razorscale", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701220005")
+mod:SetRevision("20230120193044")
 mod:SetCreatureID(33186)
-mod:SetEncounterID(1139)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1139)
+else
+	mod:SetEncounterID(746)
+end
 mod:SetModelID(28787)
 
 mod:RegisterCombat("combat_yell", L.YellAir)
@@ -16,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED 64733 64704",
 	"CHAT_MSG_MONSTER_YELL",
 	"RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
 --TODO, fuse armor taunt/swap warnings
@@ -64,7 +68,7 @@ function mod:FlameTarget(targetname, uId)
 end
 
 function mod:OnCombatStart(delay)
-	enrageTimer:Start(-delay)
+	enrageTimer:Start(self:IsClassic() and 360 or 900-delay)
 	combattime = GetTime()
 	if self:IsClassic() and self:IsDifficulty("normal10") then
 		warnTurretsReadySoon:Schedule(53-delay)
@@ -118,7 +122,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam() and not self:IsTrivial() then
+	if (spellId == 64733 or spellId == 64704) and destGUID == UnitGUID("player") and self:AntiSpam(5, 1) and not self:IsTrivial() then
 		specWarnDevouringFlame:Show()
 		specWarnDevouringFlame:Play("runaway")
 	end
@@ -159,6 +163,13 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 64821 then--Fuse Armor
+		self:SendSync("FuseArmor")
+	end
+end
+
+function mod:OnSync(event, args)
+	if not self:IsInCombat() then return end
+	if event == "FuseArmor" then
 		timerFuseArmorCD:Start()
 	end
 end

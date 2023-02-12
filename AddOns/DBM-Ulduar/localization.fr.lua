@@ -438,7 +438,9 @@ L:SetMiscLocalization{
 	MobPhase3		= "Unité de commandement aérien",
 	YellPull		= "Nous n'avons pas beaucoup de temps, les amis ! Vous allez m'aider à tester ma dernière création en date, la plus grande de toutes. Avant de changer d'avis, n'oubliez pas que que vous me devez bien ça après m'avoir complètement déglingué le XT-002.",
 	YellHardPull	= "Mais, pourquoi",
-	LootMsg			= "([^%s]+).*Hitem:(%d+)"
+	YellPhase2		= "MERVEILLEUX ! Résultats parfaitement formidables !",
+	YellPhase3		= "Merci, les amis !",
+	YellPhase4		= "Fin de la phase d'essais préliminaires"
 }
 
 

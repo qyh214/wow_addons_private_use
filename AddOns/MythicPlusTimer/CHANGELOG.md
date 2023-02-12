@@ -1,3 +1,7 @@
+# MythicPlusTimer 5.0.3
+
+- Try to hide the default tracker on every update
+
 # MythicPlusTimer 5.0.2
 
 - Update tooltip system

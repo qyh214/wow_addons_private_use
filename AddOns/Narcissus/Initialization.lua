@@ -1,7 +1,7 @@
-local NARCI_VERSION_INFO = "1.3.7";
+local NARCI_VERSION_INFO = "1.3.9";
 
-local VERSION_DATE = 1670851916;
-local CURRENT_VERSION = 10307;
+local VERSION_DATE = 1675426743;
+local CURRENT_VERSION = 10309;
 local PREVIOUS_VERSION = CURRENT_VERSION;
 local TIME_SINCE_LAST_UPDATE = 0;
 
@@ -221,6 +221,9 @@ local function LoadDatabase()
             LoadAddOn("Narcissus_Database_NPC");
         end)
     end
+
+    ---- Photo Mode Saves (Experimental) ----
+    NarciPhotoModeDB = NarciPhotoModeDB or {};
 end
 
 local function LoadSettings()

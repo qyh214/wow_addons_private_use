@@ -1,0 +1,10 @@
+## Interface: 100002
+## Title: Wago App Companion
+## Author: The wago team
+## Version: 1.0.0
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## OptionalDependencies: WeakAuras
+
+data.lua
+init.lua

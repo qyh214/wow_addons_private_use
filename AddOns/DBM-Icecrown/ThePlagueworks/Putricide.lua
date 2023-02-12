@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701192851")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(36678)
-mod:SetEncounterID(1102)
+mod:SetEncounterID(mod:IsClassic() and 851 or 1102)
 mod:SetModelID(30881)
 mod:SetUsedIcons(1, 2, 3, 4)
 --mod:SetMinSyncRevision(3860)

@@ -22,7 +22,7 @@ local mistakes = {
         -- 分刺裂片 (水晶痛擊者)
         type = AD.MISTAKE.SPELL_DAMAGE,
         spell = 371021,
-        noPlayerDebuff = 377488
+        noPlayerDebuff = 386549
     },
     {
         -- 穿刺裂片 (水晶怒靈)
@@ -34,7 +34,7 @@ local mistakes = {
         -- 禁忌知識 (不穩定的監管者)
         type = AD.MISTAKE.SPELL_DAMAGE,
         spell = 371352,
-        noPlayerDebuff = 377488
+        noPlayerDebuff = 386549
     },
     {
         -- 秘能猛擊 (秘法傀儡)

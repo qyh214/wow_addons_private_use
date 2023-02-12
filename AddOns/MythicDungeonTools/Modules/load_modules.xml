@@ -1,4 +1,4 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Include file='DungeonEnemies.xml'/>
 	<Script file='PullOutlines.lua'/>
 	<Script file='EnemyInfo.lua'/>

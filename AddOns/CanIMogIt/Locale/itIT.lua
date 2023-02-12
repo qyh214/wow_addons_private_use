@@ -1,20 +1,20 @@
 local L = {}
 --[[Translation missing --]]
---[[ L["(Experimental)"] = ""--]] 
+L["(Experimental)"] = "(Experimental)"
 L["Adds tooltips to items showing if you have learned a transmog appearance."] = "Aggiunge un suggerimento, sull'oggetto che stai osservando, se è stato memorizzato nella tua collezione di aspetti."
 --[[Translation missing --]]
---[[ L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = ""--]] 
+L["Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."] = "Also shows a summary in the Appearance Sets UI of how many pieces of a transmog set you have collected."
 L["Another class can learn this item."] = "Un'altra classe può apprendere questo oggetto."
 --[[Translation missing --]]
---[[ L["Appearances updated: "] = ""--]] 
+L["Appearances updated: "] = "Appearances updated: "
 --[[Translation missing --]]
---[[ L["Ask me later"] = ""--]] 
+L["Ask me later"] = "Ask me later"
 --[[Translation missing --]]
---[[ L["Bottom"] = ""--]] 
+L["Bottom"] = "Bottom"
 --[[Translation missing --]]
---[[ L["Bottom Left"] = ""--]] 
+L["Bottom Left"] = "Bottom Left"
 --[[Translation missing --]]
---[[ L["Bottom Right"] = ""--]] 
+L["Bottom Right"] = "Bottom Right"
 L["Can be learned by:"] = "Può essere imparato da:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Messaggio Importante: Per favore, effettua l'accesso con tutti i tuoi personaggi per ottenere informazioni riguardo la tua collezione di aspetti."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogItOptions non trovato, carico le impostazioni predefinite!"
@@ -24,24 +24,24 @@ L["Cannot determine status on other characters."] = "Impossibile determinare lo 
 L["Cannot learn:"] = "Impossibile apprendere:"
 L["Cannot learn: Soulbound"] = "Impossibile apprendere: Vincolato"
 --[[Translation missing --]]
---[[ L["Center"] = ""--]] 
+L["Center"] = "Center"
 --[[Translation missing --]]
---[[ L["Changes saved!"] = ""--]] 
+L["Changes saved!"] = "Changes saved!"
 --[[Translation missing --]]
---[[ L["Database migrated to:"] = ""--]] 
+L["Database migrated to:"] = "Database migrated to:"
 --[[Translation missing --]]
---[[ L["Database Scanning chat messages"] = ""--]] 
+L["Database Scanning chat messages"] = "Database Scanning chat messages"
 L["Debug Tooltip"] = "Tooltip per il debug"
 --[[Translation missing --]]
---[[ L["Default"] = ""--]] 
+L["Default"] = "Default"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Informazioni dettagliate per scopi di debug. Utilizza questo per inviare rapporti contenenti bug."
 --[[Translation missing --]]
---[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
+L["Does not affect Quests or Adventure Journal."] = "Does not affect Quests or Adventure Journal."
 L["Equippable Items Only"] = "Solo oggetti equipaggiabili"
 --[[Translation missing --]]
---[[ L["Icon Location"] = ""--]] 
+L["Icon Location"] = "Icon Location"
 --[[Translation missing --]]
---[[ L["Items updated: "] = ""--]] 
+L["Items updated: "] = "Items updated: "
 L["Learned but cannot transmog yet."] = "Imparato, ma non si può ancora trasmogrificare."
 L["Learned for a different class and item."] = "Imparato per una diversa classe e oggetto."
 L["Learned for a different class."] = "Imparato per una classe differente."
@@ -49,57 +49,57 @@ L["Learned from another item but cannot transmog yet."] = "Imparato da un altro 
 L["Learned from another item."] = "Imparato da un altro oggetto."
 L["Learned."] = "Imparato."
 --[[Translation missing --]]
---[[ L["Left"] = ""--]] 
+L["Left"] = "Left"
 --[[Translation missing --]]
---[[ L["Migrating Database version to:"] = ""--]] 
+L["Migrating Database version to:"] = "Migrating Database version to:"
 L["Not learned."] = "Non appreso."
 --[[Translation missing --]]
---[[ L["Okay"] = ""--]] 
+L["Okay"] = "Okay"
 --[[Translation missing --]]
---[[ L["Okay, I'll go log onto all of my toons!"] = ""--]] 
+L["Okay, I'll go log onto all of my toons!"] = "Okay, I'll go log onto all of my toons!"
 L["Only show on items that can be equipped."] = "Mostra solamente su oggetti che possono essere equipaggiati."
 L["Only show on items that can be transmoggrified."] = "Mostra solamente su oggetti che possono essere trasmogrificati."
 L["Only show on items that you haven't learned."] = "Mostra solamente su oggetti che non hai appreso."
 --[[Translation missing --]]
---[[ L["Please note that this may not always be correct as Blizzard's information is incomplete."] = ""--]] 
+L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Please note that this may not always be correct as Blizzard's information is incomplete."
 --[[Translation missing --]]
---[[ L["Reload to apply"] = ""--]] 
+L["Reload to apply"] = "Reload to apply"
 --[[Translation missing --]]
---[[ L["Requires /reload to take effect."] = ""--]] 
+L["Requires /reload to take effect."] = "Requires /reload to take effect."
 --[[Translation missing --]]
---[[ L["Right"] = ""--]] 
+L["Right"] = "Right"
 L["Show Bag Icons"] = "Mostra Icone Borsa"
 --[[Translation missing --]]
---[[ L["Show information on the tooltip about transmog sets."] = ""--]] 
+L["Show information on the tooltip about transmog sets."] = "Show information on the tooltip about transmog sets."
 --[[Translation missing --]]
---[[ L["Show Source Location Tooltip"] = ""--]] 
+L["Show Source Location Tooltip"] = "Show Source Location Tooltip"
 --[[Translation missing --]]
---[[ L["Show Transmog Set Info"] = ""--]] 
+L["Show Transmog Set Info"] = "Show Transmog Set Info"
 L["Shows a more detailed text for some of the tooltips."] = "Mostra un testo molto dettagliato su alcuni tooltip."
 --[[Translation missing --]]
---[[ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = ""--]] 
+L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."] = "Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor, World Drop). This only works on items your current class can learn."
 --[[Translation missing --]]
---[[ L["Shows chat messages on login about the database scan."] = ""--]] 
+L["Shows chat messages on login about the database scan."] = "Shows chat messages on login about the database scan."
 --[[Translation missing --]]
---[[ L["Shows messages on login about the database scan."] = ""--]] 
+L["Shows messages on login about the database scan."] = "Shows messages on login about the database scan."
 L["Shows the icon directly on the item in your bag."] = "Mostra direttamente l'icona sull'oggetto nella tua borsa."
 --[[Translation missing --]]
---[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
+L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."
 --[[Translation missing --]]
---[[ L["Top"] = ""--]] 
+L["Top"] = "Top"
 --[[Translation missing --]]
---[[ L["Top Left"] = ""--]] 
+L["Top Left"] = "Top Left"
 --[[Translation missing --]]
---[[ L["Top Right"] = ""--]] 
+L["Top Right"] = "Top Right"
 --[[Translation missing --]]
---[[ L["Top Right (default)"] = ""--]] 
+L["Top Right (default)"] = "Top Right (default)"
 L["Transmoggable Items Only"] = "Solo oggetti trasmogrificabili"
 L["Unknown Items Only"] = "Solo oggetti sconosciuti"
 --[[Translation missing --]]
---[[ L["Updating appearances database."] = ""--]] 
+L["Updating appearances database."] = "Updating appearances database."
 L["Verbose Text"] = "Testo Dettagliato"
 --[[Translation missing --]]
---[[ L["We need to update our database. This may freeze the game for a few seconds."] = ""--]] 
+L["We need to update our database. This may freeze the game for a few seconds."] = "We need to update our database. This may freeze the game for a few seconds."
 
 
 

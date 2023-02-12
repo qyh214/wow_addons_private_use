@@ -1,12 +1,12 @@
-tag d960dd4873beeda254fcf7ddd02de01c6166d8b8 4.1.5
+tag 40901dbf968c7dae7e77dda4ddaf8454493d82ff 4.2.0
 Author:	Tevoll <git@bockmeulen.nl>
-Date:	Tue Dec 13 21:14:20 2022 +0100
+Date:	Wed Jan 25 09:07:44 2023 +0100
 
-commit 98585b0ebc9a1c47c050c89e41c9fcc733802c68
+commit 42fbdbc90a43c8d22c9ed5f597274e3c06645e4c
 Author: Tevoll <git@bockmeulen.nl>
-Date:   Tue Dec 13 19:04:55 2022 +0100
+Date:   Wed Jan 25 09:06:32 2023 +0100
 
-    Equipment Set Overlay fix
+    Update for 10.0.5
     
-    Thanks XelnorOne
+    Range fix, thanks Loreinator
 

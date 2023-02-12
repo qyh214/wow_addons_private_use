@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701192851")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(36597)
-mod:SetEncounterID(1106)
+mod:SetEncounterID(mod:IsClassic() and 856 or 1106)
 mod:DisableEEKillDetection()--EE fires at 10%
 mod:SetModelID(30721)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7)

@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701192851")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(37970, 37972, 37973)
-mod:SetEncounterID(1095)
+mod:SetEncounterID(mod:IsClassic() and 852 or 1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
 mod:SetModelID(30858)
 mod:SetUsedIcons(7, 8)

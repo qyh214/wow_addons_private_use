@@ -1,6 +1,6 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: BtWLoadouts
-## Version: v1.9.2
+## Version: v1.12.3
 ## Notes: Change your characters spec, talents, equipment, essences, and action bars all at once
 ## Author: Breen
 ## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings, BtWLoadoutsTraitsInfo
@@ -21,6 +21,8 @@ Localizations.zhTW.lua
 
 Versions.lua
 Blockers.lua
+DFTalents.100002.lua
+DFTalents.100005.lua
 Characters.lua
 Instances.lua
 Sets.lua

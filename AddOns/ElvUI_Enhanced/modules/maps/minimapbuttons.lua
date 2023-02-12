@@ -49,6 +49,7 @@ local partialIgnores = {
 	"Pin",
 	"POI",
 	"Questie",
+	"TTMinimapButton",
 }
 
 local whiteList = {

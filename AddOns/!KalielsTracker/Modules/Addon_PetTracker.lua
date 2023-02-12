@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -19,8 +19,8 @@ local eventFrame
 local header, content
 local filterButton
 
-OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER = 0x100000
-OBJECTIVE_TRACKER_UPDATE_PETTRACKER = 0x200000
+OBJECTIVE_TRACKER_UPDATE_MODULE_PETTRACKER = 0x1000000
+OBJECTIVE_TRACKER_UPDATE_PETTRACKER = 0x2000000
 PETTRACKER_TRACKER_MODULE = KT_ObjectiveTracker_GetModuleInfoTable("PETTRACKER_TRACKER_MODULE")
 
 M.Texts = {

@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230116221556")
+mod:SetRevision("20230122233736")
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetUsedIcons(8)
@@ -21,7 +21,6 @@ mod:RegisterEventsInCombat(
 )
 
 --This verion of mod is for the retail redesign
---TODO, Corrupted Geyser spawn is not in combat log so I can't implement it in this mod yet til its added
 --[[
 ability.id = 397783 and type = "begincast"
  or ability.id = 397797 and type = "applydebuff"

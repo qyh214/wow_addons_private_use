@@ -1,14 +1,14 @@
 ## Interface: 30400
 ## Title: |cff1784d1ElvUI|r Enhanced Again Wrath
 ## Author: Tevoll
-## Version: 4.1.5
+## Version: 4.2.0
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
 ## URL: https://www.curseforge.com/wow/addons/elvui-enhanced-again
 ## X-Website: https://www.curseforge.com/wow/addons/elvui-enhanced-again
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
-## X-ElvVersion: 13.10
+## X-ElvVersion: 13.23
 ## X-Wago-ID: WqKQpk6x
 
 libs\load_libs.xml

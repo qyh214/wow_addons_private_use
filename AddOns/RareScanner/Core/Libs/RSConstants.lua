@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 81
-RSConstants.CURRENT_LOOT_DB_VERSION = 91
+RSConstants.CURRENT_DB_VERSION = 84
+RSConstants.CURRENT_LOOT_DB_VERSION = 95
 
 ---============================================================================
 -- Current maps (newer)
@@ -79,8 +79,16 @@ RSConstants.ITEM_TYPE = {
 	TOY = 2,
 	PET = 3,
 	MOUNT = 4,
-	ANYTHING = 0
+	DRAKEWATCHER = 5
 }
+
+---============================================================================
+-- Types of entity filters
+---============================================================================
+
+RSConstants.ENTITY_FILTER_ALL = 1
+RSConstants.ENTITY_FILTER_WORLDMAP = 2
+RSConstants.ENTITY_FILTER_ALERTS = 3
 
 ---============================================================================
 -- Addons default settings
@@ -97,7 +105,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanInstances = false,
 			scanOnTaxi = true,
 			scanOnPetBattle = true,
-			scanWorldmapVignette = false,
+			scanWorldmapVignette = true,
 			ignoreCompletedEntities = true,
 			filteredRares = {},
 			filteredContainers = {},
@@ -137,17 +145,13 @@ RSConstants.PROFILE_DEFAULTS = {
 			worldmapButton = true
 		},
 		rareFilters = {
-			filtersToggled = true,
-			filterOnlyMap = false
+			defaultNpcFilterType = RSConstants.ENTITY_FILTER_ALL
 		},
 		containerFilters = {
-			filtersToggled = true,
-			filterOnlyMap = false,
-			filterOnlyAlerts = true,
+			defaultContainerFilterType = RSConstants.ENTITY_FILTER_ALL
 		},
 		eventFilters = {
-			filtersToggled = true,
-			filterOnlyMap = false
+			defaultEventFilterType = RSConstants.ENTITY_FILTER_ALL
 		},
 		zoneFilters = {
 			filtersToggled = true,
@@ -161,6 +165,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			searchingMounts = true,
 			searchingToys = true,
 			searchingAppearances = true,
+			searchingDrakewatcher = true,
 			showFiltered = true,
 			showDead = true,
 			showWithoutCollectibles = false
@@ -229,6 +234,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			showingMissingPets = true,
 			showingMissingToys = true,
 			showingMissingAppearances = true,
+			showingMissingDrakewatcher = true,
 			numItems = 10,
 			numItemsPerRow = 10,
 			tooltipsCommands = true,
@@ -308,6 +314,9 @@ RSConstants.ULDUM_MAPID = 1527
 RSConstants.THE_MAW_MAPID = 1543
 RSConstants.ZERETH_MORTIS_MAPID = 1970
 RSConstants.DRAGON_ISLES = 1978
+RSConstants.THE_AZURE_SPAN = 2024
+RSConstants.VALDRAKKEN = 2025
+RSConstants.THE_PRIMALIST_FUTURE = 2085
 
 ---============================================================================
 -- NpcIDS
@@ -356,7 +365,7 @@ RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 
 RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
 RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
 RSConstants.DISTURBED_DIRT = { 382029, 376386, 383733, 383734, 383735 }
-RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228 }
+RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228, 194761 }
 RSConstants.OMINOUS_CONCHS_NPCS = { 193735, 193634, 193710, 197371, 193708, 193706 } --197411
 RSConstants.CONTAINERS_WITHOUT_VIGNETTE = { 376582, 376583, 376585, 376579, 376584, 377587, 378010, 376580 }
 RSConstants.MAGIC_BOUND_CHEST = { 376426, 385075, 385074 }
@@ -674,6 +683,7 @@ RSConstants.EXPLORER_FILTER_DROP_MOUNTS = 1
 RSConstants.EXPLORER_FILTER_DROP_PETS = 2
 RSConstants.EXPLORER_FILTER_DROP_TOYS = 3
 RSConstants.EXPLORER_FILTER_DROP_APPEARANCES = 4
+RSConstants.EXPLORER_FILTER_DROP_DRAKEWATCHER = 9
 RSConstants.EXPLORER_FILTER_PART_ACHIEVEMENT = 5
 RSConstants.EXPLORER_FILTER_DEAD = 6
 RSConstants.EXPLORER_FILTER_FILTERED = 7

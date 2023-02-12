@@ -116,8 +116,8 @@ local function IsEventPOIFiltered(eventID, mapID, zoneQuestID, vignetteGUIDs, on
 	end
 
 	-- Skip if the entity is filtered
-	if (RSConfigDB.IsEventFiltered(eventID) and not RSEventDB.IsWorldMap(eventID) and (not RSConfigDB.IsEventFilteredOnlyOnWorldMap() or (RSConfigDB.IsEventFilteredOnlyOnWorldMap() and not RSGeneralDB.IsRecentlySeen(eventID)))) then
-		RSLogger:PrintDebugMessageEntityID(eventID, string.format("Saltado Evento [%s]: Filtrado en opciones.", eventID))
+	if (RSConfigDB.IsEventFiltered(eventID) or RSConfigDB.IsEventFilteredOnlyWorldmap(eventID)) then
+		RSLogger:PrintDebugMessageEntityID(eventID, string.format("Saltado Evento [%s]: Filtrado en opciones (filtro completo o mapa del mundo).", eventID))
 		return true
 	end
 

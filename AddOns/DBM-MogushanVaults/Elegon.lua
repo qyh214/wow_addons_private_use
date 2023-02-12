@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(726, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20211011150900")
+mod:SetRevision("20230124054540")
 mod:SetCreatureID(60410)--Energy Charge (60913), Emphyreal Focus (60776), Cosmic Spark (62618), Celestial Protector (60793)
 mod:SetEncounterID(1500)
 mod:DisableESCombatDetection()
@@ -10,7 +10,7 @@ mod:SetUsedIcons(8, 7, 6, 5, 4, 3)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 124967 116994 117878 119389 118310 132226 132222",
+	"SPELL_AURA_APPLIED 124967 116994 117878 119389 118310 132226 132222 119387",
 	"SPELL_AURA_APPLIED_DOSE 117878",
 	"SPELL_AURA_REMOVED 116994 132226 132222",
 	"SPELL_CAST_SUCCESS 116598 132265",

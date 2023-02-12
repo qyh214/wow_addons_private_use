@@ -1,14 +1,18 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701215737")
+mod:SetRevision("20230121012312")
 
 mod:SetCreatureID(33113)
-mod:SetEncounterID(1132)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1132)
+else
+	mod:SetEncounterID(744)
+end
 mod:SetModelID(28875)
 mod:RegisterCombat("yell", L.YellPull)
---mod:SetMinSyncRevision(4182)
-mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
+mod:SetHotfixNoticeRev(20230120000000)
+mod:SetMinSyncRevision(20220120000000)
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 62396 62475 62374 62297",
@@ -32,9 +36,8 @@ local guids = {}
 local function buildGuidTable(self)
 	table.wipe(guids)
 	for uId in DBM:GetGroupMembers() do
-		local name, server = GetUnitName(uId, true)
-		local fullName = name .. (server and server ~= "" and ("-" .. server) or "")
-		guids[UnitGUID(uId.."pet") or "none"] = fullName
+		local name = DBM:GetUnitFullName(uId)
+		guids[UnitGUID(uId.."pet") or "none"] = name
 	end
 end
 
@@ -49,7 +52,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 62396 then		-- Flame Vents
 		timerFlameVents:Start()
-	elseif args.spellId == 62475 then	-- Systems Shutdown / Overload
+	elseif args.spellId == 62475 and self:AntiSpam(3, 1) then	-- Systems Shutdown / Overload
 		timerSystemOverload:Start()
 		warnSystemOverload:Show()
 		warnSystemOverload:Play("attacktank")
@@ -82,7 +85,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args.spellId == 62907 and self:AntiSpam(3, 1) then		-- Ward of Life spawned (Creature id: 34275)
+	if args.spellId == 62907 and self:AntiSpam(3, 2) then		-- Ward of Life spawned (Creature id: 34275)
 		warnWardofLife:Show()
 		warnWardofLife:Play("bigmob")
 	end

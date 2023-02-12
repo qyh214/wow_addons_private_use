@@ -1268,9 +1268,9 @@ L["Progress Value"] = "Valeur de progression"
 L["Pulse"] = "Pulsation"
 L["PvP Flagged"] = "JcJ activé"
 L["PvP Talent %i"] = "Talent JcJ %i"
+L["PvP Talent selected"] = "Talent JcJ sélectionné"
 --[[Translation missing --]]
 L["PvP Talent Selected"] = "PvP Talent Selected"
-L["PvP Talent selected"] = "Talent JcJ sélectionné"
 --[[Translation missing --]]
 L["Queued Action"] = "Queued Action"
 L["Radius"] = "Rayon"

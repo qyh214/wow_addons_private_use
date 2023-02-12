@@ -169,10 +169,7 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[Este é o alvo aonde a Fonte esta causando o
 
 O botão na direita mostra uma lista pré-definida com npcs.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000temporário|r)"
---[[Translation missing --]]
-L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[To load a texture file in the World of Warcraft client you need a file in .TGA format and its width and height must be multiples of 8.
-
-Place the texture inside /WoW Install Folder/retail/Interface/]=]
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Para carregar um arquivo de textura no World of Warcraft é necessário um arquivo no formato .TGA e a sua largura e altura devem ser múltiplas de 8. Coloque a textura dentro de: /Pasta do WoW/retail/Interface/"
 L["STRING_DAMAGE"] = "Dano"
 L["STRING_DAMAGE_DPS_IN"] = "DPS recebido de"
 L["STRING_DAMAGE_FROM"] = "Recebeu dano de"
@@ -411,10 +408,9 @@ L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Ativa ou desativa o uso de modelo 3d aci
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Escolha qual o modelo será usado no modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avançado"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Colunas de texto alinhadas"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alignment"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "The alignment is done automatically based on the length of each text"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = [=[Alinhamento Automático
+]=]
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "O alinhamento é feito automaticamente baseado no comprimento de cada texto"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Desative colchetes e separadores e alinhe textos de barras em colunas verticais"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Deslocamento %d do texto"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Deslocamento da borda direita"
@@ -1071,7 +1067,7 @@ Valores altos podem fazer o tempo de logoff do seu personagem demorar mais.
 
 Se você raramente olha os dados da raide do dia anterior, eh muito recomendado deixar esta opção em 1|cFFFFFFFF1|r.]=]
 L["STRING_OPTIONS_SENDFEEDBACK"] = "Feedback"
-L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Mostrar Barras Laterais"
+L["STRING_OPTIONS_SHOW_SIDEBARS"] = "Mostrar Bordas Laterais"
 L["STRING_OPTIONS_SHOW_SIDEBARS_DESC"] = "Mostrar ou esconder as barras laterais na esquerda e direita da janela."
 L["STRING_OPTIONS_SHOW_STATUSBAR"] = "Exibir barra de Status"
 L["STRING_OPTIONS_SHOW_STATUSBAR_DESC"] = "Exibe ou Oculta a barra de status inferior."
@@ -1206,8 +1202,7 @@ L["STRING_OPTIONS_TIMEMEASURE"] = "Medidas do Tempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = [=[|cFFFFFFFFTempo de Atividade|r: o tempo de cada membro da raide eh posto em pausa quando ele ficar ocioso e volta a contar o tempo quando ele voltar a atividade, eh a maneira mais comum de medir o Dps e Hps.
 
 |cFFFFFFFFTempo Efetivo|r: muito usado para ranqueamentos, este metodo usa o tempo total da luta para medir o Dps e Hps de todos os membros da raide.]=]
---[[Translation missing --]]
-L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Buttons and Menu Settings"
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Botões e Configurações"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Configuração da Barra de Título"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Essa opção altera o menu principal no topo da janela"
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Âncora da Barra de Ferramentas"
@@ -1326,20 +1321,12 @@ L["STRING_OPTIONS_WINDOW"] = "Painel de Opções"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Âncoras:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignorar Alterar em Massa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Quanto ativa, esta janela é ignorada quando for esconder, mostrar ou alternar todas as janelas."
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "Preenchimento da linha"
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Aplica a cor de fundo quando as linhas são exibidas"
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Escala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Ajusta a escala da janela."
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Color"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Cor da Aparência"
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Modifica a cor da Aparência aplicada a esta janela. |cFFFFFF00Importante|r: a transparência escolhida é substituída com |cFFFFFF00Valores Automáticos de Transparência|r quando ativado. |cFFFFFF00Importante|r: Selecionando a cor da Aparência, substitui qualquer cor personalizada aplicada à Barra de Status."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Configurações de Janela"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Essa opção controla a aparência da janela de uma instância selecionada."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Velocidade de Atualização"

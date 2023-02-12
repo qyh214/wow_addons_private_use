@@ -1,56 +1,97 @@
-# Version: 3.20
-2023/01/18 Released
+# Version: 3.23
+2023/02/07 Released
 ## ❗ Important
-- Compatible with ElvUI 13.18.
-- Minimum ElvUI version changed to 13.18.
-- [Event Tracker] Use a new logic to fix the inaccurate time of fishing net.
-- [Event Tracker] If you think the bonus fishing net cannot be recorded correctly, please use the command '/wtet findNet' near the fishing net, and send the output to me via Discord.
+- Adapt to ElvUI 13.25.
+- Update the enchant IDs.
 ## ✳️ New
-- Add [Class Helper] module, which provides some class-related features. Currently only Death Strike Estimator for BDK.
+- [Chat Text] Add an icon for the author's character.
+- [Skins] Add RareScanner skin.
+- [Skins] Add Simple Addon Manager skin.
+- [Skins] Add skin for The Trading Post.
 ## 💪 Improvement
-- [Paragon Reputation] Update data for Dragonflight.
-- [Announcement] Disable ElvUI's interrupt announcement when interrupt announcement is enabled.
+- [Extra Item Bar] Update the openable item list.
+- [Skins] Update the Encounter Journal skin.
+- [Skins] Update the Alert Frames skin.
+- [Skins] Update the Bigwigs Queue Timer skin.
+- [Objective Tracker] Add support for monthly activities tracking.
+- [Event Tracker] Fix the feast timer.
 
 ------
-# 版本: 3.20
-2023/01/18 发布
+# 版本: 3.23
+2023/02/07 发布
 ## ❗ 重要
-- 适配 ElvUI 13.18 版本改动.
-- 最低 ElvUI 支持版本更改为 13.18.
-- [事件追踪器] 使用一个新的逻辑以解决渔网的时间不准确的问题.
-- [事件追踪器] 如果你遇到额外渔网无法被正确记录, 请在渔网附近使用 '/wtet findNet' 命令, 并将输出内容通过 Discord 发送给我.
+- 如果你被台服工作室频繁刷屏, 试试我的新插件: Wind Chat Filter!
+- 适配 ElvUI 13.25 版本.
+- 更新附魔 ID.
 ## ✳️ 新增
-- 新增 [职业助手] 模块, 用于提供一些职业相关的功能. 暂时只有鲜血死亡骑士的灵打治疗量预估功能.
+- [聊天文字] 为作者的角色添加了一个小图标.
+- [美化皮肤] 新增了 RareScanner 的美化皮肤.
+- [美化皮肤] 新增了 Simple Addon Manager 的美化皮肤.
+- [美化皮肤] 新增了贸易站美化皮肤.
 ## 💪 改善
-- [巅峰声望] 更新巨龙时代版本数据.
-- [通告] 在启用打断通告的情况下, 自动关闭 ElvUI 的打断通告.
+- [额外物品条] 更新可开启物品列表.
+- [美化皮肤] 更新地下城手册美化皮肤.
+- [美化皮肤] 更新提醒框体皮肤.
+- [美化皮肤] 更新 Bigwigs 进本计时条皮肤.
+- [任务追踪] 新增对每月活动追踪的支持.
+- [事件追踪器] 修正盛宴计时.
 
 ------
-# 版本: 3.20
-2023/01/18 發布
+# 版本: 3.23
+2023/02/07 發布
 ## ❗ 重要
-- 適配 ElvUI 13.18 版本改動.
-- 最低 ElvUI 支援版本更改為 13.18.
-- [事件追蹤器] 使用一個新的邏輯以解決漁網的時間不準確的問題.
-- [事件追蹤器] 如果你遇到額外漁網無法被正確記錄, 請在漁網旁使用 '/wtet findNet' 命令, 並將輸出內容透過 Discord 發送給我.
+- 如果你被台服工作室頻繁刷屏, 試試我的新插件: Wind Chat Filter!
+- 適配 ElvUI 13.25 版本.
+- 更新附魔 ID.
 ## ✳️ 新增
-- 新增 [職業助手] 模組, 用於提供一些職業相關的功能. 暫時只有血魄死亡騎士的死打治療量預估功能.
+- [聊天文字] 為作者的角色添加了一個小圖示.
+- [美化皮膚] 新增了 RareScanner 的美化皮膚.
+- [美化皮膚] 新增了 Simple Addon Manager 的美化皮膚.
+- [美化皮膚] 新增了貿易站美化皮膚.
 ## 💪 改善
-- [巔峰聲望] 更新巨龍崛起版本資料.
-- [通告] 在啟用打斷通告的情況下, 自動關閉 ElvUI 的打斷通告.
+- [額外物品條] 更新可開啟物品列表.
+- [美化皮膚] 更新地城導覽手冊美化皮膚.
+- [美化皮膚] 更新提醒框架美化皮膚.
+- [美化皮膚] 更新 Bigwigs 進本計時條美化皮膚.
+- [任務追蹤] 新增對每月活動追蹤之支持.
+- [事件追蹤器] 修正盛宴計時.
 
 ------
-# 버전: 3.20
-2023/01/18 Released
+# 버전: 3.23
+2023/02/07 Released
 ## ❗ 중요 사항
-- Compatible with ElvUI 13.18.
-- Minimum ElvUI version changed to 13.18.
-- [Event Tracker] Use a new logic to fix the inaccurate time of fishing net.
-- [Event Tracker] If you think the bonus fishing net cannot be recorded correctly, please use the command '/wtet findNet' near the fishing net, and send the output to me via Discord.
+- Adapt to ElvUI 13.25.
+- Update the enchant IDs.
 ## ✳️ 신규 사항
-- Add [Class Helper] module, which provides some class-related features. Currently only Death Strike Estimator for BDK.
+- [Chat Text] Add an icon for the author's character.
+- [스킨] RareScanner 스킨을 추가했습니다.
+- [스킨] Simple Addon Manager 스킨을 추가했습니다.
+- [Skins] Add skin for The Trading Post.
 ## 💪 개선 사항
-- [Paragon Reputation] Update data for Dragonflight.
-- [Announcement] Disable ElvUI's interrupt announcement when interrupt announcement is enabled.
+- [Extra Item Bar] Update the openable item list.
+- [Skins] Update the Encounter Journal skin.
+- [Skins] Update the Alert Frames skin.
+- [Skins] Update the Bigwigs Queue Timer skin.
+- [Objective Tracker] Add support for monthly activities tracking.
+- [Event Tracker] Fix the feast timer.
+
+------
+# Версия: 3.23
+2023/02/07 Релиз
+## ❗ Важные
+- Адаптация к ElvUI 13.25.
+- Обновлены идентификаторы чар.
+## ✳️ Новые
+- [Текст чата] Добавлена маленькая иконка для персонажа автора аддона.
+- [Скины] Добавлен скин RareScanner.
+- [Скины] Добавлен скин Simple Addon Manager.
+- [Скины] Добавлен скин для Торговой лавки.
+## 💪 Улучшения
+- [Панель дополнительных предметов] Обновление списка открываемых предметов.
+- [Скины] Обновлен скин Путеводитель по приключениям.
+- [Скины] Обновлен скин предупреждений / оповещений.
+- [Скины] Обновлен скин Таймера очереди Bigwigs.
+- [Отслеживание заданий] Добавлена поддержка ежемесячного отслеживания активности.
+- [Отслеживание событий] Исправлен таймер пиршества.
 
 ------

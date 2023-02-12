@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Archavon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220704203621")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(31125)
-mod:SetEncounterID(1126)
+mod:SetEncounterID(mod:IsClassic() and 772 or 1126)
 mod:SetModelID(26967)
 
 mod:RegisterCombat("combat")

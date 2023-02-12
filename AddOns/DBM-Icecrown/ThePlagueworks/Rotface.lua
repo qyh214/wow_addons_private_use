@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Rotface", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220624005857")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(36627)
-mod:SetEncounterID(1104)
+mod:SetEncounterID(mod:IsClassic() and 850 or 1104)
 mod:SetModelID(31005)
 mod:SetUsedIcons(1, 2)
 mod:RegisterCombat("combat")

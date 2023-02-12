@@ -206,17 +206,31 @@ local VirtualDTEvent = {
 
 local VirtualDT = {
     Friends = {
+        name = "Friends",
+        text = {
+            SetFormattedText = E.noop
+        }
+    },
+    System = {
+        name = "System"
+    },
+    Time = {
+        name = "Time",
         text = {
             SetFormattedText = E.noop
         }
     },
     Guild = {
+        name = "Guild",
         text = {
             SetFormattedText = E.noop,
             SetText = E.noop
         },
         GetScript = function()
             return E.noop
+        end,
+        IsMouseOver = function()
+            return false
         end
     }
 }
@@ -289,7 +303,7 @@ local ButtonTypes = {
         icon = W.Media.Icons.barEncounterJournal,
         macro = {
             LeftButton = "/click EJMicroButton",
-            RightButton = "/run WeeklyRewards_LoadUI(); WeeklyRewardsFrame:Show()"
+            RightButton = "/run WeeklyRewards_ShowUI()"
         },
         tooltips = {
             LeftButtonIcon .. " " .. L["Encounter Journal"],
@@ -594,41 +608,6 @@ local ButtonTypes = {
         end
     }
 }
-
--- Chinese player prefer to use Meeting Stone rather than Blizzard LFG
-if IsAddOnLoaded("MeetingStone") or IsAddOnLoaded("MeetingStonePlus") then
-    local NetEaseEnv = LibStub("NetEaseEnv-1.0")
-    local MeetingStone
-    for k in pairs(NetEaseEnv._NSInclude) do
-        if type(k) == "table" then
-            MeetingStone = k.Addon
-        end
-    end
-
-    ButtonTypes.GROUP_FINDER.macro = nil
-    ButtonTypes.GROUP_FINDER.click = {
-        LeftButton = function()
-            if not InCombatLockdown() then
-                _G.ToggleLFDParentFrame()
-            else
-                _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
-            end
-        end,
-        RightButton = function()
-            if not InCombatLockdown() then
-                MeetingStone:Toggle()
-            else
-                _G.UIErrorsFrame:AddMessage(E.InfoColor .. _G.ERR_NOT_IN_COMBAT)
-            end
-        end
-    }
-    ButtonTypes.GROUP_FINDER.tooltips = {
-        L["Group Finder"],
-        "\n",
-        LeftButtonIcon .. " " .. L["Group Finder"],
-        RightButtonIcon .. " " .. L["NetEase Meeting Stone"]
-    }
-end
 
 function GB:ShowAdvancedTimeTooltip(panel)
     DT.RegisteredDataTexts["Time"].onEnter()
@@ -1384,6 +1363,12 @@ function GB:Initialize()
     if InCombatLockdown() then
         self:RegisterEvent("PLAYER_REGEN_ENABLED")
         return
+    end
+
+    for name, vDT in pairs(VirtualDT) do
+        if DT.RegisteredDataTexts[name] and DT.RegisteredDataTexts[name].applySettings then
+            DT.RegisteredDataTexts[name].applySettings(vDT, E.media.hexvaluecolor)
+        end
     end
 
     self:UpdateReknown()

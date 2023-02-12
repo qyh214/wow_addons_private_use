@@ -165,6 +165,11 @@
         </Texture>
       </Layer>
       <Layer level="BACKGROUND" textureSubLevel="1">
+        <Texture parentKey="DrakewatcherTexture" file="Interface\AddOns\RareScanner\Media\Textures\DrakewatcherTexture" hidden="true">
+         <Size x="54" y="52"/>
+        </Texture>
+      </Layer>
+      <Layer level="BACKGROUND" textureSubLevel="1">
         <Texture parentKey="AppearanceTexture" file="Interface\AddOns\RareScanner\Media\Textures\AppearanceTexture" hidden="true">
           <Size x="54" y="52"/>
         </Texture>

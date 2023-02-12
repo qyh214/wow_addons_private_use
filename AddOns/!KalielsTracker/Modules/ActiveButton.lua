@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -19,7 +19,7 @@ local KTF = KT.frame
 
 local eventFrame
 local activeFrame, abutton
-local isBlizzardButton = false
+local blizzardButtonIconID = 0
 
 local isBartender, isElvui, isTukui = false, false, false
 
@@ -75,18 +75,23 @@ local function ActiveFrame_SetPosition()
 	KT:protStop("SetPoint", activeFrame, point, relativeTo, relativePoint, xOfs, yOfs)
 end
 
-local function TestBlizzardButton()
-	isBlizzardButton = false
+local function ActiveFrame_Hide()
+	if activeFrame:IsShown() then
+		activeFrame:Hide()
+		RemoveHotkey(abutton)
+	end
+end
+
+local function UpdateBlizzardButtonIconID()
+	local iconID = 0
 	if HasExtraActionBar() then
 		local button = ExtraActionBarFrame.button
 		local actionType, id = GetActionInfo(button.action)
 		if actionType == "spell" then
-			local _, _, icon = GetSpellInfo(id)
-			if icon == abutton.item then
-				isBlizzardButton = true
-			end
+			iconID = select(3, GetSpellInfo(id))
 		end
 	end
+	blizzardButtonIconID = iconID
 end
 
 local function SetFrames()
@@ -97,11 +102,10 @@ local function SetFrames()
 			_DBG("Event - "..event, true)
 			if event == "QUEST_WATCH_LIST_CHANGED" or
 					event == "ZONE_CHANGED" or
-					event == "QUEST_POI_UPDATE" or
-					event == "BAG_UPDATE_COOLDOWN" then
+					event == "QUEST_POI_UPDATE" then
 				M:Update()
 			elseif event == "UPDATE_EXTRA_ACTIONBAR" then
-				TestBlizzardButton()
+				UpdateBlizzardButtonIconID()
 				M:Update()
 			elseif event == "UPDATE_BINDINGS" then
 				if activeFrame:IsShown() then
@@ -118,7 +122,6 @@ local function SetFrames()
 	eventFrame:RegisterEvent("UPDATE_EXTRA_ACTIONBAR")
 	eventFrame:RegisterEvent("ZONE_CHANGED")
 	eventFrame:RegisterEvent("QUEST_POI_UPDATE")
-	eventFrame:RegisterEvent("BAG_UPDATE_COOLDOWN")
 	eventFrame:RegisterEvent("UPDATE_BINDINGS")
 	eventFrame:RegisterEvent("PET_BATTLE_OPENING_START")
 	eventFrame:RegisterEvent("PET_BATTLE_CLOSE")
@@ -275,7 +278,7 @@ function M:Update(id)
 	else
 		if InCombatLockdown() then return end
 
-		if not dbChar.collapsed and not isBlizzardButton then
+		if not dbChar.collapsed then
 			for questID, _ in pairs(KT.fixedButtons) do
 				if questID == C_SuperTrack.GetSuperTrackedQuestID() then
 					closestQuestID = questID
@@ -294,36 +297,39 @@ function M:Update(id)
 
 	if closestQuestID then
 		local button = KT:GetFixedButton(closestQuestID)
-		local autoShowTooltip = false
-		if GameTooltip:IsShown() and GameTooltip:GetOwner() == abutton then
-			QuestObjectiveItem_OnLeave(abutton)
-			autoShowTooltip = true
-		end
+		if button.item ~= blizzardButtonIconID then
+			local autoShowTooltip = false
+			if GameTooltip:IsShown() and GameTooltip:GetOwner() == abutton then
+				QuestObjectiveItem_OnLeave(abutton)
+				autoShowTooltip = true
+			end
 
-		abutton.block = button.block
-		abutton.questID = closestQuestID
-		abutton:SetID(button:GetID())
-		abutton.charges = button.charges
-		abutton.rangeTimer = button.rangeTimer
-		abutton.item = button.item
-		abutton.link = button.link
-		SetItemButtonTexture(abutton, button.item)
-		SetItemButtonCount(abutton, button.charges)
-		KT_QuestObjectiveItem_UpdateCooldown(abutton)
-		abutton.text:SetText(button.num)
-		abutton:SetAttribute("item", button.link)
+			abutton.block = button.block
+			abutton.questID = closestQuestID
+			abutton:SetID(button:GetID())
+			abutton.charges = button.charges
+			abutton.rangeTimer = button.rangeTimer
+			abutton.item = button.item
+			abutton.link = button.link
+			SetItemButtonTexture(abutton, button.item)
+			SetItemButtonCount(abutton, button.charges)
+			KT_QuestObjectiveItem_UpdateCooldown(abutton)
+			abutton.text:SetText(button.num)
+			abutton:SetAttribute("item", button.link)
 
-		if not activeFrame:IsShown() then
-			UpdateHotkey()
-			activeFrame:SetShown(not KT.locked)
-		end
+			if not activeFrame:IsShown() then
+				UpdateHotkey()
+				activeFrame:SetShown(not KT.locked)
+			end
 
-		if autoShowTooltip then
-			KT_QuestObjectiveItem_OnEnter(abutton)
+			if autoShowTooltip then
+				KT_QuestObjectiveItem_OnEnter(abutton)
+			end
+		else
+			ActiveFrame_Hide()
 		end
-	elseif activeFrame:IsShown() then
-		activeFrame:Hide()
-		RemoveHotkey(abutton)
+	else
+		ActiveFrame_Hide()
 	end
 	self.timer = 0
 end

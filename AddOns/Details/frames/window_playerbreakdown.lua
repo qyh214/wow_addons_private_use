@@ -5592,6 +5592,10 @@ local row_on_enter = function(self)
 			info.jogador.detalhes = self.show --minha tabela = jogador = jogador.detales = spellid ou nome que esta sendo mostrado na direita
 			info.jogador:MontaDetalhes (self.show, self, info.instancia) --passa a spellid ou nome e a barra
 		end
+	elseif (self.isDetalhe and type(self.show) == "number") then
+		GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+		Details:GameTooltipSetSpellByID(self.show)
+		GameTooltip:Show()
 	end
 end
 
@@ -5635,6 +5639,8 @@ local row_on_leave = function(self)
 
 	elseif (self.isAlvo) then
 		self:SetHeight(CONST_TARGET_HEIGHT)
+	elseif (self.isDetalhe) then
+		self:SetHeight(16)
 	end
 end
 
@@ -6054,13 +6060,15 @@ function gump:CriaNovaBarraInfo3 (instancia, index)
 
 	esta_barra:EnableMouse(true)
 
-	CriaTexturaBarra(esta_barra)
+	
 
 	--icone
 	esta_barra.icone = esta_barra:CreateTexture(nil, "OVERLAY")
 	esta_barra.icone:SetWidth(14)
 	esta_barra.icone:SetHeight(14)
-	esta_barra.icone:SetPoint("RIGHT", esta_barra.textura, "LEFT", 18, 0)
+	esta_barra.icone:SetPoint("LEFT", esta_barra, "LEFT", 0, 0)
+
+	CriaTexturaBarra(esta_barra)
 
 	esta_barra:SetAlpha(0.9)
 	esta_barra.icone:SetAlpha(1)

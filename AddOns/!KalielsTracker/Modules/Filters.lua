@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -291,7 +291,8 @@ local function Filter_Quests(spec, idx)
 					end
 				else
 					isOnMap = (questInfo.isOnMap or
-							KT.QuestsCache_GetProperty(questInfo.questID, "startMapID") == mapID)
+							KT.QuestsCache_GetProperty(questInfo.questID, "startMapID") == mapID or
+							strfind(questInfo.title, zoneName))
 					if not questInfo.isTask and (not questInfo.isBounty or C_QuestLog.IsComplete(questInfo.questID)) and (KT.QuestsCache_GetProperty(questInfo.questID, "isCalling") or isOnMap or isInZone) then
 						if KT.inInstance then
 							if IsInstanceQuest(questInfo.questID) or isInZone then
@@ -805,7 +806,7 @@ local function SetFrames()
 	if not eventFrame then
 		eventFrame = CreateFrame("Frame")
 		eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
-			_DBG("Event - "..event.." - "..(arg1 or ""), true)
+			_DBG("Event - "..event.." - "..tostring(arg1), true)
 			if event == "ADDON_LOADED" and arg1 == "Blizzard_AchievementUI" then
 				SetHooks_AchievementUI()
 				self:UnregisterEvent(event)
@@ -827,6 +828,16 @@ local function SetFrames()
 				RemoveFavorite("quests", questID)
 			elseif event == "ACHIEVEMENT_EARNED" then
 				RemoveFavorite("achievements", arg1)
+			elseif event == "PLAYER_ENTERING_WORLD" then
+				if not KT.IsInBetween() then
+					if db.filterAuto[1] == "zone" then
+						Filter_Quests("zone")
+					end
+					if db.filterAuto[2] == "zone" then
+						Filter_Achievements("zone")
+					end
+				end
+				self:UnregisterEvent(event)
 			elseif event == "ZONE_CHANGED_NEW_AREA" then
 				if not KT.IsInBetween() then
 					C_Timer.After(0, function()
@@ -848,6 +859,7 @@ local function SetFrames()
 		end)
 	end
 	eventFrame:RegisterEvent("ADDON_LOADED")
+	eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 	eventFrame:RegisterEvent("QUEST_ACCEPTED")
 	eventFrame:RegisterEvent("QUEST_COMPLETE")
 	eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")

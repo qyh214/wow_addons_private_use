@@ -708,6 +708,7 @@ function main.hide_default_tracker()
     if quest_frame:GetParent() ~= hidden_frame then
       quest_frame:SetParent(hidden_frame)
     end
+    hidden_frame:Hide()
   end
 end
 

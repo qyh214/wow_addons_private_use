@@ -1,6 +1,9 @@
 # <DBM> World Bosses (Legion)
 
-## [r37](https://github.com/DeadlyBossMods/DBM-Legion/tree/r37) (2022-12-26)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r36...r37) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
+## [r38](https://github.com/DeadlyBossMods/DBM-Legion/tree/r38) (2023-01-24)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Legion/compare/r37...r38) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Legion/releases)
 
-- more targetted fix  
+- bump tocs  
+- Fix many bugs with incorrect spellids or missing registered spellids that caused many things not to work correctly during legion.  
+- reveal how many mods in legion are still broken....  
+- Fix actual cause of breakage  

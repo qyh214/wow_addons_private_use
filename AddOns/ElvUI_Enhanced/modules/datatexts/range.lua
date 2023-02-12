@@ -49,14 +49,14 @@ local function OnEvent(self, event)
 	end
 end
 
-local function ValueColorUpdate(hex, r, g, b)
+local function ValueColorUpdate(_, hex, r, g, b)
 	displayString = string.join("", "%s: ", hex, "%d|r - ", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)
 	end
 end
-E.valueColorUpdateFuncs[ValueColorUpdate] = true
+E.valueColorUpdateFuncs.RangeEnhanced = ValueColorUpdate
 
 --[[
 	DT:RegisterDatatext(name, category, events, eventFunc, updateFunc, clickFunc, onEnterFunc)

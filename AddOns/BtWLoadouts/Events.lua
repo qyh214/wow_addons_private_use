@@ -11,6 +11,8 @@ local GetCharacterSlug = Internal.GetCharacterSlug
 
 -- A map from the equipment manager ids to our sets
 local equipmentSetMap = {};
+-- A map from the talent tree ids to our sets
+local dfTalentTreeSetMap = {};
 
 local frame = CreateFrame("Frame");
 frame:SetScript("OnEvent", function (self, event, ...)
@@ -312,6 +314,40 @@ function frame:PLAYER_LOGIN(...)
             end
         end
     end
+
+    local activeConfigID = C_ClassTalents.GetActiveConfigID();
+    if next(dfTalentTreeSetMap) == nil then
+        local character = GetCharacterSlug();
+        for setID,set in pairs(BtWLoadoutsSets.dftalents) do
+            if type(set) == "table" then
+                if set.character and set.configID then
+                    local info = Internal.GetCharacterInfo(set.character)
+                    if not info then -- Clear character specific data if the character is unknown
+                        set.character = nil
+                        set.configID = nil
+                    end
+                end
+                if set.character == character and set.configID ~= nil then
+                    dfTalentTreeSetMap[set.configID] = set
+                end
+            end
+        end
+    end
+
+    local specID = GetSpecializationInfo(GetSpecialization());
+    local tree = Internal.GetTreeInfoBySpecID(specID);
+    local configIDs = C_ClassTalents.GetConfigIDsBySpecID(specID);
+    for _,configID in ipairs(configIDs) do
+        self:TRAIT_CONFIG_UPDATED(configID);
+    end
+
+    -- Delete any trait trees that arent for the current spec but think they are
+    for configID,set in pairs(dfTalentTreeSetMap) do
+        local configInfo = C_Traits.GetConfigInfo(configID);
+        if activeConfigID == configID or not configInfo or configInfo.treeIDs[1] ~= tree.ID or configInfo.type ~= 1 or (not tContains(configIDs, configID) and set.specID == specID) then
+            self:TRAIT_CONFIG_DELETED(configID);
+        end
+    end
 end
 local firstLogin = true
 function frame:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi)
@@ -550,6 +586,22 @@ function frame:PLAYER_SPECIALIZATION_CHANGED(...)
     end
     Internal.UpdateLauncher(Internal.GetActiveProfiles());
     Internal.UpdateTraitInfoFromPlayer();
+
+    local activeConfigID = C_ClassTalents.GetActiveConfigID();
+    local specID = GetSpecializationInfo(GetSpecialization());
+    local tree = Internal.GetTreeInfoBySpecID(specID);
+    local configIDs = C_ClassTalents.GetConfigIDsBySpecID(specID);
+    for _,configID in ipairs(configIDs) do
+        self:TRAIT_CONFIG_UPDATED(configID);
+    end
+
+    -- Delete any trait trees that arent for the current spec but think they are
+    for configID,set in pairs(dfTalentTreeSetMap) do
+        local configInfo = C_Traits.GetConfigInfo(configID);
+        if activeConfigID == configID or not configInfo or configInfo.treeIDs[1] ~= tree.ID or configInfo.type ~= 1 or (not tContains(configIDs, configID) and set.specID == specID) then
+            self:TRAIT_CONFIG_DELETED(configID);
+        end
+    end
 end
 function frame:UPDATE_INSTANCE_INFO(...)
     local name, realm = UnitFullName("player")
@@ -701,11 +753,11 @@ local enchantBySpellID = {
     [44528] = 1075, -- Greater Fortitude
     [60663] = 1099, -- Major Agility
     [44633] = 1103, -- Exceptional Agility
-    [44555] = 1119, -- Exceptional Intellect
     [47715] = 1119, -- Enchant Template
+    [44555] = 1119, -- Exceptional Intellect
     [60653] = 1128, -- Greater Intellect
-    [44593] = 1147, -- Major Versatility
     [44508] = 1147, -- Greater Versatility
+    [44593] = 1147, -- Major Versatility
     [15340] = 1483, -- Lesser Arcane Amalgamation
     [15389] = 1503, -- Lesser Arcane Amalgamation
     [15391] = 1504, -- Lesser Arcane Amalgamation
@@ -730,10 +782,10 @@ local enchantBySpellID = {
     [20015] = 1889, -- Superior Defense
     [20016] = 1890, -- Vitality
     [60692] = 1891, -- Powerful Stats
-    [20025] = 1891, -- Greater Stats
-    [44616] = 1891, -- Greater Stats
     [74191] = 1891, -- Mighty Stats
+    [20025] = 1891, -- Greater Stats
     [27905] = 1891, -- Stats
+    [44616] = 1891, -- Greater Stats
     [20026] = 1892, -- Major Health
     [20028] = 1893, -- Major Mana
     [20029] = 1894, -- Icy Chill
@@ -767,8 +819,8 @@ local enchantBySpellID = {
     [22844] = 2544, -- Arcanum of Focus
     [22846] = 2545, -- Arcanum of Protection
     [23799] = 2563, -- Strength
-    [25080] = 2564, -- Superior Agility
     [23800] = 2564, -- Agility
+    [25080] = 2564, -- Superior Agility
     [23801] = 2565, -- Argent Versatility
     [23803] = 2567, -- Mighty Versatility
     [23804] = 2568, -- Mighty Intellect
@@ -779,8 +831,8 @@ local enchantBySpellID = {
     [24165] = 2589, -- Hoodoo Hex
     [24167] = 2590, -- Prophetic Aura
     [24168] = 2591, -- Animist's Caress
-    [144736] = 2603, -- Fishing
     [13620] = 2603, -- Fishing
+    [144736] = 2603, -- Fishing
     [24420] = 2604, -- Zandalar Signet of Serenity
     [24421] = 2605, -- Zandalar Signet of Mojo
     [24422] = 2606, -- Zandalar Signet of Might
@@ -844,8 +896,8 @@ local enchantBySpellID = {
     [33993] = 2934, -- Blasting
     [33994] = 2935, -- Precise Strikes
     [33997] = 2937, -- Major Spellpower
-    [134871] = 2938, -- PvP Power
     [34003] = 2938, -- PvP Power
+    [134871] = 2938, -- PvP Power
     [34007] = 2939, -- Cat's Swiftness
     [34008] = 2940, -- Boar's Speed
     [35355] = 2977, -- Inscription of Warding
@@ -887,8 +939,8 @@ local enchantBySpellID = {
     [42974] = 3225, -- Executioner
     [44119] = 3228, -- Enchant Bracer - Template
     [44383] = 3229, -- Armor
-    [44484] = 3231, -- Haste
     [44598] = 3231, -- Haste
+    [44484] = 3231, -- Haste
     [47901] = 3232, -- Tuskarr's Vitality
     [27958] = 3233, -- Exceptional Mana
     [44488] = 3234, -- Precision
@@ -909,8 +961,8 @@ local enchantBySpellID = {
     [45697] = 3269, -- Truesilver Fishing Line
     [46578] = 3273, -- Deathfrost
     [47103] = 3289, -- Riding Crop
-    [48557] = 3289, -- Riding Crop
     [48555] = 3289, -- Skybreaker Whip
+    [48557] = 3289, -- Riding Crop
     [47672] = 3294, -- Mighty Stamina
     [47899] = 3296, -- Wisdom
     [47900] = 3297, -- Super Health
@@ -1257,56 +1309,56 @@ local enchantBySpellID = {
     [173287] = 5383, -- Hemet's Heartseeker
     [173323] = 5384, -- Mark of Bleeding Hollow
     [191009] = 5423, -- Word of Critical Strike
-    [190866] = 5423, -- Word of Critical Strike
     [190992] = 5423, -- Word of Critical Strike
+    [190866] = 5423, -- Word of Critical Strike
     [191010] = 5424, -- Word of Haste
-    [190993] = 5424, -- Word of Haste
     [190867] = 5424, -- Word of Haste
-    [190868] = 5425, -- Word of Mastery
+    [190993] = 5424, -- Word of Haste
     [190994] = 5425, -- Word of Mastery
     [191011] = 5425, -- Word of Mastery
-    [191012] = 5426, -- Word of Versatility
+    [190868] = 5425, -- Word of Mastery
     [190995] = 5426, -- Word of Versatility
+    [191012] = 5426, -- Word of Versatility
     [190869] = 5426, -- Word of Versatility
     [190870] = 5427, -- Binding of Critical Strike
     [191013] = 5427, -- Binding of Critical Strike
     [190996] = 5427, -- Binding of Critical Strike
-    [190871] = 5428, -- Binding of Haste
     [190997] = 5428, -- Binding of Haste
     [191014] = 5428, -- Binding of Haste
-    [190872] = 5429, -- Binding of Mastery
+    [190871] = 5428, -- Binding of Haste
     [191015] = 5429, -- Binding of Mastery
     [190998] = 5429, -- Binding of Mastery
-    [191016] = 5430, -- Binding of Versatility
-    [190999] = 5430, -- Binding of Versatility
+    [190872] = 5429, -- Binding of Mastery
     [190873] = 5430, -- Binding of Versatility
+    [190999] = 5430, -- Binding of Versatility
+    [191016] = 5430, -- Binding of Versatility
+    [191000] = 5431, -- Word of Strength
     [191017] = 5431, -- Word of Strength
     [190874] = 5431, -- Word of Strength
-    [191000] = 5431, -- Word of Strength
-    [191018] = 5432, -- Word of Agility
     [191001] = 5432, -- Word of Agility
     [190875] = 5432, -- Word of Agility
-    [191002] = 5433, -- Word of Intellect
+    [191018] = 5432, -- Word of Agility
     [190876] = 5433, -- Word of Intellect
     [191019] = 5433, -- Word of Intellect
+    [191002] = 5433, -- Word of Intellect
+    [190877] = 5434, -- Binding of Strength
     [191020] = 5434, -- Binding of Strength
     [191003] = 5434, -- Binding of Strength
-    [190877] = 5434, -- Binding of Strength
     [191021] = 5435, -- Binding of Agility
     [190878] = 5435, -- Binding of Agility
     [191004] = 5435, -- Binding of Agility
-    [190879] = 5436, -- Binding of Intellect
     [191022] = 5436, -- Binding of Intellect
+    [190879] = 5436, -- Binding of Intellect
     [191005] = 5436, -- Binding of Intellect
-    [190892] = 5437, -- Mark of the Claw
     [191023] = 5437, -- Mark of the Claw
+    [190892] = 5437, -- Mark of the Claw
     [191006] = 5437, -- Mark of the Claw
     [190893] = 5438, -- Mark of the Distant Army
     [191007] = 5438, -- Mark of the Distant Army
     [191024] = 5438, -- Mark of the Distant Army
     [191025] = 5439, -- Mark of the Hidden Satyr
-    [191008] = 5439, -- Mark of the Hidden Satyr
     [190894] = 5439, -- Mark of the Hidden Satyr
+    [191008] = 5439, -- Mark of the Hidden Satyr
     [190954] = 5440, -- Boon of the Scavenger
     [190955] = 5441, -- Boon of the Gemfinder
     [190956] = 5442, -- Boon of the Harvester
@@ -1330,41 +1382,41 @@ local enchantBySpellID = {
     [228407] = 5890, -- Mark of the Trained Soldier
     [228406] = 5890, -- Mark of the Trained Soldier
     [228405] = 5890, -- Mark of the Trained Soldier
+    [228408] = 5891, -- Mark of the Ancient Priestess
     [228409] = 5891, -- Mark of the Ancient Priestess
     [228410] = 5891, -- Mark of the Ancient Priestess
-    [228408] = 5891, -- Mark of the Ancient Priestess
+    [235695] = 5895, -- Mark of the Master
     [235703] = 5895, -- Mark of the Master
     [235699] = 5895, -- Mark of the Master
-    [235695] = 5895, -- Mark of the Master
+    [235700] = 5896, -- Mark of the Versatile
     [235696] = 5896, -- Mark of the Versatile
     [235704] = 5896, -- Mark of the Versatile
-    [235700] = 5896, -- Mark of the Versatile
     [235701] = 5897, -- Mark of the Quick
     [235705] = 5897, -- Mark of the Quick
     [235697] = 5897, -- Mark of the Quick
     [235706] = 5898, -- Mark of the Deadly
-    [235698] = 5898, -- Mark of the Deadly
     [235702] = 5898, -- Mark of the Deadly
+    [235698] = 5898, -- Mark of the Deadly
     [235731] = 5899, -- Boon of the Builder
     [235794] = 5900, -- Boon of the Zookeeper
     [254584] = 5929, -- Boon of the Steadfast
     [254607] = 5930, -- Ancient Fishing Line
     [254706] = 5931, -- Boon of the Lightbearer
-    [255035] = 5932, -- Kul Tiran Herbalism
     [267458] = 5932, -- Zandalari Herbalism
-    [267482] = 5933, -- Zandalari Mining
+    [255035] = 5932, -- Kul Tiran Herbalism
     [255040] = 5933, -- Kul Tiran Mining
-    [267486] = 5934, -- Zandalari Skinning
+    [267482] = 5933, -- Zandalari Mining
     [255065] = 5934, -- Kul Tiran Skinning
+    [267486] = 5934, -- Zandalari Skinning
     [255066] = 5935, -- Kul Tiran Surveying
     [267490] = 5935, -- Zandalari Surveying
-    [267495] = 5936, -- Swift Hearthing
     [255068] = 5936, -- Swift Hearthing
+    [267495] = 5936, -- Swift Hearthing
     [255070] = 5937, -- Kul Tiran Crafting
     [267498] = 5937, -- Zandalari Crafting
-    [255086] = 5938, -- Seal of Critical Strike
     [255071] = 5938, -- Seal of Critical Strike
     [255094] = 5938, -- Seal of Critical Strike
+    [255086] = 5938, -- Seal of Critical Strike
     [255095] = 5939, -- Seal of Haste
     [255072] = 5939, -- Seal of Haste
     [255087] = 5939, -- Seal of Haste
@@ -1374,31 +1426,31 @@ local enchantBySpellID = {
     [255097] = 5941, -- Seal of Versatility
     [255074] = 5941, -- Seal of Versatility
     [255089] = 5941, -- Seal of Versatility
-    [255075] = 5942, -- Pact of Critical Strike
     [255090] = 5942, -- Pact of Critical Strike
     [255098] = 5942, -- Pact of Critical Strike
-    [255076] = 5943, -- Pact of Haste
+    [255075] = 5942, -- Pact of Critical Strike
+    [281260] = 5943, -- Test Spell Token - Enchantment (DNT)
     [255099] = 5943, -- Pact of Haste
     [255091] = 5943, -- Pact of Haste
-    [281260] = 5943, -- Test Spell Token - Enchantment (DNT)
-    [255077] = 5944, -- Pact of Mastery
-    [255092] = 5944, -- Pact of Mastery
+    [255076] = 5943, -- Pact of Haste
     [255100] = 5944, -- Pact of Mastery
+    [255092] = 5944, -- Pact of Mastery
+    [255077] = 5944, -- Pact of Mastery
     [255078] = 5945, -- Pact of Versatility
     [255093] = 5945, -- Pact of Versatility
     [255101] = 5945, -- Pact of Versatility
-    [255103] = 5946, -- Coastal Surge
     [255105] = 5946, -- Coastal Surge
+    [255103] = 5946, -- Coastal Surge
     [255104] = 5946, -- Coastal Surge
-    [255110] = 5948, -- Siphoning
     [255112] = 5948, -- Siphoning
     [255111] = 5948, -- Siphoning
+    [255110] = 5948, -- Siphoning
     [255131] = 5949, -- Torrent of Elements
-    [255130] = 5949, -- Torrent of Elements
     [255129] = 5949, -- Torrent of Elements
+    [255130] = 5949, -- Torrent of Elements
     [255143] = 5950, -- Gale-Force Striking
-    [255141] = 5950, -- Gale-Force Striking
     [255142] = 5950, -- Gale-Force Striking
+    [255141] = 5950, -- Gale-Force Striking
     [255936] = 5952, -- Belt Enchant: Holographic Horror Projector
     [255940] = 5953, -- Belt Enchant: Personal Space Amplifier
     [264877] = 5955, -- Crow's Nest Scope
@@ -1406,55 +1458,55 @@ local enchantBySpellID = {
     [264762] = 5957, -- Incendiary Ammunition
     [265095] = 5958, -- Frost-Laced Ammunition
     [267554] = 5960, -- _JKL - Item Enchantment Test
-    [268852] = 5962, -- Versatile Navigation
-    [268879] = 5962, -- Versatile Navigation
     [268878] = 5962, -- Versatile Navigation
-    [268897] = 5963, -- Quick Navigation
+    [268879] = 5962, -- Versatile Navigation
+    [268852] = 5962, -- Versatile Navigation
     [268895] = 5963, -- Quick Navigation
     [268894] = 5963, -- Quick Navigation
-    [268901] = 5964, -- Masterful Navigation
-    [268903] = 5964, -- Masterful Navigation
+    [268897] = 5963, -- Quick Navigation
     [268902] = 5964, -- Masterful Navigation
-    [268909] = 5965, -- Deadly Navigation
+    [268903] = 5964, -- Masterful Navigation
+    [268901] = 5964, -- Masterful Navigation
     [268907] = 5965, -- Deadly Navigation
+    [268909] = 5965, -- Deadly Navigation
     [268908] = 5965, -- Deadly Navigation
+    [268914] = 5966, -- Stalwart Navigation
     [268915] = 5966, -- Stalwart Navigation
     [268913] = 5966, -- Stalwart Navigation
-    [268914] = 5966, -- Stalwart Navigation
     [269123] = 5967, -- Belt Enchant: Miniaturized Plasma Shield
     [271277] = 5969, -- QA Visual Debug Enchant
     [271366] = 5970, -- Safe Hearthing
     [271433] = 5971, -- Cooled Hearthing
-    [310948] = 6087, -- Spellthread Enchant 03
     [279182] = 6087, -- Resilient Spellthread
-    [279183] = 6088, -- Discreet Spellthread
+    [310948] = 6087, -- Spellthread Enchant 03
     [310946] = 6088, -- Spellthread Enchant 01
-    [310947] = 6089, -- Spellthread Enchant 02
+    [279183] = 6088, -- Discreet Spellthread
     [279184] = 6089, -- Feathery Spellthread
+    [310947] = 6089, -- Spellthread Enchant 02
+    [298011] = 6108, -- Accord of Critical Strike
     [298009] = 6108, -- Accord of Critical Strike
     [298010] = 6108, -- Accord of Critical Strike
-    [298011] = 6108, -- Accord of Critical Strike
+    [297994] = 6109, -- Accord of Haste
     [298016] = 6109, -- Accord of Haste
     [297989] = 6109, -- Accord of Haste
-    [297994] = 6109, -- Accord of Haste
-    [298002] = 6110, -- Accord of Mastery
     [297995] = 6110, -- Accord of Mastery
     [298001] = 6110, -- Accord of Mastery
-    [297999] = 6111, -- Accord of Versatility
+    [298002] = 6110, -- Accord of Mastery
     [297991] = 6111, -- Accord of Versatility
+    [297999] = 6111, -- Accord of Versatility
     [297993] = 6111, -- Accord of Versatility
     [300770] = 6112, -- Machinist's Brilliance
     [300769] = 6112, -- Machinist's Brilliance
     [298433] = 6112, -- Machinist's Brilliance
     [298439] = 6148, -- Force Multiplier
-    [298440] = 6148, -- Force Multiplier
     [300788] = 6148, -- Force Multiplier
+    [298440] = 6148, -- Force Multiplier
     [298437] = 6149, -- Oceanic Restoration
-    [298515] = 6149, -- Oceanic Restoration
     [298438] = 6149, -- Oceanic Restoration
-    [298441] = 6150, -- Naga Hide
+    [298515] = 6149, -- Oceanic Restoration
     [300789] = 6150, -- Naga Hide
     [298442] = 6150, -- Naga Hide
+    [298441] = 6150, -- Naga Hide
     [307414] = 6158, -- LUIS TEST - Enchant
     [308398] = 6162, -- LUIS TEST - Enchant - Base Visual
     [308725] = 6162, -- Illusion: Wraithchill
@@ -1506,6 +1558,34 @@ local enchantBySpellID = {
     [359584] = 6347, -- JDP - Test - Enchants
     [322354] = 6349, -- FX Test Enchant - High
     [323326] = 6350, -- FX Test Enchant - Low
+    [376822] = 6488, -- Apply Fierce Armor Kit
+    [376844] = 6489, -- Apply Fierce Armor Kit
+    [376848] = 6490, -- Apply Fierce Armor Kit
+    [376839] = 6491, -- Apply Reinforced Armor Kit
+    [376843] = 6492, -- Apply Reinforced Armor Kit
+    [376849] = 6493, -- Apply Reinforced Armor Kit
+    [376819] = 6494, -- Apply Frosted Armor Kit
+    [376845] = 6495, -- Apply Frosted Armor Kit
+    [376847] = 6496, -- Apply Frosted Armor Kit
+    [385766] = 6520, -- Apply Gyroscopic Kaleidoscope
+    [385768] = 6521, -- Apply Gyroscopic Kaleidoscope
+    [385770] = 6522, -- Apply Gyroscopic Kaleidoscope
+    [385772] = 6523, -- Apply Projectile Propulsion Pinion
+    [385773] = 6524, -- Apply Projectile Propulsion Pinion
+    [385775] = 6525, -- Projectile Propulsion Pinion
+    [386152] = 6526, -- High Intensity Thermal Scanner
+    [386153] = 6527, -- High Intensity Thermal Scanner
+    [386154] = 6528, -- High Intensity Thermal Scanner
+    [387284] = 6536, -- Vibrant Spellthread
+    [387285] = 6537, -- Vibrant Spellthread
+    [387286] = 6538, -- Vibrant Spellthread
+    [387291] = 6539, -- Frozen Spellthread
+    [387293] = 6540, -- Frozen Spellthread
+    [387294] = 6541, -- Frozen Spellthread
+    [387295] = 6542, -- Temporal Spellthread
+    [387296] = 6543, -- Temporal Spellthread
+    [387298] = 6544, -- Temporal Spellthread
+    [400122] = 6721, -- 10.0.5 - Generic - Storm - Weapon Enchant - High
 }
 local itemChangedData = {}
 function frame:ITEM_CHANGED(previousHyperlink, newHyperlink)
@@ -1549,6 +1629,48 @@ end
 function frame:SOCKET_INFO_SUCCESS(...)
     Internal.GemApplied()
 end
+function frame:TRAIT_CONFIG_UPDATED(configID)
+    local activeConfigID = C_ClassTalents.GetActiveConfigID();
+    if activeConfigID == configID then
+        return;
+    end
+
+    -- Prevent adding trait trees that arent for the current spec
+    local specID = GetSpecializationInfo(GetSpecialization());
+    local tree = Internal.GetTreeInfoBySpecID(specID);
+    
+    local validConfigIDs = C_ClassTalents.GetConfigIDsBySpecID(specID);
+    if not tContains(validConfigIDs, configID) then
+        return
+    end
+
+    local configInfo = C_Traits.GetConfigInfo(configID);
+    if not configInfo or configInfo.treeIDs[1] ~= tree.ID or configInfo.type ~= 1 then
+        return
+    end
+
+    local set = dfTalentTreeSetMap[configID];
+    if not set then
+        set = Internal.AddSet("dftalents", {
+            name = "",
+            useCount = 0,
+        })
+        dfTalentTreeSetMap[configID] = set;
+    end
+
+    Internal.RefreshSetFromConfigID(set, configID)
+end
+function frame:TRAIT_CONFIG_DELETED(configID)
+    if dfTalentTreeSetMap[configID] then
+--[==[@debug@
+        local configInfo = C_Traits.GetConfigInfo(configID);
+        print(format(L["[BtWLoadouts]: Unflagged talent loadout \"%s\" as a blizzard talent tree."], configInfo.name));
+--@end-debug@]==]
+        dfTalentTreeSetMap[configID].configID = nil;
+        dfTalentTreeSetMap[configID].character = nil;
+        dfTalentTreeSetMap[configID] = nil;
+    end
+end
 frame:RegisterEvent("ADDON_LOADED");
 frame:RegisterEvent("PLAYER_LOGIN");
 frame:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -1568,3 +1690,5 @@ frame:RegisterEvent("BAG_UPDATE_DELAYED");
 frame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player");
 frame:RegisterEvent("SOCKET_INFO_SUCCESS");
 frame:RegisterEvent("ITEM_CHANGED");
+frame:RegisterEvent("TRAIT_CONFIG_UPDATED");
+frame:RegisterEvent("TRAIT_CONFIG_DELETED");

@@ -43,7 +43,7 @@ L["Algeth'ar Echoknight"] = "Echoritterin von Algeth'ar"
 L["Algeth'ar Educator"] = "Spektralherbeiruferin"
 L["Algeth'ar Enforcer"] = "Echoritterin von Algeth'ar"
 --[[Translation missing --]]
---[[ L["Algeth'ar Nurse"] = ""--]] 
+L["Algeth'ar Nurse"] = "Algeth'ar Nurse"
 L["Algeth'ar Security"] = "Sicherheitsdienst von Algeth'ar"
 L["AlgetharAcademy"] = "Akademie von Algeth'ar"
 L["Alpha Eagle"] = "Alphaadler"

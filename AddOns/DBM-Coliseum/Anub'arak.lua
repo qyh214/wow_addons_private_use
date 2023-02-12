@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220624005857")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(34564)
-mod:SetEncounterID(1085)
+mod:SetEncounterID(mod:IsClassic() and 645 or 1085)
 mod:SetModelID(29268)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 8)
 mod:SetMinSyncRevision(20220623000000)

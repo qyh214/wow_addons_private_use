@@ -54,7 +54,7 @@ L["Shows a tooltip with the source locations of an appearance (ie. Quest, Vendor
 L["Shows chat messages on login about the database scan."] = "Показывать в чате при входе в игру сообщения о сканировании базы данных."
 L["Shows messages on login about the database scan."] = "Показывать при входе в игру сообщения о сканировании базы данных."
 L["Shows the icon directly on the item in your bag."] = "Показывать значок прямо на предмете в вашей сумке."
-L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Простите! В вашей базе данных есть поврежденные записи. Это может привести к ошибкам и выдавать неправильные результаты. Чтобы сбросить базу данных, нажмите ниже."
+L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Простите! В вашей базе данных есть повреждённые записи. Это может привести к ошибкам и выдаче неправильных результатов. Чтобы сбросить базу данных, нажмите ниже."
 L["Top"] = "Сверху"
 L["Top Left"] = "Слева сверху"
 L["Top Right"] = "Справа сверху"

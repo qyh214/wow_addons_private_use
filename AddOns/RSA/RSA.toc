@@ -1,8 +1,8 @@
-## Interface: 100002
+## Interface: 100005
 ## Title: RSA
 ## Notes: Easy Spell Announcements!
 ## Author: Raeli
-## Version: 5.11.0
+## Version: 5.12.1
 ## SavedVariables: RSADB, RSA5
 ## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0
 ## X-Credits: Jenneth, Rowaasr13, Xadurk

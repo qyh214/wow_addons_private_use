@@ -284,7 +284,7 @@ do --this can save some main file locals
 		(a = a - (b and 1 or -1) if (b and a == 1 or a == 0) or a == #c then b = not b end return c[a])
 	]]
 
-	local itsElv, itsMis, itsSimpy, itsMel, itsThradex
+	local itsElv, itsMis, itsSimpy, itsMel, itsThradex, itsPooc
 	do	--Simpy Chaos: super cute text coloring function that ignores hyperlinks and keywords
 		local e, f, g = {'||','|Helvmoji:.-|h.-|h','|[Cc].-|[Rr]','|[TA].-|[ta]','|H.-|h.-|h'}, {}, {}
 		local prettify = function(t,...) return gsub(gsub(E:TextGradient(gsub(gsub(t,'%%%%','\27'),'\124\124','\26'),...),'\27','%%%%'),'\26','||') end
@@ -303,12 +303,15 @@ do --this can save some main file locals
 		local MelColors = function(t) return specialText(t, 0.98,0.31,0.43, 0.97,0.78,0.13, 0.31,0.76,0.43, 0.49,0.48,0.97, 0.07,0.69,0.92) end
 		--Thradex: summer without you
 		local ThradexColors = function(t) return specialText(t, 0.00,0.60,0.09, 0.22,0.65,0.90, 0.22,0.65,0.90, 1.00,0.74,0.27, 1.00,0.66,0.00, 1.00,0.50,0.20, 0.92,0.31,0.23) end
+		--Repooc: Monk, Demon Hunter, Paladin, Warlock colors
+		local PoocsColors = function(t) return specialText(t, 0,1,0.6, 0.64,0.19,0.79, 0.96,0.55,0.73, 0.53,0.53,0.93) end
 
 		itsSimpy = function() return ElvSimpy, SimpyColors end
 		itsElv = function() return ElvBlue, ElvColors end
 		itsMel = function() return Hibiscus, MelColors end
 		itsMis = function() return Rainbow, MisColors end
 		itsThradex = function() return PalmTree, ThradexColors end
+		itsPooc = function() return ElvBlue, PoocsColors end
 	end
 
 	local z = {}
@@ -323,15 +326,15 @@ do --this can save some main file locals
 		z['Kalline-Myzrael']		= itsSimpy -- Shaman
 		z['Imsojelly-Myzrael']		= itsSimpy -- [Horde] DK
 		-- Luckyone
-		z['Luckyone-Gehennas']		= ElvRed -- [Horde] Hunter
-		z['Luckygrip-Gehennas']		= ElvRed -- [Horde] DK
-		z['Luckyone-Everlook']		= ElvRed -- [Alliance] Druid
-		z['Luckypriest-Everlook']	= ElvRed -- [Alliance] Priest
-		z['Luckyrogue-Everlook']	= ElvRed -- [Alliance] Rogue
-		z['Luckyhunter-Everlook']	= ElvRed -- [Alliance] Hunter
-		z['Luckydk-Everlook']		= ElvRed -- [Alliance] DK
-		z['Luckykek-Everlook']		= ElvRed -- [Alliance] Shaman
-		z['Luckyone-Giantstalker']	= ElvRed -- [Alliance] Paladin
+		z['Luckyone-Gehennas']		= ElvGreen -- [Horde] Hunter
+		z['Luckygrip-Gehennas']		= ElvGreen -- [Horde] DK
+		z['Luckyone-Everlook']		= ElvGreen -- [Alliance] Druid
+		z['Luckypriest-Everlook']	= ElvGreen -- [Alliance] Priest
+		z['Luckyrogue-Everlook']	= ElvGreen -- [Alliance] Rogue
+		z['Luckyhunter-Everlook']	= ElvGreen -- [Alliance] Hunter
+		z['Luckydk-Everlook']		= ElvGreen -- [Alliance] DK
+		z['Luckykek-Everlook']		= ElvGreen -- [Alliance] Shaman
+		z['Luckyone-Giantstalker']	= ElvGreen -- [Alliance] Paladin
 		-- Repooc
 		z['Poocsdk-Mankrik']		= ElvBlue -- [Horde] DK
 		z['Repooc-Mankrik']			= ElvBlue
@@ -364,27 +367,27 @@ do --this can save some main file locals
 		z['Róhal-Shattrath']		= ElvGreen	-- [Alliance] Hunter
 		z['Meravoker-Shattrath']	= ElvGreen	-- [Alliance] Hunter
 		-- Luckyone
-		z['Luckyone-LaughingSkull']		= ElvRed -- [Horde] Druid
-		z['Luckypriest-LaughingSkull']	= ElvRed -- [Horde] Priest
-		z['Luckymonkas-LaughingSkull']	= ElvRed -- [Horde] Monk
-		z['Luckyhunter-LaughingSkull']	= ElvRed -- [Horde] Hunter
-		z['Luckydh-LaughingSkull']		= ElvRed -- [Horde] DH
-		z['Luckymage-LaughingSkull']	= ElvRed -- [Horde] Mage
-		z['Luckypala-LaughingSkull']	= ElvRed -- [Horde] Paladin
-		z['Luckyrogue-LaughingSkull']	= ElvRed -- [Horde] Rogue
-		z['Luckywl-LaughingSkull']		= ElvRed -- [Horde] Warlock
-		z['Luckydk-LaughingSkull']		= ElvRed -- [Horde] DK
-		z['Luckyevoker-LaughingSkull']	= ElvRed -- [Horde] Evoker
-		z['Notlucky-LaughingSkull']		= ElvRed -- [Horde] Warrior
-		z['Unluckyone-LaughingSkull']	= ElvRed -- [Horde] Shaman
-		z['Luckydruid-LaughingSkull']	= ElvRed -- [Alliance] Druid
+		z['Luckyone-LaughingSkull']		= ElvGreen -- [Horde] Druid
+		z['Luckypriest-LaughingSkull']	= ElvGreen -- [Horde] Priest
+		z['Luckymonkas-LaughingSkull']	= ElvGreen -- [Horde] Monk
+		z['Luckyhunter-LaughingSkull']	= ElvGreen -- [Horde] Hunter
+		z['Luckydh-LaughingSkull']		= ElvGreen -- [Horde] DH
+		z['Luckymage-LaughingSkull']	= ElvGreen -- [Horde] Mage
+		z['Luckypala-LaughingSkull']	= ElvGreen -- [Horde] Paladin
+		z['Luckyrogue-LaughingSkull']	= ElvGreen -- [Horde] Rogue
+		z['Luckywl-LaughingSkull']		= ElvGreen -- [Horde] Warlock
+		z['Luckydk-LaughingSkull']		= ElvGreen -- [Horde] DK
+		z['Luckyevoker-LaughingSkull']	= ElvGreen -- [Horde] Evoker
+		z['Notlucky-LaughingSkull']		= ElvGreen -- [Horde] Warrior
+		z['Unluckyone-LaughingSkull']	= ElvGreen -- [Horde] Shaman
+		z['Luckydruid-LaughingSkull']	= ElvGreen -- [Alliance] Druid
 		-- Repooc
-		z['Sifpooc-Stormrage']			= ElvBlue	-- DH
-		z['Fragmented-Stormrage']		= ElvBlue	-- Warlock
-		z['Dapooc-Stormrage']			= ElvOrange	-- Druid
-		z['Poocvoker-Stormrage']		= ElvGreen	-- Evoker
-		z['Sifupooc-Spirestone']		= ElvBlue	-- Monk
-		z['Repooc-Spirestone']			= ElvBlue	-- Paladin
+		z['Sifpooc-Stormrage']			= itsPooc	-- DH
+		z['Fragmented-Stormrage']		= itsPooc	-- Warlock
+		z['Dapooc-Stormrage']			= itsPooc	-- Druid
+		z['Poocvoker-Stormrage']		= itsPooc	-- Evoker
+		z['Sifupooc-Spirestone']		= itsPooc	-- Monk
+		z['Repooc-Spirestone']			= itsPooc	-- Paladin
 		-- Simpy
 		z['Arieva-Cenarius']			= itsSimpy -- Hunter
 		z['Buddercup-Cenarius']			= itsSimpy -- Rogue
@@ -897,25 +900,28 @@ function CH:GetChatTime()
 end
 
 function CH:AddMessage(msg, infoR, infoG, infoB, infoID, accessID, typeID, isHistory, historyTime)
-	local historyTimestamp --we need to extend the arguments on AddMessage so we can properly handle times without overriding
-	if isHistory == 'ElvUI_ChatHistory' then historyTimestamp = historyTime end
+	if not strmatch(msg, '^|Helvtime|h') and not strmatch(msg, '^|Hcpl:') then
+		local historyTimestamp --we need to extend the arguments on AddMessage so we can properly handle times without overriding
+		if isHistory == 'ElvUI_ChatHistory' then historyTimestamp = historyTime end
 
-	if CH.db.timeStampFormat and CH.db.timeStampFormat ~= 'NONE' then
-		local timeStamp = BetterDate(CH.db.timeStampFormat, historyTimestamp or CH:GetChatTime())
-		timeStamp = gsub(timeStamp, ' ', '')
-		timeStamp = gsub(timeStamp, 'AM', ' AM')
-		timeStamp = gsub(timeStamp, 'PM', ' PM')
-		if CH.db.useCustomTimeColor then
-			local color = CH.db.customTimeColor
-			local hexColor = E:RGBToHex(color.r, color.g, color.b)
-			msg = format('%s[%s]|r %s', hexColor, timeStamp, msg)
-		else
-			msg = format('[%s] %s', timeStamp, msg)
+		if CH.db.timeStampFormat and CH.db.timeStampFormat ~= 'NONE' then
+			local timeStamp = BetterDate(CH.db.timeStampFormat, historyTimestamp or CH:GetChatTime())
+			timeStamp = gsub(timeStamp, ' ', '')
+			timeStamp = gsub(timeStamp, 'AM', ' AM')
+			timeStamp = gsub(timeStamp, 'PM', ' PM')
+
+			if CH.db.useCustomTimeColor then
+				local color = CH.db.customTimeColor
+				local hexColor = E:RGBToHex(color.r, color.g, color.b)
+				msg = format('|Helvtime|h%s[%s]|r|h %s', hexColor, timeStamp, msg)
+			else
+				msg = format('|Helvtime|h[%s]|h %s', timeStamp, msg)
+			end
 		end
-	end
 
-	if CH.db.copyChatLines then
-		msg = format('|Hcpl:%s|h%s|h %s', self:GetID(), E:TextureString(E.Media.Textures.ArrowRight, ':14'), msg)
+		if CH.db.copyChatLines then
+			msg = format('|Hcpl:%s|h%s|h %s', self:GetID(), E:TextureString(E.Media.Textures.ArrowRight, ':14'), msg)
+		end
 	end
 
 	self.OldAddMessage(self, msg, infoR, infoG, infoB, infoID, accessID, typeID)
@@ -1463,30 +1469,28 @@ function CH:SetChatEditBoxMessage(message)
 end
 
 local function HyperLinkedCPL(data)
-	if strsub(data, 1, 3) == 'cpl' then
-		local chatID = strsub(data, 5)
-		local chat = _G[format('ChatFrame%d', chatID)]
-		if not chat then return end
+	local chatID = strsub(data, 5)
+	local chat = _G[format('ChatFrame%d', chatID)]
+	if not chat then return end
 
-		local scale = chat:GetEffectiveScale() --blizzard does this with `scale = UIParent:GetScale()`
-		local cursorX, cursorY = GetCursorPosition()
-		cursorX, cursorY = (cursorX / scale), (cursorY / scale)
+	local cursorX, cursorY = GetCursorPosition()
+	local scale = chat:GetEffectiveScale() --blizzard does this with `scale = UIParent:GetScale()`
+	local posX, posY = (cursorX / scale), (cursorY / scale)
 
-		local _, lineIndex = chat:FindCharacterAndLineIndexAtCoordinate(cursorX, cursorY)
-		if lineIndex then
-			local visibleLine = chat.visibleLines and chat.visibleLines[lineIndex]
-			local message = visibleLine and visibleLine.messageInfo and visibleLine.messageInfo.message
-			if message and not CH:MessageIsProtected(message) then
-				message = gsub(message,'|c(%x-)|H(.-)|h(.-)|h|r','\10c%1\10H%2\10h%3\10h\10r') -- strip colors and trim but not hyperlinks
-				message = gsub(message,'||','\11') -- for printing item lines from /dump, etc
-				message = E:StripString(removeIconFromLine(message))
-				message = gsub(message,'\11','||')
-				message = gsub(message,'\10c(%x-)\10H(.-)\10h(.-)\10h\10r','|c%1|H%2|h%3|h|r')
+	local _, index = chat:FindCharacterAndLineIndexAtCoordinate(posX, posY)
+	if not index then return end
 
-				if message ~= '' then
-					CH:SetChatEditBoxMessage(message)
-				end
-			end
+	local line = chat.visibleLines and chat.visibleLines[index]
+	local msg = line and line.messageInfo and line.messageInfo.message
+	if msg and not CH:MessageIsProtected(msg) then
+		msg = gsub(msg,'|c(%x-)|H(.-)|h(.-)|h|r','\10c%1\10H%2\10h%3\10h\10r') -- strip colors and trim but not hyperlinks
+		msg = gsub(msg,'||','\11') -- for printing item lines from /dump, etc
+		msg = E:StripString(removeIconFromLine(msg))
+		msg = gsub(msg,'\11','||')
+		msg = gsub(msg,'\10c(%x-)\10H(.-)\10h(.-)\10h\10r','|c%1|H%2|h%3|h|r')
+
+		if msg ~= '' then
+			CH:SetChatEditBoxMessage(msg)
 		end
 	end
 end
@@ -1513,16 +1517,23 @@ local function HyperLinkedURL(data)
 	end
 end
 
-local SetHyperlink = _G.ItemRefTooltip.SetHyperlink
-function _G.ItemRefTooltip:SetHyperlink(data, ...)
-	if strsub(data, 1, 3) == 'cpl' then
-		HyperLinkedCPL(data)
-	elseif strsub(data, 1, 3) == 'squ' then
-		HyperLinkedSQU(data)
-	elseif strsub(data, 1, 3) == 'url' then
-		HyperLinkedURL(data)
-	else
-		SetHyperlink(self, data, ...)
+do
+	local funcs = {
+		cpl = HyperLinkedCPL,
+		squ = HyperLinkedSQU,
+		url = HyperLinkedURL
+	}
+
+	local SetHyperlink = _G.ItemRefTooltip.SetHyperlink
+	function ItemRefTooltip:SetHyperlink(data, ...)
+		if strsub(data, 1, 7) ~= 'elvtime' then
+			local func = funcs[strsub(data, 1, 3)]
+			if func then
+				func(data)
+			else
+				SetHyperlink(self, data, ...)
+			end
+		end
 	end
 end
 

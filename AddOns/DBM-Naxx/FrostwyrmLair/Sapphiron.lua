@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sapphiron", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220807204706")
+mod:SetRevision("20221201192451")
 mod:SetCreatureID(15989)
 mod:SetEncounterID(1119)
 mod:SetModelID(16033)
@@ -122,7 +122,7 @@ end
 function mod:OnSync(event)
 	if event == "DeepBreath" then
 		timerIceBlast:Start()
-		timerLanding:Update(14)
+		timerLanding:Update(14.5, 28.5)
 		self:Schedule(14.5, Landing, self)
 		warnDeepBreath:Show()
 		warnDeepBreath:Play("findshelter")

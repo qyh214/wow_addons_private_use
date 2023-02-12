@@ -139,6 +139,19 @@ options.general = {
             type = "toggle",
             name = L["Guild News IL"],
             desc = L["Show item level of each item in guild news."]
+        },
+        addCNFilter = {
+            order = 12,
+            type = "toggle",
+            name = L["View SC Group"],
+            desc = L["Let you can view the group created by Simplified Chinese players."]
+        },
+        autoToggleChatBubble = {
+            order = 13,
+            type = "toggle",
+            name = L["Auto Toggle Chat Bubble"],
+            desc = L["Only show chat bubble in instance."],
+            width = 1.5
         }
     }
 }
@@ -1743,6 +1756,100 @@ options.lfgList = {
                         )
                     end,
                     width = "full"
+                }
+            }
+        },
+        partyKeystone = {
+            order = 6,
+            type = "group",
+            name = L["Party Keystone"],
+            disabled = function()
+                return not E.private.WT.misc.lfgList.enable
+            end,
+            get = function(info)
+                return E.private.WT.misc.lfgList.partyKeystone[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc.lfgList.partyKeystone[info[#info]] = value
+                LL:UpdatePartyKeystoneFrame()
+            end,
+            args = {
+                enable = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Enable"],
+                    desc = L["Add an additional frame to show party members' keystone."]
+                },
+                font = {
+                    order = 6,
+                    type = "group",
+                    name = L["Font Setting"],
+                    inline = true,
+                    get = function(info)
+                        return E.private.WT.misc.lfgList.partyKeystone[info[#info - 1]][info[#info]]
+                    end,
+                    set = function(info, value)
+                        E.private.WT.misc.lfgList.partyKeystone[info[#info - 1]][info[#info]] = value
+                        LL:UpdatePartyKeystoneFrame()
+                    end,
+                    args = {
+                        name = {
+                            order = 1,
+                            type = "select",
+                            dialogControl = "LSM30_Font",
+                            name = L["Font"],
+                            values = LSM:HashTable("font")
+                        },
+                        style = {
+                            order = 2,
+                            type = "select",
+                            name = L["Outline"],
+                            values = {
+                                NONE = L["None"],
+                                OUTLINE = L["OUTLINE"],
+                                MONOCHROME = L["MONOCHROME"],
+                                MONOCHROMEOUTLINE = L["MONOCROMEOUTLINE"],
+                                THICKOUTLINE = L["THICKOUTLINE"]
+                            }
+                        },
+                        size = {
+                            order = 3,
+                            name = L["Size"],
+                            type = "range",
+                            min = 5,
+                            max = 60,
+                            step = 1
+                        }
+                    }
+                }
+            }
+        },
+        rightPanel = {
+            order = 7,
+            type = "group",
+            name = L["Right Panel"],
+            disabled = function()
+                return not E.private.WT.misc.lfgList.enable
+            end,
+            get = function(info)
+                return E.private.WT.misc.lfgList.rightPanel[info[#info]]
+            end,
+            set = function(info, value)
+                E.private.WT.misc.lfgList.rightPanel[info[#info]] = value
+                LL:UpdateRightPanel()
+            end,
+            args = {
+                enable = {
+                    order = 1,
+                    type = "toggle",
+                    name = L["Enable"],
+                    desc = L["Add an additional frame to filter the groups."]
+                },
+                autoRefresh = {
+                    order = 2,
+                    type = "toggle",
+                    name = L["Auto Refresh"],
+                    desc = L["Automatically refresh the list after you changing the filter."]
                 }
             }
         }

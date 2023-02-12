@@ -144,8 +144,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchor"] = "Крепление"
 	L["Anchor Point"] = "Точка крепления"
 	L["Anchored To"] = "Прикрепить к"
-	L["and"] = "и"
 	L["And "] = "И "
+	L["and"] = "и"
 	L["and aligned left"] = "Выранивание по левому краю;"
 	L["and aligned right"] = "Выранивание по правому краю;"
 	L["and rotated left"] = "Текст повернут вверх;"
@@ -249,8 +249,8 @@ Off Screen]=] ] = [=[Индикация за
 	L["Collapse all non-loaded displays"] = "Свернуть все не загруженные индикации"
 	L["Collapse all pending Import"] = "Свернуть все индикации, ожидающие импорта"
 	L["Collapsible Group"] = "Свёртываемая группа"
-	L["Color"] = "Цвет"
 	L["color"] = "цвет"
+	L["Color"] = "Цвет"
 	L["Column Height"] = "Высота столбца"
 	L["Column Space"] = "Отступ между столбцами"
 	L["Columns"] = "Столбцы"
@@ -376,7 +376,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["End Angle"] = "Конечный угол"
 	L["End of %s"] = "Конец группы \"%s\""
 	L["Enemy nameplate(s) found"] = "Индикаторы здоровья противников"
-	L["Enter a Spell ID"] = "Введите ID заклинания"
+	--[[Translation missing --]]
+	L["Enter a Spell ID. You can use the addon idTip to determine spell ids."] = "Enter a Spell ID. You can use the addon idTip to determine spell ids."
 	L["Enter an Aura Name, partial Aura Name, or Spell ID. A Spell ID will match any spells with the same name."] = [=[Введите название эффекта, часть его имени или ID заклинания.
 
 Указание ID не обеспечивает нахождение (или исключение) единственного результата, поскольку сопоставление эффектов всё равно происходит по названию заклинания, заданного этим ID.
@@ -927,8 +928,8 @@ It might not work correctly with your version!]=] ] = [=[Индикация бы
 	L["Use Display Info Id"] = "Использовать ID отображения существа"
 	L["Use SetTransform"] = "Использовать ф. SetTransform()"
 	L["Use Texture"] = "Использовать текстуру"
-	L["Used in auras:"] = "Использовано в индикациях:"
 	L["Used in Auras:"] = "Использовано в индикациях:"
+	L["Used in auras:"] = "Использовано в индикациях:"
 	--[[Translation missing --]]
 	L["Uses Texture Coordinates to rotate the texture."] = "Uses Texture Coordinates to rotate the texture."
 	L["Uses UnitIsVisible() to check if in range. This is polled every second."] = "Проверка выполняется при помощи функции UnitIsVisible(), указывающей, может ли клиент игры видеть объект. Не определяет, находится ли единица в поле зрения. Опрос происходит каждую секунду."
@@ -950,15 +951,15 @@ It might not work correctly with your version!]=] ] = [=[Индикация бы
 	L["X Offset"] = "Смещение по X"
 	L["X Rotation"] = "Поворот по X"
 	L["X Scale"] = "Масштаб по X"
-	L["x-Offset"] = "Смещение по X"
 	L["X-Offset"] = "Смещение по X"
+	L["x-Offset"] = "Смещение по X"
 	L["Y Offset"] = "Смещение по Y"
 	L["Y Rotation"] = "Поворот по Y"
 	L["Y Scale"] = "Масштаб по Y"
 	L["Yellow Rune"] = "Жёлтая руна"
 	L["Yes"] = "Да"
-	L["Y-Offset"] = "Смещение по Y"
 	L["y-Offset"] = "Смещение по Y"
+	L["Y-Offset"] = "Смещение по Y"
 	L["You already have this group/aura. Importing will create a duplicate."] = "У вас уже есть эта индикация. При импорте будет создана копия."
 	L["You are about to delete %d aura(s). |cFFFF0000This cannot be undone!|r Would you like to continue?"] = [=[Вы собираетесь удалить %d |4индикацию:индикации:индикаций;.
 |cFFFF0000Это действие необратимо!|r Продолжить?]=]

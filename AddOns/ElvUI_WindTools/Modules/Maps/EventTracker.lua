@@ -211,6 +211,10 @@ local functionFactory = {
                 end
             end,
             alert = function(self)
+                if not ET.playerEnteredWorld then
+                    return
+                end
+
                 if not self.args["alertCache"] then
                     self.args["alertCache"] = {}
                 end
@@ -242,6 +246,7 @@ local functionFactory = {
                             secondToTime(self.timeLeft)
                         )
                     )
+
                     if self.args.soundFile then
                         PlaySoundFile(LSM:Fetch("sound", self.args.soundFile), "Master")
                     end
@@ -483,6 +488,10 @@ local functionFactory = {
                 self.runningTip:SetText(tip)
             end,
             alert = function(self)
+                if not ET.playerEnteredWorld then
+                    return
+                end
+
                 if not self.netTable then
                     return
                 end
@@ -540,7 +549,9 @@ local functionFactory = {
 
                     local eventIconString = F.GetIconString(self.args.icon, 16, 16)
                     local gradientName = getGradientText(self.args.eventName, self.args.barColor)
+
                     F.Print(format(eventIconString .. " " .. gradientName .. " " .. L["%s can be collected"], netsText))
+
                     if self.args.soundFile then
                         PlaySoundFile(LSM:Fetch("sound", self.args.soundFile), "Master")
                     end
@@ -618,7 +629,7 @@ local eventData = {
             type = "loopTimer",
             questID = 70893,
             duration = 16 * 60,
-            interval = 3.5 * 60 * 60,
+            interval = 1.5 * 60 * 60,
             barColor = colorPlatte.blue,
             eventName = L["Community Feast"],
             location = C_Map_GetMapInfo(2024).name,
@@ -632,11 +643,11 @@ local eventData = {
             end,
             startTimestamp = (function()
                 local timestampTable = {
-                    [1] = 1670776200, -- NA
-                    [2] = 1670770800, -- KR
-                    [3] = 1670774400, -- EU
-                    [4] = 1670779800, -- TW
-                    [5] = 1670779800 -- CN
+                    [1] = 1675765800, -- NA
+                    [2] = 1675767600, -- KR
+                    [3] = 1676017800, -- EU
+                    [4] = 1675767600, -- TW
+                    [5] = 1675767600 -- CN
                 }
                 local region = GetCurrentRegion()
                 -- TW is not a real region, so we need to check the client language if player in KR
@@ -863,7 +874,18 @@ function trackers:disable(event)
     end
 end
 
-ET.eventHandlers = {}
+ET.eventHandlers = {
+    ["PLAYER_ENTERING_WORLD"] = {
+        function()
+            E:Delay(
+                10,
+                function()
+                    ET.playerEnteredWorld = true
+                end
+            )
+        end
+    }
+}
 
 function ET:HandlerEvent(event, ...)
     if self.eventHandlers[event] then
@@ -987,7 +1009,7 @@ function ET:UpdateTrackers()
             end
 
             tracker.args.desaturate = self.db[data.dbKey].desaturate
-            tracker.args.soundFile = self.db.sound and self.db[data.dbKey].soundFile
+            tracker.args.soundFile = self.db[data.dbKey].sound and self.db[data.dbKey].soundFile
 
             if self.db[data.dbKey].alert then
                 tracker.args.alert = true

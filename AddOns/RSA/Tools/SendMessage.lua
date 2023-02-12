@@ -64,19 +64,6 @@ function RSA.SendMessage.Party(message) -- Send a message to /party or /instance
 	end
 end
 
-function RSA.SendMessage.Channel(message, channel) -- Send a message to the custom channel that the user defines.
-	if 0 == 0 then return end -- 8.2.5 Broke Sending messages to custom channels and I'm too lazy to find every instance that this is called.
-	if RSA.AnnouncementCheck() == true then
-		if RSA.db.profile.general.globalAnnouncements.smartCustomChannel == true then
-			if GetNumGroupMembers() > 0 or GetNumSubgroupMembers() > 0 then
-				SendChatMessage(format(message), "CHANNEL", nil, GetChannelName(channel))
-			end
-		elseif RSA.db.profile.general.globalAnnouncements.smartCustomChannel == false then
-			SendChatMessage(format(message), "CHANNEL", nil, GetChannelName(channel))
-		end
-	end
-end
-
 function RSA.SendMessage.Say(message) -- Send a message to Say.
 	if IsInInstance() then
 		if RSA.AnnouncementCheck() == true then

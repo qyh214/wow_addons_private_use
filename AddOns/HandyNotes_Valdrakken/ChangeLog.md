@@ -1,5 +1,10 @@
 ## Revision History:
 
+#### v2 (January 25, 2022)
+-------------------------------
+* Updated zhCN by [nanjuekaien1](https://github.com/Dathwada/handynotes-valdrakken/pull/2)
+* Bump .toc to 100005
+
 #### v1 (November 28, 2022)
 -------------------------------
 * Added new NPC

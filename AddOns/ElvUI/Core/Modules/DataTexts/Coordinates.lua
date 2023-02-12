@@ -5,6 +5,8 @@ local _G = _G
 local strjoin = strjoin
 local InCombatLockdown = InCombatLockdown
 
+local NOT_APPLICABLE = NOT_APPLICABLE
+
 local displayString = ''
 local inRestrictedArea = false
 local mapInfo = E.MapInfo
@@ -26,7 +28,7 @@ local function OnEvent(self)
 		self.text:SetFormattedText(displayString, mapInfo.xText or 0, mapInfo.yText or 0)
 	else
 		inRestrictedArea = true
-		self.text:SetText('N/A')
+		self.text:SetText(NOT_APPLICABLE)
 	end
 end
 
@@ -35,8 +37,8 @@ local function Click()
 	_G.ToggleFrame(_G.WorldMapFrame)
 end
 
-local function ValueColorUpdate(_, hex)
+local function ApplySettings(_, hex)
 	displayString = strjoin('', hex, '%.2f|r', ' | ', hex, '%.2f|r')
 end
 
-DT:RegisterDatatext('Coords', nil, {'LOADING_SCREEN_DISABLED', 'ZONE_CHANGED', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED_NEW_AREA'}, OnEvent, Update, Click, nil, nil, L["Coords"], mapInfo, ValueColorUpdate)
+DT:RegisterDatatext('Coords', nil, {'LOADING_SCREEN_DISABLED', 'ZONE_CHANGED', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED_NEW_AREA'}, OnEvent, Update, Click, nil, nil, L["Coords"], mapInfo, ApplySettings)

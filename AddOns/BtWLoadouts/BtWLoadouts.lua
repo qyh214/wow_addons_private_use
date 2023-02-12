@@ -21,6 +21,7 @@
 	Conditions level support
 	Option to show minimap menu on mouse over
 	Trigger system for changing loadouts, run custom code when a set is changed?
+	Duplicate sets button
 ]]
 
 local ADDON_NAME, Internal = ...;
@@ -1115,7 +1116,7 @@ do
 					name = (set.name == nil or set.name == "") and L["Unnamed"] or set.name,
 					disabled = set.disabled,
 					selected = set == selected,
-					builtin = set.managerID ~= nil,
+					builtin = (set.managerID ~= nil) or (set.configID ~= nil),
 					depth = depth,
 				};
 			end

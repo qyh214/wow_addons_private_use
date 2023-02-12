@@ -3,14 +3,15 @@ local DT = E:GetModule('DataTexts')
 local B = E:GetModule('Bags')
 -- GLOBALS: ElvDB
 
-local _G = _G
 local type, wipe, pairs, ipairs, sort = type, wipe, pairs, ipairs, sort
 local format, strjoin, tinsert = format, strjoin, tinsert
 
+local _G = _G
+local EasyMenu = EasyMenu
 local GetMoney = GetMoney
-local IsControlKeyDown = IsControlKeyDown
 local IsLoggedIn = IsLoggedIn
 local IsShiftKeyDown = IsShiftKeyDown
+local IsControlKeyDown = IsControlKeyDown
 local BreakUpLargeNumbers = BreakUpLargeNumbers
 local C_WowTokenPublic_UpdateMarketPrice = C_WowTokenPublic.UpdateMarketPrice
 local C_WowTokenPublic_GetCurrentMarketPrice = C_WowTokenPublic.GetCurrentMarketPrice
@@ -26,6 +27,7 @@ local CURRENCY = CURRENCY
 local menuList, myGold = {}, {}
 local totalGold, totalHorde, totalAlliance = 0, 0, 0
 local iconString = '|T%s:16:16:0:0:64:64:4:60:4:60|t'
+local db
 
 local function sortFunction(a, b)
 	return a.amount > b.amount
@@ -50,8 +52,8 @@ local function updateTotal(faction, change)
 end
 
 local function updateGold(self, updateAll, goldChange)
-	local textOnly = not E.global.datatexts.settings.Gold.goldCoins and true or false
-	local style = E.global.datatexts.settings.Gold.goldFormat or 'BLIZZARD'
+	local textOnly = not db.goldCoins and true or false
+	local style = db.goldFormat or 'BLIZZARD'
 
 	if updateAll then
 		wipe(myGold)
@@ -115,6 +117,10 @@ end
 local function OnEvent(self, event)
 	if not IsLoggedIn() then return end
 
+	if not db then
+		db = E.global.datatexts.settings[self.name]
+	end
+
 	if E.Retail and not Ticker then
 		C_WowTokenPublic_UpdateMarketPrice()
 		Ticker = C_Timer_NewTicker(60, UpdateMarketPrice)
@@ -140,14 +146,14 @@ local function OnEvent(self, event)
 
 	updateGold(self, event == 'ELVUI_FORCE_UPDATE', Change)
 
-	self.text:SetText(E:FormatMoney(NewMoney, E.global.datatexts.settings.Gold.goldFormat or 'BLIZZARD', not E.global.datatexts.settings.Gold.goldCoins))
+	self.text:SetText(E:FormatMoney(NewMoney, db.goldFormat or 'BLIZZARD', not db.goldCoins))
 end
 
 local function Click(self, btn)
 	if btn == 'RightButton' then
 		if IsShiftKeyDown() then
 			E:SetEasyMenuAnchor(E.EasyMenu, self)
-			_G.EasyMenu(menuList, E.EasyMenu, nil, nil, nil, 'MENU')
+			EasyMenu(menuList, E.EasyMenu, nil, nil, nil, 'MENU')
 		elseif IsControlKeyDown() then
 			Profit = 0
 			Spent = 0
@@ -160,8 +166,8 @@ end
 local function OnEnter()
 	DT.tooltip:ClearLines()
 
-	local textOnly = not E.global.datatexts.settings.Gold.goldCoins and true or false
-	local style = E.global.datatexts.settings.Gold.goldFormat or 'BLIZZARD'
+	local textOnly = not db.goldCoins and true or false
+	local style = db.goldFormat or 'BLIZZARD'
 
 	DT.tooltip:AddLine(L["Session:"])
 	DT.tooltip:AddDoubleLine(L["Earned:"], E:FormatMoney(Profit, style, textOnly), 1, 1, 1, 1, 1, 1)
@@ -232,4 +238,4 @@ local function OnEnter()
 	DT.tooltip:Show()
 end
 
-DT:RegisterDatatext('Gold', nil, {'PLAYER_MONEY', 'SEND_MAIL_MONEY_CHANGED', 'SEND_MAIL_COD_CHANGED', 'PLAYER_TRADE_MONEY', 'TRADE_MONEY_CHANGED'}, OnEvent, nil, Click, OnEnter, nil, L["Gold"])
+DT:RegisterDatatext('Gold', nil, {'PLAYER_MONEY', 'SEND_MAIL_MONEY_CHANGED', 'SEND_MAIL_COD_CHANGED', 'PLAYER_TRADE_MONEY', 'TRADE_MONEY_CHANGED', 'CURRENCY_DISPLAY_UPDATE', 'PERKS_PROGRAM_CURRENCY_REFRESH'}, OnEvent, nil, Click, OnEnter, nil, L["Gold"])

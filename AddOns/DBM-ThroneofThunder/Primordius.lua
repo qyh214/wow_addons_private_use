@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220128073905")
+mod:SetRevision("20230124054540")
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--Although if you have 8 viscous horrors up, you are probably doing fight wrong.
@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 136216",
 	"SPELL_CAST_SUCCESS 136037",
-	"SPELL_AURA_APPLIED 136050 137000 136215 136246 136225 136228 136245 136218 140546",
+	"SPELL_AURA_APPLIED 136050 137000 136215 136246 136225 136228 136245 136218 140546 136210",
 	"SPELL_AURA_APPLIED_DOSE 136050 137000",
 	"SPELL_AURA_REMOVED 136050 136215 136246 136225 136245 136218 140546",
 	"UNIT_AURA player",

@@ -4617,18 +4617,6 @@ end
 
 function initFrames()
 
-  -- check game version
-  -- gameVersion is for example in form 9.2.7 or 10.0.2
-  local gameVersion = GetBuildInfo()
-  ---@diagnostic disable-next-line: cast-local-type
-  gameVersion = string.gsub(gameVersion, "%.", "")
-  ---@diagnostic disable-next-line: cast-local-type
-  gameVersion = tonumber(gameVersion)
-  if gameVersion < 1000 then
-    print("MythicDungeonTools: Unsupported game version. This version of MDT is for Dragonflight only.")
-    return
-  end
-
   for _, module in pairs(MDT.modules) do
     if module.OnInitialize then
       module:OnInitialize()

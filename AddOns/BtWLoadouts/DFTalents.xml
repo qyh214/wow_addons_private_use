@@ -143,6 +143,36 @@
 									<Anchor point="TOPLEFT" x="0" y="0"/>
 								</Anchors>
 							</Frame>
+							<Button text="BTWLOADOUTS_SPEC_TREE" parentKey="SpecTreeButton">
+								<Size x="100" y="22"/>
+								<ButtonText name="$parentText" parentKey="Text" justifyH="right"/>
+								<NormalFont style="GameFontNormal"/>
+								<HighlightFont style="GameFontHighlight"/>
+								<DisabledFont style="GameFontDisable"/>
+								<Scripts>
+									<OnLoad>
+										self:GetParent():GetParent():GetParent().SpecTreeButton = self;
+									</OnLoad>
+									<OnClick>
+										self:GetParent():GetParent():GetParent():ScrollToSpecTree();
+									</OnClick>
+								</Scripts>
+							</Button>
+							<Button text="BTWLOADOUTS_CLASS_TREE" parentKey="ClassTreeButton">
+								<Size x="100" y="22"/>
+								<ButtonText name="$parentText" parentKey="Text" justifyH="left"/>
+								<NormalFont style="GameFontNormal"/>
+								<HighlightFont style="GameFontHighlight"/>
+								<DisabledFont style="GameFontDisable"/>
+								<Scripts>
+									<OnLoad>
+										self:GetParent():GetParent():GetParent().ClassTreeButton = self;
+									</OnLoad>
+									<OnClick>
+										self:GetParent():GetParent():GetParent():ScrollToClassTree();
+									</OnClick>
+								</Scripts>
+							</Button>
 						</Frames>
 					</Frame>
 				</ScrollChild>
@@ -153,6 +183,9 @@
 					<OnDragStop>
 						self:GetParent():EndScrollDrag();
 					</OnDragStop>
+					<OnVerticalScroll>
+						self:GetParent():OnVerticalScroll(self, offset)
+					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
 			<Frame parentKey="DragHandler" hidden="true">

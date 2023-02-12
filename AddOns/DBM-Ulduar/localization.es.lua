@@ -322,7 +322,9 @@ L:SetMiscLocalization{
 	MobPhase3		= "Unidad de mando aérea",
 	YellPull		= "¡No tenemos mucho tiempo, amigos! Vais a ayudarme a probar mi última y mayor creación. Ahora, antes de que cambiéis de parecer, recordad que en cierta forma, me lo debéis después del desastre que causasteis con el XA-002.",
 	YellHardPull	= "Secuencia de autodestrucción iniciada",
-	LootMsg			= "([^%s]+).*Hitem:(%d+)"
+	YellPhase2		= "¡Contemplad el cañón de asalto antipersonal VX-001! Puede que queráis poneros a cubierto.",
+	YellPhase3		= "¡Gracias amigos! ¡Vuestros esfuerzos me han proporcionado unos datos fantásticos! Veamos, ¿dónde puse?...ah, ahí está.",
+	YellPhase4		= "Fase de prueba preliminar completada. ¡Ahora comienza la verdadera prueba!"
 }
 
 -------------------

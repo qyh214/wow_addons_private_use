@@ -442,7 +442,7 @@ function KT_Scenario_ChallengeMode_ShowBlock(timerID, elapsedTime, timeLimit)
 	KT_Scenario_ChallengeMode_UpdateTime(block, elapsedTime);
 	KT_ScenarioTimer_Start(block, KT_Scenario_ChallengeMode_UpdateTime);
 	block:Show();
-	KT_ObjectiveTracker_Expand();
+	--KT_ObjectiveTracker_Expand();  -- MSA
 	KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_SCENARIO);
 end
 
@@ -597,7 +597,7 @@ function KT_Scenario_ProvingGrounds_ShowBlock(timerID, elapsedTime, duration, me
 
 	KT_ScenarioTimer_Start(block, KT_Scenario_ProvingGrounds_UpdateTime);
 	block:Show();
-	KT_ObjectiveTracker_Expand();
+	--KT_ObjectiveTracker_Expand();  -- MSA
 	KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_SCENARIO);
 end
 

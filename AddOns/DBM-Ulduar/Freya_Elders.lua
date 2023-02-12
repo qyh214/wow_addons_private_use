@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya_Elders", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20221209054334")
 
 -- passive mod to provide information for multiple fight (trash respawn)
 -- mod:SetCreatureID(32914, 32915, 32913)
@@ -15,7 +15,7 @@ mod:RegisterEvents(
 
 local specWarnImpale			= mod:NewSpecialWarningTaunt(62928, nil, nil, nil, 1, 2)
 local specWarnFistofStone		= mod:NewSpecialWarningRun(62344, "Tank", nil, nil, 4, 2)
-local specWarnGroundTremor		= mod:NewSpecialWarningCast(62932, "SpellCaster")
+local specWarnGroundTremor		= mod:NewSpecialWarningCast(62932, "SpellCaster", nil, nil, 2, 2)
 
 local timerImpale				= mod:NewTargetTimer(5, 62928, nil, "Healer|Tank", nil, 5)
 

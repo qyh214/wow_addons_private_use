@@ -214,6 +214,14 @@ L:SetMiscLocalization{
 	YellKill		= "드디어... 드디어 그의 손아귀를... 벗어나는구나."
 }
 
+L:SetTimerLocalization{
+	TimerHardmode	= "보관함 부서짐"
+}
+
+L:SetOptionLocalization{
+	TimerHardmode	= "하드 모드 타이머 바 보기"
+}
+
 --------------
 --  Thorim  --
 --------------
@@ -315,6 +323,9 @@ L:SetMiscLocalization{
 	MobPhase3 		= "공중지휘기",
 	YellPull		= "시간이 없어, 친구들! 내가 최근에 만든 기막힌 발명품을 시험하게 도와 주겠지? 자, 마음 바꿀 생각은 말라고. XT-002를 그 꼬락서니로 만들었으니, 너흰 나한테 빚진 셈이란 걸 잊지 마!",
 	YellHardPull	= "자폭 절차를 시작합니다.",
+	YellPhase2		= "멋지군! 참으로 경이적인 결과야! 차체 내구도 98.9 퍼센트라! 손상이라고 보기도 어렵지! 계속하자고.",
+	YellPhase3		= "고맙다, 친구들! 너희 덕분에 멋진 자료를 좀 얻었어! 자, 그걸 어디 뒀더라... 아, 여기 있군.",
+	YellPhase4		= "예비 시험은 이걸로 끝이다. 자, 이제부터가 진짜라고!",
 }
 
 ---------------------

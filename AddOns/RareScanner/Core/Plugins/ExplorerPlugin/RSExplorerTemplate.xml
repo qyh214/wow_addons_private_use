@@ -134,11 +134,11 @@
   <Texture name="RSMapCanvasDetailTileTemplate" virtual="true" />
   
   <Button name="RSExplorerRareInfoLootItemTemplate" virtual="true">
-    <Size x="40" y="40"/>
+    <Size x="32" y="32"/>
     <Layers>
       <Layer level="ARTWORK">
         <Texture parentKey="Icon">
-          <Size x="40" y="40"/>
+          <Size x="32" y="32"/>
           <Anchors>
             <Anchor point="CENTER"/>
           </Anchors>
@@ -146,7 +146,7 @@
       </Layer>
       <Layer level="BACKGROUND" textureSubLevel="1">
         <Texture parentKey="IconBorder" atlas="GarrMission_RewardsShadow">
-          <Size x="40" y="40"/>
+          <Size x="32" y="32"/>
           <Anchors>
             <Anchor point="CENTER" relativeKey="$parent.Icon"/>
           </Anchors>
@@ -154,7 +154,7 @@
       </Layer>
       <Layer level="OVERLAY" textureSubLevel="1">
         <Texture parentKey="IconOverlay" hidden="true">
-          <Size x="48" y="48"/>
+          <Size x="34" y="34"/>
           <Anchors>
             <Anchor point="CENTER" relativeKey="$parent.Icon"/>
           </Anchors>
@@ -182,7 +182,7 @@
        </Layer>
        <Layer level="BACKGROUND" textureSubLevel="1">
          <Texture parentKey="Texture" alphaMode="BLEND">
-           <Size x="54" y="52"/>
+           <Size x="40" y="40"/>
            <Anchors>
              <Anchor point="TOPRIGHT" relativeKey="$parent.Background1" y="-2" x="-5" relativePoint="TOPRIGHT"/>
            </Anchors>
@@ -190,7 +190,7 @@
          </Texture>
        </Layer>
        <Layer level="ARTWORK">
-         <FontString parentKey="NoItems" inherits="GameFontHighlightLarge" hidden="true" justifyH="LEFT">
+         <FontString parentKey="NoItems" inherits="GameFontNormal" hidden="true" justifyH="LEFT">
            <Size x="0" y="18"/>
            <Anchors>
              <Anchor point="LEFT" relativeKey="$parent.Background1" relativePoint="LEFT" x="15" />
@@ -248,26 +248,32 @@
       </Frame>
       <Frame parentKey="Mounts" inherits="RSExplorerRareInfoLootTemplate">
         <Anchors>
-     	  <Anchor point="TOPLEFT" relativeKey="$parent.Map" relativePoint="BOTTOMLEFT" x="8" y="10" />
-    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Map" relativePoint="BOTTOM" x="0" y="-50"/>
+     	  <Anchor point="TOPLEFT" relativeKey="$parent.Map" relativePoint="BOTTOMLEFT" x="-2" y="5" />
+    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Map" relativePoint="BOTTOM" x="0" y="-38"/>
         </Anchors>
       </Frame>
       <Frame parentKey="Pets" inherits="RSExplorerRareInfoLootTemplate">
         <Anchors>
      	  <Anchor point="TOPLEFT" relativeKey="$parent.Mounts" relativePoint="BOTTOMLEFT" />
-    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Mounts" relativePoint="BOTTOMRIGHT" x="0" y="-60"/>
+    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Mounts" relativePoint="BOTTOMRIGHT" x="0" y="-43"/>
         </Anchors>
       </Frame>
       <Frame parentKey="Toys" inherits="RSExplorerRareInfoLootTemplate">
         <Anchors>
      	  <Anchor point="TOPLEFT" relativeKey="$parent.Pets" relativePoint="BOTTOMLEFT" />
-    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="0" y="-60"/>
+    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="0" y="-43"/>
+        </Anchors>
+      </Frame>
+      <Frame parentKey="Drakewatcher" inherits="RSExplorerRareInfoLootTemplate">
+        <Anchors>
+     	  <Anchor point="TOPLEFT" relativeKey="$parent.Toys" relativePoint="BOTTOMLEFT" />
+    	  <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Toys" relativePoint="BOTTOMRIGHT" x="0" y="-43"/>
         </Anchors>
       </Frame>
       <Frame parentKey="Appearances" inherits="RSExplorerRareInfoLootTemplate">
         <Anchors>
      	  <Anchor point="TOPLEFT" relativeKey="$parent.Mounts" relativePoint="TOPRIGHT" x="-5" y="0" />
-    	  <Anchor point="BOTTOMRIGHT" x="-10" y="10" />
+    	  <Anchor point="BOTTOMRIGHT" x="2" y="5" />
         </Anchors>
       </Frame>
     </Frames>
@@ -278,19 +284,6 @@
       <CheckButton parentKey="AutoFilterCheckButton" inherits="ChatConfigCheckButtonTemplate">
       	<Anchors>
 	      <Anchor point="LEFT" x="25" y="5" />
-    	</Anchors>
-        <Scripts>
-		  <OnEnter>
-		  	self:GetParent():GetParent():ShowTooltip(self)
-		  </OnEnter>
-		  <OnLeave>
-		  	self:GetParent():GetParent():HideTooltip(self)
-		  </OnLeave>
-        </Scripts>
-      </CheckButton>
-      <CheckButton parentKey="FilterWorldmapCheckButton" inherits="ChatConfigCheckButtonTemplate">
-      	<Anchors>
-	      <Anchor point="LEFT" relativeKey="$parent.AutoFilterCheckButton.Text" relativePoint="RIGHT" x="30" y="-2"/>
     	</Anchors>
         <Scripts>
 		  <OnEnter>

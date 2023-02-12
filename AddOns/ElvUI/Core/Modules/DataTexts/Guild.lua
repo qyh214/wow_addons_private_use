@@ -5,12 +5,13 @@ local _G = _G
 local ipairs, select, sort, unpack, wipe, ceil = ipairs, select, sort, unpack, wipe, ceil
 local format, strfind, strjoin, strsplit, strmatch = format, strfind, strjoin, strsplit, strmatch
 
+local EasyMenu = EasyMenu
 local GetDisplayedInviteType = GetDisplayedInviteType
 local GetGuildFactionInfo = GetGuildFactionInfo
 local GetGuildInfo = GetGuildInfo
 local GetGuildRosterInfo = GetGuildRosterInfo
 local GetGuildRosterMOTD = GetGuildRosterMOTD
-local GetMouseFocus = GetMouseFocus
+local MouseIsOver = MouseIsOver
 local GetNumGuildMembers = GetNumGuildMembers
 local GetQuestDifficultyColor = GetQuestDifficultyColor
 local C_GuildInfo_GuildRoster = C_GuildInfo.GuildRoster
@@ -35,7 +36,7 @@ local GUILD = GUILD
 
 local tthead, ttsubh, ttoff = {r=0.4, g=0.78, b=1}, {r=0.75, g=0.9, b=1}, {r=.3,g=1,b=.3}
 local activezone, inactivezone = {r=0.3, g=1.0, b=0.3}, {r=0.65, g=0.65, b=0.65}
-local displayString = ''
+local displayString, db = ''
 local noGuildString = ''
 local guildInfoString = '%s'
 local guildInfoString2 = GUILD..': %d/%d'
@@ -146,7 +147,7 @@ local eventHandlers = {
 		else
 			BuildGuildTable()
 			UpdateGuildMessage()
-			if GetMouseFocus() == self then
+			if MouseIsOver(self) then
 				self:GetScript('OnEnter')(self, nil, true)
 			end
 		end
@@ -214,7 +215,7 @@ local function Click(self, btn)
 		end
 
 		E:SetEasyMenuAnchor(E.EasyMenu, self)
-		_G.EasyMenu(menuList, E.EasyMenu, nil, nil, nil, 'MENU')
+		EasyMenu(menuList, E.EasyMenu, nil, nil, nil, 'MENU')
 	elseif InCombatLockdown() then
 		_G.UIErrorsFrame:AddMessage(E.InfoColor.._G.ERR_NOT_IN_COMBAT)
 	elseif E.Retail then
@@ -290,25 +291,27 @@ local function OnEvent(self, event, ...)
 		local func = eventHandlers[event]
 		if func then func(self, ...) end
 
-		if not IsAltKeyDown() and event == 'MODIFIER_STATE_CHANGED' and GetMouseFocus() == self then
+		if not IsAltKeyDown() and event == 'MODIFIER_STATE_CHANGED' and MouseIsOver(self) then
 			OnEnter(self)
 		end
 
-		if E.global.datatexts.settings.Guild.NoLabel then
+		if db.NoLabel then
 			self.text:SetFormattedText(displayString, #guildTable)
 		else
-			self.text:SetFormattedText(displayString, E.global.datatexts.settings.Guild.Label ~= '' and E.global.datatexts.settings.Guild.Label or GUILD..': ', #guildTable)
+			self.text:SetFormattedText(displayString, db.Label ~= '' and db.Label or GUILD..': ', #guildTable)
 		end
 	else
 		self.text:SetText(noGuildString)
 	end
 end
 
-local function ValueColorUpdate(self, hex)
-	displayString = strjoin('', E.global.datatexts.settings.Guild.NoLabel and '' or '%s', hex, '%d|r')
-	noGuildString = hex..L["No Guild"]
+local function ApplySettings(self, hex)
+	if not db then
+		db = E.global.datatexts.settings[self.name]
+	end
 
-	OnEvent(self)
+	displayString = strjoin('', db.NoLabel and '' or '%s', hex, '%d|r')
+	noGuildString = hex..L["No Guild"]
 end
 
-DT:RegisterDatatext('Guild', _G.SOCIAL_LABEL, {'CHAT_MSG_SYSTEM', 'GUILD_ROSTER_UPDATE', 'PLAYER_GUILD_UPDATE', 'GUILD_MOTD', 'MODIFIER_STATE_CHANGED'}, OnEvent, nil, Click, OnEnter, nil, GUILD, nil, ValueColorUpdate)
+DT:RegisterDatatext('Guild', _G.SOCIAL_LABEL, { 'CHAT_MSG_SYSTEM', 'GUILD_ROSTER_UPDATE', 'PLAYER_GUILD_UPDATE', 'GUILD_MOTD', 'MODIFIER_STATE_CHANGED' }, OnEvent, nil, Click, OnEnter, nil, GUILD, nil, ApplySettings)

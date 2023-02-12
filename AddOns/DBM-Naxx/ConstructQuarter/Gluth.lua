@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("Gluth", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220807072816")
+mod:SetRevision("20230121015815")
 mod:SetCreatureID(15932)
 mod:SetEncounterID(1108)
 mod:SetModelID(16064)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 28371",
-	"SPELL_AURA_REMOVED 28371",
+	"SPELL_AURA_APPLIED 28371 54427",
+	"SPELL_AURA_REMOVED 28371 54427",
 	"SPELL_DAMAGE 28375"
 )
 
@@ -33,7 +33,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 28371 then
+	if args.spellId == 28371 or args.spellId == 54427 then
 		if self.Options.SpecWarn19451dispel then
 			specWarnEnrage:Show(args.destName)
 			specWarnEnrage:Play("enrage")
@@ -45,7 +45,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 28371 then
+	if args.spellId == 28371 or args.spellId == 54427 then
 		timerEnrage:Stop()
 	end
 end

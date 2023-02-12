@@ -37,6 +37,12 @@ function POI:Initialize(attrs)
     self.quest = ns.AsTable(self.quest)
     self.questDeps = ns.AsTable(self.questDeps)
 
+    -- normalize points = {} back into the POI itself for legacy reasons
+    if self.points then
+        self.points = ns.AsTable(self.points)
+        for k, v in ipairs(self.points) do self[k] = v end
+    end
+
     if self.color then self.r, self.g, self.b = ns.HEXtoRGBA(self.color) end
 end
 
@@ -84,19 +90,51 @@ function POI:Draw(pin, xy)
     local size = (pin.minimap and 10 or (pin.parentHeight * 0.012))
     size = size * ns:GetOpt('poi_scale') * (self.size or 1)
 
-    local color = {ns:GetColorOpt('poi_color')}
+    local r, g, b, a = ns:GetColorOpt('poi_color')
     if self.icon then
-        color = {1, 1, 1}
+        r, g, b, a = 1, 1, 1, 1
     elseif self.color then
-        color = {ns.HEXtoRGBA(self.color)}
+        r, g, b = ns.HEXtoRGBA(self.color)
     end
 
     t:SetTexture(self.icon and ns.GetIconPath(self.icon) or CIRCLE)
-    t:SetVertexColor(unpack(color))
+    t:SetVertexColor(r, g, b, a)
     pin:SetSize(size, size)
+
+    -- if self.label or self.note then
+    --     pin:SetScript('OnEnter', function()
+    --         if pin:GetCenter() > UIParent:GetCenter() then
+    --             GameTooltip:SetOwner(pin, 'ANCHOR_LEFT')
+    --         else
+    --             GameTooltip:SetOwner(pin, 'ANCHOR_RIGHT')
+    --         end
+    --         self:Prepare()
+    --         C_Timer.After(0, function()
+    --             self:RenderAdvancedPOI(GameTooltip)
+    --             GameTooltip:Show()
+    --         end)
+    --     end)
+    --     pin:SetScript('OnLeave', function() GameTooltip:Hide() end)
+    -- end
 
     return HandyNotes:getXY(xy)
 end
+
+-- function POI:Prepare()
+--     ns.PrepareLinks(self.label)
+--     ns.PrepareLinks(self.note)
+-- end
+
+-- function POI:RenderAdvancedPOI(tooltip)
+--     -- label
+--     tooltip:SetText(ns.RenderLinks(self.label, true))
+--
+--     -- note
+--     if self.note and ns:GetOpt('show_notes') then
+--         if self.sublabel then GameTooltip_AddBlankLineToTooltip(tooltip) end
+--         tooltip:AddLine(ns.RenderLinks(self.note), 1, 1, 1, true)
+--     end
+-- end
 
 -------------------------------------------------------------------------------
 ------------------------------------ GLOW -------------------------------------

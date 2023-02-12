@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220516021321")
+mod:SetRevision("20230124054701")
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 144748 144749 145065 145171",
 	"SPELL_AURA_APPLIED 144945 145065 145171 145183 145195 144585 147209 147665 147235",
 	"SPELL_AURA_APPLIED_DOSE 145183 145195 147235",
-	"SPELL_AURA_REMOVED 145183 145195 144945 145065 145171 147209",
+	"SPELL_AURA_REMOVED 145183 145195 144945 145065 145171 147209 147665",
 	"UNIT_DIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"--I saw garrosh fire boss1 and boss3 events, so use all 5 to be safe

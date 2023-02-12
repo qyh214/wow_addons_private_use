@@ -1,3 +1,45 @@
+# v1.12.3
+
+- Fixed clearing blizzard talent trees incorrectly when switch specialization
+
+# v1.12.2
+
+- Fixed an issue that could sometimes cause the active talent loadout to be saved like a normal loadout
+- Fixed an issue causing the Blizzard talent tree window to sometimes lose the class icon
+
+# v1.12.1
+
+- Fixed an issue causing some invalid Blizzard loadouts to be saved incorrectly
+
+# v1.12.0-beta
+
+- Added support for importing Blizzard talent loadout strings directly in to BtWLoadouts
+
+# v1.11.1
+
+- Added buttons to swap between Class and Spec talent trees
+
+# v1.11.0-beta
+
+- Added buttons to swap between Class and Spec talent trees
+
+# v1.10.3
+
+- Updated for 10.0.5
+
+# v1.10.2
+
+- Added support for using Blizzard talent trees
+- Updated to support 10.0.5
+
+# v1.10.1-beta
+
+- Fixed storing profession trait trees as talent trees
+
+# v1.10.0-beta
+
+- Added support for using built in talent tree loadouts
+
 # v1.9.2
 
 - Added some debug data to the minimap tooltip when holding Shift

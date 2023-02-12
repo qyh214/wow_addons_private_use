@@ -89,7 +89,7 @@ local function Encode(content, format)
         return Encode(Encode(content, ormat), f)
     end
 end
-local function Decode(content)
+local function Decode(content, err)
     local format, content = content:match("^([A-Z])(.*)$")
 
     if format == "N" then
@@ -97,7 +97,7 @@ local function Decode(content)
     elseif format == "B" then
         return Decode(Base64Decode(content))
     else
-        return false, "Unsupported format"
+        return false, err or L["Unsupported format"]
     end
 end
 
@@ -232,6 +232,76 @@ local function VerifySource(source, sourceType, version, name, ...)
 
     return true
 end
+
+local DFTalentImportMixin = {
+    ImportLoadout = function (self, importText, loadoutName)
+        local importStream = ExportUtil.MakeImportDataStream(importText);
+        local headerValid, serializationVersion, specID, treeHash = self:ReadLoadoutHeader(importStream);
+
+        if not headerValid then
+            return false, LOADOUT_ERROR_BAD_STRING
+        end
+
+        if serializationVersion ~= 1 then
+            return false, LOADOUT_ERROR_SERIALIZATION_VERSION_MISMATCH
+        end
+
+        local classInfo = Internal.GetClassInfoBySpecID(specID);
+
+        local treeInfo = Internal.GetTreeInfoBySpecID(specID);
+        local treeNodes = Internal.GetTreeInfoBySpecID(specID);
+
+        if not self:IsHashEmpty(treeHash) then
+            -- allow third-party sites to generate loadout strings with an empty tree hash, which bypasses hash validation
+            if not self:HashEquals(treeHash, C_Traits.GetTreeHash(treeInfo.ID)) then
+                return false, LOADOUT_ERROR_TREE_CHANGED;
+            end
+        end
+
+        local loadoutContent = self:ReadLoadoutContent(importStream, treeInfo.ID);
+        local loadoutEntryInfo = self:ConvertToImportLoadoutEntryInfo(treeInfo.ID, loadoutContent);
+        
+        local _, specName = GetSpecializationInfoByID(specID);
+
+        local result = {};
+
+        result.version = 1;
+        result.type = "dftalents";
+        result.name = format(loadoutName or L["New %s Set"], specName);
+        result.treeID = treeInfo.ID;
+        result.specID = specID;
+        result.classID = classInfo.classID;
+
+        result.nodes = loadoutEntryInfo;
+
+        return true, result
+    end,
+    ConvertToImportLoadoutEntryInfo = function (self, treeID, loadoutContent)
+        local results = {};
+        local treeNodes = C_Traits.GetTreeNodes(treeID);
+        local count = 1;
+        for i, treeNodeID in ipairs(treeNodes) do
+            local indexInfo = loadoutContent[i];
+            if indexInfo.isNodeSelected then
+                local treeNode = Internal.GetNodeInfo(treeNodeID);
+                if indexInfo.isChoiceNode then
+                    results[treeNodeID] = indexInfo.choiceNodeSelection;
+                else
+                    results[treeNodeID] = indexInfo.isPartiallyRanked and indexInfo.partialRanksPurchased or treeNode.maxRanks;
+                end
+            end
+        end
+        return results;
+    end,
+}
+local DFTalentImport
+DFTalentImport = {
+    ImportLoadout = function (...)
+        LoadAddOn("Blizzard_ClassTalentUI")
+        Mixin(DFTalentImport, ClassTalentImportExportMixin, DFTalentImportMixin);
+        return DFTalentImport.ImportLoadout(...)
+    end
+}
 
 -- Import Frame
 do
@@ -384,14 +454,19 @@ end
 function External.Import(source)
     local success, err
     if type(source) == "string" then
-        success, source = Decode(source)
-        if not success then
-            return false, source
-        end
-
-        success, source = StringToTable(source)
-        if not success then
-            return false, source
+        success, err = DFTalentImport:ImportLoadout(source)
+        if success then -- Official DF Talents
+            source = err;
+        else
+            success, source = Decode(source, err)
+            if not success then
+                return false, source
+            end
+    
+            success, source = StringToTable(source)
+            if not success then
+                return false, source
+            end
         end
     end
     if type(source) ~= "table" then

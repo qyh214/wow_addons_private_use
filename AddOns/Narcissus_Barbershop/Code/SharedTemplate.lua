@@ -50,7 +50,7 @@ function NarciBarberShopSharedTemplateMixin:OnEnter()
 end
 
 function NarciBarberShopSharedTemplateMixin:OnLeave()
-    if self:IsEnabled() then
+    if self.IsEnabled and self:IsEnabled() then
         self:SetBorderColor("grey");
     else
         self:SetBorderColor("disabled");
@@ -76,34 +76,4 @@ function NarciBarberShopSharedTemplateMixin:OnClick()
         self.onClickFunc(self, self.arg1, self.arg2);
     end
     PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-end
-
-
-
-NarciBarberShopInfoButtonMixin = {};
-
-function NarciBarberShopInfoButtonMixin:OnEnter()
-    self.Icon:SetVertexColor(0.8, 0.8, 0.8);
-    SetCursor("Interface/CURSOR/UnableQuestTurnIn.blp");
-
-    local tooltip = CharCustomizeNoHeaderTooltip;
-
-    if tooltip and self.tooltip then
-        tooltip:SetOwner(self, "ANCHOR_NONE");
-        tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 4, 0);
-        tooltip:SetPadding(5, 5, 5, 5);
-        tooltip:SetMinimumWidth(300);
-        tooltip:AddLine(self.tooltip, 1, 1, 1, true);
-        tooltip.TextLeft1:SetSpacing(2);
-        tooltip:Show();
-    end
-end
-
-function NarciBarberShopInfoButtonMixin:OnLeave()
-    self.Icon:SetVertexColor(0.4, 0.4, 0.4);
-    ResetCursor();
-
-    if CharCustomizeNoHeaderTooltip then
-        CharCustomizeNoHeaderTooltip:Hide();
-    end
 end

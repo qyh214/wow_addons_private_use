@@ -1,7 +1,7 @@
 --- @type string, Private
 local AddonName, Private = ...
 
-local internalVersion = 63
+local internalVersion = 64
 
 -- Lua APIs
 local insert = table.insert
@@ -3383,7 +3383,7 @@ local function actionGlowStart(actions, frame, id)
       actions.glow_thickness,
       actions.glow_XOffset,
       actions.glow_YOffset,
-      actions.glow_border,
+      actions.glow_border and true or false,
       id
     )
   elseif actions.glow_type == "ACShine" then
@@ -4265,6 +4265,8 @@ local function startStopTimers(id, cloneId, triggernum, state)
 end
 
 local function ApplyStateToRegion(id, cloneId, region, parent)
+  -- Force custom text function to be run again
+  region.values.lastCustomTextUpdate = nil
   region:Update();
 
   region.subRegionEvents:Notify("Update", region.state, region.states)
@@ -4726,6 +4728,7 @@ local function ValueForSymbol(symbol, region, customFunc, regionState, regionSta
         return tostring(value) or ""
       end
     end
+    return ""
   else
     local value = (useHiddenStates or regionState.show) and ReplaceValuePlaceHolders(symbol, region, customFunc, regionState, formatters[symbol]);
     return value or ""

@@ -1,0 +1,6 @@
+WagoAppCompanionData = {
+["ids"] = {  },
+["slugs"] = {  },
+["uids"] = {  },
+
+}

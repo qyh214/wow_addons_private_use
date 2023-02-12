@@ -142,9 +142,9 @@ L.OPTION_CATEGORY_SPECWARNINGS		= "Специальные предупрежде
 
 L.OPTION_CATEGORY_SOUNDS			= "Звуки"
 --Misc object broken down into sub cats
-L.OPTION_CATEGORY_DROPDOWNS			= "Dropdowns"--Still put in MISC sub group, just used for line separators since multiple of these on a fight (or even having on of these at all) is rare.
+L.OPTION_CATEGORY_DROPDOWNS			= "Выпадающие списки"
 L.OPTION_CATEGORY_YELLS				= "Крики"
-L.OPTION_CATEGORY_NAMEPLATES		= "Nameplates"
+L.OPTION_CATEGORY_NAMEPLATES		= "Индикаторы"
 L.OPTION_CATEGORY_ICONS				= "Метки"
 
 L.AUTO_RESPONDED					= "Автоответ."
@@ -515,7 +515,8 @@ L.AUTO_YELL_ANNOUNCE_TEXT.repeaticon	= "{rt%%1$d}"
 L.AUTO_YELL_CUSTOM_FADE				= "%s спал"
 L.AUTO_HUD_OPTION_TEXT				= "Показывать HudMap для $spell:%s"
 L.AUTO_HUD_OPTION_TEXT_MULTI		= "Показывать HudMap для различных механик"
-L.AUTO_NAMEPLATE_OPTION_TEXT		= "Показывать Nameplate Auras для $spell:%s"
+L.AUTO_NAMEPLATE_OPTION_TEXT			= "Показывать ауры индикаторов для $spell:%s, используя совместимый аддон индикаторов или DBM"
+L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED		= "Показывать ауры индикаторов для $spell:%s, используя только DBM"
 L.AUTO_RANGE_OPTION_TEXT			= "Показывать окно проверки дистанции (%s м) для $spell:%s"
 L.AUTO_RANGE_OPTION_TEXT_SHORT		= "Показывать окно проверки дистанции (%s м)"
 L.AUTO_RRANGE_OPTION_TEXT			= "Показывать обратное окно проверки дистанции (%s) для $spell:%s"

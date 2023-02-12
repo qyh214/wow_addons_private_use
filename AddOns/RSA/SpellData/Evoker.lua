@@ -225,6 +225,22 @@ local defaults = {
 			},
 		},
 	},
+	['sourceOfMagic'] = {
+		spellID = 369459,
+		configDisplay = {
+			isDefault = true,
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] cast on [TARGET]!",},
+				tags = {TARGET = true,},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] on [TARGET] finished!",},
+				tags = {TARGET = true,},
+			},
+		},
+	},
 	['timeDilation'] = {
 		spellID = 357170,
 		configDisplay = {

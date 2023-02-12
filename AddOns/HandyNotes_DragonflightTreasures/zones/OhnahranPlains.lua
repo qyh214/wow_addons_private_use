@@ -831,6 +831,35 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
             66005880, 68805560, 68605160, 67205100, 68805680, 65605980, 65206900, r=1, g=0, b=0, loop=true,
         },
     },
+    [33803840] = { -- Huntmaster Yrgena
+        quest=74466,
+        npc=201538,
+        loot={
+            203672, -- Master Huntmaster's Wristguards
+        },
+    },
+    --[[
+    -- accompanied by
+    [33803840] = { -- Rugren
+        -- [33803840, 33803860]
+        quest=nil,
+        npc=201563,
+    },
+    ]]
+    [35404080] = { -- Groffnar
+        quest=74463,
+        npc=201537,
+        loot={
+            203671, -- Pack Leader's Pelt
+        },
+    },
+    [37003640] = { -- Bloodbeak the Ravenous
+        quest=74467,
+        npc=201535,
+        loot={
+            203673, -- Bloodbeak's Ravenor
+        },
+    },
 })
 
 -- Who's a Good Bakar?

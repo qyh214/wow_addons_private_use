@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -250,23 +250,33 @@ local function SetupTutorials()
 		},
 		{	-- 12
 			text = cTitle.."         What's New|r\n\n"..
-					cTitle.."Version 6.0.2|r\n"..
-					"- FIXED - Quests - Active Button - green mover is not over the button\n"..
-					"- FIXED - Profession - Tracked Recipes are not displayed, when they are the only"..
-					offs.."active module\n"..
-					"- ADDED - Support for WoW 10.0.2\n"..
+					cTitle.."Version 6.1.1|r\n"..
+					"- FIXED - Quests - Max Quests limit (Blizz bug)\n"..
+					"- IMPROVED - Traveler's Log tracking (click to open activity, activity dropdown"..
+					offs.."menu, activity tooltip)\n\n"..
+
+					cTitle.."Version 6.1.0|r\n"..
+					"- ADDED - Support for WoW 10.0.5\n"..
+					"- ADDED - Tracker - Timer Progress Bar skin\n"..
+					"- FIXED - Tracker repeatedly expands in Mythic+ (after boss kills, player deaths,"..
+					offs.."etc.)\n"..
+					"- FIXED - Quests - Reward information in the tooltip is sometimes not displayed\n"..
+					"- FIXED - Quests - Header highlight colors are lost, when clicked on Quest\n"..
+					"- FIXED - Quests - Quest tooltip content is overridden, when Party progress"..
+					offs.."displayed in tooltip\n"..
+					"- FIXED - Quests - Highlight colors are lost, when clicked on Campaign quest\n"..
+					"- IMPROVED - Tracker - Progress Bars skin\n"..
+					"- IMPROVED - Quests - Reward information in the tooltip\n"..
 					"- IMPROVED - Quests - Active Button - Hides the button when Blizzard displays"..
 					offs.."its own\n"..
-					"- IMPROVED - Quests - Active Button - Stored position was moved from"..
-					offs.."character settings to profile settings\n"..
-					"- IMPROVED - Profession - Recipe dropdown menu and tooltip with result item\n"..
-					"- IMPROVED - Addon support - TomTom\n"..
-					"- UPDATED - Addon support - Masque 10.0.2\n"..
-					"- UPDATED - Addon support - TomTom 3.3.5-release\n"..
-					"- UPDATED - Addon support - ElvUI 13.06, Tukui 20.341\n"..
-					"- UPDATED - Help - Supporters (Patreon)\n\n"..
+					"- IMPROVED - Profession - Recipe tooltip with enabled addon ArkInventory\n"..
+					"- IMPROVED - Filters\n"..
+					"- IMPROVED - Edit Mode Hack\n"..
+					"- IMPROVED - TomTom - auto set waypoint after update quest objective\n"..
+					"- UPDATED - Addon support - Masque 10.0.5\n"..
+					"- UPDATED - Addon support - ElvUI 13.23, Tukui 20.37\n\n"..
 
-					cTitle.."WoW 10.0.2 - Known issues w/o solution|r\n"..
+					cTitle.."WoW 10.0.5 - Known issues w/o solution|r\n"..
 					"- Clicking on tracked quests or achievements has no response during combat.\n"..
 					"- Header buttons Q and A don't work during combat.\n\n"..
 

@@ -536,6 +536,20 @@ ns.RegisterPoints(ns.THALDRASZUS, {
         },
         vignette=5437,
     },
+    [62005980] = { -- Morlash
+        quest=74450,
+        npc=201549,
+        loot={
+            203666, -- Vinelashed Bracers
+        },
+    },
+    [59406120] = { -- Overloading Defense Matrix
+        quest=74449,
+        npc=201550,
+        loot={
+            203677, -- Watcher's 'Neck' Ring
+        },
+    },
     [60008190] = { -- Liskanoth
         -- also primalist future @ 53686325
         quest=69928, -- 72057
@@ -547,6 +561,42 @@ ns.RegisterPoints(ns.THALDRASZUS, {
             200745, -- Horns of the Futurebane
             200746, -- Icebound Girdle
             200763, -- Frosted Scale Drape
+        },
+    },
+})
+
+-- the future
+
+ns.RegisterPoints(ns.PRIMALISTFUTURE, {
+    [48601740] = { -- Shardwing
+        quest=74453,
+        npc=201562,
+        loot={
+            {197593,quest=69797,}, -- Windborne Velocidrake: Feathery Head
+            200241, -- Stormcaller's Ritual Hatchet
+            200242, -- Watcher's Lightning Rod
+            203669, -- Chillwing Leggings
+        },
+    },
+    [52206760] = { -- Avalantus
+        quest=74452,
+        npc=201543,
+        loot={
+            203670, -- Prismatic Diamond Loop
+        },
+    },
+    [61603200] = { -- Tikarr Frostclaw
+        quest=74451,
+        npc=201542,
+        loot={
+            203667, -- Frostclaw's Spellfingers
+        },
+    },
+    [46204120] = { -- Shapemaster Za'lani
+        quest=74454,
+        npc=201545,
+        loot={
+            203668, -- Earhshaping Grips
         },
     },
 })

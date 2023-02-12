@@ -1,4 +1,4 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file='Devpanel.lua'/>
 	<Script file='DataCollection.lua'/>
 	<Script file='ExportLua.lua'/>

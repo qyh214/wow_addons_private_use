@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod("Toravon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220704203621")
+mod:SetRevision("20230121204455")
 mod:SetCreatureID(38433)
-mod:SetEncounterID(1129)
+mod:SetEncounterID(mod:IsClassic() and 885 or 1129)
 mod:SetModelID(31089)
 
 mod:RegisterCombat("combat")

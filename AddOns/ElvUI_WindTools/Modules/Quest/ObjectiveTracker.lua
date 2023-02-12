@@ -18,12 +18,7 @@ local ObjectiveTracker_Update = ObjectiveTracker_Update
 local C_QuestLog_GetTitleForQuestID = C_QuestLog.GetTitleForQuestID
 
 do
-    local replaceRule = {
-        [L["Tazavesh: Streets of Wonder"]] = L["[ABBR] Tazavesh: Streets of Wonder"],
-        [L["Tazavesh: So'leah's Gambit"]] = L["[ABBR] Tazavesh: So'leah's Gambit"],
-        [L["Tazavesh: Streets of Wonder"]] = L["[ABBR] Tazavesh: Streets of Wonder"],
-        [L["Torghast, Tower of the Damned"]] = L["[ABBR] Torghast, Tower of the Damned"]
-    }
+    local replaceRule = {}
 
     function OT:ShortTitle(title)
         if not title then
@@ -205,6 +200,15 @@ function OT:HandleMenuText(text)
 end
 
 function OT:HandleInfoText(text)
+    -- Sometimes Blizzard not use dash icon, just put a dash in front of text
+    if self.db.noDash and text and text.GetText then
+        rawText = text:GetText()
+
+        if rawText and rawText ~= "" and strfind(rawText, "^%- ") then
+            text:SetText(gsub(rawText, "^%- ", ""))
+        end
+    end
+
     self:ColorfulProgression(text)
     F.SetFontWithDB(text, self.db.info)
     text:SetHeight(text:GetStringHeight())
@@ -365,7 +369,8 @@ function OT:Initialize()
             _G.CAMPAIGN_QUEST_TRACKER_MODULE,
             _G.QUEST_TRACKER_MODULE,
             _G.ACHIEVEMENT_TRACKER_MODULE,
-            _G.PROFESSION_RECIPE_TRACKER_MODULE
+            _G.PROFESSION_RECIPE_TRACKER_MODULE,
+            _G.MONTHLY_ACTIVITIES_TRACKER_MODULE
         }
 
         for _, module in pairs(trackerModules) do

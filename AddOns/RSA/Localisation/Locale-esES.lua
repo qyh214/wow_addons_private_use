@@ -25,6 +25,8 @@ L["A custom name for this announcement in the options menu. Leave blank to use t
 --[[Translation missing --]]
 L["A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Immune."] = "A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Immune."
 --[[Translation missing --]]
+L["A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Reflect."] = "A Fake event supplied by RSA to allow only announcing when a SPELL_MISSED event is Reflect."
+--[[Translation missing --]]
 L["A Fake event supplied by RSA to that occurs when a player accepts a ressurect."] = "A Fake event supplied by RSA to that occurs when a player accepts a ressurect."
 --[[Translation missing --]]
 L["A Fake event supplied by RSA to trigger an announcement after a set number of seconds. Useful when a spell doesn't have an appropriate combat log event to track when it expires. You can modify the duration in the Spell Setup tab."] = "A Fake event supplied by RSA to trigger an announcement after a set number of seconds. Useful when a spell doesn't have an appropriate combat log event to track when it expires. You can modify the duration in the Spell Setup tab."
@@ -344,6 +346,8 @@ L["When this spell interrupts another spell cast."] = "When this spell interrupt
 L["When this spell is cast. If the spell has a cast-time, this is when you finish the cast. If the spell is instant, this is when the spell begins its effect."] = "When this spell is cast. If the spell has a cast-time, this is when you finish the cast. If the spell is instant, this is when the spell begins its effect."
 --[[Translation missing --]]
 L["When this spell is resisted by the target."] = "When this spell is resisted by the target."
+--[[Translation missing --]]
+L["When this spell reflects another spell."] = "When this spell reflects another spell."
 --[[Translation missing --]]
 L["When this spell removes a buff or debuff."] = "When this spell removes a buff or debuff."
 --[[Translation missing --]]

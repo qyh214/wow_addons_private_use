@@ -424,6 +424,11 @@ local function OnQuestTurnedIn(rareScannerButton, questID, xpReward, moneyReward
 			return
 		end
 	end
+	
+	-- Removes missing drakewatcher manuscript
+	RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, function()
+		RSExplorerFrame:Refresh()
+	end)
 
 	if (RSConstants.DEBUG_MODE and not foundDebug) then
 		RSLogger:PrintDebugMessage("DEBUG: Mision completada que no existe en EVENT_QUEST_IDS "..questID)

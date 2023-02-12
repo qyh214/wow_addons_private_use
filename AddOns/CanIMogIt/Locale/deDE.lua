@@ -5,13 +5,13 @@ L["Also shows a summary in the Appearance Sets UI of how many pieces of a transm
 L["Another class can learn this item."] = "Eine andere Klasse kann diesen Gegenstand erlernen."
 L["Appearances updated: "] = "Aktualisierte Vorlagen:"
 --[[Translation missing --]]
---[[ L["Ask me later"] = ""--]] 
+L["Ask me later"] = "Ask me later"
 --[[Translation missing --]]
---[[ L["Bottom"] = ""--]] 
+L["Bottom"] = "Bottom"
 --[[Translation missing --]]
---[[ L["Bottom Left"] = ""--]] 
+L["Bottom Left"] = "Bottom Left"
 --[[Translation missing --]]
---[[ L["Bottom Right"] = ""--]] 
+L["Bottom Right"] = "Bottom Right"
 L["Can be learned by:"] = "Kann erlernt werden durch:"
 L["Can I Mog It? Important Message: Please log into all of your characters to compile complete transmog appearance data."] = "Can I Mog It? Wichtiger Hinweis: Betreten Sie das Spiel mit allen Charakteren, um eine Sammlung der bereits bekannten Transmogrifikationsvorlagen zusammenzustellen."
 L["CanIMogItOptions not found, loading defaults!"] = "CanIMogIt-Einstellungen nicht gefunden, Standardeinstellungen werden geladen!"
@@ -21,21 +21,21 @@ L["Cannot determine status on other characters."] = "Kann den Status von anderen
 L["Cannot learn:"] = "Kann nicht gelernt werden:"
 L["Cannot learn: Soulbound"] = "Kann nicht gelernt werden: Seelengebunden"
 --[[Translation missing --]]
---[[ L["Center"] = ""--]] 
+L["Center"] = "Center"
 --[[Translation missing --]]
---[[ L["Changes saved!"] = ""--]] 
+L["Changes saved!"] = "Changes saved!"
 --[[Translation missing --]]
---[[ L["Database migrated to:"] = ""--]] 
+L["Database migrated to:"] = "Database migrated to:"
 L["Database Scanning chat messages"] = "Datenbank scannt Chat-Nachrichten"
 L["Debug Tooltip"] = "Debug-Tooltip"
 --[[Translation missing --]]
---[[ L["Default"] = ""--]] 
+L["Default"] = "Default"
 L["Detailed information for debug purposes. Use this when sending bug reports."] = "Detaillierte Informationen für den Debug-Prozess. Beim Senden von Fehlermeldungen aktivieren."
 --[[Translation missing --]]
---[[ L["Does not affect Quests or Adventure Journal."] = ""--]] 
+L["Does not affect Quests or Adventure Journal."] = "Does not affect Quests or Adventure Journal."
 L["Equippable Items Only"] = "Nur anlegbare Gegenstände"
 --[[Translation missing --]]
---[[ L["Icon Location"] = ""--]] 
+L["Icon Location"] = "Icon Location"
 L["Items updated: "] = "Aktualisierte Gegenstände:"
 L["Learned but cannot transmog yet."] = "Erlernt, kann aber noch nicht transmogrifiziert werden."
 L["Learned for a different class and item."] = "Erlernt für eine andere Klasse und durch einen anderen Gegenstand."
@@ -44,23 +44,23 @@ L["Learned from another item but cannot transmog yet."] = "Durch einen anderen G
 L["Learned from another item."] = "Durch einen anderen Gegenstand erlernt."
 L["Learned."] = "Bereits erlernt."
 --[[Translation missing --]]
---[[ L["Left"] = ""--]] 
+L["Left"] = "Left"
 --[[Translation missing --]]
---[[ L["Migrating Database version to:"] = ""--]] 
+L["Migrating Database version to:"] = "Migrating Database version to:"
 L["Not learned."] = "Nicht gelernt."
 --[[Translation missing --]]
---[[ L["Okay"] = ""--]] 
+L["Okay"] = "Okay"
 L["Okay, I'll go log onto all of my toons!"] = "Okay, ich werde mit allen meinen Charaktere einloggen!"
 L["Only show on items that can be equipped."] = "Hinweise nur bei Gegenständen, die angelegt werden können."
 L["Only show on items that can be transmoggrified."] = "Hinweise nur bei Gegenständen, die transmogrifiziert werden können."
 L["Only show on items that you haven't learned."] = "Hinweise nur bei Gegenständen, die noch erlernt werden können."
 L["Please note that this may not always be correct as Blizzard's information is incomplete."] = "Bitte berücksichtige, dass dies nicht immer korrekt ist, da Blizzards Informationen unvollständig sind."
 --[[Translation missing --]]
---[[ L["Reload to apply"] = ""--]] 
+L["Reload to apply"] = "Reload to apply"
 --[[Translation missing --]]
---[[ L["Requires /reload to take effect."] = ""--]] 
+L["Requires /reload to take effect."] = "Requires /reload to take effect."
 --[[Translation missing --]]
---[[ L["Right"] = ""--]] 
+L["Right"] = "Right"
 L["Show Bag Icons"] = "Zeige Taschen Symbole"
 L["Show information on the tooltip about transmog sets."] = "Im Tooltip Informationen über Transmog-Sets anzeigen."
 L["Show Source Location Tooltip"] = "Zeige Tooltip mit Quellenangabe"
@@ -71,21 +71,21 @@ L["Shows chat messages on login about the database scan."] = "Zeige beim Einlogg
 L["Shows messages on login about the database scan."] = "Zeige beim Einloggen eine Meldung zum Datenbankscan."
 L["Shows the icon directly on the item in your bag."] = "Zeigt das Symbol direkt auf den Gegenstand in der Tasche."
 --[[Translation missing --]]
---[[ L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = ""--]] 
+L["Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."] = "Sorry! Your database has corrupted entries. This will cause errors and give incorrect results. Please click below to reset the database."
 --[[Translation missing --]]
---[[ L["Top"] = ""--]] 
+L["Top"] = "Top"
 --[[Translation missing --]]
---[[ L["Top Left"] = ""--]] 
+L["Top Left"] = "Top Left"
 --[[Translation missing --]]
---[[ L["Top Right"] = ""--]] 
+L["Top Right"] = "Top Right"
 --[[Translation missing --]]
---[[ L["Top Right (default)"] = ""--]] 
+L["Top Right (default)"] = "Top Right (default)"
 L["Transmoggable Items Only"] = "Nur transmogrifizierbare Gegenstände"
 L["Unknown Items Only"] = "Nur unbekannte Gegenstände"
 L["Updating appearances database."] = "Vorlagen-Datenbank wird aktualisiert."
 L["Verbose Text"] = "Ausführlicher Text"
 --[[Translation missing --]]
---[[ L["We need to update our database. This may freeze the game for a few seconds."] = ""--]] 
+L["We need to update our database. This may freeze the game for a few seconds."] = "We need to update our database. This may freeze the game for a few seconds."
 
 
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142037")
+mod:SetRevision("20230124054540")
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
 mod:SetEncounterID(1501)
 mod:SetUsedIcons(1, 2)
@@ -9,7 +9,7 @@ mod:SetUsedIcons(1, 2)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 123707 123788 124748 125822 125390 124862 124097 124007 123845",
+	"SPELL_AURA_APPLIED 123707 123788 124748 125822 125390 124862 124097 124007 123845 124077",
 	"SPELL_AURA_APPLIED_DOSE 123707 124748",
 	"SPELL_AURA_REMOVED 123788 124097 123845",
 	"SPELL_CAST_SUCCESS 123735 125826 124845 125451 123255",

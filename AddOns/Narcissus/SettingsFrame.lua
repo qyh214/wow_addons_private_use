@@ -843,9 +843,9 @@ end
 
 
 function CreditList:CreateList(parent, anchorTo, fromOffsetY)
-    local active = {"Albator S.", "Solanya", "Erik Shafer", "Celierra&Darvian", "Pierre-Yves Bertolus", "Terradon", "Alex Boehm", "Miroslav Kovac", "Ryan Zerbin", "Nisutec"};
+    local active = {"Albator S.", "Solanya", "Erik Shafer", "Celierra&Darvian", "Pierre-Yves Bertolus", "Terradon", "Alex Boehm", "Miroslav Kovac", "Ryan Zerbin", "Tezenari"};
     local inactive = {"Elexys", "Ben Ashley", "Knightlord", "Brian Haberer", "Andrew Phoenix", "Nantangitan", "Blastflight", "Lars Norberg", "Valnoressa", "Nimrodan", "Brux",
-        "Karl", "Webb", "acein", "Christian Williamson", "Tzutzu", "Anthony Cordeiro", "Nina Recchia", "heiteo", "Psyloken", "Jesse Blick", "Victor Torres"};
+        "Karl", "Webb", "acein", "Christian Williamson", "Tzutzu", "Anthony Cordeiro", "Nina Recchia", "heiteo", "Psyloken", "Jesse Blick", "Victor Torres", "Nisutec"};
     local special = {"Marlamin | WoW.tools", "Keyboardturner | Avid Bug Finder(Generator)", "Meorawr | Wondrous Wisdomball", "Hubbotu | Translator - Russian", "Romanv | Translator - Spanish", "Onizenos | Translator - Portuguese"};
 
     local numTotal = #active;

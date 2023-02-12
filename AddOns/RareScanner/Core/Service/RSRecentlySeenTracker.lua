@@ -37,7 +37,7 @@ local function InitResetRecentlySeenTimer()
 			-- If its an entity that spawns only in one spot
 			if (type(entityInfo) == "number") then
 				if (currenTime > (entityInfo + RSConstants.RECENTLY_SEEN_RESET_TIMER)) then
-					RSLogger:PrintDebugMessage(string.format("ResetRecentlySeen[%s] (mono)", entityID))
+					--RSLogger:PrintDebugMessage(string.format("ResetRecentlySeen[%s] (mono)", entityID))
 					recently_seen_entities[entityID] = nil
 					RSGeneralDB.DeleteRecentlySeen(entityID)
 				end			
@@ -47,7 +47,7 @@ local function InitResetRecentlySeenTimer()
 					if (currenTime > (entityInfo[xy].time + RSConstants.RECENTLY_SEEN_RESET_TIMER)) then
 						if (RSUtils.GetTableLength(recently_seen_entities[entityID]) == 1) then
 							recently_seen_entities[entityID] = nil
-							RSLogger:PrintDebugMessage(string.format("ResetRecentlySeen[%s] (multi/last)", entityID))
+							--RSLogger:PrintDebugMessage(string.format("ResetRecentlySeen[%s] (multi/last)", entityID))
 							RSGeneralDB.DeleteRecentlySeen(entityID)
 							break;
 						else
@@ -89,13 +89,13 @@ function RSRecentlySeenTracker.AddRecentlySeen(entityID, atlasName, isNavigating
 			recently_seen_entities[entityID][xy].time = currentTime
 			
 			RSGeneralDB.SetRecentlySeen(entityID)
-			RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (multi) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
+			--RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (multi) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
 		end
 	-- Otherwise stores also the coordinates
 	else
 		recently_seen_entities[entityID] = currentTime
 		RSGeneralDB.SetRecentlySeen(entityID)
-		RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (mono) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
+		--RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (mono) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
 	end
 end
 
@@ -103,15 +103,15 @@ function RSRecentlySeenTracker.RemoveRecentlySeen(entityID)
 	local entityInfo = recently_seen_entities[entityID]
 	
 	if (not entityInfo) then
-		return
+		return nil
 	end
 	
 	-- If its an entity that spawns only in one spot
 	if (type(entityInfo) == "number") then
-		RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s] (mono)", entityID))
+		--RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s] (mono)", entityID))
 		recently_seen_entities[entityID] = nil
 		RSGeneralDB.DeleteRecentlySeen(entityID)
-		return
+		return nil
 	end
 	
 	-- If its an entity that spawns in multiple spots at the same time
@@ -130,7 +130,7 @@ function RSRecentlySeenTracker.RemoveRecentlySeen(entityID)
 	
 	-- If for whatever reason it couldnt get the players coordinates it will be empty
 	if (RSUtils.GetTableLength(xyDistances) == 0) then
-		return
+		return nil
 	end
 	
 	-- And removes the closest to the player
@@ -144,15 +144,15 @@ function RSRecentlySeenTracker.RemoveRecentlySeen(entityID)
 		if (distance == min) then
 			local x, y = strsplit("_", xy)
 			if (RSUtils.GetTableLength(recently_seen_entities[entityID]) == 1) then
-				RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s,x=%s,y=%s] (multi/last)", entityID, x, y))
+				--RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s,x=%s,y=%s] (multi/last)", entityID, x, y))
 				recently_seen_entities[entityID] = nil
 				RSGeneralDB.DeleteRecentlySeen(entityID)
 			else
-				RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s,x=%s,y=%s] (multi)", entityID, x, y))
+				--RSLogger:PrintDebugMessage(string.format("RemoveRecentlySeen[%s,x=%s,y=%s] (multi)", entityID, x, y))
 				recently_seen_entities[entityID][xy] = nil
 			end
 			
-			break
+			return x, y
 		end
 	end
 end

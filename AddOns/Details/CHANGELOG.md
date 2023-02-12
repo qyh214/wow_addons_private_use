@@ -1,17 +1,13 @@
 # Details! Damage Meter
 
-## [Details.DF.Wrath.10408.148](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.DF.Wrath.10408.148) (2023-01-18)
-[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.DF.Wrath.10407.148...Details.DF.Wrath.10408.148) 
+## [Details.DF.Wrath.10562.148](https://github.com/Tercioo/Details-Damage-Meter/tree/Details.DF.Wrath.10562.148) (2023-02-09)
+[Full Changelog](https://github.com/Tercioo/Details-Damage-Meter/compare/Details.DF.Wrath.10561.148...Details.DF.Wrath.10562.148) 
 
-- release for wrath toc update  
-- Merge pull request #432 from itsnotapt/patch-1  
-    Typo "Tamage"  
-- Merge pull request #437 from Flamanis/Wrath-toc-bump  
-    Bump all wrath tocs  
-- Merge pull request #436 from Flamanis/LibOpenRaidWrathPotions  
-    Add HEALING\_POTIONS table to libopenraid on wrath  
-- Bump all wrath tocs  
-- Add HEALING\_POTIONS table to libopenraid on wrath  
-- Update class\_damage.lua  
-- Update plater.lua  
-- Typo "Tamage"  
+- Fixed bugs from latest release  
+- Merge pull request #455 from Flamanis/Wipe-Custom  
+    Don't misspell _detalhes  
+- Don't misspell _detalhes  
+- Merge pull request #452 from Flamanis/Wipe-Custom  
+    Some logoff error checks  
+- Check correct value  
+- Some logoff error checks  

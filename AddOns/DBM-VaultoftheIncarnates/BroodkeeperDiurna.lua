@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod(2493, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117184100")
+mod:SetRevision("20230202061417")
 mod:SetCreatureID(190245)
 mod:SetEncounterID(2614)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
-mod:SetHotfixNoticeRev(20230117000000)
+mod:SetHotfixNoticeRev(20230201000000)
 mod:SetMinSyncRevision(20221230000000)
 mod.respawnTime = 33
 
@@ -14,7 +14,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 376073 375871 388716 375870 375716 376272 376257 375485 375575 375457 375653 375630 388918 396269 396779 375475",
 	"SPELL_CAST_SUCCESS 380175 375870 396269 181113",
-	"SPELL_AURA_APPLIED 375889 375829 376073 378782 390561 376272 375487 375475 375620 375879 376330 396264 380483",
+	"SPELL_AURA_APPLIED 375889 375829 376073 378782 390561 376272 375475 375620 375879 376330 396264 380483",
 	"SPELL_AURA_APPLIED_DOSE 375829 378782 376272 375475 375879",
 	"SPELL_AURA_REMOVED 376073 375809 376330 396264",
 	"SPELL_AURA_REMOVED_DOSE 375809",
@@ -52,7 +52,7 @@ local specWarnIcyShroud							= mod:NewSpecialWarningCount(388716, nil, nil, nil
 local specWarnStormFissure						= mod:NewSpecialWarningDodge(396779, nil, nil, nil, 2, 2, 4)
 local specWarnMortalStoneclaws					= mod:NewSpecialWarningDefensive(375870, nil, nil, nil, 1, 2)
 local specWarnMortalWounds						= mod:NewSpecialWarningTaunt(378782, nil, nil, nil, 1, 2)
-local specWarnGTFO								= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
+local specWarnGTFO								= mod:NewSpecialWarningGTFO(390747, nil, nil, nil, 1, 8)
 
 local timerGreatstaffoftheBroodkeeperCD			= mod:NewCDCountTimer(24.4, 375842, L.staff, nil, nil, 5)--Shared CD ability?
 local timerRapidIncubationCD					= mod:NewCDCountTimer(24.4, 376073, nil, nil, nil, 1)--Shared CD ability?
@@ -75,9 +75,8 @@ local warnIonizingCharge						= mod:NewTargetAnnounce(375630, 3)
 
 local specWarnPrimalistReinforcements			= mod:NewSpecialWarningAddsCount(257554, "-Healer", nil, nil, 1, 2)
 local specWarnIceBarrage						= mod:NewSpecialWarningInterruptCount(375716, "HasInterrupt", nil, nil, 1, 2)
-local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, nil, nil, nil, 1, 2, 3)
+local specWarnBurrowingStrike					= mod:NewSpecialWarningDefensive(376272, false, nil, 2, 1, 2, 3)--Spammy as all hell, should never be on by default
 local specWarnTremors							= mod:NewSpecialWarningDodge(376257, nil, nil, nil, 2, 2)
-local specWarnCauterizingFlashflames			= mod:NewSpecialWarningDispel(375487, "MagicDispeller", nil, nil, 1, 2)
 local specWarnRendingBite						= mod:NewSpecialWarningDefensive(375475, nil, nil, nil, 1, 2, 3)
 local specWarnStaticJolt						= mod:NewSpecialWarningInterruptCount(375653, "HasInterrupt", nil, nil, 1, 2)
 local specWarnIonizingCharge					= mod:NewSpecialWarningMoveAway(375630, nil, nil, nil, 1, 2)
@@ -98,7 +97,6 @@ mod:AddNamePlateOption("NPFixate", 376330, true)
 mod:AddSetIconOption("SetIconOnMages", "ej25144", true, true, {6, 5, 4})
 mod:AddSetIconOption("SetIconOnStormbringers", "ej25139", true, true, {8, 7})
 
-mod:GroupSpells(375485, 375487)--Cauterizing Flashflames cast and dispel IDs
 mod:GroupSpells(385618, "ej25144", "ej25139")--Icon Marking with general adds announce
 --Stage Two: A Broodkeeper Scorned
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25146))
@@ -131,8 +129,8 @@ mod.vb.mageIcon = 6
 mod.vb.StormbringerIcon = 8
 mod.vb.eggsGone = false
 local mythicAddsTimers	= {32.9, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
-local heroicAddsTimers	= {36.4, 19.0, 36.6, 20.0, 44.1, 19.8, 36.8, 19.9, 43.1, 21.0, 35.7, 20.0}
-local normalAddsTimers	= {35.6, 24.6, 36.6, 24.9, 43.1, 24.9, 36.5, 24.9, 43.1, 24.8}
+local heroicAddsTimers	= {35.4, 19.0, 36.3, 20.0, 43.2, 19.8, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0}--Last 5 no longer happen?
+local normalAddsTimers	= {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
 local p2StaffMythic		= {0, 19, 17, 25, 24.5, 25, 31.9, 17.5, 31, 18.7, 25, 25}--Some of this pattern is accurate but it can change, need to figure out actual cause.
 
 function mod:OnCombatStart(delay)
@@ -153,16 +151,13 @@ function mod:OnCombatStart(delay)
 		timerRapidIncubationCD:Start(14.3-delay, 1)
 	end
 	timerGreatstaffoftheBroodkeeperCD:Start(16.2-delay, 1)
-	timerPrimalistReinforcementsCD:Start(self:IsMythic() and 32.9 or self:IsHeroic() and 36.4 or 35.6-delay, 1)
+	timerPrimalistReinforcementsCD:Start(self:IsMythic() and 32.9 or 35.4-delay, 1)
 	timerIcyShroudCD:Start(26.2-delay, 1)
 	if self.Options.NPFixate then
 		DBM:FireEvent("BossMod_EnableHostileNameplates")
 	end
 	if self:IsMythic() then
 		timerStormFissureCD:Start(28-delay)
-		timerPrimalistReinforcementsCD:Start(32.9-delay, 1)
-	else--Heroic and Normal
-		timerPrimalistReinforcementsCD:Start(35.6-delay, 1)
 	end
 end
 
@@ -229,23 +224,27 @@ function mod:SPELL_CAST_START(args)
 			timerRendingBiteCD:Start(nil, args.sourceGUID)
 		end
 	elseif spellId == 376257 then
-		if self:AntiSpam(1, spellId) then
-			specWarnTremors:Show()
-			specWarnTremors:Play("shockwave")
+		if self:AntiSpam(3, spellId) then
+			if self:CheckBossDistance(args.sourceGUID, false, 6450, 18) then
+				specWarnTremors:Show()
+				specWarnTremors:Play("shockwave")
+			end
 			timerTremorsCD:Start(nil, args.sourceGUID)
 		end
 	elseif spellId == 375485 then
-		if self:AntiSpam(1, spellId) then
+		if self:AntiSpam(3, spellId) then
 			warnCauterizingFlashflames:Show()
 			timerCauterizingFlashflamesCD:Start(self:IsMythic() and 8.6 or 11.7, args.sourceGUID)--TODO, recheck heroic
 		end
 	elseif spellId == 375575 then
-		if self:AntiSpam(1, spellId) then
-			warnFlameSentry:Show()
+		if self:AntiSpam(3, spellId) then
+			if self:CheckBossDistance(args.sourceGUID, false, 13289, 28) then
+				warnFlameSentry:Show()
+			end
 			timerFlameSentryCD:Start(nil, args.sourceGUID)
 		end
 	elseif spellId == 375457 then
-		if self:AntiSpam(1, spellId) then
+		if self:AntiSpam(3, spellId) then
 			warnChillingTantrum:Show()
 			timerChillingTantrumCD:Start(nil, args.sourceGUID)
 		end
@@ -256,7 +255,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 375716 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
-			if self.Options.SetIconOnMages and self.vb.mageIcon > 5 then--Only use up to 3 icons
+			if self.Options.SetIconOnMages and self.vb.mageIcon > 3 then--Only use up to 3 icons
 				self:ScanForMobs(args.sourceGUID, 2, self.vb.mageIcon, 1, nil, 12, "SetIconOnMages")
 			end
 			self.vb.mageIcon = self.vb.mageIcon - 1
@@ -396,33 +395,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDiurnasGaze:Show()
 	elseif spellId == 376272 and not args:IsPlayer() then
 		local amount = args.amount or 1
-		--local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		--local remaining
-		--if expireTime then
-		--	remaining = expireTime-GetTime()
-		--end
-		--if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-		--	specWarnMortalWounds:Show(args.destName)
-		--	specWarnMortalWounds:Play("tauntboss")
-		--else
+		if amount % 2 == 0 then
 			warnBurrowingStrike:Show(args.destName, amount)
-		--end
+		end
 	elseif spellId == 375475 and not args:IsPlayer() then
 		local amount = args.amount or 1
-		--local _, _, _, _, _, expireTime = DBM:UnitDebuff("player", spellId)
-		--local remaining
-		--if expireTime then
-		--	remaining = expireTime-GetTime()
-		--end
-		--if (not remaining or remaining and remaining < 6.1) and not UnitIsDeadOrGhost("player") and not self:IsHealer() then
-		--	specWarnMortalWounds:Show(args.destName)
-		--	specWarnMortalWounds:Play("tauntboss")
-		--else
-			warnRendingBite:Show(args.destName, amount)
-		--end
-	elseif spellId == 375487 then
-		specWarnCauterizingFlashflames:CombinedShow(1, args.destName)
-		specWarnCauterizingFlashflames:ScheduleVoice(1, "helpldispel")
+		warnRendingBite:Show(args.destName, amount)
 	elseif spellId == 375879 then
 		local amount = args.amount or 1
 		warnBroodkeepersFury:Show(args.destName, amount)

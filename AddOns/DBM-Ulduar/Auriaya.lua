@@ -1,10 +1,14 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200530203003")
+mod:SetRevision("20230120193044")
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
-mod:SetEncounterID(1131)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1131)
+else
+	mod:SetEncounterID(750)
+end
 mod:SetModelID(28651)
 mod:RegisterCombat("combat")
 --mod:RegisterKill("kill", 33515)

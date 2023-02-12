@@ -10,5 +10,6 @@
 	<Include file="Core\Blizzard_BonusObjectiveTracker.xml"/>
 	<Include file="Core\Blizzard_ScenarioObjectiveTracker.xml"/>
 	<Script file="Core\Blizzard_ProfessionsRecipeTracker.lua"/>
+	<Script file="Core\Blizzard_MonthlyActivitiesObjectiveTracker.lua"/>
 	<Include file="Core\Blizzard_ObjectiveTrackerUIWidgetContainer.xml"/>
 </Ui>

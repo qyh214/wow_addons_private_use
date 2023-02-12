@@ -1,18 +1,19 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230110014321")
+mod:SetRevision("20230124224352")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546",
-	"SPELL_CAST_SUCCESS 374885 371358 375652",
+	"SPELL_CAST_START 391136 370764 386526 387564 377105 370766 386546 387067",
+	"SPELL_CAST_SUCCESS 374885 371358 375652 375596",
 	"SPELL_AURA_APPLIED 371007 395492 375596",
 --	"SPELL_AURA_APPLIED_DOSE 339528",
 --	"SPELL_AURA_REMOVED 339525",
+	"UNIT_DIED",
 	"GOSSIP_SHOW"
 )
 
@@ -30,10 +31,10 @@ local warnErraticGrowth						= mod:NewTargetNoFilterAnnounce(375596, 2)
 local specWarnUnstablePower					= mod:NewSpecialWarningDodge(374885, nil, nil, nil, 2, 2)
 local specWarnForbiddenKnowledge			= mod:NewSpecialWarningDodge(371358, nil, nil, nil, 2, 2)
 local specWarnNullStomp						= mod:NewSpecialWarningDodge(386526, false, nil, 2, 2, 2)
+local specWarnShoulderSlam					= mod:NewSpecialWarningDodge(391136, false, nil, nil, 2, 2)
 local specWarnCrystallineRupture			= mod:NewSpecialWarningDodge(370766, nil, nil, nil, 2, 2)
 local specWarnWildEruption					= mod:NewSpecialWarningDodge(375652, nil, nil, nil, 2, 2)
---local specWarnShoulderSlam					= mod:NewSpecialWarningMoveAway(391136, nil, nil, nil, 1, 2)
---local yellShoulderSlam						= mod:NewYell(391136)
+local specWarnArcaneBash					= mod:NewSpecialWarningDefensive(387067, nil, nil, nil, 1, 2)
 local specWarnSplinteringShards				= mod:NewSpecialWarningMoveAway(371007, nil, nil, nil, 1, 2)
 local yellSplinteringShards					= mod:NewYell(371007)
 local yellErraticGrowth						= mod:NewYell(375596)
@@ -41,30 +42,29 @@ local yellErraticGrowth						= mod:NewYell(375596)
 local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInterrupt", nil, nil, 1, 2)
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
 
+local timerWakingBaneCD						= mod:NewCDTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerErraticGrowthCD					= mod:NewCDTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerShoulderSlamCD					= mod:NewCDTimer(10.9, 391136, nil, nil, nil, 3)
+local timerArcaneBashCD						= mod:NewCDTimer(18.2, 387067, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+
 mod:AddBoolOption("AGBook", true)
 
 --local playerName = UnitName("player")
 
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc
 
---[[
-function mod:ShoulderSlamTarget(targetname)
-	if not targetname then return end
-	if targetname == UnitName("player") then
-		if self:AntiSpam(4, 5) then
-			specWarnShoulderSlam:Show()
-			specWarnShoulderSlam:Play("runout")
-		end
-		yellShoulderSlam:Yell()
-	end
-end
---]]
-
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 391136 then
-		warnShoulderSlam:Show()
---		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "ShoulderSlamTarget", 0.1, 8)
+		timerShoulderSlamCD:Start(10.9, args.sourceGUID)
+		if self:AntiSpam(3, 2) then
+			if self.Options.SpecWarn391136dodge then
+				specWarnShoulderSlam:Show()
+				specWarnShoulderSlam:Play("watchstep")
+			else
+				warnShoulderSlam:Show()
+			end
+		end
 	elseif spellId == 370764 and self:AntiSpam(5, 6) then
 		warnPiercingShards:Show()
 	elseif spellId == 377105 and self:AntiSpam(3, 6) then
@@ -83,11 +83,18 @@ function mod:SPELL_CAST_START(args)
 		specWarnMysticVapors:Show(args.sourceName)
 		specWarnMysticVapors:Play("kickcast")
 	elseif spellId == 386546 then
-		if self.Options.SpecWarn386546interrupt and  self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		timerWakingBaneCD:Start(20, args.sourceGUID)
+		if self.Options.SpecWarn386546interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnWakingBane:Show(args.sourceName)
 			specWarnWakingBane:Play("kickcast")
 		elseif self:AntiSpam(3, 5) then
 			warnWakingBane:Show()
+		end
+	elseif spellId == 387067 then
+		timerArcaneBashCD:Start(18.2, args.sourceGUID)
+		if self:IsTanking("player", nil, nil, true, args.sourceGUID) and self:AntiSpam(3, 5) then
+			specWarnArcaneBash:Show()
+			specWarnArcaneBash:Play("carefly")
 		end
 	end
 end
@@ -103,6 +110,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 375652 and self:AntiSpam(3, 2) then
 		specWarnWildEruption:Show()
 		specWarnWildEruption:Play("watchstep")
+	elseif spellId == 375596 then
+		timerErraticGrowthCD:Start(21.5, args.sourceGUID)
 	end
 end
 
@@ -135,6 +144,19 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 --]]
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 186740 then--Arcane Construct
+		timerArcaneBashCD:Stop(args.destGUID)
+	elseif cid == 187240 then--Drakonid Breaker
+		timerShoulderSlamCD:Stop(args.destGUID)
+	elseif cid == 186741 then--Drakonid Breaker
+		timerWakingBaneCD:Stop(args.destGUID)
+	elseif cid == 196115 or cid == 191164 then--Arcane Tender (one by entrance is diff id than ones before boss)
+		timerErraticGrowthCD:Stop(args.destGUID)
+	end
+end
 
 --[[
 56056 Book 1

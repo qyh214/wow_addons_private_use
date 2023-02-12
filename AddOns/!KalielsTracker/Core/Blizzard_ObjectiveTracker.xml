@@ -369,6 +369,7 @@
 					<Frame parentKey="AchievementHeader" inherits="KT_ObjectiveTrackerHeaderTemplate"/>
 					<Frame parentKey="ScenarioHeader" inherits="KT_ObjectiveTrackerHeaderTemplate"/>
 					<Frame parentKey="UIWidgetsHeader" inherits="KT_ObjectiveTrackerHeaderTemplate"/>
+					<Frame parentKey="MonthlyActivitiesHeader" inherits="KT_ObjectiveTrackerHeaderTemplate"/>
 				</Frames>
 			</Frame>
 			<Frame parentKey="HeaderMenu">

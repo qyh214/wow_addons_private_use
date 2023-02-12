@@ -1,9 +1,13 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701215737")
+mod:SetRevision("20230120193044")
 mod:SetCreatureID(32865)
-mod:SetEncounterID(1141)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1141)
+else
+	mod:SetEncounterID(752)
+end
 mod:SetModelID(28977)
 mod:SetUsedIcons(7)
 
@@ -13,10 +17,11 @@ mod:RegisterKill("yell", L.YellKill)
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 62042 62130 62526 62527",
 	"SPELL_CAST_SUCCESS 62042 62466 62130",
-	"SPELL_DAMAGE 62017",
+	"SPELL_DAMAGE 62017 62466",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
+--TODO, add chain lightning timer, 8 seconds on classic and 12 on retail. Thanks blizzard for the details.
 local warnPhase2					= mod:NewPhaseAnnounce(2, 1)
 local warnStormhammer				= mod:NewTargetNoFilterAnnounce(62470, 2)
 local warnLightningCharge			= mod:NewSpellAnnounce(62466, 2)
@@ -33,6 +38,7 @@ mod:AddBoolOption("AnnounceFails", false, "announce", nil, nil, nil, 62017)
 local enrageTimer					= mod:NewBerserkTimer(369)
 local timerStormhammer				= mod:NewBuffActiveTimer(16, 62042, nil, nil, nil, 3)--Cast timer? Review if i ever do this boss again.
 local timerLightningCharge	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3)
+--local timerChainLightning	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3)
 local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
@@ -107,7 +113,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnLightningCharge:Show()
 		timerLightningCharge:Start()
 	elseif args.spellId == 62130 then
-		timerUnbalancingStrike:Start()
+		timerUnbalancingStrike:Start(self:IsClassic() and 15 or 25)
 	end
 end
 
@@ -137,6 +143,7 @@ function mod:OnSync(event, arg)
 		warnPhase2:Show()
 		enrageTimer:Stop()
 		timerHardmode:Stop()
+		timerUnbalancingStrike:Start(self:IsClassic() and 10 or 15)
 		enrageTimer:Start(300)
 	end
 end

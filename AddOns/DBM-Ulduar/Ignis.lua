@@ -1,11 +1,16 @@
 local mod	= DBM:NewMod("Ignis", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701215737")
+mod:SetRevision("20230123012946")
 mod:SetCreatureID(33118)
-mod:SetEncounterID(1136)
+if not mod:IsClassic() then
+	mod:SetEncounterID(1136)
+else
+	mod:SetEncounterID(745)
+end
 mod:SetModelID(29185)
 mod:SetUsedIcons(8)
+mod:SetHotfixNoticeRev(20230120000000)
 
 mod:RegisterCombat("combat")
 
@@ -19,8 +24,8 @@ mod:RegisterEventsInCombat(
 local announceSlagPot			= mod:NewTargetNoFilterAnnounce(63477, 3)
 local announceConstruct			= mod:NewCountAnnounce(62488, 2)
 
-local warnFlameJetsCast			= mod:NewSpecialWarningCast(62488, "SpellCaster")
-local warnFlameBrittle			= mod:NewSpecialWarningSwitch(62382, "Dps")
+local warnFlameJetsCast			= mod:NewSpecialWarningCast(63472, "SpellCaster", nil, nil, 1, 2)
+local warnFlameBrittle			= mod:NewSpecialWarningSwitch(62382, "Dps", nil, nil, 1, 2)
 
 local timerFlameJetsCast		= mod:NewCastTimer(2.7, 63472)
 local timerActivateConstruct	= mod:NewCDCountTimer(30, 62488, nil, nil, nil, 1)

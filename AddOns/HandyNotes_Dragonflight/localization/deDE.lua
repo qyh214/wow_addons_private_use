@@ -42,19 +42,23 @@ L['options_icons_kite_desc'] = 'Zeigt die Positionen der {npc:198118} für den E
 
 L['disturbed_dirt'] = 'Bewegte Erde'
 L['options_icons_disturbed_dirt'] = 'Bewegte Erde'
-L['options_icons_disturbed_dirt_desc'] = 'Zeigt die möglichen Positionen für Bewegte Erde an.'
+L['options_icons_disturbed_dirt_desc'] = 'Zeigt die möglichen Positionen für {object:Bewegte Erde} an.'
 
 L['scout_pack'] = 'Expeditionsspäherpack'
 L['options_icons_scout_pack'] = 'Expeditionsspäherpacks'
-L['options_icons_scout_pack_desc'] = 'Zeigt die möglichen Positionen für Expeditionsspäherpacks an.'
+L['options_icons_scout_pack_desc'] = 'Zeigt die möglichen Positionen für {object:Expeditionsspäherpacks} an.'
 
 L['magicbound_chest'] = 'Magiegebundene Truhe'
 L['options_icons_magicbound_chest'] = 'Magiegebundene Truhen'
-L['options_icons_magicbound_chest_desc'] = 'Zeigt die möglichen Positionen der Magiegebundenen Truhen an.'
+L['options_icons_magicbound_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Magiegebundene Truhe} an.'
 
-L['dr_best'] = 'Deine beste Zeit:\n - Normal: %.3fs\n - Fortgeschritten: %.3fs'
+L['tuskarr_tacklebox'] = 'Angelzubehör der Tuskarr'
+L['options_icons_tuskarr_tacklebox'] = 'Angelzubehör der Tuskarr'
+L['options_icons_tuskarr_tacklebox_desc'] = 'Zeigt die möglichen Positionen für {object:Angelzubehör der Tuskarr} an.'
+
+L['dr_best'] = 'Deine beste Zeit:\n - Normal: %.3fs\n - Fortgeschritten: %.3fs\n - Rückwärts: %.3fs'
 L['dr_best_dash'] = 'Deine beste Zeit:\n - %.3fs'
-L['dr_note'] = 'Vorgabezeit:\n - Normal: %ss / %ss\n - Fortgeschritten: %ss / %ss'
+L['dr_note'] = 'Vorgabezeit:\n - Normal: %ss / %ss\n - Fortgeschritten: %ss / %ss\n - Rückwärts: %ss / %ss'
 L['dr_note_dash'] = 'Vorgabezeit:\n - %ss / %ss'
 L['dr_bronze'] = '\n\nBeende das Rennen um ' .. ns.color.Bronze('Bronze') .. ' zu erhalten.'
 L['options_icons_dragonrace'] = 'Drachenrennen'
@@ -86,8 +90,8 @@ L['signal_transmitter_note'] = ns.color.Orange('Benötigt 10 Punkte in Mechanisc
 L['options_icons_signal_transmitter'] = 'Wyrmlochgenerator Signaltransmitters'
 L['options_icons_signal_transmitter_desc'] = 'Zeigt die Positionen der {object:Deaktivierten Signaltransmitter} für {item:198156} an.'
 
-L['spawns_hourly'] = 'Erscheint nur einmal pro Stunde.'
-L['spawns_at_night'] = 'Erscheint nur nachts. (Ab 18:30 Server Zeit)'
+L['spawns_periodically'] = '{note:Erscheint möglicherweise alle 30 Minuten, synchronisiert über den Realm. (Beispiel: 9:00, 17:30)}'
+L['spawns_at_night'] = '{note:Erscheint nur nachts. (Ab 18:30 Server Zeit)}'
 
 L['elemental_storm'] = 'Elementarsturm'
 L['elemental_storm_thunderstorm'] = 'Gewittersturm'
@@ -120,6 +124,7 @@ L['options_icons_elemental_storm_desc'] = 'Zeigt die möglichen Positionen der E
 ------------------------------- THE AZURE SPAN --------------------------------
 -------------------------------------------------------------------------------
 
+L['bisquis_note'] = 'Kocht beim gemeinschaftlichen Festmahl in {location:Iskaara} eine legendäre Suppe und besiegt dann {npc:197557}.'
 L['blightfur_note'] = 'Sprich mit {npc:193633}, um den seltenen Gegner erscheinen zu lassen.'
 L['brackenhide_rare_note'] = 'Dieser seltene Gegner erscheint nach einer festen Rotation von {npc:197344} > {npc:197353} > {npc:197354} > {npc:197356} im Abstand von 10 Minuten.'
 L['fisherman_tinnak_note'] = 'Sammel {object:Zerbrochene Angelrute}, {object:Zerrissenes Fischernetz} und {object:Alte Harpune}, um ihn zu beschwören.'
@@ -169,17 +174,24 @@ L['snowclaw_cub_note_end'] = ns.color.Orange('Alle Gegenstände können im Aukti
 
 L['tome_of_polymoph_duck'] = 'Benutze {spell:1953}, um in die Höhle zu gelangen und interagiere dann mit dem {object:Manastürmen für Anfänger} Buch, um die Quest abzuschließen.'
 
-L['temperamental_skyclaw_note'] = [[
-Sammle (oder kaufe im Auktionshaus):
-
-20x {item:201420}
-20x {item:201421}
-20x {item:201422}
-
-Fragt nach der gesattelten Slyvern und präsentiert {npc:190892} die gesammelten "Gerichte".
-]]
+L['temperamental_skyclaw_note_start'] = 'Sammle (oder kaufe im Auktionshaus):'
+L['temperamental_skyclaw_note_end'] = 'Fragt nach der gesattelten Slyvern und präsentiert {npc:190892} die gesammelten "Gerichte".'
 
 L['elder_poa_note'] = 'Tausche {item:200071} gegen Ruf bei den {faction:2511} ein.'
+
+L['artists_easel_note_step1'] = '{quest:70166}\n{npc:194415}, an der Spitze des Turms beim {location:Uralter Aussichtspunkt}, wird dich bitten, sein Gemälde an {npc:194323}, den größten Maler der je gelebt hat, zu übergeben.'
+L['artists_easel_note_step2'] = '{quest:70168}\n{npc:194425} wird dich bitten, Gemälde aus den Dungeons {location:Rubinlebensbecken}, {location:Der Angriff der Nokhud} und {location:Brackenfellhöhle} zu holen.'
+L['artists_easel_note_step3'] = '{quest:70170}\n{npc:194425} wird dich bitten, Gemälde aus den Dungeons {location:Hallen der Infusion}, {location:Akademie von Algeth\'ar}, {location:Das Azurblaue Gewölbe} und {location:Neltharus} zu holen.'
+L['artists_easel_note_step4'] = 'Bringe die letzten Gemälde zu {npc:194323}, um das Spielzeug zu erhalten.\n\n{note:Gemälde können nicht aus Dungeons der Schwierigkeitsstufe Mythisch oder Mythisch+ geholt werden.}'
+
+L['somewhat_stabilized_arcana_note'] = 'Oben auf dem Turm.\n\nSchließe die kurze Questreihe von {npc:197100} ab, um das Spielzeug zu erhalten.'
+
+L['stranded_soul_note'] = [[
+Nachdem du {npc:196900} getötet hast, explodiert er in 4 {npc:196901n}.
+Du musst sie aktivieren, um die Eiswand zu schmelzen (Zwei Spieler empfohlen).
+
+Töte dann {npc:197183} in der Höhle, um {item:200528} zu erhalten.
+]]
 
 -------------------------------------------------------------------------------
 ------------------------------- FORBIDDEN REACH -------------------------------
@@ -203,13 +215,30 @@ L['porta_the_overgrown_note'] = 'Verteile 5x {item:194426} auf dem Boden um {npc
 L['scaleseeker_mezeri_note'] = 'Sprich mit {npc:193224} und biete ihr ein {item:194681} an und folge ihr, bis sie den seltenen Gegner enthüllt.'
 L['shade_of_grief_note'] = 'Klicke den {npc:193166} an, um den seltenen Gegner zu beschwören.'
 L['windscale_the_stormborn_note'] = 'Töte die {npc:192367}, die auf das {npc:192357} kanalisieren.'
+L['windseeker_avash_note'] = 'Töte {npc:195742} und {npc:187916} in der Nähe, um den seltenen Gegner erscheinen zu lassen.'
 L['zarizz_note'] = 'Visiere und fauche {emote:(/fauchen)} die vier {npc:193169n} an, um den seltenen Gegner erscheinen zu lassen.'
+
+L['aylaag_outpost_note'] = '{note:Erscheint nur, wenn das Lager der Aylaag beim {location:Außenposten der Aylaag} ist.}'
+L['eaglewatch_outpost_note'] = '{note:Erscheint nur, wenn das Lager der Aylaag beim {location:Adlerblickaußenposten} ist.}'
+L['river_camp_note'] = '{note:Erscheint nur, wenn das Lager der Aylaag beim {location:River Camp} ist.}' -- review, can't find this location
+
+L['defend_clan_aylaag'] = 'Verteidigt Klan Aylaag'
+L['defend_clan_aylaag_note'] = '{note:Erscheint nur während des Verteidigungsevents, wenn das Lager der Aylaag umzieht. Keine Beute.}'
 
 L['gold_swong_coin_note'] = 'In der Höhle mit {npc:191608} zu seiner rechten Seite.'
 L['nokhud_warspear_note'] = '{item:194540} kann in Expeditionsspäherpacks und in Bewegte Erde enthalten sein.'
 L['slightly_chewed_duck_egg_note'] = 'Finde und streichel {npc:192997}, um die {item:195453} zu erhalten, benutze diese anschließend. {item:199171} schlüpft innerhalb von 3 Tagen zu {item:199172}.'
 L['yennus_boat'] = 'Spielzeugboot der Tuskarr'
 L['yennus_boat_note'] = 'Plündere das {object:Spielzeugboot der Tuskarr}, um {item:200876} zu erhalten, das die Quest {quest:72063} startet, die bei {npc:195252} abgegeben werden kann.'
+
+L['forgotten_dragon_treasure_label'] = 'Vergessener Drachenschatz'
+L['forgotten_dragon_treasure_step1'] = '1. Sammle 5x {item:195884} von {object:Kristalline Blume} ({dot:Green}) im Westen der {location:Ebenen von Ohn\'ahra}.'
+L['forgotten_dragon_treasure_step2'] = '2. Kombiniere die Blütenblätter beim {object:Uralter Stein} ({dot:Yellow}), um ein {item:195542} herzustellen.'
+L['forgotten_dragon_treasure_step3'] = '3. Benutze das {item:195542} beim {object:Uralten Stein}, um den Stärkungszauber {spell:378935} (20 Sekunden) zu erhalten. Folge den Blumen und lauf durch diese hindurch, um den Stärkungszauber aufzufrischen, bis zu einer Höhle mit der {object:Smaragdtruhe} ({dot:Blue}), in der ein {item:195041} ist.'
+L['forgotten_dragon_treasure_step4'] = 'Sobald du den Schlüssel hast, geht zum {object:Vergessener Drachenschatz}, um diesen zu öffnen und deine Belohnung zu erhalten.'
+L['fdt_crystalline_flower'] = 'Kristalline Blume'
+L['fdt_ancient_stone'] = 'Uralter Stein'
+L['fdt_emerald_chest'] = 'Smaragdtruhe'
 
 L['pm_ench_shalasar_glimmerdusk'] = 'Im zweiten Stock der Turmruine.'
 L['pm_herb_hua_greenpaw'] = 'Kniet neben einem Baum.'
@@ -258,7 +287,7 @@ L['hunt_instructor_basku_note'] = 'Tausche {item:200093} gegen Ruf bei den {fact
 L['elder_yusa_note'] = 'Visiere {npc:192818} an und benutze den Chatbefehl {emote:/hunger}, um das Rezept zu erhalten.'
 L['initiate_kittileg_note'] = 'Schließe die Quest {quest:66226} ab, um das Spielzeug zu erhalten!'
 
-L['quackers_duck_trap_kit'] = 'Um {npc:192557} zu rufen, benötigst du zuerst das {item:194740}, welches du in einem Lager in der Nähe findest.\n\nUm daraus eine {item:194712} zu bauen, benötigst du folgende Materialien:'
+L['quackers_duck_trap_kit'] = 'Um {npc:192557} zu rufen, benötigst du zuerst das {item:194740}, welches du im {location:Lager des Aylaag Klans} in der Nähe findest.{dot:Blue}\n\nUm daraus eine {item:194712} zu bauen, benötigst du folgende Materialien:'
 L['quackers_spawn'] = 'Als nächstes musst du eine Ente mit der {item:194712} fangen, du findest einige in der Nähe des Nestes. Die {item:194739} kannst du dann bei {npc:192581} benutzen, um {npc:192557} zu rufen.'
 
 L['knew_you_nokhud_do_it_note'] = '{note:Die drei Gegenstände sind einzigartig und bleiben nur 30 Minuten im Inventar.}\n\nErbeute einen {item:200184}, eine {item:200194} und einen {item:200196} von {npc:185357}, {npc:185353} oder {npc:185168} im Gebiet der {location:Festung Nokhudon}.\n\nKombiniere diese zu einer {item:200201} und benutze diese, um bei {npc:197884} den Trainingsparcours beginnen zu können.\n\nVerwende deinen |cFFFFFD00Zusätzlichen Aktionsbutton|r, um den Erfolg zu erringen.\n\n{note:Die drei Gegenstände zu erbeuten ist in einem Schlachtzug während eines Elementarsturms viel einfacher.}'
@@ -266,6 +295,8 @@ L['options_icons_nokhud_do_it'] = '{achievement:16583}'
 L['options_icons_nokhud_do_it_desc'] = 'Zeigt die Position für den Erfolg {achievement:16583} an.'
 
 L['chest_of_the_flood'] = 'Truhe der Flut'
+
+L['aylaag_camp_note'] = 'Der {faction:Aylaag Klan} zieht alle 3 Tage und 3 Stunden (75 Stunden) weiter in ein anderes Lager, folge ihnen und verteidige sie auf ihren Weg.'
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -322,6 +353,13 @@ L['lillian_brightmoon_note'] = 'Tausche {item:201412} gegen Ruf bei der |cFFFFFF
 
 L['chest_of_the_elements'] = 'Truhe der Elemente'
 
+L['hoard_of_draconic_delicacies_note_start'] = 'Schließe die folgenden 7 Quests von {npc:189479} ab:'
+L['hoard_of_draconic_delicacies_note_end'] = 'Nachdem alle Quests abgeschlossen wurden wird {npc:189479} die Quest {quest:67071} anbieten, um dein Rezept zu erhalten.\n\n{note:Die Quests richten sich nach dem aktiven Gastkoch in {location:Die Rubinenklave} und stimmen möglicherweise nicht mit der oben aufgeführten Reihenfolge überein.}'
+
+L['brendormi_note_start'] = 'Tausche {item:202039} und {currency:2118} gegen Ausrüstung, ein Haustier, ein Spielzeug oder ein Reittier ein.'
+L['brendormi_note_item'] = 'Zurzeit hast du %s {item:202039}.'
+L['brendormi_note_currency'] = 'Zurzeit hast du %s {currency:2118}.'
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -331,22 +369,32 @@ L['captain_lancer_note'] = 'Erscheint nach dem Abschluss des {spell:388945} Even
 L['enkine_note'] = 'Töte {npc:193137}, {npc:193138} oder auch {npc:193139} entlang des Lavaflusses, um die {item:201092} zu erhalten, benutze es und fische in der Nähe von {npc:191866} in der Lava, um den seltenen Gegner erscheinen zu lassen.'
 L['lepidoralia_note'] = 'Hilf {npc:193342} in der {location:Flatterkaverne} Höhle dabei {npc:193274} zu fangen, bis der seltene Gegner erscheint.'
 L['obsidian_citadel_rare_note'] = 'Du und andere Spieler müssen insgesamt %dx {item:191264} bei %s abgeben.\nUm einen Schlüssel herzustellen, müssen 30x {item:191251} und 3x {item:193201} kombiniert werden, diese können von Gegnern bei der {location:Obsidianzitadelle} geplündert werden.'
-L['shadeslash_note'] = 'Klicke auf den {object:Gestohlener Fokus}, um den seltenen Gegner erscheinen zu lassen.'
+L['shadeslash_note'] = 'Klicke den {object:Gestohlener Globus}, das {object:Gestohlenes Teleskop} und dann auf den {object:Gestohlener Fokus}, um den seltenen Gegner erscheinen zu lassen.'
 L['obsidian_throne_rare_note'] = 'Innerhalb des {location:Obsidianthron}.'
-L['slurpo_snail_note'] = 'Plündere in einer Höhle im {location:Azurblauen Gebirge} (11.0, 41.4) aus einem {object:Salzkristall} ein {item:201033} und benutze ihn in dieser Höhle, um den seltenen Gegner erscheinen zu lassen.'
+L['slurpo_snail_note'] = 'Plündere in einer Höhle im {location:Azurblauen Gebirge} (11.0, 41.4) aus einem {object:Salzkristall} ein {item:201033} und benutze ihn in einer Höhle in {location:Die Küste des Erwachens} (36.0, 89.8), um den seltenen Gegner erscheinen zu lassen.'
 L['worldcarver_atir_note'] = 'Sammle 3x {item:191211} von {npc:187366} in der Nähe und platziere diese beim {npc:197395}, um den seltenen Gegner erscheinen zu lassen.'
 
 L['bubble_drifter_note'] = '{item:199061} kann in Expeditionsspäherpacks und in Bewegte Erde enthalten sein.'
 L['dead_mans_chestplate_note'] = 'Im Inneren des Turms auf der mittleren Etage.'
 L['fullsails_supply_chest_note'] = 'Der Schlüssel kann südlich der {location:Botschaft von Schwingenrast} von {npc:187971} und {npc:187320} fallen gelassen werden.'
 L['golden_dragon_goblet_note'] = 'Plündere {item:202081} von {npc:190056} an der {location:Wilde Küste} und schließe die kleine Questreihe ab.'
+L['lost_obsidian_cache'] = 'Verlorene Obsidiantruhe'
+L['lost_obsidian_cache_step1'] = '1. Sammle {item:194122} auf dem Boden neben der {npc:186763}.'
+L['lost_obsidian_cache_step2'] = '2. Wirf {item:194122} auf die {npc:191851} und fliege mit ihr zum Höhleneingang.'
+L['lost_obsidian_cache_step3'] = '3. Plündere den {item:198085} vom {object:Verlorener Truhenschlüssel} am Höhleneingang und öffne damit die {object:Verlorene Obsidiantruhe} weiter hinten in der Höhle, um das Spielzeug zu erhalten.'
 L['misty_treasure_chest_note'] = 'Stelle dich auf den {npc:185485} der aus dem Wasserfall ragt, um in die Höhle zu gelangen.'
 L['onyx_gem_cluster_note'] = 'Auf Ruhmstufe 21 bei der |cFFFFFF00Drachenschuppenexpedition|r kannst du die Quest {quest:70833} abschließen und als Belohnung die {item:200738} bekommen (einmal pro Account) oder kaufe die Karte von {npc:189065} für 3 {item:192863} und 500 {currency:2003} und benutze es.'
 L['torn_riding_pack_note'] = 'Liegt am oberen Ende des Wasserfalls.'
 L['yennus_kite_note'] = 'Steckt an einem Ast in der Baumkrone fest.'
 
 L['fullsails_supply_chest'] = 'Vorratskiste der Vollsegel'
-L['hidden_hornswog_hoard_note'] = 'Sammel {item:200064}, {item:200065} und {item:200066}, kombiniere diese beim {object:"Rätsel für Aufmerksame: Ein Naturführer"} nahe dem Schatz und füttere dann den Frosch damit.'
+L['hidden_hornswog_hoard_note'] = [[
+Sammel die drei Gegenstände und kombiniere diese beim {object:"Rätsel für Aufmerksame: Ein Naturführer"} nahe dem Schatz und füttere dann den Frosch damit.
+
+{item:200064}{dot:Yellow}
+{item:200065}{dot:Blue}
+{item:200066}{dot:White}
+]]
 
 L['pm_alch_grigori_vialtry'] = 'Auf einem Felsvorsprung mit Blick auf den {location:Blitzfrostangriff}.'
 L['pm_skin_zenzi'] = 'Sitzt direkt am Flussufer.'
@@ -424,3 +472,21 @@ L['options_icons_safari_desc'] = 'Zeigt die Positionen der Kampfhaustiere für d
 L['shyfly_note'] = 'Du musst dich auf der Quest {quest:70853} befinden, um {npc:189102} zu sehen.'
 
 L['cataloger_jakes_note'] = 'Tausche {item:192055} gegen Ruf bei der |cFFFFFF00Drachenschuppenexpedition|r ein.'
+
+L['snack_attack_suffix'] = 'Snacks an Böff verfüttert'
+L['snack_attack_note'] = 'Füttere {npc:194922} in Phase 1 des Szenarios |cFFFFFD00Belagerung der Drachenfluchfestung|r mit 20 {npc:195806}.\n\n{note:Diese müssen nicht in einer einzigen Belagerung an ihn verfüttert werden.}'
+L['options_icons_snack_attack'] = '{achievement:16410}'
+L['options_icons_snack_attack_desc'] = 'Zeigt die Position von {npc:195806} für den Erfolg {achievement:16410} an.'
+
+L['loyal_magmammoth_step_1'] = 'Schritt 1'
+L['loyal_magmammoth_step_2'] = 'Schritt 2'
+L['loyal_magmammoth_step_3'] = 'Schritt 3'
+L['loyal_magmammoth_true_friend'] = 'Wahrer Freund'
+L['loyal_magmammoth_wrathion_quatermaster_note'] = 'Kaufe 1x {item:201840} ' .. ns.color.Gold('(800 Gold)') .. ' entweder von {npc:199020} oder {npc:188625}.'
+L['loyal_magmammoth_sabellian_quatermaster_note'] = 'Kaufe 1x {item:201839} ' .. ns.color.Gold('(800 Gold)') .. ' entweder von {npc:199036} oder {npc:188623}.'
+L['loyal_magmammoth_harness_note'] = 'Kaufe 1x {item:201837} von {npc:191135}.'
+L['loyal_magmammoth_taming_note'] = 'Benutze den {item:201837} während du auf einem {npc:198150} aufsitzt, um das Reittier zu erhalten.\n\n{note:Berichten zufolge kann nur das {npc:198150} im {location:Sengender Stieg} gezügelt werden.}'
+
+L['djaradin_cache'] = 'Depot der Djaradin'
+L['options_icons_djaradin_cache'] = 'Depots der Djaradin'
+L['options_icons_djaradin_cache_desc'] = 'Zeigt die möglichen Positionen für {object:Depot der Djaradin} an.'

@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -58,6 +58,16 @@ end
 -- Table
 function KT.IsTableEmpty(table)
     return (next(table) == nil)
+end
+
+-- Recipes
+function KT.GetNumTrackedRecipes()
+    return #C_TradeSkillUI.GetRecipesTracked(true) + #C_TradeSkillUI.GetRecipesTracked(false)
+end
+
+-- Activities
+function KT.GetNumTrackedActivities()
+    return #C_PerksActivities.GetTrackedPerksActivities().trackedIDs
 end
 
 -- Map
@@ -142,21 +152,57 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
     local numQuestCurrencies = GetNumQuestLogRewardCurrencies(questID)
     local numQuestRewards = GetNumQuestLogRewards(questID)
     local numQuestSpellRewards = GetNumQuestLogRewardSpells(questID)
-    local numQuestChoices = GetNumQuestLogChoices(questID)
+    local numQuestChoices = GetNumQuestLogChoices(questID, true)
     local honor = GetQuestLogRewardHonor(questID)
-    if xp > 0 or
-            money > 0 or
-            artifactXP > 0 or
-            numQuestCurrencies > 0 or
-            numQuestRewards > 0 or
-            numQuestSpellRewards > 0 or
-            numQuestChoices > 0 or
-            honor > 0 then
+    local majorFactionRepRewards = C_QuestLog.GetQuestLogMajorFactionReputationRewards(questID)
+    local rewardsTitle = REWARDS..":"
+
+    if not isBonus then
+        if numQuestChoices == 1 then
+            tooltip:AddLine(" ")
+            tooltip:AddLine(rewardsTitle)
+        elseif numQuestChoices > 1 then
+            tooltip:AddLine(" ")
+            tooltip:AddLine(CHOOSE_ONE_REWARD..":")
+            rewardsTitle = OTHER.." "..rewardsTitle
+        end
+
+        -- choices
+        for i = 1, numQuestChoices do
+            local lootType = GetQuestLogChoiceInfoLootType(i)
+            local text, color
+            if lootType == 0 then
+                -- item
+                local name, texture, numItems, quality, isUsable = GetQuestLogChoiceInfo(i)
+                if numItems > 1 then
+                    text = format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, texture, HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(numItems), name)
+                elseif name and texture then
+                    text = format(BONUS_OBJECTIVE_REWARD_FORMAT, texture, name)
+                end
+                color = isUsable and ITEM_QUALITY_COLORS[quality] or colorNotUsable
+            elseif lootType == 1 then
+                -- currency
+                local name, texture, amount, currencyID, quality = GetQuestLogRewardCurrencyInfo(i, questID, true)
+                amount = FormatLargeNumber(amount)
+                text = format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, texture, HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(amount), name)
+                color = ITEM_QUALITY_COLORS[quality]
+            end
+            if text and color then
+                tooltip:AddLine(text, color.r, color.g, color.b)
+            end
+        end
+    end
+
+    if xp > 0 or money > 0 or artifactXP > 0 or numQuestCurrencies > 0 or numQuestRewards > 0 or numQuestSpellRewards > 0 or honor > 0 or majorFactionRepRewards then
         local isQuestWorldQuest = QuestUtils_IsQuestWorldQuest(questID)
         local isWarModeDesired = C_PvP.IsWarModeDesired()
         local questHasWarModeBonus = C_QuestLog.QuestCanHaveWarModeBonus(questID)
-        tooltip:AddLine(" ")
-        tooltip:AddLine(REWARDS..":")
+
+        if numQuestChoices ~= 1 then
+            tooltip:AddLine(" ")
+            tooltip:AddLine(rewardsTitle)
+        end
+
         -- xp
         if xp > 0 then
             tooltip:AddLine(format(BONUS_OBJECTIVE_EXPERIENCE_FORMAT, FormatLargeNumber(xp).."|c0000ff00"), 1, 1, 1)
@@ -164,10 +210,12 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
                 tooltip:AddLine(WAR_MODE_BONUS_PERCENTAGE_XP_FORMAT:format(C_PvP.GetWarModeRewardBonus()))
             end
         end
+
         -- honor
         if honor > 0 then
             tooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, "Interface\\ICONS\\Achievement_LegionPVPTier4", honor, HONOR), 1, 1, 1)
         end
+
         -- money
         if money > 0 then
             tooltip:AddLine(GetCoinTextureString(money, 12), 1, 1, 1)
@@ -175,22 +223,7 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
                 tooltip:AddLine(WAR_MODE_BONUS_PERCENTAGE_FORMAT:format(C_PvP.GetWarModeRewardBonus()))
             end
         end
-        if not isBonus then
-            -- choices
-            for i = 1, numQuestChoices do
-                local name, texture, numItems, quality, isUsable = GetQuestLogChoiceInfo(i)
-                local text
-                if numItems > 1 then
-                    text = format(BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT, texture, HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(numItems), name)
-                elseif texture and name then
-                    text = format(BONUS_OBJECTIVE_REWARD_FORMAT, texture, name)
-                end
-                if text then
-                    local color = isUsable and ITEM_QUALITY_COLORS[quality] or colorNotUsable
-                    tooltip:AddLine(text, color.r, color.g, color.b)
-                end
-            end
-        end
+
         -- spells
         for i = 1, numQuestSpellRewards do
             local texture, name = GetQuestLogRewardSpell(i, questID)
@@ -198,6 +231,7 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
                 tooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_FORMAT, texture, name), 1, 1, 1)
             end
         end
+
         -- items
         for i = 1, numQuestRewards do
             local name, texture, numItems, quality, isUsable = GetQuestLogRewardInfo(i, questID)
@@ -212,14 +246,26 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
                 tooltip:AddLine(text, color.r, color.g, color.b)
             end
         end
+
         -- artifact power
         if artifactXP > 0 then
             tooltip:AddLine(format(BONUS_OBJECTIVE_ARTIFACT_XP_FORMAT, FormatLargeNumber(artifactXP)), 1, 1, 1)
         end
+
         -- currencies
         if numQuestCurrencies > 0 then
             QuestUtils_AddQuestCurrencyRewardsToTooltip(questID, tooltip)
         end
+
+        -- reputation
+        if majorFactionRepRewards then
+            for i, rewardInfo in ipairs(majorFactionRepRewards) do
+                local majorFactionData = C_MajorFactions.GetMajorFactionData(rewardInfo.factionID)
+                local text = FormatLargeNumber(rewardInfo.rewardAmount).." "..format(QUEST_REPUTATION_REWARD_TITLE, majorFactionData.name)
+                tooltip:AddLine(text, 1, 1, 1)
+            end
+        end
+
         -- war mode bonus (quest only)
         if isWarModeDesired and not isQuestWorldQuest and questHasWarModeBonus then
             tooltip:AddLine(WAR_MODE_BONUS_PERCENTAGE_FORMAT:format(C_PvP.GetWarModeRewardBonus()))
@@ -395,17 +441,24 @@ StaticPopupDialogs[addonName.."_WowheadURL"] = {
     end,
     OnShow = function(self)
         local name = "..."
+        local urlText = self.text.text_arg1.."="..self.text.text_arg2
         if self.text.text_arg1 == "quest" then
             name = QuestUtils_GetQuestName(self.text.text_arg2)
         elseif self.text.text_arg1 == "achievement" then
             name = select(2, GetAchievementInfo(self.text.text_arg2))
         elseif self.text.text_arg1 == "spell" then
             name = GetSpellInfo(self.text.text_arg2)
+        elseif self.text.text_arg1 == "activity" then
+            local activityInfo = C_PerksActivities.GetPerksActivityInfo(self.text.text_arg2)
+            if activityInfo then
+                name = activityInfo.activityName
+            end
+            urlText = "trading-post-activity/"..self.text.text_arg2
         end
-        local www = KT.locale:sub(1, 2)
-        if www == "zh" then www = "cn" end
+        local lang = KT.locale:sub(1, 2)
+        if lang == "zh" then lang = "cn" end
         self.text:SetText(self.text:GetText().."\n|cffff7f00"..name.."|r")
-        self.editBox.text = "https://"..www..".wowhead.com/"..self.text.text_arg1.."="..self.text.text_arg2
+        self.editBox.text = "https://"..lang..".wowhead.com/"..urlText
         self.editBox:SetText(self.editBox.text)
         self.editBox:SetFocus()
     end,

@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -56,8 +56,10 @@ local function Hack_EditMode()
     if not ObjectiveTrackerFrame:IsInDefaultPosition() then
         ShowUIPanel(EditModeManagerFrame)
         ObjectiveTrackerFrame:ResetToDefaultPosition()
-        EditModeManagerFrame:SaveLayouts()
-        HideUIPanel(EditModeManagerFrame)
+        C_Timer.After(0.1, function()
+            EditModeManagerFrame:SaveLayouts()
+            HideUIPanel(EditModeManagerFrame)
+        end)
     end
 
     GameMenuButtonEditMode:HookScript("PreClick", function()

@@ -49,6 +49,7 @@ langs.enUS = {
 	config_schedule = "Display keystone schedule and party keystones (requires reload UI)",
 	["dungeon_Shadowmoon Burial Grounds"] = "Shadowmoon",
 	["dungeon_Temple of the Jade Serpent"] = "Jade Serpent",
+	timeLimit = "Time Limit %s",
 }
 langs.enGB = langs.enUS
 

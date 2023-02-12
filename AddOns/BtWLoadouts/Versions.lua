@@ -1,6 +1,9 @@
 local _, Internal = ...;
 
 local current = select(4, GetBuildInfo());
+local function IsBuild(build)
+    return build == current
+end
 local function IsAtleastBuild(build)
     return build <= current
 end
@@ -16,6 +19,9 @@ Internal.IsChainsOfDominationPatch = IsAtleastBuild(90100)
 Internal.IsEternitysEndPatch = IsAtleastBuild(90200)
 Internal.IsEternitysEndPatch = IsAtleastBuild(90200)
 Internal.IsDragonflightPatch = IsAtleastBuild(100000)
+Internal.Is100000 = IsBuild(100000)
+Internal.Is100002 = IsBuild(100002)
+Internal.Is100005 = IsBuild(100005)
 
 Internal.IsBattleForAzeroth = IsExpansion(LE_EXPANSION_BATTLEFORAZEROTH or 7)
 Internal.IsShadowlands = IsExpansion(LE_EXPANSION_SHADOWLANDS or 8)

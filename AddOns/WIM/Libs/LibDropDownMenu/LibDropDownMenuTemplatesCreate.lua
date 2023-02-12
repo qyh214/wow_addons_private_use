@@ -461,7 +461,7 @@ function Create_LargeDropDownMenu(name,parent)
 	menu.Middle:SetPoint("TOPLEFT",menu.Left,"TOPRIGHT");
 	menu.Middle:SetPoint("BOTTOMRIGHT",menu.Right,"BOTTOMLEFT");
 
-	menu.Text = menu:CreateFrontString("NumberFont_Small");
+	menu.Text = menu:CreateFrontString("GameFontHighlight");
 	menu.Text:SetNonSpaceWrap(false);
 	menu.Text:SetJustifyH("RIGHT");
 	menu.Text:SetPoint("RIGHT",menu.Button,"LEFT",-4,1);

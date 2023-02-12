@@ -84,6 +84,9 @@ local function IsCollectionFiltered(type, entityID, itemID, classIndex)
 		-- If appearance
 		elseif (RSConfigDB.IsShowingMissingAppearances() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE] and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex], itemID)) then
 			return false
+		-- If drakewatcher manuscripts
+		elseif (RSConfigDB.IsShowingMissingDrakewatcher() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER], itemID)) then
+			return false
 		end
 	end
 	

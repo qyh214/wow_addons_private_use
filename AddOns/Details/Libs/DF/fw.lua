@@ -1,6 +1,6 @@
 
 
-local dversion = 412
+local dversion = 415
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -4915,7 +4915,7 @@ do
             if (newObject) then
 				tinsert(self.inUse, newObject)
 				if (self.onAcquire) then
-					DF:QuickDispatch(self.onAcquire, object)
+					DF:QuickDispatch(self.onAcquire, newObject)
 				end
 				return newObject, true
             end

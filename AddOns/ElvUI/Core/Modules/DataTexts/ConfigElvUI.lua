@@ -7,12 +7,12 @@ local IsShiftKeyDown = IsShiftKeyDown
 local InCombatLockdown = InCombatLockdown
 local ReloadUI = ReloadUI
 
-local displayString = ''
+local displayString, db = ''
 local configText = 'ElvUI'
 local reloadText = RELOADUI
 
 local function OnEvent(self)
-	self.text:SetFormattedText(displayString, E.global.datatexts.settings.ElvUI.Label ~= '' and E.global.datatexts.settings.ElvUI.Label or configText)
+	self.text:SetFormattedText(displayString, db.Label ~= '' and db.Label or configText)
 end
 
 local function OnEnter()
@@ -26,8 +26,8 @@ local function OnEnter()
 
 		for _, plugin in pairs(E.Libs.EP.plugins) do
 			if not plugin.isLib then
-				local r, g, b = E:HexToRGB(plugin.old and 'ff3333' or '33ff33')
-				DT.tooltip:AddDoubleLine(plugin.title, plugin.version, 1, 1, 1, r/255, g/255, b/255)
+				local r, g, b = plugin.old and 1 or .2, plugin.old and .2 or 1, .2
+				DT.tooltip:AddDoubleLine(plugin.title, plugin.version, 1, 1, 1, r, g, b)
 			end
 		end
 	end
@@ -45,10 +45,12 @@ local function OnClick(_, button)
 	end
 end
 
-local function ValueColorUpdate(self, hex)
-	displayString = strjoin('', hex, '%s|r')
+local function ApplySettings(self, hex)
+	if not db then
+		db = E.global.datatexts.settings[self.name]
+	end
 
-	OnEvent(self)
+	displayString = strjoin('', hex, '%s|r')
 end
 
-DT:RegisterDatatext('ElvUI', nil, nil, OnEvent, nil, OnClick, OnEnter, nil, L["ElvUI Config"], nil, ValueColorUpdate)
+DT:RegisterDatatext('ElvUI', nil, nil, OnEvent, nil, OnClick, OnEnter, nil, L["ElvUI Config"], nil, ApplySettings)

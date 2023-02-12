@@ -57,7 +57,7 @@ function KT_QUEST_TRACKER_MODULE:SetBlockHeader(block, text, questLogIndex, isQu
 
 	-- set the text
 	block.HeaderText:SetWidth(block.lineWidth or KT_OBJECTIVE_TRACKER_TEXT_WIDTH);
-	local height = self:SetStringText(block.HeaderText, text, nil, KT_OBJECTIVE_TRACKER_COLOR["Header"]);
+	local height = self:SetStringText(block.HeaderText, text, nil, KT_OBJECTIVE_TRACKER_COLOR["Header"], block.isHighlighted);  -- MSA (Blizz bug)
 	block.height = height;
 end
 

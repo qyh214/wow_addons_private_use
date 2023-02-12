@@ -44,7 +44,7 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
             200864, -- Glimmering Alexstraszite Cluster
         },
         hide_before=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 21),
-        active={ns.conditions.Item(198843), ns.conditions.QuestComplete(70392), any=true}, -- Ruby Gem Cluster Map
+        active={ns.conditions.Item(199062), ns.conditions.QuestComplete(70528), any=true}, -- Ruby Gem Cluster Map
         note="Find {item:198843} in other treasures"
     },
     [46713121] = { -- Yennu's Kite

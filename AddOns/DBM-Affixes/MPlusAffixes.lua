@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("MPlusAffixes", "DBM-Affixes")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230116010542")
+mod:SetRevision("20230129054032")
 --mod:SetModelID(47785)
 mod:SetZone(2516, 2526, 2515, 2521, 1477, 1571, 1176, 960)--All of the S1 DF M+ Dungeons
 
@@ -11,9 +11,9 @@ mod.isTrashModBossFightAllowed = true
 mod:RegisterEvents(
 	"SPELL_CAST_START 240446",
 --	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED 240447 226512 350209 396369 396364",
+	"SPELL_AURA_APPLIED 240447 226510 226512 350209 396369 396364",
 --	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED 396369 396364",
+	"SPELL_AURA_REMOVED 396369 396364 226510",
 	"SPELL_DAMAGE 209862",
 	"SPELL_MISSED 209862"
 --	"UNIT_DIED"
@@ -38,6 +38,8 @@ local timerPositiveCharge					= mod:NewBuffFadesTimer(15, 396369, 391990, nil, 2
 local timerNegativeCharge					= mod:NewBuffFadesTimer(15, 396364, 391991, nil, 2, 5, nil, nil, nil, 1, 4)
 mod:GroupSpells(396363, 396369, 396364)--Thundering with the two charge spells
 
+mod:AddNamePlateOption("NPSanguine", 226510, "Tank", true)
+
 --Antispam IDs for this mod: 1 run away, 2 dodge, 3 dispel, 4 incoming damage, 5 you/role, 6 misc, 7 gtfo, 8 personal aggregated alert
 
 local thunderingTotal = 0
@@ -54,7 +56,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 240446 and self:AntiSpam(3, 6) then
+	if spellId == 240446 and self:AntiSpam(3, "aff6") then
 		warnExplosion:Show()
 	end
 end
@@ -77,17 +79,23 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnQuake:Show()
 			specWarnQuake:Play("range5")
 		end
-	elseif spellId == 226512 and args:IsPlayer() and self:AntiSpam(3, 7) then
+	elseif spellId == 226512 and args:IsPlayer() and self:AntiSpam(3, "aff7") then--Sanguine Ichor on player
 		specWarnGTFO:Show(args.spellName)
 		specWarnGTFO:Play("watchfeet")
-	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(3, 8) then
+	elseif spellId == 226510 then--Sanguine Ichor on mob
+		if self.Options.NPSanguine then
+			DBM.Nameplate:Show(true, args.destGUID, spellId, nil, nil, nil, true)
+		end
+	elseif spellId == 350209 and args:IsPlayer() and self:AntiSpam(3, "aff8") then
 		specWarnSpitefulFixate:Show()
 		specWarnSpitefulFixate:Play("targetyou")
 	elseif spellId == 396369 or spellId == 396364 then
-		if self:AntiSpam(30, 1) then
+		if self:AntiSpam(20, "affseasonal") then
 			thunderingTotal = 0
+			playerThundering = false
 		end
 		thunderingTotal = thunderingTotal + 1
+		DBM:Debug("thundering Total added: "..thunderingTotal, 2)
 		if args:IsPlayer() then
 			playerThundering = true
 			self:Unschedule(yellRepeater)
@@ -105,20 +113,22 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 			local formatedIcon = DBM_CORE_L.AUTO_YELL_CUSTOM_POSITION:format(icon, "")
 			yellRepeater(self, formatedIcon, 0)
+			yellThunderingFades:Cancel()
 			yellThunderingFades:Countdown(15, 5, icon)--Start icon spam with count at 5 remaining
 		end
 	end
 end
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+--mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
 	if spellId == 396369 or spellId == 396364 then
 		thunderingTotal = thunderingTotal - 1
+		DBM:Debug("thundering Total removed: "..thunderingTotal, 2)
 		--Your debuff is gone, OR all debuffs but one are gone and you're the one with it
 		if args:IsPlayer() or (thunderingTotal == 1 and DBM:UnitDebuff("player", 396369, 396364)) then
-			if playerThundering then--Because it's still possible to get double clear messages/yells
+			if playerThundering then--To avoid double clear yells when player is last clear, cause we force clear at 1, but SPELL_AURA_REMOVED would also fire
 				warnThunderingFades:Show()
 				playerThundering = false
 				yellThundering:Yell(DBM_COMMON_L.CLEAR)
@@ -128,11 +138,15 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:Unschedule(yellRepeater)
 			yellThunderingFades:Cancel()
 		end
+	elseif spellId == 226510 then--Sanguine Ichor on mob
+		if self.Options.NPSanguine then
+			DBM.Nameplate:Hide(true, args.destGUID, spellId, nil, nil, nil, nil, true)
+		end
 	end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, 7) then
+	if spellId == 209862 and destGUID == UnitGUID("player") and self:AntiSpam(3, "aff7") then
 		specWarnGTFO:Show(spellName)
 		specWarnGTFO:Play("watchfeet")
 	end

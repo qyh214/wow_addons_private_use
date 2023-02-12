@@ -25,6 +25,7 @@ local RSEntityStateHandler = private.ImportLib("RareScannerEntityStateHandler")
 
 -- RareScanner general libraries
 local RSUtils = private.ImportLib("RareScannerUtils")
+local RSConstants = private.ImportLib("RareScannerConstants")
 
 RSEntityPinMixin = CreateFromMixins(MapCanvasPinMixin);
 
@@ -58,13 +59,25 @@ function RSEntityPinMixin:OnMouseDown(button)
 		--Toggle state
 		if (IsShiftKeyDown() and IsAltKeyDown()) then
 			if (self.POI.isNpc) then
-				RSConfigDB.SetNpcFiltered(self.POI.entityID, false)
+				if (RSConfigDB.GetDefaultNpcFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+					RSConfigDB.SetNpcFiltered(self.POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+				else
+					RSConfigDB.SetNpcFiltered(self.POI.entityID)
+				end
 				self:Hide();
 			elseif (self.POI.isContainer) then
-				RSConfigDB.SetContainerFiltered(self.POI.entityID, false)
+				if (RSConfigDB.GetDefaultContainerFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+					RSConfigDB.SetContainerFiltered(self.POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+				else
+					RSConfigDB.SetContainerFiltered(self.POI.entityID)
+				end
 				self:Hide();
 			elseif (self.POI.isEvent) then
-				RSConfigDB.SetEventFiltered(self.POI.entityID, false)
+				if (RSConfigDB.GetDefaultEventFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+					RSConfigDB.SetEventFiltered(self.POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+				else
+					RSConfigDB.SetEventFiltered(self.POI.entityID)
+				end
 				self:Hide();
 			end
 			self:GetMap():RefreshAllDataProviders();

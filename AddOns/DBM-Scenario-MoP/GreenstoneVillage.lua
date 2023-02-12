@@ -3,13 +3,13 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal"
 
-mod:SetRevision("20200912131657")
+mod:SetRevision("20230124054540")
 
 mod:RegisterCombat("scenario", 1024)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_CAST_START",
+	"SPELL_AURA_APPLIED 131143 119364",
+	"SPELL_CAST_START 117664",
 --	"SPELL_CAST_SUCCESS",
 	"UNIT_DIED"
 )
@@ -54,7 +54,8 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
---[[TODO, verify consistency in this
+--[[
+--TODO, verify consistency in this
 "<214.6 21:21:15> [CLEU] SPELL_CAST_SUCCESS#false#0xF13104D400005C84#Beast of Jade#2632#0#0x0400000001D0EE70#Moonianna#1298#0#131209#Jade Pounce#1", -- [1924]
 "<229.2 21:21:30> [CLEU] SPELL_AURA_APPLIED#false#0xF13104D400005C84#Beast of Jade#68168#0#0xF13104D400005C84#Beast of Jade#68168#0#119364#Jade Statue#8#BUFF#10#10000000", -- [2082]
 function mod:SPELL_CAST_SUCCESS(args)

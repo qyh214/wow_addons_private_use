@@ -48,7 +48,7 @@ local guildBags = {51,52,53,54,55,56,57,58}
 local bankBags = {BANK_CONTAINER}
 local MAX_MOVE_TIME = 1.25
 
-local bankOffset, maxBankSlots = E.Classic and 4 or 5, E.Classic and 10 or 12
+local bankOffset, maxBankSlots = (E.Classic or E.Wrath) and 4 or 5, E.Classic and 10 or E.Wrath and 11 or 12
 for i = bankOffset + 1, maxBankSlots do
 	tinsert(bankBags, i)
 end
@@ -670,9 +670,12 @@ local blackListedSlots = {}
 local blackListQueries = {}
 function B:BuildBlacklist(...)
 	for entry in pairs(...) do
+		local itemID = tonumber(entry)
 		local itemName = GetItemInfo(entry)
 
-		if itemName then
+		if itemID then
+			blackList[itemID] = true
+		elseif itemName then
 			blackList[itemName] = true
 		elseif entry ~= '' then
 			if strfind(entry, '%[') and strfind(entry, '%]') then
@@ -700,8 +703,9 @@ function B.Sort(bags, sorter, invertDirection)
 	for i, bag, slot in B:IterateBags(bags, nil, 'both') do
 		if not E.Retail or not B:IsSortIgnored(bag) then
 			local link = B:GetItemLink(bag, slot)
+			local itemID = B:GetItemID(bag, slot)
 			local bagSlot = B:Encode_BagSlot(bag, slot)
-			if link and blackList[GetItemInfo(link)] then
+			if (itemID and blackList[itemID]) or (link and blackList[GetItemInfo(link)]) then
 				blackListedSlots[bagSlot] = true
 			end
 
@@ -786,8 +790,9 @@ function B.Fill(sourceBags, targetBags, reverse, canMove)
 		if #emptySlots == 0 then break end
 
 		local link = B:GetItemLink(bag, slot)
+		local itemID = B:GetItemID(bag, slot)
 		local bagSlot = B:Encode_BagSlot(bag, slot)
-		if link and blackList[GetItemInfo(link)] then
+		if (itemID and blackList[itemID]) or (link and blackList[GetItemInfo(link)]) then
 			blackListedSlots[bagSlot] = true
 		end
 

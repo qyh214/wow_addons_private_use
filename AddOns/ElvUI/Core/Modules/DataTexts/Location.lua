@@ -7,6 +7,8 @@ local GetZonePVPInfo = GetZonePVPInfo
 local IsInInstance = IsInInstance
 local ToggleFrame = ToggleFrame
 
+local NOT_APPLICABLE = NOT_APPLICABLE
+
 local mapInfo = E.MapInfo
 
 local colors = { -- pulled from Blizz's ZoneText.lua
@@ -26,7 +28,7 @@ end
 
 local function OnEvent(self)
 	if not mapInfo.mapID then
-		self.text:SetText('N/A')
+		self.text:SetText(NOT_APPLICABLE)
 		return
 	end
 
@@ -43,7 +45,7 @@ local function OnEvent(self)
 
 		self.text:SetFormattedText('%s%s%s%s%s%s|r', E:RGBToHex(color.r, color.g, color.b), continent, first, zone, second, subzone)
 	else
-		self.text:SetText('N/A')
+		self.text:SetText(NOT_APPLICABLE)
 	end
 end
 
@@ -53,4 +55,4 @@ local function OnClick()
 	ToggleFrame(_G.WorldMapFrame)
 end
 
-DT:RegisterDatatext('Location', nil, { 'LOADING_SCREEN_DISABLED', 'ZONE_CHANGED_NEW_AREA', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED' }, OnEvent, nil, OnClick, nil, nil, L['Location'])
+DT:RegisterDatatext('Location', nil, { 'LOADING_SCREEN_DISABLED', 'ZONE_CHANGED_NEW_AREA', 'ZONE_CHANGED_INDOORS', 'ZONE_CHANGED' }, OnEvent, nil, OnClick, nil, nil, L["Location"])

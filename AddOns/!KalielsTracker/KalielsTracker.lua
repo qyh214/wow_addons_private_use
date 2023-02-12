@@ -1,5 +1,5 @@
 --- Kaliel's Tracker
---- Copyright (c) 2012-2022, Marouan Sabbagh <mar.sabbagh@gmail.com>
+--- Copyright (c) 2012-2023, Marouan Sabbagh <mar.sabbagh@gmail.com>
 --- All Rights Reserved.
 ---
 --- This file is part of addon Kaliel's Tracker.
@@ -22,6 +22,7 @@ local fmod = math.fmod
 local format = string.format
 local gsub = string.gsub
 local ipairs = ipairs
+local max = math.max
 local pairs = pairs
 local strfind = string.find
 local tonumber = tonumber
@@ -43,6 +44,7 @@ local UIParent = UIParent
 local trackerWidth = 280
 local paddingBottom = 15
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\Media\\"
+local testLine
 local freeIcons = {}
 local freeTags = {}
 local freeButtons = {}
@@ -699,6 +701,7 @@ local function SetHooks()
 
 	OTF:HookScript("OnEvent", function(self, event)
 		if event == "PLAYER_ENTERING_WORLD" and not KT.initialized then
+			testLine = self.freeLines[1]
 			self.freeLines[1] = nil
 
 			Default_UpdateModuleInfoTables()
@@ -871,9 +874,6 @@ local function SetHooks()
 			fontString:SetWordWrap(db.textWordWrap)
 			fontString.KTskinned = true
 		end
-		if self == KT_QUEST_TRACKER_MODULE and not useHighlight then
-			useHighlight = fontString:GetParent().isHighlighted  -- fix Blizz bug
-		end
 		if useFullHeight then
 			fontString:SetMaxLines(0)
 		else
@@ -940,11 +940,26 @@ local function SetHooks()
 				end
 				GameTooltip:SetHyperlink(questLink)
 				if db.tooltipShowRewards then
-					KT.GameTooltip_AddQuestRewardsToTooltip(GameTooltip, block.id)
+					if not HaveQuestRewardData(block.id) then
+						C_TaskQuest.RequestPreloadRewardData(block.id)
+						block.updateTooltip = true
+						C_Timer.After(0.2, function()
+							if block.updateTooltip then
+								block.updateTooltip = nil
+								block.module:OnBlockHeaderEnter(block)
+							end
+						end)
+					else
+						KT.GameTooltip_AddQuestRewardsToTooltip(GameTooltip, block.id)
+					end
 				end
 				if IsInGroup() then
 					GameTooltip:AddLine(" ")
-					GameTooltip:SetQuestPartyProgress(block.id, true)
+					local tooltipData = C_TooltipInfo.GetQuestPartyProgress(block.id, true)
+					if tooltipData then
+						local tooltipInfo = { tooltipData = tooltipData, append = true }
+						GameTooltip:ProcessInfo(tooltipInfo)
+					end
 				end
 			else
 				GameTooltip:SetHyperlink(GetAchievementLink(block.id))
@@ -962,7 +977,7 @@ local function SetHooks()
 			block.fixedTag.text:SetTextColor(colorStyle.r, colorStyle.g, colorStyle.b)
 		end
 	end)
-	Default_SetFunctionChanged("OnBlockHeaderEnter", "KT_PROFESSION_RECIPE_TRACKER_MODULE")
+	Default_SetFunctionChanged("OnBlockHeaderEnter", "KT_PROFESSION_RECIPE_TRACKER_MODULE", "KT_MONTHLY_ACTIVITIES_TRACKER_MODULE")
 
 	function KT_PROFESSION_RECIPE_TRACKER_MODULE:OnBlockHeaderEnter(block)
 		KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderEnter(block)
@@ -975,29 +990,80 @@ local function SetHooks()
 			else
 				GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -32, 1)
 			end
-			GameTooltip:SetRecipeResultItem(block.id)
+			local recipeID = KT.GetRecipeID(block)
+			GameTooltip:SetRecipeResultItem(recipeID)
 			if db.tooltipShowID and not ArkInventory then
 				GameTooltip:AddLine(" ")
-				GameTooltip:AddDoubleLine(" ", "ID: |cffffffff"..block.id)
+				GameTooltip:AddDoubleLine(" ", "ID: |cffffffff"..recipeID)
 			end
 			GameTooltip:Show()
+		end
+	end
+
+	function KT_MONTHLY_ACTIVITIES_TRACKER_MODULE:OnBlockHeaderEnter(block)
+		KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:OnBlockHeaderEnter(block)
+
+		if db.tooltipShow then
+			local activityInfo = C_PerksActivities.GetPerksActivityInfo(block.id)
+			if activityInfo then
+				GameTooltip:SetOwner(block, "ANCHOR_NONE")
+				GameTooltip:ClearAllPoints()
+				if KTF.anchorLeft then
+					GameTooltip:SetPoint("TOPLEFT", block, "TOPRIGHT", 12, 1)
+				else
+					GameTooltip:SetPoint("TOPRIGHT", block, "TOPLEFT", -32, 1)
+				end
+
+				GameTooltip_SetTitle(GameTooltip, activityInfo.activityName, NORMAL_FONT_COLOR, true)
+				GameTooltip:AddLine(" ")
+
+				if activityInfo.description ~= "" then
+					GameTooltip:AddLine(activityInfo.description, 1, 1, 1, true)
+					GameTooltip:AddLine(" ")
+				end
+
+				GameTooltip:AddLine(REQUIREMENTS..":")
+				for _, requirement in ipairs(activityInfo.requirementsList) do
+					local tooltipLine = requirement.requirementText
+					tooltip4Line = string.gsub(tooltipLine, " / ", "/")
+					local color = not requirement.completed and WHITE_FONT_COLOR or DISABLED_FONT_COLOR
+					GameTooltip:AddLine(tooltipLine, color.r, color.g, color.b)
+				end
+
+				if db.tooltipShowRewards then
+					GameTooltip:AddLine(" ")
+					GameTooltip:AddLine(REWARDS..":")
+					GameTooltip:AddLine(FormatLargeNumber(activityInfo.thresholdContributionAmount).." "..MONTHLY_ACTIVITIES_POINTS, 1, 1, 1)
+				end
+
+				if db.tooltipShowID then
+					GameTooltip:AddLine(" ")
+					GameTooltip:AddDoubleLine(" ", "ID: |cffffffff"..block.id)
+				end
+				GameTooltip:Show()
+			end
 		end
 	end
 
 	if ArkInventory then
 		hooksecurefunc(ArkInventory.API, "ReloadedTooltipReady", function(tooltip, fn, ...)
 			if fn == "SetRecipeResultItem" then
-				if db.tooltipShowID then
-					local id = ...
-					GameTooltip:AddLine(" ")
-					GameTooltip:AddDoubleLine(" ", "ID: |cffffffff"..id)
-					GameTooltip:Show()
+				local owner = tooltip:GetOwner()
+				if owner.module == KT_PROFESSION_RECIPE_TRACKER_MODULE then
+					if db.tooltipShowID then
+						local id = ...
+						GameTooltip:AddLine(" ")
+						GameTooltip:AddDoubleLine(" ", "ID: |cffffffff"..id)
+						GameTooltip:Show()
+					end
 				end
 			end
 		end)
 	end
 
 	hooksecurefunc(KT_DEFAULT_OBJECTIVE_TRACKER_MODULE, "OnBlockHeaderLeave", function(self, block)
+		block.updateTooltip = nil
+
 		local colorStyle
 		if block.module == KT_QUEST_TRACKER_MODULE or
 				block.module == KT_CAMPAIGN_QUEST_TRACKER_MODULE then
@@ -1351,22 +1417,23 @@ local function SetHooks()
 		KT:ToggleEmptyTracker(not KT.IsTableEmpty(KT.activeTasks))
 	end)
 
-	local function SetProgressBarStyle(progressBar)
+	local function SetProgressBarStyle(progressBar, xOffsetMod)
 		if not progressBar.KTskinned or KT.forcedUpdate then
 			local block = progressBar.block
 			block.height = block.height - progressBar.height
 
-			progressBar:SetSize(232, 23)
-			progressBar.height = 23
-			--_C(progressBar, { r = 0, g = 1, b = 0 })
+			progressBar:SetSize(232, 21)
+			progressBar.height = 21
 
-			progressBar.Bar:SetSize(208, 13)
+			local xOffset = KT_OBJECTIVE_TRACKER_DASH_WIDTH + 2
+			progressBar.Bar:SetSize(210 - xOffset, 13)
 			progressBar.Bar:EnableMouse(false)
 			progressBar.Bar:ClearAllPoints()
 
 			if progressBar.Bar.BarFrame then
-				-- World Quest
-				progressBar.Bar:SetPoint("LEFT", 22, 0)
+				-- World Quest / Scenario
+				xOffsetMod = xOffsetMod or 20
+				progressBar.Bar:SetPoint("LEFT", xOffset + xOffsetMod, 0)
 				progressBar.Bar.BarFrame:Hide()
 				progressBar.Bar.BarFrame2:Hide()
 				progressBar.Bar.BarFrame3:Hide()
@@ -1375,7 +1442,7 @@ local function SetHooks()
 				progressBar.Bar.Starburst:Hide()
 			else
 				-- Default
-				progressBar.Bar:SetPoint("LEFT", 2, 0)
+				progressBar.Bar:SetPoint("LEFT", xOffset, 0)
 				progressBar.Bar.BorderLeft:Hide()
 				progressBar.Bar.BorderRight:Hide()
 				progressBar.Bar.BorderMid:Hide()
@@ -1395,7 +1462,7 @@ local function SetHooks()
 			progressBar.Bar.Label:SetFont(LSM:Fetch("font", "Arial Narrow"), 13, "")
 			progressBar.Bar:SetStatusBarTexture(LSM:Fetch("statusbar", db.progressBar))
 			progressBar.KTskinned = true
-			progressBar.isSkinned = true	-- ElvUI hack
+			progressBar.isSkinned = true  -- ElvUI hack
 
 			block.height = block.height + progressBar.height
 		end
@@ -1428,6 +1495,58 @@ local function SetHooks()
 		progressBar.Bar.IconBG:Hide()
 		progressBar.needsReward = nil
 	end
+
+	local function SetTimerBarStyle(progressBar)
+		if not progressBar.KTskinned or KT.forcedUpdate then
+			local block = progressBar.block
+			block.height = block.height - progressBar.height
+
+			local barHeight = max(12, db.fontSize + fmod(db.fontSize, 2))
+			progressBar:SetSize(232, barHeight)
+			progressBar.height = barHeight
+
+			progressBar.Label:SetWidth(0)
+			progressBar.Label:SetPoint("LEFT", KT_OBJECTIVE_TRACKER_DASH_WIDTH, 0)
+			progressBar.Label:SetFont(LSM:Fetch("font", "Arial Narrow"), db.fontSize, db.fontFlag)
+			progressBar.Label:SetText("00:00")
+			local labelWidth = progressBar.Label:GetWidth() + 10
+			progressBar.Label:SetText()
+			progressBar.Label:SetWidth(labelWidth)
+
+			progressBar.Bar:SetSize(210 - KT_OBJECTIVE_TRACKER_DASH_WIDTH - labelWidth, 8)
+			progressBar.Bar:EnableMouse(false)
+			progressBar.Bar:ClearAllPoints()
+			progressBar.Bar:SetPoint("LEFT", progressBar.Label, "RIGHT", 0, 0)
+			progressBar.Bar.BorderLeft:Hide()
+			progressBar.Bar.BorderRight:Hide()
+			progressBar.Bar.BorderMid:Hide()
+
+			local border1 = progressBar.Bar:CreateTexture(nil, "BACKGROUND", nil, -2)
+			border1:SetPoint("TOPLEFT", -1, 1)
+			border1:SetPoint("BOTTOMRIGHT", 1, -1)
+			border1:SetColorTexture(0, 0, 0)
+
+			local border2 = progressBar.Bar:CreateTexture(nil, "BACKGROUND", nil, -3)
+			border2:SetPoint("TOPLEFT", -2, 2)
+			border2:SetPoint("BOTTOMRIGHT", 2, -2)
+			border2:SetColorTexture(0.4, 0.4, 0.4)
+
+			progressBar.Bar:SetStatusBarTexture(LSM:Fetch("statusbar", db.progressBar))
+			progressBar.KTskinned = true
+			progressBar.isSkinned = true  -- ElvUI hack
+
+			block.height = block.height + progressBar.height
+		end
+
+	end
+
+	local bck_KT_DEFAULT_OBJECTIVE_TRACKER_MODULE_AddTimerBar = KT_DEFAULT_OBJECTIVE_TRACKER_MODULE.AddTimerBar
+	function KT_DEFAULT_OBJECTIVE_TRACKER_MODULE:AddTimerBar(block, line, duration, startTime)
+		local timerBar = bck_KT_DEFAULT_OBJECTIVE_TRACKER_MODULE_AddTimerBar(self, block, line, duration, startTime)
+		SetTimerBarStyle(timerBar)
+		return timerBar
+	end
+	Default_SetFunctionChanged("AddTimerBar")
 
 	hooksecurefunc("KT_BonusObjectiveTracker_OnTaskCompleted", function(questID, xp, money)
 		if KT.activeTasks[questID] then
@@ -1495,7 +1614,9 @@ local function SetHooks()
 	local bck_KT_SCENARIO_TRACKER_MODULE_AddProgressBar = KT_SCENARIO_TRACKER_MODULE.AddProgressBar
 	function KT_SCENARIO_TRACKER_MODULE:AddProgressBar(block, line, criteriaIndex)
 		local progressBar = bck_KT_SCENARIO_TRACKER_MODULE_AddProgressBar(self, block, line, criteriaIndex)
-		SetProgressBarStyle(progressBar)
+		SetProgressBarStyle(progressBar, 16)
+		progressBar.Bar.Icon:Hide()
+		progressBar.Bar.IconBG:Hide()
 		return progressBar
 	end
 
@@ -1698,7 +1819,7 @@ local function SetHooks()
 		QuestsCache_UpdateProperty(questID, "startMapID", KT.GetCurrentMapAreaID())
 	end)
 
-	-- QuestMapFrame.lua
+	-- QuestMapFrame.lua (taint)
 	function QuestMapFrame_OpenToQuestDetails(questID)  -- R
 		local mapID = GetQuestUiMapID(questID);
 		if ( mapID == 0 ) then mapID = nil; end
@@ -1706,7 +1827,7 @@ local function SetHooks()
 		QuestMapFrame_ShowQuestDetails(questID);
 	end
 
-	-- QuestPOI.lua
+	-- QuestPOI.lua (taint)
 	local bck_QuestPOI_GetButton = QuestPOI_GetButton
 	QuestPOI_GetButton = function(parent, questID, style, index)
 		local poiButton = bck_QuestPOI_GetButton(parent, questID, style, index)
@@ -2041,8 +2162,9 @@ local function SetHooks()
 	end
 
 	function KT_PROFESSION_RECIPE_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)  -- R
+		local recipeID = KT.GetRecipeID(block);
 		if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
-			local link = C_TradeSkillUI.GetRecipeLink(block.id);
+			local link = C_TradeSkillUI.GetRecipeLink(recipeID);
 			if ( link ) then
 				ChatEdit_InsertLink(link);
 			end
@@ -2052,25 +2174,28 @@ local function SetHooks()
 				ProfessionsFrame_LoadUI();
 			end
 			if ( IsModifiedClick("RECIPEWATCHTOGGLE") ) then
-				C_TradeSkillUI.SetRecipeTracked(block.id, false);
+				C_TradeSkillUI.SetRecipeTracked(recipeID, false, KT.IsRecraftBlock(block))
 			elseif IsModifiedClick(db.menuWowheadURLModifier) then
-				KT:Alert_WowheadURL("spell", block.id)
+				KT:Alert_WowheadURL("spell", recipeID)
 			else
-				C_TradeSkillUI.OpenRecipe(block.id);
-				C_Timer.After(0, function()
-					C_TradeSkillUI.OpenRecipe(block.id);  -- fix Blizz bug
-				end)
+				if not KT.IsRecraftBlock(block) then
+					C_TradeSkillUI.OpenRecipe(recipeID);
+					C_Timer.After(0, function()
+						C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
+					end)
+				end
 			end
 		else
 			KT_ObjectiveTracker_ToggleDropDown(block, KT_RecipeObjectiveTracker_OnOpenDropDown);
 		end
 	end
 
-	function KT_RecipeObjectiveTracker_OnOpenDropDown(self)  -- R
+	function KT_RecipeObjectiveTracker_OnOpenDropDown(self)
 		local block = self.activeFrame;
+		local recipeID = KT.GetRecipeID(block);
 
 		local info = MSA_DropDownMenu_CreateInfo();
-		info.text = GetSpellInfo(block.id);
+		info.text = GetSpellInfo(recipeID);
 		info.isTitle = 1;
 		info.notCheckable = 1;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
@@ -2078,18 +2203,20 @@ local function SetHooks()
 		info = MSA_DropDownMenu_CreateInfo();
 		info.notCheckable = 1;
 
-        info.text = PROFESSIONS_TRACKING_VIEW_RECIPE;
-        info.func = function()
-            C_TradeSkillUI.OpenRecipe(block.id);
-			C_Timer.After(0, function()
-				C_TradeSkillUI.OpenRecipe(block.id);  -- fix Blizz bug
-			end)
-        end;
-        MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		if not KT.IsRecraftBlock(block) then
+			info.text = PROFESSIONS_TRACKING_VIEW_RECIPE;
+			info.func = function()
+				C_TradeSkillUI.OpenRecipe(recipeID);
+				C_Timer.After(0, function()
+					C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
+				end)
+			end;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
 
         info.text = PROFESSIONS_UNTRACK_RECIPE;
         info.func = function()
-            C_TradeSkillUI.SetRecipeTracked(block.id, false);
+			C_TradeSkillUI.SetRecipeTracked(recipeID, false, KT.IsRecraftBlock(block))
         end;
 		MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 
@@ -2097,6 +2224,63 @@ local function SetHooks()
 			info.text = "|cff33ff99Wowhead|r URL";
 			info.func = KT.Alert_WowheadURL;
 			info.arg1 = "spell";
+			info.arg2 = recipeID;
+			info.checked = false;
+			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+		end
+	end
+
+	function KT_MONTHLY_ACTIVITIES_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButton)  -- R
+		if ( IsModifiedClick("CHATLINK") and ChatEdit_GetActiveWindow() ) then
+			local perksActivityLink = C_PerksActivities.GetPerksActivityChatLink(block.id);
+			ChatEdit_InsertLink(perksActivityLink);
+		elseif ( mouseButton ~= "RightButton" ) then
+			MSA_CloseDropDownMenus();
+			if ( not EncounterJournal ) then
+				EncounterJournal_LoadUI();
+			end
+			if ( IsModifiedClick("QUESTWATCHTOGGLE") ) then
+				KT_MonthlyActivitiesObjectiveTracker_UntrackPerksActivity(_, block.id);
+			elseif IsModifiedClick(db.menuWowheadURLModifier) then
+				KT:Alert_WowheadURL("activity", block.id)
+			else
+				MonthlyActivitiesFrame_OpenFrameToActivity(block.id);
+			end
+		else
+			KT_ObjectiveTracker_ToggleDropDown(block, KT_MonthlyActivitiesObjectiveTracker_OnOpenDropDown);
+		end
+	end
+
+	function KT_MonthlyActivitiesObjectiveTracker_OnOpenDropDown(self)  -- R
+		local block = self.activeFrame;
+
+        local info = MSA_DropDownMenu_CreateInfo();
+        info.text = block.name;
+        info.isTitle = 1;
+        info.notCheckable = 1;
+        MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+        info = MSA_DropDownMenu_CreateInfo();
+        info.notCheckable = 1;
+
+        info.text = "Open "..TRACKER_HEADER_MONTHLY_ACTIVITIES;
+        info.func = function (button, ...)
+			KT_MonthlyActivitiesObjectiveTracker_OpenFrameToActivity(...);
+		end;
+        info.arg1 = block.id;
+        info.checked = false;
+        MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+        info.text = OBJECTIVES_STOP_TRACKING;
+        info.func = KT_MonthlyActivitiesObjectiveTracker_UntrackPerksActivity;
+        info.arg1 = block.id;
+        info.checked = false;
+        MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
+
+		if db.menuWowheadURL then
+			info.text = "|cff33ff99Wowhead|r URL";
+			info.func = KT.Alert_WowheadURL;
+			info.arg1 = "activity";
 			info.arg2 = block.id;
 			info.checked = false;
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
@@ -2339,6 +2523,9 @@ end
 
 function KT:SetText()
 	self.font = LSM:Fetch("font", db.font)
+	testLine.Dash:SetFont(self.font, db.fontSize, db.fontFlag)
+	KT_OBJECTIVE_TRACKER_DASH_WIDTH = testLine.Dash:GetWidth()
+	KT_OBJECTIVE_TRACKER_TEXT_WIDTH = KT_OBJECTIVE_TRACKER_LINE_WIDTH - KT_OBJECTIVE_TRACKER_DASH_WIDTH - 12
 
 	-- Headers
 	SetHeaders("text")
@@ -2613,7 +2800,8 @@ function KT:IsTrackerEmpty(noaddon)
 			self.IsTableEmpty(self.activeTasks) and
 			C_QuestLog.GetNumWorldQuestWatches() == 0 and
 			not self.inScenario and
-			#C_TradeSkillUI.GetRecipesTracked() == 0)
+			self.GetNumTrackedRecipes() == 0 and
+			self.GetNumTrackedActivities() == 0)
 	if not noaddon then
 		result = (result and not self.AddonPetTracker:IsShown())
 	end
