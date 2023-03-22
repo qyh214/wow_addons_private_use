@@ -758,6 +758,7 @@ local function DCS_DefaultStatsAnchors()
 end
 
 local function DCS_InterfaceOptionsStatsAnchors()
+	if InCombatLockdown() then return end
 	if (DejaCharacterStatsPanel~=nil) then
 		DCS_InterfaceOptConfigButton:RegisterEvent("UNIT_AURA")
 		DCS_InterfaceOptConfigButton:RegisterEvent("UPDATE_INVENTORY_DURABILITY")

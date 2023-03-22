@@ -112,7 +112,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
     -- https://www.wowhead.com/beta/achievement=16678/adventurer-of-the-azure-span
     [59405520] = { -- Wilrive
         criteria=56097,
-        quest=69948, -- didn't actually trigger
+        quest=73900, -- 69948 didn't actually trigger
         npc=193632,
         loot={
             {196976,quest=69176,}, -- Cliffside Wylderdrake: Head Mane
@@ -123,6 +123,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
             200193, -- Manafrond Sandals
             200195, -- Thunderscale Legguards
             200232, -- Raptor Talonglaive
+            200212, -- Sand-Encrusted Greaves
             {200249,toy=true,}, -- Mage's Chewed Wand
             200442, -- Basilisk Hide Jerkin
             200445, -- Lucky Hunting Charm
@@ -173,7 +174,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
     [57685441] = { -- Mucka the Raker
         -- ...very prone to resetting+evading and healing to full
         criteria=56102,
-        quest=nil, -- no quest popped
+        quest=73885,
         npc=193201,
         loot={
             {196976,quest=69176,}, -- Cliffside Wylderdrake: Head Mane
@@ -189,6 +190,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
             200563, -- Primal Ritual Shell
             200859, -- Seasoned Hunter's Trophy
         },
+        note="You may need to kill a stuck {npc:193219:Muckling} nearby to stop this from evading",
     },
     [08804860] = { -- Brackle
         criteria=56103,

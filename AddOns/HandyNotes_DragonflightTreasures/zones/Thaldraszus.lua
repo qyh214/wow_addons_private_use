@@ -16,9 +16,10 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     [33957694] = { -- Cracked Hourglass
         criteria=54810,
         quest=70607,
-        loot={},
+        loot={169951}, -- Broken Hourglass
         active={ns.conditions.QuestComplete(70537), ns.conditions.Item(199068), any=true}, -- Time-Lost Memo
         note="Find {item:199068} in other treasures",
+        vignette=5379,
     },
     [58158005] = { -- Sandy Wooden Duck
         criteria=54811,
@@ -170,7 +171,7 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     },
     [59806100] = { -- Phenran
         criteria=56140,
-        quest=69976,
+        quest=74020, -- 69976,
         npc=193688,
         loot={
             {197100,quest=69301,}, -- Highland Drake: Crested Brow
@@ -544,7 +545,7 @@ ns.RegisterPoints(ns.THALDRASZUS, {
         },
     },
     [59406120] = { -- Overloading Defense Matrix
-        quest=74449,
+        quest=74449, -- 74565
         npc=201550,
         loot={
             203677, -- Watcher's 'Neck' Ring

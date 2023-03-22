@@ -43,6 +43,15 @@ L= DBM:GetModLocalization(108)
 -----------------------------
 L= DBM:GetModLocalization(109)
 
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("BlackrockCavernsTrash")
+
+L:SetGeneralLocalization({
+	name =	"Blackrock Caverns Trash"
+})
+
 ---------------------
 --  The Deadmines  --
 ---------------------
@@ -328,14 +337,19 @@ L:SetMiscLocalization{
 --------------
 L= DBM:GetModLocalization(115)
 
-L:SetOptionLocalization({
-	BreathIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(88308)
-})
-
 -----------
 -- Asaad --
 -----------
 L= DBM:GetModLocalization(116)
+
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("VortexPinnacleTrash")
+
+L:SetGeneralLocalization({
+	name =	"Vortex Pinnacle Trash"
+})
 
 ---------------------------
 --  The Throne of Tides  --

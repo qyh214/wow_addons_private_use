@@ -26,6 +26,7 @@ local unpack, tinsert, tremove = unpack, tinsert, tremove
 local next, time, wipe, type = next, time, wipe, type
 local select, pairs, ipairs = select, pairs, ipairs
 local strupper, strsplit = strupper, strsplit
+local hooksecurefunc = hooksecurefunc
 
 local SecureButton_GetUnit = SecureButton_GetUnit
 local SecureButton_GetModifiedUnit = SecureButton_GetModifiedUnit
@@ -341,8 +342,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 			if(isEventlessUnit(objectUnit)) then
 				oUF:HandleEventlessUnit(object)
 			else
-				-- No need to enable this for eventless units.
-				object:SetAttribute('toggleForVehicle', true)
 				oUF:HandleUnit(object)
 			end
 		else
@@ -800,11 +799,7 @@ function oUF:SpawnNamePlates(namePrefix, nameplateCallback, nameplateCVars)
 	-- and because forbidden nameplates exist, we have to allow default nameplate
 	-- driver to create, update, and remove Blizz nameplates.
 	-- Disable only not forbidden nameplates.
-	_G.NamePlateDriverFrame:HookScript('OnEvent', function(_, event, unit)
-		if(event == 'NAME_PLATE_UNIT_ADDED' and unit) then
-			self:DisableBlizzard(unit)
-		end
-	end)
+	hooksecurefunc(_G.NamePlateDriverFrame, 'AcquireUnitFrame', oUF.DisableNamePlate)
 
 	local eventHandler = CreateFrame('Frame', 'oUF_NamePlateDriver')
 	eventHandler:RegisterEvent('NAME_PLATE_UNIT_ADDED')

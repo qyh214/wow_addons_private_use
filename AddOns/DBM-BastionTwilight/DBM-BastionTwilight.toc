@@ -1,4 +1,4 @@
-## Interface: 100005
+## Interface: 100007
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Bastion of Twilight|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Die Bastion des Zwielichts|r
@@ -21,7 +21,7 @@
 ## X-DBM-Mod-Sort: 804
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 3
-## Version: r224
+## Version: r225
 
 localization.en.lua
 localization.de.lua

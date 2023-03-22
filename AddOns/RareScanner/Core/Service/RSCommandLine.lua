@@ -19,6 +19,7 @@ local RSLogger = private.ImportLib("RareScannerLogger")
 
 -- RareScanner services
 local RSWaypoints = private.ImportLib("RareScannerWaypoints")
+local RSRecentlySeenTracker = private.ImportLib("RareScannerRecentlySeenTracker")
 
 -- RareScanner other addons integration services
 local RSTomtom = private.ImportLib("RareScannerTomtom")
@@ -61,13 +62,16 @@ SlashCmdList["RARESCANNER_CMD"] = function(command, ...)
 	elseif (command == RSConstants.CMD_TOGGLE_SCANNING_WORLD_MAP_VIGNETTES) then
 		RSCommandLine.CmdToggleScanningWorldmapVignettes()
 	elseif (RSUtils.Contains(command, RSConstants.CMD_TOMTOM_WAYPOINT)) then
-		local _, npcID, name = strsplit(";", command)
+		local _, mapID, x, y, name = strsplit(";", command)
 		if (RSConfigDB.IsTomtomSupportEnabled() and not RSConfigDB.IsAddingTomtomWaypointsAutomatically()) then
-			RSTomtom.AddTomtomWaypoint(tonumber(npcID), name)
+			RSTomtom.AddTomtomWaypoint(mapID, x, y, name)
 		end
 		if (RSConfigDB.IsWaypointsSupportEnabled() and not RSConfigDB.IsAddingWaypointsAutomatically()) then
-			RSWaypoints.AddWaypoint(tonumber(npcID))
+			RSWaypoints.AddWaypoint(mapID, x, y, name)
 		end
+	elseif (RSUtils.Contains(command, RSConstants.CMD_RECENTLY_SEEN)) then
+		local _, entityID, mapID, x, y = strsplit(";", command)
+		RSRecentlySeenTracker.AddPendingAnimation(tonumber(entityID), mapID, x, y, true)
 	elseif (command == RSConstants.CMD_TOGGLE_DRAGON_GLYPHS) then
 		RSCommandLine.CmdToggleDragonGlyphs()
 	elseif (command == RSConstants.CMD_OPEN_EXPLORER) then

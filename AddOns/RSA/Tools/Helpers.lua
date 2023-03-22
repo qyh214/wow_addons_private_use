@@ -4,18 +4,17 @@ local uClass = string.lower(select(2, UnitClass('player')))
 
 local function CombatState()
 	local profile = RSA.db.profile.general.globalAnnouncements.combatState
-	local canAnnounce = false
 	if InCombatLockdown() then
 		if profile.inCombat then
-			canAnnounce = true
+			return true
 		end
 	else
 		if profile.noCombat then
-			canAnnounce = true
+			return true
 		end
 	end
 
-	return canAnnounce
+	return false
 end
 
 function RSA.AnnouncementCheck() -- Checks against user settings to see if we are allowed to announce.

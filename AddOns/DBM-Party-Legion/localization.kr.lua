@@ -132,13 +132,22 @@ L= DBM:GetModLocalization(1487)
 L= DBM:GetModLocalization(1488)
 
 L:SetMiscLocalization({
-	SkovaldRP		= "안 돼! 나도 내 가치를 증명했다, 오딘. 나는 신왕 스코발드다! 나의 아이기스에 어찌 감히 필멸자가 손을 댄단 말이냐!"
+	SkovaldRP		= "안 돼! 나도 내 가치를 증명했다, 오딘. 나는 신왕 스코발드다! 나의 아이기스에 어찌 감히 필멸자가 손을 댄단 말이냐!",
+	SkovaldRPTwo	= "이 가짜 용사들이 아이기스를 포기하지 않는다면... 목숨을 포기해야 할 거다!"
 })
 
 -----------------------
 -- Odyn --
 -----------------------
 L= DBM:GetModLocalization(1489)
+
+L:SetOptionLocalization({
+	RuneBehavior		= "룬 낙인때 보스 모드 작동 방식을 설정합니다.",
+	Icon				= "룬 색과 일치하는 공격대 징표 기반 음성 경고 제공 (징표 기둥 사용)",
+	Entrance			= "입구가 남쪽 옥좌가 북쪽인 동서남북 음성 경고 제공",
+	Minimap				= "미니맵 기준으로 옥좌가 남쪽 입구가 북쪽인 동서남북 음성 경고 제공",
+	Generic				= "당신이 대상입니다 음성 알림만 제공합니다. 방향 지시는 하지 않습니다"--Default
+})
 
 L:SetMiscLocalization({
 	tempestModeMessage		=	"폭풍우 시퀀스 아님: %s. 8초 후 다시 검사합니다.",
@@ -264,35 +273,53 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	AGBoat		= "등불 클릭하면 배 소환 대화 자동 선택",
-	AGDisguise		= "라일레스 루나스트르에게 말을 걸면 변장하기 대화 자동 선택",
-	SpyHelper		= "첩자 색출을 위해 수다쟁이 호사가 NPC에게 말을 걸면 대화 내용을 자동으로 감지하여 정보 창에 표시 (다른 DBM/BW 사용자와 동기화)",
-	SpyHelperClose2	= "0.3초 후 대화창 자동 닫기 (다른 모드나 WA가 대화 내역을 감지할 시간을 주기 위한 지연)",
-	SendToChat2	= "대화창에도 힌트 알려주기 (위의 설정을 켜야 작동)"
+	warnAvailableItems	= "파티에 주변의 버프 오브젝트 알림",
+	AGBoat				= "등불 클릭하면 배 소환 대화 자동 선택",
+	AGDisguise			= "라일레스 루나스트르에게 말을 걸면 변장하기 대화 자동 선택",
+	AGBuffs				= "사용 가능한 버프 활성화때 대화 자동 선택",
+	SpyHelper			= "첩자 색출을 위해 수다쟁이 호사가 NPC에게 말을 걸면 대화 내용을 자동으로 감지하여 정보 창에 표시 (다른 DBM/BW 사용자와 동기화)",
+	SpyHelperClose2			= "0.3초 후 대화창 자동 닫기 (다른 모드나 WA가 대화 내역을 감지할 시간을 주기 위한 지연)",
+	SendToChat2			= "대화창에도 힌트 알려주기 (위의 설정을 켜야 작동)"
 })
 
 L:SetMiscLocalization({
-	Found		= "자, 너무 그렇게 다그치지 마십시오",
+	Found			= "자, 너무 그렇게 다그치지 마십시오",
 	--Add translationss, but keep english termss for cross language groups since these post to chat
 	--Format "localized / english"
-	CluesFound	= "단서 발견: %d/5",
-	Gloves		= "장갑 / gloves",
-	NoGloves	= "장갑 없음 / no gloves",
-	Cape		= "망토 / cape",
-	Nocape		= "망토 없음 / no cape",
-	LightVest	= "밝은색 조끼 / light vest",
-	DarkVest	= "어두운색 조끼 / dark vest",
-	Female		= "여자 / female",
-	Male		= "남자 / male",
-	ShortSleeve = "짧은 소매 / short sleeve",
-	LongSleeve	= "긴 소매 / long sleeve",
-	Potions		= "물약 / potions",
-	NoPotions	= "물약 없음 / no potions",
-	Book		= "책 / book",
-	Pouch		= "주머니 / pouch",
+	CluesFound				= "단서 발견: %d/5",
+	ClueShort				= "단서 %d/5: %s",
+	Gloves					= "장갑 / gloves",
+	NoGloves				= "장갑 없음 / no gloves",
+	Cape					= "망토 / cape",
+	Nocape					= "망토 없음 / no cape",
+	LightVest				= "밝은색 조끼 / light vest",
+	DarkVest				= "어두운색 조끼 / dark vest",
+	Female					= "여자 / female",
+	Male					= "남자 / male",
+	ShortSleeve				= "짧은 소매 / short sleeve",
+	LongSleeve				= "긴 소매 / long sleeve",
+	Potions					= "물약 / potions",
+	NoPotions				= "물약 없음 / no potions",
+	Book					= "책 / book",
+	Pouch					= "주머니 / pouch",
 
-	SpyFoundP 	= "첩자 발견",
-	SpyFound 	= "%s|1이;가; 첩자를 발견했습니다"
+	SpyFoundP 				= "첩자 발견",
+	SpyFound 				= "%s|1이;가; 첩자를 발견했습니다",
+	SpyGoingAway				= "첩자 색출 도우미는 10.0.7 패치에서 너프로 없어질 예정입니다. 이 던전에 대한 블리자드의 의도는 악마 사냥꾼을 활용하거나 보이스챗으로 협력해서 찾으라는 것입니다",
+	--Profession				 stuff
+	Nightshade					= "밤그늘 간식",
+	UmbralBloom					= "그림자 꽃",
+	InfernalTome				= "지옥불 고서",
+	MagicalLantern				= "마법 초롱",
+	StarlightRoseBrew			= "별빛 장미 차",
+	WaterloggedScroll			= "물에 젖은 두루마리",
+	DiscardedJunk				= "버려진 쓰레기",
+	BazaarGoods					= "장터 물품",
+	WoundedNightborneCivilian	= "부상당한 나이트본 주민",
+	LifesizedNightborneStatue	= "실물 크기의 나이트본 석상",
+	--
+	Available					= "%s|cffffffff%s|r 있음",
+	UsableBy					= "%s|1이;가; 사용 가능"
 })
 
 

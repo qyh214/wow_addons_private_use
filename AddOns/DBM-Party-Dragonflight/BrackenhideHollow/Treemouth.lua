@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2473, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221206015003")
+mod:SetRevision("20230301213049")
 mod:SetCreatureID(186120)
 mod:SetEncounterID(2568)
 mod:SetUsedIcons(8, 7, 6, 5)
@@ -131,7 +131,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			DBM.InfoFrame:Show(2, "enemyabsorb", nil, args.amount, "boss1")
 		end
 	elseif spellId == 377864 then
-		warnInfectiousSpit:Show(args.destName, args.amount or 1)
+		local amount = args.amount or 1
+--		if amount % 2 == 0 then
+			warnInfectiousSpit:Show(args.destName, amount)
+--		end
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

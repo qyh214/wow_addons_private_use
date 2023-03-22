@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.45 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.46 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for

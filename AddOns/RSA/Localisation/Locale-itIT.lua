@@ -101,7 +101,7 @@ L["Damage Absorb"] = "Damage Absorb"
 L["Disabled Channels"] = "Disabled Channels"
 --[[Translation missing --]]
 L["Discord"] = "Discord"
-L["Dispel"] = "Dispel"
+L["Dispel"] = true
 --[[Translation missing --]]
 L["Dispel Resist"] = "Dispel Resist"
 --[[Translation missing --]]

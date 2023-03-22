@@ -62,4 +62,14 @@ private.DRAGON_GLYPHS = {
 	[16062] = { zoneID = 2023, artID = { 1705 }, x = 8647, y = 3944 }; --Dragon Glyphs: Rusza'thar Reach
 	[16058] = { zoneID = 2023, artID = { 1705 }, x = 4460, y = 6480 }; --Dragon Glyphs: Szar Skeleth
 	[16671] = { zoneID = 2023, artID = { 1705 }, x = 7831, y = 2131 }; --Dragon Glyphs: Mirewood Fen
+	
+	-- Forbidden Reach
+	[17398] = { zoneID = 2151, artID = { 1781 }, x = 1838, y = 1320, parent = 17411 }; --Dragon Glyphs: Winglord's Perch
+	[17400] = { zoneID = 2151, artID = { 1781 }, x = 6254, y = 3238, parent = 17411 }; --Dragon Glyphs: Froststone Peak
+	[17402] = { zoneID = 2151, artID = { 1781 }, x = 7729, y = 5510, parent = 17411 }; --Dragon Glyphs: Stormsunder Mountain
+	[17404] = { zoneID = 2151, artID = { 1781 }, x = 5905, y = 6508, parent = 17411 }; --Dragon Glyphs: Talonlords' Perch
+	[17399] = { zoneID = 2151, artID = { 1781 }, x = 2056, y = 9140, parent = 17411 }; --Dragon Glyphs: Talon's Watch
+	[17401] = { zoneID = 2151, artID = { 1781 }, x = 7946, y = 3261, parent = 17411 }; --Dragon Glyphs: Dragonskull Island
+	[17403] = { zoneID = 2151, artID = { 1781 }, x = 4851, y = 6897, parent = 17411 }; --Dragon Glyphs: The Frosted Spine
+	[17405] = { zoneID = 2151, artID = { 1781 }, x = 3769, y = 3069, parent = 17411 }; --Dragon Glyphs: Caldera of the Menders
 }

@@ -3,6 +3,7 @@
 ]]
 
 local _, Internal = ...;
+local L = Internal.L;
 
 local UnitSex = UnitSex
 local UnitRace = UnitRace
@@ -5073,11 +5074,17 @@ do
 	end
 	function Internal.UpdateTraitInfoFromPlayer()
 		if not C_ClassTalents then
+--[==[@debug@
+			print(format(L["[BtWLoadouts]: failed to update trait information for %s, missing C_ClassTalents."], PlayerUtil.GetSpecName()));
+--@end-debug@]==]
 			return
 		end
 
 		local configID = C_ClassTalents.GetActiveConfigID();
 		if not configID then
+--[==[@debug@
+			print(format(L["[BtWLoadouts]: failed to update trait information for %s, missing active config id."], PlayerUtil.GetSpecName()));
+--@end-debug@]==]
 			return
 		end
 		local specID = GetSpecializationInfo(GetSpecialization());
@@ -5087,6 +5094,10 @@ do
 		local nodeIDs = C_Traits.GetTreeNodes(treeID);
 		local currencies = C_Traits.GetTreeCurrencyInfo(configID, treeID, true);
 		local incomingEdgesByNodeID = {}
+		
+--[==[@debug@
+		print(format(L["[BtWLoadouts]: updating trait information for %s, configID: %d, treeID: %d."], PlayerUtil.GetSpecName(), configID, treeID));
+--@end-debug@]==]
 
 		local conditions = setmetatable({}, {
 			__index = function (self, key)
@@ -5115,6 +5126,9 @@ do
 			-- Gates arent compatible with saved version so we cant get the spentAmountRequired
 			-- without a lot of extra effort so we will just fail for now
 			if not found then
+--[==[@debug@
+				print(format(L["[BtWLoadouts]: failed to update trait information for %s, compatible gates."], PlayerUtil.GetSpecName()));
+--@end-debug@]==]
 				return;
 			end
 		end
@@ -5137,6 +5151,9 @@ do
 
 				-- Although currencies have all the data we store their maxQuantity is incorrect on non max level characters
 				if not found then
+--[==[@debug@
+					print(format(L["[BtWLoadouts]: failed to update trait information for %s, incorrect currency max quantity."], PlayerUtil.GetSpecName()));
+--@end-debug@]==]
 					return;
 				end
 			end
@@ -5191,6 +5208,9 @@ do
 
 				local savedNodeInfo = Internal.GetNodeInfo(nodeID);
 				if not savedNodeInfo then
+--[==[@debug@
+			print(format(L["[BtWLoadouts]: failed to update trait information for %s, missing saved node info for node %d."], PlayerUtil.GetSpecName(), nodeID));
+--@end-debug@]==]
 					return
 				end
 

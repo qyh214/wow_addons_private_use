@@ -1,6 +1,28 @@
 local W, F, L, P, G, O = unpack(select(2, ...))
 local C = W.Utilities.Color
 
+local date = date
+local format = format
+local max = max
+local pairs = pairs
+local pcall = pcall
+local random = random
+local select = select
+local strsub = strsub
+local time = time
+local tonumber = tonumber
+local tostring = tostring
+
+local CopyTable = CopyTable
+local GetClassColor = GetClassColor
+local GetNumClasses = GetNumClasses
+local StaticPopup_Show = StaticPopup_Show
+
+local C_CreatureInfo_GetClassInfo = C_CreatureInfo.GetClassInfo
+local C_CreatureInfo_GetRaceInfo = C_CreatureInfo.GetRaceInfo
+local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
+local C_Map_GetMapInfo = C_Map.GetMapInfo
+
 _G.StaticPopupDialogs["WIND_CHAT_FILTER_NEW_RULE"] = {
     text = L["New Rule Name"],
     button1 = L["Create"],
@@ -40,12 +62,12 @@ local function isDefaultRule(ruleID)
     return strsub(ruleID, 1, 2) == "__"
 end
 
-local function coloredToggleName(tbl, key)
+local function coloredToggleName(tbl, key, default)
     local k = key or "enabled"
     if tbl[k] then
-        return C.StringByTemplate(L["Enabled"], "success")
+        return default and L["Enabled"] or C.StringByTemplate(L["Enabled"], "success")
     else
-        return C.StringByTemplate(L["Disabled"], "danger")
+        return default and L["Disabled"] or C.StringByTemplate(L["Disabled"], "danger")
     end
 end
 
@@ -75,6 +97,7 @@ local function customArea(context, tbl, data)
             inputArea = {
                 type = "input",
                 name = data.addInputTitle,
+                desc = data.addInputDesc,
                 order = 10,
                 get = function(info)
                     return addTemp
@@ -123,6 +146,7 @@ local function customArea(context, tbl, data)
         customOptions.args[object] = {
             type = "execute",
             name = name,
+            desc = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:230:307|t " .. L["Remove"],
             func = function()
                 tbl[object] = nil
                 F.Print(format(L["%s has been removed."], C.StringByTemplate(name, "info")))
@@ -155,7 +179,7 @@ local function mapOptions(context, order)
             enabled = {
                 type = "toggle",
                 name = function(info)
-                    return coloredToggleName(context.rule.map)
+                    return coloredToggleName(context.rule.map, nil, context.isDefault)
                 end,
                 desc = L["Filter by the map where player is in."],
                 disabled = context.isDefault,
@@ -185,8 +209,8 @@ local function mapOptions(context, order)
                         order = 1,
                         type = "description",
                         name = function()
-                            local mapID = C_Map.GetBestMapForUnit("player")
-                            local ok, info = pcall(C_Map.GetMapInfo, mapID)
+                            local mapID = C_Map_GetBestMapForUnit("player")
+                            local ok, info = pcall(C_Map_GetMapInfo, mapID)
                             if ok and info and info.name then
                                 return format(
                                     L["Current Map:"] .. " %s (%s)",
@@ -210,7 +234,7 @@ local function mapOptions(context, order)
         context.rule.map.mapIDs,
         {
             previewWithString = function(value)
-                local ok, info = pcall(C_Map.GetMapInfo, value)
+                local ok, info = pcall(C_Map_GetMapInfo, value)
                 if ok and info and info.name then
                     return C.StringByTemplate(info.name, "info")
                 else
@@ -222,7 +246,7 @@ local function mapOptions(context, order)
             addButtonText = L["Add"],
             addDuplicateMessage = L["This map has already been added."],
             customVerifier = function(value)
-                local ok, info = pcall(C_Map.GetMapInfo, value)
+                local ok, info = pcall(C_Map_GetMapInfo, value)
                 if ok and info and info.name then
                     return true, info.name
                 else
@@ -231,7 +255,7 @@ local function mapOptions(context, order)
             end,
             customTitle = L["Custom Maps"],
             objectToName = function(object)
-                local ok, info = pcall(C_Map.GetMapInfo, object)
+                local ok, info = pcall(C_Map_GetMapInfo, object)
                 return info.name
             end,
             order = 13,
@@ -264,7 +288,7 @@ local function messageOptions(context, order)
             enabled = {
                 type = "toggle",
                 name = function(info)
-                    return coloredToggleName(context.rule.message)
+                    return coloredToggleName(context.rule.message, nil, context.isDefault)
                 end,
                 desc = L["Filter by the specific keywords in the message."],
                 disabled = context.isDefault,
@@ -301,6 +325,8 @@ local function messageOptions(context, order)
             previewWithString = nil,
             addTitle = L["Add Keyword"],
             addInputTitle = L["Keyword"],
+            addInputDesc = L["Placeholder"] ..
+                format("\n\n%s %s", C.StringByTemplate("%playerName%", "info"), L["Player Name"]),
             addButtonText = L["Add"],
             addDuplicateMessage = L["This keyword has already been added."],
             customVerifier = nil,
@@ -338,7 +364,7 @@ local function channelOptions(context, order)
             enabled = {
                 type = "toggle",
                 name = function(info)
-                    return coloredToggleName(context.rule.channel)
+                    return coloredToggleName(context.rule.channel, nil, context.isDefault)
                 end,
                 desc = L["Filter by the channel category or names."],
                 disabled = context.isDefault,
@@ -416,20 +442,30 @@ local function channelOptions(context, order)
                         name = L["Raid"],
                         order = 7
                     },
+                    instance = {
+                        type = "toggle",
+                        name = L["Instance"],
+                        order = 8
+                    },
                     trade = {
                         type = "toggle",
                         name = L["Trade"],
-                        order = 8
+                        order = 9
                     },
                     general = {
                         type = "toggle",
-                        name = L["General"],
-                        order = 9
+                        name = L["General Chat"],
+                        order = 10
+                    },
+                    newcomer = {
+                        type = "toggle",
+                        name = L["Newcomer Chat"],
+                        order = 11
                     },
                     battleground = {
                         type = "toggle",
                         name = L["Battleground"],
-                        order = 10
+                        order = 12
                     }
                 }
             }
@@ -514,7 +550,7 @@ local function playerInfoOptions(context, order)
             enabled = {
                 type = "toggle",
                 name = function(info)
-                    return coloredToggleName(context.rule.playerInfo)
+                    return coloredToggleName(context.rule.playerInfo, nil, context.isDefault)
                 end,
                 desc = L["Filter by the channel category or names."],
                 disabled = context.isDefault,
@@ -534,7 +570,7 @@ local function playerInfoOptions(context, order)
                         order = 1,
                         type = "toggle",
                         name = function(info)
-                            return coloredToggleName(context.rule.playerInfo.config, "class")
+                            return coloredToggleName(context.rule.playerInfo.config, "class", context.isDefault)
                         end,
                         get = function(info)
                             return context.rule.playerInfo.config.class
@@ -569,7 +605,7 @@ local function playerInfoOptions(context, order)
                         order = 1,
                         type = "toggle",
                         name = function(info)
-                            return coloredToggleName(context.rule.playerInfo.config, "race")
+                            return coloredToggleName(context.rule.playerInfo.config, "race", context.isDefault)
                         end,
                         get = function(info)
                             return context.rule.playerInfo.config.race
@@ -622,7 +658,7 @@ local function playerInfoOptions(context, order)
                         order = 1,
                         type = "toggle",
                         name = function(info)
-                            return coloredToggleName(context.rule.playerInfo.config, "name")
+                            return coloredToggleName(context.rule.playerInfo.config, "name", context.isDefault)
                         end,
                         get = function(info)
                             return context.rule.playerInfo.config.name
@@ -649,7 +685,7 @@ local function playerInfoOptions(context, order)
                         order = 1,
                         type = "toggle",
                         name = function(info)
-                            return coloredToggleName(context.rule.playerInfo.config, "realm")
+                            return coloredToggleName(context.rule.playerInfo.config, "realm", context.isDefault)
                         end,
                         get = function(info)
                             return context.rule.playerInfo.config.realm
@@ -667,7 +703,7 @@ local function playerInfoOptions(context, order)
     }
 
     for i = 1, GetNumClasses() do
-        local classInfo = C_CreatureInfo.GetClassInfo(i)
+        local classInfo = C_CreatureInfo_GetClassInfo(i)
         if classInfo.classFile then
             local hex = select(4, GetClassColor(classInfo.classFile))
             options.args.class.args[classInfo.classFile] = {
@@ -695,7 +731,7 @@ local function playerInfoOptions(context, order)
     local tempOrder = 10
     local addRaceOption = function(tbl, color, icon)
         for raceKey, raceID in pairs(tbl) do
-            local raceInfo = C_CreatureInfo.GetRaceInfo(raceID)
+            local raceInfo = C_CreatureInfo_GetRaceInfo(raceID)
             if raceInfo then
                 options.args.race.args[raceKey] = {
                     type = "toggle",
@@ -826,6 +862,30 @@ function F.RefreshRuleOptions(dbTable, optionTable, ruleID, rule)
         end,
         order = 1000 - rule.priority,
         args = {
+            description = {
+                type = "group",
+                name = L["Description"],
+                order = 1,
+                inline = true,
+                args = {
+                    title = {
+                        type = "description",
+                        name = format(
+                            "%s %s %s",
+                            L["The sub-modules of each rule (e.g. the message module) are independent of each other."],
+                            format(
+                                L[
+                                    "When %s starts filtering, it will pass the contextual information to all enabled sub-modules, and the rule will only be matched if the data passes all sub-modules."
+                                ],
+                                W.AddonName
+                            ),
+                            L["In other words, they are AND relationships."]
+                        ),
+                        order = 1,
+                        width = "full"
+                    }
+                }
+            },
             general = {
                 type = "group",
                 name = L["General"],
@@ -858,6 +918,7 @@ function F.RefreshRuleOptions(dbTable, optionTable, ruleID, rule)
                         end,
                         set = function(info, value)
                             rule.priority = value
+                            F.RefreshRuleOptions(dbTable, optionTable, ruleID, rule)
                             W:SendMessage("WCF_RULE_UPDATED")
                         end,
                         desc = function()
@@ -892,6 +953,7 @@ function F.RefreshRuleOptions(dbTable, optionTable, ruleID, rule)
                         set = function(info, value)
                             rule.description = value
                         end,
+                        multiline = 3,
                         width = "full"
                     }
                 }
@@ -929,20 +991,9 @@ function F.RefreshRuleOptions(dbTable, optionTable, ruleID, rule)
         options.args.general.args.ruleName.disabled = true
         options.args.general.args.ruleDescription.disabled = true
 
-        options.args.defualtRuleDescription = {
-            type = "group",
-            name = L["Notice"],
-            order = 1,
-            inline = true,
-            args = {
-                title = {
-                    type = "description",
-                    name = C.StringByTemplate(L["Some settings of default rules cannot be changed."], "warning"),
-                    order = 1,
-                    width = "full"
-                }
-            }
-        }
+        options.args.description.name = L["Notice"]
+        options.args.description.args.title.name =
+            C.StringByTemplate(L["Some settings of default rules cannot be changed."], "warning")
     end
 
     optionTable["rule_" .. ruleID] = options
@@ -1009,16 +1060,18 @@ local emptyRule = {
     },
     channel = {
         enabled = false,
-        say = false,
-        yell = false,
-        whisper = false,
+        battleground = false,
         emote = false,
+        general = false,
         guild = false,
+        instance = false,
+        newcomer = false,
         party = false,
         raid = false,
+        say = false,
         trade = false,
-        general = false,
-        battleground = false,
+        whisper = false,
+        yell = false,
         channelNames = {}
     },
     map = {
@@ -1054,9 +1107,12 @@ end
 
 function F.CopyRule(rule, tbl, optTbl)
     local randomID = tostring(time()) .. tostring(random(11, 99))
-    tbl[randomID] = CopyTable(rule)
-    tbl[randomID].name = rule.name .. " " .. L["Copy"]
-    F.RefreshRuleOptions(tbl, optTbl, randomID, tbl[randomID])
+    local newRule = CopyTable(rule)
+    newRule.priority = max(newRule.priority + 1, 1)
+    newRule.name = rule.name .. " " .. L["Copy"]
+    newRule.enabled = false
+    F.RefreshRuleOptions(tbl, optTbl, randomID, newRule)
+    tbl[randomID] = newRule
     W:RefreshOptions()
 end
 

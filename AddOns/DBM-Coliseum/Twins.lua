@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230210200745")
 mod:SetCreatureID(34497, 34496)
 mod:SetEncounterID(mod:IsClassic() and 641 or 1089)
 mod:SetModelID(29240)
@@ -21,7 +21,7 @@ local warnSpecial					= mod:NewAnnounce("WarnSpecialSpellSoon", 3)
 local warnTouchDebuff				= mod:NewAnnounce("WarningTouchDebuff", 2, 66823)
 local warnPoweroftheTwins			= mod:NewAnnounce("WarningPoweroftheTwins2", 4, 65916, "Healer", nil, nil, 65916)
 
-local specWarnSpecial				= mod:NewSpecialWarning("SpecWarnSpecial")--Change Color, No voice ideas for this
+local specWarnSpecial				= mod:NewSpecialWarning("SpecWarnSpecial", nil, nil, nil, 1, 14)
 local specWarnSwitch				= mod:NewSpecialWarning("SpecWarnSwitchTarget", nil, nil, nil, 1, 2, nil, nil, 65875)
 local specWarnKickNow 				= mod:NewSpecialWarning("SpecWarnKickNow", "HasInterrupt", nil, 2, 1, 2, nil, nil, 65875)
 local specWarnPoweroftheTwins		= mod:NewSpecialWarningDefensive(65916, "Tank", nil, 2, 1, 2)
@@ -65,6 +65,7 @@ do
 	local function SpecialAbility(debuff)
 		if not debuff then
 			specWarnSpecial:Show()
+			specWarnSpecial:Play("changecolor")
 		end
 		timerSpecial:Start()
 		warnSpecial:Schedule(40)
@@ -132,6 +133,7 @@ do
 		elseif args.spellId == 65950 then
 			if args:IsPlayer() and self.Options.SpecialWarnOnDebuff then
 				specWarnSpecial:Show()
+				specWarnSpecial:Play("changecolor")
 			end
 			timerLightTouch:Start(args.destName)
 			if self.Options.SetIconOnDebuffTarget then
@@ -144,6 +146,7 @@ do
 		elseif args.spellId == 66001 then
 			if args:IsPlayer() and self.Options.SpecialWarnOnDebuff then
 				specWarnSpecial:Show()
+				specWarnSpecial:Play("changecolor")
 			end
 			timerDarkTouch:Start(args.destName)
 			if self.Options.SetIconOnDebuffTarget then

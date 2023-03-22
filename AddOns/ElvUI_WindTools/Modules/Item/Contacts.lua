@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local CT = W:NewModule("Contacts", "AceHook-3.0")
 local S = W.Modules.Skins
 local ES = E.Skins
@@ -18,6 +18,7 @@ local GameTooltip = _G.GameTooltip
 local GetClassColor = GetClassColor
 local GetGuildRosterInfo = GetGuildRosterInfo
 local GetNumGuildMembers = GetNumGuildMembers
+local IsAddOnLoaded = IsAddOnLoaded
 local IsInGuild = IsInGuild
 
 local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
@@ -162,14 +163,27 @@ function CT:ShowContextText(button)
     EasyMenu(menu, self.contextMenuFrame, "cursor", 0, 0, "MENU")
 end
 
+function CT:RepositionWithPostal()
+    if not self.frame or not _G.Postal_QuickAttachButton1 then
+        return
+    end
+
+    local width = _G.Postal_QuickAttachButton1:IsShown() and _G.Postal_QuickAttachButton1:GetWidth()
+    width = width and width + 2 or 0
+
+    self.frame:ClearAllPoints()
+    self.frame:SetPoint("TOPLEFT", _G.MailFrame, "TOPRIGHT", 3 + width, -1)
+    self.frame:SetPoint("BOTTOMRIGHT", _G.MailFrame, "BOTTOMRIGHT", 153 + width, 1)
+end
+
 function CT:ConstructFrame()
     if self.frame then
         return
     end
 
     local frame = CreateFrame("Frame", "WTContacts", _G.SendMailFrame)
-    frame:Point("TOPLEFT", _G.MailFrame, "TOPRIGHT", 3, -1)
-    frame:Point("BOTTOMRIGHT", _G.MailFrame, "BOTTOMRIGHT", 153, 1)
+    frame:SetPoint("TOPLEFT", _G.MailFrame, "TOPRIGHT", 3, -1)
+    frame:SetPoint("BOTTOMRIGHT", _G.MailFrame, "BOTTOMRIGHT", 153, 1)
     frame:CreateBackdrop("Transparent")
     frame:EnableMouse(true)
 
@@ -183,6 +197,43 @@ function CT:ConstructFrame()
     end
 
     self.frame = frame
+
+    if IsAddOnLoaded("Postal") then
+        self:RepositionWithPostal()
+
+        if _G.Postal_QuickAttachButton1 then
+            if not self.postalHooked then
+                self:SecureHook(_G.Postal_QuickAttachButton1, "Show", "RepositionWithPostal")
+                self:SecureHook(_G.Postal_QuickAttachButton1, "Hide", "RepositionWithPostal")
+                self.postalHooked = true
+            end
+        else
+            local Postal = _G.LibStub("AceAddon-3.0"):GetAddon("Postal")
+            local Postal_QuickAttach = Postal and Postal:GetModule("QuickAttach")
+            if Postal_QuickAttach and Postal_QuickAttach.OnEnable then
+                self:SecureHook(
+                    Postal_QuickAttach,
+                    "OnEnable",
+                    function()
+                        self:RepositionWithPostal()
+                        if not self.postalHooked then
+                            self:SecureHook(_G.Postal_QuickAttachButton1, "Show", "RepositionWithPostal")
+                            self:SecureHook(_G.Postal_QuickAttachButton1, "Hide", "RepositionWithPostal")
+                            self.postalHooked = true
+                        end
+                    end
+                )
+
+                self:SecureHook(
+                    Postal_QuickAttach,
+                    "OnDisable",
+                    function()
+                        self:RepositionWithPostal()
+                    end
+                )
+            end
+        end
+    end
 
     self.contextMenuFrame = CreateFrame("Frame", "WTContactsContextMenu", E.UIParent, "UIDropDownMenuTemplate")
 end
@@ -399,6 +450,10 @@ function CT:ConstructPageController()
     self.frame:SetScript(
         "OnMouseWheel",
         function(_, delta)
+            if not currentPageIndex then
+                return
+            end
+
             if delta > 0 then
                 if pagePrevButton:IsShown() then
                     currentPageIndex = currentPageIndex - 1
@@ -687,7 +742,6 @@ function CT:SendMailFrame_OnShow()
         self.frame:Hide()
     else
         self.frame:Show()
-        self:ChangeCategory()
     end
 end
 
@@ -705,6 +759,8 @@ function CT:Initialize()
     self:ConstructPageController()
 
     self:SecureHookScript(_G.SendMailFrame, "OnShow", "SendMailFrame_OnShow")
+
+    self:ChangeCategory()
     self.initialized = true
 end
 

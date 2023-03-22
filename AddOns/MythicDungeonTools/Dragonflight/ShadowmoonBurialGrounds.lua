@@ -5,10 +5,10 @@ MDT.dungeonList[dungeonIndex] = L["ShadowmoonBurialGrounds"]
 MDT.mapInfo[dungeonIndex] = {
   viewportPositionOverrides = {
     [2] = {
-      zoomScale = 1.2999999523163;
-      horizontalPan = 62.187168291065;
-      verticalPan = 128.07692242776;
-    };
+      zoomScale = 1.2999999523163,
+      horizontalPan = 62.187168291065,
+      verticalPan = 128.07692242776,
+    },
   }
 };
 local zones = { 574, 575, 576 }
@@ -32,26 +32,26 @@ MDT.dungeonTotalCount[dungeonIndex] = { normal = 300, teeming = 1000, teemingEna
 MDT.mapPOIs[dungeonIndex] = {
   [1] = {
     [1] = {
-      ["template"] = "MapLinkPinTemplate";
-      ["type"] = "mapLink";
-      ["x"] = 778.10903165531;
-      ["y"] = -289.25207909273;
-      ["target"] = 2;
-      ["direction"] = 2;
-      ["connectionIndex"] = 1;
-    };
-  };
+      ["template"] = "MapLinkPinTemplate",
+      ["type"] = "mapLink",
+      ["x"] = 778.10903165531,
+      ["y"] = -289.25207909273,
+      ["target"] = 2,
+      ["direction"] = 2,
+      ["connectionIndex"] = 1,
+    },
+  },
   [2] = {
     [1] = {
-      ["template"] = "MapLinkPinTemplate";
-      ["type"] = "mapLink";
-      ["x"] = 91.375197691184;
-      ["y"] = -327.60509130439;
-      ["target"] = 1;
-      ["direction"] = -2;
-      ["connectionIndex"] = 1;
-    };
-  };
+      ["template"] = "MapLinkPinTemplate",
+      ["type"] = "mapLink",
+      ["x"] = 91.375197691184,
+      ["y"] = -327.60509130439,
+      ["target"] = 1,
+      ["direction"] = -2,
+      ["connectionIndex"] = 1,
+    },
+  },
 };
 
 MDT.dungeonEnemies[dungeonIndex] = {
@@ -217,9 +217,9 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["scale"] = 2;
       };
       [2] = {
-        ["x"] = 541.65191304665;
-        ["y"] = -172.70844111254;
-        ["g"] = 5;
+        ["x"] = 330.07654114684;
+        ["y"] = -177.46751954615;
+        ["g"] = 3;
         ["sublevel"] = 1;
         ["scale"] = 2;
       };
@@ -263,22 +263,22 @@ MDT.dungeonEnemies[dungeonIndex] = {
     };
     ["clones"] = {
       [1] = {
-        ["x"] = 320.53618455696;
-        ["y"] = -178.34942753211;
+        ["x"] = 312.74030357542;
+        ["y"] = -174.36084956149;
         ["g"] = 3;
         ["sublevel"] = 1;
         ["scale"] = 1.5;
       };
       [2] = {
-        ["x"] = 332.74232495119;
-        ["y"] = -166.83814935191;
+        ["x"] = 331.54124057716;
+        ["y"] = -159.5862127124;
         ["g"] = 3;
         ["sublevel"] = 1;
         ["scale"] = 1.5;
       };
       [3] = {
-        ["x"] = 341.81661261145;
-        ["y"] = -176.35941756771;
+        ["x"] = 348.77391510297;
+        ["y"] = -179.71347466361;
         ["g"] = 3;
         ["sublevel"] = 1;
         ["scale"] = 1.5;
@@ -373,8 +373,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
     };
     ["clones"] = {
       [1] = {
-        ["x"] = 329.90659209306;
-        ["y"] = -188.71177441727;
+        ["x"] = 327.59502840616;
+        ["y"] = -194.71725993613;
         ["g"] = 3;
         ["sublevel"] = 1;
         ["scale"] = 1.5;
@@ -914,6 +914,76 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["x"] = 132.85062887786;
         ["y"] = -382.15468905875;
         ["g"] = 21;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [72] = {
+        ["x"] = 420.56573135679;
+        ["y"] = -301.69020812656;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [73] = {
+        ["x"] = 425.69807147601;
+        ["y"] = -303.33256965148;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [74] = {
+        ["x"] = 430.83043508924;
+        ["y"] = -307.64374662875;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [75] = {
+        ["x"] = 430.00922495925;
+        ["y"] = -302.10078969753;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [76] = {
+        ["x"] = 425.28744291699;
+        ["y"] = -298.20020603825;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [77] = {
+        ["x"] = 398.77658239964;
+        ["y"] = -343.3851968323;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [78] = {
+        ["x"] = 405.34588753518;
+        ["y"] = -344.20639521528;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [79] = {
+        ["x"] = 411.91535712889;
+        ["y"] = -346.87522241464;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [80] = {
+        ["x"] = 400.21357090999;
+        ["y"] = -348.10699062158;
+        ["g"] = 27;
+        ["sublevel"] = 2;
+        ["scale"] = 0.7;
+      };
+      [81] = {
+        ["x"] = 406.16712115919;
+        ["y"] = -349.95461943796;
+        ["g"] = 27;
         ["sublevel"] = 2;
         ["scale"] = 0.7;
       };

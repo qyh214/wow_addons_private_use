@@ -372,7 +372,7 @@ L:SetWarningLocalization{
 	WarningSanity 					= "%d Sanity remaining",
 	SpecWarnSanity 					= "%d Sanity remaining",
 	SpecWarnMadnessOutNow			= "Induce Madness ending - Move out",
-	WarnBrainPortalSoon				= "Brain Portal in 3 seconds",
+	WarnBrainPortalSoon				= "Brain Portal in 10 seconds",
 	specWarnBrainPortalSoon			= "Brain Portal soon"
 }
 

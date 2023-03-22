@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local A = W:GetModule("Announcement")
 
 local _G = _G
@@ -37,7 +37,7 @@ function A:Interrupt(sourceGUID, sourceName, destName, spellId, extraSpellId)
 
     if sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") then
         -- 自己及宠物打断
-        if config.player.enable then
+        if config.player.enable and destName and destName ~= E.myname then
             self:SendMessage(FormatMessage(config.player.text), self:GetChannel(config.player.channel))
         end
     elseif config.others.enable then

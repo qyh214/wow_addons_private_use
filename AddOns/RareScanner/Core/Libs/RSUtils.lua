@@ -145,6 +145,14 @@ function RSUtils.Lpad(s, l, c)
 	return res, res ~= s
 end
 
+function RSUtils.tostring(s)
+	if (s) then
+		return tostring(s)
+	end
+	
+	return nil
+end
+
 ---============================================================================
 -- Arithmetic utils
 ---============================================================================

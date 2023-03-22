@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121064252")
+mod:SetRevision("20230301053143")
 mod:SetCreatureID(33271)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1134)
@@ -19,6 +19,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 62662",
 	"SPELL_AURA_REMOVED 62662",
 	"SPELL_CAST_SUCCESS 62660 63276 63364",
+	"UNIT_DIED",
 	"RAID_BOSS_EMOTE"
 )
 
@@ -86,6 +87,7 @@ function mod:OnCombatStart(delay)
 	timerEnrage:Start(-delay)
 	timerHardmode:Start(self:IsClassic() and 254 or 189-delay)
 	timerNextSurgeofDarkness:Start(-delay)
+	DBM:AddMsg("If vezax is not targeted or set to focus target when animus is out, you will not get alerts for shadow crash")
 end
 
 function mod:SPELL_CAST_START(args)
@@ -152,6 +154,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 63364 then
 		specWarnAnimus:Show()
 		specWarnAnimus:Play("bigmob")
+		DBM:AddMsg("If Vezax is not targeted by at least one raid member at all times, or set as YOUR focus target when animus is out, you will not get alerts for shadow crash")
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 33488 then--Saronite Vapor
+		timerHardmode:Stop()
 	end
 end
 

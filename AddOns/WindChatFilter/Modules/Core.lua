@@ -1,5 +1,21 @@
 local W, F, L = unpack(select(2, ...))
-local CORE = W:NewModule("Core")
+local CORE = W:NewModule("Core", "AceEvent-3.0", "AceTimer-3.0")
+
+local format = format
+local ipairs = ipairs
+local pairs = pairs
+local sort = sort
+local time = time
+local tinsert = tinsert
+local wipe = wipe
+
+local ChatFrame_AddMessageEventFilter = ChatFrame_AddMessageEventFilter
+local IsGuildMember = IsGuildMember
+local IsInInstance = IsInInstance
+
+local C_BattleNet_GetAccountInfoByGUID = C_BattleNet.GetAccountInfoByGUID
+local C_FriendList_IsFriend = C_FriendList.IsFriend
+local C_Timer_After = C_Timer.After
 
 local blackList = {}
 local priorityOfBlackList = {}
@@ -16,16 +32,21 @@ local eventToChannel = {
     ["CHAT_MSG_YELL"] = "Yell",
     ["CHAT_MSG_WHISPER"] = "Whisper",
     ["CHAT_MSG_WHISPER_INFORM"] = "Whisper",
+    ["CHAT_MSG_INSTANCE_CHAT"] = "Instance",
+    ["CHAT_MSG_INSTANCE_CHAT_LEADER"] = "Instance",
     ["CHAT_MSG_RAID"] = "Raid",
     ["CHAT_MSG_RAID_LEADER"] = "Raid",
     ["CHAT_MSG_PARTY"] = "Party",
     ["CHAT_MSG_PARTY_LEADER"] = "Party",
     ["CHAT_MSG_GUILD"] = "Guild",
+    ["CHAT_MSG_OFFICER"] = "Guild",
     ["CHAT_MSG_BATTLEGROUND"] = "Battleground",
-    ["CHAT_MSG_EMOTE"] = "Emote"
+    ["CHAT_MSG_EMOTE"] = "Emote",
+    ["CHAT_MSG_TEXT_EMOTE"] = "Emote"
 }
 
 local handleCache = {}
+local friendCache = {}
 
 local function result(blocked, guid, channel)
     handleCache[guid .. "_" .. channel] = {
@@ -35,25 +56,57 @@ local function result(blocked, guid, channel)
     return blocked
 end
 
+local function isExcluded(guid)
+    if not W.global.advanced.includeMyself then
+        if guid == W.myGUID then
+            return true
+        end
+    end
+
+    if guid ~= W.myGUID and not W.global.advanced.includeGuildMember then
+        if IsGuildMember(guid) then
+            return true
+        end
+    end
+
+    if guid ~= W.myGUID and not W.global.advanced.includeFriend then
+        if not friendCache[guid] then
+            friendCache[guid] = (C_BattleNet_GetAccountInfoByGUID(guid) or C_FriendList_IsFriend(guid)) and 1 or -1
+        end
+
+        if friendCache[guid] == 1 then
+            return true
+        end
+    end
+
+    return false
+end
+
 local function messageHandler(_, event, msg, sender, _, _, _, _, _, _, channelName, _, _, guid)
-    if not W.global.advanced.includeMyself and guid == W.myGUID then
+    if not (event and msg and sender and channelName and guid) then
+        return false
+    end
+
+    if W.global.advanced.stopInInstance and IsInInstance() then
         return false
     end
 
     local channel = eventToChannel[event]
     if not channel then
-        return
+        return false
     end
 
-    if channel == "Channel" then
-        channel = channelName
-    end
+    channel = channel == "Channel" and channelName or channel
 
     local cache = handleCache[guid .. "_" .. channel]
     if cache and cache.time + 1 > time() then
         return cache.blocked
     else
         handleCache[guid .. "_" .. channel] = nil
+    end
+
+    if isExcluded(guid) then
+        return result(false, guid, channel)
     end
 
     local data = {
@@ -81,6 +134,31 @@ local function messageHandler(_, event, msg, sender, _, _, _, _, _, _, channelNa
     return result(false, guid, channel)
 end
 
+function CORE:GetChatFilterResult(sender, guid)
+    local data = {
+        channel = "",
+        message = "",
+        sender = sender,
+        guid = guid
+    }
+
+    for _, name in ipairs(priorityOfWhiteList) do
+        local filter = whiteList[name]
+        if filter and filter.func and filter.func(data) then
+            return false
+        end
+    end
+
+    for _, name in ipairs(priorityOfBlackList) do
+        local filter = blackList[name]
+        if filter and filter.func and filter.func(data) then
+            return true, name
+        end
+    end
+
+    return false
+end
+
 local function getPriorityForList(list)
     local cache = {}
     for name, filter in pairs(list) do
@@ -100,12 +178,12 @@ local function getPriorityForList(list)
         end
     )
 
-    local result = {}
+    local r = {}
     for i, v in ipairs(cache) do
-        result[i] = v.name
+        r[i] = v.name
     end
 
-    return result
+    return r
 end
 
 function CORE:RegisterBlackList(name, filter)
@@ -178,11 +256,12 @@ function CORE:RebuildRules()
 
     for _, rule in pairs(rules.whiteList) do
         if rule.enabled then
+            local functionList = {}
             local filter = {
                 priority = rule.priority,
-                functionList = {},
+                functionList = functionList,
                 func = function(data)
-                    for _, func in ipairs(filter.functionList) do
+                    for _, func in ipairs(functionList) do
                         if not func(data) then
                             return false
                         end
@@ -192,7 +271,7 @@ function CORE:RebuildRules()
             }
 
             for _, parser in pairs(ruleParsers) do
-                tinsert(filter.functionList, parser(rule))
+                tinsert(functionList, parser(rule))
             end
 
             self:RegisterWhiteList(rule.name, filter)
@@ -200,39 +279,46 @@ function CORE:RebuildRules()
     end
 end
 
+function CORE:MapChanging()
+    local now = time()
+    self.mapChanging = true
+    self.mapChangingTime = time()
+
+    C_Timer_After(
+        3,
+        function()
+            if self.mapChangingTime == now then
+                self.mapChanging = false
+            end
+        end
+    )
+end
+
+function CORE:CleanupCache()
+    local now = time()
+    for k, v in pairs(handleCache) do
+        if v.time + 10 < now then
+            handleCache[k] = nil
+        end
+    end
+end
+
 function CORE:OnInitialize()
     self.db = W.db.core
 
-    if not self.db.enable then
+    if not self.db.enable or self.initialized then
         return
     end
 
     self:RebuildRules()
+    self:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE", "MapChanging")
+    self:RegisterEvent("PLAYER_ENTERING_WORLD", "MapChanging")
 
-    C_Timer.NewTicker(
-        10,
-        function()
-            local now = time()
-            for k, v in pairs(handleCache) do
-                if v.time < now - 10 then
-                    handleCache[k] = nil
-                end
-            end
-        end
-    )
+    self.cleanupCacheTimer = self:ScheduleRepeatingTimer("CleanupCache", 10)
 
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_BATTLEGROUND", messageHandler)
-    ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", messageHandler)
+    for channel, _ in pairs(eventToChannel) do
+        ChatFrame_AddMessageEventFilter(channel, messageHandler)
+    end
 
     self.initialized = true
 end
@@ -242,25 +328,8 @@ function CORE:ProfileUpdate()
 
     self:RebuildRules()
 
-    if not self.db.enable then
-        if self.initialized then
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SAY", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_YELL", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER_INFORM", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_RAID", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_RAID_LEADER", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY_LEADER", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_GUILD", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_BATTLEGROUND", messageHandler)
-            ChatFrame_RemoveMessageEventFilter("CHAT_MSG_EMOTE", messageHandler)
-        end
-    else
-        if not self.initialized then
-            self:OnInitialize()
-        end
+    if self.db.enable then
+        self:OnInitialize()
     end
 end
 

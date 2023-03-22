@@ -607,7 +607,7 @@ L["STRING_OPTIONS_COMBAT_ALPHA_3"] = "Außerhalb eines Kampfes"
 L["STRING_OPTIONS_COMBAT_ALPHA_4"] = "Außerhalb einer Gruppe"
 L["STRING_OPTIONS_COMBAT_ALPHA_5"] = "Außerhalb einer Instanz"
 L["STRING_OPTIONS_COMBAT_ALPHA_6"] = "Innerhalb einer Instanz"
-L["STRING_OPTIONS_COMBAT_ALPHA_7"] = "Fehler beseitgen im Schlachtzug"
+L["STRING_OPTIONS_COMBAT_ALPHA_7"] = "Fehler beseitigen im Schlachtzug"
 L["STRING_OPTIONS_COMBAT_ALPHA_8"] = "auf dem Schlachtfeld"
 L["STRING_OPTIONS_COMBAT_ALPHA_9"] = "In Mythisch+"
 L["STRING_OPTIONS_COMBAT_ALPHA_DESC"] = [=[Wähle, wie ein Kampf die Fenstertransparenz beeinflussen soll.

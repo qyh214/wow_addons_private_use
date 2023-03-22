@@ -17,9 +17,12 @@ ns[4] = {
 
 ns[5] = {
     advanced = {
+        stopInInstance = false,
         includeMyself = false,
+        includeFriend = false,
+        includeGuildMember = false,
         playerInfoCacheExpiration = 7 * 24 * 60 * 60,
-        logLevel = 2,
+        logLevel = 1,
         doNotUseGUIDCache = false
     },
     playerInfoCache = {}

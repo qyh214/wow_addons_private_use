@@ -1,3 +1,12 @@
+# v1.12.4
+
+- Added log message for the internal trait tree version when changing Dragonflight Talents
+- Updated trait tree data with missing multi-choice node for Rogues
+- Fixed WoW Icon in the sidebar overlapping text when no category filters were enabled
+- Fixed a bug where trait tree cache could be update before the players specialization had completely changed causing it to become temporarily corrupted
+- Fixed new Blizzard talent trees not being tracked instantly
+- Fixed an error where changing pvp talents would require a rested area or a tome
+
 # v1.12.3
 
 - Fixed clearing blizzard talent trees incorrectly when switch specialization

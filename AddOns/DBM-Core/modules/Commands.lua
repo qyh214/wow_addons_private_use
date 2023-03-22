@@ -20,9 +20,9 @@ local function Pull(timer)
 	end
 	local targetName = (UnitExists("target") and UnitIsEnemy("player", "target")) and UnitName("target") or nil--Filter non enemies in case player isn't targetting bos but another player/pet
 	if targetName then
-		private.sendSync("PT", timer .. "\t" .. DBM:GetCurrentArea() .. "\t" .. targetName)
+		private.sendSync(private.DBMSyncProtocol, "PT", timer .. "\t" .. DBM:GetCurrentArea() .. "\t" .. targetName)
 	else
-		private.sendSync("PT", timer .. "\t" .. DBM:GetCurrentArea())
+		private.sendSync(private.DBMSyncProtocol, "PT", timer .. "\t" .. DBM:GetCurrentArea())
 	end
 end
 
@@ -35,7 +35,7 @@ local function Break(timer)
 		DBM:AddMsg(L.BREAK_USAGE)
 		return
 	end
-	private.sendSync("BT", timer * 60)
+	private.sendSync(private.DBMSyncProtocol, "BT", timer * 60)
 end
 
 local ShowLag, ShowDurability
@@ -146,6 +146,10 @@ end
 local trackedHudMarkers = {}
 SLASH_DEADLYBOSSMODS1 = "/dbm"
 SlashCmdList["DEADLYBOSSMODS"] = function(msg)
+	if not private.dbmIsEnabled then
+		DBM:ForceDisableSpam()
+		return
+	end
 	local cmd = msg:lower()
 	if cmd == "ver" or cmd == "version" then
 		DBM:ShowVersions(false)

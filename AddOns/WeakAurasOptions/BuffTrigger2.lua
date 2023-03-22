@@ -222,7 +222,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = L["Unit"],
       order = 10,
       disabled = true,
-      hidden = function() return not trigger.type == "aura2" end,
       get = function() return true end
     },
     unit = {
@@ -233,7 +232,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       values = function()
         return OptionsPrivate.Private.unit_types_bufftrigger_2
       end,
-      hidden = function() return not trigger.type == "aura2" end,
       desc = L["• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00ff00Pet|r correspond directly to those individual unitIDs.\n• |cff00ff00Specific Unit|r lets you provide a specific valid unitID to watch.\n|cffff0000Note|r: The game will not fire events for all valid unitIDs, making some untrackable by this trigger.\n• |cffffff00Party|r, |cffffff00Raid|r, |cffffff00Boss|r, |cffffff00Arena|r, and |cffffff00Nameplate|r can match multiple corresponding unitIDs.\n• |cffffff00Smart Group|r adjusts to your current group type, matching just the \"player\" when solo, \"party\" units (including \"player\") in a party or \"raid\" units in a raid.\n• |cffffff00Multi-target|r attempts to use the Combat Log events, rather than unitID, to track affected units.\n|cffff0000Note|r: Without a direct relationship to actual unitIDs, results may vary.\n\n|cffffff00*|r Yellow Unit settings can match multiple units and will default to being active even while no affected units are found without a Unit Count or Match Count setting."],
     },
     useSpecificUnit = {
@@ -262,13 +260,21 @@ local function GetBuffTriggerOptions(data, triggernum)
       order = 10.4,
       hidden = function() return not (trigger.type == "aura2" and trigger.unit == "member" and WeakAuras.UntrackableUnit(trigger.specificUnit)) end
     },
+    warnSoftTarget = {
+      type = "description",
+      width = WeakAuras.doubleWidth,
+      name = function()
+        return L["|cFFFF0000Note:|r The unit '%s' requires soft target cvars to be enabled."]:format(trigger.unit or "")
+      end,
+      order = 10.4,
+      hidden = function() return not WeakAuras.IsUntrackableSoftTarget(trigger.unit) end
+    },
     useDebuffType = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Aura Type"],
       order = 11,
       disabled = true,
-      hidden = function() return not trigger.type == "aura2" end,
       get = function() return true end
     },
     debuffType = {
@@ -277,7 +283,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = L["Aura Type"],
       order = 11.1,
       values = OptionsPrivate.Private.debuff_types,
-      hidden = function() return not trigger.type == "aura2" end
     },
     spell_filters_header = {
       type = "header",
@@ -320,7 +325,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = L["Name(s)"],
       order = 12,
       width = WeakAuras.normalWidth - 0.2,
-      hidden = function() return not trigger.type == "aura2" end
     },
     useNameSpace = {
       type = "description",
@@ -334,7 +338,6 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = L["Exact Spell ID(s)"],
       width = WeakAuras.normalWidth - 0.2,
       order = 22,
-      hidden = function() return not trigger.type == "aura2" end
     },
     useExactSpellIdSpace = {
       type = "description",
@@ -602,9 +605,9 @@ local function GetBuffTriggerOptions(data, triggernum)
       end,
       desc = function()
         local value = trigger.ownOnly
-        if value == nil then return L["Only match auras cast by the player or his pet"]
-        elseif value == false then return L["Only match auras cast by people other than the player or his pet"]
-        else return L["Only match auras cast by the player or his pet"] end
+        if value == nil then return L["Only match auras cast by the player or their pet"]
+        elseif value == false then return L["Only match auras cast by people other than the player or their pet"]
+        else return L["Only match auras cast by the player or their pet"] end
       end,
       get = function()
         local value = trigger.ownOnly
@@ -724,7 +727,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       width = WeakAuras.doubleWidth,
       hidden = function()
         return not (trigger.type == "aura2" and trigger.unit ~= "multi")
-               or WeakAuras.IsClassicOrBCCOrWrath()
+               or WeakAuras.IsClassicEraOrWrath()
       end
     },
     fetchRaidMark = {
@@ -810,7 +813,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       order = 67.1,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party"))
-        or WeakAuras.IsClassicOrBCC()
+        or WeakAuras.IsClassicEra()
       end
     },
     group_role = {
@@ -820,7 +823,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       values = OptionsPrivate.Private.role_types,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and trigger.useGroupRole)
-        or WeakAuras.IsClassicOrBCC()
+        or WeakAuras.IsClassicEra()
       end,
       order = 67.2
     },
@@ -831,7 +834,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       width = WeakAuras.normalWidth,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and not trigger.useGroupRole)
-        or WeakAuras.IsClassicOrBCC()
+        or WeakAuras.IsClassicEra()
       end
     },
     useRaidRole = {

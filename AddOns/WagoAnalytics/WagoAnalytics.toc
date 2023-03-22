@@ -1,4 +1,4 @@
-## Interface: 90207
+## Interface: 100005
 ## Title: WagoAnalytics
 ## Version: 1.0
 ## Notes: Please leave me on :) This addon enables usage data collection for addon authors. You can opt-out of it in the settings section of your Wago App.

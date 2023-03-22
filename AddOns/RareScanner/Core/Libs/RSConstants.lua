@@ -24,15 +24,15 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 84
-RSConstants.CURRENT_LOOT_DB_VERSION = 95
+RSConstants.CURRENT_DB_VERSION = 88
+RSConstants.CURRENT_LOOT_DB_VERSION = 99
 
 ---============================================================================
 -- Current maps (newer)
 ---============================================================================
 
 RSConstants.CURRENT_MAP_ID = 1978 --Dragon Isles
-RSConstants.CURRENT_SUBMAP_ID = 2022 --The Waking Shores
+RSConstants.CURRENT_SUBMAP_ID = 2151 --The Forbidden Reach
 
 ---============================================================================
 -- Default filtered entities by version
@@ -59,6 +59,7 @@ RSConstants.EVENTS = {
 
 RSConstants.CHECK_RESET_RECENTLY_SEEN_TMER = 5 --5 seconds
 RSConstants.RECENTLY_SEEN_RESET_TIMER = 120 --2 minutes
+RSConstants.RECENTLY_SEEN_PING_ANIMATION_TIMER = 5 --5 seconds
 RSConstants.CACHE_ALL_COMPLETED_QUEST_IDS_TIMER = 60 --1 minute
 RSConstants.FIND_HIDDEN_QUESTS_TIMER = 5 --5 seconds after killing a NPC or opening a container
 RSConstants.CHECK_RESPAWN_BY_QUEST_TIMER = 150 --2.5 minutes
@@ -91,6 +92,14 @@ RSConstants.ENTITY_FILTER_WORLDMAP = 2
 RSConstants.ENTITY_FILTER_ALERTS = 3
 
 ---============================================================================
+-- Events when adding animations to the world map
+---============================================================================
+
+RSConstants.MAP_ANIMATIONS_ON_FOUND = 1
+RSConstants.MAP_ANIMATIONS_ON_CLICK = 2
+RSConstants.MAP_ANIMATIONS_ON_BOTH = 3
+
+---============================================================================
 -- Addons default settings
 ---============================================================================
 
@@ -105,6 +114,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanInstances = false,
 			scanOnTaxi = true,
 			scanOnPetBattle = true,
+			scanOnRacingQuest = true,
 			scanWorldmapVignette = true,
 			ignoreCompletedEntities = true,
 			filteredRares = {},
@@ -168,11 +178,12 @@ RSConstants.PROFILE_DEFAULTS = {
 			searchingDrakewatcher = true,
 			showFiltered = true,
 			showDead = true,
-			showWithoutCollectibles = false
+			showWithoutCollectibles = false,
+			lockingMap = false
 		},
 		map = {
 			displayNpcIcons = true,
-			displayHuntingPartyRaresNpcIcons = true,
+			displayHuntingPartyRaresNpcIcons = false,
 			displayPrimalStormRaresNpcIcons = true,
 			displayContainerIcons = true,
 			displayNotTrackeableContainerIcons = true,
@@ -216,6 +227,13 @@ RSConstants.PROFILE_DEFAULTS = {
 			overlayColour8 = { 0.18, 1, 0.42 },
 			overlayColour9 = { 1, 0.04, 0.4 },
 			overlayColour10 = { 0.4, 0.007, 1 },
+			animationNpcs = true,
+			animationNpcsType = RSConstants.MAP_ANIMATIONS_ON_BOTH,
+			animationContainers = true,
+			animationContainersType = RSConstants.MAP_ANIMATIONS_ON_CLICK,
+			animationEvents = true,
+			animationEventsType = RSConstants.MAP_ANIMATIONS_ON_CLICK,
+			animationVignettes = true
 		},
 		loot = {
 			filteredLootCategories = {},
@@ -280,6 +298,7 @@ RSConstants.CMD_TOGGLE_SCANNING_WORLD_MAP_VIGNETTES = "swmv"
 RSConstants.CMD_TOMTOM_WAYPOINT = "waypoint"
 RSConstants.CMD_TOGGLE_DRAGON_GLYPHS = "tdg"
 RSConstants.CMD_OPEN_EXPLORER = "explorer"
+RSConstants.CMD_RECENTLY_SEEN = "rseen"
 
 ---============================================================================
 -- AtlasNames
@@ -295,10 +314,17 @@ RSConstants.NPC_TORMENTORS_VIGNETTE = "Tormentors-Boss"
 RSConstants.CONTAINER_VIGNETTE = "VignetteLoot"
 RSConstants.CONTAINER_ELITE_VIGNETTE = "VignetteLootElite"
 RSConstants.CONTAINER_LOCKED_VIGNETTE = "vignetteloot-locked"
+RSConstants.CONTAINER_ELITE_LOCKED_VIGNETTE = "vignettelootelite-locked"
 
 RSConstants.EVENT_VIGNETTE = "VignetteEvent"
 RSConstants.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
 RSConstants.EVENT_TORMENTORS_VIGNETTE = "Tormentors-Event"
+
+---============================================================================
+-- SpellIDs
+---============================================================================
+
+RSConstants.RACING_SPELL_ID = 369968
 
 ---============================================================================
 -- MapIDS
@@ -365,9 +391,9 @@ RSConstants.CACHES_SWAGSNOUT_GROMIT = { 369292, 369294, 369310, 369297, 369295, 
 RSConstants.STOLEN_ANIMA_VESSEL = { 368946, 368947, 368948, 368949, 368950, 368951, 368952, 368953 }
 RSConstants.STOLEN_ANIMA_VESSEL_RIFT = { 369227, 369235, 369236 }
 RSConstants.DISTURBED_DIRT = { 382029, 376386, 383733, 383734, 383735 }
-RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228, 194761 }
+RSConstants.HUNTING_PARTY_NPCS = { 195093, 194760, 194251, 191103, 194409, 194601, 191450, 194438, 194458, 195417, 195101, 195283, 195300, 195430, 195132, 193853, 193896, 193311, 193330, 193228, 194761, 193722, 187614, 190161, 190523, 190601, 190625, 190634, 190641, 190751, 190752, 190756, 190757, 190907, 190968, 191103, 193311, 193330, 193341, 193704, 193724, 193885, 194225, 194240, 194608, 194624, 194761, 194763, 195286, 195431, 196244, 196246, 196250, 196324, 196326, 196334, 196350, 196535, 197409, 197501 }
 RSConstants.OMINOUS_CONCHS_NPCS = { 193735, 193634, 193710, 197371, 193708, 193706 } --197411
-RSConstants.CONTAINERS_WITHOUT_VIGNETTE = { 376582, 376583, 376585, 376579, 376584, 377587, 378010, 376580 }
+RSConstants.CONTAINERS_WITHOUT_VIGNETTE = { 376582, 376583, 376585, 376579, 376584, 377587, 378010, 376580, 386165, 386166, 386167, 386212, 386214, 386174, 386179, 386168, 386208, 386213, 386172 }
 RSConstants.MAGIC_BOUND_CHEST = { 376426, 385075, 385074 }
 RSConstants.CONTAINER_WITH_NPC_VIGNETTE = { 192243 }
 
@@ -494,7 +520,7 @@ RSConstants.ITEMS_REQUIRE_KYRIAN = { 186483 }
 -- Achievements
 ---============================================================================
 
-RSConstants.TALES_OF_EXILE_ACHIEVEMENT_ID = 15509;
+RSConstants.TALES_OF_EXILE_ACHIEVEMENT_ID = 15509
 
 ---============================================================================
 -- Garrison cache
@@ -714,5 +740,5 @@ function RSConstants.IsNpcAtlas(atlasName)
 end
 
 function RSConstants.IsContainerAtlas(atlasName)
-	return atlasName == RSConstants.CONTAINER_VIGNETTE or atlasName == RSConstants.CONTAINER_ELITE_VIGNETTE or atlasName == RSConstants.CONTAINER_LOCKED_VIGNETTE
+	return atlasName == RSConstants.CONTAINER_VIGNETTE or atlasName == RSConstants.CONTAINER_ELITE_VIGNETTE or atlasName == RSConstants.CONTAINER_LOCKED_VIGNETTE or atlasName == RSConstants.CONTAINER_ELITE_LOCKED_VIGNETTE
 end

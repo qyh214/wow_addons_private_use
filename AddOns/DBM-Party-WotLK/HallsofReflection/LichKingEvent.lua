@@ -1,12 +1,12 @@
 local mod = DBM:NewMod(603, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision("20221013055548")
+mod:SetRevision("20230311193122")
 --mod:SetEncounterID(1990)--TODO, why was this unreliable?
 
 mod:RegisterEvents(
 	"SPELL_AURA_REMOVED 69708",
-	"UNIT_SPELLCAST_SUCCEEDED boss1"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"--Might fail in classic, hard to say.
 )
 
 local WarnWave		= mod:NewAnnounce("WarnWave", 2)

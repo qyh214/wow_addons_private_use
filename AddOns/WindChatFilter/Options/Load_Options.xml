@@ -4,5 +4,5 @@
 	<Script file='Rules.lua'/>
 	<Script file='Information.lua'/>
 	<Script file='BlackList.lua'/>
-
+	<Script file='GroupInviteGuard.lua'/>
 </Ui>

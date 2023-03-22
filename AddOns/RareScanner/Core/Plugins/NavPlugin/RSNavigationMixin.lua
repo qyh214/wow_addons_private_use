@@ -60,10 +60,19 @@ function RSNavigationMixin:EnablePreviousButton()
 	return false
 end
 
-function RSNavigationMixin:AddNext(vignetteInfo)
+function RSNavigationMixin:AddNext(mapID, x, y, name, atlasName, objectGUID)
 	-- Skip if already in the pool in the last position
 	local lastVignetteInfo = navigationCache[#navigationCache]
-	if (not lastVignetteInfo or lastVignetteInfo.objectGUID ~= vignetteInfo.objectGUID) then
+	
+	local vignetteInfo = {}
+	vignetteInfo.mapID = mapID
+	vignetteInfo.x = x
+	vignetteInfo.y = y
+	vignetteInfo.name = name
+	vignetteInfo.atlasName = atlasName
+	vignetteInfo.objectGUID = objectGUID
+	
+	if (not lastVignetteInfo or lastVignetteInfo.objectGUID ~= objectGUID) then
 		table.insert(navigationCache, vignetteInfo)
 	end
 	

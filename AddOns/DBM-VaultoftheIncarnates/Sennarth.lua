@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2482, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230130211834")
+mod:SetRevision("20230308071952")
 mod:SetCreatureID(187967)
 mod:SetEncounterID(2592)
 mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20230122000000)
-mod:SetMinSyncRevision(20230122000000)
+mod:SetHotfixNoticeRev(20230216000000)
+mod:SetMinSyncRevision(20230216000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -43,7 +43,7 @@ local warnChillingBlast							= mod:NewTargetAnnounce(371976, 2)
 local warnEnvelopingWebs						= mod:NewTargetNoFilterAnnounce(372082, 3)
 local warnWrappedInWebs							= mod:NewTargetNoFilterAnnounce(372044, 4)
 local warnCallSpiderlings						= mod:NewCountAnnounce(372238, 2)
-local warnFrostbreathArachnid						= mod:NewSpellAnnounce("ej24899", 2)
+local warnFrostbreathArachnid					= mod:NewSpellAnnounce("ej24899", 2)
 
 local specWarnChillingBlast						= mod:NewSpecialWarningMoveAway(371976, nil, nil, nil, 1, 2)
 local yellChillingBlast							= mod:NewYell(371976)
@@ -54,18 +54,19 @@ local yellEnvelopingWebsFades					= mod:NewIconFadesYell(372082)
 local specWarnStickyWebbing						= mod:NewSpecialWarningStack(372030, nil, 3, nil, nil, 1, 6)
 local specWarnGossamerBurst						= mod:NewSpecialWarningSpell(373405, nil, nil, nil, 2, 12)
 local specWarnWebBlast							= mod:NewSpecialWarningTaunt(385083, nil, nil, nil, 1, 2)
-local specWarnFreezingBreath						= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2)
+local specWarnFreezingBreath					= mod:NewSpecialWarningDodge(374112, nil, nil, nil, 1, 2)
 
 local timerChillingBlastCD						= mod:NewCDCountTimer(18.5, 371976, nil, nil, nil, 3)--18.5-54.5
 local timerEnvelopingWebsCD						= mod:NewCDCountTimer(24, 372082, nil, nil, nil, 3)--24-46.9
 local timerGossamerBurstCD						= mod:NewCDCountTimer(36.9, 373405, nil, nil, nil, 2)--36.9-67.6
 local timerCallSpiderlingsCD					= mod:NewCDCountTimer(25.1, 372238, nil, nil, nil, 1)--17.6-37
 local timerFrostbreathArachnidCD				= mod:NewCDCountTimer(98.9, "ej24899", nil, nil, nil, 1)
-local timerFreezingBreathCD							= mod:NewCDTimer(11.1, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerFreezingBreathCD						= mod:NewCDTimer(11.1, 374112, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerPhaseCD								= mod:NewPhaseTimer(30)
 
 --mod:AddRangeFrameOption("8")
 mod:AddInfoFrameOption(372030, false)--Useful raid leader tool, but not needed by everyone
+mod:GroupSpells(372082, 372030, 372044)--Wrapped in webs and sticking webbing with enveloping Webs
 
 --Stage Two: Cold Peak
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(24885))
@@ -114,13 +115,13 @@ local allTimers = {
 	["heroic"] = {
 		[1] = {
 			--Chilling Blast
-			[371976] = {15.5, 37.6, 37.4, 29.1, 37.2, 37.5, 21.9, 36.5, 37.3},--likely 36 sec cd that resets on encounter events
+			[371976] = {15.5, 37.6, 37.4, 26.7, 37.2, 36.4, 21.9, 36.5, 37.3},--likely 36 sec cd that resets on encounter events
 			--Enveloping Webs
-			[372082] = {18.1, 26.7, 30.5, 44.8, 26.7, 30.4, 38.9, 26.4, 30.4},--likely 26sec cd that rests on encounter events
+			[372082] = {18.1, 26.7, 30.5, 43.8, 24.3, 26.6, 38.9, 26.4, 30.4},--likely 26sec cd that rests on encounter events
 			--Gossamer Burst
 			[373405] = {31.4, 37.7, 64.3, 36.5, 59.6, 37.6},--likely 36 sec cd that resets on encounter events
 			--Call Spiderlings
-			[372238] = {0, 25.5, 25.5, 26.7, 38.8, 25.5, 25.5, 25.5, 20.7, 26.7, 26.7},--likely 25 sec cd that resets on encounter events
+			[372238] = {0, 25.5, 25.5, 26.7, 38.8, 25.5, 25.5, 25.5, 19.4, 26.7, 26.7},--likely 25 sec cd that resets on encounter events
 		},
 		--[2] = {
 		--	--Chilling Blast
@@ -228,7 +229,7 @@ function mod:SPELL_CAST_START(args)
 		if self.vb.phase == 2 then
 			timerChillingBlastCD:Start(32, self.vb.blastCount+1)
 		else
-			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.blastCount+1)
+			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.blastCount+1)
 			if timer then
 				timerChillingBlastCD:Start(timer, self.vb.blastCount+1)
 			end
@@ -236,7 +237,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 372082 then
 		self.vb.webIcon = 1
 		self.vb.webCount = self.vb.webCount + 1
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.webCount+1)
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.webCount+1)
 		if timer then
 			timerEnvelopingWebsCD:Start(timer, self.vb.webCount+1)
 		end
@@ -244,7 +245,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.burstCount = self.vb.burstCount + 1
 		specWarnGossamerBurst:Show(self.vb.burstCount)
 		specWarnGossamerBurst:Play("pullin")
-		local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.burstCount+1)
+		local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.burstCount+1)
 		if timer then
 			timerGossamerBurstCD:Start(timer, self.vb.burstCount+1)
 		end
@@ -287,7 +288,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			--Mythic sequenced, 44, 30, 35?
 			timerCallSpiderlingsCD:Start(self:IsNormal() and 25 or 30, self.vb.spiderlingsCount+1)
 		else
-			local timer = self:GetFromTimersTable(allTimers, difficultyName, self.vb.phase, spellId, self.vb.spiderlingsCount+1)
+			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.spiderlingsCount+1)
 			if timer then
 				timerCallSpiderlingsCD:Start(timer, self.vb.spiderlingsCount+1)
 			end

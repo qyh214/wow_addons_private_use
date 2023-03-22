@@ -1,4 +1,4 @@
-## Interface: 100005
+## Interface: 100007
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Cataclysm)|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Groupe-Cataclysm|r
@@ -44,7 +44,7 @@
 ## X-DBM-Mod-MinExpansion: 3
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
-## Version: r62
+## Version: r74
 
 localization.en.lua
 localization.de.lua
@@ -60,6 +60,7 @@ BlackrockCaverns\Corla.lua
 BlackrockCaverns\KarshSteelBender.lua
 BlackrockCaverns\Beauty.lua
 BlackrockCaverns\AscendantLordObsidius.lua
+BlackrockCaverns\BlackrockCavernsTrash.lua
 Deadmines\Glubtok.lua
 Deadmines\Helix.lua
 Deadmines\FoeReaper.lua
@@ -90,6 +91,7 @@ ShadowFangKeep\Godfrey.lua
 TheVortexPinnacle\GrandVizierErtan.lua
 TheVortexPinnacle\Altairus.lua
 TheVortexPinnacle\Asaad.lua
+TheVortexPinnacle\VortexPinnacleTrash.lua
 TheStonecore\Corborus.lua
 TheStonecore\Slabhide.lua
 TheStonecore\Ozruk.lua

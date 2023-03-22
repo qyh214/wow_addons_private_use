@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "zhTW" then
+if (GAME_LOCALE or GetLocale()) ~= "zhTW" then
   return
 end
 
@@ -75,6 +75,7 @@ local L = WeakAuras.L
 	L["|cFFFF0000default|r texture"] = "|cFFFF0000預設|r材質"
 	L["|cFFFF0000desaturated|r "] = "|cFFFF0000去色|r "
 	L["|cFFFF0000Note:|r The unit '%s' is not a trackable unit."] = "|cFFFF0000注意:|r 單位 '%s' 不是可以監控的單位。"
+	L["|cFFFF0000Note:|r The unit '%s' requires soft target cvars to be enabled."] = "|cFFFF0000注意：|r單位 '%s'  需要啟用軟目標cvar參數。"
 	L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r"] = "|cFFffcc00對齊:|r |cFFFF0000%s|r對齊到框架的|cFFFF0000%s|r"
 	L["|cFFffcc00Anchors:|r Anchored |cFFFF0000%s|r to frame's |cFFFF0000%s|r with offset |cFFFF0000%s/%s|r"] = "|cFFffcc00對齊:|r |cFFFF0000%s|r對齊到框架的|cFFFF0000%s|r，偏移|cFFFF0000%s/%s|r"
 	L["|cFFffcc00Anchors:|r Anchored to frame's |cFFFF0000%s|r"] = "|cFFffcc00對齊:|r 對齊到框架的|cFFFF0000%s|r"
@@ -237,6 +238,7 @@ Off Screen]=] ] = [=[提醒效果
 	L["Column Height"] = "行高度"
 	L["Column Space"] = "行間距"
 	L["Columns"] = "行"
+	L["COMBAT_LOG_EVENT_UNFILTERED with no filter can trigger frame drops in raid environment."] = "COMBAT_LOG_EVENT_UNFILTERED 沒有過濾器可以觸發，在團隊環境中偵數降低。"
 	L["Combinations"] = "組合"
 	L["Combine Matches Per Unit"] = "合併每個單位符合的"
 	L["Common Text"] = "普通文字"
@@ -297,6 +299,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Debug Log:"] = "偵錯紀錄："
 	L["Default"] = "預設"
 	L["Default Color"] = "減益顏色"
+	L["Delay"] = "延遲"
 	L["Delete"] = "刪除"
 	L["Delete all"] = "全部刪除"
 	L["Delete children and group"] = "刪除子項目和群組"
@@ -366,6 +369,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Event Type"] = "事件類型"
 	L["Event(s)"] = "事件"
 	L["Everything"] = "全部"
+	L["Exact Item Match"] = "精確物品匹配"
 	L["Exact Spell ID(s)"] = "正確的法術 ID"
 	L["Exact Spell Match"] = "完全符合法術"
 	L["Expand"] = "展開"
@@ -527,6 +531,7 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Indent Size"] = "內縮大小"
 	L["Information"] = "資訊"
 	L["Inner"] = "內部"
+	L["Invalid Item ID"] = "無效的物品ID"
 	L["Invalid Item Name/ID/Link"] = "無效的物品名稱/ID/連結"
 	L["Invalid Spell ID"] = "無效的法術 ID"
 	L["Invalid Spell Name/ID/Link"] = "無效的法術名稱/ID/連結"
@@ -612,6 +617,16 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "注意: 副本外面無法在 '說' 和 '大喊' 頻道自動發送訊息，會被阻擋。"
 	L["Npc ID"] = "NPC ID"
 	L["Number of Entries"] = "項目數量"
+	L[ [=[Occurence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = "事件的發生，當光環被卸載時重置，可以是一系列值可以有多個值，用逗號或空格分隔，範例：第 2、5 和 6 個事件：2、5、6 第2至第6：每2個事件 2-6：/2 從第2開始每 3 事件：2/3 從第2開始到第 11結束的每3事件：2-11/3"
 	L["Offer a guided way to create auras for your character"] = "用步驟導引的方式替角色建立提醒效果"
 	L["Offset by |cFFFF0000%s|r/|cFFFF0000%s|r"] = "偏移 |cFFFF0000%s|r/|cFFFF0000%s|r"
 	L["Offset by 1px"] = "偏移 1px"
@@ -620,8 +635,8 @@ Can use \ to escape -.]=] ] = "過濾器格式：'名字'，'名字-伺服器'�
 	L["On Init"] = "初始化時"
 	L["On Show"] = "出現時"
 	L["Only Match auras cast by a player (not an npc)"] = "只符合玩家 (非 NPC) 施放的光環"
-	L["Only match auras cast by people other than the player or his pet"] = "只符合其他玩家施放的光環"
-	L["Only match auras cast by the player or his pet"] = "只符合玩家自己或寵物施放的光環"
+	L["Only match auras cast by people other than the player or their pet"] = "只匹配玩家或他們的寵物以外的人施放的光環"
+	L["Only match auras cast by the player or their pet"] = "只匹配玩家或其寵物施放的光環"
 	L["Operator"] = "運算符"
 	L["Option %i"] = "選項 %i"
 	L["Option key"] = "選項 key"

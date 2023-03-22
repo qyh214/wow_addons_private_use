@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 local options = W.options.skins.args
 local LSM = E.Libs.LSM
 local S = W.Modules.Skins
@@ -1118,6 +1118,13 @@ options.addons = {
             name = L["Angry Keystones"],
             addonName = "AngryKeystones"
         },
+        auctionator = {
+            order = 10,
+            type = "toggle",
+            name = L["Auctionator"],
+            addonName = "Auctionator",
+            addonskinsKey = "Auctionator"
+        },
         bigWigs = {
             order = 10,
             type = "toggle",
@@ -1187,6 +1194,13 @@ options.addons = {
             end,
             addonName = "OmniCD"
         },
+        postal = {
+            order = 10,
+            type = "toggle",
+            name = L["Postal"],
+            addonName = "Postal",
+            addonskinsKey = "Postal"
+        },
         premadeGroupsFilter = {
             order = 10,
             type = "toggle",
@@ -1211,7 +1225,7 @@ options.addons = {
             order = 10,
             type = "toggle",
             name = L["Simple Addon Manager"],
-            addonName = "SimpleAddonManager",
+            addonName = "SimpleAddonManager"
         },
         simulationcraft = {
             order = 10,

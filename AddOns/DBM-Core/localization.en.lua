@@ -186,7 +186,8 @@ L.BIG_WIGS								= "BigWigs"
 L.UPDATEREMINDER_HEADER					= "Your version of " .. L.DEADLY_BOSS_MODS.. " is out-of-date.\n Version %s (%s) is available for download through Curse, Wago, WoWI, or from GitHub Releases page"
 L.UPDATEREMINDER_FOOTER					= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 L.UPDATEREMINDER_FOOTER_GENERIC			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
-L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being too out of date, it has been force disabled and cannot be used until updated. This is to ensure outdated or incompatible mods do not cause poor play experience for yourself or fellow group members."
+L.UPDATEREMINDER_DISABLE				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and incompatible with newer versions of DBM, it has been force disabled and cannot be used until updated. This is to ensure incompatible mods do not cause poor play experience for yourself or fellow group members."
+L.UPDATEREMINDER_DISABLETEST			= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date and this being a test/beta realm, it has been force disabled and cannot be used until updated. This is to ensure out of date mods aren't being used to generate test feedback"
 L.UPDATEREMINDER_HOTFIX					= L.DBM .. " version you are on has known issues during this boss encounter that are corrected if you update to latest release"
 L.UPDATEREMINDER_HOTFIX_ALPHA			= L.DBM .. " version you are on has known issues during this boss encounter that are corrected in an upcoming release (or latest alpha version)"
 L.UPDATEREMINDER_MAJORPATCH				= "WARNING: Due to your " .. L.DEADLY_BOSS_MODS.. " being out of date, " .. L.DBM .. " has been disabled until updated, since this is a major game patch. This is to ensure old and incompatible code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from Curse, Wago, WoWI, or from GitHub Releases page as soon as possible."
@@ -382,6 +383,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	soakcount							= "%s - soak %%s",
 	jump								= "%s - jump",
 	run									= "%s - run away",
+	runcount							= "%s - run away (%%s)",
 	cast								= "%s - stop casting",
 	lookaway							= "%s on %%s - look away",
 	reflect								= "%s on >%%s< - stop attacking",
@@ -431,6 +433,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	soakcount							= "Show special announce (with count) to soak for $spell:%s",
 	jump								= "Show special announce to move to jump for $spell:%s",
 	run 								= "Show special announce to run away from $spell:%s",
+	runcount							= "Show special announce (with count) to run away from $spell:%s",
 	cast 								= "Show special announce to stop casting for $spell:%s",--Spell Interrupt
 	lookaway							= "Show special announce to look away for $spell:%s",
 	reflect 							= "Show special announce to stop attacking $spell:%s",--Spell Reflect
@@ -599,6 +602,8 @@ L.DUR_CHECKING							= "Checking raid Durability... "
 L.DUR_HEADER							= L.DEADLY_BOSS_MODS.. " - Durability Results"
 L.DUR_ENTRY								= "%s: Durability [%d percent] / Gear broken [%s]"
 L.LAG_FOOTER							= "No Response: %s"
+
+L.OVERRIDE_ACTIVATED					= "Configuration overrides have been activated for this encounter by RL"
 
 --LDB
 L.LDB_TOOLTIP_HELP1						= "Click to open " .. L.DBM

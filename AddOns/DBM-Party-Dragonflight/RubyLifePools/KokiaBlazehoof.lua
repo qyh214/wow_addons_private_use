@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2485, "DBM-Party-Dragonflight", 7, 1202)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230108015722")
+mod:SetRevision("20230226035537")
 mod:SetCreatureID(189232)
 mod:SetEncounterID(2609)
 --mod:SetUsedIcons(1, 2, 3)
@@ -32,13 +32,13 @@ mod:RegisterEventsInCombat(
 local warnBurnout								= mod:NewCastAnnounce(373087, 4)
 local warnInferno								= mod:NewCastAnnounce(384823, 3)
 local warnBaitBoulder							= mod:NewBaitAnnounce(372107, 3, nil, nil, nil, nil, 8)
-local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, nil, nil, nil, 8)
+local warnBaitAdd								= mod:NewBaitAnnounce(372863, 3, nil, false, 2, nil, 8)
 
 local specWarnSearingBlows						= mod:NewSpecialWarningDefensive(372858, nil, nil, nil, 1, 2)
 local specWarnMoltenBoulder						= mod:NewSpecialWarningDodge(372107, nil, nil, nil, 1, 2)
 local yellMoltenBoulder							= mod:NewYell(372107)
 local specWarnRitualofBlazebinding				= mod:NewSpecialWarningSwitch(372863, nil, nil, nil, 1, 2)
-local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, nil, 1, 2)
+local specWarnRoaringBlaze						= mod:NewSpecialWarningInterruptCount(373017, "HasInterrupt", nil, 2, 1, 2)
 local specWarnBurnout							= mod:NewSpecialWarningRun(373087, "Melee", nil, nil, 4, 2)
 local specWarnGTFO								= mod:NewSpecialWarningGTFO(372820, nil, nil, nil, 1, 8)
 
@@ -91,27 +91,25 @@ function mod:SPELL_CAST_START(args)
 		specWarnRitualofBlazebinding:Play("killmob")
 		timerRitualofBlazebindingCD:Start()
 		warnBaitAdd:ScheduleVoice(29.2, "bait")--3.5 seconds before
-	elseif spellId == 373017 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+	elseif spellId == 373017 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
 		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
-		if self:CheckInterruptFilter(args.sourceGUID, false, false) then--Count interrupt, so cooldown is not checked
-			specWarnRoaringBlaze:Show(args.sourceName, count)
-			if count == 1 then
-				specWarnRoaringBlaze:Play("kick1r")
-			elseif count == 2 then
-				specWarnRoaringBlaze:Play("kick2r")
-			elseif count == 3 then
-				specWarnRoaringBlaze:Play("kick3r")
-			elseif count == 4 then
-				specWarnRoaringBlaze:Play("kick4r")
-			elseif count == 5 then
-				specWarnRoaringBlaze:Play("kick5r")
-			else
-				specWarnRoaringBlaze:Play("kickcast")
-			end
+		specWarnRoaringBlaze:Show(args.sourceName, count)
+		if count == 1 then
+			specWarnRoaringBlaze:Play("kick1r")
+		elseif count == 2 then
+			specWarnRoaringBlaze:Play("kick2r")
+		elseif count == 3 then
+			specWarnRoaringBlaze:Play("kick3r")
+		elseif count == 4 then
+			specWarnRoaringBlaze:Play("kick4r")
+		elseif count == 5 then
+			specWarnRoaringBlaze:Play("kick5r")
+		else
+			specWarnRoaringBlaze:Play("kickcast")
 		end
 	elseif spellId == 373087 then
 		if self.Options.SpecWarn373087run then

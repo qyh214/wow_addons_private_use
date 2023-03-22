@@ -22,7 +22,7 @@ function RSTomtom.AddWorldMapTomtomWaypoint(mapID, x, y, name)
 	if (TomTom and RSConfigDB.IsAddingWorldMapTomtomWaypoints() and mapID and x and y and name) then
 		RSTomtom.RemoveCurrentTomtomWaypoint()
 				
-		tomtom_waypoint = TomTom:AddWaypoint(mapID, RSUtils.FixCoord(x), RSUtils.FixCoord(y), {
+		tomtom_waypoint = TomTom:AddWaypoint(tonumber(mapID), RSUtils.FixCoord(x), RSUtils.FixCoord(y), {
 			title = name,
 			persistent = false,
 			minimap = false,
@@ -32,20 +32,17 @@ function RSTomtom.AddWorldMapTomtomWaypoint(mapID, x, y, name)
 	end
 end
 
-function RSTomtom.AddTomtomWaypoint(npcID, name)
-	if (TomTom and RSConfigDB.IsTomtomSupportEnabled() and npcID and name) then
+function RSTomtom.AddTomtomWaypoint(mapID, x, y, name)
+	if (TomTom and RSConfigDB.IsTomtomSupportEnabled() and mapID and x and y and name) then
 		RSTomtom.RemoveCurrentTomtomWaypoint()
 		
-		local npcInfo = RSGeneralDB.GetAlreadyFoundEntity(npcID)
-		if (npcInfo and npcInfo.coordX and npcInfo.coordY) then
-			tomtom_waypoint = TomTom:AddWaypoint(npcInfo.mapID, RSUtils.FixCoord(npcInfo.coordX), RSUtils.FixCoord(npcInfo.coordY), {
-				title = name,
-				persistent = false,
-				minimap = false,
-				world = false,
-				cleardistance = 25
-			})
-		end
+		tomtom_waypoint = TomTom:AddWaypoint(tonumber(mapID), RSUtils.FixCoord(x), RSUtils.FixCoord(y), {
+			title = name,
+			persistent = false,
+			minimap = false,
+			world = false,
+			cleardistance = 25
+		})
 	end
 end
 
@@ -55,16 +52,8 @@ function RSTomtom.AddTomtomWaypointFromVignette(vignetteInfo, manuallyFired)
 		return
 	end
 
-	-- Extract info from vignnette
-	local _, _, _, _, _, npcID, _ = strsplit("-", vignetteInfo.objectGUID);
-	if (npcID) then
-		npcID = tonumber(npcID)
-	else
-		return
-	end
-
 	-- Adds the waypoint
-	RSTomtom.AddTomtomWaypoint(npcID, vignetteInfo.name)
+	RSTomtom.AddTomtomWaypoint(vignetteInfo.mapID, vignetteInfo.x, vignetteInfo.y, vignetteInfo.name)
 end
 
 function RSTomtom.RemoveCurrentTomtomWaypoint()

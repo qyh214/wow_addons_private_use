@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "deDE" then
+if (GAME_LOCALE or GetLocale()) ~= "deDE" then
   return
 end
 
@@ -92,6 +92,10 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
 	L["Keeps existing triggers intact"] = "Verändert existierende Auslöser nicht"
+	--[[Translation missing --]]
+	L["Max 3"] = "Max 3"
+	--[[Translation missing --]]
+	L["Max 4"] = "Max 4"
 	L["Next"] = "Nächste"
 	--[[Translation missing --]]
 	L["Only show the aura if the target has the debuff."] = "Only show the aura if the target has the debuff."

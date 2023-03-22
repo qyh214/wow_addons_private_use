@@ -8,11 +8,12 @@ L.TranslationBy 			= "Elnarfim"
 L.Website					= "디스코드 채널 |cFF73C2FBhttps://discord.gg/deadlybossmods|r를 방문해 보세요. 트위터 팔로우 @deadlybossmods 또는 @MysticalOS"
 L.WebsiteButton				= "웹사이트"
 
-L.OTabBosses	= "보스"--Deprecated and will be deleted once tabs no longer use this
-L.OTabRaids		= "레이드"--Raids & PVP
-L.OTabDungeons	= "파티/1인"--1-5 person content (Dungeons, MoP Scenarios, World Events, Brawlers, Proving Grounds, Visions, Torghast, etc)
-L.OTabPlugins	= "핵심 플러그인"
-L.OTabAbout		= "소개"
+L.OTabBosses					= "보스 설정"--Deprecated and will be deleted once tabs no longer use this
+L.OTabRaids						= "공격대"--Raids & PVP
+L.OTabDungeons						= "파티/1인"--1-5 person content (Dungeons, MoP Scenarios, World Events, Brawlers, Proving Grounds, Visions, Torghast, etc)
+L.OTabPlugins					= "핵심 플러그인"
+L.OTabOptions					= "핵심 설정"
+L.OTabAbout						= "소개"
 
 L.TabCategory_OTHER			= "기타 모드"
 L.TabCategory_AFFIXES		= "어픽스"
@@ -37,7 +38,7 @@ L.Import					= "가져오기"
 L.Enable					= "활성화"
 L.Disable					= "비활성화"
 
-L.NoSound					= "효과음 없음"
+L.NoSound					= "없음"
 
 L.IconsInUse				= "사용되는 공격대 징표:"
 
@@ -282,8 +283,8 @@ L.EventEngageMusic			= "보스 전투 도중 재생할 배경음 설정"
 L.Area_EventSoundsExtras	= "이벤트 효과음 설정"
 L.EventMusicCombined		= "던전과 보스 전투 배경음에 모든 음악 사용 (변경사항을 적용하려면 UI 리로드 필요)"
 L.Area_EventSoundsFilters	= "이벤트 효과음 필터 적용 조건"
-L.EventFilterDungMythicMusic= "신화/신화+ 난이도에선 던전 배경음을 재생하지 않음"
-L.EventFilterMythicMusic	= "신화/신화+ 난이도에선 보스 전투 배경음을 재생하지 않음"
+L.EventFilterDungMythicMusic		= "신화/신화+ 난이도에선 던전 배경음을 재생하지 않음"
+L.EventFilterMythicMusic		= "신화/신화+ 난이도에선 보스 전투 배경음을 재생하지 않음"
 
 -- Tab: Timers
 L.TabCategory_Timers		= "타이머"
@@ -360,6 +361,7 @@ L.Highest					= "가장 높은 순"
 L.Lowest					= "가장 낮은 순"
 L.NoBarFade					= "시작/종료시 색상 변화를 그라데이션 효과 대신 작은/큰 바 색을 사용"
 L.BarInlineIcons			= "바 안쪽에 아이콘 사용"
+L.DisableRightClickBar				= "우클릭으로 타이머 취소 기능 끄기"
 L.ShortTimerText			= "짧은 타이머 텍스트 사용 (사용 가능할 때만)"
 L.KeepBar					= "스킬 시전 전까지 타이머 작동 중단"
 L.KeepBar2					= "(모드에서 지원할 경우에만)"
@@ -370,25 +372,11 @@ L.BarSkin					= "바 스킨"
 L.TabCategory_Filters	 	= "기능 끄기 및 필터"
 L.Area_DBMFiltersSetup		= "DBM 기능 필터 가이드"
 L.Area_BlizzFiltersSetup	= "블리자드 기능 필터 가이드"
--- Panel: DBM Features
-L.Panel_SpamFilter			= "DBM 기능"
-L.Area_SpamFilter_Anounces	= "알림 관련 기능 끄기 및 필터 설정"
+-- Panel: Toggle DBM Features
+L.Panel_SpamFilter			= "DBM 기능 켜고 끄기"
+
+L.Area_SpamFilter_SpecFeatures		= "알림 기능"
 L.SpamBlockNoShowAnnounce	= "모든 알림 및 효과음 재생 안함"
-L.SpamBlockNoShowTgtAnnounce = "대상자 알림 중 타인에게 영향이 없는 것은 알림과 효과음 출력하지 않음 (위의 옵션 체크시 자동 적용)"
-L.SpamBlockNoTrivialSpecWarnSound	= "현재 레벨에 맞는 콘텐츠 이외에는 특수 알림 효과음 재생이나 화면 점멸 효과 사용 안함 (대신 사용자가 선택한 정규 알림 효과음 재생)"
-
-L.Area_SpamFilter_SpecRoleFilters	= "특수 알림 유형 필터 (DBM 알림 내역 조정)"
-L.SpamSpecInformationalOnly			= "특수 알림에서 행동 지시 텍스트/음성 알림을 전부 삭제합니다. (UI 재시작 필요) 알림은 여전히 표시되며 음성도 출력되지만 일반적인 사항만 보여주며 직접적인 지시 사항은 없습니다"
-L.SpamSpecRoleDispel				= "'해제' 경고 완전히 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleInterrupt				= "'차단' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleDefensive				= "'생존기' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleTaunt					= "'도발' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleSoak					= "'바닥 밟기' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleStack					= "'중첩 높음' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleSwitch				= "'대상 변경' &amp; '쫄 등장' 경고 빼기 (텍스트와 효과음 전부)"
-L.SpamSpecRoleGTFO					= "'바닥 피하기' 경고 빼기 (텍스트와 효과음 전부)"
-
-L.Area_SpamFilter_SpecFeatures		= "특정 특수 알림 기능 켜기/끄기"
 L.SpamBlockNoSpecWarnText	= "특수 알림 텍스트 표시 안함"
 L.SpamBlockNoSpecWarnFlash	= "특수 알림에 화면 점멸 사용 안함"
 L.SpamBlockNoSpecWarnVibrate		= "특수 알림에 컨트롤러 진동 안함"
@@ -413,21 +401,6 @@ L.Area_Restore				= "DBM 복구 설정 (DBM이 보스 모드 종료시 이전 �
 L.SpamBlockNoIconRestore	= "아이콘 설정 상태를 저장하지 않고 전투 종료시 원래대로 복구"
 L.SpamBlockNoRangeRestore	= "모드가 '숨김' 명령을 내렸을 때 이전 설정 상태로 거리 창 복구 안함"
 
-L.Area_SpamFilter			= "스팸 방지 필터 설정"
-L.DontShowFarWarnings		= "멀리 떨어진 곳의 이벤트에 대한 알림 및 바 표시 안함"
-L.StripServerName			= "알림, 타이머, 거리 검사, 정보 창에서 이름에 서버명 제거"
-L.FilterVoidFormSay			= "공허의 형상일땐 공격대 징표나 초읽기를 말풍선으로 표시 안함 (그 외 말풍선 알림은 작동)"
-
-L.Area_SpecFilter			= "역할 관련 필터 설정"
-L.FilterTankSpec			= "방어 전담이 아닐땐 방어 전담용 알림 보지 않기 (참고: '도발' 알림은 현재 전부 기본값으로 켜짐 상태이기 때문에 대부분의 이용자는 설정을 끄지 않는 것을 권장합니다.)"
-L.FilterInterruptsHeader	= "상황에 따라 주문 차단 알림을 표시하지 않기"
-L.FilterInterrupts			= "주문 시전 몹이 현재 대상/주시 대상이 아닐 때 (항상)"
-L.FilterInterrupts2			= "주문 시전 몹이 현재 대상/주시 대상이 아니거나 (항상) 차단기가 쿨타임일 때 (보스 전투만)"
-L.FilterInterrupts3			= "주문 시전 몹이 현재 대상/주시 대상이 아니거나 (항상) 차단기가 쿨타임일 때 (보스 및 쫄 정리시)"
-L.FilterInterruptNoteName	= "사용자 메모에 자기 이름이 포함되지 않은 경우 차단 가능 주문의 알림 보지 않기"
-L.FilterDispels				= "해제 주문이 쿨타임일땐 해제 알림 보지 않기"
-L.FilterTrashWarnings		= "일반, 영웅, 이전 확장팩 던전에선 일반몹 알림 보지 않기"
-
 L.Area_PullTimer			= "풀링, 휴식, 전투, 사용자 지정 바 관련 필터 설정"
 L.DontShowPTNoID			= "같은 지역에 없는 사용자가 보낸 DBM 풀링 타이머 차단 (지역의 ID가 포함되지 않은 상태로 전송된 BigWigs 타이머는 절대 차단하지 않음)"
 L.DontShowPT				= "풀링/휴식 타이머 표시 안함"
@@ -436,8 +409,46 @@ L.DontShowPTCountdownText	= "풀링 초읽기 숫자 표시 안함"
 L.DontPlayPTCountdown		= "풀링/휴식/전투/사용자 지정 초읽기 전구간 음성 재생 안함"
 L.PT_Threshold				= "휴식/전투/사용자 지정 타이머 초읽기 음성 재생 안함: %d초 까지"
 
+-- Panel: Reduce Information
+L.Panel_ReducedInformation			= "정보량 줄이기"
+
+L.Area_SpamFilter_Anounces	= "알림 관련 기능 끄기 및 필터 설정"
+L.SpamBlockNoShowTgtAnnounce = "대상자 알림 중 타인에게 영향이 없는 것은 알림과 효과음 출력하지 않음 (DBM 기능 항목에서 전체 끄기를 설정하면 이 설정 무시)"
+L.SpamBlockNoTrivialSpecWarnSound	= "현재 레벨에 맞는 콘텐츠 이외에는 특수 알림 효과음 재생이나 화면 점멸 효과 사용 안함 (대신 사용자가 선택한 정규 알림 효과음 재생)"
+
+L.Area_SpamFilter			= "스팸 방지 필터 설정"
+L.DontShowFarWarnings		= "멀리 떨어진 곳의 이벤트에 대한 알림 및 바 표시 안함"
+L.StripServerName			= "알림, 타이머, 거리 검사, 정보 창에서 이름에 서버명 제거"
+L.FilterVoidFormSay			= "공허의 형상일땐 공격대 징표나 초읽기를 말풍선으로 표시 안함 (그 외 말풍선 알림은 작동)"
+
+L.Area_SpecFilter			= "역할 관련 필터 설정"
+L.FilterTankSpec			= "방어 전담이 아닐땐 방어 전담용 알림 보지 않기 (참고: '도발' 알림은 현재 전부 기본값으로 켜짐 상태이기 때문에 대부분의 이용자는 설정을 끄지 않는 것을 권장합니다.)"
+L.FilterDispels				= "해제 주문이 쿨타임일땐 해제 알림 보지 않기"
+L.FilterTrashWarnings		= "일반, 영웅, 이전 확장팩 던전에선 일반몹 알림 보지 않기"
+
+L.Area_BInterruptFilter				= "보스 차단 알림 필터 설정"
+L.FilterTargetFocus					= "현재 대상/주시 대상이 아니면 알림 표시 안함"
+L.FilterInterruptCooldown			= "차단 주문이 쿨타임일땐 표시 안함"
+L.FilterInterruptHealer				= "힐러일때 표시 안함"
+L.FilterInterruptNoteName			= "시전 횟수가 포함되어 있는 차단 알림에서 사용자 정의 메모에 내 이름이 없으면 표시 안함"--Only used on bosses, trash mods don't assign counts
+L.Area_BInterruptFilterFooter		= "필터를 선택하지 않으면 모든 차단 알림이 표시됩니다 (스팸이 될 수 있음)\n일부 모드에선 매우 중요한 주문일 경우 필터 설정이 완전히 무시될 수 있습니다"
+L.Area_TInterruptFilter				= "일반몹 차단 알림 필터 설정"--Reuses above 3 strings
+
+-- Panel: DBM Handholding
+L.Panel_HandFilter					= "DBM 관할 알림 줄이기"
+L.Area_SpamFilter_SpecRoleFilters	= "특수 알림 유형 필터 (DBM이 관할하는 알림의 정보량 조정)"
+L.SpamSpecInformationalOnly			= "특수 알림에서 행동 지시 텍스트/음성 알림을 전부 삭제합니다. (UI 재시작 필요) 알림은 여전히 표시되며 음성도 출력되지만 일반적인 사항만 보여주며 직접적인 지시 사항은 없습니다"
+L.SpamSpecRoleDispel				= "'해제' 경고 완전히 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleInterrupt				= "'차단' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleDefensive				= "'생존기' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleTaunt					= "'도발' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleSoak					= "'바닥 밟기' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleStack					= "'중첩 높음' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleSwitch				= "'대상 변경' &amp; '쫄 등장' 경고 빼기 (텍스트와 효과음 전부)"
+L.SpamSpecRoleGTFO					= "'바닥 피하기' 경고 빼기 (텍스트와 효과음 전부)"
+
 -- Panel: Blizzard Features
-L.Panel_HideBlizzard		= "블리자드 기능"
+L.Panel_HideBlizzard		= "블리자드 기능 켜고 끄기"
 L.Area_HideBlizzard			= "블리자드 기능 끄기 및 숨김 설정"
 L.HideBossEmoteFrame		= "보스 전투중 보스 감정표현 숨기기"
 L.HideWatchFrame			= "추적중인 업적이 없고 신화+ 난이도가 아니라면 보스 전투시 퀘스트 추적 프레임을 숨깁니다."
@@ -451,6 +462,37 @@ L.OnlyFight					= "전투중일 때 한번만 재생"
 L.AfterFirst				= "인스턴스 던전에 있을 때 한번만 재생"
 L.CombatOnly				= "전투중 차단 (모든 전투)"
 L.RaidCombat				= "전투중 차단 (보스만)"
+
+-- Panel: Raid Leader Controls
+L.Tab_RLControls					= "공대장 제어 설정"
+L.Area_FeatureOverrides				= "기능 무시 설정"
+L.OverrideIcons 					= "공격대에서 자신 포함 모든 사용자들의 공격대 징표 설정을 비활성화 (DBM이 원하는 방식대로 징표를 지정하게 만들려면 비활성화 대신 강제 적용 설정을 사용하세요)"
+L.OverrideSay						= "공격대에서 자신 포함 모든 사용자들의 말풍선/일반 대화 메시지 설정 비활성화"
+L.DisableStatusWhisperShort			= "공격대/파티의 현재 상태/답변 귓속말 비활성화"--Duplicated from privacy but makes sense to include option in both panels
+L.DisableGuildStatusShort			= "공격대/파티의 길드와 연동된 공략 진도 메시지 비활성화"--Duplicated from privacy but makes sense to include option in both panels
+--L.DisabledForDropdown				= "비활성화 기능이 적용될 보스 모드 선택"--NYI
+--L.DiabledForBoth					= "DBM과 BW 모두 위의 기능 비활성화"--NYI
+--L.DiabledForDBM					= "DBM 사용자들만 위의 기능 비활성화"--NYI
+--L.DiabledForBW					= "BW 사용자들만 위의 기능 비활성화"--NYI
+
+L.Area_ConfigOverrides				= "기능 강제 적용 설정 (미구현, 향후 구현 예정)"--NYI
+L.OverrideBossAnnounceOptions		= "모든 DBM 사용자의 보스 모드 알림 설정을 내 설정대로 적용"--NYI
+L.OverrideBossTimerOptions			= "모든 DBM 사용자의 보스 모드 타이머 바 설정을 내 설정대로 적용"--NYI
+L.OverrideBossIconOptions			= "모든 DBM 사용자의 보스 모드 공격대 징표 설정을 내 설정대로 적용 (위의 설정에서 공격대 징표를 비활성화했다면 이 설정은 무시합니다)"--NYI
+L.OverrideBossSayOptions			= "모든 DBM 사용자의 보스 모드 말풍선 설정을 내 설정대로 적용 (위의 설정에서 말풍선을 비활성화했다면 이 설정은 무시합니다)"--NYI
+L.ConfigAreaFooter					= "이곳의 설정들은 전투 시작시 임시로 사용자에게 강제 적용되는 것으로 저장된 개인 설정은 바꾸지 않습니다."
+L.ConfigAreaFooter2					= "모든 역할들의 설정을 검토하는 것을 권장하며 탱커나 그밖에 필요로 하는 역할의 타이머 바/경고 설정을 제외하지 마세요"
+
+L.Area_receivingOptions				= "수신 설정 (미구현, 향후 구현 예정)"--NYI
+L.NoAnnounceOverride				= "공대장의 알림 강제 적용을 수락하지 않습니다."--NYI
+L.NoTimerOverridee					= "공대장의 타이머 바 강제 적용을 수락하지 않습니다."--NYI
+L.ReplaceMyConfigOnOverride			= "경고: 강제 적용시 공대장의 설정이 내 모드 설정을 대체하게 되며 되돌릴 수 없습니다"--NYI
+L.ReceivingFooter					= "공격대 징표와 말풍선 설정이 주변 다른 사람들에게 적용되고 나면 나만 예외로 빠질 수 없습니다"--NYI
+L.ReceivingFooter2					= "이러한 설정을 활성화했을때 내 설정이 의도한 것과 충돌할 경우 당신과 공대장 둘만 조정하면 됩니다"--NYI
+L.ReceivingFooter3					= "'내 모드 설정을 대체'를 활성화하면 당신의 원래 설정은 강제 적용된 설정에 의해 지워질 것입니다"--NYI
+
+
+L.TabFooter							= "이 패널의 모든 설정은 당신이 공격대/공찾 공대장일때만 작동합니다"
 
 -- Panel: Privacy
 L.Tab_Privacy 				= "사생활 보호 수위 조정"

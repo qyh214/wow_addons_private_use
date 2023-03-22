@@ -1,7 +1,7 @@
 local W, F, L, P, G, O = unpack(select(2, ...))
+local LDBI = LibStub("LibDBIcon-1.0")
 
 local _G = _G
-
 local format = format
 local StaticPopup_Show = StaticPopup_Show
 
@@ -129,18 +129,17 @@ O.information = {
                 format(L["Thank you for using %s!"], L["Wind Chat Filter"]),
                 format(L["%s is an addon aimed to filter some chat messages in game."], L["Wind Chat Filter"]),
                 format(
-                    L["You can send your suggestions or bugs via %s, %s, %s, %s and the thread in %s."],
+                    L["You can send your suggestions or bugs via %s, %s, %s and the thread in %s."],
                     L["QQ Group"],
                     L["Discord"],
-                    L["KOOK"],
-                    L["Github"],
+                    L["GitHub"],
                     L["NGA.cn"]
                 )
             )
         },
         contributors = {
             order = 6,
-            name = L["Contributors (Github.com)"],
+            name = L["Contributors (GitHub.com)"],
             type = "group",
             inline = true,
             args = {
@@ -155,6 +154,11 @@ O.information = {
                 },
                 ["2"] = {
                     order = 2,
+                    type = "description",
+                    name = format("%s", "kpkhxlgy0")
+                },
+                ["3"] = {
+                    order = 3,
                     type = "description",
                     name = format(
                         "%s: %s",
@@ -233,30 +237,15 @@ O.information = {
                     end,
                     width = 0.6
                 },
-                kook = {
+                github = {
                     order = 4,
                     type = "execute",
-                    name = L["KOOK"],
-                    image = W.Media.Icons.kook,
-                    func = function()
-                        StaticPopup_Show(
-                            "WIND_CHAT_FILTER_EDITBOX",
-                            L["Wind Chat Filter"] .. " - " .. L["KOOK"],
-                            nil,
-                            "https://kook.top/oRTgkL"
-                        )
-                    end,
-                    width = 0.6
-                },
-                github = {
-                    order = 5,
-                    type = "execute",
-                    name = L["Github"],
+                    name = L["GitHub"],
                     image = W.Media.Icons.github,
                     func = function()
                         StaticPopup_Show(
                             "WIND_CHAT_FILTER_EDITBOX",
-                            L["Wind Chat Filter"] .. " - " .. L["Github"],
+                            L["Wind Chat Filter"] .. " - " .. L["GitHub"],
                             nil,
                             "https://github.com/fang2hou/" .. W.AddonNamePlain .. "/issues"
                         )

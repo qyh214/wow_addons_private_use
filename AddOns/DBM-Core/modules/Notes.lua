@@ -109,12 +109,14 @@ local function CreateOurFrame()
 		elseif IsInGroup(2) and IsInInstance() then--For BGs, LFR and LFG (we also check IsInInstance() so if you're in queue but fighting something outside like a world boss, it'll sync in "RAID" instead)
 			DBM:AddMsg(L.NOTESHAREERRORGROUPFINDER)
 		else
+			local playerName, _, playerRealm = DBM:GetMyPlayerInfo()
+			local fullname = playerName.."-"..playerRealm
 			local msg = frame.mod.id.."\t"..frame.modvar.."\t"..syncText.."\t"..frame.abilityName
 			if IsInRaid() then
-				SendAddonMessage(private.DBMPrefix, "NS\t" .. msg, "RAID")
+				SendAddonMessage(private.DBMPrefix, fullname .. "\t" .. private.DBMSyncProtocol .. "\tNS\t" .. msg, "RAID")
 				DBM:AddMsg(L.NOTESHARED)
 			elseif IsInGroup(1) then
-				SendAddonMessage(private.DBMPrefix, "NS\t" .. msg, "PARTY")
+				SendAddonMessage(private.DBMPrefix, fullname .. "\t" .. private.DBMSyncProtocol .. "\tNS\t" .. msg, "PARTY")
 				DBM:AddMsg(L.NOTESHARED)
 			else--Solo
 				DBM:AddMsg(L.NOTESHAREERRORSOLO)

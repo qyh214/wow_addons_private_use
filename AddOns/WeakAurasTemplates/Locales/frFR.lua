@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "frFR" then
+if (GAME_LOCALE or GetLocale()) ~= "frFR" then
   return
 end
 
@@ -62,6 +62,10 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Mettez en surbrillance quand le sort est actif."
 	L["Hold CTRL to create multiple auras at once"] = "Maintenir CTRL pour créer plusieurs auras simultanément"
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
+	--[[Translation missing --]]
+	L["Max 3"] = "Max 3"
+	--[[Translation missing --]]
+	L["Max 4"] = "Max 4"
 	L["Next"] = "Suivant"
 	L["Only show the aura if the target has the debuff."] = "Montre l'aura que si la cible a l'affaiblissement."
 	L["Only show the aura when the item is on cooldown."] = "Afficher uniquement l'aura quand l'objet est en recharge."

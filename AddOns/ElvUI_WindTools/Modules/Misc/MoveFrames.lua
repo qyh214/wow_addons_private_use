@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local MF = W.Modules.MoveFrames
 local B = E:GetModule("Bags")
 
@@ -263,9 +263,6 @@ local BlizzardFramesOnDemand = {
     },
     ["Blizzard_OrderHallUI"] = {
         "OrderHallTalentFrame"
-    },
-    ["Blizzard_PlayerChoice"] = {
-        "PlayerChoiceFrame"
     },
     ["Blizzard_Professions"] = {
         ["ProfessionsFrame"] = {

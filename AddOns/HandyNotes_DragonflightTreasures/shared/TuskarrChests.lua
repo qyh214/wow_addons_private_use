@@ -14,14 +14,39 @@ local repchest = ns.nodeMaker{
 
 local decay = repchest{
     label="Decay Covered Chest",
+    loot={
+        201363, -- Brackenhide Hollow Maul
+        201365, -- Brackenhide Gnoll Guard
+        201367, -- Hollow Hunter's Sticker
+        201368, -- Brackenhide Hollow Barbslinger
+        201369, -- Hollow Greatwood Pestilence
+        201370, -- Brackenhide Skullcracker
+        194312, -- Pattern: Gnoll Tent
+        {194540, quest=67046}, -- Nokhud Armorer's Notes
+        {199066, quest=70535}, -- Letter of Caution
+    },
 }
 
 local icemaw = repchest{
     label="Icemaw Storage Cache",
+    loot={
+        {194540, quest=67046}, -- Nokhud Armorer's Notes
+        {199066, quest=70535}, -- Letter of Caution
+        {199068, quest=70537}, -- Time-Lost Memo
+    },
 }
 
 local tuskarr = repchest{
     label="Tuskarr Chest",
+    loot={
+        201372, -- Imbu Tuskarr Axe
+        201373, -- Imbu Net Cutter
+        201374, -- Tuskarr Fishing Pike
+        201375, -- Imbu Warrior's Club
+        201376, -- Imbu Tuskarr Mace
+        201377, -- Tuskarr Elder's Staff
+        201378, -- Tuskarr Angler's Crossbow
+    },
 }
 
 ns.RegisterPoints(ns.AZURESPAN, {

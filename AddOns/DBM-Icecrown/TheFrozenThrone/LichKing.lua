@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230202071934")
 mod:SetCreatureID(36597)
 mod:SetEncounterID(mod:IsClassic() and 856 or 1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -236,12 +236,12 @@ function mod:SPELL_CAST_START(args)
 		specWarnInfest:Show()
 		timerInfestCD:Start()
 	elseif args.spellId == 72762 then -- Defile
-		self:BossTargetScanner(36597, "DefileTarget", 0.02, 15)
+		self:BossTargetScanner(args.sourceGUID, "DefileTarget", 0.02, 15)
 		warnDefileSoon:Cancel()
 		warnDefileSoon:Schedule(27)
 		timerDefileCD:Start()
 	elseif args.spellId == 73539 then -- Shadow Trap (Heroic)
-		self:BossTargetScanner(36597, "TrapTarget", 0.02, 15)
+		self:BossTargetScanner(args.sourceGUID, "TrapTarget", 0.02, 15)
 		timerTrapCD:Start()
 	elseif args.spellId == 73650 then -- Restore Soul (Heroic)
 		warnRestoreSoul:Show()

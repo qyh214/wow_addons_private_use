@@ -298,8 +298,8 @@ WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
 
 local versionStringFromToc = GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "5.3.7"
-local buildTime = "20230125005356"
+local versionString = "5.4.2"
+local buildTime = "20230316050327"
 
 local flavorFromToc = GetAddOnMetadata("WeakAuras", "X-Flavor")
 local flavorFromTocToNumber = {
@@ -311,7 +311,7 @@ local flavorFromTocToNumber = {
 local flavor = flavorFromTocToNumber[flavorFromToc]
 
 --[==[@debug@
-if versionStringFromToc == "5.3.7" then
+if versionStringFromToc == "5.4.2" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
 end
@@ -322,12 +322,8 @@ WeakAuras.buildTime = buildTime
 WeakAuras.newFeatureString = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 WeakAuras.BuildInfo = select(4, GetBuildInfo())
 
-function WeakAuras.IsClassic()
+function WeakAuras.IsClassicEra()
   return flavor == 1
-end
-
-function WeakAuras.IsBCC()
-  return flavor == 2
 end
 
 function WeakAuras.IsWrathClassic()
@@ -338,20 +334,8 @@ function WeakAuras.IsRetail()
   return flavor == 10
 end
 
-function WeakAuras.IsClassicOrBCC()
-  return WeakAuras.IsClassic() or WeakAuras.IsBCC()
-end
-
-function WeakAuras.IsClassicOrBCCOrWrath()
-  return WeakAuras.IsClassic() or WeakAuras.IsBCC() or WeakAuras.IsWrathClassic()
-end
-
-function WeakAuras.IsBCCOrWrath()
-  return WeakAuras.IsBCC() or WeakAuras.IsWrathClassic()
-end
-
-function WeakAuras.IsBCCOrWrathOrRetail()
-  return WeakAuras.IsBCC() or WeakAuras.IsWrathClassic() or WeakAuras.IsRetail()
+function WeakAuras.IsClassicEraOrWrath()
+  return WeakAuras.IsClassicEra() or WeakAuras.IsWrathClassic()
 end
 
 function WeakAuras.IsWrathOrRetail()
@@ -393,7 +377,7 @@ do
     "LibSerialize",
     "LibUIDropDownMenu-4.0"
   }
-  if WeakAuras.IsClassic() then
+  if WeakAuras.IsClassicEra() then
     tinsert(LibStubLibs, "LibClassicSpellActionCount-1.0")
     tinsert(LibStubLibs, "LibClassicCasterino")
     tinsert(LibStubLibs, "LibClassicDurations")

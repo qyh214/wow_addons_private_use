@@ -119,9 +119,6 @@ local function OnVignettesUpdated(rareScannerButton)
 		if (vignetteInfo and vignetteInfo.onWorldMap) then
 			vignetteInfo.id = vignetteGUID
 			rareScannerButton:DetectedNewVignette(rareScannerButton, vignetteInfo)
-		elseif (vignetteInfo and vignetteInfo.onMinimap and vignetteInfo.objectGUID) then
-			local _, _, _, _, _, vignetteEntityID, _ = strsplit("-", vignetteInfo.objectGUID);
-			RSMinimap.HideIcon(vignetteEntityID)
 		end
 	end
 end
@@ -219,7 +216,7 @@ local function OnPlayerTargetChanged()
 		-- check if killed
 		if (RSGeneralDB.GetAlreadyFoundEntity(npcID) and not RSNpcDB.IsNpcKilled(npcID)) then
 			-- Update coordinates (if zone doesnt use vignettes)
-			if (RSMapDB.IsZoneWithoutVignette(playerMapID)) then
+			if (RSMapDB.IsZoneWithoutVignette(playerMapID) and CheckInteractDistance("unit", 4)) then
 				RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(npcID)
 			end
 
@@ -235,14 +232,14 @@ local function OnPlayerTargetChanged()
 				end
 
 				if (completed) then
-					RSLogger:PrintDebugMessage(string.format("Target NPC [%s] con mision completada, se marca como muerto.", npcID))
+					--RSLogger:PrintDebugMessage(string.format("Target NPC [%s] con mision completada, se marca como muerto.", npcID))
 					RSEntityStateHandler.SetDeadNpc(npcID)
 				else
-					RSLogger:PrintDebugMessage(string.format("Target NPC [%s] con mision SIN completar.", npcID))
+					--RSLogger:PrintDebugMessage(string.format("Target NPC [%s] con mision SIN completar.", npcID))
 					RSGeneralDB.UpdateAlreadyFoundEntityTime(npcID)
 				end
 			elseif (unitClassification ~= "rare" and unitClassification ~= "rareelite") then
-				RSLogger:PrintDebugMessage(string.format("Target NPC [%s] sin dragon plateado, se marca como muerto.", npcID))
+				--RSLogger:PrintDebugMessage(string.format("Target NPC [%s] sin dragon plateado, se marca como muerto.", npcID))
 				RSEntityStateHandler.SetDeadNpc(npcID)
 			end
 		end
@@ -269,13 +266,13 @@ local function OnLootOpened()
 			-- If the loot comes from a container that we support
 			if (unitType == "GameObject") then
 				local containerID = id and tonumber(id) or nil
+				RSLogger:PrintDebugMessage(string.format("Abierto [%s].", containerID or ""))
 
 				-- We support all the containers with vignette plus those ones that are part of achievements (without vignette)
 				if (RSGeneralDB.GetAlreadyFoundEntity(containerID) or RSContainerDB.GetInternalContainerInfo(containerID)) then
 					-- Sets the container as opened
 					-- We are looping through all the items looted, we dont want to call this method with every item
 					if (not looted) then
-						RSLogger:PrintDebugMessage(string.format("Abierto [%s].", containerID or ""))
 				
 						-- Check if we have the Container in our database but the addon didnt detect it
 						-- This will happend in the case where the container doesnt have a vignette
@@ -513,8 +510,26 @@ end
 
 local function OnAchievementEarned(achievementID)
 	if (achievementID and RSDragonGlyphDB.GetInternalDragonGlyphInfo(achievementID)) then
+		RSLogger:PrintDebugMessage(string.format("Logro de glifo [%s]. Completado.", achievementID))
 		RSDragonGlyphDB.SetDragonGlyphCollected(achievementID)
-		RSMinimap.RefreshAllData(true)
+		RSMinimap.HideIcon(achievementID)
+	end
+end
+
+---============================================================================
+-- Event: CRITERIA_EARNED
+-- Fired when a part of an achievement is earned
+---============================================================================
+
+local function OnCriteriaEarned(parentAchievementID, description)
+	RSLogger:PrintDebugMessage(string.format("Criteria del logro [%s][%s]. Completado.", parentAchievementID, description))
+	if (parentAchievementID) then
+		local achievementID = RSDragonGlyphDB.GetChildDragonGlyphID(parentAchievementID, description)
+		if (achievementID) then
+			RSLogger:PrintDebugMessage(string.format("Logro de glifo [%s]. Completado.", achievementID))
+			RSDragonGlyphDB.SetDragonGlyphCollected(achievementID)
+			RSMinimap.HideIcon(achievementID)
+		end
 	end
 end
 
@@ -534,25 +549,6 @@ local function OnPlayerLogin(rareScannerButton)
 end
 
 ---============================================================================
--- Event: PLAYER_ENTERING_WORLD
--- Fired when the player logs in the game and the UI is ready
----============================================================================
-
-local function OnPlayerEnteringWorld(rareScannerButton)
-	-- Fires the first scan
-	local vignetteGUIDs = C_VignetteInfo.GetVignettes();
-	for _, vignetteGUID in ipairs(vignetteGUIDs) do
-		local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID);
-		if (vignetteInfo) then
-			vignetteInfo.id = vignetteGUID
-			rareScannerButton:DetectedNewVignette(rareScannerButton, vignetteInfo)
-		end
-	end
-	
-	rareScannerButton:UnregisterEvent("PLAYER_ENTERING_WORLD")
-end
-
----============================================================================
 -- Event handler
 ---============================================================================
 
@@ -560,8 +556,6 @@ local vignetteUpdatedDelay
 local function HandleEvent(rareScannerButton, event, ...) 
 	if (event == "PLAYER_LOGIN") then
 		OnPlayerLogin(rareScannerButton)
-	elseif (event == "PLAYER_ENTERING_WORLD") then
-		OnPlayerEnteringWorld(rareScannerButton)
 	elseif (event == "VIGNETTE_MINIMAP_UPDATED") then
 		OnVignetteMinimapUpdated(rareScannerButton, ...)
 	elseif (event == "VIGNETTES_UPDATED") then
@@ -601,13 +595,14 @@ local function HandleEvent(rareScannerButton, event, ...)
 		OnTransmogCollectionUpdated()
 	elseif (event == "ACHIEVEMENT_EARNED") then
 		OnAchievementEarned(...)
+	elseif (event == "CRITERIA_EARNED") then
+		OnCriteriaEarned(...)
 	end
 end
 
 function RSEventHandler.RegisterEvents(rareScannerButton, addon)
 	RareScanner = addon
 	rareScannerButton:RegisterEvent("PLAYER_LOGIN")
-	rareScannerButton:RegisterEvent("PLAYER_ENTERING_WORLD")
 	rareScannerButton:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
 	rareScannerButton:RegisterEvent("VIGNETTES_UPDATED")
 	rareScannerButton:RegisterEvent("NAME_PLATE_UNIT_ADDED")
@@ -626,6 +621,7 @@ function RSEventHandler.RegisterEvents(rareScannerButton, addon)
 	rareScannerButton:RegisterEvent("NEW_TOY_ADDED")
 	rareScannerButton:RegisterEvent("TRANSMOG_COLLECTION_UPDATED")
 	rareScannerButton:RegisterEvent("ACHIEVEMENT_EARNED")
+	rareScannerButton:RegisterEvent("CRITERIA_EARNED")
 
 	-- Captures all events
 	rareScannerButton:SetScript("OnEvent", function(self, event, ...)

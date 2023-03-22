@@ -1,20 +1,23 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local A = W:GetModule("Announcement")
 
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
+local UnitName = UnitName
 
 A.EventList = {
     "CHALLENGE_MODE_COMPLETED",
     "CHAT_MSG_ADDON",
-    "CHAT_MSG_PARTY",
-    "CHAT_MSG_PARTY_LEADER",
     "CHAT_MSG_GUILD",
+    "CHAT_MSG_PARTY_LEADER",
+    "CHAT_MSG_PARTY",
     "CHAT_MSG_SYSTEM",
     "COMBAT_LOG_EVENT_UNFILTERED",
     "GROUP_ROSTER_UPDATE",
+    "ITEM_CHANGED",
     "LFG_COMPLETION_REWARD",
     "PLAYER_ENTERING_WORLD",
     "QUEST_LOG_UPDATE",
+    "UNIT_SPELLCAST_SUCCEEDED",
 }
 
 -- CHAT_MSG_SYSTEM: text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, unused, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons
@@ -34,6 +37,10 @@ end
 
 function A:CHAT_MSG_GUILD(event, ...)
     self:KeystoneLink(event, ...)
+end
+
+function A:ITEM_CHANGED(event, ...)
+    E:Delay(0.5, self.Keystone, self, event)
 end
 
 function A:COMBAT_LOG_EVENT_UNFILTERED()
@@ -68,17 +75,17 @@ function A:LFG_COMPLETION_REWARD()
     self:Goodbye()
 end
 
-function A:PLAYER_ENTERING_WORLD()
+function A:PLAYER_ENTERING_WORLD(event, ...)
     self.playerEnteredWorld = true
     self:Quest()
-    E:Delay(2, self.Keystone, self, "PLAYER_ENTERING_WORLD")
+    E:Delay(2, self.Keystone, self, event)
     E:Delay(4, self.ResetAuthority, self)
     E:Delay(10, self.ResetAuthority, self)
 end
 
-function A:CHALLENGE_MODE_COMPLETED()
+function A:CHALLENGE_MODE_COMPLETED(event, ...)
     self:Goodbye()
-    E:Delay(2, self.Keystone, self, "CHALLENGE_MODE_COMPLETED")
+    E:Delay(2, self.Keystone, self, event)
 end
 
 -- TODO: SCENARIO_COMPLETED 场景完成事件
@@ -99,4 +106,8 @@ end
 
 function A:GROUP_ROSTER_UPDATE()
     self:ResetAuthority()
+end
+
+function A:UNIT_SPELLCAST_SUCCEEDED(event, unitTarget, castGUID, spellId)
+    self:Utility(event, UnitName(unitTarget), spellId)
 end

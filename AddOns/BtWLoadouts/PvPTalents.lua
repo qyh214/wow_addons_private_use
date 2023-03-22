@@ -267,7 +267,7 @@ local function CombinePvPTalentSets(result, state, ...)
 	end
 
 	if state and state.blockers and not IsPvPTalentSetActive(result) then
-		state.blockers[Internal.GetRestedTomeBlocker()] = true
+		-- state.blockers[Internal.GetRestedTomeBlocker()] = true
 		state.blockers[Internal.GetCombatBlocker()] = true
 	end
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230123212550")
+mod:SetRevision("20230220171538")
 mod:SetCreatureID(33288)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1143)
@@ -46,6 +46,7 @@ local specWarnDeafeningRoar			= mod:NewSpecialWarningSpell(64189, nil, nil, nil,
 local specWarnFervor				= mod:NewSpecialWarningYou(63138, nil, nil, nil, 1, 2)
 local specWarnMalady				= mod:NewSpecialWarningYou(63830, nil, nil, nil, 1, 2)
 local specWarnMaladyNear			= mod:NewSpecialWarningClose(63830, nil, nil, nil, 1, 2)
+local yellMalady					= mod:NewYell(63830)
 local yellSqueeze					= mod:NewYell(64125)
 
 local enrageTimer					= mod:NewBerserkTimer(900)
@@ -67,8 +68,8 @@ else
 	timerAchieve					= mod:NewAchievementTimer(420, 3012)
 end
 
-mod:AddSetIconOption("SetIconOnFearTarget", 63802, true, false, {6})
-mod:AddSetIconOption("SetIconOnFervorTarget", 63802, false, false, {7})
+mod:AddSetIconOption("SetIconOnFearTarget", 63830, true, false, {6})
+mod:AddSetIconOption("SetIconOnFervorTarget", 63138, false, false, {7})
 mod:AddSetIconOption("SetIconOnBrainLinkTarget", 63802, true, false, {1, 2})
 mod:AddSetIconOption("SetIconOnBeacon", 64465, true, true, {1, 2, 3, 4, 5, 6, 7, 8})
 mod:AddInfoFrameOption(63050)
@@ -156,10 +157,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.vb.phase < 3 then
 			if self:IsClassic() then
 				brainportal:Start(90)
-				warnBrainPortalSoon:Schedule(85)
+				warnBrainPortalSoon:Schedule(80)
 			else
 				brainportal:Start(60)
-				warnBrainPortalSoon:Schedule(55)
+				warnBrainPortalSoon:Schedule(50)
 			end
 		else--P3 yogg casts
 			timerLunaricGaze:Start()
@@ -199,6 +200,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnMalady:Show()
 			specWarnMalady:Play("targetyou")
+			yellMalady:Yell()
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
@@ -230,10 +232,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		--timerBrainLinkCD:Start(19)--VERIFY ME
 		if self:IsClassic() then
 			brainportal:Start(60)
-			warnBrainPortalSoon:Schedule(55)
+			warnBrainPortalSoon:Schedule(50)
 		else
 			brainportal:Start(10.5)
-			warnBrainPortalSoon:Schedule(5.5)
+			warnBrainPortalSoon:Schedule(0.5)
 		end
 		warnP2:Show()
 	elseif args.spellId == 64465 then

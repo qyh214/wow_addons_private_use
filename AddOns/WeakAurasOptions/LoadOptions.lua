@@ -25,7 +25,7 @@ local function CorrectSpellName(input)
     else
       return nil;
     end
-  elseif WeakAuras.IsClassic() and input then
+  elseif WeakAuras.IsClassicEra() and input then
     local _, _, _, _, _, _, spellId = GetSpellInfo(input)
     if spellId then
       return spellId
@@ -511,7 +511,7 @@ function OptionsPrivate.ConstructOptions(prototype, data, startorder, triggernum
           options["exact"..name] = {
             type = "toggle",
             width = WeakAuras.normalWidth - 0.1,
-            name = L["Exact Spell Match"],
+            name = arg.type == "item" and L["Exact Item Match"] or L["Exact Spell Match"],
             order = order,
             hidden = hidden,
             get = function()
@@ -562,17 +562,20 @@ function OptionsPrivate.ConstructOptions(prototype, data, startorder, triggernum
           disabled = function() return not trigger["use_"..realname]; end,
           get = function()
             if(arg.type == "item") then
+              local useExactSpellId = (arg.showExactOption and trigger["use_exact_"..realname])
               if(trigger["use_"..realname] and trigger[realname] and trigger[realname] ~= "") then
-                local name = GetItemInfo(trigger[realname]);
-                if(name) then
-                  return name;
-                else
+                if useExactSpellId then
                   local itemId = tonumber(trigger[realname])
                   if itemId and itemId ~= 0 then
                     return tostring(trigger[realname])
                   end
-                  return L["Invalid Item Name/ID/Link"];
+                else
+                  local name = GetItemInfo(trigger[realname]);
+                  if(name) then
+                    return name;
+                  end
                 end
+                return useExactSpellId and L["Invalid Item ID"] or L["Invalid Item Name/ID/Link"];
               else
                 return nil;
               end
@@ -876,6 +879,70 @@ function OptionsPrivate.ConstructOptions(prototype, data, startorder, triggernum
     end
   end
 
+  if prototype.countEvents then
+    options.use_count = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = WeakAuras.newFeatureString .. L["Count"],
+      order = order,
+      get = function()
+        return trigger.use_count
+      end,
+      set = function(info, v)
+        trigger.use_count = v
+        WeakAuras.Add(data)
+      end
+    };
+    order = order + 1;
+    options.count = {
+      type = "input",
+      width = WeakAuras.normalWidth,
+      name = L["Count"],
+      desc = L["Occurence of the event, reset when aura is unloaded\nCan be a range of values\nCan have multiple values separated by a comma or a space\n\nExamples:\n2nd 5th and 6th events: 2, 5, 6\n2nd to 6th: 2-6\nevery 2 events: /2\nevery 3 events starting from 2nd: 2/3\nevery 3 events starting from 2nd and ending at 11th: 2-11/3"],
+      order = order,
+      disabled = function() return not trigger.use_count end,
+      get = function()
+        return trigger.count
+      end,
+      set = function(info, v)
+        trigger.count = v
+        WeakAuras.Add(data)
+      end
+    };
+    order = order + 1;
+  end
+  if prototype.delayEvents then
+    options.use_delay = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = WeakAuras.newFeatureString .. L["Delay"],
+      order = order,
+      get = function()
+        return trigger.use_delay
+      end,
+      set = function(info, v)
+        trigger.use_delay = v
+        WeakAuras.Add(data)
+      end
+    };
+    order = order + 1;
+    options.delay = {
+      type = "input",
+      width = WeakAuras.normalWidth,
+      name = L["Delay"],
+      order = order,
+      disabled = function() return not trigger.use_delay end,
+      validate = ValidateNumeric,
+      get = function()
+        return trigger.delay and tostring(trigger.delay)
+      end,
+      set = function(info, v)
+        trigger.delay = tonumber(v)
+        WeakAuras.Add(data)
+      end
+    };
+    order = order + 1;
+  end
   if prototype.timedrequired then
     options.unevent = {
       type = "select",

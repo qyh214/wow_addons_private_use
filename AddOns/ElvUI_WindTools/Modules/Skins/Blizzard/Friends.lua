@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local S = W.Modules.Skins
 
 local _G = _G
@@ -44,6 +44,9 @@ function S:FriendsFrame()
         return
     end
 
+    _G.FriendsFrameBattlenetFrame.UnavailableInfoFrame:ClearAllPoints()
+    _G.FriendsFrameBattlenetFrame.UnavailableInfoFrame:Point("TOPLEFT", _G.FriendsFrame, "TOPRIGHT", 3, -1)
+
     local frames = {
         _G.FriendsFrame,
         _G.FriendsFriendsFrame,
@@ -51,7 +54,9 @@ function S:FriendsFrame()
         _G.RecruitAFriendFrame.SplashFrame,
         _G.RecruitAFriendRewardsFrame,
         _G.RecruitAFriendRecruitmentFrame,
-        _G.FriendsFrameBattlenetFrame.BroadcastFrame
+        _G.FriendsFrameBattlenetFrame.UnavailableInfoFrame,
+        _G.FriendsFrameBattlenetFrame.BroadcastFrame,
+        _G.QuickJoinRoleSelectionFrame
     }
 
     for _, frame in pairs(frames) do

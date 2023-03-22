@@ -865,8 +865,7 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
         vignette=5387,
     },
     [28047868] = { -- Beakers
-        -- no quest, no vignette, just a random rare-flagged mob
-        quest=nil,
+        quest=73902,
         npc=193177,
         loot={},
     },

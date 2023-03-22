@@ -448,6 +448,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
 	end
 
+	local vignettePosition = {}
 	if (not isNavigating) then
 		-- Ignore if hidden quest is completed
 		if (RSConfigDB.IsIgnoringCompletedEntities()) then
@@ -475,11 +476,14 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 		-- If the vignette is simulated
 		if (vignetteInfo.x and vignetteInfo.y) then
 			local coordinates = {}
-			coordinates.x = vignetteInfo.x
-			coordinates.y = vignetteInfo.y
-			RareScanner:UpdateRareFound(entityID, vignetteInfo, coordinates)
+			vignettePosition.x = vignetteInfo.x
+			vignettePosition.y = vignetteInfo.y
+			RareScanner:UpdateRareFound(entityID, vignetteInfo, vignettePosition)
 		else
-			RareScanner:UpdateRareFound(entityID, vignetteInfo)
+			vignettePosition = RareScanner:UpdateRareFound(entityID, vignetteInfo)
+			if (not vignettePosition) then
+				return
+			end
 		end
 
 		-- If we have it as dead but we got a notification it means that the restart time is wrong (this is normal when playing while a world quest reset)
@@ -487,6 +491,9 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 			RSLogger:PrintDebugMessage(string.format("El NPC [%s] estaba marcado como muerto, pero lo acabamos de detectar vivo, resucitado!", entityID))
 			RSNpcDB.DeleteNpcKilled(entityID)
 		end
+	else
+		vignettePosition.x = vignetteInfo.x
+		vignettePosition.y = vignetteInfo.y
 	end
 
 	local isInstance, instanceType = IsInInstance()
@@ -501,6 +508,10 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	-- disable alerts while flying
 	elseif (UnitOnTaxi("player") and not RSConfigDB.IsScanningWhileOnTaxi()) then
 		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar montado en un transporte", entityID))
+		return
+	-- disable alerts while racing
+	elseif (not RSConfigDB.IsScanningWhileOnRacingQuest() and C_UnitAuras.GetPlayerAuraBySpellID(RSConstants.RACING_SPELL_ID)) then
+		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar haciendo una mision de vuelo", entityID))
 		return
 	-- disable alerts while in pet combat
 	elseif (C_PetBattles.IsInBattle() and not RSConfigDB.IsScanningWhileOnPetBattle()) then
@@ -632,7 +643,7 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 	if (RSConfigDB.IsButtonDisplaying()) then
 		-- Adds the new NPCID to the navigation list
 		if (RSConfigDB.IsDisplayingNavigationArrows() and not isNavigating) then
-			self.NextButton:AddNext(vignetteInfo)
+			self.NextButton:AddNext(mapID, vignettePosition.x, vignettePosition.y, vignetteInfo.name, vignetteInfo.atlasName, vignetteInfo.objectGUID)
 		end
 
 		-- Show the button
@@ -646,11 +657,14 @@ function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
 			else
 				self.name = vignetteInfo.name
 			end
+			self.mapID = mapID
 			self.preEvent = vignetteInfo.preEvent
 			self.atlasName = vignetteInfo.atlasName
 
 			local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
 			self.displayID = npcInfo and npcInfo.displayID or nil
+			self.x = vignettePosition.x
+			self.y = vignettePosition.y
 
 			-- Show button / miniature / loot bar if not in combat
 			if (not InCombatLockdown()) then
@@ -753,7 +767,7 @@ function RareScanner:UpdateRareFound(entityID, vignetteInfo, coordinates)
 	end
 
 	if (not vignettePosition) then
-		RSLogger:PrintDebugMessage(string.format("UpdateRareFound[%s]: Error! No se han podido calcular las coordenadas para la entidad recien encontrada!", entityID))
+		RSLogger:PrintDebugMessage(string.format("UpdateRareFound[%s]: Error! No se han podido calcular las coordenadas para la entidad recien encontrada en el mapa [%s]!", entityID, mapID and mapID or ""))
 		return
 	end
 
@@ -766,6 +780,8 @@ function RareScanner:UpdateRareFound(entityID, vignetteInfo, coordinates)
 	else
 		RSGeneralDB.AddAlreadyFoundEntity(entityID, mapID, vignettePosition.x, vignettePosition.y, artID, atlasName)
 	end
+	
+	return vignettePosition
 end
 
 function scanner_button:DisplayMessages(name)
@@ -840,7 +856,11 @@ function scanner_button:ShowButton()
 			macrotext = string.format("%s\n/tm %s", macrotext, RSConfigDB.GetMarkerOnTarget())
 		end
 
-		macrotext = string.format("%s\n/rarescanner %s;%s;%s",macrotext, RSConstants.CMD_TOMTOM_WAYPOINT, self.npcID, self.name)
+		macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s",macrotext, RSConstants.CMD_TOMTOM_WAYPOINT, self.mapID, self.x, self.y, self.name)
+		
+		if (RSConfigDB.IsShowingAnimationForNpcs() and RSConfigDB.GetAnimationForNpcs() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) then
+			macrotext = string.format("%s\n/rarescanner %s;%s",macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, self.mapID, self.x, self.y)
+		end
 		self:SetAttribute("macrotext", macrotext)
 
 		-- show model
@@ -852,7 +872,15 @@ function scanner_button:ShowButton()
 		end
 	else
 		self.Description_text:SetText(AL["NOT_TARGETEABLE"])
-		self:SetAttribute("macrotext", string.format("\n/rarescanner %s;%s;%s", RSConstants.CMD_TOMTOM_WAYPOINT, self.npcID, self.name))
+		
+		local macrotext = string.format("\n/rarescanner %s;%s;%s;%s;%s", RSConstants.CMD_TOMTOM_WAYPOINT, self.mapID, self.x, self.y, self.name)
+		
+		if ((RSConstants.IsContainerAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForContainers() and RSConfigDB.GetAnimationForContainers() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) or
+				(RSConstants.IsEventAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForEvents() and RSConfigDB.GetAnimationForEvents() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND)) then
+			macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s",macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, self.mapID, self.x, self.y)
+		end
+		
+		self:SetAttribute("macrotext", macrotext)
 
 		-- hide model if displayed
 		self.ModelView:ClearModel()
@@ -897,6 +925,9 @@ function RareScanner:Test()
 	scanner_button.npcID = npcTestID
 	scanner_button.name = npcTestName
 	scanner_button.displayID = npcTestDisplayID
+	scanner_button.mapID = 120
+	scanner_button.x = 2800
+	scanner_button.y = 6540
 	scanner_button.atlasName = RSConstants.NPC_VIGNETTE
 	scanner_button.Title:SetText(npcTestName)
 	scanner_button:DisplayMessages(npcTestName)
@@ -1242,6 +1273,27 @@ local function RefreshDatabaseData(previousDbVersion)
 		)
 		table.insert(routines, fixEventFilters)
 	end
+	
+	-- Launches a forced vignette scan
+	local firstScanRoutine = RSRoutines.LoopRoutineNew()
+	firstScanRoutine:Init(function() return C_VignetteInfo.GetVignettes() end, 100,
+		function(context, index, vignetteGUID)
+			local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID);
+			if (vignetteInfo) then
+				if (vignetteInfo.onWorldMap and RSConfigDB.IsScanningWorldMapVignettes()) then
+					vignetteInfo.id = vignetteGUID
+					scanner_button:DetectedNewVignette(scanner_button, vignetteInfo)	
+				elseif (vignetteInfo.onMinimap) then
+					vignetteInfo.id = vignetteGUID
+					scanner_button:DetectedNewVignette(scanner_button, vignetteInfo)
+				end
+			end
+		end, 
+		function(context)
+			RSLogger:PrintDebugMessage("Lanzado primer scan de vignettes")
+		end
+	)
+	table.insert(routines, firstScanRoutine)
 
 	-- Launch all the routines in order
 	local chainRoutines = RSRoutines.ChainLoopRoutineNew()
@@ -1273,7 +1325,7 @@ local function UpdateRareNamesDB(currentDbVersion)
 	npcNameScannerRoutine:Init(RSNpcDB.GetAllInternalNpcInfo, 100)
 	C_Timer.NewTicker(0.5, function(self)
 		local finished = npcNameScannerRoutine:Run(function(context, npcID, _)
-			RSNpcDB.GetNpcName(npcID);
+			RSNpcDB.GetNpcName(npcID, true);
 		end)
 	
 		if (finished) then

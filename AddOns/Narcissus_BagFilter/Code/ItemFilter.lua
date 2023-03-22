@@ -311,6 +311,11 @@ function ItemFilter.ShowGem()
 	SaveLastFilter(ItemFilter.ShowGem);
 end
 
+function ItemFilter.ShowPrimordialStones()
+	local name = NarciAPI.GetCachedItemTooltipTextByLine(204002, 2) or "Primordial Stone";
+	ItemFilter.SearchKeyword(name);
+end
+
 function ItemFilter.Remove()
 	SearchEventFrame:UnregisterEvent("INVENTORY_SEARCH_UPDATE");
 	SearchEventFrame.postSearchCallback = nil;

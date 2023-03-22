@@ -395,6 +395,7 @@ local defaults = {
 		},
 		configDisplay = {
 			isDefault = true,
+			defaultName = RSA.GetSpellInfo(527) .. ' | ' .. RSA.GetSpellInfo(213634),
 		},
 		events = {
 			['SPELL_DISPEL'] = {

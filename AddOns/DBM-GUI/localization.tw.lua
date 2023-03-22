@@ -113,7 +113,6 @@ L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄所選內容"
 --Auto Logging: Global filter Options
 L.Area_AutoLoggingFilters	= "自動記錄過濾"
 L.RecordOnlyBosses			= "不記錄小怪的戰鬥 (只記錄首領。請於首領開打前使用 /dbm pull 以獲取數據)"
-
 L.DoNotLogLFG				= "不記錄地城搜尋器或團隊搜尋器 (佇列的內容)"
 --Auto Logging: Recorded Content types
 L.Area_AutoLoggingContent	= "自動記錄內容"
@@ -372,13 +371,17 @@ L.Area_DBMFiltersSetup		= "DBM過濾器指南"
 L.Area_BlizzFiltersSetup	= "暴雪過濾器指南"
 -- Panel: DBM Features
 L.Panel_SpamFilter					= "DBM功能設置"
+
+-- Panel: Reduce Information
+L.Panel_ReducedInformation			= "減少訊息"
+
 L.Area_SpamFilter_Anounces			= "全局警告禁用及過濾選項"
 L.SpamBlockNoShowAnnounce			= "不顯示任何提示文字或播放警告音效"
 L.SpamBlockNoShowTgtAnnounce		= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
 L.SpamBlockNoTrivialSpecWarnSound	= "如果相對你等級是不重要的內容則不要播放特別提示音效 (播放使用者選擇的標準提示音效替代)"
 
 L.Area_SpamFilter_SpecRoleFilters	= "特別提示類型過濾（控制DBM要怎麼做）"
-L.SpamSpecInformationalOnly			= "從特別警告中刪除所有教學文字/口語警報 (需要重載UI)。警報仍顯示和播放聲音，但將是通用和非指示性"
+L.SpamSpecInformationalOnly			= "從特別警告中刪除所有說明文字/語音警告 (需要重載UI)。警報仍顯示和播放聲音，但將是通用和非指示性"
 L.SpamSpecRoleDispel				= "完全過濾 '驅散' 警報 (完全無文字或聲音)"
 L.SpamSpecRoleInterrupt				= "過濾 '打斷' 警報 (完全無文字或聲音)"
 L.SpamSpecRoleDefensive				= "過濾 '減傷' 警報 (完全無文字或聲音)"
@@ -409,6 +412,7 @@ L.SpamBlockNoHudMap			= "不要顯示HudMap"
 L.SpamBlockNoNameplate		= "不要顯示名條光環 "
 L.SpamBlockNoYells			= "不送出大喊至頻道"
 L.SpamBlockNoNoteSync		= "不接受註記分享"
+L.SpamBlockAutoGossip		= "不要自動處理對話內容"
 
 L.Area_Restore				= "DBM還原選項(DBM是否還原至使用者過去狀態)"
 L.SpamBlockNoIconRestore	= "不在戰鬥結束後記住和還原團隊圖示狀態"
@@ -429,6 +433,19 @@ L.FilterInterrupts3			= "如果施法者不是你的目標/專注目標(總是)�
 L.FilterInterruptNoteName	= "過濾可中斷技能的警告(與次數)，如果自訂註記警告沒有包含你的名字"
 L.FilterDispels				= "過濾可驅散技能如果你的驅散技正在冷卻中"
 L.FilterTrashWarnings		= "過濾所有小怪警告在普通與英雄以及過往版本的地城"
+
+-- Panel: DBM Handholding
+L.Panel_HandFilter					= "減少DBM的控制"
+L.Area_SpamFilter_SpecRoleFilters	= "特別警告類型過濾 (控制DBM要怎麼做)"
+L.SpamSpecInformationalOnly			= "刪除所有特別警告的說明文字/語音警告 (需要UI重載)。警報仍顯示和播放聲音，但將是通用和非指示性"
+L.SpamSpecRoleDispel				= "徹底過濾'驅散'警告 (完全無文字或聲音)"
+L.SpamSpecRoleInterrupt				= "過濾'打斷'警告 (完全無文字或聲音)"
+L.SpamSpecRoleDefensive				= "過濾'減傷'警告 (完全無文字或聲音)"
+L.SpamSpecRoleTaunt					= "過濾'嘲諷'警告 (完全無文字或聲音)"
+L.SpamSpecRoleSoak					= "過濾'分擔'警告 (完全無文字或聲音)"
+L.SpamSpecRoleStack					= "過濾'高層數'警告 (完全無文字或聲音)"
+L.SpamSpecRoleSwitch				= "過濾'切換目標''小怪' 警報 (完全無文字或聲音)"
+L.SpamSpecRoleGTFO					= "過濾'地板技能'警告 (完全無文字或聲音)"
 
 L.Area_PullTimer			= "開怪、休息、戰鬥和自定義計時器過濾器選項"
 L.DontShowPTNoID			= "阻擋與你不同區域ID送出的開怪倒數計時條"
@@ -453,6 +470,32 @@ L.OnlyFight					= "只有戰鬥中，每次動畫播放一次之後"
 L.AfterFirst				= "在副本中，每次動畫播放一次之後"
 L.CombatOnly				= "在任何戰鬥中停用"
 L.RaidCombat				= "只在首領戰鬥中停用"
+
+-- Panel: Raid Leader Controls
+L.Tab_RLControls					= "團隊領隊控制項"
+L.Area_FeatureOverrides				= "功能覆蓋選項"
+L.OverrideIcons 					= "禁用團隊中所有玩家的圖示標記，包括我自己 (如果您希望DBM按您的原則進行標記，請使用覆蓋而不是禁用)"
+L.OverrideSay						= "禁用團隊中所有玩家的聊天泡泡/說訊息，包含我自己"
+L.DisableStatusWhisperShort			= "禁用整個團隊的狀態/回覆密語"--Duplicated from privacy but makes sense to include option in both panels
+L.DisableGuildStatusShort			= "禁用整個團隊同步到公會的進度訊息"--Duplicated from privacy but makes sense to include option in both panels
+
+L.Area_ConfigOverrides				= "設定覆蓋選項 (施工中, 稍後完成)"--NYI
+L.OverrideBossAnnounceOptions		= "將所有DBM玩家的通告配置設定為我的配置"--NYI
+L.OverrideBossTimerOptions			= "將所有DBM玩家的計時器配置設定為我的配置"--NYI
+L.OverrideBossIconOptions			= "將所有DBM玩家的圖示配置設定為我的配置 (如果在上述選項中禁用圖示設置，則忽略此選項)"--NYI
+L.OverrideBossSayOptions			= "將所有DBM玩家的聊天泡泡配置設定為我的配置 (如果在上述選項中禁用聊天泡泡設置，則忽略此選項)"--NYI
+L.ConfigAreaFooter					= "該區域的選項僅臨時干涉覆蓋玩家的配置，而沒有更改其保存的配置。"
+L.ConfigAreaFooter2					= "建議考慮所有角色職責，並且不排除計時器/警報..等等，可能需要"
+
+L.Area_receivingOptions				= "接收選項 (施工中, 稍後完成)"--NYI
+L.NoAnnounceOverride				= "不要接收團隊領隊的通告覆蓋。"--NYI
+L.NoTimerOverridee					= "不要接收團隊領隊的計時器覆蓋。"--NYI
+L.ReplaceMyConfigOnOverride			= "警告：在覆蓋上永久使用團隊領隊的替換我的配置"--NYI
+L.ReceivingFooter					= "圖示和聊天泡泡選項無法選擇覆蓋，因為這些設置會影響您周圍的其他玩家"--NYI
+L.ReceivingFooter2					= "如果您啟用這些選項，則在您和領隊之間，您的配置可能會與其意圖衝突"--NYI
+L.ReceivingFooter3					= "如果您啟用了 '替換我的配置' 您的原始設置將在覆蓋後丟失"--NYI
+
+L.TabFooter							= "本面板中的所有選項僅在您是非地下城/隨機隊伍中的隊伍領隊的情況下運作"
 
 -- Panel: Privacy
 L.Tab_Privacy 				= "隱私控制"

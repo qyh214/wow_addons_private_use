@@ -1,5 +1,9 @@
 local W, F, L = unpack(select(2, ...))
+
+local _G = _G
 local format = format
+local strlower = strlower
+local strupper = strupper
 
 W.Media = {
 	Icons = {},
@@ -96,10 +100,9 @@ end
 AddMedia("icon", "Icon.tga", "Icons")
 
 AddMedia("discord", "Discord.tga", "Icons")
-AddMedia("github", "Github.tga", "Icons")
+AddMedia("github", "GitHub.tga", "Icons")
 AddMedia("nga", "NGA.tga", "Icons")
 AddMedia("qq", "QQ.tga", "Icons")
-AddMedia("kook", "KOOK.tga", "Icons")
 
 AddMedia("donateKofi", "Ko-fi.tga", "Icons")
 AddMedia("donateAiFaDian", "AiFaDian.tga", "Icons")

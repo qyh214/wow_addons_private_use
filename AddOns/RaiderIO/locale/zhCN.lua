@@ -1,4 +1,4 @@
--- Generated from CurseForge on Sat Feb 11 20:13:07 UTC 2023
+-- Generated from CurseForge on Tue Mar 21 20:26:13 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("zhCN") then
@@ -27,11 +27,11 @@ L["CHANGES_REQUIRES_UI_RELOAD"] = [=[您的改动已保存，但您必须重新�
 L["CHARACTER_LF_GUILD_MPLUS"] = "正在寻找大秘境公会"
 L["CHARACTER_LF_GUILD_MPLUS_WITH_SCORE"] = "正在寻找大秘境公会"
 L["CHARACTER_LF_GUILD_PVP"] = "正在寻找PvP公会"
-L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = "正在寻找团队副本公会"
-L["CHARACTER_LF_GUILD_RAID_HEROIC"] = "正在寻找英雄团队副本公会"
-L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = "正在寻找史诗团队副本公会"
-L["CHARACTER_LF_GUILD_RAID_NORMAL"] = "正在寻找普通团队副本公会"
-L["CHARACTER_LF_GUILD_SOCIAL"] = "正在寻找休闲社交公会"
+L["CHARACTER_LF_GUILD_RAID_DEFAULT"] = "正在寻找开荒团本的公会"
+L["CHARACTER_LF_GUILD_RAID_HEROIC"] = "正在寻找开荒英雄团本的公会"
+L["CHARACTER_LF_GUILD_RAID_MYTHIC"] = "正在寻找开荒史诗团本的公会"
+L["CHARACTER_LF_GUILD_RAID_NORMAL"] = "正在寻找开荒普通团本的公会"
+L["CHARACTER_LF_GUILD_SOCIAL"] = "正在寻找休闲社交的公会"
 L["CHARACTER_LF_TEAM_MPLUS_DEFAULT"] = "正在寻找大秘境队伍"
 L["CHARACTER_LF_TEAM_MPLUS_WITH_SCORE"] = "正在寻找%d+的大秘境队伍"
 L["CHECKBOX_DISPLAY_WEEKLY"] = "显示每周最高记录"
@@ -94,7 +94,7 @@ L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "分数使用基础装备等级颜色显�
 L["EXPORTJSON_COPY_TEXT"] = "复制下方的链接然后在 |cff00C8FFhttps://raider.io|r 的任何地方粘贴来查看所有的玩家。"
 L["GENERAL_TOOLTIP_OPTIONS"] = "常规鼠标提示选项"
 L["GUILD_BEST_SEASON"] = "公会：赛季最佳"
-L["GUILD_BEST_TITLE"] = "记录"
+L["GUILD_BEST_TITLE"] = "Raider.IO 记录"
 L["GUILD_BEST_WEEKLY"] = "公会：每周最佳"
 L["GUILD_LF_MPLUS_DEFAULT"] = "正在招募大秘境玩家"
 L["GUILD_LF_MPLUS_WITH_SCORE"] = "正在招募分数%d+的大秘境成员"
@@ -299,7 +299,7 @@ L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS"] = "允许Raider.IO客户端控�
 L["USE_RAIDERIO_CLIENT_LIVE_TRACKING_SETTINGS_DESC"] = "允许Raider.IO客户端（运行时）自动控制你的战斗日志设置。"
 L["WARNING_DEBUG_MODE_ENABLE"] = "|cffFFFFFF%s|r Debug模式已经开启. 输入 |cffFFFFFF/raiderio debug|r 关闭debug模式"
 L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "Raider.IO：你必须先关闭Raider.IO个人页面的自动定位"
-L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r 冲击世界首杀模式已开启。你可以通过使用 |cffFFFFFF/raiderio rwf |r来关闭它。"
+L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r 首杀争夺赛模式已开启。你可以通过使用 |cffFFFFFF/raiderio rwf |r来关闭它。"
 L["WIPE_RWF_MODE_BUTTON"] = "清除"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以从存储文件中清除日志。 这将需要重新加载您的界面。"
 

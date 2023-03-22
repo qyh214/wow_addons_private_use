@@ -1,97 +1,60 @@
-# Version: 3.23
-2023/02/07 Released
+# Version: 3.26
+2023/03/22 Released
 ## ❗ Important
-- Adapt to ElvUI 13.25.
-- Update the enchant IDs.
+- Adapt to World of Warcraft 10.0.7.
+- Adapt to ElvUI 13.28.
 ## ✳️ New
-- [Chat Text] Add an icon for the author's character.
-- [Skins] Add RareScanner skin.
-- [Skins] Add Simple Addon Manager skin.
-- [Skins] Add skin for The Trading Post.
+- Added a status bar texture WindTools Clean. Thanks Jodalo
 ## 💪 Improvement
-- [Extra Item Bar] Update the openable item list.
-- [Skins] Update the Encounter Journal skin.
-- [Skins] Update the Alert Frames skin.
-- [Skins] Update the Bigwigs Queue Timer skin.
-- [Objective Tracker] Add support for monthly activities tracking.
-- [Event Tracker] Fix the feast timer.
+- [Game Bar] Fix the problem that it can't be loaded normally after the 10.0.7 update.
+- [Chat Text] Adapt to the latest ElvUI chat module.
 
 ------
-# 版本: 3.23
-2023/02/07 发布
+# 版本: 3.26
+2023/03/22 发布
 ## ❗ 重要
-- 如果你被台服工作室频繁刷屏, 试试我的新插件: Wind Chat Filter!
-- 适配 ElvUI 13.25 版本.
-- 更新附魔 ID.
+- 适配魔兽世界 10.0.7 版本.
+- 适配 ElvUI 13.28 版本.
 ## ✳️ 新增
-- [聊天文字] 为作者的角色添加了一个小图标.
-- [美化皮肤] 新增了 RareScanner 的美化皮肤.
-- [美化皮肤] 新增了 Simple Addon Manager 的美化皮肤.
-- [美化皮肤] 新增了贸易站美化皮肤.
+- 新增了一个状态条材质 WindTools Clean. 感谢 Jodalo
 ## 💪 改善
-- [额外物品条] 更新可开启物品列表.
-- [美化皮肤] 更新地下城手册美化皮肤.
-- [美化皮肤] 更新提醒框体皮肤.
-- [美化皮肤] 更新 Bigwigs 进本计时条皮肤.
-- [任务追踪] 新增对每月活动追踪的支持.
-- [事件追踪器] 修正盛宴计时.
+- [游戏条] 修复 10.0.7 更新后无法正常加载的问题.
+- [聊天文字] 适配最新的 ElvUI 聊天模块.
 
 ------
-# 版本: 3.23
-2023/02/07 發布
+# 版本: 3.26
+2023/03/22 發布
 ## ❗ 重要
-- 如果你被台服工作室頻繁刷屏, 試試我的新插件: Wind Chat Filter!
-- 適配 ElvUI 13.25 版本.
-- 更新附魔 ID.
+- 適配魔獸世界 10.0.7 版本.
+- 適配 ElvUI 13.28 版本.
 ## ✳️ 新增
-- [聊天文字] 為作者的角色添加了一個小圖示.
-- [美化皮膚] 新增了 RareScanner 的美化皮膚.
-- [美化皮膚] 新增了 Simple Addon Manager 的美化皮膚.
-- [美化皮膚] 新增了貿易站美化皮膚.
+- 新增了一個狀態條材質 WindTools Clean. 感謝 Jodalo
 ## 💪 改善
-- [額外物品條] 更新可開啟物品列表.
-- [美化皮膚] 更新地城導覽手冊美化皮膚.
-- [美化皮膚] 更新提醒框架美化皮膚.
-- [美化皮膚] 更新 Bigwigs 進本計時條美化皮膚.
-- [任務追蹤] 新增對每月活動追蹤之支持.
-- [事件追蹤器] 修正盛宴計時.
+- [遊戲條] 修復 10.0.7 更新後無法正常加載的問題.
+- [聊天文字] 適配最新的 ElvUI 聊天模組.
 
 ------
-# 버전: 3.23
-2023/02/07 Released
+# 버전: 3.26
+2023/03/22 Released
 ## ❗ 중요 사항
-- Adapt to ElvUI 13.25.
-- Update the enchant IDs.
+- Adapt to World of Warcraft 10.0.7.
+- Adapt to ElvUI 13.28.
 ## ✳️ 신규 사항
-- [Chat Text] Add an icon for the author's character.
-- [스킨] RareScanner 스킨을 추가했습니다.
-- [스킨] Simple Addon Manager 스킨을 추가했습니다.
-- [Skins] Add skin for The Trading Post.
+- Added a status bar texture WindTools Clean. Thanks Jodalo
 ## 💪 개선 사항
-- [Extra Item Bar] Update the openable item list.
-- [Skins] Update the Encounter Journal skin.
-- [Skins] Update the Alert Frames skin.
-- [Skins] Update the Bigwigs Queue Timer skin.
-- [Objective Tracker] Add support for monthly activities tracking.
-- [Event Tracker] Fix the feast timer.
+- [Game Bar] Fix the problem that it can't be loaded normally after the 10.0.7 update.
+- [Chat Text] Adapt to the latest ElvUI chat module.
 
 ------
-# Версия: 3.23
-2023/02/07 Релиз
+# Версия: 3.26
+2023/03/22 Релиз
 ## ❗ Важные
-- Адаптация к ElvUI 13.25.
-- Обновлены идентификаторы чар.
+- Adapt to World of Warcraft 10.0.7.
+- Adapt to ElvUI 13.28.
 ## ✳️ Новые
-- [Текст чата] Добавлена маленькая иконка для персонажа автора аддона.
-- [Скины] Добавлен скин RareScanner.
-- [Скины] Добавлен скин Simple Addon Manager.
-- [Скины] Добавлен скин для Торговой лавки.
+- Added a status bar texture WindTools Clean. Thanks Jodalo
 ## 💪 Улучшения
-- [Панель дополнительных предметов] Обновление списка открываемых предметов.
-- [Скины] Обновлен скин Путеводитель по приключениям.
-- [Скины] Обновлен скин предупреждений / оповещений.
-- [Скины] Обновлен скин Таймера очереди Bigwigs.
-- [Отслеживание заданий] Добавлена поддержка ежемесячного отслеживания активности.
-- [Отслеживание событий] Исправлен таймер пиршества.
+- [Game Bar] Fix the problem that it can't be loaded normally after the 10.0.7 update.
+- [Chat Text] Adapt to the latest ElvUI chat module.
 
 ------

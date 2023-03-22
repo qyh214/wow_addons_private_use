@@ -16,13 +16,16 @@ local Disturbeddirt = ns.node.Disturbeddirt
 local Dragonglyph = ns.node.Dragonglyph
 local Dragonrace = ns.node.Dragonrace
 local ElementalStorm = ns.node.ElementalStorm
+local ElusiveCreature = ns.node.ElusiveCreature
 local Flag = ns.node.Flag
 local Fragment = ns.node.Fragment
+local GrandHunt = ns.node.GrandHunt
 local LegendaryCharacter = ns.node.LegendaryCharacter
 local MagicBoundChest = ns.node.MagicBoundChest
 local PM = ns.node.ProfessionMasters
 local PrettyNeat = ns.node.PrettyNeat
 local PT = ns.node.ProfessionTreasures
+local Rare14h = ns.node.Rare14h
 local RareElite = ns.node.RareElite
 local Safari = ns.node.Safari
 local Scoutpack = ns.node.Scoutpack
@@ -35,6 +38,7 @@ local Currency = ns.reward.Currency
 local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
+local Recipe = ns.reward.Recipe
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
 
@@ -90,10 +94,10 @@ map.nodes[31097121] = Rare({
     }
 }) -- Blightpaw the Depraved
 
-map.nodes[59847057] = Rare({ -- required 67030
+map.nodes[59847057] = Rare14h({
     id = 193220,
     quest = 73987,
-    note = L['spawns_periodically'],
+    rotationID = 25,
     rewards = {
         Achievement({id = 16679, criteria = 56149}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -146,10 +150,10 @@ local CRAGGRAVATEDELEMENTAL = Rare({
 map.nodes[45458518] = CRAGGRAVATEDELEMENTAL
 map.nodes[52746732] = CRAGGRAVATEDELEMENTAL
 
-map.nodes[47675115] = Rare({ -- required 67030
+map.nodes[47675115] = Rare14h({
     id = 193234,
     quest = 73990,
-    note = L['spawns_periodically'],
+    rotationID = 6,
     rewards = {
         Achievement({id = 16446, criteria = 55398, note = L['pretty_neat_note']}),
         Achievement({id = 16679, criteria = 56147}),
@@ -179,7 +183,7 @@ map.nodes[53374092] = Rare({
     }
 }) -- Goremaul the Gluttonous
 
-map.nodes[59128380] = Rare({ -- review
+map.nodes[59128380] = Rare({
     id = 193126,
     quest = 73881,
     rewards = {
@@ -221,10 +225,10 @@ map.nodes[62298177] = Rare({
     pois = {POI({61708120})} -- Entrance
 }) -- Lord Epochbrgl
 
-map.nodes[52895903] = Rare({
+map.nodes[52895903] = Rare14h({
     id = 193246,
     quest = 74013,
-    note = L['spawns_periodically'],
+    rotationID = 12,
     rewards = {
         Achievement({id = 16679, criteria = 56141}),
         Transmog({item = 200257, slot = L['2h_mace']}), -- Decay Infused Branch
@@ -238,10 +242,10 @@ map.nodes[52895903] = Rare({
     }
 }) -- Matriarch Remalla
 
-map.nodes[59806100] = Rare({ -- reqired 67030
+map.nodes[59806100] = Rare({
     id = 193688,
     quest = 74020,
-    note = L['spawns_periodically'],
+    -- rotationID = 7, -- wait for blizz fix.
     rewards = {
         Achievement({id = 16679, criteria = 56140}),
         Transmog({item = 200146, slot = L['1h_mace']}), -- Phenran's Discordant Smasher
@@ -255,10 +259,10 @@ map.nodes[59806100] = Rare({ -- reqired 67030
     }
 }) -- Phenran
 
-map.nodes[57218420] = Rare({ -- reqired 67030 review
+map.nodes[57218420] = Rare14h({
     id = 193210,
     quest = 74021,
-    note = L['spawns_periodically'],
+    rotationID = 0,
     rewards = {
         Achievement({id = 16679, criteria = 56142}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
@@ -309,10 +313,10 @@ map.nodes[50404840] = Rare({
     }
 }) -- Razk'vex the Untamed
 
-map.nodes[40087014] = Rare({ -- reqiured 67030
+map.nodes[40087014] = Rare14h({
     id = 193240,
     quest = 74024,
-    note = L['spawns_periodically'],
+    rotationID = 4,
     rewards = {
         Achievement({id = 16679, criteria = 56148}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -329,10 +333,10 @@ map.nodes[40087014] = Rare({ -- reqiured 67030
     }
 }) -- Riverwalker Tamopo
 
-map.nodes[50005180] = Rare({ -- reqiured 67030 review
+map.nodes[50005180] = Rare14h({
     id = 193666,
     quest = 74025,
-    note = L['spawns_periodically'],
+    rotationID = 10,
     rewards = {
         Achievement({id = 16679, criteria = 56151}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -347,10 +351,11 @@ map.nodes[50005180] = Rare({ -- reqiured 67030 review
     }
 }) -- Rokmur
 
-map.nodes[37607780] = Rare({ -- reqiured 67030
+map.nodes[37607780] = Rare14h({
     id = 193176,
     quest = 74029,
-    note = L['spawns_periodically'] .. '\n\n' .. L['in_cave'],
+    rotationID = 18,
+    cave = true,
     rewards = {
         Achievement({id = 16679, criteria = 56150}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
@@ -365,10 +370,10 @@ map.nodes[37607780] = Rare({ -- reqiured 67030
     pois = {POI({38507640})} -- Cave entrance
 }) -- Sandana the Tempest
 
-map.nodes[47207895] = Rare({ -- review -- reqiured 67030
+map.nodes[47207895] = Rare14h({
     id = 193258,
     quest = 74035,
-    note = L['spawns_periodically'],
+    rotationID = 21,
     rewards = {
         Achievement({id = 16679, criteria = 56144}),
         Transmog({item = 200139, slot = L['bow']}) -- Tempest Arc
@@ -418,10 +423,11 @@ map.nodes[46267317] = Rare({
     pois = {POI({47547180})} -- Cave entrance
 }) -- The Weeping Vilomah
 
-map.nodes[35027001] = Rare({ -- reqiured 67030 review
+map.nodes[35027001] = Rare14h({
     id = 193146,
     quest = 74036,
-    note = L['spawns_periodically'] .. '\n\n' .. L['in_small_cave'],
+    rotationID = 15,
+    cave = true,
     rewards = {
         Achievement({id = 16679, criteria = 56146}),
         Transmog({item = 200291, slot = L['leather']}), -- Waterlogged Racing Grips
@@ -467,7 +473,7 @@ map.nodes[57366540] = Rare({
 
 map.nodes[55647727] = Rare({
     id = 193229,
-    quest = 72814, -- 69873
+    quest = 72814,
     rewards = {
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
         Transmog({item = 200174, slot = L['leather']}), -- Bonesigil Shoulderguards
@@ -529,7 +535,7 @@ tpf.nodes[48421722] = Rare({
     }
 }) -- Shardwing
 
-tpf.nodes[62073370] = Rare({
+tpf.nodes[61813142] = Rare({
     id = 201542,
     quest = 74558,
     rewards = {
@@ -646,7 +652,7 @@ val.nodes[09535629] = Treasure({
     note = L['tasty_hatchling_treat_note'],
     parent = map.id,
     rewards = {
-        Item({item = 198106}) -- Recipe: Tasty Hatchling's Treat
+        Recipe({item = 198106, profession = 185}) -- Recipe: Tasty Hatchling's Treat
     }
 }) -- Tasty Hatchling's Treat
 
@@ -666,6 +672,117 @@ tpf.nodes[28002590] = ns.node.ElementalChest({
     },
     pois = {POI({29282604})} -- Entrance
 }) -- Chest of the Elements
+
+-------------------------------------------------------------------------------
+---------------------------- DRACTHYR SUPPLY CHEST ----------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[42708120] = ns.node.DracthyrSupplyChest()
+map.nodes[42808040] = ns.node.DracthyrSupplyChest()
+map.nodes[43405150] = ns.node.DracthyrSupplyChest()
+map.nodes[43807770] = ns.node.DracthyrSupplyChest()
+map.nodes[44408150] = ns.node.DracthyrSupplyChest()
+map.nodes[44607730] = ns.node.DracthyrSupplyChest()
+map.nodes[44805170] = ns.node.DracthyrSupplyChest()
+map.nodes[45007870] = ns.node.DracthyrSupplyChest()
+map.nodes[45305520] = ns.node.DracthyrSupplyChest()
+map.nodes[45705750] = ns.node.DracthyrSupplyChest()
+map.nodes[46205190] = ns.node.DracthyrSupplyChest()
+map.nodes[47408040] = ns.node.DracthyrSupplyChest()
+map.nodes[48407650] = ns.node.DracthyrSupplyChest()
+map.nodes[50108070] = ns.node.DracthyrSupplyChest()
+map.nodes[55206730] = ns.node.DracthyrSupplyChest()
+map.nodes[55606930] = ns.node.DracthyrSupplyChest()
+map.nodes[56007140] = ns.node.DracthyrSupplyChest()
+map.nodes[57406630] = ns.node.DracthyrSupplyChest()
+map.nodes[57506640] = ns.node.DracthyrSupplyChest()
+map.nodes[58206750] = ns.node.DracthyrSupplyChest()
+map.nodes[61201730] = ns.node.DracthyrSupplyChest()
+map.nodes[61901250] = ns.node.DracthyrSupplyChest()
+map.nodes[65101310] = ns.node.DracthyrSupplyChest()
+
+-------------------------------------------------------------------------------
+------------------------------- SIMMERING CHEST -------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[35608530] = ns.node.SimmeringChest()
+map.nodes[38908510] = ns.node.SimmeringChest()
+map.nodes[39908480] = ns.node.SimmeringChest()
+map.nodes[46906030] = ns.node.SimmeringChest()
+map.nodes[48905840] = ns.node.SimmeringChest()
+map.nodes[48905850] = ns.node.SimmeringChest()
+map.nodes[51406090] = ns.node.SimmeringChest()
+
+-------------------------------------------------------------------------------
+--------------------------------- TITAN CHEST ---------------------------------
+-------------------------------------------------------------------------------
+
+local TitanChest = Class('TitanChest', ns.node.Node, {
+    label = L['titan_chest'],
+    icon = 'chest_pk',
+    group = ns.groups.TITAN_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201048, slot = L['cosmetic']}), -- Tyrhold Epaulets
+        Transmog({item = 201049, slot = L['cosmetic']}), -- Tyrhold Robe
+        Transmog({item = 201050, slot = L['cosmetic']}), -- Tyrhold Leggings
+        Transmog({item = 201051, slot = L['cosmetic']}), -- Tyrhold Slippers
+        Transmog({item = 201052, slot = L['cosmetic']}), -- Tyrhold Visage
+        Transmog({item = 201053, slot = L['cosmetic']}), -- Tyrhold Gloves
+        Transmog({item = 201054, slot = L['cosmetic']}), -- Tyrhold Drape
+        Transmog({item = 201056, slot = L['cosmetic']}), -- Tyrhold Sash
+        Transmog({item = 201455, slot = L['cosmetic']}), -- Tyrhold Broadsword
+        Transmog({item = 201456, slot = L['cosmetic']}), -- Tyrhold Carbine
+        Transmog({item = 201457, slot = L['cosmetic']}), -- Tyrhold Relic
+        Transmog({item = 201458, slot = L['cosmetic']}), -- Aegis of Tyrhold
+        Transmog({item = 201459, slot = L['cosmetic']}), -- Tyrhold Shortsword
+        Transmog({item = 201460, slot = L['cosmetic']}), -- Gavel of Tyrhold
+        Transmog({item = 201461, slot = L['cosmetic']}), -- Tyrhold Pinnacle
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+}) -- Titan Chest
+
+map.nodes[34107310] = TitanChest()
+map.nodes[34306600] = TitanChest()
+map.nodes[34706700] = TitanChest()
+map.nodes[35807540] = TitanChest()
+map.nodes[35906730] = TitanChest()
+map.nodes[37705110] = TitanChest()
+map.nodes[37706980] = TitanChest()
+map.nodes[38105300] = TitanChest()
+map.nodes[38705340] = TitanChest()
+map.nodes[38804480] = TitanChest()
+map.nodes[38904610] = TitanChest()
+map.nodes[41204520] = TitanChest()
+map.nodes[46007210] = TitanChest()
+map.nodes[48306900] = TitanChest()
+map.nodes[48807530] = TitanChest()
+map.nodes[48907100] = TitanChest()
+map.nodes[49707590] = TitanChest()
+map.nodes[51107470] = TitanChest()
+map.nodes[57108080] = TitanChest()
+map.nodes[57108240] = TitanChest()
+map.nodes[57606450] = TitanChest()
+map.nodes[57708050] = TitanChest()
+map.nodes[59305670] = TitanChest()
+map.nodes[59905590] = TitanChest()
+map.nodes[60005470] = TitanChest()
+map.nodes[60606220] = TitanChest()
+map.nodes[61906180] = TitanChest()
+
+-------------------------------------------------------------------------------
+------------------------------ FROSTBOUND CHEST -------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[54006140] = ns.node.FrostboundChest()
+map.nodes[55206290] = ns.node.FrostboundChest()
+map.nodes[56206450] = ns.node.FrostboundChest()
 
 -------------------------------------------------------------------------------
 --------------------------------- BATTLE PETS ---------------------------------
@@ -718,10 +835,10 @@ map.nodes[52208050] = PT.Blacksmithing({
 }) -- Draconic Flux
 
 map.nodes[55203050] = PT.Alchemy({
-    id = 201003,
+    id = 203471,
     quest = 70278,
-    note = L['pt_alch_furry_gloop_note']
-}) -- Furry Gloop
+    note = L['pt_alch_tasty_candy_note']
+}) -- Tasty Candy
 
 map.nodes[56104090] = PT.Inscription({
     id = 201015,
@@ -902,20 +1019,33 @@ map.nodes[62296972] = Disturbeddirt()
 -------------------------------------------------------------------------------
 
 map.nodes[35517551] = Scoutpack()
+map.nodes[35628576] = Scoutpack()
+map.nodes[36798245] = Scoutpack()
 map.nodes[37637740] = Scoutpack()
 map.nodes[38796831] = Scoutpack()
 map.nodes[38806831] = Scoutpack()
+map.nodes[40148559] = Scoutpack()
+map.nodes[40498368] = Scoutpack()
 map.nodes[41234798] = Scoutpack()
+map.nodes[47428021] = Scoutpack()
+map.nodes[49047926] = Scoutpack()
+map.nodes[50098074] = Scoutpack()
 map.nodes[50844623] = Scoutpack()
 map.nodes[52758333] = Scoutpack()
+map.nodes[54837958] = Scoutpack()
 map.nodes[55413167] = Scoutpack()
 map.nodes[55456797] = Scoutpack()
 map.nodes[55873598] = Scoutpack()
 map.nodes[55875138] = Scoutpack()
 map.nodes[56063178] = Scoutpack()
+map.nodes[57128078] = Scoutpack()
+map.nodes[57468106] = Scoutpack()
 map.nodes[58046702] = Scoutpack()
 map.nodes[59198794] = Scoutpack()
 map.nodes[59496912] = Scoutpack()
+map.nodes[59547955] = Scoutpack()
+map.nodes[61697948] = Scoutpack()
+map.nodes[65548193] = Scoutpack()
 
 -------------------------------------------------------------------------------
 ------------------------------ Magic-Bound Chest ------------------------------
@@ -1439,6 +1569,44 @@ end
 val.nodes[38113773] = Mythressa()
 
 -------------------------------------------------------------------------------
+------------------------------ ELUSIVE CREATURES ------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[56007100] = ElusiveCreature({
+    label = '{npc:195518}',
+    rewards = {
+        Item({item = 193224}), -- Lustrous Scaled Hide
+        Item({item = 193215}), -- Adamant Scales
+        Item({item = 193255}) -- Pristine Vorquin Horn
+    }
+}) -- Elusive Cliffdweller Vorquin
+
+map.nodes[48005100] = ElusiveCreature({
+    label = '{npc:195472}',
+    rewards = {
+        Item({item = 193218}), -- Dense Hide
+        Item({item = 193211}), -- Resilient Leather
+        Item({item = 193254}) -- Rockfang Leather
+    }
+}) -- Elusive Ferocious Titanfang
+
+-------------------------------------------------------------------------------
+--------------------------------- GRAND HUNTS ---------------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[34576668] = GrandHunt({
+    mapID = map.id,
+    areaPOI = 7097,
+    criteria = 55686
+}) -- Southern Thaldraszus Hunt
+
+map.nodes[50594665] = GrandHunt({
+    mapID = map.id,
+    areaPOI = 7099,
+    criteria = 55687
+}) -- Northern Thaldraszus Hunt
+
+-------------------------------------------------------------------------------
 -------------------------------- MISCELLANEOUS --------------------------------
 -------------------------------------------------------------------------------
 
@@ -1480,7 +1648,7 @@ local Rumiastrasza = Class('Rumiastrasza', Collectible, {
     quest = 67071, -- What a Long Sweet Trip It's Been
     parent = map.id,
     rewards = {
-        Item({item = 198132}) -- Recipe: Hoard of Draconic Delicacies
+        Recipe({item = 198132, profession = 185}) -- Recipe: Hoard of Draconic Delicacies
     }
 }) -- Rumiastrasza
 

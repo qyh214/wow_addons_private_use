@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "esES" then
+if (GAME_LOCALE or GetLocale()) ~= "esES" then
   return
 end
 
@@ -8,7 +8,7 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	L["Abilities"] = "Habilidades"
-	L["Add Triggers"] = "Añadir disparadores"
+	L["Add Triggers"] = "Añadir activadores"
 	L["Always Active"] = "Siempre activo"
 	L["Always Show"] = "Mostrar siempre"
 	L["Always show the aura, highlight it if debuffed."] = "Mostrar siempre el aura, resaltarla si hay perjuicios."
@@ -18,78 +18,53 @@ local L = WeakAuras.L
 	L["Always shows the aura, grey if buff not active."] = "Muestra siempre el aura, se vuelve gris si el beneficio no está activo."
 	L["Always shows the aura, highlight it if buffed."] = "Muestra siempre el aura, la resalta si el beneficio está activo."
 	L["Always shows the aura, highlight when active, turns blue on insufficient resources."] = "Muestra siempre el aura, la resalta si está activa, se vuelve azul si no hay suficientes recursos."
-	--[[Translation missing --]]
-	L["Always shows the aura, highlight while proc is active, blue on insufficient resources."] = "Always shows the aura, highlight while proc is active, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Always shows the aura, highlight while proc is active, blue when not usable."] = "Always shows the aura, highlight while proc is active, blue when not usable."
-	--[[Translation missing --]]
-	L["Always shows the aura, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Always shows the aura, highlight while proc is active, turns red when out of range, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns blue on insufficient resources."] = "Always shows the aura, turns blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns blue when not usable."] = "Always shows the aura, turns blue when not usable."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if on cooldown."] = "Always shows the aura, turns grey if on cooldown."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "Always shows the aura, turns grey if the ability is not usable and red when out of range."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns grey if the ability is not usable."] = "Always shows the aura, turns grey if the ability is not usable."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Always shows the aura, turns red when out of range, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Always shows the aura, turns red when out of range."] = "Always shows the aura, turns red when out of range."
-	--[[Translation missing --]]
-	L["Always shows the aura."] = "Always shows the aura."
-	--[[Translation missing --]]
-	L["Back"] = "Back"
+	L["Always shows the aura, highlight while proc is active, blue on insufficient resources."] = "Siempre muestra el aura, resalta mientras el proc está activo, azul con recursos insuficientes."
+	L["Always shows the aura, highlight while proc is active, blue when not usable."] = "Muestra siempre el aura, resaltada mientras el proc está activo, azul cuando no se puede usar."
+	L["Always shows the aura, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Muestra siempre el aura, resalta mientras el proc está activo, se vuelve rojo cuando está fuera de alcance, azul en caso de recursos insuficientes."
+	L["Always shows the aura, turns blue on insufficient resources."] = "Siempre muestra el aura, se vuelve azul con recursos insuficientes."
+	L["Always shows the aura, turns blue when not usable."] = "Siempre muestra el aura, se vuelve azul cuando no se puede utilizar."
+	L["Always shows the aura, turns grey if on cooldown."] = "Siempre muestra el aura, se vuelve gris si está en cooldown."
+	L["Always shows the aura, turns grey if the ability is not usable and red when out of range."] = "Muestra siempre el aura, se vuelve gris si la habilidad no es utilizable y roja cuando está fuera de alcance."
+	L["Always shows the aura, turns grey if the ability is not usable."] = "Muestra siempre el aura, se vuelve gris si la habilidad no es utilizable."
+	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Siempre muestra el aura, se vuelve roja cuando está fuera de alcance, azul en caso de recursos insuficientes."
+	L["Always shows the aura, turns red when out of range."] = "Siempre muestra el aura, se vuelve roja cuando está fuera de alcance."
+	L["Always shows the aura."] = "Siempre muestra el aura."
+	L["Back"] = "Volver"
 	--[[Translation missing --]]
 	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
 	--[[Translation missing --]]
 	L["Basic Show On Ready"] = "Basic Show On Ready"
-	--[[Translation missing --]]
-	L["Bloodlust/Heroism"] = "Bloodlust/Heroism"
+	L["Bloodlust/Heroism"] = "Ansia de sangre/Heroísmo"
 	L["buff"] = "beneficio"
 	L["Buffs"] = "Beneficios"
-	--[[Translation missing --]]
-	L["Cancel"] = "Cancel"
-	--[[Translation missing --]]
-	L["Cast"] = "Cast"
+	L["Cancel"] = "Cancelar"
+	L["Cast"] = "Castear"
 	L["Charge and Buff Tracking"] = "Seguimiento de cargas y beneficios"
 	L["Charge and Debuff Tracking"] = "Seguimiento de cargas y perjuicios"
-	--[[Translation missing --]]
-	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
-	--[[Translation missing --]]
-	L["Charge Tracking"] = "Charge Tracking"
-	--[[Translation missing --]]
+	L["Charge and Duration Tracking"] = "Seguimiento de cargas y duración"
+	L["Charge Tracking"] = "Seguimiento de cargas"
 	L["cooldown"] = "cooldown"
-	--[[Translation missing --]]
-	L["Cooldown Tracking"] = "Cooldown Tracking"
-	--[[Translation missing --]]
+	L["Cooldown Tracking"] = "Seguimiento de cooldown"
 	L["Cooldowns"] = "Cooldowns"
-	--[[Translation missing --]]
-	L["Create Auras"] = "Create Auras"
+	L["Create Auras"] = "Crear auras"
 	L["debuff"] = "perjuicio"
 	L["Debuffs"] = "Perjuicios"
-	--[[Translation missing --]]
 	L["General"] = "General"
-	--[[Translation missing --]]
-	L["Health"] = "Health"
-	--[[Translation missing --]]
-	L["Highlight while action is queued."] = "Highlight while action is queued."
-	--[[Translation missing --]]
-	L["Highlight while active, red when out of range."] = "Highlight while active, red when out of range."
-	--[[Translation missing --]]
-	L["Highlight while active."] = "Highlight while active."
+	L["Health"] = "Salud"
+	L["Highlight while action is queued."] = "Resaltar mientras la acción está en cola."
+	L["Highlight while active, red when out of range."] = "Resaltar mientras está activa, rojo cuando está fuera de alcance."
+	L["Highlight while active."] = "Resaltar mientras está activa."
 	L["Highlight while buffed, red when out of range."] = "Resaltar cuando hay beneficio activo, rojo cuando esté fuera de rango."
 	L["Highlight while buffed."] = "Resaltar cuando hay beneficio activo."
 	L["Highlight while debuffed, red when out of range."] = "Resaltar cuando hay perjuicio activo, rojo cuando esté fuera de rango."
 	L["Highlight while debuffed."] = "Resaltar cuando hay perjuicio activo."
+	L["Highlight while spell is active."] = "Resaltar mientras el hechizo está activo."
+	L["Hold CTRL to create multiple auras at once"] = "Mantén pulsado CTRL para crear varias auras a la vez"
+	L["Keeps existing triggers intact"] = "Mantiene intactos los activadores existentes"
 	--[[Translation missing --]]
-	L["Highlight while spell is active."] = "Highlight while spell is active."
+	L["Max 3"] = "Max 3"
 	--[[Translation missing --]]
-	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
-	--[[Translation missing --]]
-	L["Keeps existing triggers intact"] = "Keeps existing triggers intact"
+	L["Max 4"] = "Max 4"
 	--[[Translation missing --]]
 	L["Next"] = "Next"
 	L["Only show the aura if the target has the debuff."] = "Mostrar el aura solo si el objetivo tiene el perjuicio activo."
@@ -110,10 +85,8 @@ local L = WeakAuras.L
 	L["Pet Behavior"] = "Comportamiento de mascota"
 	--[[Translation missing --]]
 	L["PvP Talents"] = "PvP Talents"
-	--[[Translation missing --]]
-	L["Replace all existing triggers"] = "Replace all existing triggers"
-	--[[Translation missing --]]
-	L["Replace Triggers"] = "Replace Triggers"
+	L["Replace all existing triggers"] = "Sustituir todos los activadores existentes"
+	L["Replace Triggers"] = "Sustituir activadores"
 	--[[Translation missing --]]
 	L["Resources"] = "Resources"
 	--[[Translation missing --]]

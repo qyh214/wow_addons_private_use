@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HallsofInfusionTrash", "DBM-Party-Dragonflight", 8)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221205015333")
+mod:SetRevision("20230212000355")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -32,6 +32,7 @@ local specWarnBlastingGust					= mod:NewSpecialWarningInterrupt(374080, "HasInte
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 390290 and self:AntiSpam(3, 6) then
 		specWarnFlashFlood:Show()
 		specWarnFlashFlood:Play("carefly")

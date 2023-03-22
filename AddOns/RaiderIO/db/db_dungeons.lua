@@ -43,7 +43,7 @@ ns.dungeons = {
         ["keystone_instance"] = 401,
         ["instance_map_id"] = 2515,
         ["lfd_activity_ids"] = { 1177, 1178, 1179, 1180 },
-        ["timers"] = { 1224, 1632, 2040 },
+        ["timers"] = { 1278, 1704, 2130 },
         ["name"] = "The Azure Vault",
         ["shortName"] = "AV",
     },

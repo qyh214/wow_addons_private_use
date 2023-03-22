@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(971, "DBM-Highmaul", nil, 477)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220127091718")
+mod:SetRevision("20230316183205")
 mod:SetCreatureID(77404)
 mod:SetEncounterID(1706)
 --mod:SetModelSound("sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_AGGRO.ogg", "sound\\creature\\thebutcher\\VO_60_OGRERAID_BUTCHER_SPELL_B.ogg")
@@ -21,14 +21,14 @@ mod:RegisterEventsInCombat(
 local warnCleave					= mod:NewCountAnnounce(156157, 2, nil, false)
 local warnTenderizer				= mod:NewStackAnnounce(156151, 2, nil, "Tank")
 local warnCleaver					= mod:NewSpellAnnounce(156143, 3, nil, false, 2)--Saberlash
+local warnBoundingCleaveEnd			= mod:NewEndAnnounce(156160, 1)
 local warnFrenzy					= mod:NewSpellAnnounce(156598, 4)
 
-local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2)
+local specWarnTenderizer			= mod:NewSpecialWarningStack(156151, nil, 2, nil, nil, 1, 6)
 local specWarnTenderizerOther		= mod:NewSpecialWarningTaunt(156151, nil, nil, nil, nil, 2)
 local specWarnGushingWounds			= mod:NewSpecialWarningStack(156152, nil, 2, nil, nil, nil, 2)
 local specWarnBoundingCleave		= mod:NewSpecialWarningCount(156160, nil, nil, nil, 2, 12)
-local specWarnBoundingCleaveEnded	= mod:NewSpecialWarningEnd(156160)
-local specWarnPaleVitriol			= mod:NewSpecialWarningMove(163046, nil, nil, nil, nil, 2)--Mythic
+local specWarnPaleVitriol			= mod:NewSpecialWarningGTFO(163046, nil, nil, nil, 1, 8)--Mythic
 
 local timerCleaveCD					= mod:NewCDTimer(6, 156157, nil, false, nil, 5)
 local timerTenderizerCD				= mod:NewCDTimer(15.2, 156151, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON, nil, 2, 4)
@@ -142,7 +142,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnCleaver:Show()
 		timerCleaverCD:Start()
 	elseif spellId == 156172 then--The cleave finisher of Bounding Cleave. NOT to be confused with other cleave.
-		specWarnBoundingCleaveEnded:Show()
+		warnBoundingCleaveEnd:Show()
 		--Timer for when regular cleave resumes
 		if self.vb.isFrenzied then
 			timerCleaveCD:Start(5)
@@ -152,10 +152,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
 	if spellId == 163046 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
-		specWarnPaleVitriol:Show()
-		specWarnPaleVitriol:Play("runaway")
+		specWarnPaleVitriol:Show(spellName)
+		specWarnPaleVitriol:Play("watchfeet")
 	end
 end
 mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE

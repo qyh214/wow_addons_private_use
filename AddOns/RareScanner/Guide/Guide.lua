@@ -588,6 +588,64 @@ private.NPC_GUIDE = {
 		[RSConstants.DOT..7] = { x = 0.5273 , y = 0.6993, comment = AL["NOTE_191950_1"] };		
 		[RSConstants.DOT..8] = { x = 0.5376 , y = 0.6746, comment = AL["NOTE_191950_1"] };	
 	}; --Porta the Overgrown
+	["2006812151"] = { 
+		[RSConstants.ENTRANCE..1] = { x = 0.4366, y = 0.5859 };
+		[RSConstants.ENTRANCE..2] = { x = 0.4203, y = 0.5836 };
+		[RSConstants.ENTRANCE..3] = { x = 0.4134, y = 0.6052 };
+		[RSConstants.ENTRANCE..4] = { x = 0.4170, y = 0.6200 };
+	}; --Bonesifter Marwak
+	["2006102151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.3673, y = 0.3245 };
+	}; --Duzalgor <Guardian of the Noxious Brood>
+	["2005372151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.2675, y = 0.4169 };
+	}; --Gahz'raxes <Spawn of Gahz'ragon>
+	["2009602151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.5190, y = 0.5982 };
+	}; --Warden Entrix <Hand of Lapisagos>
+	["2009602102"] = { 
+		[RSConstants.TRANSPORT..1] = { x = 0.4991, y = 0.5426 };
+		[RSConstants.TRANSPORT..2] = { x = 0.4697, y = 0.4737 };
+	}; --Warden Entrix <Hand of Lapisagos>
+	["2009782151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.5190, y = 0.5982 };
+	}; --Pyrachniss
+	["2009782102"] = { 
+		[RSConstants.TRANSPORT] = { x = 0.6799, y = 0.4921 };
+	}; --Pyrachniss
+	["2005842151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.5904, y = 0.4961 };
+	}; --Vraken the Hunter
+	["2009042151"] = { 
+		[RSConstants.ENTRANCE..1] = { x = 0.7224, y = 0.6474 };
+		[RSConstants.ENTRANCE..2] = { x = 0.7070, y = 0.6645 };
+		[RSConstants.ENTRANCE..3] = { x = 0.7092, y = 0.6879 };
+		[RSConstants.ENTRANCE..4] = { x = 0.7191, y = 0.6972 };
+	}; --Veltrax
+	["2009112151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.7448, y = 0.5460 };
+	}; --Volcanakk
+	["2006002151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.4676, y = 0.1920 };
+	}; --Reisa the Drowned
+	["2008852151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.6144, y = 0.5821 };
+	}; --Lady Shaz'ra
+	["2011812151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.6936, y = 0.4631 };
+	}; --Mad-Eye Carrey
+	["2007302151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.8069, y = 0.6087 };
+	}; --Tidesmith Zarviss
+	["2006212151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.5510, y = 0.3876 };
+	}; --Manathema
+	["2007432151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.3091, y = 0.6085 };
+	}; --Amephyst
+	["2006192151"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.4289, y = 0.5098 };
+	}; --Tectonus
 }
 
 ---============================================================================

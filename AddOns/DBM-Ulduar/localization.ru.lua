@@ -374,7 +374,7 @@ L:SetWarningLocalization{
 	WarningSanity 					= "Осталось %d Здравомыслия",
 	SpecWarnSanity 					= "Осталось %d Здравомыслия",
 	SpecWarnMadnessOutNow			= "Доведение до помешательства заканчивается - выбегайте",
-	WarnBrainPortalSoon				= "Портал Разума через 3 секунды",
+	WarnBrainPortalSoon				= "Портал Разума через 10 секунд",
 	specWarnBrainPortalSoon			= "Скоро Портал Разума"
 }
 

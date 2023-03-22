@@ -1,10 +1,12 @@
 local W, F, L, P, G, O = unpack(select(2, ...))
 
+local loadstring = loadstring
+
 local codeSnippet =
     [[
-local C = _G.WindChatFilter[1]:GetModule("Core")
+local api = _G.WindChatFilter.API
 
-C:TestWithAllFilters({
+api.TestWithAllFilters({
     channel = "Say",
     message = "This is a test message.",
     sender = "CoolName",
@@ -38,8 +40,25 @@ O.advanced = {
             type = "group",
             inline = true,
             args = {
-                includeMyself = {
+                stopInInstance = {
                     order = 1,
+                    type = "toggle",
+                    name = L["Stop In Instance"],
+                    desc = L["Stop filtering in instance."] ..
+                        "\n" ..
+                            L[
+                                "Enable this option will save resource usage, but some message may not be filtered when you change zone."
+                            ],
+                    get = function(info)
+                        return W.global.advanced.stopInInstance
+                    end,
+                    set = function(info, value)
+                        W.global.advanced.stopInInstance = value
+                    end,
+                    width = 1.5
+                },
+                includeMyself = {
+                    order = 2,
                     type = "toggle",
                     name = L["Include Myself"],
                     desc = L["Filter the messages from you."],
@@ -48,6 +67,32 @@ O.advanced = {
                     end,
                     set = function(info, value)
                         W.global.advanced.includeMyself = value
+                    end,
+                    width = 1.5
+                },
+                includeFriend = {
+                    order = 3,
+                    type = "toggle",
+                    name = L["Include Friend"],
+                    desc = L["Filter the messages from your friends."],
+                    get = function(info)
+                        return W.global.advanced.includeFriend
+                    end,
+                    set = function(info, value)
+                        W.global.advanced.includeFriend = value
+                    end,
+                    width = 1.5
+                },
+                includeGuildMember = {
+                    order = 4,
+                    type = "toggle",
+                    name = L["Include Guild Member"],
+                    desc = L["Filter the messages from your guild members."],
+                    get = function(info)
+                        return W.global.advanced.includeGuildMember
+                    end,
+                    set = function(info, value)
+                        W.global.advanced.includeGuildMember = value
                     end,
                     width = 1.5
                 }
@@ -99,7 +144,7 @@ O.advanced = {
                     type = "select",
                     name = L["Log Level"],
                     desc = L["Only display log message that the level is higher than you choose."] ..
-                        "\n|cffff3860" .. L["Set to 2 if you do not understand the meaning of log level."] .. "|r",
+                        "\n|cffff3860" .. L["Set to 1 if you do not understand the meaning of log level."] .. "|r",
                     get = function(info)
                         return W.global.advanced.logLevel
                     end,

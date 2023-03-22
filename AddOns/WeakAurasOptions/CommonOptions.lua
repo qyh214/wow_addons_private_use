@@ -1073,6 +1073,10 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       values = (data.regionType == "group" or data.regionType == "dynamicgroup")
                 and OptionsPrivate.Private.anchor_frame_types_group
                 or OptionsPrivate.Private.anchor_frame_types,
+      sorting = OptionsPrivate.Private.SortOrderForValues(
+                (data.regionType == "group" or data.regionType == "dynamicgroup")
+                and OptionsPrivate.Private.anchor_frame_types_group
+                or OptionsPrivate.Private.anchor_frame_types),
     },
     anchorFrameParent = {
       type = "toggle",
@@ -1084,7 +1088,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
         return data.anchorFrameParent or data.anchorFrameParent == nil;
       end,
       hidden = function()
-        return not IsGroupByFrame() and (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE" or IsParentDynamicGroup());
+        return not IsGroupByFrame() and (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE" or IsParentDynamicGroup());
       end,
     },
     anchorFrameSpaceOne = {
@@ -1094,7 +1098,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       order = 72,
       image = function() return "", 0, 0 end,
       hidden = function()
-        return IsParentDynamicGroup() or not (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE")
+        return IsParentDynamicGroup() or not (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE")
       end,
     },
     -- Input field to select frame to anchor on
@@ -1140,7 +1144,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       type = "select",
       width = WeakAuras.normalWidth,
       name = function()
-        if (data.anchorFrameType == "SCREEN") then
+        if (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT") then
           return L["To Screen's"]
         elseif (data.anchorFrameType == "PRD") then
           return L["To Personal Ressource Display's"];
@@ -1157,7 +1161,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
           if IsParentDynamicGroup() then
             return true
           end
-          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE";
+          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE";
         else
           return data.anchorFrameType == "MOUSE";
         end
@@ -1174,7 +1178,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
         if IsGroupByFrame() then
           return true
         end
-        if (data.anchorFrameType ~= "SCREEN") then
+        if (data.anchorFrameType ~= "SCREEN" and data.anchorFrameType ~= "UIPARENT") then
           return true;
         end
         if (data.parent) then
@@ -1251,7 +1255,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       order = 82,
       image = function() return "", 0, 0 end,
       hidden = function()
-        return not (data.anchorFrameType ~= "SCREEN" or IsParentDynamicGroup());
+        return not (data.anchorFrameType ~= "SCREEN" or data.anchorFrameType ~= "UIPARENT" or IsParentDynamicGroup());
       end
     },
   };

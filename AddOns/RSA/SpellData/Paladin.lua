@@ -94,12 +94,14 @@ local defaults = {
 		additionalSpellIDs = {
 			[231895] = true, -- Crusade
 			[216331] = true, -- Avenging Crusader
+			[389539] = true, -- Sentinel
+
 		},
 		configDisplay = {
 			isDefault = true,
 			disabledChannels = {whisper = true},
-			defaultName = RSA.GetSpellInfo(31884) .. ' | ' .. RSA.GetSpellInfo(216331) .. ' | ' .. RSA.GetSpellInfo(231895),
-			defaultDesc = RSA.DescTableBuilder(31884,216331,231895),
+			defaultName = RSA.GetSpellInfo(31884) .. ' | ' .. RSA.GetSpellInfo(216331) .. ' | ' .. RSA.GetSpellInfo(231895)  .. ' | ' .. RSA.GetSpellInfo(389539),
+			defaultDesc = RSA.DescTableBuilder(31884),
 		},
 		events = {
 			['SPELL_CAST_SUCCESS'] = {
@@ -278,6 +280,7 @@ local defaults = {
 		},
 		configDisplay = {
 			isDefault = true,
+			defaultName = RSA.GetSpellInfo(4987) .. ' | ' .. RSA.GetSpellInfo(213644),
 		},
 		events = {
 			['SPELL_DISPEL'] = {
@@ -315,6 +318,22 @@ local defaults = {
 				messages = {"[LINK] activated!",},
 			},
 			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
+			},
+		},
+	},
+	['eyeOfTyr'] = {
+		spellID = 387174,
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+			['RSA_END_TIMER'] = {
+				duration = 9,
 				messages = {"[LINK] finished!",},
 			},
 		},
@@ -836,6 +855,7 @@ local wrath = {
 		},
 		configDisplay = {
 			isDefault = true,
+			defaultName = RSA.GetSpellInfo(4987) .. ' | ' .. RSA.GetSpellInfo(1152),
 		},
 		events = {
 			['SPELL_DISPEL'] = {
@@ -1082,6 +1102,22 @@ local wrath = {
 					TARGET = true,
 					MISSTYPE = true,
 				},
+			},
+		},
+	},
+	['sacredShield'] = {
+		spellID = 53601,
+		configDisplay = {
+			isDefault = true,
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+				tags = {TARGET = true,},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
+				tags = {TARGET = true,},
 			},
 		},
 	},

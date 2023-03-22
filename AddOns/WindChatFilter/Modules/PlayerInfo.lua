@@ -1,6 +1,14 @@
 local W, F, L = unpack(select(2, ...))
 local CORE = W:GetModule("Core")
 
+local next = next
+local pairs = pairs
+local strfind = strfind
+
+local GetNumClasses = GetNumClasses
+
+local C_CreatureInfo_GetClassInfo = C_CreatureInfo.GetClassInfo
+
 local races = {
     neutral = {
         "Pandaren",
@@ -57,7 +65,7 @@ local function getPlayerInfoFilter(rule)
     local matchRealms = rule.playerInfo.realm
 
     for i = 1, GetNumClasses() do
-        local classInfo = C_CreatureInfo.GetClassInfo(i)
+        local classInfo = C_CreatureInfo_GetClassInfo(i)
         local className = classInfo and classInfo.classFile
         if className then
             matchClasses[className] = rule.playerInfo.class and rule.playerInfo.class[className]
@@ -132,7 +140,7 @@ local function getPlayerInfoFilter(rule)
             local matched = false
 
             for name, _ in pairs(matchNames) do
-                if strfind(playerInfo.name, name) then
+                if strfind(playerInfo.name, name) or strfind(data.sender, name) then
                     matched = true
                     break
                 end

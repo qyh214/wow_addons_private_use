@@ -1,10 +1,10 @@
-lightweight tag 2c2b701b13c3c83a74350f4fa9dfd5afc34d4c29 10.0.2-2
+lightweight tag d011343a078226c2836a5317794ba1cba74d5308 10.0.0.5-3
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Wed Dec 21 16:54:21 2022 -0500
+Date:	Thu Mar 16 14:18:50 2023 -0400
 
-commit 2c2b701b13c3c83a74350f4fa9dfd5afc34d4c29
+commit d011343a078226c2836a5317794ba1cba74d5308
 Author: Xuerian <xuerian@gmail.com>
-Date:   Wed Dec 21 16:54:21 2022 -0500
+Date:   Thu Mar 16 14:18:50 2023 -0400
 
-    Group: Potential hover issue workaround
+    Group: Only disenchant roll if it's possible
 

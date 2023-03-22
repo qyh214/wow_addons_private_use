@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NeltharusTrash", "DBM-Party-Dragonflight", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221205015333")
+mod:SetRevision("20230320021831")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -50,6 +50,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 382708 and self:AntiSpam(3, 2) then
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnVolcanicGuard:Show()
@@ -58,7 +59,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 376186 and self:AntiSpam(3, 2) then
 		specWarnEruptiveCrash:Show()
 		specWarnEruptiveCrash:Play("watchstep")
-	elseif spellId == 372311 and self:IsValidWarning(args.sourceGUID) and self:AntiSpam(3, 2) then
+	elseif spellId == 372311 and self:AntiSpam(3, 2) then
 		specWarnMagmaFist:Show()
 		specWarnMagmaFist:Play("shockwave")
 	elseif spellId == 372201 and self:AntiSpam(3, 2) then
@@ -98,7 +99,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnScorchingFusillade:Play("scatter")
 			yellScorchingFusillade:Yell()
 		end
-	elseif spellId == 371875 and self:AntiSpam(3, 5) then
+	elseif spellId == 371875 and self:AntiSpam(3, 3) then
 		specWarnFiredUp:Show(args.destName)
 		specWarnFiredUp:Play("enrage")
 	end

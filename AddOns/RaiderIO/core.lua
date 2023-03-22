@@ -18,7 +18,7 @@ local ScrollBoxUtil do
     ScrollBoxUtil = {}
 
     ---@class CallbackRegistryMixin
-    ---@field public RegisterCallback fun(event: string, callback: fun())
+    ---@field public RegisterCallback fun(event: string|any, callback: fun())
 
     ---@class ScrollBoxBaseMixin : CallbackRegistryMixin
     ---@field public GetFrames fun(): Frame[]
@@ -675,23 +675,23 @@ do
 
     ---@class Module
     -- private properties for internal use only
-    ---@field private id string @Required and unique string to identify the module.
-    ---@field private index number @Automatically assigned a number based on the creation order.
-    ---@field private loaded boolean @Flag indicates if the module is loaded.
-    ---@field private enabled boolean @Flag indicates if the module is enabled.
-    ---@field private dependencies string[] @List over dependencies before we can Load the module.
+    ---@field public id string @Required and unique string to identify the module.
+    ---@field public index number @Automatically assigned a number based on the creation order.
+    ---@field public loaded boolean @Flag indicates if the module is loaded.
+    ---@field public enabled boolean @Flag indicates if the module is enabled.
+    ---@field public dependencies string[] @List over dependencies before we can Load the module.
     -- private functions that should never be called
-    ---@field private SetLoaded function @Internal function should not be called manually.
-    ---@field private Load function @Internal function should not be called manually.
-    ---@field private SetEnabled function @Internal function should not be called manually.
+    ---@field public SetLoaded function @Internal function should not be called manually.
+    ---@field public Load function @Internal function should not be called manually.
+    ---@field public SetEnabled function @Internal function should not be called manually.
     -- protected functions that can be called but should never be overridden
-    ---@field protected IsLoaded function @Internal function, can be called but do not override.
-    ---@field protected IsEnabled function @Internal function, can be called but do not override.
-    ---@field protected Enable function @Internal function, can be called but do not override.
-    ---@field protected Disable function @Internal function, can be called but do not override.
-    ---@field protected SetDependencies function @Internal function, can be called but do not override.
-    ---@field protected HasDependencies function @Internal function, can be called but do not override.
-    ---@field protected GetDependencies function @Internal function, can be called but do not override. Returns a table using the same order as the dependencies table. Returns the modules or nil depending if they are available or not.
+    ---@field public IsLoaded function @Internal function, can be called but do not override.
+    ---@field public IsEnabled function @Internal function, can be called but do not override.
+    ---@field public Enable function @Internal function, can be called but do not override.
+    ---@field public Disable function @Internal function, can be called but do not override.
+    ---@field public SetDependencies function @Internal function, can be called but do not override.
+    ---@field public HasDependencies function @Internal function, can be called but do not override.
+    ---@field public GetDependencies function @Internal function, can be called but do not override. Returns a table using the same order as the dependencies table. Returns the modules or nil depending if they are available or not.
     -- public functions that can be overridden
     ---@field public CanLoad function @If it returns true the module will be loaded, otherwise postponed for later. Override to define your modules load criteria that have to be met before loading.
     ---@field public OnLoad function @Once the module loads this function is executed. Use this to setup further logic for your module. The args provided are the module references as described in the dependencies table.
@@ -1699,7 +1699,7 @@ do
             temp.dungeon = util:GetDungeonByLFDActivityID(activityInfo.activityID) or util:GetRaidByLFDActivityID(activityInfo.activityID)
             temp.hosting = true
         end
-        local applications = C_LFGList.GetApplications()
+        local applications = C_LFGList.GetApplications() ---@type number[]
         for _, resultID in ipairs(applications) do
             local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
             if searchResultInfo and searchResultInfo.activityID and not searchResultInfo.isDelisted then
@@ -1956,6 +1956,7 @@ do
 
     ---@class InternalStaticPopupDialog
     ---@field public id string
+    ---@field public which? string
     ---@field public text string|fun(): string
     ---@field public button1? string
     ---@field public button2? string
@@ -1979,6 +1980,9 @@ do
         if not StaticPopupDialogs[id] then
             if type(popup.text) == "function" then
                 popup.text = popup.text()
+            end
+            if not popup.which then
+                popup.which = popup.id
             end
             StaticPopupDialogs[id] = popup
         end
@@ -7363,7 +7367,7 @@ do
         f.texRight:SetSize(32, 32)
         f.texRight:SetPoint("RIGHT", 16, 0)
         f.texMid = f:CreateTexture(nil, "BACKGROUND")
-        f.texMid:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Mid2", true)
+        f.texMid:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorder-Mid2")
         f.texMid:SetSize(0, 32)
         f.texMid:SetPoint("TOPLEFT", f.texLeft, "TOPRIGHT", 0, 0)
         f.texMid:SetPoint("TOPRIGHT", f.texRight, "TOPLEFT", 0, 0)
@@ -7377,7 +7381,7 @@ do
         f.texFocusRight:SetSize(32, 32)
         f.texFocusRight:SetPoint("RIGHT", 16, 0)
         f.texFocusMid = f:CreateTexture(nil, "BORDER")
-        f.texFocusMid:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorderFocus-Mid", true)
+        f.texFocusMid:SetTexture("Interface\\ChatFrame\\UI-ChatInputBorderFocus-Mid")
         f.texFocusMid:SetSize(0, 32)
         f.texFocusMid:SetPoint("TOPLEFT", f.texFocusLeft, "TOPRIGHT", 0, 0)
         f.texFocusMid:SetPoint("TOPRIGHT", f.texFocusRight, "TOPLEFT", 0, 0)
@@ -7423,10 +7427,10 @@ do
             Frame:SetSize(310, config:Get("debugMode") and 115 or 100)
             Frame:SetPoint("CENTER")
             if Frame.SetBackdrop then
-                Frame:SetBackdrop(BACKDROP_TUTORIAL_16_16)
-                Frame:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR:GetRGB())
-                Frame:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR:GetRGB())
-                Frame:SetBackdropColor(0, 0, 0, 1) -- TODO: ?
+                Frame:SetBackdrop(BACKDROP_TUTORIAL_16_16) ---@diagnostic disable-line: param-type-mismatch
+                Frame:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR:GetRGB()) ---@diagnostic disable-line: param-type-mismatch
+                Frame:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR:GetRGB()) ---@diagnostic disable-line: param-type-mismatch
+                Frame:SetBackdropColor(0, 0, 0, 1) ---@diagnostic disable-line: param-type-mismatch
             end
             Frame.header = Frame:CreateFontString(nil, nil, "ChatFontNormal")
             Frame.header:SetPoint("TOPLEFT", 16, -12)
@@ -8153,6 +8157,11 @@ do
         return t, n
     end
 
+    ---@class Ticker
+    ---@field public CalledDuringScan boolean @Private. Set if the guild news gets scanned while we have an active ticker.
+    ---@field public Cancel fun(self: Ticker)
+    ---@field public IsCancelled fun(self: Ticker)
+
     local guildNewsTicker ---@type Ticker?
     local guildNewsCount ---@type number
 
@@ -8214,6 +8223,7 @@ do
             end
         end)
         LOOT_FRAME.MiniFrame:StartScanning()
+        ---@type Ticker
         guildNewsTicker = C_Timer.NewTicker(SCAN_INTERVAL_BETWEEN_CYCLES, function()
             if not coroutine.resume(co) then
                 if guildNewsTicker then
@@ -8225,6 +8235,9 @@ do
             end
         end)
     end
+
+    local LOOT_SLOT_ITEM = LOOT_SLOT_ITEM or Enum.LootSlotType.Item ---@diagnostic disable-line: undefined-global
+    local LOOT_SLOT_CURRENCY = LOOT_SLOT_CURRENCY or Enum.LootSlotType.Currency ---@diagnostic disable-line: undefined-global
 
     local function OnEvent(event, ...)
         if event == "LOOT_READY" then
@@ -9429,9 +9442,9 @@ do
             configParentFrame:RegisterForDrag("LeftButton")
 
             if configParentFrame.SetBackdrop then
-                configParentFrame:SetBackdrop(configOptions.backdrop)
-                configParentFrame:SetBackdropColor(0, 0, 0, 0.8)
-                configParentFrame:SetBackdropBorderColor(0.5, 0.5, 0.5, 0.8)
+                configParentFrame:SetBackdrop(configOptions.backdrop) ---@diagnostic disable-line: param-type-mismatch
+                configParentFrame:SetBackdropColor(0, 0, 0, 0.8) ---@diagnostic disable-line: param-type-mismatch
+                configParentFrame:SetBackdropBorderColor(0.5, 0.5, 0.5, 0.8) ---@diagnostic disable-line: param-type-mismatch
             end
 
             configParentFrame:SetScript("OnShow", ConfigFrame_OnShow)
@@ -9959,9 +9972,10 @@ do
     ---@field public name string @The character name.
     ---@field public success boolean @Set `true` if the profile exists and contains data, otherwise `false` to ensure it is empty or missing.
     ---@field public exists boolean @Set `true` if the test expects the profile to exist, otherwise `false` to ensure it doesn't exist
-    ---@field private profile DataProviderCharacterProfile @Set internally once the test runs and the profile is attempted retrieved.
-    ---@field private status boolean @Set internally to `true` if the test passed, otherwise `false` if something went wrong.
-    ---@field private explanation string @Set internally to describe what went wrong, or what went right depending on the test.
+    -- private fields
+    ---@field public profile DataProviderCharacterProfile @Private. Set internally once the test runs and the profile is attempted retrieved.
+    ---@field public status boolean @Private. Set internally to `true` if the test passed, otherwise `false` if something went wrong.
+    ---@field public explanation string @Private. Set internally to describe what went wrong, or what went right depending on the test.
 
     ---@param guid1 any
     ---@param guid2 any

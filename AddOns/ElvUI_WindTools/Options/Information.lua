@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 local options = W.options.information.args
 local ACH = E.Libs.ACH
 
@@ -86,10 +86,9 @@ options.help = {
                             W.Title
                         ),
                         format(
-                            L["You can send your suggestions or bugs via %s, %s, %s, %s and the thread in %s."],
+                            L["You can send your suggestions or bugs via %s, %s, %s and the thread in %s."],
                             L["QQ Group"],
                             L["Discord"],
-                            L["KOOK"],
                             L["GitHub"],
                             L["NGA.cn"]
                         ),
@@ -129,18 +128,8 @@ options.help = {
                     end,
                     width = 0.7
                 },
-                kook = {
-                    order = 5,
-                    type = "execute",
-                    name = L["KOOK"],
-                    image = W.Media.Icons.kook,
-                    func = function()
-                        E:StaticPopup_Show("WINDTOOLS_EDITBOX", nil, nil, "https://kook.top/ryxa8X")
-                    end,
-                    width = 0.7
-                },
                 qq = {
-                    order = 6,
+                    order = 5,
                     type = "execute",
                     name = L["QQ Group"],
                     image = W.Media.Icons.qq,
@@ -150,7 +139,7 @@ options.help = {
                     width = 0.7
                 },
                 github = {
-                    order = 7,
+                    order = 6,
                     type = "execute",
                     name = L["GitHub"],
                     image = W.Media.Icons.github,
@@ -546,6 +535,9 @@ do -- 媒体文件
             "Media/Icons/Button/Minus.tga",
             "Media/Icons/Button/Plus.tga",
             "Media/Icons/Button/Forward.tga"
+        },
+        ["Jodalo"] = {
+            "Media/Textures/StatusbarClean.tga"
         },
         ["IconPark"] = {
             "Media/Icons/Categories"

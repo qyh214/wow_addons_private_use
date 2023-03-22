@@ -33,7 +33,8 @@ Bouldron 193644
 Zurgaz Corebreaker
 @ Azure Span 60306731, vignette 5244
 
-Gravlion
+Gravlion 193654: 69960 + 73998
+@ Waking Shores 29545298, vignette 5233
 @ Azure Span 59876845, vignette 5233
 @ Ohn'Ahran Plains 36763686, vignette 5233
 
@@ -48,5 +49,8 @@ Crystalus 193645: 69952 + 73989
 
 Gaelzion 193653: 69959 + 73995
 @ Thaldraszus 61085657, vignette 5232
+
+Karantun 193647:
+@ Ohn'Ahran 34453468, vignette 5227
 
 ]]

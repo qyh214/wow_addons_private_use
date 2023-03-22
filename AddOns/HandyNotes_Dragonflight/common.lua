@@ -16,6 +16,7 @@ local Currency = ns.reward.Currency
 local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
+local Recipe = ns.reward.Recipe
 local Spacer = ns.reward.Spacer
 local Transmog = ns.reward.Transmog
 
@@ -26,6 +27,11 @@ ns.expansion = 10
 -------------------------------------------------------------------------------
 ----------------------------------- GROUPS ------------------------------------
 -------------------------------------------------------------------------------
+
+ns.groups.COMMUNITY_FEAST = ns.Group('community_feast', 629056, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
 
 ns.groups.DJARADIN_CACHE = Group('djaradin_cache', 'chest_pp', {
     defaults = ns.GROUP_HIDDEN,
@@ -42,12 +48,42 @@ ns.groups.DRAGON_GLYPH = Group('dragon_glyph', 4728198, {
     type = ns.group_types.EXPANSION
 })
 
+ns.groups.DRAGONBANE_SIEGE = ns.Group('dragonbane_siege', 3753264, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.DRAGONRACE = Group('dragonrace', 1100022, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
 
 ns.groups.ELEMENTAL_STORM = Group('elemental_storm', 538566, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ELUSIVE_CREATURE = ns.Group('elusive_creature', 644271, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION,
+    IsEnabled = function(self)
+        -- Only display group for skinning players
+        if not ns.professions.SKINNING:HasProfession() then return false end
+        return ns.Group.IsEnabled(self)
+    end
+})
+
+ns.groups.FORBIDDEN_HOARD = Group('forbidden_hoard', 'chest_pp', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.FROSTSTONE_VAULT_STORM = Group('froststone_vault_storm', 463562, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.GRAND_HUNTS = Group('grand_hunts', 237377, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -70,15 +106,76 @@ ns.groups.SCOUT_PACK = Group('scout_pack', 4562583, {
 ns.groups.SIGNAL_TRANSMITTER = Group('signal_transmitter', 4548860, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION,
-
-    -- Only display group for engineering players
     IsEnabled = function(self)
-        if not ns.PlayerHasProfession(202) then return false end
+        -- Only display group for engineering players
+        if not ns.professions.ENGINEERING:HasProfession() then
+            return false
+        end
         return Group.IsEnabled(self)
     end
 })
 
-ns.groups.TUSKARR_TACKLEBOX = Group('tuskarr_tacklebox', 'chest_bl', {
+ns.groups.SMALL_TREASURES = Group('small_treasures', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TUSKARR_TACKLEBOX = Group('tuskarr_tacklebox', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TUSKARR_CHEST = Group('tuskarr_chest', 'chest_bn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.CLAN_CHEST = Group('clan_chest', 'chest_bk', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DECAY_COVERED_CHEST = Group('decay_covered_chest', 'chest_pk', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.REED_CHEST = Group('reed_chest', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.DRACTHYR_SUPPLY_CHEST = Group('dracthyr_supply_chest', 'chest_bl', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.SIMMERING_CHEST = Group('simmering_chest', 'chest_gn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ICEMAW_STORAGE_CACHE = Group('icemaw_storage_cache', 'chest_nv', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.TITAN_CHEST = Group('titan_chest', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.FROSTBOUND_CHEST = Group('frostbound_chest', 'chest_rd', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.LIGHTNING_BOUND_CHEST = Group('lightning_bound_chest', 'chest_pp', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ZSKERA_VAULTS = Group('zskera_vaults', 4909720, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -163,6 +260,12 @@ ns.groups.LEYLINE = Group('leyline', 1033908, {
     achievement = 16638
 })
 
+ns.groups.LIBRARY = Group('librarian_of_the_reach', 4549135, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17530
+})
+
 ns.groups.NEW_PERSPECTIVE = Group('new_perspective', 1109100, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
@@ -179,6 +282,18 @@ ns.groups.SAFARI = Group('safari', 4048818, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.ACHIEVEMENT,
     achievement = 16519
+})
+
+ns.groups.SCALECOMMANDER_ITEM = Group('scalecommander_item', 134422, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17315
+})
+
+ns.groups.SCROLL_HUNTER = Group('scroll_hunter', 4549192, {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.ACHIEVEMENT,
+    achievement = 17532
 })
 
 ns.groups.SNACK_ATTACK = Group('snack_attack', 134062, {
@@ -220,23 +335,6 @@ ns.node.RareElite = RareElite
 ----------------------------- PROFESSION TREASURES ----------------------------
 -------------------------------------------------------------------------------
 
--- LuaFormatter off
-local PROFESSIONS = {
-    -- name, icon, skillID, variantID
-    {'Alchemy', 4620669, 171, 2823},
-    {'Blacksmithing', 4620670, 164, 2822},
-    {'Enchanting', 4620672, 333, 2825},
-    {'Engineering', 4620673, 202, 2827},
-    {'Herbalism', 4620675, 182, 2832},
-    {'Inscription', 4620676, 773, 2828},
-    {'Jewelcrafting', 4620677, 755, 2829},
-    {'Leatherworking', 4620678, 165, 2830},
-    {'Mining', 4620679, 186, 2833},
-    {'Skinning', 4620680, 393, 2834},
-    {'Tailoring', 4620681, 197, 2831}
-}
--- LuaFormatter on
-
 local ProfessionMaster = Class('ProfessionMaster', ns.node.NPC, {
     scale = 0.9,
     group = ns.groups.PROFESSION_TREASURES
@@ -263,20 +361,25 @@ ns.node.ProfessionTreasures = {}
 local PM = ns.node.ProfessionMasters
 local PT = ns.node.ProfessionTreasures
 
-for i, ids in ipairs(PROFESSIONS) do
-    local name, icon, skillID, variantID = unpack(ids)
+for _, profession in pairs(ns.professions) do
+    if profession.variantID ~= nil then
+        local name = profession.name
+        local icon = profession.icon
+        local skillID = profession.skillID
+        local variantID = profession.variantID[10]
 
-    PM[name] = Class(name .. 'Master', ProfessionMaster, {
-        icon = icon,
-        skillID = skillID,
-        requires = ns.requirement.Profession(skillID, variantID, 25)
-    })
+        PM[name] = Class(name .. 'Master', ProfessionMaster, {
+            icon = icon,
+            skillID = skillID,
+            requires = ns.requirement.Profession(skillID, variantID, 25)
+        })
 
-    PT[name] = Class(name .. 'Treasure', ProfessionTreasure, {
-        icon = icon,
-        skillID = skillID,
-        requires = ns.requirement.Profession(skillID, variantID, 25)
-    })
+        PT[name] = Class(name .. 'Treasure', ProfessionTreasure, {
+            icon = icon,
+            skillID = skillID,
+            requires = ns.requirement.Profession(skillID, variantID, 25)
+        })
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -704,15 +807,19 @@ ns.node.Scoutpack = Scoutpack
 ------------------------------ Magic-Bound Chest ------------------------------
 -------------------------------------------------------------------------------
 
+-- Ice Bound Chest         377540 -- cosmetics, maps,       same spawn points as Magic Bound Chest
 local MagicBoundChest = Class('MagicBoundChest', Node, {
     icon = 'chest_tl',
-    label = L['magicbound_chest'],
+    label = L['magicbound_chest'] .. ' / ' .. L['ice_bound_chest'],
     group = ns.groups.MAGICBOUND_CHEST,
     requires = ns.requirement.Reputation(2507, 16, true), -- Dragonscale Expedition
     rewards = {
         Item({item = 191784}), -- Dragon Shard of Knowledge
         Item({item = 190454}), -- Primal Chaos
         Item({item = 199062, quest = 70528}), -- Ruby Gem Cluster Map
+        Item({item = 198843, quest = 70392}), -- Emerald Gardens Explorer's Notes
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199067, quest = 70536}), -- Precious Plans
         Item({item = 192055}), -- Dragon Isles Artifact
         Currency({id = 2003}) -- Dragon Isles Supplies
     }
@@ -726,7 +833,7 @@ ns.node.MagicBoundChest = MagicBoundChest
 
 local TuskarrTacklebox = Class('TuskarrTacklebox', Node, {
     label = L['tuskarr_tacklebox'],
-    icon = 'chest_bl',
+    icon = 'chest_yw',
     group = ns.groups.TUSKARR_TACKLEBOX,
     requires = {
         ns.requirement.Reputation(2511, 27, true), -- Iskaara Tuskarr
@@ -748,6 +855,92 @@ local TuskarrTacklebox = Class('TuskarrTacklebox', Node, {
 })
 
 ns.node.TuskarrTacklebox = TuskarrTacklebox
+
+-------------------------------------------------------------------------------
+---------------------------------- REED CHEST ---------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.ReedChest = Class('ReedChest', Node, {
+    label = L['reed_chest'],
+    icon = 'chest_yw', -- TODO change color
+    group = ns.groups.REED_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 200071}), -- Sacred Tuskarr Totem
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+---------------------------- DRACTHYR SUPPLY CHEST ----------------------------
+-------------------------------------------------------------------------------
+
+ns.node.DracthyrSupplyChest = Class('DracthyrSupplyChest', Node, {
+    label = L['dracthyr_supply_chest'],
+    icon = 'chest_bl',
+    group = ns.groups.DRACTHYR_SUPPLY_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 200071}), -- Sacred Tuskarr Totem
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+------------------------------- SIMMERING CHEST -------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.SimmeringChest = Class('SimmeringChest', Node, {
+    label = L['simmering_chest'],
+    icon = 'chest_gn',
+    group = ns.groups.SIMMERING_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201446, slot = L['cosmetic']}), -- Primal Revenant's Firewall
+        Transmog({item = 201445, slot = L['cosmetic']}), -- Primal Revenant's Emberblade
+        Item({item = 199061, quest = 70527}), -- A Guide to Rare Fish
+        Item({item = 194540, quest = 67046}), -- Nokhud Armorer's Notes
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 194486}), -- Plans: Shield of the Hearth
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
+
+-------------------------------------------------------------------------------
+------------------------------- FROSTBOUND CHEST ------------------------------
+-------------------------------------------------------------------------------
+
+ns.node.FrostboundChest = Class('FrostboundChest', Node, {
+    label = L['frostbound_chest'],
+    icon = 'chest_gn',
+    group = ns.groups.FROSTBOUND_CHEST,
+    rewards = {
+        Item({item = 191784}), -- Dragon Shard of Knowledge
+        Item({item = 190454}), -- Primal Chaos
+        Transmog({item = 201443, slot = L['cosmetic']}), -- Primal Revenant's Icewall
+        Transmog({item = 201442, slot = L['cosmetic']}), -- Primal Revenant's Frostblade
+        Item({item = 199065, quest = 70534}), -- Sorrowful Letter
+        Item({item = 199066, quest = 70535}), -- Letter of Caution
+        Item({item = 199068, quest = 70537}), -- Time-Lost Memo
+        Item({item = 192055}), -- Dragon Isles Artifact
+        Item({item = 199906}), -- Titan Relic
+        Currency({id = 2003}) -- Dragon Isles Supplies
+    }
+})
 
 -------------------------------------------------------------------------------
 --------------------------------- DRAGONRACES ---------------------------------
@@ -801,27 +994,31 @@ hooksecurefunc(VignettePinMixin, 'DisplayNormalTooltip', function(self)
     if self and self.vignetteID then
         local mapID = self:GetMap().mapID
         local group = ns.groups.DRAGONRACE
-        if self.vignetteID == 5104 and group:GetDisplay(mapID) then -- Bronze Timekeeper Vignette 5104
-            local guid = self.vignetteGUID
-            local x = C_VignetteInfo.GetVignettePosition(guid, mapID).x
-            local y = C_VignetteInfo.GetVignettePosition(guid, mapID).y
-            local node = ns.maps[mapID].nodes[HandyNotes:getCoord(x, y)]
-            if node then
-                GameTooltip:SetText(ns.RenderLinks(node.label, true))
-                GameTooltip:AddLine(ns.RenderLinks(node.sublabel, true), 1, 1, 1)
-                if ns:GetOpt('show_notes') then
-                    GameTooltip_AddBlankLineToTooltip(GameTooltip)
-                    GameTooltip:AddLine(ns.RenderLinks(node.note), 1, 1, 1, true)
-                end
-                if ns:GetOpt('show_loot') then
-                    GameTooltip:AddLine(' ')
-                    for i, reward in ipairs(node.rewards) do
-                        if reward:IsEnabled() then
-                            reward:Render(GameTooltip)
+        if ns.maps[mapID] then
+            if self.vignetteID == 5104 and group:GetDisplay(mapID) then -- Bronze Timekeeper Vignette 5104
+                local guid = self.vignetteGUID
+                local x = C_VignetteInfo.GetVignettePosition(guid, mapID).x
+                local y = C_VignetteInfo.GetVignettePosition(guid, mapID).y
+                local node = ns.maps[mapID].nodes[HandyNotes:getCoord(x, y)]
+                if node then
+                    GameTooltip:SetText(ns.RenderLinks(node.label, true))
+                    GameTooltip:AddLine(ns.RenderLinks(node.sublabel, true), 1,
+                        1, 1)
+                    if ns:GetOpt('show_notes') then
+                        GameTooltip_AddBlankLineToTooltip(GameTooltip)
+                        GameTooltip:AddLine(ns.RenderLinks(node.note), 1, 1, 1,
+                            true)
+                    end
+                    if ns:GetOpt('show_loot') then
+                        GameTooltip:AddLine(' ')
+                        for i, reward in ipairs(node.rewards) do
+                            if reward:IsEnabled() then
+                                reward:Render(GameTooltip)
+                            end
                         end
                     end
+                    GameTooltip:Show()
                 end
-                GameTooltip:Show()
             end
         end
     end
@@ -889,17 +1086,129 @@ ns.node.Safari = Safari
 -------------------------------------------------------------------------------
 
 local ElementalChest = Class('ElementalChest', ns.node.Treasure, {
-    icon = 'chest_rd', -- temporary, maybe change it to different icon?
+    icon = 'chest_rd',
     getters = {
         rlabel = function(self)
-            local completed = C_QuestLog.IsQuestFlaggedCompleted(self.quest[1])
-            local color = completed and ns.status.Green or ns.status.Gray
-            return color(L['weekly'])
+            if self.quest then
+                local completed = C_QuestLog.IsQuestFlaggedCompleted(
+                    self.quest[1])
+                local color = completed and ns.status.Green or ns.status.Gray
+                return color(L['weekly'])
+            end
         end
     }
 })
 
 ns.node.ElementalChest = ElementalChest
+
+-------------------------------------------------------------------------------
+------------------------------- INTERVAL RARES --------------------------------
+-------------------------------------------------------------------------------
+
+local function nextSpawn(self, timeYellow, timeGreen)
+    local region = GetCurrentRegion() -- https://wowpedia.fandom.com/wiki/API_GetCurrentRegion
+    local initial = self.initialSpawn
+    local CurrentTime = GetServerTime()
+
+    local SpawnTime = self.rotationID * self.spawnOffset
+    if region == 2 and initial.kr then
+        SpawnTime = SpawnTime + initial.kr
+    elseif region == 3 and initial.eu then
+        SpawnTime = SpawnTime + initial.eu
+    elseif region == 4 and initial.tw then
+        SpawnTime = SpawnTime + initial.tw
+    else
+        SpawnTime = SpawnTime + initial.us
+    end
+
+    local NextSpawn = SpawnTime +
+                          math.ceil(
+            (CurrentTime - SpawnTime) / self.spawnInterval) * self.spawnInterval
+    local TimeLeft = NextSpawn - CurrentTime
+    local SpawnsIn = TimeLeft <= 60 and L['now'] or
+                         SecondsToTime(TimeLeft, true, true)
+
+    if timeYellow and timeGreen then
+        local color = ns.color.Orange
+        if TimeLeft < timeYellow then color = ns.color.Yellow end
+        if TimeLeft < timeGreen then color = ns.color.Green end
+        SpawnsIn = color(SpawnsIn)
+    end
+
+    local TimeFormat =
+        ns:GetOpt('use_standard_time') and L['time_format_12hrs'] or
+            L['time_format_24hrs']
+    return format('%s (%s)', SpawnsIn, date(TimeFormat, NextSpawn))
+end
+
+---------------------------------- 14 HOURS -----------------------------------
+
+local Rare14h = Class('Rare14h', Rare, {
+    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000}, -- initial spawn time of the first rare to calculate other rares
+    spawnOffset = 1800, -- time between rares
+    spawnInterval = 50400 -- inverval of a single rare
+})
+
+function Rare14h.getters:note()
+    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
+    if self.cave then note = note .. '\n\n' .. L['in_cave'] end
+    return note
+end
+
+local RareElite14h = Class('RareElite14h', RareElite, {
+    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000},
+    spawnOffset = 1800,
+    spawnInterval = 50400
+})
+
+function RareElite14h.getters:note()
+    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
+    if self.cave then note = note .. '\n\n' .. L['in_cave'] end
+    return note
+end
+
+--------------------------------- BRACKENHIDE ---------------------------------
+
+local Brackenhide = Class('Brackenhide', Rare, {
+    initialSpawn = {us = 1672531800, eu = 1672531200, tw = 1677162000},
+    spawnOffset = 600,
+    spawnInterval = 2400
+})
+
+function Brackenhide.getters:note()
+    return format(L['brackenhide_rare_note'], nextSpawn(self, 1200, 600))
+end
+
+------------------------------------ FEAST ------------------------------------
+
+local Feast = Class('Feast', Rare, {
+    initialSpawn = {us = 1677164400, eu = 1677168000, tw = 1677166200},
+    spawnOffset = 5400, -- review
+    spawnInterval = 5400, -- review
+    rotationID = 0
+})
+
+function Feast.getters:note()
+    return format(L['bisquis_note'], nextSpawn(self, 3600, 600))
+end
+
+----------------------------- THE OHN'AHRAN TRAIL -----------------------------
+
+local AylaagCamp = Class('AylaagCamp', Collectible, {
+    initialSpawn = {us = 1677456000, eu = 1677502800, tw = 1677571200},
+    spawnOffset = 270000,
+    spawnInterval = 810000
+})
+
+function AylaagCamp.getters:note()
+    return format(L['aylaag_camp_note'], nextSpawn(self, 7200, 1800))
+end
+
+ns.node.Rare14h = Rare14h
+ns.node.RareElite14h = RareElite14h
+ns.node.Brackenhide = Brackenhide
+ns.node.Feast = Feast
+ns.node.AylaagCamp = AylaagCamp
 
 -------------------------------------------------------------------------------
 ------------------------------ ELEMENTAL STORMS -------------------------------
@@ -1059,14 +1368,27 @@ local ELEMENTAL_STORM_PET_REWARDS = {
 }
 
 local ELEMENTAL_STORM_FORMULA_REWARDS = {
-    ['all'] = Item({item = 194641}), -- Design: Elemental Lariat
-    ['thunderstorm'] = Item({
+    ['all'] = Recipe({item = 194641, profession = 755}), -- Design: Elemental Lariat
+    ['thunderstorm'] = Recipe({
         item = 200911,
+        profession = 333,
         note = L['elemental_storm_thunderstorm']
     }), -- Formula: Illusion: Primal Air
-    ['sandstorm'] = Item({item = 200912, note = L['elemental_storm_sandstorm']}), -- Formula: Illusion: Primal Earth
-    ['firestorm'] = Item({item = 200913, note = L['elemental_storm_firestorm']}), -- Formula: Illusion: Primal Fire
-    ['snowstorm'] = Item({item = 200914, note = L['elemental_storm_snowstorm']}) -- Formula: Illusion: Primal Frost
+    ['sandstorm'] = Recipe({
+        item = 200912,
+        profession = 333,
+        note = L['elemental_storm_sandstorm']
+    }), -- Formula: Illusion: Primal Earth
+    ['firestorm'] = Recipe({
+        item = 200913,
+        profession = 333,
+        note = L['elemental_storm_firestorm']
+    }), -- Formula: Illusion: Primal Fire
+    ['snowstorm'] = Recipe({
+        item = 200914,
+        profession = 333,
+        note = L['elemental_storm_snowstorm']
+    }) -- Formula: Illusion: Primal Frost
 }
 
 local ElementalStorm = Class('ElementalStorm', Collectible, {
@@ -1125,7 +1447,7 @@ hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
         local group = ns.groups.ELEMENTAL_STORM
         local stormType = ELEMENTAL_STORM_AREA_POIS[self.areaPoiID]
 
-        if FlightMapFrame == nil or not FlightMapFrame:IsShown() then
+        if ELEMENTAL_STORM_MOB_ACHIVEMENTS[mapID] then -- check if current map has rewards
             if stormType and group:GetDisplay(mapID) then
                 local rewards = {
                     ELEMENTAL_STORM_MOB_ACHIVEMENTS['all'], Achievement({
@@ -1144,6 +1466,117 @@ hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
                 for i, reward in ipairs(rewards) do
                     if reward:IsEnabled() then
                         reward:Render(GameTooltip)
+                    end
+                end
+                GameTooltip:Show()
+            end
+        end
+    end
+end)
+
+-------------------------------------------------------------------------------
+------------------------------ ELUSIVE CREATURES ------------------------------
+-------------------------------------------------------------------------------
+
+local ElusiveCreature = ns.Class('ElusiveCreature', ns.node.Node, {
+    icon = 644271,
+    requires = ns.requirement.Item(193906), -- Elusive Creature Bait
+    group = ns.groups.ELUSIVE_CREATURE,
+    note = L['elusive_creature_note']
+}) -- Elusive Creature
+
+ns.node.ElusiveCreature = ElusiveCreature
+
+-------------------------------------------------------------------------------
+--------------------------------- GRAND HUNTS ---------------------------------
+-------------------------------------------------------------------------------
+
+local GRAND_HUNT_AREA_POIS = {
+    [7089] = 'Western Ohnahran Plains Hunt',
+    [7090] = 'Eastern Ohnahran Plains Hunt',
+    [7091] = 'Southern Waking Shore',
+    [7092] = 'Eastern Waking Shore',
+    [7093] = 'Northern Waking Shore',
+    [7094] = 'Western Azure Span Hunt',
+    [7095] = 'Eastern Azure Span Hunt',
+    [7096] = 'Southern Azure Span Hunt',
+    [7097] = 'Southern Thaldrazus Hunt',
+    [7098] = 'Northern Ohnahran Plains Hunt',
+    [7099] = 'Northern Thaldraszus Hunt',
+    [7342] = 'Grand Hunts (Ohnahran Plains',
+    [7343] = 'Grand Hunts (Thaldraszus)',
+    [7344] = 'Grand Hunts (The Waking Shore)',
+    [7345] = 'Grand Hunts (The Azure Span)'
+}
+
+local GRAND_HUNT_BAG_REWARDS = {
+    Mount({item = 192791, id = 1635}), -- Plainswalker Bearer
+    Pet({item = 200276, id = 3311}), -- Ohuna Companion
+    Pet({item = 200290, id = 3325}) -- Bakar Companion
+}
+
+local GrandHunt = Class('GrandHunt', Collectible, {
+    label = L['grand_hunts_label'],
+    icon = 237377,
+    group = ns.groups.GRAND_HUNTS,
+    IsEnabled = function(self)
+        local activePOIs = C_AreaPoiInfo.GetAreaPOIForMap(self.mapID)
+        for a = 1, #activePOIs do
+            if activePOIs[a] == self.areaPOI then return false end
+        end
+        return true
+    end
+}) -- Grand Hunts
+
+function GrandHunt.getters:rewards()
+    local rewards = {
+        Achievement({id = 16544}), -- Grand Hunter
+        Achievement({
+            id = 16541,
+            criteria = {id = 1, qty = true, suffix = L['longhunter_suffix']}
+        }), -- Longhunter
+        Achievement({
+            id = 16545,
+            criteria = {
+                id = 1,
+                qty = true,
+                suffix = L['the_best_at_what_i_do_suffix']
+            }
+        }), -- The Best at What I Do
+        Achievement({id = 16540, criteria = self.criteria}), -- Hunt Master
+        Achievement({
+            id = 16543,
+            criteria = {
+                55746, -- Bakar Companion Color: Brown
+                55747, -- Bakar Companion Color: White
+                55748, -- Bakar Companion Color: Orange
+                55749, -- Bakar Companion Color: Golden Brown
+                55750, -- Bakar Companion Color: Black
+                55751, -- Ohuna Companion Color: Red
+                55752, -- Ohuna Companion Color: Dark
+                55753, -- Ohuna Companion Color: Sepia
+                55754 -- Ohuna Companion Color: Brown
+            }
+        }) -- Tetrachromancer
+    }
+    for k, v in pairs(GRAND_HUNT_BAG_REWARDS) do table.insert(rewards, v) end
+    return rewards
+end
+
+ns.node.GrandHunt = GrandHunt
+
+hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
+    if self and self.areaPoiID then
+        local mapID = self:GetMap().mapID
+        local group = ns.groups.GRAND_HUNTS
+        if GRAND_HUNT_AREA_POIS[self.areaPoiID] then
+            if group:GetDisplay(mapID) then
+                if ns:GetOpt('show_loot') then
+                    GameTooltip:AddLine(' ')
+                    for i, reward in ipairs(GRAND_HUNT_BAG_REWARDS) do
+                        if reward:IsEnabled() then
+                            reward:Render(GameTooltip)
+                        end
                     end
                 end
                 GameTooltip:Show()

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230123032433")
+mod:SetRevision("20230209213512")
 mod:SetCreatureID(33432)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1138)
@@ -11,7 +11,7 @@ end
 mod:DisableESCombatDetection()--fires for RP, and we need yells to identify hard mode anyways
 mod:SetModelID(28578)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetHotfixNoticeRev(20230122000000)
+mod:SetHotfixNoticeRev(20230209000000)
 mod:SetMinSyncRevision(20230113000000)
 
 mod:RegisterCombat("combat_yell", L.YellPull)
@@ -55,11 +55,11 @@ local timerSpinUp					= mod:NewCastTimer(4, 63414, nil, nil, nil, 3, nil, DBM_CO
 local timerP3Wx2LaserBarrageCast	= mod:NewCastTimer(10, 63274, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--channel
 local timerNextP3Wx2LaserBarrage	= mod:NewNextTimer(48, 63414, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--next cast
 local timerNextShockblast			= mod:NewNextTimer(34, 63631, nil, nil, nil, 2)
-local timerPlasmaBlastCD			= mod:NewCDTimer(30, 64529, nil, "Tank", 2, 5)
+local timerPlasmaBlastCD			= mod:NewCDTimer(30, 64529, nil, "Tank|Healer", 3, 5)
 local timerShell					= mod:NewBuffActiveTimer(6, 63666, nil, "Healer", 2, 5, nil, DBM_COMMON_L.HEALER_ICON)
 --local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570, nil, nil, nil, 3)
 local timerFlameSuppressant			= mod:NewBuffActiveTimer(10, 65192, nil, nil, nil, 3)
-local timerNextFrostBomb			= mod:NewNextTimer(80, 64623, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
+--local timerNextFrostBomb			= mod:NewNextTimer(80, 64623, nil, nil, nil, 3, nil, DBM_COMMON_L.HEROIC_ICON)
 local timerBombExplosion			= mod:NewCastTimer(15, 65333, nil, nil, nil, 3)
 
 mod:AddSetIconOption("SetIconOnNapalm", 63666, false, false, {1, 2, 3, 4, 5, 6, 7})
@@ -130,7 +130,7 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 64623 then
 		warnFrostBomb:Show()
 		timerBombExplosion:Start()
-		timerNextFrostBomb:Start()
+--		timerNextFrostBomb:Start()
 	end
 end
 
@@ -213,7 +213,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
---p1 to P2
+--p1 to P2 Retail
 --"<148.72 20:35:06> [CLEU] UNIT_DIED##nil#Creature-0-3134-603-12576-34071-00004DDF6F#Leviathan Mk II#-1#false#nil#nil", -- [715]
 --"<149.92 20:35:08> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for Leviathan Mk II. Active: false#nil", -- [724]
 --"<153.97 20:35:12> [UNIT_SPELLCAST_SUCCEEDED] Leviathan Mk II(0.0%-0.0%){Target:??} -Freeze Anim- [[boss1:Cast-3-3134-603-12576-63354-00004DE450:63354]]", -- [732]
@@ -222,7 +222,14 @@ end
 --"<191.12 20:35:49> [CHAT_MSG_MONSTER_YELL] Behold the VX-001 Anti-personnel Assault Cannon! You might want to take cover.#Mimiron###Leviathan Mk II##0#0##0#150#nil#0#false#false#false#false",
 --"<197.06 20:35:55> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for VX-001. Active: true#nil", -- [783]
 
---p2 to P3
+--P1 to P2 Classic
+--"<7969.81 21:54:10> [CLEU] UNIT_DIED##nil#Creature-0-4445-603-16861-34071-00005FF300#Leviathan Mk II#-1#false#nil#nil", -- [209328]
+--"<7971.42 21:54:12> [UNIT_TARGETABLE_CHANGED] -nameplate1- [CanAttack:false#Exists:false#IsVisible:true#Name:Leviathan Mk II#GUID:Vehicle-0-4445-603-16861-33432-00005FF300#Classification:worldboss#Health:1]", -- [209378
+--"<7981.35 21:54:22> [CHAT_MSG_MONSTER_YELL] WONDERFUL! Positively marvelous results! Hull integrity at 98.9 percent! Barely a dent! Moving right along.#Mimiron###Leviathan Mk II##0#0##
+--"<8015.20 21:54:56> [CHAT_MSG_MONSTER_YELL] Behold the VX-001 Anti-personnel Assault Cannon! You might want to take cover.#Mimiron###Leviathan Mk II##0#0##0#2974#nil#0#false#false#false#false",
+--"<8021.61 21:55:02> [CLEU] SPELL_CAST_SUCCESS#Vehicle-0-4445-603-16861-33651-0000601793#VX-001##nil#64582#Emergency Mode#nil#nil", -- [209779]--Hard mode only
+
+--p2 to P3 Retail
 --"<295.88 20:37:34> [UNIT_SPELLCAST_SUCCEEDED] VX-001(0.0%-0.0%){Target:??} -Vehicle Damaged- [[boss2:Cast-3-3134-603-12576-63415-00004DE4DE:63415]]", -- [1032]
 --"<295.88 20:37:34> [UNIT_SPELLCAST_SUCCEEDED] VX-001(0.0%-0.0%){Target:??} -ClearAllDebuffs- [[boss2:Cast-3-3134-603-12576-34098-0000CDE4DE:34098]]", -- [1033]
 --"<295.90 20:37:34> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for VX-001. Active: false#nil", -- [1039]
@@ -230,7 +237,12 @@ end
 --"<317.62 20:37:55> [CHAT_MSG_MONSTER_YELL] Isn't it beautiful? I call it the magnificent aerial command unit!#Mimiron###VX-001##0#0##0#156#nil#0#false#false#false#false", -- [1051]
 --"<319.89 20:37:58> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for Aerial Command Unit. Active: true#nil", -- [1056]
 
---P3 to P4
+--P2 to P3 Classic
+--"<8093.04 21:56:13> [CHAT_MSG_MONSTER_YELL] Thank you, friends! Your efforts have yielded some fantastic data! Now, where did I put-- oh, there it is.#
+--"<8115.73 21:56:36> [CHAT_MSG_MONSTER_YELL] Isn't it beautiful? I call it the magnificent aerial command unit!#Mimiron###VX-001##0#0##0#2983#nil#0#false#false#false#false", -- [213905]
+--"<8118.78 21:56:39> [CLEU] SPELL_AURA_APPLIED#Vehicle-0-4445-603-16861-33670-00006017F2#Aerial Command Unit#Vehicle-0-4445-603-16861-33670-00006017F2#Aerial Command Unit#64582#Emergency Mode#BUFF#nil", -- [213921]
+
+--P3 to P4 Retail
 --"<367.17 20:38:45> [UNIT_SPELLCAST_SUCCEEDED] Aerial Command Unit(0.0%-0.0%){Target:Omegal} -Vehicle Damaged- [[boss3:Cast-3-3134-603-12576-63415-00004DE525:63415]]", -- [1174]
 --"<370.79 20:38:49> [UNIT_SPELLCAST_SUCCEEDED] Aerial Command Unit(0.0%-0.0%){Target:??} -ClearAllDebuffs- [[boss3:Cast-3-3134-603-12576-34098-0000CDE528:34098]]", -- [1182]
 --"<370.79 20:38:49> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for Aerial Command Unit. Active: false#nil", -- [1190]
@@ -239,6 +251,11 @@ end
 --"<398.74 20:39:16> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for Leviathan Mk II. Active: true#nil", -- [1260]
 --"<398.74 20:39:16> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for VX-001. Active: true#nil", -- [1262]
 --"<398.74 20:39:16> [DBM_Debug] UNIT_TARGETABLE_CHANGED event fired for Aerial Command Unit. Active: true#nil", -- [1264]
+
+--P3 to P4 Classic
+--"<9657.41 22:22:18> [CHAT_MSG_MONSTER_YELL] Preliminary testing phase complete. Now comes the true test!#Mimiron###Aerial Command Unit##0#0##0#3185#nil#0#false#false#false#false", -- [248368]
+--"<9676.85 22:22:37> [CHAT_MSG_MONSTER_YELL] Gaze upon its magnificence! Bask in its glorious, um, glory! I present you with... V-07-TR-0N!
+--"<9683.01 22:22:43> [PLAYER_TARGET_CHANGED] -1 Hostile (worldboss Mechanical) - VX-001 # Vehicle-0-4445-603-16861-33651-0000601CE7", -- [248605]
 
 --Classic can't use this for phase changes because boss isn't an active unit ID on stage changes without boss frames
 --Classic can use it for rocket strike since that's cast while boss is actually active
@@ -254,29 +271,29 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			--timerNextFlameSuppressant:Stop()
 			timerPlasmaBlastCD:Stop()
 			timerP1toP2:Start()--41.5
-			if self.Options.RangeFrame then
-				DBM.RangeCheck:Hide()
-			end
+--			if self.vb.hardmode then
+--				timerNextFrostBomb:Start(42.2)--Disabled since i'm not entirely convinced this has a timer but instead is cast when a certain fire threshold is triggrred, i've seen from 42 all the way to never cast (solo raids with far less fire).
+--			end
 			timerRocketStrikeCD:Start(63)
 			timerNextP3Wx2LaserBarrage:Start(75)
-			if self.vb.hardmode then
-				timerNextFrostBomb:Start(94)
+			if self.Options.RangeFrame then
+				DBM.RangeCheck:Hide()
 			end
 		elseif self.vb.phase == 3 then
 			timerP3Wx2LaserBarrageCast:Stop()
 			timerNextP3Wx2LaserBarrage:Stop()
-			timerNextFrostBomb:Stop()
+--			timerNextFrostBomb:Stop()
 			timerRocketStrikeCD:Stop()
 			timerP2toP3:Start()--24
 		elseif self.vb.phase == 4 then
 			timerP3toP4:Start()--27.9
 			--Need to be reverified on live
-			if self.vb.hardmode then
-				timerNextFrostBomb:Start(32)
-			end
+--			if self.vb.hardmode then
+--				timerNextFrostBomb:Start(32)
+--			end
 			timerRocketStrikeCD:Start(50)
 			timerNextP3Wx2LaserBarrage:Start(59.8)
-			timerNextShockblast:Start(81)
+			timerNextShockblast:Start(75.5)
 		end
 	elseif (spellId == 64402 or spellId == 65034) then--P2, P4 Rocket Strike
 		self:SendSync("RocketStrike")
@@ -299,30 +316,30 @@ function mod:OnSync(event, args)
 		timerPlasmaBlastCD:Stop()
 		--Timers are using retail adjusted to yell, need actual confirmation
 		timerP1toP2:Start(37.2)
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Hide()
-		end
+--		if self.vb.hardmode then
+--			timerNextFrostBomb:Start(42.2)
+--		end
 		timerRocketStrikeCD:Start(58.7)
 		timerNextP3Wx2LaserBarrage:Start(70.9)
-		if self.vb.hardmode then
-			timerNextFrostBomb:Start(89.7)
+		if self.Options.RangeFrame then
+			DBM.RangeCheck:Hide()
 		end
 	elseif event == "Phase3" and self.vb.phase == 2 then
 		timerP3Wx2LaserBarrageCast:Stop()
 		timerNextP3Wx2LaserBarrage:Stop()
-		timerNextFrostBomb:Stop()
+--		timerNextFrostBomb:Stop()
 		timerRocketStrikeCD:Stop()
-		timerP2toP3:Start(16.8)
+		timerP2toP3:Start(16.8)--16.8-25, using yells is swell
 	elseif event == "Phase4" and self.vb.phase == 3 then
 		--All these timers might be wrong because they are mashed between retail and legacy using math guesses
 		timerP3toP4:Start(24)
 		--Adjusted to live, but live timers might be wrong, plus need to be classic vetted anyways
-		if self.vb.hardmode then
-			timerNextFrostBomb:Start(28.5)
-		end
+--		if self.vb.hardmode then
+--			timerNextFrostBomb:Start(28.5)
+--		end
 		timerRocketStrikeCD:Start(46.1)
 		timerNextP3Wx2LaserBarrage:Start(55.9)
-		timerNextShockblast:Start(77.1)
+		timerNextShockblast:Start(71.6)
 	elseif event == "RocketStrike" then
 		warnRocketStrike:Show()
 		warnRocketStrike:Play("watchstep")

@@ -61,6 +61,10 @@ Private.character_types = {
   npc = L["Non-player Character"]
 }
 
+Private.spec_position_types = {
+  RANGED = L["Ranged"],
+  MELEE = L["Melee"]
+}
 
 Private.group_sort_types = {
   ascending = L["Ascending"],
@@ -80,7 +84,7 @@ Private.group_hybrid_sort_types = {
   descending = L["Descending"]
 }
 
-if WeakAuras.IsClassic() then
+if WeakAuras.IsClassicEra() then
   Private.time_format_types = {
     [0] = L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"],
     [1] = L["Blizzard (2h | 3m | 10s | 2.4)"],
@@ -838,7 +842,6 @@ Private.aura_types = {
   DEBUFF = L["Debuff"],
 }
 
-
 Private.debuff_class_types = {
   magic = L["Magic"],
   curse = L["Curse"],
@@ -848,20 +851,41 @@ Private.debuff_class_types = {
   none = L["None"]
 }
 
-Private.unit_types = {
-  player = L["Player"],
+Private.player_target_events = {
+  PLAYER_TARGET_CHANGED = "target",
+  PLAYER_FOCUS_CHANGED = "focus",
+  PLAYER_SOFT_ENEMY_CHANGED = "softenemy",
+  PLAYER_SOFT_FRIEND_CHANGED = "softfriend",
+}
+
+Private.soft_target_cvars = {
+  softenemy = "SoftTargetEnemy",
+  softfriend = "SoftTargetFriend"
+}
+
+local target_unit_types = {
   target = L["Target"],
-  focus = L["Focus"],
+}
+
+if not WeakAuras.IsClassicEra() then
+  target_unit_types.focus = L["Focus"]
+end
+
+if WeakAuras.IsWrathOrRetail() then
+  target_unit_types.softenemy = L["Soft Enemy"]
+  target_unit_types.softfriend = L["Soft Friend"]
+end
+
+Private.unit_types = Mixin({
+  player = L["Player"],
   group = L["Group"],
   member = L["Specific Unit"],
   pet = L["Pet"],
   multi = L["Multi-target"]
-}
+}, target_unit_types)
 
-Private.unit_types_bufftrigger_2 = {
+Private.unit_types_bufftrigger_2 = Mixin({
   player = L["Player"],
-  target = L["Target"],
-  focus = L["Focus"],
   group = L["Smart Group"],
   raid = L["Raid"],
   party = L["Party"],
@@ -871,20 +895,16 @@ Private.unit_types_bufftrigger_2 = {
   pet = L["Pet"],
   member = L["Specific Unit"],
   multi = L["Multi-target"]
-}
+}, target_unit_types)
 
-Private.actual_unit_types_with_specific = {
+Private.actual_unit_types_with_specific = Mixin({
   player = L["Player"],
-  target = L["Target"],
-  focus = L["Focus"],
   pet = L["Pet"],
   member = L["Specific Unit"]
-}
+}, target_unit_types)
 
-Private.actual_unit_types_cast = {
+Private.actual_unit_types_cast = Mixin({
   player = L["Player"],
-  target = L["Target"],
-  focus = L["Focus"],
   group = L["Smart Group"],
   party = L["Party"],
   raid = L["Raid"],
@@ -893,25 +913,21 @@ Private.actual_unit_types_cast = {
   nameplate = L["Nameplate"],
   pet = L["Pet"],
   member = L["Specific Unit"],
-}
+}, target_unit_types)
 
 Private.actual_unit_types_cast_tooltip = L["• |cff00ff00Player|r, |cff00ff00Target|r, |cff00ff00Focus|r, and |cff00ff00Pet|r correspond directly to those individual unitIDs.\n• |cff00ff00Specific Unit|r lets you provide a specific valid unitID to watch.\n|cffff0000Note|r: The game will not fire events for all valid unitIDs, making some untrackable by this trigger.\n• |cffffff00Party|r, |cffffff00Raid|r, |cffffff00Boss|r, |cffffff00Arena|r, and |cffffff00Nameplate|r can match multiple corresponding unitIDs.\n• |cffffff00Smart Group|r adjusts to your current group type, matching just the \"player\" when solo, \"party\" units (including \"player\") in a party or \"raid\" units in a raid.\n\n|cffffff00*|r Yellow Unit settings will create clones for each matching unit while this trigger is providing Dynamic Info to the Aura."]
 
-Private.threat_unit_types = {
-  target = L["Target"],
-  focus = L["Focus"],
+Private.threat_unit_types = Mixin({
   nameplate = L["Nameplate"],
   boss = L["Boss"],
   member = L["Specific Unit"],
   none = L["At Least One Enemy"]
-}
+}, target_unit_types)
 
-Private.unit_types_range_check = {
-  target = L["Target"],
-  focus = L["Focus"],
+Private.unit_types_range_check = Mixin({
   pet = L["Pet"],
   member = L["Specific Unit"]
-}
+}, target_unit_types)
 
 Private.unit_threat_situation_types = {
   [-1] = L["Not On Threat Table"],
@@ -941,7 +957,7 @@ do
     [6] = true,
     [7] = true,
     [8] = true,
-    [9] = not WeakAuras.IsClassicOrBCCOrWrath() and true or nil, -- Goblin
+    [9] = not WeakAuras.IsClassicEraOrWrath() and true or nil, -- Goblin
     [10] = true,
     [11] = true,
     [22] = true,
@@ -1076,6 +1092,7 @@ Private.inverse_point_types = {
 
 Private.anchor_frame_types = {
   SCREEN = L["Screen/Parent Group"],
+  UIPARENT = L["Screen"],
   PRD = L["Personal Resource Display"],
   MOUSE = L["Mouse Cursor"],
   SELECTFRAME = L["Select Frame"],
@@ -1086,6 +1103,7 @@ Private.anchor_frame_types = {
 
 Private.anchor_frame_types_group = {
   SCREEN = L["Screen/Parent Group"],
+  UIPARENT = L["Screen"],
   PRD = L["Personal Resource Display"],
   MOUSE = L["Mouse Cursor"],
   SELECTFRAME = L["Select Frame"],
@@ -1825,7 +1843,7 @@ if BuildInfo <= 80100 then -- 8.1.5
   Private.texture_types.Sparks["worldstate-capturebar-spark-green"] = "Capture Bar Green Spark"
   Private.texture_types.Sparks["worldstate-capturebar-spark-yellow"] = "Capture Bar Yellow Spark"
 end
-if WeakAuras.IsClassic() then -- Classic
+if WeakAuras.IsClassicEra() then -- Classic
   Private.texture_types["Blizzard Alerts"] = nil
   do
     local beams = Private.texture_types["Beams"]
@@ -1848,7 +1866,7 @@ if WeakAuras.IsClassic() then -- Classic
       runes[tostring(v)] = nil
     end
   end
-elseif WeakAuras.IsBCCOrWrath() then
+elseif WeakAuras.IsWrathClassic() then
   Private.texture_types["Blizzard Alerts"] = nil
   do
     local beams = Private.texture_types["Beams"]
@@ -2066,7 +2084,7 @@ Private.swing_types = {
   ["off"] = SECONDARYHANDSLOT
 }
 
-if WeakAuras.IsClassicOrBCCOrWrath() then
+if WeakAuras.IsClassicEraOrWrath() then
   Private.swing_types["ranged"] = RANGEDSLOT
 end
 
@@ -2277,7 +2295,7 @@ Private.instance_types = {
   ratedarena = L["Rated Arena"]
 }
 
-if WeakAuras.IsClassic() then
+if WeakAuras.IsClassicEra() then
   Private.instance_types["ratedpvp"] = nil
   Private.instance_types["arena"] = nil
   Private.instance_types["ratedarena"] = nil
@@ -2392,7 +2410,7 @@ if WeakAuras.IsRetail() then
     lfr = PLAYER_DIFFICULTY3,
     challenge = PLAYER_DIFFICULTY5
   }
-elseif WeakAuras.IsBCCOrWrath() then
+elseif WeakAuras.IsWrathClassic() then
   Private.difficulty_types = {
     none = L["None"],
     normal = PLAYER_DIFFICULTY1,
@@ -2401,7 +2419,7 @@ elseif WeakAuras.IsBCCOrWrath() then
 end
 
 
-if WeakAuras.IsClassicOrBCCOrWrath() then
+if WeakAuras.IsClassicEraOrWrath() then
   Private.raid_role_types = {
     MAINTANK = "|TInterface\\GroupFrame\\UI-Group-maintankIcon:16:16|t "..MAINTANK,
     MAINASSIST = "|TInterface\\GroupFrame\\UI-Group-mainassistIcon:16:16|t "..MAINASSIST,
@@ -2709,7 +2727,7 @@ Private.pet_behavior_types = {
   assist = PET_MODE_ASSIST
 }
 
-if WeakAuras.IsClassicOrBCCOrWrath() then
+if WeakAuras.IsClassicEraOrWrath() then
   Private.pet_behavior_types.aggressive = PET_MODE_AGGRESSIVE
   Private.pet_behavior_types.assist = nil
 end
@@ -3351,6 +3369,11 @@ for i = 1, 4 do
   Private.multiUnitUnits.party["partypet"..i] = true
 end
 
+if WeakAuras.IsWrathOrRetail() then
+  Private.baseUnitId["softenemy"] = true
+  Private.baseUnitId["softfriend"] = true
+end
+
 if WeakAuras.IsRetail() then
   for i = 1, 10 do
     Private.baseUnitId["boss"..i] = true
@@ -3358,7 +3381,7 @@ if WeakAuras.IsRetail() then
   end
 end
 
-if WeakAuras.IsBCCOrWrathOrRetail() then
+if WeakAuras.IsWrathOrRetail() then
   for i = 1, 5 do
     Private.baseUnitId["arena"..i] = true
     Private.multiUnitUnits.arena["arena"..i] = true
@@ -3464,7 +3487,7 @@ skippedWeaponTypes[11] = true -- Bear Claws
 skippedWeaponTypes[12] = true -- Cat Claws
 skippedWeaponTypes[14] = true -- Misc
 skippedWeaponTypes[17] = true -- Spears
-if WeakAuras.IsClassicOrBCCOrWrath() then
+if WeakAuras.IsClassicEraOrWrath() then
   skippedWeaponTypes[9] = true -- Glaives
 else
   skippedWeaponTypes[16] = true -- Thrown
@@ -3772,23 +3795,17 @@ WeakAuras.StopMotion.animation_types = {
 }
 
 
-if WeakAuras.IsClassic() then
+if WeakAuras.IsClassicEra() then
   Private.baseUnitId.focus = nil
   Private.baseUnitId.vehicle = nil
   Private.multiUnitId.boss = nil
   Private.multiUnitId.arena = nil
   wipe(Private.multiUnitUnits.boss)
   wipe(Private.multiUnitUnits.arena)
-  Private.unit_types.focus = nil
-  Private.unit_types_bufftrigger_2.focus = nil
   Private.unit_types_bufftrigger_2.boss = nil
   Private.unit_types_bufftrigger_2.arena = nil
-  Private.actual_unit_types_with_specific.focus = nil
   Private.actual_unit_types_cast.boss = nil
   Private.actual_unit_types_cast.arena = nil
-  Private.actual_unit_types_cast.focus = nil
-  Private.unit_types_range_check.focus = nil
-  Private.threat_unit_types.focus = nil
   Private.item_slot_types[0] = AMMOSLOT
   Private.item_slot_types[18] = RANGEDSLOT
   for slot = 20, 28 do
@@ -3812,7 +3829,7 @@ if WeakAuras.IsClassic() then
   end
 end
 
-if WeakAuras.IsBCCOrWrath() then
+if WeakAuras.IsWrathClassic() then
   Private.item_slot_types[0] = AMMOSLOT
   Private.item_slot_types[18] = RANGEDSLOT
   for slot = 20, 28 do

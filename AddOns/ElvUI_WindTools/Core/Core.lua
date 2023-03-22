@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 
 local _G = _G
 local format = format
@@ -20,6 +20,7 @@ local IsAddOnLoaded = IsAddOnLoaded
 
 local C_CVar_GetCVarBool = C_CVar.GetCVarBool
 local C_LFGList = C_LFGList
+local C_UI_Reload = C_UI.Reload
 
 local ACCEPT = _G.ACCEPT
 local CANCEL = _G.CANCEL
@@ -29,7 +30,7 @@ W.PlainTitle = gsub(W.Title, "|c........([^|]+)|r", "%1")
 W.Locale = GetLocale()
 W.ChineseLocale = strsub(W.Locale, 0, 2) == "zh"
 W.MaxLevelForPlayerExpansion = GetMaxLevelForPlayerExpansion()
-W.SupportElvUIVersion = 13.23
+W.SupportElvUIVersion = 13.28
 W.ClassColor = _G.RAID_CLASS_COLORS[E.myclass]
 
 W.RegisteredModules = {}
@@ -67,7 +68,7 @@ E.PopupDialogs.WINDTOOLS_BUTTON_FIX_RELOAD = {
     ),
     button1 = L["Reload UI"],
     button2 = CANCEL,
-    OnAccept = _G.ReloadUI
+    OnAccept = C_UI_Reload
 }
 
 -- Keybinds

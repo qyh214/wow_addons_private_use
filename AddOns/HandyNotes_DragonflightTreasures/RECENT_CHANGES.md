@@ -1,7 +1,7 @@
-## Changed in v42
+## Changed in v44
 
-* New rares for 10.0.5
-* Improve the Boomthyr rocket engineering treasure a bit; questid thanks to InvisiBilldotnet!
-* Adjust my item comparison tooltips to avoid an error caused by incompletely-updated-for-Dragonflight tooltip addons
-* Fix Emerald Garden Explorer's Notes / Ruby Gem Cluster Map mixup in some tooltips
+* Do better at hiding some of the recipes if you know them
+* Cracked hourglass loot+vignette added
+* Add assorted dirt and packs
+* Fix: routes weren't obeying their display setting on the minimap
 

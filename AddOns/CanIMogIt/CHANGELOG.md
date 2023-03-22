@@ -1,3 +1,38 @@
+10.0.7v1.51 - 2023/03/21
+
+* [#305](https://gitlab.com/toreltwiddler/CanIMogIt/issues/305) Fix error when upgrading from old database
+
+*****
+
+10.0.5v1.50 - 2023/03/08
+
+![BoE and BoP tooltips and overlay!](https://i.imgur.com/EWzgkpo.png "BoE and BoP tooltips and overlay!")
+
+* [#303](https://gitlab.com/toreltwiddler/CanIMogIt/issues/303) Support BoP and BoE tooltips and icons.
+
+*****
+
+10.0.5v1.49 - 2023/03/01
+
+* [#301](https://gitlab.com/toreltwiddler/CanIMogIt/issues/301) Fix error with database update when the sourceID isn't valid.
+
+*****
+
+10.0.5v1.48 - 2023/02/26
+
+Fixed a couple of bugs related to the database
+
+* [#298](https://gitlab.com/toreltwiddler/CanIMogIt/issues/298) Class restrictions were recorded incorrectly and may have shown incorrect information for unknown items on characters that could not equip the item.  However it should never have told you that you knew an item incorrectly.
+* [#294](https://gitlab.com/toreltwiddler/CanIMogIt/issues/294) Appearances "Known from another item" may have incorrectly shown as "Known" until observed.  However once moused over or logging into a different character, they would have been removed from the database (so you may have seen removed items on login).
+
+*****
+
+10.0.5v1.47 - 2023/02/19
+
+* [#278](https://gitlab.com/toreltwiddler/CanIMogIt/issues/278) Fixed ElvUI overlay icons (Thanks @Gwarii!)
+
+*****
+
 10.0.5v1.46 - 2023/01/23
 
 * Updated TOC.

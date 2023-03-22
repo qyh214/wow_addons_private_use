@@ -19,6 +19,8 @@ function dataProvider:RefreshAllData()
     HBDPins:RemoveAllMinimapIcons(self)
     self:ReleaseAllPins()
 
+    if not ns.db.show_routes then return end
+
     -- if we either can't display anything meaningful, or are disabled
     if GetCVar('rotateMinimap') == '1' and self.facing == nil then return end
     

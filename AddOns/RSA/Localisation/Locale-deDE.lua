@@ -81,7 +81,7 @@ L["Control the areas of the game this spell is allowed to be announced."] = "Con
 --[[Translation missing --]]
 L["Current Messages:"] = "Current Messages:"
 L["Current Version: %s"] = "Aktuelle Version: %s"
-L["Curseforge"] = "Curseforge"
+L["Curseforge"] = true
 --[[Translation missing --]]
 L["Custom Caster"] = "Custom Caster"
 --[[Translation missing --]]
@@ -95,7 +95,7 @@ L["Damage"] = "Schaden"
 L["Damage Absorb"] = "Damage Absorb"
 --[[Translation missing --]]
 L["Disabled Channels"] = "Disabled Channels"
-L["Discord"] = "Discord"
+L["Discord"] = true
 L["Dispel"] = "Entfernen"
 --[[Translation missing --]]
 L["Dispel Resist"] = "Dispel Resist"
@@ -132,7 +132,7 @@ L["Event unique spell ID"] = "Event unique spell ID"
 L["Exposes more options to allow custom setup of spells."] = "Exposes more options to allow custom setup of spells."
 L["Failed"] = "Fehlgeschlagen"
 L["Feasts"] = "Bankette"
-L["Feedback"] = "Feedback"
+L["Feedback"] = true
 L["General Replacement"] = "Allgemeine Ersetzung"
 --[[Translation missing --]]
 L["Group Announcement"] = "Group Announcement"
@@ -215,7 +215,7 @@ L["Spell Setup for this spell is locked."] = "Spell Setup for this spell is lock
 L["Spell Starts"] = "Spell Starts"
 --[[Translation missing --]]
 L["Spell Stolen"] = "Spell Stolen"
-L["Start"] = "Start"
+L["Start"] = true
 --[[Translation missing --]]
 L["Summon"] = "Summon"
 --[[Translation missing --]]
@@ -232,7 +232,7 @@ L["turned off"] = "turned off"
 L["turned on"] = "turned on"
 --[[Translation missing --]]
 L["Unlock setup"] = "Unlock setup"
-L["URL"] = "URL"
+L["URL"] = true
 --[[Translation missing --]]
 L["Use Global Environment Settings"] = "Use Global Environment Settings"
 L["Use Single Replacement"] = "Benutze einzelne Ersetzung"

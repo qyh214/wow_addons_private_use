@@ -3,14 +3,14 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230122043650")
+mod:SetRevision("20230303100550")
 mod:SetCreatureID(59051, 59726, 58826)--59051 (Strife), 59726 (Anger), 58826 (Zao Sunseeker). This event has a random chance to be Zao (solo) or Anger and Strife (together)
 mod:SetEncounterID(1417)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 113315 113309",
+	"SPELL_AURA_APPLIED 113309",
 	"SPELL_AURA_APPLIED_DOSE 113315",
 	"SPELL_CAST_SUCCESS 122714",
 	"UNIT_DIED"
@@ -26,7 +26,7 @@ mod:RegisterEvents(
 local warnIntensity			= mod:NewStackAnnounce(113315, 3)
 local warnUltimatePower		= mod:NewTargetAnnounce(113309, 4)
 
-local specWarnIntensity		= mod:NewSpecialWarning("SpecWarnIntensity", nil, nil, nil, 1, 2)
+local specWarnIntensity		= mod:NewSpecialWarning("SpecWarnIntensity", "-Healer", nil, 2, 1, 2)
 local specWarnUltimatePower	= mod:NewSpecialWarningTarget(113309, nil, nil, nil, 2, 2)
 
 local timerRP				= mod:NewRPTimer(17.4)
@@ -39,9 +39,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 113315 then
-		warnIntensity:Show(args.destName, args.amount or 1)
-	elseif args.spellId == 113309 then
+	if args.spellId == 113309 then
 		specWarnUltimatePower:Show(args.destName)
 		specWarnUltimatePower:Play("aesoon")
 		timerUltimatePower:Start(args.destName)
@@ -56,13 +54,11 @@ end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
 	if args.spellId == 113315 then
-		if args.amount % 2 == 0 then--only warn every 2
-			if args.amount >= 6 then--Start point of special warnings subject to adjustment based on live tuning.
-				specWarnIntensity:Show(args.spellName, args.destName, args.amount)
-				specWarnIntensity:Play("targetchange")
-			else
-				warnIntensity:Show(args.destName, args.amount)
-			end
+		if args.amount == 7 then--Start point of special warnings subject to adjustment based on live tuning.
+			specWarnIntensity:Show(args.spellName, args.destName, args.amount)
+			specWarnIntensity:Play("targetchange")
+		elseif args.amount % 2 == 0 then
+			warnIntensity:Show(args.destName, args.amount)
 		end
 	end
 end

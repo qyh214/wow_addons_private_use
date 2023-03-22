@@ -510,6 +510,14 @@ local function _GetAppearances()
 end
 
 
+function CanIMogIt:PauseDatabaseScan(message)
+    if CanIMogItOptions["printDatabaseScan"] then
+        CanIMogIt:Print(message or L["Database scan paused."])
+    end
+    CanIMogIt.frame:SetScript("OnUpdate", nil)
+end
+
+
 local timer = 0
 local function GetAppearancesOnUpdate(self, elapsed)
     -- OnUpdate function with a reset timer to throttle getting appearances.
@@ -1338,10 +1346,17 @@ function CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
                     text = CanIMogIt.KNOWN_BUT_TOO_LOW_LEVEL
                     unmodifiedText = CanIMogIt.KNOWN_BUT_TOO_LOW_LEVEL
                 else
-                    -- The player knows the appearance from this item, but
-                    -- the character can never use it.
-                    text = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER
-                    unmodifiedText = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER
+                    if isItemSoulbound then
+                        -- The player knows the appearance from this item, but
+                        -- the character can never use it.
+                        text = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER
+                        unmodifiedText = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER
+                    else
+                        -- The player knows the appearance from this item, but
+                        -- the character can never use it, but it is BoE.
+                        text = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER_BOE
+                        unmodifiedText = CanIMogIt.KNOWN_BY_ANOTHER_CHARACTER_BOE
+                    end
                 end
             end
         -- Does the player know the appearance from a different item?
@@ -1360,10 +1375,17 @@ function CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
                     text = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_BUT_TOO_LOW_LEVEL
                     unmodifiedText = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_BUT_TOO_LOW_LEVEL
                 else
-                    -- The player knows the appearance from another item, but
-                    -- this charater can never use/learn the apperance.
-                    text = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER
-                    unmodifiedText = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER
+                    if isItemSoulbound then
+                        -- The player knows the appearance from another item, but
+                        -- this charater can never use/learn the apperance.
+                        text = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER
+                        unmodifiedText = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER
+                    else
+                        -- The player knows the appearance from another item, but
+                        -- this charater can never use/learn the apperance, but it is BoE.
+                        text = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER_BOE
+                        unmodifiedText = CanIMogIt.KNOWN_FROM_ANOTHER_ITEM_AND_CHARACTER_BOE
+                    end
                 end
             end
         else
@@ -1396,11 +1418,6 @@ function CanIMogIt:CalculateTooltipText(itemLink, bag, slot)
         text = CanIMogIt.NOT_TRANSMOGABLE
         unmodifiedText = CanIMogIt.NOT_TRANSMOGABLE
     end
-
-    -- if CanIMogItOptions["showBoEColors"] then
-    --     -- Apply the option, if it is enabled then check item bind.
-    --     text, unmodifiedText = CanIMogIt:CheckItemBindType(text, unmodifiedText, itemLink, bag, slot)
-    -- end
 
     return text, unmodifiedText
 end

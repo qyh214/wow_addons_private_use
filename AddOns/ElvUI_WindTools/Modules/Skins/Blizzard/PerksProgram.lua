@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local S = W.Modules.Skins
 
 local _G = _G
@@ -24,7 +24,9 @@ function S:Blizzard_PerksProgram()
     local footer = frame.FooterFrame
     if footer then
         self:CreateShadow(footer.TogglePlayerPreview)
-        footer.TogglePlayerPreview.shadow:SetAllPoints()
+        if footer.TogglePlayerPreview.shadow then
+            footer.TogglePlayerPreview.shadow:SetAllPoints()
+        end
 
         self:CreateBackdropShadow(footer.RotateButtonContainer.RotateLeftButton)
         self:CreateBackdropShadow(footer.RotateButtonContainer.RotateRightButton)

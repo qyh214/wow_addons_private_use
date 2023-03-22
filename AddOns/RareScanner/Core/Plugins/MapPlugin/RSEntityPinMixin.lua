@@ -196,13 +196,7 @@ function RSEntityPinMixin:ShowGuide(mapID)
 			if (not info.questID or not C_QuestLog.IsQuestFlaggedCompleted(info.questID)) then
 				local POI = RSGuidePOI.GetGuidePOI(self.POI.entityID, pinType, info)
 				local pin = self:GetMap():AcquirePin("RSGuideTemplate", POI, self);
-				if (POI.loopAnimation) then
-					pin.ShowPingAnim:SetLooping("REPEAT")
-					pin.ShowPingAnim:Play()
-				else
-					pin.ShowPingAnim:SetLooping("NONE")
-					pin.ShowPingAnim:Play()
-				end
+				pin.ShowPingAnim:Play()
 			end
 		end
 		RSGeneralDB.SetGuideActive(self.POI.entityID)

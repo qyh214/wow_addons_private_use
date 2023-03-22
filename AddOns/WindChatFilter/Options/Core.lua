@@ -7,6 +7,8 @@ local ADBO = LibStub("AceDBOptions-3.0")
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBI = LibStub("LibDBIcon-1.0")
 
+local ipairs = ipairs
+
 local CreateFrame = CreateFrame
 local Settings = Settings
 
@@ -48,8 +50,8 @@ local options = {
         rebuild = {
             order = 999,
             type = "execute",
-            name = L["Rebuild Rules"],
-            desc = L["Compile the rule to the real function for high performance filtering."],
+            name = F.GetIconString([[Interface\Buttons\UI-RefreshButton]], 14, 14) .. " " .. L["Rebuild Rules"],
+            desc = L["You must recomplie the rules to apply the changes."],
             width = "full",
             hidden = function()
                 return not isRuleUpdated

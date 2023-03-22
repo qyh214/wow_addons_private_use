@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local S = W.Modules.Skins
 local LL = W:NewModule("LFGList", "AceHook-3.0", "AceEvent-3.0")
 local LSM = E.Libs.LSM
@@ -30,14 +30,14 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = GetSpecializationInfo
 local GetTime = GetTime
-local GetUnitName = GetUnitName
 local InCombatLockdown = InCombatLockdown
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInGroup = IsInGroup
 local LoadAddOn = LoadAddOn
 local UnitClassBase = UnitClassBase
+local UnitName = UnitName
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
-local WeeklyRewards_LoadUI = WeeklyRewards_LoadUI
+local WeeklyRewards_ShowUI = WeeklyRewards_ShowUI
 
 local C_ChallengeMode_GetAffixInfo = C_ChallengeMode.GetAffixInfo
 local C_ChallengeMode_GetDungeonScoreRarityColor = C_ChallengeMode.GetDungeonScoreRarityColor
@@ -402,7 +402,7 @@ function LL:InitializePartyKeystoneFrame()
     F.SetFontWithDB(frame.title, self.db.partyKeystone.font)
     frame.title:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -10)
     frame.title:SetJustifyH("LEFT")
-    frame.title:SetText(W.Title .. " - " .. L["Keystone"])
+    frame.title:SetText(F.GetWindStyleText(L["Party Keystone"]))
 
     frame.button = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
     frame.button:SetSize(60, self.db.partyKeystone.font.size + 4)
@@ -472,7 +472,7 @@ function LL:UpdatePartyKeystoneFrame()
         if mapID and mythicKeystoneDungeons[mapID] then
             local level = data.level
             local playerClass = UnitClassBase(unitID)
-            local playerName = GetUnitName(unitID, false)
+            local playerName = UnitName(unitID)
             local texture = select(4, C_ChallengeMode_GetMapUIInfo(tonumber(mapID)))
 
             tinsert(

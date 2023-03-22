@@ -240,7 +240,6 @@ local defaults = {
 			},
 			['RSA_SPELL_IMMUNE'] = {
 				messages = {"[TARGET] [MISSTYPE] [LINK]!"},
-				targetIsMe = true,
 				tags = {
 					TARGET = true,
 					MISSTYPE = true,

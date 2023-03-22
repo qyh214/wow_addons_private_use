@@ -1,6 +1,12 @@
 local W, F, L = unpack(select(2, ...))
 local CORE = W:GetModule("Core")
 
+local gsub = gsub
+local next = next
+local pairs = pairs
+local strfind = strfind
+local strsplit = strsplit
+
 local function getMessageFilter(rule)
     if not rule.message or not rule.message.enabled then
         return nil
@@ -15,9 +21,12 @@ local function getMessageFilter(rule)
             return false
         end
 
+        local playerName = strsplit("-", data.sender)
+
         if rule.message.keywords then
             for keyword, _ in pairs(rule.message.keywords) do
-                if strfind(data.message, keyword) then
+                local kw = gsub(keyword, "%%playerName%%", playerName)
+                if strfind(data.message, kw) then
                     return true
                 end
             end

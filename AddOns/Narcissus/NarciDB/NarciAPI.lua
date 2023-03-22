@@ -571,16 +571,61 @@ end
 do
     local GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots;
     local GetContainerItemID = (C_Container and C_Container.GetContainerItemID) or GetContainerItemID;
-    local function GetItemBagPosition(itemID)
-        for bagID = 0, (NUM_BAG_SLOTS or 4) do
-            for slotID = 1, GetContainerNumSlots(bagID) do
-                if(GetContainerItemID(bagID, slotID) == itemID) then
-                    return bagID, slotID
+    local GetContainerItemLink = (C_Container and C_Container.GetContainerItemLink) or GetContainerItemLink;
+    local GetInventoryItemID = GetInventoryItemID;
+    local GetItemCount = GetItemCount;
+
+    local function GetItemBagPosition(itemID, findHighestItemLevel)
+        if findHighestItemLevel then
+            local topLevel = -1;
+            local level;
+            local GetDetailedItemLevelInfo = GetDetailedItemLevelInfo;
+            local id1, id2;
+
+            for bagID = 0, (NUM_BAG_SLOTS or 4) do
+                for slotID = 1, GetContainerNumSlots(bagID) do
+                    if(GetContainerItemID(bagID, slotID) == itemID) then
+                        level = GetDetailedItemLevelInfo( GetContainerItemLink(bagID, slotID) ) or 0;
+                        if level > topLevel then
+                            id1, id2 = bagID, slotID;
+                        end
+                    end
+                end
+            end
+
+            return id1, id2;
+
+        else
+            for bagID = 0, (NUM_BAG_SLOTS or 4) do
+                for slotID = 1, GetContainerNumSlots(bagID) do
+                    if(GetContainerItemID(bagID, slotID) == itemID) then
+                        return bagID, slotID
+                    end
                 end
             end
         end
     end
     NarciAPI.GetItemBagPosition = GetItemBagPosition;
+
+    local function GetItemPositionByItemID(itemID)
+        local count = GetItemCount(itemID);
+
+        if count and count > 0 then
+            local id;
+            for slotID = 1, 19 do
+                id = GetInventoryItemID("player", slotID);
+                if id and id == itemID then
+                    return "inventory", slotID
+                end
+            end
+
+            local bagID, slotID = GetItemBagPosition(itemID);
+            if bagID then
+                return "container", bagID, slotID
+            end
+        end
+    end
+    NarciAPI.GetItemPositionByItemID = GetItemPositionByItemID;
 end
 
 
@@ -3174,6 +3219,16 @@ end
 
 NarciAPI.IsPlayerAtMaxLevel = IsPlayerAtMaxLevel;
 
+
+local function SecureActionButtonPreClick()
+    local value = GetCVar("ActionButtonUseKeyDown");
+    SetCVar("ActionButtonUseKeyDown", 0);
+    After(0, function()
+        SetCVar("ActionButtonUseKeyDown", value);
+    end);
+end
+
+NarciAPI.SecureActionButtonPreClick = SecureActionButtonPreClick;
 
 --[[
     /script DEFAULT_CHAT_FRAME:AddMessage("\124Hitem:narcissus:0:\124h[Test Link]\124h\124r");

@@ -1,9 +1,11 @@
 local mod	= DBM:NewMod(599, "DBM-Party-WotLK", 6, 275)
 local L		= mod:GetLocalizedStrings()
 
-mod.statTypes = "normal,heroic,timewalker"
+if not mod:IsClassic() then
+	mod.statTypes = "normal,heroic,timewalker"
+end
 
-mod:SetRevision("20220221000356")
+mod:SetRevision("20230311193122")
 mod:SetCreatureID(28546)
 mod:SetEncounterID(1984)
 mod:SetUsedIcons(8)
@@ -13,8 +15,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 52658 59795",
 	"SPELL_AURA_REMOVED 52658 59795",
-	"SPELL_CAST_START 52770",
-	"UNIT_HEALTH boss1"
+	"SPELL_CAST_START 52770"
 )
 
 local warningDisperseSoon	= mod:NewSoonAnnounce(52770, 2)
@@ -32,9 +33,19 @@ local warnedDisperse = false
 
 function mod:OnCombatStart()
 	warnedDisperse = false
+	if self:IsClassic() then
+		self:RegisterShortTermEvents(
+			"UNIT_HEALTH"
+		)
+	else
+		self:RegisterShortTermEvents(
+			"UNIT_HEALTH boss1"
+		)
+	end
 end
 
 function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -79,5 +90,6 @@ function mod:UNIT_HEALTH(uId)
 	if not warnedDisperse and self:GetUnitCreatureId(uId) == 28546 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.54 then
 		warnedDisperse = true
 		warningDisperseSoon:Show()
+		self:UnregisterShortTermEvents()
 	end
 end

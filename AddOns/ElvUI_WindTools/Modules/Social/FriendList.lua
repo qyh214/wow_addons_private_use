@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local FL = W:NewModule("FriendList", "AceHook-3.0")
 
 local _G = _G
@@ -235,25 +235,12 @@ function FL:UpdateFriendButton(button)
         return
     end
 
-    local gameCode,
-        gameName,
-        realID,
-        name,
-        server,
-        class,
-        area,
-        level,
-        note,
-        faction,
-        status,
-        isInCurrentRegion,
-        regionID,
-        wowID
+    local gameName, realID, name, server, class, area, level, note, faction, status, isInCurrentRegion, regionID, wowID
 
     if button.buttonType == FRIENDS_BUTTON_TYPE_WOW then
         -- WoW friends
-        gameCode = "WoW"
-        gameName = projectCodes["WOW"].name
+        wowID = WOW_PROJECT_MAINLINE
+        gameName = projectCodes["WOW"]
         local friendInfo = C_FriendList_GetFriendInfoByIndex(button.id)
         name, server = strsplit("-", friendInfo.name) -- server is nil if it's not a cross-realm friend
         level = friendInfo.level
@@ -281,7 +268,6 @@ function FL:UpdateFriendButton(button)
             note = friendAccountInfo.note
 
             local gameAccountInfo = friendAccountInfo.gameAccountInfo
-            gameCode = gameAccountInfo.clientProgram
             gameName = projectCodes[strupper(gameAccountInfo.clientProgram)]
 
             if gameAccountInfo.isOnline then
@@ -372,12 +358,6 @@ function FL:UpdateFriendButton(button)
                 buttonText = F.CreateColorString(area .. " - " .. server, self.db.areaColor)
             else
                 buttonText = F.CreateColorString(area, self.db.areaColor)
-            end
-
-            if not isInCurrentRegion and regionLocales[regionID] and not E.db.WT.social.filter.unblockProfanityFilter then
-                -- Unblocking profanity filter will change the region
-                local regionText = format("[%s]", regionLocales[regionID])
-                buttonText = buttonText .. " " .. F.CreateColorString(regionText, {r = 0.62, g = 0.62, b = 0.62})
             end
 
             button.info:SetText(buttonText)

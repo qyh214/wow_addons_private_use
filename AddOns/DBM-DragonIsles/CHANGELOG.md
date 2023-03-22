@@ -1,26 +1,57 @@
 # <DBM> World Bosses (Dragonflight)
 
-## [10.0.23](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.23) (2023-02-02)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.22...10.0.23) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
+## [10.0.33](https://github.com/DeadlyBossMods/DBM-Retail/tree/10.0.33) (2023-03-21)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-Retail/compare/10.0.32...10.0.33) [Previous Releases](https://github.com/DeadlyBossMods/DBM-Retail/releases)
 
-- Fix a regression (from when icons were changed to match other mods) that caused broodkeeper to never mark more than one mage  
-- prep tags  
-- Allow core to seemlessly switch to gossip index if gossipID missing  
-- Bump mod HF revision  
-- actually also scrap this warning entirely, it's also too spammy  
-- address even more massive amount of spam on broodkeeper  
-- also distance filter scope two of adds abilities to further reduce spam if adds are far away and not your problem  
-- massively increase alert aggregation due to excessive alert spam on broodkeeper (that agian wasn't reported)  
-- remove unused warnings/options  
-- Update koKR (#179)  
-- Update localization.ru.lua (#178)  
-- disable manual calls to collectgarbage due to a 10.0.5 bug where manually calling garbage collect actually causes natural GC to cease working and instead leak memory like mad. It'll result in a briefly high memory usage report after loading mods, but it'll eventually clear out from non broken automatic GC, it's not urgent to purge it right away and was purely for cosmetic/reporting reasons anyways that we did this.  
-- more tweaks to resolve more potential for mod conflicts/squelching that was unwanted  
-- also cleanup unused this season  
-- This is a bug at least, fixed a bug where thundering count didn't reset on new thundering, if a trash warning from another mod recently used same antispam ID.  
-- more safety for good measure  
-- debug  
-- Scrap lightning crash icon options since it never worked anyways, and change yells to use non icons  
-- Announce mark cast with count when each set goes out  
-- Very tiny tweaks to add timers  
-- bump alphas  
+- Bump FD  
+- Bump toc files  
+- Bump toc files  
+- Update koKR (Retail) (#877)  
+- Add zhTW (#875)  
+- Update zhTW (#874)  
+- Forgotten Experiments Drycode  
+- Fixed a bug wehre :Restart timer object would fire false debug on count timers because it'd fail to clear previous count timers in the stop call, causing them to do cleanup in start call instead.  
+- Also fix mod loading for Season 2 and fated raids (which are still fated)  
+- Fix affixes zone detection for M+ Season 2  
+- update instanceDifficulty table for 10.1  
+- Update localization.es.lua (#876)  
+- Push finished mods for rashok and zskarn  
+- Fix invalid spellId  
+- push finished Amalgamation chamber mod  
+- Push finished Kazzara mod  
+- tweak aggregation  
+- Update localization.ru.lua (#197)  
+- Update localization.ru.lua (#200)  
+- Update zhTW (#202)  
+- Update koKR (Retail) (#872)  
+- Create localization.tw.lua (#873)  
+- Fix missing spellids  
+- Full Amalgamation Chamber drycode  
+- Fix last  
+- Some renames and more creature Ids/prep for tomorrows work  
+- fix missed spellIds  
+- Full Rashok drycode  
+- Cleaner solution over the select method before. Closes #199  
+- Fix invalid spellId  
+- Full Zskarn drycode  
+- change voice for blizzard on council. apparently the splash has been gone since launch but blizzard never updated tooltip to reflect this. Closes #871  
+- Fix also needs this  
+- Fix offset  
+- Fixed a bug where tank timer could vanish if you pull shanigans that cause cast to never finish on broodkeeper  
+    Fixed a bug with count displayed in tank and staff timers on phase 2 transition on broodkeeper  
+- Update koKR (#196)  
+- Add option to disable right click on timers.  
+- Update koKR (Retail) (#869)  
+- Full Kazzara drycode  
+- Add zhTW (#865)  
+    Co-authored-by: Artemis <QartemisT@gmail.com>  
+- Update DBM-Aberrus.toc (#867)  
+    Add RU Title and Mod-Name  
+- Create localization.ru.lua (#868)  
+    Create RU locale  
+- Update localization.ru.lua (#866)  
+    So as not to forget later ..  
+- fix first error so lua check can tell me what else is broken  
+- Full Zaqali elders drycode  
+- Add templates for 10.1 encounters  
+- bump alpha  

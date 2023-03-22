@@ -81,7 +81,7 @@ L["Control the areas of the game this spell is allowed to be announced."] = "Con
 --[[Translation missing --]]
 L["Current Messages:"] = "Current Messages:"
 L["Current Version: %s"] = "Текущая версия: %s"
-L["Curseforge"] = "Curseforge"
+L["Curseforge"] = true
 --[[Translation missing --]]
 L["Custom Caster"] = "Custom Caster"
 --[[Translation missing --]]
@@ -95,7 +95,7 @@ L["Damage"] = "Урон"
 L["Damage Absorb"] = "Damage Absorb"
 --[[Translation missing --]]
 L["Disabled Channels"] = "Disabled Channels"
-L["Discord"] = "Discord"
+L["Discord"] = true
 L["Dispel"] = "Рассеивание"
 --[[Translation missing --]]
 L["Dispel Resist"] = "Dispel Resist"

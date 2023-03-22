@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local A = W:GetModule("Announcement")
 
 local gsub = gsub
@@ -41,7 +41,7 @@ function A:Keystone(event)
     if event == "PLAYER_ENTERING_WORLD" then
         cache.mapID = mapID
         cache.keystoneLevel = keystoneLevel
-    elseif event == "CHALLENGE_MODE_COMPLETED" then
+    elseif event == "CHALLENGE_MODE_COMPLETED" or event == "ITEM_CHANGED" then
         if cache.mapID ~= mapID or cache.keystoneLevel ~= keystoneLevel then
             cache.mapID = mapID
             cache.keystoneLevel = keystoneLevel

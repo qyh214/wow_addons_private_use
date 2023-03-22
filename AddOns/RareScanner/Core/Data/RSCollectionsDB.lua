@@ -215,6 +215,10 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 		end
 		
 		-- Update filters
+		if (not RSCollectionsDB.GetAllEntitiesCollectionsLoot()) then
+			return
+		end
+		
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.TOY]
@@ -375,6 +379,10 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 		end
 		
 		-- Update filters
+		if (not RSCollectionsDB.GetAllEntitiesCollectionsLoot()) then
+			return
+		end
+		
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.PET]
@@ -711,6 +719,10 @@ function RSCollectionsDB.RemoveNotCollectedAppearance(appearanceID, callback) --
 		local routines = {}
 	
 		-- Update filters
+		if (not RSCollectionsDB.GetAllEntitiesCollectionsLoot()) then
+			return
+		end
+		
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			local removeNotCollectedAppearanceRoutine = RSRoutines.LoopRoutineNew()
 			removeNotCollectedAppearanceRoutine:Init(function() return RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source] end, 20,
@@ -837,6 +849,10 @@ function RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, callback) --QUE
 		end
 		
 		-- Update filters
+		if (not RSCollectionsDB.GetAllEntitiesCollectionsLoot()) then
+			return
+		end
+		
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER]

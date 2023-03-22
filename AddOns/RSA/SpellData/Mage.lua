@@ -410,7 +410,7 @@ local wrath = {
 		},
 	},
 	['portal'] = {
-		spellID = 10059, -- Generic Portal spell.
+		spellID = 10059, -- Portal: Stormwind (Generic Portal spell doesn't exist in classic)
 		additionalSpellIDs = {
 			[10059] = true, -- Stormwind
 			[11416] = true, -- Ironforge
@@ -512,7 +512,7 @@ local wrath = {
 		},
 	},
 	['teleport'] = {
-		spellID = 3561, -- Generic Teleport spell.
+		spellID = 3561, -- Teleport: Stormwind (Generic Teleport spell doesn't exist in classic).
 		additionalSpellIDs = {
 			[3561] = true, -- Stormwind
 			[3562] = true, -- Ironforge

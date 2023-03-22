@@ -2,4 +2,5 @@
 	<Script file='Core.lua'/>
 	<Include file='Functions\Load_Functions.xml'/>
 	<Include file='Utilities\Load_Utilities.xml'/>
+	<Script file='API.lua'/>
 </Ui>

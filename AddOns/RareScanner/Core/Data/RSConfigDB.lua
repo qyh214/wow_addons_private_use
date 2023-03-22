@@ -21,7 +21,6 @@ local RSLogger = private.ImportLib("RareScannerLogger")
 local RSUtils = private.ImportLib("RareScannerUtils")
 local RSRoutines = private.ImportLib("RareScannerRoutines")
 
-
 ---============================================================================
 -- Timers options
 ---============================================================================
@@ -265,6 +264,14 @@ end
 
 function RSConfigDB.SetScanningWhileOnTaxi(value)
 	private.db.general.scanOnTaxi = value
+end
+
+function RSConfigDB.IsScanningWhileOnRacingQuest()
+	return private.db.general.scanOnRacingQuest
+end
+
+function RSConfigDB.SetScanningWhileOnRacingQuest(value)
+	private.db.general.scanOnRacingQuest = value
 end
 
 function RSConfigDB.IsScanningWhileOnPetBattle()
@@ -1207,6 +1214,14 @@ function RSConfigDB.GetExplorerMapID()
 	return private.db.collections.mapID
 end
 
+function RSConfigDB.SetLockingCurrentMap(value)
+	private.db.collections.lockingMap = value
+end
+
+function RSConfigDB.IsLockingCurrentMap()
+	return private.db.collections.lockingMap
+end
+
 function RSConfigDB.ResetLootFilters()
 	-- Quality Uncommon and supperior
 	RSConfigDB.SetLootFilterMinQuality(Enum.ItemQuality.Poor)
@@ -1470,4 +1485,64 @@ function RSConfigDB.GetWorldMapOverlayColour(id)
 	end
 	
 	return nil
+end
+
+---============================================================================
+-- Worldmap animations
+---============================================================================
+
+function RSConfigDB.IsShowingAnimationForNpcs()
+	return private.db.map.animationNpcs
+end
+
+function RSConfigDB.SetShowingAnimationForNpcs(value)
+	private.db.map.animationNpcs = value
+end
+
+function RSConfigDB.GetAnimationForNpcs()
+	return private.db.map.animationNpcsType
+end
+
+function RSConfigDB.SetAnimationForNpcs(value)
+	private.db.map.animationNpcsType = value
+end
+
+function RSConfigDB.IsShowingAnimationForContainers()
+	return private.db.map.animationContainers
+end
+
+function RSConfigDB.SetShowingAnimationForContainers(value)
+	private.db.map.animationContainers = value
+end
+
+function RSConfigDB.GetAnimationForContainers()
+	return private.db.map.animationContainersType
+end
+
+function RSConfigDB.SetAnimationForContainers(value)
+	private.db.map.animationContainersType = value
+end
+
+function RSConfigDB.IsShowingAnimationForEvents()
+	return private.db.map.animationEvents
+end
+
+function RSConfigDB.SetShowingAnimationForEvents(value)
+	private.db.map.animationEvents = value
+end
+
+function RSConfigDB.GetAnimationForEvents()
+	return private.db.map.animationEventsType
+end
+
+function RSConfigDB.SetAnimationForEvents(value)
+	private.db.map.animationEventsType = value
+end
+
+function RSConfigDB.IsShowingAnimationForVignettes()
+	return private.db.map.animationVignettes
+end
+
+function RSConfigDB.SetShowingAnimationForVignettes(value)
+	private.db.map.animationVignettes = value
 end

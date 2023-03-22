@@ -44,8 +44,13 @@ L= DBM:GetModLocalization(108)
 -----------------------------
 L= DBM:GetModLocalization(109)
 
-L:SetOptionLocalization({
-	SetIconOnBoss	= "Пометить босса иконкой после $spell:76200 "
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("BlackrockCavernsTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Пещеры Черной горы"
 })
 
 ---------------------
@@ -333,14 +338,19 @@ L:SetMiscLocalization{
 --------------
 L= DBM:GetModLocalization(115)
 
-L:SetOptionLocalization({
-	BreathIcon	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(88308)
-})
-
 -----------
 -- Asaad --
 -----------
 L= DBM:GetModLocalization(116)
+
+---------
+--Trash--
+---------
+L = DBM:GetModLocalization("VortexPinnacleTrash")
+
+L:SetGeneralLocalization({
+	name =	"Трэш мобы Вершина Смерча"
+})
 
 ---------------------------
 --  The Throne of Tides  --
@@ -549,8 +559,7 @@ L:SetWarningLocalization{
 
 L:SetOptionLocalization{
 	SpecWarnToxic	= "Спецпредупреждение, когда на Вас нет $spell:96328",
-	InfoFrame		= "Показывать игроков без $spell:96328",
-	SetIconOnGaze	= DBM_CORE_L.AUTO_ICONS_OPTION_TARGETS:format(96342)
+	InfoFrame		= "Показывать игроков без $spell:96328"
 }
 
 L:SetMiscLocalization{

@@ -679,6 +679,10 @@ local function ModelPanelScale_OnValueChanged(self, value)
     SettingFunctions.SetModelPanelScale(value);
 end
 
+local function LoopAnimation_OnValueChanged(self, value)
+    SettingFunctions.SetModelLoopAnimation(value);
+end
+
 local function GetOppositeValue(value)
     value = Round0(value);
     if value > 0 then
@@ -2019,6 +2023,7 @@ local Categories = {
     {name = L["Photo Mode"], level = 0, key = "photoMode",
         widgets = {
             {type = "header", level = 0, text = L["Photo Mode"]},
+            {type = "checkbox", level = 1, key = "LoopAnimation", text = L["Loop Animation"], onValueChangedFunc = LoopAnimation_OnValueChanged},
             {type = "slider", level = 1, key = "screenshotQuality", text = L["Sceenshot Quality"], onValueChangedFunc = ScreenshotQuality_OnValueChanged, minValue = 3, maxValue = 10, getValueFunc = ScreenshotQuality_GetValue, valueFormatFunc = Round0, convertionFunc = Round0},
             {type = "subheader", level = 1, text = L["Screenshot Quality Description"]},
             {type = "slider", level = 1, key = "ModelPanelScale", text = L["Panel Scale"], onValueChangedFunc = ModelPanelScale_OnValueChanged, minValue = 0.8, maxValue = 1, valueStep = 0.1, extraTopPadding = 1, valueFormatFunc = Round1},

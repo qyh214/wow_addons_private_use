@@ -73,6 +73,8 @@ L["Animated Weapon"] = "살아 움직이는 무기"
 L["Anodized Coilbearer"] = "양극산화 코일지기"
 L["Apply to preset"] = "길에 적용함"
 L["Aqu'sirr"] = "아쿠시르"
+--[[Translation missing --]]
+L["Arachnopod Destroyer"] = "Arachnopod Destroyer"
 L["Aranasi Broodmother"] = "아라나시 무리어미"
 L["Arcane Anomaly"] = "비전 변형물"
 --[[Translation missing --]]
@@ -122,6 +124,8 @@ L["atalTeemingNote"] = "무리 메모:%s%sG29가 항상 있지 않습니다%sG2�
 L["Atrium of Sethraliss"] = "세스랄리스의 안뜰"
 --[[Translation missing --]]
 L["Attumen the Huntsman"] = "Attumen the Huntsman"
+--[[Translation missing --]]
+L["Auriaya"] = "Auriaya"
 L["Automatic Coloring"] = "자동채색"
 --[[Translation missing --]]
 L["Automatically color pulls"] = "Automatically color pulls"
@@ -208,6 +212,8 @@ L["Bomb Tonk"] = "폭탄 통통 로봇"
 L["Bone Magus"] = "해골 학자"
 --[[Translation missing --]]
 L["Bonemaw"] = "Bonemaw"
+--[[Translation missing --]]
+L["Boomer XP-500"] = "Boomer XP-500"
 L["Borka the Brute"] = "육중한 보르카"
 L["Bottom Feeder"] = "밑바닥 포식자"
 L["Bound Energy"] = "속박된 마력"
@@ -220,6 +226,8 @@ after this pull]=] ] = [=[Bounty stacks
 after this pull]=]
 --[[Translation missing --]]
 L["BrackenhideHollow"] = "Brackenhide Hollow"
+--[[Translation missing --]]
+L["Brain of Yogg-Saron"] = "Brain of Yogg-Saron"
 L["Brawling Patron"] = "난동 피우는 손님"
 L["Brittlebone Crossbowman"] = "불완전뼈 석궁수"
 L["Brittlebone Mage"] = "불완전뼈 마법사"
@@ -247,10 +255,14 @@ L["Cartel Smuggler"] = "중개단 밀수업자"
 L["Cartel Wiseguy"] = "중개단 폭력단원"
 L["Catacombs"] = "지하무덤"
 L["Cathedral of Eternal Night"] = "영원한 밤의 대성당"
+--[[Translation missing --]]
+L["Chamber Overseer"] = "Chamber Overseer"
 L["Chamber Sentinel"] = "묘실의 파수병"
 --[[Translation missing --]]
 L["ChamberOfFlames"] = "Chamber of Flames"
 L["Champion Druna"] = "용사 드루나"
+--[[Translation missing --]]
+L["Champion of Hodir"] = "Champion of Hodir"
 L["Channeler Varisz"] = "역술사 바리즈"
 L["Charged Dust Devil"] = "충전된 먼지 악마"
 --[[Translation missing --]]
@@ -279,6 +291,8 @@ L["Click to switch to current week"] = "Click to switch to current week"
 L["Click to toggle AddOn Window"] = "Click to toggle AddOn Window"
 --[[Translation missing --]]
 L["Clicking this button will attempt to join the ongoing Live Session of your group or create a new one if none is found"] = "Clicking this button will attempt to join the ongoing Live Session of your group or create a new one if none is found"
+--[[Translation missing --]]
+L["Clockwork Sapper"] = "Clockwork Sapper"
 L["Coastwalker Goliath"] = "해안방랑자 거수"
 L["Coin-Operated Crowd Pummeler"] = "동전 투입식 군중 난타기"
 L["Coldmist Stalker"] = "얼음안개 땅거미"
@@ -316,6 +330,8 @@ L["Corrupt Living Water"] = "Corrupt Living Water"
 L["Corrupted Manafiend"] = "Corrupted Manafiend"
 --[[Translation missing --]]
 L["Corrupted Scroll"] = "Corrupted Scroll"
+--[[Translation missing --]]
+L["Corrupted Servitor"] = "Corrupted Servitor"
 L["Corsair Officer"] = "해적 장교"
 L["Corstilax"] = "코스틸락스"
 L["Court of Stars"] = "별의 궁정"
@@ -355,6 +371,10 @@ L["Cutwater Striker"] = "바다가름 공격병"
 L["Damaged Golem"] = "손상된 골렘"
 L["Dargrul"] = "다르그룰"
 L["Dark Acolyte"] = "어둠의 수행사제"
+--[[Translation missing --]]
+L["Dark Rune Ravager"] = "Dark Rune Ravager"
+--[[Translation missing --]]
+L["Dark Rune Thunderer"] = "Dark Rune Thunderer"
 L["Darkheart Thicket"] = "어둠심장 숲"
 L["Darkheart Thicket Sublevel"] = "어둠심장 숲"
 --[[Translation missing --]]
@@ -490,7 +510,13 @@ L["Edit"] = "편집"
 L["Efficiency Score"] = "Efficiency Score"
 --[[Translation missing --]]
 L["EfficiencyScoreTip"] = "Efficiency Score indicates how valuable an NPCs dungeon count is compared to their raw health."
+--[[Translation missing --]]
+L["Elder Brightleaf"] = "Elder Brightleaf"
+--[[Translation missing --]]
+L["Elder Ironbranch"] = "Elder Ironbranch"
 L["Elder Leaxa"] = "장로 리악사"
+--[[Translation missing --]]
+L["Elder Stonebark"] = "Elder Stonebark"
 L["Elemental"] = "정령"
 L["Elfyra"] = "엘피라"
 L["Embalming Fluid"] = "불변의 액체"
@@ -547,6 +573,8 @@ L["Eye of Azshara Sublevel"] = "아즈샤라의 눈"
 --[[Translation missing --]]
 L["Eye of Sethraliss"] = "Eye of Sethraliss"
 L["Faceless Corruptor"] = "얼굴 없는 타락자"
+--[[Translation missing --]]
+L["Faceless Horror"] = "Faceless Horror"
 L["Faceless Maiden"] = "얼굴 없는 여인"
 L["Faithless Tender"] = "부정한 관리인"
 L["Fallen Deathspeaker"] = "타락한 죽음예언자"
@@ -581,6 +609,8 @@ L["Finger Food"] = "맨손음식"
 --[[Translation missing --]]
 L["Flame Channeler"] = "Flame Channeler"
 --[[Translation missing --]]
+L["Flame Leviathan"] = "Flame Leviathan"
+--[[Translation missing --]]
 L["Flamegullet"] = "Flamegullet"
 --[[Translation missing --]]
 L["Flashfrost Chillweaver"] = "Flashfrost Chillweaver"
@@ -595,6 +625,10 @@ L["Footbomb Hooligan"] = "축구탄 난동꾼"
 L["Forces"] = "병력"
 L["Forces only: 5/200"] = "병력뿐: 5/200"
 L["Forces+%: 5/200 (2.5%)"] = "병력+%: 5/200 (2.5%)"
+--[[Translation missing --]]
+L["Forest Swarmer"] = "Forest Swarmer"
+--[[Translation missing --]]
+L["Forge Construct"] = "Forge Construct"
 L["Forgotten Denizen"] = "잊혀진 토착영혼"
 L["Forgotten Spirit"] = "잊혀진 영혼"
 L["Forlorn Spirit"] = "외로운 영혼"
@@ -631,6 +665,8 @@ L["freeholdGraveyardDescription1"] = "Unlocks after defeating Skycap'n Kragg"
 L["freeholdGraveyardDescription2"] = "Unlocks after defeating Council o' Captains"
 L["Frenzied Ghoul"] = "광포한 구울"
 L["Frenzied Nightclaw"] = "광포한 밤표범"
+--[[Translation missing --]]
+L["Freya"] = "Freya"
 L["Fulminating Lasher"] = "폭발성 덩굴손"
 L["Fungalmancer"] = "곰팡이술사"
 L["Fungi Stormer"] = "버섯 번개술사"
@@ -644,6 +680,8 @@ L["Gardens of Repose"] = "영면의 정원"
 L["Gatewarden Zo'mazz"] = "관문지기 조마즈"
 L["Gazerax"] = "가제락스"
 L["General Kaal"] = "장군 카알"
+--[[Translation missing --]]
+L["General Vezax"] = "General Vezax"
 L["General Xakal"] = "장군 자칼"
 L["Gerenth the Vile"] = "흉측한 게렌스"
 L["Ghostly Baker"] = "유령 제빵사"
@@ -711,6 +749,10 @@ L["Guard Captain Atu"] = "경비대장 아투"
 L["Guardian Construct"] = "수호의 피조물"
 L["Guardian Elemental"] = "수호정령"
 --[[Translation missing --]]
+L["Guardian Lasher"] = "Guardian Lasher"
+--[[Translation missing --]]
+L["Guardian of Life"] = "Guardian of Life"
+--[[Translation missing --]]
 L["Guardian Sentry"] = "Guardian Sentry"
 L["Guardian's Library"] = "수호자의 도서관"
 L["Gunker"] = "진창오물"
@@ -730,6 +772,8 @@ L["HallsOfAtonementFloor3"] = "영혼의 성역"
 --[[Translation missing --]]
 L["HallsOfInfusion"] = "Halls of Infusion"
 L["Harbaron"] = "하르바론"
+--[[Translation missing --]]
+L["Hardened Iron Golem"] = "Hardened Iron Golem"
 L["hardResetPrompt"] = [=[정말로 모든 설정을 초기화하시겠습니까?
 초기화 후 UI가 리로드됩니다!]=]
 L["hardResetPromptTitle"] = "모든 설정 삭제"
@@ -781,6 +825,8 @@ L["High Contrast"] = "High Contrast"
 L["Hired Assassin"] = "고용된 암살자"
 L["HK-8 Aerial Oppression Unit"] = "HK-8 공중 압박 유닛"
 --[[Translation missing --]]
+L["Hodir"] = "Hodir"
+--[[Translation missing --]]
 L["Hold CTRL to single-select enemies."] = "Hold CTRL to single-select enemies."
 --[[Translation missing --]]
 L["Hold SHIFT to create a new pull while selecting enemies."] = "Hold SHIFT to create a new pull while selecting enemies."
@@ -798,6 +844,8 @@ L["Hymdall"] = "하임달"
 L["Hyrja"] = "히리아"
 L["Ickor Bileflesh"] = "이코르 바일플래시"
 L["If the Minimap Button is enabled"] = "미니맵 아이콘이 켜있으면"
+--[[Translation missing --]]
+L["Ignis the Furnace Master"] = "Ignis the Furnace Master"
 L["Illysanna Ravencrest"] = "일리산나 레이븐크레스트"
 L["Imacu'tya"] = "이마쿠티아"
 L["Imbued Stormcaller"] = "마력 깃든 폭풍소환사"
@@ -837,12 +885,16 @@ L["Interrogation Specialist"] = "심문 전문가"
 L["Invalid import string"] = "가져오는 문자열이 무효합니다 "
 L["Iron Infantry"] = "강철 보병"
 --[[Translation missing --]]
+L["Iron Mender"] = "Iron Mender"
+--[[Translation missing --]]
 L["Iron Star"] = "Iron Star"
 --[[Translation missing --]]
 L["IronDocks"] = "Iron Docks"
 --[[Translation missing --]]
 L["ironDocksIronStar"] = "Iron Star"
 L["Ironhull Apprentice"] = "아이언헐 수습생"
+--[[Translation missing --]]
+L["Ironroot Lasher"] = "Ironroot Lasher"
 L["Irontide Bonesaw"] = "무쇠파도 해골톱날"
 L["Irontide Buccaneer"] = "무쇠파도 해적단원"
 L["Irontide Cleaver"] = "무쇠파도 절단자"
@@ -892,6 +944,8 @@ L["Knight Captain Valyri"] = "기사대장 발리리"
 L["Knock"] = "뒤로 날리기"
 --[[Translation missing --]]
 L["Kokia Blazehoof"] = "Kokia Blazehoof"
+--[[Translation missing --]]
+L["Kologarn"] = "Kologarn"
 L["Koramar"] = "코라마"
 --[[Translation missing --]]
 L["krBrutePatrolNote"] = "This Brute will stop patrolling when he reaches Emissary of the Tides 7"
@@ -928,6 +982,8 @@ L["Levels below 10 will hide enemies related to seasonal affixes"] = "10보다 �
 --[[Translation missing --]]
 L["Leymor"] = "Leymor"
 L["Library Floor"] = "도서관 하층"
+--[[Translation missing --]]
+L["Lightning Charged Iron Dwarf"] = "Lightning Charged Iron Dwarf"
 L["Link Spells"] = "마법 링크하기"
 --[[Translation missing --]]
 L["Liu Flameheart"] = "Liu Flameheart"
@@ -955,6 +1011,8 @@ L["L'ura"] = "르우라"
 L["Maddened Survivalist"] = "광기의 생존주의자"
 --[[Translation missing --]]
 L["MaggotNote"] = "Note on Devouring Maggots:%s%sDevouring Maggots with the buff 'Parasitic' will try to 'Infest' Players%sUpon successful cast of 'Infest' the Devouring Maggot will disappear and spawn 2x Devouring Maggots after a debuff on the infested player runs out.%sYou can only gain 1 count for killing the initial Infested Maggot - the 2 newly spawned Infested Maggots do not give count.%s%sInfected Peasants spawn 3x Devouring Maggots which do give 1 count each.%sThese Devouring Maggots are mapped next to the Infected Peasants"
+--[[Translation missing --]]
+L["Magma Rager"] = "Magma Rager"
 L["Maiden of Virtue"] = "고결의 여신"
 L["Make this preset the live preset"] = "이 길을 라이브 길로 만들기"
 L["Makogg Emberblade"] = "잿불칼날 마코그"
@@ -970,6 +1028,8 @@ L["Mana Wyrm"] = "마나 지룡"
 --[[Translation missing --]]
 L["manaDevourerNote"] = "Mana Devourer 1 is representing the Boss because it also awards enemy forces"
 L["Mana-Gorged Wyrm"] = "마나로 포식한 지룡"
+--[[Translation missing --]]
+L["Mangrove Ent"] = "Mangrove Ent"
 L["Maniacal Soulbinder"] = "광기 어린 영혼결속사"
 L["Manifestation of Envy"] = "시기의 현신"
 L["Margrave Stradama"] = "후작 스트라다마"
@@ -1015,6 +1075,8 @@ L["Midnight"] = "천둥이"
 L["Mightstone Breaker"] = "막돌 파괴자"
 L["Millhouse Manastorm"] = "밀하우스 마나스톰"
 L["Millificent Manastorm"] = "밀리피센트 마나스톰"
+--[[Translation missing --]]
+L["Mimiron"] = "Mimiron"
 L["Mind Control"] = "정신 지배"
 L["Mindshattered Screecher"] = "정신파괴 비명날개"
 L["Mine Rat"] = "광산 쥐"
@@ -1023,6 +1085,8 @@ L["minecartNote"] = "광산 수레%s사용할 수 있습니다"
 L["Minion of Doubt"] = "Minion of Doubt"
 L["Minion of Zul"] = "줄의 수하"
 L["Mire Soldier"] = "진창 병사"
+--[[Translation missing --]]
+L["Misguided Nymph"] = "Misguided Nymph"
 L["Mistcaller"] = "미스트콜러"
 L["Mists of Tirna Scithe"] = "티르너 사이드의 안개"
 L["Mistveil Defender"] = "안개장막 수호병"
@@ -1039,6 +1103,8 @@ L["mlGraveyardNote2"] = "광산 수레를 탄 후에 얻습니다"
 L["mlGraveyardNote3"] = "릭사 플럭스플레임을 패배시킬 후에 얻습니다"
 L["mlJockeyNote"] = "기계화 평화감시단을 부서질 때에 21과 22 로봇 조종사를 공격해야 합니다"
 L["Mogul Razdunk"] = "모굴 라즈덩크"
+--[[Translation missing --]]
+L["Molten Colossus"] = "Molten Colossus"
 --[[Translation missing --]]
 L["Monstrous Corpse Spider"] = "Monstrous Corpse Spider"
 L["Monzumi"] = "몬주미"
@@ -1061,6 +1127,8 @@ L["Nalthor the Rimebinder"] = "냉기결속사 날토르"
 L["Nal'tira"] = "날티라"
 L["Nar'zudah"] = "나르주다"
 L["Nathrezim Infiltrator"] = "Nathrezim Infiltrator"
+--[[Translation missing --]]
+L["Nature's Blade"] = "Nature's Blade"
 L["Necrotic"] = "괴저"
 L["Necrotic Spiderling"] = "괴저 새끼거미"
 L["Neesa Nox"] = "니사 녹스"
@@ -1157,6 +1225,8 @@ L["P.O.S.T. Master"] = "우.정.국.장."
 L["P.O.S.T. Worker"] = "우.정.국. 직원"
 L["Paceran the Virulent"] = "맹독의 파세란"
 L["Pallid Gorger"] = "창백한 탐식자"
+--[[Translation missing --]]
+L["Parts Recovery Technician"] = "Parts Recovery Technician"
 L["Patchwerk Soldier"] = "패치워크 병사"
 L["Path of Illumination"] = "계시의 길"
 L["Patrol Captain Gerdo"] = "경비대 대장 게르도"
@@ -1257,6 +1327,8 @@ L["Ravenous Dreadbat"] = "포악한 공포박쥐"
 --[[Translation missing --]]
 L["Ravenous Wolf"] = "Ravenous Wolf"
 L["Ravenshold"] = "까마귀요새"
+--[[Translation missing --]]
+L["Razorscale"] = "Razorscale"
 L["Reanimated Crossbowman"] = "되살아난 석궁수"
 L["Reanimated Guardian"] = "되살아난 수호자"
 L["Reanimated Honor Guard"] = "되살아난 근위병"
@@ -1344,9 +1416,13 @@ L["Ruby Overlook"] = "Ruby Overlook"
 L["RubyLifePools"] = "루비 생명의 웅덩이"
 L["Ruin's Descent"] = "폐허 하강장치"
 --[[Translation missing --]]
+L["Rune Etched Sentry"] = "Rune Etched Sentry"
+--[[Translation missing --]]
 L["Rune Seal Keeper"] = "Rune Seal Keeper"
 L["Runecarver Slave"] = "룬조각사 노예"
 L["Runecarver Sorn"] = "룬조각사 소른"
+--[[Translation missing --]]
+L["Runemaster Molgeim"] = "Runemaster Molgeim"
 L["Runestag Elderhorn"] = "늙은뿔 룬수사슴"
 L["Runic Disciple"] = "룬 신도"
 L["Sacrificial Pits"] = "희생의 구덩이"
@@ -1564,6 +1640,8 @@ L["Spriggan Mendbender"] = "스프리건 상처잡이"
 L["Start or join the current |cFF00FF00Live Session|r"] = "|cFF00FF00Live Session|을 참여하거나 시작하기"
 L["Static-charged Dervish"] = "정전기 충전된 광신자"
 L["Stealthling"] = "새끼 은신거미"
+--[[Translation missing --]]
+L["Steelbreaker"] = "Steelbreaker"
 L["Steeljaw Grizzly"] = "강철무쇠 회색곰"
 L["Stinging Parasite"] = "독침 기생충"
 L["Stitched Vanguard"] = "누더기 선봉대"
@@ -1579,11 +1657,15 @@ L["Stonefury"] = "분노석"
 L["Stonewall Gargon"] = "돌담 가르곤"
 L["Storm Drake"] = "폭풍 비룡"
 --[[Translation missing --]]
+L["Storm Tempered Keeper"] = "Storm Tempered Keeper"
+--[[Translation missing --]]
 L["Storm Warrior"] = "Storm Warrior"
 --[[Translation missing --]]
 L["Stormcaller Arynga"] = "Stormcaller Arynga"
 --[[Translation missing --]]
 L["Stormcaller Boroo"] = "Stormcaller Boroo"
+--[[Translation missing --]]
+L["Stormcaller Brundir"] = "Stormcaller Brundir"
 --[[Translation missing --]]
 L["Stormcaller Solongo"] = "Stormcaller Solongo"
 --[[Translation missing --]]
@@ -1652,6 +1734,8 @@ L["Territorial Bladebeak"] = "텃세하는 칼날부리"
 --[[Translation missing --]]
 L["Territorial Eagle"] = "Territorial Eagle"
 L["Test Subject"] = "피험 대상"
+--[[Translation missing --]]
+L["The Antechamber of Ulduar"] = "The Antechamber of Ulduar"
 L["The Arcway"] = "비전로"
 L["The Arcway Sublevel"] = "비전로"
 L["The Balconies"] = "발코니"
@@ -1673,8 +1757,12 @@ L["The Grimewalker"] = "오염걸음"
 L["The Guest Chambers"] = "객실"
 L["The High Gate"] = "드높은 관문"
 L["The Hold"] = "요새"
+--[[Translation missing --]]
+L["The Inner Sanctum of Ulduar"] = "The Inner Sanctum of Ulduar"
 L["The Jeweled Estate"] = "보석의 장원"
 L["The Menagerie"] = "동물원"
+--[[Translation missing --]]
+L["The Mind's Eye"] = "The Mind's Eye"
 L["The MOTHERLODE!!"] = "왕노다지 광산!!"
 L["The MOTHERLODE!! Sublevel"] = "왕노다지 광산!!"
 L["The Naglfar"] = "나글파르"
@@ -1683,6 +1771,8 @@ L["The Necrotic Wake"] = "죽음의 상흔"
 L["The Nodding Tiger"] = "The Nodding Tiger"
 L["The Platinum Pummeler"] = "백금 난타로봇"
 L["The preset will continuously synchronize between all party members participating in the Live Session"] = "라이브 세션에 참여하시는 파티 맴버들끼리 길이 계속 동기화될 겁니다"
+--[[Translation missing --]]
+L["The Prison of Yogg-Saron"] = "The Prison of Yogg-Saron"
 --[[Translation missing --]]
 L["The Raging Tempest"] = "The Raging Tempest"
 L["The Raven's Crown"] = "까마귀의 왕관"
@@ -1697,6 +1787,8 @@ L["The selected level will affect displayed npc health"] = "선택된 레벨이 
 L["The Servant's Quarters"] = "하인 숙소"
 --[[Translation missing --]]
 L["The Songbird Queen"] = "The Songbird Queen"
+--[[Translation missing --]]
+L["The Spark of Imagination"] = "The Spark of Imagination"
 --[[Translation missing --]]
 L["The Talking Fish"] = "The Talking Fish"
 L["The Under Junk"] = "지하 쓰게리장"
@@ -1728,6 +1820,8 @@ L["TheScrollkeepersSanctum"] = "The Scrollkeeper's Sanctum"
 --[[Translation missing --]]
 L["TheVaultOfTyr"] = "The Vault of Tyr"
 L["Thistle Acolyte"] = "엉겅퀴 수행사제"
+--[[Translation missing --]]
+L["Thorim"] = "Thorim"
 L["Thornguard"] = "가시방어병"
 L["Thrashbite the Scornful"] = "경멸하는 난타이빨"
 --[[Translation missing --]]
@@ -1758,11 +1852,25 @@ L["Toxic Saurid"] = "독성 사우리드"
 L["Tracker Zo'korss"] = "추적자 조코르스"
 --[[Translation missing --]]
 L["Train Depot"] = "Train Depot"
+--[[Translation missing --]]
+L["Trash"] = "Trash"
 L["Tred'ova"] = "트레도바"
 L["Trixie Tazer"] = "트릭시 테이저"
 L["Trothak"] = "트로삭"
 L["Troubled Soul"] = "괴로워하는 영혼"
+--[[Translation missing --]]
+L["Twilight Adherent"] = "Twilight Adherent"
+--[[Translation missing --]]
+L["Twilight Frost Mage"] = "Twilight Frost Mage"
 L["Twilight Grove"] = "황혼의 숲"
+--[[Translation missing --]]
+L["Twilight Guardian"] = "Twilight Guardian"
+--[[Translation missing --]]
+L["Twilight Pyromancer"] = "Twilight Pyromancer"
+--[[Translation missing --]]
+L["Twilight Shadowblade"] = "Twilight Shadowblade"
+--[[Translation missing --]]
+L["Twilight Slayer"] = "Twilight Slayer"
 L["Tyrannical"] = "폭군"
 --[[Translation missing --]]
 L["Ukhel Beastcaller"] = "Ukhel Beastcaller"
@@ -1775,6 +1883,8 @@ L["Ukhel Willcrusher"] = "Ukhel Willcrusher"
 L["Ularogg Cragshaper"] = "바위구체자 울라로그"
 --[[Translation missing --]]
 L["UldamanLegacyOfTyr"] = "Uldaman: Legacy of Tyr"
+--[[Translation missing --]]
+L["Ulduar"] = "Ulduar"
 L["Umbral War-Adept"] = "암영 전투 숙련가"
 --[[Translation missing --]]
 L["Umbrelskul"] = "Umbrelskul"
@@ -1902,6 +2012,10 @@ L["Wholesome Hostess"] = "건전한 시녀"
 L["Wicked Oppressor"] = "사악한 탄압자"
 L["Windspeaker Heldis"] = "바람예언자 헬디스"
 --[[Translation missing --]]
+L["Winter Revenant"] = "Winter Revenant"
+--[[Translation missing --]]
+L["Winter Rumbler"] = "Winter Rumbler"
+--[[Translation missing --]]
 L["Wise Mari"] = "Wise Mari"
 L["Withered Fiend"] = "메마른 마귀"
 L["Withered Manawraith"] = "메마른 마나 망령"
@@ -1917,10 +2031,20 @@ L["Wyrmtongue Scavenger"] = "고룡혓바닥 청소부"
 L["Wyrmtongue Trickster"] = "고룡혓바닥 사기꾼"
 L["Xav the Unfallen"] = "몰락하지 않은 자 자브"
 --[[Translation missing --]]
+L["XB-488 Disposalbot"] = "XB-488 Disposalbot"
+--[[Translation missing --]]
+L["XD-175 Compactobot"] = "XD-175 Compactobot"
+--[[Translation missing --]]
 L["Xiang"] = "Xiang"
 L["Xira the Underhanded"] = "비열한 자 시라"
+--[[Translation missing --]]
+L["XR-949 Salvagebot"] = "XR-949 Salvagebot"
+--[[Translation missing --]]
+L["XT-002 Deconstructor"] = "XT-002 Deconstructor"
 L["Yazma"] = "야즈마"
 L["Ymiron, the Fallen King"] = "타락한 왕 이미론"
+--[[Translation missing --]]
+L["Yogg-Saron"] = "Yogg-Saron"
 L["You are using MDT. You rock!"] = "MDT를 사용하셔서 짱이세요!!"
 L["You can always return to the current Live Session preset by clicking the 'Return to Live' button next to the preset-dropdown"] = "길-드롭다운 옆에 있는 '라이브 길에 돌아가기'라는 버튼을 누르시면 현재 라이브 세션 길에 항상 돌아가실 수 있습니다"
 --[[Translation missing --]]

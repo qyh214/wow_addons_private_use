@@ -184,10 +184,16 @@ function frame:ADDON_LOADED(...)
             end
         end
         if BtWLoadoutsSpecInfo.version ~= Internal.GetSpecInfoVersion() then
+--[==[@debug@
+            print(L["BtWLoadouts: Clearing spec info cache as internal spec data been updated"])
+--@end-debug@]==]
             BtWLoadoutsSpecInfo = {}
             BtWLoadoutsSpecInfo.version = Internal.GetSpecInfoVersion()
         end
         if BtWLoadoutsTraitsInfo.version ~= Internal.GetTraitInfoVersion() then
+--[==[@debug@
+            print(L["BtWLoadouts: Clearing trait info cache as internal trait data been updated"])
+--@end-debug@]==]
             BtWLoadoutsTraitsInfo = {trees = {}, nodes = {}}
             BtWLoadoutsTraitsInfo.version = Internal.GetTraitInfoVersion()
         end
@@ -564,7 +570,7 @@ function frame:BANKFRAME_OPENED(...)
     self:EQUIPMENT_SETS_CHANGED()
     Internal.InitializeBankItems()
 end
-function frame:PLAYER_SPECIALIZATION_CHANGED(...)
+function frame:ACTIVE_PLAYER_SPECIALIZATION_CHANGED(...)
     do
         local specID = GetSpecializationInfo(GetSpecialization());
         local spec = BtWLoadoutsSpecInfo[specID] or {};
@@ -1629,6 +1635,9 @@ end
 function frame:SOCKET_INFO_SUCCESS(...)
     Internal.GemApplied()
 end
+function frame:TRAIT_CONFIG_CREATED(configInfo)
+    self:TRAIT_CONFIG_UPDATED(configInfo.ID)
+end
 function frame:TRAIT_CONFIG_UPDATED(configID)
     local activeConfigID = C_ClassTalents.GetActiveConfigID();
     if activeConfigID == configID then
@@ -1663,8 +1672,7 @@ end
 function frame:TRAIT_CONFIG_DELETED(configID)
     if dfTalentTreeSetMap[configID] then
 --[==[@debug@
-        local configInfo = C_Traits.GetConfigInfo(configID);
-        print(format(L["[BtWLoadouts]: Unflagged talent loadout \"%s\" as a blizzard talent tree."], configInfo.name));
+        print(format(L["[BtWLoadouts]: Unflagged talent loadout \"%s\" as a blizzard talent tree."], dfTalentTreeSetMap[configID].name));
 --@end-debug@]==]
         dfTalentTreeSetMap[configID].configID = nil;
         dfTalentTreeSetMap[configID].character = nil;
@@ -1677,7 +1685,7 @@ frame:RegisterEvent("PLAYER_ENTERING_WORLD");
 frame:RegisterEvent("CONSOLE_MESSAGE");
 frame:RegisterEvent("EQUIPMENT_SETS_CHANGED");
 frame:RegisterEvent("BANKFRAME_OPENED");
-frame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+frame:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED");
 frame:RegisterEvent("UPDATE_INSTANCE_INFO");
 frame:RegisterEvent("ZONE_CHANGED");
 frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
@@ -1690,5 +1698,6 @@ frame:RegisterEvent("BAG_UPDATE_DELAYED");
 frame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player");
 frame:RegisterEvent("SOCKET_INFO_SUCCESS");
 frame:RegisterEvent("ITEM_CHANGED");
+frame:RegisterEvent("TRAIT_CONFIG_CREATED");
 frame:RegisterEvent("TRAIT_CONFIG_UPDATED");
 frame:RegisterEvent("TRAIT_CONFIG_DELETED");

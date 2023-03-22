@@ -308,6 +308,7 @@ local defaults = {
 		},
 		configDisplay = {
 			isDefault = true,
+			defaultName = RSA.GetSpellInfo(2782) .. ' | ' .. RSA.GetSpellInfo(88423),
 		},
 		events = {
 			['SPELL_DISPEL'] = {
@@ -719,9 +720,6 @@ local wrath = {
 	['removeCurse'] = {
 		spellID = 2782,
 		throttle = 0.25,
-		additionalSpellIDs = {
-			[88423] = true, -- Nature's Cure
-		},
 		configDisplay = {
 			isDefault = true,
 		},

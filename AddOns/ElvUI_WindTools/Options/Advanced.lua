@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 local options = W.options.advanced.args
 local C = W.Utilities.Color
 
@@ -7,7 +7,7 @@ local format = format
 local tostring = tostring
 local type = type
 
-local ReloadUI = ReloadUI
+local C_UI_Reload = C_UI.Reload
 
 local function blue(string)
     if type(string) ~= "string" then
@@ -130,7 +130,7 @@ E.PopupDialogs.WINDTOOLS_RESET_MODULE = {
     button2 = _G.CANCEL,
     OnAccept = function(_, func)
         func()
-        ReloadUI()
+        C_UI_Reload()
     end,
     whileDead = 1,
     hideOnEscape = true
@@ -143,7 +143,7 @@ E.PopupDialogs.WINDTOOLS_RESET_ALL_MODULES = {
     OnAccept = function()
         E.db.WT = P
         E.private.WT = V
-        ReloadUI()
+        C_UI_Reload()
     end,
     whileDead = 1,
     hideOnEscape = true
@@ -809,23 +809,8 @@ options.reset = {
                         )
                     end
                 },
-                filter = {
-                    order = 6,
-                    type = "execute",
-                    name = L["Filter"],
-                    func = function()
-                        E:StaticPopup_Show(
-                            "WINDTOOLS_RESET_MODULE",
-                            L["Filter"],
-                            nil,
-                            function()
-                                E.db.WT.social.filter = P.social.filter
-                            end
-                        )
-                    end
-                },
                 friendList = {
-                    order = 7,
+                    order = 6,
                     type = "execute",
                     name = L["Friend List"],
                     func = function()
@@ -840,7 +825,7 @@ options.reset = {
                     end
                 },
                 smartTab = {
-                    order = 8,
+                    order = 7,
                     type = "execute",
                     name = L["Smart Tab"],
                     func = function()
@@ -1244,7 +1229,7 @@ do
         button2 = _G.CANCEL,
         OnAccept = function()
             F.Profiles.ImportByString(text)
-            ReloadUI()
+            C_UI_Reload()
         end,
         whileDead = 1,
         hideOnEscape = true

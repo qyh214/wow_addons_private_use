@@ -4,7 +4,7 @@
 ## Notes: Where are the hidden treasures in the Dragon Isles?
 ## Notes-ruRU: Показывает на карте, где спрятаны сокровища на Драконьих островах
 ## Author: Kemayo
-## Version: v42
+## Version: v44
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com

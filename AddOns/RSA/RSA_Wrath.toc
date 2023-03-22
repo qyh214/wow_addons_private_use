@@ -2,7 +2,7 @@
 ## Title: RSA
 ## Notes: Easy Spell Announcements!
 ## Author: Raeli
-## Version: 5.12.1
+## Version: 5.14
 ## SavedVariables: RSADB, RSA5
 ## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0
 ## X-Credits: Jenneth, Rowaasr13, Xadurk
@@ -15,11 +15,12 @@
 embeds.xml
 #@end-no-lib-strip@
 
+Localisation\Locale-deDE.lua
 Localisation\Locale-enUS.lua
 Localisation\Locale-esES.lua
-Localisation\Locale-deDE.lua
-Localisation\Locale-koKR.lua
+Localisation\Locale-frFR.lua
 Localisation\Locale-itIT.lua
+Localisation\Locale-koKR.lua
 Localisation\Locale-ruRU.lua
 Localisation\Locale-zhCN.lua
 Localisation\Locale-zhTW.lua

@@ -34,8 +34,8 @@ function RSOverlayMixin:OnAcquired(x, y, r, g, b, pin)
 end
 
 function RSOverlayMixin:OnMouseEnter()
-	if (self.pin.ShowAnim and not self.pin.ShowAnim:IsPlaying()) then
-		self.pin.ShowAnim:Play();
+	if (self.pin.ShowPingAnim and not self.pin.ShowPingAnim:IsPlaying()) then
+		self.pin.ShowPingAnim:Play();
 	end
 
 	GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
@@ -49,8 +49,8 @@ function RSOverlayMixin:OnMouseEnter()
 end
 
 function RSOverlayMixin:OnMouseLeave()
-	if (self.pin.ShowAnim and self.pin.ShowAnim:IsPlaying()) then
-		self.pin.ShowAnim:Stop();
+	if (self.pin.ShowPingAnim and self.pin.ShowPingAnim:IsPlaying()) then
+		self.pin.ShowPingAnim:Stop();
 	end
 
 	GameTooltip:Hide()

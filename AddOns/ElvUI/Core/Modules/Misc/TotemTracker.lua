@@ -2,7 +2,7 @@ local E, L, V, P, G = unpack(ElvUI)
 local T = E:GetModule('TotemTracker')
 
 local _G = _G
-local next = next
+local ipairs = ipairs
 local unpack = unpack
 
 local CreateFrame = CreateFrame
@@ -31,18 +31,15 @@ function T:UpdateButton(button, totem)
 	end
 end
 
-function T:HideTotem()
-	T:UpdateButton(T.bar[priority[self.layoutIndex]], self)
-end
-
 function T:Update()
 	if E.Retail then
-		for totem in next, _G.TotemFrame.totemPool.activeObjects do
-			T:UpdateButton(T.bar[priority[totem.layoutIndex]], totem)
-
-			if totem:GetScript('OnHide') ~= T.HideTotem then
-				totem:SetScript('OnHide', T.HideTotem)
+		for _, button in ipairs(T.bar) do
+			if button:IsShown() then
+				button:SetShown(false)
 			end
+		end
+		for totem in _G.TotemFrame.totemPool:EnumerateActive() do
+			T:UpdateButton(T.bar[priority[totem.layoutIndex]], totem)
 		end
 	else
 		for i = 1, MAX_TOTEMS do
@@ -137,6 +134,12 @@ function T:Initialize()
 
 	T:RegisterEvent('PLAYER_TOTEM_UPDATE', 'Update')
 	T:RegisterEvent('PLAYER_ENTERING_WORLD', 'Update')
+
+	if E.Retail then
+		T:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED', 'Update')
+	else
+		T:RegisterEvent('ACTIVE_TALENT_GROUP_CHANGED', 'Update')
+	end
 
 	E:CreateMover(bar, 'TotemTrackerMover', L["Totem Tracker"], nil, nil, nil, nil, nil, 'general,totems')
 end

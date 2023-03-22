@@ -489,7 +489,7 @@ ns.itemIsKnowable = function(item)
                 return bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask
             end
         end
-        return (item.toy or item.mount or item.pet or item.quest or CanLearnAppearance(item[1]))
+        return (item.toy or item.mount or item.pet or item.quest or item.questComplete or item.set or item.spell or CanLearnAppearance(item[1]))
     end
     return CanLearnAppearance(item)
 end
@@ -512,6 +512,21 @@ ns.itemIsKnown = function(item)
                 -- we want to return nil for sets the current class can't learn:
                 if info.classMask and bit.band(info.classMask, ns.playerClassMask) == ns.playerClassMask then return false end
             end
+            return false
+        end
+        if item.spell then
+            -- can't use the tradeskill functions + the recipe-spell because that data's only available after the tradeskill window has been opened...
+            local info = C_TooltipInfo.GetItemByID(item[1])
+            if info then
+                TooltipUtil.SurfaceArgs(info)
+                for _, line in ipairs(info.lines) do
+                    TooltipUtil.SurfaceArgs(line)
+                    if line.leftText and string.match(line.leftText, _G.ITEM_SPELL_KNOWN) then
+                        return true
+                    end
+                end
+            end
+            return false
         end
         if CanLearnAppearance(item[1]) then return HasAppearance(item[1]) end
     elseif CanLearnAppearance(item) then

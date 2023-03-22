@@ -512,7 +512,8 @@ L.AUTO_YELL_ANNOUNCE_TEXT.combo		= "%s, %%s"
 L.AUTO_YELL_CUSTOM_FADE				= "%s 消失"
 L.AUTO_HUD_OPTION_TEXT				= "为$spell:%s显示HudMap(退休了)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "为多个机制显示HudMap(退休了)"
-L.AUTO_NAMEPLATE_OPTION_TEXT			= "为$spell:%s显示姓名面板光环"
+L.AUTO_NAMEPLATE_OPTION_TEXT			= "为$spell:%s显示姓名面板光环，包括兼容插件和DBM"
+L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED		= "为$spell:%s显示姓名面板光环，只包括DBM"
 L.AUTO_RANGE_OPTION_TEXT				= "距离监视(%s码)：$spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 L.AUTO_RANGE_OPTION_TEXT_SHORT		= "距离监视(%s码)"--For when a range frame is just used for more than one thing
 L.AUTO_RRANGE_OPTION_TEXT			= "反转距离监视(%s码)：$spell:%s"--Reverse range frame (green when players in range, red when not)
@@ -570,6 +571,8 @@ L.DUR_CHECKING				= "全团装备耐久度检测请稍后... "
 L.DUR_HEADER					= L.DEADLY_BOSS_MODS .. "- 装备耐久度检测结果"
 L.DUR_ENTRY					= "%s: %d 耐久度 / %s件装备损坏"
 L.DUR_FOOTER					= "未反馈此次检测的团员:%s"
+
+L.OVERRIDE_ACTIVATED			= "本次战斗的配置已经被队长的配置覆盖"
 
 --LDB
 L.LDB_TOOLTIP_HELP1	= "左键 打开" .. L.DBM

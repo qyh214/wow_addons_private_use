@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2493, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230202061417")
+mod:SetRevision("20230313032526")
 mod:SetCreatureID(190245)
 mod:SetEncounterID(2614)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
-mod:SetHotfixNoticeRev(20230201000000)
-mod:SetMinSyncRevision(20221230000000)
+mod:SetHotfixNoticeRev(20230226000000)
+mod:SetMinSyncRevision(20230226000000)
 mod.respawnTime = 33
 
 mod:RegisterCombat("combat")
@@ -27,11 +27,11 @@ mod:RegisterEventsInCombat(
 --TODO, improve auto marking of the priority adds (like mages that need interrupt rotations)?
 --TODO, what is range of tremors? does the mob turn while casting it? These answers affect warning defaults/filters, for now it's everyone
 --[[
-(ability.id = 376073 or ability.id = 375871 or ability.id = 388716 or ability.id = 388918 or ability.id = 375870 or ability.id = 376272 or ability.id = 375475 or ability.id = 375485 or ability.id = 396269 or ability.id = 396779) and type = "begincast"
+(ability.id = 376073 or ability.id = 375871 or ability.id = 388716 or ability.id = 388918 or ability.id = 375870 or ability.id = 396269 or ability.id = 396779) and type = "begincast"
  or ability.id = 380175 and type = "cast"
  or ability.id = 375879
- or (ability.id = 375716 or ability.id = 375653 or ability.id = 375457 or ability.id = 375630 or ability.id = 376257 or ability.id = 375575) and type = "begincast"
  or ability.id = 181113
+ or (ability.id = 375716 or ability.id = 375653 or ability.id = 375457 or ability.id = 375630 or ability.id = 376257 or ability.id = 375575 or ability.id = 375475 or ability.id = 376272 or ability.id = 375485) and type = "begincast"
 --]]
 --Stage One: The Primalist Clutch
 mod:AddTimerLine(DBM:EJ_GetSectionInfo(25119))
@@ -114,7 +114,7 @@ local yellDetonatingStoneslamFades				= mod:NewShortFadesYell(396264, nil, nil, 
 local specWarnDetonatingStoneslamTaunt			= mod:NewSpecialWarningTaunt(396264, nil, nil, nil, 1, 2, 4)
 
 local timerBroodkeepersFuryCD					= mod:NewNextCountTimer(30, 375879, nil, nil, nil, 5)--Static CD
-local timerEGreatstaffoftheBroodkeeperCD		= mod:NewCDCountTimer(24.4, 380176, L.staff, nil, nil, 5)--Shared CD ability
+local timerEGreatstaffoftheBroodkeeperCD		= mod:NewCDCountTimer(17, 380176, L.staff, nil, nil, 5)--Shared CD ability
 local timerFrozenShroudCD						= mod:NewCDCountTimer(40.5, 388918, nil, nil, nil, 2, nil, DBM_COMMON_L.DAMAGE_ICON..DBM_COMMON_L.HEALER_ICON..DBM_COMMON_L.MAGIC_ICON)--Static CD
 local timerMortalStoneSlamCD					= mod:NewCDCountTimer(20.7, 396269, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.MYTHIC_ICON)
 
@@ -122,28 +122,112 @@ local castsPerGUID = {}
 mod.vb.staffCount = 0
 mod.vb.icyCount = 0
 mod.vb.addsCount = 0
+mod.vb.tankComboStarted = false
 mod.vb.tankCombocount = 0
 mod.vb.wildFireCount = 0
 mod.vb.incubationCount = 0
-mod.vb.mageIcon = 6
-mod.vb.StormbringerIcon = 8
 mod.vb.eggsGone = false
 local mythicAddsTimers	= {32.9, 14.7, 48.9, 14.4, 41.1, 18.9, 44.7, 15.3, 41.4, 18.2}
 local heroicAddsTimers	= {35.4, 19.0, 36.3, 20.0, 43.2, 19.8, 36.3, 19.9, 43.1, 21.0, 35.7, 20.0}--Last 5 no longer happen?
 local normalAddsTimers	= {35.4, 24.6, 36.3, 24.9, 43.1, 24.9, 36.3, 24.9, 43.1, 24.8}
-local p2StaffMythic		= {0, 19, 17, 25, 24.5, 25, 31.9, 17.5, 31, 18.7, 25, 25}--Some of this pattern is accurate but it can change, need to figure out actual cause.
+local addUsedMarks = {}
+--[[
+Mortal Stoneclaws 2 second ICD (P1)
+Mortal Stoneslam 2 second ICD (P2 mythic)
+Wildfire 2.5 second ICD in P1 and 5 second ICD in P2 when double cast on heroic/mythic (still 2.5 on lfr/normal)
+Icy Shroud 2.5 second ICD
+Frozen Shroud 2.5 ICD including staff*
+Storm Fissure triggers 3 sec ICD
+greatstaff triggers 1 second ICD (not really worth including)
+rapid incubation triggers 3 second ICD, usually it's staff cast after 3 seconds later but in other cases another spell can jump in and push staff further out so 3 sec before staff rule isn't a gaurentee, but the 3 seconds before next spell is
+
+Key Notes:
+In stage 1 staff is consistently 24 seconds, whether that's actual CD kind of doesn't matter, since other spells have equal CD it'll queue at 24-27sec regardless
+In stage 2, staff has 20 second cd on easy and 17 seconds on normal (at least based on current data) but it'll rarely ever see it's base CD due to spell queuing/ICD
+--]]
+local function updateAllTimers(self, ICD, exclusion)
+	if not self.Options.ExperimentalTimerCorrection then return end
+	DBM:Debug("updateAllTimers running", 3)
+	--Abilities that use same timer in P1 and P2
+	if timerWildfireCD:GetRemaining(self.vb.wildFireCount+1) < ICD then
+		local elapsed, total = timerWildfireCD:GetTime(self.vb.wildFireCount+1)
+		local extend = ICD - (total-elapsed)
+		DBM:Debug("timerWildfireCD extended by: "..extend, 2)
+		timerWildfireCD:Update(elapsed, total+extend, self.vb.wildFireCount+1)
+	end
+	if self:IsMythic() and timerStormFissureCD:GetRemaining() < ICD then
+		local elapsed, total = timerStormFissureCD:GetTime()
+		local extend = ICD - (total-elapsed)
+		DBM:Debug("timerStormFissureCD extended by: "..extend, 2)
+		timerStormFissureCD:Update(elapsed, total+extend)
+	end
+	--Specific Phase ability timers
+	local phase = self.vb.phase
+	if phase == 1 then
+		if not exclusion and timerMortalStoneclawsCD:GetRemaining(self.vb.tankCombocount+1) < ICD then--All difficulties have P1 stoneclaws
+			local elapsed, total = timerMortalStoneclawsCD:GetTime(self.vb.tankCombocount+1)
+			local extend = ICD - (total-elapsed)
+			DBM:Debug("timerMortalStoneclawsCD extended by: "..extend, 2)
+			timerMortalStoneclawsCD:Update(elapsed, total+extend, self.vb.tankCombocount+1)
+		end
+		if timerGreatstaffoftheBroodkeeperCD:GetRemaining(self.vb.staffCount+1) < ICD then
+			local elapsed, total = timerGreatstaffoftheBroodkeeperCD:GetTime(self.vb.staffCount+1)
+			local extend = ICD - (total-elapsed)
+			DBM:Debug("timerGreatstaffoftheBroodkeeperCD extended by: "..extend, 2)
+			timerGreatstaffoftheBroodkeeperCD:Update(elapsed, total+extend, self.vb.staffCount+1)
+		end
+		if timerIcyShroudCD:GetRemaining(self.vb.icyCount+1) < ICD then
+			local elapsed, total = timerIcyShroudCD:GetTime(self.vb.icyCount+1)
+			local extend = ICD - (total-elapsed)
+			DBM:Debug("timerIcyShroudCD extended by: "..extend, 2)
+			timerIcyShroudCD:Update(elapsed, total+extend, self.vb.icyCount+1)
+		end
+	else--Phase 2
+		if self:IsMythic() then--Mythic P2 has stoneslam versus stoneclaws
+			if not exclusion and timerMortalStoneSlamCD:GetRemaining(self.vb.tankCombocount+1) < ICD then--All difficulties have P1 stoneclaws
+				local elapsed, total = timerMortalStoneSlamCD:GetTime(self.vb.tankCombocount+1)
+				local extend = ICD - (total-elapsed)
+				DBM:Debug("timerMortalStoneSlamCD extended by: "..extend, 2)
+				timerMortalStoneSlamCD:Update(elapsed, total+extend, self.vb.tankCombocount+1)
+			end
+		else
+			if not exclusion and timerMortalStoneclawsCD:GetRemaining(self.vb.tankCombocount+1) < ICD then--All difficulties have P1 stoneclaws
+				local elapsed, total = timerMortalStoneclawsCD:GetTime(self.vb.tankCombocount+1)
+				local extend = ICD - (total-elapsed)
+				DBM:Debug("timerMortalStoneclawsCD extended by: "..extend, 2)
+				timerMortalStoneclawsCD:Update(elapsed, total+extend, self.vb.tankCombocount+1)
+			end
+		end
+		if timerEGreatstaffoftheBroodkeeperCD:GetRemaining(self.vb.staffCount+1) < ICD then
+			local elapsed, total = timerEGreatstaffoftheBroodkeeperCD:GetTime(self.vb.staffCount+1)
+			local extend = ICD - (total-elapsed)
+			DBM:Debug("timerEGreatstaffoftheBroodkeeperCD extended by: "..extend, 2)
+			timerEGreatstaffoftheBroodkeeperCD:Update(elapsed, total+extend, self.vb.staffCount+1)
+		end
+		if timerFrozenShroudCD:GetRemaining(self.vb.icyCount+1) < ICD then
+			local elapsed, total = timerFrozenShroudCD:GetTime(self.vb.icyCount+1)
+			local extend = ICD - (total-elapsed)
+			DBM:Debug("timerFrozenShroudCD extended by: "..extend, 2)
+			timerFrozenShroudCD:Update(elapsed, total+extend, self.vb.icyCount+1)
+		end
+	end
+end
+
+local function resetTankComboState(self)
+	self.vb.tankComboStarted = false
+end
 
 function mod:OnCombatStart(delay)
 	table.wipe(castsPerGUID)
+	table.wipe(addUsedMarks)
 	self:SetStage(1)
+	self.vb.tankComboStarted = false
 	self.vb.tankCombocount = 0
 	self.vb.staffCount = 0
 	self.vb.icyCount = 0
 	self.vb.addsCount = 0
 	self.vb.wildFireCount = 0
 	self.vb.incubationCount = 0
-	self.vb.mageIcon = 6
-	self.vb.StormbringerIcon = 8
 	self.vb.eggsGone = false
 	timerMortalStoneclawsCD:Start(3.2-delay, 1)
 	timerWildfireCD:Start(8.2-delay, 1)
@@ -181,32 +265,64 @@ function mod:SPELL_CAST_START(args)
 		if not self.vb.eggsGone then
 			timerRapidIncubationCD:Start(24, self.vb.incubationCount+1)
 		end
+		updateAllTimers(self, 3)
 	elseif spellId == 375871 and self:AntiSpam(10, 1) then
 		self.vb.wildFireCount = self.vb.wildFireCount + 1
 		specWarnWildfire:Show()
 		specWarnWildfire:Play("scatter")
-		specWarnWildfire:ScheduleVoice(1.5, "watchstep")
+		specWarnWildfire:ScheduleVoice(2, "watchstep")
 		timerWildfireCD:Start(self:IsMythic() and 23 or self:IsHeroic() and 21.4 or 25, self.vb.wildFireCount+1)
+		if self:IsHard() and self.vb.phase == 2 then
+			updateAllTimers(self, 5)
+		else
+			updateAllTimers(self, 2.5)
+		end
 	elseif spellId == 388716 then
 		self.vb.icyCount = self.vb.icyCount + 1
 		specWarnIcyShroud:Show(self.vb.icyCount)
 		specWarnIcyShroud:Play("aesoon")
 		timerIcyShroudCD:Start(self:IsMythic() and 41 or self:IsHeroic() and 39.1 or 44, self.vb.icyCount+1)
+		updateAllTimers(self, 2.5)
 	elseif spellId == 388918 then
 		self.vb.icyCount = self.vb.icyCount + 1
 		specWarnFrozenShroud:Show(self.vb.icyCount)
 		specWarnFrozenShroud:Play("aesoon")
 		timerFrozenShroudCD:Start(nil, self.vb.icyCount+1)--40-45
+		updateAllTimers(self, 2.5)
 	elseif spellId == 375870 then
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnMortalStoneclaws:Show()
 			specWarnMortalStoneclaws:Play("defensive")
 		end
+		if not self.vb.tankComboStarted then
+			self.vb.tankComboStarted = true
+			self.vb.tankCombocount = self.vb.tankCombocount + 1
+			self:Unschedule(resetTankComboState)
+			self:Schedule(8, resetTankComboState, self)
+		else
+			timerMortalStoneclawsCD:Stop()--Don't print cast refreshed before expired for a recast
+		end
+		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we start timer here
+		local timer = ((self:IsEasy() or self.vb.phase == 1) and 22.4 or 7.3)
+		timerMortalStoneclawsCD:Start(timer, self.vb.tankCombocount+1)
+		updateAllTimers(self, 2, true)
 	elseif spellId == 396269 then
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnMortalStoneSlam:Show()
 			specWarnMortalStoneSlam:Play("defensive")
 		end
+		if not self.vb.tankComboStarted then
+			self.vb.tankComboStarted = true
+			self.vb.tankCombocount = self.vb.tankCombocount + 1
+			self:Unschedule(resetTankComboState)
+			self:Schedule(8, resetTankComboState, self)
+		else
+			timerMortalStoneSlamCD:Stop()
+		end
+		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we start timer here
+		local timer = (self.vb.phase == 1 and 21.9 or 7.3)
+		timerMortalStoneSlamCD:Start(timer, self.vb.tankCombocount+1)
+		updateAllTimers(self, 2, true)
 	elseif spellId == 376272 then
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnBurrowingStrike:Show()
@@ -233,7 +349,9 @@ function mod:SPELL_CAST_START(args)
 		end
 	elseif spellId == 375485 then
 		if self:AntiSpam(3, spellId) then
-			warnCauterizingFlashflames:Show()
+			if self:CheckBossDistance(args.sourceGUID, false, 13289, 28) then
+				warnCauterizingFlashflames:Show()
+			end
 			timerCauterizingFlashflamesCD:Start(self:IsMythic() and 8.6 or 11.7, args.sourceGUID)--TODO, recheck heroic
 		end
 	elseif spellId == 375575 then
@@ -255,10 +373,15 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 375716 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
-			if self.Options.SetIconOnMages and self.vb.mageIcon > 3 then--Only use up to 3 icons
-				self:ScanForMobs(args.sourceGUID, 2, self.vb.mageIcon, 1, nil, 12, "SetIconOnMages")
+			if self.Options.SetIconOnMages then
+				for i = 6, 4, -1 do -- 6, 5, 4
+					if not addUsedMarks[i] then
+						addUsedMarks[i] = args.sourceGUID
+						self:ScanForMobs(args.sourceGUID, 2, i, 1, nil, 12, "SetIconOnMages")
+						break
+					end
+				end
 			end
-			self.vb.mageIcon = self.vb.mageIcon - 1
 		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
@@ -273,10 +396,15 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 375653 then
 		if not castsPerGUID[args.sourceGUID] then
 			castsPerGUID[args.sourceGUID] = 0
-			if self.Options.SetIconOnStormbringers and self.vb.StormbringerIcon > 6 then--Only use up to 3 icons
-				self:ScanForMobs(args.sourceGUID, 2, self.vb.StormbringerIcon, 1, nil, 12, "SetIconOnStormbringers")
+			if self.Options.SetIconOnStormbringers then
+				for i = 8, 7, -1 do -- 8, 7
+					if not addUsedMarks[i] then
+						addUsedMarks[i] = args.sourceGUID
+						self:ScanForMobs(args.sourceGUID, 2, i, 1, nil, 12, "SetIconOnStormbringers")
+						break
+					end
+				end
 			end
-			self.vb.StormbringerIcon = self.vb.StormbringerIcon - 1
 		end
 		castsPerGUID[args.sourceGUID] = castsPerGUID[args.sourceGUID] + 1
 		local count = castsPerGUID[args.sourceGUID]
@@ -292,6 +420,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnStormFissure:Show()
 		specWarnStormFissure:Play("watchstep")
 		timerStormFissureCD:Start()
+		updateAllTimers(self, 3)
 	end
 end
 
@@ -299,39 +428,63 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 380175 then
 		self.vb.staffCount = self.vb.staffCount + 1
+		local staffTimer
+		if self:IsHard() then
+			staffTimer = (self.vb.staffCount >= 14) and 17 or 24.3
+		else
+			staffTimer = (self.vb.staffCount >= 13) and 20 or 24.3
+		end
 		if self.vb.phase == 1 then
 			specWarnGreatstaffoftheBroodkeeper:Show(self.vb.staffCount)
 			specWarnGreatstaffoftheBroodkeeper:Play("specialsoon")
-			timerGreatstaffoftheBroodkeeperCD:Start(24.3, self.vb.staffCount+1)--24-29 in all difficulties
+			timerGreatstaffoftheBroodkeeperCD:Start(staffTimer, self.vb.staffCount+1)--24-29 in all difficulties
 		else
 			specWarnEGreatstaffoftheBroodkeeper:Show(self.vb.staffCount)
 			specWarnEGreatstaffoftheBroodkeeper:Play("specialsoon")
-			if self:IsMythic() then
-				local timer = p2StaffMythic[self.vb.staffCount+1] or 17.5
-				timerEGreatstaffoftheBroodkeeperCD:Start(timer, self.vb.staffCount+1)
-			else
-				timerEGreatstaffoftheBroodkeeperCD:Start(20.6, self.vb.staffCount+1)--20-27
+			timerEGreatstaffoftheBroodkeeperCD:Start(staffTimer, self.vb.staffCount+1)--17-33
+		end
+		--updateAllTimers(self, 1)
+	elseif spellId == 375870 then
+		self.vb.tankComboStarted = false
+	elseif spellId == 396269 then
+		self.vb.tankComboStarted = false
+	elseif spellId == 181113 then
+		local cid = self:GetCIDFromGUID(args.sourceGUID)
+		if cid == 191206 then--Mages
+			if not castsPerGUID[args.sourceGUID] then
+				castsPerGUID[args.sourceGUID] = 0
+				if self.Options.SetIconOnMages then
+					for i = 6, 4, -1 do -- 6, 5, 4
+						if not addUsedMarks[i] then
+							addUsedMarks[i] = args.sourceGUID
+							self:ScanForMobs(args.sourceGUID, 2, i, 1, nil, 12, "SetIconOnMages")
+							break
+						end
+					end
+				end
+			end
+		elseif cid == 191232 then--StormBringers
+			if not castsPerGUID[args.sourceGUID] then
+				castsPerGUID[args.sourceGUID] = 0
+				if self.Options.SetIconOnStormbringers then
+					for i = 8, 7, -1 do -- 8, 7
+						if not addUsedMarks[i] then
+							addUsedMarks[i] = args.sourceGUID
+							self:ScanForMobs(args.sourceGUID, 2, i, 1, nil, 12, "SetIconOnStormbringers")
+							break
+						end
+					end
+				end
 			end
 		end
-	elseif spellId == 375870 then
-		self.vb.tankCombocount = self.vb.tankCombocount + 1
-		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we start timer here
-		local timer = ((self:IsEasy() or self.vb.phase == 1) and 22.4 or 7.3)-1.5
-		timerMortalStoneclawsCD:Start(timer, self.vb.tankCombocount+1)
-	elseif spellId == 396269 then
-		self.vb.tankCombocount = self.vb.tankCombocount + 1
-		--Sometimes boss interrupts cast to cast another ability then starts cast over, so we start timer here
-		local timer = (self.vb.phase == 1 and 21.9 or 7.3)-1.5
-		timerMortalStoneSlamCD:Start(timer, self.vb.tankCombocount+1)
-	elseif spellId == 181113 and self:AntiSpam(10, 2) then
-		self.vb.addsCount = self.vb.addsCount + 1
-		self.vb.mageIcon = 6
-		self.vb.StormbringerIcon = 8
-		specWarnPrimalistReinforcements:Show(self.vb.addsCount)
-		specWarnPrimalistReinforcements:Play("killmob")
-		local timer = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
-		if timer then
-			timerPrimalistReinforcementsCD:Start(timer, self.vb.addsCount+1)
+		if self:AntiSpam(10, 2) then
+			self.vb.addsCount = self.vb.addsCount + 1
+			specWarnPrimalistReinforcements:Show(self.vb.addsCount)
+			specWarnPrimalistReinforcements:Play("killmob")
+			local timer = self:IsMythic() and mythicAddsTimers[self.vb.addsCount+1] or self:IsHeroic() and heroicAddsTimers[self.vb.addsCount+1] or self:IsEasy() and normalAddsTimers[self.vb.addsCount+1]
+			if timer then
+				timerPrimalistReinforcementsCD:Start(timer, self.vb.addsCount+1)
+			end
 		end
 	end
 end
@@ -415,25 +568,23 @@ function mod:SPELL_AURA_APPLIED(args)
 			--Mortal Stone Claws, since we don't swap timers, no action needed
 			--On mythic mortal claws swaps to mortal slam, doesn't change on heroic and below
 			if self:IsMythic() then
-				timerMortalStoneclawsCD:Stop()
-				timerMortalStoneSlamCD:Start(15, 1)
-				self.vb.tankCombocount = 0
-				timerGreatstaffoftheBroodkeeperCD:Stop()
-				timerEGreatstaffoftheBroodkeeperCD:Start(19, 1)
-			else
-				--Tank timer doesn't reset, just keeps going, staff timer doesn't restart, just swaps to new object
-				local remainingStaff = timerGreatstaffoftheBroodkeeperCD:GetRemaining(self.vb.staffCount+1)
-				if remainingStaff then
-					timerGreatstaffoftheBroodkeeperCD:Stop()
-					timerEGreatstaffoftheBroodkeeperCD:Start(remainingStaff, 1)--Does NOT restart anymore, even though on mythic it inherits a cast sequence, it still finishes out previous CD
+				local remainingCombo = timerMortalStoneclawsCD:GetRemaining(self.vb.tankCombocount+1)
+				if remainingCombo then
+					timerMortalStoneclawsCD:Stop()
+					timerMortalStoneclawsCD:Start(remainingCombo, self.vb.tankCombocount+1)--Does NOT restart anymore, even though on mythic it inherits a cast sequence, it still finishes out previous CD
 				end
+			end
+			--Tank timer doesn't reset, just keeps going, staff timer doesn't restart, just swaps to new object
+			local remainingStaff = timerGreatstaffoftheBroodkeeperCD:GetRemaining(self.vb.staffCount+1)
+			if remainingStaff then
+				timerGreatstaffoftheBroodkeeperCD:Stop()
+				timerEGreatstaffoftheBroodkeeperCD:Start(remainingStaff, self.vb.staffCount+1)--Does NOT restart anymore, even though on mythic it inherits a cast sequence, it still finishes out previous CD
 			end
 			local remainingIcy = timerGreatstaffoftheBroodkeeperCD:GetRemaining(self.vb.icyCount+1)
 			if remainingIcy then
 				timerIcyShroudCD:Stop()
 				timerFrozenShroudCD:Start(remainingIcy, 1)
 			end
-			self.vb.staffCount = 0
 			self.vb.icyCount = 0--Reused for frozen shroud
 		end
 	end
@@ -474,8 +625,21 @@ function mod:UNIT_DIED(args)
 	elseif cid == 191222 then--Juvenile Frost Proto-Dragon
 		timerRendingBiteCD:Stop(args.destGUID)
 		timerChillingTantrumCD:Stop(args.destGUID)
+	elseif cid == 191206 then--Primalist Mage
+		for i = 6, 4, -1 do -- 6, 5, 4
+			if addUsedMarks[i] == args.destGUID then
+				addUsedMarks[i] = nil
+				return
+			end
+		end
 	elseif cid == 191232 then--Drakonid Stormbringer
 		timerIonizingChargeCD:Stop(args.destGUID)
+		for i = 8, 7, -1 do -- 8, 7
+			if addUsedMarks[i] == args.destGUID then
+				addUsedMarks[i] = nil
+				break
+			end
+		end
 	end
 end
 

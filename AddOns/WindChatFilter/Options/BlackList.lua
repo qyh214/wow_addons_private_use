@@ -1,5 +1,8 @@
 local W, F, L, P, G, O = unpack(select(2, ...))
 
+local ipairs = ipairs
+local pairs = pairs
+
 O.blackList = {
     order = 11,
     name = L["Black List"],
@@ -21,7 +24,7 @@ O.blackList = {
             func = function()
                 F.CreateNewRule(W.db.rules.blackList, O.blackList.args)
             end
-        },
+        }
     }
 }
 

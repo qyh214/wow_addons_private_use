@@ -803,6 +803,7 @@ local function move_janela(baseframe, iniciando, instancia, just_updating)
 				instancia_alvo:SaveMainWindowPosition()
 				instancia_alvo:RestoreMainWindowPosition()
 
+				instancia_alvo:ShutDown()
 				Details.FadeHandler.Fader(instancia_alvo.baseframe, 1)
 				Details.FadeHandler.Fader(instancia_alvo.rowframe, parseRowFrameAlpha(1))
 				Details.FadeHandler.Fader(instancia_alvo.baseframe.cabecalho.ball, 1)
@@ -4165,7 +4166,7 @@ function gump:CreateNewLine(instance, index)
 	return newLine
 end
 
-function Details:SetBarTextSettings (size, font, fixedcolor, leftcolorbyclass, rightcolorbyclass, leftoutline, rightoutline, customrighttextenabled, customrighttext, percentage_type, showposition, customlefttextenabled, customlefttext, smalloutline_left, smalloutlinecolor_left, smalloutline_right, smalloutlinecolor_right, translittext)
+function Details:SetBarTextSettings (size, font, fixedcolor, leftcolorbyclass, rightcolorbyclass, leftoutline, rightoutline, customrighttextenabled, customrighttext, percentage_type, showposition, customlefttextenabled, customlefttext, smalloutline_left, smalloutlinecolor_left, smalloutline_right, smalloutlinecolor_right, translittext, yoffset, leftoffset)
 
 	--size
 	if (size) then
@@ -4255,6 +4256,13 @@ function Details:SetBarTextSettings (size, font, fixedcolor, leftcolorbyclass, r
 		self.row_info.textL_translit_text = translittext
 	end
 
+	if (yoffset) then
+		self.row_info.text_yoffset = yoffset
+	end
+
+	if (leftoffset) then
+		self.row_info.textL_offset = leftoffset
+	end
 	self:InstanceReset()
 	self:InstanceRefreshRows()
 end
@@ -4804,14 +4812,14 @@ function Details:InstanceRefreshRows(instance)
 
 			row.lineText4:SetText("")
 
-			row.lineText2:SetPoint("right", row.statusbar, "right", -self.fontstrings_text2_anchor, 0)
-			row.lineText3:SetPoint("right", row.statusbar, "right", -self.fontstrings_text3_anchor, 0)
-			row.lineText4:SetPoint("right", row.statusbar, "right", -self.fontstrings_text4_anchor, 0)
+			row.lineText2:SetPoint("right", row.statusbar, "right", -self.fontstrings_text2_anchor, self.row_info.text_yoffset)
+			row.lineText3:SetPoint("right", row.statusbar, "right", -self.fontstrings_text3_anchor, self.row_info.text_yoffset)
+			row.lineText4:SetPoint("right", row.statusbar, "right", -self.fontstrings_text4_anchor, self.row_info.text_yoffset)
 
 			if (no_icon) then
 				row.statusbar:SetPoint("topleft", row, "topleft")
 				row.statusbar:SetPoint("bottomright", row, "bottomright")
-				row.lineText1:SetPoint("left", row.statusbar, "left", 2, 0)
+				row.lineText1:SetPoint("left", row.statusbar, "left", self.row_info.textL_offset + 2, self.row_info.text_yoffset)
 				row.icone_classe:Hide()
 				row.iconHighlight:Hide()
 			else
@@ -4826,7 +4834,7 @@ function Details:InstanceRefreshRows(instance)
 				end
 
 				row.statusbar:SetPoint("bottomright", row, "bottomright")
-				row.lineText1:SetPoint("left", row.icone_classe, "right", 3, 0)
+				row.lineText1:SetPoint("left", row.icone_classe, "right", self.row_info.textL_offset + 3, self.row_info.text_yoffset)
 			end
 		else
 			row.lineText1:ClearAllPoints()
@@ -4839,14 +4847,14 @@ function Details:InstanceRefreshRows(instance)
 			row.lineText2:SetJustifyH("left")
 			row.lineText1:SetJustifyH("right")
 
-			row.lineText4:SetPoint("left", row.statusbar, "left", self.fontstrings_text4_anchor + 1, 0)
-			row.lineText3:SetPoint("left", row.statusbar, "left", self.fontstrings_text3_anchor + 1, 0)
-			row.lineText2:SetPoint("left", row.statusbar, "left", self.fontstrings_text2_anchor + 1, 0)
+			row.lineText4:SetPoint("left", row.statusbar, "left", self.fontstrings_text4_anchor + 1, self.row_info.text_yoffset)
+			row.lineText3:SetPoint("left", row.statusbar, "left", self.fontstrings_text3_anchor + 1, self.row_info.text_yoffset)
+			row.lineText2:SetPoint("left", row.statusbar, "left", self.fontstrings_text2_anchor + 1, self.row_info.text_yoffset)
 
 			if (no_icon) then
 				row.statusbar:SetPoint("topleft", row, "topleft")
 				row.statusbar:SetPoint("bottomright", row, "bottomright")
-				row.lineText1:SetPoint("right", row.statusbar, "right", -2, 0)
+				row.lineText1:SetPoint("right", row.statusbar, "right", self.row_info.textL_offset - 2, self.row_info.text_yoffset)
 				row.icone_classe:Hide()
 				row.iconHighlight:Hide()
 				--[[ Deprecation of right_to_left_texture in favor of StatusBar:SetReverseFill 5/2/2022 - Flamanis
@@ -4866,7 +4874,7 @@ function Details:InstanceRefreshRows(instance)
 
 				row.statusbar:SetPoint("topleft", row, "topleft")
 
-				row.lineText1:SetPoint("right", row.icone_classe, "left", -2, 0)
+				row.lineText1:SetPoint("right", row.icone_classe, "left", self.row_info.textL_offset - 2, self.row_info.text_yoffset)
 			end
 		end
 

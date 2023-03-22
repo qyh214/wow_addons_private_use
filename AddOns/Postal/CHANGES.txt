@@ -1,10 +1,8 @@
 ------------------------------------------------------------------------
-r571 | Zimzarina | 2023-01-25 02:55:57 +0000 (Wed, 25 Jan 2023) | 2 lines
+r573 | Zimzarina | 2023-03-21 19:36:56 +0000 (Tue, 21 Mar 2023) | 1 line
 Changed paths:
-   M /trunk/Postal.lua
    M /trunk/Postal.toc
 
-TOC update for Retail
-Fixed MiniMap issue caused by Blizzard object name change (Issue #328)
+TOC Update.
 ------------------------------------------------------------------------
 

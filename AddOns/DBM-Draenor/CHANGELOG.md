@@ -1,7 +1,7 @@
 # <DBM> World Bosses (WoD)
 
-## [r69](https://github.com/DeadlyBossMods/DBM-WoD/tree/r69) (2023-01-24)
-[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r68...r69) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
+## [r70](https://github.com/DeadlyBossMods/DBM-WoD/tree/r70) (2023-03-21)
+[Full Changelog](https://github.com/DeadlyBossMods/DBM-WoD/compare/r69...r70) [Previous Releases](https://github.com/DeadlyBossMods/DBM-WoD/releases)
 
-- bump tocs  
-- enable extra checks  
+- Bump toc files  
+- Fixes to the butcher, Closes #16  

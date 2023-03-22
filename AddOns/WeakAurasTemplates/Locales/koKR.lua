@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "koKR" then
+if (GAME_LOCALE or GetLocale()) ~= "koKR" then
   return
 end
 
@@ -61,6 +61,10 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "주문이 활성화 되어 있는 동안 강조"
 	L["Hold CTRL to create multiple auras at once"] = "한 번에 여러 효과를 만드려면 CTRL 키를 누르세요"
 	L["Keeps existing triggers intact"] = "활성 조건 그대로 유지"
+	--[[Translation missing --]]
+	L["Max 3"] = "Max 3"
+	--[[Translation missing --]]
+	L["Max 4"] = "Max 4"
 	L["Next"] = "다음"
 	L["Only show the aura if the target has the debuff."] = "대상에 약화 효과가 있을 때만 효과를 표시합니다."
 	L["Only show the aura when the item is on cooldown."] = "아이템이 재사용 대기 중일 때만 효과를 표시합니다."

@@ -43,8 +43,8 @@ local currentContinentDropDownValues = { }
 
 local function MapByName_Sort(mapIDs)
 	local comparison = function(mapID1, mapID2)
-		local mapName1 = RSMap.GetMapName(mapID1)
-		local mapName2 = RSMap.GetMapName(mapID2)
+		local mapName1 = RSMap.GetMapName(mapID1) or ""
+		local mapName2 = RSMap.GetMapName(mapID2) or ""
 
 		-- Otherwise order by name
 		local strCmpResult = strcmputf8i(mapName1, mapName2);
@@ -142,9 +142,24 @@ local function PopulateContinentDropDown(mainFrame, continentDropDown)
 		currentContinentDropDownValues[continentID] = mapIDs
 	end
 	
+	-- If player is locking current map check if available and selects it
+	if (RSConfigDB.IsLockingCurrentMap()) then
+		-- Gets players map ID
+		local currentPlayerMapID = C_Map.GetBestMapForUnit("player");
+		if (currentPlayerMapID) then
+			-- Gets players continent map ID
+			local currentPlayerContinentID = RSMapDB.GetContinentOfMap(currentPlayerMapID)
+			if (currentPlayerContinentID and RSUtils.Contains(continentsSorted, currentPlayerContinentID) and RSUtils.Contains(currentContinentDropDownValues[currentPlayerContinentID], currentPlayerMapID)) then
+				RSConfigDB.SetExplorerContinentMapID(currentPlayerContinentID)
+				RSConfigDB.SetExplorerMapID(currentPlayerMapID)
+			end
+		end
+	end
+	
 	-- Tries to select the previous continent/map
 	local previousContinentID = RSConfigDB.GetExplorerContinenMapID()
 	local previousMapID = RSConfigDB.GetExplorerMapID()
+	
 	if (previousContinentID and previousMapID and RSUtils.Contains(continentsSorted, previousContinentID) and RSUtils.Contains(currentContinentDropDownValues[previousContinentID], previousMapID)) then
 		LibDD:UIDropDownMenu_SetText(continentDropDown, RSMap.GetMapName(previousMapID))
 		mainFrame:ShowContentPanels()
@@ -369,6 +384,21 @@ function RSExplorerFilters:Initialize(mainFrame)
 		FilterDropDownMenu_Initialize(self)
 		PopulateContinentDropDown(self.mainFrame, self.ContinentDropDown)
 		ContinentDropDownMenu_Initialize(self)
+		
+		self.LockCurrentZone = CreateFrame("CheckButton", "LockCurrentZone", self, "ChatConfigCheckButtonTemplate");
+		self.LockCurrentZone:SetPoint("LEFT", self.ContinentDropDown, "RIGHT", -10, 0)
+		LockCurrentZoneText:SetText(AL["EXPLORER_LOCK_CURRENT_ZONE"])
+		self.LockCurrentZone.tooltip = AL["EXPLORER_LOCK_CURRENT_ZONE_DESC"]
+		self.LockCurrentZone:SetScript("OnEnter", function(self)
+			mainFrame:ShowTooltip(self)
+		end)
+		self.LockCurrentZone:SetScript("OnLeave", function(self)
+			mainFrame:HideTooltip(self)
+		end)
+		self.LockCurrentZone:SetChecked(RSConfigDB.IsLockingCurrentMap())
+		self.LockCurrentZone.func = function(self, checked)
+			RSConfigDB.SetLockingCurrentMap(checked)
+		end
 		
 		self.RestartScanningButton:SetText(AL["EXPLORER_RESCANN"])
 		self.RestartScanningButton.tooltip = AL["EXPLORER_RESCANN_DESC"]
@@ -1011,6 +1041,7 @@ function RSExplorerDetailMap:RefreshDetailTiles(mapFrame)
 	end
 	
 	-- Add explored overlay
+	self.textureLoadGroup:Reset();
 	if (exploredMapTextures) then
 		local TILE_SIZE_WIDTH = layerInfo.tileWidth;
 		local TILE_SIZE_HEIGHT = layerInfo.tileHeight;
@@ -1223,6 +1254,10 @@ function RSExplorerMixin:OnShow()
     	self:HideContentPanels()
     elseif (not self.initialized) then
 		self:Initialize()
+	end
+	-- change to player's zone
+	if (RSConfigDB.IsLockingCurrentMap()) then
+		self:Refresh()
 	end
 	
 	self:Show()

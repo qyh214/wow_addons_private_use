@@ -16,12 +16,11 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 -- Ingame waypoints
 ---============================================================================
 
-local function AddWaypoint(entityID)
+local function AddWaypoint(mapID, x, y)
 	C_Map.ClearUserWaypoint();
 
-	local entityInfo = RSGeneralDB.GetAlreadyFoundEntity(entityID)
-	if (entityInfo and entityInfo.coordX and entityInfo.coordY) then
-		local uiMapPoint = UiMapPoint.CreateFromCoordinates(entityInfo.mapID, tostring(RSUtils.FixCoord(entityInfo.coordX)), tostring(RSUtils.FixCoord(entityInfo.coordY)));
+	if (mapID and x and y) then
+		local uiMapPoint = UiMapPoint.CreateFromCoordinates(mapID, tostring(RSUtils.FixCoord(x)), tostring(RSUtils.FixCoord(y)));
 		C_Map.SetUserWaypoint(uiMapPoint);
 		C_SuperTrack.SetSuperTrackedUserWaypoint(true);
 	end
@@ -36,9 +35,9 @@ function RSWaypoints.AddWorldMapWaypoint(mapID, x, y)
 	end
 end
 
-function RSWaypoints.AddWaypoint(entityID)
-	if (entityID and RSConfigDB.IsWaypointsSupportEnabled()) then
-		AddWaypoint(entityID)
+function RSWaypoints.AddWaypoint(mapID, x, y)
+	if (mapID and x and y and RSConfigDB.IsWaypointsSupportEnabled()) then
+		AddWaypoint(mapID, x, y)
 	end
 end
 
@@ -48,14 +47,6 @@ function RSWaypoints.AddWaypointFromVignette(vignetteInfo, manuallyFired)
 		return
 	end
 
-	-- Extract info from vignnette
-	local _, _, _, _, _, entityID, _ = strsplit("-", vignetteInfo.objectGUID);
-	if (entityID) then
-		entityID = tonumber(entityID)
-	else
-		return
-	end
-
 	-- Adds the waypoint
-	AddWaypoint(entityID)
+	AddWaypoint(vignetteInfo.mapID, vignetteInfo.x, vignetteInfo.y)
 end

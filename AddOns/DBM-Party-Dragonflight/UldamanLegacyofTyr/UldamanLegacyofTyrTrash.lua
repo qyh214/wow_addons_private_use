@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("UldamanLegacyofTyrTrash", "DBM-Party-Dragonflight", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221115231757")
+mod:SetRevision("20230320021831")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -30,6 +30,7 @@ local specWarnSpikedCarapace				= mod:NewSpecialWarningInterrupt(369823, "HasInt
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 369811 and self:AntiSpam(5, 2) then
 		specWarnBrutalSlam:Show()
 		specWarnBrutalSlam:Play("watchstep")
@@ -51,7 +52,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end
 	local spellId = args.spellId
-	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") and self:AntiSpam(3, 5) then
+	if spellId == 369365 and args:IsDestTypePlayer() and self:CheckDispelFilter("curse") and self:AntiSpam(3, 3) then
 		specWarnCurseofStone:Show(args.destName)
 		specWarnCurseofStone:Play("helpdispel")
 	end

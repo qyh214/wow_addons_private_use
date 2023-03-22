@@ -1,6 +1,10 @@
 local W, F, L = unpack(select(2, ...))
 local CORE = W:GetModule("Core")
 
+local next = next
+local pairs = pairs
+local strfind = strfind
+
 local tradeChannelNames = {
     "^Trade",
     "^交易"
@@ -12,17 +16,25 @@ local generalChannelNames = {
     "^综合"
 }
 
+local newcomerChannelNames = {
+    "Newcommer Chat",
+    "新人频道",
+    "新手聊天",
+    "新手頻道"
+}
+
 local availableConfigKeys = {
-    "say",
-    "yell",
-    "whisper",
+    "battleground",
     "emote",
+    "general",
     "guild",
+    "instance",
     "party",
     "raid",
+    "say",
     "trade",
-    "general",
-    "battleground"
+    "whisper",
+    "yell"
 }
 
 local function getChannelFilter(rule)
@@ -75,7 +87,15 @@ local function getChannelFilter(rule)
             return true
         end
 
+        if rule.channel.instance and data.channel == "Instance" then
+            return true
+        end
+
         if rule.channel.raid and data.channel == "Raid" then
+            return true
+        end
+
+        if rule.channel.battleground and data.channel == "Battleground" then
             return true
         end
 
@@ -95,8 +115,12 @@ local function getChannelFilter(rule)
             end
         end
 
-        if rule.channel.battleground and data.channel == "Battleground" then
-            return true
+        if rule.channel.newcomer then
+            for _, name in pairs(newcomerChannelNames) do
+                if data.channel == name then
+                    return true
+                end
+            end
         end
 
         if rule.channel.channelNames then

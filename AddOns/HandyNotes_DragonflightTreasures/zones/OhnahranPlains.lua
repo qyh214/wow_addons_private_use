@@ -138,7 +138,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
 -- (It's the Patient Bufonid again)
 ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     [56127701] = {
-        quest={71199, 71203, any=true}, -- 71199 is day 4, 71203 is the daily
+        quest={71209, 71203, any=true}, -- 71199 is day 4, 71203 is the daily
         hide_before=ns.conditions.QuestComplete(66676), -- Sneaking In
     },
     [57667232] = {
@@ -341,7 +341,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     },
     [37005400] = { -- Researcher Sneakwing
         criteria=56069,
-        quest=70689,
+        quest=70698, -- 74023
         npc=196010,
         loot={
             {196992,quest=69192,}, -- Cliffside Wylderdrake: Heavy Horns
@@ -674,9 +674,11 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     [81207780] = { -- Astray Splasher
         achievement=16678, -- Adventurer of the *Azure Span*
         criteria=56130,
-        quest=nil,
+        quest=74057, -- 72400? an iskaar rep level hit at the same time...
         npc=197411,
-        loot={},
+        loot={
+            200164, -- Iceloop
+        },
     },
     [59926695] = { -- Prozela Galeshot
         quest=72815, -- 69968 also

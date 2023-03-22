@@ -296,6 +296,8 @@ local function ActivateSet(set, state)
     if spellId == 384255 then
         complete = false;
     elseif not IsSetActive(set) and not state.dfTalentsAttempted then
+        Internal.LogMessage("Activate talent tree version %d", Internal.GetTraitInfoVersion());
+
         complete = false;
 
         local specID = GetSpecializationInfo(GetSpecialization());

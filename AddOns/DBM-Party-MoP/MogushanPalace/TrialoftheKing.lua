@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220218034448")
+mod:SetRevision("20230307064655")
 mod:SetCreatureID(61442, 61444, 61445)--61442 (Kuai the Brute), 61453 (Mu'Shiba, Kuai's Add), 61444 (Ming the Cunning), 61445 (Haiyan the Unstoppable)
 mod:SetEncounterID(1442)
 
@@ -46,19 +46,6 @@ local haiyan = DBM:EJ_GetSectionInfo(6023)
 
 --end
 
-function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 119946 then
-		warnRavage:Show(args.destName)
-		timerRavageCD:Start()
-	elseif args.spellId == 123655 then
-		warnTraumaticBlow:Show(args.destName)
-		timerTraumaticBlowCD:Start()
-	elseif args.spellId == 120201 then
-		warnConflag:Show(args.destName)
-		timerConflagCD:Start()
-	end
-end
-
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 119922 then
 		specWarnShockwave:Show()
@@ -70,6 +57,19 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 123654 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 		specWarnLightningBolt:Show(args.sourceName)
 		specWarnLightningBolt:Play("kickcast")
+	end
+end
+
+function mod:SPELL_AURA_APPLIED(args)
+	if args.spellId == 119946 then
+		warnRavage:Show(args.destName)
+		timerRavageCD:Start()
+	elseif args.spellId == 123655 then
+		warnTraumaticBlow:Show(args.destName)
+		timerTraumaticBlowCD:Start()
+	elseif args.spellId == 120201 then
+		warnConflag:Show(args.destName)
+		timerConflagCD:Start()
 	end
 end
 

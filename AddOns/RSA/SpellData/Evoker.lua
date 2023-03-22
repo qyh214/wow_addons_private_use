@@ -49,6 +49,7 @@ local defaults = {
 		throttle = 0.25,
 		configDisplay = {
 			isDefault = true,
+			defaultName = RSA.GetSpellInfo(365585) .. ' | ' .. RSA.GetSpellInfo(360823),
 		},
 		events = {
 			['SPELL_DISPEL'] = {
@@ -257,7 +258,22 @@ local defaults = {
 			},]]--
 		},
 	},
-
+	['zephyr'] = {
+		spellID = 374227,
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
+				targetIsMe = true,
+			},
+		},
+	},
 }
 
 if RSA.IsRetail() then

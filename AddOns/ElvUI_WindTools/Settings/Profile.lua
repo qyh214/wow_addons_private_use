@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 local _G = _G
 
 local GetLocale = GetLocale
@@ -226,6 +226,13 @@ P.announcement = {
             },
             ["261602"] = {
                 -- 凱蒂的郵哨
+                enable = true,
+                includePlayer = true,
+                raidWarning = false,
+                text = L["%player% used %spell%"]
+            },
+            ["384911"] = {
+                -- 原子校準器
                 enable = true,
                 includePlayer = true,
                 raidWarning = false,
@@ -871,7 +878,11 @@ P.social = {
         roleIconSize = 16,
         roleIconStyle = "SUNUI",
         removeRealm = true,
-        customAbbreviation = {}
+        customAbbreviation = {},
+        classIconStyle = "flatborder2",
+        guildMemberStatus = true,
+        guildMemberStatusInviteLink = true,
+        mergeAchievement = true
     },
     emote = {
         enable = true,
@@ -906,10 +917,6 @@ P.social = {
             size = 12,
             style = "OUTLINE"
         }
-    },
-    filter = {
-        enable = true,
-        unblockProfanityFilter = true
     },
     contextMenu = {
         enable = true,

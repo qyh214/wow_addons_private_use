@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230124013307")
+mod:SetRevision("20230314022917")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 372087 391726 391723 373614 392395 372696 384194 392486 392394 392640 392451 372047",
+	"SPELL_CAST_START 372087 391726 391723 373614 392395 372696 384194 392486 392394 392640 392451 372047 372735",
+	"SPELL_CAST_SUCCESS 385536",
 	"SPELL_AURA_APPLIED 373693 392641 373972 391050",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 373693 391050",
@@ -15,7 +16,7 @@ mod:RegisterEvents(
 
 --TODO, can Blazing Rush be target scanned? upgrade to special announce?
 --[[
-(ability.id = 372087 or ability.id = 391726 or ability.id = 391723 or ability.id = 373614 or ability.id = 372696 or ability.id = 392395 or ability.id = 392486 or ability.id = 392394 or ability.id = 392640 or ability.id = 392451 or ability.id = 372047) and type = "begincast"
+(ability.id = 372087 or ability.id = 391726 or ability.id = 391723 or ability.id = 373614 or ability.id = 372696 or ability.id = 372735 or ability.id = 392395 or ability.id = 392486 or ability.id = 392394 or ability.id = 392640 or ability.id = 392451 or ability.id = 372047) and type = "begincast"
  or ability.id = 391050 and (type = "applybuff" or type = "removebuff")
 --]]
 local warnLivingBomb						= mod:NewTargetAnnounce(373693, 3)
@@ -24,6 +25,8 @@ local warnRollingThunder					= mod:NewTargetNoFilterAnnounce(392641, 3)
 local warnFireMaw							= mod:NewCastAnnounce(392394, 3, nil, nil, "Tank|Healer")
 local warnSteelBarrage						= mod:NewCastAnnounce(372047, 3, nil, nil, "Tank|Healer")
 local warnFlashfire							= mod:NewCastAnnounce(392451, 4)
+local warnFlameDance						= mod:NewCastAnnounce(385536, 4, 6, nil, nil, nil, nil, 3)
+local warnTectonicSlam						= mod:NewCastAnnounce(372735, 4, nil, nil, nil, nil, nil, 3)
 
 local specWarnLightningStorm				= mod:NewSpecialWarningSpell(392486, nil, nil, nil, 2, 2)
 local specWarnBlazeofGlory					= mod:NewSpecialWarningSpell(373972, nil, nil, nil, 2, 2)
@@ -48,7 +51,7 @@ local timerSteelBarrageCD					= mod:NewCDTimer(17, 372047, nil, "Tank", nil, 5, 
 local timerBlazingRushCD					= mod:NewCDTimer(17, 372087, nil, nil, nil, 3)
 local timerStormBreathCD					= mod:NewCDTimer(15.7, 391726, nil, nil, nil, 3)
 local timerRollingThunderCD					= mod:NewCDTimer(21.8, 392641, nil, nil, nil, 3)
-local timerThunderjawCD						= mod:NewCDTimer(19.4, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerThunderjawCD						= mod:NewCDTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerLightningStormCD					= mod:NewCDTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerFlashfireCD						= mod:NewCDTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerTempestStormshieldCD				= mod:NewCDTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
@@ -74,6 +77,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
+	if not self:IsValidWarning(args.sourceGUID) then return end
 	if spellId == 372087 then
 		if self:AntiSpam(3, 2) then
 			specWarnBlazingRush:Show()
@@ -105,6 +109,13 @@ function mod:SPELL_CAST_START(args)
 		if self:AntiSpam(3, 2) then
 			specWarnExcavatingBlast:Show()
 			specWarnExcavatingBlast:Play("watchstep")
+		end
+	elseif spellId == 372735 then
+		--TODO, Timer?
+		if self:AntiSpam(3, 6) then
+			warnTectonicSlam:Show()
+			warnTectonicSlam:Play("aesoon")
+			warnTectonicSlam:Schedule(1.5, "crowdcontrol")
 		end
 	elseif spellId == 392395 then
 		timerThunderjawCD:Start()
@@ -148,6 +159,15 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:SPELL_CAST_SUCCESS(args)
+	local spellId = args.spellId
+	if not self:IsValidWarning(args.sourceGUID) then return end
+	if spellId == 385536 and self:AntiSpam(3, 6) then
+		warnFlameDance:Show()
+		warnFlameDance:Play("aesoon")
+		warnFlameDance:Schedule(1.5, "crowdcontrol")
+	end
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not self.Options.Enabled then return end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2477, "DBM-Party-Dragonflight", 3, 1198)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221214204213")
+mod:SetRevision("20230302183052")
 mod:SetCreatureID(186151)
 mod:SetEncounterID(2580)
 --mod:SetUsedIcons(1, 2, 3)
@@ -105,7 +105,11 @@ function mod:SPELL_CAST_START(args)
 --		timerUpheavalCD:Start()
 	elseif spellId == 376892 then
 		specWarnCracklingUpheaval:Show()
-		specWarnCracklingUpheaval:Play("watchstep")
+		if self:IsMythic() then
+			specWarnCracklingUpheaval:Play("runout")
+		else
+			specWarnCracklingUpheaval:Play("watchstep")
+		end
 		timerCracklingUpheavalCD:Start()
 	elseif spellId == 375937 then
 		self.vb.comboCount = self.vb.comboCount + 1

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230210184406")
 mod:SetCreatureID(34564)
 mod:SetEncounterID(mod:IsClassic() and 645 or 1085)
 mod:SetModelID(29268)
@@ -13,7 +13,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 67574 66013 66012 1022",
 	"SPELL_AURA_REFRESH 67574 66013 66012",
-	"SPELL_AURA_REMOVED 66013 1022",
+	"SPELL_AURA_REMOVED 67574 66013 1022",
 	"SPELL_CAST_START 66118 66134",
 	"RAID_BOSS_EMOTE"
 )
@@ -21,6 +21,7 @@ mod:RegisterEventsInCombat(
 local warnAdds				= mod:NewAnnounce("warnAdds", 3, 45419)
 local preWarnShadowStrike	= mod:NewSoonAnnounce(66134, 3)
 local warnShadowStrike		= mod:NewSpellAnnounce(66134, 4)
+local warnPCold				= mod:NewTargetNoFilterAnnounce(66013, 3, nil, "Healer")
 local warnPursue			= mod:NewTargetNoFilterAnnounce(67574, 4)
 local warnFreezingSlash		= mod:NewTargetNoFilterAnnounce(66012, 2, nil, "Tank|Healer")
 local warnHoP				= mod:NewTargetNoFilterAnnounce(1022, 2, nil, false)--Heroic strat revolves around kiting pursue and using Hand of Protection.
@@ -50,6 +51,7 @@ mod:AddBoolOption("AnnouncePColdIcons", false, nil, nil, nil, nil, 66013)
 mod:AddBoolOption("AnnouncePColdIconsRemoved", false, nil, nil, nil, nil, 66013)
 
 mod.vb.Burrowed = false
+local pcoldIcons = {}
 
 local function Adds(self)
 	if self:IsInCombat() then
@@ -73,6 +75,7 @@ local function ShadowStrike(self)
 end
 
 function mod:OnCombatStart(delay)
+	self:SetStage(1)
 	self.vb.Burrowed = false
 	timerAdds:Start(10-delay)
 	warnAdds:Schedule(10-delay)
@@ -88,12 +91,6 @@ function mod:OnCombatStart(delay)
 	end
 end
 
-function mod:AnnouncePcoldIcons(uId, icon)
-	if self.Options.AnnouncePColdIcons and IsInGroup() and DBM:GetRaidRank() > 1 then
-		SendChatMessage(L.PcoldIconSet:format(icon, DBM:GetUnitFullName(uId)), IsInRaid() and "RAID" or "PARTY")
-	end
-end
-
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 67574 then
 		if args:IsPlayer() then
@@ -104,17 +101,31 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnPursue:Show(args.destName)
 		end
 		if self.Options.PursueIcon then
-			self:SetIcon(args.destName, 8, 15)
+			self:SetIcon(args.destName, 8)
 		end
 	elseif args.spellId == 66013 then
-		timerPCold:Show()
-		if args:IsPlayer() then
-			specWarnPCold:Show()
-			specWarnPCold:Play("targetyou")
+		if self:AntiSpam(5, 1) then
+			table.wipe(pcoldIcons)
+			timerPCold:Start()
 		end
-		if self.Options.SetIconsOnPCold then
-			local maxIcon = self:IsDifficulty("normal25", "heroic25") and 5 or 2
-			self:SetSortedIcon("roster", 1, args.destName, 1, maxIcon, false, "AnnouncePcoldIcons")
+		pcoldIcons[#pcoldIcons+1] = args.destName
+		local maxIcon = self:IsDifficulty("normal25", "heroic25") and 5 or 2
+		if (#pcoldIcons == maxIcon) or (#pcoldIcons == DBM:NumRealAlivePlayers()) then
+			table.sort(pcoldIcons, DBM.SortByGroup)
+			for i = 1, #pcoldIcons do
+				local name = pcoldIcons[i]
+				if self.Options.SetIconsOnPCold then
+					self:SetIcon(name, i)
+				end
+				if self.Options.AnnouncePColdIcons and IsInGroup() and DBM:GetRaidRank() > 1 then
+					SendChatMessage(L.PcoldIconSet:format(i, name), IsInRaid() and "RAID" or "PARTY")
+				end
+				if name == DBM:GetMyPlayerInfo() then
+					specWarnPCold:Show(self:IconNumToTexture(i))
+					specWarnPCold:Play("targetyou")
+				end
+				warnPCold:Show(table.concat(pcoldIcons, "<, >"))
+			end
 		end
 	elseif args.spellId == 66012 then
 		warnFreezingSlash:Show(args.destName)
@@ -127,7 +138,11 @@ end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 66013 then
+	if args.spellId == 67574 then
+		if self.Options.PursueIcon then
+			self:SetIcon(args.destName, 0)
+		end
+	elseif args.spellId == 66013 then
 		if self.Options.SetIconsOnPCold then
 			self:SetIcon(args.destName, 0)
 			if self.Options.AnnouncePColdIconsRemoved and DBM:GetRaidRank() > 1 then
@@ -141,6 +156,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 66118 then
+		self:SetStage(3)
 		warnPhase3:Show()
 		warnEmergeSoon:Cancel()
 		warnSubmergeSoon:Cancel()
@@ -151,7 +167,7 @@ function mod:SPELL_CAST_START(args)
 			warnAdds:Cancel()
 			self:Unschedule(Adds)
 		end
-	elseif args.spellId == 66134 then
+	elseif args.spellId == 66134 and self:AntiSpam(2, 2) then
 		self:Unschedule(ShadowStrike)
 		ShadowStrike(self)
 		if self.Options.SpecWarn66134spell then
@@ -164,6 +180,7 @@ end
 
 function mod:RAID_BOSS_EMOTE(msg)
 	if msg and msg:find(L.Burrow) then
+		self:SetStage(2)
 		self.vb.Burrowed = true
 		timerAdds:Cancel()
 		warnAdds:Cancel()
@@ -172,6 +189,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 		timerEmerge:Start()
 		timerFreezingSlash:Stop()
 	elseif msg and msg:find(L.Emerge) then
+		self:SetStage(1)
 		self.vb.Burrowed = false
 		timerAdds:Start(5)
 		warnAdds:Schedule(5)

@@ -5,7 +5,7 @@ if not Internal.Is100005 then
 end
 
 Internal.dftalents = {
-    version = 6,
+    version = 7,
     trees = {
         -- Warrior
         [71] = { -- Arms
@@ -37480,7 +37480,7 @@ Internal.dftalents = {
             posY = 3900,
             maxRanks = 1,
             conditionIDs = { 22769, 22769, 22769 },
-            entryIDs = { 112638, 112637 },
+            entryIDs = { 112638 },
             groupIDs = { 9047, 9049 },
             costs = {
                 { ID = 2900, amount = 1 }

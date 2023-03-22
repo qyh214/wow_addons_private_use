@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230210200745")
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(mod:IsClassic() and 629 or 1088)--Buggy, never enable this
 mod:SetMinSyncRevision(104)
@@ -42,7 +42,7 @@ local warnCharge			= mod:NewTargetNoFilterAnnounce(52311, 4)
 
 local specWarnImpale3		= mod:NewSpecialWarningStack(66331, nil, 3, nil, nil, 1, 6)
 local specWarnAnger3		= mod:NewSpecialWarningStack(66636, "Tank|Healer", 3, nil, nil, 1, 6)
-local specWarnGTFO			= mod:NewSpecialWarningGTFO(66317, nil, nil, nil, 1, 2)
+local specWarnGTFO			= mod:NewSpecialWarningGTFO(66317, nil, nil, nil, 1, 8)
 local specWarnToxin			= mod:NewSpecialWarningMoveTo(66823, nil, nil, nil, 1, 2)
 local specWarnBile			= mod:NewSpecialWarningYou(66869, nil, nil, nil, 1, 2)
 local specWarnSilence		= mod:NewSpecialWarningSpell(66330, "SpellCaster", nil, nil, 1, 2)
@@ -249,12 +249,9 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, spellName)
-	if (spellId == 66317 or spellId == 66320) and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then	-- Fire Bomb (66317 is impact damage, not avoidable but leaving in because it still means earliest possible warning to move. Other 4 are tick damage from standing in it)
+	if (spellId == 66317 or spellId == 66320 or spellId == 66881) and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then	-- Fire Bomb (66317 is impact damage, not avoidable but leaving in because it still means earliest possible warning to move. Other 4 are tick damage from standing in it)
 		specWarnGTFO:Show(spellName)
-		specWarnGTFO:Play("runaway")
-	elseif spellId == 66881 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then							-- Slime Pool
-		specWarnGTFO:Show(spellName)
-		specWarnGTFO:Play("runaway")
+		specWarnGTFO:Play("watchfeet")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

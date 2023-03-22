@@ -1,7 +1,7 @@
 --- @type string, Private
 local AddonName, Private = ...
 
-local internalVersion = 64
+local internalVersion = 65
 
 -- Lua APIs
 local insert = table.insert
@@ -852,7 +852,7 @@ local function CreateTalentCache()
 
   Private.talent_types_specific[player_class] = Private.talent_types_specific[player_class] or {};
 
-  if WeakAuras.IsClassicOrBCCOrWrath() then
+  if WeakAuras.IsClassicEraOrWrath() then
     for tab = 1, GetNumTalentTabs() do
       for num_talent = 1, GetNumTalents(tab) do
         local talentName, talentIcon = GetTalentInfo(tab, num_talent);
@@ -1556,7 +1556,7 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
 
   local player, realm, zone = UnitName("player"), GetRealmName(), GetRealZoneText()
   --- @type boolean|number, boolean|number, boolean|string, boolean|string
-  local spec, specId, role, raidRole = false, false, false, false
+  local specId, role, position, raidRole = false, false, false, false
   local inPetBattle, vehicle, vehicleUi = false, false, false
   local dragonriding
   local zoneId = C_Map.GetBestMapForUnit("player")
@@ -1575,12 +1575,11 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     raidMemberType = raidMemberType + 2
   end
 
-  if WeakAuras.IsClassicOrBCCOrWrath() then
+  if WeakAuras.IsClassicEraOrWrath() then
     local raidID = UnitInRaid("player")
     if raidID then
       raidRole = select(10, GetRaidRosterInfo(raidID))
     end
-    spec = 1
     role = "none"
     if WeakAuras.IsWrathClassic() then
       role = UnitGroupRolesAssigned("player")
@@ -1594,9 +1593,7 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     end
   else
     dragonriding = Private.IsDragonriding()
-    spec = GetSpecialization()
-    specId = GetSpecializationInfo(spec)
-    role = select(5, GetSpecializationInfo(spec))
+    specId, role, position = Private.LibSpecWrapper.SpecRolePositionForUnit("player")
     inPetBattle = C_PetBattles.IsInBattle()
     vehicle = UnitInVehicle('player') or UnitOnTaxi('player')
     vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar()
@@ -1636,18 +1633,15 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     if (data and not data.controlledChildren) then
       local loadFunc = loadFuncs[id];
       local loadOpt = loadFuncsForOptions[id];
-      if WeakAuras.IsClassic() then
+      if WeakAuras.IsClassicEra() then
         shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, inEncounter, alive, vehicle, group, player, realm, class, race, faction, playerLevel, zone, encounter_id, size, raidRole, raidMemberType)
         couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, inEncounter, alive, vehicle, group, player, realm, class, race, faction, playerLevel, zone, encounter_id, size, raidRole, raidMemberType)
-      elseif WeakAuras.IsBCC() then
-        shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, inEncounter, alive, vehicle, group, player, realm, class, race, faction, playerLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, raidRole, raidMemberType)
-        couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, inEncounter, alive, vehicle, group, player, realm, class, race, faction, playerLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, raidRole, raidMemberType)
       elseif WeakAuras.IsWrathClassic() then
         shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, inEncounter, alive, vehicle, vehicleUi, group, player, realm, class, race, faction, playerLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, raidRole, raidMemberType)
         couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, inEncounter, alive, vehicle, vehicleUi, group, player, realm, class, race, faction, playerLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, raidRole, raidMemberType)
       elseif WeakAuras.IsRetail() then
-        shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, inEncounter, alive, warmodeActive, inPetBattle, vehicle, vehicleUi, dragonriding, group, player, realm, specId, race, faction, playerLevel, effectiveLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, raidMemberType, affixes)
-        couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, inEncounter, alive, warmodeActive, inPetBattle, vehicle, vehicleUi, dragonriding, group, player, realm, specId, race, faction, playerLevel, effectiveLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, raidMemberType, affixes)
+        shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", inCombat, inEncounter, alive, warmodeActive, inPetBattle, vehicle, vehicleUi, dragonriding, group, player, realm, specId, race, faction, playerLevel, effectiveLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, position, raidMemberType, affixes)
+        couldBeLoaded =  loadOpt and loadOpt("ScanForLoads_Auras",   inCombat, inEncounter, alive, warmodeActive, inPetBattle, vehicle, vehicleUi, dragonriding, group, player, realm, specId, race, faction, playerLevel, effectiveLevel, zone, zoneId, zonegroupId, encounter_id, size, difficulty, difficultyIndex, role, position, raidMemberType, affixes)
       end
 
       if(shouldBeLoaded and not loaded[id]) then
@@ -3849,6 +3843,49 @@ do
   end
 end
 
+function WeakAuras.GetAuraInstanceTooltipInfo(unit, auraInstanceId, filter)
+  if WeakAuras.IsRetail() then
+    local tooltipText = ""
+    local tooltipData
+    if filter == "HELPFUL" then
+      tooltipData = C_TooltipInfo.GetUnitBuffByAuraInstanceID(unit, auraInstanceId, filter)
+    else
+      tooltipData = C_TooltipInfo.GetUnitDebuffByAuraInstanceID(unit, auraInstanceId, filter)
+    end
+    local secondLine = tooltipData and tooltipData.lines[2] -- This is the line we want
+    if secondLine then
+      for _, arg in ipairs(secondLine.args) do
+        if arg.field == "leftText" then
+          tooltipText = arg.stringVal or ""
+        end
+      end
+    end
+    return Private.ParseTooltipText(tooltipText)
+  end
+end
+
+function Private.ParseTooltipText(tooltipText)
+  local debuffType = "none";
+  local tooltipSize = {};
+  if(tooltipText) then
+    for t in tooltipText:gmatch("(%d[%d%.,]*)") do
+      if (LARGE_NUMBER_SEPERATOR == ",") then
+        t = t:gsub(",", "");
+      else
+        t = t:gsub("%.", "");
+        t = t:gsub(",", ".");
+      end
+      tinsert(tooltipSize, tonumber(t));
+    end
+  end
+
+  if (#tooltipSize) then
+    return tooltipText, debuffType, unpack(tooltipSize);
+  else
+    return tooltipText, debuffType, 0;
+  end
+end
+
 function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
   local tooltipText = ""
   if WeakAuras.IsRetail() then
@@ -3869,27 +3906,7 @@ function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
     tooltipText = tooltipTextLine and tooltipTextLine:GetObjectType() == "FontString" and tooltipTextLine:GetText() or "";
   end
 
-
-  local debuffType = "none";
-  local found = false;
-  local tooltipSize = {};
-  if(tooltipText) then
-    for t in tooltipText:gmatch("(%d[%d%.,]*)") do
-      if (LARGE_NUMBER_SEPERATOR == ",") then
-        t = t:gsub(",", "");
-      else
-        t = t:gsub("%.", "");
-        t = t:gsub(",", ".");
-      end
-      tinsert(tooltipSize, tonumber(t));
-    end
-  end
-
-  if (#tooltipSize) then
-    return tooltipText, debuffType, unpack(tooltipSize);
-  else
-    return tooltipText, debuffType, 0;
-  end
+  return Private.ParseTooltipText(tooltipText)
 end
 
 local FrameTimes = {};
@@ -4300,7 +4317,6 @@ end
 
 local function evaluateTriggerStateTriggers(id)
   local result = false;
-  Private.ActivateAuraEnvironment(id);
 
   if WeakAuras.IsOptionsOpen() then
     -- While the options are open ignore the combination function
@@ -4313,12 +4329,12 @@ local function evaluateTriggerStateTriggers(id)
     result = true;
   else
     if (triggerState[id].disjunctive == "custom" and triggerState[id].triggerLogicFunc) then
+      Private.ActivateAuraEnvironment(id)
       local ok, returnValue = xpcall(triggerState[id].triggerLogicFunc, Private.GetErrorHandlerId(id, L["Custom Trigger Combination"]), triggerState[id].triggers);
+      Private.ActivateAuraEnvironment()
       result = ok and returnValue;
     end
   end
-
-  Private.ActivateAuraEnvironment();
 
   return result;
 end
@@ -5372,6 +5388,10 @@ local function GetAnchorFrame(data, region, parent)
     return parent;
   end
 
+  if (anchorFrameType == "UIPARENT") then
+    return UIParent;
+  end
+
   if (anchorFrameType == "PRD") then
     Private.ensurePRDFrame();
     personalRessourceDisplayFrame:anchorFrame(id, anchorFrameType);
@@ -5475,7 +5495,7 @@ function Private.AnchorFrame(data, region, parent)
     local anchorParent = GetAnchorFrame(data, region, parent);
     if not anchorParent then return end
     if (data.anchorFrameParent or data.anchorFrameParent == nil
-        or data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE") then
+        or data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE") then
       xpcall(region.SetParent, Private.GetErrorHandlerId(data.id, L["Anchoring"]), region, anchorParent);
     else
       region:SetParent(parent or WeakAurasFrame);
@@ -5483,7 +5503,7 @@ function Private.AnchorFrame(data, region, parent)
 
     local anchorPoint = data.anchorPoint
     if data.parent then
-      if data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE" then
+      if data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE" then
         anchorPoint = "CENTER"
       end
     else
@@ -5516,7 +5536,7 @@ function Private.FindUnusedId(prefix)
 end
 
 function WeakAuras.SetModel(frame, model_path, model_fileId, isUnit, isDisplayInfo)
-  if not WeakAuras.IsRetail() then
+  if WeakAuras.IsClassicEra() then
     if isDisplayInfo then
       pcall(frame.SetDisplayInfo, frame, tonumber(model_path))
     elseif isUnit then
@@ -5634,7 +5654,10 @@ do
   trackableUnits["focus"] = true
   trackableUnits["pet"] = true
   trackableUnits["vehicle"] = true
-
+  if WeakAuras.IsWrathOrRetail() then
+    trackableUnits["softenemy"] = true
+    trackableUnits["softfriend"] = true
+  end
   for i = 1, 5 do
     trackableUnits["arena" .. i] = true
     trackableUnits["arenapet" .. i] = true
@@ -5653,6 +5676,16 @@ do
     trackableUnits["raid" .. i] = true
     trackableUnits["raidpet" .. i] = true
     trackableUnits["nameplate" .. i] = true
+  end
+
+  function WeakAuras.IsUntrackableSoftTarget(unit)
+    if not Private.soft_target_cvars[unit] then return end
+    -- technically this is incorrect if user doesn't have KBM and sets CVar to "2" (KBM only)
+    -- but, there doesn't seem to be a way to detect 'user lacks KBM'
+    -- anyways, the intersection of people who know how to set cvars and also don't have KBM for WoW is probably nil
+    -- that might change if WoW ever ends up on playstation & friends, but also hell might freeze over so who knows
+    local threshold = C_GamePad.IsEnabled() and 1 or 2
+    return (tonumber(C_CVar.GetCVar(Private.soft_target_cvars[unit])) or 0) < threshold
   end
 
   function WeakAuras.UntrackableUnit(unit)

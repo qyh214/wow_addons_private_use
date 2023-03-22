@@ -1349,7 +1349,7 @@ end
 function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 	local _;
 	local slotID = self.slotID;
-	local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID)
+	local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID);
 	--print(slotName..slotID)
 	--local texture = CharacterHeadSlot.popoutButton.icon:GetTexture()
 	local itemLink;
@@ -1365,6 +1365,7 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 			self:UntrackTempEnchant();
 			self:ClearOverlay();
 			self:HideVFX();
+			self.itemLink = nil;
 			self.isSlotHidden = false;	--Undress an item from player model
 			self.RuneSlot:Hide();
 			self.GradientBackground:Show();
@@ -1457,11 +1458,13 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 				end
 			end
 
-			local itemVFX;
-			local itemID = GetItemInfoInstant(itemLink);
-			borderTexKey, itemVFX, bR, bG, bB = GetBorderArtByItemID(itemID);
+			self.itemLink = itemLink;
 
-			itemIcon = GetInventoryItemTexture("player", slotID);
+			local itemVFX, hideItemIcon;
+			local itemID = GetItemInfoInstant(itemLink);
+			borderTexKey, itemVFX, bR, bG, bB, hideItemIcon = GetBorderArtByItemID(itemID);
+
+			itemIcon = ((not hideItemIcon) and GetInventoryItemTexture("player", slotID)) or nil;
 			itemName = C_Item.GetItemName(itemLocation);
 			itemQuality = C_Item.GetItemQuality(itemLocation);
 			effectiveLvl = C_Item.GetCurrentItemLevel(itemLocation);
@@ -1472,16 +1475,15 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 			--	NarciDebug:CalculateAverage(effectiveLvl);
 			--end
 
-			if slotID == 13 or slotID == 14 then
-				if itemID == 167555 then	--Pocket-Sized Computation Device
-					gemName, gemLink = IsItemSocketable(itemLink, 2);
+			if not hideItemIcon then
+				if slotID == 13 or slotID == 14 then
+					if itemID == 167555 then	--Pocket-Sized Computation Device
+						gemName, gemLink = IsItemSocketable(itemLink, 2);
+					else
+						gemName, gemLink = IsItemSocketable(itemLink);
+					end
 				else
 					gemName, gemLink = IsItemSocketable(itemLink);
-				end
-			else
-				gemName, gemLink = IsItemSocketable(itemLink);
-				if slotID == 11 then
-					GN = gemName;
 				end
 			end
 			
@@ -1520,7 +1522,7 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 			end
 	
 
-			local enchantText = GetItemEnchantText(itemLink, true, self.isRight);
+			local enchantText, isEnchanted = GetItemEnchantText(itemLink, true, self.isRight);	--enchantText (effect texts) may not be available yet
 			if enchantText then
 				if self.isRight then
 					effectiveLvl = enchantText.."  "..effectiveLvl;
@@ -1528,7 +1530,7 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 					effectiveLvl = effectiveLvl.."  "..enchantText;
 				end
 				self:ClearOverlay();
-			else
+			elseif not isEnchanted then
 				if SHOW_MISSING_ENCHANT_ALERT and SlotButtonOverlayUtil:IsSlotValidForEnchant(slotID, itemID) then
 					SlotButtonOverlayUtil:ShowEnchantAlert(self, slotID, itemID);
 					if self.isRight then
@@ -1556,8 +1558,6 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 			QueueFrame:Add(self, self.Refresh);
 			return
 		end
-
-		self.itemLink = itemLink;
 	else
 		self:UntrackCooldown();
 		self:UntrackTempEnchant();
@@ -1783,7 +1783,9 @@ function NarciEquipmentSlotMixin:OnEvent(event, ...)
 					flyout:SetItemSlot(self, true);
 				end
 			else
-
+				if not MOG_MODE then
+					ItemTooltip:SetFromSlotButton(self, -2, 6);
+				end
 			end
 		end
 	elseif event == "UI_ERROR_MESSAGE" then
@@ -1893,6 +1895,12 @@ function NarciEquipmentSlotMixin:OnHide()
 	self.Highlight:Hide();
 	self.Highlight:SetAlpha(0);
 	self:ResetAnimation();
+end
+
+function NarciEquipmentSlotMixin:PreClick(button)
+	if button == "RightButton" then
+		NarciAPI.SecureActionButtonPreClick();
+	end
 end
 
 function NarciEquipmentSlotMixin:PostClick(button)

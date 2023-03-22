@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230122233736")
+mod:SetRevision("20230301011610")
 mod:SetCreatureID(56448)
 mod:SetEncounterID(1418)
 mod:SetUsedIcons(8)
@@ -38,7 +38,7 @@ local specWarnHydrolance			= mod:NewSpecialWarningInterrupt(397801, "HasInterrup
 local specWarnGTFO					= mod:NewSpecialWarningGTFO(397799, nil, nil, nil, 1, 8)
 
 local timerWashAwayCD				= mod:NewCDTimer(41.3, 397783, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)--41-44
-local timerCorruptedVortexCD		= mod:NewCDTimer(14.2, 397797, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
+local timerCorruptedVortexCD		= mod:NewCDTimer(13, 397797, nil, nil, nil, 3, nil, DBM_COMMON_L.HEALER_ICON)
 local timerCorruptedGeyserCD		= mod:NewCDCountTimer("d5", 397793, nil, nil, nil, 3)
 
 function mod:OnCombatStart(delay)
@@ -53,7 +53,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnWashAway:Show()
 		specWarnWashAway:Play("watchstep")
 		timerWashAwayCD:Start()
-		timerCorruptedVortexCD:Restart(17.2)
+		timerCorruptedVortexCD:Restart(16)
 		--"<432.19 20:50:33> [CLEU] SPELL_CAST_START#Creature-0-3772-960-3510-56448-000045A960#Der weise Mari(56.1%-100.0%)##nil#397783#Wegspülen#nil#nil", -- [3320]
 		--"<435.47 20:50:36> [CLEU] SPELL_DAMAGE[CONDENSED]#Creature-0-3772-960-3510-56448-000045A960#Der weise Mari#2 Targets#397793#Verderbter Geysir", -- [3338]
 		--"<440.60 20:50:41> [CLEU] SPELL_DAMAGE#Creature-0-3772-960-3510-56448-000045A960#Der weise Mari#Player-1401-04216D3A#Valî-Shattrath#397793#Verderbter Geysir", -- [3373]

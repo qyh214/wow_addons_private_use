@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 
 V.combat = {}
 
@@ -396,6 +396,7 @@ V.skins = {
         ace3DropdownBackdrop = true,
         adiBags = true,
         angryKeystones = true,
+        auctionator = true,
         bigWigs = true,
         bigWigsQueueTimer = true,
         bugSack = true,
@@ -406,6 +407,7 @@ V.skins = {
         omniCD = true,
         omniCDIcon = true,
         omniCDStatusBar = true,
+        postal = true,
         premadeGroupsFilter = true,
         raiderIO = true,
         rareScanner = true,

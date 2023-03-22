@@ -60,6 +60,21 @@ function RSDragonGlyphDB.GetInternalDragonGlyphInfo(glyphID)
 	return nil
 end
 
+function RSDragonGlyphDB.GetChildDragonGlyphID(parentGlyphID, description)
+	if (parentGlyphID) then
+		for glyphID, info in pairs (private.DRAGON_GLYPHS) do
+			if (info.parent and info.parent == parentGlyphID) then
+				local name = RSDragonGlyphDB.GetDragonGlyphName(glyphID)
+				if (RSUtils.Contains(name, description)) then
+					return glyphID
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
 function RSDragonGlyphDB.GetInternalDragonGlyphCoordinates(glyphID, mapID)
 	if (glyphID and mapID) then
 		local dragonGlyphInfo = RSDragonGlyphDB.GetInternalDragonGlyphInfoByMapID(glyphID, mapID)

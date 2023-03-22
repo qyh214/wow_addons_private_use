@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Champions", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230210200745")
 mod:SetCreatureID(34458, 34451, 34459, 34448, 34449, 34445, 34456, 34447, 34441, 34454, 34444, 34455, 34450, 34453, 34461, 34460, 34469, 34467, 34468, 34471, 34465, 34466, 34473, 34472, 34470, 34463, 34474, 34475)
 --mod:SetEncounterID(mod:IsClassic() and 637 or 1086)--This must never be enabled
 mod:SetBossHPInfoToHighest()
@@ -28,7 +28,7 @@ local warnDeathgrip			= mod:NewTargetNoFilterAnnounce(66017, 2)
 local warnCyclone			= mod:NewTargetNoFilterAnnounce(65859, 1, nil, false)
 local warnSheep				= mod:NewTargetNoFilterAnnounce(65801, 1, nil, false)
 
-local specWarnHellfire		= mod:NewSpecialWarningMove(65816, nil, nil, nil, 1, 2)
+local specWarnHellfire		= mod:NewSpecialWarningGTFO(65816, nil, nil, nil, 1, 8)
 local specWarnHandofProt	= mod:NewSpecialWarningDispel(66009, "MagicDispeller", nil, nil, 1, 2)
 local specWarnDivineShield	= mod:NewSpecialWarningDispel(66010, "MagicDispeller", nil, nil, 1, 2)
 local specWarnIceBlock		= mod:NewSpecialWarningDispel(65802, "MagicDispeller", nil, nil, 1, 2)
@@ -89,7 +89,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 65817 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnHellfire:Show()
-		specWarnHellfire:Play("runaway")
+		specWarnHellfire:Play("watchfeet")
 	end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE

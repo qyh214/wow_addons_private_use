@@ -23,6 +23,7 @@ local RESET_RECENTLY_SEEN_TIMER
 ---============================================================================
 
 local recently_seen_entities = {}
+local ping_animations = {}
 local VIGNETTE_ID_SEPARATOR = "-"
 
 local function InitResetRecentlySeenTimer()
@@ -61,7 +62,11 @@ local function InitResetRecentlySeenTimer()
 	end)
 end
 
-function RSRecentlySeenTracker.AddRecentlySeen(entityID, atlasName, isNavigating)
+function RSRecentlySeenTracker.AddRecentlySeen(entityID, atlasName, isNavigating)	
+	if (not entityID) then
+		return
+	end
+	
 	if (isNavigating) then
 		return
 	end
@@ -71,31 +76,41 @@ function RSRecentlySeenTracker.AddRecentlySeen(entityID, atlasName, isNavigating
 	
 	local currentTime = time()
 	
+	-- Extracts info from internal database
+	local entityInfo = RSGeneralDB.GetAlreadyFoundEntity(entityID)
+	if (not entityInfo) then
+		return
+	end
+	
 	-- If not spawning in multiple places at the same time stores only the time
-	if (entityID and (RSUtils.Contains(RSConstants.NPCS_WITH_MULTIPLE_SPAWNS, entityID) or RSUtils.Contains(RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS, entityID))) then
+	if (RSUtils.Contains(RSConstants.NPCS_WITH_MULTIPLE_SPAWNS, entityID) or RSUtils.Contains(RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS, entityID)) then
 		-- Extracts info from internal database
-		local entityInfo = RSGeneralDB.GetAlreadyFoundEntity(entityID)
-		if (entityInfo) then
-			if (not recently_seen_entities[entityID]) then
-				recently_seen_entities[entityID] = {}
-			end
-			
-			local xy = entityInfo.coordX.."_"..entityInfo.coordY
-			recently_seen_entities[entityID][xy] = {}
-			recently_seen_entities[entityID][xy].x = entityInfo.coordX
-			recently_seen_entities[entityID][xy].y = entityInfo.coordY
-			recently_seen_entities[entityID][xy].mapID = entityInfo.mapID
-			recently_seen_entities[entityID][xy].atlasName = atlasName
-			recently_seen_entities[entityID][xy].time = currentTime
-			
-			RSGeneralDB.SetRecentlySeen(entityID)
-			--RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (multi) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
+		if (not recently_seen_entities[entityID]) then
+			recently_seen_entities[entityID] = {}
 		end
+		
+		local xy = entityInfo.coordX.."_"..entityInfo.coordY
+		recently_seen_entities[entityID][xy] = {}
+		recently_seen_entities[entityID][xy].x = entityInfo.coordX
+		recently_seen_entities[entityID][xy].y = entityInfo.coordY
+		recently_seen_entities[entityID][xy].mapID = entityInfo.mapID
+		recently_seen_entities[entityID][xy].atlasName = atlasName
+		recently_seen_entities[entityID][xy].time = currentTime
+		
+		RSGeneralDB.SetRecentlySeen(entityID)
+		--RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (multi) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
 	-- Otherwise stores also the coordinates
 	else
 		recently_seen_entities[entityID] = currentTime
 		RSGeneralDB.SetRecentlySeen(entityID)
 		--RSLogger:PrintDebugMessage(string.format("AddRecentlySeen[%s] (mono) [%s]", entityID, RSTimeUtils.TimeStampToClock(currentTime)))
+	end
+	
+	-- Adds to the list to show ping animation
+	if ((RSConstants.IsNpcAtlas(atlasName) and RSConfigDB.IsShowingAnimationForNpcs() and RSConfigDB.GetAnimationForNpcs() ~= RSConstants.MAP_ANIMATIONS_ON_CLICK) or 
+			(RSConstants.IsContainerAtlas(atlasName) and RSConfigDB.IsShowingAnimationForContainers() and RSConfigDB.GetAnimationForContainers() ~= RSConstants.MAP_ANIMATIONS_ON_CLICK) or
+			(RSConstants.IsEventAtlas(atlasName) and RSConfigDB.IsShowingAnimationForEvents() and RSConfigDB.GetAnimationForEvents() ~= RSConstants.MAP_ANIMATIONS_ON_CLICK)) then
+		RSRecentlySeenTracker.AddPendingAnimation(entityID, entityInfo.mapID, entityInfo.coordX, entityInfo.coordY)
 	end
 end
 
@@ -186,4 +201,74 @@ end
 
 function RSRecentlySeenTracker.GetAllRecentlySeenSpots()
 	return recently_seen_entities
+end
+
+---============================================================================
+-- World map animations for recently seen entities
+---============================================================================
+
+function RSRecentlySeenTracker.ShouldPlayAnimation(entityID, mapID, x, y)
+	if (not entityID) then
+		return false
+	end
+	
+	local pingAnimationInfo = ping_animations[tonumber(entityID)]
+	if (not pingAnimationInfo) then
+		return false
+	elseif (pingAnimationInfo == true) then
+		return true
+	end
+	
+	if (not mapID or not x or not y) then
+		return true
+	end
+
+	for xy, info in pairs (pingAnimationInfo) do
+		if (info.mapID == tostring(mapID) and info.x == tostring(x) and info.y == tostring(y)) then
+			RSLogger:PrintDebugMessage(string.format("ShouldPlayAnimation[%s] (multi) [%s]", entityID, xy))
+			return true
+		end
+	end
+	
+	return false
+end
+
+function RSRecentlySeenTracker.AddPendingAnimation(entityID, mapID, x, y, refreshWorldMap)	
+	if (not ping_animations[entityID]) then
+		ping_animations[entityID] = {}
+	end
+	
+	if (mapID and x and y) then
+		local xy = x.."_"..y
+		ping_animations[entityID][xy] = {}
+		ping_animations[entityID][xy].x = RSUtils.tostring(x)
+		ping_animations[entityID][xy].y = RSUtils.tostring(y)
+		ping_animations[entityID][xy].mapID = RSUtils.tostring(mapID)
+	else
+		ping_animations[entityID] = true
+	end
+	
+	if (refreshWorldMap and WorldMapFrame:IsShown()) then
+		WorldMapFrame:RefreshAllDataProviders();
+	end
+end
+
+function RSRecentlySeenTracker.DeletePendingAnimation(entityID, mapID, x, y, refreshWorldMap)
+	if (not entityID) then
+		return
+	end
+	
+	RSLogger:PrintDebugMessage(string.format("DeletePendingAnimation[%s]", entityID))
+	
+	local entityIDnumber = tonumber(entityID)
+	if (x and y and type(ping_animations[entityIDnumber]) == "table") then
+		local xy = x.."_"..y
+		if (RSUtils.GetTableLength(ping_animations[entityIDnumber]) == 1) then
+			ping_animations[entityIDnumber] = nil
+		else
+			ping_animations[entityIDnumber][xy] = nil
+		end
+	else
+		ping_animations[entityIDnumber] = nil
+	end
 end

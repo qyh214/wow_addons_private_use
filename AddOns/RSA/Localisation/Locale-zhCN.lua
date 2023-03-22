@@ -82,7 +82,7 @@ L["Control the areas of the game this spell is allowed to be announced."] = "Con
 --[[Translation missing --]]
 L["Current Messages:"] = "Current Messages:"
 L["Current Version: %s"] = "当前版本：%s"
-L["Curseforge"] = "Curseforge"
+L["Curseforge"] = true
 --[[Translation missing --]]
 L["Custom Caster"] = "Custom Caster"
 --[[Translation missing --]]
@@ -235,7 +235,7 @@ L["turned off"] = "turned off"
 L["turned on"] = "turned on"
 --[[Translation missing --]]
 L["Unlock setup"] = "Unlock setup"
-L["URL"] = "URL"
+L["URL"] = true
 --[[Translation missing --]]
 L["Use Global Environment Settings"] = "Use Global Environment Settings"
 L["Use Single Replacement"] = "单次替换"

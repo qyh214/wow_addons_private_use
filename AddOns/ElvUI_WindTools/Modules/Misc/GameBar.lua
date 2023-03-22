@@ -1,4 +1,4 @@
-local W, F, E, L = unpack(select(2, ...))
+local W, F, E, L = unpack((select(2, ...)))
 local S = W.Modules.Skins
 local GB = W:NewModule("GameBar", "AceEvent-3.0", "AceHook-3.0")
 local DT = E:GetModule("DataTexts")
@@ -45,7 +45,6 @@ local ItemMixin = ItemMixin
 local PlayerHasToy = PlayerHasToy
 local PlaySound = PlaySound
 local RegisterStateDriver = RegisterStateDriver
-local ReloadUI = ReloadUI
 local ResetCPUUsage = ResetCPUUsage
 local Screenshot = Screenshot
 local ShowUIPanel = ShowUIPanel
@@ -71,9 +70,10 @@ local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_Garrison_GetCompleteMissions = C_Garrison.GetCompleteMissions
 local C_Timer_NewTicker = C_Timer.NewTicker
 local C_ToyBox_IsToyUsable = C_ToyBox.IsToyUsable
+local C_UI_Reload = C_UI.Reload
 
-local FollowerType_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0
-local FollowerType_9_0 = Enum.GarrisonFollowerType.FollowerType_9_0
+local FollowerType_8_0 = Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower
+local FollowerType_9_0 = Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower
 
 local NUM_PANEL_BUTTONS = 7
 local IconString = "|T%s:16:18:0:0:64:64:4:60:7:57"
@@ -834,7 +834,7 @@ function GB:ConstructTimeArea()
             if IsShiftKeyDown() then
                 if IsControlKeyDown() then
                     C_CVar_SetCVar("scriptProfile", C_CVar_GetCVarBool("scriptProfile") and 0 or 1)
-                    ReloadUI()
+                    C_UI_Reload()
                 else
                     collectgarbage("collect")
                     ResetCPUUsage()

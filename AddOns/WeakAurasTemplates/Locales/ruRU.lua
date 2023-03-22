@@ -1,6 +1,6 @@
 if not WeakAuras.IsLibsOK() then return end
 
-if GetLocale() ~= "ruRU" then
+if (GAME_LOCALE or GetLocale()) ~= "ruRU" then
   return
 end
 
@@ -59,6 +59,10 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Выделяет индикацию, если заклинание активно."
 	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
+	--[[Translation missing --]]
+	L["Max 3"] = "Max 3"
+	--[[Translation missing --]]
+	L["Max 4"] = "Max 4"
 	L["Next"] = "Далее"
 	L["Only show the aura if the target has the debuff."] = "Показывает индикацию, только когда на цели есть дебафф."
 	L["Only show the aura when the item is on cooldown."] = "Показывает индикацию, только когда предмет восстанавливается."

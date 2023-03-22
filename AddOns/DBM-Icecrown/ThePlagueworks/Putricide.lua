@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230121204455")
+mod:SetRevision("20230202071934")
 mod:SetCreatureID(36678)
 mod:SetEncounterID(mod:IsClassic() and 851 or 1102)
 mod:SetModelID(30881)
@@ -189,7 +189,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timerMalleableGooCD:Start()
 		end
-		self:BossTargetScanner(36678, "MalleableGooTarget", 0.05, 6)
+		self:BossTargetScanner(args.sourceGUID, "MalleableGooTarget", 0.05, 6)
 	end
 end
 

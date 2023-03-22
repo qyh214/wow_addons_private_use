@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220920232426")
+mod:SetRevision("20230307064655")
 mod:SetCreatureID(61243, 61337, 61338, 61339, 61340)--61243 (Gekkan), 61337 (Glintrok Ironhide), 61338 (Glintrok Skulker), 61339 (Glintrok Oracle), 61340 (Glintrok Hexxer)
 mod:SetEncounterID(1509, 1510)
 
@@ -31,6 +31,19 @@ local timerHex					= mod:NewTargetTimer(20, 118903, nil, "Healer", nil, 5, nil, 
 
 --function mod:OnCombatStart(delay)
 --end
+
+function mod:SPELL_CAST_START(args)
+	if args.spellId == 118903 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnHexInterrupt:Show(args.sourceName)
+		specWarnHexInterrupt:Play("kickcast")
+	elseif args.spellId == 118963 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnShank:Show(args.sourceName)
+		specWarnShank:Play("kickcast")
+	elseif args.spellId == 118940 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+		specWarnCleansingFlame:Show(args.sourceName)
+		specWarnCleansingFlame:Play("kickcast")
+	end
+end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(118988, 129262) then
@@ -62,19 +75,6 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerHex:Cancel(args.destName)
 	elseif args.spellId == 118958 then
 		timerIronProtector:Cancel(args.destName)
-	end
-end
-
-function mod:SPELL_CAST_START(args)
-	if args.spellId == 118903 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnHexInterrupt:Show(args.sourceName)
-		specWarnHexInterrupt:Play("kickcast")
-	elseif args.spellId == 118963 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnShank:Show(args.sourceName)
-		specWarnShank:Play("kickcast")
-	elseif args.spellId == 118940 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
-		specWarnCleansingFlame:Show(args.sourceName)
-		specWarnCleansingFlame:Play("kickcast")
 	end
 end
 

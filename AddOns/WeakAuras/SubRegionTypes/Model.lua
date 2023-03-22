@@ -54,13 +54,13 @@ local function PreShow(self)
 
   -- Adjust model
   local modelId
-  if not WeakAuras.IsRetail() then
+  if WeakAuras.IsClassicEra() then
     modelId = data.model_path
   else
     modelId = tonumber(data.model_fileId)
   end
   if modelId then
-    self:SetModel(modelId)
+    pcall(self.SetModel, self, modelId)
   end
 
   self:ClearTransform()
@@ -95,8 +95,6 @@ local function AcquireModel(region, data)
   Private.barmodels[model] = true
   model.api = data.api
 
-  model:ClearAllPoints()
-
   local anchor
   if region.parentType == "aurabar" then
     anchor = region.parent.bar
@@ -110,6 +108,7 @@ local function AcquireModel(region, data)
     extra_height = data.extra_height or 0
   end
 
+  model:ClearAllPoints()
   model:SetPoint("TOPLEFT", anchor ,"TOPLEFT", -extra_width/2, extra_height/2)
   model:SetPoint("BOTTOMRIGHT", anchor ,"BOTTOMRIGHT", extra_width/2, -extra_height/2)
 
@@ -119,13 +118,13 @@ local function AcquireModel(region, data)
 
   -- Adjust model
   local modelId
-  if not WeakAuras.IsRetail() then
+  if WeakAuras.IsClassicEra() then
     modelId = data.model_path
   else
     modelId = tonumber(data.model_fileId)
   end
   if modelId then
-    model:SetModel(modelId)
+    pcall(model.SetModel, model, modelId)
   end
 
   model:ClearTransform()
@@ -248,6 +247,7 @@ local function modify(parent, region, parentData, data, first)
     extra_height = data.extra_height or 0
   end
 
+  region:ClearAllPoints()
   region:SetPoint("TOPLEFT", anchor ,"TOPLEFT", -extra_width/2, extra_height/2)
   region:SetPoint("BOTTOMRIGHT", anchor ,"BOTTOMRIGHT", extra_width/2, -extra_height/2)
 

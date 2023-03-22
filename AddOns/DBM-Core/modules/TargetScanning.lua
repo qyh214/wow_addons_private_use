@@ -27,6 +27,20 @@ do
 		"boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8", "boss9", "boss10", "focus", "target"
 	}
 
+	local fullUids = {
+		"boss1", "boss2", "boss3", "boss4", "boss5", "boss6", "boss7", "boss8", "boss9", "boss10",
+		"mouseover", "target", "focus", "focustarget", "targettarget", "mouseovertarget",
+		"party1target", "party2target", "party3target", "party4target",
+		"raid1target", "raid2target", "raid3target", "raid4target", "raid5target", "raid6target", "raid7target", "raid8target", "raid9target", "raid10target",
+		"raid11target", "raid12target", "raid13target", "raid14target", "raid15target", "raid16target", "raid17target", "raid18target", "raid19target", "raid20target",
+		"raid21target", "raid22target", "raid23target", "raid24target", "raid25target", "raid26target", "raid27target", "raid28target", "raid29target", "raid30target",
+		"raid31target", "raid32target", "raid33target", "raid34target", "raid35target", "raid36target", "raid37target", "raid38target", "raid39target", "raid40target",
+		"nameplate1", "nameplate2", "nameplate3", "nameplate4", "nameplate5", "nameplate6", "nameplate7", "nameplate8", "nameplate9", "nameplate10",
+		"nameplate11", "nameplate12", "nameplate13", "nameplate14", "nameplate15", "nameplate16", "nameplate17", "nameplate18", "nameplate19", "nameplate20",
+		"nameplate21", "nameplate22", "nameplate23", "nameplate24", "nameplate25", "nameplate26", "nameplate27", "nameplate28", "nameplate29", "nameplate30",
+		"nameplate31", "nameplate32", "nameplate33", "nameplate34", "nameplate35", "nameplate36", "nameplate37", "nameplate38", "nameplate39", "nameplate40"
+	}
+
 	local function getBossTarget(guid, scanOnlyBoss)
 		local name, uid, bossuid
 		local cacheuid = bossuIdCache[guid] or "boss1"
@@ -60,35 +74,13 @@ do
 				bossuIdCache[UnitGUID(cacheuid)] = cacheuid
 				name, uid, bossuid = getBossTarget(UnitGUID(cacheuid), scanOnlyBoss)
 			else
-				local found = false
-				for _, uId in ipairs(bossTargetuIds) do
+				local usedTable = scanOnlyBoss and bossTargetuIds or fullUids
+				for _, uId in ipairs(usedTable) do
 					if mod:GetUnitCreatureId(uId) == cidOrGuid then
-						found = true
 						bossuIdCache[cidOrGuid] = uId
 						bossuIdCache[UnitGUID(uId)] = uId
 						name, uid, bossuid = getBossTarget(UnitGUID(uId), scanOnlyBoss)
 						break
-					end
-				end
-				if not found and not scanOnlyBoss then
-					if IsInRaid() then
-						for i = 1, GetNumGroupMembers() do
-							if mod:GetUnitCreatureId("raid"..i.."target") == cidOrGuid then
-								bossuIdCache[cidOrGuid] = "raid"..i.."target"
-								bossuIdCache[UnitGUID("raid"..i.."target")] = "raid"..i.."target"
-								name, uid, bossuid = getBossTarget(UnitGUID("raid"..i.."target"))
-								break
-							end
-						end
-					elseif IsInGroup() then
-						for i = 1, GetNumSubgroupMembers() do
-							if mod:GetUnitCreatureId("party"..i.."target") == cidOrGuid then
-								bossuIdCache[cidOrGuid] = "party"..i.."target"
-								bossuIdCache[UnitGUID("party"..i.."target")] = "party"..i.."target"
-								name, uid, bossuid = getBossTarget(UnitGUID("party"..i.."target"))
-								break
-							end
-						end
 					end
 				end
 			end

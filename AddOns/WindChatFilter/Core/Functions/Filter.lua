@@ -1,5 +1,11 @@
 local W, F, L = unpack(select(2, ...))
 
+local pairs = pairs
+local pcall = pcall
+local time = time
+
+local GetPlayerInfoByGUID = GetPlayerInfoByGUID
+
 function F.CleanupPlayerInfoCache(onlyExpired)
     local now = time()
     for guid, playerInfo in pairs(W.global.playerInfoCache) do

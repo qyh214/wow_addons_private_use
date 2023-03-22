@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1861, "DBM-TombofSargeras", nil, 875)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116144653")
+mod:SetRevision("20230202223707")
 mod:SetCreatureID(115767)--116328 Vellius, 115795 Abyss Stalker, 116329/116843 Sarukel
 mod:SetEncounterID(2037)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -316,13 +316,16 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	elseif spellId == 239423 then--Dread Shark
 		if self:IsMythic() then
 			--Every two sharks
-			specWarnDreadShark:Show()
-			if DBM:UnitDebuff("player", bufferFish) then--Has bufferfish
-				specWarnDreadShark:Play("takedamage")
-			else
-				specWarnDreadShark:Play("watchstep")
+			if self:AntiSpam(10, 10) then
+				specWarnDreadShark:Show()
+				if DBM:UnitDebuff("player", bufferFish) then--Has bufferfish
+					specWarnDreadShark:Play("takedamage")
+				else
+					specWarnDreadShark:Play("watchstep")
+				end
 			end
 			self.vb.phase = self.vb.phase + 0.5
+			timerBufferSpawn:Stop()
 			timerBufferSpawn:Start(21)
 		else
 			--Non mythic seems to use this for phase change even though there are no dread sharks

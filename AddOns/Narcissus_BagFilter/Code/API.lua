@@ -57,6 +57,8 @@ local function PrimarySearchboxTextChanged(f, userInput)
     end
 end
 
+local PRIMARY_BAG_OPENED = false;
+
 local function PrimaryBag_OnShow()
     TriggerEvent("PRIMARY_BAG_OPEN");
 end
@@ -64,6 +66,12 @@ end
 local function PrimaryBag_OnHide()
     TriggerEvent("PRIMARY_BAG_CLOSED");
 end
+
+local function IsPrimaryBagOpened()
+    return PRIMARY_BAG_OPENED
+end
+
+API.IsPrimaryBagOpened = IsPrimaryBagOpened;
 
 local function Bagnon_FrameNew(frame, id)
     if id == "inventory" then
@@ -143,7 +151,13 @@ local function FindPrimarySearchBox()
     end
 
     if not primaryBag then
-        primaryBag = _G["ContainerFrame1"];
+        local useCombinedBags = C_CVar.GetCVarBool("combinedBags");
+
+        if useCombinedBags then
+            primaryBag = _G["ContainerFrameCombinedBags"];
+        else
+            primaryBag = _G["ContainerFrame1"];
+        end
     end
 
     if primaryBag then
@@ -209,6 +223,25 @@ end
 function API.IsSocketingItem()
     return IsFrameOpened("ItemSocketingFrame");
 end
+
+
+local GetSocketTypes = GetSocketTypes;
+local HasExtraActionBar = HasExtraActionBar;
+local GetActionInfo = GetActionInfo;
+
+function API.IsUsingPrimodialStoneSystem()
+    if GetSocketTypes(1) == "Primordial" then
+        return true
+    end
+
+    if HasExtraActionBar() then
+        local actionType, id, subType = GetActionInfo(217);
+        if id == 405721 then
+            return true
+        end
+    end
+end
+
 
 function API.AddToEventListner(frame)
     for i, f in ipairs(EventListener.callbackList) do

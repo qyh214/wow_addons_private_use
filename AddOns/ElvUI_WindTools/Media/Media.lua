@@ -1,4 +1,4 @@
-local W, F, E, L, V, P, G = unpack(select(2, ...))
+local W, F, E, L, V, P, G = unpack((select(2, ...)))
 local LSM = E.Libs.LSM
 
 local _G = _G
@@ -336,7 +336,6 @@ AddMedia("discord", "Discord.tga", "Icons")
 AddMedia("github", "Github.tga", "Icons")
 AddMedia("nga", "NGA.tga", "Icons")
 AddMedia("qq", "QQ.tga", "Icons")
-AddMedia("kook", "KOOK.tga", "Icons")
 
 AddMedia("convert", "Convert.tga", "Icons")
 AddMedia("favorite", "Favorite.tga", "Icons")
@@ -399,6 +398,7 @@ end
 LSM:Register("statusbar", "WindTools Glow", MediaPath .. "Textures/StatusbarGlow.tga")
 LSM:Register("statusbar", "WindTools Flat", MediaPath .. "Textures/StatusbarFlat.blp")
 LSM:Register("statusbar", "WindTools Light", MediaPath .. "Textures/StatusbarLight.tga")
+LSM:Register("statusbar", "WindTools Clean", MediaPath .. "Textures/StatusbarClean.tga")
 
 LSM:Register("statusbar", "ToxiUI Clean", MediaPath .. "Textures/ToxiUI/ToxiUI-clean.tga")
 LSM:Register("statusbar", "ToxiUI Dark", MediaPath .. "Textures/ToxiUI/ToxiUI-dark.tga")

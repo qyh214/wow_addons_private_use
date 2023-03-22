@@ -41,7 +41,7 @@ end
 --Primary icon methods
 function module:SetIcon(mod, target, icon, timer)
 	if not target then return end--Fix a rare bug where target becomes nil at last second (end combat fires and clears targets)
-	if DBM.Options.DontSetIcons or not private.enableIcons or DBM:GetRaidRank(playerName) == 0 then
+	if DBM.Options.DontSetIcons or not private.enableIcons or private.raidIconsDisabled or DBM:GetRaidRank(playerName) == 0 then
 		return
 	end
 	mod:UnscheduleMethod("SetIcon", target)
@@ -109,7 +109,7 @@ do
 
 	function module:SetUnsortedIcon(mod, delay, target, startIcon, maxIcon, descendingIcon, returnFunc, scanId)
 		if not target then return end
-		if DBM.Options.DontSetIcons or not private.enableIcons or DBM:GetRaidRank(playerName) == 0 then
+		if DBM.Options.DontSetIcons or not private.enableIcons or private.raidIconsDisabled or DBM:GetRaidRank(playerName) == 0 then
 			return
 		end
 		scanId = scanId or 1--Default 1, since sorted defaults to 2, this allows both objects to be used while omitting on a single mod (but need to be numbered if 2 of same object used)
@@ -171,108 +171,21 @@ end
 
 --Special Icon Methods
 do
-	local function SortByGroup(v1, v2)
-		return DBM:GetGroupId(DBM:GetUnitFullName(v1), true) < DBM:GetGroupId(DBM:GetUnitFullName(v2), true)
-	end
-	local function SortByTankAlpha(v1, v2)
-		--Tank > Melee > Ranged prio, and if two of any of types, alphabetical names are preferred
-		if DBM:IsTanking(v1) == DBM:IsTanking(v2) then
-			return DBM:GetUnitFullName(v1) < DBM:GetUnitFullName(v2)
-		--if one is tank and one isn't, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsTanking(v1) and not DBM:IsTanking(v2) then
-			return true
-		elseif DBM:IsTanking(v2) and not DBM:IsTanking(v1) then
-			return false
-		elseif DBM:IsMelee(v1) == DBM:IsMelee(v2) then
-			return DBM:GetUnitFullName(v1) < DBM:GetUnitFullName(v2)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsMelee(v1) and not DBM:IsMelee(v2) then
-			return true
-		elseif DBM:IsMelee(v2) and not DBM:IsMelee(v1) then
-			return false
-		end
-	end
-	local function SortByTankRoster(v1, v2)
-		--Tank > Melee > Ranged prio, and if two of any of types, roster index as secondary
-		if DBM:IsTanking(v1) == DBM:IsTanking(v2) then
-			return DBM:GetGroupId(DBM:GetUnitFullName(v1), true) < DBM:GetGroupId(DBM:GetUnitFullName(v2), true)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsTanking(v1) and not DBM:IsTanking(v2) then
-			return true
-		elseif DBM:IsTanking(v2) and not DBM:IsTanking(v1) then
-			return false
-		elseif DBM:IsMelee(v1) == DBM:IsMelee(v2) then
-			return DBM:GetGroupId(DBM:GetUnitFullName(v1), true) < DBM:GetGroupId(DBM:GetUnitFullName(v2), true)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsMelee(v1) and not DBM:IsMelee(v2) then
-			return true
-		elseif DBM:IsMelee(v2) and not DBM:IsMelee(v1) then
-			return false
-		end
-	end
-	local function SortByMeleeAlpha(v1, v2)
-		--if both are melee, the return values are equal and we use alpha sort
-		--if both are ranged, the return values are equal and we use alpha sort
-		if DBM:IsMelee(v1) == DBM:IsMelee(v2) then
-			return DBM:GetUnitFullName(v1) < DBM:GetUnitFullName(v2)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsMelee(v1) and not DBM:IsMelee(v2) then
-			return true
-		elseif DBM:IsMelee(v2) and not DBM:IsMelee(v1) then
-			return false
-		end
-	end
-	local function SortByMeleeRoster(v1, v2)
-		--if both are melee, the return values are equal and we use raid roster index sort
-		--if both are ranged, the return values are equal and we use raid roster index sort
-		if DBM:IsMelee(v1) == DBM:IsMelee(v2) then
-			return DBM:GetGroupId(DBM:GetUnitFullName(v1), true) < DBM:GetGroupId(DBM:GetUnitFullName(v2), true)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsMelee(v1) and not DBM:IsMelee(v2) then
-			return true
-		elseif DBM:IsMelee(v2) and not DBM:IsMelee(v1) then
-			return false
-		end
-	end
-	local function SortByRangedAlpha(v1, v2)
-		--if both are melee, the return values are equal and we use alpha sort
-		--if both are ranged, the return values are equal and we use alpha sort
-		if DBM:IsRanged(v1) == DBM:IsRanged(v2) then
-			return DBM:GetUnitFullName(v1) < DBM:GetUnitFullName(v2)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsRanged(v1) and not DBM:IsRanged(v2) then
-			return true
-		elseif DBM:IsRanged(v2) and not DBM:IsRanged(v1) then
-			return false
-		end
-	end
-	local function SortByRangedRoster(v1, v2)
-		--if both are melee, the return values are equal and we use raid roster index sort
-		--if both are ranged, the return values are equal and we use raid roster index sort
-		if DBM:IsRanged(v1) == DBM:IsRanged(v2) then
-			return DBM:GetGroupId(DBM:GetUnitFullName(v1), true) < DBM:GetGroupId(DBM:GetUnitFullName(v2), true)
-		--if one is melee and one is ranged, they are not equal so it goes to the below elseifs that prio melee
-		elseif DBM:IsRanged(v1) and not DBM:IsRanged(v2) then
-			return true
-		elseif DBM:IsRanged(v2) and not DBM:IsRanged(v1) then
-			return false
-		end
-	end
 	local function SetIconBySortedTable(mod, sortType, startIcon, descendingIcon, returnFunc, scanId)
 		if sortType == "tankalpha" then
-			tsort(iconUnitTable[scanId], SortByTankAlpha)
+			tsort(iconUnitTable[scanId], DBM.SortByTankAlpha)
 		elseif sortType == "tankroster" then
-			tsort(iconUnitTable[scanId], SortByTankRoster)
+			tsort(iconUnitTable[scanId], DBM.SortByTankRoster)
 		elseif sortType == "meleealpha" then
-			tsort(iconUnitTable[scanId], SortByMeleeAlpha)
+			tsort(iconUnitTable[scanId], DBM.SortByMeleeAlpha)
 		elseif sortType == "meleeroster" then
-			tsort(iconUnitTable[scanId], SortByMeleeRoster)
+			tsort(iconUnitTable[scanId], DBM.SortByMeleeRoster)
 		elseif sortType == "rangedalpha" then
-			tsort(iconUnitTable[scanId], SortByRangedAlpha)
+			tsort(iconUnitTable[scanId], DBM.SortByRangedAlpha)
 		elseif sortType == "rangedroster" then
-			tsort(iconUnitTable[scanId], SortByRangedRoster)
+			tsort(iconUnitTable[scanId], DBM.SortByRangedRoster)
 		elseif sortType == "roster" then
-			tsort(iconUnitTable[scanId], SortByGroup)
+			tsort(iconUnitTable[scanId], DBM.SortByGroup)
 		else--Just generic "alpha" sort
 			tsort(iconUnitTable[scanId])
 		end
@@ -314,7 +227,7 @@ do
 			return
 		end
 		if not target then return end
-		if DBM.Options.DontSetIcons or not private.enableIcons or DBM:GetRaidRank(playerName) == 0 then
+		if DBM.Options.DontSetIcons or not private.enableIcons or private.raidIconsDisabled or DBM:GetRaidRank(playerName) == 0 then
 			return
 		end
 		scanId = scanId or 2--Default 2, since unsorted defaults to 1, this allows both objects to be used while omitting on a single mod (but need to be numbered if 2 of same object used)
@@ -506,7 +419,7 @@ do
 			iconVariables[scanId].wipeGUID = wipeGUID and true or false
 			if not scanExpires[scanId] then
 				scanExpires[scanId] = GetTime() + (scanningTime or 8)
-				DBM:Schedule((scanningTime or 8)+1, expireScan, scanId, iconVariables[scanId].wipeGUID)
+				DBM:Schedule((scanningTime or 8)+2, expireScan, scanId, iconVariables[scanId].wipeGUID)
 			end
 			if scanTable and type(scanTable) == "table" then
 				iconVariables[scanId].scanTable = scanTable

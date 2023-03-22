@@ -597,9 +597,9 @@ function RSNpcDB.SetNpcName(npcID, name)
 	end
 end
 
-function RSNpcDB.GetNpcName(npcID)
+function RSNpcDB.GetNpcName(npcID, refresh)
 	if (npcID) then
-		if (private.dbglobal.rare_names[GetLocale()][npcID]) then
+		if (private.dbglobal.rare_names[GetLocale()][npcID] and not refresh) then
 			return private.dbglobal.rare_names[GetLocale()][npcID]
 		else
 			RSTooltipScanners.ScanNpcName(npcID)
