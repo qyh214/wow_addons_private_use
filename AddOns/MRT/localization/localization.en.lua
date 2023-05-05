@@ -950,6 +950,7 @@ L.InspectViewerForce = "Force"
 PH.InspectViewerHideInRaid = "Hide players who are not in the raid"
 L.InspectViewerColorizeNoValorUpgrade = "Mark out items with missing valor upgrade"
 PH.InspectViewerNoExRTAddon = "Player has no MRT"
+L.InspectViewerRefreshAll = "Refresh all"
 
 L.CoinsSpoilsOfPandariaWinTrigger = "System resetting. Don't turn the power off, or the whole thing will probably explode."
 PH.CoinsEmpty = "Empty yet"

@@ -1,5 +1,21 @@
 # Changelog
 
+## Changed in v46
+
+* Updated for 10.1.0 and Zaralek Cavern
+* Zaralek Cavern has: rares, dragon glyphs, and loot; is still missing a few points
+* Forbidden Reach's Forbidden Hoard now has loot
+* Update the embedded Krowi_WorldMapButtons-1.4
+* Minor data updates to earlier zones
+
+## Changed in v45
+
+* Updated for 10.0.7 and the Forbidden Reach
+* Forbidden Reach has: rares, dragon glyphs, high peaks, dragon races, librarian books
+* Add the missing Overseer Stonetongue from 10.0.5
+* Show the Revival Catalyst in Thaldraszus
+* Add Titan Chests in Thaldraszus
+
 ## Changed in v44
 
 * Do better at hiding some of the recipes if you know them

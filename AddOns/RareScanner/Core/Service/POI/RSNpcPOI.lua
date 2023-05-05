@@ -155,6 +155,7 @@ function RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 	POI.isDiscovered = POI.isDead or alreadyFoundInfo ~= nil
 	POI.isFriendly = RSNpcDB.IsInternalNpcFriendly(npcID)
 	POI.achievementIDs = RSAchievementDB.GetNotCompletedAchievementIDsByMap(npcID, mapID)
+	
 	if (npcInfo) then
 		POI.worldmap = npcInfo.worldmap
 		POI.factionID = npcInfo.factionID
@@ -167,16 +168,23 @@ function RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 		POI.Texture = RSConstants.LIGHT_BLUE_NPC_TEXTURE
 	elseif (RSRecentlySeenTracker.IsRecentlySeen(npcID, POI.x, POI.y)) then
 		POI.Texture = RSConstants.PINK_NPC_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) == 0) then
+	elseif (not POI.isDiscovered) then
 		POI.Texture = RSConstants.RED_NPC_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.YELLOW_NPC_TEXTURE
-	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.GREEN_NPC_TEXTURE
 	else
 		POI.Texture = RSConstants.NORMAL_NPC_TEXTURE
 	end
-
+	
+	-- Mini icons
+	if (npcInfo and npcInfo.prof) then
+		POI.iconAtlas = RSConstants.PROFFESION_ICON_ATLAS
+	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
+		POI.iconAtlas = RSConstants.ACHIEVEMENT_ICON_ATLAS
+	elseif (RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, npcID)) then
+		POI.iconAtlas = RSConstants.HUNTING_PARTY_ICON_ATLAS
+	elseif (GetStormInvasionAtlasName(npcID, mapID)) then
+		POI.iconAtlas = GetStormInvasionAtlasName(npcID, mapID)
+	end
+	
 	return POI
 end
 
@@ -202,14 +210,29 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, questTitles, v
 	end
 	
 	-- Skip if hunting party rare and is filtered
-	if (not RSConfigDB.IsShowingHuntingPartyRareNPCs() and RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, npcID)) then
+	local isHuntingParty = RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, npcID)
+	if (not RSConfigDB.IsShowingHuntingPartyRareNPCs() and isHuntingParty) then
 		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado NPC de grupo de caza.", npcID))
 		return true
 	end
 	
 	-- Skip if primal storm rare and is filtered
-	if (not RSConfigDB.IsShowingPrimalStormRareNPCs() and (RSUtils.Contains(RSConstants.FIRE_STORM_EVENTS_NPCS, npcID) or RSUtils.Contains(RSConstants.WATER_STORM_EVENTS_NPCS, npcID) or RSUtils.Contains(RSConstants.AIR_STORM_EVENTS_NPCS, npcID) or RSUtils.Contains(RSConstants.EARTH_STORM_EVENTS_NPCS, npcID))) then
+	local isPrimalStorm = GetStormInvasionAtlasName(npcID, mapID) ~= nil
+	if (not RSConfigDB.IsShowingPrimalStormRareNPCs() and isPrimalStorm) then
 		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado NPC de tormenta prismatica.", npcID))
+		return true
+	end
+	
+	-- Skip if achievement rare and is filtered
+	local isAchievement = RSUtils.GetTableLength(RSAchievementDB.GetNotCompletedAchievementIDsByMap(npcID, mapID)) > 0;
+	if (not RSConfigDB.IsShowingAchievementRareNPCs() and isAchievement) then
+		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado NPC con logro.", npcID))
+		return true
+	end
+	
+	-- Skip if other filtered
+	if (not RSConfigDB.IsShowingOtherRareNPCs() and not isHuntingParty and not isPrimalStorm and not isAchievement) then
+		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado otro NPC.", npcID))
 		return true
 	end
 
@@ -261,11 +284,11 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, questTitles, v
 	-- Skip if dead 
 	if (npcDead) then
 		-- and not showing dead entities in 'not reseteable' maps
-		if (RSConfigDB.IsShowingDeadNpcsInReseteableZones() and not RSMapDB.IsReseteableKillMapID(mapID, artID)) then
+		if (RSConfigDB.IsShowingAlreadyKilledNpcsInReseteableZones() and not RSMapDB.IsReseteableKillMapID(mapID, artID)) then
 			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Esta muerto (zona no reseteable).", npcID))
 			return true
 		--  and not showing dead entities
-		elseif (not RSConfigDB.IsShowingDeadNpcsInReseteableZones() and not RSConfigDB.IsShowingDeadNpcs()) then
+		elseif (not RSConfigDB.IsShowingAlreadyKilledNpcsInReseteableZones() and not RSConfigDB.IsShowingAlreadyKilledNpcs()) then
 			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Esta muerto.", npcID))
 			return true
 		end
@@ -284,6 +307,11 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, questTitles, v
 				RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Hay un vignette del juego mostrándolo (Vignette onMinimap).", npcID))
 				return true
 			end
+			-- If Ancestral Spirit in Forbidden Reach, locate real NPC
+			if (tonumber(vignetteNPCID) == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT and RSNpcDB.GetNpcId(vignetteInfo.name, mapID)) then
+				RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Hay un vignette del juego mostrándolo (Espiritú ancestral).", npcID))
+				return true
+			end
 		end
 	end
 
@@ -293,6 +321,11 @@ end
 function RSNpcPOI.GetMapNotDiscoveredNpcPOIs(mapID, questTitles, vignetteGUIDs, onWorldMap, onMinimap)
 	-- Skip if not showing NPC icons
 	if (not RSConfigDB.IsShowingNpcs()) then
+		return
+	end
+	
+	-- Skip if not showing not discovered NPC icons
+	if (not RSConfigDB.IsShowingNotDiscoveredNpcs()) then
 		return
 	end
 	

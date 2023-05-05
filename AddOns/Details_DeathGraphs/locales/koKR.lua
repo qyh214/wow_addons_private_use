@@ -54,3 +54,4 @@ L["STRING_SURVIVAL"] = "생존"
 L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "시간선 죽음 임계치"
 L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "우두머리 전투 중 처음 사망한 |cFFFFFF00X|r명의 플레이어는 시간선 그래프에 표시하기 위해 등록됩니다."
 L["STRING_TOOLTIP"] = "죽음 그래프 표시"
+

@@ -1,6 +1,6 @@
 # HandyNotes
 
-## [v1.6.13](https://github.com/Nevcairiel/HandyNotes/tree/v1.6.13) (2022-11-16)
-[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.6.12...v1.6.13) [Previous Releases](https://github.com/Nevcairiel/HandyNotes/releases)
+## [v1.6.15](https://github.com/Nevcairiel/HandyNotes/tree/v1.6.15) (2023-05-03)
+[Full Changelog](https://github.com/Nevcairiel/HandyNotes/compare/v1.6.14...v1.6.15) [Previous Releases](https://github.com/Nevcairiel/HandyNotes/releases)
 
-- Update TOC for 10.0.2  
+- Update TOC for 10.1  

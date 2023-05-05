@@ -449,7 +449,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Debufftyp"
 	--[[Translation missing --]]
-	L["Debug Console"] = "Debug Console"
+	L["Debug Log"] = "Debug Log"
 	--[[Translation missing --]]
 	L["Debug Log:"] = "Debug Log:"
 	L["Default"] = "Standard"
@@ -644,8 +644,6 @@ Can use \ to escape -.]=]
 	L["Frequency"] = "Häufigkeit"
 	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
-	--[[Translation missing --]]
-	L["Get Help"] = "Get Help"
 	L["Global Conditions"] = "Globale Bedingungen"
 	L["Glow %s"] = "Leuchten %s"
 	L["Glow Action"] = "Leuchtaktion"
@@ -729,6 +727,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	L["Icon Info"] = "Symbolinfo"
 	L["Icon Inset"] = "Symboleinrückung"
 	--[[Translation missing --]]
+	L["Icon Picker"] = "Icon Picker"
+	--[[Translation missing --]]
 	L["Icon Position"] = "Icon Position"
 	--[[Translation missing --]]
 	L["Icon Settings"] = "Icon Settings"
@@ -774,6 +774,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	--[[Translation missing --]]
 	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Importieren"
+	--[[Translation missing --]]
+	L["Import / Export"] = "Import / Export"
 	L["Import a display from an encoded string"] = "Anzeige von Klartext importieren"
 	--[[Translation missing --]]
 	L["Import as Copy"] = "Import as Copy"
@@ -822,6 +824,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	L["Is Stealable"] = "Ist stehlbar"
 	--[[Translation missing --]]
 	L["Is Unit"] = "Is Unit"
+	--[[Translation missing --]]
+	L["Join Discord"] = "Join Discord"
 	L["Justify"] = "Ausrichten"
 	--[[Translation missing --]]
 	L["Keep Aspect Ratio"] = "Keep Aspect Ratio"
@@ -838,6 +842,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	--[[Translation missing --]]
 	L["Length of |cFFFF0000%s|r"] = "Length of |cFFFF0000%s|r"
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Line"] = "Line"
 	--[[Translation missing --]]
 	L["Lines & Particles"] = "Lines & Particles"
 	--[[Translation missing --]]
@@ -873,6 +879,8 @@ Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.
 	L["Model"] = "Modell"
 	--[[Translation missing --]]
 	L["Model %s"] = "Model %s"
+	--[[Translation missing --]]
+	L["Model Picker"] = "Model Picker"
 	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
@@ -913,6 +921,8 @@ Nur ein Wert kann ausgewählt werden.]=]
 	L["Nameplates"] = "Nameplates"
 	L["Negator"] = "Nicht"
 	L["New Aura"] = "Neue Aura"
+	--[[Translation missing --]]
+	L["New Template"] = "New Template"
 	L["New Value"] = "Neuer Wert"
 	L["No Children"] = "Keine Kinder"
 	--[[Translation missing --]]
@@ -1092,7 +1102,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Saved Data"] = "Saved Data"
 	L["Scale"] = "Skalierung"
-	L["Search"] = "Suchen"
 	--[[Translation missing --]]
 	L["Select Talent"] = "Select Talent"
 	L["Select the auras you always want to be listed first"] = "Wähle die Auren aus, die immer an oberster Stelle angezeigt werden sollen"
@@ -1230,6 +1239,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Text Settings"] = "Texteinstellungen"
 	L["Texture"] = "Textur"
 	L["Texture Info"] = "Texturinfo"
+	--[[Translation missing --]]
+	L["Texture Picker"] = "Texture Picker"
 	--[[Translation missing --]]
 	L["Texture Rotation"] = "Texture Rotation"
 	--[[Translation missing --]]

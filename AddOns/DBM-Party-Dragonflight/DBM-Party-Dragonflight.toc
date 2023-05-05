@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (Dragonflight)|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mazmorras (Dragonflight)|r
@@ -10,6 +10,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMPartyDragonflight_AllSavedVars
 ## SavedVariablesPerCharacter: DBMPartyDragonflight_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: DRAGONFLIGHT
@@ -27,7 +28,7 @@
 ## X-Curse-Project-ID: 314994
 ## X-WoWI-ID: 24904
 ## X-Wago-ID: xZKxZENk
-## Version: r74
+## Version: r76
 
 localization.en.lua
 localization.kr.lua

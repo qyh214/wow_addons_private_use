@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	local _detalhes = 		_G._detalhes
+	local _detalhes = 		_G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local DetailsFramework = DetailsFramework
 
@@ -38,13 +38,13 @@
 	local container_habilidades = _detalhes.container_habilidades --details local
 
 	--localize the cooldown table from the framework
-	local defensive_cooldowns = DetailsFramework.CooldownsAllDeffensive --default from all game versions
+	local defensive_cooldowns = {}
 
 	if (LIB_OPEN_RAID_COOLDOWNS_INFO) then
 		--check if the cooldown is type 2 or 3 or 4 and add to the defensive_cooldowns table
 		for spellId, spellTable in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
 			if (spellTable.type == 2 or spellTable.type == 3 or spellTable.type == 4) then
-				defensive_cooldowns[spellId] = true
+				defensive_cooldowns[spellId] = spellTable
 			end
 		end
 	end
@@ -108,12 +108,15 @@
 	--pets
 		local container_pets = {} --just initialize table (placeholder)
 	--ignore deaths
-		local ignore_death = {}
+		local ignore_death_cache = {}
 	--cache
 		local cacheAnything = {
 			arenaHealth = {},
 			paladin_vivaldi_blessings = {},
+			track_hunter_frenzy = false,
 		}
+
+		
 
 	--cache the data for passive trinkets procs
 		local _trinket_data_cache = {}
@@ -258,6 +261,11 @@
 
 			--charge warrior
 			[105771] = 126664,
+
+			--elemental stances
+			[377458] = 377459,
+			[377461] = 377459,
+			[382133] = 377459,
 		}
 
 	else --retail
@@ -315,6 +323,11 @@
 
 			[228361] = 228360, --shadow priest void erruption
 		}
+
+		--all totem
+		--377461 382133
+		--377458 377459
+
 	end
 
 	local bitfield_debuffs = {}
@@ -353,6 +366,9 @@
 		[169429] = true,
 		[169428] = true,
 		[169430] = true,
+
+		--Volatile Spark on razga'reth
+		[194999] = true,
 	}
 
 	local ignored_npcids = {}
@@ -1225,6 +1241,7 @@
 		end
 
 		if (_trinket_data_cache[spellId] and _in_combat) then
+			---@type trinketdata
 			local thisData = _trinket_data_cache[spellId]
 			if (thisData.lastCombatId == _global_combat_counter) then
 				if (thisData.lastPlayerName == sourceName) then
@@ -1248,6 +1265,18 @@
 				thisData.lastCombatId = _global_combat_counter
 				thisData.lastActivation = time
 				thisData.lastPlayerName = sourceName
+			end
+
+			if (_current_combat.trinketProcs) then
+				local playerTrinketData = _current_combat.trinketProcs[sourceName] or {}
+				_current_combat.trinketProcs[sourceName] = playerTrinketData
+				local trinketData = playerTrinketData[spellId] or {cooldown = 0, total = 0}
+				playerTrinketData[spellId] = trinketData
+
+				if (trinketData.cooldown < time) then
+					trinketData.cooldown = time + 20
+					trinketData.total = trinketData.total + 1
+				end
 			end
 		end
 
@@ -2296,6 +2325,9 @@
 			if (bIsShield) then
 				spellTable.is_shield = true
 			end
+
+			spellTable.spellschool = spellType
+
 			if (_current_combat.is_boss and sourceFlags and bitBand(sourceFlags, OBJECT_TYPE_ENEMY) ~= 0) then
 				_detalhes.spell_school_cache[spellName] = spellType
 			end
@@ -2468,7 +2500,7 @@
 
 				C_Timer.After(0.05, function() --25/12/2022: enabled the delay to wait the combatlog dump damage events which will happen after the buff is applied
 					parser:dead("UNIT_DIED", time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
-					ignore_death [sourceName] = true
+					ignore_death_cache [sourceName] = true
 				end)
 				return
 
@@ -2476,7 +2508,7 @@
 				--BfA monk talent
 				monk_guard_talent [sourceSerial] = amount
 
-			elseif (spellId == 272790) then --hunter pet Frenzy quick fix for show the Frenzy uptime
+			elseif (spellId == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy quick fix for show the Frenzy uptime
 				if (pet_frenzy_cache[sourceName]) then
 					if (DetailsFramework:IsNearlyEqual(pet_frenzy_cache[sourceName], time, 0.2)) then
 						return
@@ -2685,7 +2717,7 @@
 		end
 
 		if (tipo == "BUFF") then
-			if (spellid == 272790) then --hunter pet Frenzy spellid
+			if (spellid == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy spellid
 				local miscActorObject = misc_cache[sourceName]
 				if (miscActorObject) then
 					--fastest way to query utility spell data
@@ -2773,7 +2805,7 @@
 		end
 
 		if (tipo == "BUFF") then
-				if (spellid == 272790) then --hunter pet Frenzy spellid
+				if (spellid == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy spellid
 					if (not pet_frenzy_cache[sourceName]) then
 						return
 					end
@@ -3633,105 +3665,102 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
-	--search key: ~spellcast ~castspell ~cast
-	function parser:spellcast (token, time, who_serial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname, spelltype)
-
-	------------------------------------------------------------------------------------------------
-	--early checks and fixes
-
+	---search key: ~spellcast ~castspell ~cast
+	---comment: this function is called when a spell is casted
+	---@param token string
+	---@param time number
+	---@param sourceSerial string
+	---@param sourceName string
+	---@param sourceFlags number
+	---@param targetSerial string
+	---@param targetName string
+	---@param targetFlags number
+	---@param targetRaidFlags number
+	---@param spellId number
+	---@param spellName string
+	---@param spellType number
+	function parser:spellcast(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetRaidFlags, spellId, spellName, spellType)
 		--only capture if is in combat
 		if (not _in_combat) then
 			return
 		end
 
-		if (not who_name) then
-			who_name = "[*] " .. spellname
+		if (not sourceName) then
+			sourceName = "[*] " .. spellName
 		end
 
-	------------------------------------------------------------------------------------------------
-	--get actors
-
-		--main actor
-
-		local este_jogador, meu_dono = misc_cache [who_serial] or misc_cache_pets [who_serial] or misc_cache [who_name], misc_cache_petsOwners [who_serial]
-		--local este_jogador = misc_cache [who_name]
-
-		if (not este_jogador) then
-
-			este_jogador, meu_dono, who_name = _current_misc_container:PegarCombatente (who_serial, who_name, who_flags, true)
-
-			if (meu_dono) then --� um pet
-				if (who_serial ~= "") then
-					misc_cache_pets [who_serial] = este_jogador
-					misc_cache_petsOwners [who_serial] = meu_dono
+		local sourceActor, ownerActor = misc_cache[sourceSerial] or misc_cache_pets[sourceSerial] or misc_cache[sourceName], misc_cache_petsOwners[sourceSerial]
+		if (not sourceActor) then
+			sourceActor, ownerActor, sourceName = _current_misc_container:PegarCombatente (sourceSerial, sourceName, sourceFlags, true)
+			if (ownerActor) then
+				if (sourceSerial ~= "") then
+					misc_cache_pets [sourceSerial] = sourceActor
+					misc_cache_petsOwners [sourceSerial] = ownerActor
 				end
-
-				--conferir se o dono j� esta no cache
-				if (not misc_cache [meu_dono.serial] and meu_dono.serial ~= "") then
-					misc_cache [meu_dono.serial] = meu_dono
+				if (not misc_cache[ownerActor.serial] and ownerActor.serial ~= "") then
+					misc_cache[ownerActor.serial] = ownerActor
 				end
 			else
-				if (who_flags) then
-					misc_cache [who_name] = este_jogador
+				if (sourceFlags) then
+					misc_cache[sourceName] = sourceActor
 				end
 			end
 		end
 
 	------------------------------------------------------------------------------------------------
 	--build containers on the fly
-		local spell_cast = este_jogador.spell_cast
-		if (not spell_cast) then
-			este_jogador.spell_cast = {[spellid] = 1}
-		else
-			spell_cast [spellid] = (spell_cast [spellid] or 0) + 1
+		--amount of casts by actors ~casts
+		local castsByPlayer = _current_combat.amountCasts[sourceName]
+		if (not castsByPlayer) then
+			castsByPlayer = {}
+			_current_combat.amountCasts[sourceName] = castsByPlayer
 		end
+		local amountOfCasts = _current_combat.amountCasts[sourceName][spellName] or 0
+		amountOfCasts = amountOfCasts + 1
+		_current_combat.amountCasts[sourceName][spellName] = amountOfCasts
 
 	------------------------------------------------------------------------------------------------
-	--record cooldowns cast which can't track with buff applyed.
-
-		--foi um jogador que castou
-		if (raid_members_cache [who_serial]) then
-			--check if is a cooldown :D
-			if (defensive_cooldowns [spellid]) then
-				--usou cooldown
-				if (not alvo_name) then
-					if (DetailsFramework.CooldownsDeffense [spellid]) then
-						alvo_name = who_name
-
-					elseif (DetailsFramework.CooldownsRaid [spellid]) then
-						alvo_name = Loc ["STRING_RAID_WIDE"]
-
+	--record cooldowns cast which can't track with buff applyed
+		--a player is the caster
+		if (raid_members_cache[sourceSerial]) then
+			--check if is a cooldown
+			local cooldownInfo = defensive_cooldowns[spellId]
+			if (cooldownInfo) then
+				if (not targetName) then
+					if (cooldownInfo.type == 2 or cooldownInfo.type == 3) then
+						targetName = sourceName
+					elseif (cooldownInfo.type == 4) then
+						targetName = Loc ["STRING_RAID_WIDE"]
 					else
-						alvo_name = "--x--x--"
+						targetName = "--x--x--"
 					end
 				end
-				return parser:add_defensive_cooldown (token, time, who_serial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname)
+				return parser:add_defensive_cooldown(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetRaidFlags, spellId, spellName)
 			end
-
 		else
 			--enemy successful casts (not interrupted)
-			if (bitBand(who_flags, 0x00000040) ~= 0 and who_name) then --byte 2 = 4 (enemy)
+			if (bitBand(sourceFlags, 0x00000040) ~= 0 and sourceName) then --byte 2 = 4 (enemy)
 				--damager
-				local este_jogador = damage_cache [who_serial]
+				local este_jogador = damage_cache [sourceSerial]
 				if (not este_jogador) then
-					este_jogador = _current_damage_container:PegarCombatente (who_serial, who_name, who_flags, true)
+					este_jogador = _current_damage_container:PegarCombatente (sourceSerial, sourceName, sourceFlags, true)
 				end
 
 				if (este_jogador) then
 					--actor spells table
-					local spell = este_jogador.spells._ActorTable [spellid] --line where the actor was nil
+					local spell = este_jogador.spells._ActorTable [spellId] --line where the actor was nil
 					if (not spell) then
-						spell = este_jogador.spells:PegaHabilidade (spellid, true, token)
+						spell = este_jogador.spells:PegaHabilidade (spellId, true, token)
 					end
 					spell.successful_casted = spell.successful_casted + 1
 				end
 
 				--add the spellId in the enemy_cast_cache table to store the time the enemy successfully cast a spell
 				--check if the spell is in the table
-				local enemyName = who_name
+				local enemyName = sourceName
 
 				if (not enemy_cast_cache[time]) then
-					enemy_cast_cache[time] = {enemyName, spellid, 1}
+					enemy_cast_cache[time] = {enemyName, spellId, 1}
 				else
 					enemy_cast_cache[time][3] = enemy_cast_cache[time][3] + 1
 				end
@@ -4085,8 +4114,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				--must be in combat
 				_in_combat
 			) then
-				if (ignore_death[targetName]) then
-					ignore_death[targetName] = nil
+				if (ignore_death_cache[targetName]) then
+					ignore_death_cache[targetName] = nil
 					return
 				end
 
@@ -4120,6 +4149,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				if (not recordedEvents) then
 					recordedEvents = _current_combat:CreateLastEventsTable(targetName)
 				end
+
+				--during a regular combat, 99.9% of the events aren't used by the death log
+				--hence the process of getting data for the death log is made as fast as it can be
+				--when a death occurs, the death log data is then parsed and built, the next 200 lines does this processing
 
 				--lesses index = older / higher index = newer
 
@@ -4318,10 +4351,12 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 						overallDeathTable.dead_at = mythicPlusElapsedTime
 
 						--save data about the mythic run in the deathTable which goes in the regular segment
+						--confused? 'playerDeathTable' is added into the '_current_combat.last_events_tables' ~20 above on a tinsert
 						playerDeathTable["mythic_plus"] = true
 						playerDeathTable["mythic_plus_dead_at"] = mythicPlusElapsedTime
 						playerDeathTable["mythic_plus_dead_at_string"] = overallDeathTable[6]
 
+						--now add the death table into the overall data (this is the regular overall data, not the mythic plus overall data)
 						tinsert(_detalhes.tabela_overall.last_events_tables, #_detalhes.tabela_overall.last_events_tables + 1, overallDeathTable)
 					end
 				end
@@ -5549,7 +5584,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			if (_detalhes.in_group) then
 				--player entered in a group, cleanup and set the new enviromnent
-				Details:RestartInternalGarbageCollector(true)
+				Details222.GarbageCollector.RestartInternalGarbageCollector(true)
 				Details:WipePets()
 				Details:SchedulePetUpdate(1)
 				Details:InstanceCall(Details.AdjustAlphaByContext)
@@ -5569,7 +5604,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			if (not _detalhes.in_group) then
 				--player left the group, run routines to cleanup the environment
-				Details:RestartInternalGarbageCollector(true)
+				Details222.GarbageCollector.RestartInternalGarbageCollector(true)
 				Details:WipePets()
 				Details:SchedulePetUpdate(1)
 				wipe(Details.details_users)
@@ -5805,10 +5840,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		_detalhes.logoff_saving_data = true
 
 		--close info window
-		if (_detalhes.FechaJanelaInfo) then
+		if (_detalhes.CloseBreakdownWindow) then
 			tinsert(_detalhes_global.exit_log, "1 - Closing Janela Info.")
 			currentStep = "Fecha Janela Info"
-			xpcall(_detalhes.FechaJanelaInfo, saver_error)
+			xpcall(_detalhes.CloseBreakdownWindow, saver_error)
 		end
 
 		--do not save window pos
@@ -5957,7 +5992,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		wipe(enemy_cast_cache)
 		wipe(empower_cache)
 
-		wipe(ignore_death)
+		wipe(ignore_death_cache)
 
 		wipe(reflection_damage)
 		wipe(reflection_debuffs)
@@ -5969,6 +6004,66 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		wipe(dk_pets_cache.apoc)
 
 		wipe(cacheAnything.paladin_vivaldi_blessings)
+
+		cacheAnything.track_hunter_frenzy = Details.combat_log.track_hunter_frenzy
+
+		if (Details.combat_log.merge_gemstones_1007) then
+			--ring powers merged, https://gist.github.com/ljosberinn/65abe150133ff3a08cd70f840f7dd019 (by Gerrit Alex - WCL)
+			override_spellId[403225] = 404884 --Flame Licked Stone
+			override_spellId[404974] = 404884 --Shining Obsidian Stone
+			override_spellId[405220] = 404884 --Pestilent Plague Stone
+			override_spellId[405221] = 404884 --Pestilent Plague Stone
+			override_spellId[405209] = 404884 --Humming Arcane Stone
+			override_spellId[403391] = 404884 --Freezing Ice Stone
+			override_spellId[404911] = 404884 --Desirous Blood Stone
+			override_spellId[404941] = 404884 --Shining Obsidian Stone
+			override_spellId[403087] = 404884 --Storm Infused Stone
+			override_spellId[403273] = 404884 --Fel Flame via Entropic Fel Stone
+			override_spellId[403171] = 404884 --Uncontainable Charge via Echoing Thunder Stone
+			override_spellId[405235] = 404884 --Wild Spirit Stone
+			override_spellId[403381] = 404884 --Deluging Water Stone
+			override_spellId[405118] = 404884 --Exuding Steam Stone
+			override_spellId[403408] = 404884 --Exuding Steam Stone
+			override_spellId[403336] = 404884 --Indomitable Earth Stone
+			override_spellId[403392] = 404884 --Cold Frost Stone
+			override_spellId[403376] = 404884 --Gleaming Iron Stone
+			override_spellId[403253] = 404884 --Raging Magma Stone
+			override_spellId[403257] = 404884 --Searing Smokey Stone
+		else
+			override_spellId[403225] = nil --Flame Licked Stone
+			override_spellId[404974] = nil --Shining Obsidian Stone
+			override_spellId[405220] = nil --Pestilent Plague Stone
+			override_spellId[405221] = nil --Pestilent Plague Stone
+			override_spellId[405209] = nil --Humming Arcane Stone
+			override_spellId[403391] = nil --Freezing Ice Stone
+			override_spellId[404911] = nil --Desirous Blood Stone
+			override_spellId[404941] = nil --Shining Obsidian Stone
+			override_spellId[403087] = nil --Storm Infused Stone
+			override_spellId[403273] = nil --Fel Flame via Entropic Fel Stone
+			override_spellId[403171] = nil --Uncontainable Charge via Echoing Thunder Stone
+			override_spellId[405235] = nil --Wild Spirit Stone
+			override_spellId[403381] = nil --Deluging Water Stone
+			override_spellId[405118] = nil --Exuding Steam Stone
+			override_spellId[403408] = nil --Exuding Steam Stone
+			override_spellId[403336] = nil --Indomitable Earth Stone
+			override_spellId[403392] = nil --Cold Frost Stone
+			override_spellId[403376] = nil --Gleaming Iron Stone
+			override_spellId[403253] = nil --Raging Magma Stone
+			override_spellId[403257] = nil --Searing Smokey Stone
+		end
+
+		if (Details.combat_log.merge_critical_heals) then
+			override_spellId[94472] = 81751 --disc priest attonement and crit. Crits use separate id.
+			override_spellId[281469] = 270501 --disc priest contrition attonement and crit. Crits use separate id.
+			override_spellId[388025] = 388024 --MW monk Ancient Teachings, heals from damage, crit and normal are separate.
+			override_spellId[389325] = 389328 --MW monk Awakened Faeline, ^
+		else
+			override_spellId[94472] = nil --disc priest attonement and crit. Crits use separate id.
+			override_spellId[281469] = nil --disc priest contrition attonement and crit. Crits use separate id.
+			override_spellId[388025] = nil --MW monk Ancient Teachings, heals from damage, crit and normal are separate.
+			override_spellId[389325] = nil --MW monk Awakened Faeline, ^
+		end
+
 
 		damage_cache = setmetatable({}, _detalhes.weaktable)
 		damage_cache_pets = setmetatable({}, _detalhes.weaktable)
@@ -6242,31 +6337,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	function Details:IsInEncounter()
 		return Details.encounter_table.id and true or false
-	end
-
-	--get combat
-	function Details:GetCombat(combat)
-		if (not combat) then
-			return _current_combat
-
-		elseif (type(combat) == "number") then
-			if (combat == -1) then --overall
-				return Details.tabela_overall
-			elseif (combat == 0) then --current
-				return _current_combat
-			else
-				return Details.tabela_historico.tabelas [combat]
-			end
-
-		elseif (type(combat) == "string") then
-			if (combat == "overall") then
-				return Details.tabela_overall
-			elseif (combat == "current") then
-				return _current_combat
-			end
-		end
-
-		return nil
 	end
 
 	function Details:GetAllActors(_combat, _actorname)

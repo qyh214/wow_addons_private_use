@@ -220,7 +220,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
     },
     [64792998] = { -- Frigidpelt Den Mother
         criteria=56104,
-        quest=69985,
+        quest=73876, -- vignette 69985
         npc=193698,
         loot={},
         vignette=5252,

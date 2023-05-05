@@ -77,3 +77,25 @@ ns.RegisterPoints(ns.THALDRASZUS, {
 ns.RegisterPoints(ns.VALDRAKKEN, {
     [59183784] = {criteria=55815}, -- Valdrakken
 }, GLYPH{achievement=16578})
+
+ns.RegisterPoints(ns.FORBIDDENREACH, {
+    [18381320] = {criteria=58238, --[[achievement=17398--]]}, -- Winglord's Perch
+    [20569140] = {criteria=58239, --[[achievement=17399--]]}, -- Talon's Watch
+    [62543238] = {criteria=58240, --[[achievement=17400--]]}, -- Froststone Peak
+    [79553264] = {criteria=58241, --[[achievement=17401--]]}, -- Dragonskull Island
+    [77295510] = {criteria=58242, --[[achievement=17402--]]}, -- Stormsunder Mountain
+    [48516897] = {criteria=58243, --[[achievement=17403--]]}, -- The Frosted Spine
+    [59056508] = {criteria=58244, --[[achievement=17404--]]}, -- Talonlords' Perch
+    [37693069] = {criteria=58245, --[[achievement=17405--]]}, -- Caldera of the Menders
+}, GLYPH{achievement=17411})
+
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [41608030] = {criteria=59544, --[[achievement=17510--]]}, -- Dragon Glyphs: Glimmerogg
+    [62707030] = {criteria=59545, --[[achievement=17511--]]}, -- Dragon Glyphs: Nal ks'kol
+    [54705480] = {criteria=59546, --[[achievement=17512--]]}, -- Dragon Glyphs: Loamm
+    [30404520] = {criteria=59547, --[[achievement=17513--]]}, -- Dragon Glyphs: Zaqali Caldera
+    [55202780] = {criteria=59548, --[[achievement=17514--]]}, -- Dragon Glyphs: Slitherdrake Roost
+    [72004830] = {criteria=59549, --[[achievement=17515--]]}, -- Dragon Glyphs: The Throughway
+    [46503620] = {criteria=59550, --[[achievement=17516--]]}, -- Dragon Glyphs: Acidbite Ravine
+    [48000440] = {criteria=59551, --[[achievement=17517--]]}, -- Dragon Glyphs: Aberrus Approach
+}, GLYPH{achievement=18150})

@@ -1,7 +1,7 @@
 -- actor container file
 -- group members are the actors which will be shown in the window while in standard view mode, most of the times they are players in the same group as the player
 
-	local Details = _G._detalhes
+	local Details = _G.Details
 	local DF = _G.DetailsFramework
 	local _
 	local addonName, Details222 = ...
@@ -108,9 +108,59 @@ function Details222.Pets.AkaarisSoulOwner(petGUID)
 	local tooltipData = C_TooltipInfo.GetHyperlink("unit:" .. petGUID)
 	local args = tooltipData.args
 
+	if (not args) then
+		do
+			local ownerGUID = tooltipData.guid --tooltipData.guid seems to exists on all akari soul tooltips and point to the owner guid
+			if (ownerGUID) then
+				if (ownerGUID:find("^P")) then
+					local playerGUID = ownerGUID
+					local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
+					if (actorObject) then
+						return actorObject.nome, playerGUID, actorObject.flag_original
+					end
+
+					local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
+					local ownerName = guidCache[playerGUID]
+					if (ownerName) then
+						return ownerName, playerGUID, 0x514
+					end
+				end
+			end
+		end
+
+		do
+			if (tooltipData.lines) then
+				for i = 1, #tooltipData.lines do
+					local lineData = tooltipData.lines[i]
+					if (lineData.unitToken) then --unit token seems to exists when the add belongs to the "player"
+						local ownerGUID = UnitGUID(lineData.unitToken)
+						if (ownerGUID and ownerGUID:find("^P")) then
+							local playerGUID = ownerGUID
+							local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
+							if (actorObject) then
+								return actorObject.nome, playerGUID, actorObject.flag_original
+							end
+
+							local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
+							local ownerName = guidCache[playerGUID]
+							if (ownerName) then
+								return ownerName, playerGUID, 0x514
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if (not args) then
+		--new tooltip data from 10.1.0 seems to not have .args
+		return
+	end
+
 	local playerGUID
 	--iterate among args and find into the value field == guid and it must have guidVal
-	for i = 1, #args do
+	for i = 1, #args do --this is erroring in the ptr 10.1.0, as .args doesn't seem to exists on akari soul tooltip
 		local arg = args[i]
 		if (arg.field == "guid") then
 			playerGUID = arg.guidVal
@@ -123,12 +173,33 @@ function Details222.Pets.AkaarisSoulOwner(petGUID)
 		if (actorObject) then
 			return actorObject.nome, playerGUID, actorObject.flag_original
 		end
-		local guidCache = Details:GetParserPlayerCache() --cahe exists until the next combat starts
+		local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
 		local ownerName = guidCache[playerGUID]
 		if (ownerName) then
 			return ownerName, playerGUID, 0x514
 		end
 	end
+end
+
+
+---Determine if the inputted pet string contains any declension variation of the given player name.
+---@param tooltipString string
+---@param playerName string
+---@return boolean hasDeclension
+--check pet owner name with correct declension for ruRU locale (from user 'denis-kam' on github)
+local find_name_declension = function(tooltipString, playerName)
+	--2 - male, 3 - female
+	for gender = 3, 2, -1 do
+		for declensionSet = 1, GetNumDeclensionSets(playerName, gender) do
+			--check genitive case of player name
+			local genitive = DeclineName(playerName, gender, declensionSet)
+			if tooltipString:find(genitive) then
+				--print("found genitive: ", gender, declensionSet, playerName, petTooltip:find(genitive))
+				return true
+			end
+		end
+	end
+	return false
 end
 
 ---attempt to the owner of a pet using tooltip scan, if the owner isn't found, return nil
@@ -146,6 +217,65 @@ end
 		if (bIsDragonflight) then
 			local tooltipData = pet_tooltip_frame:GetTooltipData() --is pet tooltip reliable with the new tooltips changes?
 			if (tooltipData) then
+				if (not tooltipData.args and tooltipData.lines[1].leftText == '') then --Assume this unit acts like Akaari's soul, where it returns the tooltip for the player instead, with line 1 blank.
+					do
+						local ownerGUID = tooltipData.guid --tooltipData.guid points to the player attributed to this tooltip.
+						if (ownerGUID) then --If we have an owner GUID, then we should make sure it starts with a P for Player and then attempt to find the owner object from the caches.
+							if (ownerGUID:find("^P")) then
+								local playerGUID = ownerGUID
+								local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
+								if (actorObject) then
+									return actorObject.nome, playerGUID, actorObject.flag_original
+								end
+			
+								local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
+								local ownerName = guidCache[playerGUID]
+								if (ownerName) then
+									return ownerName, playerGUID, 0x514
+								end
+
+								if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
+									for enemyName, enemyToken in pairs(Details.arena_enemies) do
+										if(UnitGUID(enemyToken) == ownerGUID) then
+											return enemyName, ownerGUID, 0x548
+										end
+									end
+								end
+							end
+						end
+					end
+					do
+						if (tooltipData.lines) then
+							for i = 1, #tooltipData.lines do
+								local lineData = tooltipData.lines[i]
+								if (lineData.unitToken) then --unit token seems to exists when the add belongs to the "player"
+									local ownerGUID = UnitGUID(lineData.unitToken)
+									if (ownerGUID and ownerGUID:find("^P")) then
+										local playerGUID = ownerGUID
+										local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
+										if (actorObject) then
+											return actorObject.nome, playerGUID, actorObject.flag_original
+										end
+			
+										local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
+										local ownerName = guidCache[playerGUID]
+										if (ownerName) then
+											return ownerName, playerGUID, 0x514
+										end
+
+										if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
+											for enemyName, enemyToken in pairs(Details.arena_enemies) do
+												if(UnitGUID(enemyToken) == ownerGUID) then
+													return enemyName, ownerGUID, 0x548
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
 
 				local tooltipLines = tooltipData.lines
 				for lineIndex = 1, #tooltipLines do
@@ -176,32 +306,58 @@ end
 								--Details:Msg("(debug) pet found (2)", petName, "owner:", ownerName)
 								return ownerName, GUID, 0x514
 							end
+							
+							if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
+								for enemyName, enemyToken in pairs(Details.arena_enemies) do
+									if(UnitGUID(enemyToken) == ownerGUID) then
+										return enemyName, ownerGUID, 0x548
+									end
+								end
+							end
 						end
 					end
 				end
 			end
 		end
 
-		local actorNameString = _G["DetailsPetOwnerFinderTextLeft1"]
 		local ownerName, ownerGUID, ownerFlags
+		if (not Details.tabela_vigente) then return end --Should exist at all times but load. Just in case.
 
-		if (actorNameString) then
-			local actorName = actorNameString:GetText()
-			if (actorName and type(actorName) == "string") then
-				local isInRaid = Details.tabela_vigente.raid_roster[actorName]
-				if (isInRaid) then
-					ownerGUID = UnitGUID(actorName)
-					ownerName = actorName
-					ownerFlags = 0x514
-				else
-					for playerName in actorName:gmatch("([^%s]+)") do
-						playerName = playerName:gsub(",", "")
-						local playerIsOnRaidCache = Details.tabela_vigente.raid_roster[playerName]
-						if (playerIsOnRaidCache) then
-							ownerGUID = UnitGUID(playerName)
-							ownerName = playerName
-							ownerFlags = 0x514
-							break
+		for i=1,3 do --Loop through the 3 texts on the PetOwnerFinder tooltip
+			local actorNameString = _G["DetailsPetOwnerFinderTextLeft"..i]
+			if (actorNameString and not ownerName) then --Tooltip line exists and we haven't found a valid match yes.
+				local actorName = actorNameString:GetText()
+				if (actorName and type(actorName) == "string") then
+					local isInRaid = Details.tabela_vigente.raid_roster[actorName]
+					if (isInRaid) then
+						ownerGUID = UnitGUID(actorName)
+						ownerName = actorName
+						ownerFlags = 0x514
+					else
+						
+						if (CONST_CLIENT_LANGUAGE == "ruRU") then --If russian client, then test for declensions in the string of text.
+							for playerName, _ in pairs(Details.tabela_vigente.raid_roster) do
+								local pName = playerName
+								playerName = playerName:gsub("%-.*", "") --remove realm name
+								if (find_name_declension(actorName, playerName)) then
+									ownerGUID = unitGUID(pName)
+									ownerName = pName
+									ownerFlags = 0x514
+									break
+								end
+							end
+						else
+
+							for playerName in actorName:gmatch("([^%s]+)") do
+								playerName = playerName:gsub(",", "")
+								local playerIsOnRaidCache = Details.tabela_vigente.raid_roster[playerName]
+								if (playerIsOnRaidCache) then
+									ownerGUID = UnitGUID(playerName)
+									ownerName = playerName
+									ownerFlags = 0x514
+									break
+								end
+							end
 						end
 					end
 				end
@@ -280,6 +436,12 @@ end
 		return ipairs(self._ActorTable)
 	end
 
+	---return a table<actorIndex, actorObject> for all actors stored in this Container
+	---@return table
+	function actorContainer:GetActorTable()
+		return self._ActorTable
+	end
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internals
 
@@ -302,6 +464,7 @@ end
 		setmetatable(newContainer, actorContainer)
 		return newContainer
 	end
+
 
 	--try to get the actor class from name
 	local getActorClass = function(actorObject, actorName, actorFlags, actorSerial)
@@ -369,6 +532,8 @@ end
 	--read the actor flag
 	local readActorFlag = function(actorObject, ownerActorObject, actorSerial, actorFlags, actorName)
 		if (actorFlags) then
+			local _, zoneType = GetInstanceInfo()
+
 			--this is player actor
 			if (bitBand(actorFlags, OBJECT_TYPE_PLAYER) ~= 0) then
 				if (not Details.ignore_nicktag) then
@@ -386,7 +551,7 @@ end
 					end
 				end
 
-				if (Details.all_players_are_group or Details.immersion_enabled) then
+				if (zoneType ~= "arena" and (Details.all_players_are_group or Details.immersion_enabled)) then
 					actorObject.grupo = true
 				end
 
@@ -420,7 +585,7 @@ end
 					end
 				end
 
-				if (Details.is_in_arena) then
+				if (zoneType == "arena") then
 					--local my_team_color = GetBattlefieldArenaFaction and GetBattlefieldArenaFaction() or 0
 
 					--my team
@@ -545,22 +710,9 @@ end
 		end
 	end
 
-	--check pet owner name with correct declension for ruRU locale (from user 'denis-kam' on github)
-	local find_name_declension = function(petTooltip, playerName)
-		--2 - male, 3 - female
-		for gender = 3, 2, -1 do
-			for declensionSet = 1, GetNumDeclensionSets(playerName, gender) do
-				--check genitive case of player name
-				local genitive = DeclineName(playerName, gender, declensionSet)
-				if petTooltip:find(genitive) then
-					--print("found genitive: ", gender, declensionSet, playerName, petTooltip:find(genitive))
-					return true
-				end
-			end
-		end
-		return false
-	end
+	
 
+	--Deprecated 4/3/2023 in favor of Details222.Pets.GetPetOwner
 	local find_pet_owner = function(petGUID, petName, petFlags, self)
 		if (not Details.tabela_vigente) then
 			return
@@ -697,9 +849,12 @@ end
 			--try to find the owner
 			if (actorFlags and bitBand(actorFlags, OBJECT_TYPE_PETGUARDIAN) ~= 0) then
 				--[[statistics]]-- _detalhes.statistics.container_unknow_pet = _detalhes.statistics.container_unknow_pet + 1
-				local find_nome, find_owner = find_pet_owner(actorSerial, actorName, actorFlags, self)
-				if (find_nome and find_owner) then
-					actorName, dono_do_pet = find_nome, find_owner
+				local ownerName, ownerGUID, ownerFlags = Details222.Pets.GetPetOwner(actorSerial, actorName)
+				if (ownerName and ownerGUID) then
+					local newPetName, ownerObject = petOwnerFound (ownerName, actorSerial, actorName, actorFlags, self, ownerGUID)
+					if (newPetName and ownerObject) then
+						actorName, dono_do_pet = newPetName, ownerObject
+					end
 				end
 			end
 		end
@@ -805,7 +960,7 @@ end
 
 				if (novo_objeto.classe == "UNGROUPPLAYER") then --is a player
 					if (bitBand (actorFlags, REACTION_HOSTILE ) ~= 0) then --is hostile
-						novo_objeto.enemy = true --print(nome.." EH UM INIMIGO -> " .. engRace)
+						novo_objeto.enemy = true
 					end
 
 					--try to guess his class
@@ -995,10 +1150,10 @@ end
 	end
 
 	function actorContainer:remapear()
-		local mapa = self._NameIndexTable
-		local conteudo = self._ActorTable
-		for i = 1, #conteudo do
-			mapa [conteudo[i].nome] = i
+		local namingMap = self._NameIndexTable
+		local actorList = self._ActorTable
+		for i = 1, #actorList do
+			namingMap[actorList[i].nome] = i
 		end
 	end
 

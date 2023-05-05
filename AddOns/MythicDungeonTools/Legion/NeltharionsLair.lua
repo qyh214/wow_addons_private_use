@@ -18,11 +18,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Vileshard Crawler";
     ["id"] = 96247;
     ["count"] = 1;
-    ["health"] = 5129757;
+    ["health"] = 214549;
     ["scale"] = 0.6;
     ["displayId"] = 34068;
     ["creatureType"] = "Beast";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 717.09134241334;
@@ -105,55 +107,55 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [14] = {
         ["x"] = 633.00097526557;
         ["y"] = -242.57787949765;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [15] = {
         ["x"] = 635.31822435709;
         ["y"] = -231.06676126749;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [16] = {
         ["x"] = 643.04552187209;
         ["y"] = -224.70315727401;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [17] = {
         ["x"] = 642.59098866413;
         ["y"] = -216.06678301811;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [18] = {
         ["x"] = 628.93235170054;
         ["y"] = -235.57927008685;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [19] = {
         ["x"] = 625.75053019682;
         ["y"] = -228.7610755769;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [20] = {
         ["x"] = 631.63744692257;
         ["y"] = -212.90501621673;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [21] = {
         ["x"] = 627.09197091129;
         ["y"] = -218.35951720516;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [22] = {
         ["x"] = 640.65302038514;
         ["y"] = -229.24742404506;
-        ["g"] = 33;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
     };
@@ -162,11 +164,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Embershard Scorpion";
     ["id"] = 98406;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 65795;
     ["creatureType"] = "Beast";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 705.72782541555;
@@ -187,11 +191,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Rockback Gnasher";
     ["id"] = 91006;
     ["count"] = 3;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 65050;
     ["creatureType"] = "Beast";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 686.63697268212;
@@ -211,21 +217,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [4] = {
         ["x"] = 405.70712172106;
         ["y"] = -148.86440307402;
+        ["g"] = 18;
         ["sublevel"] = 1;
       };
       [5] = {
         ["x"] = 401.16164570978;
         ["y"] = -138.40983555783;
+        ["g"] = 18;
         ["sublevel"] = 1;
       };
       [6] = {
         ["x"] = 410.2526367463;
         ["y"] = -137.95526454833;
+        ["g"] = 18;
         ["sublevel"] = 1;
       };
       [7] = {
         ["x"] = 417.97981721945;
         ["y"] = -141.13712506599;
+        ["g"] = 18;
         ["sublevel"] = 1;
       };
       [8] = {
@@ -243,17 +253,37 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["y"] = -418.36374174185;
         ["sublevel"] = 1;
       };
+      [11] = {
+        ["x"] = 464.22356229038;
+        ["y"] = -492.49972177314;
+        ["g"] = 7;
+        ["sublevel"] = 1;
+      };
+      [12] = {
+        ["x"] = 435.99812404913;
+        ["y"] = -434.08119099532;
+        ["g"] = 8;
+        ["sublevel"] = 1;
+      };
+      [13] = {
+        ["x"] = 361.96651564036;
+        ["y"] = -451.93710203094;
+        ["g"] = 9;
+        ["sublevel"] = 1;
+      };
     };
   };
   [4] = {
     ["name"] = "Tarspitter Lurker";
     ["id"] = 91001;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 572346;
     ["scale"] = 1;
     ["displayId"] = 37550;
     ["creatureType"] = "Beast";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 662.09150365745;
@@ -285,11 +315,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Understone Drudge";
     ["id"] = 105636;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 64776;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 601.4470220737;
@@ -315,16 +347,18 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Vileshard Chunk";
     ["id"] = 101438;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 64606;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 635.72797950132;
         ["y"] = -219.50139503988;
-        ["g"] = 5;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
     };
@@ -333,16 +367,18 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Vileshard Hulk";
     ["id"] = 91000;
     ["count"] = 8;
-    ["health"] = 24528930;
+    ["health"] = 1144541;
     ["scale"] = 1;
     ["displayId"] = 65783;
     ["creatureType"] = "Humanoid";
-    ["level"] = 111;
+    ["level"] = 71;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 632.54609918105;
         ["y"] = -225.21072831059;
-        ["g"] = 5;
+        ["g"] = 3;
         ["sublevel"] = 1;
       };
       [2] = {
@@ -401,11 +437,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Understone Drummer";
     ["id"] = 92610;
     ["count"] = 4;
-    ["health"] = 8891579;
+    ["health"] = 572346;
     ["scale"] = 1;
     ["displayId"] = 64336;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 484.12022857153;
@@ -423,11 +461,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Mightstone Breaker";
     ["id"] = 90997;
     ["count"] = 5;
-    ["health"] = 14819297;
+    ["health"] = 786898;
     ["scale"] = 1;
     ["displayId"] = 64679;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 466.03916099185;
@@ -557,11 +597,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Rockbound Pelter";
     ["id"] = 91008;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 572346;
     ["scale"] = 1;
     ["displayId"] = 67568;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 477.11936687616;
@@ -642,11 +684,13 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Stoneclaw Hunter";
     ["id"] = 91332;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 643205;
     ["scale"] = 1;
     ["displayId"] = 64667;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 467.45697136899;
@@ -735,44 +779,16 @@ MDT.dungeonEnemies[dungeonIndex] = {
     };
   };
   [12] = {
-    ["name"] = "Rockback Gnasher";
-    ["id"] = 91006;
-    ["count"] = 3;
-    ["health"] = 14819297;
-    ["scale"] = 1;
-    ["displayId"] = 65050;
-    ["creatureType"] = "Beast";
-    ["level"] = 110;
-    ["clones"] = {
-      [1] = {
-        ["x"] = 464.22356229038;
-        ["y"] = -492.49972177314;
-        ["g"] = 7;
-        ["sublevel"] = 1;
-      };
-      [2] = {
-        ["x"] = 435.99812404913;
-        ["y"] = -434.08119099532;
-        ["g"] = 8;
-        ["sublevel"] = 1;
-      };
-      [3] = {
-        ["x"] = 361.96651564036;
-        ["y"] = -451.93710203094;
-        ["g"] = 9;
-        ["sublevel"] = 1;
-      };
-    };
-  };
-  [13] = {
     ["name"] = "Drums of War";
     ["id"] = 92387;
     ["count"] = 0;
-    ["health"] = 2963859;
+    ["health"] = 214549;
     ["scale"] = 0.6;
     ["displayId"] = 63017;
     ["creatureType"] = "Mechanical";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 413.13815197421;
@@ -786,15 +802,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [14] = {
+  [13] = {
     ["name"] = "Blightshard Shaper";
     ["id"] = 90998;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 643205;
     ["scale"] = 1;
     ["displayId"] = 65780;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 410.30860053762;
@@ -846,15 +864,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [15] = {
+  [14] = {
     ["name"] = "Burning Geode";
     ["id"] = 101437;
     ["count"] = 0;
-    ["health"] = 1185544;
+    ["health"] = 107377;
     ["scale"] = 1;
     ["displayId"] = 33425;
     ["creatureType"] = "Elemental";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 389.96795722979;
@@ -870,105 +890,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [16] = {
-    ["name"] = "Rockback Snapper";
-    ["id"] = 103459;
-    ["count"] = 0;
-    ["health"] = 2963859;
-    ["scale"] = 1;
-    ["displayId"] = 66336;
-    ["creatureType"] = "Beast";
-    ["level"] = 110;
-    ["clones"] = {
-      [1] = {
-        ["x"] = 394.32498947052;
-        ["y"] = -85.86036694425;
-        ["g"] = 32;
-        ["sublevel"] = 1;
-      };
-      [2] = {
-        ["x"] = 396.70949182901;
-        ["y"] = -72.045006494332;
-        ["g"] = 32;
-        ["sublevel"] = 1;
-      };
-      [3] = {
-        ["x"] = 379.33290603015;
-        ["y"] = -73.408660956443;
-        ["g"] = 19;
-        ["sublevel"] = 1;
-      };
-      [4] = {
-        ["x"] = 382.0601763269;
-        ["y"] = -67.499529797204;
-        ["g"] = 19;
-        ["sublevel"] = 1;
-      };
-      [5] = {
-        ["x"] = 367.96927329135;
-        ["y"] = -73.408660956443;
-        ["g"] = 20;
-        ["sublevel"] = 1;
-      };
-      [6] = {
-        ["x"] = 367.51468272562;
-        ["y"] = -67.045017259372;
-        ["g"] = 20;
-        ["sublevel"] = 1;
-      };
-      [7] = {
-        ["x"] = 365.2420029946;
-        ["y"] = -72.04496728714;
-        ["g"] = 20;
-        ["sublevel"] = 1;
-      };
-      [8] = {
-        ["x"] = 357.06013230253;
-        ["y"] = -75.681371499663;
-        ["g"] = 21;
-        ["sublevel"] = 1;
-      };
-      [9] = {
-        ["x"] = 358.4237868101;
-        ["y"] = -68.86317698971;
-        ["g"] = 21;
-        ["sublevel"] = 1;
-      };
-      [10] = {
-        ["x"] = 352.51473431915;
-        ["y"] = -76.135883988238;
-        ["g"] = 21;
-        ["sublevel"] = 1;
-      };
-      [11] = {
-        ["x"] = 365.69008695547;
-        ["y"] = -57.044954965949;
-        ["g"] = 22;
-        ["sublevel"] = 1;
-      };
-      [12] = {
-        ["x"] = 360.23554695309;
-        ["y"] = -52.954069471136;
-        ["g"] = 22;
-        ["sublevel"] = 1;
-      };
-      [13] = {
-        ["x"] = 354.32645544818;
-        ["y"] = -59.772263981088;
-        ["g"] = 22;
-        ["sublevel"] = 1;
-      };
-    };
-  };
-  [17] = {
+  [15] = {
     ["name"] = "Stoneclaw Grubmaster";
     ["id"] = 102404;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 64667;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 346.47770129056;
@@ -997,15 +929,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [18] = {
+  [16] = {
     ["name"] = "Tarspitter Slug";
     ["id"] = 102430;
     ["count"] = 1;
-    ["health"] = 2279892;
+    ["health"] = 214549;
     ["scale"] = 0.6;
     ["displayId"] = 66603;
     ["creatureType"] = "Beast";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 304.58895084208;
@@ -1063,15 +997,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [19] = {
+  [17] = {
     ["name"] = "Understone Demolisher";
     ["id"] = 102253;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 714145;
     ["scale"] = 1;
     ["displayId"] = 64783;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 220.87621591054;
@@ -1095,15 +1031,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [20] = {
+  [18] = {
     ["name"] = "Rockbound Trapper";
     ["id"] = 102232;
     ["count"] = 4;
-    ["health"] = 14819297;
+    ["health"] = 643205;
     ["scale"] = 1;
     ["displayId"] = 64665;
     ["creatureType"] = "Humanoid";
-    ["level"] = 110;
+    ["level"] = 70;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 186.79930014133;
@@ -1131,15 +1069,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [21] = {
+  [19] = {
     ["name"] = "Emberhusk Dominator";
     ["id"] = 113537;
     ["count"] = 10;
-    ["health"] = 24528930;
+    ["health"] = 1145128;
     ["scale"] = 1.4;
     ["displayId"] = 70784;
     ["creatureType"] = "Beast";
-    ["level"] = 111;
+    ["level"] = 71;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 198.63755258891;
@@ -1165,17 +1105,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [22] = {
+  [20] = {
     ["name"] = "Rokmora";
     ["id"] = 91003;
     ["count"] = 0;
-    ["health"] = 111016239;
+    ["health"] = 4173958;
     ["scale"] = 1;
     ["displayId"] = 62386;
     ["creatureType"] = "Humanoid";
-    ["level"] = 112;
+    ["level"] = 72;
     ["isBoss"] = true;
     ["encounterID"] = 1662;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 546.37050528437;
@@ -1184,17 +1126,19 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [23] = {
+  [21] = {
     ["name"] = "Ularogg Cragshaper";
     ["id"] = 91004;
     ["count"] = 0;
-    ["health"] = 111016239;
+    ["health"] = 3758437;
     ["scale"] = 1;
     ["displayId"] = 62390;
     ["creatureType"] = "Humanoid";
-    ["level"] = 112;
+    ["level"] = 72;
     ["isBoss"] = true;
     ["encounterID"] = 1665;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 371.04740005228;
@@ -1203,21 +1147,44 @@ MDT.dungeonEnemies[dungeonIndex] = {
       };
     };
   };
-  [24] = {
+  [22] = {
     ["name"] = "Dargrul";
     ["id"] = 91007;
     ["count"] = 0;
-    ["health"] = 117360016;
+    ["health"] = 4412500;
     ["scale"] = 1;
     ["displayId"] = 62392;
     ["creatureType"] = "Humanoid";
-    ["level"] = 112;
+    ["level"] = 72;
     ["isBoss"] = true;
     ["encounterID"] = 1687;
+    ["spells"] = {
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 144.09787242713;
         ["y"] = -351.16211884498;
+        ["sublevel"] = 1;
+      };
+    };
+  };
+  [23] = {
+    ["name"] = "Naraxas";
+    ["id"] = 91005;
+    ["count"] = 0;
+    ["health"] = 4173854;
+    ["scale"] = 1;
+    ["displayId"] = 62391;
+    ["creatureType"] = "Beast";
+    ["level"] = 72;
+    ["isBoss"] = true;
+    ["encounterID"] = 0;
+    ["spells"] = {
+    };
+    ["clones"] = {
+      [1] = {
+        ["x"] = 254.03279866085;
+        ["y"] = -233.25012225538;
         ["sublevel"] = 1;
       };
     };

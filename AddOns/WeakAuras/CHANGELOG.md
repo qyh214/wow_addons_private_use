@@ -1,14 +1,21 @@
-# [5.4.2](https://github.com/WeakAuras/WeakAuras2/tree/5.4.2) (2023-03-16)
+# [5.5.2](https://github.com/WeakAuras/WeakAuras2/tree/5.5.2) (2023-05-03)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.4.1...5.4.2)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.5.1...5.5.2)
 
 ## Highlights
 
- - Turn off new aura API usage temporarily 
+ - Bug Fixes 
 
 ## Commits
 
-Stanzilla (1):
+Stanzilla (4):
 
-- Turn off new aura API usage temporarily
+- Mark addon compartment entry as not checkable
+- Update bug_report.yml
+- Update bug_report.yml
+- Fix a few typos and update config files
+
+mrbuds (1):
+
+- Fix WeakAuras.GetAuraInstanceTooltipInfo and getTenchName for 10.1
 

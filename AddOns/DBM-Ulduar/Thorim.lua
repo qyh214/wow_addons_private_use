@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Thorim", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230120193044")
+mod:SetRevision("20230414020000")
 mod:SetCreatureID(32865)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1141)
@@ -42,7 +42,7 @@ local timerLightningCharge	 		= mod:NewCDTimer(16, 62466, nil, nil, nil, 3)
 local timerUnbalancingStrike		= mod:NewCDTimer(25.6, 62130, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerHardmode					= mod:NewTimer(175, "TimerHardmode", 62042)
 
-mod:AddRangeFrameOption("10")
+mod:AddRangeFrameOption("8")
 mod:AddSetIconOption("SetIconOnBomb", 62526, false, false, {7})
 
 local lastcharge = {}
@@ -52,7 +52,7 @@ function mod:OnCombatStart(delay)
 	enrageTimer:Start()
 	timerHardmode:Start()
 	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(10)
+		DBM.RangeCheck:Show(8)
 	end
 	table.wipe(lastcharge)
 end
@@ -138,7 +138,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:OnSync(event, arg)
-	if event == "Phase2" and self.vb.phase < 2 then
+	if event == "Phase2" and self:GetStage(2, 1) then
 		self:SetStage(2)
 		warnPhase2:Show()
 		enrageTimer:Stop()

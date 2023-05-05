@@ -2106,6 +2106,14 @@ else
     [5] = L["Rune #5"],
     [6] = L["Rune #6"]
   }
+  Private.essence_specific_types = {
+    [1] = L["Essence #1"],
+    [2] = L["Essence #2"],
+    [3] = L["Essence #3"],
+    [4] = L["Essence #4"],
+    [5] = L["Essence #5"],
+    [6] = L["Essence #6"]
+  }
 end
 
 Private.custom_trigger_types = {
@@ -2821,6 +2829,11 @@ Private.charges_change_condition_type = {
 Private.combat_event_type = {
   PLAYER_REGEN_ENABLED = L["Leaving"],
   PLAYER_REGEN_DISABLED = L["Entering"]
+}
+
+Private.encounter_event_type = {
+  ENCOUNTER_END = L["Leaving"],
+  ENCOUNTER_START = L["Entering"]
 }
 
 Private.bool_types = {

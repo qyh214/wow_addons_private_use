@@ -1,12 +1,10 @@
-tag 40901dbf968c7dae7e77dda4ddaf8454493d82ff 4.2.0
+tag 53ad35ee1087147c460fa4910b4c42d323f4ab52 4.2.1
 Author:	Tevoll <git@bockmeulen.nl>
-Date:	Wed Jan 25 09:07:44 2023 +0100
+Date:	Wed Mar 22 09:21:15 2023 +0100
 
-commit 42fbdbc90a43c8d22c9ed5f597274e3c06645e4c
+commit 96254db3edbb793ab9235ede4ca093d340a3345c
 Author: Tevoll <git@bockmeulen.nl>
-Date:   Wed Jan 25 09:06:32 2023 +0100
+Date:   Wed Mar 22 09:20:42 2023 +0100
 
-    Update for 10.0.5
-    
-    Range fix, thanks Loreinator
+    version bump 10.0.7
 

@@ -16,13 +16,20 @@ local candidates = {
       SLASH_DUNGEONTOOLS2 = "/mdt"
       SLASH_DUNGEONTOOLS3 = "/dungeontools"
       function SlashCmdList.DUNGEONTOOLS(cmd, editbox)
-        MDT:ShowInterface()
+        MDT:Async(function() MDT:ShowInterfaceInternal() end,"showInterface")
       end
 
       local ldb = LibStub("LibDBIcon-1.0")
-      ldb.objects["DungeonTools"]:SetScript("OnClick", function() MDT:ShowInterface() end)
+      ldb.objects["DungeonTools"]:SetScript("OnClick", function() MDT:Async(function() MDT:ShowInterfaceInternal() end,"showInterface") end)
     end
-  }
+  },
+  -- ["MDTGuide"] = {
+  --   name = "MDTGuide";
+  --   detected = false;
+  --   onDetect = function()
+
+  --   end
+  -- }
 }
 
 local conflictCheckFrame = CreateFrame("Frame")

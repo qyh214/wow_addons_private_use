@@ -133,7 +133,7 @@ local affixLoop = {
     {9, 11, 12, 132},
     {10, 8, 3, 132},
     {9, 6, 124, 132},
-    {10, 123, 1, 132},
+    {10, 123, 12, 132},
     {9, 8, 13, 132},
     {10, 7, 124, 132},
     {9, 123, 14, 132},
@@ -540,48 +540,12 @@ function LL:RequestKeystoneData()
     E:Delay(2, self.UpdatePartyKeystoneFrame, self)
 end
 
-LL.refreshRequestTimestamp = 0
-LL.scheduledRefreshTimestamp = 0
-LL.lastRefreshTimestamp = 0
-
-function LL:RefreshSearchAt(timestamp)
-    if self.refreshRequestTimestamp ~= timestamp then
-        return
-    end
-
-    local now = GetTime()
-
-    if now < self.lastRefreshTimestamp + 5 then
-        E:Delay(self.lastRefreshTimestamp + 5.05 - now, self.RefreshSearchAt, self, timestamp)
-        return
-    end
-
-    if
-        _G.PVEFrame:IsVisible() and _G.LFGListFrame.activePanel == _G.LFGListFrame.SearchPanel and
-            _G.LFGListFrame.SearchPanel:IsVisible() and
-            _G.LFGListFrame.SearchPanel.categoryID == 2
-     then
-        _G.LFGListFrame.SearchPanel.RefreshButton:Click()
-    end
-
-    self.lastRefreshTimestamp = timestamp
-end
-
 function LL:RefreshSearch()
     if not self.db.rightPanel.enable or not self.db.rightPanel.autoRefresh then
         return
     end
 
-    local now = GetTime()
-
-    if self.refreshRequestTimestamp == now then
-        return
-    end
-
-    self.refreshRequestTimestamp = now
-    self.scheduledRefreshTimestamp = max(now + 1, self.lastRefreshTimestamp + 5)
-
-    E:Delay(1, self.RefreshSearchAt, self, now)
+    _G.LFGListSearchPanel_DoSearch(_G.LFGListFrame.SearchPanel)
 end
 
 function LL:InitalizeRightPanel()

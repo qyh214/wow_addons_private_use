@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.46 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.47 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -521,6 +521,10 @@ PR.PARAGON_DATA = {
 			factionID = 2511,
 			cache = 199473,
 		}, 
+		[75290] = { -- Loamm Niffen
+			factionID = 2564,
+			cache = 204712,
+		},
 		[65606] = { -- Maruuk Centaur
 			factionID = 2503,
 			cache = 199474,

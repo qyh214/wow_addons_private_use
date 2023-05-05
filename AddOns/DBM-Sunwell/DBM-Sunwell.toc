@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Sunwell|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0태양샘 고원|r
@@ -9,7 +9,8 @@
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMSunwell_AllSavedVars
-## SavedVariablesPerCharacter: DBMSunwell_SavedStats
+## SavedVariablesPerCharacter: DBMSunwell_SavedStatsv
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: BC

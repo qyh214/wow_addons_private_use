@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230120193044")
+mod:SetRevision("20230414020000")
 
 mod:SetCreatureID(32906)
 if not mod:IsClassic() then
@@ -104,7 +104,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnFury:Show(args.destName)
 		end
 	elseif args.spellId == 63601 then
-		--if self.vb.phase == 2 then
+		--if self:GetStage(2) then
 			timerRootsCD:Start()
 		--end
 	end

@@ -610,9 +610,13 @@ function RSNpcDB.GetNpcName(npcID, refresh)
 end
 
 function RSNpcDB.GetNpcId(name, mapID)
-	for npcID, npcName in pairs(RSNpcDB.GetAllNpcNames()) do
-		if (RSUtils.Contains(npcName, name) and RSNpcDB.IsInternalNpcInMap(npcID, mapID, true)) then
-			return npcID;
+	if (name and mapID) then
+		for npcID, npcName in pairs(RSNpcDB.GetAllNpcNames()) do
+			if (RSUtils.Contains(npcName, name) and RSNpcDB.IsInternalNpcInMap(npcID, mapID, true)) then
+				return npcID;
+			end
 		end
 	end
+	
+	return nil
 end

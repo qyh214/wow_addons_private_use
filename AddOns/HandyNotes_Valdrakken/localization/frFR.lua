@@ -1,87 +1,156 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes_Valdrakken", "frFR", false, true)
 
 if not L then return end
--- French localization by Zickwik ( https://www.curseforge.com/members/zickwik )
+-- French localization by Zickwik ( https://www.curseforge.com/members/zickwik ) & Machou (https://github.com/Machou)
 if L then
-L["Blizzard"] = true
-L["Both"] = "Les deux"
-L["config_auctioneer"] = "Commissaire-priseur"
-L["config_auctioneer_desc"] = "Afficher l'emplacement du commissaire-priseur."
-L["config_banker"] = "Banquier"
-L["config_banker_desc"] = "Afficher les emplacements des banquiers."
-L["config_barber"] = "Coiffeur"
-L["config_barber_desc"] = "Afficher l'emplacement du coiffeur."
-L["config_easy_waypoints"] = "Points de Passage Facile"
-L["config_easy_waypoints_desc"] = "Active la création de points de passage simplifié. Vous permet de définir un point de passage par un clique-droit et d'accéder à plus d'options avec un CTRL + clique-droit."
-L["config_fmaster_waypoint"] = "Point de passage du maître de vol"
-L["config_fmaster_waypoint_desc"] = "Définit automatiquement un point de passage vers le maître de vol si vous entrez dans l’Anneau de Transfert."
-L["config_guildvault"] = "Coffre-fort de Guilde"
-L["config_guildvault_desc"] = "Afficher l'emplacement du coffre-fort de guilde."
-L["config_icon_alpha"] = "Transparence des icônes"
-L["config_icon_alpha_desc"] = "Modifie la transparence des icônes"
-L["config_icon_scale"] = "Echelles des icônes"
-L["config_icon_scale_desc"] = "Modifie la taille des icônes"
-L["config_innkeeper"] = "Aubergiste"
-L["config_innkeeper_desc"] = "Afficher l'emplacement de l'aubergiste."
-L["config_mail"] = "Boite aux lettres"
-L["config_mail_desc"] = "Afficher l'emplacements des boites aux lettres."
-L["config_onlymytrainers"] = "Afficher uniquement les maîtres et vendeurs pour mes métiers"
-L["config_onlymytrainers_desc"] = [[
-N'affecte que les maîtres en vendeurs des métiers principaux.
+----------------------------------------------------------------------------------------------------
+-----------------------------------------------CONFIG-----------------------------------------------
+----------------------------------------------------------------------------------------------------
 
-|cFFFF0000NOTE: N'affecte que lorsque deux métiers principaux sont appris.|r
-]]
-L["config_others"] = "Autres"
-L["config_others_desc"] = "Afficher tous les autres points d'intérêt."
-L["config_picons"] = "Afficher l'îcone de métier pour:"
-L["config_picons_trainer_desc"] = "Afficher les îcones du métier pour les maîtres de métiers au lieu de l'îcone de formateurs"
-L["config_picons_vendor_desc"] = "Afficher les îcones de métier pour les vendeurs au lieu de l'îcone de vendeur."
-L["config_plugin_desc"] = "Affiche les emplacements des PNJ et des points d'intérêt à Valdrakken sur la carte du monde et la mini-carte."
 L["config_plugin_name"] = "Valdrakken"
-L["config_portal"] = "Portail"
-L["config_portal_desc"] = "Afficher l'emplacement des portails."
-L["config_portaltrainer"] = "Maître des portails"
-L["config_portaltrainer_desc"] = "Afficher l'emplacement du maître des portails pour les Mages."
-L["config_reforge"] = "Renforceur d'Armure"
-L["config_reforge_desc"] = "Afficher l'emplacement du renforceur d'armure."
-L["config_restore_nodes"] = "Restaurer les nœuds cachés"
-L["config_restore_nodes_desc"] = "Restaurez tous les nœuds masqués via le menu contextuel."
-L["config_restore_nodes_print"] = "Tous les nœuds cachés ont été restaurés"
-L["config_stablemaster"] = "Maître des écuries"
-L["config_stablemaster_desc"] = "Afficher l'emplacement du maître des écuries."
+L["config_plugin_desc"] = "Affiche les emplacements des PnJs et des endroits importants à Valdrakken sur la carte du monde et la mini-carte."
+
 L["config_tab_general"] = "Général"
-L["config_tab_scale_alpha"] = "Echelle / Transparence"
+L["config_tab_scale_alpha"] = "Échelle / Transparence"
+--L["config_scale_alpha_desc"] = "PH"
+L["config_icon_scale"] = "Échelle de l’icône"
+L["config_icon_scale_desc"] = "Échelle des icônes"
+L["config_icon_alpha"] = "Transparence de l’icône"
+L["config_icon_alpha_desc"] = "Transparence des icônes"
+L["config_what_to_display"] = "Que souhaitez-vous afficher ?"
+L["config_what_to_display_desc"] = "Ces paramètres déterminent le type d’icônes à afficher."
+
+L["config_auctioneer"] = "Commissaire-priseur"
+L["config_auctioneer_desc"] = "Affiche l’emplacement du commissaire-priseur."
+
+L["config_banker"] = "Banque"
+L["config_banker_desc"] = "Affiche l’emplacement de la banque."
+
+L["config_barber"] = "Salon de coiffure"
+L["config_barber_desc"] = "Affiche l’emplacement du salon de coiffure."
+
+L["config_craftingorders"] = "Commandes d’artisanat"
+L["config_craftingorders_desc"] = "Affiche l’emplacement des commandes d’artisanats."
+
+L["config_flightmaster"] = "Maître de vol"
+L["config_flightmaster_desc"] = "Affiche l’emplacement du maître de vol."
+
+L["config_guildvault"] = "Coffre-fort de guilde"
+L["config_guildvault_desc"] = "Affiche l’emplacement du coffre-fort de guilde."
+
+L["config_innkeeper"] = "Aubergiste"
+L["config_innkeeper_desc"] = "Affiche l’emplacement des aubergistes."
+
+L["config_mail"] = "Boîte aux lettres"
+L["config_mail_desc"] = "Affiche l’emplacement des boîtes aux lettres."
+
+L["config_portal"] = "Portails"
+L["config_portal_desc"] = "Affiche l’emplacement des portails."
+
+L["config_portaltrainer"] = "Maître des Portails"
+L["config_portaltrainer_desc"] = "Affiche l’emplacement du maître des portails des mages."
+
 L["config_tpplatform"] = "Plateforme de téléportation"
-L["config_tpplatform_desc"] = "Afficher les emplacements des plateformes de téléportation."
-L["config_trainer"] = "Maîtres des Métiers"
-L["config_trainer_desc"] = "Afficher les emplacements des maîtres de métiers."
-L["config_transmogrifier"] = "Transmogrifieur"
-L["config_transmogrifier_desc"] = "Afficher l'emplacement du tranmogrifieur."
+L["config_tpplatform_desc"] = "Affiche l’emplacement de la plateforme de téléportation."
+
 L["config_travelguide_note"] = "|cFFFF0000*Déjà actif via HandyNotes: TravelGuide.|r"
-L["config_vendor"] = "Marchand"
-L["config_vendor_desc"] = "Afficher les emplacements des marchands."
+
+L["config_reforge"] = "Améliorations d’objets"
+L["config_reforge_desc"] = "Affiche l’emplacement de l’améliorations d’objets."
+
+L["config_rostrum"] = "Tribune de transformation"
+L["config_rostrum_desc"] = "Affiche l’emplacement de la tribune de transformation."
+
+L["config_stablemaster"] = "Maître des écuries"
+L["config_stablemaster_desc"] = "Affiche l’emplacement du maître des écuries."
+
+L["config_trainer"] = "Maître des métiers"
+L["config_trainer_desc"] = "Affiche l’emplacements des maîtres des métiers."
+
+L["config_transmogrifier"] = "Transmogrifieur"
+L["config_transmogrifier_desc"] = "Affiche l’emplacement du transmogrifieur."
+
+L["config_vendor"] = "Vendeurs"
+L["config_vendor_desc"] = "Affiche l’emplacements des vendeurs."
+
 L["config_void"] = "Chambre du Vide"
-L["config_void_desc"] = "Afficher l'emplacement de la chambre du vide."
-L["config_waypoint_dropdown"] = "Choisissez"
-L["config_waypoint_dropdown_desc"] = "Choisissez comment le point de passage doit être créé."
-L["config_what_to_display"] = "Affichage"
-L["config_what_to_display_desc"] = "Ces paramètres contrôlent le type d'icônes à afficher."
-L["dev_config_force_nodes"] = "Forcer les nœuds"
-L["dev_config_force_nodes_desc"] = "Force l'affichage de tous les nœuds indépendamment de la classe, de la faction ou de la congrégation."
-L["dev_config_show_prints"] = "Afficher print()"
-L["dev_config_show_prints_desc"] = "Afficher les messages print() dans la fenêtre de discussion."
+L["config_void_desc"] = "Affiche l’emplacement de la Chambre du Vide."
+
+L["config_others"] = "Autres"
+L["config_others_desc"] = "Affiche l’emplacements des autres endroits importants."
+
+L["config_onlymytrainers"] = "Affiche uniquement les maîtres de métiers et vendeurs pour mes métiers"
+L["config_onlymytrainers_desc"] = [[
+N’affecte que les maîtres des métiers et les vendeurs de mes métiers principales.
+
+|cFFFF0000NOTE: n’affecte uniquement lorsque 2 métiers ont été appris.|r
+]]
+
+L["config_fmaster_waypoint"] = "Point de passage du Maître de vol"
+L["config_fmaster_waypoint_desc"] = "Définit automatiquement un point de passage au maître de vol si vous entrez dans l’Anneau de Transfert."
+
+L["config_easy_waypoints"] = "Points de passages faciles"
+L["config_easy_waypoints_desc"] = "Active la création simplifiée de points de passages.\nPermet de définir un point de passage par un Clic droit et d’accéder à plus d’options par Ctrel + Clic droit."
+
+L["config_waypoint_dropdown"] = "Choisir"
+L["config_waypoint_dropdown_desc"] = "Choisir comment le point de passage va être créé."
+L["Blizzard"] = true
+L["TomTom"] = true
+L["Both"] = "Les deux"
+
+L["config_picons"] = "Affiche les icônes de métiers pour :"
+L["config_picons_vendor_desc"] = "Afficher les icônes de métiers pour les vendeurs au lieu des icônes des vendeurs."
+L["config_picons_trainer_desc"] = "Afficher les icônes de métiers pour les maîtres de métiers au lieu des icônes des maîtres de métiers."
+L["config_use_old_picons"] = "Affiche les anciennes icônes de métiers"
+L["config_use_old_picons_desc"] = "Affiche à nouveau les anciennes icônes de métiers au lieu des nouvelles (avant Dragonflight)."
+
+L["config_restore_nodes"] = "Restaurer les nœuds cachés"
+L["config_restore_nodes_desc"] = "Restaurez tous les nœuds qui étaient cachés via le menu contextuel."
+L["config_restore_nodes_print"] = "Tous les nœuds cachés ont été restaurés"
+
+----------------------------------------------------------------------------------------------------
+-------------------------------------------------DEV------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
 L["dev_config_tab"] = "DEV"
+
+L["dev_config_force_nodes"] = "Force Nodes"
+L["dev_config_force_nodes_desc"] = "Force the display of all nodes regardless of class, faction or covenant."
+
+L["dev_config_show_prints"] = "Show print()"
+L["dev_config_show_prints_desc"] = "Show print() messages in the chat window."
+
+----------------------------------------------------------------------------------------------------
+-----------------------------------------------HANDLER----------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+--==========================================CONTEXT_MENU==========================================--
+
+L["handler_context_menu_addon_name"] = "HandyNotes : Valdrakken"
 L["handler_context_menu_add_tomtom"] = "Ajouter à TomTom"
-L["handler_context_menu_addon_name"] = "HandyNotes: Valdrakken"
-L["handler_context_menu_hide_node"] = "Masquer ce nœud"
+L['handler_context_menu_add_map_pin'] = "Marque les waypoint sur la carte"
+L["handler_context_menu_hide_node"] = "Masque cet endroit"
+
+--============================================TOOLTIPS============================================--
+
+L["handler_tooltip_requires"] = "Requis"
+L["handler_tooltip_requires_level"] = "Nécessite au moins le niveau du joueur"
 L["handler_tooltip_data"] = "RÉCUPÉRATION DES DONNÉES..."
 L["handler_tooltip_quest"] = "Débloqué avec une quête"
-L["handler_tooltip_requires"] = "Requiert"
-L["handler_tooltip_requires_level"] = "Requiert au moins un niveau de joueur"
-L["Mailbox"] = "Boite aux lettres"
-L["Portal to Dalaran"] = "Portail vers Dalaran"
-L["Portal to Jade Forest"] = "Portail vers la forêt de Jade"
-L["Portal to Orgrimmar"] = "Portail vers Orgrimmar"
-L["Portal to Stormwind"] = "Portail vers Hurlevent"
-L["TomTom"] = true
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------DATABASE----------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+L["Crafting Orders"] = true
+L["Mailbox"] = true
+L["Portal to Dalaran"] = true
+L["Portal to Jade Forest"] = true
+L["Portal to Orgrimmar"] = true
+L["Portal to Shadowmoon Valley"] = true
+L["Portal to Stormwind"] = true
+L["Rostrum of Transformation"] = true
+L["Teleport to Seat of the Aspects"] = true
+L["Visage of True Self"] = true
+
 end

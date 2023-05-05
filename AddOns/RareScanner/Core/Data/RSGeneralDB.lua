@@ -7,6 +7,7 @@ local RSGeneralDB = private.NewLib("RareScannerGeneralDB")
 
 -- RareScanner database libraries
 local RSNpcDB = private.ImportLib("RareScannerNpcDB")
+local RSContainerDB = private.ImportLib("RareScannerContainerDB")
 local RSConfigDB = private.ImportLib("RareScannerConfigDB")
 
 -- RareScanner libraries
@@ -185,15 +186,21 @@ function RSGeneralDB.AddAlreadyFoundEntity(entityID, mapID, x, y, artID, atlasNa
 	return nil
 end
 
-
----============================================================================
--- Not discovored entities
------ Stores entities not found. This lists are used to display non discovered
------ entities in the map in a faster way
----============================================================================
-
-function RSGeneralDB.InitNotDiscoveredListsDB()
-
+function RSGeneralDB.GetBestMapForUnit(entityID, atlasName)
+	local mapID = C_Map.GetBestMapForUnit("player")
+	if (mapID) then
+		return mapID
+	end
+	
+	if (RSConstants.IsNpcAtlas(atlasName) and RSNpcDB.IsInternalNpcMonoZone(entityID)) then
+		local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
+		return npcInfo.zoneID
+	elseif (RSConstants.IsNpcAtlas(atlasName) and RSContainerDB.IsInternalContainerMonoZone(entityID)) then
+		local containerInfo = RSContainerDB.GetInternalContainerInfo(entityID)
+		return containerInfo.zoneID
+	end
+	
+	return nil
 end
 
 ---============================================================================

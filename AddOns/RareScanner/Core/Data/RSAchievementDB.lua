@@ -16,8 +16,8 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 
 local cachedAchievements = {}
 
-local function IsAchievementCompleted(achievementID)
-	if (cachedAchievements[achievementID]) then
+local function IsAchievementCompleted(achievementID, entityID, isContainer)
+	if (cachedAchievements[achievementID] and (cachedAchievements[achievementID][entityID] or isContainer)) then
 		return false
 	end
 
@@ -26,9 +26,20 @@ local function IsAchievementCompleted(achievementID)
 		cachedAchievements[achievementID] = {}
 		cachedAchievements[achievementID].icon = icon
 		cachedAchievements[achievementID].link = GetAchievementLink(achievementID)
-		return false
+		if (not isContainer) then
+			for i = GetAchievementNumCriteria(achievementID), 1, -1 do
+				local _, _, completed, _, _, _, _, assetID, _, _, _, _, _ = GetAchievementCriteriaInfo(achievementID, i)
+				if (not completed) then
+					cachedAchievements[achievementID][assetID] = true
+				end
+			end
+		end
 	end
 	
+	if (cachedAchievements[achievementID] and (cachedAchievements[achievementID][entityID] or isContainer)) then
+		return false;
+	end
+ 	
 	return true
 end
 
@@ -40,12 +51,12 @@ function RSAchievementDB.GetCachedAchievementInfo(achievementID)
 	return nil
 end
 
-function RSAchievementDB.GetNotCompletedAchievementIDsByMap(entityID, mapID)
+function RSAchievementDB.GetNotCompletedAchievementIDsByMap(entityID, mapID, isContainer)
 	if (mapID and entityID and private.ACHIEVEMENT_ZONE_IDS[mapID]) then
 		local achievementIDs = { }
 		for _, achievementID in ipairs(private.ACHIEVEMENT_ZONE_IDS[mapID]) do
 			if (RSUtils.Contains(private.ACHIEVEMENT_TARGET_IDS[achievementID], entityID)) then
-				if (not IsAchievementCompleted(achievementID)) then
+				if (not IsAchievementCompleted(achievementID, entityID, isContainer)) then
 					tinsert(achievementIDs, achievementID);
 				end
 			end
@@ -61,7 +72,7 @@ function RSAchievementDB.GetNotCompletedAchievementLink(entityID)
 	if (entityID) then
 		for achievementID, entitiesIDs in pairs(private.ACHIEVEMENT_TARGET_IDS) do
 			if (RSUtils.Contains(entitiesIDs, entityID)) then
-				if (IsAchievementCompleted(achievementID)) then
+				if (IsAchievementCompleted(achievementID, entityID)) then
 					return RSAchievementDB.GetCachedAchievementInfo(achievementID).link
 				end
 			end
@@ -69,4 +80,20 @@ function RSAchievementDB.GetNotCompletedAchievementLink(entityID)
 	end
 
 	return nil
+end
+
+function RSAchievementDB.RefreshAchievementCache(achievementID)
+	if (achievementID and cachedAchievements and cachedAchievements[achievementID]) then
+		local _, _, _, completed, _, _, _, _, _, _, _, _, _, _, _ = GetAchievementInfo(achievementID)
+		if (completed) then
+			cachedAchievements[achievementID] = nil
+		else
+			for i = GetAchievementNumCriteria(achievementID), 1, -1 do
+				local _, _, completed, _, _, _, _, assetID, _, _, _, _, _ = GetAchievementCriteriaInfo(achievementID, i)
+				if (completed and cachedAchievements[achievementID][assetID]) then
+					cachedAchievements[achievementID][assetID] = nil
+				end
+			end
+		end
+	end
 end

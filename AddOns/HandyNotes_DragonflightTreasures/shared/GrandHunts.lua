@@ -99,6 +99,11 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
         note="In cave",
         vignette=5274,
     },
+    [87621898] = { -- Boolk
+        quest=73909,
+        npc=191450,
+        vignette=5121, -- Hungry Ravine Vulture
+    },
 }, hunt)
 
 ns.RegisterPoints(ns.AZURESPAN, {

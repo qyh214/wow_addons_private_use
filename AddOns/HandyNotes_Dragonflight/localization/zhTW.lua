@@ -17,7 +17,7 @@ L['options_icons_profession_treasures_desc'] = '顯示會給予專業技能知�
 
 L['dragon_glyph'] = '龍之雕紋'
 L['options_icons_dragon_glyph'] = '龍之雕紋'
-L['options_icons_dragon_glyph_desc'] = '顯示全部56個龍之雕紋的位置.'
+L['options_icons_dragon_glyph_desc'] = '顯示全部64個龍之雕紋的位置.'
 
 L['dragonscale_expedition_flag'] = '龍鱗遠征隊'
 L['flags_placed'] = '旗幟已插上'
@@ -94,7 +94,7 @@ L['options_icons_signal_transmitter_desc'] = '顯示 {item:198156} 所需的 {ob
 L['rare_14h'] = '此稀有和其他稀有們共用一個14小時的循環, 每30分鐘會重生一隻稀有.\n\n下個可能的重生時間是: {note:%s}'
 L['time_format_12hrs'] = '%m/%d - %I:%M %p 本地時間'
 L['time_format_24hrs'] = '%m/%d - %H:%M 本地時間'
-L['now'] = nil
+L['now'] = '現在'
 L['spawns_at_night'] = '{note:僅在晚上重生 (伺服器時間 18:30 之後)}'
 
 L['elemental_storm'] = '元素風暴'
@@ -134,6 +134,10 @@ L['the_best_at_what_i_do_suffix'] = '首領已擊殺'
 
 L['options_icons_grand_hunts'] = '大狩獵'
 L['options_icons_grand_hunts_desc'] = '顯示 {object:大狩獵} 的位置和獎勵.'
+
+L['ancient_stone_label'] = nil
+L['options_icons_ancient_stones'] = '{achievement:17560}'
+L['options_icons_ancient_stones_desc'] = nil
 
 L['reed_chest'] = '蘆葦箱子'
 L['options_icons_reed_chest'] = '蘆葦箱子'
@@ -206,7 +210,7 @@ L['snowclaw_cub_note_end'] = [[
 
 當你裝備上稱號{title:『榮譽林精』}後, 提供所需的4個物品給 {npc:196768} 來取得寵物.
 
-{bug:(BUG: 稱號可能會消失需等待修正.)}'
+{note:如果你在之前失去了稱號你可以重複再做任務來取得. 明天或是下禮拜重置後再試一次.}'
 ]]
 
 L['tome_of_polymoph_duck'] = '使用 {spell:1953} 來進入洞窟並和 {object:初學者的法力風暴} 書互動來完成任務.'
@@ -256,9 +260,9 @@ L['icemaw_storage_cache'] = '冰喉儲藏所'
 L['options_icons_icemaw_storage_cache'] = '冰喉儲藏所'
 L['options_icons_icemaw_storage_cache_desc'] = '顯示 {object:冰喉儲藏所} 可能的位置.'
 
-L['kazzi_note_start'] = nil
-L['kazzi_note_item'] = nil
-L['kazzi_achievement_suffix'] = nil
+L['kazzi_note_start'] = '使用 {item:202017} 和 {item:202018} 交換塑形, 飛龍自訂, 一隻寵物, 和更多.'
+L['kazzi_note_item'] = '你現在有 %s 個 {item:%s}.'
+L['kazzi_achievement_suffix'] = '東毛語等級'
 
 -------------------------------------------------------------------------------
 ------------------ FORBIDDEN REACH (DRACTHYR STARTING ZONE) -------------------
@@ -276,112 +280,119 @@ L['mysterious_wand_note'] = '撿起 {object:水晶鑰匙} 並把它放進 {objec
 ------------------------- FORBIDDEN REACH (MAIN ZONE) -------------------------
 -------------------------------------------------------------------------------
 
--- Locations
-L['in_dragonskull_island'] = nil
-L['in_froststone_vault'] = nil
-L['in_the_high_creche'] = nil
-L['in_the_lost_atheneum'] = nil
-L['in_the_siege_creche'] = nil
-L['in_the_support_creche'] = nil
-L['in_the_war_creche'] = nil
-L['in_zskera_vaults'] = nil
+L['in_dragonskull_island'] = '在 {location:龍顱島}'
+L['in_froststone_vault'] = '在 {location:霜石密庫}'
+L['in_the_high_creche'] = '在 {location:至高育所}'
+L['in_the_lost_atheneum'] = '在 {location:失落圖書室}'
+L['in_the_siege_creche'] = '在 {location:圍城育所}'
+L['in_the_support_creche'] = '在 {location:支援育所}'
+L['in_the_war_creche'] = '在 {location:戰爭育所}'
+L['in_zskera_vaults'] = '在 {location:澤斯克拉密庫}'
 
--- Rares
-L['duzalgor_note'] = nil
-L['mad_eye_carrey_note'] = nil
-L['wymslayer_angvardi_note'] = nil
-L['loot_specialist_note'] = nil
+L['duzalgor_note'] = '收集一瓶 {spell:400751}({dot:Green}) 以用來治療 {location:支援育所} 內的毒氣.'
+L['mad_eye_carrey_note'] = '{npc:201181} 會和 {npc:201184} 以及 {npc:201182} 一起出現.'
+L['wymslayer_angvardi_note'] = '{npc:201013} 會和 {npc:201310} 一起出現.'
+L['loot_specialist_note'] = '{npc:203353} 刷新時有 {spell:406143} 和 {spell:132653} 並且當被攻擊時會逃跑.\n\n{note:在他完成施法 {spell:406141} 前快點殺掉他.}'
 
--- Profession Rares
-L['profession_required'] = nil
-L['pr_crafting_note'] = nil
-L['pr_gathering_note'] = nil
-L['pr_recipe_note'] = nil
+L['profession_required'] = '{note:需要有 %s 專業技能的玩家}'
+L['pr_crafting_note'] = '使用 {item:%2$s} 製造 {item:%1$s} 並和 {object:%3$s} 互動來召喚稀有.'
+L['pr_gathering_note'] = '使用 {item:%s} 並和 {object:%s} 互動來召喚稀有.'
+L['pr_recipe_note'] = '配方 {item:%s} 可以從 {npc:202445} 處使用 10{item:190456} 購買.'
+L['pr_summoning_note'] = '召喚稀有的玩家會有 {spell:405161} 和額外獎勵掉落.'
 
-L['pr_awakened_soil'] = nil
-L['pr_book_of_arcane_entities'] = nil
-L['pr_damaged_buzzspire'] = nil
-L['pr_empty_crab_trap'] = nil
-L['pr_farescale_shrine'] = nil
-L['pr_raw_argali_pelts'] = nil
-L['pr_resonating_crystal'] = nil
-L['pr_rumbling_deposit'] = nil
-L['pr_spellsworn_ward'] = nil
-L['pr_spiceless_stew'] = nil
-L['pr_tuskarr_kite_post'] = nil
-L['pr_tuskarr_tanning_rack'] = nil
-L['pr_volatile_brazier'] = nil
+L['pr_awakened_soil'] = '覺醒土壤'
+L['pr_book_of_arcane_entities'] = '秘法生物之書'
+L['pr_damaged_buzzspire'] = '受損的嗡鳴尖塔505'
+L['pr_empty_crab_trap'] = '空的螃蟹陷阱'
+L['pr_farescale_shrine'] = '遠鱗聖壇'
+L['pr_raw_argali_pelts'] = '阿戈利羊生毛皮'
+L['pr_resonant_crystal'] = '共鳴水晶'
+L['pr_rumbling_deposit'] = '震地礦床'
+L['pr_spellsworn_ward'] = '誓法者結界'
+L['pr_spiceless_stew'] = '無調味燉肉'
+L['pr_tuskarr_kite_post'] = '巨牙海民風箏木樁'
+L['pr_tuskarr_tanning_rack'] = '巨牙海民製皮架'
+L['pr_volatile_brazier'] = '熾烈火盆'
 
--- Treasures
-L['storm_bound_chest_label'] = nil
+L['options_icons_profession_rares'] = '專業稀有'
+L['options_icons_profession_rares_desc'] = '顯示專業稀有的位置.'
 
--- Forbidden Hoard
-L['hoarder_of_the_forbidden_reach_suffix'] = nil
-L['forbidden_spoils_suffix'] = nil
-L['forbidden_hoard_label'] = nil
+L['storm_bound_chest_label'] = '颶縛寶箱'
 
-L['options_icons_forbidden_hoard'] = nil
-L['options_icons_forbidden_hoard_desc'] = nil
+L['hoarder_of_the_forbidden_reach_suffix'] = '小寶藏已開啟'
+L['forbidden_spoils_suffix'] = '禁忌之境寶箱已開啟'
+L['forbidden_hoard_label'] = '禁忌之境寶箱'
 
--- Froststone Primal Vault Storm
-L['froststone_vault_storm_label'] = nil
-L['gooey_snailemental_note'] = nil
+L['options_icons_forbidden_hoard'] = '禁忌之境寶箱'
+L['options_icons_forbidden_hoard_desc'] = '顯示 {object:禁忌之境寶箱} 可能的位置.'
 
-L['options_icons_froststone_vault_storm'] = nil
-L['options_icons_froststone_vault_storm_desc'] = nil
+L['froststone_vault_storm_label'] = '霜石密庫洪荒風暴'
+L['gooey_snailemental_note'] = '從 {object:霜石密庫洪荒風暴} 首領收集50個 {item:204352} 來合成 {item:192785}.'
 
--- Small Treasures
-L['small_treasures_label'] = nil
-L['small_treasures_note'] = nil
+L['options_icons_froststone_vault_storm'] = '霜石密庫洪荒風暴'
+L['options_icons_froststone_vault_storm_desc'] = '顯示 {object:霜石密庫洪荒風暴} 的位置和獎勵.'
 
-L['options_icons_small_treasures'] = nil
-L['options_icons_small_treasures_desc'] = nil
+L['small_treasures_label'] = '小寶藏'
+L['small_treasures_note'] = '小寶藏共享刷新點.\n\n在 {location:莫克特村} 處從 {npc:200566} 購買 {item:204558} 並使用來取得 {spell:405637} 增益讓你可以在小地圖上看到小寶藏60分鐘.'
 
--- Zskera Vaults
-L['zskera_vaults_label'] = nil
-L['zskera_vaults_note'] = nil
-L['door_buster_suffix'] = nil
+L['options_icons_small_treasures'] = '小寶藏'
+L['options_icons_small_treasures_desc'] = '顯示小寶藏可能的位置.'
 
-L['recipe_rat_note_1'] = nil
-L['recipe_rat_note_2'] = nil
-L['recipe_rat_note_3'] = nil
-L['recipe_rat_note_4'] = nil
+L['zskera_vaults_label'] = '澤斯克拉密庫'
+L['zskera_vaults_note'] = '從稀有和箱子收集 {item:202196} 來打開在 {location:澤斯克拉密庫} 裡的門.'
+L['door_buster_suffix'] = '扇門已使用澤斯克拉密庫鑰匙解鎖'
 
-L['mm_start_note'] = nil
-L['mm_status_note'] = nil
+L['broken_waygate_label'] = '壞掉的傳送門'
+L['neltharions_toolkit_note'] = [[1. 收集在 {location:澤斯克拉密庫} 內隨機刷新的 {item:204278}.
 
-L['options_icons_zskera_vaults'] = nil
-L['options_icons_zskera_vaults_desc'] = nil
+2. 到 {location:甦醒海岸} 的 {location:灼燃棲所}.
 
--- Librarian of the Reach
-L['confiscated_journal_label'] = nil
-L['farscale_manifesto_label'] = nil
-L['lost_expeditions_notes_label'] = nil
-L['pirate_proclamation_label'] = nil
-L['spellsworn_missive_label'] = nil
-L['vrykul_tome_label'] = nil
+3. 在洞穴內 {npc:193310} 的旁邊找到 {object:壞掉的傳送門}.
 
-L['library_note'] = nil
+4. 修復 {object:壞掉的傳送門}. {note:這可能需要點好幾次.}
 
-L['options_icons_librarian_of_the_reach'] = nil
-L['options_icons_librarian_of_the_reach_desc'] = nil
+5. 傳送到 {location:澤斯克拉密庫} 內的隱藏房間. 殺掉 {npc:200375} 和 {npc:203639} 後開啟 {object:黑曜華麗貯藏箱} 來取得你的拾取!]]
 
--- Scroll Hunter
-L['scroll_hunter_suffix'] = nil
-L['scroll_hunter_note'] = nil
+L['recipe_rat_note_1'] = '在 {location:澤斯克拉密庫} 裡和  {npc:202982} 對話後, {item:202252} 會進入你的背包.'
+L['recipe_rat_note_2'] = '和 {item:202252} 互動取得 {item:204340}. {note:(5分鐘冷卻)}'
+L['recipe_rat_note_3'] = '當你有30個 {item:204340} 時,組合碎片取得食譜.'
+L['recipe_rat_note_4'] = '{note:這隻老鼠喜歡起司並且大約三分鐘會吃掉一個 {item:3927}. 好好規劃!}'
 
-L['options_icons_scroll_hunter'] = nil
-L['options_icons_scroll_hunter_desc'] = nil
+L['mm_start_note'] = '收集和組合各種在 {location:澤斯克拉密庫} 內找到的物品.'
+L['mm_status_note'] = '組合下列物品:\n{item:%s}\n{item:%s}'
 
--- While We Were Sleeping
-L['options_icons_scalecommander_item'] = nil
-L['options_icons_scalecommander_item_desc'] = nil
+L['options_icons_zskera_vaults'] = '澤斯克拉密庫'
+L['options_icons_zskera_vaults_desc'] = '顯示 {location:澤斯克拉密庫} 的獎勵.'
 
--- Misc
-L['spellsworn_gateway'] = nil
-L['gemstone_of_return'] = nil
+L['confiscated_journal_label'] = '被沒收的日誌'
+L['farscale_manifesto_label'] = '遠鱗宣言'
+L['lost_expeditions_notes_label'] = '遠征隊筆記'
+L['pirate_proclamation_label'] = '海盜宣言'
+L['spellsworn_missive_label'] = '誓法者文件'
+L['vrykul_tome_label'] = '維酷秘典'
 
-L['morqut_village_vendor_note'] = nil
+L['library_note'] = '開啟 {object:%s} 並拾取 {item:%s}.'
+
+L['options_icons_librarian_of_the_reach'] = '{achievement:17530}'
+L['options_icons_librarian_of_the_reach_desc'] = '顯示成就 {achievement:17530} 所需的書本位置. {note:有些書在 {location:澤斯克拉密庫} 內}.'
+
+L['dracthyr_runestone_label'] = '半龍人符文石'
+L['scroll_hunter_suffix'] = '從封印的卷軸找到的寶藏'
+L['scroll_hunter_note'] = '從 {location:禁忌之境} 的稀有和寶藏收集封印的卷軸.\n\n打開 {item:%s} 會在地圖上標記一個 X. 可以找到 {item:%s} 可以提升 {faction:%s} 的聲望.'
+
+L['options_icons_scroll_hunter'] = '{achievement:17532}'
+L['options_icons_scroll_hunter_desc'] = '顯示成就 {achievement:17532} 所需的卷軸獎勵位置.'
+
+L['options_icons_scalecommander_item'] = '{achievement:17315}'
+L['options_icons_scalecommander_item_desc'] = '顯示成就 {achievement:17315} 所需的物品位置. {note:有些物品在 {location:澤斯克拉密庫} 內}.'
+
+L['spellsworn_gateway'] = '誓法者傳送門'
+L['gemstone_of_return'] = '回歸寶石'
+
+L['treysh_note'] = '使用 {currency:2118} 或金幣交換塑型, 裝備和坐騎.'
+L['renown_envoy_label'] = '名望特使'
+L['renown_envoy_note'] = '使用 {currency:2118} 或金幣交換坐騎, 寵物, 塑型, 飛龍自訂, 配方和其他有用物品.\n\n從 {npc:200566} 處用 2000個 {currency:2118} 購買 {item:204383} 有機率開到 {item:191915}.'
+L['trader_hagarth_note'] = '使用 {item:190456} 交換工匠珍品設計圖.'
 
 -------------------------------------------------------------------------------
 ------------------------------ OHN'AHRAN PLAINS -------------------------------
@@ -482,9 +493,9 @@ L['options_icons_clan_chest_desc'] = '顯示 {object:氏族箱子} 可能的位�
 
 L['lightning_bound_chest'] = nil
 L['options_icons_lightning_bound_chest'] = nil
-L['options_icons_lightning_bound_chest_desc'] = nil
+L['options_icons_lightning_bound_chest_desc'] = '顯示 {object:Lightning Bound Chests} 可能的位置.'
 
-L['bloodgullet_note'] = nil
+L['bloodgullet_note'] = '在 {location:木階哨站} 的一個帳篷裡的 {object:甦醒精華} 取得 {spell:369277} 增益(1小時) 來看到靈獸.\n\n{note:只有獸王獵看的到.}'
 
 -------------------------------------------------------------------------------
 --------------------------------- THALDRASZUS ---------------------------------
@@ -548,9 +559,9 @@ L['brendormi_note_start'] = '用 {item:202039} 和 {currency:2118} 交換裝備,
 L['brendormi_note_item'] = '你現在有 %s {item:202039}.'
 L['brendormi_note_currency'] = '你現在有 %s {currency:2118}.'
 
-L['titan_chest'] = nil
-L['options_icons_titan_chest'] = nil
-L['options_icons_titan_chest_desc'] = nil
+L['titan_chest'] = '泰坦寶箱'
+L['options_icons_titan_chest'] = '泰坦寶箱'
+L['options_icons_titan_chest_desc'] = '顯示 {object:泰坦寶箱} 可能的位置.'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
@@ -688,3 +699,57 @@ L['options_icons_djaradin_cache_desc'] = '顯示 {object:加拉登貯物所} 可
 L['dragonbane_siege_label'] = '{spell:388945}'
 L['options_icons_dragonbane_siege'] = '{spell:388945}'
 L['options_icons_dragonbane_siege_desc'] = '顯示 {spell:388945} 的位置和獎勵.'
+
+L['phoenix_wishwing_note'] = nil
+L['phoenix_wishwing_talisman'] = nil
+L['phoenix_wishwing_phoenix_ember'] = nil
+L['phoenix_wishwing_sacred_ash'] = nil
+L['phoenix_wishwing_inert_ash'] = nil
+L['phoenix_wishwing_smoldering_ash'] = nil
+L['phoenix_wishwing_ash_feather'] = nil
+L['phoenix_wishwing_info'] = nil
+
+-------------------------------------------------------------------------------
+------------------------------- Zaralek Cavern --------------------------------
+-------------------------------------------------------------------------------
+
+L['in_deepflayer_nest'] = nil
+
+L['brulsef_the_stronk_note'] = nil
+
+L['ancient_zaqali_chest_note'] = nil
+L['blazing_shadowflame_chest_note'] = nil
+L['crystal_encased_chest_note'] = nil
+L['old_trunk_note'] = nil
+L['well_chewed_chest_note'] = nil
+
+L['molten_hoard_label'] = nil
+L['fealtys_reward_label'] = nil
+L['fealtys_reward_note'] = nil
+L['dreamers_bounty_label'] = nil
+L['dreamers_bounty_note'] = nil
+L['moth_pilfered_pouch_label'] = nil
+L['moth_pilfered_pouch_note'] = nil
+L['waterlogged_bundle_label'] = nil
+
+L['stolen_stash_label'] = nil
+L['ritual_offering_label'] = nil
+L['nal_kskol_reliquary_label'] = nil
+L['nal_kskol_reliquary_note'] = nil
+
+L['molten_scoutbot_note'] = nil
+L['bolts_and_brass_note'] = nil
+
+L['sniffen_sage_suffix'] = nil
+
+L['big_slick_note_1'] = nil
+
+L['saccratos_note'] = nil
+L['ponzo_note'] = nil
+
+L['smelly_trash_pile_label'] = nil
+L['options_icons_smelly_trash_pile'] = nil
+L['options_icons_smelly_trash_pile_desc'] = nil
+
+L['seething_cache_treasure_note'] = nil
+L['chest_of_the_flights_treasure_note'] = nil

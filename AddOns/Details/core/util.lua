@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	local _detalhes = _G._detalhes
+	local _detalhes = _G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local addonName, Details222 = ...
 	local _
@@ -518,6 +518,7 @@
 			local left,num,right = _string_match (n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 		end
+		
 		function _detalhes:comma_value_raw (n)
 			local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
@@ -676,6 +677,15 @@
 	function _detalhes:GetCurrentToKFunction()
 		return _detalhes.ToKFunctions [_detalhes.ps_abbreviation]
 	end
+
+	--alias
+	---transfor an integer into a string separating thousands with a comma
+	---@param number number
+	---@return string
+	function Details:CommaValue(number)
+		return Details:comma_value(number)
+	end
+
 
 ------------------------------------------------------------------------------------------------------------
 --numerical system
@@ -1139,11 +1149,6 @@ end
 					end
 				end
 			end
-
-		--mythic dungeon always in combat
-		if (_detalhes.MythicPlus.Started and _detalhes.mythic_plus.always_in_combat) then
-			return true
-		end
 
 		--coach feature
 		if (not Details.Coach.Server.IsEnabled()) then

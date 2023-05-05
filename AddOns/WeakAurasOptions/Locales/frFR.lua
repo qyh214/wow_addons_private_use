@@ -368,7 +368,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
 	L["Custom Variables"] = "Variables personnalisées"
 	L["Debuff Type"] = "Type d'affaiblissement"
 	--[[Translation missing --]]
-	L["Debug Console"] = "Debug Console"
+	L["Debug Log"] = "Debug Log"
 	--[[Translation missing --]]
 	L["Debug Log:"] = "Debug Log:"
 	L["Default"] = "Par défaut"
@@ -552,7 +552,6 @@ Can use \ to escape -.]=]
 	L["Frame Width"] = "Frame Width"
 	L["Frequency"] = "Fréquence"
 	L["Full Circle"] = "Cercle Complet"
-	L["Get Help"] = "Obtenir de l'aide"
 	L["Global Conditions"] = "Conditions globales"
 	--[[Translation missing --]]
 	L["Glow %s"] = "Glow %s"
@@ -630,6 +629,8 @@ Si le nombre entré est decimal (ex. 0.5), une fraction (ex. 1/2), ou un pourcen
 	L["Icon"] = "Icône"
 	L["Icon Info"] = "Info d'icône"
 	L["Icon Inset"] = "Objet inséré"
+	--[[Translation missing --]]
+	L["Icon Picker"] = "Icon Picker"
 	L["Icon Position"] = "Position de l'icône"
 	L["Icon Settings"] = "Paramètres de l'icône"
 	--[[Translation missing --]]
@@ -662,6 +663,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Ignored Name(s)"] = "Ignorer par nom(s)"
 	L["Ignored Spell ID"] = "Ignorer par ID de sort"
 	L["Import"] = "Importer"
+	--[[Translation missing --]]
+	L["Import / Export"] = "Import / Export"
 	L["Import a display from an encoded string"] = "Importer un graphique d'un texte encodé"
 	--[[Translation missing --]]
 	L["Import as Copy"] = "Import as Copy"
@@ -705,6 +708,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Is Stealable"] = "Est subtilisable "
 	--[[Translation missing --]]
 	L["Is Unit"] = "Is Unit"
+	--[[Translation missing --]]
+	L["Join Discord"] = "Join Discord"
 	L["Justify"] = "Justification"
 	L["Keep Aspect Ratio"] = "Conserver les Proportions"
 	L["Keep your Wago imports up to date with the Companion App."] = "Gardez vos importations Wago à jour avec l'application Companion."
@@ -718,6 +723,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	--[[Translation missing --]]
 	L["Length of |cFFFF0000%s|r"] = "Length of |cFFFF0000%s|r"
 	L["Limit"] = "Limite"
+	--[[Translation missing --]]
+	L["Line"] = "Line"
 	--[[Translation missing --]]
 	L["Lines & Particles"] = "Lines & Particles"
 	--[[Translation missing --]]
@@ -747,6 +754,8 @@ Si cette case est cochée, ce séparateur inclura du texte. Sinon, ce sera juste
 	L["Mirror"] = "Miroir"
 	L["Model"] = "Modèle"
 	L["Model %s"] = "Modèle %s"
+	--[[Translation missing --]]
+	L["Model Picker"] = "Model Picker"
 	L["Model Settings"] = "Paramètres du modèle"
 	--[[Translation missing --]]
 	L["ModelPaths could not be loaded, the addon is %s"] = "ModelPaths could not be loaded, the addon is %s"
@@ -781,6 +790,8 @@ Seule une unique valeur peut être choisie]=]
 	L["Nameplates"] = "Barres de vie"
 	L["Negator"] = "Pas"
 	L["New Aura"] = "Nouvelle aura"
+	--[[Translation missing --]]
+	L["New Template"] = "New Template"
 	L["New Value"] = "Nouvelle Valeur"
 	L["No Children"] = "Aucun enfant"
 	--[[Translation missing --]]
@@ -932,7 +943,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Saved Data"] = "Saved Data"
 	L["Scale"] = "Échelle"
-	L["Search"] = "Chercher"
 	--[[Translation missing --]]
 	L["Select Talent"] = "Select Talent"
 	L["Select the auras you always want to be listed first"] = "Choisissez les auras que vous voulez toujours voir apparaître en premier dans la liste"
@@ -1057,6 +1067,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Text Settings"] = "Paramètres du texte"
 	L["Texture"] = "Texture"
 	L["Texture Info"] = "Info Texture"
+	--[[Translation missing --]]
+	L["Texture Picker"] = "Texture Picker"
 	--[[Translation missing --]]
 	L["Texture Rotation"] = "Texture Rotation"
 	L["Texture Settings"] = "Paramètres de la texture"

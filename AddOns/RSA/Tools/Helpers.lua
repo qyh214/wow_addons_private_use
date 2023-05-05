@@ -135,7 +135,7 @@ function RSA.GetSpellDescription(id)
 end
 
 local firstRun
-function RSA.PrepareDataTables(configData, isSavedVariable)
+function RSA.PrepareDataTables(configData, sectionName)
 	-- Ensure barebones config data is properly populated and also reverse link all spellIDs used in a profile to that profile
 	-- so that the Monitor can easily check if a spellID is used in a profile, rather than having to iterate through each profile's event data.
 	-- Why not store the profile in this manner by default? It's more human readable to have everything needed for a spell to function within
@@ -146,8 +146,8 @@ function RSA.PrepareDataTables(configData, isSavedVariable)
 	for profile in pairs(configData) do
 		if not profile then return end
 
-		if isSavedVariable and not configData[profile].spellID then -- When changing a default spell, update profile name, this removes old data.
-			RSA.db.profile[isSavedVariable][profile] = nil
+		if sectionName and not configData[profile].spellID then -- When changing a default spell, update profile name, this removes old data.
+			RSA.db.profile[sectionName][profile] = nil
 			return
 		end
 		if not monitorData[configData[profile].spellID] then

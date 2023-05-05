@@ -65,7 +65,7 @@ if WeakAuras.IsClassicEra() then
   UnitAura = LCD.UnitAuraWithBuffs
 end
 
-local newAPI = false
+local newAPI = WeakAuras.IsRetail()
 
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
@@ -560,6 +560,7 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
       casterName = bestMatch.casterName,
       spellId = bestMatch.spellId,
       index = bestMatch.index,
+      auraInstanceID = bestMatch.auraInstanceID,
       filter = bestMatch.filter,
       unit = bestMatch.unit,
       unitName = bestMatch.unitName,
@@ -699,6 +700,11 @@ local function UpdateStateWithMatch(time, bestMatch, triggerStates, cloneId, mat
 
     if state.index ~= bestMatch.index then
       state.index = bestMatch.index
+      changed = true
+    end
+
+    if state.auraInstanceID ~= bestMatch.auraInstanceID then
+      state.auraInstanceID = bestMatch.auraInstanceID
       changed = true
     end
 
@@ -908,6 +914,11 @@ local function UpdateStateWithNoMatch(time, triggerStates, triggerInfo, cloneId,
 
     if state.index then
       state.index = nil
+      changed = true
+    end
+
+    if state.auraInstanceID then
+      state.auraInstanceID = nil
       changed = true
     end
 
@@ -1548,6 +1559,9 @@ do
   local _time, _unit, _filter
 
   local function HandleAura(aura)
+    if (not aura or not aura.name) then
+      return
+    end
     local debuffClass = aura.dispelName
     if debuffClass == nil then
       debuffClass = "none"
@@ -1556,7 +1570,7 @@ do
     else
       debuffClass = string.lower(debuffClass)
     end
-    UpdateMatchData(_time, matchDataChanged, _unit, nil, aura.auraInstanceID, _filter, aura.name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerorPlayerPet, aura.spellId, aura.timeMod, aura.points)
+    UpdateMatchData(_time, matchDataChanged, _unit, nil, aura.auraInstanceID, _filter, aura.name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerOrPlayerPet, aura.spellId, aura.timeMod, aura.points)
   end
 
   PrepareMatchData = function(unit, filter)
@@ -1634,11 +1648,16 @@ local function CleanUpMatchDataForUnit(unit, filter)
     for index, data in pairs(matchData[unit][filter]) do
       matchData[unit][filter][index] = nil
       for id, triggerData in pairs(data.auras) do
-       for triggernum in pairs(triggerData) do
-         matchDataByTrigger[id][triggernum][unit][index] = nil
-         matchDataChanged[id] = matchDataChanged[id] or {}
-         matchDataChanged[id][triggernum] = true
-       end
+        for triggernum in pairs(triggerData) do
+          if matchDataByTrigger[id] and matchDataByTrigger[id][triggernum]
+             and matchDataByTrigger[id][triggernum][unit]
+             and matchDataByTrigger[id][triggernum][unit][index]
+          then
+            matchDataByTrigger[id][triggernum][unit][index] = nil
+            matchDataChanged[id] = matchDataChanged[id] or {}
+            matchDataChanged[id][triggernum] = true
+          end
+        end
       end
     end
   end
@@ -1684,6 +1703,9 @@ do
   local _matchDataChanged, _time, _unit, _filter, _scanFuncNameGroup, _scanFuncSpellIdGroup, _scanFuncGeneralGroup, _scanFuncName, _scanFuncSpellId, _scanFuncGeneral
 
   local function HandleAura(aura)
+    if (not aura or not aura.name) then
+      return
+    end
     local debuffClass = aura.dispelName
     if debuffClass == nil then
       debuffClass = "none"
@@ -1694,7 +1716,7 @@ do
     end
 
     local name, spellId, auraInstanceID = aura.name, aura.spellId, aura.auraInstanceID
-    local updatedMatchData = UpdateMatchData(_time, _matchDataChanged, _unit, nil, auraInstanceID, _filter, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerorPlayerPet, spellId, aura.timeMod, aura.points)
+    local updatedMatchData = UpdateMatchData(_time, _matchDataChanged, _unit, nil, auraInstanceID, _filter, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerOrPlayerPet, spellId, aura.timeMod, aura.points)
 
     if updatedMatchData then -- Aura data changed, check against triggerInfos
       CheckScanFuncs(_scanFuncName and _scanFuncName[name], _unit, _filter, auraInstanceID)
@@ -2046,6 +2068,10 @@ local function EventHandler(frame, event, arg1, arg2, ...)
       RecheckActiveForUnitType("boss", unit, deactivatedTriggerInfos)
       if not UnitExistsFixed(unit) then
         tinsert(unitsToRemove, unit)
+      else
+        if newAPI then
+          ScanUnit(time, unit)
+        end
       end
     end
   elseif event =="ARENA_OPPONENT_UPDATE" then
@@ -2927,13 +2953,24 @@ end
 
 --- @return boolean
 function BuffTrigger.SetToolTip(trigger, state)
-  if not state.unit or not state.index then
-    return false
-  end
-  if state.filter == "HELPFUL" then
-    GameTooltip:SetUnitBuff(state.unit, state.index)
-  elseif state.filter == "HARMFUL" then
-    GameTooltip:SetUnitDebuff(state.unit, state.index)
+  if newAPI then
+    if not state.unit or not state.auraInstanceID then
+      return false
+    end
+    if state.filter == "HELPFUL" then
+      GameTooltip:SetUnitBuffByAuraInstanceID(state.unit, state.auraInstanceID, state.filter)
+    elseif state.filter == "HARMFUL" then
+      GameTooltip:SetUnitDebuffByAuraInstanceID(state.unit, state.auraInstanceID, state.filter)
+    end
+  else
+    if not state.unit or not state.index then
+      return false
+    end
+    if state.filter == "HELPFUL" then
+      GameTooltip:SetUnitBuff(state.unit, state.index)
+    elseif state.filter == "HARMFUL" then
+      GameTooltip:SetUnitDebuff(state.unit, state.index)
+    end
   end
   return true
 end
@@ -3593,6 +3630,9 @@ local AugmentMatchDataMulti
 do
   local _matchData, _unit, _sourceGUID, _nameKey, _spellKey
   local function HandleAura(aura)
+    if (not aura or not aura.name) then
+      return
+    end
     local debuffClass = aura.dispelName
     if debuffClass == nil then
       debuffClass = "none"
@@ -3605,7 +3645,7 @@ do
     local name = aura.name
     local spellId = aura.spellId
     if (name == _nameKey or spellId == _spellKey) and _sourceGUID == auraSourceGuid then
-      local changed = AugmentMatchDataMultiWith(_matchData, _unit, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerorPlayerPet, spellId, aura.timeMod)
+      local changed = AugmentMatchDataMultiWith(_matchData, _unit, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerOrPlayerPet, spellId, aura.timeMod)
       return changed
     end
   end
@@ -3710,6 +3750,9 @@ local CheckAurasMulti
 do
   local _base, _unit
   local function HandleAura(aura)
+    if (not aura or not aura.name) then
+      return
+    end
     local debuffClass = aura.dispelName
     if debuffClass == nil then
       debuffClass = "none"
@@ -3722,7 +3765,7 @@ do
     local name = aura.name
     local spellId = aura.spellId
     if _base[name] and _base[name][auraCasterGUID] then
-      local changed = AugmentMatchDataMultiWith(_base[name][auraCasterGUID], _unit, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerorPlayerPet, spellId, aura.timeMod)
+      local changed = AugmentMatchDataMultiWith(_base[name][auraCasterGUID], _unit, name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerOrPlayerPet, spellId, aura.timeMod)
       if changed then
         for id, idData in pairs(_base[name][auraCasterGUID].auras) do
           for triggernum in pairs(idData) do
@@ -3733,7 +3776,7 @@ do
       end
     end
     if _base[spellId] and _base[spellId][auraCasterGUID] then
-      local changed = AugmentMatchDataMultiWith(_base[spellId][auraCasterGUID], _unit, aura.name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerorPlayerPet, spellId, aura.timeMod)
+      local changed = AugmentMatchDataMultiWith(_base[spellId][auraCasterGUID], _unit, aura.name, aura.icon, aura.applications, debuffClass, aura.duration, aura.expirationTime, aura.sourceUnit, aura.isStealable, aura.isBossAura, aura.isFromPlayerOrPlayerPet, spellId, aura.timeMod)
       if changed then
         for id, idData in pairs(_base[spellId][auraCasterGUID].auras) do
           for triggernum in pairs(idData) do

@@ -6,8 +6,10 @@ local hooksecurefunc = hooksecurefunc
 local select = select
 local strfind = strfind
 local tinsert = tinsert
+local tonumber = tonumber
 local unpack = unpack
 
+local GetAchievementInfo = GetAchievementInfo
 local GetItemIcon = GetItemIcon
 local GetSpellTexture = GetSpellTexture
 local UnitBattlePetSpeciesID = UnitBattlePetSpeciesID
@@ -22,6 +24,7 @@ local C_EquipmentSet_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_MountJournal_GetMountInfoByID = C_MountJournal.GetMountInfoByID
 local TooltipDataProcessor_AddTooltipPostCall = TooltipDataProcessor.AddTooltipPostCall
 
+local Enum_TooltipDataType_Achievement = Enum.TooltipDataType.Achievement
 local Enum_TooltipDataType_Item = Enum.TooltipDataType.Item
 local Enum_TooltipDataType_Spell = Enum.TooltipDataType.Spell
 local Enum_TooltipDataType_Toy = Enum.TooltipDataType.Toy
@@ -43,6 +46,9 @@ _G.BONUS_OBJECTIVE_REWARD_WITH_COUNT_FORMAT = "|T%1$s:16:16:0:0:64:64:5:59:5:59|
 _G.BONUS_OBJECTIVE_REWARD_FORMAT = "|T%1$s:16:16:0:0:64:64:5:59:5:59|t %2$s"
 
 local iconFunctions = {
+    [Enum_TooltipDataType_Achievement] = function(data)
+        return select(10, GetAchievementInfo(tonumber(data.id)))
+    end,
     [Enum_TooltipDataType_Item] = function(data)
         return GetItemIcon(data.id)
     end,
@@ -191,6 +197,7 @@ end
 
 function T:Icons()
     if E.private.WT.tooltips.icon then
+        handle(Enum_TooltipDataType_Achievement)
         handle(Enum_TooltipDataType_Item)
         handle(Enum_TooltipDataType_Spell)
         handle(Enum_TooltipDataType_Toy)

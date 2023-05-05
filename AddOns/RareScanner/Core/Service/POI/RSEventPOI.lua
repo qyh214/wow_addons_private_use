@@ -69,6 +69,7 @@ function RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 	POI.isCompleted = RSEventDB.IsEventCompleted(eventID)
 	POI.isDiscovered = POI.isCompleted or alreadyFoundInfo ~= nil
 	POI.achievementIDs = RSAchievementDB.GetNotCompletedAchievementIDsByMap(eventID, mapID)
+	
 	if (eventInfo) then
 		POI.worldmap = eventInfo.worldmap
 	end
@@ -78,16 +79,19 @@ function RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 		POI.Texture = RSConstants.BLUE_EVENT_TEXTURE
 	elseif (RSRecentlySeenTracker.IsRecentlySeen(eventID, POI.x, POI.y)) then
 		POI.Texture = RSConstants.PINK_EVENT_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) == 0) then
+	elseif (not POI.isDiscovered) then
 		POI.Texture = RSConstants.RED_EVENT_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.YELLOW_EVENT_TEXTURE
-	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.GREEN_EVENT_TEXTURE
 	else
 		POI.Texture = RSConstants.NORMAL_EVENT_TEXTURE
 	end
-
+	
+	-- Mini icons
+	if (eventInfo and eventInfo.prof) then
+		POI.iconAtlas = RSConstants.PROFFESION_ICON_ATLAS
+	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
+		POI.iconAtlas = RSConstants.ACHIEVEMENT_ICON_ATLAS
+	end
+	
 	return POI
 end
 
@@ -155,6 +159,11 @@ function RSEventPOI.GetMapNotDiscoveredEventPOIs(mapID, vignetteGUIDs, onWorldMa
 		return
 	end
 
+	-- Skip if not showing not discovered icons
+	if (not RSConfigDB.IsShowingNotDiscoveredEvents()) then
+		return
+	end
+	
 	local POIs = {}
 	for eventID, _ in pairs(notDiscoveredEventIDs) do
 		local filtered = false

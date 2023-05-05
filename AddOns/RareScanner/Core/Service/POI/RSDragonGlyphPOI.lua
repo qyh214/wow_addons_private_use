@@ -13,6 +13,7 @@ local AL = LibStub("AceLocale-3.0"):GetLocale("RareScanner");
 local RSDragonGlyphDB = private.ImportLib("RareScannerDragonGlyphDB")
 local RSConfigDB = private.ImportLib("RareScannerConfigDB")
 local RSDragonGlyphDB = private.ImportLib("RareScannerDragonGlyphDB")
+local RSGeneralDB = private.ImportLib("RareScannerGeneralDB")
 
 -- RareScanner internal libraries
 local RSConstants = private.ImportLib("RareScannerConstants")
@@ -59,6 +60,13 @@ function RSDragonGlyphPOI.GetDragonGlyphPOIs(mapID)
 		-- Skip if the entity belong to a different mapID/artID that the one displaying
 		if (not filtered and not RSDragonGlyphDB.IsInternalDragonGlyphInMap(glyphID, mapID)) then
 			RSLogger:PrintDebugMessageEntityID(glyphID, string.format("Saltado Glifo [%s]: En distinta zona.", glyphID))
+			filtered = true
+		end
+	
+		-- Skip if filtering by name in the world map search box
+		local name = RSDragonGlyphDB.GetDragonGlyphName(glyphID)
+		if (name and RSGeneralDB.GetWorldMapTextFilter() and not RSUtils.Contains(name, RSGeneralDB.GetWorldMapTextFilter())) then
+			RSLogger:PrintDebugMessageEntityID(glyphID, string.format("Saltado Glifo [%s]: Filtrado por nombre [%s][%s].", glyphID, name, RSGeneralDB.GetWorldMapTextFilter()))
 			filtered = true
 		end
 

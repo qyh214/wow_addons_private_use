@@ -1042,10 +1042,20 @@ function module.options:Load()
 		{"Yogg-Saron room 3",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/uld15"}},
 
 		--201-210
+		{L.S_ZoneT30..": "..L.bossName[2688],{2166,0.51,0.72,6}},
+		{L.S_ZoneT30..": "..L.bossName[2687],{2167,0.49,0.62,3}},
+		{L.S_ZoneT30..": "..L.bossName[2693],{2166,0.35,0.23,5}},
+		{L.S_ZoneT30..": "..L.bossName[2682],{2168,0.42,0.34,2.5}},
+		{L.S_ZoneT30..": "..L.bossName[2680],{2166,0.67,0.21,6}},
+		{L.S_ZoneT30..": "..L.bossName[2689],{2166,0.51,0.23,6}},
+		{L.S_ZoneT30..": "..L.bossName[2683],{2166,0.51,0.45,6}},
+		{L.S_ZoneT30..": "..L.bossName[2684],{2169,0.51,0.28,2.5}},
+		{L.S_ZoneT30..": "..L.bossName[2685],{2170,0.49,0.71,4}},
 	}
 	local mapsSorted = {
 		1,
 		{L.NoteColor,10,94,95,96,97,98,99},
+		{L.S_ZoneT30,209,208,207,206,205,204,203,202,201},
 		{L.S_ZoneT29VotI,185,184,183,182,181,180,179,178},
 		{L.S_ZoneT28SFO,151,150,149,148,147,146,145,144,143,142,141},
 		{L.S_ZoneT27SoD,114,115,116,124,125,123,122,121,120,119,118,117},

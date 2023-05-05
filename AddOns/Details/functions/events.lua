@@ -1,7 +1,7 @@
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	local _detalhes = _G._detalhes
+	local _detalhes = _G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local _
 	local addonName, Details222 = ...
@@ -26,6 +26,7 @@
 			["UNIT_SPEC"] = {},
 			["UNIT_TALENTS"] = {},
 			["PLAYER_TARGET"] = {},
+			["DETAILS_PROFILE_APPLYED"] = {},
 		
 		--data
 			["DETAILS_DATA_RESET"] = {},
@@ -123,6 +124,7 @@ local common_events = {
 	["UNIT_SPEC"] = true,
 	["UNIT_TALENTS"] = true,
 	["PLAYER_TARGET"] = true,
+	["DETAILS_PROFILE_APPLYED"] = true,
 
 }
 

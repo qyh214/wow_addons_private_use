@@ -15,6 +15,10 @@ local C_BattleNet_GetAccountInfoByGUID = C_BattleNet.GetAccountInfoByGUID
 local C_FriendList_IsFriend = C_FriendList.IsFriend
 
 local smartModeNames = {
+    ["打團"] = true,
+    ["打团"] = true,
+    ["打本"] = true,
+    ["打副"] = true,
     ["专车"] = true,
     ["代你"] = true,
     ["代充"] = true,
@@ -62,7 +66,12 @@ function GIG:Reject(name)
     self:Log("debug", "Rejected group invitation from player: " .. name)
 
     if self.db.displayMessageAfterRejecting then
-        F.Print(format(L["Rejected group invitation from %s."], C.StringByTemplate(name, "info")))
+        local message = format(L["Rejected group invitation from %s."], C.StringByTemplate(name, "info"))
+        if self.db.allowWhisperedTarget then
+            message =
+                message .. " " .. L["You can whisper the player once to add him/her to the whitelist temporarily."]
+        end
+        F.Print(message)
     end
 
     StaticPopup_Hide("PARTY_INVITE")

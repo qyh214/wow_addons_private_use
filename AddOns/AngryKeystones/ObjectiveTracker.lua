@@ -127,8 +127,13 @@ local function ShowBlock(timerID, elapsedTime, timeLimit)
 	end
 end
 
-hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
-hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowBlock)
+if IsAddOnLoaded("!KalielsTracker") then
+	hooksecurefunc("KT_Scenario_ChallengeMode_UpdateTime", UpdateTime)
+	hooksecurefunc("KT_Scenario_ChallengeMode_ShowBlock", ShowBlock)
+else
+	hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
+	hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowBlock)
+end
 
 local keystoneWasCompleted = false
 function Mod:PLAYER_ENTERING_WORLD()

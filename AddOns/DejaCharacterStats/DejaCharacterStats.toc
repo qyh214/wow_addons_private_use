@@ -1,11 +1,12 @@
-## Interface: 100005
-## Version: R100005r1
-## Title: |TInterface\Addons\DejaCharacterStats\DCSArt\DejoLogo:26:26|t|cff00c0ffDejaCharacterStats|r
+## Interface: 100100
+## Version: R100100r2
+## Title: |cff00c0ffDejaCharacterStats|r
 ## Author: Dejablue, Kakjens, loudsoul
 ## Notes: Dejablue's improved character stats panel view.
 ## SavedVariables: DejaCharacterStatsDB
 ## SavedVariables: DCS_ClassSpecDB
 ## SavedVariablesPerCharacter: DejaCharacterStatsDBPC
+## IconTexture: Interface\AddOns\DejaCharacterStats\DCSArt\DejoLogo.blp
 
 ## X-Category: Class
 ## X-License: All Rights Reserved 2016-2020

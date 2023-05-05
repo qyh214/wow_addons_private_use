@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Events|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Eventos del mundo|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0월드 이벤트|r
@@ -14,6 +14,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMWorldEvents_AllSavedVars
 ## SavedVariablesPerCharacter: DBMWorldEvents_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: OTHER

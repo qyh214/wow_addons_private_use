@@ -188,7 +188,7 @@ function SlashCmdList.WEAKAURAS(input)
   elseif msg == "pcancel" then
     WeakAuras.CancelScheduledProfile()
   elseif msg == "minimap" then
-    Private.ToggleMinimap();
+    WeakAuras.ToggleMinimap();
   elseif msg == "help" then
     Private.PrintHelp();
   elseif msg == "repair" then
@@ -200,7 +200,7 @@ end
 
 if not WeakAuras.IsLibsOK() then return end
 
-function Private.ToggleMinimap()
+function WeakAuras.ToggleMinimap()
   WeakAurasSaved.minimap.hide = not WeakAurasSaved.minimap.hide
   if WeakAurasSaved.minimap.hide then
     LDBIcon:Hide("WeakAuras");
@@ -964,7 +964,7 @@ function Private.CountWagoUpdates()
   return updatedSlugsCount
 end
 
-local function tooltip_draw()
+local function tooltip_draw(isAddonCompartment)
   local tooltip = GameTooltip;
   tooltip:ClearLines();
   tooltip:AddDoubleLine("WeakAuras", versionString);
@@ -985,9 +985,13 @@ local function tooltip_draw()
     end
   end
   tooltip:AddLine(L["|cffeda55fRight-Click|r to toggle performance profiling window."], 0.2, 1, 0.2);
-  tooltip:AddLine(L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."], 0.2, 1, 0.2);
+  if not isAddonCompartment then
+    tooltip:AddLine(L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."], 0.2, 1, 0.2);
+  end
   tooltip:Show();
 end
+
+WeakAuras.GenerateTooltip = tooltip_draw;
 
 local colorFrame = CreateFrame("Frame");
 Private.frames["LDB Icon Recoloring"] = colorFrame;
@@ -1024,7 +1028,7 @@ Broker_WeakAuras = LDB:NewDataObject("WeakAuras", {
         WeakAuras.OpenOptions();
       end
     elseif(button == 'MiddleButton') then
-      Private.ToggleMinimap();
+      WeakAuras.ToggleMinimap();
     else
       WeakAuras.RealTimeProfilingWindow:Toggle()
     end
@@ -2934,6 +2938,16 @@ local function pAdd(data, simpleChange)
         end
       end
 
+      -- If the aura has a onHide animation we need to cancel it to ensure it's truely hidden now
+      if Private.regions[id] then
+        Private.CancelAnimation(Private.regions[id].region, true, true, true, true, true, true)
+      end
+      if clones[id] then
+        for _, region in pairs(clones[id]) do
+          Private.CancelAnimation(region, true, true, true, true, true, true)
+        end
+      end
+
       Private.ClearAuraEnvironment(id);
       for parent in Private.TraverseParents(data) do
         Private.ClearAuraEnvironment(parent.id);
@@ -3853,12 +3867,8 @@ function WeakAuras.GetAuraInstanceTooltipInfo(unit, auraInstanceId, filter)
       tooltipData = C_TooltipInfo.GetUnitDebuffByAuraInstanceID(unit, auraInstanceId, filter)
     end
     local secondLine = tooltipData and tooltipData.lines[2] -- This is the line we want
-    if secondLine then
-      for _, arg in ipairs(secondLine.args) do
-        if arg.field == "leftText" then
-          tooltipText = arg.stringVal or ""
-        end
-      end
+    if secondLine and secondLine.leftText then
+      tooltipText = secondLine.leftText
     end
     return Private.ParseTooltipText(tooltipText)
   end
@@ -3891,12 +3901,8 @@ function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
   if WeakAuras.IsRetail() then
     local tooltipData = C_TooltipInfo.GetUnitAura(unit, index, filter)
     local secondLine = tooltipData and tooltipData.lines[2] -- This is the line we want
-    if secondLine then
-      for _, arg in ipairs(secondLine.args) do
-        if arg.field == "leftText" then
-          tooltipText = arg.stringVal or ""
-        end
-      end
+    if secondLine and secondLine.leftText then
+      tooltipText = secondLine.leftText
     end
   else
     local tooltip = WeakAuras.GetHiddenTooltip();
@@ -5961,5 +5967,4 @@ do
     return data.regionType == "group" or data.regionType == "dynamicgroup"
   end
 end
-
 

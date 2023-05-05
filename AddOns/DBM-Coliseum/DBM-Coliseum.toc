@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## X-Min-Interface-Wrath: 30400
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Crusaders' Coliseum|r
@@ -14,6 +14,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMColiseum_AllSavedVars
 ## SavedVariablesPerCharacter: DBMColiseum_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: WOTLK
@@ -22,7 +23,7 @@
 ## X-DBM-Mod-Sort: 902
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 2
-## Version: r312
+## Version: r313
 
 localization.en.lua
 localization.de.lua

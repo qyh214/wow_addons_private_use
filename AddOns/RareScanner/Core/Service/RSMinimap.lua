@@ -155,6 +155,7 @@ function RSMinimap.RefreshAllData(forzed)
 			pin.Texture:SetTexture(POI.Texture)
 			pin.Texture:SetScale(RSConfigDB.GetIconsMinimapScale())
 			pin:SetFrameLevel(ENTITY_FRAME_LEVEL)
+			pin.IconTexture:SetAtlas(POI.iconAtlas)
 			HBD_Pins:AddMinimapIconMap(RSMinimap, pin, POI.mapID, RSUtils.FixCoord(POI.x), RSUtils.FixCoord(POI.y), false, false)
 		end
 	end
@@ -187,7 +188,7 @@ function RSMinimap.RefreshEntityState(entityID)
 					end
 					
 					POI = RSNpcPOI.GetNpcPOI(entityID, POI.mapID, RSNpcDB.GetInternalNpcInfo(entityID), alreadyFoundInfo)
-					if (POI.isDead and not RSConfigDB.IsShowingDeadNpcs()) then
+					if (POI.isDead and not RSConfigDB.IsShowingAlreadyKilledNpcs()) then
 						isFiltered = true
 					end
 				elseif (POI.isContainer) then
@@ -199,7 +200,7 @@ function RSMinimap.RefreshEntityState(entityID)
 					end
 					
 					POI = RSContainerPOI.GetContainerPOI(entityID, POI.mapID, RSContainerDB.GetInternalContainerInfo(entityID), alreadyFoundInfo)
-					if (POI.isOpened and not RSConfigDB.IsShowingOpenedContainers()) then
+					if (POI.isOpened and not RSConfigDB.IsShowingAlreadyOpenedContainers()) then
 						isFiltered = true
 					end
 				elseif (POI.isEvent) then
@@ -216,6 +217,7 @@ function RSMinimap.RefreshEntityState(entityID)
 					RSLogger:PrintDebugMessage(string.format("RSMinimap.RefreshEntityState[ADDED][%s,x=%s,y=%s]", entityID, POI.x, POI.y))
 					pin.Texture:SetTexture(POI.Texture)
 					pin.Texture:SetScale(RSConfigDB.GetIconsMinimapScale())
+					pin.IconTexture:SetAtlas(POI.iconAtlas)
 					pin:SetFrameLevel(ENTITY_FRAME_LEVEL)
 					HBD_Pins:AddMinimapIconMap(RSMinimap, pin, POI.mapID, RSUtils.FixCoord(POI.x), RSUtils.FixCoord(POI.y), false, false)
 				end
@@ -306,6 +308,7 @@ function RSMinimap.AddOverlay(entityID)
 			
 			pin.Texture:SetTexture(RSConstants.OVERLAY_SPOT_TEXTURE)
 			pin.Texture:SetVertexColor(r, g, b, 0.7)
+			pin.IconTexture:SetAtlas(pin.POI.iconAtlas)
 			pin:SetFrameLevel(OVERLAY_FRAME_LEVEL)
 			HBD_Pins:AddMinimapIconMap(RSMinimap, pin, mapID, RSUtils.FixCoord(x), RSUtils.FixCoord(y), false, false)
 		end
@@ -364,6 +367,7 @@ function RSMinimap.AddGuide(entityID)
 				end
 				pin.Texture:SetTexture(POI.texture)
 				pin.Texture:SetScale(RSConfigDB.GetIconsMinimapScale())
+				pin.IconTexture:SetAtlas(POI.iconAtlas)
 				pin:SetFrameLevel(GUIDE_FRAME_LEVEL)
 				HBD_Pins:AddMinimapIconMap(RSMinimap, pin, mapID, POI.x, POI.y, false, false)
 			end

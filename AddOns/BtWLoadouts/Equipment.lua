@@ -2131,7 +2131,6 @@ do
 		if newLocation ~= nil then
 			local sets = locationSets[newLocation]
 			local data = set.data[inventorySlotId]
-			
 			if locationItems[newLocation] == nil or locationItems[newLocation] == data then
 				locationItems[newLocation] = locationItems[newLocation] or data
 				locationSets[newLocation][(set.setID .. ":" .. inventorySlotId)] = true
@@ -2139,7 +2138,7 @@ do
 				locationItems[newLocation] = locationItems[newLocation] or data
 				locationSets[newLocation][(set.setID .. ":" .. inventorySlotId)] = true
 			else
-				error("ERROR")
+				Internal.LogMessage(format("2 or more items have the same location but different data (setID: %d, slotID: %d) - %s ~= %s", set.setID, inventorySlotId, data or "nil", locationItems[newLocation] or "nil"))
 			end
 		end
 	end

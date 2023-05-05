@@ -47,12 +47,8 @@ end
 local function GetContainerLeftTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_CONTAINER_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_CONTAINER_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_CONTAINER_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_CONTAINER_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_CONTAINER_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_CONTAINER_TEXTURE_FILE)) then
@@ -63,12 +59,8 @@ end
 local function GetContainerRightTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_CONTAINER_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_CONTAINER_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_CONTAINER_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_CONTAINER_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_CONTAINER_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_CONTAINER_TEXTURE_FILE)) then
@@ -79,12 +71,8 @@ end
 local function GetContainerTopTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_CONTAINER_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_CONTAINER_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_CONTAINER_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_CONTAINER_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_CONTAINER_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_CONTAINER_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_CONTAINER_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_CONTAINER_TEXTURE_FILE)) then
@@ -116,12 +104,8 @@ end
 local function GetEventLeftTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_EVENT_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_EVENT_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_EVENT_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_EVENT_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_EVENT_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_EVENT_TEXTURE_FILE)) then
@@ -132,12 +116,8 @@ end
 local function GetEventRightTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_EVENT_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_EVENT_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_EVENT_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_EVENT_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_EVENT_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_EVENT_TEXTURE_FILE)) then
@@ -148,12 +128,8 @@ end
 local function GetEventTopTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_EVENT_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_EVENT_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_EVENT_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_EVENT_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_EVENT_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_EVENT_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_EVENT_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_EVENT_TEXTURE_FILE)) then
@@ -185,12 +161,8 @@ end
 local function GetNpcLeftTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_NPC_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_NPC_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_NPC_L_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_NPC_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_NPC_L_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_NPC_TEXTURE_FILE)) then
@@ -203,12 +175,8 @@ end
 local function GetNpcRightTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_NPC_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_NPC_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_NPC_R_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_NPC_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_NPC_R_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_NPC_TEXTURE_FILE)) then
@@ -221,12 +189,8 @@ end
 local function GetNpcTopTexture(POI)
 	if (RSUtils.Contains(POI.Texture, RSConstants.PINK_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_PINK_NPC_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.YELLOW_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_YELLOW_NPC_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.RED_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_RED_NPC_T_TEXTURE
-	elseif (RSUtils.Contains(POI.Texture, RSConstants.GREEN_NPC_TEXTURE_FILE)) then
-		return RSConstants.GROUP_GREEN_NPC_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.NORMAL_NPC_TEXTURE_FILE)) then
 		return RSConstants.GROUP_NORMAL_NPC_T_TEXTURE
 	elseif (RSUtils.Contains(POI.Texture, RSConstants.BLUE_NPC_TEXTURE_FILE)) then
@@ -338,6 +302,14 @@ function RSGroupPOI.GetGroupPOI(POIs)
 				else
 					break;
 				end
+			end
+		end
+		
+		-- If proffesions
+		for _, POI in ipairs(POIs) do
+			if (POI.iconAtlas) then
+				groupPOI.iconAtlas = POI.iconAtlas
+				break
 			end
 		end
 	end

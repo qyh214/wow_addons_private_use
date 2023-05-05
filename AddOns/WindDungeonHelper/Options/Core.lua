@@ -41,7 +41,7 @@ local options = {
             order = 3,
             type = "description",
             fontSize = "small",
-            name = " \n ",
+            name = " \n |cffff000010.1 Mythic+ Dungeon still working in progress.|r",
             width = "full"
         }
     }
@@ -78,6 +78,10 @@ end
 
 function W:ShowOptions()
     Settings.OpenToCategory(self.OptionName)
+end
+
+_G.WindDungeonHelper_OnAddonCompartmentClick = function()
+    W:ShowOptions()
 end
 
 function W:RefreshOptions()

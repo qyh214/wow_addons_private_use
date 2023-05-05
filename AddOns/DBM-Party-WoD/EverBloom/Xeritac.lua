@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 
-mod:SetRevision("20210903015120")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(84550)
 mod:SetEncounterID(1752)--TODO: VERIFY, "Boss 4" isn't descriptive enough
 mod:SetReCombatTime(120, 3)--this boss can quickly re-enter combat if boss reset occurs.
@@ -67,7 +67,7 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:UNIT_TARGETABLE_CHANGED()
-	if self.vb.phase == 1 then
+	if self:GetStage(1) then
 		self:SetStage(2)
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")

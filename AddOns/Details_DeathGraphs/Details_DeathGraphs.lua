@@ -751,6 +751,11 @@ function DeathGraphs:OnEvent(_, event, ...)
 				end
 
 				hooksecurefunc(Details, "ShowDeathTooltipFunction", function(instance, lineFrame, combatObject, deathTable)
+					--in cases where the deathTable is from a copy, e.g. Overall Data, the cooldown_usage might not be available
+					if (not deathTable.cooldown_usage) then
+						return
+					end
+
 					local timeOfDeath = deathTable[2]
 					local gameCooltip = GameCooltip
 					gameCooltip:AddLine("Used Before Death:", "", 2, "white")

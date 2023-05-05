@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2170, "DBM-Party-BfA", 3, 1041)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220217031102")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(135475, 135470, 135472)
 mod:SetEncounterID(2140)
 mod:SetUsedIcons(1, 2)
@@ -210,7 +210,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 		timerTotemsCD:Stop()
 		self:SetStage(0)
 		local cid = self:GetUnitCreatureId(uId)
-		if self.vb.phase == 2 then
+		if self:GetStage(2) then
 			self.vb.bossOne = cid
 			--Start Boss 1 Timer (17sec)
 			if cid == 135475 then -- Kula the Butcher

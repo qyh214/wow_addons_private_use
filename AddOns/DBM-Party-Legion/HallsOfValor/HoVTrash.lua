@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HoVTrash", "DBM-Party-Legion", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230312071337")
+mod:SetRevision("20230422022609")
 --mod:SetModelID(47785)
 mod:SetZone(1477)
 
@@ -45,7 +45,7 @@ local timerThunderousBoltCD			= mod:NewCDTimer(4.8, 198595, nil, nil, nil, 4, ni
 local timerRuneOfHealingCD			= mod:NewCDTimer(17, 198934, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--17-18.2
 local timerHolyRadianceCD			= mod:NewCDTimer(18.1, 215433, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--17-18.2
 local timerCleansingFlameCD			= mod:NewCDTimer(6.1, 192563, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--6-9
-local timerBlastofLightCD			= mod:NewCDTimer(18.5, 191508, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--May be lower
+local timerBlastofLightCD			= mod:NewCDTimer(18, 191508, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--May be lower
 local timerEyeofStormCD				= mod:NewCDTimer(25, 200901, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerSanctifyCD				= mod:NewCDTimer(25, 192158, nil, nil, nil, 3)--25-30 based on searing light casts since searing light has 6sec ICD lockout
 
@@ -92,7 +92,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 198892 then
 		self:BossTargetScanner(args.sourceGUID, "CracklingStormTarget", 0.1, 9)
 	elseif spellId == 192563 then
-		timerCleansingFlameCD:Start()
+		timerCleansingFlameCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn192563interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnCleansingFlame:Show(args.sourceName)
 			specWarnCleansingFlame:Play("kickcast")
@@ -123,7 +123,7 @@ function mod:SPELL_CAST_START(args)
 			specWarnBlastofLight:Show()
 			specWarnBlastofLight:Play("shockwave")
 		end
-		timerBlastofLightCD:Start()
+		timerBlastofLightCD:Start(nil, args.sourceGUID)
 	elseif spellId == 198595 then
 		timerThunderousBoltCD:Start(nil, args.sourceGUID)
 		if self.Options.SpecWarn198595interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
@@ -141,12 +141,12 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 192158 then--P1 2 adds
 		specWarnSanctify:Show()
 		specWarnSanctify:Play("watchorb")
-		timerSanctifyCD:Start()
+		timerSanctifyCD:Start(nil, args.sourceGUID)
 	--2/22 01:53:53.948  SPELL_CAST_START,Creature-0-3019-1477-12381-97219-000075B856,"Solsten",0x10a48,0x0,0000000000000000,nil,0x80000000,0x80000000,200901,"Eye of the Storm",0x8
 	elseif spellId == 200901 and args:GetSrcCreatureID() == 97219 then
 		specWarnEyeofStorm:Show(eyeShortName)
 		specWarnEyeofStorm:Play("findshelter")
-		timerEyeofStormCD:Start()
+		timerEyeofStormCD:Start(nil, args.sourceGUID)
 	elseif spellId == 192288 then
 		if self:CheckInterruptFilter(args.sourceGUID, false, true) then
 			specWarnSearingLight:Show(args.sourceName)
@@ -189,25 +189,24 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 101637 then--Valarjar Aspirant
-		timerBlastofLightCD:Stop()
+		timerBlastofLightCD:Stop(args.destGUID)
 	elseif cid == 95834 then--Valajar Mystic
 		timerRuneOfHealingCD:Stop(args.destGUID)
 		timerHolyRadianceCD:Stop(args.destGUID)
 	elseif cid == 97197 then--Valajar Purifier
-		timerCleansingFlameCD:Stop()
+		timerCleansingFlameCD:Stop(args.destGUID)
 	elseif cid ==  95842 then--Valjar Thundercaller
 		timerThunderousBoltCD:Stop(args.destGUID)
 	elseif cid == 97219 then--Solsten
-		timerEyeofStormCD:Stop()
+		timerEyeofStormCD:Stop(args.destGUID)
 	elseif cid == 97202 then--Olmyr
-		timerSanctifyCD:Stop()
+		timerSanctifyCD:Stop(args.destGUID)
 	end
 end
 
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		DBM:Debug("GOSSIP_SHOW triggered with a gossip ID of: "..gossipOptionID)
 		if self.Options.AGSkovaldTrash and (gossipOptionID == 44755 or gossipOptionID == 44801 or gossipOptionID == 44802 or gossipOptionID == 44754) then -- Skovald Trash
 			self:SelectGossip(gossipOptionID)
 		elseif self.Options.AGStartOdyn and gossipOptionID == 44910 then -- Odyn

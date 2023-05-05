@@ -294,6 +294,7 @@
 			</OnEvent>
 			<OnClick>
 				PanelTemplates_Tab_OnClick(self, BtWLoadoutsFrame);
+				BtWLoadoutsFrame:OnTabChanged();
 				BtWLoadoutsFrame:Update();
 			</OnClick>
 			<OnShow>
@@ -411,6 +412,7 @@
 			</OnEvent>
 			<OnClick>
 				PanelTemplates_Tab_OnClick(self, BtWLoadoutsFrame);
+				BtWLoadoutsFrame:OnTabChanged();
 				BtWLoadoutsFrame:Update();
 			</OnClick>
 			<OnShow>
@@ -447,7 +449,7 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="BtWLoadoutsFrame" mixin="BtWLoadoutsFrameMixin" inherits="DefaultPanelTemplate" parent="UIParent" toplevel="true" enableMouse="true" movable="true" hidden="true">
+	<Frame name="BtWLoadoutsFrame" mixin="BtWLoadoutsFrameMixin" inherits="DefaultPanelTemplate" parent="UIParent" toplevel="true" enableMouse="true" resizable="true" movable="true" hidden="true">
 		<Size x="849" y="448"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -455,6 +457,10 @@
 		<KeyValues>
 			<KeyValue key="layoutType" value="ButtonFrameTemplateNoPortraitMinimizable" type="string"/>
 		</KeyValues>
+		<ResizeBounds>
+			<minResize x="849" y="448"/>
+			<maxResize x="849" y="603"/>
+		</ResizeBounds>
 		<Frames>
 			<Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
@@ -532,7 +538,7 @@
 				</KeyValues>
 				<Size x="80" y="22"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" x="-499" y="4"/>
+					<Anchor point="BOTTOMLEFT" x="270" y="4"/>
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -546,7 +552,7 @@
 				</KeyValues>
 				<Size x="120" y="22"/>
 				<Anchors>
-					<Anchor point="BOTTOMRIGHT" x="-234" y="4"/>
+					<Anchor point="BOTTOM" x="130" y="4"/>
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -667,6 +673,24 @@
 					</Button>
 				</Frames>
 			</Frame>
+			<Button parentKey="Resize" frameLevel="501">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnMouseDown>
+						self:GetParent():StartSizing("BOTTOMRIGHT")
+					</OnMouseDown>
+					<OnMouseUp>
+						self:GetParent():StopMovingOrSizing()
+						self:GetParent():OnResizeStop()
+					</OnMouseUp>
+				</Scripts>
+				<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
+				<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
+				<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad method="OnLoad"/>

@@ -2,35 +2,43 @@
 --global name declaration
 --local _StartDebugTime = debugprofilestop() print(debugprofilestop() - _StartDebugTime)
 --test if the packager will deploy to wago
+--https://github.com/LuaLS/lua-language-server/wiki/Annotations#documenting-types
 
 --make an option to show death in the order of newest to oldest
 
 		_ = nil
-		_G._detalhes = LibStub("AceAddon-3.0"):NewAddon("_detalhes", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0", "NickTag-1.0")
+		_G.Details = LibStub("AceAddon-3.0"):NewAddon("_detalhes", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0", "NickTag-1.0")
+
+		--add the original name to the global namespace
+		_detalhes = _G.Details --[[GLOBAL]]
+
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		_detalhes.build_counter = 10662
-		_detalhes.alpha_build_counter = 10662 --if this is higher than the regular counter, use it instead
-		_detalhes.dont_open_news = true
-		_detalhes.game_version = version
-		_detalhes.userversion = version .. " " .. _detalhes.build_counter
-		_detalhes.realversion = 148 --core version, this is used to check API version for scripts and plugins (see alias below)
-		_detalhes.APIVersion = _detalhes.realversion --core version
-		_detalhes.version = _detalhes.userversion .. " (core " .. _detalhes.realversion .. ")" --simple stirng to show to players
+		Details.build_counter = 10986
+		Details.alpha_build_counter = 10986 --if this is higher than the regular counter, use it instead
+		Details.dont_open_news = true
+		Details.game_version = version
+		Details.userversion = version .. " " .. Details.build_counter
+		Details.realversion = 151 --core version, this is used to check API version for scripts and plugins (see alias below)
+		Details.APIVersion = Details.realversion --core version
+		Details.version = Details.userversion .. " (core " .. Details.realversion .. ")" --simple stirng to show to players
 
-		_detalhes.acounter = 1 --in case of a second release with the same .build_counter
-		_detalhes.curseforgeVersion = GetAddOnMetadata("Details", "Version")
-
-		function _detalhes:GetCoreVersion()
-			return _detalhes.realversion
+		Details.acounter = 1 --in case of a second release with the same .build_counter
+		Details.curseforgeVersion = C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata("Details", "Version")
+		if (not Details.curseforgeVersion and GetAddOnMetadata) then
+			Details.curseforgeVersion = GetAddOnMetadata("Details", "Version")
 		end
 
-		_detalhes.BFACORE = 131 --core version on BFA launch
-		_detalhes.SHADOWLANDSCORE = 143 --core version on Shadowlands launch
-		_detalhes.DRAGONFLIGHT = 147 --core version on Dragonflight launch
+		function Details:GetCoreVersion()
+			return Details.realversion
+		end
 
-		Details = _detalhes
+		Details.BFACORE = 131 --core version on BFA launch
+		Details.SHADOWLANDSCORE = 143 --core version on Shadowlands launch
+		Details.DRAGONFLIGHT = 147 --core version on Dragonflight launch
+
+		Details = Details
 
 		local gameVersionPrefix = "Unknown Game Version - You're probably using a Details! not compatible with this version of the Game"
 		--these are the game versions currently compatible with this Details! versions
@@ -43,7 +51,7 @@
 		--WD 10288 RELEASE 10.0.2
 		--WD 10288 ALPHA 21 10.0.2
 		function Details.GetVersionString()
-			local curseforgeVersion = _detalhes.curseforgeVersion or ""
+			local curseforgeVersion = Details.curseforgeVersion or ""
 			local alphaId = curseforgeVersion:match("%-(%d+)%-")
 
 			if (not alphaId) then
@@ -74,6 +82,7 @@
 		Details222.Textures = {}
 		--namespace for pet
 		Details222.Pets = {}
+		Details222.Instances = {}
 		Details222.MythicPlus = {}
 		Details222.EJCache = {}
 		Details222.Segments = {}
@@ -82,18 +91,46 @@
 		Details222.Cache = {}
 		Details222.Perf = {}
 		Details222.Cooldowns = {}
+		Details222.GarbageCollector = {}
+		Details222.BreakdownWindow = {}
+		Details222.PlayerStats = {}
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialization stuff
 local _
 
 do
-	local _detalhes = _G._detalhes
+	local _detalhes = _G.Details
 	_detalhes.resize_debug = {}
 
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
+	--change logs
+	--[=[
+
+
+	--]=]
+
 	local news = {
+		{"v10.1.0.10985.147", "May 4th, 2023"},
+		"The Breakdown Window has been completely rebuilt from the ground up and now includes support for several new features.",
+		"A significant portion of the back-end code has been revamped, resulting in improved performance and stability.",
+		"Combatlog now supports options, check them at the Combat Log section in the options panel.",
+		"Big plugin updates with improvements to Cast Log and new features for Advanced Death Log.",
+		"Added Real-time dps bar for arena streamers.",
+		"Flamanis:",
+		"Changed Pet Ownership detection to be hopefully more robust for future patches.",
+		"Added option to merge Atonement, Contrition, Ancient Teachings, and Awakened Faeline with their Crits, in the Combat Log section.",
+		"Added DemonHunter and Evoker Defensive cooldowns.",
+		"Readded option to have M+ Overall Segment only contain Bosses.",
+		"Fixed issue with swapping to/from Tiny Threat and other plugins using bookmarks.",
+		"Fixed position persistency for Statusbar elements.",
+		"Fixed alpha channel persistency for certain color options.",
+		"Fixed stack overflow related to changing option tabs or profiles too many times.",
+		"Fixed the highlight image of a bar icon not swapping to the new icon upon scrolling.",
+		"Fixed issues related to the new Left Text Offset position.",
+		"Fixed the wrong options being unusable with Aligned Text Columns enabled.",
+
 		{"v10.0.5.10661.147", "Mar 1st, 2023"},
 		"Major fixes and updates on the Event Tracker feature (for streamers).",
 		"When trying to import a profile with a name that already exists, it'll rename it and import (Flamanis).",
@@ -766,8 +803,9 @@ do
 	local UIParent = UIParent --api locals
 
 	--Info Window
-		_detalhes.playerDetailWindow = CreateFrame("Frame", "DetailsPlayerDetailsWindow", UIParent, "BackdropTemplate")
+		_detalhes.playerDetailWindow = CreateFrame("Frame", "DetailsBreakdownWindow", UIParent, "BackdropTemplate")
 		_detalhes.PlayerDetailsWindow = _detalhes.playerDetailWindow
+		Details.BreakdownWindow = _detalhes.playerDetailWindow
 
 	--Event Frame
 		_detalhes.listener = CreateFrame("Frame", nil, UIParent)
@@ -1134,3 +1172,24 @@ function Details222.Tables.MakeWeakTable(mode)
 end
 
 --STRING_CUSTOM_POT_DEFAULT
+
+---add a statistic, log, or any other data to the player stat table
+---@param statName string
+---@param value number
+function Details222.PlayerStats:AddStat(statName, value)
+	Details.player_stats[statName] = (Details.player_stats[statName] or 0) + value
+end
+
+---same thing as above but set the value instead of adding
+---@param statName string
+---@param value number
+function Details222.PlayerStats:SetStat(statName, value)
+	Details.player_stats[statName] = value
+end
+
+---get the value of a saved stat
+---@param statName string
+---@return any
+function Details222.PlayerStats:GetStat(statName, value)
+	return Details.player_stats[statName]
+end

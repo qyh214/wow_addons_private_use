@@ -1,10 +1,10 @@
-## Interface: 100005
+## Interface: 100100
 ## Title: HandyNotes: Dragonflight Treasures
 ## Title-ruRU: HandyNotes: Сокровища на Драконьих островах
 ## Notes: Where are the hidden treasures in the Dragon Isles?
 ## Notes-ruRU: Показывает на карте, где спрятаны сокровища на Драконьих островах
 ## Author: Kemayo
-## Version: v44
+## Version: v46
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -22,16 +22,20 @@ dragonflight.lua
 
 zones\DragonIsles.lua
 zones\AzureSpan.lua
-zones\ForbiddenReach.lua
 zones\OhnahranPlains.lua
 zones\Thaldraszus.lua
 zones\WakingShores.lua
+zones\ForbiddenReach.lua
+zones\ZaralekCavern.lua
+
+zones\ForbiddenReachIntro.lua
 
 shared\ExpeditionScoutsPack.lua
 shared\DisturbedDirt.lua
 shared\MagicBoundChest.lua
 shared\TuskarrChests.lua
 shared\WarSupplyChest.lua
+shared\TitanChests.lua
 shared\GrandHunts.lua
 shared\Recipes.lua
 

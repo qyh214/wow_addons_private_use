@@ -216,23 +216,43 @@ if Internal.IsEternitysEndPatch then
     instanceDifficulties[2481] = raidDifficultiesAll -- Sepulcher of the First Ones
 end
 if Internal.IsDragonflightPatch then
-    instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
-    instanceDifficulties[2520] = dungeonNonMythicPlus -- Brackenhide Hollow
-    instanceDifficulties[2527] = dungeonNonMythicPlus -- Halls of Infusion
-    instanceDifficulties[2451] = dungeonNonMythicPlus -- Uldaman: Legacy of Tyr
-
-    instanceDifficulties[2515] = dungeonDifficultiesAll -- The Azure Vault
-    instanceDifficulties[2516] = dungeonDifficultiesAll -- The Nokhud Offensive
-    instanceDifficulties[2521] = dungeonDifficultiesAll -- Ruby Life Pools
-    instanceDifficulties[2526] = dungeonDifficultiesAll -- Algeth'ar Academy
-
-    -- Season 1 M+
-    instanceDifficulties[ 960] = { 8 } -- Temple of the Jade Serpent
-    instanceDifficulties[1176] = { 8 } -- Shadowmoon Burial Grounds
-    instanceDifficulties[1477] = { 8 } -- Halls of Valor
-    instanceDifficulties[1571] = { 8 } -- Court of Stars
-
     instanceDifficulties[2522] = raidDifficultiesAll -- Vault of the Incarnates
+
+    if Internal.IsDragonflightSeason1 then
+        instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
+        instanceDifficulties[2520] = dungeonNonMythicPlus -- Brackenhide Hollow
+        instanceDifficulties[2527] = dungeonNonMythicPlus -- Halls of Infusion
+        instanceDifficulties[2451] = dungeonNonMythicPlus -- Uldaman: Legacy of Tyr
+
+        instanceDifficulties[2515] = dungeonDifficultiesAll -- The Azure Vault
+        instanceDifficulties[2516] = dungeonDifficultiesAll -- The Nokhud Offensive
+        instanceDifficulties[2521] = dungeonDifficultiesAll -- Ruby Life Pools
+        instanceDifficulties[2526] = dungeonDifficultiesAll -- Algeth'ar Academy
+
+        -- Season 1 M+
+        instanceDifficulties[ 960] = { 8 } -- Temple of the Jade Serpent
+        instanceDifficulties[1176] = { 8 } -- Shadowmoon Burial Grounds
+        instanceDifficulties[1477] = { 8 } -- Halls of Valor
+        instanceDifficulties[1571] = { 8 } -- Court of Stars
+    else
+        instanceDifficulties[2569] = raidDifficultiesAll -- Aberrus, the Shadowed Crucible
+
+        instanceDifficulties[2519] = dungeonDifficultiesAll -- Neltharus
+        instanceDifficulties[2520] = dungeonDifficultiesAll -- Brackenhide Hollow
+        instanceDifficulties[2527] = dungeonDifficultiesAll -- Halls of Infusion
+        instanceDifficulties[2451] = dungeonDifficultiesAll -- Uldaman: Legacy of Tyr
+
+        instanceDifficulties[2515] = dungeonNonMythicPlus -- The Azure Vault
+        instanceDifficulties[2516] = dungeonNonMythicPlus -- The Nokhud Offensive
+        instanceDifficulties[2521] = dungeonNonMythicPlus -- Ruby Life Pools
+        instanceDifficulties[2526] = dungeonNonMythicPlus -- Algeth'ar Academy
+
+        -- Season 2 M+
+        instanceDifficulties[ 657] = { 8 } -- The Vortex Pinnacle
+        instanceDifficulties[1458] = { 8 } -- Neltharion's Lair
+        instanceDifficulties[1754] = { 8 } -- Freehold
+        instanceDifficulties[1841] = { 8 } -- The Underrot
+    end
 end
 Internal.dungeonDifficultiesAll = dungeonDifficultiesAll;
 Internal.raidDifficultiesAll = raidDifficultiesAll;
@@ -400,27 +420,51 @@ local dungeonInfo = {
     },
 }
 if Internal.IsDragonflightPatch then
-    dungeonInfo[#dungeonInfo+1] = {
-        name = L["Dragonflight"],
-        instances = {
-            2519, -- Neltharus
-            2520, -- Brackenhide Hollow
-            2527, -- Halls of Infusion
-            2451, -- Uldaman: Legacy of Tyr
+    if Internal.IsDragonflightSeason1 then
+        dungeonInfo[#dungeonInfo+1] = {
+            name = L["Dragonflight"],
+            instances = {
+                2519, -- Neltharus
+                2520, -- Brackenhide Hollow
+                2527, -- Halls of Infusion
+                2451, -- Uldaman: Legacy of Tyr
 
-            -- M+
-            2515, -- The Azure Vault
-            2516, -- The Nokhud Offensive
-            2521, -- Ruby Life Pools
-            2526, -- Algeth'ar Academy
+                -- M+
+                2515, -- The Azure Vault
+                2516, -- The Nokhud Offensive
+                2521, -- Ruby Life Pools
+                2526, -- Algeth'ar Academy
 
-            -- Season 1 M+
-             960, -- Temple of the Jade Serpent
-            1176, -- Shadowmoon Burial Grounds
-            1477, -- Halls of Valor
-            1571, -- Court of Stars
+                -- Season 1 M+
+                960, -- Temple of the Jade Serpent
+                1176, -- Shadowmoon Burial Grounds
+                1477, -- Halls of Valor
+                1571, -- Court of Stars
+            }
         }
-    }
+    else
+        dungeonInfo[#dungeonInfo+1] = {
+            name = L["Dragonflight"],
+            instances = {
+                2515, -- The Azure Vault
+                2516, -- The Nokhud Offensive
+                2521, -- Ruby Life Pools
+                2526, -- Algeth'ar Academy
+
+                -- M+
+                2519, -- Neltharus
+                2520, -- Brackenhide Hollow
+                2527, -- Halls of Infusion
+                2451, -- Uldaman: Legacy of Tyr
+
+                -- Season 2 M+
+                657, -- The Vortex Pinnacle
+                1458, -- Neltharion's Lair
+                1754, -- Freehold
+                1841, -- The Underrot
+            }
+        }
+    end
 end
 local raidInfo = {
     {
@@ -526,6 +570,9 @@ if Internal.IsDragonflightPatch then
             2522, -- Vault of the Incarnates
         }
     }
+    if not Internal.IsDragonflightSeason1 then
+        tinsert(raidInfo[10].instances, 2569) -- Aberrus, the Shadowed Crucible
+    end
 end
 local scenarioInfo = {
 	{
@@ -1984,6 +2031,17 @@ local instanceBosses = {
         2493, -- Broodkeeper Diurna
         2499, -- Raszageth the Storm-Eater
     },
+    [2569] = { -- Aberrus, the Shadowed Crucible
+        2522, -- Kazzara, the Hellforged
+        2529, -- The Amalgamation Chamber
+        2530, -- The Forgotten Experiments
+        2524, -- Assault of the Zaqali
+        2525, -- Rashok, the Elder
+        2532, -- The Vigilant Steward, Zskarn
+        2527, -- Magmorax
+        2523, -- Echo of Neltharion
+        2520, -- Scalecommander Sarkareth
+    },
 }
 -- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
 -- just something that signifies the boss
@@ -2069,6 +2127,15 @@ local npcIDToBossID = {
     [184986] = 2491, -- Kurog Grimtotem
     [190245] = 2493, -- Broodkeeper Diurna
     [189492] = 2499, -- Raszageth the Storm-Eater
+
+    -- Aberrus, the Shadowed Crucible
+    [201261] = 2522, -- Kazzara, the Hellforged
+    [200912] = 2530, -- The Forgotten Experiments
+    [200918] = 2530, -- The Forgotten Experiments
+    [200913] = 2530, -- The Forgotten Experiments
+    [201320] = 2525, -- Rashok, the Elder
+    [202375] = 2532, -- The Vigilant Steward, Zskarn
+    [201579] = 2527, -- Magmorax
 };
 -- Although area ids are unique we map them with instance ids so we can translate
 -- area names by instance. We translate them because we cant get the area id where
@@ -2480,6 +2547,11 @@ local uiMapIDToBossID = {
     [2124] = 2491, -- Kurog Grimtotem
     [2126] = 2493, -- Broodkeeper Diurna
     [2125] = 2499, -- Raszageth the Storm-Eater
+    -- Aberrus, the Shadowed Crucible
+    [2167] = 2529, -- The Amalgamation Chamber
+    [2168] = 2524, -- Assault of the Zaqali
+    [2169] = 2523, -- Echo of Neltharion
+    [2170] = 2520, -- Scalecommander Sarkareth
 }
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
@@ -2504,12 +2576,21 @@ function Internal.AffixesLevels()
 end
 local affixesByLevel
 if Internal.IsDragonflight then
-    affixesByLevel = {
-        [2] = {10, 9},
-        [4] = {7, 11, 6, 8, 123},
-        [7] = {13, 12, 14, 124, 3},
-        [10] = {132},
-    }
+    if Internal.IsDragonflightSeason1 then
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {7, 11, 6, 8, 123},
+            [7] = {13, 12, 14, 124, 3},
+            [10] = {132},
+        }
+    else
+        affixesByLevel = {
+            [2] = {10, 9},
+            [4] = {7, 11, 6, 8, 123},
+            [7] = {135, 136, 134, 124, 3},
+            [10] = {},
+        }
+    end
 elseif Internal.IsShadowlands then
     if Internal.IsShadowlandsSeason4 then
         affixesByLevel = {
@@ -2607,6 +2688,9 @@ function Internal.GetAffixesName(affixesID)
 
 		if affixID ~= 0 then
 			local name, _, icon = GetAffixInfo(affixID);
+            if not name then
+                error(format("Unknown affix %d", affixID))
+            end
 			names[#names+1] = name;
 			icons[#icons+1] = format("|T%d:18:18:0:0|t %s", icon, name);
 

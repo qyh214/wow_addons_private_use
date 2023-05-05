@@ -10,8 +10,49 @@ end
 local function IsExpansion(expansion)
     return expansion == GetExpansionLevel()
 end
+local seasons = {
+    [1] = {
+        [9] = 1670943600,
+        [10] = 1683644400,
+    },
+    [2] = {
+        [9] = 1671058800,
+        [10] = 1683759600,
+    },
+    [3] = {
+        [9] = 1670990400,
+        [10] = 1683691200,
+    },
+    [4] = {
+        [9] = 1671058800,
+        [10] = 1683759600,
+    },
+    [5] = {
+        [9] = 1671058800,
+        [10] = 1683759600,
+    },
+};
 local function IsSeason(season)
-    return season == C_MythicPlus.GetCurrentSeason()
+    -- C_MythicPlus.GetCurrentSeason isnt always available during first login sp we fallback to date checking.
+    -- In the future it might be worth using something else or delaying season checks
+    local current = C_MythicPlus.GetCurrentSeason()
+    if current > 0 then
+        return season == current
+    end
+
+    local time = GetServerTime()
+    local region = seasons[GetCurrentRegion()]
+    local prev = region[season]
+    if not prev or time < prev then
+        return false
+    end
+    if region[season+1] then
+        local next = region[season+1]
+        if time > next then
+            return false
+        end
+    end
+    return true
 end
 
 Internal.IsShadowlandsPatch = IsAtleastBuild(90000)
@@ -22,6 +63,8 @@ Internal.IsDragonflightPatch = IsAtleastBuild(100000)
 Internal.Is100000 = IsBuild(100000)
 Internal.Is100002 = IsBuild(100002)
 Internal.Is100005 = IsBuild(100005)
+Internal.Is100007 = IsBuild(100007)
+Internal.Is100100 = IsAtleastBuild(100100)
 
 Internal.IsBattleForAzeroth = IsExpansion(LE_EXPANSION_BATTLEFORAZEROTH or 7)
 Internal.IsShadowlands = IsExpansion(LE_EXPANSION_SHADOWLANDS or 8)
@@ -31,5 +74,5 @@ Internal.IsShadowlandsSeason1 = IsSeason(5)
 Internal.IsShadowlandsSeason2 = IsSeason(6)
 Internal.IsShadowlandsSeason3 = IsSeason(7)
 Internal.IsShadowlandsSeason4 = IsSeason(8)
-Internal.IsDragonflightSeaosn1 = IsSeason(9)
-
+Internal.IsDragonflightSeason1 = IsSeason(9)
+Internal.IsDragonflightSeason2 = IsSeason(10)

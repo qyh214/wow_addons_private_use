@@ -1,9 +1,9 @@
-## Interface: 100005
+## Interface: 100100
 ## Title: BtWLoadouts
-## Version: v1.12.4
+## Version: v1.14.2
 ## Notes: Change your characters spec, talents, equipment, essences, and action bars all at once
 ## Author: Breen
-## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings, BtWLoadoutsTraitsInfo
+## SavedVariables: BtWLoadoutsSets, BtWLoadoutsSpecInfo, BtWLoadoutsRoleInfo, BtWLoadoutsEssenceInfo, BtWLoadoutsCharacterInfo, BtWLoadoutsHelpTipFlags, BtWLoadoutsSettings, BtWLoadoutsTraitsInfo, BtWLoadoutsFrameSettings
 ## SavedVariablesPerCharacter: BtWLoadoutsCollapsed, BtWLoadoutsCategories, BtWLoadoutsFilters
 ## OptionalDeps: OPie, Adibags, Bagnon
 ## X-Curse-Project-ID: 336400
@@ -21,8 +21,8 @@ Localizations.zhTW.lua
 
 Versions.lua
 Blockers.lua
-DFTalents.100002.lua
-DFTalents.100005.lua
+DFTalents.100007.lua
+DFTalents.100100.lua
 Characters.lua
 Instances.lua
 Sets.lua

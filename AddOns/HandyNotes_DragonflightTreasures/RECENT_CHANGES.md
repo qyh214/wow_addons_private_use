@@ -1,7 +1,8 @@
-## Changed in v44
+## Changed in v46
 
-* Do better at hiding some of the recipes if you know them
-* Cracked hourglass loot+vignette added
-* Add assorted dirt and packs
-* Fix: routes weren't obeying their display setting on the minimap
+* Updated for 10.1.0 and Zaralek Cavern
+* Zaralek Cavern has: rares, dragon glyphs, and loot; is still missing a few points
+* Forbidden Reach's Forbidden Hoard now has loot
+* Update the embedded Krowi_WorldMapButtons-1.4
+* Minor data updates to earlier zones
 

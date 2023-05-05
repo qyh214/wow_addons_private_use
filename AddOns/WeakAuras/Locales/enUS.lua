@@ -261,6 +261,7 @@ L["Charged Combo Point 3"] = "Charged Combo Point 3"
 L["Charged Combo Point 4"] = "Charged Combo Point 4"
 L["Charges"] = "Charges"
 L["Charges Changed Event"] = "Charges Changed Event"
+L["Charging"] = "Charging"
 L["Chat Frame"] = "Chat Frame"
 L["Chat Message"] = "Chat Message"
 L["Check if a single talent match a Rank"] = "Check if a single talent match a Rank"
@@ -306,6 +307,7 @@ L["Critical Rating"] = "Critical Rating"
 L["Crowd Controlled"] = "Crowd Controlled"
 L["Crushing"] = "Crushing"
 L["C'thun"] = "C'thun"
+L["Current Essence"] = "Current Essence"
 L["Current Experience"] = "Current Experience"
 L["Current Movement Speed (%)"] = "Current Movement Speed (%)"
 L["Current Stage"] = "Current Stage"
@@ -364,6 +366,7 @@ L["Destination Reaction"] = "Destination Reaction"
 L["Destination Unit"] = "Destination Unit"
 L["Destination unit's raid mark index"] = "Destination unit's raid mark index"
 L["Destination unit's raid mark texture"] = "Destination unit's raid mark texture"
+L["Difficulty"] = "Difficulty"
 L["Disable Spell Known Check"] = "Disable Spell Known Check"
 L["Disabled Spell Known Check"] = "Disabled Spell Known Check"
 L["Disease"] = "Disease"
@@ -431,6 +434,7 @@ L["Enrage"] = "Enrage"
 L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "Entering"
 L["Entering/Leaving Combat"] = "Entering/Leaving Combat"
+L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "Entry Order"
 L["Environment Type"] = "Environment Type"
 L["Environmental"] = "Environmental"
@@ -449,11 +453,19 @@ L["Error deserializing"] = "Error deserializing"
 L["Error Frame"] = "Error Frame"
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
 L["Error not receiving display information from %s"] = "Error not receiving display information from %s"
+L["Essence"] = "Essence"
+L["Essence #1"] = "Essence #1"
+L["Essence #2"] = "Essence #2"
+L["Essence #3"] = "Essence #3"
+L["Essence #4"] = "Essence #4"
+L["Essence #5"] = "Essence #5"
+L["Essence #6"] = "Essence #6"
 L["Evade"] = "Evade"
 L["Event"] = "Event"
 L["Event(s)"] = "Event(s)"
 L["Every Frame"] = "Every Frame"
 L["Every Frame (High CPU usage)"] = "Every Frame (High CPU usage)"
+L["Evoker Essence"] = "Evoker Essence"
 L["Experience (%)"] = "Experience (%)"
 L["Expertise Bonus"] = "Expertise Bonus"
 L["Expertise Rating"] = "Expertise Rating"
@@ -595,6 +607,7 @@ L["Icecrown Citadel"] = "Icecrown Citadel"
 L["Icon"] = "Icon"
 L["Icon Function"] = "Icon Function"
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
 L["Ignis the Furnace Master"] = "Ignis the Furnace Master"
 L["Ignore Dead"] = "Ignore Dead"
@@ -802,6 +815,7 @@ L["Note, that cross realm transmission is possible if you are on the same group"
 L["Note: Due to how complicated the swing timer behavior is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "Note: Due to how complicated the swing timer behavior is and the lack of APIs from Blizzard, results are inaccurate in edge cases."
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Note: The available text replacements for multi triggers match the normal triggers now."
+L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "Note: This trigger relies on the WoW API, which returns incorrect information in some cases."
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"
 L["Noth the Plaguebringer"] = "Noth the Plaguebringer"
 L["NPC"] = "NPC"
@@ -809,14 +823,58 @@ L["Npc ID"] = "Npc ID"
 L["Number"] = "Number"
 L["Number Affected"] = "Number Affected"
 L["Object"] = "Object"
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=]
 L["Officer"] = "Officer"
 L["Offset from progress"] = "Offset from progress"
 L["Offset Timer"] = "Offset Timer"
 L["Old Blizzard (2h | 3m | 10s | 2.4)"] = "Old Blizzard (2h | 3m | 10s | 2.4)"
 L["On Cooldown"] = "On Cooldown"
 L["On Taxi"] = "On Taxi"
-L["Only if BigWigs shows it on it's bar"] = "Only if BigWigs shows it on it's bar"
-L["Only if DBM shows it on it's bar"] = "Only if DBM shows it on it's bar"
 L["Only if on a different realm"] = "Only if on a different realm"
 L["Only if Primary"] = "Only if Primary"
 L["Onyxia"] = "Onyxia"
@@ -1117,6 +1175,7 @@ L["String"] = "String"
 L["Subtract Cast"] = "Subtract Cast"
 L["Subtract Channel"] = "Subtract Channel"
 L["Subtract GCD"] = "Subtract GCD"
+L["Success"] = "Success"
 L["Sulfuron Harbinger"] = "Sulfuron Harbinger"
 L["Summon"] = "Summon"
 L["Supports multiple entries, separated by commas"] = "Supports multiple entries, separated by commas"
@@ -1193,6 +1252,7 @@ L["Toravon the Ice Watcher"] = "Toravon the Ice Watcher"
 L["Torghast"] = "Torghast"
 L["Total"] = "Total"
 L["Total Duration"] = "Total Duration"
+L["Total Essence"] = "Total Essence"
 L["Total Experience"] = "Total Experience"
 L["Total Match Count"] = "Total Match Count"
 L["Total Stacks"] = "Total Stacks"

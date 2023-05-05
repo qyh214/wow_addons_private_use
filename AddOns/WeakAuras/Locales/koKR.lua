@@ -305,6 +305,8 @@ L["Charged Combo Point 3"] = "Charged Combo Point 3"
 L["Charged Combo Point 4"] = "Charged Combo Point 4"
 L["Charges"] = "충전량"
 L["Charges Changed Event"] = "충전량 변경 이벤트"
+--[[Translation missing --]]
+L["Charging"] = "Charging"
 L["Chat Frame"] = "대화창"
 L["Chat Message"] = "대화 메시지"
 L["Check if a single talent match a Rank"] = "단일 특성이 등급과 일치하는지 확인"
@@ -354,6 +356,8 @@ L["Critical Rating"] = "치명타 및 극대화"
 L["Crowd Controlled"] = "군중 제어됨"
 L["Crushing"] = "강타"
 L["C'thun"] = "쑨"
+--[[Translation missing --]]
+L["Current Essence"] = "Current Essence"
 L["Current Experience"] = "현재 경험치"
 L["Current Movement Speed (%)"] = "현재 이동 속도 (%)"
 L["Current Stage"] = "현재 단계"
@@ -417,6 +421,8 @@ L["Destination Unit"] = "대상 유닛"
 L["Destination unit's raid mark index"] = "Destination unit's raid mark index"
 --[[Translation missing --]]
 L["Destination unit's raid mark texture"] = "Destination unit's raid mark texture"
+--[[Translation missing --]]
+L["Difficulty"] = "Difficulty"
 --[[Translation missing --]]
 L["Disable Spell Known Check"] = "Disable Spell Known Check"
 --[[Translation missing --]]
@@ -508,6 +514,8 @@ L["Enrage"] = "격노"
 L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "시작"
 L["Entering/Leaving Combat"] = "전투 시작/종료"
+--[[Translation missing --]]
+L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "항목 순서"
 L["Environment Type"] = "환경 종류"
 L["Environmental"] = "환경"
@@ -529,11 +537,27 @@ L["Error Frame"] = "오류창"
 --[[Translation missing --]]
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "ERROR in '%s' unknown or incompatible sub element type '%s'"
 L["Error not receiving display information from %s"] = "%s 에서 표시 정보를 받지 못하는 오류"
+--[[Translation missing --]]
+L["Essence"] = "Essence"
+--[[Translation missing --]]
+L["Essence #1"] = "Essence #1"
+--[[Translation missing --]]
+L["Essence #2"] = "Essence #2"
+--[[Translation missing --]]
+L["Essence #3"] = "Essence #3"
+--[[Translation missing --]]
+L["Essence #4"] = "Essence #4"
+--[[Translation missing --]]
+L["Essence #5"] = "Essence #5"
+--[[Translation missing --]]
+L["Essence #6"] = "Essence #6"
 L["Evade"] = "벗어남"
 L["Event"] = "이벤트"
 L["Event(s)"] = "이벤트"
 L["Every Frame"] = "매 프레임"
 L["Every Frame (High CPU usage)"] = "매 프레임 (CPU 사용량 높음)"
+--[[Translation missing --]]
+L["Evoker Essence"] = "Evoker Essence"
 L["Experience (%)"] = "경험치 (%)"
 L["Expertise Bonus"] = "숙련 보너스"
 L["Expertise Rating"] = "숙련도"
@@ -705,6 +729,8 @@ L["Icon"] = "아이콘"
 L["Icon Function"] = "Icon Function"
 --[[Translation missing --]]
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
+--[[Translation missing --]]
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "추가 지원이 필요한 경우, GitHub에서 티켓을 열거나 Discord( https://discord.gg/weakauras )를 방문해 주세요!"
 L["Ignis the Furnace Master"] = "용광로 군주 이그니스"
 L["Ignore Dead"] = "죽음 무시"
@@ -935,6 +961,8 @@ L["Note: 'Hide Alone' is not available in the new aura tracking system. A load o
 --[[Translation missing --]]
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "Note: The available text replacements for multi triggers match the normal triggers now."
 --[[Translation missing --]]
+L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "Note: This trigger relies on the WoW API, which returns incorrect information in some cases."
+--[[Translation missing --]]
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"
 L["Noth the Plaguebringer"] = "역병술사 노스"
 L["NPC"] = "NPC"
@@ -942,6 +970,54 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "횟수"
 L["Number Affected"] = "영향 받은 횟수"
 L["Object"] = "객체"
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=]
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=]
 L["Officer"] = "길드관리자"
 --[[Translation missing --]]
 L["Offset from progress"] = "Offset from progress"
@@ -951,8 +1027,6 @@ L["Old Blizzard (2h | 3m | 10s | 2.4)"] = "옛 블리자드 (2h | 3m | 10s | 2.4
 L["On Cooldown"] = "재사용 대기 중일 때"
 --[[Translation missing --]]
 L["On Taxi"] = "On Taxi"
-L["Only if BigWigs shows it on it's bar"] = "BigWigs가 바에 표시하는 경우에만"
-L["Only if DBM shows it on it's bar"] = "DBM이 바에 표시하는 경우에만"
 --[[Translation missing --]]
 L["Only if on a different realm"] = "Only if on a different realm"
 L["Only if Primary"] = "주 자원일때만"
@@ -1311,6 +1385,8 @@ L["Subtract Cast"] = "Subtract Cast"
 L["Subtract Channel"] = "Subtract Channel"
 --[[Translation missing --]]
 L["Subtract GCD"] = "Subtract GCD"
+--[[Translation missing --]]
+L["Success"] = "Success"
 L["Sulfuron Harbinger"] = "설퍼론 사자"
 L["Summon"] = "소환"
 L["Supports multiple entries, separated by commas"] = "쉼표로 구분된 여러 항목을 지원합니다"
@@ -1397,6 +1473,8 @@ L["Toravon the Ice Watcher"] = "얼음 감시자 토라본"
 L["Torghast"] = "토르가스트"
 L["Total"] = "전체"
 L["Total Duration"] = "총 지속시간"
+--[[Translation missing --]]
+L["Total Essence"] = "Total Essence"
 L["Total Experience"] = "전체 경험치"
 L["Total Match Count"] = "총 일치 횟수"
 L["Total Stacks"] = "총 중첩"

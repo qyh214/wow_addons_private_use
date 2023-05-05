@@ -390,7 +390,6 @@ L.ShowReminders="Zeige Erinnerungsnachrichten für fehlende und deaktivierte sub
 L.WorldBuffAlert="Zeige Warnung und Timer wenn World-Buff RP auf dem eigenen Realm gestartet wurde"
 L.Area_BugAlerts="Einstellungen für Fehlermeldungen"
 L.BadTimerAlert="Zeige Chat Nachricht wenn DBM einen Timer mit einer Abweichung von mehr als einer Sekunde entdeckt"
-L.BadIDAlert="Zeige Chat Nachricht wenn DBM die Verwendung einer ungültige Zauber oder Abenteuerführer ID entdeckt"
 L.PullVoice="Setze Stimme für Pull-Timer"
 L.MissingVoicePack="Fehlendes Sprachpaket (%s)"
 L.Area_VoicePackReplace="Optionen für Sprachpaketsounds (welche Sounds wann aktiviert, vertstummt und ersetzt werden)"

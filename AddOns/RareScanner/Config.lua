@@ -2895,42 +2895,55 @@ local function GetMapOptions()
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs()) end,
+							disabled = function() return not RSConfigDB.IsShowingNpcs() end,
 						},
-						keepShowingAfterDead = {
+						displayNotDiscoveredNpcIcons = {
 							order = 4,
 							type = "toggle",
-							name = AL["MAP_SHOW_ICON_AFTER_DEAD"],
-							desc = AL["MAP_SHOW_ICON_AFTER_DEAD_DESC"],
-							get = function() return RSConfigDB.IsShowingDeadNpcs() end,
+							name = AL["MAP_SHOW_ICON_NOT_DISCOVERED"],
+							desc = AL["MAP_SHOW_ICON_NOT_DISCOVERED_DESC"],
+							get = function() return RSConfigDB.IsShowingNotDiscoveredNpcs() end,
 							set = function(_, value)
-								RSConfigDB.SetShowingDeadNpcs(value)
-								RSConfigDB.SetShowingDeadNpcsInReseteableZones(false)
+								RSConfigDB.SetShowingNotDiscoveredNpcs(value)
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) end,
+							disabled = function() return not RSConfigDB.IsShowingNpcs() end,
 						},
-						keepShowingAfterDeadReseteable = {
+						displayAlreadyKilledNpcIcons = {
 							order = 5,
 							type = "toggle",
-							name = AL["MAP_SHOW_ICON_AFTER_DEAD_RESETEABLE"],
-							desc = AL["MAP_SHOW_ICON_AFTER_DEAD_RESETEABLE_DESC"],
-							get = function() return RSConfigDB.IsShowingDeadNpcsInReseteableZones() end,
+							name = AL["MAP_SHOW_ICON_ALREADY_KILLED"],
+							desc = AL["MAP_SHOW_ICON_ALREADY_KILLED_DESC"],
+							get = function() return RSConfigDB.IsShowingAlreadyKilledNpcs() end,
 							set = function(_, value)
-								RSConfigDB.SetShowingDeadNpcsInReseteableZones(value)
+								RSConfigDB.SetShowingAlreadyKilledNpcs(value)
+								RSConfigDB.SetShowingAlreadyKilledNpcsInReseteableZones(false)
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) or private.db.map.keepShowingAfterDead end,
+							disabled = function() return not RSConfigDB.IsShowingNpcs() end,
+						},
+						displayAlreadyKilledReseteable = {
+							order = 6,
+							type = "toggle",
+							name = AL["MAP_SHOW_ICON_ALREADY_KILLED_RESETEABLE"],
+							desc = AL["MAP_SHOW_ICON_ALREADY_KILLED_RESETEABLE_DESC"],
+							get = function() return RSConfigDB.IsShowingAlreadyKilledNpcsInReseteableZones() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAlreadyKilledNpcsInReseteableZones(value)
+								RSMinimap.RefreshAllData(true)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingNpcs() or not RSConfigDB.IsShowingAlreadyKilledNpcs() end,
 						},
 						separatorContainers = {
-							order = 6,
+							order = 7,
 							type = "header",
 							name = AL["MAP_CONTAINERS_ICONS"],
 						},
 						displayContainerIcons = {
-							order = 7,
+							order = 8,
 							type = "toggle",
 							name = AL["DISPLAY_CONTAINER_ICONS"],
 							desc = AL["DISPLAY_CONTAINER_ICONS_DESC"],
@@ -2941,26 +2954,39 @@ local function GetMapOptions()
 							end,
 							width = "full",
 						},
-						keepShowingAfterCollected = {
-							order = 8,
+						displayNotDiscoveredContainerIcons = {
+							order = 9,
 							type = "toggle",
-							name = AL["MAP_SHOW_ICON_AFTER_COLLECTED"],
-							desc = AL["MAP_SHOW_ICON_AFTER_COLLECTED_DESC"],
-							get = function() return RSConfigDB.IsShowingOpenedContainers() end,
+							name = AL["MAP_SHOW_ICON_NOT_DISCOVERED_CONTAINER"],
+							desc = AL["MAP_SHOW_ICON_NOT_DISCOVERED_CONTAINER_DESC"],
+							get = function() return RSConfigDB.IsShowingNotDiscoveredContainers() end,
 							set = function(_, value)
-								RSConfigDB.SetShowingOpenedContainers(value)
+								RSConfigDB.SetShowingNotDiscoveredContainers(value)
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) end,
+							disabled = function() return not RSConfigDB.IsShowingContainers() end,
+						},
+						displayAlreadyOpenedContainersIcons = {
+							order = 10,
+							type = "toggle",
+							name = AL["MAP_SHOW_ICON_ALREADY_OPENED"],
+							desc = AL["MAP_SHOW_ICON_ALREADY_OPENED_DESC"],
+							get = function() return RSConfigDB.IsShowingAlreadyOpenedContainers() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingAlreadyOpenedContainers(value)
+								RSMinimap.RefreshAllData(true)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingContainers() end,
 						},
 						separatorEvents = {
-							order = 9,
+							order = 11,
 							type = "header",
 							name = AL["MAP_EVENTS_ICONS"],
 						},
 						displayEventIcons = {
-							order = 10,
+							order = 12,
 							type = "toggle",
 							name = AL["DISPLAY_EVENT_ICONS"],
 							desc = AL["DISPLAY_EVENT_ICONS_DESC"],
@@ -2971,26 +2997,39 @@ local function GetMapOptions()
 							end,
 							width = "full",
 						},
-						keepShowingAfterCompleted = {
-							order = 11,
+						displayNotDiscoveredEventIcons = {
+							order = 13,
 							type = "toggle",
-							name = AL["MAP_SHOW_ICON_AFTER_COMPLETED"],
-							desc = AL["MAP_SHOW_ICON_AFTER_COMPLETED_DESC"],
+							name = AL["MAP_SHOW_ICON_NOT_DISCOVERED_EVENT"],
+							desc = AL["MAP_SHOW_ICON_NOT_DISCOVERED_EVENT_DESC"],
+							get = function() return RSConfigDB.IsShowingNotDiscoveredEvents() end,
+							set = function(_, value)
+								RSConfigDB.SetShowingNotDiscoveredEvents(value)
+								RSMinimap.RefreshAllData(true)
+							end,
+							width = "full",
+							disabled = function() return not RSConfigDB.IsShowingEvents() end,
+						},
+						displayAlreadyCompletedEventIcons = {
+							order = 14,
+							type = "toggle",
+							name = AL["MAP_SHOW_ICON_ALREADY_COMPLETED"],
+							desc = AL["MAP_SHOW_ICON_ALREADY_COMPLETED_DESC"],
 							get = function() return RSConfigDB.IsShowingCompletedEvents() end,
 							set = function(_, value)
 								RSConfigDB.SetShowingCompletedEvents(value)
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) end,
+							disabled = function() return not RSConfigDB.IsShowingEvents() end,
 						},
 						separatorOthers = {
-							order = 12,
+							order = 15,
 							type = "header",
 							name = AL["MAP_OTHER_ICONS"],
 						},
 						displayDragonGlyphsIcons = {
-							order = 13,
+							order = 16,
 							type = "toggle",
 							name = AL["DISPLAY_MAP_DRAGON_GLYPHS_ICONS"],
 							desc = AL["DISPLAY_MAP_DRAGON_GLYPHS_ICONS_DESC"],
@@ -3002,25 +3041,12 @@ local function GetMapOptions()
 							width = "full",
 						},
 						separatorNotDiscovered = {
-							order = 14,
+							order = 17,
 							type = "header",
 							name = AL["MAP_NOT_DISCOVERED_ICONS"],
 						},
-						displayNotDiscoveredMapIcons = {
-							order = 15,
-							type = "toggle",
-							name = AL["DISPLAY_MAP_NOT_DISCOVERED_ICONS"],
-							desc = AL["DISPLAY_MAP_NOT_DISCOVERED_ICONS_DESC"],
-							get = function() return RSConfigDB.IsShowingNotDiscoveredMapIcons() end,
-							set = function(_, value)
-								RSConfigDB.SetShowingNotDiscoveredMapIcons(value)
-								RSMinimap.RefreshAllData(true)
-							end,
-							width = "full",
-							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) end,
-						},
 						displayOldNotDiscoveredMapIcons = {
-							order = 16,
+							order = 18,
 							type = "toggle",
 							name = AL["DISPLAY_MAP_OLD_NOT_DISCOVERED_ICONS"],
 							desc = AL["DISPLAY_MAP_OLD_NOT_DISCOVERED_ICONS_DESC"],
@@ -3030,7 +3056,7 @@ local function GetMapOptions()
 								RSMinimap.RefreshAllData(true)
 							end,
 							width = "full",
-							disabled = function() return ((not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) or not private.db.map.displayNotDiscoveredMapIcons) end,
+							disabled = function() return (not RSConfigDB.IsShowingNpcs() and not RSConfigDB.IsShowingContainers() and not RSConfigDB.IsShowingEvents()) or (not RSConfigDB.IsShowingNotDiscoveredNpcs() and not RSConfigDB.IsShowingNotDiscoveredContainers() and not RSConfigDB.IsShowingNotDiscoveredEvents()) end,
 						},
 					},
 				},
@@ -3413,6 +3439,26 @@ local function GetMapOptions()
 							end,
 							width = "full",
 							disabled = function() return not RSConfigDB.IsShowingAnimationForNpcs() and not RSConfigDB.IsShowingAnimationForContainers() and not RSConfigDB.IsShowingAnimationForEvents() end,
+						},
+					}
+				},
+				reputation = {
+					type = "group",
+					order = 1,
+					name = AL["MAP_REPUTATION"],
+					handler = RareScanner,
+					desc = AL["MAP_REPUTATION_DESC"],
+					args = {
+						support = {
+							order = 1,
+							type = "toggle",
+							name = AL["MAP_REPUTATION_HIGHLIGHT"],
+							desc = AL["MAP_REPUTATION_HIGHLIGHT_DESC"],
+							get = function() return RSConfigDB.IsHighlightingReputation() end,
+							set = function(_, value)
+								RSConfigDB.SetHighlightingReputation(value)
+							end,
+							width = "full",
 						},
 					}
 				}

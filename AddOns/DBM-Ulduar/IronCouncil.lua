@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230201003256")
+mod:SetRevision("20230414020000")
 mod:SetCreatureID(32867, 32927, 32857)
 mod:SetEncounterID(1140)
 if not mod:IsClassic() then
@@ -137,7 +137,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		self:BossTargetScanner(32927, "RuneTarget", 0.1, 16, true, true)--Scan only boss unitIDs, scan only hostile targets
 		timerRuneofPowerCD:Start()
 	elseif args:IsSpellID(61869, 63481) then	-- Overload
-		if self.vb.phase ~= 3 then--In P3 timer no longer reliable, it's stopped as soon as 2 bosses are dead
+		if self:GetStage(3, 3) then--In P3 timer no longer reliable, it's stopped as soon as 2 bosses are dead
 			timerOverloadCD:Start()
 		end
 		timerOverload:Start()
@@ -223,7 +223,7 @@ function mod:UNIT_DIED(args)
 			timerLightningWhirl:Stop()
 		end
 		if self:IsClassic() or DBM.Options.DebugMode then--Not verified on retail so not enabling there right now
-			if self.vb.phase == 2 then--First kill
+			if self:GetStage(2) then--First kill
 				--if not self.vb.stealbreakerDead then
 				--
 				--end
@@ -234,7 +234,7 @@ function mod:UNIT_DIED(args)
 				--if not self.vb.brundirDead then
 				--
 				--end
-			elseif self.vb.phase == 3 then--Second Kill
+			elseif self:GetStage(3) then--Second Kill
 				--if not self.vb.stealbreakerDead then
 				--
 				--end

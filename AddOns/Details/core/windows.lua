@@ -1,5 +1,5 @@
 
-	local Details =	_G._detalhes
+	local Details =	_G.Details
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 	local libwindow = LibStub("LibWindow-1.1")
 	local _
@@ -599,7 +599,7 @@
 		return self:RestoreMainWindowPosition()
 	end
 
-	function Details:ResetaGump (instancia, tipo, segmento)
+	function Details:ResetaGump (instancia, tipo, segmento) --replaced by instance:ResetWindow(resetType, segmentId)
 		if (not instancia or type(instancia) == "boolean") then
 			segmento = tipo
 			tipo = instancia

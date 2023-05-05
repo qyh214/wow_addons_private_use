@@ -315,12 +315,12 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Custom Untrigger"] = "Свой детриггер"
 	L["Custom Variables"] = "Свои переменные"
 	L["Debuff Type"] = "Тип дебаффа"
-	L["Debug Console"] = "Консоль отладки"
+	--[[Translation missing --]]
+	L["Debug Log"] = "Debug Log"
 	L["Debug Log:"] = "Журнал отладки:"
 	L["Default"] = "По умолчанию"
 	L["Default Color"] = "Цвет по умолчанию"
-	--[[Translation missing --]]
-	L["Delay"] = "Delay"
+	L["Delay"] = "Задержка"
 	L["Delete"] = "Удалить"
 	L["Delete all"] = "Удалить всё"
 	L["Delete children and group"] = "Удалить индикации и группу"
@@ -462,7 +462,6 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Frame Width"] = "Ширина кадра"
 	L["Frequency"] = "Частота"
 	L["Full Circle"] = "Полный круг"
-	L["Get Help"] = "Получить помощь"
 	L["Global Conditions"] = "Универсальные условия"
 	L["Glow %s"] = "Свечение %s"
 	L["Glow Action"] = "Действие"
@@ -530,6 +529,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Icon"] = "Иконка"
 	L["Icon Info"] = "Информация об иконке"
 	L["Icon Inset"] = "Вставка иконки"
+	--[[Translation missing --]]
+	L["Icon Picker"] = "Icon Picker"
 	L["Icon Position"] = "Расположение иконки"
 	L["Icon Settings"] = "Настройки иконки"
 	L["Icon Source"] = "Источник иконки"
@@ -555,6 +556,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Ignored Name(s)"] = "Исключить название"
 	L["Ignored Spell ID"] = "Исключаемый ID заклинания"
 	L["Import"] = "Импорт"
+	--[[Translation missing --]]
+	L["Import / Export"] = "Import / Export"
 	L["Import a display from an encoded string"] = "Импортировать индикацию из закодированной строки"
 	L["Import as Copy"] = "Копировать"
 	L["Import has no UID, cannot be matched to existing auras."] = "У импорта нет уникального идентификатора (UID). Его нельзя сопоставить с существующими индикациями."
@@ -583,6 +586,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Is Boss Debuff"] = "Применён боссом"
 	L["Is Stealable"] = "Может быть украден"
 	L["Is Unit"] = "Использовать как единицу"
+	--[[Translation missing --]]
+	L["Join Discord"] = "Join Discord"
 	L["Justify"] = "Выравнивание"
 	L["Keep Aspect Ratio"] = "Сохранять пропорции"
 	L["Keep your Wago imports up to date with the Companion App."] = "Поддерживайте ваши индикации с Wago в актуальном состоянии при помощи приложения Companion."
@@ -594,6 +599,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Length"] = "Длина"
 	L["Length of |cFFFF0000%s|r"] = "Длина %s"
 	L["Limit"] = "Лимит"
+	--[[Translation missing --]]
+	L["Line"] = "Line"
 	L["Lines & Particles"] = "Линии или частицы"
 	L["Linked aura: "] = "Связанная индикация: "
 	L["Load"] = "Загрузка"
@@ -619,6 +626,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Mirror"] = "Отразить"
 	L["Model"] = "Модель"
 	L["Model %s"] = "Модель %s"
+	--[[Translation missing --]]
+	L["Model Picker"] = "Model Picker"
 	L["Model Settings"] = "Настройки модели"
 	L["ModelPaths could not be loaded, the addon is %s"] = "Не удалось загрузить WeakAuras Model Paths. Причина - %s"
 	L["Move Above Group"] = "Переместить выше группы"
@@ -650,6 +659,8 @@ Can use \ to escape -.]=] ] = [=[Формат записи: Имя, Имя-Иг�
 	L["Nameplates"] = "Индикаторы здоровья"
 	L["Negator"] = "Не"
 	L["New Aura"] = "Новая индикация"
+	--[[Translation missing --]]
+	L["New Template"] = "New Template"
 	L["New Value"] = "Новое значение"
 	L["No Children"] = "Нет индикаций"
 	L["No Logs saved."] = "Нет записей"
@@ -781,7 +792,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Same texture as Foreground"] = "Такая же текстура, что и на переднем плане"
 	L["Saved Data"] = "Сохраненные данные"
 	L["Scale"] = "Масштаб"
-	L["Search"] = "Поиск"
 	L["Select Talent"] = "Выбрать талант"
 	L["Select the auras you always want to be listed first"] = "Выберите индикации для гибридной позиции"
 	L["Selected Frame"] = "Выбранный кадр"
@@ -876,6 +886,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Text Settings"] = "Настройки текста"
 	L["Texture"] = "Текстура"
 	L["Texture Info"] = "Информация о текстуре"
+	--[[Translation missing --]]
+	L["Texture Picker"] = "Texture Picker"
 	--[[Translation missing --]]
 	L["Texture Rotation"] = "Texture Rotation"
 	L["Texture Settings"] = "Настройки текстуры"

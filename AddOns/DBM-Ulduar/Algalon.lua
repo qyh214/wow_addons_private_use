@@ -5,7 +5,7 @@ if not mod:IsClassic() then--on classic, it's normal10,normal25, defined in toc,
 	mod.statTypes = "normal"
 end
 
-mod:SetRevision("20230123081843")
+mod:SetRevision("20230414020000")
 mod:SetCreatureID(32871)
 if not mod:IsClassic() then--Assumed fixed in classic
 	mod:SetEncounterID(1130)
@@ -232,7 +232,7 @@ function mod:OnSync(msg, guid)
 		announcePreBigBang:Schedule(85)
 		timerNextBigBang:Start(90)
 		enrageTimer:Start(360)
-	elseif msg == "Phase2" and self.vb.phase < 2 then
+	elseif msg == "Phase2" and self:GetStage(2, 1) then
 		self:SetStage(2)
 		self.vb.warned_preP2 = true
 		timerNextCollapsingStar:Stop()

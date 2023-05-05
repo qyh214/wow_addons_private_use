@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Bastion of Twilight|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Die Bastion des Zwielichts|r
@@ -13,6 +13,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMBastionTwilight_AllSavedVars
 ## SavedVariablesPerCharacter: DBMBastionTwilight_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: CATA
@@ -21,7 +22,7 @@
 ## X-DBM-Mod-Sort: 804
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 3
-## Version: r225
+## Version: r226
 
 localization.en.lua
 localization.de.lua

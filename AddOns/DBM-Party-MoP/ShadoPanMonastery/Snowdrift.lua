@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20220217050005")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(56541)
 mod:SetEncounterID(1304)
 mod:SetReCombatTime(60)
@@ -72,9 +72,9 @@ end
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	if spellId == 110324 then
 		self:SetStage(0)
-		if self.vb.phase == 2 then
+		if self:GetStage(2) then
 			warnPhase2:Show()
-		elseif self.vb.phase == 3 then
+		elseif self:GetStage(3) then
 			warnPhase3:Show()
 		end
 		timerFistsOfFuryCD:Cancel()

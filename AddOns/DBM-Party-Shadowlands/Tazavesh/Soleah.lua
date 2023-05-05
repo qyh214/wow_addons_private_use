@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2455, "DBM-Party-Shadowlands", 9, 1194)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117063410")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(177269)
 mod:SetEncounterID(2442)
 mod:SetHotfixNoticeRev(20220405000000)
@@ -95,7 +95,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 353635 then
 		self.vb.starCount = self.vb.starCount + 1
 		warnCollapsingStar:Show(self.vb.starCount)
-		if self.vb.phase == 1 then
+		if self:GetStage(1) then
 			timerCollapsingStarCD:Start(60)
 		end
 	elseif spellId == 351119 then

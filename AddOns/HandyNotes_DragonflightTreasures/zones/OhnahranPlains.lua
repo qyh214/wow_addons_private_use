@@ -81,6 +81,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
         },
         note="Survive the trial of the elements",
         vignette=5407, -- and areaPoi 7265
+        areaPoi=7265,
     },
     [82317322] = { -- The Great Swog
         npc=191608,
@@ -537,7 +538,7 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
     --]]
     [85221544] = { -- Hamett
         criteria=56082,
-        quest=nil,
+        quest=73951,
         npc=187781,
         loot={},
     },
@@ -779,8 +780,8 @@ ns.RegisterPoints(ns.OHNAHRANPLAINS, {
         path=24503340,
         vignette=5131,
     },
-    [72615598] = { -- Biryuk
-        quest=nil,
+    [73785597] = { -- Biryuk
+        quest=73903,
         npc=193168,
         loot={}, -- only supplies and commendations
     },

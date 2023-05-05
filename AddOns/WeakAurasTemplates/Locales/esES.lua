@@ -65,20 +65,14 @@ local L = WeakAuras.L
 	L["Max 3"] = "Max 3"
 	--[[Translation missing --]]
 	L["Max 4"] = "Max 4"
-	--[[Translation missing --]]
-	L["Next"] = "Next"
+	L["Next"] = "Siguiente"
 	L["Only show the aura if the target has the debuff."] = "Mostrar el aura solo si el objetivo tiene el perjuicio activo."
-	--[[Translation missing --]]
-	L["Only show the aura when the item is on cooldown."] = "Only show the aura when the item is on cooldown."
-	--[[Translation missing --]]
-	L["Only shows if the weapon is enchanted."] = "Only shows if the weapon is enchanted."
-	--[[Translation missing --]]
-	L["Only shows if the weapon is not enchanted."] = "Only shows if the weapon is not enchanted."
+	L["Only show the aura when the item is on cooldown."] = "Mostrar el aura solo cuando el objeto está en reutilización."
+	L["Only shows if the weapon is enchanted."] = "Mostrar solo si el arma está encantada."
+	L["Only shows if the weapon is not enchanted."] = "Mostrar solo si el arma no está encantada."
 	L["Only shows the aura if the target has the buff."] = "Muestra el aura solo si el objetivo tiene el beneficio activo."
-	--[[Translation missing --]]
-	L["Only shows the aura when the ability is on cooldown."] = "Only shows the aura when the ability is on cooldown."
-	--[[Translation missing --]]
-	L["Only shows the aura when the ability is ready to use."] = "Only shows the aura when the ability is ready to use."
+	L["Only shows the aura when the ability is on cooldown."] = "Mostrar el aura solo cuando la habilidad está en reutilización."
+	L["Only shows the aura when the ability is ready to use."] = "Mostrar el aura solo cuando la habilidad está lista para usar."
 	--[[Translation missing --]]
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "Mascota viva"
@@ -87,8 +81,7 @@ local L = WeakAuras.L
 	L["PvP Talents"] = "PvP Talents"
 	L["Replace all existing triggers"] = "Sustituir todos los activadores existentes"
 	L["Replace Triggers"] = "Sustituir activadores"
-	--[[Translation missing --]]
-	L["Resources"] = "Resources"
+	L["Resources"] = "Recursos"
 	--[[Translation missing --]]
 	L["Resources and Shapeshift Form"] = "Resources and Shapeshift Form"
 	--[[Translation missing --]]

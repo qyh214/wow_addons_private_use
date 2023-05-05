@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Firelands|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Feuerlande|r
@@ -14,6 +14,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMFirelands_AllSavedVars
 ## SavedVariablesPerCharacter: DBMFirelands_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: CATA
@@ -22,7 +23,7 @@
 ## X-DBM-Mod-MapID: 720,951
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 3
-## Version: r225
+## Version: r226
 
 localization.en.lua
 localization.de.lua

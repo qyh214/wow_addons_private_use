@@ -383,14 +383,11 @@ L["STRING_OPTIONS_ADVANCED"] = "Avanzado"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Columnas de texto alineadas"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alineación"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "La alineación se hace automáticamente basada en la longitud de cada texto"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disable brackets and separators and align bars texts in vertical columns"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Desactivar corchetes y separadores y alinear textos de barras en columnas verticales"
 --[[Translation missing --]]
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Offset"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Offset from right border"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "is enabled, separators and brackets aren't used"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Desplazamiento desde el borde derecho"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "está activado, no se utilizan separadores ni corchetes."
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Modificadores de opacidad:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usar en todos los personajes"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Se usa el mismo perfil en todos los personajes. Puede anular esto en cualquier personaje simplemente seleccionando otro perfil existente."
@@ -1103,18 +1100,12 @@ L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignorar alternar masa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Cuando está habilitada, esta ventana no se ve afectada al ocultar, mostrar o alternar todas las ventanas."
 --[[Translation missing --]]
 L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Establece el color de fondo del área cuando se muestran las filas."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Escala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Ajusta la escala de la ventana. |cFFFFFF00Consejo|r: Haga clic derecho para escribir el valor. |cFFFFFF00Actual|r: %s"
 --[[Translation missing --]]
 L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Color"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Modifica el color de la apariencia aplicada en esta ventana. |cFFFFFF00Importante|r: la transparencia elegida aquí se sobreescribe con los valores de |cFFFFFF00Transparencia Automática|r cuando está activada. |Importante: la selección del color de la apariencia sobrescribe cualquier personalización de color aplicada a la barra de estado."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Configuración de ventana"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Estas opciones se permiten personalizar la aparencia de la ventana seleccionada."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Intervalo de actualización"

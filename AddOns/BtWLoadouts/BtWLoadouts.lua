@@ -1308,10 +1308,63 @@ do
 	function BtWLoadoutsSidebarMixin:OnLoad()
 		self.supportedFilters = {}
 	end
+	function BtWLoadoutsSidebarMixin:CreateButtons()
+		local buttonTemplate, initialOffsetX, initialOffsetY, initialPoint, initialRelative, offsetX, offsetY, point, relativePoint = "BtWLoadoutsSidebarScrollItemTemplate", 0, 0, "TOPLEFT", "TOPLEFT", 0, -1, "TOP", "BOTTOM";
+
+		-- Custom version of HybridScrollFrame_CreateButtons with 1 main difference, it doesnt reset the scroll when creating buttons so
+		-- we can use this to create extra buttons on resize without reseting the scroll position
+
+		local scrollChild = self.Scroll.scrollChild;
+		local button, buttonHeight, buttons, numButtons;
+	
+		local parentName = self.Scroll:GetName();
+		local buttonName = parentName and (parentName .. "Button") or nil;
+	
+		initialPoint = initialPoint or "TOPLEFT";
+		initialRelative = initialRelative or "TOPLEFT";
+		point = point or "TOPLEFT";
+		relativePoint = relativePoint or "BOTTOMLEFT";
+		offsetX = offsetX or 0;
+		offsetY = offsetY or 0;
+	
+		if ( self.Scroll.buttons ) then
+			buttons = self.Scroll.buttons;
+			buttonHeight = buttons[1]:GetHeight();
+		else
+			button = CreateFrame("BUTTON", buttonName and (buttonName .. 1) or nil, scrollChild, buttonTemplate);
+			buttonHeight = button:GetHeight();
+			button:SetPoint(initialPoint, scrollChild, initialRelative, initialOffsetX, initialOffsetY);
+			buttons = {}
+			tinsert(buttons, button);
+		end
+	
+		self.Scroll.buttonHeight = math.floor(buttonHeight + .5) - offsetY;
+	
+		local numButtons = math.ceil(self.Scroll:GetHeight() / buttonHeight) + 1;
+	
+		for i = #buttons + 1, numButtons do
+			button = CreateFrame("BUTTON", buttonName and (buttonName .. i) or nil, scrollChild, buttonTemplate);
+			button:SetPoint(point, buttons[i-1], relativePoint, offsetX, offsetY);
+			tinsert(buttons, button);
+		end
+	
+		scrollChild:SetWidth(self.Scroll:GetWidth())
+		scrollChild:SetHeight(numButtons * buttonHeight);
+		self.Scroll:SetVerticalScroll(0);
+		self.Scroll:UpdateScrollChildRect();
+	
+		self.Scroll.buttons = buttons;
+		local scrollBar = self.Scroll.scrollBar;
+		scrollBar:SetMinMaxValues(0, numButtons * buttonHeight)
+		scrollBar.buttonHeight = buttonHeight;
+		scrollBar:SetValueStep(buttonHeight);
+		scrollBar:SetStepsPerPage(numButtons - 2); -- one additional button was added above. Need to remove that, and one more to make the current bottom the new top (and vice versa)
+	end
 	function BtWLoadoutsSidebarMixin:Init()
 		self.Scroll.items = {}
 		self.Scroll.ScrollBar.doNotHide = true;
-		HybridScrollFrame_CreateButtons(self.Scroll, "BtWLoadoutsSidebarScrollItemTemplate", 0, 0, "TOPLEFT", "TOPLEFT", 0, -1, "TOP", "BOTTOM");
+		self:CreateButtons();
+		self.Scroll.scrollBar:SetValue(0);
 		self.Scroll.update = Scroll_Update
 
 		UIDropDownMenu_Initialize(self.FilterDropDown, DropDown_Initialize, "MENU");
@@ -1530,6 +1583,7 @@ do
 			self.TitleText:SetText(BTWLOADOUTS_LOADOUTS)
 			self.TitleText:SetHeight(24)
 		end
+		self.Bg:SetPoint("TOPLEFT", 0, -21) -- Fixed gap between border
 	end
 	function BtWLoadoutsFrameMixin:SetTitle(text)
 		if self.TitleContainer then
@@ -1558,6 +1612,37 @@ do
 	end
 	function BtWLoadoutsFrameMixin:OnLeave()
 		SetCursor(nil);
+	end
+	function BtWLoadoutsFrameMixin:OnResizeStop()
+		BtWLoadoutsFrameSettings = BtWLoadoutsFrameSettings or {};
+		local frame = self:GetCurrentTab();
+		local w, h = self:GetSize();
+		BtWLoadoutsFrameSettings[frame.segment or frame:GetParentKey()] = {
+			w = w,
+			h = h,
+		};
+		self.Sidebar:CreateButtons()
+		self:Update();
+	end
+	function BtWLoadoutsFrameMixin:OnTabChanged()
+		local frame = self:GetCurrentTab();
+
+		local minW, minH, maxW, maxH = self:GetResizeBounds()
+		if frame.GetMaxWidth then
+			maxW = math.max(minW, frame:GetMaxWidth());
+		else
+			maxW = minW;
+		end
+
+		local w, h = minW, minH
+		if BtWLoadoutsFrameSettings then
+			local settings = BtWLoadoutsFrameSettings[frame.segment or frame:GetParentKey()];
+			if settings then
+				w, h = settings.w, settings.h;
+			end
+		end
+		self:SetResizeBounds(minW, minH, maxW, maxH)
+		self:SetWidth(math.max(minW, math.min(w, maxW)));
 	end
 	function BtWLoadoutsFrameMixin:SetLoadout(set)
 		self.Loadouts.set = set;
@@ -1735,6 +1820,7 @@ do
 			-- 	verticalAnchorY = 0,
 			-- };
 
+			self:OnTabChanged()
 			self.initialized = true;
 		end
 

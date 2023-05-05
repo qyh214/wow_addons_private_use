@@ -21,9 +21,9 @@ module.db.statsList = {'intellect','agility','strength','haste','mastery','crit'
 module.db.statsListName = {L.InspectViewerInt,L.InspectViewerAgi,L.InspectViewerStr,L.InspectViewerHaste,L.InspectViewerMastery,L.InspectViewerCrit,L.InspectViewerSpd, L.InspectViewerMS, L.InspectViewerVer, L.InspectViewerBonusArmor, L.InspectViewerLeech, L.InspectViewerAvoidance, L.InspectViewerSpeed,ITEM_MOD_CORRUPTION}
 
 module.db.baseStats = {	--By class IDs
-	strength =  {	450,	450,	0,	0,	0,	450,	0,	0,	0,	0,	0,	0,	},
-	agility =   {	0,	0,	450,	450,	0,	0,	450,	0,	0,	450,	450,	450,	},
-	intellect = {	0,	450,	0,	0,	450,	0,	450,	450,	450,	450,	450,	0,	},
+	strength =  {	450,	450,	0,	0,	0,	450,	0,	0,	0,	0,	0,	0,	0},
+	agility =   {	0,	0,	450,	450,	0,	0,	450,	0,	0,	450,	450,	450,	0},
+	intellect = {	0,	450,	0,	0,	450,	0,	450,	450,	450,	450,	450,	0,	0},
 		--	WARRIOR,PALADIN,HUNTER,	ROGUE,	PRIEST,	DK,	SHAMAN,	MAGE,	WARLOCK,MONK,	DRUID,	DH,
 }
 module.db.raceList = {'Human','Dwarf','Night Elf','Orc','Tauren','Undead','Gnome','Troll','Blood Elf','Draenei','Goblin','Worgen','Pandaren'}
@@ -236,7 +236,10 @@ module.db.topEnchGems = IS_SL and {
 
 
 module.db.achievementsList = {
-	{	--VotI
+	{	--A
+		L.S_ZoneT30,
+		18160,18163,18164,18165,18167,18151,18152,18153,18154,18155,18156,18157,18158,18159,
+	},{	--VotI
 		L.S_ZoneT29VotI,
 		17110,17111,17112,16343,16346,16347,16348,16349,16350,16351,16352,16353,17107,17108,
 	},{	--SotFO
@@ -317,7 +320,9 @@ module.db.achievementsList = {
 	},
 }
 module.db.achievementsList_statistic = {
-	{	--VotI
+	{	--A
+
+	},{	--VotI
 
 	},{	--SotFO
 
@@ -2218,7 +2223,14 @@ function module.options:Load()
 	end)
 
 
-	self.moreInfoButton = ELib:Button(self,L.InspectViewerMoreInfo):Size(150,20):Point("TOPRIGHT",self.borderList,"BOTTOMRIGHT",-1,1):OnClick(function() module.options.moreInfoWindow:Show() end)
+	self.refreshAllButton = ELib:Button(self,L.InspectViewerRefreshAll):Size(120,20):Point("TOPRIGHT",self.borderList,"BOTTOMRIGHT",-1,1):OnClick(function() 
+		for _, name in ExRT.F.IterateRoster do
+			parentModule:AddToQueue(name)
+		end
+		module.options:showPage()
+	end)
+
+	self.moreInfoButton = ELib:Button(self,L.InspectViewerMoreInfo):Size(120,20):Point("RIGHT",self.refreshAllButton,"LEFT",-5,0):OnClick(function() module.options.moreInfoWindow:Show() end)
 
 	self.moreInfoWindow = ELib:Popup(L.InspectViewerMoreInfo):Size(250,170)
 	self.moreInfoWindow:SetScript("OnShow",function (self)
@@ -2276,7 +2288,7 @@ function module.options:Load()
 	end)
 	self.moreInfoWindow.textData  = ELib:Text(self.moreInfoWindow,"",11):Size(225,180):Point("TOP",0,-32):Top():Color()
 
-	self.buttonForce = ELib:Button(self,L.InspectViewerForce):Size(90,20):Point("RIGHT",self.moreInfoButton,"LEFT",-5,0):OnClick(function(self) 
+	self.buttonForce = ELib:Button(self,L.InspectViewerForce):Size(60,20):Point("RIGHT",self.moreInfoButton,"LEFT",-5,0):OnClick(function(self) 
 		parentModule:Force() 
 		self:SetEnabled(false)
 	end)

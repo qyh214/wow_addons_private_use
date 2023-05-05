@@ -226,7 +226,6 @@ L.WorldBuffAlert			= "Afficher une alerte et un décompte lorsqu'un évênement 
 
 L.Area_BugAlerts			= "Options des rapports de bugs"
 L.BadTimerAlert				= "Afficher un message quand DBM détecte un décompte erroné avec au moins 1 seconde de différence"
-L.BadIDAlert				= "Afficher un message quand DBM détecte une capacité ou entrée de journal erronée"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Alertes vocales"

@@ -1,0 +1,170 @@
+## Interface: 100100
+## Title: |cffff00ffWoW|r|cff00ff00Tools|r
+## Author: husandro
+## Version: 1.0.0
+## Notes: WoW |cffff0000Plus|r
+## SavedVariables: WoWToolsSave, WoWDate
+##, BunniesDB
+## DefaultState: Enabled
+## X-Wago-ID: baND1J6o
+## X-Curse-Project-ID: 715192
+## X-Category: Plugins
+## IconAtlas: orderhalltalents-done-glow
+## X-Website https://www.curseforge.com/wow/addons/wowtools
+## OptionalDeps: LibStub-1.0, CallbackHandler-1.0, LibRangeCheck-2.0, LibDBIcon-1.0, LibDataBroker-1.1, AceAddon-3.0, LibUIDropDownMenu-4.0
+
+Libs\LibStub-1.0\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibRangeCheck-2.0\LibRangeCheck-2.0.lua
+
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibUIDropDownMenu\LibUIDropDownMenu.lua
+
+##Libs\AceAddon-3.0\AceAddon-3.0.lua
+
+## AceConsole-3.0, AceDB-3.0
+##LibButtonGlow-1.0,
+
+##Libs\AceConsole-3.0\AceConsole-3.0.lua
+##Libs\AceDB-3.0\AceDB-3.0.lua
+##Libs\LibButtonGlow-1.0\LibButtonGlow-1.0.lua
+
+
+##主要，不能删除
+WoWTools.lua
+WoWDate.lua
+WoWPanel.lua
+
+
+
+##隐藏材质，透明度
+WoWPlus\Texture.lua
+##角色面板
+WoWPlus\PaperDoll.lua
+##角色，属性
+WoWPlus\Attributes.lua
+##声望面板
+WoWPlus\Reputation.lua
+##货币面板
+WoWPlus\Tokens.lua
+##移动框架, 缩放
+WoWPlus\Frame.lua
+##法术弹出框，加名称, 和颜色
+WoWPlus\SpellFrame.lua
+##任务框，增强
+WoWPlus\ObjectiveTracker.lua
+##藏品
+WoWPlus\Collections.lua
+##地图，增强
+WoWPlus\WorldMap.lua
+##鼠标，提示
+WoWPlus\Tooltips.lua
+##单位框，没完成
+WoWPlus\UnitFrame.lua
+##好友，面板
+WoWPlus\FriendsList.lua
+##小地图，增强缩放
+WowPlus\Minimap.lua
+##冒险指南, 增强
+WoWPlus\EncounterJournal.lua
+##史诗钥石地下城, 挑战增强
+WoWPlus\Challenges.lua
+##WowPlus\AuctionHouse.lua
+
+
+
+
+##自动对话，任务
+GamePlus\Gossip.lua
+##卖买
+GamePlus\SellBuy.lua
+##宠物对战
+GamePlus\PetBattle.lua
+##物品信息，显示包里，和商人，物品信息，现仅支持系统
+GamePlus\ItemInfo.lua
+##插件，方案
+GamePlus\AddOns.lua
+##自动隐藏，弹出NPC说话，
+GamePlus\Talking.lua
+##断， 驱，散
+GamePlus\InterruptStolenDispel.lua
+##日历, 显示
+GamePlus\Holiday.lua
+##镶嵌宝石
+GamePlus\Gem.lua
+##目标指示
+GamePlus\Target.lua
+##驭龙术，速度
+GamePlus\Dragonriding.lua
+##颜色选择器，增强
+GamePlus\Color.lua
+##fps ms
+GamePlus\SystemInfo.lua
+##鼠标 Mouse https://wago.io/CVmKEpl6E
+GamePlus\Cursor.lua
+
+
+
+
+##坐骑， Tools 主要的，
+##如果要使用Tools中的一个模块，必须开启坐骑模块
+Tools\_20Mount.lua
+##随机炉石
+Tools\_21Hearthstone.lua
+##打开物品，各种物品
+Tools\_22OpenItems.lua
+##食物
+Tools\_23Food.lua
+##侦察地图, 玩具, 没有小号，可以禁用
+Tools\20ScoutingMapToy.lua
+##随机玩具
+Tools\21UseToy.lua
+##专业按钮
+Tools\22Professions.lua
+##各种专送门,物品，玩具
+Tools\23UsaItems.lua
+##黛西
+Tools\24Daisy.lua
+##诺格弗格药剂 Noggenfogger Elixir
+Tools\25NoggenfoggerElixir.lua
+##挑战者之路
+Tools\26ChallengerPath.lua
+##法师传送门
+Tools\27MagePortal.lua
+
+
+
+
+##Chat Button
+##这是Chat主要，如果需要其中一个功能，这个不能关
+ChatButton\ChatButton.lua
+##超链接， 欢迎, 一些其他功能
+ChatButton\HyperLink.lua
+##ROLL
+ChatButton\Roll.lua
+##标记
+ChatButton\Markers.lua
+##邀请， 自动接受， 拒绝，屏蔽
+ChatButton\Invite.lua
+##查找器， 地下城和团队， 自动退出，进入，Roll装
+ChatButton\LFD.lua
+##世界频道
+ChatButton\World.lua
+##公会
+ChatButton\Guild.lua
+##队伍
+ChatButton\Group.lua
+##说
+ChatButton\Say.lua
+##表情，如不是中文，默认关闭
+ChatButton\Emoji.lua
+##各种, 战斗时间
+ChatButton\Combat.lua
+
+
+
+
+
+##副本, 挑战,之类
+Instance\Explosives.lua

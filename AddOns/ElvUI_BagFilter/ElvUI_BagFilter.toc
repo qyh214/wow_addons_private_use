@@ -1,9 +1,9 @@
-## Interface: 100005
+## Interface: 100007
 ## Title: |cff1784d1ElvUI|r Bag Filters
-## Version: v7.12
+## Version: v7.13
 ## Author: Warmexx [Neighbours]
 ## Dependencies: ElvUI
-## X-Date: 2023-01-29T11:20:30Z
+## X-Date: 2023-03-26T14:43:46Z
 ## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
 ## X-Website: https://github.com/warmexx/elvui-bag-filters
 ## X-Curse-Project-ID: 49767

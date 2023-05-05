@@ -262,6 +262,7 @@ L["Charged Combo Point 3"] = "充能连击点 3"
 L["Charged Combo Point 4"] = "充能连击点 4"
 L["Charges"] = "充能"
 L["Charges Changed Event"] = "充能变化事件"
+L["Charging"] = "正在充能"
 L["Chat Frame"] = "聊天窗口"
 L["Chat Message"] = "聊天信息"
 L["Check if a single talent match a Rank"] = "检查一个天赋是否满足等级"
@@ -279,12 +280,9 @@ L["Clone per Match"] = "复制每项符合项"
 L["Color"] = "颜色"
 L["Color Animation"] = "颜色动画"
 L["Combat Log"] = "战斗记录"
---[[Translation missing --]]
 L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
-Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=]
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "无过滤的 COMBAT_LOG_EVENT_UNFILTERED 触发器由于效能较差所以不推荐使用。请查阅：https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
 L["Condition Custom Text"] = "条件自定义文本"
 L["Conditions"] = "常用状态"
 L["Contains"] = "包含"
@@ -308,6 +306,7 @@ L["Critical Rating"] = "暴击等级"
 L["Crowd Controlled"] = "被控制"
 L["Crushing"] = "碾压"
 L["C'thun"] = "克苏恩"
+L["Current Essence"] = "当前精华"
 L["Current Experience"] = "当前经验值"
 L["Current Movement Speed (%)"] = "当前移动速度 (%)"
 L["Current Stage"] = "当前阶段"
@@ -323,8 +322,7 @@ L["Custom Check"] = "自定义检查"
 L["Custom Color"] = "自定义颜色"
 L["Custom Condition Code"] = "自定义条件代码"
 L["Custom Configuration"] = "自定义设置"
---[[Translation missing --]]
-L["Custom Fade Animation"] = "Custom Fade Animation"
+L["Custom Fade Animation"] = "自定义淡化动画"
 L["Custom Function"] = "自定义函数"
 L["Custom Grow"] = "自定义生长"
 L["Custom Sort"] = "自定义排序"
@@ -365,6 +363,8 @@ L["Destination Reaction"] = "目标反应"
 L["Destination Unit"] = "目标单位"
 L["Destination unit's raid mark index"] = "目标单位的团队标记编号"
 L["Destination unit's raid mark texture"] = "目标单位的团队标记材质"
+--[[Translation missing --]]
+L["Difficulty"] = "Difficulty"
 L["Disable Spell Known Check"] = "忽略法术已知检查"
 L["Disabled Spell Known Check"] = "已忽略法术已知检查"
 L["Disease"] = "疾病"
@@ -432,6 +432,8 @@ L["Enrage"] = "激怒"
 L["Enter static or relative values with %"] = "输入绝对值或者是带有%的相对值"
 L["Entering"] = "进入"
 L["Entering/Leaving Combat"] = "进入/离开战斗"
+--[[Translation missing --]]
+L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "条目排序"
 L["Environment Type"] = "环境伤害类型"
 L["Environmental"] = "环境伤害"
@@ -449,11 +451,19 @@ L["Error deserializing"] = "反序列化错误。"
 L["Error Frame"] = "错误信息框架"
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "错误：光环 %s 中存在未知或不兼容的子元素类型 %s 。"
 L["Error not receiving display information from %s"] = "错误：未收到来自 %s 的显示信息"
+L["Essence"] = "精华"
+L["Essence #1"] = "精华 #1"
+L["Essence #2"] = "精华 #2"
+L["Essence #3"] = "精华 #3"
+L["Essence #4"] = "精华 #4"
+L["Essence #5"] = "精华 #5"
+L["Essence #6"] = "精华 #6"
 L["Evade"] = "闪避"
 L["Event"] = "事件"
 L["Event(s)"] = "事件"
 L["Every Frame"] = "所有帧"
 L["Every Frame (High CPU usage)"] = "所有帧（高CPU占用）"
+L["Evoker Essence"] = "唤魔师精华"
 L["Experience (%)"] = "经验值百分比"
 L["Expertise Bonus"] = "精准加成"
 L["Expertise Rating"] = "精准等级"
@@ -595,6 +605,8 @@ L["Icecrown Citadel"] = "冰冠堡垒"
 L["Icon"] = "图标"
 L["Icon Function"] = "图标函数"
 L["Icon Function (fallback state)"] = "图标函数（后备状态）"
+--[[Translation missing --]]
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "如果你需要进一步的协助，请在 GitHub 上提交工单或是访问我们的 Discord：https://discord.gg/weakauras！"
 L["Ignis the Furnace Master"] = "掌炉者伊格尼斯"
 L["Ignore Dead"] = "忽略已死亡"
@@ -731,8 +743,7 @@ L["Maximum"] = "最大"
 L["Maximum Estimate"] = "最大预估"
 L["Media"] = "媒体"
 L["Medium"] = "中"
---[[Translation missing --]]
-L["Melee"] = "Melee"
+L["Melee"] = "近战"
 L["Melee Haste (%)"] = "攻速百分比"
 L["Message"] = "信息"
 L["Message Type"] = "信息类型"
@@ -801,6 +812,7 @@ L["Note, that cross realm transmission is possible if you are on the same group"
 L["Note: Due to how complicated the swing timer behavior is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "注意：由于近战攻击计时器的复杂性和暴雪提供的API的缺失，结果在边缘情况下不准确。"
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "注意：“不在队伍时隐藏”在新光环追踪系统中不可用，使用加载选项来达到相同效果。"
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "注意：现在普通触发器也可使用多目标触发器可用的文本替换。"
+L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "注意：此触发器依赖于WoW API，它会在某些情况下返回错误的信息。"
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "注意：此类型的触发器只是在预估和单位之间的距离，实际和友方玩家的距离一般要比预估值多 3 码。距离预估的可用数值取决于你的职业、已学技能与目标单位类型，某些距离数值不适用于特定NPC。|n|n|cFFAAFFAA友方单位：|r %s|n|cFFFFAAAA敌方单位：|r %s|n|cFFAAAAFF非特定单位：|r %s"
 L["Noth the Plaguebringer"] = "瘟疫使者诺斯"
 L["NPC"] = "NPC"
@@ -808,14 +820,60 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "数字"
 L["Number Affected"] = "影响数"
 L["Object"] = "对象"
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=]
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=]
 L["Officer"] = "官员"
 L["Offset from progress"] = "于进度偏移量"
 L["Offset Timer"] = "位移计时器"
 L["Old Blizzard (2h | 3m | 10s | 2.4)"] = "传统暴雪格式 （2h | 3m | 10s | 2.4）"
 L["On Cooldown"] = "冷却中"
 L["On Taxi"] = "在载具中"
-L["Only if BigWigs shows it on it's bar"] = "仅当其在 BigWigs 条上出现时"
-L["Only if DBM shows it on it's bar"] = "仅当其在 DBM 条上出现时"
 L["Only if on a different realm"] = "仅当在不同服务器上"
 L["Only if Primary"] = "仅当是首要时"
 L["Onyxia"] = "奥妮克希亚"
@@ -917,8 +975,7 @@ L["Raid Warning"] = "团队警告"
 L["Raids"] = "团队地下城"
 L["Range"] = "远程攻击"
 L["Range Check"] = "距离检查"
---[[Translation missing --]]
-L["Ranged"] = "Ranged"
+L["Ranged"] = "远程"
 L["Rank"] = "等级"
 L["Rare"] = "稀有"
 L["Rare Elite"] = "稀有精英"
@@ -1068,8 +1125,7 @@ L["Source unit's raid mark texture"] = "来源单位的团队标记材质"
 L["Space"] = "空白"
 L["Spacing"] = "间距"
 L["Spark"] = "闪光"
---[[Translation missing --]]
-L["Spec Position"] = "Spec Position"
+L["Spec Position"] = "专精位置"
 L["Spec Role"] = "专精角色"
 L["Specialization"] = "专精"
 L["Specific Type"] = "特定类型"
@@ -1117,6 +1173,8 @@ L["String"] = "字符串"
 L["Subtract Cast"] = "减去施法时间"
 L["Subtract Channel"] = "减去引导时间"
 L["Subtract GCD"] = "减去 GCD"
+--[[Translation missing --]]
+L["Success"] = "Success"
 L["Sulfuron Harbinger"] = "萨弗隆先驱者"
 L["Summon"] = "召唤"
 L["Supports multiple entries, separated by commas"] = "支持多个条目，由英文逗号分隔"
@@ -1192,6 +1250,7 @@ L["Toravon the Ice Watcher"] = "寒冰看守者图拉旺"
 L["Torghast"] = "托加斯特"
 L["Total"] = "总量"
 L["Total Duration"] = "总时长"
+L["Total Essence"] = "总精华"
 L["Total Experience"] = "最大经验值"
 L["Total Match Count"] = "总共匹配计数"
 L["Total Stacks"] = "总层数"

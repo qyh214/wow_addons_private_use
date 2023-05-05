@@ -34,7 +34,20 @@ L:SetOptionLocalization({
 ---------------------------
 --  Assault of the Zaqali --
 ---------------------------
---L= DBM:GetModLocalization(2524)
+L= DBM:GetModLocalization(2524)
+
+L:SetTimerLocalization{
+	timerGuardsandHuntsmanCD	= "Big Adds (%s)"
+}
+
+L:SetOptionLocalization({
+	timerGuardsandHuntsmanCD	= "Show timers for new Huntsman or Guards climbing the walls"
+})
+
+L:SetMiscLocalization({
+	northWall		= "Commanders ascend the northern battlement!",
+	southWall		= "Commanders ascend the southern battlement!"
+})
 
 ---------------------------
 --  Rashok --
@@ -56,7 +69,12 @@ L:SetOptionLocalization({
 ---------------------------
 --  Magmorax --
 ---------------------------
---L= DBM:GetModLocalization(2527)
+L= DBM:GetModLocalization(2527)
+
+L:SetMiscLocalization({
+	pool		= "{rt%d}Pool %d",--<icon> Pool 1,2,3
+	soakpool	= "Soak Pool"
+})
 
 ---------------------------
 --  Echo of Neltharion --
@@ -66,7 +84,14 @@ L:SetOptionLocalization({
 ---------------------------
 --  Scalecommander Sarkareth --
 ---------------------------
---L= DBM:GetModLocalization(2520)
+L= DBM:GetModLocalization(2520)
+
+L:SetOptionLocalization({
+	InfoFrameBehavior	= "Set mod behavior for infoframe stack tracking",
+	OblivionOnly		= "Only show Oblivion stacks (stages 1 2 and 3)",
+	HowlOnly			= "Only show Oppressing Howl stacks (stage 1, closes otherwise)",
+	Hybrid				= "Show Oppressing Howl stacks in stage 1 and Oblivion stacks in stages 2 and 3"--Default
+})
 
 -------------
 --  Trash  --

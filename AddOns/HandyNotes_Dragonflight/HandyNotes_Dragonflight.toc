@@ -1,11 +1,12 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: HandyNotes: Dragonflight
-## Version: 34
+## Version: 36
 ## Notes: Dragonflight Notes
 ## OptionalDeps: Ace3
 ## RequiredDeps: HandyNotes
 ## X-Embeds: Ace3
 ## SavedVariables: HandyNotes_DragonflightDB
+## IconTexture: 4640486
 
 embeds.xml
 core\core.xml

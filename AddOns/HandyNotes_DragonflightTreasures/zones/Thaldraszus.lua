@@ -4,6 +4,8 @@ local myname, ns = ...
 40857586 ?
 --]]
 
+-- stuffed the review box full at the Serene Dreams spa: 72357
+
 -- PRIMALIST_TOMORROW = 2085
 -- AZMERLOTH = 2092
 -- GNOLL_WAR = 2090
@@ -68,6 +70,15 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     achievement=16301, -- Treasures
     minimap=true,
     hide_before=ns.conditions.Level(64),
+})
+
+ns.RegisterPoints(ns.THALDRASZUS, {
+    [60665371] = { -- Revival Catalyst
+        label="{questname:72528:Revival Catalyst}",
+        atlas="creationcatalyst-32x32",
+        hide_before=ns.conditions.QuestComplete(72360), -- Reviving the Machine
+        note="Bring gear here to become tier",
+    },
 })
 
 -- Rares
@@ -254,7 +265,7 @@ ns.RegisterPoints(ns.THALDRASZUS, {
     },
     [39807000] = { -- Riverwalker Tamopo
         criteria=56148,
-        quest=69880,
+        quest=74024, -- 69880
         npc=193240,
         loot={
             {196976,quest=69176,}, -- Cliffside Wylderdrake: Head Mane
@@ -268,6 +279,7 @@ ns.RegisterPoints(ns.THALDRASZUS, {
             {200249,toy=true,}, -- Mage's Chewed Wand
             200442, -- Basilisk Hide Jerkin
             200859, -- Seasoned Hunter's Trophy
+            200137, -- Chitin Dreadbringer
         },
         vignette=5201,
         -- hide_before=ns.MAXLEVEL, -- TODO
@@ -549,6 +561,13 @@ ns.RegisterPoints(ns.THALDRASZUS, {
         npc=201550,
         loot={
             203677, -- Watcher's 'Neck' Ring
+        },
+    },
+    [59566227] = { -- Overseer Stonetongue
+        quest=74566, -- 74448
+        npc=201552,
+        loot={
+            203665, -- Stonetongues Hood
         },
     },
     [60008190] = { -- Liskanoth

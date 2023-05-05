@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1487, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230307064655")
+mod:SetRevision("20230326164727")
 mod:SetCreatureID(95674, 99868)--First engage, Second engage
 mod:SetEncounterID(1807)
 mod:DisableEEKillDetection()--ENCOUNTER_END fires a wipe when fenryr casts stealth and runs to new location (P2)
@@ -117,7 +117,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnHowl:Show()
 		specWarnHowl:Play("stopcast")
 		timerHowlCD:Start()
-		updateAllTimers(self, 5.8)
+		updateAllTimers(self, 4.8)
 	elseif spellId == 197558 then
 		timerLeapCD:Start()
 		updateAllTimers(self, 10.9)
@@ -125,7 +125,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.clawCount = self.vb.clawCount + 1
 		warnClawFrenzy:Show(self.vb.clawCount)
 		timerClawFrenzyCD:Start(self.vb.phase == 2 and 8.5 or 9.7, self.vb.clawCount+1)
-		updateAllTimers(self, 4.8)
+		updateAllTimers(self, 3.8)
 	end
 end
 

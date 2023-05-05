@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2482, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230308071952")
+mod:SetRevision("20230423184458")
 mod:SetCreatureID(187967)
 mod:SetEncounterID(2592)
 mod:SetUsedIcons(1, 2, 3)
@@ -226,7 +226,7 @@ function mod:SPELL_CAST_START(args)
 		--Seems to be cast 3 casts per movement, minus first, first started at movement, 2nd after first with longer cd then 3rd cast shorter cd after 2nd
 		--Repeats on next movement
 		--More consistent in stage 2
-		if self.vb.phase == 2 then
+		if self:GetStage(2) then
 			timerChillingBlastCD:Start(32, self.vb.blastCount+1)
 		else
 			local timer = self:GetFromTimersTable(allTimers, difficultyName, 1, spellId, self.vb.blastCount+1)
@@ -284,7 +284,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if spellId == 372238 then
 		self.vb.spiderlingsCount = self.vb.spiderlingsCount + 1
 		warnCallSpiderlings:Show(self.vb.spiderlingsCount)
-		if self.vb.phase == 2 then
+		if self:GetStage(2) then
 			--Mythic sequenced, 44, 30, 35?
 			timerCallSpiderlingsCD:Start(self:IsNormal() and 25 or 30, self.vb.spiderlingsCount+1)
 		else

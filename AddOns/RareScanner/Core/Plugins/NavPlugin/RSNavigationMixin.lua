@@ -83,12 +83,12 @@ function RSNavigationMixin:AddNext(mapID, x, y, name, atlasName, objectGUID)
 		currentIndex = table.getn(navigationCache)
 
 		-- Refresh waypoint
-		RSTomtom.AddTomtomWaypointFromVignette(vignetteInfo)
-		RSWaypoints.AddWaypointFromVignette(vignetteInfo)
+		RSTomtom.AddTomtomAutomaticWaypoint(mapID, x, y, name)
+		RSWaypoints.AddAutomaticWaypoint(mapID, x, y)
 	-- If the navigation cache only contains one item, adds waypoint
 	elseif (table.getn(navigationCache) == 1) then
-		RSTomtom.AddTomtomWaypointFromVignette(vignetteInfo)
-		RSWaypoints.AddWaypointFromVignette(vignetteInfo)
+		RSTomtom.AddTomtomAutomaticWaypoint(mapID, x, y, name)
+		RSWaypoints.AddAutomaticWaypoint(mapID, x, y)
 	end
 end
 
@@ -116,8 +116,8 @@ function RSNavigationMixin:Navigate()
 	self:GetParent():DetectedNewVignette(self:GetParent(), vignetteInfo, true)
 
 	-- Adds waypoint
-	RSTomtom.AddTomtomWaypointFromVignette(vignetteInfo)
-	RSWaypoints.AddWaypointFromVignette(vignetteInfo)
+	RSTomtom.AddTomtomAutomaticWaypoint(vignetteInfo.mapID, vignetteInfo.x, vignetteInfo.y, vignetteInfo.name)
+	RSWaypoints.AddAutomaticWaypoint(vignetteInfo.mapID, vignetteInfo.x, vignetteInfo.y)
 end
 
 function RSNavigationMixin:Reset()

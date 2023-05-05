@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20221015205747")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(79545)
 mod:SetEncounterID(1732)
 
@@ -80,10 +80,10 @@ end
 
 function mod:UNIT_TARGETABLE_CHANGED()
 	self:SetStage(0)
-	if self.vb.phase == 2 then
+	if self:GetStage(2) then
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
-	elseif self.vb.phase == 3 then
+	elseif self:GetStage(3) then
 		warnPhase3:Show()
 		warnPhase3:Play("pthree")
 	end

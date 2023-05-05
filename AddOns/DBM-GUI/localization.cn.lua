@@ -243,7 +243,6 @@ L.WorldBuffAlert			= "在您的位面启动世界增益释放时显示警报信�
 
 L.Area_BugAlerts			= "错误报告选项"
 L.BadTimerAlert				= "在聊天窗口中显示DBM检测到计时器错误且至少有1秒不正确的信息"
-L.BadIDAlert				= "在聊天窗口中显示DBM检测到使用中的无效技能或日志ID的信息"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "语音警报"

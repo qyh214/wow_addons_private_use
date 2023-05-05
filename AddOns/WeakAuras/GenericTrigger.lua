@@ -777,9 +777,14 @@ function WeakAuras.ScanUnitEvents(event, unit, ...)
         Private.ActivateAuraEnvironment(id);
         local updateTriggerState = false;
         for triggernum, data in pairs(triggers) do
-          local allStates = WeakAuras.GetTriggerStateForTrigger(id, triggernum);
-          if (RunTriggerFunc(allStates, data, id, triggernum, event, unit, ...)) then
-            updateTriggerState = true;
+          local delay = GenericTrigger.GetDelay(data)
+          if delay == 0 then
+            local allStates = WeakAuras.GetTriggerStateForTrigger(id, triggernum);
+            if (RunTriggerFunc(allStates, data, id, triggernum, event, unit, ...)) then
+              updateTriggerState = true;
+            end
+          else
+            Private.RunTriggerFuncWithDelay(delay, id, triggernum, data, event, unit, ...)
           end
         end
         if (updateTriggerState) then
@@ -799,9 +804,9 @@ function WeakAuras.ScanEventsInternal(event_list, event, arg1, arg2, ... )
     Private.ActivateAuraEnvironment(id);
     local updateTriggerState = false;
     for triggernum, data in pairs(triggers) do
-      local allStates = WeakAuras.GetTriggerStateForTrigger(id, triggernum);
       local delay = GenericTrigger.GetDelay(data)
       if delay == 0 then
+        local allStates = WeakAuras.GetTriggerStateForTrigger(id, triggernum);
         if (RunTriggerFunc(allStates, data, id, triggernum, event, arg1, arg2, ...)) then
           updateTriggerState = true
         end
@@ -1327,7 +1332,7 @@ do
     return tests
   end
 
-  function Private.CreateTriggerCounter(pattern)
+  function Private.ExecEnv.CreateTriggerCounter(pattern)
     local counter = {
       count = 0,
       tests = {
@@ -1341,6 +1346,9 @@ do
       GetNext = function(self)
         self.count = self.count + 1
         return self.count
+      end,
+      SetCount = function(self, count)
+        self.count = count
       end,
     }
     if pattern then
@@ -1468,9 +1476,9 @@ function GenericTrigger.Add(data, region)
 
             if prototype.countEvents then
               if trigger.use_count and type(trigger.count) == "string" and trigger.count ~= "" then
-                counter = Private.CreateTriggerCounter(trigger.count)
+                counter = Private.ExecEnv.CreateTriggerCounter(trigger.count)
               else
-                counter = Private.CreateTriggerCounter()
+                counter = Private.ExecEnv.CreateTriggerCounter()
               end
             end
 
@@ -1898,7 +1906,6 @@ do
     Private.StartProfileSystem("generictrigger swing");
     local now = GetTime()
     if event == "UNIT_ATTACK_SPEED" then
-      --- @type number?, number?
       local mainSpeedNew, offSpeedNew = UnitAttackSpeed("player")
       offSpeedNew = offSpeedNew or 0
       if lastSwingMain then
@@ -2195,6 +2202,7 @@ do
   local spellCdsCharges = CreateSpellCDHandler();
 
   local spellDetails = {}
+  local mark_ACTIONBAR_UPDATE_COOLDOWN, mark_PLAYER_ENTERING_WORLD
 
   function Private.InitCooldownReady()
     cdReadyFrame = CreateFrame("Frame");
@@ -2208,7 +2216,6 @@ do
       cdReadyFrame:RegisterEvent("CHARACTER_POINTS_CHANGED");
     end
     cdReadyFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN");
-    cdReadyFrame:RegisterEvent("SPELL_UPDATE_CHARGES");
     cdReadyFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
     cdReadyFrame:RegisterEvent("BAG_UPDATE_DELAYED");
     cdReadyFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
@@ -2233,20 +2240,34 @@ do
       end
 
       if GetTime() - cdReadyFrame.inWorld < 2 then
-        cdReadyFrame:SetScript("OnUpdate", cdReadyFrame.HandleEvent)
+        mark_PLAYER_ENTERING_WORLD = true
+        cdReadyFrame:Show()
         return
       end
-      cdReadyFrame:SetScript("OnUpdate", nil)
+      if (event == "ACTIONBAR_UPDATE_COOLDOWN") then
+        mark_ACTIONBAR_UPDATE_COOLDOWN = true
+        cdReadyFrame:Show()
+        return
+      end
 
       Private.StartProfileSystem("generictrigger cd tracking");
       if type(event) == "number" then-- Called from OnUpdate!
-        Private.CheckSpellKnown()
-        Private.CheckCooldownReady()
-        Private.CheckItemSlotCooldowns()
-      elseif(event == "SPELL_UPDATE_COOLDOWN" or event == "SPELL_UPDATE_CHARGES"
-        or event == "RUNE_POWER_UPDATE" or event == "ACTIONBAR_UPDATE_COOLDOWN"
+        if mark_PLAYER_ENTERING_WORLD then
+          Private.CheckSpellKnown()
+          Private.CheckCooldownReady()
+          Private.CheckItemSlotCooldowns()
+          mark_PLAYER_ENTERING_WORLD = nil
+          mark_ACTIONBAR_UPDATE_COOLDOWN = nil
+        elseif mark_ACTIONBAR_UPDATE_COOLDOWN then
+          Private.CheckCooldownReady()
+          mark_ACTIONBAR_UPDATE_COOLDOWN = nil
+        end
+      elseif(event == "SPELL_UPDATE_COOLDOWN" or event == "RUNE_POWER_UPDATE"
         or event == "PLAYER_TALENT_UPDATE" or event == "PLAYER_PVP_TALENT_UPDATE"
         or event == "CHARACTER_POINTS_CHANGED" or event == "RUNE_TYPE_UPDATE") then
+        if event == "SPELL_UPDATE_COOLDOWN" then
+          mark_ACTIONBAR_UPDATE_COOLDOWN = nil
+        end
         Private.CheckCooldownReady();
       elseif(event == "SPELLS_CHANGED") then
         Private.CheckSpellKnown()
@@ -2268,8 +2289,15 @@ do
         Private.CheckItemSlotCooldowns();
       end
       Private.StopProfileSystem("generictrigger cd tracking");
+      if mark_PLAYER_ENTERING_WORLD == nil and mark_ACTIONBAR_UPDATE_COOLDOWN == nil then
+        cdReadyFrame:Hide()
+      else
+        cdReadyFrame:Show()
+      end
     end
+    cdReadyFrame:Hide()
     cdReadyFrame:SetScript("OnEvent", cdReadyFrame.HandleEvent)
+    cdReadyFrame:SetScript("OnUpdate", cdReadyFrame.HandleEvent)
   end
 
   function WeakAuras.GetRuneCooldown(id)
@@ -2277,6 +2305,108 @@ do
       return runeCdExps[id] - runeCdDurs[id], runeCdDurs[id];
     else
       return 0, 0;
+    end
+  end
+
+  local initEssenceCooldown = false
+  local essenceCache = {{},{},{},{},{},{}}
+  function WeakAuras.InitEssenceCooldown()
+    if initEssenceCooldown then
+      return true
+    end
+    local EssenceEnum = Enum.PowerType.Essence
+    local lastFullValue = 0
+    local lastTime = 0
+    local essenceEventFrame = CreateFrame("Frame")
+    essenceEventFrame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player")
+    essenceEventFrame:RegisterUnitEvent("UNIT_MAXPOWER", "player")
+    essenceEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    essenceEventFrame:RegisterEvent("PLAYER_LEAVING_WORLD")
+    local essenceEventHandler = function(self, event, unitTarget, powerType)
+      if powerType and powerType ~= "ESSENCE" then
+        return
+      end
+      local now = GetTime()
+      if lastTime == now then
+        return
+      end
+      Private.StartProfileSystem("generictrigger essence")
+      local power = UnitPower("player", EssenceEnum)
+      local total = UnitPowerMax("player", EssenceEnum)
+      local peace = GetPowerRegenForPowerType(EssenceEnum)
+      if peace == nil or peace == 0 then
+        peace = 0.2
+      end
+      local duration = 1 / peace
+      local partial = UnitPartialPower("player", EssenceEnum) / 1000
+
+      if (partial == 0) then
+        lastFullValue = now
+      elseif power ~= total then
+        -- UnitPartialPower is a rather poor api, which returns incorrect values
+        -- This almost mirrors what the default ui does, in that the default ui
+        -- starts an animation and only uses UnitPartialPower when that animation's
+        -- progress differs from UnitPartialPower by 0.1
+        -- This here uses a similar logic. We sync whenever partial is 0
+        -- and then estimate based on that. And as long as that
+        -- estimate is within 0.1 of UnitPartialPower we prefer the estimate
+        local estimatedPartial = (now - lastFullValue) / duration
+        estimatedPartial = estimatedPartial - floor(estimatedPartial)
+        if abs(estimatedPartial - partial) < 0.1 then
+          partial = estimatedPartial
+        end
+      end
+      for i = 1, 6 do
+        local essence = essenceCache[i]
+        if i > total then
+          essence.duration = nil
+          essence.expirationTime = nil
+          essence.remaining = nil
+          essence.paused = nil
+        elseif power >= i then
+          essence.duration = duration
+          essence.expirationTime = math.huge
+          essence.remaining = 0
+          essence.paused = true
+        elseif power + 1 == i then
+          essence.duration = duration
+          essence.expirationTime = GetTime() + (1 - partial) * duration
+          essence.paused = false
+        else
+          essence.duration = duration
+          essence.expirationTime = GetTime() + (1 - partial) * duration + (i - 1 - power) * duration
+          essence.remaining = duration
+          essence.paused = false
+        end
+      end
+      lastTime = now
+      Private.StopProfileSystem("generictrigger essence")
+      WeakAuras.ScanEvents("ESSENCE_UPDATE")
+    end
+    essenceEventFrame:SetScript("OnEvent", essenceEventHandler)
+    essenceEventFrame:Show()
+
+    essenceEventHandler()
+    initEssenceCooldown = true
+  end
+
+  function WeakAuras.GetEssenceCooldown(essence)
+    local power = UnitPower("player", Enum.PowerType.Essence)
+    local total = UnitPowerMax("player", Enum.PowerType.Essence)
+    if essence then
+      local cache = essenceCache[essence]
+      if cache and essence <= total then
+        return cache.duration, cache.expirationTime, cache.remaining, cache.paused, power, total
+      else
+        return nil, nil, nil, nil, essence, total
+      end
+    else
+      local cache = essenceCache[total]
+      if cache and cache.duration then
+        return total * cache.duration, cache.expirationTime, cache.remaining, cache.paused, power, total
+      else
+        return nil, nil, nil, nil, power, total
+      end
     end
   end
 
@@ -3088,7 +3218,7 @@ do
       bar.icon = icon
       bar.timerType = timerType
       bar.spellId = tostring(spellId)
-      bar.count = msg:match("(%d+)") or "0"
+      bar.count = msg:match("%((%d+)%)") or msg:match("（(%d+)）") or "0"
       bar.dbmType = dbmType
 
       local barOptions = DBT.Options or DBM.Bars.options
@@ -3186,7 +3316,7 @@ do
     end
   end
 
-  function Private.ExecEnv.DBMTimerMatches(timerId, id, message, operator, spellId, dbmType, count)
+  function Private.ExecEnv.DBMTimerMatches(timerId, id, message, operator, spellId, dbmType, counter)
     if not bars[timerId] then
       return false
     end
@@ -3213,8 +3343,11 @@ do
         end
       end
     end
-    if count and count ~= "" and count ~= v.count then
-      return false
+    if counter then
+      counter:SetCount(tonumber(v.count) or 0)
+      if not counter:Match() then
+        return false
+      end
     end
     if dbmType and dbmType ~= v.dbmType then
       return false
@@ -3351,7 +3484,7 @@ do
       bar.bwBarColor = BWColorModule:GetColorTable("barColor", addon, spellId)
       bar.bwTextColor = BWColorModule:GetColorTable("barText", addon, spellId)
       bar.bwBackgroundColor = BWColorModule:GetColorTable("barBackground", addon, spellId)
-      bar.count = text:match("(%d+)") or "0"
+      bar.count = text:match("%((%d+)%)") or text:match("（(%d+)）") or "0"
       bar.cast = not(text:match("^[^<]") and true)
 
       WeakAuras.ScanEvents("BigWigs_StartBar", text)
@@ -3463,7 +3596,7 @@ do
     state.isCooldown = bar.isCooldown
   end
 
-  function Private.ExecEnv.BigWigsTimerMatches(id, message, operator, spellId, count, cast, cooldown)
+  function Private.ExecEnv.BigWigsTimerMatches(id, message, operator, spellId, counter, cast, cooldown)
     if not bars[id] then
       return false
     end
@@ -3488,8 +3621,11 @@ do
         end
       end
     end
-    if count and count ~= "" and count ~= v.count then
-      return false
+    if counter then
+      counter:SetCount(tonumber(v.count) or 0)
+      if not counter:Match() then
+        return false
+      end
     end
     if cast ~= nil and v.cast ~= cast then
       return false
@@ -3512,10 +3648,10 @@ do
     return bars[id]
   end
 
-  function WeakAuras.GetBigWigsTimer(text, operator, spellId, extendTimer, count, cast)
+  function WeakAuras.GetBigWigsTimer(text, operator, spellId, extendTimer, counter, cast)
     local bestMatch
     for id, bar in pairs(bars) do
-      if Private.ExecEnv.BigWigsTimerMatches(id, text, operator, spellId, count, cast)
+      if Private.ExecEnv.BigWigsTimerMatches(id, text, operator, spellId, counter, cast)
       and (bestMatch == nil or bar.expirationTime < bestMatch.expirationTime)
       and bar.expirationTime + extendTimer > GetTime()
       then
@@ -3668,22 +3804,15 @@ do
           local tooltipData = C_TooltipInfo.GetInventoryItem("player", id)
           if tooltipData and tooltipData.lines then
             for _, line in ipairs(tooltipData.lines) do
-              if line.args then
-                for _, arg in ipairs(line.args) do
-                  if arg.field == "leftText" then
-                    local text = arg.stringVal;
-                    if(text) then
-                      -- Format based on ITEM_ENCHANT_TIME_LEFT_MIN, ITEM_ENCHANT_TIME_LEFT_SEC
-                      local _, _, name, shortenedName = text:find("^((.-) ?+?[VI%d]*) ?%(%d+%D.+%)$");
-                      if(name and name ~= "") then
-                        return name, shortenedName;
-                      end
-                      _, _, name, shortenedName = text:find("^((.-) ?+?[VI%d]*)%（%d+%D.+%）$");
-                      if(name and name ~= "") then
-                        return name, shortenedName;
-                      end
-                    end
-                  end
+              if line.leftText then
+                -- Format based on ITEM_ENCHANT_TIME_LEFT_MIN, ITEM_ENCHANT_TIME_LEFT_SEC
+                local _, _, name, shortenedName = line.leftText:find("^((.-) ?+?[VI%d]*) ?%(%d+%D.+%)$");
+                if(name and name ~= "") then
+                  return name, shortenedName;
+                end
+                _, _, name, shortenedName = line.leftText:find("^((.-) ?+?[VI%d]*)%（%d+%D.+%）$");
+                if(name and name ~= "") then
+                  return name, shortenedName;
                 end
               end
             end
@@ -3872,19 +4001,12 @@ do
   local playerMovingFrame = nil
   local moving;
 
-  local function PlayerMoveUpdate(self, event)
+  local function PlayerMoveUpdate()
     Private.StartProfileSystem("generictrigger");
-    -- channeling e.g. Mind Flay results in lots of PLAYER_STARTED_MOVING, PLAYER_STOPPED_MOVING
-    -- for each frame
-    -- So check after 0.01 s if IsPlayerMoving() actually returns something different.
-    timer:ScheduleTimer(function()
-      Private.StartProfileSystem("generictrigger");
-      if (moving ~= IsPlayerMoving() or moving == nil) then
-        moving = IsPlayerMoving();
-        WeakAuras.ScanEvents("PLAYER_MOVING_UPDATE")
-      end
-      Private.StopProfileSystem("generictrigger");
-    end, 0.01);
+    if (moving ~= IsPlayerMoving() or moving == nil) then
+      moving = IsPlayerMoving();
+      WeakAuras.ScanEvents("PLAYER_MOVING_UPDATE")
+    end
     Private.StopProfileSystem("generictrigger");
   end
 
@@ -3903,9 +4025,7 @@ do
       playerMovingFrame = CreateFrame("Frame");
       Private.frames["Player Moving Frame"] =  playerMovingFrame;
     end
-    playerMovingFrame:RegisterEvent("PLAYER_STARTED_MOVING");
-    playerMovingFrame:RegisterEvent("PLAYER_STOPPED_MOVING");
-    playerMovingFrame:SetScript("OnEvent", PlayerMoveUpdate)
+    playerMovingFrame:SetScript("OnUpdate", PlayerMoveUpdate)
   end
 
   function WeakAuras.WatchPlayerMoveSpeed()

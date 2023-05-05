@@ -5,7 +5,7 @@ local tremove = table.remove
 local tinsert = table.insert
 local wipe = table.wipe
 
-local Details = _G._detalhes
+local Details = _G.Details
 local _
 local addonName, Details222 = ...
 
@@ -29,6 +29,35 @@ end
 --returns the current active segment
 function Details:GetCurrentCombat()
 	return Details.tabela_vigente
+end
+
+function Details:GetOverallCombat()
+	return Details.tabela_overall
+end
+
+function Details:GetCombat(combat)
+	if (not combat) then
+		return Details.tabela_vigente
+
+	elseif (type(combat) == "number") then
+		if (combat == -1) then --overall
+			return Details.tabela_overall
+
+		elseif (combat == 0) then --current
+			return Details.tabela_vigente
+		else
+			return Details.tabela_historico.tabelas[combat]
+		end
+
+	elseif (type(combat) == "string") then
+		if (combat == "overall") then
+			return Details.tabela_overall
+		elseif (combat == "current") then
+			return Details.tabela_vigente
+		end
+	end
+
+	return nil
 end
 
 --returns a private table containing all stored segments
@@ -422,7 +451,7 @@ function segmentClass:resetar_overall()
 	--	_detalhes.schedule_remove_overall = true
 	--else
 		--fecha a janela de informa��es do jogador
-		Details:FechaJanelaInfo()
+		Details:CloseBreakdownWindow()
 
 		Details.tabela_overall = combatClass:NovaTabela()
 
@@ -469,7 +498,7 @@ function segmentClass:resetar()
 	--_detalhes.schedule_remove_overall = nil
 
 	--fecha a janela de informa��es do jogador
-	Details:FechaJanelaInfo()
+	Details:CloseBreakdownWindow()
 
 	--empty temporary tables
 	Details.atributo_damage:ClearTempTables()
@@ -485,7 +514,7 @@ function segmentClass:resetar()
 		wipe (Details.schedule_add_to_overall)
 	end
 
-	Details:LimparPets()
+	Details:PetContainerCleanup()
 	Details:ResetSpecCache (true) --for�ar
 
 	-- novo container de historico

@@ -1,3 +1,46 @@
+# v1.14.2
+
+- Updated interface number for 10.1.0
+- Fixed an error where the sidebar wouldnt always show the correct number of buttons
+- Updated pvptalents for 10.1.0
+
+# v1.14.1
+
+- Fixed an error while getting the current season on first login
+
+# v1.14.0
+
+- Initial support for 10.1
+
+# v1.13.5
+
+- Updated action bar item handling to allow placing missing items on action bars unless they are equippable
+- Fixed a typo
+
+# v1.13.4
+
+- Fixed an error where old, removed talent nodes were not being removed from talent sets
+
+# v1.13.3
+
+- Fixed an issue where some talents could incorrectly be treated as choice nodes
+
+# v1.13.2
+
+- Updated so action bar sets will ignore items if none are available
+- Fixed an issue where equipment set errors could break other parts of the UI
+- Fixed an issue where some unused action bar slots were not being ignored
+- Fixed an issue where deleting a characters data would not delete the related Blizzard talent sets
+
+# v1.13.1
+
+- Updated for 10.0.7
+
+# v1.13.0-beta
+
+- Added support for resizing the main window, including horizontal resizing for the talents tab.
+- Fixed a slight gap in the background of the main window
+
 # v1.12.4
 
 - Added log message for the internal trait tree version when changing Dragonflight Talents

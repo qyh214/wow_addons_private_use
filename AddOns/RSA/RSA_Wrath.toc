@@ -2,7 +2,7 @@
 ## Title: RSA
 ## Notes: Easy Spell Announcements!
 ## Author: Raeli
-## Version: 5.14
+## Version: 5.15
 ## SavedVariables: RSADB, RSA5
 ## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0
 ## X-Credits: Jenneth, Rowaasr13, Xadurk

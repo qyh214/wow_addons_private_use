@@ -239,7 +239,6 @@ L.WorldBuffAlert					= "Show alert message and timer when world buff RP has been
 
 L.Area_BugAlerts					= "Bug Reporting Alert Options"
 L.BadTimerAlert						= "Show chat message when DBM detects a bad timer with at least 1 second of incorrectness"
-L.BadIDAlert						= "Show chat message when DBM detects an invalid spell or journal ID in use"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts				= "Spoken Alerts"

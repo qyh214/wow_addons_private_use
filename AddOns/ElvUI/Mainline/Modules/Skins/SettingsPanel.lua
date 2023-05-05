@@ -67,7 +67,7 @@ function S:SettingsPanel()
 	SettingsPanel.CategoryList:CreateBackdrop('Transparent')
 	SettingsPanel.CategoryList.backdrop:SetInside()
 
-	S:HandleTrimScrollBar(SettingsPanel.CategoryList.ScrollBar, true)
+	S:HandleTrimScrollBar(SettingsPanel.CategoryList.ScrollBar)
 
 	hooksecurefunc(SettingsPanel.CategoryList.ScrollBox, 'Update', function(frame)
 		for _, child in next, { frame.ScrollTarget:GetChildren() } do

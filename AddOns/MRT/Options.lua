@@ -695,6 +695,7 @@ function OptionsFrame:AddDeathStar(maxDeathStars,deathStarType)
 			if p >= f.alphastart then
 				a = 1 - (p - f.alphastart) / (f.alphaend - f.alphastart)
 			end
+			if a < 0 then a = 0 elseif a > 1 then a = 1 end
 			f.img:SetAlpha(a)
 			if p >= f.alphaend then
 				self:Stop()
@@ -1050,7 +1051,8 @@ do
 			askFrame:SetScript("OnUpdate",function()
 				local now = GetTime()
 				if now - start <= 30 then
-					hiddenask:SetAlpha(max(0,min((now - start) / 30,1)))
+					local a = max(0,min((now - start) / 30,1))
+					hiddenask:SetAlpha(a)
 				elseif not hiddenask.isshown then
 					hiddenask:SetAlpha(1)
 					hiddenask.isshown = true
@@ -1059,8 +1061,9 @@ do
 			
 				if carAlphaStart then
 					if now < carAlphaStart then
+						local a = 1-max(0,min((carAlphaStart - now) / 5,1))
 						for i=1,#cars do
-							cars[i]:SetAlpha(1-max(0,min((carAlphaStart - now) / 5,1)))
+							cars[i]:SetAlpha(a)
 						end
 					elseif not hiddenask.carsFull then
 						for i=1,#cars do
@@ -1151,7 +1154,7 @@ OptionsFrame.contactLeft = ELib:Text(OptionsFrame,L.setcontact,12):Size(150,25):
 OptionsFrame.contactRight = ELib:Text(OptionsFrame,"e-mail: ykiigor@gmail.com",12):Size(520,25):Point(135,-235):Color():Shadow():Top()
 
 OptionsFrame.thanksLeft = ELib:Text(OptionsFrame,L.SetThanks,12):Size(150,25):Point(15,-255):Shadow():Top()
-OptionsFrame.thanksRight = ELib:Text(OptionsFrame,"Phanx, funkydude, Shurshik, Kemayo, Guillotine, Rabbit, fookah, diesal2010, Felix, yuk6196, martinkerth, Gyffes, Cubetrace, tigerlolol, Morana, SafeteeWoW, Dejablue, Wollie, eXochron, Firehead94",12):Size(540,0):Point(135,-255):Color():Shadow():Top()
+OptionsFrame.thanksRight = ELib:Text(OptionsFrame,"Phanx, funkydude, Shurshik, Kemayo, Guillotine, Rabbit, fookah, diesal2010, Felix, yuk6196, martinkerth, Gyffes, Cubetrace, tigerlolol, Morana, SafeteeWoW, Dejablue, Wollie, eXochron, Firehead94, Mitalie",12):Size(540,0):Point(135,-255):Color():Shadow():Top()
 
 if L.TranslateBy ~= "" then
 	OptionsFrame.translateLeft = ELib:Text(OptionsFrame,L.SetTranslate,12):Size(150,25):Point("LEFT",OptionsFrame,15,0):Point("TOP",OptionsFrame.thanksRight,"BOTTOM",0,-8):Shadow():Top()

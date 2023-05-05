@@ -8,6 +8,7 @@ local Map = ns.Map
 
 local Collectible = ns.node.Collectible
 local Node = ns.node.Node
+local NPC = ns.node.NPC
 local PetBattle = ns.node.PetBattle
 local Rare = ns.node.Rare
 
@@ -22,6 +23,7 @@ local Item = ns.reward.Item
 local Mount = ns.reward.Mount
 local Pet = ns.reward.Pet
 local Recipe = ns.reward.Recipe
+local Section = ns.reward.Section
 local Spacer = ns.reward.Spacer
 local Toy = ns.reward.Toy
 local Transmog = ns.reward.Transmog
@@ -53,13 +55,14 @@ map.nodes[58174826] = Rare({
     location = L['in_small_cave'],
     rewards = {
         Achievement({id = 17525, criteria = 58458}), -- Champion of the Forbidden Reach
+        Mount({item = 192772, id = 1619}), -- Ancient Salamanther
         Pet({item = 193364, id = 3291}), -- Scruffles
         Item({item = 204276}), -- Untapped Forbidden Knowledge
         Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     },
     pois = {POI({58934944})} -- Entrance
-}) -- Vakren the Hunter
+}) -- Vraken the Hunter
 
 map.nodes[28303794] = Rare({
     id = 200537,
@@ -97,9 +100,10 @@ map.nodes[47722071] = Rare({
 
 supportCreche.nodes[35254374] = Rare({
     id = 200610,
-    quest = 73881,
+    quest = 73118,
     location = L['in_the_support_creche'],
     note = L['duzalgor_note'],
+    parent = {id = map.id, pois = {POI({36673239})}},
     rewards = {
         Achievement({id = 17525, criteria = 58462}), -- Champion of the Forbidden Reach
         Item({item = 202196}), -- Zskera Vault Key
@@ -109,7 +113,7 @@ supportCreche.nodes[35254374] = Rare({
 
 map.nodes[43736121] = Rare({
     id = 200681,
-    quest = nil,
+    quest = 73150,
     location = L['in_small_cave'],
     rewards = {
         Achievement({id = 17525, criteria = 58463}), -- Champion of the Forbidden Reach
@@ -148,6 +152,7 @@ map.nodes[59695883] = Rare({
     location = L['in_small_cave'],
     rewards = {
         Achievement({id = 17525, criteria = 58466}), -- Champion of the Forbidden Reach
+        Mount({item = 192772, id = 1619}), -- Ancient Salamanther
         Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     },
@@ -156,7 +161,7 @@ map.nodes[59695883] = Rare({
 
 map.nodes[72986738] = Rare({
     id = 200904,
-    quest = 70517,
+    quest = 73229,
     location = L['in_small_cave'],
     rewards = {
         Achievement({id = 17525, criteria = 58467}), -- Champion of the Forbidden Reach
@@ -194,7 +199,7 @@ warCreche.nodes[42958468] = Rare({
     id = 200960,
     quest = 73367,
     location = L['in_the_war_creche'],
-    parent = map.id,
+    parent = {id = map.id, pois = {POI({51895982})}},
     rewards = {
         Achievement({id = 17525, criteria = 58470}), -- Champion of the Forbidden Reach
         Pet({item = 191930, id = 3261}), -- Wakyn
@@ -208,7 +213,7 @@ map.nodes[36731223] = Rare({
     quest = 73366,
     rewards = {
         Achievement({id = 17525, criteria = 58471}), -- Champion of the Forbidden Reach
-        Mount({item = 192772, id = 197}), -- Ancient Salamanther -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192772, id = 1619}), -- Ancient Salamanther
         Item({item = 202196}), -- Zskera Vault Key
         DC.WindborneVelocidrake.ShriekerPattern, Currency({id = 2118}) -- Elemental Overflow
     }
@@ -218,7 +223,7 @@ warCreche.nodes[67355579] = Rare({
     id = 200978,
     quest = 73385,
     location = L['in_the_war_creche'],
-    parent = map.id,
+    parent = {id = map.id, pois = {POI({51895982})}},
     rewards = {
         Achievement({id = 17525, criteria = 58472}), -- Champion of the Forbidden Reach
         Item({item = 202196}), -- Zskera Vault Key
@@ -230,10 +235,10 @@ siegeCreche.nodes[58993931] = Rare({
     id = 200911,
     quest = 73225,
     location = L['in_the_siege_creche'],
-    parent = map.id,
+    parent = {id = map.id, pois = {POI({74425466})}},
     rewards = {
         Achievement({id = 17525, criteria = 58473}), -- Champion of the Forbidden Reach
-        Item({item = 202196}), -- Zskera Vault Key
+        DC.WindborneVelocidrake.HeavyScales, Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     }
 }) -- Volcanakk
@@ -242,30 +247,35 @@ siegeCreche.nodes[58993931] = Rare({
 
 local LootSpecialist = Class('LootSpecialist', Rare, {
     id = 203353,
-    quest = nil,
+    quest = 74936,
     note = L['loot_specialist_note'],
     fgroup = 'loot_specialist',
     rewards = {
         Achievement({id = 17525, criteria = 58830}), -- Champion of the Forbidden Reach
-        Item({item = 204276}), -- Untapped Forbidden Knowledge
+        DC.CliffsideWylderdrake.CoiledHorns, Item({item = 204276}), -- Untapped Forbidden Knowledge
         Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     }
 }) -- Loot Specialist
 
 map.nodes[14971438] = LootSpecialist()
-map.nodes[41021436] = LootSpecialist()
 map.nodes[47394256] = LootSpecialist()
 map.nodes[53464716] = LootSpecialist()
 
 dragonskullIsland.nodes[28984051] = LootSpecialist({
     location = L['in_dragonskull_island'],
-    parent = map.id
+    parent = {id = map.id, pois = {POI({74353661})}}
 })
 
+-------------------------------------------------------------------------------
 ------------------------------ PROFESSION RARES  ------------------------------
+-------------------------------------------------------------------------------
 
-local ProfessionRare = Class('ProfessionRare', Rare) -- Profession Rare
+local ProfessionRare = Class('ProfessionRare', NPC, {
+    icon = 'peg_rd',
+    scale = 1.5,
+    group = ns.groups.PROFESSION_RARES
+}) -- Profession Rare
 
 function ProfessionRare.getters:sublabel()
     return format(L['profession_required'], self.profession:GetName())
@@ -282,9 +292,11 @@ function ProfessionRare.getters:note()
         local reagent = self.summoningReagent
         local recipe = self.summoningRecipe
         local note = format(L['pr_crafting_note'], item, reagent, object)
-        return note .. '\n\n' .. format(L['pr_recipe_note'], recipe)
+        note = note .. '\n\n' .. format(L['pr_recipe_note'], recipe)
+        return note .. '\n\n' .. L['pr_summoning_note']
     else
-        return format(L['pr_gathering_note'], item, object)
+        local note = format(L['pr_gathering_note'], item, object)
+        return note .. '\n\n' .. L['pr_summoning_note']
     end
 end
 
@@ -292,37 +304,53 @@ function ProfessionRare.getters:rlabel()
     return ns.GetIconLink(self.profession.icon, 13)
 end
 
-dragonskullIsland.nodes[56947247] = ProfessionRare({
+local Tectonus = Class('Tectonus', ProfessionRare, {
     id = 200619,
-    quest = nil,
+    quest = 74300,
     profession = ns.professions.MINING,
     summoningItem = 203418, -- Amplified Quaking Stone
     summoningObject = L['pr_rumbling_deposit'], -- Rumbling Deposit
-    location = L['in_dragonskull_island'],
-    parent = map.id,
+    fgroup = 'fgroup_tectonus',
     rewards = {
         Achievement({id = 17525, criteria = 58474}) -- Champion of the Forbidden Reach
     }
 }) -- Tectonus
 
+map.nodes[62098142] = Tectonus()
+
+map.nodes[43264887] = Tectonus({
+    location = L['in_small_cave'],
+    pois = {POI({45284287})} -- Entrance
+})
+
+map.nodes[78743554] = Tectonus({
+    location = L['in_dragonskull_island'],
+    pois = {POI({74353661})} -- Entrance
+})
+
+dragonskullIsland.nodes[57157211] = Tectonus({
+    location = L['in_dragonskull_island']
+})
+
 local SirPinchalot = Class('SirPinchalot', ProfessionRare, {
     id = 200620,
-    quest = nil,
+    quest = 74305,
     profession = ns.professions.FISHING,
     summoningItem = 203419, -- Elusive Croaking Crab
     summoningObject = L['pr_empty_crab_trap'], -- Empty Crab Trap
-    fgroup = 'fgroup_sir_pinchalot',
+    fgroup = 'fgroup_sirpinchalot',
     rewards = {
         Achievement({id = 17525, criteria = 58475}) -- Champion of the Forbidden Reach
     }
 }) -- Sir Pinchalot
 
-map.nodes[44307464] = SirPinchalot()
-map.nodes[54707281] = SirPinchalot()
+map.nodes[70524149] = SirPinchalot()
+map.nodes[23076701] = SirPinchalot()
+map.nodes[47789090] = SirPinchalot()
 
 local Manathema = Class('Manathema', ProfessionRare, {
     id = 200621,
-    quest = nil,
+    quest = 74306,
     profession = ns.professions.ENCHANTING,
     summoningItem = 203410, -- Glowing Crystal Bookmark
     summoningObject = L['pr_book_of_arcane_entities'], -- Book of Arcane Entities
@@ -334,12 +362,20 @@ local Manathema = Class('Manathema', ProfessionRare, {
     }
 }) -- Manathema
 
-map.nodes[49264172] = Manathema()
-map.nodes[61256442] = Manathema()
+map.nodes[55633611] = Manathema({location = L['in_the_lost_atheneum']})
+
+map.nodes[47106485] = Manathema()
+
+map.nodes[46207802] = Manathema({
+    location = L['in_the_war_creche'],
+    pois = {POI({51935970})} -- Entrance
+})
+
+warCreche.nodes[43017871] = Manathema({location = L['in_the_war_creche']})
 
 local Snarfang = Class('Snarfang', ProfessionRare, {
     id = 200622,
-    quest = nil,
+    quest = 74307,
     profession = ns.professions.LEATHERWORKING,
     summoningItem = 203414, -- Reinforced Pristine Leather
     summoningObject = L['pr_tuskarr_tanning_rack'], -- Tuskarr Tanning Rack
@@ -354,13 +390,13 @@ local Snarfang = Class('Snarfang', ProfessionRare, {
     }
 }) -- Snarfang
 
-map.nodes[37124708] = Snarfang()
-map.nodes[48734944] = Snarfang()
+map.nodes[37134711] = Snarfang()
+map.nodes[48724945] = Snarfang()
 map.nodes[64967269] = Snarfang()
 
-local TuskarrKitePost = Class('TuskarrKitePost', ProfessionRare, {
+local Gareed = Class('Gareed', ProfessionRare, {
     id = 200722,
-    quest = nil,
+    quest = 74321,
     profession = ns.professions.TAILORING,
     summoningItem = 203415, -- Morqut Kite
     summoningObject = L['pr_tuskarr_kite_post'], -- Tuskarr Kite Post
@@ -372,13 +408,13 @@ local TuskarrKitePost = Class('TuskarrKitePost', ProfessionRare, {
     }
 }) -- Gareed
 
-map.nodes[31195341] = TuskarrKitePost()
-map.nodes[57634843] = TuskarrKitePost()
-map.nodes[60309155] = TuskarrKitePost()
+map.nodes[57654840] = Gareed()
+map.nodes[31185342] = Gareed()
+map.nodes[60299154] = Gareed()
 
 local Faunos = Class('Faunos', ProfessionRare, {
     id = 200725,
-    quest = nil,
+    quest = 74322,
     profession = ns.professions.SKINNING,
     summoningItem = 203417, -- Razor-Sharp Animal Bone
     summoningObject = L['pr_raw_argali_pelts'], -- Raw Argali Pelts
@@ -388,57 +424,76 @@ local Faunos = Class('Faunos', ProfessionRare, {
     }
 }) -- Faunos
 
-map.nodes[40488600] = Faunos()
-map.nodes[44993658] = Faunos()
-map.nodes[50498602] = Faunos()
-map.nodes[70664614] = Faunos()
+map.nodes[45013659] = Faunos()
+map.nodes[50488602] = Faunos()
+map.nodes[70664613] = Faunos()
 
-map.nodes[67237599] = ProfessionRare({
+local TidesmithZarviss = Class('TidesmithZarviss', ProfessionRare, {
     id = 200730,
-    quest = nil,
+    quest = 74325,
     profession = ns.professions.BLACKSMITHING,
     summoningItem = 203408, -- Ceremonial Trident
     summoningObject = L['pr_farescale_shrine'], -- Farscale Shrine
     summoningReagent = 203399, -- Damaged Trident
     summoningRecipe = 203421, -- Plans: Ceremonial Trident
+    fgroup = 'fgroup_tidesmithzarviss',
     rewards = {
         Achievement({id = 17525, criteria = 58480}) -- Champion of the Forbidden Reach
     }
 }) -- Tidesmith Zarviss
 
-warCreche.nodes[31308084] = ProfessionRare({
+map.nodes[67257598] = TidesmithZarviss()
+map.nodes[63096158] = TidesmithZarviss()
+
+map.nodes[80035881] = TidesmithZarviss({
+    location = L['in_small_cave'],
+    pois = {POI({80546045})}
+})
+
+local Arcantrix = Class('Arcantrix', ProfessionRare, {
     id = 200737,
-    quest = nil,
+    quest = 74328,
     profession = ns.professions.INSCRIPTION,
     summoningItem = 203412, -- Dispelling Rune
     summoningObject = L['pr_spellsworn_ward'], -- Spellsword Ward
     summoningReagent = 203403, -- Hastily Scrawled Rune
     summoningRecipe = 203425, -- Technique: Dispellng Rune
-    location = L['in_the_war_creche'],
-    parent = map.id,
+    fgroup = 'fgroup_arcantrix',
     rewards = {
         Achievement({id = 17525, criteria = 58481}) -- Champion of the Forbidden Reach
     }
 }) -- Arcantrix
 
+map.nodes[61256441] = Arcantrix()
+map.nodes[49264174] = Arcantrix()
+
+map.nodes[48347324] = Arcantrix({
+    location = L['in_the_war_creche'],
+    pois = {POI({51935970})} -- Entrance
+})
+
+warCreche.nodes[53105781] = Arcantrix({location = L['in_the_war_creche']})
+
 local Kangalo = Class('Kangalo', ProfessionRare, {
     id = 200738,
-    quest = nil,
+    quest = 74329,
     profession = ns.professions.HERBALISM,
     summoningItem = 203416, -- Dormant Lifebloom Seeds
     summoningObject = L['pr_awakened_soil'], -- Awakened Soil
-    fgroup = 'fgroup_kanalo',
+    fgroup = 'fgroup_kangalo',
     rewards = {
         Achievement({id = 17525, criteria = 58482}) -- Champion of the Forbidden Reach
     }
 }) -- Kangalo
 
-map.nodes[35354003] = Kangalo()
-map.nodes[56435911] = Kangalo()
+map.nodes[35354005] = Kangalo()
+map.nodes[40265336] = Kangalo()
+map.nodes[56435914] = Kangalo()
+map.nodes[75143190] = Kangalo()
 
 local Fimbul = Class('Fimbul', ProfessionRare, {
     id = 200739,
-    quest = nil,
+    quest = 74330,
     profession = ns.professions.ENGINEERING,
     summoningItem = 203411, -- Gnomish Voicebox
     summoningObject = L['pr_damaged_buzzspire'], -- Damaged Buzzspire 505
@@ -450,12 +505,13 @@ local Fimbul = Class('Fimbul', ProfessionRare, {
     }
 }) -- Fimbul
 
-map.nodes[67256157] = Fimbul()
-map.nodes[69755462] = Fimbul()
+map.nodes[44307465] = Fimbul()
+map.nodes[54707279] = Fimbul()
+map.nodes[61172683] = Fimbul()
 
 local AgniBlazehoof = Class('AgniBlazehoof', ProfessionRare, {
     id = 200740,
-    quest = nil,
+    quest = 74331,
     profession = ns.professions.ALCHEMY,
     summoningItem = 203407, -- Draconic Suppression Powder
     summoningObject = L['pr_volatile_brazier'], -- Volatile Brazier
@@ -467,39 +523,62 @@ local AgniBlazehoof = Class('AgniBlazehoof', ProfessionRare, {
     }
 }) -- Agni Blazehoof
 
-map.nodes[40295336] = AgniBlazehoof()
-map.nodes[54494599] = AgniBlazehoof()
-map.nodes[55695154] = AgniBlazehoof()
+map.nodes[56393902] = AgniBlazehoof()
+map.nodes[67256157] = AgniBlazehoof()
+map.nodes[69745464] = AgniBlazehoof()
 
-map.nodes[23066700] = ProfessionRare({
+local Luttrok = Class('Luttrok', ProfessionRare, {
     id = 200742,
-    quest = nil,
+    quest = 74332,
     profession = ns.professions.COOKING,
     summoningItem = 203409, -- Sparkling Spice Pouch
     summoningObject = L['pr_spiceless_stew'], -- Spiceless Stew
     summoningReagent = 203400, -- Lackluster Spices
     summoningRecipe = 203422, -- Recipe: Sparkling Spice Pouch
+    fgroup = 'fgroup_luttrok',
     rewards = {
-        Achievement({id = 17525, criteria = 58485}) -- Champion of the Forbidden Reach
+        Achievement({id = 17525, criteria = 58485}), -- Champion of the Forbidden Reach
+        Pet({item = 193235, id = 3285}) -- Luvvy
     }
 }) -- Luttrok
 
-map.nodes[28905707] = ProfessionRare({
+map.nodes[40265337] = Luttrok()
+map.nodes[54484598] = Luttrok()
+map.nodes[55695153] = Luttrok()
+
+local Amephyst = Class('Amephyst', ProfessionRare, {
     id = 200743,
-    quest = nil,
+    quest = 74333,
     profession = ns.professions.JEWELCRAFTING,
     summoningItem = 203413, -- Tuning Fork
-    summoningObject = L['pr_resonating_crystal'], -- Resonating Crystal
+    summoningObject = L['pr_resonant_crystal'], -- Resonant Crystal
     summoningReagent = 203404, -- Crystal Fork
     summoningRecipe = 203426, -- Design: Tuning Fork
-    location = L['in_small_cave'],
+    fgroup = 'fgroup_amephyst',
     rewards = {
-        Achievement({id = 17525, criteria = 58486}) -- Champion of the Forbidden Reach
-    },
-    pois = {
-        POI({30496101}) -- Entrance
+        Achievement({id = 17525, criteria = 58486}), -- Champion of the Forbidden Reach
+        Recipe({item = 204219, profession = 755}) -- Design: Unstable Elementium
     }
 }) -- Amephyst
+
+map.nodes[28925706] = Amephyst({
+    location = L['in_cave'],
+    pois = {POI({31006084})} -- Entrance
+})
+
+map.nodes[42694483] = Amephyst({
+    location = L['in_small_cave'],
+    pois = {POI({45284287})} -- Entrance
+})
+
+map.nodes[81193376] = Amephyst({
+    location = L['in_dragonskull_island'],
+    pois = {POI({74723614})} -- Entrance
+})
+
+dragonskullIsland.nodes[84045351] = Amephyst({
+    location = L['in_dragonskull_island']
+})
 
 -------------------------------------------------------------------------------
 ---------------------------------- TREASURES ----------------------------------
@@ -699,14 +778,6 @@ local ForbiddenHoard = Class('ForbiddenHoard', Collectible, {
     rewards = {
         Achievement({id = 17526, criteria = 58487}), -- Treasures of the Forbidden Reach
         Achievement({
-            id = 17528,
-            criteria = {
-                id = 1,
-                qty = true,
-                suffix = L['hoarder_of_the_forbidden_reach_suffix']
-            }
-        }), -- Hoarder of the Forbidden Reach
-        Achievement({
             id = 17529,
             criteria = {
                 id = 1,
@@ -714,7 +785,7 @@ local ForbiddenHoard = Class('ForbiddenHoard', Collectible, {
                 suffix = L['forbidden_spoils_suffix']
             }
         }), -- Forbidden Spoils
-        Item({item = 202667}), -- Sealed Artifact Scroll
+        DC.CliffsideWylderdrake.CoiledHorns, Item({item = 202667}), -- Sealed Artifact Scroll
         Item({item = 202668}), -- Sealed Spirit Scroll
         Item({item = 202669}), -- Sealed Fish Scroll
         Item({item = 202670}), -- Sealed Knowledge Scroll
@@ -757,27 +828,27 @@ local FSV_PS = {
         Item({item = 199691, quest = 70723}), -- Primal Earth Core
         Item({item = 199750, quest = 70754}), -- Primal Fire Core
         Item({item = 199748, quest = 70752}), -- Primal Water Core
-        Mount({item = 192785, id = 197}) -- Gooey Snailemental -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192785, id = 1627}) -- Gooey Snailemental
     },
     [7408] = {
         Achievement({id = 17540, criteria = 58567}), -- Under the Weather
         Spacer(), Item({item = 199749, quest = 70753}), -- Primal Air Core
-        Mount({item = 192785, id = 197}) -- Gooey Snailemental -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192785, id = 1627}) -- Gooey Snailemental
     }, -- Air
     [7409] = {
         Achievement({id = 17540, criteria = 58568}), -- Under the Weather
         Spacer(), Item({item = 199691, quest = 70723}), -- Primal Earth Core
-        Mount({item = 192785, id = 197}) -- Gooey Snailemental -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192785, id = 1627}) -- Gooey Snailemental
     }, -- Earth
     [7410] = {
         Achievement({id = 17540, criteria = 58569}), -- Under the Weather
         Spacer(), Item({item = 199750, quest = 70754}), -- Primal Fire Core
-        Mount({item = 192785, id = 197}) -- Gooey Snailemental -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192785, id = 1627}) -- Gooey Snailemental
     }, -- Fire
     [7411] = {
         Achievement({id = 17540, criteria = 58570}), -- Under the Weather
         Spacer(), Item({item = 199748, quest = 70752}), -- Primal Water Core
-        Mount({item = 192785, id = 197}) -- Gooey Snailemental -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192785, id = 1627}) -- Gooey Snailemental
     } -- Water
 }
 
@@ -854,6 +925,7 @@ local SMALLTREASURE = Collectible({
                 suffix = L['hoarder_of_the_forbidden_reach_suffix']
             }
         }), -- Hoarder of the Forbidden Reach
+        Item({item = 202196}), -- Zskera Vault Key
         Currency({id = 2118}) -- Elemental Overflow
     }
 }) -- Small Treasure
@@ -926,6 +998,7 @@ dragonskullIsland.nodes[69933512] = SMALLTREASURE
 ------------------ WYRMHOLE GENERATOR - SIGNAL TRANSMITTER --------------------
 -------------------------------------------------------------------------------
 
+map.nodes[31822621] = SignalTransmitter({quest = 73143}) -- Caldera of the Menders
 map.nodes[39988182] = SignalTransmitter({quest = 73145}) -- Sharpscale Coast
 map.nodes[78035110] = SignalTransmitter({quest = 73144}) -- Stormsunder Mountain
 
@@ -939,12 +1012,15 @@ local ZSKERA_VAULTS_REWARDS = {
         id = 17413,
         criteria = {id = 1, qty = true, suffix = L['door_buster_suffix']}
     }), -- Door Buster
+    DC.RenewedProtoDrake.Antlers, -- Renewed Proto-Drake: Antlers
+    Spacer(), -- Pets
     Pet({item = 193851, id = 3332}), -- Patos
     Pet({item = 193853, id = 3331}), -- Emmah
     Pet({item = 193908, id = 3338}), -- Kobaldt
     Pet({item = 204079, id = 3476}), -- Gilded Mechafrog
     Pet({item = 193835, id = 3323}), -- Brightfeather
     Pet({item = 193854, id = 3333}), -- Berylmane
+    Pet({item = 193363, id = 3290}), -- Bunbo
     Spacer(), -- Toys
     Toy({item = 204257}), -- Holoviewer: The Lady of Dreams
     Toy({item = 204256}), -- Holoviewer: The Scarlet Queen
@@ -954,7 +1030,7 @@ local ZSKERA_VAULTS_REWARDS = {
     Spacer(), -- Recipe
     Recipe({item = 204073, profession = 185}), -- Ratcipe: Deviously Deviled Eggs
     Spacer(), -- Mount
-    Mount({item = 192790, id = 197}), -- Mossy Mammoth -- TODO: REPLACE WILL REAL MOUNTID
+    Mount({item = 192790, id = 1634}), -- Mossy Mammoth
     Spacer(), -- Other Achievements
     Achievement({
         id = 17530,
@@ -1006,9 +1082,25 @@ hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
     end
 end)
 
+------------------------ RENEWED PROTO-DRAKE: ANTLERS -------------------------
+
+map.nodes[28268000] = Collectible({
+    label = '{item:204278}',
+    icon = 1529267,
+    quest = 75047,
+    location = L['in_zskera_vaults'],
+    note = L['neltharions_toolkit_note'],
+    group = ns.groups.ZSKERA_VAULTS,
+    fgroup = 'zskera_vaults',
+    requires = ns.requirement.Quest(73159), -- Exploring Our Past
+    rewards = {
+        DC.RenewedProtoDrake.Antlers -- Renewed Proto-Drake: Antlers
+    }
+}) -- Neltharion's Toolkit
+
 ---------------------- RATCIPE: DEVIOUSLY DEVILVED EGGS -----------------------
 
-local RecipeRat = Class('RecipeRat', Node, {
+local RecipeRat = Class('RecipeRat', Collectible, {
     label = '{npc:202982}',
     location = L['in_zskera_vaults'],
     icon = 4509424,
@@ -1057,7 +1149,7 @@ local MossyMammoth = Class('MossyMammoth', Collectible, {
     group = ns.groups.ZSKERA_VAULTS,
     requires = ns.requirement.Quest(73159), -- Exploring Our Past
     rewards = {
-        Mount({item = 192790, id = 197}) -- Mossy Mammoth -- TODO: REPLACE WILL REAL MOUNTID
+        Mount({item = 192790, id = 1634}) -- Mossy Mammoth
     }
 }) -- Mossy Mammoth
 
@@ -1116,10 +1208,8 @@ map.nodes[30267800] = MossyMammoth()
 ------------------ DRAGONSCALE EXPEDITION: THE HIGHEST PEAKS ------------------
 -------------------------------------------------------------------------------
 
-map.nodes[27945985] = Flag({quest = 73696})
 map.nodes[54573460] = Flag({quest = 73699})
 map.nodes[36903792] = Flag({quest = 73700})
-map.nodes[76285343] = Flag({quest = 73702})
 
 -------------------------------------------------------------------------------
 --------------------------- LIBRARIAN OF THE REACH ----------------------------
@@ -1132,7 +1222,7 @@ warCreche.nodes[52405962] = LibraryBook({
     label = L['spellsworn_missive_label'],
     location = L['in_the_war_creche'],
     note = format(L['library_note'], L['spellsworn_missive_label'], 204338),
-    parent = map.id,
+    parent = {id = map.id, pois = {POI({51895982})}},
     rewards = {Achievement({id = 17530, criteria = 58501})}
 }) -- The Burden of Lapisagos
 
@@ -1140,7 +1230,7 @@ froststoneVault.nodes[64775677] = LibraryBook({
     label = L['confiscated_journal_label'],
     location = L['in_froststone_vault'],
     note = format(L['library_note'], L['confiscated_journal_label'], 204316),
-    parent = map.id,
+    parent = {id = map.id, pois = {POI({60793775})}},
     rewards = {Achievement({id = 17530, criteria = 58502})}
 }) -- A Soldier's Journal
 
@@ -1183,14 +1273,15 @@ local ScrollHunter = Class('ScrollHunter', Collectible, {
     }
 }) -- Scroll Hunter
 
--- local DraconicArtifact = Class('DraconicArtifact', ScrollHunter, {
---     label = '{npc:196127}',
---     note = format(L['scroll_hunter_note'],
---         202667, -- Sealed Artifact Scroll
---         202871, -- Draconic Artifact
---         2507 -- Dragonscale Expedition
---     )
--- }) -- Draconic Artifact
+local DracthyrRunestone = Class('DracthyrRunestone', ScrollHunter, {
+    label = L['dracthyr_runestone_label'],
+    note = format(L['scroll_hunter_note'], 202667, -- Sealed Artifact Scroll
+    202871, -- Draconic Artifact
+    2507 -- Dragonscale Expedition
+    )
+}) -- Dracthyr Runestone
+
+map.nodes[39593108] = DracthyrRunestone()
 
 local SpiritOfBlessing = Class('SpiritOfBlessing', ScrollHunter, {
     label = '{npc:201006}',
@@ -1221,13 +1312,23 @@ local MysteriousWritings = Class('MysteriousWritings', ScrollHunter, {
 
 map.nodes[58147167] = MysteriousWritings()
 
+dragonskullIsland.nodes[56317256] = MysteriousWritings({
+    location = L['in_dragonskull_island'],
+    parent = {id = map.id, pois = {POI({74353661})}}
+})
+
 -------------------------------------------------------------------------------
 --------------------------- WHILE WE WERE SLEEPING ----------------------------
 -------------------------------------------------------------------------------
 
 local ScalecommanderItem = Class('scalecommander_item', Collectible, {
     icon = 134422,
-    group = ns.groups.SCALECOMMANDER_ITEM
+    group = ns.groups.SCALECOMMANDER_ITEM,
+    IsCollected = function(self)
+        local item = ns.faction == 'Horde' and self.item[1] or self.item[2]
+        if ns.PlayerHasItem(item) then return true end
+        return Collectible.IsCollected(self)
+    end
 })
 
 function ScalecommanderItem.getters:label()
@@ -1238,13 +1339,15 @@ map.nodes[59646492] = ScalecommanderItem({
     allianceLabel = '{quest:74866}',
     hordeLabel = '{quest:73110}',
     quest = 73110,
-    rewards = {Achievement({id = 17315, criteria = 2})}
+    rewards = {Achievement({id = 17315, criteria = 2})},
+    item = {202329, 204200}
 }) -- Journal Entry: Experiments
 
 map.nodes[50884345] = ScalecommanderItem({
     allianceLabel = '{quest:73113}',
     hordeLabel = '{quest:74880}',
-    rewards = {Achievement({id = 17315, criteria = 3})}
+    rewards = {Achievement({id = 17315, criteria = 3})},
+    item = {204221, 202335}
 }) -- Journal Entry: Relics
 
 map.nodes[58957238] = ScalecommanderItem({
@@ -1252,7 +1355,8 @@ map.nodes[58957238] = ScalecommanderItem({
     hordeLabel = '{quest:74900}',
     location = L['in_the_high_creche'],
     rewards = {Achievement({id = 17315, criteria = 5})},
-    pois = {POI({58666933})} -- Entrance
+    pois = {POI({58666933})}, -- Entrance
+    item = {204250, 202328}
 }) -- Receiving Stone: Final Warning
 
 map.nodes[58407053] = ScalecommanderItem({
@@ -1260,7 +1364,8 @@ map.nodes[58407053] = ScalecommanderItem({
     hordeLabel = '{quest:74901}',
     location = L['in_the_high_creche'],
     rewards = {Achievement({id = 17315, criteria = 6})},
-    pois = {POI({58666933})} -- Entrance
+    pois = {POI({58666933})}, -- Entrance
+    item = {204251, 202203}
 }) -- Sending Stone: Protest
 
 map.nodes[55393586] = ScalecommanderItem({
@@ -1268,7 +1373,8 @@ map.nodes[55393586] = ScalecommanderItem({
     hordeLabel = '{quest:74902}',
     location = L['in_the_lost_atheneum'],
     rewards = {Achievement({id = 17315, criteria = 7})},
-    pois = {POI({55103837})} -- Entrance
+    pois = {POI({55103837})}, -- Entrance
+    item = {204252, 202326}
 }) -- Sending Stone: Initial Report
 
 -------------------------------------------------------------------------------
@@ -1307,18 +1413,13 @@ warCreche.nodes[65376249] = GemstoneOfReturn({
     pois = {Arrow({65376249, 67030720})}
 }) -- Pyrachniss
 
-warCreche.nodes[67030720] = GemstoneOfReturn() -- Entrance
-
 --------------------------- MORQUT VILLAGE VENDORS ----------------------------
 
-local MorqutVillageVendor = Class('MorqutVillageVendor', Collectible, {
+map.nodes[35615948] = Collectible({
+    id = 200559,
     icon = 'peg_bl',
     scale = 1.3,
-    note = L['morqut_village_vendor_note']
-}) -- Morqut Village Vendor
-
-map.nodes[35615948] = MorqutVillageVendor({
-    id = 200559,
+    note = L['treysh_note'],
     rewards = {
         Transmog({item = 204562, slot = L['2h_mace']}), -- Maruuk Maul
         Transmog({item = 204563, slot = L['1h_mace']}), -- Morqut Club
@@ -1338,30 +1439,28 @@ map.nodes[35615948] = MorqutVillageVendor({
     }
 }) -- Treysh <Quartermaster>
 
-map.nodes[34216002] = MorqutVillageVendor({
-    id = 200562,
+map.nodes[34325997] = Collectible({
+    label = L['renown_envoy_label'],
+    icon = 'peg_bl',
+    scale = 1.3,
+    note = L['renown_envoy_note'],
     rewards = {
-        Pet({item = 193850, id = 3330, note = 'x25000'}) -- Buckie
+        Section('{npc:200566}'), Pet({item = 191915, id = 3259}), -- Shaggy
+        Spacer(), Section('{npc:200562}'),
+        Pet({item = 193850, id = 3330, note = 'x25000'}), -- Buckie
+        Spacer(), Section('{npc:200564}'),
+        Mount({item = 204382, id = 1467, note = 'x100000'}), -- Noble Bruffalon
+        Spacer(), Section('{npc:200563}'),
+        DC.SetNote(DC.WindborneVelocidrake.ExposedFinnedNeck, 'x2500'),
+        DC.SetNote(DC.HighlandDrake.TaperedNose, 'x2500')
     }
-}) -- Turik <Renown Envoy>
+}) -- Cataloger Daela, Turik, Storykeeper Ashekh, and Kraxxus <Renown Envoys>
 
-map.nodes[34075997] = MorqutVillageVendor({
-    id = 200564,
-    rewards = {
-        Mount({item = 204382, id = 1467, note = 'x100000'}) -- Noble Bruffalon
-    }
-}) -- Storykeeper Ashekh <Renown Envoy>
-
-map.nodes[34015980] = MorqutVillageVendor({
-    id = 200563,
-    rewards = {
-        Item({item = 197626, quest = 69831, note = 'x2500'}), -- Windbone Velocidrake: Exposed Finned Neck
-        Item({item = 197136, quest = 69337, note = 'x2500'}) -- Highland Drake: Tapered Nose
-    }
-}) -- Kraxxus <Renown Envoy>
-
-map.nodes[35905744] = MorqutVillageVendor({
+map.nodes[35905744] = Collectible({
     id = 202445,
+    icon = 'peg_bl',
+    scale = 1.3,
+    note = L['trader_hagarth_note'],
     rewards = {
         Recipe({item = 203420, profession = 171}), -- Recipe: Draconic Suppression Powder
         Recipe({item = 203421, profession = 164}), -- Plans: Ancient Ceremonial Trident
@@ -1374,5 +1473,3 @@ map.nodes[35905744] = MorqutVillageVendor({
         Recipe({item = 203428, profession = 197}) -- Pattern: Traditional Morqut Kite
     }
 }) -- Trader Hag'arth <Artisan's Consortium Quartermaster>
-
--- STOP: DO NOT ADD NEW NODES HERE UNLESS THEY BELONG IN MISCELLANEOUS

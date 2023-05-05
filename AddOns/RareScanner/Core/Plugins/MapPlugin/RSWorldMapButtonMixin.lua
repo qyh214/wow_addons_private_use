@@ -6,6 +6,9 @@ local ADDON_NAME, private = ...
 local LibStub = _G.LibStub
 local ADDON_NAME, private = ...
 
+-- RareScanner libraries
+local RSConstants = private.ImportLib("RareScannerConstants")
+
 -- RareScanner database libraries
 local RSConfigDB = private.ImportLib("RareScannerConfigDB")
 
@@ -21,15 +24,23 @@ local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 -- Constants
 local SHOW_RARE_NPC_ICONS = "rsHideRareNpcs"
 local SHOW_DEAD_RARE_NPC_ICONS = "rsHideDeadRareNpcs"
+local SHOW_NOT_DISCOVERED_RARE_NPC_ICONS = "rsHideNotDiscoveredRareNpcs"
+local SHOW_FRIENDLY_RARE_NPC_ICONS = "rsHideFriendlyRareNpcs"
+local SHOW_ACHIEVEMENT_NPC_ICONS = "rsHideAchievementRareNpcs"
 local SHOW_HUNTING_PARTY_NPC_ICONS = "rsHideHuntingPartyRareNpcs"
 local SHOW_PRIMAL_STORM_NPC_ICONS = "rsHidePrimalStormRareNpcs"
+local SHOW_OTHER_NPC_ICONS = "rsHideOtherRareNpcs"
 local SHOW_CONTAINER_ICONS = "rsHideContainers"
 local SHOW_OPEN_CONTAINER_ICONS = "rsHideOpenContainers"
+local SHOW_NOT_DISCOVERED_CONTAINER_ICONS = "rsHideNotDiscoveredContainers"
 local SHOW_NOT_TRACKEABLE_CONTAINER_ICONS = "rsHideNotTrackeableContainers"
+local SHOW_ACHIEVEMENT_CONTAINER_ICONS = "rsHideAchievementContainers"
+local SHOW_PROFESSION_CONTAINER_ICONS = "rsHideProfessionContainers"
+local SHOW_OTHER_CONTAINER_ICONS = "rsHideOtherContainers"
 local SHOW_EVENT_ICONS = "rsHideEvents"
 local SHOW_COMPLETED_EVENT_ICONS = "rsHideCompletedEvents"
+local SHOW_NOT_DISCOVERED_EVENT_ICONS = "rsHideNotDiscoveredEvents"
 local SHOW_DRAGON_GLYPHS_ICONS = "rsHideDragonGlyphs"
-local SHOW_NOT_DISCOVERED_ICONS = "rsHideNotDiscovered"
 local SHOW_NOT_DISCOVERED_ICONS_OLD = "rsHideNotDiscoveredOld"
 local DISABLE_LAST_SEEN_FILTER = "rsDisableLastSeenFilter"
 local DISABLE_LAST_SEEN_CONTAINER_FILTER = "rsDisableLastSeenContainerFilter"
@@ -45,32 +56,13 @@ local othersID = 4
 
 local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 	local OnSelection = function(self, value)
+	
+		-- Rare NPCs (general)
 		if (value == SHOW_RARE_NPC_ICONS) then
 			if (RSConfigDB.IsShowingNpcs()) then
 				RSConfigDB.SetShowingNpcs(false)
 			else
 				RSConfigDB.SetShowingNpcs(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_DEAD_RARE_NPC_ICONS) then
-			if (RSConfigDB.IsShowingDeadNpcs()) then
-				RSConfigDB.SetShowingDeadNpcs(false)
-			else
-				RSConfigDB.SetShowingDeadNpcs(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_HUNTING_PARTY_NPC_ICONS) then
-			if (RSConfigDB.IsShowingHuntingPartyRareNPCs()) then
-				RSConfigDB.SetShowingHuntingPartyRareNPCs(false)
-			else
-				RSConfigDB.SetShowingHuntingPartyRareNPCs(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_PRIMAL_STORM_NPC_ICONS) then
-			if (RSConfigDB.IsShowingPrimalStormRareNPCs()) then
-				RSConfigDB.SetShowingPrimalStormNPCs(false)
-			else
-				RSConfigDB.SetShowingPrimalStormNPCs(true)
 			end
 			RSMinimap.RefreshAllData(true)
 		elseif (value == DISABLE_LAST_SEEN_FILTER) then
@@ -80,25 +72,64 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				RSConfigDB.EnableMaxSeenTimeFilter()
 			end
 			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_DEAD_RARE_NPC_ICONS) then
+			if (RSConfigDB.IsShowingAlreadyKilledNpcs()) then
+				RSConfigDB.SetShowingAlreadyKilledNpcs(false)
+			else
+				RSConfigDB.SetShowingAlreadyKilledNpcs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_NOT_DISCOVERED_RARE_NPC_ICONS) then
+			if (RSConfigDB.IsShowingNotDiscoveredNpcs()) then
+				RSConfigDB.SetShowingNotDiscoveredNpcs(false)
+			else
+				RSConfigDB.SetShowingNotDiscoveredNpcs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_FRIENDLY_RARE_NPC_ICONS) then
+			if (RSConfigDB.IsShowingFriendlyNpcs()) then
+				RSConfigDB.SetShowingFriendlyNpcs(false)
+			else
+				RSConfigDB.SetShowingFriendlyNpcs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		
+		-- Rare NPCs (types)
+		elseif (value == SHOW_HUNTING_PARTY_NPC_ICONS) then
+			if (RSConfigDB.IsShowingHuntingPartyRareNPCs()) then
+				RSConfigDB.SetShowingHuntingPartyRareNPCs(false)
+			else
+				RSConfigDB.SetShowingHuntingPartyRareNPCs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_ACHIEVEMENT_NPC_ICONS) then
+			if (RSConfigDB.IsShowingAchievementRareNPCs()) then
+				RSConfigDB.SetShowingAchievementRareNPCs(false)
+			else
+				RSConfigDB.SetShowingAchievementRareNPCs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_PRIMAL_STORM_NPC_ICONS) then
+			if (RSConfigDB.IsShowingPrimalStormRareNPCs()) then
+				RSConfigDB.SetShowingPrimalStormNPCs(false)
+			else
+				RSConfigDB.SetShowingPrimalStormNPCs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_OTHER_NPC_ICONS) then
+			if (RSConfigDB.IsShowingOtherRareNPCs()) then
+				RSConfigDB.SetShowingOtherRareNPCs(false)
+			else
+				RSConfigDB.SetShowingOtherRareNPCs(true)
+			end
+			RSMinimap.RefreshAllData(true)
+			
+		-- Containers (general)
 		elseif (value == SHOW_CONTAINER_ICONS) then
 			if (RSConfigDB.IsShowingContainers()) then
 				RSConfigDB.SetShowingContainers(false)
 			else
 				RSConfigDB.SetShowingContainers(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_OPEN_CONTAINER_ICONS) then
-			if (RSConfigDB.IsShowingOpenedContainers()) then
-				RSConfigDB.SetShowingOpenedContainers(false)
-			else
-				RSConfigDB.SetShowingOpenedContainers(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_NOT_TRACKEABLE_CONTAINER_ICONS) then
-			if (RSConfigDB.IsShowingNotTrackeableContainers()) then
-				RSConfigDB.SetShowingNotTrackeableContainers(false)
-			else
-				RSConfigDB.SetShowingNotTrackeableContainers(true)
 			end
 			RSMinimap.RefreshAllData(true)
 		elseif (value == DISABLE_LAST_SEEN_CONTAINER_FILTER) then
@@ -108,18 +139,57 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				RSConfigDB.EnableMaxSeenContainerTimeFilter()
 			end
 			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_OPEN_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingAlreadyOpenedContainers()) then
+				RSConfigDB.SetShowingAlreadyOpenedContainers(false)
+			else
+				RSConfigDB.SetShowingAlreadyOpenedContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_NOT_DISCOVERED_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingNotDiscoveredContainers()) then
+				RSConfigDB.SetShowingNotDiscoveredContainers(false)
+			else
+				RSConfigDB.SetShowingNotDiscoveredContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+			
+		-- Containers (types)
+		elseif (value == SHOW_ACHIEVEMENT_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingAchievementContainers()) then
+				RSConfigDB.SetShowingAchievementContainers(false)
+			else
+				RSConfigDB.SetShowingAchievementContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_PROFESSION_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingProfessionContainers()) then
+				RSConfigDB.SetShowingProfessionContainers(false)
+			else
+				RSConfigDB.SetShowingProfessionContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_NOT_TRACKEABLE_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingNotTrackeableContainers()) then
+				RSConfigDB.SetShowingNotTrackeableContainers(false)
+			else
+				RSConfigDB.SetShowingNotTrackeableContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_OTHER_CONTAINER_ICONS) then
+			if (RSConfigDB.IsShowingOtherContainers()) then
+				RSConfigDB.SetShowingOtherContainers(false)
+			else
+				RSConfigDB.SetShowingOtherContainers(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		
+		-- Events
 		elseif (value == SHOW_EVENT_ICONS) then
 			if (RSConfigDB.IsShowingEvents()) then
 				RSConfigDB.SetShowingEvents(false)
 			else
 				RSConfigDB.SetShowingEvents(true)
-			end
-			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_COMPLETED_EVENT_ICONS) then
-			if (RSConfigDB.IsShowingCompletedEvents()) then
-				RSConfigDB.SetShowingCompletedEvents(false)
-			else
-				RSConfigDB.SetShowingCompletedEvents(true)
 			end
 			RSMinimap.RefreshAllData(true)
 		elseif (value == DISABLE_LAST_SEEN_EVENT_FILTER) then
@@ -129,6 +199,22 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				RSConfigDB.EnableMaxSeenEventTimeFilter()
 			end
 			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_COMPLETED_EVENT_ICONS) then
+			if (RSConfigDB.IsShowingCompletedEvents()) then
+				RSConfigDB.SetShowingCompletedEvents(false)
+			else
+				RSConfigDB.SetShowingCompletedEvents(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		elseif (value == SHOW_NOT_DISCOVERED_EVENT_ICONS) then
+			if (RSConfigDB.IsShowingCompletedEvents()) then
+				RSConfigDB.SetShowingCompletedEvents(false)
+			else
+				RSConfigDB.SetShowingCompletedEvents(true)
+			end
+			RSMinimap.RefreshAllData(true)
+		
+		-- Dragon glyphs
 		elseif (value == SHOW_DRAGON_GLYPHS_ICONS) then
 			if (RSConfigDB.IsShowingDragonGlyphs()) then
 				RSConfigDB.SetShowingDragonGlyphs(false)
@@ -136,13 +222,8 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				RSConfigDB.SetShowingDragonGlyphs(true)
 			end
 			RSMinimap.RefreshAllData(true)
-		elseif (value == SHOW_NOT_DISCOVERED_ICONS) then
-			if (RSConfigDB.IsShowingNotDiscoveredMapIcons()) then
-				RSConfigDB.SetShowingNotDiscoveredMapIcons(false)
-			else
-				RSConfigDB.SetShowingNotDiscoveredMapIcons(true)
-			end
-			RSMinimap.RefreshAllData(true)
+			
+		-- Not discovered
 		elseif (value == SHOW_NOT_DISCOVERED_ICONS_OLD) then
 			if (RSConfigDB.IsShowingOldNotDiscoveredMapIcons()) then
 				RSConfigDB.SetShowingOldNotDiscoveredMapIcons(false)
@@ -188,11 +269,6 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 			info.isNotRadio = true;
 			info.keepShownOnClick = false;
 			info.func = OnSelection;
-			
-			info.text = AL["MAP_MENU_SHOW_NOT_DISCOVERED"];
-			info.arg1 = SHOW_NOT_DISCOVERED_ICONS;
-			info.checked = RSConfigDB.IsShowingNotDiscoveredMapIcons()
-			LibDD:UIDropDownMenu_AddButton(info, level);
 		
 			info.text = AL["MAP_MENU_SHOW_NOT_DISCOVERED_OLD"];
 			info.arg1 = SHOW_NOT_DISCOVERED_ICONS_OLD;
@@ -210,27 +286,53 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				info.checked = RSConfigDB.IsShowingNpcs()
 				LibDD:UIDropDownMenu_AddButton(info, level);
 			
-				info.text = AL["MAP_MENU_SHOW_DEAD_RARE_NPCS"];
-				info.arg1 = SHOW_DEAD_RARE_NPC_ICONS;
-				info.checked = RSConfigDB.IsShowingDeadNpcs()
-				info.disabled = not RSConfigDB.IsShowingNpcs()
-				LibDD:UIDropDownMenu_AddButton(info, level);
-			
 				info.text = AL["MAP_MENU_DISABLE_LAST_SEEN_FILTER"];
 				info.arg1 = DISABLE_LAST_SEEN_FILTER;
 				info.checked = not RSConfigDB.IsMaxSeenTimeFilterEnabled()
 				info.disabled = not RSConfigDB.IsShowingNpcs()
 				LibDD:UIDropDownMenu_AddButton(info, level);
 			
-				info.text = AL["MAP_MENU_SHOW_HUNTING_PARTY_RARE_NPCS"];
+  				info.text = "|T"..RSConstants.BLUE_NPC_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_DEAD_RARE_NPCS"]
+				info.arg1 = SHOW_DEAD_RARE_NPC_ICONS;
+				info.checked = RSConfigDB.IsShowingAlreadyKilledNpcs()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.RED_NPC_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_NOT_DISCOVERED_RARE_NPCS"]
+				info.arg1 = SHOW_NOT_DISCOVERED_RARE_NPC_ICONS;
+				info.checked = RSConfigDB.IsShowingNotDiscoveredNpcs()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.LIGHT_BLUE_NPC_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_FRIENDLY_RARE_NPCS"]
+				info.arg1 = SHOW_FRIENDLY_RARE_NPC_ICONS;
+				info.checked = RSConfigDB.IsShowingFriendlyNpcs()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				LibDD:UIDropDownMenu_AddSeparator(level)
+			
+				info.text = "|A:"..RSConstants.ACHIEVEMENT_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_ACHIEVEMENT_RARE_NPCS"];
+				info.arg1 = SHOW_ACHIEVEMENT_NPC_ICONS;
+				info.checked = RSConfigDB.IsShowingAchievementRareNPCs()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|A:"..RSConstants.HUNTING_PARTY_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_HUNTING_PARTY_RARE_NPCS"];
 				info.arg1 = SHOW_HUNTING_PARTY_NPC_ICONS;
 				info.checked = RSConfigDB.IsShowingHuntingPartyRareNPCs()
 				info.disabled = not RSConfigDB.IsShowingNpcs()
 				LibDD:UIDropDownMenu_AddButton(info, level);
 			
-				info.text = AL["MAP_MENU_SHOW_PRIMAL_STORM_RARE_NPCS"];
+				info.text = "|A:"..RSConstants.PRIMAL_STORM_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_PRIMAL_STORM_RARE_NPCS"];
 				info.arg1 = SHOW_PRIMAL_STORM_NPC_ICONS;
 				info.checked = RSConfigDB.IsShowingPrimalStormRareNPCs()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+			
+				info.text = AL["MAP_MENU_SHOW_OTHER_RARE_NPCS"];
+				info.arg1 = SHOW_OTHER_NPC_ICONS;
+				info.checked = RSConfigDB.IsShowingOtherRareNPCs()
 				info.disabled = not RSConfigDB.IsShowingNpcs()
 				LibDD:UIDropDownMenu_AddButton(info, level);
 			elseif (menuList == containersID) then
@@ -238,22 +340,48 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				info.arg1 = SHOW_CONTAINER_ICONS;
 				info.checked = RSConfigDB.IsShowingContainers()
 				LibDD:UIDropDownMenu_AddButton(info, level);
-				
-				info.text = AL["MAP_MENU_SHOW_OPEN_CONTAINERS"];
-				info.arg1 = SHOW_OPEN_CONTAINER_ICONS;
-				info.checked = RSConfigDB.IsShowingOpenedContainers()
-				info.disabled = not RSConfigDB.IsShowingContainers()
-				LibDD:UIDropDownMenu_AddButton(info, level);
 			
 				info.text = AL["MAP_MENU_DISABLE_LAST_SEEN_CONTAINER_FILTER"];
 				info.arg1 = DISABLE_LAST_SEEN_CONTAINER_FILTER;
 				info.checked = not RSConfigDB.IsMaxSeenTimeContainerFilterEnabled()
 				info.disabled = not RSConfigDB.IsShowingContainers()
 				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.BLUE_CONTAINER_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_OPEN_CONTAINERS"];
+				info.arg1 = SHOW_OPEN_CONTAINER_ICONS;
+				info.checked = RSConfigDB.IsShowingAlreadyOpenedContainers()
+				info.disabled = not RSConfigDB.IsShowingContainers()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.RED_CONTAINER_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_NOT_DISCOVERED_CONTAINERS"];
+				info.arg1 = SHOW_NOT_DISCOVERED_CONTAINER_ICONS;
+				info.checked = RSConfigDB.IsShowingNotDiscoveredContainers()
+				info.disabled = not RSConfigDB.IsShowingContainers()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				LibDD:UIDropDownMenu_AddSeparator(level)
 			
-				info.text = AL["MAP_MENU_SHOW_NOT_TRACKEABLE_CONTAINERS"];
+				info.text = "|A:"..RSConstants.ACHIEVEMENT_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_ACHIEVEMENT_CONTAINERS"];
+				info.arg1 = SHOW_ACHIEVEMENT_CONTAINER_ICONS;
+				info.checked = RSConfigDB.IsShowingAchievementContainers()
+				info.disabled = not RSConfigDB.IsShowingNpcs()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+			
+				info.text = "|A:"..RSConstants.PROFFESION_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_PROFESSION_CONTAINERS"];
+				info.arg1 = SHOW_PROFESSION_CONTAINER_ICONS;
+				info.checked = RSConfigDB.IsShowingProfessionContainers()
+				info.disabled = not RSConfigDB.IsShowingContainers()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+			
+				info.text = "|A:"..RSConstants.NOT_TRACKABLE_ICON_ATLAS..":18:18::::|a "..AL["MAP_MENU_SHOW_NOT_TRACKABLE_CONTAINERS"];
 				info.arg1 = SHOW_NOT_TRACKEABLE_CONTAINER_ICONS;
 				info.checked = RSConfigDB.IsShowingNotTrackeableContainers()
+				info.disabled = not RSConfigDB.IsShowingContainers()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+			
+				info.text = AL["MAP_MENU_SHOW_OTHER_CONTAINERS"];
+				info.arg1 = SHOW_OTHER_CONTAINER_ICONS;
+				info.checked = RSConfigDB.IsShowingOtherContainers()
 				info.disabled = not RSConfigDB.IsShowingContainers()
 				LibDD:UIDropDownMenu_AddButton(info, level);
 			elseif (menuList == eventsID) then
@@ -261,20 +389,26 @@ local function WorldMapButtonDropDownMenu_Initialize(dropDown)
 				info.arg1 = SHOW_EVENT_ICONS;
 				info.checked = RSConfigDB.IsShowingEvents()
 				LibDD:UIDropDownMenu_AddButton(info, level);
-				
-				info.text = AL["MAP_MENU_SHOW_COMPLETED_EVENTS"];
-				info.arg1 = SHOW_COMPLETED_EVENT_ICONS;
-				info.checked = RSConfigDB.IsShowingCompletedEvents()
-				info.disabled = not RSConfigDB.IsShowingEvents()
-				LibDD:UIDropDownMenu_AddButton(info, level);
 			
 				info.text = AL["MAP_MENU_DISABLE_LAST_SEEN_EVENT_FILTER"];
 				info.arg1 = DISABLE_LAST_SEEN_EVENT_FILTER;
 				info.checked = not RSConfigDB.IsMaxSeenTimeEventFilterEnabled()
 				info.disabled = not RSConfigDB.IsShowingEvents()
 				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.BLUE_EVENT_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_COMPLETED_EVENTS"];
+				info.arg1 = SHOW_COMPLETED_EVENT_ICONS;
+				info.checked = RSConfigDB.IsShowingCompletedEvents()
+				info.disabled = not RSConfigDB.IsShowingEvents()
+				LibDD:UIDropDownMenu_AddButton(info, level);
+				
+				info.text = "|T"..RSConstants.RED_EVENT_TEXTURE..":18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_NOT_DISCOVERED_EVENTS"];
+				info.arg1 = SHOW_NOT_DISCOVERED_EVENT_ICONS;
+				info.checked = RSConfigDB.IsShowingNotDiscoveredEvents()
+				info.disabled = not RSConfigDB.IsShowingEvents()
+				LibDD:UIDropDownMenu_AddButton(info, level);
 			elseif (menuList == othersID) then
-				info.text = AL["MAP_MENU_SHOW_DRAGON_GLYPHS"];
+				info.text = "|TInterface\\AddOns\\RareScanner\\Media\\Icons\\DragonGlyphSmall:18:18:::::0:32:0:32|t "..AL["MAP_MENU_SHOW_DRAGON_GLYPHS"];
 				info.arg1 = SHOW_DRAGON_GLYPHS_ICONS;
 				info.checked = RSConfigDB.IsShowingDragonGlyphs()
 				LibDD:UIDropDownMenu_AddButton(info, level);

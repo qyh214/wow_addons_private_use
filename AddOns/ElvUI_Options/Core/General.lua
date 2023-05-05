@@ -67,10 +67,15 @@ GenGen.automation.args.autoRepair = ACH:Select(L["Auto Repair"], L["Automaticall
 
 GenGen.totems = ACH:Group(L["Totem Tracker"], nil, 70, nil, function(info) return E.db.general.totems[info[#info]] end, function(info, value) E.db.general.totems[info[#info]] = value TotemTracker:PositionAndSize() end)
 GenGen.totems.args.enable = ACH:Toggle(L["Enable"], nil, 1, nil, nil, nil, function() return E.private.general.totemTracker end, function(_, value) E.private.general.totemTracker = value; E.ShowPopup = true end)
-GenGen.totems.args.size = ACH:Range(L["Button Size"], nil, 2, { min = 24, max = 60, step = 1 })
-GenGen.totems.args.spacing = ACH:Range(L["Button Spacing"], nil, 3, { min = 1, max = 10, step = 1 })
-GenGen.totems.args.sortDirection = ACH:Select(L["Sort Direction"], nil, 4, { ASCENDING = L["Ascending"], DESCENDING = L["Descending"] })
-GenGen.totems.args.growthDirection = ACH:Select(L["Bar Direction"], nil, 5, { VERTICAL = L["Vertical"], HORIZONTAL = L["Horizontal"] })
+GenGen.totems.args.sortDirection = ACH:Select(L["Sort Direction"], nil, 2, { ASCENDING = L["Ascending"], DESCENDING = L["Descending"] })
+GenGen.totems.args.growthDirection = ACH:Select(L["Bar Direction"], nil, 3, { VERTICAL = L["Vertical"], HORIZONTAL = L["Horizontal"] })
+GenGen.totems.args.keepSizeRatio = ACH:Toggle(L["Keep Size Ratio"], nil, 4)
+GenGen.totems.args.spacing = ACH:Range(L["Button Spacing"], nil, 5, { min = 1, max = 10, step = 1 })
+GenGen.totems.args.size = ACH:Range(L["Button Size"], nil, 6, { min = 24, max = 60, step = 1 })
+GenGen.totems.args.height = ACH:Range(L["Button Height"], nil, 7, { min = 24, max = 60, step = 1 })
+GenGen.totems.args.size.name = function() return E.db.general.totems.keepSizeRatio and L["Button Size"] or L["Button Width"] end
+GenGen.totems.args.size.desc = function() return E.db.general.totems.keepSizeRatio and L["The size of the Totem buttons."] or L["The width of the totem buttons."] end
+GenGen.totems.args.height.hidden = function() return E.db.general.totems.keepSizeRatio end
 GenGen.totems.inline = true
 
 General.media = ACH:Group(L["Media"], nil, 5, nil, function(info) return E.db.general[info[#info]] end, function(info, value) E.db.general[info[#info]] = value end)
@@ -233,7 +238,7 @@ blizz.lootRollGroup.args.height = ACH:Range(L["Height"], nil, 6, { min = 5, max 
 blizz.lootRollGroup.args.buttonSize = ACH:Range(L["Button Size"], nil, 7, { min = 14, max = 34, step = 1 })
 blizz.lootRollGroup.args.statusBarColor = ACH:Color(L["StatusBar Color"], nil, 10, nil, nil, function(info) local c, d = E.db.general.lootRoll[info[#info]], P.general.lootRoll[info[#info]] return c.r, c.g, c.b, 1, d.r, d.g, d.b, 1 end, function(info, r, g, b) local c = E.db.general.lootRoll[info[#info]] c.r, c.g, c.b = r, g, b end, nil, function() return E.db.general.lootRoll.qualityStatusBar end)
 blizz.lootRollGroup.args.spacing = ACH:Range(L["Spacing"], nil, 11, { min = 0, max = 20, step = 1 }, nil, nil, function(info, value) E.db.general.lootRoll[info[#info]] = value Misc:UpdateLootRollFrames() _G.AlertFrame:UpdateAnchors() end)
-blizz.lootRollGroup.args.style = ACH:Select(L["Style"], nil, 12, { halfbar = 'Half Bar', fullbar = 'Full Bar' })
+blizz.lootRollGroup.args.style = ACH:Select(L["Style"], nil, 12, { halfbar = L["Half Bar"], fullbar = L["Full Bar"] })
 blizz.lootRollGroup.args.statusBarTexture = ACH:SharedMediaStatusbar(L["Texture"], L["The texture that will be used mainly for statusbars."], 13)
 blizz.lootRollGroup.args.leftButtons = ACH:Toggle(L["Left Buttons"], nil, 14)
 
@@ -258,4 +263,34 @@ blizz.objectiveFrameGroup.args.objectiveFrameAutoHide = ACH:Toggle(L["Auto Hide"
 blizz.objectiveFrameGroup.args.objectiveFrameAutoHideInKeystone = ACH:Toggle(L["Hide In Keystone"], L["Automatically hide the objective frame during boss fights while you are running a key."], 2, nil, nil, nil, nil, nil, nil, function() return not E.Retail or not E.db.general.objectiveFrameAutoHide end)
 blizz.objectiveFrameGroup.args.objectiveFrameHeight = ACH:Range(L["Objective Frame Height"], L["Height of the objective tracker. Increase size to be able to see more objectives."], 3, { min = 400, max = ceil(E.screenHeight), step = 1 }, nil, nil, function(info, value) E.db.general[info[#info]] = value Blizzard:SetObjectiveFrameHeight() end, nil, not E.Wrath)
 blizz.objectiveFrameGroup.args.bonusObjectivePosition = ACH:Select(L["Bonus Reward Position"], L["Position of bonus quest reward frame relative to the objective tracker."], 4, { RIGHT = L["Right"], LEFT = L["Left"], AUTO = L["Automatic"] }, nil, nil, nil, nil, nil, not E.Retail)
-blizz.objectiveFrameGroup.args.torghastBuffsPosition = ACH:Select(L["Maw Buffs Position"], L["Position of the Maw Buffs list relative to the objective tracker."], 5, { RIGHT = L["Right"], LEFT = L["Left"], AUTO = L["Automatic"] }, nil, nil, nil, function(info, value) E.db.general[info[#info]] = value Blizzard:HandleMawBuffsFrame() end, nil, not E.Retail)
+
+blizz.addonCompartment = ACH:Group(E.NewSign..L["Addon Compartment"], nil, 6, nil, function(info) return E.db.general.addonCompartment[info[#info]] end, function(info, value) E.db.general.addonCompartment[info[#info]] = value; Blizzard:HandleAddonCompartment() end, nil, not E.Retail)
+blizz.addonCompartment.args.size = ACH:Range(L["Size"], nil, 1, { min = 10, max = 40, step = 1 })
+blizz.addonCompartment.args.frameLevel = ACH:Range(L["Frame Level"], nil, 2, { min = 2, max = 128, step = 1 })
+blizz.addonCompartment.args.frameStrata = ACH:Select(L["Frame Strata"], nil, 3, C.Values.Strata)
+blizz.addonCompartment.args.hide = ACH:Toggle(L["Hide"], nil, 4)
+
+blizz.addonCompartment.args.fontGroup = ACH:Group(L["Font Group"], nil, 50, nil, function(info) return E.db.general.addonCompartment[info[#info]] end, function(info, value) E.db.general.addonCompartment[info[#info]] = value; Blizzard:HandleAddonCompartment() end)
+blizz.addonCompartment.args.fontGroup.args.font = ACH:SharedMediaFont(L["Font"], nil, 1)
+blizz.addonCompartment.args.fontGroup.args.fontSize = ACH:Range(L["Font Size"], nil, 2, C.Values.FontSize)
+blizz.addonCompartment.args.fontGroup.args.fontOutline = ACH:FontFlags(L["Font Outline"], nil, 3)
+blizz.addonCompartment.args.fontGroup.inline = true
+
+blizz.queueStatus = ACH:Group(E.NewSign..L["Queue Status"], nil, 60, nil, function(info) return E.db.general.queueStatus[info[#info]] end, function(info, value) E.db.general.queueStatus[info[#info]] = value Misc:HandleQueueStatus() end)
+blizz.queueStatus.args.enable = ACH:Toggle(L["Enable"], nil, 1, nil, nil, nil, function() return E.private.general.queueStatus end, function(_, value) E.private.general.queueStatus = value E.ShowPopup = true end, nil, function() return not E.Retail or E.private.actionbar.enable end)
+blizz.queueStatus.args.scale = ACH:Range(L["Scale"], nil, 2, { min = 0.3, max = 1, step = 0.05 })
+blizz.queueStatus.args.frameLevel = ACH:Range(L["Frame Level"], nil, 3, { min = 2, max = 128, step = 1 })
+blizz.queueStatus.args.frameStrata = ACH:Select(L["Frame Strata"], nil, 4, C.Values.Strata)
+
+blizz.queueStatus.args.fontGroup = ACH:Group(L["Status Text"], nil, 10, nil, nil, nil, nil, not E.Retail)
+blizz.queueStatus.args.fontGroup.args.enable = ACH:Toggle(L["Enable"], nil, 1)
+blizz.queueStatus.args.fontGroup.args.spacer1 = ACH:Spacer(2, 'full')
+blizz.queueStatus.args.fontGroup.args.font = ACH:SharedMediaFont(L["Font"], nil, 3)
+blizz.queueStatus.args.fontGroup.args.fontSize = ACH:Range(L["Font Size"], nil, 4, C.Values.FontSize)
+blizz.queueStatus.args.fontGroup.args.fontOutline = ACH:FontFlags(L["Font Outline"], nil, 5)
+blizz.queueStatus.args.fontGroup.args.spacer2 = ACH:Spacer(10, 'full')
+blizz.queueStatus.args.fontGroup.args.position = ACH:Select(L["Position"], nil, 11, C.Values.AllPoints)
+blizz.queueStatus.args.fontGroup.args.xOffset = ACH:Range(L["X-Offset"], nil, 12, { min = -30, max = 30, step = 1 })
+blizz.queueStatus.args.fontGroup.args.yOffset = ACH:Range(L["Y-Offset"], nil, 13, { min = -30, max = 30, step = 1 })
+blizz.queueStatus.args.fontGroup.inline = true
+

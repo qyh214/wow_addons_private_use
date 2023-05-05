@@ -4,7 +4,7 @@ if not L then return end
 L["ABILITY_ID"] = "ID de la compétence"
 L["STRING_"] = "-"
 L["STRING_ABSORBED"] = "Absorbé"
-L["STRING_ACTORFRAME_NOTHING"] = "oups, aucune donnée à rapporter :("
+L["STRING_ACTORFRAME_NOTHING"] = "oops, il n'y a aucune donnée à communiquer :("
 L["STRING_ACTORFRAME_REPORTAT"] = "à"
 L["STRING_ACTORFRAME_REPORTOF"] = "de"
 L["STRING_ACTORFRAME_REPORTTARGETS"] = "rapporter pour les cibles de"

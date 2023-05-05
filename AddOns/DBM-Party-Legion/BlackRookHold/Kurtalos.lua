@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1672, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(98965, 98970)
 mod:SetEncounterID(1835)
 mod:SetBossHPInfoToHighest()
@@ -46,7 +46,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 198820 then
-		if self.vb.phase == 1 then
+		if self:GetStage(1) then
 			specWarnDarkblast:Show()
 			specWarnDarkblast:Play("watchstep")
 			timerDarkBlastCD:Start()

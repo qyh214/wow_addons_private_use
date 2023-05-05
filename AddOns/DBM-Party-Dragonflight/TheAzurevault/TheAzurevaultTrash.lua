@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TheAzurevaultTrash", "DBM-Party-Dragonflight", 6)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230320021831")
+mod:SetRevision("20230405024520")
 --mod:SetModelID(47785)
 mod:SetZone(2515)
 
@@ -45,7 +45,7 @@ local specWarnMysticVapors					= mod:NewSpecialWarningInterrupt(387564, "HasInte
 local specWarnWakingBane					= mod:NewSpecialWarningInterrupt(386546, "HasInterrupt", nil, nil, 1, 2)
 local specWarnBrilliantScales				= mod:NewSpecialWarningDispel(374778, "MagicDispeller", nil, nil, 1, 2)
 
-local timerIcyBindingsCD					= mod:NewCDTimer(17.1, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerIcyBindingsCD					= mod:NewCDTimer(14, 377488, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerWakingBaneCD						= mod:NewCDTimer(20.5, 386546, nil, "HasInterrupt", nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
 local timerErraticGrowthCD					= mod:NewCDTimer(21.5, 375596, nil, nil, nil, 3, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerShoulderSlamCD					= mod:NewCDTimer(10.9, 391136, nil, nil, nil, 3)
@@ -194,7 +194,6 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		DBM:Debug("GOSSIP_SHOW triggered with a gossip ID of: "..gossipOptionID)
 		if self.Options.AGBook and (gossipOptionID == 56056 or gossipOptionID == 56057 or gossipOptionID == 56247 or gossipOptionID == 56379 or gossipOptionID == 56248 or gossipOptionID == 56378 or gossipOptionID == 56250 or gossipOptionID == 107756 or gossipOptionID == 56251) then -- Books
 			self:SelectGossip(gossipOptionID)
 		end

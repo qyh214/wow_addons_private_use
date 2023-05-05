@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2522, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230317001507")
+mod:SetRevision("20230403104939")
 mod:SetCreatureID(201261)
 mod:SetEncounterID(2688)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -62,11 +62,11 @@ function mod:OnCombatStart(delay)
 	self.vb.rayCount = 0
 	self.vb.hellCount = 0
 	self.vb.wingsCount = 0
-	timerDreadRiftsCD:Start(7.1, 1)
-	timerRaysofAnguishCD:Start(25.2, 1)
-	timerHellbeamCD:Start(29.2, 1)
-	timerWingsofExtinctionCD:Start(14.4, 1)
 	timerTerrorClawsCD:Start(3.4)
+	timerDreadRiftsCD:Start(7, 1)
+	timerWingsofExtinctionCD:Start(14.3, 1)
+	timerRaysofAnguishCD:Start(24, 1)
+	timerHellbeamCD:Start(29.2, 1)
 end
 
 function mod:SPELL_CAST_START(args)

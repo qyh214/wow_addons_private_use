@@ -11,5 +11,6 @@
 	<Script file="Conduits.lua"/>
 	<Script file="Mounts.lua"/>
 	<Script file="Pets.lua"/>
-	<Script file="Drakewatcher.lua"/>
+	<Script file="DrakewatcherQuests.lua"/>
+	<Script file="DrakewatcherSpells.lua"/>
 </Ui>

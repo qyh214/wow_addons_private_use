@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1161, "DBM-BlackrockFoundry", nil, 457)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142006")
+mod:SetRevision("20230325014113")
 mod:SetCreatureID(76877)
 mod:SetEncounterID(1691)
 --mod:SetUsedIcons(8, 7, 6, 4, 2, 1)
@@ -273,7 +273,7 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerInfernoSliceCD:Start(nil, 1)
 			if self:IsMythic() then
 				self:RegisterShortTermEvents(
-					"UNIT_POWER_FREQUENT boss1"
+					"UNIT_POWER_UPDATE boss1"
 					)
 			end
 		end
@@ -296,7 +296,7 @@ mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 do
 	local lastPower = 0
-	function mod:UNIT_POWER_FREQUENT(uId)
+	function mod:UNIT_POWER_UPDATE(uId)
 		local bossPower = UnitPower("boss1") --Get Boss Power
 		if bossPower >= 50 and bossPower-lastPower > 40 then--Boss gained an enormous amount of energy all of a sudden (less than 4 targets soaked inferno strike on mythic difficulty)
 			--So update timer

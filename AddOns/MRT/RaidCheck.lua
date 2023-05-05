@@ -339,7 +339,7 @@ if ExRT.isLK then
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bom","BoM",135908,{[19740]=1,[19834]=2,[19835]=3,[19836]=4,[19837]=5,[19838]=6,[25291]=7,[27140]=8,[48931]=9,[48932]=10,[25782]=6,[25916]=7,[27141]=8,[48933]=9,[48934]=10}}	--Blessing of Might
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bow","BoW",135970,{[19742]=1,[19850]=2,[19852]=3,[19853]=4,[19854]=5,[25290]=6,[27142]=7,[48935]=8,[48936]=9,[25894]=5,[25918]=6,[27143]=7,[48937]=8,[48938]=9}}	--Blessing of Wisdom
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bok","BoK",135993,{[20217]=1,[25898]=1,[69378]=1}}	--Blessing of Kings
-	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bos","BoS",135911,{[25899]=1,}}	--Greater Blessing of Sanctuary
+	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bos","BoS",135911,{[25899]=1,[20911]=1}}	--Greater Blessing of Sanctuary
 elseif ExRT.isBC then
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bom","BoM",135908,{[19740]=1,[19834]=2,[19835]=3,[19836]=4,[19837]=5,[19838]=6,[25291]=7,[27140]=8,[25782]=6,[25916]=7,[27141]=8}}	--Blessing of Might
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bow","BoW",135970,{[19742]=1,[19850]=2,[19852]=3,[19853]=4,[19854]=5,[25290]=6,[27142]=7,[25894]=5,[25918]=6,[27143]=7,}}	--Blessing of Wisdom

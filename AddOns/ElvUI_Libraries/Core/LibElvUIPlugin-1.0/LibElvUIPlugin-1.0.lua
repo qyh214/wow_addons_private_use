@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibElvUIPlugin-1.0", 41
+local MAJOR, MINOR = "LibElvUIPlugin-1.0", 42
 local lib = _G.LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 -- GLOBALS: ElvUI
@@ -36,7 +36,7 @@ local format, wipe, type, gmatch, gsub, ceil, strfind = format, wipe, type, gmat
 
 local geterrorhandler = geterrorhandler
 local hooksecurefunc = hooksecurefunc
-local GetAddOnMetadata = GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetNumGroupMembers = GetNumGroupMembers
 local GetLocale, IsInGuild = GetLocale, IsInGuild
 local CreateFrame, IsAddOnLoaded = CreateFrame, IsAddOnLoaded
@@ -102,6 +102,7 @@ local function checkElvUI()
 end
 
 function lib:RegisterPlugin(name, callback, isLib, libVersion)
+	if not IsAddOnLoaded(name) then return end
 	checkElvUI()
 
 	local plugin = {

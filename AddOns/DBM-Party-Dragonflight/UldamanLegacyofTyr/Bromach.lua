@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2487, "DBM-Party-Dragonflight", 2, 1197)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221213054234")
+mod:SetRevision("20230430001551")
 mod:SetCreatureID(184018)
 mod:SetEncounterID(2556)
 mod:SetUsedIcons(8)
@@ -78,7 +78,7 @@ end
 
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
-	if spellId == 369675 and self:CheckInterruptFilter(args.sourceGUID, false, true) then
+	if spellId == 369675 and args:GetSrcCreatureID() == 186658 and self:CheckInterruptFilter(args.sourceGUID, false, true) then--186658 boss version of mob
 		specWarnChainLightning:Show(args.sourceName)
 		specWarnChainLightning:Play("kickcast")
 	elseif spellId == 369754 then

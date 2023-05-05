@@ -1,3 +1,17 @@
+# RSA 5.15
+* Updated interface version
+
+## Death Knight
+* Added Abomination Limb
+* Added Blinding Sleet
+* Added Empower Rune Weapon
+## Warrior
+* Updated spell ID for Intervene in Dragonflight
+* Added Challenging Shout in Dragonflight
+* Added Avatar
+* Added Spear of Bastion
+* Added Spell Block
+
 # RSA 5.14
 * Updated the names of several announcements to clarify that the profile is setup for multiple spells. e.g Cleanse and Purify use the same spell profile, so now it displays as Cleanse | Purify, rather than just Cleanse.
 * Updated localisations - French localisation should now function in game.

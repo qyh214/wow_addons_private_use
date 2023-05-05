@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## X-Min-Interface-Wrath: 30400
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dungeons (WotLK)|r
@@ -14,6 +14,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMPartyWotLK_AllSavedVars
 ## SavedVariablesPerCharacter: DBMPartyWotLK_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: WOTLK
@@ -40,7 +41,7 @@
 ## X-DBM-Mod-MapID: 619,601,595,600,604,602,599,576,578,574,575,608,658,632,668,650
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
 ## X-DBM-Mod-MinExpansion: 2
-## Version: r74
+## Version: r76
 
 localization.en.lua
 localization.cn.lua

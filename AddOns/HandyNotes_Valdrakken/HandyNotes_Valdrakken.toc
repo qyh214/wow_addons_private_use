@@ -1,13 +1,14 @@
-## Interface: 100005
+## Interface: 100100
 ## Title: HandyNotes: Valdrakken
 ## Notes: Shows the NPC and POI locations in Valdrakken.
 ## Notes-deDE: Zeigt die Positionen von NPCs und anderen Orten von Interesse in Valdrakken an.
 ## Author: |cFFFF8C00Dathwada EU-Eredar|r
-## Version: v2
+## Version: v4
 ## RequiredDeps: HandyNotes
 ## DefaultState: enabled
 ## SavedVariables: HandyNotes_ValdrakkenDB
-## X-Date: 2023-01-25
+## IconTexture: 4661644
+## X-Date: 2023-05-05
 ## X-Category: Map
 
 # LOCALIZATION FILES

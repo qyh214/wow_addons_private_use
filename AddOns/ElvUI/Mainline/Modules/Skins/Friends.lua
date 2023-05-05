@@ -149,15 +149,6 @@ function S:FriendsFrame()
 		_G[object]:StripTextures()
 	end
 
-	local mainFrames = {
-		'WhoFrame',
-		'LFRQueueFrame',
-	}
-
-	for _, frame in pairs(mainFrames) do
-		_G[frame]:StripTextures()
-	end
-
 	local FriendsFrame = _G.FriendsFrame
 	S:HandlePortraitFrame(FriendsFrame)
 
@@ -261,6 +252,7 @@ function S:FriendsFrame()
 	end)
 
 	--Who Frame
+	_G.WhoFrame:StripTextures()
 	_G.WhoFrameListInset:StripTextures()
 	_G.WhoFrameListInset.NineSlice:Hide()
 	_G.WhoFrameEditBoxInset:StripTextures()

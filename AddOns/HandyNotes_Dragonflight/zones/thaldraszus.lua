@@ -12,6 +12,7 @@ local PetBattle = ns.node.PetBattle
 local Rare = ns.node.Rare
 local Treasure = ns.node.Treasure
 
+local AncientStone = ns.node.AncientStone
 local Disturbeddirt = ns.node.Disturbeddirt
 local Dragonglyph = ns.node.Dragonglyph
 local Dragonrace = ns.node.Dragonrace
@@ -76,23 +77,6 @@ map.nodes[59075874] = RareElite({
     },
     pois = {POI({60755543, 60736211, 59225648, 59266104})} -- Titanic Reactors
 }) -- Ancient Protector
-
-map.nodes[31097121] = Rare({
-    id = 193128,
-    quest = 74096,
-    note = L['blightpaw_note'],
-    rewards = {
-        Achievement({id = 16679, criteria = 56136}),
-        Transmog({item = 200127, slot = L['1h_sword']}), -- Gold-Alloy Blade
-        Transmog({item = 200266, slot = L['crossbow']}), -- Gnollish Chewtoy Launcher
-        Transmog({item = 200283, slot = L['leather']}), -- Gnoll-Gnawed Breeches
-        Transmog({item = 200432, slot = L['cloth']}), -- Rotguard Cowl
-        Toy({item = 200178}), -- Infected Ichor
-        DC.CliffsideWylderdrake.BlackHair,
-        DC.CliffsideWylderdrake.DualHornedChin, DC.CliffsideWylderdrake.Ears,
-        DC.HighlandDrake.SpikedClubTail
-    }
-}) -- Blightpaw the Depraved
 
 map.nodes[59847057] = Rare14h({
     id = 193220,
@@ -1605,6 +1589,39 @@ map.nodes[50594665] = GrandHunt({
     areaPOI = 7099,
     criteria = 55687
 }) -- Northern Thaldraszus Hunt
+
+-------------------------------------------------------------------------------
+------------------------ ANCIENT STONES OF THALDRASZUS ------------------------
+-------------------------------------------------------------------------------
+
+map.nodes[42767041] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58819})}
+}) -- Mighty Ducks
+
+map.nodes[60058499] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58820})}
+}) -- A Timely Message
+
+map.nodes[58155805] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58821})}
+}) -- Keeper's Blessing
+
+map.nodes[52353873] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58822})}
+}) -- Guardian Wings
+
+map.nodes[58396777] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58823})}
+}) -- Together Bound
+
+map.nodes[62401592] = AncientStone({
+    rewards = {Achievement({id = 17564, criteria = 58824})}
+}) -- Caretaker's Notes
+
+val.nodes[57048156] = AncientStone({
+    parent = map.id,
+    rewards = {Achievement({id = 17564, criteria = 58825})}
+}) -- Valdrakken
 
 -------------------------------------------------------------------------------
 -------------------------------- MISCELLANEOUS --------------------------------

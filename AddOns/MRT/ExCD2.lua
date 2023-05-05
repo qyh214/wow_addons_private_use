@@ -11637,7 +11637,7 @@ module.db.AllSpells = {
 		cdDiff={329588,-10},hideWithTalent=213602},
 	{47788,	"PRIEST,DEFTAR",2,--Оберегающий дух
 		nil,nil,{47788,180,10},nil,
-		isTalent=true,durationDiff={337811,2,329693,5},stopDurWithAuraFade=47788,changeCdAfterAuraFullDur={{47788,200209},-110}},
+		isTalent=true,durationDiff={337811,2,329693,"*1.80"},stopDurWithAuraFade=47788,changeCdAfterAuraFullDur={{47788,200209},-110}},
 	{88625,	"PRIEST",3,--Слово Света: Наказание
 		nil,nil,{88625,60,0},nil,
 		isTalent=true,resetBy=200183,reduceCdAfterCast={{14914,336314},-4,{14914,390994},{-2,-4},585,-4,{585,196985},-1.333,{585,200183,nil,200183},-12,{585,338345},{-0.24,-0.352,-0.384,-0.416,-0.448,-0.48,-0.512,-0.544,-0.576,-0.608,-0.64,-0.672,-0.704,-0.736,-0.768},{585,338345,nil,200183},{-0.72,-1.056,-1.152,-1.248,-1.344,-1.44,-1.536,-1.632,-1.728,-1.824,-1.92,-2.016,-2.112,-2.208,-2.304}}},
@@ -11655,7 +11655,7 @@ module.db.AllSpells = {
 		isTalent=true,cdDiff={341167,-25}},
 	{33206,	"PRIEST,DEFTAR",2,--Подавление боли
 		nil,{33206,180,8},nil,nil,
-		isTalent=true,durationDiff={329693,4},reduceCdAfterCast={{17,373035},-3}},
+		isTalent=true,durationDiff={329693,"*1.80"},reduceCdAfterCast={{17,373035},-3},hasCharges=373035},
 	{10060,	"PRIEST,UTIL",3,--Придание сил
 		{10060,120,20},nil,nil,nil,
 		isTalent=true,
@@ -11732,7 +11732,7 @@ module.db.AllSpells = {
 		isTalent=true,changeDurWithHaste=true,stopDurWithAuraFade=64901},
 	{15286,	"PRIEST,RAID",1,--Объятия вампира
 		{15286,120,15},nil,nil,nil,
-		isTalent=true,durationDiff={329693,7.5},cdDiff={199855,-45}},
+		isTalent=true,durationDiff={329693,"*1.80"},cdDiff={199855,-45}},
 	{228260,"PRIEST,DPS",3,--Извержение Бездны
 		nil,nil,nil,{228260,90,0}},
 	{200183,"PRIEST,HEAL",3,--Прославление
@@ -14239,6 +14239,7 @@ if ExRT.isLK then
 		{12809,	"WARRIOR",	1,	{12809,	30,	5}},	--Concussion Blow
 		{676,	"WARRIOR",	1,	{676,	60,	10}},	--Disarm
 		{55694,	"WARRIOR",	1,	{55694,	180,	10}},	--Enraged Regeneration
+		{64382,	"WARRIOR",	1,	{64382,	300,	10}},	--Shattering Throw	
 
 		{11958,	"MAGE",		1,	{11958,	480,	0}},	--Cold Snap
 		{12472,	"MAGE",		1,	{12472,	180,	20}},	--IV

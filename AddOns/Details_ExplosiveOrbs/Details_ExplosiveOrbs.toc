@@ -1,12 +1,13 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: Details!: Explosive Orbs (plugin)
 ## Title-ruRU: Details!: Взрывоопасные сферы (плагин)
 ## Notes: Show how many explosive orbs players target and hit.
 ## Notes-ruRU: Отображает, сколько взрывоопасных сфер игроки берут в цель и бьют.
 ## RequiredDeps: Details
 ## Author: LiangYuxuan
-## Version: v10.0.7
+## Version: v10.1.0
 ## SavedVariablesPerCharacter: ExplosiveOrbsLog
+## IconTexture: 2175503
 ## X-License: MIT
 ## X-Curse-Project-ID: 352367
 ## X-WoWI-ID: 25932

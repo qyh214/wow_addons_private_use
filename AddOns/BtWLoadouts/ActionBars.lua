@@ -545,8 +545,14 @@ local function PickupActionTable(tbl, test, settings, activating)
                 msg = L["Spell not found"]
             end
         elseif tbl.type == "item" then
-            if not test then
-                PickupItem(tbl.id)
+            local itemEquipLoc = select(4, GetItemInfoInstant(tbl.id))
+            -- Allowed items on bars: toys, equipment that there is at least 1 of in bags/equipped, or usable items
+            if C_ToyBox.GetToyInfo(tbl.id) or (itemEquipLoc ~= "" and GetItemCount(tbl.id) > 0) or (itemEquipLoc == "" and IsUsableItem(tbl.id)) then
+                if not test then
+                    PickupItem(tbl.id)
+                end
+            else
+                success, msg = false, L["Item unavailable"]
             end
         elseif tbl.type == "summonmount" then
             if tbl.id == 0xFFFFFFF then -- Random Favourite
@@ -612,7 +618,7 @@ local function PickupActionTable(tbl, test, settings, activating)
                 end
                 if not index then -- Couldn't find the flyout in the spell book
                     success = false
-                    msg = L["Flyout is not is spell book"]
+                    msg = L["Flyout is not in spell book"]
                 elseif not test then
                     PickupSpellBookItem(index, "spell")
                 end
@@ -734,7 +740,7 @@ local function AddActionBarSet()
     elseif classFile == "DRUID" then
         ignoredStart = 121 -- After Form Bars
     end
-    for slot = ignoredStart,132 do
+    for slot = ignoredStart,144 do
         ignored[slot] = true
     end
 
@@ -745,7 +751,11 @@ local function AddActionBarSet()
     }))
 end
 local function GetActionBarSet(id)
-    return Internal.GetSet(BtWLoadoutsSets.actionbars, id)
+    local set = Internal.GetSet(BtWLoadoutsSets.actionbars, id)
+    for slot = 121,144 do
+        set.ignored[slot] = true
+    end
+    return set
 end
 local function GetActionBarSetByName(id)
     return Internal.GetSetByName(BtWLoadoutsSets.actionbars, id)

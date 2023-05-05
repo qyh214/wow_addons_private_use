@@ -105,6 +105,10 @@ function W:ShowOptions()
     Settings.OpenToCategory(self.OptionName)
 end
 
+_G.WindChatFilter_OnAddonCompartmentClick = function()
+    W:ShowOptions()
+end
+
 function W:RefreshOptions()
     ACR:NotifyChange(self.AddonNamePlain)
 end

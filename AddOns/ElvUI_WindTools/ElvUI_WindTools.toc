@@ -1,6 +1,6 @@
-## Interface: 100007
+## Interface: 100100
 ## Author: fang2hou
-## Version: 3.26
+## Version: 3.30
 ## Title: |cff1784d1ElvUI|r |cff5385edW|r|cff5094eai|r|cff4da4e7n|r|cff4ab4e4d|r|cff47c0e1T|r|cff44cbdfo|r|cff41d7ddo|r|cff41d7ddl|r|cff41d7dds|r
 ## Title-zhCN: |cff1784d1ElvUI|r |cff5385edW|r|cff5192ebi|r|cff4e9fe8n|r|cff4bace5d|r |cff49b8e3工|r|cff42d3dd具|r|cff41d7dd箱|r
 ## Title-zhTW: |cff1784d1ElvUI|r |cff5385edW|r|cff5192ebi|r|cff4e9fe8n|r|cff4bace5d|r |cff49b8e3工|r|cff42d3dd具|r|cff41d7dd箱|r
@@ -13,6 +13,8 @@
 ## Notes-ruRU: Добавляет множество улучшенных функций в ElvUI и даёт возможность их гибко настраивать.
 ## RequiredDeps: ElvUI
 ## OptionalDeps: Blizzard_PetJournal, Rematch, SharedMedia, MythicDungeonTools, Myslot, Details, Details_Covenants, WeakAuras, BigWigs
+## AddonCompartmentFunc: WindTools_OnAddonCompartmentClick
+## IconTexture: Interface\Addons\ElvUI_WindTools\Media\Textures\WindToolsAddonIcon.png
 ## X-Credits: Blazeflack, Merathilis, Benik, siweia, loudsoul, Simpy, Azilroka, Haste, Tukz, Elv, Repooc & others in CREDITS.md
 ## X-Curse-Project-ID: 300361
 ## X-WoWI-ID: 25687

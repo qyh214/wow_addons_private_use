@@ -104,11 +104,11 @@ local Fonts = DBM_GUI:MixinSharedMedia3("font", {
 	},
 	{
 		text	= "Skurri",
-		value	= "Fonts\\skurri.ttf"
+		value	= "Fonts\\SKURRI_CYR.ttf"
 	},
 	{
 		text	= "Morpheus",
-		value	= "Fonts\\MORPHEUS.ttf"
+		value	= "Fonts\\MORPHEUS_CYR.ttf"
 	}
 })
 

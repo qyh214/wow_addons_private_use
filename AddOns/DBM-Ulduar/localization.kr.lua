@@ -369,7 +369,7 @@ L:SetWarningLocalization{
 	WarningSanity 					= "이성 %d 남음",
 	SpecWarnSanity 					= "이성 %d 남음",
 	SpecWarnMadnessOutNow			= "광기 유발 종료 - 밖으로 나가세요",
-	WarnBrainPortalSoon				= "3초 후 내부 차원문",
+	WarnBrainPortalSoon				= "10초 후 내부 차원문",
 	specWarnBrainPortalSoon			= "곧 내부 차원문"
 }
 

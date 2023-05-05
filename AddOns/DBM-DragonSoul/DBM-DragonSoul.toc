@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Dragon Soul|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Drachenseele|r
@@ -14,6 +14,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMDragonSoul_AllSavedVars
 ## SavedVariablesPerCharacter: DBMDragonSoul_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: CATA
@@ -26,7 +27,7 @@
 ## X-Curse-Project-ID: 43971
 ## X-WoWI-ID: 21469
 ## X-Wago-ID: RBKpErGE
-## Version: r225
+## Version: r226
 
 localization.en.lua
 localization.de.lua

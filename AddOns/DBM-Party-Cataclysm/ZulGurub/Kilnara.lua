@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20220116042005")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(52059)
 mod:SetEncounterID(1180)
 
@@ -45,7 +45,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 96592 then
 		warnRavage:Show(args.destName)
 		timerRavage:Start(args.destName)
-	elseif args.spellId == 97380 and self.vb.phase < 2 then
+	elseif args.spellId == 97380 and self:GetStage(2, 1) then
 		self:SetStage(2)
 		warnPhase2:Show()
 	end

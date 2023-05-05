@@ -1,27 +1,25 @@
 # Details!: Explosive Orbs (plugin)
 
-## [v10.0.7](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v10.0.7) (2023-03-22)
-[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v10.0.5...v10.0.7) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
+## [v10.1.0](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v10.1.0) (2023-05-03)
+[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v10.0.7...v10.1.0) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
 
-- chore: toc update  
-- test: update .luacheckrc  
-- test: update .luacheckrc  
-- chore(deps): bump actions/checkout from 2 to 3  
-    Bumps [actions/checkout](https://github.com/actions/checkout) from 2 to 3.  
-    - [Release notes](https://github.com/actions/checkout/releases)  
-    - [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)  
-    - [Commits](https://github.com/actions/checkout/compare/v2...v3)  
+- chore: toc update and addon icon  
+- chore(deps): bump p3lim/license-year-updater from 1 to 2  
+    Bumps [p3lim/license-year-updater](https://github.com/p3lim/license-year-updater) from 1 to 2.  
+    - [Release notes](https://github.com/p3lim/license-year-updater/releases)  
+    - [Commits](https://github.com/p3lim/license-year-updater/compare/v1...v2)  
     ---  
     updated-dependencies:  
-    - dependency-name: actions/checkout  
+    - dependency-name: p3lim/license-year-updater  
       dependency-type: direct:production  
       update-type: version-update:semver-major  
     ...  
     Signed-off-by: dependabot[bot] <support@github.com>  
-- chore(deps): bump peter-evans/create-pull-request from 3 to 4  
-    Bumps [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request) from 3 to 4.  
+- test: update .luacheckrc  
+- chore(deps): bump peter-evans/create-pull-request from 4 to 5  
+    Bumps [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request) from 4 to 5.  
     - [Release notes](https://github.com/peter-evans/create-pull-request/releases)  
-    - [Commits](https://github.com/peter-evans/create-pull-request/compare/v3...v4)  
+    - [Commits](https://github.com/peter-evans/create-pull-request/compare/v4...v5)  
     ---  
     updated-dependencies:  
     - dependency-name: peter-evans/create-pull-request  
@@ -29,4 +27,4 @@
       update-type: version-update:semver-major  
     ...  
     Signed-off-by: dependabot[bot] <support@github.com>  
-- chore: dependabot  
+- test: update .luacheckrc  

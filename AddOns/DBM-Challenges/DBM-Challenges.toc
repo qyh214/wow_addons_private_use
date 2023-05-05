@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Challenges|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Herausforderungen|r
@@ -12,6 +12,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMChallenges_AllSavedVars
 ## SavedVariablesPerCharacter: DBMChallenges_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: SCENARIO
 ## X-DBM-Mod-Category: OTHER
@@ -33,7 +34,7 @@
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 61621
 ## X-Wago-ID: Rn6VLLGd
-## Version: r155
+## Version: r156
 localization.en.lua
 localization.de.lua
 localization.es.lua

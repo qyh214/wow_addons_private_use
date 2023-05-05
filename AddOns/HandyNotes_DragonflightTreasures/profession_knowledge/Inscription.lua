@@ -92,3 +92,16 @@ ns.RegisterPoints(ns.VALDRAKKEN, {
         parent = true,
     },
 }, dfinsknowledge)
+
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [53027426] = {
+        loot={206034}, -- Hissing Rune Draft
+        quest=76120,
+        vignette=5740,
+    },
+    [36734630] = {
+        loot={206031}, -- Intact Zaqali Runes
+        quest=76117,
+        vignette=5739,
+    },
+}, dfinsknowledge)

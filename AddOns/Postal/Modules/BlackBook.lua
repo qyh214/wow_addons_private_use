@@ -146,7 +146,7 @@ function Postal_BlackBook:AddAlt()
 		if p ~= player and r == realm and f == faction then
 			enableAltsMenu = true
 		end
-		if p ~= player and r ~= realm then
+		if p ~= player or r ~= realm or f ~= faction then
 			enableAllAltsMenu = true
 		end
 	end
@@ -171,7 +171,7 @@ function Postal_BlackBook.DeleteAlt(dropdownbutton, arg1, arg2, checked)
 			if r == realm and f == faction and p ~= player then
 				enableAltsMenu = true
 			end
-			if r ~= realm and p ~= player then
+			if r ~= realm or f ~= faction or p ~= player then
 			enableAllAltsMenu = true
 			end
 		end
@@ -595,9 +595,9 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 					if (pr ~= plre ) then
 						if l and c then
 							local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
-							info.text = format("%s-%s |cff%.2x%.2x%.2x(%d %s)|r", p, r, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
+							info.text = format("%s-%s-%s |cff%.2x%.2x%.2x(%d %s)|r", p, r, f, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
 						else
-							info.text = ("%s-%s"):format(p, r)
+							info.text = ("%s-%s-%s"):format(p, r, f)
 						end
 						info.func = Postal_BlackBook.SetSendMailName
 						info.arg1 = ("%s-%s"):format(p, r)
@@ -699,10 +699,15 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 			local realm = GetRealmName()
 			local faction = UnitFactionGroup("player")
 			local player = UnitName("player")
+			if all then db = Postal.db.global.BlackBook.alts else db = altstable end
 			for i = 1, #db do
 				local p, r, f, l, c = strsplit("|", db[i])
-				if p ~= player and ( (r == realm and f == faction) or all ) then
-					p = all and p.."-"..r or p
+				if (p ~= player or r ~= realm or f ~= faction) or all then
+					if all then
+						p = all and p.."-"..r.."-"..f or p
+					else
+						p = all and p.."-"..r or p
+					end
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
 						info.text = format("%s |cff%.2x%.2x%.2x(%d %s)|r", p, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
@@ -744,8 +749,8 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 			local player = UnitName("player")
 			for i = startIndex, endIndex do
 				local p, r, f, l, c = strsplit("|", db[i])
-				if p ~= player and ( (r == realm and f == faction) or all ) then
-					p = all and p.."-"..r or p
+				if (p ~= player or r ~= realm or f ~= faction) or all then
+					p = all and p.."-"..r.."-"..f or p
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
 						info.text = format("%s |cff%.2x%.2x%.2x(%d %s)|r", p, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
@@ -803,9 +808,9 @@ elseif UIDROPDOWNMENU_MENU_VALUE == "allalt" then
 				if (pr ~= plre ) then
 					if l and c then
 						local clr = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[c] or RAID_CLASS_COLORS[c]
-						info.text = format("%s-%s |cff%.2x%.2x%.2x(%d %s)|r", p, r, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
+						info.text = format("%s-%s-%s |cff%.2x%.2x%.2x(%d %s)|r", p, r, f, clr.r*255, clr.g*255, clr.b*255, l, LOCALIZED_CLASS_NAMES_MALE[c])
 					else
-						info.text = ("%s-%s"):format(p, r)
+						info.text = ("%s-%s-%s"):format(p, r, f)
 					end
 					info.func = Postal_BlackBook.SetSendMailName
 					info.arg1 = ("%s-%s"):format(p, r)

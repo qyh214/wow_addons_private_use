@@ -879,10 +879,14 @@ P.social = {
         roleIconStyle = "SUNUI",
         removeRealm = true,
         customAbbreviation = {},
+        classIcon = true,
         classIconStyle = "flatborder2",
         guildMemberStatus = true,
         guildMemberStatusInviteLink = true,
-        mergeAchievement = true
+        mergeAchievement = true,
+        bnetFriendOnline = true,
+        bnetFriendOffline = false,
+        factionIcon = true
     },
     emote = {
         enable = true,

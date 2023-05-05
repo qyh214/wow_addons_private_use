@@ -17,7 +17,7 @@ L['options_icons_profession_treasures_desc'] = '显示给予专业知识的宝�
 
 L['dragon_glyph'] = '巨龙魔符'
 L['options_icons_dragon_glyph'] = '巨龙魔符'
-L['options_icons_dragon_glyph_desc'] = '显示全部56个巨龙魔符的位置。'
+L['options_icons_dragon_glyph_desc'] = '显示全部64个巨龙魔符的位置。'
 
 L['dragonscale_expedition_flag'] = '龙鳞探险队旗帜'
 L['flags_placed'] = '已插旗帜'
@@ -135,6 +135,10 @@ L['the_best_at_what_i_do_suffix'] = '首领已击杀'
 L['options_icons_grand_hunts'] = '洪荒狩猎'
 L['options_icons_grand_hunts_desc'] = '显示 {object:洪荒狩猎} 的位置和奖励。'
 
+L['ancient_stone_label'] = '远古之石'
+L['options_icons_ancient_stones'] = '{achievement:17560}'
+L['options_icons_ancient_stones_desc'] = '显示 {achievement:17560} 成就中 {object:远古之石} 的位置。'
+
 L['reed_chest'] = '苇草宝箱'
 L['options_icons_reed_chest'] = '苇草宝箱'
 L['options_icons_reed_chest_desc'] = '显示 {object:苇草宝箱} 可能的位置。'
@@ -206,7 +210,7 @@ L['snowclaw_cub_note_end'] = [[
 
 获得 {title:荣誉树妖} 后带上头衔，将所有4件物品提供给 {npc:196768} 以获得的宠物。
 
-{bug:错误：头衔可能会消失，等待修复。}
+{note:如果过早地失去了头衔，可以重复任务以再次获得。明天或在下一次每周重置后重试。}
 ]]
 
 L['tome_of_polymoph_duck'] = '使用 {spell:1953} 进入洞穴并与 {object:法力风暴初学指南} 书互动以完成任务。'
@@ -231,10 +235,10 @@ L['stranded_soul_note'] = [[
 ]]
 
 L['gethdazr_note'] = [[
-作为 {location:伊姆布} 事件的一部分出现，该事件以吹响 {object:伊姆布巨角}（{dot:Blue}）开始。
+作为 {location:伊姆布} 事件的一部分出现，该事件以吹响 {object:伊姆布巨角} {dot:Blue} 开始。
 只有在击杀大约30-60分钟刷新时间的 {npc:196155} 后，巨角才会变得可点击。
 
-{npc:191143}（{dot:Green}）和其他 NPC 将从 {location:伊姆布} 的东北入口杀出一条血路，直到 {npc:196165} 在悬崖出现。
+{npc:191143} {dot:Green} 和其他 NPC 将从 {location:伊姆布} 的东北入口杀出一条血路，直到 {npc:196165} 在悬崖出现。
 NPC 可以在没有帮助的情况下死亡，这将使事件失败。
 
 这可以单独完成，但建议2-3名玩家。
@@ -276,7 +280,6 @@ L['mysterious_wand_note'] = '拾取 {object:水晶钥匙} 并将其放入 {objec
 ------------------------- FORBIDDEN REACH (MAIN ZONE) -------------------------
 -------------------------------------------------------------------------------
 
--- Locations
 L['in_dragonskull_island'] = '位于 {location:龙颅岛}。'
 L['in_froststone_vault'] = '位于 {location:霜石宝库}。'
 L['in_the_high_creche'] = '位于 {location:至高育幼所}。'
@@ -286,63 +289,71 @@ L['in_the_support_creche'] = '位于 {location:支援育幼所}。'
 L['in_the_war_creche'] = '位于 {location:至高育幼所} 深处。'
 L['in_zskera_vaults'] = '位于 {location:兹斯克拉宝库}。'
 
--- Rares
-L['duzalgor_note'] = '收集一瓶 {spell:400751}（{dot:Green}）来治疗 {location:支援育幼所} 内的有毒气体。'
+L['duzalgor_note'] = '收集一瓶 {spell:400751} {dot:Green} 来治疗 {location:支援育幼所} 内的有毒气体。'
 L['mad_eye_carrey_note'] = '{npc:201181} 与 {npc:201184} 和 {npc:201182} 在一组。'
 L['wymslayer_angvardi_note'] = '{npc:201013} 和 {npc:201310} 为伴。'
 L['loot_specialist_note'] = '{npc:203353} 出现时有 {spell:406143} 和 {spell:132653} 并且会在受到攻击时逃跑。\n\n{note:在他施放 {spell:406141} 完之前快速击杀他。}'
 
--- Profession Rares
-L['profession_required'] = '{note:需要 %s 专业。}'
-L['pr_crafting_note'] = '用 {item:%2$s} 制作 {item:%1$s} 并与 {object:%s} 互动召唤稀有。'
+L['profession_required'] = '{note:需要玩家为 %s 专业。}'
+L['pr_crafting_note'] = '用 {item:%2$s} 制作 {item:%1$s} 并与 {object:%3$s} 互动召唤稀有。'
 L['pr_gathering_note'] = '使用 {item:%s} 与 {object:%s} 互动召唤稀有。'
 L['pr_recipe_note'] = '配方 {item:%s} 可以用10个 {item:190456} 从 {npc:202445} 购买。'
+L['pr_summoning_note'] = '召唤稀有的玩家将获得 {spell:405161} 和额外拾取。'
 
-L['pr_awakened_soil'] = 'Awakened Soil'
-L['pr_book_of_arcane_entities'] = 'Book of Arcane Entities'
-L['pr_damaged_buzzspire'] = 'Damaged Buzzspire 505'
-L['pr_empty_crab_trap'] = 'Empty Crab Trap'
-L['pr_farescale_shrine'] = 'Farscale Shrine'
-L['pr_raw_argali_pelts'] = 'Raw Argali Pelts'
-L['pr_resonating_crystal'] = 'Resonating Crystal'
-L['pr_rumbling_deposit'] = 'Rumbling Deposit'
-L['pr_spellsworn_ward'] = 'Spellsworn Ward'
-L['pr_spiceless_stew'] = 'Spiceless Stew'
-L['pr_tuskarr_kite_post'] = 'Tuskarr Kite Post'
-L['pr_tuskarr_tanning_rack'] = 'Tuskarr Tanning Rack'
-L['pr_volatile_brazier'] = 'Volatile Brazier'
+L['pr_awakened_soil'] = '觉醒之油'
+L['pr_book_of_arcane_entities'] = '奥术实体之书'
+L['pr_damaged_buzzspire'] = '受损的鸣塔505型'
+L['pr_empty_crab_trap'] = '空荡荡的捕蟹笼'
+L['pr_farescale_shrine'] = '远鳞神龛'
+L['pr_raw_argali_pelts'] = '未处理的绒羊毛皮'
+L['pr_resonant_crystal'] = '共鸣水晶'
+L['pr_rumbling_deposit'] = '轰鸣的矿脉'
+L['pr_spellsworn_ward'] = '法誓结界'
+L['pr_spiceless_stew'] = '无香料的炖煮'
+L['pr_tuskarr_kite_post'] = '海象人风筝柱'
+L['pr_tuskarr_tanning_rack'] = '海象人的制皮架'
+L['pr_volatile_brazier'] = '不稳定的火盆'
 
--- Treasures
-L['storm_bound_chest_label'] = 'Storm-Bound Chest'
+L['options_icons_profession_rares'] = '专业稀有'
+L['options_icons_profession_rares_desc'] = '显示专业稀有的位置。'
 
--- Forbidden Hoard
-L['hoarder_of_the_forbidden_reach_suffix'] = '已打开小宝藏'
-L['forbidden_spoils_suffix'] = '已打开 Forbidden Hoards'
-L['forbidden_hoard_label'] = 'Forbidden Hoard'
+L['storm_bound_chest_label'] = '雷缚储物箱'
 
-L['options_icons_forbidden_hoard'] = 'Forbidden Hoard'
-L['options_icons_forbidden_hoard_desc'] = '显示 {object:Forbidden Hoard} 宝箱可能的位置。'
+L['hoarder_of_the_forbidden_reach_suffix'] = '已打开小宝箱'
+L['forbidden_spoils_suffix'] = '已打开禁忌宝藏'
+L['forbidden_hoard_label'] = '禁忌宝藏'
 
--- Froststone Primal Vault Storm
-L['froststone_vault_storm_label'] = 'Froststone Vault Primal Storm'
-L['gooey_snailemental_note'] = nil
+L['options_icons_forbidden_hoard'] = '禁忌宝藏'
+L['options_icons_forbidden_hoard_desc'] = '显示 {object:禁忌宝藏} 宝箱可能的位置。'
 
-L['options_icons_froststone_vault_storm'] = 'Froststone Vault Primal Storm'
-L['options_icons_froststone_vault_storm_desc'] = '显示 {object:Froststone Vault Primal Storm} 的位置和奖励。'
+L['froststone_vault_storm_label'] = '霜石宝库原始风暴'
+L['gooey_snailemental_note'] = '从 {object:霜石宝库原始风暴} 首领收集50个 {item:204352} 组合制作 {item:192785}。'
 
--- Small Treasures
-L['small_treasures_label'] = '小宝藏'
-L['small_treasures_note'] = '刷新点之间共享小宝藏。\n\n从 {location:Morqut Village} 的 {npc:200566} 购买 {item:204558} 以获得{spell:405637} 增益，可以在小地图上看到小宝藏60分钟。'
+L['options_icons_froststone_vault_storm'] = '霜石宝库原始风暴'
+L['options_icons_froststone_vault_storm_desc'] = '显示 {object:霜石宝库原始风暴} 的位置和奖励。'
 
-L['options_icons_small_treasures'] = '小宝藏'
-L['options_icons_small_treasures_desc'] = '显示小宝藏可能的位置。'
+L['small_treasures_label'] = '小宝箱'
+L['small_treasures_note'] = '刷新点之间共享小宝箱。\n\n从 {location:莫库特村} 的 {npc:200566} 购买 {item:204558} 以获得{spell:405637} 增益，可以在小地图上看到小宝箱60分钟。'
 
--- Zskera Vaults
+L['options_icons_small_treasures'] = '小宝箱'
+L['options_icons_small_treasures_desc'] = '显示小宝箱可能的位置。'
+
 L['zskera_vaults_label'] = '兹斯克拉宝库'
 L['zskera_vaults_note'] = '从各种稀有物品和宝箱中收集 {item:202196}，打开 {location:兹斯克拉宝库} 内的大门。'
 L['door_buster_suffix'] = '使用兹斯克拉宝库钥匙解锁的门'
 
-L['recipe_rat_note_1'] = '与 {location:Zskera Vault} 中的 {npc:202982} 交谈，{item:202252} 会进入包内。'
+L['broken_waygate_label'] = '损坏的界门'
+L['neltharions_toolkit_note'] = [[1. 从 {location:兹斯克拉宝库} 中收集随机出现的 {item:204278}。
+
+2. 前往{location:觉醒海岸} 的 {location:焖燃栖地}。
+
+3. 在 {npc:193310} 旁边的洞穴中找到 {object:损坏的界门}。
+
+4. 修复 {object:损坏的界门}。{note:这可能需要点击几下。}
+
+5. 传送到 {location:兹斯克拉宝库} 内的隐藏房间。击杀 {npc:200375} 和 {npc:203639} 然后打开 {object:黑曜石大宝箱} 领取战利品！]]
+
+L['recipe_rat_note_1'] = '与 {location:兹斯克拉宝库} 中的 {npc:202982} 交谈，{item:202252} 会进入包内。'
 L['recipe_rat_note_2'] = '与 {item:202252} 互动以收到 {item:204340}。{note:（5分钟冷却时间）}'
 L['recipe_rat_note_3'] = '一旦有30个 {item:204340} 组合废料来收到配方。'
 L['recipe_rat_note_4'] = '{note:这只老鼠喜欢奶酪并且大约每三分钟就会吃掉一个 {item:3927}。做好计划！}'
@@ -353,35 +364,35 @@ L['mm_status_note'] = '组合以下物品：\n{item:%s}\n{item:%s}'
 L['options_icons_zskera_vaults'] = '兹斯克拉宝库'
 L['options_icons_zskera_vaults_desc'] = '显示 {location:兹斯克拉宝库} 的奖励。'
 
--- Librarian of the Reach
-L['confiscated_journal_label'] = 'Confiscated Journal'
-L['farscale_manifesto_label'] = 'Farscale Manifesto'
-L['lost_expeditions_notes_label'] = 'Lost Expedition Notes'
-L['pirate_proclamation_label'] = 'Pirate Proclamation'
-L['spellsworn_missive_label'] = 'Spellsworn Missive'
-L['vrykul_tome_label'] = 'Vrykul Tome'
+L['confiscated_journal_label'] = '缴获的日志'
+L['farscale_manifesto_label'] = '远鳞宣言'
+L['lost_expeditions_notes_label'] = '探险笔记'
+L['pirate_proclamation_label'] = '海盗公告'
+L['spellsworn_missive_label'] = '法誓公函'
+L['vrykul_tome_label'] = '维库魔典'
 
 L['library_note'] = '打开 {object:%s} 并拾取 {item:%s}。'
 
 L['options_icons_librarian_of_the_reach'] = '{achievement:17530}'
 L['options_icons_librarian_of_the_reach_desc'] = '显示 {achievement:17530} 成就中书籍的位置。{note:有些书籍在 {location:兹斯克拉宝库}}。'
 
--- Scroll Hunter
-L['scroll_hunter_suffix'] = '来自 Sealed Scrolls 的宝藏'
+L['dracthyr_runestone_label'] = '龙希尔符文石'
+L['scroll_hunter_suffix'] = '来自密封卷轴的宝藏'
 L['scroll_hunter_note'] = '在 {location:禁忌离岛} 附近收集各种稀有和珍藏的密封卷轴。\n\n打开一个 {item:%s} 会在地图上显示一个 X，会提供一个 {item:%s}，为 {faction:%s} 提供声望。'
 
 L['options_icons_scroll_hunter'] = '{achievement:17532}'
 L['options_icons_scroll_hunter_desc'] = '显示 {achievement:17532} 的卷轴奖励的位置。'
 
--- While We Were Sleeping
 L['options_icons_scalecommander_item'] = '{achievement:17315}'
 L['options_icons_scalecommander_item_desc'] = '显示 {achievement:17315} 成就中物品的位置。{note:有些物品在 {location:兹斯克拉宝库}}。'
 
--- Misc
-L['spellsworn_gateway'] = 'Spellsworn Gateway'
-L['gemstone_of_return'] = 'Gemstone of Return'
+L['spellsworn_gateway'] = '法誓传送门'
+L['gemstone_of_return'] = '返回宝石'
 
-L['morqut_village_vendor_note'] = '用 {currency:2118} 或金币换取坐骑、宠物、幻化、幼龙定制、配方和其他有用的物品。'
+L['treysh_note'] = '用 {currency:2118} 或金币兑换幻化装备和坐骑。'
+L['renown_envoy_label'] = '名望特使'
+L['renown_envoy_note'] = '用 {currency:2118} 或金币换取坐骑、宠物、幻化、幼龙定制、配方和其他有用的物品。\n\n从 {npc:200566} 以2000 {currency:2118} 的价格购买 {item:204383} 就有机会获得 {item:191915}。'
+L['trader_hagarth_note'] = '将 {item:190456} 换成匠人珍玩配方。'
 
 -------------------------------------------------------------------------------
 ------------------------------ OHN'AHRAN PLAINS -------------------------------
@@ -410,9 +421,9 @@ L['yennus_boat'] = '海象人玩具船'
 L['yennus_boat_note'] = '拾取 {object:海象人玩具船} 后获得 {item:200876}，开始任务 {quest:72063} 将其交还给 {npc:195252}。'
 
 L['forgotten_dragon_treasure_label'] = '被遗忘的巨龙宝藏'
-L['forgotten_dragon_treasure_step1'] = '1. 从 {location:欧恩哈拉平原} 西部的 {object:水晶花}（{dot:Green}） 收集5个 {item:195884}。'
-L['forgotten_dragon_treasure_step2'] = '2. 组合花瓣来做成 {item:195542} 并到 {object:远古之石}（{dot:Yellow}）。'
-L['forgotten_dragon_treasure_step3'] = '3. 在 {object:远古之石} 附近使用 {item:195542} 获得一个20秒的增益 {spell:378935}，允许沿着花路充能到达洞穴（{dot:Blue}）。从鲜花上奔跑会增加到达 {object:翡翠宝箱}（{dot:Blue}）和拾取 {item:195041} 的增益时间。'
+L['forgotten_dragon_treasure_step1'] = '1. 从 {location:欧恩哈拉平原} 西部的 {object:水晶花} {dot:Green} 收集5个 {item:195884}。'
+L['forgotten_dragon_treasure_step2'] = '2. 组合花瓣来做成 {item:195542} 并到 {object:远古之石} {dot:Yellow}。'
+L['forgotten_dragon_treasure_step3'] = '3. 在 {object:远古之石} 附近使用 {item:195542} 获得一个20秒的增益 {spell:378935}，允许沿着花路充能到达洞穴 {dot:Blue}。从鲜花上奔跑会增加到达 {object:翡翠宝箱} {dot:Blue} 和拾取 {item:195041} 的增益时间。'
 L['forgotten_dragon_treasure_step4'] = '拿到钥匙后，前往 {object:被遗忘的巨龙宝藏} 打开获得观龙者手稿。'
 L['fdt_crystalline_flower'] = '水晶花'
 L['fdt_ancient_stone'] = '远古之石'
@@ -550,7 +561,7 @@ L['brendormi_note_currency'] = '当前有 %s {currency:2118}。'
 
 L['titan_chest'] = '泰坦箱子'
 L['options_icons_titan_chest'] = '泰坦箱子'
-L['options_icons_titan_chest_desc'] = nil
+L['options_icons_titan_chest_desc'] = '显示 {object:泰坦箱子} 可能的位置。'
 
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
@@ -583,9 +594,9 @@ L['fullsails_supply_chest'] = '满帆补给箱'
 L['hidden_hornswog_hoard_note'] = [[
 收集3种不同的物品并在 {npc:192362} 附近的 {object:“观察谜题：实地指南”} 处组合它们以获得 {item:200063} 然后喂它。然后它会离开就可以拾取它的宝藏。
 
-{item:200064}{dot:Yellow}
-{item:200065}{dot:Blue}
-{item:200066}{dot:White}
+{item:200064} {dot:Yellow}
+{item:200065} {dot:Blue}
+{item:200066} {dot:White}
 ]]
 
 L['pm_alch_grigori_vialtry'] = '在俯瞰 {location:闪霜战地} 的平台上。'
@@ -688,3 +699,74 @@ L['options_icons_djaradin_cache_desc'] = '显示 {object:贾拉丁宝箱} 可能
 L['dragonbane_siege_label'] = '{spell:388945}'
 L['options_icons_dragonbane_siege'] = '{spell:388945}'
 L['options_icons_dragonbane_siege_desc'] = '显示 {spell:388945} 的位置和奖励。'
+
+L['phoenix_wishwing_note'] = [[
+在获得 {item:199203} 后，{npc:196214} 将提供一个上缴任务，奖励 {item:193373}。
+要完成任务，将需要以下物品（可以按任何顺序获得这些物品）：
+]]
+L['phoenix_wishwing_talisman'] = [[
+%s {item:199203}
+
+这是位于 {location:阿兰卡峰林} 的 {npc:88045} {dot:Gold} 出售。如果 {npc:88045} 不在，完成任务 {quest:35010} 就能见到他。
+需要以下物品才能购买：]]
+L['phoenix_wishwing_phoenix_ember'] = '%s {item:199099}\n从 {location:火焰之地时光漫游} 的 {npc:52530} 掉落'
+L['phoenix_wishwing_sacred_ash'] = '%s {item:199097}\n可以在 {object:烹锅} 中找到，位于 {location:阿兰卡峰林} 附近。'
+L['phoenix_wishwing_inert_ash'] = '%s {item:199092}\n位于 {location:安戈洛环形山} {dot:Gray} 中心的 {npc:6520} 少量掉落。这些与 {npc:6521} 共享重生点（但不会掉落），因此请确保将两者都击杀。'
+L['phoenix_wishwing_smoldering_ash'] = [[
+%s {item:199080}
+
+在 {location:巨龙群岛} 刷各种 {npc:凤凰} {dot:Yellow}，例如 {npc:181764} 或 {npc:195448}。
+这些大多位 于{location:觉醒海岸} 的 {location:黑曜堡垒} 周围。
+]]
+L['phoenix_wishwing_ash_feather'] = [[
+%s {item:202062}
+
+要查看 {object:羽毛}，需要从 {location:觉醒海岸} 的 {location:黑曜王座} 的 {npc:189207} {dot:Green} 处购买 {item:199177}。
+使用这条项链并捡起位于 {location:燃烧高地} 和 {location:熔渣沼泽} 中的 {item:202062} {dot:Red}，它们在 {location:黑曜王座} 周围的区域。
+]]
+L['phoenix_wishwing_info'] = '这是位于 {location:巨龙群岛} 的 {location:觉醒海岸} 的 {item:193373} 收藏品的一部分。'
+
+-------------------------------------------------------------------------------
+------------------------------- Zaralek Cavern --------------------------------
+-------------------------------------------------------------------------------
+
+L['in_deepflayer_nest'] = '位于 {location:深岩剥石者之巢}'
+
+L['brulsef_the_stronk_note'] = '从 {object:丰盛收获宝箱} 拾取奖励。'
+
+L['ancient_zaqali_chest_note'] = '使用附近的 {object:瓶装岩浆} 打开宝箱。'
+L['blazing_shadowflame_chest_note'] = '{bug:The shadowflame is too strong to bear.}' -- DEV NOTE - Do not translate
+L['crystal_encased_chest_note'] = '与蓝色 {object:调和水晶} {dot:Blue} 和红色 {object:调和水晶} {dot:Red} 一起互动打开宝箱。'
+L['old_trunk_note'] = '收集并组合5个 {item:204325} 创造 {item:204323}。'
+L['well_chewed_chest_note'] = '{item:202869} {dot:Green} 在洞穴内隐藏在 {npc:199962} 下面。'
+
+L['molten_hoard_label'] = '熔火宝藏'
+L['fealtys_reward_label'] = '忠诚的奖赏'
+L['fealtys_reward_note'] = '{bug:Currently bugged.}' -- DEV NOTE - Do not translate
+L['dreamers_bounty_label'] = '沉睡者的奖赏'
+L['dreamers_bounty_note'] = '{bug:Currently bugged.}' -- DEV NOTE - Do not translate
+L['moth_pilfered_pouch_label'] = '蛾子窃取的袋子'
+L['moth_pilfered_pouch_note'] = '帮助 {npc:203225} 通过“杂耍”飞行，直到它有5层 {spell:405358}。\n\n然后它会飞到袋子上展示。'
+L['waterlogged_bundle_label'] = '浸水的包裹'
+
+L['stolen_stash_label'] = '失窃的货物'
+L['ritual_offering_label'] = '仪式供品'
+L['nal_kskol_reliquary_label'] = '纳·克斯寇圣物匣'
+L['nal_kskol_reliquary_note'] = '使用 {object:圣物匣开启控制台} 并解开拼图以打开 {object:纳·克斯寇圣物匣}。'
+
+L['molten_scoutbot_note'] = '打开 {object:熔火斥候机器人} 并拾取 {item:204855}.'
+L['bolts_and_brass_note'] = '打开 {object:螺栓和黄铜} 并拾取 {item:204850}.'
+
+L['sniffen_sage_suffix'] = '找到特殊物品'
+
+L['big_slick_note_1'] = '{npc:48182} 可以在旧世界 {location:黑海岸} 找到。和 {npc:141489} 对话返回 {location:荆棘战争} 之前时间。'
+
+L['saccratos_note'] = '用 {item:204727} 换取宠物，坐骑和其他。'
+L['ponzo_note'] = '用 {item:204985} 和 {item:205903} 换取幼龙定制，宠物，坐骑和其他。'
+
+L['smelly_trash_pile_label'] = '臭垃圾堆'
+L['options_icons_smelly_trash_pile'] = '臭垃圾堆'
+L['options_icons_smelly_trash_pile_desc'] = '显示 {object:臭垃圾堆} 可能的位置。'
+
+L['seething_cache_treasure_note'] = nil
+L['chest_of_the_flights_treasure_note'] = nil

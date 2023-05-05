@@ -75,6 +75,7 @@ function cellPrototype:SetupCell(cell, args)
 	end)
 	self.pin.POI = POI
 	self.pin.Texture:SetTexture(POI.Texture)
+	self.pin.IconTexture:SetAtlas(POI.iconAtlas)
 	self.pin.Texture:SetScale(0.7)
 	--MapPinHighlight_CheckHighlightPin(self.pin:GetHighlightType(), self.pin, self.pin.Texture, AREAPOI_HIGHLIGHT_PARAMS);
 	self.pin:Show()

@@ -4,7 +4,7 @@ local L		= mod:GetLocalizedStrings()
 mod.statTypes = "normal,heroic,mythic,challenge,timewalker"
 mod.upgradedMPlus = true
 
-mod:SetRevision("20220917014128")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(81297, 81305)
 mod:SetEncounterID(1749)
 mod:SetBossHPInfoToHighest(false)
@@ -67,7 +67,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 164635 then
 		specWarnBurningArrows:Show()
 		specWarnBurningArrows:Play("watchfeet")
-		timerBurningArrowsCD:Start(self.vb.phase == 1 and 30 or 40)
+		timerBurningArrowsCD:Start(self:GetStage(1) and 30 or 40)
 	end
 end
 

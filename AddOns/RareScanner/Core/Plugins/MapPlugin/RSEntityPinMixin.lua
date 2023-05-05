@@ -39,6 +39,7 @@ function RSEntityPinMixin:OnAcquired(POI, dataProvider)
 	self.dataProvider = dataProvider
 	self.Texture:SetTexture(POI.Texture)
 	self.Texture:SetScale(RSConfigDB.GetIconsWorldMapScale())
+	self.IconTexture:SetAtlas(POI.iconAtlas)
 	self:SetPosition(RSUtils.FixCoord(POI.x), RSUtils.FixCoord(POI.y));
 	self:SetPassThroughButtons("MiddleButton");
 	MapPinHighlight_CheckHighlightPin(self:GetHighlightType(), self, self.Texture, AREAPOI_HIGHLIGHT_PARAMS);
@@ -209,11 +210,13 @@ function RSEntityPinMixin:OnReleased()
 	self.tooltip = nil
 end
 
-function RSEntityPinMixin:GetHighlightType() -- override
-	local _, bountyFactionID, bountyFrameType = self.dataProvider:GetBountyInfo();
-	if (bountyFrameType == BountyFrameType.ActivityTracker) then
-		if (self.POI.factionID and RSUtils.Contains(self.POI.factionID, bountyFactionID)) then
-			return MapPinHighlightType.SupertrackedHighlight;
+function RSEntityPinMixin:GetHighlightType()
+	if (RSConfigDB.IsHighlightingReputation()) then
+		local _, bountyFactionID, bountyFrameType = self.dataProvider:GetBountyInfo();
+		if (bountyFrameType == BountyFrameType.ActivityTracker) then
+			if (self.POI.factionID and RSUtils.Contains(self.POI.factionID, bountyFactionID)) then
+				return MapPinHighlightType.SupertrackedHighlight;
+			end
 		end
 	end
 

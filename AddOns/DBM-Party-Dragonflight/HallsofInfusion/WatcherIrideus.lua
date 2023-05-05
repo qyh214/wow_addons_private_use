@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2504, "DBM-Party-Dragonflight", 8, 1204)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230319041902")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(189719)
 mod:SetEncounterID(2615)
 --mod:SetUsedIcons(1, 2, 3)
@@ -110,7 +110,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 383840 then
 		warnAblativeBarrier:Show()
-		if self.vb.phase == 1 then
+		if self:GetStage(1) then
 			self:SetStage(2)
 			timerPowerOverloadCD:Stop()
 			timerSparkVolleyCD:Stop()

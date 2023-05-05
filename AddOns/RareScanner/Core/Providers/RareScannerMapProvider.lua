@@ -48,12 +48,14 @@ local function pingAnimation(pin, animation, entityID, mapID, x, y)
 	
 	animation:Stop()
 	animation:SetScript("OnLoop", function(self, loopState)
-		self.loops = self.loops + 1
-		
-		if (self.loops == 3) then
-			RSRecentlySeenTracker.DeletePendingAnimation(entityID, mapID, x, y)
-			self:Stop()
-			self:SetLooping("NONE")
+		if (self.loops) then
+			self.loops = self.loops + 1
+			
+			if (self.loops == 3) then
+				RSRecentlySeenTracker.DeletePendingAnimation(entityID, mapID, x, y)
+				self:Stop()
+				self:SetLooping("NONE")
+			end
 		end
 	end)
 		
@@ -72,7 +74,14 @@ function RareScannerDataProviderMixin:ShowAnimations()
 				local _, _, _, _, _, vignetteObjectID = strsplit("-", pin:GetObjectGUID())
 				
 				local entityID = tonumber(vignetteObjectID)
-				if ((RSConfigDB.IsShowingAnimationForNpcs() and RSNpcDB.GetInternalNpcInfo(entityID)) or (RSConfigDB.IsShowingAnimationForContainers() and RSContainerDB.GetInternalContainerInfo(entityID)) or (RSConfigDB.IsShowingAnimationForEvents() and RSEventDB.GetInternalEventInfo(entityID))) then
+				if (RSConfigDB.IsShowingAnimationForNpcs()) then
+					if (RSNpcDB.GetInternalNpcInfo(entityID)) then
+						pingAnimation(pin, pin.ShowPingAnim, vignetteObjectID)
+					elseif (entityID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT and RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID())) then
+						pingAnimation(pin, pin.ShowPingAnim, RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID()))
+					end
+				end	
+				if ((RSConfigDB.IsShowingAnimationForContainers() and RSContainerDB.GetInternalContainerInfo(entityID)) or (RSConfigDB.IsShowingAnimationForEvents() and RSEventDB.GetInternalEventInfo(entityID))) then
 					pingAnimation(pin, pin.ShowPingAnim, vignetteObjectID)
 				end	
 			end
@@ -233,6 +242,10 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 		s2:SetScaleFrom(1, 1)
 		s2:SetScaleTo(1.5, 1.5)
 	end
+	if (not pin.ShowSearchAnim) then
+		pin.ShowSearchAnim = pin.ShowPingAnim
+		pin.ShowSearchAnim:SetLooping("NONE")
+	end
 	
 	pin:HookScript("OnEnter", function(self)
 		if (not RSConfigDB.IsShowingTooltipsOnIngameIcons()) then
@@ -240,7 +253,7 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 			return
 		end
 		
-		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), self:GetVignetteType(), pin.vignetteInfo.atlasName, self:GetMap():GetMapID())
+		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), pin.vignetteInfo, self:GetMap():GetMapID())
 		if (POI) then
 			self.POI = POI
 			-- Just in case the user didnt have the questID when he found it
@@ -267,7 +280,7 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 		end
 	end)
 	pin:HookScript("OnMouseDown", function(self, button)	
-		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), self:GetVignetteType(), pin.vignetteInfo.atlasName, self:GetMap():GetMapID())
+		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), pin.vignetteInfo, self:GetMap():GetMapID())
 		if (not POI) then	
 			return
 		end
@@ -358,13 +371,13 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 			
 			-- Animate if matches with text filter
 			if (RSGeneralDB.GetWorldMapTextFilter()) then
-				local POI = RSMap.GetWorldMapPOI(pin:GetObjectGUID(), pin:GetVignetteType(), pin.vignetteInfo.atlasName, mapID)
+				local POI = RSMap.GetWorldMapPOI(pin:GetObjectGUID(), pin.vignetteInfo, mapID)
 				if (POI and RSUtils.Contains(POI.name, RSGeneralDB.GetWorldMapTextFilter())) then
 					if (not pin.ShowPingAnim:IsPlaying()) then
-						pin.ShowPingAnim:Play()
+						pin.ShowSearchAnim:Play()
 					end
 				else
-					pin.ShowPingAnim:Stop()
+					pin.ShowSearchAnim:Stop()
 				end
 			end
 		end
@@ -405,10 +418,7 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 
 				-- Animates the ping in case the filter is on
 				if (RSGeneralDB.GetWorldMapTextFilter()) then
-					pin.ShowPingAnim:SetLooping("REPEAT")
-					pin.ShowPingAnim:Play();
-				else
-					pin.ShowPingAnim:SetLooping("NONE")
+					pin.ShowSearchAnim:Play();
 				end
 
 				-- Adds children overlay/guide
@@ -426,10 +436,7 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 
 				-- Animates the ping in case the filter is on
 				if (RSGeneralDB.GetWorldMapTextFilter()) then
-					pin.ShowPingAnim:SetLooping("REPEAT")
-					pin.ShowPingAnim:Play();
-				else
-					pin.ShowPingAnim:SetLooping("NONE")
+					pin.ShowSearchAnim:Play();
 				end
 
 				-- Adds overlay if active

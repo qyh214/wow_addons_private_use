@@ -417,7 +417,7 @@ Off Screen]=] ] = "Aura está fora da tela"
 	L["Custom Variables"] = "Custom Variables"
 	L["Debuff Type"] = "Tipo de penalidade"
 	--[[Translation missing --]]
-	L["Debug Console"] = "Debug Console"
+	L["Debug Log"] = "Debug Log"
 	--[[Translation missing --]]
 	L["Debug Log:"] = "Debug Log:"
 	L["Default"] = "Padrão"
@@ -633,7 +633,6 @@ Can use \ to escape -.]=]
 	L["Frequency"] = "Frequency"
 	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
-	L["Get Help"] = "Obter Ajuda"
 	L["Global Conditions"] = "Condições Globais"
 	--[[Translation missing --]]
 	L["Glow %s"] = "Glow %s"
@@ -722,6 +721,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Icon Inset"] = "Icon Inset"
 	--[[Translation missing --]]
+	L["Icon Picker"] = "Icon Picker"
+	--[[Translation missing --]]
 	L["Icon Position"] = "Icon Position"
 	--[[Translation missing --]]
 	L["Icon Settings"] = "Icon Settings"
@@ -767,6 +768,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Ignored Spell ID"] = "Ignored Spell ID"
 	L["Import"] = "Importar"
+	--[[Translation missing --]]
+	L["Import / Export"] = "Import / Export"
 	L["Import a display from an encoded string"] = "Importar um display de um string codificado"
 	--[[Translation missing --]]
 	L["Import as Copy"] = "Import as Copy"
@@ -818,6 +821,8 @@ Can use \ to escape -.]=]
 	L["Is Stealable"] = "É Roubável"
 	--[[Translation missing --]]
 	L["Is Unit"] = "Is Unit"
+	--[[Translation missing --]]
+	L["Join Discord"] = "Join Discord"
 	L["Justify"] = "Justificar"
 	--[[Translation missing --]]
 	L["Keep Aspect Ratio"] = "Keep Aspect Ratio"
@@ -839,6 +844,8 @@ Can use \ to escape -.]=]
 	L["Length of |cFFFF0000%s|r"] = "Length of |cFFFF0000%s|r"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Line"] = "Line"
 	--[[Translation missing --]]
 	L["Lines & Particles"] = "Lines & Particles"
 	--[[Translation missing --]]
@@ -879,6 +886,8 @@ Can use \ to escape -.]=]
 	L["Model"] = "Modelo"
 	--[[Translation missing --]]
 	L["Model %s"] = "Model %s"
+	--[[Translation missing --]]
+	L["Model Picker"] = "Model Picker"
 	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
@@ -923,6 +932,8 @@ Can use \ to escape -.]=]
 	L["Nameplates"] = "Nameplates"
 	L["Negator"] = "Negador"
 	L["New Aura"] = "Nova Aura"
+	--[[Translation missing --]]
+	L["New Template"] = "New Template"
 	--[[Translation missing --]]
 	L["New Value"] = "New Value"
 	--[[Translation missing --]]
@@ -1122,7 +1133,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Saved Data"] = "Saved Data"
 	--[[Translation missing --]]
 	L["Scale"] = "Scale"
-	L["Search"] = "Procurar"
 	--[[Translation missing --]]
 	L["Select Talent"] = "Select Talent"
 	--[[Translation missing --]]
@@ -1276,6 +1286,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Texture"] = "Textura"
 	--[[Translation missing --]]
 	L["Texture Info"] = "Texture Info"
+	--[[Translation missing --]]
+	L["Texture Picker"] = "Texture Picker"
 	--[[Translation missing --]]
 	L["Texture Rotation"] = "Texture Rotation"
 	L["Texture Settings"] = "Configurações da Textura"

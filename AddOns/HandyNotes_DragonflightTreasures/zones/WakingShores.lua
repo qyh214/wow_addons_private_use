@@ -173,7 +173,7 @@ ns.RegisterPoints(ns.WAKINGSHORES, {
     -- https://www.wowhead.com/beta/achievement=16676/adventurer-of-the-waking-shores
     [52535855] = { -- Gushgut the Beaksinker
         criteria=56033,
-        quest=70718, -- didn't actually trigger?
+        quest=73879, -- 70718?
         npc=196056,
         loot={
             {197001,quest=69201,}, -- Cliffside Wylderdrake: Finned Cheek

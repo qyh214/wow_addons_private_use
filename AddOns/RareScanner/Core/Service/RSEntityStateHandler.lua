@@ -189,16 +189,18 @@ local function SetContainerOpenByZone(containerID, mapID, loadingAddon)
 	local containerAlreadyFoundInfo = RSGeneralDB.GetAlreadyFoundEntity(containerID)
 	local containerInternalInfo = RSContainerDB.GetInternalContainerInfo(containerID)
 
-	-- It it is a part of an achievement it won't come back
+	-- It it is a part of an achievement it won't come back (at least that we say so)
 	local containerWithAchievement = false;
-	if (private.ACHIEVEMENT_ZONE_IDS[mapID]) then
-		for _, achievementID in ipairs(private.ACHIEVEMENT_ZONE_IDS[mapID]) do
-			for _, objectiveID in ipairs(private.ACHIEVEMENT_TARGET_IDS[achievementID]) do
-				if (objectiveID == containerID) then
-					RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. No se puede abrir de nuevo (por formar parte de un logro)", containerID))
-					RSContainerDB.SetContainerOpened(containerID)
-					containerWithAchievement = true;
-					break;
+	if (containerInternalInfo.reset == nil) then 
+		if (private.ACHIEVEMENT_ZONE_IDS[mapID]) then
+			for _, achievementID in ipairs(private.ACHIEVEMENT_ZONE_IDS[mapID]) do
+				for _, objectiveID in ipairs(private.ACHIEVEMENT_TARGET_IDS[achievementID]) do
+					if (objectiveID == containerID) then
+						RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. No se puede abrir de nuevo (por formar parte de un logro)", containerID))
+						RSContainerDB.SetContainerOpened(containerID)
+						containerWithAchievement = true;
+						break;
+					end
 				end
 			end
 		end
@@ -212,6 +214,7 @@ local function SetContainerOpenByZone(containerID, mapID, loadingAddon)
 		-- If we know for sure it remains showing up along the day
 		elseif (containerInternalInfo and containerInternalInfo.reset) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Vuelve a aparecer en el mismo día.", containerID))
+			RSContainerDB.DeleteContainerOpened(containerID)
 		-- If we know for sure it resets with quests
 		elseif (containerInternalInfo and containerInternalInfo.questReset) then
 			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Resetea con las misiones del mundo", containerID))
@@ -292,11 +295,6 @@ function RSEntityStateHandler.SetContainerOpen(containerID, loadingAddon)
 		return
 	end
 	
-	-- Ignore if already opened
-	if (RSContainerDB.IsContainerOpened(containerID)) then
-		return
-	end
-	
 	-- Mark as opened
 	local containerInfo = RSContainerDB.GetInternalContainerInfo(containerID)
 	if (containerInfo) then
@@ -326,7 +324,6 @@ function RSEntityStateHandler.SetContainerOpen(containerID, loadingAddon)
 		end
 
 		-- Extracts quest id if we don't have it
-		-- Avoids shift-left-click events
 		if (not loadingAddon and RSConstants.DEBUG_MODE) then
 			if (not containerInfo.questID and not RSContainerDB.GetContainerQuestIdFound(containerID)) then
 				RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Buscando questID...", containerID))

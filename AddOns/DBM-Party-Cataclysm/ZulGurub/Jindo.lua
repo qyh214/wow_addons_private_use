@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "heroic,timewalker"
 
-mod:SetRevision("20210614230033")
+mod:SetRevision("20230424022226")
 mod:SetCreatureID(52148)
 mod:SetEncounterID(1182)
 mod:SetUsedIcons(8)
@@ -76,7 +76,7 @@ mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 97172 then
 		warnShadowsOfHakkar:Show()
-	elseif args.spellId == 97158 and self.vb.phase < 2 then
+	elseif args.spellId == 97158 and self:GetStage(2, 1) then
 		self:SetStage(2)
 		warnPhase2:Show()
 	end

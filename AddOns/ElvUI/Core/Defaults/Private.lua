@@ -30,6 +30,7 @@ V.general = {
 	replaceBlizzFonts = true,
 	unifiedBlizzFonts = false,
 	totemTracker = true,
+	queueStatus = true,
 	minimap = {
 		enable = true,
 		hideClassHallReport = false,
@@ -68,6 +69,7 @@ V.chat = {
 
 V.skins = {
 	ace3Enable = true,
+	libDropdown = true,
 	checkBoxSkin = true,
 	parchmentRemoverEnable = false,
 	blizzard = {

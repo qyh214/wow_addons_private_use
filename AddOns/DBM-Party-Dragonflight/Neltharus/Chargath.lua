@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2490, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221205064214")
+mod:SetRevision("20230408210214")
 mod:SetCreatureID(189340)
 mod:SetEncounterID(2613)
 --mod:SetUsedIcons(1, 2, 3)
@@ -105,7 +105,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 373424 then
 		timerGroundingSpearCD:Start()
 	elseif spellId == 375056 then
-		specWarnBladeLock:Show()
+		specWarnBladeLock:Show(args.sourceName)
 		specWarnBladeLock:Play("chainboss")
 		timerBladeLockCD:Start()
 		--Blade lock does NOT reset existing CD timers

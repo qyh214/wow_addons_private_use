@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2509, "DBM-Party-Dragonflight", 5, 1201)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230315060102")
+mod:SetRevision("20230325040301")
 mod:SetCreatureID(194181)
 mod:SetEncounterID(2562)
 --mod:SetUsedIcons(1, 2, 3)
@@ -90,7 +90,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.fissureCount = self.vb.fissureCount + 1
 		specWarnArcaneFissure:Show(self.vb.fissureCount)
 		specWarnArcaneFissure:Play("aesoon")
-		specWarnArcaneFissure:Schedule(1.5, "watchstep")
+		specWarnArcaneFissure:ScheduleVoice(1.5, "watchstep")
 		--Add 3.5 to existing manabomb and expulsion timers (Working Theory, need longer logs/larger sample)
 		--It seems to hold so far though, and if they are also energy based it would make sense since he doesn't gain energy for 3 seccond cast
 		--Of course if they are energy based, it also means the timers need to be corrected by SPELL_ENERGIZE as well :\

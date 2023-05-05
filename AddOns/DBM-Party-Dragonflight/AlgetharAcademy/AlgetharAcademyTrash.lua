@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AlgetharAcademyTrash", "DBM-Party-Dragonflight", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230301011610")
+mod:SetRevision("20230422022609")
 --mod:SetModelID(47785)
 mod:SetZone(2526)
 
@@ -114,7 +114,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		self:ScheduleMethod(0.1, "BossTargetScanner", args.sourceGUID, "GustTarget", 0.1, 8)
 	elseif spellId == 378003 then
-		timerDeadlyWindsCD:Start()
+		timerDeadlyWindsCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
 			specWarnDeadlyWinds:Show()
 			specWarnDeadlyWinds:Play("watchstep")
@@ -123,7 +123,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnRiftbreath:Show()
 		specWarnRiftbreath:Play("shockwave")
 	elseif spellId == 377912 then
-		timerExpelIntrudersCD:Start()
+		timerExpelIntrudersCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 1) then
 			specWarnExpelIntruders:Show()
 			specWarnExpelIntruders:Play("justrun")
@@ -179,8 +179,8 @@ function mod:UNIT_DIED(args)
 	if cid == 196044 then--Unruly Textbook
 		timerMonotonousLectureCD:Stop(args.destGUID)
 	elseif cid == 192680 then--Guardian Sentry
-		timerDeadlyWindsCD:Stop()
-		timerExpelIntrudersCD:Stop()
+		timerDeadlyWindsCD:Stop(args.destGUID)
+		timerExpelIntrudersCD:Stop(args.destGUID)
 	elseif cid == 196671 then--Arcane Ravager
 		timerViciousAmbushCD:Stop(args.destGUID)
 	elseif cid == 196200 then--Algeth'ar Echoknight
@@ -197,7 +197,6 @@ end
 function mod:GOSSIP_SHOW()
 	local gossipOptionID = self:GetGossipID()
 	if gossipOptionID then
-		DBM:Debug("GOSSIP_SHOW triggered with a gossip ID of: "..gossipOptionID)
 		--Black, Bronze, Blue, Red, Green
 		if self.Options.AGBuffs and (gossipOptionID == 107065 or gossipOptionID == 107081 or gossipOptionID == 107082 or gossipOptionID == 107088 or gossipOptionID == 107083) then -- Buffs
 			self:SelectGossip(gossipOptionID)

@@ -1,4 +1,4 @@
-## Interface: 100007
+## Interface: 100100
 ## X-Min-Interface: 80000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scenario-MoP|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Сценарии (Пандария)|r
@@ -13,6 +13,7 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariables: DBMScenarioMoP_AllSavedVars
 ## SavedVariablesPerCharacter: DBMScenarioMoP_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: SCENARIO
 ## X-DBM-Mod-Category: MOP
@@ -31,7 +32,7 @@
 ## X-DBM-Mod-MinExpansion: 4
 ## X-Curse-Project-ID: 85688
 ## X-WoWI-ID: 23199
-## Version: r154
+## Version: r155
 
 localization.en.lua
 localization.kr.lua

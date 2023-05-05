@@ -16,7 +16,7 @@ local chest = {
         -- the rest
         192055, -- Dragon Isles Artifact
     },
-    requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 16),
+    requires=ns.conditions.MajorFaction(ns.FACTION_DRAGONSCALE, 16), -- not quest 72041
     texture=ns.atlas_texture("VignetteLoot", {r=0.5, g=1, b=0.5, scale=0.9}),
     group="magicbound", always=true,
     vignette=5467,

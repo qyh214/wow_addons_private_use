@@ -4,7 +4,7 @@
 ## SavedVariables: _detalhes_global, __details_backup
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibItemUpgradeInfo-1.0, LibGroupInSpecT-1.1, LibCompress, LibGraph-2.0
-## Version: #Details.DF.Wrath.10.0.5.10662.148
+## Version: #Details.DF.Wrath.10.1.0.10986.151
 #@no-lib-strip@
 Libs\libs.xml
 #@end-no-lib-strip@
@@ -77,6 +77,11 @@ frames\window_api.lua
 frames\window_cdtracker.lua
 frames\window_playerbreakdown.lua
 frames\window_playerbreakdown_list.lua
+frames\window_playerbreakdown_compare.lua
+frames\window_playerbreakdown_avoidance.lua
+frames\window_playerbreakdown_auras.lua
+frames\window_playerbreakdown_spells.lua
+frames\window_playerbreakdown_spells_options.lua
 frames\window_report.lua
 frames\window_main.lua
 frames\window_custom.lua
@@ -102,6 +107,7 @@ frames\window_classcolor.lua
 frames\window_statistics.lua
 
 classes\class_error.lua
+classes\class_spelltable.lua
 classes\class_combat.lua
 classes\class_damage.lua
 classes\class_spelldamage.lua

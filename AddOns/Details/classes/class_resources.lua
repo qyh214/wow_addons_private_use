@@ -10,14 +10,14 @@ local pairs = pairs
 local _unpack = unpack
 local type = type
 --api locals
-local _GetSpellInfo = _detalhes.getspellinfo
+local _GetSpellInfo = Details.getspellinfo
 local GameTooltip = GameTooltip
 local IsInRaid = IsInRaid
 local IsInGroup = IsInGroup
 
-local _string_replace = _detalhes.string.replace --details api
+local _string_replace = Details.string.replace --details api
 
-local _detalhes = 		_G._detalhes
+local _detalhes = 		_G.Details
 local AceLocale = LibStub("AceLocale-3.0")
 local Loc = AceLocale:GetLocale ( "Details" )
 local _
@@ -267,6 +267,12 @@ function atributo_energy:AtualizarResources (whichRowLine, colocacao, instancia)
 	self:SetBarColors(esta_barra, instancia, actor_class_color_r, actor_class_color_g, actor_class_color_b)
 	--icon
 	self:SetClassIcon (esta_barra.icone_classe, instancia, self.classe)
+	if(esta_barra.mouse_over) then
+		local classIcon = esta_barra:GetClassIcon()
+		esta_barra.iconHighlight:SetTexture(classIcon:GetTexture())
+		esta_barra.iconHighlight:SetTexCoord(classIcon:GetTexCoord())
+		esta_barra.iconHighlight:SetVertexColor(classIcon:GetVertexColor())
+	end
 
 end
 
@@ -786,6 +792,13 @@ function atributo_energy:RefreshBarra(esta_barra, instancia, from_resize)
 	
 	--icon
 	self:SetClassIcon (esta_barra.icone_classe, instancia, class)
+
+	if(esta_barra.mouse_over) then
+		local classIcon = esta_barra:GetClassIcon()
+		esta_barra.iconHighlight:SetTexture(classIcon:GetTexture())
+		esta_barra.iconHighlight:SetTexCoord(classIcon:GetTexCoord())
+		esta_barra.iconHighlight:SetVertexColor(classIcon:GetVertexColor())
+	end
 	--texture color
 	self:SetBarColors(esta_barra, instancia, actor_class_color_r, actor_class_color_g, actor_class_color_b)
 	--left text
@@ -1522,10 +1535,6 @@ end
 
 			return shadow
 		end
-
-function atributo_energy:ColetarLixo (lastevent)
-	return _detalhes:ColetarLixo (class_type, lastevent)
-end
 
 function _detalhes.refresh:r_atributo_energy (este_jogador, shadow)
 	detailsFramework:Mixin(este_jogador, Details222.Mixins.ActorMixin)

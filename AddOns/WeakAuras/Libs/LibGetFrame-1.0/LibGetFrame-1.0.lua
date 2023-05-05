@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 52
+local MINOR_VERSION = 53
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -584,6 +584,9 @@ function lib.GetUnitNameplate(unit)
     elseif nameplate.ouf and nameplate.ouf.Health then
       -- bdNameplates
       return nameplate.ouf.Health
+    elseif nameplate.slab and nameplate.slab.components and nameplate.slab.components.healthBar and nameplate.slab.components.healthBar.frame then
+      -- Slab
+      return nameplate.slab.components.healthBar.frame
     elseif nameplate.UnitFrame and nameplate.UnitFrame.healthBar then
       -- default
       return nameplate.UnitFrame.healthBar

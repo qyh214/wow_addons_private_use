@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RubyLifePoolsTrash", "DBM-Party-Dragonflight", 7)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230314022917")
+mod:SetRevision("20230501054619")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -54,6 +54,8 @@ local timerRollingThunderCD					= mod:NewCDTimer(21.8, 392641, nil, nil, nil, 3)
 local timerThunderjawCD						= mod:NewCDTimer(19, 392395, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerLightningStormCD					= mod:NewCDTimer(20.6, 392486, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
 local timerFlashfireCD						= mod:NewCDTimer(12.1, 392451, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+local timerFlameDanceCD						= mod:NewCDTimer(26.6, 385536, nil, nil, nil, 5)
+local timerTectonicSlamCD					= mod:NewCDTimer(17, 372735, nil, nil, nil, 5)--17-21
 local timerTempestStormshieldCD				= mod:NewCDTimer(18.2, 391050, nil, nil, nil, 5, nil, DBM_COMMON_L.DAMAGE_ICON)
 
 
@@ -85,7 +87,7 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerBlazingRushCD:Start(17, args.sourceGUID)
 	elseif spellId == 391726 then
-		timerStormBreathCD:Start(15.7)
+		timerStormBreathCD:Start(15.7, args.sourceGUID)
 		if self:AntiSpam(3, 2) then
 			specWarnStormBreath:Show()
 			specWarnStormBreath:Play("breathsoon")
@@ -111,14 +113,13 @@ function mod:SPELL_CAST_START(args)
 			specWarnExcavatingBlast:Play("watchstep")
 		end
 	elseif spellId == 372735 then
-		--TODO, Timer?
+		timerTectonicSlamCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 6) then
 			warnTectonicSlam:Show()
-			warnTectonicSlam:Play("aesoon")
-			warnTectonicSlam:Schedule(1.5, "crowdcontrol")
+			warnTectonicSlam:Play("crowdcontrol")
 		end
 	elseif spellId == 392395 then
-		timerThunderjawCD:Start()
+		timerThunderjawCD:Start(nil, args.sourceGUID)
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then
 			specWarnThunderJaw:Show()
 			specWarnThunderJaw:Play("carefly")
@@ -142,7 +143,7 @@ function mod:SPELL_CAST_START(args)
 			warnFireMaw:Show()
 		end
 	elseif spellId == 392640 then--Rolling Thunder
-		timerRollingThunderCD:Start()
+		timerRollingThunderCD:Start(nil, args.sourceGUID)
 	elseif spellId == 392451 then
 		timerFlashfireCD:Start(12.1, args.sourceGUID)
 		if self.Options.SpecWarn392451interrupt and self:CheckInterruptFilter(args.sourceGUID, false, true) then
@@ -162,10 +163,12 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if not self:IsValidWarning(args.sourceGUID) then return end
-	if spellId == 385536 and self:AntiSpam(3, 6) then
-		warnFlameDance:Show()
-		warnFlameDance:Play("aesoon")
-		warnFlameDance:Schedule(1.5, "crowdcontrol")
+	if spellId == 385536 then
+		timerFlameDanceCD:Start(nil, args.sourceGUID)
+		if self:AntiSpam(3, 6) then
+			warnFlameDance:Show()
+			warnFlameDance:Play("crowdcontrol")
+		end
 	end
 end
 
@@ -197,7 +200,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	if spellId == 373693 and args:IsPlayer() then
 		yellLivingBombFades:Cancel()
 	elseif spellId == 391050 then
-		timerTempestStormshieldCD:Start()
+		timerTempestStormshieldCD:Start(nil, args.destGUID)
 	end
 end
 
@@ -209,15 +212,19 @@ function mod:UNIT_DIED(args)
 		timerSteelBarrageCD:Stop(args.destGUID)
 		timerBlazingRushCD:Stop(args.destGUID)
 	elseif cid == 197698 then--Thunderhead
-		timerStormBreathCD:Stop()
-		timerRollingThunderCD:Stop()
-		timerThunderjawCD:Stop()
+		timerStormBreathCD:Stop(args.destGUID)
+		timerRollingThunderCD:Stop(args.destGUID)
+		timerThunderjawCD:Stop(args.destGUID)
 	elseif cid == 198047 then--Tempest Channeler
 		timerLightningStormCD:Stop(args.destGUID)
 	elseif cid == 197985 then--Flame Channeler
 		timerFlashfireCD:Stop(args.destGUID)
 	elseif cid == 197535 then--High Channeler Ryvati
 		timerLightningStormCD:Stop(args.destGUID)
-		timerTempestStormshieldCD:Stop()
+		timerTempestStormshieldCD:Stop(args.destGUID)
+	elseif cid == 190206 then--Primalist Flamedancer
+		timerFlameDanceCD:Stop(args.destGUID)
+	elseif cid == 187969 then--Flashfrost Earthshaper
+		timerTectonicSlamCD:Stop(args.destGUID)
 	end
 end

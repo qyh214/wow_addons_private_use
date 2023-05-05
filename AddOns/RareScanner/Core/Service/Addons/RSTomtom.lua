@@ -33,7 +33,7 @@ function RSTomtom.AddWorldMapTomtomWaypoint(mapID, x, y, name)
 end
 
 function RSTomtom.AddTomtomWaypoint(mapID, x, y, name)
-	if (TomTom and RSConfigDB.IsTomtomSupportEnabled() and mapID and x and y and name) then
+	if (TomTom and RSConfigDB.IsTomtomSupportEnabled() and mapID and mapID ~= "" and x and y and name) then
 		RSTomtom.RemoveCurrentTomtomWaypoint()
 		
 		tomtom_waypoint = TomTom:AddWaypoint(tonumber(mapID), RSUtils.FixCoord(x), RSUtils.FixCoord(y), {
@@ -46,14 +46,14 @@ function RSTomtom.AddTomtomWaypoint(mapID, x, y, name)
 	end
 end
 
-function RSTomtom.AddTomtomWaypointFromVignette(vignetteInfo, manuallyFired)
+function RSTomtom.AddTomtomAutomaticWaypoint(mapID, x, y, name, manuallyFired)
 	-- If not automatic waypoints
 	if (not manuallyFired and not RSConfigDB.IsAddingTomtomWaypointsAutomatically()) then
 		return
 	end
 
 	-- Adds the waypoint
-	RSTomtom.AddTomtomWaypoint(vignetteInfo.mapID, vignetteInfo.x, vignetteInfo.y, vignetteInfo.name)
+	RSTomtom.AddTomtomWaypoint(mapID, x, y, name)
 end
 
 function RSTomtom.RemoveCurrentTomtomWaypoint()

@@ -525,16 +525,17 @@ local function SmoothShoulderCVar(toPoint, clampToZero)
 end
 
 local UpdateShoulderCVar = {};
+UpdateShoulderCVar.steps = 0;
+
 function UpdateShoulderCVar:Start(increment, clampToZero)
-	if ( not self.pauseUpdate ) then
-		self.zoom = GetCameraZoom();
-		self.pauseUpdate = true;
-		After(0.1, function()    -- Execute after 0.1s
-			self.pauseUpdate = nil;
+	self.steps = self.steps + 1;
+	After(0.15, function()    -- Execute after 0.1s
+		self.steps = self.steps - 1;
+		if self.steps <= 0 then
+			self.zoom = GetCameraZoom();
 			SmoothShoulderCVar(self.zoom * SHOULDER_FACTOR_1 + SHOULDER_FACTOR_2 + MOG_MODE_OFFSET, clampToZero);
-		end)
-	end
-	self.zoom = self.zoom + increment;
+		end
+	end)
 end
 
 local DURATION_TRANSLATION = 0.8;

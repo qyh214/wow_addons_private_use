@@ -1,6 +1,6 @@
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	local _detalhes = 		_G._detalhes
+	local _detalhes = 		_G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 	local _tempo = time()
@@ -42,6 +42,14 @@
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --details api functions
+	---for a number to the current selected abbreviation
+	---@param number number
+	---@return string
+	function Details:Format(number)
+		return Details.ToKFunctions[Details.ps_abbreviation](nil, number)
+	end
+
+
 
 	--try to find the opponent of last fight, can be called during a fight as well
 		function Details:FindEnemy()
@@ -628,9 +636,7 @@
 				--	Details:EqualizeActorsSchedule (Details.host_of)
 				end
 
-				--verifica memoria
 				Details:FlagActorsOnCommonFight() --fight_component
-				--Details:CheckMemoryAfterCombat() -- 7.2.5 is doing some weird errors even out of combat
 			else
 
 				--this segment is a boss fight
@@ -1842,17 +1848,17 @@
 			self:RefreshMainWindow(true)
 		end
 
-		function Details:RefreshMainWindow(instance, bForceRefresh)
-			if (not instance or type(instance) == "boolean") then
-				bForceRefresh = instance
-				instance = self
+		function Details:RefreshMainWindow(instanceObject, bForceRefresh)
+			if (not instanceObject or type(instanceObject) == "boolean") then
+				bForceRefresh = instanceObject
+				instanceObject = self
 			end
 
 			if (not bForceRefresh) then
 				Details.LastUpdateTick = Details._tempo
 			end
 
-			if (instance == -1) then
+			if (instanceObject == -1) then
 				--update
 				for index, thisInstance in ipairs(Details.tabela_instancias) do
 					if (thisInstance.ativa) then
@@ -1878,19 +1884,16 @@
 						return info.jogador:MontaInfo()
 					end
 				end
-
 				return
-
 			else
-				if (not instance.ativa) then
-					--print("instance not actived", instance.RefreshMainWindow, 1+nil)
+				if (not instanceObject.ativa) then
 					return
 				end
 			end
 
-			if (instance.modo == modo_ALL or instance.modo == modo_GROUP) then
-				--print("updating all instances...")
-				return instance:RefreshAllMainWindows(bForceRefresh)
+			local currentMode = instanceObject:GetMode()
+			if (currentMode == DETAILS_MODE_ALL or currentMode == DETAILS_MODE_GROUP) then
+				return instanceObject:RefreshAllMainWindows(bForceRefresh)
 			end
 		end
 

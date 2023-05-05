@@ -43,3 +43,11 @@ ns.RegisterPoints(ns.THALDRASZUS, {
 	[65727498] = {quest=71223, vignette=5424,},
 	[64645672] = {quest=71224, vignette=5425,},
 }, HIGHEST)
+
+ns.RegisterPoints(ns.FORBIDDENREACH, {
+    [54593464] = {quest=73699, vignette=5535,},
+    [36933792] = {quest=73700, vignette=5536,},
+    -- These were also added in 10.0.7 per the vignette data, but I haven't found them:
+    -- [] = {quest=73696, vignette=5533,},
+    -- [] = {quest=73702, vignette=5537,},
+}, HIGHEST)

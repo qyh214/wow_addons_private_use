@@ -18,6 +18,14 @@
 					</Anchors>
 				</Texture>
 			</Layer>
+			<Layer level="OVERLAY">
+		    	<Texture parentKey="IconTexture" useAtlasSize="true">
+		        	<Anchors>
+            			<Anchor point="TOPLEFT" relativeKey="$parent.Texture" relativePoint="CENTER"/>
+            			<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Texture" relativePoint="BOTTOMRIGHT"/>
+					</Anchors>
+		        </Texture>
+			</Layer>
 		</Layers>
 		<Scripts>
 			<OnEnter method="OnEnter"/>

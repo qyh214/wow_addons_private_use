@@ -1,7 +1,7 @@
 --@curseforge-project-slug: libsink-2-0@
 --[[
 Name: Sink-2.0
-Revision: $Rev: 149 $
+Revision: $Rev: 155 $
 Author(s): Funkydude
 Description: Library that handles chat output.
 Dependencies: LibStub, SharedMedia-3.0 (optional)
@@ -19,7 +19,7 @@ If you derive from the library or change it in any way, you are required to cont
 -- Sink-2.0
 
 local SINK20 = "LibSink-2.0"
-local SINK20_MINOR = 100000
+local SINK20_MINOR = 100001
 
 local sink = LibStub:NewLibrary(SINK20, SINK20_MINOR)
 if not sink then return end
@@ -46,20 +46,29 @@ local IsInRaid, IsInGroup, SendChatMessage = IsInRaid, IsInGroup, SendChatMessag
 -- Make sure FCT is loaded
 EnableAddOn("Blizzard_CombatText")
 local loadFCT = nil
-if GetCVar("enableFloatingCombatText") == "0" then
-	loadFCT = function()
-		loadFCT = nil
-		if not IsAddOnLoaded("Blizzard_CombatText") then
-			if SHOW_COMBAT_TEXT and SHOW_COMBAT_TEXT == "0" then -- Classic
-				SHOW_COMBAT_TEXT = "1" -- Must be set to 1 for OnLoad to properly initialize
-				LoadAddOn("Blizzard_CombatText")
-				SHOW_COMBAT_TEXT = "0"
-			else
-				SetCVar("enableFloatingCombatText", "1") -- Must be set to 1 for OnLoad to properly initialize
-				LoadAddOn("Blizzard_CombatText")
-				SetCVar("enableFloatingCombatText", "0")
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then -- Retail
+	if not IsAddOnLoaded("Blizzard_CombatText") then
+		loadFCT = function()
+			loadFCT = nil
+			LoadAddOn("Blizzard_CombatText")
+		end
+	end
+else
+	if GetCVar("enableFloatingCombatText") == "0" then
+		loadFCT = function()
+			loadFCT = nil
+			if not IsAddOnLoaded("Blizzard_CombatText") then
+				if SHOW_COMBAT_TEXT and SHOW_COMBAT_TEXT == "0" then -- Classic
+					SHOW_COMBAT_TEXT = "1" -- Must be set to 1 for OnLoad to properly initialize
+					LoadAddOn("Blizzard_CombatText")
+					SHOW_COMBAT_TEXT = "0"
+				else
+					SetCVar("enableFloatingCombatText", "1") -- Must be set to 1 for OnLoad to properly initialize
+					LoadAddOn("Blizzard_CombatText")
+					SetCVar("enableFloatingCombatText", "0")
+				end
+				CombatText_UpdateDisplayedMessages()
 			end
-			CombatText_UpdateDisplayedMessages()
 		end
 	end
 end

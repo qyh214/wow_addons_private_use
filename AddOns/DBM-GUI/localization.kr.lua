@@ -244,7 +244,6 @@ L.DisableGuildStatus 		= "길드에 진행 상황 알림 메시지를 전송하�
 
 L.Area_BugAlerts			= "버그 제보 알림 설정"
 L.BadTimerAlert				= "DBM이 최소 1초 이상 맞지 않는 불량 타이머를 감지했을 때 대화창에 메시지 표시"
-L.BadIDAlert				= "DBM에 쓰이는 주문이나 도감 ID가 잘못됐을 때 대화창에 메시지 표시"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "음성 경고"

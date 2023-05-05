@@ -2,6 +2,21 @@ local RSA = LibStub('AceAddon-3.0'):GetAddon('RSA')
 local L = LibStub("AceLocale-3.0"):GetLocale("RSA")
 
 local defaults = {
+	['abominationLimb'] = {
+		spellID = 383269,
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
+			},
+		},
+	},
 	['antiMagicShell'] = {
 		spellID = 48707,
 		configDisplay = {
@@ -65,6 +80,22 @@ local defaults = {
 			['SPELL_AURA_REMOVED'] = {
 				messages = {"[LINK] on [TARGET] finished!",},
 				tags = {TARGET = true,},
+			},
+		},
+	},
+	['blindingSleet'] = {
+		spellID = 207167,
+		throttle = 0.5,
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
 			},
 		},
 	},
@@ -137,6 +168,21 @@ local defaults = {
 					TARGET = true,
 					MISSTYPE = true,
 				},
+			},
+		},
+	},
+	['empowerRuneWeapon'] = {
+		spellID = 47568,
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+			['SPELL_AURA_REMOVED'] = {
+				messages = {"[LINK] finished!",},
 			},
 		},
 	},

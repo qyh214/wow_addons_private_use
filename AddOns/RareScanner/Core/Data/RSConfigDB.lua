@@ -403,24 +403,8 @@ end
 -- Not discovered filters database
 ---============================================================================
 
-function RSConfigDB.IsShowingNotDiscoveredMapIcons()
-	return private.db.map.displayNotDiscoveredMapIcons
-end
-
-function RSConfigDB.SetShowingNotDiscoveredMapIcons(value)
-	private.db.map.displayNotDiscoveredMapIcons = value
-end
-
-function RSConfigDB.SetShowingNotDiscoveredMapIcons(value)
-	private.db.map.displayNotDiscoveredMapIcons = value
-end
-
 function RSConfigDB.IsShowingOldNotDiscoveredMapIcons()
 	return private.db.map.displayOldNotDiscoveredMapIcons
-end
-
-function RSConfigDB.SetShowingOldNotDiscoveredMapIcons(value)
-	private.db.map.displayOldNotDiscoveredMapIcons = value
 end
 
 function RSConfigDB.SetShowingOldNotDiscoveredMapIcons(value)
@@ -535,20 +519,28 @@ function RSConfigDB.SetShowingFriendlyNpcs(value)
 	private.db.map.displayFriendlyNpcIcons = value
 end
 
-function RSConfigDB.IsShowingDeadNpcs()
-	return private.db.map.keepShowingAfterDead
+function RSConfigDB.IsShowingAlreadyKilledNpcs()
+	return private.db.map.displayAlreadyKilledNpcIcons
 end
 
-function RSConfigDB.SetShowingDeadNpcs(value)
-	private.db.map.keepShowingAfterDead = value
+function RSConfigDB.SetShowingAlreadyKilledNpcs(value)
+	private.db.map.displayAlreadyKilledNpcIcons = value
 end
 
-function RSConfigDB.IsShowingDeadNpcsInReseteableZones()
-	return private.db.map.keepShowingAfterDeadReseteable
+function RSConfigDB.IsShowingNotDiscoveredNpcs()
+	return private.db.map.displayNotDiscoveredNpcIcons
 end
 
-function RSConfigDB.SetShowingDeadNpcsInReseteableZones(value)
-	private.db.map.keepShowingAfterDeadReseteable = value
+function RSConfigDB.SetShowingNotDiscoveredNpcs(value)
+	private.db.map.displayNotDiscoveredNpcIcons = value
+end
+
+function RSConfigDB.IsShowingAlreadyKilledNpcsInReseteableZones()
+	return private.db.map.displayAlreadyKilledNpcIconsReseteable
+end
+
+function RSConfigDB.SetShowingAlreadyKilledNpcsInReseteableZones(value)
+	private.db.map.displayAlreadyKilledNpcIconsReseteable = value
 end
 
 function RSConfigDB.IsMaxSeenTimeFilterEnabled()
@@ -589,6 +581,14 @@ function RSConfigDB.SetMaxSeenTimeFilter(value, clearBak)
 	end
 end
 
+function RSConfigDB.IsShowingAchievementRareNPCs()
+	return private.db.map.displayAchievementRaresNpcIcons
+end
+
+function RSConfigDB.SetShowingAchievementRareNPCs(value)
+	private.db.map.displayAchievementRaresNpcIcons = value
+end
+
 function RSConfigDB.IsShowingHuntingPartyRareNPCs()
 	return private.db.map.displayHuntingPartyRaresNpcIcons
 end
@@ -603,6 +603,14 @@ end
 
 function RSConfigDB.SetShowingPrimalStormNPCs(value)
 	private.db.map.displayPrimalStormRaresNpcIcons = value
+end
+
+function RSConfigDB.IsShowingOtherRareNPCs()
+	return private.db.map.displayOtherRaresNpcIcons
+end
+
+function RSConfigDB.SetShowingOtherRareNPCs(value)
+	private.db.map.displayOtherRaresNpcIcons = value
 end
 
 ---============================================================================
@@ -713,12 +721,20 @@ function RSConfigDB.SetShowingGarrisonCache(value)
 	private.db.general.scanGarrison = value
 end
 
-function RSConfigDB.IsShowingOpenedContainers()
-	return private.db.map.keepShowingAfterCollected
+function RSConfigDB.IsShowingAlreadyOpenedContainers()
+	return private.db.map.displayAlreadyOpenedContainersIcons
 end
 
-function RSConfigDB.SetShowingOpenedContainers(value)
-	private.db.map.keepShowingAfterCollected = value
+function RSConfigDB.SetShowingAlreadyOpenedContainers(value)
+	private.db.map.displayAlreadyOpenedContainersIcons = value
+end
+
+function RSConfigDB.IsShowingNotDiscoveredContainers()
+	return private.db.map.displayNotDiscoveredContainerIcons
+end
+
+function RSConfigDB.SetShowingNotDiscoveredContainers(value)
+	private.db.map.displayNotDiscoveredContainerIcons = value
 end
 
 function RSConfigDB.IsMaxSeenTimeContainerFilterEnabled()
@@ -767,6 +783,30 @@ function RSConfigDB.SetShowingNotTrackeableContainers(value)
 	private.db.map.displayNotTrackeableContainerIcons = value
 end
 
+function RSConfigDB.IsShowingAchievementContainers()
+	return private.db.map.displayAchievementContainerIcons
+end
+
+function RSConfigDB.SetShowingAchievementContainers(value)
+	private.db.map.displayAchievementContainerIcons = value
+end
+
+function RSConfigDB.IsShowingProfessionContainers()
+	return private.db.map.displayProfessionContainerIcons
+end
+
+function RSConfigDB.SetShowingProfessionContainers(value)
+	private.db.map.displayProfessionContainerIcons = value
+end
+
+function RSConfigDB.IsShowingOtherContainers()
+	return private.db.map.displayOtherContainerIcons
+end
+
+function RSConfigDB.SetShowingOtherContainers(value)
+	private.db.map.displayOtherContainerIcons = value
+end
+
 ---============================================================================
 -- Event filters database
 ---============================================================================
@@ -780,11 +820,19 @@ function RSConfigDB.SetShowingEvents(value)
 end
 
 function RSConfigDB.IsShowingCompletedEvents()
-	return private.db.map.keepShowingAfterCompleted
+	return private.db.map.displayAlreadyCompletedEventIcons
 end
 
 function RSConfigDB.SetShowingCompletedEvents(value)
-	private.db.map.keepShowingAfterCompleted = value
+	private.db.map.displayAlreadyCompletedEventIcons = value
+end
+
+function RSConfigDB.IsShowingNotDiscoveredEvents()
+	return private.db.map.displayNotDiscoveredEventIcons
+end
+
+function RSConfigDB.SetShowingNotDiscoveredEvents(value)
+	private.db.map.displayNotDiscoveredEventIcons = value
 end
 
 function RSConfigDB.IsMaxSeenTimeEventFilterEnabled()
@@ -1545,4 +1593,16 @@ end
 
 function RSConfigDB.SetShowingAnimationForVignettes(value)
 	private.db.map.animationVignettes = value
+end
+
+---============================================================================
+-- Worldmap reputation
+---============================================================================
+
+function RSConfigDB.IsHighlightingReputation()
+	return private.db.map.highlightReputation
+end
+
+function RSConfigDB.SetHighlightingReputation(value)
+	private.db.map.highlightReputation = value
 end

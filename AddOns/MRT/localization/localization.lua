@@ -216,12 +216,23 @@ local zoneEJids = {
 	S_ZoneT27SoD = 1193,
 	S_ZoneT28SFO = 1195,
 	S_ZoneT29VotI = 1200,
+	S_ZoneT30 = 1208,
 }
 for prefix,eID in pairs(zoneEJids) do
 	L[prefix] = EJ_GetInstanceInfo(eID)
 end
 
 local encounterIDtoEJidData = {
+	[2688] = 2522,	--Kazzara, the Hellforged
+	[2682] = 2524,	--Assault of the Zaqali
+	[2687] = 2529,	--The Amalgamation Chamber
+	[2693] = 2530,	--The Forgotten Experiments
+	[2680] = 2525,	--Rashok, the Elder
+	[2689] = 2532,	--The Vigilant Steward, Zskarn
+	[2683] = 2527,	--Magmorax
+	[2684] = 2523,	--Echo of Neltharion
+	[2685] = 2520,	--Scalecommander Sarkareth
+
 	[2587] = 2480,	--Eranog
 	[2639] = 2500,	--Terros
 	[2590] = 2486,	--The Primalist Council
@@ -451,14 +462,15 @@ local encounterIDtoEJidChache = {
 }
 
 local encounterIDtoNamePredef = {
-	[2587] = "Eranog",
-	[2639] = "Terros",
-	[2590] = "The Primalist Council",
-	[2592] = "Sennarth, The Cold Breath",
-	[2635] = "Dathea, Ascended",
-	[2605] = "Kurog Grimtotem",
-	[2614] = "Broodkeeper Diurna",
-	[2607] = "Raszageth the Storm-Eater",
+	[2688] = "Kazzara, the Hellforged",
+	[2682] = "Assault of the Zaqali",
+	[2687] = "The Amalgamation Chamber",
+	[2693] = "The Forgotten Experiments",
+	[2680] = "Rashok, the Elder",
+	[2689] = "The Vigilant Steward, Zskarn",
+	[2683] = "Magmorax",
+	[2684] = "Echo of Neltharion",
+	[2685] = "Scalecommander Sarkareth",
 }
 
 L.bossName = setmetatable({}, {__index=function (t, k)

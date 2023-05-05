@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2491, "DBM-VaultoftheIncarnates", nil, 1200)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230215072037")
+mod:SetRevision("20230423184458")
 mod:SetCreatureID(184986)
 mod:SetEncounterID(2605)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
@@ -663,7 +663,7 @@ do
 	}
 
 	function updateAltar(self)
-		if self.vb.phase == 2 then return end
+		if self:GetStage(2) then return end
 		--Collect current timers usiing cached spellname reference so it's actually possible to find timer with API (before we change it)
 		local dElapsed, dTotal = timerDamageCD:GetTime(self.vb.damageSpell)
 		local aElapsed, aTotal = timerAvoidCD:GetTime(self.vb.avoidSpell)

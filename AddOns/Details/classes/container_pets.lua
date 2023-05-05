@@ -1,4 +1,4 @@
-local _detalhes = 		_G._detalhes
+local _detalhes = 		_G.Details
 local gump = 			_detalhes.gump
 local container_pets =		_detalhes.container_pets
 local _
@@ -227,7 +227,7 @@ function _detalhes:WipePets()
 	return wipe(_detalhes.tabela_pets.pets)
 end
 
-function _detalhes:LimparPets()
+function _detalhes:PetContainerCleanup()
 	--erase old pet table by creating a new one
 	local newPetTable = {}
 	--minimum of 90 minutes to clean a pet from the pet table data

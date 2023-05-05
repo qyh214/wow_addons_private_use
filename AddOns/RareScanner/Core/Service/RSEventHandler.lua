@@ -14,6 +14,7 @@ local RSNpcDB = private.ImportLib("RareScannerNpcDB")
 local RSDragonGlyphDB = private.ImportLib("RareScannerDragonGlyphDB")
 local RSContainerDB = private.ImportLib("RareScannerContainerDB")
 local RSCollectionsDB = private.ImportLib("RareScannerCollectionsDB")
+local RSAchievementDB = private.ImportLib("RareScannerAchievementDB")
 
 -- RareScanner services
 local RSMinimap = private.ImportLib("RareScannerMinimap")
@@ -53,15 +54,6 @@ local function HandleEntityWithoutVignette(rareScannerButton, unitID)
 			-- Continue if its an NPC that doesnt have vignette in a newer zone
 			if (not RSNpcDB.GetInternalNpcInfo(npcID) or not RSNpcDB.GetInternalNpcInfo(npcID).nameplate) then
 				return
-			end
-		end
-		
-		-- If it has a questID and its completed ignore it
-		if (RSNpcDB.GetInternalNpcInfo(npcID) and RSNpcDB.GetInternalNpcInfo(npcID).questID) then
-			for _, questID in ipairs(RSNpcDB.GetInternalNpcInfo(npcID).questID) do
-				if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
-					return
-				end
 			end
 		end
 		
@@ -421,11 +413,6 @@ local function OnQuestTurnedIn(rareScannerButton, questID, xpReward, moneyReward
 			return
 		end
 	end
-	
-	-- Removes missing drakewatcher manuscript
-	RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, function()
-		RSExplorerFrame:Refresh()
-	end)
 
 	if (RSConstants.DEBUG_MODE and not foundDebug) then
 		RSLogger:PrintDebugMessage("DEBUG: Mision completada que no existe en EVENT_QUEST_IDS "..questID)
@@ -522,14 +509,33 @@ end
 ---============================================================================
 
 local function OnCriteriaEarned(parentAchievementID, description)
-	RSLogger:PrintDebugMessage(string.format("Criteria del logro [%s][%s]. Completado.", parentAchievementID, description))
 	if (parentAchievementID) then
+		-- Update drakewatcher progress
+		RSLogger:PrintDebugMessage(string.format("Criteria del logro [%s][%s]. Completado.", parentAchievementID, description))
 		local achievementID = RSDragonGlyphDB.GetChildDragonGlyphID(parentAchievementID, description)
 		if (achievementID) then
 			RSLogger:PrintDebugMessage(string.format("Logro de glifo [%s]. Completado.", achievementID))
 			RSDragonGlyphDB.SetDragonGlyphCollected(achievementID)
 			RSMinimap.HideIcon(achievementID)
 		end
+		
+		-- Update achievements cache
+		RSAchievementDB.RefreshAchievementCache(parentAchievementID)
+	end
+end
+
+---============================================================================
+-- Event: UNIT_SPELLCAST_SUCCEEDED
+-- Fired when a part of an achievement is earned
+---============================================================================
+
+local function OnUnitSpellcastSucceeded(unitTarget, castGUID, spellID)
+	if (spellID) then
+		--RSLogger:PrintDebugMessage(string.format("Hechizo [%s]. Completado.", spellID))
+		
+		RSCollectionsDB.RemoveNotCollectedDrakewatcher(spellID, function()
+			RSExplorerFrame:Refresh()
+		end)
 	end
 end
 
@@ -597,6 +603,8 @@ local function HandleEvent(rareScannerButton, event, ...)
 		OnAchievementEarned(...)
 	elseif (event == "CRITERIA_EARNED") then
 		OnCriteriaEarned(...)
+	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
+		OnUnitSpellcastSucceeded(...)
 	end
 end
 
@@ -622,6 +630,7 @@ function RSEventHandler.RegisterEvents(rareScannerButton, addon)
 	rareScannerButton:RegisterEvent("TRANSMOG_COLLECTION_UPDATED")
 	rareScannerButton:RegisterEvent("ACHIEVEMENT_EARNED")
 	rareScannerButton:RegisterEvent("CRITERIA_EARNED")
+	rareScannerButton:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
 	-- Captures all events
 	rareScannerButton:SetScript("OnEvent", function(self, event, ...)

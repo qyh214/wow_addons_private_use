@@ -670,7 +670,7 @@ do
 		end
 	end
 
-	function S:HandleTrimScrollBar(frame, small)
+	function S:HandleTrimScrollBar(frame)
 		assert(frame, 'does not exist.')
 
 		frame:StripTextures()
@@ -689,17 +689,13 @@ do
 
 		local thumb = frame:GetThumb()
 		if thumb then
+			thumb:DisableDrawLayer('ARTWORK')
 			thumb:DisableDrawLayer('BACKGROUND')
 			thumb:CreateBackdrop('Transparent')
 			thumb.backdrop:SetFrameLevel(thumb:GetFrameLevel()+1)
 
 			local r, g, b = unpack(E.media.rgbvaluecolor)
 			thumb.backdrop:SetBackdropColor(r, g, b, .25)
-
-			if not small then
-				thumb.backdrop:Point('TOPLEFT', 4, -1)
-				thumb.backdrop:Point('BOTTOMRIGHT', -4, 1)
-			end
 
 			thumb:HookScript('OnEnter', ThumbOnEnter)
 			thumb:HookScript('OnLeave', ThumbOnLeave)
@@ -1893,7 +1889,8 @@ function S:Initialize()
 			S:Ace3_SkinTooltip(LibStub(n, true))
 		end
 	end
-	if S.EarlyDropdowns then
+
+	if E.private.skins.libDropdown and S.EarlyDropdowns then
 		for _, n in next, S.EarlyDropdowns do
 			S:SkinLibDropDownMenu(n)
 		end

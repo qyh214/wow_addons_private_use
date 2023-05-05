@@ -144,5 +144,8 @@ function RSNotes.GetNote(entityID, mapID)
 	-- Not trackable containers
 	elseif (RSUtils.Contains(RSConstants.CONTAINERS_WITHOUT_VIGNETTE, entityID)) then
 		return AL["NOTE_CONTAINERS_WITHOUT_VIGNETTE"]
+	-- Forbidden Reach containers
+	elseif (RSUtils.Contains(RSConstants.CONTAINERS_FORBIDDEN_REACH, entityID)) then
+		return AL["NOTE_CONTAINERS_FORBIDDEN_REACH"]
 	end
 end

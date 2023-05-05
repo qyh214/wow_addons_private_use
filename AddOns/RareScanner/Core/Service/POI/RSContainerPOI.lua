@@ -67,7 +67,8 @@ function RSContainerPOI.GetContainerPOI(containerID, mapID, containerInfo, alrea
 	POI.foundTime = alreadyFoundInfo and alreadyFoundInfo.foundTime
 	POI.isOpened = RSContainerDB.IsContainerOpened(containerID)
 	POI.isDiscovered = POI.isOpened or alreadyFoundInfo ~= nil
-	POI.achievementIDs = RSAchievementDB.GetNotCompletedAchievementIDsByMap(containerID, mapID)
+	POI.achievementIDs = RSAchievementDB.GetNotCompletedAchievementIDsByMap(containerID, mapID, true)
+	
 	if (containerInfo) then
 		POI.worldmap = containerInfo.worldmap
 		POI.factionID = containerInfo.factionID
@@ -78,14 +79,19 @@ function RSContainerPOI.GetContainerPOI(containerID, mapID, containerInfo, alrea
 		POI.Texture = RSConstants.BLUE_CONTAINER_TEXTURE
 	elseif (RSRecentlySeenTracker.IsRecentlySeen(containerID, POI.x, POI.y)) then
 		POI.Texture = RSConstants.PINK_CONTAINER_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) == 0) then
+	elseif (not POI.isDiscovered) then
 		POI.Texture = RSConstants.RED_CONTAINER_TEXTURE
-	elseif (not POI.isDiscovered and RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.YELLOW_CONTAINER_TEXTURE
-	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
-		POI.Texture = RSConstants.GREEN_CONTAINER_TEXTURE
 	else
 		POI.Texture = RSConstants.NORMAL_CONTAINER_TEXTURE
+	end
+	
+	-- Mini icons
+	if (containerInfo and containerInfo.prof) then
+		POI.iconAtlas = RSConstants.PROFFESION_ICON_ATLAS
+	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
+		POI.iconAtlas = RSConstants.ACHIEVEMENT_ICON_ATLAS
+	elseif (RSUtils.Contains(RSConstants.CONTAINERS_WITHOUT_VIGNETTE, containerID)) then
+		POI.iconAtlas = RSConstants.NOT_TRACKABLE_ICON_ATLAS
 	end
 
 	return POI
@@ -113,9 +119,29 @@ local function IsContainerPOIFiltered(containerID, mapID, zoneQuestID, prof, vig
 		return true
 	end
 	
+	-- Skip if achievement and is filtered
+	local isAchievement = RSUtils.GetTableLength(RSAchievementDB.GetNotCompletedAchievementIDsByMap(containerID, mapID, true)) > 0;
+	if (not RSConfigDB.IsShowingAchievementContainers() and isAchievement) then
+		RSLogger:PrintDebugMessageEntityID(containerID, string.format("Saltado Contenedor [%s]: Filtrado contenedor con logro.", containerID))
+		return true
+	end
+	
 	-- Skip if not trackeable and filtered
 	if (not RSConfigDB.IsShowingNotTrackeableContainers() and RSUtils.Contains(RSConstants.CONTAINERS_WITHOUT_VIGNETTE, containerID)) then
 		RSLogger:PrintDebugMessageEntityID(containerID, string.format("Saltado Contenedor [%s]: Filtrado contenedor no rastreable.", containerID))
+		return true
+	end
+	
+	-- Skip if profession and filtered
+	if (not RSConfigDB.IsShowingProfessionContainers() and prof) then
+		RSLogger:PrintDebugMessageEntityID(containerID, string.format("Saltado Contenedor [%s]: Filtrado contenedor de profesion.", containerID))
+		return true
+	end
+	
+	-- Skip if other (trackeable and not prof) filtered
+	local isNotTrackable = RSUtils.Contains(RSConstants.CONTAINERS_WITHOUT_VIGNETTE, containerID)
+	if (not RSConfigDB.IsShowingOtherContainers() and not isAchievement and not prof and not isNotTrackable) then
+		RSLogger:PrintDebugMessageEntityID(containerID, string.format("Saltado Contenedor [%s]: Filtrado otro contenedor.", containerID))
 		return true
 	end
 
@@ -139,7 +165,7 @@ local function IsContainerPOIFiltered(containerID, mapID, zoneQuestID, prof, vig
 	local containerOpened = RSContainerDB.IsContainerOpened(containerID)
 
 	-- Skip if opened and not showing opened entities
-	if (containerOpened and not RSConfigDB.IsShowingOpenedContainers()) then
+	if (containerOpened and not RSConfigDB.IsShowingAlreadyOpenedContainers()) then
 		RSLogger:PrintDebugMessageEntityID(containerID, string.format("Saltado Contenedor [%s]: Esta abierto.", containerID))
 		return true
 	end
@@ -188,6 +214,11 @@ end
 function RSContainerPOI.GetMapNotDiscoveredContainerPOIs(mapID, vignetteGUIDs, onWorldMap, onMinimap)
 	-- Skip if not showing container icons
 	if (not RSConfigDB.IsShowingContainers()) then
+		return
+	end
+	
+	-- Skip if not showing not discovered icons
+	if (not RSConfigDB.IsShowingNotDiscoveredContainers()) then
 		return
 	end
 

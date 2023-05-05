@@ -8,7 +8,7 @@ local min = math.min
 local unpack = unpack
 local type = type
 --api locals
-local _GetSpellInfo = _detalhes.getspellinfo
+local _GetSpellInfo = Details.getspellinfo
 local GameTooltip = GameTooltip
 local IsInRaid = IsInRaid
 local IsInGroup = IsInGroup
@@ -20,9 +20,9 @@ local format = _G.format
 
 local UnitIsUnit = UnitIsUnit
 
-local _string_replace = _detalhes.string.replace --details api
+local _string_replace = Details.string.replace --details api
 
-local _detalhes = 		_G._detalhes
+local _detalhes = 		_G.Details
 local Details = 		_detalhes
 local AceLocale = LibStub("AceLocale-3.0")
 local Loc = AceLocale:GetLocale ( "Details" )
@@ -135,30 +135,9 @@ end
 ---attempt to get the amount of casts of a spell
 ---@param combat table the combat object
 ---@param actorName string name of the actor
----@param spellId number spell id
-function Details:GetSpellCastAmount(combat, actorName, spellId) --[[exported]]
-	local actorUtilityObject = combat:GetActor(4, actorName)
-	if (actorUtilityObject) then
-		local castAmountTable = actorUtilityObject.spell_cast
-		if (castAmountTable) then
-			local castAmount = castAmountTable[spellId]
-			if (castAmount) then
-				return castAmount
-
-			elseif (not castAmount) then
-				--if the amount of casts is not found, attempt to find a spell with the same name and get the amount of casts of that spell instead
-				local spellName = GetSpellInfo(spellId)
-				for thisSpellId, thisCastAmount in pairs(castAmountTable) do
-					local thisSpellName = GetSpellInfo(thisSpellId)
-					if (thisSpellName == spellName and thisCastAmount and thisCastAmount > 0) then
-						return thisCastAmount
-					end
-				end
-			end
-		end
-	end
-
-	return 0
+---@param spellName string
+function Details:GetSpellCastAmount(combat, actorName, spellName) --[[exported]]
+	return combat:GetSpellCastAmount(actorName, spellName)
 end
 
 function atributo_misc:NovaTabela(serial, nome, link)
@@ -598,7 +577,7 @@ end
 ---@param whichRowLine number
 ---@param rankPosition number
 ---@param instance table
-function atributo_misc:UpdateDeathRow(morte, whichRowLine, rankPosition, instance)
+function atributo_misc:UpdateDeathRow(morte, whichRowLine, rankPosition, instance) --todo: change this function name
 	morte["dead"] = true
 	local thisRow = instance.barras[whichRowLine]
 
@@ -752,10 +731,24 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 		instance:RefreshScrollBar(total)
 
 		local whichRowLine = 1
-		local bIsReverse = false --debug (default false)
 
-		--if this is reverse, need to invert the values in the table which holds the deaths in the combat
-		if (bIsReverse) then
+		local bIsRaidCombat = combatObject:GetCombatType() == DETAILS_SEGMENTTYPE_RAID_BOSS
+		local bIsMythicDungeonOverall = combatObject:IsMythicDungeonOverall()
+		local bIsOverallData = instance:GetSegmentId() == DETAILS_SEGMENTID_OVERALL
+
+		local bReverseDeathLog = false
+		if (bIsRaidCombat and Details.combat_log.inverse_deathlog_raid) then
+			bReverseDeathLog = true
+
+		elseif (bIsMythicDungeonOverall and Details.combat_log.inverse_deathlog_mplus) then
+			bReverseDeathLog = true
+
+		elseif (bIsOverallData and Details.combat_log.inverse_deathlog_overalldata) then
+			bReverseDeathLog = true
+		end
+
+		if (bReverseDeathLog) then
+			--reverse the table
 			local tempTable = {}
 			for i = #allDeathsInTheCombat, 1, -1 do
 				tempTable[#tempTable+1] = allDeathsInTheCombat[i]
@@ -780,13 +773,11 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 
 		return _detalhes:EndRefresh(instance, total, combatObject, utilityActorContainer)
 	else
-
 		if (instance.atributo == 5) then --custom
-			--faz o sort da categoria e retorna o amount corrigido
-			table.sort (conteudo, _detalhes.SortIfHaveKey)
+			table.sort(conteudo, Details.SortIfHaveKey)
 
-			--n�o mostrar resultados com zero
-			for i = amount, 1, -1 do --de tr�s pra frente
+			--strip results with zero
+			for i = amount, 1, -1 do
 				if (not conteudo[i][keyName] or conteudo[i][keyName] < 1) then
 					amount = amount - 1
 				else
@@ -794,18 +785,15 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 				end
 			end
 
-			--pega o total ja aplicado na tabela do combate
-			total = combatObject.totals [class_type] [keyName]
-
-			--grava o total
+			--get the total done from the combat total data
+			total = combatObject.totals[class_type][keyName]
 			instance.top = conteudo[1][keyName]
 
 		elseif (modo == modo_ALL) then --mostrando ALL
+			table.sort(conteudo, Details.SortIfHaveKey)
 
-			table.sort (conteudo, _detalhes.SortIfHaveKey)
-
-			--n�o mostrar resultados com zero
-			for i = amount, 1, -1 do --de tr�s pra frente
+			--strip results with zero
+			for i = amount, 1, -1 do
 				if (not conteudo[i][keyName] or conteudo[i][keyName] < 1) then
 					amount = amount - 1
 				else
@@ -813,20 +801,17 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 				end
 			end
 
-			--pega o total ja aplicado na tabela do combate
-			total = combatObject.totals [class_type] [keyName]
-
-			--grava o total
+			--get the total done from the combat total data
+			total = combatObject.totals[class_type][keyName]
 			instance.top = conteudo[1][keyName]
 
-		elseif (modo == modo_GROUP) then --mostrando GROUP
+		elseif (modo == modo_GROUP) then
+			table.sort(conteudo, Details.SortGroupIfHaveKey)
 
-			--if (refresh_needed) then
-				table.sort (conteudo, _detalhes.SortGroupIfHaveKey)
-			--end
 			for index, player in ipairs(conteudo) do
-				if (player.grupo) then --� um player e esta em grupo
-					if (not player[keyName] or player[keyName] < 1) then --dano menor que 1, interromper o loop
+				if (player.grupo) then --is a player and is in the player group
+					--stop when the amount is zero
+					if (not player[keyName] or player[keyName] < 1) then
 						amount = index - 1
 						break
 					elseif (index == 1) then --esse IF aqui, precisa mesmo ser aqui? n�o daria pra pega-lo com uma chave [1] nad grupo == true?
@@ -843,29 +828,28 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 		end
 	end
 
-	--refaz o mapa do container
+	--refresh the container map
 	utilityActorContainer:remapear()
 
 	if (bIsExport) then
 		return total, keyName, instance.top, amount
 	end
 
-	if (amount < 1) then --n�o h� barras para mostrar
+	--check if there's nothing to show
+	if (amount < 1) then
 		instance:EsconderScrollBar() --precisaria esconder a scroll bar
-		return _detalhes:EndRefresh (instance, total, combatObject, utilityActorContainer) --retorna a tabela que precisa ganhar o refresh
+		return Details:EndRefresh(instance, total, combatObject, utilityActorContainer)
 	end
 
-	--estra mostrando ALL ent�o posso seguir o padr�o correto? primeiro, atualiza a scroll bar...
-	instance:RefreshScrollBar (amount)
+	instance:RefreshScrollBar(amount)
 
-	--depois faz a atualiza��o normal dele atrav�s dos_ iterators
 	local whichRowLine = 1
 	local barras_container = instance.barras
 	local percentage_type = instance.row_info.percent_type
 	local bars_show_data = instance.row_info.textR_show_data
 	local bars_brackets = instance:GetBarBracket()
 	local bars_separator = instance:GetBarSeparator()
-	local use_animations = _detalhes.is_using_row_animations and (not instance.baseframe.isStretching and not bIsForceRefresh)
+	local bUseAnimations = _detalhes.is_using_row_animations and (not instance.baseframe.isStretching and not bIsForceRefresh)
 
 	if (total == 0) then
 		total = 0.00000001
@@ -876,22 +860,22 @@ function atributo_misc:RefreshWindow(instance, combatObject, bIsForceRefresh, bI
 
 	if (instance.bars_sort_direction == 1) then --top to bottom
 		for i = instance.barraS[1], instance.barraS[2], 1 do --vai atualizar s� o range que esta sendo mostrado
-			conteudo[i]:RefreshLine(instance, barras_container, whichRowLine, i, total, subAttribute, bIsForceRefresh, keyName, nil, percentage_type, use_animations, bars_show_data, bars_brackets, bars_separator)
+			conteudo[i]:RefreshLine(instance, barras_container, whichRowLine, i, total, subAttribute, bIsForceRefresh, keyName, nil, percentage_type, bUseAnimations, bars_show_data, bars_brackets, bars_separator)
 			whichRowLine = whichRowLine+1
 		end
 
 	elseif (instance.bars_sort_direction == 2) then --bottom to top
 		for i = instance.barraS[2], instance.barraS[1], -1 do --vai atualizar s� o range que esta sendo mostrado
 			if (conteudo[i]) then
-				conteudo[i]:RefreshLine(instance, barras_container, whichRowLine, i, total, subAttribute, bIsForceRefresh, keyName, nil, percentage_type, use_animations, bars_show_data, bars_brackets, bars_separator)
+				conteudo[i]:RefreshLine(instance, barras_container, whichRowLine, i, total, subAttribute, bIsForceRefresh, keyName, nil, percentage_type, bUseAnimations, bars_show_data, bars_brackets, bars_separator)
 				whichRowLine = whichRowLine+1
 			end
 		end
 
 	end
 
-	if (use_animations) then
-		instance:PerformAnimations (whichRowLine-1)
+	if (bUseAnimations) then
+		instance:PerformAnimations(whichRowLine-1)
 	end
 
 	if (instance.atributo == 5) then --custom
@@ -1058,6 +1042,13 @@ function atributo_misc:RefreshBarra(esta_barra, instancia, from_resize)
 
 	--icon
 	self:SetClassIcon (esta_barra.icone_classe, instancia, class)
+
+	if(esta_barra.mouse_over) then
+		local classIcon = esta_barra:GetClassIcon()
+		esta_barra.iconHighlight:SetTexture(classIcon:GetTexture())
+		esta_barra.iconHighlight:SetTexCoord(classIcon:GetTexCoord())
+		esta_barra.iconHighlight:SetVertexColor(classIcon:GetVertexColor())
+	end
 	--texture color
 	self:SetBarColors(esta_barra, instancia, actor_class_color_r, actor_class_color_g, actor_class_color_b)
 	--left text
@@ -2402,16 +2393,6 @@ function atributo_misc:r_onlyrefresh_shadow (actor)
 
 	_detalhes.refresh:r_atributo_misc (actor, shadow)
 
-	--spell cast
-	if (actor.spell_cast) then
-		if (not shadow.spell_cast) then
-			shadow.spell_cast = {}
-		end
-		for spellid, _ in pairs(actor.spell_cast) do
-			shadow.spell_cast [spellid] = shadow.spell_cast [spellid] or 0
-		end
-	end
-
 	--cc done
 		if (actor.cc_done) then
 			refresh_alvos (shadow.cc_done_targets, actor.cc_done_targets)
@@ -2537,16 +2518,6 @@ function atributo_misc:r_connect_shadow (actor, no_refresh, combat_object)
 	--pets (add unique pet names)
 	for _, petName in ipairs(actor.pets) do
 		DetailsFramework.table.addunique (shadow.pets, petName)
-	end
-
-	if (actor.spell_cast) then
-		if (not shadow.spell_cast) then
-			shadow.spell_cast = {}
-		end
-
-		for spellid, amount in pairs(actor.spell_cast) do
-			shadow.spell_cast [spellid] = (shadow.spell_cast [spellid] or 0) + amount
-		end
 	end
 
 	if (actor.cc_done) then
@@ -2743,22 +2714,11 @@ function atributo_misc:r_connect_shadow (actor, no_refresh, combat_object)
 
 end
 
-function atributo_misc:ColetarLixo (lastevent)
-	return _detalhes:ColetarLixo (class_type, lastevent)
-end
-
 function _detalhes.refresh:r_atributo_misc(thisActor, shadow)
 	setmetatable(thisActor, _detalhes.atributo_misc)
 	detailsFramework:Mixin(thisActor, Details222.Mixins.ActorMixin)
 
 	thisActor.__index = _detalhes.atributo_misc
-
-	--refresh spell cast
-	if (thisActor.spell_cast) then
-		if (shadow and not shadow.spell_cast) then
-			shadow.spell_cast = {}
-		end
-	end
 
 	--refresh cc done
 	if (thisActor.cc_done) then
@@ -2895,13 +2855,6 @@ function _detalhes.clear:c_atributo_misc (este_jogador)
 end
 
 atributo_misc.__add = function(tabela1, tabela2)
-
-	if (tabela2.spell_cast) then
-		for spellid, amount in pairs(tabela2.spell_cast) do
-			tabela1.spell_cast [spellid] = (tabela1.spell_cast [spellid] or 0) + amount
-		end
-	end
-
 	if (tabela2.cc_done) then
 		tabela1.cc_done = tabela1.cc_done + tabela2.cc_done
 
@@ -3161,13 +3114,6 @@ local subtrair_keys = function(habilidade, habilidade_tabela1)
 end
 
 atributo_misc.__sub = function(tabela1, tabela2)
-
-	if (tabela2.spell_cast) then
-		for spellid, amount in pairs(tabela2.spell_cast) do
-			tabela1.spell_cast [spellid] = (tabela1.spell_cast [spellid] or 0) - amount
-		end
-	end
-
 	if (tabela2.cc_done) then
 		tabela1.cc_done = tabela1.cc_done - tabela2.cc_done
 

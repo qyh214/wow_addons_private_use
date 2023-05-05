@@ -201,7 +201,6 @@ L.WorldBossAlert			= "Mostrar mensaje de alerta cuando un amigo o miembro de her
 
 L.Area_BugAlerts			= "Opciones de alertas de informes de fallos"
 L.BadTimerAlert				= "Mostrar mensaje en el chat cuando DBM detecte un temporizador erróneo"
-L.BadIDAlert				= "Mostrar mensaje en el chat cuando DBM detecte una ID de hechizo o guía de aventuras incorrecta"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "Alertas de voz"

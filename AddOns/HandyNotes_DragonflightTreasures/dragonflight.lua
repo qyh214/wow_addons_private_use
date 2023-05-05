@@ -5,14 +5,16 @@ ns.WAKINGSHORES = 2022
 ns.OHNAHRANPLAINS = 2023
 ns.AZURESPAN = 2024
 ns.THALDRASZUS = 2025
-ns.FORBIDDENREACH = 2026
+ns.FORBIDDENREACH = 2151 -- was 2026 before 10.0.7 (but was also unreachable)
 ns.FORBIDDENREACHINTRO = 2118 -- Dracthyr
 ns.PRIMALISTFUTURE = 2085
+ns.ZARALEKCAVERN = 2133
 
 ns.FACTION_MARUUK = 2503
 ns.FACTION_DRAGONSCALE = 2507
 ns.FACTION_VALDRAKKEN = 2510
 ns.FACTION_ISKAARA = 2511
+ns.FACTION_LOAMM = 2564
 
 -- 67030 completes alongside 66221 (moving on) and 72366; it's then also completed on any alts, unlike the others
 -- (It's what's in the vignettes as a condition for visibility)
@@ -40,6 +42,7 @@ ns.defaults.profile.groupsHidden = {
     disturbeddirt = true,
     tuskarrchests = true,
     warsupply = true,
+    titanchests = true,
 }
 
 ns.groups["junk"] = BAG_FILTER_JUNK
@@ -48,6 +51,7 @@ ns.groups["disturbeddirt"] = "{spell:340561:Disturbed Dirt}"
 ns.groups["magicbound"] = "{npc:191905:Magic-Bound Chest}"
 ns.groups["tuskarrchests"] = "{item:200071:Sacred Tuskarr Totem}"
 ns.groups["warsupply"] = "War Supply Chest"
+ns.groups["titanchests"] = "Titan Chest"
 ns.groups["glyphs"] = "Dragon Glyphs"
 ns.groups["dailymount"] = "Daily Mounts"
 ns.groups["races"] = "{achievement:15939:Dragon Racing Completionist}"

@@ -53,7 +53,7 @@ L["25 Player Raid (Normal)"] = "25 人團隊 (普通)"
 L["40 Man Raid"] = "40人團隊"
 L["40 Player Raid"] = "40 人團隊"
 L["5 Man Dungeon"] = "5 人地城"
-L["A trigger in this aura is set up to track a soft target unit, but you don't have the CVars set up for this to work correctly. Consider either changing the unit tracked, or configuring the Soft Target CVars."] = "此光環中的觸發器設置為追蹤軟目標單位，但您沒有為此正確設置CVars。考慮更改追蹤的單位，或配置軟目標CVar。"
+L["A trigger in this aura is set up to track a soft target unit, but you don't have the CVars set up for this to work correctly. Consider either changing the unit tracked, or configuring the Soft Target CVars."] = "此提醒效果設定為追蹤軟目標單位，但是並沒有設定好相關的 CVars 遊戲參數讓它能正常運作。請更改追蹤的目標，或是設定軟目標的 CVars。"
 L["Abbreviate"] = "縮寫"
 L["AbbreviateLargeNumbers (Blizzard)"] = "縮寫大數字 (暴雪)"
 L["AbbreviateNumbers (Blizzard)"] = "縮寫數字 (暴雪)"
@@ -254,6 +254,7 @@ L["Charged Combo Point 3"] = "充能連擊點 3"
 L["Charged Combo Point 4"] = "充能連擊點 4"
 L["Charges"] = "可用次數"
 L["Charges Changed Event"] = "可用次數變化事件"
+L["Charging"] = "充能"
 L["Chat Frame"] = "聊天框架"
 L["Chat Message"] = "聊天訊息"
 L["Check if a single talent match a Rank"] = "檢查單個天賦是否與等級匹配"
@@ -273,7 +274,7 @@ L["Color Animation"] = "彩色動畫"
 L["Combat Log"] = "戰鬥紀錄"
 L[ [=[COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.
 Find more information:
-https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "通常不建議不使用 COMBAT_LOG_EVENT_UNFILTERED 過濾器，因為它的性能成本非常高。查詢更多資訊: https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
+https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events]=] ] = "使用 COMBAT_LOG_EVENT_UNFILTERED 時沒有搭配過濾程式，會非常耗效能。在這裡可以取得更多資訊: https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"
 L["Condition Custom Text"] = "條件自訂文字"
 L["Conditions"] = "條件"
 L["Contains"] = "包含"
@@ -297,6 +298,7 @@ L["Critical Rating"] = "致命一擊分數"
 L["Crowd Controlled"] = "群體控制"
 L["Crushing"] = "碾壓"
 L["C'thun"] = "克蘇恩"
+L["Current Essence"] = "當前精華"
 L["Current Experience"] = "目前經驗值"
 L["Current Movement Speed (%)"] = "目前移動速度 (%)"
 L["Current Stage"] = "當前階段"
@@ -312,7 +314,7 @@ L["Custom Check"] = "自訂檢查"
 L["Custom Color"] = "自訂顏色"
 L["Custom Condition Code"] = "自訂條件程式碼"
 L["Custom Configuration"] = "自訂設定選項"
-L["Custom Fade Animation"] = "自定義淡出動畫"
+L["Custom Fade Animation"] = "自訂淡出動畫"
 L["Custom Function"] = "自訂函數"
 L["Custom Grow"] = "自訂增長"
 L["Custom Sort"] = "自訂排序"
@@ -353,6 +355,7 @@ L["Destination Reaction"] = "目標反應動作"
 L["Destination Unit"] = "目標單位"
 L["Destination unit's raid mark index"] = "目標單位的團隊標記索引"
 L["Destination unit's raid mark texture"] = "目標單位的團隊標記材質"
+L["Difficulty"] = "難度"
 L["Disable Spell Known Check"] = "停用檢查已知法術"
 L["Disabled Spell Known Check"] = "停用已知法術檢查"
 L["Disease"] = "疾病"
@@ -420,6 +423,7 @@ L["Enrage"] = "狂怒"
 L["Enter static or relative values with %"] = "輸入靜態或相對的值加上 %"
 L["Entering"] = "進入"
 L["Entering/Leaving Combat"] = "進入/離開戰鬥"
+L["Entering/Leaving Encounter"] = "進入/離開 戰鬥"
 L["Entry Order"] = "項目順序"
 L["Environment Type"] = "環境類型"
 L["Environmental"] = "環境"
@@ -437,11 +441,19 @@ L["Error deserializing"] = "反序列化時出錯"
 L["Error Frame"] = "錯誤訊息框架"
 L["ERROR in '%s' unknown or incompatible sub element type '%s'"] = "“%s”中的錯誤未知或不相容的子元素類型“%s”"
 L["Error not receiving display information from %s"] = "錯誤：無法收到來自 %s 的顯示資訊"
+L["Essence"] = "精華"
+L["Essence #1"] = "精華 #1"
+L["Essence #2"] = "精華 #2"
+L["Essence #3"] = "精華 #3"
+L["Essence #4"] = "精華 #4"
+L["Essence #5"] = "精華 #5"
+L["Essence #6"] = "精華 #6"
 L["Evade"] = "閃躲"
 L["Event"] = "事件"
 L["Event(s)"] = "事件"
 L["Every Frame"] = "所有框架"
 L["Every Frame (High CPU usage)"] = "每個框架 (高 CPU 使用量)"
+L["Evoker Essence"] = "喚能師精華"
 L["Experience (%)"] = "經驗值 (%)"
 L["Expertise Bonus"] = "專業獎勵"
 L["Expertise Rating"] = "專業等級"
@@ -583,6 +595,7 @@ L["Icecrown Citadel"] = "冰冠城塞"
 L["Icon"] = "圖示"
 L["Icon Function"] = "圖示功能"
 L["Icon Function (fallback state)"] = "圖示功能（後備狀態）"
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "如果你需要其他協助，請在 GitHub 新增問題，或拜訪我們的 Discord https://discord.gg/weakauras!"
 L["Ignis the Furnace Master"] = "『火爐之主』伊格尼司"
 L["Ignore Dead"] = "忽略死者"
@@ -788,6 +801,7 @@ L["Note, that cross realm transmission is possible if you are on the same group"
 L["Note: Due to how complicated the swing timer behavior is and the lack of APIs from Blizzard, results are inaccurate in edge cases."] = "注意: 由於揮擊計時器的行為非常複雜，而且暴雪沒有提供相關 API，導致在極端的情況下並不準確。"
 L["Note: 'Hide Alone' is not available in the new aura tracking system. A load option can be used instead."] = "注意: 新的光環追蹤系統無法 '單獨隱藏'，可以改用載入選項。"
 L["Note: The available text replacements for multi triggers match the normal triggers now."] = "注意: 多個觸發可以使用的替換文字現在和一般觸發相同。"
+L["Note: This trigger relies on the WoW API, which returns incorrect information in some cases."] = "注意：此觸發器依賴於WoW的API，在某些情況下會返回不正確的訊息。"
 L["Note: This trigger type estimates the range to the hitbox of a unit. The actual range of friendly players is usually 3 yards more than the estimate. Range checking capabilities depend on your current class and known abilities as well as the type of unit being checked. Some of the ranges may also not work with certain NPCs.|n|n|cFFAAFFAAFriendly Units:|r %s|n|cFFFFAAAAHarmful Units:|r %s|n|cFFAAAAFFMiscellanous Units:|r %s"] = "注意：此觸發器類型預估到單位的命中框的範圍。友方玩家的實際射程通常比估計高3碼。範圍檢查功能取決於您當前的職業和已知功能以及所檢查單位的類型。某些範圍可能也不適用於某些NPC。|n|n|cFFAAFFAA友方單位：|r%s|n|n|cFFAAFFAA敵方單位：|r%s|n|cFFAAAAFF其他單位：|r%s"
 L["Noth the Plaguebringer"] = "『瘟疫使者』諾斯"
 L["NPC"] = "NPC"
@@ -795,14 +809,60 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "數字"
 L["Number Affected"] = "被影響的數量"
 L["Object"] = "物件"
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if BigWigs shows it on it's bar]=]
+--[[Translation missing --]]
+L[ [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Only if DBM shows it on it's bar]=]
 L["Officer"] = "幹部"
 L["Offset from progress"] = "進度偏移"
 L["Offset Timer"] = "移動時間數字"
 L["Old Blizzard (2h | 3m | 10s | 2.4)"] = "遊戲內建較舊的 (2h | 3m | 10s | 2.4)"
 L["On Cooldown"] = "冷卻中"
 L["On Taxi"] = "乘坐船/鳥點時"
-L["Only if BigWigs shows it on it's bar"] = "只有在 BigWigs 的計時條上有顯示時"
-L["Only if DBM shows it on it's bar"] = "只有在 DBM 的計時條上有顯示時"
 L["Only if on a different realm"] = "只有在不同的伺服器群組"
 L["Only if Primary"] = "只有為主要時"
 L["Onyxia"] = "奧妮克希亞"
@@ -1085,8 +1145,8 @@ L["Stacks Function"] = "層數功能"
 L["Stacks Function (fallback state)"] = "層數功能（後備狀態）"
 L["Stage"] = "階段"
 L["Stage Counter"] = "階段統計"
-L["Stagger (%)"] = "醉酒 (%)"
-L["Stagger against Target (%)"] = "醉酒針對目標 (%)"
+L["Stagger (%)"] = "醉仙緩勁 (%)"
+L["Stagger against Target (%)"] = "醉仙緩勁目標 (%)"
 L["Stagger Scale"] = "醉仙緩勁縮放大小"
 L["Stamina"] = "耐力"
 L["Stance/Form/Aura"] = "姿態/形態/光環"
@@ -1102,6 +1162,7 @@ L["String"] = "文字字串"
 L["Subtract Cast"] = "減去施法"
 L["Subtract Channel"] = "減去頻道"
 L["Subtract GCD"] = "減去 GCD"
+L["Success"] = "成功"
 L["Sulfuron Harbinger"] = "薩弗隆先驅者"
 L["Summon"] = "召喚"
 L["Supports multiple entries, separated by commas"] = "支援輸入多個項目，使用逗號分隔。"
@@ -1178,6 +1239,7 @@ L["Toravon the Ice Watcher"] = "『寒冰看守者』拓拉梵"
 L["Torghast"] = "托迦司"
 L["Total"] = "總共"
 L["Total Duration"] = "總共持續時間"
+L["Total Essence"] = "總精華"
 L["Total Experience"] = "全部經驗值"
 L["Total Match Count"] = "符合的數量總計"
 L["Total Stacks"] = "總共堆疊層數"

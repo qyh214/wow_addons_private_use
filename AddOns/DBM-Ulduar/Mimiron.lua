@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230209213512")
+mod:SetRevision("20230425015704")
 mod:SetCreatureID(33432)
 if not mod:IsClassic() then
 	mod:SetEncounterID(1138)
@@ -264,7 +264,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 	--Modern phasing path, where boss unit Ids exist.
 	if spellId == 34098 and self:AntiSpam(5, 1) and not self:IsClassic() then--ClearAllDebuffs
 		self:SetStage(0)
-		if self.vb.phase == 2 then
+		if self:GetStage(2) then
 			timerNextShockblast:Stop()
 			timerProximityMines:Stop()
 			timerFlameSuppressant:Stop()
@@ -279,13 +279,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
-		elseif self.vb.phase == 3 then
+		elseif self:GetStage(3) then
 			timerP3Wx2LaserBarrageCast:Stop()
 			timerNextP3Wx2LaserBarrage:Stop()
 --			timerNextFrostBomb:Stop()
 			timerRocketStrikeCD:Stop()
 			timerP2toP3:Start()--24
-		elseif self.vb.phase == 4 then
+		elseif self:GetStage(4) then
 			timerP3toP4:Start()--27.9
 			--Need to be reverified on live
 --			if self.vb.hardmode then
@@ -308,7 +308,8 @@ function mod:OnSync(event, args)
 		timerP3Wx2LaserBarrageCast:Cancel()
 		timerNextP3Wx2LaserBarrage:Cancel()
 		warnP3Wx2LaserBarrage:Cancel()
-	elseif event == "Phase2" and self.vb.phase == 1 then -- alternate localized-dependent detection
+	elseif event == "Phase2" and self:GetStage(1) then -- alternate localized-dependent detection
+		self:SetStage(2)
 		timerNextShockblast:Stop()
 		timerProximityMines:Stop()
 		timerFlameSuppressant:Stop()
@@ -324,13 +325,15 @@ function mod:OnSync(event, args)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
-	elseif event == "Phase3" and self.vb.phase == 2 then
+	elseif event == "Phase3" and self:GetStage(2) then
+		self:SetStage(3)
 		timerP3Wx2LaserBarrageCast:Stop()
 		timerNextP3Wx2LaserBarrage:Stop()
 --		timerNextFrostBomb:Stop()
 		timerRocketStrikeCD:Stop()
 		timerP2toP3:Start(16.8)--16.8-25, using yells is swell
-	elseif event == "Phase4" and self.vb.phase == 3 then
+	elseif event == "Phase4" and self:GetStage(3) then
+		self:SetStage(4)
 		--All these timers might be wrong because they are mashed between retail and legacy using math guesses
 		timerP3toP4:Start(24)
 		--Adjusted to live, but live timers might be wrong, plus need to be classic vetted anyways

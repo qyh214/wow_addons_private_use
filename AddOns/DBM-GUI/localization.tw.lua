@@ -239,7 +239,6 @@ L.WorldBuffAlert			= "當你的伺服器的世界增益啟動時顯示警告訊�
 
 L.Area_BugAlerts			= "錯誤回報警報選項"
 L.BadTimerAlert				= "當DBM檢測到計時器錯誤且至少有1秒不正確時顯示聊天訊息"
-L.BadIDAlert				= "當DBM檢測到使用的是無效法術或紀錄ID時顯示聊天訊息"
 
 -- Panel: Spoken Alerts Frame
 L.Panel_SpokenAlerts		= "語音警告"

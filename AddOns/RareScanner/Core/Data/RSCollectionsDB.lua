@@ -219,6 +219,7 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 			return
 		end
 		
+		local refresh = false
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.TOY]
@@ -226,6 +227,7 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 					for i = #lootList, 1, -1 do
 						if (lootList[i] == itemID) then
 							if (table.getn(lootList) == 1) then
+								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Eliminado coleccionable de la lista de la entidad [%s]. No tiene mas juguetes.", itemID, entityID))
 								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.TOY] = nil
 							else
 								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedToy[%s]: Eliminado coleccionable de la lista de la entidad [%s].", itemID, entityID))
@@ -254,15 +256,16 @@ function RSCollectionsDB.RemoveNotCollectedToy(itemID, callback) --NEW_TOY_ADDED
 								end
 							end
 							
-							if (callback) then
-								callback()
-							end
-							
+							refresh = true
 							break
 						end
 					end
 				end
 			end
+		end
+		
+		if (refresh and callback) then
+			callback()
 		end
     end
 end
@@ -330,11 +333,11 @@ local function GetPetItemID(creatureID)
 	return nil
 end
 
-local function GetPetID(itemID)
+local function GetCreatureID(itemID)
 	if (itemID) then
-		for petID, internalItemID in pairs(private.DROPPED_PET_IDS) do
+		for creatureID, internalItemID in pairs(private.DROPPED_PET_IDS) do
 			if (internalItemID == itemID) then
-				return petID
+				return creatureID
 			end
 		end
 	end
@@ -347,7 +350,7 @@ local function CheckUpdatePet(itemID, entityID, source, checkedItems)
 	if (checkedItems[RSConstants.ITEM_TYPE.PET][itemID]) then
 		UpdateEntityCollection(itemID, entityID, source, RSConstants.ITEM_TYPE.PET)
 	else
-		local creatureID = GetPetID(itemID)
+		local creatureID = GetCreatureID(itemID)
 		if (creatureID) then			
 			if (RSUtils.Contains(GetNotCollectedPetsIDs(), creatureID)) then
 				UpdateEntityCollection(itemID, entityID, source, RSConstants.ITEM_TYPE.PET)
@@ -383,6 +386,7 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 			return
 		end
 		
+		local refresh = false
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.PET]
@@ -390,6 +394,7 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 					for i = #lootList, 1, -1 do
 						if (lootList[i] == GetPetItemID(creatureID)) then
 							if (table.getn(lootList) == 1) then
+								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Eliminado coleccionable de la lista de la entidad [%s]. No tiene mas mascotas.", petGUID, entityID))
 								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.PET] = nil
 							else
 								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedPet[%s]: Eliminado coleccionable de la lista de la entidad [%s].", petGUID, entityID))
@@ -418,15 +423,16 @@ function RSCollectionsDB.RemoveNotCollectedPet(petGUID, callback) --NEW_PET_ADDE
 								end
 							end
 							
-							if (callback) then
-								callback()
-							end
-							
+							refresh = true
 							break
 						end
 					end
 				end
 			end
+		end
+		
+		if (refresh and callback) then
+			callback()
 		end
     end
 end
@@ -532,6 +538,7 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
        		end
 		end
 		
+		local refresh = false
 		for source, _ in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.MOUNT]
@@ -539,6 +546,7 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 					for i = #lootList, 1, -1 do
 						if (RSUtils.Contains(GetMountItemID(mountID), lootList[i])) then
 							if (table.getn(lootList) == 1) then
+								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Eliminado coleccionable de la lista de la entidad [%s]. No tiene mas monturas.", mountID, entityID))
 								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.MOUNT] = nil
 							else
 								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedMount[%s]: Eliminado coleccionable de la lista de la entidad [%s].", mountID, entityID))
@@ -567,15 +575,16 @@ function RSCollectionsDB.RemoveNotCollectedMount(mountID, callback) --NEW_MOUNT_
 								end
 							end
 							
-							if (callback) then
-								callback()
-							end
-							
+							refresh = true
 							break
 						end
 					end
 				end
 			end
+		end
+		
+		if (refresh and callback) then
+			callback()
 		end
     end
 end
@@ -733,6 +742,7 @@ function RSCollectionsDB.RemoveNotCollectedAppearance(appearanceID, callback) --
 							for i = #lootList, 1, -1 do
 								if (RSUtils.Contains(GetAppearanceItemIDs(appearanceID), lootList[i])) then
 									if (table.getn(lootList) == 1) then
+										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Eliminado coleccionable de la lista de la entidad [%s]. No tiene mas apariencias.", appearanceID, entityID))
 										RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex] = nil
 									else
 										RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedAppearance[%s]: Eliminado coleccionable de la lista de la entidad [%s].", appearanceID, entityID))
@@ -798,7 +808,7 @@ local function UpdateNotCollectedDrakewatchers(routines, routineTextOutput)
 	
 	-- Query
 	local notCollectedDrakewatcherRoutine = RSRoutines.LoopRoutineNew()
-	notCollectedDrakewatcherRoutine:Init(function() return private.DRAKEWATCHER_MANUSCRIPTS end, 100, 
+	notCollectedDrakewatcherRoutine:Init(function() return private.DRAKEWATCHER_QUESTS end, 100, 
 		function(context, itemID, questIDs)
 			for _, questID in ipairs(questIDs) do
 				if (not C_QuestLog.IsQuestFlaggedCompleted(questID)) then
@@ -835,13 +845,13 @@ local function CheckUpdateDrakewatcher(itemID, entityID, source, checkedItems)
 	end
 end
 
-function RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, callback) --QUEST_TURNED_IN
-	if (questID and GetNotCollectedDrakewatchers() and table.getn(GetNotCollectedDrakewatchers()) ~= nil) then		
+function RSCollectionsDB.RemoveNotCollectedDrakewatcher(spellID, callback) --UNIT_SPELLCAST_SUCCEEDED
+	if (spellID and GetNotCollectedDrakewatchers() and table.getn(GetNotCollectedDrakewatchers()) ~= nil and private.DRAKEWATCHER_SPELLS[spellID]) then		
 		-- Drop missing drakewatcher manuscript
 		local itemID
 		for i = #private.dbglobal.not_colleted_drakewatchers, 1, -1 do
 			itemID = private.dbglobal.not_colleted_drakewatchers[i]
-    		if (RSUtils.Contains(private.DRAKEWATCHER_MANUSCRIPTS[itemID], questID)) then
+    		if (private.DRAKEWATCHER_SPELLS[spellID] == itemID) then
        			table.remove(private.dbglobal.not_colleted_drakewatchers, i)
 				RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedDrakewatcher[%s]: Eliminado Manuscrito de dracovigía conseguido.", itemID))
        			break
@@ -853,6 +863,7 @@ function RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, callback) --QUE
 			return
 		end
 		
+		local refresh = false
 		for source, info in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()) do
 			for entityID, itemTypes in pairs (RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source]) do
 				local lootList = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER]
@@ -860,6 +871,7 @@ function RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, callback) --QUE
 					for i = #lootList, 1, -1 do
 						if (lootList[i] == itemID) then
 							if (table.getn(lootList) == 1) then
+								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedDrakewatcher[%s]: Eliminado coleccionable de la lista de la entidad [%s]. No tiene mas manuscritos.", itemID, entityID))
 								RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER] = nil
 							else
 								RSLogger:PrintDebugMessage(string.format("RemoveNotCollectedDrakewatcher[%s]: Eliminado coleccionable de la lista de la entidad [%s].", itemID, entityID))
@@ -888,15 +900,16 @@ function RSCollectionsDB.RemoveNotCollectedDrakewatcher(questID, callback) --QUE
 								end
 							end
 							
-							if (callback) then
-								callback()
-							end
-							
+							refresh = true
 							break
 						end
 					end
 				end
 			end
+		end
+		
+		if (refresh and callback) then
+			callback()
 		end
     end
 end

@@ -460,7 +460,7 @@ Off Screen]=]
 	--[[Translation missing --]]
 	L["Debuff Type"] = "Debuff Type"
 	--[[Translation missing --]]
-	L["Debug Console"] = "Debug Console"
+	L["Debug Log"] = "Debug Log"
 	--[[Translation missing --]]
 	L["Debug Log:"] = "Debug Log:"
 	--[[Translation missing --]]
@@ -711,8 +711,6 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Full Circle"] = "Full Circle"
 	--[[Translation missing --]]
-	L["Get Help"] = "Get Help"
-	--[[Translation missing --]]
 	L["Global Conditions"] = "Global Conditions"
 	--[[Translation missing --]]
 	L["Glow %s"] = "Glow %s"
@@ -811,6 +809,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Icon Inset"] = "Icon Inset"
 	--[[Translation missing --]]
+	L["Icon Picker"] = "Icon Picker"
+	--[[Translation missing --]]
 	L["Icon Position"] = "Icon Position"
 	--[[Translation missing --]]
 	L["Icon Settings"] = "Icon Settings"
@@ -860,6 +860,8 @@ Can use \ to escape -.]=]
 	L["Ignored Spell ID"] = "Ignored Spell ID"
 	--[[Translation missing --]]
 	L["Import"] = "Import"
+	--[[Translation missing --]]
+	L["Import / Export"] = "Import / Export"
 	--[[Translation missing --]]
 	L["Import a display from an encoded string"] = "Import a display from an encoded string"
 	--[[Translation missing --]]
@@ -915,6 +917,8 @@ Can use \ to escape -.]=]
 	--[[Translation missing --]]
 	L["Is Unit"] = "Is Unit"
 	--[[Translation missing --]]
+	L["Join Discord"] = "Join Discord"
+	--[[Translation missing --]]
 	L["Justify"] = "Justify"
 	--[[Translation missing --]]
 	L["Keep Aspect Ratio"] = "Keep Aspect Ratio"
@@ -936,6 +940,8 @@ Can use \ to escape -.]=]
 	L["Length of |cFFFF0000%s|r"] = "Length of |cFFFF0000%s|r"
 	--[[Translation missing --]]
 	L["Limit"] = "Limit"
+	--[[Translation missing --]]
+	L["Line"] = "Line"
 	--[[Translation missing --]]
 	L["Lines & Particles"] = "Lines & Particles"
 	--[[Translation missing --]]
@@ -984,6 +990,8 @@ Can use \ to escape -.]=]
 	L["Model"] = "Model"
 	--[[Translation missing --]]
 	L["Model %s"] = "Model %s"
+	--[[Translation missing --]]
+	L["Model Picker"] = "Model Picker"
 	--[[Translation missing --]]
 	L["Model Settings"] = "Model Settings"
 	--[[Translation missing --]]
@@ -1034,6 +1042,8 @@ Can use \ to escape -.]=]
 	L["Negator"] = "Negator"
 	--[[Translation missing --]]
 	L["New Aura"] = "New Aura"
+	--[[Translation missing --]]
+	L["New Template"] = "New Template"
 	--[[Translation missing --]]
 	L["New Value"] = "New Value"
 	--[[Translation missing --]]
@@ -1265,8 +1275,6 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	--[[Translation missing --]]
 	L["Scale"] = "Scale"
 	--[[Translation missing --]]
-	L["Search"] = "Search"
-	--[[Translation missing --]]
 	L["Select Talent"] = "Select Talent"
 	--[[Translation missing --]]
 	L["Select the auras you always want to be listed first"] = "Select the auras you always want to be listed first"
@@ -1454,6 +1462,8 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=]
 	L["Texture"] = "Texture"
 	--[[Translation missing --]]
 	L["Texture Info"] = "Texture Info"
+	--[[Translation missing --]]
+	L["Texture Picker"] = "Texture Picker"
 	--[[Translation missing --]]
 	L["Texture Rotation"] = "Texture Rotation"
 	--[[Translation missing --]]

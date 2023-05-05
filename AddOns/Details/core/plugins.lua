@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
-	local _detalhes = _G._detalhes
+	local _detalhes = _G.Details
 	local PixelUtil = PixelUtil or DFPixelUtil
 
 	DETAILSPLUGIN_ALWAYSENABLED = 0x1
@@ -647,14 +647,17 @@
 		local on_hide = function(self)
 			DetailsPluginContainerWindow.ClosePlugin()
 		end
-		
-		function f.RefreshFrame (frame)
-			frame:EnableMouse(false)
-			frame:SetSize(f.FrameWidth, f.FrameHeight)
+
+		local setup_frame_functions = function(frame)
 			frame:SetScript("OnMouseDown", nil)
 			frame:SetScript("OnMouseUp", nil)
 			--frame:SetScript("OnHide", on_hide)
 			frame:HookScript ("OnHide", on_hide)
+		end
+		
+		function f.RefreshFrame (frame)
+			frame:EnableMouse(false)
+			frame:SetSize(f.FrameWidth, f.FrameHeight)
 			frame:ClearAllPoints()
 			PixelUtil.SetPoint(frame, "topleft", f, "topleft", 0, 0)
 			frame:Show()
@@ -715,6 +718,7 @@
 
 			--format the plugin main frame
 			f.RefreshFrame(frame)
+			setup_frame_functions(frame)
 
 			--save the callback function for when clicking in the button from the options panel
 			pluginObject.__OnClickFromOptionsCallback = callback

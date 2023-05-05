@@ -1,4 +1,4 @@
-	local _detalhes = 		_G._detalhes
+	local _detalhes = 		_G.Details
 	local _ = nil
 	_detalhes.custom_function_cache = {}
 	local addonName, Details222 = ...
@@ -1748,7 +1748,7 @@
 			desc = Loc ["STRING_CUSTOM_MYSPELLS_DESC"],
 			source = false,
 			target = false,
-			script_version = 8,
+			script_version = 10,
 			script = [[
 				--get the parameters passed
 				local combat, instance_container, instance = ...
@@ -1820,11 +1820,11 @@
 
 			local role = DetailsFramework.UnitGroupRolesAssigned("player")
 
-			if (spell.n_dmg) then
+			if (spell.n_total) then
 
 			    local spellschool, schooltext = spell.spellschool, ""
 			    if (spellschool) then
-				local t = _detalhes.spells_school [spellschool]
+				local t = Details.spells_school [spellschool]
 				if (t and t.name) then
 				    schooltext = t.formated
 				end
@@ -1834,28 +1834,20 @@
 			    local combat_time = instance.showing:GetCombatTime()
 
 			    local debuff_uptime_total, cast_string = "", ""
-			    local misc_actor = instance.showing (4, _detalhes.playername)
+			    local misc_actor = instance.showing (4, Details.playername)
 			    if (misc_actor) then
 				local debuff_uptime = misc_actor.debuff_uptime_spells and misc_actor.debuff_uptime_spells._ActorTable [spell.id] and misc_actor.debuff_uptime_spells._ActorTable [spell.id].uptime
 				if (debuff_uptime) then
 				    debuff_uptime_total = floor(debuff_uptime / instance.showing:GetCombatTime() * 100)
 				end
 
-				local spell_cast = misc_actor.spell_cast and misc_actor.spell_cast [spell.id]
+				local spellName = GetSpellInfo(spell.id)
+				local amountOfCasts = combat:GetSpellCastAmount(Details.playername, spellName)
 
-				if (not spell_cast and misc_actor.spell_cast) then
-				    local spellname = GetSpellInfo(spell.id)
-				    for casted_spellid, amount in pairs(misc_actor.spell_cast) do
-					local casted_spellname = GetSpellInfo(casted_spellid)
-					if (casted_spellname == spellname) then
-					    spell_cast = amount .. " (|cFFFFFF00?|r)"
-					end
-				    end
+				if (amountOfCasts == 0) then
+				    amountOfCasts = "(|cFFFFFF00?|r)"
 				end
-				if (not spell_cast) then
-				    spell_cast = "(|cFFFFFF00?|r)"
-				end
-				cast_string = cast_string .. spell_cast
+				cast_string = cast_string .. amountOfCasts
 			    end
 
 			    --Cooltip code
@@ -1885,12 +1877,12 @@
 			    GC:AddLine("Normal Hits: ", spell.n_amt .. " (" ..floor( spell.n_amt/total_hits*100) .. "%)")
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
-			    local n_average = spell.n_dmg / spell.n_amt
-			    local T = (combat_time*spell.n_dmg)/spell.total
+			    local n_average = spell.n_total / spell.n_amt
+			    local T = (combat_time*spell.n_total)/spell.total
 			    local P = average/n_average*100
 			    T = P*T/100
 
-			    GC:AddLine("Average / E-Dps: ",  _detalhes:ToK (n_average) .. " / " .. format("%.1f",spell.n_dmg / T ))
+			    GC:AddLine("Average / E-Dps: ",  _detalhes:ToK (n_average) .. " / " .. format("%.1f",spell.n_total / T ))
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
 			    --GC:AddLine(" ")
@@ -1899,11 +1891,11 @@
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
 			    if (spell.c_amt > 0) then
-				local c_average = spell.c_dmg/spell.c_amt
-				local T = (combat_time*spell.c_dmg)/spell.total
+				local c_average = spell.c_total/spell.c_amt
+				local T = (combat_time*spell.c_total)/spell.total
 				local P = average/c_average*100
 				T = P*T/100
-				local crit_dps = spell.c_dmg / T
+				local crit_dps = spell.c_total / T
 
 				GC:AddLine("Average / E-Dps: ",  _detalhes:ToK (c_average) .. " / " .. _detalhes:comma_value (crit_dps))
 			    else
@@ -1913,7 +1905,7 @@
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
 
-			elseif (spell.n_curado) then
+			elseif (spell.n_total) then
 
 			    local spellschool, schooltext = spell.spellschool, ""
 			    if (spellschool) then
@@ -1945,12 +1937,12 @@
 			    GC:AddLine("Normal Hits: ", spell.n_amt .. " (" ..floor( spell.n_amt/total_hits*100) .. "%)")
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
-			    local n_average = spell.n_curado / spell.n_amt
-			    local T = (combat_time*spell.n_curado)/spell.total
+			    local n_average = spell.n_total / spell.n_amt
+			    local T = (combat_time*spell.n_total)/spell.total
 			    local P = average/n_average*100
 			    T = P*T/100
 
-			    GC:AddLine("Average / E-Dps: ",  _detalhes:ToK (n_average) .. " / " .. format("%.1f",spell.n_curado / T ))
+			    GC:AddLine("Average / E-Dps: ",  _detalhes:ToK (n_average) .. " / " .. format("%.1f",spell.n_total / T ))
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
 			    --GC:AddLine(" ")
@@ -1959,11 +1951,11 @@
 			    GC:AddStatusBar (100, 1, R, G, B, A)
 
 			    if (spell.c_amt > 0) then
-				local c_average = spell.c_curado/spell.c_amt
-				local T = (combat_time*spell.c_curado)/spell.total
+				local c_average = spell.c_total/spell.c_amt
+				local T = (combat_time*spell.c_total)/spell.total
 				local P = average/c_average*100
 				T = P*T/100
-				local crit_dps = spell.c_curado / T
+				local crit_dps = spell.c_total / T
 
 				GC:AddLine("Average / E-Hps: ",  _detalhes:ToK (c_average) .. " / " .. _detalhes:comma_value (crit_dps))
 			    else

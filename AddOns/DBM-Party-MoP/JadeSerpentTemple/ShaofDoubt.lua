@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
 
-mod:SetRevision("20230301011610")
+mod:SetRevision("20230328064409")
 mod:SetCreatureID(56439)
 mod:SetEncounterID(1439)
 mod:SetHotfixNoticeRev(20230103000000)
@@ -67,8 +67,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnTouchOfNothingness:Play("scatter")
 			yellTouchOfNothingness:Yell()
 		elseif self:CheckDispelFilter("magic") then
-			specWarnTouchOfNothingnessDispel:CombinedShow(0.8, args.destName)
-			specWarnTouchOfNothingnessDispel:ScheduleVoice(0.8, "helpdispel")
+			specWarnTouchOfNothingnessDispel:CombinedShow(1, args.destName)
+			specWarnTouchOfNothingnessDispel:ScheduleVoice(1, "helpdispel")
 		end
 		warnTouchofNothingness:CombinedShow(0.8, args.destName)
 		timerTouchofNothingness:Start(args.destName)

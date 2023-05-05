@@ -1,7 +1,8 @@
-## Interface: 100002
+## Interface: 100100
 ## Title: Advanced Interface Options
 ## Author: Stanzilla, Semlar
-## Version: 1.8.4
+## Version: 1.8.6
+## IconTexture: 134521
 ## Notes: Restores access to removed interface options in Legion
 ## X-Category: Interface Enhancements
 ## X-Website: https://www.curseforge.com/wow/addons/advancedinterfaceoptions
