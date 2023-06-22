@@ -335,18 +335,36 @@ local function CreatePluginFunctions()
 	end
 
 	function DeathGraphs:GetLastBossTexture()
-		for instanceIndex = 10, 1, -1 do
-			local instanceID, zoneName = _G.EJ_GetInstanceByIndex(instanceIndex, true)
+		local EJ_GetInstanceByIndex = EJ_GetInstanceByIndex
+		local EJ_GetEncounterInfoByIndex = EJ_GetEncounterInfoByIndex
+		local EJ_GetCreatureInfo = EJ_GetCreatureInfo
+		---@type boolean
+		local bIsRaidInstance = true
+
+		---starts on DragonIsles world bosses > Vault of Incarnates > Aberrus, The Shadowed Crucible
+		---could go to 10 for less maintenance
+		---@type number
+		local maxInstancesInCurrentPath = 3 --a EJ_GetNumAvailableInstances(bRaidInstances) would be nice
+
+		for instanceIndex = 1, maxInstancesInCurrentPath do
+			local instanceID = EJ_GetInstanceByIndex(instanceIndex, bIsRaidInstance)
 			if (instanceID) then
-				for i = 20, 1, -1 do
-					local name, description, bossID, rootSectionID, link, journalInstanceID, dungeonEncounterID, UiMapID = _G.EJ_GetEncounterInfoByIndex(i, instanceID)
-					if (name and name == DeathGraphs.currentEncounterInfo.encounterName) then
-						local id, creatureName, creatureDescription, displayInfo, iconImage = EJ_GetCreatureInfo(1, bossID)
-						return iconImage
+				--we don't know how many bosses are in the instance, so we'll just loop through them all
+				for i = 1, 20 do
+					local name, description, bossID, rootSectionID, link, journalInstanceID, dungeonEncounterID, UiMapID = EJ_GetEncounterInfoByIndex(i, instanceID)
+					if (name) then
+						if (name == DeathGraphs.currentEncounterInfo.encounterName) then
+							local id, creatureName, creatureDescription, displayInfo, iconImage = EJ_GetCreatureInfo(1, bossID)
+							return iconImage
+						end
+					else
+						--no more bosses in this instance, go to the next one
+						break
 					end
 				end
 			end
 		end
+
 		return ""
 	end
 
@@ -722,7 +740,7 @@ function DeathGraphs:OnEvent(_, event, ...)
 
 				--Install
 				local pluginName = Loc["STRING_PLUGIN_NAME"]
-				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Analytics", "Interface\\AddOns\\Details_DeathGraphs\\icon", DeathGraphs, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", DeathGraphs.version_string, defaults)
+				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Logs", "Interface\\AddOns\\Details_DeathGraphs\\icon", DeathGraphs, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", DeathGraphs.version_string, defaults)
 				if (type (install) == "table" and install.error) then
 					print (install.error)
 				end

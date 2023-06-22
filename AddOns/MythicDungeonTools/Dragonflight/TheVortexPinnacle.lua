@@ -4,14 +4,13 @@ local L = MDT.L
 local dungeonIndex = 77
 MDT.dungeonList[dungeonIndex] = L["The Vortex Pinnacle"]
 MDT.mapInfo[dungeonIndex] = {
-  --  viewportPositionOverrides =
-  --  {
-  --    [1] = {
-  --      zoomScale = 1.2999999523163;
-  --      horizontalPan = 102.41712541524;
-  --      verticalPan = 87.49594729527;
-  --    };
-  --  }
+  viewportPositionOverrides = {
+    [1] = {
+      zoomScale = 1.2999999523163;
+      horizontalPan = 70.370707774155;
+      verticalPan = 73.878552826966;
+    };
+  }
 };
 
 MDT.dungeonMaps[dungeonIndex] = {
@@ -23,9 +22,18 @@ MDT.dungeonSubLevels[dungeonIndex] = {
   [1] = L["Cyclone Summit"],
 }
 
-MDT.dungeonTotalCount[dungeonIndex] = { normal = 360, teeming = 1000, teemingEnabled = true }
+MDT.dungeonTotalCount[dungeonIndex] = { normal = 420, teeming = 1000, teemingEnabled = true }
 
 MDT.mapPOIs[dungeonIndex] = {
+  [1] = {
+    [1] = {
+      ["template"] = "DeathReleasePinTemplate";
+      ["type"] = "graveyard";
+      ["x"] = 461.2865698575;
+      ["y"] = -94.755603835682;
+      ["graveyardDescription"] = "";
+    };
+  };
 };
 
 MDT.dungeonEnemies[dungeonIndex] = {
@@ -33,11 +41,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Temple Adept";
     ["id"] = 45935;
     ["count"] = 5;
-    ["health"] = 714136;
+    ["health"] = 790706;
     ["scale"] = 1;
     ["displayId"] = 34736;
     ["creatureType"] = "Humanoid";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
+      ["Stun"] = true;
+    };
+    ["spells"] = {
+      [87779] = {
+      };
+      [87780] = {
+      };
+      [88959] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 259.37214408095;
@@ -74,24 +96,12 @@ MDT.dungeonEnemies[dungeonIndex] = {
         };
       };
       [3] = {
-        ["x"] = 253.92656524123;
-        ["y"] = -288.58316745732;
-        ["g"] = 20;
-        ["sublevel"] = 1;
-      };
-      [4] = {
-        ["x"] = 273.22132118062;
-        ["y"] = -304.23920278634;
-        ["g"] = 20;
-        ["sublevel"] = 1;
-      };
-      [5] = {
         ["x"] = 251.90704439848;
         ["y"] = -315.13515297424;
         ["g"] = 19;
         ["sublevel"] = 1;
       };
-      [6] = {
+      [4] = {
         ["x"] = 245.31194897361;
         ["y"] = -308.1068835315;
         ["g"] = 19;
@@ -103,11 +113,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Skyfall Star";
     ["id"] = 45932;
     ["count"] = 1;
-    ["health"] = 142018;
+    ["health"] = 98839;
     ["scale"] = 0.8;
     ["displayId"] = 37225;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Fear"] = true;
+      ["Stun"] = true;
+    };
+    ["spells"] = {
+      [411019] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 214.1831454089;
@@ -306,12 +325,23 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [3] = {
     ["name"] = "Minister of Air";
     ["id"] = 45930;
-    ["count"] = 5;
-    ["health"] = 708193;
+    ["count"] = 15;
+    ["health"] = 2174442;
     ["scale"] = 1;
     ["displayId"] = 34790;
     ["creatureType"] = "Humanoid";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [87762] = {
+      };
+      [88963] = {
+      };
+      [413385] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 248.79194288742;
@@ -320,8 +350,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
       };
       [2] = {
-        ["x"] = 270.14190860316;
-        ["y"] = -287.97597825779;
+        ["x"] = 264.60045020834;
+        ["y"] = -296.288147198;
         ["g"] = 20;
         ["sublevel"] = 1;
       };
@@ -330,12 +360,21 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [4] = {
     ["name"] = "Executor of the Caliph";
     ["id"] = 45928;
-    ["count"] = 15;
-    ["health"] = 1143214;
+    ["count"] = 8;
+    ["health"] = 1581412;
     ["scale"] = 1;
     ["displayId"] = 34735;
     ["creatureType"] = "Humanoid";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [87761] = {
+      };
+      [413387] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 258.62346568319;
@@ -366,8 +405,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
         };
       };
       [2] = {
-        ["x"] = 261.82446774244;
-        ["y"] = -288.38526495611;
+        ["x"] = 264.92116892084;
+        ["y"] = -287.73332099412;
         ["g"] = 20;
         ["sublevel"] = 1;
       };
@@ -378,8 +417,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
       };
       [4] = {
-        ["x"] = 272.66709974876;
-        ["y"] = -295.80455821949;
+        ["x"] = 273.6449690617;
+        ["y"] = -294.01171698703;
         ["g"] = 20;
         ["sublevel"] = 1;
       };
@@ -388,12 +427,26 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [5] = {
     ["name"] = "Servant of Asaad";
     ["id"] = 45926;
-    ["count"] = 5;
-    ["health"] = 700368;
+    ["count"] = 4;
+    ["health"] = 1186059;
     ["scale"] = 1;
     ["displayId"] = 34745;
     ["creatureType"] = "Humanoid";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
+      ["Imprison"] = true;
+      ["Stun"] = true;
+      ["Slow"] = true;
+    };
+    ["spells"] = {
+      [87771] = {
+      };
+      [411770] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 249.97521970199;
@@ -431,18 +484,53 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["g"] = 19;
         ["sublevel"] = 1;
       };
+      [7] = {
+        ["x"] = 257.84445904282;
+        ["y"] = -290.5768100558;
+        ["g"] = 20;
+        ["sublevel"] = 1;
+      };
+      [8] = {
+        ["x"] = 271.37209574484;
+        ["y"] = -302.31162417738;
+        ["g"] = 20;
+        ["sublevel"] = 1;
+      };
     };
   };
   [6] = {
     ["name"] = "Altairus";
     ["id"] = 43873;
     ["count"] = 0;
-    ["health"] = 5691552;
+    ["health"] = 8892045;
     ["scale"] = 1.6;
     ["displayId"] = 34265;
     ["creatureType"] = "Dragonkin";
     ["level"] = 70;
     ["isBoss"] = true;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [88282] = {
+      };
+      [88286] = {
+      };
+      [88308] = {
+      };
+      [181089] = {
+      };
+      [413271] = {
+      };
+      [413295] = {
+      };
+      [413296] = {
+      };
+      [413319] = {
+      };
+      [413331] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 431.97456648307;
@@ -454,19 +542,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [7] = {
     ["name"] = "Turbulent Squall";
     ["id"] = 45924;
-    ["count"] = 5;
-    ["health"] = 700503;
+    ["count"] = 3;
+    ["health"] = 889205;
     ["scale"] = 1;
     ["displayId"] = 35383;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
-    ["clones"] = {
-      [1] = {
-        ["x"] = 456.06814813777;
-        ["y"] = -448.17731273955;
-        ["g"] = 15;
-        ["sublevel"] = 1;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Stun"] = true;
+    };
+    ["spells"] = {
+      [88170] = {
       };
+      [411743] = {
+      };
+      [411744] = {
+      };
+    };
+    ["clones"] = {
       [2] = {
         ["x"] = 454.4;
         ["y"] = -441.9;
@@ -476,12 +570,6 @@ MDT.dungeonEnemies[dungeonIndex] = {
       [3] = {
         ["x"] = 448.7;
         ["y"] = -436.4;
-        ["g"] = 15;
-        ["sublevel"] = 1;
-      };
-      [4] = {
-        ["x"] = 426.4;
-        ["y"] = -433.3;
         ["g"] = 15;
         ["sublevel"] = 1;
       };
@@ -562,12 +650,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [8] = {
     ["name"] = "Young Storm Dragon";
     ["id"] = 45919;
-    ["count"] = 15;
-    ["health"] = 1689038;
+    ["count"] = 20;
+    ["health"] = 2372119;
     ["scale"] = 1;
     ["displayId"] = 34771;
     ["creatureType"] = "Dragonkin";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [88194] = {
+      };
+      [411012] = {
+      };
+      [411910] = {
+      };
+      [411911] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 453.3367879417;
@@ -587,11 +688,26 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Empyrean Assassin";
     ["id"] = 45922;
     ["count"] = 5;
-    ["health"] = 613550;
+    ["health"] = 988383;
     ["scale"] = 1;
     ["displayId"] = 19673;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Silence"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
+      ["Stun"] = true;
+    };
+    ["spells"] = {
+      [88186] = {
+      };
+      [411073] = {
+      };
+      [411083] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 434.7;
@@ -869,18 +985,45 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["g"] = 11;
         ["sublevel"] = 1;
       };
+      [9] = {
+        ["x"] = 456.06814813777;
+        ["y"] = -448.17731273955;
+        ["g"] = 15;
+        ["sublevel"] = 1;
+      };
+      [10] = {
+        ["x"] = 426.4;
+        ["y"] = -433.3;
+        ["g"] = 15;
+        ["sublevel"] = 1;
+      };
     };
   };
   [10] = {
     ["name"] = "Asaad";
     ["id"] = 43875;
     ["count"] = 0;
-    ["health"] = 5724161;
+    ["health"] = 7904040;
     ["scale"] = 1.6;
     ["displayId"] = 35388;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
     ["isBoss"] = true;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [86911] = {
+      };
+      [86930] = {
+      };
+      [87553] = {
+      };
+      [87618] = {
+      };
+      [87622] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 251.38157125948;
@@ -892,12 +1035,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [11] = {
     ["name"] = "Wild Vortex";
     ["id"] = 45912;
-    ["count"] = 3;
-    ["health"] = 638926;
+    ["count"] = 4;
+    ["health"] = 889545;
     ["scale"] = 1;
     ["displayId"] = 36060;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Incapacitate"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
+      ["Stun"] = true;
+    };
+    ["spells"] = {
+      [410760] = {
+      };
+      [410870] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 505.5;
@@ -906,20 +1062,20 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
       };
       [2] = {
-        ["x"] = 532.99904269193;
-        ["y"] = -184.30656290582;
+        ["x"] = 534.19700689399;
+        ["y"] = -190.91844243581;
         ["g"] = 5;
         ["sublevel"] = 1;
       };
       [3] = {
-        ["x"] = 536.79312860816;
-        ["y"] = -198.39442386606;
+        ["x"] = 536.26960449229;
+        ["y"] = -198.04027323861;
         ["g"] = 5;
         ["sublevel"] = 1;
       };
       [4] = {
-        ["x"] = 558.09344364169;
-        ["y"] = -172.28459215858;
+        ["x"] = 556.12864641525;
+        ["y"] = -166.5257595255;
         ["g"] = 4;
         ["sublevel"] = 1;
       };
@@ -964,12 +1120,25 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [12] = {
     ["name"] = "Cloud Prince";
     ["id"] = 45917;
-    ["count"] = 15;
-    ["health"] = 1134434;
+    ["count"] = 12;
+    ["health"] = 1581412;
     ["scale"] = 1;
     ["displayId"] = 36061;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [411002] = {
+      };
+      [411003] = {
+      };
+      [411004] = {
+      };
+      [411005] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 504.61197259036;
@@ -995,11 +1164,17 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Lurking Tempest";
     ["id"] = 45704;
     ["count"] = 0;
-    ["health"] = 1716107;
+    ["health"] = 2372119;
     ["scale"] = 1;
     ["displayId"] = 13629;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["spells"] = {
+      [85467] = {
+      };
+      [411001] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 517.6;
@@ -1023,33 +1198,48 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Gust Soldier";
     ["id"] = 45477;
     ["count"] = 5;
-    ["health"] = 666347;
+    ["health"] = 988383;
     ["scale"] = 1;
     ["displayId"] = 37224;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+      ["Fear"] = true;
+      ["Disorient"] = true;
+      ["Stun"] = true;
+      ["Slow"] = true;
+    };
+    ["spells"] = {
+      [410873] = {
+      };
+      [410997] = {
+      };
+      [410998] = {
+      };
+    };
     ["clones"] = {
       [1] = {
-        ["x"] = 544.95112791986;
-        ["y"] = -200.78096337834;
+        ["x"] = 545.70564058916;
+        ["y"] = -199.70927083869;
         ["g"] = 5;
         ["sublevel"] = 1;
       };
       [2] = {
-        ["x"] = 538.78651986974;
-        ["y"] = -180.79114851689;
+        ["x"] = 541.05926959884;
+        ["y"] = -185.90020295655;
         ["g"] = 5;
         ["sublevel"] = 1;
       };
       [3] = {
-        ["x"] = 555.07799651519;
-        ["y"] = -180.72885523411;
+        ["x"] = 550.32001737387;
+        ["y"] = -174.2709654176;
         ["g"] = 4;
         ["sublevel"] = 1;
       };
       [4] = {
-        ["x"] = 562.7740072017;
-        ["y"] = -179.37507875838;
+        ["x"] = 560.32573237146;
+        ["y"] = -174.82343364208;
         ["g"] = 4;
         ["sublevel"] = 1;
       };
@@ -1076,12 +1266,21 @@ MDT.dungeonEnemies[dungeonIndex] = {
   [15] = {
     ["name"] = "Armored Mistral";
     ["id"] = 45915;
-    ["count"] = 5;
-    ["health"] = 1271812;
+    ["count"] = 15;
+    ["health"] = 1779089;
     ["scale"] = 1;
     ["displayId"] = 33828;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [410999] = {
+      };
+      [411000] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 507.69729893433;
@@ -1124,8 +1323,8 @@ MDT.dungeonEnemies[dungeonIndex] = {
         ["sublevel"] = 1;
       };
       [4] = {
-        ["x"] = 533.45194832047;
-        ["y"] = -191.78967283806;
+        ["x"] = 543.30667930745;
+        ["y"] = -193.16931555285;
         ["g"] = 5;
         ["sublevel"] = 1;
       };
@@ -1135,12 +1334,27 @@ MDT.dungeonEnemies[dungeonIndex] = {
     ["name"] = "Grand Vizier Ertan";
     ["id"] = 43878;
     ["count"] = 0;
-    ["health"] = 4956800;
+    ["health"] = 6916035;
     ["scale"] = 1.6;
     ["displayId"] = 35181;
     ["creatureType"] = "Elemental";
     ["level"] = 70;
     ["isBoss"] = true;
+    ["characteristics"] = {
+      ["Taunt"] = true;
+    };
+    ["spells"] = {
+      [86292] = {
+      };
+      [86295] = {
+      };
+      [86310] = {
+      };
+      [86331] = {
+      };
+      [413151] = {
+      };
+    };
     ["clones"] = {
       [1] = {
         ["x"] = 458.3;

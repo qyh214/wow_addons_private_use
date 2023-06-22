@@ -93,8 +93,6 @@ L['options_icons_signal_transmitter'] = 'Transmetteurs de signaux du Générateu
 L['options_icons_signal_transmitter_desc'] = 'Afficher les emplacements des {object:Transmetteurs de signaux désactivés} pour le {item:198156}.'
 
 L['rare_14h'] = 'Ce rare fait partie d\'une rotation de 14 heures avec les autres rares, avec un rare apparaissant toutes les 30 minutes.\n\nProchaine apparition: {note:%s}'
-L['time_format_12hrs'] = '%I:%M %p - %d/%m heure locale'
-L['time_format_24hrs'] = '%H:%M - %d/%m heure locale'
 L['now'] = 'Maintenant'
 L['spawns_at_night'] = '{note:Apparaît uniquement la nuit. (Après 18:30, heure du serveur)}'
 
@@ -564,6 +562,18 @@ L['titan_chest'] = 'Coffre des Titans'
 L['options_icons_titan_chest'] = 'Coffre des Titans'
 L['options_icons_titan_chest_desc'] = 'Afficher les emplacements possibles des {object:Coffres des Titans}.'
 
+L['living_mud_mask_note'] = [[
+{npc:197346} laissera tomber les {item:200586} qui vous donneront la quête {quest:70377}. Cela vous conduira jusqu'à {npc:198062} pour les rendre.
+
+Ensuite, vous devrez parler de nouveau à {npc:198062} et lui demander une meilleure récompense. Il prendra alors un planeur pour se rendre à la zone VIP, afin que vous puissiez "profiter davantage de sa compagnie en guise de récompense".
+
+Lorsque vous arriverez sur l'île flottante, {npc:198062} se trouvera sur le sol. Parlez-lui à nouveau, en lui disant qu'il a l'air mort.
+
+Un petit slime nommé {npc:198590} apparaîtra et s'enfuira vers une branche située derrière {npc:197232}. Une fois que vous vous serez approché suffisamment, le slime vous donnera la quête {quest:72060}.
+
+Revenez voir {npc:198062}, assis sur un banc, et rendez la quête pour obtenir votre {item:200872}.
+]]
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -578,7 +588,7 @@ L['obsidian_throne_rare_note'] = 'À l\'intérieur du {location:Trône d\'obsidi
 L['slurpo_snail_note'] = 'Récupérez un {item:201033} sur un {object:Cristal de sel} dans une grotte de {location:La Travée d\'Azur} (11, 41) et utilisez-le dans la grotte aux {location:Rivages de l’Éveil} pour l\'invoquer.'
 L['worldcarver_atir_note'] = 'Récupérez 3x {item:191211} sur les {npc:187366} à proximité et placez-les sur les {npc:197395} pour faire apparaître le rare.'
 
-L['bubble_drifter_note'] = '{item:199061} peut être trouvé dans les {object:Paquetages d\'éclaireurs de l\'expédition} et les {object:Terres retournées}.'
+L['bubble_drifter_note'] = '{item:199061} peut être trouvé dans les {object:Paquetages d\'éclaireurs de l\'expédition} et les {object:Terres retournées}.\n\nPour interagir avec le poisson, vous devez obtenir {spell:388331} grâce à la {object:Plante parfumée} située à proximité.'
 L['dead_mans_chestplate_note'] = 'A l\'intérieur de la tour, au niveau intermédiaire.'
 L['fullsails_supply_chest_note'] = 'La clé est récupérable sur les {npc:187971s} et {npc:187320s} au sud de l\'{location:Ambassade de Trêve-Ailée}.'
 L['golden_dragon_goblet_note'] = 'Récupérez un {item:202081} sur les {npc:190056} sur la {location:Côte Sauvage} et terminez la petite suite de quêtes.'
@@ -724,31 +734,35 @@ Utilisez cette amulette et ramassez des {item:202062} {dot:Red} trouvées à l'{
 ]]
 L['phoenix_wishwing_info'] = 'Ceci fait partie de de la méthode d\'obtention du {item:193373} situé aux {location:Rivages de l’Éveil} sur les {location:Îles aux Dragons}.'
 
+L['bugbiter_tortoise_note'] = 'Récupérez l\'{item:202082}({dot:Red}) et le {item:202084}({dot:Green}) et échangez-les à {npc:187077} contre votre {item:202085}.\n\n{npc:187077} n\'est présente que lorsque l\'expédition {quest:66070} est active.'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
 
 L['in_deepflayer_nest'] = 'A l\'intérieur du {location:Nid de flagellants des profondeurs}'
 
-L['brulsef_the_stronk_note'] = 'Récupérez vos récompenses à partir du {object:Coffre de gains massifs}.'
+L['brulsef_the_stronk_note'] = 'Récupérez vos récompenses à partir du {object:Coffre de gains massifs}.\n\n{bug:Ne le laissez pas trop s\'éloigner de sa position initiale, sinon le coffre ne sera pas disponible après l\'avoir vaincu.}'
 
 L['ancient_zaqali_chest_note'] = 'Utilisez un {object:Magma en bouteille} à proximité pour ouvrir le coffre.'
-L['blazing_shadowflame_chest_note'] = nil -- DEV NOTE - Do not translate
+L['blazing_shadowflame_chest_note'] = 'Équipez la {item:15138}, qui peut être achetée à l\'hôtel des ventes ou fabriquée par un travailleur du cuir, pour pouvoir ouvrir le coffre.'
 L['crystal_encased_chest_note'] = 'Interagissez avec le {object:Cristal d\'harmonisation} ({dot:Blue}) et le {object:Cristal d\'harmonisation} ({dot:Red}) pour ouvrir le coffre.'
-L['old_trunk_note'] = 'Rassemblez et combinez x5 {item:204325} pour créer une {item:204323}.'
+L['old_trunk_note'] = 'Trouvez et ramassez la {npc:204277} 5 fois, pour obtenir la {item:204323}. {note:La première souris se trouve à côté du coffre.}'
 L['well_chewed_chest_note'] = 'La {item:202869}({dot:Green}) est cachée sous la {npc:199962} dans la grotte.'
 
 L['molten_hoard_label'] = 'Butin en fusion'
 L['fealtys_reward_label'] = 'Récompense de loyauté'
-L['fealtys_reward_note'] = nil -- DEV NOTE - Do not translate
+L['fealtys_reward_note'] = 'Agenouillez-vous {emote:/genou} devant la statue de dragon au sud-ouest jusqu\'à ce qu\'elle crache du feu, pour pouvoir ouvrir le coffre.'
 L['dreamers_bounty_label'] = 'Butin de la Rêveuse'
-L['dreamers_bounty_note'] = nil -- DEV NOTE - Do not translate
+L['dreamers_bounty_note'] = 'Le {object:Butin de la Rêveuse} ne peut être récupéré que si vous avez le debuff {spell:400066} sur vous, obtenu à partir des {npc:201068} à proximité.'
 L['moth_pilfered_pouch_label'] = 'Bourse volée par les phalènes'
 L['moth_pilfered_pouch_note'] = 'Aidez le {npc:203225} à voler en le faisant "jongler" jusqu\'à ce qu\'il ait cinq charges de {spell:405358}.\n\nIl volera alors jusqu\'à la bourse et vous la révèlera.'
 L['waterlogged_bundle_label'] = 'Paquet détrempé'
 
 L['stolen_stash_label'] = 'Butin volé'
 L['ritual_offering_label'] = 'Offrandes rituelles'
+L['options_icons_ritual_offering'] = 'Offrandes rituelles'
+L['options_icons_ritual_offering_desc'] = 'Afficher les emplacements possibles des {object:Offrandes rituelles}.'
 L['nal_kskol_reliquary_label'] = 'Reliquaire de Nak Ks\'sol'
 L['nal_kskol_reliquary_note'] = 'Utilisez la {object:Console d\'accès au reliquaire} et résolvez l\'énigme pour ouvrir le {object:Reliquaire de Nak Ks\'sol}.'
 
@@ -757,7 +771,8 @@ L['bolts_and_brass_note'] = 'Examinez les {object:Boulons et cuivre} et récupé
 
 L['sniffen_sage_suffix'] = 'objets spéciaux trouvés'
 
-L['big_slick_note_1'] = 'l\'{npc:48182} peut être trouvé dans l\'ancienne version de la zone {location:Sombrivage}. Parlez à {npc:141489} pour remonter le temps avant la {location:Guerre des épines}.'
+L['big_slick_note'] = 'Terminez des quêtes journalières données par {npc:201752} pour atteindre le niveau de réputation "Professionnalisme" (soit un total de 2800 points de réputation) avec la faction {faction:2568} pour obtenir votre monture.\n\nVous pouvez également lui montrer les escargots suivants (mascottes) au niveau 25 pour obtenir 100 points de réputation pour chacun d\'entre eux :'
+L['grogul_note'] = 'Parlez à {npc:204672} et choisissez une friandise que vous pourrez utiliser pour encourager cet escargot à aller plus vite.\n{note:Le haut-fait peut être obtenu avant le niveau de Renom 7.}'
 
 L['saccratos_note'] = 'Échangez vos {item:204727} contre une mascotte, une monture et plus encore.'
 L['ponzo_note'] = 'Échangez vos {item:204985} et vos {item:205903} contre des personnalisations de drake, une mascotte, une monture et plus encore.'
@@ -766,5 +781,12 @@ L['smelly_trash_pile_label'] = 'Tas de déchets kifouette'
 L['options_icons_smelly_trash_pile'] = 'Tas de déchets kifouette'
 L['options_icons_smelly_trash_pile_desc'] = 'Afficher les emplacements possibles des {object:Tas de déchets kifouette}.'
 
-L['seething_cache_treasure_note'] = nil
-L['chest_of_the_flights_treasure_note'] = nil
+L['seething_cache_treasure_note'] = 'Pour pouvoir voir la {object:Cache bouillonnante} et récupérer le {item:192779}, vous devrez obtenir 3x charges du debuff {spell:399342}, récupéré sur les {object:Orbes bouillonnants} situés à la {location:Caldeira Zaqali} dans la {location:Grotte de Zaralek}.'
+L['chest_of_the_flights_treasure_note'] = 'Pour ouvrir le coffre au trésor, vous devez cliquer sur les {object:Gemmes renforcées} dans l\'ordre {note:Rouge > Noire > Bleue > Jaune > Verte}.'
+L['curious_top_hat_note'] = 'Interagissez avec le {npc:205010} pendant que vous avez le buff {spell:410288} pour obtenir {item:205021}. Si vous n\'avez pas le buff et que vous vous approchez de lui, il s\'enfuira.'
+
+L['zaralek_rotation_active'] = ns.color.Blue('Ce Rare peut apparaître aujourd\'hui.')
+L['zaralek_rotation_inactive'] = ns.color.Orange('Ce Rare n\'apparaîtra pas aujourd\'hui, revenez demain.')
+
+L['options_icons_zone_event'] = nil
+L['options_icons_zone_event_desc'] = nil

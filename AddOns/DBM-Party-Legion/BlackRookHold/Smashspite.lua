@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1664, "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20200806142123")
+mod:SetRevision("20230509011041")
 mod:SetCreatureID(98949)
 mod:SetEncounterID(1834)
 mod:SetUsedIcons(1)
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 198073 198245",
 --	"SPELL_PERIODIC_DAMAGE",
 --	"SPELL_PERIODIC_MISSED",
-	"UNIT_POWER_FREQUENT boss1"
+	"UNIT_POWER_UPDATE boss1"
 )
 
 --TODO, maye GTFO for fire on ground (and timers and other stuff for it too maybe, seems all over place though).
@@ -102,7 +102,7 @@ end
 do
 	local warnedSoon = false
 	local UnitPower = UnitPower
-	function mod:UNIT_POWER_FREQUENT(uId)
+	function mod:UNIT_POWER_UPDATE(uId)
 		local power = UnitPower(uId)
 		if power >= 85 and not warnedSoon then
 			warnedSoon = true

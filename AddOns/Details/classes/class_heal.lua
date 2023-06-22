@@ -1658,15 +1658,125 @@ end
 ---------- bifurca��o
 function atributo_heal:MontaInfo()
 	if (info.sub_atributo == 1 or info.sub_atributo == 2) then
-		return self:MontaInfoHealingDone()
+		self:MontaInfoHealingDone()
+
+		--[=[
+		local bNeedUpdateAgain = false
+
+		--sort by healing done
+		---@type df_headerframe
+		local spellsHeader = DetailsSpellBreakdownTab.GetSpellScrollFrame().Header
+		local totalHeader = spellsHeader:GetHeaderColumnByName("amount")
+		if (totalHeader and totalHeader:IsShown()) then
+			local columnSelected, order, key, name = spellsHeader:GetSelectedColumn()
+			if (name == "overheal") then
+				totalHeader:Click()
+				bNeedUpdateAgain = true
+			end
+		end
+
+		---@type df_headerframe
+		local targetsHeader = DetailsSpellBreakdownTab.GetTargetScrollFrame().Header
+		local totalHeader = targetsHeader:GetHeaderColumnByName("amount")
+		if (totalHeader and totalHeader:IsShown()) then
+			local columnSelected, order, key, name = targetsHeader:GetSelectedColumn()
+			if (name == "overheal") then
+				totalHeader:Click()
+				bNeedUpdateAgain = true
+			end
+		end
+
+		if (bNeedUpdateAgain) then
+			self:MontaInfoHealingDone()
+		end
+		--]=]
+
 	elseif (info.sub_atributo == 3) then
-		return self:MontaInfoOverHealing()
+		self:MontaInfoHealingDone()
+
+		--[=[
+		local bNeedUpdateAgain = false
+
+		--sort by overhealing
+		---@type df_headerframe
+		local spellsHeader = DetailsSpellBreakdownTab.GetSpellScrollFrame().Header
+		local overhealHeader = spellsHeader:GetHeaderColumnByName("overheal")
+		if (overhealHeader and overhealHeader:IsShown()) then
+			local columnSelected, order, key, name = spellsHeader:GetSelectedColumn()
+			if (name ~= "overheal") then
+				overhealHeader:Click()
+				bNeedUpdateAgain = true
+			end
+		end
+
+		---@type df_headerframe
+		local targetsHeader = DetailsSpellBreakdownTab.GetTargetScrollFrame().Header
+		local overhealHeader = targetsHeader:GetHeaderColumnByName("overheal")
+		if (overhealHeader and overhealHeader:IsShown()) then
+			local columnSelected, order, key, name = targetsHeader:GetSelectedColumn()
+			if (name ~= "overheal") then
+				overhealHeader:Click()
+				bNeedUpdateAgain = true
+			end
+		end
+
+		if (bNeedUpdateAgain) then
+			self:MontaInfoHealingDone()
+		end
+		--]=]
+
 	elseif (info.sub_atributo == 4) then
-		return self:MontaInfoHealTaken()
+		self:MontaInfoHealTaken()
 	end
 end
 
+local healingTakenHeadersAllowed = {icon = true, name = true, rank = true, amount = true, persecond = true, percent = true}
 function atributo_heal:MontaInfoHealTaken()
+	---@type actor
+	local actorObject = self
+	---@type instance
+	local instance = info.instancia
+	---@type combat
+	local combatObject = instance:GetCombat()
+	---@type string
+	local actorName = actorObject:Name()
+
+	---@type number
+	local healTakenTotal = actorObject.healing_taken
+	---@type table<string, boolean>
+	local healTakenFrom = actorObject.healing_from
+	---@type actorcontainer
+	local healContainer = combatObject:GetContainer(class_type)
+
+	local resultTable = {}
+
+	---@type string
+	for healerName in pairs(healTakenFrom) do
+		local sourceActorObject = healContainer:GetActor(healerName)
+		if (sourceActorObject) then
+			---@type table<string, number>
+			local targets = sourceActorObject:GetTargets()
+			---@type number|nil
+			local amountOfHeal = targets[actorName]
+			if (amountOfHeal) then
+				---@type texturetable
+				local iconTable = Details:GetActorIcon(sourceActorObject)
+
+				---@type {name: string, amount: number, icon: texturetable}
+				local healTakenTable = {name = healerName, total = amountOfHeal, icon = iconTable}
+
+				resultTable[#resultTable+1] = healTakenTable
+			end
+		end
+	end
+
+	resultTable.totalValue = healTakenTotal
+	resultTable.combatTime = combatObject:GetCombatTime()
+	resultTable.headersAllowed = healingTakenHeadersAllowed
+
+	Details222.BreakdownWindow.SendGenericData(resultTable, actorObject, combatObject, instance)
+
+	if true then return end
 
 	local healing_taken = self.healing_taken
 	local curandeiros = self.healing_from
@@ -1722,7 +1832,7 @@ function atributo_heal:MontaInfoHealTaken()
 
 end
 
-function atributo_heal:MontaInfoOverHealing()
+function atributo_heal:MontaInfoOverHealing() --this should be deprecated now
 --pegar as habilidade de dar sort no heal
 
 	local instancia = info.instancia
@@ -1904,9 +2014,12 @@ function atributo_heal:MontaInfoHealingDone()
 			if (index) then
 				---@type spelltableadv
 				local bkSpellData = actorSpellsSorted[index]
-				bkSpellData.spellIds[#bkSpellData.spellIds+1] = spellId
+
 				bkSpellData.spellTables[#bkSpellData.spellTables+1] = spellTable
-				bkSpellData.petNames[#bkSpellData.petNames+1] = ""
+
+				---@type bknesteddata
+				local nestedData = {spellId = spellId, spellTable = spellTable, actorName = "", value = 0}
+				bkSpellData.nestedData[#bkSpellData.nestedData+1] = nestedData
 				bkSpellData.bCanExpand = true
 			else
 				---@type spelltableadv
@@ -1916,9 +2029,8 @@ function atributo_heal:MontaInfoHealingDone()
 					bIsExpanded = Details222.BreakdownWindow.IsSpellExpanded(spellId),
 					bCanExpand = false,
 
-					spellIds = {spellId},
-					spellTables = {spellTable}, --sub spell tables to show if the spell is expanded
-					petNames = {""},
+					spellTables = {spellTable},
+					nestedData = {{spellId = spellId, spellTable = spellTable, actorName = "", value = 0}},
 				}
 				detailsFramework:Mixin(bkSpellData, Details.SpellTableMixin)
 
@@ -1949,9 +2061,12 @@ function atributo_heal:MontaInfoHealingDone()
 					if (index) then --PET
 						---@type spelltableadv
 						local bkSpellData = actorSpellsSorted[index]
-						bkSpellData.spellIds[#bkSpellData.spellIds+1] = spellId
+
 						bkSpellData.spellTables[#bkSpellData.spellTables+1] = spellTable
-						bkSpellData.petNames[#bkSpellData.petNames+1] = petName
+
+						---@type bknesteddata
+						local nestedData = {spellId = spellId, spellTable = spellTable, actorName = petName, value = 0}
+						bkSpellData.nestedData[#bkSpellData.nestedData+1] = nestedData
 						bkSpellData.bCanExpand = true
 					else --PET
 						---@type spelltableadv
@@ -1961,9 +2076,8 @@ function atributo_heal:MontaInfoHealingDone()
 							expanded = Details222.BreakdownWindow.IsSpellExpanded(spellId),
 							bCanExpand = false,
 
-							spellIds = {spellId},
 							spellTables = {spellTable},
-							petNames = {petName},
+							nestedData = {{spellId = spellId, spellTable = spellTable, actorName = petName, value = 0}},
 						}
 						detailsFramework:Mixin(bkSpellData, Details.SpellTableMixin)
 
@@ -1979,6 +2093,7 @@ function atributo_heal:MontaInfoHealingDone()
 		---@type spelltableadv
 		local bkSpellData = actorSpellsSorted[i]
 		Details.SpellTableMixin.SumSpellTables(bkSpellData.spellTables, bkSpellData)
+		--Details:Destroy(bkSpellData, "spellTables")
 	end
 
 	--table.sort(actorSpellsSorted, Details.Sort2)
@@ -1989,11 +2104,10 @@ function atributo_heal:MontaInfoHealingDone()
 	actorSpellsSorted.totalValue = actorTotal
 	actorSpellsSorted.combatTime = actorCombatTime
 
-	--actorSpellsSorted has the spell infomation, need to pass to the summary tab
-
 	--cleanup
-	table.wipe(alreadyAdded)
+	Details:Destroy(alreadyAdded)
 
+	--actorSpellsSorted has the spell infomation, need to pass to the summary tab
 	--send to the breakdown window
 	Details222.BreakdownWindow.SendSpellData(actorSpellsSorted, actorObject, combatObject, instance)
 

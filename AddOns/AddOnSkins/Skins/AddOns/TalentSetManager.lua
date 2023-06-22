@@ -1,8 +1,6 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('TalentSetManager') then return end
-
-function AS:TalentSetMgr(event, addon)
+function R:TalentSetManager(event, addon)
 	if addon == 'Blizzard_TalentUI' then
 		AS:Delay(0.02, function()
 			TalentSetsListEquipSet.ButtonBackground:Hide()
@@ -17,29 +15,29 @@ function AS:TalentSetMgr(event, addon)
 
 			TalentSetsMainframe.title:SetFont(AS.Font, 14)
 
-			AS:CreateBackdrop(TalentSetsMainframe)
-			AS:SkinBackdropFrame(TalentSetsMainframe, true)
-			AS:SkinTexture(TalentSetsMainframe.Bg)
-			AS:SkinFrame(TalentSetsShowButton)
-			AS:CreateBackdrop(TalentSetsShowButton)
+			S:CreateBackdrop(TalentSetsMainframe)
+			S:HandleFrame(TalentSetsMainframe, true)
+			S:HandleIcon(TalentSetsMainframe.Bg)
+			S:HandleFrame(TalentSetsShowButton)
+			S:CreateBackdrop(TalentSetsShowButton)
 			TalentSetsShowButton:SetNormalTexture("Interface\\Icons\\achievement_guildperk_ladyluck_rank2")
-			AS:SkinTexture(TalentSetsShowButton:GetNormalTexture())
+			S:HandleIcon(TalentSetsShowButton:GetNormalTexture())
 
 			TalentSetsListEquipSet:SetWidth(TalentSetsListEquipSet:GetWidth() - 3)
-			AS:SkinButton(TalentSetsListEquipSet)
+			S:HandleButton(TalentSetsListEquipSet)
 			TalentSetsListSaveSet:SetWidth(TalentSetsListSaveSet:GetWidth() - 3)
 			TalentSetsListSaveSet:ClearAllPoints()
 			TalentSetsListSaveSet:SetPoint("TOPLEFT", TalentSetsListEquipSet, "TOPRIGHT", 1, 0)
-			AS:SkinButton(TalentSetsListSaveSet)
+			S:HandleButton(TalentSetsListSaveSet)
 
 			TalentSetsFrameScrollBarScrollUpButton:ClearAllPoints()
 			TalentSetsFrameScrollBarScrollUpButton:SetPoint("TOPLEFT", TalentSetsListSaveSet, "TOPRIGHT", 1, 0)
 			TalentSetsFrameScrollBar:SetWidth(TalentSetsFrameScrollBar:GetWidth() - 13)
-			AS:SkinScrollBar(TalentSetsFrameScrollBar)
+			S:HandleScrollBar(TalentSetsFrameScrollBar)
 
 			for i = 1, #TalentSetsList["buttons"] do
-				AS:SkinFrame(_G["TalentSetsListButton"..i])
-				AS:SkinTexture(_G["TalentSetsListButton"..i.."Icon"])
+				S:HandleFrame(_G["TalentSetsListButton"..i])
+				S:HandleIcon(_G["TalentSetsListButton"..i.."Icon"])
 				if i == 1 then
 					_G["TalentSetsListButton"..i]:ClearAllPoints()
 					_G["TalentSetsListButton"..i]:SetPoint("TOPLEFT", TalentSetsListEquipSet, "BOTTOMLEFT", 0, -1)
@@ -52,4 +50,4 @@ function AS:TalentSetMgr(event, addon)
 	end
 end
 
-AS:RegisterSkin('TalentSetManager', AS.TalentSetMgr, "ADDON_LOADED")
+AS:RegisterSkin('TalentSetManager', nil, "ADDON_LOADED")

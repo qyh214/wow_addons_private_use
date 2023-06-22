@@ -1,8 +1,6 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('FlyoutButtonCustom') then return end
-
-function AS:FlyoutButtonCustom()
+function R:FlyoutButtonCustom()
 	if FlyoutButtonCustom_Settings then
 		FlyoutButtonCustom_Settings.Highlight = false
 		FlyoutButtonCustom_Settings.ShowBorders = false
@@ -13,14 +11,13 @@ function AS:FlyoutButtonCustom()
 		local name = self:GetName()
 		local button = self
 		local icon = _G[name.."Icon"]
-		local cooldown = _G[name.."Cooldown"]
 		local border = _G[name.."Border"]
 		local count = _G[name.."Count"]
 		local btname = _G[name.."Name"]
 		local hotkey = _G[name.."HotKey"]
 		local normal = _G[name.."NormalTexture"]
 
-		AS:StyleButton(button)
+		S:StyleButton(button)
 		button:SetNormalTexture("")
 
 		if border then
@@ -38,15 +35,15 @@ function AS:FlyoutButtonCustom()
 
 		hotkey:ClearAllPoints()
 		hotkey:SetPoint("TOPRIGHT", 0, 0)
-		hotkey.ClearAllPoints = AS.Noop
-		hotkey.SetPoint = AS.Noop
+		hotkey.ClearAllPoints = S.noop
+		hotkey.SetPoint = S.noop
 
 		if not button.isSkinned then
-			AS:CreateBackdrop(button)
-			button.Backdrop:SetAllPoints()
+			S:CreateBackdrop(button)
+			button.backdrop:SetAllPoints()
 
-			AS:SkinTexture(icon)
-			AS:SetInside(icon)
+			S:HandleIcon(icon)
+			S:SetInside(icon)
 
 			button.isSkinned = true
 		end
@@ -63,4 +60,4 @@ function AS:FlyoutButtonCustom()
 	hooksecurefunc(FlyoutListButton, "UpdateTexture", CreateBorder)
 end
 
-AS:RegisterSkin('FlyoutButtonCustom', AS.FlyoutButtonCustom)
+AS:RegisterSkin('FlyoutButtonCustom')

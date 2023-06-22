@@ -1,10 +1,12 @@
-lightweight tag d011343a078226c2836a5317794ba1cba74d5308 10.0.0.5-3
+tag 7d35946ca352d2d2778e6c19eb7dcadc52ffb5c4 10.1-1
 Author:	Xuerian <xuerian@gmail.com>
-Date:	Thu Mar 16 14:18:50 2023 -0400
+Date:	Sun May 28 14:28:31 2023 -0400
 
-commit d011343a078226c2836a5317794ba1cba74d5308
+Prevent Group from loading until updated
+
+commit 45c3be08d65097b0676ca7a5fa7598f7a7a6058f
 Author: Xuerian <xuerian@gmail.com>
-Date:   Thu Mar 16 14:18:50 2023 -0400
+Date:   Sun May 28 14:23:16 2023 -0400
 
-    Group: Only disenchant roll if it's possible
+    Bump TOC, do not load Group on recent versions until updated
 

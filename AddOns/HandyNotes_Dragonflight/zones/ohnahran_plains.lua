@@ -25,7 +25,6 @@ local MagicBoundChest = ns.node.MagicBoundChest
 local PM = ns.node.ProfessionMasters
 local PrettyNeat = ns.node.PrettyNeat
 local PT = ns.node.ProfessionTreasures
-local Rare14h = ns.node.Rare14h
 local Safari = ns.node.Safari
 local Scoutpack = ns.node.Scoutpack
 local SignalTransmitter = ns.node.SignalTransmitter
@@ -57,6 +56,7 @@ local map = Map({id = 2023, settings = true})
 
 map.nodes[31567644] = Rare({
     id = 195186,
+    vignette = 5351,
     quest = 73950,
     note = L['eaglewatch_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56092})}
@@ -64,6 +64,7 @@ map.nodes[31567644] = Rare({
 
 map.nodes[30546628] = Rare({
     id = 189652,
+    vignette = nil,
     quest = 73872,
     rewards = {
         Achievement({id = 16677, criteria = 56068}),
@@ -82,6 +83,7 @@ map.nodes[30546628] = Rare({
 
 map.nodes[49866673] = Rare({
     id = 192020,
+    vignette = 5138,
     quest = 74063,
     note = L['eaglemaster_niraak_note'],
     rewards = {
@@ -94,8 +96,9 @@ map.nodes[49866673] = Rare({
 
 map.nodes[56718128] = Rare({
     id = 193142,
+    vignette = 5173,
     quest = 73875,
-    note = L['in_small_cave'],
+    location = L['in_small_cave'],
     rewards = {
         Achievement({id = 16677, criteria = 56064}),
         Transmog({item = 200309, slot = L['plate']}), -- Rock Encrusted Chestguard
@@ -106,10 +109,11 @@ map.nodes[56718128] = Rare({
     }
 }) -- Enraged Sapphire
 
-map.nodes[75184651] = Rare14h({
+map.nodes[75184651] = Rare({
     id = 193170,
+    vignette = 5182,
     quest = 73994,
-    rotationID = 17,
+    interval = ns.Intervals.Interval14h({id = 17}),
     rewards = {
         Achievement({id = 16677, criteria = 56075}),
         Transmog({item = 200433, slot = L['leather']}), -- Footwraps of Subjugation
@@ -124,6 +128,7 @@ map.nodes[75184651] = Rare14h({
 
 map.nodes[85221544] = Rare({
     id = 187781,
+    vignette = nil,
     quest = 73951,
     note = L['aylaag_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56082})}
@@ -131,21 +136,25 @@ map.nodes[85221544] = Rare({
 
 map.nodes[80544222] = Rare({
     id = 188095,
+    vignette = 5077,
     quest = 73966,
     note = L['aylaag_outpost_note'] .. '\n\n' .. L['hunter_of_the_deep_note'],
     rewards = {Achievement({id = 16677, criteria = 56083})}
-}) -- Hunter of the Deep
+}) -- Hunter of Deep
 
 map.nodes[80513869] = Rare({
     id = 188124,
+    vignette = 5078,
     quest = 73967,
-    note = L['aylaag_outpost_note'] .. '\n\n' .. L['in_cave'],
+    location = L['in_cave'],
+    note = L['aylaag_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56084})},
     pois = {POI({79143656})} -- Entrance
 }) -- Irontree
 
 map.nodes[87556151] = Rare({
     id = 197009,
+    vignette = nil,
     quest = 73882,
     rewards = {
         Achievement({id = 16677, criteria = 56067}), --
@@ -165,15 +174,17 @@ map.nodes[87556151] = Rare({
 
 map.nodes[32823817] = Rare({
     id = 195409,
+    vignette = 5365,
     quest = 73968,
     note = L['eaglewatch_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56094})}
 }) -- Makhra the Ashtouched
 
-map.nodes[71694585] = Rare14h({
+map.nodes[71694585] = Rare({
     id = 193212,
+    vignette = 5195,
     quest = 74011,
-    rotationID = 27,
+    interval = ns.Intervals.Interval14h({id = 27}),
     rewards = {
         Achievement({id = 16677, criteria = 56073}),
         Transmog({item = 200197, slot = L['staff']}), -- Armoredon Herding Crook
@@ -189,10 +200,11 @@ map.nodes[71694585] = Rare14h({
     }
 }) -- Malsegan
 
-map.nodes[63017996] = Rare14h({
+map.nodes[63017996] = Rare({
     id = 193173,
+    vignette = 5183,
     quest = 74015,
-    rotationID = 9,
+    interval = ns.Intervals.Interval14h({id = 9}),
     rewards = {
         Achievement({id = 16677, criteria = 56070}),
         Transmog({item = 200306, slot = L['cloak']}), -- Tempest Shawl
@@ -205,6 +217,7 @@ map.nodes[63017996] = Rare14h({
 
 map.nodes[58604940] = Rare({
     id = 187219,
+    vignette = nil,
     label = L['defend_clan_aylaag'],
     note = L['defend_clan_aylaag_note'],
     rewards = {
@@ -219,10 +232,11 @@ map.nodes[58604940] = Rare({
     }
 }) -- Defend Clan Aylaag
 
-map.nodes[61212950] = Rare14h({
+map.nodes[61212950] = Rare({
     id = 193235,
+    vignette = 5199,
     quest = 74018,
-    rotationID = 24,
+    interval = ns.Intervals.Interval14h({id = 24}),
     rewards = {
         Achievement({id = 16677, criteria = 56074}),
         Transmog({item = 200203, slot = L['mail']}), -- Repurposed Giant's Thimble
@@ -233,9 +247,10 @@ map.nodes[61212950] = Rare14h({
 
 map.nodes[59686802] = Rare({
     id = 191950,
+    vignette = 5136,
     quest = 73971,
-    note = L['river_camp_note'] .. '\n\n' .. L['in_small_cave'] .. '\n\n' ..
-        L['porta_the_overgrown_note'],
+    location = L['in_small_cave'],
+    note = L['river_camp_note'] .. '\n\n' .. L['porta_the_overgrown_note'],
     rewards = {Achievement({id = 16677, criteria = 56087})},
     pois = {
         POI({59696879}), -- Entrance
@@ -251,6 +266,7 @@ map.nodes[59686802] = Rare({
 
 local Quackers = Class('Quackers', Rare, {
     id = 192557,
+    vignette = 5144,
     quest = 73972,
     rewards = {
         Achievement({id = 16677, criteria = 56091}),
@@ -276,10 +292,11 @@ end
 
 map.nodes[68207920] = Quackers() -- Quackers the Terrible
 
-map.nodes[37005380] = Rare14h({
+map.nodes[37005380] = Rare({
     id = 196010,
+    vignette = 5378,
     quest = 74023,
-    rotationID = 14,
+    interval = ns.Intervals.Interval14h({id = 14}),
     rewards = {
         Achievement({id = 16677, criteria = 56069}),
         Transmog({item = 200165, slot = L['shield']}), -- Aegis of Scales
@@ -290,10 +307,11 @@ map.nodes[37005380] = Rare14h({
     }
 }) -- Researcher Sneakwing
 
-map.nodes[43405560] = Rare14h({
+map.nodes[43405560] = Rare({
     id = 193227,
+    vignette = 5205,
     quest = 74026,
-    rotationID = 3,
+    interval = ns.Intervals.Interval14h({id = 3}),
     rewards = {
         Achievement({id = 16677, criteria = 56071}),
         Transmog({item = 200308, slot = L['bow']}), -- Rellen's Legacy
@@ -304,6 +322,7 @@ map.nodes[43405560] = Rare14h({
 
 map.nodes[42804428] = Rare({
     id = 195223,
+    vignette = nil,
     quest = 73973,
     note = L['eaglewatch_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56093})}
@@ -311,6 +330,7 @@ map.nodes[42804428] = Rare({
 
 map.nodes[20444344] = Rare({
     id = 193215,
+    vignette = 5190,
     quest = 74073,
     note = L['scaleseeker_mezeri_note'],
     rewards = {
@@ -328,6 +348,7 @@ map.nodes[20444344] = Rare({
 
 map.nodes[50117517] = Rare({
     id = 193136,
+    vignette = 5187,
     quest = 73893,
     rewards = {
         Achievement({id = 16677, criteria = 56063}),
@@ -340,6 +361,7 @@ map.nodes[50117517] = Rare({
 
 map.nodes[61801283] = Rare({
     id = 193188,
+    vignette = nil,
     quest = 73894,
     rewards = {
         Achievement({id = 16677, criteria = 56065}),
@@ -353,6 +375,7 @@ map.nodes[61801283] = Rare({
 
 map.nodes[29964103] = Rare({
     id = 187559,
+    vignette = nil,
     quest = 74075,
     note = L['shade_of_grief_note'],
     rewards = {
@@ -368,6 +391,7 @@ map.nodes[29964103] = Rare({
 
 map.nodes[21603960] = Rare({
     id = 193165,
+    vignette = nil,
     quest = 73896,
     rewards = {
         Achievement({id = 16677, criteria = 56062}),
@@ -380,10 +404,11 @@ map.nodes[21603960] = Rare({
     }
 }) -- Sparkspitter Vrak
 
-map.nodes[53627281] = Rare14h({
+map.nodes[53627281] = Rare({
     id = 193123,
+    vignette = 5168,
     quest = 74034,
-    rotationID = 20,
+    interval = ns.Intervals.Interval14h({id = 20}),
     rewards = {
         Achievement({id = 16677, criteria = 56072}),
         Transmog({item = 200216, slot = L['cloth']}), -- Water Heating Cord
@@ -398,6 +423,7 @@ map.nodes[53627281] = Rare14h({
 
 map.nodes[78298276] = Rare({
     id = 191842,
+    vignette = 5135,
     quest = 73974,
     note = L['river_camp_note'],
     rewards = {Achievement({id = 16677, criteria = 56086})}
@@ -405,6 +431,7 @@ map.nodes[78298276] = Rare({
 
 map.nodes[27605560] = Rare({
     id = 195204,
+    vignette = 5352,
     quest = 73976,
     note = L['eaglewatch_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56088})}
@@ -412,6 +439,7 @@ map.nodes[27605560] = Rare({
 
 map.nodes[83786215] = Rare({
     id = 192453,
+    vignette = nil,
     quest = 73978,
     note = L['river_camp_note'],
     rewards = {Achievement({id = 16677, criteria = 56090})}
@@ -419,6 +447,7 @@ map.nodes[83786215] = Rare({
 
 map.nodes[84214784] = Rare({
     id = 192364,
+    vignette = 5140,
     quest = 73979,
     note = L['river_camp_note'] .. '\n\n' .. L['windscale_the_stormborn_note'],
     rewards = {Achievement({id = 16677, criteria = 56089})}
@@ -426,6 +455,7 @@ map.nodes[84214784] = Rare({
 
 map.nodes[58596822] = Rare({
     id = 192045,
+    vignette = 5553,
     quest = 74088,
     note = L['windseeker_avash_note'],
     rewards = {
@@ -438,6 +468,7 @@ map.nodes[58596822] = Rare({
 
 map.nodes[30206260] = Rare({
     id = 193140,
+    vignette = 5469,
     quest = 74091,
     note = L['zarizz_note'],
     rewards = {
@@ -454,6 +485,7 @@ map.nodes[30206260] = Rare({
 
 map.nodes[31456387] = Rare({
     id = 193209,
+    vignette = nil,
     quest = 73901,
     rewards = {
         Achievement({id = 16677, criteria = 56066}),
@@ -476,6 +508,7 @@ map.nodes[31456387] = Rare({
 
 map.nodes[72232306] = Rare({
     id = 188451,
+    vignette = 5087,
     quest = 73980,
     note = L['aylaag_outpost_note'],
     rewards = {Achievement({id = 16677, criteria = 56085})}
@@ -483,6 +516,7 @@ map.nodes[72232306] = Rare({
 
 map.nodes[90434005] = Rare({
     id = 193128,
+    vignette = nil,
     quest = 74096,
     note = L['blightpaw_note'],
     rewards = {
@@ -501,6 +535,7 @@ map.nodes[90434005] = Rare({
 
 map.nodes[80817770] = Rare({
     id = 197411,
+    vignette = nil,
     quest = 74057,
     label = L['large_lunker_sighting'],
     note = L['large_lunker_sighting_note'],
@@ -519,6 +554,7 @@ map.nodes[80817770] = Rare({
 
 map.nodes[59926696] = Rare({
     id = 193669,
+    vignette = 5240,
     quest = 72815,
     rewards = {
         Item({item = 198048}), -- Titan Training Matrix I
@@ -538,8 +574,9 @@ map.nodes[59926696] = Rare({
 
 map.nodes[26366533] = Rare({
     id = 193153,
+    vignette = 5178,
     quest = 72845,
-    note = L['in_small_cave'],
+    location = L['in_small_cave'],
     rewards = {
         Item({item = 198048}), -- Titan Training Matrix I
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -556,8 +593,9 @@ map.nodes[26366533] = Rare({
 
 map.nodes[44894924] = Rare({
     id = 192949,
+    vignette = 5389,
     quest = 72847,
-    note = L['in_small_cave'],
+    location = L['in_small_cave'],
     rewards = {
         Item({item = 198048}), -- Titan Training Matrix I
         Transmog({item = 200137, slot = L['dagger']}), -- Chitin Dreadbringer
@@ -575,6 +613,7 @@ map.nodes[44894924] = Rare({
 
 map.nodes[63034854] = Rare({
     id = 193133,
+    vignette = 5170,
     quest = 72849,
     note = L['in_waterfall_cave'],
     rewards = {
@@ -594,6 +633,7 @@ map.nodes[63034854] = Rare({
 
 map.nodes[22956670] = Rare({
     id = 193163,
+    vignette = 5179,
     quest = 72851,
     rewards = {
         Item({item = 198048}), -- Titan Training Matrix I
@@ -612,8 +652,9 @@ map.nodes[22956670] = Rare({
 
 map.nodes[26073412] = Rare({
     id = 191354,
+    vignette = 5131,
     quest = 72852,
-    note = L['in_cave'],
+    location = L['in_cave'],
     rewards = {
         Item({item = 198048}), -- Titan Training Matrix I
         Transmog({item = 198429, slot = L['staff']}), -- Typhoon Bringer
@@ -629,8 +670,9 @@ map.nodes[26073412] = Rare({
 
 map.nodes[43105078] = Rare({
     id = 192983,
+    vignette = 5163,
     quest = 74095,
-    note = L['in_cave'],
+    location = L['in_cave'],
     rewards = {
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
         Transmog({item = 200174, slot = L['leather']}), -- Bonesigil Shoulderguards
@@ -648,6 +690,7 @@ map.nodes[43105078] = Rare({
 map.nodes[34823454] = Rare(
     { -- is all over the place on wowhead, took a random one,
         id = 201540,
+        vignette = 5570,
         quest = 74546,
         rewards = {
             Transmog({item = 203674, slot = L['plate']}), -- Brutal Tramplers
@@ -660,6 +703,7 @@ map.nodes[34823454] = Rare(
 
 map.nodes[36803800] = Rare({
     id = 201535,
+    vignette = 5573,
     quest = 74552,
     rewards = {
         Transmog({item = 203673, slot = L['dagger']}), -- Bloodbeak's Ravenor
@@ -671,6 +715,7 @@ map.nodes[36803800] = Rare({
 
 map.nodes[35804040] = Rare({
     id = 201537,
+    vignette = 5569,
     quest = 74463,
     rewards = {
         Transmog({item = 203671, slot = L['cloak']}), -- Bloodbeak's Ravenor
@@ -680,6 +725,7 @@ map.nodes[35804040] = Rare({
 
 map.nodes[32614184] = Rare({
     id = 201539,
+    vignette = 5571,
     quest = 74547,
     rewards = {
         Transmog({item = 203676, slot = L['cloth']}), -- Stormcaller's Grounding Shoes
@@ -691,6 +737,7 @@ map.nodes[32614184] = Rare({
 
 map.nodes[33843872] = Rare({
     id = 201538,
+    vignette = 5572,
     quest = 74548,
     rewards = {
         Transmog({item = 203672, slot = L['mail']}), -- Master Huntmaster's Wristguards
@@ -1194,7 +1241,7 @@ map.nodes[81035952] = Bakar({
 -------------------------------------------------------------------------------
 
 map.nodes[22753027] = Disturbeddirt()
-map.nodes[25976132] = Disturbeddirt({note = L['in_small_cave']})
+map.nodes[25976132] = Disturbeddirt({location = L['in_small_cave']})
 map.nodes[29765203] = Disturbeddirt()
 map.nodes[29777163] = Disturbeddirt()
 map.nodes[29777363] = Disturbeddirt()
@@ -1224,7 +1271,7 @@ map.nodes[62787415] = Disturbeddirt()
 map.nodes[63251396] = Disturbeddirt()
 map.nodes[65868145] = Disturbeddirt()
 map.nodes[66451981] = Disturbeddirt()
-map.nodes[66825534] = Disturbeddirt({note = L['in_small_cave']})
+map.nodes[66825534] = Disturbeddirt({location = L['in_small_cave']})
 map.nodes[69087885] = Disturbeddirt()
 map.nodes[71706413] = Disturbeddirt()
 map.nodes[75003584] = Disturbeddirt()
@@ -1233,13 +1280,13 @@ map.nodes[77987330] = Disturbeddirt()
 map.nodes[78217937] = Disturbeddirt()
 map.nodes[78534035] = Disturbeddirt()
 map.nodes[78782268] = Disturbeddirt()
-map.nodes[78943707] = Disturbeddirt({note = L['in_small_cave']})
+map.nodes[78943707] = Disturbeddirt({location = L['in_small_cave']})
 map.nodes[79697606] = Disturbeddirt()
 map.nodes[80133864] = Disturbeddirt({
-    note = L['in_cave'],
+    location = L['in_cave'],
     pois = {POI({79403650})}
 })
-map.nodes[80823851] = Disturbeddirt({note = L['in_cave']})
+map.nodes[80823851] = Disturbeddirt({location = L['in_cave']})
 map.nodes[81403827] = Disturbeddirt()
 map.nodes[82543651] = Disturbeddirt()
 map.nodes[82593486] = Disturbeddirt()
@@ -1287,13 +1334,14 @@ map.nodes[63423235] = Scoutpack()
 map.nodes[64028081] = Scoutpack()
 map.nodes[65021064] = Scoutpack()
 map.nodes[66798258] = Scoutpack()
+map.nodes[69873626] = Scoutpack()
 map.nodes[71356836] = Scoutpack()
 map.nodes[73353879] = Scoutpack()
 map.nodes[73618656] = Scoutpack()
 map.nodes[78736935] = Scoutpack()
 map.nodes[79432374] = Scoutpack()
-map.nodes[79923683] = Scoutpack({note = L['in_small_cave']})
-map.nodes[83663235] = Scoutpack({note = L['in_small_cave']})
+map.nodes[79923683] = Scoutpack({location = L['in_small_cave']})
+map.nodes[83663235] = Scoutpack({location = L['in_small_cave']})
 map.nodes[83812914] = Scoutpack()
 map.nodes[84194551] = Scoutpack()
 map.nodes[84685647] = Scoutpack()
@@ -1301,33 +1349,35 @@ map.nodes[86084606] = Scoutpack()
 map.nodes[86323937] = Scoutpack()
 map.nodes[86483680] = Scoutpack()
 map.nodes[87256074] = Scoutpack()
+map.nodes[87573657] = Scoutpack()
+map.nodes[87612555] = Scoutpack()
 map.nodes[91393390] = Scoutpack()
 
 -------------------------------------------------------------------------------
 ------------------------------ Magic-Bound Chest ------------------------------
 -------------------------------------------------------------------------------
 
-map.nodes[31457162] = MagicBoundChest({note = L['in_small_cave']})
-map.nodes[38905590] = MagicBoundChest({note = L['in_small_cave']})
+map.nodes[31457162] = MagicBoundChest({location = L['in_small_cave']})
+map.nodes[38905590] = MagicBoundChest({location = L['in_small_cave']})
 map.nodes[39306790] = MagicBoundChest()
 map.nodes[53805720] = MagicBoundChest({
-    note = L['in_small_cave'],
+    location = L['in_small_cave'],
     pois = {POI({53315684})}
 })
-map.nodes[55003120] = MagicBoundChest({note = L['in_small_cave']})
+map.nodes[55003120] = MagicBoundChest({location = L['in_small_cave']})
 map.nodes[55405030] = MagicBoundChest({
-    note = L['in_cave'],
+    location = L['in_cave'],
     pois = {POI({57575115})}
 })
-map.nodes[61008020] = MagicBoundChest({note = L['in_small_cave']})
-map.nodes[80908080] = MagicBoundChest({note = L['in_small_cave']})
-map.nodes[82603290] = MagicBoundChest({note = L['in_small_cave']})
+map.nodes[61008020] = MagicBoundChest({location = L['in_small_cave']})
+map.nodes[80908080] = MagicBoundChest({location = L['in_small_cave']})
+map.nodes[82603290] = MagicBoundChest({location = L['in_small_cave']})
 map.nodes[85106640] = MagicBoundChest({
     requires = {
         ns.requirement.Reputation(2507, 16, true),
         ns.requirement.Profession(186)
     },
-    note = L['in_small_cave']
+    location = L['in_small_cave']
 })
 
 -------------------------------------------------------------------------------
@@ -2088,44 +2138,35 @@ map.nodes[57473193] = Ohnahra()
 
 ----------------------------- THE OHN'AHRAN TRAIL -----------------------------
 
-map.nodes[71473180] = ns.node.AylaagCamp(
-    { -- Aylaag Outpost to river camp
-        icon = 237385,
-        requires = {
-            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
-        },
-        rotationID = 0,
-        rewards = {
-            Achievement({id = 16462, criteria = 55480}) -- The Ohn'ahran Trail
-        },
-        pois = {POI({70666300})}
-    })
+map.nodes[71473180] = Collectible({
+    icon = 237385,
+    requires = ns.requirement.Reputation(2503, 4, true), -- Maruuk Centaur
+    interval = ns.Intervals.AylaagCampInterval({id = 0}),
+    rewards = {
+        Achievement({id = 16462, criteria = 55480}) -- The Ohn'ahran Trail
+    },
+    pois = {POI({70666300})}
+}) -- Aylaag Outpost to River Camp
 
-map.nodes[70666300] = ns.node.AylaagCamp(
-    { -- River camp to Eaglewatch Outpost
-        icon = 237385,
-        requires = {
-            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
-        },
-        rotationID = 1,
-        rewards = {
-            Achievement({id = 16462, criteria = 55481}) -- The Ohn'ahran Trail
-        },
-        pois = {POI({55375224})}
-    })
+map.nodes[70666300] = Collectible({
+    icon = 237385,
+    requires = ns.requirement.Reputation(2503, 4, true), -- Maruuk Centaur
+    interval = ns.Intervals.AylaagCampInterval({id = 1}),
+    rewards = {
+        Achievement({id = 16462, criteria = 55481}) -- The Ohn'ahran Trail
+    },
+    pois = {POI({55375224})}
+}) -- River camp to Eaglewatch Outpost
 
-map.nodes[55375224] = ns.node.AylaagCamp(
-    { -- Eaglewatch Outpost to Aylaag Outpost
-        icon = 237385,
-        requires = {
-            ns.requirement.Reputation(2503, 4, true) -- Maruuk Centaur
-        },
-        rotationID = 2,
-        rewards = {
-            Achievement({id = 16462, criteria = 55482}) -- The Ohn'ahran Trail
-        },
-        pois = {POI({71473180})}
-    })
+map.nodes[55375224] = Collectible({
+    icon = 237385,
+    requires = ns.requirement.Reputation(2503, 4, true), -- Maruuk Centaur
+    interval = ns.Intervals.AylaagCampInterval({id = 2}),
+    rewards = {
+        Achievement({id = 16462, criteria = 55482}) -- The Ohn'ahran Trail
+    },
+    pois = {POI({71473180})}
+}) -- Eaglewatch Outpost to Aylaag Outpost
 
 ----------------------------- MISCELLANEOUS NPCs ------------------------------
 

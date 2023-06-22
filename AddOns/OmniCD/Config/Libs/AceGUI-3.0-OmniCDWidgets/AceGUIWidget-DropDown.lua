@@ -5,11 +5,11 @@
 ---------------------------------------------------------------------------------
 -- Parameters for dropdown with disable item support:
 -- type = "select",
--- disabledItem = function() return key end, -- must be a function
+-- disabledItem = function() return key end, -- wrap in a function if key is a string, else you can return func, number, table keys(multiple items)
 
 -- type = "multiselect",
 -- dialogControl = "Dropdown-OmniCD",
--- disabledItem = function() return key end, -- key can be a string or table(multiple items)
+-- disabledItem = function() return key end,
 
 -- Add disabledItem to AceConfigregistery-3.0 typedkeys to validate
 ---------------------------------------------------------------------------------
@@ -417,14 +417,13 @@ do
 	local widgetVersion = 36
 	]]
 	local widgetType = "Dropdown-OmniCD"
-	local widgetVersion = 38 -- backdrop, 38 right align, 10.1 fix
+	local widgetVersion = 39 -- backdrop, v38 right align, 10.1 fix, 39: readded mo tt
 	-- e
 
 	--[[ Static data ]]--
 
 	--[[ UI event handler ]]--
 
-	--[[ s -r v38
 	local function Control_OnEnter(this)
 		this.obj.button:LockHighlight()
 		this.obj:Fire("OnEnter")
@@ -434,7 +433,6 @@ do
 		this.obj.button:UnlockHighlight()
 		this.obj:Fire("OnLeave")
 	end
-	]]
 
 	local function Dropdown_OnHide(this)
 		local self = this.obj
@@ -566,11 +564,11 @@ do
 		if disabled then
 			self.text:SetTextColor(0.5,0.5,0.5)
 			self.button:Disable()
-			--self.button_cover:Disable() -- s -r
+			self.button_cover:Disable()
 			self.label:SetTextColor(0.5,0.5,0.5)
 		else
 			self.button:Enable()
-			--self.button_cover:Enable() -- s -r
+			self.button_cover:Enable()
 			--[[ s r
 			self.label:SetTextColor(1,.82,0)
 			]]
@@ -827,10 +825,8 @@ do
 		local button = _G[dropdown:GetName() .. "Button"]
 		self.button = button
 		button.obj = self
-		--[[ s -r v38
 		button:SetScript("OnEnter",Control_OnEnter)
 		button:SetScript("OnLeave",Control_OnLeave)
-		]]
 		button:SetScript("OnClick",Dropdown_TogglePullout)
 		-- s b
 		button:ClearAllPoints()
@@ -845,16 +841,18 @@ do
 		button.DisabledTexture:SetSize(16, 16)
 		button.DisabledTexture:SetPoint("RIGHT")
 		-- e
-		--[[ s -r v38
 		local button_cover = CreateFrame("BUTTON",nil,self.frame) -- s Whats this for? extending mouse interact area
 		self.button_cover = button_cover
 		button_cover.obj = self
 		button_cover:SetPoint("TOPLEFT",self.frame,"BOTTOMLEFT",0,25)
+		--[[ s r
 		button_cover:SetPoint("BOTTOMRIGHT",self.frame,"BOTTOMRIGHT")
+		]]
+		button_cover:SetPoint("BOTTOMRIGHT",self.frame,"BOTTOMRIGHT", -10, 3) --v38
+		-- e
 		button_cover:SetScript("OnEnter",Control_OnEnter)
 		button_cover:SetScript("OnLeave",Control_OnLeave)
 		button_cover:SetScript("OnClick",Dropdown_TogglePullout)
-		]]
 
 		local text = _G[dropdown:GetName() .. "Text"]
 		self.text = text

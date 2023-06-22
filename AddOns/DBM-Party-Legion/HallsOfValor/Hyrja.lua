@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(1486, "DBM-Party-Legion", 4, 721)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230308172050")
+mod:SetRevision("20230504231118")
 mod:SetCreatureID(95833)
 mod:SetEncounterID(1806)
 mod:SetHotfixNoticeRev(20230308000000)
 
 mod:RegisterCombat("combat")
-mod:SetWipeTime(120)
+--mod:SetWipeTime(120)--Restore in classic legion, if that ever happens
+--mod.sendMainBossGUID = true--Boss does lots of on fly timer adjustments, lets not overwhelm external handlers just yet
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 192018 192307 200901",

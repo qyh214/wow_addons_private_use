@@ -52,7 +52,7 @@ addOnTestMode.Cell = function(isTestEnabled)
 		CellDB["general"]["showSolo"] = true
 	else
 		CellDB["general"]["showSolo"] = config.Cell
-		if UnitAffectingCombat("player") then
+		if P.inLockdown then
 			TM:EndTestOOC()
 			return
 		end
@@ -71,7 +71,7 @@ function TM:Test(key)
 			E.write(format(E.STR.UNSUPPORTED_ADDON, activeCustomUF))
 		end
 
-		if UnitAffectingCombat("player") then
+		if P.inLockdown then
 			P.isInTestMode = false
 			return E.write(ERR_NOT_IN_COMBAT)
 		end
@@ -147,7 +147,7 @@ function TM:Test(key)
 		if not activeCustomUF then
 			if E.isDF then
 				if P.isInEditMode then
-					if UnitAffectingCombat("player") then
+					if P.inLockdown then
 						self:EndTestOOC()
 					else
 						HideUIPanel(EditModeManagerFrame)
@@ -155,7 +155,7 @@ function TM:Test(key)
 				end
 			else
 				if CompactRaidFrameContainer and CompactRaidFrameContainer:IsVisible() and (groupSize == 0 or not P:CompactFrameIsActive()) then
-					if UnitAffectingCombat("player") then
+					if P.inLockdown then
 						self:EndTestOOC()
 					else
 						CompactRaidFrameManager:Hide()

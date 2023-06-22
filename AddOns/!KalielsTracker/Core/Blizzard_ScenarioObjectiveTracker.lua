@@ -61,7 +61,7 @@ end
 function KT_ScenarioBlocksFrame_ExtraBlocksSetShown(shown)
 	KT_TopScenarioWidgetContainerBlock:SetShown(shown);
 	KT_BottomScenarioWidgetContainerBlock:SetShown(shown);
-	KT_SCENARIO_TRACKER_MODULE.BlocksFrame.MawBuffsBlock:SetShown(shown and IsInJailersTower());
+	KT_SCENARIO_TRACKER_MODULE.BlocksFrame.MawBuffsBlock:SetShown(shown and ShouldShowMawBuffs());
 end
 
 function KT_ScenarioBlocksFrame_OnFinishSlideIn()
@@ -226,6 +226,7 @@ function KT_ScenarioBlocksFrame_OnLoad(self)
 	self:RegisterEvent("SPELL_UPDATE_COOLDOWN");
     self:RegisterEvent("CHALLENGE_MODE_START");
     self:RegisterEvent("SCENARIO_CRITERIA_SHOW_STATE_UPDATE");
+	self:RegisterUnitEvent("UNIT_AURA", "player");
 end
 
 function KT_ScenarioBlocksFrame_OnEvent(self, event, ...)
@@ -254,6 +255,11 @@ function KT_ScenarioBlocksFrame_OnEvent(self, event, ...)
     elseif (event == "SCENARIO_CRITERIA_SHOW_STATE_UPDATE") then
     	local show = ...;
     	KT_SCENARIO_CONTENT_TRACKER_MODULE:SetShowCriteria(show);
+	elseif (event == "UNIT_AURA") then
+		local isShowingMawBuffs = KT_ScenarioBlocksFrame:IsShown() and KT_ScenarioBlocksFrame.MawBuffsBlock:IsShown();
+		if (ShouldShowMawBuffs() ~= isShowingMawBuffs) then
+			KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_SCENARIO);
+		end
 	end
 end
 
@@ -928,7 +934,9 @@ function KT_SCENARIO_CONTENT_TRACKER_MODULE:Update()
 
 	local scenarioName, currentStage, numStages, flags, _, _, _, xp, money, scenarioType, _, textureKit = C_Scenario.GetInfo();
 	local rewardsFrame = KT_ObjectiveTrackerScenarioRewardsFrame;
-	if ( numStages == 0 or IsOnGroundFloorInJailersTower() ) then
+	local shouldShowMawBuffs = ShouldShowMawBuffs();
+	local isInScenario = numStages > 0;
+	if ( not isInScenario and (not shouldShowMawBuffs or IsOnGroundFloorInJailersTower()) ) then
 		KT_ScenarioBlocksFrame_Hide();
 		self:EndLayout();
 		return;
@@ -961,7 +969,9 @@ function KT_SCENARIO_CONTENT_TRACKER_MODULE:Update()
 	local inWarfront = (scenarioType == LE_SCENARIO_TYPE_WARFRONT);
 	local scenariocompleted = currentStage > numStages;
 
-	if ( scenariocompleted ) then
+	if ( not isInScenario ) then
+		stageBlock:Hide();
+	elseif ( scenariocompleted ) then
 		KT_ObjectiveTracker_AddBlock(stageBlock);
 		KT_ScenarioBlocksFrame_SetupStageBlock(scenariocompleted);
 		stageBlock:Show();
@@ -1027,33 +1037,38 @@ function KT_SCENARIO_CONTENT_TRACKER_MODULE:Update()
 	BlocksFrame.currentStage = currentStage;
 	BlocksFrame.stageName = stageName;
 
-	if ( not KT_ScenarioProvingGroundsBlock.timerID and not scenariocompleted ) then
-		if (weightedProgress) then
-			self:UpdateWeightedProgressCriteria(stageDescription, stageBlock, objectiveBlock, BlocksFrame);
-		else
-			self:UpdateCriteria(numCriteria, objectiveBlock);
-			self:AddSpells(objectiveBlock, spellInfo);
-
-			-- add the objective block
-			objectiveBlock:SetHeight(objectiveBlock.height);
-			if ( KT_ObjectiveTracker_AddBlock(objectiveBlock) ) then
-				if ( not BlocksFrame.slidingAction ) then
-					objectiveBlock:Show();
-				end
+	if ( isInScenario ) then
+		if ( not KT_ScenarioProvingGroundsBlock.timerID and not scenariocompleted ) then
+			if (weightedProgress) then
+				self:UpdateWeightedProgressCriteria(stageDescription, stageBlock, objectiveBlock, BlocksFrame);
 			else
-				objectiveBlock:Hide();
-				stageBlock:Hide();
+				self:UpdateCriteria(numCriteria, objectiveBlock);
+				self:AddSpells(objectiveBlock, spellInfo);
+
+				-- add the objective block
+				objectiveBlock:SetHeight(objectiveBlock.height);
+				if ( KT_ObjectiveTracker_AddBlock(objectiveBlock) ) then
+					if ( not BlocksFrame.slidingAction ) then
+						objectiveBlock:Show();
+					end
+				else
+					objectiveBlock:Hide();
+					stageBlock:Hide();
+				end
 			end
 		end
+		KT_ScenarioSpellButtons_UpdateCooldowns();
+
+		KT_ObjectiveTracker_AddBlock(KT_TopScenarioWidgetContainerBlock);
 	end
-	KT_ScenarioSpellButtons_UpdateCooldowns();
 
-	KT_ObjectiveTracker_AddBlock(KT_TopScenarioWidgetContainerBlock);
-
-	if IsInJailersTower() then
+	if ( shouldShowMawBuffs ) then
 		KT_ObjectiveTracker_AddBlock(BlocksFrame.MawBuffsBlock);
 	end
-	KT_ObjectiveTracker_AddBlock(KT_BottomScenarioWidgetContainerBlock);
+
+	if ( isInScenario ) then
+		KT_ObjectiveTracker_AddBlock(KT_BottomScenarioWidgetContainerBlock);
+	end
 
 	-- add the scenario block
 	if ( BlocksFrame.currentBlock ) then
@@ -1096,6 +1111,8 @@ function KT_SCENARIO_CONTENT_TRACKER_MODULE:Update()
 			KT_SCENARIO_CONTENT_TRACKER_MODULE.Header.Text:SetText(TRACKER_HEADER_PROVINGGROUNDS);
 		elseif( dungeonDisplay ) then
 			KT_SCENARIO_CONTENT_TRACKER_MODULE.Header.Text:SetText(TRACKER_HEADER_DUNGEON);
+		elseif ( shouldShowMawBuffs and not IsInJailersTower() ) then
+			KT_SCENARIO_CONTENT_TRACKER_MODULE.Header.Text:SetText(GetZoneText());
 		else
 			KT_SCENARIO_CONTENT_TRACKER_MODULE.Header.Text:SetText(scenarioName);
 		end
@@ -1105,8 +1122,8 @@ function KT_SCENARIO_CONTENT_TRACKER_MODULE:Update()
 
 	self:EndLayout();
 
-	if KT_OBJECTIVE_TRACKER_UPDATE_REASON == KT_OBJECTIVE_TRACKER_UPDATE_MOVED then
-		if IsInJailersTower() then
+	if ( KT_OBJECTIVE_TRACKER_UPDATE_REASON == KT_OBJECTIVE_TRACKER_UPDATE_MOVED ) then
+		if ( shouldShowMawBuffs ) then
 			KT_SCENARIO_TRACKER_MODULE.BlocksFrame.MawBuffsBlock.Container:UpdateAlignment();
 		end
 	end

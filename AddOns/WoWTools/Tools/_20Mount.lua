@@ -2,7 +2,7 @@ local id, e = ...
 local addName= MOUNT
 
 local Save={
-    disabled= not e.Player.husandro,
+    --disabled= not e.Player.husandro,
     Mounts={
         [ITEMS]={[174464]=true, [168035]=true},--幽魂缰绳 噬渊鼠缰绳
         [SPELLS]={
@@ -66,7 +66,7 @@ local Save={
     },
     XD= true,
     KEY= e.Player.husandro and 'BUTTON5', --为我自定义, 按键
-    AFKRandom=e.Player.husandro,--离开时, 随机坐骑
+    --AFKRandom=e.Player.husandro,--离开时, 随机坐骑
 }
 
 local panel= CreateFrame("Frame")
@@ -393,7 +393,7 @@ end
 --#############
 local function Init_Dialogs()
     StaticPopupDialogs[id..addName..'ITEMS']={--物品, 设置对话框
-        text=id..' '..addName..' '..(e.onlyChinese and '物品' or ITEMS)..'\n\n%s\n%s',
+        text=id..' '..addName..' '..(e.onlyChinese and '物品' or ITEMS)..'|n|n%s|n%s',
         whileDead=1,
         hideOnEscape=1,
         exclusive=1,
@@ -423,7 +423,7 @@ local function Init_Dialogs()
     }
 
     StaticPopupDialogs[id..addName..'SPELLS']={--法术, 设置对话框
-        text=id..' '..addName..' '..(e.onlyChinese and '法术' or SPELLS)..'\n\n%s\n%s',
+        text=id..' '..addName..' '..(e.onlyChinese and '法术' or SPELLS)..'|n|n%s|n%s',
         whileDead=1,
         hideOnEscape=1,
         exclusive=1,
@@ -453,7 +453,7 @@ local function Init_Dialogs()
     }
 
     StaticPopupDialogs[id..addName..'KEY']={--快捷键,设置对话框
-        text=id..' '..addName..'\n'..(e.onlyChinese and '快捷键"' or SETTINGS_KEYBINDINGS_LABEL)..'\n\nQ, BUTTON5',
+        text=id..' '..addName..'|n'..(e.onlyChinese and '快捷键"' or SETTINGS_KEYBINDINGS_LABEL)..'|n|nQ, BUTTON5',
         whileDead=1,
         hideOnEscape=1,
         exclusive=1,
@@ -501,7 +501,7 @@ local function Init_Dialogs()
             local info= uiMapID and C_Map.GetMapInfo(uiMapID)
             if uiMapID and info and info.name then--uiMapID<2147483647
                 tab[uiMapID]=true
-                reText= reText and reText..'\n' or ''
+                reText= reText and reText..'|n' or ''
                 reText= reText..uiMapID..info.name
             end
         end)
@@ -509,7 +509,7 @@ local function Init_Dialogs()
     end
 
     StaticPopupDialogs[id..addName..'FLOOR'] = {--区域,设置对话框
-        text=id..' '..addName..' '..(e.onlyChinese and '区域' or FLOOR)..'\n\n%s\n%s',
+        text=id..' '..addName..' '..(e.onlyChinese and '区域' or FLOOR)..'|n|n%s|n%s',
         --whileDead=1,
         --hideOnEscape=1,
         --exclusive=1,
@@ -536,7 +536,7 @@ local function Init_Dialogs()
         end,
         OnAccept = function(self4, data)
             local tab, text= get_UIMapIDs(self4.editBox:GetText())
-            print('|cnGREEN_FONT_COLOR:', data.name, data.spellID, data.mountID, ':|r\n|cffff00ff', text, '\n|r'..id, addName, 'Tools','...')
+            print('|cnGREEN_FONT_COLOR:', data.name, data.spellID, data.mountID, ':|r|n|cffff00ff', text, '|n|r'..id, addName, 'Tools','...')
 
             Save.Mounts[FLOOR][data.spellID]= tab
             checkMount()--检测坐骑
@@ -790,7 +790,7 @@ local function InitMenu(self, level, type)--主菜单
             if mountID then
                 local useError = select(2, C_MountJournal.GetMountUsabilityByID(mountID, true))
                 if useError then
-                    info.tooltipText= info.tooltipText..'\n|cnRED_FONT_COLOR:'..useError
+                    info.tooltipText= info.tooltipText..'|n|cnRED_FONT_COLOR:'..useError
                 end
             end
             e.LibDD:UIDropDownMenu_AddButton(info, level);
@@ -826,7 +826,7 @@ local function InitMenu(self, level, type)--主菜单
                 local text
                 for uiMapID, _ in pairs(Save.Mounts[FLOOR][spellID]) do
                     local mapInfo = C_Map.GetMapInfo(uiMapID)
-                    text= text and text..'\n' or ''
+                    text= text and text..'|n' or ''
                     text= text..uiMapID..' '..(mapInfo and mapInfo.name or (e.onlyChinese and '无' or NONE))
                 end
                 info.tooltipText= text
@@ -838,7 +838,7 @@ local function InitMenu(self, level, type)--主菜单
                 if mountID then
                     local useError = select(2, C_MountJournal.GetMountUsabilityByID(mountID, true))
                     if useError then
-                        info.tooltipText= info.tooltipText..'\n|cnRED_FONT_COLOR:'..useError
+                        info.tooltipText= info.tooltipText..'|n|cnRED_FONT_COLOR:'..useError
 
                     end
                 end
@@ -976,7 +976,7 @@ local function Init_Menu_Set_UI(self, level, menuList)--坐骑界面, 菜单
                 StaticPopup_Show(
                     id..addName..'FLOOR',
                     (tab.icon and '|T'..tab.icon..':0|t' or '').. (tab.name or ('spellID: '..tab.spellID)),
-                    (Save.Mounts[FLOOR][tab.spellID] and (e.onlyChinese and '已存在' or ERR_ZONE_EXPLORED:format(PROFESSIONS_CURRENT_LISTINGS)) or (e.onlyChinese and '新建' or NEW))..'\n\n uiMapID: '..(C_Map.GetBestMapForUnit("player") or ''),
+                    (Save.Mounts[FLOOR][tab.spellID] and (e.onlyChinese and '已存在' or ERR_ZONE_EXPLORED:format(PROFESSIONS_CURRENT_LISTINGS)) or (e.onlyChinese and '新建' or NEW))..'|n|n uiMapID: '..(C_Map.GetBestMapForUnit("player") or ''),
                     tab
                 )
             end
@@ -984,7 +984,7 @@ local function Init_Menu_Set_UI(self, level, menuList)--坐骑界面, 菜单
                 local text
                 for uiMapID,_ in pairs(Save.Mounts[type][spellID]) do
                     local mapInfo= uiMapID and C_Map.GetMapInfo(uiMapID)
-                    text= text and text..'\n' or ''
+                    text= text and text..'|n' or ''
                     text= text..'uiMapID '..uiMapID..' '..(mapInfo and mapInfo.name or (e.onlyChinese and '无' or NONE))
                 end
                 if text then
@@ -1030,7 +1030,6 @@ local function Init_Menu_Set_UI(self, level, menuList)--坐骑界面, 菜单
     e.LibDD:UIDropDownMenu_AddButton(info, level);
 end
 local function setMountJournal_InitMountButton(self, elementData)--Blizzard_MountCollection.lua
-   --print(self.spellID, self.mountID, self.index)
     if not self or not self.spellID then
         if self and self.btn then
             self.btn:SetShown(false)
@@ -1041,7 +1040,7 @@ local function setMountJournal_InitMountButton(self, elementData)--Blizzard_Moun
     for _, type in pairs(MountType) do
         local ID=Save.Mounts[type][self.spellID]
         if ID then
-            text= text and text..'\n' or ''
+            text= text and text..'|n' or ''
             if type==FLOOR then
                 local num=0
                 for _, _ in pairs(ID) do
@@ -1099,11 +1098,10 @@ end
 local function Init()
     Init_Dialogs()--初始化，对话框
 
-    OkMount= IsSpellKnown(90265)--是否已学, 骑术
-                or IsSpellKnown(33391)
-                or IsSpellKnown(34090)
-                or IsSpellKnown(33388)
-
+    OkMount= IsSpellKnownOrOverridesKnown(90265)--是否已学, 骑术
+                or IsSpellKnownOrOverridesKnown(33391)
+                or IsSpellKnownOrOverridesKnown(34090)
+                or IsSpellKnownOrOverridesKnown(33388)
 
     for type, tab in pairs(Save.Mounts) do
         for ID, _ in pairs(tab) do
@@ -1251,6 +1249,7 @@ local function Init()
     end)
     button:SetScript("OnLeave",function(self)
         e.tips:Hide()
+        setClickAtt()--设置属性
         ResetCursor()
         self.border:SetAtlas('bag-reagent-border')
     end)
@@ -1314,6 +1313,8 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
                 button.Up:SetAtlas('NPE_ArrowUp')
                 button.Up:SetSize(20,20)
 
+                Init()--初始
+
                 panel:RegisterEvent('PLAYER_REGEN_DISABLED')
                 panel:RegisterEvent('PLAYER_REGEN_ENABLED')
                 panel:RegisterEvent('SPELLS_CHANGED')
@@ -1329,6 +1330,8 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
                 panel:RegisterEvent('ZONE_CHANGED_NEW_AREA')
                 panel:RegisterEvent('SPELL_UPDATE_COOLDOWN')
                 panel:RegisterEvent('SPELL_UPDATE_USABLE')
+                panel:RegisterEvent('PET_BATTLE_CLOSE')
+                panel:RegisterUnitEvent('UNIT_EXITED_VEHICLE', "player")
 
                 panel:RegisterEvent('PLAYER_STARTED_MOVING')--设置, TOOLS 框架,隐藏
 
@@ -1342,7 +1345,7 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
                     end
                 end
 
-                Init()--初始
+                
             else
                 e.toolsFrame.disabled=true
                 panel:UnregisterAllEvents()
@@ -1351,7 +1354,6 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         elseif arg1=='Blizzard_Collections' then
             hooksecurefunc('MountJournal_InitMountButton',setMountJournal_InitMountButton)
-            
             --hooksecurefunc('MountJournal_ShowMountDropdown',setMountJournal_ShowMountDropdown)
         end
 
@@ -1391,7 +1393,7 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
         if not XD then
             checkMount()--检测坐骑
         end
-    elseif event=='MOUNT_JOURNAL_USABILITY_CHANGED' or event=='PLAYER_MOUNT_DISPLAY_CHANGED' then-- or event=='AREA_POIS_UPDATED' then
+    elseif event=='MOUNT_JOURNAL_USABILITY_CHANGED' or event=='PLAYER_MOUNT_DISPLAY_CHANGED' or event=='PET_BATTLE_CLOSE' or event=='UNIT_EXITED_VEHICLE' then-- or event=='AREA_POIS_UPDATED' then
         setClickAtt()--设置属性
 
     elseif event=='MODIFIER_STATE_CHANGED' then
@@ -1428,10 +1430,10 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2)
         setClickAtt()--设置属性
 
     elseif event=='LEARNED_SPELL_IN_TAB' then
-        OkMount= IsSpellKnown(90265)--是否已学, 骑术
-                or IsSpellKnown(33391)
-                or IsSpellKnown(34090)
-                or IsSpellKnown(33388)
+        OkMount= IsSpellKnownOrOverridesKnown(90265)--是否已学, 骑术
+                or IsSpellKnownOrOverridesKnown(33391)
+                or IsSpellKnownOrOverridesKnown(34090)
+                or IsSpellKnownOrOverridesKnown(33388)
 
     end
 end)

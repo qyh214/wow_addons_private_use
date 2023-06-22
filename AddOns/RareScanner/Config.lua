@@ -26,6 +26,7 @@ local RSConstants = private.ImportLib("RareScannerConstants")
 -- RareScanner service libraries
 local RSMinimap = private.ImportLib("RareScannerMinimap")
 local RSMap = private.ImportLib("RareScannerMap")
+local RSTargetUnitTracker = private.ImportLib("RareScannerTargetUnitTracker")
 
 -----------------------------------------------------------------------
 -- Config option functions.
@@ -290,8 +291,23 @@ local function GetGeneralOptions()
 					end,
 					width = "full",
 				},
-				ignoreCompletedEntities = {
+				scanTargetUnit = {
 					order = 11,
+					name = AL["ENABLE_SCAN_TARGET_UNIT"],
+					desc = AL["ENABLE_SCAN_TARGET_UNIT_DESC"],
+					type = "toggle",
+					get = function() return RSConfigDB.IsScanningTargetUnit() end,
+					set = function(_, value)
+						if (value) then
+							LibDialog:Spawn(RSConstants.TARGET_UNIT_WARNING)
+						else
+							RSConfigDB.SetScanningTargetUnit(value)
+						end
+					end,
+					width = "full",
+				},
+				ignoreCompletedEntities = {
+					order = 12,
 					name = AL["IGNORE_SCAN_COMPLETED_ENTITIES"],
 					desc = AL["IGNORE_SCAN_COMPLETED_ENTITIES_DESC"],
 					type = "toggle",
@@ -302,7 +318,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				showMaker = {
-					order = 12,
+					order = 13,
 					name = AL["ENABLE_MARKER"],
 					desc = AL["ENABLE_MARKER_DESC"],
 					type = "toggle",
@@ -313,7 +329,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				marker = {
-					order = 13,
+					order = 14,
 					type = "select",
 					dialogControl = 'RS_Markers',
 					name = AL["MARKER"],
@@ -327,12 +343,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingMarkerOnTarget() end,
 				},
 				separatorIngameWaypoints = {
-					order = 14,
+					order = 15,
 					type = "header",
 					name = AL["INGAME_WAYPOINTS"],
 				},
 				enableIngameWaypoints = {
-					order = 15,
+					order = 16,
 					name = AL["ENABLE_WAYPOINTS_SUPPORT"],
 					desc = AL["ENABLE_WAYPOINTS_SUPPORT_DESC"],
 					type = "toggle",
@@ -346,7 +362,7 @@ local function GetGeneralOptions()
 					width = "full",
 				},
 				autoIngameWaypoints = {
-					order = 16,
+					order = 17,
 					name = AL["ENABLE_AUTO_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -358,12 +374,12 @@ local function GetGeneralOptions()
 					disabled = function() return not RSConfigDB.IsWaypointsSupportEnabled() end,
 				},
 				separatorTomtomWaypoints = {
-					order = 17,
+					order = 18,
 					type = "header",
 					name = AL["TOMTOM_WAYPOINTS"],
 				},
 				enableTomtomSupport = {
-					order = 18,
+					order = 19,
 					name = AL["ENABLE_TOMTOM_SUPPORT"],
 					desc = AL["ENABLE_TOMTOM_SUPPORT_DESC"],
 					type = "toggle",
@@ -378,7 +394,7 @@ local function GetGeneralOptions()
 					disabled = function() return not TomTom end,
 				},
 				autoTomtomWaypoints = {
-					order = 19,
+					order = 20,
 					name = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS"],
 					desc = AL["ENABLE_AUTO_TOMTOM_WAYPOINTS_DESC"],
 					type = "toggle",
@@ -788,13 +804,25 @@ local function GetDisplayOptions()
 					end,
 					width = "full",
 				},
-				separatorNavigation = {
+				displayChatTimestampMessage = {
 					order = 11,
+					type = "toggle",
+					name = AL["SHOW_CHAT_TIMESTAMP_ALERT"],
+					desc = AL["SHOW_CHAT_TIMESTAMP_ALERT_DESC"],
+					get = function() return RSConfigDB.IsDisplayingTimestampChatMessages() end,
+					set = function(_, value)
+						RSConfigDB.SetDisplayingTimestampChatMessages(value)
+					end,
+					width = "full",
+					disabled = function() return not RSConfigDB.IsDisplayingChatMessages() end,
+				},
+				separatorNavigation = {
+					order = 12,
 					type = "header",
 					name = AL["NAVIGATION_OPTIONS"],
 				},
 				enableNavigation = {
-					order = 12,
+					order = 13,
 					type = "toggle",
 					name = AL["NAVIGATION_ENABLE"],
 					desc = AL["NAVIGATION_ENABLE_DESC"],
@@ -805,7 +833,7 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				navigationLockEntity = {
-					order = 13,
+					order = 14,
 					type = "toggle",
 					name = AL["NAVIGATION_LOCK_ENTITY"],
 					desc = AL["NAVIGATION_LOCK_ENTITY_DESC"],
@@ -817,12 +845,12 @@ local function GetDisplayOptions()
 					disabled = function() return not RSConfigDB.IsDisplayingNavigationArrows() end,
 				},
 				separatorMap = {
-					order = 14,
+					order = 15,
 					type = "header",
 					name = AL["MAP_OPTIONS"],
 				},
 				minimapButton = {
-					order = 15,
+					order = 16,
 					type = "toggle",
 					name = AL["DISPLAY_MINIMAP_BUTTON"],
 					desc = AL["DISPLAY_MINIMAP_BUTTON_DESC"],
@@ -834,7 +862,7 @@ local function GetDisplayOptions()
 					width = "full",
 				},
 				worldmapButton = {
-					order = 16,
+					order = 17,
 					type = "toggle",
 					name = AL["DISPLAY_WORLDMAP_BUTTON"],
 					desc = AL["DISPLAY_WORLDMAP_BUTTON_DESC"],
@@ -874,7 +902,7 @@ end
 
 local npc_filter_options
 
-local function GetFilterOptions()
+local function GetNpcFilterOptions()
 	if not npc_filter_options then
 		-- load continent combo
 		local CONTINENT_MAP_IDS = {}
@@ -1052,8 +1080,15 @@ local function GetFilterOptions()
 						-- load subzones combo
 						loadSubmapsCombo(key)
 
-						-- search
-						searchNpcByContinentID(key, private.filter_options_input)
+						-- autoselect first element and search
+						if (RSUtils.GetTableLength(npc_filter_options.args.subzones.values) > 0) then
+							local sortedKeys = sortValues(npc_filter_options.args.subzones.values)
+							for _, zoneID in pairs(sortedKeys) do
+								private.filter_options_subzones = zoneID
+								searchNpcByZoneID(zoneID, private.filter_options_input)
+								break
+							end
+						end
 					end,
 					width = 1.0,
 				},
@@ -1069,7 +1104,14 @@ local function GetFilterOptions()
 						end
 						return nil;
 					end,
-					get = function(_, key) return private.filter_options_subzones end,
+					get = function(_, key)
+						-- initialize
+						if (not private.filter_options_subzones) then
+							private.filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
+						end
+
+						return private.filter_options_subzones
+					end,
 					set = function(_, key, value)
 						private.filter_options_subzones = key
 
@@ -1087,12 +1129,12 @@ local function GetFilterOptions()
 					func = function()
 						private.filter_options_input = nil
 						npc_filter_options.args.subzones.values = {}
-						private.filter_options_subzones = nil
+						private.filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
 						private.filter_options_continents = RSConstants.CURRENT_MAP_ID
 						-- load subzones combo
 						loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 						-- search
-						searchNpcByContinentID(RSConstants.CURRENT_MAP_ID)
+						searchNpcByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 					end,
 					width = 0.5,
 				},
@@ -1150,7 +1192,7 @@ local function GetFilterOptions()
 		loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 
 		-- launch first search zone filters
-		searchNpcByContinentID(RSConstants.CURRENT_MAP_ID)
+		searchNpcByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 	end
 
 	return npc_filter_options
@@ -1284,6 +1326,7 @@ local function GetCustomNpcOptions()
 								
 								private.custom_npcs_options[npcID].zone = private.custom_npcs_options[npcID].subzone
 								RSNpcDB.SetCustomNpcInfo(npcID, private.custom_npcs_options[npcID])
+								RSTargetUnitTracker.Refresh()
 							end
 						end,
 						width = "normal",
@@ -1764,8 +1807,15 @@ local function GetContainerFilterOptions()
 						-- load subzones combo
 						loadSubmapsCombo(key)
 
-						-- search
-						searchContainerByContinentID(key, private.container_filter_options_input)
+						-- autoselect first element and search
+						if (RSUtils.GetTableLength(container_filter_options.args.subzones.values) > 0) then
+							local sortedKeys = sortValues(container_filter_options.args.subzones.values)
+							for _, zoneID in pairs(sortedKeys) do
+								private.container_filter_options_subzones = zoneID
+								searchContainerByZoneID(zoneID, private.container_filter_options_input)
+								break
+							end
+						end
 					end,
 					width = 1.0,
 				},
@@ -1781,7 +1831,14 @@ local function GetContainerFilterOptions()
 						end
 						return nil;
 					end,
-					get = function(_, key) return private.container_filter_options_subzones end,
+					get = function(_, key)
+						-- initialize
+						if (not private.container_filter_options_subzones) then
+							private.container_filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
+						end
+
+						return private.container_filter_options_subzones
+					end,
 					set = function(_, key, value)
 						private.container_filter_options_subzones = key
 
@@ -1799,12 +1856,12 @@ local function GetContainerFilterOptions()
 					func = function()
 						private.container_filter_options_input = nil
 						container_filter_options.args.subzones.values = {}
-						private.container_filter_options_subzones = nil
+						private.container_filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
 						private.container_filter_options_continents = RSConstants.CURRENT_MAP_ID
 						-- load subzones combo
 						loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 						-- search
-						searchContainerByContinentID(RSConstants.CURRENT_MAP_ID)
+						searchContainerByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 					end,
 					width = 0.5,
 				},
@@ -1862,7 +1919,7 @@ local function GetContainerFilterOptions()
 		loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 
 		-- launch first search zone filters
-		searchContainerByContinentID(RSConstants.CURRENT_MAP_ID)
+		searchContainerByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 	end
 
 	return container_filter_options
@@ -2048,8 +2105,15 @@ local function GetEventFilterOptions()
 						-- load subzones combo
 						loadSubmapsCombo(key)
 
-						-- search
-						searchEventByContinentID(key, private.event_filter_options_input)
+						-- autoselect first element and search
+						if (RSUtils.GetTableLength(event_filter_options.args.subzones.values) > 0) then
+							local sortedKeys = sortValues(event_filter_options.args.subzones.values)
+							for _, zoneID in pairs(sortedKeys) do
+								private.event_filter_options_subzones = zoneID
+								searchEventByZoneID(zoneID, private.event_filter_options_input)
+								break
+							end
+						end
 					end,
 					width = 1.0,
 				},
@@ -2065,7 +2129,14 @@ local function GetEventFilterOptions()
 						end
 						return nil;
 					end,
-					get = function(_, key) return private.event_filter_options_subzones end,
+					get = function(_, key)
+						-- initialize
+						if (not private.event_filter_options_subzones) then
+							private.event_filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
+						end
+
+						return private.event_filter_options_subzones
+					end,
 					set = function(_, key, value)
 						private.event_filter_options_subzones = key
 
@@ -2083,12 +2154,12 @@ local function GetEventFilterOptions()
 					func = function()
 						private.event_filter_options_input = nil
 						event_filter_options.args.subzones.values = {}
-						private.event_filter_options_subzones = nil
+						private.event_filter_options_subzones = RSConstants.CURRENT_SUBMAP_ID
 						private.event_filter_options_continents = RSConstants.CURRENT_MAP_ID
 						-- load subzones combo
 						loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 						-- search
-						searchEventByContinentID(RSConstants.CURRENT_MAP_ID)
+						searchEventByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 					end,
 					width = 0.5,
 				},
@@ -2146,90 +2217,133 @@ local function GetEventFilterOptions()
 		loadSubmapsCombo(RSConstants.CURRENT_MAP_ID)
 
 		-- launch first search zone filters
-		searchEventByContinentID(RSConstants.CURRENT_MAP_ID)
+		searchEventByZoneID(RSConstants.CURRENT_SUBMAP_ID)
 	end
 
 	return event_filter_options
 end
 
-local zones_filter_options
+local zone_filter_options
 
 local function GetZonesFilterOptions()
-	if not zones_filter_options then
+	if not zone_filter_options then
 		-- load continent combo
 		local CONTINENT_MAP_IDS = {}
-		for k, v in pairs(RSMapDB.GetContinents()) do
-			if (v.zonefilter) then
-				if (v.id) then
-					CONTINENT_MAP_IDS[k] = RSMap.GetMapName(k)
+		for continentID, continentInfo in pairs(RSMapDB.GetContinents()) do
+			if (continentInfo.zonefilter) then
+				if (continentInfo.id) then
+					CONTINENT_MAP_IDS[continentID] = RSMap.GetMapName(continentID)
 				else
-					CONTINENT_MAP_IDS[k] = AL["ZONES_CONTINENT_LIST"][k]
+					CONTINENT_MAP_IDS[continentID] = AL["ZONES_CONTINENT_LIST"][continentID]
+				end
+			end
+		end
+					
+		local currentOrder
+		local zones = {}
+		local resetResults = function()	
+			-- Remove current results
+			for zoneID, _ in pairs (zones) do
+				zone_filter_options.args[string.format(filterLine, zoneID)] = nil
+				zone_filter_options.args[string.format(filterTypeLine, zoneID)] = nil
+			end
+			
+			-- Remove current zones
+			zones = {}
+			
+			-- Resets order
+			currentOrder = 6
+		end
+		
+		local addZone = function(name, zoneID)	
+			currentOrder = currentOrder + 1;
+			zone_filter_options.args[string.format(filterLine, zoneID)] = {
+				order = currentOrder + 0.1,
+				type = "toggle",
+				name = name,
+				desc = string.format(AL["FILTER_DESC"], AL["FILTER_TYPE_ALL"], AL["FILTER_TYPE_WORLDMAP"], AL["FILTER_TYPE_ALERTS"]),
+				get = function() 
+					if (RSConfigDB.GetZoneFiltered(zoneID) ~= nil) then
+						return false
+					else
+						return true
+					end
+				end,
+				set = function(_, value)
+					if (value) then
+						RSConfigDB.DeleteZoneFiltered(zoneID)
+					else
+						RSConfigDB.SetZoneFiltered(zoneID)
+					end
+					RSMinimap.RefreshAllData(true)
+				end,
+				width = 2.15
+			}
+			zone_filter_options.args[string.format(filterTypeLine, zoneID)] = {
+				order = currentOrder + 0.2,
+				type = "select",
+				name = "",
+				values = FILTERS_TYPE,
+				get = function(_, key)
+					return RSConfigDB.GetZoneFiltered(zoneID)
+				end,
+				set = function(_, key, value)
+					RSConfigDB.SetZoneFiltered(zoneID, key)
+					RSMinimap.RefreshAllData(true)
+				end,
+				width = 1.5,
+				disabled = function()
+					if (RSConfigDB.GetZoneFiltered(zoneID) == nil) then
+						return true
+					else
+						return false
+					end
+				end
+			}
+		end
+
+		local searchZoneByContinentID = function(continentID, zoneName)
+			resetResults();
+			
+			if (continentID) then
+				for _, subZoneID in ipairs(RSMapDB.GetContinents()[continentID].zones) do
+					local name = RSMap.GetMapName(subZoneID)
+					name = string.format("%s (%s)", name, subZoneID)
+					
+					if (not zoneName or RSUtils.Contains(name,zoneName)) then
+						zones[subZoneID] = name
+					end
+				end
+			
+				-- Sort list by name
+				for _, zoneID in ipairs (RSUtils.GetSortedKeysByValue(zones, function(a, b) return a < b end)) do
+					addZone(zones[zoneID], zoneID)
 				end
 			end
 		end
 
-		local searchZoneByContinentID = function(continentID, zoneName)
-			if (continentID) then
-				table.foreach(RSMapDB.GetContinents()[continentID].zones, function(index, zoneID)
-					local tempName = nil
-					if (zoneName) then
-						local name = RSMap.GetMapName(zoneID)
-						if (string.find(string.upper(name), string.upper(zoneName))) then
-							tempName = name
-						end
-					else
-						tempName = RSMap.GetMapName(zoneID)
-					end
-
-					if (tempName) then
-						local i = 2
-						local tempLoopName = tempName
-						while (zones_filter_options.args.zoneFilters.values[tempLoopName]) do
-							tempLoopName = tempName..' ('..i..')'
-							i = i+1
-						end
-
-						zones_filter_options.args.zoneFilters.values[tempLoopName] = zoneID
-					end
-				end)
-			end
-		end
-
-		zones_filter_options = {
+		zone_filter_options = {
 			type = "group",
 			order = 1,
 			name = AL["ZONES_FILTER"],
 			handler = RareScanner,
 			desc = AL["ZONES_FILTER"],
 			args = {
-				filterOnlyMap = {
-					order = 1,
-					type = "toggle",
-					name = AL["FILTER_ZONES_ONLY_MAP"],
-					desc = AL["FILTER_ZONES_ONLY_MAP_DESC"],
-					get = function() return RSConfigDB.IsZoneFilteredOnlyOnWorldMap() end,
-					set = function(_, value)
-						RSConfigDB.SetZoneFilteredOnlyOnWorldMap(value)
-						RSMinimap.RefreshAllData(true)
-					end,
-					width = "full",
-				},
 				zoneFiltersSearch = {
-					order = 2,
+					order = 1,
 					type = "input",
 					name = AL["FILTERS_SEARCH"],
 					desc = AL["ZONES_FILTERS_SEARCH_DESC"],
-					get = function(_, value) return private.zones_filter_input end,
+					get = function(_, value) return private.zone_filter_options_input end,
 					set = function(_, value)
-						private.zones_filter_input = value
+						private.zone_filter_options_input = value
 						-- search
-						zones_filter_options.args.zoneFilters.values = {}
-						searchZoneByContinentID(private.zones_filter_options_continents, value)
+						searchZoneByContinentID(private.zone_filter_options_continents, value)
 					end,
 					width = "full",
 				},
 				continents = {
-					order = 3.1,
+					order = 2.1,
 					type = "select",
 					name = AL["FILTER_CONTINENT"],
 					desc = AL["FILTER_CONTINENT_DESC"],
@@ -2237,88 +2351,88 @@ local function GetZonesFilterOptions()
 					sorting = sortValues(CONTINENT_MAP_IDS),
 					get = function(_, key)
 						-- initialize
-						if (not private.zones_filter_options_continents) then
-							private.zones_filter_options_continents = RSConstants.CURRENT_MAP_ID
-
-							-- launch first search zone filters
-							searchZoneByContinentID(private.zones_filter_options_continents)
+						if (not private.zone_filter_options_continents) then
+							private.zone_filter_options_continents = RSConstants.CURRENT_MAP_ID
 						end
 
-						return private.zones_filter_options_continents
+						return private.zone_filter_options_continents
 					end,
 					set = function(_, key, value)
-						private.zones_filter_options_continents = key
+						private.zone_filter_options_continents = key
 
 						-- search
-						zones_filter_options.args.zoneFilters.values = {}
-						searchZoneByContinentID(key, private.zones_filter_input)
+						searchZoneByContinentID(key, private.zone_filter_options_input)
 					end,
-					width = "normal",
+					width = 1.0,
 				},
 				zoneFiltersClear = {
-					order = 3.2,
+					order = 2.2,
 					name = AL["CLEAR_FILTERS_SEARCH"],
 					desc = AL["CLEAR_FILTERS_SEARCH_DESC"],
 					type = "execute",
 					func = function()
-						private.zones_filter_input = nil
-						private.zones_filter_options_continents = RSConstants.CURRENT_MAP_ID
+						private.zone_filter_options_input = nil
+						private.zone_filter_options_continents = RSConstants.CURRENT_MAP_ID
 						-- search
-						zones_filter_options.args.zoneFilters.values = {}
 						searchZoneByContinentID(RSConstants.CURRENT_MAP_ID)
 					end,
-					width = "normal",
+					width = 0.5,
 				},
 				separator = {
-					order = 4,
+					order = 3,
 					type = "header",
 					name = AL["ZONES_FILTER"],
 				},
-				zoneFiltersToogleAll = {
-					order = 5,
-					name = AL["TOGGLE_FILTERS"],
-					desc = AL["TOGGLE_FILTERS_DESC"],
+				defaultFilter = {
+					order = 4.1,
+					type = "select",
+					name = AL["FILTER_DEFAULT"],
+					desc = string.format(AL["FILTER_DEFAULT_DESC"], AL["FILTERS_FILTER_ALL"]),
+					values = FILTERS_TYPE,
+					get = function(_, key) return RSConfigDB.GetDefaultZoneFilter() end,
+					set = function(_, key, value)
+						RSConfigDB.SetDefaultZoneFilter(key)
+					end,
+					width = 1.65,
+				},
+				filterAllButton = {
+					order = 4.2,
+					name = AL["FILTERS_FILTER_ALL"],
+					desc = AL["FILTERS_FILTER_ALL_DESC"],
 					type = "execute",
 					func = function()
-						if (next(zones_filter_options.args.zoneFilters.values) ~= nil) then
-							if (private.db.zoneFilters.filtersToggled) then
-								private.db.zoneFilters.filtersToggled = false
-							else
-								private.db.zoneFilters.filtersToggled = true
-							end
-
-							for _, mapID in pairs(zones_filter_options.args.zoneFilters.values) do
-								RSConfigDB:SetZoneFiltered(mapID, private.db.zoneFilters.filtersToggled)
+						for zoneID, _ in pairs(zones) do
+							if (RSConfigDB.GetZoneFiltered(zoneID) == nil) then
+								RSConfigDB.SetZoneFiltered(zoneID)
 							end
 						end
+						
 						RSMinimap.RefreshAllData(true)
 					end,
-					width = "full",
+					width = 1,
 				},
-				zoneFilters = {
-					order = 6,
-					type = "multiselect",
-					name = AL["FILTER_ZONES_LIST"],
-					desc = AL["FILTER_ZONES_LIST_DESC"],
-					values = {},
-					get = function(_, mapID) return RSConfigDB:GetZoneFiltered(mapID) end,
-					set = function(_, mapID, value)
-						if (private.SUBZONES_IDS[mapID]) then
-							for _, subZoneMapID in ipairs(private.SUBZONES_IDS[mapID]) do
-								RSConfigDB:SetZoneFiltered(subZoneMapID, value)
-								RSLogger:PrintDebugMessage(string.format("zoneFilters.subzona [%s]", subZoneMapID))
-							end
+				unfilterAllButton = {
+					order = 4.3,
+					name = AL["FILTERS_UNFILTER_ALL"],
+					desc = AL["FILTERS_UNFILTER_ALL_DESC"],
+					type = "execute",
+					func = function()
+						for zoneID, _ in pairs(zones) do
+							RSConfigDB.DeleteZoneFiltered(zoneID)
 						end
-						RSConfigDB:SetZoneFiltered(mapID, value)
-						RSLogger:PrintDebugMessage(string.format("zoneFilters [%s]", mapID))
+						
 						RSMinimap.RefreshAllData(true)
 					end,
-				}
+					width = 1,
+				},
 			},
 		}
+
+		-- launch first search zone filters
+		searchZoneByContinentID(RSConstants.CURRENT_MAP_ID)
 	end
 
-	return zones_filter_options
+	return zone_filter_options
 end
 
 local loot_filter_options
@@ -2335,7 +2449,7 @@ local function GetLootFilterOptions()
 		if (loot_filter_options) then
 			loot_filter_options.args.filters.args.category_filters.args.lootFilters.values = {}
 			for i, subcategoryID in ipairs(private.ITEM_CLASSES[mainClassID]) do
-				loot_filter_options.args.filters.args.category_filters.args.lootFilters.values[GetItemSubClassInfo(mainClassID, subcategoryID)] = subcategoryID
+				loot_filter_options.args.filters.args.category_filters.args.lootFilters.values[subcategoryID] = GetItemSubClassInfo(mainClassID, subcategoryID)
 			end
 		end
 	end
@@ -3495,7 +3609,7 @@ function RareScanner:SetupOptions()
 	RSAC:RegisterOptionsTable("RareScanner Sound", GetSoundOptions)
 	RSAC:RegisterOptionsTable("RareScanner Display", GetDisplayOptions)
 	RSAC:RegisterOptionsTable("RareScanner Custom NPCs", GetCustomNpcOptions)
-	RSAC:RegisterOptionsTable("RareScanner NPC Filter", GetFilterOptions)
+	RSAC:RegisterOptionsTable("RareScanner NPC Filter", GetNpcFilterOptions)
 	RSAC:RegisterOptionsTable("RareScanner Container Filter", GetContainerFilterOptions)
 	RSAC:RegisterOptionsTable("RareScanner Event Filter", GetEventFilterOptions)
 	RSAC:RegisterOptionsTable("RareScanner Zone Filter", GetZonesFilterOptions)
@@ -3503,7 +3617,7 @@ function RareScanner:SetupOptions()
 	RSAC:RegisterOptionsTable("RareScanner Map", GetMapOptions)
 	RSAC:RegisterOptionsTable("RareScanner Profiles", RareScanner:GetOptionsTable())
 
-	local RSACD = LibStub("AceConfigDialog-3.0-RSmod")
+	local RSACD = LibStub("AceConfigDialog-3.0")
 	RSACD:AddToBlizOptions("RareScanner General", _G.GENERAL_LABEL, "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Sound", AL["SOUND"], "RareScanner")
 	RSACD:AddToBlizOptions("RareScanner Display", AL["DISPLAY"], "RareScanner")

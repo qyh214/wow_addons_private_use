@@ -1,7 +1,7 @@
 ## Interface: 100100
 ## Title: WeakAuras
 ## Author: The WeakAuras Team
-## Version: 5.5.2
+## Version: 5.5.5
 ## IconTexture: Interface\AddOns\WeakAuras\Media\Textures\icon.blp
 ## X-Flavor: Mainline
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
@@ -22,6 +22,9 @@
 
 # External code + initialization
 embeds.xml
+
+# TaintLess
+Libs\TaintLess\TaintLess.xml
 
 # Client flavor specific libs
 Libs\LibSpecialization\LibSpecialization.lua
@@ -58,6 +61,7 @@ Dragonriding.lua
 SubscribableObject.lua
 
 # Region support
+RegionTypes\SmoothStatusBarMixin.lua
 RegionTypes\RegionPrototype.lua
 RegionTypes\ProgressTexture.lua
 RegionTypes\Texture.lua

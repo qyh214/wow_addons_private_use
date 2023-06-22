@@ -195,7 +195,7 @@ do
 		end
 	end
 
-	local function onHide(self)
+	local function onHide()
 		smallBarsAnchor:StopMovingOrSizing()
 		largeBarsAnchor:StopMovingOrSizing()
 	end

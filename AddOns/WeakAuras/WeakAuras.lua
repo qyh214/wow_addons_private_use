@@ -1,7 +1,7 @@
 --- @type string, Private
 local AddonName, Private = ...
 
-local internalVersion = 65
+local internalVersion = 66
 
 -- Lua APIs
 local insert = table.insert
@@ -371,6 +371,7 @@ function Private.validate(input, default)
   end
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function WeakAuras.RegisterRegionType(name, createFunction, modifyFunction, default, properties, validate)
   if not(name) then
     error("Improper arguments to WeakAuras.RegisterRegionType - name is not defined", 2);
@@ -465,6 +466,7 @@ function WeakAuras.RegisterSubRegionType(name, displayName, supportFunction, cre
   end
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function WeakAuras.RegisterRegionOptions(name, createFunction, icon, displayName, createThumbnail, modifyThumbnail, description, templates, getAnchors)
   if not(name) then
     error("Improper arguments to WeakAuras.RegisterRegionOptions - name is not defined", 2);
@@ -1559,9 +1561,11 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
   end
 
   local player, realm, zone = UnitName("player"), GetRealmName(), GetRealZoneText()
-  --- @type boolean|number, boolean|number, boolean|string, boolean|string
+  --- @type boolean|number|nil, boolean|string|nil, boolean|string|nil, boolean|string
   local specId, role, position, raidRole = false, false, false, false
+  --- @type boolean, boolean, boolean
   local inPetBattle, vehicle, vehicleUi = false, false, false
+  --- @type boolean
   local dragonriding
   local zoneId = C_Map.GetBestMapForUnit("player")
   local zonegroupId = zoneId and C_Map.GetMapGroupID(zoneId)
@@ -1569,12 +1573,15 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
   local faction = UnitFactionGroup("player")
   local _, class = UnitClass("player")
   local inCombat = UnitAffectingCombat("player")
+  --- @type boolean
   local inEncounter = encounter_id ~= 0;
   local alive = not UnitIsDeadOrGhost('player')
   local raidMemberType = 0
-  if  UnitIsGroupLeader("player") then
+
+  if UnitIsGroupLeader("player") then
     raidMemberType = 1
   end
+
   if UnitIsGroupAssistant("player") then
     raidMemberType = raidMemberType + 2
   end
@@ -1590,8 +1597,8 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
       if role == "NONE" then
         role = GetTalentGroupRole(GetActiveTalentGroup()) or "NONE"
       end
-      vehicle = UnitInVehicle('player') or UnitOnTaxi('player')
-      vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar()
+      vehicle = UnitInVehicle('player') or UnitOnTaxi('player') or false
+      vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar() or false
     else
       vehicle = UnitOnTaxi('player')
     end
@@ -1599,8 +1606,8 @@ local function scanForLoadsImpl(toCheck, event, arg1, ...)
     dragonriding = Private.IsDragonriding()
     specId, role, position = Private.LibSpecWrapper.SpecRolePositionForUnit("player")
     inPetBattle = C_PetBattles.IsInBattle()
-    vehicle = UnitInVehicle('player') or UnitOnTaxi('player')
-    vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar()
+    vehicle = UnitInVehicle('player') or UnitOnTaxi('player') or false
+    vehicleUi = UnitHasVehicleUI('player') or HasOverrideActionBar() or HasVehicleActionBar() or false
   end
 
   local size, difficulty, instanceType, ZoneMapID, difficultyIndex = GetInstanceTypeAndSize()
@@ -2938,7 +2945,7 @@ local function pAdd(data, simpleChange)
         end
       end
 
-      -- If the aura has a onHide animation we need to cancel it to ensure it's truely hidden now
+      -- If the aura has a onHide animation we need to cancel it to ensure it's truly hidden now
       if Private.regions[id] then
         Private.CancelAnimation(Private.regions[id].region, true, true, true, true, true, true)
       end
@@ -5411,9 +5418,11 @@ local function GetAnchorFrame(data, region, parent)
   end
 
   if (anchorFrameType == "NAMEPLATE") then
-    local unit = region.state.unit
-    local frame = unit and WeakAuras.GetUnitNameplate(unit)
-    if frame then return frame end
+    local unit = region.state and region.state.unit
+    if unit then
+      local frame = unit and WeakAuras.GetUnitNameplate(unit)
+      if frame then return frame end
+    end
     if WeakAuras.IsOptionsOpen() then
       Private.ensurePRDFrame()
       personalRessourceDisplayFrame:anchorFrame(id, anchorFrameType)
@@ -5422,7 +5431,7 @@ local function GetAnchorFrame(data, region, parent)
   end
 
   if (anchorFrameType == "UNITFRAME") then
-    local unit = region.state.unit
+    local unit = region.state and region.state.unit
     if unit then
       local frame = WeakAuras.GetUnitFrame(unit) or WeakAuras.HiddenFrames
       if frame then

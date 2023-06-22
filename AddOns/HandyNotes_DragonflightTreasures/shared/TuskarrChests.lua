@@ -51,7 +51,6 @@ local tuskarr = repchest{
 
 ns.RegisterPoints(ns.AZURESPAN, {
     [58504270] = decay,
-    [58504270] = decay,
     [34903190] = decay,
     [35603410] = decay,
     [34103410] = decay,

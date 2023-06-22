@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(2522, "DBM-Aberrus", nil, 1208)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230403104939")
+mod:SetRevision("20230531064217")
 mod:SetCreatureID(201261)
 mod:SetEncounterID(2688)
 mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(20230316000000)
---mod:SetMinSyncRevision(20221215000000)
+mod:SetHotfixNoticeRev(20230510000000)
+mod:SetMinSyncRevision(20230510000000)
 --mod.respawnTime = 29
 
 mod:RegisterCombat("combat")
@@ -29,19 +29,19 @@ local specWarnHellsteelCarnage						= mod:NewSpecialWarningDodgeCount(401319, ni
 local specWarnDreadRift								= mod:NewSpecialWarningYou(406525, nil, nil, nil, 1, 2)
 local yellDreadRift									= mod:NewShortPosYell(406525)
 local yellDreadRiftFades							= mod:NewIconFadesYell(406525)
-local specWarnRayofAnguish							= mod:NewSpecialWarningYouPos(402253, nil, nil, nil, 1, 2)
+local specWarnRayofAnguish							= mod:NewSpecialWarningYou(402253, nil, nil, nil, 1, 2)
 local yellRayofAnguish								= mod:NewShortYell(402253)
-local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, nil, nil, 2, 2)
+local specWarnHellbeam								= mod:NewSpecialWarningDodgeCount(400430, nil, 18357, nil, 2, 2)
 local specWarnWindsofExtinction						= mod:NewSpecialWarningCount(403326, nil, nil, nil, 2, 13)
 local specWarnTerrorClaws							= mod:NewSpecialWarningDefensive(404744, nil, nil, nil, 1, 2)
 local specWarnTerrorClawsTaunt						= mod:NewSpecialWarningTaunt(404744, nil, nil, nil, 1, 2)
 local specWarnGTFO									= mod:NewSpecialWarningGTFO(406530, nil, nil, nil, 1, 8)
 --
-local timerDreadRiftsCD								= mod:NewCDCountTimer(34.3, 406516, nil, nil, nil, 3)
-local timerRaysofAnguishCD							= mod:NewCDCountTimer(34.1, 407069, nil, nil, nil, 3)
-local timerHellbeamCD								= mod:NewCDCountTimer(35.5, 400430, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerWingsofExtinctionCD						= mod:NewCDCountTimer(34.1, 403326, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
-local timerTerrorClawsCD							= mod:NewCDTimer(15.9, 404744, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerDreadRiftsCD								= mod:NewCDCountTimer(34, 406516, nil, nil, nil, 3)
+local timerRaysofAnguishCD							= mod:NewCDCountTimer(34, 407069, nil, nil, nil, 3)
+local timerHellbeamCD								= mod:NewCDCountTimer(35.5, 400430, 18357, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)--"Breath"
+local timerWingsofExtinctionCD						= mod:NewCDCountTimer(34, 403326, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON)
+local timerTerrorClawsCD							= mod:NewCDTimer(15.6, 404744, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 --local berserkTimer								= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("SetIconOnDreadRifts", 406516, false, 0, {1, 2, 3, 4, 5, 6, 7, 8})--Default to off, players need to get used to this not existing
@@ -96,7 +96,7 @@ function mod:SPELL_CAST_START(args)
 		self.vb.wingsCount = self.vb.wingsCount + 1
 		specWarnWindsofExtinction:Show(self.vb.wingsCount)
 		specWarnWindsofExtinction:Play("pushbackincoming")
-		timerWingsofExtinctionCD:Start()
+		timerWingsofExtinctionCD:Start(nil, self.vb.wingsCount+1)
 	elseif spellId == 404744 then
 		if self:IsTanking("player", nil, nil, true, args.sourceGUID) then--Boss1 doesn't exist, so it uses guid and token scanner
 			specWarnTerrorClaws:Show()
@@ -124,10 +124,10 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 402253 then
 		if args:IsPlayer() then
 			specWarnRayofAnguish:Show()
-			specWarnRayofAnguish:Play("targetyou")--"mm"..icon
+			specWarnRayofAnguish:Play("laserrun")
 			yellRayofAnguish:Yell()
 		end
-		warnDreadRayofAnguish:CombinedShow(0.5, self.vb.rayCount, args.destName)
+		warnDreadRayofAnguish:CombinedShow(1.1, self.vb.rayCount, args.destName)
 	elseif spellId == 404743 and not args:IsPlayer() then
 		specWarnTerrorClawsTaunt:Show(args.destName)
 		specWarnTerrorClawsTaunt:Play("tauntboss")

@@ -104,4 +104,9 @@ ns.RegisterPoints(ns.ZARALEKCAVERN, {
         quest=76117,
         vignette=5739,
     },
+    [54532020] = {
+        loot={206035}, -- Ancient Research
+        quest=76121,
+        vignette=5741,
+    },
 }, dfinsknowledge)

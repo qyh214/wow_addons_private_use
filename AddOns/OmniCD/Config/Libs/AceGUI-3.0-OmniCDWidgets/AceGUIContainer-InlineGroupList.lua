@@ -19,7 +19,7 @@
 InlineGroup Container
 Simple container widget that creates a visible "box" with an optional title.
 -------------------------------------------------------------------------------]]
-local Type, Version = "InlineGroupList-OmniCD", 23
+local Type, Version = "InlineGroupList-OmniCD", 25
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 local OmniCDC = LibStub("OmniCDC", true)
@@ -127,20 +127,15 @@ local methods = {
 	["SetTitle"] = function(self, name, desc, class) -- set spell name, mo tooltip, class bg
 		self.titletext:SetText(name)
 		self.title.desc = desc
-
-		if name == ALL then -- header bar (toggle all)
-			self.frame.framebg:SetColorTexture(0.5, 0.5, 0.5, 0.25)
+		if class then
+			self.arg = class
+			local classColor = RAID_CLASS_COLORS[class]
+			local r, g, b = classColor.r, classColor.g, classColor.b
+			self.frame.framebg:SetColorTexture(r, g, b, 1)
+			self.frame.framebg:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 0.5), CreateColor(1, 1, 1, 0.05)) -- v24
 			self.frame.framebg:Show()
 		else
-			if class then
-				self.arg = class
-				local classColor = RAID_CLASS_COLORS[class]
-				local r, g, b = classColor.r, classColor.g, classColor.b
-				self.frame.framebg:SetColorTexture(r, g, b, 0.4)
-				self.frame.framebg:Show()
-			else
-				self.frame.framebg:Hide()
-			end
+			self.frame.framebg:Hide()
 		end
 	end,
 

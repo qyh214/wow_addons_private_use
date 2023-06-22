@@ -77,7 +77,9 @@ function RareScannerDataProviderMixin:ShowAnimations()
 				if (RSConfigDB.IsShowingAnimationForNpcs()) then
 					if (RSNpcDB.GetInternalNpcInfo(entityID)) then
 						pingAnimation(pin, pin.ShowPingAnim, vignetteObjectID)
-					elseif (entityID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT and RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID())) then
+					elseif ((entityID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT or entityID == RSConstants.ZARALEK_CAVERN_LOAM_SCOUT) and RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID())) then
+						pingAnimation(pin, pin.ShowPingAnim, RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID()))
+					elseif (entityID == RSConstants.GOBLIN_PORTAL) then
 						pingAnimation(pin, pin.ShowPingAnim, RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID()))
 					end
 				end	
@@ -256,6 +258,12 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), pin.vignetteInfo, self:GetMap():GetMapID())
 		if (POI) then
 			self.POI = POI
+			
+			-- With events ignore
+			if (self.POI.isEvent) then
+				return
+			end
+			
 			-- Just in case the user didnt have the questID when he found it
 			if (POI.isOpened) then
 				RSContainerDB.DeleteContainerOpened(POI.entityID)
@@ -275,6 +283,7 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 		end
 		
 		pin.POI = nil
+			
 		if (RSTooltip.HideTooltip(self.tooltip)) then
 			pin.tooltip = nil
 		end

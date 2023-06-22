@@ -1,0 +1,10 @@
+## Interface: 100100
+## Title: |cff0080ffMDGuildBest|r
+## Title-zhCN: |cff0080ffMDGuildBest|r 公会大秘记录
+## Title-zhTW: |cff0080ffMDGuildBest|r 公會大秘記錄
+## Author: Siweia
+## Version: 3.1
+## SavedVariables: MDdb
+
+Locales.lua
+Core.lua

@@ -235,14 +235,16 @@ local GetItemInfoInstant = GetItemInfoInstant;
 local find = string.find;
 local LOOT_ITEM_SELF = string.gsub(LOOT_ITEM_SELF or "You receive loot: %s", "%%s", "");
 local QuestItemDB = {};
+local PLAYER_GUID = "";
 
 local function QuestItemTracker_OnEvent(self, event, text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid)
     local itemID = match(text, "item:(%d+)", 1);
     if itemID then
         itemID = tonumber(itemID);
+        --print(event, itemID)
         local classID = select(6, GetItemInfoInstant(itemID));
         if classID == 12 then
-            if find(text, LOOT_ITEM_SELF) then
+            if guid == PLAYER_GUID then    --find(text, LOOT_ITEM_SELF)
                 if not QuestItemDB[itemID] then
                     QuestItemDB[itemID]= true;
                     NarciQuestItemDisplay:SetItem(itemID);
@@ -300,6 +302,8 @@ do
 
         QuestItemDB = NarciStatisticsDB.QuestItems;
         NarciQuestItemDisplay:UseSavedPosition();
+
+        PLAYER_GUID = UnitGUID("player");
     end
 
     addon.AddInitializationCallback(LoadDatabase);

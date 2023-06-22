@@ -1,14 +1,12 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('Storyline') then return end
+function R:Storyline()
+	S:HandleFrame(Storyline_NPCFrame)
+	S:HandleCloseButton(Storyline_NPCFrameClose)
 
-function AS:Storyline()
-	AS:SkinFrame(Storyline_NPCFrame)
-	AS:SkinCloseButton(Storyline_NPCFrameClose)
-
-	AS:Desaturate(Storyline_NPCFrameLock)
-	AS:Desaturate(Storyline_NPCFrameResizeButton)
-	AS:Desaturate(Storyline_NPCFrameConfigButton)
+	S:Desaturate(Storyline_NPCFrameLock)
+	S:Desaturate(Storyline_NPCFrameResizeButton)
+	S:Desaturate(Storyline_NPCFrameConfigButton)
 
 	--Reposition Menu
 	Storyline_NPCFrameResizeButton:ClearAllPoints()
@@ -19,4 +17,4 @@ function AS:Storyline()
 	Storyline_NPCFrameConfigButton:SetPoint('BOTTOM', Storyline_NPCFrameResizeButton, 'TOP', 1, 2)
 end
 
-AS:RegisterSkin('Storyline', AS.Storyline)
+AS:RegisterSkin('Storyline')

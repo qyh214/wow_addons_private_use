@@ -143,14 +143,18 @@ L["handler_tooltip_quest"] = "Débloqué avec une quête"
 ----------------------------------------------------------------------------------------------------
 
 L["Crafting Orders"] = true
-L["Mailbox"] = true
-L["Portal to Dalaran"] = true
-L["Portal to Jade Forest"] = true
-L["Portal to Orgrimmar"] = true
-L["Portal to Shadowmoon Valley"] = true
-L["Portal to Stormwind"] = true
+L["Mailbox"] = "Boite aux lettres"
+L["Portal to Orgrimmar"] = "Portail vers Orgrimmar"
+L["Portal to Stormwind"] = "Portail vers Hurlevent"
 L["Rostrum of Transformation"] = true
 L["Teleport to Seat of the Aspects"] = true
 L["Visage of True Self"] = true
+L["Portal to Nazmir"] = "Portail vers Nazmir"
+L["Portal to Tiragarde Sound"] = "Portail vers la rade de Tiragarde"
+L["Portal to Uldum"] = "Portail vers Uldum"
+L["Portal to Badlands"] = "Portail vers les terres Ingrates"
 
+-- L["Portal to Dalaran"] = "Portail vers Dalaran"
+-- L["Portal to Jade Forest"] = "Portail vers la forêt de Jade"
+-- L["Portal to Shadowmoon Valley"] = "Portail vers la vallée d’Ombrelune"
 end

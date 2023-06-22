@@ -1,10 +1,11 @@
+---@class XLootAddon
 local XLoot = select(2, ...)
 
 local function CompileLocales(locales)
 	local L = locales[GetLocale()] and locales[GetLocale()] or locales.enUS
 	if L ~= locales.enUS then
 		setmetatable(L, { __index = locales.enUS })
-		for k, v in pairs(L) do	
+		for k, v in pairs(L) do
 			if type(v) == 'table' then
 				setmetatable(v, { __index = locales.enUS[k] })
 			end

@@ -92,8 +92,6 @@ L['options_icons_signal_transmitter'] = 'Wyrmhole Generator Signal Transmitters'
 L['options_icons_signal_transmitter_desc'] = 'Display {object:Deactivated Signal Transmitters} locations for the {item:198156}.'
 
 L['rare_14h'] = 'This rare is on a 14 hour rotation with other rares with one rare spawning every 30 minutes.\n\nNext spawn in: {note:%s}'
-L['time_format_12hrs'] = '%B %d - %I:%M %p local time'
-L['time_format_24hrs'] = '%B %d - %H:%M local time'
 L['now'] = 'Now'
 L['spawns_at_night'] = '{note:Spawns only at night. (After 18:30 server time)}'
 
@@ -563,6 +561,18 @@ L['titan_chest'] = 'Titan Chest'
 L['options_icons_titan_chest'] = 'Titan Chest'
 L['options_icons_titan_chest_desc'] = 'Display possible locations of {object:Titan Chest}.'
 
+L['living_mud_mask_note'] = [[
+{npc:197346} will drop the {item:200586} which give you the {quest:70377} quest. This will take you over to {npc:198062} to turn them in.
+
+After that you have to speak with {npc:198062} again and ask him for a better reward. He will take a glider over to the VIP area so you can 'enjoy his company further as a reward'.
+
+When you arrive at the floating island {npc:198062} will be on the floor. Speak with him again, saying that he looks dead.
+
+A small slime called {npc:198590} will spawn and run away to a branch behind {npc:197232}. Once you get close enough the slime will offer you the quest {quest:72060}.
+
+Go back to {npc:198062}, sitting on a bench, and turn in the quest for your {item:200872}.
+]]
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -577,7 +587,7 @@ L['obsidian_throne_rare_note'] = 'Inside the {location:Obsidian Throne}.'
 L['slurpo_snail_note'] = 'Loot a {item:201033} from {object:Salt Crystal} in {location:The Azure Span} cave (11, 41) and use it in {location:The Waking Shores} cave to summon him.'
 L['worldcarver_atir_note'] = 'Collect 3x {item:191211} from {npc:187366} nearby and place them at {npc:197395} to spawn the rare.'
 
-L['bubble_drifter_note'] = '{item:199061} can be found in {object:Expedition Scout\'s Packs} and {object:Disturbed Dirts}.'
+L['bubble_drifter_note'] = '{item:199061} can be found in {object:Expedition Scout\'s Packs} and {object:Disturbed Dirts}.\n\nTo interact with the fish you need to get {spell:388331} from the {object:Fragrant Plant} nearby.'
 L['dead_mans_chestplate_note'] = 'Inside the tower on the middle floor.'
 L['fullsails_supply_chest_note'] = 'The key drops from {npc:187971s} and {npc:187320s} south of {location:Wingrest Embassy}.'
 L['golden_dragon_goblet_note'] = 'Loot {item:202081} from {npc:190056} on the {location:Wild Coast} and complete the small quest line.'
@@ -726,23 +736,25 @@ Use this necklace and pick up {item:202062} {dot:Red} found within the {location
 ]]
 L['phoenix_wishwing_info'] = 'This is part of the {item:193373} Collectible located in {location:The Waking Shore} on the {location:Dragon Isles}.'
 
+L['bugbiter_tortoise_note'] = 'Collect {item:202082}({dot:Red}) and {item:202084}({dot:Green}) and exchange it at {npc:187077} for your {item:202085}.\n\n{npc:187077} requires the world quest {quest:66070} to be active.'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
 
 L['in_deepflayer_nest'] = 'Within {location:Deepflayer Nest}'
 
-L['brulsef_the_stronk_note'] = 'Loot your rewards from the {object:Chest of Massive Gains}.'
+L['brulsef_the_stronk_note'] = 'Loot your rewards from the {object:Chest of Massive Gains}.\n\n{bug:Don\'t let him leave the initial position far away, otherwise there will be no chest after defeating him.}'
 
 L['ancient_zaqali_chest_note'] = 'Use a nearby {object:Bottled Magma} to open the chest.'
-L['blazing_shadowflame_chest_note'] = '{bug:The shadowflame is too strong to bear.}' -- DEV NOTE - Do not translate
+L['blazing_shadowflame_chest_note'] = 'Equip the {item:15138}, which can be bought from the auction house or crafted by a leatherworker, to loot the chest.'
 L['crystal_encased_chest_note'] = 'Interact with both the blue {object:Attunement Crystal} ({dot:Blue}) and red {object:Attunement Crystal} ({dot:Red}) to open the chest.'
-L['old_trunk_note'] = 'Collect and combine x5 {item:204325} to create {item:204323}.'
+L['old_trunk_note'] = 'Find and collect the {npc:204277} 5 times, to get the {item:204323}. {note:The first mouse is next to the chest.}'
 L['well_chewed_chest_note'] = 'The {item:202869}({dot:Green}) is hidden underneath the {npc:199962} within the cave.'
 
 L['molten_hoard_label'] = 'Molten Hoard'
 L['fealtys_reward_label'] = 'Fealty\'s Reward'
-L['fealtys_reward_note'] = '{bug:Currently bugged.}' -- DEV NOTE - Do not translate
+L['fealtys_reward_note'] = 'Kneel {emote:/kneel} in front of the dragon statue in the southwest until it breathes fire to be able to open the chest.'
 L['dreamers_bounty_label'] = 'Dreamer\'s Bounty'
 L['dreamers_bounty_note'] = 'The {object:Dreamers\'s Bounty} can only be looted while you have the {spell:400066} debuff on you which you get from {npc:201068} nearby.'
 L['moth_pilfered_pouch_label'] = 'Moth-Pilfered Pouch'
@@ -751,6 +763,8 @@ L['waterlogged_bundle_label'] = 'Waterlogged Bundle'
 
 L['stolen_stash_label'] = 'Stolen Stash'
 L['ritual_offering_label'] = 'Ritual Offering'
+L['options_icons_ritual_offering'] = 'Ritual Offering'
+L['options_icons_ritual_offering_desc'] = 'Display possible locations of {object:Ritual Offerings}.'
 L['nal_kskol_reliquary_label'] = 'Nal ks\'kol Reliquary'
 L['nal_kskol_reliquary_note'] = 'Use the {object:Reliquary Access Console} and solve the puzzle to open the {object:Nal ks\'kol Reliquary}.'
 
@@ -759,7 +773,8 @@ L['bolts_and_brass_note'] = 'Open the {object:Bolts and Brass} and loot the {ite
 
 L['sniffen_sage_suffix'] = 'special items found'
 
-L['big_slick_note_1'] = '{npc:48182} can be found in old-world {location:Darkshore}. Speak with {npc:141489} to travel back in time before the {location:War of Thorns}.'
+L['big_slick_note'] = 'Complete daily quests from {npc:201752} to reach the reputation level "Professional" (total 2800 reputation) at the faction {faction:2568} to get your mount.\n\nOr show him the following snails (pets) at level 25 to get 100 reputation for each:'
+L['grogul_note'] = 'Talk to {npc:204672} and choose a treat that you can use to encourage this snail to move faster.\n{note:The achievement can be obtained before Renown 7.}'
 
 L['saccratos_note'] = 'Exchange {item:204727} for a pet, mount, and more.'
 L['ponzo_note'] = 'Exchange {item:204985} and {item:205903} for drake customizations, pet, mount, and more.'
@@ -768,5 +783,12 @@ L['smelly_trash_pile_label'] = 'Smelly Trash Pile'
 L['options_icons_smelly_trash_pile'] = 'Smelly Trash Pile'
 L['options_icons_smelly_trash_pile_desc'] = 'Display possible locations of {object:Smelly Trash Pile}.'
 
-L['seething_cache_treasure_note'] = 'To be able to see the {object:Seething Cache} and loot the {item = 192779} you\'ll need to pick up 3x stacks of a {spell:399342} debuff from {object:Seething Orbs} located in the {location:Zaqali Caldera} area in {location:Zaralek Cavern}.'
+L['seething_cache_treasure_note'] = 'To be able to see the {object:Seething Cache} and loot the {item:192779} you\'ll need to pick up 3x stacks of a {spell:399342} debuff from {object:Seething Orbs} located in the {location:Zaqali Caldera} area in {location:Zaralek Cavern}.'
 L['chest_of_the_flights_treasure_note'] = 'To open the treasure chest you need to click on the {object:Empowered Gems} in the order {note:Red > Black > Blue > Yellow > Green}.'
+L['curious_top_hat_note'] = 'Interact with {npc:205010} while you have the {spell:410288} Buff to recieve {item:205021}. If you dont have the Buff and go near him he will run away.'
+
+L['zaralek_rotation_active'] = ns.color.Blue('This Rare can spawn today.')
+L['zaralek_rotation_inactive'] = ns.color.Orange('This Rare will not spawn today, come back tomorrow.')
+
+L['options_icons_zone_event'] = 'Zone Event'
+L['options_icons_zone_event_desc'] = 'Display locations for zone events.'

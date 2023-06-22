@@ -1,8 +1,8 @@
-## Interface: 100007
+## Interface: 100100
 ## Title: Lib: LibDropDownMenu
 ## Notes: Library providing downdown menu like blizzards DropDownMenu
 ## Author: Hizuro
-## Version: r29
+## Version: r31
 ## OptionalDeps: LibStub, CallbackHandler-1.0
 
 ## X-Curse-Project-ID: 298617

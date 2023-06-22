@@ -363,8 +363,7 @@ L["Destination Reaction"] = "目标反应"
 L["Destination Unit"] = "目标单位"
 L["Destination unit's raid mark index"] = "目标单位的团队标记编号"
 L["Destination unit's raid mark texture"] = "目标单位的团队标记材质"
---[[Translation missing --]]
-L["Difficulty"] = "Difficulty"
+L["Difficulty"] = "难度"
 L["Disable Spell Known Check"] = "忽略法术已知检查"
 L["Disabled Spell Known Check"] = "已忽略法术已知检查"
 L["Disease"] = "疾病"
@@ -426,14 +425,13 @@ L["Enchant Name or ID"] = "附魔名称或 ID"
 L["Enchant Removed"] = "附魔移除"
 L["Enchanted"] = "已附魔"
 L["Enchanting Cast Bar"] = "附魔施法条"
-L["Encounter ID(s)"] = "BOSS 战 ID"
+L["Encounter ID(s)"] = "首领战 ID"
 L["Energize"] = "能量值恢复"
 L["Enrage"] = "激怒"
 L["Enter static or relative values with %"] = "输入绝对值或者是带有%的相对值"
 L["Entering"] = "进入"
 L["Entering/Leaving Combat"] = "进入/离开战斗"
---[[Translation missing --]]
-L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
+L["Entering/Leaving Encounter"] = "进入/离开首领战斗"
 L["Entry Order"] = "条目排序"
 L["Environment Type"] = "环境伤害类型"
 L["Environmental"] = "环境伤害"
@@ -512,6 +510,7 @@ L["Formats |cFFFF0000%unit|r"] = "格式化 |cFFFF0000%unit|r"
 L["Formats Player's |cFFFF0000%guid|r"] = "格式化玩家的 |cFFFF0000%guid|r"
 L["Forward"] = "正向"
 L["Forward, Reverse Loop"] = "正向，反向循环"
+L["Fourth Value of Tooltip Text"] = "鼠标提示文本的第四项值"
 L["Frame Selector"] = "选择框体"
 L["Frequency"] = "频率"
 L["Freya"] = "弗蕾亚"
@@ -605,8 +604,7 @@ L["Icecrown Citadel"] = "冰冠堡垒"
 L["Icon"] = "图标"
 L["Icon Function"] = "图标函数"
 L["Icon Function (fallback state)"] = "图标函数（后备状态）"
---[[Translation missing --]]
-L["Id"] = "Id"
+L["Id"] = "ID"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "如果你需要进一步的协助，请在 GitHub 上提交工单或是访问我们的 Discord：https://discord.gg/weakauras！"
 L["Ignis the Furnace Master"] = "掌炉者伊格尼斯"
 L["Ignore Dead"] = "忽略已死亡"
@@ -677,6 +675,7 @@ L["Jin'do the Hexxer"] = "妖术师金度"
 L["Journal Stage"] = "指南阶段"
 L["Keep Inside"] = "保持在内"
 L["Kel'Thuzad"] = "克尔苏加德"
+L["Key"] = "Key"
 L["Kologarn"] = "科隆加恩"
 L["Koralon the Flame Watcher"] = "火焰看守者科拉隆"
 L["Kurinnaxx"] = "库林纳克斯"
@@ -820,7 +819,6 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "数字"
 L["Number Affected"] = "影响数"
 L["Object"] = "对象"
---[[Translation missing --]]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -832,19 +830,18 @@ every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3
 
-Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
-Can be a range of values
-Can have multiple values separated by a comma or a space
+Only if BigWigs shows it on it's bar]=] ] = [=[事件发生的次数，光环不再加载时重置
+可以为值的范围
+可以有多个条目，由英文逗号或空格分隔
 
-Examples:
-2nd 5th and 6th events: 2, 5, 6
-2nd to 6th: 2-6
-every 2 events: /2
-every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3
+例如：
+第二、第五和第六次事件：2, 5, 6
+第二到第六次事件：2-6
+每两次事件：/2
+从第二次开始每三次事件：2/3
+从第二到第十一次事件开始每三次事件：2-11/3
 
-Only if BigWigs shows it on it's bar]=]
---[[Translation missing --]]
+仅当BigWigs在它的进度条上显示]=]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -856,18 +853,18 @@ every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3
 
-Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
-Can be a range of values
-Can have multiple values separated by a comma or a space
+Only if DBM shows it on it's bar]=] ] = [=[事件发生的次数，光环不再加载时重置
+可以为值的范围
+可以有多个条目，由英文逗号或空格分隔
 
-Examples:
-2nd 5th and 6th events: 2, 5, 6
-2nd to 6th: 2-6
-every 2 events: /2
-every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3
+例如：
+第二、第五和第六次事件：2, 5, 6
+第二到第六次事件：2-6
+每两次事件：/2
+从第二次开始每三次事件：2/3
+从第二到第十一次事件开始每三次事件：2-11/3
 
-Only if DBM shows it on it's bar]=]
+仅当DBM在它的进度条上显示]=]
 L["Officer"] = "官员"
 L["Offset from progress"] = "于进度偏移量"
 L["Offset Timer"] = "位移计时器"
@@ -1081,6 +1078,8 @@ L["Show Heal Absorb"] = "显示治疗吸收量"
 L["Show Incoming Heal"] = "显示即将到来的治疗"
 L["Show Loss of Control"] = "显示失控效果"
 L["Show On"] = "显示于"
+L["Show Override"] = "显示替代"
+L["Show Override Spell"] = "显示替代法术"
 L["Show Rested Overlay"] = "显示休息覆盖层"
 L["Shrink"] = "收缩"
 L["Silithid Royalty"] = "安其拉三宝"
@@ -1173,8 +1172,7 @@ L["String"] = "字符串"
 L["Subtract Cast"] = "减去施法时间"
 L["Subtract Channel"] = "减去引导时间"
 L["Subtract GCD"] = "减去 GCD"
---[[Translation missing --]]
-L["Success"] = "Success"
+L["Success"] = "成功"
 L["Sulfuron Harbinger"] = "萨弗隆先驱者"
 L["Summon"] = "召唤"
 L["Supports multiple entries, separated by commas"] = "支持多个条目，由英文逗号分隔"
@@ -1192,8 +1190,8 @@ L["Talent"] = "天赋"
 L["Talent |cFFFF0000Not|r Known"] = "天赋|cFFFF0000不|r可用"
 L["Talent |cFFFF0000Not|r Selected"] = "天赋|cFFFF0000未|r选择"
 L["Talent Known"] = "天赋可用"
-L["Talent Selected"] = "天赋选择"
 L["Talent selected"] = "天赋选择"
+L["Talent Selected"] = "天赋选择"
 L["Talent Specialization"] = "专精"
 L["Tanking And Highest"] = "做T并且最高"
 L["Tanking But Not Highest"] = "做T但不是最高"
@@ -1210,6 +1208,7 @@ L["The aura has overwritten the global '%s', this might affect other auras."] = 
 L["The effective level differs from the level in e.g. Time Walking dungeons."] = "有效等级和实际等级的差，例如：在时光漫游副本中的等级差。"
 L["The Eye of Eternity"] = "永恒之眼"
 L["The Four Horsemen"] = "天启四骑士"
+L["The 'Key' value can be found in the BigWigs options of a specific spell"] = "特定法术的\"ID\"值可以在BigWigs选项中找到"
 L["The Lich King"] = "巫妖王"
 L["The Obsidian Sanctum"] = "黑曜石圣殿"
 L["The Prophet Skeram"] = "预言者斯克拉姆"
@@ -1242,6 +1241,7 @@ L["Tooltip"] = "鼠标提示"
 L["Tooltip Value 1"] = "鼠标提示值 1"
 L["Tooltip Value 2"] = "鼠标提示值 2"
 L["Tooltip Value 3"] = "鼠标提示值 3"
+L["Tooltip Value 4"] = "鼠标提示值 4"
 L["Top"] = "上"
 L["Top Left"] = "左上"
 L["Top Right"] = "右上"

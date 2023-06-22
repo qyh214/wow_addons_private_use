@@ -250,33 +250,16 @@ local function SetupTutorials()
 		},
 		{	-- 12
 			text = cTitle.."         What's New|r\n\n"..
-					cTitle.."Version 6.1.1|r\n"..
-					"- FIXED - Quests - Max Quests limit (Blizz bug)\n"..
-					"- IMPROVED - Traveler's Log tracking (click to open activity, activity dropdown"..
-					offs.."menu, activity tooltip)\n\n"..
+					cTitle.."Version 6.2.0|r\n"..
+					cBold.."Quick compatibility update, more updates will follow.|r\n"..
+					"- ADDED - Support for WoW 10.1.0\n"..
+					"- ADDED - Support for WoW 10.0.7\n"..
+					"- UPDATED - Addon support - PetTracker 10.0.1\n"..
+					"- UPDATED - Addon support - Masque 10.1.1\n"..
+					"- UPDATED - Addon support - TomTom 3.3.9-release\n"..
+					"- UPDATED - Help - Supporters (Patreon)\n\n"..
 
-					cTitle.."Version 6.1.0|r\n"..
-					"- ADDED - Support for WoW 10.0.5\n"..
-					"- ADDED - Tracker - Timer Progress Bar skin\n"..
-					"- FIXED - Tracker repeatedly expands in Mythic+ (after boss kills, player deaths,"..
-					offs.."etc.)\n"..
-					"- FIXED - Quests - Reward information in the tooltip is sometimes not displayed\n"..
-					"- FIXED - Quests - Header highlight colors are lost, when clicked on Quest\n"..
-					"- FIXED - Quests - Quest tooltip content is overridden, when Party progress"..
-					offs.."displayed in tooltip\n"..
-					"- FIXED - Quests - Highlight colors are lost, when clicked on Campaign quest\n"..
-					"- IMPROVED - Tracker - Progress Bars skin\n"..
-					"- IMPROVED - Quests - Reward information in the tooltip\n"..
-					"- IMPROVED - Quests - Active Button - Hides the button when Blizzard displays"..
-					offs.."its own\n"..
-					"- IMPROVED - Profession - Recipe tooltip with enabled addon ArkInventory\n"..
-					"- IMPROVED - Filters\n"..
-					"- IMPROVED - Edit Mode Hack\n"..
-					"- IMPROVED - TomTom - auto set waypoint after update quest objective\n"..
-					"- UPDATED - Addon support - Masque 10.0.5\n"..
-					"- UPDATED - Addon support - ElvUI 13.23, Tukui 20.37\n\n"..
-
-					cTitle.."WoW 10.0.5 - Known issues w/o solution|r\n"..
+					cTitle.."WoW 10.1.0 - Known issues w/o solution|r\n"..
 					"- Clicking on tracked quests or achievements has no response during combat.\n"..
 					"- Header buttons Q and A don't work during combat.\n\n"..
 
@@ -348,13 +331,22 @@ local function SetupTutorials()
 					"of time that addon development requires.\n\n"..
 					"                                    Many thanks to all supporters  |T"..helpPath.."help_patreon:16:16:0:0:256:32:157:173:0:16|t\n\n"..
 					cTitle.."Patrons|r\n"..
+					SetFormatedPatronName("Legendary", "FrankN'Furter")..
 					SetFormatedPatronName("Legendary", "Zayah", "Vek'nilash")..
+					SetFormatedPatronName("Epic", "Haekwon", "Elune")..
+					SetFormatedPatronName("Epic", "Monty", "Winterhoof")..
 					SetFormatedPatronName("Epic", "Squishses", "Area 52")..
+					SetFormatedPatronName("Rare", "Liothen", "Emerald Dream")..
+					SetFormatedPatronName("Uncommon", "Anaara", "Auchindoun")..
 					SetFormatedPatronName("Uncommon", "Charles Howarth")..
+					SetFormatedPatronName("Uncommon", "Chris J")..
 					SetFormatedPatronName("Uncommon", "Flex (drantor)")..
+					SetFormatedPatronName("Uncommon", "Jason")..
+					SetFormatedPatronName("Uncommon", "Kevin Costa")..
 					SetFormatedPatronName("Uncommon", "Kyle Fuller")..
 					SetFormatedPatronName("Uncommon", "Pablo Sebastián Molina Silva")..
 					SetFormatedPatronName("Uncommon", "Semy", "Ravencrest")..
+					SetFormatedPatronName("Uncommon", "Sopleb")..
 					SetFormatedPatronName("Uncommon", "Torresman", "Drak'thul")..
 					SetFormatedPatronName("Uncommon", "Xeelee", "Razorfen")..
 					SetFormatedPatronName("Common", "Darren Divecha")..

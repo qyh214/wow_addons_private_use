@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu May  4 19:43:31 UTC 2023
+-- Generated from CurseForge on Wed Jun 21 21:15:56 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("zhCN") then
@@ -54,15 +54,20 @@ L["DISABLE_RWF_MODE_RELOAD"] = "你正在禁用冲击世界首杀模式。点击
 L["DPS"] = "伤害输出"
 L["DUNGEON_SHORT_NAME_AA"] = "艾杰斯亚学院"
 L["DUNGEON_SHORT_NAME_AV"] = "碧蓝魔馆"
+L["DUNGEON_SHORT_NAME_BH"] = "蕨皮山谷"
 L["DUNGEON_SHORT_NAME_COS"] = "群星庭院"
 L["DUNGEON_SHORT_NAME_DOS"] = "彼界"
+L["DUNGEON_SHORT_NAME_FH"] = "自由镇"
 L["DUNGEON_SHORT_NAME_GD"] = "恐轨车站"
 L["DUNGEON_SHORT_NAME_GMBT"] = "集市（后三）"
 L["DUNGEON_SHORT_NAME_HOA"] = "赎罪大厅"
+L["DUNGEON_SHORT_NAME_HOI"] = "注能大厅"
 L["DUNGEON_SHORT_NAME_HOV"] = "英灵殿"
 L["DUNGEON_SHORT_NAME_ID"] = "钢铁码头"
 L["DUNGEON_SHORT_NAME_LOWR"] = "卡拉赞下层"
 L["DUNGEON_SHORT_NAME_MISTS"] = "仙林迷雾"
+L["DUNGEON_SHORT_NAME_NELT"] = "奈萨鲁斯"
+L["DUNGEON_SHORT_NAME_NL"] = "巢穴"
 L["DUNGEON_SHORT_NAME_NO"] = "诺库德阻击战"
 L["DUNGEON_SHORT_NAME_NW"] = "通灵战潮 "
 L["DUNGEON_SHORT_NAME_PF"] = "凋魂之殇"
@@ -73,8 +78,11 @@ L["DUNGEON_SHORT_NAME_SOA"] = "晋升高塔"
 L["DUNGEON_SHORT_NAME_STRT"] = "集市（前五）"
 L["DUNGEON_SHORT_NAME_TJS"] = "青龙寺"
 L["DUNGEON_SHORT_NAME_TOP"] = "伤逝剧场"
+L["DUNGEON_SHORT_NAME_ULD"] = "奥达曼"
+L["DUNGEON_SHORT_NAME_UNDR"] = "地渊孢林"
 L["DUNGEON_SHORT_NAME_UPPR"] = "卡拉赞上层"
 L["DUNGEON_SHORT_NAME_VOTW"] = "化身巨龙牢窟"
+L["DUNGEON_SHORT_NAME_VP"] = "旋云之巅"
 L["DUNGEON_SHORT_NAME_WORK"] = "麦卡贡车间"
 L["DUNGEON_SHORT_NAME_YARD"] = "麦卡贡垃圾场"
 L["ENABLE_AUTO_FRAME_POSITION"] = "自动调整Raider.IO个人页面的位置"
@@ -136,6 +144,17 @@ L["PREVIOUS_SCORE"] = "之前的大秘境分数 (%s)"
 L["PROFILE_BEST_RUNS"] = "按地下城显示最佳记录"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "锁定Raider.IO主页框架，或开启自动定位来隐藏这个锚点。"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告:|r |cffFFFFFF%s|r无法找到你目前阵营的数据。请检查你|cffFFFFFF/raiderio|r 的设置 并且开启鼠标提示数据 |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["RAID_BOSS_ATSC_1"] = "狱铸者卡扎拉"
+L["RAID_BOSS_ATSC_2"] = "融合体密室"
+L["RAID_BOSS_ATSC_3"] = "被遗忘的实验体"
+L["RAID_BOSS_ATSC_4"] = "扎卡利突袭"
+L["RAID_BOSS_ATSC_5"] = "长老莱修克"
+L["RAID_BOSS_ATSC_6"] = "警戒管事兹斯卡恩"
+L["RAID_BOSS_ATSC_7"] = "玛格莫莱克斯"
+L["RAID_BOSS_ATSC_8"] = "奈萨里奥的回响"
+L["RAID_BOSS_ATSC_9"] = "鳞长萨卡雷斯"
 L["RAID_BOSS_CN_1"] = "啸翼"
 L["RAID_BOSS_CN_10"] = "德纳修斯大帝"
 L["RAID_BOSS_CN_2"] = "猎手阿尔迪莫"
@@ -228,6 +247,14 @@ L["RELOAD_LATER"] = "我一会儿再重载界面（Reload）"
 L["RELOAD_NOW"] = "现在重载界面（Reload）"
 L["RELOAD_RWF_MODE_BUTTON"] = "保存"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "点击保存到储存文件，这将需要重新加载您的界面。"
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 L["RWF_MINIBUTTON_TOOLTIP"] = "每当有待处理的战利品时左键单击。 这将会重新加载你的界面。 右键单击以打开冲击世界首杀框架。"
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "（记录相关项目）"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "（记录战利品）"

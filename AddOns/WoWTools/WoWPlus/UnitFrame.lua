@@ -28,9 +28,10 @@ end
 --拾取专精
 --#######
 local function set_LootSpecialization()--拾取专精
-    if  PlayerFrame and PlayerFrame.lootSpecTexture then
+    local self= PlayerFrame
+    if self and self.lootSpecFrame then
         local find=false
-        if PlayerFrame.unit~='vehicle' then
+        if self.unit~='vehicle' then
             local currentSpec = GetSpecialization()
             local specID= currentSpec and GetSpecializationInfo(currentSpec)
             if specID then
@@ -38,15 +39,14 @@ local function set_LootSpecialization()--拾取专精
                 if lootSpecID and lootSpecID~=specID then
                     local name, _, texture= select(2, GetSpecializationInfoByID(lootSpecID))
                     if texture and name then
-                        SetPortraitToTexture(PlayerFrame.lootSpecTexture, texture)
+                        SetPortraitToTexture(self.lootSpecFrame.texture, texture)
                         find=true
-                        PlayerFrame.lootSpecTexture.tips= (e.onlyChinese and '专精拾取' or SELECT_LOOT_SPECIALIZATION)..": "..name
+                        self.lootSpecFrame.tips= (e.onlyChinese and '专精拾取' or SELECT_LOOT_SPECIALIZATION)..": "..name
                     end
                 end
             end
         end
-        PlayerFrame.lootSpecTexture:SetShown(find)
-        PlayerFrame.lootPortrait:SetShown(find)
+        self.lootSpecFrame:SetShown(find)
     end
 end
 
@@ -74,7 +74,7 @@ local function set_Instance_Difficulty()
             local otherDifficulty = GetLegacyRaidDifficultyID()
             local size3= otherDifficulty and DifficultyUtil.GetMaxPlayers(otherDifficulty)--UnitPopup.lua
             if size3 and not displayMythic3 then
-                text3= text3..'\n'..(e.onlyChinese and '经典团队副本难度' or LEGACY_RAID_DIFFICULTY)..': '..(size3==10 and (e.onlyChinese and '10人' or RAID_DIFFICULTY1) or size3==25 and (e.onlyChinese and '25人' or RAID_DIFFICULTY2) or '')
+                text3= text3..'|n'..(e.onlyChinese and '经典团队副本难度' or LEGACY_RAID_DIFFICULTY)..': '..(size3==10 and (e.onlyChinese and '10人' or RAID_DIFFICULTY1) or size3==25 and (e.onlyChinese and '25人' or RAID_DIFFICULTY2) or '')
             end
 
             if name2 then
@@ -88,7 +88,7 @@ local function set_Instance_Difficulty()
                 local text2= (e.onlyChinese and '地下城难度' or DUNGEON_DIFFICULTY)..': '..name2
 
                 if name3==name2 or displayMythic3 then
-                    text2= text2..'\n\n'..text3
+                    text2= text2..'|n|n'..text3
                 end
                 PlayerFrame.instanceFrame.tips=text2
                 find= true
@@ -114,39 +114,38 @@ end
 --#########
 --挑战，数据
 --#########
-local function set_Keystones_Date()--挑战，数据
-    if not PlayerFrame or not PlayerFrame.keystoneText then
+local function set_Keystones_Date()
+    local self= PlayerFrame
+    if not self or not self.keystoneText then
         return
-    elseif IsInInstance() or IsInRaid() then
-        PlayerFrame.keystoneText:SetText('')
+    elseif IsInInstance() then
+        self.keystoneText:SetText('')
         return
     end
 
     local text
     local score= C_ChallengeMode.GetOverallDungeonScore()
     if score and score>0 then
-        text= score
+        text= e.GetKeystoneScorsoColor(score)
         local info = C_MythicPlus.GetRunHistory(false, true)--本周记录
         if info then
             local num= 0
-            local level
+            local level--, completed
             for _, runs  in pairs(info) do
-                if runs and runs.level and runs.completed then
+                if runs and runs.level then
                     num= num+ 1
                     if not level or level< runs.level then
                         level= runs.level
+                        --completed= runs.completed
                     end
                 end
             end
             if num>0 and level then
-                if level>=15 then
-                    level= '|cnGREEN_FONT_COLOR:'..level..'|r'
-                end
                 text= text..' ('..level..') '..num
             end
         end
     end
-    PlayerFrame.keystoneText:SetText(text or '')
+    self.keystoneText:SetText(text or '')
 end
 
 --####
@@ -161,27 +160,33 @@ local function set_PlayerFrame()--PlayerFrame.lua
     --施法条
     PlayerCastingBarFrame:HookScript('OnShow', function(self)--图标
         self.Icon:SetShown(true)
+        self:SetFrameStrata('FULLSCREEN_DIALOG')--设置为， 最上层
     end)
-    PlayerCastingBarFrame:SetFrameStrata('FULLSCREEN')--设置为， 最上层
-    set_SetTextColor(PlayerCastingBarFrame.Text, e.Player.r, e.Player.g, e.Player.b)--颜色
-    PlayerCastingBarFrame.castingText= e.Cstr(PlayerCastingBarFrame, {color={r=e.Player.r, g=e.Player.g, b=e.Player.b}, justifyH='RIGHT'})
-    PlayerCastingBarFrame.castingText:SetDrawLayer('OVERLAY', 2)
-    PlayerCastingBarFrame.castingText:SetPoint('RIGHT', PlayerCastingBarFrame.ChargeFlash, 'RIGHT')
-    PlayerCastingBarFrame.elapsed=0
-    PlayerCastingBarFrame:HookScript('OnUpdate', function(self, elapsed)--玩家, 施法, 时间
-        self.elapsed= self.elapsed+ elapsed
-        if self.elapsed>=0.01 and self.value and self.maxValue then
-            local value= self.channeling and self.value or (self.maxValue-self.value)
-            if value<=0 then
-                self.castingText:SetText(0)
-            elseif value>=3 then
-                self.castingText:SetFormattedText('%i', value)
-            else
-                self.castingText:SetFormattedText('%.01f', value)
+
+    if not PlayerCastingBarFrame.CastTimeText then
+        PlayerCastingBarFrame.castingText= e.Cstr(PlayerCastingBarFrame, {color={r=e.Player.r, g=e.Player.g, b=e.Player.b}, justifyH='RIGHT'})
+        PlayerCastingBarFrame.castingText:SetDrawLayer('OVERLAY', 2)
+        PlayerCastingBarFrame.castingText:SetPoint('RIGHT', PlayerCastingBarFrame.ChargeFlash, 'RIGHT')
+        PlayerCastingBarFrame.elapsed=0
+        PlayerCastingBarFrame:HookScript('OnUpdate', function(self, elapsed)--玩家, 施法, 时间
+            self.elapsed= self.elapsed+ elapsed
+            if self.elapsed>=0.01 and self.value and self.maxValue then
+                local value= self.channeling and self.value or (self.maxValue-self.value)
+                if value<=0 then
+                    self.castingText:SetText(0)
+                elseif value>=3 then
+                    self.castingText:SetFormattedText('%i', value)
+                else
+                    self.castingText:SetFormattedText('%.01f', value)
+                end
+                self.elapsed=0
             end
-            self.elapsed=0
-        end
-    end)
+        end)
+    else
+        set_SetTextColor(PlayerCastingBarFrame.CastTimeText, e.Player.r, e.Player.g, e.Player.b)--系统施法，颜色
+    end
+    set_SetTextColor(PlayerCastingBarFrame.Text, e.Player.r, e.Player.g, e.Player.b)--法术名称，颜色
+
     hooksecurefunc('PlayerFrame_UpdateGroupIndicator', function()--处理,小队, 号码
         if IsInRaid() and PlayerFrameGroupIndicatorText then
             local text= PlayerFrameGroupIndicatorText:GetText()
@@ -261,7 +266,7 @@ local function set_TargetFrame()
             local mi, ma= e.GetRange('target')
             local text
             if mi and ma then
-                text=mi..'\n'..ma
+                text=mi..'|n'..ma
                 if mi>40 then
                     text='|cFFFF0000'..text--红色
                 elseif mi>35 then
@@ -363,14 +368,54 @@ local function set_PartyFrame()--PartyFrame.lua
                     end)
 
                     hooksecurefunc(memberFrame, 'UpdateAssignedRoles', function(self2)--隐藏, DPS 图标
-                        if self2.unit then
-                            local role = UnitGroupRolesAssigned(self2.unit)
-                            local icon = self2.PartyMemberOverlay.RoleIcon
-                            if icon and role== 'DAMAGER' then
-                                icon:SetShown(false)
-                            end
+                        if UnitGroupRolesAssigned(self2.unit)=='DAMAGER' then
+                            self2.PartyMemberOverlay.RoleIcon:SetShown(false)
                         end
                     end)
+
+                    frame.tipsCombat= frame:CreateTexture(nil,'OVERLAY', nil, 7)--战斗指示
+                    frame.tipsCombat:SetSize(20,20)
+                    frame.tipsCombat:SetPoint('LEFT', frame.TotPortrait, 'RIGHT')
+                    frame.tipsCombat:SetAtlas('UI-HUD-UnitFrame-Player-CombatIcon-2x')
+                    frame.tipsCombat:SetVertexColor(1, 0, 0)
+                    frame.elapsed= 0
+                    frame:HookScript('OnUpdate', function(self2, elapsed)
+                        self2.elapsed= self2.elapsed +elapsed
+                        if self2.elapsed>0.5 then
+                            self2.tipsCombat:SetShown(UnitAffectingCombat(self2.unit))
+                            self2.elapsed=0
+                        end
+                    end)
+
+                    frame.positionFrame= CreateFrame("Frame", nil, frame)--队友位置
+                    frame.positionFrame:SetPoint('LEFT', frame.LeaderIcon, 'RIGHT')
+                    frame.positionFrame:SetSize(1,1)
+                    frame.positionFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+                    frame.positionFrame:SetScript('OnEvent', function(self2)
+                        self2:SetShown(not IsInInstance())
+                    end)
+                    frame.positionFrame.Text= e.Cstr(frame.positionFrame)
+                    frame.positionFrame.Text:SetPoint('LEFT', frame.positionFrame, 'RIGHT',-2,0)
+                    frame.positionFrame.elapsed= 0
+                    frame.positionFrame.unit= frame.unit
+                    frame.positionFrame:SetScript('OnUpdate', function(self2, elapsed)
+                        self2.elapsed= self2.elapsed +elapsed
+                        if self2.elapsed>1 then
+                            local mapID= C_Map.GetBestMapForUnit(self2.unit)--地图ID
+                            local mapInfo= mapID and C_Map.GetMapInfo(mapID)
+                            local text
+                            if mapInfo and mapInfo.name then
+                                text= mapInfo.name
+                                local mapID2= C_Map.GetBestMapForUnit('player')
+                                if mapID2== mapID then
+                                    text= e.Icon.select2..text
+                                end
+                            end
+                            self2.Text:SetText(text or '')
+                            self2.elapsed=0
+                        end
+                    end)
+                    frame.positionFrame:SetShown(not IsInInstance())
                 end
 
                 if frame.RaidTargetIcon then
@@ -407,7 +452,11 @@ local function set_PartyFrame()--PartyFrame.lua
                     if classFilename then
                         local r,g,b=GetClassColor(classFilename)
                         if r and g and b then
-                            memberFrame.Texture:SetVertexColor(r,g,b)
+                            memberFrame.Texture:SetVertexColor(r, g, b)
+
+                            if frame.positionFrame.Text then--队友位置
+                                frame.positionFrame.Text:SetTextColor(r, g, b)
+                            end
                         end
                     end
                 end
@@ -478,29 +527,41 @@ local function set_UnitFrame_Update()--职业, 图标， 颜色
 
             if self.unit=='player' and self~= PetFrame and self.PlayerFrameContainer then
                 local frameLevel=self.PlayerFrameContainer:GetFrameLevel()+1
-                self.lootSpecTexture= self:CreateTexture(nil,'BORDER', nil, 6)--拾取专精
-                self.lootSpecTexture:SetSize(14,14)
-                self.lootSpecTexture:SetPoint('TOPRIGHT', self.classTexture, 'TOPLEFT', -0.5,4)
-                self.lootSpecTexture:EnableMouse(true)
-                self.lootSpecTexture:SetScript('OnEnter', function(self2)
+                frameLevel= frameLevel<0 and 0 or frameLevel
+
+                self.lootSpecFrame= CreateFrame("Frame", nil, self)
+                self.lootSpecFrame:SetPoint('TOPRIGHT', self.classTexture, 'TOPLEFT', -0.5,4)
+                self.lootSpecFrame:SetSize(14,14)
+                self.lootSpecFrame:EnableMouse(true)
+                self.lootSpecFrame:SetFrameLevel(frameLevel)
+                self.lootSpecFrame.texture=self.lootSpecFrame:CreateTexture(nil, 'BORDER')
+                self.lootSpecFrame.texture:SetAllPoints(self.lootSpecFrame)
+
+                local portrait= self.lootSpecFrame:CreateTexture(nil, 'ARTWORK', nil,7)--外框
+                portrait:SetAtlas('DK-Base-Rune-CDFill')
+                portrait:SetPoint('CENTER', self.lootSpecFrame)
+                portrait:SetSize(20,20)
+                portrait:SetVertexColor(r,g,b,1)
+
+                local lootTipsTexture= self.lootSpecFrame:CreateTexture(nil, "OVERLAY")
+                lootTipsTexture:SetSize(10,10)
+                lootTipsTexture:SetPoint('TOP',0,8)
+                lootTipsTexture:SetAtlas('Banker')
+                self.lootSpecFrame:SetScript('OnEnter', function(self2)
                     if self2.tips then
                         e.tips:SetOwner(self2, "ANCHOR_LEFT")
                         e.tips:ClearLines()
                         e.tips:AddLine(self2.tips)
+                        e.tips:AddLine(' ')
+                        e.tips:AddDoubleLine(id, addName)
                         e.tips:Show()
                     end
                 end)
-                self.lootSpecTexture:SetScript('OnLeave', function() e.tips:Hide() end)
-                self.lootPortrait= self.PlayerFrameContainer:CreateTexture(nil, 'OVERLAY', nil,7)--外框
-                self.lootPortrait:SetAtlas('DK-Base-Rune-CDFill')
-                self.lootPortrait:SetPoint('CENTER', self.lootSpecTexture)
-                self.lootPortrait:SetSize(20,20)
-                self.lootPortrait:SetVertexColor(r,g,b,1)
                 set_LootSpecialization()--拾取专精
 
-                self.instanceFrame2= CreateFrame("Frame", nil, self)--副本, 地下城，指示
+                self.instanceFrame2= CreateFrame("Frame", nil, self)--Riad 副本, 地下城，指示
                 self.instanceFrame2:SetFrameLevel(frameLevel)
-                self.instanceFrame2:SetPoint('RIGHT', self.lootSpecTexture, 'LEFT',-2, -1)
+                self.instanceFrame2:SetPoint('RIGHT', self.lootSpecFrame, 'LEFT',-2, 1)
                 self.instanceFrame2:SetSize(16,16)
                 self.instanceFrame2:EnableMouse(true)
                 self.instanceFrame2:SetScript('OnEnter', function(self2)
@@ -508,24 +569,22 @@ local function set_UnitFrame_Update()--职业, 图标， 颜色
                         e.tips:SetOwner(self2, "ANCHOR_LEFT")
                         e.tips:ClearLines()
                         e.tips:AddLine(self2.tips)
+                        e.tips:AddLine(' ')
+                        e.tips:AddDoubleLine(id, addName)
                         e.tips:Show()
                     end
                 end)
                 self.instanceFrame2:SetScript('OnLeave', function() e.tips:Hide() end)
                 self.instanceFrame2.texture= self.instanceFrame2:CreateTexture(nil,'BORDER', nil, 1)
                 self.instanceFrame2.texture:SetAllPoints(self.instanceFrame2)
-                self.instanceFrame2.texture:SetAtlas('DungeonSkull')
-                local portrait= self.instanceFrame2:CreateTexture(nil, 'BORDER',nil,2)--外框
-                portrait:SetAtlas('DK-Base-Rune-CDFill')
-                portrait:SetPoint('CENTER')
-                portrait:SetSize(20,20)
-                portrait:SetVertexColor(r,g,b,1)
-                self.instanceFrame2.text= e.Cstr(self.instanceFrame2, {size=8})
-                self.instanceFrame2.text:SetPoint('TOP')
+                self.instanceFrame2.texture:SetAtlas('BossBanner-SkullCircle')
 
-                self.instanceFrame= CreateFrame("Frame", nil, self)--副本, 地下城，指示
+                self.instanceFrame2.text= e.Cstr(self.instanceFrame2, {size=8})
+                self.instanceFrame2.text:SetPoint('TOP',0,5)
+
+                self.instanceFrame= CreateFrame("Frame", nil, self)--5人 副本, 地下城，指示
                 self.instanceFrame:SetFrameLevel(frameLevel)
-                self.instanceFrame:SetPoint('RIGHT', self.instanceFrame2, 'LEFT',1, -6)
+                self.instanceFrame:SetPoint('RIGHT', self.instanceFrame2, 'LEFT',0, -6)
                 self.instanceFrame:SetSize(16,16)
                 self.instanceFrame:EnableMouse(true)
                 self.instanceFrame:SetScript('OnEnter', function(self2)
@@ -533,6 +592,8 @@ local function set_UnitFrame_Update()--职业, 图标， 颜色
                         e.tips:SetOwner(self2, "ANCHOR_LEFT")
                         e.tips:ClearLines()
                         e.tips:AddLine(self2.tips)
+                        e.tips:AddLine(' ')
+                        e.tips:AddDoubleLine(id, addName)
                         e.tips:Show()
                     end
                 end)
@@ -574,16 +635,13 @@ local function set_UnitFrame_Update()--职业, 图标， 颜色
             else
                 self.classTexture:SetTexture(0)
             end
-            --if CanInspect(unit) and CheckInteractDistance(unit, 1) then
-              --  NotifyInspect(unit)--取得装等
-            --end
         end
         self.classPortrait:SetVertexColor(r,g,b,1)
 
         if self==PlayerFrame then
             set_Instance_Difficulty()--副本, 地下城，指示
             set_LootSpecialization()--拾取专精
-            set_Keystones_Date()--挑战，数据
+            C_Timer.After(2, set_Keystones_Date)--挑战，数据
         end
 
         if self.itemLevel then
@@ -603,7 +661,7 @@ local function set_UnitFrame_Update()--职业, 图标， 颜色
                 self.name:SetText(name)
             end
         end
-        if self.healthbar then
+        if self.healthbar then--生命条，颜色，材质
             self.healthbar:SetStatusBarTexture('UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health-Status')
             self.healthbar:SetStatusBarColor(r,g,b)--颜色
         end
@@ -866,7 +924,6 @@ local function set_RaidFrame()--设置,团队
             frame.statusText:SetText(text)
         end
     end)
-
     hooksecurefunc('CompactRaidGroup_InitializeForGroup', function(frame, groupIndex)--处理, 队伍号
         frame.title:SetText('|A:'..e.Icon.number..groupIndex..':18:18|a')
     end)
@@ -898,6 +955,10 @@ local function set_RaidFrame()--设置,团队
     end)
     CompactRaidFrameContainer.moveFrame:SetScript("OnLeave", function(self, d)
         ResetCursor()
+        self:SetAlpha(0.3)
+    end)
+    CompactRaidFrameContainer.moveFrame:SetScript('OnEnter', function(self)
+        self:SetAlpha(1)
     end)
     CompactRaidFrameContainer.moveFrame:SetScript('OnMouseWheel', function(self, d)--缩放
         if IsAltKeyDown() then
@@ -906,9 +967,9 @@ local function set_RaidFrame()--设置,团队
             else
                 local sacle= Save.raidFrameScale or 1
                 if d==1 then
-                    sacle=sacle+0.1
+                    sacle=sacle+0.05
                 elseif d==-1 then
-                    sacle=sacle-0.1
+                    sacle=sacle-0.05
                 end
                 if sacle>2 then
                     sacle=2
@@ -1048,7 +1109,12 @@ local function Init()
     set_RaidFrame()--团队
 
     set_CompactPartyFrame()--小队, 使用团框架
-    hooksecurefunc('CompactPartyFrame_UpdateVisibility', set_CompactPartyFrame)
+
+    --if CompactPartyFrame_UpdateVisibility then--10.1.5出错
+        if CompactPartyFrame_UpdateVisibility then
+            hooksecurefunc('CompactPartyFrame_UpdateVisibility', set_CompactPartyFrame)
+        end
+   -- end
 
     set_PlayerFrame()--玩家
     set_TargetFrame()--目标
@@ -1125,6 +1191,8 @@ local function Init()
         MainMenuBarVehicleLeaveButton:SetScript('OnUpdate', get_UnitSpeed)
         MainMenuBarVehicleLeaveButton:SetScript('OnHide', hide_SpeedText)
     end
+
+    C_Timer.After(2, set_ToggleWarMode)--设置, 战争模式
 end
 
 --###########
@@ -1166,7 +1234,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
             sel2:SetScript('OnEnter', function(self2)
                 e.tips:SetOwner(self2, "ANCHOR_LEFT")
                 e.tips:ClearLines()
-                e.tips:AddDoubleLine(e.onlyChinese and '如果出现错误' or ENABLE_ERROR_SPEECH, e.onlyChinese and '请取消' or CANCEL)
+                e.tips:AddDoubleLine(e.onlyChinese and '提示：如果出现错误' or ('note: '..ENABLE_ERROR_SPEECH), e.onlyChinese and '请取消' or CANCEL)
                 --e.tips:AddDoubleLine(e.onlyChinese and '登出游戏' or LOG_OUT..GAME, e.onlyChinese and '请取消' or CANCEL)
                 e.tips:Show()
             end)
@@ -1181,9 +1249,12 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 panel:UnregisterAllEvents()
             else
                 Init()
-                panel:UnregisterEvent('ADDON_LOADED')
+                --panel:UnregisterEvent('ADDON_LOADED')
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
+
+        elseif arg1=='Blizzard_ChallengesUI' then--挑战,钥石,插入界面
+            C_Timer.After(2, set_Keystones_Date)--挑战，数据
         end
 
     elseif event == "PLAYER_LOGOUT" then
@@ -1200,15 +1271,19 @@ panel:SetScript("OnEvent", function(self, event, arg1)
         else
             self:UnregisterEvent('CHAT_MSG_SYSTEM')
         end
-        set_Instance_Difficulty()--副本, 地下城，指示
-        set_Keystones_Date()--挑战，数据
-        set_ToggleWarMode()--设置, 战争模式
+
+        C_Timer.After(2, function()
+            set_Instance_Difficulty()--副本, 地下城，指示
+            set_Keystones_Date()--挑战，数据
+            set_ToggleWarMode()--设置, 战争模式
+        end)
+
 
     elseif event=='PLAYER_FLAGS_CHANGED' or event=='PLAYER_UPDATE_RESTING' then
-        set_ToggleWarMode()--设置, 战争模式
+        C_Timer.After(1, set_ToggleWarMode)--设置, 战争模式
 
     elseif event=='GROUP_ROSTER_UPDATE' or event=='GROUP_LEFT' then
-        set_Keystones_Date()--挑战，数据
+        C_Timer.After(2, set_Keystones_Date)--挑战，数据
 
     elseif event=='CHAT_MSG_SYSTEM' then--"地下城难度已设置为%s。团队副本难度设置为%s。已将经典团队副本难度设置为%s。
         if arg1 and (arg1:find(dungeonDifficultyStr) or arg1:find(raidDifficultyStr) or arg1:find(legacyRaidDifficultyStr)) then

@@ -7,13 +7,22 @@ local Save={
         vigentteButton=e.Player.husandro,
         vigentteButtonShowText=true,
         miniMapPoint={},--保存小图地, 按钮位置
+        useServerTimer=true,--小时图，使用服务器, 时间
 }
-local uiMapIDsTab= {2026, 2025, 2024, 2023, 2022, 2133}--监视, areaPoiIDs，
-local questIDTab= {--世界任务, 监视, ID
-    [74378]=true,
+local uiMapIDsTab= {--地图ID 监视, areaPoiIDs，
+    2026,
+    2025,
+    2024,
+    2023,
+    2022,
+    2133
 }
-local panel=CreateFrame("Frame")
 
+local questIDTab= {--世界任务, 监视, ID
+   -- [74378]=true,
+}
+
+local panel=CreateFrame("Frame")
 
 --###################
 --更新地区时,缩小化地图
@@ -87,11 +96,18 @@ local function set_vigentteButton_Event()
     end
 end
 
-
+local setVigentteButtonText
 local function set_vigentteButton_Text()
     if not Save.vigentteButtonShowText then
         panel.vigentteButton.text:SetText('')
+        setVigentteButtonText=nil
         return
+    end
+
+    if setVigentteButtonText then
+        return
+    else
+        setVigentteButtonText=true
     end
 
     local text
@@ -125,65 +141,68 @@ local function set_vigentteButton_Text()
         local info= C_VignetteInfo.GetVignetteInfo(guid)
         if info and info.atlasName and not info.isDead then
             if info.onMinimap then
-                text= text and text..'\n' or ''
+                text= text and text..'|n' or ''
                 text= text..(info.name and '|cnGREEN_FONT_COLOR:'..info.name..'|r' or '')..'|A:'..info.atlasName..':0:0|a'
             elseif info.onWorldMap then
-                text= text and text..'\n' or ''
+                text= text and text..'|n' or ''
                 text= text..(info.name and '|cffff00ff'..info.name..'|r' or '')..'|A:'..info.atlasName..':0:0|a'
             end
         end
     end
 
-    if e.Player.level== e.Player.levelMax then
+    if e.Player.levelMax then
         for _, uiMapID in pairs(uiMapIDsTab) do
             local areaPoiIDs = C_AreaPoiInfo.GetAreaPOIForMap(uiMapID) or {}
             for _, areaPoiID in pairs(areaPoiIDs) do
                 local poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(uiMapID, areaPoiID)
-                if poiInfo and poiInfo.name and poiInfo.atlasName and C_AreaPoiInfo.IsAreaPOITimed(areaPoiID) then
-                    local secondsLeft = C_AreaPoiInfo.GetAreaPOISecondsLeft(areaPoiID)
-                    if secondsLeft and secondsLeft>0 then
-                        text= text and text..'\n' or ''
-                        if poiInfo.widgetSetID then
-                            local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(poiInfo.widgetSetID) or {}
-                            for _,widget in ipairs(widgets) do
-                                if widget and widget.widgetID and  widget.widgetType==8 then
-                                    local widgetInfo = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(widget.widgetID)
-                                    if widgetInfo and widgetInfo.shownState== 1  and widgetInfo.text then
-                                        local icon, num= widgetInfo.text:match('(|T.-|t).+(%d+)')
-                                        if icon and num then
-                                            text= text..'|cff00ff00'..num..'|r'..icon
-                                            break
-                                        end
+                local secondsLeft = C_AreaPoiInfo.GetAreaPOISecondsLeft(areaPoiID)
+                if poiInfo and poiInfo.name and poiInfo.atlasName and secondsLeft and secondsLeft>0 then-- C_AreaPoiInfo.IsAreaPOITimed(areaPoiID) then
+                    text= text and text..'|n' or ''
+                    if poiInfo.widgetSetID then
+                        local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(poiInfo.widgetSetID) or {}
+                        for _,widget in ipairs(widgets) do
+                            if widget and widget.widgetID and  widget.widgetType==8 then
+                                local widgetInfo = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(widget.widgetID)
+                                if widgetInfo and widgetInfo.shownState== 1  and widgetInfo.text then
+                                    local icon, num= widgetInfo.text:match('(|T.-|t).+(%d+)')
+                                    if icon and num then
+                                        text= text..'|cff00ff00'..num..'|r'..icon
+                                        break
                                     end
                                 end
                             end
                         end
+                    end
 
 
-                        text= text.. poiInfo.name
-                        if poiInfo.factionID and C_Reputation.IsMajorFaction(poiInfo.factionID) then
-                            local info = C_MajorFactions.GetMajorFactionData(poiInfo.factionID)
-                            if info and info.textureKit then
-                                text= text..'|A:MajorFactions_Icons_'..info.textureKit..'512:0:0|a'
-                            else
-                                text= text..' '
-                            end
+                    text= text.. poiInfo.name
+                    if poiInfo.factionID and C_Reputation.IsMajorFaction(poiInfo.factionID) then
+                        local info = C_MajorFactions.GetMajorFactionData(poiInfo.factionID)
+                        if info and info.textureKit then
+                            text= text..'|A:MajorFactions_Icons_'..info.textureKit..'512:0:0|a'
                         else
                             text= text..' '
                         end
+                    else
+                        text= text..' '
+                    end
+                    if secondsLeft and secondsLeft>0 then
                         local secText=SecondsToClock(secondsLeft,true)
                         secText= secText:gsub('：',':')
                         if secondsLeft<= 600 then
                             secText= '|cnGREEN_FONT_COLOR:'..secText..'|r'
                         end
                         text= text..secText
-                        text= text..'|A:'..poiInfo.atlasName..':0:0|a'
                     end
+                    text= text..'|A:'..poiInfo.atlasName..':0:0|a'
                 end
             end
         end
     end
+
+
     panel.vigentteButton.text:SetText(text or '..')
+    setVigentteButtonText=nil
 end
 
 local function set_VIGNETTE_MINIMAP_UPDATED()--小地图, 标记, 文本
@@ -295,7 +314,7 @@ local function Init_Menu(self, level, type)
         checked= C_CVar.GetCVarBool("minimapTrackingShowAll"),
         tooltipOnButton=true,
         tooltipTitle= e.onlyChinese and '显示: 追踪' or SHOW..': '..TRACKING,
-        tooltipText= id..' '..addName..'\n\nCVar minimapTrackingShowAll',
+        tooltipText= id..' '..addName..'|n|nCVar minimapTrackingShowAll',
         func= function()
             C_CVar.SetCVar('minimapTrackingShowAll', not C_CVar.GetCVarBool("minimapTrackingShowAll") and '1' or '0' )
         end
@@ -336,7 +355,7 @@ local function Init_Menu(self, level, type)
     for _, mapID in pairs(uiMapIDsTab) do
         local mapInfo=C_Map.GetMapInfo(mapID)
         if mapInfo and mapInfo.name then
-            mapName= mapName..'\n'..mapInfo.name
+            mapName= mapName..'|n'..mapInfo.name
         end
     end
     info={
@@ -358,9 +377,6 @@ local function Init_Menu(self, level, type)
     e.LibDD:UIDropDownMenu_AddButton(info, level)
 end
 
---#######
---盟约图标
---#######
 local Set_MinMap_Icon= function(tab)-- {name, texture, func, hide} 小地图，建立一个图标 Hide("MyLDB") icon:Show("")
     local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject(tab.name, {
         type = "data source",
@@ -374,68 +390,10 @@ local Set_MinMap_Icon= function(tab)-- {name, texture, func, hide} 小地图，�
     return icon
 end
 
-local function set_ExpansionLandingPageMinimapButton()
-    Save.miniMapPoint= Save.miniMapPoint or {}
-
-    Set_MinMap_Icon({name= id, texture= 136235,
-        func= function(self, d)
-            local key= IsModifierKeyDown()
-            if d=='LeftButton' then
-                if IsShiftKeyDown() then
-                    if not IsAddOnLoaded("Blizzard_WeeklyRewards") then--周奖励面板
-                        LoadAddOn("Blizzard_WeeklyRewards")
-                    end
-                    WeeklyRewards_ShowUI()--WeeklyReward.lua
-                elseif IsAltKeyDown() then
-                    if not self.menu then
-                        self.Menu=CreateFrame("Frame", id..addName..'Menu', self, "UIDropDownMenuTemplate")
-                        e.LibDD:UIDropDownMenu_Initialize(self.Menu, Init_Menu, 'MENU')
-                    end
-                    e.LibDD:ToggleDropDownMenu(1, nil,self.Menu, self, 15,0)
-                elseif not key then
-                    local expButton=ExpansionLandingPageMinimapButton
-                    if expButton and expButton.ToggleLandingPage and expButton.title then
-                        expButton.ToggleLandingPage(expButton)--Minimap.lua
-                    else
-                        securecallfunction(InterfaceOptionsFrame_OpenToCategory, id)
-                    end
-                end
-            elseif not key then
-                securecallfunction(InterfaceOptionsFrame_OpenToCategory, id)               
-            end
-        end,
-        enter= function(self)
-            local expButton=ExpansionLandingPageMinimapButton
-            if expButton and expButton.OnEnter and expButton.title then--Minimap.lua
-                expButton.OnEnter(expButton)
-                e.tips:AddLine(' ')
-            else
-                e.tips:SetOwner(self, "ANCHOR_Left")
-                e.tips:ClearLines()
-            end
-            e.tips:AddDoubleLine(e.onlyChinese and '菜单' or SLASH_TEXTTOSPEECH_MENU, 'Alt'..e.Icon.left, 0,1,0, 0,1,0)
-            e.tips:AddDoubleLine(e.onlyChinese and '宏伟宝库' or RATED_PVP_WEEKLY_VAULT , 'Shift'..e.Icon.left, 1,0,1, 1,0,1)
-            e.tips:AddDoubleLine(e.onlyChinese and '选项' or SETTINGS_TITLE , e.Icon.right, 0,1,0, 0,1,0)
-            e.tips:AddLine(' ')
-            e.tips:AddDoubleLine(id, addName)
-            e.tips:Show()
-            if expButton and expButton:IsShown() then
-                expButton:SetShown(false)
-            end
-        end
-    })
-
-    C_Timer.After(2, function()
-        if ExpansionLandingPageMinimapButton then ExpansionLandingPageMinimapButton:SetShown(false) end
-    end)
-end
-
 --####
 --初始
 --####
 local function Init()
-    C_Timer.After(2, set_ExpansionLandingPageMinimapButton)--盟约图标
-
     if MinimapCluster then
         if MinimapCluster.InstanceDifficulty and MinimapCluster.InstanceDifficulty.Instance.Border then
             MinimapCluster.InstanceDifficulty.Instance.Border:SetVertexColor(e.Player.r, e.Player.g, e.Player.b, 1)--外框， 颜色
@@ -488,17 +446,77 @@ local function Init()
         end)
     end
 
+    --########
+    --盟约图标
+    --########
+
+
+    Save.miniMapPoint= Save.miniMapPoint or {}
+    Set_MinMap_Icon({name= id, texture= 136235,
+        func= function(self, d)
+            local key= IsModifierKeyDown()
+            if d=='LeftButton' then
+                if IsShiftKeyDown() then
+                    if not IsAddOnLoaded("Blizzard_WeeklyRewards") then--周奖励面板
+                        LoadAddOn("Blizzard_WeeklyRewards")
+                    end
+                    WeeklyRewards_ShowUI()--WeeklyReward.lua
+                elseif IsAltKeyDown() then
+                    if not self.menu then
+                        self.Menu=CreateFrame("Frame", id..addName..'Menu', self, "UIDropDownMenuTemplate")
+                        e.LibDD:UIDropDownMenu_Initialize(self.Menu, Init_Menu, 'MENU')
+                    end
+                    e.LibDD:ToggleDropDownMenu(1, nil,self.Menu, self, 15,0)
+                elseif not key then
+                    local expButton=ExpansionLandingPageMinimapButton
+                    if expButton and expButton.ToggleLandingPage and expButton.title then
+                        expButton.ToggleLandingPage(expButton)--Minimap.lua
+                    else
+                        securecallfunction(InterfaceOptionsFrame_OpenToCategory, id)
+                    end
+                end
+            elseif not key then
+                securecallfunction(InterfaceOptionsFrame_OpenToCategory, id)
+            end
+        end,
+        enter= function(self)
+            local expButton=ExpansionLandingPageMinimapButton
+            if expButton and expButton.OnEnter and expButton.title then--Minimap.lua
+                expButton.OnEnter(expButton)
+                e.tips:AddLine(' ')
+            else
+                e.tips:SetOwner(self, "ANCHOR_Left")
+                e.tips:ClearLines()
+            end
+            e.tips:AddDoubleLine(e.onlyChinese and '菜单' or SLASH_TEXTTOSPEECH_MENU, 'Alt'..e.Icon.left, 0,1,0, 0,1,0)
+            e.tips:AddDoubleLine(e.onlyChinese and '宏伟宝库' or RATED_PVP_WEEKLY_VAULT , 'Shift'..e.Icon.left, 1,0,1, 1,0,1)
+            e.tips:AddDoubleLine(e.onlyChinese and '选项' or SETTINGS_TITLE , e.Icon.right, 0,1,0, 0,1,0)
+            e.tips:AddLine(' ')
+            e.tips:AddDoubleLine(id, addName)
+            e.tips:Show()
+            if expButton and expButton:IsShown() then
+                expButton:SetShown(false)
+            end
+        end
+    })
+
+    if ExpansionLandingPageMinimapButton then
+        ExpansionLandingPageMinimapButton:SetShown(false)
+        ExpansionLandingPageMinimapButton:HookScript('OnShow', function(self2)
+            self2:SetShown(false)
+        end)
+    end
 
 end
+
 
 --###########
 --加载保存数据
 --###########
 panel:RegisterEvent("ADDON_LOADED")
-
 panel:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" then
-        if  arg1==id then
+        if arg1==id then
             Save= WoWToolsSave[addName] or Save
 
              --添加控制面板        
@@ -508,7 +526,9 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 print(id, addName, e.onlyChinese and '需求重新加载' or REQUIRES_RELOAD)
              end)
 
-            if not Save.disabled then
+            if Save.disabled then
+                panel:UnregisterAllEvents()
+            else
                 if not e.Player.levelMax then
                     uiMapIDsTab= {}
                     questIDTab= {}
@@ -522,7 +542,44 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 Init()
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
-            panel:UnregisterEvent('ADDON_LOADED')
+
+        elseif arg1=='Blizzard_TimeManager' then
+            local TimeManagerClockButton_Update_R= TimeManagerClockButton_Update--小时图，使用服务器, 时间
+            local function set_Server_Timer()--小时图，使用服务器, 时间
+                if Save.useServerTimer then
+                    TimeManagerClockButton_Update=function()
+                        TimeManagerClockTicker:SetText(SecondsToClock(GetServerTime()))
+                    end
+                else
+                    TimeManagerClockButton_Update= TimeManagerClockButton_Update_R
+                end
+            end
+            if Save.useServerTimer then
+                set_Server_Timer()
+            end
+            local check= CreateFrame("CheckButton", nil, TimeManagerFrame, "InterfaceOptionsCheckButtonTemplate")
+            check:SetPoint('TOPLEFT', TimeManagerFrame, 'BOTTOMLEFT')
+            check.Text:SetText(e.onlyChinese and '服务器时间' or TIMEMANAGER_TOOLTIP_REALMTIME)
+            check:SetChecked(Save.useServerTimer)
+            check:SetScript('OnClick', function()
+                Save.useServerTimer= not Save.useServerTimer and true or nil
+                set_Server_Timer()
+            end)
+            check:SetScript('OnEnter', function(self2)
+                e.tips:SetOwner(self2, "ANCHOR_LEFT");
+                e.tips:ClearLines();
+                e.tips:AddDoubleLine(e.onlyChinese and '时间信息' or TIMEMANAGER_TOOLTIP_TITLE, e.onlyChinese and '使用' or USE)
+                e.tips:AddDoubleLine(id, addName)
+                e.tips:Show()
+            end)
+            check:SetScript('OnLeave', function() e.tips:Hide() end)
+
+            hooksecurefunc('TimeManagerClockButton_UpdateTooltip', function()
+                e.tips:AddDoubleLine(e.Icon.left..(e.onlyChinese and '服务器时间' or TIMEMANAGER_TOOLTIP_REALMTIME), SecondsToClock(GetServerTime()))
+                e.tips:AddDoubleLine(id, addName)
+                e.tips:Show()
+            end)
+        --elseif arg1=='Blizzard_ExpansionLandingPage' then
         end
 
     elseif event == "PLAYER_LOGOUT" then

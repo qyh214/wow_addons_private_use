@@ -1,8 +1,6 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('Bartender4') then return end
-
-function AS:Bartender4()
+function R:Bartender4()
 	local function StyleNormalButton(self)
 		local Name = self:GetName()
 		local Action = self.action
@@ -53,15 +51,15 @@ function AS:Bartender4()
 		end
 
 		if (BtnBG) then
-			AS:Kill(BtnBG)
+			S:Kill(BtnBG)
 		end
 
-		AS:SetTemplate(Button)
+		S:SetTemplate(Button)
 		Button:UnregisterEvent("ACTIONBAR_SHOWGRID")
 		Button:UnregisterEvent("ACTIONBAR_HIDEGRID")
 
-		AS:SkinTexture(Icon)
-		AS:SetInside(Icon)
+		S:HandleIcon(Icon)
+		S:SetInside(Icon)
 
 		if (Normal) then
 			Normal:ClearAllPoints()
@@ -73,7 +71,7 @@ function AS:Bartender4()
 			end
 		end
 
-		AS:StyleButton(Button)
+		S:StyleButton(Button)
 		Button.isSkinned = true
 	end
 
@@ -88,12 +86,12 @@ function AS:Bartender4()
 		end
 		if MainMenuBarBackpackButton then
 			local Texture = MainMenuBarBackpackButton.icon:GetTexture()
-			AS:SkinIconButton(MainMenuBarBackpackButton, true)
+			S:HandleItemButton(MainMenuBarBackpackButton, true)
 			MainMenuBarBackpackButton.icon.SetTexCoord = function() end
 			MainMenuBarBackpackButton.icon:SetTexture(Texture)
 			for i = 0, 3 do
 				if _G['CharacterBag'..i..'Slot'] then
-					AS:SkinIconButton(_G['CharacterBag'..i..'Slot'], true)
+					S:HandleItemButton(_G['CharacterBag'..i..'Slot'], true)
 					_G['CharacterBag'..i..'Slot'].icon.SetTexCoord = function() end
 				end
 			end
@@ -101,4 +99,4 @@ function AS:Bartender4()
 	end
 end
 
-AS:RegisterSkin('Bartender4', AS.Bartender4)
+AS:RegisterSkin('Bartender4')

@@ -17,7 +17,7 @@ local OmniCDC =	 LibStub("OmniCDC")
 --[[ s r
 local MAJOR, MINOR = "AceConfigDialog-3.0", 85
 ]]
-local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 87 -- 82 DF -- 87 backdrop
+local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 91 -- 82 DF -- 87 backdrop
 -- e
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -32,20 +32,20 @@ AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", 
 -- This will be used for the option panel only starting 87. Backdrop is set on :SetDefaultSize
 AceConfigDialog.tooltip = AceConfigDialog.tooltip or CreateFrame("GameTooltip", "AceConfigDialogTooltip-OmniCD", UIParent, BackdropTemplateMixin and "GameTooltipTemplate, BackdropTemplate" or "GameTooltipTemplate")
 --if select(4, GetBuildInfo()) > 90100 then -- 9.1.5 fix > Blizzard added this for classic era
-if WOW_PROJECT_ID ~= WOW_PROJECT_BURNING_CRUSADE_CLASSIC or LE_EXPANSION_LEVEL_CURRENT ~= LE_EXPANSION_BURNING_CRUSADE then
+if WOW_PROJECT_ID ~= WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
 	SharedTooltip_SetBackdropStyle(AceConfigDialog.tooltip, nil, true);
 end
 -- Copy blizzard function so it doesn't reset backdrop onHide
-local function GameTooltip_OnHide(self)
+local GameTooltip_OnHide
+GameTooltip_OnHide = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and function(self)
+	--[[
 	self.needsReset = true;
 	self.waitingForData = false;
-	--[[ 9.1.0
-	SharedTooltip_SetBackdropStyle(self, self.IsEmbedded and GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED or TOOLTIP_BACKDROP_STYLE_DEFAULT);
-	]]
-	--[[ 9.1.5
-	local style = nil;
-	SharedTooltip_SetBackdropStyle(self, style, self.IsEmbedded);
-	]]
+	-- 9.1.0
+	--SharedTooltip_SetBackdropStyle(self, self.IsEmbedded and GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED or TOOLTIP_BACKDROP_STYLE_DEFAULT);
+	-- 9.1.5
+	--local style = nil;
+	--SharedTooltip_SetBackdropStyle(self, style, self.IsEmbedded);
 	GameTooltip_ClearMoney(self);
 	GameTooltip_ClearStatusBars(self);
 	GameTooltip_ClearProgressBars(self);
@@ -67,6 +67,46 @@ local function GameTooltip_OnHide(self)
 		self.ItemTooltip:Hide();
 	end
 	self:SetPadding(0, 0, 0, 0);
+	]]
+	-- 10.0
+	self.waitingForData = false;
+	--local style = nil;
+	--SharedTooltip_SetBackdropStyle(self, style, self.IsEmbedded);
+	GameTooltip_ClearMoney(self);
+	GameTooltip_ClearStatusBars(self);
+	GameTooltip_ClearProgressBars(self);
+	GameTooltip_ClearWidgetSet(self);
+	TooltipComparisonManager:Clear(self);
+
+	GameTooltip_HideBattlePetTooltip();
+
+	if self.ItemTooltip then
+		EmbeddedItemTooltip_Hide(self.ItemTooltip);
+	end
+	self:SetPadding(0, 0, 0, 0);
+
+	self:ClearHandlerInfo();
+
+	if self.StatusBar then
+		self.StatusBar:ClearWatch();
+	end
+end or function(self)
+	self.needsReset = true;
+--	local style = nil;
+--	SharedTooltip_SetBackdropStyle(self, style, self.IsEmbedded);
+	self.default = nil;
+	self.overrideComparisonAnchorFrame = nil;
+	self.overrideComparisonAnchorSide = nil;
+	GameTooltip_ClearMoney(self);
+	GameTooltip_ClearStatusBars(self);
+	GameTooltip_ClearProgressBars(self);
+	GameTooltip_ClearWidgetSet(self);
+	if ( self.shoppingTooltips ) then
+		for _, frame in pairs(self.shoppingTooltips) do
+			frame:Hide();
+		end
+	end
+	self.comparing = false;
 end
 AceConfigDialog.tooltip:SetScript("OnHide", GameTooltip_OnHide)
 -- e
@@ -1323,7 +1363,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 
 					-- s b (edit/dnd) not using dnd. find a better way to get function for alt things.
 					local arg = GetOptionsMemberValue("arg", v, options, path, appName)
-					if type(arg) == "number" or type(arg) == "function" then
+					if type(arg) == "number" then --or type(arg) == "function" then
 						control:SetArg(arg)
 					end
 					-- e
@@ -1492,6 +1532,11 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 								end
 							end
 
+							-- s b (Multiselect dropdown with disable support) v88 v89
+							-- disabledItem member type must be a function
+							local item = GetOptionsMemberValue("disabledItem", v, options, path, appName)
+							-- e
+
 							control:PauseLayout()
 							local width = GetOptionsMemberValue("width",v,options,path,appName)
 							for s = 1, #valuesort do
@@ -1501,7 +1546,7 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 								check:SetLabel(name == ALL and text or "") -- name "" is header row
 								check:SetUserData("value", value)
 								check:SetUserData("text", text)
-								check:SetDisabled(disabled)
+								check:SetDisabled(disabled or (type(item)=="table" and item[value] or value == item))
 								check:SetTriState(v.tristate)
 								check:SetValue(GetOptionsMemberValue("get",v, options, path, appName, value))
 								check:SetCallback("OnValueChanged", ActivateMultiControl_NoRefresh) -- don't refresh layout (laggy)
@@ -1910,7 +1955,7 @@ function AceConfigDialog:FeedGroup(appName,options,container,rootframe,path, isR
 			]]
 			-- e
 			local opt = path[#path-1]
-			scroll:SetLayout(opt and opt:match("list_") and "Flow-Nopadding-OmniCD" or "flow" )
+			scroll:SetLayout(opt and opt:match("^list_%w+$") and "Flow-Nopadding-OmniCD" or "flow" )
 			scroll.width = "fill"
 			scroll.height = "fill"
 			container:SetLayout("fill")

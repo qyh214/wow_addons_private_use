@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu May  4 19:43:24 UTC 2023
+-- Generated from CurseForge on Wed Jun 21 21:15:50 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("frFR") then
@@ -80,13 +80,19 @@ L["DPS"] = "DPS"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DOS"] = "DOS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_GMBT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
 --[[Translation missing --]]
@@ -94,6 +100,10 @@ L["DUNGEON_SHORT_NAME_HOA"] = "HOA"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_LOWR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_MISTS"] = "MISTS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "NW"
@@ -110,9 +120,15 @@ L["DUNGEON_SHORT_NAME_SOA"] = "SOA"
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "TOP"
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_UNDR"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_UPPR"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
 --[[Translation missing --]]
@@ -191,6 +207,26 @@ L["PROFILE_BEST_RUNS"] = "Meilleurs Donjons"
 --[[Translation missing --]]
 --[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Attention:|r |cffFFFFFF%s|r Aucune donnée trouvée pour votre faction actuelle . Veuillez vérifier vos paramètres |cffFFFFFF/raiderio|r et activer les données d'info-bulle pour |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_9"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Hurlaile"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor le Veneur"
@@ -347,6 +383,14 @@ L["RELOAD_NOW"] = "Recharger l'interface maintenant"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]

@@ -6,23 +6,26 @@ local Save={
     alpha= 0.5,
     chatBubbleAlpha= 0.5,--聊天泡泡
     chatBubbleSacal= 0.85,
+    classPowerNum= e.Player.husandro,--职业，显示数字
 }
 local panel=CreateFrame("Frame")
 
 
-local function hideTexture(self)
+local function hide_Texture(self, notClear)
     if self then
         if self:GetObjectType()=='Texture' then
-            self:SetTexture(0)
+            if not notClear then
+                self:SetTexture(0)
+            end
         end
         self:SetShown(false)
     end
 end
 
-local function setAlpha(self, notAlpha, notColor)
+local function set_Alpha(self, notAlpha, notColor, value)
     if self then
         if not (Save.disabledAlpha or notAlpha)  then
-            self:SetAlpha(Save.alpha)
+            self:SetAlpha(value or Save.alpha)
         end
         if e.Player.useColor and self:GetObjectType()=='Texture' and not notColor then
             self:SetVertexColor(e.Player.useColor.r, e.Player.useColor.g, e.Player.useColor.b)
@@ -38,7 +41,7 @@ local function hide_Frame_Texture(frame, tab)
         for index, icon in pairs(frames) do
             if tab.index then
                 if tab.index==index then
-                    hideTexture(icon)
+                    hide_Texture(icon)
                     break
                 end
             elseif icon:GetObjectType()=="Texture" then
@@ -49,7 +52,7 @@ local function hide_Frame_Texture(frame, tab)
     end
 end
 
---透明度, 颜色, frame, 子材质
+--透明度, 颜色, frame, 子材质 set_Alpha_Frame_Texture(frame, {index=nil, notAlpha=nil, notColor=nil})
 local function set_Alpha_Frame_Texture(frame, tab)
     if frame then
         tab=tab or {}
@@ -64,10 +67,10 @@ local function set_Alpha_Frame_Texture(frame, tab)
                 end
                 return
             elseif icon:GetObjectType()=="Texture" then
-                if not Save.disabledAlpha  then
+                if not Save.disabledAlpha and not tab.notAlpha  then
                     icon:SetAlpha(Save.alpha)
                 end
-                if e.Player.useColor then
+                if e.Player.useColor and not tab.notColor then
                     icon:SetVertexColor(e.Player.useColor.r, e.Player.useColor.g, e.Player.useColor.b)
                 end
             end
@@ -84,52 +87,52 @@ local function Init_HideTexture()
     end
     hooksecurefunc('PlayerFrame_UpdateArt', function()--隐藏材质, 载具
         if OverrideActionBarEndCapL then
-            hideTexture(OverrideActionBarEndCapL)
-            hideTexture(OverrideActionBarEndCapR)
-            hideTexture(OverrideActionBarBorder)
-            hideTexture(OverrideActionBarBG)
-            hideTexture(OverrideActionBarButtonBGMid)
-            hideTexture(OverrideActionBarButtonBGR)
-            hideTexture(OverrideActionBarButtonBGL)
+            hide_Texture(OverrideActionBarEndCapL)
+            hide_Texture(OverrideActionBarEndCapR)
+            hide_Texture(OverrideActionBarBorder)
+            hide_Texture(OverrideActionBarBG)
+            hide_Texture(OverrideActionBarButtonBGMid)
+            hide_Texture(OverrideActionBarButtonBGR)
+            hide_Texture(OverrideActionBarButtonBGL)
         end
         if OverrideActionBarMicroBGMid then
-            hideTexture(OverrideActionBarMicroBGMid)
-            hideTexture(OverrideActionBarMicroBGR)
-            hideTexture(OverrideActionBarMicroBGL)
-            hideTexture(OverrideActionBarLeaveFrameExitBG)
+            hide_Texture(OverrideActionBarMicroBGMid)
+            hide_Texture(OverrideActionBarMicroBGR)
+            hide_Texture(OverrideActionBarMicroBGL)
+            hide_Texture(OverrideActionBarLeaveFrameExitBG)
 
-            hideTexture(OverrideActionBarDivider2)
-            hideTexture(OverrideActionBarLeaveFrameDivider3)
+            hide_Texture(OverrideActionBarDivider2)
+            hide_Texture(OverrideActionBarLeaveFrameDivider3)
         end
         if OverrideActionBarExpBar then
-            hideTexture(OverrideActionBarExpBarXpMid)
-            hideTexture(OverrideActionBarExpBarXpR)
-            hideTexture(OverrideActionBarExpBarXpL)
+            hide_Texture(OverrideActionBarExpBarXpMid)
+            hide_Texture(OverrideActionBarExpBarXpR)
+            hide_Texture(OverrideActionBarExpBarXpL)
         end
     end)
-    if ExtraActionButton1 then hideTexture(ExtraActionButton1.style) end--额外技能
-    if ZoneAbilityFrame then hideTexture(ZoneAbilityFrame.Style) end--区域技能
+    if ExtraActionButton1 then hide_Texture(ExtraActionButton1.style) end--额外技能
+    if ZoneAbilityFrame then hide_Texture(ZoneAbilityFrame.Style) end--区域技能
 
-    if MainMenuBar and MainMenuBar.EndCaps then hideTexture(MainMenuBar.EndCaps.LeftEndCap) end
-    if MainMenuBar and MainMenuBar.EndCaps then hideTexture(MainMenuBar.EndCaps.RightEndCap) end
+    if MainMenuBar and MainMenuBar.EndCaps then hide_Texture(MainMenuBar.EndCaps.LeftEndCap) end
+    if MainMenuBar and MainMenuBar.EndCaps then hide_Texture(MainMenuBar.EndCaps.RightEndCap) end
 
     if PetBattleFrame then--宠物
-        hideTexture(PetBattleFrame.TopArtLeft)
-        hideTexture(PetBattleFrame.TopArtRight)
-        hideTexture(PetBattleFrame.TopVersus)
+        hide_Texture(PetBattleFrame.TopArtLeft)
+        hide_Texture(PetBattleFrame.TopArtRight)
+        hide_Texture(PetBattleFrame.TopVersus)
         PetBattleFrame.TopVersusText:SetText('')
         PetBattleFrame.TopVersusText:SetShown(false)
-        hideTexture(PetBattleFrame.WeatherFrame.BackgroundArt)
+        hide_Texture(PetBattleFrame.WeatherFrame.BackgroundArt)
 
-        hideTexture(PetBattleFrameXPBarLeft)
-        hideTexture(PetBattleFrameXPBarRight)
-        hideTexture(PetBattleFrameXPBarMiddle)
+        hide_Texture(PetBattleFrameXPBarLeft)
+        hide_Texture(PetBattleFrameXPBarRight)
+        hide_Texture(PetBattleFrameXPBarMiddle)
 
         if PetBattleFrame.BottomFrame then
-            hideTexture(PetBattleFrame.BottomFrame.LeftEndCap)
-            hideTexture(PetBattleFrame.BottomFrame.RightEndCap)
-            hideTexture(PetBattleFrame.BottomFrame.Background)
-            hideTexture(PetBattleFrame.BottomFrame.TurnTimer.ArtFrame2)
+            hide_Texture(PetBattleFrame.BottomFrame.LeftEndCap)
+            hide_Texture(PetBattleFrame.BottomFrame.RightEndCap)
+            hide_Texture(PetBattleFrame.BottomFrame.Background)
+            hide_Texture(PetBattleFrame.BottomFrame.TurnTimer.ArtFrame2)
             PetBattleFrame.BottomFrame.FlowFrame:SetShown(false)
             PetBattleFrame.BottomFrame.Delimiter:SetShown(false)
         end
@@ -138,10 +141,10 @@ local function Init_HideTexture()
     hide_Frame_Texture(PetBattleFrame.BottomFrame.MicroButtonFrame)
 
     hooksecurefunc('PetBattleFrame_UpdatePassButtonAndTimer', function(self)--Blizzard_PetBattleUI.lua
-        hideTexture(self.BottomFrame.TurnTimer.TimerBG)
+        hide_Texture(self.BottomFrame.TurnTimer.TimerBG)
         --self.BottomFrame.TurnTimer.Bar:SetShown(true);
-        hideTexture(self.BottomFrame.TurnTimer.ArtFrame);
-        hideTexture(self.BottomFrame.TurnTimer.ArtFrame2);
+        hide_Texture(self.BottomFrame.TurnTimer.ArtFrame);
+        hide_Texture(self.BottomFrame.TurnTimer.ArtFrame2);
     end)
 
     hooksecurefunc(HelpTip,'Show', function(self, parent, info, relativeRegion)--隐藏所有HelpTip HelpTip.lua
@@ -165,29 +168,29 @@ local function Init_HideTexture()
     end)
 
     if MainMenuBar and MainMenuBar.BorderArt then--主动作条
-        hideTexture(MainMenuBar.BorderArt.TopEdge)
-        hideTexture(MainMenuBar.BorderArt.BottomEdge)
-        hideTexture(MainMenuBar.BorderArt.LeftEdge)
-        hideTexture(MainMenuBar.BorderArt.RightEdge)
-        hideTexture(MainMenuBar.BorderArt.TopLeftCorner)
-        hideTexture(MainMenuBar.BorderArt.BottomLeftCorner)
-        hideTexture(MainMenuBar.BorderArt.TopRightCorner)
-        hideTexture(MainMenuBar.BorderArt.BottomRightCorner)
+        hide_Texture(MainMenuBar.BorderArt.TopEdge)
+        hide_Texture(MainMenuBar.BorderArt.BottomEdge)
+        hide_Texture(MainMenuBar.BorderArt.LeftEdge)
+        hide_Texture(MainMenuBar.BorderArt.RightEdge)
+        hide_Texture(MainMenuBar.BorderArt.TopLeftCorner)
+        hide_Texture(MainMenuBar.BorderArt.BottomLeftCorner)
+        hide_Texture(MainMenuBar.BorderArt.TopRightCorner)
+        hide_Texture(MainMenuBar.BorderArt.BottomRightCorner)
     end
-    if MultiBarBottomLeftButton10 then hideTexture(MultiBarBottomLeftButton10.SlotBackground) end
+    if MultiBarBottomLeftButton10 then hide_Texture(MultiBarBottomLeftButton10.SlotBackground) end
 
      if CompactRaidFrameManager then--隐藏, 团队, 材质 Blizzard_CompactRaidFrameManager.lua
-        hideTexture(CompactRaidFrameManagerBorderTop)
-        hideTexture(CompactRaidFrameManagerBorderRight)
-        hideTexture(CompactRaidFrameManagerBorderBottom)
-        hideTexture(CompactRaidFrameManagerBorderTopRight)
-        hideTexture(CompactRaidFrameManagerBorderTopLeft)
-        hideTexture(CompactRaidFrameManagerBorderBottomLeft)
-        hideTexture(CompactRaidFrameManagerBorderBottomRight)
-        hideTexture(CompactRaidFrameManagerDisplayFrameHeaderDelineator)
-        hideTexture(CompactRaidFrameManagerDisplayFrameHeaderBackground)
-        hideTexture(CompactRaidFrameManagerBg)
-        hideTexture(CompactRaidFrameManagerDisplayFrameFilterOptionsFooterDelineator)
+        hide_Texture(CompactRaidFrameManagerBorderTop)
+        hide_Texture(CompactRaidFrameManagerBorderRight)
+        hide_Texture(CompactRaidFrameManagerBorderBottom)
+        hide_Texture(CompactRaidFrameManagerBorderTopRight)
+        hide_Texture(CompactRaidFrameManagerBorderTopLeft)
+        hide_Texture(CompactRaidFrameManagerBorderBottomLeft)
+        hide_Texture(CompactRaidFrameManagerBorderBottomRight)
+        hide_Texture(CompactRaidFrameManagerDisplayFrameHeaderDelineator)
+        hide_Texture(CompactRaidFrameManagerDisplayFrameHeaderBackground)
+        hide_Texture(CompactRaidFrameManagerBg)
+        hide_Texture(CompactRaidFrameManagerDisplayFrameFilterOptionsFooterDelineator)
 
         CompactRaidFrameManager.toggleButton:SetNormalAtlas(e.Icon.toRight,true)--展开, 图标
         CompactRaidFrameManager.toggleButton:SetAlpha(0.3)
@@ -243,15 +246,15 @@ local function Init_HideTexture()
     }
     local function hideButtonText(self)
         if self then
-            hideTexture(self.SlotArt)
-            hideTexture(self.SlotBackground)--背景，
-            hideTexture(self.NormalTexture)--外框，方块
+            hide_Texture(self.SlotArt)
+            hide_Texture(self.SlotBackground)--背景，
+            hide_Texture(self.NormalTexture)--外框，方块
             if self.RightDivider and self.BottomDivider then
                 self.RightDivider:SetShown(false)--frame
                 self.BottomDivider:SetShown(false)
-                hideTexture(self.RightDivider.TopEdge)
-                hideTexture(self.RightDivider.BottomEdge)
-                hideTexture(self.RightDivider.Center)
+                hide_Texture(self.RightDivider.TopEdge)
+                hide_Texture(self.RightDivider.BottomEdge)
+                hide_Texture(self.RightDivider.Center)
             end
             if self.HotKey then--快捷键
                 self.HotKey:SetShadowOffset(1, -1)
@@ -342,64 +345,209 @@ local function Init_Set_AlphaAndColor()
         return
     end
 
-    --骑士，能量条
-    setAlpha(PaladinPowerBarFrameBG)
-    setAlpha(PaladinPowerBarFrameBankBG)
+    --####
+    --职业
+    --####
+    local function set_Num_Texture(self, num, color)
+        if not self.numTexture and (self.layoutIndex or num) and Save.classPowerNum then
+            self.numTexture= self:CreateTexture(nil, 'OVERLAY')
+            self.numTexture:SetSize(12,12)
+            self.numTexture:SetPoint('CENTER', self, 'CENTER')
+            self.numTexture:SetAtlas(e.Icon.number..(num or self.layoutIndex))
+            if color~=false then
+                if not color then
+                    set_Alpha(self.numTexture, true)
+                else
+                    self.numTexture:SetVertexColor(color.r, color.g, color.b)
+                end
+            end
+        end
+    end
+    if e.Player.class=='PALADIN' then--QS PaladinPowerBarFrame
+        if PaladinPowerBarFrame and PaladinPowerBarFrame.Background and PaladinPowerBarFrame.ActiveTexture then
+            hide_Texture(PaladinPowerBarFrame.Background, true)
+            hide_Texture(PaladinPowerBarFrame.ActiveTexture, true)
+            PaladinPowerBarFrame:HookScript('OnEnter', function(self2)
+                self2.Background:SetShown(true)
+                self2.ActiveTexture:SetShown(true)
+            end)
+            PaladinPowerBarFrame:HookScript('OnLeave', function(self2)
+                hide_Texture(self2.Background, true)
+                hide_Texture(self2.ActiveTexture, true)
+            end)
+            if ClassNameplateBarPaladinFrame then
+                hide_Texture(ClassNameplateBarPaladinFrame.Background)
+                hide_Texture(ClassNameplateBarPaladinFrame.ActiveTexture)
+            end
+            local maxHolyPower = UnitPowerMax('player', Enum.PowerType.HolyPower)--UpdatePower
+            for i=1,maxHolyPower do
+                local holyRune = PaladinPowerBarFrame["rune"..i]
+                set_Num_Texture(holyRune, i, false)
+            end
+        end
+
+    elseif e.Player.class=='MAGE' then--法师
+        if MageArcaneChargesFrame and MageArcaneChargesFrame.classResourceButtonTable then
+            for _, mage in pairs(MageArcaneChargesFrame.classResourceButtonTable) do
+                hide_Texture(mage.ArcaneBG)
+            end
+            if ClassNameplateBarMageFrame and ClassNameplateBarMageFrame.classResourceButtonTable then
+                for _, mage in pairs(ClassNameplateBarMageFrame.classResourceButtonTable) do
+                    hide_Texture(mage.ArcaneBG)
+                end
+            end
+        end
+
+    elseif e.Player.class=='DRUID' then--DruidComboPointBarFrame
+        local function set_DruidComboPointBarFrame(self)
+            if self then
+                for btn, _ in pairs(self) do
+                    hide_Texture(btn.BG_Active)
+                    hide_Texture(btn.BG_Inactive)
+                    set_Num_Texture(btn)
+                end
+            end
+        end
+        set_DruidComboPointBarFrame(DruidComboPointBarFrame and DruidComboPointBarFrame.classResourceButtonPool and DruidComboPointBarFrame.classResourceButtonPool.activeObjects)
+        if DruidComboPointBarFrame then
+            DruidComboPointBarFrame:HookScript('OnEvent', function(self)
+                set_DruidComboPointBarFrame(self.classResourceButtonPool.activeObjects)
+            end)
+        end
+        if ClassNameplateBarFeralDruidFrame and ClassNameplateBarFeralDruidFrame.classResourceButtonTable then
+            for _, btn in pairs(ClassNameplateBarFeralDruidFrame.classResourceButtonTable) do
+                hide_Texture(btn.BG_Active)
+                hide_Texture(btn.BG_Inactive)
+                set_Num_Texture(btn)
+            end
+        end
+
+    elseif e.Player.class=='ROGUE' then--DZ RogueComboPointBarFrame
+        if RogueComboPointBarFrame and RogueComboPointBarFrame.UpdateMaxPower then
+            hooksecurefunc(RogueComboPointBarFrame, 'UpdateMaxPower',function(self)
+                C_Timer.After(0.5, function()
+                    for _, btn in pairs(self.classResourceButtonTable or {}) do
+                        hide_Texture(btn.BGActive)
+                        hide_Texture(btn.BGInactive)
+                        set_Alpha(btn.BGShadow, nil, nil, 0.3)
+                        set_Num_Texture(btn)
+                    end
+                    if ClassNameplateBarRogueFrame and ClassNameplateBarRogueFrame.classResourceButtonTable then
+                        for _, btn in pairs(ClassNameplateBarRogueFrame.classResourceButtonTable) do
+                            hide_Texture(btn.BGActive)
+                            hide_Texture(btn.BGInactive)
+                            set_Alpha(btn.BGShadow, nil, nil, 0.3)
+                            set_Num_Texture(btn)
+                        end
+                    end
+                end)
+            end)
+        end
+
+    elseif e.Player.class=='MONK' then--MonkHarmonyBarFrame
+        local function set_MonkHarmonyBarFrame(btn)
+            if btn then
+                hide_Texture(btn.Chi_BG_Active)
+                hide_Texture(btn.BGInactive)
+                set_Alpha(btn.Chi_BG, nil, nil, 0.2)
+                set_Num_Texture(btn)
+            end
+        end
+        hooksecurefunc(MonkHarmonyBarFrame, 'UpdateMaxPower', function(self)
+            C_Timer.After(0.5, function()
+                for i = 1, #self.classResourceButtonTable do
+                    set_MonkHarmonyBarFrame(self.classResourceButtonTable[i])
+                end
+                local tab= ClassNameplateBarWindwalkerMonkFrame and ClassNameplateBarWindwalkerMonkFrame.classResourceButtonTable or {}
+                for i = 1, #tab do
+                    set_MonkHarmonyBarFrame(tab[i])
+                end
+            end)
+        end)
+        hooksecurefunc(MonkHarmonyBarFrame, 'UpdatePower', function(self)
+            for _, btn in pairs(self.classResourceButtonTable or {}) do
+                if btn.Chi_BG then
+                    btn.Chi_BG:SetAlpha(0.2)
+                end
+            end
+            if ClassNameplateBarWindwalkerMonkFrame then
+                for _, btn in pairs(ClassNameplateBarWindwalkerMonkFrame.classResourceButtonTable or {}) do
+                    if btn.Chi_BG then
+                        btn.Chi_BG:SetAlpha(0.2)
+                    end
+                end
+            end
+        end)
+    elseif e.Player.class=='DEATHKNIGHT' then
+        if RuneFrame.Runes then
+            for _, btn in pairs(RuneFrame.Runes) do
+                hide_Texture(btn.BG_Active)
+                hide_Texture(btn.BG_Inactive)
+            end
+        end
+        if DeathKnightResourceOverlayFrame.Runes then
+            for _, btn in pairs(DeathKnightResourceOverlayFrame.Runes) do
+                hide_Texture(btn.BG_Active)
+                hide_Texture(btn.BG_Inactive)
+            end
+        end
+    end
+
 
     --角色，界面
-    setAlpha(CharacterFrameBg)
-    hideTexture(CharacterFrameInset.Bg)
-    setAlpha(CharacterFrame.NineSlice.TopEdge)
-    setAlpha(CharacterFrame.NineSlice.BottomEdge)
-    setAlpha(CharacterFrame.NineSlice.LeftEdge)
-    setAlpha(CharacterFrame.NineSlice.RightEdge)
+    set_Alpha(CharacterFrameBg)
+    hide_Texture(CharacterFrameInset.Bg)
+    set_Alpha(CharacterFrame.NineSlice.TopEdge)
+    set_Alpha(CharacterFrame.NineSlice.BottomEdge)
+    set_Alpha(CharacterFrame.NineSlice.LeftEdge)
+    set_Alpha(CharacterFrame.NineSlice.RightEdge)
 
-    setAlpha(CharacterFrame.NineSlice.TopRightCorner)
-    setAlpha(CharacterFrame.NineSlice.TopLeftCorner)
-    setAlpha(CharacterFrame.NineSlice.BottomRightCorner)
-    setAlpha(CharacterFrame.NineSlice.BottomLeftCorner)
+    set_Alpha(CharacterFrame.NineSlice.TopRightCorner)
+    set_Alpha(CharacterFrame.NineSlice.TopLeftCorner)
+    set_Alpha(CharacterFrame.NineSlice.BottomRightCorner)
+    set_Alpha(CharacterFrame.NineSlice.BottomLeftCorner)
 
-    hideTexture(CharacterFrameInsetRight.Bg)
-    setAlpha(CharacterStatsPane.ClassBackground)
-    setAlpha(CharacterStatsPane.EnhancementsCategory.Background)
-    setAlpha(CharacterStatsPane.AttributesCategory.Background)
-    setAlpha(CharacterStatsPane.ItemLevelCategory.Background)
+    hide_Texture(CharacterFrameInsetRight.Bg)
+    set_Alpha(CharacterStatsPane.ClassBackground)
+    set_Alpha(CharacterStatsPane.EnhancementsCategory.Background)
+    set_Alpha(CharacterStatsPane.AttributesCategory.Background)
+    set_Alpha(CharacterStatsPane.ItemLevelCategory.Background)
     hooksecurefunc('PaperDollTitlesPane_UpdateScrollBox', function()--PaperDollFrame.lua
         for _, button in pairs(PaperDollFrame.TitleManagerPane.ScrollBox:GetFrames()) do
-            hideTexture(button.BgMiddle)
+            hide_Texture(button.BgMiddle)
         end
     end)
-    hideTexture(PaperDollFrame.TitleManagerPane.ScrollBar.Backplate)
+    hide_Texture(PaperDollFrame.TitleManagerPane.ScrollBar.Backplate)
     hooksecurefunc('PaperDollEquipmentManagerPane_Update', function()--PaperDollFrame.lua
         for _, button in pairs(PaperDollFrame.EquipmentManagerPane.ScrollBox:GetFrames()) do
-            hideTexture(button.BgMiddle)
+            hide_Texture(button.BgMiddle)
         end
     end)
-    hideTexture(PaperDollFrame.EquipmentManagerPane.ScrollBar.Backplate)
-    hideTexture(ReputationFrame.ScrollBar.Backplate)
-    hideTexture(TokenFrame.ScrollBar.Backplate)
+    hide_Texture(PaperDollFrame.EquipmentManagerPane.ScrollBar.Backplate)
+    hide_Texture(ReputationFrame.ScrollBar.Backplate)
+    hide_Texture(TokenFrame.ScrollBar.Backplate)
 
-    hideTexture(CharacterModelFrameBackgroundTopLeft)--角色3D背景
-    hideTexture(CharacterModelFrameBackgroundTopRight)
-    hideTexture(CharacterModelFrameBackgroundBotLeft)
-    hideTexture(CharacterModelFrameBackgroundBotRight)
-    hideTexture(CharacterModelFrameBackgroundOverlay)
+    hide_Texture(CharacterModelFrameBackgroundTopLeft)--角色3D背景
+    hide_Texture(CharacterModelFrameBackgroundTopRight)
+    hide_Texture(CharacterModelFrameBackgroundBotLeft)
+    hide_Texture(CharacterModelFrameBackgroundBotRight)
+    hide_Texture(CharacterModelFrameBackgroundOverlay)
 
     --法术书
-    setAlpha(SpellBookFrame.NineSlice.TopLeftCorner)
-    setAlpha(SpellBookFrame.NineSlice.TopEdge)
-    setAlpha(SpellBookFrame.NineSlice.TopRightCorner)
+    set_Alpha(SpellBookFrame.NineSlice.TopLeftCorner)
+    set_Alpha(SpellBookFrame.NineSlice.TopEdge)
+    set_Alpha(SpellBookFrame.NineSlice.TopRightCorner)
     if SpellBookPageText then
         SpellBookPageText:SetTextColor(1, 0.82, 0)
     end
 
-    hideTexture(SpellBookPage1)
-    hideTexture(SpellBookPage2)
-    setAlpha(SpellBookFrameBg)
-    hideTexture(SpellBookFrameInset.Bg)
+    hide_Texture(SpellBookPage1)
+    hide_Texture(SpellBookPage2)
+    set_Alpha(SpellBookFrameBg)
+    hide_Texture(SpellBookFrameInset.Bg)
 
     for i=1, 12 do
-        setAlpha(_G['SpellButton'..i..'Background'])
+        set_Alpha(_G['SpellButton'..i..'Background'])
         local frame= _G['SpellButton'..i]
         if frame then
             hooksecurefunc(frame, 'UpdateButton', function(self)--SpellBookFrame.lua
@@ -412,195 +560,190 @@ local function Init_Set_AlphaAndColor()
     set_Alpha_Frame_Texture(SpellBookFrameTabButton2)
     set_Alpha_Frame_Texture(SpellBookFrameTabButton3)
 
-    --[[set_Alpha_Frame_Texture(SpellBookSkillLineTab1)
-    set_Alpha_Frame_Texture(SpellBookSkillLineTab2)
-    set_Alpha_Frame_Texture(SpellBookSkillLineTab3)
-    set_Alpha_Frame_Texture(SpellBookSkillLineTab4)
-    set_Alpha_Frame_Texture(SpellBookSkillLineTab5)
-    set_Alpha_Frame_Texture(SpellBookSkillLineTab6)]]
-    --hide_Frame_Texture(SpellBookSkillLineTab1, {index=3})
-    --hide_Frame_Texture(SpellBookSkillLineTab1, {index=2})
-    --hide_Frame_Texture(SpellBookSkillLineTab1, {index=1})
-
 
     --世界地图
-    setAlpha(WorldMapFrame.BorderFrame.NineSlice.TopLeftCorner)
-    setAlpha(WorldMapFrame.BorderFrame.NineSlice.TopEdge)
-    setAlpha(WorldMapFrame.BorderFrame.NineSlice.TopRightCorner)
-    setAlpha(WorldMapFrameBg)
-    setAlpha(QuestMapFrame.Background)
+    set_Alpha(WorldMapFrame.BorderFrame.NineSlice.TopLeftCorner)
+    set_Alpha(WorldMapFrame.BorderFrame.NineSlice.TopEdge)
+    set_Alpha(WorldMapFrame.BorderFrame.NineSlice.TopRightCorner)
+    set_Alpha(WorldMapFrameBg)
+    set_Alpha(QuestMapFrame.Background)
     WorldMapFrame.NavBar:DisableDrawLayer('BACKGROUND')
 
     --地下城和团队副本
-    setAlpha(PVEFrame.NineSlice.TopLeftCorner)
-    setAlpha(PVEFrame.NineSlice.TopEdge)
-    setAlpha(PVEFrame.NineSlice.TopRightCorner)
-    setAlpha(LFGListFrame.CategorySelection.Inset.CustomBG)
-    hideTexture(LFGListFrame.CategorySelection.Inset.Bg)
-    setAlpha(LFGListFrame.SearchPanel.SearchBox.Middle)
-    setAlpha(LFGListFrame.SearchPanel.SearchBox.Left)
-    setAlpha(LFGListFrame.SearchPanel.SearchBox.Right)
-    setAlpha(LFGListFrame.SearchPanel.ScrollBar.Backplate)
-    setAlpha(LFGListFrame.EntryCreation.Inset.CustomBG)
-    setAlpha(LFGListFrame.EntryCreation.Inset.Bg)
-    setAlpha(LFGListFrameMiddleMiddle)
-    setAlpha(LFGListFrameMiddleLeft)
-    setAlpha(LFGListFrameMiddleRight)
-    setAlpha(LFGListFrameBottomMiddle)
-    setAlpha(LFGListFrameTopMiddle)
-    setAlpha(LFGListFrameTopLeft)
-    setAlpha(LFGListFrameBottomLeft)
-    setAlpha(LFGListFrameTopRight)
-    setAlpha(LFGListFrameBottomRight)
-    setAlpha(RaidFinderFrameBottomInset.Bg)
-    setAlpha(RaidFinderQueueFrameBackground)
-    setAlpha(RaidFinderQueueFrameSelectionDropDownMiddle)
-    setAlpha(RaidFinderQueueFrameSelectionDropDownLeft)
-    setAlpha(RaidFinderQueueFrameSelectionDropDownRight)
-    setAlpha(RaidFinderFrameRoleBackground, nil, true)
-    setAlpha(RaidFinderFrameRoleInset.Bg)
+    set_Alpha(PVEFrame.NineSlice.TopLeftCorner)
+    set_Alpha(PVEFrame.NineSlice.TopEdge)
+    set_Alpha(PVEFrame.NineSlice.TopRightCorner)
+    set_Alpha(LFGListFrame.CategorySelection.Inset.CustomBG)
+    hide_Texture(LFGListFrame.CategorySelection.Inset.Bg)
+    set_Alpha(LFGListFrame.SearchPanel.SearchBox.Middle)
+    set_Alpha(LFGListFrame.SearchPanel.SearchBox.Left)
+    set_Alpha(LFGListFrame.SearchPanel.SearchBox.Right)
+    set_Alpha(LFGListFrame.SearchPanel.ScrollBar.Backplate)
+    set_Alpha(LFGListFrame.EntryCreation.Inset.CustomBG)
+    set_Alpha(LFGListFrame.EntryCreation.Inset.Bg)
+    set_Alpha(LFGListFrameMiddleMiddle)
+    set_Alpha(LFGListFrameMiddleLeft)
+    set_Alpha(LFGListFrameMiddleRight)
+    set_Alpha(LFGListFrameBottomMiddle)
+    set_Alpha(LFGListFrameTopMiddle)
+    set_Alpha(LFGListFrameTopLeft)
+    set_Alpha(LFGListFrameBottomLeft)
+    set_Alpha(LFGListFrameTopRight)
+    set_Alpha(LFGListFrameBottomRight)
+    set_Alpha(RaidFinderFrameBottomInset.Bg)
+    set_Alpha(RaidFinderQueueFrameBackground)
+    set_Alpha(RaidFinderQueueFrameSelectionDropDownMiddle)
+    set_Alpha(RaidFinderQueueFrameSelectionDropDownLeft)
+    set_Alpha(RaidFinderQueueFrameSelectionDropDownRight)
+    set_Alpha(RaidFinderFrameRoleBackground, nil, true)
+    set_Alpha(RaidFinderFrameRoleInset.Bg)
 
-    hideTexture(PVEFrameBg)--左边
-    hideTexture(PVEFrameBlueBg)
-    setAlpha(PVEFrameLeftInset.Bg)
+    hide_Texture(PVEFrameBg)--左边
+    hide_Texture(PVEFrameBlueBg)
+    set_Alpha(PVEFrameLeftInset.Bg)
 
-    setAlpha(LFDQueueFrameBackground)
-    setAlpha(LFDQueueFrameTypeDropDownMiddle)
-    setAlpha(LFDQueueFrameTypeDropDownRight)
-    setAlpha(LFDQueueFrameTypeDropDownLeft)
+    set_Alpha(LFDQueueFrameBackground)
+    set_Alpha(LFDQueueFrameTypeDropDownMiddle)
+    set_Alpha(LFDQueueFrameTypeDropDownRight)
+    set_Alpha(LFDQueueFrameTypeDropDownLeft)
 
-    setAlpha(LFDParentFrameInset.Bg)
-    setAlpha(LFDParentFrameRoleBackground)
+    set_Alpha(LFDParentFrameInset.Bg)
+    set_Alpha(LFDParentFrameRoleBackground)
 
-    setAlpha(ProfessionsFrame.NineSlice.TopLeftCorner)
-    setAlpha(ProfessionsFrame.NineSlice.TopEdge)
-    setAlpha(ProfessionsFrame.NineSlice.TopRightCorner)
-    setAlpha(ProfessionsFrameBg)
-    setAlpha(ProfessionsFrame.CraftingPage.SchematicForm.Background)
-    setAlpha(ProfessionsFrame.CraftingPage.RankBar.Background)
+    --专业
+    set_Alpha(ProfessionsFrame.NineSlice.TopLeftCorner)
+    set_Alpha(ProfessionsFrame.NineSlice.TopEdge)
+    set_Alpha(ProfessionsFrame.NineSlice.TopRightCorner)
+    set_Alpha(ProfessionsFrameBg)
+    set_Alpha(ProfessionsFrame.CraftingPage.SchematicForm.Background)
+    set_Alpha(ProfessionsFrame.CraftingPage.RankBar.Background)
 
-    setAlpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundTop)
-    setAlpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundMiddle)
-    setAlpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundBottom)
+    set_Alpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundTop)
+    set_Alpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundMiddle)
+    set_Alpha(ProfessionsFrame.CraftingPage.SchematicForm.Details.BackgroundBottom)
 
-    hideTexture(ProfessionsFrame.SpecPage.TreeView.Background)
-    hideTexture(ProfessionsFrame.SpecPage.DetailedView.Background)
-    setAlpha(ProfessionsFrame.SpecPage.DetailedView.Path.DialBG)
-    setAlpha(ProfessionsFrame.SpecPage.DetailedView.UnspentPoints.CurrencyBackground)
+    hide_Texture(ProfessionsFrame.SpecPage.TreeView.Background)
+    hide_Texture(ProfessionsFrame.SpecPage.DetailedView.Background)
+    set_Alpha(ProfessionsFrame.SpecPage.DetailedView.Path.DialBG)
+    set_Alpha(ProfessionsFrame.SpecPage.DetailedView.UnspentPoints.CurrencyBackground)
 
-    setAlpha(GossipFrame.NineSlice.TopEdge)
-    setAlpha(GossipFrame.NineSlice.TopLeftCorner)
-    setAlpha(GossipFrame.NineSlice.TopRightCorner)
-    setAlpha(GossipFrameBg)
-    hideTexture(GossipFrameInset.Bg)
-    hideTexture(GossipFrame.GreetingPanel.ScrollBar.Backplate)
+    set_Alpha(InspectRecipeFrameBg)
+    set_Alpha(InspectRecipeFrame.SchematicForm.MinimalBackground)
+
+
+    set_Alpha(GossipFrame.NineSlice.TopEdge)
+    set_Alpha(GossipFrame.NineSlice.TopLeftCorner)
+    set_Alpha(GossipFrame.NineSlice.TopRightCorner)
+    set_Alpha(GossipFrameBg)
+    hide_Texture(GossipFrameInset.Bg)
+    hide_Texture(GossipFrame.GreetingPanel.ScrollBar.Backplate)
 
     set_Alpha_Frame_Texture(PVEFrameTab1)
     set_Alpha_Frame_Texture(PVEFrameTab2)
     set_Alpha_Frame_Texture(PVEFrameTab3)
 
     if PetStableFrame then--猎人，宠物
-        setAlpha(PetStableFrame.NineSlice.TopEdge)
-        setAlpha(PetStableFrame.NineSlice.TopLeftCorner)
-        setAlpha(PetStableFrame.NineSlice.TopRightCorner)
-        hideTexture(PetStableFrameModelBg)
-        hideTexture(PetStableFrameInset.Bg)
-        setAlpha(PetStableFrameBg)
-        hideTexture(PetStableFrameStableBg)
-        hideTexture(PetStableActiveBg)
+        set_Alpha(PetStableFrame.NineSlice.TopEdge)
+        set_Alpha(PetStableFrame.NineSlice.TopLeftCorner)
+        set_Alpha(PetStableFrame.NineSlice.TopRightCorner)
+        hide_Texture(PetStableFrameModelBg)
+        hide_Texture(PetStableFrameInset.Bg)
+        set_Alpha(PetStableFrameBg)
+        hide_Texture(PetStableFrameStableBg)
+        hide_Texture(PetStableActiveBg)
         for i=1, 10 do
             if i<=5 then
-                hideTexture(_G['PetStableActivePet'..i..'Background'])
-                setAlpha(_G['PetStableActivePet'..i..'Border'])
+                hide_Texture(_G['PetStableActivePet'..i..'Background'])
+                set_Alpha(_G['PetStableActivePet'..i..'Border'])
             end
-            setAlpha(_G['PetStableStabledPet'..i..'Background'])
+            set_Alpha(_G['PetStableStabledPet'..i..'Background'])
         end
     end
 
     --商人
-    setAlpha(MerchantFrame.NineSlice.TopEdge)
-    setAlpha(MerchantFrame.NineSlice.TopLeftCorner)
-    setAlpha(MerchantFrame.NineSlice.TopRightCorner)
-    setAlpha(MerchantFrameBg)
-    hideTexture(MerchantFrameInset.Bg)
-    setAlpha(MerchantMoneyInset.Bg)
-    hideTexture(MerchantMoneyBgMiddle)
-    hideTexture(MerchantMoneyBgLeft)
-    hideTexture(MerchantMoneyBgRight)
+    set_Alpha(MerchantFrame.NineSlice.TopEdge)
+    set_Alpha(MerchantFrame.NineSlice.TopLeftCorner)
+    set_Alpha(MerchantFrame.NineSlice.TopRightCorner)
+    set_Alpha(MerchantFrameBg)
+    hide_Texture(MerchantFrameInset.Bg)
+    set_Alpha(MerchantMoneyInset.Bg)
+    hide_Texture(MerchantMoneyBgMiddle)
+    hide_Texture(MerchantMoneyBgLeft)
+    hide_Texture(MerchantMoneyBgRight)
     for i=1, 12 do
-        setAlpha(_G['MerchantItem'..i..'SlotTexture'])
+        set_Alpha(_G['MerchantItem'..i..'SlotTexture'])
     end
-    setAlpha(MerchantFrameLootFilterMiddle)
-    setAlpha(MerchantFrameLootFilterLeft)
-    setAlpha(MerchantFrameLootFilterRight)
+    set_Alpha(MerchantFrameLootFilterMiddle)
+    set_Alpha(MerchantFrameLootFilterLeft)
+    set_Alpha(MerchantFrameLootFilterRight)
 
     --银行
-    setAlpha(BankFrame.NineSlice.TopEdge)
-    setAlpha(BankFrame.NineSlice.TopLeftCorner)
-    setAlpha(BankFrame.NineSlice.TopRightCorner)
+    set_Alpha(BankFrame.NineSlice.TopEdge)
+    set_Alpha(BankFrame.NineSlice.TopLeftCorner)
+    set_Alpha(BankFrame.NineSlice.TopRightCorner)
 
-    hideTexture(BankFrameMoneyFrameInset.Bg)
-    setAlpha(BankFrameMoneyFrameBorderMiddle)
-    setAlpha(BankFrameMoneyFrameBorderRight)
-    setAlpha(BankFrameMoneyFrameBorderLeft)
+    hide_Texture(BankFrameMoneyFrameInset.Bg)
+    set_Alpha(BankFrameMoneyFrameBorderMiddle)
+    set_Alpha(BankFrameMoneyFrameBorderRight)
+    set_Alpha(BankFrameMoneyFrameBorderLeft)
 
     BankFrame:DisableDrawLayer('BACKGROUND')
     local texture= BankFrame:CreateTexture(nil,'BORDER',nil, 1)
     texture:SetAtlas('auctionhouse-background-buy-noncommodities-market')
     texture:SetAllPoints(BankFrame)
-    setAlpha(texture)
-    hideTexture(BankFrameBg)
+    set_Alpha(texture)
+    hide_Texture(BankFrameBg)
 
     hooksecurefunc('BankFrameItemButton_Update',function(button)--银行
         if button.NormalTexture and button.NormalTexture:IsShown() then
-            hideTexture(button.NormalTexture)
+            hide_Texture(button.NormalTexture)
         end
         if ReagentBankFrame.numColumn and not ReagentBankFrame.hidexBG then
             ReagentBankFrame.hidexBG=true
             for column = 1, 7 do
-                hideTexture(ReagentBankFrame["BG"..column])
+                hide_Texture(ReagentBankFrame["BG"..column])
             end
         end
     end)
 
     --背包
     if ContainerFrameCombinedBags and ContainerFrameCombinedBags.NineSlice then
-        setAlpha(ContainerFrameCombinedBags.NineSlice.TopEdge)
-        setAlpha(ContainerFrameCombinedBags.NineSlice.LeftEdge)
-        setAlpha(ContainerFrameCombinedBags.NineSlice.RightEdge)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.TopEdge)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.LeftEdge)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.RightEdge)
 
-        setAlpha(ContainerFrameCombinedBags.NineSlice.BottomEdge)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.BottomEdge)
 
-        setAlpha(ContainerFrameCombinedBags.NineSlice.TopLeftCorner)
-        setAlpha(ContainerFrameCombinedBags.NineSlice.TopRightCorner)
-        setAlpha(ContainerFrameCombinedBags.NineSlice.BottomRightCorner)
-        setAlpha(ContainerFrameCombinedBags.NineSlice.BottomLeftCorner)
-        setAlpha(ContainerFrameCombinedBags.MoneyFrame.Border.Middle)
-        setAlpha(ContainerFrameCombinedBags.MoneyFrame.Border.Right)
-        setAlpha(ContainerFrameCombinedBags.MoneyFrame.Border.Left)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.TopLeftCorner)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.TopRightCorner)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.BottomRightCorner)
+        set_Alpha(ContainerFrameCombinedBags.NineSlice.BottomLeftCorner)
+        set_Alpha(ContainerFrameCombinedBags.MoneyFrame.Border.Middle)
+        set_Alpha(ContainerFrameCombinedBags.MoneyFrame.Border.Right)
+        set_Alpha(ContainerFrameCombinedBags.MoneyFrame.Border.Left)
 
-        setAlpha(ContainerFrameCombinedBags.Bg.TopSection, true)
-        --setAlpha(ContainerFrameCombinedBags.Bg.BottomEdge)
-        --setAlpha(ContainerFrameCombinedBags.Bg.BottomRight)
-        --setAlpha(ContainerFrameCombinedBags.Bg.BottomLeft)
-        setAlpha(BagItemSearchBox.Middle)
-        setAlpha(BagItemSearchBox.Left)
-        setAlpha(BagItemSearchBox.Right)
+        set_Alpha(ContainerFrameCombinedBags.Bg.TopSection, true)
+        --set_Alpha(ContainerFrameCombinedBags.Bg.BottomEdge)
+        --set_Alpha(ContainerFrameCombinedBags.Bg.BottomRight)
+        --set_Alpha(ContainerFrameCombinedBags.Bg.BottomLeft)
+        set_Alpha(BagItemSearchBox.Middle)
+        set_Alpha(BagItemSearchBox.Left)
+        set_Alpha(BagItemSearchBox.Right)
     end
     for i=1 ,NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS+1 do
         local frame= _G['ContainerFrame'..i]
         if frame and frame.NineSlice then
-            setAlpha(frame.Bg.TopSection, true)
-            setAlpha(frame.NineSlice.TopEdge)
-            setAlpha(frame.NineSlice.TopLeftCorner)
-            setAlpha(frame.NineSlice.TopRightCorner)
+            set_Alpha(frame.Bg.TopSection, true)
+            set_Alpha(frame.NineSlice.TopEdge)
+            set_Alpha(frame.NineSlice.TopLeftCorner)
+            set_Alpha(frame.NineSlice.TopRightCorner)
         end
     end
 
     local function set_BagTexture_Button(button)
         if not button.hasItem then
-            hideTexture(button.icon)
-            hideTexture(button.ItemSlotBackground)
+            hide_Texture(button.icon)
+            hide_Texture(button.ItemSlotBackground)
             button.NormalTexture:SetAlpha(0.1)
             if e.Player.useColor then
                 button.NormalTexture:SetVertexColor(e.Player.useColor.r, e.Player.useColor.g, e.Player.useColor.b)
@@ -627,8 +770,8 @@ local function Init_Set_AlphaAndColor()
     end)
     hooksecurefunc('PaperDollItemSlotButton_Update', function(frame)--PaperDollFrame.lua
         if frame:GetID()>30 then
-            setAlpha(frame:GetNormalTexture())
-            setAlpha(frame.icon)
+            set_Alpha(frame:GetNormalTexture())
+            set_Alpha(frame.icon)
         end
     end)
     hide_Frame_Texture(CharacterHeadSlot)--1
@@ -655,24 +798,24 @@ local function Init_Set_AlphaAndColor()
     set_Alpha_Frame_Texture(CharacterFrameTab3)
 
     --好友列表
-    setAlpha(FriendsFrame.NineSlice.TopEdge)
-    setAlpha(FriendsFrame.NineSlice.TopLeftCorner)
-    setAlpha(FriendsFrame.NineSlice.TopRightCorner)
-    setAlpha(FriendsFrameBg)
-    hideTexture(FriendsFrameInset.Bg)
-    hideTexture(FriendsListFrame.ScrollBar.Backplate)
-    hideTexture(IgnoreListFrame.ScrollBar.Backplate)
+    set_Alpha(FriendsFrame.NineSlice.TopEdge)
+    set_Alpha(FriendsFrame.NineSlice.TopLeftCorner)
+    set_Alpha(FriendsFrame.NineSlice.TopRightCorner)
+    set_Alpha(FriendsFrameBg)
+    hide_Texture(FriendsFrameInset.Bg)
+    hide_Texture(FriendsListFrame.ScrollBar.Backplate)
+    hide_Texture(IgnoreListFrame.ScrollBar.Backplate)
     if RecruitAFriendFrame and RecruitAFriendFrame.RecruitList then
-        hideTexture(RecruitAFriendFrame.RecruitList.ScrollBar.Backplate)
-        setAlpha(RecruitAFriendFrame.RecruitList.ScrollFrameInset.Bg)
+        hide_Texture(RecruitAFriendFrame.RecruitList.ScrollBar.Backplate)
+        set_Alpha(RecruitAFriendFrame.RecruitList.ScrollFrameInset.Bg)
     end
-    hideTexture(WhoFrameListInset.Bg)
-    hideTexture(WhoFrame.ScrollBar.Backplate)
-    setAlpha(WhoFrameDropDownMiddle)
-    setAlpha(WhoFrameDropDownLeft)
-    setAlpha(WhoFrameDropDownRight)
-    hideTexture(WhoFrameEditBoxInset.Bg)
-    hideTexture(QuickJoinFrame.ScrollBar.Backplate)
+    hide_Texture(WhoFrameListInset.Bg)
+    hide_Texture(WhoFrame.ScrollBar.Backplate)
+    set_Alpha(WhoFrameDropDownMiddle)
+    set_Alpha(WhoFrameDropDownLeft)
+    set_Alpha(WhoFrameDropDownRight)
+    hide_Texture(WhoFrameEditBoxInset.Bg)
+    hide_Texture(QuickJoinFrame.ScrollBar.Backplate)
 
     set_Alpha_Frame_Texture(FriendsFrameTab1)
     set_Alpha_Frame_Texture(FriendsFrameTab2)
@@ -680,87 +823,110 @@ local function Init_Set_AlphaAndColor()
     set_Alpha_Frame_Texture(FriendsFrameTab4)
 
     --聊天设置
-    setAlpha(ChannelFrame.NineSlice.TopEdge)
-    setAlpha(ChannelFrame.NineSlice.TopLeftCorner)
-    setAlpha(ChannelFrame.NineSlice.TopRightCorner)
-    setAlpha(ChannelFrameBg)
-    hideTexture(ChannelFrameInset.Bg)
-    hideTexture(ChannelFrame.RightInset.Bg)
-    hideTexture(ChannelFrame.LeftInset.Bg)
-    hideTexture(ChannelFrame.ChannelRoster.ScrollBar.Backplate)
+    set_Alpha(ChannelFrame.NineSlice.TopEdge)
+    set_Alpha(ChannelFrame.NineSlice.TopLeftCorner)
+    set_Alpha(ChannelFrame.NineSlice.TopRightCorner)
+    set_Alpha(ChannelFrameBg)
+    hide_Texture(ChannelFrameInset.Bg)
+    hide_Texture(ChannelFrame.RightInset.Bg)
+    hide_Texture(ChannelFrame.LeftInset.Bg)
+    hide_Texture(ChannelFrame.ChannelRoster.ScrollBar.Backplate)
 
     --任务
-    setAlpha(QuestFrame.NineSlice.TopEdge)
-    setAlpha(QuestFrame.NineSlice.TopLeftCorner)
-    setAlpha(QuestFrame.NineSlice.TopRightCorner)
-    setAlpha(QuestFrameBg)
-    hideTexture(QuestFrameInset.Bg)
+    set_Alpha(QuestFrame.NineSlice.TopEdge)
+    set_Alpha(QuestFrame.NineSlice.TopLeftCorner)
+    set_Alpha(QuestFrame.NineSlice.TopRightCorner)
+    set_Alpha(QuestFrameBg)
+    hide_Texture(QuestFrameInset.Bg)
 
     --信箱
-    setAlpha(MailFrame.NineSlice.TopEdge)
-    setAlpha(MailFrame.NineSlice.TopLeftCorner)
-    setAlpha(MailFrame.NineSlice.TopRightCorner)
-    setAlpha(MailFrameBg)
-    hideTexture(InboxFrameBg)
-    hideTexture(MailFrameInset.Bg)
-    setAlpha(SendStationeryBackgroundLeft)
-    setAlpha(SendStationeryBackgroundRight)
-    setAlpha(SendMailMoneyBgMiddle)
-    setAlpha(SendMailMoneyBgRight)
-    setAlpha(SendMailMoneyBgLeft)
-    hideTexture(SendMailMoneyInset.Bg)
+    set_Alpha(MailFrame.NineSlice.TopEdge)
+    set_Alpha(MailFrame.NineSlice.TopLeftCorner)
+    set_Alpha(MailFrame.NineSlice.TopRightCorner)
+    set_Alpha(MailFrameBg)
+    hide_Texture(InboxFrameBg)
+    hide_Texture(MailFrameInset.Bg)
+    set_Alpha(OpenMailFrame.NineSlice)
+    set_Alpha(OpenMailFrameBg)
+    set_Alpha(OpenMailFrameInset.Bg)
+
+    SendMailBodyEditBox:HookScript('OnEditFocusLost', function()
+        set_Alpha(SendStationeryBackgroundLeft)
+        set_Alpha(SendStationeryBackgroundRight)
+    end)
+    SendMailBodyEditBox:HookScript('OnEditFocusGained', function()
+        if SendStationeryBackgroundLeft then
+            SendStationeryBackgroundLeft:SetAlpha(1)
+            SendStationeryBackgroundLeft:SetVertexColor(1,1,1)
+            SendStationeryBackgroundRight:SetAlpha(1)
+            SendStationeryBackgroundRight:SetVertexColor(1,1,1)
+        end
+    end)
+    set_Alpha(SendStationeryBackgroundLeft)
+    set_Alpha(SendStationeryBackgroundRight)
+
+    set_Alpha(SendMailMoneyBgMiddle)
+    set_Alpha(SendMailMoneyBgRight)
+    set_Alpha(SendMailMoneyBgLeft)
+    hide_Texture(SendMailMoneyInset.Bg)
+    set_Alpha(MailFrame.NineSlice.LeftEdge)
+    set_Alpha(MailFrame.NineSlice.RightEdge)
+    set_Alpha(MailFrame.NineSlice.BottomRightCorner)
+    set_Alpha(MailFrame.NineSlice.BottomLeftCorner)
+    set_Alpha(MailFrame.NineSlice.BottomEdge)
+    set_Alpha(MailFrameInset.NineSlice.LeftEdge)
 
 
     --拾取, 历史
-    setAlpha(GroupLootHistoryFrame.NineSlice.TopRightCorner)
-    setAlpha(GroupLootHistoryFrame.NineSlice.TopEdge)
-    setAlpha(GroupLootHistoryFrame.NineSlice.TopLeftCorner)
-    setAlpha(GroupLootHistoryFrame.NineSlice.RightEdge)
-    setAlpha(GroupLootHistoryFrame.NineSlice.LeftEdge)
-    setAlpha(GroupLootHistoryFrame.NineSlice.BottomLeftCorner)
-    setAlpha(GroupLootHistoryFrame.NineSlice.BottomRightCorner)
-    setAlpha(GroupLootHistoryFrame.NineSlice.BottomEdge)
-    setAlpha(GroupLootHistoryFrameBg)
-    setAlpha(GroupLootHistoryFrame.ScrollBar.Track.Middle)
-    setAlpha(GroupLootHistoryFrame.ScrollBar.Track.Begin)
-    setAlpha(GroupLootHistoryFrame.ScrollBar.Track.End)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.TopRightCorner)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.TopEdge)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.TopLeftCorner)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.RightEdge)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.LeftEdge)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.BottomLeftCorner)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.BottomRightCorner)
+    set_Alpha(GroupLootHistoryFrame.NineSlice.BottomEdge)
+    set_Alpha(GroupLootHistoryFrameBg)
+    set_Alpha(GroupLootHistoryFrame.ScrollBar.Track.Middle)
+    set_Alpha(GroupLootHistoryFrame.ScrollBar.Track.Begin)
+    set_Alpha(GroupLootHistoryFrame.ScrollBar.Track.End)
 
-    setAlpha(GroupLootHistoryFrameMiddle)
-    setAlpha(GroupLootHistoryFrameLeft)
-    setAlpha(GroupLootHistoryFrameRight)
-    setAlpha()
+    set_Alpha(GroupLootHistoryFrameMiddle)
+    set_Alpha(GroupLootHistoryFrameLeft)
+    set_Alpha(GroupLootHistoryFrameRight)
+    set_Alpha()
 
-    
-    
+
+
 
     --频道, 设置
-    hideTexture(ChatConfigCategoryFrame.NineSlice.Center)
-    hideTexture(ChatConfigBackgroundFrame.NineSlice.Center)
-    hideTexture(ChatConfigChatSettingsLeft.NineSlice.Center)
+    hide_Texture(ChatConfigCategoryFrame.NineSlice.Center)
+    hide_Texture(ChatConfigBackgroundFrame.NineSlice.Center)
+    hide_Texture(ChatConfigChatSettingsLeft.NineSlice.Center)
 
     hooksecurefunc('ChatConfig_CreateCheckboxes', function(frame)--ChatConfigFrame.lua
         if frame.NineSlice then
-            hideTexture(frame.NineSlice.TopEdge)
-            hideTexture(frame.NineSlice.BottomEdge)
-            hideTexture(frame.NineSlice.RightEdge)
-            hideTexture(frame.NineSlice.LeftEdge)
-            hideTexture(frame.NineSlice.TopLeftCorner)
-            hideTexture(frame.NineSlice.TopRightCorner)
-            hideTexture(frame.NineSlice.BottomLeftCorner)
-            hideTexture(frame.NineSlice.BottomRightCorner)
-            hideTexture(frame.NineSlice.Center)
+            hide_Texture(frame.NineSlice.TopEdge)
+            hide_Texture(frame.NineSlice.BottomEdge)
+            hide_Texture(frame.NineSlice.RightEdge)
+            hide_Texture(frame.NineSlice.LeftEdge)
+            hide_Texture(frame.NineSlice.TopLeftCorner)
+            hide_Texture(frame.NineSlice.TopRightCorner)
+            hide_Texture(frame.NineSlice.BottomLeftCorner)
+            hide_Texture(frame.NineSlice.BottomRightCorner)
+            hide_Texture(frame.NineSlice.Center)
         end
         local checkBoxNameString = frame:GetName().."CheckBox";
         for index, _ in ipairs(frame.checkBoxTable) do
             local checkBox = _G[checkBoxNameString..index];
             if checkBox and checkBox.NineSlice then
-                hideTexture(checkBox.NineSlice.TopEdge)
-                hideTexture(checkBox.NineSlice.RightEdge)
-                hideTexture(checkBox.NineSlice.LeftEdge)
-                hideTexture(checkBox.NineSlice.TopRightCorner)
-                hideTexture(checkBox.NineSlice.TopLeftCorner)
-                hideTexture(checkBox.NineSlice.BottomRightCorner)
-                hideTexture(checkBox.NineSlice.BottomLeftCorner)
+                hide_Texture(checkBox.NineSlice.TopEdge)
+                hide_Texture(checkBox.NineSlice.RightEdge)
+                hide_Texture(checkBox.NineSlice.LeftEdge)
+                hide_Texture(checkBox.NineSlice.TopRightCorner)
+                hide_Texture(checkBox.NineSlice.TopLeftCorner)
+                hide_Texture(checkBox.NineSlice.BottomRightCorner)
+                hide_Texture(checkBox.NineSlice.BottomLeftCorner)
             end
         end
     end)
@@ -786,36 +952,27 @@ local function Init_Set_AlphaAndColor()
     end)
 
     --插件，管理
-    setAlpha(AddonList.NineSlice.TopEdge)
-    setAlpha(AddonList.NineSlice.TopLeftCorner)
-    setAlpha(AddonList.NineSlice.TopRightCorner)
-    setAlpha(AddonListBg)
-    setAlpha(AddonListInset.Bg)
-    hideTexture(AddonList.ScrollBar.Backplate)
-    setAlpha(AddonCharacterDropDownMiddle)
-    setAlpha(AddonCharacterDropDownLeft)
-    setAlpha(AddonCharacterDropDownRight)
+    set_Alpha(AddonList.NineSlice.TopEdge)
+    set_Alpha(AddonList.NineSlice.TopLeftCorner)
+    set_Alpha(AddonList.NineSlice.TopRightCorner)
+    set_Alpha(AddonListBg)
+    set_Alpha(AddonListInset.Bg)
+    hide_Texture(AddonList.ScrollBar.Backplate)
+    set_Alpha(AddonCharacterDropDownMiddle)
+    set_Alpha(AddonCharacterDropDownLeft)
+    set_Alpha(AddonCharacterDropDownRight)
 
     --场景 Blizzard_ScenarioObjectiveTracker.lua
     --[[if ObjectiveTrackerBlocksFrame then
-        setAlpha(ObjectiveTrackerBlocksFrame.ScenarioHeader.Background)
-        setAlpha(ObjectiveTrackerBlocksFrame.AchievementHeader.Background)
-        setAlpha(ObjectiveTrackerBlocksFrame.QuestHeader.Background)
+        set_Alpha(ObjectiveTrackerBlocksFrame.ScenarioHeader.Background)
+        set_Alpha(ObjectiveTrackerBlocksFrame.AchievementHeader.Background)
+        set_Alpha(ObjectiveTrackerBlocksFrame.QuestHeader.Background)
         hooksecurefunc('ScenarioStage_UpdateOptionWidgetRegistration', function(stageBlock, widgetSetID)
-            setAlpha(stageBlock.NormalBG, nil, true)
-            setAlpha(stageBlock.FinalBG)
+            set_Alpha(stageBlock.NormalBG, nil, true)
+            set_Alpha(stageBlock.FinalBG)
         end)
     end]]
 
-    --小地图
-    setAlpha(MinimapCompassTexture)
-
-    --[[对话框
-    if StaticPopup1 then
-        if StaticPopup1.Border then
-            setAlpha(StaticPopup1.Border.Bg)
-        end
-    end]]
 
     local buttons = {
         CharacterMicroButton,--菜单
@@ -834,20 +991,35 @@ local function Init_Set_AlphaAndColor()
     }
     for _, frame in pairs(buttons) do
         if frame then
-            setAlpha(frame:GetNormalTexture(), true)
+            set_Alpha(frame:GetNormalTexture(), true)
         end
     end
+    buttons=nil
 
     if MainStatusTrackingBarContainer then--货币，XP，追踪，最下面BAR
-        hideTexture(MainStatusTrackingBarContainer.BarFrameTexture)
+        hide_Texture(MainStatusTrackingBarContainer.BarFrameTexture)
     end
-    
 
-    C_Timer.After(3, function()
+    hide_Frame_Texture(AddonCompartmentFrame)
+    if e.Player.useColor then
+        AddonCompartmentFrame.Text:SetTextColor(e.Player.useColor.r, e.Player.useColor.g, e.Player.useColor.b)
+    end
+
+    hide_Texture(PlayerFrameAlternateManaBarBorder)
+    hide_Texture(PlayerFrameAlternateManaBarLeftBorder)
+    hide_Texture(PlayerFrameAlternateManaBarRightBorder)
+
+    --小地图
+    set_Alpha(MinimapCompassTexture)
+    set_Alpha_Frame_Texture(MinimapCluster.BorderTop)
+    set_Alpha_Frame_Texture(MinimapCluster.Tracking.Button)
+    set_Alpha_Frame_Texture(GameTimeFrame)
+
+    C_Timer.After(2, function()
         if SpellFlyout and SpellFlyout.Background then--Spell Flyout
-            hideTexture(SpellFlyout.Background.HorizontalMiddle)
-            hideTexture(SpellFlyout.Background.End)
-            hideTexture(SpellFlyout.Background.VerticalMiddle)
+            hide_Texture(SpellFlyout.Background.HorizontalMiddle)
+            hide_Texture(SpellFlyout.Background.End)
+            hide_Texture(SpellFlyout.Background.VerticalMiddle)
         end
 
         for i=1, GetNumAddOns() do
@@ -860,6 +1032,7 @@ local function Init_Set_AlphaAndColor()
                 end
             end
         end
+
     end)
 end
 
@@ -871,168 +1044,171 @@ local function set_Alpha_Event(arg1)
         return
     end
     if arg1=='Blizzard_TrainerUI' then--专业训练师
-        setAlpha(ClassTrainerFrame.NineSlice.TopEdge)
-        setAlpha(ClassTrainerFrame.NineSlice.TopLeftCorner)
-        setAlpha(ClassTrainerFrame.NineSlice.TopRightCorner)
-        hideTexture(ClassTrainerFrameInset.Bg)
-        hideTexture(ClassTrainerFrameBg)
+        set_Alpha(ClassTrainerFrame.NineSlice.TopEdge)
+        set_Alpha(ClassTrainerFrame.NineSlice.TopLeftCorner)
+        set_Alpha(ClassTrainerFrame.NineSlice.TopRightCorner)
+        hide_Texture(ClassTrainerFrameInset.Bg)
+        hide_Texture(ClassTrainerFrameBg)
 
-        hideTexture(ClassTrainerFrameBottomInset.Bg)
-        setAlpha(ClassTrainerFrameFilterDropDownMiddle)
-        setAlpha(ClassTrainerFrameFilterDropDownLeft)
-        setAlpha(ClassTrainerFrameFilterDropDownRight)
-        hideTexture(ClassTrainerFrame.ScrollBar.Backplate)
+        hide_Texture(ClassTrainerFrameBottomInset.Bg)
+        set_Alpha(ClassTrainerFrameFilterDropDownMiddle)
+        set_Alpha(ClassTrainerFrameFilterDropDownLeft)
+        set_Alpha(ClassTrainerFrameFilterDropDownRight)
+        hide_Texture(ClassTrainerFrame.ScrollBar.Backplate)
 
     elseif arg1=='Blizzard_TimeManager' then--小时图，时间
-        setAlpha(TimeManagerFrame.NineSlice.TopLeftCorner)
-        setAlpha(TimeManagerFrame.NineSlice.TopEdge)
-        setAlpha(TimeManagerFrame.NineSlice.TopRightCorner)
-        setAlpha(TimeManagerFrameBg)
-        hideTexture(TimeManagerFrameInset.Bg)
-        setAlpha(TimeManagerAlarmMessageEditBox.Middle)
-        setAlpha(TimeManagerAlarmMessageEditBox.Left)
-        setAlpha(TimeManagerAlarmMessageEditBox.Right)
+        set_Alpha(TimeManagerFrame.NineSlice.TopLeftCorner)
+        set_Alpha(TimeManagerFrame.NineSlice.TopEdge)
+        set_Alpha(TimeManagerFrame.NineSlice.TopRightCorner)
+        set_Alpha(TimeManagerFrameBg)
+        hide_Texture(TimeManagerFrameInset.Bg)
+        set_Alpha(TimeManagerAlarmMessageEditBox.Middle)
+        set_Alpha(TimeManagerAlarmMessageEditBox.Left)
+        set_Alpha(TimeManagerAlarmMessageEditBox.Right)
+        if e.Player.useColor then
+            TimeManagerClockTicker:SetTextColor(e.Player.useColor.r, e.Player.useColor.g, e.Player.useColor.b)
+        end
+
 
     elseif arg1=='Blizzard_ClassTalentUI' and not Save.disabledAlpha then--天赋
-        setAlpha(ClassTalentFrame.TalentsTab.BottomBar)--下面
-        setAlpha(ClassTalentFrame.NineSlice.TopLeftCorner)--顶部
-        setAlpha(ClassTalentFrame.NineSlice.TopEdge)--顶部
-        setAlpha(ClassTalentFrame.NineSlice.TopRightCorner)--顶部
-        setAlpha(ClassTalentFrameBg)--里面
-        hideTexture(ClassTalentFrame.TalentsTab.BlackBG)
+        set_Alpha(ClassTalentFrame.TalentsTab.BottomBar)--下面
+        set_Alpha(ClassTalentFrame.NineSlice.TopLeftCorner)--顶部
+        set_Alpha(ClassTalentFrame.NineSlice.TopEdge)--顶部
+        set_Alpha(ClassTalentFrame.NineSlice.TopRightCorner)--顶部
+        set_Alpha(ClassTalentFrameBg)--里面
+        hide_Texture(ClassTalentFrame.TalentsTab.BlackBG)
         hooksecurefunc(ClassTalentFrame.TalentsTab, 'UpdateSpecBackground', function(self2)--Blizzard_ClassTalentTalentsTab.lua
             if self2.specBackgrounds then
                 for _, background in ipairs(self2.specBackgrounds) do
-                    hideTexture(background)
+                    hide_Texture(background)
                 end
             end
         end)
 
-        hideTexture(ClassTalentFrame.SpecTab.Background)
-        hideTexture(ClassTalentFrame.SpecTab.BlackBG)
+        hide_Texture(ClassTalentFrame.SpecTab.Background)
+        hide_Texture(ClassTalentFrame.SpecTab.BlackBG)
         hooksecurefunc(ClassTalentFrame.SpecTab, 'UpdateSpecContents', function(self2)--Blizzard_ClassTalentSpecTab.lua
             local numSpecs= self2.numSpecs
             if numSpecs and numSpecs>0 then
                 for i = 1, numSpecs do
                     local contentFrame = self2.SpecContentFramePool:Acquire();
                     if contentFrame then
-                        hideTexture(contentFrame.HoverBackground)
+                        hide_Texture(contentFrame.HoverBackground)
                     end
                 end
             end
         end)
 
-        setAlpha(ClassTalentFrameMiddle)
-        setAlpha(ClassTalentFrameLeft)
-        setAlpha(ClassTalentFrameRight)
-        setAlpha(ClassTalentFrame.TalentsTab.SearchBox.Middle)
-        setAlpha(ClassTalentFrame.TalentsTab.SearchBox.Left)
-        setAlpha(ClassTalentFrame.TalentsTab.SearchBox.Right)
+        set_Alpha(ClassTalentFrameMiddle)
+        set_Alpha(ClassTalentFrameLeft)
+        set_Alpha(ClassTalentFrameRight)
+        set_Alpha(ClassTalentFrame.TalentsTab.SearchBox.Middle)
+        set_Alpha(ClassTalentFrame.TalentsTab.SearchBox.Left)
+        set_Alpha(ClassTalentFrame.TalentsTab.SearchBox.Right)
 
     elseif arg1=='Blizzard_AchievementUI' then--成就
+        set_Alpha(AchievementFrame.Header.PointBorder)
+        hide_Texture(AchievementFrameSummary.Background)
+        hide_Texture(AchievementFrameCategoriesBG)
+        hide_Texture(AchievementFrameAchievements.Background)
 
-        setAlpha(AchievementFrame.Header.PointBorder)
-        hideTexture(AchievementFrameSummary.Background)
-        hideTexture(AchievementFrameCategoriesBG)
-        hideTexture(AchievementFrameAchievements.Background)
+        hide_Texture(AchievementFrameWaterMark)
+        hide_Texture(AchievementFrameGuildEmblemRight)
 
-        hideTexture(AchievementFrameWaterMark)
-        hideTexture(AchievementFrameGuildEmblemRight)
+        hide_Texture(AchievementFrame.BottomRightCorner)
+        hide_Texture(AchievementFrame.BottomLeftCorner)
+        hide_Texture(AchievementFrame.TopLeftCorner)
+        hide_Texture(AchievementFrame.TopRightCorner)
 
-        hideTexture(AchievementFrame.BottomRightCorner)
-        hideTexture(AchievementFrame.BottomLeftCorner)
-        hideTexture(AchievementFrame.TopLeftCorner)
-        hideTexture(AchievementFrame.TopRightCorner)
+        hide_Texture(AchievementFrame.BottomEdge)
+        hide_Texture(AchievementFrame.TopEdge)
+        hide_Texture(AchievementFrame.LeftEdge)
+        hide_Texture(AchievementFrame.RightEdge)
+        hide_Texture(AchievementFrame.Header.Right)
+        hide_Texture(AchievementFrame.Header.Left)
 
-        hideTexture(AchievementFrame.BottomEdge)
-        hideTexture(AchievementFrame.TopEdge)
-        hideTexture(AchievementFrame.LeftEdge)
-        hideTexture(AchievementFrame.RightEdge)
-        hideTexture(AchievementFrame.Header.Right)
-        hideTexture(AchievementFrame.Header.Left)
+        hide_Texture(AchievementFrame.SearchBox.Middle)
+        hide_Texture(AchievementFrame.SearchBox.Left)
+        hide_Texture(AchievementFrame.SearchBox.Right)
 
-        hideTexture(AchievementFrame.SearchBox.Middle)
-        hideTexture(AchievementFrame.SearchBox.Left)
-        hideTexture(AchievementFrame.SearchBox.Right)
+        set_Alpha(AchievementFrame.Background)
+        set_Alpha(AchievementFrameMetalBorderBottomLeft)
+        set_Alpha(AchievementFrameMetalBorderBottom)
+        set_Alpha(AchievementFrameMetalBorderBottomRight)
+        set_Alpha(AchievementFrameMetalBorderRight)
+        set_Alpha(AchievementFrameMetalBorderLeft)
+        set_Alpha(AchievementFrameMetalBorderTopLeft)
+        set_Alpha(AchievementFrameMetalBorderTop)
+        set_Alpha(AchievementFrameMetalBorderTopRight)
 
-        setAlpha(AchievementFrame.Background)
-        setAlpha(AchievementFrameMetalBorderBottomLeft)
-        setAlpha(AchievementFrameMetalBorderBottom)
-        setAlpha(AchievementFrameMetalBorderBottomRight)
-        setAlpha(AchievementFrameMetalBorderRight)
-        setAlpha(AchievementFrameMetalBorderLeft)
-        setAlpha(AchievementFrameMetalBorderTopLeft)
-        setAlpha(AchievementFrameMetalBorderTop)
-        setAlpha(AchievementFrameMetalBorderTopRight)
+        set_Alpha(AchievementFrameWoodBorderBottomLeft)
+        set_Alpha(AchievementFrameWoodBorderBottomRight)
+        set_Alpha(AchievementFrameWoodBorderTopLeft)
+        set_Alpha(AchievementFrameWoodBorderTopRight)
 
-        setAlpha(AchievementFrameWoodBorderBottomLeft)
-        setAlpha(AchievementFrameWoodBorderBottomRight)
-        setAlpha(AchievementFrameWoodBorderTopLeft)
-        setAlpha(AchievementFrameWoodBorderTopRight)
-
-        hideTexture(AchievementFrameSummaryCategoriesStatusBarFillBar)
+        hide_Texture(AchievementFrameSummaryCategoriesStatusBarFillBar)
         for i=1, 10 do
-            hideTexture(_G['AchievementFrameCategoriesCategory'..i..'Bar'])
+            hide_Texture(_G['AchievementFrameCategoriesCategory'..i..'Bar'])
         end
         if AchievementFrameStatsBG then
             AchievementFrameStatsBG:Hide()
         end
-        setAlpha(AchievementFrame.Header.LeftDDLInset)
-        setAlpha(AchievementFrame.Header.RightDDLInset)
+        set_Alpha(AchievementFrame.Header.LeftDDLInset)
+        set_Alpha(AchievementFrame.Header.RightDDLInset)
         hooksecurefunc(AchievementTemplateMixin, 'Init', function(self)
             if self.Icon then
-                hideTexture(self.Icon.frame)
+                hide_Texture(self.Icon.frame)
             end
         end)
-        hideTexture(AchievementFrameAchievements.ScrollBar.Backplate)
-        hideTexture(AchievementFrameStats.ScrollBar.Backplate)
-        hideTexture(AchievementFrameCategories.ScrollBar.Backplate)
+        hide_Texture(AchievementFrameAchievements.ScrollBar.Backplate)
+        hide_Texture(AchievementFrameStats.ScrollBar.Backplate)
+        hide_Texture(AchievementFrameCategories.ScrollBar.Backplate)
         set_Alpha_Frame_Texture(AchievementFrameTab1)
         set_Alpha_Frame_Texture(AchievementFrameTab2)
         set_Alpha_Frame_Texture(AchievementFrameTab3)
 
     elseif arg1=='Blizzard_Communities' then--公会和社区
-        setAlpha(CommunitiesFrame.NineSlice.TopEdge)
-        setAlpha(CommunitiesFrame.NineSlice.TopLeftCorner)
-        setAlpha(CommunitiesFrame.NineSlice.TopRightCorner)
+        set_Alpha(CommunitiesFrame.NineSlice.TopEdge)
+        set_Alpha(CommunitiesFrame.NineSlice.TopLeftCorner)
+        set_Alpha(CommunitiesFrame.NineSlice.TopRightCorner)
 
-        setAlpha(CommunitiesFrame.NineSlice.BottomEdge)
-        setAlpha(CommunitiesFrame.NineSlice.BottomLeftCorner)
-        setAlpha(CommunitiesFrame.NineSlice.BottomRightCorner)
+        set_Alpha(CommunitiesFrame.NineSlice.BottomEdge)
+        set_Alpha(CommunitiesFrame.NineSlice.BottomLeftCorner)
+        set_Alpha(CommunitiesFrame.NineSlice.BottomRightCorner)
 
-        setAlpha(CommunitiesFrameBg)
-        setAlpha(CommunitiesFrame.MemberList.ColumnDisplay.Background)
-        setAlpha(CommunitiesFrameCommunitiesList.Bg)
-        setAlpha(CommunitiesFrameInset.Bg)
+        set_Alpha(CommunitiesFrameBg)
+        set_Alpha(CommunitiesFrame.MemberList.ColumnDisplay.Background)
+        set_Alpha(CommunitiesFrameCommunitiesList.Bg)
+        set_Alpha(CommunitiesFrameInset.Bg)
         CommunitiesFrame.GuildBenefitsFrame.Perks:DisableDrawLayer('BACKGROUND')
         CommunitiesFrameGuildDetailsFrameInfo:DisableDrawLayer('BACKGROUND')
         CommunitiesFrameGuildDetailsFrameNews:DisableDrawLayer('BACKGROUND')
 
-        hideTexture(CommunitiesFrameCommunitiesList.ScrollBar.Backplate)
-        hideTexture(CommunitiesFrameCommunitiesList.ScrollBar.Background)
-        hideTexture(CommunitiesFrame.MemberList.ScrollBar.Backplate)
-        hideTexture(CommunitiesFrame.MemberList.ScrollBar.Background)
+        hide_Texture(CommunitiesFrameCommunitiesList.ScrollBar.Backplate)
+        hide_Texture(CommunitiesFrameCommunitiesList.ScrollBar.Background)
+        hide_Texture(CommunitiesFrame.MemberList.ScrollBar.Backplate)
+        hide_Texture(CommunitiesFrame.MemberList.ScrollBar.Background)
 
-        setAlpha(CommunitiesFrame.ChatEditBox.Mid)
-        setAlpha(CommunitiesFrame.ChatEditBox.Left)
-        setAlpha(CommunitiesFrame.ChatEditBox.Right)
-        setAlpha(CommunitiesFrameMiddle)
+        set_Alpha(CommunitiesFrame.ChatEditBox.Mid)
+        set_Alpha(CommunitiesFrame.ChatEditBox.Left)
+        set_Alpha(CommunitiesFrame.ChatEditBox.Right)
+        set_Alpha(CommunitiesFrameMiddle)
 
-        hideTexture(CommunitiesFrame.GuildBenefitsFrame.Rewards.Bg)
+        hide_Texture(CommunitiesFrame.GuildBenefitsFrame.Rewards.Bg)
 
         hooksecurefunc(CommunitiesFrameCommunitiesList,'UpdateCommunitiesList',function(self)
             C_Timer.After(0.3, function()
                 for _, button in pairs(CommunitiesFrameCommunitiesList.ScrollBox:GetFrames()) do
-                setAlpha(button.Background)
+                set_Alpha(button.Background)
                 end
             end)
         end)
 
-        setAlpha(ClubFinderCommunityAndGuildFinderFrame.InsetFrame.Bg)
-        hideTexture(ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ScrollBar.Backplate)
-        hideTexture(CommunitiesFrame.GuildBenefitsFrame.Rewards.ScrollBar.Backplate)
-        hideTexture(CommunitiesFrameGuildDetailsFrameNews.ScrollBar.Backplate)
-        hideTexture(CommunitiesFrameGuildDetailsFrameNews.ScrollBar.Background)
+        set_Alpha(ClubFinderCommunityAndGuildFinderFrame.InsetFrame.Bg)
+        hide_Texture(ClubFinderCommunityAndGuildFinderFrame.CommunityCards.ScrollBar.Backplate)
+        hide_Texture(CommunitiesFrame.GuildBenefitsFrame.Rewards.ScrollBar.Backplate)
+        hide_Texture(CommunitiesFrameGuildDetailsFrameNews.ScrollBar.Backplate)
+        hide_Texture(CommunitiesFrameGuildDetailsFrameNews.ScrollBar.Background)
 
         hide_Frame_Texture(CommunitiesFrame.ChatTab, {index=1})
         hide_Frame_Texture(CommunitiesFrame.RosterTab, {index=1})
@@ -1041,46 +1217,46 @@ local function set_Alpha_Event(arg1)
         hide_Frame_Texture(ClubFinderCommunityAndGuildFinderFrame.ClubFinderSearchTab, {index=1})
         hide_Frame_Texture(ClubFinderCommunityAndGuildFinderFrame.ClubFinderPendingTab, {index=1})
 
-        setAlpha(ClubFinderGuildFinderFrame.InsetFrame.Bg)
+        set_Alpha(ClubFinderGuildFinderFrame.InsetFrame.Bg)
 
 
     elseif arg1=='Blizzard_PVPUI' then--地下城和团队副本, PVP
-        hideTexture(HonorFrame.Inset.Bg)
-        setAlpha(HonorFrame.BonusFrame.WorldBattlesTexture)
-        hideTexture(HonorFrame.ConquestBar.Background)
-        setAlpha(ConquestFrame.Inset.Bg)
-        setAlpha(ConquestFrame.RatedBGTexture)
+        hide_Texture(HonorFrame.Inset.Bg)
+        set_Alpha(HonorFrame.BonusFrame.WorldBattlesTexture)
+        hide_Texture(HonorFrame.ConquestBar.Background)
+        set_Alpha(ConquestFrame.Inset.Bg)
+        set_Alpha(ConquestFrame.RatedBGTexture)
         PVPQueueFrame.HonorInset:DisableDrawLayer('BACKGROUND')
-        setAlpha(PVPQueueFrame.HonorInset.CasualPanel.HonorLevelDisplay.Background)
-        setAlpha(HonorFrameTypeDropDownMiddle)
-        setAlpha(HonorFrameTypeDropDownLeft)
-        setAlpha(HonorFrameTypeDropDownRight)
-        hideTexture(ConquestFrame.RatedBGTexture)
-        hideTexture(LFDQueueFrameSpecific.ScrollBar.Backplate)
+        set_Alpha(PVPQueueFrame.HonorInset.CasualPanel.HonorLevelDisplay.Background)
+        set_Alpha(HonorFrameTypeDropDownMiddle)
+        set_Alpha(HonorFrameTypeDropDownLeft)
+        set_Alpha(HonorFrameTypeDropDownRight)
+        hide_Texture(ConquestFrame.RatedBGTexture)
+        hide_Texture(LFDQueueFrameSpecific.ScrollBar.Backplate)
 
     elseif arg1=='Blizzard_EncounterJournal' then--冒险指南
-        setAlpha(EncounterJournal.NineSlice.TopLeftEdge)
-        setAlpha(EncounterJournal.NineSlice.TopEdge)
-        setAlpha(EncounterJournal.NineSlice.TopRightEdge)
-        setAlpha(EncounterJournal.NineSlice.TopRightCorner)
-        setAlpha(EncounterJournal.NineSlice.TopLeftCorner)
+        set_Alpha(EncounterJournal.NineSlice.TopLeftEdge)
+        set_Alpha(EncounterJournal.NineSlice.TopEdge)
+        set_Alpha(EncounterJournal.NineSlice.TopRightEdge)
+        set_Alpha(EncounterJournal.NineSlice.TopRightCorner)
+        set_Alpha(EncounterJournal.NineSlice.TopLeftCorner)
 
-        hideTexture(EncounterJournalBg)
-        hideTexture(EncounterJournalInset.Bg)
+        hide_Texture(EncounterJournalBg)
+        hide_Texture(EncounterJournalInset.Bg)
 
 
-        setAlpha(EncounterJournalInstanceSelectBG)
-        --setAlpha(EncounterJournalEncounterFrameInfoBG)
-        setAlpha(EncounterJournalEncounterFrameInfoModelFrameDungeonBG)
+        set_Alpha(EncounterJournalInstanceSelectBG)
+        --set_Alpha(EncounterJournalEncounterFrameInfoBG)
+        set_Alpha(EncounterJournalEncounterFrameInfoModelFrameDungeonBG)
         EncounterJournalNavBar:DisableDrawLayer('BACKGROUND')
 
-        setAlpha(EncounterJournalInstanceSelectTierDropDownMiddle)
-        setAlpha(EncounterJournalInstanceSelectTierDropDownLeft)
-        setAlpha(EncounterJournalInstanceSelectTierDropDownRight)
+        set_Alpha(EncounterJournalInstanceSelectTierDropDownMiddle)
+        set_Alpha(EncounterJournalInstanceSelectTierDropDownLeft)
+        set_Alpha(EncounterJournalInstanceSelectTierDropDownRight)
 
         C_Timer.After(0.3, function()
             if EncounterJournalMonthlyActivitiesFrame then
-                setAlpha(EncounterJournalMonthlyActivitiesFrame.Bg)
+                set_Alpha(EncounterJournalMonthlyActivitiesFrame.Bg)
             end
         end)
 
@@ -1090,25 +1266,25 @@ local function set_Alpha_Event(arg1)
         set_Alpha_Frame_Texture(EncounterJournalRaidTab)
 
     elseif arg1=="Blizzard_GuildBankUI" then--公会银行
-        setAlpha(GuildBankFrame.BlackBG)
-        hideTexture(GuildBankFrame.TitleBg)
-        hideTexture(GuildBankFrame.RedMarbleBG)
-        setAlpha(GuildBankFrame.MoneyFrameBG)
+        set_Alpha(GuildBankFrame.BlackBG)
+        hide_Texture(GuildBankFrame.TitleBg)
+        hide_Texture(GuildBankFrame.RedMarbleBG)
+        set_Alpha(GuildBankFrame.MoneyFrameBG)
 
-        setAlpha(GuildBankFrame.TabLimitBG)
-        setAlpha(GuildBankFrame.TabLimitBGLeft)
-        setAlpha(GuildBankFrame.TabLimitBGRight)
-        setAlpha(GuildItemSearchBox.Middle)
-        setAlpha(GuildItemSearchBox.Left)
-        setAlpha(GuildItemSearchBox.Right)
-        setAlpha(GuildBankFrame.TabTitleBG)
-        setAlpha(GuildBankFrame.TabTitleBGLeft)
-        setAlpha(GuildBankFrame.TabTitleBGRight)
+        set_Alpha(GuildBankFrame.TabLimitBG)
+        set_Alpha(GuildBankFrame.TabLimitBGLeft)
+        set_Alpha(GuildBankFrame.TabLimitBGRight)
+        set_Alpha(GuildItemSearchBox.Middle)
+        set_Alpha(GuildItemSearchBox.Left)
+        set_Alpha(GuildItemSearchBox.Right)
+        set_Alpha(GuildBankFrame.TabTitleBG)
+        set_Alpha(GuildBankFrame.TabTitleBGLeft)
+        set_Alpha(GuildBankFrame.TabTitleBGRight)
 
         for i=1, 7 do
             local frame= GuildBankFrame['Column'..i]
             if frame then
-                hideTexture(frame.Background)
+                hide_Texture(frame.Background)
             end
         end
 
@@ -1134,188 +1310,188 @@ local function set_Alpha_Event(arg1)
 
 
     elseif arg1=='Blizzard_AuctionHouseUI' then--拍卖行
-        setAlpha(AuctionHouseFrame.NineSlice.TopLeftCorner)
-        setAlpha(AuctionHouseFrame.NineSlice.TopEdge)
-        setAlpha(AuctionHouseFrame.NineSlice.TopRightCorner)
-        setAlpha(AuctionHouseFrameBg)
-        setAlpha(AuctionHouseFrame.CategoriesList.Background)
+        set_Alpha(AuctionHouseFrame.NineSlice.TopLeftCorner)
+        set_Alpha(AuctionHouseFrame.NineSlice.TopEdge)
+        set_Alpha(AuctionHouseFrame.NineSlice.TopRightCorner)
+        set_Alpha(AuctionHouseFrameBg)
+        set_Alpha(AuctionHouseFrame.CategoriesList.Background)
 
-        setAlpha(AuctionHouseFrame.SearchBar.SearchBox.Middle)
-        setAlpha(AuctionHouseFrame.SearchBar.SearchBox.Left)
-        setAlpha(AuctionHouseFrame.SearchBar.SearchBox.Right)
-        setAlpha(AuctionHouseFrameMiddleMiddle)
-        setAlpha(AuctionHouseFrameMiddleLeft)
-        setAlpha(AuctionHouseFrameMiddleRight)
-        setAlpha(AuctionHouseFrameBottomMiddle)
-        setAlpha(AuctionHouseFrameBottomLeft)
-        setAlpha(AuctionHouseFrameBottomRight)
+        set_Alpha(AuctionHouseFrame.SearchBar.SearchBox.Middle)
+        set_Alpha(AuctionHouseFrame.SearchBar.SearchBox.Left)
+        set_Alpha(AuctionHouseFrame.SearchBar.SearchBox.Right)
+        set_Alpha(AuctionHouseFrameMiddleMiddle)
+        set_Alpha(AuctionHouseFrameMiddleLeft)
+        set_Alpha(AuctionHouseFrameMiddleRight)
+        set_Alpha(AuctionHouseFrameBottomMiddle)
+        set_Alpha(AuctionHouseFrameBottomLeft)
+        set_Alpha(AuctionHouseFrameBottomRight)
 
-        hideTexture(AuctionHouseFrame.CategoriesList.ScrollBar.Backplate)
-        hideTexture(AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBar.Backplate)
-        setAlpha(AuctionHouseFrameMiddle)
-        setAlpha(AuctionHouseFrameLeft)
-        setAlpha(AuctionHouseFrameRight)
-        hideTexture(AuctionHouseFrame.MoneyFrameInset.Bg)
+        hide_Texture(AuctionHouseFrame.CategoriesList.ScrollBar.Backplate)
+        hide_Texture(AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBar.Backplate)
+        set_Alpha(AuctionHouseFrameMiddle)
+        set_Alpha(AuctionHouseFrameLeft)
+        set_Alpha(AuctionHouseFrameRight)
+        hide_Texture(AuctionHouseFrame.MoneyFrameInset.Bg)
 
-        setAlpha(AuctionHouseFrame.ItemSellFrame.Background)--出售
-        setAlpha(AuctionHouseFrame.ItemSellList.Background)
-        hideTexture(AuctionHouseFrame.ItemSellList.ScrollBar.Backplate)
+        set_Alpha(AuctionHouseFrame.ItemSellFrame.Background)--出售
+        set_Alpha(AuctionHouseFrame.ItemSellList.Background)
+        hide_Texture(AuctionHouseFrame.ItemSellList.ScrollBar.Backplate)
 
-        hideTexture(AuctionHouseFrameAuctionsFrame.SummaryList.ScrollBar.Backplate)
-        hideTexture(AuctionHouseFrameAuctionsFrame.AllAuctionsList.ScrollBar.Backplate)
+        hide_Texture(AuctionHouseFrameAuctionsFrame.SummaryList.ScrollBar.Backplate)
+        hide_Texture(AuctionHouseFrameAuctionsFrame.AllAuctionsList.ScrollBar.Backplate)
 
-        setAlpha(AuctionHouseFrameAuctionsFrame.SummaryList.Background)
-        setAlpha(AuctionHouseFrameAuctionsFrame.AllAuctionsList.Background)
+        set_Alpha(AuctionHouseFrameAuctionsFrame.SummaryList.Background)
+        set_Alpha(AuctionHouseFrameAuctionsFrame.AllAuctionsList.Background)
 
     elseif arg1=='Blizzard_ProfessionsCustomerOrders' then--专业定制
-        setAlpha(ProfessionsCustomerOrdersFrame.NineSlice.TopLeftCorner)
-        setAlpha(ProfessionsCustomerOrdersFrame.NineSlice.TopEdge)
-        setAlpha(ProfessionsCustomerOrdersFrame.NineSlice.TopRightCorner)
-        setAlpha(ProfessionsCustomerOrdersFrameBg)
-        setAlpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Middle)
-        setAlpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Left)
-        setAlpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Right)
+        set_Alpha(ProfessionsCustomerOrdersFrame.NineSlice.TopLeftCorner)
+        set_Alpha(ProfessionsCustomerOrdersFrame.NineSlice.TopEdge)
+        set_Alpha(ProfessionsCustomerOrdersFrame.NineSlice.TopRightCorner)
+        set_Alpha(ProfessionsCustomerOrdersFrameBg)
+        set_Alpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Middle)
+        set_Alpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Left)
+        set_Alpha(ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox.Right)
 
-        setAlpha(ProfessionsCustomerOrdersFrameMiddleMiddle)
-        setAlpha(ProfessionsCustomerOrdersFrameMiddleLeft)
-        setAlpha(ProfessionsCustomerOrdersFrameMiddleRight)
-        setAlpha(ProfessionsCustomerOrdersFrame.BrowseOrders.CategoryList.Background)
+        set_Alpha(ProfessionsCustomerOrdersFrameMiddleMiddle)
+        set_Alpha(ProfessionsCustomerOrdersFrameMiddleLeft)
+        set_Alpha(ProfessionsCustomerOrdersFrameMiddleRight)
+        set_Alpha(ProfessionsCustomerOrdersFrame.BrowseOrders.CategoryList.Background)
 
-        setAlpha(ProfessionsCustomerOrdersFrame.Form.LeftPanelBackground.Background)
-        setAlpha(ProfessionsCustomerOrdersFrame.Form.RightPanelBackground.Background)
+        set_Alpha(ProfessionsCustomerOrdersFrame.Form.LeftPanelBackground.Background)
+        set_Alpha(ProfessionsCustomerOrdersFrame.Form.RightPanelBackground.Background)
 
-        hideTexture(ProfessionsCustomerOrdersFrame.MoneyFrameInset.Bg)
-        setAlpha(ProfessionsCustomerOrdersFrameLeft)
-        setAlpha(ProfessionsCustomerOrdersFrameMiddle)
-        setAlpha(ProfessionsCustomerOrdersFrameRight)
+        hide_Texture(ProfessionsCustomerOrdersFrame.MoneyFrameInset.Bg)
+        set_Alpha(ProfessionsCustomerOrdersFrameLeft)
+        set_Alpha(ProfessionsCustomerOrdersFrameMiddle)
+        set_Alpha(ProfessionsCustomerOrdersFrameRight)
 
     elseif arg1=='Blizzard_BlackMarketUI' then--黑市
-        setAlpha(BlackMarketFrameTitleBg)
-        setAlpha(BlackMarketFrameBg)
-        setAlpha(BlackMarketFrame.LeftBorder)
-        setAlpha(BlackMarketFrame.RightBorder)
-        setAlpha(BlackMarketFrame.BottomBorder)
-        setAlpha(BlackMarketFrame.ScrollBar.Backplate)
+        set_Alpha(BlackMarketFrameTitleBg)
+        set_Alpha(BlackMarketFrameBg)
+        set_Alpha(BlackMarketFrame.LeftBorder)
+        set_Alpha(BlackMarketFrame.RightBorder)
+        set_Alpha(BlackMarketFrame.BottomBorder)
+        set_Alpha(BlackMarketFrame.ScrollBar.Backplate)
 
     elseif arg1=='Blizzard_Collections' then--收藏
-        setAlpha(CollectionsJournal.NineSlice.TopEdge)
-        setAlpha(CollectionsJournal.NineSlice.TopLeftCorner)
-        setAlpha(CollectionsJournal.NineSlice.TopRightCorner)
-        setAlpha(CollectionsJournalBg)
+        set_Alpha(CollectionsJournal.NineSlice.TopEdge)
+        set_Alpha(CollectionsJournal.NineSlice.TopLeftCorner)
+        set_Alpha(CollectionsJournal.NineSlice.TopRightCorner)
+        set_Alpha(CollectionsJournalBg)
 
-        hideTexture(MountJournal.LeftInset.Bg)
-        setAlpha(MountJournal.MountDisplay.YesMountsTex)
-        hideTexture(MountJournal.RightInset.Bg)
-        setAlpha(MountJournal.BottomLeftInset.Background)
-        hideTexture(MountJournal.BottomLeftInset.Bg)
+        hide_Texture(MountJournal.LeftInset.Bg)
+        set_Alpha(MountJournal.MountDisplay.YesMountsTex)
+        hide_Texture(MountJournal.RightInset.Bg)
+        set_Alpha(MountJournal.BottomLeftInset.Background)
+        hide_Texture(MountJournal.BottomLeftInset.Bg)
 
-        hideTexture(MountJournal.ScrollBar.Backplate)
-        setAlpha(MountJournalSearchBox.Middle)
-        setAlpha(MountJournalSearchBox.Right)
-        setAlpha(MountJournalSearchBox.Left)
+        hide_Texture(MountJournal.ScrollBar.Backplate)
+        set_Alpha(MountJournalSearchBox.Middle)
+        set_Alpha(MountJournalSearchBox.Right)
+        set_Alpha(MountJournalSearchBox.Left)
 
-        hideTexture(PetJournalPetCardBG)
-        setAlpha(PetJournalPetCardInset.Bg)
-        setAlpha(PetJournalRightInset.Bg)
-        hideTexture(PetJournalLoadoutPet1BG)
-        hideTexture(PetJournalLoadoutPet2BG)
-        hideTexture(PetJournalLoadoutPet3BG)
-        setAlpha(PetJournalLoadoutBorderSlotHeaderBG)
-        hideTexture(PetJournalLeftInset.Bg)
+        hide_Texture(PetJournalPetCardBG)
+        set_Alpha(PetJournalPetCardInset.Bg)
+        set_Alpha(PetJournalRightInset.Bg)
+        hide_Texture(PetJournalLoadoutPet1BG)
+        hide_Texture(PetJournalLoadoutPet2BG)
+        hide_Texture(PetJournalLoadoutPet3BG)
+        set_Alpha(PetJournalLoadoutBorderSlotHeaderBG)
+        hide_Texture(PetJournalLeftInset.Bg)
 
-        hideTexture(PetJournal.ScrollBar.Backplate)
-        setAlpha(PetJournalSearchBox.Middle)
-        setAlpha(PetJournalSearchBox.Right)
-        setAlpha(PetJournalSearchBox.Left)
-        setAlpha(PetJournal.PetCount.BorderTopMiddle)
-        setAlpha(PetJournal.PetCount.Bg)
-        setAlpha(PetJournal.PetCount.BorderBottomMiddle)
-        setAlpha(PetJournal.PetCount.BorderTopRightMiddle)
-        setAlpha(PetJournal.PetCount.BorderTopLeftMiddle)
-        setAlpha(PetJournal.PetCount.BorderBottomLeft)
-        setAlpha(PetJournal.PetCount.BorderTopLeft)
-        setAlpha(PetJournal.PetCount.BorderBottomRight)
-        setAlpha(PetJournal.PetCount.BorderTopRight)
+        hide_Texture(PetJournal.ScrollBar.Backplate)
+        set_Alpha(PetJournalSearchBox.Middle)
+        set_Alpha(PetJournalSearchBox.Right)
+        set_Alpha(PetJournalSearchBox.Left)
+        set_Alpha(PetJournal.PetCount.BorderTopMiddle)
+        set_Alpha(PetJournal.PetCount.Bg)
+        set_Alpha(PetJournal.PetCount.BorderBottomMiddle)
+        set_Alpha(PetJournal.PetCount.BorderTopRightMiddle)
+        set_Alpha(PetJournal.PetCount.BorderTopLeftMiddle)
+        set_Alpha(PetJournal.PetCount.BorderBottomLeft)
+        set_Alpha(PetJournal.PetCount.BorderTopLeft)
+        set_Alpha(PetJournal.PetCount.BorderBottomRight)
+        set_Alpha(PetJournal.PetCount.BorderTopRight)
 
-        hideTexture(ToyBox.iconsFrame.BackgroundTile)
-        hideTexture(ToyBox.iconsFrame.Bg)
-        setAlpha(ToyBox.searchBox.Middle)
-        setAlpha(ToyBox.searchBox.Right)
-        setAlpha(ToyBox.searchBox.Left)
+        hide_Texture(ToyBox.iconsFrame.BackgroundTile)
+        hide_Texture(ToyBox.iconsFrame.Bg)
+        set_Alpha(ToyBox.searchBox.Middle)
+        set_Alpha(ToyBox.searchBox.Right)
+        set_Alpha(ToyBox.searchBox.Left)
         ToyBox.progressBar:DisableDrawLayer('BACKGROUND')
 
-        hideTexture(HeirloomsJournal.iconsFrame.BackgroundTile)
-        hideTexture(HeirloomsJournal.iconsFrame.Bg)
-        setAlpha(HeirloomsJournalSearchBox.Middle)
-        setAlpha(HeirloomsJournalSearchBox.Right)
-        setAlpha(HeirloomsJournalSearchBox.Left)
-        setAlpha(HeirloomsJournalClassDropDownMiddle)
-        setAlpha(HeirloomsJournalClassDropDownLeft)
-        setAlpha(HeirloomsJournalClassDropDownRight)
-        setAlpha(HeirloomsJournalMiddleMiddle)
-        setAlpha(HeirloomsJournalMiddleLeft)
-        setAlpha(HeirloomsJournalMiddleRight)
-        setAlpha(HeirloomsJournalBottomMiddle)
-        setAlpha(HeirloomsJournalTopMiddle)
-        setAlpha(HeirloomsJournalBottomLeft)
-        setAlpha(HeirloomsJournalBottomRight)
-        setAlpha(HeirloomsJournalTopLeft)
-        setAlpha(HeirloomsJournalTopRight)
+        hide_Texture(HeirloomsJournal.iconsFrame.BackgroundTile)
+        hide_Texture(HeirloomsJournal.iconsFrame.Bg)
+        set_Alpha(HeirloomsJournalSearchBox.Middle)
+        set_Alpha(HeirloomsJournalSearchBox.Right)
+        set_Alpha(HeirloomsJournalSearchBox.Left)
+        set_Alpha(HeirloomsJournalClassDropDownMiddle)
+        set_Alpha(HeirloomsJournalClassDropDownLeft)
+        set_Alpha(HeirloomsJournalClassDropDownRight)
+        set_Alpha(HeirloomsJournalMiddleMiddle)
+        set_Alpha(HeirloomsJournalMiddleLeft)
+        set_Alpha(HeirloomsJournalMiddleRight)
+        set_Alpha(HeirloomsJournalBottomMiddle)
+        set_Alpha(HeirloomsJournalTopMiddle)
+        set_Alpha(HeirloomsJournalBottomLeft)
+        set_Alpha(HeirloomsJournalBottomRight)
+        set_Alpha(HeirloomsJournalTopLeft)
+        set_Alpha(HeirloomsJournalTopRight)
 
-        hideTexture(WardrobeCollectionFrame.ItemsCollectionFrame.BackgroundTile)
-        hideTexture(WardrobeCollectionFrame.ItemsCollectionFrame.Bg)
-        hideTexture(WardrobeCollectionFrame.ItemsCollectionFrame.ShadowLineTop)
+        hide_Texture(WardrobeCollectionFrame.ItemsCollectionFrame.BackgroundTile)
+        hide_Texture(WardrobeCollectionFrame.ItemsCollectionFrame.Bg)
+        hide_Texture(WardrobeCollectionFrame.ItemsCollectionFrame.ShadowLineTop)
 
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.BackgroundTile)
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.Bg)
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.LeftInset.Bg)
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.ListContainer.ScrollBar.Backplate)
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.ShadowLineTop)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.BackgroundTile)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.Bg)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.LeftInset.Bg)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.ListContainer.ScrollBar.Backplate)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.RightInset.ShadowLineTop)
 
-        setAlpha(WardrobeCollectionFrameSearchBox.Middle)
-        setAlpha(WardrobeCollectionFrameSearchBox.Left)
-        setAlpha(WardrobeCollectionFrameSearchBox.Right)
-        setAlpha(WardrobeCollectionFrameMiddleMiddle)
-        setAlpha(WardrobeCollectionFrameTopMiddle)
-        setAlpha(WardrobeCollectionFrameBottomMiddle)
-        setAlpha(WardrobeCollectionFrameTopMiddle)
-        setAlpha(WardrobeCollectionFrameMiddleLeft)
-        setAlpha(WardrobeCollectionFrameMiddleRight)
-        setAlpha(WardrobeCollectionFrameTopLeft)
-        setAlpha(WardrobeCollectionFrameBottomLeft)
-        setAlpha(WardrobeCollectionFrameBottomRight)
-        setAlpha(WardrobeCollectionFrameTopLeft)
+        set_Alpha(WardrobeCollectionFrameSearchBox.Middle)
+        set_Alpha(WardrobeCollectionFrameSearchBox.Left)
+        set_Alpha(WardrobeCollectionFrameSearchBox.Right)
+        set_Alpha(WardrobeCollectionFrameMiddleMiddle)
+        set_Alpha(WardrobeCollectionFrameTopMiddle)
+        set_Alpha(WardrobeCollectionFrameBottomMiddle)
+        set_Alpha(WardrobeCollectionFrameTopMiddle)
+        set_Alpha(WardrobeCollectionFrameMiddleLeft)
+        set_Alpha(WardrobeCollectionFrameMiddleRight)
+        set_Alpha(WardrobeCollectionFrameTopLeft)
+        set_Alpha(WardrobeCollectionFrameBottomLeft)
+        set_Alpha(WardrobeCollectionFrameBottomRight)
+        set_Alpha(WardrobeCollectionFrameTopLeft)
                  --WardrobeCollectionFrameBottomRight
 
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonMiddleMiddle)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonBottomMiddle)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonTopMiddle)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonMiddleLeft)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonMiddleRight)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonTopLeft)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonBottomLeft)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonTopRight)
-        setAlpha(WardrobeSetsCollectionVariantSetsButtonBottomRight)
-        hideTexture(WardrobeCollectionFrame.SetsCollectionFrame.DetailsFrame.ModelFadeTexture)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonMiddleMiddle)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonBottomMiddle)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonTopMiddle)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonMiddleLeft)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonMiddleRight)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonTopLeft)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonBottomLeft)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonTopRight)
+        set_Alpha(WardrobeSetsCollectionVariantSetsButtonBottomRight)
+        hide_Texture(WardrobeCollectionFrame.SetsCollectionFrame.DetailsFrame.ModelFadeTexture)
         --[[hooksecurefunc(WardrobeSetsScrollFrameButtonMixin, 'Init', function(button, displayData)--外观列表
-            setAlpha(button.Background)
+            set_Alpha(button.Background)
         end)]]
 
         --试衣间
-        setAlpha(WardrobeFrame.NineSlice.TopLeftCorner)
-        setAlpha(WardrobeFrame.NineSlice.TopEdge)
-        setAlpha(WardrobeFrame.NineSlice.TopRightCorner)
-        hideTexture(WardrobeFrameBg)
-        hideTexture(WardrobeTransmogFrame.Inset.Bg)
-        setAlpha(WardrobeTransmogFrame.Inset.BG)
-        hideTexture(WardrobeCollectionFrame.SetsTransmogFrame.BackgroundTile)
-        setAlpha(WardrobeCollectionFrame.SetsTransmogFrame.Bg)
-        setAlpha(WardrobeOutfitDropDownMiddle)
-        setAlpha(WardrobeOutfitDropDownLeft)
-        setAlpha(WardrobeOutfitDropDownRight)
-        setAlpha(WardrobeTransmogFrame.MoneyMiddle)
-        setAlpha(WardrobeTransmogFrame.MoneyLeft)
-        setAlpha(WardrobeTransmogFrame.MoneyRight)
+        set_Alpha(WardrobeFrame.NineSlice.TopLeftCorner)
+        set_Alpha(WardrobeFrame.NineSlice.TopEdge)
+        set_Alpha(WardrobeFrame.NineSlice.TopRightCorner)
+        hide_Texture(WardrobeFrameBg)
+        hide_Texture(WardrobeTransmogFrame.Inset.Bg)
+        set_Alpha(WardrobeTransmogFrame.Inset.BG)
+        hide_Texture(WardrobeCollectionFrame.SetsTransmogFrame.BackgroundTile)
+        set_Alpha(WardrobeCollectionFrame.SetsTransmogFrame.Bg)
+        set_Alpha(WardrobeOutfitDropDownMiddle)
+        set_Alpha(WardrobeOutfitDropDownLeft)
+        set_Alpha(WardrobeOutfitDropDownRight)
+        set_Alpha(WardrobeTransmogFrame.MoneyMiddle)
+        set_Alpha(WardrobeTransmogFrame.MoneyLeft)
+        set_Alpha(WardrobeTransmogFrame.MoneyRight)
         --[[for v=1,6 do--物品,幻化, 背景
             for h= 1, 3 do
                 local button= WardrobeCollectionFrame.ItemsCollectionFrame['ModelR'..h..'C'..v]
@@ -1333,9 +1509,9 @@ local function set_Alpha_Event(arg1)
             end
         end
         WardrobeCollectionFrame.progressBar:DisableDrawLayer('BACKGROUND')
-        setAlpha(WardrobeCollectionFrameWeaponDropDownMiddle)
-        setAlpha(WardrobeCollectionFrameWeaponDropDownLeft)
-        setAlpha(WardrobeCollectionFrameWeaponDropDownRight)
+        set_Alpha(WardrobeCollectionFrameWeaponDropDownMiddle)
+        set_Alpha(WardrobeCollectionFrameWeaponDropDownLeft)
+        set_Alpha(WardrobeCollectionFrameWeaponDropDownRight)
 
         set_Alpha_Frame_Texture(CollectionsJournalTab1)
         set_Alpha_Frame_Texture(CollectionsJournalTab2)
@@ -1344,136 +1520,141 @@ local function set_Alpha_Event(arg1)
         set_Alpha_Frame_Texture(CollectionsJournalTab5)
 
         if RematchJournal then
-            setAlpha(RematchJournal.NineSlice.TopEdge)
-            setAlpha(RematchJournal.NineSlice.TopRightCorner)
-            setAlpha(RematchJournal.NineSlice.TopLeftCorner)
-            setAlpha(RematchJournalBg)
-            setAlpha(RematchLoadoutPanel.Target.InsetBack)
-            hideTexture(RematchPetPanel.Top.InsetBack)
-            setAlpha(RematchQueuePanel.List.Background.InsetBack)
-            setAlpha(RematchQueuePanel.Top.InsetBack)
-            hideTexture(RematchPetPanel.Top.TypeBar.NineSlice)
-            setAlpha(RematchTeamPanel.List.Background.InsetBack)
-            setAlpha(RematchOptionPanel.List.Background.InsetBack)
-            setAlpha(RematchLoadoutPanel.TopLoadout.InsetBack)
+            set_Alpha(RematchJournal.NineSlice.TopEdge)
+            set_Alpha(RematchJournal.NineSlice.TopRightCorner)
+            set_Alpha(RematchJournal.NineSlice.TopLeftCorner)
+            set_Alpha(RematchJournalBg)
+            set_Alpha(RematchLoadoutPanel.Target.InsetBack)
+            hide_Texture(RematchPetPanel.Top.InsetBack)
+            set_Alpha(RematchQueuePanel.List.Background.InsetBack)
+            set_Alpha(RematchQueuePanel.Top.InsetBack)
+            hide_Texture(RematchPetPanel.Top.TypeBar.NineSlice)
+            set_Alpha(RematchTeamPanel.List.Background.InsetBack)
+            set_Alpha(RematchOptionPanel.List.Background.InsetBack)
+            set_Alpha(RematchLoadoutPanel.TopLoadout.InsetBack)
         end
     elseif arg1=='Blizzard_Calendar' then--日历
-        setAlpha(CalendarFrameTopMiddleTexture)
-        setAlpha(CalendarFrameTopLeftTexture)
-        setAlpha(CalendarFrameTopRightTexture)
+        set_Alpha(CalendarFrameTopMiddleTexture)
+        set_Alpha(CalendarFrameTopLeftTexture)
+        set_Alpha(CalendarFrameTopRightTexture)
 
-        setAlpha(CalendarFrameLeftTopTexture)
-        setAlpha(CalendarFrameLeftMiddleTexture)
-        setAlpha(CalendarFrameLeftBottomTexture)
-        setAlpha(CalendarFrameRightTopTexture)
-        setAlpha(CalendarFrameRightMiddleTexture)
-        setAlpha(CalendarFrameRightBottomTexture)
+        set_Alpha(CalendarFrameLeftTopTexture)
+        set_Alpha(CalendarFrameLeftMiddleTexture)
+        set_Alpha(CalendarFrameLeftBottomTexture)
+        set_Alpha(CalendarFrameRightTopTexture)
+        set_Alpha(CalendarFrameRightMiddleTexture)
+        set_Alpha(CalendarFrameRightBottomTexture)
 
-        setAlpha(CalendarFrameBottomRightTexture)
-        setAlpha(CalendarFrameBottomMiddleTexture)
-        setAlpha(CalendarFrameBottomLeftTexture)
+        set_Alpha(CalendarFrameBottomRightTexture)
+        set_Alpha(CalendarFrameBottomMiddleTexture)
+        set_Alpha(CalendarFrameBottomLeftTexture)
         for i= 1, 42 do
             local frame= _G['CalendarDayButton'..i]
             if frame then
                 frame:DisableDrawLayer('BACKGROUND')
             end
         end
-        setAlpha(CalendarCreateEventFrame.Border.Bg)
+        set_Alpha(CalendarCreateEventFrame.Border.Bg)
 
 
     elseif arg1=='Blizzard_FlightMap' then--飞行地图
-        setAlpha(FlightMapFrame.BorderFrame.NineSlice.TopLeftCorner)
-        setAlpha(FlightMapFrame.BorderFrame.NineSlice.TopEdge)
-        setAlpha(FlightMapFrame.BorderFrame.NineSlice.TopRightCorner)
+        set_Alpha(FlightMapFrame.BorderFrame.NineSlice.TopLeftCorner)
+        set_Alpha(FlightMapFrame.BorderFrame.NineSlice.TopEdge)
+        set_Alpha(FlightMapFrame.BorderFrame.NineSlice.TopRightCorner)
 
-        hideTexture(FlightMapFrame.ScrollContainer.Child.TiledBackground)
-        hideTexture(FlightMapFrameBg)
+        hide_Texture(FlightMapFrame.ScrollContainer.Child.TiledBackground)
+        hide_Texture(FlightMapFrameBg)
     elseif arg1=='Blizzard_ItemSocketingUI' then--镶嵌宝石，界面
-        setAlpha(ItemSocketingFrame.NineSlice.TopLeftCorner)
-        setAlpha(ItemSocketingFrame.NineSlice.TopEdge)
-        setAlpha(ItemSocketingFrame.NineSlice.TopRightCorner)
-        setAlpha(ItemSocketingFrameBg)
-        hideTexture(ItemSocketingFrameInset.Bg)
-        hideTexture(ItemSocketingFrame['SocketFrame-Right'])
-        hideTexture(ItemSocketingFrame['SocketFrame-Left'])
-        hideTexture(ItemSocketingFrame['ParchmentFrame-Top'])
-        hideTexture(ItemSocketingFrame['ParchmentFrame-Bottom'])
-        hideTexture(ItemSocketingFrame['ParchmentFrame-Right'])
-        hideTexture(ItemSocketingFrame['ParchmentFrame-Left'])
-        setAlpha(ItemSocketingFrame['GoldBorder-Top'])
-        setAlpha(ItemSocketingFrame['GoldBorder-Bottom'])
-        setAlpha(ItemSocketingFrame['GoldBorder-Right'])
-        setAlpha(ItemSocketingFrame['GoldBorder-Left'])
-        setAlpha(ItemSocketingFrame['GoldBorder-BottomLeft'])
-        setAlpha(ItemSocketingFrame['GoldBorder-TopLeft'])
-        setAlpha(ItemSocketingFrame['GoldBorder-BottomRight'])
-        setAlpha(ItemSocketingFrame['GoldBorder-TopRight'])
-        setAlpha(ItemSocketingScrollFrameMiddle)
-        setAlpha(ItemSocketingScrollFrameTop)
-        setAlpha(ItemSocketingScrollFrameBottom)
+        set_Alpha(ItemSocketingFrame.NineSlice.TopLeftCorner)
+        set_Alpha(ItemSocketingFrame.NineSlice.TopEdge)
+        set_Alpha(ItemSocketingFrame.NineSlice.TopRightCorner)
+        set_Alpha(ItemSocketingFrameBg)
+        hide_Texture(ItemSocketingFrameInset.Bg)
+        hide_Texture(ItemSocketingFrame['SocketFrame-Right'])
+        hide_Texture(ItemSocketingFrame['SocketFrame-Left'])
+        hide_Texture(ItemSocketingFrame['ParchmentFrame-Top'])
+        hide_Texture(ItemSocketingFrame['ParchmentFrame-Bottom'])
+        hide_Texture(ItemSocketingFrame['ParchmentFrame-Right'])
+        hide_Texture(ItemSocketingFrame['ParchmentFrame-Left'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-Top'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-Bottom'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-Right'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-Left'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-BottomLeft'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-TopLeft'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-BottomRight'])
+        set_Alpha(ItemSocketingFrame['GoldBorder-TopRight'])
+        set_Alpha(ItemSocketingScrollFrameMiddle)
+        set_Alpha(ItemSocketingScrollFrameTop)
+        set_Alpha(ItemSocketingScrollFrameBottom)
 
-    elseif arg1=='Blizzard_ChallengesUI' then--挑战, 钥匙插件, 界面
-        setAlpha(ChallengesFrameInset.Bg)
+    elseif arg1=='Blizzard_ChallengesUI' then--挑战, 钥匙插入， 界面
+        set_Alpha(ChallengesFrameInset.Bg)
+
+        hooksecurefunc(ChallengesKeystoneFrame, 'Reset', function(self2)--钥匙插入， 界面
+            set_Alpha_Frame_Texture(self2, {index=1})
+            hide_Texture(self2.InstructionBackground)
+        end)
 
     elseif arg1=='Blizzard_WeeklyRewards' then--周奖励提示
-        setAlpha(WeeklyRewardsFrame.BackgroundTile)
-        setAlpha(WeeklyRewardsFrame.HeaderFrame.Middle)
-        setAlpha(WeeklyRewardsFrame.HeaderFrame.Left)
-        setAlpha(WeeklyRewardsFrame.HeaderFrame.Right)
-        setAlpha(WeeklyRewardsFrame.RaidFrame.Background)
-        setAlpha(WeeklyRewardsFrame.MythicFrame.Background)
-        setAlpha(WeeklyRewardsFrame.PVPFrame.Background)
+        set_Alpha(WeeklyRewardsFrame.BackgroundTile)
+        set_Alpha(WeeklyRewardsFrame.HeaderFrame.Middle)
+        set_Alpha(WeeklyRewardsFrame.HeaderFrame.Left)
+        set_Alpha(WeeklyRewardsFrame.HeaderFrame.Right)
+        set_Alpha(WeeklyRewardsFrame.RaidFrame.Background)
+        set_Alpha(WeeklyRewardsFrame.MythicFrame.Background)
+        set_Alpha(WeeklyRewardsFrame.PVPFrame.Background)
         hooksecurefunc(WeeklyRewardsFrame,'UpdateSelection', function(self2)
             for _, frame in ipairs(self2.Activities) do
-                setAlpha(frame.Background)
+                set_Alpha(frame.Background)
             end
         end)
 
     elseif arg1=='Blizzard_ItemInteractionUI' then--套装, 转换        
-        setAlpha(ItemInteractionFrame.NineSlice.TopLeftCorner)
-        setAlpha(ItemInteractionFrame.NineSlice.TopEdge)
-        setAlpha(ItemInteractionFrame.NineSlice.TopRightCorner)
-        setAlpha(ItemInteractionFrameBg)
-        setAlpha(ItemInteractionFrame.Inset.Bg)
-        setAlpha(ItemInteractionFrameMiddle)
+        set_Alpha(ItemInteractionFrame.NineSlice.TopLeftCorner)
+        set_Alpha(ItemInteractionFrame.NineSlice.TopEdge)
+        set_Alpha(ItemInteractionFrame.NineSlice.TopRightCorner)
+        set_Alpha(ItemInteractionFrameBg)
+        set_Alpha(ItemInteractionFrame.Inset.Bg)
+        set_Alpha(ItemInteractionFrameMiddle)
 
-        setAlpha(ItemInteractionFrameRight)
-        setAlpha(ItemInteractionFrameLeft)
+        set_Alpha(ItemInteractionFrameRight)
+        set_Alpha(ItemInteractionFrameLeft)
 
-        hideTexture(ItemInteractionFrame.ButtonFrame.BlackBorder)
+        hide_Texture(ItemInteractionFrame.ButtonFrame.BlackBorder)
 
     elseif arg1=='Blizzard_InspectUI' then--玩家, 观察角色, 界面
-        setAlpha(InspectFrame.NineSlice.TopLeftCorner)
-        setAlpha(InspectFrame.NineSlice.TopEdge)
-        setAlpha(InspectFrame.NineSlice.TopRightCorner)
-        setAlpha(InspectFrameBg)
-        hideTexture(InspectFrameInset.Bg)
-        hideTexture(InspectPVPFrame.BG)
-        hideTexture(InspectGuildFrameBG)
+        set_Alpha(InspectFrame.NineSlice.TopLeftCorner)
+        set_Alpha(InspectFrame.NineSlice.TopEdge)
+        set_Alpha(InspectFrame.NineSlice.TopRightCorner)
+        set_Alpha(InspectFrameBg)
+        hide_Texture(InspectFrameInset.Bg)
+        hide_Texture(InspectPVPFrame.BG)
+        hide_Texture(InspectGuildFrameBG)
 
     elseif arg1=='Blizzard_ItemUpgradeUI' then--装备升级,界面        
-        setAlpha(ItemUpgradeFrame.NineSlice.TopLeftCorner)
-        setAlpha(ItemUpgradeFrame.NineSlice.TopEdge)
-        setAlpha(ItemUpgradeFrame.NineSlice.TopRightCorner)
-        setAlpha(ItemUpgradeFrameBg)
-        hideTexture(ItemUpgradeFrame.TopBG)
-        hideTexture(ItemUpgradeFrame.BottomBG)
-        setAlpha(ItemUpgradeFramePlayerCurrenciesBorderMiddle)
-        setAlpha(ItemUpgradeFramePlayerCurrenciesBorderLeft)
-        setAlpha(ItemUpgradeFramePlayerCurrenciesBorderRight)
+        set_Alpha(ItemUpgradeFrame.NineSlice.TopLeftCorner)
+        set_Alpha(ItemUpgradeFrame.NineSlice.TopEdge)
+        set_Alpha(ItemUpgradeFrame.NineSlice.TopRightCorner)
+        set_Alpha(ItemUpgradeFrameBg)
+        hide_Texture(ItemUpgradeFrame.TopBG)
+        hide_Texture(ItemUpgradeFrame.BottomBG)
+        set_Alpha(ItemUpgradeFramePlayerCurrenciesBorderMiddle)
+        set_Alpha(ItemUpgradeFramePlayerCurrenciesBorderLeft)
+        set_Alpha(ItemUpgradeFramePlayerCurrenciesBorderRight)
 
-        setAlpha(ItemUpgradeFrameMiddle)
-        setAlpha(ItemUpgradeFrameRight)
-        setAlpha(ItemUpgradeFrameLeft)
+        set_Alpha(ItemUpgradeFrameMiddle)
+        set_Alpha(ItemUpgradeFrameRight)
+        set_Alpha(ItemUpgradeFrameLeft)
 
     elseif arg1=='Blizzard_MacroUI' then--宏
-        setAlpha(MacroFrame.NineSlice.TopLeftCorner)
-        setAlpha(MacroFrame.NineSlice.TopEdge)
-        setAlpha(MacroFrame.NineSlice.TopRightCorner)
-        hideTexture(MacroFrameBg)
-        setAlpha(MacroFrameInset.Bg)
-        hideTexture(MacroFrame.MacroSelector.ScrollBar.Backplate)
-        hideTexture(MacroFrameSelectedMacroBackground)
+        set_Alpha(MacroFrame.NineSlice.TopLeftCorner)
+        set_Alpha(MacroFrame.NineSlice.TopEdge)
+        set_Alpha(MacroFrame.NineSlice.TopRightCorner)
+        hide_Texture(MacroFrameBg)
+        set_Alpha(MacroFrameInset.Bg)
+        hide_Texture(MacroFrame.MacroSelector.ScrollBar.Backplate)
+        hide_Texture(MacroFrameSelectedMacroBackground)
     elseif arg1=='Blizzard_GarrisonUI' then--要塞
         --[[
         Move(GarrisonShipyardFrame,{})--海军行动
@@ -1483,48 +1664,49 @@ local function set_Alpha_Event(arg1)
         Move(OrderHallMissionFrame, {})
         ]]
         if GarrisonCapacitiveDisplayFrame then--要塞订单
-            setAlpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopLeftCorner)
-            setAlpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopEdge)
-            setAlpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopRightCorner)
-            setAlpha(GarrisonCapacitiveDisplayFrameBg)
-            hideTexture(GarrisonCapacitiveDisplayFrame.TopTileStreaks)
-            hideTexture(GarrisonCapacitiveDisplayFrameInset.Bg)
+            set_Alpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopLeftCorner)
+            set_Alpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopEdge)
+            set_Alpha(GarrisonCapacitiveDisplayFrame.NineSlice.TopRightCorner)
+            set_Alpha(GarrisonCapacitiveDisplayFrameBg)
+            hide_Texture(GarrisonCapacitiveDisplayFrame.TopTileStreaks)
+            hide_Texture(GarrisonCapacitiveDisplayFrameInset.Bg)
         end
 
     elseif arg1=='Blizzard_GenericTraitUI' then--欲龙术
-        setAlpha(GenericTraitFrame.Background)
-        setAlpha(GenericTraitFrame.NineSlice.RightEdge)
-        setAlpha(GenericTraitFrame.NineSlice.LeftEdge)
-        setAlpha(GenericTraitFrame.NineSlice.TopEdge)
-        setAlpha(GenericTraitFrame.NineSlice.BottomEdge)
-        setAlpha(GenericTraitFrame.NineSlice.TopRightCorner)
-        setAlpha(GenericTraitFrame.NineSlice.TopLeftCorner)
-        setAlpha(GenericTraitFrame.NineSlice.BottomLeftCorner)
-        setAlpha(GenericTraitFrame.NineSlice.BottomRightCorner)
+        set_Alpha(GenericTraitFrame.Background)
+        set_Alpha(GenericTraitFrame.NineSlice.RightEdge)
+        set_Alpha(GenericTraitFrame.NineSlice.LeftEdge)
+        set_Alpha(GenericTraitFrame.NineSlice.TopEdge)
+        set_Alpha(GenericTraitFrame.NineSlice.BottomEdge)
+        set_Alpha(GenericTraitFrame.NineSlice.TopRightCorner)
+        set_Alpha(GenericTraitFrame.NineSlice.TopLeftCorner)
+        set_Alpha(GenericTraitFrame.NineSlice.BottomLeftCorner)
+        set_Alpha(GenericTraitFrame.NineSlice.BottomRightCorner)
 
     elseif arg1=='Blizzard_PlayerChoice' then----任务选择
         C_Timer.After(0.3, function()
             if PlayerChoiceFrame.NineSlice then
-                hideTexture(PlayerChoiceFrame.NineSlice.TopLeftCorner)
-                hideTexture(PlayerChoiceFrame.NineSlice.TopEdge)
-                hideTexture(PlayerChoiceFrame.NineSlice.TopRightCorner)
-                hideTexture(PlayerChoiceFrame.NineSlice.BottomLeftCorner)
-                hideTexture(PlayerChoiceFrame.NineSlice.BottomEdge)
-                hideTexture(PlayerChoiceFrame.NineSlice.BottomRightCorner)
-                hideTexture(PlayerChoiceFrame.NineSlice.RightEdge)
-                hideTexture(PlayerChoiceFrame.NineSlice.LeftEdge)
+                hide_Texture(PlayerChoiceFrame.NineSlice.TopLeftCorner)
+                hide_Texture(PlayerChoiceFrame.NineSlice.TopEdge)
+                hide_Texture(PlayerChoiceFrame.NineSlice.TopRightCorner)
+                hide_Texture(PlayerChoiceFrame.NineSlice.BottomLeftCorner)
+                hide_Texture(PlayerChoiceFrame.NineSlice.BottomEdge)
+                hide_Texture(PlayerChoiceFrame.NineSlice.BottomRightCorner)
+                hide_Texture(PlayerChoiceFrame.NineSlice.RightEdge)
+                hide_Texture(PlayerChoiceFrame.NineSlice.LeftEdge)
             end
             if PlayerChoiceFrame.Title then
-                setAlpha(PlayerChoiceFrame.Title.Middle)
-                setAlpha(PlayerChoiceFrame.Title.Left)
-                setAlpha(PlayerChoiceFrame.Title.Right)
+                set_Alpha(PlayerChoiceFrame.Title.Middle)
+                set_Alpha(PlayerChoiceFrame.Title.Left)
+                set_Alpha(PlayerChoiceFrame.Title.Right)
             end
             if PlayerChoiceFrame.Background then
-                hideTexture(PlayerChoiceFrame.Background.BackgroundTile)
+                hide_Texture(PlayerChoiceFrame.Background.BackgroundTile)
             end
         end)
     elseif arg1=='Blizzard_MajorFactions' then--派系声望
-        setAlpha(MajorFactionRenownFrame.Background)
+        set_Alpha(MajorFactionRenownFrame.Background)
+
     end
 end
 
@@ -1547,28 +1729,21 @@ local function Init_chatBubbles()--聊天泡泡
     end
 end
 
-
-local function options_Init()--添加控制面板
-    panel.name = '|A:AnimCreate_Icon_Texture:0:0|a'..(e.onlyChinese and '材质' or addName)
-    panel.parent =id
-    InterfaceOptions_AddCategory(panel)
-
-    e.ReloadPanel({panel=panel, addName= addName, restTips=true, checked=nil,--重新加载UI, 重置, 按钮
-        disabledfunc=nil,
-        clearfunc= function() Save=nil e.Reload() end}
-    )
-
-    local textureCheck=CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
-    textureCheck.text:SetText('1)'..(e.onlyChinese and '隐藏材质' or HIDE..addName))
-    textureCheck:SetChecked(not Save.disabledTexture)
-    textureCheck:SetPoint('TOPLEFT', 0, -48)
-    textureCheck:SetScript('OnMouseDown', function()
+--###########
+--添加控制面板
+--###########
+local function options_Init()--初始，选项
+    panel.check=CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
+    panel.check.text:SetText('1)'..(e.onlyChinese and '隐藏材质' or HIDE..addName))
+    panel.check:SetChecked(not Save.disabledTexture)
+    panel.check:SetPoint('TOPLEFT', 0, -48)
+    panel.check:SetScript('OnMouseDown', function()
         Save.disabledTexture= not Save.disabledTexture and true or nil
     end)
 
     local alphaCheck=CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
     alphaCheck.text:SetText('2)'..(e.onlyChinese and '透明度' or CHANGE_OPACITY))
-    alphaCheck:SetPoint('TOPLEFT', textureCheck, 'BOTTOMLEFT', 0, -16)
+    alphaCheck:SetPoint('TOPLEFT', panel.check, 'BOTTOMLEFT', 0, -16)
     alphaCheck:SetChecked(not Save.disabledAlpha)
     alphaCheck:SetScript('OnMouseDown', function()
         Save.disabledAlpha= not Save.disabledAlpha and true or false
@@ -1576,7 +1751,7 @@ local function options_Init()--添加控制面板
 
     local alphaValue= CreateFrame("Slider", nil, panel, 'OptionsSliderTemplate')
     alphaValue:SetPoint("LEFT", alphaCheck.text, 'RIGHT', 6,0)
-    alphaValue:SetSize(200,20)
+    alphaValue:SetSize(120,20)
     alphaValue:SetMinMaxValues(0, 0.9)
     alphaValue:SetValue(Save.alpha)
     alphaValue.Low:SetText('0')
@@ -1588,6 +1763,15 @@ local function options_Init()--添加控制面板
         self:SetValue(value)
         self.Text:SetText(value)
         Save.alpha= value==0 and 0 or value
+    end)
+
+    --职业，显示数字
+    local classNumCheck=CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
+    classNumCheck.text:SetText((e.onlyChinese and '职业能量数字' or (CLASS..'('..AUCTION_HOUSE_QUANTITY_LABEL..')'..ENERGY))..format(e.Icon.number2,1)..format(e.Icon.number2,2)..format(e.Icon.number2,3))
+    classNumCheck:SetPoint('LEFT', alphaValue, 'RIGHT', 6, 0)
+    classNumCheck:SetChecked(Save.classPowerNum)
+    classNumCheck:SetScript('OnMouseDown', function()
+        Save.classPowerNum= not Save.classPowerNum and true or nil
     end)
 
 
@@ -1609,7 +1793,7 @@ local function options_Init()--添加控制面板
 
     local chatBubbleAlpha=CreateFrame("CheckButton", nil, panel, "InterfaceOptionsCheckButtonTemplate")
     chatBubbleAlpha.text:SetText(e.onlyChinese and '透明度' or CHANGE_OPACITY)
-    chatBubbleAlpha:SetPoint('TOPLEFT', chatBubbleCheck, 'BOTTOMRIGHT')
+    chatBubbleAlpha:SetPoint('TOPLEFT', chatBubbleCheck, 'BOTTOMRIGHT',0,-10)
     chatBubbleAlpha:SetChecked(not Save.disabledChatBubbleAlpha)
     chatBubbleAlpha:SetScript('OnMouseDown', function()
         Save.disabledChatBubbleAlpha= not Save.disabledChatBubbleAlpha and true or false
@@ -1617,7 +1801,7 @@ local function options_Init()--添加控制面板
 
     local chaAlphaValue= CreateFrame("Slider", nil, panel, 'OptionsSliderTemplate')
     chaAlphaValue:SetPoint("LEFT", chatBubbleAlpha.text, 'RIGHT', 6,0)
-    chaAlphaValue:SetSize(200,20)
+    chaAlphaValue:SetSize(120,20)
     chaAlphaValue:SetMinMaxValues(0, 0.9)
     chaAlphaValue:SetValue(Save.chatBubbleAlpha)
     chaAlphaValue.Low:SetText('0')
@@ -1641,7 +1825,7 @@ local function options_Init()--添加控制面板
 
     local chaScaleValue= CreateFrame("Slider", nil, panel, 'OptionsSliderTemplate')
     chaScaleValue:SetPoint("LEFT", chatBubbleSacale.text, 'RIGHT', 6,0)
-    chaScaleValue:SetSize(200,20)
+    chaScaleValue:SetSize(120,20)
     chaScaleValue:SetMinMaxValues(0.3, 2)
     chaScaleValue:SetValue(Save.chatBubbleSacal)
     chaScaleValue.Low:SetText('0.3')
@@ -1665,9 +1849,22 @@ panel:SetScript("OnEvent", function(self, event, arg1)
         if arg1== id then
             Save= WoWToolsSave[addName] or Save
 
-            options_Init()
+            panel.name = '|A:AnimCreate_Icon_Texture:0:0|a'..(e.onlyChinese and '材质' or addName)
+            panel.parent =id
+            InterfaceOptions_AddCategory(panel)
 
-            if Save.disabledTexture and Save.disabledAlpha and Save.disabledChatBubble then
+            e.ReloadPanel({panel=panel, addName= addName, restTips=true, checked= not Save.disabled, clearTips=nil,--重新加载UI, 重置, 按钮
+                disabledfunc= function()
+                                Save.disabled= not Save.disabled and true or nil
+                                if not Save.disabled and not panel.check then
+                                    options_Init()--初始，选项
+                                end
+                                print(id, addName, e.GetEnabeleDisable(not Save.disabled), e.onlyChinese and '需要重新加载' or REQUIRES_RELOAD)
+                            end,
+                clearfunc= function() Save=nil e.Reload() end}
+            )
+
+            if Save.disabled then
                 panel:UnregisterAllEvents()
             else
                 Init_HideTexture()
@@ -1675,6 +1872,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 if not Save.disabledChatBubble then
                     Init_chatBubbles()
                 end
+                options_Init()--初始，选项
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
 
@@ -1692,7 +1890,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
     else--ChatBubbles https://wago.io/yyX84OlOD
         C_Timer.After(0, function()
             for _, buble in pairs(C_ChatBubbles.GetAllChatBubbles()) do
-                if not buble.setAlpha then
+                if not buble.set_Alpha then
                     local frame= buble:GetChildren()
                     if frame then
                         if not Save.disabledChatBubbleSacal and Save.chatBubbleSacal~=1 then
@@ -1716,7 +1914,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                                 end
                             end
                         end
-                        buble.setAlpha= true
+                        buble.set_Alpha= true
                     end
                 end
             end

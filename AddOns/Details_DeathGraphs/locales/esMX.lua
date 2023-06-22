@@ -32,4 +32,3 @@ L["STRING_SURVIVAL"] = "Supervivencia"
 L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "Umbral de muertes en la línea de tiempo"
 L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "Las primeras |cFFFFFF00X|r muertes en el encuentro se registran para mostrar en el gráfico de la línea de tiempo."
 L["STRING_TOOLTIP"] = "Mostrar gráficos de muerte"
-

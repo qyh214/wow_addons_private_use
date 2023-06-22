@@ -200,7 +200,7 @@ local extraBarsInfo = {
 					},
 				},
 				sortBy = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. COMPACT_UNIT_FRAME_PROFILE_SORTBY,
+					name = COMPACT_UNIT_FRAME_PROFILE_SORTBY,
 					desc = function(info)
 						return info[4] == "raidBar0" and interruptBarSortByDesc or raidBarSortByDesc
 					end,
@@ -287,7 +287,7 @@ local extraBarsInfo = {
 					type = "toggle",
 				},
 				nameOfsY = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. L["Name Offset Y"],
+					name = L["Name Offset Y"],
 					order = 3,
 					type = "range",
 					min = -20, max = 50, step = 1,
@@ -388,7 +388,7 @@ local extraBarsInfo = {
 					type = "toggle",
 				},
 				useIconAlpha = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. L["Use Icon Alpha"],
+					name = L["Use Icon Alpha"],
 					desc = L["Apply \'Icons\' alpha settings to the status bar"],
 					order = 10,
 					type = "toggle",
@@ -486,7 +486,7 @@ local extraBarsInfo = {
 					end,
 				},
 				textScale = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. L["Name Scale"],
+					name = L["Name Scale"],
 					desc = format("%s\n\n%s", L["Set the Name Bar name scale"], L["The global font settings are in the General menu"]),
 					order = 21,
 					type = "range",
@@ -501,7 +501,7 @@ local extraBarsInfo = {
 			order = 40,
 			args = {
 				renameBar = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. L["Rename Bar"],
+					name = L["Rename Bar"],
 					order = 1,
 					type = "input",
 					get = function(info)
@@ -563,7 +563,7 @@ local extraBarsInfo = {
 }
 
 local extraBars = {
-	name = E.STR.WHATS_NEW_ESCSEQ .. L["Extra Bars"],
+	name = L["Extra Bars"],
 	type = "group",
 	childGroups = "tab",
 	order = 70,

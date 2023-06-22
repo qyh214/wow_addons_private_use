@@ -1,9 +1,10 @@
-## Interface: 100002
-## Version: 5.0.3
+## Interface: 100100
+## Version: 5.2.0
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
 ## SavedVariables: MythicPlusTimerDB
+## IconTexture: Interface\Icons\ability_racial_timeismoney
 
 addon.lua
 locales.lua

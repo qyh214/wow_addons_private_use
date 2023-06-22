@@ -3,13 +3,21 @@
 -----------------------------------------------------------------------
 local ADDON_NAME, private = ...
 
+local LibTime = LibStub("LibTime-1.0")
+
 local RSLogger = private.NewLib("RareScannerLogger")
 
 -- RareScanner libraries
 local RSConstants = private.ImportLib("RareScannerConstants")
 
 function RSLogger:PrintMessage(message)
-	print("|cFF00FF00[RareScanner]: |cFFFFFFFF"..message)
+	-- Cannot use RSConfigDB in this class
+	if (private.db.display.displayTimestampChatMessage) then
+		local timeStamp = LibTime.GetTimeString("LocalTime",true,true)
+		print(string.format("|cFFFCD6CD[%s] |cFF00FF00[RareScanner]: |cFFFFFFFF%s", timeStamp, message))
+	else
+		print(string.format("|cFF00FF00[RareScanner]: |cFFFFFFFF%s", message))
+	end
 end
 
 function RSLogger:PrintDebugMessage(message)

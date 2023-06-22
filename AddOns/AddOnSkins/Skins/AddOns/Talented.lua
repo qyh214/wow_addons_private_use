@@ -1,8 +1,6 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn("Talented") then return end
-
-function AS:Talented(_, addon)
+function R:Talented(_, addon)
     if addon ~= "Blizzard_TalentUI" then return end
 
     local function TalentedSkin()
@@ -10,19 +8,19 @@ function AS:Talented(_, addon)
         local pve, pvp = Talented.PvETab, Talented.PvPTab
         local pveTexture, pvpTexture = Talented.PvETexture, Talented.PvPTexture
 
-        AS:SkinFrame(pve)
-        AS:StyleButton(pve)
+        S:HandleFrame(pve)
+        S:StyleButton(pve)
         pve:SetNormalTexture(pveTexture)
-        AS:SetInside(pve:GetNormalTexture())
-        AS:SkinTexture(pve:GetNormalTexture())
+        S:SetInside(pve:GetNormalTexture())
+        S:HandleIcon(pve:GetNormalTexture())
         local point, relatedTo, point2, x, y = pve:GetPoint()
         pve:SetPoint(point, relatedTo, point2, 1, y)
 
-        AS:SkinFrame(pvp)
-        AS:StyleButton(pvp)
+        S:HandleFrame(pvp)
+        S:StyleButton(pvp)
         pvp:SetNormalTexture(pvpTexture)
-        AS:SetInside(pvp:GetNormalTexture())
-        AS:SkinTexture(pvp:GetNormalTexture())
+        S:SetInside(pvp:GetNormalTexture())
+        S:HandleIcon(pvp:GetNormalTexture())
         point, relatedTo, point2, x, y = pvp:GetPoint()
         pvp:SetPoint(point, relatedTo, point2, 1, y)
     end
@@ -30,4 +28,4 @@ function AS:Talented(_, addon)
     AS:Delay(0.02, TalentedSkin)
 end
 
-AS:RegisterSkin('Talented', AS.Talented, "ADDON_LOADED")
+AS:RegisterSkin('Talented', nil, "ADDON_LOADED")

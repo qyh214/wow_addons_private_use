@@ -222,6 +222,14 @@ function RSConfigDB.SetDisplayingChatMessages(value)
 	private.db.display.displayChatMessage = value
 end
 
+function RSConfigDB.IsDisplayingTimestampChatMessages()
+	return private.db.display.displayTimestampChatMessage
+end
+
+function RSConfigDB.SetDisplayingTimestampChatMessages(value)
+	private.db.display.displayTimestampChatMessage = value
+end
+
 function RSConfigDB.IsDisplayingLootBar()
 	return private.db.loot.displayLoot
 end
@@ -330,74 +338,13 @@ function RSConfigDB.SetScanningChatAlerts(value)
 	private.db.general.scanChatAlerts = value
 end
 
----============================================================================
--- Zone filters database
----============================================================================
-
-function RSConfigDB.GetAllFilteredZones()
-	return private.db.general.filteredZones
+function RSConfigDB.IsScanningTargetUnit()
+	return private.db.general.scanTargetUnit
 end
 
-function RSConfigDB.IsZoneFiltered(mapID)
-	return private.db.general.filteredZones[mapID] == false
+function RSConfigDB.SetScanningTargetUnit(value)
+	private.db.general.scanTargetUnit = value
 end
-
-function RSConfigDB.IsZoneFilteredOnlyOnWorldMap()
-	return private.db.zoneFilters.filterOnlyMap
-end
-
-function RSConfigDB.SetZoneFilteredOnlyOnWorldMap(value)
-	private.db.zoneFilters.filterOnlyMap = value
-end
-
-function RSConfigDB.IsEntityZoneFiltered(entityID, atlasName)
-	if (entityID and atlasName) then
-		-- If npc
-		if (RSConstants.IsNpcAtlas(atlasName)) then
-			local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
-			if (RSNpcDB.IsInternalNpcMultiZone(entityID)) then
-				for mapID, _ in pairs (npcInfo.zoneID) do
-					if (private.db.general.filteredZones[mapID] == false) then
-						return true;
-					end
-				end
-			elseif (RSNpcDB.IsInternalNpcMonoZone(entityID) and RSConfigDB.IsZoneFiltered(npcInfo.zoneID)) then
-				return true;
-			end
-			-- If container
-		elseif (RSConstants.IsContainerAtlas(atlasName)) then
-			local containerInfo = RSContainerDB.GetInternalContainerInfo(entityID)
-			if (RSContainerDB.IsInternalContainerMultiZone(entityID)) then
-				for mapID, _ in pairs (containerInfo.zoneID) do
-					if (private.db.general.filteredZones[mapID] == false) then
-						return true;
-					end
-				end
-			elseif (RSContainerDB.IsInternalContainerMonoZone(entityID) and RSConfigDB.IsZoneFiltered(containerInfo.zoneID)) then
-				return true;
-			end
-			-- If event
-		elseif (RSConstants.IsEventAtlas(atlasName)) then
-			local eventInfo = RSEventDB.GetInternalEventInfo(entityID)
-			if (eventInfo and RSConfigDB.IsZoneFiltered(eventInfo.zoneID)) then
-				return true;
-			end
-		end
-	end
-
-	return false
-end
-
-function RSConfigDB:GetZoneFiltered(mapID)
-	if (mapID) then
-		return private.db.general.filteredZones[mapID]
-	end
-end
-
-function RSConfigDB:SetZoneFiltered(mapID, value)
-	private.db.general.filteredZones[mapID] = value
-end
-
 
 ---============================================================================
 -- Not discovered filters database
@@ -587,6 +534,14 @@ end
 
 function RSConfigDB.SetShowingAchievementRareNPCs(value)
 	private.db.map.displayAchievementRaresNpcIcons = value
+end
+
+function RSConfigDB.IsShowingProfessionRareNPCs()
+	return private.db.map.displayProfessionRaresNpcIcons
+end
+
+function RSConfigDB.SetShowingProfessionRareNPCs(value)
+	private.db.map.displayProfessionRaresNpcIcons = value
 end
 
 function RSConfigDB.IsShowingHuntingPartyRareNPCs()
@@ -942,6 +897,123 @@ end
 
 function RSConfigDB.GetDefaultEventFilter()
 	return private.db.eventFilters.defaultEventFilterType
+end
+
+---============================================================================
+-- Zone filters database
+---============================================================================
+
+function RSConfigDB.IsZoneFiltered(zoneID)
+	local filterType = RSConfigDB.GetZoneFiltered(zoneID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALL) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsZoneFilteredOnlyWorldmap(zoneID)
+	local filterType = RSConfigDB.GetZoneFiltered(zoneID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_WORLDMAP) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsZoneFilteredOnlyAlerts(zoneID)
+	local filterType = RSConfigDB.GetZoneFiltered(zoneID)
+	if (filterType and filterType == RSConstants.ENTITY_FILTER_ALERTS) then
+		return true
+	end
+	
+	return false
+end
+
+function RSConfigDB.IsEntityZoneFilteredOnlyAlerts(entityID, atlasName)
+	if (entityID and atlasName) then
+		-- If npc
+		if (RSConstants.IsNpcAtlas(atlasName)) then
+			local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
+			if (npcInfo) then
+				if (RSNpcDB.IsInternalNpcMultiZone(entityID)) then
+					for mapID, _ in pairs (npcInfo.zoneID) do
+						if (RSConfigDB.GetZoneFiltered(mapID)) then
+							return RSConfigDB.IsZoneFilteredOnlyAlerts(mapID)
+						end
+					end
+				elseif (RSNpcDB.IsInternalNpcMonoZone(entityID)) then
+					return RSConfigDB.IsZoneFilteredOnlyAlerts(npcInfo.zoneID)
+				end
+			end
+		-- If container
+		elseif (RSConstants.IsContainerAtlas(atlasName)) then
+			local containerInfo = RSContainerDB.GetInternalContainerInfo(entityID)
+			if (containerInfo) then
+				if (RSContainerDB.IsInternalContainerMultiZone(entityID)) then
+					for mapID, _ in pairs (containerInfo.zoneID) do
+						if (RSConfigDB.GetZoneFiltered(mapID)) then
+							return RSConfigDB.IsZoneFilteredOnlyAlerts(mapID)
+						end
+					end
+				elseif (RSContainerDB.IsInternalContainerMonoZone(entityID)) then
+					return RSConfigDB.IsZoneFilteredOnlyAlerts(containerInfo.zoneID)
+				end
+			end
+		-- If event
+		elseif (RSConstants.IsEventAtlas(atlasName)) then
+			local eventInfo = RSEventDB.GetInternalEventInfo(entityID)
+			if (eventInfo) then
+				return RSConfigDB.IsZoneFilteredOnlyAlerts(eventInfo.zoneID)
+			end
+		end
+	end
+
+	return false
+end
+
+function RSConfigDB.GetZoneFiltered(zoneID)
+	if (zoneID and private.db.zoneFilters.filteredZones and private.db.zoneFilters.filteredZones[zoneID]) then
+		return private.db.zoneFilters.filteredZones[zoneID]
+	end
+	
+	return nil
+end
+
+function RSConfigDB.SetZoneFiltered(zoneID, filterType)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.SetZoneFiltered [%s][%s]", eventID, filterType or ""))
+	if (not private.db.zoneFilters.filteredZones) then
+		private.db.zoneFilters.filteredZones = {}
+	end
+	
+	if (zoneID) then
+		if (filterType) then
+			private.db.zoneFilters.filteredZones[zoneID] = filterType
+		else
+			private.db.zoneFilters.filteredZones[zoneID] = RSConfigDB.GetDefaultZoneFilter()
+		end
+	end
+end
+
+function RSConfigDB.DeleteZoneFiltered(zoneID)
+	--RSLogger:PrintDebugMessage(string.format("RSConfigDB.DeleteZoneFiltered [%s]", zoneID))
+	if (zoneID and private.db.zoneFilters.filteredZones and private.db.zoneFilters.filteredZones[zoneID]) then
+		private.db.zoneFilters.filteredZones[zoneID] = nil
+	end
+	
+	if (RSUtils.GetTableLength(private.db.zoneFilters.filteredZones) == 0) then
+		private.db.zoneFilters.filteredZones = nil
+	end
+end
+
+function RSConfigDB.SetDefaultZoneFilter(filterType)
+	if (filterType) then
+		private.db.zoneFilters.defaultZoneFilterType = filterType
+	end
+end
+
+function RSConfigDB.GetDefaultZoneFilter()
+	return private.db.zoneFilters.defaultZoneFilterType
 end
 
 ---============================================================================

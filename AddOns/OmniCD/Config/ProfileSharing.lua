@@ -16,7 +16,7 @@ local ProfileValues = function() return E.DB:GetProfiles(tbl) end
 
 local ProfileSharing = {
 	name = L["Profile Sharing"],
-	order = -1,
+	order = 1100,
 	type = "group",
 	args = {
 		desc = {

@@ -1,9 +1,7 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('XPBarNone') then return end
-
-function AS:XPBarNone(event, addon)
-	AS:CreateBackdrop(XPBarNoneXPBar)
+function R:XPBarNone()
+	S:CreateBackdrop(XPBarNoneXPBar)
 end
 
-AS:RegisterSkin('XPBarNone', AS.XPBarNone)
+AS:RegisterSkin('XPBarNone')

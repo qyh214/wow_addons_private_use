@@ -11,7 +11,7 @@ Graphical Slider, like, for Range values.
 --[[ s r
 local Type, Version = "Slider", 23
 ]]
-local Type, Version = "Slider-OmniCD", 26 -- 24 backdrop, 25 label color white, 26 right align
+local Type, Version = "Slider-OmniCD", 27 -- 24 backdrop, 25 label color white, 26 right align
 -- e
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
@@ -250,7 +250,7 @@ local function Constructor()
 	--[[ s r
 	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	]]
-	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal-OmniCD") -- text color set by SetDisabled
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall-OmniCD") -- text color set by SetDisabled. v27 set to smaller font
 	-- e
 	label:SetPoint("TOPLEFT")
 	label:SetPoint("TOPRIGHT", -10, 0) -- v26

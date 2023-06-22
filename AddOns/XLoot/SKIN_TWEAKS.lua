@@ -1,3 +1,6 @@
+---@class XLootAddon
+local XLoot = select(2, ...)
+
 function XLoot:ApplySkinTweaks()
 	XLoot:RegisterMasqueTweak('LiteStep', { size = 16, padding = 0 })
 	XLoot:RegisterMasqueTweak('LiteStep - XLT', { size = 16, padding = 0 })

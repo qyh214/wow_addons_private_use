@@ -1,21 +1,19 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('NugRunning') then return end
-
-function AS:NugRunning()
+function R:NugRunning()
 	hooksecurefunc(NugRunning, 'ActivateTimer', function(self, w, h)
 		for _, timer in pairs(self.timers) do
 			if not timer.isSkinned then
 				timer:SetBackdrop(nil)
 
 				local ic = timer.icon:GetParent()
-				AS:CreateBackdrop(ic, 'Default')
+				S:CreateBackdrop(ic, 'Default')
 
-				AS:CreateBackdrop(timer.bar, 'Default')
+				S:CreateBackdrop(timer.bar, 'Default')
 				timer.isSkinned = true
 			end
 		end
 	end)
 end
 
-AS:RegisterSkin('NugRunning', AS.NugRunning)
+AS:RegisterSkin('NugRunning')

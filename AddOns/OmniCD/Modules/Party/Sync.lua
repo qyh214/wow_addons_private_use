@@ -337,9 +337,19 @@ end
 
 
 
-function CM.SyncCooldowns(guid, serializedCooldownData)
+
+function CM.SyncCooldowns(guid, encodedData)
 	local info = P.groupInfo[guid]
 	if not info then return end
+
+	local compressedData = LibDeflate:DecodeForWoWAddonChannel(encodedData)
+	if not compressedData then
+		return
+	end
+	local serializedCooldownData = LibDeflate:DecompressDeflate(compressedData)
+	if not serializedCooldownData then
+		return
+	end
 
 	local now = GetTime()
 	while ( serializedCooldownData ) do
@@ -354,18 +364,14 @@ function CM.SyncCooldowns(guid, serializedCooldownData)
 				remainingTime = tonumber(remainingTime)
 				modRate = tonumber(modRate)
 				charges = tonumber(charges)
-
 				charges = icon.maxcharges and charges ~= -1 and charges or nil
-				local elapsed = duration - remainingTime
-				local startTime = now - elapsed
 				local active = icon.active and info.active[spellID]
-
-
 				if ( active and duration == 0 ) then
 					P:ResetCooldown(icon)
 
-
-				elseif ( active and abs(active.startTime - startTime) > 1 ) or ( not active and duration > 0 and E.sync_periodic[spellID] ) then
+				elseif ( active and (spellID ~= 642 or not active.forbearanceOvertime or active.forbearanceOvertime ~= 0) and (abs(active.duration - (now - active.startTime) - remainingTime) > 1 or active.charges ~= charges) )
+					or ( not active and duration > 0 and E.sync_periodic[spellID] ) then
+					local startTime = now - (duration - remainingTime)
 					icon.cooldown:SetCooldown(startTime, duration, modRate)
 					P:SetCooldownElements(icon, charges)
 
@@ -420,23 +426,15 @@ local function CooldownSyncFrame_OnUpdate(_, elapsed)
 		return
 	end
 
-	local c = 0
 	local now = GetTime()
-	local userActive = not P.isUserDisabled and P.userInfo.active
-
+	local c = 0
 	for id, cooldownInfo in pairs(CM.cooldownSyncIDs) do
 		local start, duration, modRate, charges = GetCooldownFix(id)
 		if start then
-			local prevStart, prevCharges
-			local active = userActive and userActive[id]
-			if active then
-				prevStart, prevCharges = active.startTime, active.charges or 0
-			else
-				prevStart, prevCharges = cooldownInfo[1], cooldownInfo[2]
-			end
-			local periodicSync = E.sync_periodic[id]
+			local prevStart, prevCharges = cooldownInfo[1], cooldownInfo[2]
+			local isPeriodic = E.sync_periodic[id]
 			if duration == 0 then
-				if periodicSync then
+				if isPeriodic and prevStart ~= 0 then
 					cooldownInfo[1] = start
 					cooldownInfo[2] = charges
 					cooldownData[c + 1] = id
@@ -445,7 +443,7 @@ local function CooldownSyncFrame_OnUpdate(_, elapsed)
 					c = c + 3
 				end
 			else
-				if periodicSync or abs(start - prevStart) > 1 or charges > prevCharges then
+				if abs(start - prevStart) > 1 or charges > prevCharges then
 					cooldownInfo[1] = start
 					cooldownInfo[2] = charges
 					local remainingTime = start + duration - now
@@ -483,11 +481,13 @@ local function CooldownSyncFrame_OnUpdate(_, elapsed)
 	end
 
 	local serializedCooldownData = concat(cooldownData, ",")
+	local compressedData = LibDeflate:CompressDeflate(serializedCooldownData)
+	local encodedData = LibDeflate:EncodeForWoWAddonChannel(compressedData)
 	if not P.isUserDisabled then
-		CM.SyncCooldowns(E.userGUID, serializedCooldownData)
+		CM.SyncCooldowns(E.userGUID, encodedData)
 	end
 	if next(CM.syncedGroupMembers) then
-		CM:SendComm(MSG_COOLDOWN_SYNC, E.userGUID, serializedCooldownData)
+		CM:SendComm(MSG_COOLDOWN_SYNC, E.userGUID, encodedData)
 	end
 end
 

@@ -429,7 +429,7 @@ L["S_PARTY"] = "Gruppo"
 --[[Translation missing --]]
 L["S_PARTY_DESC1"] = "Quests with a blue star means all party members have the quest."
 --[[Translation missing --]]
-L["S_PARTY_DESC2"] = "If a red star is shown, a party member isn't elegible to world quests or doesn't have WQT installed yet."
+L["S_PARTY_DESC2"] = "If a red star is shown, a party member isn't eligible for world quests or doesn't have WQT installed yet."
 L["S_PARTY_PLAYERSWITH"] = "Giocatori nel gruppo Con WQT:"
 L["S_PARTY_PLAYERSWITHOUT"] = "Giocatori nel gruppo Senza WQT:"
 L["S_QUESTSCOMPLETED"] = "Missioni Completate"

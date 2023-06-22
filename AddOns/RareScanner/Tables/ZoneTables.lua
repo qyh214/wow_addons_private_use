@@ -21,7 +21,7 @@ private.CONTINENT_ZONE_IDS = {
 	[9999] = { zonefilter = true, npcfilter = true, zones = {276,378,628,629,672,734,702,695,747,739} }; --Class Halls
 	[9998] = { zonefilter = true, npcfilter = true, zones = {407}, current = { "all" } }; --Darkmoon Island
 	[9997] = { zonefilter = true, npcfilter = true, zones = {35,219,229,237,243,251,274,279,280,301,306,316,317,318,616,677,703,706,713,731,733,749,845,897,903,974,1004,1015,1041,1663,1666,1675,1669,1674,1677,1683,1692,2093} }; --Dungeons or scenarios
-	[9996] = { zonefilter = true, npcfilter = true, zones = {366,508,764,850,909,2047} }; --Raids
+	[9996] = { zonefilter = true, npcfilter = true, zones = {366,508,764,850,909,2047,2166} }; --Raids
 	[9995] = { zonefilter = false, npcfilter = true, zones = {0} }; --Unknown
 	[9994] = { zonefilter = true, npcfilter = false, zones = {981,1022,1032,1033,1034,1035,1036,1037,1336,1337,1501,1502} }; --Expedition islands
 }
@@ -80,6 +80,7 @@ private.SUBZONES_IDS = {
 	[2024] = {2132}; -- The Azure Span minimaps
 	[2151] = {2100,2101,2102,2154}; --The Forbidden Reach (10.0.7) (Dragonflight)
 	[2133] = {2184}; --Zaralek Cavern (10.1.0) (Dragonflight)
+	[2166] = {2167,2168,2169,2170}; --Aberrus, the Shadowed Crucible
 }
 
 private.ZONES_WITHOUT_VIGNETTE = {
@@ -109,12 +110,12 @@ private.ZONES_WITHOUT_VIGNETTE = {
 	[14] = { 15 }; --Arathi highlands
 	[26] = { 27 }; --The hinterlands
 	[37] = { 41 }; --Elwynn forest
-	[81] = { 86 }; --Silithus
+	[81] = { 962,86 }; --Silithus
 	[48] = { 53 }; --Loch modan
 	[23] = { 24 }; --Eastern plaguelands
 	[63] = { 68 }; --Ashenvale
 	[65] = { 70 }; --Stonetalon mountains
-	[70] = { 75, 498 }; --Dustwallow marsh
+	[70] = { 498,75 }; --Dustwallow marsh
 	[21] = { 22 }; --Silverpine forest
 	[64] = { 69 }; --Thousand needles
 	[36] = { 37 }; --Burning steppes
@@ -148,12 +149,12 @@ private.ZONES_WITHOUT_VIGNETTE = {
 	--[118] = { 123 }; --Icecrown (uncomment once Shadowlands pre-patch is over)
 	[126] = { 131 }; --Dalaran
 	[207] = { 212 }; --Deepholm
-	[198] = { 203 }; --Mount hyjal
-	[241] = { 252 }; --Twilight highlands
+	[198] = { 203,227 }; --Mount hyjal
+	[241] = { 338,252 }; --Twilight highlands
 	[205] = { 210 }; --Shimmering expanse
 	[204] = { 209 }; --Abyssal depths
 	[338] = { 350 }; --Molten front
-	[249] = { 289 }; --Uldum
+	[249] = { 260,289 }; --Uldum
 	[201] = { 206 }; --Kelp thar forest
 	[203] = { 208 }; --Vashj ir
 	[73] = { 77 }; --The gaping chasm
@@ -187,14 +188,6 @@ private.ZONES_WITHOUT_VIGNETTE = {
 	[274] = { 285 }; --Old hillsbrad foothills
 	[462] = { 474 }; --Camp Narache
 	[425] = { 437 }; --Northshire
-	
-	-- Remove if in retail all the vignettes work
-	[2022] = { 1706 }; --The Walking Shores
-	[2023] = { 1705 }; --Ohn'ahran Plains
-	[2024] = { 1707 }; --The Azure Span
-	[2025] = { 1708 }; --Thaldraszus
-	[2151] = { 1781 }; --The Forbidden Reach (10.0.7) (Dragonflight)
-	[2133] = { 1775 }; --The Forbidden Reach (10.0.7) (Dragonflight)
 }
 
 private.RESETABLE_KILLS_ZONE_IDS = {

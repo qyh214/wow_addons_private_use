@@ -5,11 +5,9 @@ e.tips=GameTooltip
 e.LibDD=LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 local function GetWeek()--周数
+    local region= GetCurrentRegion()
     local d = date("*t")
-    local cd=3
-    if GetCurrentRegion()==5 then --1US(includes Brazil and Oceania) 2Korea 3Europe (includes Russia) 4Taiwan 5China
-        cd=4
-    end
+    local cd= region==1 and 2 or region==3 and 3 or 4--1US(includes Brazil and Oceania) 2Korea 3Europe (includes Russia) 4Taiwan 5China
     for d3=1,15 do
         if date('*t', time({year=d.year, month=1, day=d3})).wday == cd then
             cd=d3
@@ -23,11 +21,11 @@ local function GetWeek()--周数
     return week
 end
 
-local LeftButtonDown = C_CVar.GetCVarBool("ActionButtonUseKeyDown") and 'LeftButtonDown' or 'LeftButtonUp'
-local RightButtonDown= C_CVar.GetCVarBool("ActionButtonUseKeyDown") and 'RightButtonDown' or 'RightButtonUp'
+e.LeftButtonDown = C_CVar.GetCVarBool("ActionButtonUseKeyDown") and 'LeftButtonDown' or 'LeftButtonUp'
+e.RightButtonDown= C_CVar.GetCVarBool("ActionButtonUseKeyDown") and 'RightButtonDown' or 'RightButtonUp'
 
 
-e.LoadDate= function(tab)--e.LoadDate({id=, type=''})--加载 item quest spell
+function e.LoadDate(tab)--e.LoadDate({id=, type=''})--加载 item quest spell
     if not tab.id then
         return
     end
@@ -64,7 +62,7 @@ end
 for _, spellID in pairs(spellLoadTab) do
     e.LoadDate({id=spellID, type='spell'})
 end
-for bag=0, NUM_BAG_SLOTS do
+for bag= Enum.BagIndex.Backpack, Constants.InventoryConstants.NumBagSlots+1 do
     for slot=1, C_Container.GetContainerNumSlots(bag) do
         local info = C_Container.GetContainerItemInfo(bag, slot)
         if info and info.itemID then
@@ -86,24 +84,47 @@ e.itemPetID={--宠物对换, wow9.0
 }
 
 local GetPlayerNameRemoveRealm= function(name, realm)--玩家名称, 去服务器为*
-    realm = realm=='' and nil or realm
-    if name then
-        realm= realm or name:match('%-(.+)')
-        if realm then
-            name= name:match('(.+)%-') or name
-            if realm==e.Player.realm then
-                return name
-            elseif e.Player.Realms[realm] then
-                return name..'|cnGREEN_FONT_COLOR:*|r'
-            else
-                return name..'*'
-            end
+    if not name then
+        return
+    end
+    local reName= name:match('(.+)%-') or name
+    local reRealm= name:match('%-(.+)') or realm
+    if not reName or reRealm=='' or reRealm==e.Player.realm then
+        return reName
+    elseif e.Player.Realms[reRealm] then
+        return reName..'|cnGREEN_FONT_COLOR:*|r'
+    elseif reRealm then
+        return reName..'*'
+    end
+    return reName
+end
+
+function e.GetUnitName(name, unit, guid)--取得全名
+    if name and name:gsub(' ','')~='' then
+        if not name:find('%-') then
+            name= name..'-'..e.Player.realm
         end
         return name
+    elseif guid then
+        local name2, realm = select(6, GetPlayerInfoByGUID(guid))
+        if name2 then
+            if not realm or realm=='' then
+                realm= e.Player.realm
+            end
+            return name2..'-'..realm
+        end
+    elseif unit then
+        local name2, realm= UnitName(unit)
+        if name2 then
+            if not realm or realm=='' then
+                realm= e.Player.realm
+            end
+            return name2..'-'..realm
+        end
     end
 end
 
-e.GetUnitRaceInfo=function(tab)--e.GetUnitRaceInfo({unit=nil, guid=nil, race=nil, sex=nil, reAtlas=false})--玩家种族图标
+function e.GetUnitRaceInfo(tab)--e.GetUnitRaceInfo({unit=nil, guid=nil, race=nil, sex=nil, reAtlas=false})--玩家种族图标
     local race =tab.race or tab.unit and select(2,UnitRace(tab.unit))
     local sex= tab.sex
     if not (race or sex) and tab.guid then
@@ -131,8 +152,8 @@ e.GetUnitRaceInfo=function(tab)--e.GetUnitRaceInfo({unit=nil, guid=nil, race=nil
     end
 end
 
-e.Class=function(unit, class, reAltlas)--职业图标
-    class=class or unit and select(2, UnitClass(unit))
+function e.Class(unit, class, reAltlas)--职业图标
+    class= unit and select(2, UnitClass(unit)) or class
     if class then
         if class=='EVOKER' then
             class='classicon-evoker'
@@ -147,27 +168,33 @@ e.Class=function(unit, class, reAltlas)--职业图标
     end
 end
 
-e.GetGUID= function(unit, name)--从名字,名unit, 获取GUID
+function e.GetGUID(unit, name)--从名字,名unit, 获取GUID
     if unit then
         return UnitGUID(unit)
+
     elseif name then
-        name= name:gsub('%-'..e.Player.realm, '')
-        local info=C_FriendList.GetFriendInfo(name)--好友
+        local info=C_FriendList.GetFriendInfo(name:gsub('%-'..e.Player.realm, ''))--好友
         if info then
-            return info.playerGuid
-        elseif e.GroupGuid[name] then--队友
+            return info.guid
+        end
+
+        name= e.GetUnitName(name)
+        if e.GroupGuid[name] then--队友
             return e.GroupGuid[name].guid
+
         elseif e.WoWGUID[name] then--战网
-            return e.WoWGUID[name]
+            return e.WoWGUID[name].guid
+
         elseif name==e.Player.name then
             return e.Player.guid
-        elseif UnitIsPlayer('target') and GetUnitName('target',true)==name then--目标
+
+        elseif UnitIsPlayer('target') and e.GetUnitName(nil, 'target')==name then--目标
             return UnitGUID('target')
         end
     end
 end
 
-e.GetFriend= function(name, guid, unit)--检测, 是否好友
+function e.GetFriend(name, guid, unit)--检测, 是否好友
     if guid or unit then
         guid= guid or e.GetGUID(unit, name)
         if guid and guid~=e.Player.guid then
@@ -180,18 +207,20 @@ e.GetFriend= function(name, guid, unit)--检测, 是否好友
             end
         end
     elseif name then
-        name= name:gsub('%-'..e.Player.realm, '')
-        if e.WoWGUID[name] then
-            return e.Icon.wow2
-        elseif C_FriendList.GetFriendInfo(name)  then
+        if C_FriendList.GetFriendInfo(name:gsub('%-'..e.Player.realm, ''))  then
             return '|A:groupfinder-icon-friend:0:0|a'--好友
+        end
+        if e.WoWGUID[e.GetUnitName(name)] then
+            return e.Icon.wow2
         end
     end
 end
 
-e.GetUnitFaction= function(unit, text)--检查, 是否同一阵营
-    local faction= unit and UnitFactionGroup(unit) or text
-    if faction and faction~= e.Player.faction then
+e.GetUnitFaction= function(unit, faction, all)--检查, 是否同一阵营
+    if not faction and unit then
+        faction= UnitFactionGroup(unit)
+    end
+    if faction and (faction~= e.Player.faction or all) then
         return faction=='Horde' and e.Icon.horde2 or faction=='Alliance' and e.Icon.alliance2 or '|A:nameplates-icon-flag-neutral:0:0|a'
     end
 end
@@ -216,21 +245,29 @@ e.PlayerLink=function(name, guid, slotLink) --玩家超链接
     end
 end
 
-e.GetPlayerInfo= function(tab)--e.GetPlayerInfo({unit=nil, guid=nil, name=nil, factionName=nil, reName=true, reLink=false})
+e.GetPlayerInfo= function(tab)--e.GetPlayerInfo({unit=nil, guid=nil, name=nil, faction=nil, reName=true, reLink=false, reRealm=false, reNotRegion=false})
     local guid= tab.guid or e.GetGUID(tab.unit, tab.name)
     if guid==e.Player.guid then
         return e.Icon.player..((tab.reName or tab.reLink) and e.Player.col..(e.onlyChinese and '我' or COMBATLOG_FILTER_STRING_ME)..'|r' or '')..e.Icon.star2
+
     elseif guid and C_PlayerInfo.GUIDIsPlayer(guid) then
         local _, englishClass, _, englishRace, sex, name, realm = GetPlayerInfoByGUID(guid)
-        local unit= tab.unit or guid and e.GroupGuid[guid] and e.GroupGuid[guid].unit
+
+        local unit= tab.unit
+        if guid and (not tab.faction or unit) then
+            if e.GroupGuid[guid] then
+                unit = unit or e.GroupGuid[guid].unit
+                tab.faction= tab.faction or e.GroupGuid[guid].faction
+            end
+        end
+
         local friend= e.GetFriend(nil, guid, nil)--检测, 是否好友
-        local faction= unit and e.GetUnitFaction(unit)--检查, 是否同一阵营
         local groupInfo= e.GroupGuid[guid] or {}--队伍成员
-        local server= e.Get_Region(realm)--服务器，EU， US {col=, text=, realm=}
-        
+        local server= not tab.reNotRegion and e.Get_Region(realm)--服务器，EU， US {col=, text=, realm=}
+
         local text= (server and server.col or '')
                     ..(friend or '')
-                    ..(faction or '')
+                    ..(e.GetUnitFaction(unit, tab.faction) or '')--检查, 是否同一阵营
                     ..(e.GetUnitRaceInfo({unit=unit, guid=guid , race=englishRace, sex=sex, reAtlas=false}) or '')
                     ..(e.Class(unit, englishClass) or '')
 
@@ -240,16 +277,34 @@ e.GetPlayerInfo= function(tab)--e.GetPlayerInfo({unit=nil, guid=nil, name=nil, f
 
         if tab.reLink then
             return text..e.PlayerLink(name, guid, true) --玩家超链接
+
         elseif tab.reName and name then
             if tab.reRealm then
-                text= text..(name..(realm and realm~='' and '-'..realm or ''))
+                if not realm or realm=='' or realm==e.Player.realm then
+                    text= text..name
+                else
+                    text= text..name..'-'..realm
+                end
             else
                 text= text..GetPlayerNameRemoveRealm(name, realm)
             end
-            text= '|c'..select(4,GetClassColor(englishClass))..text..'|r'                
+            text= '|c'..select(4,GetClassColor(englishClass))..text..'|r'
         end
         return text
+
+    elseif tab.name then
+        if tab.reLink then
+            return e.PlayerLink(tab.name, nil, true) --玩家超链接
+
+        elseif tab.reName then
+            local name=tab.name
+            if not tab.reRealm then
+                name= GetPlayerNameRemoveRealm(name)
+            end
+            return name
+        end
     end
+
     return ''
 end
 
@@ -265,7 +320,7 @@ e.Player={
     b= select(3, GetClassColor(UnitClassBase('player'))),
     col= '|c'..select(4, GetClassColor(UnitClassBase('player'))),
     cn= GetCurrentRegion()==5,
-    region=GetCurrentRegion(),--1US (includes Brazil and Oceania) 2Korea 3Europe (includes Russia) 4Taiwan 5China
+    region= GetCurrentRegion(),--1US (includes Brazil and Oceania) 2Korea 3Europe (includes Russia) 4Taiwan 5China
     Lo= GetLocale(),
     week= GetWeek(),--周数
     guid= UnitGUID('player'),
@@ -276,6 +331,7 @@ e.Player={
     LayerText= 'Layer',--位面文本
     Layer= nil, --位面数字
     useColor= nil,--使用颜色
+    
 }
  --MAX_PLAYER_LEVEL = GetMaxLevelForPlayerExpansion()
  --zh= LOCALE_zhCN or LOCALE_zhTW,--GetLocale()== ("zhCN" or 'zhTW'),
@@ -293,7 +349,7 @@ e.Icon={
     select2='|A:AlliedRace-UnlockingFrame-Checkmark:0:0|a',--绿色√
     selectYellow='Adventures-Checkmark',--黄色√
     X2='|A:xmarksthespot:0:0|a',
-    O2='|TInterface\\AddOns\\WeakAuras\\Media\\Textures\\cancel-mark.tga:0|t',--￠
+    O2='|A:talents-button-reset:0:0|a',--￠
 
     right='|A:newplayertutorial-icon-mouse-rightbutton:0:0|a',
     left='|A:newplayertutorial-icon-mouse-leftbutton:0:0|a',
@@ -310,7 +366,7 @@ e.Icon={
     map2='|A:poi-islands-table:0:0|a',
     wow2='|A:Icon-WoW:0:0|a',--136235
 
-    horde='charcreatetest-logo-horde',
+    horde= 'charcreatetest-logo-horde',
     alliance='charcreatetest-logo-alliance',
     horde2='|A:charcreatetest-logo-horde:0:0|a',
     alliance2='|A:charcreatetest-logo-alliance:0:0|a',
@@ -343,7 +399,7 @@ e.Icon={
     DAMAGER='|A:groupfinder-icon-role-large-dps:0:0|a',
     NONE='|A:groupfinder-icon-emptyslot:0:0|a',
     leader='|A:UI-HUD-UnitFrame-Player-Group-GuideIcon:0:0|a',--队长
- 
+
     info2='|A:questlegendary:0:0|a',--黄色!
     star2='|A:auctionhouse-icon-favorite:0:0|a',--星星
 }
@@ -365,7 +421,7 @@ e.Icon={
 
 
 
-e.PlayerOnlineInfo=function(unit)--单位，状态信息
+function e.PlayerOnlineInfo(unit)--单位，状态信息
     if unit and UnitExists(unit) then
         if not UnitIsConnected(unit) then
             return format("\124T%s.tga:0\124t", FRIENDS_TEXTURE_DND), e.onlyChinese and '离线' or PLAYER_OFFLINE
@@ -388,7 +444,7 @@ e.GetNpcID = function(unit)--NPC ID
     end
 end
 
-e.GetUnitMapName=function(unit)--单位, 地图名称
+function e.GetUnitMapName(unit)--单位, 地图名称
     local text
     local uiMapID= C_Map.GetBestMapForUnit(unit)
     if unit=='player' and IsInInstance() then
@@ -478,10 +534,10 @@ e.GetDifficultyColor = function(string, difficultyID)--DifficultyUtil.lua
     end
 end
 
-e.Cstr=function(self, tab)--self, {size, copyFont, changeFont, color={r=,g=,b=,a=}, layer=, justifyH}
+function e.Cstr(self, tab)--self, {size, copyFont, changeFont, color={r=,g=,b=,a=}, layer=, justifyH=, mouse=false, wheel=false}
     tab= tab or {}--Fonts.xml FontStyles.xml
     self= self or UIParent
-    local font= tab.changeFont or self:CreateFontString(nil, (tab.layer or 'OVERLAY'), 'GameFontNormal', 5)
+    local font= tab.changeFont or self:CreateFontString(nil, (tab.layer or 'OVERLAY'), 'GameFontNormal',  5)
     if tab.copyFont then
         --[[font:CopyFontObject(tab.copyFont)
         if tab.size then
@@ -515,6 +571,12 @@ e.Cstr=function(self, tab)--self, {size, copyFont, changeFont, color={r=,g=,b=,a
             end
         end
     end
+    if tab.mouse then
+        font:EnableMouse(true)
+    end
+    if tab.wheel then
+        font:EnableMouseWheel(true)
+    end
     return font
 end
 
@@ -536,7 +598,7 @@ e.Cedit= function(self, width, height)
     return editBox
 end
 
-e.Cbtn= function(self, tab)--type, icon, name, size
+function e.Cbtn(self, tab)--type, icon, name, size
     tab=tab or {}
     self= self or UIParent
     local button
@@ -562,7 +624,7 @@ e.Cbtn= function(self, tab)--type, icon, name, size
             end
         end
     end
-    button:RegisterForClicks(LeftButtonDown, RightButtonDown)
+    button:RegisterForClicks(e.LeftButtonDown, e.RightButtonDown)
     button:EnableMouseWheel(true)
     if tab.size then
         button:SetSize(tab.size[1], tab.size[2])
@@ -586,6 +648,11 @@ e.Ccool=function(self, start, duration, modRate, HideCountdownNumbers, Reverse, 
         if SwipeTexture then
             self.cooldown:SetSwipeTexture('Interface\\CHARACTERFRAME\\TempPortraitAlphaMask')--圆框架
         end
+        self:HookScript('OnHide', function(self2)
+            if self2.cooldown then
+                self2.cooldown:Clear()
+            end
+        end)
     end
     start=start or GetTime()
     self.cooldown:SetCooldown(start, duration, modRate)
@@ -652,7 +719,7 @@ e.WA_GetUnitAura = function(unit, spell, filter)--AuraEnvironment.lua
 end
 ]]
 
-e.WA_GetUnitBuff = function(unit, spell, filter)
+e.WA_GetUnitBuff = function(unit, spell, filter)--HELPFUL HARMFUL
     for i = 1, 40 do
         local spellID = select(10, UnitBuff(unit, i, filter))
         if not spellID then
@@ -677,10 +744,10 @@ end
 
 ]]
 
-e.WA_Utf8Sub = function(input, size, letterSize)
+function e.WA_Utf8Sub(input, size, letterSize, lower)
     local output = ""
     if type(input) ~= "string" then
-      return output
+      return output or ''
     end
     local i = 1
 
@@ -716,7 +783,7 @@ e.WA_Utf8Sub = function(input, size, letterSize)
       end
       i = i + 1
     end
-    return output
+    return lower and strlower(output) or output
 end
 --[[
 e.HEX=function(r, g, b, a)
@@ -806,13 +873,13 @@ e.GetSpellItemCooldown = function(spellID, itemID)--法术冷却
     end
 end
 
-e.Cbtn2= function(name, parent, showTexture, rightClick)
+function e.Cbtn2(name, parent, showTexture, rightClick)
     local button= CreateFrame("Button", name, parent or UIParent, "SecureActionButtonTemplate")
     button:SetSize(30, 30)
     if rightClick then
-        button:RegisterForClicks(LeftButtonDown, RightButtonDown)
+        button:RegisterForClicks(e.LeftButtonDown, e.RightButtonDown)
     elseif rightClick~=false then
-        button:RegisterForClicks(LeftButtonDown)
+        button:RegisterForClicks(e.LeftButtonDown)
     end
     button:EnableMouseWheel(true)
 
@@ -917,9 +984,10 @@ e.Say=function(type, name, wow, text)
 end
 
 e.GetKeystoneScorsoColor= function(score, texture, overall)--地下城史诗, 分数, 颜色 C_ChallengeMode.GetOverallDungeonScore()
-    if not score or score==0 then
+    if not score or score==0 or score=='0' then
         return ''
     else
+        score= type(score)~='number' and tonumber(score) or score
         local color= not overall and C_ChallengeMode.GetDungeonScoreRarityColor(score) or C_ChallengeMode.GetSpecificDungeonOverallScoreRarityColor(score)
         if color  then
             score= color:WrapTextInColorCode(score)
@@ -931,7 +999,7 @@ e.GetKeystoneScorsoColor= function(score, texture, overall)--地下城史诗, �
     end
 end
 
-e.GetTimeInfo= function(value, chat, time)
+function e.GetTimeInfo(value, chat, time)
     if value>0 then
         time= time or GetTime()
         time= time < value and time + 86400 or time
@@ -1070,13 +1138,13 @@ e.GetExpansionText= function(expacID, questID)--版本数据
         if e.ExpansionLevel==expacID then
             return _G['EXPANSION_NAME'..expacID], (e.onlyChinese and '版本' or GAME_VERSION_LABEL)..' '..(expacID+1)
         else
-            return '|cff606060'.._G['EXPANSION_NAME'..expacID]..'|r', '|cff606060'..(e.onlyChinese and '版本' or GAME_VERSION_LABEL)..' '..(expacID+1)..'|r'
+            return '|cff828282'.._G['EXPANSION_NAME'..expacID]..'|r', '|cff828282'..(e.onlyChinese and '版本' or GAME_VERSION_LABEL)..' '..(expacID+1)..'|r'
         end
     end
 end
 
 --e.GetTooltipData({bag={bag=nil, slot=nil}, guidBank={tab=nil, slot=nil}, merchant={slot, buyBack=true}, inventory=nil, hyperLink=nil, itemID=nil, text={}, onlyText=nil, wow=nil, onlyWoW=nil, red=nil, onlyRed=nil})--物品提示，信息
-e.GetTooltipData= function(tab)
+function e.GetTooltipData(tab)
     local tooltipData
     if tab.itemID and C_Heirloom.IsItemHeirloom(tab.itemID) then
         tooltipData= C_TooltipInfo.GetHeirloomByItemID(tab.itemID)
@@ -1094,7 +1162,7 @@ e.GetTooltipData= function(tab)
         tooltipData= C_TooltipInfo.GetInventoryItem('player', tab.inventory)
     end
     tooltipData= tooltipData or tab.hyperLink and C_TooltipInfo.GetHyperlink(tab.hyperLink)
-    local date={
+    local data={
         red=false,
         wow=false,
         text={},
@@ -1104,12 +1172,12 @@ e.GetTooltipData= function(tab)
         local findText= numText>0 or tab.wow
         local numFind=0
         for _, line in ipairs(tooltipData.lines) do--是否
-            TooltipUtil.SurfaceArgs(line)
-            if tab.red and not date.red then
+           -- TooltipUtil.SurfaceArgs(line)
+            if tab.red and not data.red then
                 local leftHex=line.leftColor and line.leftColor:GenerateHexColor()
                 local rightHex=line.rightColor and line.rightColor:GenerateHexColor()
                 if leftHex == 'ffff2020' or leftHex=='fefe1f1f' or rightHex== 'ffff2020' or rightHex=='fefe1f1f' then-- or hex=='fefe7f3f' then
-                    date.red=true
+                    data.red=true
                     if tab.onlyRed then
                         break
                     end
@@ -1119,7 +1187,7 @@ e.GetTooltipData= function(tab)
                 if tab.text then
                     for _, text in pairs(tab.text) do
                         if text and (line.leftText:find(text) or line.leftText==text) then
-                            date.text[text]= line.leftText:match(text) or line.leftText
+                            data.text[text]= line.leftText:match(text) or line.leftText
                             numFind= numFind +1
                             if tab.onlyText and numFind==numText then
                                 break
@@ -1127,8 +1195,8 @@ e.GetTooltipData= function(tab)
                         end
                     end
                 end
-                if tab.wow and not date.wow and (line.leftText==ITEM_BNETACCOUNTBOUND or line.leftText==ITEM_ACCOUNTBOUND) then--暴雪游戏通行证绑定, 账号绑定
-                    date.wow=true
+                if tab.wow and not data.wow and (line.leftText==ITEM_BNETACCOUNTBOUND or line.leftText==ITEM_ACCOUNTBOUND) then--暴雪游戏通行证绑定, 账号绑定
+                    data.wow=true
                     if tab.onlyWoW then
                         break
                     end
@@ -1136,7 +1204,7 @@ e.GetTooltipData= function(tab)
             end
         end
     end
-    return date
+    return data
 end
 
 e.PlaySound= function(soundKitID, setPlayerSound)--播放, 声音 SoundKitConstants.lua e.PlaySound()--播放, 声音
@@ -1175,35 +1243,35 @@ e.Get_Item_Stats= function(link)--物品，次属性，表
     local num, tab= 0, {}
     local info= GetItemStats(link) or {}
     if info['ITEM_MOD_CRIT_RATING_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '爆' or strlower(e.WA_Utf8Sub(STAT_CRITICAL_STRIKE, 1, 2)), value=info['ITEM_MOD_CRIT_RATING_SHORT'] or 1, index=1})
+        table.insert(tab, {text=e.onlyChinese and '爆' or e.WA_Utf8Sub(STAT_CRITICAL_STRIKE, 1, 2, true), value=info['ITEM_MOD_CRIT_RATING_SHORT'] or 1, index=1})
         num= num +1
     end
     if info['ITEM_MOD_HASTE_RATING_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '急' or strlower(e.WA_Utf8Sub(STAT_HASTE, 1,2)), value=info['ITEM_MOD_HASTE_RATING_SHORT'] or 1, index=1})
+        table.insert(tab, {text=e.onlyChinese and '急' or e.WA_Utf8Sub(STAT_HASTE, 1, 2, true), value=info['ITEM_MOD_HASTE_RATING_SHORT'] or 1, index=1})
         num= num +1
     end
     if info['ITEM_MOD_MASTERY_RATING_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '精' or strlower(e.WA_Utf8Sub(STAT_MASTERY, 1,2)), value=info['ITEM_MOD_MASTERY_RATING_SHORT'] or 1, index=1})
+        table.insert(tab, {text=e.onlyChinese and '精' or e.WA_Utf8Sub(STAT_MASTERY, 1, 2, true), value=info['ITEM_MOD_MASTERY_RATING_SHORT'] or 1, index=1})
         num= num +1
     end
     if info['ITEM_MOD_VERSATILITY'] then
-        table.insert(tab, {text=e.onlyChinese and '全' or strlower(e.WA_Utf8Sub(STAT_VERSATILITY, 1,2)), value=info['ITEM_MOD_VERSATILITY'] or 1, index=1})
+        table.insert(tab, {text=e.onlyChinese and '全' or e.WA_Utf8Sub(STAT_VERSATILITY, 1, 2, true), value=info['ITEM_MOD_VERSATILITY'] or 1, index=1})
         num= num +1
     end
     if num<4 and info['ITEM_MOD_CR_AVOIDANCE_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '闪' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_AVOIDANCE_SHORT, 1,2)), value=info['ITEM_MOD_CR_AVOIDANCE_SHORT'], index=2})
+        table.insert(tab, {text=e.onlyChinese and '闪' or e.WA_Utf8Sub(ITEM_MOD_CR_AVOIDANCE_SHORT, 1, 2, true), value=info['ITEM_MOD_CR_AVOIDANCE_SHORT'], index=2})
         num= num +1
     end
     if num<4 and info['ITEM_MOD_CR_LIFESTEAL_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '吸' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_LIFESTEAL_SHORT, 1,2)), value=info['ITEM_MOD_CR_LIFESTEAL_SHORT'] or 1, index=2})
+        table.insert(tab, {text=e.onlyChinese and '吸' or e.WA_Utf8Sub(ITEM_MOD_CR_LIFESTEAL_SHORT, 1, 2, true), value=info['ITEM_MOD_CR_LIFESTEAL_SHORT'] or 1, index=2})
         num= num +1
     end
     --[[if num<4 and info['ITEM_MOD_CR_AVOIDANCE_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '溅' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_MULTISTRIKE_SHORT, 1,2)), value=info['ITEM_MOD_CR_MULTISTRIKE_SHORT'] or 1, index=2})
+        table.insert(tab, {text=e.onlyChinese and '溅' or e.WA_Utf8Sub(ITEM_MOD_CR_MULTISTRIKE_SHORT, 1,2,true), value=info['ITEM_MOD_CR_MULTISTRIKE_SHORT'] or 1, index=2})
         num= num +1
     end]]
     if num<4 and info['ITEM_MOD_CR_SPEED_SHORT'] then
-        table.insert(tab, {text=e.onlyChinese and '速' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_SPEED_SHORT, 1,2)), value=info['ITEM_MOD_CR_SPEED_SHORT'] or 1, index=2})
+        table.insert(tab, {text=e.onlyChinese and '速' or e.WA_Utf8Sub(ITEM_MOD_CR_SPEED_SHORT, 1,2,true), value=info['ITEM_MOD_CR_SPEED_SHORT'] or 1, index=2})
         num= num +1
     end
     return tab
@@ -1230,8 +1298,8 @@ e.Set_Item_Stats = function(self, link, setting) --setting= setting or {}
             local quality = C_Item.GetItemQualityByID(link)--颜色
             if quality==7 then
                 local itemLevelStr=ITEM_LEVEL:gsub('%%d', '%(%%d%+%)')--"物品等级：%d"
-                local dateInfo= e.GetTooltipData({hyperLink=link, itemID= setting.itemID or GetItemInfoInstant(link), text={itemLevelStr}, onlyText=true})--物品提示，信息
-                itemLevel= tonumber(dateInfo.text[itemLevelStr])
+                local dataInfo= e.GetTooltipData({hyperLink=link, itemID= setting.itemID or GetItemInfoInstant(link), text={itemLevelStr}, onlyText=true})--物品提示，信息
+                itemLevel= tonumber(dataInfo.text[itemLevelStr])
             end
             itemLevel= itemLevel or GetDetailedItemLevelInfo(link)
             if itemLevel and itemLevel<3 then
@@ -1605,6 +1673,7 @@ local regionColor = {--https://wago.io/6-GG3RMcC
     ["esES"] = {col="|cFFFFBF00ES|r", text='ES', realm="Spain"},
     ["ruRU"] = {col="|cFFCCCCFFRU|r" ,text='RU', realm="Russia"},
     ["ptBR"] = {col="|cFF8fce00PT|r", text='PT', realm="Portuguese"},
+
     ["oce"] = {col="|cFF00FF00OCE|r", text='CE', realm="Oceanic"},
     ["usp"] = {col="|cFF00FFFFUSP|r", text='USP', realm="US Pacific"},
     ["usm"] = {col="|cFFFF00FFUSM|r", text='USM', realm="US Mountain"},
@@ -1613,9 +1682,15 @@ local regionColor = {--https://wago.io/6-GG3RMcC
     ["mex"] = {col="|cFFCCCCFFMEX|r", text='MEX', realm="Mexico"},
     ["bzl"] = {col="|cFF8fce00BZL|r", text='BZL', realm="Brazil"},
 }
-e.Get_Region= function(server, guid, unit)--e.Get_Region(server, guid, unit)--服务器，EU， US {col=, text=, realm=}
-    server= server
-            or unit and ((select(2, UnitName(unit)) or e.Player.realm))
-            or guid and select(7, GetPlayerInfoByGUID(guid))
-    return server and Realms[server] and regionColor[Realms[server]]
+e.Get_Region= function(realm, guid, unit, disabled)--e.Get_Region(server, guid, unit)--服务器，EU， US {col=, text=, realm=}
+    if disabled then
+        regionColor={}
+        Realms={}
+    else
+        realm= realm=='' and e.Player.realm
+                or realm
+                or unit and ((select(2, UnitName(unit)) or e.Player.realm))
+                or guid and select(7, GetPlayerInfoByGUID(guid))
+        return realm and Realms[realm] and regionColor[Realms[realm]]
+    end
 end

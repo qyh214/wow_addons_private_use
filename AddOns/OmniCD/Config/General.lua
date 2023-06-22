@@ -45,6 +45,7 @@ C["General"] = {
 			mmColor = {r=1, g=1, b=1},
 			mmssColor = {r=1, g=1, b=1},
 		},
+		useElvUICooldownTimer = true,
 	}
 }
 
@@ -217,9 +218,28 @@ local General = {
 			get = function(info) return E.profile.General.cooldownText[ info[3] ][ info[#info] ] end,
 			set = function(info, value) E.profile.General.cooldownText[ info[3] ][ info[#info] ] = value E:Refresh() end,
 			args = {
+				coooldownTimer = {
+					name = L["Cooldown Timer"],
+					order = 100,
+					type = "group",
+					inline = true,
+					args = {
+						useElvUICooldownTimer = {
+							disabled = function() return not _G.ElvUI end,
+							name = L["Use ElvUI Timer"],
+							desc = L["[Show Numbers for Cooldowns] must be disabled in Blizzard's \'Options/Action Bars\' menu."],
+							type = "toggle",
+							get = function(info) return E.profile.General.cooldownText.useElvUICooldownTimer end,
+							set = function(info, value)
+								E.profile.General.cooldownText.useElvUICooldownTimer = value
+								E.Libs.OmniCDC.StaticPopup_Show("OMNICD_RELOADUI", E.STR.RELOAD_UI)
+							end,
+						},
+					}
+				},
 				statusBar = {
 					name = L["Status Bar"],
-					order = 100,
+					order = 200,
 					type = "group",
 					inline = true,
 					args = {

@@ -67,7 +67,7 @@ local function SetHooks()
 			-- original code
 			local name, icon = specie:GetInfo()
 			local text = name .. (level > 0 and format(' (%s)', level) or '')
-			local r,g,b = self:GetColor(quality)
+			local r,g,b = self:GetColor(quality):GetRGB()
 
 			local line = self:Add(text, icon, source, r,g,b)
 			line:SetScript('OnClick', function() specie:Display() end)
@@ -238,7 +238,7 @@ function M:OnInitialize()
 	_DBG("|cffffff00Init|r - "..self:GetName(), true)
 	db = KT.db.profile
 	dbChar = KT.db.char
-	self.isLoaded = (KT:CheckAddOn("PetTracker", "10.0") and db.addonPetTracker)
+	self.isLoaded = (KT:CheckAddOn("PetTracker", "10.0.1") and db.addonPetTracker)
 
 	if self.isLoaded then
 		KT:Alert_IncompatibleAddon("PetTracker", "10.0")

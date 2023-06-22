@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,timewalker"
 
-mod:SetRevision("20200912135206")
+mod:SetRevision("20230521191200")
 mod:SetCreatureID(40792)
 mod:SetEncounterID(1047)
 mod:SetMainBossID(42172)--42172 is Ozumat, but we need Neptulon for engage trigger.
@@ -56,6 +56,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
 end
 
 function mod:OnSync(msg)
+	if not self:IsInCombat() then return end
 	if msg == "bossdown" then
 		DBM:EndCombat(self)
 	end

@@ -15,8 +15,8 @@ do
 	localization = localization:gsub("frFR", FRFR):gsub("koKR", KOKR)
 	localization = localization:gsub("ruRU", RURU):gsub("zhCN", ZHCN)
 	localization = localization:gsub("zhTW", ZHTW)
---	localization = localization:gsub("itIT", LFG_LIST_LANGUAGE_ITIT)
---	localization = localization:gsub("ptBR", LFG_LIST_LANGUAGE_PTBR)
+
+
 	fieldText.localizations = localization
 
 	local t = {}
@@ -46,7 +46,7 @@ end):gsub("\t", "\32\32\32\32\32\32\32\32")
 local getGlobalOption = function(info) return E.global[ info[#info] ] end
 local setGlobalOption = function(info, value) E.global[ info[#info] ] = value end
 
--- Generate option table on demand for late loading plugins
+
 local function GetOptions()
 	if not E.options then
 		E.options = {
@@ -54,9 +54,9 @@ local function GetOptions()
 			type = "group",
 			args = {
 				Home = {
-					-- Use escape sequence here. tree icons have backdrop borders
---					icon = E.Libs.OmniCDC.texture.logo,
---					iconCoords = {0, 1, 0, 1},
+
+
+
 					name = format("|T%s:18|t %s", E.Libs.OmniCDC.texture.logo, E.AddOn),
 					order = 0,
 					type = "group",
@@ -129,9 +129,9 @@ local function GetOptions()
 							get = getGlobalOption,
 							set = setGlobalOption,
 						},
-						-- requires /rl for ace to redraw pixels
+
 						minusScale = {
-							disabled = function() return E.global.optionPanelScale < 0.84 end, -- == 0.8 doesn't work??
+							disabled = function() return E.global.optionPanelScale < 0.84 end,
 							image = E.Libs.OmniCDC.texture.minus, imageWidth = 18, imageHeight = 18,
 							name = "",
 							order = 13,
@@ -283,6 +283,29 @@ local function GetOptions()
 								},
 							}
 						} or nil,
+						otherAddOns = E.isDF and {
+							name = ADDONS,
+							order = 60,
+							type = "group",
+							args = {
+								omniauras = {
+									name = "OmniAuras",
+									desc = "Track important buffs and debuffs on any Blizzard frame",
+									order = 1,
+									type = "input",
+									dialogControl = "Link-OmniCD",
+									get = function() return "https://www.curseforge.com/wow/addons/omniauras" end,
+								},
+								omnisort = {
+									name = "OmniSort",
+									desc = "Party group sorter with auto-adjusting keybinds and macros",
+									order = 2,
+									type = "input",
+									dialogControl = "Link-OmniCD",
+									get = function() return "https://www.curseforge.com/wow/addons/omnisort" end,
+								},
+							}
+						} or nil,
 					}
 				},
 			},
@@ -341,8 +364,8 @@ function E:SetupOptions()
 		arrowb	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-dn-b]],
 	}
 	self.Libs.OmniCDC.SetOptionFontDefaults(nil, nil)
-	self.Libs.ACR:RegisterOptionsTable(self.AddOn, GetOptions, true) -- skip validation
---	self.optionsFrames.OmniCD = self.Libs.ACD:AddToBlizOptions(self.AddOn)
+	self.Libs.ACR:RegisterOptionsTable(self.AddOn, GetOptions, true)
+
 
 	self.optionsFrames.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.DB)
 	self.optionsFrames.profiles.order = 1000
@@ -369,6 +392,6 @@ end
 
 function E:RefreshProfile(currentProfile)
 	currentProfile = currentProfile or self.DB:GetCurrentProfile()
-	self.DB.keys.profile = currentProfile .. ":D" -- Bypass same profile check. credits to ElvUI
+	self.DB.keys.profile = currentProfile .. ":D"
 	self.DB:SetProfile(currentProfile)
 end

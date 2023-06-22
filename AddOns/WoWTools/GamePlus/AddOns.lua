@@ -6,10 +6,7 @@ local Save={
         buttons={
             [RESISTANCE_FAIR]={
                 ['WeakAuras']=true,
-                ['WeakAurasArchive']=true,
-                ['WeakAurasModelPaths']=true,
                 ['WeakAurasOptions']=true,
-                ['WeakAurasTemplates']=true,
                 ['BugSack']=true,
                 ['!BugGrabber']=true,
                 ['TextureAtlasViewer']=true,
@@ -71,7 +68,7 @@ local function setButtons()--设置按钮, 和位置
 
                     elseif d=='RightButton' then--移除
                         StaticPopupDialogs[id..addName..'DELETE']={
-                            text =id..' '..addName..'\n\n< |cff00ff00%s|r >\n\n'..(e.onlyChinese and '插件数量' or  ADDONS..AUCTION_HOUSE_QUANTITY_LABEL)..' %s',
+                            text =id..' '..addName..'|n|n< |cff00ff00%s|r >|n|n'..(e.onlyChinese and '插件数量' or  ADDONS..AUCTION_HOUSE_QUANTITY_LABEL)..' %s',
                             button1 = e.onlyChinese and '删除' or DELETE,
                             button2 = e.onlyChinese and '取消' or CANCEL,
                             whileDead=true,
@@ -156,7 +153,7 @@ local function Init()
     panel:SetText(e.onlyChinese and '新建' or NEW)
     panel:SetScript('OnClick',function()
         StaticPopupDialogs[id..addName..'NEW']={
-            text =id..' '..addName..'\n\n'..(e.onlyChinese and '当前已选择' or ICON_SELECTION_TITLE_CURRENT)..' %s\n\n'..(e.onlyChinese and '新的方案' or PAPERDOLL_NEWEQUIPMENTSET),
+            text =id..' '..addName..'|n|n'..(e.onlyChinese and '当前已选择' or ICON_SELECTION_TITLE_CURRENT)..' %s|n|n'..(e.onlyChinese and '新的方案' or PAPERDOLL_NEWEQUIPMENTSET),
             button1 = e.onlyChinese and '新建' or NEW,
             button2 = e.onlyChinese and '取消' or CANCEL,
             hasEditBox=true,
@@ -249,10 +246,8 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
                 Save.buttons[e.onlyChinese and '宠物对战' or PET_BATTLE_COMBAT_LOG ]={
                     ['BugSack']=true,
                     ['!BugGrabber']=true,
-                    ['Ace3']=true,
-                    ['AceGUI-3.0_SFX-Widgets']=true,
                     ['tdBattlePetScript']=true,
-                    ['tdBattlePetScript_Rematch']=true,
+                    --['zAutoLoadPetTeam_Rematch']=true,
                     ['Rematch']=true,
                     [id]=true,
                 }
@@ -260,16 +255,11 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
                     ['BugSack']=true,
                     ['!BugGrabber']=true,
                     ['WeakAuras']=true,
-                    ['WeakAurasArchive']=true,
-                    ['WeakAurasModelPaths']=true,
                     ['WeakAurasOptions']=true,
-                    ['WeakAurasTemplates']=true,
-                    ['Recount']=true,
+                    ['Details']=true,
                     ['DBM-Core']=true,
                     ['DBM-Challenges']=true,
-                    ['DBM-GUI']=true,
                     ['DBM-StatusBarTimers']=true,
-                    ['DBM-DMF']=true,
                     [id]=true,
                 }
             end

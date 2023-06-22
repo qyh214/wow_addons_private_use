@@ -24,8 +24,8 @@ RSConstants.LOOT_ITEM_ID = nil
 -- Current versions
 ---============================================================================
 
-RSConstants.CURRENT_DB_VERSION = 97
-RSConstants.CURRENT_LOOT_DB_VERSION = 108
+RSConstants.CURRENT_DB_VERSION = 106
+RSConstants.CURRENT_LOOT_DB_VERSION = 116
 
 ---============================================================================
 -- Current maps (newer)
@@ -48,9 +48,11 @@ RSConstants.DEFAULT_FILTERED_ENTITIES = {
 ---============================================================================
 
 RSConstants.SHADOWLANDS_PRE_PATCH_EVENT = 1
+RSConstants.DIABLO_4_GOBLIN_EVENT = 2
 
 RSConstants.EVENTS = {
-	[RSConstants.SHADOWLANDS_PRE_PATCH_EVENT] = false
+	[RSConstants.SHADOWLANDS_PRE_PATCH_EVENT] = false;
+	[RSConstants.DIABLO_4_GOBLIN_EVENT] = false;
 }
 
 ---============================================================================
@@ -62,9 +64,11 @@ RSConstants.RECENTLY_SEEN_RESET_TIMER = 120 --2 minutes
 RSConstants.RECENTLY_SEEN_PING_ANIMATION_TIMER = 5 --5 seconds
 RSConstants.CACHE_ALL_COMPLETED_QUEST_IDS_TIMER = 60 --1 minute
 RSConstants.FIND_HIDDEN_QUESTS_TIMER = 5 --5 seconds after killing a NPC or opening a container
-RSConstants.CHECK_RESPAWN_BY_QUEST_TIMER = 150 --2.5 minutes
-RSConstants.CHECK_RESPAWNING_BY_LASTSEEN_TIMER = 60 --1 minute
+RSConstants.CHECK_RESPAWN_THRESHOLD = 150 --2.5 minutes
+RSConstants.CHECK_RESPAWN_TIMER = 60 --1 minute
 RSConstants.CHECK_RESET_NOTIFICATIONS_TIMER = 10 --10 seconds
+RSConstants.CHECK_TARGETS_TIMER = 2 --2 seconds
+RSConstants.BUTTON_TIMER = 1 --1 seconds
 
 ---============================================================================
 -- Collections enumerators
@@ -116,6 +120,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			scanOnPetBattle = true,
 			scanOnRacingQuest = true,
 			scanWorldmapVignette = true,
+			scanTargetUnit = false,
 			ignoreCompletedEntities = true,
 			filteredRares = {},
 			filteredContainers = {},
@@ -146,6 +151,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			autoHideButton = 0,
 			displayRaidWarning = true,
 			displayChatMessage = true,
+			displayTimestampChatMessage = true,
 			enableNavigation = true,
 			navigationLockEntity = false,
 			lockPosition = false,
@@ -186,6 +192,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			displayNotDiscoveredNpcIcons = true,
 			displayAlreadyKilledNpcIcons = false,
 			displayAlreadyKilledNpcIconsReseteable = false,
+			displayProfessionRaresNpcIcons = true,
 			displayAchievementRaresNpcIcons = true,
 			displayHuntingPartyRaresNpcIcons = false,
 			displayPrimalStormRaresNpcIcons = true,
@@ -318,6 +325,8 @@ RSConstants.NPC_LEGION_VIGNETTE = "DemonInvasion5"
 RSConstants.NPC_NAZJATAR_VIGNETTE = "nazjatar-nagaevent"
 RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE = "Warfront-NeutralHero"
 RSConstants.NPC_TORMENTORS_VIGNETTE = "Tormentors-Boss"
+RSConstants.NPC_DIABLO_GOBLIN = "BuildanAbomination-32x32"
+RSConstants.NPC_WARLOCK_PORTAL_GOBLIN = "WarlockPortal-Yellow-32x32"
 
 RSConstants.CONTAINER_VIGNETTE = "VignetteLoot"
 RSConstants.CONTAINER_ELITE_VIGNETTE = "VignetteLootElite"
@@ -327,6 +336,7 @@ RSConstants.CONTAINER_ELITE_LOCKED_VIGNETTE = "vignettelootelite-locked"
 RSConstants.EVENT_VIGNETTE = "VignetteEvent"
 RSConstants.EVENT_ELITE_VIGNETTE = "VignetteEventElite"
 RSConstants.EVENT_TORMENTORS_VIGNETTE = "Tormentors-Event"
+RSConstants.EVENT_ZARALEK_CAVERN = "minimap-genericevent-hornicon-small"
 
 ---============================================================================
 -- SpellIDs
@@ -351,6 +361,7 @@ RSConstants.DRAGON_ISLES = 1978
 RSConstants.THE_AZURE_SPAN = 2024
 RSConstants.VALDRAKKEN = 2025
 RSConstants.THE_PRIMALIST_FUTURE = 2085
+RSConstants.ZARALEK_CAVERN = 2133
 
 ---============================================================================
 -- NpcIDS
@@ -387,6 +398,7 @@ RSConstants.FIRE_STORM_EVENTS_NPCS = { 193650, 193648, 193675, 193686, 193687 }
 RSConstants.WATER_STORM_EVENTS_NPCS = { 193645, 193655, 193682, 193677, 193678, 193679 }
 RSConstants.AIR_STORM_EVENTS_NPCS = { 193653, 193647, 193684, 193674, 193685 }
 RSConstants.EARTH_STORM_EVENTS_NPCS = { 193644, 193654, 193652, 193680 }
+RSConstants.FYRAKK_ASSAULTS_NPCS = { 201054, 203698, 203699, 203700, 203703, 203705, 203707, 201673 }
 RSConstants.BOUNDING_SHRROM_CONTAINERS = { 349793, 349797, 353330 }
 RSConstants.RIPE_PURIAN_CONTAINERS = { 353643, 353503, 353205, 353500, 352754, 353516, 353325, 353019, 353252, 353314, 352998 }
 RSConstants.RIFT_HIDDEN_ENTITIES = { 179883, 368645, 368646, 368647, 368648, 368649, 368650 }
@@ -406,7 +418,9 @@ RSConstants.MAGIC_BOUND_CHEST = { 376426, 385075, 385074 }
 RSConstants.CONTAINER_WITH_NPC_VIGNETTE = { 192243 }
 RSConstants.CONTAINERS_FORBIDDEN_REACH = { 386214, 386165, 386166, 386167, 386168, 386172, 386174, 386179, 386208, 386212, 386213 }
 RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT = 203388
+RSConstants.GOBLIN_PORTAL = 205722
 RSConstants.ZARALEK_CAVERN_LOAM_SCOUT = 204657
+RSConstants.ELUSIVE_NPCS = { 204821, 204831, 202436, 202441, 194489, 194491, 195465, 195472, 195492, 195509, 195518, 195541 }
 
 -- NPCs that spawn after completing an event
 RSConstants.NPCS_WITH_PRE_EVENT = {
@@ -491,6 +505,7 @@ RSConstants.NPCS_WITH_PRE_EVENT = {
 	[386346] = 200740;
 	[386340] = 200742;
 	[386338] = 200743;
+	[205722] = 205490;
 }
 
 -- Contains that spawn after completing an event
@@ -529,8 +544,9 @@ RSConstants.IGNORED_VIGNETTES = { 156480, 155660, 163373, 370467, 370466, 182160
 RSConstants.NPCS_WITH_EVENT_VIGNETTE = { 72156, 154154, 154330, 164547, 164477, 160629, 175012, 157833, 166398, 164064, 162829, 157964, 162844, 171317, 170774, 162849, 170301, 170302, 170711, 170634, 170731, 172862, 172577, 158025, 158278, 170303, 179684, 179791, 179805, 177444, 180246, 179108, 179853, 179755, 179768, 179779, 179460, 179851, 179735, 169827, 203280 }
 RSConstants.NPCS_WITH_CONTAINER_VIGNETTE = { 179883 }
 RSConstants.CONTAINERS_WITH_NPC_VIGNETTE = { 369435, 398828 }
+RSConstants.EVENTS_WITH_NPC_VIGNETTE = { 204131, 204211, 204747, 204768, 203278, 203950, 204101, 203065, 203702, 203889, 205006, 204710, 204967, 204732, 204389, 204423, 204460, 204763 }
 RSConstants.NPCS_WITH_MULTIPLE_SPAWNS = { 69768, 69769, 69841, 69842, 70323 }
-RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290, 376587, 382029, 376386, 383733, 383734, 383735, 383732, 386214, 386165, 386166, 386167, 386168, 386172, 386174, 386179, 386208, 386212, 386213, 401844 }
+RSConstants.CONTAINERS_WITH_MULTIPLE_SPAWNS = { 375366, 375530, 375362, 375363, 375373, 375290, 376587, 382029, 376386, 383733, 383734, 383735, 383732, 386214, 386165, 386166, 386167, 386168, 386172, 386174, 386179, 386208, 386212, 386213, 401844, 401845 }
 RSConstants.FIRIM_EXILE_OBJECTS = { 375973, 375982, 375983, 375984, 375985, 375986, 375987 }
 
 ---============================================================================
@@ -701,6 +717,7 @@ RSConstants.STEP7 = "7"
 RSConstants.APPLY_COLLECTIONS_LOOT_FILTERS = "RARESCANNER_APPLY_COLLECTIONS_LOOT_FILTERS"
 RSConstants.EXPLORER_FILTERING_DIALOG = "RARESCANNER_EXPLORER_FILTERING_DIALOG"
 RSConstants.EXPLORER_SCAN_NOT_DONE = "RARESCANNER_EXPLORER_SCAN_NOT_DONE"
+RSConstants.TARGET_UNIT_WARNING = "RARESCANNER_TARGET_UNIT_WARNING"
 
 ---============================================================================
 -- Explorer filters
@@ -733,11 +750,11 @@ function RSConstants.IsScanneableAtlas(atlasName)
 end
 
 function RSConstants.IsEventAtlas(atlasName)
-	return atlasName == RSConstants.EVENT_VIGNETTE or atlasName == RSConstants.EVENT_ELITE_VIGNETTE or atlasName == RSConstants.EVENT_TORMENTORS_VIGNETTE
+	return atlasName == RSConstants.EVENT_VIGNETTE or atlasName == RSConstants.EVENT_ELITE_VIGNETTE or atlasName == RSConstants.EVENT_TORMENTORS_VIGNETTE or atlasName == RSConstants.EVENT_ZARALEK_CAVERN
 end
 
 function RSConstants.IsNpcAtlas(atlasName)
-	return atlasName == RSConstants.NPC_VIGNETTE or atlasName == RSConstants.NPC_LEGION_VIGNETTE or atlasName == RSConstants.NPC_VIGNETTE_ELITE or atlasName == RSConstants.NPC_NAZJATAR_VIGNETTE or atlasName == RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE or atlasName == RSConstants.NPC_TORMENTORS_VIGNETTE
+	return atlasName == RSConstants.NPC_VIGNETTE or atlasName == RSConstants.NPC_LEGION_VIGNETTE or atlasName == RSConstants.NPC_VIGNETTE_ELITE or atlasName == RSConstants.NPC_NAZJATAR_VIGNETTE or atlasName == RSConstants.NPC_WARFRONT_NEUTRAL_HERO_VIGNETTE or atlasName == RSConstants.NPC_TORMENTORS_VIGNETTE or atlasName == RSConstants.NPC_DIABLO_GOBLIN or atlasName == RSConstants.NPC_WARLOCK_PORTAL_GOBLIN
 end
 
 function RSConstants.IsContainerAtlas(atlasName)

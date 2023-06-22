@@ -1213,6 +1213,43 @@ function RSCollectionsDB.GetAllEntitiesCollectionsLoot()
 	return private.dbglobal.entity_collections_loot
 end
 
+function RSCollectionsDB.GetEntityCollectionsLoot(entityID, type)
+	local items = {}
+	if (entityID and RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()) > 0) then
+		local collectionsLoot = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[type]		
+		if (collectionsLoot and collectionsLoot[entityID]) then
+			local _, _, classIndex = UnitClass("player");
+			
+			-- If mount
+			if (RSConfigDB.IsShowingMissingMounts() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.MOUNT]) then
+				items = RSUtils.JoinTables(items, collectionsLoot[entityID][RSConstants.ITEM_TYPE.MOUNT])
+			end
+			
+			-- If pet
+			if (RSConfigDB.IsShowingMissingPets() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.PET]) then
+				items = RSUtils.JoinTables(items, collectionsLoot[entityID][RSConstants.ITEM_TYPE.PET])
+			end
+			
+			-- If toy
+			if (RSConfigDB.IsShowingMissingToys() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.TOY]) then
+				items = RSUtils.JoinTables(items, collectionsLoot[entityID][RSConstants.ITEM_TYPE.TOY])
+			end
+			
+			-- If appearance
+			if (RSConfigDB.IsShowingMissingAppearances() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE] and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex]) then
+				items = RSUtils.JoinTables(items, collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex])
+			end
+			
+			-- If drakewatcher manuscripts
+			if (RSConfigDB.IsShowingMissingDrakewatcher() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER]) then
+				items = RSUtils.JoinTables(items, collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER])
+			end
+		end
+	end
+	
+	return items
+end
+
 function RSCollectionsDB.IsCollectionsScanDoneWithCurrentVersion()
 	if (private.dbglobal.lastCollectionsScanVersion and private.dbglobal.lastCollectionsScanVersion[RSConstants.CURRENT_LOOT_DB_VERSION]) then
 		return true

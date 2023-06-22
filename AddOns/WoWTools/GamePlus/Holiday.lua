@@ -78,8 +78,6 @@ local function set_Text()--设置,显示内容 Blizzard_Calendar.lua CalendarDay
         return
     end
 
-    panel:SetButtonState('PUSHED')
-
     local monthOffset,day
     local info= C_Calendar.GetEventIndex()
     local info2= C_DateAndTime.GetCurrentCalendarTime()
@@ -145,7 +143,16 @@ local function set_Text()--设置,显示内容 Blizzard_Calendar.lua CalendarDay
         if title:find(PVP) then
             msg= msg..'|A:pvptalents-warmode-swords:0:0|a'--pvp
         elseif event.calendarType=='HOLIDAY' and event.eventID then
-            if event.eventID==1063 or event.eventID==617 or event.eventID==623 or event.eventID==629 or event.eventID==654 or event.eventID==1068 or event.eventID==1277 or event.eventID==1269 then--时光
+            if event.eventID==1063
+                or event.eventID==616
+                or event.eventID==617
+                or event.eventID==623
+                or event.eventID==629
+                or event.eventID==654
+                or event.eventID==1068
+                or event.eventID==1277
+                or event.eventID==1269 then--时光
+
                 local tab={40168, 40173, 40786, 45563, 55499, 40168, 40173, 40787, 45563, 55498, 64710,64709}
                 msg= msg..set_Quest_Completed(tab)--任务是否完成
                 find_Quest=true
@@ -232,7 +239,7 @@ local function set_Text()--设置,显示内容 Blizzard_Calendar.lua CalendarDay
         end
 
         if msg~='' then
-            Text2= Text2~='' and Text2..'\n' or Text2
+            Text2= Text2~='' and Text2..'|n' or Text2
             Text2= Text2..msg..' '
         end
 	end
@@ -244,7 +251,8 @@ local function set_Text()--设置,显示内容 Blizzard_Calendar.lua CalendarDay
     end
     panel.Text:SetText(Text2)
 
-    C_Timer.After(1, function()
+    panel:SetButtonState('PUSHED')
+    C_Timer.After(2, function()
         panel:SetButtonState('NORMAL')
     end)
 end
@@ -281,6 +289,10 @@ local function Text_Settings()--设置Text
         end
     end
     C_Timer.After(2, set_Text)
+end
+
+local function set_Point()--设置, 位置
+    panel:SetPoint('TOPRIGHT', Minimap, 'BOTTOMLEFT', -20,0)
 end
 
 --#####
@@ -346,7 +358,7 @@ local function InitMenu(self, level, type)--主菜单
             func=function()
                 Save.point=nil
                 panel:ClearAllPoints()
-                panel:SetPoint('TOP', Minimap, 'BOTTOM',-20,0)
+                set_Point()
             end,
             tooltipOnButton=true,
             tooltipTitle=e.Icon.right..' '..NPE_MOVE,
@@ -413,7 +425,7 @@ local function Init()
     if Save.point then
         panel:SetPoint(Save.point[1], UIParent, Save.point[3], Save.point[4], Save.point[5])
     else
-        panel:SetPoint('TOP', Minimap, 'BOTTOM',-20,0)
+        set_Point()
     end
 
     panel:RegisterForDrag("RightButton")
@@ -469,7 +481,7 @@ local function Init()
         end
     end)
 
-    
+
 
     set_event()
     Text_Settings()--设置Text
@@ -481,7 +493,7 @@ local function Init()
         if info and info.eventID then
             text= (info.iconTexture and '|T'..info.iconTexture..':0|t'..info.iconTexture or '')
                 ..'  eventID '..info.eventID
-                ..(info.title and '\n'..info.title or '')
+                ..(info.title and '|n'..info.title or '')
         end
         if text and not CalendarViewHolidayFrame.Text then
             CalendarViewHolidayFrame.Text= e.Cstr(CalendarViewHolidayFrame)
@@ -509,7 +521,7 @@ local function Init()
             for index, button in pairs(CalendarCreateEventInviteList.ScrollBox:GetFrames()) do--ScrollBox.lua
                 local inviteInfo = C_Calendar.EventGetInvite(index)
                 if inviteInfo and inviteInfo.guid then
-                   button.Class:SetText(e.GetPlayerInfo({unit=nil, guid=inviteInfo.guid, name=inviteInfo.name,  reName=false, reRealm=false, reLink=false}))
+                   button.Class:SetText(e.GetPlayerInfo({guid=inviteInfo.guid, name=inviteInfo.name}))
                 end
             end
         end
@@ -525,7 +537,7 @@ local function Init()
         self.menu:SetPoint('BOTTOMLEFT', CalendarCreateEventFrame, 'BOTTOMRIGHT', -22,74)
         e.LibDD:UIDropDownMenu_SetWidth(self.menu, 60)
         e.LibDD:UIDropDownMenu_SetText(self.menu, e.onlyChinese and '战网' or COMMUNITY_COMMAND_BATTLENET)
-        e.LibDD:UIDropDownMenu_Initialize(self.menu, function(self, level, type)
+        e.LibDD:UIDropDownMenu_Initialize(self.menu, function(_, level)
             local map=e.GetUnitMapName('player');--玩家区域名称
             local inviteTab={}
             for index = 1, C_Calendar.GetNumInvites() do
@@ -538,9 +550,9 @@ local function Init()
             for i=1 ,BNGetNumFriends() do
                 local wow=C_BattleNet.GetFriendAccountInfo(i);
                 local wowInfo= wow and wow.gameAccountInfo
-                if wowInfo and wowInfo.playerGuid and wowInfo.characterName and not inviteTab[wowInfo.characterName] then
+                if wowInfo and wowInfo.playerGuid and wowInfo.characterName and not inviteTab[wowInfo.characterName] and wowInfo.wowProjectID==1 then
 
-                    local text= e.GetPlayerInfo({unit=nil, guid=wowInfo.playerGuid, name=wowInfo.characterName,  reName=true, reRealm=true, reLink=false})--角色信息
+                    local text= e.GetPlayerInfo({guid=wowInfo.playerGuid, faction=wowInfo.factionName, name=wowInfo.characterName, reName=true, reRealm=true})--角色信息
                     if wowInfo.areaName then --位置
                         if wowInfo.areaName==map then
                             text=text..e.Icon.map2
@@ -581,7 +593,7 @@ local function Init()
         menu2:SetPoint('TOPRIGHT', self.menu, 'BOTTOMRIGHT')
         e.LibDD:UIDropDownMenu_SetWidth(menu2, 60)
         e.LibDD:UIDropDownMenu_SetText(menu2, e.onlyChinese and '好友' or FRIEND)
-        e.LibDD:UIDropDownMenu_Initialize(menu2, function(self, level, type)
+        e.LibDD:UIDropDownMenu_Initialize(menu2, function(_, level)
             local map=e.GetUnitMapName('player');--玩家区域名称
             local inviteTab={}
             for index = 1, C_Calendar.GetNumInvites() do
@@ -594,7 +606,7 @@ local function Init()
             for i=1 , C_FriendList.GetNumFriends() do
                 local game=C_FriendList.GetFriendInfoByIndex(i)
                 if game and game.name and not inviteTab[game.name] then--and not game.afk and not game.dnd then
-                    local text=e.GetPlayerInfo({unit=nil, guid=game.guid, name=game.name,  reName=true, reRealm=true, reLink=false})--角色信息
+                    local text=e.GetPlayerInfo({guid=game.guid, name=game.name,  reName=true, reRealm=true})--角色信息
                     text= (game.level and game.level~=MAX_PLAYER_LEVEL and game.level>0) and text .. ' |cff00ff00'..game.level..'|r' or text--等级
                     if game.area and game.connected then
                         if game.area == map then--地区
@@ -634,7 +646,7 @@ local function Init()
         e.LibDD:UIDropDownMenu_SetWidth(last, 60)
         e.LibDD:UIDropDownMenu_SetText(last, e.onlyChinese and '公会' or GUILD)
         e.LibDD:UIDropDownMenu_Initialize(last, function(self2, level, type)
-            local map=e.GetUnitMapName('player');--玩家区域名称
+            local map=e.GetUnitMapName('player')
             local inviteTab={}
             for index = 1, C_Calendar.GetNumInvites() do
                 local inviteInfo = C_Calendar.EventGetInvite(index);
@@ -646,7 +658,7 @@ local function Init()
             for index=1,  GetNumGuildMembers() do
                 local name, rankName, rankIndex, lv, _, zone, publicNote, officerNote, isOnline, status, _, _, _, _, _, _, guid = GetGuildRosterInfo(index)
                 if name and guid and not inviteTab[name] and isOnline and name~=e.Player.name_realm then
-                    local text=e.GetPlayerInfo({unit=nil, guid=guid, name=name,  reName=true, reRealm=true, reLink=false})--名称
+                    local text=e.GetPlayerInfo({guid=guid, name=name,  reName=true, reRealm=true})--名称
                     text=(lv and lv~=MAX_PLAYER_LEVEL and lv>0) and text..' |cnGREEN_FONT_COLOR:'..lv..'|r' or text--等级
                     if zone then--地区
                         text= zone==map and text..e.Icon.map2 or text..' '..zone
@@ -703,7 +715,11 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                     LoadAddOn("Blizzard_Calendar")
                     Calendar_Toggle()
                     C_Calendar.OpenCalendar()
-                    Calendar_Toggle()
+                    C_Timer.After(2, function()
+                        if CalendarFrame and CalendarFrame:IsShown() then
+                            Calendar_Toggle()
+                        end
+                    end)
                 else
                     Init()--初始
                     panel:UnregisterEvent('ADDON_LOADED')

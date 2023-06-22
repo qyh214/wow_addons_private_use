@@ -2,7 +2,7 @@
 -- AddOn namespace.
 -----------------------------------------------------------------------
 local LibStub = _G.LibStub
-local RareScanner = LibStub("AceAddon-3.0"):NewAddon("RareScanner")
+local RareScanner = LibStub("AceAddon-3.0"):NewAddon("RareScanner", "AceConsole-3.0")
 
 local ADDON_NAME, private = ...
 
@@ -31,16 +31,16 @@ local RSQuestTracker = private.ImportLib("RareScannerQuestTracker")
 local RSRoutines = private.ImportLib("RareScannerRoutines")
 
 -- RareScanner services
+local RSButtonHandler = private.ImportLib("RareScannerButtonHandler")
 local RSRespawnTracker = private.ImportLib("RareScannerRespawnTracker")
-local RSNotificationTracker = private.ImportLib("RareScannerNotificationTracker")
-local RSRecentlySeenTracker = private.ImportLib("RareScannerRecentlySeenTracker")
 local RSMap = private.ImportLib("RareScannerMap")
 local RSMinimap = private.ImportLib("RareScannerMinimap")
-local RSWaypoints = private.ImportLib("RareScannerWaypoints")
 local RSLoot = private.ImportLib("RareScannerLoot")
 local RSAudioAlerts = private.ImportLib("RareScannerAudioAlerts")
 local RSEventHandler = private.ImportLib("RareScannerEventHandler")
 local RSEntityStateHandler = private.ImportLib("RareScannerEntityStateHandler")
+local RSCommandLine = private.ImportLib("RareScannerCommandLine")
+local RSTargetUnitTracker = private.ImportLib("RareScannerTargetUnitTracker")
 
 -- RareScanner other addons integration services
 local RSTomtom = private.ImportLib("RareScannerTomtom")
@@ -256,11 +256,23 @@ scanner_button.LootBar.itemFramesPool.InitItemList = function(self, atlasName, e
 	-- Extract entity loot
 	local updateCacheItemRoutine = RSRoutines.LoopRoutineNew()
 	if (RSConstants.IsNpcAtlas(atlasName) and RSNpcDB.GetNpcLoot(entityID)) then
-		updateCacheItemRoutine:Init(RSNpcDB.GetNpcLoot, 3, nil, nil, entityID)
-		parent.totalItems = RSUtils.GetTableLength(RSNpcDB.GetNpcLoot(entityID))
+		if (RSConfigDB.IsFilteringByExplorerResults()) then
+			local items = RSCollectionsDB.GetEntityCollectionsLoot(entityID, RSConstants.ITEM_SOURCE.NPC)
+			updateCacheItemRoutine:Init(function() return items end, 3, nil, nil, entityID)
+			parent.totalItems = RSUtils.GetTableLength(items)
+		else
+			updateCacheItemRoutine:Init(RSNpcDB.GetNpcLoot, 3, nil, nil, entityID)
+			parent.totalItems = RSUtils.GetTableLength(RSNpcDB.GetNpcLoot(entityID))
+		end
 	elseif (RSConstants.IsContainerAtlas(atlasName) and RSContainerDB.GetContainerLoot(entityID)) then
-		updateCacheItemRoutine:Init(RSContainerDB.GetContainerLoot, 3, nil, nil, entityID)
-		parent.totalItems = RSUtils.GetTableLength(RSContainerDB.GetContainerLoot(entityID))
+		if (RSConfigDB.IsFilteringByExplorerResults()) then
+			local items = RSCollectionsDB.GetEntityCollectionsLoot(entityID, RSConstants.ITEM_SOURCE.CONTAINER)
+			updateCacheItemRoutine:Init(function() return items end, 3, nil, nil, entityID)
+			parent.totalItems = RSUtils.GetTableLength(items)
+		else
+			updateCacheItemRoutine:Init(RSContainerDB.GetContainerLoot, 3, nil, nil, entityID)
+			parent.totalItems = RSUtils.GetTableLength(RSContainerDB.GetContainerLoot(entityID))
+		end
 	else
 		return
 	end
@@ -371,431 +383,7 @@ end
 
 -- Checks if the rare has been found already in the last 5 minutes
 function scanner_button:DetectedNewVignette(self, vignetteInfo, isNavigating)
-	local _, _, _, _, _, id, _ = strsplit("-", vignetteInfo.objectGUID);
-	local entityID = tonumber(id)
-	local originalEntityID = tonumber(id)
-	
-	if (not entityID) then
-		return
-	end
-	
-	--RSLogger:PrintDebugMessage(string.format("Vignette ATLAS [%s]", vignetteInfo.atlasName))
-		
-	local mapID = RSGeneralDB.GetBestMapForUnit(entityID, vignetteInfo.atlasName)
-	
-	-- Overrides name if Torghast vignette
-	if (vignetteInfo.type and vignetteInfo.type == Enum.VignetteType.Torghast) then
-		local npcName = RSNpcDB.GetNpcName(entityID)
-		if (npcName) then
-			vignetteInfo.name = npcName
-		end
-	end
-	
-	-- Check if it is an event to summon another NPC. In that case display NPC information instead
-	if (RSConstants.NPCS_WITH_PRE_EVENT[entityID]) then
-		local rareNpcID = RSConstants.NPCS_WITH_PRE_EVENT[entityID]
-		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
-		vignetteInfo.name = RSNpcDB.GetNpcName(rareNpcID)
-		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
-		entityID = rareNpcID
-		vignetteInfo.preEvent = true
-	elseif ((entityID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT or entityID == RSConstants.ZARALEK_CAVERN_LOAM_SCOUT) and RSNpcDB.GetNpcId(vignetteInfo.name, mapID)) then
-		local rareNpcID = RSNpcDB.GetNpcId(vignetteInfo.name, mapID)
-		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
-		vignetteInfo.name = RSNpcDB.GetNpcName(rareNpcID)
-		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
-		entityID = rareNpcID
-		vignetteInfo.preEvent = true
-	end
-	
-	-- Check if it is an event so summon another CONTAINER. In that case display CONTAINER information instead
-	if (RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]) then
-		local containerID = RSConstants.CONTAINERS_WITH_PRE_EVENT[entityID]
-		RSGeneralDB.RemoveAlreadyFoundEntity(entityID)
-		if (not vignetteInfo.name) then
-			vignetteInfo.name = RSContainerDB.GetContainerName(entityID)
-		end
-		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
-		entityID = containerID
-		vignetteInfo.preEvent = true
-	end
-	
-	-- Check if container with NPC vignette
-	if (RSConstants.CONTAINER_WITH_NPC_VIGNETTE[entityID]) then
-		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
-	end
-
-	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
-	if (RSUtils.Contains(RSConstants.IGNORED_VIGNETTES, entityID)) then
-		return
-	end
-
-	-- Check if we have already found this vignette in a short period of time
-	if (RSNotificationTracker.IsAlreadyNotificated(vignetteInfo.id, isNavigating, entityID)) then
-		--RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora porque se ha avisado de esta hace menos de %s minutos", entityID, RSConfigDB.GetRescanTimer()))
-		return
-	end
-	
-	-- In Dragonflight there are icons in the continent map, ignore them
-	if (mapID and mapID == RSConstants.DRAGON_ISLES) then
-		return
-	end
-	
-	-- In Uldum and Valley of eternal Blossoms the icon for elite NPC is used for events
-	if (mapID and vignetteInfo.atlasName == RSConstants.NPC_VIGNETTE_ELITE and (mapID == RSConstants.VALLEY_OF_ETERNAL_BLOSSOMS_MAPID or mapID == RSConstants.ULDUM_MAPID)) then
-		vignetteInfo.atlasName = RSConstants.EVENT_VIGNETTE
-	end
-
-	-- In Tanaan jungle the icon for elite EVENTs is used for the rare NPCs Deathtalon, Doomroller, Terrorfist, and Vengeance
-	if (vignetteInfo.atlasName == RSConstants.EVENT_ELITE_VIGNETTE and (entityID == RSConstants.DOOMROLLER_ID or entityID == RSConstants.DEATHTALON or entityID == RSConstants.TERRORFIST or entityID == RSConstants.VENGEANCE)) then
-		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
-	end
-
-	-- These NPCs are tagged with events
-	if (RSUtils.Contains(RSConstants.NPCS_WITH_EVENT_VIGNETTE, entityID)) then
-		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
-	end
-
-	-- These NPCs are tagged with containers
-	if (RSUtils.Contains(RSConstants.NPCS_WITH_CONTAINER_VIGNETTE, entityID)) then
-		vignetteInfo.atlasName = RSConstants.NPC_VIGNETTE
-	end
-
-	-- These containers are tagged with rare NPCs
-	if (entityID == RSConstants.CATACOMBS_CACHE or RSUtils.Contains(RSConstants.CONTAINERS_WITH_NPC_VIGNETTE, entityID)) then
-		vignetteInfo.atlasName = RSConstants.CONTAINER_VIGNETTE
-	end
-
-	local vignettePosition = {}
-	if (not isNavigating) then
-		-- Ignore if hidden quest is completed
-		if (RSConfigDB.IsIgnoringCompletedEntities()) then
-			if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
-				if (RSNpcDB.GetInternalNpcInfo(entityID) and RSNpcDB.GetInternalNpcInfo(entityID).questID) then
-					for _, questID in ipairs(RSNpcDB.GetInternalNpcInfo(entityID).questID) do
-						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
-							RSLogger:PrintDebugMessage(string.format("Detectado NPC [%s] con misión oculta completa, se ignora.", entityID))
-							return
-						end
-					end
-				end
-			elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName)) then
-				if (RSContainerDB.GetInternalContainerInfo(entityID) and RSContainerDB.GetInternalContainerInfo(entityID).questID) then
-					for _, questID in ipairs(RSContainerDB.GetInternalContainerInfo(entityID).questID) do
-						if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
-							RSLogger:PrintDebugMessage(string.format("Detectado Contenedor [%s] con misión oculta completa, se ignora.", entityID))
-							return
-						end
-					end
-				end
-			end
-		end
-		
-		-- If the vignette is simulated
-		if (vignetteInfo.x and vignetteInfo.y) then
-			local coordinates = {}
-			vignettePosition.x = vignetteInfo.x
-			vignettePosition.y = vignetteInfo.y
-			RareScanner:UpdateRareFound(entityID, vignetteInfo, vignettePosition)
-		else
-			vignettePosition = RareScanner:UpdateRareFound(entityID, vignetteInfo)
-			if (not vignettePosition) then
-				return
-			end
-		end
-
-		-- If we have it as dead but we got a notification it means that the restart time is wrong (this is normal when playing while a world quest reset)
-		if (RSNpcDB.IsNpcKilled(entityID)) then
-			RSLogger:PrintDebugMessage(string.format("El NPC [%s] estaba marcado como muerto, pero lo acabamos de detectar vivo, resucitado!", entityID))
-			RSNpcDB.DeleteNpcKilled(entityID)
-		end
-	else
-		vignettePosition.x = vignetteInfo.x
-		vignettePosition.y = vignetteInfo.y
-	end
-
-	local isInstance, instanceType = IsInInstance()
-
-	-- disable ALL alerts while cinematic is playing
-	if (RSEventHandler.IsCinematicPlaying()) then
-		return
-	-- disable ALL alerts in instances
-	elseif (isInstance == true and not RSConfigDB.IsScanningInInstances()) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar en una instancia", entityID))
-		return
-	-- disable alerts while flying
-	elseif (UnitOnTaxi("player") and not RSConfigDB.IsScanningWhileOnTaxi()) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar montado en un transporte", entityID))
-		return
-	-- disable alerts while racing
-	elseif (not RSConfigDB.IsScanningWhileOnRacingQuest() and C_UnitAuras.GetPlayerAuraBySpellID(RSConstants.RACING_SPELL_ID)) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar haciendo una mision de vuelo", entityID))
-		return
-	-- disable alerts while in pet combat
-	elseif (C_PetBattles.IsInBattle() and not RSConfigDB.IsScanningWhileOnPetBattle()) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar en medio de un combate de mascotas", entityID))
-		return
-	-- disable scanning for every entity that is not treasure, event or rare
-	elseif (not RSConstants.IsScanneableAtlas(vignetteInfo.atlasName)) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por tener el atlas [%s] que no es escaneable", entityID, vignetteInfo.atlasName))
-		return
-	-- disable ALL alerts for containers
-	elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName) and not RSConfigDB.IsScanningForContainers()) then
-		RSLogger:PrintDebugMessage(string.format("El contenedor [%s] se ignora por haber deshabilitado alertas de contenedores", entityID))
-		return
-	-- disable alerts for filtered containers. Check if the container is filtered, in which case we don't show anything
-	elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName) and RSConfigDB.IsContainerFiltered(entityID)) then
-		RSLogger:PrintDebugMessage(string.format("El contenedor [%s] se ignora por estar filtrado (completo)", entityID))
-		return
-	-- disable alerts for rare NPCs
-	elseif (RSConstants.IsNpcAtlas(vignetteInfo.atlasName) and not RSConfigDB.IsScanningForNpcs()) then
-		RSLogger:PrintDebugMessage(string.format("El NPC [%s] se ignora por haber deshabilitado alertas de NPCs", entityID))
-		return
-	-- disable alerts for filtered rare NPCs (completely)
-	elseif (RSConstants.IsNpcAtlas(vignetteInfo.atlasName) and RSConfigDB.IsNpcFiltered(entityID)) then
-		RSLogger:PrintDebugMessage(string.format("El NPC [%s] se ignora por estar filtrado (completo)", entityID))
-		return
-	-- disable alerts for filtered rare NPCs (alerts)
-	elseif (RSConstants.IsNpcAtlas(vignetteInfo.atlasName) and RSConfigDB.IsNpcFilteredOnlyAlerts(entityID)) then
-		RSLogger:PrintDebugMessage(string.format("El NPC [%s] se ignora por estar filtrado (alertas)", entityID))
-		RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, false)
-		RSMinimap.RefreshAllData(true)
-		return
-	-- disable alerts for events
-	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName) and not RSConfigDB.IsScanningForEvents()) then
-		RSLogger:PrintDebugMessage(string.format("El evento [%s] se ignora por haber deshabilitado alertas de eventos", entityID))
-		return
-	-- disable alerts for filtered events (completely)
-	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName) and RSConfigDB.IsEventFiltered(entityID)) then
-		RSLogger:PrintDebugMessage(string.format("El evento [%s] se ignora por estar filtrado (completo)", entityID))
-		return
-	-- disable alerts for filtered events (alerts)
-	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName) and RSConfigDB.IsEventFilteredOnlyAlerts(entityID)) then
-		RSLogger:PrintDebugMessage(string.format("El evento [%s] se ignora por estar filtrado (alertas)", entityID))
-		RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, false)
-		RSMinimap.RefreshAllData(true)
-		return
-	-- disable alerts for filtered zones
-	elseif (not RSConfigDB.IsZoneFilteredOnlyOnWorldMap() and (RSConfigDB.IsZoneFiltered(mapID) or RSConfigDB.IsEntityZoneFiltered(entityID, vignetteInfo.atlasName))) then
-		RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por pertenecer a una zona filtrada", entityID))
-		return
-	-- extra checkings for containers
-	elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName)) then
-		-- there is one container without name in Shadowlands
-		if (not vignetteInfo.name or string.gsub(vignetteInfo.name, "", "") == "") then
-			vignetteInfo.name = AL["CONTAINER"]
-		end
-		
-		-- save containers to show it on the world map
-		RSContainerDB.SetContainerName(entityID, vignetteInfo.name)
-
-		-- some containers belong to places where rares die forever
-		-- and anyway, this containers can respawn every day
-		-- so if this is the case, mark it as an exception
-		if (RSContainerDB.IsContainerOpened(entityID)) then
-			RSContainerDB.SetContainerReseteable(entityID)
-			RSContainerDB.DeleteContainerOpened(entityID)
-			RSLogger:PrintDebugMessage(string.format("Contenedor [%s]. Detectado como reseteable (cuando no lo estaba)", entityID))
-		end
-		
-		-- disable visual/sound alerts for filtered containers
-		if (RSConfigDB.IsContainerFilteredOnlyAlerts(entityID)) then
-			RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, false)
-			RSMinimap.RefreshAllData(true)
-			return
-		end
-
-		-- disable garrison container alert
-		if (not RSConfigDB.IsShowingGarrisonCache()) then
-			-- check if the container is the garrison cache
-			if (RSUtils.Contains(RSConstants.GARRISON_CACHE_IDS, entityID)) then
-				RSLogger:PrintDebugMessage("Contenedor de la ciudadela filtrado")
-				return
-			end
-		end
-
-		-- disable button alert for containers
-		if (not RSConfigDB.IsButtonDisplayingForContainers()) then
-			RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, false)
-			RSTomtom.AddTomtomAutomaticWaypoint(mapID, vignettePosition.x, vignettePosition.y, vignetteInfo.name)
-			RSWaypoints.AddAutomaticWaypoint(mapID, vignettePosition.x, vignettePosition.y)
-
-			if (RSNotificationTracker.IsAlreadyNotificated(vignetteInfo.id, false, entityID)) then
-				RSLogger:PrintDebugMessage(string.format("El contenedor [%s] se ignora porque se ha avisado de esta hace menos de 2 minutos", entityID))
-				return
-			else
-				RSNotificationTracker.AddNotification(vignetteInfo.id, false, entityID)
-				FlashClientIcon()
-				RSAudioAlerts.PlaySoundAlert(vignetteInfo.atlasName)
-				self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
-				return
-			end
-		end
-	-- extra checkings for events
-	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName)) then
-		-- check just in case its an NPC
-		if (not RSNpcDB.GetNpcName(entityID)) then
-			RSEventDB.SetEventName(entityID, vignetteInfo.name)
-		end
-	end
-
-	-- Sets the current vignette as new found
-	RSNotificationTracker.AddNotification(vignetteInfo.id, isNavigating, entityID)
-
-	--------------------------------
-	-- show messages and play alarm
-	--------------------------------
-	if (not isNavigating) then
-		FlashClientIcon()
-		self:DisplayMessages(vignetteInfo.preEvent and string.format(AL["PRE_EVENT"], vignetteInfo.name) or vignetteInfo.name)
-		RSAudioAlerts.PlaySoundAlert(vignetteInfo.atlasName)
-	end
-
-	------------------------
-	-- set up new button
-	------------------------
-	if (RSConfigDB.IsButtonDisplaying()) then
-		-- Adds the new NPCID to the navigation list
-		if (RSConfigDB.IsDisplayingNavigationArrows() and not isNavigating) then
-			self.NextButton:AddNext(mapID, vignettePosition.x, vignettePosition.y, vignetteInfo.name, vignetteInfo.atlasName, vignetteInfo.objectGUID)
-		end
-
-		-- Show the button
-		if (not self:IsShown() or isNavigating or not RSConfigDB.IsDisplayingNavigationArrows() or not RSConfigDB.IsNavigationLockEnabled()) then
-			self.npcID = entityID
-			-- Sometimes the vignette name doesn't match the servers name
-			-- Let's try to use always the servers
-			if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
-				local npcName = RSNpcDB.GetNpcName(entityID)
-				self.name = npcName and npcName or vignetteInfo.name
-			else
-				self.name = vignetteInfo.name
-			end
-			self.mapID = mapID
-			self.preEvent = vignetteInfo.preEvent
-			self.atlasName = vignetteInfo.atlasName
-
-			local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
-			self.displayID = npcInfo and npcInfo.displayID or nil
-			self.x = vignettePosition.x
-			self.y = vignettePosition.y
-
-			-- Show button / miniature / loot bar if not in combat
-			if (not InCombatLockdown()) then
-				-- Wow API doesnt allow to call Show() (protected function) if you are under attack, so
-				-- we check if this is the situation to avoid it and show the frames
-				-- once the battle is over (pendingToShow)
-				self:ShowButton()
-			else
-				-- Mark to show after combat
-				self.pendingToShow = true
-			end
-		elseif (RSConfigDB.IsDisplayingNavigationArrows() and RSConfigDB.IsNavigationLockEnabled()) then
-			-- reset the time to auto hide (so it takes into account the new entity found)
-			self:StartHideTimer()
-
-			-- Refresh the navigation arrows
-			if (self.NextButton:EnableNextButton()) then
-				self.NextButton:Show()
-			else
-				self.NextButton:Hide()
-			end
-
-			if (self.PreviousButton:EnablePreviousButton()) then
-				self.PreviousButton:Show()
-			else
-				self.PreviousButton:Hide()
-			end
-		end
-	end
-
-	-- If navigation disabled, control Tomtom waypoint externally
-	if (not RSConfigDB.IsButtonDisplaying() or not RSConfigDB.IsDisplayingNavigationArrows()) then
-		RSTomtom.AddTomtomAutomaticWaypoint(mapID, vignettePosition.x, vignettePosition.y, vignetteInfo.name)
-		RSWaypoints.AddAutomaticWaypoint(mapID, vignettePosition.x, vignettePosition.y)
-	end
-
-	-- Add recently seen
-	RSRecentlySeenTracker.AddRecentlySeen(entityID, vignetteInfo.atlasName, isNavigating)
-
-	-- Refresh minimap
-	RSMinimap.RefreshAllData(true)
-end
-
-function RareScanner:UpdateRareFound(entityID, vignetteInfo, coordinates)
-	-- Calculates all the parameters
-	local atlasName
-
-	-- If its a NPC
-	local mapID = nil
-	if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
-		atlasName = RSConstants.NPC_VIGNETTE
-
-		-- MapID always try to get it first from the internal database
-		-- GetBestMapForUnit not always returns the expected value!
-		local npcInfo = RSNpcDB.GetInternalNpcInfo(entityID)
-		if (RSNpcDB.IsInternalNpcMonoZone(entityID) and npcInfo.zoneID ~= 0) then
-			mapID = npcInfo.zoneID
-		else
-			mapID = C_Map.GetBestMapForUnit("player")
-		end
-		-- If its a container
-	elseif (RSConstants.IsContainerAtlas(vignetteInfo.atlasName)) then
-		atlasName = RSConstants.CONTAINER_VIGNETTE
-
-		-- MapID always try to get it first from the internal database
-		-- GetBestMapForUnit not always returns the expected value!
-		local containerInfo = RSContainerDB.GetInternalContainerInfo(entityID)
-		if (RSContainerDB.IsInternalContainerMonoZone(entityID) and containerInfo.zoneID ~= 0) then
-			mapID = containerInfo.zoneID
-		else
-			mapID = C_Map.GetBestMapForUnit("player")
-		end
-		-- If its an event
-	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName)) then
-		atlasName = RSConstants.EVENT_VIGNETTE
-
-		-- MapID always try to get it first from the internal database
-		-- GetBestMapForUnit not always returns the expected value!
-		local eventInfo = RSEventDB.GetInternalEventInfo(entityID)
-		if (eventInfo and eventInfo.zoneID ~= 0) then
-			mapID = eventInfo.zoneID
-		else
-			mapID = C_Map.GetBestMapForUnit("player")
-		end
-	else
-		return
-	end
-
-	if (not mapID or mapID == 0) then
-		RSLogger:PrintDebugMessage(string.format("UpdateRareFound[%s]: Error! No se ha podido calcular el mapID para la entidad recien encontrada!", entityID))
-		return
-	end
-
-	-- Extract the coordinates from the parameter if we are simulating a vignette, or from a real vignette info
-	local vignettePosition = nil
-	if (coordinates and coordinates.x and coordinates.y) then
-		vignettePosition = coordinates
-	else
-		vignettePosition = C_VignetteInfo.GetVignettePosition(vignetteInfo.vignetteGUID, mapID)
-	end
-
-	if (not vignettePosition) then
-		RSLogger:PrintDebugMessage(string.format("UpdateRareFound[%s]: Error! No se han podido calcular las coordenadas para la entidad recien encontrada en el mapa [%s]!", entityID, mapID and mapID or ""))
-		return
-	end
-
-	local artID = C_Map.GetMapArtID(mapID)
-
-	-- Updates if it was found before
-	if (RSGeneralDB.GetAlreadyFoundEntity(entityID)) then
-		RSGeneralDB.UpdateAlreadyFoundEntity(entityID, mapID, vignettePosition.x, vignettePosition.y, artID, atlasName)
-		-- Adds if its the first time found
-	else
-		RSGeneralDB.AddAlreadyFoundEntity(entityID, mapID, vignettePosition.x, vignettePosition.y, artID, atlasName)
-	end
-	
-	return vignettePosition
+	RSButtonHandler.AddAlert(self, vignetteInfo, isNavigating)
 end
 
 function scanner_button:DisplayMessages(name)
@@ -873,10 +461,10 @@ function scanner_button:ShowButton()
 			macrotext = string.format("%s\n/tm %s", macrotext, RSConfigDB.GetMarkerOnTarget())
 		end
 
-		macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s",macrotext, RSConstants.CMD_TOMTOM_WAYPOINT, mapID, self.x, self.y, self.name)
+		macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s", macrotext, RSConstants.CMD_TOMTOM_WAYPOINT, mapID, self.x, self.y, self.name)
 		
 		if (RSConfigDB.IsShowingAnimationForNpcs() and RSConfigDB.GetAnimationForNpcs() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) then
-			macrotext = string.format("%s\n/rarescanner %s;%s",macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, mapID, self.x, self.y)
+			macrotext = string.format("%s\n/rarescanner %s;%s", macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, mapID, self.x, self.y)
 		end
 		self:SetAttribute("macrotext", macrotext)
 
@@ -892,9 +480,12 @@ function scanner_button:ShowButton()
 		
 		local macrotext = string.format("\n/rarescanner %s;%s;%s;%s;%s", RSConstants.CMD_TOMTOM_WAYPOINT, mapID, self.x, self.y, self.name)
 		
-		if ((RSConstants.IsContainerAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForContainers() and RSConfigDB.GetAnimationForContainers() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) or
-				(RSConstants.IsEventAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForEvents() and RSConfigDB.GetAnimationForEvents() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND)) then
-			macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s",macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, mapID, self.x, self.y)
+		-- Set animation on containers
+		if (RSConstants.IsContainerAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForContainers() and RSConfigDB.GetAnimationForContainers() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) then
+			macrotext = string.format("%s\n/rarescanner %s;%s;%s;%s;%s", macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID, mapID, self.x, self.y)
+		-- Set animation on events
+		elseif (RSConstants.IsEventAtlas(self.atlasName) and RSConfigDB.IsShowingAnimationForEvents() and RSConfigDB.GetAnimationForEvents() ~= RSConstants.MAP_ANIMATIONS_ON_FOUND) then
+			macrotext = string.format("%s\n/rarescanner %s;%s", macrotext, RSConstants.CMD_RECENTLY_SEEN, self.npcID)
 		end
 		
 		self:SetAttribute("macrotext", macrotext)
@@ -920,6 +511,7 @@ function scanner_button:ShowButton()
 	self:StartHideTimer()
 end
 
+local AUTOHIDING_TIMER
 function scanner_button:StartHideTimer()
 	if (RSConfigDB.GetAutoHideButtonTime() > 0) then
 		if (AUTOHIDING_TIMER) then
@@ -1005,6 +597,9 @@ function RareScanner:OnInitialize()
 	C_Timer.NewTicker(2, function()
 		RSMinimap.RefreshAllData()
 	end)
+	
+	-- Initialize command line
+	RSCommandLine.Initialize(self)
 
 	RSLogger:PrintDebugMessage("Cargado")
 end
@@ -1086,7 +681,7 @@ local function RefreshDatabaseData(previousDbVersion)
 			if (npcInfo.questID) then
 				for _, questID in ipairs(npcInfo.questID) do
 					if (C_QuestLog.IsQuestFlaggedCompleted(questID) and not RSNpcDB.IsNpcKilled(npcID)) then
-						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El NPC[%s] no esta marcado como muerto, pero su mision (BD capturada) esta completada", npcID))
+						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El NPC[%s] no esta marcado como muerto, pero su mision esta completada", npcID))
 						-- The NPC will be tagged as dead as usual, it won't be until the next world quest reset
 						-- when the RespawnTracker will decide if this NPC died forever
 						RSEntityStateHandler.SetDeadNpc(npcID, true)
@@ -1108,7 +703,7 @@ local function RefreshDatabaseData(previousDbVersion)
 			if (eventInfo.questID) then
 				for _, questID in ipairs(eventInfo.questID) do
 					if (C_QuestLog.IsQuestFlaggedCompleted(questID) and not RSEventDB.IsEventCompleted(eventID)) then
-						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El Evento[%s] no esta marcado como completado, pero su mision (BD capturada) esta completada", eventID))
+						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El Evento[%s] no esta marcado como completado, pero su mision esta completada", eventID))
 						-- The Event will be tagged as completed as usual, it won't be until the next world quest reset
 						-- when the RespawnTracker will decide if this event is completed forever
 						RSEntityStateHandler.SetEventCompleted(eventID, true)
@@ -1130,7 +725,7 @@ local function RefreshDatabaseData(previousDbVersion)
 			if (containerInfo.questID) then
 				for _, questID in ipairs(containerInfo.questID) do
 					if (C_QuestLog.IsQuestFlaggedCompleted(questID) and not RSContainerDB.IsContainerOpened(containerID)) then
-						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El Contenedor[%s] no esta marcado como cerrado, pero su mision (BD capturada) esta completada", containerID))
+						RSLogger:PrintDebugMessage(string.format("RefreshDatabaseData. El Contenedor[%s] no esta marcado como cerrado, pero su mision esta completada", containerID))
 						-- The Container will be tagged as opened as usual, it won't be until the next world quest reset
 						-- when the RespawnTracker will decide if this container is opened forever
 						RSEntityStateHandler.SetContainerOpen(containerID, true)
@@ -1144,7 +739,6 @@ local function RefreshDatabaseData(previousDbVersion)
 		end
 	)
 	table.insert(routines, setContainersOpenedByQuestIdRoutine)
-	
 	
 	-- Clean already killed/collected/completed entities that arent in the database
 	if (not RSGeneralDB.GetLastCleanDb()) then
@@ -1290,6 +884,33 @@ local function RefreshDatabaseData(previousDbVersion)
 		)
 		table.insert(routines, fixEventFilters)
 	end
+
+	-- Update older zone filters system to newer (10.1.0)
+	if (RSUtils.GetTableLength(private.db.general.filteredZones) > 0) then
+		-- Set default behaviour
+		if (private.db.zoneFilters.filterOnlyMap) then
+			RSConfigDB.SetDefaultZoneFilter(RSConstants.ENTITY_FILTER_WORLDMAP)
+		else
+			RSConfigDB.SetDefaultZoneFilter(RSConstants.ENTITY_FILTER_ALL)
+		end
+		
+		local fixZoneFilters = RSRoutines.LoopRoutineNew()
+		fixZoneFilters:Init(function() return private.db.general.filteredZones end, 100,
+			function(context, zoneID, value)
+				if (private.db.general.filtersFixed and value == true) then
+					RSConfigDB.SetZoneFiltered(zoneID)
+				elseif (not private.db.general.filtersFixed and value == false) then
+					RSConfigDB.SetZoneFiltered(zoneID)
+				end
+			end, 
+			function(context)			
+				private.db.zoneFilters.filterOnlyMap = nil
+				private.db.general.filteredZones = nil
+				RSLogger:PrintDebugMessage("Migrados filtros de Zonas")
+			end
+		)
+		table.insert(routines, fixZoneFilters)
+	end
 	
 	-- Launches a forced vignette scan
 	local firstScanRoutine = RSRoutines.LoopRoutineNew()
@@ -1318,6 +939,9 @@ local function RefreshDatabaseData(previousDbVersion)
 	chainRoutines:Run(function(context)
 		-- Initialize respawning tracker and scan the first time
 		RSRespawnTracker.Init()
+		
+		-- Initialize unit target tracker
+		RSTargetUnitTracker.Init(scanner_button)
 		
 		-- Set default filters
 		if (not previousDbVersion or previousDbVersion < RSConstants.DEFAULT_FILTERED_ENTITIES.version) then
@@ -1358,6 +982,15 @@ local function UpdateRareNamesDB(currentDbVersion)
 				end
 			end
 			
+			-- Sets already found Events as Events if they were found as NPCs
+			for _, eventID in ipairs (RSConstants.EVENTS_WITH_NPC_VIGNETTE) do
+				local eventInfo = RSGeneralDB.GetAlreadyFoundEntity(eventID)
+				if (eventInfo and eventInfo.atlasName ~= RSConstants.EVENT_VIGNETTE) then
+					eventInfo.atlasName = RSConstants.EVENT_VIGNETTE
+					RSLogger:PrintDebugMessage(string.format("Evento [%s]. Estaba marcado como un rare, Corregido!.", eventID))
+				end
+			end
+			
 			-- Remove already found entities that might be a pre event
 			for preEntityID, _ in pairs (RSConstants.NPCS_WITH_PRE_EVENT) do
 				RSGeneralDB.RemoveAlreadyFoundEntity(preEntityID)
@@ -1390,13 +1023,6 @@ function RareScanner:InitializeDataBase()
 	--============================================
 	-- Initialize default profiles
 	--============================================
-
-	-- Initialize zone filter list
-	for k, v in pairs(RSMapDB.GetContinents()) do
-		table.foreach(v.zones, function(index, zoneID)
-			RSConstants.PROFILE_DEFAULTS.profile.general.filteredZones[zoneID] = true
-		end)
-	end
 
 	-- Initialize loot filter list
 	for categoryID, subcategories in pairs(private.ITEM_CLASSES) do

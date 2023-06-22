@@ -1,4 +1,9 @@
 
+hooksecurefunc(GroupLootHistoryFrame.ScrollBox, 'SetScrollTargetOffset', function(self)
+    for _, btn in pairs(self:GetFrames()) do
+        set_LootFrame_btn(btn)
+    end
+end)
 for index, button in pairs(CalendarCreateEventInviteList.ScrollBox:GetFrames()) do--ScrollBox.lua
 	
 end
@@ -8,7 +13,7 @@ for i=1, numItems do
 	local frame = LootHistoryFrame.itemFrames[i]
 	
 end
-
+LFGListUtil_IsEntryEmpowered() 是否,队长,助理 (UnitIsGroupAssistant('player') or UnitIsGroupLeader('player'))
 BACKGROUND
 BORDER
 ARTWORK
@@ -20,13 +25,13 @@ RANGE_INDICATOR = "●"
 UIPanelWindows[]
 
 GetClassColoredTextForUnit(unit, text)
-FrameUtil.RegisterFrameForEvents(self, table);
-FrameUtil.UnregisterFrameForEvents(self, table);
+FrameUtil.RegisterFrameForEvents(self, table)
+FrameUtil.UnregisterFrameForEvents(self, table)
 SetPortraitTexture(textureObject, unitToken [, disableMasking])
 SetPortraitToTexture(textureObject, texturePath)
 Region:SetVertexColor(colorR, colorG, colorB [, a])
 ... = securecall(func or functionName, ...)
-frame:SetFrameLevel(self:GetFrameLevel() + 5);
+frame:SetFrameLevel(self:GetFrameLevel() + 5)
 UnitPopupSharedMenus.lua
 UnitHasVehiclePlayerFrameUI("player")
 
@@ -37,12 +42,18 @@ local item = Item:CreateFromItemLink(outputItemInfo.hyperlink)
 quality = item:GetItemQuality()
 
 if IsModifiedClick("CHATLINK") then
-    local spellLink = GetSpellLink(self:GetSpellID());
-    ChatEdit_InsertLink(spellLink);
+    local spellLink = GetSpellLink(self:GetSpellID())
+    ChatEdit_InsertLink(spellLink)
 end
 
-SetItemButtonTextureVertexColor(button, 1.0, 1.0, 1.0);
-SetItemButtonNormalTextureVertexColor(button, 1.0, 1.0, 1.0);
+if ChatEdit_GetActiveWindow() then
+    securecall(ChatEdit_InsertLink, link)
+else
+    securecall(ChatFrame_OpenChat, link)
+end
+
+SetItemButtonTextureVertexColor(button, 1.0, 1.0, 1.0)
+SetItemButtonNormalTextureVertexColor(button, 1.0, 1.0, 1.0)
 
 Day={0.10, 0.72, 1},--日常 |cff19b7ff  任务颜色
 Week={0.02, 1, 0.66},--周长 |cff05ffa8
@@ -64,27 +75,60 @@ LOCALE_itIT  11
 StaticPopupDialogs
 https://wowpedia.fandom.com/wiki/Creating_simple_pop-up_dialog_boxes
 
-local hasPetUI, isHunterPet = HasPetUI();
+local hasPetUI, isHunterPet = HasPetUI()
 Frame:DisableDrawLayer('BACKGROUND')
 
 fileID = GetFileIDFromPath(filePath)--检查,自定义,文件是否存在
 
 InterfaceOptionsFrame_OpenToCategory(id)
+
 CharacterFrameTab_OnClick (self, button)
 if ( name == "CharacterFrameTab1" ) then
-		ToggleCharacter("PaperDollFrame");
+		ToggleCharacter("PaperDollFrame")
 elseif ( name == "CharacterFrameTab2" ) then
-		ToggleCharacter("ReputationFrame");
+		ToggleCharacter("ReputationFrame")
 elseif ( name == "CharacterFrameTab3" ) then
-		CharacterFrame_ToggleTokenFrame();
+		CharacterFrame_ToggleTokenFrame()
 end
-ToggleCollectionsJournal(tabIndex) UIParent.lua
+
+ToggleCollectionsJournal(tabIndex) UIParent.lua--收藏
+ToggleToyCollection(autoPageToCollectedToyID)
+
+ToggleCharacter("PaperDollFrame")--角色
 
 ToggleEncounterJournal()
+EJ_ContentTab_Select(EncounterJournalDungeonTab:GetID())
+
+ToggleTalentFrame(self.suggestedTab)--天赋
+
+TogglToggleAchievementFrame()--成就
+ToggleQuestLog()--
+ToggleGuildFrame()
+ToggleCommunitiesFrame()
+
+TogglePVPUI()
+ToggleStoreUI()
+ToggleGarrisonMissionUI()
+ToggleCovenantMissionUI()
+ToggleOrderHallTalentUI()
+ToggleCovenantRenown()
+ToggleExpansionLandingPage()
+ToggleFramerate(true)
+ToggleOrderHallTalentUI()
+ToggleGameMenu()
+ToggleFrame(frame)
+OpenAchievementFrameToAchievement(achievementID)
+
+PVEFrame_ToggleFrame();
+PVEFrame_ToggleFrame("GroupFinderFrame", LFDParentFrame);
+PVEFrame_ToggleFrame("GroupFinderFrame", RaidFinderFrame);
+PVEFrame_ToggleFrame("GroupFinderFrame", nil);
+
 
 Interface\Cursor\UI-Cursor-Move   Redlist.xml
 
 securecall('',)
+wrapFunc(C_PetBattles.DeclineQueuedPVPMatch)
 
 securecallfunction(GameTooltip_AddQuest, self, questID)
 
@@ -97,3 +141,9 @@ end
 function IsWrath()
     return WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 end
+
+panel:SetButtonState('PUSHED')
+panel:SetButtonState('NORMAL')
+
+背包
+PaperDoll_IsEquippedSlot

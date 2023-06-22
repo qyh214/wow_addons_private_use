@@ -1,5 +1,11 @@
 ## Revision History:
 
+#### v5 (May 12, 2023)
+-------------------------------
+* Added Portal to Badlands in Valdrakken
+* Updated Portals for Mythic+ Season 2 in Valdrakken
+* Updated zhTW by [bns333](https://legacy.curseforge.com/members/bns333)
+
 #### v4 (May 05, 2023)
 -------------------------------
 * Add IconTexture to .toc

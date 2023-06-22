@@ -70,3 +70,21 @@ ns.RegisterPoints(ns.THALDRASZUS, {
         quest = 70294,
     },
 }, dflwknowledge)
+
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [41164881] = {
+        loot={204986}, -- Flame-Infused Scale Oil
+        quest=75495,
+        vignette=5678,
+    },
+    [45252112] = {
+        loot={204987}, -- Lava-Forged Leatherworker's "Knife"
+        quest=75496,
+        vignette=5679,
+    },
+    [49565480] = {
+        loot={204988}, -- Sulfur-Soaked Skins
+        quest=75502,
+        vignette=5680,
+    },
+}, dflwknowledge)

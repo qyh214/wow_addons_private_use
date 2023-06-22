@@ -767,7 +767,7 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 		model:SetPosition(0, startY, defaultZ);
 		model.posZ = defaultZ;
 		model:SetFacing(-pi/2);
-		model:FreezeAnimation(4,1);
+		model:FreezeAnimation(4, 1, 0);
 		model:SetAnimation(4);
 		self:SetScript("OnUpdate", PlayerModelAnimIn_Update_Style1);
 	else
@@ -788,7 +788,7 @@ PMAI:SetScript("OnShow", function(self)		--PlayerModelAnimIn
 		model.posZ = startZ;
 		model:SetFacing(startFacing);
 		model.rotation = startFacing;
-		model:FreezeAnimation(animStart,1);
+		model:FreezeAnimation(animStart, 1, 0);
 		model:SetAnimation(animStart);
 		self:SetScript("OnUpdate", EntranceAnimation[5]);
 	end
@@ -2641,10 +2641,12 @@ function NarciGenericModelMixin:Freeze(animationID, variationID, animationFrame)
 	else
 		variationID = self.variationID or 0;
 	end
+
+	animationFrame = animationFrame or 0;
 	self:FreezeAnimation(animationID, variationID, animationFrame);
 	self.animationID = animationID;
 	self.isPaused = true;
-	self.freezedFrame = animationFrame or 0;
+	self.freezedFrame = animationFrame;
 end
 
 function NarciGenericModelMixin:PlayAnimation(animationID, variationID)

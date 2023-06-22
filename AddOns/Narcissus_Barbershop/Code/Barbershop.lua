@@ -182,7 +182,7 @@ end
 
 function ModelPool:AcquireModel(modelID)
     if not self.activeModelPool[modelID] then
-        self.activeModelPool[modelID] = CreateFrame("PlayerModel", self.container);
+        self.activeModelPool[modelID] = CreateFrame("PlayerModel", nil, self.container);
         self.SetupModel( self.activeModelPool[modelID] );
     end
     return self.activeModelPool[modelID]

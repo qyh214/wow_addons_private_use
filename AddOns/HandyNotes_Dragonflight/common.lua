@@ -139,6 +139,11 @@ ns.groups.REED_CHEST = Group('reed_chest', 'chest_yw', {
     type = ns.group_types.EXPANSION
 })
 
+ns.groups.RITUAL_OFFERING = Group('ritual_offering', 'chest_bn', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
 ns.groups.SCOUT_PACK = Group('scout_pack', 4562583, {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
@@ -182,6 +187,11 @@ ns.groups.TUSKARR_CHEST = Group('tuskarr_chest', 'chest_bn', {
 })
 
 ns.groups.TUSKARR_TACKLEBOX = Group('tuskarr_tacklebox', 'chest_yw', {
+    defaults = ns.GROUP_HIDDEN,
+    type = ns.group_types.EXPANSION
+})
+
+ns.groups.ZONE_EVENT = Group('zone_event', 'peg_rd', {
     defaults = ns.GROUP_HIDDEN,
     type = ns.group_types.EXPANSION
 })
@@ -461,6 +471,7 @@ ns.DRAGON_CUSTOMIZATIONS = {
         ImpalerHorns = Item({item = 197379, quest = 69580}),
         ManedCrest = Item({item = 197363, quest = 69564}),
         ManedTail = Item({item = 197405, quest = 69606}),
+        PlatedJaw = Item({item = 202275, quest = 73059}),
         PredatorPattern = Item({item = 197394, quest = 69595}),
         PurpleHair = Item({item = 197372, quest = 69573}),
         RazorSnout = Item({item = 197399, quest = 69600}),
@@ -730,6 +741,7 @@ ns.DRAGON_CUSTOMIZATIONS = {
         RedScales = Item({item = 203353, quest = 73844}),
         SharkFinnedTail = Item({item = 203359, quest = 73851}),
         ShortHorns = Item({item = 203333, quest = 73822}),
+        ShortSpikedCrest = Item({item = 197364, quest = 69565}),
         SingleJawHorn = Item({item = 203344, quest = 73835}),
         SmallFinnedCrest = Item({item = 203317, quest = 73805}),
         SmallFinnedTail = Item({item = 203358, quest = 73850}),
@@ -889,7 +901,8 @@ local Scoutpack = Class('Scoutpack', Node, {
         Item({item = 198852, quest = 70407}), -- Bear Termination Orders
         Item({item = 198843, quest = 70392}), -- Emerald Gardens Explorer's Notes
         Item({item = 192055}), -- Dragon Isles Artifact
-        Currency({id = 2003}) -- Dragon Isles Supplies
+        Currency({id = 2003}), -- Dragon Isles Supplies
+        Currency({id = 2245}) -- Flightstones
     }
 })
 
@@ -1206,113 +1219,52 @@ local ElementalChest = Class('ElementalChest', ns.node.Treasure, {
 ns.node.ElementalChest = ElementalChest
 
 -------------------------------------------------------------------------------
-------------------------------- INTERVAL RARES --------------------------------
+---------------------------------- INTERVALS ----------------------------------
 -------------------------------------------------------------------------------
+ns.Intervals = {}
 
-local function nextSpawn(self, timeYellow, timeGreen)
-    local region = GetCurrentRegion() -- https://wowpedia.fandom.com/wiki/API_GetCurrentRegion
-    local initial = self.initialSpawn
-    local CurrentTime = GetServerTime()
-
-    local SpawnTime = self.rotationID * self.spawnOffset
-    if region == 2 and initial.kr then
-        SpawnTime = SpawnTime + initial.kr
-    elseif region == 3 and initial.eu then
-        SpawnTime = SpawnTime + initial.eu
-    elseif region == 2 and initial.tw then
-        SpawnTime = SpawnTime + initial.tw
-    else
-        SpawnTime = SpawnTime + initial.us
-    end
-
-    local NextSpawn = SpawnTime +
-                          math.ceil(
-            (CurrentTime - SpawnTime) / self.spawnInterval) * self.spawnInterval
-    local TimeLeft = NextSpawn - CurrentTime
-    local SpawnsIn = TimeLeft <= 60 and L['now'] or
-                         SecondsToTime(TimeLeft, true, true)
-
-    if timeYellow and timeGreen then
-        local color = ns.color.Orange
-        if TimeLeft < timeYellow then color = ns.color.Yellow end
-        if TimeLeft < timeGreen then color = ns.color.Green end
-        SpawnsIn = color(SpawnsIn)
-    end
-
-    local TimeFormat =
-        ns:GetOpt('use_standard_time') and L['time_format_12hrs'] or
-            L['time_format_24hrs']
-    return format('%s (%s)', SpawnsIn, date(TimeFormat, NextSpawn))
-end
-
----------------------------------- 14 HOURS -----------------------------------
-
-local Rare14h = Class('Rare14h', Rare, {
-    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000}, -- initial spawn time of the first rare to calculate other rares
-    spawnOffset = 1800, -- time between rares
-    spawnInterval = 50400 -- inverval of a single rare
+local Interval = Class('Interval', ns.Interval, {
+    format_12hrs = L['time_format_12hrs'],
+    format_24hrs = L['time_format_24hrs']
 })
 
-function Rare14h.getters:note()
-    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
-    if self.cave then note = note .. '\n\n' .. L['in_cave'] end
-    return note
-end
-
-local RareElite14h = Class('RareElite14h', RareElite, {
-    initialSpawn = {eu = 1676237400, us = 1677335400, tw = 1675701000},
-    spawnOffset = 1800,
-    spawnInterval = 50400
+ns.Intervals.Interval14h = Class('Interval14h', Interval, {
+    initial = {eu = 1676237400, us = 1677335400, tw = 1675701000}, -- initial spawn time of the first rare to calculate other rares
+    offset = 1800, -- time between rares
+    interval = 50400, -- inverval of a single rare
+    yellow = 14400,
+    green = 1800,
+    text = L['rare_14h']
 })
 
-function RareElite14h.getters:note()
-    local note = format(L['rare_14h'], nextSpawn(self, 14400, 1800))
-    if self.cave then note = note .. '\n\n' .. L['in_cave'] end
-    return note
-end
-
---------------------------------- BRACKENHIDE ---------------------------------
-
-local Brackenhide = Class('Brackenhide', Rare, {
-    initialSpawn = {us = 1672531800, eu = 1672531200, tw = 1677162000},
-    spawnOffset = 600,
-    spawnInterval = 2400
+ns.Intervals.BrackenhideInterval = Class('BrackenhideInterval', Interval, {
+    initial = {us = 1672531800, eu = 1672531200, tw = 1677162000},
+    offset = 600,
+    interval = 2400,
+    yellow = 1200,
+    green = 600,
+    text = L['brackenhide_rare_note']
 })
 
-function Brackenhide.getters:note()
-    return format(L['brackenhide_rare_note'], nextSpawn(self, 1200, 600))
-end
-
------------------------------------- FEAST ------------------------------------
-
-local Feast = Class('Feast', Rare, {
-    initialSpawn = {us = 1677164400, eu = 1677168000, tw = 1677166200},
-    spawnOffset = 5400, -- review
-    spawnInterval = 5400, -- review
-    rotationID = 0
+ns.Intervals.FeastInterval = Class('FeastInterval', Interval, {
+    initial = {us = 1677164400, eu = 1677168000, tw = 1677166200},
+    offset = 5400,
+    interval = 5400,
+    id = 0,
+    yellow = 3600,
+    green = 600,
+    text = L['bisquis_note']
 })
 
-function Feast.getters:note()
-    return format(L['bisquis_note'], nextSpawn(self, 3600, 600))
-end
-
------------------------------ THE OHN'AHRAN TRAIL -----------------------------
-
-local AylaagCamp = Class('AylaagCamp', Collectible, {
-    initialSpawn = {us = 1677456000, eu = 1677502800, tw = 1677571200},
-    spawnOffset = 270000,
-    spawnInterval = 810000
+ns.Intervals.AylaagCampInterval = Class('AylaagCampInterval', Interval, {
+    initial = {us = 1677456000, eu = 1677502800, tw = 1677571200},
+    offset = 270000,
+    interval = 810000,
+    id = 0,
+    yellow = 7200,
+    green = 1800,
+    text = L['aylaag_camp_note']
 })
-
-function AylaagCamp.getters:note()
-    return format(L['aylaag_camp_note'], nextSpawn(self, 7200, 1800))
-end
-
-ns.node.Rare14h = Rare14h
-ns.node.RareElite14h = RareElite14h
-ns.node.Brackenhide = Brackenhide
-ns.node.Feast = Feast
-ns.node.AylaagCamp = AylaagCamp
 
 -------------------------------------------------------------------------------
 ------------------------------ ELEMENTAL STORMS -------------------------------
@@ -1713,4 +1665,18 @@ hooksecurefunc(AreaPOIPinMixin, 'TryShowTooltip', function(self)
             end
         end
     end
+end)
+
+hooksecurefunc(VignettePinMixin, 'OnMouseEnter', function(self)
+    local map = ns.maps[WorldMapFrame:GetMapID()] or nil
+
+    if not map then return end
+
+    for _, node in pairs(map.nodes) do
+        if node.vignette and node.vignette == self:GetVignetteID() and
+            node.rewards and ns:GetOpt('show_loot') then
+            node:RenderRewards(GameTooltip)
+        end
+    end
+    GameTooltip:Show()
 end)

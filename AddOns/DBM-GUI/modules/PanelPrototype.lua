@@ -272,26 +272,26 @@ do
 		{ text = "SA 2", value = 2 },
 		{ text = "SA 3", value = 3 },
 		{ text = "SA 4", value = 4 },
-		-- Inject DBMs custom media that's not available to LibSharedMedia because it uses SoundKit Id (which LSM doesn't support)
+		-- Inject DBMs custom media that's not available to LibSharedMedia because I haven't added it yet
 		--{ text = "AirHorn (DBM)", value = "Interface\\AddOns\\DBM-Core\\sounds\\AirHorn.ogg" },
-		{ text = "Algalon: Beware!", value = isRetail and 15391 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\UR_Algalon_BHole01.ogg" },
-		{ text = "BB Wolf: Run Away", value = not isClassic and 9278 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\HoodWolfTransformPlayer01.ogg" },
-		{ text = "Illidan: Not Prepared", value = not isClassic and 11466 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\BLACK_Illidan_04.ogg" },
-		{ text = "Illidan: Not Prepared2", value = isRetail and 68563 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\VO_703_Illidan_Stormrage_03.ogg" },
-		{ text = "Kil'Jaeden: Destruction", value = not isClassic and 12506 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\KILJAEDEN02.ogg" },
-		{ text = "Loatheb: I see you", value = isRetail and 128466 or 8826 },
-		{ text = "Night Elf Bell", value = isRetail and 11742 or 6674 },
-		{ text = "PvP Flag", value = 8174 },
+		{ text = "Algalon: Beware!", value = isRetail and 543587 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\UR_Algalon_BHole01.ogg" },
+		{ text = "BB Wolf: Run Away", value = not isClassic and 552035 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\HoodWolfTransformPlayer01.ogg" },
+		{ text = "Illidan: Not Prepared", value = not isClassic and 552503 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\BLACK_Illidan_04.ogg" },
+		{ text = "Illidan: Not Prepared2", value = isRetail and 1412178 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\VO_703_Illidan_Stormrage_03.ogg" },
+		{ text = "Kil'Jaeden: Destruction", value = not isClassic and 553193 or "Interface\\AddOns\\DBM-Core\\sounds\\ClassicSupport\\KILJAEDEN02.ogg" },
+		{ text = "Loatheb: I see you", value = 554236 },
+		{ text = "Night Elf Bell", value = 566558 },
+		{ text = "PvP Flag", value = 569200 },
 	})
 	if isRetail then
-		tinsert(sounds, { text = "Blizzard Raid Emote", value = 37666 })
-		tinsert(sounds, { text = "C'Thun: You Will Die!", value = 8585 })
-		tinsert(sounds, { text = "Headless Horseman: Laugh", value = 11965 })
-		tinsert(sounds, { text = "Kaz'rogal: Marked", value = 11052 })
-		tinsert(sounds, { text = "Lady Malande: Flee", value = 11482 })
-		tinsert(sounds, { text = "Milhouse: Light You Up", value = 49764 })
-		tinsert(sounds, { text = "Void Reaver: Marked", value = 11213 })
-		tinsert(sounds, { text = "Yogg Saron: Laugh", value = 15757 })
+		tinsert(sounds, { text = "Blizzard Raid Emote", value = 876098 })
+		tinsert(sounds, { text = "C'Thun: You Will Die!", value = 546633 })
+		tinsert(sounds, { text = "Headless Horseman: Laugh", value = 551703 })
+		tinsert(sounds, { text = "Kaz'rogal: Marked", value = 553050 })
+		tinsert(sounds, { text = "Lady Malande: Flee", value = 553566 })
+		tinsert(sounds, { text = "Milhouse: Light You Up", value = 555337 })
+		tinsert(sounds, { text = "Void Reaver: Marked", value = 563787 })
+		tinsert(sounds, { text = "Yogg Saron: Laugh", value = 564859 })
 	end
 
 	local function RGBPercToHex(r, g, b)
@@ -374,14 +374,18 @@ do
 					frame2:SetSize(25, 25)
 					frame2:SetText("|TInterface/FriendsFrame/UI-FriendsFrame-Note.blp:14:0:2:-1|t")
 					frame2.mytype = "button"
-					frame2:SetScript("OnClick", function(self)
+					frame2:SetScript("OnClick", function()
 						DBM:ShowNoteEditor(mod, modvar, noteSpellName)
 					end)
 					textPad = 2
 				end
 			end
 			frame.myheight = 0
-			frame2.myheight = 0
+			if frame2 then
+				frame2.myheight = 0
+			else
+				textPad = 37
+			end
 		end
 		local buttonText
 		if desc then -- Switch all checkbutton frame to SimpleHTML frame (auto wrap)
@@ -399,15 +403,15 @@ do
 				else -- "journal:contentType:contentID:difficulty"
 					local _, contentType, contentID = strsplit(":", data)
 					if contentType == "2" then
-						local name, description = DBM:EJ_GetSectionInfo(tonumber(contentID))
-						GameTooltip:AddLine(name or CL.UNKNOWN, 255, 255, 255, 0)
+						local spellName, spellDesc = DBM:EJ_GetSectionInfo(tonumber(contentID))
+						GameTooltip:AddLine(spellName or CL.UNKNOWN, 255, 255, 255, 0)
 						GameTooltip:AddLine(" ")
-						GameTooltip:AddLine(description or CL.UNKNOWN, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
+						GameTooltip:AddLine(spellDesc or CL.UNKNOWN, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
 					end
 				end
 				GameTooltip:Show()
 				currActiveButton = self:GetParent()
-				updateFrame:SetScript("OnUpdate", function(self)
+				updateFrame:SetScript("OnUpdate", function()
 					local inHitBox = GetCursorPosition() - currActiveButton:GetCenter() < -100
 					if currActiveButton.fakeHighlight and not inHitBox then
 						currActiveButton:UnlockHighlight()
@@ -442,7 +446,11 @@ do
 		end
 		button.textObj = buttonText
 		button.text = desc or CL.UNKNOWN
-		button.widthPad = frame and frame:GetWidth() + frame2:GetWidth() or 0
+		if frame2 then
+			button.widthPad = frame and frame:GetWidth() + frame2:GetWidth() or 0
+		else
+			button.widthPad = frame and frame:GetWidth() or 0
+		end
 		buttonText:SetWidth(self.frame:GetWidth() - button.widthPad)
 		if textLeft then
 			buttonText:ClearAllPoints()

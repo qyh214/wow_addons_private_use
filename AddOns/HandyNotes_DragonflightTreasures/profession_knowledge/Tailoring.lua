@@ -77,3 +77,21 @@ ns.RegisterPoints(ns.THALDRASZUS, {
         quest = 70372,
     },
 }, dftlrknowledge)
+
+ns.RegisterPoints(ns.ZARALEKCAVERN, {
+    [47214855] = {
+        loot={206019}, -- Abandoned Reserve Chute
+        quest=76102,
+        vignette=5736,
+    },
+    [44521565] = {
+        loot={206030}, -- Exquisitely Embroidered Banner
+        quest=76116,
+        vignette=5738,
+    },
+    [59117314] = {
+        loot={206025}, -- Used Medical Wrap Kit
+        quest=76110,
+        vignette=5737,
+    },
+}, dftlrknowledge)

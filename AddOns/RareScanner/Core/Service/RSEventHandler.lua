@@ -41,7 +41,7 @@ local function HandleEntityWithoutVignette(rareScannerButton, unitID)
 	end
 	
 	local unitType, _, _, _, _, entityID = strsplit("-", unitGuid)
-	if (unitType == "Creature") then
+	if (unitType == "Creature" or unitType == "Vehicle") then
 		local npcID = entityID and tonumber(entityID) or nil
 	
 		-- If player in a zone with vignettes ignore it
@@ -50,12 +50,12 @@ local function HandleEntityWithoutVignette(rareScannerButton, unitID)
 			return
 		end
 	
-		if (not RSMapDB.IsZoneWithoutVignette(mapID)) then
+		--if (not RSMapDB.IsZoneWithoutVignette(mapID)) then
 			-- Continue if its an NPC that doesnt have vignette in a newer zone
-			if (not RSNpcDB.GetInternalNpcInfo(npcID) or not RSNpcDB.GetInternalNpcInfo(npcID).nameplate) then
-				return
-			end
-		end
+		--	if (not RSNpcDB.GetInternalNpcInfo(npcID) or not RSNpcDB.GetInternalNpcInfo(npcID).nameplate) then
+		--		return
+		--	end
+		--end
 		
 		-- If its a supported NPC and its not killed
 		if ((RSGeneralDB.GetAlreadyFoundEntity(npcID) or RSNpcDB.GetInternalNpcInfo(npcID)) and not UnitIsDead(unitID)) then
@@ -207,9 +207,16 @@ local function OnPlayerTargetChanged()
 
 		-- check if killed
 		if (RSGeneralDB.GetAlreadyFoundEntity(npcID) and not RSNpcDB.IsNpcKilled(npcID)) then
-			-- Update coordinates (if zone doesnt use vignettes)
-			if (RSMapDB.IsZoneWithoutVignette(playerMapID) and CheckInteractDistance("unit", 4)) then
+			-- Update coordinates (if zone doesnt use vignettes or it is detected with nameplates)
+			local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
+			if ((RSMapDB.IsZoneWithoutVignette(playerMapID) or npcInfo.nameplate) and CheckInteractDistance("unit", 4)) then
 				RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(npcID)
+			end
+			
+			-- If it's a custom NPC that's all
+			local customNpcInfo = RSNpcDB.GetCustomNpcInfo(npcID)
+			if (customNpcInfo) then
+				return
 			end
 
 			-- Check the questID asociated to see if its completed
@@ -258,7 +265,7 @@ local function OnLootOpened()
 			-- If the loot comes from a container that we support
 			if (unitType == "GameObject") then
 				local containerID = id and tonumber(id) or nil
-				RSLogger:PrintDebugMessage(string.format("Abierto [%s].", containerID or ""))
+				--RSLogger:PrintDebugMessage(string.format("Abierto [%s].", containerID or ""))
 
 				-- We support all the containers with vignette plus those ones that are part of achievements (without vignette)
 				if (RSGeneralDB.GetAlreadyFoundEntity(containerID) or RSContainerDB.GetInternalContainerInfo(containerID)) then
@@ -636,22 +643,4 @@ function RSEventHandler.RegisterEvents(rareScannerButton, addon)
 	rareScannerButton:SetScript("OnEvent", function(self, event, ...)
 		HandleEvent(self, event, ...) 
 	end)
-	
-	-- In DL VIGNETTES_UPDATED seems buggy, so keep checking every 10 seconds
-	-- In DL VIGNETTE_MINIMAP_UPDATED doesn't fire if the container appears where the player stands
---	local ticker = C_Timer.NewTicker(10, function() 
---		local vignetteGUIDs = C_VignetteInfo.GetVignettes();
---		for _, vignetteGUID in ipairs(vignetteGUIDs) do
---			local vignetteInfo = C_VignetteInfo.GetVignetteInfo(vignetteGUID);
---			if (vignetteInfo) then
---				if (vignetteInfo.onWorldMap and RSConfigDB.IsScanningWorldMapVignettes()) then
---					vignetteInfo.id = vignetteGUID
---					rareScannerButton:DetectedNewVignette(rareScannerButton, vignetteInfo)	
---				elseif (vignetteInfo.onMinimap) then
---					vignetteInfo.id = vignetteGUID
---					rareScannerButton:DetectedNewVignette(rareScannerButton, vignetteInfo)
---				end
---			end
---		end
---	end);
 end

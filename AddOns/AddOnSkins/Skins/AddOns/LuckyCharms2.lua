@@ -1,31 +1,29 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('LuckyCharms2') then return end
-
-function AS:LuckyCharms2(event, addon)
+function R:LuckyCharms2(event, addon)
 	local function StyleButton(self)
 		local name = self:GetName()
 		local button = self
 		local icon = _G[name.."Icon"]
 
 		if not button.isSkinned then
-			AS:CreateBackdrop(button)
-			AS:StyleButton(button)
-			button.Backdrop:SetAllPoints()
-			AS:SkinTexture(icon)
-			AS:SetInside(icon)
+			S:CreateBackdrop(button)
+			S:StyleButton(button)
+			button.backdrop:SetAllPoints()
+			S:HandleIcon(icon)
+			S:SetInside(icon)
 			button.isSkinned = true
 		end
 	end
 
-	AS:SkinFrame(_G["LuckyCharmAnchorBar"])
-	AS:SkinFrame(_G["LuckyCharmBar"])
-	AS:SkinFrame(_G["LuckyCharmsFlares_main"])
+	S:HandleFrame(_G["LuckyCharmAnchorBar"])
+	S:HandleFrame(_G["LuckyCharmBar"])
+	S:HandleFrame(_G["LuckyCharmsFlares_main"])
 
 	StyleButton(_G["LCBDragButton"])
 
-	AS:SkinButton(_G["LCRCButton"])
-	AS:SkinButton(_G["LCKOButton"])
+	S:HandleButton(_G["LCRCButton"])
+	S:HandleButton(_G["LCKOButton"])
 
 	local i = 0
 	while _G["LuckyCharm"..i] do
@@ -49,4 +47,4 @@ function AS:LuckyCharms2(event, addon)
 	LuckyCharms.Flares.SetTexCoords()
 end
 
-AS:RegisterSkin('LuckyCharms2', AS.LuckyCharms2)
+AS:RegisterSkin('LuckyCharms2')

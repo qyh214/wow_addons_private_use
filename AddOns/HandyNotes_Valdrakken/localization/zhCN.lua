@@ -103,7 +103,7 @@ L["Both"] = "同时显示"
 L["config_picons"] = "显示专业图标"
 L["config_picons_vendor_desc"] = "显示专业图标而不是商人图标"
 L["config_picons_trainer_desc"] = "显示专业图标而不是训练师图标"
-  
+
 L["config_use_old_picons"] = "显示旧职业图标"
 L["config_use_old_picons_desc"] = "显示旧职业图标而不是新的图标 (巨龙时代之前的)."
 
@@ -147,13 +147,17 @@ L["handler_tooltip_quest"] = "解锁任务"
 
 L["Crafting Orders"] = "制造订单"
 L["Mailbox"] = "邮箱"
-L["Portal to Dalaran"] = "通往达拉然"
-L["Portal to Jade Forest"] = "通往翡翠林"
 L["Portal to Orgrimmar"] = "通往奥格瑞玛"
-L["Portal to Shadowmoon Valley"] = "通往影月谷"
 L["Portal to Stormwind"] = "通往暴风城"
 L["Rostrum of Transformation"] = "幻形讲坛"
 L["Teleport to Seat of the Aspects"] = "传送到守护巨龙之座"
 L["Visage of True Self"] = "凯旋幻容"
+L["Portal to Nazmir"] = "通往纳兹米尔的传送门"
+L["Portal to Tiragarde Sound"] = "通往提拉加德海峡的传送门"
+L["Portal to Uldum"] = "通往奥丹姆"
+L["Portal to Badlands"] = "通往荒芜之地的传送门"
 
+-- L["Portal to Dalaran"] = "通往达拉然"
+-- L["Portal to Jade Forest"] = "通往翡翠林"
+-- L["Portal to Shadowmoon Valley"] = "通往影月谷"
 end

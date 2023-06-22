@@ -1,7 +1,7 @@
 local questItems = {};
 
 local function AutoQuestPopupTracker_Initialize(owningModule)
-	owningModule:AddBlockOffset("KT_AutoQuestPopUpBlockTemplate", -39, -4);
+	owningModule:AddBlockOffset("KT_AutoQuestPopUpBlockTemplate", -25, -4);  -- MSA
 	owningModule.initializedPopUpTracker = true;
 end
 

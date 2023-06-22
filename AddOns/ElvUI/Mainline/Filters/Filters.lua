@@ -684,6 +684,7 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[226512] = List(), -- Sanguine
 		[240559] = List(), -- Grievous
 		[240443] = List(), -- Bursting
+		[409492] = List(), -- Afflicted Cry
 	----------------------------------------------------------
 	----------------- Dragonflight Dungeons ------------------
 	----------------------------------------------------------
@@ -771,6 +772,7 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[372570] = List(), -- Bold Ambush
 		[372459] = List(), -- Burning
 		[372208] = List(), -- Djaradin Lava
+		[414585] = List(), -- Fiery Demise
 	-- Uldaman: Legacy of Tyr
 		[368996] = List(), -- Purging Flames
 		[369792] = List(), -- Skullcracker
@@ -887,6 +889,9 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[274555] = List(), -- Scabrous Bites
 		[258875] = List(), -- Blackout Barrel
 		[256363] = List(), -- Ripper Punch
+		[258352] = List(), -- Grapeshot
+		[413136] = List(), -- Whirling Dagger 1
+		[413131] = List(), -- Whirling Dagger 2
 	-- Neltharion's Lair
 		[199705] = List(), -- Devouring
 		[199178] = List(), -- Spiked Tongue
@@ -945,6 +950,8 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[402617] = List(), -- Blazing Heat
 		[401809] = List(), -- Corrupting Shadow
 		[405394] = List(), -- Shadowflame
+		[405914] = List(), -- Withering Vulnerability 1
+		[413597] = List(), -- Withering Vulnerability 2
 	-- Experimentation of Dracthyr
 		[406317] = List(), -- Mutilation 1
 		[406365] = List(), -- Mutilation 2
@@ -996,6 +1003,10 @@ G.unitframe.aurafilters.RaidDebuffs = {
 		[401135] = List(), -- Wild Breath (Evoker)
 		[408071] = List(), -- Shapeshifter's Fervor
 	-- Scalecommander Sarkareth
+		[403520] = List(), -- Embrace of Nothingness
+		[401383] = List(), -- Oppressing Howl
+		[401951] = List(), -- Oblivion
+		[407496] = List(), -- Infinite Duress
 	---------------------------------------------------------
 	---------------- Vault of the Incarnates ----------------
 	---------------------------------------------------------
@@ -1123,6 +1134,7 @@ G.unitframe.aurafilters.RaidBuffsElvUI = {
 		[372202] = List(), -- Scorching Breath
 		[378149] = List(), -- Granite Shell
 		[372311] = List(), -- Magma Fist
+		[376780] = List(), -- Magma Shield
 	-- Uldaman: Legacy of Tyr
 		[369791] = List(), -- Skullcracker
 		[369602] = List(), -- Defensive Bulwark 1
@@ -1292,6 +1304,13 @@ G.unitframe.aurafilters.RaidBuffsElvUI = {
 		[407088] = List(), -- Empowered Shadows
 		[407039] = List(), -- Empower Shadows
 	-- Scalecommander Sarkareth
+		[404705] = List(), -- Rescind
+		[404269] = List(), -- Ebon Might
+		[401810] = List(), -- Glittering Surge
+		[410631] = List(), -- Void Empowerment 1
+		[403284] = List(), -- Void Empowerment 2
+		[410654] = List(), -- Void Empowerment 3
+		[410625] = List(), -- End Existence
 	---------------------------------------------------------
 	---------------- Vault of the Incarnates ----------------
 	---------------------------------------------------------

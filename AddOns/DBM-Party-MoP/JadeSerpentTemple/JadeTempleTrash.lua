@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("JadeTempleTrash", "DBM-Party-MoP", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230422022609")
+mod:SetRevision("20230507021253")
 --mod:SetModelID(47785)
 mod.isTrashMod = true
 
@@ -107,7 +107,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 396018 and self:AntiSpam(3, 5) then
 		warnFitofRage:Show()
 	elseif spellId == 397931 then
-		timerDarkClawCD:Start()
+		timerDarkClawCD:Start(nil, args.sourceGUID)
 		if self:AntiSpam(3, 5) then
 			warnDarkClaw:Show()
 		end

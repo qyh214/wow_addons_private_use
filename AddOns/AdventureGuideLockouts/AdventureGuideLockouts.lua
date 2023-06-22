@@ -86,7 +86,8 @@ AddOn.worldBosses = {
             { encounterID = 2515, questID = 69929 }, -- Strunraan, The Sky's Misery
             { encounterID = 2506, questID = 69930 }, -- Basrikron, The Shale Wing
             { encounterID = 2517, questID = 69927 }, -- Bazual, The Dreaded Flame
-            { encounterID = 2518, questID = 69928 }  -- Liskanoth, The Futurebane
+            { encounterID = 2518, questID = 69928 }, -- Liskanoth, The Futurebane
+            { encounterID = 2531, questID = 74892 }  -- The Zaqali Elders
         }
     }
 }
@@ -144,9 +145,8 @@ end
 ---@param instanceIndex number
 ---@return table @ instanceLockout
 function AddOn:GetInstanceLockout(instanceIndex)
-    local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, difficultyName, numEncounters, numCompleted = GetSavedInstanceInfo(instanceIndex)
+    local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, difficultyName, numEncounters, numCompleted, _, instanceID = GetSavedInstanceInfo(instanceIndex)
     if not locked and not extended then return end
-    local instanceID = tonumber(GetSavedInstanceChatLink(instanceIndex):match("%b::(%d+)"))
     if instanceID == 1544 then
         numEncounters = 3 -- Fixes wrong encounters count for Assault on Violet Hold
     elseif instanceID == 1822 then
@@ -374,24 +374,12 @@ end
 local function UpdateDataProvider()
     local dataIndex = 1
     local showRaid = EncounterJournal_IsRaidTabSelected(EncounterJournal)
-    local instanceID, name, description, _, buttonImage, _, _, _, link, _, mapID = EJ_GetInstanceByIndex(dataIndex, showRaid)
-
-    local dataProvider = CreateDataProvider()
-    while instanceID ~= nil do
-        dataProvider:Insert({
-            instanceID = instanceID,
-            name = name,
-            description = description,
-            buttonImage = buttonImage,
-            link = link,
-            mapID = mapID,
-        })
-
+    local mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
+    EncounterJournal.instanceSelect.ScrollBox:ForEachElementData(function(elementData)
+        elementData.mapID = mapID
         dataIndex = dataIndex + 1
-        instanceID, name, description, _, buttonImage, _, _, _, link, _, mapID = EJ_GetInstanceByIndex(dataIndex, showRaid)
-    end
-
-    EncounterJournal.instanceSelect.ScrollBox:SetDataProvider(dataProvider)
+        mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
+    end)
 end
 
 -- This fixes an issue introduced by assigning the mapID.

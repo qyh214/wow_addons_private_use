@@ -33,6 +33,9 @@ local spellTable_FieldsToSum = {
     ["e_heal"] = true,
     ["e_lvl"] = true,
     ["e_total"] = true,
+    ["DODGE"] = true,
+    ["PARRY"] = true,
+    ["MISS"] = true,
 }
 
 ---@class spelltablemixin
@@ -102,6 +105,13 @@ Details.SpellTableMixin = {
                             for level, amount in pairs(value) do
                                 targetTable[key][level] = (targetTable[key][level] or 0) + amount
                             end
+
+                        elseif (key == "c_max" or key == "n_max") then
+                            targetTable[key] = math.max(targetTable[key] or value, value)
+
+                        elseif (key == "c_min" or key == "n_min") then
+                            targetTable[key] = math.min(targetTable[key] or value, value)
+
                         else
                             targetTable[key] = (targetTable[key] or 0) + value
                         end

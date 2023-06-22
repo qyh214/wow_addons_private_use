@@ -602,7 +602,8 @@ local treeNodeEntryIDs = {
 }
 
 local talentIDFix = { [103211]=377779,[103216]=343240,[103224]=377623, }
-local talentChargeFix = { [36554]=true,[191634]=true,[47568]=true, }
+
+local talentChargeFix = { [36554]=true,[191634]=true,[47568]=true, [5394]=true }
 
 local MAX_NUM_TALENTS = MAX_NUM_TALENTS or (E.isWOTLKC and 31 or 25)
 
@@ -918,12 +919,13 @@ function CM:UpdateCooldownSyncIDs(info)
 	wipe(self.cooldownSyncIDs)
 	for id, t in E.pairs(E.sync_cooldowns.ALL, E.sync_cooldowns[E.userClass]) do
 		local spellID
-		for _, v in ipairs(t) do
+		for i = 1, #t do
+			local v = t[i]
 			spellID = not v or FindValidSpellID(info, v)
 			if not spellID then break end
 		end
 		if spellID then
-			self.cooldownSyncIDs[spellID == true and id or spellID] = { 0, 0 }
+			self.cooldownSyncIDs[spellID == true and id or spellID] = { 0, -1 }
 		end
 	end
 	self:ToggleCooldownSync()

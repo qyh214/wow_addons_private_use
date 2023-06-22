@@ -4,6 +4,8 @@ local _, addon = ...
 local READING_SPEED_LETTER = 180 * 5;   --WPM * avg. word length
 local FONT_HEIGHT_DESC = 16;
 local match = string.match;
+local READABLE_ITEM = ITEM_CAN_BE_READ or "<This item can be read>";
+local START_QUEST_ITEM = ITEM_STARTS_QUEST or "This Item Begins a Quest";
 
 do
     local textLanguage = GetLocale();
@@ -192,11 +194,13 @@ function NarciQuestItemDisplayMixin:SetTheme(themeID)
         self.Description:SetTextColor(0.77, 0.76, 0.62);
         self.Background:SetVertexColor(0.1, 0.1, 0.1);
         NarciAPI.NineSliceUtil.SetBorderColor(self.Border, 69/255, 36/255, 11/255, 1);
+        self.theme = 2;
     else
         self.ItemName:SetTextColor(0, 0, 0);
         self.Description:SetTextColor(0, 0, 0);
         self.Background:SetVertexColor(1, 1, 1);
         NarciAPI.NineSliceUtil.SetBorderColor(self.Border, 114/255, 16/255, 17/255, 1);
+        self.theme = 1;
     end
 end
 
@@ -218,7 +222,7 @@ function NarciQuestItemDisplayMixin:ProcessQueue()
 end
 
 function NarciQuestItemDisplayMixin:SetItem(itemID, requery)
-    --/run NarciQuestItemDisplay:SetItem(204803);NarciQuestItemDisplay:SetItem(204713)
+    --/run NarciQuestItemDisplay:SetItem(203395);NarciQuestItemDisplay:SetItem(205366)
 
     local tooltipData = C_TooltipInfo.GetItemByID(itemID);
     if not (tooltipData and tooltipData.lines) then
@@ -226,7 +230,7 @@ function NarciQuestItemDisplayMixin:SetItem(itemID, requery)
         return
     end
 
-    local name, description;
+    local name, description, extraText;
 
     for i, line in ipairs(tooltipData.lines) do
         if line.leftText and line.type ~= 20 then
@@ -235,7 +239,14 @@ function NarciQuestItemDisplayMixin:SetItem(itemID, requery)
             else
                 if match(line.leftText, "^[\"“]") then
                     description = line.leftText;
-                    break
+                elseif line.leftText == READABLE_ITEM or line.leftText == START_QUEST_ITEM then
+                    local color;
+                    if self.theme == 1 then
+                        color = "700b0b";
+                    else
+                        color = "b04a4a";
+                    end
+                    extraText = "|cff"..color..line.leftText.."|r";
                 end
             end
         end
@@ -259,6 +270,10 @@ function NarciQuestItemDisplayMixin:SetItem(itemID, requery)
 
     self:Show();
 
+    if extraText then
+        description = description.."\n"..extraText;
+    end
+
     local icon = C_Item.GetItemIconByID(itemID);
     self.ItemName:ClearAllPoints();
     self.ItemName:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0);
@@ -269,7 +284,7 @@ function NarciQuestItemDisplayMixin:SetItem(itemID, requery)
 
     self:Layout();
 
-    local readTime = (strlenutf8(name) + strlenutf8(description)) / READING_SPEED_LETTER * 60;
+    local readTime = 1 + (strlenutf8(name) + strlenutf8(description)) / READING_SPEED_LETTER * 60;
     self.Border.CloseButton.Countdown:SetCooldownDuration(readTime);
     self.Border.CloseButton.Countdown:Pause();
 end

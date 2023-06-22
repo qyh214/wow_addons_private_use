@@ -1,6 +1,6 @@
-## Interface: 100002
+## Interface: 100100
 ## Title: |cff16C3F2AddOn|r|cFFFFFFFFSkins|r
-## Version: 4.62
+## Version: 4.68
 ## Author: Azilroka, Nihilistzsche
 ## SavedVariables: AddOnSkinsDB, AddOnSkinsDS
 ## OptionalDeps: AllTheThings, ElvUI
@@ -8,10 +8,11 @@
 ## X-Wago-ID: RXKqy5Ky
 
 Libs\Load_Libs.xml
-Locale\Load_Locale.xml
 Init.lua
+
+Locale\Load_Locale.xml
 Core\Load_Core.xml
 Embed\Load_Embed.xml
 
 Skins\AddOns\Load_Skins.xml
-Skins\Mainline\Load_Skins.xml
+# Skins\Mainline\Load_Skins.xml

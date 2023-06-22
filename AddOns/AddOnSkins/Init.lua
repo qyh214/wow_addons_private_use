@@ -1,6 +1,3 @@
-local _, Engine = ...
-local AS = _G.LibStub('AceAddon-3.0'):NewAddon('AddOnSkins', 'AceConsole-3.0', 'AceEvent-3.0', 'AceHook-3.0', 'AceTimer-3.0')
-
 local _G = _G
 local select = select
 local format = format
@@ -8,17 +5,24 @@ local strlower = strlower
 local CreateFrame = CreateFrame
 local GetAddOnEnableState = GetAddOnEnableState
 local GetAddOnInfo = GetAddOnInfo
-local GetAddOnMetadata = GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 local GetNumAddOns = GetNumAddOns
-local GetPhysicalScreenSize = GetPhysicalScreenSize
 local GetRealmName = GetRealmName
 local UIParent = UIParent
 local UnitClass = UnitClass
 local UnitName = UnitName
 local UnitFactionGroup = UnitFactionGroup
 
+local AddOnName, Engine = ...
+local AS = _G.LibStub('AceAddon-3.0'):NewAddon('AddOnSkins', 'AceConsole-3.0', 'AceEvent-3.0', 'AceHook-3.0', 'AceTimer-3.0')
+
+AS.EmbedSystem = AS:NewModule('EmbedSystem', 'AceEvent-3.0', 'AceHook-3.0')
+AS.Skins = AS:NewModule('Skins', 'AceTimer-3.0', 'AceHook-3.0', 'AceEvent-3.0')
+
 Engine[1] = AS
-Engine[2] = _G.LibStub("AceLocale-3.0"):GetLocale('AddOnSkins', false)
+Engine[2] = {}
+Engine[3] = AS.Skins
+Engine[4] = {}
 
 _G.AddOnSkins = Engine
 _G.AddOnSkinsDS = {}
@@ -28,9 +32,23 @@ AS.Retail = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 AS.TBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 AS.Wrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
-AS.Title = GetAddOnMetadata(..., 'Title')
-AS.Version = tonumber(GetAddOnMetadata(..., 'Version'))
-AS.Authors = GetAddOnMetadata(..., 'Author'):gsub(", ", "    ")
+AS.Libs = {
+	AC = _G.LibStub('AceConfig-3.0'),
+	ACD = _G.LibStub('AceConfigDialog-3.0-ElvUI', true) or _G.LibStub('AceConfigDialog-3.0'),
+	ACH = _G.LibStub('LibAceConfigHelper'),
+	ADB = _G.LibStub('AceDB-3.0'),
+	ADBO = _G.LibStub('AceDBOptions-3.0'),
+	ACL = _G.LibStub("AceLocale-3.0-ElvUI", true) or _G.LibStub("AceLocale-3.0"),
+	EP = _G.LibStub('LibElvUIPlugin-1.0', true),
+	ACR = _G.LibStub('AceConfigRegistry-3.0'),
+	GUI = _G.LibStub('AceGUI-3.0'),
+	LCG = _G.LibStub('LibCustomGlow-1.0', true),
+	LSM = _G.LibStub('LibSharedMedia-3.0', true),
+}
+
+AS.Title = GetAddOnMetadata(AddOnName, 'Title')
+AS.Version = tonumber(GetAddOnMetadata(AddOnName, 'Version'))
+AS.Authors = GetAddOnMetadata(AddOnName, 'Author'):gsub(", ", "    ")
 AS.ProperVersion = format('%.2f', AS.Version)
 AS.TicketTracker = 'https://github.com/Azilroka/AddOnSkins/issues'
 AS.MyClass = select(2, UnitClass('player'))
@@ -38,33 +56,12 @@ AS.MyName = UnitName('player')
 AS.MyRealm = GetRealmName()
 AS.Noop = function() end
 AS.TexCoords = { .075, .925, .075, .925 }
-AS.UIScale = UIParent:GetScale()
 AS.Faction = UnitFactionGroup('player')
-AS.Mult = 1
-AS.ScreenWidth, AS.ScreenHeight = GetPhysicalScreenSize()
-
-AS.Libs = {
-	ACH = _G.LibStub('LibAceConfigHelper'),
-	LSM = _G.LibStub('LibSharedMedia-3.0', true),
-	LCG = _G.LibStub('LibCustomGlow-1.0', true),
-	AC = _G.LibStub('AceConfig-3.0'),
-	GUI = _G.LibStub('AceGUI-3.0'),
-	ACR = _G.LibStub('AceConfigRegistry-3.0'),
-	ACD = _G.LibStub('AceConfigDialog-3.0'),
-	ACL = Engine[2],
-	ADB = _G.LibStub('AceDB-3.0'),
-}
-
-local Color = _G.RAID_CLASS_COLORS[AS.MyClass]
-AS.ClassColor = { Color.r, Color.g, Color.b }
-AS.Color = { 0, 0.44, .87, 1 }
-
-AS.skins = {}
-AS.events = {}
-AS.register = {}
-AS.FrameLocks = {}
 
 AS.preload = {}
+AS.skins = {}
+AS.events = {}
+AS.FrameLocks = {}
 
 AS.AddOns = {}
 AS.AddOnVersion = {}
@@ -75,13 +72,7 @@ for i = 1, GetNumAddOns() do
 	AS.AddOnVersion[strlower(Name)] = GetAddOnMetadata(Name, 'Version')
 end
 
-AS.Media = {
-	Textures = {
-		Plus = [[Interface\AddOns\AddOnSkins\Media\Textures\Plus]],
-		Minus = [[Interface\AddOns\AddOnSkins\Media\Textures\Minus]],
-		QuestBang = [[Interface\AddOns\AddOnSkins\Media\Textures\UI-Icon-QuestBang]]
-	}
-}
+AS.Libs.LSM:Register('statusbar', 'Solid', [[Interface\Buttons\WHITE8X8]])
 
 AS.Hider = CreateFrame('Frame', nil, UIParent)
 AS.Hider:Hide()

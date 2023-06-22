@@ -7,7 +7,8 @@ local chargesStr= ITEM_SPELL_CHARGES:gsub('%%d', '%(%%d%+%)')--(%d+)次
 local keyStr= format(CHALLENGE_MODE_KEYSTONE_NAME,'(.+) ')--钥石
 local equipStr= format(EQUIPMENT_SETS, '(.+)')
 local pvpItemStr= PVP_ITEM_LEVEL_TOOLTIP:gsub('%%d', '%(%%d%+%)')--"装备：在竞技场和战场中将物品等级提高至%d。"
-local upgradeStr= ITEM_UPGRADE_FRAME_CURRENT_UPGRADE_FORMAT:gsub('%%s/%%s','(%%d%+/%%d%+)')-- "升级：%s/%s"
+local upgradeStr= ITEM_UPGRADE_FRAME_CURRENT_UPGRADE_FORMAT:gsub('%%s/%%s','(.-%%d%+/%%d%+)')-- "升级：%s/%s"
+--local upgradeStr2= ITEM_UPGRADE_FRAME_CURRENT_UPGRADE_FORMAT_STRING:gsub('%%s %%s/%%s','(.+)' ) --"升级：%s %s/%s"
 local classStr= format(ITEM_CLASSES_ALLOWED, '(.+)') --"职业：%s";
 local itemLevelStr= ITEM_LEVEL:gsub('%%d', '%(%%d%+%)')--"物品等级：%d"
 local FMTab={}--附魔
@@ -24,7 +25,7 @@ local heirloomWeapontemEquipLocTab={--传家宝，武器，itemEquipLoc
         ['INVTYPE_RANGEDRIGHT']= true,
     }
 
---set_Item_Info(itemButton, {bag={bag=bagID, slot=slotID}, merchant={slot=slot, buyBack= selectedTab==2}, guidBank={tab=tab, slot=i}, hyperLink=nil})
+--set_Item_Info(itemButton, {bag={bag=bagID, slot=slotID}, merchant={slot=slot, buyBack= selectedTab==2}, guidBank={tab=tab, slot=i}, hyperLink=nil, point=nil})
 local function set_Item_Info(self, tab)
     local itemLink, containerInfo, itemID= tab.hyperLink, nil, nil
     if tab.bag then
@@ -72,20 +73,20 @@ local function set_Item_Info(self, tab)
             end
 
         elseif itemID==6948 then--炉石
-            bottomLeftText= e.WA_Utf8Sub(GetBindLocation(), 2, 5)
+            bottomLeftText= e.WA_Utf8Sub(GetBindLocation(), 2, 3, true)
 
         elseif containerInfo and containerInfo.hasLoot then--宝箱
             local dateInfo= e.GetTooltipData({bag=tab.bag, merchant=tab.merchant, guidBank=tab.guidBank, hyperLink=itemLink, red=true, onlyRed=true})--物品提示，信息
             topRightText= dateInfo.red and '|A:Monuments-Lock:0:0|a' or '|A:talents-button-undo:0:0|a'
 
-        elseif C_Item.IsItemKeystoneByID(itemID) then--挑战
+        elseif itemID and C_Item.IsItemKeystoneByID(itemID) then--挑战
             local name=itemLink:match('%[(.-)]') or itemLink
             if name then
                 topLeftText=name:match('%((%d+)%)') or C_MythicPlus.GetOwnedKeystoneLevel() --等级
                 name=name:gsub('%((%d+)%)','')
                 name=name:match('（(.-)）') or name:match('%((.-)%)') or name:match('%- (.+)') or name:match(keyStr)--名称
                 if name then
-                    bottomLeftText=e.WA_Utf8Sub(name, 3,6)
+                    bottomLeftText= e.WA_Utf8Sub(name, 3,6, true)
                 end
                 local activities=C_WeeklyRewards.GetActivities(1)--本周完成
                 if activities then
@@ -107,13 +108,13 @@ local function set_Item_Info(self, tab)
             topRightText='|A:Coin-Silver:0:0|a'
 
         elseif classID==1 then--背包
-            bottomLeftText= e.WA_Utf8Sub(itemSubType, 2,5)
+            bottomLeftText= e.WA_Utf8Sub(itemSubType, 2,3, true)
             if containerInfo and not containerInfo.isBound then--没有锁定
                 topRightText='|A:'..e.Icon.unlocked..':0:0|a'
             end
             --local dateInfo= e.GetTooltipData({bag=tab.bag, merchant=tab.merchant, guidBank=tab.guidBank, hyperLink=itemLink, text={bagNumStr}})
             --topLeftText= dateInfo.text[bagNumStr]--格数 CONTAINER_SLOTS  不知怎样处理--%2$s da %1$d |4scomparto:scomparti
-         
+
         elseif classID==3 then--宝石
             if expacID== e.ExpansionLevel then
                 local dateInfo= e.GetTooltipData({bag=tab.bag, merchant=tab.merchant, guidBank=tab.guidBank, hyperLink=itemLink, text={'(%+%d+ .+)', }})--物品提示，信息
@@ -130,11 +131,11 @@ local function set_Item_Info(self, tab)
                     str2= str2 or text:match('%+%d+ .+')
                     if str2 then
                         str2= str2:match('%+%d+ (.+)')
-                        leftText=e.WA_Utf8Sub(str2,1,3)
+                        leftText= e.WA_Utf8Sub(str2,1,3, true)
                         leftText= leftText and '|cffffffff'..leftText..'|r'
                         if str3 then
                             str3= str3:match('%+%d+ (.+)')
-                            bottomLeftText= e.WA_Utf8Sub(str3,1,3)
+                            bottomLeftText= e.WA_Utf8Sub(str3,1,3, true)
                             bottomLeftText= bottomLeftText and '|cffffffff'..bottomLeftText..'|r'
                         end
                     end
@@ -151,9 +152,9 @@ local function set_Item_Info(self, tab)
             local dateInfo= e.GetTooltipData({bag=tab.bag, merchant=tab.merchant, guidBank=tab.guidBank, hyperLink=itemLink, text={ITEM_SPELL_KNOWN, useStr,}, wow=true, red=true})--物品提示，信息 ITEM_SPELL_KNOWN = "已经学会";
             if not (classID==15 and (subclassID== 0 or subclassID==4)) then
                 if classID==0 and subclassID==5 then
-                    topRightText= e.WA_Utf8Sub(POWER_TYPE_FOOD, 2,5)--食物
+                    topRightText= e.WA_Utf8Sub(POWER_TYPE_FOOD, 2,3, true)--食物
                 else
-                    topRightText= e.WA_Utf8Sub(itemSubType==OTHER and itemType or itemSubType, 2,3)
+                    topRightText= e.WA_Utf8Sub(itemSubType==OTHER and itemType or itemSubType, 2,3, true)
                 end
                 if expacID and expacID< e.ExpansionLevel and itemID~='5512' and itemID~='113509' then--低版本，5512糖 食物,113509[魔法汉堡]
                     topRightText= '|cff606060'..topRightText..'|r'
@@ -187,11 +188,11 @@ local function set_Item_Info(self, tab)
                 local dateInfo= e.GetTooltipData({bag=tab.bag, merchant=tab.merchant, guidBank=tab.guidBank, hyperLink=itemLink, itemID=itemID,
                                                 text={equipStr, pvpItemStr, upgradeStr, classStr, itemLevelStr}, wow=true, red=true})--物品提示，信息
                 if dateInfo.text[itemLevelStr] then--传家宝
-                    itemLevel= tonumber(dateInfo.text[itemLevelStr])
+                    itemLevel= tonumber(dateInfo.text[itemLevelStr]) or 0
                 end
                 if dateInfo.text[equipStr] then--套装名称，
                     local text= dateInfo.text[equipStr]:match('(.+),') or dateInfo.text[equipStr]:match('(.+)，') or dateInfo.text[equipStr]
-                    bottomLeftText=e.WA_Utf8Sub(text,3,5)
+                    bottomLeftText= e.WA_Utf8Sub(text,3,3, true)
                 elseif itemMinLevel>e.Player.level then--低装等
                     bottomLeftText='|cnRED_FONT_COLOR:'..itemMinLevel..'|r'
                 elseif dateInfo.wow then--战网
@@ -214,7 +215,7 @@ local function set_Item_Info(self, tab)
                                 findText= ' '..findText..','
                                 findText:gsub(' (.-),', function(t)
                                     if ClassNameIconTab[t] then
-                                        text= select(2, math.modf(n/4))==0 and text..'\n' or text
+                                        text= select(2, math.modf(n/4))==0 and text..'|n' or text
                                         text=text..ClassNameIconTab[t]
                                         n= n+1
                                     end
@@ -222,7 +223,7 @@ local function set_Item_Info(self, tab)
                             else
                                 for className, icon in pairs (ClassNameIconTab) do
                                     if dateInfo.text[classStr]:find(className) then
-                                        text= select(2, math.modf(n/4))==0 and text..'\n' or text
+                                        text= select(2, math.modf(n/4))==0 and text..'|n' or text
                                         text=text..icon
                                         n= n+1
                                     end
@@ -237,13 +238,17 @@ local function set_Item_Info(self, tab)
                     rightText= '|A:Warfronts-BaseMapIcons-Horde-Barracks-Minimap:0:0|a'
                 end
                 if dateInfo.text[upgradeStr] then--"升级：%s/%s"
+                    
                     local min, max= dateInfo.text[upgradeStr]:match('(%d+)/(%d+)')
+                    local upText= dateInfo.text[upgradeStr]:match('(.-)%d+/%d+')
+                    upText= upText and strlower(e.WA_Utf8Sub(upText,1,3, true)) or ''
+                    
                     if min and max then
                         if min==max then
-                            leftText= "|A:VignetteKill:0:0|a"
+                            leftText= "|A:VignetteKill:0:0|a"..upText
                         else
                             min, max= tonumber(min), tonumber(max)
-                            leftText= '|cnGREEN_FONT_COLOR:'..max-min..'|r'
+                            leftText= '|cnGREEN_FONT_COLOR:'..max-min..'|r'..upText
                         end
                     end
                 end
@@ -277,19 +282,17 @@ local function set_Item_Info(self, tab)
                         topLeftText=e.Icon.X2
                     end
                 end
-                if (containerInfo and not containerInfo.isBound) or tab.guidBank or (tab.merchant and tab.merchant.buyBack) then--没有锁定
-                    topRightText=itemSubType and e.WA_Utf8Sub(itemSubType,2,4) or '|A:'..e.Icon.unlocked..':0:0|a'
-                end
+                --[[if (containerInfo and not containerInfo.isBound) or tab.guidBank then--没有锁定
+                    topRightText=itemSubType and e.WA_Utf8Sub(itemSubType,2,3, true) or '|A:'..e.Icon.unlocked..':0:0|a'
+                end]]
             end
             if containerInfo and not containerInfo.isBound or not containerInfo then
                 local isCollected
                 bottomRightText, isCollected= e.GetItemCollected(itemLink, nil, true)--幻化
-                if containerInfo and itemQuality and itemQuality<=1 then
-                    if itemQuality==0 and isCollected then
-                        topRightText='|A:Coin-Silver:0:0|a'
-                    elseif not isCollected then
-                        topRightText=itemSubType and e.WA_Utf8Sub(itemSubType,2,4)
-                    end
+                if itemQuality==0 and isCollected then
+                    topRightText= '|A:Coin-Silver:0:0|a'
+                elseif not isCollected and itemSubType then
+                    topRightText=e.WA_Utf8Sub(itemSubType,2,3, true)
                 end
             end
 
@@ -311,7 +314,7 @@ local function set_Item_Info(self, tab)
 
 
         elseif classID==12 and itemQuality and itemQuality>0 then--任务
-            topRightText= e.onlyChinese and '任务' or e.WA_Utf8Sub(itemSubType, 2,5)
+            topRightText= e.onlyChinese and '任务' or e.WA_Utf8Sub(itemSubType, 2,3, true)
 
         elseif itemQuality==7 or itemQuality==8 then--7传家宝，8 WoWToken
             topRightText=e.Icon.wow2
@@ -353,7 +356,7 @@ local function set_Item_Info(self, tab)
             end
         end
 
-        if (tab.bag and tab.bag.bag<=NUM_BAG_SLOTS+1 and tab.bag.bag>=0) or not tab.bag then
+        if (tab.bag and tab.bag.bag <= NUM_BAG_SLOTS+1 and tab.bag.bag>=0) or not tab.bag then
             local num=GetItemCount(itemLink, true)-GetItemCount(itemLink)--银行数量
             if num>0  then
                 leftText= '+'..e.MK(num, 0)
@@ -363,7 +366,7 @@ local function set_Item_Info(self, tab)
 
     if topRightText and not self.topRightText then
         self.topRightText=e.Cstr(self, {size=size})--size, nil, nil, nil, 'OVERLAY')
-        self.topRightText:SetPoint('TOPRIGHT',2,0)
+        self.topRightText:SetPoint('TOPRIGHT', tab.point or self, 2,0)
     end
     if self.topRightText then
         self.topRightText:SetText(topRightText or '')
@@ -373,7 +376,7 @@ local function set_Item_Info(self, tab)
     end
     if topLeftText and not self.topLeftText then
         self.topLeftText=e.Cstr(self, {size=size})--size, nil, nil, nil, 'OVERLAY')
-        self.topLeftText:SetPoint('TOPLEFT')
+        self.topLeftText:SetPoint('TOPLEFT', tab.point or self)
     end
     if self.topLeftText then
         self.topLeftText:SetText(topLeftText or '')
@@ -384,7 +387,7 @@ local function set_Item_Info(self, tab)
     if bottomRightText then
         if not self.bottomRightText then
             self.bottomRightText=e.Cstr(self, {size=size})--size, nil, nil, nil, 'OVERLAY')
-            self.bottomRightText:SetPoint('BOTTOMRIGHT')
+            self.bottomRightText:SetPoint('BOTTOMRIGHT', tab.point or self)
         end
     end
     if self.bottomRightText then
@@ -396,7 +399,7 @@ local function set_Item_Info(self, tab)
 
     if leftText and not self.leftText then
         self.leftText=e.Cstr(self, {size=size})--size, nil, nil, nil, 'OVERLAY')
-        self.leftText:SetPoint('LEFT')
+        self.leftText:SetPoint('LEFT', tab.point or self)
     end
     if self.leftText then
         self.leftText:SetText(leftText or '')
@@ -407,7 +410,7 @@ local function set_Item_Info(self, tab)
 
     if rightText and not self.rightText then
         self.rightText=e.Cstr(self, {size=size})--size, nil, nil, nil, 'OVERLAY')
-        self.rightText:SetPoint('RIGHT')
+        self.rightText:SetPoint('RIGHT', tab.point or self)
     end
     if self.rightText then
         self.rightText:SetText(rightText or '')
@@ -418,7 +421,7 @@ local function set_Item_Info(self, tab)
 
     if bottomLeftText and not self.bottomLeftText then
         self.bottomLeftText=e.Cstr(self, {size=size})--size)
-        self.bottomLeftText:SetPoint('BOTTOMLEFT')
+        self.bottomLeftText:SetPoint('BOTTOMLEFT', tab.point or self)
     end
     if self.bottomLeftText then
         self.bottomLeftText:SetText(bottomLeftText or '')
@@ -459,6 +462,8 @@ local function setMerchantInfo()--商人设置
             set_Item_Info(itemButton, {merchant={slot=slot, buyBack= selectedTab==2}})
         end
     end
+	set_Item_Info(MerchantBuyBackItemItemButton, {merchant={slot=GetNumBuybackItems(), buyBack=true}})
+
 end
 
 
@@ -508,11 +513,41 @@ end
 --初始
 --####
 local function Init()
-
+    --################
+    --设置，收信箱，物品
+    --################
+    hooksecurefunc('InboxFrame_Update',function()
+        for i=1, INBOXITEMS_TO_DISPLAY do
+            local btn=_G["MailItem"..i.."Button"]
+            if btn and btn:IsShown() then
+                --local packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, itemCount, wasRead, x, y, z, isGM, firstItemQuantity, firstItemLink = GetInboxHeaderInfo(btn.index)
+                set_Item_Info(btn, {hyperLink= select(15, GetInboxHeaderInfo(btn.index))})
+            end
+        end
+    end)
+    hooksecurefunc('OpenMail_Update', function()--多物品，打开时
+        if not OpenMailFrame_IsValidMailID() then
+            return
+        end
+        for i=1, ATTACHMENTS_MAX_RECEIVE do
+            local attachmentButton = OpenMailFrame.OpenMailAttachments[i];
+            if attachmentButton and attachmentButton:IsShown() then
+                set_Item_Info(attachmentButton, {hyperLink= HasInboxItem(InboxFrame.openMailID, i) and GetInboxItemLink(InboxFrame.openMailID, i)})
+            end
+        end
+    end)
+    hooksecurefunc('SendMailFrame_Update', function()--发信箱，物品
+        for i=1, ATTACHMENTS_MAX_SEND do
+            local sendMailAttachmentButton = SendMailFrame.SendMailAttachments[i]
+            if sendMailAttachmentButton and sendMailAttachmentButton:IsShown() then
+                set_Item_Info(sendMailAttachmentButton, {hyperLink= HasSendMailItem(i) and GetSendMailItemLink(i)})
+            end
+        end
+    end)
     --#################
     --拾取时, 弹出, 物品提示，信息
     --[[hooksecurefunc('LootUpgradeFrame_SetUp', function(self, itemLink)--AlertFrameSystems.lua
-        print(id,addName, itemLink,'LootUpgradeFrame_SetUp')
+        
         e.Set_Item_Stats(self, itemLink, self.lootItem and self.lootItem.Icon or self.Icon)
     end)
     hooksecurefunc('LootWonAlertFrame_SetUp', function(self, itemLink)
@@ -644,6 +679,7 @@ local function Init()
             end)
         end
         return
+
     elseif IsAddOnLoaded("Baggins") then
         hooksecurefunc(Baggins, 'UpdateItemButton', function(_, _, button, bagID, slotID)
             if button and bagID and slotID then
@@ -651,6 +687,7 @@ local function Init()
             end
         end)
         return
+
     elseif IsAddOnLoaded('Inventorian') then
         local ADDON = LibStub("AceAddon-3.0"):GetAddon("Inventorian")
         local InvLevel = ADDON:NewModule('InventorianWoWToolsItemInfo')
@@ -662,26 +699,36 @@ local function Init()
         end
         hooksecurefunc(ADDON.Item, "WrapItemButton", InvLevel.WrapItemButton)
         return
+
+    else
+        hooksecurefunc('ContainerFrame_GenerateFrame',function (self)
+            for _, frame in ipairs(ContainerFrameSettingsManager:GetBagsShown()) do
+                if not frame.SetBagInfo then
+                    setBags(frame)
+                    hooksecurefunc(frame, 'UpdateItems', setBags)
+                    frame.SetBagInfo=true
+                end
+            end
+        end)
+
+        panel:RegisterEvent('BANKFRAME_OPENED')--打开所有银行，背包
+        panel:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED")--打开公会银行时, 打开背包
+        panel:RegisterEvent("GUILDBANK_ITEM_LOCK_CHANGED")
     end
 
-    hooksecurefunc('ContainerFrame_GenerateFrame',function (self)
-        for _, frame in ipairs(ContainerFrameSettingsManager:GetBagsShown()) do
-            if not frame.SetBagInfo then
-                setBags(frame)
-                hooksecurefunc(frame, 'UpdateItems', setBags)
-                frame.SetBagInfo=true
-            end
-        end
-    end)
     hooksecurefunc('BankFrameItemButton_Update', set_BankFrameItemButton_Update)--银行
 
     --############
     --排序:从右到左
     --############
-    local button= e.Cbtn(ContainerFrameCombinedBags.TitleContainer, {icon=true, size={20,20}})
-    button:SetPoint('LEFT')
-    button:SetAlpha(0.5)
-    button:SetScript('OnClick', function(self, d)
+    local btn= e.Cbtn(ContainerFrameCombinedBags.TitleContainer, {icon=true, size={20,20}, name= 'ITEMSINFOMenuButton'})
+    if _G['MoveZoomInButtonPerContainerFrameCombinedBags'] then
+        btn:SetPoint('RIGHT', _G['MoveZoomInButtonPerContainerFrameCombinedBags'], 'LEFT')
+    else
+        btn:SetPoint('LEFT')
+    end
+    btn:SetAlpha(0.5)
+    btn:SetScript('OnClick', function(self, d)
         if not self.Menu then
             self.Menu= CreateFrame("Frame", id..addName..'Menu', self, "UIDropDownMenuTemplate")--菜单列表
             e.LibDD:UIDropDownMenu_Initialize(self.Menu, function(self2, level, type)
@@ -689,7 +736,7 @@ local function Init()
                     text= e.onlyChinese and '反向整理背包' or REVERSE_CLEAN_UP_BAGS_TEXT,
                     checked= C_Container.GetSortBagsRightToLeft(),
                     tooltipOnButton=true,
-                    tooltipTitle='C_Container.\nSetSortBagsRightToLeft',
+                    tooltipTitle='C_Container.|nSetSortBagsRightToLeft',
                     tooltipText= e.onlyChinese and '整理背包会将物品移动到你最右边的背包里' or OPTION_TOOLTIP_REVERSE_CLEAN_UP_BAGS,
                     func= function()
                         C_Container.SetSortBagsRightToLeft(not C_Container.GetSortBagsRightToLeft() and true or false)
@@ -704,7 +751,7 @@ local function Init()
                     icon= e.Icon.toLeft,
                     checked= C_Container.GetInsertItemsLeftToRight(),
                     tooltipOnButton=true,
-                    tooltipTitle='C_Container.\nSetInsertItemsLeftToRight',
+                    tooltipTitle='C_Container.|nSetInsertItemsLeftToRight',
                     tooltipText= e.onlyChinese and '新物品会出现在你最左边的背包里' or OPTION_TOOLTIP_REVERSE_NEW_LOOT,
                     func= function()
                         C_Container.SetInsertItemsLeftToRight(not C_Container.GetInsertItemsLeftToRight() and true or false)
@@ -717,7 +764,7 @@ local function Init()
                     icon= 'bags-button-autosort-up',
                     checked=not C_Container.GetBackpackAutosortDisabled(),
                     tooltipOnButton=true,
-                    tooltipTitle='C_Container.\nSetBackpackAutosortDisabled',
+                    tooltipTitle='C_Container.|nSetBackpackAutosortDisabled',
                     func= function()
                         C_Container.SetBackpackAutosortDisabled(not C_Container.GetBackpackAutosortDisabled() and true or false)
                     end,
@@ -729,7 +776,7 @@ local function Init()
                     icon= 'bags-button-autosort-up',
                     checked=not C_Container.GetBankAutosortDisabled(),
                     tooltipOnButton=true,
-                    tooltipTitle='C_Container.\nSetBankAutosortDisabled',
+                    tooltipTitle='C_Container.|nSetBankAutosortDisabled',
                     func= function()
                         C_Container.SetBankAutosortDisabled(not C_Container.GetBankAutosortDisabled() and true or false)
                     end,
@@ -747,7 +794,8 @@ local function Init()
         end
         e.LibDD:ToggleDropDownMenu(1, nil, self.Menu, self, 15, 0)
     end)
-
+    btn:SetScript('OnEnter', function(self2) self2:SetAlpha(1) end)
+    btn:SetScript('OnLeave', function(self2) self2:SetAlpha(0.5) end)
     if not MainMenuBarBackpackButton.OnClick then
         MainMenuBarBackpackButton:HookScript('OnClick', function(_, d)
             if d=='RightButton' then
@@ -755,10 +803,7 @@ local function Init()
             end
         end)
     end
-
-    panel:RegisterEvent('BANKFRAME_OPENED')
-    panel:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED");
-    panel:RegisterEvent("GUILDBANK_ITEM_LOCK_CHANGED");
+    --使用插件时，会退出，不要在下面加代码
 end
 
 --###########
@@ -794,25 +839,44 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 panel:UnregisterAllEvents()
             else
                 Init()
-                panel:UnregisterEvent('ADDON_LOADED')
+                --panel:UnregisterEvent('ADDON_LOADED')
 
                 FMTab={--附魔
                         ['主属性']= '主',
                         ['坐骑速度']= '骑',
-                        [PRIMARY_STAT1_TOOLTIP_NAME]=  e.onlyChinese and "力" or strlower(e.WA_Utf8Sub(PRIMARY_STAT1_TOOLTIP_NAME, 1, 3)),
-                        [PRIMARY_STAT2_TOOLTIP_NAME]=  e.onlyChinese and "敏" or strlower(e.WA_Utf8Sub(PRIMARY_STAT2_TOOLTIP_NAME, 1, 3)),
-                        [PRIMARY_STAT3_TOOLTIP_NAME]=  e.onlyChinese and "耐" or strlower(e.WA_Utf8Sub(PRIMARY_STAT3_TOOLTIP_NAME, 1, 3)),
-                        [PRIMARY_STAT4_TOOLTIP_NAME]=  e.onlyChinese and "智" or strlower(e.WA_Utf8Sub(PRIMARY_STAT4_TOOLTIP_NAME, 1, 3)),
-                        [ITEM_MOD_CRIT_RATING_SHORT]= e.onlyChinese and '爆' or strlower(e.WA_Utf8Sub(STAT_CRITICAL_STRIKE, 1, 3)),
-                        [ITEM_MOD_HASTE_RATING_SHORT]= e.onlyChinese and '急' or strlower(e.WA_Utf8Sub(STAT_HASTE, 1,3)),
-                        [ITEM_MOD_MASTERY_RATING_SHORT]= e.onlyChinese and '精' or strlower(e.WA_Utf8Sub(STAT_MASTERY, 1,3)),
-                        [ITEM_MOD_VERSATILITY]= e.onlyChinese and '全' or strlower(e.WA_Utf8Sub(STAT_VERSATILITY, 1,3)),
-                        [ITEM_MOD_CR_AVOIDANCE_SHORT]= e.onlyChinese and '闪' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_AVOIDANCE_SHORT, 1,3)),
-                        [ITEM_MOD_CR_LIFESTEAL_SHORT]= e.onlyChinese and '吸' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_LIFESTEAL_SHORT, 1,3)),
-                        [ITEM_MOD_CR_SPEED_SHORT]= e.onlyChinese and '速' or strlower(e.WA_Utf8Sub(ITEM_MOD_CR_SPEED_SHORT, 1,3)),
+                        [PRIMARY_STAT1_TOOLTIP_NAME]=  e.onlyChinese and "力" or e.WA_Utf8Sub(PRIMARY_STAT1_TOOLTIP_NAME, 1, 3, true),
+                        [PRIMARY_STAT2_TOOLTIP_NAME]=  e.onlyChinese and "敏" or e.WA_Utf8Sub(PRIMARY_STAT2_TOOLTIP_NAME, 1, 3, true),
+                        [PRIMARY_STAT3_TOOLTIP_NAME]=  e.onlyChinese and "耐" or e.WA_Utf8Sub(PRIMARY_STAT3_TOOLTIP_NAME, 1, 3, true),
+                        [PRIMARY_STAT4_TOOLTIP_NAME]=  e.onlyChinese and "智" or e.WA_Utf8Sub(PRIMARY_STAT4_TOOLTIP_NAME, 1, 3, true),
+                        [ITEM_MOD_CRIT_RATING_SHORT]= e.onlyChinese and '爆' or e.WA_Utf8Sub(STAT_CRITICAL_STRIKE, 1, 3, true),
+                        [ITEM_MOD_HASTE_RATING_SHORT]= e.onlyChinese and '急' or e.WA_Utf8Sub(STAT_HASTE, 1, 3, true),
+                        [ITEM_MOD_MASTERY_RATING_SHORT]= e.onlyChinese and '精' or e.WA_Utf8Sub(STAT_MASTERY, 1, 3, true),
+                        [ITEM_MOD_VERSATILITY]= e.onlyChinese and '全' or e.WA_Utf8Sub(STAT_VERSATILITY, 1, 3, true),
+                        [ITEM_MOD_CR_AVOIDANCE_SHORT]= e.onlyChinese and '闪' or e.WA_Utf8Sub(ITEM_MOD_CR_AVOIDANCE_SHORT, 1, 3, true),
+                        [ITEM_MOD_CR_LIFESTEAL_SHORT]= e.onlyChinese and '吸' or e.WA_Utf8Sub(ITEM_MOD_CR_LIFESTEAL_SHORT, 1, 3, true),
+                        [ITEM_MOD_CR_SPEED_SHORT]= e.onlyChinese and '速' or e.WA_Utf8Sub(ITEM_MOD_CR_SPEED_SHORT, 1, 3, true),
                     }
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
+
+        elseif arg1=='Blizzard_PerksProgram' then
+            --##########################
+            --商站
+            --Blizzard_PerksProgram.lua          
+            local function set_FrozenButton_Tips()
+                local frame= PerksProgramFrame:GetFrozenItemFrame()
+                if frame then
+                    local itemLink= frame.FrozenButton.itemID and select(2, GetItemInfo(frame.FrozenButton.itemID))
+                    set_Item_Info(frame.FrozenButton, {hyperLink=itemLink})
+                end
+            end
+            hooksecurefunc(PerksProgramFrame.ProductsFrame.ProductsScrollBoxContainer.ScrollBox, 'SetScrollTargetOffset', function(self2)
+                for _, btn in pairs(self2:GetFrames()) do
+                    local itemLink= btn.itemID and select(2, GetItemInfo(btn.itemID))
+                    set_Item_Info(btn.ContentsContainer, {hyperLink=itemLink, point=btn.ContentsContainer.Icon})
+                end
+                set_FrozenButton_Tips()
+            end)
         end
 
     elseif event == "PLAYER_LOGOUT" then
@@ -831,7 +895,11 @@ panel:SetScript("OnEvent", function(self, event, arg1)
 
     elseif event=='BANKFRAME_OPENED' then--打开所有银行，背包
         for i=NUM_TOTAL_EQUIPPED_BAG_SLOTS+1, (NUM_TOTAL_EQUIPPED_BAG_SLOTS + NUM_BANKBAGSLOTS), 1 do
-            ToggleBag(i);
+            if not  IsBagOpen(i) then
+                OpenBag(i)
+            end
+            --ToggleBag(i);
         end
+
     end
 end)

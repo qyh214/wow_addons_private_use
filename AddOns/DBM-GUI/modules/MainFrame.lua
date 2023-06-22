@@ -112,7 +112,7 @@ do
 		count = count + 1
 		if count == 3 then
 			count = 0
-			DBM:PlaySound("1304911", true)
+			DBM:PlaySoundFile(1304911, true)
 		end
 	end)
 end

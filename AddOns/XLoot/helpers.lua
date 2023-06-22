@@ -1,6 +1,6 @@
+---@class XLootAddon
 local XLoot = select(2, ...)
 local buffer, print = {}, print
-local _G = _G
 
 local table_insert, table_concat, string_format = table.insert, table.concat, string.format
 
@@ -28,7 +28,8 @@ function XLoot.CopperToString(copper)
 	return table_concat(buffer, ", ")
 end
 
-local tooltip = CreateFrame('GameTooltip', 'XLootTooltip', UIParent, 'GameTooltipTemplate')
+XLootTooltip = CreateFrame('GameTooltip', 'XLootTooltip', UIParent, 'GameTooltipTemplate')
+local tooltip = XLootTooltip
 tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
 local bind_types = {
@@ -68,7 +69,7 @@ function XLoot.CanEquipItem(link)
 			local lr, lg, lb = _G["XLootTooltipTextLeft"..i]:GetTextColor()
 			return (r > .8 and b > .8 and g > .8 and lr > .8 and lg > .8 and lb > .8) and true or false
 		end
-	end	
+	end
 end
 function XLoot.IsItemUpgrade(link)
 	if not XLoot.CanEquipItem(link) then
@@ -115,7 +116,7 @@ function XLoot.FancyPlayerName(name, class, opt)
 end
 
 
-local temp_list, template = {}, 
+local temp_list, template = {},
 [[local string_match = string.match
 return function(message)
 	local pcall_status, m1, m2, m3, m4, m5 = pcall(string_match, message, [=[^%s$]=])
@@ -126,7 +127,7 @@ end]]
 -- Return a inverted match string and corresponding list of ordered match slots (m1-m5)
 local match, gsub, insert = string.match, string.gsub, table.insert
 local function invert(pattern)
-	local inverted, arglist = pattern
+	local inverted, arglist = pattern, nil
 	-- Escape magic characters
 	inverted = gsub(inverted, "%(", "%%(")
 	inverted = gsub(inverted, "%)", "%%)")

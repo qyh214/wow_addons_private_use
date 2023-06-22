@@ -1,8 +1,6 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('FlyPlateBuffs') then return end
-
-function AS:FPB()
+function R:FlyPlateBuffs()
 	local C_NamePlate_GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
 
 	local function skinNameplateButton(Button)
@@ -10,10 +8,10 @@ function AS:FPB()
 		Button.durationBg:SetTexture('')
 		Button.border:SetTexture('')
 		--texture
-		AS:SkinTexture(Button.texture)
+		S:HandleIcon(Button.texture)
 		Button.texture:SetInside(Button, 0, 0)
 
-		AS:CreateBackdrop(Button)
+		S:CreateBackdrop(Button)
 
 	end
 
@@ -39,4 +37,4 @@ function AS:FPB()
 	end)
 end
 
-AS:RegisterSkin('FlyPlateBuffs', AS.FPB)
+AS:RegisterSkin('FlyPlateBuffs')

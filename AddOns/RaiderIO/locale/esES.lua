@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu May  4 19:43:22 UTC 2023
+-- Generated from CurseForge on Wed Jun 21 21:15:49 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("esES") then
@@ -66,16 +66,26 @@ L["DPS"] = "DPS"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh: Gambito - GMBT"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salas de la Expiación - HOA"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_HOI"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_HOV"] = ""--]] 
 L["DUNGEON_SHORT_NAME_ID"] = "Puerto de Hierro - ID"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior - LOWR"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NELT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_NL"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_NO"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW"
@@ -90,9 +100,15 @@ L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh: Calles - STRT"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_UNDR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior - UPPR"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WORK"] = "Mechagon: Taller - WORK"
 L["DUNGEON_SHORT_NAME_YARD"] = "Mechagon: Desguace - YARD"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar automáticamente el marco de perfil de RaiderIO"
@@ -156,6 +172,26 @@ L["PROFILE_BEST_RUNS"] = "Mejor de cada mazmorra"
 --[[Translation missing --]]
 --[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede encontrar datos para tu facción actual. Compruebe la configuración de |cffFFFFFF/raiderio|r y habilite los datos de información sobre herramientas para |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATSC_9"] = ""--]] 
 L["RAID_BOSS_CN_1"] = "Alachilla"
 L["RAID_BOSS_CN_10"] = "Sire Denathrius"
 L["RAID_BOSS_CN_2"] = "Altimor el Cazador"
@@ -259,6 +295,14 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]

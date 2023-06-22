@@ -18,13 +18,7 @@ local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelInfo = UnitChannelInfo
-
-if IS_WOW_PROJECT_CLASSIC_ERA then
-    UnitCastingInfo = CastingInfo
-    UnitChannelInfo = ChannelInfo
-end
+local CastInfo = detailsFramework.CastInfo
 
 local PixelUtil = PixelUtil or DFPixelUtil
 
@@ -1982,37 +1976,50 @@ local no_options = {}
 ---UseStatusBar = false, --if true, creates a status bar at the bottom of the frame (frame.StatusBar)
 ---NoCloseButton = false, --if true, won't show the close button
 ---NoTitleBar = false, --if true, don't create the title bar
----@param parent table
----@param width number|nil
----@param height number|nil
----@param title string|nil
----@param frameName string|nil
----@param panelOptions table|nil
----@param savedVariableTable table|nil
----@return table
+---@class simplepanel
+---@field TitleBar frame
+---@field Title fontstring
+---@field Close button
+---@field SetTitle fun(self: simplepanel, title: string)
+---@param parent frame the parent frame
+---@param width number|nil the width of the panel
+---@param height number|nil the height of the panel
+---@param title string|nil a string to show in the title bar
+---@param frameName string|nil the name of the frame
+---@param panelOptions table|nil a table with options described above
+---@param savedVariableTable table|nil a table to save the scale of the panel
+---@return frame
 function detailsFramework:CreateSimplePanel(parent, width, height, title, frameName, panelOptions, savedVariableTable)
+	--create a saved variable table if the savedVariableTable has been not passed within the function call
 	if (savedVariableTable and frameName and not savedVariableTable[frameName]) then
 		savedVariableTable[frameName] = {
 			scale = 1
 		}
 	end
 
+	--create a frame name if the frameName has been not passed within the function call
 	if (not frameName) then
 		frameName = "DetailsFrameworkSimplePanel" .. detailsFramework.SimplePanelCounter
 		detailsFramework.SimplePanelCounter = detailsFramework.SimplePanelCounter + 1
 	end
+
+	--default parent is UIParent
 	if (not parent) then
-		parent = UIParent
+		parent = _G["UIParent"]
 	end
 
+	--default options
 	panelOptions = panelOptions or no_options
 
-	local simplePanel = CreateFrame("frame", frameName, UIParent,"BackdropTemplate")
+	--create the frame
+	local simplePanel = CreateFrame("frame", frameName, _G["UIParent"],"BackdropTemplate")
 	simplePanel:SetSize(width or 400, height or 250)
-	simplePanel:SetPoint("center", UIParent, "center", 0, 0)
+	simplePanel:SetPoint("center", _G["UIParent"], "center", 0, 0)
 	simplePanel:SetFrameStrata("FULLSCREEN")
 	simplePanel:EnableMouse()
 	simplePanel:SetMovable(true)
+
+	--set the backdrop
 	simplePanel:SetBackdrop(SimplePanel_frame_backdrop)
 	simplePanel:SetBackdropColor(unpack(SimplePanel_frame_backdrop_color))
 	simplePanel:SetBackdropBorderColor(unpack(SimplePanel_frame_backdrop_border_color))
@@ -3424,232 +3431,6 @@ function detailsFramework:FindHighestParent(self)
 	return highestParent
 end
 
-detailsFramework.TabContainerFunctions = {}
-
-local button_tab_template = detailsFramework.table.copy({}, detailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE"))
-button_tab_template.backdropbordercolor = nil
-
-detailsFramework.TabContainerFunctions.CreateUnderlineGlow = function(button)
-	local selectedGlow = button:CreateTexture(nil, "background", nil, -4)
-	selectedGlow:SetPoint("topleft", button.widget, "bottomleft", -7, 0)
-	selectedGlow:SetPoint("topright", button.widget, "bottomright", 7, 0)
-	selectedGlow:SetTexture([[Interface\BUTTONS\UI-Panel-Button-Glow]])
-	selectedGlow:SetTexCoord(0, 95/128, 30/64, 38/64)
-	selectedGlow:SetBlendMode("ADD")
-	selectedGlow:SetHeight(8)
-	selectedGlow:SetAlpha(.75)
-	selectedGlow:Hide()
-	button.selectedUnderlineGlow = selectedGlow
-end
-
-detailsFramework.TabContainerFunctions.OnMouseDown = function(self, button)
-	--search for UIParent
-	local f = detailsFramework:FindHighestParent (self)
-	local container = self:GetParent()
-
-	if (button == "LeftButton") then
-		if (not f.IsMoving and f:IsMovable()) then
-			f:StartMoving()
-			f.IsMoving = true
-		end
-	elseif (button == "RightButton") then
-		if (not f.IsMoving and container.IsContainer) then
-			if (self.IsFrontPage) then
-				if (container.CanCloseWithRightClick) then
-					if (f.CloseFunction) then
-						f:CloseFunction()
-					else
-						f:Hide()
-					end
-				end
-			else
-				--goes back to front page
-				detailsFramework.TabContainerFunctions.SelectIndex (self, _, 1)
-			end
-		end
-	end
-end
-
-detailsFramework.TabContainerFunctions.OnMouseUp = function(self, button)
-	local f = detailsFramework:FindHighestParent (self)
-	if (f.IsMoving) then
-		f:StopMovingOrSizing()
-		f.IsMoving = false
-	end
-end
-
-detailsFramework.TabContainerFunctions.SelectIndex = function(self, fixedParam, menuIndex)
-	local mainFrame = self.AllFrames and self or self.mainFrame or self:GetParent()
-
-	for i = 1, #mainFrame.AllFrames do
-		mainFrame.AllFrames[i]:Hide()
-		if (mainFrame.ButtonNotSelectedBorderColor) then
-			mainFrame.AllButtons[i]:SetBackdropBorderColor(unpack(mainFrame.ButtonNotSelectedBorderColor))
-		end
-		if (mainFrame.AllButtons[i].selectedUnderlineGlow) then
-			mainFrame.AllButtons[i].selectedUnderlineGlow:Hide()
-		end
-	end
-
-	mainFrame.AllFrames[menuIndex]:Show()
-	if mainFrame.AllFrames[menuIndex].RefreshOptions then
-		mainFrame.AllFrames[menuIndex]:RefreshOptions()
-	end
-	if (mainFrame.ButtonSelectedBorderColor) then
-		mainFrame.AllButtons[menuIndex]:SetBackdropBorderColor(unpack(mainFrame.ButtonSelectedBorderColor))
-	end
-	if (mainFrame.AllButtons[menuIndex].selectedUnderlineGlow) then
-		mainFrame.AllButtons[menuIndex].selectedUnderlineGlow:Show()
-	end
-	mainFrame.CurrentIndex = menuIndex
-
-	if (mainFrame.hookList.OnSelectIndex) then
-		detailsFramework:QuickDispatch(mainFrame.hookList.OnSelectIndex, mainFrame, mainFrame.AllButtons[menuIndex])
-	end
-end
-
-detailsFramework.TabContainerFunctions.SetIndex = function(self, index)
-	self.CurrentIndex = index
-end
-
-local tab_container_on_show = function(self)
-	local index = self.CurrentIndex
-	self.SelectIndex (self.AllButtons[index], nil, index)
-end
-
-function detailsFramework:CreateTabContainer (parent, title, frameName, frameList, optionsTable, hookList, languageInfo)
-	local options_text_template = detailsFramework:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
-	local options_dropdown_template = detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-	local options_switch_template = detailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-	local options_slider_template = detailsFramework:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
-	local options_button_template = detailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
-
-	optionsTable = optionsTable or {}
-	local parentFrameWidth = parent:GetWidth()
-	local y_offset = optionsTable.y_offset or 0
-	local buttonWidth = optionsTable.button_width or 160
-	local buttonHeight = optionsTable.button_height or 20
-	local buttonAnchorX = optionsTable.button_x or 230
-	local buttonAnchorY = optionsTable.button_y or -32
-	local button_text_size = optionsTable.button_text_size or 10
-	local containerWidthOffset = optionsTable.container_width_offset or 0
-
-	local mainFrame = CreateFrame("frame", frameName, parent.widget or parent, "BackdropTemplate")
-	mainFrame:SetAllPoints()
-	detailsFramework:Mixin(mainFrame, detailsFramework.TabContainerFunctions)
-	mainFrame.hookList = hookList or {}
-
-	local mainTitle = detailsFramework:CreateLabel(mainFrame, title, 24, "white")
-	mainTitle:SetPoint("topleft", mainFrame, "topleft", 10, -30 + y_offset)
-
-	mainFrame:SetFrameLevel(200)
-
-	mainFrame.AllFrames = {}
-	mainFrame.AllButtons = {}
-	mainFrame.CurrentIndex = 1
-	mainFrame.IsContainer = true
-	mainFrame.ButtonSelectedBorderColor = optionsTable.button_selected_border_color or {1, 1, 0, 1}
-	mainFrame.ButtonNotSelectedBorderColor = optionsTable.button_border_color or {0, 0, 0, 0}
-
-	if (optionsTable.right_click_interact ~= nil) then
-		mainFrame.CanCloseWithRightClick = optionsTable.right_click_interact
-	else
-		mainFrame.CanCloseWithRightClick = true
-	end
-
-	--languageInfo
-	local addonId = languageInfo and languageInfo.language_addonId or "none"
-
-	for i, frameInfo in ipairs(frameList) do
-		local f = CreateFrame("frame", "$parent" .. frameInfo.name, mainFrame, "BackdropTemplate")
-		f:SetAllPoints()
-		f:SetFrameLevel(210)
-		f:Hide()
-
-		--attempt to get the localized text from the language system using the addonId and the frameInfo.title
-		local phraseId = frameInfo.title
-		local bIsLanguagePrahseID = detailsFramework.Language.DoesPhraseIDExistsInDefaultLanguage(addonId, phraseId)
-
-		local title = detailsFramework:CreateLabel(f, "", 16, "silver")
-		if (bIsLanguagePrahseID) then
-			DetailsFramework.Language.RegisterObjectWithDefault(addonId, title.widget, frameInfo.title, frameInfo.title)
-		else
-			title:SetText(frameInfo.title)
-		end
-
-		title:SetPoint("topleft", mainTitle, "bottomleft", 0, 0)
-		f.titleText = title
-
-		local tabButton = detailsFramework:CreateButton(mainFrame, detailsFramework.TabContainerFunctions.SelectIndex, buttonWidth, buttonHeight, frameInfo.title, i, nil, nil, nil, "$parentTabButton" .. frameInfo.name, false, button_tab_template)
-
-		if (bIsLanguagePrahseID) then
-			DetailsFramework.Language.RegisterObjectWithDefault(addonId, tabButton.widget, frameInfo.title, frameInfo.title)
-		end
-
-		PixelUtil.SetSize(tabButton, buttonWidth, buttonHeight)
-		tabButton:SetFrameLevel(220)
-		tabButton.textsize = button_text_size
-		tabButton.mainFrame = mainFrame
-		detailsFramework.TabContainerFunctions.CreateUnderlineGlow(tabButton)
-
-		local rightClickToBack
-		if (i == 1 or optionsTable.rightbutton_always_close) then
-			rightClickToBack = detailsFramework:CreateLabel(f, "right click to close", 10, "gray")
-			rightClickToBack:SetPoint("bottomright", f, "bottomright", -1, optionsTable.right_click_y or 0)
-			if (optionsTable.close_text_alpha) then
-				rightClickToBack:SetAlpha(optionsTable.close_text_alpha)
-			end
-			f.IsFrontPage = true
-		else
-			rightClickToBack = detailsFramework:CreateLabel(f, "right click to go back to main menu", 10, "gray")
-			rightClickToBack:SetPoint("bottomright", f, "bottomright", -1, optionsTable.right_click_y or 0)
-			if (optionsTable.close_text_alpha) then
-				rightClickToBack:SetAlpha(optionsTable.close_text_alpha)
-			end
-		end
-
-		if (optionsTable.hide_click_label) then
-			rightClickToBack:Hide()
-		end
-
-		f:SetScript("OnMouseDown", detailsFramework.TabContainerFunctions.OnMouseDown)
-		f:SetScript("OnMouseUp", detailsFramework.TabContainerFunctions.OnMouseUp)
-
-		tinsert(mainFrame.AllFrames, f)
-		tinsert(mainFrame.AllButtons, tabButton)
-	end
-
-	--order buttons
-	local x = buttonAnchorX
-	local y = buttonAnchorY
-	local spaceBetweenButtons = 3
-
-	local allocatedSpaceForButtons = parentFrameWidth - ((#frameList - 2) * spaceBetweenButtons) - buttonAnchorX + containerWidthOffset
-	local amountButtonsPerRow = floor(allocatedSpaceForButtons / buttonWidth)
-
-	mainFrame.AllButtons[1]:SetPoint("topleft", mainTitle, "topleft", x, y)
-	x = x + buttonWidth + 2
-
-	for i = 2, #mainFrame.AllButtons do
-		local button = mainFrame.AllButtons[i]
-		PixelUtil.SetPoint(button, "topleft", mainTitle, "topleft", x, y)
-		x = x + buttonWidth + 2
-
-		if (i % amountButtonsPerRow == 0) then
-			x = buttonAnchorX
-			y = y - buttonHeight - 1
-		end
-	end
-
-	--when show the frame, reset to the current internal index
-	mainFrame:SetScript("OnShow", tab_container_on_show)
-	--select the first frame
-	mainFrame.SelectIndex (mainFrame.AllButtons[1], nil, 1)
-
-	print()
-	return mainFrame
-end
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- ~right ~click to ~close
 
@@ -3889,6 +3670,7 @@ function detailsFramework:CreateScrollBox(parent, name, refreshFunc, data, width
 	scroll.Frames = {}
 	scroll.ReajustNumFrames = autoAmount
 	scroll.CreateLineFunc = createLineFunc
+	scroll.DontHideChildrenOnPreRefresh = false
 
 	detailsFramework:Mixin(scroll, detailsFramework.SortFunctions)
 	detailsFramework:Mixin(scroll, detailsFramework.ScrollBoxFunctions)
@@ -3906,31 +3688,53 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- ~resizers
 
-function detailsFramework:CreateResizeGrips (parent)
-	if (parent) then
-		local parentName = parent:GetName()
+--these options are copied to the object with object:BuildOptionsTable()
+local rezieGripOptions = {
+	width = 32,
+	height = 32,
+	should_mirror_left_texture = true,
+	normal_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]],
+	highlight_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]],
+	pushed_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]],
+}
 
-		local leftResizer = CreateFrame("button", parentName and parentName .. "LeftResizer" or nil, parent, "BackdropTemplate")
-		local rightResizer = CreateFrame("button", parentName and parentName .. "RightResizer" or nil, parent, "BackdropTemplate")
+---create the two resize grips for a frame, one in the bottom left and another in the bottom right
+---@param parent frame
+---@param options table|nil
+---@param leftResizerName string|nil
+---@param rightResizerName string|nil
+---@return frame, frame
+function detailsFramework:CreateResizeGrips(parent, options, leftResizerName, rightResizerName)
+	local parentName = parent:GetName()
 
-		leftResizer:SetPoint("bottomleft", parent, "bottomleft")
-		rightResizer:SetPoint("bottomright", parent, "bottomright")
-		leftResizer:SetSize(16, 16)
-		rightResizer:SetSize(16, 16)
+	local leftResizer = _G.CreateFrame("button", leftResizerName or (parentName and "$parentLeftResizer"), parent, "BackdropTemplate")
+	local rightResizer = _G.CreateFrame("button", rightResizerName or (parentName and "$parentRightResizer"), parent, "BackdropTemplate")
 
-		rightResizer:SetNormalTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]])
-		rightResizer:SetHighlightTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]])
-		rightResizer:SetPushedTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]])
-		leftResizer:SetNormalTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]])
-		leftResizer:SetHighlightTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]])
-		leftResizer:SetPushedTexture([[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]])
+	detailsFramework:Mixin(leftResizer, detailsFramework.OptionsFunctions)
+	detailsFramework:Mixin(rightResizer, detailsFramework.OptionsFunctions)
+	leftResizer:BuildOptionsTable(rezieGripOptions, options)
+	rightResizer:BuildOptionsTable(rezieGripOptions, options)
 
+	leftResizer:SetPoint("bottomleft", parent, "bottomleft", 0, 0)
+	rightResizer:SetPoint("bottomright", parent, "bottomright", 0, 0)
+	leftResizer:SetSize(leftResizer.options.width, leftResizer.options.height)
+	rightResizer:SetSize(leftResizer.options.width, leftResizer.options.height)
+
+	rightResizer:SetNormalTexture(rightResizer.options.normal_texture)
+	rightResizer:SetHighlightTexture(rightResizer.options.highlight_texture)
+	rightResizer:SetPushedTexture(rightResizer.options.pushed_texture)
+
+	leftResizer:SetNormalTexture(leftResizer.options.normal_texture)
+	leftResizer:SetHighlightTexture(leftResizer.options.highlight_texture)
+	leftResizer:SetPushedTexture(leftResizer.options.pushed_texture)
+
+	if (leftResizer.options.should_mirror_left_texture) then
 		leftResizer:GetNormalTexture():SetTexCoord(1, 0, 0, 1)
 		leftResizer:GetHighlightTexture():SetTexCoord(1, 0, 0, 1)
 		leftResizer:GetPushedTexture():SetTexCoord(1, 0, 0, 1)
-
-		return leftResizer, rightResizer
 	end
+
+	return leftResizer, rightResizer
 end
 
 
@@ -4503,6 +4307,9 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- ~standard backdrop
 ---this is the standard backdrop for detailsframework, it's a dark-ish color semi transparent with a thin opaque black border
+---for the background it uses UI-Tooltip-Background with detailsFramework:GetDefaultBackdropColor() color
+---for the border it uses Interface\Buttons\WHITE8X8
+---also creates an additional texture frame.__background = texture with the same setting of the backdrop background
 ---@param frame table
 ---@param bUseSolidColor any
 ---@param alphaScale number
@@ -5054,7 +4861,7 @@ local default_icon_row_options = {
 }
 
 function detailsFramework:CreateIconRow (parent, name, options)
-	local f = CreateFrame("frame", name, parent, "BackdropTemplate")
+	local f = _G.CreateFrame("frame", name, parent, "BackdropTemplate")
 	f.IconPool = {}
 	f.NextIcon = 1
 	f.AuraCache = {}
@@ -5071,419 +4878,6 @@ function detailsFramework:CreateIconRow (parent, name, options)
 	f:SetBackdropBorderColor(unpack(f.options.backdrop_border_color))
 
 	return f
-end
-
-
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---~header
-
---mixed functions
-detailsFramework.HeaderFunctions = {
-	AddFrameToHeaderAlignment = function(self, frame)
-		self.FramesToAlign = self.FramesToAlign or {}
-		tinsert(self.FramesToAlign, frame)
-	end,
-
-	GetFramesFromHeaderAlignment = function(self, frame)
-		return self.FramesToAlign or {}
-	end,
-
-	--@self: an object like a line
-	--@headerFrame: the main header frame
-	--@anchor: which side the columnHeaders are attach
-	AlignWithHeader = function(self, headerFrame, anchor)
-		local columnHeaderFrames = headerFrame.columnHeadersCreated
-		anchor = anchor or "topleft"
-
-		for i = 1, #self.FramesToAlign do
-			local frame = self.FramesToAlign[i]
-			frame:ClearAllPoints()
-
-			local columnHeader = columnHeaderFrames[i]
-			local offset = 0
-
-			if (columnHeader.columnAlign == "right") then
-				offset = columnHeader:GetWidth()
-				if (frame:GetObjectType() == "FontString") then
-					frame:SetJustifyH("right")
-				end
-			end
-
-			frame:SetPoint(columnHeader.columnAlign, self, anchor, columnHeader.XPosition + columnHeader.columnOffset + offset, 0)
-		end
-	end,
-
-	--@self: column header button
-	OnClick = function(self, buttonClicked)
-
-		--get the header main frame
-		local headerFrame = self:GetParent()
-
-		--if this header does not have a clickable header, just ignore
-		if (not headerFrame.columnSelected) then
-			return
-		end
-
-		--get the latest column header selected
-		local previousColumnHeader = headerFrame.columnHeadersCreated[headerFrame.columnSelected]
-		previousColumnHeader.Arrow:Hide()
-		headerFrame:ResetColumnHeaderBackdrop(previousColumnHeader)
-		headerFrame:SetBackdropColorForSelectedColumnHeader(self)
-
-		if (headerFrame.columnSelected == self.columnIndex) then
-			self.order = self.order ~= "ASC" and "ASC" or "DESC"
-		end
-		headerFrame.columnOrder = self.order
-
-		--set the new column header selected
-		headerFrame.columnSelected = self.columnIndex
-
-		headerFrame:UpdateSortArrow(self)
-
-		if (headerFrame.options.header_click_callback) then
-			--callback with the main header frame, column header, column index and column order as payload
-			local okay, errortext = pcall(headerFrame.options.header_click_callback, headerFrame, self, self.columnIndex, self.order)
-			if (not okay) then
-				print("DF: Header onClick callback error:", errortext)
-			end
-		end
-	end,
-}
-
-detailsFramework.HeaderCoreFunctions = {
-	GetColumnWidth = function(self, columnId)
-		return self.HeaderTable[columnId].width
-	end,
-
-	SetHeaderTable = function(self, newTable)
-		self.columnHeadersCreated = self.columnHeadersCreated or {}
-		self.HeaderTable = newTable
-		self.NextHeader = 1
-		self.HeaderWidth = 0
-		self.HeaderHeight = 0
-		self:Refresh()
-	end,
-
-	--return which header is current selected and the the order ASC DESC
-	GetSelectedColumn = function(self)
-		return self.columnSelected, self.columnHeadersCreated[self.columnSelected or 1].order
-	end,
-
-	--clean up and rebuild the header following the header options
-	--@self: main header frame
-	Refresh = function(self)
-		--refresh background frame
-		self:SetBackdrop(self.options.backdrop)
-		self:SetBackdropColor(unpack(self.options.backdrop_color))
-		self:SetBackdropBorderColor(unpack(self.options.backdrop_border_color))
-
-		--reset all header frames
-		for i = 1, #self.columnHeadersCreated do
-			local columnHeader = self.columnHeadersCreated[i]
-			columnHeader.InUse = false
-			columnHeader:Hide()
-		end
-
-		local previousColumnHeader
-		local growDirection = string.lower(self.options.grow_direction)
-
-		--update header frames
-		local headerSize = #self.HeaderTable
-		for i = 1, headerSize do
-			--get the header button, a new one is created if it doesn't exists yet
-			local columnHeader = self:GetNextHeader()
-			self:UpdateColumnHeader(columnHeader, i)
-
-			--grow direction
-			if (not previousColumnHeader) then
-				columnHeader:SetPoint("topleft", self, "topleft", 0, 0)
-
-				if (growDirection == "right") then
-					if (self.options.use_line_separators) then
-						columnHeader.Separator:Show()
-						columnHeader.Separator:SetWidth(self.options.line_separator_width)
-						columnHeader.Separator:SetColorTexture(unpack(self.options.line_separator_color))
-
-						columnHeader.Separator:ClearAllPoints()
-						if (self.options.line_separator_gap_align) then
-							columnHeader.Separator:SetPoint("topleft", columnHeader, "topright", 0, 0)
-						else
-							columnHeader.Separator:SetPoint("topright", columnHeader, "topright", 0, 0)
-						end
-						columnHeader.Separator:SetHeight(self.options.line_separator_height)
-					end
-				end
-			else
-				if (growDirection == "right") then
-					columnHeader:SetPoint("topleft", previousColumnHeader, "topright", self.options.padding, 0)
-
-					if (self.options.use_line_separators) then
-						columnHeader.Separator:Show()
-						columnHeader.Separator:SetWidth(self.options.line_separator_width)
-						columnHeader.Separator:SetColorTexture(unpack(self.options.line_separator_color))
-
-						columnHeader.Separator:ClearAllPoints()
-						if (self.options.line_separator_gap_align) then
-							columnHeader.Separator:SetPoint("topleft", columnHeader, "topright", 0, 0)
-						else
-							columnHeader.Separator:SetPoint("topleft", columnHeader, "topright", 0, 0)
-						end
-						columnHeader.Separator:SetHeight(self.options.line_separator_height)
-
-						if (headerSize == i) then
-							columnHeader.Separator:Hide()
-						end
-					end
-
-				elseif (growDirection == "left") then
-					columnHeader:SetPoint("topright", previousColumnHeader, "topleft", -self.options.padding, 0)
-
-				elseif (growDirection == "bottom") then
-					columnHeader:SetPoint("topleft", previousColumnHeader, "bottomleft", 0, -self.options.padding)
-
-				elseif (growDirection == "top") then
-					columnHeader:SetPoint("bottomleft", previousColumnHeader, "topleft", 0, self.options.padding)
-				end
-			end
-
-			previousColumnHeader = columnHeader
-		end
-
-		self:SetSize(self.HeaderWidth, self.HeaderHeight)
-	end,
-
-	--@self: main header frame
-	UpdateSortArrow = function(self, columnHeader, defaultShown, defaultOrder)
-		local options = self.options
-		local order = defaultOrder or columnHeader.order
-		local arrowIcon = columnHeader.Arrow
-
-		if (type(defaultShown) ~= "boolean") then
-			arrowIcon:Show()
-		else
-			arrowIcon:SetShown(defaultShown)
-			if (defaultShown) then
-				self:SetBackdropColorForSelectedColumnHeader(columnHeader)
-			end
-		end
-
-		arrowIcon:SetAlpha(options.arrow_alpha)
-
-		if (order == "ASC") then
-			arrowIcon:SetTexture(options.arrow_up_texture)
-			arrowIcon:SetTexCoord(unpack(options.arrow_up_texture_coords))
-			arrowIcon:SetSize(unpack(options.arrow_up_size))
-
-		elseif (order == "DESC") then
-			arrowIcon:SetTexture(options.arrow_down_texture)
-			arrowIcon:SetTexCoord(unpack(options.arrow_down_texture_coords))
-			arrowIcon:SetSize(unpack(options.arrow_down_size))
-		end
-	end,
-
-	--@self: main header frame
-	UpdateColumnHeader = function(self, columnHeader, headerIndex)
-		local headerData = self.HeaderTable[headerIndex]
-
-		if (headerData.icon) then
-			columnHeader.Icon:SetTexture(headerData.icon)
-
-			if (headerData.texcoord) then
-				columnHeader.Icon:SetTexCoord(unpack(headerData.texcoord))
-			else
-				columnHeader.Icon:SetTexCoord(0, 1, 0, 1)
-			end
-
-			columnHeader.Icon:SetPoint("left", columnHeader, "left", self.options.padding, 0)
-			columnHeader.Icon:Show()
-		end
-
-		if (headerData.text) then
-			columnHeader.Text:SetText(headerData.text)
-
-			--text options
-			detailsFramework:SetFontColor(columnHeader.Text, self.options.text_color)
-			detailsFramework:SetFontSize(columnHeader.Text, self.options.text_size)
-			detailsFramework:SetFontOutline(columnHeader.Text, self.options.text_shadow)
-
-			--point
-			if (not headerData.icon) then
-				columnHeader.Text:SetPoint("left", columnHeader, "left", self.options.padding, 0)
-			else
-				columnHeader.Text:SetPoint("left", columnHeader.Icon, "right", self.options.padding, 0)
-			end
-
-			columnHeader.Text:Show()
-		end
-
-		--column header index
-		columnHeader.columnIndex = headerIndex
-
-		if (headerData.canSort) then
-			columnHeader.order = "DESC"
-			columnHeader.Arrow:SetTexture(self.options.arrow_up_texture)
-		else
-			columnHeader.Arrow:Hide()
-		end
-
-		if (headerData.selected) then
-			columnHeader.Arrow:Show()
-			columnHeader.Arrow:SetAlpha(.843)
-			self:UpdateSortArrow(columnHeader, true, columnHeader.order)
-			self.columnSelected = headerIndex
-		else
-			if (headerData.canSort) then
-				self:UpdateSortArrow(columnHeader, false, columnHeader.order)
-			end
-		end
-
-		--size
-		if (headerData.width) then
-			columnHeader:SetWidth(headerData.width)
-		end
-		if (headerData.height) then
-			columnHeader:SetHeight(headerData.height)
-		end
-
-		columnHeader.XPosition = self.HeaderWidth -- + self.options.padding
-		columnHeader.YPosition = self.HeaderHeight -- + self.options.padding
-
-		columnHeader.columnAlign = headerData.align or "left"
-		columnHeader.columnOffset = headerData.offset or 0
-
-		--add the header piece size to the total header size
-		local growDirection = string.lower(self.options.grow_direction)
-
-		if (growDirection == "right" or growDirection == "left") then
-			self.HeaderWidth = self.HeaderWidth + columnHeader:GetWidth() + self.options.padding
-			self.HeaderHeight = math.max(self.HeaderHeight, columnHeader:GetHeight())
-
-		elseif (growDirection == "top" or growDirection == "bottom") then
-			self.HeaderWidth =  math.max(self.HeaderWidth, columnHeader:GetWidth())
-			self.HeaderHeight = self.HeaderHeight + columnHeader:GetHeight() + self.options.padding
-		end
-
-		columnHeader:Show()
-		columnHeader.InUse = true
-	end,
-
-	--reset column header backdrop
-	--@self: main header frame
-	ResetColumnHeaderBackdrop = function(self, columnHeader)
-		columnHeader:SetBackdrop(self.options.header_backdrop)
-		columnHeader:SetBackdropColor(unpack(self.options.header_backdrop_color))
-		columnHeader:SetBackdropBorderColor(unpack(self.options.header_backdrop_border_color))
-	end,
-
-	--@self: main header frame
-	SetBackdropColorForSelectedColumnHeader = function(self, columnHeader)
-		columnHeader:SetBackdropColor(unpack(self.options.header_backdrop_color_selected))
-	end,
-
-	--clear the column header
-	--@self: main header frame
-	ClearColumnHeader = function(self, columnHeader)
-		columnHeader:SetSize(self.options.header_width, self.options.header_height)
-		self:ResetColumnHeaderBackdrop(columnHeader)
-
-		columnHeader:ClearAllPoints()
-
-		columnHeader.Icon:SetTexture("")
-		columnHeader.Icon:Hide()
-		columnHeader.Text:SetText("")
-		columnHeader.Text:Hide()
-	end,
-
-	--get the next column header, create one if doesn't exists
-	--@self: main header frame
-	GetNextHeader = function(self)
-		local nextHeader = self.NextHeader
-		local columnHeader = self.columnHeadersCreated[nextHeader]
-
-		if (not columnHeader) then
-			--create a new column header
-			local newHeader = CreateFrame("button", "$parentHeaderIndex" .. nextHeader, self, "BackdropTemplate")
-			newHeader:SetScript("OnClick", detailsFramework.HeaderFunctions.OnClick)
-
-			--header icon
-			detailsFramework:CreateImage(newHeader, "", self.options.header_height, self.options.header_height, "ARTWORK", nil, "Icon", "$parentIcon")
-			--header separator
-			detailsFramework:CreateImage(newHeader, "", 1, 1, "ARTWORK", nil, "Separator", "$parentSeparator")
-			--header name text
-			detailsFramework:CreateLabel(newHeader, "", self.options.text_size, self.options.text_color, "GameFontNormal", "Text", "$parentText", "ARTWORK")
-			--header selected and order icon
-			detailsFramework:CreateImage(newHeader, self.options.arrow_up_texture, 12, 12, "ARTWORK", nil, "Arrow", "$parentArrow")
-
-			newHeader.Arrow:SetPoint("right", newHeader, "right", -1, 0)
-
-			newHeader.Separator:Hide()
-			newHeader.Arrow:Hide()
-
-			self:UpdateSortArrow(newHeader, false, "DESC")
-
-			tinsert(self.columnHeadersCreated, newHeader)
-			columnHeader = newHeader
-		end
-
-		self:ClearColumnHeader(columnHeader)
-		self.NextHeader = self.NextHeader + 1
-		return columnHeader
-	end,
-
-	NextHeader = 1,
-	HeaderWidth = 0,
-	HeaderHeight = 0,
-}
-
-local default_header_options = {
-	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	backdrop_color = {0, 0, 0, 0.2},
-	backdrop_border_color = {0.1, 0.1, 0.1, .2},
-
-	text_color = {1, 1, 1, 1},
-	text_size = 10,
-	text_shadow = false,
-	grow_direction = "RIGHT",
-	padding = 2,
-
-	--each piece of the header
-	header_backdrop = {bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	header_backdrop_color = {0, 0, 0, 0.5},
-	header_backdrop_color_selected = {0.3, 0.3, 0.3, 0.5},
-	header_backdrop_border_color = {0, 0, 0, 0},
-	header_width = 120,
-	header_height = 20,
-
-	arrow_up_texture = [[Interface\Buttons\Arrow-Up-Down]],
-	arrow_up_texture_coords = {0, 1, 6/16, 1},
-	arrow_up_size = {12, 11},
-	arrow_down_texture = [[Interface\Buttons\Arrow-Down-Down]],
-	arrow_down_texture_coords = {0, 1, 0, 11/16},
-	arrow_down_size = {12, 11},
-	arrow_alpha = 0.659,
-
-	use_line_separators = false,
-	line_separator_color = {.1, .1, .1, .6},
-	line_separator_width = 1,
-	line_separator_height = 200,
-	line_separator_gap_align = false,
-}
-
-function detailsFramework:CreateHeader(parent, headerTable, options, frameName)
-	local newHeader = CreateFrame("frame", frameName or "$parentHeaderLine", parent, "BackdropTemplate")
-
-	detailsFramework:Mixin(newHeader, detailsFramework.OptionsFunctions)
-	detailsFramework:Mixin(newHeader, detailsFramework.HeaderCoreFunctions)
-
-	newHeader:BuildOptionsTable(default_header_options, options)
-
-	newHeader:SetBackdrop(newHeader.options.backdrop)
-	newHeader:SetBackdropColor(unpack(newHeader.options.backdrop_color))
-	newHeader:SetBackdropBorderColor(unpack(newHeader.options.backdrop_border_color))
-
-	newHeader:SetHeaderTable(headerTable)
-
-	return newHeader
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -7997,7 +7391,7 @@ detailsFramework.CastFrameFunctions = {
 
 		if (self.unit) then
 			if (self.casting) then
-				local name, text, texture, startTime = UnitCastingInfo (self.unit)
+				local name, text, texture, startTime = CastInfo.UnitCastingInfo (self.unit)
 				if (name) then
 					--[[if not self.spellStartTime then
 						self:UpdateCastingInfo(self.unit)
@@ -8008,7 +7402,7 @@ detailsFramework.CastFrameFunctions = {
 				self:RunHooksForWidget("OnShow", self, self.unit)
 
 			elseif (self.channeling) then
-				local name, text, texture, endTime = UnitChannelInfo (self.unit)
+				local name, text, texture, endTime = CastInfo.UnitChannelInfo (self.unit)
 				if (name) then
 					--[[if not self.spellEndTime then
 						self:UpdateChannelInfo(self.unit)
@@ -8204,8 +7598,8 @@ detailsFramework.CastFrameFunctions = {
 	end,
 
 	PLAYER_ENTERING_WORLD = function(self, unit, arg1)
-		local isChannel = UnitChannelInfo (unit)
-		local isRegularCast = UnitCastingInfo (unit)
+		local isChannel = CastInfo.UnitChannelInfo (unit)
+		local isRegularCast = CastInfo.UnitCastingInfo (unit)
 
 		if (isChannel) then
 			self.channeling = true
@@ -8229,7 +7623,7 @@ detailsFramework.CastFrameFunctions = {
 	end,
 
 	UpdateCastingInfo = function(self, unit)
-		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = UnitCastingInfo (unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = CastInfo.UnitCastingInfo (unit)
 
 		--is valid?
 		if (not self:IsValid (unit, name, isTradeSkill, true)) then
@@ -8344,7 +7738,8 @@ detailsFramework.CastFrameFunctions = {
 	end,
 
 	UpdateChannelInfo = function(self, unit, ...)
-		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = UnitChannelInfo (unit)
+		local unitID, castID, spellID = ...
+		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = CastInfo.UnitChannelInfo (unit)
 
 		--is valid?
 		if (not self:IsValid (unit, name, isTradeSkill, true)) then
@@ -8471,7 +7866,9 @@ detailsFramework.CastFrameFunctions = {
 			end
 
 			self.casting = nil
+			self.channeling = nil
 			self.finished = true
+			self.castID = nil
 
 			if (not self:HasScheduledHide()) then
 				--check if settings has no fade option or if its parents are not visible
@@ -8502,8 +7899,10 @@ detailsFramework.CastFrameFunctions = {
 			local _, maxValue = self:GetMinMaxValues()
 			self:SetValue(self.maxValue or maxValue or 1)
 
+			self.casting = nil
 			self.channeling = nil
 			self.finished = true
+			self.castID = nil
 
 			if (not self:HasScheduledHide()) then
 				--check if settings has no fade option or if its parents are not visible
@@ -8543,6 +7942,7 @@ detailsFramework.CastFrameFunctions = {
 			self.channeling = nil
 			self.failed = true
 			self.finished = true
+			self.castID = nil
 			self:SetValue(self.maxValue or select(2, self:GetMinMaxValues()) or 1)
 
 			--set the statusbar color
@@ -8564,6 +7964,7 @@ detailsFramework.CastFrameFunctions = {
 			self.channeling = nil
 			self.interrupted = true
 			self.finished = true
+			self.castID = nil
 
 			if (self.Settings.FillOnInterrupt) then
 				self:SetValue(self.maxValue or select(2, self:GetMinMaxValues()) or 1)
@@ -8584,7 +7985,7 @@ detailsFramework.CastFrameFunctions = {
 	end,
 
 	UNIT_SPELLCAST_DELAYED = function(self, unit, ...)
-		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo (unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = CastInfo.UnitCastingInfo (unit)
 
 		if (not self:IsValid (unit, name, isTradeSkill)) then
 			return
@@ -8599,7 +8000,7 @@ detailsFramework.CastFrameFunctions = {
 	end,
 
 	UNIT_SPELLCAST_CHANNEL_UPDATE = function(self, unit, ...)
-		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = UnitChannelInfo (unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = CastInfo.UnitChannelInfo (unit)
 
 		if (not self:IsValid (unit, name, isTradeSkill)) then
 			return
@@ -8636,90 +8037,6 @@ detailsFramework.CastFrameFunctions = {
 }
 
 detailsFramework:Mixin(detailsFramework.CastFrameFunctions, detailsFramework.ScriptHookMixin)
-
--- for classic era use LibClassicCasterino:
-local LibCC = LibStub("LibClassicCasterino", true)
-if IS_WOW_PROJECT_CLASSIC_ERA and LibCC then
-	local fCast = CreateFrame("frame")
-
-	local getCastBar = function(unitId)
-		local plateFrame = C_NamePlate.GetNamePlateForUnit (unitId)
-		if (not plateFrame) then
-			return
-		end
-
-		local castBar = plateFrame.unitFrame and plateFrame.unitFrame.castBar
-		if (not castBar) then
-			return
-		end
-
-		return castBar
-	end
-
-	local triggerCastEvent = function(castBar, event, unitId, ...)
-		if (castBar and castBar.OnEvent) then
-			castBar.OnEvent (castBar, event, unitId)
-		end
-	end
-
-	local funcCast = function(event, unitId, ...)
-		local castBar = getCastBar (unitId)
-		if (castBar) then
-			triggerCastEvent (castBar, event, unitId)
-		end
-	end
-
-	fCast.UNIT_SPELLCAST_START = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_STOP = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_DELAYED = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_FAILED = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_INTERRUPTED = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_CHANNEL_START = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_CHANNEL_UPDATE = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	fCast.UNIT_SPELLCAST_CHANNEL_STOP = function(self, event, unitId, ...)
-		triggerCastEvent (getCastBar (unitId), event, unitId)
-	end
-
-	if LibCC then
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_START", funcCast)
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_DELAYED", funcCast) -- only for player
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_STOP", funcCast)
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_FAILED", funcCast)
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_INTERRUPTED", funcCast)
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_CHANNEL_START", funcCast)
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_CHANNEL_UPDATE", funcCast) -- only for player
-		LibCC.RegisterCallback(fCast,"UNIT_SPELLCAST_CHANNEL_STOP", funcCast)
-
-		UnitCastingInfo = function(unit)
-			return LibCC:UnitCastingInfo (unit)
-		end
-
-		UnitChannelInfo = function(unit)
-			return LibCC:UnitChannelInfo (unit)
-		end
-	end
-end -- end classic era
 
 -- ~castbar
 

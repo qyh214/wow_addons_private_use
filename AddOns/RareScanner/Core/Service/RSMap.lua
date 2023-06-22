@@ -150,7 +150,7 @@ function RSMap.GetMapPOIs(mapID, onWorldMap, onMiniMap)
 	MapPOIs = {}
 
 	-- Skip if zone filtered
-	if (RSConfigDB.IsZoneFiltered(mapID)) then
+	if (RSConfigDB.IsZoneFiltered(mapID) or RSConfigDB.IsZoneFilteredOnlyWorldmap(mapID)) then
 		return
 	end
 
@@ -273,6 +273,16 @@ function RSMap.GetWorldMapPOI(objectGUID, vignetteInfo, mapID)
 		
 		if (npcInfo or alreadyFoundInfo) then
 			return RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
+		end
+	elseif (RSConstants.IsEventAtlas(vignetteInfo.atlasName)) then
+		local _, _, _, _, _, vignetteObjectID = strsplit("-", objectGUID)
+		local eventID = tonumber(vignetteObjectID)
+		
+		local eventInfo = RSEventDB.GetInternalEventInfo(eventID)
+		local alreadyFoundInfo = RSGeneralDB.GetAlreadyFoundEntity(eventID)
+	
+		if (eventInfo or alreadyFoundInfo) then
+			return RSEventPOI.GetEventPOI(eventID, mapID, eventInfo, alreadyFoundInfo)
 		end
 	end
 	

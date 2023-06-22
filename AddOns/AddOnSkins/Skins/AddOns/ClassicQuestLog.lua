@@ -1,24 +1,21 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('Classic Quest Log') then return end
-
-function AS:ClassicQuestLog()
-	AS:SkinFrame(ClassicQuestLog, "Transparent")
-	AS:SkinScrollBar(ClassicQuestLogScrollFrameScrollBar)
-	AS:SkinScrollBar(ClassicQuestLogDetailScrollFrameScrollBar)
-	AS:StripTextures(ClassicQuestLogInset)
-	AS:StripTextures(ClassicQuestLogScrollFrame.expandAll)
-	AS:StripTextures(ClassicQuestLog.chrome.countFrame)
-	AS:StripTextures(ClassicQuestLogScrollFrame)
-	AS:StripTextures(ClassicQuestLogDetailScrollFrame)
+function R:ClassicQuestLog()
+	S:HandleFrame(ClassicQuestLog, "Transparent")
+	S:HandleScrollBar(ClassicQuestLog.log)
+	S:StripTextures(ClassicQuestLogInset)
+	S:StripTextures(ClassicQuestLogScrollFrame.expandAll)
+	S:StripTextures(ClassicQuestLog.chrome.countFrame)
+	S:StripTextures(ClassicQuestLogScrollFrame)
+	S:StripTextures(ClassicQuestLogDetailScrollFrame)
 
 	for i = 1, ClassicQuestLog.chrome:GetNumChildren() do
 		local object = select(i, ClassicQuestLog.chrome:GetChildren())
 		if object:IsObjectType('Button') then
 			if object:GetText() ~= nil then
-				AS:SkinButton(object, true)
+				S:HandleButton(object, true)
 			else
-				AS:SkinCloseButton(object, true)
+				S:HandleCloseButton(object, true)
 			end
 		end
 	end
@@ -46,4 +43,4 @@ function AS:ClassicQuestLog()
 	ClassicQuestLog.chrome.mapButton:SetSize(56, 40)
 end
 
-AS:RegisterSkin('Classic Quest Log', AS.ClassicQuestLog)
+AS:RegisterSkin('Classic Quest Log', R.ClassicQuestLog)

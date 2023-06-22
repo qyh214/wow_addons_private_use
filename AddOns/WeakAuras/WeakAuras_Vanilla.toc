@@ -1,7 +1,7 @@
 ## Interface: 11403
 ## Title: WeakAuras
 ## Author: The WeakAuras Team
-## Version: 5.5.2
+## Version: 5.5.5
 ## X-Flavor: Vanilla
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
@@ -57,6 +57,7 @@ DebugLog.lua
 SubscribableObject.lua
 
 # Region support
+RegionTypes\SmoothStatusBarMixin.lua
 RegionTypes\RegionPrototype.lua
 RegionTypes\ProgressTexture.lua
 RegionTypes\Texture.lua

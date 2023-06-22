@@ -1,12 +1,10 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('NoNoGoGo') then return end
-
-function AS:NoNoGoGo()
-	AS:CreateBackdrop(NNGGAnchorFrame)
-	AS:SkinButton(NNGGPullTimerFrame, true)
-	AS:SkinButton(NNGGReadyCheckFrame, true)
-	AS:SkinStatusBar(NNGGStatusBarFrame)
+function R:NoNoGoGo()
+	S:CreateBackdrop(NNGGAnchorFrame)
+	S:HandleButton(NNGGPullTimerFrame, true)
+	S:HandleButton(NNGGReadyCheckFrame, true)
+	S:HandleStatusBar(NNGGStatusBarFrame)
 end
 
-AS:RegisterSkin('NoNoGoGo', AS.NoNoGoGo)
+AS:RegisterSkin('NoNoGoGo')

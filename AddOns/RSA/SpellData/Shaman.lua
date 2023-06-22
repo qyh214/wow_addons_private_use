@@ -249,6 +249,26 @@ local defaults = {
 			},
 		},
 	},
+	-- shihuang temp fix
+	['spiritlinktotem'] = {
+		spellID = 98008,
+		--[[
+		additionalSpellIDs = {
+			[59156] = true, -- Rank 2
+			[59158] = true, -- Rank 3
+			[59159] = true, -- Rank 4
+		},
+		]]--
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+		},
+	},
 --[[
 Earthgrab Totem
 -----------------------Feral Spirit
@@ -656,6 +676,26 @@ local wrath = {
 			[59158] = true, -- Rank 3
 			[59159] = true, -- Rank 4
 		},
+		configDisplay = {
+			isDefault = true,
+			disabledChannels = {whisper = true},
+		},
+		events = {
+			['SPELL_CAST_SUCCESS'] = {
+				messages = {"[LINK] activated!",},
+			},
+		},
+	},
+	-- shihuang temp fix
+	['spiritlinktotem'] = {
+		spellID = 98008,
+		--[[
+		additionalSpellIDs = {
+			[59156] = true, -- Rank 2
+			[59158] = true, -- Rank 3
+			[59159] = true, -- Rank 4
+		},
+		]]--
 		configDisplay = {
 			isDefault = true,
 			disabledChannels = {whisper = true},

@@ -4,6 +4,8 @@
 local FOLDER_NAME, private = ...
 
 private.ACHIEVEMENT_ZONE_IDS = {
+	[84] = { 18258 }; --Stormwind
+	[85] = { 18258 }; --Orgrimmar
 	[104] = { 1312 }; --Shadowmoon valley (BC)
 	[109] = { 1312 }; --Netherstorm (BC)
 	[100] = { 1312 }; --Hellfire peninsula (BC)
@@ -61,13 +63,13 @@ private.ACHIEVEMENT_ZONE_IDS = {
 	[1961] = { 15107, 15099 }; --Korthia (Shadowlands)
 	[1970] = { 15391, 15331, 15392, 15509 }; --Zereth mortis
 	[2030] = { 15331 }; --Zereth mortis (Nexus of Actualization)
-	[2022] = { 16461, 16297, 16496, 16676 }; --The Waking Shores (Dragonflight)
-	[2024] = { 16461, 16300, 16678, 16444 }; --The Azure Span (Dragonflight)
-	[2023] = { 16461, 16299, 16677 }; --Ohn'ahran Plains (Dragonflight)
-	[2025] = { 16461, 16301, 16679 }; --Thaldraszus (Dragonflight)
-	[2132] = { 16678 }; --The Azure Span minimap (Dragonflight)
+	[2022] = { 16461, 16297, 16496, 16676, 18258 }; --The Waking Shores (Dragonflight)
+	[2024] = { 16461, 16300, 16678, 16444, 18258 }; --The Azure Span (Dragonflight)
+	[2023] = { 16461, 16299, 16677, 18258 }; --Ohn'ahran Plains (Dragonflight)
+	[2025] = { 16461, 16301, 16679, 18258 }; --Thaldraszus (Dragonflight)
+	[2132] = { 16678, 18258 }; --The Azure Span minimap (Dragonflight)
 	[2151] = { 17524, 17525, 17526 }; --The Forbidden Reach (10.0.7) (Dragonflight)
-	[2133] = { 17786, 17783, 18100 }; --Zaralek Cavern (10.1.0) (Dragonflight)
+	[2133] = { 17786, 17783, 18100, 18199 }; --Zaralek Cavern (10.1.0) (Dragonflight)
 }
 
 private.ACHIEVEMENT_TARGET_IDS = {
@@ -137,4 +139,6 @@ private.ACHIEVEMENT_TARGET_IDS = {
 	[17786] = { 386104, 385565, 386123, 388896, 389114, 388911, 386079, 392591, 386086, 200618 }; --Treasures of Zaralek Cavern (10.1.0)
 	[17783] = { 203515, 203621, 203664, 203592, 203611, 203646, 203466, 203462, 203630, 203521, 203643, 203662, 201029, 203468, 204093, 203660, 203477, 203627, 203625, 203618, 203642, 200111, 204096, 203480, 203593 }; --Adventurer of Zaralek Cavern (10.1.0)
 	[18100] = { 203515, 203621, 203664, 203592, 203627, 203625, 203618, 200111, 203643, 203662, 201029, 203468, 204093, 203660, 203477, 203646, 203466, 203462, 203521, 203480, 203593 }; --Cavern Clawbbering
+	[18258] = { 205490 }; --Little Lord of Lies (10.1.0)
+	[18199] = { 203846, 202274 }; --Zaqali Ritual Buster (10.1.0)
 }

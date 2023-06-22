@@ -133,7 +133,7 @@ local function set_PLAYER_TARGET_CHANGED()--设置, 邀请目标
     if guid then
         InvPlateGuid[guid]=name--保存到已邀请列表
     end
-    print(id, addName, e.onlyChinese and '目标' or TARGET, e.GetPlayerInfo({unit=nil, guid=guid, name=name,  reName=false, reRealm=false, reLink=true}))
+    print(id, addName, e.onlyChinese and '目标' or TARGET, e.GetPlayerInfo({guid=guid, name=name, reLink=true}))
 end
 
 local function InvPlateGuidFunc()--从已邀请过列表里, 再次邀请 
@@ -173,8 +173,6 @@ local function set_PARTY_INVITE_REQUEST(name, isTank, isHealer, isDamage, isNati
     if not StaticPopup1 or not StaticPopup1:IsShown() then
         return
     end
-    --local tex=StaticPopup1Text  
-    --local playerInfo= e.GetPlayerInfo(nil, inviterGUID, true)
 
     local function setPrint(sec, text)
         e.PlaySound(SOUNDKIT.IG_PLAYER_INVITE)--播放, 声音
@@ -182,7 +180,8 @@ local function set_PARTY_INVITE_REQUEST(name, isTank, isHealer, isDamage, isNati
             '|cnGREEN_FONT_COLOR:'..sec.. ' |r'..(e.onlyChinese and '秒' or SECONDS),
             (isTank and e.Icon.TANK or '')..(isHealer and e.Icon.HEALER or '')..(isDamage and e.Icon.DAMAGER or ''),
             questSessionActive and (e.onlyChinese and '场景战役' or SCENARIOS) or '',--场景战役
-            isNativeRealm and '|cnGREEN_FONT_COLOR:'..format(e.onlyChinese and '%s其它服务器' or INVITATION_XREALM, e.PlayerLink(nil, inviterGUID)) or e.PlayerLink(nil, inviterGUID)--转服务器
+            isNativeRealm and '|cnGREEN_FONT_COLOR:'..format(e.onlyChinese and '%s其它服务器' or INVITATION_XREALM,
+            e.PlayerLink(nil, inviterGUID))--转服务器
         )
         e.Ccool(StaticPopup1, nil, sec, nil, true, true, nil)--冷却条    
     end
@@ -366,6 +365,18 @@ local function set_Shift_Click_focurs()
     end
 end
 
+local function set_SummonTips()--召唤，提示
+    if Save.Summon and not button.summonTips then
+        button.summonTips= button:CreateTexture(nil,'OVERLAY')
+        button.summonTips:SetPoint('BOTTOMLEFT',2, 2)
+        button.summonTips:SetSize(15,16)
+        button.summonTips:SetAtlas('Raid-Icon-SummonPending')
+    end
+    if button.summonTips then
+        button.summonTips:SetShown(Save.Summon)
+    end
+end
+
 --#######
 --初始菜单
 --#######
@@ -493,9 +504,10 @@ local function InitList(self, level, type)
             checked= Save.Summon,
             tooltipOnButton=true,
             tooltipTitle= '|cnRED_FONT_COLOR:'..(e.onlyChinese and '取消' or CANCEL)..'|r',
-            tooltipText= e.onlyChinese and '战斗中\n离开\nalt' or HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_IN_COMBAT..'\n'..AFK..'\nalt',
+            tooltipText= e.onlyChinese and '战斗中|n离开|nalt' or HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_IN_COMBAT..'|n'..AFK..'|nalt',
             func= function()
                 Save.Summon= not Save.Summon and true or nil
+                set_SummonTips()--召唤，提示
             end
         }
         e.LibDD:UIDropDownMenu_AddButton(info, level)
@@ -549,7 +561,7 @@ local function InitList(self, level, type)
                     end,
                     tooltipOnButton=true,
                     tooltipTitle= e.onlyChinese and '移除' or REMOVE,
-                    tooltipText= format(e.onlyChinese and '%d次' or ITEM_SPELL_CHARGES, nu)..'\n\n'..(select(7,GetPlayerInfoByGUID(guid)) or ''),
+                    tooltipText= format(e.onlyChinese and '%d次' or ITEM_SPELL_CHARGES, nu)..'|n|n'..(select(7,GetPlayerInfoByGUID(guid)) or ''),
                 }
                 e.LibDD:UIDropDownMenu_AddButton(info, level)
             end
@@ -582,7 +594,7 @@ local function InitList(self, level, type)
             notCheckable=true,
             func= function()
                 StaticPopupDialogs[id..addName..'CHANNEL']={--设置,内容,频道, 邀请,事件
-                    text=id..' '..addName..' '..(e.onlyChinese and '频道' or CHANNEL)..'\n\n'..(e.onlyChinese and '关键词' or KBASE_DEFAULT_SEARCH_TEXT),
+                    text=id..' '..addName..' '..(e.onlyChinese and '频道' or CHANNEL)..'|n|n'..(e.onlyChinese and '关键词' or KBASE_DEFAULT_SEARCH_TEXT),
                     whileDead=1,
                     hideOnEscape=1,
                     exclusive=1,
@@ -653,7 +665,7 @@ local function InitList(self, level, type)
         end
         e.LibDD:UIDropDownMenu_AddSeparator(level)
         info= {
-            text=  e.onlyChinese and '仅限系统(玩家)\n' or (LFG_LIST_CROSS_FACTION:format(SYSTEM..' ('..PLAYER..')')),
+            text=  e.onlyChinese and '仅限系统(玩家)|n' or (LFG_LIST_CROSS_FACTION:format(SYSTEM..' ('..PLAYER..')')),
             notCheckable=true,
             isTitle=true,
         }
@@ -771,7 +783,7 @@ local function InitList(self, level, type)
             Save.setFucus= not Save.setFucus and true or nil
             set_Shift_Click_focurs()--Shift+点击设置焦点
             if Save.setFucus then
-                print(id,addName, '|cnGREEN_FONT_COLOR:\nPlayerFrame','PetFrame','Party1','Party2','Party3','Party4','TargetFrame','TargetFrameToT','Boss1TargetFrame','Boss2TargetFrame','Boss3TargetFrame','Boss4TargetFrame','Boss5TargetFrame', 'FocusFrameToT')
+                print(id,addName, '|cnGREEN_FONT_COLOR:|nPlayerFrame','PetFrame','Party1','Party2','Party3','Party4','TargetFrame','TargetFrameToT','Boss1TargetFrame','Boss2TargetFrame','Boss3TargetFrame','Boss4TargetFrame','Boss5TargetFrame', 'FocusFrameToT')
             end
            --print(id,addName, e.GetEnabeleDisable(Save.setFucus), e.onlyChinese and '需要重新加载' or REQUIRES_RELOAD)
         end,
@@ -789,7 +801,7 @@ local function Init()
     button.texture:SetAtlas('communities-icon-addgroupplus')
     --setTexture()--设置图标颜色, 是否有权限
 
-    
+    set_SummonTips()--召唤，提示
 
     button:SetScript('OnMouseDown', function(self, d)
         if d=='LeftButton' then

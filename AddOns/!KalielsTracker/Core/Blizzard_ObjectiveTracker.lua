@@ -797,6 +797,12 @@ function KT_ObjectiveTracker_OnLoad(self)
 	QuestPOI_Initialize(self.BlocksFrame, function(self) self:SetScale(0.9); self:RegisterForClicks("LeftButtonUp", "RightButtonUp"); end );
 end
 
+function KT_ObjectiveTracker_UpdateOpacity()
+	--[[local self = KT_ObjectiveTrackerFrame;
+	local alpha = (self.editModeOpacity or 0) / 100;
+	self.NineSlice:SetAlpha(alpha);]]
+end
+
 function KT_ObjectiveTracker_OnShow(self)
 --	UIParentManagedFrameMixin.OnShow(self);
 --	KT_ObjectiveTracker_UpdateHeight();
@@ -853,6 +859,9 @@ function KT_ObjectiveTracker_Initialize(self)
 	KT_ProfessionsRecipeTracking_Initialize();
 
 	self.initialized = true;
+
+	-- calls that depend on self.initialized
+	KT_ObjectiveTracker_UpdateBackground();
 end
 
 function KT_ObjectiveTracker_OnFocusedQuestChanged(self)
@@ -1050,6 +1059,7 @@ function KT_ObjectiveTracker_Collapse()
 	KT_ObjectiveTrackerFrame.BlocksFrame:Hide();
 	KT_ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:SetCollapsed(true);
 	KT_ObjectiveTrackerFrame.HeaderMenu.Title:Show();
+	KT_ObjectiveTracker_UpdateBackground();
 end
 
 function KT_ObjectiveTracker_Expand()
@@ -1057,6 +1067,7 @@ function KT_ObjectiveTracker_Expand()
 	KT_ObjectiveTrackerFrame.BlocksFrame:Show();
 	KT_ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:SetCollapsed(false);
 	KT_ObjectiveTrackerFrame.HeaderMenu.Title:Hide();
+	KT_ObjectiveTracker_UpdateBackground();
 end
 
 function KT_ObjectiveTracker_ToggleDropDown(frame, handlerFunc)
@@ -1419,6 +1430,7 @@ function KT_ObjectiveTracker_Update(reason, id, moduleWhoseCollapseChanged)
 	end
 
 	KT_ObjectiveTracker_ReorderModules();
+	KT_ObjectiveTracker_UpdateBackground();
 	KT_ObjectiveTracker_UpdatePOIs();
 	ObjectiveTracker_AnimateHeaders(currentHeaders);
 
@@ -1435,6 +1447,25 @@ function KT_ObjectiveTracker_Update(reason, id, moduleWhoseCollapseChanged)
 
 	tracker.BlocksFrame.currentBlock = nil;
 	tracker.isUpdating = false;
+end
+
+function KT_ObjectiveTracker_UpdateBackground()
+	--[[local lastBlock;
+	if KT_ObjectiveTrackerFrame.initialized then
+		for index, module in ipairs_reverse(KT_ObjectiveTrackerFrame.MODULES_UI_ORDER) do
+			if module.topBlock then
+				lastBlock = module.lastBlock;
+				break;
+			end
+		end
+	end
+
+	if lastBlock and not KT_ObjectiveTrackerFrame.collapsed then
+		KT_ObjectiveTrackerFrame.NineSlice:Show();
+		KT_ObjectiveTrackerFrame.NineSlice:SetPoint("BOTTOM", lastBlock, "BOTTOM", 0, -10);
+	else
+		KT_ObjectiveTrackerFrame.NineSlice:Hide();
+	end]]
 end
 
 function KT_ObjectiveTracker_CheckAndHideHeader(moduleHeader)

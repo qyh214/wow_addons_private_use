@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu May  4 19:43:28 UTC 2023
+-- Generated from CurseForge on Wed Jun 21 21:15:54 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("ptBR") then
@@ -52,15 +52,20 @@ L["DISABLE_RWF_MODE_RELOAD"] = "Você está desabilitando o modo Race World Firs
 L["DPS"] = "DPS"
 L["DUNGEON_SHORT_NAME_AA"] = "Academia Algeth'ar"
 L["DUNGEON_SHORT_NAME_AV"] = "Câmara Lazúli"
+L["DUNGEON_SHORT_NAME_BH"] = "Clareira de Courambaia"
 L["DUNGEON_SHORT_NAME_COS"] = "Pátio das Estrelas"
 L["DUNGEON_SHORT_NAME_DOS"] = "Outro Lado"
+L["DUNGEON_SHORT_NAME_FH"] = "Angra do Facão"
 L["DUNGEON_SHORT_NAME_GD"] = "Central do Carrilcruel"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Gambito de So'leah"
 L["DUNGEON_SHORT_NAME_HOA"] = "Salões"
+L["DUNGEON_SHORT_NAME_HOI"] = "Salões da Infusão"
 L["DUNGEON_SHORT_NAME_HOV"] = "Salões da Bravura"
 L["DUNGEON_SHORT_NAME_ID"] = "Docas de Ferro"
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior "
 L["DUNGEON_SHORT_NAME_MISTS"] = "Brumas"
+L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus"
+L["DUNGEON_SHORT_NAME_NL"] = "Covil de Neltharion"
 L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhid"
 L["DUNGEON_SHORT_NAME_NW"] = "Chaga"
 L["DUNGEON_SHORT_NAME_PF"] = "Empéstia"
@@ -71,12 +76,13 @@ L["DUNGEON_SHORT_NAME_SOA"] = "Torres"
 L["DUNGEON_SHORT_NAME_STRT"] = "Ruas das Maravilhas"
 L["DUNGEON_SHORT_NAME_TJS"] = "Templo da Serpente de Jade"
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro"
+L["DUNGEON_SHORT_NAME_ULD"] = "Uldaman"
+L["DUNGEON_SHORT_NAME_UNDR"] = "Terra Podre"
 L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior"
 L["DUNGEON_SHORT_NAME_VOTW"] = "Câmara das Guardiãs"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_WORK"] = ""--]] 
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_YARD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_VP"] = "Pináculo do Vórtice"
+L["DUNGEON_SHORT_NAME_WORK"] = "Gnomecan - Oficina"
+L["DUNGEON_SHORT_NAME_YARD"] = "Gnomecan - Ferro-velho"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar o Quadro de Perfil do Raider.IO Automaticamente."
 L["ENABLE_AUTO_FRAME_POSITION_DESC"] = "Ativar isso manterá o Quadro de perfil de M+ ao lado do \"Localizador de grupos\"."
 L["ENABLE_DEBUG_MODE_RELOAD"] = "Você está ativando o modo de depuração. Destina-se apenas a fins de teste e desenvolvimento e incorrerá em uso adicional de memória. Clicar em Confirmar recarregará sua interface."
@@ -137,6 +143,17 @@ L["PREVIOUS_SCORE"] = "Pontuação anterior de M+ (%s)"
 L["PROFILE_BEST_RUNS"] = "Melhores Runs por Masmorra"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "Tranque o Quadro de Perfil do Raider.IO ou ative o Posicionamento Automático para ocultar esta âncora."
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Warning:|r |cffFFFFFF%s|r não pode encontrar dados para sua facção atual. Verifique suas configurações |cffFFFFFF/raiderio|r e ative os dados da ferramenta para |cffFFFFFF%s|r."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["RAID_BOSS_ATSC_1"] = "Kazzara, a Forjada no Inferno"
+L["RAID_BOSS_ATSC_2"] = "A Câmara da Amalgamação"
+L["RAID_BOSS_ATSC_3"] = "Os Experimentos Esquecidos"
+L["RAID_BOSS_ATSC_4"] = "Ataque dos Zaqali"
+L["RAID_BOSS_ATSC_5"] = "Rashok, o Ancião"
+L["RAID_BOSS_ATSC_6"] = "Zskarn, o Comissário Vigilante"
+L["RAID_BOSS_ATSC_7"] = "Magmorax"
+L["RAID_BOSS_ATSC_8"] = "Eco de Neltharion"
+L["RAID_BOSS_ATSC_9"] = "Comandante-de-escama Sarkareth"
 L["RAID_BOSS_CN_1"] = "Guinchasa"
 L["RAID_BOSS_CN_10"] = "Sir Denathrius"
 L["RAID_BOSS_CN_2"] = "Guarda-caça Altimor"
@@ -229,6 +246,14 @@ L["RELOAD_LATER"] = "Recarregarei depois."
 L["RELOAD_NOW"] = "Recarregar agora."
 L["RELOAD_RWF_MODE_BUTTON"] = "Salvar"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "Clique para salvar o log no arquivo de armazenamento. Isso fará com que sua interface seja recarregada."
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 L["RWF_MINIBUTTON_TOOLTIP"] = "Clique com o botão esquerdo sempre que houver saque pendente. Isso fará com que sua interface seja recarregada. Clique com o botão direito para abrir o quadro do Race World First."
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "(registrando itens relevantes)"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "(registrando saque)"

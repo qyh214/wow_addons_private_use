@@ -1,19 +1,20 @@
 local mod	= DBM:NewMod(2489, "DBM-Party-Dragonflight", 4, 1199)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230117042742")
+mod:SetRevision("20230519041237")
 mod:SetCreatureID(189478)--Forgemaster Gorek
 mod:SetEncounterID(2612)
 --mod:SetUsedIcons(1, 2, 3)
 --mod:SetHotfixNoticeRev(20220322000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 374969",
-	"SPELL_CAST_SUCCESS 374635 374842 374534",
+	"SPELL_CAST_START 374969 374839",
+	"SPELL_CAST_SUCCESS 374635 374534",
 	"SPELL_AURA_APPLIED 374842 374534",
 --	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED 374534 374842"
@@ -23,8 +24,8 @@ mod:RegisterEventsInCombat(
 )
 
 --[[
-(ability.id = 374969) and type = "begincast"
- or (ability.id = 374635 or ability.id = 374842 or ability.id = 374534) and type = "cast"
+(ability.id = 374969 or ability.id = 374839) and type = "begincast"
+ or (ability.id = 374635 or ability.id = 374534) and type = "cast"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 local warnBlazinAegis							= mod:NewTargetNoFilterAnnounce(374842, 3)
@@ -53,10 +54,10 @@ local timerForgestormCD							= mod:NewNextTimer(30.3, 374969, nil, nil, nil, 2)
 --mod:AddSetIconOption("SetIconOnStaggeringBarrage", 361018, true, false, {1, 2, 3})
 
 function mod:OnCombatStart(delay)
-	timerMightoftheForgeCD:Start(3.2-delay)
+	timerMightoftheForgeCD:Start(3.1-delay)
 	timerBlazinAegisCD:Start(11.5-delay)
-	timerHeatedSwingsCD:Start(20.2-delay)
-	timerForgestormCD:Start(26.7-delay)
+	timerHeatedSwingsCD:Start(20.1-delay)
+	timerForgestormCD:Start(26.6-delay)
 end
 
 --function mod:OnCombatEnd()
@@ -74,6 +75,8 @@ function mod:SPELL_CAST_START(args)
 		specWarnForgestorm:Show()
 		specWarnForgestorm:Play("watchstep")
 		timerForgestormCD:Start()
+	elseif spellId == 374839 then
+		timerBlazinAegisCD:Start()
 	end
 end
 
@@ -81,10 +84,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 374635 then
 		specWarnMightoftheForge:Show()
-		specWarnMightoftheForge:Play("specialsoon")
+		specWarnMightoftheForge:Play("aesoon")
 		timerMightoftheForgeCD:Start()
-	elseif spellId == 374842 then
-		timerBlazinAegisCD:Start()
 	elseif spellId == 374534 then
 		timerHeatedSwingsCD:Start()
 	end
@@ -96,14 +97,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBlazinAegis:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnBlazinAegis:Show()
-			specWarnBlazinAegis:Play("runout")
+			specWarnBlazinAegis:Play("scatter")
 			yellBlazinAegis:Yell()
 			yellBlazinAegisFades:Countdown(spellId)
 		end
 	elseif spellId == 374534 then
 		if args:IsPlayer() then
 			specWarnHeatedSwings:Show()
-			specWarnHeatedSwings:Play("runout")
+			specWarnHeatedSwings:Play("specialsoon")
 			yellHeatedSwings:Yell()
 			yellHeatedSwingsFades:Countdown(spellId)
 		else

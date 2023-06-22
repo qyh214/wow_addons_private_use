@@ -1,0 +1,101 @@
+## Interface: 20501
+## X-Min-Interface: 20501
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Raids (Vanilla)|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMRaidsVanilla_AllSavedVars
+## SavedVariablesPerCharacter: DBMRaidsVanilla_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: Classic
+## X-DBM-StatTypes: normal
+## X-DBM-Mod-SubCategoriesID: 533, 531, 509, 309, 469, 409, 249
+## X-DBM-Mod-Name: Raids (Vanilla)
+## X-DBM-Mod-Sort: 1101
+## X-DBM-Mod-MapID: 533, 531, 509, 309, 469, 409, 249
+## X-DBM-Mod-MinCoreRevision: 20230521000000
+## X-DBM-Mod-MinExpansion: 1
+## Version: r698
+
+localization.en.lua
+localization.tw.lua
+localization.br.lua
+localization.cn.lua
+localization.de.lua
+localization.es.lua
+localization.fr.lua
+localization.kr.lua
+localization.mx.lua
+localization.ru.lua
+
+VanillaNaxx\ArachnidQuarter\Anub'Rekhan.lua
+VanillaNaxx\ArachnidQuarter\Faerlina.lua
+VanillaNaxx\ArachnidQuarter\Maexxna.lua
+VanillaNaxx\ConstructQuarter\Patchwerk.lua
+VanillaNaxx\ConstructQuarter\Grobbulus.lua
+VanillaNaxx\ConstructQuarter\Gluth.lua
+VanillaNaxx\ConstructQuarter\Thaddius.lua
+VanillaNaxx\PlagueQuarter\Noth.lua
+VanillaNaxx\PlagueQuarter\Heigan.lua
+VanillaNaxx\PlagueQuarter\Loatheb.lua
+VanillaNaxx\MilitaryQuarter\Razuvious.lua
+VanillaNaxx\MilitaryQuarter\Gothik.lua
+VanillaNaxx\MilitaryQuarter\Horsemen.lua
+VanillaNaxx\FrostwyrmLair\Sapphiron.lua
+VanillaNaxx\FrostwyrmLair\Kel'Thuzad.lua
+
+AQ40\AQ40Trash.lua
+AQ40\Skeram.lua
+AQ40\ThreeBugs.lua
+AQ40\Sartura.lua
+AQ40\Fankriss.lua
+AQ40\Viscidus.lua
+AQ40\Huhuran.lua
+AQ40\TwinEmps.lua
+AQ40\CThun.lua
+AQ40\Ouro.lua
+
+AQ20\AQ20Trash.lua
+AQ20\Kurinnaxx.lua
+AQ20\Rajaxx.lua
+AQ20\Moam.lua
+AQ20\Buru.lua
+AQ20\Ayamiss.lua
+AQ20\Ossirian.lua
+
+VanillaZG\Venoxis.lua
+VanillaZG\Jeklik.lua
+VanillaZG\Marli.lua
+VanillaZG\Thekal.lua
+VanillaZG\Arlokk.lua
+VanillaZG\Hakkar.lua
+VanillaZG\Bloodlord.lua
+VanillaZG\EdgeOfMadness.lua
+VanillaZG\Gahzranka.lua
+VanillaZG\Jindo.lua
+
+BWL\Razorgore.lua
+BWL\Vaelastrasz.lua
+BWL\Broodlord.lua
+BWL\Firemaw.lua
+BWL\Ebonroc.lua
+BWL\Flamegor.lua
+BWL\Chromaggus.lua
+BWL\Nefarian.lua
+BWL\TalonGuards.lua
+
+MC\MCTrash.lua
+MC\Lucifron.lua
+MC\Magmadar.lua
+MC\Gehennas.lua
+MC\Garr.lua
+MC\Geddon.lua
+MC\Shazzrah.lua
+MC\Sulfuron.lua
+MC\Golemagg.lua
+MC\Majordomo.lua
+MC\Ragnaros.lua
+
+VanillaOnyxia\Onyxia.lua

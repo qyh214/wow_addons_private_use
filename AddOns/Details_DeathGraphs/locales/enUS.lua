@@ -54,4 +54,3 @@ L["STRING_SURVIVAL"] = "Survival"
 L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "Timeline Deaths Threshold"
 L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "The first |cFFFFFF00X|r deaths in the encounter are registered to show on the timeline graphic."
 L["STRING_TOOLTIP"] = "Show death graphics"
-

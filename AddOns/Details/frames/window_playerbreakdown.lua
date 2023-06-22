@@ -33,6 +33,12 @@ local PLAYER_DETAILS_STATUSBAR_ALPHA = 1
 Details.player_details_tabs = {}
 breakdownWindow.currentTabsInUse =  {}
 
+Details222.BreakdownWindow.BackdropSettings = {
+	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
+	backdropcolor = {DetailsFramework:GetDefaultBackdropColor()},
+	backdropbordercolor = {0, 0, 0, 0.7},
+}
+
 ------------------------------------------------------------------------------------------------------------------------------
 --self = instancia
 --jogador = classe_damage ou classe_heal
@@ -105,7 +111,8 @@ function Details:OpenBreakdownWindow(instanceObject, actorObject, bFromAttribute
 			Details:CloseBreakdownWindow()
 			return
 		end
-		return Details.row_singleclick_overwrite[mainAttribute][subAttribute](_, actorObject, instanceObject, bIsShiftKeyDown, bIsControlKeyDown)
+		Details.row_singleclick_overwrite[mainAttribute][subAttribute](_, actorObject, instanceObject, bIsShiftKeyDown, bIsControlKeyDown)
+		return
 	end
 
 	if (instanceObject:GetMode() == DETAILS_MODE_RAID) then
@@ -411,17 +418,17 @@ end
 Details222.BreakdownWindow.ExpandedSpells = {}
 
 ---set a spell as expanded or not in the breakdown window
----@param spellID number
+---@param key any
 ---@param bIsExpanded boolean
-function Details222.BreakdownWindow.SetSpellAsExpanded(spellID, bIsExpanded)
-	Details222.BreakdownWindow.ExpandedSpells[spellID] = bIsExpanded
+function Details222.BreakdownWindow.SetSpellAsExpanded(key, bIsExpanded)
+	Details222.BreakdownWindow.ExpandedSpells[key] = bIsExpanded
 end
 
 ---get the state of the expanded for a spell
----@param spellID number
+---@param key any
 ---@return boolean
-function Details222.BreakdownWindow.IsSpellExpanded(spellID)
-	return Details222.BreakdownWindow.ExpandedSpells[spellID]
+function Details222.BreakdownWindow.IsSpellExpanded(key)
+	return Details222.BreakdownWindow.ExpandedSpells[key]
 end
 
 ---receives spell data to show in the summary tab
@@ -431,22 +438,29 @@ end
 ---@param instance instance
 function Details222.BreakdownWindow.SendSpellData(data, actorObject, combatObject, instance)
 	--need to get the tab showing the summary and transmit the data to it
-	local tab = Details222.BreakdownWindow.CurrentDefaultTab
-	if (tab) then
+	local tabButton = Details222.BreakdownWindow.CurrentDefaultTab
+	if (tabButton) then
 		--tab is the tab button
-		if (tab.OnReceiveSpellData) then
-			tab.OnReceiveSpellData(data, actorObject, combatObject, instance)
+		if (tabButton.OnReceiveSpellData) then
+			tabButton.OnReceiveSpellData(data, actorObject, combatObject, instance)
 		end
 	end
 end
 
 function Details222.BreakdownWindow.SendTargetData(targetList, actorObject, combatObject, instance)
-	--need to get the tab showing the summary and transmit the data to it
-	local tab = Details222.BreakdownWindow.CurrentDefaultTab
-	if (tab) then
-		--tab is the tab button
-		if (tab.OnReceiveTargetData) then
-			tab.OnReceiveTargetData(targetList, actorObject, combatObject, instance)
+	local tabButton = Details222.BreakdownWindow.CurrentDefaultTab
+	if (tabButton) then
+		if (tabButton.OnReceiveTargetData) then
+			tabButton.OnReceiveTargetData(targetList, actorObject, combatObject, instance)
+		end
+	end
+end
+
+function Details222.BreakdownWindow.SendGenericData(resultTable, actorObject, combatObject, instance)
+	local tabButton = Details222.BreakdownWindow.CurrentDefaultTab
+	if (tabButton) then
+		if (tabButton.OnReceiveGenericData) then
+			tabButton.OnReceiveGenericData(resultTable, actorObject, combatObject, instance)
 		end
 	end
 end
@@ -494,6 +508,7 @@ function Details:CreateBreakdownWindow()
 	breakdownWindow:EnableMouse(true)
 	breakdownWindow:SetResizable(true)
 	breakdownWindow:SetMovable(true)
+	breakdownWindow:SetClampedToScreen(true)
 
 	--make the window movable
 	if (not breakdownWindow.registeredLibWindow) then
@@ -505,6 +520,12 @@ function Details:CreateBreakdownWindow()
 			LibWindow.RestorePosition(breakdownWindow)
 			LibWindow.MakeDraggable(breakdownWindow)
 			LibWindow.SavePosition(breakdownWindow)
+
+			breakdownWindow:SetScript("OnMouseDown", function(self, button)
+				if (button == "RightButton") then
+					Details:CloseBreakdownWindow()
+				end
+			end)
 		end
 	end
 
@@ -544,7 +565,7 @@ function Details:CreateBreakdownWindow()
     end)
 
 	--title
-	detailsFramework:NewLabel(breakdownWindow, breakdownWindow, nil, "titleText", Loc ["STRING_PLAYER_DETAILS"] .. " (|cFFFF8811Under Maintenance|r) - Report Bugs At Discord", "GameFontHighlightLeft", 12, {227/255, 186/255, 4/255})
+	detailsFramework:NewLabel(breakdownWindow, breakdownWindow, nil, "titleText", Loc ["STRING_PLAYER_DETAILS"], "GameFontHighlightLeft", 12, {227/255, 186/255, 4/255})
 	breakdownWindow.titleText:SetPoint("center", breakdownWindow, "center")
 	breakdownWindow.titleText:SetPoint("top", breakdownWindow, "top", 0, -6)
 

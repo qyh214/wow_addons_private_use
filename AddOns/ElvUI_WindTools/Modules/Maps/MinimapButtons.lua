@@ -80,6 +80,48 @@ local acceptedFrames = {
 
 local moveButtons = {}
 
+function MB:HandleLibDBIconButton(button, name)
+	if not strsub(name, 1, strlen("LibDBIcon")) == "LibDBIcon" then
+		return true
+	end
+
+	if not button.Show or not button.Hide or not button.IsShown then
+		return true
+	end
+
+	self:SecureHook(
+		button,
+		"Hide",
+		function()
+			for i, moveButtonName in pairs(moveButtons) do
+				if name == moveButtonName then
+					tremove(moveButtons, i)
+					break
+				end
+			end
+
+			self:UpdateLayout()
+		end
+	)
+
+	self:SecureHook(
+		button,
+		"Show",
+		function()
+			for _, moveButtonName in pairs(moveButtons) do
+				if name == moveButtonName then
+					return
+				end
+			end
+
+			tinsert(moveButtons, name)
+			self:UpdateLayout()
+		end
+	)
+
+	return button:IsShown()
+end
+
 do
 	local modified = false
 	function MB:UpdateExpansionLandingPageMinimapIcon(icon)
@@ -224,6 +266,7 @@ function MB:SkinButton(frame)
 				return
 			end
 		end
+
 		for _, ignoreName in pairs(IgnoreList.startWith) do
 			if strsub(name, 1, strlen(ignoreName)) == ignoreName then
 				return
@@ -360,9 +403,11 @@ function MB:SkinButton(frame)
 			end
 		end
 
-		tinsert(moveButtons, name)
-
 		frame.isSkinned = true
+
+		if self:HandleLibDBIconButton(frame, name) then
+			tinsert(moveButtons, name)
+		end
 	end
 end
 
@@ -383,6 +428,8 @@ function MB:UpdateLayout()
 	else
 		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end
+
+	sort(moveButtons)
 
 	local buttonsPerRow = self.db.buttonsPerRow
 	local numOfRows = ceil(#moveButtons / buttonsPerRow)

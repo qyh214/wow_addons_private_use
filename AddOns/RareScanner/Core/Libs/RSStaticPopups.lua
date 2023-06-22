@@ -115,3 +115,28 @@ LibDialog:Register(RSConstants.EXPLORER_SCAN_NOT_DONE, {
         },
     },          
 })
+
+---============================================================================
+-- TargetUnit tracker warning
+---============================================================================
+
+LibDialog:Register(RSConstants.TARGET_UNIT_WARNING, {
+	text = string.format(AL["TARGET_UNIT_WARNING"]),
+	no_close_button = true,
+    buttons = {
+        {
+            text = YES,
+            on_click = function(self, mouseButton, down)
+            	RSConfigDB.SetScanningTargetUnit(true)
+            	LibStub("AceConfigRegistry-3.0"):NotifyChange("RareScanner General")
+            end,
+        },
+        {
+            text = NO,
+            on_click = function(self, mouseButton, down)
+            	RSConfigDB.SetScanningTargetUnit(false)
+            	LibDialog:Dismiss(RSConstants.TARGET_UNIT_WARNING)
+            end,
+        },
+    },          
+})

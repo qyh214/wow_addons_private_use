@@ -42,13 +42,17 @@ local Save={
         [204578]=1,
         [204579]=1,
 
-        --[[[190315]=10,--[活力之土] 没， 包含材料包
-        [190328]=10,--[活力之霜]
-        [198326]=10,--[活力之气]
-        [190320]=10,--[活力之火]]
-        
+        [204075]=15,--雏龙的暗影烈焰纹章碎片 10.1
+        [204076]=15,
+        [204077]=15,
+        [204717]=2,
+
     },
     no={--禁用使用
+        [6948]=true,--炉石
+        [140192]=true,--达拉然炉石
+        [110560]=true,--要塞炉石
+
         [139590]=true,--[传送卷轴：拉文霍德]
         [141605]=true,--[飞行管理员的哨子]
         [163604]=true,--[撒网器5000型]
@@ -59,24 +63,28 @@ local Save={
         [128353]=true,--海军上将的罗盘
         [86143]=true,--pet
         [5512]=true,--SS糖
+        [92675]=true,--无瑕野兽战斗石
+        [92741]=true,--无瑕战斗石
 
-        [6948]=true,--10.0
-        [194510]=true,
-        [199197]=true,
-        [200613]=true,
-        [18149]=true,
-        [194701]=true,
-        [192749]=true,
-        [140192]=true,
-        [110560]=true,
-        [204439]=true,
-        [194743]=true,
-        [194730]=true,
-        [194519]=true,
-        [202620]=true,
+        --10.0
+        [194510]=true,--伊斯卡拉鱼叉
+        [199197]=true,--瓶装精
+        [200613]=true,--艾拉格风石碎片
+        [18149]=true,--召回符文
+        [194701]=true,--不祥海螺
+        [192749]=true,--时空水晶
+
+        [204439]=true,--研究宝箱钥匙
+        [194743]=true,--古尔查克的指示器
+        [194730]=true,--鳞腹鲭鱼
+        [194519]=true,--欧索利亚的协助
+        [202620]=true,--毒素解药
+        [191529]=true,--卓然洞悉
+        [191526]=true,--次级卓然洞悉
 
         --10.1
-        [203708]=true
+        [203708]=true,--蜗壳哨
+        [205982]=true,--失落的挖掘地图
     },
     pet=true,
     open=true,
@@ -90,7 +98,6 @@ local Save={
 local Combat, Bag, Opening= nil,{},nil
 local panel= CreateFrame("Frame")
 local button
-
 
 --QUEST_REPUTATION_REWARD_TOOLTIP = "在%2$s中的声望提高%1$d点";
 local function setCooldown()--冷却条
@@ -155,108 +162,99 @@ local function getItems()--取得背包物品信息
     Opening= true
     equipItem=nil
     Bag={}
-
-    for bag=0, NUM_BAG_SLOTS do
+    for bag= Enum.BagIndex.Backpack, NUM_BAG_FRAMES + NUM_REAGENTBAG_FRAMES do--Constants.InventoryConstants.NumBagSlots
         for slot=1, C_Container.GetContainerNumSlots(bag) do
             local info = C_Container.GetContainerItemInfo(bag, slot)
             local duration, enable = select(2, C_Container.GetContainerItemCooldown(bag, slot))
-            local classID= info and info.itemID and select(6, GetItemInfoInstant(info.itemID))
+            local classID= (info and info.itemID) and select(6, GetItemInfoInstant(info.itemID))
 
-            if info and info.itemID and info.hyperlink and not info.isLocked and info.iconFileID and not (duration and duration>2 or enable==0) and classID~=8 then
+            if info
+                and info.itemID
+                and info.hyperlink
+                and not info.isLocked
+                and info.iconFileID
+                and (not Save.no[info.itemID] or Save.use[info.itemID])
+                and not (duration and duration>2 or enable==0) and classID~=8
+            then
                 e.LoadDate({id=info.itemID, type='item'})
+
                 if Save.use[info.itemID] then--自定义
                     if Save.use[info.itemID]<=info.stackCount then
                         setAtt(bag, slot, info.iconFileID, info.itemID)
                         return
                     end
 
-                elseif not Save.no[info.itemID] and not e.GetTooltipData({hyperLink=info.hyperlink, red=true, onlyRed=true}).red then--不出售, 可以使用
-                    local _, _, _, _, itemMinLevel, _, _, _, itemEquipLoc, _, _, classID2, subclassID= GetItemInfo(info.hyperlink)
-                    classID= classID or classID2
-                    if itemEquipLoc and _G[itemEquipLoc] then--幻化
-                        if Save.mago and (itemMinLevel and itemMinLevel<=e.Player.level or not itemMinLevel) and info.quality then--and (not info.isBound or (classID==4 and (subclassID==0 or subclassID==5))) then
-                            local  isCollected, isSelf= select(2, e.GetItemCollected(info.hyperlink))
-                            if not isCollected and isSelf then
-                                setAtt(bag, slot, info.iconFileID, info.itemID)
-                                equipItem=true
-                                return
-                            end
-                        end
+                else
+                    local dateInfo= e.GetTooltipData({hyperLink=info.hyperlink, red=true, onlyRed=true, text={}})
 
-                    elseif info.hyperlink:find('Hbattlepet:(%d+)') or (classID==15 and subclassID==2) then--宠物, 收集数量
-                        if Save.pet then
-                            local speciesID = info.hyperlink:match('Hbattlepet:(%d+)') or select(13, C_PetJournal.GetPetInfoByItemID(info.itemID))--宠物物品                        
-                            if speciesID then
-                                local numCollected, limit= C_PetJournal.GetNumCollectedInfo(speciesID)
-                                if numCollected and limit and numCollected <  limit then
+                    if not dateInfo.red then--不出售, 可以使用
+                        local _, _, _, _, itemMinLevel, _, _, _, itemEquipLoc, _, _, classID2, subclassID= GetItemInfo(info.hyperlink)
+                        classID= classID or classID2
+
+                        if itemEquipLoc and _G[itemEquipLoc] then--幻化
+                            if Save.mago and (itemMinLevel and itemMinLevel<=e.Player.level or not itemMinLevel) and info.quality then--and (not info.isBound or (classID==4 and (subclassID==0 or subclassID==5))) then
+                                local  isCollected, isSelf= select(2, e.GetItemCollected(info.hyperlink))
+                                if not isCollected and isSelf then
                                     setAtt(bag, slot, info.iconFileID, info.itemID)
+                                    equipItem=true
                                     return
                                 end
                             end
-                        end
-                    elseif info.hasLoot then--可打开
-                        if Save.open then
-                            setAtt(bag, slot, info.iconFileID, info.itemID)
-                            return
-                        end
 
-                    elseif classID==9 then--配方                    
-                        if Save.ski then
-                            if subclassID == 0 then
-                                if GetItemSpell(info.hyperlink) then
-                                    setAtt(bag, slot, info.iconFileID, info.itemID)
-                                end
-                            else
-                                setAtt(bag, slot, info.iconFileID, info.itemID)
-                            end
-                            return
-                        end
-
-                    elseif classID==15 and  subclassID==5 then--坐骑
-                        if Save.mount then
-                            local mountID = C_MountJournal.GetMountFromItem(info.itemID)
-                            if mountID then
-                                local isCollected =select(11, C_MountJournal.GetMountInfoByID(mountID))
-                                if not isCollected then
-                                    setAtt(bag, slot, info.iconFileID, info.itemID)
-                                    return
+                        elseif info.hyperlink:find('Hbattlepet:(%d+)') or (classID==15 and subclassID==2) then--宠物, 收集数量
+                            if Save.pet then
+                                local speciesID = info.hyperlink:match('Hbattlepet:(%d+)') or select(13, C_PetJournal.GetPetInfoByItemID(info.itemID))--宠物物品                        
+                                if speciesID then
+                                    local numCollected, limit= C_PetJournal.GetNumCollectedInfo(speciesID)
+                                    if numCollected and limit and numCollected <  limit then
+                                        setAtt(bag, slot, info.iconFileID, info.itemID)
+                                        return
+                                    end
                                 end
                             end
-                        end
-
-                    elseif C_ToyBox.GetToyInfo(info.itemID) then
-                        if Save.toy and not PlayerHasToy(info.itemID) then--玩具 
-                            setAtt(bag, slot, info.iconFileID, info.itemID)
-                            return
-                        end
-
-                    elseif Save.alt and classID~=0 then
-                        local spell= select(2, GetItemSpell(info.hyperlink))
-                        if spell and IsUsableSpell(spell) and not C_Item.IsAnimaItemByID(info.hyperlink) then
-                            setAtt(bag, slot, info.iconFileID, info.itemID)
-                            return
-                        end
-                        --[[if classID==0 and subclassID==8  then--声望，物品
-                            setAtt(bag, slot, info.iconFileID, info.itemID)
-                            return
-                        else
-                            --print(C_Item.IsItemSpecificToPlayerClass(info.hyperlink), info.hyperlink)
-                        if C_Item.IsItemSpecificToPlayerClass(info.hyperlink) then
-                            setAtt(bag, slot, info.iconFileID, info.itemID)
-                            return
-                        else]]
-                        --[[if classID==15 and subclassID==4 then--其它
-                            if info.itemID == 193201 or info.itemID==191251 then--钥匙框架
-                                if GetItemCount(193201)>=3 and GetItemCount(191251)>=30 then
-                                    setAtt(bag, slot, info.iconFileID, info.itemID)
-                                    return
-                                end
-                            elseif not C_Item.IsAnimaItemByID(info.hyperlink) then
-                                
+                        elseif info.hasLoot then--可打开
+                            if Save.open then
                                 setAtt(bag, slot, info.iconFileID, info.itemID)
                                 return
                             end
-                        end]]
+
+                        elseif classID==9 then--配方                    
+                            if Save.ski then
+                                if subclassID == 0 then
+                                    if GetItemSpell(info.hyperlink) then
+                                        setAtt(bag, slot, info.iconFileID, info.itemID)
+                                    end
+                                else
+                                    setAtt(bag, slot, info.iconFileID, info.itemID)
+                                end
+                                return
+                            end
+
+                        elseif classID==15 and  subclassID==5 then--坐骑
+                            if Save.mount then
+                                local mountID = C_MountJournal.GetMountFromItem(info.itemID)
+                                if mountID then
+                                    local isCollected =select(11, C_MountJournal.GetMountInfoByID(mountID))
+                                    if not isCollected then
+                                        setAtt(bag, slot, info.iconFileID, info.itemID)
+                                        return
+                                    end
+                                end
+                            end
+
+                        elseif C_ToyBox.GetToyInfo(info.itemID) then
+                            if Save.toy and not PlayerHasToy(info.itemID) then--玩具 
+                                setAtt(bag, slot, info.iconFileID, info.itemID)
+                                return
+                            end
+
+                        elseif Save.alt and (classID~=0 or classID==0 and subclassID==8) then-- 8 使用: 在龙鳞探险队中的声望提高1000点
+                            local spell= select(2, GetItemSpell(info.hyperlink))
+                            if spell and IsUsableSpell(spell) and not C_Item.IsAnimaItemByID(info.hyperlink) then
+                                setAtt(bag, slot, info.iconFileID, info.itemID)
+                                return
+                            end
+                        end
                     end
                 end
             end
@@ -282,93 +280,111 @@ end
 --####
 --菜单
 --####
-local function setUseMenu(level)--二级, 使用
-    local info={
-        text= e.onlyChinese and '全部清除' or CLEAR_ALL,
-        notCheckable=true,
-        func=function()
-            Save.use={}
-            getItems()
-            e.LibDD:CloseDropDownMenus()
-        end
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info,level)
-    for itemID, num in pairs(Save.use) do
-        info={
-            text= (select(2, GetItemInfo(itemID)) or  ('itemID: '..itemID)).. (num>1 and ' |cnGREEN_FONT_COLOR:x'..num..'|r' or ''),
-            icon= C_Item.GetItemIconByID(itemID),
-            checked=true,
-            tooltipOnButton=true,
-            tooltipTitle= e.onlyChinese and '移除' or REMOVE,
-            tooltipText=num>1 and '\n'..(e.onlyChinese and '组合物品' or COMBINED_BAG_TITLE:gsub(INVTYPE_BAG,ITEMS))..'\n'..(e.onlyChinese and '数量' or AUCTION_STACK_SIZE)..': '..num..'\nitemID: '..itemID,
-            func=function()
-                Save.use[itemID]=nil
-                getItems()
-            end,
-        }
-        e.LibDD:UIDropDownMenu_AddButton(info,level)
-    end
-end
-local function setNoMenu(level)--二级,禁用
-    local info={
-        text= e.onlyChinese and '全部清除' or CLEAR_ALL,
-        notCheckable=true,
-        func=function()
-            Save.no={}
-            getItems()
-            e.LibDD:CloseDropDownMenus()
-        end,
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
-
-    for itemID, _ in pairs(Save.no) do
-        info={
-            text=select(2, GetItemInfo(itemID)) or  ('itemID: '..itemID),
-            icon=C_Item.GetItemIconByID(itemID),
-            checked=true,
-            tooltipOnButton=true,
-            tooltipTitle=REMOVE,
-            tooltipText= 'itemID: '..itemID,
-            func=function()
-                Save.no[itemID]=nil
-                getItems()
-            end,
-        }
-        e.LibDD:UIDropDownMenu_AddButton(info, level)
-    end
-end
 local function setMenuList(self, level, menuList)--主菜单
+    local info={}
     if menuList=='USE' then
-        setUseMenu(level)
+        local find
+        for itemID, num in pairs(Save.use) do--二级, 使用
+            info={
+                text= (select(2, GetItemInfo(itemID)) or  ('itemID: '..itemID)).. (num>1 and ' |cnGREEN_FONT_COLOR:x'..num..'|r' or ''),
+                icon= C_Item.GetItemIconByID(itemID),
+                checked=true,
+                tooltipOnButton=true,
+                tooltipTitle= e.onlyChinese and '移除' or REMOVE,
+                tooltipText=num>1 and '|n'..(e.onlyChinese and '组合物品' or COMBINED_BAG_TITLE:gsub(INVTYPE_BAG,ITEMS))..'|n'..(e.onlyChinese and '数量' or AUCTION_STACK_SIZE)..': '..num..'|nitemID: '..itemID,
+                func=function()
+                    Save.use[itemID]=nil
+                    getItems()
+                end,
+            }
+            e.LibDD:UIDropDownMenu_AddButton(info,level)
+            find= true
+        end
+        if find then
+            e.LibDD:UIDropDownMenu_AddSeparator(level)
+            info={
+                text= e.onlyChinese and '全部清除' or CLEAR_ALL,
+                notCheckable=true,
+                func=function()
+                    Save.use={}
+                    getItems()
+                    e.LibDD:CloseDropDownMenus()
+                end
+            }
+        else
+            info={
+                text=e.onlyChinese and '无' or NONE,
+                isTitle=true,
+                notCheckable=true,
+            }
+        end
+        e.LibDD:UIDropDownMenu_AddButton(info,level)
         return
+
     elseif menuList=='NO' then
-        setNoMenu(level)
+        local find
+        for itemID, _ in pairs(Save.no) do
+            info={
+                text=select(2, GetItemInfo(itemID)) or  ('itemID: '..itemID),
+                icon=C_Item.GetItemIconByID(itemID),
+                checked=true,
+                tooltipOnButton=true,
+                tooltipTitle=REMOVE,
+                tooltipText= 'itemID: '..itemID,
+                func=function()
+                    Save.no[itemID]=nil
+                    getItems()
+                end,
+            }
+            e.LibDD:UIDropDownMenu_AddButton(info, level)
+            find=true
+        end
+        if find then
+            e.LibDD:UIDropDownMenu_AddSeparator(level)
+            info={
+                text= e.onlyChinese and '全部清除' or CLEAR_ALL,
+                notCheckable=true,
+                func=function()
+                    Save.no={}
+                    getItems()
+                    e.LibDD:CloseDropDownMenus()
+                end,
+            }
+        else
+            info={
+                text=e.onlyChinese and '无' or NONE,
+                isTitle=true,
+                notCheckable=true,
+            }
+        end
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
         return
     end
 
-    local t={}
-    t.notCheckable=true
+
+    info={
+        notCheckable=true,
+        tooltipOnButton=true,
+    }
     if Bag.bag and Bag.slot then
-        t.text=C_Container.GetContainerItemLink(Bag.bag, Bag.slot) or ('bag: '..Bag.bag ..' slot: '..Bag.slot)
+        info.text=C_Container.GetContainerItemLink(Bag.bag, Bag.slot) or ('bag: '..Bag.bag ..' slot: '..Bag.slot)
         local bagInfo=C_Container.GetContainerItemInfo(Bag.bag, Bag.slot)
-        t.icon= bagInfo and bagInfo.iconFileID
-        t.func=function()
+        info.icon= bagInfo and bagInfo.iconFileID
+        info.func=function()
             setDisableCursorItem()--禁用当物品
         end
-        t.tooltipOnButton=true
         if not UnitAffectingCombat('player') then
-            t.tooltipTitle='|cnRED_FONT_COLOR:'..(e.onlyChinese and '禁用' or DISABLE)..'|r'..e.Icon.mid..(e.onlyChinese and '鼠标滚轮向上滚动' or KEY_MOUSEWHEELUP)
+            info.tooltipTitle='|cnRED_FONT_COLOR:'..(e.onlyChinese and '禁用' or DISABLE)..'|r'..e.Icon.mid..(e.onlyChinese and '鼠标滚轮向上滚动' or KEY_MOUSEWHEELUP)
         end
     else
-        t.text=addName..': '..(e.onlyChinese and '无' or  NONE)
-        t.isTitle=true
-        t.tooltipOnButton=true
-        t.tooltipTitle= e.onlyChinese and '使用/禁用' or (USE..'/'..DISABLE)
-        t.tooltipText= e.onlyChinese and '拖曳物品到这里' or (DRAG_MODEL..ITEMS)
+        info.text=addName..': '..(e.onlyChinese and '无' or  NONE)
+        info.isTitle=true
+        info.tooltipTitle= e.onlyChinese and '使用/禁用' or (USE..'/'..DISABLE)
+        info.tooltipText= e.onlyChinese and '拖曳物品到这里' or (DRAG_MODEL..ITEMS)
     end
 
-    e.LibDD:UIDropDownMenu_AddButton(t)
-    e.LibDD:UIDropDownMenu_AddSeparator()
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
+    e.LibDD:UIDropDownMenu_AddSeparator(level)
 
     local no,use= 0, 0
     for _ in pairs(Save.no) do
@@ -377,21 +393,24 @@ local function setMenuList(self, level, menuList)--主菜单
     for _ in pairs(Save.use) do
         use=use+1
     end
-    t={}--自定义禁用列表
-    t.text= (e.onlyChinese and '禁用' or DISABLE)..' #'..no
-    t.notCheckable=1
-    t.menuList='NO'
-    t.hasArrow=true
-    e.LibDD:UIDropDownMenu_AddButton(t)
 
-    t={}--自定义使用列表
-    t.text= (e.onlyChinese and '使用' or USE)..' #'..use
-    t.notCheckable=1
-    t.menuList='USE'
-    t.hasArrow=true
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    info={--自定义禁用列表
+        text= (e.onlyChinese and '禁用' or DISABLE)..' #'..no,
+        notCheckable=1,
+        menuList='NO',
+        hasArrow=true,
+    }
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={--自定义使用列表
+        text= (e.onlyChinese and '使用' or USE)..' #'..use,
+        notCheckable=1,
+        menuList='USE',
+        hasArrow=true,
+    }
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
+
+    info={
         text= e.onlyChinese and '<右键点击打开>' or ITEM_OPENABLE,
         checked=Save.open,
         func=function()
@@ -399,9 +418,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '宠物' or PET,
         tooltipOnButton=true,
         tooltipTitle= '<3',
@@ -411,9 +430,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '玩具' or TOY,
         checked=Save.toy,
         func=function()
@@ -421,9 +440,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '坐骑' or MOUNTS,
         checked=Save.mount,
         func=function()
@@ -431,9 +450,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '幻化' or TRANSMOGRIFY,
         checked=Save.mago,
         func=function()
@@ -441,9 +460,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end,
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '配方' or TRADESKILL_SERVICE_LEARN,
         checked=Save.ski,
         func=function()
@@ -451,9 +470,9 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end,
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    t={
+    info={
         text= e.onlyChinese and '其它' or BINDING_HEADER_OTHER,
         checked=Save.alt,
         func=function()
@@ -461,10 +480,10 @@ local function setMenuList(self, level, menuList)--主菜单
             getItems()
         end
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    e.LibDD:UIDropDownMenu_AddSeparator()
-    t={
+    e.LibDD:UIDropDownMenu_AddSeparator(level)
+    info={
         text= e.onlyChinese and '自动隐藏' or (AUTO_JOIN:gsub(JOIN,'')..HIDE),
         tooltipOnButton=true,
         tooltipTitle= e.onlyChinese and '未发现物品' or BROWSE_NO_RESULTS,
@@ -474,7 +493,7 @@ local function setMenuList(self, level, menuList)--主菜单
         end,
         checked= Save.noItemHide
     }
-    e.LibDD:UIDropDownMenu_AddButton(t)
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
     e.LibDD:UIDropDownMenu_AddButton({text= e.onlyChinese and '拖曳物品: 使用/禁用' or (DRAG_MODEL..ITEMS..'('..USE..'/'..DISABLE..')'), isTitle=true, notCheckable=true})
 end
@@ -499,7 +518,7 @@ local function shoTips(self)--显示提示
             e.tips:SetBagItem(Bag.bag, Bag.slot)
             if not UnitAffectingCombat('player') then
                 e.tips:AddLine(' ')
-                e.tips:AddDoubleLine(e.Icon.mid..(e.onlyChinese and '鼠标滚轮向上滚动' or KEY_MOUSEWHEELUP), e.onlyChinese and '禁用' or DISABLE, 1,0,0, 1,0,0 )
+                e.tips:AddDoubleLine(e.Icon.mid..'|cnRED_FONT_COLOR:'..(e.onlyChinese and '鼠标滚轮向上滚动' or KEY_MOUSEWHEELUP), '|cnRED_FONT_COLOR:'..(e.onlyChinese and '禁用' or DISABLE))
             end
             e.tips:Show()
         end
@@ -528,18 +547,25 @@ local function Init()
             end
             --添加，移除
             StaticPopupDialogs['OpenItmesUseOrDisableItem']={
-                text=id..' '..addName..'\n\n%s\n%s\n\n'..(e.onlyChinese and '合成物品' or COMBINED_BAG_TITLE:gsub(INVTYPE_BAG,ITEMS))..' >1: ',
+                text=id..' '..addName..'|n|n%s|n%s|n|n'..(e.onlyChinese and '合成物品' or COMBINED_BAG_TITLE:gsub(INVTYPE_BAG,ITEMS))..' >1: ',
                 whileDead=1,
                 hideOnEscape=1,
                 exclusive=1,
                 timeout = 60,
                 hasEditBox=1,
                 button1='|cnGREEN_FONT_COLOR:'..(e.onlyChinese and '使用' or USE)..'|r',
-                button2=CANCEL,
+                button2= e.onlyChinese and '取消' or CANCEL,
                 button3='|cnRED_FONT_COLOR:'..(e.onlyChinese and '禁用' or DISABLE)..'|r',
                 OnShow = function(self2, data)
                     self2.editBox:SetNumeric(true)
-                    local num=Save.use[data.itemID] or 1
+                    local num=Save.use[data.itemID]
+                    if not num then
+                        local useStr=ITEM_SPELL_TRIGGER_ONUSE..'(.+)'--使用：
+                        local dateInfo= e.GetTooltipData({bag=nil, guidBank=nil, merchant=nil, inventory=nil, hyperLink=data.itemLink, itemID=nil, text={useStr}, onlyText=true, wow=nil, onlyWoW=nil, red=nil, onlyRed=nil})--物品提示，信息 使用：
+                        num= dateInfo.text[useStr] and dateInfo.text[useStr]:match('%d+')
+                        num= num and tonumber(num)
+                    end
+                    num=num or 1
                     self2.editBox:SetNumber(num)
                     self2.editBox:SetAutoFocus(false)
                     self2.editBox:ClearFocus()
@@ -577,7 +603,7 @@ local function Init()
             icon= C_Item.GetItemIconByID(itemID)
             icon = icon and '|T'..icon..':0|t'..itemLink or ''
             local list=Save.use[itemID] and (e.onlyChinese and '当前列表' or PROFESSIONS_CURRENT_LISTINGS)..': |cff00ff00'..(e.onlyChinese and '使用' or USE)..'|r' or Save.no[itemID] and (e.onlyChinese and '当前列表' or PROFESSIONS_CURRENT_LISTINGS)..': |cffff0000'..(e.onlyChinese and '禁用' or DISABLE)..'|r' or ''
-            StaticPopup_Show('OpenItmesUseOrDisableItem',icon,list, {itemID=itemID, itemLink=itemLink})
+            StaticPopup_Show('OpenItmesUseOrDisableItem', icon, list, {itemID=itemID, itemLink=itemLink})
             ClearCursor()
         else
             shoTips(self)--显示提示
@@ -602,6 +628,9 @@ local function Init()
             end
             if MerchantFrame:IsVisible() then
                 MerchantFrame:SetShown(false)
+            end
+            if SendMailFrame:IsShown() then
+                MailFrame:SetShown(false)
             end
         end
     end)

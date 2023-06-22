@@ -923,7 +923,7 @@ local function handle_tooltip(tooltip, point, skip_label)
         local comparison = _G[myname.."ComparisonTooltip"]
         if not comparison then
             comparison = CreateFrame("GameTooltip", myname.."ComparisonTooltip", UIParent, "ShoppingTooltipTemplate")
-            Mixin(comparison, GameTooltipDataMixin)
+            if _G.GameTooltipDataMixin then Mixin(comparison, GameTooltipDataMixin) end
             comparison:SetFrameStrata("TOOLTIP")
             comparison:SetClampedToScreen(true)
         end

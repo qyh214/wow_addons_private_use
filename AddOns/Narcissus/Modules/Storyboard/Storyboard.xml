@@ -217,12 +217,12 @@
                         <Anchor point="CENTER" relativeKey="$parent.ItemIcon" relativePoint="CENTER" x="0" y="0"/>
                     </Anchors>
                 </Texture>
-                <FontString inherits="GameFontBlackMedium" parentKey="ItemName" justifyH="LEFT" justifyV="TOP" spacing="2">
+                <FontString inherits="GameFontBlackMedium" parentKey="ItemName" justifyH="LEFT" justifyV="TOP" spacing="3">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="0"/>
                     </Anchors>
                 </FontString>
-                <FontString inherits="GameFontBlackMedium" parentKey="Description" justifyH="LEFT" justifyV="TOP" spacing="2">
+                <FontString inherits="GameFontBlackMedium" parentKey="Description" justifyH="LEFT" justifyV="TOP" spacing="3">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeKey="$parent.ItemName" relativePoint="BOTTOMLEFT" y="-4"/>
                     </Anchors>

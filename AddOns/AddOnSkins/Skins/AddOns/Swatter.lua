@@ -1,17 +1,15 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('!Swatter') then return end
-
-function AS:Swatter()
+function R:Swatter()
 	if SwatterErrorFrame then
-		AS:SkinFrame(SwatterErrorFrame)
+		S:HandleFrame(SwatterErrorFrame)
 		SwatterErrorEditBox:SetFrameLevel(2)
-		AS:SkinButton(Swatter.Error.Done)
-		AS:SkinButton(Swatter.Error.Next)
-		AS:SkinButton(Swatter.Error.Prev)
-		AS:SkinButton(Swatter.Drag)
-		AS:SkinScrollBar(SwatterErrorInputScrollScrollBar)
+		S:HandleButton(Swatter.Error.Done)
+		S:HandleButton(Swatter.Error.Next)
+		S:HandleButton(Swatter.Error.Prev)
+		S:HandleButton(Swatter.Drag)
+		S:HandleScrollBar(SwatterErrorInputScrollScrollBar)
 	end
 end
 
-AS:RegisterSkin('Swatter', AS.Swatter, '[!BugGrabber]', '[!ImprovedErrorFrame]')
+AS:RegisterSkin('!Swatter', R.Swatter, '[!BugGrabber]', '[!ImprovedErrorFrame]')

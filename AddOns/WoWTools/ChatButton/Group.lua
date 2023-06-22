@@ -1,9 +1,13 @@
 local id, e = ...
 local addName= 'ChatButtonGroup'
 local Save={
-    mouseUP= not LOCALE_zhCN and SUMMON ..' '..COMBATLOG_FILTER_STRING_ME or '求拉, 谢谢',
+    --mouseUP=  not LOCALE_zhCN and SUMMON ..' '..COMBATLOG_FILTER_STRING_ME or '求拉, 谢谢',
+    mouseUP=  (e.Player.region==1 or e.Player.region==3) and 'sum me, pls' 
+                or e.Player.region==5  and '求拉, 谢谢' 
+                or format('%s %s',SUMMON, COMBATLOG_FILTER_STRING_ME),
     mouseDown= not LOCALE_zhCN and 'inv, thx' or '1' ,
 }
+--1US (includes Brazil and Oceania) 2Korea 3Europe (includes Russia) 4Taiwan 5China
 local button
 
 local roleAtlas={
@@ -53,21 +57,21 @@ local function setGroupTips()--队伍信息提示
         button.membersText:SetText(isInGroup and num or '')
     end
 
-    local subgroup, combatRole
+    local combatRole--subgroup,
     local tab=e.GroupGuid[e.Player.guid]
     if tab then
-        subgroup= tab and tab.subgroup
+      --  subgroup= tab and tab.subgroup
         combatRole=tab.combatRole
     end
 
-    if subgroup and not button.subgroupTexture then--小队号
+    --[[if subgroup and not button.subgroupTexture then--小队号
         button.subgroupTexture=e.Cstr(button, {size=10, colro=true, justifyH='RIGHT'})--10, nil, nil, true, nil, 'RIGHT')
         button.subgroupTexture:SetPoint('TOPRIGHT',-6,-3)
         button.subgroupTexture:SetTextColor(0,1,0)
     end
     if button.subgroupTexture then
         button.subgroupTexture:SetText(subgroup or '')
-    end
+    end]]
 
     if isInRaid and not isInInstance and not button.textureNotInstance then--在副本外, 在团时, 提示
         button.textureNotInstance=button:CreateTexture(nil,'BACKGROUND')
@@ -134,8 +138,8 @@ local function InitMenu(self, level, type)--主菜单
                 func=function(_, arg1, arg2)
                     StaticPopupDialogs[id..addName..'CUSTOM']={--区域,设置对话框
                         text=id..'    '..addName
-                            ..'\n\n'..(e.onlyChinese and '自定义发送信息' or (CUSTOM..SEND_MESSAGE))
-                            ..'\n\n|cnGREEN_FONT_COLOR:%s|r\n\n'
+                            ..'|n|n'..(e.onlyChinese and '自定义发送信息' or (CUSTOM..SEND_MESSAGE))
+                            ..'|n|n|cnGREEN_FONT_COLOR:%s|r|n|n'
                             ..(e.onlyChinese and '队伍' or HUD_EDIT_MODE_SETTING_UNIT_FRAME_GROUPS),
                         whileDead=1,
                         hideOnEscape=1,
@@ -279,7 +283,7 @@ local function show_Group_Info_Toolstip()--玩家,信息, 提示
         end
 
         if guid and maxHP and role then
-            info.name= (e.PlayerOnlineInfo(unit) or '')..e.GetPlayerInfo({unit=unit, guid=guid, name=nil,  reName=true, reRealm=true}).. (e.UnitItemLevel[guid] and e.UnitItemLevel[guid].itemLeve or '')
+            info.name= (e.PlayerOnlineInfo(unit) or '')..e.GetPlayerInfo({unit=unit, guid=guid, reName=true, reRealm=true})..(e.UnitItemLevel[guid] and e.UnitItemLevel[guid].itemLeve or '')
             info.maxHP= maxHP
 
             if uiMapID then--不在同地图

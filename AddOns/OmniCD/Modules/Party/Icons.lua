@@ -25,7 +25,7 @@ function P:SetIconLayout(frame, sortOrder)
 		local icon = icons[i]
 		icon:Hide()
 
-		if (displayInactive or icon.active) and (self.multiline or i <= self.maxNumIcons) then
+		if (displayInactive or icon.active) and (self.multiline or numActive <= self.maxNumIcons) then
 			icon:ClearAllPoints()
 			if numActive > 1 then
 				count = count + 1
@@ -171,7 +171,7 @@ function P:SetChargeScale(icon, chargeScale)
 end
 
 function P:SetTooltip(icon, showTooltip)
-	icon:EnableMouse(showTooltip)
+	icon:EnableMouse((not icon.SetPassThroughButtons or icon.isPassThrough) and (showTooltip or icon.tooltipID))
 end
 
 function P:ApplySettings(frame)

@@ -144,15 +144,17 @@ L["handler_tooltip_quest"] = "Freigeschaltet mit der Quest"
 
 L["Crafting Orders"] = "Handwerksaufträge"
 L["Mailbox"] = "Briefkasten"
-L["Portal to Dalaran"] = "Portal nach Dalaran"
-L["Portal to Jade Forest"] = "Portal zum Jadewald"
 L["Portal to Orgrimmar"] = "Portal nach Orgrimmar"
-L["Portal to Shadowmoon Valley"] = "Portal ins Schattenmondtal"
 L["Portal to Stormwind"] = "Portal nach Sturmwind"
 L["Rostrum of Transformation"] = "Podium der Transformation"
 L["Teleport to Seat of the Aspects"] = "Teleport zum Sitz der Aspekte"
 L["Visage of True Self"] = "Angesicht des Selbst"
+L["Portal to Nazmir"] = "Portal nach Nazmir"
+L["Portal to Tiragarde Sound"] = "Portal zum Tiragardesund"
+L["Portal to Uldum"] = "Portal nach Uldum"
+L["Portal to Badlands"] = "Portal zum Ödland"
 
-L["Expert Pet Trainer"] = "Tierausbildungsexpertin"
-
+-- L["Portal to Dalaran"] = "Portal nach Dalaran"
+-- L["Portal to Jade Forest"] = "Portal zum Jadewald"
+-- L["Portal to Shadowmoon Valley"] = "Portal ins Schattenmondtal"
 end

@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2474, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230114200950")
+mod:SetRevision("20230530090806")
 mod:SetCreatureID(186121)
 mod:SetEncounterID(2569)
 mod:SetUsedIcons(8)
-mod:SetHotfixNoticeRev(20221505000000)
+mod:SetHotfixNoticeRev(20230513000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 
@@ -25,17 +26,18 @@ mod:RegisterEventsInCombat(
 --[[
 (ability.id = 373960 or ability.id = 376170 or ability.id = 373912) and type = "begincast"
  or ability.id = 373944 and type = "summon"
+ or ability.id = 374186 and type = "removebuff"
  or type = "dungeonencounterstart" or type = "dungeonencounterend"
 --]]
 --TODO, longer pulls for decaying strength timer (needs more data, single pull with 3 casts but still all over the place)
 local warnDecayigStrength						= mod:NewSpellAnnounce(373960, 3)
 
-local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, nil, nil, nil, 1, 2)
+local specWarnRotburstTotem						= mod:NewSpecialWarningSwitch(373944, "-Healer", nil, 2, 1, 2)
 local specWarnChokingRotcloud					= mod:NewSpecialWarningDodge(376170, nil, nil, nil, 2, 2, 4)
 local specWarnDecaystrike						= mod:NewSpecialWarningDefensive(373917, nil, nil, nil, 1, 2)
 --local specWarnGTFO							= mod:NewSpecialWarningGTFO(340324, nil, nil, nil, 1, 8)
 
-local timerDecayingStrengthCD					= mod:NewCDTimer(69.2, 373960, nil, nil, nil, 2)--Likely still bugged
+local timerDecayingStrengthCD					= mod:NewCDTimer(40.5, 373960, nil, nil, nil, 2)
 local timerRotburstTotemCD						= mod:NewCDTimer(18.2, 373944, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--18-21
 local timerChokingRotcloutCD					= mod:NewCDTimer(42.5, 376170, nil, nil, nil, 3, nil, DBM_COMMON_L.MYTHIC_ICON)
 local timerDecayStrikeCD						= mod:NewCDTimer(19.4, 373917, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
@@ -53,11 +55,11 @@ function mod:OnCombatStart(delay)
 	table.wipe(WitheringRotStacks)
 	self.vb.waterCount = 0
 	if self:IsMythic() then
-		timerChokingRotcloutCD:Start(5.1-delay)
+		timerChokingRotcloutCD:Start(5.7-delay)
 	end
-	timerDecayStrikeCD:Start(10.8-delay)
-	timerRotburstTotemCD:Start(19.1-delay)
-	timerDecayingStrengthCD:Start(41.1-delay)
+	timerDecayStrikeCD:Start(10.5-delay)
+	timerRotburstTotemCD:Start(18.9-delay)
+	timerDecayingStrengthCD:Start(40-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(373896))
 		DBM.InfoFrame:Show(5, "table", WitheringRotStacks, 1)
@@ -81,14 +83,17 @@ function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 373960 then
 		warnDecayigStrength:Show()
---		timerDecayingStrengthCD:Start()--69.2, 100.8
+		timerChokingRotcloutCD:Restart(10)
+		timerDecayStrikeCD:Restart(14.5)
+		timerRotburstTotemCD:Restart(22.9)
+		timerDecayingStrengthCD:Start(44.9)
 	elseif spellId == 376170 then
 		specWarnChokingRotcloud:Show()
-		specWarnChokingRotcloud:Play("shockwave")
-		timerChokingRotcloutCD:Start()
+		specWarnChokingRotcloud:Play("watchstep")
+--		timerChokingRotcloutCD:Start()
 	elseif spellId == 373912 then
 		timerDecayStrikeCD:Start()
-		if args:IsPlayer() then
+		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnDecaystrike:Show()
 			specWarnDecaystrike:Play("defensive")
 		end

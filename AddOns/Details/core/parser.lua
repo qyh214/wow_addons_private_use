@@ -27,6 +27,7 @@
 	local _UnitGroupRolesAssigned = DetailsFramework.UnitGroupRolesAssigned
 	local _GetSpellInfo = _detalhes.getspellinfo
 	local isWOTLK = DetailsFramework.IsWotLKWow()
+	local isERA = DetailsFramework.IsClassicWow()
 	local _tempo = time()
 	local _, Details222 = ...
 	_ = nil
@@ -1867,6 +1868,7 @@
 			sourceName = "[*] " .. spellName
 		end
 
+
 		local npcId = tonumber(select(6, strsplit("-", petSerial)) or 0)
 
 		--differenciate army and apoc pets for DK
@@ -2000,7 +2002,7 @@
 	end
 
 	function parser:heal_absorb(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount)
-		if (isWOTLK) then
+		if (isWOTLK or isERA) then
 			if (not amount) then
 				--melee
 				shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount = spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId
@@ -3689,6 +3691,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			sourceName = "[*] " .. spellName
 		end
 
+		---@type actor, actor
 		local sourceActor, ownerActor = misc_cache[sourceSerial] or misc_cache_pets[sourceSerial] or misc_cache[sourceName], misc_cache_petsOwners[sourceSerial]
 		if (not sourceActor) then
 			sourceActor, ownerActor, sourceName = _current_misc_container:PegarCombatente (sourceSerial, sourceName, sourceFlags, true)
@@ -3719,6 +3722,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		amountOfCasts = amountOfCasts + 1
 		_current_combat.amountCasts[sourceName][spellName] = amountOfCasts
 
+		--if (sourceSerial == UnitGUID("player")) then
+		--	print(sourceName, spellName, amountOfCasts)
+		--end
+
 	------------------------------------------------------------------------------------------------
 	--record cooldowns cast which can't track with buff applyed
 		--a player is the caster
@@ -3741,18 +3748,20 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			--enemy successful casts (not interrupted)
 			if (bitBand(sourceFlags, 0x00000040) ~= 0 and sourceName) then --byte 2 = 4 (enemy)
 				--damager
-				local este_jogador = damage_cache [sourceSerial]
-				if (not este_jogador) then
-					este_jogador = _current_damage_container:PegarCombatente (sourceSerial, sourceName, sourceFlags, true)
+				---@type actor
+				local enemyActorObject = damage_cache[sourceSerial]
+				if (not enemyActorObject) then
+					enemyActorObject = _current_damage_container:PegarCombatente(sourceSerial, sourceName, sourceFlags, true)
 				end
 
-				if (este_jogador) then
+				if (enemyActorObject) then
 					--actor spells table
-					local spell = este_jogador.spells._ActorTable [spellId] --line where the actor was nil
-					if (not spell) then
-						spell = este_jogador.spells:PegaHabilidade (spellId, true, token)
+					---@type spelltable
+					local spellTable = enemyActorObject.spells._ActorTable[spellId]
+					if (not spellTable) then
+						spellTable = enemyActorObject.spells:PegaHabilidade(spellId, true, token)
 					end
-					spell.successful_casted = spell.successful_casted + 1
+					spellTable.successful_casted = spellTable.successful_casted + 1
 				end
 
 				--add the spellId in the enemy_cast_cache table to store the time the enemy successfully cast a spell
@@ -3765,7 +3774,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 					enemy_cast_cache[time][3] = enemy_cast_cache[time][3] + 1
 				end
 			end
-			return
 		end
 	end
 
@@ -5404,6 +5412,36 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		if (difficultyID == 8) then
 			_detalhes:SendEvent("COMBAT_MYTHICDUNGEON_END")
 		end
+
+		local okay, errorText = pcall(function()
+			local mapChallengeModeID, mythicLevel, time, onTime, keystoneUpgradeLevels, practiceRun, oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord, PrimaryAffix, isEligibleForScore, members = C_ChallengeMode.GetCompletionInfo()
+			if (mapChallengeModeID) then
+				local statName = "mythicdungeoncompletedDF2"
+				local mythicDungeonRuns = Details222.PlayerStats:GetStat(statName)
+				mythicDungeonRuns = mythicDungeonRuns or {}
+
+				mythicDungeonRuns[mapChallengeModeID] = mythicDungeonRuns[mapChallengeModeID] or {}
+				mythicDungeonRuns[mapChallengeModeID][mythicLevel] = mythicDungeonRuns[mapChallengeModeID][mythicLevel] or {}
+
+				local currentRun = mythicDungeonRuns[mapChallengeModeID][mythicLevel]
+				currentRun.completed = (currentRun.completed or 0) + 1
+				currentRun.totalTime = (currentRun.totalTime or 0) + time
+				if (not currentRun.minTime or time < currentRun.minTime) then
+					currentRun.minTime = time
+				end
+
+				currentRun.history = currentRun.history or {}
+				local day, month, year = tonumber(date("%d")), tonumber(date("%m")), tonumber(date("%Y"))
+				local amountDeaths = C_ChallengeMode.GetDeathCount() or 0
+				tinsert(currentRun.history, {day = day, month = month, year = year, runTime = time, onTime = onTime, deaths = amountDeaths, affix = PrimaryAffix})
+
+				Details222.PlayerStats:SetStat("mythicdungeoncompletedDF2", mythicDungeonRuns)
+			end
+		end)
+
+		if (not okay) then
+			_detalhes:Msg("something went wrong (0x7878):", errorText)
+		end
 	end
 
 	function _detalhes.parser_functions:PLAYER_REGEN_ENABLED(...)
@@ -5908,6 +5946,10 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		xpcall(saveNicktabCache, saver_error)
 	end)
 
+	local eraNamedSpellsToID = {}
+
+	
+
 	-- ~parserstart ~startparser ~cleu ~parser
 	function _detalhes.OnParserEvent()
 		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
@@ -5917,7 +5959,55 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end
-	_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEvent)
+
+	function _detalhes.OnParserEventClassicEra()
+		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
+
+		local func = token_list[token]
+		if (func) then
+			if(eraNamedSpellsToID[token]) then
+				A1 = A2
+			end
+			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
+		end
+	end
+
+	if(isERA) then
+		eraNamedSpellsToID = {
+		["SPELL_PERIODIC_DAMAGE"] = true,
+		["SPELL_DAMAGE"] = true,
+		["SPELL_BUILDING_DAMAGE"] = true,
+		["DAMAGE_SHIELD"] = true,
+		["DAMAGE_SPLIT"] = true,
+		["SPELL_MISSED"] = true,
+		["SPELL_PERIODIC_MISSED"] = true,
+		["SPELL_BUILDING_MISSED"] = true,
+		["DAMAGE_SHIELD_MISSED"] = true,
+
+		["SPELL_HEAL"] = true,
+		["SPELL_PERIODIC_HEAL"] = true,
+		["SPELL_HEAL_ABSORBED"] = true,
+		["SPELL_ABSORBED"] = true,
+
+		["SPELL_AURA_APPLIED"] = true,
+		["SPELL_AURA_REMOVED"] = true,
+		["SPELL_AURA_REFRESH"] = true,
+		["SPELL_AURA_APPLIED_DOSE"] = true,
+		["SPELL_ENERGIZE"] = true,
+		["SPELL_PERIODIC_ENERGIZE"] = true,
+
+		["SPELL_CAST_SUCCESS"] = true,
+		["SPELL_DISPEL"] = true,
+		["SPELL_STOLEN"] = true,
+		["SPELL_AURA_BROKEN"] = true,
+		["SPELL_AURA_BROKEN_SPELL"] = true,
+		["SPELL_RESURRECT"] = true,
+		["SPELL_INTERRUPT"] = true,
+		}
+		_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEventClassicEra)
+	else
+		_detalhes.parser_frame:SetScript("OnEvent", _detalhes.OnParserEvent)
+	end
 
 	function _detalhes:UpdateParser()
 		_tempo = _detalhes._tempo
@@ -6392,6 +6482,38 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 		else
 			return nil
+		end
+	end
+
+
+	function Details:GetUnitId(unitName)
+		unitName = unitName or self.nome
+		local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
+		if (openRaidLib) then
+			local unitId = openRaidLib.GetUnitID(unitName)
+			if (unitId) then
+				return unitId
+			end
+		end
+
+		if (IsInRaid()) then
+			for i = 1, GetNumGroupMembers() do
+				local unitId = "raid" .. i
+				if (GetUnitName(unitId, true) == unitName) then
+					return unitId
+				end
+			end
+
+		elseif (IsInGroup()) then
+			for i = 1, GetNumGroupMembers() -1 do
+				local unitId = "party" .. i
+				if (GetUnitName(unitId, true) == unitName) then
+					return unitId
+				end
+			end
+			if (UnitName("player") == unitName) then
+				return "player"
+			end
 		end
 	end
 

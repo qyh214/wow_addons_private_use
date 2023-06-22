@@ -19,7 +19,7 @@ local createOptionsPanel = function()
     local options_button_template = DF:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
 
     local optionsFrame = DF:CreateSimplePanel(UIParent, 550, 500, "Details! Breakdown Options", "DetailsSpellBreakdownOptionsPanel")
-    optionsFrame:SetFrameStrata("HIGH")
+    optionsFrame:SetFrameStrata("DIALOG")
     optionsFrame:SetPoint("topleft", UIParent, "topleft", 2, -40)
     optionsFrame:Show()
 
@@ -61,34 +61,6 @@ local createOptionsPanel = function()
 
     local optionsTable = {
         {type = "label", get = function() return "Spell Details Block" end, text_template = subSectionTitleTextTemplate},
-            {--width
-                type = "range",
-                get = function() return Details.breakdown_spell_tab.blockcontainer_width end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockcontainer_width = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                end,
-                min = 150,
-                max = 450,
-                step = 1,
-                name = "Width",
-                desc = "Width",
-                hidden = true,
-            },
-            {--height
-                type = "range",
-                get = function() return Details.breakdown_spell_tab.blockcontainer_height end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockcontainer_height = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                end,
-                min = 150,
-                max = 450,
-                step = 1,
-                name = "Height",
-                desc = "Height",
-                hidden = true,
-            },
             {--block height
                 type = "range",
                 get = function() return Details.breakdown_spell_tab.blockspell_height end,
@@ -101,71 +73,6 @@ local createOptionsPanel = function()
                 step = 1,
                 name = "Block Height",
                 desc = "Block Height",
-            },
-            {--line height
-                type = "range",
-                get = function() return Details.breakdown_spell_tab.blockspellline_height end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockspellline_height = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                end,
-                min = 10,
-                max = 30,
-                step = 1,
-                name = "Line Height",
-                desc = "Line Height",
-            },
-            {--show spark
-                type = "toggle",
-                get = function() return Details.breakdown_spell_tab.blockspell_spark_show end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockspell_spark_show = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                end,
-                name = "Show Spark",
-                desc = "Show Spark",
-            },
-            {--spark width
-                type = "range",
-                get = function() return Details.breakdown_spell_tab.blockspell_spark_width end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockspell_spark_width = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                end,
-                min = 1,
-                max = 24,
-                step = 1,
-                name = "Spark Width",
-                desc = "Spark Width",
-            },
-            {--spark offset
-                type = "range",
-                get = function() return Details.breakdown_spell_tab.blockspell_spark_offset end,
-                set = function(self, fixedparam, value)
-                    Details.breakdown_spell_tab.blockspell_spark_offset = value
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-                    DetailsSpellBreakdownTab.UpdateShownSpellBlock()
-                end,
-                min = -12,
-                max = 12,
-                step = 1,
-                name = "Spark Offset",
-                desc = "Spark Offset",
-            },
-			{--spark color
-				type = "color",
-                get = function()
-                    return Details.breakdown_spell_tab.blockspell_spark_color
-				end,
-				set = function(self, r, g, b, a)
-                    Details.breakdown_spell_tab.blockspell_spark_color[1] = r
-                    Details.breakdown_spell_tab.blockspell_spark_color[2] = g
-                    Details.breakdown_spell_tab.blockspell_spark_color[3] = b
-                    Details.breakdown_spell_tab.blockspell_spark_color[4] = a
-                    DetailsSpellBreakdownTab.GetSpellBlockFrame():UpdateBlocks()
-				end,
-				name = "Spark Color",
-				desc = "Spark Color",
             },
 
         {type = "blank"},
@@ -293,6 +200,53 @@ local createOptionsPanel = function()
                 desc = "Background Alpha",
             },
 
+        {type = "blank"},
+        {type = "label", get = function() return "Group Player Spells:" end, text_template = subSectionTitleTextTemplate},
+            { --nest player spells | merge player spells
+                type = "toggle",
+                get = function() return Details.breakdown_spell_tab.nest_players_spells_with_same_name end,
+                set = function(self, fixedparam, value)
+                    Details.breakdown_spell_tab.nest_players_spells_with_same_name = value
+                end,
+                name = "Group Player Spells With Same Name",
+                desc = "Group spells casted by players which has the same name",
+            },
+
+        {type = "blank"},
+        {type = "label", get = function() return "Group Pet Spells:" end, text_template = subSectionTitleTextTemplate},
+
+            { --nest pet spells with the same name
+                type = "toggle",
+                get = function() return Details.breakdown_spell_tab.nest_pet_spells_by_name end,
+                set = function(self, fixedparam, value)
+                    Details.breakdown_spell_tab.nest_pet_spells_by_name = value
+                end,
+                name = "Group Pet Names Under a Pet Spell Bar",
+                desc = "Group Pets By Name",
+                hooks = {["OnSwitch"] = function()
+                    if (Details.breakdown_spell_tab.nest_pet_spells_by_name) then
+                        Details.breakdown_spell_tab.nest_pet_spells_by_caster = false
+                        DetailsSpellBreakdownOptionsPanel:RefreshOptions()
+                    end
+                end}
+            },
+
+            { --nest pet spells with the same name
+                type = "toggle",
+                get = function() return Details.breakdown_spell_tab.nest_pet_spells_by_caster end,
+                set = function(self, fixedparam, value)
+                    Details.breakdown_spell_tab.nest_pet_spells_by_caster = value
+
+                end,
+                name = "Group Pet Spells Under a Pet Name Bar",
+                desc = "Group Pets By Spell",
+                hooks = {["OnSwitch"] = function()
+                    if (Details.breakdown_spell_tab.nest_pet_spells_by_caster) then
+                        Details.breakdown_spell_tab.nest_pet_spells_by_name = false
+                        DetailsSpellBreakdownOptionsPanel:RefreshOptions()
+                    end
+                end}
+            },
     }
 
     --build the menu

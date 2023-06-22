@@ -1,4 +1,7 @@
-﻿v3.5.16
+﻿v3.5.17
+- Update to patch 10.1
+
+v3.5.16
 - Fix error that occured when not all bag slots were equipped with bags
 
 v3.5.15

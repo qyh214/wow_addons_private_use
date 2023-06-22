@@ -60,7 +60,12 @@ function KT_PROFESSION_RECIPE_TRACKER_MODULE:OnBlockHeaderClick(block, mouseButt
 			C_TradeSkillUI.SetRecipeTracked(KT.GetRecipeID(block), track, KT.IsRecraftBlock(block));
 		else
 			if not KT.IsRecraftBlock(block) then
-				C_TradeSkillUI.OpenRecipe(KT.GetRecipeID(block));
+				local recipeID = KT.GetRecipeID(block);
+				if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+					C_TradeSkillUI.OpenRecipe(recipeID);
+				else
+					Professions.InspectRecipe(recipeID);
+				end
 			end
 		end
 	else
@@ -107,19 +112,39 @@ function KT_PROFESSION_RECIPE_TRACKER_MODULE:Update()
 				local blockName = isRecraft and PROFESSIONS_CRAFTING_FORM_RECRAFTING_HEADER:format(recipeSchematic.name) or recipeSchematic.name;
 				self:SetBlockHeader(block, blockName);
 
+				local eligibleSlots = {};
 				for slotIndex, reagentSlotSchematic in ipairs(recipeSchematic.reagentSlotSchematics) do
-					if reagentSlotSchematic.reagentType == Enum.CraftingReagentType.Basic then
+					if Professions.IsReagentSlotRequired(reagentSlotSchematic) then
+						if Professions.IsReagentSlotModifyingRequired(reagentSlotSchematic) then
+							table.insert(eligibleSlots, 1, {slotIndex = slotIndex, reagentSlotSchematic = reagentSlotSchematic});
+						else
+							table.insert(eligibleSlots, {slotIndex = slotIndex, reagentSlotSchematic = reagentSlotSchematic});
+						end
+					end
+				end
+
+				for idx, tbl in ipairs(eligibleSlots) do
+					local slotIndex = tbl.slotIndex;
+					local reagentSlotSchematic = tbl.reagentSlotSchematic;
+					if Professions.IsReagentSlotRequired(reagentSlotSchematic) then
 						local reagent = reagentSlotSchematic.reagents[1];
 						local quantityRequired = reagentSlotSchematic.quantityRequired;
 						local quantity = Professions.AccumulateReagentsInPossession(reagentSlotSchematic.reagents);
 						local name = nil;
-						if reagent.itemID then
-							local item = Item:CreateFromItemID(reagent.itemID);
-							name = item:GetItemName();
-						elseif reagent.currencyID then
-							local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(reagent.currencyID);
-							if currencyInfo then
-								name = currencyInfo.name;
+
+						if Professions.IsReagentSlotBasicRequired(reagentSlotSchematic) then
+							if reagent.itemID then
+								local item = Item:CreateFromItemID(reagent.itemID);
+								name = item:GetItemName();
+							elseif reagent.currencyID then
+								local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(reagent.currencyID);
+								if currencyInfo then
+									name = currencyInfo.name;
+								end
+							end
+						elseif Professions.IsReagentSlotModifyingRequired(reagentSlotSchematic) then
+							if reagentSlotSchematic.slotInfo then
+								name = reagentSlotSchematic.slotInfo.slotText;
 							end
 						end
 
@@ -169,65 +194,31 @@ function KT_PROFESSION_RECIPE_TRACKER_MODULE:Update()
 end
 
 function KT_ProfessionsRecipeTracking_Initialize()
-	local function GetAllBasicReagentIDs()
-		local currencyIDs = {};
-		local itemIDs = {};
-		local function AddIDs(isRecraft)
-			for _, recipeID in ipairs(C_TradeSkillUI.GetRecipesTracked(isRecraft)) do
-				for _, reagent in ipairs(Professions.CreateRecipeReagentsForAllBasicReagents(recipeID)) do
-					if reagent.itemID then
-						table.insert(itemIDs, reagent.itemID);
-					elseif reagent.currencyID then
-						table.insert(currencyIDs, reagent.currencyID);
-					end
-				end
-			end
-		end
-
-		AddIDs(IsRecrafting);
-		AddIDs(not IsRecrafting);
-		return itemIDs, currencyIDs;
-	end
-
-	-- itemIDs and currencyIDs captured by OnItemCountChanged will be updated by OnTrackedRecipeUpdate below.
-	local itemIDs, currencyIDs = GetAllBasicReagentIDs();
-
-	local function OnItemCountChanged(o, itemID)
-		if tContains(itemIDs, itemID) then
-			KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE);
-		end
-	end
-	EventRegistry:RegisterFrameEvent("ITEM_COUNT_CHANGED");
-	EventRegistry:RegisterCallback("ITEM_COUNT_CHANGED", OnItemCountChanged, KT_PROFESSION_RECIPE_TRACKER_MODULE);
-
 	local function OnCurrencyChanged(o, currencyID)
-		if tContains(currencyIDs, currencyID) then
-			ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE);
-		end
-	end
-	EventRegistry:RegisterFrameEvent("CURRENCY_DISPLAY_UPDATE");
-	EventRegistry:RegisterCallback("CURRENCY_DISPLAY_UPDATE", OnCurrencyChanged, PROFESSION_RECIPE_TRACKER_MODULE);
-
-	local function OnTrackedRecipeUpdate(o, recipeID, tracked)
-		itemIDs, currencyIDs = GetAllBasicReagentIDs();
 		KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE);
 	end
+	EventRegistry:RegisterFrameEvent("CURRENCY_DISPLAY_UPDATE");
+	EventRegistry:RegisterCallback("CURRENCY_DISPLAY_UPDATE", OnCurrencyChanged, KT_PROFESSION_RECIPE_TRACKER_MODULE);
 
+	local function OnTrackedRecipeUpdate(o, recipeID, tracked)
+		KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE);
+	end
 	EventRegistry:RegisterFrameEvent("TRACKED_RECIPE_UPDATE");
 	EventRegistry:RegisterCallback("TRACKED_RECIPE_UPDATE", OnTrackedRecipeUpdate, KT_PROFESSION_RECIPE_TRACKER_MODULE);
 
-	local function UntrackRecipeIfUnlearned(isRecraft)
-		for _, recipeID in ipairs(C_TradeSkillUI.GetRecipesTracked(isRecraft)) do
-			if not C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
-				local track = false;
-				C_TradeSkillUI.SetRecipeTracked(recipeID, track, isRecraft);
-			end
-		end
+	local function OnBagUpdateDelayed(o)
+		KT_ObjectiveTracker_Update(KT_OBJECTIVE_TRACKER_UPDATE_MODULE_PROFESSION_RECIPE);
 	end
+	EventRegistry:RegisterFrameEvent("BAG_UPDATE_DELAYED");
+	EventRegistry:RegisterCallback("BAG_UPDATE_DELAYED", OnBagUpdateDelayed, KT_PROFESSION_RECIPE_TRACKER_MODULE);
 
 	local function OnSkillLinesChanged(o)
-		UntrackRecipeIfUnlearned(IsRecrafting);
-		UntrackRecipeIfUnlearned(not IsRecrafting);
+		for _, recipeID in ipairs(C_TradeSkillUI.GetRecipesTracked(not IsRecrafting)) do
+			if not C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+				local track = false;
+				C_TradeSkillUI.SetRecipeTracked(recipeID, track, not IsRecrafting);
+			end
+		end
 	end
 	EventRegistry:RegisterFrameEvent("SKILL_LINES_CHANGED");
 	EventRegistry:RegisterCallback("SKILL_LINES_CHANGED", OnSkillLinesChanged, KT_PROFESSION_RECIPE_TRACKER_MODULE);

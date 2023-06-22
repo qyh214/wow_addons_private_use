@@ -1,0 +1,77 @@
+## Interface: 100100
+## X-Min-Interface: 80000
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Raids (Cata)|r
+## Author: MysticalOS
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariables: DBMRaidsCata_AllSavedVars
+## SavedVariablesPerCharacter: DBMRaidsCata_SavedStats
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
+## X-DBM-Mod-Category: CATA
+## X-DBM-StatTypes: normal,normal25,heroic,heroic25
+## X-DBM-Mod-SubCategoriesID: 967,720,754,671,669,757
+## X-DBM-Mod-Name: Raids (Cata)
+## X-DBM-Mod-Sort: 801
+## X-DBM-Mod-MapID: 967,720,951,754,671,669,757
+## X-DBM-Mod-MinCoreRevision: 20230525000000
+## X-DBM-Mod-MinExpansion: 3
+## X-Curse-Project-ID: 43971
+## X-WoWI-ID: 21469
+## X-Wago-ID: RBKpErGE
+## Version: r227
+
+localization.en.lua
+localization.de.lua
+localization.ru.lua
+localization.es.lua
+localization.kr.lua
+localization.cn.lua
+localization.tw.lua
+localization.fr.lua
+localization.it.lua
+localization.br.lua
+
+DragonSoul\Morchok.lua
+DragonSoul\Zonozz.lua
+DragonSoul\Yorsahj.lua
+DragonSoul\Hagara.lua
+DragonSoul\Ultraxion.lua
+DragonSoul\Blackhorn.lua
+DragonSoul\SpineDeathwing.lua
+DragonSoul\MadnessDeathwing.lua
+DragonSoul\DSTrash.lua
+
+Firelands\Bethtilac.lua
+Firelands\Rhyolith.lua
+Firelands\Alysrazor.lua
+Firelands\Shannox.lua
+Firelands\Baleroc.lua
+Firelands\FandralStaghelm.lua
+Firelands\Ragnaros.lua
+Firelands\Volcanus.lua
+Firelands\Nexus.lua
+Firelands\FirelandsTrash.lua
+
+ThroneFourWinds\Conclave.lua
+ThroneFourWinds\AlAkir.lua
+
+BastionTwilight\HalfusWyrmbreaker.lua
+BastionTwilight\ValionaTheralion.lua
+BastionTwilight\AscendantCouncil.lua
+BastionTwilight\Chogall.lua
+BastionTwilight\Sinestra.lua
+BastionTwilight\BoTTrash.lua
+
+BlackwingDescent\DarkIronGolemCouncil.lua
+BlackwingDescent\Magmaw.lua
+BlackwingDescent\Atramedes.lua
+BlackwingDescent\Chimaeron.lua
+BlackwingDescent\Maloriak.lua
+BlackwingDescent\Nefarian.lua
+BlackwingDescent\BWDTrash.lua
+
+BaradinHold\Argaloth.lua
+BaradinHold\Occuthar.lua
+BaradinHold\Alizabal.lua

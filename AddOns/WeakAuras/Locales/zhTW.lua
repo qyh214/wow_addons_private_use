@@ -502,6 +502,7 @@ L["Formats |cFFFF0000%unit|r"] = "格式化 |cFFFF0000%unit|r"
 L["Formats Player's |cFFFF0000%guid|r"] = "格式化玩家的 |cFFFF0000%guid|r"
 L["Forward"] = "前進"
 L["Forward, Reverse Loop"] = "前進，反向循環"
+L["Fourth Value of Tooltip Text"] = "工具提示文本的第四個值"
 L["Frame Selector"] = "框架選擇器"
 L["Frequency"] = "頻率"
 L["Freya"] = "芙蕾雅"
@@ -666,6 +667,7 @@ L["Jin'do the Hexxer"] = "『妖術師』金度"
 L["Journal Stage"] = "日誌階段"
 L["Keep Inside"] = "保持在內"
 L["Kel'Thuzad"] = "克爾蘇加德"
+L["Key"] = "關鍵"
 L["Kologarn"] = "柯洛剛恩"
 L["Koralon the Flame Watcher"] = "『烈焰看守者』寇拉隆"
 L["Kurinnaxx"] = "庫林納克斯"
@@ -809,7 +811,6 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "數字"
 L["Number Affected"] = "被影響的數量"
 L["Object"] = "物件"
---[[Translation missing --]]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -821,19 +822,18 @@ every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3
 
-Only if BigWigs shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
-Can be a range of values
-Can have multiple values separated by a comma or a space
+Only if BigWigs shows it on it's bar]=] ] = [=[發生的事件，提醒效果卸載時會重置
+可以是一個範圍的值
+可以有多個值，用逗號或空白分隔
 
-Examples:
-2nd 5th and 6th events: 2, 5, 6
-2nd to 6th: 2-6
-every 2 events: /2
-every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3
+範例:
+第2、第5和第6個事件: 2, 5, 6
+第2到第6個事件: 2-6
+每2個事件: /2
+從第2個開始，每3個事件: 2/3
+從第2個開始到第11個結束，每3個事件: 2-11/3
 
-Only if BigWigs shows it on it's bar]=]
---[[Translation missing --]]
+只有 BigWigs 在它的計時條上面顯示時]=]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -845,18 +845,18 @@ every 2 events: /2
 every 3 events starting from 2nd: 2/3
 every 3 events starting from 2nd and ending at 11th: 2-11/3
 
-Only if DBM shows it on it's bar]=] ] = [=[Occurrence of the event, reset when aura is unloaded
-Can be a range of values
-Can have multiple values separated by a comma or a space
+Only if DBM shows it on it's bar]=] ] = [=[發生的事件，提醒效果卸載時會重置
+可以是一個範圍的值
+可以有多個值，用逗號或空白分隔
 
-Examples:
-2nd 5th and 6th events: 2, 5, 6
-2nd to 6th: 2-6
-every 2 events: /2
-every 3 events starting from 2nd: 2/3
-every 3 events starting from 2nd and ending at 11th: 2-11/3
+範例:
+第2、第5和第6個事件: 2, 5, 6
+第2到第6個事件: 2-6
+每2個事件: /2
+從第2個開始，每3個事件: 2/3
+從第2個開始到第11個結束，每3個事件: 2-11/3
 
-Only if DBM shows it on it's bar]=]
+只有 DBM 在它的計時條上面顯示時]=]
 L["Officer"] = "幹部"
 L["Offset from progress"] = "進度偏移"
 L["Offset Timer"] = "移動時間數字"
@@ -1070,6 +1070,8 @@ L["Show Heal Absorb"] = "顯示治療吸收"
 L["Show Incoming Heal"] = "顯示即將獲得的治療"
 L["Show Loss of Control"] = "顯示被控制"
 L["Show On"] = "顯示於"
+L["Show Override"] = "顯示覆蓋"
+L["Show Override Spell"] = "顯示覆蓋法術"
 L["Show Rested Overlay"] = "顯示休息加成的疊加圖層"
 L["Shrink"] = "收縮"
 L["Silithid Royalty"] = "異種蠍皇族"
@@ -1181,8 +1183,8 @@ L["Talent"] = "天賦"
 L["Talent |cFFFF0000Not|r Known"] = "|cFFFF0000未知的|r天賦"
 L["Talent |cFFFF0000Not|r Selected"] = "|cFFFF0000沒有選擇|r天賦"
 L["Talent Known"] = "已知的天賦"
-L["Talent Selected"] = "選擇的天賦"
 L["Talent selected"] = "選擇的天賦"
+L["Talent Selected"] = "選擇的天賦"
 L["Talent Specialization"] = "天賦專精"
 L["Tanking And Highest"] = "坦怪中並且是最高"
 L["Tanking But Not Highest"] = "坦怪中但不是最高"
@@ -1199,6 +1201,7 @@ L["The aura has overwritten the global '%s', this might affect other auras."] = 
 L["The effective level differs from the level in e.g. Time Walking dungeons."] = "真實等級和等級 (例如: 時光漫遊的) 不同。"
 L["The Eye of Eternity"] = "永恆之眼"
 L["The Four Horsemen"] = "四騎士"
+L["The 'Key' value can be found in the BigWigs options of a specific spell"] = "“關鍵”值可以在BigWigs選項中的特定法術找到"
 L["The Lich King"] = "巫妖王"
 L["The Obsidian Sanctum"] = "黑曜聖所"
 L["The Prophet Skeram"] = "預言者斯克拉姆"
@@ -1231,6 +1234,7 @@ L["Tooltip"] = "滑鼠提示"
 L["Tooltip Value 1"] = "滑鼠提示值 1"
 L["Tooltip Value 2"] = "滑鼠提示值 2"
 L["Tooltip Value 3"] = "滑鼠提示值 3"
+L["Tooltip Value 4"] = "工具提示值 4"
 L["Top"] = "上"
 L["Top Left"] = "左上"
 L["Top Right"] = "右上"

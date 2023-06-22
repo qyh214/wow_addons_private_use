@@ -1302,10 +1302,19 @@ private.CONTAINER_GUIDE = {
 		[RSConstants.ENTRANCE] = { x = 0.4840, y = 0.1880 };
 	}; --Lava-Drenched Shadow Crystal
 	["3860862133"] = { 
-		[RSConstants.DOT..1] = { x = 0.2875, y = 0.5530, comment = AL["NOTE_386086_1"] };
-		[RSConstants.DOT..2] = { x = 0.2995, y = 0.4797, comment = AL["NOTE_386086_1"] };
-		[RSConstants.DOT..3] = { x = 0.3441, y = 0.4571, comment = AL["NOTE_386086_1"] };
-		[RSConstants.DOT..4] = { x = 0.3760, y = 0.4668, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..1] = { x = 0.2520, y = 0.4480, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..2] = { x = 0.2670, y = 0.4700, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..3] = { x = 0.2760, y = 0.4900, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..4] = { x = 0.2800, y = 0.5130, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..4] = { x = 0.2875, y = 0.5530, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..5] = { x = 0.2995, y = 0.4797, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..7] = { x = 0.3020, y = 0.4000, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..8] = { x = 0.3120, y = 0.5200, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..10] = { x = 0.3273, y = 0.5224, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..11] = { x = 0.3441, y = 0.4571, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..12] = { x = 0.3440, y = 0.4880, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..13] = { x = 0.3630, y = 0.4410, comment = AL["NOTE_386086_1"] };
+		[RSConstants.DOT..14] = { x = 0.3760, y = 0.4668, comment = AL["NOTE_386086_1"] };
 	}; --Seething Cache
 	["3988102133"] = { 
 		[RSConstants.FLAG] = { x = 0.4357, y = 0.2302, comment = AL["NOTE_398810_1"] };

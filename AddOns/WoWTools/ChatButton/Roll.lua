@@ -54,12 +54,22 @@ local function setCHAT_MSG_SYSTEM(text)
             button.rightBottomText:SetText(Min)
         end
     end
-    
+
+    local faction,guid
+    if name==e.Player.name_realm then
+        faction= e.Player.faction
+        guid= e.Player.guid
+    elseif e.GroupGuid[name] then
+        faction= e.GroupGuid[name].faction
+        guid= e.GroupGuid[name].guid
+    end
+
     table.insert(Tab, {name=name,
                         roll=roll,
                         date=date('%X'),
                         text=text,
-                        guid= name==e.Player.name_realm and e.Player.guid or e.GroupGuid[name] and e.GroupGuid[name].guid
+                        guid= guid,
+                        faction= faction,
                     })
 end
 
@@ -97,8 +107,18 @@ end
 local function setAutoClearRegisterEvent()--注册自动清除事件
     if Save.autoClear then
         panel:RegisterEvent('PLAYER_REGEN_DISABLED')
+        if not button.autoClearTips then
+            button.autoClearTips= button:CreateTexture(nil,'OVERLAY')
+            button.autoClearTips:SetPoint('BOTTOMLEFT',4, 4)
+            button.autoClearTips:SetSize(12,12)
+            button.autoClearTips:SetAtlas('bags-button-autosort-up')
+            --button.autoClearTips:SetVertexColor(e.Player.r, e.Player.g, e.Player.b)
+        end
     else
         panel:UnregisterEvent('PLAYER_REGEN_DISABLED')
+    end
+    if button.autoClearTips then
+        button.autoClearTips:SetShown(Save.autoClear)
     end
 end
 
@@ -110,11 +130,11 @@ local function InitMenu(self, level, type)--主菜单
     if type=='SAVE' then
         for _, tab in pairs(Save.save) do
             info={
-                text='|cffffffff'..tab.roll..'|r '..e.GetPlayerInfo({unit=tab.unit, guid=tab.guid, name=tab.name,  reName=true, reRealm=true, reLink=false})..' '..tab.date,
+                text='|cffffffff'..tab.roll..'|r '..e.GetPlayerInfo({unit=tab.unit, guid=tab.guid, name=tab.name, reName=true, reRealm=true})..' '..tab.date,
                 notCheckable=true,
                 tooltipOnButton=true,
                 tooltipTitle=tab.text,
-                tooltipText=tab.date..'\n\n'..(e.onlyChinese and '发送信息' or SEND_MESSAGE)..e.Icon.left,
+                tooltipText=tab.date..'|n|n'..(e.onlyChinese and '发送信息' or SEND_MESSAGE)..e.Icon.left,
                 arg1=tab.text,
                 func=function(self2, arg1)
                     e.Chat(arg1)
@@ -125,6 +145,7 @@ local function InitMenu(self, level, type)--主菜单
 
         info={
             text= e.onlyChinese and '清除' or SLASH_STOPWATCH_PARAM_STOP2,
+            icon= 'bags-button-autosort-up',
             notCheckable=true,
             colorCode= #Save.save==0 and '|cff606060',
             func=function()
@@ -138,13 +159,13 @@ local function InitMenu(self, level, type)--主菜单
     local tabNew={}
     for _, tab in pairs(Tab) do
         info={
-            text='|cffffffff'..tab.roll..'|r '..e.GetPlayerInfo({unit=tab.unit, guid=tab.guid, name=tab.name,  reName=true, reRealm=true, reLink=false}) ..' '..tab.date,
+            text='|cffffffff'..tab.roll..'|r '..e.GetPlayerInfo({unit=tab.unit, guid=tab.guid, name=tab.name, reName=true, reRealm=true}) ..' '..tab.date,
             notCheckable=true,
             tooltipOnButton=true,
             tooltipTitle=tab.text,
-            tooltipText=tab.date..'\n\n'..(e.onlyChinese and '发送信息' or SEND_MESSAGE)..e.Icon.left,
+            tooltipText=tab.date..'|n|n'..(e.onlyChinese and '发送信息' or SEND_MESSAGE)..e.Icon.left,
             arg1=tab.arg1,
-            func=function(self2, arg1)
+            func=function(_, arg1)
                 e.Chat(arg1)
             end,
         }
@@ -159,6 +180,18 @@ local function InitMenu(self, level, type)--主菜单
         tabNew[tab.name]=true
         e.LibDD:UIDropDownMenu_AddButton(info, level)
     end
+
+    info={
+        text= (#Tab>0 and '|A:bags-greenarrow:0:0|a' or '')..(e.onlyChinese and '清除' or SLASH_STOPWATCH_PARAM_STOP2),
+        notCheckable= true,
+        colorCode= #Tab==0 and '|cff606060',
+        menuList= 'SAVE',
+        hasArrow= true,
+        func=function()
+            setRest()--重置
+        end
+    }
+    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
     e.LibDD:UIDropDownMenu_AddSeparator(level)
     info={
@@ -175,17 +208,7 @@ local function InitMenu(self, level, type)--主菜单
     }
     e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    info={
-        text= e.onlyChinese and '清除' or SLASH_STOPWATCH_PARAM_STOP2,
-        notCheckable= true,
-        colorCode= #Tab==0 and '|cff606060',
-        menuList= 'SAVE',
-        hasArrow= true,
-        func=function()
-            setRest()--重置
-        end
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
+   
 end
 
 
@@ -199,7 +222,7 @@ local function Init()
     setAutoClearRegisterEvent()--注册自动清除事件
 
     button.texture:SetTexture('Interface\\PVPFrame\\Icons\\PVP-Banner-Emblem-47')
-    
+
 
     button:SetScript('OnMouseDown',function(self, d)
         if d=='LeftButton' then
@@ -237,7 +260,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
 
     elseif event == "PLAYER_LOGOUT" then
         if not e.ClearAllSave then
-            
+
             get_Save_Max()--清除时,保存数据
             WoWToolsSave[addName]=Save
         end

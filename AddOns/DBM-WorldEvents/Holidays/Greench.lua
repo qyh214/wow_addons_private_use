@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Greench", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220208061732")
+mod:SetRevision("20230521190609")
 mod:SetCreatureID(54499)
 mod:SetModelID(39021)
 mod:SetReCombatTime(10, 5)
@@ -70,6 +70,7 @@ end
 --Use syncing since these unit events require "target" or "focus" to detect.
 --At least someone in group should be targeting this stuff and sync it to those that aren't (like a healer)
 function mod:OnSync(event)
+	if not self:IsInCombat() then return end
 	if event == "SnowMan" then
 		warnSnowman:Show()
 		timerTreeCD:Start()--Not a bug, it's intended to start opposite timer off each trigger.

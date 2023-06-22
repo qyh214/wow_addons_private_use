@@ -23,9 +23,9 @@ local function set_PetBattleUnitFrame_UpdateDisplay(self)--Blizzard_PetBattleUI.
                 local speed = C_PetBattles.GetSpeed(petOwner, petIndex)
                 local power = C_PetBattles.GetPower(petOwner, petIndex)
                 if speed and power then
-                    t=t and t..'\n' or ''
-                    t=t..power..'\n'..speed
-                    --t=t..'|A:Soulbinds_Tree_Conduit_Icon_Attack:0:0|a'..power..'\n'..'|A:Soulbinds_Tree_Conduit_Icon_Utility:0:0|a'..speed
+                    t=t and t..'|n' or ''
+                    t=t..power..'|n'..speed
+                    --t=t..'|A:Soulbinds_Tree_Conduit_Icon_Attack:0:0|a'..power..'|n'..'|A:Soulbinds_Tree_Conduit_Icon_Utility:0:0|a'..speed
                 end
             end
         end
@@ -496,7 +496,11 @@ end
 
 local function set_Button_setFrame_PetJournal()--宠物手册，增加按钮
     local frame= e.Cbtn(RematchJournal or PetJournal, {icon=true,size={25, 25}})
-    frame:SetPoint('TOPLEFT', RematchJournal or PetJournal,'TOPRIGHT',3,-29)
+    if _G['MoveZoomInButtonPerCollectionsJournal'] then
+        frame:SetPoint('RIGHT', _G['MoveZoomInButtonPerCollectionsJournal'], 'LEFT')
+    else
+        frame:SetPoint('TOPLEFT', RematchJournal or PetJournal,'TOPRIGHT',3,-29)
+    end
     frame:SetScript('OnMouseDown', function()
         if panel.setFrame then
             set_Pet_Type(not panel:IsShown() and true or false)

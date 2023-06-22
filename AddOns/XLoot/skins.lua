@@ -1,3 +1,4 @@
+---@class XLootAddon
 local XLoot = select(2, ...)
 local lib = {
 	skins = {},

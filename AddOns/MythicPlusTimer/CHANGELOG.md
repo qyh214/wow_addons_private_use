@@ -1,3 +1,15 @@
+# MythicPlusTimer 5.2.0
+
+- Keep objectives hidden when challenge mode completes (By benhamlin (https://github.com/benhamlin), thanks)
+
+# MythicPlusTimer 5.1.1
+
+- Moved getting quest_frame just before it is hidden to work with ElvUI (By revolive (https://github.com/revolive), thanks)
+
+# MythicPlusTimer 5.1.0
+
+- Update for WoW 10.1.0
+
 # MythicPlusTimer 5.0.3
 
 - Try to hide the default tracker on every update

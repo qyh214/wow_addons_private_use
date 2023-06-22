@@ -140,8 +140,8 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Anchor"] = "锚点"
 	L["Anchor Point"] = "锚点指向"
 	L["Anchored To"] = "对齐到"
-	L["And "] = "和"
 	L["and"] = "和"
+	L["And "] = "和"
 	L["and aligned left"] = "并且左对齐"
 	L["and aligned right"] = "并且右对齐"
 	L["and rotated left"] = "并且向左旋转"
@@ -239,8 +239,8 @@ Off Screen]=] ] = "光环在屏幕外"
 	L["Collapse all non-loaded displays"] = "折叠所有未载入的图示"
 	L["Collapse all pending Import"] = "折叠所有待定的导入"
 	L["Collapsible Group"] = "可折叠的组"
-	L["color"] = "颜色"
 	L["Color"] = "颜色"
+	L["color"] = "颜色"
 	L["Column Height"] = "行高度"
 	L["Column Space"] = "行空间"
 	L["Columns"] = "列"
@@ -301,8 +301,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Custom Untrigger"] = "自定义取消触发器"
 	L["Custom Variables"] = "自定义变量"
 	L["Debuff Type"] = "减益类型"
-	--[[Translation missing --]]
-	L["Debug Log"] = "Debug Log"
+	L["Debug Log"] = "调试日志"
 	L["Debug Log:"] = "调试日志："
 	L["Default"] = "默认"
 	L["Default Color"] = "默认颜色"
@@ -325,7 +324,8 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Distribute Horizontally"] = "横向分布"
 	L["Distribute Vertically"] = "纵向分布"
 	L["Do not group this display"] = "不要将此图示编组"
-	L["Do you want to ignore all future updates for this aura"] = "你想忽略此光环未来的所有更新吗"
+	L["Do you want to enable updates for this aura"] = "你想启用这个光环的更新吗"
+	L["Do you want to ignore updates for this aura"] = "你想忽略这个光环的更新吗"
 	L["Documentation"] = "文档"
 	L["Done"] = "完成"
 	L["Drag to move"] = "拖拽来移动"
@@ -501,8 +501,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Icon"] = "图标"
 	L["Icon Info"] = "图标信息"
 	L["Icon Inset"] = "图标内嵌"
-	--[[Translation missing --]]
-	L["Icon Picker"] = "Icon Picker"
+	L["Icon Picker"] = "图标选择器"
 	L["Icon Position"] = "图标位置"
 	L["Icon Settings"] = "图标设置"
 	L["Icon Source"] = "图标来源"
@@ -522,14 +521,14 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Ignore out of checking range"] = "忽略超出检查范围"
 	L["Ignore Self"] = "忽略自身"
 	L["Ignore updates"] = "忽略更新"
+	L["Ignore Wago updates"] = "忽略Wago更新"
 	L["Ignored"] = "被忽略"
 	L["Ignored Aura Name"] = "忽略光环名称"
 	L["Ignored Exact Spell ID(s)"] = "忽略精确法术 ID"
 	L["Ignored Name(s)"] = "忽略名称"
 	L["Ignored Spell ID"] = "忽略法术 ID"
 	L["Import"] = "导入"
-	--[[Translation missing --]]
-	L["Import / Export"] = "Import / Export"
+	L["Import / Export"] = "导入 / 导出"
 	L["Import a display from an encoded string"] = "从字串导入一个图示"
 	L["Import as Copy"] = "以副本导入"
 	L["Import has no UID, cannot be matched to existing auras."] = "导入没有UID，无法与现有光环匹配。"
@@ -557,8 +556,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Is Boss Debuff"] = "首领施放的减益效果"
 	L["Is Stealable"] = "可偷取"
 	L["Is Unit"] = "是单位"
-	--[[Translation missing --]]
-	L["Join Discord"] = "Join Discord"
+	L["Join Discord"] = "加入 Discord"
 	L["Justify"] = "对齐"
 	L["Keep Aspect Ratio"] = "保持比例不变"
 	L["Keep your Wago imports up to date with the Companion App."] = "利用Companion应用程序保持你的Wago导入最新。"
@@ -570,8 +568,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Length"] = "长度"
 	L["Length of |cFFFF0000%s|r"] = "长度|cFFFF0000%s|r"
 	L["Limit"] = "限制"
-	--[[Translation missing --]]
-	L["Line"] = "Line"
+	L["Line"] = "行"
 	L["Lines & Particles"] = "线条和粒子"
 	L["Linked aura: "] = "关联光环："
 	L["Load"] = "载入"
@@ -596,8 +593,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Mirror"] = "镜像"
 	L["Model"] = "模型"
 	L["Model %s"] = "模型 %s"
-	--[[Translation missing --]]
-	L["Model Picker"] = "Model Picker"
+	L["Model Picker"] = "模型选择器"
 	L["Model Settings"] = "模型设置"
 	L["ModelPaths could not be loaded, the addon is %s"] = "无法载入Model Paths：%s"
 	L["Move Above Group"] = "移动上方的组"
@@ -626,8 +622,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Nameplates"] = "姓名板"
 	L["Negator"] = "不"
 	L["New Aura"] = "新建"
-	--[[Translation missing --]]
-	L["New Template"] = "New Template"
+	L["New Template"] = "新模版"
 	L["New Value"] = "新值"
 	L["No Children"] = "没有子项目"
 	L["No Logs saved."] = "没有已保存的调试日志。"
@@ -638,7 +633,7 @@ Can use \ to escape -.]=] ] = [=[过滤格式：'名称'，'名称-服务器'，
 	L["Note: Automated Messages to SAY and YELL are blocked outside of Instances."] = "注意：无法在副本外自动发送“说”与“大喊”信息。"
 	L["Npc ID"] = "NPC ID"
 	L["Number of Entries"] = "条目数"
-	L[ [=[Occurence of the event, reset when aura is unloaded
+	L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
 
@@ -846,8 +841,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发�
 	L["Text Settings"] = "文本设置"
 	L["Texture"] = "材质"
 	L["Texture Info"] = "材质信息"
-	--[[Translation missing --]]
-	L["Texture Picker"] = "Texture Picker"
+	L["Texture Picker"] = "材质选择器"
 	L["Texture Rotation"] = "材质旋转"
 	L["Texture Settings"] = "材质设置"
 	L["Texture Wrap"] = "材质折叠"
@@ -862,7 +856,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件发�
 	L["Thickness"] = "粗细"
 	L["This adds %raidMark as text replacements."] = "这将添加 %raidMark 作为文本替换。"
 	L["This adds %role, %roleIcon as text replacements. Does nothing if the unit is not a group member."] = "这将添加 %role, %roleIcon 作为文本替换。如果单位不是队伍成员，则不产生效果。"
-	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 as text replacements and also allows filtering based on the tooltip content/values."] = "这将添加 %tooltip, %tooltip1, %tooltip2, %tooltip3 作为文本替换，同时允许根据这些内容/值进行过滤。"
+	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "这将添加 %tooltip, %tooltip1, %tooltip2, %tooltip3, %tooltip4 作为文本替换，同时允许根据这些内容/值进行过滤。"
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "此光环包含自定义Lua代码。请确认你可以信任发送它的人！"
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
@@ -953,7 +947,6 @@ It might not work correctly with your version!]=] ] = "此光环由更新版本�
 	L["Y Rotation"] = "Y轴旋转"
 	L["Y Scale"] = "长度比例"
 	L["Yellow Rune"] = "黄色符文"
-	L["Yes"] = "是"
 	L["y-Offset"] = "Y偏移"
 	L["Y-Offset"] = "Y 偏移"
 	L["You already have this group/aura. Importing will create a duplicate."] = "此组/光环已经存在，继续导入将会创建副本。"

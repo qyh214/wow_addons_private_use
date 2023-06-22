@@ -4,6 +4,8 @@
 	<Script file="fw.lua"/>
 	<Script file="mixins.lua"/>
 	<Script file="util.lua"/>
+	<Script file="header.lua"/>
+	<Script file="containers.lua"/>
 	<Script file="iteminfo.lua"/>
 	<Script file="addon.lua"/>
 	<Script file="colors.lua"/>
@@ -19,6 +21,7 @@
 	<Script file="languages.lua"/>
 	<Script file="timebar.lua"/>
 	<Script file="charts.lua"/>
+	<Script file="externals.lua"/>
 	
 	<Include file="tutorial_alert.xml"/>
 	<Include file="split_bar.xml"/>
@@ -31,4 +34,5 @@
 
 	<Script file="pictureedit.lua"/>
 	<Script file="auras.lua"/>
+	<Script file="tabcontainer.lua"/>
 </Ui>

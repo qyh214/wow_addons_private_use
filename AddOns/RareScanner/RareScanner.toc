@@ -12,15 +12,18 @@
 ## Notes-itIT: Scanner Minimappa. Crea un avviso sonoro e grafico riportante una miniatura e un pulsante ogniqualvolta un PNG, tesoro, cassa o evento apparirà sulla minimappa
 ## Notes-frFR: Scanner Minimap. Vous avertit visuellement grâce à un bouton et une miniature et émet un son chaque fois qu'un PNJ, un trésor ou un événement rare apparaît dans votre minimap
 ## Author: maqjav, Maciza-Tyrande
-## Version: 10.1.0.2
+## Version: 10.1.0.13
 ## SavedVariables: RareScannerDB
 ## OptionalDeps: Ace3
 ## X-Category: Achievements, Map, Miscellaneous
 ## X-Credits: maqjav, Maciza-Tyrande
-## X-Date: May. 04, 2023
+## X-Date: Jun. 17, 2023
 ## X-Email: maqjav@gmail.com
 ## X-License: All Rights Reserved
 ## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, ruRU, itIT, ptBR, koKR, zhCN, zhTW
+## AddonCompartmentFunc: RareScanner_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: RareScanner_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: RareScanner_OnAddonCompartmentLeave
 ## IconTexture: Interface\AddOns\RareScanner\Media\Icons\OriginalSkull
 
 ExternalLibs\Libs.xml

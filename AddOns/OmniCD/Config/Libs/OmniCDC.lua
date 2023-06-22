@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "OmniCDC", 2
+local MAJOR, MINOR = "OmniCDC", 3
 local OmniCDC, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not OmniCDC then
 	return
@@ -46,7 +46,7 @@ function OmniCDC.SetFontProperties(fontString, db)
 		if fontPath then -- fallbacks to default fonts
 			fontString:SetShadowOffset(ofsX, ofsY)
 			fontString:SetShadowColor(r, g, b, ofsX == 0 and ofsY == 0 and 0 or 1)
-			flag = flag == "NONE" and (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or select(4, GetBuildInfo()) == 30401) and "" or flag
+			flag = flag == "NONE" and (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE or (WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC and select(4, GetBuildInfo()) >= 30401)) and "" or flag
 			fontString:SetFont(fontPath, size, flag)
 		end
 	end

@@ -26,7 +26,6 @@ local MagicBoundChest = ns.node.MagicBoundChest
 local PM = ns.node.ProfessionMasters
 local PrettyNeat = ns.node.PrettyNeat
 local PT = ns.node.ProfessionTreasures
-local Rare14h = ns.node.Rare14h
 local RareElite = ns.node.RareElite
 local Safari = ns.node.Safari
 local Scoutpack = ns.node.Scoutpack
@@ -64,6 +63,7 @@ local tpf = Map({id = 2085, settings = false}) -- The Primalist Future
 
 map.nodes[59075874] = RareElite({
     id = 193664,
+    vignette = 5236,
     quest = 74055,
     note = L['ancient_protector_note'],
     rewards = {
@@ -78,10 +78,11 @@ map.nodes[59075874] = RareElite({
     pois = {POI({60755543, 60736211, 59225648, 59266104})} -- Titanic Reactors
 }) -- Ancient Protector
 
-map.nodes[59847057] = Rare14h({
+map.nodes[59847057] = Rare({
     id = 193220,
+    vignette = 5193,
     quest = 73987,
-    rotationID = 25,
+    interval = ns.Intervals.Interval14h({id = 25}),
     rewards = {
         Achievement({id = 16679, criteria = 56149}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -101,8 +102,10 @@ map.nodes[59847057] = Rare14h({
 
 map.nodes[44886910] = Rare({
     id = 193658,
+    vignette = 5235,
     quest = 74060,
-    note = L['in_cave'] .. ' ' .. L['corrupted_proto_dragon_note'],
+    location = L['in_cave'],
+    note = L['corrupted_proto_dragon_note'],
     rewards = {
         Achievement({id = 16679, criteria = 56156}),
         Transmog({item = 200166, slot = L['offhand']}), -- Corrupted Drake Horn
@@ -118,6 +121,7 @@ map.nodes[44886910] = Rare({
 
 local CRAGGRAVATEDELEMENTAL = Rare({
     id = 193663,
+    vignette = 5237,
     quest = 74061,
     fgroup = 'craggravated',
     focusable = true,
@@ -134,10 +138,11 @@ local CRAGGRAVATEDELEMENTAL = Rare({
 map.nodes[45458518] = CRAGGRAVATEDELEMENTAL
 map.nodes[52746732] = CRAGGRAVATEDELEMENTAL
 
-map.nodes[47675115] = Rare14h({
+map.nodes[47675115] = Rare({
     id = 193234,
+    vignette = 5198,
     quest = 73990,
-    rotationID = 6,
+    interval = ns.Intervals.Interval14h({id = 6}),
     rewards = {
         Achievement({id = 16446, criteria = 55398, note = L['pretty_neat_note']}),
         Achievement({id = 16679, criteria = 56147}),
@@ -152,6 +157,7 @@ map.nodes[47675115] = Rare14h({
 
 map.nodes[53374092] = Rare({
     id = 193125,
+    vignette = nil,
     quest = 73878,
     rewards = {
         Achievement({id = 16679, criteria = 56138}),
@@ -169,6 +175,7 @@ map.nodes[53374092] = Rare({
 
 map.nodes[59128380] = Rare({
     id = 193126,
+    vignette = nil,
     quest = 73881,
     rewards = {
         Achievement({id = 16679, criteria = 56135}),
@@ -193,6 +200,7 @@ map.nodes[59128380] = Rare({
 
 map.nodes[62298177] = Rare({
     id = 193241,
+    vignette = 5203,
     quest = 74066,
     note = L['lord_epochbrgl_note'],
     rewards = {
@@ -209,10 +217,11 @@ map.nodes[62298177] = Rare({
     pois = {POI({61708120})} -- Entrance
 }) -- Lord Epochbrgl
 
-map.nodes[52895903] = Rare14h({
+map.nodes[52895903] = Rare({
     id = 193246,
+    vignette = 5204,
     quest = 74013,
-    rotationID = 12,
+    interval = ns.Intervals.Interval14h({id = 12}),
     rewards = {
         Achievement({id = 16679, criteria = 56141}),
         Transmog({item = 200257, slot = L['2h_mace']}), -- Decay Infused Branch
@@ -228,8 +237,9 @@ map.nodes[52895903] = Rare14h({
 
 map.nodes[59806100] = Rare({
     id = 193688,
+    vignette = 5248,
     quest = 74020,
-    -- rotationID = 7, -- wait for blizz fix.
+    -- interval = ns.Intervals.Interval14h({id = 7}), -- wait for blizz fix.
     rewards = {
         Achievement({id = 16679, criteria = 56140}),
         Transmog({item = 200146, slot = L['1h_mace']}), -- Phenran's Discordant Smasher
@@ -243,10 +253,11 @@ map.nodes[59806100] = Rare({
     }
 }) -- Phenran
 
-map.nodes[57218420] = Rare14h({
+map.nodes[57218420] = Rare({
     id = 193210,
+    vignette = 5192,
     quest = 74021,
-    rotationID = 0,
+    interval = ns.Intervals.Interval14h({id = 0}),
     rewards = {
         Achievement({id = 16679, criteria = 56142}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
@@ -258,6 +269,7 @@ map.nodes[57218420] = Rare14h({
 
 map.nodes[37967903] = Rare({
     id = 193130,
+    vignette = 5479,
     quest = 73889,
     rewards = {
         Achievement({id = 16679, criteria = 56137}), --
@@ -275,6 +287,7 @@ map.nodes[37967903] = Rare({
 
 map.nodes[50404840] = Rare({
     id = 193143,
+    vignette = 5180,
     quest = 73892,
     rewards = {
         Achievement({id = 16679, criteria = 56133}), --
@@ -297,10 +310,11 @@ map.nodes[50404840] = Rare({
     }
 }) -- Razk'vex the Untamed
 
-map.nodes[40087014] = Rare14h({
+map.nodes[40087014] = Rare({
     id = 193240,
+    vignette = 5201,
     quest = 74024,
-    rotationID = 4,
+    interval = ns.Intervals.Interval14h({id = 4}),
     rewards = {
         Achievement({id = 16679, criteria = 56148}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -317,10 +331,11 @@ map.nodes[40087014] = Rare14h({
     }
 }) -- Riverwalker Tamopo
 
-map.nodes[50005180] = Rare14h({
+map.nodes[50005180] = Rare({
     id = 193666,
+    vignette = 5238,
     quest = 74025,
-    rotationID = 10,
+    interval = ns.Intervals.Interval14h({id = 10}),
     rewards = {
         Achievement({id = 16679, criteria = 56151}),
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -335,11 +350,12 @@ map.nodes[50005180] = Rare14h({
     }
 }) -- Rokmur
 
-map.nodes[37607780] = Rare14h({
+map.nodes[37607780] = Rare({
     id = 193176,
+    vignette = 5185,
     quest = 74029,
-    rotationID = 18,
-    cave = true,
+    interval = ns.Intervals.Interval14h({id = 18}),
+    location = L['in_cave'],
     rewards = {
         Achievement({id = 16679, criteria = 56150}),
         Transmog({item = 200202, slot = L['mail']}), -- Tomorrow's Chains
@@ -354,10 +370,11 @@ map.nodes[37607780] = Rare14h({
     pois = {POI({38507640})} -- Cave entrance
 }) -- Sandana the Tempest
 
-map.nodes[47207895] = Rare14h({
+map.nodes[47207895] = Rare({
     id = 193258,
+    vignette = 5207,
     quest = 74035,
-    rotationID = 21,
+    interval = ns.Intervals.Interval14h({id = 21}),
     rewards = {
         Achievement({id = 16679, criteria = 56144}),
         Transmog({item = 200139, slot = L['bow']}) -- Tempest Arc
@@ -372,6 +389,7 @@ map.nodes[47207895] = Rare14h({
 
 map.nodes[38466826] = Rare({
     id = 191305,
+    vignette = 5439,
     quest = 74085,
     note = L['the_great_shellkhan_note'],
     rewards = {
@@ -392,8 +410,10 @@ map.nodes[38466826] = Rare({
 
 map.nodes[46267317] = Rare({
     id = 183984,
+    vignette = 4958,
     quest = 74086,
-    note = L['in_cave'] .. ' ' .. L['weeping_vilomah_note'],
+    location = L['in_cave'],
+    note = L['weeping_vilomah_note'],
     rewards = {
         Achievement({id = 16679, criteria = 56153}),
         Transmog({item = 200214, slot = L['mail']}), -- Grasp of the Weeping Widow
@@ -407,11 +427,12 @@ map.nodes[46267317] = Rare({
     pois = {POI({47547180})} -- Cave entrance
 }) -- The Weeping Vilomah
 
-map.nodes[35027001] = Rare14h({
+map.nodes[35027001] = Rare({
     id = 193146,
+    vignette = 5431,
     quest = 74036,
-    rotationID = 15,
-    cave = true,
+    interval = ns.Intervals.Interval14h({id = 15}),
+    location = L['in_cave'],
     rewards = {
         Achievement({id = 16679, criteria = 56146}),
         Transmog({item = 200291, slot = L['leather']}), -- Waterlogged Racing Grips
@@ -422,6 +443,7 @@ map.nodes[35027001] = Rare14h({
 
 map.nodes[47884976] = Rare({
     id = 193161,
+    vignette = 5177,
     quest = 74089,
     note = L['woofang_note'],
     rewards = {
@@ -439,6 +461,7 @@ map.nodes[47884976] = Rare({
 
 map.nodes[57366540] = Rare({
     id = 197411,
+    vignette = nil,
     quest = 74057,
     label = L['large_lunker_sighting'],
     note = L['large_lunker_sighting_note'],
@@ -457,6 +480,7 @@ map.nodes[57366540] = Rare({
 
 map.nodes[55647727] = Rare({
     id = 193229,
+    vignette = 5196,
     quest = 72814,
     rewards = {
         Transmog({item = 200131, slot = L['dagger']}), -- Reclaimed Survivalist's Dagger
@@ -474,6 +498,7 @@ map.nodes[55647727] = Rare({
 
 map.nodes[36757287] = Rare({
     id = 193273,
+    vignette = 5437,
     quest = 72842,
     rewards = {
         Achievement({id = 16446, criteria = 55399, note = L['pretty_neat_note']}),
@@ -491,6 +516,7 @@ map.nodes[36757287] = Rare({
 
 map.nodes[36798556] = Rare({
     id = 193668,
+    vignette = 5239,
     quest = 72813,
     rewards = {
         Transmog({item = 200182, slot = L['cloak']}), -- Riveted Drape
@@ -510,6 +536,7 @@ map.nodes[36798556] = Rare({
 
 tpf.nodes[48421722] = Rare({
     id = 201562,
+    vignette = 5567,
     quest = 74556,
     rewards = {
         Transmog({item = 203669, slot = L['leather']}), -- Chillwing Leggings
@@ -521,6 +548,7 @@ tpf.nodes[48421722] = Rare({
 
 tpf.nodes[61813142] = Rare({
     id = 201542,
+    vignette = 5565,
     quest = 74558,
     rewards = {
         Transmog({item = 203667, slot = L['cloth']}), -- Frostclaw's Spellfingers
@@ -530,6 +558,7 @@ tpf.nodes[61813142] = Rare({
 
 tpf.nodes[53536521] = Rare({
     id = 201543,
+    vignette = 5566,
     quest = 74554,
     rewards = {
         Transmog({item = 200187, slot = L['staff']}), -- Rod of Glacial Force
@@ -541,6 +570,7 @@ tpf.nodes[53536521] = Rare({
 
 tpf.nodes[46884248] = Rare({
     id = 201545,
+    vignette = 5568,
     quest = 74553,
     rewards = {
         Transmog({item = 203668, slot = L['mail']}), -- Earhshaping Grips
@@ -612,7 +642,7 @@ map.nodes[58168007] = Treasure({
 
 map.nodes[64851655] = Treasure({
     quest = 70610,
-    note = L['in_cave'],
+    location = L['in_cave'],
     rewards = {
         Achievement({id = 16301, criteria = 54814}), Item({item = 193036}) -- Left-Handed Magnifying Glass
     }
@@ -623,7 +653,7 @@ map.nodes[64851655] = Treasure({
 map.nodes[52458361] = Treasure({
     quest = 72355,
     label = '{npc:198604}',
-    note = L['in_cave'],
+    location = L['in_cave'],
     requires = ns.requirement.Profession(186), -- Mining
     rewards = {
         Pet({item = 201463, id = 3415}) -- Cubbly
@@ -646,7 +676,7 @@ tpf.nodes[28002590] = ns.node.ElementalChest({
     quest = 71995,
     parent = map.id,
     label = L['chest_of_the_elements'],
-    note = L['in_cave'],
+    location = L['in_cave'],
     rewards = {
         Item({item = 192055}), -- Dragon Isles Artifact
         Item({item = 199906}), -- Centaur Hunting Trophy
@@ -988,6 +1018,7 @@ map.nodes[49514830] = Disturbeddirt()
 map.nodes[49894474] = Disturbeddirt()
 map.nodes[53398748] = Disturbeddirt()
 map.nodes[53997921] = Disturbeddirt()
+map.nodes[54067537] = Disturbeddirt()
 map.nodes[54273978] = Disturbeddirt()
 map.nodes[54433376] = Disturbeddirt()
 map.nodes[55588459] = Disturbeddirt()
@@ -995,8 +1026,12 @@ map.nodes[55756743] = Disturbeddirt()
 map.nodes[55918384] = Disturbeddirt()
 map.nodes[56957403] = Disturbeddirt()
 map.nodes[59532835] = Disturbeddirt()
+map.nodes[57118079] = Disturbeddirt()
+map.nodes[57458105] = Disturbeddirt()
+map.nodes[59547954] = Disturbeddirt()
 map.nodes[62226638] = Disturbeddirt()
 map.nodes[62296972] = Disturbeddirt()
+map.nodes[62697948] = Disturbeddirt()
 
 -------------------------------------------------------------------------------
 -------------------------- EXPEDITION SCOUT'S PACKS ---------------------------
@@ -1011,7 +1046,9 @@ map.nodes[38806831] = Scoutpack()
 map.nodes[40148559] = Scoutpack()
 map.nodes[40498368] = Scoutpack()
 map.nodes[41234798] = Scoutpack()
+map.nodes[41234798] = Scoutpack()
 map.nodes[47428021] = Scoutpack()
+map.nodes[48185655] = Scoutpack()
 map.nodes[49047926] = Scoutpack()
 map.nodes[50098074] = Scoutpack()
 map.nodes[50844623] = Scoutpack()
@@ -1025,6 +1062,8 @@ map.nodes[56063178] = Scoutpack()
 map.nodes[57128078] = Scoutpack()
 map.nodes[57468106] = Scoutpack()
 map.nodes[58046702] = Scoutpack()
+map.nodes[58436454] = Scoutpack()
+map.nodes[58975754] = Scoutpack()
 map.nodes[59198794] = Scoutpack()
 map.nodes[59496912] = Scoutpack()
 map.nodes[59547955] = Scoutpack()
@@ -1036,7 +1075,7 @@ map.nodes[65548193] = Scoutpack()
 -------------------------------------------------------------------------------
 
 map.nodes[35107050] = MagicBoundChest({
-    note = L['in_small_cave'],
+    location = L['in_small_cave'],
     pois = {POI({34926940})}
 })
 map.nodes[42606660] = MagicBoundChest({
@@ -1044,10 +1083,10 @@ map.nodes[42606660] = MagicBoundChest({
         ns.requirement.Reputation(2507, 16, true),
         ns.requirement.Profession(186)
     },
-    note = L['in_small_cave']
+    location = L['in_small_cave']
 })
 map.nodes[42907900] = MagicBoundChest({
-    note = L['in_cave'],
+    location = L['in_cave'],
     pois = {POI({40957754})}
 })
 map.nodes[50205200] = MagicBoundChest({
@@ -1055,23 +1094,23 @@ map.nodes[50205200] = MagicBoundChest({
         ns.requirement.Reputation(2507, 16, true),
         ns.requirement.Profession(186)
     },
-    note = L['in_small_cave']
+    location = L['in_small_cave']
 })
 map.nodes[53005690] = MagicBoundChest()
-map.nodes[54108390] = MagicBoundChest({note = L['in_small_cave']})
+map.nodes[54108390] = MagicBoundChest({location = L['in_small_cave']})
 map.nodes[54803270] = MagicBoundChest({
     requires = {
         ns.requirement.Reputation(2507, 16, true),
         ns.requirement.Profession(186)
     },
-    note = L['in_small_cave']
+    location = L['in_small_cave']
 })
 map.nodes[58606750] = MagicBoundChest({
-    note = L['in_cave'],
+    location = L['in_cave'],
     pois = {POI({56916717})}
 })
 map.nodes[61305400] = MagicBoundChest({
-    note = L['in_cave'],
+    location = L['in_cave'],
     pois = {POI({59755371})}
 })
 map.nodes[62207180] = MagicBoundChest()
@@ -1656,6 +1695,14 @@ val.nodes[43757494] = Collectible({
     },
     rewards = {Pet({item = 193571, id = 3303})}
 }) -- Mallard Ducklin
+
+map.nodes[40474531] = Collectible({
+    id = 197346,
+    quest = 72060,
+    icon = 1500916,
+    note = L['living_mud_mask_note'],
+    rewards = {Pet({item = 200872, id = 3405})}
+}) -- Pet: Living Mud Mask
 
 ----------------------------- MISCELLANEOUS NPCs ------------------------------
 

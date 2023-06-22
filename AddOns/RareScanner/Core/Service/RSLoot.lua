@@ -65,29 +65,10 @@ local function IsFilteredByCategory(itemLink, itemID, itemClassID, itemSubClassI
 	return false
 end
 
-local function IsCollectionFiltered(type, entityID, itemID, classIndex)
-	if (RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()) == 0) then
-		return true
-	end
-	
-	local collectionsLoot = RSCollectionsDB.GetAllEntitiesCollectionsLoot()[type]
-	if (collectionsLoot and collectionsLoot[entityID]) then
-		-- If mount
-		if (RSConfigDB.IsShowingMissingMounts() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.MOUNT] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.MOUNT], itemID)) then
-			return false
-		-- If pet
-		elseif (RSConfigDB.IsShowingMissingPets() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.PET] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.PET], itemID)) then
-			return false
-		-- If toy
-		elseif (RSConfigDB.IsShowingMissingToys() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.TOY] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.TOY], itemID)) then
-			return false
-		-- If appearance
-		elseif (RSConfigDB.IsShowingMissingAppearances() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE] and collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.APPEARANCE][classIndex], itemID)) then
-			return false
-		-- If drakewatcher manuscripts
-		elseif (RSConfigDB.IsShowingMissingDrakewatcher() and collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER] and RSUtils.Contains(collectionsLoot[entityID][RSConstants.ITEM_TYPE.DRAKEWATCHER], itemID)) then
-			return false
-		end
+local function IsCollectionFiltered(type, entityID, itemID)
+	local items = RSCollectionsDB.GetEntityCollectionsLoot(entityID, type)
+	if (RSUtils.Contains(items, itemID)) then
+		return false
 	end
 	
 	RSLogger:PrintDebugMessageItemID(itemID, string.format("Item [%s]. Filtrado por estar ya conseguido o estar filtrado en el explorador", itemID))
@@ -97,8 +78,7 @@ end
 function RSLoot.IsFiltered(entityID, itemID, itemLink, itemRarity, itemEquipLoc, itemClassID, itemSubClassID)
 	-- Filter by explorer results
 	if (RSConfigDB.IsFilteringByExplorerResults() and RSUtils.GetTableLength(RSCollectionsDB.GetAllEntitiesCollectionsLoot()) > 0) then
-		local _, _, classIndex = UnitClass("player");
-		return IsCollectionFiltered(RSConstants.ITEM_SOURCE.NPC, entityID, itemID, classIndex) and IsCollectionFiltered(RSConstants.ITEM_SOURCE.CONTAINER, entityID, itemID, classIndex)
+		return IsCollectionFiltered(RSConstants.ITEM_SOURCE.NPC, entityID, itemID) and IsCollectionFiltered(RSConstants.ITEM_SOURCE.CONTAINER, entityID, itemID)
 	end
 
 	-- Category filter

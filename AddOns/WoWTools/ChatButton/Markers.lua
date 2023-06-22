@@ -1,6 +1,15 @@
 local id, e = ...
 local addName= BINDING_HEADER_RAID_TARGET
-local Save={ autoSet=true, tank=2, tank2=6, healer=1, countdown=7, groupReadyTips=true, markersScale=0.85, markersFrame= e.Player.husandro}
+local Save={
+        autoSet=true,
+        tank=2,
+        tank2=6,
+        healer=1,
+        countdown=7,
+        groupReadyTips=true,
+        markersScale=0.85,
+        markersFrame= e.Player.husandro
+    }
 
 local button
 local panel= CreateFrame("Frame")
@@ -54,8 +63,9 @@ local function setRaidTarget()--设置团队标记
     if num> 0 then
         table.sort(tab, function(a,b) return a.hp<b.hp end)
         setTaget(tab[1].unit, Save.tank)--设置,目标,标记
+
         if num>=2 and Save.tank2~=0 then
-            setTaget(tab[2].unit, Save.tank)--设置,目标,标记
+            setTaget(tab[2].unit, Save.tank2)--设置,目标,标记
         end
     end
 end
@@ -129,17 +139,24 @@ local function setGroupReadyTipsEvent()--注册事件, 就绪,队员提示信息
         panel:UnregisterEvent('CHAT_MSG_SYSTEM')
     end
 end
-local function getReadyCheckStatus(unit, index)
-    local stat=GetReadyCheckStatus(unit)
-    local text= e.GetPlayerInfo({unit=unit, guid=UnitGUID(unit), name=nil,  reName=true, reRealm=true, reLink=false})
-    local hasCoolText= UnitHasLFGRandomCooldown(unit) and '|T236347:0|t|cnRED_FONT_COLOR:'..(e.onlyChinese and '逃亡者' or DESERTER)..'|r' or ''
+local function getReadyCheckStatus(unit, index, uiMapID)
+    local stat= GetReadyCheckStatus(unit)
     if stat=='ready' then
-        return '|cnGREEN_FONT_COLOR:'..index..")|r"..e.Icon.select2..text..hasCoolText
-    elseif stat=='waiting' then
-        return index..")   "..text..hasCoolText
-    elseif stat=='notready' then
-        return '|cnRED_FONT_COLOR:'..index..")|r"..e.Icon.O2..text..(UnitIsAFK(unit) and '|cff606060<'..AFK..'>|r' or not UnitIsConnected(unit) and 	'|cff606060<'..(e.onlyChinese and '离线' or PLAYER_OFFLINE)..'>|r' or '')..hasCoolText
+        return
     end
+    local mapText, mapID e.GetUnitMapName(unit)--单位, 地图名称
+    return (
+                stat== 'waiting' and '|A:QuestTurnin:0:0|a'
+                or stat== 'notready' and e.Icon.X2
+                or stat
+                or ''
+            )
+            ..(index<10 and ' ' or '')..index..')'--编号号
+            ..(e.PlayerOnlineInfo(unit) or '')
+            ..e.GetPlayerInfo({guid=UnitGUID(unit), unit=unit, reName=true, reRealm=true})
+            ..(UnitHasLFGRandomCooldown(unit) and '|cnRED_FONT_COLOR:<'..(e.onlyChinese and '逃亡者' or DESERTER)..'>|r' or '')
+            ..(uiMapID~=mapID and mapText or '')--地图名称
+            ..' '
 end
 local function setGroupReadyTips(event, arg1, arg2)
     local text=''
@@ -147,33 +164,34 @@ local function setGroupReadyTips(event, arg1, arg2)
         local isInRaid=IsInRaid()
         local unit=isInRaid and 'raid' or 'party'
         local num=GetNumGroupMembers()
+        local uiMapID= C_Map.GetBestMapForUnit('player')
         if isInRaid then
             for index= 1, num do
-                local text2=getReadyCheckStatus(unit..index, index)
+                local text2=getReadyCheckStatus(unit..index, index, uiMapID)
                 if text2 then
-                    text= (text~='' and text..'\n' or text)..text2
+                    text= (text~='' and text..'|n' or text)..text2
                 end
             end
         else
             for index= 1, num-1 do
-                local text2=getReadyCheckStatus(unit..index, index)
+                local text2=getReadyCheckStatus(unit..index, index, uiMapID)
                 if text2 then
-                    text= (text~='' and text..'\n' or text)..text2
+                    text= (text~='' and text..'|n' or text)..text2
                 end
             end
-            local text2=getReadyCheckStatus('player', num)
+            local text2=getReadyCheckStatus('player', num, uiMapID)
             if text2 then
-                text= (text~='' and text..'\n' or text)..text2
+                text= (text~='' and text..'|n' or text)..text2
             end
         end
         if text~='' and not button.groupReadyTips then
-            button.groupReadyTips=e.Cbtn(nil, {icon='hide', size={20,20}})
+            button.groupReadyTips= e.Cbtn(nil, {icon='hide', size={20,20}})
             if Save.groupReadyTipsPoint then
                 button.groupReadyTips:SetPoint(Save.groupReadyTipsPoint[1], UIParent, Save.groupReadyTipsPoint[3], Save.groupReadyTipsPoint[4], Save.groupReadyTipsPoint[5])
             else
                 button.groupReadyTips:SetPoint('BOTTOMLEFT', button, 'TOPLEFT', 0, 20)
             end
-            button.groupReadyTips:SetScript('OnMouseDown', function(self,d)
+            button.groupReadyTips:SetScript('OnClick', function(self, d)
                 local key=IsModifierKeyDown()
                 if d=='LeftButton' and not key then
                     self.text:SetText('')
@@ -193,10 +211,12 @@ local function setGroupReadyTips(event, arg1, arg2)
                 e.tips:AddDoubleLine(e.onlyChinese and '清除全部' or  CLEAR_ALL, e.Icon.left)
                 e.tips:AddDoubleLine(e.onlyChinese and '移动' or NPE_MOVE, e.Icon.right)
                 e.tips:Show()
+                button:SetButtonState('PUSHED')
             end)
             button.groupReadyTips:SetScript('OnLeave', function()
                 ResetCursor()
                 e.tips:Hide()
+                button:SetButtonState('NORMAL')
             end)
             button.groupReadyTips:SetScript("OnMouseUp", function(self, d)
                 ResetCursor()
@@ -228,7 +248,7 @@ local function setGroupReadyTips(event, arg1, arg2)
         end
         if event=='READY_CHECK' and text~='' then
             if button.groupReadyTips.timer then button.groupReadyTips.timer:Cancel() end
-            button.groupReadyTips.timer=C_Timer.NewTimer(arg2 or 35, function()
+            button.groupReadyTips.timer= C_Timer.NewTimer(arg2 or 35, function()
                 button.groupReadyTips.text:SetText('')
                 button.groupReadyTips:SetShown(false)
             end)
@@ -250,10 +270,15 @@ local function setTexture()--图标, 自动标记
     else
         button.texture:SetTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcon_'..Save.tank)
     end
-    if Save.autoSet then
-        button.border:SetAtlas('bag-border')
-    else
-        button.border:SetAtlas('bag-reagent-border')
+    if Save.autoSet and not button.autoSetTips then
+        button.autoSetTips= button:CreateTexture(nil,'OVERLAY')
+        button.autoSetTips:SetPoint('BOTTOMLEFT',4, 4)
+        button.autoSetTips:SetSize(12,12)
+        button.autoSetTips:SetAtlas('Warfronts-BaseMapIcons-Alliance-Workshop-Minimap')
+        --button.autoSetTips:SetVertexColor(e.Player.r, e.Player.g, e.Player.b)
+    end
+    if button.autoSetTips then
+        button.autoSetTips:SetShown(Save.autoSet)
     end
 end
 local function setAllTextrue()--主图标,是否有权限
@@ -341,7 +366,7 @@ local function setMarkersFrame()--设置标记, 框架
                 btn:SetPoint('BOTTOMRIGHT', last or frame, 'BOTTOMLEFT')
             end
             if index==0 then
-                btn:SetNormalTexture('Interface\\AddOns\\WeakAuras\\Media\\Textures\\cancel-mark.tga')
+                btn:SetNormalAtlas(e.Icon.disabled)
                 btn:RegisterForDrag("RightButton")
                 btn:SetScript("OnDragStart", function(self,d )
                     if d=='RightButton' and not IsModifierKeyDown() then
@@ -464,7 +489,7 @@ local function setMarkersFrame()--设置标记, 框架
 
             elseif d=='RightButton' and IsControlKeyDown() then--设置时间
                 StaticPopupDialogs[id..addName..'COUNTDOWN']={--区域,设置对话框
-                    text=id..' '..addName..'\n'..(e.onlyChinese and '就绪' or READY)..'\n\n1 - 3600',
+                    text=id..' '..addName..'|n'..(e.onlyChinese and '就绪' or READY)..'|n|n1 - 3600',
                     whileDead=1,
                     hideOnEscape=1,
                     exclusive=1,
@@ -568,7 +593,7 @@ local function setMarkersFrame()--设置标记, 框架
             btn:SetAttribute("marker2", index==0 and 0 or tab[index])
             btn:SetAttribute("action2", "clear")
             if index==0 then
-                btn:SetNormalTexture('Interface\\AddOns\\WeakAuras\\Media\\Textures\\cancel-mark.tga')
+                btn:SetNormalAtlas(e.Icon.disabled)
             else
                 btn:SetNormalTexture('Interface\\TargetingFrame\\UI-RaidTargetingIcon_'..index)
             end
@@ -625,7 +650,7 @@ local function InitMenu(self, level, type)--主菜单
             }
             e.LibDD:UIDropDownMenu_AddButton(info, level)
             info={
-                text=e.Icon.O2..(e.onlyChinese and '未就绪' or NOT_READY_FEMALE),--未就绪
+                text=e.Icon.X2..(e.onlyChinese and '未就绪' or NOT_READY_FEMALE),--未就绪
                 colorCode='|cffff0000',
                 checked=Save.autoReady==2,
                 func=function()
@@ -710,6 +735,7 @@ local function InitMenu(self, level, type)--主菜单
     else
         info={
             text= e.onlyChinese and '自动标记' or (AUTO_JOIN:gsub(JOIN,'')..EVENTTRACE_MARKER)..e.Icon.TANK..e.Icon.HEALER,
+            icon= 'Warfronts-BaseMapIcons-Alliance-Workshop-Minimap',
             checked= Save.autoSet,
             disabled= Save.tank==0 and Save.healer==0,
             func=function()
@@ -772,7 +798,18 @@ local function InitMenu(self, level, type)--主菜单
         e.LibDD:UIDropDownMenu_AddButton(info, level)
 
         info={
-            text=(Save.autoReady==1 and e.Icon.select2 or Save.autoReady==2 and e.Icon.O2 or (e.onlyChinese and '无' or NONE)).. (e.onlyChinese and '自动' or AUTO_JOIN:gsub(JOIN,''))..((not Save.autoReady or Save.autoReady==1) and (e.onlyChinese and '就绪' or READY) or Save.autoReady==2 and (e.onlyChinese and '未就绪' or NOT_READY_FEMALE) or ''),
+            text=(
+                    Save.autoReady==1 and e.Icon.select2
+                    or Save.autoReady==2 and e.Icon.O2
+                    or (e.onlyChinese and '无' or NONE)
+                )
+                ..(e.onlyChinese and '自动' or AUTO_JOIN:gsub(JOIN,''))
+                ..(
+                    (not Save.autoReady or Save.autoReady==1) and (e.onlyChinese and '就绪' or READY)
+                    or Save.autoReady==2 and (e.onlyChinese and '未就绪'
+                    or NOT_READY_FEMALE)
+                    or ''
+                ),
             checked= Save.autoReady==1 or Save.autoReady==2,
             colorCode= Save.autoReady==1 and '|cff00ff00' or Save.autoReady==2 and '|cffff0000',
             menuList='ready',
@@ -839,9 +876,9 @@ local function Init()
             if self.autoReadyText then
                 local text=''
                 if Save.autoReady==1 then
-                    text=id..' '..addName..'\n|cnGREEN_FONT_COLOR:'..AUTO_JOIN:gsub(JOIN, '')..READY..'|r'..e.Icon.select2
+                    text=id..' '..addName..'|n|cnGREEN_FONT_COLOR:'..AUTO_JOIN:gsub(JOIN, '')..READY..'|r'..e.Icon.select2
                 elseif Save.autoReady==2 then
-                    text=id..' '..addName..'\n|cnRED_FONT_COLOR:'..AUTO_JOIN:gsub(JOIN, '')..NOT_READY_FEMALE..'|r'..e.Icon.O2
+                    text=id..' '..addName..'|n|cnRED_FONT_COLOR:'..AUTO_JOIN:gsub(JOIN, '')..NOT_READY_FEMALE..'|r'..e.Icon.O2
                 end
                self.autoReadyText:SetText(text)
             end

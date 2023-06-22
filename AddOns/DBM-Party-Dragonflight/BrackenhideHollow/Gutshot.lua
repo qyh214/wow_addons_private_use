@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(2472, "DBM-Party-Dragonflight", 1, 1196)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230114200950")
+mod:SetRevision("20230530090329")
 mod:SetCreatureID(186116)--194745 for Rotfang Hyena
 mod:SetEncounterID(2567)
 --mod:SetUsedIcons(1, 2, 3)
-mod:SetHotfixNoticeRev(20230114000000)
+mod:SetHotfixNoticeRev(20230507000000)
 --mod:SetMinSyncRevision(20211203000000)
 --mod.respawnTime = 29
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 
@@ -36,7 +37,7 @@ local warnEnsnaringTrap							= mod:NewTargetNoFilterAnnounce(384148, 3)--Trap g
 local warnSmellLikeMeat							= mod:NewTargetNoFilterAnnounce(384425, 3)
 local warnCallHyenas							= mod:NewSpellAnnounce(384827, 2)
 
-local specWarnEnsnaringTrap						= mod:NewSpecialWarningYou(384148, nil, nil, nil, 1, 2)--Trap going out
+local specWarnEnsnaringTrap						= mod:NewSpecialWarningMoveAway(384148, nil, nil, nil, 1, 2)--Trap going out
 local yellEnsnaringTrap							= mod:NewYell(384148, nil, false)--Trap going out
 local specWarnFeedingFrenzy						= mod:NewSpecialWarningDispel(384764, "RemoveEnrage", nil, nil, 1, 2)--Buff on mob
 local specWarnFeedingFrenzyYou					= mod:NewSpecialWarningRun(384725, nil, nil, nil, 4, 2)--Debuff on player
@@ -49,7 +50,7 @@ local timerEnsnaringTrapCD						= mod:NewCDTimer(17, 384148, nil, nil, nil, 3)--
 local timerMeatTossCD							= mod:NewCDTimer(21.8, 384416, nil, nil, nil, 3)
 local timerCallHyenasCD							= mod:NewCDTimer(31.6, 384827, nil, nil, nil, 1)
 --local timerMastersCallCD						= mod:NewCDTimer(35, 384638, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)--Doesn't seem to have an actual CD?
-local timerGutShotCD							= mod:NewCDTimer(21.8, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerGutShotCD							= mod:NewCDTimer(18.2, 384343, nil, nil, nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --local berserkTimer							= mod:NewBerserkTimer(600)
 
@@ -105,7 +106,7 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 384353 then
 		if self:IsTanking("player", "boss1", nil, true) then
 			specWarnGutShot:Show()
-			specWarnGutShot:Play("defensive")
+			specWarnGutShot:Play("carefly")
 		end
 		timerGutShotCD:Start()
 	end
@@ -124,7 +125,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnEnsnaringTrap:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnEnsnaringTrap:Show()
-			specWarnEnsnaringTrap:Play("targetyou")
+			specWarnEnsnaringTrap:Play("scatter")
 			yellEnsnaringTrap:Yell()
 		end
 	elseif spellId == 384425 then
@@ -176,7 +177,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		end
 	elseif spellId == 387889 then
 		if self.Options.NPAuraOnHunterleadersTactics then
-			DBM.Nameplate:Show(true, args.destGUID, spellId)
+			DBM.Nameplate:Hide(true, args.destGUID, spellId)
 		end
 	end
 end

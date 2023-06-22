@@ -15,6 +15,8 @@ local Save={
         [34498]=true,--[纸飞艇工具包]
     },
     altDisabledAutoLoot= e.Player.husandro,--打开拾取窗口时，下次禁用，自动拾取
+    --sellJunkMago=true,--出售，可幻化，垃圾物品
+
 }
 local bossSave={}
 local buySave={}--购买物品
@@ -121,21 +123,30 @@ e.CheckItemSell= function(itemID, quality)
     if itemID then
         if Save.noSell[itemID] then
             return
+
         elseif Save.Sell[itemID] and not Save.notSellCustom then
             return e.onlyChinese and '自定义' or CUSTOM
+
         elseif e.itemPetID[itemID] then--宠物对换
             return
+
         elseif bossSave[itemID] and not Save.notSellBoss then
             return e.onlyChinese and '首领' or BOSS
+
         elseif quality==0 and not Save.notSellJunk then--垃圾
-            local classID, subclassID = select(6, GetItemInfoInstant(itemID))
-            if (classID==2 or classID==4) and subclassID~=0 then
-                local isCollected = select(2, e.GetItemCollected(itemID, nil, nil))--物品是否收集
-                if isCollected==false then
-                    return
+            if Save.sellJunkMago then
+                return e.onlyChinese and '垃圾' or BAG_FILTER_JUNK
+
+            else
+                local classID, subclassID = select(6, GetItemInfoInstant(itemID))
+                if (classID==2 or classID==4) and subclassID~=0 then
+                    local isCollected = select(2, e.GetItemCollected(itemID, nil, nil))--物品是否收集
+                    if isCollected==false then
+                        return
+                    end
                 end
+                return e.onlyChinese and '垃圾' or BAG_FILTER_JUNK
             end
-            return e.onlyChinese and '垃圾' or BAG_FILTER_JUNK
         end
     end
 end
@@ -148,35 +159,46 @@ local function setSellItems()
         return
     end
     local num, gruop, preceTotale= 0, 0, 0
-    for bag=0, NUM_BAG_SLOTS do--背包        
+    for bag= Enum.BagIndex.Backpack, Constants.InventoryConstants.NumBagSlots do
         for slot=0, C_Container.GetContainerNumSlots(bag) do--背包数量
             local info = C_Container.GetContainerItemInfo(bag,slot)
-            if info and info.hyperlink and info.itemID and info.quality and (info.quality<5 or Save.Sell[info.itemID] and not Save.notSellCustom) then
+            if info
+                and info.hyperlink
+                and info.itemID
+                and info.quality
+                and (info.quality<5 or Save.Sell[info.itemID]and not Save.notSellCustom)
+            then
                 local checkText= e.CheckItemSell(info.itemID, info.quality)--检察 ,boss掉落, 指定 或 出售灰色,宠物
                 if not info.isLocked and checkText then
-                    C_Container.UseContainerItem(bag, slot);--买出
+                    C_Container.UseContainerItem(bag, slot)--买出
+
                     local prece =0
                     if not info.hasNoValue then--卖出钱
                         prece = (select(11, GetItemInfo(info.hyperlink)) or 0) * (C_Container.stackCount or 1);--价格
                         preceTotale = preceTotale + prece
                     end
-                    num=num+ (C_Container.stackCount or 1)--数量
-                    if not (info.quality==0 and e.Player.husandro)then
-                        gruop= gruop+1--组
-                    end
-                    print(addName, e.onlyChinese and '出售' or AUCTION_HOUSE_SELL_TAB, checkText or '', info.hyperlink, GetCoinTextureString(prece))
-                    if gruop>= 12 then
+                    gruop= gruop+ 1
+                    num= num+ (C_Container.stackCount or 1)--数量
+
+                    print('|cnRED_FONT_COLOR:'..gruop..')|r', checkText or '', info.hyperlink, GetCoinTextureString(prece))
+
+                    if gruop>= 11 then
                         break
                     end
                 end
-                if gruop>= 12 then
+                if gruop>= 11 then
                     break
                 end
             end
         end
     end
     if num > 0 then
-        print(id, addName, AUCTION_HOUSE_SELL_TAB, '|cnGREEN_FONT_COLOR:'..gruop..'|r'..AUCTION_PRICE_PER_STACK, '|cnGREEN_FONT_COLOR:'..num..'|r'..AUCTION_HOUSE_QUANTITY_LABEL, GetCoinTextureString(preceTotale))
+        print(
+            id, addName,
+            (e.onlyChinese and '出售' or AUCTION_HOUSE_SELL_TAB)..' |cnGREEN_FONT_COLOR:'..gruop..'|r'..(e.onlyChinese and '组' or AUCTION_PRICE_PER_STACK),
+            '|cnGREEN_FONT_COLOR:'..num..'|r'..(e.onlyChinese and '件' or AUCTION_HOUSE_QUANTITY_LABEL),
+            GetCoinTextureString(preceTotale)
+        )
     end
 end
 
@@ -300,7 +322,7 @@ local function setMerchantInfo()--设置, 提示, 信息
             if not Save.notShowBagNum then--包里，银行，总数
                 local bag=itemID and GetItemCount(itemID,true)
                 if bag and bag>0 then
-                    num=(num and num..'\n' or '')..bag..e.Icon.bank2
+                    num=(num and num..'|n' or '')..bag..e.Icon.bank2
                 end
             end
             if num and not itemButton.buyItemNum then
@@ -368,145 +390,152 @@ end
 --#######
 --设置菜单
 --#######
-local function setCustomItemMenu(level)--二级菜单, 自定义出售
-    local info = {
-        text=e.onlyChinese and '清除全部' or CLEAR_ALL,
-        notCheckable=true,
-        func=function ()
-            Save.Sell={}
-            e.LibDD:CloseDropDownMenus();
-        end,
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
-    for itemID, boolean in pairs(Save.Sell) do
-        if itemID  then
-            e.LoadDate({id=itemID, type='item'})
-            local itemLink= select(2, GetItemInfo(itemID))
-            itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
-            info = {}
-            info.text= itemLink
-            info.icon= C_Item.GetItemIconByID(itemID)
-            info.checked=boolean
-            info.func=function()
-                Save.Sell[itemID]=nil
-                print(id, addName, '|cnGREEN_FONT_COLOR:'..REMOVE..'|r'..AUCTION_HOUSE_SELL_TAB, itemLink)
+local function Init_Menu(self, level, type)
+    local info
+    if type=='SELLJUNK' then--出售垃圾
+        info= {
+            text= e.onlyChinese and '幻化' or TRANSMOGRIFICATION,
+            checked= Save.sellJunkMago,
+            func=function ()
+                Save.sellJunkMago= not Save.sellJunkMago and true or nil
+                setSellItems()--出售物品
+            end,
+        }
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
+        return
+
+    elseif type=='CUSTOM' then--二级菜单, 自定义出售
+        for itemID, boolean in pairs(Save.Sell) do
+            if itemID  then
+                e.LoadDate({id=itemID, type='item'})
+                local itemLink= select(2, GetItemInfo(itemID))
+                itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
+                info= {}
+                info.text= itemLink
+                info.icon= C_Item.GetItemIconByID(itemID)
+                info.checked=boolean
+                info.func=function()
+                    Save.Sell[itemID]=nil
+                    print(id, addName, '|cnGREEN_FONT_COLOR:'..REMOVE..'|r'..AUCTION_HOUSE_SELL_TAB, itemLink)
+                end
+                e.LibDD:UIDropDownMenu_AddButton(info, level)
             end
-            e.LibDD:UIDropDownMenu_AddButton(info, level)
         end
-    end
-end
+        e.LibDD:UIDropDownMenu_AddSeparator(level)
+        info= {
+            text=e.onlyChinese and '清除全部' or CLEAR_ALL,
+            notCheckable=true,
+            func=function ()
+                Save.Sell={}
+                e.LibDD:CloseDropDownMenus();
+            end,
+        }
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
+        return
 
-local function setBossItemMenu(level)--二级菜单, BOSS
-    local info = {
-        text=e.onlyChinese and '清除全部' or CLEAR_ALL,
-        notCheckable=true,
-        func=function ()
-            bossSave={}
-            e.LibDD:CloseDropDownMenus();
+    elseif type=='BOSS' then--二级菜单, BOSS
+        for itemID, _ in pairs(bossSave) do
+            if itemID then
+                e.LoadDate({id=itemID, type='item'})
+                info= {
+                    text= select(2,GetItemInfo(itemID)) or itemID,
+                    notCheckable=true,
+                    icon= C_Item.GetItemIconByID(itemID),
+                    func=function()
+                        Save.bossSave[itemID]=nil
+                    end,
+                }
+                e.LibDD:UIDropDownMenu_AddButton(info, level)
+            end
         end
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
-    for itemID, _ in pairs(bossSave) do
-        if itemID then
-            e.LoadDate({id=itemID, type='item'})
-            info = {
-                text= select(2,GetItemInfo(itemID)) or itemID,
-                notCheckable=true,
-                icon= C_Item.GetItemIconByID(itemID),
-                func=function()
-                    Save.bossSave[itemID]=nil
-                end,
-            }
-            e.LibDD:UIDropDownMenu_AddButton(info, level)
-        end
-    end
-end
+        e.LibDD:UIDropDownMenu_AddSeparator(level)
+        info= {
+            text=e.onlyChinese and '清除全部' or CLEAR_ALL,
+            notCheckable=true,
+            func=function ()
+                bossSave={}
+                e.LibDD:CloseDropDownMenus();
+            end
+        }
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
+        return
 
-local function setBuyItemMenu(level)--二级菜单, 购买物品
-    local info = {
-        text=e.onlyChinese and '清除全部' or CLEAR_ALL,
-        notCheckable=true,
-        func=function ()
-            buySave={}
-            setMerchantInfo()--设置, 提示, 信息
-            e.LibDD:CloseDropDownMenus();
-       end
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
-    for itemID, num in pairs(buySave) do
-        if itemID and num then
-            select(2, GetItemInfo(itemID))
-            local bag=GetItemCount(itemID)
-            local bank=GetItemCount(itemID, true)-bag
-            local itemLink= select(2, GetItemInfo(itemID))
-            itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
-            info = {}
-            info.text='|cnGREEN_FONT_COLOR:'..num..'|r '..itemLink..' '..'|cnYELLOW_FONT_COLOR:'..bag..e.Icon.bag2..bank..e.Icon.bank2..'|r'
-            info.checked= true
-            info.icon= C_Item.GetItemIconByID(itemID)
-            info.func=function()
-                buySave[itemID]=nil
+    elseif type=='BUY' then--二级菜单, 购买物品
+        for itemID, num in pairs(buySave) do
+            if itemID and num then
+                select(2, GetItemInfo(itemID))
+                local bag=GetItemCount(itemID)
+                local bank=GetItemCount(itemID, true)-bag
+                local itemLink= select(2, GetItemInfo(itemID))
+                itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
+                info= {}
+                info.text='|cnGREEN_FONT_COLOR:'..num..'|r '..itemLink..' '..'|cnYELLOW_FONT_COLOR:'..bag..e.Icon.bag2..bank..e.Icon.bank2..'|r'
+                info.checked= true
+                info.icon= C_Item.GetItemIconByID(itemID)
+                info.func=function()
+                    buySave[itemID]=nil
+                    setMerchantInfo()--设置, 提示, 信息
+                end
+                e.LibDD:UIDropDownMenu_AddButton(info, level)
+            end
+        end
+        e.LibDD:UIDropDownMenu_AddSeparator(level)
+        info= {
+            text=e.onlyChinese and '清除全部' or CLEAR_ALL,
+            notCheckable=true,
+            func=function ()
+                buySave={}
                 setMerchantInfo()--设置, 提示, 信息
+                e.LibDD:CloseDropDownMenus();
+           end
+        }
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
+        return
+
+    elseif type=='BUYBACK' then--二级菜单, 购回物品
+        for itemID, _ in pairs(Save.noSell) do
+            if itemID then
+                select(2, GetItemInfo(itemID))
+                local bag=GetItemCount(itemID)
+                local bank=GetItemCount(itemID, true)-bag
+                local itemLink= select(2, GetItemInfo(itemID))
+                itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
+                info= {
+                    text=itemLink..' '..'|cnYELLOW_FONT_COLOR:'..bag..e.Icon.bag2..bank..e.Icon.bank2..'|r',
+                    checked= true,
+                    icon= C_Item.GetItemIconByID(itemID),
+                    func=function()
+                        Save.noSell[itemID]=nil
+                    end,
+                }
+                e.LibDD:UIDropDownMenu_AddButton(info, level)
             end
-            e.LibDD:UIDropDownMenu_AddButton(info, level)
         end
+        e.LibDD:UIDropDownMenu_AddSeparator(level)
+        info ={
+            text= e.onlyChinese and '清除全部' or CLEAR_ALL,
+            notCheckable=true,
+            func=function ()
+                Save.noSell={}
+                e.LibDD:CloseDropDownMenus();
+            end,
+        }
+        e.LibDD:UIDropDownMenu_AddButton(info, level)
+        return
     end
-end
-local function setBuybackItemMenu(level)--二级菜单, 购回物品
-    local info ={
-        text= e.onlyChinese and '清除全部' or CLEAR_ALL,
-        notCheckable=true,
-        func=function ()
-            Save.noSell={}
-            e.LibDD:CloseDropDownMenus();
-        end,
-    }
-    e.LibDD:UIDropDownMenu_AddButton(info, level)
 
-    for itemID, _ in pairs(Save.noSell) do
-        if itemID then
-            select(2, GetItemInfo(itemID))
-            local bag=GetItemCount(itemID)
-            local bank=GetItemCount(itemID, true)-bag
-            local itemLink= select(2, GetItemInfo(itemID))
-            itemLink= itemLink or C_Item.GetItemNameByID(itemID) or ('itemID: ' .. itemID)
-            info = {
-                text=itemLink..' '..'|cnYELLOW_FONT_COLOR:'..bag..e.Icon.bag2..bank..e.Icon.bank2..'|r',
-                checked= true,
-                icon= C_Item.GetItemIconByID(itemID),
-                func=function()
-                    Save.noSell[itemID]=nil
-                end,
-            }
-            e.LibDD:UIDropDownMenu_AddButton(info, level)
-        end
-    end
-end
-
-local function InitList(self, level, menuLit)
-    if menuLit=='CUSTOM' then
-        setCustomItemMenu(level)
-        return
-    elseif menuLit=='BOSS' then
-        setBossItemMenu(level)
-        return
-    elseif menuLit=='BUY' then
-        setBuyItemMenu(level)
-        return
-    elseif menuLit=='BUYBACK' then
-        setBuybackItemMenu(level)
-        return
-    end
     local num
-    local info ={--出售垃圾
+    info ={--出售垃圾
         text= e.onlyChinese and '出售垃圾' or AUCTION_HOUSE_SELL_TAB..BAG_FILTER_JUNK,
         checked= not Save.notSellJunk,
+        menuList= 'SELLJUNK',
+        hasArrow= true,
         func=function ()
             Save.notSellJunk= not Save.notSellJunk and true or nil
         end,
         tooltipOnButton=true,
         tooltipTitle=id..' '.. addName,
-        tooltipText='\n'..PROFESSIONS_CRAFTING_QUALITY:format('|cff606060'..ITEM_QUALITY0_DESC..'|r'),
+        tooltipText=format(e.onlyChinese and '品质：%s' or PROFESSIONS_CRAFTING_QUALITY, '|cff606060'..(e.onlyChinese and '粗糙' or ITEM_QUALITY0_DESC)..'|r'),
     }
     e.LibDD:UIDropDownMenu_AddButton(info)
 
@@ -597,15 +626,15 @@ local function InitList(self, level, menuLit)
         setDurabiliy()
     end
     info.tooltipOnButton=true
-    info.tooltipTitle=GUILD_BANK_MONEY_LOG.. ' '..RepairSave.date
-    local text=	MINIMAP_TRACKING_REPAIR..': '..RepairSave.num..' '..VOICEMACRO_LABEL_CHARGE1
-                ..'\n'..GUILD..': '..GetCoinTextureString(RepairSave.guild)
-                ..'\n'..PLAYER..': '..GetCoinTextureString(RepairSave.player)
+    info.tooltipTitle= (e.onlyChinese and '金币记录' or GUILD_BANK_MONEY_LOG).. ' '..RepairSave.date
+    local text=	(e.onlyChinese and '修理' or MINIMAP_TRACKING_REPAIR)..': '..RepairSave.num..' '..(e.onlyChinese and '次' or VOICEMACRO_LABEL_CHARGE1)
+                ..'|n'..(e.onlyChinese and '公会' or GUILD)..': '..GetCoinTextureString(RepairSave.guild)
+                ..'|n'..(e.onlyChinese and '玩家' or PLAYER)..': '..GetCoinTextureString(RepairSave.player)
     if RepairSave.guild>0 and RepairSave.player>0 then
-        text=text..'\n\n'..TOTAL..': '..GetCoinTextureString(RepairSave.guild+RepairSave.player)
+        text=text..'|n|n'..(e.onlyChinese and '合计' or TOTAL)..': '..GetCoinTextureString(RepairSave.guild+RepairSave.player)
     end
     if CanGuildBankRepair() then
-        text=text..'\n\n'..GUILDBANK_REPAIR..'\n'..GetCoinTextureString(GetGuildBankMoney())
+        text=text..'|n|n'..(e.onlyChinese and '你想要使用公会资金修理吗？' or GUILDBANK_REPAIR)..'|n'..GetCoinTextureString(GetGuildBankMoney() or 0)
     end
     info.tooltipText=text
     e.LibDD:UIDropDownMenu_AddButton(info)
@@ -629,7 +658,7 @@ local function InitList(self, level, menuLit)
             Save.notDELETE= not Save.notDELETE and true or nil
         end,
         tooltipOnButton=true,
-        tooltipTitle= e.onlyChinese and '你真的要摧毁%s吗？\n\n请在输入框中输入 DELETE 以确认。' or DELETE_GOOD_ITEM,
+        tooltipTitle= e.onlyChinese and '你真的要摧毁%s吗？|n|n请在输入框中输入 DELETE 以确认。' or DELETE_GOOD_ITEM,
     }
     e.LibDD:UIDropDownMenu_AddButton(info)
 
@@ -645,15 +674,10 @@ local function InitList(self, level, menuLit)
     e.LibDD:UIDropDownMenu_AddButton(info)
 end
 
-local function setMenu()
-    local frame=MerchantFrame
-    if not frame or panel.set then
-        return
-    end
-    panel.set=e.Cbtn(frame.TitleContainer, {size={20,20}, icon='hide'})
-    panel.set:SetNormalTexture(236994)
-    panel.set:SetPoint('RIGHT', frame.TitleContainer ,'RIGHT', -25, 0)
-    panel.set:SetScript('OnEnter', function(self2)
+local function Init_Button(frame)
+    local btn=e.Cbtn(frame.TitleContainer, {size={20,20}, texture=236994})
+    btn:SetPoint('RIGHT', frame.TitleContainer ,'RIGHT', -25, 0)
+    btn:SetScript('OnEnter', function(self2)
         e.tips:SetOwner(self2, "ANCHOR_LEFT");
         e.tips:ClearLines();
         e.tips:AddDoubleLine(id, addName)
@@ -677,7 +701,7 @@ local function setMenu()
         end
         e.tips:Show()
     end)
-    panel.set:SetScript('OnMouseUp', function(self2, d)
+    btn:SetScript('OnMouseUp', function(self2, d)
         local infoType, itemID, itemLink = GetCursorInfo()
         if infoType=='item' and itemID then
             if Save.Sell[itemID] then
@@ -705,10 +729,10 @@ local function setMenu()
                 icon= icon and '|T'..icon..':0|t' or ''
                 StaticPopupDialogs[id..addName..'Buy']={
                     text =id..' '..addName
-                    ..'\n\n'.. (e.onlyChinese and '自动购买' or AUTO_JOIN:gsub(JOIN,PURCHASE))..': '..icon ..itemLink
-                    ..'\n\n'..e.Icon.player..e.Player.name_realm..': ' ..(e.onlyChinese and '数量' or AUCTION_HOUSE_QUANTITY_LABEL)
-                    ..'\n\n0: '..(e.onlyChinese and '清除' or SLASH_STOPWATCH_PARAM_STOP2)
-                    ..(Save.notAutoBuy and '\n\n'..(e.onlyChinese and '自动购买' or AUTO_JOIN:gsub(JOIN,PURCHASE))..': '..e.GetEnabeleDisable(false) or ''),
+                    ..'|n|n'.. (e.onlyChinese and '自动购买' or AUTO_JOIN:gsub(JOIN,PURCHASE))..': '..icon ..itemLink
+                    ..'|n|n'..e.Icon.player..e.Player.name_realm..': ' ..(e.onlyChinese and '数量' or AUCTION_HOUSE_QUANTITY_LABEL)
+                    ..'|n|n0: '..(e.onlyChinese and '清除' or SLASH_STOPWATCH_PARAM_STOP2)
+                    ..(Save.notAutoBuy and '|n|n'..(e.onlyChinese and '自动购买' or AUTO_JOIN:gsub(JOIN,PURCHASE))..': '..e.GetEnabeleDisable(false) or ''),
                     button1 = e.onlyChinese and '购买' or PURCHASE,
                     button2 = e.onlyChinese and '取消' or CANCEL,
                     hasEditBox=true,whileDead=true,timeout=60,hideOnEscape = 1,
@@ -743,16 +767,16 @@ local function setMenu()
         else
             if not self2.Menu then
                 self2.Menu=CreateFrame("Frame", id..addName..'Menu', self2, "UIDropDownMenuTemplate")
-                e.LibDD:UIDropDownMenu_Initialize(self2.Menu, InitList, 'MENU')
+                e.LibDD:UIDropDownMenu_Initialize(self2.Menu, Init_Menu, 'MENU')
             end
             e.LibDD:ToggleDropDownMenu(1, nil, self2.Menu, self2, 15, 0)
         end
     end)
-    panel.set:SetScript('OnLeave', function() e.tips:Hide() end)
+    btn:SetScript('OnLeave', function() e.tips:Hide() end)
 
-    panel.noSell=e.Cbtn(panel.set, {size={20,20}, icon=false})--nil, false)--购回
-    panel.noSell:SetPoint('RIGHT', panel.set, 'LEFT', -2, 0)
-    panel.noSell:SetScript('OnMouseUp', function(self2)
+    local noSellButton=e.Cbtn(btn, {size={20,20}, icon=false})--nil, false)--购回
+    noSellButton:SetPoint('RIGHT', btn, 'LEFT', -2, 0)
+    noSellButton:SetScript('OnMouseUp', function(self2)
         local infoType, itemID, itemLink = GetCursorInfo()
         if infoType=='item' and itemID then
             if Save.noSell[itemID] then
@@ -771,7 +795,7 @@ local function setMenu()
             ClearCursor();
         end
     end)
-    panel.noSell:SetScript('OnEnter', function(self2)
+    noSellButton:SetScript('OnEnter', function(self2)
         e.tips:SetOwner(self2, "ANCHOR_LEFT");
         e.tips:ClearLines();
         e.tips:AddDoubleLine(id, addName)
@@ -796,7 +820,7 @@ local function setMenu()
         end
         e.tips:Show()
     end)
-    panel.noSell:SetScript('OnLeave', function() e.tips:Hide() end)
+    noSellButton:SetScript('OnLeave', function() e.tips:Hide() end)
 end
 
 --StackSplitFrame.lua 堆叠,数量,框架
@@ -885,6 +909,8 @@ end
 --初始
 --####
 local function Init()
+    Init_Button(MerchantFrame)--初始，按钮
+
     --######
     --DELETE
     --######
@@ -949,6 +975,7 @@ local function Init()
             end
         end)]]
     end
+
 end
 
 --###########
@@ -1025,7 +1052,7 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
         setAutoRepairAll()--自动修理
         setSellItems()--出售物品
         setBuyItems()--购买物品
-        setMenu()--设置菜单
+
 
     elseif event=='UPDATE_INVENTORY_DURABILITY' then
         setDurabiliy()

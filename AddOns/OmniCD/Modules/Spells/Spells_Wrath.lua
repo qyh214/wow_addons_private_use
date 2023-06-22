@@ -101,6 +101,18 @@ E.spell_db = {
 		{ spellID = 34477, duration = 30, type = "other", rlvl = 70 },
 		{ spellID = 3034, duration = 15, type = "other", rlvl = 36 },
 
+		{ spellID = 53480, duration = 60, type = "other", rlvl = 1 },
+
+
+
+
+
+
+
+
+
+
+
 
 
 

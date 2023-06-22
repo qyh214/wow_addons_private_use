@@ -18,6 +18,8 @@ function P:Enable()
 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
 	self:RegisterEvent('GROUP_ROSTER_UPDATE')
 	self:RegisterEvent('GROUP_JOINED')
+	self:RegisterEvent('PLAYER_REGEN_ENABLED')
+	self:RegisterEvent('PLAYER_REGEN_DISABLED')
 	self:SetScript("OnEvent", function(self, event, ...)
 		self[event](self, ...)
 	end)
@@ -25,6 +27,9 @@ function P:Enable()
 	self.enabled = true
 
 	self.zone = select(2, IsInInstance())
+	if InCombatLockdown() then
+		self:PLAYER_REGEN_DISABLED()
+	end
 	CM:InspectUser()
 
 	self:SetHooks()

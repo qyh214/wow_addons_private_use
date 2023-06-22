@@ -11,6 +11,9 @@ elseif E.preCata then
 end
 
 local SpellTooltip = CreateFrame("GameTooltip", "OmniCDSpellTooltip", UIParent, "GameTooltipTemplate")
+local TOOLTIP_UPDATE_TIME = 0.2
+SpellTooltip.updateTooltipTimer = TOOLTIP_UPDATE_TIME
+
 local FEIGN_DEATH = 5384
 local TOUCH_OF_KARMA = 125174
 local DEBUFF_HEARTSTOP_AURA = 214975
@@ -301,9 +304,25 @@ local function OmniCDCooldown_OnHide(self)
 	end
 end
 
+local function SpellTooltip_OnUpdate(self, elapsed)
+	self.updateTooltipTimer = self.updateTooltipTimer - elapsed
+	if self.updateTooltipTimer > 0 then
+		return
+	end
+	self.updateTooltipTimer = TOOLTIP_UPDATE_TIME
+	local owner = self:GetOwner()
+	if owner then
+		self:SetSpellByID(owner.tooltipID or owner.spellID)
+	end
+end
+SpellTooltip:SetScript("OnUpdate", SpellTooltip_OnUpdate)
+
 local function OmniCDIcon_OnEnter(self)
-	SpellTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	SpellTooltip:SetSpellByID(self.tooltipID or self.spellID)
+	local id = self.tooltipID or self.spellID
+	if id then
+		SpellTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		SpellTooltip:SetSpellByID(id)
+	end
 end
 
 local function OmniCDIcon_OnLeave()
@@ -343,6 +362,21 @@ local textureUVs = {
 	"borderLeft",
 }
 
+
+local pendingPassThroughButtons = {}
+function P:UpdatePassThroughButtons()
+	local showTooltip = E.db.icons.showTooltip
+	for i = #pendingPassThroughButtons, 1, -1 do
+		local icon = pendingPassThroughButtons[i]
+		icon:SetPassThroughButtons("LeftButton", "RightButton")
+		icon.isPassThrough = true
+		if showTooltip then
+			icon:EnableMouse(true)
+		end
+		pendingPassThroughButtons[i] = nil
+	end
+end
+
 local function GetIcon(barFrame, iconIndex)
 	local icon = tremove(unusedIcons)
 	if not icon then
@@ -361,19 +395,22 @@ local function GetIcon(barFrame, iconIndex)
 		icon.icon:SetSnapToPixelGrid(false)
 
 		icon.name:SetFontObject(E.IconFont)
-
-
-
+		if E.ElvUI1 then
+			E.ElvUI1:RegisterCooldown(icon.cooldown, "OmniCD")
+		end
 		icon.cooldown:SetScript("OnHide", OmniCDCooldown_OnHide)
 		icon:SetScript("OnEnter", OmniCDIcon_OnEnter)
 		icon:SetScript("OnLeave", OmniCDIcon_OnLeave)
-		if not E.isClassic then
-			icon:SetPassThroughButtons("LeftButton", "RightButton")
+		if icon.SetPassThroughButtons then
+			if P.inLockdown then
+				tinsert(pendingPassThroughButtons, icon)
+			else
+				icon:SetPassThroughButtons("LeftButton", "RightButton")
+				icon.isPassThrough = true
+			end
 		end
 	end
-
 	icon:SetParent(barFrame.container)
-
 	barFrame.icons[iconIndex] = icon
 	return icon
 end
@@ -684,6 +721,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 							iconIndex = iconIndex + 1
 							icon = frame.icons[iconIndex] or GetIcon(frame, iconIndex)
 						end
+
 						icon.name:Hide()
 						icon.guid = guid
 						icon.spellID = spellID

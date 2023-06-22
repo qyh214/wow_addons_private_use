@@ -2,9 +2,11 @@
 
 -- Customized for OmniCD by permission of the copyright owner.
 
--- Parameters to Edit on CTRL + mouse click
--- arg = spellID (number), func DND
+-- OmniCD: Adds spell to Editor on CTRL + click
+-- arg = spellID, func DND
 
+-- OmniAuras: Show delete button on mouse over
+-- arg = -spellID
 ---------------------------------------------------------------------------------
 
 --[[-----------------------------------------------------------------------------
@@ -13,7 +15,7 @@ Checkbox Widget
 --[[ s r
 local Type, Version = "CheckBox", 26
 ]]
-local Type, Version = "CheckBox-OmniCD", 29 --26 by OA, 28 backdrop 29 text right align
+local Type, Version = "CheckBox-OmniCD", 30 --26 by OA, 28 backdrop 29 text right align -- v30: temp
 -- e
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
@@ -114,11 +116,89 @@ local function CheckBox_OnMouseUp(frame)
 	end
 end
 ]]
+
+-- v30
+local delButton
+
+local function delButton_OnEnter(self)
+	local AceConfigDialog = LibStub("AceConfigDialog-3.0-OmniCD")
+	if AceConfigDialog then
+		AceConfigDialog.tooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+		AceConfigDialog.tooltip:SetText(DELETE, 1, .82, 0, true)
+	end
+end
+
+local function delButton_OnLeave(self)
+	local AceConfigDialog = LibStub("AceConfigDialog-3.0-OmniCD")
+	if AceConfigDialog then
+		AceConfigDialog.tooltip:Hide()
+	end
+	-- do nothing if it's entering parent frame -- is there an api for this?
+	if GetMouseFocus() ~= self:GetParent() then
+		self.fadeOut:Play()
+	end
+end
+
+local function delButton_OnClick(self)
+	if not OmniAuras then return end
+	local frame = self:GetParent()
+	local arg = math.abs(frame.obj.arg)
+	local sId = tostring(arg)
+	OmniAuras[1].blacklist[sId] = nil
+	OmniAuras[1].global.auraBlacklist[arg] = nil
+	OmniAuras[1]:ACR_NotifyChange()
+	OmniAuras[1]:Refresh()
+end
+
+local function GetDeleteButton()
+	local Button = CreateFrame("Button", "OmniCDC_delButton", UIParent, "BackdropTemplate")
+	Button:SetSize(20, 20)
+	OmniCDC.SetBackdrop(Button)
+	Button:SetBackdropColor(0.725, 0.008, 0.008)
+	Button:SetBackdropBorderColor(0, 0, 0)
+	Button:SetNormalFontObject("GameFontHighlightSmall-OmniCD")
+	Button:SetText("X")
+
+	Button.fadeIn = Button:CreateAnimationGroup()
+	local fadeIn = Button.fadeIn:CreateAnimation("Alpha")
+	fadeIn:SetFromAlpha(0)
+	fadeIn:SetToAlpha(1)
+	fadeIn:SetDuration(0.4)
+	fadeIn:SetSmoothing("OUT")
+
+	Button.fadeOut = Button:CreateAnimationGroup()
+	local fadeOut = Button.fadeOut:CreateAnimation("Alpha")
+	fadeOut:SetFromAlpha(1)
+	fadeOut:SetToAlpha(0)
+	fadeOut:SetDuration(0.3)
+	fadeOut:SetSmoothing("OUT")
+	Button.fadeOut:SetScript("OnFinished", function() Button:Hide() end)
+
+	Button:SetScript("OnEnter", delButton_OnEnter)
+	Button:SetScript("OnLeave", delButton_OnLeave)
+	Button:SetScript("OnClick", delButton_OnClick)
+	return Button
+end
+
 local function Control_OnEnter(frame)
 	frame.obj:Fire("OnEnter")
 	-- v27
 --	frame.obj.checkbg:SetBackdropBorderColor(0.5, 0.5, 0.5)	 -- match range slider editbox
 	frame.obj.checkbg.border:SetColorTexture(0.5, 0.5, 0.5)
+	-- v30
+	local arg = frame.obj.arg
+	if arg and arg < 0 and OmniAuras then
+		delButton = delButton or GetDeleteButton()
+		delButton:SetParent(frame)
+		delButton:ClearAllPoints()
+		delButton:SetPoint("RIGHT", frame, -10, 0)
+		if not delButton:IsVisible() then
+			delButton.fadeIn:Play()
+		elseif delButton.fadeOut:IsPlaying() then
+			delButton.fadeOut:Stop()
+		end
+		delButton:Show()
+	end
 end
 
 local function Control_OnLeave(frame)
@@ -126,6 +206,15 @@ local function Control_OnLeave(frame)
 	-- v27
 --	frame.obj.checkbg:SetBackdropBorderColor(0.2, 0.2, 0.25) -- match range slider editbox
 	frame.obj.checkbg.border:SetColorTexture(0.2, 0.2, 0.25)
+	-- v30
+	local arg = frame.obj.arg
+	if arg and arg < 0 and delButton then
+		-- do nothing if it's entering delButton
+		if GetMouseFocus() ~= delButton then
+			--delButton:Hide()
+			delButton.fadeOut:Play()
+		end
+	end
 end
 
 local mouseOverFrame -- (mu) prevent mouseup registering outside of frame region
@@ -145,9 +234,8 @@ local function CheckBox_OnMouseDown(frame)
 		mouseOverFrame = GetMouseFocus();
 		---[[
 		local arg = self.arg
-		if type(arg) == "number" then
+		if arg and arg > 0 then
 			--cursorArg = arg
-
 			local isCtrlKey = IsControlKeyDown()
 			if isCtrlKey and OmniCD and OmniCD[1] and OmniCD[1].EditSpell then
 				OmniCD[1].EditSpell(nil, tostring(arg))
@@ -204,7 +292,7 @@ local methods = {
 		self:SetImage()
 		self:SetDisabled(nil)
 		self:SetDescription(nil)
-		--self:SetArg(nil) -- s a reset arg (dnd) not using yet
+		self.arg = nil
 	end,
 
 	-- ["OnRelease"] = nil,

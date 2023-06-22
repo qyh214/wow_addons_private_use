@@ -13,7 +13,7 @@ local function set_Gem()--Blizzard_ItemSocketingUI.lua MAX_NUM_SOCKETS
     local links={}
     local gem1007= select(2, GetSocketItemInfo())== 4638590 --204000, 204030
 
-    for bag=0, NUM_BAG_SLOTS do
+    for bag= Enum.BagIndex.Backpack, Constants.InventoryConstants.NumBagSlots do
         for slot=1, C_Container.GetContainerNumSlots(bag) do
             local info = C_Container.GetContainerItemInfo(bag, slot)
             if info
@@ -137,7 +137,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
 
-        elseif arg1=='Blizzard_ItemSocketingUI' then--10.07 原石宝石，提示
+        --[[elseif arg1=='Blizzard_ItemSocketingUI' then--10.07 原石宝石，提示
 
             ItemSocketingFrame.setTipsFrame= CreateFrame("Frame", nil, ItemSocketingFrame)
             ItemSocketingFrame.setTipsFrame:SetFrameStrata('HIGH')
@@ -176,7 +176,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                     end
                 end
             end
-            ItemSocketingFrame.setTipsFrame:SetShown(select(2,GetSocketItemInfo())== 4638590)--10.07 原石宝石，提示
+            ItemSocketingFrame.setTipsFrame:SetShown(select(2,GetSocketItemInfo())== 4638590)--10.07 原石宝石，提示]]
         end
 
     elseif event=='PLAYER_LOGOUT' then
@@ -192,7 +192,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
         if ItemSocketingFrame.setTipsFrame then
             ItemSocketingFrame.setTipsFrame:SetShown(gem1007)--10.07 原石宝石，提示
         end
-        
+
         if not IsInInstance() and gem1007 and ExtraActionButton1 and ExtraActionButton1:IsShown() and ExtraActionButton1.icon and ItemSocketingFrame and ItemSocketingFrame:IsVisible() then
             local icon= ExtraActionButton1.icon:GetTexture()
             if icon==4638590 or icon==876370 then

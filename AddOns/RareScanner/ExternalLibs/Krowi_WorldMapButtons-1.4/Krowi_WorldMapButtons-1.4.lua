@@ -19,7 +19,7 @@
 		the copyright holders.
 ]]
 
-local lib = LibStub:NewLibrary('Krowi_WorldMapButtons-1.4', 4);
+local lib = LibStub:NewLibrary('Krowi_WorldMapButtons-1.4', 5);
 
 if not lib then
 	return;
@@ -27,8 +27,11 @@ end
 
 local version = (GetBuildInfo());
 local major = string.match(version, "(%d+)%.(%d+)%.(%d+)(%w?)");
+lib.IsClassic = major == "1";
+lib.IsTbcClassic = major == "2";
 lib.IsWrathClassic = major == "3";
 lib.IsDragonflightRetail = major == "10";
+lib.HasNoOverlay = lib.IsClassic or lib.IsTbcClassic or lib.IsWrathClassic;
 
 local AddButton;
 local function Fix1_3_1Buttons()
@@ -47,7 +50,7 @@ local function Fix1_3_1Buttons()
 end
 
 local function Fix1_4_3Buttons()
-	if lib.IsWrathClassic then
+	if lib.HasNoOverlay then
 		for _, button in next, lib.Buttons do
 			button:SetParent(WorldMapFrame.ScrollContainer);
 			button:SetFrameStrata("TOOLTIP");
@@ -97,7 +100,7 @@ local function HookDefaultButtons()
 end
 
 local function PatchWrathClassic()
-	if lib.IsWrathClassic and WorldMapFrame.RefreshOverlayFrames == nil then
+	if lib.HasNoOverlay and WorldMapFrame.RefreshOverlayFrames == nil then
 		WorldMapFrame.RefreshOverlayFrames = function()
 		end
 	end
@@ -109,7 +112,7 @@ function AddButton(button)
 	local xOffset = 4 + lib.NumButtons * 32;
 	button:SetPoint("TOPRIGHT", WorldMapFrame:GetCanvasContainer(), "TOPRIGHT", -xOffset, -2);
 	button.relativeFrame = WorldMapFrame:GetCanvasContainer();
-	hooksecurefunc(WorldMapFrame, lib.IsWrathClassic and "OnMapChanged" or "RefreshOverlayFrames", function()
+	hooksecurefunc(WorldMapFrame, lib.HasNoOverlay and "OnMapChanged" or "RefreshOverlayFrames", function()
 		button:Refresh();
 		lib.SetPoints();
 	end);
@@ -135,9 +138,9 @@ function lib:Add(templateName, templateType)
 	PatchWrathClassic();
 
 	self.NumButtons = self.NumButtons + 1;
-	local button = CreateFrame(templateType, "Krowi_WorldMapButtons" .. self.NumButtons, lib.IsWrathClassic and WorldMapFrame.ScrollContainer or WorldMapFrame, templateName);
+	local button = CreateFrame(templateType, "Krowi_WorldMapButtons" .. self.NumButtons, lib.HasNoOverlay and WorldMapFrame.ScrollContainer or WorldMapFrame, templateName);
 
-	if lib.IsWrathClassic then
+	if lib.HasNoOverlay then
 		button:SetFrameStrata("TOOLTIP");
 	end
 

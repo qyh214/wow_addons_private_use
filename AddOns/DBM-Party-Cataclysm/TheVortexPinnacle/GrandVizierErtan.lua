@@ -2,12 +2,14 @@ local mod	= DBM:NewMod(114, "DBM-Party-Cataclysm", 8, 68)
 local L		= mod:GetLocalizedStrings()
 
 mod.statTypes = "normal,heroic,challenge,timewalker"
+mod.upgradedMPlus = true
 
-mod:SetRevision("20230429090040")
+mod:SetRevision("20230504231118")
 mod:SetCreatureID(43878)
 mod:SetEncounterID(1043)
 mod:SetHotfixNoticeRev(20230427000000)
 --mod:SetMinSyncRevision(20230226000000)
+mod.sendMainBossGUID = true
 
 mod:RegisterCombat("combat")
 

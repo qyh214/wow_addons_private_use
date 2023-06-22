@@ -1,14 +1,11 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('AutoEquipQuestItem') then return end
-
-function AS:AutoEquipQuestItem(event, addon)
-	for i = 1, QuestFrameRewardPanel:GetNumChildren() do
-		local Region = select(i, QuestFrameRewardPanel:GetChildren())
+function R:AutoEquipQuestItem()
+	for _, Region in pairs({QuestFrameRewardPanel:GetChildren()}) do
 		if Region:IsObjectType('Button') and Region:GetName() == nil then
-			AS:SkinButton(Region)
+			S:HandleButton(Region)
 		end
 	end
 end
 
-AS:RegisterSkin('AutoEquipQuestItem', AS.AutoEquipQuestItem)
+AS:RegisterSkin('AutoEquipQuestItem')

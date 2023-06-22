@@ -38,7 +38,7 @@ local function GetDisabledItems(info)
 end
 
 local position = {
-	name = E.STR.WHATS_NEW_ESCSEQ .. L["Position"],
+	name = L["Position"],
 	type = "group",
 	order = 20,
 	get = function(info) return E.profile.Party[ info[2] ].position[ info[#info] ] end,
@@ -241,7 +241,7 @@ local position = {
 					min = -5, max = 100, softMin = 0, softMax = 10, step = 1,
 				},
 				maxNumIcons = {
-					name = E.STR.WHATS_NEW_ESCSEQ .. L["Max Number of Visible Icons"],
+					name = L["Max Number of Visible Icons"],
 					desc = format("%s\n\n%s\n\n|cffff2020%s", L["Set the max number of icons that can be displayed per unit"], L["For double/triple layout, it will limit the number of icons per line"], L["0: Disable option"]),
 					order = 19,
 					type = "range",

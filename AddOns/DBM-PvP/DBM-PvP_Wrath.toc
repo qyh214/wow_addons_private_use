@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30402
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
@@ -30,10 +30,10 @@
 ## X-DBM-Mod-Name-ptBR: JxJ
 ## X-DBM-Mod-MapID: 30,489,529,559,562,566,572,607,617,618,628,726,727,761,968,980,998,1105,1134,1170,1504,1505,1552,1672,1681,1803,1825,1911,2106,2107,2118,2167,2177,2197,2245,2373,2509,2511,2547,2563
 ## X-DBM-Mod-MinCoreRevision: 20200524142133
-## X-DBM-Mod-Sort: 1500
+## X-DBM-Mod-Sort: 254
 ## X-Curse-Project-ID: 61882
 ## X-Wago-ID: Xb6Xe0Kp
-## Version: r145
+## Version: r146
 
 localization.en.lua
 localization.br.lua

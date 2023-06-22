@@ -227,7 +227,7 @@ function RSRecentlySeenTracker.ShouldPlayAnimation(entityID, mapID, x, y)
 
 	for xy, info in pairs (pingAnimationInfo) do
 		if (info.mapID == tostring(mapID) and info.x == tostring(x) and info.y == tostring(y)) then
-			RSLogger:PrintDebugMessage(string.format("ShouldPlayAnimation[%s] (multi) [%s]", entityID, xy))
+			--RSLogger:PrintDebugMessage(string.format("ShouldPlayAnimation[%s] (multi) [%s]", entityID, xy))
 			return true
 		end
 	end

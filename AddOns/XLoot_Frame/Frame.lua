@@ -38,9 +38,12 @@ end
 
 -- Create module
 local addon, L = XLoot:NewModule("Frame")
+
 -- Prepare frame/global
-local XLootFrame = CreateFrame("Frame", "XLootFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
+XLootFrame = CreateFrame("Frame", "XLootFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 XLootFrame.addon = addon
+local XLootFrame = XLootFrame
+
 -- Grab locals
 local mouse_focus, opt
 
@@ -449,6 +452,19 @@ end
 local mouse_focus
 local BuildRow
 do
+	---@class XLootFrameRow: Button
+	---@field text_name FontString
+	---@field text_info FontString
+	---@field text_quantity FontString
+	---@field text_bind FontString
+	---@field text_locked FontString
+	---@field text_button_auto FontString
+	---@field button_auto Button
+	---@field frame_item Frame
+	---@field texture_item Texture
+	---@field texture_bang Texture
+	---@field i integer
+	---@field owner Frame
 	local RowPrototype = XLoot.NewPrototype()
 	-- Text helpers
 	local function smalltext(text)
@@ -473,9 +489,9 @@ do
 		self.frame_item:SetBorderColor(r, g, b, a or 1)
 	end
 
-	function RowPrototype:SetHighlightColor(r, g, b)
-		self:SetHighlightColor(r, g, b)
-		self.frame_item:SetHighlightColor(r, g, b)
+	function RowPrototype:SetHighlightColor(r, g, b, a)
+		self:SetHighlightColor(r, g, b, a)
+		self.frame_item:SetHighlightColor(r, g, b, a)
 	end
 
 	-- Frame events
@@ -761,6 +777,7 @@ do
 
 		-- Apply prototype after skin to override method
 		RowPrototype:New(row)
+		---@cast row XLootFrameRow
 
 		-- Create fontstrings
 		local name = row:CreateFontString(not fake and frame_name..'Text' or nil)

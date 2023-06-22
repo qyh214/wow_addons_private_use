@@ -55,14 +55,16 @@ panel:SetScript("OnEvent", function(self, event, arg1)
         end
 
     elseif event=='TALKINGHEAD_REQUESTED' then--TalkingHeadUI.lua
-        local _, _, vo, _, _, _, name, text, isNewTalkingHead = C_TalkingHead.GetCurrentLineInfo();
+        local _, _, vo, _, _, _, name, text, isNewTalkingHead = C_TalkingHead.GetCurrentLineInfo()
+        TalkingHeadFrame:CloseImmediately()
         if vo and vo>0 and self.soundKitID~=vo then
-            PlaySound(vo, "Talking Head", true, true)
+            e.PlaySound(vo, true)
+
+            --PlaySound(vo, "Talking Head", true, true)
             if not Save.notPrint then
                 print('|cff00ff00'..name..'|r','|cffff00ff'..text..'|r',id, addName, 'soundKitID', vo)
             end
             self.soundKitID=vo
         end
-        TalkingHeadFrame:CloseImmediately()
     end
 end)

@@ -1674,10 +1674,10 @@ function GenericTrigger.Add(data, region)
   end
 
   if warnAboutCLEUEvents then
-    Private.AuraWarnings.UpdateWarning(data.uid, "spamy_event_warning", "warning",
+    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning", "warning",
                 L["COMBAT_LOG_EVENT_UNFILTERED without a filter is generally advised against as it’s very performance costly.\nFind more information:\nhttps://github.com/WeakAuras/WeakAuras2/wiki/Custom-Triggers#events"])
   else
-    Private.AuraWarnings.UpdateWarning(data.uid, "spamy_event_warning")
+    Private.AuraWarnings.UpdateWarning(data.uid, "spammy_event_warning")
   end
 end
 
@@ -2005,7 +2005,11 @@ end
 do
   local cdReadyFrame;
 
+  --- @type table<number|string, boolean> Tracks which spells we want to fetch information on,
   local spells = {};
+  --- @type table<number, boolean>
+  local checkOverrideSpell = {}
+  --- @type table<number, boolean>
   local spellKnown = {};
 
   local spellCharges = {};
@@ -2410,7 +2414,13 @@ do
     end
   end
 
-  function WeakAuras.GetSpellCooldown(id, ignoreRuneCD, showgcd, ignoreSpellKnown, track)
+  function WeakAuras.GetSpellCooldown(id, ignoreRuneCD, showgcd, ignoreSpellKnown, track, followOverride)
+    if followOverride then
+      if spellDetails[id] then
+        id = spellDetails[id].override or id
+      end
+    end
+
     if (not spellKnown[id] and not ignoreSpellKnown) then
       return;
     end
@@ -2441,7 +2451,13 @@ do
     return startTime, duration, gcdCooldown, readyTime, modRate
   end
 
-  function WeakAuras.GetSpellCharges(id, ignoreSpellKnown)
+  function WeakAuras.GetSpellCharges(id, ignoreSpellKnown, followoverride)
+    if followoverride then
+      if spellDetails[id] then
+        id = spellDetails[id].override or id
+      end
+    end
+
     if (not spellKnown[id] and not ignoreSpellKnown) then
       return;
     end
@@ -2642,6 +2658,24 @@ do
   end
 
   function Private.CheckSpellKnown()
+    local overrides = {}
+    -- First check for overrides, if we don't yet track a specific override, add it
+    for id, _ in pairs(checkOverrideSpell) do
+      local override
+      if type(id) == "number" then
+        override = FindSpellOverrideByID(id)
+      else
+        local spellId = select(7, GetSpellInfo(id))
+        if spellId then
+          override = FindSpellOverrideByID(spellId)
+        end
+      end
+      if id ~= override and override and not spells[override] then
+        WeakAuras.WatchSpellCooldown(override, false, false)
+      end
+      overrides[id] = override
+    end
+
     for id, _ in pairs(spells) do
       local known = WeakAuras.IsSpellKnownIncludingPet(id);
       local changed = false
@@ -2664,10 +2698,17 @@ do
         changed = true
       end
 
+      if checkOverrideSpell[id] then
+        local override = overrides[id]
+        if spellDetails[id].override ~= override then
+          spellDetails[id].override = override
+          changed = true
+        end
+      end
+
       if changed and not WeakAuras.IsPaused() then
         WeakAuras.ScanEvents("SPELL_COOLDOWN_CHANGED", id)
       end
-
     end
   end
 
@@ -2893,7 +2934,7 @@ do
     end
   end
 
-  function WeakAuras.WatchSpellCooldown(id, ignoreRunes)
+  function WeakAuras.WatchSpellCooldown(id, ignoreRunes, followoverride)
     if not(cdReadyFrame) then
       Private.InitCooldownReady();
     end
@@ -2906,16 +2947,26 @@ do
       end
     end
 
-    if (spells[id]) then
+    if (spells[id] and not followoverride or checkOverrideSpell[id]) then
       return;
     end
     spells[id] = true;
+    checkOverrideSpell[id] = followoverride
     local name, _, icon, _, _, _, spellId = GetSpellInfo(id)
     spellDetails[id] = {
       name = name,
       icon = icon,
       id = spellId
     }
+
+    if followoverride then
+      if type(id) == "number" then
+        spellDetails[id].override = FindSpellOverrideByID(id)
+      else
+        spellDetails[id].override = spellId and FindSpellOverrideByID(spellId) or nil
+      end
+    end
+
     spellKnown[id] = WeakAuras.IsSpellKnownIncludingPet(id);
 
     local charges, maxCharges, startTime, duration, unifiedCooldownBecauseRune,
@@ -2935,6 +2986,13 @@ do
       spellCdsOnlyCooldownRune:HandleSpell(id, startTimeCooldown, durationCooldown, modRate)
     end
     spellCdsCharges:HandleSpell(id, startTimeCharges, durationCharges, modRateCharges)
+
+    if spellDetails[id].override then
+      -- If this spell is overridden and the option is on, track the overridden spell too
+      if spellDetails[id].override ~= id then
+        WeakAuras.WatchSpellCooldown(spellDetails[id].override, false, false)
+      end
+    end
   end
 
   function WeakAuras.WatchItemCooldown(id)
@@ -3306,11 +3364,8 @@ do
         end
       end
       WeakAuras.ScanEvents("DBM_TimerUpdate", id)
-    elseif event == "DBM_SetStage" then
-      local mod, modId, stage, encounterId, stageTotal = ...
-      currentStage = stage
-      currentStageTotal = stageTotal
-      WeakAuras.ScanEvents("DBM_SetStage", ...)
+    elseif event == "DBM_SetStage" or event == "DBM_Pull" or event == "DBM_Wipe" or event == "DBM_Kill" then
+      WeakAuras.ScanEvents("DBM_SetStage")
     else -- DBM_Announce
       WeakAuras.ScanEvents(event, ...)
     end
@@ -3356,7 +3411,7 @@ do
   end
 
   function WeakAuras.GetDBMStage()
-    return currentStage, currentStageTotal
+    return DBM:GetStage()
   end
 
   function WeakAuras.GetDBMTimerById(id)
@@ -3545,6 +3600,9 @@ do
       local addon, stage = ...
       currentStage = stage
       WeakAuras.ScanEvents("BigWigs_SetStage", ...)
+    elseif event == "BigWigs_OnBossWipe" or event == "BigWigs_OnBossWin" then
+      currentStage = 0
+      WeakAuras.ScanEvents("BigWigs_SetStage", ...)
     end
   end
 
@@ -3555,6 +3613,18 @@ do
     if BigWigsLoader then
       BigWigsLoader.RegisterMessage(WeakAuras, event, bigWigsEventCallback)
       registeredBigWigsEvents[event] = true
+      if event == "BigWigs_SetStage" then
+        -- on init of BigWigs_SetStage callback, we want to fetch currentStage in case we are already in an encounter when this is run
+        if BigWigs and BigWigs.IterateBossModules then
+          local stage = 0
+          for _, module in BigWigs:IterateBossModules() do
+            if module:IsEngaged() then
+              stage = math.max(stage, module:GetStage() or 1)
+            end
+          end
+          currentStage = stage
+        end
+      end
     end
   end
 
@@ -3929,12 +3999,12 @@ do
       -- on dragonflight UNIT_SPELLCAST_EMPOWER_START and UNIT_SPELLCAST_EMPOWER_STOP OnEvent are
       -- triggered from cacheEmpoweredFrame after updating cache use by WeakAuras.UnitChannelInfo
 
-      castLatencyFrame:SetScript("OnEvent", function(self, event)
+      castLatencyFrame:SetScript("OnEvent", function(self, event, ...)
         if event == "CURRENT_SPELL_CAST_CHANGED" then
           castLatencyFrame.sendTime = GetTime()
           return
         end
-        if event == "UNIT_SPELLCAST_SUCCEEDED" then
+        if event == "UNIT_SPELLCAST_SUCCEEDED" or event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_INTERRUPTED" then
           castLatencyFrame.sendTime = nil
           return
         end

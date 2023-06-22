@@ -253,10 +253,11 @@ L.Area_CountdownOptions		= "倒數選項"
 L.Area_VoicePackReplace		= "語音包替換選項 (選擇那些語音包要啟用、靜音以及替換)"
 L.VPReplaceNote				= "注意: 語音包永遠不會更改或刪除警告聲音。\n當替換語音包時，只是被簡單地靜音。"
 L.ReplacesAnnounce			= "替換提示聲音 (注意: 語音包除了階段轉換以及小怪外很少使用)"
-L.ReplacesSA1				= "替換特別提示 1 聲音 (個人的 'pvp拔旗')"
+L.ReplacesSA1				= "替換特別提示 1 聲音 (個人的 'pvp拔旗' 非地板技能警告)"
 L.ReplacesSA2				= "替換特別提示 2 聲音 (每個人 '當心')"
 L.ReplacesSA3				= "替換特別提示 3 聲音 (高優先級的 'airhorn')"
 L.ReplacesSA4				= "替換特別提示 4 聲音 (高優先級的 '快跑')"
+L.ReplacesGTFO				= "替換特別提示 地板技能警告 聲音"
 L.ReplacesCustom			= "替換特別提示 自定義使用者設置 (每個警告)(不建議)"
 L.Area_VoicePackAdvOptions	= "語音包進階選項"
 L.SpecWarn_AlwaysVoice		= "總是播放所有語音警告 (即使已禁用特別警告，對團隊領隊是有用的，除此之外不建議使用)"
@@ -371,6 +372,48 @@ L.Area_BlizzFiltersSetup	= "暴雪過濾器指南"
 -- Panel: DBM Features
 L.Panel_SpamFilter					= "DBM功能設置"
 
+L.Area_SpamFilter_SpecFeatures		= "通告功能"
+L.SpamBlockNoShowAnnounce			= "不顯示任何一般（非強調）通告提示文字或播放警告音效"
+L.SpamBlockNoSpecWarnText			= "不顯示特別提示文字"
+L.SpamBlockNoSpecWarnFlash			= "特別提示時不閃爍螢幕"
+L.SpamBlockNoSpecWarnVibrate		= "特別提示時不震動控制器"
+L.SpamBlockNoSpecWarnSound			= "不播放特別提示音效 (如果在“語音警告”面板中啟用了語音包，則仍允許語音包)"
+
+L.Area_SpamFilter_Timers			= "全局計時禁用及過濾選項"
+L.SpamBlockNoShowBossTimers			= "不顯示地城/團隊首領的計時器"
+L.SpamBlockNoShowTrashTimers		= "不顯示地城/團隊小怪的計時器(注意: 這也會停用名條的技能冷卻)"
+L.SpamBlockNoShowEventTimers		= "不顯示事件與提示計時器(佇列提示/首領重生..等)"
+L.SpamBlockNoShowUTimers			= "不顯示玩家送出的計時器(自訂/拉怪/休息)"
+L.SpamBlockNoCountdowns				= "不播放倒數音效"
+
+L.Area_SpamFilter_Nameplates		= "名條通用禁止 & 過濾選項"
+L.SpamBlockNoNameplate				= "不要顯示名條光環"
+L.SpamBlockNoBossGUIDs				= "不要在plater名條上顯示主要首領(首領1)計時器作為名條光環\n(如果在Plater中啟用了功能，您仍然會看到小怪/首領計時器）"
+L.SpamBlockTimersWithNameplates		= "如果在Plater選項中啟用了Plaster名條光環 CD，不要顯示小怪的計時條(不適用於首領戰，這將始終顯示計時條）"
+L.NameplateFooter					= "可用的其他功能，如果啟用了Plater名條"
+
+L.Area_SpamFilter_Misc				= "全局其他禁用及過濾選項"
+L.SpamBlockNoSetIcon				= "不設置標記在目標上"
+L.SpamBlockNoRangeFrame				= "不顯示距離框架"
+L.SpamBlockNoInfoFrame				= "不顯示訊息框架"
+L.SpamBlockNoHudMap					= "不要顯示HudMap"
+
+L.SpamBlockNoYells					= "不送出大喊至頻道"
+L.SpamBlockNoNoteSync				= "不接受註記分享"
+L.SpamBlockAutoGossip				= "不要自動處理對話內容"
+
+L.Area_Restore						= "DBM還原選項(DBM是否還原至使用者過去狀態)"
+L.SpamBlockNoIconRestore			= "不在戰鬥結束後記住和還原團隊圖示狀態"
+L.SpamBlockNoRangeRestore			= "不因模組預設值還原距離框架的狀態"
+
+L.Area_PullTimer					= "開怪、休息、戰鬥和自定義計時器過濾器選項"
+L.DontShowPTNoID					= "阻擋與你不同區域ID送出的開怪倒數計時條(永遠不會阻擋在沒有區域ID的情況下發送的Bigwigs計時器)"
+L.DontShowPT						= "不要顯示開怪/休息倒數計時條"
+L.DontShowPTText					= "不要顯示開怪/休息計時提示文字"
+L.DontShowPTCountdownText			= "不要顯示開怪計時倒數文字"
+L.DontPlayPTCountdown				= "完全不要播放開怪/休息/開戰/自訂計時器倒數音效"
+L.PT_Threshold						= "不要播放高於%d秒以上的休息/開戰/自訂倒數計時器音效"
+
 -- Panel: Reduce Information
 L.Panel_ReducedInformation			= "減少訊息"
 
@@ -379,59 +422,23 @@ L.SpamBlockNoShowAnnounce			= "不顯示任何提示文字或播放警告音效"
 L.SpamBlockNoShowTgtAnnounce		= "不顯示目標的提示文字或播放警告音效 (上列選項會覆蓋此選項)"
 L.SpamBlockNoTrivialSpecWarnSound	= "如果相對你等級是不重要的內容則不要播放特別提示音效 (播放使用者選擇的標準提示音效替代)"
 
-L.Area_SpamFilter_SpecRoleFilters	= "特別提示類型過濾（控制DBM要怎麼做）"
-L.SpamSpecInformationalOnly			= "從特別警告中刪除所有說明文字/語音警告 (需要重載UI)。警報仍顯示和播放聲音，但將是通用和非指示性"
-L.SpamSpecRoleDispel				= "完全過濾 '驅散' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleInterrupt				= "過濾 '打斷' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleDefensive				= "過濾 '減傷' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleTaunt					= "過濾 '嘲諷' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleSoak					= "過濾 '吸收' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleStack					= "過濾 '疊加層數' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleSwitch				= "過濾 '切換目標''小怪' 警報 (完全無文字或聲音)"
-L.SpamSpecRoleGTFO					= "過濾 '地面有害技能' 警報 (完全無文字或聲音)"
+L.Area_SpamFilter					= "垃圾過濾選項"
+L.DontShowFarWarnings				= "不發送距離過遠的事件提示/計時器"
+L.StripServerName					= "隱藏警告、計時器、距離檢測以及資訊框架的玩家伺服器名稱"
+L.FilterVoidFormSay					= "在虛空型態時不要發送圖示/倒數計時聊天喊話(仍會發送標準聊天喊話)"
 
+L.Area_SpecFilter					= "角色職責過濾選項"
+L.FilterTankSpec					= "非坦克角色職責時過濾掉坦克專精的特定警告 (註:不建議玩家關閉此選項因大多數的坦克嘲諷警告都是預設開啟。)"
+L.FilterDispels						= "過濾可驅散技能如果你的驅散技正在冷卻中"
+L.FilterTrashWarnings				= "過濾所有小怪警告在普通與英雄以及過往版本的地城"
 
-L.Area_SpamFilter_SpecFeatures		= "特別提示功能切換"
-L.SpamBlockNoSpecWarnText			= "不顯示特別提示文字"
-L.SpamBlockNoSpecWarnFlash			= "特別提示時不閃爍螢幕"
-L.SpamBlockNoSpecWarnVibrate		= "特別提示時不震動控制器"
-L.SpamBlockNoSpecWarnSound			= "不播放特別提示音效 (如果在“語音警告”面板中啟用了語音包，則仍允許語音包)"
-
-
-L.Area_SpamFilter_Timers	= "全局計時禁用及過濾選項"
-L.SpamBlockNoShowTimers		= "不顯示計時器(首領模組/挑戰模式/尋求組隊/重生)"
-L.SpamBlockNoShowUTimers	= "不顯示玩家送出的計時器(自訂/拉怪/休息)"
-L.SpamBlockNoCountdowns		= "不播放倒數音效"
-
-L.Area_SpamFilter_Misc		= "全局其他禁用及過濾選項"
-L.SpamBlockNoSetIcon		= "不設置標記在目標上"
-L.SpamBlockNoRangeFrame		= "不顯示距離框架"
-L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
-L.SpamBlockNoHudMap			= "不要顯示HudMap"
-L.SpamBlockNoNameplate		= "不要顯示名條光環 "
-L.SpamBlockNoYells			= "不送出大喊至頻道"
-L.SpamBlockNoNoteSync		= "不接受註記分享"
-L.SpamBlockAutoGossip		= "不要自動處理對話內容"
-
-L.Area_Restore				= "DBM還原選項(DBM是否還原至使用者過去狀態)"
-L.SpamBlockNoIconRestore	= "不在戰鬥結束後記住和還原團隊圖示狀態"
-L.SpamBlockNoRangeRestore	= "不因模組預設值還原距離框架的狀態"
-
-L.Area_SpamFilter			= "垃圾過濾選項"
-L.DontShowFarWarnings		= "不發送距離過遠的事件提示/計時器"
-L.StripServerName			= "隱藏警告、計時器、距離檢測以及資訊框架的玩家伺服器名稱"
-L.FilterVoidFormSay			= "在虛空型態時不要發送圖示/倒數計時聊天喊話(仍會發送標準聊天喊話)"
-
-L.Area_SpecFilter			= "角色職責過濾選項"
-L.FilterTankSpec			= "非坦克角色職責時過濾掉坦克專精的特定警告 (註:不建議玩家關閉此選項因大多數的坦克嘲諷警告都是預設開啟。)"
-L.FilterInterruptsHeader	= "過濾可中斷技能的警告基於以下行為偏好。"
-L.SWFNever					= "永不"
-L.FilterInterrupts			= "如果施法者不是你的目標/專注目標(總是)。"
-L.FilterInterrupts2			= "如果施法者不是你的目標/專注目標(總是)或中斷在冷卻中(只適用首領)"
-L.FilterInterrupts3			= "如果施法者不是你的目標/專注目標(總是)或中斷在冷卻中(首領&小怪)"
-L.FilterInterruptNoteName	= "過濾可中斷技能的警告(與次數)，如果自訂註記警告沒有包含你的名字"
-L.FilterDispels				= "過濾可驅散技能如果你的驅散技正在冷卻中"
-L.FilterTrashWarnings		= "過濾所有小怪警告在普通與英雄以及過往版本的地城"
+L.Area_BInterruptFilter				= "首領打斷過濾選項"
+L.FilterTargetFocus					= "過濾如果施法者不是你的目標/專注目標"
+L.FilterInterruptCooldown			= "過濾如果打斷技能正在冷卻中"
+L.FilterInterruptHealer				= "過濾如果你不是治療專精"
+L.FilterInterruptNoteName			= "過濾如果警告有計數，但自訂註記警告沒有包含你的名字"--Only used on bosses, trash mods don't assign counts
+L.Area_BInterruptFilterFooter		= "如果未勾選過濾選項，所有打斷都將顯示(可能會有點刷屏)\n如果法術至關重要，有些模組可能會完全忽略這些過濾器"
+L.Area_TInterruptFilter				= "小怪打斷過濾選項"--Reuses above 3 strings
 
 -- Panel: DBM Handholding
 L.Panel_HandFilter					= "減少DBM的控制"
@@ -446,29 +453,21 @@ L.SpamSpecRoleStack					= "過濾'高層數'警告 (完全無文字或聲音)"
 L.SpamSpecRoleSwitch				= "過濾'切換目標''小怪' 警報 (完全無文字或聲音)"
 L.SpamSpecRoleGTFO					= "過濾'地板技能'警告 (完全無文字或聲音)"
 
-L.Area_PullTimer			= "開怪、休息、戰鬥和自定義計時器過濾器選項"
-L.DontShowPTNoID			= "阻擋與你不同區域ID送出的開怪倒數計時條"
-L.DontShowPT				= "不要顯示開怪/休息倒數計時條"
-L.DontShowPTText			= "不要顯示開怪/休息提示文字"
-L.DontShowPTCountdownText	= "不要顯示開怪計時倒數文字"
-L.DontPlayPTCountdown		= "完全不要播放開怪/休息/開戰/自訂計時器倒數音效"
-L.PT_Threshold				= "不要播放高於%d秒以上的休息/開戰/自訂倒數計時器音效"
-
 -- Panel: Blizzard Features
-L.Panel_HideBlizzard		= "暴雪內建功能設置"
-L.Area_HideBlizzard			= "禁用及隱藏暴雪功能選項"
-L.HideBossEmoteFrame		= "首領戰鬥時隱藏團隊首領表情框架"
-L.HideWatchFrame			= "首領戰鬥時隱藏任務目標框架。如果沒有追蹤中的成就，或是不在傳奇+。"
-L.HideGarrisonUpdates		= "首領戰鬥時隱藏追隨者任務完成提示"
-L.HideGuildChallengeUpdates	= "首領戰鬥時隱藏公會挑戰完成提示"
-L.HideQuestTooltips			= "首領戰鬥時隱藏任務目標提示"
-L.HideTooltips				= "首領戰鬥時完全地隱藏滑鼠提示"
-L.DisableSFX				= "首領戰鬥時禁用音效頻道（注意：如果啟用此選項，則即使戰鬥進入時音效未打開，戰鬥結束時也會打開聲音效果）"
-L.DisableCinematics			= "禁用遊戲中的過場動畫"
-L.OnlyFight					= "只有戰鬥中，每次動畫播放一次之後"
-L.AfterFirst				= "在副本中，每次動畫播放一次之後"
-L.CombatOnly				= "在任何戰鬥中停用"
-L.RaidCombat				= "只在首領戰鬥中停用"
+L.Panel_HideBlizzard			= "暴雪內建功能設置"
+L.Area_HideBlizzard				= "禁用及隱藏暴雪功能選項"
+L.HideBossEmoteFrame			= "首領戰鬥時隱藏團隊首領表情框架"
+L.HideWatchFrame				= "首領戰鬥時隱藏任務目標框架。如果沒有追蹤中的成就，或是不在傳奇+。"
+L.HideGarrisonUpdates			= "首領戰鬥時隱藏追隨者任務完成提示"
+L.HideGuildChallengeUpdates		= "首領戰鬥時隱藏公會挑戰完成提示"
+L.HideQuestTooltips				= "首領戰鬥時隱藏任務目標提示"
+L.HideTooltips					= "首領戰鬥時完全地隱藏滑鼠提示"
+L.DisableSFX					= "首領戰鬥時禁用音效頻道（注意：如果啟用此選項，則即使戰鬥進入時音效未打開，戰鬥結束時也會打開聲音效果）"
+L.DisableCinematics				= "禁用遊戲中的過場動畫"
+L.OnlyFight						= "只有戰鬥中，每次動畫播放一次之後"
+L.AfterFirst					= "在副本中，每次動畫播放一次之後"
+L.CombatOnly					= "在任何戰鬥中停用"
+L.RaidCombat					= "只在首領戰鬥中停用"
 
 -- Panel: Raid Leader Controls
 L.Tab_RLControls					= "團隊領隊控制項"
@@ -477,6 +476,10 @@ L.OverrideIcons 					= "禁用團隊中所有玩家的圖示標記，包括我�
 L.OverrideSay						= "禁用團隊中所有玩家的聊天泡泡/說訊息，包含我自己"
 L.DisableStatusWhisperShort			= "禁用整個團隊的狀態/回覆密語"--Duplicated from privacy but makes sense to include option in both panels
 L.DisableGuildStatusShort			= "禁用整個團隊同步到公會的進度訊息"--Duplicated from privacy but makes sense to include option in both panels
+--L.DisabledForDropdown				= "Choose boss mod(s) disable is sent to"--NYI
+--L.DiabledForBoth					= "Disable above features for both DBM and BW"--NYI
+--L.DiabledForDBM					= "Disable above features for only DBM users"--NYI
+--L.DiabledForBW					= "Disable above features for only BW users"--NYI
 
 L.Area_ConfigOverrides				= "設定覆蓋選項 (施工中, 稍後完成)"--NYI
 L.OverrideBossAnnounceOptions		= "將所有DBM玩家的通告配置設定為我的配置"--NYI

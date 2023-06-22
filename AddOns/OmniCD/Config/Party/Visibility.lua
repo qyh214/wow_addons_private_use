@@ -39,7 +39,7 @@ local visibility = {
 			}
 		},
 		groupSize = {
-			name = E.STR.WHATS_NEW_ESCSEQ .. L["Group Size"],
+			name = L["Group Size"],
 			order = 30,
 			type = "group",
 			inline = true,

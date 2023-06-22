@@ -143,7 +143,7 @@ end
 function M:OnInitialize()
     _DBG("|cffffff00Init|r - "..self:GetName(), true)
     db = KT.db.profile
-    self.isLoadedMasque = (KT:CheckAddOn("Masque", "10.0.5") and db.addonMasque)
+    self.isLoadedMasque = (KT:CheckAddOn("Masque", "10.1.1") and db.addonMasque)
 
     if self.isLoadedMasque then
         KT:Alert_IncompatibleAddon("Masque", "10.0.1")

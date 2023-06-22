@@ -1,4 +1,4 @@
--- Generated from CurseForge on Thu May  4 19:43:26 UTC 2023
+-- Generated from CurseForge on Wed Jun 21 21:15:52 UTC 2023
 local ns = select(2, ...) ---@type ns @The addon namespace.
 
 if ns:IsSameLocale("koKR") then
@@ -15,10 +15,8 @@ L["API_DEPRECATED_UNKNOWN_ADDON"] = "<알수없는 애드온>"
 L["API_DEPRECATED_UNKNOWN_FILE"] = "<알수 없는 애드온 파일>"
 L["API_DEPRECATED_WITH"] = "|cffFF0000경고!|r addon |cffFFFFFF%s|r은(는) 더 이상 사용되지 않는 RaiderIO.%s. 함수를 호출합니다. 이 기능은 향후 릴리스에서 제거 될 예정입니다. %s의 작성자가 대신 새 API RaiderIO.%s로 업데이트하는 것이 좋습니다. 콜 스택: %s"
 L["API_INVALID_DATABASE"] = "|cffff0000 경고!|r |cffffffff%s|r에서 잘못된 RaiderIO 데이터베이스를 감지했습니다. RaiderIO Client에서 모든 지역과 진영을 새로 고치거나 Addon을 수동으로 다시 설치하십시오."
---[[Translation missing --]]
---[[ L["AUTO_COMBATLOG"] = ""--]] 
---[[Translation missing --]]
---[[ L["AUTO_COMBATLOG_DESC"] = ""--]] 
+L["AUTO_COMBATLOG"] = "던전 & 공격대에서 자동으로 전투로그 기록 활성"
+L["AUTO_COMBATLOG_DESC"] = "지원되는 던전,공격대에 입장 및 퇴장 시 자동으로 전투로그 기록을 활성하거나 해제합니다."
 L["BEST_FOR_DUNGEON"] = "던전 최고 기록"
 L["BEST_RUN"] = "최고 기록"
 L["BEST_SCORE"] = "최고 쐐기 점수 (%s)"
@@ -75,15 +73,20 @@ L["DISABLE_DEBUG_MODE_RELOAD"] = [=[귀하는 디버그 모드를 비활성화�
 L["DPS"] = "|cffFF3636공격전담|r"
 L["DUNGEON_SHORT_NAME_AA"] = "대학"
 L["DUNGEON_SHORT_NAME_AV"] = "하늘빛"
+L["DUNGEON_SHORT_NAME_BH"] = "담쟁이"
 L["DUNGEON_SHORT_NAME_COS"] = "별궁"
 L["DUNGEON_SHORT_NAME_DOS"] = "저편"
+L["DUNGEON_SHORT_NAME_FH"] = "자유"
 L["DUNGEON_SHORT_NAME_GD"] = "정비소"
 L["DUNGEON_SHORT_NAME_GMBT"] = "승부수"
 L["DUNGEON_SHORT_NAME_HOA"] = "속죄"
+L["DUNGEON_SHORT_NAME_HOI"] = "주입"
 L["DUNGEON_SHORT_NAME_HOV"] = "용전"
 L["DUNGEON_SHORT_NAME_ID"] = "선착장"
 L["DUNGEON_SHORT_NAME_LOWR"] = "하층"
 L["DUNGEON_SHORT_NAME_MISTS"] = "티르"
+L["DUNGEON_SHORT_NAME_NELT"] = "넬루"
+L["DUNGEON_SHORT_NAME_NL"] = "넬둥"
 L["DUNGEON_SHORT_NAME_NO"] = "노쿠드"
 L["DUNGEON_SHORT_NAME_NW"] = "죽상"
 L["DUNGEON_SHORT_NAME_PF"] = "역병"
@@ -94,8 +97,11 @@ L["DUNGEON_SHORT_NAME_SOA"] = "승천"
 L["DUNGEON_SHORT_NAME_STRT"] = "거리"
 L["DUNGEON_SHORT_NAME_TJS"] = "옥룡사"
 L["DUNGEON_SHORT_NAME_TOP"] = "투기장"
+L["DUNGEON_SHORT_NAME_ULD"] = "울다만"
+L["DUNGEON_SHORT_NAME_UNDR"] = "썩은굴"
 L["DUNGEON_SHORT_NAME_UPPR"] = "상층"
 L["DUNGEON_SHORT_NAME_VOTW"] = "금고"
+L["DUNGEON_SHORT_NAME_VP"] = "누각"
 L["DUNGEON_SHORT_NAME_WORK"] = "작업장"
 L["DUNGEON_SHORT_NAME_YARD"] = "고철장"
 L["ENABLE_AUTO_FRAME_POSITION"] = "내 프로필 프레임 위치 자동화"
@@ -111,10 +117,8 @@ L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "RaiderIO 클라이언트 항상 허�
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "이 기능을 사용하면 RaiderIO Client에서 다운로드 한 자세한 RaiderIO 프로필 데이터를 확인하여 사용자의 정보를 볼 수 있습니다."
 --[[Translation missing --]]
 --[[ L["ENABLE_RWF_MODE_BUTTON"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["ENABLE_RWF_MODE_RELOAD"] = ""--]] 
+L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "월드 퍼스트 레이스 모드를 활성화합니다. UI가 재시작됩니다."
+L["ENABLE_RWF_MODE_RELOAD"] = "월드 퍼스트 레이스(Race to World First) 모드를 활성화하고 있습니다. 신화적인 세계 최초 달성을 위한 경쟁에 사용하기 위한 것이며, 데이터 업로드를 위해 Raider.IO 클라이언트와 함께 사용해야 합니다. 확인을 클릭하면 인터페이스가 다시 로드됩니다."
 L["ENABLE_SIMPLE_SCORE_COLORS"] = "표준 색상 사용"
 L["ENABLE_SIMPLE_SCORE_COLORS_DESC"] = "표준 아이템 품질의 색상만으로 점수를 표시합니다. 이렇게 하면 색각 보정이 필요한 사람들이 점수 등급을 쉽게 구분할 수 있습니다."
 L["EXPORTJSON_COPY_TEXT"] = "다음을 복사하여 |cff00C8FFhttps://raider.io|r에 붙여 넣어 모든 플레이어를 찾으십시오."
@@ -172,6 +176,17 @@ L["PROFILE_BEST_RUNS"] = "던전별 최고 기록"
 --[[Translation missing --]]
 --[[ L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = ""--]] 
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000경고:|r |cffFFFFFF%s|r은(는) 현재 진영에 대한 데이터를 찾을 수 없습니다. |cffFFFFFF/raiderio|r 설정을 확인하고 |cffFFFFFF%s|r에 대한 툴팁 데이터를 활성화하십시오."
+--[[Translation missing --]]
+--[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["RAID_BOSS_ATSC_1"] = "지옥벼림 카자라"
+L["RAID_BOSS_ATSC_2"] = "융합체의 방"
+L["RAID_BOSS_ATSC_3"] = "잊힌 실험체"
+L["RAID_BOSS_ATSC_4"] = "자칼리의 습격"
+L["RAID_BOSS_ATSC_5"] = "장로 라소크"
+L["RAID_BOSS_ATSC_6"] = "경계하는 청지기 지스카른"
+L["RAID_BOSS_ATSC_7"] = "마그모락스"
+L["RAID_BOSS_ATSC_8"] = "넬타리온의 메아리"
+L["RAID_BOSS_ATSC_9"] = "비늘사령관 사카레스"
 L["RAID_BOSS_CN_1"] = "절규날개"
 L["RAID_BOSS_CN_10"] = "대영주 데나트리우스"
 L["RAID_BOSS_CN_2"] = "사냥꾼 알티모르"
@@ -269,6 +284,14 @@ L["RELOAD_NOW"] = "지금 다시 불러오기"
 --[[ L["RELOAD_RWF_MODE_BUTTON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]

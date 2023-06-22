@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(2506, "DBM-DragonIsles", nil, 1205)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230111000939")
+mod:SetRevision("20230603080252")
 mod:SetCreatureID(193535)
 mod:SetEncounterID(2640)
 mod:SetReCombatTime(20)
@@ -34,7 +34,7 @@ local specWarnEarthBolt					= mod:NewSpecialWarningInterrupt(385652, "HasInterru
 local timerSunderingCrashCD				= mod:NewAITimer(74.7, 386259, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerAwakenCragCD					= mod:NewCDTimer(36.6, 385506, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)--Wild Variation, but also world lag
 local timerFracturingTremorCD			= mod:NewCDTimer(13.9, 385270, nil, nil, nil, 3)
-local timerShaleBreathCD				= mod:NewCDTimer(16.9, 385137, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerShaleBreathCD				= mod:NewCDTimer(15.9, 385137, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 
 --mod:AddRangeFrameOption(5, 361632)
 

@@ -1,4 +1,4 @@
- 	-- Updated for 10.0.2 November 15th, 2022 GRM ver 1.948 (Classic/Wrath/Live Retail Compatible)
+ 	-- Updated April 20th 2023 GRM ver 1.972 (Classic/Wrath/Live Retail Compatible)
 
 local AS = unpack(AddOnSkins)
 local GRM = {}
@@ -12,7 +12,7 @@ function AS:GuildRosterManager()
 
 	-- Stylistic choice for GRM
 	local AdjustSliderThumbFrameLevel = function ( thumb )
-		thumb.Backdrop:SetFrameLevel ( thumb.Backdrop:GetFrameLevel() - 2 )
+		thumb.backdrop:SetFrameLevel( thumb.backdrop:GetFrameLevel() - 2 )
 	end
 
 	--------------------
@@ -126,10 +126,6 @@ function AS:GuildRosterManager()
 	AS:SkinButton(GRM_CustomRankResetButton)
 	AS:SkinButton(GRM_HardResetButton)
 	AS:SkinButton(GRM_ExportGlobalControlButton)
-	AS:SkinButton(GRM_OpenMacroToolButton)
-	AS:SkinButton(GRM_OpenMouseoverButton)
-	AS:SkinButton(GRM_OpenExportToolButton)
-	AS:SkinButton(GRM_OpenAuditJoinDateToolButton)
 	AS:SkinButton(GRM_RosterResetOptionsButton)
 	AS:SkinFrame(GRM_DefaultTabSelected)
 	AS:SkinFrame(GRM_DefaultTabMenu	)
@@ -174,8 +170,6 @@ function AS:GuildRosterManager()
 	AS:SkinCheckBox(GRM_LevelFilter4Button)
 	AS:SkinCheckBox(GRM_LevelFilter5Button)
 	AS:SkinCheckBox(GRM_LevelFilter6Button)
-	AS:SkinCheckBox(GRM_AnnounceBdaysOnLoginButton)
-
 	if GRM_LevelFilter7Button then
 		AS:SkinCheckBox(GRM_LevelFilter7Button)	-- 10.0 with level 70 introduced need for
 	end
@@ -197,6 +191,7 @@ function AS:GuildRosterManager()
 	AS:SkinCheckBox(GRM_BDaySyncCheckBox)
 	AS:SkinCheckBox(GRM_RosterNotifyOnChangesCheckButton)
 	AS:SkinEditBox(GRM_AutoTriggerTimeEditBox)
+	AS:SkinButton(GRM_SyncProgressButton)
 
 	-- Officer Tab
 	AS:SkinCheckBox(GRM_RosterAddTimestampCheckButton)
@@ -210,10 +205,7 @@ function AS:GuildRosterManager()
 	AS:SkinEditBox(GRM_CustomTagREJoinEditBox)
 
 	-- Backup Tab
-	AS:SkinCheckBox(GRM_AutoBackupCheckBox)
-	AS:SkinEditBox(GRM_AutoBackupTimeEditBox)
-	AS:SkinButton(GRM_HordeTab)
-	AS:SkinButton(GRM_AllianceTab)
+	AS:SkinButton(GRM_TransferGuideButton)
 
 	-- UX (UI) Tab
 	AS:SkinCheckBox(GRM_FadeCheckButton)
@@ -221,13 +213,12 @@ function AS:GuildRosterManager()
 	AS:SkinCheckBox(GRM_ReputationToggleButton)
 	AS:SkinCheckBox(GRM_BirthdayToggleButton)
 	AS:SkinCheckBox(GRM_ColorizePlayerNamesButton)
-	AS:SkinSlideBar(GRM_CoreWindowScaleSlider)
-	AS:SkinSlideBar(GRM_MouseOverScaleSlider)
-	AS:SkinSlideBar(GRM_MacroToolScaleSlider)
-	AS:SkinSlideBar(GRM_ExportToolScaleSlider)
-	AS:SkinSlideBar(GRM_AdvancedAuditToolScaleSlider)
+	AS:SkinCheckBox(GRM_ShowLevelCheckButton)
+	AS:SkinCheckBox(GRM_ShowLevelCheckButton2)
+	AS:SkinCheckBox(GRM_ShowMythicRatingButton)
 
-	------------------------------
+
+	----------------------------
 	-- Add Event to Calendar Frame
 	------------------------------
 	GRM_AddEventScrollBorderFrameBottomBorder:Hide()
@@ -246,7 +237,7 @@ function AS:GuildRosterManager()
 	AS:SkinButton(GRM_EventsFrameIgnoreAllButton)
 
 	--------------------
-	--Ban List
+	-- Ban List
 	--------------------
 	GRM_CoreBanListScrollBorderFrameBottomBorder:Hide()
 	GRM_CoreBanListScrollBorderFrameTopBorder:Hide()
@@ -656,7 +647,7 @@ function AS:GuildRosterManager()
 			GRM_UI.GRM_MemberDetailMetaData.GRM_MemberDetailDateJoinedTitleTxt:SetFont ( GRM_G.FontChoice , GRM_G.FontModifier + 9 , "NONE" );
 			GRM_UI.GRM_MemberDetailMetaData.GRM_MemberDetailBirthdayTitleText:SetFont ( GRM_G.FontChoice , GRM_G.FontModifier + 9 , "NONE" );
 			GRM_UI.GRM_MemberDetailMetaData.GRM_altFrameTitleText:SetFont ( GRM_G.FontChoice , GRM_G.FontModifier + 8 , "NONE" );
-			GRM_UI.GRM_CoreAltFrame.GRM_AddAltEditFrame.GRM_AddAltTitleText:SetFont ( GRM_G.FontChoice , GRM_G.FontModifier + 11 , "NONE" );
+			GRM_UI.GRM_MemberDetailMetaData.GRM_CoreAltFrame.GRM_AddAltEditFrame.GRM_AddAltTitleText:SetFont ( GRM_G.FontChoice , GRM_G.FontModifier + 11 , "NONE" );
 
 			-- Tooltip Scaling should be a bit bigger
 			GRM_MemberDetailNJDSyncTooltip:SetScale ( 0.85 )
@@ -757,7 +748,6 @@ function AS:GuildRosterManager()
 			AS:SkinFrame(GRM_RosterReportUpcomingEventsOverlayNote)
 			AS:SkinFrame(GRM_RosterMinLvlOverlayNote)
 			AS:SkinFrame(GRM_AutoTriggerTimeOverlayNote)
-			AS:SkinFrame(GRM_AutoBackupTimeOverlayNote)
 
 			isLoaded2 = true
 		end

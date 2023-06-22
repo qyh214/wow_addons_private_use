@@ -120,6 +120,12 @@ function KT.IsInBetween()  -- Shadowlands
     return (UnitOnTaxi("player") and KT.GetCurrentMapAreaID() == 1550)
 end
 
+-- Quests
+function KT.GetQuestRewardSpells(questID)
+    local spellRewards = C_QuestInfoSystem.GetQuestRewardSpells(questID) or {}
+    return #spellRewards, spellRewards
+end
+
 -- RGB to Hex
 local function DecToHex(num)
     local b, k, hex, d = 16, "0123456789abcdef", "", 0
@@ -151,7 +157,7 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
     local artifactXP = GetQuestLogRewardArtifactXP(questID)
     local numQuestCurrencies = GetNumQuestLogRewardCurrencies(questID)
     local numQuestRewards = GetNumQuestLogRewards(questID)
-    local numQuestSpellRewards = GetNumQuestLogRewardSpells(questID)
+    local numQuestSpellRewards, questSpellRewards = KT.GetQuestRewardSpells(questID)
     local numQuestChoices = GetNumQuestLogChoices(questID, true)
     local honor = GetQuestLogRewardHonor(questID)
     local majorFactionRepRewards = C_QuestLog.GetQuestLogMajorFactionReputationRewards(questID)
@@ -225,10 +231,13 @@ function KT.GameTooltip_AddQuestRewardsToTooltip(tooltip, questID, isBonus)
         end
 
         -- spells
-        for i = 1, numQuestSpellRewards do
-            local texture, name = GetQuestLogRewardSpell(i, questID)
-            if name and texture then
-                tooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_FORMAT, texture, name), 1, 1, 1)
+        if numQuestSpellRewards > 0 then
+            for _, spellID in ipairs(questSpellRewards) do
+                local spellInfo = C_QuestInfoSystem.GetQuestRewardSpellInfo(questID, spellID)
+                local knownSpell = IsSpellKnownOrOverridesKnown(spellID)
+                if spellInfo and spellInfo.texture and spellInfo.name and not knownSpell and (not spellInfo.isBoostSpell or IsCharacterNewlyBoosted()) and (not spellInfo.garrFollowerID or not C_Garrison.IsFollowerCollected(spellInfo.garrFollowerID)) then
+                    tooltip:AddLine(format(BONUS_OBJECTIVE_REWARD_FORMAT, spellInfo.texture, spellInfo.name), 1, 1, 1)
+                end
             end
         end
 
@@ -317,7 +326,7 @@ end
 -- Scenario
 function KT.IsScenarioHidden()
     local _, _, numStages = C_Scenario.GetInfo()
-    return numStages == 0 or IsOnGroundFloorInJailersTower()
+    return numStages == 0 or not ShouldShowMawBuffs() or IsOnGroundFloorInJailersTower()
 end
 
 -- Time

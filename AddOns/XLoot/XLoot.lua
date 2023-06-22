@@ -1,3 +1,4 @@
+---@class XLootAddon: AceAddon
 local XLoot = LibStub("AceAddon-3.0"):NewAddon(select(2, ...), "XLoot")
 _G.XLoot = XLoot
 local L = XLoot.L
@@ -12,12 +13,13 @@ local defaults = {
 	}
 }
 
-
 -------------------------------------------------------------------------------
 -- Module helpers
 
 -- Return module localization with new module
 local _NewModule = XLoot.NewModule
+---@return XLootModule module
+---@return table localization
 function XLoot:NewModule(module_name, ...)
 	local new = _NewModule(self, module_name, ...)
 	return new, self["L_"..module_name]
@@ -75,13 +77,15 @@ function XLoot:ApplyOptions(in_options)
 end
 
 -- Add shortcuts for modules
-XLoot:SetDefaultModulePrototype({
+---@class XLootModule: AceAddon
+local XLootModule = {
+	opt = {},
 	InitializeModule = function(self, defaults, frame)
 		local module_name = self:GetName()
 		-- Set up DB namespace
 		self.db = XLoot.db:RegisterNamespace(module_name, defaults)
 		self.opt = self.db.profile
-		
+
 		function self.ShowOptions()
 			XLoot:ShowOptionPanel(self)
 		end
@@ -92,7 +96,8 @@ XLoot:SetDefaultModulePrototype({
 	end,
 	SetEventHandler = SetEventHandler,
 	OnProfileChanged = XLoot.OnProfileChanged,
-})
+}
+XLoot:SetDefaultModulePrototype(XLootModule)
 
 -------------------------------------------------------------------------------
 -- Prototype helper

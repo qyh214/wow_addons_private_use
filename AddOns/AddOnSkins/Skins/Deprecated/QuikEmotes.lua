@@ -1,0 +1,37 @@
+local AS, L, S, R = unpack(AddOnSkins)
+
+if not AS:CheckAddOn('QuikEmotes') then return end
+
+function R:QuikEmotes()
+	S:HandleFrame(Group1)
+	S:HandleButton(Button1)
+	S:HandleButton(Button2)
+	S:HandleButton(Button3)
+	S:HandleButton(Button4)
+	S:HandleButton(Button5)
+	S:HandleButton(Button6)
+	S:HandleButton(Button7)
+	S:HandleButton(Button8)
+	S:HandleButton(Button9)
+	S:HandleButton(Button10)
+	S:HandleButton(Button11)
+	S:HandleButton(Button12)
+	S:HandleButton(Button13)
+	S:HandleButton(Button14)
+	S:HandleButton(Button15)
+	S:HandleButton(Button16)
+	S:HandleButton(Button17)
+	S:HandleButton(Button18)
+	S:HandleButton(Button19)
+	S:HandleButton(Button20)
+	S:HandleButton(Button21)
+	S:HandleButton(Button22)
+	S:HandleFrame(Group2)
+	S:HandleFrame(Select)
+	S:HandleButton(List1)
+	S:HandleButton(List2)
+	S:HandleButton(All)
+
+end
+
+AS:RegisterSkin('QuikEmotes', R.QuikEmotes)

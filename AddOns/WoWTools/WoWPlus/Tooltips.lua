@@ -92,7 +92,7 @@ end
 --取得网页，数据链接
 --################
 StaticPopupDialogs["WowheadQuickLinkUrl"] = {
-    text= '|cffff00ff%s|r |cnGREEN_FONT_COLOR:CTRL+C |r'..BROWSER_COPY_LINK,
+    text= id..' '..addName..'|n|cffff00ff%s|r |cnGREEN_FONT_COLOR:Ctrl+C |r'..BROWSER_COPY_LINK,
     button1 = e.onlyChinese and '关闭' or CLOSE,
     OnShow = function(self, web)
         self.editBox:SetScript("OnEscapePressed", function(s) s:ClearFocus() s:GetParent():Hide() end)
@@ -103,13 +103,25 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
                 print(id,addName, '|cnGREEN_FONT_COLOR:'..(e.onlyChinese and '复制链接' or BROWSER_COPY_LINK)..'|r', s:GetText())
             end
         end)
-        self.editBox:SetScript('OnEditFocusLost', function(self2)
-            self2:SetTextColor(e.Player.r, e.Player.g, e.Player.b)
+        self.editBox:SetScript('OnEditFocusLost', function(s)
+            s:SetTextColor(0.82, 0.82, 0.82)
         end)
         self.editBox:SetScript('OnEditFocusGained', function(s)
+            s:SetText(web)
             s:SetTextColor(0,1,0)
             s:HighlightText()
         end)
+        --[[self.editBox:SetScript('OnTextChanged', function(s)
+            s:SetText(web)
+            s:SetTextColor(0,1,0)
+            s:HighlightText()
+        end)
+        self.editBox:SetScript('OnCursorChanged', function(s)
+            s:SetText(web)
+            s:SetTextColor(0,1,0)
+            s:HighlightText()
+        end)]]
+
         self.editBox:SetMaxLetters(0)
         self.editBox:SetWidth(self:GetWidth())
         self.editBox:SetText(web)
@@ -117,16 +129,28 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         self.editBox:SetAutoFocus(false)
         self.editBox:SetFocus(true)
         self.editBox:SetTextColor(0,1,0)
+
+        self.button1:SetText(e.onlyChinese and '关闭' or CLOSE)
+    end,
+    OnHide= function(self)
+        self.editBox:SetScript("OnEscapePressed", nil)
+        self.editBox:SetScript("OnEnterPressed", nil)
+        self.editBox:SetScript("OnKeyUp", nil)
+        self.editBox:SetScript('OnEditFocusLost', nil)
+        self.editBox:SetScript('OnEditFocusGained', nil)
+        --self.editBox:SetScript('OnTextChanged', nil)
+        --self.editBox:SetScript('OnCursorChanged', nil)
+        self.editBox:SetTextColor(1,1,1)
     end,
     hasEditBox = true,
-    editBoxWidth = 240,
+    editBoxWidth = 320,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
     --preferredIndex = 3,
 }
-
-local wowheadText= 'https://www.wowhead.com/%s=%d/%s'
+--https://www.wowhead.com/cn/pet-ability=509/汹涌
+local wowheadText= 'https://www.wowhead.com/%s=%d'
 local raiderioText= 'https://raider.io/characters/%s/%s/%s'
 if LOCALE_zhCN or LOCALE_zhTW then
     wowheadText= 'https://www.wowhead.com/cn/%s=%d/%s'
@@ -154,72 +178,77 @@ elseif LOCALE_koKR then
     raiderioText= 'https://raider.io/kr/characters/%s/%s/%s'
 end
 
-ItemRefTooltip.wowhead=e.Cbtn(ItemRefTooltip, {size={20,20},type=false})--取得网页，数据链接
-ItemRefTooltip.wowhead:SetPoint('RIGHT',ItemRefTooltip.CloseButton, 'LEFT',0,2)
-ItemRefTooltip.wowhead:SetNormalAtlas('questlegendary')
-ItemRefTooltip.wowhead:SetScript('OnClick', function(self)
-    if self.web then
-        StaticPopup_Show("WowheadQuickLinkUrl",
-            'WoWHead',
-            nil,
-            self.web
-        )
-    end
-end)
-ItemRefTooltip.wowhead:SetShown(false)
+local function create_Tooltip_Button(self)
+    self.wowhead=e.Cbtn(self, {size={20,20},type=false})--取得网页，数据链接
+    self.wowhead:SetPoint('RIGHT',self.CloseButton, 'LEFT',0,2)
+    self.wowhead:SetNormalAtlas('questlegendary')
+    self.wowhead:SetScript('OnClick', function(self)
+        if self.web then
+            StaticPopup_Show("WowheadQuickLinkUrl",
+                'WoWHead',
+                nil,
+                self.web
+            )
+        end
+    end)
+    self.wowhead:SetShown(false)
+end
 
 --get_Web_Link({frame=self, type='npc', id=companionID, name=speciesName, col=nil, isPetUI=false})--取得网页，数据链接 npc item spell currency
 --get_Web_Link({unitName=name, realm=realm, col=nil})--取得单位, raider.io 网页，数据链接
 local RegionName= GetCurrentRegionName()
 local function get_Web_Link(tab)
-    if tab.frame==ItemRefTooltip then
+    if tab.frame==ItemRefTooltip or tab.frame==FloatingBattlePetTooltip then
         if tab.type and tab.id then
-            ItemRefTooltip.wowhead.web=format(wowheadText, tab.type, tab.id, tab.name or '')
-            ItemRefTooltip.wowhead:SetShown(true)
+            if not tab.frame.wowhead then
+                create_Tooltip_Button(tab.frame)
+            end
+            tab.frame.wowhead.web=format(wowheadText, tab.type, tab.id, tab.name or '')
+            tab.frame.wowhead:SetShown(true)
         end
-    elseif Save.ctrl and  not UnitAffectingCombat('player') then
-        if tab.id then
-            if tab.type=='quest' then
-                if not tab.name then
-                    local index= C_QuestLog.GetLogIndexForQuestID(tab.id)
-                    local info= index and C_QuestLog.GetInfo(index)
-                    tab.name= info and info.title
-                end
+        return
+    end
+    if not Save.ctrl or UnitAffectingCombat('player')  then
+        return
+    end
+
+    if tab.id then
+        if tab.type=='quest' then
+            if not tab.name then
+                local index= C_QuestLog.GetLogIndexForQuestID(tab.id)
+                local info= index and C_QuestLog.GetInfo(index)
+                tab.name= info and info.title
             end
-            local web=format(wowheadText, tab.type, tab.id, tab.name or '')
-            if tab.isPetUI then
-                if tab.frame then
-                    BattlePetTooltipTemplate_AddTextLine(tab.frame, 'wowhead  Ctrl+Shift')
-                end
-            else
-                tab.frame:AddDoubleLine((tab.col or '')..'WoWHead', (tab.col or '')..'Ctrl+Shift')
-            end
-            if IsControlKeyDown() and IsShiftKeyDown() then
-                StaticPopup_Show("WowheadQuickLinkUrl",
-                    'WoWHead',
-                    nil,
-                    web
-                )
-            end
-        elseif tab.unitName then
+        end
+        if tab.isPetUI then
             if tab.frame then
-                tab.frame:SetText(e.Icon.info2..tab.col..'Raider.IO Shift+Ctrl')
-                tab.frame:SetShown(true)
-            else
-                e.tips:AddDoubleLine(e.Icon.info2..(tab.col or '')..'Raider.IO', (tab.col or '')..'Ctrl+Shift')
-                e.tips:SetShown(true)
+                BattlePetTooltipTemplate_AddTextLine(tab.frame, 'wowhead  Ctrl+Shift')
             end
-            if IsControlKeyDown() and IsShiftKeyDown() then
-                StaticPopup_Show("WowheadQuickLinkUrl",
-                    'Raider.IO',
-                    nil,
-                    format(raiderioText, RegionName, tab.realm or e.Player.realm, tab.unitName)
-                )
-            end
+        elseif tab.frame== e.tips then
+            tab.frame:AddDoubleLine((tab.col or '')..'WoWHead', (tab.col or '')..'Ctrl+Shift')
         end
-    elseif tab.frame and not tab.isPetUI then
-        tab.frame:SetText('')
-        tab.frame:SetShown(false)
+        if IsControlKeyDown() and IsShiftKeyDown() then
+            StaticPopup_Show("WowheadQuickLinkUrl",
+                'WoWHead',
+                nil,
+                format(wowheadText, tab.type, tab.id, tab.name or '')
+            )
+        end
+    elseif tab.unitName then
+        if tab.frame then
+            tab.frame:SetText(e.Icon.info2..(tab.col or '')..'Raider.IO Ctrl+Shift')
+            tab.frame:SetShown(true)
+        else
+            e.tips:AddDoubleLine(e.Icon.info2..(tab.col or '')..'Raider.IO', (tab.col or '')..'Ctrl+Shift')
+            e.tips:SetShown(true)
+        end
+        if IsControlKeyDown() and IsShiftKeyDown() then
+            StaticPopup_Show("WowheadQuickLinkUrl",
+                'Raider.IO',
+                nil,
+                format(raiderioText, RegionName, tab.realm or e.Player.realm, tab.unitName)
+            )
+        end
     end
 end
 
@@ -301,17 +330,21 @@ local function setItem(self, ItemLink)
         return
     end
     local itemName, _, itemQuality, itemLevel, _, _, _, _, _, _, _, _, _, bindType, expacID, setID = GetItemInfo(ItemLink)
-    local itemID, itemType, itemSubType, itemEquipLoc, itemTexture, classID, subclassID = GetItemInfoInstant(ItemLink)
+    local itemID, itemType, itemSubType, itemEquipLoc, itemTexture2, classID, subclassID = GetItemInfoInstant(ItemLink)
     itemID = itemID or ItemLink:match(':(%d+):')
     local r, g, b, col= 1,1,1,e.Player.col
     if itemQuality then
         r, g, b, col= GetItemQualityColor(itemQuality)
         col=col and '|c'..col
     end
+    self:AddLine(' ')
     if expacID then--版本数据
         self:AddDoubleLine(e.GetExpansionText(expacID))
     end
-    self:AddDoubleLine(itemID and (e.onlyChinese and '物品' or ITEMS)..' '.. itemID or ' ' , itemTexture and '|T'..itemTexture..':0|t'..itemTexture)--ID, texture
+
+    local itemTexture= itemTexture2 or itemID and C_Item.GetItemIconByID(itemID)
+    self:AddDoubleLine(itemID and (e.onlyChinese and '物品' or ITEMS)..' '.. itemID or ' ' , itemTexture and '|T'..itemTexture..':0|t'..itemTexture, 1,1,1, 1,1,1)--ID, texture
+
     if classID and subclassID then
         self:AddDoubleLine((itemType and itemType..' classID'  or 'classID') ..' '..classID, (itemSubType and itemSubType..' subID' or 'subclassID')..' '..subclassID)
     end
@@ -321,7 +354,7 @@ local function setItem(self, ItemLink)
         if itemLevel and itemLevel>1 then
             local slot=itemEquipLoc and e.itemSlotTable[itemEquipLoc]--比较装等
             if slot then
-                self:AddDoubleLine(_G[itemEquipLoc]..' '..itemEquipLoc, (e.onlyChinese and '栏位' or TRADESKILL_FILTER_SLOTS)..' '..slot)--栏位
+                self:AddDoubleLine(_G[itemEquipLoc]..' '..itemEquipLoc, (e.onlyChinese and '栏位' or TRADESKILL_FILTER_SLOTS)..' '..slot, 1,1,1, 1,1,1)--栏位
                 local slotLink=GetInventoryItemLink('player', slot)
                 local text
                 if slotLink then
@@ -402,7 +435,7 @@ local function setItem(self, ItemLink)
 
     if C_Item.IsItemKeystoneByID(itemID) then--挑战
         --local numPlayer=1 --帐号数据 --{score=总分数,itemLink={超连接}, weekLevel=本周最高, weekNum=本周次数, all=总次数},
-        for guid, info in pairs(WoWDate) do
+        for guid, info in pairs(WoWDate or {}) do
             if guid and info then
                 local find
                 for linkItem, _ in pairs(info.Keystone.itemLink) do
@@ -410,7 +443,7 @@ local function setItem(self, ItemLink)
                 find=true
                 end
                 if find then
-                    self:AddLine(e.GetPlayerInfo({unit=nil, guid=guid, name=nil,  reName=true, reRealm=true, reLink=false}))
+                    self:AddLine(e.GetPlayerInfo({guid=guid, faction=info.faction, reName=true, reRealm=true}))
                 end
             end
         end
@@ -426,17 +459,18 @@ local function setItem(self, ItemLink)
         end
     else
         local bagAll,bankAll,numPlayer=0,0,0--帐号数据
-        for guid, info in pairs(WoWDate) do
+        for guid, info in pairs(WoWDate or {}) do
             if guid and info and guid~=e.Player.guid then
                 local tab=info.Item[itemID]
                 if tab and tab.bag and tab.bank then
-                    self:AddDoubleLine(e.GetPlayerInfo({unit=nil, guid=guid, name=nil,  reName=true, reRealm=true, reLink=false}), e.Icon.bank2..(tab.bank==0 and '|cff606060'..tab.bank..'|r' or tab.bank)..' '..e.Icon.bag2..(tab.bag==0 and '|cff606060'..tab.bag..'|r' or tab.bag))
+                    self:AddDoubleLine(e.GetPlayerInfo({guid=guid, faction=info.faction, reName=true, reRealm=true}), e.Icon.bank2..(tab.bank==0 and '|cff606060'..tab.bank..'|r' or tab.bank)..' '..e.Icon.bag2..(tab.bag==0 and '|cff606060'..tab.bag..'|r' or tab.bag))
                     bagAll=bagAll +tab.bag
                     bankAll=bankAll +tab.bank
                     numPlayer=numPlayer +1
                 end
             end
         end
+
         if numPlayer>0 then
             wowNum= bagAll+ bankAll
             self:AddDoubleLine(numPlayer..' '..(e.onlyChinese and '角色' or CHARACTER)..' '..e.MK(wowNum+bag+bank, 3), e.Icon.wow2..e.MK(bagAll+bankAll, 3)..' = '..e.Icon.bank2..(bankAll==0 and '|cff606060'..bankAll..'|r' or e.MK(bankAll,3))..' '..e.Icon.bag2..(bagAll==0 and '|cff606060'..bagAll..'|r' or e.MK(bagAll, 3)))
@@ -455,14 +489,15 @@ local function setItem(self, ItemLink)
     self:Show()
 end
 
-local function setSpell(self, spellID)--法术
+local function set_Spell(self, spellID)--法术
     spellID = spellID or select(2, self:GetSpell())
     if not spellID then
         return
     end
     local name, _, icon, _, _, _, _, originalIcon= GetSpellInfo(spellID)
     local spellTexture=  originalIcon or icon or GetSpellTexture(spellID)
-    self:AddDoubleLine((e.onlyChinese and '法术' or SPELLS)..' '..spellID, spellTexture and '|T'..spellTexture..':0|t'..spellTexture)
+    self:AddLine(' ')
+    self:AddDoubleLine((e.onlyChinese and '法术' or SPELLS)..' '..spellID, spellTexture and '|T'..spellTexture..':0|t'..spellTexture, 1,1,1, 1,1,1)
     local mountID = C_MountJournal.GetMountFromSpell(spellID)--坐骑
     if mountID then
         setMount(self, mountID)
@@ -497,11 +532,11 @@ local function setCurrency(self, currencyID)--货币
     end
 
     local all,numPlayer=0,0
-    for guid, info in pairs(WoWDate) do--帐号数据
+    for guid, info in pairs(WoWDate or {}) do--帐号数据
         if guid~=e.Player.guid then
             local quantity=info.Currency[currencyID]
             if quantity and quantity>0 then
-                self:AddDoubleLine(e.GetPlayerInfo({unit=nil, guid=guid, name=nil,  reName=true, reRealm=true, reLink=false}), e.MK(quantity, 3))
+                self:AddDoubleLine(e.GetPlayerInfo({guid=guid, faction=info.faction, reName=true, reRealm=true}), e.MK(quantity, 3))
                 all=all+quantity
                 numPlayer=numPlayer+1
             end
@@ -546,6 +581,7 @@ end
 local function set_Aura(self, auraID)--Aura
     local name, _, icon, _, _, _, spellID = GetSpellInfo(auraID)
    if icon and spellID then
+        self:AddLine(' ')
         self:AddDoubleLine((e.onlyChinese and '光环' or AURAS)..' '..spellID, '|T'..icon..':0|t'..icon)
         local mountID = C_MountJournal.GetMountFromSpell(spellID)
         if mountID then
@@ -722,7 +758,8 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 local price= C_WowTokenPublic.GetCurrentMarketPrice()
                 C_WowTokenPublic.UpdateMarketPrice()
                 if price then
-                    GameTooltipTextRight1:SetText('|A:token-choice-wow:0:0|a'..col..e.MK(price/10000,2)..'|r|A:Front-Gold-Icon:0:0|a')
+                    local all, numPlayer= e.GetItemWoWNum(122284)--取得WOW物品数量
+                    GameTooltipTextRight1:SetText(col..all..(numPlayer>1 and '('..numPlayer..')' or '')..'|A:token-choice-wow:0:0|a'..e.MK(price/10000,3)..'|r|A:Front-Gold-Icon:0:0|a')
                     GameTooltipTextRight1:SetShown(true)
                 end
             end
@@ -766,11 +803,11 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 text= text..'(|cnGREEN_FONT_COLOR:'..effectiveLevel..'|r) '
             end
 
-            local info= C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)--挑战, 分数
+            info= C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit)--挑战, 分数
             if info and info.currentSeasonScore and info.currentSeasonScore>0 then
                 text= text..' '..(e.GetUnitRaceInfo({unit=unit, guid=guid, race=raceFile, sex=sex, reAtlas=false}) or '')
                         ..' '..e.Class(nil, classFilename)
-                        ..' '..(UnitIsPVP(unit) and  '|cnGREEN_FONT_COLOR:PvP|r' or 'PvE')
+                        ..' '..(UnitIsPVP(unit) and  '|cnGREEN_FONT_COLOR:'..(e.onlyChinese and 'PvP' or PVP)..'|r' or (e.onlyChinese and 'PvE' or TRANSMOG_SET_PVE))
                         ..'  '..e.GetKeystoneScorsoColor(info.currentSeasonScore,true)
 
                 if info.runs and info.runs then
@@ -788,7 +825,7 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 text= text..' '..(e.GetUnitRaceInfo({unit=unit, guid=guid, race=raceFile, sex=sex, reAtlas=false})  or '')
                         ..(raceName or '')
                         ..' '..(e.Class(nil, classFilename) or '')
-                        ..' '..(UnitIsPVP(unit) and '(|cnGREEN_FONT_COLOR:PvP|r)' or '(PvE)')
+                        ..' '..(UnitIsPVP(unit) and '(|cnGREEN_FONT_COLOR:'..(e.onlyChinese and 'PvP' or TRANSMOG_SET_PVP)..'|r)' or ('('..(e.onlyChinese and 'PvE' or TRANSMOG_SET_PVE)..')'))
             end
             text= col and col..text..'|r' or text
             line:SetText(text)
@@ -830,6 +867,7 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                     else
                         if not hideLine  then
                             hideLine=line
+                            line:SetTextColor(r,g,b)
                         else
                             line:SetText('')
                             line:SetShown(false)
@@ -838,6 +876,7 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 else
                     if not hideLine then
                         hideLine=line
+                        line:SetTextColor(r,g,b)
                     else
                         line:SetText('')
                         line:SetShown(false)
@@ -845,7 +884,14 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 end
             end
         end
-        get_Web_Link({frame=hideLine, unitName=name, realm=realm, col=col})--取得单位, raider.io 网页，数据链接
+        if UnitAffectingCombat('player') then
+            if hideLine then
+                hideLine:SetText('')
+                hideLine:SetShown(false)
+            end
+        else
+            get_Web_Link({frame=hideLine, unitName=name, realm=realm, col=nil})--取得单位, raider.io 网页，数据链接
+        end
 
     elseif (UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit)) then--宠物TargetFrame.lua
         setPet(self, UnitBattlePetSpeciesID(unit), true)
@@ -864,7 +910,7 @@ local function setUnitInfo(self, unit)--设置单位提示信息
                 self:AddDoubleLine(col..e.Player.LayerText..' '..zone, col..'NPC '..npc, r,g,b, r,g,b)
                 e.Player.Layer=zone
             end
-            get_Web_Link({frame=self, type='npc', id=npc, name=name, col=col, isPetUI=false})--取得网页，数据链接
+            get_Web_Link({frame=self, type='npc', id=npc, name=name, col=col, isPetUI=false})--取得网页，数据链接 
         end
 
         --怪物, 图标
@@ -897,7 +943,6 @@ local function setUnitInfo(self, unit)--设置单位提示信息
         if type and not type:find(COMBAT_ALLY_START_MISSION) then
             self.textRight:SetText(col..type..'|r')
         end
-
     end
 
     if not Save.hideHealth then
@@ -1037,7 +1082,11 @@ local function set_Battle_Pet(self, speciesID, level, breedQuality, maxHealth, p
     end
     BattlePetTooltipTemplate_AddTextLine(self, abilityIcon)
 
-    BattlePetTooltipTemplate_AddTextLine(self, tooltipSource)--来源提示
+    if tooltipSource then
+        tooltipSource= tooltipSource:gsub(':', ':|n')
+        tooltipSource= tooltipSource:gsub('：', ':|n')
+        BattlePetTooltipTemplate_AddTextLine(self, tooltipSource)--来源提示
+    end
 
     if PetJournalSearchBox and PetJournalSearchBox:IsVisible() then--设置搜索
         PetJournalSearchBox:SetText(speciesName)
@@ -1066,7 +1115,7 @@ local function set_Azerite(self, powerID)--艾泽拉斯之心
         self:AddDoubleLine('powerID', powerID)
         local info = C_AzeriteEmpoweredItem.GetPowerInfo(powerID)
         if info and info.spellID then
-            setSpell(self, info.spellID)--法术
+            set_Spell(self, info.spellID)--法术
         end
     end
 end
@@ -1085,8 +1134,10 @@ local function Init()
     end)
     ItemRefTooltip:HookScript("OnHide", function (self)--隐藏
         setInitItem(self, true)
-        ItemRefTooltip.wowhead.web=nil--取得网页，数据链接
-        ItemRefTooltip.wowhead:SetShown(false)
+        if ItemRefTooltip.wowhead then
+            ItemRefTooltip.wowhead.web=nil--取得网页，数据链接
+            ItemRefTooltip.wowhead:SetShown(false)
+        end
     end)
 
     hooksecurefunc('GameTooltip_AddQuestRewardsToTooltip', setQuest)--世界任务ID GameTooltip_AddQuest
@@ -1095,9 +1146,15 @@ local function Init()
     hooksecurefunc('SharedPetBattleAbilityTooltip_SetAbility', function(self, abilityInfo, additionalText)
         local abilityID = abilityInfo:GetAbilityID();
         if abilityID then
-            local _, _, icon, _, unparsedDescription = C_PetBattles.GetAbilityInfoByID(abilityID)
+            local _, name, icon, _, unparsedDescription = C_PetBattles.GetAbilityInfoByID(abilityID)
             local description = SharedPetAbilityTooltip_ParseText(abilityInfo, unparsedDescription)
-            self.Description:SetText(description..'\n\n'..(e.onlyChinese and '技能' or ABILITIES)..' '..abilityID..(icon and '  |T'..icon..':0|t'..icon or ''))
+            self.Description:SetText(description
+                                    ..'|n|n|cffffffff'..(e.onlyChinese and '技能' or ABILITIES)
+                                    ..' '..abilityID
+                                    ..(icon and '  |T'..icon..':0|t'..icon or '')..'|r'
+                                    ..(Save.ctrl and not UnitAffectingCombat('player') and '|nWoWHead Ctrl+Shift' or '')
+                                )
+            get_Web_Link({frame=self, type='pet-ability', id=abilityID, name=name, col=nil, isPetUI=false})--取得网页，数据链接 npc item spell currency
         end
     end)
 
@@ -1114,14 +1171,14 @@ local function Init()
                 end
             end
 
-        elseif date.id and date.type then--and date.type~= 25 then
+        elseif date.id and date.type then
             if date.type==0 or date.type==19 then--TooltipUtil.lua 0物品 19玩具
                 local itemID, itemLink=TooltipUtil.GetDisplayedItem(tooltip)
                 itemLink= itemLink or itemID or date.id
                 setItem(tooltip, itemLink)
 
             elseif date.type==1 then
-                setSpell(tooltip, date.id)--法术
+                set_Spell(tooltip, date.id)--法术
 
             elseif date.type==5 then
                 setCurrency(tooltip, date.id)--货币
@@ -1143,6 +1200,23 @@ local function Init()
 
             elseif date.type==23 then
                 setQuest(tooltip, date.id)--任务
+
+            elseif date.type==25 then--宏
+                local frame= GetMouseFocus()
+                if frame and frame.action then
+                    local type, macroID= GetActionInfo(frame.action)
+                    if type=='macro' and macroID then
+                        local spellID= GetMacroSpell(macroID)
+                        if spellID then
+                            set_Spell(tooltip, spellID)
+                            tooltip:AddLine(' ')
+                        end
+                        local text=GetMacroBody(macroID)
+                        if text then
+                            tooltip:AddLine(text)
+                        end
+                    end
+                end
 
             elseif e.Player.husandro then
                 tooltip:AddDoubleLine('id '..date.id, 'type '..date.type)
@@ -1170,7 +1244,7 @@ local function Init()
             if unit then
                 set_Unit_Health_Bar(self, unit)
             end
-        end);
+        end)
     end
 
     --####
@@ -1206,7 +1280,7 @@ local function Init()
                 e.tips:AddLine(name..' '..standingID..'/'..MAX_REPUTATION_REACTION, 1,1,1)
                 e.tips:AddLine(description, nil,nil,nil, true)
                 e.tips:AddLine(' ')
-                local gender = UnitSex("player");
+                local gender = e.Player.sex
                 local factionStandingtext = GetText("FACTION_STANDING_LABEL"..standingID, gender)
                 local barColor = FACTION_BAR_COLORS[standingID]
                 factionStandingtext=barColor:WrapTextInColorCode(factionStandingtext)--颜色
@@ -1262,6 +1336,8 @@ local function Init()
         local speciesID= petGUID and C_PetJournal.GetPetInfoByPetID(petGUID)
         setPet(self, speciesID)--宠物
     end)
+
+
 
     setCVar(nil, nil, true)--设置CVar
 
@@ -1330,8 +1406,18 @@ local function Init()
                     e.tips:ClearLines()
                     securecallfunction(GameTooltip_AddQuest, self2, self2.questID)
                     e.tips:AddLine(' ')
-                    e.tips:AddDoubleLine(id, addName)
+                    e.tips:AddDoubleLine(id, addName..e.Icon.left)
                     e.tips:Show()
+                end
+            end)
+            self.questIDLabel:SetScript('OnMouseDown', function(self2)
+                if self2.questID then
+                    local info = C_QuestLog.GetQuestTagInfo(self2.questID)
+                    StaticPopup_Show("WowheadQuickLinkUrl",
+                    'WoWHead',
+                    nil,
+                    format(wowheadText, 'quest', self2.questID, info and info.tagName or '')
+                )
                 end
             end)
         end
@@ -1341,7 +1427,11 @@ local function Init()
         local label= QuestMapFrame.DetailsFrame.questIDLabel
         if not label then
             label= create_Quest_Label(QuestMapFrame.DetailsFrame)
-            label:SetPoint('BOTTOMRIGHT',QuestMapFrame.DetailsFrame, 'TOPRIGHT', 20, 10)
+            if IsAddOnLoaded('WoWeuCN_Quests') then
+                label:SetPoint('BOTTOMRIGHT',QuestMapFrame.DetailsFrame, 'TOPRIGHT', 25, 28)
+            else
+                label:SetPoint('BOTTOMRIGHT',QuestMapFrame.DetailsFrame, 'TOPRIGHT', 20, 10)
+            end
         end
         label:SetText(questID or '')
         label.questID= questID
@@ -1396,8 +1486,25 @@ local function Init()
         get_Web_Link({frame=e.tips, type='quest', id=info.questID, name=info.title, col=nil, isPetUI=false})--取得网页，数据链接
         e.tips:Show()
     end)
+
+
+    --追踪栏
+    hooksecurefunc('BonusObjectiveTracker_OnBlockEnter', function(block)
+        if block.id and not block.module.tooltipBlock and block.TrackedQuest then
+            e.tips:SetOwner(block, "ANCHOR_LEFT")
+            e.tips:ClearLines()
+            securecallfunction(GameTooltip_AddQuest, block.TrackedQuest or block, block.id)
+            e.tips:AddLine(' ')
+            e.tips:AddDoubleLine(id, addName)
+            e.tips:Show()
+        end
+    end)
 end
 
+
+--##########
+--设置 panel
+--##########
 local function set_Cursor_Tips(self)
     GameTooltip_SetDefaultAnchor(e.tips, self or UIParent)
     --e.tips:SetOwner(UIParent, 'ANCHOR_CURSOR_LEFT', Save.cursorX, Save.cursorY)
@@ -1405,16 +1512,13 @@ local function set_Cursor_Tips(self)
     e.tips:SetUnit('player')
     e.tips:Show()
 end
---##########
---设置 panel
---##########
 local function Init_Panel()
     panel.name = e.Icon.mid..addName;--添加新控制面板
     panel.parent= id
     InterfaceOptions_AddCategory(panel)
 
 
-    e.ReloadPanel({panel=panel, addName= addName, restTips=true, checked=not Save.disabled,--重新加载UI, 重置, 按钮
+    e.ReloadPanel({panel=panel, addName= addName, restTips=true, checked=not Save.disabled, clearTips=nil,--重新加载UI, 重置, 按钮
         disabledfunc=function()
             Save.disabled= not Save.disabled and true or nil
             print(id, addName, e.GetEnabeleDisable(not Save.disabled), e.onlyChinese and '需要重新加载' or REQUIRES_RELOAD)
@@ -1575,6 +1679,9 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 Init()--初始
                 if e.onlyChinese then
                     raiderioText= 'https://raider.io/cn/characters/%s/%s/%s'
+                    if not LOCALE_zhCN then
+                        wowheadText= 'https://www.wowhead.com/cn/%s=%d'
+                    end
                 end
             end
             panel:RegisterEvent("PLAYER_LOGOUT")
@@ -1641,7 +1748,7 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 end
             end)
             hooksecurefunc('AchievementFrameComparison_SetUnit', function(unit)--比较成就
-                local text= e.GetPlayerInfo({unit=unit, guid=unit and UnitGUID(unit), name=nil,  reName=true, reRealm=true, reLink=false})--玩家信息图标
+                local text= e.GetPlayerInfo({unit=unit, reName=true, reRealm=true})--玩家信息图标
                 if text~='' then
                     AchievementFrameComparisonHeaderName:SetText(text)
                 end
@@ -1658,12 +1765,11 @@ panel:SetScript("OnEvent", function(self, event, arg1)
                 AchievementFrameComparisonHeader:EnableMouse(true)
                 AchievementFrameComparisonHeader:SetScript('OnLeave', function() e.tips:Hide() end)
                 AchievementFrameComparisonHeader:SetScript('OnEnter', func)
-
             end
 
         elseif arg1=='Blizzard_Collections' then--宠物手册， 召唤随机，偏好宠物，技能ID    
             hooksecurefunc('PetJournalSummonRandomFavoritePetButton_OnEnter', function()--PetJournalSummonRandomFavoritePetButton
-                setSpell(e.tips, 243819)
+                set_Spell(e.tips, 243819)
                 e.tips:Show()
             end)
 

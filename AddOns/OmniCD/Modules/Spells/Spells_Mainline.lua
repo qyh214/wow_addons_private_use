@@ -3,7 +3,7 @@ local E = select(2, ...):unpack()
 E.spell_db = {
 	["WARRIOR"] = {
 		{ ["class"]="WARRIOR",["type"]="defensive",["buff"]=236273,["spec"]=true,["name"]="Duel",["duration"]=60,["icon"]=1455893,["spellID"]=236273, },
-		{ ["class"]="WARRIOR",["type"]="offensive",["buff"]=198817,["spec"]=true,["name"]="Sharpen Blade",["duration"]=25,["icon"]=1380678,["spellID"]=198817, },
+		{ ["class"]="WARRIOR",["type"]="offensive",["buff"]=198817,["spec"]=true,["name"]="Sharpen Blade",["duration"]=30,["icon"]=1380678,["spellID"]=198817, },
 		{ ["class"]="WARRIOR",["type"]="counterCC",["buff"]=236321,["spec"]=true,["name"]="War Banner",["duration"]=90,["icon"]=603532,["spellID"]=236320, },
 		{ ["class"]="WARRIOR",["type"]="other",["buff"]=329038,["spec"]=true,["name"]="Bloodrage",["duration"]=20,["icon"]=132277,["spellID"]=329038, },
 		{ ["class"]="WARRIOR",["type"]="other",["buff"]=355,["name"]="Taunt",["duration"]=8,["icon"]=136080,["spellID"]=355,["talent"]=205800, },
@@ -349,7 +349,7 @@ E.spell_db = {
 		{ ["class"]="DRUID",["type"]="dispel",["buff"]=88423,["duration"]=8,["name"]="Nature's Cure",["icon"]=236288,["spellID"]=88423, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=5215,["duration"]=6,["name"]="Prowl",["icon"]=514640,["spellID"]=5215, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=50334,["spec"]=104,["duration"]=180,["name"]="Berserk",["icon"]=236149,["spellID"]=50334,["talent"]=102558, },
-		{ ["class"]="DRUID",["type"]="defensive",["buff"]=22812,["duration"]=60,["name"]="Barkskin",["icon"]=136097,["spellID"]=22812, },
+		{ ["class"]="DRUID",["type"]="defensive",["buff"]=22812,["duration"]={[104]=45,["default"]=60},["name"]="Barkskin",["icon"]=136097,["spellID"]=22812, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=6795,["duration"]=8,["name"]="Growl",["icon"]=132270,["spellID"]=6795,["talent"]=207017, },
 		{ ["class"]="DRUID",["type"]="other",["buff"]=132158,["spec"]=true,["name"]="Nature's Swiftness",["duration"]=60,["icon"]=136076,["spellID"]=132158, },
 		{ ["class"]="DRUID",["type"]="offensive",["buff"]=102351,["spec"]=true,["name"]="Cenarion Ward",["duration"]=30,["icon"]=132137,["spellID"]=102351, },
@@ -422,7 +422,7 @@ E.spell_db = {
 		{ ["class"]="WARLOCK",["type"]="other",["buff"]=48020,["duration"]=30,["name"]="Demonic Circle: Teleport",["icon"]=237560,["spellID"]=48020, },
 		{ ["class"]="WARLOCK",["type"]="defensive",["buff"]=104773,["duration"]=180,["name"]="Unending Resolve",["icon"]=136150,["spellID"]=104773, },
 		{ ["class"]="WARLOCK",["type"]="other",["buff"]=333889,["spec"]=true,["name"]="Fel Domination",["duration"]=180,["icon"]=237564,["spellID"]=333889, },
-		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=328774,["spec"]=true,["name"]="Amplify Curse",["duration"]=30,["icon"]=136132,["spellID"]=328774, },
+		{ ["class"]="WARLOCK",["type"]="offensive",["buff"]=328774,["spec"]=true,["name"]="Amplify Curse",["duration"]=60,["icon"]=136132,["spellID"]=328774, },
 		{ ["class"]="WARLOCK",["type"]="defensive",["buff"]=108416,["spec"]=true,["name"]="Dark Pact",["duration"]=60,["icon"]=136146,["spellID"]=108416, },
 		{ ["class"]="WARLOCK",["type"]="cc",["buff"]=30283,["spec"]=true,["name"]="Shadowfury",["duration"]=60,["icon"]=607865,["spellID"]=30283, },
 		{ ["class"]="WARLOCK",["type"]="cc",["buff"]=5484,["spec"]=true,["name"]="Howl of Terror",["duration"]=40,["icon"]=607852,["spellID"]=5484, },
@@ -562,7 +562,7 @@ E.spell_db = {
 
 	},
 	["SHAMAN"] = {
-		{ ["class"]="SHAMAN",["type"]="other",["buff"]=409293,["spec"]=true,["name"]="Burrow",["duration"]=120,["icon"]=136025,["spellID"]=409293, },
+		{ ["class"]="SHAMAN",["type"]="immunity",["buff"]=409293,["spec"]=true,["name"]="Burrow",["duration"]=120,["icon"]=136025,["spellID"]=409293, },
 		{ ["class"]="SHAMAN",["type"]="other",["buff"]=2484,["name"]="Earthbind Totem",["duration"]=30,["icon"]=136102,["spellID"]=2484, },
 
 

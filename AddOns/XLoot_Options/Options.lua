@@ -454,7 +454,7 @@ function addon:OnEnable() -- Construct addon option tables here
 	}
 
 	-- Shared Media
-	local LSM = LibStub and LibStub("LibSharedMedia-3.0",1)
+	local LSM = LibStub and LibStub("LibSharedMedia-3.0", true)
 
 	local fonts
 	if LSM then

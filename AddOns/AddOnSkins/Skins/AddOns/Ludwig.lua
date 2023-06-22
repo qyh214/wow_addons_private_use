@@ -1,13 +1,11 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 
-if not AS:CheckAddOn('Ludwig') then return end
-
-function AS:Ludwig()
+function R:Ludwig()
 	hooksecurefunc(Ludwig, 'ToggleSearchFrame', function()
 		if LudwigFrame.isSkinned then return end
-		
+
 		-- Main frame
-		AS:SkinFrame(LudwigFrame)
+		S:HandleFrame(LudwigFrame)
 		LudwigFrame:SetHeight(456)
 		LudwigFrame:SetWidth(360)
 		LudwigFrame:SetMovable(true)
@@ -16,36 +14,36 @@ function AS:Ludwig()
 		LudwigFrame:SetScript('OnDragStart', LudwigFrame.StartMoving)
 		LudwigFrame:SetScript('OnDragStop', LudwigFrame.StopMovingOrSizing)
 
-		AS:SkinCloseButton(LudwigFrameCloseButton, true)
-		
+		S:HandleCloseButton(LudwigFrameCloseButton, true)
+
 		-- Search box
-		AS:SkinEditBox(LudwigFramesearch)
+		S:HandleEditBox(LudwigFramesearch)
 		LudwigFramesearch:SetPoint('TOPLEFT', 58, -44)
 
 		-- iLevel boxes
-		AS:SkinEditBox(LudwigFrameminLevel)
+		S:HandleEditBox(LudwigFrameminLevel)
 		local LudwigFrameHyphenText = select(7, LudwigFrame:GetRegions())
 		LudwigFrameHyphenText:SetPoint('LEFT', LudwigFrameminLevel, 'RIGHT', 4, 0)
-		AS:SkinEditBox(LudwigFramemaxLevel)
+		S:HandleEditBox(LudwigFramemaxLevel)
 
 		-- Reset button
 		local LudwigFrameResetButton = select(5, LudwigFrame:GetChildren())
-		AS:Desaturate(LudwigFrameResetButton)
-		
+		S:Desaturate(LudwigFrameResetButton)
+
 		-- Scroll frame and scroll bar
-		AS:SkinFrame(LudwigFrameScrollFrame, 'Default')
+		S:HandleFrame(LudwigFrameScrollFrame, 'Default')
 		LudwigFrameScrollFrame:ClearAllPoints()
 		LudwigFrameScrollFrame:SetPoint('TOPLEFT', 20, -78)
 		LudwigFrameScrollFrame:SetHeight(330)
 		LudwigFrameScrollFrame:SetWidth(300)
-		AS:SkinScrollBar(LudwigFrameScrollFrameScrollBar)
-		
+		S:HandleScrollBar(LudwigFrameScrollFrameScrollBar)
+
 		-- Dropdown boxes (Needs work on dropdown lists positions)
-		AS:SkinDropDownBox(LudwigFrameQuality)
+		S:HandleDropDownBox(LudwigFrameQuality)
 		LudwigFrameQuality:ClearAllPoints()
 		LudwigFrameQuality:SetPoint('BOTTOMLEFT', 35, 4)
 		LudwigFrameQuality:SetWidth(90)
-		AS:SkinDropDownBox(LudwigFrameCategory)
+		S:HandleDropDownBox(LudwigFrameCategory)
 		LudwigFrameCategory:ClearAllPoints()
 		LudwigFrameCategory:SetPoint('BOTTOMLEFT', LudwigFrameQuality, 'BOTTOMRIGHT', -20, 0)
 		LudwigFrameCategory:SetWidth(200)
@@ -54,4 +52,4 @@ function AS:Ludwig()
 	end)
 end
 
-AS:RegisterSkin('Ludwig', AS.Ludwig)
+AS:RegisterSkin('Ludwig')

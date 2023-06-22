@@ -28,7 +28,7 @@ L['broken_banding_note'] = 'Am Knöchel des rechten Fußes der Statue.'
 L['chunk_of_sculpture_note'] = 'Auf dem Boden, von der Drachenstatue aus auf der linken Seite.'
 L['dislodged_dragoneye_note'] = 'Auf einem Felsen unter der Brust der Drachenstatue.'
 L['finely_carved_wing_note'] = 'Unter dem rechten Knie der Drachenstatue.'
-L['fragment_requirement_note'] = ns.color.Orange('Bevor du die losen Teile einsammeln kannst, musst du {npc:193915} in der {location:Botschaft von Schwingenrast} bei der Drachenstatue fragen, was sie hier macht.}')
+L['fragment_requirement_note'] = ns.color.Orange('Bevor du die losen Teile einsammeln kannst, musst du {npc:193915} in der {location:Botschaft von Schwingenrast} bei der Drachenstatue fragen, was sie hier macht.')
 L['golden_claw_note'] = 'An der hinteren rechten Klaue der Drachenstatue.'
 L['precious_stone_fragment_note'] = 'Unter dem rechten Fuß der Statue.'
 L['stone_dragontooth_note'] = 'Auf dem Boden neben dem Sockel der Drachenstatue.'
@@ -92,8 +92,6 @@ L['options_icons_signal_transmitter'] = 'Wyrmlochgenerator Signaltransmitters'
 L['options_icons_signal_transmitter_desc'] = 'Zeigt die Positionen der {object:Deaktivierten Signaltransmitter} für {item:198156} an.'
 
 L['rare_14h'] = 'Dieser Gegner befindet sich in einem 14 Stunden Interval mit anderen Gegnern, wobei alle 30 Minuten einer dieser Gegner erscheinen kann.\n\nNächstes mögliches erscheinen: {note:%s}'
-L['time_format_12hrs'] = '%d.%m - %I:%M %p'
-L['time_format_24hrs'] = '%d.%m - %H:%M'
 L['now'] = 'Jetzt'
 L['spawns_at_night'] = '{note:Erscheint nur nachts. (Ab 18:30 Server Zeit)}'
 
@@ -236,13 +234,13 @@ Töte dann {npc:197183} in der Höhle, um {item:200528} zu erhalten.
 ]]
 
 L['gethdazr_note'] = [[
-Erscheint als Teil eines Events in {location:Imbu} welches durch das blasen des {object:Großen Horns von Imbu} gestartet wird.({dot:Blue})
-Das Horn kann erst angeklicht werden nachdem der {npc:Wütende Luftelementar} besiegt wurde. Dieser hat eine Respawn Zeit von ca. 30-60 Minuten.
+Erscheint als Teil eines Events in {location:Imbu}, welches durch das blasen des {object:Großen Horns von Imbu} gestartet wird.({dot:Blue})
+Das Horn kann erst angeklickt werden, nachdem der {npc:Wütende Luftelementar} besiegt wurde. Dieser hat eine Wiedererscheinungszeit von ca. 30-60 Minuten.
 
-{npc:191143}({dot:Green}) und andere NPCs kämpfen sich dann vom nordöstlichen Eingang von {location:Imbu} bis zur Klippe vor, wo {npc:196165} dann spawnen wird.
-Die NPCs können sterben wenn du ihnen nicht hilfst, dadurch wird das Event fehlschlagen.
+{npc:191143}({dot:Green}) und andere NPCs kämpfen sich dann vom nordöstlichen Eingang von {location:Imbu} bis zur Klippe vor, an dieser {npc:196165} erscheinen wird.
+Die NPCs können sterben, wenn du ihnen nicht hilfst, dadurch wird das Event fehlschlagen.
 
-Das Event kann alleine geschafft werden, 2-3 Spieler sind aber empfohlen.
+Das Event kann alleine abgeschlossen werden, allerdings sind 2-3 Spieler empfehlenswert.
 ]]
 
 L['tuskarr_chest'] = 'Kiste der Tuskarr'
@@ -351,8 +349,8 @@ L['neltharions_toolkit_note'] = [[
 
 3. Repariere {object:Defektes Portal} in der Höhle neben {npc:193310}.
 
-4. Teleportiere dich damit in einen geheimen Raum im {location:Gewölbe von Zskera}. Töte dort {npc:200375} und {npc:203639}, um die {object:Obsidian Grand Cache} für deine Beute öffnen zu können.
-]] -- TODO Obsidian Grand Cache
+4. Teleportiere dich damit in einen geheimen Raum im {location:Gewölbe von Zskera}. Töte dort {npc:200375} und {npc:203639}, um die {object:Große Obsidiantruhe} für deine Beute öffnen zu können.
+]]
 
 L['recipe_rat_note_1'] = 'Sprich mit {npc:202982} im {location:Gewölbe von Zskera} und du erhältst {item:202252}.'
 L['recipe_rat_note_2'] = 'Interagiere mit {item:202252}, um {item:204340} zu erhalten. {note:(5 Minute Abklingzeit)}'
@@ -564,6 +562,20 @@ L['titan_chest'] = 'Titanentruhe'
 L['options_icons_titan_chest'] = 'Titanentruhe'
 L['options_icons_titan_chest_desc'] = 'Zeigt die möglichen Positionen für {object:Titanentruhen} an.'
 
+L['living_mud_mask_note'] = [[
+Plündere {item:200586} von {npc:197346}, um die Quest {quest:70377} zu starten, welche du bei {npc:198062} abschließen musst.
+
+Nachdem du die Quest beendet hast, sprich nochmal mit {npc:198062} und frage ihn nach einer anderen Belohnung.
+
+Er wird mit {npc:197467} sprechen, um in den VIP-Bereich zu gelangen und wird von diesem auf die fliegende Insel geworfen.
+
+Wenn du bei der fliegenden Insel ankommst, wird {npc:198062} am Boden liegen. Sprich mit ihm und sag ihm, dass er Tot aussieht.
+
+Verfolge die erscheinende {npc:198590} bis auf einen Ast hinter {npc:197232}. Wenn du nah genug am Schlamm stehst, wird er dir die Quest {quest:72060} anbieten.
+
+Geh zu {npc:198062} und schließe die Quest ab, um {item:200872} zu erhalten.
+]]
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -578,7 +590,7 @@ L['obsidian_throne_rare_note'] = 'Innerhalb des {location:Obsidianthron}.'
 L['slurpo_snail_note'] = 'Plündere in einer Höhle im {location:Azurblauen Gebirge} (11.0, 41.4) aus einem {object:Salzkristall} ein {item:201033} und benutze ihn in einer Höhle in {location:Die Küste des Erwachens} (36.0, 89.8), um den seltenen Gegner erscheinen zu lassen.'
 L['worldcarver_atir_note'] = 'Sammle 3x {item:191211} von {npc:187366} in der Nähe und platziere diese beim {npc:197395}, um den seltenen Gegner erscheinen zu lassen.'
 
-L['bubble_drifter_note'] = '{item:199061} kann in Expeditionsspäherpacks und in Bewegte Erde enthalten sein.'
+L['bubble_drifter_note'] = '{item:199061} kann in Expeditionsspäherpacks und in Bewegte Erde enthalten sein.\n\nUm mit dem Fisch zu interagieren, benötigst du den {spell:388331} von einer {object:Duftenden Pflanze} in der Nähe.'
 L['dead_mans_chestplate_note'] = 'Im Inneren des Turms auf der mittleren Etage.'
 L['fullsails_supply_chest_note'] = 'Der Schlüssel kann südlich der {location:Botschaft von Schwingenrast} von {npc:187971} und {npc:187320} fallen gelassen werden.'
 L['golden_dragon_goblet_note'] = 'Plündere {item:202081} von {npc:190056} an der {location:Wilde Küste} und schließe die kleine Questreihe ab.'
@@ -660,7 +672,7 @@ L['slumbering_worldsnail_note1'] = [[
 4. Kaufe mit den gesammelten {item:202173} das Reittier.
 ]]
 
-L['slumbering_worldsnail_note2'] = ns.color.Orange('ACHTUNG: Wenn du stirbst, verlierst du den Schwächungszauber {spell:386848}. Kaufe entweder für 20x {item:202173} eine neue Mitgliedschaft bei {npc:193310} bevor du stirbst oder du musst weitere Schlüssel abgeben, um eine neue Mitgliedschaft aus der Truhe zu erhalten.}')
+L['slumbering_worldsnail_note2'] = ns.color.Orange('ACHTUNG: Wenn du stirbst, verlierst du den Schwächungszauber {spell:386848}. Kaufe entweder für 20x {item:202173} eine neue Mitgliedschaft bei {npc:193310} bevor du stirbst oder du musst weitere Schlüssel abgeben, um eine neue Mitgliedschaft aus der Truhe zu erhalten.')
 
 L['magmashell_note'] = 'Erbeute von {npc:193138n} einen {item:201883} in der Nähe der {location:Obsidianzitadelle} und bringe es zu {npc:199010}.\n\n' .. ns.color.Orange('Es wird 20 Sekunden {spell:395626} kanalisiert, während du in der Lava bist, um das Reittier zu erhalten. Es ist empfehlenswert einen Heiler mitzubringen oder etwas wie das Spielzeug {item:200116}.')
 
@@ -726,47 +738,59 @@ Benutze die Halskette und sammle {item:202062} {dot:Red} die sich in der Umgebun
 ]]
 L['phoenix_wishwing_info'] = 'Dies ist teil des {item:193373} in {location:Küste des Erwachens} auf den {location:Dracheninseln}.'
 
+L['bugbiter_tortoise_note'] = 'Sammle {item:202082}({dot:Red}) und {item:202084}({dot:Green}) und tausche sie bei {npc:187077} gegen {item:202085} ein.\n\nDamit {npc:187077} erscheint muss die Weltquest {quest:66070} aktiv sein.'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
 
 L['in_deepflayer_nest'] = 'Im {location:Tiefenschindernest}.'
 
-L['brulsef_the_stronk_note'] = 'Du erhältst deine Belohnung aus der {object:Chest of Massive Gains}.' -- todo: translate chest name
+L['brulsef_the_stronk_note'] = 'Du erhältst deine Belohnung aus der {object:Truhe der massiven Muckis}.\n\n{bug:Bewege ihn nicht zu weit von der Ausgangsposition weg, ansonst kann es sein, dass nach dem Sieg über ihn keine Truhe erscheint.}'
 
 L['ancient_zaqali_chest_note'] = 'Benutze das {object:Abgefüllte Magma} in der Nähe, um die Kiste zu öffnen.'
-L['blazing_shadowflame_chest_note'] = nil
-L['crystal_encased_chest_note'] = 'Interagiere mit dem Blauen {object:Abstimmungskristall} ({dot:Blue}) und dem Roten {object:Abstimmungskristall} ({dot:Red}), um den Schatz zu öffnen.'
-L['old_trunk_note'] = 'Sammle und kombiniere 5 {item:204325} um einen {item:204323} herzustellen.'
-L['well_chewed_chest_note'] = 'Der {item:202869}({dot:Green}) ist unter {npc:199962} in einer Höhle versteckt.'
+L['blazing_shadowflame_chest_note'] = 'Lege den {item:15138} an, der im Auktionshaus gekauft oder von einem Lederverarbeiter hergestellt werden kann, um die Truhe öffnen zu können.'
+L['crystal_encased_chest_note'] = 'Interagiere mit dem Blauen {object:Abstimmungskristall} ({dot:Blue}) und dem Roten {object:Abstimmungskristall} ({dot:Red}), um die Truhe öffnen zu können.'
+L['old_trunk_note'] = 'Finde und sammle die {npc:204277} 5 mal ein, um den {item:204323} zu erhalten. {note:Die erste Maus ist direkt neben der Truhe.}'
+L['well_chewed_chest_note'] = 'Der {item:202869}({dot:Green}) ist unter {npc:199962} in der Höhle versteckt.'
 
 L['molten_hoard_label'] = 'Geschmolzener Schatz'
 L['fealtys_reward_label'] = 'Belohnung der Treue'
-L['fealtys_reward_note'] = nil
+L['fealtys_reward_note'] = 'Knie {emote:(/knien)} vor der Drachenstatue im Südwesten, bis diese Feuer spuckt, um die Truhe öffnen zu können.'
 L['dreamers_bounty_label'] = 'Belohnung des Träumers'
-L['dreamers_bounty_note'] = nil
+L['dreamers_bounty_note'] = 'Greife eine {npc:201068} an und warte bis diese den Schwächungszauber {spell:400066} auf dich wirkt, um die Truhe öffnen zu können.'
 L['moth_pilfered_pouch_label'] = 'Von Motten geplünderte Tasche'
 L['moth_pilfered_pouch_note'] = 'Hilf {npc:203225} zu fliegen indem du sie wiederholt "jonglierst", bis sie 5 Stapel {spell:405358} erlangt.\n\nSie fliegt dann zum Schatz und enthüllt ihn.'
 L['waterlogged_bundle_label'] = 'Durchnässtes Bündel'
 
 L['stolen_stash_label'] = 'Gestohlenes Lager'
 L['ritual_offering_label'] = 'Ritualopfergaben'
+L['options_icons_ritual_offering'] = 'Ritualopfergaben'
+L['options_icons_ritual_offering_desc'] = 'Zeigt die möglichen Positionen von {object:Ritualopfergaben}.'
 L['nal_kskol_reliquary_label'] = 'Reliquiar von Nal ks\'kol'
-L['nal_kskol_reliquary_note'] = 'Benutze die {object:Reliquary Access Console} und löse das Rätsel um das {object:Reliquiar von Nal ks\'kol} zu öffnen.' -- todo: translate object name
+L['nal_kskol_reliquary_note'] = 'Benutze die {object:Reliquiarzugriffskonsole} und löse das Rätsel, um das {object:Reliquiar von Nal ks\'kol} öffnen zu können.'
 
-L['molten_scoutbot_note'] = 'Öffne das {object:Molten Scoutbot} und plündere {item:204855}.' -- todo: translate chest name
-L['bolts_and_brass_note'] = 'Öffne {object:Bolts and Brass} und plündere {item:204850}.' -- todo: translate chest name
+L['molten_scoutbot_note'] = 'Öffne den {object:Geschmolzenen Späherbot} und plündere {item:204855}.'
+L['bolts_and_brass_note'] = 'Öffne {object:Bolzen und Bronze} und plündere {item:204850}.'
 
 L['sniffen_sage_suffix'] = 'Spezialgegenstände erschnüffelt'
 
-L['big_slick_note_1'] = '{npc:48182} kann in der alten Welt an der {location:Dunkelküste} gefunden werden. Sprich mit {npc:141489} um in die Zeit vor dem {location:Krieg der Dornen} zurückzureisen.'
+L['big_slick_note'] = 'Schließe bei {npc:201752} tägliche Quests ab, um bei der Fraktion {faction:2568} die Rufstufe "Professionell" (insgesamt 2800 Ruf) zu erreichen, um dein Reittier zu erhalten.\n\nOder zeige ihm die folgenden Schnecken (Haustiere) auf Stufe 25, um jeweils 100 Ruf zu erhalten:'
+L['grogul_note'] = 'Sprich mit {npc:204672} und wähle ein Leckerli aus, das du benutzen kannst, die Schnecke zu ermutigen sich schneller fortzubewegen.\n{note:Der Erfolg kann vor Ruhmstufe 7 erlangt werden.}'
 
-L['saccratos_note'] = 'Tausche {item:204727} gegen ein Reittier, ein Haustier und mehr ein.'
+L['saccratos_note'] = 'Tausche {item:204727} gegen zwei Reittiere, ein Haustier und mehr ein.'
 L['ponzo_note'] = 'Tausche {item:204985} gegen Drachenanpassungen, ein Reittier, ein Haustier und mehr ein.'
 
 L['smelly_trash_pile_label'] = 'Stinkender Müllhaufen'
 L['options_icons_smelly_trash_pile'] = 'Stinkender Müllhaufen'
 L['options_icons_smelly_trash_pile_desc'] = 'Zeigt die möglichen Positionen der {object:Stinkenden Müllhaufen} an.'
 
-L['seething_cache_treasure_note'] = nil
-L['chest_of_the_flights_treasure_note'] = nil
+L['seething_cache_treasure_note'] = 'Sammle von {object:Brodelnde Kugel} 3x Stapel des Schwächungszaubers {spell:399342}, um die Truhe sehen und öffnen zu können.'
+L['chest_of_the_flights_treasure_note'] = 'Aktiviere {object:Ermächtigter Edelsteine} in der Reihenfolge {note:Rot > Schwarz > Blau > Gelb > Grün}, um die Truhe öffnen zu können.'
+L['curious_top_hat_note'] = 'Interagiere mit {npc:205010} während du den {spell:410288} Stärkungszauber auf dir hast, um {item:205021} zu erhalten. Wenn du den Stärkungszauber nicht hast wird er weglaufen.'
+
+L['zaralek_rotation_active'] = ns.color.Blue('Dieser seltene Gegner kann heute erscheinen.')
+L['zaralek_rotation_inactive'] = ns.color.Orange('Dieser seltene Gegner wird heute nicht erscheinen, komm morgen wieder.')
+
+L['options_icons_zone_event'] = nil
+L['options_icons_zone_event_desc'] = nil

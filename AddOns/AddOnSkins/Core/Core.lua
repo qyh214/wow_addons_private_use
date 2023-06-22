@@ -1,23 +1,24 @@
-local AS, ASL = unpack(AddOnSkins)
+AddOnSkins[2] = AddOnSkins[1].Libs.ACL:GetLocale('AddOnSkins', GetLocale()) -- Locale doesn't exist yet, make it exist.
+
+local AS, L, S, R = unpack(AddOnSkins)
 local AddOnName = ...
 
--- Cache global variables
---Lua functions
+local ES = AS.EmbedSystem
+
 local _G = _G
-local select, pairs, ipairs, type, pcall = select, pairs, ipairs, type, pcall
-local floor, print, format, strlower, strfind, strmatch = floor, print, format, strlower, strfind, strmatch
+local pairs, ipairs, type, pcall = pairs, ipairs, type, pcall
+local floor, print, format, strlower, strmatch, strlen = floor, print, format, strlower, strmatch, strlen
 local sort, tinsert = sort, tinsert
---WoW API / Variables
+
+local geterrorhandler = geterrorhandler
 local IsAddOnLoaded, C_Timer = IsAddOnLoaded, C_Timer
--- GLOBALS:
 
 AS.SkinErrors = {}
 
 local Validator = CreateFrame('Frame')
 
 function AS:CheckOption(optionName, ...)
-	for i = 1, select('#', ...) do
-		local addon = select(i, ...)
+	for _, addon in next, {...} do
 		if not addon then break end
 		if not AS:CheckAddOn(addon) then return false end
 	end
@@ -27,10 +28,13 @@ end
 
 function AS:SetOption(optionName, value)
 	AS.db[optionName] = value
+end
 
-	if AddOnSkinsDS[AS.Version] and AddOnSkinsDS[AS.Version][optionName] == true then
-		AddOnSkinsDS[AS.Version][optionName] = nil
+function AS:IsSkinEnabled(name, elvName)
+	if elvName and _G.ElvUI and _G.ElvUI[1].private.skins.blizzard.enable and _G.ElvUI[1].private.skins.blizzard[elvName] then
+		return false
 	end
+	return name and AS:CheckOption(name)
 end
 
 function AS:GetColor(name)
@@ -56,10 +60,6 @@ function AS:GetClassColor(class)
 	end
 
 	return color
-end
-
-function AS:Scale(Number)
-	return AS.Mult * floor(Number/AS.Mult + .5)
 end
 
 function AS:OrderedPairs(t, f)
@@ -102,99 +102,66 @@ function AS:Round(num, idp)
 end
 
 function AS:RegisterForPetBattleHide(frame)
-	if frame.IsVisible and frame:GetName() then
-		AS.FrameLocks[frame:GetName()] = { shown = false }
-	end
+	RegisterStateDriver(frame, 'visibility', '[petbattle] hide; show')
 end
 
-function AS:AddNonPetBattleFrames()
-	for frame,data in pairs(AS.FrameLocks) do
-		if data.shown then
-			_G[frame]:Show()
+function AS:SkinEvent(event, ...)
+	if event == 'ADDON_LOADED' then
+		local addon = ...
+		if AS.skins[addon] and AS:CheckOption(addon) then
+			for _, func in ipairs(AS.skins[addon]) do
+				AS:CallSkin(addon, func, event, ...)
+			end
+			if strmatch(addon, '^Blizzard_') then
+				AS:UnregisterSkinEvent(addon, event)
+			end
 		end
-	end
-end
-
-function AS:RemoveNonPetBattleFrames()
-	for frame,data in pairs(AS.FrameLocks) do
-		if _G[frame]:IsVisible() then
-			data.shown = true
-			_G[frame]:Hide()
-		else
-			data.shown = false
-		end
-	end
-end
-
-function AS:RegisterSkin(addonName, skinFunc, ...)
-	local events = {}
-	local priority = 1
-	for i = 1, select('#', ...) do
-		local event = select(i, ...)
-		if not event then break end
-		if type(event) == 'number' then
-			priority = event
-		else
-			events[event] = true
-		end
-	end
-	local registerMe = { func = skinFunc, events = events, priority = priority }
-	if not AS.register[addonName] then AS.register[addonName] = {} end
-	AS.register[addonName][skinFunc] = registerMe
-end
-
-function AS:UnregisterSkin(addonName, skinFunc)
-	if (not AS.register[addonName] or not AS.preload[addonName]) then return end
-
-	if skinFunc then
-		AS.register[addonName][skinFunc] = nil
 	else
-		AS.register[addonName] = nil
-	end
-	if AS.preload[addonName] then
-		AS.preload[addonName] = nil
-	end
-end
-
-local function GenerateEventFunction()
-	local eventHandler = function(_, event, ...)
 		for skin, funcs in pairs(AS.skins) do
-			if AS:CheckOption(skin) and AS.events[event][skin] then
+			if AS.events[event][skin] and AS:CheckOption(skin) and (skin == 'Libraries' or skin == 'Ace3' or strmatch(skin, '^Blizzard_') or AS:CheckAddOn(skin)) then
 				for _, func in ipairs(funcs) do
 					AS:CallSkin(skin, func, event, ...)
 				end
 			end
 		end
 	end
-	return eventHandler
 end
 
-function AS:RegisteredSkin(addonName, priority, func, events)
-	for c, _ in pairs(events) do
-		if strfind(c, '%[') then
-			local conflict = strmatch(c, '%[([!%w_]+)%]')
-			if AS:CheckAddOn(conflict) then return end
+local alwaysValid = { PLAYER_ENTERING_WORLD = true, ADDON_LOADED = true }
+
+function AS:RegisterSkin(addonName, skinFunc, ...)
+	local priority = 1
+	local events = ... and { ... } or { 'PLAYER_ENTERING_WORLD' }
+
+	for _, event in next, events do
+		if not event then break end
+		local conflict = strmatch(event, '%[([!%w_]+)%]')
+		if conflict and AS:CheckAddOn(conflict) then
+			return
+		elseif type(event) == 'number' then
+			priority = event
+		elseif alwaysValid[event] or pcall(Validator.RegisterEvent, Validator, event) then
+			Validator:UnregisterEvent(event)
+			if not AS.events[event] then AS.events[event] = {} end
+			AS.events[event][addonName] = true
 		end
 	end
+
 	if not AS.skins[addonName] then AS.skins[addonName] = {} end
-	AS.skins[addonName][priority] = func
-	for event, _ in pairs(events) do
-		if not strfind(event, '%[') then
-			if pcall(Validator.RegisterEvent, Validator, event) then
-				Validator:UnregisterEvent(event)
-				if not AS.events[event] then
-					AS[event] = GenerateEventFunction()
-					AS:RegisterEvent(event)
-					AS.events[event] = {}
-				end
-				AS.events[event][addonName] = true
-			end
-		end
+	AS.skins[addonName][priority] = skinFunc or R[addonName]
+end
+
+function AS:UnregisterSkin(addonName)
+	if (not AS.skins[addonName] or not AS.preload[addonName]) then return end
+
+	AS.skins[addonName] = nil
+	if AS.preload[addonName] then
+		AS.preload[addonName] = nil
 	end
 end
 
-function AS:RegisterSkinForPreload(addonName, skinFunc, addon1)
-	AS.preload[addonName] = { func = skinFunc, addon = addon1 }
+function AS:RegisterSkinForPreload(addonName, skinFunc, addon)
+	AS.preload[addonName] = { func = skinFunc or R[addonName], addon = addon }
 end
 
 function AS:RunPreload(addonName)
@@ -203,6 +170,7 @@ function AS:RunPreload(addonName)
 		pcall(preloadData.func, self, 'ADDON_LOADED', addonName)
 	end
 end
+
 
 local function errorhandler(err)
 	return geterrorhandler()(err)
@@ -213,18 +181,18 @@ function AS:CallSkin(addonName, func, event, ...)
 		local args = {...}
 		xpcall(function() func(self, event, unpack(args)) end, errorhandler)
 	else
-		local pass, error = pcall(func, self, event, ...)
+		local pass = pcall(func, self, event, ...)
 		if not pass then
 			AS.FoundError = true
-			AddOnSkinsDS[AS.Version] = AddOnSkinsDS[AS.Version] or {}
-			AddOnSkinsDS[AS.Version][addonName] = true
+			_G.AddOnSkinsDS[AS.Version] = _G.AddOnSkinsDS[AS.Version] or {}
+			_G.AddOnSkinsDS[AS.Version][addonName] = true
 			AS:SetOption(addonName, false)
 			local Name = AS:CheckAddOn(addonName) and format('%s %s', addonName, AS:GetAddOnVersion(addonName) or 'UNKNOWN') or addonName
 
 			tinsert(AS.SkinErrors, Name)
 
 			if AS.RunOnce then
-				AS:Print(format('%s: There was an error in the following skin: %s', AS.Version, Name))
+				AS:Print(format(L["%s: There was an error in the following skin: %s"], AS.Version, Name))
 			end
 		end
 	end
@@ -254,87 +222,67 @@ function AS:UpdateMedia()
 	AS.BorderColor = { 0, 0, 0 }
 	AS.Color = AS.ClassColor
 	AS.HideShadows = false
-
-	if AS:CheckOption('SkinTemplate') == 'Custom' then
-		AS.BackdropColor = AS:CheckOption('CustomBackdropColor')
-		AS.BorderColor = AS:CheckOption('CustomBorderColor')
-	end
 end
 
-function AS:GetPixelScale()
-	AS.mult = max(0.4, min(1.15, 768 / AS.ScreenHeight))
-end
-
-function AS:StartSkinning()
+function AS:StartUp(event, ...)
 	AS:UnregisterEvent('PLAYER_ENTERING_WORLD')
-	AS:GetPixelScale()
 
 	AS.Color = AS:CheckOption('ClassColor') and AS.ClassColor or { 0, 0.44, .87, 1 }
 	AS.ParchmentEnabled = AS:CheckOption('Parchment')
 
 	AS:UpdateMedia()
 
-	for addonName, alldata in pairs(AS.register) do
-		for _, data in pairs(alldata) do
-			AS:RegisteredSkin(addonName, data.priority, data.func, data.events)
-		end
+	if AS:CheckAddOn('ElvUI') then
+		AS:SecureHook(_G.ElvUI[1], 'UpdateMedia')
 	end
 
 	if not AS:CheckOption('SkinDebug') then
-		for Version, SkinTable in pairs(AddOnSkinsDS) do
+		for Version, SkinTable in pairs(_G.AddOnSkinsDS) do
 			if Version == AS.Version or Version < AS.Version then
+				if Version < AS.Version then
+					_G.AddOnSkinsDS[Version] = nil
+				end
 				for addonName, _ in pairs(SkinTable) do
 					AS:SetOption(addonName, ((Version == AS.Version) and false or (Version < AS.Version) and true))
-				end
-				if Version < AS.Version then
-					AddOnSkinsDS[Version] = nil
 				end
 			end
 		end
 	end
 
-	for addonName, funcs in AS:OrderedPairs(AS.skins) do
-		-- Check Blizzard
-		if AS:CheckOption(addonName) and strfind(addonName, 'Blizzard_') then
+	-- Check Blizzard for already loaded
+	for addonName, funcs in next, AS.skins do
+		if strmatch(addonName, '^Blizzard_') and AS:CheckOption(addonName) then
 			for _, func in ipairs(funcs) do
 				if IsAddOnLoaded(addonName) then
 					AS:CallSkin(addonName, func, 'ADDON_LOADED', addonName)
 				end
-
-				AS:CallSkin(addonName, func, 'PLAYER_ENTERING_WORLD')
-			end
-		end
-
-		if AS:CheckOption(addonName) and (AS:CheckAddOn(addonName) or addonName == 'Libraries' or addonName == 'Ace3') then
-			for _, func in ipairs(funcs) do
-				AS:CallSkin(addonName, func, 'PLAYER_ENTERING_WORLD')
 			end
 		end
 	end
+
+	AS:SkinEvent(event, ...)
 
 	if AS:CheckOption('LoginMsg') then
 		AS:Print(format("Version: |cFF1784D1%s|r Loaded!", AS.Version))
 	end
 
-	if AS:CheckAddOn('AddonLoader') then
-		AS:Print('AddOnSkins is not compatible with AddonLoader.\nPlease remove it if you would like all the skins to function.')
-	end
-
 	if not AS:CheckOption('SkinDebug') and AS.FoundError then
-		AS:Print(format('%s: There was an error in the following skin(s): %s', AS.Version, table.concat(AS.SkinErrors, ", ")))
-		AS:Print(format('Please report this to Azilroka immediately @ %s', AS:PrintURL(AS.TicketTracker)))
+		AS:Print(format(L["%s: There was an error in the following skin(s): %s"], AS.Version, table.concat(AS.SkinErrors, ", ")))
+		AS:Print(format(L["Please report this to Azilroka immediately @ %s"], AS:PrintURL(AS.TicketTracker)))
 	end
 
-	AS:EmbedInit()
+	ES:Initialize()
 
 	AS.RunOnce = true
 end
 
 function AS:Init(event, addon)
-	if event == 'ADDON_LOADED' and IsAddOnLoaded(AddOnName) then
-		AS:BuildProfile()
-
-		AS:UpdateMedia()
+	if event == 'ADDON_LOADED' and (AS.Initialized or IsAddOnLoaded(AddOnName)) then
+		if addon == AddOnName then
+			AS.Initialized = true
+			AS:BuildProfile()
+			AS:UpdateMedia()
+		end
 
 		AS:RunPreload(addon)
 	end
@@ -342,27 +290,11 @@ function AS:Init(event, addon)
 	if event == 'PLAYER_LOGIN' then
 		AS:BuildOptions()
 
-		if _G.EnhancedShadows then
-			AS.ES = _G.EnhancedShadows
+		for addOnEvent in pairs(AS.events) do
+			AS:RegisterEvent(addOnEvent, 'SkinEvent')
 		end
 
-		AS.EP = LibStub('LibElvUIPlugin-1.0', true)
-		if AS.EP then
-			AS.EP:RegisterPlugin(AddOnName, AS.GetOptions)
-		else
-			AS:GetOptions()
-		end
-
-		AS:RegisterEvent('PLAYER_ENTERING_WORLD', 'StartSkinning')
-
-		if AS.Libs.LSM then
-			AS.Libs.LSM:Register('statusbar', 'Solid', [[Interface\Buttons\WHITE8X8]])
-		end
-
-		if AS.Retail then
-			AS:RegisterEvent('PET_BATTLE_CLOSE', 'AddNonPetBattleFrames')
-			AS:RegisterEvent('PET_BATTLE_OPENING_START', 'RemoveNonPetBattleFrames')
-		end
+		AS:RegisterEvent('PLAYER_ENTERING_WORLD', 'StartUp')
 	end
 end
 

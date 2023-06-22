@@ -1,15 +1,11 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 if not AS:CheckAddOn('Recount') then return end
 
--- Cache global variables
---Lua functions
+local ES = AS.EmbedSystem
 local _G = _G
---WoW API / Variables
--- GLOBALS:
 
-function AS:Embed_Recount()
-	local EmbedParent = _G.EmbedSystem_MainWindow
-	if AS:CheckOption('EmbedSystemDual') then EmbedParent = AS:CheckOption('EmbedRight') == 'Recount' and _G.EmbedSystem_RightWindow or _G.EmbedSystem_LeftWindow end
+function ES:Recount()
+	local EmbedParent = AS:CheckOption('EmbedSystemDual') and (AS:CheckOption('EmbedRight') == 'Recount' and ES.Right or ES.Left) or ES.Main
 
 	_G.Recount_MainWindow:SetParent(EmbedParent)
 	_G.Recount_MainWindow:ClearAllPoints()
@@ -18,13 +14,9 @@ function AS:Embed_Recount()
 	_G.Recount_MainWindow:SetFrameLevel(AS:CheckOption('EmbedFrameLevel'))
 
 	if AS:CheckOption('Recount') then
-		if _G.Recount_MainWindow.Backdrop then
-			AS:SetTemplate(_G.Recount_MainWindow.Backdrop, AS:CheckOption('EmbedBackdropTransparent') and 'Transparent')
-			if AS:CheckOption('EmbedBackdrop') then
-				_G.Recount_MainWindow.Backdrop:Show()
-			else
-				_G.Recount_MainWindow.Backdrop:Hide()
-			end
+		if _G.Recount_MainWindow.backdrop then
+			S:SetTemplate(_G.Recount_MainWindow.backdrop, AS:CheckOption('EmbedBackdropTransparent') and 'Transparent')
+			_G.Recount_MainWindow.backdrop:SetShown(AS:CheckOption('EmbedBackdrop'))
 		end
 	end
 

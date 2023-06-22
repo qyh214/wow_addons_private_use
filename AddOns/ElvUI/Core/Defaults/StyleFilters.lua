@@ -44,7 +44,7 @@ G.nameplates.filters = {
 }
 
 if E.Retail then
-	G.nameplates.filters.ElvUI_Explosives = {
+	G.nameplates.filters.ElvUI_Incorporeal = {
 		triggers = {
 			priority = 2,
 			nameplateType = {
@@ -52,11 +52,10 @@ if E.Retail then
 				enemyNPC = true
 			},
 			names = {
-				['120651'] = true
+				['204560'] = true -- Incorporeal Being
 			}
 		},
 		actions = {
-			usePortrait = true,
 			scale = 1.15,
 			color = {
 				health = true,

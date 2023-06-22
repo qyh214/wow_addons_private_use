@@ -1,9 +1,8 @@
 local id, e = ...
 local panel=CreateFrame("Frame")
+--local addName= 'WoWDate'
 WoWDate={}
 e.GroupFrame={}--UnitFrame.lua 设置装等， 专精
-
-
 
 --##############
 --战网，好友GUID
@@ -11,11 +10,12 @@ e.GroupFrame={}--UnitFrame.lua 设置装等， 专精
 e.WoWGUID={}--e.WoWGUID[名称-服务器]=guid
 local function setwowguidTab(info)
     if info and info.characterName then
-        local name= info.characterName
-        if info.realmDisplayName and info.realmDisplayName~='' and info.realmDisplayName~=e.Player.realm then
-            name= name..'-'..info.realmDisplayName
+        local name= e.GetUnitName(info.characterName)
+        if info.isOnline and info.wowProjectID==1 then
+            e.WoWGUID[name]={guid=info.playerGuid, faction=info.factionName}
+        else
+            e.WoWGUID[name]=nil
         end
-        e.WoWGUID[name]= (info.isOnline and info.wowProjectID==1) and info.playerGuid or nil
     end
 end
 local function get_WoW_GUID_Info(friendIndex)
@@ -60,13 +60,11 @@ local function get_Player_Info(guid)--取得玩家信息
         end
 
         itemLevel= itemLevel or e.UnitItemLevel[guid] and e.UnitItemLevel[guid].itemLevel
-        --local name, realm= UnitFullName(unit)
         local specID= GetInspectSpecialization(unit)
         e.UnitItemLevel[guid] = {--玩家装等
             itemLevel= itemLevel,
             specID= specID,
-            --name= name,
-            --realm= realm,
+            faction= UnitFactionGroup(unit),
             col= hex,
             r=r,
             g=g,
@@ -128,6 +126,7 @@ function e.GetGroupGuidDate()--队伍数据收集
                         unit=unit,
                         subgroup= subgroup,
                         combatRole= role or combatRole,
+                        faction= UnitFactionGroup(unit),
                     }
                     e.GroupGuid[guid]= tab
                     tab.guid= guid
@@ -149,6 +148,7 @@ function e.GetGroupGuidDate()--队伍数据收集
                         unit= unit,
                         combatRole= UnitGroupRolesAssigned(unit),
                         guid=guid,
+                        faction= UnitFactionGroup(unit),
                     }
                     e.GroupGuid[guid]= tab
                     tab.guid= guid
@@ -204,7 +204,7 @@ end
 local function updateItems()
     WoWDate[e.Player.guid].Keystone.itemLink={}
     WoWDate[e.Player.guid].Item={}--{itemID={bag=包, bank=银行}}
-    for bagID=0, NUM_BAG_SLOTS do
+    for bagID= Enum.BagIndex.Backpack, Constants.InventoryConstants.NumBagSlots+1 do
         for slotID=1, C_Container.GetContainerNumSlots(bagID) do
             local itemID = C_Container.GetContainerItemID(bagID, slotID)
             if itemID then
@@ -225,6 +225,21 @@ local function updateItems()
     end
 end
 
+e.GetItemWoWNum= function(itemID)--e.GetItemWoWNum()--取得WOW物品数量
+    local all,numPlayer=0,0
+    for guid, info in pairs(WoWDate) do
+        if guid and info then --and guid~=e.Player.guid then
+            local tab=info.Item[itemID]
+            if tab and tab.bag and tab.bank then
+                all=all +tab.bag
+                all=all +tab.bank
+                numPlayer=numPlayer +1
+            end
+        end
+    end
+    return all, numPlayer
+end
+
 --#######
 --更新货币
 --#######
@@ -240,7 +255,7 @@ local function updateCurrency(arg1)--{currencyID = 数量}
             local currencyID = link and C_CurrencyInfo.GetCurrencyIDFromLink(link)
             local info = C_CurrencyInfo.GetCurrencyListInfo(i)
             if currencyID and info and info.quantity and currencyID~=2032 then
-                WoWDate[e.Player.guid].Currency[currencyID]=info.quantity==0 and nil or info.quantity
+                WoWDate[e.Player.guid].Currency[currencyID]= info.quantity<=0 and nil or info.quantity
             end
         end
     end
@@ -320,6 +335,17 @@ local function set_Money()--钱
     WoWDate[e.Player.guid].Money= money==0 and nil or money
 end
 
+
+local function get_Info_Challenge()--挑战
+    C_MythicPlus.RequestCurrentAffixes()
+    C_MythicPlus.RequestMapInfo()
+    C_MythicPlus.RequestRewards()
+    for _, mapID in pairs(C_ChallengeMode.GetMapTable() or {}) do
+        C_ChallengeMode.RequestLeaders(mapID)
+    end
+    --C_MythicPlus.GetRunHistory(false, true)--本周记录
+end
+
 panel:RegisterEvent("ADDON_LOADED")
 --panel:RegisterEvent('PLAYER_LOGOUT')
 panel:RegisterEvent('PLAYER_ENTERING_WORLD')
@@ -367,6 +393,7 @@ panel:SetScript('OnEvent', function(self, event, arg1, arg2)
                     --Money=钱
                     --GuildInfo=公会信息,
                 }
+            WoWDate[e.Player.guid].faction= e.Player.faction--派系
 
             for guid, tab in pairs(WoWDate) do--清除不是本周数据
                 if tab.Keystone.week ~=e.Player.week then
@@ -385,10 +412,9 @@ panel:SetScript('OnEvent', function(self, event, arg1, arg2)
             end
 
             if e.Player.levelMax then
-                C_MythicPlus.RequestMapInfo()
-                C_MythicPlus.RequestRewards()
-                C_MythicPlus.RequestCurrentAffixes()
+                get_Info_Challenge()--挑战
             end
+
             RequestRaidInfo()
             C_MajorFactions.RequestCatchUpState()
             C_FriendList.ShowFriends()
@@ -404,7 +430,7 @@ panel:SetScript('OnEvent', function(self, event, arg1, arg2)
                 NotifyInspect('player')--取得,自已, 装等
                 e.GetGroupGuidDate()--队伍数据收集    
                 set_Money()--钱
-                updateCurrency()--{currencyID = 数量}
+                updateCurrency(nil)--{currencyID = 数量}
 
                 --################
                 --开启, 新手編輯模式
@@ -440,12 +466,11 @@ panel:SetScript('OnEvent', function(self, event, arg1, arg2)
             get_Player_Info(arg1)
 
     elseif event=='CHALLENGE_MODE_MAPS_UPDATE' or event=='WEEKLY_REWARDS_UPDATE' then--地下城挑战
-        updateChallengeMode()
         C_MythicPlus.RequestRewards()
+        C_Timer.After(2, updateChallengeMode)
 
     elseif event=='CHALLENGE_MODE_COMPLETED' then
-        C_MythicPlus.RequestMapInfo()
-        C_MythicPlus.RequestRewards()
+        get_Info_Challenge()--挑战
 
     elseif event=='ZONE_CHANGED_NEW_AREA' then--位面, 清除
         e.Player.Layer=nil
@@ -462,6 +487,7 @@ panel:SetScript('OnEvent', function(self, event, arg1, arg2)
 
     elseif event=='BOSS_KILL' then
         RequestRaidInfo()
+
     elseif event=='CURRENCY_DISPLAY_UPDATE' then--货币
         updateCurrency(arg1)
 

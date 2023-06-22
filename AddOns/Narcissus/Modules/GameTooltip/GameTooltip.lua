@@ -1094,6 +1094,7 @@ function NarciEquipmentTooltipMixin:SetUseTransmogLayout(state)
             self.HeaderFrame.ItemName:SetPoint("TOPLEFT", self.HeaderFrame, "TOPLEFT", TOOLTIP_PADDING, -36);
             self.HeaderFrame.ItemType:SetPoint("TOPLEFT", self.HeaderFrame.ItemName, "BOTTOMLEFT", 0, -4);
             self.headerPadding = 48 + SEG_INSETS;
+            self.HeaderFrame.CraftingQualityIcon:Hide();
         else
             self.HeaderFrame.ItemName:SetPoint("TOPLEFT", self.HeaderFrame, "TOPLEFT", TOOLTIP_PADDING, -TOOLTIP_PADDING);
             self.HeaderFrame.ItemType:SetPoint("TOPLEFT", self.HeaderFrame.ItemLevel, "BOTTOMLEFT", 0, -2);

@@ -19,11 +19,11 @@ local Save={
 local button
 local panel= CreateFrame("Frame")
 
-local Magic=function(s)  local t={'%%', '%.', '%(','%)','%+', '%-', '%*', '%?', '%[', '%^', '%$'} for _,v in pairs(t) do s=s:gsub(v,'%%'..v) end return s end --  ( ) . % + - * ? [ ^ $
+--[[local Magic=function(s)  local t={'%%', '%.', '%(','%)','%+', '%-', '%*', '%?', '%[', '%^', '%$'} for _,v in pairs(t) do s=s:gsub(v,'%%'..v) end return s end --  ( ) . % + - * ? [ ^ $
 local MK=function(k,b) if not b then b=1 end if k>=1e6 then k=string.format('%.'..b..'fm',k/1e6) elseif k>= 1e4 and GetLocale() == "zhCN" then k=string.format('%.'..b..'fw',k/1e4) elseif k>=1e3 then k=string.format('%.'..b..'fk',k/1e3) else k=string.format('%i',k) end return k end--加k 9.1
 local Race=function(u, race, sex2) local s =u and select(2,UnitRace(u)) or race local sex= u and UnitSex(u) or sex2 if s and (sex==2 or sex==3 ) then s= s=='Scourge' and 'Undead' or s=='HighmountainTauren' and 'highmountain' or s=='ZandalariTroll' and 'zandalari' or s=='LightforgedDraenei' and 'lightforged' or s s=string.lower(s) sex= sex==2 and 'male' or sex==3 and 'female' return '|A:raceicon-'..s..'-'..sex..':0:0|a' end end--角色图标
 local Class=function(u, c, icon) c=c or select(2, UnitClass(u)) c=c and 'groupfinder-icon-class-'..c or nil if c then if icon then return '|A:'..c ..':0:0|a' else return c end end end--职业图标
---local Name=UnitName('player')
+]]
 
 local set_LOOT_ITEM= LOOT_ITEM:gsub('%%s', '(.+)')--%s获得了战利品：%s。
 
@@ -56,12 +56,8 @@ local function Realm(link)--去服务器为*, 加队友种族图标,和N,T
     if name==e.Player.name_realm or name==e.Player.name then
         return e.Icon.toRight2..e.Player.col..COMBATLOG_FILTER_STRING_ME..'|r'..e.Icon.toLeft2
     else
-        local text= e.GetPlayerInfo({unit=nil, guid=nil, name=name,  reName=false, reRealm=false})
+        local text= e.GetPlayerInfo({name=name})
         if server then
-            --[[local realm= e.Get_Region(server)--服务器，EU， US {col=, text=, realm=}
-            if realm then
-                text= text and realm.col..text or realm.col
-            end]]
             if server== e.Player.realm then
                 return (text or '')..link:gsub('%-'..server..'|r]|h', '|r]|h')
             elseif e.Player.Realms[server] then
@@ -156,7 +152,7 @@ local function Item(link)--物品超链接
     end
     local bag=GetItemCount(link, true)--数量
     if bag and bag>0 then
-        t=t..e.Icon.bag2..MK(bag, 3)
+        t=t..e.Icon.bag2..e.MK(bag, 3)
     end
     if t~=link then
         return t
@@ -235,7 +231,13 @@ local function Currency(link)--货币
     if info and info.iconFileID then
         local nu=''
         if info.quantity and info.quantity>0 then
-            nu=MK(info.quantity, 3)
+            nu=e.MK(info.quantity, 3)
+            if (info.quantity==info.maxQuantity--最大数
+                or (info.canEarnPerWeek and info.maxWeeklyQuantity==info.quantityEarnedThisWeek)--本周
+                or (info.useTotalEarnedForMaxQty and info.totalEarned==info.maxQuantity)--赛季
+            ) then
+                nu= '|cnRED_FONT_COLOR:'..nu..'|r'
+            end
         end
         return  '|T'..info.iconFileID..':0|t'..link..nu
     end
@@ -372,27 +374,12 @@ end
 
 local function DungeonScore(link)--史诗钥石评分
     local score, guid, itemLv=link:match('|HdungeonScore:(%d+):(.-):.-:%d+:(%d+):')
-    local t=link
-    if score and score~='0' then
-        t=score..link
-    end
-    if guid then
-        local _, class, _, race, sex = GetPlayerInfoByGUID(guid)
-        race=Race(nil, race, sex)
-        class=Class(nil, class, true)
-        t=class and class..t or t
-        t=race and race..t or t
-    end
+    local t=e.GetPlayerInfo({guid=guid})..e.GetKeystoneScorsoColor(score)
+    t=t..link
     if itemLv and itemLv~='0' then
-        t=t..itemLv
+        t=t..'|A:charactercreate-icon-customize-body-selected:0:0|a'..itemLv
     end
-    local nu=#C_MythicPlus.GetRunHistory()
-    if nu>0 then
-        t=t..' |cff00ff00'..nu..'/'..#C_MythicPlus.GetRunHistory(false, true)..'|r'
-    end
-    if t~=link then
-        return t
-    end
+    return t
 end
 
 local function Journal(link)--冒险指南 |Hjournal:0:1031:14|h[Uldir]|h 0=Instance, 1=Encounter, 2=Section
@@ -429,23 +416,14 @@ end
 
 local function Instancelock(link)
     local guid, InstanceID, DifficultyID=link:match('Hinstancelock:(.-):(%d+):(%d+):')
-    local t=link
-    if guid then
-        local _, class, _, race, sex = GetPlayerInfoByGUID(guid)
-        race=Race(nil, race, sex)
-        class=Class(nil, class, true)
-        t=class and class..t or t
-        t=race and race..t or t
-    end
+    local t=e.GetPlayerInfo({guid=guid})..link
     if DifficultyID and InstanceID then
-        local name=GetDifficultyInfo(DifficultyID)
+        local name= GetDifficultyInfo(DifficultyID)
         if name then
             t=t..'|Hjournal:0:'..InstanceID..':'..DifficultyID..'|h['..name..']|h'
         end
     end
-    if t~=link then
-        return t
-    end
+   return t
 end
 
 local function TransmogSet(link)--幻化套装
@@ -532,7 +510,7 @@ local function setAddMessageFunc(self, s, ...)
             if unitName==e.Player.name then
                 s=s:gsub(unitName..'['..e.Player.col..(e.onlyChinese and '我' or COMBATLOG_FILTER_STRING_ME)..'|r]')
             else
-                s=s:gsub(Magic(unitName), e.PlayerLink(unitName))
+                s=s:gsub(e.Magic(unitName), e.PlayerLink(unitName))
             end
         end
     end
@@ -569,7 +547,8 @@ local function setUseDisabled()
         DEFAULT_CHAT_FRAME.AddMessage=setAddMessageFunc
         DEFAULT_CHAT_FRAME.editBox:SetAltArrowKeyMode(false)--alt +方向= 移动
     end
-    button.texture:SetShown(not Save.disabed)--SetDesaturated(Save.disabed)
+
+    button.texture:SetAtlas(not Save.disabed and e.Icon.icon or e.Icon.disabled)
 end
 local function setFunc()--使用，禁用
     Save.disabed= not Save.disabed and true or nil
@@ -610,11 +589,11 @@ local function setPanel()
         local s=editBox:GetText()
         if s:gsub(' ','')~='' then
             s=s..' '
-            s=s:gsub('\n', ' ')
+            s=s:gsub('|n', ' ')
             s:gsub('.- ', function(t)
                 t=t:gsub(' ','')
                 if t and t~='' then
-                    t=Magic(t)
+                    t=e.Magic(t)
                     Save.text[t]=true
                     n=n+1
                     print(n..')'..COLOR, t)
@@ -632,7 +611,7 @@ local function setPanel()
     if Save.channels then
         local t3=''
         for k, v in pairs(Save.channels) do
-            if t3~='' then t3=t3..'\n' end
+            if t3~='' then t3=t3..'|n' end
             t3=t3..k..'='..v
         end
        editBox2:SetText(t3)
@@ -647,11 +626,11 @@ local function setPanel()
         local s=editBox2:GetText()
         if s:gsub(' ','')~='' then
             s=s..' '
-            s=s:gsub('\n', ' ')
+            s=s:gsub('|n', ' ')
             s:gsub('.-=.- ', function(t)
                 local name,name2=t:match('(.-)=(.-) ')
                 if name and name2 and name~='' and name2~='' then
-                    name=Magic(name)
+                    name=e.Magic(name)
                     Save.channels[name]=name2
                     n=n+1
                     print(n..')'..CHANNELS..': ',name, REPLACE, name2)
@@ -709,9 +688,18 @@ local function set_START_TIMER_Event()--事件, 声音
     if Save.setPlayerSound then
         panel:RegisterEvent('START_TIMER')
         panel:RegisterEvent('STOP_TIMER_OF_TYPE')
+        if not button.setPlayerSoundTips then
+            button.setPlayerSoundTips= button:CreateTexture(nil,'OVERLAY')
+            button.setPlayerSoundTips:SetPoint('BOTTOMLEFT',4, 4)
+            button.setPlayerSoundTips:SetSize(12,12)
+            button.setPlayerSoundTips:SetAtlas('chatframe-button-icon-voicechat')
+        end
     else
         panel:UnregisterEvent('START_TIMER')
         panel:UnregisterEvent('STOP_TIMER_OF_TYPE')
+    end
+    if button.setPlayerSoundTips then
+        button.setPlayerSoundTips:SetShown(Save.setPlayerSound)
     end
 end
 
@@ -720,7 +708,7 @@ end
 --对话框
 --#####
 StaticPopupDialogs[id..addName..'WELCOME']={--区域,设置对话框
-    text=id..' '..addName..'\n\n'..	EMOTE103_CMD1:gsub('/','').. JOIN..' |cnGREEN_FONT_COLOR:%s|r',
+    text=id..' '..addName..'|n|n'..	EMOTE103_CMD1:gsub('/','').. JOIN..' |cnGREEN_FONT_COLOR:%s|r',
     whileDead=1,
     hideOnEscape=1,
     exclusive=1,
@@ -890,9 +878,9 @@ local function InitMenu(self, level, type)
         tooltipOnButton=true,
         tooltipTitle= e.onlyChinese and '框架栈' or DEBUG_FRAMESTACK,
         tooltipText='|cnGREEN_FONT_COLOR:Alt|r '..(e.onlyChinese and '切换' or HUD_EDIT_MODE_SWITCH)
-                    ..'\n|cnGREEN_FONT_COLOR:Ctrl|r '..(e.onlyChinese and '显示' or SHOW)
-                    ..'\n|cnGREEN_FONT_COLOR:Shift|r '..(e.onlyChinese and '材质信息' or TEXTURES_SUBHEADER..INFO)
-                    ..'\n|cnGREEN_FONT_COLOR:Ctrl+C|r '.. (e.onlyChinese and '复制' or CALENDAR_COPY_EVENT)..' \"File\" '..(e.onlyChinese and '类型' or TYPE),
+                    ..'|n|cnGREEN_FONT_COLOR:Ctrl|r '..(e.onlyChinese and '显示' or SHOW)
+                    ..'|n|cnGREEN_FONT_COLOR:Shift|r '..(e.onlyChinese and '材质信息' or TEXTURES_SUBHEADER..INFO)
+                    ..'|n|cnGREEN_FONT_COLOR:Ctrl+C|r '.. (e.onlyChinese and '复制' or CALENDAR_COPY_EVENT)..' \"File\" '..(e.onlyChinese and '类型' or TYPE),
         func= function()--Bindings.xml
             if not IsAddOnLoaded("Blizzard_DebugTools") then
                 LoadAddOn("Blizzard_DebugTools")
@@ -905,6 +893,7 @@ local function InitMenu(self, level, type)
     --e.LibDD:UIDropDownMenu_AddSeparator(level)
     info={--重载
         text= e.onlyChinese and '重新加载UI' or RELOADUI,
+        icon='Interface\\Vehicles\\UI-Vehicles-Button-Exit-Up',
         notCheckable=true,
         tooltipOnButton=true,
         tooltipTitle='/reload',
@@ -942,7 +931,8 @@ local function Init()
     if not Save.disabed then--使用，禁用
         setUseDisabled()
     else
-        button.texture:SetDesaturated(true)
+        --button.texture:SetDesaturated(true)
+        button.texture:SetAtlas(not Save.disabed and e.Icon.icon or e.Icon.disabled)
     end
 
     setPanel()--设置控制面板
@@ -951,9 +941,9 @@ local function Init()
 
     showTimestamps= C_CVar.GetCVar("showTimestamps")~='none' and true or nil
 
-    if Save.setPlayerSound then
+    --if Save.setPlayerSound then
         set_START_TIMER_Event()--事件, 声音
-    end
+    --end
 
     LFGListInviteDialog:SetScript("OnShow", function(self)--队伍查找器, 接受邀请
         if Save.setPlayerSound then
@@ -996,6 +986,7 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
 
                 button=e.Cbtn2(nil, WoWToolsChatButtonFrame, true, false)
 
+
                 Init()
                 panel:RegisterEvent('CVAR_UPDATE')
                 panel:RegisterEvent("PLAYER_LOGOUT")
@@ -1003,10 +994,18 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
             --panel:UnregisterEvent('ADDON_LOADED')
 
         elseif arg1=='Blizzard_DebugTools' then--FSTACK Blizzard_DebugTools.lua
-            local btn= e.Cbtn(TableAttributeDisplay, {icon='hide', size={40,40}})
+            local btn= e.Cbtn(TableAttributeDisplay, {icon='hide', size={35,35}})
             btn:SetPoint("BOTTOMRIGHT", TableAttributeDisplay.TitleButton, 'TOPRIGHT',0,2)
             btn:SetNormalAtlas(e.Icon.icon)
             btn:SetScript('OnClick', FrameStackTooltip_ToggleDefaults)
+            btn:SetScript('OnLeave', function() e.tips:Hide() end)
+            btn:SetScript('OnEnter', function(self2)
+                e.tips:SetOwner(self2, "ANCHOR_LEFT")
+                e.tips:ClearLines()
+                e.tips:AddDoubleLine('|cff00ff00FST|rACK', e.GetEnabeleDisable(true)..'/'..e.GetEnabeleDisable(false))
+                e.tips:AddDoubleLine(id, addName)
+                e.tips:Show()
+            end)
 
             local edit= CreateFrame("EditBox", nil, TableAttributeDisplay, 'InputBoxTemplate')
             edit:SetPoint('BOTTOMRIGHT', btn, 'BOTTOMLEFT')
@@ -1024,6 +1023,12 @@ panel:SetScript("OnEvent", function(self, event, arg1, arg2, arg3)
                             end
                         end
                     end
+            end)
+            edit:SetScript("OnKeyUp", function(s, key)
+                if IsControlKeyDown() and key == "C" then
+                    --s:ClearFocus() s:GetParent():Hide()
+                    print(id,addName, '|cnGREEN_FONT_COLOR:'..(e.onlyChinese and '复制链接' or BROWSER_COPY_LINK)..'|r', s:GetText())
+                end
             end)
         end
 

@@ -4,6 +4,8 @@ WeakAuras = {}
 WeakAuras.L = {}
 Private.frames = {}
 
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 --- @alias uid string
 --- @alias auraId string
 
@@ -297,8 +299,8 @@ WeakAuras.normalWidth = 1.3
 WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
 local versionStringFromToc = GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "5.5.2"
-local buildTime = "20230504020050"
+local versionString = "5.5.5"
+local buildTime = "20230621150703"
 
 local flavorFromToc = GetAddOnMetadata("WeakAuras", "X-Flavor")
 local flavorFromTocToNumber = {
@@ -310,7 +312,7 @@ local flavorFromTocToNumber = {
 local flavor = flavorFromTocToNumber[flavorFromToc]
 
 --[==[@debug@
-if versionStringFromToc == "5.5.2" then
+if versionStringFromToc == "5.5.5" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
 end

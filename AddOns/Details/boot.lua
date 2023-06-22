@@ -15,8 +15,8 @@
 		local addonName, Details222 = ...
 		local version, build, date, tocversion = GetBuildInfo()
 
-		Details.build_counter = 10986
-		Details.alpha_build_counter = 10986 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 11023
+		Details.alpha_build_counter = 11023 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -40,11 +40,7 @@
 
 		Details = Details
 
-		local gameVersionPrefix = "Unknown Game Version - You're probably using a Details! not compatible with this version of the Game"
-		--these are the game versions currently compatible with this Details! versions
-		if (DetailsFramework.IsWotLKWow() or DetailsFramework.IsShadowlandsWow() or DetailsFramework.IsDragonflight()) then
-			gameVersionPrefix = "WD"
-		end
+		local gameVersionPrefix = "VWD" --vanilla, wrath, dragonflight
 
 		Details.gameVersionPrefix = gameVersionPrefix
 
@@ -112,7 +108,32 @@ do
 	--]=]
 
 	local news = {
-		{"v10.1.0.10985.147", "May 4th, 2023"},
+		{"v10.1.0.11022.151", "May 20th, 2023"},
+		"Breakdown pet options has changed to: 'Group Pets by Their Names' or 'Group Pets by Their Spells'.",
+		"Evoker empowered level now ocupies less space on the rectangle showing the damage by empower level.",
+		"Another Framework update.",
+		"Fixed an issue where some pet bars still showing the owner name.",
+		"Fixed an issue with the player selector on Breakdown window causing an error when selecting some players.",
+		"Fixed an issue caused by opening the breakdown window while seeing healing overall.",
+		"Fixed an issue with the min and max damage of a spell when viewing the 'merged' damage of two or more spells.",
+		"Fixed an issue with the Raid Check plugin throwing an error on Shuffle Arenas.",
+		"Fixed shields for Classic versions (Flamanis).",
+
+		{"v10.1.0.11011.151", "May 13th, 2023"},
+		"Added options: 'Group Player Spells With Same Name' and 'Group Pets By Spell' on the breakdown options.",
+		"Added combat log options for 'Calculate Shield Wasted Amount' and 'Calculate Energy Wasted Amount' under the options > Combat Log.",
+		"Framework and OpenRaid Updated.",
+		"Breakdown window won't go off screen anymore.",
+		"Breakdown now shows damage per phase if the segment has more than one phase.",
+		"Overhealing can now be seen within the Healing Done breakdown. This removes the necessity of having to go back and forward between healing done and overhealing.",
+		"Friendly Fire can now be seen in the breakdown window by clicking on the player bar (before the click on the player bar opened the report screen).",
+		"Healing Taken can also be seen on the breakdown window.",
+		"Some options from the Breakdown options got removed, most of them are now auto calculated by the system.",
+		"Fixed an issue where the Frags display was showinig death of friendly objects like Efflorescense.",
+		"Fixed an issue where item damage was showing 'Unknown Item' on cold logins.",
+		"Fixed defenses gauge (miss, dodge, parry) not showing in the spell details on the breakdown window.",
+
+		{"v10.1.0.10985.151", "May 4th, 2023"},
 		"The Breakdown Window has been completely rebuilt from the ground up and now includes support for several new features.",
 		"A significant portion of the back-end code has been revamped, resulting in improved performance and stability.",
 		"Combatlog now supports options, check them at the Combat Log section in the options panel.",
@@ -1180,6 +1201,13 @@ function Details222.PlayerStats:AddStat(statName, value)
 	Details.player_stats[statName] = (Details.player_stats[statName] or 0) + value
 end
 
+---get the value of a saved stat
+---@param statName string
+---@return any
+function Details222.PlayerStats:GetStat(statName)
+	return Details.player_stats[statName]
+end
+
 ---same thing as above but set the value instead of adding
 ---@param statName string
 ---@param value number
@@ -1187,9 +1215,155 @@ function Details222.PlayerStats:SetStat(statName, value)
 	Details.player_stats[statName] = value
 end
 
----get the value of a saved stat
----@param statName string
----@return any
-function Details222.PlayerStats:GetStat(statName, value)
-	return Details.player_stats[statName]
+
+
+---destroy a table and remove it from the object, if the key isn't passed, the object itself is destroyed
+---@param object any
+---@param key string|nil
+function Details:Destroy(object, key)
+	if (key) then
+		if (getmetatable(object[key])) then
+			setmetatable(object[key], nil)
+		end
+		object[key].__index = nil
+		table.wipe(object[key])
+		object[key] = nil
+	else
+		if (getmetatable(object)) then
+			setmetatable(object, nil)
+		end
+		object.__index = nil
+		table.wipe(object)
+	end
+end
+
+---destroy an actor within a combat object, this call will 
+---@param actorObject actor
+---@param combatObject combat
+function Details:DestroyActor(actorObject, combatObject)
+	--using low level api here for performance
+	---@type actor[]
+	local allActors = {}
+
+	for containerType = 1, 4 do
+		local index = combatObject[containerType]._NameIndexTable[actorObject.nome]
+		if (index) then
+			---@type actor
+			local actor = combatObject[containerType]._ActorTable[index]
+
+			if (actor) then
+				allActors[#allActors+1] = actor
+
+				--need to reduce the amount done by the actor from the combatObject
+				local combatTotalsTable = combatObject.totals --without group
+				local combatTotalsTableInGroup = combatObject.totals_grupo --with group
+
+				if (containerType == 1 or containerType == 2) then --damage|healing done
+					combatTotalsTable[containerType] = combatTotalsTable[containerType] - actor.total
+					if (actor.grupo) then
+						combatTotalsTableInGroup[containerType] = combatTotalsTableInGroup[containerType] - actor.total
+					end
+
+				elseif (containerType == 3) then
+					if (actor.total and actor.total > 0) then
+						combatTotalsTable[containerType][actor.powertype] = combatTotalsTable[containerType][actor.powertype] - actor.total
+						combatTotalsTableInGroup[containerType][actor.powertype] = combatTotalsTableInGroup[containerType][actor.powertype] - actor.total
+					end
+					if (actor.alternatepower and actor.alternatepower > 0) then
+						combatTotalsTable[containerType].alternatepower = combatTotalsTable[containerType].alternatepower - actor.alternatepower
+						combatTotalsTableInGroup[containerType].alternatepower = combatTotalsTableInGroup[containerType].alternatepower - actor.alternatepower
+					end
+
+				elseif (containerType == 4) then
+					--decrease the amount of CC break from the combat totals
+					if (actor.cc_break and actor.cc_break > 0) then
+						if (combatTotalsTable[containerType].cc_break) then
+							combatTotalsTable[containerType].cc_break = combatTotalsTable[containerType].cc_break - actor.cc_break
+						end
+						if (combatTotalsTableInGroup[containerType].cc_break) then
+							combatTotalsTableInGroup[containerType].cc_break = combatTotalsTableInGroup[containerType].cc_break - actor.cc_break
+						end
+					end
+
+					--decrease the amount of dispell from the combat totals
+					if (actor.dispell and actor.dispell > 0) then
+						if (combatTotalsTable[containerType].dispell) then
+							combatTotalsTable[containerType].dispell = combatTotalsTable[containerType].dispell - actor.dispell
+						end
+						if (combatTotalsTableInGroup[containerType].dispell) then
+							combatTotalsTableInGroup[containerType].dispell = combatTotalsTableInGroup[containerType].dispell - actor.dispell
+						end
+					end
+
+					--decrease the amount of interrupt from the combat totals
+					if (actor.interrupt and actor.interrupt > 0) then
+						if (combatTotalsTable[containerType].interrupt) then
+							combatTotalsTable[containerType].interrupt = combatTotalsTable[containerType].interrupt - actor.interrupt
+						end
+						if (combatTotalsTableInGroup[containerType].interrupt) then
+							combatTotalsTableInGroup[containerType].interrupt = combatTotalsTableInGroup[containerType].interrupt - actor.interrupt
+						end
+					end
+
+					--decrease the amount of ress from the combat totals
+					if (actor.ress and actor.ress > 0) then
+						if (combatTotalsTable[containerType].ress) then
+							combatTotalsTable[containerType].ress = combatTotalsTable[containerType].ress - actor.ress
+						end
+						if (combatTotalsTableInGroup[containerType].ress) then
+							combatTotalsTableInGroup[containerType].ress = combatTotalsTableInGroup[containerType].ress - actor.ress
+						end
+					end
+
+					--decrease the amount of dead from the combat totals
+					if (actor.dead and actor.dead > 0) then
+						if (combatTotalsTable[containerType].dead) then
+							combatTotalsTable[containerType].dead = combatTotalsTable[containerType].dead - actor.dead
+						end
+						if (combatTotalsTableInGroup[containerType].dead) then
+							combatTotalsTableInGroup[containerType].dead = combatTotalsTableInGroup[containerType].dead - actor.dead
+						end
+					end
+
+					--decreate the amount of cooldowns used from the combat totals
+					if (actor.cooldowns_defensive and actor.cooldowns_defensive > 0) then
+						if (combatTotalsTable[containerType].cooldowns_defensive) then
+							combatTotalsTable[containerType].cooldowns_defensive = combatTotalsTable[containerType].cooldowns_defensive - actor.cooldowns_defensive
+						end
+						if (combatTotalsTableInGroup[containerType].cooldowns_defensive) then
+							combatTotalsTableInGroup[containerType].cooldowns_defensive = combatTotalsTableInGroup[containerType].cooldowns_defensive - actor.cooldowns_defensive
+						end
+					end
+
+					--decrease the amount of buff uptime from the combat totals
+					if (actor.buff_uptime and actor.buff_uptime > 0) then
+						if (combatTotalsTable[containerType].buff_uptime) then
+							combatTotalsTable[containerType].buff_uptime = combatTotalsTable[containerType].buff_uptime - actor.buff_uptime
+						end
+						if (combatTotalsTableInGroup[containerType].buff_uptime) then
+							combatTotalsTableInGroup[containerType].buff_uptime = combatTotalsTableInGroup[containerType].buff_uptime - actor.buff_uptime
+						end
+					end
+
+					--decrease the amount of debuff uptime from the combat totals
+					if (actor.debuff_uptime and actor.debuff_uptime > 0) then
+						if (combatTotalsTable[containerType].debuff_uptime) then
+							combatTotalsTable[containerType].debuff_uptime = combatTotalsTable[containerType].debuff_uptime - actor.debuff_uptime
+						end
+						if (combatTotalsTableInGroup[containerType].debuff_uptime) then
+							combatTotalsTableInGroup[containerType].debuff_uptime = combatTotalsTableInGroup[containerType].debuff_uptime - actor.debuff_uptime
+						end
+					end
+				end
+
+				for i = 1, #allActors do
+					local thisActor = allActors[i]
+					setmetatable(thisActor, nil)
+					thisActor.__index = nil
+					thisActor.__newindex = nil
+					Details:Destroy(thisActor)
+				end
+			end
+		end
+	end
 end

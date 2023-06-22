@@ -1,8 +1,5 @@
-## Changed in v46
+## Changed in v49
 
-* Updated for 10.1.0 and Zaralek Cavern
-* Zaralek Cavern has: rares, dragon glyphs, and loot; is still missing a few points
-* Forbidden Reach's Forbidden Hoard now has loot
-* Update the embedded Krowi_WorldMapButtons-1.4
-* Minor data updates to earlier zones
+* Profession treasure questids added to Zaralek Cavern (thanks to chris-merritt!)
+* Skornak's Lava Ball wasn't available off the PTR
 

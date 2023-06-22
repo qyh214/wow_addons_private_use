@@ -1,7 +1,7 @@
 local id, e = ...
 
 local Save={
-    world= e.Player.cn and '大脚世界频道' or CHANNEL_CATEGORY_WORLD,
+    world= e.Player.region==5 and '大脚世界频道' or FIND_A_GROUP,
     myChatFilter= true,--过滤，多次，内容
 }
 local addName='ChatButtonWorldChannel'
@@ -157,7 +157,7 @@ local function InitMenu(self, level, type)--主菜单
             notCheckable=true,
             func= function()
                 StaticPopupDialogs[id..addName..'changeNamme']={
-                    text=(e.onlyChinese and '修改名称' or EQUIPMENT_SET_EDIT:gsub('/.+',''))..'\n\n'..(e.onlyChinese and '重新加载UI' or RELOADUI ),
+                    text=(e.onlyChinese and '修改名称' or EQUIPMENT_SET_EDIT:gsub('/.+',''))..'|n|n'..(e.onlyChinese and '重新加载UI' or RELOADUI ),
                     whileDead=1,
                     hideOnEscape=1,
                     exclusive=1,

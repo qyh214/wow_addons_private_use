@@ -665,7 +665,7 @@ ns.RegisterPoints(ns.AZURESPAN, {
         npc=195353,
         quest=nil,
         loot={
-            {201440, mount=1553},
+            {201440, mount=1553}, -- Reins of the Liberated Slyvern
         },
         note="Spawns in this cave, then flies around the area in a big circle",
     },

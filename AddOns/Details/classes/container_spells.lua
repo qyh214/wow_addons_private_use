@@ -44,6 +44,13 @@ local addonName, Details222 = ...
 		return self._ActorTable[spellId]
 	end
 
+
+	---return a table containing keys as spellid and value as spelltable
+	---@return table<number, table>
+	function container_habilidades:GetRawSpellTable()
+		return self._ActorTable
+	end
+
 	---return the value of the spellTable[key] for the passed spellId
 	---@param spellId number
 	---@param key string
@@ -70,6 +77,20 @@ local addonName, Details222 = ...
 	function container_habilidades:GetOrCreateSpell(id, shouldCreate, token)
 		return self:PegaHabilidade (id, shouldCreate, token)
 	end
+
+	---return (boolean) if the container two or more spells within
+	---@return boolean
+	function container_habilidades:HasTwoOrMoreSpells()
+		local count = 0
+		for _ in pairs(self._ActorTable) do
+			count = count + 1
+			if (count >= 2) then
+				return true
+			end
+		end
+		return false
+	end
+
 
 	function container_habilidades:PegaHabilidade (id, criar, token)
 

@@ -122,6 +122,7 @@ local LoopIndexRoutine = {} do
 	
 	function LoopIndexRoutine:Reset()
 		self.context.currentIndex = 1
+		self.context.finished = false
 	end
 	
 	function LoopIndexRoutine:New()

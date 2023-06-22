@@ -32,4 +32,3 @@ L["STRING_SURVIVAL"] = "Survie"
 L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "Seuil de décès chronologique"
 L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "Les premiers décès |cFFFFFF00X|r lors de la rencontre sont enregistrés pour apparaître sur le graphique chronologie."
 L["STRING_TOOLTIP"] = "Afficher les graphiques des morts"
-

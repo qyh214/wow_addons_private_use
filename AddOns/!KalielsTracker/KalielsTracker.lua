@@ -1663,11 +1663,8 @@ local function SetHooks()
 	end
 
 	hooksecurefunc("KT_AutoQuestPopupTracker_Update", function(owningModule)
-		if SplashFrame:IsShown() then return end
-		if not owningModule.KTpopupSkinned then
-			owningModule:AddBlockOffset("KT_AutoQuestPopUpBlockTemplate", -25, -4)
-			owningModule.KTpopupSkinned = true
-		end
+		KT.hiddenQuestPopUps = SplashFrame:IsShown()
+		if KT.hiddenQuestPopUps then return end
 		for i = 1, GetNumAutoQuestPopUps() do
 			local questID, popUpType = GetAutoQuestPopUp(i)
 			if AutoQuestPopupTracker_ShouldDisplayQuest(questID, owningModule) then
@@ -1910,6 +1907,20 @@ local function SetHooks()
 	hooksecurefunc(QuestUtil, "SetupWorldQuestButton", function(button, worldQuestType, rarity, isElite, tradeskillLineIndex, inProgress, selected, isCriteria, isSpellTarget, isEffectivelyTracked)
         button.Glow:SetShown(false)
     end)
+
+	-- SplashFrame.lua
+	hooksecurefunc(SplashFrame, "SetupFrame", function(self, screenInfo)
+		if screenInfo then
+			KT_ObjectiveTracker_Update()
+		end
+	end)
+
+	SplashFrame:HookScript("OnHide", function(self)
+		if OTF.collapsed then
+			KT_ObjectiveTracker_Expand()
+		end
+		KT_ObjectiveTracker_Update()
+	end)
 
 	-- UIErrorsFrame.lua
 	local bck_UIErrorsFrame_OnEvent = UIErrorsFrame:GetScript("OnEvent")
@@ -2179,10 +2190,14 @@ local function SetHooks()
 				KT:Alert_WowheadURL("spell", recipeID)
 			else
 				if not KT.IsRecraftBlock(block) then
-					C_TradeSkillUI.OpenRecipe(recipeID);
-					C_Timer.After(0, function()
-						C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
-					end)
+					if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+						C_TradeSkillUI.OpenRecipe(recipeID);
+						C_Timer.After(0, function()
+							C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
+						end)
+					else
+						Professions.InspectRecipe(recipeID);
+					end
 				end
 			end
 		else
@@ -2206,10 +2221,14 @@ local function SetHooks()
 		if not KT.IsRecraftBlock(block) then
 			info.text = PROFESSIONS_TRACKING_VIEW_RECIPE;
 			info.func = function()
-				C_TradeSkillUI.OpenRecipe(recipeID);
-				C_Timer.After(0, function()
-					C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
-				end)
+				if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+					C_TradeSkillUI.OpenRecipe(recipeID);
+					C_Timer.After(0, function()
+						C_TradeSkillUI.OpenRecipe(recipeID);  -- fix Blizz bug
+					end)
+				else
+					Professions.InspectRecipe(recipeID);
+				end
 			end;
 			MSA_DropDownMenu_AddButton(info, MSA_DROPDOWN_MENU_LEVEL);
 		end
@@ -2795,7 +2814,7 @@ end
 
 function KT:IsTrackerEmpty(noaddon)
 	local result = (KT.GetNumQuestWatches() == 0 and
-			GetNumAutoQuestPopUps() == 0 and
+			(GetNumAutoQuestPopUps() == 0 or self.hiddenQuestPopUps) and
 			GetNumTrackedAchievements() == 0 and
 			self.IsTableEmpty(self.activeTasks) and
 			C_QuestLog.GetNumWorldQuestWatches() == 0 and
@@ -2906,6 +2925,7 @@ function KT:OnInitialize()
 	self.inWorld = false
 	self.inInstance = IsInInstance()
 	self.inScenario = C_Scenario.IsInScenario() and not KT.IsScenarioHidden()
+	self.hiddenQuestPopUps = false
 	self.stopUpdate = true
 	self.questStateStopUpdate = false
 	self.collapsedByUser = false

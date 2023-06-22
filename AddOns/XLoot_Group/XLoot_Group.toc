@@ -4,7 +4,7 @@
 ## Interface-WoTLK: 30400
 ## Title: XLoot Group
 ## Notes: Customizable and skinnable loot roll, alert, and reroll frames
-## Version: 10.0.0.5-3
+## Version: 10.1-1
 ## Author: Xuerian
 ## X-Category: Inventory
 

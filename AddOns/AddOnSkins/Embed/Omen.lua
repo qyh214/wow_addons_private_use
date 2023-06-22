@@ -1,25 +1,17 @@
-local AS = unpack(AddOnSkins)
+local AS, L, S, R = unpack(AddOnSkins)
 if not AS:CheckAddOn('Omen') then return end
 
--- Cache global variables
---Lua functions
 local _G = _G
---WoW API / Variables
--- GLOBALS:
+local ES = AS.EmbedSystem
 
-function AS:Embed_Omen()
-	local EmbedParent = _G.EmbedSystem_MainWindow
-	if AS:CheckOption('EmbedSystemDual') then EmbedParent = AS:CheckOption('EmbedRight') == 'Omen' and _G.EmbedSystem_RightWindow or _G.EmbedSystem_LeftWindow end
+function ES:Omen()
+	local EmbedParent = AS:CheckOption('EmbedSystemDual') and (AS:CheckOption('EmbedRight') == 'Omen' and ES.Right or ES.Left) or ES.Main
 
 	_G.Omen.BarList.SetBackdrop = nil
 	_G.Omen.BarList.SetBackdropColor = nil
 	_G.Omen.BarList.SetBackdropBorderColor = nil
 
-	if AS:CheckOption('EmbedBackdrop') then
-		AS:SkinFrame(_G.Omen.BarList, AS:CheckOption('EmbedBackdropTransparent') and 'Transparent')
-	else
-		AS:StripTextures(_G.Omen.BarList)
-	end
+	S:SetTemplate(_G.Omen.BarList, AS:CheckOption('EmbedBackdrop') and (AS:CheckOption('EmbedBackdropTransparent') and 'Transparent' or 'Default') or 'NoBackdrop')
 
 	_G.Omen.BarList.SetBackdrop = AS.Noop
 	_G.Omen.BarList.SetBackdropColor = AS.Noop
@@ -37,7 +29,7 @@ function AS:Embed_Omen()
 	_G.Omen:OnProfileChanged(nil, _G.Omen.db)
 
 	_G.OmenAnchor:SetParent(EmbedParent)
-	AS:SetTemplate(_G.OmenAnchor)
+	S:SetTemplate(_G.OmenAnchor)
 	_G.OmenAnchor:SetFrameLevel(AS:CheckOption('EmbedFrameLevel'))
 	_G.OmenAnchor:SetBackdropColor(0, 0, 0, 0)
 	_G.OmenAnchor:ClearAllPoints()

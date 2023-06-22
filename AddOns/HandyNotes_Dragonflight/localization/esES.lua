@@ -93,8 +93,6 @@ L['options_icons_signal_transmitter'] = 'Transmisores de Generadores de Agujeros
 L['options_icons_signal_transmitter_desc'] = 'Muestra dónde están los {object:Transmisor Desactivado} para los {item:198156}.'
 
 L['rare_14h'] = 'Este raro está en una rotación de 14 horas junto con otros raros. Hay una aparición rara cada 30 minutos.\n\nPróxima aparición: {note:%s}'
-L['time_format_12hrs'] = '%I:%M %p - %d/%m Hora local'
-L['time_format_24hrs'] = '%H:%M - %d/%m Hora local'
 L['now'] = 'Ahora'
 L['spawns_at_night'] = '{note:Sólo aparece por la noche. (Después de las 18:30 hora del servidor)}'
 
@@ -564,6 +562,18 @@ L['titan_chest'] = 'Cofre Titánico'
 L['options_icons_titan_chest'] = 'Cofre Titánico'
 L['options_icons_titan_chest_desc'] = 'Muestra dónde pueden haber {object:Cofre Titánico}.'
 
+L['living_mud_mask_note'] = [[
+{npc:197346} soltará las {item:200586} que iniciarán la misión {quest:70377}. Tendrás que devolvérselas a {npc:198062}.
+
+Tras ello, habla de nuevo con {npc:198062} y pregúntale por una recompensa mejor. Él cogerá un planeador a la zona VIP para que puedas 'disfrutar más de su compañía como recompensa'.
+
+Cuando llegues a la isla flotante, {npc:198062} estará en el suelo. Habla de nuevo con él para decirle que parece muerto.
+
+Aparecerá una babosa llamada {npc:198590} y huirá a una rama detrás de {npc:197232}. Una vez estés suficientemente cerca, la babosa te ofrecerá la misión {quest:72060}.
+
+Vuelve con {npc:198062}, que está sentado en un banco, y entrega la misión para conseguir tu {item:200872}.
+]]
+
 -------------------------------------------------------------------------------
 ------------------------------ THE WAKING SHORE -------------------------------
 -------------------------------------------------------------------------------
@@ -578,7 +588,7 @@ L['obsidian_throne_rare_note'] = 'Dentro del {location:Trono Obsidiana}.'
 L['slurpo_snail_note'] = 'Despoja un {item:201033} de un {object:Cristal de Sal} en una cueva de {location:Las Tierras Azures}. Úsalo en una cueva de las {location:Orillas del Despertar} para invocar al raro.'
 L['worldcarver_atir_note'] = 'Recoge 3x {item:191211} del {npc:187366} cercano y ponlos en los {npc:197395} para hacer aparecer al raro.'
 
-L['bubble_drifter_note'] = 'La {item:199061} se puede encontrar en las {object:Mochila de Explorador de Expedición} y en las {object:Tierra Revuelta}.'
+L['bubble_drifter_note'] = 'La {item:199061} se puede encontrar en las {object:Mochila de Explorador de Expedición} y en las {object:Tierra Revuelta}.\n\nPara interactuar con el pez necesitas tener {spell:388331} de una {object:Planta Aromática} cercana.'
 L['dead_mans_chestplate_note'] = 'Dentro de la torre. En el piso central.'
 L['fullsails_supply_chest_note'] = 'La llave la sueltan los {npc:187971} y los {npc:187320} al sur de la {location:Embajada Reposo Alado}.'
 L['golden_dragon_goblet_note'] = 'Despoja la {item:202081} del {npc:190056} en la {location:Costa Indómita} y completa la pequeña cadena de misiones.'
@@ -727,31 +737,35 @@ Usa el amuleto y coge las {item:202062} {dot:Red} que hay dentro del {location:A
 ]]
 L['phoenix_wishwing_info'] = 'Esto es parte de la mascota de combate {item:193373} localizada en las {location:Orillas del Despertar} de las {location:Islas Dragón}.'
 
+L['bugbiter_tortoise_note'] = 'Consigue un {item:202082} {dot:Red} y un {item:202084} {dot:Green} para intercambiarlos con {npc:187077} para conseguir tu {item:202085}.\n\n{npc:187077} requiere que esté activa la misión del mundo {quest:66070}.'
+
 -------------------------------------------------------------------------------
 ------------------------------- Zaralek Cavern --------------------------------
 -------------------------------------------------------------------------------
 
 L['in_deepflayer_nest'] = 'Dentro del {location:Nido de los Despellejadores}.'
 
-L['brulsef_the_stronk_note'] = 'Despoja tus recompensas del {object:Cofre de Enormes Beneficios}.'
+L['brulsef_the_stronk_note'] = 'Despoja tus recompensas del {object:Cofre de Enormes Beneficios}.\n\n{bug:No le dejes ir muy lejos de la posición inicial o no habrá ningún cofre tras derrotarlo.}'
 
 L['ancient_zaqali_chest_note'] = 'Usa el {object:Magma Embotellado} cercano para abrir el cofre.'
-L['blazing_shadowflame_chest_note'] = '{bug:The shadowflame is too strong to bear.}' -- DEV NOTE - Do not translate
+L['blazing_shadowflame_chest_note'] = 'Equipa la {item:15138}, que se puede comprar en la Casa de Subastas o crease por un peletero, para despojar el cofre.'
 L['crystal_encased_chest_note'] = 'Interactúa con el {object:Cristal de Armonización} azul {dot:Blue} y con el {object:Cristal de Armonización} rojo {dot:Red} para abrir el cofre.'
-L['old_trunk_note'] = 'Recoge y combina 5x {item:204325} para crear {item:204323}.'
+L['old_trunk_note'] = 'Busca y recoge 5 veces el {npc:204277} para conseguir la {item:204323}. {note:El primer ratón está junto al cofre.}'
 L['well_chewed_chest_note'] = 'La {item:202869} {dot:Green} está escondida debajo de {npc:199962} dentro de la cueva.'
 
 L['molten_hoard_label'] = 'Tesoro de Magma'
 L['fealtys_reward_label'] = 'Recompensa de Lealtad'
-L['fealtys_reward_note'] = '{bug:Currently bugged.}' -- DEV NOTE - Do not translate
+L['fealtys_reward_note'] = 'Teclea la emoción {emote:/arrodillarse} enfrente de la estatua del dragón al suroeste hasta que escupa fuego para poder abrir el cofre.'
 L['dreamers_bounty_label'] = 'Botín de Soñador'
-L['dreamers_bounty_note'] = '{bug:Currently bugged.}' -- DEV NOTE - Do not translate
+L['dreamers_bounty_note'] = 'El {object:Botín de Soñador} sólo se puede despojar mientras tengas en ti el debuff {spell:400066} que consigues del {npc:201068} cercano.'
 L['moth_pilfered_pouch_label'] = 'Bolsa Birlada por unas Polillas'
 L['moth_pilfered_pouch_note'] = 'Ayuda a {npc:203225} para que vuele haciendo "malabarismos" hasta que tenga cinco acumulaciones de {spell:405358}.\n\nEntonces volará a la faltriquera y te la revelará.'
 L['waterlogged_bundle_label'] = 'Fardo Empapado'
 
 L['stolen_stash_label'] = 'Alijo Robado'
 L['ritual_offering_label'] = 'Ofrendas Rituales'
+L['options_icons_ritual_offering'] = 'Ofrendas Rituales'
+L['options_icons_ritual_offering_desc'] = 'Muestra dónde pueden haber {object:Ofrendas Rituales}.'
 L['nal_kskol_reliquary_label'] = 'Relicario de Nal ks\'kol'
 L['nal_kskol_reliquary_note'] = 'Usa la {object:Consola de Acceso al Relicario} y resuelve el puzzle para abrir el {object:Relicario de Nal ks\'kol}.'
 
@@ -760,7 +774,8 @@ L['bolts_and_brass_note'] = 'Abre los {object:Tornillos y Latón} y despoja los 
 
 L['sniffen_sage_suffix'] = 'objetos especiales encontrados'
 
-L['big_slick_note_1'] = '{npc:48182} está en el viejo mundo de la {location:Costa Oscura}. Habla con {npc:141489} para volver atrás en el tiempo antes de la {location:Guerra de las Espinas}.'
+L['big_slick_note'] = 'Completa misiones diarias de {npc:201752} para alcanzar el nivel de reputación "Profesional" (2800 de reputación en total) con la facción {faction:2568} para conseguir tu montura.\n\nO enséñale los siguientes caracoles (mascotas de combate) a nivel 25 para conseguir 100 de reputación por cada uno:'
+L['grogul_note'] = 'Habla con {npc:204672} y elige una golosina que puedas usar para animar al caracol correspondiente a ir más rápido.\n{note:El logro se puede conseguir con menos de Renombre 7.}'
 
 L['saccratos_note'] = 'Cambia {item:204727} por una mascota, montura, y más.'
 L['ponzo_note'] = 'Cambia {item:204985} y {item:205903} por personalizaciones para el draco, mascota, montura, y más.'
@@ -769,5 +784,12 @@ L['smelly_trash_pile_label'] = 'Montón de Basura Maloliente'
 L['options_icons_smelly_trash_pile'] = 'Montón de Basura Maloliente'
 L['options_icons_smelly_trash_pile_desc'] = 'Muestra dónde puede haber {object:Montón de Basura Maloliente}.'
 
-L['seething_cache_treasure_note'] = nil
-L['chest_of_the_flights_treasure_note'] = nil
+L['seething_cache_treasure_note'] = 'Para poder ver el {object:Alijo Hirviente} y despojar la {item:192779} necesitarás coger 3 acumulaciones del debuff {spell:399342} de los {object:Orbe Hirviente} que hay en la zona de la {location:Caldera Zaqali} en la {location:Caverna Zaralek}.'
+L['chest_of_the_flights_treasure_note'] = 'Para abrir el cofre necesitarás hacer click en las {object:Gema Potenciada} en el orden {note:Rojo > Negro > Azul > Amarillo > Verde}.'
+L['curious_top_hat_note'] = 'Interactúa con la {npc:205010} mientras tengas el buff {spell:410288} para recibir {item:205021}. Si no tienes el buff y te acercas, huirá.'
+
+L['zaralek_rotation_active'] = ns.color.Blue('Este Raro puedo aparecer hoy.')
+L['zaralek_rotation_inactive'] = ns.color.Orange('Este Raro no aparecerá hoy, vuelve mañana.')
+
+L['options_icons_zone_event'] = nil
+L['options_icons_zone_event_desc'] = nil
