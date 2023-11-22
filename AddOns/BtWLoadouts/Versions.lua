@@ -14,22 +14,32 @@ local seasons = {
     [1] = {
         [9] = 1670943600,
         [10] = 1683644400,
+        [11] = 1699974000,
     },
     [2] = {
         [9] = 1671058800,
         [10] = 1683759600,
+        [11] = 1700089200,
     },
     [3] = {
         [9] = 1670990400,
         [10] = 1683691200,
+        [11] = 1700020800,
     },
     [4] = {
         [9] = 1671058800,
         [10] = 1683759600,
+        [11] = 1700089200,
     },
     [5] = {
         [9] = 1671058800,
         [10] = 1683759600,
+        [11] = 1700089200,
+    },
+    [72] = {
+        [9] = 1671058800,
+        [10] = 1683759600,
+        [11] = 1700089200,
     },
 };
 local function IsSeason(season)
@@ -58,13 +68,13 @@ end
 Internal.IsShadowlandsPatch = IsAtleastBuild(90000)
 Internal.IsChainsOfDominationPatch = IsAtleastBuild(90100)
 Internal.IsEternitysEndPatch = IsAtleastBuild(90200)
-Internal.IsEternitysEndPatch = IsAtleastBuild(90200)
 Internal.IsDragonflightPatch = IsAtleastBuild(100000)
 Internal.Is100000 = IsBuild(100000)
 Internal.Is100002 = IsBuild(100002)
 Internal.Is100005 = IsBuild(100005)
 Internal.Is100007 = IsBuild(100007)
 Internal.Is100100 = IsAtleastBuild(100100)
+Internal.Is100105 = IsAtleastBuild(100105)
 
 Internal.IsBattleForAzeroth = IsExpansion(LE_EXPANSION_BATTLEFORAZEROTH or 7)
 Internal.IsShadowlands = IsExpansion(LE_EXPANSION_SHADOWLANDS or 8)
@@ -76,3 +86,4 @@ Internal.IsShadowlandsSeason3 = IsSeason(7)
 Internal.IsShadowlandsSeason4 = IsSeason(8)
 Internal.IsDragonflightSeason1 = IsSeason(9)
 Internal.IsDragonflightSeason2 = IsSeason(10)
+Internal.IsDragonflightSeason3 = IsSeason(11)

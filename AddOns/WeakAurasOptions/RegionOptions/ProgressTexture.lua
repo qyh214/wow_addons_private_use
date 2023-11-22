@@ -309,7 +309,7 @@ local function createOptions(id, data)
       name = "",
     },
   };
-  options = WeakAuras.regionPrototype.AddAdjustedDurationOptions(options, data, 57);
+  options = OptionsPrivate.Private.regionPrototype.AddAdjustedDurationOptions(options, data, 57);
 
   local overlayInfo = OptionsPrivate.Private.GetOverlayInfo(data);
   if (overlayInfo and next(overlayInfo)) then
@@ -864,4 +864,7 @@ if WeakAuras.IsClassicEra() then
   table.remove(templates, 2)
 end
 
-WeakAuras.RegisterRegionOptions("progresstexture", createOptions, createIcon, L["Progress Texture"], createThumbnail, modifyThumbnail, L["Shows a texture that changes based on duration"], templates);
+OptionsPrivate.registerRegions = OptionsPrivate.registerRegions or {}
+table.insert(OptionsPrivate.registerRegions, function()
+  OptionsPrivate.Private.RegisterRegionOptions("progresstexture", createOptions, createIcon, L["Progress Texture"], createThumbnail, modifyThumbnail, L["Shows a texture that changes based on duration"], templates);
+end)

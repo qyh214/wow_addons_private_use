@@ -166,7 +166,15 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
       desc = desc,
       order = baseOrder + i / 100 + 0.0003,
       hidden = hiddenFunction,
-      get = function(info) return trigger[optionKey] and trigger[optionKey][i] end,
+      get = function(info)
+        local rawString = trigger[optionKey] and trigger[optionKey][i] or ""
+        local spellName, _, _, _, _, _, spellID = GetSpellInfo(WeakAuras.SafeToNumber(rawString))
+        if spellName and spellID then
+          return ("%s (%s)"):format(spellID, spellName) .. "\0" .. rawString
+        else
+          return rawString .. "\0" .. rawString
+        end
+      end,
       set = function(info, v)
         trigger[optionKey] = trigger[optionKey] or {}
         if v == "" then
@@ -189,7 +197,8 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
         WeakAuras.UpdateThumbnail(data)
         WeakAuras.ClearAndUpdateOptions(data.id)
       end,
-      validate = isExactSpellId and WeakAuras.ValidateNumeric or nil
+      validate = isExactSpellId and WeakAuras.ValidateNumeric or nil,
+      control = "WeakAurasInputFocus",
     }
   end
   -- VALIDATE ?
@@ -714,7 +723,7 @@ local function GetBuffTriggerOptions(data, triggernum)
     },
     useAffected = {
       type = "toggle",
-      name = L["Fetch Affected/Unaffected Names"],
+      name = L["Fetch Affected/Unaffected Names and Units"],
       width = WeakAuras.doubleWidth,
       order = 65.1,
       hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")) end
@@ -991,9 +1000,9 @@ local function GetBuffTriggerOptions(data, triggernum)
       type = "input",
       width = WeakAuras.normalWidth,
       name = L["Npc ID"],
-      validate = ValidateNumeric,
       hidden = function() return not (trigger.type == "aura2" and trigger.unit == "nameplate" and trigger.useNpcId) end,
-      order = 69.32
+      order = 69.32,
+      desc = L["Supports multiple entries, separated by commas"]
     },
     npcIdSpace = {
       type = "description",
@@ -1026,10 +1035,18 @@ local function GetBuffTriggerOptions(data, triggernum)
       width = WeakAuras.doubleWidth,
       hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")) end
     },
+    inRange = {
+      type = "toggle",
+      name = L["Ignore out of casting range"],
+      desc = L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."],
+      order = 69.81,
+      width = WeakAuras.doubleWidth,
+      hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and WeakAuras.IsRetail()) end
+    },
     ignoreInvisible = {
       type = "toggle",
       name = L["Ignore out of checking range"],
-      desc = L["Uses UnitIsVisible() to check if in range. This is polled every second."],
+      desc = L["Uses UnitIsVisible() to check if game client has loaded a object for this unit. This distance is around 100 yards. This is polled every second."],
       order = 69.9,
       width = WeakAuras.doubleWidth,
       hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")) end

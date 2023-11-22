@@ -262,6 +262,8 @@ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "金錢獎勵顯示圓環"
 L["S_OPTIONS_ANIMATIONS"] = "顯示動畫效果"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+--[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "地圖視窗對齊中間"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "尚未變更任何數值，必須先 '啟用縮放視窗大小'。"
 L["S_OPTIONS_MAPFRAME_SCALE"] = "地圖視窗縮放大小"

@@ -847,14 +847,20 @@ end
 
 
 function CreditList:CreateList(parent, anchorTo, fromOffsetY)
-    local active = {"Albator S.", "Solanya", "Erik Shafer", "Celierra&Darvian", "Pierre-Yves Bertolus", "Terradon", "Alex Boehm", "Miroslav Kovac", "Ryan Zerbin", "Tezenari"};
-    local inactive = {"Elexys", "Ben Ashley", "Knightlord", "Brian Haberer", "Andrew Phoenix", "Nantangitan", "Blastflight", "Lars Norberg", "Valnoressa", "Nimrodan", "Brux",
-        "Karl", "Webb", "acein", "Christian Williamson", "Tzutzu", "Anthony Cordeiro", "Nina Recchia", "heiteo", "Psyloken", "Jesse Blick", "Victor Torres", "Nisutec"};
-    local special = {"Marlamin | WoW.tools", "Keyboardturner | Avid Bug Finder(Generator)", "Meorawr | Wondrous Wisdomball", "Hubbotu | Translator - Russian", "Romanv | Translator - Spanish", "Onizenos | Translator - Portuguese"};
+    local active = {"Albator S.", "Lala.Marie", "Erik Shafer", "Celierra&Darvian", "Pierre-Yves Bertolus", "Terradon", "Miroslav Kovac", "Ryan Zerbin", "Helene Rigo"};
+    local inactive = {"Alex Boehm", "Solanya", "Elexys", "Ben Ashley", "Knightlord", "Brian Haberer", "Andrew Phoenix", "Nantangitan", "Blastflight", "Lars Norberg", "Valnoressa", "Nimrodan", "Brux",
+        "Karl", "Webb", "acein", "Christian Williamson", "Tzutzu", "Anthony Cordeiro", "Nina Recchia", "heiteo", "Psyloken", "Jesse Blick", "Victor Torres", "Nisutec", "Tezenari", "Gina"};
+    local special = {"Marlamin | WoW.tools", "Keyboardturner | Avid Bug Finder(Generator)", "Meorawr | Wondrous Wisdomball", "Ghost | Real Person", "Hubbotu | Translator - Russian", "Romanv | Translator - Spanish", "Onizenos | Translator - Portuguese"};
+
+    local aciveColor = "|cff914270";
 
     local numTotal = #active;
     local mergedList = active;
     local totalHeight;
+
+    for i = 1, #active do
+        active[i] = aciveColor ..active[i].."|r";
+    end
 
     for i = 1, #inactive do
         numTotal = numTotal + 1;
@@ -862,9 +868,10 @@ function CreditList:CreateList(parent, anchorTo, fromOffsetY)
     end
 
     local upper = string.upper;
+    local gsub = string.gsub;
 
     table.sort(mergedList, function(a, b)
-        return upper(a) < upper(b)
+        return upper( gsub(a, aciveColor, "") ) < upper( gsub(b, aciveColor, "") )
     end);
 
 
@@ -2050,7 +2057,7 @@ local Categories = {
             {type = "checkbox", level = 1, key = "DressingRoom", text = L["Dressing Room"], onValueChangedFunc = DressingRoomToggle_OnValueChanged, description = L["Dressing Room Description"]},
             {type = "subheader", level = 1, text = L["Expansion Features"], extraTopPadding = 1},
             {type = "checkbox", level = 1, key = "PaperDollWidget", text = L["Paperdoll Widget"], onValueChangedFunc = PaperDollWidgetToggle_OnValueChanged, showFeaturePreview = true, onEnterFunc = FeaturePreview.ShowPreview, onLeaveFunc = FeaturePreview.HidePreview},
-            {type = "checkbox", level = 1, key = "ConduitTooltip", text = L["Conduit Tooltip"], onValueChangedFunc = ConduitTooltipToggle_OnValueChanged, showFeaturePreview = true, onEnterFunc = FeaturePreview.ShowPreview, onLeaveFunc = FeaturePreview.HidePreview},
+            --{type = "checkbox", level = 1, key = "ConduitTooltip", text = L["Conduit Tooltip"], onValueChangedFunc = ConduitTooltipToggle_OnValueChanged, showFeaturePreview = true, onEnterFunc = FeaturePreview.ShowPreview, onLeaveFunc = FeaturePreview.HidePreview},
         },
     },
 
@@ -2113,9 +2120,20 @@ if IS_DRAGONFLIGHT then
     InsertCategory(talentCategory);
 
     
+    local function NarciBagItemFilter_LoadAddOn()
+        if not NarciBagItemFilterSettings then
+            LoadAddOn("Narcissus_BagFilter");
+        end
+    end
 
     local function ItemSearchToggle_OnValueChanged(self, state)
-        NarciBagItemFilterSettings.SetEnableSearchSuggestion(state);
+        if state then
+            NarciBagItemFilter_LoadAddOn();
+        end
+
+        if NarciBagItemFilterSettings then
+            NarciBagItemFilterSettings.SetEnableSearchSuggestion(state);
+        end
     end
     
     local function ItemSearchDirectionButton_OnValueChanged(self, id)
@@ -2150,7 +2168,8 @@ if IS_DRAGONFLIGHT then
     end
 
     local function IsBagItemFilterAddOnLoaded()
-        return NarciBagItemFilterSettings ~= nil
+        --return NarciBagItemFilterSettings ~= nil
+        return true     --changed this module to load-on-demand, so we need to keep its settings visible
     end
 
     local bagCategory = {name = L["Bag Item Filter"], level = 1, key = "bagitemfilter", validityCheckFunc = IsBagItemFilterAddOnLoaded,

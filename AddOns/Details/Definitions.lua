@@ -1,373 +1,190 @@
 
---uiobject: is an object that represents a UI element, such as a frame, a texture, or a button. UIObjects are the base class for all UI elements in the WoW API.
---3D World: is an object which is placed behind|below all UI elements, cannot be parent of any object, in the 3D World object is where the game world is rendered
---size: corresponds to the height and height of an object, it is measure in pixels, must be bigger than zero.
---scale: the size of an object is multiplied by this value, it is measure in percentage, must be between 0.65 and 2.40.
---alpha: corresponds to the transparency of an object, the bigger is the value less transparent is the object, it is measure in percentage, must be between 0 and 1, zero is fully transparent and one is fully opaque.
 
+---@alias plugintype
+---| "SOLO"
+---| "RAID"
+---| "TOOLBAR"
+---| "STATUSBAR"
 
----@class _G
----@field RegisterAttributeDriver fun(statedriver: frame, attribute: string, conditional: string)
----@field RegisterStateDriver fun(statedriver: frame, attribute: string, conditional: string)
----@field UnitGUID fun(unit: unit): string
----@field UnitName fun(unit: unit): string
----@field GetCursorPosition fun(): number, number return the position of the cursor on the screen, in pixels, relative to the bottom left corner of the screen.
+---@alias detailsevent
+---| "DETAILS_INSTANCE_OPEN"
+---| "DETAILS_INSTANCE_CLOSE"
+---| "DETAILS_INSTANCE_SIZECHANGED"
+---| "DETAILS_INSTANCE_STARTRESIZE"
+---| "DETAILS_INSTANCE_ENDRESIZE"
+---| "DETAILS_INSTANCE_STARTSTRETCH"
+---| "DETAILS_INSTANCE_ENDSTRETCH"
+---| "DETAILS_INSTANCE_CHANGESEGMENT"
+---| "DETAILS_INSTANCE_CHANGEATTRIBUTE"
+---| "DETAILS_INSTANCE_CHANGEMODE"
+---| "DETAILS_INSTANCE_NEWROW"
+---| "DETAILS_OPTIONS_MODIFIED"
+---| "DETAILS_DATA_RESET"
+---| "DETAILS_DATA_SEGMENTREMOVED"
+---| "COMBAT_ENCOUNTER_START"
+---| "COMBAT_ENCOUNTER_END"
+---| "COMBAT_PLAYER_ENTER"
+---| "COMBAT_PLAYER_LEAVE"
+---| "COMBAT_PLAYER_TIMESTARTED"
+---| "COMBAT_BOSS_WIPE"
+---| "COMBAT_BOSS_DEFEATED"
+---| "COMBAT_BOSS_FOUND"
+---| "COMBAT_INVALID"
+---| "COMBAT_PREPOTION_UPDATED"
+---| "COMBAT_CHARTTABLES_CREATING"
+---| "COMBAT_CHARTTABLES_CREATED"
+---| "COMBAT_ENCOUNTER_PHASE_CHANGED"
+---| "COMBAT_ARENA_START"
+---| "COMBAT_ARENA_END"
+---| "COMBAT_MYTHICDUNGEON_START"
+---| "COMBAT_MYTHICDUNGEON_END"
+---| "GROUP_ONENTER"
+---| "GROUP_ONLEAVE"
+---| "ZONE_TYPE_CHANGED"
+---| "REALM_CHANNEL_ENTER"
+---| "REALM_CHANNEL_LEAVE"
+---| "COMM_EVENT_RECEIVED"
+---| "COMM_EVENT_SENT"
+---| "UNIT_SPEC"
+---| "UNIT_TALENTS"
+---| "PLAYER_TARGET"
+---| "DETAILS_PROFILE_APPLYED"
 
----@class unixtime : number const
+---@alias containertype number this container type is the number used to identify the actorcontainer type when using combat:GetContainer(containertype), can be 1, 2, 3, or 4.
 
----@class timer : table
----@field Cancel fun(self: timer)
----@field IsCancelled fun(self: timer): boolean
+---@alias actorclass string this is the class of the actor, can be "WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "DEATHKNIGHT", "SHAMAN", "MAGE", "WARLOCK", "MONK", "DRUID", "DEMONHUNTER"
+---@alias actorspec number this is the specID of the actor
+---@alias uniquecombatid number a unique ID to point to a single combat, each character has its ID counter, use with Details:DoesCombatWithUIDExists(); Details:GetCombatByUID(); retrive with combat:GetCombatUID()
 
----@class C_Timer
----@field After fun(delay: number, func: function)
----@field NewTimer fun(delay: number, func: function): timer
----@field NewTicker fun(interval: number, func: function, iterations: number|nil): timer
+---@alias cleuname string
 
----@class C_ChallengeMode : table
----@field GetActiveKeystoneInfo fun(): number, number[], boolean @returns keystoneLevel, affixIDs, wasActive
+---@class petinfo : table
+---@field key1 ownername
+---@field key2 guid
+---@field key3 unixtime
+---@field key4 boolean
+---@field key5 petname
+---@field key6 guid
 
----@class tablesize : {H: number, W: number}
----@class tablecoords : {L: number, R: number, T: number, B: number}
----@class texturecoords: {left: number, right: number, top: number, bottom: number}
----@class objectsize : {height: number, width: number}
----@class texturetable : {texture: string, coords: texturecoords, size: objectsize}
-
----@class spellid : number
----@class actorname : string
----@class spellname : string
----@class actorid : string
----@class red : number color value representing the red component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
----@class green : number color value representing the green component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
----@class blue : number color value representing the blue component of a color, the value must be between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
----@class alpha : number @number(0-1.0) value representing the alpha (transparency) of a UIObject, the value must be between 0 and 1. 0 is fully transparent, 1 is fully opaque.
----@class color : table, string @table(r: red|number, g: green|number, b: blue|number, a: alpha|number) @string(color name) @hex (000000-ffffff) value representing a color, the value must be a table with the following fields: r, g, b, a. r, g, b are numbers between 0 and 1, a is a number between 0 and 1. To retrieve a color from a string or table use: local red, green, blue, alpha = DetailsFramework:ParseColors(color)
----@class scale : number @number(0.65-2.40) value representing the scale factor of the UIObject, the value must be between 0.65 and 2.40, the width and height of the UIObject will be multiplied by this value.
----@class texture : string, number is an object that represents a graphical image. Textures are used to display visual elements such as icons, backgrounds, borders, and more.
----@class frame : uiobject represents a container for other UI elements, such as textures, buttons, text, and more. Gotten from the first result of GetWidth() or from the first result of GetSize(). It is expected a GetWidth() or GetSize() when the type 'width' is used.
----@class width : number property that represents the horizontal size of a UI element, such as a frame or a texture.
----@class height : number property that represents the vertical size of a UI element, such as a frame or a texture. Gotten from the first result of GetHeight() or from the second result of GetSize(). It is expected a GetHeight() or GetSize() when the type 'height' is used.
----@class script : string, function is a piece of code that is executed in response to a specific event, such as a button click or a frame update. Scripts can be used to implement behavior and logic for UI elements.
----@class event : string is a notification that is sent to a frame when something happens, such as a button click or a frame update. Events can be used to trigger scripts.
----@class framestrata : string @string(BACKGROUND, LOW, MEDIUM, HIGH, DIALOG, FULLSCREEN, FULLSCREEN_DIALOG, TOOLTIP) property that determines the stacking order of frames. Higher strata values indicate frames that should be displayed on top of frames with lower strata values.
----@class backdrop : table @table(bgFile: string, edgeFile: string, tile: edgeSize: number, backgroundColor: color, borderColor: color) is a table that contains information about the backdrop of a frame. The backdrop is the background of a frame, which can be a solid color, a gradient, or a texture.
----@class unit : string string that represents a unit in the game, such as the player, a party member, or a raid member.
----@class health : number amount of hit points (health) of a unit. This value can be changed by taking damage or healing.
----@class role : string @string(TANK, HEALER, DAMAGER, NONE) is a string that represents the role of a unit, such as tank, healer, or damage dealer.
----@class point : string @string(topleft, topright, bottomleft, bottomright, top, bottom, left, right, center) is a string that represents a point on a frame. Points are used to position frames relative to each other.
-
----@class uiobject
----@field GetObjectType fun(self: uiobject) : string
----@field Show fun(self: uiobject) make the object be shown on the user screen
----@field Hide fun(self: uiobject) make the object be hidden from the user screen
----@field SetShown fun(self: uiobject, state: boolean) show or hide the object
----@field IsShown fun(self: uiobject) : boolean return if the object is shown or not
----@field SetAllPoints fun(self: uiobject) set the object to be the same size as its parent
----@field SetParent fun(self: uiobject, parent: frame) set the parent object of the object
----@field SetSize fun(self: uiobject, width: width|number, height: height|number) set the width and height of the object
----@field SetWidth fun(self: uiobject, width: width|number) set only the width of the object
----@field SetHeight fun(self: uiobject, height: height|number) set only the height of the object
----@field SetAlpha fun(self: uiobject, alpha: alpha|number) set the transparency of the object
----@field SetScale fun(self: uiobject, scale: scale|number)
----@field GetWidth fun(self: uiobject) : width|number
----@field GetHeight fun(self: uiobject) : height|number
----@field GetScale fun(self: uiobject) : scale|number
----@field GetAlpha fun(self: uiobject) : alpha|number
----@field GetSize fun(self: uiobject) : width|number, height|number
----@field GetParent fun(self: uiobject) : frame
----@field GetPoint fun(self: uiobject, index: number): string, frame, string, number, number
----@field GetCenter fun(self: uiobject): number, number
----@field SetPoint fun(self: uiobject, point: "topleft"|"topright"|"bottomleft"|"bottomright"|"top"|"bottom"|"left"|"right"|"center", relativeFrame: uiobject, relativePoint: "topleft"|"topright"|"bottomleft"|"bottomright"|"top"|"bottom"|"left"|"right"|"center", xOffset: number, yOffset: number)
----@field ClearAllPoints fun(self: uiobject)
----@field CreateAnimationGroup fun(self: uiobject, name: string|nil, templateName: string|nil) : animationgroup
-
----@class animationgroup : uiobject
----@field CreateAnimation fun(self: animationgroup, animationType: string, name: string|nil, inheritsFrom: string|nil) : animation
----@field GetAnimation fun(self: animationgroup, name: string) : animation
----@field GetAnimations fun(self: animationgroup) : table
----@field GetDuration fun(self: animationgroup) : number
----@field GetEndDelay fun(self: animationgroup) : number
----@field GetLoopState fun(self: animationgroup) : boolean
----@field GetScript fun(self: animationgroup, event: string) : function
----@field GetSmoothProgress fun(self: animationgroup) : boolean
----@field IsDone fun(self: animationgroup) : boolean
----@field IsPaused fun(self: animationgroup) : boolean
----@field IsPlaying fun(self: animationgroup) : boolean
----@field Pause fun(self: animationgroup)
----@field Play fun(self: animationgroup)
----@field Resume fun(self: animationgroup)
----@field SetDuration fun(self: animationgroup, duration: number)
----@field SetEndDelay fun(self: animationgroup, delay: number)
----@field SetLooping fun(self: animationgroup, loop: boolean)
----@field SetScript fun(self: animationgroup, event: string, handler: function|nil) "OnEvent"|"OnShow"
----@field SetSmoothProgress fun(self: animationgroup, smooth: boolean)
----@field Stop fun(self: animationgroup)
-
----@class animation : uiobject
----@field GetDuration fun(self: animation) : number
----@field GetEndDelay fun(self: animation) : number
----@field GetOrder fun(self: animation) : number
----@field GetScript fun(self: animation, event: string) : function
----@field GetSmoothing fun(self: animation) : string
----@field IsDone fun(self: animation) : boolean
----@field IsPaused fun(self: animation) : boolean
----@field IsPlaying fun(self: animation) : boolean
----@field Pause fun(self: animation)
----@field Play fun(self: animation)
----@field Resume fun(self: animation)
----@field SetDuration fun(self: animation, duration: number)
----@field SetEndDelay fun(self: animation, delay: number)
----@field SetOrder fun(self: animation, order: number)
----@field SetScript fun(self: animation, event: string, handler: function|nil)
----@field SetSmoothing fun(self: animation, smoothing: string)
----@field Stop fun(self: animation)
-
----@class frame : uiobject
----@field SetAttribute fun(self: frame, name: string, value: any)
----@field SetScript fun(self: frame, event: string, handler: function|nil)
----@field GetScript fun(self: frame, event: string) : function
----@field SetFrameStrata fun(self: frame, strata: framestrata|"background"|"low"|"medium"|"high"|"dialog"|"fullscreen"|"fullscreen_dialog"|"tooltip")
----@field SetFrameLevel fun(self: frame, level: number)
----@field SetClampedToScreen fun(self: frame, clamped: boolean)
----@field SetClampRectInsets fun(self: frame, left: number, right: number, top: number, bottom: number)
----@field SetMovable fun(self: frame, movable: boolean)
----@field SetUserPlaced fun(self: frame, userPlaced: boolean)
----@field SetBackdrop fun(self: frame, backdrop: backdrop|table)
----@field SetBackdropColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number)
----@field SetBackdropBorderColor fun(self: frame, red: red|number, green: green|number, blue: blue|number, alpha: alpha|number)
----@field SetHitRectInsets fun(self: frame, left: number, right: number, top: number, bottom: number)
----@field SetToplevel fun(self: frame, toplevel: boolean)
----@field SetPropagateKeyboardInput fun(self: frame, propagate: boolean)
----@field SetPropagateGamepadInput fun(self: frame, propagate: boolean)
----@field StartMoving fun(self: frame)
----@field IsMovable fun(self: frame) : boolean
----@field StartSizing fun(self: frame, point: "top"|"topright"|"right"|"bottomright"|"bottom"|"bottomleft"|"left"|"topleft")
----@field StopMovingOrSizing fun(self: frame)
----@field GetAttribute fun(self: frame, name: string) : any
----@field GetFrameLevel fun(self: frame) : number
----@field GetFrameStrata fun(self: frame) : framestrata|string
----@field GetNumChildren fun(self: frame) : number
----@field GetNumPoints fun(self: frame) : number
----@field GetNumRegions fun(self: frame) : number
----@field GetName fun(self: frame) : string
----@field GetChildren fun(self: frame) : frame[]
----@field GetRegions fun(self: frame) : region[]
----@field CreateTexture fun(self: frame, name: string|nil, layer: "background"|"border"|"artwork"|"overlay"|"highlight", inherits: string|nil, subLayer: number|nil) : texture
----@field CreateFontString fun(self: frame, name: string|nil, layer: "background"|"border"|"artwork"|"overlay"|"highlight", inherits: string|nil, subLayer: number|nil) : fontstring
----@field EnableMouse fun(self: frame, enable: boolean)
----@field SetResizable fun(self: frame, enable: boolean)
----@field EnableMouseWheel fun(self: frame, enable: boolean)
----@field RegisterForDrag fun(self: frame, button: string)
----@field SetResizeBounds fun(self: frame, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number)
-
----@class button : frame
----@field Click fun(self: button)
----@field SetNormalTexture fun(self: button, texture: texture)
----@field SetPushedTexture fun(self: button, texture: texture)
----@field SetHighlightTexture fun(self: button, texture: texture)
----@field SetDisabledTexture fun(self: button, texture: texture)
----@field SetCheckedTexture fun(self: button, texture: texture)
----@field SetNormalFontObject fun(self: button, fontString: fontstring)
----@field SetHighlightFontObject fun(self: button, fontString: fontstring)
----@field SetDisabledFontObject fun(self: button, fontString: fontstring)
----@field SetText fun(self: button, text: string)
----@field GetText fun(self: button) : string
----@field SetTextInsets fun(self: button, left: number, right: number, top: number, bottom: number)
----@field GetTextInsets fun(self: button) : number, number, number, number
----@field SetDisabledTextColor fun(self: button, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field GetDisabledTextColor fun(self: button) : number, number, number, number
----@field SetFontString fun(self: button, fontString: fontstring)
----@field GetFontString fun(self: button) : fontstring
----@field SetButtonState fun(self: button, state: string, enable: boolean)
----@field GetButtonState fun(self: button, state: string) : boolean
----@field RegisterForClicks fun(self: button, button1: nil|"AnyUp"|"AnyDown"|"LeftButtonDown"|"LeftButtonUp"|"MiddleButtonUp"|"MiddleButtonDown"|"RightButtonDown"|"RightButtonUp"|"Button4Up"|"Button4Down"|"Button5Up"|"Button5Down", button2: nil|"AnyUp"|"AnyDown"|"LeftButtonDown"|"LeftButtonUp"|"MiddleButtonUp"|"MiddleButtonDown"|"RightButtonDown"|"RightButtonUp"|"Button4Up"|"Button4Down"|"Button5Up"|"Button5Down")
----@field GetNormalTexture fun(self: button) : texture
----@field GetPushedTexture fun(self: button) : texture
----@field GetHighlightTexture fun(self: button) : texture
----@field GetDisabledTexture fun(self: button) : texture
-
----@class statusbar : frame
----@field SetStatusBarColor fun(self: statusbar, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field SetStatusBarTexture fun(self: statusbar, path: string)
----@field SetMinMaxValues fun(self: statusbar, minValue: number, maxValue: number)
----@field SetValue fun(self: statusbar, value: number)
----@field SetValueStep fun(self: statusbar, valueStep: number)
----@field SetOrientation fun(self: statusbar, orientation: string)
----@field SetReverseFill fun(self: statusbar, reverseFill: boolean)
----@field GetMinMaxValues fun(self: statusbar) : number, number
----@field GetValue fun(self: statusbar) : number
----@field GetValueStep fun(self: statusbar) : number
----@field GetOrientation fun(self: statusbar) : string
----@field GetReverseFill fun(self: statusbar) : boolean
-
----@class scrollframe : frame
----@field SetScrollChild fun(self: scrollframe, child: frame)
----@field GetScrollChild fun(self: scrollframe) : frame
----@field SetHorizontalScroll fun(self: scrollframe, offset: number)
----@field SetVerticalScroll fun(self: scrollframe, offset: number)
----@field GetHorizontalScroll fun(self: scrollframe) : number
----@field GetVerticalScroll fun(self: scrollframe) : number
----@field GetHorizontalScrollRange fun(self: scrollframe) : number
----@field GetVerticalScrollRange fun(self: scrollframe) : number
-
----@class region : uiobject
-
----@class fontstring : region
----@field SetDrawLayer fun(self: fontstring, layer: "background"|"border"|"artwork"|"overlay"|"highlight", subLayer: number|nil)
----@field SetFont fun(self: fontstring, font: string, size: number, flags: string)
----@field SetText fun(self: fontstring, text: string|number)
----@field GetText fun(self: fontstring) : string
----@field GetFont fun(self: fontstring) : string, number, string
----@field GetStringWidth fun(self: fontstring) : number return the width of the string in pixels
----@field SetShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field GetShadowColor fun(self: fontstring) : number, number, number, number
----@field SetShadowOffset fun(self: fontstring, offsetX: number, offsetY: number)
----@field GetShadowOffset fun(self: fontstring) : number, number
----@field SetTextColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field GetTextColor fun(self: fontstring) : number, number, number, number
----@field SetJustifyH fun(self: fontstring, justifyH: string)
----@field GetJustifyH fun(self: fontstring) : string
----@field SetJustifyV fun(self: fontstring, justifyV: string)
----@field GetJustifyV fun(self: fontstring) : string
----@field SetNonSpaceWrap fun(self: fontstring, nonSpaceWrap: boolean)
----@field GetNonSpaceWrap fun(self: fontstring) : boolean
----@field SetIndentedWordWrap fun(self: fontstring, indentedWordWrap: boolean)
----@field GetIndentedWordWrap fun(self: fontstring) : boolean
----@field SetMaxLines fun(self: fontstring, maxLines: number)
----@field GetMaxLines fun(self: fontstring) : number
----@field SetWordWrap fun(self: fontstring, wordWrap: boolean)
----@field GetWordWrap fun(self: fontstring) : boolean
----@field SetSpacing fun(self: fontstring, spacing: number)
----@field GetSpacing fun(self: fontstring) : number
----@field SetLineSpacing fun(self: fontstring, lineSpacing: number)
----@field GetLineSpacing fun(self: fontstring) : number
----@field SetMaxLetters fun(self: fontstring, maxLetters: number)
----@field GetMaxLetters fun(self: fontstring) : number
----@field SetTextInsets fun(self: fontstring, left: number, right: number, top: number, bottom: number)
----@field GetTextInsets fun(self: fontstring) : number, number, number, number
----@field SetTextJustification fun(self: fontstring, justifyH: string, justifyV: string)
----@field GetTextJustification fun(self: fontstring) : string, string
----@field SetTextShadowColor fun(self: fontstring, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field GetTextShadowColor fun(self: fontstring) : number, number, number, number
----@field SetTextShadowOffset fun(self: fontstring, offsetX: number, offsetY: number)
----@field GetTextShadowOffset fun(self: fontstring) : number, number
----@field SetTextShadow fun(self: fontstring, offsetX: number, offsetY: number, r: red|number, g: green|number, b: blue|number, a: alpha|number)
----@field SetTextTruncate fun(self: fontstring, truncate: string)
----@field GetTextTruncate fun(self: fontstring) : string
----@field SetTextTruncateWidth fun(self: fontstring, width: number)
----@field GetTextTruncateWidth fun(self: fontstring) : number
----@field SetTextTruncateLines fun(self: fontstring, lines: number)
----@field GetTextTruncateLines fun(self: fontstring) : number
-
----@class texture : region
----@field SetDrawLayer fun(self: texture, layer: "background"|"border"|"artwork"|"overlay"|"highlight", subLayer: number|nil)
----@field SetTexture fun(self: texture, path: string)
----@field SetColorTexture fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number|nil)
----@field SetDesaturated fun(self: texture, desaturate: boolean)
----@field SetBlendMode fun(self: texture, mode: "ADD"|"BLEND"|"DISABLE"|"MOD"|"MOD2X"|"OVERLAY"|"REPLACE"|"SUBTRACT")
----@field SetVertexColor fun(self: texture, r: red|number, g: green|number, b: blue|number, a: alpha|number|nil)
----@field GetPoint fun(self: texture, index: number) : string, table, string, number, number
----@field SetShown fun(self: texture, state: boolean)
----@field IsShown fun(self: texture) : boolean
----@field GetParent fun(self: texture) : table
----@field SetTexCoord fun(self: texture, left: number, right: number, top: number, bottom: number)
----@field GetTexCoord fun(self: texture) : number, number, number, number
----@field SetRotation fun(self: texture, rotation: number)
----@field GetRotation fun(self: texture) : number
----@field SetRotationRadians fun(self: texture, rotation: number)
----@field GetRotationRadians fun(self: texture) : number
----@field SetRotationDegrees fun(self: texture, rotation: number)
----@field GetRotationDegrees fun(self: texture) : number
----@field SetMask fun(self: texture, mask: table)
----@field GetMask fun(self: texture) : table
----@field SetMaskTexture fun(self: texture, maskTexture: table)
----@field GetMaskTexture fun(self: texture) : table
----@field GetDesaturated fun(self: texture) : boolean
----@field SetGradient fun(self: texture, gradient: string)
----@field GetGradient fun(self: texture) : string
----@field SetGradientAlpha fun(self: texture, gradient: string)
----@field GetGradientAlpha fun(self: texture) : string
----@field SetGradientRotation fun(self: texture, rotation: number)
----@field GetGradientRotation fun(self: texture) : number
----@field SetGradientRotationRadians fun(self: texture, rotation: number)
----@field GetGradientRotationRadians fun(self: texture) : number
----@field SetGradientRotationDegrees fun(self: texture, rotation: number)
----@field GetGradientRotationDegrees fun(self: texture) : number
----@field SetGradientColors fun(self: texture, ...)
----@field GetGradientColors fun(self: texture) : number, number, number, number, number, number, number, number, number, number, number, number
----@field GetBlendMode fun(self: texture) : string
----@field GetVertexColor fun(self: texture) : number, number, number, number
-
-
-
-
-
-
+---@class petownerinfo : table
+---@field key1 unitname owner name
+---@field key2 guid owner guid
+---@field key3 controlflags owner flags
+---@field key4 unixtime time when the pet was created
+---@field key5 boolean true if the pet is part of the player's group
+---@field key6 petname pet name
+---@field key7 guid pet guid
 
 ---@class details
+---@field pets table<guid, petinfo> store the pet guid as the key and the petinfo as the value
 ---@field SpellTableMixin spelltablemixin
 ---@field GetInstance fun(self: details) : instance
 ---@field GetWindow fun(self: details) : instance this is an alias of GetInstance
 ---@field GetCombat fun(self: details) : combat
----@field GetSpellSchoolFormatedName fun(self: details, spellschool: number) : string
+---@field GetSpellSchoolFormatedName fun(self: details, spellschool: spellschool) : string
 ---@field CommaValue fun(self: details, number: number) : string
 ---@field CreateEventListener fun(self: details) : table
+---@field GetFullName fun(self: details, unitId: any, ambiguateString: any) : string create a CLEU compatible name of the unit passed, return string is in the format "playerName-realmName", the string will also be ambiguated using the ambiguateString passed
 
 ---@class detailseventlistener : table
----@field RegisterEvent fun(self: detailseventlistener, event: "DETAILS_INSTANCE_OPEN"|"DETAILS_INSTANCE_CLOSE"|"DETAILS_INSTANCE_SIZECHANGED"|"DETAILS_INSTANCE_STARTRESIZE"|"DETAILS_INSTANCE_ENDRESIZE"|"DETAILS_INSTANCE_STARTSTRETCH"|"DETAILS_INSTANCE_ENDSTRETCH"|"DETAILS_INSTANCE_CHANGESEGMENT"|"DETAILS_INSTANCE_CHANGEATTRIBUTE"|"DETAILS_INSTANCE_CHANGEMODE"|"DETAILS_INSTANCE_NEWROW"|"DETAILS_OPTIONS_MODIFIED"|"DETAILS_DATA_RESET"|"DETAILS_DATA_SEGMENTREMOVED"|"COMBAT_ENCOUNTER_START"|"COMBAT_ENCOUNTER_END"|"COMBAT_PLAYER_ENTER"|"COMBAT_PLAYER_LEAVE"|"COMBAT_PLAYER_TIMESTARTED"|"COMBAT_BOSS_WIPE"|"COMBAT_BOSS_DEFEATED"|"COMBAT_BOSS_FOUND"|"COMBAT_INVALID"|"COMBAT_PREPOTION_UPDATED"|"COMBAT_CHARTTABLES_CREATING"|"COMBAT_CHARTTABLES_CREATED"|"COMBAT_ENCOUNTER_PHASE_CHANGED"|"COMBAT_ARENA_START"|"COMBAT_ARENA_END"|"COMBAT_MYTHICDUNGEON_START"|"COMBAT_MYTHICDUNGEON_END"|"GROUP_ONENTER"|"GROUP_ONLEAVE"|"ZONE_TYPE_CHANGED"|"REALM_CHANNEL_ENTER"|"REALM_CHANNEL_LEAVE"|"COMM_EVENT_RECEIVED"|"COMM_EVENT_SENT"|"UNIT_SPEC"|"UNIT_TALENTS"|"PLAYER_TARGET"|"DETAILS_PROFILE_APPLYED", callback: function)
----@field UnregisterEvent fun(self: detailseventlistener, event: "DETAILS_INSTANCE_OPEN"|"DETAILS_INSTANCE_CLOSE"|"DETAILS_INSTANCE_SIZECHANGED"|"DETAILS_INSTANCE_STARTRESIZE"|"DETAILS_INSTANCE_ENDRESIZE"|"DETAILS_INSTANCE_STARTSTRETCH"|"DETAILS_INSTANCE_ENDSTRETCH"|"DETAILS_INSTANCE_CHANGESEGMENT"|"DETAILS_INSTANCE_CHANGEATTRIBUTE"|"DETAILS_INSTANCE_CHANGEMODE"|"DETAILS_INSTANCE_NEWROW"|"DETAILS_OPTIONS_MODIFIED"|"DETAILS_DATA_RESET"|"DETAILS_DATA_SEGMENTREMOVED"|"COMBAT_ENCOUNTER_START"|"COMBAT_ENCOUNTER_END"|"COMBAT_PLAYER_ENTER"|"COMBAT_PLAYER_LEAVE"|"COMBAT_PLAYER_TIMESTARTED"|"COMBAT_BOSS_WIPE"|"COMBAT_BOSS_DEFEATED"|"COMBAT_BOSS_FOUND"|"COMBAT_INVALID"|"COMBAT_PREPOTION_UPDATED"|"COMBAT_CHARTTABLES_CREATING"|"COMBAT_CHARTTABLES_CREATED"|"COMBAT_ENCOUNTER_PHASE_CHANGED"|"COMBAT_ARENA_START"|"COMBAT_ARENA_END"|"COMBAT_MYTHICDUNGEON_START"|"COMBAT_MYTHICDUNGEON_END"|"GROUP_ONENTER"|"GROUP_ONLEAVE"|"ZONE_TYPE_CHANGED"|"REALM_CHANNEL_ENTER"|"REALM_CHANNEL_LEAVE"|"COMM_EVENT_RECEIVED"|"COMM_EVENT_SENT"|"UNIT_SPEC"|"UNIT_TALENTS"|"PLAYER_TARGET"|"DETAILS_PROFILE_APPLYED")
+---@field RegisterEvent fun(self: detailseventlistener, event: detailsevent, callback: function)
+---@field UnregisterEvent fun(self: detailseventlistener, event: detailsevent)
+
+---@class deathtable : table
+---@field key1 any[] what happened to the player before death
+---@field key2 number unix time
+---@field key3 string player name
+---@field key4 string player class
+---@field key5 number max health
+---@field key6 string time of death as string
+---@field dead boolean just a boolean to indicate this is a death table
+---@field last_cooldown {key1: unixtime, key2: spellid}
+---@field dead_at combattime
+---@field spec specializationid
 
 ---@class customspellinfo : {name: string, isPassive: boolean, itemId: number, icon: string|number}
----@class customiteminfo: {itemId: number, isPassive: boolean}
+---@class customiteminfo: {itemId: number, isPassive: boolean, nameExtra: string?, icon: string|number|nil}
 ---@class savedspelldata : {key1: number, key2: string, key3: number}
 ---@class alternatepowertable : {last: number, total: number}
 
 ---@class combat : table
+---@field bIsClosed boolean if true the combat is closed (passed by the EndCombat() function)
+---@field __destroyedBy string
 ---@field amountCasts {[string]: table<string, number>}
+---@field instance_type instancetype "raid" or "party" or "pvp" or "arena" or "none" or "scenario"
 ---@field end_time number
 ---@field start_time number
+---@field combat_counter number
+---@field is_trash boolean while in raid this is set to true if the combat isn't raid boss, in dungeon this is set to true if the combat isn't a boss or if the dungeon isn't a mythic+
+---@field raid_roster table<string, string> [unitName] = unitGUID
+---@field overall_added boolean is true when the combat got added into the overall combat
 ---@field is_mythic_dungeon_trash boolean
 ---@field is_mythic_dungeon_run_id number
 ---@field is_mythic_dungeon_segment boolean
 ---@field trinketProcs table<actorname, table<spellid, {cooldown: number, total: number}>>
----@field GetPhases fun(combat: combat) : table
 ---@field alternate_power table<actorname, alternatepowertable>
+---@field totals {key1: table, key2: table, key3: table, key3: table}
+---@field totals_grupo {key1: table, key2: table, key3: table, key3: table}
+---@field __destroyed boolean
+---@field PhaseData table
+---@field is_boss table
+---@field is_world_trash_combat boolean when true this combat is a regular combat done in the world, not in a dungeon, raid, battleground, arena, ...
+---@field player_last_events table<string, table[]> record the latest events of each player, latter used to build the death log
+---@field GetCombatUID fun(combat: combat) : uniquecombatid
+---@field GetTimeData fun(combat: combat, dataName: string) : table
+---@field GetPhases fun(combat: combat) : table
 ---@field GetCombatTime fun(combat) : number
 ---@field GetDeaths fun(combat) : table --get the table which contains the deaths of the combat
 ---@field GetStartTime fun(combat: combat) : number
 ---@field SetStartTime fun(combat: combat, time: number)
 ---@field GetEndTime fun(combat: combat) : number
+---@field GetDifficulty fun(combat: combat) : number return the dungeon or raid difficulty for boss fights
+---@field GetEncounterCleuID fun(combat: combat) : number return the encounterId for boss fights, this number is gotten from the ENCOUNTER_START event
+---@field GetBossInfo fun(combat: combat) : table a table containing many informations about the boss fight
 ---@field SetEndTime fun(combat: combat, time: number)
 ---@field CopyDeathsFrom fun(combat1: combat, combat2: combat, bMythicPlus: boolean) copy the deaths from combat2 to combat1, use true on bMythicPlus if the combat is from a mythic plus run
----@field GetContainer fun(combat: combat, containerType: number) : actorcontainer get an actor container, containerType can be 1 for damage, 2 heal, 3 energy, 4 utility
+---@field GetContainer fun(combat: combat, containerType: containertype) : actorcontainer get an actorcontainer, containerType can be 1 for damage, 2 heal, 3 resources, 4 utility
 ---@field GetSpellCastAmount fun(combat: combat, actorName: string, spellName: string) : number get the amount of times a spell was casted
 ---@field RemoveActorFromSpellCastTable fun(combat: combat, actorName: string)
 ---@field GetSpellCastTable fun(combat: combat, actorName: string|nil) : table
 ---@field GetSpellUptime fun(combat: combat, actorName: string, spellId: number, auraType: string|nil) : number get the uptime of a buff or debuff
----@field GetActor fun(combat: combat, attribute: number, playerName: string) : actor
+---@field GetActor fun(combat: combat, containerType: number, playerName: string) : actor
 ---@field CreateAlternatePowerTable fun(combat: combat, actorName: string) : alternatepowertable
+---@field GetCombatNumber fun(combat: combat) : number get a unique number representing the combatId, each combat has a unique number
+---@field SetDate fun(combat: combat, startDate: string, endDate: string) set the start and end date of the combat, format: "H:M:S"
+---@field GetDate fun(combat: combat) : string, string get the start and end date of the combat, format: "H:M:S"
+---@field GetRoster fun(combat: combat) : table<string, string> get the roster of the combat, the table contains the names of the players in the combat
+---@field InstanceType fun(combat: combat) : string get the instance type of the combat, can be "raid" or "party" or "pvp" or "arena" or "none"
+---@field IsTrash fun(combat: combat) : boolean is true if the combat is a trash combat
 
----@class actorcontainer : table
----@field _ActorTable table
----@field _NameIndexTable table
+---@class actorcontainer : table contains two tables _ActorTable and _NameIndexTable, the _ActorTable contains the actors, the _NameIndexTable contains the index of the actors in the _ActorTable, making quick to reorder them without causing overhead
+---@field need_refresh boolean when true the container is dirty and needs to be refreshed
+---@field _ActorTable table array of actors
+---@field _NameIndexTable table<string, number> [actorName] = actorIndex in the _ActorTable, actorcontainer:Remap() refreshes the _NameIndexTable
 ---@field GetActor fun(container: actorcontainer, actorName: string) get an actor by its name
+---@field GetOrCreateActor fun(container: actorcontainer, actorSerial: guid, actorName: actorname, actorFlags: controlflags, bShouldCreateActor: boolean) get an actor by its name, if the actor doesn't exist it will be created
 ---@field GetSpellSource fun(container: actorcontainer, spellId: number) get the first actor found which casted the spell
 ---@field GetAmount fun(container: actorcontainer, actorName: string, key: string) get the amount of actor[key]
 ---@field GetTotal fun(container: actorcontainer, key: string) get the total amount of actor[key] for all actors
 ---@field GetTotalOnRaid fun(container: actorcontainer, key: string, combat: combat) get the total amount of actor[key] only for the actors which are in the raid
 ---@field GetActorTable fun(container: actorcontainer) get the table<actorIndex, actorObject> which contains the actors
 ---@field ListActors fun(container: actorcontainer) usage: for index, actorObject in container:ListActors() do
+---@field RemoveActor fun(container: actorcontainer, actor: actor) remove an actor from the container
+---@field GetType fun(container: actorcontainer) : number get the container type, 1 for damage, 2 for heal, 3 for energy, 4 for utility
+---@field Remap fun(container: actorcontainer) refreshes the _NameIndexTable part of the container
+---@field Cleanup fun(container: actorcontainer) remove all destroyed actors from the container
 
 ---@class spellcontainer : table
 ---@field _ActorTable table store [spellId] = spelltable
----@field GetSpell fun(container: spellcontainer, spellId: number) get a spell by its id
+---@field GetSpell fun(container: spellcontainer, spellId: number) get a spell by its id, does not create if not found
 ---@field ListActors fun(container: spellcontainer) : any, any usage: for spellId, spelltable in container:ListActors() do
 ---@field ListSpells fun(container: spellcontainer) : any, any usage: for spellId, spelltable in container:ListActors() do
 ---@field HasTwoOrMoreSpells fun(container: spellcontainer) : boolean return true if the container has two or more spells
+---@field GetOrCreateSpell fun(self: spellcontainer, spellId: number, bCanCreateSpellIfMissing: boolean|nil, cleuToken: string|nil) : spelltable
 
 ---@class friendlyfiretable : table
 ---@field total number total amount of friendly fire caused by the actor
----@field spells table<number, number> spellId = total
+---@field spells table<spellid, number> spellId = total
 
 ---@class spelltable : table
 ---@field uptime number
@@ -385,6 +202,7 @@
 ---@field targets table<string, number> store the [target name] = total value
 ---@field targets_overheal table<string, number>
 ---@field targets_absorbs table<string, number>
+---@field extra table store extra data
 ---@field id number --spellid
 ---@field is_shield boolean --true if the spell is a shield
 ---@field successful_casted number successful casted times (only for enemies)
@@ -410,15 +228,25 @@
 ---@class targettable : {[string]: number}
 
 ---@class actor : table
----@field BuildSpellTargetFromBreakdownSpellData fun(actor: actor, bkSpellData: spelltableadv) : table
----@field BuildSpellTargetFromSpellTable fun(actor: actor, spellTable: spelltable) : table
+---@field owner actor
+---@field tipo number the container type
+---@field ownerName string name of the owner of the pet, a pet without an owner is considered an orphan and be suitable for garbage collection
+---@field pets table<number, string>
+---@field arena_enemy boolean if true the actor is an enemy in an arena match
+---@field dps_started boolean if true the actor started to do damage or healing
+---@field start_time unixtime when this actor started to be tracked
+---@field end_time number when this actor stopped to be tracked, end_time - start_time is the activity time of the actor
+---@field displayName string actor name shown in the regular window
+---@field pvp boolean indicates if the actor is a part of a pvp match
+---@field flag_original number original actor flag from what was received in the combat log
 ---@field debuff_uptime_spells table
 ---@field buff_uptime_spells table
----@field spells table
----@field aID number|string
+---@field spells spellcontainer
+---@field aID number|string actorID is a realm-playername or npcID
 ---@field spellicon number|string
 ---@field cooldowns_defensive_spells table
----@field nome string
+---@field nome string name of the actor
+---@field isTank boolean if true the player had the spec TANK during the combat
 ---@field serial string
 ---@field spec number
 ---@field grupo boolean
@@ -429,9 +257,17 @@
 ---@field last_event unixtime
 ---@field total_without_pet number
 ---@field total number
----@field pets table<number, string>
+---@field total_extra number
+---@field last_dps_realtime number
 ---@field targets targettable
----@field GetSpellContainer fun(actor: actor, containerType: "debuff"|"buff"|"spell"|"cooldowns") : spellcontainer
+---@field GetSpell fun(actor: actor, spellId: number) : spelltable
+---@field BuildSpellTargetFromBreakdownSpellData fun(actor: actor, bkSpellData: spelltableadv) : table
+---@field BuildSpellTargetFromSpellTable fun(actor: actor, spellTable: spelltable) : table
+---@field raid_targets table<number, number>
+---@field IsPlayer fun(actor: actor) : boolean return true if the actor is controlled by a player
+---@field IsPetOrGuardian fun(actor: actor) : boolean return true if the actor is a pet or guardian
+---@field IsGroupPlayer fun(actor: actor) : boolean return true if the actor is a player in the group (or was in the group during the combat)
+---@field GetSpellContainer fun(actor: actor, containerType: "debuff"|"buff"|"spell"|"cooldowns"|"dispel") : spellcontainer
 ---@field Class fun(actor: actor) : string get the ingame class of the actor
 ---@field Spec fun(actor: actor) : string get the ingame spec of the actor
 ---@field Name fun(actor: actor) : string get the name of the actor
@@ -442,9 +278,47 @@
 
 ---@class actordamage : actor
 ---@field friendlyfire_total number
----@field friendlyfire friendlyfiretable
----@field damage_taken number amount of damage the actor took durent the segment
+---@field friendlyfire table<actorname, friendlyfiretable>
+---@field damage_taken number amount of damage the actor took during the segment
 ---@field damage_from table<string, boolean> store the name of the actors which damaged the actor, format: [actorName] = true
+---@field totalabsorbed number amount of damage dealt by the actor by got absorbed by the target, this is a "ABSORB" type of miss but still counts as damage done
+---@field augmentedSpellsContainer spellcontainer
+
+---@class actorheal : actor
+---@field healing_taken number amount of healing the actor took during the segment
+---@field totalover number amount of healing that was overhealed
+---@field totalabsorb number amount of healing that was absorbed
+---@field heal_enemy_amt number amount of healing done to enemies this included enemy to enemy heals
+---@field totaldenied number amount of healing that was denied by the target - from cleu event SPELL_HEAL_ABSORBED
+---@field totalover_without_pet number amount of healing that was overhealed without the pet healing
+---@field healing_from table<string, boolean> store the name of the actors which healed the actor, format: [actorName] = true
+---@field heal_enemy table<number, number> store the amount of healing done by each spell that landed into an enemy, format: [spellId] = healing done
+---@field targets_overheal table<string, number> [targetName] = overheal
+---@field targets_absorbs table<string, number> [targetName] = absorbs
+
+---@class actorresource : actor
+---@field powertype number power type of the actor
+---@field alternatepower number alternate power of the actor
+
+---@class actorutility : actor
+---@field cc_break number amount of times the actor broke a cc
+---@field interrupt number amount of times the actor interrupted a spell
+---@field ress number amount of times the actor ressed a player
+---@field dead number amount of times the actor died
+---@field cooldowns_defensive number amount of times the actor used a defensive cooldown
+---@field buff_uptime number amount of time the actor had a buff
+---@field debuff_uptime number amount of time the actor had a debuff
+---@field cc_done number amount of times the actor applyed a crowdcontrol on a target
+---@field cc_done_targets table<string, number> [targetName] = amount of times the actor cc'd the target
+---@field cc_done_spells spellcontainer
+---@field dispell number amount of times the actor dispelled a buff or debuff
+---@field dispell_spells spellcontainer
+---@field dispell_targets table<string, number> [targetName] = amount
+---@field dispell_oque table<number, number> [spellId] = amount, amount of times the actor dispelled the spellId
+
+--interrupt_targets interrupt_spells interrompeu_oque
+--cc_break_targets cc_break_spells cc_break_oque
+
 
 ---@class segmentid : number
 ---@class instanceid : number
@@ -463,6 +337,7 @@
 ---@field freezed boolean
 ---@field sub_atributo_last table
 ---@field row_info table
+---@field GetSize fun(instance: instance) : width, height
 ---@field GetInstanceGroup fun() : table
 ---@field GetCombat fun(instance: instance)
 ---@field ChangeIcon fun(instance: instance)
@@ -473,6 +348,7 @@
 ---@field IsLowerInstance fun(instance: instance) : boolean
 ---@field IsEnabled fun(instance: instance) : boolean
 ---@field GetId fun(instance: instance) : instanceid
+---@field SetSegmentId fun(instance: instance, segment: segmentid) set the segmentId for the instance and nothing else, use 'SetSegment' for a full update
 ---@field GetSegmentId fun(instance: instance) : segmentid
 ---@field RefreshCombat fun(instance: instance)
 ---@field Freeze fun(instance: instance)
@@ -496,6 +372,16 @@
 ---@field averageTime number
 
 ---@class tabframe : frame this is the tab frame object for the breakdown window
+
+---@class breakdownwindow : frame
+---@field shownPluginObject table
+---@field BreakdownSideMenuFrame frame frame attached to the left or right side of the breakdown window
+---@field BreakdownPluginSelectionFrame frame frame which has buttons to select a plugin to show in the breakdown window
+---@field BreakdownTabsFrame frame where the tab buttons are located (parent frame)
+---@field RegisteredPluginButtons button[] table which contains plugins buttons that are registered to the breakdown window
+---@field RefreshPlayerScroll fun() refresh the player scroll frame (shown in the left side of the breakdown window)
+---@field RegisterPluginButton fun(button: button, pluginObject: table, pluginAbsolutename: string) register a plugin button to the breakdown window
+---@field GetShownPluginObject fun() : table get the plugin object that is currently shown in the breakdown window
 
 ---@class breakdownscrolldata : table
 ---@field totalValue number total done by the actor
@@ -542,6 +428,8 @@
 ---@field Icon texture
 ---@field InLineTexts fontstring[]
 ---@field statusBar breakdownspellbarstatusbar
+---@field bIsFromLeftScroll boolean
+---@field bIsFromRightScroll boolean
 
 ---@class breakdowntargetbar : button, df_headerfunctions
 ---@field index number
@@ -590,16 +478,17 @@
 
 ---spelltableadv is similar to spelltable but allow custom members, methods and any modification isn't save to saved variables
 ---@class spelltableadv : spelltable, spelltablemixin
----@field expanded boolean if is true the show the nested spells
+---@field expanded boolean? if is true the show the nested spells
 ---@field spellTables spelltable[]
 ---@field nestedData bknesteddata[]
 ---@field bCanExpand boolean
----@field expandedIndex number
----@field bIsExpanded boolean
----@field statusBarValue number
----@field actorName string --when showing an actor header, this is the actor name
----@field bIsActorHeader boolean is this is true, the spellbar is an actor header, which is a bar with the actor name with the actor spells nested
----@field actorIcon texture
+---@field expandedIndex number?
+---@field bIsExpanded boolean?
+---@field statusBarValue number?
+---@field npcId any
+---@field actorName string? --when showing an actor header, this is the actor name
+---@field bIsActorHeader boolean? if this is true, the spellbar is an actor header, which is a bar with the actor name with the actor spells nested
+---@field actorIcon textureid|texturepath?
 
 ---@class bknesteddata : {spellId: number, spellTable: spelltable, actorName: string, value: number, bIsActorHeader: boolean} fills .nestedData table in spelltableadv, used to store the nested spells data, 'value' is set when the breakdown sort the values by the selected header
 
@@ -662,6 +551,16 @@
 ---@field TabFrame breakdownspellstab
 ---@field mainAttribute number
 ---@field subAttribute number
+---@field TargetScrollFrame breakdowntargetscrollframe
+---@field PhaseScrollFrame breakdownphasescrollframe
+---@field GenericScrollFrameLeft breakdowngenericscrollframe
+---@field GenericScrollFrameRight breakdowngenericscrollframe
+---@field SpellContainerFrame df_framecontainer
+---@field BlocksContainerFrame df_framecontainer
+---@field TargetsContainerFrame df_framecontainer
+---@field PhaseContainerFrame df_framecontainer
+---@field GenericContainerFrameLeft df_framecontainer
+---@field GenericContainerFrameRight df_framecontainer
 ---@field GetActor fun() : actor
 ---@field GetCombat fun() : combat
 ---@field GetInstance fun() : instance
@@ -684,10 +583,21 @@
 ---@field CreateSpellBlockContainer fun(tabFrame: tabframe) : breakdownspellblockframe
 ---@field UpdateShownSpellBlock fun()
 ---@field CreateTargetContainer fun(tabFrame: tabframe) : breakdowntargetscrollframe
+---@field CreateGenericContainers fun(tabFrame: tabframe) : breakdowngenericscrollframe, breakdowngenericscrollframe
 ---@field CreateSpellScrollContainer fun(tabFrame: tabframe) : breakdownspellscrollframe
 ---@field CreateTargetBar fun(self: breakdowntargetscrollframe, index: number) : breakdowntargetbar
 ---@field CreateSpellBar fun(self: breakdownspellscrollframe, index: number) : breakdownspellbar
 
+---@class timemachine : table
+---@field Ticker fun() runs each second and check if actors are performing damage and healing actions, if the actor isn't, stop the activity time of that actor
+---@field Start fun() start the time machine, called once from the start.lua
+---@field Cleanup fun() check for actors with __destroyed flag and remove them from the time machine
+---@field Restart fun() reset all data inside the time machine
+---@field AddActor fun(actor: actor) add the actor to the time machine
+---@field RemoveActor fun(actor: actor) remove the actor from the time machine
+---@field StopTime fun(actor: actor) stop the time of the actor
+---@field SetOrGetPauseState fun(actor: actor, bPause: boolean|nil) : boolean|nil set or get the pause state of the actor, if bPause is nil, then it will return the current pause state
 
-
+---@class details222 : table
+---@field TimeMachine timemachine
 

@@ -27,6 +27,9 @@ local ruleParsers = {}
 local ruleParserOrder = {}
 
 local eventToChannel = {
+    ["CHAT_MSG_SYSTEM"] = "System",
+    ["CHAT_MSG_AFK"] = "DND",
+    ["CHAT_MSG_DND"] = "DND",
     ["CHAT_MSG_CHANNEL"] = "Channel",
     ["CHAT_MSG_SAY"] = "Say",
     ["CHAT_MSG_YELL"] = "Yell",
@@ -83,7 +86,16 @@ local function isExcluded(guid)
 end
 
 local function messageHandler(_, event, msg, sender, _, _, _, _, _, _, channelName, _, _, guid)
-    if not (event and msg and sender and channelName and guid) then
+    if not event then
+        return false
+    end
+
+    if event == "CHAT_MSG_SYSTEM" then
+        sender = "System"
+        guid = "" .. time()
+    end
+
+    if not (msg and sender and channelName and guid) then
         return false
     end
 
@@ -105,7 +117,7 @@ local function messageHandler(_, event, msg, sender, _, _, _, _, _, _, channelNa
         handleCache[guid .. "_" .. channel] = nil
     end
 
-    if isExcluded(guid) then
+    if event ~= "CHAT_MSG_SYSTEM" and isExcluded(guid) then
         return result(false, guid, channel)
     end
 

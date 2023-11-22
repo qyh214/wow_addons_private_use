@@ -62,3 +62,25 @@ $r = realm
 $d = datum
 $b = line change]=] -- Needs review
 L["watermarktest"] = "Anzeige Wasserzeichen" -- Needs review
+
+-- Added by Nukme
+-- L["Auto-Screenshot Management Addon\n\n"] = ""
+-- L["Version"] = ""
+-- L["Author"] = ""
+-- L["Github Repo"] = ""
+-- L["NGA Feedback"] = ""
+-- L["mythicpluscompletion"] = ""
+-- L["General Settings"] = ""
+-- L["Difficulty Settings"] = ""
+-- L["DifficultyID reference webpage:"] = ""
+-- L["PARTY"] = ""
+-- L["RAID"] = ""
+-- L["SCENARIO"] = ""
+-- L["PVP"] = ""
+-- L["NONE"] = ""
+-- L["Reset Character Kill History"] = ""
+-- L["Reset All General Settings"]  = ""
+-- L["Click to Reset"] = ""
+-- L["Encounter Success"] = ""
+-- L["Screenshot Events"] = ""
+-- L["Encounter Settings"] = ""

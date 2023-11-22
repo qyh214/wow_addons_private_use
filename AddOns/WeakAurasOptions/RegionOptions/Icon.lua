@@ -329,9 +329,9 @@ local function modifyThumbnail(parent, frame, data)
       iconPath = path or data.displayIcon
     end
     if iconPath and iconPath ~= "" then
-      WeakAuras.SetTextureOrAtlas(self.icon, iconPath)
+      OptionsPrivate.Private.SetTextureOrAtlas(self.icon, iconPath)
     else
-      WeakAuras.SetTextureOrAtlas(self.icon, "Interface\\Icons\\INV_Misc_QuestionMark")
+      OptionsPrivate.Private.SetTextureOrAtlas(self.icon, "Interface\\Icons\\INV_Misc_QuestionMark")
     end
   end
 
@@ -518,7 +518,10 @@ local function GetAnchors(data)
   return anchorPoints;
 end
 
-WeakAuras.RegisterRegionOptions("icon", createOptions, "interface\\icons\\spell_holy_sealofsalvation.blp", L["Icon"],
-                                createThumbnail, modifyThumbnail,
-                                L["Shows a spell icon with an optional cooldown overlay"],
-                                templates, GetAnchors);
+OptionsPrivate.registerRegions = OptionsPrivate.registerRegions or {}
+table.insert(OptionsPrivate.registerRegions, function()
+  OptionsPrivate.Private.RegisterRegionOptions("icon", createOptions, "interface\\icons\\spell_holy_sealofsalvation.blp", L["Icon"],
+                                  createThumbnail, modifyThumbnail,
+                                  L["Shows a spell icon with an optional cooldown overlay"],
+                                  templates, GetAnchors);
+end)

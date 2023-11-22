@@ -1,3 +1,0 @@
-local myname, ns = ...
-
-ns.RegisterPoints(1978, {}) -- Dragon Isles continent

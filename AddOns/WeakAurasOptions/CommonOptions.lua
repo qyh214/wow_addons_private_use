@@ -374,8 +374,17 @@ end
 
 local function CreateHiddenAll(subOption)
   return function(data, info)
+    local mainOptions = OptionsPrivate.EnsureOptions(data, subOption)
+    for i=1,#info do
+      mainOptions = mainOptions.args[info[i]];
+    end
+
     if(#data.controlledChildren == 0) then
-      return true;
+      if mainOptions.hiddenAllIfAnyHidden then
+        return false
+      else
+        return true
+      end
     end
 
     for child in  OptionsPrivate.Private.TraverseLeafs(data) do
@@ -387,13 +396,24 @@ local function CreateHiddenAll(subOption)
         childOptionTable[i] = childOption;
       end
       if (childOption) then
-        if (not hiddenChild(childOptionTable, info)) then
-          return false;
+        local childHidden = hiddenChild(childOptionTable, info)
+        if mainOptions.hiddenAllIfAnyHidden then
+          if childHidden then
+            return true
+          end
+        else
+          if not childHidden then
+            return false
+          end
         end
       end
     end
 
-    return true;
+    if mainOptions.hiddenAllIfAnyHidden then
+      return false
+    else
+      return true
+    end
   end
 end
 
@@ -721,6 +741,11 @@ local function replaceNameDescFuncs(intable, data, subOption)
                       if(type(display) == "number") then
                         display = math.floor(display * 100) / 100;
                       else
+                        local nullBytePos = display:find("\0", nil, true)
+                        if nullBytePos then
+                          display = display:sub(1, nullBytePos - 1)
+                        end
+
                         if #display > 50 then
                           display = display:sub(1, 50) .. "..."
                         end
@@ -1098,7 +1123,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       order = 72,
       image = function() return "", 0, 0 end,
       hidden = function()
-        return IsParentDynamicGroup() or not (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE")
+        return IsParentDynamicGroup() or not (data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE" or IsGroupByFrame())
       end,
     },
     -- Input field to select frame to anchor on
@@ -1108,7 +1133,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       name = L["Frame"],
       order = 73,
       hidden = function()
-        if (IsParentDynamicGroup()) then
+        if (IsParentDynamicGroup() or IsGroupByFrame()) then
           return true;
         end
         return not (data.anchorFrameType == "SELECTFRAME")
@@ -1121,7 +1146,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
       name = L["Choose"],
       order = 74,
       hidden = function()
-        if (IsParentDynamicGroup()) then
+        if (IsParentDynamicGroup() or IsGroupByFrame()) then
           return true;
         end
         return not (data.anchorFrameType == "SELECTFRAME")
@@ -1161,7 +1186,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
           if IsParentDynamicGroup() then
             return true
           end
-          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "UIPARENT" or data.anchorFrameType == "MOUSE";
+          return data.anchorFrameType == "SCREEN" or data.anchorFrameType == "MOUSE";
         else
           return data.anchorFrameType == "MOUSE";
         end
@@ -1178,7 +1203,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
         if IsGroupByFrame() then
           return true
         end
-        if (data.anchorFrameType ~= "SCREEN" and data.anchorFrameType ~= "UIPARENT") then
+        if (data.anchorFrameType ~= "SCREEN") then
           return true;
         end
         if (data.parent) then
@@ -1262,7 +1287,7 @@ local function PositionOptions(id, data, _, hideWidthHeight, disableSelfPoint, g
 
   OptionsPrivate.commonOptions.AddCodeOption(positionOptions, data, L["Custom Anchor"], "custom_anchor",
                       "https://github.com/WeakAuras/WeakAuras2/wiki/Custom-Code-Blocks#custom-anchor-function",
-                      71.5, function() return not(data.anchorFrameType == "CUSTOM" and not IsParentDynamicGroup()) end,
+                      71.5, function() return not(data.anchorFrameType == "CUSTOM" and not IsParentDynamicGroup() and not IsGroupByFrame()) end,
                       {"customAnchor"}, false, { setOnParent = group })
   return positionOptions;
 end

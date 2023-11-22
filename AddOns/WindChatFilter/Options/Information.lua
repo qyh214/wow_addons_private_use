@@ -232,7 +232,7 @@ O.information = {
                             "WIND_CHAT_FILTER_EDITBOX",
                             L["Wind Chat Filter"] .. " - " .. L["QQ Group"],
                             nil,
-                            "336069019"
+                            "948518444"
                         )
                     end,
                     width = 0.6

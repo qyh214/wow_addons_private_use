@@ -275,6 +275,8 @@ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Zeige Kopfgeld-Ring"
 L["S_OPTIONS_ANIMATIONS"] = "Animationen verwenden"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+--[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Kartenfenster zentrieren"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Du musst zuerst 'Kartenfensterskalierung' aktivieren, kein Wert wurde geändert."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Kartenfensterskalierung"

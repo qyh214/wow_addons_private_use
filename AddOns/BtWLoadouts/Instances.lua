@@ -216,6 +216,8 @@ if Internal.IsEternitysEndPatch then
     instanceDifficulties[2481] = raidDifficultiesAll -- Sepulcher of the First Ones
 end
 if Internal.IsDragonflightPatch then
+    instanceDifficulties[2441] = {2, 23} -- Tazavesh, the Veiled Market
+
     instanceDifficulties[2522] = raidDifficultiesAll -- Vault of the Incarnates
 
     if Internal.IsDragonflightSeason1 then
@@ -234,7 +236,7 @@ if Internal.IsDragonflightPatch then
         instanceDifficulties[1176] = { 8 } -- Shadowmoon Burial Grounds
         instanceDifficulties[1477] = { 8 } -- Halls of Valor
         instanceDifficulties[1571] = { 8 } -- Court of Stars
-    else
+    elseif Internal.IsDragonflightSeason2 then
         instanceDifficulties[2569] = raidDifficultiesAll -- Aberrus, the Shadowed Crucible
 
         instanceDifficulties[2519] = dungeonDifficultiesAll -- Neltharus
@@ -252,6 +254,27 @@ if Internal.IsDragonflightPatch then
         instanceDifficulties[1458] = { 8 } -- Neltharion's Lair
         instanceDifficulties[1754] = { 8 } -- Freehold
         instanceDifficulties[1841] = { 8 } -- The Underrot
+    else
+        instanceDifficulties[2549] = raidDifficultiesAll -- Amirdrassil, the Dream's Hope
+
+        instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
+        instanceDifficulties[2520] = dungeonNonMythicPlus -- Brackenhide Hollow
+        instanceDifficulties[2527] = dungeonNonMythicPlus -- Halls of Infusion
+        instanceDifficulties[2451] = dungeonNonMythicPlus -- Uldaman: Legacy of Tyr
+
+        instanceDifficulties[2515] = dungeonNonMythicPlus -- The Azure Vault
+        instanceDifficulties[2516] = dungeonNonMythicPlus -- The Nokhud Offensive
+        instanceDifficulties[2521] = dungeonNonMythicPlus -- Ruby Life Pools
+        instanceDifficulties[2526] = dungeonNonMythicPlus -- Algeth'ar Academy
+
+        -- Season 3 M+
+        instanceDifficulties[ 643] = { 8 } -- Throne of the Tides
+        instanceDifficulties[1279] = { 8 } -- The Everbloom
+        instanceDifficulties[1466] = { 8 } -- Darkheart Thicket
+        instanceDifficulties[1501] = { 8 } -- Black Rook Hold
+        instanceDifficulties[1763] = { 8 } -- Atal'Dazar
+        instanceDifficulties[1862] = { 8 } -- Waycrest Manor
+        instanceDifficulties[2579] = { 2, 23,  8} -- Dawn of the Infinites
     end
 end
 Internal.dungeonDifficultiesAll = dungeonDifficultiesAll;
@@ -442,7 +465,7 @@ if Internal.IsDragonflightPatch then
                 1571, -- Court of Stars
             }
         }
-    else
+    elseif Internal.IsDragonflightSeason2 then
         dungeonInfo[#dungeonInfo+1] = {
             name = L["Dragonflight"],
             instances = {
@@ -462,6 +485,30 @@ if Internal.IsDragonflightPatch then
                 1458, -- Neltharion's Lair
                 1754, -- Freehold
                 1841, -- The Underrot
+            }
+        }
+    else
+        dungeonInfo[#dungeonInfo+1] = {
+            name = L["Dragonflight"],
+            instances = {
+                2515, -- The Azure Vault
+                2516, -- The Nokhud Offensive
+                2521, -- Ruby Life Pools
+                2526, -- Algeth'ar Academy
+                2519, -- Neltharus
+                2520, -- Brackenhide Hollow
+                2527, -- Halls of Infusion
+                2451, -- Uldaman: Legacy of Tyr
+
+                2579, -- Dawn of the Infinites
+
+                -- Season 3 M+
+                643, -- Throne of the Tides
+                1279, -- The Everbloom
+                1466, -- Darkheart Thicket
+                1501, -- Black Rook Hold
+                1763, -- Atal'Dazar
+                1862, -- Waycrest Manor
             }
         }
     end
@@ -570,8 +617,11 @@ if Internal.IsDragonflightPatch then
             2522, -- Vault of the Incarnates
         }
     }
-    if not Internal.IsDragonflightSeason1 then
+    if Internal.IsDragonflightSeason2 or Internal.IsDragonflightSeason3 then
         tinsert(raidInfo[10].instances, 2569) -- Aberrus, the Shadowed Crucible
+    end
+    if Internal.IsDragonflightSeason3 then
+        tinsert(raidInfo[10].instances, 2549) -- Amirdrassil, the Dream's Hope
     end
 end
 local scenarioInfo = {
@@ -1969,7 +2019,7 @@ local instanceBosses = {
         2469, -- Anduin Wrynn
         2457, -- Lords of Dread
         2467, -- Rygelon
-        2464, -- The Jailer, Zovaal
+        2464, -- The Jailer
     },
 
     -- Dragonflight
@@ -2021,6 +2071,17 @@ local instanceBosses = {
         2510, -- Khajin the Unyielding
         2511, -- Primal Tsunami
     },
+    [2579] = { -- Dawn of the Infinite
+        2521, -- Chronikar
+        2528, -- Manifested Timeways
+        2535, -- Blight of Galakrond
+        2537, -- Iridikron the Stonescaled
+        2526, -- Tyr, the Infinite Keeper
+        2536, -- Morchie
+        2534, -- Time-Lost Battlefield
+        2533, -- Time-Lost Battlefield
+        2538, -- Chrono-Lord Deios
+    },
     [2522] = { -- Vault of the Incarnates
         2480, -- Eranog
         2500, -- Terros
@@ -2041,6 +2102,17 @@ local instanceBosses = {
         2527, -- Magmorax
         2523, -- Echo of Neltharion
         2520, -- Scalecommander Sarkareth
+    },
+    [2549] = { -- Amirdrassil, the Dream's Hope
+        2564, -- Gnarlroot
+        2554, -- Igira the Cruel
+        2557, -- Volcoross
+        2555, -- Council of Dreams
+        2553, -- Larodar, Keeper of the Flame
+        2556, -- Nymue, Weaver of the Cycle
+        2563, -- Smolderon
+        2565, -- Tindral Sageswift, Seer of the Flame
+        2519, -- Fyrakk the Blazing
     },
 }
 -- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
@@ -2136,6 +2208,18 @@ local npcIDToBossID = {
     [201320] = 2525, -- Rashok, the Elder
     [202375] = 2532, -- The Vigilant Steward, Zskarn
     [201579] = 2527, -- Magmorax
+
+    [209333] = 2564, -- Gnarlroot
+    [200926] = 2554, -- Igira the Cruel
+    [208478] = 2557, -- Volcoross
+    [208445] = 2553, -- Larodar, Keeper of the Flame
+    [208363] = 2555, -- Council of Dreams
+    [208365] = 2555, -- Council of Dreams
+    [208367] = 2555, -- Council of Dreams
+    [206172] = 2556, -- Nymue, Weaver of the Cycle
+    [200927] = 2563, -- Smolderon
+    [209090] = 2565, -- Tindral Sageswift, Seer of the Flame
+    -- [] = 2519, -- Fyrakk the Blazing
 };
 -- Although area ids are unique we map them with instance ids so we can translate
 -- area names by instance. We translate them because we cant get the area id where
@@ -2207,6 +2291,9 @@ local InstanceAreaIDToBossID = {
         -- [] = 2457, -- Lords of Dread
         -- [] = 2467, -- Rygelon
         -- [] = 2464, -- The Jailer, Zovaal
+    },
+    [2549] = { -- Amirdrassil, the Dream's Hope
+        [15049] = 2557, -- Volcoross
     },
 };
 -- This is for bosses that have their own unique world map
@@ -2539,6 +2626,11 @@ local uiMapIDToBossID = {
     [2095] = 2488, -- Melidrussa Chillworn
     -- Halls of Infusion
     [2082] = 2504, -- Watcher Irideus
+    -- Dawn of the Infinite
+    [2190] = 2521, -- Chronikar
+    [2191] = 2528, -- Manifested Timeways
+    [2195] = 2526, -- Tyr, the Infinite Keeper
+    [2196] = 2536, -- Morchie
     -- Vault of the Incarnates
     [2119] = 2480, -- Eranog
     [2120] = 2486, -- The Primal Council
@@ -2552,6 +2644,14 @@ local uiMapIDToBossID = {
     [2168] = 2524, -- Assault of the Zaqali
     [2169] = 2523, -- Echo of Neltharion
     [2170] = 2520, -- Scalecommander Sarkareth
+    -- Amirdrassil, the Dream's Hope
+    [2232] = {2564, 2554}, -- Gnarlroot, Igira the Cruel
+    [2244] = {2557, 2557}, -- Volcoross, Larodar, Keeper of the Flame
+    [2240] = {2555, 2556}, -- Council of Dreams, Nymue, Weaver of the Cycle
+    [2233] = 2563, -- Smolderon
+    [2234] = 2565, -- Tindral Sageswift, Seer of the Flame
+    [2237] = 2565, -- Tindral Sageswift, Seer of the Flame
+    [2238] = 2519, -- Fyrakk the Blazing
 }
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
@@ -2664,10 +2764,7 @@ local function PushAffixMask(a, b)
 end
 function Internal.GetExclusiveAffixes(affixesID)
 	affixesID = bit.band(affixesID or 0, 0xffffff)
-	if affixesID == 0 or GetExpansionLevel() == 8 then
-		return {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}
-	end
-	return affixesMask[affixesID];
+	return affixesMask[affixesID] or {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 end
 function Internal.CompareAffixMasks(a, b)
     return bit.band(a[1] or 0, b[1] or 0) == (a[1] or 0) and
@@ -2820,8 +2917,12 @@ local bossRequirements = {
     [2417] = {2401, 2390, 2389}, -- Mordretha, the Endless Empress, requires Gorechop, Xav the Unfallen, Kul'tharok
     [2410] = {2408, 2409, 2398}, -- Mueh'zala, requires Hakkar the Soulflayer, The Manastorms, and Dealer Xy'exa
 
-    [2482] = {2639}, -- Sennarth, the Cold Breath, requires Terros
+    [2482] = {2500}, -- Sennarth, the Cold Breath, requires Terros
     [2491] = {2500, 2482}, -- Kurog Grimtotem, requires Terros and Sennarth, the Cold Breath
+
+    [2554] = {2564}, -- Igira the Cruel, requires Gnarlroot
+    [2557] = {2557}, -- Larodar, Keeper of the Flame, requires Volcoross
+    [2556] = {2555}, -- Nymue, Weaver of the Cycle, requires Council of Dreams
 }
 function Internal.BossAvailable(bossID)
 	if IsEncounterComplete(bossID) then

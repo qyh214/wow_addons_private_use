@@ -1,6 +1,6 @@
 
-local DF = _G["DetailsFramework"]
-if (not DF or not DetailsFrameworkCanLoad) then
+local detailsFramework = _G["DetailsFramework"]
+if (not detailsFramework or not DetailsFrameworkCanLoad) then
 	return
 end
 
@@ -10,15 +10,15 @@ local APITextEntryFunctions = false
 do
 	local metaPrototype = {
 		WidgetType = "textentry",
-		dversion = DF.dversion,
+		dversion = detailsFramework.dversion,
 	}
 
 	--check if there's a metaPrototype already existing
-	if (_G[DF.GlobalWidgetControlNames["textentry"]]) then
+	if (_G[detailsFramework.GlobalWidgetControlNames["textentry"]]) then
 		--get the already existing metaPrototype
-		local oldMetaPrototype = _G[DF.GlobalWidgetControlNames["textentry"]]
+		local oldMetaPrototype = _G[detailsFramework.GlobalWidgetControlNames["textentry"]]
 		--check if is older
-		if ( (not oldMetaPrototype.dversion) or (oldMetaPrototype.dversion < DF.dversion) ) then
+		if ( (not oldMetaPrototype.dversion) or (oldMetaPrototype.dversion < detailsFramework.dversion) ) then
 			--the version is older them the currently loading one
 			--copy the new values into the old metatable
 			for funcName, _ in pairs(metaPrototype) do
@@ -27,18 +27,18 @@ do
 		end
 	else
 		--first time loading the framework
-		_G[DF.GlobalWidgetControlNames["textentry"]] = metaPrototype
+		_G[detailsFramework.GlobalWidgetControlNames["textentry"]] = metaPrototype
 	end
 end
 
-local TextEntryMetaFunctions = _G[DF.GlobalWidgetControlNames["textentry"]]
+local TextEntryMetaFunctions = _G[detailsFramework.GlobalWidgetControlNames["textentry"]]
 
-DF:Mixin(TextEntryMetaFunctions, DF.SetPointMixin)
-DF:Mixin(TextEntryMetaFunctions, DF.FrameMixin)
-DF:Mixin(TextEntryMetaFunctions, DF.TooltipHandlerMixin)
-DF:Mixin(TextEntryMetaFunctions, DF.ScriptHookMixin)
+detailsFramework:Mixin(TextEntryMetaFunctions, detailsFramework.SetPointMixin)
+detailsFramework:Mixin(TextEntryMetaFunctions, detailsFramework.FrameMixin)
+detailsFramework:Mixin(TextEntryMetaFunctions, detailsFramework.TooltipHandlerMixin)
+detailsFramework:Mixin(TextEntryMetaFunctions, detailsFramework.ScriptHookMixin)
 
-DF.TextEntryCounter = DF.TextEntryCounter or 1
+detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 
 ------------------------------------------------------------------------------------------------------------
 --metatables
@@ -231,7 +231,7 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 			self.editbox:SetBackdropColor(unpack(self.enabled_backdrop_color))
 			self.editbox:SetTextColor(unpack(self.enabled_text_color))
 			if (self.editbox.borderframe) then
-				local r, g, b, a = DF:ParseColors(unpack(self.editbox.borderframe.onleave_backdrop))
+				local r, g, b, a = detailsFramework:ParseColors(unpack(self.editbox.borderframe.onleave_backdrop))
 				self.editbox.borderframe:SetBackdropColor(r, g, b, a)
 			end
 		end
@@ -245,8 +245,8 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 
 			self.editbox:Disable()
 
-			self.editbox:SetBackdropBorderColor(.5, .5, .5, .5)
-			self.editbox:SetBackdropColor(.5, .5, .5, .5)
+			self.editbox:SetBackdropBorderColor(0, 0, 0, 1)
+			self.editbox:SetBackdropColor(.1, .1, .1, .834)
 			self.editbox:SetTextColor(.5, .5, .5, .5)
 
 			if (self.editbox.borderframe) then
@@ -320,7 +320,7 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 	local OnEnterPressed = function(textentry, byScript)
 		local object = textentry.MyObject
 		if (object.ignoreNextCallback) then
-			DF.Schedules.RunNextTick(function() object.ignoreNextCallback = nil end)
+			detailsFramework.Schedules.RunNextTick(function() object.ignoreNextCallback = nil end)
 			return
 		end
 
@@ -329,7 +329,7 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 			return
 		end
 
-		local text = DF:Trim(textentry:GetText())
+		local text = detailsFramework:Trim(textentry:GetText())
 		if (string.len(text) > 0) then
 			textentry.text = text
 			if (textentry.MyObject.func) then
@@ -372,7 +372,7 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 	local OnEditFocusLost = function(textEntry)
 		local object = textEntry.MyObject
 		if (object.ignoreNextCallback) then
-			DF.Schedules.RunNextTick(function() object.ignoreNextCallback = nil end)
+			detailsFramework.Schedules.RunNextTick(function() object.ignoreNextCallback = nil end)
 			return
 		end
 
@@ -383,7 +383,7 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 			end
 
 			if (not textEntry.focuslost) then
-				local text = DF:Trim(textEntry:GetText())
+				local text = detailsFramework:Trim(textEntry:GetText())
 				if (string.len(text) > 0) then
 					textEntry.MyObject.currenttext = text
 					if (textEntry.MyObject.func) then
@@ -447,6 +447,58 @@ DF.TextEntryCounter = DF.TextEntryCounter or 1
 		OnEnterPressed(self.editbox, byScript)
 	end
 
+	---set the textEntry as a search box, it will add a magnifying glass icon on the left side and a clearSearchButton in the right.
+	function TextEntryMetaFunctions:SetAsSearchBox()
+		if (self.__bIsSearchBox) then
+			return
+		end
+
+		self:SetJustifyH("left")
+		self:SetJustifyV("center")
+		self:SetTextInsets(18, 14, 0, 0)
+
+		local magnifyingGlassTexture = self:CreateTexture(nil, "OVERLAY")
+		magnifyingGlassTexture:SetAtlas("common-search-magnifyingglass")
+		magnifyingGlassTexture:SetPoint("left", self.widget, "left", 4, 0)
+		magnifyingGlassTexture:SetSize(self:GetHeight()-10, self:GetHeight()-10)
+		magnifyingGlassTexture:SetAlpha(0.5)
+
+		local searchFontString = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+		searchFontString:SetText("search")
+		searchFontString:SetAlpha(0.3)
+		searchFontString:SetPoint("left", magnifyingGlassTexture, "right", 2, 0)
+		detailsFramework:SetFontSize(searchFontString, 10)
+
+		local clearSearchButton = CreateFrame("button", nil, self.widget, "UIPanelCloseButton")
+		clearSearchButton:SetPoint("right", self.widget, "right", -3, 0)
+		clearSearchButton:SetSize(10, 10)
+		clearSearchButton:SetAlpha(0.3)
+		clearSearchButton:GetNormalTexture():SetAtlas("common-search-clearbutton")
+		clearSearchButton:GetHighlightTexture():SetAtlas("common-search-clearbutton")
+		clearSearchButton:GetPushedTexture():SetAtlas("common-search-clearbutton")
+		clearSearchButton:Hide()
+
+		clearSearchButton:SetScript("OnClick", function()
+			self:SetText("")
+			local bByScript = true
+			self:PressEnter(bByScript)
+			self:ClearFocus()
+		end)
+
+		self:SetHook("OnEditFocusGained", function()
+			clearSearchButton:Show()
+			searchFontString:Hide()
+		end)
+
+		self:SetHook("OnEditFocusLost", function()
+			if (self:GetText() == "") then
+				searchFontString:Show()
+				clearSearchButton:Hide()
+			end
+		end)
+
+		self.__bIsSearchBox = true
+	end
 ------------------------------------------------------------------------------------------------------------
 
 function TextEntryMetaFunctions:SetTemplate(template)
@@ -461,12 +513,12 @@ function TextEntryMetaFunctions:SetTemplate(template)
 		self.editbox:SetBackdrop(template.backdrop)
 	end
 	if (template.backdropcolor) then
-		local r, g, b, a = DF:ParseColors(template.backdropcolor)
+		local r, g, b, a = detailsFramework:ParseColors(template.backdropcolor)
 		self.editbox:SetBackdropColor(r, g, b, a)
 		self.onleave_backdrop = {r, g, b, a}
 	end
 	if (template.backdropbordercolor) then
-		local r, g, b, a = DF:ParseColors(template.backdropbordercolor)
+		local r, g, b, a = detailsFramework:ParseColors(template.backdropbordercolor)
 		self.editbox:SetBackdropBorderColor(r, g, b, a)
 		self.editbox.current_bordercolor[1] = r
 		self.editbox.current_bordercolor[2] = g
@@ -479,14 +531,51 @@ end
 ------------------------------------------------------------------------------------------------------------
 --object constructor
 
-function DF:CreateTextEntry(parent, func, w, h, member, name, with_label, entry_template, label_template)
-	return DF:NewTextEntry(parent, parent, name, member, w, h, func, nil, nil, nil, with_label, entry_template, label_template)
+---@class df_textentry : editbox
+---@field widget editbox
+---@field tooltip any
+---@field show any
+---@field hide any
+---@field width any
+---@field height any
+---@field text any
+---@field multiline any
+---@field align any
+---@field ShouldOptimizeAutoComplete boolean?
+---@field SetTemplate fun(self:df_textentry, template:table)
+---@field Disable fun(self:df_textentry)
+---@field Enable fun(self:df_textentry)
+---@field SetCommitFunction fun(self:df_textentry, func:function)
+---@field SetNext fun(self:df_textentry, next:df_textentry)
+---@field SetLabelText fun(self:df_textentry, text:string)
+---@field SelectAll fun(self:df_textentry)
+---@field SetAutoSelectTextOnFocus fun(self:df_textentry, value:boolean)
+---@field Blink fun(self:df_textentry)
+---@field SetText fun(self:df_textentry, text:string)
+---@field GetText fun(self:df_textentry)
+---@field SetEnterFunction fun(self:df_textentry, func:function, param1:any, param2:any)
+---@field SetHook fun(self:df_textentry, hookName:string, func:function)
+---@field SetAsSearchBox fun(self:df_textentry)
+---@field SetAsAutoComplete fun(self:df_textentry, poolName:string, poolTable:table?, shouldOptimize:boolean?) poolName is the name of the member on textEntry that will be used to store the pool table, poolTable is an array with word to be used on the autocomplete, shouldOptimize is a boolean that will optimize the autocomplete by using a cache table, it's recommended to use it if the autocomplete array is too large.
+
+---@param parent frame
+---@param textChangedCallback function
+---@param width number
+---@param height number
+---@param member string?
+---@param name string?
+---@param labelText string?
+---@param textentryTemplate table?
+---@param labelTemplate table?
+---@return df_textentry
+function detailsFramework:CreateTextEntry(parent, textChangedCallback, width, height, member, name, labelText, textentryTemplate, labelTemplate)
+	return detailsFramework:NewTextEntry(parent, parent, name, member, width, height, textChangedCallback, nil, nil, nil, labelText, textentryTemplate, labelTemplate)
 end
 
-function DF:NewTextEntry(parent, container, name, member, width, height, func, param1, param2, space, withLabel, entryTemplate, labelTemplate)
+function detailsFramework:NewTextEntry(parent, container, name, member, width, height, func, param1, param2, space, withLabel, entryTemplate, labelTemplate)
 	if (not name) then
-		name = "DetailsFrameworkTextEntryNumber" .. DF.TextEntryCounter
-		DF.TextEntryCounter = DF.TextEntryCounter + 1
+		name = "DetailsFrameworkTextEntryNumber" .. detailsFramework.TextEntryCounter
+		detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter + 1
 
 	elseif (not parent) then
 		return error("Details! FrameWork: parent not found.", 2)
@@ -497,7 +586,7 @@ function DF:NewTextEntry(parent, container, name, member, width, height, func, p
 	end
 
 	if (name:find("$parent")) then
-		local parentName = DF.GetParentName(parent)
+		local parentName = detailsFramework.GetParentName(parent)
 		name = name:gsub("$parent", parentName)
 	end
 
@@ -607,7 +696,7 @@ function DF:NewTextEntry(parent, container, name, member, width, height, func, p
 	setmetatable(newTextEntryObject, TextEntryMetaFunctions)
 
 	if (withLabel) then
-		local label = DF:CreateLabel(newTextEntryObject.editbox, withLabel, nil, nil, nil, "label", nil, "overlay")
+		local label = detailsFramework:CreateLabel(newTextEntryObject.editbox, withLabel, nil, nil, nil, "label", nil, "overlay")
 		label.text = withLabel
 		newTextEntryObject.editbox:SetPoint("left", label.widget, "right", 2, 0)
 		if (labelTemplate) then
@@ -623,8 +712,8 @@ function DF:NewTextEntry(parent, container, name, member, width, height, func, p
 	return newTextEntryObject, withLabel
 end
 
-function DF:NewSpellEntry(parent, func, width, height, param1, param2, member, name)
-	local editbox = DF:NewTextEntry(parent, parent, name, member, width, height, func, param1, param2)
+function detailsFramework:NewSpellEntry(parent, func, width, height, param1, param2, member, name)
+	local editbox = detailsFramework:NewTextEntry(parent, parent, name, member, width, height, func, param1, param2)
 	return editbox
 end
 
@@ -890,10 +979,39 @@ local set_speciallua_editor_font_size = function(borderFrame, newSize)
 	borderFrame.editboxlines:SetFont(file, newSize, flags)
 end
 
-function DF:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointent, showLineNumbers)
-	if (name:find("$parent")) then
-		local parentName = DF.GetParentName(parent)
-		name = name:gsub("$parent", parentName)
+---@class df_luaeditor : frame
+---@field scroll scrollframe
+---@field editbox editbox
+---@field scrollnumberlines number
+---@field editboxlines editbox
+---@field SetTemplate fun(self:df_luaeditor, template:table)
+---@field Disable fun(self:df_luaeditor)
+---@field Enable fun(self:df_luaeditor)
+---@field SetText fun(self:df_luaeditor, text:string)
+---@field GetText fun(self:df_luaeditor):string
+---@field SetTextSize fun(self:df_luaeditor, size:number)
+---@field ClearFocus fun(self:df_luaeditor)
+---@field SetFocus fun(self:df_luaeditor)
+
+---create a text box to edit lua code
+---if 'nointent' is true, the lua code will not be indented / highlighted / colored
+---@param parent frame
+---@param width number
+---@param height number
+---@param member string?
+---@param name string?
+---@param nointent boolean?
+---@param showLineNumbers boolean?
+---@param bNoName boolean?
+---@return df_luaeditor
+function detailsFramework:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointent, showLineNumbers, bNoName)
+	if (not bNoName) then
+		if (name and name:find("$parent")) then
+			local parentName = detailsFramework.GetParentName(parent)
+			name = name:gsub("$parent", parentName)
+		end
+	else
+		name =  nil
 	end
 
 	local borderframe = CreateFrame("Frame", name, parent,"BackdropTemplate")
@@ -904,9 +1022,9 @@ function DF:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointe
 	end
 
 	local scrollframe = CreateFrame("ScrollFrame", name, borderframe, "UIPanelScrollFrameTemplate, BackdropTemplate")
-	local scrollframeNumberLines = CreateFrame("ScrollFrame", name .. "NumberLines", borderframe, "UIPanelScrollFrameTemplate, BackdropTemplate")
+	local scrollframeNumberLines = CreateFrame("ScrollFrame", name and (name .. "NumberLines"), borderframe, "UIPanelScrollFrameTemplate, BackdropTemplate")
 
-	scrollframe.editbox = CreateFrame("editbox", "$parentEditBox", scrollframe,"BackdropTemplate")
+	scrollframe.editbox = CreateFrame("editbox", name and "$parentEditBox", scrollframe,"BackdropTemplate")
 	scrollframe.editbox:SetMultiLine (true)
 	scrollframe.editbox:SetAutoFocus(false)
 	scrollframe.editbox:SetScript("OnCursorChanged", _G.ScrollingEdit_OnCursorChanged)
@@ -916,7 +1034,7 @@ function DF:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointe
 
 	--line number
 	if (showLineNumbers) then
-		scrollframeNumberLines.editbox = CreateFrame("editbox", "$parentLineNumbers", scrollframeNumberLines, "BackdropTemplate")
+		scrollframeNumberLines.editbox = CreateFrame("editbox", name and "$parentLineNumbers", scrollframeNumberLines, "BackdropTemplate")
 		scrollframeNumberLines.editbox:SetMultiLine (true)
 		scrollframeNumberLines.editbox:SetAutoFocus(false)
 		scrollframeNumberLines.editbox:SetEnabled (false)
@@ -976,7 +1094,7 @@ function DF:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointe
 			scrollframeNumberLines.editbox:SetSize(scrollframe.editbox:GetSize())
 
 			local text = scrollframe.editbox:GetText()
-			local textInArray = DF:SplitTextInLines(text)
+			local textInArray = detailsFramework:SplitTextInLines(text)
 
 			local maxStringWidth = scrollframe.editbox:GetWidth()
 			scrollframeNumberLines.editbox:SetWidth(maxStringWidth)
@@ -992,13 +1110,13 @@ function DF:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointe
 				--set the line text into a fontstring to get its width
 				local thisText = textInArray[i]
 				stringLengthFontString:SetText(thisText)
-				local lineTextLength = ceil(stringLengthFontString:GetStringWidth())
+				local lineTextLength = math.ceil(stringLengthFontString:GetStringWidth())
 
 				if (lineTextLength < maxStringWidth) then
 					resultText = resultText .. i .. "\n"
 				else
 					--if the text width is bigger than the editbox width, add a blank line into the line counter
-					local linesToOccupy = floor(lineTextLength / maxStringWidth)
+					local linesToOccupy = math.floor(lineTextLength / maxStringWidth)
 					local fillingText = i .. ""
 					for o = 1, linesToOccupy do
 						fillingText = fillingText .. "\n"

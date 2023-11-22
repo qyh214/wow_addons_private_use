@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.47 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.50 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -517,6 +517,10 @@ PR.PARAGON_DATA = {
 			factionID = 2507,
 			cache = 199472,
 		}, 
+		[76425] = { -- Dream Wardens
+			factionID = 2574,
+			cache = 210992,
+		},
 		[66511] = { -- Iskaara Tuskarr
 			factionID = 2511,
 			cache = 199473,

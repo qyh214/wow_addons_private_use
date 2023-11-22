@@ -263,7 +263,7 @@
 
 		--check if is a spell target custom
 		if (custom_object:IsSpellTarget()) then
-			table.wipe(classCustom._TargetActorsProcessed)
+			Details:Destroy(classCustom._TargetActorsProcessed)
 			classCustom._TargetActorsProcessedAmt = 0
 			classCustom._TargetActorsProcessedTotal = 0
 			classCustom._TargetActorsProcessedTop = 0
@@ -552,22 +552,22 @@
 		-- update tooltip function --
 
 		if (self.id) then
-			local school = _detalhes.spell_school_cache [self.nome]
+			local school = _detalhes.spell_school_cache[self.nome]
 			if (school) then
-				local school_color = _detalhes.school_colors [school]
-				if (not school_color) then
-					school_color = _detalhes.school_colors ["unknown"]
+				local schoolColor = Details.spells_school[school]
+				if (not schoolColor) then
+					schoolColor = Details.spells_school[1]
 				end
-				actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(school_color)
+				actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(schoolColor.decimals)
 			else
-				local color = _detalhes.school_colors ["unknown"]
-				actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(color)
+				local schoolColor = Details.spells_school[1]
+				actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(schoolColor.decimals)
 			end
 		else
 			actor_class_color_r, actor_class_color_g, actor_class_color_b = self:GetBarColor()
 		end
 
-		self:RefreshBarra2 (row, instance, previous_table, is_forced, row_value, index, row_container)
+		self:RefreshBarra2(row, instance, previous_table, is_forced, row_value, index, row_container)
 
 	end
 
@@ -644,16 +644,16 @@
 
 		if (from_resize) then
 			if (self.id) then
-				local school = _detalhes.spell_school_cache [self.nome]
+				local school = _detalhes.spell_school_cache[self.nome]
 				if (school) then
-					local school_color = _detalhes.school_colors [school]
-					if (not school_color) then
-						school_color = _detalhes.school_colors ["unknown"]
+					local schoolColor = Details.spells_school[school]
+					if (not schoolColor) then
+						schoolColor = Details.spells_school[1]
 					end
-					actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(school_color)
+					actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(schoolColor.decimals)
 				else
-					local color = _detalhes.school_colors ["unknown"]
-					actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(color)
+					local schoolColor = Details.spells_school[1]
+					actor_class_color_r, actor_class_color_g, actor_class_color_b = unpack(schoolColor.decimals)
 				end
 			else
 				actor_class_color_r, actor_class_color_g, actor_class_color_b = self:GetBarColor()
@@ -736,8 +736,8 @@
 	end
 
 	function classCustom:WipeCustomActorContainer()
-		table.wipe(self._ActorTable)
-		table.wipe(self._NameIndexTable)
+		Details:Destroy(self._ActorTable)
+		Details:Destroy(self._NameIndexTable)
 	end
 
 	function classCustom:GetValue (actor)
@@ -841,6 +841,8 @@
 				is_custom = true,
 				color = actor.color,
 			}, classCustom.mt)
+
+			newActor.customColor = actor.customColor
 
 			newActor.name_complement = name_complement
 			newActor.displayName = actor.displayName or (_detalhes:GetOnlyName(newActor.nome) .. (name_complement or ""))
@@ -1071,7 +1073,7 @@
 	end
 
 	function _detalhes:ResetCustomFunctionsCache()
-		table.wipe(_detalhes.custom_function_cache)
+		Details:Destroy(_detalhes.custom_function_cache)
 	end
 
 	function _detalhes.refresh:r_atributo_custom()
@@ -1378,7 +1380,7 @@
 			desc = Loc ["STRING_CUSTOM_ACTIVITY_DPS_DESC"],
 			source = false,
 			target = false,
-			script_version = 3,
+			script_version = 4,
 			total_script = [[
 				local value, top, total, combat, instance = ...
 				local minutos, segundos = math.floor(value/60), math.floor(value%60)
@@ -1389,26 +1391,24 @@
 				return string.format("%.1f", value/top*100)
 			]],
 			script = [[
-				--init:
-				local combat, instance_container, instance = ...
+				local combatObject, instanceContainer, instanceObject = ...
 				local total, amount = 0, 0
 
-				--get the misc actor container
-				local damage_container = combat:GetActorList ( DETAILS_ATTRIBUTE_DAMAGE )
+				--get the damager actors
+				local listOfDamageActors = combatObject:GetActorList(DETAILS_ATTRIBUTE_DAMAGE)
 
-				--do the loop:
-				for _, player in ipairs( damage_container ) do
-					if (player.grupo) then
-						local activity = player:Tempo()
+				for _, actorObject in ipairs(listOfDamageActors) do
+					if (actorObject:IsGroupPlayer()) then
+						local activity = actorObject:Tempo()
 						total = total + activity
 						amount = amount + 1
 						--add amount to the player
-						instance_container:AddValue (player, activity)
+						instanceContainer:AddValue(actorObject, activity)
 					end
 				end
 
 				--return:
-				return total, combat:GetCombatTime(), amount
+				return total, combatObject:GetCombatTime(), amount
 			]],
 			tooltip = [[
 
@@ -1442,7 +1442,7 @@
 			desc = Loc ["STRING_CUSTOM_ACTIVITY_HPS_DESC"],
 			source = false,
 			target = false,
-			script_version = 2,
+			script_version = 3,
 			total_script = [[
 				local value, top, total, combat, instance = ...
 				local minutos, segundos = math.floor(value/60), math.floor(value%60)
@@ -1453,26 +1453,24 @@
 				return string.format("%.1f", value/top*100)
 			]],
 			script = [[
-				--init:
-				local combat, instance_container, instance = ...
-				local total, top, amount = 0, 0, 0
+				local combatObject, instanceContainer, instanceObject = ...
+				local total, amount = 0, 0
 
-				--get the misc actor container
-				local damage_container = combat:GetActorList ( DETAILS_ATTRIBUTE_HEAL )
+				--get the healing actors
+				local listOfHealingActors = combatObject:GetActorList(DETAILS_ATTRIBUTE_HEAL)
 
-				--do the loop:
-				for _, player in ipairs( damage_container ) do
-					if (player.grupo) then
-						local activity = player:Tempo()
+				for _, actorObject in ipairs(listOfHealingActors) do
+					if (actorObject:IsGroupPlayer()) then
+						local activity = actorObject:Tempo()
 						total = total + activity
 						amount = amount + 1
 						--add amount to the player
-						instance_container:AddValue (player, activity)
+						instanceContainer:AddValue (actorObject, activity)
 					end
 				end
 
 				--return:
-				return total, combat:GetCombatTime(), amount
+				return total, combatObject:GetCombatTime(), amount
 			]],
 			tooltip = [[
 

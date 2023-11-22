@@ -355,6 +355,7 @@ module.db.EXPORT_FULL_KEYS = {
 	["Attendance"] = L.Attendance,
 	["LootHistory"] = L.LootHistory,
 	["Reminder"] = true,
+	["Reminder2"] = true,
 }
 
 function module:ProfileToText(isFullExport)

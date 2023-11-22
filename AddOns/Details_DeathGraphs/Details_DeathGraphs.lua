@@ -1,143 +1,170 @@
 
-local Loc = LibStub("AceLocale-3.0"):GetLocale("Details_DeathGraphs")
-local DeathGraphs = Details:NewPluginObject("Details_DeathGraphs", DETAILSPLUGIN_ALWAYSENABLED)
-tinsert (UISpecialFrames, "Details_DeathGraphs")
-DeathGraphs.version_string = "v3.8"
-
+local addonId, advancedDeathLogs = ...
 local Details = Details
+local detailsFramework = DetailsFramework
+local _
+
+local Loc = LibStub("AceLocale-3.0"):GetLocale("Details_DeathGraphs")
+local adlObject = Details:NewPluginObject("Details_DeathGraphs", DETAILSPLUGIN_ALWAYSENABLED)
+table.insert(UISpecialFrames, "Details_DeathGraphs")
+adlObject.version_string = "v3.8"
+
+advancedDeathLogs.PluginAbsoluteName = "DETAILS_PLUGIN_DEATH_GRAPHICS"
+
+---@alias ehash string
+
+local GetNumGroupMembers = GetNumGroupMembers
+local UnitName = UnitName
+local CreateFrame = CreateFrame
+local UnitClass = UnitClass
+local unpack = unpack
+local GameCooltip = GameCooltip
+local GetTime = GetTime
+local C_Timer = C_Timer
+local time = time
+local GetUnitName = GetUnitName
+local bitBand = bit.band
 
 --main frame
-local mainFrame = DeathGraphs.Frame
+local mainFrame = adlObject.Frame
+detailsFramework:ApplyStandardBackdrop(mainFrame)
+advancedDeathLogs.mainFrame = mainFrame
+advancedDeathLogs.pluginObject = adlObject
+advancedDeathLogs.tabFrameY = -25 --where the tab frames should be placed
+advancedDeathLogs.dropdownWidth = 175 --width of the dropdowns
+advancedDeathLogs.dropdownIconSize = {32, 20} --width of the dropdowns
+advancedDeathLogs.dropdownIconCoords = {0, 1, 0, 0.9}
+advancedDeathLogs.tutorialTextSize = 10
+advancedDeathLogs.tutorialWidgetsAlpha = 0.6
+advancedDeathLogs.defaultTextSize = 11
 
-local CONST_DBTYPE_DEATH = "deaths"
+local wipe = table.wipe
+
 local CONST_DBTYPE_ENDURANCE = "endurance"
-local debugmode = false
 
-DeathGraphs:SetPluginDescription(Loc["STRING_PLUGIN_DESC"])
+advancedDeathLogs.debugMode = false
+advancedDeathLogs.debugEncounter = false
+
+adlObject:SetPluginDescription(Loc["STRING_PLUGIN_DESC"])
 
 local cleuEventFrame = CreateFrame("frame")
 
-local function CreatePluginFunctions()
-	function DeathGraphs:DebugMsg(msg, sec)
-		if (debugmode) then
-			DeathGraphs:Msg(msg, sec)
+local createPluginFunctions = function()
+	function adlObject:DebugMsg(msg, sec, ...)
+		if (advancedDeathLogs.debugMode) then
+			adlObject:Msg(msg, sec, ...)
 		end
 	end
 
-	function DeathGraphs.RefreshWindow()
-		if (not DeathGraphs.frames_built) then
-			Details.DeathGraphsWindowBuilder(DeathGraphs)
-			Details.DeathGraphsWindowBuilder = nil
-			DeathGraphs.frames_built = true
+	function adlObject.RefreshWindow()
+		if (not adlObject.frames_built) then
+			adlObject.DeathGraphsWindowBuilder(adlObject)
+			adlObject.DeathGraphsWindowBuilder = nil
+			adlObject.frames_built = true
 
-			local currentSegment = DeathGraphs:GetCurrentCombat()
-			if (currentSegment and currentSegment.is_boss and currentSegment.is_boss.diff and currentSegment.is_boss.id) then
-				DeathGraphs.db.last_boss = DeathGraphs.last_encounter_hash or ("" .. currentSegment.is_boss.id .. currentSegment.is_boss.diff)
+			---@type combat
+			local currentCombat = adlObject:GetCurrentCombat()
+			if (currentCombat and currentCombat.is_boss and currentCombat.is_boss.diff and currentCombat.is_boss.id) then
+				adlObject.db.last_boss = adlObject.last_encounter_hash or ("" .. currentCombat.is_boss.id .. currentCombat.is_boss.diff)
 			end
 
-			DeathGraphs.db.showing_type = 3
+			adlObject.db.showing_type = 3
 		end
 
-		DeathGraphs:Refresh()
+		adlObject:Refresh()
 	end
 
-	function DeathGraphs:OpenWindow()
-		if (not DeathGraphs.frames_built) then
-			Details.DeathGraphsWindowBuilder(DeathGraphs)
-			Details.DeathGraphsWindowBuilder = nil
-			DeathGraphs.frames_built = true
+	function adlObject:OpenWindow()
+		if (not adlObject.frames_built) then
+			adlObject.DeathGraphsWindowBuilder(adlObject)
+			adlObject.DeathGraphsWindowBuilder = nil
+			adlObject.frames_built = true
 
-			local current_segment = DeathGraphs:GetCurrentCombat()
-			if (current_segment and current_segment.is_boss and current_segment.is_boss.diff and current_segment.is_boss.id) then
-				DeathGraphs.db.last_boss = DeathGraphs.last_encounter_hash or ("" .. current_segment.is_boss.id .. current_segment.is_boss.diff)
+			---@type combat
+			local currentCombat = adlObject:GetCurrentCombat()
+			if (currentCombat and currentCombat.is_boss and currentCombat.is_boss.diff and currentCombat.is_boss.id) then
+				adlObject.db.last_boss = adlObject.last_encounter_hash or ("" .. currentCombat.is_boss.id .. currentCombat.is_boss.diff)
 			end
 
-			DeathGraphs.db.showing_type = 3
+			adlObject.db.showing_type = 3
 		end
 
-		DeathGraphs:Refresh()
-		DetailsPluginContainerWindow.OpenPlugin(DeathGraphs)
+		adlObject:Refresh()
+		DetailsPluginContainerWindow.OpenPlugin(adlObject)
 	end
 
-	function DeathGraphs:CloseWindow()
+	function adlObject:CloseWindow()
 		mainFrame:Hide()
 	end
 
-	local cooltip_menu = function()
-		local CoolTip = GameCooltip2
+	local onEnterIconCooltipMenu = function()
+		local gameCooltip = GameCooltip
 
-		CoolTip:Reset()
-		CoolTip:SetType("menu")
+		gameCooltip:Reset()
+		gameCooltip:SetType("menu")
 
-		CoolTip:SetOption("TextSize", Details.font_sizes.menus)
-		CoolTip:SetOption("TextFont", Details.font_faces.menus)
+		gameCooltip:SetOption("TextSize", Details.font_sizes.menus)
+		gameCooltip:SetOption("TextFont", Details.font_faces.menus)
 
-		CoolTip:SetOption("LineHeightSizeOffset", 3)
-		CoolTip:SetOption("VerticalOffset", 2)
-		CoolTip:SetOption("VerticalPadding", -4)
-		CoolTip:SetOption("FrameHeightSizeOffset", -3)
+		gameCooltip:SetOption("LineHeightSizeOffset", 3)
+		gameCooltip:SetOption("VerticalOffset", 2)
+		gameCooltip:SetOption("VerticalPadding", -4)
+		gameCooltip:SetOption("FrameHeightSizeOffset", -3)
 
 		Details:SetTooltipMinWidth()
 
 		--build the menu options
-			--death log
-			CoolTip:AddLine("Advanced Death Log")
-			CoolTip:AddMenu(1, function()
-				DeathGraphs:OpenWindow()
-				DeathGraphs:HideAll()
-				DeathGraphs:ShowCurrent()
-				DeathGraphs:RefreshButtons()
+		--death log
+		gameCooltip:AddLine("Advanced Death Log")
+		gameCooltip:AddMenu(1, function()
+			adlObject:OpenWindow()
+			adlObject:HideAll()
+			adlObject:ShowCurrent()
+			adlObject:RefreshButtons()
 
-				CoolTip:Hide()
-			end, "main")
-			CoolTip:AddIcon([[Interface\WORLDSTATEFRAME\SkullBones]], 1, 1, 16, 16, 4/64, 28/64, 4/64, 28/64, "orange")
+			gameCooltip:Hide()
+		end, "main")
+		gameCooltip:AddIcon([[Interface\WORLDSTATEFRAME\SkullBones]], 1, 1, 16, 16, 4/64, 28/64, 4/64, 28/64, "orange")
 
-			--enemy spell timeline
-			CoolTip:AddLine("Boss Ability Timeline")
-			CoolTip:AddMenu(1, function()
-				DeathGraphs:OpenWindow()
-				DeathGraphs:HideAll()
-				DeathGraphs:ShowTimeline()
-				DeathGraphs:RefreshButtons()
+		--enemy spell timeline
+		gameCooltip:AddLine("Boss Ability Timeline")
+		gameCooltip:AddMenu(1, function()
+			adlObject:OpenWindow()
+			adlObject:HideAll()
+			adlObject:ShowTimeline()
+			adlObject:RefreshButtons()
 
-				CoolTip:Hide()
-			end, "main")
-			CoolTip:AddIcon([[Interface\Transmogrify\transmog-tooltip-arrow]], 1, 1, 16, 14, 0, 1, 0, 1, "orange")
+			gameCooltip:Hide()
+		end, "main")
+		gameCooltip:AddIcon([[Interface\Transmogrify\transmog-tooltip-arrow]], 1, 1, 16, 14, 0, 1, 0, 1, "orange")
 
-			--player endurance
-			CoolTip:AddLine("Player Endurance")
-			CoolTip:AddMenu(1, function()
-				DeathGraphs:OpenWindow()
-				DeathGraphs:HideAll()
-				DeathGraphs:ShowEndurance()
-				DeathGraphs:RefreshButtons()
+		--player endurance
+		gameCooltip:AddLine("Player Endurance")
+		gameCooltip:AddMenu(1, function()
+			adlObject:OpenWindow()
+			adlObject:HideAll()
+			adlObject:ShowEndurance()
+			adlObject:RefreshButtons()
 
-				CoolTip:Hide()
-			end, "main")
-			CoolTip:AddIcon([[Interface\RAIDFRAME\Raid-Icon-Rez]], 1, 1, 16, 16, 0.03, 0.97, 0, 1, "orange")
+			gameCooltip:Hide()
+		end, "main")
+		gameCooltip:AddIcon([[Interface\RAIDFRAME\Raid-Icon-Rez]], 1, 1, 16, 16, 0.03, 0.97, 0, 1, "orange")
 
 		--apply the backdrop settings to the menu
 		Details:FormatCooltipBackdrop()
-		CoolTip:SetOwner(DEATHGRAPHICS_BUTTON, "bottom", "top", 0, 0)
-		CoolTip:ShowCooltip()
+		gameCooltip:SetOwner(adlObject.ToolbarButton, "bottom", "top", 0, 0)
+		gameCooltip:ShowCooltip()
 	end
 
-	DeathGraphs.ToolbarButton = DeathGraphs.ToolBar:NewPluginToolbarButton(DeathGraphs.OpenWindow, "Interface\\AddOns\\Details_DeathGraphs\\icon", Loc["STRING_PLUGIN_NAME"], Loc["STRING_TOOLTIP"], 16, 16, "DEATHGRAPHICS_BUTTON", cooltip_menu)
-	DeathGraphs.ToolbarButton.shadow = true
+	adlObject.ToolbarButton = adlObject.ToolBar:NewPluginToolbarButton(adlObject.OpenWindow, "Interface\\AddOns\\Details_DeathGraphs\\icon", Loc["STRING_PLUGIN_NAME"], Loc["STRING_TOOLTIP"], 16, 16, "DEATHGRAPHICS_BUTTON", onEnterIconCooltipMenu)
+	adlObject.ToolbarButton.shadow = true
 
-	function DeathGraphs:CanShowIcon()
+	function adlObject:CanShowIcon()
 		if (self.db.show_icon == 1) then
 			local foundSomething = false
 
-			for _, boss in pairs(DeathGraphs.deaths_database) do
-				if (boss) then
-					foundSomething = true
-					break
-				end
-			end
-
 			if (not foundSomething) then
-				for _, boss in pairs(DeathGraphs.endurance_database) do
+				for _, boss in pairs(adlObject.endurance_database) do
 					if (boss) then
 						foundSomething = true
 						break
@@ -146,18 +173,18 @@ local function CreatePluginFunctions()
 			end
 
 			if (foundSomething) then
-				DeathGraphs:ShowToolbarIcon(DeathGraphs.ToolbarButton, "star")
+				adlObject:ShowToolbarIcon(adlObject.ToolbarButton, "star")
 			else
-				DeathGraphs:HideToolbarIcon(DeathGraphs.ToolbarButton)
+				adlObject:HideToolbarIcon(adlObject.ToolbarButton)
 			end
 		end
 	end
 
-	function DeathGraphs:HideIcon()
-		DeathGraphs:HideToolbarIcon(DeathGraphs.ToolbarButton)
+	function adlObject:HideIcon()
+		adlObject:HideToolbarIcon(adlObject.ToolbarButton)
 	end
 
-	function DeathGraphs:OnDetailsEvent(event, ...)
+	function adlObject:OnDetailsEvent(event, ...)
 		if (event == "HIDE") then
 			self.open = false
 
@@ -167,404 +194,493 @@ local function CreatePluginFunctions()
 		elseif (event == "COMBAT_BOSS_FOUND") then
 
 		elseif (event == "COMBAT_PLAYER_ENTER") then
+			---@debug
+			if (advancedDeathLogs.debugMode and advancedDeathLogs.debugEncounter) then
+				adlObject.OnEncounterStart()
+			end
+			---@end-debug
 
 		elseif (event == "COMBAT_PLAYER_LEAVE") then
-			DeathGraphs:DebugMsg("combat finished -> calling CombatFinished()")
-			DeathGraphs:CombatFinished(...)
+			---@debug
+			if (advancedDeathLogs.debugMode and advancedDeathLogs.debugEncounter) then
+				adlObject.OnEncounterEnd()
+			end
+			---@end-debug
+
+			adlObject:DebugMsg("combat finished -> calling CombatFinished()")
+			adlObject:CombatFinished(...)
 			cleuEventFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 		elseif (event == "PLUGIN_DISABLED") then
-			DeathGraphs:HideIcon()
+			adlObject:HideIcon()
 
-		elseif (event == "PLUGIN_ENABLED" or event == "DETAILS_STARTED") then
-			DeathGraphs:CanShowIcon()
+		elseif (event == "PLUGIN_ENABLED") then
+			adlObject:CanShowIcon()
+
+			--when details finish his startup and are ready to work
+		elseif (event == "DETAILS_STARTED") then
+			adlObject:CanShowIcon()
+
+			C_Timer.After(1, function()
+				--Details.BreakdownWindowFrame:Show()
+				--Details.BreakdownWindowFrame.ShowPluginOnBreakdown(adlObject, advancedDeathLogs.mainFrame.timelineButtonBreakdown)
+			end)
 		end
 	end
-
-	local eventFrame = CreateFrame("frame")
-	eventFrame:RegisterEvent("ENCOUNTER_END")
-	eventFrame:RegisterEvent("ENCOUNTER_START")
-
-	eventFrame:SetScript("OnEvent", function(self, event, ...)
-		if (event == "ENCOUNTER_START") then
-			local encounterId, encounterName, difficultyId, raidSize = select(1, ...)
-
-			DeathGraphs.currentEncounterHash = encounterId .. "-" .. difficultyId
-
-			DeathGraphs.currentEncounterInfo = {
-				encounterId = encounterId,
-				encounterName = encounterName,
-				difficultyId = difficultyId,
-				raidSize = raidSize,
-				hash = DeathGraphs.currentEncounterHash,
-			}
-
-			DeathGraphs.BossEncounterStartAt = GetTime()
-			DeathGraphs.EnemySkillTable = {}
-			DeathGraphs.EnemySkillTableDelay = {}
-			cleuEventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-		elseif (event == "ENCOUNTER_END") then
-			local encounterId, encounterName, difficultyId, raidSize, endStatus = select(1, ...)
-			DeathGraphs.currentEncounterInfo = {
-				encounterId = encounterId,
-				encounterName = encounterName,
-				difficultyId = difficultyId,
-				raidSize = raidSize,
-				hash = DeathGraphs.currentEncounterHash,
-				killed = endStatus,
-			}
-		end
-	end)
-
-	mainFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
-
-	function DeathGraphs:GetEncounterDiffString(diffInteger)
-		if (diffInteger == 17) then
-			return "Raid Finder"
-
-		elseif (diffInteger == 16) then
-			return "Mythic"
-
-		elseif (diffInteger == 15) then
-			return "Heroic"
-
-		elseif (diffInteger == 14) then
-			return "Normal"
-		end
-	end
-
-	function DeathGraphs:GetPlayerTable(bossTable, playerName)
-		local player_table = bossTable.player_db[playerName]
-		if (player_table) then
-			return player_table
-		end
-
-		if (bossTable.type == CONST_DBTYPE_DEATH) then
-			local t = {
-				overall = {},
-				deaths = {},
-				name = playerName,
-				class = select(2, UnitClass(playerName))
-			}
-			bossTable.player_db[playerName] = t
-			return t
-
-		elseif (bossTable.type == CONST_DBTYPE_ENDURANCE) then
-			local t = {
-				points = 0,
-				encounters = 0,
-				deaths = {},
-				class = select(2, UnitClass(playerName))
-			}
-			bossTable.player_db[playerName] = t
-			return t
-
-		end
-	end
-
-	function DeathGraphs:GetBossTable(bossHash, type)
-		local dbTable
-		if (type == CONST_DBTYPE_DEATH) then
-			dbTable = DeathGraphs.deaths_database
-
-		elseif (type == CONST_DBTYPE_ENDURANCE) then
-			dbTable = DeathGraphs.endurance_database
-		end
-
-		local boss_table = dbTable[bossHash]
-		if (boss_table) then
-			return boss_table
-		end
-
-		local t = {
-			player_db = {},
-			id = bossHash,
-			name = DeathGraphs.currentEncounterInfo.encounterName,
-			diff = DeathGraphs.currentEncounterInfo.difficultyId,
-			hash = bossHash,
-		}
-
-		if (type == CONST_DBTYPE_DEATH) then
-			t.type = CONST_DBTYPE_DEATH
-			DeathGraphs.deaths_database[bossHash] = t
-
-		elseif (type == CONST_DBTYPE_ENDURANCE) then
-			t.type = CONST_DBTYPE_ENDURANCE
-			DeathGraphs.endurance_database[bossHash] = t
-		end
-
-		return t
-	end
-
-	function DeathGraphs:CanRecordOnDifficulty(difficult)
-		--normal mode
-		if (difficult == 14) then
-			if (not DeathGraphs.db.captures[2]) then
-				DeathGraphs:DebugMsg("Normal mode isn't active, not recording this segment.")
-				return
-			end
-			return true
-
-		--heroic mode
-		elseif (difficult == 15) then
-			if (not DeathGraphs.db.captures[3]) then
-				DeathGraphs:DebugMsg("Heroic mode isn't active, not recording this segment.")
-				return
-			end
-			return true
-
-		--raid finder
-		elseif (difficult == 17) then
-			if (not DeathGraphs.db.captures[1]) then
-				DeathGraphs:DebugMsg("Raid Finder mode isn't active, not recording this segment.")
-				return
-			end
-			return true
-
-		--mythic
-		elseif (difficult == 16) then
-			if (not DeathGraphs.db.captures[4]) then
-				DeathGraphs:DebugMsg("Mythic mode isn't active, not recording this segment.")
-				return
-			end
-			return true
-		else
-			return
-		end
-	end
-
-	function DeathGraphs:GetLastBossTexture()
-		local EJ_GetInstanceByIndex = EJ_GetInstanceByIndex
-		local EJ_GetEncounterInfoByIndex = EJ_GetEncounterInfoByIndex
-		local EJ_GetCreatureInfo = EJ_GetCreatureInfo
-		---@type boolean
-		local bIsRaidInstance = true
-
-		---starts on DragonIsles world bosses > Vault of Incarnates > Aberrus, The Shadowed Crucible
-		---could go to 10 for less maintenance
-		---@type number
-		local maxInstancesInCurrentPath = 3 --a EJ_GetNumAvailableInstances(bRaidInstances) would be nice
-
-		for instanceIndex = 1, maxInstancesInCurrentPath do
-			local instanceID = EJ_GetInstanceByIndex(instanceIndex, bIsRaidInstance)
-			if (instanceID) then
-				--we don't know how many bosses are in the instance, so we'll just loop through them all
-				for i = 1, 20 do
-					local name, description, bossID, rootSectionID, link, journalInstanceID, dungeonEncounterID, UiMapID = EJ_GetEncounterInfoByIndex(i, instanceID)
-					if (name) then
-						if (name == DeathGraphs.currentEncounterInfo.encounterName) then
-							local id, creatureName, creatureDescription, displayInfo, iconImage = EJ_GetCreatureInfo(1, bossID)
-							return iconImage
-						end
-					else
-						--no more bosses in this instance, go to the next one
-						break
-					end
-				end
-			end
-		end
-
-		return ""
-	end
-
-	function DeathGraphs:CombatFinished(combat)
-		if (not DeathGraphs.EnemySkillTable) then
-			DeathGraphs:DebugMsg("nil value: DeathGraphs.EnemySkillTable")
-			return
-		end
-
-		--check the difficulty
-		local difficult = DeathGraphs.currentEncounterInfo.difficultyId
-		if (not DeathGraphs:CanRecordOnDifficulty(difficult)) then
-			DeathGraphs:DebugMsg("Raid difficulty is too low, not recording this segment.")
-			return
-		end
-
-		--read all deaths
-		local bossInfoTable = combat:GetBossInfo()
-		DeathGraphs:DebugMsg("bossinfo", bossInfoTable)
-
-		DeathGraphs.db.last_combat_id = DeathGraphs.combat_id
-
-		if (bossInfoTable) then
-			DeathGraphs:DebugMsg("boss found", bossInfoTable.name)
-
-			local boss_table = DeathGraphs:GetBossTable(DeathGraphs.currentEncounterInfo.hash, CONST_DBTYPE_DEATH)
-			local endurance_table = DeathGraphs:GetBossTable(DeathGraphs.currentEncounterInfo.hash, CONST_DBTYPE_ENDURANCE)
-			DeathGraphs.last_encounter_hash = DeathGraphs.currentEncounterInfo.hash
-
-			--iterate beetween deaths occured in latest encounter
-			local death_list = combat:GetDeaths()
-			local endurance_failed = {}
-
-			DeathGraphs:DebugMsg("deaths: " .. #death_list)
-
-			if (#death_list > 0) then
-				--get raid size
-				if (combat:GetCombatTime() > 40) then
-					local max_endurance = DeathGraphs.db.endurance_threshold
-					local max_deaths = DeathGraphs.db.deaths_threshold
-					local max_deaths_for_current = DeathGraphs.db.max_deaths_for_current
-					local deaths_stored = 0
-
-					--build the table (for last try deaths)
-					local current_table = {bossname = DeathGraphs.currentEncounterInfo.encounterName, timeelapsed = combat:GetCombatTime(), bossicon = {0, 1, 0, 1, DeathGraphs:GetLastBossTexture()}, date = combat:GetEndTime(), deaths = {}}
-					--and add to the database
-					tinsert(DeathGraphs.current_database, 1, current_table)
-					--check if there is too much segments
-					if (#DeathGraphs.current_database > DeathGraphs.db.max_segments_for_current) then
-						tremove(DeathGraphs.current_database)
-					end
-
-					--timeline stuff, spellcast
-					DeathGraphs.graph_database[DeathGraphs.last_encounter_hash] = DeathGraphs.graph_database[DeathGraphs.last_encounter_hash] or {deaths = {}, spells = {}, ids = {}}
-					local timeline_boss = DeathGraphs.graph_database[DeathGraphs.last_encounter_hash]
-
-					local timenow = time()
-
-					--parse all spells:
-					local unpack = unpack
-					for index, t in ipairs(DeathGraphs.EnemySkillTable) do
-						--get the values
-						local TimeAt, SpellId, SpellName = unpack(t)
-						--check and create the table for this spell
-						timeline_boss.spells[SpellName] = timeline_boss.spells[SpellName] or {}
-						--save the spellId for this spell
-						timeline_boss.ids[SpellName] = SpellId
-						--add the spell to the table
-						tinsert (timeline_boss.spells[SpellName], {TimeAt, timenow})
-					end
-
-					local max_timeline_deaths = DeathGraphs.db.max_deaths_for_timeline
-
-					wipe (DeathGraphs.EnemySkillTable) --unload from memory
-					--hierarchy for the new graph
-					-- Database -> [Combat Hash (EncounterId + Boss Diff Id)] = {}  Hash
-					-- Combat Hash (EncounterId + Boss Diff Id) -> [SpellId] = {}  Hash
-					-- SpellId -> [Index] = {}  Numeric
-					-- Indexed -> TimeAt, time()
-
-					--iterate amoung deaths
-					for i, t in ipairs(death_list) do
-						-------------------------------------
-						--for 'last try' deaths stuff
-							local _, class = UnitClass(t[3])
-							local playername, playerclass, deathtime, deathcombattime, deathtimestring, playermaxhealth, deathevents, lastcooldown = DeathGraphs:UnpackDeathTable(t)
-							if (#current_table.deaths < max_deaths_for_current) then
-								tinsert (current_table.deaths, {name = playername, class = playerclass, time = deathtime, timestring = deathtimestring, timeofdeath = deathcombattime, events = deathevents, maxhealth = playermaxhealth})
-							end
-						-------------------------------------
-
-						if (deaths_stored < max_deaths) then
-							local player_table = DeathGraphs:GetPlayerTable(boss_table, t[3])
-
-							deaths_stored = deaths_stored + 1
-
-							--store death
-							local d = Details.CopyTable(t[1])
-
-							local last = d[#d]
-							if (last[4]) then
-								if (type (last[1]) == "number" and last[1] == 3) then
-									tremove (d, #d)
-								end
-							end
-
-							while (#d > 16) do
-								tremove (d, 1)
-							end
-
-						end --if deaths_stored < max_deaths
-
-						--store endurance
-							if (i <= max_endurance) then
-								local player_table = DeathGraphs:GetPlayerTable(endurance_table, t[3])
-
-								if (endurance_failed[t[3]]) then
-									player_table.points = player_table.points + 80
-								else
-									player_table.points = player_table.points + 90
-								end
-
-								player_table.encounters = player_table.encounters + 1
-
-								local last_hit = DeathGraphs:GetLastHit(t[1])
-								tinsert (player_table.deaths, {combat.is_boss.try_number or 0, t.dead_at, last_hit})
-								endurance_failed[t[3]] = true
-
-								DeathGraphs:DebugMsg("Added an endurance entry.")
-							end
-
-						--timeline storage
-							if (i <= max_timeline_deaths) then
-								--playername, playerclass, deathtime, deathcombattime, deathtimestring, playermaxhealth, deathevents, lastcooldown
-								--combat time
-								local TimeAt = floor(deathcombattime)
-								--add to the table
-								timeline_boss.deaths[TimeAt] = timeline_boss.deaths[TimeAt] or {}
-								tinsert (timeline_boss.deaths[TimeAt], timenow)
-							end
-
-						--everything is on max
-							if (i > max_endurance and deaths_stored >= max_deaths and i > max_timeline_deaths) then
-								break
-							end
-
-					end --loop
-				end --combat time > 40
-			else
-				DeathGraphs:DebugMsg("no deaths found on this encounter.")
-			end --#death_list > 0
-
-			--close the rest of endurance
-			if (combat:GetCombatTime() > 40) then
-				for i = 1, GetNumGroupMembers(), 1 do
-					local player_name, player_realm = UnitName("raid" .. i)
-					if (player_realm and player_realm ~= "") then
-						player_name = player_name .. "-" .. player_realm
-					end
-
-					if (not endurance_failed[player_name]) then
-						local damage_actor = combat(1, player_name)
-						local healing_actor = combat(2, player_name)
-
-						if ((damage_actor and damage_actor.total > 0) or (healing_actor and healing_actor.total > 0)) then
-							local player_table = DeathGraphs:GetPlayerTable(endurance_table, player_name)
-							player_table.points = player_table.points + 100
-							player_table.encounters = player_table.encounters + 1
-						end
-					end
-				end
-			end
-
-			DeathGraphs:CanShowIcon()
-		end
-	end --is boss
 end
 
-function DeathGraphs:GetLastHit(deathlog)
+local debugModeEncounterData = detailsFramework.table.copy({}, advancedDeathLogs.testBossTable)
+
+local encounterEventFrame = CreateFrame("frame")
+encounterEventFrame:RegisterEvent("ENCOUNTER_END")
+encounterEventFrame:RegisterEvent("ENCOUNTER_START")
+
+function adlObject.OnEncounterStart(...)
+	local encounterId, encounterName, difficultyId, raidSize = select(1, ...)
+
+	if (advancedDeathLogs.debugMode and advancedDeathLogs.debugEncounter) then
+		if (not encounterId) then
+			--make data for testing
+			encounterId = debugModeEncounterData.encounterId
+			encounterName = debugModeEncounterData.encounterName
+			difficultyId = debugModeEncounterData.difficultyId
+			raidSize = debugModeEncounterData.raidSize
+		end
+	end
+
+	adlObject.currentEncounterHash = encounterId .. "-" .. difficultyId
+
+	adlObject.currentEncounterInfo = {
+		encounterId = encounterId,
+		encounterName = encounterName,
+		difficultyId = difficultyId,
+		raidSize = raidSize,
+		hash = adlObject.currentEncounterHash,
+	}
+
+	adlObject.BossEncounterStartAt = GetTime()
+
+	--store casts of enemy spells
+	---@type {key1: combattime, key2: spellid, key3: spellname}
+	adlObject.EnemySkillTable = {}
+
+	--store when the last spell by the enemy was casted, this to prevent the same spell to be logged twice in the same second
+	---@type table<spellid, combattime>
+	adlObject.EnemySkillTableDelay = {}
+
+	--store when the combat has started
+	cleuEventFrame.combatStartTime = time()
+
+	--start logging cleu events
+	cleuEventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+end
+
+function adlObject.OnEncounterEnd(...)
+	local encounterId, encounterName, difficultyId, raidSize, endStatus = select(1, ...)
+
+	if (advancedDeathLogs.debugMode and advancedDeathLogs.debugEncounter) then
+		if (not encounterId) then
+			--make data for testing
+			encounterId = debugModeEncounterData.encounterId
+			encounterName = debugModeEncounterData.encounterName
+			difficultyId = debugModeEncounterData.difficultyId
+			raidSize = debugModeEncounterData.raidSize
+			endStatus = debugModeEncounterData.endStatus
+		end
+	end
+
+	adlObject.currentEncounterInfo = {
+		encounterId = encounterId,
+		encounterName = encounterName,
+		difficultyId = difficultyId,
+		raidSize = raidSize,
+		hash = adlObject.currentEncounterHash,
+		killed = endStatus,
+	}
+end
+
+encounterEventFrame:SetScript("OnEvent", function(self, event, ...)
+	if (event == "ENCOUNTER_START") then
+		adlObject.OnEncounterStart(...)
+
+	elseif (event == "ENCOUNTER_END") then
+		adlObject.OnEncounterEnd(...)
+	end
+end)
+
+mainFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+
+function adlObject:GetEncounterDiffString(diffInteger)
+	if (diffInteger == 17) then
+		return "Raid Finder"
+
+	elseif (diffInteger == 16) then
+		return "Mythic"
+
+	elseif (diffInteger == 15) then
+		return "Heroic"
+
+	elseif (diffInteger == 14) then
+		return "Normal"
+	end
+end
+
+function adlObject:GetPlayerTable(bossTable, playerName)
+	local playerTable = bossTable.player_db[playerName]
+	if (playerTable) then
+		return playerTable
+	end
+
+	if (bossTable.type == CONST_DBTYPE_ENDURANCE) then
+		local _, class = UnitClass(playerName)
+		local newPlayerTable = {
+			points = 0,
+			encounters = 0,
+			deaths = {},
+			class = class or "PRIEST"
+		}
+
+		bossTable.player_db[playerName] = newPlayerTable
+		return newPlayerTable
+	end
+end
+
+function adlObject:GetEnduranceDataForBossHash(bossHash)
+	local dbTable = adlObject.endurance_database
+
+	local bossTable = dbTable[bossHash]
+	if (bossTable) then
+		return bossTable
+	end
+
+	local newBossTable = {
+		player_db = {},
+		id = bossHash,
+		name = adlObject.currentEncounterInfo.encounterName,
+		diff = adlObject.currentEncounterInfo.difficultyId,
+		hash = bossHash,
+	}
+
+	newBossTable.type = CONST_DBTYPE_ENDURANCE
+	adlObject.endurance_database[bossHash] = newBossTable
+
+	return newBossTable
+end
+
+function adlObject:GetDifficultyName(difficultyId)
+	if (difficultyId == 14) then
+		return "Normal"
+
+	elseif (difficultyId == 15) then
+		return "Heroic"
+
+	elseif (difficultyId == 17) then
+		return "Raid Finder"
+
+	elseif (difficultyId == 16) then
+		return "Mythic"
+	end
+end
+
+function adlObject:CanRecordOnDifficulty(difficultyId)
+	--normal mode
+	if (difficultyId == 14) then
+		if (not adlObject.db.captures[2]) then
+			adlObject:DebugMsg("Normal mode isn't active, not recording this segment.")
+			return
+		end
+		return true
+
+	--heroic mode
+	elseif (difficultyId == 15) then
+		if (not adlObject.db.captures[3]) then
+			adlObject:DebugMsg("Heroic mode isn't active, not recording this segment.")
+			return
+		end
+		return true
+
+	--raid finder
+	elseif (difficultyId == 17) then
+		if (not adlObject.db.captures[1]) then
+			adlObject:DebugMsg("Raid Finder mode isn't active, not recording this segment.")
+			return
+		end
+		return true
+
+	--mythic
+	elseif (difficultyId == 16) then
+		if (not adlObject.db.captures[4]) then
+			adlObject:DebugMsg("Mythic mode isn't active, not recording this segment.")
+			return
+		end
+		return true
+	else
+		return
+	end
+end
+
+function adlObject:GetBossInformation(encounterId)
+	return advancedDeathLogs.dataBase.encounterInfo[encounterId]
+end
+
+function adlObject:CombatFinished(combatObject)
+	--does the encounter fight saved a list of enemy skills used?
+	if (not adlObject.EnemySkillTable) then
+		adlObject:DebugMsg("nil value: DeathGraphs.EnemySkillTable")
+		return
+	end
+
+	--get the difficulty
+	local difficult = adlObject.currentEncounterInfo.difficultyId
+	--does the user selected to record this difficulty?
+	if (not adlObject:CanRecordOnDifficulty(difficult)) then
+		adlObject:DebugMsg("Raid difficulty is too low, not recording this segment.")
+		return
+	end
+
+	--read all deaths
+	local bossInfoTable = combatObject:GetBossInfo() --return the is_boss table
+	adlObject:DebugMsg("bossinfo: ", bossInfoTable and "exists" or "nil")
+
+	---@debug this will add the bossinfo into the combatObject for tests purposes
+		if (not bossInfoTable and advancedDeathLogs.debugMode) then
+			bossInfoTable = {
+				index = 1,
+				name = debugModeEncounterData.encounterName,
+				encounter = debugModeEncounterData.encounterName,
+				zone = debugModeEncounterData.zoneName,
+				mapid = debugModeEncounterData.zoneId,
+				diff = debugModeEncounterData.difficultyId,
+				diff_string = debugModeEncounterData.difficultyName,
+				ej_instance_id = debugModeEncounterData.ejid,
+				id = debugModeEncounterData.encounterId,
+			}
+
+			combatObject.is_boss = bossInfoTable
+			combatObject:SetStartTime(time() - 180)
+			combatObject:SetEndTime(time())
+
+			adlObject.EnemySkillTable = detailsFramework.table.copy({}, advancedDeathLogs.testEnemySkillTable)
+		end
+	---@end-debug
+
+	if (not bossInfoTable) then
+		return
+	end
+
+	--get the table containing bosses information from the database
+	--the information this table store is informed below where it creates a new table if it doesn't exist
+	local encounterInfo = advancedDeathLogs.dataBase.encounterInfo[bossInfoTable.id]
+	if (not encounterInfo) then
+		--if the boss info for this encounter isn't yet recorded, then record it
+		---@type adl_encounterinfo
+		local newEncounterInfo = {
+			bossIcon = Details:GetBossEncounterTexture(bossInfoTable.name or "Unknown Boss") or [[Interface\ICONS\INV_Misc_QuestionMark]],
+			encounterName = bossInfoTable.name or "Unknown Boss",
+			zoneName = bossInfoTable.zone or "",
+			zoneId = bossInfoTable.mapid or 0,
+			encounterId = bossInfoTable.id or 0,
+		}
+		advancedDeathLogs.dataBase.encounterInfo[bossInfoTable.id] = newEncounterInfo
+	end
+
+	if (bossInfoTable) then
+		adlObject:DebugMsg("boss found", bossInfoTable.name)
+		adlObject:DebugMsg("adlObject.last_encounter_hash:", adlObject.currentEncounterInfo.hash)
+		adlObject.last_encounter_hash = adlObject.currentEncounterInfo.hash
+
+		--iterate beetween deaths occured in latest encounter
+		local deathList = combatObject:GetDeaths()
+		if ((not deathList or not deathList[1]) and advancedDeathLogs.debugMode) then
+			deathList = advancedDeathLogs.testDeathLogs
+		end
+
+		local enduranceTable = adlObject:GetEnduranceDataForBossHash(adlObject.currentEncounterInfo.hash)
+
+		--register the latest time the endurance table was updated, use to check if the table is outdated and sort order
+		enduranceTable.unixtime = time()
+
+		---@type table<actorname, boolean> player names that failed the endurance check
+		local enduranceFailed = {}
+
+		adlObject:DebugMsg("deaths amount (#deathList): " .. #deathList)
+		adlObject:DebugMsg("combat time: " .. combatObject:GetCombatTime())
+
+		if (#deathList > 0) then
+			--only record if the encounter had more than 40 seconds
+			if (combatObject:GetCombatTime() > 40) then
+				--create a table to store the deaths of this segment
+				local deathsOccurredOnThisEncounter = {
+					bossname = adlObject.currentEncounterInfo.encounterName,
+					timeelapsed = combatObject:GetCombatTime(),
+					bossicon = {0, 1, 0, 1, Details:GetBossEncounterTexture(adlObject.currentEncounterInfo.encounterName or "Unknown Boss")},
+					date = combatObject:GetEndTime(),
+					deaths = {} --store all deaths in this encounter
+				}
+				--add the table into the database, the member 'deaths' if filled below when iterating the deaths
+				table.insert(advancedDeathLogs.dataBase.deathsPerSegment, 1, deathsOccurredOnThisEncounter)
+
+				--check if there is too much segments
+				if (#advancedDeathLogs.dataBase.deathsPerSegment > adlObject.db.max_segments_for_current) then
+					table.remove(advancedDeathLogs.dataBase.deathsPerSegment)
+				end
+
+				--timeline stuff, spellcast - build the sub tables to store the deaths, spells and spellIds
+
+				local encounterHash = adlObject.last_encounter_hash
+
+				--store how many deaths occurred in the same second during all tries on the same encounter
+				--example: [45] = {unixtime, unixtime, unixtime, unixtime}, [80] = {unixtime, unixtime, unixtime, unixtime}
+				--the unixtime is in case need to clean up deaths after a while
+
+				local deathsOnSeconds = advancedDeathLogs.dataBase.deathsOccurrences
+				---@type table<number, unixtime[]>
+				local encounterDeathsOnSeconds = deathsOnSeconds[encounterHash]
+				if (not encounterDeathsOnSeconds) then
+					encounterDeathsOnSeconds = {}
+					deathsOnSeconds[encounterHash] = encounterDeathsOnSeconds
+				end
+
+				local enemySpellCasts = advancedDeathLogs.dataBase.enemySpellCasts
+				local encounterSpellCasts = enemySpellCasts[encounterHash]
+				if (not encounterSpellCasts) then
+					encounterSpellCasts = {}
+					enemySpellCasts[encounterHash] = encounterSpellCasts
+				end
+
+				local spellIdCache = advancedDeathLogs.dataBase.spellIdCache
+				local timeNow = time()
+
+				adlObject:DebugMsg("#adlObject.EnemySkillTable: " .. #adlObject.EnemySkillTable)
+
+				---@type {key1: combattime, key2: spellid, key3: spellname}
+				local allCastsOnThisEncounter = adlObject.EnemySkillTable
+
+				--iterate among spells captured in the combatlgo and fill the tables created above
+				for index, spellInfo in ipairs(allCastsOnThisEncounter) do
+					--get the values
+					local combatTime, spellId, spellName = unpack(spellInfo)
+
+					--create the table for this spell if needed
+					encounterSpellCasts[spellName] = encounterSpellCasts[spellName] or {}
+
+					--the timeNow is used to clear old spell casts
+					table.insert(encounterSpellCasts[spellName], {combatTime, timeNow})
+
+					--save the spellId for this spell
+					spellIdCache[spellName] = spellId
+				end
+
+				wipe(allCastsOnThisEncounter) --unload from memory
+
+				--max current segment deaths to record
+				local maxDeathsForCurrent = adlObject.db.max_deaths_for_current
+				--max timeline deaths to record
+				local maxTimelineDeaths = adlObject.db.max_deaths_for_timeline
+				--max endurance deaths to record
+				local maxEndurance = adlObject.db.endurance_threshold
+
+				--iterate amoung deaths
+				for deathIndex, thisDeathTable in ipairs(deathList) do
+					--record for 'last try' 'current segment' deaths stuff
+					local playerName, playerClass, deathUnixTime, deathCombatTime, deathStringTime, playerMaxHealth, deathEvents, lastCooldown = adlObject:UnpackDeathTable(thisDeathTable)
+					if (#deathsOccurredOnThisEncounter.deaths < maxDeathsForCurrent) then
+						--deathsOccurredOnThisEncounter.deaths is an indexed entry on advancedDeathLogs.dataBase.deathsPerSegment
+						table.insert(deathsOccurredOnThisEncounter.deaths, {
+							name = playerName,
+							class = playerClass,
+							time = deathUnixTime,
+							timestring = deathStringTime,
+							timeofdeath = deathCombatTime,
+							events = deathEvents,
+							maxhealth = playerMaxHealth
+						})
+					end
+
+					--record endurance
+					if (deathIndex <= maxEndurance) then
+						local playerTable = adlObject:GetPlayerTable(enduranceTable, playerName)
+
+						if (enduranceFailed[playerName]) then
+							playerTable.points = playerTable.points + 80
+						else
+							playerTable.points = playerTable.points + 90
+						end
+
+						playerTable.encounters = playerTable.encounters + 1
+
+						local lastHit = adlObject:GetLastHit(deathEvents)
+						table.insert(playerTable.deaths, {combatObject.is_boss.try_number or 0, deathCombatTime, lastHit})
+						enduranceFailed[playerName] = true
+
+						adlObject:DebugMsg("Added an endurance entry.")
+					end
+
+					--record for timeline deaths
+					if (deathIndex <= maxTimelineDeaths) then
+						--combat time
+						local combatTime = math.floor(deathCombatTime)
+						--add to the table
+						encounterDeathsOnSeconds[combatTime] = encounterDeathsOnSeconds[combatTime] or {}
+						table.insert(encounterDeathsOnSeconds[combatTime], timeNow)
+					end
+
+					--everything is on max
+					if (deathIndex > maxEndurance and deathIndex > maxTimelineDeaths and deathIndex > maxDeathsForCurrent) then
+						break
+					end
+				end --loop
+			end --combat time > 40
+		else
+			adlObject:DebugMsg("no deaths found on this encounter.")
+		end --#death_list > 0
+
+		--close the rest of endurance
+		if (combatObject:GetCombatTime() > 40) then
+			for i = 1, GetNumGroupMembers(), 1 do
+				local playerName = GetUnitName("raid" .. i, true)
+
+				if (not enduranceFailed[playerName]) then
+					---@type actordamage
+					local damageActor = combatObject(DETAILS_ATTRIBUTE_DAMAGE, playerName)
+					---@type actorheal
+					local healingActor = combatObject(DETAILS_ATTRIBUTE_HEAL, playerName)
+
+					if ((damageActor and damageActor.total > 0) or (healingActor and healingActor.total > 0)) then
+						local playerTable = adlObject:GetPlayerTable(enduranceTable, playerName)
+						playerTable.points = playerTable.points + 100
+						playerTable.encounters = playerTable.encounters + 1
+					end
+				end
+			end
+		end
+
+		adlObject:CanShowIcon()
+	end
+end
+
+function adlObject:GetLastHit(deathlog)
 	for i = #deathlog, 1, -1 do
 		local hit = deathlog[i]
 		--[1] boolean (true)
 		--added a check for index 6 which stores info about the source, it won't pass if there's no source of the damage
 		if (type (hit[1]) == "boolean" and hit[1] and hit[6]) then
-			local spellname = DeathGraphs.getspellinfo(hit[2]) or ""
-			return spellname .. " |cFFFF3333" .. DeathGraphs:comma_value(hit[3]) .. "|r"
+			local spellName = adlObject.getspellinfo(hit[2]) or ""
+			return spellName .. " |cFFFF3333" .. adlObject:comma_value(hit[3]) .. "|r"
 		end
 	end
 	return ""
 end
 
-local build_options_panel = function()
-	local options_frame = DeathGraphs:CreatePluginOptionsFrame("DeathGraphsOptionsWindow", Loc["STRING_OPTIONS"], 1)
+local buildOptionsPanel = function()
+	local options_frame = adlObject:CreatePluginOptionsFrame("DeathGraphsOptionsWindow", Loc["STRING_OPTIONS"], 1)
 	options_frame:SetHeight(260)
 
 	local menu = {
 		{
 			type = "range",
-			get = function() return DeathGraphs.db.endurance_threshold end,
-			set = function(self, fixedparam, value) DeathGraphs.db.endurance_threshold = value end,
+			get = function() return adlObject.db.endurance_threshold end,
+			set = function(self, fixedparam, value) adlObject.db.endurance_threshold = value end,
 			min = 1,
 			max = 30,
 			step = 1,
@@ -573,8 +689,8 @@ local build_options_panel = function()
 		},
 		{
 			type = "range",
-			get = function() return DeathGraphs.db.max_deaths_for_timeline end,
-			set = function(self, fixedparam, value) DeathGraphs.db.max_deaths_for_timeline = value end,
+			get = function() return adlObject.db.max_deaths_for_timeline end,
+			set = function(self, fixedparam, value) adlObject.db.max_deaths_for_timeline = value end,
 			min = 1,
 			max = 30,
 			step = 1,
@@ -583,8 +699,8 @@ local build_options_panel = function()
 		},
 		{
 			type = "range",
-			get = function() return DeathGraphs.db.max_segments_for_current end,
-			set = function(self, fixedparam, value) DeathGraphs.db.max_segments_for_current = value end,
+			get = function() return adlObject.db.max_segments_for_current end,
+			set = function(self, fixedparam, value) adlObject.db.max_segments_for_current = value end,
 			min = 1,
 			max = 10,
 			step = 1,
@@ -598,9 +714,9 @@ local build_options_panel = function()
 			name = Loc["STRING_RAIDFINDER"],
 			desc = Loc["STRING_RAIDFINDER_DESC"],
 			order = 1,
-			get = function() return DeathGraphs.db.captures[1] end,
+			get = function() return adlObject.db.captures[1] end,
 			set = function(self, val)
-				DeathGraphs.db.captures[1] = not DeathGraphs.db.captures[1]
+				adlObject.db.captures[1] = not adlObject.db.captures[1]
 			end,
 		},
 		{
@@ -608,9 +724,9 @@ local build_options_panel = function()
 			name = Loc["STRING_NORMAL"],
 			desc = Loc["STRING_NORMAL_DESC"],
 			order = 1,
-			get = function() return DeathGraphs.db.captures[2] end,
+			get = function() return adlObject.db.captures[2] end,
 			set = function(self, val)
-				DeathGraphs.db.captures[2] = not DeathGraphs.db.captures[2]
+				adlObject.db.captures[2] = not adlObject.db.captures[2]
 			end,
 		},
 		{
@@ -618,9 +734,9 @@ local build_options_panel = function()
 			name = Loc["STRING_HEROIC"],
 			desc = Loc["STRING_HEROIC_DESC"],
 			order = 1,
-			get = function() return DeathGraphs.db.captures[4] end,
+			get = function() return adlObject.db.captures[4] end,
 			set = function(self, val)
-				DeathGraphs.db.captures[3] = not DeathGraphs.db.captures[3]
+				adlObject.db.captures[3] = not adlObject.db.captures[3]
 			end,
 		},
 		{
@@ -628,94 +744,124 @@ local build_options_panel = function()
 			name = Loc["STRING_MYTHIC"],
 			desc = Loc["STRING_MYTHIC_DESC"],
 			order = 1,
-			get = function() return DeathGraphs.db.captures[4] end,
+			get = function() return adlObject.db.captures[4] end,
 			set = function(self, val)
-				DeathGraphs.db.captures[4] = not DeathGraphs.db.captures[4]
+				adlObject.db.captures[4] = not adlObject.db.captures[4]
 			end,
 		},
 		--{blank = true},
 
 	}
 
-	local options_text_template = DeathGraphs:GetFramework():GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
-	local options_dropdown_template = DeathGraphs:GetFramework():GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-	local options_switch_template = DeathGraphs:GetFramework():GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-	local options_slider_template = DeathGraphs:GetFramework():GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
-	local options_button_template = DeathGraphs:GetFramework():GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
+	local options_text_template = adlObject:GetFramework():GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
+	local options_dropdown_template = adlObject:GetFramework():GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+	local options_switch_template = adlObject:GetFramework():GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+	local options_slider_template = adlObject:GetFramework():GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
+	local options_button_template = adlObject:GetFramework():GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
 
-	DeathGraphs:GetFramework():BuildMenu(options_frame, menu, 15, -75, 360, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
+	adlObject:GetFramework():BuildMenu(options_frame, menu, 15, -75, 360, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
 	options_frame:SetBackdropColor(0, 0, 0, .9)
 end
 
-DeathGraphs.OpenOptionsPanel = function()
+adlObject.OpenOptionsPanel = function()
 	if (not DeathGraphsOptionsWindow) then
-		build_options_panel()
+		buildOptionsPanel()
 	end
 	DeathGraphsOptionsWindow:Show()
 end
 
-cleuEventFrame:SetScript("OnEvent", function (self, event, time, token, ...)
+cleuEventFrame:SetScript("OnEvent", function (self, event)
+	local time, token, hidding, sourceSerial, sourceName, sourceFlags, sourceFlags2, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName = CombatLogGetCurrentEventInfo()
 	if (token == "SPELL_CAST_SUCCESS") then --if an actor successful casted a spell
-		local hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, spellid, spellname, spelltype = ...
-		if (bit.band(who_flags, 0x00000040) ~= 0) then --check if the actor is a enemy        DeathGraphs.BossEncounterStartAt
-			local t = floor(GetTime() - DeathGraphs.BossEncounterStartAt) --get the combat time
-			if (DeathGraphs.EnemySkillTableDelay[spellid] ~= t) then --avoid a spell be recorded more than once per second
-				tinsert (DeathGraphs.EnemySkillTable, {t, spellid, spellname}) --add the spell
-				DeathGraphs.EnemySkillTableDelay[spellid] = t
+		if (bitBand(sourceFlags, 0x00000040) ~= 0) then --check if the actor is a enemy        DeathGraphs.BossEncounterStartAt
+			local thisTime = math.floor(time - cleuEventFrame.combatStartTime) --get the combat elapsed time
+			if (adlObject.EnemySkillTableDelay[spellId] ~= thisTime) then --avoid a spell be recorded more than once per second
+				table.insert(adlObject.EnemySkillTable, {thisTime, spellId, spellName}) --add the spell
+				adlObject.EnemySkillTableDelay[spellId] = thisTime
 			end
 		end
 	end
 end)
 
-function DeathGraphs:OnEvent(_, event, ...)
+function adlObject:OnEvent(_, event, ...)
 	if (event == "ADDON_LOADED") then
 		local AddonName = select(1, ...)
 		if (AddonName == "Details_DeathGraphs") then
+			if (Details) then
+				--saved variables
+				local currentDatabaseVersion = 1
 
-			if (_G.Details) then
+				if (not AdvancedDeathLogsDB) then
+					---@class adl_encounterinfo : table
+					---@field encounterName encountername
+					---@field encounterId encounterid
+					---@field bossIcon textureid|texturepath|nil
+					---@field zoneName string
+					---@field zoneId number
 
-				--catch data
-				DeathGraphs.deaths_database = DeathGraphsDBDeaths or {}
-				DeathGraphsDBDeaths = DeathGraphs.deaths_database
+					---@class adl_deathtable : table
+					---@field name actorname
+					---@field class class
+					---@field time unixtime
+					---@field timestring timestring
+					---@field timeofdeath combattime
+					---@field events table[]
+					---@field maxhealth health
 
-				--clean up
-				local time_threshold = time() - 604800 -- one week
-				for hash, bosstable in pairs(DeathGraphs.deaths_database) do
-					for playername, playertable in pairs(bosstable.player_db) do
-						for i = #(playertable.deaths or {}), 1, -1 do
-							local this_death = playertable.deaths[i]
-							if ((this_death[6] or 0) < time_threshold) then
-								tremove (playertable.deaths, i)
-								--print ("Death removed for player", playername, this_death[6])
-							end
-						end
-					end
+					---@class adl_segmentdeaths : table
+					---@field encounterName encountername
+					---@field bossIcon textureid|texturepath|nil
+					---@field date unixtime
+					---@field timeelapsed combattime
+					---@field deaths adl_deathtable[]
+
+					---@class adl_deathoccurrences : table
+					---@field combattime unixtime[]
+
+					---@class adl_spellcasts : table
+					---@field spellname {key1: combattime, key2: unixtime}[]
+
+					---@class adl_database : table
+					---@field __version number
+					---@field encounterInfo table<encounterid, adl_encounterinfo>
+					---@field deathsPerSegment adl_segmentdeaths[]
+					---@field deathsOccurrences table<ehash, table<number, unixtime[]>>
+					---@field enemySpellCasts table<ehash, adl_spellcasts>
+					---@field spellIdCache table<spellname, spellid>
+
+					---@type adl_database
+					local newDatabaseTable = {
+						__version = currentDatabaseVersion,
+						encounterInfo = {}, --store information about an encounter
+
+						deathsPerSegment = {}, --replace: DeathGraphs.current_database | store all deaths per encounter
+						deathsOccurrences = {}, --replace: graph_database[EncounterHash].deaths | store deaths per second of all encounters: [encounter-hash][second] = {unixtime, unixtime, unixtime}
+						enemySpellCasts = {}, --replace: graph_database[EncounterHash].spells | store all enemy spell casts for all encounters
+						spellIdCache = {}, --replace: graph_database[EncounterHash].ids | store [spellName] = spellId
+					}
+
+					AdvancedDeathLogsDB = newDatabaseTable
 				end
 
-				DeathGraphs.endurance_database = DeathGraphsDBEndurance or {}
-				DeathGraphsDBEndurance = DeathGraphs.endurance_database
+				---@type adl_database
+				local database = AdvancedDeathLogsDB
 
-				--new (current deaths)
-				DeathGraphs.current_database = DeathGraphsDBCurrent or {}
-				DeathGraphsDBCurrent = DeathGraphs.current_database
-				--new (graph stuff)
-				DeathGraphs.graph_database = DeathGraphsDBGraph or {}
-				DeathGraphsDBGraph = DeathGraphs.graph_database
+				advancedDeathLogs.dataBase = database
 
-				--check old versions without endurance amount
-				for bossid, bosstable in pairs(DeathGraphs.endurance_database) do
-					for playername, playertable in pairs(bosstable.player_db) do
-						if (not playertable.encounters) then
-							DeathGraphs.endurance_database[bossid].player_db[playername] = nil
-						end
-					end
-				end
+				DeathGraphsDBEndurance = DeathGraphsDBEndurance or {}
 
-			--	DeathGraphs.endurance_database -> hashboss, bosstable -> player_db -> playername, playertable -> encounters
-			--	/run DeathGraphsDBEndurance=nil;DeathGraphsDBDeaths=nil
+				--old database
+				DeathGraphsDBDeaths = nil
+				DeathGraphsDBCurrent = nil
+				DeathGraphsDBGraph = nil
+
+				--all the four are in use
+				adlObject.endurance_database = DeathGraphsDBEndurance
+
+				--DeathGraphs.endurance_database -> hashboss, bosstable -> player_db -> playername, playertable -> encounters
 
 				--create widgets
-				CreatePluginFunctions()
+				createPluginFunctions()
 
 				--core version required
 				local MINIMAL_DETAILS_VERSION_REQUIRED = 128
@@ -727,9 +873,8 @@ function DeathGraphs:OnEvent(_, event, ...)
 					last_segment = false,
 					last_encounter_hash = false,
 					showing_type = 4,
-					last_combat_id = 0,
 					captures = {false, true, true, true},
-					deaths_threshold = 10,
+					--deaths_threshold = 10,
 					endurance_threshold = 3,
 					max_segments_for_current = 2,
 					max_deaths_for_current = 20,
@@ -738,193 +883,28 @@ function DeathGraphs:OnEvent(_, event, ...)
 					timeline_cutoff_delete_time = 3,
 				}
 
-				--Install
+				--install
 				local pluginName = Loc["STRING_PLUGIN_NAME"]
-				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Logs", "Interface\\AddOns\\Details_DeathGraphs\\icon", DeathGraphs, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", DeathGraphs.version_string, defaults)
+				local install, saveddata = _G.Details:InstallPlugin("TOOLBAR", "Advanced Death Logs", "Interface\\AddOns\\Details_DeathGraphs\\icon", adlObject, "DETAILS_PLUGIN_DEATH_GRAPHICS", MINIMAL_DETAILS_VERSION_REQUIRED, "Details! Team", adlObject.version_string, defaults)
 				if (type (install) == "table" and install.error) then
 					print (install.error)
 				end
 
 				--Register needed events
-				_G.Details:RegisterEvent(DeathGraphs, "COMBAT_BOSS_FOUND")
-				_G.Details:RegisterEvent(DeathGraphs, "DETAILS_DATA_RESET")
-				_G.Details:RegisterEvent(DeathGraphs, "COMBAT_PLAYER_LEAVE")
-				_G.Details:RegisterEvent(DeathGraphs, "COMBAT_PLAYER_ENTER")
+				Details:RegisterEvent(adlObject, "COMBAT_BOSS_FOUND")
+				Details:RegisterEvent(adlObject, "DETAILS_DATA_RESET")
+				Details:RegisterEvent(adlObject, "COMBAT_PLAYER_LEAVE")
+				Details:RegisterEvent(adlObject, "COMBAT_PLAYER_ENTER")
+				Details:RegisterEvent(adlObject, "DETAILS_STARTED")
+
+				advancedDeathLogs.pluginObject.DeathGraphsWindowBuilder(adlObject)
+				advancedDeathLogs.pluginObject.DeathGraphsWindowBuilder = nil
+				adlObject.frames_built = true
 
 				--store the install time for deactive tutorials by time
-				DeathGraphs.db.InstalledAt = DeathGraphs.db.InstalledAt or time()
-				if (not DeathGraphs.db.v1) then
-					DeathGraphs.db.v1 = true
-					wipe (DeathGraphsDBGraph)
-				end
+				adlObject.db.InstalledAt = adlObject.db.InstalledAt or time()
 
-				if (not DeathGraphs.db.v2) then
-					DeathGraphs.db.v2 = true
-					wipe (DeathGraphsDBGraph)
-				end
-
-				--embed the plugin into the plugin window
-				if (DetailsPluginContainerWindow) then
-					DetailsPluginContainerWindow.EmbedPlugin(DeathGraphs, DeathGraphs.Frame)
-				end
-
-				hooksecurefunc(Details, "ShowDeathTooltipFunction", function(instance, lineFrame, combatObject, deathTable)
-					--in cases where the deathTable is from a copy, e.g. Overall Data, the cooldown_usage might not be available
-					if (not deathTable.cooldown_usage) then
-						return
-					end
-
-					local timeOfDeath = deathTable[2]
-					local gameCooltip = GameCooltip
-					gameCooltip:AddLine("Used Before Death:", "", 2, "white")
-					gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
-
-					for spellId, cdTime in pairs(deathTable.cooldown_usage) do
-						local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
-						local timeOfUse = floor(timeOfDeath - cdTime)
-						if (timeOfUse < 0 and timeOfUse > -60) then
-							gameCooltip:AddLine(spellName, DetailsFramework:IntegerToTimer(timeOfUse) .. "s", 2, "white")
-							gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
-						end
-					end
-
-					gameCooltip:AddLine(" ", "", 2, "white")
-					gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
-
-					--
-					gameCooltip:AddLine("Cooldown Received:", "", 2, "white")
-					gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
-					local cooldownsReceived = deathTable["cooldown_received"] or {}
-
-					for i = 1, #cooldownsReceived do
-						local spellId, time, sourceName = unpack(cooldownsReceived[i])
-						local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
-						local timeOfUseBeforeDeath = floor(time - timeOfDeath)
-
-						if (timeOfUseBeforeDeath < 0 and timeOfUseBeforeDeath > -60) then
-							spellName = spellName:sub(1, 12)
-							sourceName = DetailsFramework:RemoveRealmName(sourceName):sub(1, 10)
-							local name = spellName .. " (" .. sourceName .. ")"
-							gameCooltip:AddLine(name, timeOfUseBeforeDeath .. "s", 2, "white")
-							gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
-						end
-					end
-
-					gameCooltip:AddLine(" ", "", 2, "white")
-					gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
-
-					gameCooltip:AddLine("Cooldown Status:", "", 2, "white")
-					gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
-
-					for spellId, cooldownInfo in pairs(deathTable.cooldown_status) do
-						local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
-						spellName = spellName:sub(1, 24)
-
-						local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-						local timeLeft, charges, timeOffset, duration, updateTime = openRaidLib.GetCooldownTimeFromCooldownInfo(cooldownInfo)
-						if (timeLeft == 0) then
-							gameCooltip:AddLine(spellName, "|cFF11FF11good|r", 2, "white")
-							gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
-						else
-							gameCooltip:AddLine(spellName, "-" .. DetailsFramework:IntegerToTimer(timeLeft), 2, "white")
-							gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
-						end
-					end
-
-					gameCooltip:SetOption("FixedWidthSub", 200)
-				end)
-
-				-------------------------------------------------------------------------
-				--cooldown state and usage history
-
-				local cdTracker = {
-					Cooldowns = {
-						Usage = {},
-						Received = {},
-					}
-				}
-
-				function cdTracker.Cooldowns.RegisterCooldownUsage()
-					cdTracker.Cooldowns.Usage = {} --will store [unitName] = {spellId = time, spellId = time, spellId = time}
-					local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-					if (openRaidLib) then
-						function cdTracker.Cooldowns.OnReceiveSingleCooldownUpdate(unitId, spellId, cooldownInfo, unitCooldows, allUnitsCooldowns)
-							local unitName = GetUnitName(unitId, true)
-							if (not unitName) then
-								return
-							end
-
-							--if details! isn't in combat, return
-							if (not Details.in_combat) then
-								return
-							end
-
-							--local bIsReady, percent, timeLeft, charges, minValue, maxValue, currentValue, duration = openRaidLib.GetCooldownStatusFromCooldownInfo(cooldownInfo)
-
-							--add the cooldown used into the table
-							cdTracker.Cooldowns.Usage[unitName] = cdTracker.Cooldowns.Usage[unitName] or {}
-							cdTracker.Cooldowns.Usage[unitName][spellId] = time()
-						end
-
-						--register a callback to be notified when a cooldown is used
-						openRaidLib.RegisterCallback(cdTracker.Cooldowns, "CooldownUpdate", "OnReceiveSingleCooldownUpdate")
-					end
-				end
-
-				local cooldownListener = Details:CreateEventListener()
-				cdTracker.Cooldowns.RegisterCooldownUsage()
-
-				function cooldownListener:WipeCooldownUsage()
-					wipe(cdTracker.Cooldowns.Usage)
-					wipe(cdTracker.Cooldowns.Received)
-				end
-
-				cooldownListener:RegisterEvent("GROUP_ONENTER", "WipeCooldownUsage")
-				cooldownListener:RegisterEvent("GROUP_ONLEAVE", "WipeCooldownUsage")
-				cooldownListener:RegisterEvent("COMBAT_ENCOUNTER_START", "WipeCooldownUsage")
-				cooldownListener:RegisterEvent("COMBAT_ENCOUNTER_END", "WipeCooldownUsage")
-
-				local onDeathEvent = function(_, token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, deathTable, lastCooldown, combatElapsedTime, maxHealth)
-					local cooldownUsage = {}
-
-					local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-					if (openRaidLib) then
-						local unitCooldowns = openRaidLib.GetUnitCooldowns(targetName, "defensive-personal,defensive-raid,itemheal")
-						cooldownUsage = cdTracker.Cooldowns.Usage[targetName] or {}
-
-						deathTable["cooldown_usage"] = cooldownUsage --list of cooldowns the player used before dying
-						deathTable["cooldown_status"] = unitCooldowns --list of cooldowns the player had when died
-
-						local targetedPersonalCooldowns = {}
-						local cooldownsReceived = cdTracker.Cooldowns.Received[targetName] or {}
-						for i = 1, #cooldownsReceived do
-							local spellId, thisTime = unpack(cooldownsReceived[i])
-							if (time - 20 < thisTime) then
-								targetedPersonalCooldowns[#targetedPersonalCooldowns+1] = cooldownsReceived[i]
-							end
-						end
-						deathTable["cooldown_received"] = targetedPersonalCooldowns --list of cooldowns received from other players
-					end
-				end
-
-				local onCooldownEvent = function(_, token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, spellId, spellName)
-					if (sourceSerial and targetSerial) then
-						if (sourceName and targetName) then
-							local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
-							if (openRaidLib) then
-								local cooldownData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
-								if (cooldownData and cooldownData.type == 3) then
-									--this is a defensive cooldown
-									cdTracker.Cooldowns.Received[targetName] = cdTracker.Cooldowns.Received[targetName] or {}
-									tinsert(cdTracker.Cooldowns.Received[targetName], {spellId, time, sourceName})
-								end
-							end
-						end
-					end
-				end
-
-				Details:InstallHook(DETAILS_HOOK_DEATH, onDeathEvent)
-				Details:InstallHook(DETAILS_HOOK_COOLDOWN, onCooldownEvent)
+				advancedDeathLogs.RegisterDetailsHook()
 			end
 		end
 	end

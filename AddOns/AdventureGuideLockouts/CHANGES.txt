@@ -1,42 +1,10 @@
-lightweight tag ba1eaeb7746f80886321d491d5f4c32d0be91597 v1.4.6
+lightweight tag fd4f37c62545a9840ec1bf29a4d839d7ee7c29dc v1.4.9
 Author:	Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:	Sun May 7 03:18:33 2023 -0400
+Date:	Tue Nov 14 23:33:03 2023 -0500
 
-commit ba1eaeb7746f80886321d491d5f4c32d0be91597
+commit fd4f37c62545a9840ec1bf29a4d839d7ee7c29dc
 Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Sun May 7 03:18:33 2023 -0400
+Date:   Tue Nov 14 23:33:03 2023 -0500
 
-    Bump version
-
-commit 83f68e220cee5e3a05566eb10b61debb9eb823d5
-Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Sun May 7 03:14:44 2023 -0400
-
-    Bump version
-
-commit e28c9f756fae56d20d149bbe7e7c47f71dea59fd
-Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Sun May 7 03:13:39 2023 -0400
-
-    Add world boss introduced in patch 10.1.0
-
-commit 16fc067d5cc2d30267b5b0a3ffbe637c91d1bc29
-Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Sun May 7 03:10:28 2023 -0400
-
-    Fix `EncounterJournal.instanceID` taint introduced by `UpdateDataProvider`
-
-commit 7035f4a97fb608cb0c339dda61c0795f4630ebd8
-Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Wed Jan 25 22:51:38 2023 -0500
-
-    Getting instanceID from instanceLink is no longer needed
-
-commit f118a4f6e8d370a791c32143113e9bc82baeefcf
-Author: Valdemar <54585769+Hollicsh@users.noreply.github.com>
-Date:   Thu Jan 12 01:49:43 2023 +0500
-
-    Add ruRU notes to .toc (#24)
-    
-    Add RU Notes.
+    Add new world boss
 

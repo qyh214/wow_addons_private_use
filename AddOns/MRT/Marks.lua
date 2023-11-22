@@ -30,7 +30,16 @@ do
 			tmr = 0
 			for i=1,8 do
 				local name = VMRT.Marks.list[i]
-				if name and UnitName(name) and GetRaidTargetIndex(name)~=i then
+				if name and name:find("[, ]") then
+					for subname in name:gmatch("[^, ]+") do
+						if UnitName(subname) then
+							if GetRaidTargetIndex(subname)~=i then
+								SetRaidTargetIcon(subname, i)
+							end
+							break
+						end
+					end
+				elseif name and UnitName(name) and GetRaidTargetIndex(name)~=i then
 					SetRaidTargetIcon(name, i)
 				end
 			end
@@ -73,7 +82,7 @@ function module.options:Load()
 
 	self.namesEditBox = {}
 	for i=1,8 do
-		self.namesEditBox[i] = ELib:Edit(self):Size(600,20):Point(45,-65-(i-1)*24):Text(VMRT.Marks.list[i]):OnChange(MarksEditBoxTextChanged)
+		self.namesEditBox[i] = ELib:Edit(self):Size(600,20):Point(45,-65-(i-1)*24):Text(VMRT.Marks.list[i]):OnChange(MarksEditBoxTextChanged):Tooltip(L.MarksMultiplyNames)
 		self.namesEditBox[i]._i = i
 		self.namesEditBox[i].icon = ELib:Icon(self.namesEditBox[i],"Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..i,22):Point("RIGHT",self.namesEditBox[i],"LEFT",-5,0)
 	end

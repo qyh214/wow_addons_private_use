@@ -282,6 +282,8 @@ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Mostrar anel de recompensa"
 L["S_OPTIONS_ANIMATIONS"] = "Faça animações"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+--[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Janela do Mapa Centralizada "
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Você precisa habilitar a 'Escala da janela do mapa' primeiro, nenhum valor foi alterado."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Escala da janela do mapa"

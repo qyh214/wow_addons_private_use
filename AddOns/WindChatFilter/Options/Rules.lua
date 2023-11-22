@@ -466,7 +466,17 @@ local function channelOptions(context, order)
                         type = "toggle",
                         name = L["Battleground"],
                         order = 12
-                    }
+                    },
+                    system = {
+                        type = "toggle",
+                        name = L["System"],
+                        order = 13
+                    },
+                    dnd = {
+                        type = "toggle",
+                        name = L["Do Not Disturb"],
+                        order = 14
+                    },
                 }
             }
         }

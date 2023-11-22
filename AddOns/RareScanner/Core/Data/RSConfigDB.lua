@@ -544,20 +544,18 @@ function RSConfigDB.SetShowingProfessionRareNPCs(value)
 	private.db.map.displayProfessionRaresNpcIcons = value
 end
 
-function RSConfigDB.IsShowingHuntingPartyRareNPCs()
-	return private.db.map.displayHuntingPartyRaresNpcIcons
+function RSConfigDB.IsMinieventFiltered(minieventID)
+	if (minieventID and private.db.map.displayMinieventsNpcIcons[minieventID]) then
+		return private.db.map.displayMinieventsNpcIcons[minieventID]
+	end
+	
+	return false
 end
 
-function RSConfigDB.SetShowingHuntingPartyRareNPCs(value)
-	private.db.map.displayHuntingPartyRaresNpcIcons = value
-end
-
-function RSConfigDB.IsShowingPrimalStormRareNPCs()
-	return private.db.map.displayPrimalStormRaresNpcIcons
-end
-
-function RSConfigDB.SetShowingPrimalStormNPCs(value)
-	private.db.map.displayPrimalStormRaresNpcIcons = value
+function RSConfigDB.SetMinieventFiltered(minieventID, filtered)
+	if (minieventID) then
+		private.db.map.displayMinieventsNpcIcons[minieventID] = filtered
+	end
 end
 
 function RSConfigDB.IsShowingOtherRareNPCs()

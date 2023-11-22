@@ -262,6 +262,8 @@ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Выделять золотым �
 L["S_OPTIONS_ANIMATIONS"] = "С анимацией"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+--[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Расположение карты по центру"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Сначала вам нужно включить 'Масштаб окна карты', значение не было изменено."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Масштаб окна карты"

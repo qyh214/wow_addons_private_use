@@ -50,26 +50,83 @@ local function RemoveNotDiscoveredNpc(npcID)
 end
 
 ---============================================================================
--- Storm invasion NOCs POIs
+-- Dreamsurge NPCs POIs
+---- NPCs that are part of a dreamsurge event (Dragonflight)
+---============================================================================
+
+local function findClosestSpot(npcID, mapID, poiX, poiY)
+	local mapNpcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
+  	if (not mapNpcInfo or not mapNpcInfo.overlay) then
+    	return poiX, poiY
+  	else
+    	local xyDistances = {}
+    	for _, coordinatePair in ipairs (mapNpcInfo.overlay) do
+      		local coordx, coordy =  strsplit("-", coordinatePair)
+          		local distance = RSUtils.DistanceBetweenCoords(coordx, poiX, coordy, poiY)
+      			if (distance > 0.01) then
+            		xyDistances[coordinatePair] = distance
+      			end
+        	end
+  
+    		if (RSUtils.GetTableLength(xyDistances) == 0) then
+    			return poiX, poiY
+        	end
+  
+        	local distances = {}
+        	for xy, distance in pairs (xyDistances) do
+          		table.insert(distances, distance)
+        	end
+        
+        	local min = math.min(unpack(distances))
+        	for xy, distance in pairs (xyDistances) do
+          		if (distance == min) then
+            		local xo, yo = strsplit("-", xy)
+        		return xo, yo
+      		end
+    	end
+	end
+end
+
+local function GetMinieventXY(npcID, mapID, atlasName)
+	local areaPOIs = GetAreaPOIsForPlayerByMapIDCached(mapID);
+  	for _, areaPoiID in ipairs(areaPOIs) do
+    	local poiInfo = C_AreaPoiInfo.GetAreaPOIInfo(mapID, areaPoiID);
+    	if (poiInfo) then
+	    	local isPrimaryMapForPOI = poiInfo.isPrimaryMapForPOI
+    		local x, y = poiInfo.position:GetXY()
+	    	
+	  		if (isPrimaryMapForPOI and poiInfo.atlasName == atlasName) then
+		      	return findClosestSpot(npcID, mapID, x, y)
+	    	end
+	    end
+	end
+end
+
+---============================================================================
+-- Storm invasion NPCs POIs
 ---- NPCs that are part of a storm invasion event (Dragonflight)
 ---============================================================================
 
-local function GetStormInvasionAtlasName(npcID, mapID)
-	if (RSUtils.Contains(RSConstants.FIRE_STORM_EVENTS_NPCS, npcID)) then
+local function GetStormInvasionAtlasName(minieventID)
+	if (not minieventID) then
+		return nil
+	end
+	
+	if (minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_FIRE_MINIEVENT) then
     	return RSConstants.FIRE_STORM_ATLAS 
-  	elseif (RSUtils.Contains(RSConstants.WATER_STORM_EVENTS_NPCS, npcID)) then
+  	elseif (minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_WATER_MINIEVENT) then
     	return RSConstants.WATER_STORM_ATLAS 
-  	elseif (RSUtils.Contains(RSConstants.EARTH_STORM_EVENTS_NPCS, npcID)) then
+  	elseif (minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_EARTH_MINIEVENT) then
     	return RSConstants.EARTH_STORM_ATLAS 
-  	elseif (RSUtils.Contains(RSConstants.AIR_STORM_EVENTS_NPCS, npcID)) then
+  	elseif (minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_AIR_MINIEVENT) then
     	return RSConstants.AIR_STORM_ATLAS
   	end
   
   	return nil
 end
 
-local function GetStormInvasionXY(npcID, mapID)
-	local npcStormAtlasName = GetStormInvasionAtlasName(npcID, mapID) 
+local function GetStormInvasionXY(npcID, mapID, minieventID)
+	local npcStormAtlasName = GetStormInvasionAtlasName(minieventID) 
   	if (not npcStormAtlasName) then
     	return nil
   	end
@@ -94,36 +151,7 @@ local function GetStormInvasionXY(npcID, mapID)
 			end
 	    	
 	  		if (isPrimaryMapForPOI and poiInfo.atlasName == npcStormAtlasName) then
-		      	local mapNpcInfo = RSNpcDB.GetInternalNpcInfoByMapID(npcID, mapID)
-		      	if (not mapNpcInfo or not mapNpcInfo.overlay) then
-		        	return x, y
-		      	else
-		        	local xyDistances = {}
-		        	for _, coordinatePair in ipairs (mapNpcInfo.overlay) do
-		          		local coordx, coordy =  strsplit("-", coordinatePair)
-		          		local distance = RSUtils.DistanceBetweenCoords(coordx, x, coordy, y)
-	          			if (distance > 0.01) then
-		            		xyDistances[coordinatePair] = distance
-	          			end
-		        	end
-		  
-	        		if (RSUtils.GetTableLength(xyDistances) == 0) then
-	        			return x, y
-		        	end
-		  
-		        	local distances = {}
-		        	for xy, distance in pairs (xyDistances) do
-		          		table.insert(distances, distance)
-		        	end
-		        
-		        	local min = math.min(unpack(distances))
-		        	for xy, distance in pairs (xyDistances) do
-		          		if (distance == min) then
-		            		local xo, yo = strsplit("-", xy)
-		            		return xo, yo
-		          		end
-		        	end
-		    	end
+		      	return findClosestSpot(npcID, mapID, x, y)
 	    	end
 	    end
 	end
@@ -140,16 +168,7 @@ function RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 	POI.isNpc = true
 	POI.grouping = true
 	POI.name = RSNpcDB.GetNpcName(npcID)
-	POI.mapID = mapID
-	if (GetStormInvasionAtlasName(npcID, mapID)) then
-    	POI.x, POI.y = GetStormInvasionXY(npcID, mapID)
-  	elseif (alreadyFoundInfo and alreadyFoundInfo.mapID == mapID) then
-		POI.x = alreadyFoundInfo.coordX
-		POI.y = alreadyFoundInfo.coordY
-  	else
-	  	POI.x, POI.y = RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
-	end
-	
+	POI.mapID = mapID	
 	POI.foundTime = alreadyFoundInfo and alreadyFoundInfo.foundTime
 	POI.isDead = RSNpcDB.IsNpcKilled(npcID)
 	POI.isDiscovered = POI.isDead or alreadyFoundInfo ~= nil
@@ -159,6 +178,21 @@ function RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 	if (npcInfo) then
 		POI.worldmap = npcInfo.worldmap
 		POI.factionID = npcInfo.factionID
+		POI.minieventID = npcInfo.minieventID
+	end
+	
+	-- Coordinates
+	if (GetStormInvasionAtlasName(POI.minieventID)) then
+    	POI.x, POI.y = GetStormInvasionXY(npcID, mapID, POI.minieventID)
+  	elseif (POI.minieventID == RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT) then
+    	POI.x, POI.y = GetMinieventXY(npcID, mapID, RSConstants.DREAMSURGE_ICON_ATLAS)
+  	elseif (POI.minieventID == RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT) then
+    	POI.x, POI.y = GetMinieventXY(npcID, mapID, RSConstants.FYRAKK_ICON_ATLAS)
+  	elseif (alreadyFoundInfo and alreadyFoundInfo.mapID == mapID) then
+		POI.x = alreadyFoundInfo.coordX
+		POI.y = alreadyFoundInfo.coordY
+  	else
+	  	POI.x, POI.y = RSNpcDB.GetInternalNpcCoordinates(npcID, mapID)
 	end
 	
 	-- Textures
@@ -179,16 +213,22 @@ function RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 		POI.iconAtlas = RSConstants.PROFFESION_ICON_ATLAS
 	elseif (RSUtils.GetTableLength(POI.achievementIDs) > 0) then
 		POI.iconAtlas = RSConstants.ACHIEVEMENT_ICON_ATLAS
-	elseif (RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, npcID)) then
-		POI.iconAtlas = RSConstants.HUNTING_PARTY_ICON_ATLAS
-	elseif (GetStormInvasionAtlasName(npcID, mapID)) then
-		POI.iconAtlas = GetStormInvasionAtlasName(npcID, mapID)
+	elseif (POI.minieventID) then
+		if (POI.minieventID == RSConstants.DRAGONFLIGHT_HUNTING_PARTY_MINIEVENT) then
+			POI.iconAtlas = RSConstants.HUNTING_PARTY_ICON_ATLAS
+		elseif (POI.minieventID == RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT) then
+			POI.iconAtlas = RSConstants.DREAMSURGE_ICON_ATLAS
+		elseif (GetStormInvasionAtlasName(POI.minieventID)) then
+			POI.iconAtlas = GetStormInvasionAtlasName(POI.minieventID)
+		elseif (POI.minieventID == RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT) then
+			POI.iconAtlas = RSConstants.FYRAKK_ICON_ATLAS
+		end
 	end
 	
 	return POI
 end
 
-local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, questTitles, vignetteGUIDs, onWorldMap, onMinimap)
+local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, minieventID, questTitles, vignetteGUIDs, onWorldMap, onMinimap)
 	local name = RSNpcDB.GetNpcName(npcID)
 	
 	-- Skip if part of a disabled event
@@ -209,18 +249,28 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, questTit
 		return true
 	end
 	
-	-- Skip if hunting party rare and is filtered
-	local isHuntingParty = RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, npcID)
-	if (not RSConfigDB.IsShowingHuntingPartyRareNPCs() and isHuntingParty) then
-		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado NPC de grupo de caza.", npcID))
-		return true
-	end
-	
-	-- Skip if primal storm rare and is filtered
-	local isPrimalStorm = GetStormInvasionAtlasName(npcID, mapID) ~= nil
-	if (not RSConfigDB.IsShowingPrimalStormRareNPCs() and isPrimalStorm) then
-		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado NPC de tormenta prismatica.", npcID))
-		return true
+	-- Skip if rare part of a filtered minievent
+	local isMinieventWithFilter = false;
+	if (minieventID) then
+		isMinieventWithFilter = RSConstants.MINIEVENTS_WORLDMAP_FILTERS[minieventID]
+		
+		-- Skip if minievent is filtered
+		if (RSConfigDB.IsMinieventFiltered(minieventID)) then
+			RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado minievento [%s].", npcID, minieventID))
+			return true
+		-- Skip if Dreamsurge minievent is not up
+		elseif (minieventID == RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT and not GetMinieventXY(npcID, mapID, RSConstants.DREAMSURGE_ICON_ATLAS)) then
+		    RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Investigacion pico onirico que no esta activa.", npcID))
+		    return true
+		-- Skip if Invasion storm minievent is not up
+		elseif (GetStormInvasionAtlasName(minieventID) ~= nil and not GetStormInvasionXY(npcID, mapID, minieventID)) then
+		    RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Invasión de tormentas [%s] que no esta activa.", npcID, GetStormInvasionAtlasName(minieventID)))
+		    return true
+		-- Skip if Fyrakk assault minievent is not up
+		elseif (minieventID == RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT and not GetMinieventXY(npcID, mapID, RSConstants.FYRAKK_ICON_ATLAS)) then
+		    RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Asalto Fyrakk que no esta activo.", npcID))
+		    return true
+		end
 	end
 	
 	-- Skip if achievement rare and is filtered
@@ -237,7 +287,7 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, questTit
 	end
 	
 	-- Skip if other filtered
-	if (not RSConfigDB.IsShowingOtherRareNPCs() and not isHuntingParty and not isPrimalStorm and not isAchievement and not prof) then
+	if (not RSConfigDB.IsShowingOtherRareNPCs() and not isMinieventWithFilter and not isAchievement and not prof) then
 		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Filtrado otro NPC.", npcID))
 		return true
 	end
@@ -276,12 +326,6 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, questTit
 	if (RSUtils.Contains(questTitles, npcName)) then
 		RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Tiene misión del mundo activa.", npcID))
 		return true
-	end
-	
-	-- Skip if storm NPC and the event isn't up
-	if (GetStormInvasionAtlasName(npcID, mapID) and not GetStormInvasionXY(npcID, mapID)) then
-	    RSLogger:PrintDebugMessageEntityID(npcID, string.format("Saltado NPC [%s]: Invasión de tormentas [%s] que no esta activa.", npcID, GetStormInvasionAtlasName(npcID, mapID)))
-	    return true
 	end
 
 	-- A 'not discovered' NPC will be setted as killed when the kill is detected while loading the addon and its questID is completed
@@ -394,7 +438,7 @@ function RSNpcPOI.GetMapNotDiscoveredNpcPOIs(mapID, questTitles, vignetteGUIDs, 
 		end
 
 		-- Skip if common filters
-		if (not filtered and not IsNpcPOIFiltered(npcID, mapID, RSNpcDB.GetInternalNpcArtID(npcID, mapID), npcInfo.zoneQuestId, npcInfo.prof, questTitles, vignetteGUIDs, onWorldMap, onMinimap)) then
+		if (not filtered and not IsNpcPOIFiltered(npcID, mapID, RSNpcDB.GetInternalNpcArtID(npcID, mapID), npcInfo.zoneQuestId, npcInfo.prof, npcInfo.minieventID, questTitles, vignetteGUIDs, onWorldMap, onMinimap)) then
 			tinsert(POIs, RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo))
 		end
 	end
@@ -446,12 +490,14 @@ function RSNpcPOI.GetMapAlreadyFoundNpcPOI(npcID, alreadyFoundInfo, mapID, quest
 	-- Skip if common filters
 	local zoneQuestID
 	local prof
+	local minieventID
 	if (npcInfo) then
 		zoneQuestID = npcInfo.zoneQuestId
 		prof = npcInfo.prof
+		minieventID = npcInfo.minieventID
 	end
 
-	if (not IsNpcPOIFiltered(npcID, mapID, alreadyFoundInfo.artID, zoneQuestID, prof, questTitles, vignetteGUIDs, onWorldMap, onMinimap)) then
+	if (not IsNpcPOIFiltered(npcID, mapID, alreadyFoundInfo.artID, zoneQuestID, prof, minieventID, questTitles, vignetteGUIDs, onWorldMap, onMinimap)) then
 		return RSNpcPOI.GetNpcPOI(npcID, mapID, npcInfo, alreadyFoundInfo)
 	end
 end

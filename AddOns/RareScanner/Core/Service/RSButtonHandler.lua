@@ -136,7 +136,7 @@ local function FixVignetteInfo(vignetteInfo)
 	end
 	
 		-- there is one container without name in Shadowlands
-	if (RSConstants.IsContainerAtlas(vignetteInfo.atlasName) and not vignetteInfo.name or string.gsub(vignetteInfo.name, "", "") == "") then
+	if (RSConstants.IsContainerAtlas(vignetteInfo.atlasName) and (not vignetteInfo.name or string.gsub(vignetteInfo.name, "", "") == "")) then
 		vignetteInfo.name = AL["CONTAINER"]
 	end
 	
@@ -201,7 +201,7 @@ local function UpdateRareFound(entityID, vignetteInfo, coordinates)
 	local vignettePosition = nil
 	if (coordinates and coordinates.x and coordinates.y) then
 		vignettePosition = coordinates
-	else
+	elseif (not vignetteInfo.simulated) then
 		vignettePosition = C_VignetteInfo.GetVignettePosition(vignetteInfo.vignetteGUID, mapID)
 	end
 
@@ -260,8 +260,16 @@ local function ShowAlert(button, vignetteInfo, isNavigating)
 			UpdateRareFound(entityID, vignetteInfo, vignettePosition)
 		else
 			vignettePosition = UpdateRareFound(entityID, vignetteInfo)
+			
+			-- If the entity doesn't have coordinates (for example a custom NPC) set a random coordinate set so at least it shows the notification
 			if (not vignettePosition) then
-				return
+				if (RSConstants.IsNpcAtlas(vignetteInfo.atlasName)) then
+					vignettePosition = {}
+					vignettePosition.x = -1
+					vignettePosition.y = -1
+				else
+					return
+				end
 			end
 		end
 
@@ -501,6 +509,7 @@ function RSButtonHandler.AddAlert(button, vignetteInfo, isNavigating)
 	
 	-- Check it it is an entity that use a vignette but it isn't a rare, event or treasure
 	if (RSUtils.Contains(RSConstants.IGNORED_VIGNETTES, entityID)) then
+		--RSLogger:PrintDebugMessage(string.format("La entidad [%s] se ignora por estar ignorada", entityID))
 		return
 	-- Check if we have already found this vignette in a short period of time
 	elseif (RSNotificationTracker.IsAlreadyNotificated(vignetteInfo.id, isNavigating, entityID)) then

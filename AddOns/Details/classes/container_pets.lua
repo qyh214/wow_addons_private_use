@@ -1,262 +1,245 @@
-local _detalhes = 		_G.Details
-local gump = 			_detalhes.gump
-local container_pets =		_detalhes.container_pets
+
+local Details = 		_G.Details
+local container_pets =		Details.container_pets
 local _
 local addonName, Details222 = ...
 
--- api locals
 local UnitGUID = _G.UnitGUID
-local _UnitName = _G.UnitName
-local _GetUnitName = _G.GetUnitName
+local UnitName = _G.UnitName
 local IsInRaid = _G.IsInRaid
 local IsInGroup = _G.IsInGroup
 local GetNumGroupMembers = _G.GetNumGroupMembers
-
--- lua locals
 local setmetatable = setmetatable
-local _bit_band = bit.band --lua local
+local bitBand = bit.band --lua local
 local pairs = pairs
-local wipe = table.wipe
+
+local unitIDRaidCache = Details222.UnitIdCache.Raid
 
 --details locals
-local is_ignored = _detalhes.pets_ignored
+local bIsIgnored = Details.pets_ignored
 
 function container_pets:NovoContainer()
-	local esta_tabela = {}
-	setmetatable(esta_tabela, _detalhes.container_pets)
-	esta_tabela.pets = {} --armazena a pool -> uma dictionary com o [serial do pet] -> nome do dono
-	esta_tabela._ActorTable = {} --armazena os 15 ultimos pets do jogador -> [jogador nome] -> {nil, nil, nil, ...}
-	return esta_tabela
+	local newPetContainer = {}
+	setmetatable(newPetContainer, Details.container_pets)
+
+	---@type petinfo
+	local newPetCacheTable = {}
+	newPetContainer.pets = newPetCacheTable
+
+	newPetContainer._ActorTable = {}
+	return newPetContainer
 end
 
 local OBJECT_TYPE_PET = 0x00001000
-local EM_GRUPO = 0x00000007
-local PET_EM_GRUPO = 0x00001007
+local OBJECT_IN_GROUP = 0x00000007
 
-function container_pets:PegaDono (pet_serial, pet_nome, pet_flags)
-
+function container_pets:GetPetOwner(petGUID, petName, petFlags)
 	--sair se o pet estiver na ignore
-	if (is_ignored [pet_serial]) then
+	if (bIsIgnored[petGUID]) then
 		return
 	end
 
 	--buscar pelo pet no container de pets
-	local busca = self.pets [pet_serial]
-	if (busca) then
+	local petInfo = self.pets[petGUID]
+	if (petInfo) then
 		--in merging operations, make sure to not add the owner name a second time in the name
-	
+
 		--check if the pet name already has the owner name in, if not, add it
-		if (not pet_nome:find("<")) then
+		if (not petName:find("<")) then
 			--get the owner name
-			local ownerName = busca[1]
+			local ownerName = petInfo[1]
 			--add the owner name to the pet name
-			pet_nome = pet_nome .. " <".. ownerName ..">"
+			petName = petName .. " <".. ownerName ..">"
 		end
-		
-		--return busca[6] or pet_nome, busca[1], busca[2], busca[3] --busca[6] poderia estar causando problemas
-		return pet_nome, busca[1], busca[2], busca[3] --[1] dono nome [2] dono serial [3] dono flag
+
+		return petName, petInfo[1], petInfo[2], petInfo[3] --petName, ownerName, ownerGUID, ownerFlags
 	end
-	
+
 	--buscar pelo pet na raide
-	local dono_nome, dono_serial, dono_flags
-	
+	local ownerName, ownerGUID, ownerFlags
+
 	if (IsInRaid()) then
-		for i = 1, GetNumGroupMembers() do 
-			if (pet_serial == UnitGUID("raidpet"..i)) then
-				dono_serial = UnitGUID("raid"..i)
-				dono_flags = 0x00000417 --emulate sourceflag flag
-				
-				local nome, realm = _UnitName ("raid"..i)
-				if (realm and realm ~= "") then
-					nome = nome.."-"..realm
-				end
-				dono_nome = nome
+		for i = 1, GetNumGroupMembers() do
+			if (petGUID == UnitGUID("raidpet"..i)) then
+				ownerGUID = UnitGUID(unitIDRaidCache[i])
+				ownerFlags = 0x00000417 --emulate sourceflag flag
+				local unitName = Details:GetFullName(unitIDRaidCache[i])
+				ownerName = unitName
 			end
 		end
-		
+
 	elseif (IsInGroup()) then
-		for i = 1, GetNumGroupMembers()-1 do 
-			if (pet_serial == UnitGUID("partypet"..i)) then
-				dono_serial = UnitGUID("party"..i)
-				dono_flags = 0x00000417 --emulate sourceflag flag
-				
-				local nome, realm = _UnitName ("party"..i)
-				if (realm and realm ~= "") then
-					nome = nome.."-"..realm
-				end
-				
-				dono_nome = nome
+		for i = 1, GetNumGroupMembers()-1 do
+			if (petGUID == UnitGUID("partypet"..i)) then
+				ownerGUID = UnitGUID("party"..i)
+				ownerFlags = 0x00000417 --emulate sourceflag flag
+				local unitName = Details:GetFullName("party"..i)
+				ownerName = unitName
 			end
 		end
 	end
-	
-	if (not dono_nome) then
-		if (pet_serial == UnitGUID("pet")) then
-			dono_nome = _GetUnitName ("player")
-			dono_serial = UnitGUID("player")
+
+	if (not ownerName) then
+		if (petGUID == UnitGUID("pet")) then
+			ownerName = Details:GetFullName("player")
+			ownerGUID = UnitGUID("player")
 			if (IsInGroup() or IsInRaid()) then
-				dono_flags = 0x00000417 --emulate sourceflag flag
+				ownerFlags = 0x00000417 --emulate sourceflag flag
 			else
-				dono_flags = 0x00000411 --emulate sourceflag flag
+				ownerFlags = 0x00000411 --emulate sourceflag flag
 			end
 		end
 	end
-	
-	if (dono_nome) then
-		self.pets [pet_serial] = {dono_nome, dono_serial, dono_flags, _detalhes._tempo, true, pet_nome, pet_serial} --adicionada a flag emulada
-		
-		if (not pet_nome:find("<")) then
-			pet_nome = pet_nome .. " <".. dono_nome ..">"
+
+	if (ownerName) then
+		local foundTime = Details._tempo
+		self.pets[petGUID] = {ownerName, ownerGUID, ownerFlags, foundTime, true, petName, petGUID} --adicionada a flag emulada
+
+		if (not petName:find("<")) then
+			petName = petName .. " <".. ownerName ..">"
 		end
-		
-		return pet_nome, dono_nome, dono_serial, dono_flags
+
+		return petName, ownerName, ownerGUID, ownerFlags
 	else
-		
-		if (pet_flags and _bit_band (pet_flags, OBJECT_TYPE_PET) ~= 0) then --� um pet
-			if (not _detalhes.pets_no_owner [pet_serial] and _bit_band (pet_flags, EM_GRUPO) ~= 0) then
-				_detalhes.pets_no_owner [pet_serial] = {pet_nome, pet_flags}
-				_detalhes:Msg("couldn't find the owner of the pet:", pet_nome)
+		if (petFlags and bitBand(petFlags, OBJECT_TYPE_PET) ~= 0) then --is a pet
+			if (not Details.pets_no_owner[petGUID] and bitBand(petFlags, OBJECT_IN_GROUP) ~= 0) then
+				Details.pets_no_owner[petGUID] = {petName, petFlags}
+				Details:Msg("couldn't find the owner of the pet:", petName)
 			end
 		else
-			is_ignored [pet_serial] = true
+			bIsIgnored[petGUID] = true
 		end
 	end
-	return
 end
 
-function container_pets:Unpet (...)
-	local unitid = ...
+function container_pets:Unpet(...)
+	local unitId = ...
+	local ownerGUID = UnitGUID(unitId)
 
-	local owner_serial = UnitGUID(unitid)
-	
-	if (owner_serial) then
-		--tira o pet existente da tabela de pets e do cache do core
-		local existing_pet_serial = _detalhes.pets_players [owner_serial]
-		if (existing_pet_serial) then
-			_detalhes.parser:RevomeActorFromCache (existing_pet_serial)
-			container_pets:Remover (existing_pet_serial)
-			_detalhes.pets_players [owner_serial] = nil
-		end
-		--verifica se h� um pet novo deste jogador
-		local pet_serial = UnitGUID(unitid .. "pet")
-		if (pet_serial) then
-			if (not _detalhes.tabela_pets.pets [pet_serial]) then
-				local nome, realm = _UnitName (unitid)
-				if (realm and realm ~= "") then
-					nome = nome.."-"..realm
-				end
-				_detalhes.tabela_pets:Adicionar (pet_serial, _UnitName (unitid .. "pet"), 0x1114, owner_serial, nome, 0x514)
+	if (ownerGUID) then
+		--remove existing pet from thecache
+		do
+			local petGUID = Details.pets_players[ownerGUID]
+			if (petGUID) then
+				Details.parser:RevomeActorFromCache(petGUID)
+				container_pets:Remover(petGUID)
+				Details.pets_players[ownerGUID] = nil
 			end
-			_detalhes.parser:RevomeActorFromCache (pet_serial)
-			container_pets:PlayerPet (owner_serial, pet_serial)
+		end
+
+		--check if the player has a new pet
+		do
+			local petGUID = UnitGUID(unitId .. "pet")
+			if (petGUID) then
+				if (not Details.tabela_pets.pets[petGUID]) then
+					local unitName = Details:GetFullName(unitId)
+					Details.tabela_pets:AddPet(petGUID, UnitName(unitId .. "pet"), 0x1114, ownerGUID, unitName, 0x514)
+				end
+
+				Details.parser:RevomeActorFromCache(petGUID)
+				container_pets:PlayerPet(ownerGUID, petGUID)
+			end
 		end
 	end
 end
 
-function container_pets:PlayerPet (player_serial, pet_serial)
-	_detalhes.pets_players [player_serial] = pet_serial
+function container_pets:PlayerPet(player_serial, pet_serial)
+	Details.pets_players[player_serial] = pet_serial
 end
 
 function container_pets:BuscarPets()
 	if (IsInRaid()) then
-		for i = 1, GetNumGroupMembers(), 1 do 
-			local pet_serial = UnitGUID("raidpet"..i)
-			if (pet_serial) then
-				if (not _detalhes.tabela_pets.pets [pet_serial]) then
-					local nome, realm = _UnitName ("raid"..i)
-					if (realm and realm ~= "") then
-						nome = nome.."-"..realm
-					end
-					local owner_serial = UnitGUID("raid"..i)
-					_detalhes.tabela_pets:Adicionar (pet_serial, _UnitName ("raidpet"..i), 0x1114, owner_serial, nome, 0x514)
-					_detalhes.parser:RevomeActorFromCache (pet_serial)
-					container_pets:PlayerPet (owner_serial, pet_serial)
+		for i = 1, GetNumGroupMembers(), 1 do
+			local petGUID = UnitGUID("raidpet" .. i)
+			if (petGUID) then
+				if (not Details.tabela_pets.pets[petGUID]) then
+					local unitName = Details:GetFullName(unitIDRaidCache[i])
+					local ownerGUID = UnitGUID(unitIDRaidCache[i])
+					Details.tabela_pets:AddPet(petGUID, UnitName("raidpet"..i), 0x1114, ownerGUID, unitName, 0x514)
+					Details.parser:RevomeActorFromCache(petGUID)
+					container_pets:PlayerPet(ownerGUID, petGUID)
 				end
 			end
 		end
-		
+
 	elseif (IsInGroup()) then
-		for i = 1, GetNumGroupMembers()-1, 1 do 
-			local pet_serial = UnitGUID("partypet"..i)
-			if (pet_serial) then
-				if (not _detalhes.tabela_pets.pets [pet_serial]) then
-					local nome, realm = _UnitName ("party"..i)
-
-					if (realm and realm ~= "") then
-						nome = nome.."-"..realm
-					end
-					_detalhes.tabela_pets:Adicionar (pet_serial, _UnitName ("partypet"..i), 0x1114, UnitGUID("party"..i), nome, 0x514) 
-
+		for i = 1, GetNumGroupMembers()-1, 1 do
+			local petGUID = UnitGUID("partypet"..i)
+			if (petGUID) then
+				if (not Details.tabela_pets.pets[petGUID]) then
+					local unitName = Details:GetFullName("party"..i)
+					Details.tabela_pets:AddPet(petGUID, UnitName("partypet"..i), 0x1114, UnitGUID("party"..i), unitName, 0x514)
 				end
 			end
 		end
-		
-		local pet_serial = UnitGUID("pet")
-		if (pet_serial) then
-			if (not _detalhes.tabela_pets.pets [pet_serial]) then
-				_detalhes.tabela_pets:Adicionar (pet_serial, _UnitName ("pet"), 0x1114, UnitGUID("player"), _detalhes.playername, 0x514)
+
+		local petGUID = UnitGUID("pet")
+		if (petGUID) then
+			if (not Details.tabela_pets.pets[petGUID]) then
+				Details.tabela_pets:AddPet(petGUID, UnitName("pet"), 0x1114, UnitGUID("player"), Details.playername, 0x514)
 			end
 		end
-		
+
 	else
-		local pet_serial = UnitGUID("pet")
-		if (pet_serial) then
-			if (not _detalhes.tabela_pets.pets [pet_serial]) then
-				_detalhes.tabela_pets:Adicionar (pet_serial, _UnitName ("pet"), 0x1114, UnitGUID("player"), _detalhes.playername, 0x514)
+		local petGUID = UnitGUID("pet")
+		if (petGUID) then
+			if (not Details.tabela_pets.pets[petGUID]) then
+				Details.tabela_pets:AddPet(petGUID, UnitName("pet"), 0x1114, UnitGUID("player"), Details.playername, 0x514)
 			end
 		end
 	end
 end
 
-function container_pets:Remover (pet_serial)
-	if (_detalhes.tabela_pets.pets [pet_serial]) then
-		table.wipe(_detalhes.tabela_pets.pets [pet_serial])
+function container_pets:Remover(petGUID)
+	if (Details.tabela_pets.pets[petGUID]) then
+		Details:Destroy(Details.tabela_pets.pets[petGUID])
 	end
-	_detalhes.tabela_pets.pets [pet_serial] = nil
+	Details.tabela_pets.pets[petGUID] = nil
 end
 
-function container_pets:Adicionar (pet_serial, pet_nome, pet_flags, dono_serial, dono_nome, dono_flags)
-	if (pet_flags and _bit_band (pet_flags, OBJECT_TYPE_PET) ~= 0 and _bit_band (pet_flags, EM_GRUPO) ~= 0) then
-		self.pets [pet_serial] = {dono_nome, dono_serial, dono_flags, _detalhes._tempo, true, pet_nome, pet_serial}
+function container_pets:AddPet(petGUID, petName, petFlags, ownerGUID, ownerName, ownerFlags)
+	if (petFlags and bitBand(petFlags, OBJECT_TYPE_PET) ~= 0 and bitBand(petFlags, OBJECT_IN_GROUP) ~= 0) then
+		self.pets[petGUID] = {ownerName, ownerGUID, ownerFlags, Details._tempo, true, petName, petGUID}
 	else
-		self.pets [pet_serial] = {dono_nome, dono_serial, dono_flags, _detalhes._tempo, false, pet_nome, pet_serial}
+		self.pets[petGUID] = {ownerName, ownerGUID, ownerFlags, Details._tempo, false, petName, petGUID}
 	end
 end
 
-function _detalhes:WipePets()
-	return wipe(_detalhes.tabela_pets.pets)
+function Details:WipePets()
+	return Details:Destroy(Details.tabela_pets.pets)
 end
 
-function _detalhes:PetContainerCleanup()
+function Details222.Pets.PetContainerCleanup()
 	--erase old pet table by creating a new one
 	local newPetTable = {}
+
 	--minimum of 90 minutes to clean a pet from the pet table data
-	for PetSerial, PetTable in pairs(_detalhes.tabela_pets.pets) do 
-		if ( (PetTable[4] + 5400 > _detalhes._tempo + 1) or (PetTable[5] and PetTable[4] + 43200 > _detalhes._tempo) ) then
-			newPetTable [PetSerial] = PetTable
+	for petGUID, petTable in pairs(Details.tabela_pets.pets) do
+		if ((petTable[4] + 5400 > Details._tempo + 1) or (petTable[5] and petTable[4] + 43200 > Details._tempo)) then
+			newPetTable[petGUID] = petTable
 		end
 	end
-	_detalhes.tabela_pets.pets = newPetTable
-	_detalhes:UpdateContainerCombatentes()
-	
+
+	Details.tabela_pets.pets = newPetTable
+	Details:UpdatePetCache()
 end
 
-local have_schedule = false
-function _detalhes:UpdatePets()
-	have_schedule = false
+local bHasSchedule = false
+function Details:UpdatePets()
+	bHasSchedule = false
 	return container_pets:BuscarPets()
 end
-function _detalhes:SchedulePetUpdate(seconds)
-	if (have_schedule) then
+
+function Details:SchedulePetUpdate(seconds)
+	if (bHasSchedule) then
 		return
 	end
-	have_schedule = true
+	bHasSchedule = true
 
-	--_detalhes:ScheduleTimer("UpdatePets", seconds or 5)
 	Details.Schedules.NewTimer(seconds or 5, Details.UpdatePets, Details)
 end
 
-function _detalhes.refresh:r_container_pets (container)
+function Details.refresh:r_container_pets(container)
 	setmetatable(container, container_pets)
 end
 

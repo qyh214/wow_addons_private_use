@@ -195,7 +195,11 @@ function module.options:Load()
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.5,0.73828125,0.5,0.75},
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.7421875,0.98828125,0,0.25},
 		{"Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES",0.7421875,0.98828125,0.5,0.75},
+		"interface/icons/classicon_evoker",
 	}
+	if ExRT.isClassic then
+		tremove(icons_list, #icons_list)
+	end
 
 	local IsDotIn
 	local LockedImgHideAll
@@ -620,10 +624,11 @@ function module.options:Load()
 		end
 	end
 
+	local ICONS_SIZE = 40
 	self.icon_selector = {}
 	for i=1,#icons_list do
 		local t = icons_list[i]
-		self.icon_selector[i] = ELib:Icon(self,type(t)=='table' and t[1] or t,floor(COLOR_SIZE / 2),true):OnClick(function()
+		self.icon_selector[i] = ELib:Icon(self,type(t)=='table' and t[1] or t,floor(ICONS_SIZE / 2),true):OnClick(function()
 			curr_icon = i
 			self.curr_color_texture:SetTexture(icons_list[i])
 		end)
@@ -1051,10 +1056,40 @@ function module.options:Load()
 		{L.S_ZoneT30..": "..L.bossName[2683],{2166,0.51,0.45,6}},
 		{L.S_ZoneT30..": "..L.bossName[2684],{2169,0.51,0.28,2.5}},
 		{L.S_ZoneT30..": "..L.bossName[2685],{2170,0.49,0.71,4}},
+		{"Lord Marrowgar",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc1"}},
+
+		--211-220
+		{"Lady Deathwhisper",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc2"}},
+		{"Gunship Battle",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc3"}},
+		{"Deathbringer Saurfang",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc4"}},
+		{"Festergut",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc5"}},
+		{"Rotface",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc6"}},
+		{"Professor Putricide",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc7"}},
+		{"Blood Prince Council",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc8"}},
+		{"Blood-Queen Lana'thel",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc9"}},
+		{"Valithria Dreamwalker",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc10"}},
+		{"Sindragosa",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc11"}},
+
+		--221-230
+		{"The Lich King",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc12"}},
+		{"The Lich King [Frostmourne]",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc13"}},
+		{"The Lich King",{"Interface/AddOns/"..GlobalAddonName.."/mediaclassic/icc14"}},
+		{L.S_ZoneT31..": "..L.bossName[2820],{2232,0.51,0.32,2}},
+		{L.S_ZoneT31..": "..L.bossName[2731],{2244,0.36,0.31,5}},
+		{L.S_ZoneT31..": "..L.bossName[2737],{2244,0.55,0.58,5}},
+		{L.S_ZoneT31..": "..L.bossName[2708],{2240,0.62,0.31,5}},
+		{L.S_ZoneT31..": "..L.bossName[2728],{2240,0.43,0.61,5}},
+		{L.S_ZoneT31..": "..L.bossName[2824],{2233,0.50,0.33,4.5}},
+		{L.S_ZoneT31..": "..L.bossName[2786],{2237,0.49,0.52,1}},
+
+		--231-240
+		{L.S_ZoneT31..": "..L.bossName[2677],{2238,0.45,0.53,1}},
+		
 	}
 	local mapsSorted = {
 		1,
 		{L.NoteColor,10,94,95,96,97,98,99},
+		{L.S_ZoneT31,231,230,229,228,227,226,225,224},
 		{L.S_ZoneT30,209,208,207,206,205,204,203,202,201},
 		{L.S_ZoneT29VotI,185,184,183,182,181,180,179,178},
 		{L.S_ZoneT28SFO,151,150,149,148,147,146,145,144,143,142,141},
@@ -1074,6 +1109,7 @@ function module.options:Load()
 			1,
 			{L.NoteColor,10,94,95,96,97,98,99},
 			{"The Ruby Sanctum",168},
+			{"Icecrown Citadel [rooms]",210,211,212,213,214,215,216,217,218,219,220,223,221,222},
 			{"Icecrown Citadel",160,161,162,163,164,165,166,167},
 			{"Onyxia's Lair",169},
 			{"Trial of the Crusader",158,159},

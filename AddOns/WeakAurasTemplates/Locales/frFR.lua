@@ -7,6 +7,9 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["< 4 stacks"] = "< à 4 stacks"
+	--[[Translation missing --]]
+	L["5 stacks"] = "5 stacks"
 	L["Abilities"] = "Capacités"
 	L["Add Triggers"] = "Ajouter des déclencheurs"
 	L["Always Active"] = "Toujours actif"
@@ -86,8 +89,7 @@ local L = WeakAuras.L
 	L["Rogue cooldown"] = "Rogue cooldown"
 	L["Runes"] = "Runes"
 	L["Shapeshift Form"] = "Forme de Changeforme"
-	--[[Translation missing --]]
-	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
+	L["Show Always, Glow on Missing"] = "Toujours afficher, lorsque la brillance est manquante"
 	L["Show Charges and Check Usable"] = "Afficher les Charges et Vérifier si Utilisable"
 	L["Show Charges with Proc Tracking"] = "Afficher les Charges avec le Suivi des Procs"
 	L["Show Charges with Range Tracking"] = "Afficher les Charges avec Vérification de la Portée"

@@ -148,7 +148,7 @@ function Details:RefreshScrollBar(x) --x = amount of bars being refreshed
 	if (self.update) then
 		self.update = false
 		self.v_barras = true
-		return Details:EsconderBarrasNaoUsadas(self)
+		return Details:HideBarsNotInUse(self)
 	end
 end
 
@@ -537,7 +537,7 @@ local update_line = function(self, target_frame)
 			ball:SetSize(16, 16)
 			ball:SetAlpha(0.3)
 			ball:SetTexCoord(410/512, 426/512, 2/512, 18/512)
-			tinsert(guide_balls, ball)
+			table.insert(guide_balls, ball)
 		end
 
 		ball:ClearAllPoints()
@@ -689,20 +689,6 @@ local movement_onupdate = function(self, elapsed)
 								instancia_alvo.h_cima:Flash(1, 1, 2.0, false, 0, 0)
 								tem_livre = true
 
-							end
-						end
-					end
-
-					if (tem_livre) then
-						if (not Details.snap_alert.playing) then
-							instancia_alvo:SnapAlert()
-							Details.snap_alert.playing = true
-
-							if (not DetailsFramework.IsTimewalkWoW()) then
-								Details.MicroButtonAlert.Text:SetText(string.format(Loc["STRING_ATACH_DESC"], self.instance.meu_id, instancia_alvo.meu_id))
-								Details.MicroButtonAlert:SetPoint("bottom", instancia_alvo.baseframe.cabecalho.modo_selecao.widget, "top", 0, 18)
-								Details.MicroButtonAlert:SetHeight(200)
-								Details.MicroButtonAlert:Show()
 							end
 						end
 					end
@@ -965,10 +951,6 @@ local function move_janela(baseframe, iniciando, instancia, just_updating)
 			this_instance.isMoving = false
 		end
 
-		Details.snap_alert.playing = false
-		Details.snap_alert.animIn:Stop()
-		Details.snap_alert.animOut:Play()
-
 		if (not DetailsFramework.IsTimewalkWoW()) then
 			Details.MicroButtonAlert:Hide()
 		end
@@ -1183,7 +1165,7 @@ end
 local check_snap_side = function(instanceid, snap, id, container)
 	local instance = Details:GetInstance(instanceid)
 	if (instance and instance.snap [snap] and instance.snap [snap] == id) then
-		tinsert(container, instance)
+		table.insert(container, instance)
 		return true
 	end
 end
@@ -1278,7 +1260,7 @@ function Details:InstanciasVerticais(instance)
 		end
 		bottom_clamp = bottom_clamp + 20
 		bottom_clamp = bottom_clamp + this_instance.baseframe:GetHeight()
-		tinsert(on_top, this_instance)
+		table.insert(on_top, this_instance)
 	end
 
 	return on_top, bottom_clamp, top_clamp
@@ -1989,11 +1971,12 @@ local lineScript_Onmouseup = function(self, button)
 					end
 				end
 
-				if (Details.row_singleclick_overwrite [instanceObject.atributo] and type(Details.row_singleclick_overwrite [instanceObject.atributo][instanceObject.sub_atributo]) == "function") then
-					return Details.row_singleclick_overwrite [instanceObject.atributo][instanceObject.sub_atributo] (_, self.minha_tabela, instanceObject, bIsShiftDown, bIsControlDown)
+				--if there's a function to overwrite the default behavior
+				if (Details.row_singleclick_overwrite[instanceObject.atributo] and type(Details.row_singleclick_overwrite[instanceObject.atributo][instanceObject.sub_atributo]) == "function") then
+					return Details.row_singleclick_overwrite[instanceObject.atributo][instanceObject.sub_atributo](_, self.minha_tabela, instanceObject, bIsShiftDown, bIsControlDown)
 				end
 
-				return Details:ReportSingleLine (instanceObject, self)
+				return Details:ReportSingleLine(instanceObject, self)
 			end
 
 			if (not self.minha_tabela) then
@@ -2093,7 +2076,6 @@ local iconFrame_OnEnter = function(self)
 
 
 		elseif (actor.nome) then --ensure it's an actor table
-
 			local serial = actor.serial
 			local name = actor:name()
 			local class = actor:class()
@@ -2267,6 +2249,14 @@ local iconFrame_OnEnter = function(self)
 				end
 			end
 
+			if (actor.spec == 1473 and actor.tipo == DETAILS_ATTRIBUTE_DAMAGE) then
+				local damageDone = math.floor(actor.total + actor.total_extra)
+				GameCooltip:AddLine("Evoker Predicted Damage:", Details:Format(damageDone) .. " (" .. Details:Format(damageDone / Details:GetCurrentCombat():GetCombatTime()) .. ")", 1, "white")
+				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
+				Details:AddTooltipBackgroundStatusbar()
+				height = height + 19
+			end
+
 			GameCooltip:SetOption("FixedHeight", height)
 			GameCooltip:ShowCooltip()
 
@@ -2274,7 +2264,6 @@ local iconFrame_OnEnter = function(self)
 			self.showing = "actor"
 		end
 	end
-
 end
 
 local iconFrame_OnLeave = function(self)
@@ -2297,12 +2286,12 @@ function icon_frame_events:EnterCombat()
 	for anim, _ in pairs(Details.icon_animations.load.in_use) do
 		anim.anim:Stop()
 		anim:Hide()
-		tinsert(Details.icon_animations.load.available, anim)
+		table.insert(Details.icon_animations.load.available, anim)
 
 		anim.icon_frame.icon_animation = nil
 		anim.icon_frame = nil
 	end
-	wipe (Details.icon_animations.load.in_use)
+	Details:Destroy(Details.icon_animations.load.in_use)
 end
 
 icon_frame_events:RegisterEvent("COMBAT_PLAYER_ENTER", "EnterCombat")
@@ -2329,7 +2318,7 @@ function icon_frame_events:CancelAnim(anim)
 		end
 
 		Details.icon_animations.load.in_use[frame] = nil
-		tinsert(Details.icon_animations.load.available, frame)
+		table.insert(Details.icon_animations.load.available, frame)
 		frame.anim:Stop()
 		frame:Hide()
 
@@ -2346,7 +2335,7 @@ local icon_frame_inspect_callback = function(guid, unitid, iconFrame)
 
 	local inUse = Details.icon_animations.load.in_use[iconFrame.icon_animation]
 	if (inUse) then
-		tinsert(Details.icon_animations.load.available, iconFrame.icon_animation)
+		table.insert(Details.icon_animations.load.available, iconFrame.icon_animation)
 		Details.icon_animations.load.in_use[iconFrame.icon_animation] = nil
 	end
 
@@ -2374,7 +2363,7 @@ local icon_frame_create_animation = function()
 	t:SetAlpha(0.7)
 	t:SetAllPoints()
 
-	tinsert(Details.icon_animations.load.available, f)
+	table.insert(Details.icon_animations.load.available, f)
 end
 
 local icon_frame_on_click_down = function(self)
@@ -3060,7 +3049,7 @@ function Details:InstanceAlert (msg, icon, timeInSeconds, clickfunc, doflash, fo
 	end
 
 	self.alert.button.func = nil
-	wipe (self.alert.button.func_param)
+	Details:Destroy(self.alert.button.func_param)
 
 	if (clickfunc) then
 		self.alert.button.func = clickfunc[1]
@@ -3298,18 +3287,6 @@ local function show_anti_overlap (instance, host, side)
 	anti_menu_overlap:Show()
 end
 
-Details.snap_alert = CreateFrame("frame", "DetailsSnapAlertFrame", UIParent, "ActionBarButtonSpellActivationAlert")
-Details.snap_alert:Hide()
-Details.snap_alert:SetFrameStrata("FULLSCREEN")
-
-function Details:SnapAlert()
-	print("alert started")
-	Details.snap_alert:ClearAllPoints()
-	Details.snap_alert:SetPoint("topleft", self.baseframe.cabecalho.modo_selecao.widget, "topleft", -8, 6)
-	Details.snap_alert:SetPoint("bottomright", self.baseframe.cabecalho.modo_selecao.widget, "bottomright", 8, -6)
-	Details.snap_alert.animOut:Stop()
-	Details.snap_alert.animIn:Play()
-end
 
 do
 
@@ -3608,12 +3585,7 @@ function gump:CriaJanelaPrincipal (ID, instancia, criando)
 		baseframe:EnableMouseWheel(false)
 		baseframe:EnableMouse(true)
 
-		if (not DetailsFramework.IsDragonflight() and not DetailsFramework.IsWotLKWowWithRetailAPI()) then
-			baseframe:SetMinResize (150, 7)
-			baseframe:SetMaxResize (Details.max_window_size.width, Details.max_window_size.height)
-		else
-			--baseframe:SetResizeBounds(150, 7, _detalhes.max_window_size.width, _detalhes.max_window_size.height)
-		end
+	    baseframe:SetResizeBounds(150, 7, _detalhes.max_window_size.width, _detalhes.max_window_size.height)
 
 		baseframe:SetBackdrop(defaultBackdropSt)
 		baseframe:SetBackdropColor(instancia.bg_r, instancia.bg_g, instancia.bg_b, instancia.bg_alpha)
@@ -4031,6 +4003,26 @@ local windowLineMixin = {
 
 Details.barras_criadas = 0
 
+local onEnterExtraStatusbar = function(self)
+	self:SetAlpha(1)
+	if (self.OnEnterCallback) then
+		local okay, errorText = pcall(self.OnEnterCallback, self)
+		if (not okay) then
+			Details:Msg("Error on extra statusbar OnEnterCallback: ", errorText)
+		end
+	end
+end
+
+local onLeaveExtraStatusbar = function(self)
+	self:SetAlpha(self.defaultAlpha)
+	if (self.OnLeaveCallback) then
+		local okay, errorText = pcall(self.OnLeaveCallback, self)
+		if (not okay) then
+			Details:Msg("Error on extra statusbar OnEnterCallback: ", errorText)
+		end
+	end
+end
+
 --alias
 function gump:NewRow(instancia, index)
 	return gump:CreateNewLine(instancia, index)
@@ -4083,6 +4075,23 @@ function gump:CreateNewLine(instance, index)
 	newLine.textura:SetHorizTile(false)
 	newLine.textura:SetVertTile(false)
 	newLine.statusbar:SetStatusBarTexture(newLine.textura)
+
+	newLine.extraStatusbar = CreateFrame("StatusBar", "DetailsBarra_Statusbar2_" .. instance.meu_id .. "_" .. index, newLine)
+	newLine.extraStatusbar:SetMinMaxValues(0, 100)
+	newLine.extraStatusbar.texture = newLine.extraStatusbar:CreateTexture(nil, "overlay")
+	newLine.extraStatusbar:SetStatusBarTexture(newLine.extraStatusbar.texture)
+
+	--by default painting the extraStatusbar with the evoker color
+	local evokerColor = Details.class_colors["EVOKER"]
+	--newLine.extraStatusbar.texture:SetTexture([[Interface\AddOns\Details\images\bar_textures\bar_of_bars.png]]) --setColorTexture is very expensive, so set the color once and use vertex color to change it
+	newLine.extraStatusbar.texture:SetColorTexture(1, 1, 1, 1) --setColorTexture is very expensive, so set the color once and use vertex color to change it
+
+	newLine.extraStatusbar.texture:SetVertexColor(unpack(evokerColor))
+	newLine.extraStatusbar:SetAlpha(0.7)
+	newLine.extraStatusbar.defaultAlpha = 0.7
+	newLine.extraStatusbar:Hide()
+	newLine.extraStatusbar:SetScript("OnEnter", onEnterExtraStatusbar)
+	newLine.extraStatusbar:SetScript("OnLeave", onLeaveExtraStatusbar)
 
 	--frame for hold the backdrop border
 	newLine.border = CreateFrame("Frame", "DetailsBarra_Border_" .. instance.meu_id .. "_" .. index, newLine.statusbar, "BackdropTemplate")
@@ -5609,7 +5618,7 @@ function Details:SetIconAlpha(alpha, hide, noAnimations)
 		end
 	end
 
-	table.wipe(SetIconAlphaCacheButtonsTable)
+	Details:Destroy(SetIconAlphaCacheButtonsTable)
 	SetIconAlphaCacheButtonsTable[1] = self.baseframe.cabecalho.modo_selecao
 	SetIconAlphaCacheButtonsTable[2] = self.baseframe.cabecalho.segmento
 	SetIconAlphaCacheButtonsTable[3] = self.baseframe.cabecalho.atributo
@@ -5654,17 +5663,17 @@ function Details:SetIconAlpha(alpha, hide, noAnimations)
 	end
 end
 
-function Details:ToolbarMenuSetButtonsOptions(spacement, shadow)
+function Details:ToolbarMenuSetButtonsOptions(spacement, iconShadows)
 	if (type(spacement) ~= "number") then
 		spacement = self.menu_icons.space
 	end
 
-	if (type(shadow) ~= "boolean") then
-		shadow = self.menu_icons.shadow
+	if (type(iconShadows) ~= "boolean") then
+		iconShadows = self.menu_icons.shadow
 	end
 
 	self.menu_icons.space = spacement
-	self.menu_icons.shadow = shadow
+	self.menu_icons.shadow = iconShadows
 
 	return self:ToolbarMenuSetButtons()
 end
@@ -5703,7 +5712,7 @@ function Details:ToolbarMenuSetButtons(_mode, _segment, _attributes, _report, _r
 	self.menu_icons[5] = _reset
 	self.menu_icons[6] = _close
 
-	table.wipe(tbuttons)
+	Details:Destroy(tbuttons)
 
 	tbuttons[1] = self.baseframe.cabecalho.modo_selecao
 	tbuttons[2] = self.baseframe.cabecalho.segmento
@@ -5925,13 +5934,13 @@ function Details:ToolbarMenuSetButtons(_mode, _segment, _attributes, _report, _r
 
 end
 
-function Details:ToolbarMenuButtons (_mode, _segment, _attributes, _report)
-	return self:ToolbarMenuSetButtons (_mode, _segment, _attributes, _report)
+function Details:ToolbarMenuButtons(_mode, _segment, _attributes, _report)
+	return self:ToolbarMenuSetButtons(_mode, _segment, _attributes, _report)
 end
 
 local parameters_table = {}
 
-local on_leave_menu = function(self, elapsed)
+local onLeaveMenuFunc = function(self, elapsed)
 	parameters_table[2] = parameters_table[2] + elapsed
 	if (parameters_table[2] > 0.3) then
 		if (not _G.GameCooltip.mouseOver and not _G.GameCooltip.buttonOver and (not _G.GameCooltip:GetOwner() or _G.GameCooltip:GetOwner() == self)) then
@@ -5942,7 +5951,6 @@ local on_leave_menu = function(self, elapsed)
 end
 
 local OnClickNovoMenu = function(_, _, id, instance)
-
 	local is_new
 	if (not Details.tabela_instancias [id]) then
 		--esta criando uma nova
@@ -6205,7 +6213,8 @@ function Details:GetSegmentInfo(index)
 	elseif (index == 0 or index == "current") then
 		combat = Details.tabela_vigente
 	else
-		combat = Details.tabela_historico.tabelas[index]
+		local segmentsTable = Details:GetCombatSegments()
+		combat = segmentsTable[index]
 	end
 
 	if (combat) then
@@ -6318,8 +6327,10 @@ local buildSegmentTooltip = function(self, deltaTime)
 		local amountOfSegments = 0
 		local segmentsWithACombat = 0
 
+		local segmentsTable = Details:GetCombatSegments()
+
 		for i = 1, Details.segments_amount do
-			if (Details.tabela_historico.tabelas[i]) then
+			if (segmentsTable[i]) then
 				segmentsWithACombat = segmentsWithACombat + 1
 			else
 				break
@@ -6338,8 +6349,8 @@ local buildSegmentTooltip = function(self, deltaTime)
 		local isMythicDungeon = false
 		for i = Details.segments_amount, 1, -1 do
 			if (i <= fill) then
-				local thisCombat = Details.tabela_historico.tabelas[i]
-				if (thisCombat) then
+				local thisCombat = segmentsTable[i]
+				if (thisCombat and not thisCombat.__destroyed) then
 					local enemy = thisCombat.is_boss and thisCombat.is_boss.name
 					local segmentInfoAdded = false
 					segmentsUsed = segmentsUsed + 1
@@ -6618,11 +6629,11 @@ local buildSegmentTooltip = function(self, deltaTime)
 						end
 					end
 
-					gameCooltip:AddMenu(1, instance.TrocaTabela, i)
+					gameCooltip:AddMenu(1, instance.SetSegmentFromCooltip, i)
 
 					if (not segmentInfoAdded) then
 						gameCooltip:AddLine(Loc["STRING_SEGMENT_ENEMY"] .. ":", enemy, 2, "white", "white")
-						local decorrido = thisCombat:GetCombatTime()
+						local decorrido = thisCombat:GetCombatTime() --attempt to call method 'GetCombatTime' (a nil value)
 						local minutos, segundos = floor(decorrido/60), floor(decorrido%60)
 						gameCooltip:AddLine(Loc["STRING_SEGMENTS_LIST_COMBATTIME"] .. ":", minutos.."m "..segundos.."s", 2, "white", "white")
 
@@ -6632,11 +6643,16 @@ local buildSegmentTooltip = function(self, deltaTime)
 
 					amountOfSegments = amountOfSegments + 1
 				else
-					gameCooltip:AddLine(Loc["STRING_SEGMENT_LOWER"] .. " #" .. i, _, 1, "gray")
-					gameCooltip:AddMenu(1, instance.TrocaTabela, i)
-					gameCooltip:AddIcon([[Interface\QUESTFRAME\UI-Quest-BulletPoint]], "main", "left", 16, 16, nil, nil, nil, nil, empty_segment_color)
-					gameCooltip:AddLine(Loc["STRING_SEGMENT_EMPTY"], _, 2)
-					gameCooltip:AddIcon([[Interface\CHARACTERFRAME\Disconnect-Icon]], 2, 1, 12, 12, 0.3125, 0.65625, 0.265625, 0.671875)
+					if (thisCombat and thisCombat.__destroyed) then
+						Details:Msg("a deleted combat object was found on the history table, please report this bug on discord:")
+						Details:Msg("combat destroyed by:", thisCombat.__destroyedBy)
+					else
+						gameCooltip:AddLine(Loc["STRING_SEGMENT_LOWER"] .. " #" .. i, _, 1, "gray")
+						gameCooltip:AddMenu(1, instance.SetSegmentFromCooltip, i)
+						gameCooltip:AddIcon([[Interface\QUESTFRAME\UI-Quest-BulletPoint]], "main", "left", 16, 16, nil, nil, nil, nil, empty_segment_color)
+						gameCooltip:AddLine(Loc["STRING_SEGMENT_EMPTY"], _, 2)
+						gameCooltip:AddIcon([[Interface\CHARACTERFRAME\Disconnect-Icon]], 2, 1, 12, 12, 0.3125, 0.65625, 0.265625, 0.671875)
+					end
 				end
 
 				if (menuIndex) then
@@ -6660,7 +6676,7 @@ local buildSegmentTooltip = function(self, deltaTime)
 
 			--add the new line
 			gameCooltip:AddLine(segmentos.current_standard, _, 1, "white")
-			gameCooltip:AddMenu(1, instance.TrocaTabela, 0)
+			gameCooltip:AddMenu(1, instance.SetSegmentFromCooltip, 0)
 			gameCooltip:AddIcon([[Interface\QUESTFRAME\UI-Quest-BulletPoint]], "main", "left", 16, 16, nil, nil, nil, nil, "orange")
 
 			--current segment is a dungeon mythic+?
@@ -6877,7 +6893,7 @@ local buildSegmentTooltip = function(self, deltaTime)
 		----------- overall
 		--CoolTip:AddLine(segmentos.overall_standard, _, 1, "white") Loc["STRING_REPORT_LAST"] .. " " .. fight_amount .. " " .. Loc["STRING_REPORT_FIGHTS"]
 		gameCooltip:AddLine(Loc["STRING_SEGMENT_OVERALL"], _, 1, "white")
-		gameCooltip:AddMenu(1, instance.TrocaTabela, -1)
+		gameCooltip:AddMenu(1, instance.SetSegmentFromCooltip, -1)
 		gameCooltip:AddIcon([[Interface\QUESTFRAME\UI-Quest-BulletPoint]], "main", "left", 16, 16, nil, nil, nil, nil, "orange")
 
 			local enemy_name = Details.tabela_overall.overall_enemy_name
@@ -8369,7 +8385,7 @@ function Details:GetInstanceGroup (instance_id)
 				if (this_instance and this_instance:IsEnabled()) then
 					for side, id in pairs(this_instance.snap) do
 						if (id == last_id) then
-							tinsert(current_group, this_instance)
+							table.insert(current_group, this_instance)
 							got = true
 							last_id = i
 						end
@@ -8387,7 +8403,7 @@ function Details:GetInstanceGroup (instance_id)
 				if (this_instance and this_instance:IsEnabled()) then
 					for side, id in pairs(this_instance.snap) do
 						if (id == last_id) then
-							tinsert(current_group, this_instance)
+							table.insert(current_group, this_instance)
 							got = true
 							last_id = i
 						end
@@ -8976,13 +8992,13 @@ end
 
 		gameCooltip:AddLine(Loc["STRING_ERASE_DATA_OVERALL"], nil, 1, "white", nil, Details.font_sizes.menus, Details.font_faces.menus)
 		gameCooltip:AddIcon([[Interface\Buttons\UI-StopButton]], 1, 1, 14, 14, 0, 1, 0, 1, "orange")
-		gameCooltip:AddMenu(1, Details.tabela_historico.resetar_overall)
+		gameCooltip:AddMenu(1, Details.tabela_historico.ResetOverallData)
 
 		gameCooltip:AddLine("$div", nil, 1, nil, -5, -11)
 
 		gameCooltip:AddLine(Loc["STRING_ERASE_DATA"], nil, 1, "white", nil, Details.font_sizes.menus, Details.font_faces.menus)
 		gameCooltip:AddIcon([[Interface\Buttons\UI-StopButton]], 1, 1, 14, 14, 0, 1, 0, 1, "red")
-		gameCooltip:AddMenu(1, Details.tabela_historico.resetar)
+		gameCooltip:AddMenu(1, Details.tabela_historico.ResetAllCombatData)
 
 		show_anti_overlap(self.instance, self, "top")
 
@@ -9004,7 +9020,7 @@ end
 
 		if (GameCooltip.active) then
 			parameters_table [2] = 0
-			self:SetScript("OnUpdate", on_leave_menu)
+			self:SetScript("OnUpdate", onLeaveMenuFunc)
 		else
 			self:SetScript("OnUpdate", nil)
 		end
@@ -9106,7 +9122,7 @@ end
 
 		if (GameCooltip.active) then
 			parameters_table [2] = 0
-			self:SetScript("OnUpdate", on_leave_menu)
+			self:SetScript("OnUpdate", onLeaveMenuFunc)
 		else
 			self:SetScript("OnUpdate", nil)
 		end
@@ -9193,7 +9209,7 @@ local reportButton_OnLeave = function(self, motion, forced, from_click)
 
 	if (GameCooltip.active) then
 		parameters_table[2] = from_click and 1 or 0
-		self:SetScript("OnUpdate", on_leave_menu)
+		self:SetScript("OnUpdate", onLeaveMenuFunc)
 	else
 		self:SetScript("OnUpdate", nil)
 	end
@@ -9264,7 +9280,7 @@ local attributeButton_OnLeave = function(self, motion, forced, from_click)
 
 	if (GameCooltip.active) then
 		parameters_table[2] = 0
-		self:SetScript("OnUpdate", on_leave_menu)
+		self:SetScript("OnUpdate", onLeaveMenuFunc)
 	else
 		self:SetScript("OnUpdate", nil)
 	end
@@ -9313,7 +9329,7 @@ local segmentButton_OnLeave = function(self, motion, forced, fromClick)
 
 	if (GameCooltip.active) then
 		parameters_table[2] = 0
-		self:SetScript("OnUpdate", on_leave_menu)
+		self:SetScript("OnUpdate", onLeaveMenuFunc)
 	else
 		self:SetScript("OnUpdate", nil)
 	end
@@ -9375,7 +9391,7 @@ local modeSelector_OnLeave = function(self)
 
 	if (GameCooltip.active) then
 		parameters_table[2] = 0
-		self:SetScript("OnUpdate", on_leave_menu)
+		self:SetScript("OnUpdate", onLeaveMenuFunc)
 	else
 		self:SetScript("OnUpdate", nil)
 	end
@@ -9398,7 +9414,7 @@ local changeSegmentOnClick = function(instancia, buttontype)
 		GameCooltip:Select(1, segmentIndex)
 
 		--change the segment
-		instancia:TrocaTabela(previousSegment) --todo: use new api
+		instancia:SetSegment(previousSegment) --todo: use new api
 		segmentButton_OnEnter(instancia.baseframe.cabecalho.segmento.widget, _, true, true)
 
 	elseif (buttontype == "RightButton") then
@@ -9414,7 +9430,7 @@ local changeSegmentOnClick = function(instancia, buttontype)
 		local segmentIndex = math.abs(targetSegment - maxSegments)
 		GameCooltip:Select(1, segmentIndex)
 
-		instancia:TrocaTabela(nextSegment)
+		instancia:SetSegment(nextSegment)
 		segmentButton_OnEnter(instancia.baseframe.cabecalho.segmento.widget, _, true, true)
 
 	elseif (buttontype == "MiddleButton") then
@@ -9426,7 +9442,7 @@ local changeSegmentOnClick = function(instancia, buttontype)
 		local select_ = math.abs(goal - total_shown)
 		GameCooltip:Select(1, select_)
 
-		instancia:TrocaTabela(segmento_goal)
+		instancia:SetSegment(segmento_goal)
 		segmentButton_OnEnter (instancia.baseframe.cabecalho.segmento.widget, _, true, true)
 
 	end
@@ -9715,7 +9731,7 @@ function gump:CriaCabecalho (baseframe, instancia)
 			end
 		else
 			if (not Details.disable_reset_button) then
-				Details.tabela_historico:resetar()
+				Details.tabela_historico:ResetAllCombatData()
 			else
 				Details:Msg(Loc["STRING_OPTIONS_DISABLED_RESET"])
 			end

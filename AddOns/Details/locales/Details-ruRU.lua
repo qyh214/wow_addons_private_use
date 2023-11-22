@@ -1340,12 +1340,7 @@ L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[Отрегулируйте масшт
 
 |cFFFFFF00Текущий|r: %s]=]
 L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Цвет оболочки"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Изменяет цвет скина, применяемого к этому окнe. |cFFFFFF00Важно|r: выбранный здесь альфа-канал перезаписывается значениями |cFFFFFF00Автоматическая прозрачность|r при включении. |cFFFFFF00Важно|r: выбор цвета скина перезаписывает любые настройки цвета, примененные к строке состояния.."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Общие настройки окна"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Эти параметры управляют внешним видом выбранного окна."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Интервал обновления"

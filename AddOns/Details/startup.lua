@@ -41,7 +41,7 @@ function Details:StartMeUp()
 		--healing, hps, overheal, healing taken
 			Details.row_singleclick_overwrite[2] = {true, true, true, true, false, Details.atributo_heal.ReportSingleDamagePreventedLine}
 		--mana, rage, energy, runepower
-			Details.row_singleclick_overwrite[3] = {true, true, true, true}
+			Details.row_singleclick_overwrite[3] = {true, true, true, true} --missing other resources and alternate power
 		--cc breaks, ress, interrupts, dispells, deaths
 			Details.row_singleclick_overwrite[4] = {true, true, true, true, Details.atributo_misc.ReportSingleDeadLine, Details.atributo_misc.ReportSingleCooldownLine, Details.atributo_misc.ReportSingleBuffUptimeLine, Details.atributo_misc.ReportSingleDebuffUptimeLine}
 
@@ -87,7 +87,7 @@ function Details:StartMeUp()
 	if (Details.ocd_tracker.show_options) then
 		Details:InitializeCDTrackerWindow()
 	end
-
+	--/run Details.ocd_tracker.show_options = true; ReloadUI()
 	--custom window
 	Details.custom = Details.custom or {}
 
@@ -99,8 +99,8 @@ function Details:StartMeUp()
 	Details.MicroButtonAlert:Hide()
 
 	--actor details window
-	Details.playerDetailWindow = Details:CreateBreakdownWindow()
-	Details.FadeHandler.Fader(Details.playerDetailWindow, 1)
+	Details.BreakdownWindowFrame = Details:CreateBreakdownWindow()
+	Details.FadeHandler.Fader(Details.BreakdownWindowFrame, 1)
 
 	--copy and paste window
 	Details:CreateCopyPasteWindow()
@@ -113,7 +113,7 @@ function Details:StartMeUp()
 	Details:GetLowerInstanceNumber()
 
 	--start time machine
-	Details.timeMachine:TurnOn()
+	Details222.TimeMachine.Start()
 
 	--update abbreviation shortcut
 	Details.atributo_damage:UpdateSelectedToKFunction()
@@ -316,7 +316,7 @@ function Details:StartMeUp()
 		Details.AnnounceStartup = nil
 	end
 
-	Details.Schedules.NewTimer(5, Details.AnnounceStartup, Details)
+	Details.Schedules.NewTimer(4, Details.AnnounceStartup, Details)
 
 	if (Details.failed_to_load) then
 		Details.failed_to_load:Cancel()
@@ -493,6 +493,9 @@ function Details:StartMeUp()
 				}
 				trinketData[spellId] = thisTrinketData
 			end
+
+		elseif (trinketTable.onUse and trinketTable.castId) then
+			Details222.OnUseItem.Trinkets[trinketTable.castId] = spellId
 		end
 	end
 
@@ -510,8 +513,8 @@ function Details:StartMeUp()
 	--dailly reset of the cache for talents and specs
 	local today = date("%d")
 	if (Details.last_day ~= today) then
-		wipe(Details.cached_specs)
-		wipe(Details.cached_talents)
+		Details:Destroy(Details.cached_specs)
+		Details:Destroy(Details.cached_talents)
 	end
 
 	--get the player spec
@@ -520,7 +523,7 @@ function Details:StartMeUp()
 	--embed windows on the chat window
 	Details.chat_embed:CheckChatEmbed(true)
 
-	if (Details.player_details_window.skin ~= "ElvUI") then
+	if (Details.player_details_window.skin ~= "ElvUI") then --obsolete
 		local setDefaultSkinOnPlayerBreakdownWindow = function()
 			Details:ApplyPDWSkin("ElvUI")
 		end
@@ -568,12 +571,12 @@ function Details:StartMeUp()
 
 	if (GetExpansionLevel() == 9) then
 		if (not Details.data_wipes_exp["10"]) then
-			wipe(Details.encounter_spell_pool or {})
-			wipe(Details.boss_mods_timers or {})
-			wipe(Details.spell_school_cache or {})
-			wipe(Details.spell_pool or {})
-			wipe(Details.npcid_pool or {})
-			wipe(Details.current_exp_raid_encounters or {})
+			Details:Destroy(Details.encounter_spell_pool or {})
+			Details:Destroy(Details.boss_mods_timers or {})
+			Details:Destroy(Details.spell_school_cache or {})
+			Details:Destroy(Details.spell_pool or {})
+			Details:Destroy(Details.npcid_pool or {})
+			Details:Destroy(Details.current_exp_raid_encounters or {})
 			Details.data_wipes_exp["10"] = true
 		end
 	end
@@ -581,10 +584,14 @@ function Details:StartMeUp()
 	Details.boss_mods_timers.encounter_timers_dbm = Details.boss_mods_timers.encounter_timers_dbm or {}
 	Details.boss_mods_timers.encounter_timers_bw = Details.boss_mods_timers.encounter_timers_bw or {}
 
-	--clear overall data on new session
-	if (Details.overall_clear_logout) then
-		Details.tabela_overall = Details.combate:NovaTabela()
+	if (Details.time_type == 3 or not Details.time_type) then
+		Details.time_type = 2
 	end
+
+	--clear overall data on new session
+	--if (Details.overall_clear_logout) then --this is suppose to be in the load data file
+	--	Details.tabela_overall = Details.combate:NovaTabela()
+	--end
 
 	if (not DetailsFramework.IsTimewalkWoW()) then
 		--wipe overall on torghast - REMOVE ON 10.0
@@ -593,7 +600,7 @@ function Details:StartMeUp()
 		torghastTracker:SetScript("OnEvent", function(self, event, level, towerType)
 			if (level == 1) then
 				if (Details.overall_clear_newtorghast) then
-					Details.historico:resetar_overall()
+					Details.historico:ResetOverallData()
 					Details:Msg("overall data are now reset.") --localize-me
 				end
 			end
@@ -609,6 +616,7 @@ function Details:StartMeUp()
 
 	--to ignore this, use /run _G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Original or add to any script that run on login
 	--also the slash command "/details stopperfcheck" stop it as well
+	Details.check_stuttering = false
 	if (Details.check_stuttering) then
 		_G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Custom
 	end
@@ -618,6 +626,8 @@ function Details:StartMeUp()
 	pcall(Details222.EJCache.MakeCache)
 
 	pcall(Details222.ClassCache.MakeCache)
+
+	Details:BuildSpecsNameCache()
 
 	Details222.Cache.DoMaintenance()
 

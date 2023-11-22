@@ -3,6 +3,8 @@ if not WeakAuras.IsLibsOK() then return end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["< 4 stacks"] = "< 4 stacks"
+	L["5 stacks"] = "5 stacks"
 	L["Abilities"] = "Abilities"
 	L["Add Triggers"] = "Add Triggers"
 	L["Always Active"] = "Always Active"

@@ -140,7 +140,6 @@ function WorldQuestTracker:OnInit()
 		DF.Language.SetCurrentLanguage(addonId, WQTrackerLanguage.language)
 	end
 
-
 	WorldQuestTracker.InitAt = GetTime()
 	WorldQuestTracker.LastMapID = WorldQuestTracker.GetCurrentMapAreaID()
 
@@ -1040,6 +1039,9 @@ function SlashCmdList.WQTRACKER (msg, editbox)
 			ReloadUI()
 		end)
 		b:SetPoint("center", UIParent, "center", 0, 0)
+
+	elseif (msg == "options") then
+		WorldQuestTracker.OpenOptionsPanel()
 
 	elseif (msg == "test") then
 		local playerLevel = UnitLevel("player")

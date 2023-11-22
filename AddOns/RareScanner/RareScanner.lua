@@ -378,6 +378,7 @@ function scanner_button:SimulateRareFound(npcID, objectGUID, name, x, y, atlasNa
 	vignetteInfo.objectGUID = objectGUID or string.format("a-a-a-a-a-%s-a", npcID)
 	vignetteInfo.x = x
 	vignetteInfo.y = y
+	vignetteInfo.simulated = true
 	self:DetectedNewVignette(self, vignetteInfo)
 end
 
@@ -675,6 +676,7 @@ local function RefreshDatabaseData(previousDbVersion)
 	end
 
 	-- Set already killed NPCs checking questID
+	-- Set alive if reset flag
 	local setKilledNpcsByQuestIdRoutine = RSRoutines.LoopRoutineNew()
 	setKilledNpcsByQuestIdRoutine:Init(RSNpcDB.GetAllInternalNpcInfo, 200, 
 		function(context, npcID, npcInfo)
@@ -688,6 +690,8 @@ local function RefreshDatabaseData(previousDbVersion)
 						break
 					end
 				end
+			elseif (npcInfo.reset and RSNpcDB.IsNpcKilled(npcID)) then
+				RSNpcDB.DeleteNpcKilled(npcID)
 			end
 		end, 
 		function(context)			
@@ -719,6 +723,7 @@ local function RefreshDatabaseData(previousDbVersion)
 	table.insert(routines, setCompletedEventsByQuestIdRoutine)
 
 	-- Set already completed container checking questID
+	-- Set open if reset flag
 	local setContainersOpenedByQuestIdRoutine = RSRoutines.LoopRoutineNew()
 	setContainersOpenedByQuestIdRoutine:Init(RSContainerDB.GetAllInternalContainerInfo, 200,
 		function(context, containerID, containerInfo)
@@ -732,6 +737,8 @@ local function RefreshDatabaseData(previousDbVersion)
 						break
 					end
 				end
+			elseif (containerInfo.reset and RSContainerDB.IsContainerOpened(containerID)) then
+				RSContainerDB.DeleteContainerOpened(containerID)
 			end
 		end, 
 		function(context)			

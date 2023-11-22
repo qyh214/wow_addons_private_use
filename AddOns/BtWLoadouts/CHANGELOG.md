@@ -1,3 +1,34 @@
+# v1.15.5
+
+- Fixed an issue where macros were not being placed in action slots that already had macros
+
+# v1.15.4
+
+- Fixed an issue where loadouts wouldnt show as active if they contained action bar sets with macros
+
+# v1.15.3
+
+- Fixed error creating and updating action bars
+- Updated verison for 10.2
+
+# v1.15.2
+
+- Updated for 10.2
+- Fixed error selecting mythic plus affix in conditions
+
+# v1.15.2
+
+- Updated for 10.1.7
+
+# v1.15.1
+
+- Fixed an issue importing loadouts using Blizzard loadout string
+
+# v1.15.0
+
+- Updated talent tree caching to be more accurate
+- Updated for 10.1.5
+
 # v1.14.2
 
 - Updated interface number for 10.1.0

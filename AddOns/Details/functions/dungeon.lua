@@ -6,6 +6,8 @@ local verbosemode = false --auto open the chart panel
 local _
 local addonName, Details222 = ...
 
+local detailsFramework = DetailsFramework
+
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale( "Details" )
 
 --constants
@@ -30,17 +32,9 @@ function mythicDungeonCharts:Debug(...)
 	end
 end
 
-local addPlayerDamage = function(unitName, unitRealm)
-	--get the combatlog name
-	local CLName
-	if (unitRealm and unitRealm ~= "") then
-		CLName = unitName .. "-" .. unitRealm
-	else
-		CLName = unitName
-	end
-
+local addPlayerDamage = function(unitCleuName)
 	--get the player data
-	local playerData = mythicDungeonCharts.ChartTable.Players[CLName]
+	local playerData = mythicDungeonCharts.ChartTable.Players[unitCleuName]
 
 	--if this is the first tick for the player, ignore the damage done on this tick
 	--this is done to prevent a tick tick with all the damage the player did on the previous segment
@@ -49,9 +43,9 @@ local addPlayerDamage = function(unitName, unitRealm)
 	--check if the player data doesn't exists
 	if (not playerData) then
 		playerData = {
-			Name = unitName,
+			Name = detailsFramework:RemoveRealmName(unitCleuName),
 			ChartData = {max_value = 0},
-			Class = select(2, UnitClass(CLName)),
+			Class = select(2, UnitClass(Details:Ambiguate(unitCleuName))),
 
 			--spec zero for now, need to retrive later during combat
 			Spec = 0,
@@ -63,7 +57,7 @@ local addPlayerDamage = function(unitName, unitRealm)
 			LastCombatID = -1,
 		}
 
-		mythicDungeonCharts.ChartTable.Players[CLName] = playerData
+		mythicDungeonCharts.ChartTable.Players[unitCleuName] = playerData
 		bIsFirstTick = true
 	end
 
@@ -86,10 +80,10 @@ local addPlayerDamage = function(unitName, unitRealm)
 				playerData.LastDamage = 0
 				playerData.LastCombatID = segmentId
 
-				--mythicDungeonCharts:Debug("Combat changed for player", CLName)
+				--mythicDungeonCharts:Debug("Combat changed for player", unitCleuName)
 			end
 
-			local actorTable = currentCombat:GetActor(DETAILS_ATTRIBUTE_DAMAGE, CLName)
+			local actorTable = currentCombat:GetActor(DETAILS_ATTRIBUTE_DAMAGE, unitCleuName)
 			if (actorTable) then
 				--update the player spec
 				playerData.Spec = actorTable.spec
@@ -107,8 +101,8 @@ local addPlayerDamage = function(unitName, unitRealm)
 					local eDps = damageDone / currentCombat:GetCombatTime()
 
 					--add the damage to the chart table
-					tinsert(playerData.ChartData, eDps)
-					--mythicDungeonCharts:Debug("Added dps for " , CLName, ":", eDps)
+					table.insert(playerData.ChartData, eDps)
+					--mythicDungeonCharts:Debug("Added dps for " , unitCleuName, ":", eDps)
 
 					if (eDps > playerData.ChartData.max_value) then
 						playerData.ChartData.max_value = eDps
@@ -119,8 +113,8 @@ local addPlayerDamage = function(unitName, unitRealm)
 					playerData.LastDamage = damageDone
 
 					--add the damage to the chart table
-					tinsert(playerData.ChartData, damageDiff)
-					--mythicDungeonCharts:Debug("Added damage for " , CLName, ":", damageDiff)
+					table.insert(playerData.ChartData, damageDiff)
+					--mythicDungeonCharts:Debug("Added damage for " , unitCleuName, ":", damageDiff)
 
 					if (damageDiff > playerData.ChartData.max_value) then
 						playerData.ChartData.max_value = damageDiff
@@ -128,7 +122,7 @@ local addPlayerDamage = function(unitName, unitRealm)
 				end
 			else
 				--player still didn't made anything on this combat, so just add zero
-				tinsert(playerData.ChartData, 0)
+				table.insert(playerData.ChartData, 0)
 			end
 		end
 	end
@@ -151,13 +145,14 @@ local tickerCallback = function(tickerObject)
 	--tick damage
 	local totalPlayers = GetNumGroupMembers()
 	for i = 1, totalPlayers-1 do
-		local unitName, unitRealm = UnitName ("party" .. i)
-		if (unitName) then
-			addPlayerDamage(unitName, unitRealm)
+		---@type cleuname
+		local cleuName = Details:GetFullName("party" .. i)
+		if (cleuName) then
+			addPlayerDamage(cleuName)
 		end
 	end
 
-	addPlayerDamage(UnitName ("player"))
+	addPlayerDamage(Details:GetFullName("player"))
 end
 
 function mythicDungeonCharts:OnBossDefeated()
@@ -170,7 +165,7 @@ function mythicDungeonCharts:OnBossDefeated()
 		if (mythicDungeonCharts.ChartTable and mythicDungeonCharts.ChartTable.Running and bossInfo) then
 
 			local copiedBossInfo = Details:GetFramework().table.copy({}, bossInfo)
-			tinsert(mythicDungeonCharts.ChartTable.BossDefeated, {time() - mythicDungeonCharts.ChartTable.StartTime, copiedBossInfo, currentCombat:GetCombatTime()})
+			table.insert(mythicDungeonCharts.ChartTable.BossDefeated, {time() - mythicDungeonCharts.ChartTable.StartTime, copiedBossInfo, currentCombat:GetCombatTime()})
 			mythicDungeonCharts:Debug("Boss defeated, time saved", currentCombat:GetCombatTime())
 		else
 			if (mythicDungeonCharts.ChartTable and mythicDungeonCharts.ChartTable.EndTime ~= -1) then
@@ -180,7 +175,7 @@ function mythicDungeonCharts:OnBossDefeated()
 
 					if (bossInfo) then
 						local copiedBossInfo = Details:GetFramework().table.copy({}, bossInfo)
-						tinsert(mythicDungeonCharts.ChartTable.BossDefeated, {time() - mythicDungeonCharts.ChartTable.StartTime, copiedBossInfo, currentCombat:GetCombatTime()})
+						table.insert(mythicDungeonCharts.ChartTable.BossDefeated, {time() - mythicDungeonCharts.ChartTable.StartTime, copiedBossInfo, currentCombat:GetCombatTime()})
 						mythicDungeonCharts:Debug("Boss defeated, time saved, but used time aproximation:", mythicDungeonCharts.ChartTable.EndTime + 2, now, currentCombat:GetCombatTime())
 					end
 				end
@@ -290,7 +285,7 @@ function mythicDungeonCharts.ShowReadyPanel()
 		readyFrame:EnableMouse(true)
 		readyFrame:SetMovable(true)
 		DetailsFramework:ApplyStandardBackdrop(readyFrame)
-		DetailsFramework:CreateTitleBar (readyFrame, "Details! Damage Graphic for M+")
+		DetailsFramework:CreateTitleBar (readyFrame, "Details! Damage Chart for M+")
 
 		readyFrame:Hide()
 
@@ -302,7 +297,7 @@ function mythicDungeonCharts.ShowReadyPanel()
 		LibWindow.SavePosition(readyFrame)
 
 		--show button
-		readyFrame.ShowButton = DetailsFramework:CreateButton(readyFrame, function() mythicDungeonCharts.ShowChart(); readyFrame:Hide() end, 80, 20, Loc ["STRING_SLASH_SHOW"])
+		readyFrame.ShowButton = DetailsFramework:CreateButton(readyFrame, function() mythicDungeonCharts.ShowChart(); readyFrame:Hide() end, 80, 20, Loc ["STRING_SLASH_SHOW"]:gsub("^%l", string.upper))
 		readyFrame.ShowButton:SetTemplate(DetailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
 		readyFrame.ShowButton:SetPoint("topright", readyFrame, "topright", -5, -30)
 
@@ -382,7 +377,7 @@ function mythicDungeonCharts.ShowChart()
 			--titleLabelMinimized:SetPoint("top", titlebarMinimized , "top", 0, -5)
 			dungeonChartFrame.TitleTextMinimized = titleLabelMinimized
 
-		tinsert(UISpecialFrames, "DetailsMythicDungeonChartFrame")
+		table.insert(UISpecialFrames, "DetailsMythicDungeonChartFrame")
 
 		--register to libwindow
 		local LibWindow = LibStub("LibWindow-1.1")
@@ -651,7 +646,7 @@ function mythicDungeonCharts.ShowChart()
 		chartData.max_value = maxValue
 
 		mythicDungeonCharts.Frame.ChartFrame:AddLine(chartData, lineColor, lineName, combatTime, texture, "SMA")
-		tinsert(mythicDungeonCharts.PlayerGraphIndex, playerName)
+		table.insert(mythicDungeonCharts.PlayerGraphIndex, playerName)
 	end
 
 	mythicDungeonCharts.Frame.ChartFrame:RefreshBossTimeline(mythicDungeonCharts.ChartTable.BossDefeated, mythicDungeonCharts.ChartTable.ElapsedTime)
@@ -661,8 +656,8 @@ function mythicDungeonCharts.ShowChart()
 	for i, bossTable in ipairs(mythicDungeonCharts.ChartTable.BossDefeated) do
 		local combatTime = bossTable [3] or math.random(10, 30)
 
-		tinsert(bossTimeTable, bossTable[1])
-		tinsert(bossTimeTable, bossTable[1] - combatTime)
+		table.insert(bossTimeTable, bossTable[1])
+		table.insert(bossTimeTable, bossTable[1] - combatTime)
 	end
 
 	mythicDungeonCharts.Frame.ChartFrame:AddOverlay(bossTimeTable, {1, 1, 1, 0.05}, "Show Boss", "")
@@ -757,7 +752,7 @@ function mythicDungeonCharts:CustomDrawLine (C, sx, sy, ex, ey, w, color, layer,
 		T:SetTexture(TextureDirectory.."line")
 	end
 
-	tinsert(C.GraphLib_Lines_Used, T)
+	table.insert(C.GraphLib_Lines_Used, T)
 
 	T:SetDrawLayer(layer or "ARTWORK")
 
@@ -832,7 +827,7 @@ function mythicDungeonCharts:CustomDrawLine (C, sx, sy, ex, ey, w, color, layer,
 		pixelFrame:SetPoint("BOTTOMLEFT", C, relPoint, cx - Bwid, cy - Bhgt)
 		pixelFrame:SetPoint("TOPRIGHT", C, relPoint, cx + Bwid, cy + Bhgt)
 
-		tinsert(mythicDungeonCharts.Frame.ChartFrame.FrameInUse, pixelFrame)
+		table.insert(mythicDungeonCharts.Frame.ChartFrame.FrameInUse, pixelFrame)
 		pixelFrame.PlayerName = playerName
 		pixelFrame.Height = ey
 

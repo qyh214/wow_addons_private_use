@@ -2430,7 +2430,7 @@ do
 						local isInventory = bit.band(ITEM_INVENTORY_LOCATION_PLAYER, location) ~= 0 and bit.band(ITEM_INVENTORY_LOCATION_BAGS, location) == 0
 						local isBags = bit.band(ITEM_INVENTORY_LOCATION_PLAYER, location) ~= 0 and bit.band(ITEM_INVENTORY_LOCATION_BAGS, location) ~= 0
 						local isBank = bit.band(ITEM_INVENTORY_LOCATION_BANK, location) ~= 0
-						if (not skipInventory == isInventory) or (not skipBags == isBags) or (not skipBank == isBank) then
+						if (skipInventory ~= isInventory) or (skipBags ~= isBags) or (skipBank ~= isBank) then
 							for setLocation in pairs(locationSets[location]) do
 								local setID, setSlot = strsplit(":", setLocation)
 								setID, setSlot = tonumber(setID), tonumber(setSlot)

@@ -1,7 +1,7 @@
-## Interface: 100100
+## Interface: 100200
 ## Title: WeakAuras Options
 ## Author: The WeakAuras Team
-## Version: 5.5.5
+## Version: 5.8.6
 ## IconTexture: Interface\AddOns\WeakAuras\Media\Textures\icon.blp
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
@@ -82,6 +82,7 @@ AceGUI-Widgets\AceGUIWidget-WeakAurasPendingUpdateButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasTextureButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasIconButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasMultiLineEditBox.lua
+AceGUI-Widgets\AceGUIWidget-WeakAurasMultiLineEditBoxWithEnter.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasNewButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasImportButton.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasToolbarButton.lua
@@ -96,3 +97,5 @@ AceGUI-Widgets\AceGuiWidget-WeakAurasProgressBar.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasSpinBox.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasMiniTalent_Dragonflight.lua
 AceGUI-Widgets\AceGUIWidget-WeakAurasScrollArea.lua
+AceGUI-Widgets\AceGUIWidget-WeakAurasInputFocus.lua
+AceGUI-Widgets\AceGuiWidget-WeakAurasMediaSound.lua

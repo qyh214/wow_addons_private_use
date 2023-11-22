@@ -30,10 +30,9 @@ end
 -- Loot tooltip scanner
 ---============================================================================
 
-function RSTooltipScanners.ScanLoot(itemLink, value)
+local function ScanItem(tooltipData, value)
 	local foundText = false
 	
-	local tooltipData = C_TooltipInfo.GetHyperlink(itemLink)
 	if (tooltipData) then
 		TooltipUtil.SurfaceArgs(tooltipData)
 		for _, line in ipairs(tooltipData.lines) do
@@ -42,7 +41,7 @@ function RSTooltipScanners.ScanLoot(itemLink, value)
 		
 		if (tooltipData.lines) then
 			for i=1, #tooltipData.lines do
-				if (tooltipData.lines[i]) then
+				if (tooltipData.lines[i]) then	
 					local toolTipText = tooltipData.lines[i].leftText
 					if (toolTipText and RSUtils.Contains(toolTipText, value)) then
 						foundText = true
@@ -54,4 +53,12 @@ function RSTooltipScanners.ScanLoot(itemLink, value)
 	end
 	
 	return foundText
+end
+
+function RSTooltipScanners.ScanLootByItemID(itemID, value)
+	return ScanItem(C_TooltipInfo.GetItemByID(itemID), value)
+end
+
+function RSTooltipScanners.ScanLoot(itemLink, value)
+	return ScanItem(C_TooltipInfo.GetHyperlink(itemLink), value)
 end

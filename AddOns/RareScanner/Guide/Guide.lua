@@ -664,6 +664,50 @@ private.NPC_GUIDE = {
 	["2035212133"] = { 
 		[RSConstants.ENTRANCE] = { x = 0.5287, y = 0.1887 };
 	}; --Professor Gastrinax <Ex-Emeritus of Algeth'ar Academy>
+	["2058652025"] = { 
+		[RSConstants.ENTRANCE] = { x = 0.5936, y = 0.6967 };
+	}; --Zal'kir the Chosen <The Maw of K'Tanth>
+	["2016642025"] = { 
+		[RSConstants.STEP1] = { x = 0.5214, y = 0.8140, comment = AL["NOTE_201664_1"] };
+		[RSConstants.STEP2] = { x = 0.5220, y = 0.8160, comment = AL["NOTE_201664_2"] };
+	}; --Temporal Investi-gator
+	["2120092200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6345, y = 0.7156 };
+	}; --Fruitface
+	["2101612200"] = {
+		[RSConstants.ENTRANCE..1] = { x = 0.4502, y = 0.3684 };
+		[RSConstants.ENTRANCE..2] = { x = 0.4425, y = 0.3606 };
+		[RSConstants.ENTRANCE..3] = { x = 0.4319, y = 0.3648 };
+	}; --Ristar, the Rabid
+	["2099192200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.3830, y = 0.3225 };
+	}; --Isaqa <The Shatterer>
+	["2105082200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.3810, y = 0.6145 };
+	}; --Voracious Mikanji
+	["2100512200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.4174, y = 0.7310 };
+	}; --Matriarch Keevah
+	["2100452200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.3875, y = 0.7162 };
+	}; --Moragh the Slothful
+	["2105592200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.2354, y = 0.3239 };
+	}; --Balboan
+	["2100752200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.4757, y = 0.3048 };
+	}; --Henri Snufftail
+	["2100702200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.5424, y = 0.3708 };
+	}; --Mosa Umbramane
+	["2099132200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6345, y = 0.7156 };
+		[RSConstants.FLAG] = { x = 0.6016, y = 6875, comment = AL["NOTE_209913_1"] };
+	}; --Fruitface
+	["2099132254"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6525, y = 0.4875 };
+		[RSConstants.FLAG] = { x = 0.6016, y = 0.6875, comment = AL["NOTE_209913_1"] };
+	}; --Fruitface
 }
 
 ---============================================================================
@@ -1319,6 +1363,35 @@ private.CONTAINER_GUIDE = {
 	["3988102133"] = { 
 		[RSConstants.FLAG] = { x = 0.4357, y = 0.2302, comment = AL["NOTE_398810_1"] };
 	}; --Fealty's Reward
+	["4110652200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6345, y = 0.7156 };
+	}; --Reliquary of Ashamane
+	["4110652254"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6525, y = 0.4875 };
+		[RSConstants.FLAG] = { x = 0.6248, y = 0.6004, comment = AL["NOTE_411065_1"] };
+	}; --Reliquary of Ashamane
+	["4114652200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.5476, y = 0.4441 };
+	}; --Unwaking Echo
+	["4092222200"] = {
+		[RSConstants.FLAG] = { x = 0.4788, y = 0.5430, comment = AL["NOTE_409222_1"] };
+	}; --Reliquary of Ursol
+	["4110672200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.3310, y = 0.8242 };
+		[RSConstants.FLAG] = { x = 0.3082, y = 0.8069, comment = AL["NOTE_411067_1"] };
+	}; --Reliquary of Goldrinn
+	["4110662200"] = {
+		[RSConstants.FLAG] = { x = 0.6212, y = 0.2351, comment = AL["NOTE_411066_1"] };
+	}; --Reliquary of Aviana
+	["4077392200"] = {
+		[RSConstants.STEP1] = { x = 0.3971, y = 0.5215, comment = AL["NOTE_407739_1"] };
+		[RSConstants.STEP2] = { x = 0.4222, y = 0.5630, comment = AL["NOTE_407739_2"] };
+		[RSConstants.STEP3] = { x = 0.4175, y = 0.6256, comment = AL["NOTE_407739_3"] };
+		[RSConstants.STEP4] = { x = 0.3409, y = 0.5634, comment = AL["NOTE_407739_4"] };
+	}; --Triflesnatch's Roving Trove
+	["4104342200"] = {
+		[RSConstants.ENTRANCE] = { x = 0.6345, y = 0.7156 };
+	}; --Splash Potion of Narcolepsy
 }
 
 ---============================================================================

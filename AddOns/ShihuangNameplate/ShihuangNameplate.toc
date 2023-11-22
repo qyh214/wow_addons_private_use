@@ -1,8 +1,0 @@
-## Interface: 90200
-## Title: ShihuangNameplate
-## Version: 9.2.0-1.0
-## Notes: Shihuang's nameplate addon
-## Notes-zhCN: 始皇姓名版调整
-## Author: EKE、Shihuang
-## X-License: GPL-3.0
-core.lua

@@ -131,6 +131,7 @@ end
 
 local SQRT2 = sqrt(2)
 local function GetRotatedPoints(degrees, scaleForFullRotate)
+  degrees = degrees or 0
   local angle = rad(135 - degrees);
   local factor = scaleForFullRotate and 1 or SQRT2
   local vx = math.cos(angle) / factor
@@ -152,7 +153,7 @@ local function modifyThumbnail(parent, region, data, fullModify, size)
     region.texture:SetHeight(scale * data.height);
   end
 
-  WeakAuras.SetTextureOrAtlas(region.texture, data.texture, data.textureWrapMode, data.textureWrapMode);
+  OptionsPrivate.Private.SetTextureOrAtlas(region.texture, data.texture, data.textureWrapMode, data.textureWrapMode);
   region.texture:SetVertexColor(data.color[1], data.color[2], data.color[3], data.color[4]);
   region.texture:SetBlendMode(data.blendMode);
 
@@ -233,5 +234,8 @@ if WeakAuras.IsClassicEra() then
   table.remove(templates, 2)
 end
 
-WeakAuras.RegisterRegionOptions("texture", createOptions, createIcon, L["Texture"], createThumbnail, modifyThumbnail,
-                                L["Shows a custom texture"], templates);
+OptionsPrivate.registerRegions = OptionsPrivate.registerRegions or {}
+table.insert(OptionsPrivate.registerRegions, function()
+  OptionsPrivate.Private.RegisterRegionOptions("texture", createOptions, createIcon, L["Texture"], createThumbnail, modifyThumbnail,
+                                    L["Shows a custom texture"], templates);
+end)

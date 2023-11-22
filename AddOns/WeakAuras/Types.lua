@@ -35,6 +35,7 @@ Private.glow_frame_types = {
 
 --- @type table<dynamicGroupCircularTypes, string>
 Private.circular_group_constant_factor_types = {
+  ANGLE = L["Angle and Radius"],
   RADIUS = L["Radius"],
   SPACING = L["Spacing"]
 }
@@ -865,15 +866,12 @@ Private.soft_target_cvars = {
 
 local target_unit_types = {
   target = L["Target"],
+  softenemy = L["Soft Enemy"],
+  softfriend = L["Soft Friend"]
 }
 
 if not WeakAuras.IsClassicEra() then
   target_unit_types.focus = L["Focus"]
-end
-
-if WeakAuras.IsWrathOrRetail() then
-  target_unit_types.softenemy = L["Soft Enemy"]
-  target_unit_types.softfriend = L["Soft Friend"]
 end
 
 Private.unit_types = Mixin({
@@ -1400,8 +1398,9 @@ local function update_specs()
       if tabName then
         tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
         if WeakAuras.IsRetail() then
+          local classColor = WA_GetClassColor(classFileName)
           Private.spec_types_all[specId] = CreateAtlasMarkup(GetClassAtlas(classFileName:lower()))
-          .. "|T"..(icon or "error")..":0|t "..(tabName or "error");
+          .. "|T"..(icon or "error")..":0|t "..(WrapTextInColorCode(tabName, classColor) or "error");
         end
       end
     end
@@ -2544,9 +2543,16 @@ Private.send_chat_message_types = {
 
 Private.send_chat_message_types.TTS = L["Text-to-speech"]
 Private.tts_voices = {}
-for i, voiceInfo in pairs(C_VoiceChat.GetTtsVoices()) do
-  Private.tts_voices[voiceInfo.voiceID] = voiceInfo.name
+local function updateTts()
+  wipe(Private.tts_voices)
+  for i, voiceInfo in pairs(C_VoiceChat.GetTtsVoices()) do
+    Private.tts_voices[voiceInfo.voiceID] = voiceInfo.name
+  end
 end
+updateTts()
+local TtsUpdateFrame = CreateFrame("FRAME")
+TtsUpdateFrame:RegisterEvent("VOICE_CHAT_TTS_VOICES_UPDATE")
+TtsUpdateFrame:SetScript("OnEvent", updateTts)
 
 Private.group_aura_name_info_types = {
   aura = L["Aura Name"],
@@ -2702,6 +2708,12 @@ end)
 
 -- register options font
 LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraMono-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+-- Other Fira fonts
+LSM:Register("font", "Fira Sans Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Condensed Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Condensed Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+
 
 -- register plain white border
 LSM:Register("border", "Square Full White", [[Interface\AddOns\WeakAuras\Media\Textures\Square_FullWhite.tga]])
@@ -3204,6 +3216,9 @@ Private.author_option_media_controls = {
   background = "LSM30_Background",
   font = "LSM30_Font"
 }
+Private.author_option_media_itemControls = {
+  sound = "WeakAurasMediaSound"
+}
 Private.array_entry_name_types = {
   [-1] = L["Fixed Names"],
   [0] = L["Entry Order"],
@@ -3330,6 +3345,13 @@ Private.glow_types = {
   buttonOverlay = L["Action Button Glow"],
 }
 
+if WeakAuras.IsRetail() then
+  local build = select(4, GetBuildInfo())
+  if build >= 100105 then
+    Private.glow_types.Proc = L["Proc Glow"]
+  end
+end
+
 Private.font_sizes = {
   small = L["Small"],
   medium = L["Medium"],
@@ -3342,7 +3364,9 @@ Private.baseUnitId = {
   ["target"] = true,
   ["pet"] = true,
   ["focus"] = true,
-  ["vehicle"] = true
+  ["vehicle"] = true,
+  ["softenemy"] = true,
+  ["softfriend"] = true
 }
 
 Private.multiUnitId = {
@@ -3383,18 +3407,10 @@ for i = 1, 4 do
 end
 
 if WeakAuras.IsWrathOrRetail() then
-  Private.baseUnitId["softenemy"] = true
-  Private.baseUnitId["softfriend"] = true
-end
-
-if WeakAuras.IsRetail() then
   for i = 1, 10 do
     Private.baseUnitId["boss"..i] = true
     Private.multiUnitUnits.boss["boss"..i] = true
   end
-end
-
-if WeakAuras.IsWrathOrRetail() then
   for i = 1, 5 do
     Private.baseUnitId["arena"..i] = true
     Private.multiUnitUnits.arena["arena"..i] = true
@@ -3850,10 +3866,6 @@ if WeakAuras.IsWrathClassic() then
   end
   Private.talent_extra_option_types[0] = nil
   Private.talent_extra_option_types[2] = nil
-  Private.multiUnitId.boss = nil
-  wipe(Private.multiUnitUnits.boss)
-  Private.unit_types_bufftrigger_2.boss = nil
-  Private.actual_unit_types_cast.boss = nil
 
   local reset_swing_spell_list = {
     1464, 8820, 11604, 11605, 25241, 25242, -- Slam

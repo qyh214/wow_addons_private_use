@@ -25,6 +25,8 @@ L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55f右键|r显示/隐藏性能分析窗口。"
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift + 左键|r暂停插件执行。"
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000非|r 已装备物品增益ID"
+--[[Translation missing --]]
+L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000非|r 玩家名字/服务器"
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000未|r学会的法术"
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00额外选项：|r%s"
@@ -73,6 +75,16 @@ L["Action Button Glow"] = "动作条按钮发光"
 L["Action Usable"] = "动作可以使用"
 L["Actions"] = "动作"
 L["Active"] = "活跃"
+L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[活跃Boss模块插件：|cFFffcc00BigWigs|r
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
+L[ [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[活跃Boss模块插件：|cFFffcc00DBM|r
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
 L["Add"] = "添加"
 L["Add Missing Auras"] = "添加缺少的光环"
 L["Additional Trigger Replacements"] = "额外触发器动态文字"
@@ -101,6 +113,8 @@ L["Always True"] = "总是真"
 L["Amount"] = "数量"
 L["Anchoring"] = "锚定"
 L["And Talent"] = "和天赋"
+--[[Translation missing --]]
+L["Angle and Radius"] = "Angle and Radius"
 L["Animations"] = "动画"
 L["Anticlockwise"] = "逆时针"
 L["Anub'arak"] = "阿努布雷坎"
@@ -201,6 +215,10 @@ L["Blood-Queen Lana'thel"] = "兰娜瑟尔女王"
 L["Border"] = "边框"
 L["Boss"] = "首领"
 L["Boss Emote"] = "首领表情"
+L["Boss Mod Announce"] = "Boss模块通报"
+L["Boss Mod Stage"] = "Boss模块阶段"
+L["Boss Mod Stage (Event)"] = "Boss模块阶段 (事件)"
+L["Boss Mod Timer"] = "Boss模块计时条"
 L["Boss Whisper"] = "首领密语"
 L["Bottom"] = "下"
 L["Bottom Left"] = "左下"
@@ -330,7 +348,7 @@ L["Custom Text Function"] = "自定义文本函数"
 L["Custom Trigger Combination"] = "自定义触发器组合"
 L["Custom Variables"] = "自定义变量"
 L["Damage"] = "伤害"
-L["Damage Shield"] = "护盾(如:荆棘术)伤害"
+L["Damage Shield"] = "护盾伤害"
 L["Damage Shield Missed"] = "护盾伤害未命中"
 L["Damage Split"] = "伤害分担"
 L["DBM Announce"] = "DBM 通知"
@@ -392,6 +410,7 @@ L["Dungeon (Timewalking)"] = "地下城（时空漫游）"
 L["Dungeons"] = "地下城"
 L["Durability Damage"] = "耐久度下降"
 L["Durability Damage All"] = "耐久度上限下降"
+L["Duration"] = "持续时间"
 L["Duration Function"] = "持续时间函数"
 L["Duration Function (fallback state)"] = "持续时间函数（后备状态）"
 L["Dynamic Information"] = "动态信息"
@@ -428,6 +447,8 @@ L["Enchanting Cast Bar"] = "附魔施法条"
 L["Encounter ID(s)"] = "首领战 ID"
 L["Energize"] = "能量值恢复"
 L["Enrage"] = "激怒"
+--[[Translation missing --]]
+L["Enter a name or a spellId"] = "Enter a name or a spellId"
 L["Enter static or relative values with %"] = "输入绝对值或者是带有%的相对值"
 L["Entering"] = "进入"
 L["Entering/Leaving Combat"] = "进入/离开战斗"
@@ -435,6 +456,7 @@ L["Entering/Leaving Encounter"] = "进入/离开首领战斗"
 L["Entry Order"] = "条目排序"
 L["Environment Type"] = "环境伤害类型"
 L["Environmental"] = "环境伤害"
+L["Equipment"] = "装备"
 L["Equipment Set"] = "装备方案"
 L["Equipment Set Equipped"] = "装备方案已使用"
 L["Equipment Slot"] = "装备栏"
@@ -462,12 +484,14 @@ L["Event(s)"] = "事件"
 L["Every Frame"] = "所有帧"
 L["Every Frame (High CPU usage)"] = "所有帧（高CPU占用）"
 L["Evoker Essence"] = "唤魔师精华"
+L["Exact Spell ID(s)"] = "精确法术 ID"
 L["Experience (%)"] = "经验值百分比"
 L["Expertise Bonus"] = "精准加成"
 L["Expertise Rating"] = "精准等级"
 L["Extend Outside"] = "扩展外侧"
 L["Extra Amount"] = "额外数量"
 L["Extra Attacks"] = "额外攻击"
+L["Extra Spell Id"] = "额外法术ID"
 L["Extra Spell Name"] = "额外法术名称"
 L["Faction"] = "阵营"
 L["Faction Champions"] = "阵营冠军"
@@ -529,9 +553,11 @@ L["Gahz'ranka"] = "加兹兰卡"
 L["Gained"] = "获得了"
 L["Garr"] = "加尔"
 L["Gehennas"] = "基赫纳斯"
+L["General"] = "一般"
 L["General Rajaxx"] = "拉贾克斯将军"
 L["General Vezax"] = "维扎克斯将军"
 L["General Zarithrian"] = "萨瑞瑟里安将军"
+L["GetNameAndIcon Function (fallback state)"] = "获取名称与图表函数（后备状态）"
 L["Glancing"] = "躲闪"
 L["Global Cooldown"] = "公共冷却"
 L["Glow"] = "发光"
@@ -558,6 +584,8 @@ L["Group Finder Poke"] = "队伍查找器眼睛点击"
 L["Group Finder Poke End"] = "队伍查找器眼睛点击结束"
 L["Group Finder Poke Initial"] = "队伍查找器眼睛点击初始"
 L["Group Leader/Assist"] = "团队领袖/助理"
+--[[Translation missing --]]
+L["Group Size"] = "Group Size"
 L["Group Type"] = "队伍类型"
 L["Grow"] = "生长"
 L["GTFO Alert"] = "GTFO 警报"
@@ -621,7 +649,9 @@ L["In Group"] = "在队伍中"
 L["In Party"] = "在小队中"
 L["In Pet Battle"] = "宠物对战中"
 L["In Raid"] = "在团队中"
+L["In Range"] = "在范围内"
 L["In Vehicle"] = "在载具中"
+L["In War Mode"] = "开启战争模式"
 L["Include Bank"] = "包括银行中的"
 L["Include Charges"] = "包含使用次数"
 L["Include Death Runes"] = "包括死亡符文"
@@ -651,6 +681,7 @@ L["Is Death Rune"] = "是死亡符文"
 L["Is Exactly"] = "完全匹配"
 L["Is Moving"] = "移动中"
 L["Is Off Hand"] = "副手"
+L["Is Paused"] = "已暂停"
 L["is useable"] = "可用的"
 L["Island Expedition (Heroic)"] = "海岛探险（英雄）"
 L["Island Expedition (Mythic)"] = "海岛探险（史诗）"
@@ -697,7 +728,6 @@ L["Left, then Up"] = "向左，然后向上"
 L["Legacy Looking for Raid"] = "传统团队副本（随机）"
 L["Legacy RGB Gradient"] = "传统 RGB 变色"
 L["Legacy RGB Gradient Pulse"] = "传统 RGB 变色跳动"
-L["Legacy Spellname"] = "传统法术名称"
 L["Legion"] = "军团再临"
 L["Length"] = "长度"
 L["Level"] = "等级"
@@ -705,6 +735,7 @@ L["Limited"] = "有限的"
 L["Lines & Particles"] = "线条和粒子"
 L["Load Conditions"] = "加载条件"
 L["Loatheb"] = "洛欧塞布"
+L["Location"] = "位置"
 L["Looking for Raid"] = "团队副本（随机）"
 L["Loop"] = "循环"
 L["Lord Jaraxxus"] = "加拉克苏斯大王"
@@ -782,6 +813,7 @@ L["Name"] = "名称"
 L["Name Function"] = "名称函数"
 L["Name Function (fallback state)"] = "名称函数（后备状态）"
 L["Name of Caster's Target"] = "施法者目标的名称"
+L["Name(s)"] = "名称"
 L["Name/Realm of Caster's Target"] = "施法者目标的名称/服务器"
 L["Nameplate"] = "姓名板"
 L["Nameplate Type"] = "姓名版类型"
@@ -795,6 +827,11 @@ L["Neutral"] = "中立"
 L["Never"] = "从不"
 L["Next Combat"] = "下次战斗"
 L["Next Encounter"] = "下次首领战斗"
+L[ [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[未检测到活跃Boss模块插件。
+
+注意：此触发器会依序使用BigWigs或DBM。]=]
 L["No Extend"] = "不伸展"
 L["No Instance"] = "野外"
 L["No Profiling information saved."] = "没有已保存的性能分析信息。"
@@ -819,6 +856,29 @@ L["Npc ID"] = "NPC ID"
 L["Number"] = "数字"
 L["Number Affected"] = "影响数"
 L["Object"] = "对象"
+L[ [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=] ] = [=[事件发生的次数
+可以为值的范围
+可以有多个条目，由英文逗号或空格分隔
+
+例如：
+第二、第五和第六次事件：2, 5, 6
+第二到第六次事件：2-6
+每两次事件：/2
+从第二次开始每三次事件：2/3
+从第二到第十一次事件开始每三次事件：2-11/3
+
+仅当Boss模块插件显示计数时工作]=]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -941,6 +1001,7 @@ L["Precision"] = "精度"
 L["Preset"] = "预设"
 L["Princess Huhuran"] = "哈霍兰公主"
 L["Print Profiling Results"] = "输出性能分析结果"
+L["Proc Glow"] = "触发发光"
 L["Professor Putricide"] = "普崔塞德教授"
 L["Profiling already started."] = "性能分析已开始。"
 L["Profiling automatically started."] = "性能分析自动开始。"
@@ -1145,6 +1206,7 @@ L["Spell Name"] = "法术名称"
 L["Spell Peneration Percent"] = "法术穿透百分比"
 L["Spell School"] = "法术派系"
 L["Spell Usable"] = "法术可用"
+L["Spellname"] = "法术名称"
 L["Spin"] = "旋转"
 L["Spiral"] = "螺旋"
 L["Spiral In And Out"] = "螺旋进入和退出"
@@ -1162,6 +1224,7 @@ L["Stamina"] = "耐力"
 L["Stance/Form/Aura"] = "姿态/形态/光环"
 L["Standing"] = "级别"
 L["Star Shake"] = "摇动"
+L["Start Animation"] = "开始动画"
 L["Start Now"] = "现在开始"
 L["Status"] = "状态"
 L["Status Bar"] = "状态条"
@@ -1190,8 +1253,8 @@ L["Talent"] = "天赋"
 L["Talent |cFFFF0000Not|r Known"] = "天赋|cFFFF0000不|r可用"
 L["Talent |cFFFF0000Not|r Selected"] = "天赋|cFFFF0000未|r选择"
 L["Talent Known"] = "天赋可用"
-L["Talent selected"] = "天赋选择"
 L["Talent Selected"] = "天赋选择"
+L["Talent selected"] = "天赋选择"
 L["Talent Specialization"] = "专精"
 L["Tanking And Highest"] = "做T并且最高"
 L["Tanking But Not Highest"] = "做T但不是最高"
@@ -1275,7 +1338,7 @@ L["Trigger %s"] = "触发器%s"
 L["Trigger 1"] = "触发器 1"
 L["Trigger State Updater (Advanced)"] = "触发器状态更新器（高级）"
 L["Trigger Update"] = "触发器更新"
-L["Trigger:"] = "触发器"
+L["Trigger:"] = "触发器："
 L["Trivial (Low Level)"] = "低等级（灰色）"
 L["True"] = "真"
 L["Trying to repair broken conditions in %s likely caused by a WeakAuras bug."] = "正在尝试修复由WeakAuras的Bug导致的，%s的损坏条件。"
@@ -1289,7 +1352,7 @@ L["Unholy Rune #1"] = "邪恶符文 #1"
 L["Unholy Rune #2"] = "邪恶符文 #2"
 L["Unit"] = "单位"
 L["Unit Characteristics"] = "单位特性"
-L["Unit Destroyed"] = "单位被摧毁(如:图腾,治疗结界)"
+L["Unit Destroyed"] = "单位被摧毁"
 L["Unit Died"] = "单位死亡"
 L["Unit Dissipates"] = "单位消散"
 L["Unit Frame"] = "单位框体"
@@ -1298,6 +1361,10 @@ L["Unit is Unit"] = "同一单位"
 L["Unit Name"] = "单位名称"
 L["Unit Name/Realm"] = "单位名称/服务器"
 L["Units Affected"] = "受影响的单位"
+--[[Translation missing --]]
+L["Units of affected Players in a table format"] = "Units of affected Players in a table format"
+--[[Translation missing --]]
+L["Units of unaffected Players in a table format"] = "Units of unaffected Players in a table format"
 L["unknown location"] = "未知位置"
 L["Unlimited"] = "无限制"
 L["Untrigger %s"] = "取消触发器 %s"
@@ -1311,6 +1378,7 @@ L["Use /wa minimap to show the minimap icon again."] = "使用 /wa minimap 来�
 L["Use Custom Color"] = "使用自定义颜色"
 L["Use Legacy floor rounding"] = "使用传统向下取整"
 L["Use Watched Faction"] = "使用追踪的阵营"
+L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "使用UnitInRange()检查是否在范围内。根据你的职业和专精决定范围为25或40码，与默认团队框架的在或不在范围表现一致。"
 L["Using WeakAuras.clones is deprecated. Use WeakAuras.GetRegion(id, cloneId) instead."] = "WeakAuras.clones已被弃用。请使用WeakAuras.GetRegion(id, cloneId)代替。"
 L["Using WeakAuras.regions is deprecated. Use WeakAuras.GetRegion(id) instead."] = "WeakAuras.regions已被弃用。请使用WeakAuras.GetRegion(id)代替。"
 L["Vaelastrasz the Corrupt"] = "堕落的瓦拉斯塔兹"
@@ -1327,7 +1395,6 @@ L["Vesperon"] = "维斯匹隆"
 L["Viscidus"] = "维希度斯"
 L["Visibility"] = "可见性"
 L["Visions of N'Zoth"] = "恩佐斯的幻象"
-L["War Mode Active"] = "战争模式开启"
 L["Warfront (Heroic)"] = "战争前线（英雄）"
 L["Warfront (Normal)"] = "战争前线（普通）"
 L["Warlords of Draenor"] = "德拉诺之王"
@@ -1341,7 +1408,14 @@ L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras内置格式 （63
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
-Last upgrade: %s]=] ] = "WeakAuras监测到它的版本被降低。你已保存的光环可能无法再正常工作。是否要运行|cffff0000实验性|r修复工具？运行后将会丢失上次数据库升级后的所有改动。上次升级：%s"
+Last upgrade: %s
+
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=] ] = [=[WeakAuras检测到它的版本已被降低。
+已保存的光环可能无法再正常工作。
+是否要运行|cffff0000实验性|r修复工具？运行后将会丢失上次数据库升级后的所有改动。
+上次升级：%s
+
+|cffff0000在点击此按钮之前，你应该备份你的WTF文件夹。|r]=]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras 在登录过程中遇到了一个错误，请于此处报告这个错误：https://github.com/WeakAuras/Weakauras2/issues/new"
 L["WeakAuras Profiling"] = "WeakAuras性能分析"
 L["WeakAuras Profiling Report"] = "WeakAuras性能分析报告"

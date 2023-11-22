@@ -41,7 +41,7 @@ local options = {
             order = 3,
             type = "description",
             fontSize = "small",
-            name = " \n |cffff000010.1 Mythic+ Dungeon still working in progress.|r",
+            name = " \n |cffff000010.2 Mythic+ Dungeon still working in progress.|r",
             width = "full"
         }
     }

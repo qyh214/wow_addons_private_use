@@ -48,14 +48,14 @@ function DropDownExpandArrowMixin:OnEnter()
 	if self:IsEnabled() then
 		local listFrame = _G["LibDropDownMenu_List"..level];
 		if ( not listFrame or not listFrame:IsShown() or select(2, listFrame:GetPoint(1)) ~= self ) then
-			ToggleDropDownMenu(level, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self);
+			ToggleDropDownMenu(level, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self, nil, self:GetParent().menuListDisplayMode);
 		end
 	end
 end
 
 function DropDownExpandArrowMixin:OnMouseDown(button)
 	if self:IsEnabled() then
-		ToggleDropDownMenu(self:GetParent():GetParent():GetID() + 1, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self);
+		ToggleDropDownMenu(self:GetParent():GetParent():GetID() + 1, self:GetParent().value, nil, nil, nil, nil, self:GetParent().menuList, self, nil, self:GetParent().menuListDisplayMode);
 	end
 end
 
@@ -97,4 +97,10 @@ end
 
 function UIDropDownCustomMenuEntryMixin:GetContextData()
 	return self.contextData;
+end
+
+ColorSwatchMixin = {}
+
+function ColorSwatchMixin:SetColor(color)
+	self.Color:SetVertexColor(color:GetRGB());
 end

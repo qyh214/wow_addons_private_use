@@ -341,6 +341,18 @@ local function GetActionInfoTable(slot, tbl)
         elseif IsCovenantClassAbility(id) then
             id = GetCovenantClassAbility() or id
         end
+    elseif actionType == "macro" then
+        PickupAction(slot)
+
+        local cursorType, cursorId = GetCursorInfo()
+        if cursorType == "macro" then
+            id = cursorId
+        else
+            actionType = nil
+            id = nil
+        end
+
+        PlaceAction(slot)
     end
 
     -- There are some situations where actions can be "empty" but showing as macros with id 0
@@ -395,18 +407,19 @@ local function CompareSlot(slot, tbl, settings)
     if tbl == nil then
         return actionType == nil
     elseif actionType == "macro" and tbl.type == "macro" then
-        local macroText = trim(GetMacroBody(id) or "")
-        -- Macro in the action slot has the same text as the macro we want
-        if macroText == trim(tbl.macroText) then
-            return true
-        end
+        return true -- GetActionInfo currently doesnt return the id for macros
+        -- local macroText = trim(GetMacroBody(id) or "")
+        -- -- Macro in the action slot has the same text as the macro we want
+        -- if macroText == trim(tbl.macroText) then
+        --     return true
+        -- end
 
-        -- There is a macro with the text we want and its not the one in the action slot
-        if GetMacroByText(tbl.macroText) ~= nil then
-            return false
-        end
+        -- -- There is a macro with the text we want and its not the one in the action slot
+        -- if GetMacroByText(tbl.macroText) ~= nil then
+        --     return false
+        -- end
 
-        return id == GetMacroIndexByName(tbl.name)
+        -- return id == GetMacroIndexByName(tbl.name)
     elseif actionType == "companion" and subType == "MOUNT" and tbl.type == "summonmount" then
         return id == select(2, C_MountJournal.GetDisplayedMountInfo(tbl.id))
     elseif tbl.type == "companion" and tbl.subType == "MOUNT" and actionType == "summonmount" then
@@ -701,7 +714,7 @@ local function ActivateActionBarSet(set, state)
         if not set.ignored[slot] then
             local action = set.actions[slot]
 
-            if not CompareSlot(slot, action, set.settings) then
+            if not CompareSlot(slot, action, set.settings) or GetActionInfo(slot) == "macro" then
                 local success, done = SetActon(slot, action)
                 if not done then
                     complete = false

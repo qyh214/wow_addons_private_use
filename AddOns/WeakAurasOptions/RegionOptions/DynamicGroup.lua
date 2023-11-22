@@ -177,6 +177,25 @@ local function createOptions(id, data)
       hidden = function() return data.grow == "CUSTOM" end,
       disabled = function() return not data.useAnchorPerUnit end
     },
+    anchorOn = {
+      type = "input",
+      width = WeakAuras.doubleWidth,
+      name = L["Run on..."],
+      desc = L["You can add a comma-separated list of state values here that (when changed) WeakAuras should also run the Anchor Code on.\n\nWeakAuras will always run custom anchor code if you include 'changed' in this list, or when a region is added, removed, or re-ordered."],
+      order = 1.61,
+      get = function()
+        return data.anchorOn or ""
+      end,
+      hidden = function()
+        return not(data.grow ~= "CUSTOM" and data.useAnchorPerUnit and data.anchorPerUnit == "CUSTOM")
+      end,
+      set = function(info, v)
+        data.anchorOn = v
+        WeakAuras.Add(data)
+        WeakAuras.ClearAndUpdateOptions(data.id)
+        OptionsPrivate.ResetMoverSizer()
+      end
+    },
     -- custom grow option added below
     align = {
       type = "select",
@@ -239,7 +258,7 @@ local function createOptions(id, data)
       name = L["Constant Factor"],
       order = 4,
       values = OptionsPrivate.Private.circular_group_constant_factor_types,
-      hidden = function() return data.grow ~= "CIRCLE" and data.grow ~= "COUNTERCIRCLE" end
+      hidden = function() return not(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") end
     },
     rotation = {
       type = "range",
@@ -250,14 +269,31 @@ local function createOptions(id, data)
       min = 0,
       max = 360,
       bigStep = 3,
-      hidden = function() return data.grow ~= "CIRCLE" and data.grow ~= "COUNTERCIRCLE" end
+      hidden = function() return not(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") end
     },
     fullCircle = {
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Full Circle"],
       order = 7,
-      hidden = function() return data.grow ~= "CIRCLE" and data.grow ~= "COUNTERCIRCLE" end
+      hidden = function()
+        return not(
+          (data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE")
+          and (data.constantFactor == "RADIUS" or data.constantFactor == "SPACING"))
+        end
+    },
+    stepAngle = {
+      type = "range",
+      control = "WeakAurasSpinBox",
+      width = WeakAuras.normalWidth,
+      name = L["Angle Between Auras"],
+      order = 12,
+      min = 0,
+      max = 180,
+      bigStep = 1,
+      hidden = function()
+        return not((data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") and data.constantFactor == "ANGLE")
+      end
     },
     arcLength = {
       type = "range",
@@ -269,7 +305,11 @@ local function createOptions(id, data)
       max = 360,
       bigStep = 3,
       disabled = function() return data.fullCircle end,
-      hidden = function() return data.grow ~= "CIRCLE" and data.grow ~= "COUNTERCIRCLE" end
+      hidden = function()
+        return not(
+          (data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE")
+          and (data.constantFactor == "RADIUS" or data.constantFactor == "SPACING"))
+        end
     },
     radius = {
       type = "range",
@@ -280,7 +320,11 @@ local function createOptions(id, data)
       softMin = 0,
       softMax = 500,
       bigStep = 1,
-      hidden = function() return data.grow == "CUSTOM" or not((data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") and data.constantFactor == "RADIUS") end
+      hidden = function()
+        return not(
+          (data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE")
+          and (data.constantFactor == "RADIUS" or data.constantFactor == "ANGLE"))
+        end
     },
     -- grid grow options
     gridType = {
@@ -348,9 +392,12 @@ local function createOptions(id, data)
       softMax = 300,
       bigStep = 1,
       hidden = function()
-        return data.grow == "CUSTOM"
-            or data.grow == "GRID"
-            or ((data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") and data.constantFactor == "RADIUS")
+        return not(
+          data.grow == "LEFT" or data.grow == "RIGHT"
+          or data.grow == "UP" or data.grow == "DOWN"
+          or data.grow == "HORIZONTAL" or data.grow == "VERTICAL"
+          or ((data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE")
+              and (data.constantFactor == "SPACING")))
       end
     },
     stagger = {
@@ -590,7 +637,7 @@ local function modifyThumbnail(parent, frame, data)
       icon:SetAllPoints(frame)
       frame.icon = icon
     end
-    local success = WeakAuras.SetTextureOrAtlas(frame.icon, path or data.groupIcon) and (path or data.groupIcon)
+    local success = OptionsPrivate.Private.SetTextureOrAtlas(frame.icon, path or data.groupIcon) and (path or data.groupIcon)
     if success then
       if frame.defaultIcon then
         frame.defaultIcon:Hide()
@@ -615,4 +662,7 @@ local function createIcon()
   return thumbnail
 end
 
-WeakAuras.RegisterRegionOptions("dynamicgroup", createOptions, createIcon, L["Dynamic Group"], createThumbnail, modifyThumbnail, L["A group that dynamically controls the positioning of its children"]);
+OptionsPrivate.registerRegions = OptionsPrivate.registerRegions or {}
+table.insert(OptionsPrivate.registerRegions, function()
+  OptionsPrivate.Private.RegisterRegionOptions("dynamicgroup", createOptions, createIcon, L["Dynamic Group"], createThumbnail, modifyThumbnail, L["A group that dynamically controls the positioning of its children"]);
+end)

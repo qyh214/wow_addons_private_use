@@ -49,7 +49,7 @@ function Details:BossModsLink()
                 local currentCombat = Details:GetCurrentCombat()
                 local combatTime = currentCombat:GetCombatTime()
                 if (combatTime > 5) then
-                    tinsert(currentCombat.PhaseData, {phase, combatTime})
+                    table.insert(currentCombat.PhaseData, {phase, combatTime})
                 end
                 Details:SendEvent("COMBAT_ENCOUNTER_PHASE_CHANGED", nil, phase)
             end
@@ -79,7 +79,7 @@ function Details:BossModsLink()
                 local currentCombat = Details:GetCurrentCombat()
                 local combatTime = currentCombat:GetCombatTime()
                 if (combatTime > 5) then
-                    tinsert(currentCombat.PhaseData, {phase, combatTime})
+                    table.insert(currentCombat.PhaseData, {phase, combatTime})
                 end
 
                 Details:SendEvent("COMBAT_ENCOUNTER_PHASE_CHANGED", nil, phase)
@@ -133,19 +133,28 @@ function Details:CreateCallbackListeners()
             end
 
             current_encounter = false
-            wipe (current_table_dbm)
-            wipe (current_table_bigwigs)
+            Details:Destroy(current_table_dbm)
+            Details:Destroy(current_table_bigwigs)
         end
     end)
+
     event_frame:RegisterEvent("ENCOUNTER_START")
     event_frame:RegisterEvent("ENCOUNTER_END")
     event_frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
     if (_G.DBM) then
         local dbm_timer_callback = function(bar_type, id, msg, timer, icon, bartype, spellId, colorId, modid)
-            local spell = tostring(spellId)
-            if (spell and not current_table_dbm [spell]) then
-                current_table_dbm [spell] = {spell, id, msg, timer, icon, bartype, spellId, colorId, modid}
+            local currentCombat = Details:GetCurrentCombat()
+            if (not currentCombat.__destroyed) then --async events, need to check for combat destruction
+                ---@type combattime
+                local combatTime = currentCombat:GetCombatTime()
+                table.insert(currentCombat.bossTimers, {"dbm", combatTime, bar_type, id, msg, timer, icon, bartype, spellId, colorId, modid})
+                --print("dbm event", bar_type, id, msg, timer, icon, bartype, spellId, colorId, modid)
+
+                local spell = tostring(spellId)
+                if (spell and not current_table_dbm[spell]) then
+                    current_table_dbm[spell] = {spell, id, msg, timer, icon, bartype, spellId, colorId, modid}
+                end
             end
         end
         DBM:RegisterCallback ("DBM_TimerStart", dbm_timer_callback)
@@ -154,15 +163,24 @@ function Details:CreateCallbackListeners()
     --record Bigwigs timers shown at /details spells.
     --this is also usage to create weakauras directly from details!
     function Details:RegisterBigWigsCallBack()
-        if (BigWigsLoader) then
-            function Details:BigWigs_StartBar (event, module, spellid, bar_text, time, icon, ...)
-                spellid = tostring(spellid)
-                if (not current_table_bigwigs [spellid]) then
-                    current_table_bigwigs [spellid] = {(type(module) == "string" and module) or (module and module.moduleName) or "", spellid or "", bar_text or "", time or 0, icon or ""}
+        --if the user is also using DBM, ignore registering another callback
+        if (BigWigsLoader and not _G.DBM) then
+            function Details:BigWigs_StartBar(event, module, spellid, bar_text, time, icon, ...)
+                local currentCombat = Details:GetCurrentCombat()
+                if (not currentCombat.__destroyed) then --async events, need to check for combat destruction
+                    ---@type combattime
+                    local combatTime = currentCombat:GetCombatTime()
+                    table.insert(currentCombat.bossTimers, {"bw", combatTime, spellid, bar_text, time, icon})
+
+                    spellid = tostring(spellid)
+                    if (not current_table_bigwigs[spellid]) then
+                        current_table_bigwigs[spellid] = {(type(module) == "string" and module) or (module and module.moduleName) or "", spellid or "", bar_text or "", time or 0, icon or ""}
+                    end
                 end
             end
+
             if (BigWigsLoader.RegisterMessage) then
-                BigWigsLoader.RegisterMessage (Details, "BigWigs_StartBar")
+                BigWigsLoader.RegisterMessage(Details, "BigWigs_StartBar")
             end
         end
     end

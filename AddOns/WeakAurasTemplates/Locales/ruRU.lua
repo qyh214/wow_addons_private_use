@@ -7,6 +7,8 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["< 4 stacks"] = "(менее 4 стаков)"
+	L["5 stacks"] = "(5 стаков)"
 	L["Abilities"] = "Способности"
 	L["Add Triggers"] = "Добавить триггеры"
 	L["Always Active"] = "Всегда активный триггер"
@@ -43,7 +45,7 @@ local L = WeakAuras.L
 	L["Charge Tracking"] = "Отслеживание заряда"
 	L["cooldown"] = "(восстановление)"
 	L["Cooldown Tracking"] = "Отслеживание восстановления"
-	L["Cooldowns"] = "Перезарядки"
+	L["Cooldowns"] = "Восстановление"
 	L["Create Auras"] = "Создать"
 	L["debuff"] = "(дебафф)"
 	L["Debuffs"] = "Дебаффы"
@@ -59,10 +61,8 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Выделяет индикацию, если заклинание активно."
 	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
-	--[[Translation missing --]]
-	L["Max 3"] = "Max 3"
-	--[[Translation missing --]]
-	L["Max 4"] = "Max 4"
+	L["Max 3"] = "(3 уровня усиления)"
+	L["Max 4"] = "(4 уровня усиления)"
 	L["Next"] = "Далее"
 	L["Only show the aura if the target has the debuff."] = "Показывает индикацию, только когда на цели есть дебафф."
 	L["Only show the aura when the item is on cooldown."] = "Показывает индикацию, только когда предмет восстанавливается."

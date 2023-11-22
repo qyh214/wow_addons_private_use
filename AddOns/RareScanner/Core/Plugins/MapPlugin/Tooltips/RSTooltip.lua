@@ -120,22 +120,22 @@ local function showItemToolTip(cell, args)
 	ItemToolTip:Show()
 end
 
-local function showItemComparationTooltip(cell)
-	if (IsShiftKeyDown() and ItemToolTip:IsShown()) then
-		ItemToolTipComp1:SetScale(RSConfigDB.GetWorldMapLootAchievTooltipsScale())
-		ItemToolTipComp2:SetScale(RSConfigDB.GetWorldMapLootAchievTooltipsScale())
-		ItemToolTipComp1:SetFrameLevel(2100)
-		ItemToolTipComp2:SetFrameLevel(2100)
-		GameTooltip_ShowCompareItem(ItemToolTip)
-		cell:SetPropagateKeyboardInput(false)
-	else
-		cell:SetPropagateKeyboardInput(true)
+local function showHideItemComparationTooltip(cell, _, event, key, down)
+	if (event ~= "MODIFIER_STATE_CHANGED") then
+		return
 	end
-end
-
-local function hideItemComparationTooltip(cell)
-	GameTooltip_HideShoppingTooltips(ItemToolTip)
-	cell:SetPropagateKeyboardInput(true)
+	
+	if (down == 1) then
+		if (IsShiftKeyDown() and ItemToolTip:IsShown()) then
+			ItemToolTipComp1:SetScale(RSConfigDB.GetWorldMapLootAchievTooltipsScale())
+			ItemToolTipComp2:SetScale(RSConfigDB.GetWorldMapLootAchievTooltipsScale())
+			ItemToolTipComp1:SetFrameLevel(2100)
+			ItemToolTipComp2:SetFrameLevel(2100)
+			GameTooltip_ShowCompareItem(ItemToolTip)
+		end
+	elseif (down == 0) then
+		GameTooltip_HideShoppingTooltips(ItemToolTip)
+	end
 end
 
 local function hideItemToolTip(cell)
@@ -298,7 +298,7 @@ local function AddNotesTooltip(tooltip, pin)
 		return
 	end
 	
-	local note = RSNotes.GetNote(pin.POI.entityID, pin.POI.mapID)
+	local note = RSNotes.GetNote(pin.POI.entityID, pin.POI.mapID, pin.POI.minieventID)
 	if (note) then
 		local line = tooltip:AddLine()
 		tooltip:SetCell(line, 1, RSUtils.TextColor(note, "FFFFCC"), nil, "LEFT", 10, nil, nil, nil, RSConstants.TOOLTIP_MAX_WIDTH, RSConstants.TOOLTIP_MAX_WIDTH)
@@ -353,8 +353,7 @@ local function AddLootTooltip(tooltip, pin)
 
 				tooltip:SetCell(line, j, "|T"..iconFileDataID..":24|t", nil, "LEFT", 1, nil, nil, nil, nil, 20, 20)
 				tooltip:SetCellScript(line, j, "OnEnter", showItemToolTip, { itemInfo[1], itemLink, itemClassID, itemSubClassID });
-				tooltip:SetCellScript(line, j, "OnKeyDown", showItemComparationTooltip);
-				tooltip:SetCellScript(line, j, "OnKeyUp", hideItemComparationTooltip);
+				tooltip:SetCellScript(line, j, "OnEvent", showHideItemComparationTooltip)
 				tooltip:SetCellScript(line, j, "OnLeave", hideItemToolTip)
 				tooltip:SetCellScript(line, j, "OnMouseDown", filterItem, { itemInfo[1], itemClassID, itemSubClassID, itemLink })
 

@@ -101,8 +101,9 @@ local specCodeToID = {
 	["MONKHEAL"] = 270,
 	["DEMONHUNTERDPS"] = 577,
 	["DEMONHUNTERTANK"] = 581,
-	["EVOKERDPS"] = 1467,
+	["EVOKERDPS1"] = 1467,
 	["EVOKERHEAL"] = 1468,
+	["EVOKERDPS2"] = 1473,
 }
 
 local specLocalizate = {
@@ -217,12 +218,23 @@ local zoneEJids = {
 	S_ZoneT28SFO = 1195,
 	S_ZoneT29VotI = 1200,
 	S_ZoneT30 = 1208,
+	S_ZoneT31 = 1207,
 }
 for prefix,eID in pairs(zoneEJids) do
 	L[prefix] = EJ_GetInstanceInfo(eID)
 end
 
 local encounterIDtoEJidData = {
+	[2820] = 2564,	--Gnarlroot
+	[2709] = 2554,	--Igira the Cruel
+	[2737] = 2557,	--Volcoross
+	[2731] = 2553,	--Larodar, Keeper of the Flame
+	[2728] = 2555,	--Council of Dreams
+	[2708] = 2556,	--Nymue, Weaver of the Cycle
+	[2824] = 2563,	--Smolderon
+	[2786] = 2565,	--Tindral Sageswift, Seer of Flame
+	[2677] = 2519,	--Fyrakk the Blazing
+
 	[2688] = 2522,	--Kazzara, the Hellforged
 	[2682] = 2524,	--Assault of the Zaqali
 	[2687] = 2529,	--The Amalgamation Chamber
@@ -462,15 +474,15 @@ local encounterIDtoEJidChache = {
 }
 
 local encounterIDtoNamePredef = {
-	[2688] = "Kazzara, the Hellforged",
-	[2682] = "Assault of the Zaqali",
-	[2687] = "The Amalgamation Chamber",
-	[2693] = "The Forgotten Experiments",
-	[2680] = "Rashok, the Elder",
-	[2689] = "The Vigilant Steward, Zskarn",
-	[2683] = "Magmorax",
-	[2684] = "Echo of Neltharion",
-	[2685] = "Scalecommander Sarkareth",
+	[2820] = "Gnarlroot",	--
+	[2709] = "Igira the Cruel",	--
+	[2737] = "Volcoross",	--
+	[2731] = "Larodar, Keeper of the Flame",	--
+	[2728] = "Council of Dreams",	--
+	[2708] = "Nymue, Weaver of the Cycle",	--
+	[2824] = "Smolderon",	--
+	[2786] = "Tindral Sageswift, Seer of Flame",	--
+	[2677] = "Fyrakk the Blazing",	--
 }
 
 L.bossName = setmetatable({}, {__index=function (t, k)

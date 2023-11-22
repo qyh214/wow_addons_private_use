@@ -63,3 +63,25 @@ $r = realm
 $d = date
 $b = line change]=]
 L["watermarktest"] = "Watermark display (toggle)"
+
+-- Added by Nukme
+L["Auto-Screenshot Management Addon\n\n"] = true
+L["Version"] = true
+L["Author"] = true
+L["Github Repo"] = true
+L["NGA Feedback"] = true
+L["mythicpluscompletion"] = true
+L["General Settings"] = true
+L["Difficulty Settings"] = true
+L["DifficultyID reference webpage:"] = true
+L["PARTY"] = true
+L["RAID"] = true
+L["SCENARIO"] = true
+L["PVP"] = true
+L["NONE"] = true
+L["Reset Character Kill History"] = true
+L["Reset All General Settings"]  = true
+L["Click to Reset"] = true
+L["Encounter Success"] = true
+L["Screenshot Events"] = true
+L["Encounter Settings"] = true

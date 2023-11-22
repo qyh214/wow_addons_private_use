@@ -13,7 +13,7 @@ local strsplit = _G.strsplit
 local floor = _G.floor
 local tremove = _G.tremove
 local UnitName = _G.UnitName
-local tinsert = _G.tinsert
+local tinsert = tinsert
 local IsInRaid = _G.IsInRaid
 local GetNumGroupMembers = _G.GetNumGroupMembers
 local GetRaidRosterInfo = _G.GetRaidRosterInfo
@@ -80,11 +80,11 @@ function Details.packFunctions.PackCombatData(combatObject, flags)
     --0x8 misc
     --0x10 no combat header
 
-    table.wipe(actorInformation)
-    table.wipe(actorInformationIndexes)
-    table.wipe(actorDamageInfo)
-    table.wipe(actorHealInfo)
-    table.wipe(actorUtilityInfo)
+    Details:Destroy(actorInformation)
+    Details:Destroy(actorInformationIndexes)
+    Details:Destroy(actorDamageInfo)
+    Details:Destroy(actorHealInfo)
+    Details:Destroy(actorUtilityInfo)
 
     --reset the serial counter
     entitySerialCounter = 0
@@ -427,7 +427,7 @@ function Details.packFunctions.PackDamage(combatObject)
     local actorsToPack = {}
 
     --get the player object from the combat > damage container
-    local playerName = UnitName("player")
+    local playerName = Details.playername
     local playerObject = combatObject:GetActor(DETAILS_ATTRIBUTE_DAMAGE, playerName)
     if (not playerObject) then
         if (isDebugging) then
@@ -677,7 +677,7 @@ function Details.packFunctions.PackHeal(combatObject)
     local actorsToPack = {}
 
     --get the player object from the combat > damage container
-    local playerName = UnitName("player")
+    local playerName = Details.playername
     local playerObject = combatObject:GetActor(DETAILS_ATTRIBUTE_HEAL, playerName)
     if (not playerObject) then
         if (isDebugging) then
@@ -931,7 +931,7 @@ function Details.packFunctions.PackUtility(combatObject)
     local actorsToPack = {}
 
     --get the player object from the combat > utility container
-    local playerName = UnitName("player")
+    local playerName = Details.playername
     local playerObject = combatObject:GetActor(DETAILS_ATTRIBUTE_MISC, playerName)
     if (not playerObject) then
         if (isDebugging) then

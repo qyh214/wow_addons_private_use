@@ -8,7 +8,7 @@ local L = MDT.L
 -- Additional dungeon lists just need to be added to seasonList and dungeonSelectionToIndex.
 
 -- How to find the dungeon map files:
--- Add launch option "- console" to wow
+-- Add launch option "-console" to wow
 -- Unsync your Config.wtf from wow servers: SET synchronizeConfig "0"
 -- Add the following to the Config.wtf: SET ConsoleKey "F10" (or whatever key you want)
 -- Go to character selection screen and press your console key
@@ -33,13 +33,15 @@ if MDT:IsDragonflight() then
   tinsert(MDT.seasonList, L["Dragonflight Season 1"])
   tinsert(MDT.dungeonSelectionToIndex, { 42, 43, 44, 45, 6, 3, 46, 47 })
   tinsert(MDT.seasonList, L["Dragonflight Season 2"])
-  tinsert(MDT.dungeonSelectionToIndex, { 49, 48, 51, 50, 8, 16, 22, 77})
+  tinsert(MDT.dungeonSelectionToIndex, { 49, 48, 51, 50, 8, 16, 22, 77 })
+  tinsert(MDT.seasonList, L["Dragonflight Season 3"])
+  tinsert(MDT.dungeonSelectionToIndex, { 100, 101, 102, 103, 15, 104, 4, 105 })
 end
 
 if MDT:IsWrath() then
   tinsert(MDT.seasonList, L["Wrath of the Lich King"])
   tinsert(MDT.dungeonSelectionToIndex,
-    { 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76 })
+    { 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 80, 81 })
 end
 
 local seasonList = MDT.seasonList
@@ -61,9 +63,21 @@ function MDT:UpdateDungeonDropDown()
   dungeonDropdown:SetList(dungeonSelectionToNames[db.selectedDungeonList])
   dungeonDropdown:SetValue(indexToDungeonSelection[db.selectedDungeonList][currentDungeonIdx])
   dungeonDropdown:ClearFocus()
-  sublevelDropdown:SetList(MDT.dungeonSubLevels[currentDungeonIdx])
+  local sublevels = MDT.dungeonSubLevels[currentDungeonIdx]
+  sublevelDropdown:SetList(sublevels)
   sublevelDropdown:SetValue(db.presets[currentDungeonIdx][db.currentPreset[currentDungeonIdx]].value.currentSublevel)
   sublevelDropdown:ClearFocus()
+  local group = MDT.main_frame.DungeonSelectionGroup
+  --dirty hack
+  if #sublevels == 1 then
+    group.children[2] = nil
+    group:SetHeight(25)
+    sublevelDropdown.frame:Hide()
+  else
+    group.children[2] = sublevelDropdown
+    group:SetHeight(50)
+    sublevelDropdown.frame:Show()
+  end
 end
 
 ---CreateDungeonSelectDropdown
@@ -127,7 +141,6 @@ function MDT:CreateDungeonSelectDropdown(frame)
   group.SublevelDropdown:SetCallback("OnValueChanged", function(widget, callbackName, key)
     db.presets[db.currentDungeonIdx][db.currentPreset[db.currentDungeonIdx]].value.currentSublevel = key
     MDT:UpdateMap()
-    MDT:ZoomMapToDefault()
   end)
   group:AddChild(group.SublevelDropdown)
 

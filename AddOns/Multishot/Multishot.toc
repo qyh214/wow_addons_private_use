@@ -1,13 +1,13 @@
-## Interface: 90200
+## Interface: 100200
 ## Title: Multishot Fan Update
 ## Notes: Takes screenshots of memorable events in your World of Warcraft career.
-## Version: 9.2.0.3
+## Version: 10.2.0.1
 ## Author: dlui & dridzt
 ## X-Maintainer: Nukme 
 ## X-Repository: https://github.com/Nukme/Multishot
 ## X-NGA_Feedback: https://bbs.nga.cn/read.php?tid=7534350
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3
-## SavedVariables: MultishotConfig
+## SavedVariables: MultishotConfigDB, MultishotHistoryDB
 ## SavedVariablesPerCharacter: MultishotPlayerScreens
 
 #@no-lib-strip@

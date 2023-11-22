@@ -248,9 +248,11 @@ local DFTalentImportMixin = {
 
         local classInfo = Internal.GetClassInfoBySpecID(specID);
 
-        local treeInfo = Internal.GetTreeInfoBySpecID(specID);
-        local treeNodes = Internal.GetTreeInfoBySpecID(specID);
+        C_ClassTalents.InitializeViewLoadout(specID, 70);
+        C_ClassTalents.ViewLoadout({});
 
+        local treeID = C_ClassTalents.GetTraitTreeForSpec(specID)
+        local treeInfo = C_Traits.GetTreeInfo(Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, treeID);
         if not self:IsHashEmpty(treeHash) then
             -- allow third-party sites to generate loadout strings with an empty tree hash, which bypasses hash validation
             if not self:HashEquals(treeHash, C_Traits.GetTreeHash(treeInfo.ID)) then
@@ -283,7 +285,7 @@ local DFTalentImportMixin = {
         for i, treeNodeID in ipairs(treeNodes) do
             local indexInfo = loadoutContent[i];
             if indexInfo.isNodeSelected then
-                local treeNode = Internal.GetNodeInfo(treeNodeID);
+                local treeNode = C_Traits.GetNodeInfo(Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, treeNodeID);
                 if indexInfo.isChoiceNode then
                     results[treeNodeID] = indexInfo.choiceNodeSelection;
                 else

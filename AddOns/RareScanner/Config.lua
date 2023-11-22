@@ -1050,9 +1050,14 @@ local function GetNpcFilterOptions()
 					get = function(_, value) return private.filter_options_input end,
 					set = function(_, value)
 						private.filter_options_input = value
+						
 						-- search
 						if (private.filter_options_subzones) then
-							searchNpcByZoneID(private.filter_options_subzones, value)
+							if (not value or string.len(value) < 3) then
+								searchNpcByZoneID(private.filter_options_subzones, value)
+							else
+								searchNpcByContinentID(private.filter_options_continents, value)
+							end
 						else
 							searchNpcByContinentID(private.filter_options_continents, value)
 						end
@@ -1779,7 +1784,11 @@ local function GetContainerFilterOptions()
 						private.container_filter_options_input = value
 						-- search
 						if (private.container_filter_options_subzones) then
-							searchContainerByZoneID(private.container_filter_options_subzones, value)
+							if (not value or string.len(value) < 3) then
+								searchContainerByZoneID(private.container_filter_options_subzones, value)
+							else
+								searchContainerByContinentID(private.container_filter_options_continents, value)
+							end
 						else
 							searchContainerByContinentID(private.container_filter_options_continents, value)
 						end
@@ -2075,9 +2084,14 @@ local function GetEventFilterOptions()
 					get = function(_, value) return private.event_filter_options_input end,
 					set = function(_, value)
 						private.event_filter_options_input = value
+						
 						-- search
 						if (private.event_filter_options_subzones) then
-							searchEventByZoneID(private.event_filter_options_subzones, value)
+							if (not value or string.len(value) < 3) then
+								searchEventByZoneID(private.event_filter_options_subzones, value)
+							else
+								searchEventByContinentID(private.event_filter_options_continents, value)
+							end
 						else
 							searchEventByContinentID(private.event_filter_options_continents, value)
 						end

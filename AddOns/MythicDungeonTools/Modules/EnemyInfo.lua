@@ -21,16 +21,18 @@ local function CreateDispatcher(argCount)
     ]]
 
   local ARGS = {}
-  for i = 1, argCount do ARGS[i] = "arg" .. i end
+  for i = 1, argCount do ARGS[i] = "arg"..i end
   code = code:gsub("ARGS", tconcat(ARGS, ", "))
-  return assert(loadstring(code, "safecall Dispatcher[" .. argCount .. "]"))(xpcall, errorhandler)
+  return assert(loadstring(code, "safecall Dispatcher["..argCount.."]"))(xpcall, errorhandler)
 end
 
-local Dispatchers = setmetatable({}, { __index = function(self, argCount)
-  local dispatcher = CreateDispatcher(argCount)
-  rawset(self, argCount, dispatcher)
-  return dispatcher
-end })
+local Dispatchers = setmetatable({}, {
+  __index = function(self, argCount)
+    local dispatcher = CreateDispatcher(argCount)
+    rawset(self, argCount, dispatcher)
+    return dispatcher
+  end
+})
 Dispatchers[0] = function(func)
   return xpcall(func, errorhandler)
 end
@@ -116,7 +118,6 @@ local function MakeEnemeyInfoFrame()
 
   --EnemyInfo
   local function DrawGroup1(container)
-
     ---LEFT
     local leftContainer = AceGUI:Create("SimpleGroup")
     f.leftContainer = leftContainer
@@ -359,7 +360,7 @@ local function MakeEnemeyInfoFrame()
       SendChatMessage(string.format(L["MDT: Spells for %s:"], enemyName), distribution)
       for i, child in pairs(f.spellScroll.children) do
         local link = GetSpellLink(child.spellId)
-        SendChatMessage(i .. ". " .. link, distribution)
+        SendChatMessage(i..". "..link, distribution)
       end
     end)
     spellButtonsContainer:AddChild(sendSpellsButton)
@@ -417,6 +418,11 @@ local characteristics = {
   ["Enslave Demon"] = "Interface\\ICONS\\spell_shadow_enslavedemon",
   ["Slow"] = "Interface\\ICONS\\ability_rogue_trip",
   ["Imprison"] = "Interface\\ICONS\\ability_demonhunter_imprison",
+  ["Sleep Walk"] = "Interface\\ICONS\\ability_xavius_dreamsimulacrum",
+  ["Scare Beast"] = "Interface\\ICONS\\ability_druid_cower",
+  ["Hibernate"] = "Interface\\ICONS\\spell_nature_sleep",
+  ["Turn Evil"] = "Interface\\ICONS\\ability_paladin_turnevil",
+  ["Mind Soothe"] = "Interface\\ICONS\\spell_holy_mindsooth",
 }
 local spellBlacklist = {
   [277564] = true, --Regenerative Blood
@@ -482,6 +488,8 @@ local spellBlacklist = {
   [391191] = true, -- dh stuff
   [390181] = true, -- dh stuff
   [228318] = true, -- enrage
+  [374557] = true, -- brittle
+  [387096] = true, -- pyrogenics
   --[X]  = true,
 }
 local lastEnemyIdx
@@ -498,6 +506,7 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
   lastEnemyIdx = enemyIdx
   if not enemyIdx then return end
   local data = MDT.dungeonEnemies[db.currentDungeonIdx][enemyIdx]
+  if not data then return end
   local f = MDT.EnemyInfoFrame
   f:SetTitle(L[data.name])
   f.model:SetDisplayInfo(data.displayId or 39490)
@@ -586,6 +595,7 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
   if data.spells then
     for spellId, spellData in pairs(data.spells) do
       if MDT:GetDB().devMode or not spellBlacklist[spellId] then
+        ---@diagnostic disable-next-line: param-type-mismatch
         local spellButton = AceGUI:Create("MDTSpellButton")
         spellButton:SetSpell(spellId, spellData)
         spellButton:Initialize()
@@ -599,6 +609,7 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
   f.powerScroll:ReleaseChildren()
   if data.powers then
     for powerSpellId, powerData in pairs(data.powers) do
+      ---@diagnostic disable-next-line: param-type-mismatch
       local powerButton = AceGUI:Create("MDTPowerButton")
       powerButton:SetSpell(powerSpellId, powerData)
       powerButton:Initialize()

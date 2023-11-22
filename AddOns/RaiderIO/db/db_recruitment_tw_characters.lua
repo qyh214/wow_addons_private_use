@@ -2,17 +2,13 @@
 -- Copyright (c) 2023 by Ludicrous Speed, LLC
 -- All rights reserved.
 --
-local provider={name=...,data=3,region="tw",date="2023-06-21T21:02:58Z",numCharacters=30752,db={}}
+local provider={name=...,data=3,region="tw",date="2023-11-22T08:38:45Z",numCharacters=29829,db={}}
 local F
 
-F = function() provider.db["阿薩斯"]={0,"惡魔腳毛","漆黑腳毛","蜜雪","黑龍腳毛"} end F()
-F = function() provider.db["世界之樹"]={8,"Paoda","菜菜子","阿提米斯"} end F()
-F = function() provider.db["亞雷戈斯"]={14,"穢邪路路"} end F()
-F = function() provider.db["冰霜之刺"]={16,"七轟"} end F()
-F = function() provider.db["聖光之願"]={18,"永遠沒事做"} end F()
-F = function() provider.db["日落沼澤"]={20,"冰火雙重天","十一顆","咖哩咖哩幽默","咖哩小尾巴","小壞","我爱看烟花","旅行包","晴朗","灵犀","無尾熊之星","肉嘟嘟胖呼呼","花殤紫幽幽","阿戦","阿莱克斯莉萨","非正义的圣光"} end F()
-F = function() provider.db["暗影之月"]={50,"Nazhock","Worchief","巨獸斬","狼魅妹"} end F()
-F = function() provider.db["水晶之刺"]={58,"潘鳳"} end F()
+F = function() provider.db["暗影之月"]={0,"Momococo","低排放載具","吃土更健康","地獄吹水","大叔和理非","天線低低嗶","小龍公主","惡魔小妹妹","浪潮披薩","減弱薩滿","科興大師兄","米拉妮","聖誕","芋泥","阿耳忒弥斯","領主","黑魔后"} end F()
+F = function() provider.db["眾星之子"]={34,"盐板肥牛"} end F()
+F = function() provider.db["冰風崗哨"]={36,"Mirmir","Ruobierten","Superpriest","丨扣泥奇蛙丨","化身","反应迟钝","吕小布","天枰座","奎賽霖","小仙女你别跑","小而香","希曼","幽冥咆哮","忧郁小猫猫","怪我入戏太深","情圣马库斯","我只是练气期","我踏月色而来","提刀稳情场","无敌最俊朗","朱小河","沙福林","猿老頭","神说要有光","翎舞尛宝","翎舞尛战","翎舞尛牛","老十交公粮","老十去洗澡","老十晒衣服","老夫子","蒽蒽漸行漸遠","贫道法号断德","超級脆脆鯊","酱香小排骨","香辣小龙虾","麦辣鸡腿堡"} end F()
+F = function() provider.db["世界之樹"]={110,"Tall","待自来"} end F()
 
 F = nil
 RaiderIO.AddProvider(provider)

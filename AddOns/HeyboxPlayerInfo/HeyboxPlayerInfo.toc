@@ -1,9 +1,0 @@
-## Interface: 00000
-## Title: 黑盒工坊配置同步模块
-## Version: 1.9.7.5
-## SavedVariables:  HEYBOX_SAVED_PLAYER_INFOS
-## SavedVariablesPerCharacter:  HEYBOX_SAVED_PER_PLAYER_INFOS
-Init.lua
-Utils.lua
-GetData.lua
-SaveData.lua

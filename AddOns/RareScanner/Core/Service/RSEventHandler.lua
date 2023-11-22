@@ -198,17 +198,22 @@ local function OnPlayerTargetChanged()
 		local unitClassification = UnitClassification("target")
 		local npcID = id and tonumber(id) or nil
 		local playerMapID = C_Map.GetBestMapForUnit("player")
+		local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
+		
+		-- If not known ignore it
+		if (not npcInfo) then
+			return
+		end
 
 		-- Check if we have the NPC in our database but the addon didnt detect it
 		-- This will happend in the case where the NPC is a rare, but it doesnt have a vignette
-		if (not RSGeneralDB.GetAlreadyFoundEntity(npcID) and RSNpcDB.GetInternalNpcInfo(npcID)) then
+		if (not RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
 			RSGeneralDB.AddAlreadyFoundNpcWithoutVignette(npcID)
 		end
 
 		-- check if killed
-		if (RSGeneralDB.GetAlreadyFoundEntity(npcID) and not RSNpcDB.IsNpcKilled(npcID)) then
+		if (not RSNpcDB.IsNpcKilled(npcID)) then
 			-- Update coordinates (if zone doesnt use vignettes or it is detected with nameplates)
-			local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
 			if ((RSMapDB.IsZoneWithoutVignette(playerMapID) or npcInfo.nameplate) and CheckInteractDistance("unit", 4)) then
 				RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(npcID)
 			end
@@ -220,8 +225,7 @@ local function OnPlayerTargetChanged()
 			end
 
 			-- Check the questID asociated to see if its completed
-			local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)
-			if (npcInfo and npcInfo.questID) then
+			if (npcInfo.questID) then
 				local completed = false
 				for i, questID in ipairs (npcInfo.questID) do
 					if (C_QuestLog.IsQuestFlaggedCompleted(questID)) then
@@ -300,7 +304,7 @@ local function OnLootOpened()
 				local npcID = id and tonumber(id) or nil
 				
 				-- If its a supported NPC
-				if (RSGeneralDB.GetAlreadyFoundEntity(npcID)) then
+				if (RSGeneralDB.GetAlreadyFoundEntity(npcID) or RSNpcDB.GetInternalNpcInfo(npcID)) then
 					local itemLink = GetLootSlotLink(i)
 					if (itemLink) then
 						local _, _, _, lootType, id, _, _, _, _, _, _, _, _, _, name = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")

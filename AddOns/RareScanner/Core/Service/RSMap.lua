@@ -266,6 +266,9 @@ function RSMap.GetWorldMapPOI(objectGUID, vignetteInfo, mapID)
 		-- If Ancestral Spirit in Forbidden Reach or Loam Scoat in Zaralek Cavern, locate real NPC
 		if ((npcID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT or npcID == RSConstants.ZARALEK_CAVERN_LOAM_SCOUT) and RSNpcDB.GetNpcId(vignetteInfo.name, mapID)) then
 			npcID = RSNpcDB.GetNpcId(vignetteInfo.name, mapID)
+		-- If pre-event, sets the NPC ID
+		elseif (RSConstants.NPCS_WITH_PRE_EVENT[npcID]) then
+			npcID = RSConstants.NPCS_WITH_PRE_EVENT[npcID]
 		end
 		
 		local npcInfo = RSNpcDB.GetInternalNpcInfo(npcID)

@@ -1,31 +1,33 @@
 
 --[[
 Name: LibTime-1.0
-Revision: $Revision: r37_RS $
+Revision: $Revision: r41 $
 Author: Hizuro (hizuro@gmx.net)
 Description: A little library around date, time and GetGameTime and more...
 Dependencies: LibStub
 License: GPL v3
 ]]
 
-local MAJOR, MINOR = "LibTime-1.0", tonumber((gsub("r37_RS","r",""))) or 999;
+local MAJOR, MINOR = "LibTime-1.0", tonumber((gsub("r41","r",""))) or 999;
 local lib = LibStub:NewLibrary(MAJOR, MINOR);
 
 if not lib then return; end
 
 local GetGameTime, date, time, _G = GetGameTime, date, time, _G;
+local RequestTimePlayed,strsplit,ipairs = RequestTimePlayed,strsplit,ipairs;
+local tonumber,tinsert,unpack = tonumber,tinsert,unpack;
 local hms,hm = "%02d:%02d:%02d","%02d:%02d";
-local realmTime,minute = false,nil;
-local playedTimeout, playedHide = 12, false;
-local playedTotal, playedLevel, playedSession = 0, 0, false;
-local suppressAllPlayedMsgs = false;
-local realmTimeSyncTicker
+local realmTime,minute = nil,nil;
+local IsPlayerLoggedIn,IsPlayedTimeRequested = false,false;
+local playedTotal, playedLevel, playedSession;
+local realmTimeSyncTicker,chatFrames,UnregisterEvent,RegisterEvent
 local events = {};
 
 lib.countryLocalizedNames = {}; -- filled on end of the file
 
+local countries = {};
 local countryNames = {};
-local countries = {
+local countryList = {
 	"Afghanistan;4.5;0","Alaska;-9;1","Arabian;3;0","Argentina;-3;0","Armenia;4;1","Australian Central;9.5;1","Australian Eastern;10;1",
 	"AustralianWestern;8;0","Azerbaijan;4;1","Azores;-1;1","Bangladesh;6;0","Bhutan;6;0","Bolivia;-4;0","Brazil;-3;0","Brunei;8;0","Cape Verde;-1;0",
 	"Central Africa;2;0","Central Brazilian;-4;1","Central European;1;1","Central Greenland;-3;1","Central Indonesian;8;0","Chamorro;10;0","Chile;-4;1",
@@ -45,36 +47,50 @@ local countries = {
 
 --[[ internal event and update functions ]]--
 
-local chatFrames = false;
 local function toggleChatFramesTimePlayedMsgEvent()
+	if not UnregisterEvent then
+		local mt = getmetatable(_G["ChatFrame1"]).__index;
+		if mt and mt.UnregisterEvent then
+			UnregisterEvent = mt.UnregisterEvent;
+			RegisterEvent = mt.RegisterEvent;
+		end
+	end
 	if not chatFrames then
+		-- unregister TIME_PLAYED_MSG to hide played time message in chat
 		chatFrames = {};
 		for i=1, 10 do
 			local frame = _G["ChatFrame"..i];
-			if _G["ChatFrame"..i] and _G["ChatFrame"..i].messageTypeList then
-				for _, group in ipairs(_G["ChatFrame"..i].messageTypeList) do
+			if frame and frame.messageTypeList then
+				for _, group in ipairs(frame.messageTypeList) do
 					if group=="SYSTEM" then
-						_G["ChatFrame"..i]:UnregisterEvent("TIME_PLAYED_MSG");
+						UnregisterEvent(frame,"TIME_PLAYED_MSG");
 						tinsert(chatFrames,i);
 					end
 				end
 			end
 		end
 	else
+		-- re register event TIME_PLAYED_MSG
 		for i=1, #chatFrames do
 			if _G["ChatFrame"..chatFrames[i]] then
-				_G["ChatFrame"..chatFrames[i]]:RegisterEvent("TIME_PLAYED_MSG");
+				RegisterEvent(_G["ChatFrame"..chatFrames[i]],"TIME_PLAYED_MSG");
 			end
 		end
+		chatFrames = nil
 	end
 end
 
-local function playedTimeoutFunc()
-	if not playedTimeout then
-		return;
+local function DoRequestTimePlayed()
+	-- played time already known
+	if playedTotal then
+		return
 	end
-	playedHide = true;
-	RequestTimePlayed();
+	-- disable played message output in chat windows
+	toggleChatFramesTimePlayedMsgEvent();
+	-- request /played if event PLAYER_LOGIN already fired
+	if IsPlayerLoggedIn then
+		RequestTimePlayed();
+	end
 end
 
 local function realmTimeSyncTickerFunc()
@@ -88,41 +104,36 @@ local function realmTimeSyncTickerFunc()
 	end
 end
 
-function events.VARIABLES_LOADED()
-	UIParent:RegisterEvent("TIME_PLAYED_MSG");
-end
-
 function events.PLAYER_LOGIN()
-	if (not lib.countryLocalizedNames) then
-		lib.loadCountryLocalizedNames()
-	end
-	for index,data in ipairs(countries) do
+	for index,data in ipairs(countryList) do
 		local name,shift,dst = strsplit(";",data);
 		countries[index] = {name=lib.countryLocalizedNames[name] or name,timeshift=tonumber(shift),dst=dst==1};
 		countryNames[index] = lib.countryLocalizedNames[name] or name;
 	end
+	countryList=nil;
 
 	local hours, minutes, seconds = GetGameTime();
 	playedSession = time();
 	if tonumber(seconds) then
 		-- YEAH! Surprise! GetGameTime returns time "with seconds"... [maybe in future? ^_^]
-		realmTimeSyncTickerFunc = nil;
 		lib.GetGameTime = GetGameTime;
 	else
 		minute = minutes;
 		realmTimeSyncTicker = C_Timer.NewTicker(0.5,realmTimeSyncTickerFunc);
 	end
-	toggleChatFramesTimePlayedMsgEvent();
-	if playedTimeout then
-		C_Timer.After(playedTimeout,playedTimeoutFunc);
+	IsPlayerLoggedIn=true;
+	if IsPlayedTimeRequested then
+		DoRequestTimePlayed()
 	end
 end
 
 function events.TIME_PLAYED_MSG(...)
-	playedTimeout, playedTotal, playedLevel = false, ...;
-	if not suppressAllPlayedMsgs and chatFrames then
+	playedTotal, playedLevel = ...;
+	if chatFrames and #chatFrames>0 then
+		-- reenable played time messages in chat windows
 		toggleChatFramesTimePlayedMsgEvent();
 	end
+	UIParent:UnregisterEvent("TIME_PLAYED_MSG");
 end
 
 UIParent:HookScript("OnEvent",function(self,event,...)
@@ -132,6 +143,8 @@ UIParent:HookScript("OnEvent",function(self,event,...)
 	end
 end);
 
+UIParent:RegisterEvent("TIME_PLAYED_MSG");
+
 
 --[[ library functions ]]--
 local function get_date(timeval,b24h,bUTC)
@@ -139,6 +152,7 @@ local function get_date(timeval,b24h,bUTC)
 	local t = {strsplit(":",date(datestr,timeval))};
 	return tonumber(t[1]),tonumber(t[2]),tonumber(t[3]), t[4];
 end
+
 
 --- GetGameTime
 -- @param b24hours [bool]
@@ -211,7 +225,7 @@ function lib.iterateCountryList()
 end
 
 
---- GetPlayedTime
+--- GetPlayedTime - Get played time. Requires use of RequestPlayedTime.
 -- @return playedTotal, playedLevel, playedSession
 function lib.GetPlayedTime()
 	local session = time()-playedSession;
@@ -219,6 +233,21 @@ function lib.GetPlayedTime()
 		return playedTotal+session, playedLevel+session, session;
 	end
 	return 0, 0, session;
+end
+
+
+--- RequestPlayedTime - Now it is required to request played time before get it.
+-- @return nil
+function lib.RequestPlayedTime()
+	if playedTotal then
+		return -- played time already known
+	end
+	-- request /played if event PLAYER_LOGIN already fired
+	if IsPlayerLoggedIn then
+		DoRequestTimePlayed();
+	else -- wait on event PLAYER_LOGIN for request from client api
+		IsPlayedTimeRequested = true;
+	end
 end
 
 
@@ -249,36 +278,22 @@ function lib.GetTimeString(name,b24hours,displaySeconds,countryId)
 end
 
 
---- SuppressAllPlayedForSeconds
--- @param seconds [number] - time in seconds from login to suppress all played time messages
-function lib.SuppressAllPlayedForSeconds(seconds)
-	if (type(seconds)=="number") then
-		suppressAllPlayedMsgs = seconds;
-		local since = time()-(playedSession or 0);
-		if since<seconds then
-			C_Timer.After(seconds-since+15,function()
-				if chatFrames then
-					toggleChatFramesTimePlayedMsgEvent();
-				end
-			end);
-		end
-	end
+--- SuppressAllPlayedForSeconds - Deprecated!
+function lib.SuppressAllPlayedForSeconds()
+	print("LibTime-1.0:", " Warning. SuppressAllPlayedForSeconds function is deprecated. Will be removed soon.")
 end
 
 
--- localizations; filled by packager
+--- Localizations
+-- Do you want to help localize this library?
+-- https://legacy.curseforge.com/wow/addons/libtime-1-0/localization
 
-function lib.loadCountryLocalizedNames()
-	-- Do you want to help localize this library?
-	-- https://www.curseforge.com/wow/addons/libtime-1-0/localization
-	-- or https://legacy.curseforge.com/wow/addons/libtime-1-0/localization
-
-	-- [Info]:
-	-- I don't like it really but this localization was made with google translation.
-	-- Do you found wrong translations please go to the curseforge localization page and add the correct translation.
-	lib.countryLocalizedNames = {}
+-- [Info]:
+-- I don't like it really but this localization was made with google translation.
+-- Do you found wrong translations please go to the curseforge localization page and add the correct translation.
+do
 	local L = lib.countryLocalizedNames;
-	if LOCALE_deDE then
+	if _G["LOCALE_deDE"] then
 		L["Afghanistan"] = "Afghanistan"
 		L["Alaska"] = "Alaska"
 		L["Arabian"] = "arabisch"
@@ -393,7 +408,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Jakutsk"
 		L["Yap"] = "Kläffen"
 		L["Yekaterinburg"] = "Jekaterinburg"
-	elseif LOCALE_esES or LOCALE_esMX then
+	elseif _G["LOCALE_esES"] or _G["LOCALE_esMX"] then
 		L["Afghanistan"] = "Afganistán"
 		L["Alaska"] = "Alaska"
 		L["Arabian"] = "Árabe"
@@ -493,7 +508,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "Tuvalu"
 		L["Ulaanbaatar"] = "Ulán Bator"
 		L["Uruguay"] = "Uruguay"
-		L["US Central Standart Time (CST)"] = "EE.UU. Hora Estándar Central (CST)"
+		--L["US Central Standart Time (CST)"] = "EE.UU. Hora Estándar Central (CST)"
 		L["Uzbekistan"] = "Uzbekistán"
 		L["Vanuatu"] = "Vanuatu"
 		L["Venezuela"] = "Venezuela"
@@ -507,7 +522,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Yakutsk"
 		L["Yap"] = "Yap"
 		L["Yekaterinburg"] = "Ekaterimburgo"
-	elseif LOCALE_frFR then
+	elseif _G["LOCALE_frFR"] then
 		L["Afghanistan"] = "Afghanistan"
 		L["Alaska"] = "Alaska"
 		L["Arabian"] = "arabe"
@@ -608,7 +623,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "Tuvalu"
 		L["Ulaanbaatar"] = "Oulan-Bator"
 		L["Uruguay"] = "Uruguay"
-		L["US Central Standart Time (CST)"] = "Heure normale du centre des États-Unis (CST)"
+		--L["US Central Standart Time (CST)"] = "Heure normale du centre des États-Unis (CST)"
 		L["Uzbekistan"] = "Ouzbékistan"
 		L["Vanuatu"] = "Vanuatu"
 		L["Venezuela"] = "Venezuela"
@@ -622,7 +637,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Iakoutsk"
 		L["Yap"] = "Japper"
 		L["Yekaterinburg"] = "Iekaterinbourg"
-	elseif LOCALE_itIT then
+	elseif _G["LOCALE_itIT"] then
 		L["Afghanistan"] = "Afghanistan"
 		L["Alaska"] = "Alaska"
 		L["Arabian"] = "arabo"
@@ -723,7 +738,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "Tuvalù"
 		L["Ulaanbaatar"] = "Ulan Bator"
 		L["Uruguay"] = "Uruguay"
-		L["US Central Standart Time (CST)"] = "Ora standard centrale degli Stati Uniti (CST)"
+		--L["US Central Standart Time (CST)"] = "Ora standard centrale degli Stati Uniti (CST)"
 		L["Uzbekistan"] = "Uzbekistan"
 		L["Vanuatu"] = "Vanuatu"
 		L["Venezuela"] = "Venezuela"
@@ -737,7 +752,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Jakutsk"
 		L["Yap"] = "Già"
 		L["Yekaterinburg"] = "Ekaterinburg"
-	elseif LOCALE_koKR then
+	elseif _G["LOCALE_koKR"] then
 		L["Afghanistan"] = "아프가니스탄"
 		L["Alaska"] = "알래스카"
 		L["Arabian"] = "아라비아 사람"
@@ -838,7 +853,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "투발루"
 		L["Ulaanbaatar"] = "울란바토르"
 		L["Uruguay"] = "우루과이"
-		L["US Central Standart Time (CST)"] = "미국 중부 표준시(CST)"
+		--L["US Central Standart Time (CST)"] = "미국 중부 표준시(CST)"
 		L["Uzbekistan"] = "우즈베키스탄"
 		L["Vanuatu"] = "바누아투"
 		L["Venezuela"] = "베네수엘라"
@@ -852,7 +867,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "야쿠츠크"
 		L["Yap"] = "얍"
 		L["Yekaterinburg"] = "예 카테 린 부르크"
-	elseif LOCALE_ptBR or LOCALE_ptPT then
+	elseif _G["LOCALE_ptBR"] or _G["LOCALE_ptPT"] then
 		L["Afghanistan"] = "Afeganistão"
 		L["Alaska"] = "Alasca"
 		L["Arabian"] = "árabe"
@@ -953,7 +968,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "Tuvalu"
 		L["Ulaanbaatar"] = "Ulaanbaatar"
 		L["Uruguay"] = "Uruguai"
-		L["US Central Standart Time (CST)"] = "Horário Padrão Central dos EUA (CST)"
+		--L["US Central Standart Time (CST)"] = "Horário Padrão Central dos EUA (CST)"
 		L["Uzbekistan"] = "Uzbequistão"
 		L["Vanuatu"] = "Vanuatu"
 		L["Venezuela"] = "Venezuela"
@@ -967,7 +982,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Iakutsk"
 		L["Yap"] = "Yap"
 		L["Yekaterinburg"] = "Ecaterimburgo"
-	elseif LOCALE_ruRU then
+	elseif _G["LOCALE_ruRU"] then
 		L["Afghanistan"] = "Афганистан"
 		L["Alaska"] = "Аляска"
 		L["Arabian"] = "арабский"
@@ -1068,7 +1083,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "Тувалу"
 		L["Ulaanbaatar"] = "Улан-Батор"
 		L["Uruguay"] = "Уругвай"
-		L["US Central Standart Time (CST)"] = "Центральное стандартное время США (CST)"
+		--L["US Central Standart Time (CST)"] = "Центральное стандартное время США (CST)"
 		L["Uzbekistan"] = "Узбекистан"
 		L["Vanuatu"] = "Вануату"
 		L["Venezuela"] = "Венесуэла"
@@ -1082,7 +1097,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "Якутск"
 		L["Yap"] = "Яп"
 		L["Yekaterinburg"] = "Екатеринбург"
-	elseif LOCALE_zhCN then
+	elseif _G["LOCALE_zhCN"] then
 		L["Afghanistan"] = "阿富汗"
 		L["Alaska"] = "阿拉斯加州"
 		L["Arabian"] = "阿拉伯"
@@ -1183,7 +1198,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "图瓦卢"
 		L["Ulaanbaatar"] = "乌兰巴托"
 		L["Uruguay"] = "乌拉圭"
-		L["US Central Standart Time (CST)"] = "美国中部标准时间 (CST)"
+		--L["US Central Standart Time (CST)"] = "美国中部标准时间 (CST)"
 		L["Uzbekistan"] = "乌兹别克斯坦"
 		L["Vanuatu"] = "瓦努阿图"
 		L["Venezuela"] = "委内瑞拉"
@@ -1197,7 +1212,7 @@ function lib.loadCountryLocalizedNames()
 		L["Yakutsk"] = "雅库茨克"
 		L["Yap"] = "邑"
 		L["Yekaterinburg"] = "叶卡捷琳堡"
-	elseif LOCALE_zhTW then
+	elseif _G["LOCALE_zhTW"] then
 		L["Afghanistan"] = "阿富汗"
 		L["Alaska"] = "阿拉斯加州"
 		L["Arabian"] = "阿拉伯"
@@ -1298,7 +1313,7 @@ function lib.loadCountryLocalizedNames()
 		L["Tuvalu"] = "圖瓦盧"
 		L["Ulaanbaatar"] = "烏蘭巴托"
 		L["Uruguay"] = "烏拉圭"
-		L["US Central Standart Time (CST)"] = "美國中部標準時間 (CST)"
+		--L["US Central Standart Time (CST)"] = "美國中部標準時間 (CST)"
 		L["Uzbekistan"] = "烏茲別克斯坦"
 		L["Vanuatu"] = "瓦努阿圖"
 		L["Venezuela"] = "委內瑞拉"

@@ -581,6 +581,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       width = WeakAuras.normalWidth,
       values = OptionsPrivate.Private.sound_types,
       sorting = OptionsPrivate.Private.SortOrderForValues(OptionsPrivate.Private.sound_types),
+      itemControl = "WeakAurasMediaSound",
       name = blueIfNoValue2(data, conditions[i].changes[j], "value", "sound", L["Differences"]),
       desc = descIfNoValue2(data, conditions[i].changes[j], "value", "sound", propertyType, OptionsPrivate.Private.sound_types),
       order = order,
@@ -1065,6 +1066,9 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
 
     local glowTypesExcepButtonOverlay = CopyTable(OptionsPrivate.Private.glow_types)
     glowTypesExcepButtonOverlay["buttonOverlay"] = nil
+    local glowTypesExcepButtonOverlayAndProc = CopyTable(OptionsPrivate.Private.glow_types)
+    glowTypesExcepButtonOverlayAndProc["buttonOverlay"] = nil
+    glowTypesExcepButtonOverlayAndProc["Proc"] = nil
 
     args["condition" .. i .. "value" .. j .. "glow_action"] = {
       type = "select",
@@ -1179,6 +1183,40 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       disabled = function() return not anyGlowExternal("use_glow_color", true) end
     }
     order = order + 1
+    args["condition" .. i .. "value" .. j .. "glow_startAnim"] = {
+      type = "toggle",
+      width = WeakAuras.normalWidth,
+      name = blueIfNoValue2(data, conditions[i].changes[j], "value", "glow_startAnim", L["Start Animation"], L["Start Animation"]),
+      desc = descIfNoValue2(data, conditions[i].changes[j], "value", "glow_startAnim", propertyType),
+      order = order,
+      get = function()
+        return type(conditions[i].changes[j].value) == "table" and conditions[i].changes[j].value.glow_startAnim;
+      end,
+      set = setValueComplex("glow_startAnim"),
+      hidden = function()
+        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", "Proc"))
+      end
+    }
+    order = order + 1
+    args["condition" .. i .. "value" .. j .. "glow_duration"] = {
+      type = "range",
+      control = "WeakAurasSpinBox",
+      width = WeakAuras.normalWidth,
+      name = blueIfNoValue2(data, conditions[i].changes[j], "value", "glow_duration", L["Duration"], L["Duration"]),
+      desc = descIfNoValue2(data, conditions[i].changes[j], "value", "glow_duration", propertyType),
+      order = order,
+      softMin = 0.01,
+      softMax = 3,
+      step = 0.05,
+      get = function()
+        return type(conditions[i].changes[j].value) == "table" and conditions[i].changes[j].value.glow_duration or 1;
+      end,
+      set = setValueComplex("glow_duration"),
+      hidden = function()
+        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", "Proc"))
+      end,
+    }
+    order = order + 1
     args["condition" .. i .. "value" .. j .. "glow_lines"] = {
       type = "range",
       control = "WeakAurasSpinBox",
@@ -1194,7 +1232,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       end,
       set = setValueComplex("glow_lines"),
       hidden = function()
-        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", glowTypesExcepButtonOverlay))
+        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", glowTypesExcepButtonOverlayAndProc))
       end,
     }
     order = order + 1
@@ -1213,7 +1251,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       end,
       set = setValueComplex("glow_frequency"),
       hidden = function()
-        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", glowTypesExcepButtonOverlay))
+        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", glowTypesExcepButtonOverlayAndProc))
       end,
     }
     order = order + 1
@@ -1289,7 +1327,7 @@ local function addControlsForChange(args, order, data, conditionVariable, totalA
       end,
       set = setValueComplex("glow_YOffset"),
       hidden = function()
-        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", "Pixel"))
+        return not (anyGlowExternal("glow_action", "show") and anyGlowExternal("glow_type", glowTypesExcepButtonOverlay))
       end,
     }
     order = order + 1
@@ -1401,14 +1439,14 @@ local function addControlsForIfLine(args, order, data, conditionVariable, totalA
     local isFirst = path[#path] == 1;
     if (isFirst) then
       if (needsTriggerName) then
-        optionsName = optionsName .. string.format(L["Trigger %s"], check.trigger);
+        optionsName = optionsName .. OptionsPrivate.GetTriggerTitle(data, check.trigger)
       end
     else
       if (needsTriggerName) then
         if (parentType == "AND") then
-          optionsName = optionsName .. string.format(L["and Trigger %s"], check.trigger);
+          optionsName = optionsName .. string.format(L["and %s"], OptionsPrivate.GetTriggerTitle(data, check.trigger));
         else
-          optionsName = optionsName .. string.format(L["or Trigger %s"], check.trigger);
+          optionsName = optionsName .. string.format(L["or %s"], OptionsPrivate.GetTriggerTitle(data, check.trigger));
         end
       end
     end
@@ -1416,9 +1454,9 @@ local function addControlsForIfLine(args, order, data, conditionVariable, totalA
     local isLinked = conditions[i].linked and i > 1
     if (needsTriggerName) then
       if isLinked then
-        optionsName = optionsName .. string.format(L["Else If Trigger %s"], check.trigger);
+        optionsName = optionsName .. string.format(L["Else If %s"], OptionsPrivate.GetTriggerTitle(data, check.trigger));
       else
-        optionsName = optionsName .. string.format(L["If Trigger %s"], check.trigger);
+        optionsName = optionsName .. string.format(L["If %s"], OptionsPrivate.GetTriggerTitle(data, check.trigger));
       end
     else
         optionsName = optionsName .. (isLinked and L["Else If"] or L["If"])
@@ -1977,6 +2015,49 @@ local function fixUpLinkedInFirstCondition(conditions)
   end
 end
 
+local function formatConditionTitle(text, propertyType, value)
+  if propertyType == "color" and type(value) == "table" then
+    local r, g, b = unpack(value)
+    r, g, b = r or 1, g or 1, b or 1
+    return ("|cFF%2x%2x%2x%s|r"):format(r * 220 + 35, g * 220 + 35, b * 220 + 35, text)
+  elseif propertyType == "bool" then
+    return ("%s: %s"):format(text, value and L["ON"] or L["OFF"])
+  elseif propertyType == "sound" and type(value) == "table" and type(value.sound) == "string" and value.sound ~= "" then
+    if OptionsPrivate.Private.sound_types[value.sound] then
+      return ("%s: %s"):format(text, OptionsPrivate.Private.sound_types[value.sound])
+    end
+  elseif value ~= nil and type(value) ~= "table" then
+    return ("%s: %s"):format(text, value)
+  end
+  return text
+end
+
+local function GetConditionTitle(changes, conditionnum, allProperties)
+  if type(changes) == "table" and #changes > 0 then
+    local outs = {}
+    for i, change in ipairs(changes) do
+      local property = change.property
+      if property and allProperties.propertyMap[property] then
+        local display = allProperties.propertyMap[property].display
+        local propertyType = allProperties.propertyMap[property].type
+        local title
+        if type(display) == "string" then
+          title = display
+        elseif type(display) == "table" then
+          title = ("%s %s"):format(display[1], display[2])
+        end
+        if title then
+          tinsert(outs, formatConditionTitle(title, propertyType, change.value))
+        end
+      end
+    end
+    if #outs > 0 then
+      return L["%i. %s"]:format(conditionnum, table.concat(outs, ", "))
+    end
+  end
+  return L["%i."]:format(conditionnum)
+end
+
 local function addControlsForCondition(args, order, data, conditionVariable, totalAuraCount, conditions, i, conditionTemplates, conditionTemplateWithoutCombinations, allProperties)
   if (not conditions[i].check) then
     return order;
@@ -1998,7 +2079,7 @@ local function addControlsForCondition(args, order, data, conditionVariable, tot
 
   args["condition" .. i .. "header"] = {
     type = "execute",
-    name = L["Condition %i"]:format(i),
+    name = GetConditionTitle(conditions[i].changes, i, allProperties),
     order = order,
     width = WeakAuras.doubleWidth - 0.6,
     func = function()
@@ -2016,7 +2097,8 @@ local function addControlsForCondition(args, order, data, conditionVariable, tot
     image = collapsed and "Interface\\AddOns\\WeakAuras\\Media\\Textures\\expand" or "Interface\\AddOns\\WeakAuras\\Media\\Textures\\collapse" ,
     imageWidth = 18,
     imageHeight = 18,
-    control = "WeakAurasExpand"
+    control = "WeakAurasExpand",
+    fontObject = GameFontHighlight
   };
   order = order + 1;
 
@@ -2315,7 +2397,7 @@ local function mergeConditionTemplates(allConditionTemplates, auraConditionsTemp
   end
 end
 
-local function createConditionTemplatesValueList(allConditionTemplates, numTriggers, excludeCombinations)
+local function createConditionTemplatesValueList(allConditionTemplates, numTriggers, excludeCombinations, data)
   local conditionTemplates = {};
   conditionTemplates.all = allConditionTemplates;
   conditionTemplates.indexToTrigger = {};
@@ -2345,7 +2427,7 @@ local function createConditionTemplatesValueList(allConditionTemplates, numTrigg
           elseif (triggernum == -1) then
             conditionTemplates.display[index]  = string.format(L["Global Conditions"]);
           else
-            conditionTemplates.display[index]  = string.format(L["Trigger %d"], triggernum);
+            conditionTemplates.display[index]  = OptionsPrivate.GetTriggerTitle(data, triggernum)
           end
           index = index + 1;
 
@@ -2404,7 +2486,7 @@ local function createConditionTemplates(data)
   }
   allConditionTemplates[-1] = OptionsPrivate.Private.GetGlobalConditions();
 
-  local conditionTemplates = createConditionTemplatesValueList(allConditionTemplates, numTriggers);
+  local conditionTemplates = createConditionTemplatesValueList(allConditionTemplates, numTriggers, nil, data);
 
   if (data.controlledChildren) then
     conditionTemplates.displayWithCopy = CopyTable(conditionTemplates.display);
@@ -2414,7 +2496,7 @@ local function createConditionTemplates(data)
     conditionTemplates.indexToVariable[9998] = "COPY";
   end
 
-  local conditionTemplateWithoutCombinations = createConditionTemplatesValueList(allConditionTemplates, numTriggers, true);
+  local conditionTemplateWithoutCombinations = createConditionTemplatesValueList(allConditionTemplates, numTriggers, true, data);
 
   return conditionTemplates, conditionTemplateWithoutCombinations;
 end
@@ -2579,7 +2661,7 @@ local function SubPropertiesForChange(change)
       "glow_action", "glow_frame_type", "glow_type",
       "glow_frame", "choose_glow_frame",
       "use_glow_color", "glow_color",
-      "glow_lines", "glow_frequency", "glow_length", "glow_thickness", "glow_XOffset", "glow_YOffset",
+      "glow_startAnim", "glow_duration", "glow_lines", "glow_frequency", "glow_length", "glow_thickness", "glow_XOffset", "glow_YOffset",
       "glow_scale", "glow_border"
     }
   elseif change.property == "chat" then

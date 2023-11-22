@@ -8862,7 +8862,7 @@ function BWInterfaceFrameLoad()
 				else
 					local class
 					name = GetGUID(sourceGUID)
-					if sourceGUID ~= "" then
+					if sourceGUID and sourceGUID ~= "" then
 						class = select(2,GetPlayerInfoByGUID(sourceGUID))
 					end
 					name = "|c".. ExRT.F.classColor(class) .. name .. "|r"

@@ -42,8 +42,8 @@ local default = {
   zoom = 0
 };
 
-WeakAuras.regionPrototype.AddAdjustedDurationToDefault(default);
-WeakAuras.regionPrototype.AddAlphaToDefault(default);
+Private.regionPrototype.AddAdjustedDurationToDefault(default);
+Private.regionPrototype.AddAlphaToDefault(default);
 
 local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
 
@@ -152,7 +152,7 @@ local properties = {
   },
 };
 
-WeakAuras.regionPrototype.AddProperties(properties, default);
+Private.regionPrototype.AddProperties(properties, default);
 
 local function GetProperties(data)
   local overlayInfo = Private.GetOverlayInfo(data);
@@ -963,7 +963,7 @@ local funcs = {
     end
 
     iconPath = iconPath or self.displayIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
-    WeakAuras.SetTextureOrAtlas(self.icon, iconPath)
+    Private.SetTextureOrAtlas(self.icon, iconPath)
   end,
   SetOverlayColor = function(self, id, r, g, b, a)
     self.bar:SetAdditionalBarColor(id, { r, g, b, a});
@@ -1063,6 +1063,7 @@ local funcs = {
 local function create(parent)
   -- Create overall region (containing everything else)
   local region = CreateFrame("Frame", nil, parent);
+  --- @cast region table|Frame
   region.regionType = "aurabar"
   region:SetMovable(true);
   region:SetResizable(true);
@@ -1073,6 +1074,7 @@ local function create(parent)
   end
 
   local bar = CreateFrame("Frame", nil, region);
+  --- @cast bar table|Frame
   Mixin(bar, Private.SmoothStatusBarMixin);
 
   -- Now create a bunch of textures
@@ -1129,7 +1131,7 @@ local function create(parent)
     end
   end
 
-  WeakAuras.regionPrototype.create(region);
+  Private.regionPrototype.create(region);
 
   for k, f in pairs(funcs) do
     region[k] = f
@@ -1153,7 +1155,7 @@ local function modify(parent, region, data)
   region.text = nil
   region.stacks = nil
 
-  WeakAuras.regionPrototype.modify(parent, region, data);
+  Private.regionPrototype.modify(parent, region, data);
   -- Localize
   local bar, iconFrame, icon = region.bar, region.iconFrame, region.icon;
 
@@ -1202,7 +1204,7 @@ local function modify(parent, region, data)
   bar:SetStatusBarTexture(texturePath);
   bar:SetBackgroundColor(data.backgroundColor[1], data.backgroundColor[2], data.backgroundColor[3], data.backgroundColor[4]);
   -- Update spark settings
-  WeakAuras.SetTextureOrAtlas(bar.spark, data.sparkTexture);
+  Private.SetTextureOrAtlas(bar.spark, data.sparkTexture);
   bar.spark:SetVertexColor(data.sparkColor[1], data.sparkColor[2], data.sparkColor[3], data.sparkColor[4]);
   bar.spark:SetWidth(data.sparkWidth);
   bar.spark:SetHeight(data.sparkHeight);
@@ -1417,7 +1419,7 @@ local function modify(parent, region, data)
   --- Update internal bar alignment
   region.bar:Update();
 
-  WeakAuras.regionPrototype.modifyFinish(parent, region, data);
+  Private.regionPrototype.modifyFinish(parent, region, data);
 end
 
 local function validate(data)
@@ -1434,4 +1436,4 @@ local function validate(data)
 end
 
 -- Register new region type with WeakAuras
-WeakAuras.RegisterRegionType("aurabar", create, modify, default, GetProperties, validate);
+Private.RegisterRegionType("aurabar", create, modify, default, GetProperties, validate);

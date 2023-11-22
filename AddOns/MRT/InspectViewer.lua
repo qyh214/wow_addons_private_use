@@ -506,6 +506,7 @@ do
 		[581] = "agi",
 		[1467] = "int",
 		[1468] = "int",
+		[1473] = "int",
 	}
 	function module:GetSpecMainStat(specID)
 		return specToStat[specID or 0]

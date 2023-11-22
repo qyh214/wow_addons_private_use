@@ -362,14 +362,15 @@ function MDT:DisableBrushPreview()
 end
 
 ---ToggleToolbarTooltip
-function MDT:ToggleToolbarTooltip(show, widget)
+function MDT:ToggleToolbarTooltip(show, widget, anchor)
   if not show then
     GameTooltip:Hide()
   else
+    anchor = anchor or "ANCHOR_BOTTOM"
     local yOffset = -1
     if widget.type == "EditBox" then yOffset = yOffset - 1 end
     if widget.type == "ColorPicker" then yOffset = yOffset - 3 end
-    GameTooltip:SetOwner(widget.frame, "ANCHOR_BOTTOM", 0, yOffset)
+    GameTooltip:SetOwner(widget.frame, anchor, 0, yOffset)
     GameTooltip:SetText(widget.tooltipText, 1, 1, 1, 1)
     GameTooltip:Show()
   end
@@ -482,7 +483,8 @@ function MDT:OverrideScrollframeScripts()
           local currentPreset = MDT:GetCurrentPreset()
           currentPreset.objects[note.objectIndex].d[1] = x - xOffset
           currentPreset.objects[note.objectIndex].d[2] = y - yOffset
-          if MDT.liveSessionActive then MDT:LiveSession_SendNoteCommand("move", note.objectIndex, x - xOffset, y -
+          if MDT.liveSessionActive then
+            MDT:LiveSession_SendNoteCommand("move", note.objectIndex, x - xOffset, y -
               yOffset)
           end
           MDT:DrawAllPresetObjects()
@@ -567,8 +569,11 @@ function MDT:StartArrowDrawing()
   ---l: x1,y1,x2,y2,...
   ---t: triangleroation
   local arrowBrushSize = db.toolbar.brushSize + 8 --we want arrows to be thicker by default compared to lines
-  nobj = { d = { arrowBrushSize, 1, MDT:GetCurrentSubLevel(), true,
-    MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b) }, l = {} }
+  nobj = {
+    d = { arrowBrushSize, 1, MDT:GetCurrentSubLevel(), true,
+      MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b) },
+    l = {}
+  }
   nobj.l = { MDT:Round(startx, 1), MDT:Round(starty, 1) }
   nobj.t = {}
   local scale = MDT:GetScale()
@@ -632,8 +637,11 @@ function MDT:StartLineDrawing()
   ---new object
   ---d: size,lineFactor,sublevel,shown,colorstring,drawLayer,[smooth]
   ---l: x1,y1,x2,y2,...
-  nobj = { d = { db.toolbar.brushSize, 1.1, MDT:GetCurrentSubLevel(), true,
-    MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b), nil, true }, l = {} }
+  nobj = {
+    d = { db.toolbar.brushSize, 1.1, MDT:GetCurrentSubLevel(), true,
+      MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b), nil, true },
+    l = {}
+  }
   nobj.l = {}
 
   local scale = MDT:GetScale()
@@ -644,13 +652,13 @@ function MDT:StartLineDrawing()
     endx, endy = MDT:GetCursorPosition()
     if endx ~= startx and endy ~= starty then
       DrawLine(line, MDT.main_frame.mapPanelTile1, startx, starty, endx, endy, (db.toolbar.brushSize * 0.3) * 1.1 * scale
-        , 1.00, "TOPLEFT")
+      , 1.00, "TOPLEFT")
       line:SetDrawLayer(objectDrawLayer, drawLayer)
       line:Show()
       MDT:DrawCircle(startx, starty, (db.toolbar.brushSize * 0.3) * scale, db.toolbar.color, objectDrawLayer, drawLayer,
         true, nil, circle1, true)
       MDT:DrawCircle(endx, endy, (db.toolbar.brushSize * 0.3) * scale, db.toolbar.color, objectDrawLayer, drawLayer, true
-        , nil, circle2, true)
+      , nil, circle2, true)
       nobj.d[6] = drawLayer
     end
   end)
@@ -703,8 +711,11 @@ function MDT:StartPencilDrawing()
   ---new object
   ---d: size,lineFactor,sublevel,shown,colorstring,drawLayer,[smooth]
   ---l: x1,y1,x2,y2,...
-  nobj = { d = { db.toolbar.brushSize, 1.1, MDT:GetCurrentSubLevel(), true,
-    MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b), 0, true }, l = {} }
+  nobj = {
+    d = { db.toolbar.brushSize, 1.1, MDT:GetCurrentSubLevel(), true,
+      MDT:RGBToHex(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b), 0, true },
+    l = {}
+  }
   nobj.l = {}
 
   local lineIdx = 1
@@ -912,11 +923,6 @@ end
 
 ---StartNoteDrawing
 function MDT:StartNoteDrawing()
-  --check if we have less than 25 notes
-  if notePoolCollection and notePoolCollection.pools.QuestPinTemplatenil.numActiveObjects > 24 then
-    MDT:UpdateSelectedToolbarTool()
-    return
-  end
   ---new object for storage
   ---x,y,sublevel,shown,text,n=true
   local x, y = MDT:GetCursorPosition()
@@ -1087,6 +1093,16 @@ do
   })
 end
 
+local function POIButton_CalculateNumericTexCoords(index, color)
+  if index then
+    color = color or 0.5;
+    local iconIndex = index - 1;
+    local yOffset = color + floor(iconIndex / 8) * 0.125;
+    local xOffset = mod(iconIndex, 8) * 0.125;
+    return xOffset, xOffset + 0.125, yOffset, yOffset + 0.125;
+  end
+end
+
 ---DrawNote
 function MDT:DrawNote(x, y, text, objectIndex)
   if not notePoolCollection then
@@ -1115,7 +1131,11 @@ function MDT:DrawNote(x, y, text, objectIndex)
   note.NormalTexture:SetTexCoord(0.500, 0.625, 0.375, 0.5)
   note.PushedTexture:SetTexCoord(0.375, 0.500, 0.375, 0.5)
   note.HighlightTexture:SetTexCoord(0.625, 0.750, 0.375, 0.5)
-  note.Display.Icon:SetTexCoord(QuestPOI_CalculateNumericTexCoords(note.noteIdx, QUEST_POI_COLOR_BLACK))
+  -- temporary fix for there not being enough textures in the atlas
+  -- should copy and fix the atlas instead
+  local idx = note.noteIdx % 25
+  if idx == 0 then idx = 1 end
+  note.Display.Icon:SetTexCoord(POIButton_CalculateNumericTexCoords(idx, 0))
   note.Display.Icon:Show()
   note.tooltipText = text or ""
 
@@ -1155,6 +1175,14 @@ function MDT:DrawNote(x, y, text, objectIndex)
   note:SetScript("OnLeave", function()
     GameTooltip:Hide()
   end)
+
+  -- Interface\AddOns\Blizzard_MapCanvas\MapCanvas_DataProviderBase.lua calls this function when a pin is clicked
+  -- to avoid lua error we create it here
+  note.GetMap = function()
+    return {
+      ProcessGlobalPinMouseActionHandlers = function(...) end,
+    }
+  end
 
   note:Show()
 end

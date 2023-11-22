@@ -361,6 +361,8 @@ L["S_OPTIONS_ANIMATIONS"] = "Do Animations"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
 --[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
+--[[Translation missing --]]
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Map Window Centralized"
 --[[Translation missing --]]
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "You need to enable 'Map Window Scale' first, no value has changed."

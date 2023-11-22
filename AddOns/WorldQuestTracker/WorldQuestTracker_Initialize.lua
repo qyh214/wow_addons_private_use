@@ -4,41 +4,42 @@
 do
 	WQT_VERSION = 414
 
-	--> update quest type max when a new type of world quest is added to the filtering
-	WQT_QUESTTYPE_MAX = 		10			--[[global]]
+	--update quest type max when a new type of world quest is added to the filtering
+	WQT_QUESTTYPE_MAX = 		11			--[[global]]
 
-	--> all quest types current available
+	--all quest types current available
 	WQT_QUESTTYPE_GOLD = 		"gold"			--[[global]]
 	WQT_QUESTTYPE_RESOURCE = 	"resource"		--[[global]]
-	WQT_QUESTTYPE_APOWER = 	"apower"		--[[global]]
-	WQT_QUESTTYPE_EQUIPMENT = 	"equipment"	--[[global]]
-	WQT_QUESTTYPE_TRADE = 		"trade"		--[[global]]
+	WQT_QUESTTYPE_APOWER = 		"apower"		--[[global]]
+	WQT_QUESTTYPE_EQUIPMENT = 	"equipment"		--[[global]]
+	WQT_QUESTTYPE_TRADE = 		"trade"			--[[global]]
 	WQT_QUESTTYPE_DUNGEON = 	"dungeon"		--[[global]]
 	WQT_QUESTTYPE_PROFESSION =	 "profession"	--[[global]]
 	WQT_QUESTTYPE_PVP = 		"pvp"			--[[global]]
 	WQT_QUESTTYPE_PETBATTLE = 	"petbattle"		--[[global]]
 	WQT_QUESTTYPE_REPUTATION = 	"reputation"	--[[global]]
+	WQT_QUESTTYPE_RACING = 		"racing"		--[[global]]
 
-	WQT_QUERYTYPE_REWARD = 	"reward"		--[[global]]
-	WQT_QUERYTYPE_QUEST = 		"quest"		--[[global]]
+	WQT_QUERYTYPE_REWARD = 		"reward"		--[[global]]
+	WQT_QUERYTYPE_QUEST = 		"quest"			--[[global]]
 	WQT_QUERYTYPE_PERIOD = 		"period"		--[[global]]
 	WQT_QUERYDB_ACCOUNT = 		"global"		--[[global]]
 	WQT_QUERYDB_LOCAL = 		"character"		--[[global]]
 	WQT_REWARD_RESOURCE = 		"resource"		--[[global]]
 	WQT_REWARD_GOLD = 			"gold"			--[[global]]
 	WQT_REWARD_APOWER = 		"artifact"		--[[global]]
-	WQT_QUESTS_TOTAL = 		"total"		--[[global]]
-	WQT_QUESTS_PERIOD = 		"quest"		--[[global]]
-	WQT_DATE_TODAY = 			1			--[[global]]
-	WQT_DATE_YESTERDAY = 		2			--[[global]]
-	WQT_DATE_1WEEK = 			3			--[[global]]
-	WQT_DATE_2WEEK = 			4			--[[global]]
-	WQT_DATE_MONTH = 			5			--[[global]]
+	WQT_QUESTS_TOTAL = 			"total"			--[[global]]
+	WQT_QUESTS_PERIOD = 		"quest"			--[[global]]
+	WQT_DATE_TODAY = 			1				--[[global]]
+	WQT_DATE_YESTERDAY = 		2				--[[global]]
+	WQT_DATE_1WEEK = 			3				--[[global]]
+	WQT_DATE_2WEEK = 			4				--[[global]]
+	WQT_DATE_MONTH = 			5				--[[global]]
 
 	--helps blend the icons within the map texture
 	WQT_ZONEWIDGET_ALPHA =		0.97
-	WQT_WORLDWIDGET_ALPHA =	0.975
-	WQT_WORLDWIDGET_BLENDED =	ALPHA_BLEND_AMOUNT - 0.11
+	WQT_WORLDWIDGET_ALPHA =		0.975
+	WQT_WORLDWIDGET_BLENDED =	ALPHA_BLEND_AMOUNT
 
 	WQT_ANIMATION_SPEED = 0.05
 
@@ -60,6 +61,7 @@ do
 	FILTER_TYPE_REPUTATION_TOKEN = "reputation_token"
 	FILTER_TYPE_EQUIPMENT = "equipment"
 	FILTER_TYPE_TRADESKILL = "trade_skill"
+	FILTER_TYPE_RACING = "racing"
 
 	--9.0.1 re-filling the French globals
 	local questTagType = _G.Enum.QuestTagType
@@ -70,7 +72,7 @@ do
 	LE_QUEST_TAG_TYPE_INVASION = questTagType.Invasion
 	LE_QUEST_TAG_TYPE_FACTION_ASSAULT = questTagType.FactionAssault
 	LE_QUEST_TAG_TYPE_PVP = questTagType.PvP
---
+
 	local questQualityType = _G.Enum.WorldQuestQuality --former known as rarity
 	LE_WORLD_QUEST_QUALITY_COMMON = questQualityType.Common
 	LE_WORLD_QUEST_QUALITY_RARE = questQualityType.Rare
@@ -89,19 +91,21 @@ do
 				equipment = true,
 				trade_skill = true,
 				reputation_token = true,
+				racing = true,
 			},
 
 			sort_order = {
-				[WQT_QUESTTYPE_REPUTATION] = 8,
+				[WQT_QUESTTYPE_REPUTATION] = 7,
 				[WQT_QUESTTYPE_TRADE] = 5,
-				[WQT_QUESTTYPE_APOWER] = 10,
-				[WQT_QUESTTYPE_GOLD] = 7,
+				[WQT_QUESTTYPE_APOWER] = 11,
+				[WQT_QUESTTYPE_GOLD] = 8,
 				[WQT_QUESTTYPE_RESOURCE] = 5,
-				[WQT_QUESTTYPE_EQUIPMENT] = 9,
+				[WQT_QUESTTYPE_EQUIPMENT] = 10,
 				[WQT_QUESTTYPE_DUNGEON] = 4,
 				[WQT_QUESTTYPE_PROFESSION] = 3,
 				[WQT_QUESTTYPE_PVP] = 2,
 				[WQT_QUESTTYPE_PETBATTLE] = 6,
+				[WQT_QUESTTYPE_RACING] = 9,
 			},
 
 			groupfinder = {
@@ -158,12 +162,12 @@ do
 
 			world_map_config = {
 				onmap_show = true,
-				onmap_scale_offset = 0,
+				onmap_scale_offset = 0.6,
 				summary_show = true,
-				summary_scale = 1,
+				summary_scale = 0.95,
 				summary_showby = "bytype", --"bytype" or "byzone"
 				summary_anchor = "left",
-				summary_widgets_per_row = 10,
+				summary_widgets_per_row = 8,
 			},
 
 			disable_world_map_widgets = false,
@@ -180,6 +184,8 @@ do
 				extra_tracking_indicator = false,--a
 				use_bounty_ring = false,--a
 			},--a
+
+			show_world_shortcuts = false,
 
 			last_news_time = 0,
 
@@ -218,9 +224,9 @@ do
 			tracker_textsize = 12,
 
 			talking_heads_heard = {},--a
-			talking_heads_torgast = true,--a
-			talking_heads_dungeon = true,--a
-			talking_heads_raid = true,--a
+			talking_heads_torgast = false,--a
+			talking_heads_dungeon = false,--a
+			talking_heads_raid = false,--a
 			talking_heads_openworld = false,--a
 
 			flymaster_tracker_frame_pos = {},--a
@@ -228,7 +234,7 @@ do
 
 			show_faction_frame = true,--a
 
-			map_frame_anchor = "center",--a
+			map_frame_anchor = "left",--a
 
 			map_frame_scale_enabled = false,--a
 			map_frame_scale_mod = 1,--a
@@ -238,6 +244,7 @@ do
 			show_summary_minimize_button = true,
 
 			zone_map_config = {
+				summary_show = true,
 				quest_summary_scale = 1,
 				show_widgets = true,
 				scale = 1,
@@ -324,6 +331,7 @@ do
 
 	--store zone widgets
 	WorldQuestTracker.ZoneWidgetPool = {}
+	WorldQuestTracker.VignettePool = {}
 	--default world quest pins
 	WorldQuestTracker.DefaultWorldQuestPin = {}
 	WorldQuestTracker.ShowDefaultWorldQuestPin = {}

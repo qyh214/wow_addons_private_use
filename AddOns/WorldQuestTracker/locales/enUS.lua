@@ -2,6 +2,8 @@ local addonId = ...
 local languageTable = DetailsFramework.Language.RegisterLanguage(addonId, "enUS")
 local L = languageTable
 
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
+
 L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
 L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
@@ -278,6 +280,7 @@ L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Extra Tracker Mark"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Show Bounty Ring"
 L["S_OPTIONS_ANIMATIONS"] = "Do Animations"
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Map Window Centralized"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "You need to enable 'Map Window Scale' first, no value has changed."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Map Window Scale"

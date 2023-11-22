@@ -108,6 +108,7 @@ end
 
 function Create_ColorSwatch(name, parent, opts)
 	local colorswatch = CreateFrame("Button",name,parent);
+	Mixin(colorswatch, ColorSwatchMixin);
 
 	colorswatch:Hide();
 	colorswatch:SetSize(16,16);

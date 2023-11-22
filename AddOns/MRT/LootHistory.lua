@@ -144,7 +144,7 @@ module.main.LOOT_HISTORY_ROLL_COMPLETE = module.main.LOOT_HISTORY_FULL_UPDATE
 
 function module.main:LOOT_HISTORY_UPDATE_ENCOUNTER(encounterID)
 	local drops = C_LootHistory.GetSortedDropsForEncounter(encounterID)
-
+	if not drops then return end
 	for _, dropInfo in ipairs(drops) do
 		local lootListID = dropInfo.lootListID
 

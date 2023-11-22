@@ -99,7 +99,7 @@ local function formatValueForAssignment(vType, value, pathToCustomFunction, path
     if (value and type(value) == "table") then
       return ([[{ glow_action = %q, glow_frame_type = %q, glow_type = %q,
       glow_frame = %q, use_glow_color = %s, glow_color = {%s, %s, %s, %s},
-      glow_lines = %d, glow_frequency = %f, glow_length = %f, glow_thickness = %f, glow_XOffset = %f, glow_YOffset = %f,
+      glow_startAnim = %s, glow_duration = %f, glow_lines = %d, glow_frequency = %f, glow_length = %f, glow_thickness = %f, glow_XOffset = %f, glow_YOffset = %f,
       glow_scale = %f, glow_border = %s }]]):format(
         value.glow_action or "",
         value.glow_frame_type or "",
@@ -110,6 +110,8 @@ local function formatValueForAssignment(vType, value, pathToCustomFunction, path
         type(value.glow_color) == "table" and tostring(value.glow_color[2]) or "1",
         type(value.glow_color) == "table" and tostring(value.glow_color[3]) or "1",
         type(value.glow_color) == "table" and tostring(value.glow_color[4]) or "1",
+        value.glow_startAnim and "true" or "false",
+        value.glow_duration or 1,
         value.glow_lines or 8,
         value.glow_frequency or 0.25,
         value.glow_length or 10,
@@ -369,9 +371,15 @@ local function CreateTestForCondition(uid, input, allConditionsTemplate, usedSta
     -- If adding a new condition type, don't forget to adjust the validator in the options code
 
     if (cType == "timer" and value) then
-      recheckCode = "  nextTime = state[" .. trigger .. "] and not state[" .. trigger .. "].paused"
-                    .. " and state[" .. trigger .. "]" .. string.format("[%q]",  variable)
-                    .. " and (state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " - " .. value .. ")\n"
+      if useModRate then
+        recheckCode = "  nextTime = state[" .. trigger .. "] and not state[" .. trigger .. "].paused"
+        .. " and state[" .. trigger .. "]" .. string.format("[%q]",  variable)
+        .. " and (state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " - " .. value .. " * (state[" .. trigger .. "].modRate or 1.0))\n"
+      else
+        recheckCode = "  nextTime = state[" .. trigger .. "] and not state[" .. trigger .. "].paused"
+        .. " and state[" .. trigger .. "]" .. string.format("[%q]",  variable)
+        .. " and (state[" .. trigger .. "]" .. string.format("[%q]",  variable) .. " - " .. value .. ")\n"
+      end
       recheckCode = recheckCode .. "  if (nextTime and (not recheckTime or nextTime < recheckTime) and nextTime >= now) then\n"
       recheckCode = recheckCode .. "    recheckTime = nextTime\n";
       recheckCode = recheckCode .. "  end\n"
@@ -537,7 +545,7 @@ function Private.GetSubRegionProperties(data, properties)
       if subProperties then
         for key, property in pairs(subProperties) do
           subIndex[key] = subIndex[key] and subIndex[key] + 1 or 1
-          property.display = { subIndex[key] .. ". " .. subRegionTypeData.displayName,
+          property.display = { subRegionTypeData.displayName .. " " .. subIndex[key],
                                property.display,
                                property.defaultProperty }
           properties["sub." .. index .. "." .. key ] = property;

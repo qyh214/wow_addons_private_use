@@ -111,7 +111,7 @@ end
 local function InviteList(list,noNewList)
 	local nowinvnum = 1
 	local inRaid = IsInRaid()
-	if #list > 5 and not inRaid then
+	if #list >= 5 and not inRaid then
 		module.db.converttoraid = true
 	end
 	if not noNewList and not inRaid then

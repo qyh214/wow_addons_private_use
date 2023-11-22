@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 53
+local MINOR_VERSION = 56
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -25,7 +25,8 @@ local defaultFramePriorities = {
   "^Vd4", -- vuhdo
   "^Vd5", -- vuhdo
   "^Vd", -- vuhdo
-  "^HealBot", -- healbot
+  "^HealBot_HealUnit", -- healbot
+  "^hbPet_HealUnit", -- healbot
   "^GridLayout", -- grid
   "^Grid2Layout", -- grid2
   "^NugRaid%d+UnitButton%d+", -- Aptechka
@@ -57,6 +58,10 @@ local defaultFramePriorities = {
   "^oUF_.-Player",
   "^PlayerFrame",
 }
+local getDefaultFramePriorities = function()
+  return CopyTable(defaultFramePriorities)
+end
+lib.getDefaultFramePriorities = getDefaultFramePriorities
 
 local defaultPlayerFrames = {
   "^InvenUnitFrames_Player",
@@ -68,6 +73,10 @@ local defaultPlayerFrames = {
   "oUF_PlayerPlate",
   "PlayerFrame",
 }
+local getDefaultPlayerFrames = function()
+  return CopyTable(defaultPlayerFrames)
+end
+lib.getDefaultPlayerFrames = getDefaultPlayerFrames
 local defaultTargetFrames = {
   "^InvenUnitFrames_Target",
   "SUFUnittarget",
@@ -76,7 +85,12 @@ local defaultTargetFrames = {
   "ElvUF_Target",
   "oUF_.-Target",
   "TargetFrame",
+  "^hbExtra_HealUnit",
 }
+local getDefaultTargetFrames = function()
+  return CopyTable(defaultTargetFrames)
+end
+lib.getDefaultTargetFrames = getDefaultTargetFrames
 local defaultTargettargetFrames = {
   "^InvenUnitFrames_TargetTarget",
   "SUFUnittargetarget",
@@ -87,6 +101,10 @@ local defaultTargettargetFrames = {
   "oUF_ToT",
   "TargetTargetFrame",
 }
+local getDefaultTargettargetFrames = function()
+  return CopyTable(defaultTargettargetFrames)
+end
+lib.getDefaultTargettargetFrames = getDefaultTargettargetFrames
 local defaultPartyFrames = {
   "^InvenUnitFrames_Party%d",
   "^AleaUI_GroupHeader",
@@ -97,18 +115,32 @@ local defaultPartyFrames = {
   "^PitBull4_Groups_Party",
   "^CompactParty",
 }
+local getDefaultPartyFrames = function()
+  return CopyTable(defaultPartyFrames)
+end
+lib.getDefaultPartyFrames = getDefaultPartyFrames
 local defaultPartyTargetFrames = {
   "SUFChildpartytarget%d",
 }
+local getDefaultPartyTargetFrames = function()
+  return CopyTable(defaultPartyTargetFrames)
+end
+lib.getDefaultPartyTargetFrames = getDefaultPartyTargetFrames
 local defaultFocusFrames = {
   "^InvenUnitFrames_Focus",
   "ElvUF_FocusTarget",
   "LUFUnitfocus",
   "FocusFrame",
+  "^hbExtra_HealUnit",
 }
+local getDefaultFocusFrames = function()
+  return CopyTable(defaultFocusFrames)
+end
+lib.getDefaultFocusFrames = getDefaultFocusFrames
 local defaultRaidFrames = {
   "^Vd",
-  "^HealBot",
+  "^HealBot_HealUnit",
+  "^hbPet_HealUnit",
   "^GridLayout",
   "^Grid2Layout",
   "^PlexusLayout",
@@ -122,6 +154,10 @@ local defaultRaidFrames = {
   "^LUFHeaderraid",
   "^CompactRaid",
 }
+local getDefaultRaidFrames = function()
+  return CopyTable(defaultRaidFrames)
+end
+lib.getDefaultRaidFrames = getDefaultRaidFrames
 
 --
 local CacheMonitorMixin = {}
@@ -428,9 +464,15 @@ local defaultOptions = {
     "RavenOverlay",
     "AshToAshUnit%d+ShadowGroupHeaderUnitButton%d+",
     "InvenUnitFrames_TargetTargetTarget",
+    "CellSpotlightFrame",
+    "CellQuickCastButton",
   },
   returnAll = false,
 }
+local getDefaultOptions = function()
+  return CopyTable(defaultOptions)
+end
+lib.getDefaultOptions = getDefaultOptions
 
 local IterateGroupMembers = function(reversed, forceParty)
   local unit = (not forceParty and IsInRaid()) and 'raid' or 'party'

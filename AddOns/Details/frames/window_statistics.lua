@@ -4,6 +4,7 @@
 local Details = _G.Details
 local DF = _G.DetailsFramework
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
+local _
 
 --prefix used on sync statistics
 local CONST_GUILD_SYNC = "GS"
@@ -39,7 +40,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
         statisticsFrame:SetMovable(true)
         statisticsFrame:SetWidth(850)
         statisticsFrame:SetHeight(500)
-        tinsert(UISpecialFrames, "DetailsRaidHistoryWindow")
+        table.insert(UISpecialFrames, "DetailsRaidHistoryWindow")
 
         function statisticsFrame.OpenDB()
             local db = Details.storage:OpenRaidStorage()
@@ -61,6 +62,8 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
 
         --create title bar
         local titlebar = DF:CreateTitleBar(statisticsFrame, "Details! " .. Loc ["STRING_STATISTICS"])
+        titlebar.CloseButton:SetScript("OnClick", function() statisticsFrame:GetParent():Hide() end)
+
 --STRING_GUILDDAMAGERANK_TUTORIAL_DESC
 --STRING_OPTIONS_CHART_CLOSE
 
@@ -245,7 +248,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                             playerName = playerName:gsub("%|c%x%x%x%x%x%x%x%x", "")
                             playerName = playerName:gsub("%|r", "")
                             playerName = playerName:gsub(".*%s", "")
-                            tinsert(result, {playerName, statisticsFrame.LatestResourceTable[i][2]})
+                            table.insert(result, {playerName, statisticsFrame.LatestResourceTable[i][2]})
                         else
                             break
                         end
@@ -433,7 +436,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                         local roleTable = encounter [role]
                         for playerName, _ in pairs(roleTable) do
                             if (not alreadyListed [playerName]) then
-                                tinsert(t, {value = playerName, label = playerName, icon = icon, onclick = onPlayer2Select})
+                                table.insert(t, {value = playerName, label = playerName, icon = icon, onclick = onPlayer2Select})
                                 alreadyListed [playerName] = true
                             end
                         end
@@ -453,10 +456,10 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
             local currentGuild = guildDropdown.value
 
             --wipe data
-            wipe(difficultyList)
-            wipe(bossList)
-            wipe(raidList)
-            wipe(guildList)
+            Details:Destroy(difficultyList)
+            Details:Destroy(bossList)
+            Details:Destroy(raidList)
+            Details:Destroy(guildList)
 
             local bossRepeated = {}
             local raidRepeated = {}
@@ -495,7 +498,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                 if (encounter) then
                                     local instanceId = Details:GetInstanceIdFromEncounterId(dungeonEncounterID)
                                     if (raidSelected == instanceId) then
-                                        tinsert(bossList, {value = dungeonEncounterID, label = encounter.boss, icon = icon, onclick = onSelectBoss})
+                                        table.insert(bossList, {value = dungeonEncounterID, label = encounter.boss, icon = icon, onclick = onSelectBoss})
                                         bossRepeated[dungeonEncounterID] = true
                                     end
 
@@ -513,7 +516,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                             local raidIcon = raidData.raidIcon
                                             local raidIconCoords = raidData.raidIconCoords
 
-                                            tinsert(raidList, {value = instance.id, label = instanceName, icon = raidIcon, texcoord = raidIconCoords, onclick = onRaidSelect})
+                                            table.insert(raidList, {value = instance.id, label = instanceName, icon = raidIcon, texcoord = raidIconCoords, onclick = onRaidSelect})
                                             raidRepeated[instance.name] = true
                                         end
                                     end
@@ -523,14 +526,14 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                             --add guild name to the dropdown
                             if (playerGuildName) then
                                 if (not guildRepeated[playerGuildName]) then
-                                    tinsert(guildList, {value = playerGuildName, label = playerGuildName, icon = icon, onclick = onGuildSelect})
+                                    table.insert(guildList, {value = playerGuildName, label = playerGuildName, icon = icon, onclick = onGuildSelect})
                                     guildRepeated[playerGuildName] = true
                                 end
                             else
                                 for index, encounter in ipairs(encounterTable) do
                                     local guild = encounter.guild
                                     if (not guildRepeated[guild]) then
-                                        tinsert(guildList, {value = guild, label = guild, icon = icon, onclick = onGuildSelect})
+                                        table.insert(guildList, {value = guild, label = guild, icon = icon, onclick = onGuildSelect})
                                         guildRepeated[guild] = true
                                     end
                                 end
@@ -545,7 +548,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
                                 end
 
                             elseif (difficulty == 15) then
@@ -556,7 +559,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
                                 end
 
                             elseif (difficulty == 16) then
@@ -567,7 +570,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
                                 end
                             end
                         end
@@ -618,8 +621,8 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
 
             local raidSelected = DetailsRaidHistoryWindow.select_raid:GetValue()
             local bossRepeated = {}
-            wipe(bossList)
-            wipe(difficultyList)
+            Details:Destroy(bossList)
+            Details:Destroy(difficultyList)
 
             for difficulty, encounterIdTable in pairs(db) do
                 if (type(difficulty) == "number" and allowedKeysForDifficulty[difficulty]) then
@@ -631,7 +634,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                 if (encounter) then
                                     local instanceId = Details:GetInstanceIdFromEncounterId(dungeonEncounterID)
                                     if (raidSelected == instanceId) then
-                                        tinsert(bossList, {value = dungeonEncounterID, label = encounter.boss, icon = icon, onclick = onSelectBoss})
+                                        table.insert(bossList, {value = dungeonEncounterID, label = encounter.boss, icon = icon, onclick = onSelectBoss})
                                         bossRepeated[dungeonEncounterID] = true
                                     end
                                 end
@@ -646,7 +649,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
                                 end
 
                             elseif (difficulty == 15) then
@@ -657,7 +660,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
                                 end
 
                             elseif (difficulty == 16) then
@@ -668,7 +671,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     end
                                 end
                                 if (not alreadyHave) then
-                                    tinsert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
+                                    table.insert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
                                 end
                             end
                         end
@@ -725,7 +728,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                         if (player) then
 
                             --tinsert(data, {text = date, value = player[1], data = player, fulldate = encounter.date, elapsed = encounter.elapsed})
-                            tinsert(data, {text = date, value = player[1]/encounter.elapsed, utext = Details:ToK2 (player[1]/encounter.elapsed), data = player, fulldate = encounter.date, elapsed = encounter.elapsed})
+                            table.insert(data, {text = date, value = player[1]/encounter.elapsed, utext = Details:ToK2 (player[1]/encounter.elapsed), data = player, fulldate = encounter.date, elapsed = encounter.elapsed})
                         end
                     end
                 end
@@ -816,7 +819,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                 end
 
                 local playerNameFormated = Details:GetOnlyName(playerName)
-                tinsert(sortTable, {
+                table.insert(sortTable, {
                     "|c" .. classColor .. playerNameFormated .. "|r",
                     Details:comma_value (t.ps),
                     Details:ToK2 (t.total),
@@ -865,7 +868,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                     date = date:sub (1, -4)
                     amt_encounters = amt_encounters + 1
 
-                    tinsert(header, {name = date, type = "text"})
+                    table.insert(header, {name = date, type = "text"})
 
                     for playerName, playerTable in pairs(roleTable) do
                         local index = players_index [playerName]
@@ -875,19 +878,19 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                             player = {playerName}
                             player_class [playerName] = playerTable [3]
                             for i = 1, amt_encounters-1 do
-                                tinsert(player, "")
+                                table.insert(player, "")
                             end
-                            tinsert(player, Details:ToK2 (playerTable [1] / encounter.elapsed))
-                            tinsert(players, player)
+                            table.insert(player, Details:ToK2 (playerTable [1] / encounter.elapsed))
+                            table.insert(players, player)
                             players_index [playerName] = #players
 
                             --print("not index", playerName, amt_encounters, date, 2, amt_encounters-1)
                         else
                             player = players [index]
                             for i = #player+1, amt_encounters-1 do
-                                tinsert(player, "")
+                                table.insert(player, "")
                             end
-                            tinsert(player, Details:ToK2 (playerTable [1] / encounter.elapsed))
+                            table.insert(player, Details:ToK2 (playerTable [1] / encounter.elapsed))
                         end
 
                     end
@@ -899,7 +902,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
 
             for index, playerTable in ipairs(players) do
                 for i = #playerTable, amt_encounters do
-                    tinsert(playerTable, "")
+                    table.insert(playerTable, "")
                 end
 
                 local className = select(2, GetClassInfo (player_class [playerTable [1]] or 0))

@@ -21,6 +21,7 @@ L["|cffeda55fMiddle-Click|r to toggle the minimap icon on or off."] = "|cffeda55
 L["|cffeda55fRight-Click|r to toggle performance profiling window."] = "|cffeda55fRight-Click|r to toggle performance profiling window."
 L["|cffeda55fShift-Click|r to pause addon execution."] = "|cffeda55fShift-Click|r to pause addon execution."
 L["|cFFFF0000Not|r Item Bonus Id Equipped"] = "|cFFFF0000Not|r Item Bonus Id Equipped"
+L["|cFFFF0000Not|r Item Equipped"] = "|cFFFF0000Not|r Item Equipped"
 L["|cFFFF0000Not|r Player Name/Realm"] = "|cFFFF0000Not|r Player Name/Realm"
 L["|cFFFF0000Not|r Spell Known"] = "|cFFFF0000Not|r Spell Known"
 L["|cFFffcc00Extra Options:|r %s"] = "|cFFffcc00Extra Options:|r %s"
@@ -69,6 +70,16 @@ L["Action Button Glow"] = "Action Button Glow"
 L["Action Usable"] = "Action Usable"
 L["Actions"] = "Actions"
 L["Active"] = "Active"
+L[ [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00BigWigs|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
+L[ [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[Active boss mod addon: |cFFffcc00DBM|r
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 L["Add"] = "Add"
 L["Add Missing Auras"] = "Add Missing Auras"
 L["Additional Trigger Replacements"] = "Additional Trigger Replacements"
@@ -97,6 +108,7 @@ L["Always True"] = "Always True"
 L["Amount"] = "Amount"
 L["Anchoring"] = "Anchoring"
 L["And Talent"] = "And Talent"
+L["Angle and Radius"] = "Angle and Radius"
 L["Animations"] = "Animations"
 L["Anticlockwise"] = "Anticlockwise"
 L["Anub'arak"] = "Anub'arak"
@@ -199,6 +211,10 @@ L["Blood-Queen Lana'thel"] = "Blood-Queen Lana'thel"
 L["Border"] = "Border"
 L["Boss"] = "Boss"
 L["Boss Emote"] = "Boss Emote"
+L["Boss Mod Announce"] = "Boss Mod Announce"
+L["Boss Mod Stage"] = "Boss Mod Stage"
+L["Boss Mod Stage (Event)"] = "Boss Mod Stage (Event)"
+L["Boss Mod Timer"] = "Boss Mod Timer"
 L["Boss Whisper"] = "Boss Whisper"
 L["Bottom"] = "Bottom"
 L["Bottom Left"] = "Bottom Left"
@@ -395,6 +411,7 @@ L["Dungeon (Timewalking)"] = "Dungeon (Timewalking)"
 L["Dungeons"] = "Dungeons"
 L["Durability Damage"] = "Durability Damage"
 L["Durability Damage All"] = "Durability Damage All"
+L["Duration"] = "Duration"
 L["Duration Function"] = "Duration Function"
 L["Duration Function (fallback state)"] = "Duration Function (fallback state)"
 L["Dynamic Information"] = "Dynamic Information"
@@ -431,6 +448,7 @@ L["Enchanting Cast Bar"] = "Enchanting Cast Bar"
 L["Encounter ID(s)"] = "Encounter ID(s)"
 L["Energize"] = "Energize"
 L["Enrage"] = "Enrage"
+L["Enter a name or a spellId"] = "Enter a name or a spellId"
 L["Enter static or relative values with %"] = "Enter static or relative values with %"
 L["Entering"] = "Entering"
 L["Entering/Leaving Combat"] = "Entering/Leaving Combat"
@@ -438,6 +456,7 @@ L["Entering/Leaving Encounter"] = "Entering/Leaving Encounter"
 L["Entry Order"] = "Entry Order"
 L["Environment Type"] = "Environment Type"
 L["Environmental"] = "Environmental"
+L["Equipment"] = "Equipment"
 L["Equipment Set"] = "Equipment Set"
 L["Equipment Set Equipped"] = "Equipment Set Equipped"
 L["Equipment Slot"] = "Equipment Slot"
@@ -466,12 +485,14 @@ L["Event(s)"] = "Event(s)"
 L["Every Frame"] = "Every Frame"
 L["Every Frame (High CPU usage)"] = "Every Frame (High CPU usage)"
 L["Evoker Essence"] = "Evoker Essence"
+L["Exact Spell ID(s)"] = "Exact Spell ID(s)"
 L["Experience (%)"] = "Experience (%)"
 L["Expertise Bonus"] = "Expertise Bonus"
 L["Expertise Rating"] = "Expertise Rating"
 L["Extend Outside"] = "Extend Outside"
 L["Extra Amount"] = "Extra Amount"
 L["Extra Attacks"] = "Extra Attacks"
+L["Extra Spell Id"] = "Extra Spell Id"
 L["Extra Spell Name"] = "Extra Spell Name"
 L["Faction"] = "Faction"
 L["Faction Champions"] = "Faction Champions"
@@ -533,9 +554,11 @@ L["Gahz'ranka"] = "Gahz'ranka"
 L["Gained"] = "Gained"
 L["Garr"] = "Garr"
 L["Gehennas"] = "Gehennas"
+L["General"] = "General"
 L["General Rajaxx"] = "General Rajaxx"
 L["General Vezax"] = "General Vezax"
 L["General Zarithrian"] = "General Zarithrian"
+L["GetNameAndIcon Function (fallback state)"] = "GetNameAndIcon Function (fallback state)"
 L["Glancing"] = "Glancing"
 L["Global Cooldown"] = "Global Cooldown"
 L["Glow"] = "Glow"
@@ -562,6 +585,7 @@ L["Group Finder Poke"] = "Group Finder Poke"
 L["Group Finder Poke End"] = "Group Finder Poke End"
 L["Group Finder Poke Initial"] = "Group Finder Poke Initial"
 L["Group Leader/Assist"] = "Group Leader/Assist"
+L["Group Size"] = "Group Size"
 L["Group Type"] = "Group Type"
 L["Grow"] = "Grow"
 L["GTFO Alert"] = "GTFO Alert"
@@ -625,7 +649,9 @@ L["In Group"] = "In Group"
 L["In Party"] = "In Party"
 L["In Pet Battle"] = "In Pet Battle"
 L["In Raid"] = "In Raid"
+L["In Range"] = "In Range"
 L["In Vehicle"] = "In Vehicle"
+L["In War Mode"] = "In War Mode"
 L["Include Bank"] = "Include Bank"
 L["Include Charges"] = "Include Charges"
 L["Include Death Runes"] = "Include Death Runes"
@@ -655,6 +681,7 @@ L["Is Death Rune"] = "Is Death Rune"
 L["Is Exactly"] = "Is Exactly"
 L["Is Moving"] = "Is Moving"
 L["Is Off Hand"] = "Is Off Hand"
+L["Is Paused"] = "Is Paused"
 L["is useable"] = "is useable"
 L["Island Expedition (Heroic)"] = "Island Expedition (Heroic)"
 L["Island Expedition (Mythic)"] = "Island Expedition (Mythic)"
@@ -701,7 +728,6 @@ L["Left, then Up"] = "Left, then Up"
 L["Legacy Looking for Raid"] = "Legacy Looking for Raid"
 L["Legacy RGB Gradient"] = "Legacy RGB Gradient"
 L["Legacy RGB Gradient Pulse"] = "Legacy RGB Gradient Pulse"
-L["Legacy Spellname"] = "Legacy Spellname"
 L["Legion"] = "Legion"
 L["Length"] = "Length"
 L["Level"] = "Level"
@@ -709,6 +735,7 @@ L["Limited"] = "Limited"
 L["Lines & Particles"] = "Lines & Particles"
 L["Load Conditions"] = "Load Conditions"
 L["Loatheb"] = "Loatheb"
+L["Location"] = "Location"
 L["Looking for Raid"] = "Looking for Raid"
 L["Loop"] = "Loop"
 L["Lord Jaraxxus"] = "Lord Jaraxxus"
@@ -788,6 +815,7 @@ L["Name"] = "Name"
 L["Name Function"] = "Name Function"
 L["Name Function (fallback state)"] = "Name Function (fallback state)"
 L["Name of Caster's Target"] = "Name of Caster's Target"
+L["Name(s)"] = "Name(s)"
 L["Name/Realm of Caster's Target"] = "Name/Realm of Caster's Target"
 L["Nameplate"] = "Nameplate"
 L["Nameplate Type"] = "Nameplate Type"
@@ -801,6 +829,11 @@ L["Neutral"] = "Neutral"
 L["Never"] = "Never"
 L["Next Combat"] = "Next Combat"
 L["Next Encounter"] = "Next Encounter"
+L[ [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=] ] = [=[No active boss mod addon detected.
+
+Note: This trigger will use BigWigs or DBM, in that order if both are installed.]=]
 L["No Extend"] = "No Extend"
 L["No Instance"] = "No Instance"
 L["No Profiling information saved."] = "No Profiling information saved."
@@ -825,6 +858,29 @@ L["Npc ID"] = "Npc ID"
 L["Number"] = "Number"
 L["Number Affected"] = "Number Affected"
 L["Object"] = "Object"
+L[ [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=] ] = [=[Occurrence of the event
+Can be a range of values
+Can have multiple values separated by a comma or a space
+
+Examples:
+2nd 5th and 6th events: 2, 5, 6
+2nd to 6th: 2-6
+every 2 events: /2
+every 3 events starting from 2nd: 2/3
+every 3 events starting from 2nd and ending at 11th: 2-11/3
+
+Works only if Boss Mod addon show counter]=]
 L[ [=[Occurrence of the event, reset when aura is unloaded
 Can be a range of values
 Can have multiple values separated by a comma or a space
@@ -947,6 +1003,7 @@ L["Precision"] = "Precision"
 L["Preset"] = "Preset"
 L["Princess Huhuran"] = "Princess Huhuran"
 L["Print Profiling Results"] = "Print Profiling Results"
+L["Proc Glow"] = "Proc Glow"
 L["Professor Putricide"] = "Professor Putricide"
 L["Profiling already started."] = "Profiling already started."
 L["Profiling automatically started."] = "Profiling automatically started."
@@ -1152,6 +1209,7 @@ L["Spell Name"] = "Spell Name"
 L["Spell Peneration Percent"] = "Spell Peneration Percent"
 L["Spell School"] = "Spell School"
 L["Spell Usable"] = "Spell Usable"
+L["Spellname"] = "Spellname"
 L["Spin"] = "Spin"
 L["Spiral"] = "Spiral"
 L["Spiral In And Out"] = "Spiral In And Out"
@@ -1169,6 +1227,7 @@ L["Stamina"] = "Stamina"
 L["Stance/Form/Aura"] = "Stance/Form/Aura"
 L["Standing"] = "Standing"
 L["Star Shake"] = "Star Shake"
+L["Start Animation"] = "Start Animation"
 L["Start Now"] = "Start Now"
 L["Status"] = "Status"
 L["Status Bar"] = "Status Bar"
@@ -1306,6 +1365,8 @@ L["Unit is Unit"] = "Unit is Unit"
 L["Unit Name"] = "Unit Name"
 L["Unit Name/Realm"] = "Unit Name/Realm"
 L["Units Affected"] = "Units Affected"
+L["Units of affected Players in a table format"] = "Units of affected Players in a table format"
+L["Units of unaffected Players in a table format"] = "Units of unaffected Players in a table format"
 L["unknown location"] = "unknown location"
 L["Unlimited"] = "Unlimited"
 L["Untrigger %s"] = "Untrigger %s"
@@ -1319,6 +1380,7 @@ L["Use /wa minimap to show the minimap icon again."] = "Use /wa minimap to show 
 L["Use Custom Color"] = "Use Custom Color"
 L["Use Legacy floor rounding"] = "Use Legacy floor rounding"
 L["Use Watched Faction"] = "Use Watched Faction"
+L["Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."] = "Uses UnitInRange() to check if in range. Matches default raid frames out of range behavior, which is between 25 to 40 yards depending on your class and spec."
 L["Using WeakAuras.clones is deprecated. Use WeakAuras.GetRegion(id, cloneId) instead."] = "Using WeakAuras.clones is deprecated. Use WeakAuras.GetRegion(id, cloneId) instead."
 L["Using WeakAuras.regions is deprecated. Use WeakAuras.GetRegion(id) instead."] = "Using WeakAuras.regions is deprecated. Use WeakAuras.GetRegion(id) instead."
 L["Vaelastrasz the Corrupt"] = "Vaelastrasz the Corrupt"
@@ -1335,7 +1397,6 @@ L["Vesperon"] = "Vesperon"
 L["Viscidus"] = "Viscidus"
 L["Visibility"] = "Visibility"
 L["Visions of N'Zoth"] = "Visions of N'Zoth"
-L["War Mode Active"] = "War Mode Active"
 L["Warfront (Heroic)"] = "Warfront (Heroic)"
 L["Warfront (Normal)"] = "Warfront (Normal)"
 L["Warlords of Draenor"] = "Warlords of Draenor"
@@ -1349,10 +1410,14 @@ L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras Built-In (63:42 |
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
-Last upgrade: %s]=] ] = [=[WeakAuras has detected that it has been downgraded.
+Last upgrade: %s
+
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=] ] = [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.
-Last upgrade: %s]=]
+Last upgrade: %s
+
+|cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=]
 L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
 L["WeakAuras Profiling"] = "WeakAuras Profiling"
 L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"

@@ -1,8 +1,10 @@
--- Generated from CurseForge on Wed Jun 21 21:15:56 UTC 2023
-local ns = select(2, ...) ---@type ns @The addon namespace.
+-- Generated from CurseForge on Wed Nov 22 08:44:03 UTC 2023
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("zhCN") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "zhCN"
 
@@ -53,10 +55,15 @@ L["DISABLE_RWF_MODE_BUTTON_TOOLTIP"] = "点击禁用冲击世界首杀模式。�
 L["DISABLE_RWF_MODE_RELOAD"] = "你正在禁用冲击世界首杀模式。点击确定将会重新加载你的界面。"
 L["DPS"] = "伤害输出"
 L["DUNGEON_SHORT_NAME_AA"] = "艾杰斯亚学院"
+L["DUNGEON_SHORT_NAME_AD"] = "阿塔达萨"
 L["DUNGEON_SHORT_NAME_AV"] = "碧蓝魔馆"
 L["DUNGEON_SHORT_NAME_BH"] = "蕨皮山谷"
+L["DUNGEON_SHORT_NAME_BRH"] = "黑鸦堡垒"
 L["DUNGEON_SHORT_NAME_COS"] = "群星庭院"
+L["DUNGEON_SHORT_NAME_DHT"] = "黑心林地"
 L["DUNGEON_SHORT_NAME_DOS"] = "彼界"
+L["DUNGEON_SHORT_NAME_EB"] = "永茂林地"
+L["DUNGEON_SHORT_NAME_FALL"] = "永恒：陨落"
 L["DUNGEON_SHORT_NAME_FH"] = "自由镇"
 L["DUNGEON_SHORT_NAME_GD"] = "恐轨车站"
 L["DUNGEON_SHORT_NAME_GMBT"] = "集市（后三）"
@@ -71,6 +78,7 @@ L["DUNGEON_SHORT_NAME_NL"] = "巢穴"
 L["DUNGEON_SHORT_NAME_NO"] = "诺库德阻击战"
 L["DUNGEON_SHORT_NAME_NW"] = "通灵战潮 "
 L["DUNGEON_SHORT_NAME_PF"] = "凋魂之殇"
+L["DUNGEON_SHORT_NAME_RISE"] = "永恒：崛起"
 L["DUNGEON_SHORT_NAME_RLP"] = "红玉新生法池"
 L["DUNGEON_SHORT_NAME_SBG"] = "影月墓地"
 L["DUNGEON_SHORT_NAME_SD"] = "赤红深渊"
@@ -78,11 +86,13 @@ L["DUNGEON_SHORT_NAME_SOA"] = "晋升高塔"
 L["DUNGEON_SHORT_NAME_STRT"] = "集市（前五）"
 L["DUNGEON_SHORT_NAME_TJS"] = "青龙寺"
 L["DUNGEON_SHORT_NAME_TOP"] = "伤逝剧场"
+L["DUNGEON_SHORT_NAME_TOTT"] = "潮汐王座"
 L["DUNGEON_SHORT_NAME_ULD"] = "奥达曼"
 L["DUNGEON_SHORT_NAME_UNDR"] = "地渊孢林"
 L["DUNGEON_SHORT_NAME_UPPR"] = "卡拉赞上层"
 L["DUNGEON_SHORT_NAME_VOTW"] = "化身巨龙牢窟"
 L["DUNGEON_SHORT_NAME_VP"] = "旋云之巅"
+L["DUNGEON_SHORT_NAME_WM"] = "维克雷斯庄园"
 L["DUNGEON_SHORT_NAME_WORK"] = "麦卡贡车间"
 L["DUNGEON_SHORT_NAME_YARD"] = "麦卡贡垃圾场"
 L["ENABLE_AUTO_FRAME_POSITION"] = "自动调整Raider.IO个人页面的位置"
@@ -94,6 +104,8 @@ L["ENABLE_NO_SCORE_COLORS"] = "关闭所有大秘境分数颜色"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "关闭分数颜色，所有分数会显示为白色。"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "允许启用Raider.IO客户端增强功能"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "开启这个将会从Raider.IO客户端下载你的角色具体的Raider.IO大秘境个人信息。"
+L["ENABLE_REPLAY"] = "显示大秘境回放系统"
+L["ENABLE_REPLAY_DESC"] = "开启此功能后 你将可以与已完成的大秘境记录比赛。"
 L["ENABLE_RWF_MODE_BUTTON"] = "禁用"
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以开启冲击世界首杀模式。需要重新加载你的界面。 "
 L["ENABLE_RWF_MODE_RELOAD"] = "你正在开启冲击世界首杀模式。这是为了与大秘境世界首杀比赛一起使用并且只能用于此，并通过Raider.IO客户端上传数据。点击确认重新加载你的界面。"
@@ -117,6 +129,7 @@ L["HIDE_OWN_PROFILE"] = "隐藏个人Raider.IO信息鼠标提示"
 L["HIDE_OWN_PROFILE_DESC"] = "启用这个选项将会隐藏你自己的Raider.IO鼠标提醒，但依旧会显示其他玩家的Raider.IO个人页面（如果有的话）"
 L["INVERSE_PROFILE_MODIFIER"] = "反转Raider.IO个人页面鼠标提示快捷键"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "启用这个将会反转Raider.IO个人页面鼠标提示的快捷键（Shift/Ctrl/Alt）：按住来显示个人/队长或队长个人页面/个人页面。"
+L["LOCALE_NAME"] = "英语"
 L["LOCKING_PROFILE_FRAME"] = "Raider.IO：锁定大秘境个人页面框体"
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "大号最高大秘境分数 (%s)"
 L["MAINS_RAID_PROGRESS"] = "大号团本进度"
@@ -144,8 +157,16 @@ L["PREVIOUS_SCORE"] = "之前的大秘境分数 (%s)"
 L["PROFILE_BEST_RUNS"] = "按地下城显示最佳记录"
 L["PROFILE_TOOLTIP_ANCHOR_TOOLTIP"] = "锁定Raider.IO主页框架，或开启自动定位来隐藏这个锚点。"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000警告:|r |cffFFFFFF%s|r无法找到你目前阵营的数据。请检查你|cffFFFFFF/raiderio|r 的设置 并且开启鼠标提示数据 |cffFFFFFF%s|r."
---[[Translation missing --]]
---[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["PVP_DATA_HEADER"] = "Raider.IO PvP 个人资料"
+L["RAID_BOSS_ATDH_1"] = "瘤根"
+L["RAID_BOSS_ATDH_2"] = "残虐者艾姬拉"
+L["RAID_BOSS_ATDH_3"] = "沃尔科罗斯"
+L["RAID_BOSS_ATDH_4"] = "梦境议会"
+L["RAID_BOSS_ATDH_5"] = "拉罗达尔，烈焰守护者"
+L["RAID_BOSS_ATDH_6"] = "尼穆威，轮回编织者"
+L["RAID_BOSS_ATDH_7"] = "斯莫德隆"
+L["RAID_BOSS_ATDH_8"] = "丁达尔·迅贤，烈焰预言者"
+L["RAID_BOSS_ATDH_9"] = "火光之龙菲莱克"
 L["RAID_BOSS_ATSC_1"] = "狱铸者卡扎拉"
 L["RAID_BOSS_ATSC_2"] = "融合体密室"
 L["RAID_BOSS_ATSC_3"] = "被遗忘的实验体"
@@ -247,14 +268,37 @@ L["RELOAD_LATER"] = "我一会儿再重载界面（Reload）"
 L["RELOAD_NOW"] = "现在重载界面（Reload）"
 L["RELOAD_RWF_MODE_BUTTON"] = "保存"
 L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = "点击保存到储存文件，这将需要重新加载您的界面。"
---[[Translation missing --]]
---[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
---[[Translation missing --]]
---[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
+L["REPLAY_AUTO_SELECTION"] = "首选回放类型"
+L["REPLAY_AUTO_SELECTION_DESC"] = "选择你希望自动选择的回放类型。"
+L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = "公会最佳记录"
+L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = "最近记录"
+L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = "个人最佳记录"
+L["REPLAY_AUTO_SELECTION_STARRED"] = "星标记录"
+L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = "队伍最佳记录"
+L["REPLAY_BACKGROUND_COLOR"] = "回放背景颜色"
+L["REPLAY_BACKGROUND_COLOR_DESC"] = "确定回放框体的背景颜色"
+L["REPLAY_DISABLE_CONFIRM"] = "如果你关闭了|cffFFBD0A大秘境回放系统|r，你可以从|cffFFBD0ARaider.IO 插件|r的设置面板里重新打开。"
+L["REPLAY_FRAME_ALPHA"] = "回放框体透明度"
+L["REPLAY_FRAME_ALPHA_DESC"] = "确定回放框体的透明度"
+L["REPLAY_MENU_COPY_URL"] = "复制回放URL链接"
+L["REPLAY_MENU_DISABLE"] = "关闭"
+L["REPLAY_MENU_DOCK"] = "锚点"
+L["REPLAY_MENU_LOCK"] = "锁定"
+L["REPLAY_MENU_POSITION"] = "位置"
+L["REPLAY_MENU_REPLAY"] = "回放"
+L["REPLAY_MENU_STYLE"] = "样式"
+L["REPLAY_MENU_TIMING"] = "时间"
+L["REPLAY_MENU_UNDOCK"] = "解锁"
+L["REPLAY_MENU_UNLOCK"] = "解锁"
+L["REPLAY_REPLAY_CHANGING"] = "改变你的回放将重置实时数据"
+L["REPLAY_SETTINGS_TOOLTIP"] = "设置"
+L["REPLAY_STYLE_TITLE_MDI"] = "MDI"
+L["REPLAY_STYLE_TITLE_MODERN"] = "标准"
+L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = "紧凑"
+L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = "只显示Boss"
+L["REPLAY_SUMMARY_LOGGED"] = "|cffFFFFFF%s|r 上传了你用时 |cffFFFFFF%s|r. 完成了 |cffFFFFFF+%s|r 的记录。"
+L["REPLAY_TIMING_TITLE_BOSS"] = "首领时间"
+L["REPLAY_TIMING_TITLE_DUNGEON"] = "地下城时间"
 L["RWF_MINIBUTTON_TOOLTIP"] = "每当有待处理的战利品时左键单击。 这将会重新加载你的界面。 右键单击以打开冲击世界首杀框架。"
 L["RWF_SUBTITLE_LOGGING_FILTERED_LOOT"] = "（记录相关项目）"
 L["RWF_SUBTITLE_LOGGING_LOOT"] = "（记录战利品）"
@@ -330,5 +374,4 @@ L["WARNING_RWF_MODE_ENABLE"] = "|cffFFFFFF%s|r 首杀争夺赛模式已开启。
 L["WIPE_RWF_MODE_BUTTON"] = "清除"
 L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = "点击以从存储文件中清除日志。 这将需要重新加载您的界面。"
 
-	ns.L = L
 end

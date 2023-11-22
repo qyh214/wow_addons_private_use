@@ -1,46 +1,23 @@
-# [5.5.5](https://github.com/WeakAuras/WeakAuras2/tree/5.5.5) (2023-06-18)
+# [5.8.6](https://github.com/WeakAuras/WeakAuras2/tree/5.8.6) (2023-11-15)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.5.4...5.5.5)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.5...5.8.6)
 
 ## Highlights
 
- - Updates to the BW/DBM triggers
-- Bug fixes
-- Talent load checks now use talent instead of spell id 
+ - Update for Range Check hotfix
+- Bugfixes and texture updates for 10.2 
 
 ## Commits
 
-InfusOnWoW (14):
+InfusOnWoW (1):
 
-- Rework Talent load to check via talent id instead of spell id
-- Remove talents that don't exist
-- Rewrite Two Column Drop Down
-- Make Two ColumnDropDown work with table values
-- Fix lua error if GetSpecialization returns nil
-- Prevent an empty PlaySound from stopping sounds
-- Model: Fix setting of unit models in Wotlk
-- Animation Options: Fix rotate amount being invisible
-- DBM Stage Trigger: Fix if loaded after SetStage has already fired
-- BW Timer: Fixes lua error if remaining is a string
-- Fix TexturePicker Search box
-- BT2: Fix unloading auras prevents the next schedule of a recheck
-- In ActivateEnvironment for tsu variables, don't create the region
-- Tweak Ignore Update PR
-
-Logan Tracy (1):
-
-- Added Unleash Life template for Restoration Shaman
-
-Stanzilla (2):
-
-- Update Wrath TOC for 3.4.2
-- Spelling fixes
+- Switch to LibRangeCheck-3.0
 
 mrbuds (5):
 
-- Fix "BigWigs Timer" trigger remaining time option
-- BigWigs Stage trigger: set stage back to 0 after encounter end
-- Init BigWigs stage value when registering BigWigs_SetStage
-- BigWigs triggers: rename "Spell Id" field to "Key"
-- Fix printed nil on updating aura
+- Update model list for 10.2
+- Update texture atlas list for 10.2
+- Use LibRangeCheck-3.0
+- Dynamic Group: don't apply level to subgroups, don't do it only for top level groups
+- Dynamic Group: raise level of auras over backdrop
 

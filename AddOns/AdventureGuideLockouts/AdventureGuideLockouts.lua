@@ -1,4 +1,4 @@
-local _, AddOn = ...
+local ADDON_NAME, AddOn = ...
 
 AddOn.worldBosses = {
     {
@@ -87,7 +87,8 @@ AddOn.worldBosses = {
             { encounterID = 2506, questID = 69930 }, -- Basrikron, The Shale Wing
             { encounterID = 2517, questID = 69927 }, -- Bazual, The Dreaded Flame
             { encounterID = 2518, questID = 69928 }, -- Liskanoth, The Futurebane
-            { encounterID = 2531, questID = 74892 }  -- The Zaqali Elders
+            { encounterID = 2531, questID = 74892 }, -- The Zaqali Elders
+            { encounterID = 2562, questID = 76367 }  -- Aurostor, The Hibernator
         }
     }
 }
@@ -107,10 +108,10 @@ function AddOn:GetSavedWorldBossInfo(instanceIndex)
     local difficulty = 2
     local locked = false
     local difficultyName = RAID_INFO_WORLD_BOSS
-    local numEncounters = 0
+    local numEncounters = #self.worldBosses[instanceIndex].encounters
     local numCompleted = 0
 
-    for encounterIndex = 1, #self.worldBosses[instanceIndex].encounters do
+    for encounterIndex = 1, numEncounters do
         local encounter = self.worldBosses[instanceIndex].encounters[encounterIndex]
         local isDefeated = C_QuestLog.IsQuestFlaggedCompleted(encounter.questID)
         if instanceIndex == 5 and encounterIndex == 4 then
@@ -131,13 +132,13 @@ end
 ---@param encounterIndex number
 ---@return string, boolean @ bossName, isKilled
 function AddOn:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
-    if encounterIndex > #self.worldBosses[instanceIndex].encounters then return end
+    local encounter = self.worldBosses[instanceIndex].encounters[encounterIndex]
     local bossName
-    local isKilled = C_QuestLog.IsQuestFlaggedCompleted(self.worldBosses[instanceIndex].encounters[encounterIndex].questID)
-    if not self.worldBosses[instanceIndex].encounters[encounterIndex].encounterID then
+    local isKilled = C_QuestLog.IsQuestFlaggedCompleted(encounter.questID)
+    if not encounter.encounterID then
         bossName = select(2, GetAchievementInfo(7333)) -- Localize "The Four Celestials"
     else
-        bossName = EJ_GetEncounterInfo(self.worldBosses[instanceIndex].encounters[encounterIndex].encounterID)
+        bossName = EJ_GetEncounterInfo(encounter.encounterID)
     end
     return bossName, isKilled
 end
@@ -197,10 +198,10 @@ function AddOn:GetWorldBossLockout(instanceIndex)
     if not locked then return end
 
     local encounters = {}
-    local encounterIndex = 1
-    local bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
-    while bossName do
+    local numAvailableEncounters = 0
+    for encounterIndex = 1, numEncounters do
         local isAvailable = true
+        local bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
         if instanceIndex == 5 and encounterIndex == 4 then
             isAvailable = self.isStromgardeAvailable
             isKilled = isKilled and isAvailable
@@ -215,9 +216,7 @@ function AddOn:GetWorldBossLockout(instanceIndex)
             isKilled = isKilled,
             isAvailable = isAvailable
         }
-        numEncounters = (isAvailable or isKilled) and numEncounters + 1 or numEncounters
-        encounterIndex = encounterIndex + 1
-        bossName, isKilled = self:GetSavedWorldBossEncounterInfo(instanceIndex, encounterIndex)
+        numAvailableEncounters = (isAvailable or isKilled) and numAvailableEncounters + 1 or numAvailableEncounters
     end
 
     return {
@@ -226,10 +225,10 @@ function AddOn:GetWorldBossLockout(instanceIndex)
         instanceID = instanceID,
         difficulty = difficulty,
         difficultyName = difficultyName,
-        numEncounters = numEncounters,
+        numEncounters = numAvailableEncounters,
         numCompleted = numCompleted,
-        progress = numCompleted .. "/" .. numEncounters,
-        complete = numCompleted == numEncounters
+        progress = numCompleted .. "/" .. numAvailableEncounters,
+        complete = numCompleted == numAvailableEncounters
     }
 end
 
@@ -346,7 +345,9 @@ function AddOn:UpdateInstanceStatusFrame(button, elementData)
         end
     end
 
-    if not instances then return end
+    if not instances then
+        return
+    end
 
     for i = 1, #instances do
         local instance = instances[i]
@@ -354,83 +355,51 @@ function AddOn:UpdateInstanceStatusFrame(button, elementData)
         if instance.complete then
             frame.completeFrame:Show()
             frame.progressFrame:Hide()
-            frame:Show()
         elseif instance.progress then
             frame.completeFrame:Hide()
             frame.progressFrame:SetText(instance.progress)
             frame.progressFrame:Show()
-            frame:Show()
-        else
-            frame:Hide()
         end
         frame.instanceInfo = instance
+
+        -- This prevents ScrollTarget's OnSizeChanged callback from being fired with taint.
+        RunNextFrame(function() frame:Show() end)
     end
 
     self:UpdateStatusFramePosition(orderIndex)
 end
 
--- This fixes an issue with the original function
--- not setting the mapID correctly in the data provider.
-local function UpdateDataProvider()
+local function UpdateFrames()
     local dataIndex = 1
     local showRaid = EncounterJournal_IsRaidTabSelected(EncounterJournal)
-    local mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
-    EncounterJournal.instanceSelect.ScrollBox:ForEachElementData(function(elementData)
-        elementData.mapID = mapID
+    EncounterJournal.instanceSelect.ScrollBox:ForEachFrame(function(frame, elementData)
+        -- This fixes an issue with the original function not setting the mapID correctly in the data provider.
+        elementData.mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
+        AddOn:UpdateInstanceStatusFrame(frame, elementData)
         dataIndex = dataIndex + 1
-        mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
     end)
 end
 
--- This fixes an issue introduced by assigning the mapID.
--- The Fated icon is not hidden when switching tabs or expansions.
-local function SetFated(button, elementData)
-    local modifiedInstanceInfo = C_ModifiedInstance.GetModifiedInstanceInfoFromMapID(elementData.mapID)
-    if modifiedInstanceInfo then
-        button.ModifiedInstanceIcon.info = modifiedInstanceInfo
-        button.ModifiedInstanceIcon.name = nil
-        local atlas = button.ModifiedInstanceIcon:GetIconTextureAtlas()
-        button.ModifiedInstanceIcon.Icon:SetAtlas(atlas, true)
-        button.ModifiedInstanceIcon:SetSize(button.ModifiedInstanceIcon.Icon:GetSize())
-        button.ModifiedInstanceIcon:Show()
-    else
-        button.ModifiedInstanceIcon:Hide()
-    end
-end
-
-local function UpdateFrames(scrollBox, locked)
-    if locked then return end
-    local buttons = scrollBox:GetFrames()
-    for i = 1, #buttons do
-        local button = buttons[i]
-        local elementData = button:GetElementData()
-        AddOn:UpdateInstanceStatusFrame(button, elementData)
-        SetFated(button, elementData)
-    end
-end
-
 local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("BOSS_KILL")
 frame:RegisterEvent("UPDATE_INSTANCE_INFO")
 frame:SetScript("OnEvent", function(_, event, arg1)
-    if event == "PLAYER_ENTERING_WORLD" then
-        AddOn.playerFaction = UnitFactionGroup("player")
-        AddOn.worldBosses[5].encounters[4].encounterID = AddOn.playerFaction == "Horde" and 2212 or 2213
-        AddOn.worldBosses[5].encounters[4].questID =  AddOn.playerFaction == "Horde" and 52848 or 52847
-        AddOn.worldBosses[5].encounters[8].encounterID = AddOn.playerFaction == "Horde" and 2329 or 2345
-        AddOn.worldBosses[5].encounters[8].questID =  AddOn.playerFaction == "Horde" and 54896 or 54895
-    elseif event == "ADDON_LOADED" and arg1 == "Blizzard_EncounterJournal" then
-        hooksecurefunc("EncounterJournal_ListInstances", UpdateDataProvider)
-        hooksecurefunc(EncounterJournal.instanceSelect.ScrollBox, "SetUpdateLocked", UpdateFrames)
+    if event == "ADDON_LOADED" then
+        if arg1 == ADDON_NAME then
+            local playerFaction = UnitFactionGroup("player")
+            AddOn.worldBosses[5].encounters[4].encounterID = playerFaction == "Horde" and 2212 or 2213
+            AddOn.worldBosses[5].encounters[4].questID =  playerFaction == "Horde" and 52848 or 52847
+            AddOn.worldBosses[5].encounters[8].encounterID = playerFaction == "Horde" and 2329 or 2345
+            AddOn.worldBosses[5].encounters[8].questID =  playerFaction == "Horde" and 54896 or 54895
+            AddOn.playerFaction = playerFaction
+        elseif arg1 == "Blizzard_EncounterJournal" then
+            hooksecurefunc("EncounterJournal_ListInstances", UpdateFrames)
+        end
     elseif event == "BOSS_KILL" then
         RequestRaidInfo()
     elseif event == "UPDATE_INSTANCE_INFO" then
         AddOn:RequestWarfrontInfo()
         AddOn:UpdateSavedInstances()
-        if EncounterJournal and EncounterJournal:IsVisible() then
-            UpdateFrames(EncounterJournal.instanceSelect.ScrollBox)
-        end
     end
 end)

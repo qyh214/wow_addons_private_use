@@ -583,8 +583,8 @@ function Details:CreateCurrentDpsFrame(parent, name)
 				DF:SetFontOutline (labelYellowTeam_DPS, Details.realtime_dps_meter.font_shadow)
 
 				--wipe current data for arena
-				wipe (f.PlayerTeamBuffer)
-				wipe (f.YellowTeamBuffer)
+				Details:Destroy(f.PlayerTeamBuffer)
+				Details:Destroy(f.YellowTeamBuffer)
 
 				--reset damage
 				f.PlayerTeamDamage = 0
@@ -723,8 +723,8 @@ function Details:CreateCurrentDpsFrame(parent, name)
 					local yellowDamageDone = thisTickYellowDamage - f.LastYellowDamage
 
 					--add the damage to buffer
-					tinsert(f.PlayerTeamBuffer, 1, playerTeamDamageDone)
-					tinsert(f.YellowTeamBuffer, 1, yellowDamageDone)
+					table.insert(f.PlayerTeamBuffer, 1, playerTeamDamageDone)
+					table.insert(f.YellowTeamBuffer, 1, yellowDamageDone)
 					
 					--save the current damage amount
 					f.LastPlayerTeamDamage = thisTickPlayerTeamDamage
@@ -824,7 +824,7 @@ function Details:CreateCurrentDpsFrame(parent, name)
 					local groupDamageDoneOnThisTick = thisTickGroupDamage - f.LastTickGroupDamage
 					
 					--add the damage to buffer
-					tinsert(f.GroupBuffer, 1, groupDamageDoneOnThisTick)
+					table.insert(f.GroupBuffer, 1, groupDamageDoneOnThisTick)
 					
 					--save the current damage amount
 					f.LastTickGroupDamage = thisTickGroupDamage
@@ -902,9 +902,9 @@ function Details:CreateCurrentDpsFrame(parent, name)
 		
 		function eventListener:ResetBuffer()
 			if (f:IsShown()) then
-				wipe (f.PlayerTeamBuffer)
-				wipe (f.YellowTeamBuffer)
-				wipe (f.GroupBuffer)
+				Details:Destroy(f.PlayerTeamBuffer)
+				Details:Destroy(f.YellowTeamBuffer)
+				Details:Destroy(f.GroupBuffer)
 				f.GroupTotalDamage = 0
 				f.PlayerTeamDamage = 0
 				f.YellowDamage = 0

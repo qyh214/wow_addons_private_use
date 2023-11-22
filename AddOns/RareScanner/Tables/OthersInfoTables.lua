@@ -82,4 +82,14 @@ private.DRAGON_GLYPHS = {
 	[17513] = { zoneID = 2133, artID = { 1775 }, x = 3046, y = 4529, parent = 18150 }; --Dragon Glyphs: Zaqali Caldera
 	[17515] = { zoneID = 2133, artID = { 1775 }, x = 7207, y = 4843, parent = 18150 }; --Dragon Glyphs: The Throughway
 	[17517] = { zoneID = 2133, artID = { 1775 }, x = 4810, y = 0432, parent = 18150 }; --Dragon Glyphs: Aberrus Approach
+	
+	-- Emerald Dream
+	[19296] = { zoneID = 2200, artID = { 1806 }, x = 6034, y = 3013, parent = 19306 }; --Dragon Glyphs: Eye of Ysera
+	[19297] = { zoneID = 2200, artID = { 1806 }, x = 2121, y = 2676, parent = 19306 }; --Dragon Glyphs: Smoldering Ascent
+	[19298] = { zoneID = 2200, artID = { 1806 }, x = 3379, y = 4564, parent = 19306 }; --Dragon Glyphs: Smoldering Copse
+	[19299] = { zoneID = 2200, artID = { 1806 }, x = 2990, y = 2125, parent = 19306 }; --Dragon Glyphs: Cinder Summit
+	[19300] = { zoneID = 2200, artID = { 1806 }, x = 4551, y = 4581, parent = 19306 }; --Dragon Glyphs: Dreamsurge Basin
+	[19301] = { zoneID = 2200, artID = { 1806 }, x = 4999, y = 6433, parent = 19306 }; --Dragon Glyphs: Amirdrassil
+	[19302] = { zoneID = 2200, artID = { 1806 }, x = 3174, y = 8074, parent = 19306 }; --Dragon Glyphs: Whorlwing basin
+	[19303] = { zoneID = 2200, artID = { 1806 }, x = 6167, y = 7548, parent = 19306 }; --Dragon Glyphs: Wakeful Vista
 }

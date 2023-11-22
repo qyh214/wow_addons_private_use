@@ -56,7 +56,7 @@ local headerColor = "yellow"
 
 local actor_class_color_r, actor_class_color_g, actor_class_color_b
 
-local info = _detalhes.playerDetailWindow
+local breakdownWindowFrame = Details.BreakdownWindowFrame
 local keyName
 
 
@@ -283,7 +283,7 @@ function atributo_energy:RefreshWindow (instancia, tabela_do_combate, forcar, ex
 	local showing = tabela_do_combate [class_type]
 
 	if (#showing._ActorTable < 1) then --n�o h� barras para mostrar
-		return _detalhes:EsconderBarrasNaoUsadas (instancia, showing), "", 0, 0
+		return _detalhes:HideBarsNotInUse(instancia, showing), "", 0, 0
 	end
 	
 	local total = 0
@@ -1046,14 +1046,14 @@ end
 
 ---------DETALHES BIFURCA��O
 function atributo_energy:MontaInfo()
-	if (info.sub_atributo <= 4) then
+	if (breakdownWindowFrame.sub_atributo <= 4) then
 		return self:MontaInfoRegenRecebido()
 	end
 end
 
 ---------DETALHES bloco da direita BIFURCA��O
 function atributo_energy:MontaDetalhes (spellid, barra)
-	if (info.sub_atributo <= 4) then
+	if (breakdownWindowFrame.sub_atributo <= 4) then
 		return self:MontaDetalhesRegenRecebido (spellid, barra)
 	end
 end
@@ -1064,11 +1064,11 @@ function atributo_energy:MontaInfoRegenRecebido()
 
 	reset_tooltips_table()
 
-	local barras = info.barras1
-	local barras2 = info.barras2
-	local barras3 = info.barras3
+	local barras = breakdownWindowFrame.barras1
+	local barras2 = breakdownWindowFrame.barras2
+	local barras3 = breakdownWindowFrame.barras3
 	
-	local instancia = info.instancia
+	local instancia = breakdownWindowFrame.instancia
 
 	local tabela_do_combate = instancia.showing
 	local container = tabela_do_combate [class_type] 
@@ -1188,7 +1188,7 @@ function atributo_energy:MontaInfoRegenRecebido()
 			break
 		end
 	
-		barra = info.barras2 [index]
+		barra = breakdownWindowFrame.barras2 [index]
 		
 		if (not barra) then
 			barra = gump:CriaNovaBarraInfo2 (instancia, index)
@@ -1229,10 +1229,10 @@ function atributo_energy:MontaDetalhesRegenRecebido (nome, barra)
 	
 	reset_tooltips_table()
 	
-	local barras = info.barras3
-	local instancia = info.instancia
+	local barras = breakdownWindowFrame.barras3
+	local instancia = breakdownWindowFrame.instancia
 
-	local tabela_do_combate = info.instancia.showing
+	local tabela_do_combate = breakdownWindowFrame.instancia.showing
 	local container = tabela_do_combate [class_type]
 	
 	local total_regenerado = self.received
@@ -1321,7 +1321,7 @@ end
 
 function atributo_energy:MontaTooltipAlvos (esta_barra, index)
 
-	local instancia = info.instancia
+	local instancia = breakdownWindowFrame.instancia
 	local tabela_do_combate = instancia.showing
 	local container = tabela_do_combate [class_type] 
 	
@@ -1374,7 +1374,7 @@ end
 
 
 --controla se o dps do jogador esta travado ou destravado
-function atributo_energy:Iniciar (iniciar)
+function atributo_energy:GetOrChangeActivityStatus (iniciar)
 	return false --retorna se o dps esta aberto ou fechado para este jogador
 end
 
@@ -1552,7 +1552,6 @@ end
 
 function _detalhes.clear:c_atributo_energy (este_jogador)
 	este_jogador.__index = nil
-	este_jogador.shadow = nil
 	este_jogador.links = nil
 	este_jogador.minha_barra = nil
 	

@@ -242,7 +242,7 @@ local function SetRequirements(set)
                         break -- We dont actually need to check anything more
                     end
                 else
-                    if not nodeInfo.ranksPurchased == 1 or not nodeInfo.activeEntry or nodeInfo.activeEntry.entryID ~= nodeInfo.entryIDs[value] then
+                    if nodeInfo.ranksPurchased ~= 1 or not nodeInfo.activeEntry or nodeInfo.activeEntry.entryID ~= nodeInfo.entryIDs[value] then
                         isActive = false;
                     end
                 end
@@ -845,6 +845,11 @@ function BtWLoadoutsDFTalentsMixin:Update(updatePosition, skipUpdateTree)
             set.treeID = treeInfo.ID;
             set.nodes = {};
         end
+
+		local configID = Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID; -- C_ClassTalents.GetActiveConfigID();
+		C_ClassTalents.InitializeViewLoadout(self.set.specID, 70);
+		local success = C_ClassTalents.ViewLoadout({});
+        Internal.UpdateTraitInfoFromConfig(self.set.specID, configID)
 
         local treeID = set.treeID
         local nodes = C_Traits.GetTreeNodes(treeID)

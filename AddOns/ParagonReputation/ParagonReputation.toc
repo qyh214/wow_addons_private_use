@@ -1,7 +1,7 @@
-## Interface: 100100
+## Interface: 100200
 ## Title: |cff0088eeParagon|r Reputation
 ## Author: |cffabd473Fail|r |cffff4000US-Ragnaros|r
-## Version: 1.47
+## Version: 1.50
 ## Notes: Better visualization of Paragon Factions on the Reputation Frame.
 ## IconTexture: 3753261
 ## DefaultState: Enabled

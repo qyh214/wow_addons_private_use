@@ -210,12 +210,7 @@ local function CreatePluginFrames()
 	SOF:SetClampedToScreen (true)
 
 	pcall(function()
-		if (DetailsFramework.IsDragonflight()) then
-			SOF:SetResizeBounds(150, 10, 800, 1024)
-		else
-			SOF:SetMinResize(150, 10)
-			SOF:SetMaxResize(800, 1024)
-		end
+		SOF:SetResizeBounds(150, 10, 800, 1024)
 	end)
 
 	function StreamOverlay:SaveWindowSizeAnLocation()
@@ -2354,14 +2349,20 @@ end
 
 
 function StreamOverlay:OnEvent (_, event, ...)
-	if (DetailsFramework and DetailsFramework.IsClassicWow()) then
-		return
-	end
+	--if (DetailsFramework and DetailsFramework.IsClassicWow()) then
+	--	return
+	--end
 	if (event == "ADDON_LOADED") then
 		local AddonName = select (1, ...)
 		if (AddonName == "Details_Streamer") then
 			
-			playerName = UnitName ("player")
+			local interimPlayerName, playerRealm = UnitFullName ("player")
+
+			--if(select(4, GetBuildInfo()) >= 100200) then
+				playerName = interimPlayerName .. '-' .. playerRealm --playerName is an upvalue from the file header
+			--end
+
+			playerName = _G.Details:Ambiguate(playerName)
 
 			if (_G.Details) then
 			

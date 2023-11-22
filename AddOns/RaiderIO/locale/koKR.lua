@@ -1,8 +1,10 @@
--- Generated from CurseForge on Wed Jun 21 21:15:52 UTC 2023
-local ns = select(2, ...) ---@type ns @The addon namespace.
+-- Generated from CurseForge on Wed Nov 22 08:43:59 UTC 2023
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("koKR") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "koKR"
 
@@ -72,10 +74,15 @@ L["DISABLE_DEBUG_MODE_RELOAD"] = [=[귀하는 디버그 모드를 비활성화�
 --[[ L["DISABLE_RWF_MODE_RELOAD"] = ""--]] 
 L["DPS"] = "|cffFF3636공격전담|r"
 L["DUNGEON_SHORT_NAME_AA"] = "대학"
+L["DUNGEON_SHORT_NAME_AD"] = "아탈"
 L["DUNGEON_SHORT_NAME_AV"] = "하늘빛"
 L["DUNGEON_SHORT_NAME_BH"] = "담쟁이"
+L["DUNGEON_SHORT_NAME_BRH"] = "검떼"
 L["DUNGEON_SHORT_NAME_COS"] = "별궁"
+L["DUNGEON_SHORT_NAME_DHT"] = "어심"
 L["DUNGEON_SHORT_NAME_DOS"] = "저편"
+L["DUNGEON_SHORT_NAME_EB"] = "상록숲"
+L["DUNGEON_SHORT_NAME_FALL"] = "몰락"
 L["DUNGEON_SHORT_NAME_FH"] = "자유"
 L["DUNGEON_SHORT_NAME_GD"] = "정비소"
 L["DUNGEON_SHORT_NAME_GMBT"] = "승부수"
@@ -90,6 +97,7 @@ L["DUNGEON_SHORT_NAME_NL"] = "넬둥"
 L["DUNGEON_SHORT_NAME_NO"] = "노쿠드"
 L["DUNGEON_SHORT_NAME_NW"] = "죽상"
 L["DUNGEON_SHORT_NAME_PF"] = "역병"
+L["DUNGEON_SHORT_NAME_RISE"] = "현신"
 L["DUNGEON_SHORT_NAME_RLP"] = "루비"
 L["DUNGEON_SHORT_NAME_SBG"] = "어둠달"
 L["DUNGEON_SHORT_NAME_SD"] = "심연"
@@ -97,11 +105,13 @@ L["DUNGEON_SHORT_NAME_SOA"] = "승천"
 L["DUNGEON_SHORT_NAME_STRT"] = "거리"
 L["DUNGEON_SHORT_NAME_TJS"] = "옥룡사"
 L["DUNGEON_SHORT_NAME_TOP"] = "투기장"
+L["DUNGEON_SHORT_NAME_TOTT"] = "파도"
 L["DUNGEON_SHORT_NAME_ULD"] = "울다만"
 L["DUNGEON_SHORT_NAME_UNDR"] = "썩은굴"
 L["DUNGEON_SHORT_NAME_UPPR"] = "상층"
 L["DUNGEON_SHORT_NAME_VOTW"] = "금고"
 L["DUNGEON_SHORT_NAME_VP"] = "누각"
+L["DUNGEON_SHORT_NAME_WM"] = "웨이"
 L["DUNGEON_SHORT_NAME_WORK"] = "작업장"
 L["DUNGEON_SHORT_NAME_YARD"] = "고철장"
 L["ENABLE_AUTO_FRAME_POSITION"] = "내 프로필 프레임 위치 자동화"
@@ -115,6 +125,10 @@ L["ENABLE_NO_SCORE_COLORS"] = "점수 색상 끄기"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "점수의 색상 표시를 사용하지 않습니다. 모든 점수는 흰색으로 표시됩니다."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "RaiderIO 클라이언트 항상 허용"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "이 기능을 사용하면 RaiderIO Client에서 다운로드 한 자세한 RaiderIO 프로필 데이터를 확인하여 사용자의 정보를 볼 수 있습니다."
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["ENABLE_RWF_MODE_BUTTON"] = ""--]] 
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "월드 퍼스트 레이스 모드를 활성화합니다. UI가 재시작됩니다."
@@ -147,6 +161,8 @@ L["HIDE_OWN_PROFILE"] = "개인 RaiderIO 프로필 툴팁 숨기기"
 L["HIDE_OWN_PROFILE_DESC"] = "설정하면 자신의 RaiderIO 프로필 툴팁이 표시되지 않지만 다른 플레이어의 프로필 툴팁이 있으면 표시 할 수 있습니다."
 L["INVERSE_PROFILE_MODIFIER"] = "프로필 전환 사용"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "툴팁에 프로필 표시 전환 사용. 보조키(Shift/Ctrl/Alt) 유지시 개인 프로필과 파티장 프로필이 전환됩니다."
+--[[Translation missing --]]
+--[[ L["LOCALE_NAME"] = ""--]] 
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: 프로필 고정"
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "주 캐릭터 최고 쐐기 점수 (%s)"
 L["MAINS_RAID_PROGRESS"] = "주 캐릭터 진행상황"
@@ -178,6 +194,15 @@ L["PROFILE_BEST_RUNS"] = "던전별 최고 기록"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000경고:|r |cffFFFFFF%s|r은(는) 현재 진영에 대한 데이터를 찾을 수 없습니다. |cffFFFFFF/raiderio|r 설정을 확인하고 |cffFFFFFF%s|r에 대한 툴팁 데이터를 활성화하십시오."
 --[[Translation missing --]]
 --[[ L["PVP_DATA_HEADER"] = ""--]] 
+L["RAID_BOSS_ATDH_1"] = "옹이뿌리"
+L["RAID_BOSS_ATDH_2"] = "잔혹한 이기라"
+L["RAID_BOSS_ATDH_3"] = "볼코로스"
+L["RAID_BOSS_ATDH_4"] = "꿈의 의회"
+L["RAID_BOSS_ATDH_5"] = "불꽃지기 라로다르"
+L["RAID_BOSS_ATDH_6"] = "순환의 방직공 니무에"
+L["RAID_BOSS_ATDH_7"] = "스몰데론"
+L["RAID_BOSS_ATDH_8"] = "틴드랄 세이지스위프트"
+L["RAID_BOSS_ATDH_9"] = "광염의 피락"
 L["RAID_BOSS_ATSC_1"] = "지옥벼림 카자라"
 L["RAID_BOSS_ATSC_2"] = "융합체의 방"
 L["RAID_BOSS_ATSC_3"] = "잊힌 실험체"
@@ -285,6 +310,52 @@ L["RELOAD_NOW"] = "지금 다시 불러오기"
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_LOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_POSITION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_STYLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_TIMING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
@@ -292,6 +363,14 @@ L["RELOAD_NOW"] = "지금 다시 불러오기"
 --[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
@@ -385,5 +464,4 @@ L["WARNING_LOCK_POSITION_FRAME_AUTO"] = "RaiderIO: 먼저 내 프로필 위치 �
 --[[Translation missing --]]
 --[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 
-	ns.L = L
 end

@@ -16,7 +16,7 @@ I've been posting updates on the Chinese forum NGA since Nov 2014. You can provi
 
 Also, feel free to open up an [issue](https://github.com/Nukme/Multishot/issues) here on Github.
 
-## Major updates and fixes
+## Major Updates and Fixes
 - Add option to auto-screenshot after finishing a Mythic+ dungeon.
 - Add option to auto-screenshot after obtaining a Legendary item.
 - Remove the functionality to auto-screenshot after killing a rare mob.

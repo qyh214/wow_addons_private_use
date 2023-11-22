@@ -22,6 +22,7 @@
 	<Script file="db/db_client_colors.lua" />
 	<Script file="db/db_client_config.lua" />
 	<Script file="db/db_client_guilds.lua" />
+	<Script file="db/db_client_replays.lua" />
 	<Script file="db/db_dungeons.lua" />
 	<Script file="db/db_realms.lua" />
 	<Script file="db/db_regions.lua" />

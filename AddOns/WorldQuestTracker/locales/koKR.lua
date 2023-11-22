@@ -266,6 +266,8 @@ L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "현상금 고리 표시"
 L["S_OPTIONS_ANIMATIONS"] = "애니메이션 사용"
 --[[Translation missing --]]
 L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+--[[Translation missing --]]
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "지도 창 중앙 고정"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "먼저 '지도 창 크기 조절' 을 활성화해야 하며, 값이 변경되지 않았습니다."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "지도 창 크기 조절"

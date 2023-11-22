@@ -195,7 +195,7 @@
 							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-20" y="13"/>
 						</Anchors>
 					</Slider> -->
-					<Slider parentKey="ScrollBar" inherits="HybridScrollBarTrimTemplate">
+					<Slider parentKey="scrollBar" inherits="HybridScrollBarTrimTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="4" y="20"/>
 							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="4" y="11"/>

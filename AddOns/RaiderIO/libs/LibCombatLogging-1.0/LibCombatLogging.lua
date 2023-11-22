@@ -2,10 +2,11 @@ local MAJOR, MINOR = "LibCombatLogging-1.0", 1
 assert(LibStub, MAJOR .. " requires LibStub")
 
 ---@class LibCombatLogging @The core library table accessible by the library users to start, stop or get logging states. Add `---@type LibCombatLogging` where you import it to enable annotations.
+---@field public RegisterCallback fun(self: CallbackHandlerRegistry, event: string, callback: fun(event: string, ...))
 
----@class LibCombatLogging_AddOn @The addon handle is a unique string used to track your addon and it's used when printing state changes.
+---@class LibCombatLogging_AddOn : string @The addon handle is a unique string used to track your addon and it's used when printing state changes.
 
----@type LibCombatLogging
+---@class LibCombatLogging
 local Lib, PrevMinor = LibStub:NewLibrary(MAJOR, MINOR)
 if not Lib then return end
 
@@ -183,6 +184,8 @@ end
 --- On start and stop events print the appropriate text in the chat to inform the user about what is going on
 do
 
+	---@param event string
+	---@param addon LibCombatLogging_AddOn
 	local function OnEvent(event, addon, ...)
 		local info = ChatTypeInfo.SYSTEM
 		if event == CallbackEvents.ADDON_STARTED_LOGGING then

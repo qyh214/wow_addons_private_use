@@ -22,6 +22,8 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 
 RSGroupPinMixin = CreateFromMixins(MapCanvasPinMixin);
 
+RSGroupPinMixin.SetPassThroughButtons = function() end
+
 function RSGroupPinMixin:OnLoad()
 	self:SetScalingLimits(1, 1, 1.0);
 end
@@ -53,7 +55,10 @@ function RSGroupPinMixin:OnAcquired(POI, dataProvider)
 	end
 	self.IconTexture:SetAtlas(POI.iconAtlas)
 	self:SetPosition(POI.x, POI.y);
-	self:SetPassThroughButtons("MiddleButton");
+	
+	if (self.SetPassThroughButtons) then
+		self:SetPassThroughButtons("MiddleButton");
+	end
 end
 
 function RSGroupPinMixin:OnMouseEnter()

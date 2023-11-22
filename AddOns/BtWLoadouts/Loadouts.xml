@@ -224,7 +224,7 @@
                 <Frames>
                     <Frame parentKey="DropDown" inherits="BtWLoadoutsSetDropDownTemplate" enableMouse="true">
                     </Frame>
-                    <Slider parentKey="ScrollBar" inherits="HybridScrollBarTemplate">
+                    <Slider parentKey="scrollBar" inherits="HybridScrollBarTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="-12"/>
                             <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="13"/>

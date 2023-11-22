@@ -75,6 +75,13 @@ function RareScannerDataProviderMixin:ShowAnimations()
 				
 				local entityID = tonumber(vignetteObjectID)
 				if (RSConfigDB.IsShowingAnimationForNpcs()) then
+					-- If it's a pre-event
+					if (RSConstants.NPCS_WITH_PRE_EVENT[entityID]) then
+						entityID = RSConstants.NPCS_WITH_PRE_EVENT[entityID]
+						vignetteObjectID = tostring(entityID)
+					end
+				
+					-- If it's a pre-spawn event
 					if (RSNpcDB.GetInternalNpcInfo(entityID)) then
 						pingAnimation(pin, pin.ShowPingAnim, vignetteObjectID)
 					elseif ((entityID == RSConstants.FORBIDDEN_REACH_ANCESTRAL_SPIRIT or entityID == RSConstants.ZARALEK_CAVERN_LOAM_SCOUT) and RSNpcDB.GetNpcId(pin:GetVignetteName(), self:GetMap():GetMapID())) then
@@ -179,6 +186,91 @@ end
 local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 	if (not pin or not vignetteObjectID) then
 		return
+	end
+	
+	if (not pin.SetPassThroughButtonsLoaded and not InCombatLockdown()) then
+		pin:SetPassThroughButtons("MiddleButton");
+		pin.SetPassThroughButtonsLoaded = true
+	end
+	
+	-- This hook will be removed for entities not managed by this addon, so that's why it might be gone and it needs to rehook it
+	if (pin:GetScript("OnMouseDown") == nil) then
+		pin:SetScript("OnMouseDown", function(self, button)
+			local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), pin.vignetteInfo, self:GetMap():GetMapID())
+			if (not POI) then	
+				return
+			end
+					
+			if (button == "LeftButton") then				
+				--Toggle state (if showing tooltips)
+				if (RSConfigDB.IsShowingTooltipsOnIngameIcons() and IsShiftKeyDown() and IsAltKeyDown()) then
+					if (POI.isNpc) then
+						if (RSConfigDB.GetDefaultNpcFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+							RSConfigDB.SetNpcFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+						else
+							RSConfigDB.SetNpcFiltered(POI.entityID)
+						end
+						self:Hide();
+					elseif (POI.isContainer) then
+						if (RSConfigDB.GetDefaultContainerFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+							RSConfigDB.SetContainerFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+						else
+							RSConfigDB.SetContainerFiltered(POI.entityID)
+						end
+						self:Hide();
+					elseif (POI.isEvent) then
+						if (RSConfigDB.GetDefaultEventFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
+							RSConfigDB.SetEventFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
+						else
+							RSConfigDB.SetEventFiltered(POI.entityID)
+						end
+						self:Hide();
+					end
+					RSMinimap.RefreshEntityState(POI.entityID)
+				-- Simulate ingame waypoint
+				elseif (IsControlKeyDown()) then
+					RSWaypoints.AddWorldMapWaypoint(POI.mapID, POI.x, POI.y)
+				end
+			elseif (button == "RightButton") then
+				-- Ignore all these events if not showing tooltips
+				if (not RSConfigDB.IsShowingTooltipsOnIngameIcons()) then
+					return
+				end
+							
+				-- Add waypoint
+				if (IsShiftKeyDown()) then
+					if (RSConfigDB.IsAddingWorldMapTomtomWaypoints()) then
+						RSTomtom.AddWorldMapTomtomWaypoint(POI.mapID, POI.x, POI.y, POI.name)
+					end
+					if (RSConfigDB.IsAddingWorldMapIngameWaypoints()) then
+						RSWaypoints.AddWorldMapWaypoint(POI.mapID, POI.x, POI.y)
+					end
+				elseif (not IsShiftKeyDown() and not IsAltKeyDown() and not IsControlKeyDown()) then
+					-- If already showing a guide toggle it first
+					if (self:GetMap():GetNumActivePinsByTemplate("RSGuideTemplate") > 0) then	
+						self:GetMap():RemoveAllPinsByTemplate("RSGuideTemplate");
+											
+						local guideEntityID = RSGeneralDB.GetGuideActive()
+						if (guideEntityID) then
+							-- If same guide showing then disable it
+							if (guideEntityID ~= POI.entityID) then
+								RSGeneralDB.SetGuideActive(POI.entityID)
+								parentFrame:ShowGuideLayer(POI.entityID, self:GetMap():GetMapID())
+							else
+								RSGeneralDB.RemoveGuideActive()
+							end
+						end
+					-- Otherwise show it
+					else
+						RSGeneralDB.SetGuideActive(POI.entityID)
+						parentFrame:ShowGuideLayer(POI.entityID, self:GetMap():GetMapID())
+					end
+				end
+	
+				-- Refresh minimap
+				RSMinimap.RefreshAllData(true)
+			end
+		end)
 	end
 	
 	if (pin.initialized) then
@@ -288,74 +380,7 @@ local function initWorldMapVignette(parentFrame, pin, vignetteObjectID)
 			pin.tooltip = nil
 		end
 	end)
-	pin:HookScript("OnMouseDown", function(self, button)	
-		local POI = RSMap.GetWorldMapPOI(self:GetObjectGUID(), pin.vignetteInfo, self:GetMap():GetMapID())
-		if (not POI) then	
-			return
-		end
-				
-		if (button == "LeftButton") then
-			--Toggle state
-			if (IsShiftKeyDown() and IsAltKeyDown()) then
-				if (POI.isNpc) then
-					if (RSConfigDB.GetDefaultNpcFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
-						RSConfigDB.SetNpcFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
-					else
-						RSConfigDB.SetNpcFiltered(POI.entityID)
-					end
-					self:Hide();
-				elseif (POI.isContainer) then
-					if (RSConfigDB.GetDefaultContainerFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
-						RSConfigDB.SetContainerFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
-					else
-						RSConfigDB.SetContainerFiltered(POI.entityID)
-					end
-					self:Hide();
-				elseif (POI.isEvent) then
-					if (RSConfigDB.GetDefaultEventFilter() == RSConstants.ENTITY_FILTER_ALERTS) then
-						RSConfigDB.SetEventFiltered(POI.entityID, RSConstants.ENTITY_FILTER_ALL)
-					else
-						RSConfigDB.SetEventFiltered(POI.entityID)
-					end
-					self:Hide();
-				end
-				RSMinimap.RefreshEntityState(POI.entityID)
-			end
-		elseif (button == "RightButton") then
-			-- Add waypoint
-			if (IsShiftKeyDown()) then
-				if (RSConfigDB.IsAddingWorldMapTomtomWaypoints()) then
-					RSTomtom.AddWorldMapTomtomWaypoint(POI.mapID, POI.x, POI.y, POI.name)
-				end
-				if (RSConfigDB.IsAddingWorldMapIngameWaypoints()) then
-					RSWaypoints.AddWorldMapWaypoint(POI.mapID, POI.x, POI.y)
-				end
-			-- If already showing a guide toggle it first
-			elseif (self:GetMap():GetNumActivePinsByTemplate("RSGuideTemplate") > 0) then	
-				self:GetMap():RemoveAllPinsByTemplate("RSGuideTemplate");
-									
-				local guideEntityID = RSGeneralDB.GetGuideActive()
-				if (guideEntityID) then
-					-- If same guide showing then disable it
-					if (guideEntityID ~= POI.entityID) then
-						RSGeneralDB.SetGuideActive(POI.entityID)
-						parentFrame:ShowGuideLayer(POI.entityID, self:GetMap():GetMapID())
-					else
-						RSGeneralDB.RemoveGuideActive()
-					end
-				end
-			-- Otherwise show it
-			else
-				RSGeneralDB.SetGuideActive(POI.entityID)
-				parentFrame:ShowGuideLayer(POI.entityID, self:GetMap():GetMapID())
-			end
 
-			-- Refresh minimap
-			RSMinimap.RefreshAllData(true)
-		end
-	end)
-
-	pin:SetPassThroughButtons("MiddleButton");
 	RSLogger:PrintDebugMessage(string.format("Sobreescrito contenedor del mapa del mundo: %s, [%s]", pin:GetObjectGUID(), pin:GetVignetteType()))
 	pin.initialized = true
 end
@@ -376,11 +401,17 @@ function RareScannerDataProviderMixin:RefreshAllData(fromOnShow)
 	for pin in self:GetMap():EnumeratePinsByTemplate("VignettePinTemplate") do
 		if (pin:GetObjectGUID()) then
 			local _, _, _, _, _, vignetteObjectID = strsplit("-", pin:GetObjectGUID())
-			initWorldMapVignette(self, pin, vignetteObjectID)
+			
+			local POI = RSMap.GetWorldMapPOI(pin:GetObjectGUID(), pin.vignetteInfo, mapID)
+			if (POI) then
+				initWorldMapVignette(self, pin, vignetteObjectID)
+			else
+				-- Avoids blocking mouse clicks on vignettes not managed by this addon
+				pin:SetScript("OnMouseDown", nil)
+			end
 			
 			-- Animate if matches with text filter
 			if (RSGeneralDB.GetWorldMapTextFilter()) then
-				local POI = RSMap.GetWorldMapPOI(pin:GetObjectGUID(), pin.vignetteInfo, mapID)
 				if (POI and RSUtils.Contains(POI.name, RSGeneralDB.GetWorldMapTextFilter())) then
 					if (not pin.ShowPingAnim:IsPlaying()) then
 						pin.ShowSearchAnim:Play()

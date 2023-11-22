@@ -29,6 +29,8 @@ local RSConstants = private.ImportLib("RareScannerConstants")
 
 RSEntityPinMixin = CreateFromMixins(MapCanvasPinMixin);
 
+RSEntityPinMixin.SetPassThroughButtons = function() end
+
 function RSEntityPinMixin:OnLoad()
 	self:SetScalingLimits(1, 0.75, 1.0);
 end
@@ -41,7 +43,9 @@ function RSEntityPinMixin:OnAcquired(POI, dataProvider)
 	self.Texture:SetScale(RSConfigDB.GetIconsWorldMapScale())
 	self.IconTexture:SetAtlas(POI.iconAtlas)
 	self:SetPosition(RSUtils.FixCoord(POI.x), RSUtils.FixCoord(POI.y));
-	self:SetPassThroughButtons("MiddleButton");
+	if (self.SetPassThroughButtons) then
+		self:SetPassThroughButtons("MiddleButton");
+	end
 	MapPinHighlight_CheckHighlightPin(self:GetHighlightType(), self, self.Texture, AREAPOI_HIGHLIGHT_PARAMS);
 end
 
@@ -84,7 +88,7 @@ function RSEntityPinMixin:OnMouseDown(button)
 			self:GetMap():RefreshAllDataProviders();
 			RSMinimap.RefreshEntityState(self.POI.entityID)
 		-- Toggle overlay
-		elseif (not IsShiftKeyDown() and not IsAltKeyDown()) then
+		elseif (not IsShiftKeyDown() and not IsAltKeyDown() and not IsControlKeyDown()) then
 			-- If overlay showing then hide it
 			local overlayInfo = RSGeneralDB.GetOverlayActive(self.POI.entityID)
 			if (overlayInfo) then
@@ -109,7 +113,7 @@ function RSEntityPinMixin:OnMouseDown(button)
 				RSWaypoints.AddWorldMapWaypoint(self.POI.mapID, self.POI.x, self.POI.y)
 			end
 		-- Toggle guide
-		else
+		elseif (not IsShiftKeyDown() and not IsAltKeyDown() and not IsControlKeyDown()) then
 			-- If guide showing then hide it
 			local guideEntityID = RSGeneralDB.GetGuideActive()
 			if (guideEntityID) then

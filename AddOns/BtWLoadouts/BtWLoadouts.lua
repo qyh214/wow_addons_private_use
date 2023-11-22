@@ -1362,7 +1362,7 @@ do
 	end
 	function BtWLoadoutsSidebarMixin:Init()
 		self.Scroll.items = {}
-		self.Scroll.ScrollBar.doNotHide = true;
+		self.Scroll.scrollBar.doNotHide = true;
 		self:CreateButtons();
 		self.Scroll.scrollBar:SetValue(0);
 		self.Scroll.update = Scroll_Update

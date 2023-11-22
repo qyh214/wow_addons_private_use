@@ -39,8 +39,8 @@ plater_integration_frame.OnTickFrameFunc = function(self, deltaTime)
 			damageTable.CurrentDamageFromPlayer = damageTable.CurrentDamageFromPlayer + damageOnThisUpdateFromPlayer
 			
 			--add to the buffer the damage added
-			tinsert(damageTable.RealTimeBuffer, 1, damageOnThisUpdate)
-			tinsert(damageTable.RealTimeBufferFromPlayer, 1, damageOnThisUpdateFromPlayer)
+			table.insert(damageTable.RealTimeBuffer, 1, damageOnThisUpdate)
+			table.insert(damageTable.RealTimeBufferFromPlayer, 1, damageOnThisUpdateFromPlayer)
 			
 			--remove the damage from the buffer
 			local damageRemoved = tremove(damageTable.RealTimeBuffer, CONST_BUFFER_SIZE + 1)
@@ -114,7 +114,7 @@ function Details:RefreshPlaterIntegration()
 	if (Plater and Details.plater.realtime_dps_enabled or Details.plater.realtime_dps_player_enabled or Details.plater.damage_taken_enabled) then
 		
 		--wipe the cache
-		wipe (plater_integration_frame.DamageTaken)
+		Details:Destroy(plater_integration_frame.DamageTaken)
 		
 		--read cleu events
 		plater_integration_frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

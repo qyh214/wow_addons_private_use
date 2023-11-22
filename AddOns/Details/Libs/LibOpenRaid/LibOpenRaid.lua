@@ -23,6 +23,8 @@ BUGS:
 
 --]=]
 
+LIB_OPEN_RAID_CAN_LOAD = false
+
 local versionString, revision, launchDate, gameVersion = GetBuildInfo()
 
 local isExpansion_Dragonflight = function()
@@ -37,19 +39,15 @@ if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not isExpansion_Dragonflight()) t
 end
 
 local major = "LibOpenRaid-1.0"
-local CONST_LIB_VERSION = 102
+local CONST_LIB_VERSION = 113
 
-if (not LIB_OPEN_RAID_MAX_VERSION) then
-    LIB_OPEN_RAID_MAX_VERSION = CONST_LIB_VERSION
-else
-    LIB_OPEN_RAID_MAX_VERSION = math.max(LIB_OPEN_RAID_MAX_VERSION, CONST_LIB_VERSION)
+if (LIB_OPEN_RAID_MAX_VERSION) then
+    if (CONST_LIB_VERSION <= LIB_OPEN_RAID_MAX_VERSION) then
+        return
+    end
 end
 
-LIB_OPEN_RAID_CAN_LOAD = false
-
-local unpack = table.unpack or _G.unpack
-
---declae the library within the LibStub
+--declare the library within the LibStub
     local libStub = _G.LibStub
     local openRaidLib = libStub:NewLibrary(major, CONST_LIB_VERSION)
 
@@ -58,8 +56,11 @@ local unpack = table.unpack or _G.unpack
     end
 
     openRaidLib.__version = CONST_LIB_VERSION
-
     LIB_OPEN_RAID_CAN_LOAD = true
+    LIB_OPEN_RAID_MAX_VERSION = CONST_LIB_VERSION
+
+    --locals
+    local unpack = table.unpack or _G.unpack
 
     openRaidLib.__errors = {} --/dump LibStub:GetLibrary("LibOpenRaid-1.0").__errors
 
@@ -1362,7 +1363,8 @@ end
 --talent update (when the player changes a talent and the lib needs to notify other players in the group)
 function openRaidLib.UnitInfoManager.SendTalentUpdate()
     --talents
-    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo("player", true)
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
     local talentsToSend = unitInfo.talents
     local dataToSend = "" .. CONST_COMM_PLAYERINFO_TALENTS_PREFIX .. ","
     local talentsString = openRaidLib.PackTable(talentsToSend)
@@ -1374,16 +1376,25 @@ function openRaidLib.UnitInfoManager.SendTalentUpdate()
 end
 
 function openRaidLib.UnitInfoManager.OnPlayerTalentChanged()
-    --update the local player
-    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo("player", true)
-    local unitName = UnitName("player")
-    openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, nil, nil, nil, openRaidLib.UnitInfoManager.GetPlayerTalents())
+    --this talent update could be a specialization change, so we need to pass the specId as well
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
+    local specId = 0
 
-    --schedule send to the group
-    openRaidLib.Schedules.NewUniqueTimer(1 + math.random(0, 1), openRaidLib.UnitInfoManager.SendTalentUpdate, "UnitInfoManager", "sendTalent_Schedule")
+    if (getSpecializationVersion() == CONST_SPECIALIZATION_VERSION_MODERN) then
+        local selectedSpecialization = GetSpecialization()
+        if (selectedSpecialization) then
+            specId = GetSpecializationInfo(selectedSpecialization) or 0
+        end
+    end
+
+    openRaidLib.UnitInfoManager.SetUnitInfo(playerName, unitInfo, specId, nil, nil, openRaidLib.UnitInfoManager.GetPlayerTalents())
 
     --trigger public callback event
     openRaidLib.publicCallback.TriggerCallback("TalentUpdate", "player", unitInfo.talents, unitInfo, openRaidLib.UnitInfoManager.GetAllUnitsInfo())
+
+    --schedule send to the group
+    openRaidLib.Schedules.NewUniqueTimer(1 + math.random(0, 1), openRaidLib.UnitInfoManager.SendTalentUpdate, "UnitInfoManager", "sendTalent_Schedule")
 end
 openRaidLib.internalCallback.RegisterCallback("talentUpdate", openRaidLib.UnitInfoManager.OnPlayerTalentChanged)
 
@@ -1402,7 +1413,8 @@ openRaidLib.commHandler.RegisterComm(CONST_COMM_PLAYERINFO_TALENTS_PREFIX, openR
 --pvp talent update (when the player changes a pvp talent and the lib needs to notify other players in the group)
 function openRaidLib.UnitInfoManager.SendPvPTalentUpdate()
     --pvp talents
-    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo("player", true)
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
     local pvpTalentsToSend = unitInfo.pvpTalents
     local pvpTalentsString = openRaidLib.PackTable(pvpTalentsToSend)
 
@@ -1416,9 +1428,9 @@ end
 
 function openRaidLib.UnitInfoManager.OnPlayerPvPTalentChanged()
     --update the local player
-    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo("player", true)
-    local unitName = UnitName("player")
-    openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, nil, nil, nil, nil, nil, openRaidLib.UnitInfoManager.GetPlayerPvPTalents())
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
+    openRaidLib.UnitInfoManager.SetUnitInfo(playerName, unitInfo, nil, nil, nil, nil, nil, openRaidLib.UnitInfoManager.GetPlayerPvPTalents())
 
     --schedule send to the group
     openRaidLib.Schedules.NewUniqueTimer(1 + math.random(0, 1), openRaidLib.UnitInfoManager.SendPvPTalentUpdate, "UnitInfoManager", "sendPvPTalent_Schedule")
@@ -1583,7 +1595,7 @@ openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", openRaidLib.UnitI
         local itemLevel = openRaidLib.GearManager.GetPlayerItemLevel()
 
         --repair status
-        local gearDurability = openRaidLib.GearManager.GetPlayerGearDurability()
+        local gearDurability, lowestItemDurability = openRaidLib.GearManager.GetPlayerGearDurability()
 
         --get weapon enchant
         local weaponEnchant, mainHandEnchantId, offHandEnchantId = openRaidLib.GearManager.GetPlayerWeaponEnchant()
@@ -1625,6 +1637,16 @@ openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", openRaidLib.UnitI
 
         unitGearInfo.equippedGear = equippedGearList
 
+        local tierAmount = 0
+
+        for i = 1, #equippedGearList do
+            if (equippedGearList[i].isTier) then
+                tierAmount = tierAmount + 1
+            end
+        end
+
+        unitGearInfo.tierAmount = tierAmount
+
         openRaidLib.publicCallback.TriggerCallback("GearUpdate", openRaidLib.GetUnitID(unitName), unitGearInfo, openRaidLib.GearManager.GetAllUnitsGear())
     end
 
@@ -1654,7 +1676,7 @@ openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", openRaidLib.UnitI
 
         --unpack the enchant data as a ipairs table
         local noEnchantTableUnpacked = openRaidLib.UnpackTable(data, 4, false, false, noEnchantTableSize)
-        --unpack the enchant data as a ipairs table
+        --unpack the gems data as a ipairs table
         local noGemsTableUnpacked = openRaidLib.UnpackTable(data, noGemsTableIndex, false, false, noGemsTableSize)
         --unpack the full gear
         local equippedGearListUnpacked = equippedGearListIndex and openRaidLib.UnpackTable(data, equippedGearListIndex, false, true, 4) or {}
@@ -2375,6 +2397,14 @@ end
 function openRaidLib.CooldownManager.OnReceiveUnitCooldowns(data, unitName)
     --unpack the table as a pairs table
     local unpackedTable = openRaidLib.UnpackTable(data, 1, true, true, CONST_COOLDOWN_INFO_SIZE)
+
+    --[=[ --debug for data received from Evokers
+    local _, class = UnitClass(unitName)
+    if (class == "EVOKER") then
+        print(unitName)
+        dumpt(unpackedTable)
+    end
+    --]=]
 
     --add the list of cooldowns
     openRaidLib.CooldownManager.AddUnitCooldownsList(unitName, unpackedTable)

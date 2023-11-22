@@ -781,8 +781,7 @@ L["STRING_OPTIONS_NICKNAME_DESC"] = [=[为您设置一个昵称。
 昵称发送给公会成员和 Details!使用它代替你的名字。]=]
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "行文字编辑器"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "打开文本编辑器"
---[[Translation missing --]]
-L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
+L["STRING_OPTIONS_OPENBROKER"] = "打开Broker文本编辑"
 L["STRING_OPTIONS_OVERALL_ALL"] = "所有片段"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "所有片段会被添加到总体数据。"
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "总体数据:"
@@ -1227,21 +1226,14 @@ L["STRING_OPTIONS_WINDOW"] = "选项面板"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "锚点:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "忽略品质切换"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "启用后，隐藏，显示或切换所有窗口时，此窗口不受影响"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "“行的区域颜色”"
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "设置显示行时区域的背景颜色。"
 L["STRING_OPTIONS_WINDOW_SCALE"] = "尺度"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = [=[调整窗口的比例
 |cFFFFFF00贴士|r：右键单击以键入值
 |cFFFFFF00当前|r：%s]=]
 L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "皮肤颜色"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "修改应用于此窗口的皮肤颜色。 |cFFFFFF00重要|r：启用后，此处选择的 alpha 将被 |cFFFFFF00自动透明度 |r 值覆盖。 |cFFFFFF00重要|r：选择肤色会覆盖应用于状态栏的任何颜色自定义。"
 L["STRING_OPTIONS_WINDOW_TITLE"] = "窗口设置"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "这些选项控制选择窗口的窗口外观。"
 L["STRING_OPTIONS_WINDOWSPEED"] = "更新间隔"

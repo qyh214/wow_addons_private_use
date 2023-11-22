@@ -121,18 +121,51 @@ function TransitionAPI.TransformCameraSpaceToModelSpace(model, x, y, z)     --#9
     return model:TransformCameraSpaceToModelSpace(SharedVector3D);
 end
 
+local USING_TABLE_ARG = false;    --Model APIs weren't fully unified by 10.1.5, this is a temp workaround
+
+--[[
+do
+    local _, _, _, tocVersion = GetBuildInfo();
+    tocVersion = tonumber(tocVersion);
+
+    if addon.IsTOCVersionEqualOrNewerThan(100105) then
+        USING_TABLE_ARG = true;
+    end
+end
+--]]
+
 function TransitionAPI.SetCameraPosition(model, x, y, z)     --#10
     if type(x) == "table" then
         x, y, z = x:GetXYZ();
     end
-    model:SetCameraPosition(x, y, z);
+
+    if USING_TABLE_ARG and model:IsObjectType("CinematicModel") then
+        local position = {
+            x = x,
+            y = y,
+            z = z,
+        }
+        model:SetCameraPosition(position);
+    else
+        model:SetCameraPosition(x, y, z);
+    end
 end
 
 function TransitionAPI.SetCameraTarget(model, x, y, z)     --#11
     if type(x) == "table" then
         x, y, z = x:GetXYZ();
     end
-    model:SetCameraTarget(x, y, z);
+
+    if USING_TABLE_ARG and model:IsObjectType("CinematicModel") then
+        local position = {
+            x = x,
+            y = y,
+            z = z,
+        }
+        model:SetCameraTarget(position);
+    else
+        model:SetCameraTarget(x, y, z);
+    end
 end
 
 function TransitionAPI.SetModelPosition(model, x, y, z)     --#12

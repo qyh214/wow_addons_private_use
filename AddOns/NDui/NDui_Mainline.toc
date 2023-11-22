@@ -1,0 +1,21 @@
+## Interface: 100200
+## Title: |cff0080ffNDui|r
+## X-Credits: Elv, Freebaser, Haleth, Haste, lightspark, Loshine, Neavo, p3lim, Paopao001, Qulight, Ray, Rubgrsch, Simpy, Tuller, zork.
+## Author: Siweia
+## Notes: More than a UI.
+## Version: 7.14.2
+## X-Support: DF
+## X-Website: https://github.com/siweia/NDui
+## X-Curse-Project-ID: 324377
+## X-WoWI-ID: 24846
+## X-Wago-ID: Xb6X4j6p
+## SavedVariables: NDuiADB, NDuiPDB
+## SavedVariablesPerCharacter: NDuiDB
+
+Init.lua
+Locales\Locales.xml
+Core\Core.xml
+Config\Config.xml
+Libs\Libs.xml
+Modules\Modules.xml
+Plugins\Plugins.xml

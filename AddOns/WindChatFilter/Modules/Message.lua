@@ -26,7 +26,7 @@ local function getMessageFilter(rule)
         if rule.message.keywords then
             for keyword, _ in pairs(rule.message.keywords) do
                 local kw = gsub(keyword, "%%playerName%%", playerName)
-                if strfind(data.message, kw) then
+                if strfind(data.message, kw) or strfind(gsub(data.message, "%s", ""), kw) then
                     return true
                 end
             end

@@ -17,7 +17,7 @@ local RSUtils = private.ImportLib("RareScannerUtils")
 -- NPCs notes
 ---============================================================================
 
-function RSNotes.GetNote(entityID, mapID)
+function RSNotes.GetNote(entityID, mapID, minieventID)
 	-- Crafting rare NPCs event
 	if (RSUtils.Contains(RSConstants.CRAFTING_NPCS, entityID)) then
 		return string.format(AL["NOTE_CRAFTING_NPCS"], AL[string.format("NOTE_%s", entityID)])
@@ -85,31 +85,34 @@ function RSNotes.GetNote(entityID, mapID)
 	-- Requires entering the rift in the maw
 	elseif (RSUtils.Contains(RSConstants.RIFT_NPCS_MAW, entityID)) then
 		return AL["NOTE_RIFT_NPCS_MAW"]
-	-- Requires air storms in Dragon Isles
-	elseif (RSUtils.Contains(RSConstants.AIR_STORM_EVENTS_NPCS, entityID)) then
+	-- Requires air storm invasion in Dragon Isles
+	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_AIR_MINIEVENT) then
 		return AL["NOTE_AIR_STORM_EVENTS"]
-	-- Requires fire storms in Dragon Isles
-	elseif (RSUtils.Contains(RSConstants.FIRE_STORM_EVENTS_NPCS, entityID)) then
+	-- Requires fire storm invasion in Dragon Isles
+	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_FIRE_MINIEVENT) then
     	return AL["NOTE_FIRE_STORM_EVENTS"]
-  	-- Requires earth storms in Dragon Isles
-  	elseif (RSUtils.Contains(RSConstants.EARTH_STORM_EVENTS_NPCS, entityID)) then
+  	-- Requires earth storm invasion in Dragon Isles
+  	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_EARTH_MINIEVENT) then
     	return AL["NOTE_EARTH_STORM_EVENTS"]
-  	-- Requires water storms in Dragon Isles
-  	elseif (RSUtils.Contains(RSConstants.WATER_STORM_EVENTS_NPCS, entityID)) then
+  	-- Requires water storm invasion in Dragon Isles
+  	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_STORM_INVASTION_WATER_MINIEVENT) then
     	return AL["NOTE_WATER_STORM_EVENTS"]
 	-- Grand hunting party bosses
-	elseif (RSUtils.Contains(RSConstants.HUNTING_PARTY_NPCS, entityID)) then
+	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_HUNTING_PARTY_MINIEVENT) then
 		return AL["NOTE_HUNTING_PARTY_NPCS"]
 	-- Omnious conchs
 	elseif (RSUtils.Contains(RSConstants.OMINOUS_CONCHS_NPCS, entityID)) then
 		return AL["NOTE_OMINOUS_CONCHS_NPCS"]
 	-- Fyrakk assaults
-	elseif (RSUtils.Contains(RSConstants.FYRAKK_ASSAULTS_NPCS, entityID)) then
+	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT) then
 		return AL["NOTE_FYRAKK_ASSAULTS_NPCS"]
 	-- Elusive NPCs in Dragon Isles
 	elseif (RSUtils.Contains(RSConstants.ELUSIVE_NPCS, entityID)) then
 		return AL["NOTE_ELUSIVE_NPCS"]
-	end
+	-- Requires dreamsurge investigation in Dragon Isles
+  	elseif (minieventID and minieventID == RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT) then
+    	return AL["NOTE_DREAMSURGE_EVENTS"]
+  	end
 	
 	-- Rune of constructs Containers
 	if (RSUtils.Contains(RSConstants.RUNE_CONSTRUCTS_CONTAINERS, entityID)) then
@@ -153,5 +156,8 @@ function RSNotes.GetNote(entityID, mapID)
 	-- Forbidden Reach containers
 	elseif (RSUtils.Contains(RSConstants.CONTAINERS_FORBIDDEN_REACH, entityID)) then
 		return AL["NOTE_CONTAINERS_FORBIDDEN_REACH"]
+	-- Unwaking echo containers
+	elseif (RSUtils.Contains(RSConstants.CONTAINERS_UNWAKING_ECHO, entityID)) then
+		return AL["NOTE_UNWAKING_ECHO"]
 	end
 end

@@ -1,0 +1,19 @@
+## Interface: 100200
+## Title: |cff0080ffNDui|r Plus
+## Author: Witness
+## Notes: NDui Plugin
+## RequiredDeps: NDui
+## Version: 1.8.8
+## IconTexture: Interface\AddOns\NDui_Plus\Media\Texture\icon2
+## SavedVariables: NDuiPlusDB
+## SavedVariablesPerCharacter: NDuiPlusCharDB
+## X-Curse-Project-ID: 389434
+## X-Wago-ID: 0mKOvP6x
+## X-Credits: Siweia, Elv, fgprodigal, Cybeloras, hokohuang, Dencer, fang2hou, HopeAsd, p3lim, gegenschall.
+
+Init.lua
+Locales\Locales.xml
+Libs\Libs.xml
+Media\Media.xml
+Core\Core.xml
+Modules\Modules.xml

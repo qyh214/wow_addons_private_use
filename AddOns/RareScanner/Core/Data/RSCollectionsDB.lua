@@ -21,6 +21,7 @@ local RSConstants = private.ImportLib("RareScannerConstants")
 local RSLogger = private.ImportLib("RareScannerLogger")
 local RSUtils = private.ImportLib("RareScannerUtils")
 local RSRoutines = private.ImportLib("RareScannerRoutines")
+local RSTooltipScanners = private.ImportLib("RareScannerTooltipScanners")
 
 ---============================================================================
 -- Transmog locations (added in 9.2.5)
@@ -41,6 +42,82 @@ local TRANSMOG_LOCATIONS = {
 	["MAINHANDSLOT"] = { Enum.TransmogCollectionType.Wand, Enum.TransmogCollectionType.OneHAxe, Enum.TransmogCollectionType.OneHSword, Enum.TransmogCollectionType.OneHMace, Enum.TransmogCollectionType.Dagger, Enum.TransmogCollectionType.Fist, Enum.TransmogCollectionType.TwoHAxe, Enum.TransmogCollectionType.TwoHSword, Enum.TransmogCollectionType.TwoHMace, Enum.TransmogCollectionType.Staff, Enum.TransmogCollectionType.Polearm, Enum.TransmogCollectionType.Bow, Enum.TransmogCollectionType.Gun, Enum.TransmogCollectionType.Crossbow, Enum.TransmogCollectionType.Warglaives, Enum.TransmogCollectionType.Paired };
 	["SECONDARYHANDSLOT"] = { Enum.TransmogCollectionType.Shield, Enum.TransmogCollectionType.Holdable };
 }
+
+local CLASS_MISSING_APPEARNACES = {
+	[1] = { --Warrior
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Thrown, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield }
+	};
+	[2] = { --Paladin
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate, Enum.ItemArmorSubclass.Shield }
+	};
+	[3] = { --Hunter
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Crossbow, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Mail }
+	};
+	[4] = { --Rogue
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Bows, Enum.ItemWeaponSubclass.Guns, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Thrown, Enum.ItemWeaponSubclass.Crossbow,  Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather }
+	};
+	[5] = { --Priest
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Wand, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth }
+	};
+	[6] = { --DeathKnight
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Plate }
+	};
+	[7] = { --Shaman
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Mail, Enum.ItemArmorSubclass.Shield }
+	};
+	[8] = { --Mage
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Wand, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth }
+	};
+	[9] = { --Warlock
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Wand, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Cloth }
+	};
+	[10] = { --Monk
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather }
+	};
+	[11] = { --Druid
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Polearm, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather }
+	};
+	[12] = { --Demon Hunter
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Warglaive, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Leather }
+	};
+	[13] = { --Evoker
+		[Enum.ItemClass.Weapon] = { Enum.ItemWeaponSubclass.Axe1H, Enum.ItemWeaponSubclass.Axe2H, Enum.ItemWeaponSubclass.Mace1H, Enum.ItemWeaponSubclass.Mace2H, Enum.ItemWeaponSubclass.Sword1H, Enum.ItemWeaponSubclass.Sword2H, Enum.ItemWeaponSubclass.Staff, Enum.ItemWeaponSubclass.Bearclaw, Enum.ItemWeaponSubclass.Catclaw, Enum.ItemWeaponSubclass.Unarmed, Enum.ItemWeaponSubclass.Generic, Enum.ItemWeaponSubclass.Dagger, Enum.ItemWeaponSubclass.Thrown, Enum.ItemWeaponSubclass.Fishingpole },
+		[Enum.ItemClass.Armor] = { Enum.ItemArmorSubclass.Mail }
+	};
+}
+
+---============================================================================
+-- Auxiliar functions
+---============================================================================
+
+local function PlayerCanUseItem(itemID)
+	local _, _, classIndex = UnitClass("player");
+	local _, _, _, itemEquipLoc, _, classID, subclassID = GetItemInfoInstant(itemID)
+	
+	-- If cloak
+	if (itemEquipLoc == Enum.InventoryType.IndexCloakType) then
+		return true
+	end
+	
+	-- If weapon or armor
+	if (CLASS_MISSING_APPEARNACES[classIndex][classID] and RSUtils.Contains(CLASS_MISSING_APPEARNACES[classIndex][classID], subclassID)) then
+		return true
+	end
+	
+	return false
+end
 
 ---============================================================================
 -- Manage database
@@ -123,11 +200,11 @@ local function UpdateEntityCollection(itemID, entityID, source, itemType)
 		
 		if (not RSUtils.Contains(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][itemType][classIndex], itemID)) then
 			table.insert(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][itemType][classIndex], itemID)
-			RSLogger:PrintDebugMessage(string.format("UpdateEntityCollection: Añadido itemID [%s], del tipo [%s], clase [%s], para la entidad [%s]. Origen [%s].", itemID, itemType, classIndex, entityID, source))
+			--RSLogger:PrintDebugMessage(string.format("UpdateEntityCollection: Añadido itemID [%s], del tipo [%s], clase [%s], para la entidad [%s]. Origen [%s].", itemID, itemType, classIndex, entityID, source))
 		end
 	elseif (not RSUtils.Contains(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][itemType], itemID)) then
 		table.insert(RSCollectionsDB.GetAllEntitiesCollectionsLoot()[source][entityID][itemType], itemID)
-		RSLogger:PrintDebugMessage(string.format("UpdateEntityCollection: Añadido itemID [%s], del tipo [%s], para la entidad [%s]. Origen [%s].", itemID, itemType, entityID, source))
+		--RSLogger:PrintDebugMessage(string.format("UpdateEntityCollection: Añadido itemID [%s], del tipo [%s], para la entidad [%s]. Origen [%s].", itemID, itemType, entityID, source))
 	end
 end
 
@@ -607,61 +684,6 @@ local function AddAppearanceItemID(appearanceID, itemID)
 	end
 end
 
-local function GetAppearanceItemIDs(appearanceID)
-	if (private.dbglobal.appearances_item_id) then
-		return private.dbglobal.appearances_item_id[appearanceID]
-	end
-	
-	return nil
-end
-
-local function UpdateNotCollectedAppearanceItemIDs(routines, routineTextOutput)
-	private.dbchar.not_colleted_appearances_item_ids = {}
-	
-	-- Query	
-	for transmogLocationName, transmogCollectionTypes in pairs (TRANSMOG_LOCATIONS) do
-		local transmogLocation = TransmogUtil.GetTransmogLocation(transmogLocationName, Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
-		for _, categoryID in ipairs (transmogCollectionTypes) do
-			local name, _, _, _, _ = C_TransmogCollection.GetCategoryInfo(categoryID) -- Returns name only for the current class proficiencie, so if there is no name, this class cannot transmog it
-			local visualsList = C_TransmogCollection.GetCategoryAppearances(categoryID, transmogLocation)
-			if (name and visualsList) then
-				local notCollectedAppearanceItemIDs = RSRoutines.LoopIndexRoutineNew()
-				notCollectedAppearanceItemIDs:Init(C_TransmogCollection.GetCategoryAppearances, 100, 
-					function(context, j)
-						if (not context.counter) then
-							context.counter = 0
-						end
-						if (not visualsList[j].isCollected) then
-							context.counter = context.counter + 1
-							local sources = C_TransmogCollection.GetAppearanceSources(visualsList[j].visualID, context.arguments[1], context.arguments[2])
-							for k = 1, #sources do
-								if (sources[k].sourceType == 4 or sources[k].sourceType == 2) then --World drop/quest
-									AddAppearanceItemID(sources[k].visualID, sources[k].itemID)
-							
-									if (not private.dbchar.not_colleted_appearances_item_ids[sources[k].itemID]) then
-										private.dbchar.not_colleted_appearances_item_ids[sources[k].itemID] = true
-									end
-								end
-							end
-						end
-					end,
-					function(context)
-						local name, _, _, _, _ = C_TransmogCollection.GetCategoryInfo(context.arguments[1])
-						RSLogger:PrintDebugMessage(string.format("UpdateNotCollectedAppearanceItemIDs. [%s] [%s no conseguidas].", name, context.counter or "0"))
-						
-						if (routineTextOutput) then
-							routineTextOutput:SetText(string.format(AL["EXPLORER_MISSING_APPEARANCES"], context.counter or "0", name))
-						end
-					end,
-					categoryID,
-					transmogLocation
-				)
-				table.insert(routines, notCollectedAppearanceItemIDs)
-			end
-		end
-	end
-end
-
 local function GetNotCollectedAppearanceItemIDs()
 	return private.dbchar.not_colleted_appearances_item_ids
 end
@@ -685,6 +707,124 @@ local function DropNotCollectedAppearance(appearanceID)
 	end
 	
 	return false
+end
+
+local function GetAppearanceItemIDs(appearanceID)
+	if (private.dbglobal.appearances_item_id) then
+		return private.dbglobal.appearances_item_id[appearanceID]
+	end
+	
+	return nil
+end
+
+local function UpdateNotCollectedAppearanceItemIDs(routines, routineTextOutput)
+	private.dbchar.not_colleted_appearances_item_ids = {}
+	
+	-- Query	
+	for transmogLocationName, transmogCollectionTypes in pairs (TRANSMOG_LOCATIONS) do
+		local transmogLocation = TransmogUtil.GetTransmogLocation(transmogLocationName, Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
+		for _, categoryID in ipairs (transmogCollectionTypes) do
+			local name, _, _, _, _ = C_TransmogCollection.GetCategoryInfo(categoryID) -- Returns name only for the current class proficiencie, so if there is no name, this class cannot transmog it
+			if (name) then
+				local visualsList = C_TransmogCollection.GetCategoryAppearances(categoryID, transmogLocation)
+				
+				-- Appearances hidden in the collections tab
+				if (private.MISSING_SOURCES[categoryID]) then
+					local notCollectedAppearanceItemIDs = RSRoutines.LoopIndexRoutineNew()
+					notCollectedAppearanceItemIDs:Init(function() return private.MISSING_SOURCES[categoryID] end, 100, 
+						function(context, i)
+							if (not context.counter) then
+								context.counter = 0
+							end
+							
+							local visualItemID = private.MISSING_SOURCES[context.arguments[1]][i]
+							local sVisualID, sItemID = strsplit(";",visualItemID)
+							
+							local visualID = tonumber(sVisualID)
+							local itemID = tonumber(sItemID)
+							
+							if (visualsList) then
+								local collected = false
+								local inVisualList = false
+								for j = 1, #visualsList do
+									if (visualsList[j].visualID == visualID and visualsList[j].isCollected) then
+										collected = true
+										inVisualList = true
+										break
+									end	
+								end
+								
+								if (not collected and not C_TransmogCollection.PlayerHasTransmog(itemID, visualID) and PlayerCanUseItem(itemID)) then	
+									context.counter = context.counter + 1
+									AddAppearanceItemID(visualID, itemID)
+								
+									if (not private.dbchar.not_colleted_appearances_item_ids[itemID]) then
+										private.dbchar.not_colleted_appearances_item_ids[itemID] = true
+									end
+									
+									-- Some items show up as not collected but they are, so if it wasnt in the visuallist check the tooltip
+									if (not inVisualList) then
+										local item = Item:CreateFromItemID(itemID)
+										item:ContinueOnItemLoad(function()
+											if (not RSTooltipScanners.ScanLoot(item:GetItemLink(), TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN)) then
+												DropNotCollectedAppearance(visualID)
+											end
+										end)
+									end
+								end
+							end
+						end,
+						function(context)
+							local name, _, _, _, _ = C_TransmogCollection.GetCategoryInfo(context.arguments[1])
+							RSLogger:PrintDebugMessage(string.format("UpdateNotCollectedAppearanceItemIDs. [%s] [%s no conseguidas (ocultas)].", name, context.counter or "0"))
+							
+							if (routineTextOutput) then
+								routineTextOutput:SetText(string.format(AL["EXPLORER_MISSING_APPEARANCES"], context.counter or "0", name))
+							end
+						end,
+						categoryID
+					)
+					table.insert(routines, notCollectedAppearanceItemIDs)
+				end
+				
+				-- Appearances shown in the collections tab
+				if (visualsList) then
+					local notCollectedAppearanceItemIDs = RSRoutines.LoopIndexRoutineNew()
+					notCollectedAppearanceItemIDs:Init(C_TransmogCollection.GetCategoryAppearances, 100, 
+						function(context, j)
+							if (not context.counter) then
+								context.counter = 0
+							end
+							if (not visualsList[j].isCollected) then
+								context.counter = context.counter + 1
+								local sources = C_TransmogCollection.GetAppearanceSources(visualsList[j].visualID, context.arguments[1], context.arguments[2])
+								for k = 1, #sources do
+									if (sources[k].sourceType == 4 or sources[k].sourceType == 2) then --World drop/quest
+										AddAppearanceItemID(sources[k].visualID, sources[k].itemID)
+								
+										if (not private.dbchar.not_colleted_appearances_item_ids[sources[k].itemID]) then
+											private.dbchar.not_colleted_appearances_item_ids[sources[k].itemID] = true
+										end
+									end	
+								end
+							end
+						end,
+						function(context)
+							local name, _, _, _, _ = C_TransmogCollection.GetCategoryInfo(context.arguments[1])
+							RSLogger:PrintDebugMessage(string.format("UpdateNotCollectedAppearanceItemIDs. [%s] [%s no conseguidas].", name, context.counter or "0"))
+							
+							if (routineTextOutput) then
+								routineTextOutput:SetText(string.format(AL["EXPLORER_MISSING_APPEARANCES"], context.counter or "0", name))
+							end
+						end,
+						categoryID,
+						transmogLocation
+					)
+					table.insert(routines, notCollectedAppearanceItemIDs)
+				end
+			end
+		end
+	end
 end
 
 local function CheckUpdateAppearance(itemID, entityID, source, checkedItems)

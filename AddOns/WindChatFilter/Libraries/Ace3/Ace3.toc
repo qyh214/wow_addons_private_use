@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100200
 
 ## Title: Lib: Ace3
 ## Notes: AddOn development framework
@@ -6,7 +6,7 @@
 ## X-Website: http://www.wowace.com
 ## X-Category: Library
 ## X-License: Limited BSD
-## Version: 1.3.4
+## Version: 1.4.4
 
 LibStub\LibStub.lua
 CallbackHandler-1.0\CallbackHandler-1.0.xml

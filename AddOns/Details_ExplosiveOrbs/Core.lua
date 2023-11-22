@@ -14,7 +14,7 @@ local bit_band = bit.band
 local C_ChallengeMode_GetActiveKeystoneInfo = C_ChallengeMode.GetActiveKeystoneInfo
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
 local CreateFrame = CreateFrame
-local GetAddOnMetadata = GetAddOnMetadata
+local C_AddOns_GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local UnitGUID = UnitGUID
 
 local tContains = tContains
@@ -433,7 +433,7 @@ function EO:MergeSegmentsOnEnd()
     local overallCombat = Details:GetCombat(1)
     local overall = overallCombat:GetCombatNumber()
     local runID = select(2, overallCombat:IsMythicDungeon())
-    for i = 2, 25 do
+    for i = 2, 40 do
         local combat = Details:GetCombat(i)
         if not combat then break end
 
@@ -507,20 +507,11 @@ function EO:MergeRemainingTrashAfterAllBossesDone()
     self:CleanDiscardCombat()
 end
 
-function EO:OnResetOverall()
-    self:Debug("on Details Reset Overall")
-
-    if self.overall and self.db[self.overall] then
-        self.db[self.overall] = nil
-    end
-    self.overall = Details:GetCombat(-1):GetCombatNumber()
-end
-
 function EO:CleanDiscardCombat()
     local remain = {}
     remain[self.overall] = true
 
-    for i = 1, 25 do
+    for i = 1, 40 do
         local combat = Details:GetCombat(i)
         if not combat then break end
 
@@ -556,6 +547,10 @@ function EO:OnDetailsEvent(event, combat)
         EO:Debug("DETAILS_DATA_RESET")
         EO.overall = Details:GetCombat(-1):GetCombatNumber()
         EO:CleanDiscardCombat()
+    elseif event == 'DETAILS_DATA_SEGMENTREMOVED' then
+        EO:Debug("DETAILS_DATA_SEGMENTREMOVED")
+        EO.overall = Details:GetCombat(-1):GetCombatNumber()
+        EO:CleanDiscardCombat()
     end
 end
 
@@ -564,7 +559,6 @@ function EO:LoadHooks()
     self:SecureHook(_G.DetailsMythicPlusFrame, 'MergeTrashCleanup')
     self:SecureHook(_G.DetailsMythicPlusFrame, 'MergeRemainingTrashAfterAllBossesDone')
 
-    self:SecureHook(Details.historico, 'resetar_overall', 'OnResetOverall')
     self.overall = Details:GetCombat(-1):GetCombatNumber()
 
     Details:InstallCustomObject(self.CustomDisplay)
@@ -635,7 +629,7 @@ do
     end
 
     function EO:InstallPlugin()
-        local version = GetAddOnMetadata(addon, 'Version')
+        local version = C_AddOns_GetAddOnMetadata(addon, 'Version')
 
         plugin = Details:NewPluginObject('Details_ExplosiveOrbs', _G.DETAILSPLUGIN_ALWAYSENABLED)
         plugin.OpenOptionsPanel = OpenOptionsPanel
@@ -651,6 +645,7 @@ do
         Details:RegisterEvent(plugin, 'COMBAT_PLAYER_ENTER')
         Details:RegisterEvent(plugin, 'COMBAT_PLAYER_LEAVE')
         Details:RegisterEvent(plugin, 'DETAILS_DATA_RESET')
+        Details:RegisterEvent(plugin, 'DETAILS_DATA_SEGMENTREMOVED')
     end
 end
 

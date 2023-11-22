@@ -53,6 +53,7 @@ local defaultSpecTimers = {
 	[581] = 10, -- Demon Hunter: Vengeance	
 	[1467] = 10,
 	[1468] = 10,
+	[1473] = 10,
 }
 
 module.db.specIcons = ExRT.GDB.ClassSpecializationIcons
@@ -73,24 +74,38 @@ local function ToRaid(msg)
 	end
 end
 
+local dbmPrefix = (ExRT.isClassic and ExRT.isLK) and "D5WC" or
+	ExRT.isClassic and "D5C" or
+	"D5"
+
 local function CreateTimers(ctime,cname)
 	local chat_type,playerName = ExRT.F.chatType()
 
+	local name = UnitName("player")
+	local realm = GetRealmName()
+	local normalizedPlayerRealm = realm:gsub("[%s-]+", "")
+	local dbmPlayerPrefix = name .. "-" .. normalizedPlayerRealm .. "\t"
+	if chat_type == "WHISPER" then
+		dbmPlayerPrefix = ""
+	end
 	if cname == L.timerattack then
 		SendAddonMessage("BigWigs", "P^Pull^"..ctime, chat_type,playerName)
 		local _,_,_,_,_,_,_,mapID = GetInstanceInfo()
-		SendAddonMessage("D4", ("PT\t%d\t%d"):format(ctime,mapID or 0), chat_type,playerName)
+		SendAddonMessage(dbmPrefix, ("%s1\tPT\t%d\t%d"):format(dbmPlayerPrefix, ctime,mapID or 0), chat_type,playerName)
 		if not ExRT.isClassic and VMRT.Timers.BlizzTimer then --currently is bugged, wait to fix
 			C_PartyInfo.DoCountdown(ctime)
 		end
 	elseif cname == L.timerafk then
 		SendAddonMessage("BigWigs", "P^Break^"..ctime, chat_type,playerName)
-		SendAddonMessage("D4", ("BT\t%d"):format(ctime), chat_type,playerName)
+		SendAddonMessage(dbmPrefix, ("%s1\tBT\t%d"):format(dbmPlayerPrefix, ctime), chat_type,playerName)
 	else
 		SendAddonMessage("BigWigs", "P^CBar^"..ctime.." "..cname, chat_type,playerName)
-		SendAddonMessage("D4", ("U\t%d\t%s"):format(ctime,cname), chat_type,playerName)
+		SendAddonMessage(dbmPrefix, ("%s1\tU\t%d\t%s"):format(dbmPlayerPrefix, ctime, cname), chat_type,playerName)
 		if not ExRT.isClassic and VMRT.Timers.BlizzTimer then
 			C_PartyInfo.DoCountdown(0)
+		end
+		if DBM then
+			DBM:CreatePizzaTimer(ctime, cname, nil, name)
 		end
 	end
 end

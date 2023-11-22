@@ -51,7 +51,7 @@ local function getMapFilter(rule)
 
         if rule.map.mapIDs then
             for customMap, _ in pairs(rule.map.mapIDs) do
-                if customMap == map then
+                if customMap == tostring(map) then
                     return true
                 end
             end

@@ -6,7 +6,7 @@
 
 -- 14: added support for chinese and russian
 
-local major, minor = "NickTag-1.0", 15
+local major, minor = "NickTag-1.0", 16
 local NickTag, oldminor = LibStub:NewLibrary (major, minor)
 
 if (not NickTag) then

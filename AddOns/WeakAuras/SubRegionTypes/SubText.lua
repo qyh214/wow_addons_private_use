@@ -200,6 +200,12 @@ local function modify(parent, region, parentData, data, first)
 
   local fontPath = SharedMedia:Fetch("font", data.text_font);
   text:SetFont(fontPath, data.text_fontSize, data.text_fontType);
+  if not text:GetFont() and fontPath then -- workaround font not loading correctly
+    local objectName = "WeakAuras-Font-" .. data.text_font
+    local fontObject = _G[objectName] or CreateFont(objectName)
+    fontObject:SetFont(fontPath, data.text_fontSize, data.text_fontType == "None" and "" or data.text_fontType)
+    text:SetFontObject(fontObject)
+  end
   if not text:GetFont() then -- Font invalid, set the font but keep the setting
     text:SetFont(STANDARD_TEXT_FONT, data.text_fontSize, data.text_fontType);
   end
@@ -239,24 +245,22 @@ local function modify(parent, region, parentData, data, first)
         break
       end
     end
-
-    if type(parentData.conditions) == "table" then
-      for _, condition in ipairs(parentData.conditions) do
-        if type(condition.changes) == "table" then
-          for _, change in ipairs(condition.changes) do
-            if type(change.property) == "string"
-            and change.property:match("sub%.%d+%.text_text")
-            and type(change.value) == "string"
-            and Private.ContainsCustomPlaceHolder(change.value)
-            then
-              containsCustomText = true
-              break
+    if not containsCustomText then
+      if type(parentData.conditions) == "table" then
+        for _, condition in ipairs(parentData.conditions) do
+          if type(condition.changes) == "table" then
+            for _, change in ipairs(condition.changes) do
+              if type(change.property) == "string"
+                and change.property:match("sub%.%d+%.text_text")
+              then
+                containsCustomText = true
+                break
+              end
             end
           end
         end
       end
     end
-
     if containsCustomText and parentData.customText and parentData.customText ~= "" then
       parent.customTextFunc = WeakAuras.LoadFunction("return "..parentData.customText)
     else
@@ -266,20 +270,49 @@ local function modify(parent, region, parentData, data, first)
     parent.values.lastCustomTextUpdate = nil
   end
 
+  local texts = {}
+  local textStr = data.text_text or ""
+  if textStr ~= "" then
+    tinsert(texts, textStr)
+  end
+
+  local subRegionIndex = 1
+  for index, subRegion in ipairs(parentData.subRegions) do
+    if subRegion == data then
+      subRegionIndex = index
+      break;
+    end
+  end
+  if type(parentData.conditions) == "table" then
+    local conditionName = "sub."..subRegionIndex..".text_text"
+    for _, condition in ipairs(parentData.conditions) do
+      if type(condition.changes) == "table" then
+        for _, change in ipairs(condition.changes) do
+          if type(change.property) == "string" and change.property == conditionName then
+            if type(change.value ) == "string" and change.value ~= "" then
+              tinsert(texts, change.value)
+            end
+          end
+        end
+      end
+    end
+  end
+
+  local getter = function(key, default)
+    local fullKey = "text_text_format_" .. key
+    if (data[fullKey] == nil) then
+      data[fullKey] = default
+    end
+    return data[fullKey]
+  end
+  region.subTextFormatters = Private.CreateFormatters(texts, getter)
+
   function region:ConfigureTextUpdate()
     local UpdateText
     if region.text_text and Private.ContainsAnyPlaceHolders(region.text_text) then
-      local getter = function(key, default)
-        local fullKey = "text_text_format_" .. key
-        if data[fullKey] == nil then
-          data[fullKey] = default
-        end
-        return data[fullKey]
-      end
-      local formatters = Private.CreateFormatters(region.text_text, getter)
       UpdateText = function()
         local textStr = region.text_text or ""
-        textStr = Private.ReplacePlaceHolders(textStr, parent, nil, false, formatters)
+        textStr = Private.ReplacePlaceHolders(textStr, parent, nil, false, self.subTextFormatters)
 
         if text:GetFont() then
           text:SetText(WeakAuras.ReplaceRaidMarkerSymbols(textStr))

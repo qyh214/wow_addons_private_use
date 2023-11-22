@@ -103,12 +103,12 @@ do
 	---@param actorName string
 	---@return string className, number left, number right, number top, number bottom, number red, number green, number blue, number alpha
 	function Details:GetClass(actorName)
-		local _, class = UnitClass(actorName)
+		local unitClass = Details:GetUnitClass(actorName)
 
-		if (class) then
-			local left, right, top, bottom = unpack(Details.class_coords[class])
-			local r, g, b = unpack(Details.class_colors[class])
-			return class, left, right, top, bottom, r or 1, g or 1, b or 1, 1
+		if (unitClass) then
+			local left, right, top, bottom = unpack(Details.class_coords[unitClass])
+			local r, g, b = unpack(Details.class_colors[unitClass])
+			return unitClass, left, right, top, bottom, r or 1, g or 1, b or 1, 1
 		else
 			local overallCombatObject = Details:GetCombat(DETAILS_SEGMENTID_OVERALL)
 			for containerId = 1, DETAILS_COMBAT_AMOUNT_CONTAINERS do
@@ -116,12 +116,12 @@ do
 				local actorObject = actorContainer:GetActor(actorName)
 
 				if (actorObject) then
-					class = actorObject:Class()
-					if (class) then
+					unitClass = actorObject:Class()
+					if (unitClass) then
 						--found the class of the actor
-						local left, right, top, bottom = unpack(Details.class_coords[class] or CONST_UNKNOWN_CLASS_COORDS)
-						local r, g, b = unpack(Details.class_colors[class])
-						return class, left, right, top, bottom, r or 1, g or 1, b or 1, 1
+						local left, right, top, bottom = unpack(Details.class_coords[unitClass] or CONST_UNKNOWN_CLASS_COORDS)
+						local r, g, b = unpack(Details.class_colors[unitClass])
+						return unitClass, left, right, top, bottom, r or 1, g or 1, b or 1, 1
 					end
 				end
 			end
@@ -275,6 +275,31 @@ do
 		return Details.cached_specs[unitSerial]
 	end
 
+	local specNamesToId = {}
+	function Details:BuildSpecsNameCache()
+		if (DetailsFramework.IsDragonflightAndBeyond()) then
+			---@type table<class, table<specializationid, boolean>>
+			local classSpecList = DetailsFramework.ClassSpecs
+			---@number
+			local numClasses = GetNumClasses()
+
+			for i = 1, numClasses do
+				local classInfo = C_CreatureInfo.GetClassInfo(i)
+				local localizedClassName = classInfo.className
+				local classTag = classInfo.classFile
+
+				local specIdsList = classSpecList[classTag]
+				if (specIdsList) then
+					for specId in pairs(specIdsList) do
+						local specId2, specName = GetSpecializationInfoByID(specId)
+						if (specId2 and specName) then
+							specNamesToId[specName .. " " .. localizedClassName] = specId2
+						end
+					end
+				end
+			end
+		end
+	end
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -286,11 +311,11 @@ do
 		---@type actor, actorcontainer, number
 		local actorObject, actorContainer, attempts = payload[1], payload[2], payload[3]
 
-		if (not actorObject) then
+		if (not actorObject or actorObject.__destroyed) then
 			return false
 		end
 
-		local spellContainerNames = actorObject:GetSpellContainerNames()
+		local spellContainerNames = actorObject:GetSpellContainerNames() --1x Details/functions/playerclass.lua:293: attempt to call method 'GetSpellContainerNames' (a nil value)
 		for i = 1, #spellContainerNames do
 			local spellContainer = actorObject:GetSpellContainer(spellContainerNames[i])
 			if (spellContainer) then
@@ -348,7 +373,7 @@ do
 	function Details:GuessSpec(payload)
 		---@type actor, actorcontainer, number
 		local actorObject, actorContainer, attempts = payload[1], payload[2], payload[3]
-		if (not actorObject) then
+		if (not actorObject or actorObject.__destroyed) then
 			return false
 		end
 
@@ -365,7 +390,7 @@ do
 		if (not actorSpec) then
 			local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 			if (openRaidLib) then
-				local unitInfo = openRaidLib.GetUnitInfo(actorObject:Name())
+				local unitInfo = openRaidLib.GetUnitInfo(actorObject:Name()) --1x Details/functions/playerclass.lua:368: attempt to call method 'Name' (a nil value)
 				if (unitInfo and unitInfo.specId and unitInfo.specId ~= 0) then
 					actorSpec = unitInfo.specId
 				end
@@ -377,9 +402,32 @@ do
 			actorSpec = Details.cached_specs[actorObject.serial]
 		end
 
+		--attempt to get spec from tooltip
+		if (not actorSpec and DetailsFramework:IsDragonflightAndBeyond()) then
+			local tooltipData = C_TooltipInfo.GetHyperlink("unit:" .. actorObject.serial)
+			if (tooltipData and tooltipData.lines) then
+				for i = 1, #tooltipData.lines do
+					local thisLineData = tooltipData.lines[i]
+					local text = thisLineData.leftText
+					if (text and thisLineData.type == 0) then
+						local specId = specNamesToId[text]
+						if (specId and type(specId) == "number") then
+							actorSpec = specId
+						end
+					end
+				end
+			end
+		end
+
 		--attempt to get from the spells the actor used in the current combat
 		if (not actorSpec) then
-			local currentCombatObject = Details:GetCombat(DETAILS_SEGMENTID_CURRENT)
+			local currentCombatObject = Details:GetCurrentCombat()
+
+			if (currentCombatObject.__destroyed) then
+				--schedule made before a destroy combat call, but not cancelled
+				return
+			end
+
 			for containerId = 1, DETAILS_COMBAT_AMOUNT_CONTAINERS do
 				if (actorSpec) then
 					break
@@ -449,7 +497,6 @@ do
 
 		if (actorSpec) then
 			Details.cached_specs[actorObject.serial] = actorSpec
-
 			actorObject:SetSpecId(actorSpec)
 			actorObject.classe = Details.SpecIDToClass[actorSpec] or actorObject.classe
 			actorObject.guessing_spec = nil
@@ -472,9 +519,9 @@ do
 				Details:ScheduleTimer("GuessSpec", 1, payload) --todo: replace schedule from ace3 and use our own
 			end
 		else
-			if (attempts and attempts < 10) then
+			if (attempts and attempts < 4) then
 				payload[3] = attempts + 1
-				Details:ScheduleTimer("GuessSpec", 3, payload)
+				Details:ScheduleTimer("GuessSpec", 4, payload)
 			end
 		end
 

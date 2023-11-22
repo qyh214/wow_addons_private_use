@@ -62,7 +62,7 @@ function Details222.CooldownTracking.GetOrCreateNewCooldownLine(cooldownFrame, l
         return cooldownLine
     else
         cooldownLine = DF:CreateTimeBar(cooldownFrame, [[Interface\AddOns\Details\images\bar_serenity]], Details.ocd_tracker.width-2, Details.ocd_tracker.height-2, 100, nil, cooldownFrame:GetName() .. "CDFrame" .. lineId)
-        tinsert(cooldownFrame.bars, cooldownLine)
+        table.insert(cooldownFrame.bars, cooldownLine)
         cooldownLine:EnableMouse(false)
         return cooldownLine
     end
@@ -295,7 +295,7 @@ end
                     Details222.CooldownTracking.SetupCooldownLine(cooldownLine)
 
                     --add the cooldown into the organized by class table
-                    tinsert(cooldownsOrganized[classId], cooldownLine)
+                    table.insert(cooldownsOrganized[classId], cooldownLine)
 
                     --iterate to the next cooldown line
                     cooldownFrame.nextLineId = cooldownFrame.nextLineId + 1
@@ -328,7 +328,7 @@ end
         end
 
         cooldownFrame.scheduleRosterUpdate = nil
-        wipe(cooldownFrame.playerCache)
+        Details:Destroy(cooldownFrame.playerCache)
         cooldownFrame.nextLineId = 1
 
         if (Details.ocd_tracker.show_conditions.only_in_group) then

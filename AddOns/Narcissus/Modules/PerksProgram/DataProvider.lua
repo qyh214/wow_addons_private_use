@@ -31,16 +31,19 @@ local IGNORED_KEYS = {
     perksVendorItemID = true,
     timeRemaining = true,
     refundable = true,
+    pending = true,
 };
 
 local DELIMITER = "::";
 
 local function CompressTable(tbl)
     local output = DELIMITER;
+    local valueType;
 
     for k, v in pairs(tbl) do
         if not IGNORED_KEYS[k] then
-            if v ~= 0 and v ~= "" then
+            valueType = type(v);
+            if valueType == "number" or valueType == "string" and v ~= 0 and v ~= "" then
                 output = output ..k ..DELIMITER.. v ..DELIMITER;
             end
         end
@@ -127,6 +130,8 @@ end
 function DataProvider:GetAndCacheVendorItemInfo(vendorItemID)
     if not VendorItemDataCache[vendorItemID] then
         local info = GetVendorItemInfo(vendorItemID);
+        --! After patch ?, the perksVendorItemID will not return 0 even you haven't visited Trading Post during the game session
+        --! So (perksVendorItemID ~= 0) is no longer a reliable way to check if we need to decompress data from our SavedVariables
         if info and info.perksVendorItemID ~= 0 then
             if info.name and info.name ~= "" then
                 VendorItemDataCache[vendorItemID] = info;
@@ -143,6 +148,8 @@ function DataProvider:GetVendorItemName(vendorItemID)
     local info = self:GetAndCacheVendorItemInfo(vendorItemID);
     if info then
         return info.name
+    else
+        return ""
     end
 end
 
@@ -150,6 +157,8 @@ function DataProvider:GetVendorItemCategory(vendorItemID)
     local info = self:GetAndCacheVendorItemInfo(vendorItemID);
     if info then
         return info.perksVendorCategoryID
+    else
+        return 128
     end
 end
 
@@ -157,6 +166,8 @@ function DataProvider:GetVendorItemDescription(vendorItemID)
     local info = self:GetAndCacheVendorItemInfo(vendorItemID);
     if info then
         return info.description
+    else
+        return ""
     end
 end
 
@@ -174,6 +185,16 @@ function DataProvider:GetVendorItemPrice(vendorItemID)
         end
     end
     return 0
+end
+
+function DataProvider:GetVendorItemTransmogSetID(vendorItemID)
+    local info = self:GetAndCacheVendorItemInfo(vendorItemID);
+    if info and info.transmogSetID ~= 0 then
+        return info.transmogSetID
+    else
+        local cachedData = self:GetVendorItemInfoFromDatabase(vendorItemID);
+        return cachedData and cachedData.transmogSetID or nil;
+    end
 end
 
 function DataProvider:IsVendorItemPurchased(vendorItemID)
@@ -432,6 +453,20 @@ function DataProvider:GetCurrentMonthItems()
     end
 end
 
+function DataProvider:GetVendorItemAddedMonthName(vendorItemID)
+    local info = self:GetVendorItemInfoFromDatabase(vendorItemID);
+    if info and info.addedDate then
+        if not self.currentMonthDate then
+            local month, year = self:GetActivePerksDate();
+            self.currentMonthDate = year.."/"..month;
+        end
+
+        local monthName = DataProvider:GetDisplayMonthName(info.addedDate);
+        return monthName, (self.currentMonthDate == info.addedDate);
+    else
+        return nil, true
+    end
+end
 
 
 

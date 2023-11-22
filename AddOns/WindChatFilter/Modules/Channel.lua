@@ -24,6 +24,8 @@ local newcomerChannelNames = {
 }
 
 local availableConfigKeys = {
+    "system",
+    "dnd",
     "battleground",
     "emote",
     "general",
@@ -61,6 +63,14 @@ local function getChannelFilter(rule)
     return function(data)
         if not data.channel then
             return false
+        end
+
+        if rule.channel.dnd and data.channel == "DND" then
+            return true
+        end
+
+        if rule.channel.system and data.channel == "System" then
+            return true
         end
 
         if rule.channel.say and data.channel == "Say" then

@@ -54,8 +54,7 @@ function RSMinimap.LoadMinimapButton()
 			if (button == "LeftButton") then
 				RSExplorerFrame:Show()
 			elseif (button == "RightButton") then
-				InterfaceOptionsFrame_OpenToCategory("RareScanner")
-				InterfaceOptionsFrame_OpenToCategory("RareScanner")
+				Settings.OpenToCategory("RareScanner")
 			end
 		end,
 		OnTooltipShow = function(tooltip)

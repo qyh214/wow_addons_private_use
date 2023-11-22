@@ -1,8 +1,10 @@
--- Generated from CurseForge on Wed Jun 21 21:15:49 UTC 2023
-local ns = select(2, ...) ---@type ns @The addon namespace.
+-- Generated from CurseForge on Wed Nov 22 08:43:55 UTC 2023
+local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("esES") then
+
 	local L = ns.L or ns:NewLocale()
+	ns.L = L
 
 	L.LOCALE_NAME = "esES"
 
@@ -64,12 +66,22 @@ L["DPS"] = "DPS"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AA"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_AD"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_AV"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_BH"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_BRH"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_COS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_DHT"] = ""--]] 
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_EB"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_FALL"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_FH"] = ""--]] 
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
@@ -91,6 +103,8 @@ L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
 L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW"
 L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_RISE"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_RLP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_SBG"] = ""--]] 
@@ -101,6 +115,8 @@ L["DUNGEON_SHORT_NAME_STRT"] = "Tazavesh: Calles - STRT"
 --[[ L["DUNGEON_SHORT_NAME_TJS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_TOP"] = "Teatro del Dolor - TOP"
 --[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_TOTT"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_ULD"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_UNDR"] = ""--]] 
@@ -109,6 +125,8 @@ L["DUNGEON_SHORT_NAME_UPPR"] = "Karazhan: Superior - UPPR"
 --[[ L["DUNGEON_SHORT_NAME_VOTW"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_VP"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["DUNGEON_SHORT_NAME_WM"] = ""--]] 
 L["DUNGEON_SHORT_NAME_WORK"] = "Mechagon: Taller - WORK"
 L["DUNGEON_SHORT_NAME_YARD"] = "Mechagon: Desguace - YARD"
 L["ENABLE_AUTO_FRAME_POSITION"] = "Posicionar automáticamente el marco de perfil de RaiderIO"
@@ -120,6 +138,10 @@ L["ENABLE_NO_SCORE_COLORS"] = "Desactivar colores de puntuación"
 L["ENABLE_NO_SCORE_COLORS_DESC"] = "Desactiva los colores de las puntuaciones. Todas las puntuaciones se mostrarán de color blanco."
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS"] = "Habilitar mejoras del cliente de RaiderIO"
 L["ENABLE_RAIDERIO_CLIENT_ENHANCEMENTS_DESC"] = "Permite ver información detallada del cliente de RaiderIO de tus personajes confirmados."
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["ENABLE_REPLAY_DESC"] = ""--]] 
 L["ENABLE_RWF_MODE_BUTTON"] = "Habilitar"
 L["ENABLE_RWF_MODE_BUTTON_TOOLTIP"] = "Haz clic para habilitar el modo Race World First. Esto hará que su interfaz se vuelva a cargar."
 --[[Translation missing --]]
@@ -144,6 +166,8 @@ L["HIDE_OWN_PROFILE"] = "Ocultar ventana emergente de perfil personal de RaiderI
 L["HIDE_OWN_PROFILE_DESC"] = "Oculta la ventana emergente de tu perfil personal de RaiderIO. No afecta a las ventanas emergentes de otros jugadores."
 L["INVERSE_PROFILE_MODIFIER"] = "Invertir modificador de marco de perfil"
 L["INVERSE_PROFILE_MODIFIER_DESC"] = "Invierte el comportamiento del modificador del marco de perfil (mayús/ctrl/alt) para que muestre por defecto el perfil del líder del grupo."
+--[[Translation missing --]]
+--[[ L["LOCALE_NAME"] = ""--]] 
 L["LOCKING_PROFILE_FRAME"] = "RaiderIO: bloqueando el marco de perfil de M+."
 L["MAINS_BEST_SCORE_BEST_SEASON"] = "Mejor puntuación en M+ con el main (%s)"
 L["MAINS_RAID_PROGRESS"] = "Progreso de personaje principal"
@@ -174,6 +198,24 @@ L["PROFILE_BEST_RUNS"] = "Mejor de cada mazmorra"
 L["PROVIDER_NOT_LOADED"] = "|cffFF0000Advertencia:|r |cffFFFFFF%s|r no puede encontrar datos para tu facción actual. Compruebe la configuración de |cffFFFFFF/raiderio|r y habilite los datos de información sobre herramientas para |cffFFFFFF%s|r."
 --[[Translation missing --]]
 --[[ L["PVP_DATA_HEADER"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_1"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_2"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_3"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_4"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_5"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_6"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_7"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_8"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["RAID_BOSS_ATDH_9"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RAID_BOSS_ATSC_1"] = ""--]] 
 --[[Translation missing --]]
@@ -296,6 +338,52 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 --[[Translation missing --]]
 --[[ L["RELOAD_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_GUILD_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_MOST_RECENT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_PERSONAL_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_STARRED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_AUTO_SELECTION_TEAM_BEST"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_BACKGROUND_COLOR_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_DISABLE_CONFIRM"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_FRAME_ALPHA_DESC"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_COPY_URL"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DISABLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_DOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_LOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_POSITION"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_REPLAY"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_STYLE"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_TIMING"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNDOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_MENU_UNLOCK"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_REPLAY_CHANGING"] = ""--]] 
+--[[Translation missing --]]
 --[[ L["REPLAY_SETTINGS_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MDI"] = ""--]] 
@@ -303,6 +391,14 @@ L["RELOAD_NOW"] = "Reiniciarla ahora"
 --[[ L["REPLAY_STYLE_TITLE_MODERN"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["REPLAY_STYLE_TITLE_MODERN_COMPACT"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_STYLE_TITLE_MODERN_SPLITS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_SUMMARY_LOGGED"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_BOSS"] = ""--]] 
+--[[Translation missing --]]
+--[[ L["REPLAY_TIMING_TITLE_DUNGEON"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["RWF_MINIBUTTON_TOOLTIP"] = ""--]] 
 --[[Translation missing --]]
@@ -388,5 +484,4 @@ L["WIPE_RWF_MODE_BUTTON"] = "Wipe"
 --[[Translation missing --]]
 --[[ L["WIPE_RWF_MODE_BUTTON_TOOLTIP"] = ""--]] 
 
-	ns.L = L
 end

@@ -202,47 +202,98 @@ function TestForMultiSelect(trigger, arg)
   return test;
 end
 
-function ConstructTest(trigger, arg)
+local function singleTest(arg, trigger, name, value, operator, use_exact)
+  local number = tonumber(value)
+  if(arg.type == "tristate") then
+    return TestForTriState(trigger, arg);
+  elseif(arg.type == "multiselect") then
+    return TestForMultiSelect(trigger, arg);
+  elseif(arg.type == "toggle") then
+    return TestForToggle(trigger, arg);
+  elseif (arg.type == "spell" or arg.type == "item") then
+    if arg.test then
+      if arg.showExactOption then
+        return "("..arg.test:format(value, tostring(use_exact) or "false") ..")";
+      else
+        return "("..arg.test:format(value)..")";
+      end
+    else
+      return "(".. name .." and "..name.."==" ..(number or ("\""..(tostring(value) or "").."\""))..")";
+    end
+  elseif(arg.test) then
+    return "("..arg.test:format(tostring(value) or "")..")";
+  elseif(arg.type == "longstring" and operator) then
+    return TestForLongString(trigger, arg);
+  elseif (arg.type == "string" or arg.type == "select") then
+    return "(".. name .." and "..name.."==" ..(number or ("\""..(tostring(value) or "").."\""))..")";
+  elseif (arg.type == "number") then
+    return "(".. name .." and "..name..(operator or "==")..(number or 0) ..")";
+  else
+    -- Should be unused
+    return "(".. name .." and "..name..(operator or "==")..(number or ("\""..(tostring(value) or 0).."\""))..")";
+  end
+end
+
+function ConstructTest(trigger, arg, testGroups, preambleGroups)
   local test
   local preamble
   local name = arg.name;
-  if(arg.hidden or arg.type == "tristate" or arg.type == "toggle" or (arg.type == "multiselect" and trigger["use_"..name] ~= nil) or ((trigger["use_"..name] or arg.required) and trigger[name])) then
-    local number = tonumber(trigger[name]);
-    if(arg.type == "tristate") then
-      test = TestForTriState(trigger, arg);
-    elseif(arg.type == "multiselect") then
-      test = TestForMultiSelect(trigger, arg);
-    elseif(arg.type == "toggle") then
-      test = TestForToggle(trigger, arg);
-    elseif (arg.type == "spell" or arg.type == "item") then
-      if arg.test then
-        if arg.showExactOption then
-          test = "("..arg.test:format(trigger[name], tostring(trigger["use_exact_" .. name]) or "false") ..")";
-        else
-          test = "("..arg.test:format(trigger[name])..")";
-        end
-      else
-        test = "(".. name .." and "..name.."==" ..(number or ("\""..(trigger[name] or "").."\""))..")";
-      end
-    elseif(arg.test) then
-      test = "("..arg.test:format(tostring(trigger[name]) or "")..")";
-    elseif(arg.type == "longstring" and trigger[name.."_operator"]) then
-      test = TestForLongString(trigger, arg);
-    elseif (arg.type == "string" or arg.type == "select") then
-      test = "(".. name .." and "..name.."==" ..(number or ("\""..(trigger[name] or "").."\""))..")";
-    elseif (arg.type == "number") then
-      test = "(".. name .." and "..name..(trigger[name.."_operator"] or "==")..(number or 0) ..")";
-    else
-      -- Should be unused
-      test = "(".. name .." and "..name..(trigger[name.."_operator"] or "==")..(number or ("\""..(trigger[name] or 0).."\""))..")";
+
+  if arg.preamble then
+    if not arg.preambleGroup or not preambleGroups[arg.preambleGroup] then
+      preamble = arg.preamble:format(trigger[name] or "")
+    end
+    if arg.preambleGroup then
+      preambleGroups[arg.preambleGroup] = true
     end
   end
 
-  if arg.preamble then
-    preamble = arg.preamble:format(trigger[name] or "")
+  if arg.hidden
+    or arg.type == "tristate"
+    or arg.type == "toggle"
+    or (arg.type == "multiselect" and trigger["use_"..name] ~= nil)
+    or ((trigger["use_"..name] or arg.required) and trigger[name])
+  then
+    if arg.multiEntry then
+      if type(trigger[name]) == "table" and #trigger[name] > 0 then
+        test = ""
+        for i, value in ipairs(trigger[name]) do
+          local operator = name and type(trigger[name.."_operator"]) == "table" and trigger[name.."_operator"][i]
+          local use_exact = name and type(trigger["use_exact_" .. name]) == "table" and trigger["use_exact_" .. name][i]
+
+          if arg.multiEntry.operator == "preamble" then
+            preamble = preamble and (preamble .. "\n") or ""
+            preamble = preamble .. arg.multiEntry.preambleAdd:format(value)
+          else
+            local single = singleTest(arg, trigger, name, value, operator, use_exact)
+            if single then
+              if test ~= "" then
+                test = test .. arg.multiEntry.operator
+              end
+              test = test .. single
+            end
+          end
+        end
+
+        if arg.multiEntry.operator == "preamble" then
+          test = arg.test
+        end
+
+        if test == "" then
+          test = nil
+        else
+          test = "(" .. test .. ")"
+        end
+      end
+    else
+      local value = trigger[name]
+      local operator = name and trigger[name.."_operator"]
+      local use_exact = name and trigger["use_exact_" .. name]
+      test = singleTest(arg, trigger, name, value, operator, use_exact)
+    end
   end
 
-  if (test == "(true)") then
+  if not test or test == "(true)" or arg.testGroup and testGroups[arg.testGroup] then
     return nil, preamble
   end
 
@@ -275,6 +326,9 @@ function ConstructFunction(prototype, trigger)
   local store = {};
   local init;
   local preambles = "\n"
+  local orConjunctionGroups = {}
+  local preambleGroups = {}
+  local testGroups = {}
   if(prototype.init) then
     init = prototype.init(trigger);
   else
@@ -300,12 +354,17 @@ function ConstructFunction(prototype, trigger)
         if (arg.store) then
           tinsert(store, name);
         end
-        local test, preamble = ConstructTest(trigger, arg);
+        local test, preamble = ConstructTest(trigger, arg, testGroups, preambleGroups);
         if (test) then
           if(arg.required) then
             tinsert(required, test);
           else
-            tinsert(tests, test);
+            if arg.orConjunctionGroup then
+              orConjunctionGroups[arg.orConjunctionGroup] = orConjunctionGroups[arg.orConjunctionGroup] or {}
+              tinsert(orConjunctionGroups[arg.orConjunctionGroup], test)
+            else
+              tinsert(tests, test);
+            end
           end
           if(arg.debug) then
             tinsert(debug, arg.debug:format(trigger[name]));
@@ -317,6 +376,11 @@ function ConstructFunction(prototype, trigger)
       end
     end
   end
+
+  for _, orConjunctionGroup in pairs(orConjunctionGroups) do
+    tinsert(tests, "("..table.concat(orConjunctionGroup, " or ")..")")
+  end
+
   local ret = preambles .. "return function("..tconcat(input, ", ")..")\n";
   ret = ret..(init or "");
 
@@ -606,13 +670,6 @@ local function RunTriggerFunc(allStates, data, id, triggernum, event, arg1, arg2
         untriggerCheck = true;
       end
     elseif (data.statesParameter == "unit") then
-      if optionsEvent then
-        if Private.multiUnitUnits[data.trigger.unit] then
-          arg1 = next(Private.multiUnitUnits[data.trigger.unit])
-        else
-          arg1 = data.trigger.unit
-        end
-      end
       if arg1 then
         if Private.multiUnitUnits[data.trigger.unit] then
           unitForUnitTrigger = arg1
@@ -892,7 +949,12 @@ function Private.ScanEventsWatchedTrigger(id, watchedTriggernums)
   Private.ActivateAuraEnvironment(nil)
 end
 
-local function AddFakeTime(state)
+local function AddFakeInformation(state, eventData)
+  state.autoHide = false
+  local canHaveDuration = eventData.prototype and eventData.prototype.canHaveDuration == "timed"
+  if canHaveDuration and state.expirationTime == nil then
+    state.progressType = "timed"
+  end
   if state.progressType == "timed" then
     if state.expirationTime and state.expirationTime ~= math.huge and state.expirationTime > GetTime() then
       return
@@ -901,38 +963,52 @@ local function AddFakeTime(state)
     state.expirationTime = GetTime() + 7
     state.duration = 7
   end
+  if eventData.prototype and eventData.prototype.GetNameAndIcon then
+    local name, icon = eventData.prototype.GetNameAndIcon(eventData.trigger)
+    if state.name == nil then
+      state.name = name
+    end
+    if state.icon == nil then
+      state.icon = icon
+    end
+  end
 end
 
 function GenericTrigger.CreateFakeStates(id, triggernum)
   local data = WeakAuras.GetData(id)
+  local eventData = events[id][triggernum]
 
   Private.ActivateAuraEnvironment(id);
   local allStates = WeakAuras.GetTriggerStateForTrigger(id, triggernum);
-  RunTriggerFunc(allStates, events[id][triggernum], id, triggernum, "OPTIONS")
 
-  local canHaveDuration = events[id][triggernum].prototype and events[id][triggernum].prototype.canHaveDuration == "timed"
+
+  local arg1
+  if eventData.statesParameter == "unit" then
+    local unit = eventData.trigger.unit
+    if Private.multiUnitUnits[unit] then
+      arg1 = next(Private.multiUnitUnits[unit])
+    else
+      arg1 = unit
+    end
+  end
+
+  RunTriggerFunc(allStates, eventData, id, triggernum, "OPTIONS", arg1)
 
   local shown = 0
   for id, state in pairs(allStates) do
     if state.show then
       shown = shown + 1
     end
-    state.autoHide = false
-    if canHaveDuration and state.expirationTime == nil then
-      state.progressType = "timed"
-    end
-    AddFakeTime(state)
+
+    AddFakeInformation(state, eventData)
   end
 
   if shown == 0 then
     local state = {}
     GenericTrigger.CreateFallbackState(data, triggernum, state)
     allStates[""] = state
-    state.autoHide = false
-    if canHaveDuration and state.expirationTime == nil then
-      state.progressType = "timed"
-    end
-    AddFakeTime(state)
+
+    AddFakeInformation(state, eventData)
   end
 
   Private.ActivateAuraEnvironment(nil);
@@ -2441,10 +2517,12 @@ do
 
     if (showgcd) then
       if ((gcdStart or 0) + (gcdDuration or 0) > startTime + duration) then
+        if startTime == 0 then
+          gcdCooldown = true
+        end
         startTime = gcdStart;
         duration = gcdDuration;
         modRate = gcdModrate
-        gcdCooldown = true;
       end
     end
 
@@ -2473,9 +2551,11 @@ do
     end
     if (showgcd) then
       if ((gcdStart or 0) + (gcdDuration or 0) > startTime + duration) then
+        if startTime == 0 then
+          gcdCooldown = true
+        end
         startTime = gcdStart;
         duration = gcdDuration;
-        gcdCooldown = true;
       end
     end
     return startTime, duration, enabled, gcdCooldown;
@@ -2507,9 +2587,11 @@ do
 
     if (showgcd) then
       if ((gcdStart or 0) + (gcdDuration or 0) > startTime + duration) then
+        if startTime == 0 then
+          gcdCooldown = true
+        end
         startTime = gcdStart;
         duration = gcdDuration;
-        gcdCooldown = true;
       end
     end
     return startTime, duration, enabled, gcdCooldown;
@@ -3113,11 +3195,11 @@ function WeakAuras.WatchUnitChange(unit)
     watchUnitChange:RegisterEvent("PLAYER_TARGET_CHANGED")
     if not WeakAuras.IsClassicEra() then
       watchUnitChange:RegisterEvent("PLAYER_FOCUS_CHANGED")
-      watchUnitChange:RegisterEvent("PLAYER_SOFT_ENEMY_CHANGED")
-      watchUnitChange:RegisterEvent("PLAYER_SOFT_FRIEND_CHANGED")
     else
       watchUnitChange:RegisterEvent("PLAYER_ROLES_ASSIGNED")
     end
+    watchUnitChange:RegisterEvent("PLAYER_SOFT_ENEMY_CHANGED")
+    watchUnitChange:RegisterEvent("PLAYER_SOFT_FRIEND_CHANGED")
     watchUnitChange:RegisterEvent("UNIT_TARGET");
     watchUnitChange:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT");
     watchUnitChange:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -3232,517 +3314,6 @@ function WeakAuras.GetEquipmentSetInfo(itemSetName, partial)
     end
   end
   return bestMatchName, bestMatchIcon, bestMatchNumEquipped, bestMatchNumItems;
-end
-
--- DBM
-do
-  local registeredDBMEvents = {}
-  local bars = {}
-  local nextExpire -- time of next expiring timer
-  local recheckTimer -- handle of timer
-  local currentStage = 0 -- can do 1>2>1>2>1>...
-  local currentStageTotal = 0 -- always 1>2>3>4>...
-  local function dbmRecheckTimers()
-    local now = GetTime()
-    nextExpire = nil
-    for id, bar in pairs(bars) do
-      if not bar.paused then
-        if bar.expirationTime < now then
-          bars[id] = nil
-          WeakAuras.ScanEvents("DBM_TimerStop", id)
-        elseif nextExpire == nil then
-          nextExpire = bar.expirationTime
-        elseif bar.expirationTime < nextExpire then
-          nextExpire = bar.expirationTime
-        end
-      end
-    end
-
-    if nextExpire then
-      recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, nextExpire - now)
-    end
-  end
-
-  local function dbmEventCallback(event, ...)
-    if event == "DBM_TimerStart" then
-      local id, msg, duration, icon, timerType, spellId, dbmType = ...
-      local now = GetTime()
-      local expirationTime = now + duration
-      bars[id] = bars[id] or {}
-      local bar = bars[id]
-      bar.message = msg
-      bar.expirationTime = expirationTime
-      bar.duration = duration
-      bar.icon = icon
-      bar.timerType = timerType
-      bar.spellId = tostring(spellId)
-      bar.count = msg:match("%((%d+)%)") or msg:match("（(%d+)）") or "0"
-      bar.dbmType = dbmType
-
-      local barOptions = DBT.Options or DBM.Bars.options
-      local r, g, b = 0, 0, 0
-      if dbmType == 1 then
-        r, g, b = barOptions.StartColorAR, barOptions.StartColorAG, barOptions.StartColorAB
-      elseif dbmType == 2 then
-        r, g, b = barOptions.StartColorAER, barOptions.StartColorAEG, barOptions.StartColorAEB
-      elseif dbmType == 3 then
-        r, g, b = barOptions.StartColorDR, barOptions.StartColorDG, barOptions.StartColorDB
-      elseif dbmType == 4 then
-        r, g, b = barOptions.StartColorIR, barOptions.StartColorIG, barOptions.StartColorIB
-      elseif dbmType == 5 then
-        r, g, b = barOptions.StartColorRR, barOptions.StartColorRG, barOptions.StartColorRB
-      elseif dbmType == 6 then
-        r, g, b = barOptions.StartColorPR, barOptions.StartColorPG, barOptions.StartColorPB
-      elseif dbmType == 7 then
-        r, g, b = barOptions.StartColorUIR, barOptions.StartColorUIG, barOptions.StartColorUIB
-      else
-        r, g, b = barOptions.StartColorR, barOptions.StartColorG, barOptions.StartColorB
-      end
-      bar.dbmColor = {r, g, b}
-
-      WeakAuras.ScanEvents("DBM_TimerStart", id)
-      if nextExpire == nil then
-        recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, expirationTime - now)
-        nextExpire = expirationTime
-      elseif expirationTime < nextExpire then
-        timer:CancelTimer(recheckTimer)
-        recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, expirationTime - now)
-        nextExpire = expirationTime
-      end
-    elseif event == "DBM_TimerStop" then
-      local id = ...
-      bars[id] = nil
-      WeakAuras.ScanEvents("DBM_TimerStop", id)
-    elseif event == "kill" or event == "wipe" then -- Wipe or kill, removing all timers
-      local id = ...
-      wipe(bars)
-      WeakAuras.ScanEvents("DBM_TimerStopAll", id)
-    elseif event == "DBM_TimerPause" then
-      local id = ...
-      local bar = bars[id]
-      if bar then
-        bar.paused = true
-        bar.remaining = bar.expirationTime - GetTime()
-        WeakAuras.ScanEvents("DBM_TimerPause", id)
-        if recheckTimer then
-          timer:CancelTimer(recheckTimer)
-        end
-        dbmRecheckTimers()
-      end
-    elseif event == "DBM_TimerResume" then
-      local id = ...
-      local bar = bars[id]
-      if bar then
-        bar.paused = nil
-        bar.expirationTime = GetTime() + (bar.remaining or 0)
-        bar.remaining = nil
-        WeakAuras.ScanEvents("DBM_TimerResume", id)
-        if nextExpire == nil then
-          recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
-          nextExpire = bar.expirationTime
-        elseif bar.expirationTime < nextExpire then
-          timer:CancelTimer(recheckTimer)
-          recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
-          nextExpire = bar.expirationTime
-        end
-      end
-    elseif event == "DBM_TimerUpdate" then
-      local id, elapsed, duration = ...
-      local now = GetTime()
-      local expirationTime = now + duration - elapsed
-      local bar = bars[id]
-      if bar then
-        bar.duration = duration
-        bar.expirationTime = expirationTime
-        if nextExpire == nil then
-          recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, bar.expirationTime - GetTime())
-          nextExpire = expirationTime
-        elseif nextExpire == nil or expirationTime < nextExpire then
-          timer:CancelTimer(recheckTimer)
-          recheckTimer = timer:ScheduleTimerFixed(dbmRecheckTimers, duration - elapsed)
-          nextExpire = expirationTime
-        end
-      end
-      WeakAuras.ScanEvents("DBM_TimerUpdate", id)
-    elseif event == "DBM_SetStage" or event == "DBM_Pull" or event == "DBM_Wipe" or event == "DBM_Kill" then
-      WeakAuras.ScanEvents("DBM_SetStage")
-    else -- DBM_Announce
-      WeakAuras.ScanEvents(event, ...)
-    end
-  end
-
-  function Private.ExecEnv.DBMTimerMatches(timerId, id, message, operator, spellId, dbmType, counter)
-    if not bars[timerId] then
-      return false
-    end
-
-    local v = bars[timerId]
-    if id and id ~= "" and id ~= timerId then
-      return false
-    end
-    if spellId and spellId ~= "" and spellId ~= v.spellId then
-      return false
-    end
-    if message and message ~= "" and operator then
-      if operator == "==" then
-        if v.message ~= message then
-          return false
-        end
-      elseif operator == "find('%s')" then
-        if v.message == nil or not v.message:find(message, 1, true) then
-          return false
-        end
-      elseif operator == "match('%s')" then
-        if v.message == nil or not v.message:match(message) then
-          return false
-        end
-      end
-    end
-    if counter then
-      counter:SetCount(tonumber(v.count) or 0)
-      if not counter:Match() then
-        return false
-      end
-    end
-    if dbmType and dbmType ~= v.dbmType then
-      return false
-    end
-    return true
-  end
-
-  function WeakAuras.GetDBMStage()
-    return DBM:GetStage()
-  end
-
-  function WeakAuras.GetDBMTimerById(id)
-    return bars[id]
-  end
-
-  function WeakAuras.GetAllDBMTimers()
-    return bars
-  end
-
-  function WeakAuras.GetDBMTimer(id, message, operator, spellId, extendTimer, dbmType, count)
-    local bestMatch
-    for timerId, bar in pairs(bars) do
-      if Private.ExecEnv.DBMTimerMatches(timerId, id, message, operator, spellId, dbmType, count)
-      and (bestMatch == nil or bar.expirationTime < bestMatch.expirationTime)
-      and bar.expirationTime + extendTimer > GetTime()
-      then
-        bestMatch = bar
-      end
-    end
-    return bestMatch
-  end
-
-  function Private.ExecEnv.CopyBarToState(bar, states, id, extendTimer)
-    extendTimer = extendTimer or 0
-    if extendTimer + bar.duration < 0 then return end
-    states[id] = states[id] or {}
-    local state = states[id]
-    state.show = true
-    state.changed = true
-    state.icon = bar.icon
-    state.message = bar.message
-    state.name = bar.message
-    state.expirationTime = bar.expirationTime + extendTimer
-    state.progressType = 'timed'
-    state.duration = bar.duration + extendTimer
-    state.timerType = bar.timerType
-    state.spellId = bar.spellId
-    state.count = bar.count
-    state.dbmType = bar.dbmType
-    state.dbmColor = bar.dbmColor
-    state.extend = extendTimer
-    if extendTimer ~= 0 then
-      state.autoHide = true
-    end
-    state.paused = bar.paused
-    state.remaining = bar.remaining
-  end
-
-  function WeakAuras.RegisterDBMCallback(event)
-    if registeredDBMEvents[event] then
-      return
-    end
-    if DBM then
-      DBM:RegisterCallback(event, dbmEventCallback)
-      registeredDBMEvents[event] = true
-    end
-  end
-
-  function WeakAuras.GetDBMTimers()
-    return bars
-  end
-
-  local scheduled_scans = {}
-
-  local function doDbmScan(fireTime)
-    scheduled_scans[fireTime] = nil
-    WeakAuras.ScanEvents("DBM_TimerUpdate")
-  end
-  function Private.ExecEnv.ScheduleDbmCheck(fireTime)
-    if not scheduled_scans[fireTime] then
-      scheduled_scans[fireTime] = timer:ScheduleTimerFixed(doDbmScan, fireTime - GetTime() + 0.1, fireTime)
-    end
-  end
-end
-
--- BigWigs
-do
-  local registeredBigWigsEvents = {}
-  local bars = {}
-  local nextExpire -- time of next expiring timer
-  local recheckTimer -- handle of timer
-  local currentStage = 0
-
-  local function recheckTimers()
-    local now = GetTime()
-    nextExpire = nil
-    for id, bar in pairs(bars) do
-      if not bar.paused then
-        if bar.expirationTime < now then
-          bars[id] = nil
-          WeakAuras.ScanEvents("BigWigs_StopBar", id)
-        elseif nextExpire == nil then
-          nextExpire = bar.expirationTime
-        elseif bar.expirationTime < nextExpire then
-          nextExpire = bar.expirationTime
-        end
-      end
-    end
-
-    if nextExpire then
-      recheckTimer = timer:ScheduleTimerFixed(recheckTimers, nextExpire - now)
-    end
-  end
-
-  local function bigWigsEventCallback(event, ...)
-    if event == "BigWigs_Message" then
-      WeakAuras.ScanEvents("BigWigs_Message", ...)
-    elseif event == "BigWigs_StartBar" then
-      local addon, spellId, text, duration, icon, isCD = ...
-      local now = GetTime()
-      local expirationTime = now + duration
-
-      local newBar
-      bars[text] = bars[text] or {}
-      local bar = bars[text]
-      bar.addon = addon
-      bar.spellId = tostring(spellId)
-      bar.text = text
-      bar.duration = duration
-      bar.expirationTime = expirationTime
-      bar.icon = icon
-      bar.isCooldown = isCD or false
-      local BWColorModule = BigWigs:GetPlugin("Colors")
-      bar.bwBarColor = BWColorModule:GetColorTable("barColor", addon, spellId)
-      bar.bwTextColor = BWColorModule:GetColorTable("barText", addon, spellId)
-      bar.bwBackgroundColor = BWColorModule:GetColorTable("barBackground", addon, spellId)
-      bar.count = text:match("%((%d+)%)") or text:match("（(%d+)）") or "0"
-      bar.cast = not(text:match("^[^<]") and true)
-
-      WeakAuras.ScanEvents("BigWigs_StartBar", text)
-      if nextExpire == nil then
-        recheckTimer = timer:ScheduleTimerFixed(recheckTimers, expirationTime - now)
-        nextExpire = expirationTime
-      elseif expirationTime < nextExpire then
-        timer:CancelTimer(recheckTimer)
-        recheckTimer = timer:ScheduleTimerFixed(recheckTimers, expirationTime - now)
-        nextExpire = expirationTime
-      end
-    elseif event == "BigWigs_StopBar" then
-      local addon, text = ...
-      if bars[text] then
-        bars[text] = nil
-        WeakAuras.ScanEvents("BigWigs_StopBar", text)
-      end
-    elseif event == "BigWigs_PauseBar" then
-      local addon, text = ...
-      local bar = bars[text]
-      if bar and not bar.paused then
-        bar.paused = true
-        bar.remaining = bar.expirationTime - GetTime()
-        WeakAuras.ScanEvents("BigWigs_PauseBar", text)
-        if recheckTimer then
-          timer:CancelTimer(recheckTimer)
-        end
-        recheckTimers()
-      end
-    elseif event == "BigWigs_ResumeBar" then
-      local addon, text = ...
-      local bar = bars[text]
-      if bar and bar.paused then
-        bar.paused = nil
-        bar.expirationTime = GetTime() + (bar.remaining or 0)
-        bar.remaining = nil
-        WeakAuras.ScanEvents("BigWigs_ResumeBar", text)
-        if nextExpire == nil then
-          recheckTimer = timer:ScheduleTimerFixed(recheckTimers, bar.expirationTime - GetTime())
-        elseif bar.expirationTime < nextExpire then
-          timer:CancelTimer(recheckTimer)
-          recheckTimer = timer:ScheduleTimerFixed(recheckTimers, bar.expirationTime - GetTime())
-          nextExpire = bar.expirationTime
-        end
-      end
-    elseif event == "BigWigs_StopBars"
-    or event == "BigWigs_OnBossDisable"
-    or event == "BigWigs_OnPluginDisable"
-    then
-      local addon = ...
-      for id, bar in pairs(bars) do
-        if bar.addon == addon then
-          bars[id] = nil
-          WeakAuras.ScanEvents("BigWigs_StopBar", id)
-        end
-      end
-    elseif event == "BigWigs_SetStage" then
-      local addon, stage = ...
-      currentStage = stage
-      WeakAuras.ScanEvents("BigWigs_SetStage", ...)
-    elseif event == "BigWigs_OnBossWipe" or event == "BigWigs_OnBossWin" then
-      currentStage = 0
-      WeakAuras.ScanEvents("BigWigs_SetStage", ...)
-    end
-  end
-
-  function WeakAuras.RegisterBigWigsCallback(event)
-    if registeredBigWigsEvents[event] then
-      return
-    end
-    if BigWigsLoader then
-      BigWigsLoader.RegisterMessage(WeakAuras, event, bigWigsEventCallback)
-      registeredBigWigsEvents[event] = true
-      if event == "BigWigs_SetStage" then
-        -- on init of BigWigs_SetStage callback, we want to fetch currentStage in case we are already in an encounter when this is run
-        if BigWigs and BigWigs.IterateBossModules then
-          local stage = 0
-          for _, module in BigWigs:IterateBossModules() do
-            if module:IsEngaged() then
-              stage = math.max(stage, module:GetStage() or 1)
-            end
-          end
-          currentStage = stage
-        end
-      end
-    end
-  end
-
-  function WeakAuras.RegisterBigWigsTimer()
-    WeakAuras.RegisterBigWigsCallback("BigWigs_StartBar")
-    WeakAuras.RegisterBigWigsCallback("BigWigs_StopBar")
-    WeakAuras.RegisterBigWigsCallback("BigWigs_StopBars")
-    WeakAuras.RegisterBigWigsCallback("BigWigs_OnBossDisable")
-    WeakAuras.RegisterBigWigsCallback("BigWigs_PauseBar")
-    WeakAuras.RegisterBigWigsCallback("BigWigs_ResumeBar")
-  end
-
-  function Private.ExecEnv.CopyBigWigsTimerToState(bar, states, id, extendTimer)
-    extendTimer = extendTimer or 0
-    if extendTimer + bar.duration < 0 then return end
-    states[id] = states[id] or {}
-    local state = states[id]
-    state.show = true
-    state.changed = true
-    state.addon = bar.addon
-    state.spellId = bar.spellId
-    state.text = bar.text
-    state.name = bar.text
-    state.duration = bar.duration + extendTimer
-    state.expirationTime = bar.expirationTime + extendTimer
-    state.bwBarColor = bar.bwBarColor
-    state.bwTextColor = bar.bwTextColor
-    state.bwBackgroundColor = bar.bwBackgroundColor
-    state.count = bar.count
-    state.cast = bar.cast
-    state.progressType = "timed"
-    state.icon = bar.icon
-    state.extend = extendTimer
-    if extendTimer ~= 0 then
-      state.autoHide = true
-    end
-    state.paused = bar.paused
-    state.remaining = bar.remaining
-    state.isCooldown = bar.isCooldown
-  end
-
-  function Private.ExecEnv.BigWigsTimerMatches(id, message, operator, spellId, counter, cast, cooldown)
-    if not bars[id] then
-      return false
-    end
-
-    local v = bars[id]
-    local bestMatch
-    if spellId and spellId ~= "" and spellId ~= v.spellId then
-      return false
-    end
-    if message and message ~= "" and operator then
-      if operator == "==" then
-        if v.text ~= message then
-          return false
-        end
-      elseif operator == "find('%s')" then
-        if v.text == nil or not v.text:find(message, 1, true) then
-          return false
-        end
-      elseif operator == "match('%s')" then
-        if v.text == nil or not v.text:match(message) then
-          return false
-        end
-      end
-    end
-    if counter then
-      counter:SetCount(tonumber(v.count) or 0)
-      if not counter:Match() then
-        return false
-      end
-    end
-    if cast ~= nil and v.cast ~= cast then
-      return false
-    end
-    if cooldown ~= nil and v.isCooldown ~= cooldown then
-      return false
-    end
-    return true
-  end
-
-  function WeakAuras.GetBigWigsStage()
-    return currentStage
-  end
-
-  function WeakAuras.GetAllBigWigsTimers()
-    return bars
-  end
-
-  function WeakAuras.GetBigWigsTimerById(id)
-    return bars[id]
-  end
-
-  function WeakAuras.GetBigWigsTimer(text, operator, spellId, extendTimer, counter, cast)
-    local bestMatch
-    for id, bar in pairs(bars) do
-      if Private.ExecEnv.BigWigsTimerMatches(id, text, operator, spellId, counter, cast)
-      and (bestMatch == nil or bar.expirationTime < bestMatch.expirationTime)
-      and bar.expirationTime + extendTimer > GetTime()
-      then
-        bestMatch = bar
-      end
-    end
-    return bestMatch
-  end
-
-  local scheduled_scans = {}
-
-  local function doBigWigsScan(fireTime)
-    scheduled_scans[fireTime] = nil
-    WeakAuras.ScanEvents("BigWigs_Timer_Update")
-  end
-
-  function Private.ExecEnv.ScheduleBigWigsCheck(fireTime)
-    if not scheduled_scans[fireTime] then
-      scheduled_scans[fireTime] = timer:ScheduleTimerFixed(doBigWigsScan, fireTime - GetTime() + 0.1, fireTime)
-    end
-  end
 end
 
 function Private.ExecEnv.CheckTotemName(totemName, triggerTotemName, triggerTotemPattern, triggerTotemOperator)
@@ -4068,22 +3639,23 @@ end
 
 -- Player Moving
 do
+  --- @class PlayerMovingFrame
+  --- @field moving integer|nil
+  --- @field speed integer|nil
+
+  --- @type PlayerMovingFrame|Frame|nil
   local playerMovingFrame = nil
-  local moving;
 
   local function PlayerMoveUpdate()
     Private.StartProfileSystem("generictrigger");
-    if (moving ~= IsPlayerMoving() or moving == nil) then
-      moving = IsPlayerMoving();
+    local moving = IsPlayerMoving()
+    if (playerMovingFrame.moving ~= moving or playerMovingFrame.moving == nil) then
+      playerMovingFrame.moving = moving
       WeakAuras.ScanEvents("PLAYER_MOVING_UPDATE")
     end
-    Private.StopProfileSystem("generictrigger");
-  end
 
-  local function PlayerMoveSpeedUpdate()
-    Private.StartProfileSystem("generictrigger");
     local speed = GetUnitSpeed("player")
-    if speed ~= playerMovingFrame.speed then
+    if playerMovingFrame.speed ~= speed then
       playerMovingFrame.speed = speed
       WeakAuras.ScanEvents("PLAYER_MOVE_SPEED_UPDATE")
     end
@@ -4093,18 +3665,11 @@ do
   function WeakAuras.WatchForPlayerMoving()
     if not(playerMovingFrame) then
       playerMovingFrame = CreateFrame("Frame");
+      --- @cast playerMovingFrame PlayerMovingFrame
       Private.frames["Player Moving Frame"] =  playerMovingFrame;
+      playerMovingFrame.speed = GetUnitSpeed("player")
     end
     playerMovingFrame:SetScript("OnUpdate", PlayerMoveUpdate)
-  end
-
-  function WeakAuras.WatchPlayerMoveSpeed()
-    if not(playerMovingFrame) then
-      playerMovingFrame = CreateFrame("Frame");
-      Private.frames["Player Moving Frame"] =  playerMovingFrame;
-    end
-    playerMovingFrame.speed = GetUnitSpeed("player")
-    playerMovingFrame:SetScript("OnUpdate", PlayerMoveSpeedUpdate)
   end
 end
 
@@ -4169,31 +3734,37 @@ function WeakAuras.GetUniqueCloneId()
   return uniqueId;
 end
 
+--- @type fun(trigger: triggerData) : prototypeData
+function GenericTrigger.GetPrototype(trigger)
+  if trigger.type and trigger.event then
+    if Private.category_event_prototype[trigger.type] then
+      return Private.event_prototypes[trigger.event]
+    end
+  end
+end
+
+--- @type fun(data: auraData, triggernum: number) : "timed"|boolean, boolean?
 function GenericTrigger.CanHaveDuration(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
 
-  if (Private.category_event_prototype[trigger.type]) then
-    if trigger.event then
-      local prototype = Private.event_prototypes[trigger.event]
-      if prototype then
-        if prototype.durationFunc then
-          if(type(prototype.init) == "function") then
-            prototype.init(trigger);
-          end
-          local current, maximum, custom = prototype.durationFunc(trigger);
-          current = type(current) ~= "number" and current or 0
-          maximum = type(maximum) ~= "number" and maximum or 0
-          if(custom) then
-            return {current = current, maximum = maximum};
-          else
-            return "timed";
-          end
-        elseif prototype.canHaveDuration then
-          return prototype.canHaveDuration, prototype.useModRate
-        elseif prototype.timedrequired then
-          return "timed"
-        end
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    if prototype.durationFunc then
+      if(type(prototype.init) == "function") then
+        prototype.init(trigger);
       end
+      local current, maximum, custom = prototype.durationFunc(trigger);
+      current = type(current) ~= "number" and current or 0
+      maximum = type(maximum) ~= "number" and maximum or 0
+      if(custom) then
+        return {current = current, maximum = maximum};
+      else
+        return "timed";
+      end
+    elseif prototype.canHaveDuration then
+      return prototype.canHaveDuration, prototype.useModRate
+    elseif prototype.timedrequired then
+      return "timed"
     end
   elseif (trigger.type == "custom") then
     if trigger.custom_type == "event" and trigger.custom_hide == "timed" and trigger.duration then
@@ -4207,9 +3778,10 @@ function GenericTrigger.CanHaveDuration(data, triggernum)
   return false
 end
 
+--- @type fun(data: auraData): number?
 function GenericTrigger.GetDelay(data)
   if data.event then
-    local prototype = Private.event_prototypes[data.event]
+    local prototype = GenericTrigger.GetPrototype(data.trigger)
     if prototype and prototype.delayEvents then
       local trigger = data.trigger
       if trigger.use_delay and type(trigger.delay) == "number" and trigger.delay > 0 then
@@ -4228,17 +3800,18 @@ function GenericTrigger.GetTsuConditionVariables(id, triggernum)
 end
 
 --- Returns a table containing the names of all overlays
---- @param data table
+--- @param data auraData
 --- @param triggernum number
 function GenericTrigger.GetOverlayInfo(data, triggernum)
   local result;
 
   local trigger = data.triggers[triggernum].trigger
 
-  if (trigger.type ~= "custom" and trigger.event and Private.event_prototypes[trigger.event] and Private.event_prototypes[trigger.event].overlayFuncs) then
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if (prototype and prototype.overlayFuncs) then
     result = {};
     local dest = 1;
-    for i, v in ipairs(Private.event_prototypes[trigger.event].overlayFuncs) do
+    for i, v in ipairs(prototype.overlayFuncs) do
       local enable = true
       if type(v.enable) == "function" then
         enable = v.enable(trigger)
@@ -4298,16 +3871,20 @@ function GenericTrigger.CanHaveClones(data)
   return false;
 end
 
+--- @type fun(data: auraData, triggernum: number): string?, string?
 function GenericTrigger.GetNameAndIcon(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
   local icon, name
-  if (Private.category_event_prototype[trigger.type]) then
-    if(trigger.event and Private.event_prototypes[trigger.event]) then
-      if(Private.event_prototypes[trigger.event].iconFunc) then
-        icon = Private.event_prototypes[trigger.event].iconFunc(trigger);
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    if prototype.GetNameAndIcon then
+      return prototype.GetNameAndIcon(trigger)
+    else
+      if prototype.iconFunc then
+        icon = prototype.iconFunc(trigger)
       end
-      if(Private.event_prototypes[trigger.event].nameFunc) then
-        name = Private.event_prototypes[trigger.event].nameFunc(trigger);
+      if prototype.nameFunc then
+        name = prototype.nameFunc(trigger)
       end
     end
   end
@@ -4316,18 +3893,17 @@ function GenericTrigger.GetNameAndIcon(data, triggernum)
 end
 
 ---Returns the type of tooltip to show for the trigger.
---- @param data table
+--- @param data auraData
 --- @param triggernum number
 --- @return boolean|string
 function GenericTrigger.CanHaveTooltip(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
-  if (Private.category_event_prototype[trigger.type]) then
-    if (trigger.event and Private.event_prototypes[trigger.event]) then
-      if(Private.event_prototypes[trigger.event].hasSpellID) then
-        return "spell";
-      elseif(Private.event_prototypes[trigger.event].hasItemID) then
-        return "item";
-      end
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    if prototype.hasSpellID then
+      return "spell";
+    elseif prototype.hasItemID then
+      return "item";
     end
   end
 
@@ -4370,47 +3946,46 @@ function GenericTrigger.SetToolTip(trigger, state)
     end
   end
 
-  if (Private.category_event_prototype[trigger.type]) then
-    if (trigger.event and Private.event_prototypes[trigger.event]) then
-      if(Private.event_prototypes[trigger.event].hasSpellID) then
-        GameTooltip:SetSpellByID(trigger.spellName);
-        return true
-      elseif(Private.event_prototypes[trigger.event].hasItemID) then
-        GameTooltip:SetHyperlink("item:"..trigger.itemName..":0:0:0:0:0:0:0")
-        return true
-      end
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    if prototype.hasSpellID then
+      GameTooltip:SetSpellByID(trigger.spellName);
+      return true
+    elseif prototype.hasItemID then
+      GameTooltip:SetHyperlink("item:"..trigger.itemName..":0:0:0:0:0:0:0")
+      return true
     end
   end
   return false
 end
 
+--- @type fun(data: auraData, triggernum: number): string
 function GenericTrigger.GetAdditionalProperties(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
   local ret = "";
-  if (Private.category_event_prototype[trigger.type]) then
-    if (trigger.event and Private.event_prototypes[trigger.event]) then
-      local found = false;
-      local additional = ""
-      for _, v in pairs(Private.event_prototypes[trigger.event].args) do
-        local enable = true
-        if(type(v.enable) == "function") then
-          enable = v.enable(trigger)
-        elseif type(v.enable) == "boolean" then
-          enable = v.enable
-        end
-        if (enable and v.store and v.name and v.display) then
-          found = true;
-          additional = additional .. "|cFFFF0000%".. triggernum .. "." .. v.name .. "|r - " .. v.display .. "\n";
-        end
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    local found = false;
+    local additional = ""
+    for _, v in pairs(prototype.args) do
+      local enable = true
+      if(type(v.enable) == "function") then
+        enable = v.enable(trigger)
+      elseif type(v.enable) == "boolean" then
+        enable = v.enable
       end
-      if Private.event_prototypes[trigger.event].countEvents then
+      if (enable and v.store and v.name and v.display) then
         found = true;
-        additional = additional .. "|cFFFF0000%".. triggernum .. ".count|r - " .. L["Count"] .. "\n";
+        additional = additional .. "|cFFFF0000%".. triggernum .. "." .. v.name .. "|r - " .. v.display .. "\n";
       end
+    end
+    if prototype.countEvents then
+      found = true;
+      additional = additional .. "|cFFFF0000%".. triggernum .. ".count|r - " .. L["Count"] .. "\n";
+    end
 
-      if (found) then
-        ret = ret .. additional;
-      end
+    if (found) then
+      ret = ret .. additional;
     end
   else
     if (trigger.custom_type == "stateupdate") then
@@ -4448,6 +4023,13 @@ local commonConditions = {
     display = L["Total Duration"],
     type = "number",
     useModRate = true
+  },
+  paused = {
+    display =L["Is Paused"],
+    type = "bool",
+    test = function(state, needle)
+      return (state.paused and 1 or 0) == needle
+    end
   },
   value = {
     display = L["Progress Value"],
@@ -4488,97 +4070,98 @@ function Private.ExpandCustomVariables(variables)
   end
 end
 
+--- @type fun(data: auraData, triggernum: number): table
 function GenericTrigger.GetTriggerConditions(data, triggernum)
   local trigger = data.triggers[triggernum].trigger
 
-  if (Private.category_event_prototype[trigger.type]) then
-    if (trigger.event and Private.event_prototypes[trigger.event]) then
-      local result = {};
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    local result = {};
 
-      local canHaveDuration, modRated = GenericTrigger.CanHaveDuration(data, triggernum);
-      local timedDuration = canHaveDuration;
-      local valueDuration = canHaveDuration;
-      if (canHaveDuration == "timed") then
-        valueDuration = false;
-      elseif (type(canHaveDuration) == "table") then
-        timedDuration = false;
+    local canHaveDuration, modRated = GenericTrigger.CanHaveDuration(data, triggernum);
+    local timedDuration = canHaveDuration;
+    local valueDuration = canHaveDuration;
+    if (canHaveDuration == "timed") then
+      valueDuration = false;
+    elseif (type(canHaveDuration) == "table") then
+      timedDuration = false;
+    end
+
+    if (timedDuration) then
+      if modRated then
+        result.expirationTime = commonConditions.expirationTimeModRate;
+        result.duration = commonConditions.durationModRate;
+      else
+        result.expirationTime = commonConditions.expirationTime;
+        result.duration = commonConditions.duration;
       end
+      result.paused = commonConditions.paused
+    end
 
-      if (timedDuration) then
-        if modRated then
-          result.expirationTime = commonConditions.expirationTimeModRate;
-          result.duration = commonConditions.durationModRate;
-        else
-          result.expirationTime = commonConditions.expirationTime;
-          result.duration = commonConditions.duration;
-        end
-      end
+    if (valueDuration) then
+      result.value = commonConditions.value;
+      result.total = commonConditions.total;
+    end
 
-      if (valueDuration) then
-        result.value = commonConditions.value;
-        result.total = commonConditions.total;
-      end
+    if prototype.stacksFunc then
+      result.stacks = commonConditions.stacks;
+    end
 
-      if (Private.event_prototypes[trigger.event].stacksFunc) then
-        result.stacks = commonConditions.stacks;
-      end
+    if prototype.nameFunc then
+      result.name = commonConditions.name;
+    end
 
-      if (Private.event_prototypes[trigger.event].nameFunc) then
-        result.name = commonConditions.name;
-      end
-
-      for _, v in pairs(Private.event_prototypes[trigger.event].args) do
-        if (v.conditionType and v.name and v.display) then
-          local enable = true;
-          if (v.enable ~= nil) then
-            if type(v.enable) == "function" then
-              enable = v.enable(trigger);
-            elseif type(v.enable) == "boolean" then
-              enable = v.enable
-            end
+    for _, v in pairs(prototype.args) do
+      if (v.conditionType and v.name and v.display) then
+        local enable = true;
+        if (v.enable ~= nil) then
+          if type(v.enable) == "function" then
+            enable = v.enable(trigger);
+          elseif type(v.enable) == "boolean" then
+            enable = v.enable
           end
+        end
 
-          if (enable) then
-            result[v.name] = {
-              display = v.display,
-              type = v.conditionType
-            }
-            if (result[v.name].type == "select" or result[v.name].type == "unit") then
-              if (v.conditionValues) then
-                result[v.name].values = Private[v.conditionValues] or WeakAuras[v.conditionValues];
+        if (enable) then
+          result[v.name] = {
+            display = v.display,
+            type = v.conditionType
+          }
+          if (result[v.name].type == "select" or result[v.name].type == "unit") then
+            if (v.conditionValues) then
+              result[v.name].values = Private[v.conditionValues] or WeakAuras[v.conditionValues];
+            else
+              if type(v.values) == "function" then
+                result[v.name].values = v.values()
               else
-                if type(v.values) == "function" then
-                  result[v.name].values = v.values()
-                else
-                  result[v.name].values = Private[v.values] or WeakAuras[v.values];
-                end
+                result[v.name].values = Private[v.values] or WeakAuras[v.values];
               end
             end
-            if (v.conditionPreamble) then
-              result[v.name].preamble = v.conditionPreamble;
-            end
-            if (v.conditionTest) then
-              result[v.name].test = v.conditionTest;
-            end
-            if (v.conditionEvents) then
-              result[v.name].events = v.conditionEvents;
-            end
-            if (v.operator_types) then
-              result[v.name].operator_types = v.operator_types;
-            end
+          end
+          if (v.conditionPreamble) then
+            result[v.name].preamble = v.conditionPreamble;
+          end
+          if (v.conditionTest) then
+            result[v.name].test = v.conditionTest;
+          end
+          if (v.conditionEvents) then
+            result[v.name].events = v.conditionEvents;
+          end
+          if (v.operator_types) then
+            result[v.name].operator_types = v.operator_types;
           end
         end
       end
-
-      if Private.event_prototypes[trigger.event].countEvents then
-        result.count = {
-          display = L["Count"],
-          type = "number"
-        }
-      end
-
-      return result;
     end
+
+    if prototype.countEvents then
+      result.count = {
+        display = L["Count"],
+        type = "number"
+      }
+    end
+
+    return result;
   elseif(trigger.type == "custom") then
     if (trigger.custom_type == "status" or trigger.custom_type == "event") then
       local result = {};
@@ -4643,13 +4226,20 @@ function GenericTrigger.CreateFallbackState(data, triggernum, state)
 
   Private.ActivateAuraEnvironment(data.id, "", state);
   local trigger = data.triggers[triggernum].trigger
-  if (event.nameFunc) then
-    local ok, name = xpcall(event.nameFunc, Private.GetErrorHandlerUid(data.uid, L["Name Function (fallback state)"]), trigger);
+
+  if event.GetNameAndIcon then
+    local ok, name, icon = xpcall(event.GetNameAndIcon, Private.GetErrorHandlerUid(data.uid, L["GetNameAndIcon Function (fallback state)"]), trigger);
     state.name = ok and name or nil;
-  end
-  if (event.iconFunc) then
-    local ok, icon = xpcall(event.iconFunc, Private.GetErrorHandlerUid(data.uid, L["Icon Function (fallback state)"]), trigger);
     state.icon = ok and icon or nil;
+  else
+    if (event.nameFunc) then
+      local ok, name = xpcall(event.nameFunc, Private.GetErrorHandlerUid(data.uid, L["Name Function (fallback state)"]), trigger);
+      state.name = ok and name or nil;
+    end
+    if (event.iconFunc) then
+      local ok, icon = xpcall(event.iconFunc, Private.GetErrorHandlerUid(data.uid, L["Icon Function (fallback state)"]), trigger);
+      state.icon = ok and icon or nil;
+    end
   end
 
   if (event.textureFunc ) then
@@ -4719,8 +4309,9 @@ end
 
 function GenericTrigger.GetTriggerDescription(data, triggernum, namestable)
   local trigger = data.triggers[triggernum].trigger
-  if (Private.category_event_prototype[trigger.type]) then
-    tinsert(namestable, {L["Trigger:"], (Private.event_prototypes[trigger.event].name or L["Undefined"])});
+  local prototype = GenericTrigger.GetPrototype(trigger)
+  if prototype then
+    tinsert(namestable, {L["Trigger:"], (prototype.name or L["Undefined"])});
     if(trigger.event == "Combat Log" and trigger.subeventPrefix and trigger.subeventSuffix) then
       tinsert(namestable, {L["Message type:"], (Private.subevent_prefix_types[trigger.subeventPrefix] or L["Undefined"]).." "..(Private.subevent_suffix_types[trigger.subeventSuffix] or L["Undefined"])});
     end
@@ -4765,17 +4356,21 @@ do
   end
 end
 
-local findIdInLink = function(id, itemLink)
+local findIdInLink = function(id, itemLink, startPos)
   local findID = ":" .. tostring(id:trim())
-  return itemLink:find(findID .. ":", 1, true) or itemLink:find(findID .. "|", 1, true)
+  return itemLink:find(findID .. ":", startPos, true) or itemLink:find(findID .. "|", startPos, true)
 end
 
 WeakAuras.CheckForItemBonusId = function(ids)
   for id in tostring(ids):gmatch('([^,]+)') do
     for slot in pairs(Private.item_slot_types) do
       local itemLink = GetInventoryItemLink('player', slot)
-      if itemLink and findIdInLink(id, itemLink) then
-        return true
+      if itemLink then
+        local startPos = itemLink:find(":", 1, true)
+        startPos = itemLink:find(":", startPos + 1 , true)
+        if findIdInLink(id, itemLink, startPos) then
+          return true
+        end
       end
     end
   end
@@ -4788,7 +4383,7 @@ WeakAuras.GetBonusIdInfo = function(ids, specificSlot)
   for id in tostring(ids):gmatch('([^,]+)') do
     for slot in pairs(checkSlots) do
       local itemLink = GetInventoryItemLink('player', slot)
-      if itemLink and findIdInLink(id, itemLink) then
+      if itemLink and findIdInLink(id, itemLink, 1) then
         local itemID, _, _, _, icon = GetItemInfoInstant(itemLink)
         local itemName = itemLink:match("%[(.*)%]")
         return id, itemID, itemName, icon, slot, Private.item_slot_types[slot]

@@ -13,4 +13,5 @@
 	<Script file="Pets.lua"/>
 	<Script file="DrakewatcherQuests.lua"/>
 	<Script file="DrakewatcherSpells.lua"/>
+	<Script file="MissingSources.lua"/>
 </Ui>

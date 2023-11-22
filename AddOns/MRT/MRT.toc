@@ -1,9 +1,11 @@
-## Interface: 100100
+## Interface: 100200
 ## Title: Method Raid Tools
 ## Author: ykiigor
 ## Notes: Method Raid Tools
 ## SavedVariables: VMRT
-## Version: 4740
+## Version: 4810
+## AddonCompartmentFunc: MRT_MinimapClickFunction
+## IconTexture: Interface\AddOns\MRT\media\MiniMap.tga
 core.lua
 Functions.lua
 embeds.xml

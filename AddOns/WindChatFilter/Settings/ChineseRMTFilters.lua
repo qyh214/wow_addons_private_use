@@ -27,8 +27,22 @@ local RMTMessagekeywords = {
     ["消費"] = true,
     ["专车"] = true,
     ["專車"] = true,
+    ["专业團隊"] = true,
+    ["包車"] = true,
+    ["包车"] = true,
     ["化身巨龙牢窟"] = true,
     ["化身巨龍牢窟"] = true,
+    ["『朧影實驗場』亞貝魯斯"] = true,
+    ["朧影實驗場"] = true,
+    ["亞貝魯斯"] = true,
+    ["亚贝鲁斯，焰影熔炉"] = true,
+    ["亚贝鲁斯"] = true,
+    ["焰影熔炉"] = true,
+    ["阿梅达希尔，梦境之愿"] = true,
+    ["阿梅达希尔"] = true,
+    ["梦境之愿"] = true,
+    ["『夢境希望』埃達希爾"] = true,
+    ["埃達希爾"] = true,
     ["清水"] = true,
     ["躺尸"] = true,
     ["可躺"] = true,
@@ -105,7 +119,15 @@ local RMTMessagekeywords = {
     ["全给"] = true,
     ["网游"] = true,
     ["頂級團"] = true,
-    ["顶级团"] = true
+    ["顶级团"] = true,
+    ["永恒黎明"] = true,
+    ["新新"] = true,
+    ["防封"] = true,
+    ["自己上"] = true,
+    ["宝 库"] = true,
+    ["宏 伟"] = true,
+    ["wowbusin"] = true,
+    ["陪 一"] = true
 }
 
 P.rules.blackList["__rmt_padaren_dk"] = {
@@ -169,6 +191,8 @@ P.rules.blackList["__rmt_padaren_dk"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = true,
@@ -186,6 +210,96 @@ P.rules.blackList["__rmt_padaren_dk"] = {
     map = {
         enabled = true,
         mainCity = true,
+        mapIDs = {
+            ["467"] = true
+        }
+    },
+    message = {
+        enabled = false,
+        keywords = {}
+    }
+}
+
+P.rules.blackList["__rmt_dnd"] = {
+    enabled = true,
+    name = L["DND Character"],
+    description = L["Filter DND characters."],
+    priority = -1,
+    playerInfo = {
+        enabled = false,
+        config = {
+            race = false,
+            class = false,
+            name = false,
+            realm = false
+        },
+        class = {
+            DEMONHUNTER = false,
+            DEATHKNIGHT = false,
+            WARRIOR = false,
+            MAGE = false,
+            ROGUE = false,
+            DRUID = false,
+            HUNTER = false,
+            SHAMAN = false,
+            PRIEST = false,
+            WARLOCK = false,
+            PALADIN = false,
+            MONK = false,
+            EVOKER = false
+        },
+        race = {
+            Pandaren = false,
+            Dracthyr = false,
+            Human = false,
+            Dwarf = false,
+            NightElf = false,
+            Gnome = false,
+            Draenei = false,
+            Worgen = false,
+            VoidElf = false,
+            LightforgedDraenei = false,
+            DarkIronDwarf = false,
+            KulTiran = false,
+            Mechagnome = false,
+            Orc = false,
+            Scourge = false,
+            Tauren = false,
+            Troll = false,
+            BloodElf = false,
+            Goblin = false,
+            Nightborne = false,
+            HighmountainTauren = false,
+            MagharOrc = false,
+            ZandalariTroll = false,
+            Vulpera = false,
+            includeHostileFaction = false,
+            includeNeutral = false
+        },
+        name = {},
+        realm = {}
+    },
+    channel = {
+        enabled = true,
+        system = false,
+        dnd = true,
+        say = false,
+        yell = false,
+        whisper = false,
+        emote = false,
+        guild = false,
+        party = false,
+        raid = false,
+        trade = false,
+        general = false,
+        newcomer = false,
+        instance = false,
+        battleground = false,
+        channelNames = {}
+    },
+    map = {
+        enabled = false,
+        mainCity = false,
         mapIDs = {}
     },
     message = {
@@ -273,12 +387,15 @@ P.rules.blackList["__rmt_cn_1"] = {
             ["專車"] = true,
             ["找我"] = true,
             ["靜思"] = true,
-            ["静思"] = true
+            ["静思"] = true,
+            ["优惠"] = true
         },
         realm = {}
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = true,
@@ -298,7 +415,9 @@ P.rules.blackList["__rmt_cn_1"] = {
     map = {
         enabled = true,
         mainCity = true,
-        mapIDs = {}
+        mapIDs = {
+            ["467"] = true
+        }
     },
     message = {
         enabled = false,
@@ -367,6 +486,8 @@ P.rules.blackList["__rmt_cn_2"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = false,
@@ -384,7 +505,9 @@ P.rules.blackList["__rmt_cn_2"] = {
     map = {
         enabled = true,
         mainCity = true,
-        mapIDs = {}
+        mapIDs = {
+            ["467"] = true
+        }
     },
     message = {
         enabled = true,
@@ -453,6 +576,8 @@ P.rules.blackList["__rmt_cn_3"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = false,
         yell = false,
         whisper = true,
@@ -541,6 +666,8 @@ P.rules.blackList["__main_city_1"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = false,
@@ -638,6 +765,8 @@ P.rules.blackList["__main_city_2"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = false,
@@ -724,6 +853,8 @@ P.rules.blackList["__addon_1"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = false,
@@ -816,6 +947,8 @@ P.rules.blackList["__addon_2"] = {
     },
     channel = {
         enabled = true,
+        system = false,
+        dnd = true,
         say = true,
         yell = true,
         whisper = false,
@@ -843,6 +976,106 @@ P.rules.blackList["__addon_2"] = {
             ["^打断→"] = true,
             ["^%[斷法%]"] = true,
             ["^%[断法%]"] = true
+        }
+    }
+}
+
+P.rules.blackList["__craft"] = {
+    enabled = false,
+    name = L["Craft Advertisement"],
+    description = L["Filter some announcement messages if you feel annoying."],
+    priority = -40,
+    playerInfo = {
+        enabled = false,
+        config = {
+            race = false,
+            class = false,
+            name = false,
+            realm = false
+        },
+        class = {
+            DEMONHUNTER = false,
+            DEATHKNIGHT = false,
+            WARRIOR = false,
+            MAGE = false,
+            ROGUE = false,
+            DRUID = false,
+            HUNTER = false,
+            SHAMAN = false,
+            PRIEST = false,
+            WARLOCK = false,
+            PALADIN = false,
+            MONK = false,
+            EVOKER = false
+        },
+        race = {
+            Pandaren = false,
+            Dracthyr = false,
+            Human = false,
+            Dwarf = false,
+            NightElf = false,
+            Gnome = false,
+            Draenei = false,
+            Worgen = false,
+            VoidElf = false,
+            LightforgedDraenei = false,
+            DarkIronDwarf = false,
+            KulTiran = false,
+            Mechagnome = false,
+            Orc = false,
+            Scourge = false,
+            Tauren = false,
+            Troll = false,
+            BloodElf = false,
+            Goblin = false,
+            Nightborne = false,
+            HighmountainTauren = false,
+            MagharOrc = false,
+            ZandalariTroll = false,
+            Vulpera = false,
+            includeHostileFaction = false,
+            includeNeutral = false
+        },
+        name = {},
+        realm = {}
+    },
+    channel = {
+        enabled = true,
+        system = false,
+        dnd = true,
+        say = true,
+        yell = true,
+        whisper = false,
+        emote = true,
+        guild = false,
+        party = false,
+        raid = false,
+        trade = true,
+        general = false,
+        newcomer = false,
+        instance = false,
+        battleground = false,
+        channelNames = {
+            ["組隊"] = true
+        }
+    },
+    map = {
+        enabled = false,
+        mainCity = false,
+        mapIDs = {}
+    },
+    message = {
+        enabled = true,
+        keywords = {
+            ["代工"] = true,
+            ["秒做"] = true,
+            ["下单"] = true,
+            ["纹章"] = true,
+            ["永恒"] = true,
+            ["新造"] = true,
+            ["稳三"] = true,
+            ["稳3"] = true,
+            ["免费稳"] = true
         }
     }
 }

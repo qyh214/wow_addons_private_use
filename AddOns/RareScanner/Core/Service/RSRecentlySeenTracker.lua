@@ -31,7 +31,7 @@ local function InitResetRecentlySeenTimer()
 		return
 	end
 	
-	RESET_RECENTLY_SEEN_TIMER = C_Timer.NewTicker(RSConstants.CHECK_RESET_RECENTLY_SEEN_TMER, function()
+	RESET_RECENTLY_SEEN_TIMER = C_Timer.NewTicker(RSConstants.CHECK_RESET_RECENTLY_SEEN_TIMER, function()
 		for entityID, entityInfo in pairs (recently_seen_entities) do
 			local currenTime = time()
 			

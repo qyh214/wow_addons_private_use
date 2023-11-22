@@ -1,12 +1,9 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	local _detalhes = _G.Details
+	local Details = _G.Details
 	local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 	local addonName, Details222 = ...
 	local _
-
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---local pointers
 
 	local upper = string.upper --lua local
 	local ipairs = ipairs --lua local
@@ -24,6 +21,9 @@
 	local strsplit = strsplit
 	local _pcall = pcall
 	local GetTime = GetTime
+	local GetUnitName = _G.GetUnitName
+	local UnitExists = UnitExists
+	local UnitGUID = UnitGUID
 
 	local IsInRaid = IsInRaid --wow api local
 	local IsInGroup = IsInGroup --wow api local
@@ -31,7 +31,127 @@
 	local UnitAffectingCombat = UnitAffectingCombat --wow api local
 	local _InCombatLockdown = InCombatLockdown --wow api local
 
-	local gump = _detalhes.gump --details local
+	local playerRealmName = GetRealmName()
+
+	local gump = Details.gump --details local
+
+	local predicateFunc = function(spellIdToFind, casterName, _, name, icon, applications, dispelName, duration, expirationTime, sourceUnitId, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications)
+		if (spellIdToFind == spellId and UnitExists(sourceUnitId)) then
+			if (casterName == Details:GetUnitNameForAPI(sourceUnitId)) then
+				return true
+			end
+		end
+	end
+
+	do
+		---find the duration of a debuff by passing the spellId and the caster name
+		---@param unitId unit
+		---@param spellId spellid
+		---@param casterName actorname
+		---@return auraduration|nil auraDuration
+		---@return number|nil expirationTime
+		function Details:FindDebuffDuration(unitId, spellId, casterName)
+			local name, texture, count, debuffType, duration, expirationTime = AuraUtil.FindAura(predicateFunc, unitId, "HARMFUL", spellId, casterName)
+			if (name) then
+				return duration, expirationTime
+			end
+		end
+
+		function Details:FindDebuffDurationByUnitName(targetString, spellId, casterString)
+			local targetName = Details:Ambiguate(targetString)
+			local casterName = Details:Ambiguate(casterString)
+			return Details:FindDebuffDuration(targetName, spellId, casterName)
+		end
+	end
+
+	do
+		---find the duration of a buff by passing the spellId and the caster name
+		---@param unitId unit
+		---@param spellId spellid
+		---@param casterName actorname
+		---@return auraduration|nil auraDuration
+		---@return number|nil expirationTime
+		function Details:FindBuffDuration(unitId, spellId, casterName) --not called anywhere else except the function below
+			local name, texture, count, debuffType, duration, expirationTime = AuraUtil.FindAura(predicateFunc, unitId, "HELPFUL", spellId, casterName)
+			if (name) then
+				return duration, expirationTime
+			end
+		end
+
+		function Details:FindBuffDurationByUnitName(targetString, spellId, casterString)
+			local targetName = Details:Ambiguate(targetString)
+			local casterName = Details:Ambiguate(casterString)
+			return Details:FindBuffDuration(targetName, spellId, casterName)
+		end
+	end
+
+	do
+		function Details:FindBuffCastedBy(unitId, buffSpellId, casterName) --not called anywhere else except the function below
+			local auraName, texture, count, auraType, duration, expTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, playerOrPet, nameplateShowAll, timeMod, v1, v2, v3, v4, v5 = AuraUtil.FindAura(predicateFunc, unitId, "HELPFUL", buffSpellId, casterName)
+			if (auraName) then
+				return auraName, texture, count, auraType, duration, expTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, playerOrPet, nameplateShowAll, timeMod, v1, v2, v3, v4, v5
+			end
+		end
+
+		function Details:FindBuffCastedByUnitName(targetString, buffSpellId, casterString)
+			local targetName = Details:Ambiguate(targetString)
+			local casterName = Details:Ambiguate(casterString)
+			return Details:FindBuffCastedBy(targetName, buffSpellId, casterName)
+		end
+	end
+
+	---return the unitId by passing a unit serial (guid)
+	---@param unitSerial serial
+	---@return unit|nil unitId
+	function Details:FindUnitIDByUnitSerial(unitSerial)
+		--target
+		if (UnitExists("target")) then
+			if (UnitGUID("target") == unitSerial) then
+				return "target"
+			end
+		end
+
+		--focus
+		if (UnitExists("focus")) then
+			if (UnitGUID("focus") == unitSerial) then
+				return "focus"
+			end
+		end
+
+		--boss
+		for i = 1, 9 do
+			local unitId = Details222.UnitIdCache.Boss[i]
+			if (UnitExists(unitId)) then
+				if (UnitGUID(unitId) == unitSerial) then
+					return unitId
+				end
+			else
+				break
+			end
+		end
+
+		--nameplate
+		for i = 1, 40 do
+			local unitId = Details222.UnitIdCache.Nameplate[i]
+			if (UnitExists(unitId)) then
+				if (UnitGUID(unitId) == unitSerial) then
+					return unitId
+				end
+			end
+		end
+
+		--arena enemies
+		for i = 1, #Details222.UnitIdCache.Arena do
+			local unitId = Details222.UnitIdCache.Arena[i]
+			if (UnitExists(unitId)) then
+				if (UnitGUID(unitId) == unitSerial) then
+					return unitId
+				end
+			else
+				break
+			end
+		end
+	end
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --fade handler
@@ -39,7 +159,6 @@
 	Details.FadeHandler = {
 		frames = {}
 	}
-
 
 	--fade in is hidding the frame,	it is the opposite of the stardard
 	local fadeINFinishedCallback = function(frame)
@@ -178,7 +297,7 @@
 
 		--hide all instanceBars on all instances
 		if (frame == "all") then
-			for _, instancia in ipairs(_detalhes.tabela_instancias) do
+			for _, instancia in ipairs(Details.tabela_instancias) do
 				if (hideType == "barras") then
 					for i = 1, instancia.rows_created do
 						local instanceBar = instancia.barras[i]
@@ -291,7 +410,7 @@
 --details api functions
 
 	--get the npc id from guid
-	function _detalhes:GetNpcIdFromGuid (guid)
+	function Details:GetNpcIdFromGuid (guid)
 		local NpcId = select( 6, strsplit( "-", guid ) )
 		if (NpcId) then
 			return tonumber( NpcId )
@@ -299,12 +418,12 @@
 		return 0
 	end
 
-	function _detalhes:GetSourceFromNpcId (npcId)
-		for index, container in ipairs(_detalhes.tabela_vigente) do
+	function Details:GetSourceFromNpcId (npcId)
+		for index, container in ipairs(Details.tabela_vigente) do
 			if (index <= 4) then
 				local t = container._ActorTable
 				for i = 1, #t do
-					if (_detalhes:GetNpcIdFromGuid (t[i].serial) == npcId) then
+					if (Details:GetNpcIdFromGuid (t[i].serial) == npcId) then
 						return t[i].nome
 					end
 				end
@@ -315,51 +434,64 @@
 	function Details:GetRaidLeader()
 		if (IsInRaid()) then
 			for i = 1, GetNumGroupMembers() do
-				local name, rank = GetRaidRosterInfo(i)
+				local actorName, rank = GetRaidRosterInfo(i)
 				if (rank == 2) then
-					return name, "raid" .. i
+					return actorName, "raid" .. i
 				end
 			end
 		end
-		return
 	end
 
-	function _detalhes:UnpackDeathTable (t)
-		local deathevents = t[1]
-		local deathtime = t[2]
-		local playername = t[3]
-		local playerclass = t[4]
-		local playermaxhealth = t[5]
-		local deathtimestring = t[6]
-		local lastcooldown = t.last_cooldown
-		local deathcombattime = t.dead_at
+	---unpack a death table
+	---@param deathTable table
+	---@return actorname actorName name of the actor
+	---@return actorclass actorClass class of the actor
+	---@return unixtime deathTime unittime of when the death occurred
+	---@return combattime deathCombatTime time in seconds since the combat start
+	---@return timestring deathTimeString time in string format
+	---@return number maxHealth max health of the actor
+	---@return table deathEvents events that lead the actor to death
+	---@return {key1: unixtime, key2: spellid}
+	---@return specializationid specId
+	function Details:UnpackDeathTable(deathTable)
+		local deathevents = deathTable[1]
+		local deathtime = deathTable[2]
+		local playername = deathTable[3]
+		local playerclass = deathTable[4]
+		local playermaxhealth = deathTable[5]
+		local deathtimestring = deathTable[6]
+		local lastcooldown = deathTable.last_cooldown
+		local deathcombattime = deathTable.dead_at
+		local spec = deathTable.spec
 
-		return playername, playerclass, deathtime, deathcombattime, deathtimestring, playermaxhealth, deathevents, lastcooldown
+		return playername, playerclass, deathtime, deathcombattime, deathtimestring, playermaxhealth, deathevents, lastcooldown, spec
 	end
 
-	function Details:GetOrderNumber() --who_name
-		--local name = upper (who_name .. "zz")
-		--local byte1 = abs(_string_byte (name, 2)-91)/1000000
-		--return byte1 + abs(_string_byte (name, 1)-91)/10000
-		return _math_random (1000, 9000) / 1000000
+	---get a random fraction number
+	---@return number
+	function Details:GetOrderNumber() --anyString
+		--local name = upper(anyString .. "zz")
+		--local byte1 = abs(_string_byte(name, 2)-91) / 1000000
+		--return byte1 + abs(_string_byte(name, 1)-91) / 10000
+		return _math_random(1000, 9000) / 1000000
 	end
 
 	--/script print(tonumber(4/1000000)) - 4e-006
 	--0.000004
 	--set all table keys to lower
 	local temptable = {}
-	function _detalhes:LowerizeKeys (_table)
+	function Details:LowerizeKeys (_table)
 		for key, value in pairs(_table) do
 			temptable [string.lower(key)] = value
 		end
-		temptable, _table = table.wipe(_table), temptable
+		temptable, _table = Details:Destroy(_table), temptable
 		return _table
 	end
 
-	_detalhes.ToKFunctions = {}
+	Details.ToKFunctions = {}
 
 	--krKR by @yuk6196 (http://wow.curseforge.com/profiles/yuk6196)
-	function _detalhes:UseEastAsianNumericalSystem()
+	function Details:UseEastAsianNumericalSystem()
 
 		--try to auto detect the language
 		local symbol_1K, symbol_10K, symbol_1B
@@ -375,13 +507,13 @@
 		--usage: _detalhes:SetNumericalSystemOverride (language)  language can be:  "kr", "cn", "tw"
 
 		--just in case the user mess up something
-		if (type(_detalhes.numerical_system_symbols) ~= "string") then
-			_detalhes.numerical_system_symbols = "auto"
+		if (type(Details.numerical_system_symbols) ~= "string") then
+			Details.numerical_system_symbols = "auto"
 		end
 
 		--do the override
-		if (_detalhes.numerical_system_symbols ~= "auto") then
-			local locale = string.lower(_detalhes.numerical_system_symbols)
+		if (Details.numerical_system_symbols ~= "auto") then
+			local locale = string.lower(Details.numerical_system_symbols)
 
 			if (locale == "kr") then
 				symbol_1K, symbol_10K, symbol_1B = "천", "만", "억"
@@ -398,7 +530,7 @@
 			symbol_1K, symbol_10K, symbol_1B = "千", "万", "亿"
 		end
 
-		function _detalhes:ToK (numero)
+		function Details:ToK (numero)
 			if (numero > 100000000) then
 				return _string_format ("%.2f", numero/100000000) .. symbol_1B
 			elseif (numero > 10000) then
@@ -409,7 +541,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToK2 (numero)
+		function Details:ToK2 (numero)
 			if (numero > 99999999) then
 				return _string_format ("%.2f", numero/100000000) .. symbol_1B
 			elseif (numero > 999999) then
@@ -425,7 +557,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToK0 (numero)
+		function Details:ToK0 (numero)
 			if (numero > 100000000) then
 				return _string_format ("%.0f", numero/100000000) .. symbol_1B
 			elseif (numero > 10000) then
@@ -436,7 +568,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToKMin (numero)
+		function Details:ToKMin (numero)
 			if (numero > 100000000) then
 				return _string_format ("%.2f", numero/100000000) .. symbol_1B
 			elseif (numero > 10000) then
@@ -447,7 +579,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToK2Min (numero)
+		function Details:ToK2Min (numero)
 			if (numero > 99999999) then
 				return _string_format ("%.2f", numero/100000000) .. symbol_1B
 			elseif (numero > 999999) then
@@ -463,7 +595,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToK0Min (numero)
+		function Details:ToK0Min (numero)
 			if (numero > 100000000) then
 				return _string_format ("%.0f", numero/100000000) .. symbol_1B
 			elseif (numero > 10000) then
@@ -475,7 +607,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToKReport (numero)
+		function Details:ToKReport (numero)
 			if (numero > 100000000) then
 				return _string_format ("%.2f", numero/100000000) .. symbol_1B
 			elseif (numero > 10000) then
@@ -486,7 +618,7 @@
 			return numero
 		end
 
-		function _detalhes:Format (n, custom)
+		function Details:Format (n, custom)
 			n = _math_floor(n)
 			if (custom) then
 				if (n > 99999999) then
@@ -499,17 +631,17 @@
 					return n
 				end
 			else
-				return _detalhes.ToKFunctions [_detalhes.ps_abbreviation] (nil, n)
+				return Details.ToKFunctions [Details.ps_abbreviation] (nil, n)
 			end
 		end
 
 		--no changes
-		function _detalhes:NoToK (numero)
+		function Details:NoToK (numero)
 			return _math_floor(numero)
 		end
 
 		-- thanks http://richard.warburton.it
-		function _detalhes:comma_value (n)
+		function Details:comma_value (n)
 			if (not n) then return "0" end
 			n = _math_floor(n)
 			if (n == 0) then
@@ -518,28 +650,28 @@
 			local left,num,right = _string_match (n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 		end
-		
-		function _detalhes:comma_value_raw (n)
+
+		function Details:comma_value_raw (n)
 			local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 		end
 
-		wipe (_detalhes.ToKFunctions)
+		Details:Destroy(Details.ToKFunctions)
 
-		tinsert(_detalhes.ToKFunctions, _detalhes.NoToK)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK2)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK0)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToKMin)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK2Min)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK0Min)
-		tinsert(_detalhes.ToKFunctions, _detalhes.comma_value)
+		table.insert(Details.ToKFunctions, Details.NoToK)
+		table.insert(Details.ToKFunctions, Details.ToK)
+		table.insert(Details.ToKFunctions, Details.ToK2)
+		table.insert(Details.ToKFunctions, Details.ToK0)
+		table.insert(Details.ToKFunctions, Details.ToKMin)
+		table.insert(Details.ToKFunctions, Details.ToK2Min)
+		table.insert(Details.ToKFunctions, Details.ToK0Min)
+		table.insert(Details.ToKFunctions, Details.comma_value)
 
 	end
 
-	function _detalhes:UseWestNumericalSystem()
+	function Details:UseWestNumericalSystem()
 		--short numbers
-		function _detalhes:ToK (numero)
+		function Details:ToK (numero)
 			if (numero > 999999999) then
 				return format("%.2f", numero/1000000000) .. "B"
 			elseif (numero > 1000000) then
@@ -551,7 +683,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToK2 (numero)
+		function Details:ToK2 (numero)
 			if (numero > 999999999) then
 				return format("%.2f", numero/1000000000) .. "B"
 			elseif (numero > 999999) then
@@ -566,7 +698,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToK0 (numero)
+		function Details:ToK0 (numero)
 			if (numero > 999999999) then
 				return format("%.2f", numero/1000000000) .. "B"
 			elseif (numero > 1000000) then
@@ -578,7 +710,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToKMin (numero)
+		function Details:ToKMin (numero)
 			if (numero > 1000000) then
 				return _string_format ("%.2f", numero/1000000) .. "m"
 			elseif (numero > 1000) then
@@ -588,7 +720,7 @@
 			return _string_format ("%.0f", numero)
 		end
 
-		function _detalhes:ToK2Min (numero)
+		function Details:ToK2Min (numero)
 			if (numero > 999999) then
 				return _string_format ("%.2f", numero/1000000) .. "m"
 			elseif (numero > 99999) then
@@ -601,7 +733,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToK0Min (numero)
+		function Details:ToK0Min (numero)
 			if (numero > 1000000) then
 				return _string_format ("%.0f", numero/1000000) .. "m"
 			elseif (numero > 1000) then
@@ -612,7 +744,7 @@
 		end
 
 		--short numbers no numbers after comma
-		function _detalhes:ToKReport (numero)
+		function Details:ToKReport (numero)
 			if (numero > 1000000) then
 				return _string_format ("%.2f", numero/1000000) .. "M"
 			elseif (numero > 1000) then
@@ -622,7 +754,7 @@
 			return numero
 		end
 
-		function _detalhes:Format (n, custom)
+		function Details:Format (n, custom)
 			n = _math_floor(n)
 			if (custom) then
 				if (n > 999999) then
@@ -633,17 +765,17 @@
 					return n
 				end
 			else
-				return _detalhes.ToKFunctions [_detalhes.ps_abbreviation] (nil, n)
+				return Details.ToKFunctions [Details.ps_abbreviation] (nil, n)
 			end
 		end
 
 		--no changes
-		function _detalhes:NoToK (numero)
+		function Details:NoToK (numero)
 			return _math_floor(numero)
 		end
 
 		-- thanks http://richard.warburton.it
-		function _detalhes:comma_value (n)
+		function Details:comma_value (n)
 			if (not n) then return "0" end
 			n = _math_floor(n)
 			if (n == 0) then
@@ -652,30 +784,30 @@
 			local left,num,right = _string_match (n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 		end
-		function _detalhes:comma_value_raw (n)
+		function Details:comma_value_raw (n)
 			local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
 			return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 		end
 
-		wipe (_detalhes.ToKFunctions)
+		Details:Destroy(Details.ToKFunctions)
 
-		tinsert(_detalhes.ToKFunctions, _detalhes.NoToK)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK2)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK0)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToKMin)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK2Min)
-		tinsert(_detalhes.ToKFunctions, _detalhes.ToK0Min)
-		tinsert(_detalhes.ToKFunctions, _detalhes.comma_value)
+		table.insert(Details.ToKFunctions, Details.NoToK)
+		table.insert(Details.ToKFunctions, Details.ToK)
+		table.insert(Details.ToKFunctions, Details.ToK2)
+		table.insert(Details.ToKFunctions, Details.ToK0)
+		table.insert(Details.ToKFunctions, Details.ToKMin)
+		table.insert(Details.ToKFunctions, Details.ToK2Min)
+		table.insert(Details.ToKFunctions, Details.ToK0Min)
+		table.insert(Details.ToKFunctions, Details.comma_value)
 
 		--
 	end
 
 	--load western as default, the proper method is loaded within the profile
-	_detalhes:UseWestNumericalSystem()
+	Details:UseWestNumericalSystem()
 
-	function _detalhes:GetCurrentToKFunction()
-		return _detalhes.ToKFunctions [_detalhes.ps_abbreviation]
+	function Details:GetCurrentToKFunction()
+		return Details.ToKFunctions [Details.ps_abbreviation]
 	end
 
 	--alias
@@ -690,49 +822,49 @@
 ------------------------------------------------------------------------------------------------------------
 --numerical system
 
-	function _detalhes:SetNumericalSystemOverride (language)
+	function Details:SetNumericalSystemOverride (language)
 		if (not language) then
 			language = "auto"
 		end
-		_detalhes.numerical_system_symbols = language
-		_detalhes:Msg("NumSystem override is now:", language)
+		Details.numerical_system_symbols = language
+		Details:Msg("NumSystem override is now:", language)
 
-		_detalhes:SelectNumericalSystem()
+		Details:SelectNumericalSystem()
 	end
 
-	function _detalhes:GetNumericalSystem()
-		return _detalhes.numerical_system
+	function Details:GetNumericalSystem()
+		return Details.numerical_system
 	end
 
-	function _detalhes:SelectNumericalSystem (system)
+	function Details:SelectNumericalSystem (system)
 		if (not system or type(system) ~= "number") then
-			system = _detalhes.numerical_system or 1
+			system = Details.numerical_system or 1
 		end
 
-		_detalhes.numerical_system = system
+		Details.numerical_system = system
 
 		if (system == 1) then
-			_detalhes:UseWestNumericalSystem()
+			Details:UseWestNumericalSystem()
 		elseif (system == 2) then
-			_detalhes:UseEastAsianNumericalSystem()
+			Details:UseEastAsianNumericalSystem()
 		end
 
-		_detalhes:UpdateToKFunctions()
+		Details:UpdateToKFunctions()
 	end
 
-	function _detalhes:UpdateToKFunctions()
-		_detalhes.atributo_damage:UpdateSelectedToKFunction()
-		_detalhes.atributo_heal:UpdateSelectedToKFunction()
-		_detalhes.atributo_energy:UpdateSelectedToKFunction()
-		_detalhes.atributo_misc:UpdateSelectedToKFunction()
-		_detalhes.atributo_custom:UpdateSelectedToKFunction()
+	function Details:UpdateToKFunctions()
+		Details.atributo_damage:UpdateSelectedToKFunction()
+		Details.atributo_heal:UpdateSelectedToKFunction()
+		Details.atributo_energy:UpdateSelectedToKFunction()
+		Details.atributo_misc:UpdateSelectedToKFunction()
+		Details.atributo_custom:UpdateSelectedToKFunction()
 		Details:RefreshMainWindow(-1, true)
 	end
 
 --------end of ToK functions----
 
 	--replacing data for custom texts
-	_detalhes.string = {}
+	Details.string = {}
 
 	local function_cache = {}
 	local arguments_cache = {}
@@ -747,7 +879,7 @@
 		if (not func) then
 			func = loadstring (str)
 			if (not func) then
-				_detalhes:Msg("|cFFFF9900error compiling script on custom text|r: ", errortext)
+				Details:Msg("|cFFFF9900error compiling script on custom text|r: ", errortext)
 				return 0
 			end
 			DetailsFramework:SetEnvironment(func)
@@ -756,13 +888,13 @@
 
 		local okey, value = _pcall (func, parameters_cache [1], parameters_cache [2], parameters_cache [3], parameters_cache [4], arguments_cache[1], arguments_cache[2], arguments_cache[3])
 		if (not okey) then
-			_detalhes:Msg("|cFFFF9900error on custom text|r:", value)
+			Details:Msg("|cFFFF9900error on custom text|r:", value)
 			return 0
 		end
 		return value or 0
 	end
 
-	function _detalhes.string.replace (str, v1, v2, v3, v4, v5, v6, v7)
+	function Details.string.replace (str, v1, v2, v3, v4, v5, v6, v7)
 		arguments_cache [1] = v1
 		arguments_cache [2] = v2
 		arguments_cache [3] = v3
@@ -775,7 +907,7 @@
 	end
 
 	--remove a index from a hash table
-	function _detalhes:tableRemove (tabela, indexName)
+	function Details:tableRemove (tabela, indexName)
 		local newtable = {}
 		for hash, value in pairs(tabela) do
 			if (hash ~= indexName) then
@@ -786,7 +918,7 @@
 	end
 
 	--return if the numeric table have an object
-	function _detalhes:tableIN (tabela, objeto)
+	function Details:tableIN (tabela, objeto)
 		for index, valor in ipairs(tabela) do
 			if (valor == objeto) then
 				return index
@@ -796,7 +928,7 @@
 	end
 
 	--reverse numerical table
-	function _detalhes:reverse_table (t)
+	function Details:reverse_table (t)
 		local new = {}
 		local index = 1
 		for i = #t, 1, -1 do
@@ -806,9 +938,9 @@
 		return new
 	end
 
-	_detalhes.table = {}
+	Details.table = {}
 
-	function _detalhes.table.reverse (t)
+	function Details.table.reverse (t)
 		local new = {}
 		local index = 1
 		for i = #t, 1, -1 do
@@ -819,7 +951,7 @@
 	end
 	--yah, i know
 
-	function _detalhes.table.copy(t1, t2)
+	function Details.table.copy(t1, t2)
 		for key, value in pairs(t2) do
 			if (type(value) == "table") then
 				t1 [key] = Details.CopyTable(value)
@@ -830,29 +962,29 @@
 		return t1
 	end
 
-	function _detalhes.table.deploy(t1, t2)
+	function Details.table.deploy(t1, t2)
 		for key, value in pairs(t2) do
 			if (type(value) == "table") then
 				t1 [key] = t1 [key] or {}
-				_detalhes.table.deploy(t1 [key], t2 [key])
+				Details.table.deploy(t1 [key], t2 [key])
 			elseif (t1 [key] == nil) then
 				t1 [key] = value
 			end
 		end
 	end
 
-	function _detalhes.table.overwrite (t1, t2)
+	function Details.table.overwrite (t1, t2)
 		for key, value in pairs(t2) do
 			if (type(value) == "table") then
 				t1 [key] = t1 [key] or {}
-				_detalhes.table.overwrite (t1 [key], t2 [key])
+				Details.table.overwrite (t1 [key], t2 [key])
 			else
 				t1 [key] = value
 			end
 		end
 	end
 
-	function _detalhes.table.dump (t, s, deep)
+	function Details.table.dump (t, s, deep)
 
 		if (type(t) == "number") then
 			return t
@@ -885,7 +1017,7 @@
 				else
 					s = s .. space .. "[\"" .. key .. "\"] = |cFFa9ffa9table {|r\n"
 				end
-				s = s .. _detalhes.table.dump (value, nil, deep+1)
+				s = s .. Details.table.dump (value, nil, deep+1)
 				s = s .. space .. "|cFFa9ffa9}|r\n"
 
 			elseif (tpe == "string") then
@@ -907,7 +1039,7 @@
 		return s
 	end
 
-	function _detalhes:hex (num)
+	function Details:hex (num)
 		local hexstr = '0123456789abcdef'
 		local s = ''
 		while num > 0 do
@@ -922,7 +1054,7 @@
 		return s
 	end
 
-	function _detalhes:percent_color (value, inverted)
+	function Details:percent_color (value, inverted)
 		local r, g
 		if (value < 50) then
 			r = 255
@@ -945,7 +1077,7 @@
 
 	--unpack more than 1 table
 	-- http://www.dzone.com/snippets/lua-unpack-multiple-tables
-	function _detalhes:unpacks (...)
+	function Details:unpacks (...)
 		local values = {}
 		for i = 1, select('#', ...) do
 			for _, value in ipairs(select(i, ...)) do
@@ -956,14 +1088,14 @@
 	end
 
 	--trim http://lua-users.org/wiki/StringTrim
-	function _detalhes:trim (s)
+	function Details:trim (s)
 		local from = s:match"^%s*()"
 		return from > #s and "" or s:match(".*%S", from)
 	end
 
 -- lua base64 codec (c) 2006-2008 by Alex Kloss - http://www.it-rfc.de - licensed under the terms of the LGPL2 - http://lua-users.org/wiki/BaseSixtyFour
 do
-	_detalhes._encode = {}
+	Details._encode = {}
 
 	-- shift left
 	local function lsh (value,shift)
@@ -992,7 +1124,7 @@ do
 
 	-- function encode
 	-- encodes input string to base64.
-	function _detalhes._encode:enc (data)
+	function Details._encode:enc (data)
 		local bytes = {}
 		local result = ""
 		for spos=0,string.len(data)-1,3 do
@@ -1007,7 +1139,7 @@ do
 
 	-- function decode
 	-- decode base64 input to string
-	function _detalhes._encode:Decode (data)
+	function Details._encode:Decode (data)
 		local chars = {}
 		local result=""
 		for dpos=0,string.len(data)-1,4 do
@@ -1017,44 +1149,44 @@ do
 		return result
 	end
 
-	function _detalhes._encode:Encode (s)
-		return _detalhes._encode:enc (s)
+	function Details._encode:Encode (s)
+		return Details._encode:enc (s)
 	end
 end
 
 	--scale
-	function _detalhes:Scale (rangeMin, rangeMax, scaleMin, scaleMax, x)
+	function Details:Scale (rangeMin, rangeMax, scaleMin, scaleMax, x)
 		return 1 + (x - rangeMin) * (scaleMax - scaleMin) / (rangeMax - rangeMin)
 	end
 
 	--font color
-	function _detalhes:SetFontColor(fontString, r, g, b, a)
+	function Details:SetFontColor(fontString, r, g, b, a)
 		r, g, b, a = gump:ParseColors(r, g, b, a)
 		fontString:SetTextColor(r, g, b, a)
 	end
 
 	--font size
-	function _detalhes:SetFontSize(fontString, ...)
+	function Details:SetFontSize(fontString, ...)
 		local fonte, _, flags = fontString:GetFont()
 		fontString:SetFont(fonte, _math_max (...), flags)
 	end
-	function _detalhes:GetFontSize (fontString)
+	function Details:GetFontSize (fontString)
 		local _, size = fontString:GetFont()
 		return size
 	end
 
 	--font face
-	function _detalhes:SetFontFace (fontString, fontface)
+	function Details:SetFontFace (fontString, fontface)
 		local _, size, flags = fontString:GetFont()
 		fontString:SetFont(fontface, size, flags)
 	end
-	function _detalhes:GetFontFace (fontString)
+	function Details:GetFontFace (fontString)
 		local fontface = fontString:GetFont()
 		return fontface
 	end
 
 	--font outline
-	function _detalhes:SetFontOutline (fontString, outline)
+	function Details:SetFontOutline (fontString, outline)
 		local fonte, size = fontString:GetFont()
 		if (outline) then
 			if (type(outline) == "boolean" and outline) then
@@ -1066,12 +1198,12 @@ end
 			end
 		end
 
-		if (_detalhes.force_font_outline ~= "") then
-			if (_detalhes.force_font_outline == "OUTLINE") then
+		if (Details.force_font_outline ~= "") then
+			if (Details.force_font_outline == "OUTLINE") then
 				outline = "OUTLINE"
-			elseif (_detalhes.force_font_outline == "THICKOUTLINE") then
+			elseif (Details.force_font_outline == "THICKOUTLINE") then
 				outline = "THICKOUTLINE"
-			elseif (_detalhes.force_font_outline == "MONOCHROME") then
+			elseif (Details.force_font_outline == "MONOCHROME") then
 				outline = "MONOCHROME"
 			end
 		end
@@ -1079,10 +1211,10 @@ end
 		fontString:SetFont(fonte, size, outline)
 	end
 
-	function _detalhes:UseOutline (outline)
+	function Details:UseOutline (outline)
 		outline = outline or ""
-		_detalhes.force_font_outline = outline
-		for ID, instance in _detalhes:ListInstances() do
+		Details.force_font_outline = outline
+		for ID, instance in Details:ListInstances() do
 			if (instance:IsEnabled()) then
 				instance:RefreshBars()
 				instance:InstanceReset()
@@ -1094,26 +1226,28 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internal functions
 
-	function _detalhes:HealthTick()
+	function Details:HealthTick()
 		if (UnitExists("boss1") and IsInRaid() and IsInInstance()) then
 			local health = (UnitHealth ("boss1") or 0) / (UnitHealthMax ("boss1") or 0)
-			if (_detalhes.boss1_health_percent) then
-				if (_detalhes.boss1_health_percent < health) then
+			if (Details.boss1_health_percent) then
+				if (Details.boss1_health_percent < health) then
 					return
 				end
 			end
-			_detalhes.boss1_health_percent = health
+			Details.boss1_health_percent = health
 		end
 	end
 
-	--is in combat yet?
-	function _detalhes:EstaEmCombate()
+	---do tasks that need to run every second during the combat
+	---also check if all members of the group are in combat or not
+	---when no one is in combat, the combat is over
+	---@return boolean bIsInCombat if true, the comabt is still going on
+	local combatTicker = function()
+		Details:TimeDataTick()
+		Details:BrokerTick()
+		Details:HealthTick()
 
-		_detalhes:TimeDataTick()
-		_detalhes:BrokerTick()
-		_detalhes:HealthTick()
-
-		local _, zoneType = GetInstanceInfo()
+		local zoneName, zoneType = GetInstanceInfo()
 
 		if (Details.Coach.Server.IsEnabled()) then
 			if (Details.debug) then
@@ -1122,7 +1256,7 @@ end
 			return true
 
 		--battleground
-		elseif (zoneType == "pvp" and _detalhes.use_battleground_server_parser) then
+		elseif (zoneType == "pvp" and Details.use_battleground_server_parser) then
 			return true
 
 		--arena
@@ -1130,25 +1264,25 @@ end
 			return true
 
 		--is in combat
-			elseif (UnitAffectingCombat("player")) then
-				return true
+		elseif (UnitAffectingCombat("player")) then
+			return true
 
-			elseif (IsInRaid()) then
-				local unitIdCache = Details222.UnitIdCache.Raid
-				for i = 1, GetNumGroupMembers(), 1 do
-					if (UnitAffectingCombat(unitIdCache[i])) then
-						return true
-					end
-				end
-
-			elseif (IsInGroup()) then
-				local unitIdCache = Details222.UnitIdCache.Party
-				for i = 1, GetNumGroupMembers()-1, 1 do
-					if (UnitAffectingCombat(unitIdCache[i])) then
-						return true
-					end
+		elseif (IsInRaid()) then
+			local unitIdCache = Details222.UnitIdCache.Raid
+			for i = 1, GetNumGroupMembers(), 1 do
+				if (UnitAffectingCombat(unitIdCache[i])) then
+					return true
 				end
 			end
+
+		elseif (IsInGroup()) then
+			local unitIdCache = Details222.UnitIdCache.Party
+			for i = 1, GetNumGroupMembers()-1, 1 do
+				if (UnitAffectingCombat(unitIdCache[i])) then
+					return true
+				end
+			end
+		end
 
 		--coach feature
 		if (not Details.Coach.Server.IsEnabled()) then
@@ -1157,10 +1291,25 @@ end
 			end
 		end
 
+		Details:StopCombatTicker()
 		Details:SairDoCombate()
+		return false
 	end
 
-	function _detalhes:FindGUIDFromName (name)
+	function Details:StartCombatTicker()
+		if (Details.CombatTicker) then
+			Details.CombatTicker:Cancel()
+		end
+		Details.CombatTicker = Details.Schedules.NewTicker(1, combatTicker)
+	end
+
+	function Details:StopCombatTicker()
+		if (Details.CombatTicker) then
+			Details.CombatTicker:Cancel()
+		end
+	end
+
+	function Details:FindGUIDFromName (name) --deprecated? couldn't find any usage at november 2023
 		if (IsInRaid()) then
 			for i = 1, GetNumGroupMembers(), 1 do
 				local this_name, _ = UnitName ("raid"..i)
@@ -1176,15 +1325,15 @@ end
 				end
 			end
 		end
-		if (UnitName ("player") == name) then
+		if (UnitName ("player") == name or Details.playername == name) then
 			return UnitGUID("player")
 		end
 		return nil
 	end
 
 	--[[ test grayscale ]]
-	function _detalhes:teste_grayscale()
-		local instancia = _detalhes.tabela_instancias[1]
+	function Details:teste_grayscale()
+		local instancia = Details.tabela_instancias[1]
 		for i = 1, instancia.rows_created, 1 do
 			local barra = instancia.barras[i]
 			local red, green, blue, alpha = barra.textura:GetVertexColor()
@@ -1225,7 +1374,7 @@ end
 						if (ThisGradient.Func) then
 							local okey, errortext = _pcall (ThisGradient.Func, ThisGradient.FuncParam)
 							if (not okey) then
-								_detalhes:Msg("GradientEffect() end function error:", errortext)
+								Details:Msg("GradientEffect() end function error:", errortext)
 							end
 						end
 
@@ -1301,7 +1450,7 @@ end
 			EndBlue = 1.0
 		end
 
-		local GradientFrameControl = _detalhes.listener
+		local GradientFrameControl = Details.listener
 		GradientFrameControl.gradientes = GradientFrameControl.gradientes or {}
 
 		for index = 1, #GradientFrameControl.gradientes do
@@ -1494,7 +1643,7 @@ end
 
 		--esse ALL aqui pode dar merda com as inst�ncias n�o ativadas
 		if (frame == "all") then --todas as inst�ncias
-			for _, instancia in ipairs(_detalhes.tabela_instancias) do
+			for _, instancia in ipairs(Details.tabela_instancias) do
 				if (parametros == "barras") then --hida todas as barras da inst�ncia
 					for i = 1, instancia.rows_created, 1 do
 						Details.FadeHandler.Fader(instancia.barras[i], tipo, velocidade+(i/10))
@@ -1614,7 +1763,7 @@ end
 		end
 	end
 
-	function _detalhes:name_space (barra)
+	function Details:name_space (barra)
 		--if (barra.icone_secundario_ativo) then
 		--	local tamanho = barra:GetWidth()-barra.lineText4:GetStringWidth()-16-barra:GetHeight()
 		--	barra.lineText1:SetSize(tamanho-2, 15)
@@ -1623,7 +1772,7 @@ end
 		--end
 	end
 
-	function _detalhes:name_space_info (barra)
+	function Details:name_space_info (barra)
 		if (barra.icone_secundario_ativo) then
 			local tamanho = barra:GetWidth()-barra.lineText4:GetStringWidth()-16-barra:GetHeight()
 			barra.lineText1:SetSize(tamanho-10, 15)
@@ -1633,7 +1782,7 @@ end
 		end
 	end
 
-	function _detalhes:name_space_generic (barra, separador)
+	function Details:name_space_generic (barra, separador)
 		local texto_direita_tamanho = barra.lineText4:GetStringWidth()
 		local tamanho = barra:GetWidth()-texto_direita_tamanho-16
 		if (separador) then

@@ -7,6 +7,10 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	--[[Translation missing --]]
+	L["< 4 stacks"] = "< 4 stacks"
+	--[[Translation missing --]]
+	L["5 stacks"] = "5 stacks"
 	L["Abilities"] = "Habilidades"
 	L["Add Triggers"] = "Agregar desencadenadores"
 	L["Always Active"] = "Siempre activo"

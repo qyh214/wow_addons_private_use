@@ -1,7 +1,8 @@
-## Interface: 30401
+## Interface: 30402
 ## Title: Details!: Raid Check (plugin)
 ## Notes: Show talents and item level for all members in your group, also shows food and flask state.
 ## RequiredDeps: Details
+## IconTexture: Interface\AddOns\Details\images\minimap
 
 #@no-lib-strip@
 embeds.xml

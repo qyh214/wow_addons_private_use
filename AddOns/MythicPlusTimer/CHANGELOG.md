@@ -1,3 +1,8 @@
+# MythicPlusTimer 5.3.0
+
+- Update for WoW 10.2
+
+
 # MythicPlusTimer 5.2.0
 
 - Keep objectives hidden when challenge mode completes (By benhamlin (https://github.com/benhamlin), thanks)

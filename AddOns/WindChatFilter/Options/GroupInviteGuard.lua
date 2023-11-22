@@ -66,8 +66,18 @@ O.groupInviteGuard = {
                     name = L["Allow Whispered Target"],
                     desc = L["Allow group invites from players who you sent whispers recently."]
                 },
-                modes = {
+                muteAlreadyInGroupSound = {
                     order = 4,
+                    type = "toggle",
+                    name = L["Mute Already In Group SE"],
+                    desc = L["Mute the sound effect that alerts you when you are already in a group."],
+                    set = function(info, value)
+                        W.db.groupInviteGuard[info[#info]] = value
+                        W:GetModule("GroupInviteGuard"):ProfileUpdate()
+                    end
+                },
+                modes = {
+                    order = 5,
                     type = "group",
                     inline = true,
                     name = L["Modes"],

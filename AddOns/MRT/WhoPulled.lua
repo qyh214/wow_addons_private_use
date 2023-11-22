@@ -22,14 +22,14 @@ function module.options:Load()
 		end
 	  	self.lastPull:SetText(L.WhoPulledlastPull..": "..pull)
 	  	if module.db.isPet then
-	  		self.name:SetText((module.db.whoPulled or "").." ("..PET.." "..module.db.isPet..")")
+	  		self.Name:SetText((module.db.whoPulled or "").." ("..PET.." "..module.db.isPet..")")
 	  	else
-	  		self.name:SetText(module.db.whoPulled or "")
+	  		self.Name:SetText(module.db.whoPulled or "")
 	  	end
 	end
 	
 	self.lastPull = ELib:Text(self,"",12):Point("TOP",0,-50):Top():Color()
-	self.name = ELib:Text(self,"",18):Point("TOP",0,-65):Top():Color()
+	self.Name = ELib:Text(self,"",18):Point("TOP",0,-65):Top():Color()
 	
 	self.chatCheck = ELib:Check(self,L.WhoPulledChatOption,not VMRT.WhoPulled.DisableChat):Point("BOTTOMLEFT",10,40):OnClick(function(self)
 		VMRT.WhoPulled.DisableChat = not self:GetChecked()

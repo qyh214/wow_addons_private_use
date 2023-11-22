@@ -1081,10 +1081,9 @@ function RSExplorerDetailMap:RefreshDetailTiles(mapFrame)
 					end
 					texture:SetWidth(texturePixelWidth);
 					texture:SetHeight(texturePixelHeight);
-					texture:SetTexture(exploredTextureInfo.fileDataIDs[((j - 1) * numTexturesWide) + k], nil, nil, "TRILINEAR");
-					texture:ClearAllPoints();
-					--texture:SetTexCoord(0, texturePixelWidth/textureFileWidth, 0, texturePixelHeight/textureFileHeight);
+					texture:SetTexCoord(0, texturePixelWidth/textureFileWidth, 0, texturePixelHeight/textureFileHeight);
 					texture:SetPoint("TOPLEFT", exploredTextureInfo.offsetX + (TILE_SIZE_WIDTH * (k-1)), -(exploredTextureInfo.offsetY + (TILE_SIZE_HEIGHT * (j - 1))));
+					texture:SetTexture(exploredTextureInfo.fileDataIDs[((j - 1) * numTexturesWide) + k], nil, nil, "TRILINEAR");
 					texture:SetDrawLayer("ARTWORK", -1);
 					texture:Show();
 				end

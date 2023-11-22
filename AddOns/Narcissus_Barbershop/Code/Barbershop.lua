@@ -60,54 +60,10 @@ local MainFrame, ScrollModelFrame, EditButton, EditBox, DeleteButton, PlusButton
 local BarbershopModel, ExportEditBox;
 local BarberShopUI; --Blizzard BarberShopUI
 
---[[
-NarciBarberShopModelMixin = {};
-
-local CameraUpdater = CreateFrame("Frame");
-
-function CameraUpdater:ZoomTo(value)
-    BarbershopModel:MakeCurrentCameraCustom();
-    local currentDistance = BarbershopModel:GetCameraDistance();
-    self.zoomDistance = value
-    BarbershopModel:SetCameraDistance(value);
-end
-
-function NarciBarberShopModelMixin:OnLoad()
-    self:SetUnit("player")
-    self:SetLight(true, false, -0.707, 0, -0.707, 1, 1, 1, 1, 0.5, 1, 1, 1);
-    self:SetCamera(0);
-    self:SetPortraitZoom(0.9);
-    self:SetAnimation(0, 0);
-    self:SetPaused(true);
-    self:SetKeepModelOnHide(true);
-    
-    local ScreenHeight = UIParent:GetHeight();
-    self:SetSize(ScreenHeight, ScreenHeight)
-    BarbershopModel = self;
-    self:SetViewTranslation(0, -80);
-    self:SetPosition(-0.5, 0.2, 0);
-end
-
-function NarciBarberShopModelMixin:OnShow()
-    
-end
-
-function NarciBarberShopModelMixin:OnModelLoaded()
-    self:SetPaused(true)
-end
-
-function NarciBarberShopModelMixin:ZoomTo(value)
-    CameraUpdater:ZoomTo(value)
-end
---]]
-
-
-
-----------------------------------------------------------------------------------------------------
-
 
 local HAS_ALTERNATE_FORM = false;
 local IN_ALTERNATE_FORM = false;    --For worgen, human form is the alternate form
+local IS_SAVE_SUPPORTED = true;     --Disable saves for non-Moonkin Shapeshifts
 
 local RACE_WITH_ALTERNATE_FORM = {
     [22] = "human",       --worgen
@@ -212,7 +168,7 @@ end
 
 
 local ALTERNATE_FORM_SAVED_ID = "alternateForm";   --OLD:220 (number)
-local MAX_SAVES = 10;
+local MAX_SAVES = 20;
 local NUM_ACTIVE_BUTTONS = 0;
 local SCROLLFRAME_CENTER_Y;
 
@@ -463,8 +419,11 @@ RaceAtlas.fixedModelAtlasNames = {
     [129] = "dragonriding-barbershop-icon-pterrodax",
     [123] = "dragonriding-barbershop-icon-drake",
     [126] = "dragonriding-barbershop-icon-wyvernspirit",
-
-    [125] = "dragonriding-barbershop-icon-slitherdrake",  --10.1.0
+    --10.1.0
+    [125] = "dragonriding-barbershop-icon-slitherdrake",
+    --10.2.0
+    [149] = "dragonriding-barbershop-icon-netherwingdrake",
+    [188] = "dragonriding-barbershop-icon-faeriedragon",
 };
 
 function RaceAtlas:GetAtlas(raceName, gender, alternateForm)
@@ -710,15 +669,18 @@ function DataProvider:IsCharacterDataUnique(customizationData)
         end
     end
 
-    if isUnique then
-        if numLooks < MAX_SAVES then
-            PlusButton:SetCase(1);
+    if IS_SAVE_SUPPORTED then
+        if isUnique then
+            if numLooks < MAX_SAVES then
+                PlusButton:SetCase(1);
+            else
+                PlusButton:SetCase(3);
+            end
         else
-            PlusButton:SetCase(3);
+            PlusButton:SetCase(2);
         end
-    else
-        PlusButton:SetCase(2);
     end
+
     PlusButton.numSaves = numLooks;
 
     if SavedLookButtons then
@@ -934,7 +896,7 @@ function CustomizationUtil:ApplyCustomizationCategoryData(customizationCategoryD
     if firstCall then
         After(0.033, function()
             self:ApplyCustomizationCategoryData(customizationCategoryData);
-            DataProvider:IsCharacterDataUnique(customizationCategoryData);
+            DataProvider:IsCharacterDataUnique();
         end);
     end
 end
@@ -1310,11 +1272,14 @@ function NarciBarberShopPlusButtonMixin:OnEnter()
 
     local labelWidth = self.Label:GetWrappedWidth();
     self.Count:SetPoint("LEFT", self.Label, "LEFT", labelWidth + 8, 0);
-    if self.numSaves then
-        self.Count:SetText(self.numSaves.." / "..MAX_SAVES);
-        self.Count:Show();
-    else
-        self.Count:Hide();
+
+    if IS_SAVE_SUPPORTED then
+        if self.numSaves then
+            self.Count:SetText(self.numSaves.." / "..MAX_SAVES);
+            self.Count:Show();
+        else
+            self.Count:Hide();
+        end
     end
 end
 
@@ -1681,9 +1646,9 @@ function NarciBarberShopMixin:OnLeave()
     end
 end
 
-function NarciBarberShopMixin:ToggleSaves(visible)
+function NarciBarberShopMixin:ToggleSaves(savable)
     --For Shapeshifter
-    if visible then
+    if savable then
         self.SavedLooksFrame:Show();
         self:FadeIn(0.2);
     else
@@ -1691,6 +1656,8 @@ function NarciBarberShopMixin:ToggleSaves(visible)
         self.SavedLooksFrame:Hide();
         self:SetAlpha(0);
     end
+
+    IS_SAVE_SUPPORTED = savable;
 end
 
 local SCROLL_OFFSETS = {};  --Used to preserve the scroll offset of the old category
@@ -1706,7 +1673,7 @@ function NarciBarberShopMixin:UpdateCategory(sex, raceName)
     local chrModelID = C_BarberShop.GetViewingChrModel();
 
     if chrModelID then
-        --Dragonriding
+        --Dragonriding / Druid Forms
         modelPoolID = chrModelID;
         raceName = chrModelID;
         databaseKey = "chrModel"..chrModelID;
@@ -1780,7 +1747,7 @@ function NarciBarberShopMixin:OnBarberShopOpen()
     if self.initialCustomizationData then
         for _, categoryData in ipairs(self.initialCustomizationData) do
             if categoryData.chrModelID then
-                isDragonriding = true;
+                isDragonriding = API.IsDragonridingChrModel(categoryData.chrModelID);
                 break
             end
         end
@@ -1794,6 +1761,8 @@ function NarciBarberShopMixin:OnBarberShopOpen()
         self.initialIconAtlas = currentCharacterData.raceData and currentCharacterData.raceData.createScreenIconAtlas;
         raceName = GetRaceFileName(currentCharacterData);
     end
+
+    IS_SAVE_SUPPORTED = true;   --Reset druid form flag
     self:UpdateCategory(sex, raceName);
     StatManager:OnBarberShopOpen();
 end
@@ -1874,10 +1843,11 @@ local function HookMixin()
     end);
 
     hooksecurefunc(C_BarberShop, "SetViewingShapeshiftForm", function(formID)
-        if formID then
-            MainFrame:ToggleSaves(false);
-        else
+        MainFrame:UpdateCategory();
+        if API.IsFormSavable(formID) then
             MainFrame:ToggleSaves(true);
+        else
+            MainFrame:ToggleSaves(false);
         end
     end);
 
@@ -1955,15 +1925,13 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
             MainFrame:UpdateCategory();
             MainFrame:OnBarberShopOpen();
 
-            
-           --[[
-            if true then
+            --[[
+            if false then
                 C_Timer.After(0.5 , function()
                     BarberShopUI:SetPropagateKeyboardInput(true);    --DEBUG
                 end)
             end
             --]]
-           
         end
     elseif event == "BARBER_SHOP_OPEN" then
         MainFrame:OnBarberShopOpen();
@@ -1982,7 +1950,7 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
         else
             BarberShopUI:Cancel();
         end
-        StatManager:UpdateMoney();
+        --StatManager:UpdateMoney();
     end
 end)
 
@@ -2101,10 +2069,11 @@ local TabData = {
 
     { name = "Statistics", order = 0, localizedName = STATISTICS,
         layout = {
-            { name = "Money", type = "header", localizedName = L["Coins Spent"] },
-            { name = "CoinsSpentSinceShadowlands", type="money", localizedName = "9.0+", tooltip = "Coins spent since 9.0"},
-            { name = "CoinsSpentLifetime", type="money", localizedName = HONOR_LIFETIME, tooltip = "Coins spent during lifetime"},
-            { name = "Blank", type="header", localizedName=" ",},
+            --Barbershop service is free now. Remove money stats
+            --{ name = "Money", type = "header", localizedName = L["Coins Spent"] },
+            --{ name = "CoinsSpentSinceShadowlands", type="money", localizedName = "9.0+", tooltip = "Coins spent since 9.0"},
+            --{ name = "CoinsSpentLifetime", type="money", localizedName = HONOR_LIFETIME, tooltip = "Coins spent during lifetime"},
+            --{ name = "Blank", type="header", localizedName=" ",},
             { name = "LocationHeader", type = "location", localizedName = L["Locations"] },
         },
     },
@@ -2200,7 +2169,7 @@ local function CreateTabs(frame)
                     object:SetHeader();
                     totalHeight = totalHeight + 16;
                     StatManager.widgets[objectData.name] = object;
-                    
+
                 end
             end
 
@@ -2492,6 +2461,10 @@ function NarciDevToolPortraitMixin:OnLoad()
     self.ReloadButton:SetScript("OnClick", function()
         self:LoadProfile();
     end)
+
+    self.Model:SetScript("OnModelLoaded", function(self)
+        print("ModelFileID:", self:GetModelFileID())
+    end);
 end
 
 function NarciDevToolPortraitMixin:OnShow()
@@ -2587,6 +2560,8 @@ function NarciBarberShopLoadingFrameMixin:LoadPortraits()
         self.total = total;
     end
 
+    MainFrame.initialCustomizationData = C_BarberShop.GetAvailableCustomizations();
+
     self.Name:SetText(Narci.L["Loading Portraits"] .."...");
     self.current = fromID - 1;
     self.Ring.AnimSpin:Play();
@@ -2633,10 +2608,11 @@ function NarciBarberShopLoadingFrameMixin:OnLoadingComplete()
     --self:Hide();
     FadeFrame(self, 0.5, 0);
 
+    MainFrame:ResetCustomizationInternally();
+
     if MainFrame:IsCharacterCategoryChanged() then
-        local customizationCategoryData = C_BarberShop.GetAvailableCustomizations();
-        DataProvider:IsCharacterDataUnique(customizationCategoryData);
+
     else
-        MainFrame:ResetCustomizationInternally();
+
     end
 end

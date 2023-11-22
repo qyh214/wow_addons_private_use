@@ -65,7 +65,7 @@ end
 function RSMapDB.GetContinentOfMap(mapID)
 	if (mapID) then
 		for continentID, info in pairs(RSMapDB.GetContinents()) do
-			if (RSUtils.Contains(info, mapID)) then
+			if (RSUtils.Contains(info.zones, mapID)) then
 				if (info.zonefilter and info.npcfilter) then
 					return continentID
 				else

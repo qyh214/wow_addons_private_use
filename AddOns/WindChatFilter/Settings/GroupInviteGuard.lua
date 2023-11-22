@@ -4,7 +4,8 @@ P.groupInviteGuard = {
     enabled = true,
     displayMessageAfterRejecting = true,
     allowWhisperedTarget = true,
-    smartMode = true,
-    onlyFriendsOrGuildMembers = false,
+    smartMode = false,
+    muteAlreadyInGroupSound = true,
+    onlyFriendsOrGuildMembers = true,
     chatFilterMode = false
 }

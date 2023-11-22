@@ -13,7 +13,9 @@ local GetInfoByInventoryItem = C_TooltipInfo.GetInventoryItem;
 
 --C_TooltipInfo.GetInventoryItem("player", 13, true)
 --TooltipDataLineType
-local TP_LINE_TYPE_SOCKET = 3;
+local LINE_TYPE_SOCKET = 3;
+local LINE_TYPE_TOY_EFFECT = Enum.TooltipDataLineType.ToyEffect;
+local LINE_TYPE_TOY_DESC = Enum.TooltipDataLineType.ToyDescription;
 
 local strtrim = strtrim;
 local strsub = string.sub;
@@ -32,12 +34,14 @@ local max = math.max;
 
 local _G = _G;
 local L = Narci.L;
+local NarciAPI = NarciAPI;
 local TEXT_LOCALE = GetLocale();
 
 local GetItemInfoInstant = GetItemInfoInstant;
 local GetItemGem = GetItemGem;
 local GetItemStats = GetItemStats;
 local GetInventoryItemLink = GetInventoryItemLink;
+local StripHyperlinks = StripHyperlinks;    --Added in 10.1.0
 
 local function IsArtifactRelic(item)
     --an alternative to IsArtifactRelicItem()
@@ -160,6 +164,11 @@ local PATTERN_CLASS_REQUIREMENT = Pattern_WrapSpace(ITEM_CLASSES_ALLOWED);
 local PATTERN_AMMO_DPS = gsub(AMMO_DAMAGE_TEMPLATE, "%%s", "([%%d.]+)");
 local PATTERN_PROFESSION_QUALITY = Pattern_WrapSpace(PROFESSIONS_CRAFTING_QUALITY or "Quality: %s");
 local PATTERN_ITEM_LEVEL = ITEM_LEVEL or "Item Level";
+local PATTERN_UPGRADE_TRACK_NAME = gsub(ITEM_UPGRADE_TOOLTIP_FORMAT_STRING or "Upgrade Level: %s %d/%d", "%%s", "(%%D+)");
+
+local ITEM_UPGRADE_TRACK_LEVELS = {
+    --[TrackName] = maxItemLevel
+};
 
 local SOCKET_TYPE_TEXTURE =	{
     Yellow = "Yellow",
@@ -981,6 +990,11 @@ local function GetCompleteItemData(tooltipData, itemLink)
                             end
                             data.upgradeString = strtrim(match1);
                             anyMatch = true;
+
+                            local trackName = match(lineText, PATTERN_UPGRADE_TRACK_NAME);
+                            if trackName and ITEM_UPGRADE_TRACK_LEVELS[trackName] then
+                                data.fullyUpgradedItemLevel = ITEM_UPGRADE_TRACK_LEVELS[trackName];
+                            end
                         end
                     end
                 end
@@ -1062,7 +1076,7 @@ local function GetCompleteItemData(tooltipData, itemLink)
 
                     if not anyMatch then
                         --socket
-                        if lines[i].type and (lines[i].type == TP_LINE_TYPE_SOCKET) then   --type:GemSocket/
+                        if lines[i].type and (lines[i].type == LINE_TYPE_SOCKET) then   --type:GemSocket/
                             if not data then
                                 data = {};
                             end
@@ -1305,7 +1319,7 @@ local function IsItemSocketable(itemLink, socketID)
     local numLines = #lines;
 
     for i = 4, numLines do     --max 10
-        if lines[i] and lines[i].type and lines[i].type == TP_LINE_TYPE_SOCKET then
+        if lines[i] and lines[i].type and lines[i].type == LINE_TYPE_SOCKET then
             return lines[i].leftText, nil
         end
     end
@@ -1368,7 +1382,7 @@ local function GetItemSocketInfo(itemLink)
     gemOrderID = 0;
 
     for i = 4, numLines do     --max 10
-        if lines[i] and lines[i].type and lines[i].type == TP_LINE_TYPE_SOCKET then
+        if lines[i] and lines[i].type and lines[i].type == LINE_TYPE_SOCKET then
             gemOrderID = gemOrderID + 1;
             if not socektInfo then
                 socektInfo = {};
@@ -1750,5 +1764,93 @@ function TestSetProfessionQuality(quality, small)
     end
     
     TT:SetAtlas(atlas, true);
+
+    C_TooltipInfo.GetHyperlink("item:202557::::::::70:261::4:1:3524:1:28:2648")
 end
 --]]
+
+local function GetAvailableItemUpgradeTracks()
+    local bonusInfo = {
+        --{bonusID, maxItemLevel}
+        {9294, 398},  --Explorer
+        {9302, 411},  --Adventurer
+        {9313, 424},  --Veteran 1/8    --LFG
+        {9321, 437},  --Champion 1/8   --Normal
+        {9330, 441},  --Hero 1/5       --Heroic
+        {9380, 447},  --Myth 1/3       --Mythic added in 10.1.5
+    };
+
+    local tooltipData;
+    local trackName;
+    local upgradeText;
+
+    for _, info in ipairs(bonusInfo) do
+        tooltipData = C_TooltipInfo.GetHyperlink("item:2092::::::::::::1:"..info[1]);
+        if tooltipData and tooltipData.lines then
+            upgradeText = GetLineText(tooltipData.lines, 3);
+            if upgradeText and upgradeText ~= "" then
+                trackName = match(upgradeText, PATTERN_UPGRADE_TRACK_NAME);
+                if trackName then
+                    ITEM_UPGRADE_TRACK_LEVELS[trackName] = info[2];
+                end
+            end
+        end
+    end
+end
+
+GetAvailableItemUpgradeTracks();
+C_Timer.After(8, GetAvailableItemUpgradeTracks);
+
+
+local function Debug_PrintItemBonus(fromID)
+    local tooltipData, context;
+    local defaultText = _G.ITEM_BIND_ON_EQUIP or "Binds when equipped";
+
+    for bonusID = fromID, fromID + 500 do
+        tooltipData = C_TooltipInfo.GetHyperlink("item:2092::::::::::::1:"..bonusID);
+        if tooltipData and tooltipData.lines then
+            context = GetLineText(tooltipData.lines, 3);
+            if context and context ~= "" and context ~= defaultText then
+                print(bonusID, context);
+            end
+        else
+            print("Throttled");
+            break
+        end
+    end
+end
+
+NarciAPI.DebugPrintItemBonus = Debug_PrintItemBonus;
+
+
+local function GetToyEffect(item)
+    local itemID;
+    if type(item) == "number" then
+        itemID = item;
+    else
+        itemID = GetItemInfoInstant(item);
+    end
+
+    local tooltipData = C_TooltipInfo.GetToyByItemID(itemID);
+    if not (tooltipData and tooltipData.lines) then return end;
+
+    local toyEffect, toyDescription;
+
+    for i, lineData in ipairs(tooltipData.lines) do
+        if lineData.leftText then
+            if lineData.type == LINE_TYPE_TOY_EFFECT then
+                toyEffect = StripHyperlinks(lineData.leftText);
+                toyEffect = lineData.leftColor:WrapTextInColorCode(toyEffect);
+            elseif lineData.type == LINE_TYPE_TOY_DESC then
+                toyDescription = StripHyperlinks(lineData.leftText);
+                toyDescription = lineData.leftColor:WrapTextInColorCode(toyDescription);
+            end
+
+            if toyEffect and toyDescription then break end;
+        end
+    end
+
+    return toyEffect, toyDescription
+end
+
+NarciAPI.GetToyEffect = GetToyEffect;

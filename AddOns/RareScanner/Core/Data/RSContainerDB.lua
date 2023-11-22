@@ -166,6 +166,15 @@ function RSContainerDB.IsWorldMap(containerID)
 	end
 end
 
+function RSContainerDB.IsDisabledEvent(containerID)
+	if (containerID) then
+		local containerInfo = RSContainerDB.GetInternalContainerInfo(containerID)
+		return containerInfo and containerInfo.event and not RSConstants.EVENTS[containerInfo.event]
+	end
+	
+	return false
+end
+
 ---============================================================================
 -- Container Loot internal database
 ----- Stores Container loot included with the addon
@@ -315,7 +324,15 @@ end
 
 function RSContainerDB.GetContainerName(containerID)
 	if (containerID) then
-		if (RSUtils.Contains(RSConstants.RELIC_CACHE, containerID)) then
+		-- Fix for Small Somnut showing as Magical Bloom
+		if (containerID == 408719) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL[string.format("CONTAINER_%s", containerID)]
+			return AL[string.format("CONTAINER_%s", containerID)]
+		elseif (private.dbglobal.object_names[GetLocale()][containerID]) then
+			return private.dbglobal.object_names[GetLocale()][containerID]
+		elseif (AL[string.format("CONTAINER_%s", containerID)] ~= string.format("CONTAINER_%s", containerID)) then
+			return AL[string.format("CONTAINER_%s", containerID)]
+		elseif (RSUtils.Contains(RSConstants.RELIC_CACHE, containerID)) then
 			private.dbglobal.object_names[GetLocale()][containerID] = AL["RELIC_CACHE"]
 			return AL["RELIC_CACHE"]
 		elseif (RSUtils.Contains(RSConstants.PILE_BONES, containerID)) then
@@ -330,10 +347,165 @@ function RSContainerDB.GetContainerName(containerID)
 		elseif (RSUtils.Contains(RSConstants.FIRIM_EXILE_OBJECTS, containerID)) then
 			private.dbglobal.object_names[GetLocale()][containerID] = AL["NOTE_FIRIM_EXILE"]
 			return AL["NOTE_FIRIM_EXILE"]
-		elseif (private.dbglobal.object_names[GetLocale()][containerID]) then
-			return private.dbglobal.object_names[GetLocale()][containerID]
-		elseif (AL[string.format("CONTAINER_%s", containerID)] ~= string.format("CONTAINER_%s", containerID)) then
-			return AL[string.format("CONTAINER_%s", containerID)]
+		elseif (RSUtils.Contains(RSConstants.RUMBLE_COIN_BAG, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["RUMBLE_COIN_BAG"]
+			return AL["RUMBLE_COIN_BAG"]
+		elseif (RSUtils.Contains(RSConstants.RUMBLE_FOIL_BAG, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["RUMBLE_FOIL_BAG"]
+			return AL["RUMBLE_FOIL_BAG"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_INFESTED_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_INFESTED_CACHE"]
+			return AL["CONTAINERS_INFESTED_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_JANIS_STASH, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_JANIS_STASH"]
+			return AL["CONTAINERS_JANIS_STASH"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_BLACK_EMPIRE_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_BLACK_EMPIRE_CACHE"]
+			return AL["CONTAINERS_BLACK_EMPIRE_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_DARKSHORE_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_DARKSHORE_CACHE"]
+			return AL["CONTAINERS_DARKSHORE_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_INVASIVE_MAWSHROOM, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_INVASIVE_MAWSHROOM"]
+			return AL["CONTAINERS_INVASIVE_MAWSHROOM"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_LUNARLIGHT_POD, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_LUNARLIGHT_POD"]
+			return AL["CONTAINERS_LUNARLIGHT_POD"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_AMATHET_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_AMATHET_CACHE"]
+			return AL["CONTAINERS_AMATHET_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_VOID_SEEPED_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_VOID_SEEPED_CACHE"]
+			return AL["CONTAINERS_VOID_SEEPED_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_LEGION_WAR_SUPPLIES, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_LEGION_WAR_SUPPLIES"]
+			return AL["CONTAINERS_LEGION_WAR_SUPPLIES"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_CURIOUS_GRAIN_SACK, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_CURIOUS_GRAIN_SACK"]
+			return AL["CONTAINERS_CURIOUS_GRAIN_SACK"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_PUGILISTS_PRIZE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_PUGILISTS_PRIZE"]
+			return AL["CONTAINERS_PUGILISTS_PRIZE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SKYWARD_BELL, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SKYWARD_BELL"]
+			return AL["CONTAINERS_SKYWARD_BELL"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_BROKEN_BELL, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_BROKEN_BELL"]
+			return AL["CONTAINERS_BROKEN_BELL"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_ENCHANTED_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_ENCHANTED_CHEST"]
+			return AL["CONTAINERS_ENCHANTED_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_TEST_OF_PENITENCE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_TEST_OF_PENITENCE"]
+			return AL["CONTAINERS_TEST_OF_PENITENCE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_DECAYED_HUSK, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_DECAYED_HUSK"]
+			return AL["CONTAINERS_DECAYED_HUSK"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SECRET_TREASURE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SECRET_TREASURE"]
+			return AL["CONTAINERS_SECRET_TREASURE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_MECHANIZED_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_MECHANIZED_CHEST"]
+			return AL["CONTAINERS_MECHANIZED_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_TREASURE_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_TREASURE_CHEST"]
+			return AL["CONTAINERS_TREASURE_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_ARCANE_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_ARCANE_CHEST"]
+			return AL["CONTAINERS_ARCANE_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_EREDAR_WAR_SUPPLIES, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_EREDAR_WAR_SUPPLIES"]
+			return AL["CONTAINERS_EREDAR_WAR_SUPPLIES"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SHIMMERING_ANCIENT_MANA_CLUSTER, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SHIMMERING_ANCIENT_MANA_CLUSTER"]
+			return AL["CONTAINERS_SHIMMERING_ANCIENT_MANA_CLUSTER"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SPROUTING_GROWTH, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SPROUTING_GROWTH"]
+			return AL["CONTAINERS_SPROUTING_GROWTH"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_BURIED_TREASURE_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_BURIED_TREASURE_CHEST"]
+			return AL["CONTAINERS_BURIED_TREASURE_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_LOOSE_PARTS, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_LOOSE_PARTS"]
+			return AL["CONTAINERS_LOOSE_PARTS"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SMALL_TREASURE_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SMALL_TREASURE_CHEST"]
+			return AL["CONTAINERS_SMALL_TREASURE_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_FULL_GARRISON_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_FULL_GARRISON_CACHE"]
+			return AL["CONTAINERS_FULL_GARRISON_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_MOGU_PLUNDER, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_MOGU_PLUNDER"]
+			return AL["CONTAINERS_MOGU_PLUNDER"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_AMBERED_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_AMBERED_CACHE"]
+			return AL["CONTAINERS_AMBERED_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_SILVER_STRONGBOX, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_SILVER_STRONGBOX"]
+			return AL["CONTAINERS_SILVER_STRONGBOX"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_GARRISON_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_GARRISON_CACHE"]
+			return AL["CONTAINERS_GARRISON_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_CURSED_TREASURE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_CURSED_TREASURE"]
+			return AL["CONTAINERS_CURSED_TREASURE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_RUNEBOUND_COFFER, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_RUNEBOUND_COFFER"]
+			return AL["CONTAINERS_RUNEBOUND_COFFER"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_HIDDEN_HOARD, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_HIDDEN_HOARD"]
+			return AL["CONTAINERS_HIDDEN_HOARD"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_FAERIE_STASH, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_FAERIE_STASH"]
+			return AL["CONTAINERS_FAERIE_STASH"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_A_DAMP_SCROLL, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_A_DAMP_SCROLL"]
+			return AL["CONTAINERS_A_DAMP_SCROLL"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_DISTURBED_DIRT, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_DISTURBED_DIRT"]
+			return AL["CONTAINERS_DISTURBED_DIRT"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_RIFTBOUND_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_RIFTBOUND_CACHE"]
+			return AL["CONTAINERS_RIFTBOUND_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_GLOWING_ARCANE_TRUNK, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_GLOWING_ARCANE_TRUNK"]
+			return AL["CONTAINERS_GLOWING_ARCANE_TRUNK"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_ELIXIR_OF_SHADOW_SIGHT, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_ELIXIR_OF_SHADOW_SIGHT"]
+			return AL["CONTAINERS_ELIXIR_OF_SHADOW_SIGHT"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_RIFT_HIDDEN_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_RIFT_HIDDEN_CACHE"]
+			return AL["CONTAINERS_RIFT_HIDDEN_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_DIM_LUNARLIGHT_POD, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_DIM_LUNARLIGHT_POD"]
+			return AL["CONTAINERS_DIM_LUNARLIGHT_POD"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_MAGIC_BOUND_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_MAGIC_BOUND_CHEST"]
+			return AL["CONTAINERS_MAGIC_BOUND_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_ANCIENT_EREDAR_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_ANCIENT_EREDAR_CACHE"]
+			return AL["CONTAINERS_ANCIENT_EREDAR_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_NEST_OF_UNUSUAL_MATERIALS, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_NEST_OF_UNUSUAL_MATERIALS"]
+			return AL["CONTAINERS_NEST_OF_UNUSUAL_MATERIALS"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_WAR_SUPPLY_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_WAR_SUPPLY_CHEST"]
+			return AL["CONTAINERS_WAR_SUPPLY_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_MAWSWORN_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_MAWSWORN_CACHE"]
+			return AL["CONTAINERS_MAWSWORN_CACHE"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_HARMONIC_CHEST, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_HARMONIC_CHEST"]
+			return AL["CONTAINERS_HARMONIC_CHEST"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_STONEBORN_SATCHEL, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_STONEBORN_SATCHEL"]
+			return AL["CONTAINERS_STONEBORN_SATCHEL"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_UNWAKING_ECHO, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_UNWAKING_ECHO"]
+			return AL["CONTAINERS_UNWAKING_ECHO"]
+		elseif (RSUtils.Contains(RSConstants.CONTAINERS_DREAMSEED_CACHE, containerID)) then
+			private.dbglobal.object_names[GetLocale()][containerID] = AL["CONTAINERS_DREAMSEED_CACHE"]
+			return AL["CONTAINERS_DREAMSEED_CACHE"]
 		end
 	end
 

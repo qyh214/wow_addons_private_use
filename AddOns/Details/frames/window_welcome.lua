@@ -28,7 +28,7 @@ function _detalhes:OpenWelcomeWindow()
 		window:SetScript("OnMouseDown", function() window:StartMoving() end)
 		window:SetScript("OnMouseUp", function() window:StopMovingOrSizing() end)
 		window:SetScript("OnHide", function()
-			_detalhes.tabela_historico:resetar()
+			_detalhes.tabela_historico:ResetAllCombatData()
 
 			if (DetailsFramework.IsClassicWow()) then
 				local new_instance = Details:GetWindow (1)
@@ -185,8 +185,19 @@ function _detalhes:OpenWelcomeWindow()
 	local frame_alert = CreateFrame("frame", nil, window)
 	frame_alert:SetPoint("topright", window)
 	function _detalhes:StopPlayStretchAlert()
-		frame_alert.alert.animIn:Stop()
-		frame_alert.alert.animOut:Play()
+		if (frame_alert.alert.animOut) then
+			if (not frame_alert.alert.animOut:IsPlaying()) then
+				frame_alert.alert.animOut:Stop()
+				frame_alert.alert.animOut:Play()
+			end
+			if (not frame_alert.alert.animIn:IsPlaying()) then
+				frame_alert.alert.animIn:Stop()
+			end
+		elseif (frame_alert.alert.ProcStartAnim) then
+			if (not frame_alert.alert.ProcStartAnim:IsPlaying()) then
+				frame_alert.alert.ProcStartAnim:Stop()
+			end
+		end
 		_detalhes.stopwelcomealert = nil
 	end
 	frame_alert.alert = CreateFrame("frame", "DetailsWelcomeWindowAlert", UIParent, "ActionBarButtonSpellActivationAlert")
@@ -321,7 +332,7 @@ local window_openned_at = time()
 				local instance1 = Details:GetInstance(1)
 				local instance2 = Details:GetInstance(2)
 
-				_detalhes.tabela_historico:resetar()
+				_detalhes.tabela_historico:ResetAllCombatData()
 
 				if (fixedParameter == 1) then --latin
 					if (instance1 and instance1:IsEnabled()) then
@@ -395,8 +406,8 @@ local window_openned_at = time()
 			window.LatinAlphabetCheckBox.OnSwitch = onSelectAlphabet
 			window.LatinAlphabetLabel:SetPoint("left", window.LatinAlphabetCheckBox, "right", 2, 0)
 
-			tinsert(allAlphabetCheckBoxes, window.LatinAlphabetCheckBox)
-			tinsert(allAlphabetLabels, window.LatinAlphabetLabel)
+			table.insert(allAlphabetCheckBoxes, window.LatinAlphabetCheckBox)
+			table.insert(allAlphabetLabels, window.LatinAlphabetLabel)
 
 			--Russian
 			g:NewLabel(window, _, "$parentCyrillicAlphabetLabel", "CyrillicAlphabetLabel", Loc["STRING_WELCOME_75"], "GameFontHighlightLeft")
@@ -406,8 +417,8 @@ local window_openned_at = time()
 			window.CyrillicAlphabetCheckBox:SetTemplate(g:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
 			window.CyrillicAlphabetCheckBox.OnSwitch = onSelectAlphabet
 			window.CyrillicAlphabetLabel:SetPoint("left", window.CyrillicAlphabetCheckBox, "right", 2, 0)
-			tinsert(allAlphabetCheckBoxes, window.CyrillicAlphabetCheckBox)
-			tinsert(allAlphabetLabels, window.CyrillicAlphabetLabel)
+			table.insert(allAlphabetCheckBoxes, window.CyrillicAlphabetCheckBox)
+			table.insert(allAlphabetLabels, window.CyrillicAlphabetLabel)
 
 			--Chinese
 			g:NewLabel(window, _, "$parentChinaAlphabetLabel", "ChinaAlphabetLabel", Loc["STRING_WELCOME_76"], "GameFontHighlightLeft")
@@ -417,8 +428,8 @@ local window_openned_at = time()
 			window.ChinaCheckBox:SetTemplate(g:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
 			window.ChinaCheckBox.OnSwitch = onSelectAlphabet
 			window.ChinaAlphabetLabel:SetPoint("left", window.ChinaCheckBox, "right", 2, 0)
-			tinsert(allAlphabetCheckBoxes, window.ChinaCheckBox)
-			tinsert(allAlphabetLabels, window.ChinaAlphabetLabel)
+			table.insert(allAlphabetCheckBoxes, window.ChinaCheckBox)
+			table.insert(allAlphabetLabels, window.ChinaAlphabetLabel)
 
 			--Korea
 			g:NewLabel(window, _, "$parentKoreanAlphabetLabel", "KoreanAlphabetLabel", Loc["STRING_WELCOME_77"], "GameFontHighlightLeft")
@@ -428,8 +439,8 @@ local window_openned_at = time()
 			window.KoreanCheckBox:SetTemplate(g:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
 			window.KoreanCheckBox.OnSwitch = onSelectAlphabet
 			window.KoreanAlphabetLabel:SetPoint("left", window.KoreanCheckBox, "right", 2, 0)
-			tinsert(allAlphabetCheckBoxes, window.KoreanCheckBox)
-			tinsert(allAlphabetLabels, window.KoreanAlphabetLabel)
+			table.insert(allAlphabetCheckBoxes, window.KoreanCheckBox)
+			table.insert(allAlphabetLabels, window.KoreanAlphabetLabel)
 
 			--Taiwan
 			g:NewLabel(window, _, "$parentTaiwanAlphabetLabel", "TaiwanAlphabetLabel", Loc["STRING_WELCOME_78"], "GameFontHighlightLeft")
@@ -439,8 +450,8 @@ local window_openned_at = time()
 			window.TaiwanCheckBox:SetTemplate(g:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE"))
 			window.TaiwanCheckBox.OnSwitch = onSelectAlphabet
 			window.TaiwanAlphabetLabel:SetPoint("left", window.TaiwanCheckBox, "right", 2, 0)
-			tinsert(allAlphabetCheckBoxes, window.TaiwanCheckBox)
-			tinsert(allAlphabetLabels, window.TaiwanAlphabetLabel)
+			table.insert(allAlphabetCheckBoxes, window.TaiwanCheckBox)
+			table.insert(allAlphabetLabels, window.TaiwanAlphabetLabel)
 
 			window.LatinAlphabetCheckBox:SetPoint("topleft", texto_alphabet, "bottomleft", 0, -10)
 			window.CyrillicAlphabetCheckBox:SetPoint("topleft", window.LatinAlphabetCheckBox, "bottomleft", 0, -2)
@@ -642,10 +653,10 @@ local window_openned_at = time()
 
 		pages [#pages+1] = {skins_frame_alert, bg55, texto55, texto_alphabet, texto555, skins_image, changemind, texto_appearance, font_label, font_dropdown, skin_dropdown, skin_label, create_window_button, window_color, window.BarHeightLabel, window.BarHeightSlider, window.TextSizeLabel, window.TextSizeSlider, window.ShowPercentLabel, window.ShowPercentCheckBox}
 		for i, widget in ipairs(allAlphabetCheckBoxes) do
-			tinsert(pages [#pages], widget)
+			table.insert(pages [#pages], widget)
 		end
 		for i, widget in ipairs(allAlphabetLabels) do
-			tinsert(pages [#pages], widget)
+			table.insert(pages [#pages], widget)
 		end
 
 		for _, widget in ipairs(pages[#pages]) do
@@ -1043,7 +1054,7 @@ local window_openned_at = time()
 		local update_frame_alert = CreateFrame("frame", nil, window)
 		update_frame_alert:SetScript("OnShow", function()
 
-			_detalhes.tabela_historico:resetar()
+			_detalhes.tabela_historico:ResetAllCombatData()
 			created_test_bars = 0
 
 			_detalhes.zone_type = "pvp"
@@ -1120,9 +1131,19 @@ local window_openned_at = time()
 			instance.baseframe.button_stretch:SetAlpha(1)
 			frame_alert.alert:SetPoint("topleft", instance.baseframe.button_stretch, "topleft", -20, 6)
 			frame_alert.alert:SetPoint("bottomright", instance.baseframe.button_stretch, "bottomright", 20, -14)
-
-			frame_alert.alert.animOut:Stop()
-			frame_alert.alert.animIn:Play()
+			if (frame_alert.alert.animOut) then
+				if (frame_alert.alert.animOut:IsPlaying()) then
+					frame_alert.alert.animOut:Stop()
+				end
+				if (not frame_alert.alert.animIn:IsPlaying()) then
+					frame_alert.alert.animIn:Stop()
+					frame_alert.alert.animIn:Play()
+				end
+			elseif (frame_alert.alert.ProcStartAnim) then
+				if (not frame_alert.alert.ProcStartAnim:IsPlaying()) then
+					frame_alert.alert.ProcStartAnim:Play()
+				end
+			end
 			if (_detalhes.stopwelcomealert) then
 				_detalhes:CancelTimer(_detalhes.stopwelcomealert)
 			end
@@ -1178,8 +1199,19 @@ local window_openned_at = time()
 			frame_alert.alert:SetPoint("topleft", instance.baseframe.cabecalho.modo_selecao.widget, "topleft", -8, 6)
 			frame_alert.alert:SetPoint("bottomright", instance.baseframe.cabecalho.modo_selecao.widget, "bottomright", 8, -6)
 
-			frame_alert.alert.animOut:Stop()
-			frame_alert.alert.animIn:Play()
+			if (frame_alert.alert.animOut) then
+				if (frame_alert.alert.animOut:IsPlaying()) then
+					frame_alert.alert.animOut:Stop()
+				end
+				if (not frame_alert.alert.animIn:IsPlaying()) then
+					frame_alert.alert.animIn:Stop()
+					frame_alert.alert.animIn:Play()
+				end
+			elseif (frame_alert.alert.ProcStartAnim) then
+				if (not frame_alert.alert.ProcStartAnim:IsPlaying()) then
+					frame_alert.alert.ProcStartAnim:Play()
+				end
+			end
 			if (_detalhes.stopwelcomealert) then
 				_detalhes:CancelTimer(_detalhes.stopwelcomealert)
 			end
@@ -1297,7 +1329,7 @@ local window_openned_at = time()
 
 		local group_frame_alert = CreateFrame("frame", nil, window)
 		group_frame_alert:SetScript("OnShow", function()
-			_detalhes.tabela_historico:resetar()
+			_detalhes.tabela_historico:ResetAllCombatData()
 			created_test_bars = 0
 		end)
 
@@ -1342,7 +1374,7 @@ local window_openned_at = time()
 		local tooltip_frame = CreateFrame("frame", nil, window)
 		tooltip_frame:SetScript("OnShow", function(self)
 
-			_detalhes.tabela_historico:resetar()
+			_detalhes.tabela_historico:ResetAllCombatData()
 			created_test_bars = 0
 
 			local current_combat = _detalhes:GetCombat("current")
@@ -1412,8 +1444,19 @@ local window_openned_at = time()
 			frame_alert.alert:SetPoint("topleft", bar1, "topleft", -60, 8)
 			frame_alert.alert:SetPoint("bottomright", bar1, "bottomright", 60, -10)
 
-			frame_alert.alert.animOut:Stop()
-			frame_alert.alert.animIn:Play()
+			if (frame_alert.alert.animOut) then
+				if (frame_alert.alert.animOut:IsPlaying()) then
+					frame_alert.alert.animOut:Stop()
+				end
+				if (not frame_alert.alert.animIn:IsPlaying()) then
+					frame_alert.alert.animIn:Stop()
+					frame_alert.alert.animIn:Play()
+				end
+			elseif (frame_alert.alert.ProcStartAnim) then
+				if (not frame_alert.alert.ProcStartAnim:IsPlaying()) then
+					frame_alert.alert.ProcStartAnim:Play()
+				end
+			end
 			if (_detalhes.stopwelcomealert) then
 				_detalhes:CancelTimer(_detalhes.stopwelcomealert)
 			end

@@ -1,88 +1,57 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Details_DeathGraphs", "zhCN") 
 if not L then return end 
 
---[[Translation missing --]]
-L["STRING_BRESS"] = "Battle Ress"
---[[Translation missing --]]
-L["STRING_DEATH_DESC"] = "Show panel containing player deaths."
---[[Translation missing --]]
-L["STRING_DEATHS"] = "Deaths"
---[[Translation missing --]]
-L["STRING_ENCOUNTER_MAXSEGMENTS"] = "Current Encounter Max Segments"
---[[Translation missing --]]
-L["STRING_ENCOUNTER_MAXSEGMENTS_DESC"] = "Maximum amount of segments to store on the 'Current Encounter' display."
---[[Translation missing --]]
-L["STRING_ENDURANCE"] = "Endurance"
---[[Translation missing --]]
-L["STRING_ENDURANCE_DEATHS_THRESHOLD"] = "Endurance Deaths Threshold"
---[[Translation missing --]]
-L["STRING_ENDURANCE_DEATHS_THRESHOLD_DESC"] = "The first |cFFFFFF00X|r players to die loses endurance percentage."
---[[Translation missing --]]
-L["STRING_ENDURANCE_DESC"] = [=[Endurance is conceptual score where the goal is to tell who is surviving more during raid encounters.
+L["STRING_BRESS"] = "战斗复活"
+L["STRING_DEATH_DESC"] = "显示玩家死亡记录"
+L["STRING_DEATHS"] = "死亡"
+L["STRING_ENCOUNTER_MAXSEGMENTS"] = "当前战斗最大分段"
+L["STRING_ENCOUNTER_MAXSEGMENTS_DESC"] = "'当前战斗'所能显示的最大分段数。"
+L["STRING_ENDURANCE"] = "生存值"
+L["STRING_ENDURANCE_DEATHS_THRESHOLD"] = "生存值的死亡阀值"
+L["STRING_ENDURANCE_DEATHS_THRESHOLD_DESC"] = "第一个死亡的 |cFFFFFF00X|r 玩家会损失生存值百分比。"
+L["STRING_ENDURANCE_DESC"] = [=[生存值是概念性分数，其目标是告诉在团队战斗中谁更能生存。
 
-The percentage of endurance is calculated taking into account only the first deaths (configurable under '|cFFFFDD00Config Death Limits|r').]=]
---[[Translation missing --]]
-L["STRING_FLAWLESS"] = "|cFF44FF44Flawless Player!|r"
---[[Translation missing --]]
-L["STRING_HEROIC"] = "Heroic"
---[[Translation missing --]]
-L["STRING_HEROIC_DESC"] = "Record deaths when you are playing on heroic difficulty."
---[[Translation missing --]]
-L["STRING_LATEST"] = "Latest"
---[[Translation missing --]]
-L["STRING_MYTHIC"] = "Mythic"
---[[Translation missing --]]
-L["STRING_MYTHIC_DESC"] = "Record deaths when you are playing on mythic difficulty."
---[[Translation missing --]]
-L["STRING_NORMAL"] = "Normal"
---[[Translation missing --]]
-L["STRING_NORMAL_DESC"] = "Record deaths when you are playing on normal difficulty."
---[[Translation missing --]]
-L["STRING_OPTIONS"] = "Options"
---[[Translation missing --]]
-L["STRING_OVERALL_DEATHS_THRESHOLD"] = "Overall Deaths Threshold"
---[[Translation missing --]]
-L["STRING_OVERALL_DEATHS_THRESHOLD_DESC"] = "The first |cFFFFFF00X|r players to die has their deaths registered into overall deaths."
---[[Translation missing --]]
-L["STRING_OVERTIME"] = "Over Time"
---[[Translation missing --]]
-L["STRING_PLUGIN_DESC"] = [=[During boss encounters, capture raid members deaths and build statistics from it.
+生存值的百分比计算只考虑首次死亡 (可以在'|cFFFFDD00设置死亡限制|r下配置')。]=]
+L["STRING_FLAWLESS"] = "|cFF44FF44完美无瑕的玩家！|r"
+L["STRING_HEROIC"] = "英雄"
+L["STRING_HEROIC_DESC"] = "当您在英雄难度时记录死亡。"
+L["STRING_LATEST"] = "最近"
+L["STRING_MYTHIC"] = "史诗"
+L["STRING_MYTHIC_DESC"] = "当您在史诗难度时记录死亡。"
+L["STRING_NORMAL"] = "普通"
+L["STRING_NORMAL_DESC"] = "当您在普通难度时记录死亡。"
+L["STRING_OPTIONS"] = "选项"
+L["STRING_OVERALL_DEATHS_THRESHOLD"] = "全部死亡阀值"
+L["STRING_OVERALL_DEATHS_THRESHOLD_DESC"] = "第一个死亡的 |cFFFFFF00X|r 玩家死亡记录会被记录在总死亡人数中。"
+L["STRING_OVERTIME"] = "超时"
+L["STRING_PLUGIN_DESC"] = [=[在首领战斗期间，捕获团队成员死亡信息，并从中建立统计数据。
 
-- |cFFFFFFFFCurrent Encounter|r: |cFFFF9900show deaths for the latest segments.
+- |cFFFFFFFF当前战斗|r: |cFFFF9900显示最近分段的死亡人数
 
-- |cFFFFFFFFTimeline|r: |cFFFF9900show a graph telling when debuffs and spells from the boss are casted on raid members and draw lines representing where deaths are happening.
+- |cFFFFFFFF时间轴|r: |cFFFF9900显示一个图表，告诉团队成员何时受到来自BOSS的debuff和技能是什么时候在团队成员身上施放并画线标记死亡的时间轴。
 
-- |cFFFFFFFFEndurance|r: |cFFFF9900show a list of players with a percentage indicating how much tries they were alive in the encounter.
+- |cFFFFFFFF生存值|r: |cFFFF9900显示玩家列表，并用百分比表示他们在BOSS战中的存活时间。
 
-- |cFFFFFFFFOverall|r: |cFFFF9900Mantain a list of players with their death and also the damage taken by spell before the death.]=]
---[[Translation missing --]]
-L["STRING_PLUGIN_NAME"] = "Advanced Death Logs"
---[[Translation missing --]]
-L["STRING_PLUGIN_WELCOME"] = [=[Welcome to Advanced Death Logs!
+- |cFFFFFFFF全部|r: |cFFFF9900显示玩家的死亡列表以及死亡前受到的技能伤害。]=]
+L["STRING_PLUGIN_NAME"] = "高级死亡日志"
+L["STRING_PLUGIN_WELCOME"] = [=[欢迎访问高级死亡日志!
 
 
--|cFFFFFF00Current Encounter|r: show deaths from the last boss encouter, by default it stores deaths for the last two segments, you may increase this at the options panel.
+-|cFFFFFF00当前战斗|r: 显示上一次BOSS战的死亡记录，在默认情况会保存最近2次的死亡记录，您可以在选项界面修改保存次数。
 
-- |cFFFFFF00Timeline|r: Show where your raid is dying most at time, also shows the time for enemy abilities.
+- |cFFFFFF00时间轴|r: 显示您的团队什么时候死亡最多，同时也显示敌人技能的时间。
 
-- |cFFFFFF00Endurance|r: Measure player skill from who is dying first in a encounter, by default the first 5 players to die loses Endurance Percentage.
+- |cFFFFFF00生存值|r: 根据BOSS战中最先死亡的玩家中了什么技能，默认情况下前5名死亡的玩家会损失生存值百分比。
 
-- |cFFFFFF00Overall|r: show common death logs plus the overall damage taken before the player's death.
+- |cFFFFFF00全部|r: 显示玩家死亡记录以及死亡前受到的技能总伤害。
 
 
-- You can always close the window by clicking with the right mouse button!]=]
---[[Translation missing --]]
-L["STRING_RAIDFINDER"] = "Raid Finder"
---[[Translation missing --]]
-L["STRING_RAIDFINDER_DESC"] = "Record deaths when you are playing on raid finder."
---[[Translation missing --]]
-L["STRING_RESET"] = "Reset Data"
---[[Translation missing --]]
-L["STRING_SURVIVAL"] = "Survival"
---[[Translation missing --]]
-L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "Timeline Deaths Threshold"
---[[Translation missing --]]
-L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "The first |cFFFFFF00X|r deaths in the encounter are registered to show on the timeline graphic."
---[[Translation missing --]]
-L["STRING_TOOLTIP"] = "Show death graphics"
+- 你可以随时右键点击关闭窗口!]=]
+L["STRING_RAIDFINDER"] = "随机团队"
+L["STRING_RAIDFINDER_DESC"] = "当您在随机团队难度时记录死亡。"
+L["STRING_RESET"] = "重置数据"
+L["STRING_SURVIVAL"] = "存活"
+L["STRING_TIMELINE_DEATHS_THRESHOLD"] = "死亡阀值时间轴"
+L["STRING_TIMELINE_DEATHS_THRESHOLD_DESC"] = "第一个 |cFFFFFF00X|r 死亡的玩家显示在时间轴图表中。"
+L["STRING_TOOLTIP"] = "显示死亡图表"
 

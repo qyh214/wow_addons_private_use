@@ -161,6 +161,8 @@ function NarciItemSocketingActionButtonMixin:AttemptToEnable()
     else
         self:SetFailedReason(1);
     end
+
+    Narci_EquipmentOption.ItemList.NoItemText:Hide();   --HideNoItemAlert
 end
 
 function NarciItemSocketingActionButtonMixin:TrackFlyingStatus()
@@ -272,7 +274,7 @@ function NarciItemSocketingActionButtonMixin:SetActionForNarcissusUI()
         self:SetAttribute("type1", "macro");
         self:SetAttribute("macrotext", macroText);
         self:AttemptToEnable();
-        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonDown", "RightButtonUp");
         self:SetScript("PostClick", NarcissusActionButton_PostClick);
         self.preclickFunc = SocketInventoryItem;
         self.preclickArg1 = equipmentSlotIndex;
@@ -327,7 +329,6 @@ function NarciItemSocketingActionButtonMixin:Release()
 end
 
 function NarciItemSocketingActionButtonMixin:PreClick()
-    NarciAPI.SecureActionButtonPreClick();
     if self.preclickFunc then
         self.preclickFunc(self.preclickArg1);
     end
