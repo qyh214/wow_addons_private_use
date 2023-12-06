@@ -9,7 +9,7 @@ DB.Version = C_AddOns.GetAddOnMetadata("NDui", "Version")
 DB.Support = C_AddOns.GetAddOnMetadata("NDui", "X-Support")
 DB.Client = GetLocale()
 DB.ScreenWidth, DB.ScreenHeight = GetPhysicalScreenSize()
-DB.isNewPatch = select(4, GetBuildInfo()) >= 100200 -- 10.2.0
+DB.isNewPatch = select(4, GetBuildInfo()) >= 100205 -- 10.2.0
 
 -- Colors
 DB.MyName = UnitName("player")
@@ -74,6 +74,7 @@ DB.closeTex = Media.."Hutu\\close"
 DB.ArrowUp = Media.."Hutu\\arrow"
 DB.afdianTex = Media.."Hutu\\Afdian"
 DB.patreonTex = Media.."Hutu\\Patreon"
+DB.sponsorTex = Media.."Hutu\\Sponsor"
 DB.mailTex = "Interface\\Minimap\\Tracking\\Mailbox"
 DB.gearTex = "Interface\\WorldMap\\Gear_64"
 DB.eyeTex = "Interface\\Minimap\\Raid_Icon"		-- blue: \\Dungeon_Icon

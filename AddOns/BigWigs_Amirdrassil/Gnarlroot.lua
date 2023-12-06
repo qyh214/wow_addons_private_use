@@ -22,6 +22,8 @@ local torturedScreamCount = 1
 local shadowflameCleaveCount = 1
 local dreadfireBarrageCount = 1
 local intermissionCount = 0
+local myDreadfireBarrageStacks = 0
+local allowTankWarnings = true
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -29,7 +31,6 @@ local intermissionCount = 0
 
 local L = mod:GetLocale()
 if L then
-	L.shadowflame_cleave = "Frontal Cone"
 	L.tortured_scream = "Scream"
 end
 
@@ -45,7 +46,7 @@ function mod:GetOptions()
 		-- Stage One: Garden of Despair
 		421898, -- Flaming Pestilence
 		422053, -- Shadow Spines
-		{421972, "SAY", "SAY_COUNTDOWN"}, -- Controlled Burn
+		{421972, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Controlled Burn
 		controlledBurnMarker,
 		422023, -- Shadow-Scorched Earth
 		{424352, "TANK"}, -- Dreadfire Barrage
@@ -67,7 +68,8 @@ function mod:GetOptions()
 		[421898] = CL.adds, -- Flaming Pestilence (Adds)
 		[421972] = CL.bombs, -- Controlled Burn (Bombs)
 		[422026] = L.tortured_scream, -- Tortured Scream (Scream)
-		[422039] = L.shadowflame_cleave, -- Shadowflame Cleave (Cleave)
+		[422039] = CL.frontal_cone, -- Shadowflame Cleave (Frontal Cone)
+		[421840] = CL.weakened, -- Uprooted Agony (Weakened)
 	}
 end
 
@@ -80,8 +82,10 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "ControlledBurnApplied", 421972)
 	self:Log("SPELL_AURA_REMOVED", "ControlledBurnRemoved", 421972)
 	self:Log("SPELL_CAST_START", "DreadfireBarrage", 424352)
+	self:Log("SPELL_AURA_REMOVED", "DreadfireBarrageStop", 424352)
 	self:Log("SPELL_AURA_APPLIED", "DreadfireBarrageApplied", 426106)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "DreadfireBarrageApplied", 426106)
+	self:Log("SPELL_AURA_REMOVED", "DreadfireBarrageRemoved", 426106)
 	self:Log("SPELL_CAST_START", "TorturedScream", 422026)
 	self:Log("SPELL_CAST_START", "ShadowflameCleave", 422039)
 
@@ -113,6 +117,8 @@ function mod:OnEngage()
 	shadowflameCleaveCount = 1
 	dreadfireBarrageCount = 1
 	intermissionCount = 1
+	myDreadfireBarrageStacks = 0
+	allowTankWarnings = true
 	mobCollector = {}
 	taintedTreantMarks = {}
 
@@ -121,7 +127,7 @@ function mod:OnEngage()
 	self:CDBar(424352, self:Easy() and 9.6 or 9.0, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
 	self:CDBar(421898, self:Easy() and 16.5 or 15.0, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
 	self:CDBar(421972, self:Heroic() and 32 or 36, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
-	self:CDBar(422039, self:Easy() and 22.4 or 20.0, CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount)) -- Shadowflame Cleave
+	self:CDBar(422039, self:Easy() and 22.4 or 20.0, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
 	self:CDBar("stages", 90, CL.count:format(CL.stage:format(2), intermissionCount), 421013) -- Doom Cultivation
 
 	if self:GetOption(taintedTreantMarker) then
@@ -185,13 +191,9 @@ do
 end
 
 function mod:DreadfireBarrage(args)
-	local bossUnit = self:UnitTokenFromGUID(args.sourceGUID)
-	if self:Tanking(bossUnit) then
-		self:PersonalMessage(args.spellId)
-		self:PlaySound(args.spellId, "warning")
-	else -- TargetMessage?
-		self:Message(args.spellId, "purple")
-	end
+	allowTankWarnings = false
+	self:StopBar(CL.count:format(args.spellName, dreadfireBarrageCount))
+	self:Message(args.spellId, "purple", CL.count:format(args.spellName, dreadfireBarrageCount))
 	dreadfireBarrageCount = dreadfireBarrageCount + 1
 
 	local cd
@@ -208,16 +210,26 @@ function mod:DreadfireBarrage(args)
 	self:Bar(args.spellId, cd, CL.count:format(args.spellName, dreadfireBarrageCount))
 end
 
+function mod:DreadfireBarrageStop()
+	allowTankWarnings = true -- Using this as our throttle as I'm not convinced there will always be 5 stacks exactly, the final stack should always apply to the tank after this ends
+end
+
 function mod:DreadfireBarrageApplied(args)
-	local bossUnit = self:UnitTokenFromGUID(args.sourceGUID)
 	local amount = args.amount or 1
-	if amount % 2 == 0 or amount > 4 then
+	if self:Me(args.destGUID) then
+		myDreadfireBarrageStacks = amount
+	end
+	if allowTankWarnings or amount % 5 == 0 then -- Only warn for the final stack, or every 5/10/15..
 		self:StackMessage(424352, "purple", args.destName, amount, 5)
-		if not self:Tanking(bossUnit) and amount > 4 then -- Taunt?
-			self:PlaySound(424352, "warning")
-		elseif self:Me(args.destGUID) then
-			self:PlaySound(424352, "alarm")
+		if myDreadfireBarrageStacks == 0 and self:Tank() then -- No stacks on me
+			self:PlaySound(424352, "warning") -- Taunt
 		end
+	end
+end
+
+function mod:DreadfireBarrageRemoved(args)
+	if self:Me(args.destGUID) then
+		myDreadfireBarrageStacks = 0
 	end
 end
 
@@ -242,25 +254,25 @@ function mod:TorturedScream(args)
 end
 
 function mod:ShadowflameCleave(args)
-	self:StopBar(CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount))
-	self:Message(args.spellId, "yellow", CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount))
+	self:StopBar(CL.count:format(CL.frontal_cone, shadowflameCleaveCount))
+	self:Message(args.spellId, "yellow", CL.count:format(CL.frontal_cone, shadowflameCleaveCount))
 	self:PlaySound(args.spellId, "alert")
 	shadowflameCleaveCount = shadowflameCleaveCount + 1
 	if self:Mythic() then
 		local timer = { 21.4, 24.0, 27.0, 0 }
-		self:CDBar(args.spellId, timer[shadowflameCleaveCount], CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount))
+		self:CDBar(args.spellId, timer[shadowflameCleaveCount], CL.count:format(CL.frontal_cone, shadowflameCleaveCount))
 	elseif shadowflameCleaveCount < 4 then -- 3 per
-		self:CDBar(args.spellId, self:Easy() and 26.7 or 24.0, CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount))
+		self:CDBar(args.spellId, self:Easy() and 26.7 or 24.0, CL.count:format(CL.frontal_cone, shadowflameCleaveCount))
 	end
 end
 
 -- Stage Two: Agonizing Growth
 function mod:DoomCultivation(args)
-	self:StopBar(424352) -- Dreadfire Barrage
+	self:StopBar(CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
 	self:StopBar(CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
 	self:StopBar(CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
 	self:StopBar(CL.count:format(L.tortured_scream, torturedScreamCount)) -- Tortured Scream
-	self:StopBar(CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount)) -- Shadowflame Cleave
+	self:StopBar(CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
 	self:StopBar(CL.count:format(CL.stage:format(2), intermissionCount)) -- Stage Two: Agonizing Growth / Doom Cultivation
 
 	self:Message("stages", "yellow", CL.stage:format(2), false)
@@ -300,9 +312,9 @@ do
 end
 
 function mod:UprootedAgonyApplied(args)
-	self:Message(args.spellId, "green", CL.count:format(args.spellName, intermissionCount))
+	self:Message(args.spellId, "green", CL.count:format(CL.weakened, intermissionCount))
 	self:PlaySound(args.spellId, "long")
-	self:Bar(args.spellId, 20, CL.count:format(args.spellName, intermissionCount))
+	self:Bar(args.spellId, 20, CL.count:format(CL.weakened, intermissionCount))
 end
 
 function mod:UprootedAgonyRemoved(args)
@@ -323,7 +335,7 @@ function mod:UprootedAgonyRemoved(args)
 	self:Bar(424352, self:Easy() and 14.3 or 10.4, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
 	self:Bar(421898, self:Easy() and 23.5 or 16.4, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
 	self:Bar(421972, self:Mythic() and 37.4 or self:Easy() and 44.5 or 33, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
-	self:Bar(422039, self:Easy() and 44 or 21.4, CL.count:format(L.shadowflame_cleave, shadowflameCleaveCount)) -- Shadowflame Cleave
+	self:Bar(422039, self:Easy() and 44 or 21.4, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
 	self:Bar("stages", 92.2, CL.count:format(CL.intermission, intermissionCount), 421013) -- Intermission / Doom Cultivation
 end
 

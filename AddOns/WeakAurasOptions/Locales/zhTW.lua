@@ -864,6 +864,10 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["This adds %tooltip, %tooltip1, %tooltip2, %tooltip3 and %tooltip4 as text replacements and also allows filtering based on the tooltip content/values."] = "這會加入 %tooltip, %tooltip1, %tooltip2, %tooltip3 和 %tooltip4 來替換文字，還允許根據浮動提示資訊的內容/值來過濾。"
 	L[ [=[This aura contains custom Lua code.
 Make sure you can trust the person who sent it!]=] ] = "這個提醒效果包含自訂的 Lua 程式碼，請務必確定你能夠信任傳送給你的人!"
+	--[[Translation missing --]]
+	L["This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to an aura '%s', but cannot be used to update that aura. This usually happens if an aura is moved out of a group."
+	--[[Translation missing --]]
+	L["This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."] = "This aura is marked as an update to auras '%s', but cannot be used to update them. This usually happens if an aura is moved out of a group."
 	L[ [=[This aura was created with a different version (%s) of World of Warcraft.
 It might not work correctly!]=] ] = "這個提醒效果是由不同版本 (%s) 的魔獸世界建立的，可能無法正常運作!"
 	L[ [=[This aura was created with a newer version of WeakAuras.

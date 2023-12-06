@@ -1,4 +1,4 @@
--- Generated from CurseForge on Wed Nov 22 08:43:59 UTC 2023
+-- Generated from CurseForge on Tue Dec  5 21:49:01 UTC 2023
 local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("koKR") then
@@ -79,7 +79,7 @@ L["DUNGEON_SHORT_NAME_AV"] = "하늘빛"
 L["DUNGEON_SHORT_NAME_BH"] = "담쟁이"
 L["DUNGEON_SHORT_NAME_BRH"] = "검떼"
 L["DUNGEON_SHORT_NAME_COS"] = "별궁"
-L["DUNGEON_SHORT_NAME_DHT"] = "어심"
+L["DUNGEON_SHORT_NAME_DHT"] = "어숲"
 L["DUNGEON_SHORT_NAME_DOS"] = "저편"
 L["DUNGEON_SHORT_NAME_EB"] = "상록숲"
 L["DUNGEON_SHORT_NAME_FALL"] = "몰락"

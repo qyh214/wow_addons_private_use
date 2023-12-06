@@ -196,7 +196,8 @@ L["Back and Forth"] = "De Atrás a Adelante"
 L["Background"] = "Fondo"
 L["Background Color"] = "Color de fondo"
 L["Baltharus the Warborn"] = "Baltharus el Batallante"
-L["Bar Color"] = "Color de la barra"
+--[[Translation missing --]]
+L["Bar Color/Gradient Start"] = "Bar Color/Gradient Start"
 L["Baron Geddon"] = "Barón Geddon"
 L["Battle for Azeroth"] = "Battle for Azeroth"
 L["Battle.net Whisper"] = "Battle.net Mensaje"
@@ -350,6 +351,8 @@ L["Critical Rating"] = "Índice de crítico"
 L["Crowd Controlled"] = "Bajo Control"
 L["Crushing"] = "Golpe Aplastador"
 L["C'thun"] = "C'thun"
+--[[Translation missing --]]
+L["Current Combo Point charged"] = "Current Combo Point charged"
 --[[Translation missing --]]
 L["Current Essence"] = "Current Essence"
 L["Current Experience"] = "Experiencia actual"
@@ -670,8 +673,9 @@ L["Golemagg the Incinerator"] = "Golemagg the Incinerator"
 --[[Translation missing --]]
 L["Gothik the Harvester"] = "Gothik the Harvester"
 L["Gradient"] = "Degradado"
-L["Gradient Color"] = "Color del degradado"
 L["Gradient Enabled"] = "Degradado activado"
+--[[Translation missing --]]
+L["Gradient End"] = "Gradient End"
 L["Gradient Orientation"] = "Orientación del degradado"
 L["Gradient Pulse"] = "Degradado Pulsante"
 --[[Translation missing --]]
@@ -908,6 +912,8 @@ L["Loatheb"] = "Loatheb"
 L["Location"] = "Location"
 L["Looking for Raid"] = "Buscador de banda"
 L["Loop"] = "Bucle"
+--[[Translation missing --]]
+L["Loot"] = "Loot"
 L["Lord Jaraxxus"] = "Lord Jaraxxus"
 L["Lord Marrowgar"] = "Lord Tuétano"
 --[[Translation missing --]]
@@ -1783,6 +1789,8 @@ L["Tracking Charge CDs"] = "Tracking Charge CDs"
 --[[Translation missing --]]
 L["Tracking Only Cooldown"] = "Tracking Only Cooldown"
 L["Transmission error"] = "Error de transmisión"
+--[[Translation missing --]]
+L["Treat charged combo point as 7 combo points"] = "Treat charged combo point as 7 combo points"
 --[[Translation missing --]]
 L["Trial of the Crusader"] = "Trial of the Crusader"
 L["Trigger"] = "Activador"

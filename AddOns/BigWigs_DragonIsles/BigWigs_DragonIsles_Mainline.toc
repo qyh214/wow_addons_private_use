@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 巨龙群岛模块
 ## Notes-zhTW: BigWigs Dragon Isles Modules
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v300
+## Version: v305.2
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

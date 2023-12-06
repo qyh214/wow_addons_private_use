@@ -71,8 +71,8 @@ local timersMythic = {
 	-- p2
 	[428896] = { 45.5 }, -- Ashen Devastation
 	[427252] = { 7.4, 26.7, 35.9, 21.7 }, -- Falling Embers
-	[427299] = { 29.0, 51.8 }, -- Flash Fire
-	[427343] = { 64.9, 32.6 }, -- Fire Whirl
+	[427299] = { 29.0, 51.8, 27.6 }, -- Flash Fire
+	[427343] = { 58.4, 32.6 }, -- Fire Whirl
 	[429973] = { 14.0, 25.9, 19.2, 26.7, 16.7 }, -- Smoldering Backdraft
 	[421325] = { 20.7, 55.1 }, -- Ashen Call
 }
@@ -87,11 +87,13 @@ if L then
 	L.custom_on_repeating_yell_smoldering_suffocation = "Repeating Suffocation Health Yell"
 	L.custom_on_repeating_yell_smoldering_suffocation_desc = "Repeating yell messages for Smoldering Suffocation to let others know when you are below 75% health."
 
+	L.blazing_coalescence_on_player_note = "When it's on you"
+	L.blazing_coalescence_on_boss_note = "When it's on the boss"
+
 	L.scorching_roots = "Roots"
 	L.furious_charge = "Charge"
 	L.blazing_thorns = "Dodges"
 	L.falling_embers = "Soaks"
-	L.smoldering_backdraft = "Frontal"
 	L.fire_whirl = "Tornadoes"
 end
 
@@ -114,7 +116,7 @@ function mod:GetOptions()
 		{423719, "TANK"}, -- Nature's Fury
 		426206, -- Blazing Thorns
 		426249, -- Blazing Coalescence (Player)
-		"blazing_coalescence_boss", -- Blazing Coalescence (Boss) 426256
+		426256, -- Blazing Coalescence (Boss)
 		{417634, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Raging Inferno
 		417632, -- Burning Ground
 		-- Mythic
@@ -145,9 +147,13 @@ function mod:GetOptions()
 		[422614] = L.scorching_roots, -- Scorching Roots (Roots)
 		[418637] = L.furious_charge, -- Furious Charge (Charge)
 		[426206] = L.blazing_thorns, -- Blazing Thorns (Dodges)
+		[426249] = L.blazing_coalescence_on_player_note, -- Blazing Coalescence (When it's on you)
+		[426256] = L.blazing_coalescence_on_boss_note, -- Blazing Coalescence (When it's on the boss)
+		[417634] = CL.full_energy, -- Raging Inferno (Full Energy)
 		[427252] = L.falling_embers, -- Falling Embers (Soaks)
 		[427299] = CL.bombs, -- Flash Fire (Bombs)
 		[427343] = L.fire_whirl, -- Fire Whirl (Tornadoes)
+		[429973] = CL.frontal_cone, -- Smoldering Backdraft (Frontal Cone)
 		[421325] = CL.adds, -- Ashen Call (Adds)
 	}
 end
@@ -200,7 +206,7 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	timers = self:Easy() and timersNormal or timersHeroic
+	timers = self:Easy() and timersNormal or self:Mythic() and timersMythic or timersHeroic
 	self:SetStage(1)
 	fieryForceOfNatureCount = 1
 	scorchingRootsCount = 1
@@ -224,7 +230,7 @@ function mod:OnEngage()
 	self:Bar(426206, timers[426206][blazingThornsCount], CL.count:format(L.blazing_thorns, blazingThornsCount)) -- Blazing Thorns
 	self:Bar(418637, timers[418637][furiousChargeCount], CL.count:format(L.furious_charge, furiousChargeCount)) -- Furious Charge
 	self:Bar(422614, timers[422614][scorchingRootsCount], CL.count:format(L.scorching_roots, scorchingRootsCount)) -- Scorching Roots
-	self:Bar(417634, 90, CL.count:format(self:SpellName(417634), ragingInfernoCount)) -- Raging Inferno
+	self:Bar(417634, 90, CL.count:format(CL.full_energy, ragingInfernoCount)) -- Raging Inferno
 
 	self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1")
 
@@ -321,17 +327,17 @@ function mod:BlazingCoalescenceApplied(args)
 end
 
 function mod:BlazingCoalescenceAppliedOnBoss(args)
-	self:StackMessage("blazing_coalescence_boss", "red", args.destName, args.amount, 1, args.spellId)
-	self:PlaySound("blazing_coalescence_boss", "alarm")
+	self:Message(args.spellId, "red", CL.buff_boss:format(args.spellName))
+	self:PlaySound(args.spellId, "info")
 end
 
 function mod:RagingInferno(args)
-	self:StopBar(CL.count:format(args.spellName, ragingInfernoCount))
-	self:Message(args.spellId, "red", CL.count:format(args.spellName, ragingInfernoCount))
+	self:StopBar(CL.count:format(CL.full_energy, ragingInfernoCount))
+	self:Message(args.spellId, "red", CL.count:format(CL.full_energy, ragingInfernoCount))
 	self:PlaySound(args.spellId, "long")
 	ragingInfernoCount = ragingInfernoCount + 1
-	self:Bar(args.spellId, 102, CL.count:format(args.spellName, ragingInfernoCount))
-	self:CastBar(args.spellId, 4, args.spellName)
+	self:Bar(args.spellId, 102, CL.count:format(CL.full_energy, ragingInfernoCount))
+	self:CastBar(args.spellId, 4, CL.full_energy)
 end
 
 function mod:IgnitingGrowth(args)
@@ -359,7 +365,7 @@ function mod:ConsumingFlame(args)
 	self:StopBar(CL.count:format(L.scorching_roots, scorchingRootsCount)) -- Scorching Roots
 	self:StopBar(CL.count:format(L.furious_charge, furiousChargeCount)) -- Furious Charge
 	self:StopBar(CL.count:format(L.blazing_thorns, blazingThornsCount)) -- Blazing Thorns
-	self:StopBar(CL.count:format(self:SpellName(417634), ragingInfernoCount)) -- Raging Inferno
+	self:StopBar(CL.count:format(CL.full_energy, ragingInfernoCount)) -- Raging Inferno
 
 	self:CastBar(args.spellId, 16)
 end
@@ -381,7 +387,7 @@ function mod:ConsumingFlameRemoved(args)
 
 	self:Bar(421407, 2.5, CL.count:format(self:SpellName(421407), searingAshCount)) -- Searing Ash
 	self:Bar(427252, timers[427252][fallingEmbersCount], CL.count:format(L.falling_embers, fallingEmbersCount)) -- Falling Embers
-	self:Bar(429973, timers[429973][smolderingBackdraftCount], CL.count:format(L.smoldering_backdraft, smolderingBackdraftCount)) -- Smoldering Backdraft
+	self:Bar(429973, timers[429973][smolderingBackdraftCount], CL.count:format(CL.frontal_cone, smolderingBackdraftCount)) -- Smoldering Backdraft
 	self:Bar(421325, timers[421325][ashenCallCount], CL.count:format(CL.adds, ashenCallCount)) -- Ashen Call
 	self:Bar(427299, timers[427299][flashFireCount], CL.count:format(CL.bombs, flashFireCount)) -- Flash Fire
 	self:Bar(427343, timers[427343][fireWhirlCount], CL.count:format(L.fire_whirl, fireWhirlCount)) -- Fire Whirl
@@ -470,11 +476,11 @@ do
 	end
 
 	function mod:SmolderingBackdraft(args)
-		self:StopBar(CL.count:format(L.smoldering_backdraft, smolderingBackdraftCount))
-		self:Message(429973, "purple", CL.count:format(L.smoldering_backdraft, smolderingBackdraftCount))
+		self:StopBar(CL.count:format(CL.frontal_cone, smolderingBackdraftCount))
+		self:Message(429973, "purple", CL.count:format(CL.frontal_cone, smolderingBackdraftCount))
 		self:PlaySound(429973, "alarm")
 		smolderingBackdraftCount = smolderingBackdraftCount + 1
-		self:Bar(429973, timers[429973][smolderingBackdraftCount], CL.count:format(L.smoldering_backdraft, smolderingBackdraftCount))
+		self:Bar(429973, timers[429973][smolderingBackdraftCount], CL.count:format(CL.frontal_cone, smolderingBackdraftCount))
 	end
 
 	function mod:SmolderingSuffocationApplied(args)

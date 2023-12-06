@@ -4,11 +4,6 @@ if L then
 	L.energyStatus = "Eine Sphäre hat Bleichborke erreicht: %d%% Energie"
 end
 
-L = BigWigs:NewBossLocale("Yalnu", "deDE")
-if L then
-	L.warmup_trigger = "Das Portal ist verloren. Wir müssen diese Bestie aufhalten, bevor sie entkommt!"
-end
-
 L = BigWigs:NewBossLocale("The Everbloom Trash", "deDE")
 if L then
 	L.dreadpetal = "Schreckensblüte"
@@ -18,10 +13,12 @@ if L then
 	L.everbloom_mender = "Heiler des Immergrünen Flors"
 	L.gnarlroot = "Knorrenwurzel"
 	L.melded_berserker = "Befallener Berserker"
+	L.twisted_abomination = "Verzerrte Monstrosität"
 	L.infested_icecaller = "Infizierte Eisruferin"
 	L.putrid_pyromancer = "Eitriger Pyromant"
 	L.addled_arcanomancer = "Verwirrter Arkanomant"
 
 	L.gate_opens = "Portal geöffnet"
 	L.gate_opens_desc = "Zeigt eine Leiste wann Untermagier Kesalon das Portal zu Yalnu öffnet."
+	L.yalnu_warmup_trigger = "Das Portal ist verloren. Wir müssen diese Bestie aufhalten, bevor sie entkommt!"
 end

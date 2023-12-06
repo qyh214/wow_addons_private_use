@@ -468,8 +468,7 @@ L["Dark Rune Thunderer"] = "Trovejador da Runa Negra"
 L["Dark Rune Warrior"] = "Guerreiro da Runa Negra"
 L["Dark Rune Worker"] = "Trabalhador da Runa Negra"
 L["Dark Touched Warrior"] = "Guerreiro Tocado pelas Trevas"
-L["Darkheart Thicket"] = [=[Bosque Corenegro 
-]=]
+L["Darkheart Thicket"] = "Bosque Corenegro"
 L["Darkheart Thicket Sublevel"] = [=[Bosque Corenegro Subnível 1
 ]=]
 L["Darkweb Hatchling"] = "Filhote de Teiabreu"

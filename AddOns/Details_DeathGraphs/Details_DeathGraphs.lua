@@ -708,7 +708,7 @@ local buildOptionsPanel = function()
 			name = Loc["STRING_ENCOUNTER_MAXSEGMENTS"],
 		},
 
-		{blank = true},
+		{type = "blank"},
 		{
 			type = "toggle",
 			name = Loc["STRING_RAIDFINDER"],
@@ -749,17 +749,16 @@ local buildOptionsPanel = function()
 				adlObject.db.captures[4] = not adlObject.db.captures[4]
 			end,
 		},
-		--{blank = true},
 
 	}
 
-	local options_text_template = adlObject:GetFramework():GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
-	local options_dropdown_template = adlObject:GetFramework():GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-	local options_switch_template = adlObject:GetFramework():GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-	local options_slider_template = adlObject:GetFramework():GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
-	local options_button_template = adlObject:GetFramework():GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
+	local options_text_template = DetailsFramework:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
+	local options_dropdown_template = DetailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+	local options_switch_template = DetailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+	local options_slider_template = DetailsFramework:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
+	local options_button_template = DetailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
 
-	adlObject:GetFramework():BuildMenu(options_frame, menu, 15, -75, 360, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
+	DetailsFramework:BuildMenu(options_frame, menu, 15, -75, 360, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
 	options_frame:SetBackdropColor(0, 0, 0, .9)
 end
 

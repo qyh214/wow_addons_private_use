@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 56
+local MINOR_VERSION = 57
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -464,7 +464,6 @@ local defaultOptions = {
     "RavenOverlay",
     "AshToAshUnit%d+ShadowGroupHeaderUnitButton%d+",
     "InvenUnitFrames_TargetTargetTarget",
-    "CellSpotlightFrame",
     "CellQuickCastButton",
   },
   returnAll = false,

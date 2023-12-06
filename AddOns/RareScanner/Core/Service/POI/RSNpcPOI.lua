@@ -252,7 +252,7 @@ local function IsNpcPOIFiltered(npcID, mapID, artID, zoneQuestID, prof, minieven
 	-- Skip if rare part of a filtered minievent
 	local isMinieventWithFilter = false;
 	if (minieventID) then
-		isMinieventWithFilter = RSConstants.MINIEVENTS_WORLDMAP_FILTERS[minieventID]
+		isMinieventWithFilter = RSConstants.MINIEVENTS_WORLDMAP_FILTERS[minieventID].active
 		
 		-- Skip if minievent is filtered
 		if (RSConfigDB.IsMinieventFiltered(minieventID)) then

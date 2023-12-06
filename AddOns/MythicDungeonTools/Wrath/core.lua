@@ -12,6 +12,20 @@ local tinsert, tremove, CreateFrame, tonumber, max, min, abs, pairs, ipairs, Get
 local sizex = 840
 local sizey = 555
 local framesInitialized, initFrames
+MDT.externalLinks = {
+  {
+    name = "GitHub",
+    tooltip = L["Open an issue on GitHub"],
+    url = "https://github.com/Nnoggie/MythicDungeonTools/issues",
+    texture = { "Interface\\AddOns\\MythicDungeonTools\\Textures\\icons", 0.76, 1, 0.75, 1 }
+  },
+  {
+    name = "Discord",
+    tooltip = L["Provide feedback in Discord"],
+    url = "https://discord.gg/tdxMPb3",
+    texture = { "Interface\\AddOns\\MythicDungeonTools\\Textures\\icons", 0.5, .75, 0.75, 1 }
+  },
+}
 
 local mythicColor = "|cFFFFFFFF"
 MDT.BackdropColor = { 0.058823399245739, 0.058823399245739, 0.058823399245739, 0.9 }
@@ -133,6 +147,7 @@ local defaultSavedVars = {
     scale = 1,
     nonFullscreenScale = 1.3,
     enemyForcesFormat = 2,
+    useForcesCount = false,
     enemyStyle = 1,
     currentDungeonIdx = 70,
     currentDifficulty = 10,
@@ -166,8 +181,12 @@ local defaultSavedVars = {
 do
   for i = 1, 120 do
     defaultSavedVars.global.presets[i] = {
-      [1] = { text = L["Default"], value = {}, objects = {},
-        colorPaletteInfo = { autoColoring = true, colorPaletteIdx = 4 } },
+      [1] = {
+        text = L["Default"],
+        value = {},
+        objects = {},
+        colorPaletteInfo = { autoColoring = true, colorPaletteIdx = 4 }
+      },
       [2] = { text = L["<New Preset>"], value = 0 },
     }
     defaultSavedVars.global.currentPreset[i] = 1
@@ -370,6 +389,7 @@ function MDT:CreateMenu()
   liveReturnButton.Icon:SetTexture("Interface\\Buttons\\UI-RefreshButton")
   liveReturnButton.Icon:SetSize(16, 16)
   liveReturnButton.Icon:SetTexCoord(1, 0, 0, 1) --flipped image
+  ---@diagnostic disable-next-line: param-type-mismatch
   liveReturnButton.Icon:SetPoint("CENTER", liveReturnButton, "CENTER")
   liveReturnButton:SetScript("OnClick", function() self:ReturnToLivePreset() end)
   liveReturnButton:SetFrameLevel(4)
@@ -385,6 +405,7 @@ function MDT:CreateMenu()
   setLivePresetButton.Icon = setLivePresetButton:CreateTexture(nil, "OVERLAY", nil, 0)
   setLivePresetButton.Icon:SetTexture("Interface\\ChatFrame\\ChatFrameExpandArrow")
   setLivePresetButton.Icon:SetSize(16, 16)
+  ---@diagnostic disable-next-line: param-type-mismatch
   setLivePresetButton.Icon:SetPoint("CENTER", setLivePresetButton, "CENTER")
   setLivePresetButton:SetScript("OnClick", function() self:SetLivePreset() end)
   setLivePresetButton:SetFrameLevel(4)
@@ -637,8 +658,42 @@ function MDT:MakeTopBottomTextures(frame)
   frame.bottomLeftPanelString:SetJustifyV("CENTER")
   frame.bottomLeftPanelString:SetPoint("LEFT", frame.bottomPanel, "LEFT", 0, 0)
   frame.bottomLeftPanelString:SetTextColor(1, 1, 1, 1)
+  ---@diagnostic disable-next-line: redundant-parameter
   frame.bottomLeftPanelString:SetText(" v"..GetAddOnMetadata(AddonName, "Version"))
   frame.bottomLeftPanelString:Show()
+
+  local externalButtonGroup = AceGUI:Create("SimpleGroup")
+  MDT:FixAceGUIShowHide(externalButtonGroup, frame)
+  externalButtonGroup.frame:ClearAllPoints()
+  if not externalButtonGroup.frame.SetBackdrop then
+    Mixin(externalButtonGroup.frame, BackdropTemplateMixin)
+  end
+  externalButtonGroup.frame:SetBackdropColor(0, 0, 0, 0)
+  externalButtonGroup:SetHeight(40)
+  externalButtonGroup:SetPoint("LEFT", frame.bottomLeftPanelString, "RIGHT", 0, 0)
+  externalButtonGroup:SetLayout("Flow")
+  externalButtonGroup.frame:SetFrameStrata("High")
+  externalButtonGroup.frame:SetFrameLevel(7)
+  externalButtonGroup.frame:ClearBackdrop()
+  frame.externalButtonGroup = externalButtonGroup
+
+  for _, dest in ipairs(MDT.externalLinks) do
+    local button = AceGUI:Create("Icon")
+    button:SetImage(unpack(dest.texture))
+    button:SetCallback("OnClick", function(widget, callbackName)
+      MDT:ExportString(dest.url)
+    end)
+    button.tooltipText = dest.tooltip
+    button:SetWidth(24)
+    button:SetImageSize(20, 20)
+    button:SetCallback("OnEnter", function(widget, callbackName)
+      MDT:ToggleToolbarTooltip(true, widget, "ANCHOR_TOPLEFT")
+    end)
+    button:SetCallback("OnLeave", function()
+      MDT:ToggleToolbarTooltip(false)
+    end)
+    externalButtonGroup:AddChild(button)
+  end
 
   frame.bottomPanel:EnableMouse(true)
   frame.bottomPanel:RegisterForDrag("LeftButton")
@@ -969,8 +1024,9 @@ function MDT:MakeSidePanel(frame)
       MDT:SendToGroup(distribution)
     end
     local presetSize = self:GetPresetSize(false, 5)
-    if presetSize > 25000 then
-      local prompt = string.format(L["LargePresetWarning"], presetSize, "\n", "\n", "\n")
+    if presetSize > 3500 then
+      local timeToSend = 1 + math.max(presetSize - 2550, 0) / 255
+      local prompt = string.format(L["LargePresetWarning"], timeToSend, "\n", "\n", "\n")
       MDT:OpenConfirmationFrame(450, 150, L["Sharing large preset"], "Share", prompt, callback)
     else
       callback()
@@ -1082,7 +1138,7 @@ function MDT:MakeSidePanel(frame)
   frame.sidePanel.WidgetGroup:AddChild(frame.sidePanelImportButton)
   frame.sidePanel.WidgetGroup:AddChild(frame.sidePanelExportButton)
   frame.sidePanel.WidgetGroup:AddChild(frame.LinkToChatButton)
-  frame.sidePanel.WidgetGroup:AddChild(frame.LiveSessionButton)
+  -- frame.sidePanel.WidgetGroup:AddChild(frame.LiveSessionButton)
   frame.sidePanel.WidgetGroup:AddChild(frame.settingsCogwheel)
 
   --Week Dropdown (Infested / Affixes)
@@ -3055,9 +3111,10 @@ function MDT:MakeSettingsFrame(frame)
   frame.settingsFrame = AceGUI:Create("Frame")
   frame.settingsFrame:SetTitle(L["Settings"])
   frame.settingsFrame:SetWidth(240)
-  frame.settingsFrame:SetHeight(220)
+  frame.settingsFrame:SetHeight(250)
   frame.settingsFrame:EnableResize(false)
   frame.settingsFrame:SetLayout("Flow")
+  MDT:FixAceGUIShowHide(frame.settingsFrame)
 
   frame.minimapCheckbox = AceGUI:Create("CheckBox")
   frame.minimapCheckbox:SetLabel(L["Enable Minimap Button"])
@@ -3071,6 +3128,15 @@ function MDT:MakeSettingsFrame(frame)
     end
   end)
   frame.settingsFrame:AddChild(frame.minimapCheckbox)
+
+  frame.forcesCheckbox = AceGUI:Create("CheckBox")
+  frame.forcesCheckbox:SetLabel(L["Use forces count"])
+  frame.forcesCheckbox:SetValue(db.useForcesCount)
+  frame.forcesCheckbox:SetCallback("OnValueChanged", function(widget, callbackName, value)
+    db.useForcesCount = value
+    MDT:ReloadPullButtons()
+  end)
+  frame.settingsFrame:AddChild(frame.forcesCheckbox)
 
   frame.AutomaticColorsCheck = AceGUI:Create("CheckBox")
   frame.AutomaticColorsCheck:SetLabel(L["Automatically color pulls"])
@@ -3397,12 +3463,12 @@ function MDT:UpdatePullButtonNPCData(idx)
     oldPullForces = MDT:CountForces(idx - 1, false)
   end
   local oldPercent = oldPullForces / totalForcesMax
-  frame.newPullButtons[idx]:ShowReapingIcon(false, currentPercent, oldPercent)
+  frame.newPullButtons[idx]:ShowReapingIcon(false, pullForces, oldPullForces, totalForcesMax)
   --prideful icon
   if (math.floor(currentPercent / 0.2) > math.floor(oldPercent / 0.2)) and oldPercent < 1 and db.currentSeason == 5 then
-    frame.newPullButtons[idx]:ShowPridefulIcon(true, currentPercent, oldPercent)
+    frame.newPullButtons[idx]:ShowPridefulIcon(true, pullForces, oldPullForces, totalForcesMax)
   else
-    frame.newPullButtons[idx]:ShowPridefulIcon(false, currentPercent, oldPercent)
+    frame.newPullButtons[idx]:ShowPridefulIcon(false, pullForces, oldPullForces, totalForcesMax)
   end
   --shrouded icon
   --count amount of shrouded in this pull
@@ -4482,6 +4548,7 @@ function initFrames()
   main_frame.mainFrametex:SetDrawLayer(canvasDrawLayer, -5)
   main_frame.mainFrametex:SetColorTexture(unpack(MDT.BackdropColor))
 
+  ---@diagnostic disable-next-line: redundant-parameter
   local version = GetAddOnMetadata(AddonName, "Version"):gsub("%.", "")
   db.version = tonumber(version)
   -- Set frame position

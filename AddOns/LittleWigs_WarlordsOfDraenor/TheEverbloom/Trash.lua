@@ -13,6 +13,7 @@ mod:RegisterEnableMob(
 	81820, -- Everbloom Mender
 	81984, -- Gnarlroot
 	86372, -- Melded Berserker
+	84767, -- Twisted Abomination
 	84989, -- Infested Icecaller
 	84957, -- Putrid Pyromancer
 	84990  -- Addled Arcanomancer
@@ -31,6 +32,7 @@ if L then
 	L.everbloom_mender = "Everbloom Mender"
 	L.gnarlroot = "Gnarlroot"
 	L.melded_berserker = "Melded Berserker"
+	L.twisted_abomination = "Twisted Abomination"
 	L.infested_icecaller = "Infested Icecaller"
 	L.putrid_pyromancer = "Putrid Pyromancer"
 	L.addled_arcanomancer = "Addled Arcanomancer"
@@ -38,6 +40,8 @@ if L then
 	L.gate_opens = "Gate Opens"
 	L.gate_opens_desc = "Show a bar indicating when Undermage Kesalon will open the gate to Yalnu."
 	L.gate_opens_icon = "spell_fire_fireball02"
+
+	L.yalnu_warmup_trigger = "The portal is lost! We must stop this beast before it can escape!"
 end
 
 --------------------------------------------------------------------------------
@@ -63,6 +67,8 @@ function mod:GetOptions()
 		426500, -- Gnarled Roots
 		-- Melded Berserker
 		172578, -- Bounding Whirl
+		-- Twisted Abomination
+		169445, -- Noxious Eruption
 		-- Infested Icecaller
 		426845, -- Cold Fusion
 		-- Putrid Pyromancer
@@ -77,6 +83,7 @@ function mod:GetOptions()
 		[164887] = L.everbloom_mender,
 		[169494] = L.gnarlroot,
 		[172578] = L.melded_berserker,
+		[169445] = L.twisted_abomination,
 		[426845] = L.infested_icecaller,
 		[427223] = L.putrid_pyromancer,
 		[426974] = L.addled_arcanomancer,
@@ -84,6 +91,9 @@ function mod:GetOptions()
 end
 
 function mod:OnBossEnable()
+	-- RP Timers
+	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+
 	-- Dreadpetal
 	self:Log("SPELL_AURA_APPLIED_DOSE", "DreadpetalPollenApplied", 164886)
 
@@ -103,11 +113,14 @@ function mod:OnBossEnable()
 	-- Gnarlroot
 	self:Log("SPELL_CAST_START", "LivingLeaves", 169494)
 	self:Log("SPELL_AURA_APPLIED", "LivingLeavesApplied", 169495)
-	self:Log("SPELL_CAST_SUCCESS", "GnarledRoots", 426500)
-	self:Log("SPELL_AURA_APPLIED", "GnarledRootsApplied", 426500)
+	self:Log("SPELL_CAST_START", "GnarledRoots", 426500)
+	self:Death("GnarlrootDeath", 81984)
 
 	-- Melded Berserker
 	self:Log("SPELL_CAST_SUCCESS", "BoundingWhirl", 172578)
+
+	-- Twisted Abomination
+	self:Log("SPELL_CAST_START", "NoxiousEruption", 169445)
 
 	-- Infested Icecaller
 	self:Log("SPELL_CAST_SUCCESS", "ColdFusion", 426845)
@@ -132,10 +145,16 @@ function mod:ArchmageSolDefeated()
 	-- 40.27 [CHAT_MSG_MONSTER_SAY] If that beast crosses through, the unchecked growth will choke the whole of Azeroth! Hurry!#Undermage Kesalon
 	-- ~42.26 Gate Despawns
 	self:Bar("gate_opens", 35.0, L.gate_opens, L.gate_opens_icon)
-	-- enable Yalnu's mod so that it will always pick up the RP yell
-	local yalnuMod = BigWigs:GetBossModule("Yalnu", true)
-	if yalnuMod then
-		yalnuMod:Enable()
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(_, msg, sender)
+	if msg == L.yalnu_warmup_trigger then
+		-- The portal is lost! We must stop this beast before it can escape!#Lady Baihu
+		local yalnuMod = BigWigs:GetBossModule("Yalnu", true)
+		if yalnuMod then
+			yalnuMod:Enable()
+			yalnuMod:Warmup()
+		end
 	end
 end
 
@@ -221,47 +240,69 @@ end
 
 -- Everbloom Mender
 
-function mod:HealingWaters(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	if self:Interrupter() then
-		self:PlaySound(args.spellId, "warning")
-	else
-		self:PlaySound(args.spellId, "alert")
+do
+	local prev = 0
+	function mod:HealingWaters(args)
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+			if self:Interrupter() then
+				self:PlaySound(args.spellId, "warning")
+			else
+				self:PlaySound(args.spellId, "alert")
+			end
+		end
+		--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
 	end
-	--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
 end
 
 -- Gnarlroot
 
-function mod:LivingLeaves(args)
-	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "info")
-	--self:NameplateCDBar(args.spellId, 18.2, args.sourceGUID)
-end
-
-function mod:LivingLeavesApplied(args)
-	if self:Me(args.destGUID) then
-		self:PersonalMessage(169494, "underyou")
-		self:PlaySound(169494, "underyou", nil, args.destName)
-	end
-end
-
 do
-	local playerList = {}
+	-- use this timer to schedule StopBars on both abilities, this way if you pull
+	-- and reset the mob (or wipe) the bars won't be stuck for the rest of the dungeon.
+	local timer
+
+	function mod:LivingLeaves(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "yellow")
+		self:PlaySound(args.spellId, "info")
+		self:CDBar(args.spellId, 18.2)
+		timer = self:ScheduleTimer("GnarlrootDeath", 30)
+	end
+
+	do
+		local prev = 0
+		function mod:LivingLeavesApplied(args)
+			local t = args.time
+			if t - prev > 2 and self:Me(args.destGUID) then
+				prev = t
+				self:PersonalMessage(169494, "underyou")
+				self:PlaySound(169494, "underyou", nil, args.destName)
+			end
+		end
+	end
 
 	function mod:GnarledRoots(args)
-		playerList = {}
-		--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:PlaySound(args.spellId, "alarm")
+		self:CDBar(args.spellId, 18.2)
+		timer = self:ScheduleTimer("GnarlrootDeath", 30)
 	end
 
-	function mod:GnarledRootsApplied(args)
-		-- can be movement dispelled, else you have to attack the roots
-		-- currently applies to pets as well as players
-		if self:Player(args.destFlags) then
-			playerList[#playerList + 1] = args.destName
-			self:PlaySound(args.spellId, "alarm", nil, playerList)
-			self:TargetsMessage(args.spellId, "orange", playerList, 5)
+	function mod:GnarlrootDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
 		end
+		self:StopBar(169494) -- Living Leaves
+		self:StopBar(426500) -- Gnarled Roots
 	end
 end
 
@@ -278,6 +319,21 @@ do
 		end
 	end
 	--self:NameplateCDBar(args.spellId, 16.9, args.sourceGUID)
+end
+
+-- Twisted Abomination
+
+do
+	local prev = 0
+	function mod:NoxiousEruption(args)
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "red")
+			self:PlaySound(args.spellId, "alert")
+		end
+	end
+	--self:NameplateCDBar(args.spellId, 15.8, args.sourceGUID)
 end
 
 -- Infested Icecaller

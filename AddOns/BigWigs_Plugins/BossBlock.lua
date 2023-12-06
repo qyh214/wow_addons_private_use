@@ -48,6 +48,7 @@ local GetCVar = C_CVar.GetCVar
 local CheckElv = nil
 local RestoreAll
 local hideQuestTrackingTooltips = false
+local activatedModules = {}
 
 -------------------------------------------------------------------------------
 -- Options
@@ -324,6 +325,7 @@ do
 end
 
 function plugin:OnPluginDisable()
+	activatedModules = {}
 	RestoreAll(self)
 end
 
@@ -367,6 +369,12 @@ do
 	local restoreObjectiveTracker = nil
 	function plugin:OnEngage(_, module)
 		if not module or not module:GetJournalID() or module.worldBoss then return end
+		if next(activatedModules) then
+			activatedModules[module:GetJournalID()] = true
+			return
+		else
+			activatedModules[module:GetJournalID()] = true
+		end
 
 		if self.db.profile.blockEmotes and not onTestBuild then -- Don't block emotes on WoW beta.
 			KillEvent(RaidBossEmoteFrame, "RAID_BOSS_EMOTE")
@@ -458,7 +466,11 @@ do
 
 	function plugin:BigWigs_OnBossDisable(_, module)
 		if not module or not module:GetJournalID() or module.worldBoss then return end
-		RestoreAll(self)
+		activatedModules[module:GetJournalID()] = nil
+		if not next(activatedModules) then
+			activatedModules = {}
+			RestoreAll(self)
+		end
 	end
 end
 
@@ -581,6 +593,7 @@ do
 		[964] = true, -- Raszageth defeat
 		[991] = true, -- Iridikron (DotI) defeat
 		[992] = true, -- Chrono-Lord Deios (DotI) defeat
+		[1003] = true, -- Fyrakk defeat
 	}
 
 	function plugin:PLAY_MOVIE(_, id)
@@ -637,6 +650,7 @@ do
 		[-2002] = true, -- Sylvanas stage 2
 		[-2004] = true, -- Sylvanas defeat
 		[-2170] = true, -- Sarkareth defeat
+		[-2233] = true, -- Smolderon defeat
 	}
 
 	-- Cinematic skipping hack to workaround an item (Vision of Time) that creates cinematics in Siege of Orgrimmar.

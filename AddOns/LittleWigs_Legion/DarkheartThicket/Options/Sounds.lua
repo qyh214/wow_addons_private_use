@@ -8,8 +8,8 @@ BigWigs:AddSounds("Archdruid Glaidalis", {
 })
 
 BigWigs:AddSounds("Oakheart", {
-	[204574] = "info",
-	[204611] = "alert",
+	[204574] = {"alert","info"},
+	[204611] = {"alarm","alert"},
 	[204666] = "alert",
 	[204667] = "alarm",
 	[212786] = "long",
@@ -36,6 +36,7 @@ BigWigs:AddSounds("Darkheart Thicket Trash", {
 	[198910] = "info",
 	[200580] = "alarm",
 	[200630] = "alert",
+	[200642] = {"alert","warning"},
 	[200658] = "alert",
 	[200684] = "alert",
 	[200768] = "alarm",

@@ -4,7 +4,7 @@
 
 local mod, CL = BigWigs:NewBoss("Council of Dreams", 2549, 2555)
 if not mod then return end
-mod:RegisterEnableMob(208363, 208365, 208956) -- Urctos, Aerwynn, Pip
+mod:RegisterEnableMob(208363, 208365, 208367) -- Urctos, Aerwynn, Pip
 mod:SetEncounterID(2728)
 mod:SetRespawnTime(30)
 
@@ -13,6 +13,8 @@ mod:SetRespawnTime(30)
 --
 
 local castingRebirth = false
+local rebirthCount = 1
+local rebirthTimers = {}
 
 local specialCD = 56
 local specialChain = { ["urctos"] = "aerwynn", ["aerwynn"] = "pip", ["pip"] = "urctos" }
@@ -54,12 +56,10 @@ if L then
 	L.pip = mod:SpellName(-27302)
 
 	L.barreling_charge = "Charge"
-	L.noxious_blossom = CL.pools
 	L.poisonous_javelin = "Javelin"
 	L.song_of_the_dragon = "Song"
 	L.polymorph_bomb = "Ducks"
 	L.polymorph_bomb_single = "Duck"
-	L.emerald_winds = CL.pushback
 end
 
 --------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ end
 
 function mod:GetOptions()
 	return {
-		418187, -- Rebirth
+		{418187, "CASTBAR"}, -- Rebirth
 		-- "berserk",
 		-- Urctos
 		420525, -- Blinding Rage
@@ -98,15 +98,15 @@ function mod:GetOptions()
 		[420525] = L.ultimate_boss:format(L.urctos), -- Blinding Rage (Ultimate (Urctos))
 		[420948] = L.barreling_charge,
 		[421292] = L.ultimate_boss:format(L.aerwynn), -- Constricting Thicket (Ultimate (Aerwynn))
-		[420671] = L.noxious_blossom,
+		[420671] = CL.pools,
 		[421029] = L.ultimate_boss:format(L.pip), -- Song of the Dragon (Ultimate (Pip))
 		[418720] = L.polymorph_bomb,
-		[421024] = L.emerald_winds,
+		[421024] = CL.pushback,
 	}
 end
 
 function mod:OnBossEnable()
-	self:RegisterMessage("BigWigs_EncounterEnd", "CancelAllTimers") -- stop skipped cast bars
+	self:RegisterMessage("BigWigs_EncounterEnd") -- stop skipped cast bars immediately on wipe
 
 	-- General
 	self:Log("SPELL_CAST_START", "Rebirth", 418187)
@@ -158,6 +158,9 @@ end
 
 function mod:OnEngage()
 	castingRebirth = false
+	rebirthCount = 1
+	rebirthTimers = {}
+
 	activeSpecials = 0
 	specialCount = 1
 
@@ -186,8 +189,10 @@ function mod:OnEngage()
 	self:Bar(421022, self:Easy() and 8.0 or 5.0, CL.count:format(self:SpellName(421022), agonizingClawsCount)) -- Agonizing Claws
 	self:Bar(420948, self:Easy() and 29.0 or 13.0, CL.count:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
 	if self:Mythic() then
+		-- Ult [Urctos/Aerwynn] (%d)
 		self:Bar(420525, specialCD, L.special_mythic_bar:format(L.urctos, L.aerwynn, specialCount)) -- Blinding Rage/Constricting Thicket
 	else
+		-- Ult [Urctos] (%d)
 		self:Bar(420525, specialCD, L.special_bar:format(L.urctos, blindingRageCount)) -- Blinding Rage
 	end
 	nextSpecial = GetTime() + specialCD
@@ -195,15 +200,22 @@ function mod:OnEngage()
 
 	-- Aerwynn
 	-- self:Bar(421570, 0.5) -- Leap
-	self:Bar(420671, self:Easy() and 11.0 or 5.0, CL.count:format(L.noxious_blossom, noxiousBlossomCount)) -- Noxious Blossom
+	self:Bar(420671, self:Easy() and 11.0 or 5.0, CL.count:format(CL.pools, noxiousBlossomCount)) -- Noxious Blossom
 	self:Bar(420858, self:Easy() and 20.0 or 21.0, CL.count:format(L.poisonous_javelin, poisonousJavelinCount)) -- Poisonous Javelin
 
 	-- Pip
 	self:Bar(421501, 23.0) -- Blink
 	self:Bar(418720, self:Easy() and 35.0 or 36.0, CL.count:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
-	self:Bar(421024, self:Mythic() and 43 or 45.5, CL.count:format(L.emerald_winds, emeraldWindsCount)) -- Emerald Winds
+	self:Bar(421024, self:Mythic() and 43 or 45.5, CL.count:format(CL.pushback, emeraldWindsCount)) -- Emerald Winds
 
 	self:SetPrivateAuraSound(418720, 429123) -- Polymorph Bomb
+end
+
+function mod:BigWigs_EncounterEnd()
+	for id, timer in next, rebirthTimers do
+		self:CancelTimer(timer)
+		rebirthTimers[id] = nil
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -214,43 +226,50 @@ function mod:SpecialOver()
 	activeSpecials = math.max(activeSpecials - 1, 0)
 	if activeSpecials == 0 then
 		self:StopBar(L.special_mechanic_bar:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
-		self:StopBar(L.special_mechanic_bar:format(L.noxious_blossom, noxiousBlossomCount)) -- Noxious Blossom
+		self:StopBar(L.special_mechanic_bar:format(CL.pools, noxiousBlossomCount)) -- Noxious Blossom
 		self:StopBar(L.special_mechanic_bar:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
 
 		specialCount = specialCount + 1
-		agonizingClawsCount = 1
 
-		self:Bar(421022, self:Easy() and 8.0 or 5.0, CL.count:format(self:SpellName(421022), agonizingClawsCount)) -- Agonizing Claws
-		self:Bar(420948, self:Easy() and 29.0 or 13.0, CL.count:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
+		if agonizingClawsCount == 1 then -- don't start if Urctos is confused about the phase
+			self:Bar(421022, self:Easy() and 8.0 or 5.0, CL.count:format(self:SpellName(421022), agonizingClawsCount)) -- Agonizing Claws
+			self:Bar(420948, self:Easy() and 29.0 or 13.0, CL.count:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
+		end
 
-		self:Bar(420671, self:Easy() and 11.0 or 5.0, CL.count:format(L.noxious_blossom, noxiousBlossomCount)) -- Noxious Blossom
+		self:Bar(420671, self:Easy() and 11.0 or 5.0, CL.count:format(CL.pools, noxiousBlossomCount)) -- Noxious Blossom
 		self:Bar(420858, self:Easy() and 20.0 or 21.0, CL.count:format(L.poisonous_javelin, poisonousJavelinCount)) -- Poisonous Javelin
 		self:Bar(421570, 49.0) -- Leap (0.5, then 48.5, sometimes skipping the 0.5)
 
 		self:Bar(418720, 16.0, CL.count:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
 		self:Bar(421501, 23.0) -- Blink
-		self:Bar(421024, self:Mythic() and 43 or 45.5, CL.count:format(L.emerald_winds, emeraldWindsCount)) -- Emerald Winds
+		self:Bar(421024, self:Mythic() and 43 or 45.5, CL.count:format(CL.pushback, emeraldWindsCount)) -- Emerald Winds
 
 		nextSpecial = GetTime() + specialCD
 		if nextSpecialAbility == "urctos" then
 			nextSpecialAbility = "aerwynn"
 			if self:Mythic() then
+				-- Ult [Aerwynn/Pip] (%d)
 				self:Bar(421292, specialCD, L.special_mythic_bar:format(L.aerwynn, L.pip, specialCount)) -- Constricting Thicket/Song of the Dragon
 			else
+				-- Ult [Aerwynn] (%d)
 				self:Bar(421292, specialCD, L.special_bar:format(L.aerwynn, constrictingThicketCount)) -- Constricting Thicket
 			end
 		elseif nextSpecialAbility == "aerwynn" then
 			nextSpecialAbility = "pip"
 			if self:Mythic() then
+				-- Ult [Pip/Urctos] (%d)
 				self:Bar(421029, specialCD, L.special_mythic_bar:format(L.pip, L.urctos, specialCount)) -- Song of the Dragon/Blinding Rage
 			else
+				-- Ult [Pip] (%d)
 				self:Bar(421029, specialCD, L.special_bar:format(L.pip, constrictingThicketCount))  -- Song of the Dragon
 			end
 		elseif nextSpecialAbility == "pip" then
 			nextSpecialAbility = "urctos"
 			if self:Mythic() then
+				-- Ult [Urctos/Aerwynn] (%d)
 				self:Bar(420525, specialCD, L.special_mythic_bar:format(L.urctos, L.aerwynn, specialCount)) -- Blinding Rage/Constricting Thicket
 			else
+				-- Ult [Urctos] (%d)
 				self:Bar(420525, specialCD, L.special_bar:format(L.urctos, constrictingThicketCount))   -- Blinding Rage
 			end
 		end
@@ -259,38 +278,53 @@ end
 
 -- General
 function mod:Rebirth(args)
+	local rebirthTime = self:Mythic() and 15 or self:Heroic() and 20 or self:Easy() and 30
+	self:CastBar(args.spellId, rebirthTime, CL.count:format(args.spellName, rebirthCount))
+	rebirthCount = rebirthCount + 1
 	if not castingRebirth then
 		self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "long")
-		self:Bar(args.spellId, 15)
 		castingRebirth = true
 	end
 
 	-- handle skipping a cast due to rebirth
 	local boss = self:MobId(args.sourceGUID)
-	local rebirthTime = 15
 	local remainingSpecialCD = nextSpecial - GetTime()
 	if remainingSpecialCD > rebirthTime then
 		if boss == 208363 then -- Urctos
 			local remaining = self:BarTimeLeft(CL.count:format(self:SpellName(421022), agonizingClawsCount)) -- Agonizing Claws
 			if remaining > 0 and remaining < rebirthTime then
-				self:ScheduleTimer(function()
-					agonizingClawsCount = agonizingClawsCount + 1
-					local cd
-					if self:Easy() then
-						local timer = { 8.0, 6.0, 25.0, 6.0, 0 }
-						cd = timer[agonizingClawsCount]
-					else
-						local timer = { 5.0, 4.0, 16.0, 4.0, 0 }
-						cd = timer[agonizingClawsCount]
-					end
-					self:Bar(421022, cd, CL.count:format(self:SpellName(421022), agonizingClawsCount))
-				end, remaining)
+				-- find the next cast time and set the correct count for it
+				local timer = self:Easy() and { 8.0, 6.0, 25.0, 6.0 } or { 5.0, 4.0, 16.0, 4.0 }
+				local count = 1
+				local totalCD = remaining
+				while timer[agonizingClawsCount + count] and (totalCD + timer[agonizingClawsCount + count] < rebirthTime) do
+					totalCD = remaining + timer[agonizingClawsCount + count]
+					count = count + 1
+				end
+				if timer[agonizingClawsCount + count] then
+					rebirthTimers[421022] = self:ScheduleTimer(function()
+						agonizingClawsCount = agonizingClawsCount + count
+						self:Bar(421022, totalCD, CL.count:format(self:SpellName(421022), agonizingClawsCount))
+					end, remaining)
+				end
+			end
+
+			if not self:Easy() then
+				remaining = self:BarTimeLeft(CL.count:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
+				if remaining > 0 and remaining < rebirthTime then
+					rebirthTimers[420948] = self:ScheduleTimer(function()
+						-- barrelingChargeCount = barrelingChargeCount + 1 -- does count matter? debuff should be off
+						if nextSpecial - GetTime() > 25 then
+							self:Bar(420948, 20, CL.count:format(L.barreling_charge, barrelingChargeCount))
+						end
+					end, remaining)
+				end
 			end
 		elseif boss == 208365 then -- Aerwynn
 			local remaining = self:BarTimeLeft(CL.count:format(L.poisonous_javelin, poisonousJavelinCount)) -- Poisonous Javelin
 			if remaining > 0 and remaining < rebirthTime then
-				self:ScheduleTimer(function()
+				rebirthTimers[420858] = self:ScheduleTimer(function()
 					if nextSpecial - GetTime() > 25 then
 						self:Bar(420858, 25.0, CL.count:format(L.poisonous_javelin, poisonousJavelinCount))
 					end
@@ -299,17 +333,18 @@ function mod:Rebirth(args)
 		elseif boss == 208956 then -- Pip
 			local remaining = self:BarTimeLeft(CL.count:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
 			if remaining > 0 and remaining < rebirthTime then
-				self:ScheduleTimer(function()
+				rebirthTimers[418720] = self:ScheduleTimer(function()
 					if nextSpecial - GetTime() > 25 then
 						self:Bar(418720, self:Easy() and 19.0 or 20.0, CL.count:format(L.polymorph_bomb, polymorphBombCount))
 					end
 				end, remaining)
 			end
+			-- Noxious Blossom logic is annoying, so just let the next cast figure things out
 		end
 	elseif not self:Mythic() then
 		if (boss == 208363 and nextSpecialAbility == "urctos") or (boss == 208365 and nextSpecialAbility == "aerwynn") or (boss == 208956 and nextSpecialAbility == "pip") then
 			-- is this how this works?
-			self:ScheduleTimer("SpecialOver", remainingSpecialCD)
+			rebirthTimers[boss] = self:ScheduleTimer("SpecialOver", remainingSpecialCD)
 		end
 	end
 end
@@ -333,20 +368,21 @@ end
 
 -- Urctos
 function mod:BlindingRage(args)
-	self:Message(args.spellId, "orange", CL.count:format(L.ultimate_boss:format(self:SpellName(L.urctos)), blindingRageCount))
+	self:Message(args.spellId, "orange", CL.count:format(L.ultimate_boss:format(L.urctos), blindingRageCount)) -- Urctos ult
 	self:PlaySound(args.spellId, "alert") -- duck boss
 	blindingRageCount = blindingRageCount + 1
 
 	activeSpecials = activeSpecials + 1
+	agonizingClawsCount = 1 -- reset on all specials start because Urctos gets weird if interrupted during the Blinding Rage cast
 
 	-- if not self:Mythic() or nextSpecialAbility == "pip" then
-	-- 	self:Bar(420671, self:Mythic() and 1.0 or self:Easy() and 3.0 or 5.0, L.special_mechanic_bar:format(L.noxious_blossom, noxiousBlossomCount)) -- Noxious Blossom
+	-- 	self:Bar(420671, self:Mythic() and 1.0 or self:Easy() and 3.0 or 5.0, L.special_mechanic_bar:format(CL.pools, noxiousBlossomCount)) -- Noxious Blossom
 	-- end
 	-- self:Bar(418720, 9.0, L.special_mechanic_bar:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
 end
 
 function mod:BlindingRageOver()
-	self:StopBar(L.special_mechanic_bar:format(L.noxious_blossom, noxiousBlossomCount)) -- Noxious Blossom
+	self:StopBar(L.special_mechanic_bar:format(CL.pools, noxiousBlossomCount)) -- Noxious Blossom
 	self:StopBar(L.special_mechanic_bar:format(L.polymorph_bomb, polymorphBombCount)) -- Polymorph Bomb
 	self:SpecialOver()
 
@@ -450,11 +486,12 @@ end
 
 -- Aerwynn
 function mod:ConstrictingThicket(args)
-	self:Message(args.spellId, "orange", CL.casting:format(CL.count:format(L.ultimate_boss:format(L.aerwynn)), constrictingThicketCount))
+	self:Message(args.spellId, "orange", CL.casting:format(CL.count:format(L.ultimate_boss:format(L.aerwynn), constrictingThicketCount))) -- Aerwynn ult
 	self:PlaySound(args.spellId, "alert") -- Interrupt
 	constrictingThicketCount = constrictingThicketCount + 1
 
 	activeSpecials = activeSpecials + 1
+	agonizingClawsCount = 1
 
 	-- self:Bar(420948, self:Mythic() and 4.0 or 3.0, L.special_mechanic_bar:format(L.barreling_charge, barrelingChargeCount)) -- Barreling Charge
 end
@@ -464,13 +501,13 @@ function mod:ConstrictingThicketOver()
 	self:SpecialOver()
 
 	if activeSpecials > 0 and specialChain[nextSpecialAbility] == "pip" then -- Aerwynn + Pip
-		self:StopBar(CL.count:format(L.noxious_blossom, noxiousBlossomCount)) -- make sure we're not duplicating
-		self:Bar(420671, 5.0, L.special_mechanic_bar:format(L.noxious_blossom, noxiousBlossomCount))
+		self:StopBar(CL.count:format(CL.pools, noxiousBlossomCount)) -- make sure we're not duplicating
+		self:Bar(420671, 5.0, L.special_mechanic_bar:format(CL.pools, noxiousBlossomCount))
 	end
 end
 
 function mod:AerwynnBarrelingCharge()
-	self:Message(421292, "green", CL.interrupted:format(L.ultimate_boss:format(L.aerwynn))) -- Constricting Thicket
+	self:Message(421292, "green", CL.interrupted:format(L.ultimate_boss:format(L.aerwynn))) -- Aerwynn interrupted
 	self:PlaySound(421292, "info")
 end
 
@@ -491,7 +528,7 @@ function mod:ConstrictingThicketApplied(args)
 end
 
 function mod:NoxiousBlossom(args)
-	local spellName = L.noxious_blossom
+	local spellName = CL.pools
 	self:StopBar(L.special_mechanic_bar:format(spellName, noxiousBlossomCount))
 	self:StopBar(CL.count:format(spellName, noxiousBlossomCount))
 
@@ -553,12 +590,13 @@ end
 
 -- Pip
 function mod:SongOfTheDragon(args)
-	self:Message(args.spellId, "orange", CL.count:format(L.ultimate_boss:format(self:SpellName(L.pip)), songCount))
+	self:Message(args.spellId, "orange", CL.count:format(L.ultimate_boss:format(L.pip), songCount)) -- Pip ult
 	self:PlaySound(args.spellId, "alert")
 	self:CastBar(args.spellId, self:Mythic() and 14 or 24, L.song_of_the_dragon)
 	songCount = songCount + 1
 
 	activeSpecials = activeSpecials + 1
+	agonizingClawsCount = 1
 
 	-- self:Bar(420671, self:Mythic() and 1.0 or 3.0, L.special_mechanic_bar:format(args.spellName, noxiousBlossomCount)) -- Noxious Blossom
 end
@@ -566,7 +604,7 @@ end
 function mod:SongOfTheDragonOver()
 	self:StopBar(CL.cast:format(L.song_of_the_dragon))
 
-	self:Message(421292, "green", CL.over:format(L.ultimate_boss:format(L.pip)))
+	self:Message(421292, "green", CL.over:format(L.ultimate_boss:format(L.pip))) -- Pip ult over
 	self:PlaySound(421292, "info")
 
 	self:SpecialOver()
@@ -657,12 +695,12 @@ function mod:PolymorphBombRemoved(args)
 end
 
 function mod:EmeraldWinds(args)
-	self:StopBar(CL.count:format(L.emerald_winds, emeraldWindsCount))
-	self:Message(args.spellId, "orange", CL.count:format(L.emerald_winds, emeraldWindsCount))
+	self:StopBar(CL.count:format(CL.pushback, emeraldWindsCount))
+	self:Message(args.spellId, "orange", CL.count:format(CL.pushback, emeraldWindsCount))
 	self:PlaySound(args.spellId, "alarm") -- move for pushback
 	emeraldWindsCount = emeraldWindsCount + 1
 	-- 1 per special
-	-- self:Bar(args.spellId, 45.5, CL.count:format(L.emerald_winds, emeraldWindsCount))
+	-- self:Bar(args.spellId, 45.5, CL.count:format(CL.pushback, emeraldWindsCount))
 end
 
 function mod:Blink(args)

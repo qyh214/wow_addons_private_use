@@ -19,9 +19,9 @@ mod:RegisterEnableMob(
 
 	------ Murozond's Rise ------
 	201223, -- Infinite Twilight Magus
+	201222, -- Valow, Timesworn Keeper
 	205158, -- Spurlok, Timesworn Sentinel
 	205152, -- Lerai, Timesworn Maiden
-	201222, -- Valow, Timesworn Keeper
 	199748, -- Timeline Marauder
 	208061, -- Temporal Rift
 	208438, -- Infinite Saboteur
@@ -60,9 +60,9 @@ if L then
 
 	------ Murozond's Rise ------
 	L.infinite_twilight_magus = "Infinite Twilight Magus"
+	L.valow = "Valow, Timesworn Keeper"
 	L.spurlok = "Spurlok, Timesworn Sentinel"
 	L.lerai = "Lerai, Timesworn Maiden"
-	L.valow = "Valow, Timesworn Keeper"
 	L.timeline_marauder = "Timeline Marauder"
 	L.infinite_saboteur = "Infinite Saboteur"
 	L.infinite_riftmage = "Infinite Riftmage"
@@ -115,22 +115,23 @@ function mod:GetOptions()
 		------ Murozond's Rise ------
 		-- Infinite Twilight Magus
 		413607, -- Corroding Volley
+		-- Valow, Timesworn Keeper
+		412136, -- Temporal Strike
+		413024, -- Titanic Bulwark
 		-- Spurlok, Timesworn Sentinel
 		412215, -- Shrouding Sandstorm
 		412922, -- Binding Grasp
 		-- Lerai, Timesworn Maiden
 		412129, -- Orb of Contemplation
-		-- Valow, Timesworn Keeper
-		412136, -- Multiversal Fist
-		413024, -- Titanic Bulwark
 		-- Timeline Marauder
 		417481, -- Displace Chronosequence
 		-- Infinite Saboteur
 		419351, -- Bronze Exhalation
 		-- Infinite Riftmage
-		418200, -- Infinite Burn
+		{418200, "DISPEL"}, -- Infinite Burn
 		-- Time-Lost Waveshaper
 		411300, -- Fish Bolt Volley
+		411407, -- Bubbly Barrage
 		-- Time-Lost Aerobot
 		412156, -- Bombing Run
 		412200, -- Electro-Juiced Gigablast
@@ -153,6 +154,7 @@ function mod:GetOptions()
 		407125, -- Sundering Slam
 		-- Infinite Timebender
 		412378, -- Dizzying Sands
+		411952, -- Millenium Aid
 	}, {
 		-- General
 		["custom_on_rift_autotalk"] = CL.general,
@@ -170,9 +172,9 @@ function mod:GetOptions()
 
 		------ Murozond's Rise ------
 		[413607] = L.infinite_twilight_magus,
+		[412136] = L.valow,
 		[412215] = L.spurlok,
 		[412129] = L.lerai,
-		[412136] = L.valow,
 		[417481] = L.timeline_marauder,
 		[419351] = L.infinite_saboteur,
 		[418200] = L.infinite_riftmage,
@@ -233,16 +235,20 @@ function mod:OnBossEnable()
 	-- Infinite Twilight Magus
 	self:Log("SPELL_CAST_START", "CorrodingVolley", 413607)
 
+	-- Valow, Timesworn Keeper
+	self:Log("SPELL_CAST_START", "TemporalStrike", 412136)
+	self:Log("SPELL_CAST_START", "TitanicBulwark", 413024)
+	self:Death("ValowDeath", 201222)
+
 	-- Spurlok, Timesworn Sentinel
 	self:Log("SPELL_CAST_START", "ShroudingSandstorm", 412215)
 	self:Log("SPELL_CAST_START", "BindingGrasp", 412922)
+	self:Log("SPELL_AURA_APPLIED", "BindingGraspApplied", 412922)
+	self:Death("SpurlokDeath", 205158)
 
 	-- Lerai, Timesworn Maiden
 	self:Log("SPELL_CAST_START", "OrbOfContemplation", 412129)
-
-	-- Valow, Timesworn Keeper
-	self:Log("SPELL_CAST_START", "MultiversalFist", 412136)
-	self:Log("SPELL_CAST_START", "TitanicBulwark", 413024)
+	self:Death("LeraiDeath", 205152)
 
 	-- Tyr
 	self:Log("SPELL_AURA_REMOVED", "PonderingTheOathstoneRemoved", 413595)
@@ -255,9 +261,11 @@ function mod:OnBossEnable()
 
 	-- Infinite Riftmage
 	self:Log("SPELL_CAST_START", "InfiniteBurn", 418200)
+	self:Log("SPELL_AURA_APPLIED", "InfiniteBurnApplied", 418200)
 
 	-- Time-Lost Waveshaper
 	self:Log("SPELL_CAST_START", "FishBoltVolley", 411300)
+	self:Log("SPELL_CAST_START", "BubblyBarrage", 411407)
 
 	-- Time-Lost Aerobot
 	self:Log("SPELL_CAST_START", "BombingRun", 412156)
@@ -291,6 +299,7 @@ function mod:OnBossEnable()
 
 	-- Infinite Timebender
 	self:Log("SPELL_CAST_START", "DizzyingSands", 412378)
+	self:Log("SPELL_CAST_START", "MillenniumAid", 411952)
 end
 
 --------------------------------------------------------------------------------
@@ -366,7 +375,6 @@ do
 			playerList = {}
 		end
 		playerList[#playerList + 1] = args.destName
-		-- TODO confirm max 2 targets
 		self:TargetsMessage(415769, "yellow", playerList, 2, nil, nil, .5)
 		self:PlaySound(415769, "alert", nil, playerList)
 		if self:Me(args.destGUID) then
@@ -466,46 +474,106 @@ function mod:CorrodingVolley(args)
 	--self:NameplateCDBar(args.spellId, 7.3, args.sourceGUID)
 end
 
--- Spurlok, Timesworn Sentinel
-
-function mod:ShroudingSandstorm(args)
-	self:Message(args.spellId, "orange")
-	self:PlaySound(args.spellId, "alert")
-	--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
-end
+-- Valow, Timesworn Keeper
 
 do
-	local function printTarget(self, name, guid)
-		self:TargetMessage(412922, "yellow", name)
-		self:PlaySound(412922, "info", nil, name)
+	-- timer used to clean up bars in case of a wipe
+	local timer
+
+	function mod:TemporalStrike(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:PlaySound(args.spellId, "alarm")
+		self:CDBar(args.spellId, 12.1)
+		timer = self:ScheduleTimer("ValowDeath", 30)
+	end
+
+	function mod:TitanicBulwark(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "yellow")
+		self:PlaySound(args.spellId, "info")
+		self:CDBar(args.spellId, 26.7)
+		timer = self:ScheduleTimer("ValowDeath", 30)
+	end
+
+	function mod:ValowDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(412136) -- Temporal Strike
+		self:StopBar(413024) -- Titanic Bulwark
+	end
+end
+
+-- Spurlok, Timesworn Sentinel
+
+do
+	-- timer used to clean up bars in case of a wipe
+	local timer
+
+	function mod:ShroudingSandstorm(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:PlaySound(args.spellId, "alert")
+		self:CDBar(args.spellId, 19.4)
+		timer = self:ScheduleTimer("SpurlokDeath", 30)
 	end
 
 	function mod:BindingGrasp(args)
-		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
-		--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+		self:PlaySound(args.spellId, "info")
+		self:CDBar(args.spellId, 19.4)
+		timer = self:ScheduleTimer("SpurlokDeath", 30)
+	end
+
+	function mod:BindingGraspApplied(args)
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:PlaySound(args.spellId, "alarm", nil, args.destName)
+	end
+
+	function mod:SpurlokDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(412215) -- Shrouding Sandstorm
+		self:StopBar(412922) -- Binding Grasp
 	end
 end
 
--- Spurlok, Timesworn Sentinel
+-- Lerai, Timesworn Maiden
 
-function mod:OrbOfContemplation(args)
-	self:Message(args.spellId, "orange")
-	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 13.4, args.sourceGUID)
-end
+do
+	-- timer used to clean up bars in case of a wipe
+	local timer
 
--- Valow, Timesworn Keeper
+	function mod:OrbOfContemplation(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:PlaySound(args.spellId, "alarm")
+		self:CDBar(args.spellId, 13.4)
+		timer = self:ScheduleTimer("LeraiDeath", 30)
+	end
 
-function mod:MultiversalFist(args)
-	self:Message(args.spellId, "orange")
-	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 15.8, args.sourceGUID)
-end
-
-function mod:TitanicBulwark(args)
-	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "info")
-	--self:NameplateCDBar(args.spellId, 26.7, args.sourceGUID)
+	function mod:LeraiDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(412129) -- Orb of Contemplation
+	end
 end
 
 -- Tyr
@@ -543,12 +611,30 @@ function mod:InfiniteBurn(args)
 	--self:NameplateCDBar(args.spellId, 9.7, args.sourceGUID)
 end
 
+do
+	local prev = 0
+	function mod:InfiniteBurnApplied(args)
+		local t = args.time
+		if t - prev > 2 and (self:Dispeller("magic", nil, args.spellId) or self:Dispeller("movement", nil, args.spellId)) then
+			prev = t
+			self:TargetMessage(args.spellId, "yellow", args.destName)
+			self:PlaySound(args.spellId, "alert", nil, args.destName)
+		end
+	end
+end
+
 -- Time-Lost Waveshaper
 
 function mod:FishBoltVolley(args)
 	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
 	--self:NameplateCDBar(args.spellId, 13.3, args.sourceGUID)
+end
+
+function mod:BubblyBarrage(args)
+	self:Message(args.spellId, "red")
+	self:PlaySound(args.spellId, "long")
+	--self:NameplateCDBar(args.spellId, 20.6, args.sourceGUID)
 end
 
 -- Time-Lost Aerobot
@@ -691,4 +777,9 @@ function mod:DizzyingSands(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "warning")
 	--self:NameplateCDBar(args.spellId, 29.1, args.sourceGUID)
+end
+
+function mod:MillenniumAid(args)
+	self:Message(args.spellId, "orange")
+	self:PlaySound(args.spellId, "alarm")
 end

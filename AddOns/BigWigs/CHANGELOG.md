@@ -1,10 +1,17 @@
 # BigWigs
 
-## [v300](https://github.com/BigWigsMods/BigWigs/tree/v300) (2023-11-20)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v299.3...v300) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
+## [v305.2](https://github.com/BigWigsMods/BigWigs/tree/v305.2) (2023-12-05)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v305.1...v305.2) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
 
-- bump version  
-- Amirdrassil/Larodar: Add castbar countdown on Raging Inferno, emphasize flash fire, cleanups  
-- Update deDE (#1457)  
-- Amirdrassil/Smolderon: Add a castbar countdown for the tank soak for damage roles, emphasize for overheat & searing aftermath  
-- DragonIsles/Aurostor: Add module  
+- Update zhCN (#1483)  
+- Amirdrassil/Fyrakk: Fix a compare logic  
+- Amirdrassil/Fyrakk: fix a lua error and re-add 7th add wave for heroic spirits of kaldorei  
+- Update deDE (#1484)  
+- Core: Add "above you" common locale entry  
+- Core: Locale update  
+- Locale cleanups  
+- Update deDE (#1481)  
+- Core: Add a few more common locale entries  
+- Update zhCN (#1482)  
+- Amirdrassil/Nymue: Show messages for who Weaver's Burden is on  
+- Core/BossPrototype: Add `RegisterWhisperEmoteComms(func)` API  

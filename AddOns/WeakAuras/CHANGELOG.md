@@ -1,23 +1,33 @@
-# [5.8.6](https://github.com/WeakAuras/WeakAuras2/tree/5.8.6) (2023-11-15)
+# [5.8.7](https://github.com/WeakAuras/WeakAuras2/tree/5.8.7) (2023-12-03)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.5...5.8.6)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.6...5.8.7)
 
 ## Highlights
 
- - Update for Range Check hotfix
-- Bugfixes and texture updates for 10.2 
+ - Updates for Season of Discovery
+- New option to treat charged combo point as 7 combo points (thanks to @weswigham for initial idea+PR)
+- Bug fixes 
 
 ## Commits
 
-InfusOnWoW (1):
+InfusOnWoW (9):
 
-- Switch to LibRangeCheck-3.0
+- Show an warning on trying to update an aura that can't be updated
+- Add an option to treat a charged combo point as 7 combo points
+- Add CHAT_MSG_LOOT type
+- Tweak frame levels again a bit
+- Improve error message for auras without a region type
+- AuraBar: Fix property names for gradient colors
+- Author Options: Also sort Sound list for the user
+- Drangonflying Load Option
+- Templates: Fix talent load option for Holy Word: Sanctify
 
-mrbuds (5):
+Stanzilla (2):
 
-- Update model list for 10.2
-- Update texture atlas list for 10.2
-- Use LibRangeCheck-3.0
-- Dynamic Group: don't apply level to subgroups, don't do it only for top level groups
-- Dynamic Group: raise level of auras over backdrop
+- Bump minor
+- Bump Classic TOC for SoD
+
+mrbuds (1):
+
+- Classis SoD: include new spell ids in spell cache
 

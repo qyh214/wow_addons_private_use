@@ -14,7 +14,7 @@ mod:SetRespawnTime(15)
 
 function mod:GetOptions()
 	return {
-		{200182, "TANK_HEALER"}, -- Festering Rip
+		{200182, "DISPEL"}, -- Festering Rip
 		200238, -- Feed on the Weak
 		200185, -- Nightmare Bolt
 		{200243, "ICON", "SAY"}, -- Waking Nightmare
@@ -55,8 +55,10 @@ function mod:FesteringRip(args)
 end
 
 function mod:FesteringRipApplied(args)
-	self:TargetMessage(args.spellId, "purple", args.destName)
-	self:PlaySound(args.spellId, "alert", nil, args.destName)
+	if self:Me(args.destGUID) or self:Dispeller("magic", nil, args.spellId) then
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:PlaySound(args.spellId, "alert", nil, args.destName)
+	end
 end
 
 do
@@ -107,7 +109,7 @@ end
 
 function mod:WakingNightmareApplied(args)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Yell(args.spellId)
 		self:PersonalMessage(args.spellId)
 		self:PlaySound(args.spellId, "alarm")
 	end

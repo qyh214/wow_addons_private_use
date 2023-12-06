@@ -214,7 +214,7 @@ local function OnPlayerTargetChanged()
 		-- check if killed
 		if (not RSNpcDB.IsNpcKilled(npcID)) then
 			-- Update coordinates (if zone doesnt use vignettes or it is detected with nameplates)
-			if ((RSMapDB.IsZoneWithoutVignette(playerMapID) or npcInfo.nameplate) and CheckInteractDistance("unit", 4)) then
+			if ((RSMapDB.IsZoneWithoutVignette(playerMapID) or npcInfo.nameplate) and not InCombatLockdown() and CheckInteractDistance("unit", 4)) then
 				RSGeneralDB.UpdateAlreadyFoundEntityPlayerPosition(npcID)
 			end
 			

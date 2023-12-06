@@ -25,7 +25,7 @@ RSConstants.LOOT_ITEM_ID = nil
 ---============================================================================
 
 RSConstants.CURRENT_DB_VERSION = 118
-RSConstants.CURRENT_LOOT_DB_VERSION = 130
+RSConstants.CURRENT_LOOT_DB_VERSION = 131
 
 ---============================================================================
 -- Current maps (newer)
@@ -73,15 +73,15 @@ RSConstants.DRAGONFLIGHT_DREAMSEED_MINIEVENT = 9
 
 -- Minievents that will have an option to filter/unfilter the icons from the worldmap
 RSConstants.MINIEVENTS_WORLDMAP_FILTERS = {
-	[RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_FIRE_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_WATER_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_EARTH_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_AIR_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_HUNTING_PARTY_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_WARCRAFT_RUMBLE_MINIEVENT] = true;
-	[RSConstants.DRAGONFLIGHT_DREAMSEED_MINIEVENT] = true;
+	[RSConstants.DRAGONFLIGHT_DREAMSURGE_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_FIRE_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_WATER_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_EARTH_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_STORM_INVASTION_AIR_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_HUNTING_PARTY_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022 } };
+	[RSConstants.DRAGONFLIGHT_FYRAKK_MINIEVENT] = { active = true, mapIDs = { 2023, 2024} };
+	[RSConstants.DRAGONFLIGHT_WARCRAFT_RUMBLE_MINIEVENT] = { active = true, mapIDs = { 2025, 2024, 2023, 2022, 2199, 2112, 1, 84, 85 } };
+	[RSConstants.DRAGONFLIGHT_DREAMSEED_MINIEVENT] = { active = true, mapIDs = { 2200 } };
 }
 
 ---============================================================================
@@ -199,8 +199,7 @@ RSConstants.PROFILE_DEFAULTS = {
 			defaultEventFilterType = RSConstants.ENTITY_FILTER_ALL
 		},
 		zoneFilters = {
-			filtersToggled = true,
-			filterOnlyMap = false
+			defaultZoneFilterType = RSConstants.ENTITY_FILTER_ALL
 		},
 		collections = {
 			filteredOnlyOnWorldMap = false,

@@ -157,10 +157,7 @@ L["STRING_CUSTOM_SPELLID_DESC"] = "Opcional. El hechizo que la fuente utiliza pa
 L["STRING_CUSTOM_TARGET"] = "Objetivo:"
 L["STRING_CUSTOM_TARGET_DESC"] = "Este está el objetivo del fuente. El botón a la derecha muestra una lista de PNJs de los encuentros de banda."
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000temporalmente|r)"
---[[Translation missing --]]
-L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[To load a texture file in the World of Warcraft client you need a file in .TGA format and its width and height must be multiples of 8.
-
-Place the texture inside /WoW Install Folder/retail/Interface/]=]
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = "Para cargar un archivo de texturas en el cliente de World of Warcraft necesitas un archivo en formato .TGA y tanto su ancho como su alto deben ser un múltiplo de 8. Pon el archivo dentro de la carpeta /carpeta_de_instalacion_de_wow/retail/Interface/"
 L["STRING_DAMAGE"] = "Daño"
 L["STRING_DAMAGE_DPS_IN"] = "DPS recibido por"
 L["STRING_DAMAGE_FROM"] = "Recibió daño por"
@@ -383,20 +380,13 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "Modelo 3D superior:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "Activado o desactivado el uso de un marco de modelo 3D sobre las barras."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "Elija qué modelo se utilizará en la barra de modelo superior."
 L["STRING_OPTIONS_ADVANCED"] = "Avanzado"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Aligned Text Columns"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Auto Alignment"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "The alignment is done automatically based on the length of each text"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disable brackets and separators and align bars texts in vertical columns"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Offset"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Offset from right border"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "is enabled, separators and brackets aren't used"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Columnas de texto alineadas"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "Alineación automática"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "La alineación se hace automáticamente basada en la longitud de cada texto"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Deshabilita corchetes y separadores y textos de barras alineadas en columnas verticales"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Texto %d desplazamiento"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Desplazar desde el borde derecho"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "está habilitado, no se utilizan separadores ni corchetes"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "Modificadores de opacidad:"
 L["STRING_OPTIONS_ALWAYS_USE"] = "Usar en todos los personajes"
 L["STRING_OPTIONS_ALWAYS_USE_DESC"] = "Se usa el mismo perfil en todos los personajes. Puede anular esto en cualquier personaje simplemente seleccionando otro perfil existente."
@@ -582,14 +572,12 @@ L["STRING_OPTIONS_ED_DESC"] = [=[|cFFFFFF00Manualmente|r: El usuario necesita ha
 L["STRING_OPTIONS_ED1"] = "Manualmente"
 L["STRING_OPTIONS_ED2"] = "Mensaje"
 L["STRING_OPTIONS_ED3"] = "Auto"
---[[Translation missing --]]
-L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Edit Custom Text"
+L["STRING_OPTIONS_EDIT_CUSTOM_TEXT"] = "Editar texto personalizado"
 L["STRING_OPTIONS_EDITIMAGE"] = "Editar imagen"
 L["STRING_OPTIONS_EDITINSTANCE"] = "Configurando ventana:"
 L["STRING_OPTIONS_ERASECHARTDATA"] = "Borrar gráficos"
 L["STRING_OPTIONS_ERASECHARTDATA_DESC"] = "Durante el cierre de sesión, se borran todos los datos de combate recopilados para crear gráficos."
---[[Translation missing --]]
-L["STRING_OPTIONS_EXPORT_PROFILE"] = "Export Profile"
+L["STRING_OPTIONS_EXPORT_PROFILE"] = "Exportar perfil"
 L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Artilugios externos"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Estas opciones controlan el comportamiento de muchos artilugios extranjeros."
 L["STRING_OPTIONS_GENERAL"] = "Opciones generales"
@@ -611,12 +599,9 @@ L["STRING_OPTIONS_IGNORENICKNAME_DESC"] = "Cuando está habilitado, los apodos y
 L["STRING_OPTIONS_ILVL_TRACKER"] = "Rastreador de nivel de objeto:"
 L["STRING_OPTIONS_ILVL_TRACKER_DESC"] = "Cuando está habilitado y fuera de combate, el addon consulta y rastrea el nivel de objeto de los jugadores en la banda. Si está deshabilitado, aún lee el nivel de objeto de las consultas de otros addons cuando inspecciona manualmente a otro jugador."
 L["STRING_OPTIONS_ILVL_TRACKER_TEXT"] = "Habilitado"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE"] = "Import Profile"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Insert a Name for the New Profile"
---[[Translation missing --]]
-L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Import Profile (paste string)"
+L["STRING_OPTIONS_IMPORT_PROFILE"] = "Importar perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_NAME"] = "Inserta un nombre para el nuevo perfil"
+L["STRING_OPTIONS_IMPORT_PROFILE_PASTE"] = "Details! Importar perfil (pega la cadena de importación)"
 L["STRING_OPTIONS_INSTANCE_BACKDROP"] = "Textura del fondo"
 L["STRING_OPTIONS_INSTANCE_BACKDROP_DESC"] = "Escoger la textura del fondo de la ventana. |cffffff00Defecto|r: Details Background."
 L["STRING_OPTIONS_INSTANCE_CURRENT"] = "Auto-cambiar al actual"
@@ -709,8 +694,7 @@ L["STRING_OPTIONS_NICKNAME"] = "Apodo"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Reemplazar el nombre de su personaje. El apodo se envía a los miembres de la hermandad, y se muestra en Details! en vez del nombre de su personaje."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor de texto de fila"
 L["STRING_OPTIONS_OPEN_TEXT_EDITOR"] = "Abrir editor de texto"
---[[Translation missing --]]
-L["STRING_OPTIONS_OPENBROKER"] = "Open Broker Text Editor"
+L["STRING_OPTIONS_OPENBROKER"] = "Editor de texto de agente abierto"
 L["STRING_OPTIONS_OVERALL_ALL"] = "Todos segmentos"
 L["STRING_OPTIONS_OVERALL_ALL_DESC"] = "Todos segmentos se inclyen en los datos globales."
 L["STRING_OPTIONS_OVERALL_ANCHOR"] = "Datos globales:"
@@ -1001,8 +985,7 @@ L["STRING_OPTIONS_TEXTEDITOR_TOK_TOOLTIP"] = [=[Añadir una función para abrevi
 Por ejemplo: 1500000 a 1.5kk.]=]
 L["STRING_OPTIONS_TIMEMEASURE"] = "Medida de tiempo"
 L["STRING_OPTIONS_TIMEMEASURE_DESC"] = "|cFFFFFF00Actividad|r: el temporizador de cada miembro de la banda se pone en espera si se detiene su actividad y vuelve a contar cuando se reanuda, forma común de medir DPS y SPS.  |cFFFFFF00Efectivo|r: utilizado en las clasificaciones, este método utiliza el tiempo de combate transcurrido para medir el DPS y el SPS de todos los miembros de la banda."
---[[Translation missing --]]
-L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Buttons and Menu Settings"
+L["STRING_OPTIONS_TITLEBAR_MENUBUTTONS_HEADER"] = "Botones y configuración del menú"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS"] = "Configuración del botón de la barra de título"
 L["STRING_OPTIONS_TOOLBAR_SETTINGS_DESC"] = "Estas opciones cambian el menú principal en la parte superior de la ventana."
 L["STRING_OPTIONS_TOOLBARSIDE"] = "Barra de título en el lado superior"
@@ -1110,20 +1093,12 @@ L["STRING_OPTIONS_WINDOW"] = "Opciones"
 L["STRING_OPTIONS_WINDOW_ANCHOR_ANCHORS"] = "Anclas:"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE"] = "Ignorar alternar masa"
 L["STRING_OPTIONS_WINDOW_IGNOREMASSTOGGLE_DESC"] = "Cuando está habilitada, esta ventana no se ve afectada al ocultar, mostrar o alternar todas las ventanas."
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Row's Area Color\""
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Set the background color of the area when the rows are shown."
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR"] = "\"Color del área de la fila\""
+L["STRING_OPTIONS_WINDOW_ROWAREA_COLOR_DESC"] = "Establece el color de fondo del área cuando se muestran las filas."
 L["STRING_OPTIONS_WINDOW_SCALE"] = "Escala"
 L["STRING_OPTIONS_WINDOW_SCALE_DESC"] = "Ajusta la escala de la ventana. |cFFFFFF00Consejo|r: Haga clic derecho para escribir el valor. |cFFFFFF00Actual|r: %s"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Skin Color"
---[[Translation missing --]]
-L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = [=[Modifies the color of the skin applied into this window.
-
-|cFFFFFF00Important|r: the alpha chosen here is overwritten with |cFFFFFF00Auto Transparency|r values when enabled.
-
-|cFFFFFF00Important|r: selecting the skin color overwrites any color customization applied to statusbar.]=]
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR"] = "Color de piel"
+L["STRING_OPTIONS_WINDOW_SKIN_COLOR_DESC"] = "Modifica el color de la piel aplicada en esta ventana. |cFFFFFF00Importante|r: la transparencia elegida aquí se sobreescribe con los valores de |cFFFFFF00Transparencia Automática|r cuando está activada. |Importante: la selección del color de la apariencia sobrescribe cualquier personalización de color aplicada a la barra de estado."
 L["STRING_OPTIONS_WINDOW_TITLE"] = "Configuración de ventana"
 L["STRING_OPTIONS_WINDOW_TITLE_DESC"] = "Estas opciones se permiten personalizar la aparencia de la ventana seleccionada."
 L["STRING_OPTIONS_WINDOWSPEED"] = "Intervalo de actualización"

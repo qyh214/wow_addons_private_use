@@ -1,5 +1,5 @@
 --
--- RaiderIO Client Data. Generated on Wed Nov 22 2023 14:21:49 GMT+0000 (Coordinated Universal Time)
+-- RaiderIO Client Data. Generated on Wed Dec 06 2023 03:12:29 GMT+0000 (Coordinated Universal Time)
 --
 local _, ns = ...
 ns.GUILD_BEST_DATA = {
@@ -11,136 +11,34 @@ ns.GUILD_BEST_DATA = {
     },
     ["season_best"] = {
       {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7403159569184857,
-        ["clear_time"] = "00:27:24.241",
+        ["zone_id"] = 7673,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.162812972133799,
+        ["clear_time"] = "00:34:54.225",
         ["party"] = {
           {
-            ["name"] = "君子不器",
+            ["name"] = "Palabuding",
             ["role"] = "tank",
             ["class_id"] = 2
           },
           {
-            ["name"] = "帅瓜瓜",
+            ["name"] = "指染流年",
             ["role"] = "healer",
-            ["class_id"] = 11
+            ["class_id"] = 5
           },
           {
-            ["name"] = "冤屈",
+            ["name"] = "可愛的小只因",
             ["role"] = "dps",
-            ["class_id"] = 8
+            ["class_id"] = 13
           },
           {
-            ["name"] = "我不忙叨人",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "龙儿飞",
+            ["name"] = "火锅丶老乱",
             ["role"] = "dps",
             ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.785366343901357,
-        ["clear_time"] = "00:23:34.444",
-        ["party"] = {
-          {
-            ["name"] = "丶无法触及",
-            ["role"] = "tank",
-            ["class_id"] = 12
           },
           {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Memorry",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "Minnashinde",
-            ["role"] = "dps",
-            ["class_id"] = 1
-          },
-          {
-            ["name"] = "我午睡了鸭",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          }
-        }
-      },
-      {
-        ["zone_id"] = 7805,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7857153103726563,
-        ["clear_time"] = "00:28:17.930",
-        ["party"] = {
-          {
-            ["name"] = "蹄子小丶",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "團滅薩滿",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "幽幽猎丷",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "蛤蟆尊者",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8321219415227111,
-        ["clear_time"] = "00:30:48.142",
-        ["party"] = {
-          {
-            ["name"] = "王铁柱",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "今夕何年",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "佳爷",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "狗贰蛋",
+            ["name"] = "花生米老湿",
             ["role"] = "dps",
             ["class_id"] = 12
           }
@@ -148,171 +46,171 @@ ns.GUILD_BEST_DATA = {
       },
       {
         ["zone_id"] = 1000010,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8543713152235743,
-        ["clear_time"] = "00:29:03.771",
+        ["level"] = 25,
+        ["upgrades"] = 2,
+        ["fraction"] = 0.788814693196812,
+        ["clear_time"] = "00:26:49.970",
         ["party"] = {
           {
-            ["name"] = "雾里三千意",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "兲丶丿",
+            ["name"] = "伊索丶",
             ["role"] = "healer",
             ["class_id"] = 10
           },
           {
-            ["name"] = "Miyaar",
+            ["name"] = "十局半上",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "小呆瓜呀",
+            ["name"] = "大师兄丶圣",
+            ["role"] = "dps",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "救救弟弟",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8017995380840065,
+        ["clear_time"] = "00:28:52.688",
+        ["party"] = {
+          {
+            ["name"] = "Palabuding",
+            ["role"] = "tank",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "指染流年",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Eastleaves",
+            ["role"] = "dps",
+            ["class_id"] = 11
+          },
+          {
+            ["name"] = "放弃输出灬宇",
             ["role"] = "dps",
             ["class_id"] = 13
           },
           {
-            ["name"] = "范克理夫",
+            ["name"] = "花生米老湿",
             ["role"] = "dps",
-            ["class_id"] = 4
+            ["class_id"] = 12
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8334196360109375,
+        ["clear_time"] = "00:30:01.019",
+        ["party"] = {
+          {
+            ["name"] = "都是憨包",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "核弹小宝宝",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "别演了蟹蟹",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "超级恐怖人",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "黄昏无风",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 9424,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9412386047900066,
+        ["clear_time"] = "00:34:50.490",
+        ["party"] = {
+          {
+            ["name"] = "Palabuding",
+            ["role"] = "tank",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "指染流年",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "可愛的小只因",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          },
+          {
+            ["name"] = "火锅丶老乱",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "简繁丶",
+            ["role"] = "dps",
+            ["class_id"] = 8
           }
         }
       }
     },
     ["weekly_best"] = {
       {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7403159569184857,
-        ["clear_time"] = "00:27:24.241",
+        ["zone_id"] = 7673,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.162812972133799,
+        ["clear_time"] = "00:34:54.225",
         ["party"] = {
           {
-            ["name"] = "君子不器",
+            ["name"] = "Palabuding",
             ["role"] = "tank",
             ["class_id"] = 2
           },
           {
-            ["name"] = "帅瓜瓜",
+            ["name"] = "指染流年",
             ["role"] = "healer",
-            ["class_id"] = 11
+            ["class_id"] = 5
           },
           {
-            ["name"] = "冤屈",
+            ["name"] = "可愛的小只因",
             ["role"] = "dps",
-            ["class_id"] = 8
+            ["class_id"] = 13
           },
           {
-            ["name"] = "我不忙叨人",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "龙儿飞",
+            ["name"] = "火锅丶老乱",
             ["role"] = "dps",
             ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.785366343901357,
-        ["clear_time"] = "00:23:34.444",
-        ["party"] = {
-          {
-            ["name"] = "丶无法触及",
-            ["role"] = "tank",
-            ["class_id"] = 12
           },
           {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Memorry",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "Minnashinde",
-            ["role"] = "dps",
-            ["class_id"] = 1
-          },
-          {
-            ["name"] = "我午睡了鸭",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          }
-        }
-      },
-      {
-        ["zone_id"] = 7805,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7857153103726563,
-        ["clear_time"] = "00:28:17.930",
-        ["party"] = {
-          {
-            ["name"] = "蹄子小丶",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "團滅薩滿",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "幽幽猎丷",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "蛤蟆尊者",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8321219415227111,
-        ["clear_time"] = "00:30:48.142",
-        ["party"] = {
-          {
-            ["name"] = "王铁柱",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "兲丶丿",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "今夕何年",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "佳爷",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "狗贰蛋",
+            ["name"] = "花生米老湿",
             ["role"] = "dps",
             ["class_id"] = 12
           }
@@ -320,35 +218,137 @@ ns.GUILD_BEST_DATA = {
       },
       {
         ["zone_id"] = 1000010,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8543713152235743,
-        ["clear_time"] = "00:29:03.771",
+        ["level"] = 25,
+        ["upgrades"] = 2,
+        ["fraction"] = 0.788814693196812,
+        ["clear_time"] = "00:26:49.970",
         ["party"] = {
           {
-            ["name"] = "雾里三千意",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "兲丶丿",
+            ["name"] = "伊索丶",
             ["role"] = "healer",
             ["class_id"] = 10
           },
           {
-            ["name"] = "Miyaar",
+            ["name"] = "十局半上",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "小呆瓜呀",
+            ["name"] = "大师兄丶圣",
+            ["role"] = "dps",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "救救弟弟",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8017995380840065,
+        ["clear_time"] = "00:28:52.688",
+        ["party"] = {
+          {
+            ["name"] = "Palabuding",
+            ["role"] = "tank",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "指染流年",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Eastleaves",
+            ["role"] = "dps",
+            ["class_id"] = 11
+          },
+          {
+            ["name"] = "放弃输出灬宇",
             ["role"] = "dps",
             ["class_id"] = 13
           },
           {
-            ["name"] = "范克理夫",
+            ["name"] = "花生米老湿",
             ["role"] = "dps",
-            ["class_id"] = 4
+            ["class_id"] = 12
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8334196360109375,
+        ["clear_time"] = "00:30:01.019",
+        ["party"] = {
+          {
+            ["name"] = "都是憨包",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "核弹小宝宝",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "别演了蟹蟹",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "超级恐怖人",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "黄昏无风",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 9424,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9412386047900066,
+        ["clear_time"] = "00:34:50.490",
+        ["party"] = {
+          {
+            ["name"] = "Palabuding",
+            ["role"] = "tank",
+            ["class_id"] = 2
+          },
+          {
+            ["name"] = "指染流年",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "可愛的小只因",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          },
+          {
+            ["name"] = "火锅丶老乱",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "简繁丶",
+            ["role"] = "dps",
+            ["class_id"] = 8
           }
         }
       }
@@ -362,695 +362,344 @@ ns.GUILD_BEST_DATA = {
     },
     ["season_best"] = {
       {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
+        ["zone_id"] = 9424,
+        ["level"] = 26,
         ["upgrades"] = 1,
-        ["fraction"] = 0.8872559063053339,
-        ["clear_time"] = "00:26:37.947",
+        ["fraction"] = 0.915033280069014,
+        ["clear_time"] = "00:33:52.288",
         ["party"] = {
           {
-            ["name"] = "月印百川",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "男銅都很少話",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Qaqo",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "桃桃冰紅茶",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "红肉丝丶",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.805870519639378,
-        ["clear_time"] = "00:24:11.372",
-        ["party"] = {
-          {
-            ["name"] = "黑夜最相似",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "Kby",
+            ["name"] = "暗夸克丶",
             ["role"] = "healer",
             ["class_id"] = 5
           },
           {
-            ["name"] = "Mahabharata",
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "竖起一杆旗",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "忘川的紫罗兰",
+            ["name"] = "美國國王",
             ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "萌萌然",
-            ["role"] = "dps",
-            ["class_id"] = 2
+            ["class_id"] = 8
           }
         }
       },
       {
         ["zone_id"] = 7805,
-        ["level"] = 22,
+        ["level"] = 26,
         ["upgrades"] = 1,
-        ["fraction"] = 0.9601258492021514,
-        ["clear_time"] = "00:34:34.831",
+        ["fraction"] = 0.9381924748692618,
+        ["clear_time"] = "00:33:47.433",
         ["party"] = {
           {
-            ["name"] = "亞連沃克丶",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "貓耳愛麗絲",
+            ["name"] = "暗夸克丶",
             ["role"] = "healer",
-            ["class_id"] = 11
+            ["class_id"] = 5
           },
           {
-            ["name"] = "Hinanawitens",
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "复仇还不加强",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "息灾",
+            ["name"] = "美國國王",
             ["role"] = "dps",
-            ["class_id"] = 13
+            ["class_id"] = 8
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 26,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9758926311395795,
+        ["clear_time"] = "00:35:08.903",
+        ["party"] = {
+          {
+            ["name"] = "捕风",
+            ["role"] = "tank",
+            ["class_id"] = 12
           },
           {
-            ["name"] = "皇轩",
+            ["name"] = "核桃酱",
+            ["role"] = "healer",
+            ["class_id"] = 11
+          },
+          {
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "多鱼",
+            ["role"] = "dps",
+            ["class_id"] = 4
+          },
+          {
+            ["name"] = "阿梓喵",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          }
+        }
+      },
+      {
+        ["zone_id"] = 1000010,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.0621416277029043,
+        ["clear_time"] = "00:36:07.830",
+        ["party"] = {
+          {
+            ["name"] = "Neverun",
+            ["role"] = "tank",
+            ["class_id"] = 6
+          },
+          {
+            ["name"] = "于笙",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "东京热",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "仁者",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          },
+          {
+            ["name"] = "华东丶梁朝伟",
             ["role"] = "dps",
             ["class_id"] = 9
           }
         }
       },
       {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.6924501346197305,
-        ["clear_time"] = "00:20:47.102",
+        ["zone_id"] = 1000011,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 2.8744191922347024,
+        ["clear_time"] = "01:43:31.617",
         ["party"] = {
           {
-            ["name"] = "凯小楼",
+            ["name"] = "裁决",
             ["role"] = "tank",
-            ["class_id"] = 1
+            ["class_id"] = 2
           },
           {
-            ["name"] = "車寶山",
+            ["name"] = "朝朝",
             ["role"] = "healer",
             ["class_id"] = 11
           },
           {
-            ["name"] = "Floweret",
+            ["name"] = "华东丶吴奇隆",
             ["role"] = "dps",
-            ["class_id"] = 4
+            ["class_id"] = 2
           },
           {
-            ["name"] = "Gumayusi",
+            ["name"] = "坤乾丶",
             ["role"] = "dps",
             ["class_id"] = 3
           },
           {
-            ["name"] = "桃桃冰紅茶",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7445378925807288,
-        ["clear_time"] = "00:22:20.912",
-        ["party"] = {
-          {
-            ["name"] = "随便丶玩玩",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "春日桃桃冰",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "Luuck",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "Togas",
+            ["name"] = "月巴舟亢",
             ["role"] = "dps",
             ["class_id"] = 4
-          },
-          {
-            ["name"] = "萌萌然",
-            ["role"] = "dps",
-            ["class_id"] = 2
           }
         }
       }
     },
     ["weekly_best"] = {
       {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
+        ["zone_id"] = 9424,
+        ["level"] = 26,
         ["upgrades"] = 1,
-        ["fraction"] = 0.8872559063053339,
-        ["clear_time"] = "00:26:37.947",
+        ["fraction"] = 0.915033280069014,
+        ["clear_time"] = "00:33:52.288",
         ["party"] = {
           {
-            ["name"] = "月印百川",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "男銅都很少話",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Qaqo",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "桃桃冰紅茶",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "红肉丝丶",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.805870519639378,
-        ["clear_time"] = "00:24:11.372",
-        ["party"] = {
-          {
-            ["name"] = "黑夜最相似",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "Kby",
+            ["name"] = "暗夸克丶",
             ["role"] = "healer",
             ["class_id"] = 5
           },
           {
-            ["name"] = "Mahabharata",
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "竖起一杆旗",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "忘川的紫罗兰",
+            ["name"] = "美國國王",
             ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "萌萌然",
-            ["role"] = "dps",
-            ["class_id"] = 2
+            ["class_id"] = 8
           }
         }
       },
       {
         ["zone_id"] = 7805,
-        ["level"] = 22,
+        ["level"] = 26,
         ["upgrades"] = 1,
-        ["fraction"] = 0.9601258492021514,
-        ["clear_time"] = "00:34:34.831",
+        ["fraction"] = 0.9381924748692618,
+        ["clear_time"] = "00:33:47.433",
         ["party"] = {
           {
-            ["name"] = "亞連沃克丶",
+            ["name"] = "遨游四海",
             ["role"] = "tank",
             ["class_id"] = 12
           },
           {
-            ["name"] = "貓耳愛麗絲",
+            ["name"] = "暗夸克丶",
             ["role"] = "healer",
-            ["class_id"] = 11
+            ["class_id"] = 5
           },
           {
-            ["name"] = "Hinanawitens",
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "复仇还不加强",
             ["role"] = "dps",
             ["class_id"] = 12
           },
           {
-            ["name"] = "息灾",
+            ["name"] = "美國國王",
             ["role"] = "dps",
-            ["class_id"] = 13
+            ["class_id"] = 8
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 26,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9758926311395795,
+        ["clear_time"] = "00:35:08.903",
+        ["party"] = {
+          {
+            ["name"] = "捕风",
+            ["role"] = "tank",
+            ["class_id"] = 12
           },
           {
-            ["name"] = "皇轩",
+            ["name"] = "核桃酱",
+            ["role"] = "healer",
+            ["class_id"] = 11
+          },
+          {
+            ["name"] = "华东丶梁朝伟",
+            ["role"] = "dps",
+            ["class_id"] = 9
+          },
+          {
+            ["name"] = "多鱼",
+            ["role"] = "dps",
+            ["class_id"] = 4
+          },
+          {
+            ["name"] = "阿梓喵",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          }
+        }
+      },
+      {
+        ["zone_id"] = 1000010,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.0621416277029043,
+        ["clear_time"] = "00:36:07.830",
+        ["party"] = {
+          {
+            ["name"] = "Neverun",
+            ["role"] = "tank",
+            ["class_id"] = 6
+          },
+          {
+            ["name"] = "于笙",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "东京热",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "仁者",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          },
+          {
+            ["name"] = "华东丶梁朝伟",
             ["role"] = "dps",
             ["class_id"] = 9
           }
         }
       },
       {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.6924501346197305,
-        ["clear_time"] = "00:20:47.102",
+        ["zone_id"] = 1000011,
+        ["level"] = 26,
+        ["upgrades"] = 0,
+        ["fraction"] = 2.8744191922347024,
+        ["clear_time"] = "01:43:31.617",
         ["party"] = {
           {
-            ["name"] = "凯小楼",
+            ["name"] = "裁决",
             ["role"] = "tank",
-            ["class_id"] = 1
+            ["class_id"] = 2
           },
           {
-            ["name"] = "車寶山",
+            ["name"] = "朝朝",
             ["role"] = "healer",
             ["class_id"] = 11
           },
           {
-            ["name"] = "Floweret",
+            ["name"] = "华东丶吴奇隆",
             ["role"] = "dps",
-            ["class_id"] = 4
+            ["class_id"] = 2
           },
           {
-            ["name"] = "Gumayusi",
+            ["name"] = "坤乾丶",
             ["role"] = "dps",
             ["class_id"] = 3
           },
           {
-            ["name"] = "桃桃冰紅茶",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7445378925807288,
-        ["clear_time"] = "00:22:20.912",
-        ["party"] = {
-          {
-            ["name"] = "随便丶玩玩",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "春日桃桃冰",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "Luuck",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "Togas",
+            ["name"] = "月巴舟亢",
             ["role"] = "dps",
             ["class_id"] = 4
-          },
-          {
-            ["name"] = "萌萌然",
-            ["role"] = "dps",
-            ["class_id"] = 2
-          }
-        }
-      }
-    }
-  },
-  ["森林之心-語風"] = {
-    ["profile"] = {
-      ["name"] = "森林之心",
-      ["realm"] = "語風",
-      ["faction"] = "alliance"
-    },
-    ["season_best"] = {
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8161070605813774,
-        ["clear_time"] = "00:24:29.808",
-        ["party"] = {
-          {
-            ["name"] = "寳儿",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "扶风丶",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Ryeco",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "愚妄",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "詩和遠方",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000010,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8114428277524879,
-        ["clear_time"] = "00:27:36.154",
-        ["party"] = {
-          {
-            ["name"] = "Michaeldevil",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "一枕清风",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "千俞",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "大罵四方",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "安度因嘤嘤",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.9952805021524098,
-        ["clear_time"] = "00:36:50.517",
-        ["party"] = {
-          {
-            ["name"] = "寳儿",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "刀滒",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Anonb8b0837",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "愚妄",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "詩和遠方",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 22,
-        ["upgrades"] = 0,
-        ["fraction"] = 1.0452909746201968,
-        ["clear_time"] = "00:31:22.568",
-        ["party"] = {
-          {
-            ["name"] = "奶咖",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "黑粉頭子",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "吓坏小朋友",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "孤灯下",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "黑色的白色",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 22,
-        ["upgrades"] = 0,
-        ["fraction"] = 1.0466934023833419,
-        ["clear_time"] = "00:38:44.705",
-        ["party"] = {
-          {
-            ["name"] = "醉奶先森",
-            ["role"] = "tank",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "刀滒",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Goldenowl",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "一度缱绻",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "最后一次",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      }
-    },
-    ["weekly_best"] = {
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8161070605813774,
-        ["clear_time"] = "00:24:29.808",
-        ["party"] = {
-          {
-            ["name"] = "寳儿",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "扶风丶",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Ryeco",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "愚妄",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "詩和遠方",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000010,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8114428277524879,
-        ["clear_time"] = "00:27:36.154",
-        ["party"] = {
-          {
-            ["name"] = "Michaeldevil",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "一枕清风",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "千俞",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "大罵四方",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "安度因嘤嘤",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 22,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.9952805021524098,
-        ["clear_time"] = "00:36:50.517",
-        ["party"] = {
-          {
-            ["name"] = "寳儿",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "刀滒",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Anonb8b0837",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "愚妄",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "詩和遠方",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 22,
-        ["upgrades"] = 0,
-        ["fraction"] = 1.0452909746201968,
-        ["clear_time"] = "00:31:22.568",
-        ["party"] = {
-          {
-            ["name"] = "奶咖",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "黑粉頭子",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "吓坏小朋友",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "孤灯下",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "黑色的白色",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 22,
-        ["upgrades"] = 0,
-        ["fraction"] = 1.0466934023833419,
-        ["clear_time"] = "00:38:44.705",
-        ["party"] = {
-          {
-            ["name"] = "醉奶先森",
-            ["role"] = "tank",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "刀滒",
-            ["role"] = "healer",
-            ["class_id"] = 10
-          },
-          {
-            ["name"] = "Goldenowl",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "一度缱绻",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          },
-          {
-            ["name"] = "最后一次",
-            ["role"] = "dps",
-            ["class_id"] = 12
           }
         }
       }
@@ -1064,118 +713,16 @@ ns.GUILD_BEST_DATA = {
     },
     ["season_best"] = {
       {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
+        ["zone_id"] = 7805,
+        ["level"] = 26,
         ["upgrades"] = 0,
-        ["fraction"] = 1.027762369662615,
-        ["clear_time"] = "00:30:50.999",
+        ["fraction"] = 1.0186187036643701,
+        ["clear_time"] = "00:36:41.234",
         ["party"] = {
           {
-            ["name"] = "Yunsui",
+            ["name"] = "我不行了啦",
             ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "了了戊己",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "冲锋撞南墙",
-            ["role"] = "dps",
             ["class_id"] = 12
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "相原胡桃",
-            ["role"] = "dps",
-            ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7245667377608004,
-        ["clear_time"] = "00:26:49.262",
-        ["party"] = {
-          {
-            ["name"] = "Yunsui",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "了了戊己",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "冲锋撞南墙",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "相原胡桃",
-            ["role"] = "dps",
-            ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7417605451196808,
-        ["clear_time"] = "00:22:15.910",
-        ["party"] = {
-          {
-            ["name"] = "灵界打击",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "回忆的箭",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "Cunmao",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "青衫渐远",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000010,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8041591397154041,
-        ["clear_time"] = "00:27:21.288",
-        ["party"] = {
-          {
-            ["name"] = "我守護的壹切",
-            ["role"] = "tank",
-            ["class_id"] = 2
           },
           {
             ["name"] = "兇貓圓圓",
@@ -1183,171 +730,171 @@ ns.GUILD_BEST_DATA = {
             ["class_id"] = 5
           },
           {
-            ["name"] = "冒充职业选手",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "奶綠裝芒丶",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "好死喵",
-            ["role"] = "dps",
-            ["class_id"] = 2
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000011,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8474873143680697,
-        ["clear_time"] = "00:29:40.570",
-        ["party"] = {
-          {
-            ["name"] = "贝爷",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "小星星丶",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Alicé",
+            ["name"] = "Hxy",
             ["role"] = "dps",
             ["class_id"] = 8
           },
           {
-            ["name"] = "梅竹吣雪",
+            ["name"] = "別情阿叔",
             ["role"] = "dps",
             ["class_id"] = 4
           },
           {
-            ["name"] = "薛定諤的咕",
+            ["name"] = "青草湖",
             ["role"] = "dps",
-            ["class_id"] = 11
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 1000010,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8911444836572678,
+        ["clear_time"] = "00:30:18.825",
+        ["party"] = {
+          {
+            ["name"] = "嗨到睡不着",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "你的菠萝包",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Timeboom",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          },
+          {
+            ["name"] = "诺姆兹多",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          },
+          {
+            ["name"] = "边关月",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.937548328342586,
+        ["clear_time"] = "00:33:46.041",
+        ["party"] = {
+          {
+            ["name"] = "涅歿西斯",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "慕漓乄",
+            ["role"] = "healer",
+            ["class_id"] = 10
+          },
+          {
+            ["name"] = "屁屁花丶",
+            ["role"] = "dps",
+            ["class_id"] = 7
+          },
+          {
+            ["name"] = "您吃了吗",
+            ["role"] = "dps",
+            ["class_id"] = 1
+          },
+          {
+            ["name"] = "百发百不中",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9794238683127572,
+        ["clear_time"] = "00:35:16.534",
+        ["party"] = {
+          {
+            ["name"] = "满命心海",
+            ["role"] = "tank",
+            ["class_id"] = 6
+          },
+          {
+            ["name"] = "刃夜",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "不是杰瑞丶",
+            ["role"] = "dps",
+            ["class_id"] = 4
+          },
+          {
+            ["name"] = "奶茶害伦",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "片想",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.0655349678551447,
+        ["clear_time"] = "00:38:22.620",
+        ["party"] = {
+          {
+            ["name"] = "嗨到睡不着",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "白雪奥利奥",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Sunnyi",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          },
+          {
+            ["name"] = "Timeboom",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          },
+          {
+            ["name"] = "四脚蛇",
+            ["role"] = "dps",
+            ["class_id"] = 13
           }
         }
       }
     },
     ["weekly_best"] = {
       {
-        ["zone_id"] = 9028,
-        ["level"] = 23,
+        ["zone_id"] = 7805,
+        ["level"] = 26,
         ["upgrades"] = 0,
-        ["fraction"] = 1.027762369662615,
-        ["clear_time"] = "00:30:50.999",
+        ["fraction"] = 1.0186187036643701,
+        ["clear_time"] = "00:36:41.234",
         ["party"] = {
           {
-            ["name"] = "Yunsui",
+            ["name"] = "我不行了啦",
             ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "了了戊己",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "冲锋撞南墙",
-            ["role"] = "dps",
             ["class_id"] = 12
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "相原胡桃",
-            ["role"] = "dps",
-            ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9424,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7245667377608004,
-        ["clear_time"] = "00:26:49.262",
-        ["party"] = {
-          {
-            ["name"] = "Yunsui",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "了了戊己",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "冲锋撞南墙",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "相原胡桃",
-            ["role"] = "dps",
-            ["class_id"] = 9
-          }
-        }
-      },
-      {
-        ["zone_id"] = 9028,
-        ["level"] = 21,
-        ["upgrades"] = 2,
-        ["fraction"] = 0.7417605451196808,
-        ["clear_time"] = "00:22:15.910",
-        ["party"] = {
-          {
-            ["name"] = "灵界打击",
-            ["role"] = "tank",
-            ["class_id"] = 6
-          },
-          {
-            ["name"] = "回忆的箭",
-            ["role"] = "healer",
-            ["class_id"] = 5
-          },
-          {
-            ["name"] = "Cunmao",
-            ["role"] = "dps",
-            ["class_id"] = 4
-          },
-          {
-            ["name"] = "屁屁花丶",
-            ["role"] = "dps",
-            ["class_id"] = 7
-          },
-          {
-            ["name"] = "青衫渐远",
-            ["role"] = "dps",
-            ["class_id"] = 8
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000010,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8041591397154041,
-        ["clear_time"] = "00:27:21.288",
-        ["party"] = {
-          {
-            ["name"] = "我守護的壹切",
-            ["role"] = "tank",
-            ["class_id"] = 2
           },
           {
             ["name"] = "兇貓圓圓",
@@ -1355,53 +902,155 @@ ns.GUILD_BEST_DATA = {
             ["class_id"] = 5
           },
           {
-            ["name"] = "冒充职业选手",
-            ["role"] = "dps",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "奶綠裝芒丶",
-            ["role"] = "dps",
-            ["class_id"] = 3
-          },
-          {
-            ["name"] = "好死喵",
-            ["role"] = "dps",
-            ["class_id"] = 2
-          }
-        }
-      },
-      {
-        ["zone_id"] = 1000011,
-        ["level"] = 21,
-        ["upgrades"] = 1,
-        ["fraction"] = 0.8474873143680697,
-        ["clear_time"] = "00:29:40.570",
-        ["party"] = {
-          {
-            ["name"] = "贝爷",
-            ["role"] = "tank",
-            ["class_id"] = 12
-          },
-          {
-            ["name"] = "小星星丶",
-            ["role"] = "healer",
-            ["class_id"] = 2
-          },
-          {
-            ["name"] = "Alicé",
+            ["name"] = "Hxy",
             ["role"] = "dps",
             ["class_id"] = 8
           },
           {
-            ["name"] = "梅竹吣雪",
+            ["name"] = "別情阿叔",
             ["role"] = "dps",
             ["class_id"] = 4
           },
           {
-            ["name"] = "薛定諤的咕",
+            ["name"] = "青草湖",
             ["role"] = "dps",
-            ["class_id"] = 11
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 1000010,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.8911444836572678,
+        ["clear_time"] = "00:30:18.825",
+        ["party"] = {
+          {
+            ["name"] = "嗨到睡不着",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "你的菠萝包",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Timeboom",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          },
+          {
+            ["name"] = "诺姆兹多",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          },
+          {
+            ["name"] = "边关月",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.937548328342586,
+        ["clear_time"] = "00:33:46.041",
+        ["party"] = {
+          {
+            ["name"] = "涅歿西斯",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "慕漓乄",
+            ["role"] = "healer",
+            ["class_id"] = 10
+          },
+          {
+            ["name"] = "屁屁花丶",
+            ["role"] = "dps",
+            ["class_id"] = 7
+          },
+          {
+            ["name"] = "您吃了吗",
+            ["role"] = "dps",
+            ["class_id"] = 1
+          },
+          {
+            ["name"] = "百发百不中",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 1,
+        ["fraction"] = 0.9794238683127572,
+        ["clear_time"] = "00:35:16.534",
+        ["party"] = {
+          {
+            ["name"] = "满命心海",
+            ["role"] = "tank",
+            ["class_id"] = 6
+          },
+          {
+            ["name"] = "刃夜",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "不是杰瑞丶",
+            ["role"] = "dps",
+            ["class_id"] = 4
+          },
+          {
+            ["name"] = "奶茶害伦",
+            ["role"] = "dps",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "片想",
+            ["role"] = "dps",
+            ["class_id"] = 13
+          }
+        }
+      },
+      {
+        ["zone_id"] = 7805,
+        ["level"] = 25,
+        ["upgrades"] = 0,
+        ["fraction"] = 1.0655349678551447,
+        ["clear_time"] = "00:38:22.620",
+        ["party"] = {
+          {
+            ["name"] = "嗨到睡不着",
+            ["role"] = "tank",
+            ["class_id"] = 12
+          },
+          {
+            ["name"] = "白雪奥利奥",
+            ["role"] = "healer",
+            ["class_id"] = 5
+          },
+          {
+            ["name"] = "Sunnyi",
+            ["role"] = "dps",
+            ["class_id"] = 8
+          },
+          {
+            ["name"] = "Timeboom",
+            ["role"] = "dps",
+            ["class_id"] = 3
+          },
+          {
+            ["name"] = "四脚蛇",
+            ["role"] = "dps",
+            ["class_id"] = 13
           }
         }
       }

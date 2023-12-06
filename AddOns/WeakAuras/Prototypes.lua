@@ -3239,6 +3239,7 @@ Private.event_prototypes = {
           and trigger.unit == 'player' and trigger.use_powertype and trigger.powertype == 4
       then
         ret = ret .. [[
+          local comboPoint = UnitPower(unit, 4)
           local chargedComboPoint = GetUnitChargedPowerPoints('player') or {}
           if state.chargedComboPoint1 ~= chargedComboPoint[1] then
             state.chargedComboPoint = chargedComboPoint[1] -- For backwards compability
@@ -3260,8 +3261,23 @@ Private.event_prototypes = {
             state.chargedComboPoint4 = chargedComboPoint[4]
             state.changed = true
           end
-
+          local currentCharged = tContains(chargedComboPoint, comboPoint)
+          if state.currentCharged ~= currentCharged then
+            state.currentCharged = currentCharged
+            state.changed = true
+          end
         ]]
+
+        if trigger.use_chargedAsSeven then
+          ret = ret .. [[
+            local UnitPower = function()
+              if tContains(chargedComboPoint, comboPoint) then
+                return 7
+              end
+              return comboPoint
+            end
+          ]]
+        end
       end
 
       return ret
@@ -3319,6 +3335,27 @@ Private.event_prototypes = {
           return WeakAuras.IsRetail() and trigger.unit == 'player' and trigger.use_powertype and trigger.powertype == 4
         end,
         hidden = not WeakAuras.IsRetail()
+      },
+      {
+        name = "chargedAsSeven",
+        display = L["Treat charged combo point as 7 combo points"],
+        type = "toggle",
+        test = "true",
+        enable = function(trigger)
+          return WeakAuras.IsRetail() and trigger.unit == 'player' and trigger.use_powertype and trigger.powertype == 4
+        end,
+        hidden = not WeakAuras.IsRetail()
+      },
+      {
+        name = "currentCharged",
+        type = "bool",
+        display = L["Current Combo Point charged"],
+        conditionType = "bool",
+        enable = function(trigger)
+          return WeakAuras.IsRetail() and trigger.unit == 'player'and trigger.use_powertype and trigger.powertype == 4
+        end,
+        hidden = true,
+        test = "true"
       },
       {
         name = "chargedComboPoint1",
@@ -6999,37 +7036,43 @@ Private.event_prototypes = {
   },
   ["Chat Message"] = {
     type = "event",
-    events = {
-      ["events"] = {
-        "CHAT_MSG_INSTANCE_CHAT",
-        "CHAT_MSG_INSTANCE_CHAT_LEADER",
-        "CHAT_MSG_BG_SYSTEM_ALLIANCE",
-        "CHAT_MSG_BG_SYSTEM_HORDE",
-        "CHAT_MSG_BG_SYSTEM_NEUTRAL",
-        "CHAT_MSG_BN_WHISPER",
-        "CHAT_MSG_CHANNEL",
-        "CHAT_MSG_EMOTE",
-        "CHAT_MSG_GUILD",
-        "CHAT_MSG_MONSTER_EMOTE",
-        "CHAT_MSG_MONSTER_PARTY",
-        "CHAT_MSG_MONSTER_SAY",
-        "CHAT_MSG_MONSTER_WHISPER",
-        "CHAT_MSG_MONSTER_YELL",
-        "CHAT_MSG_OFFICER",
-        "CHAT_MSG_PARTY",
-        "CHAT_MSG_PARTY_LEADER",
-        "CHAT_MSG_RAID",
-        "CHAT_MSG_RAID_LEADER",
-        "CHAT_MSG_RAID_BOSS_EMOTE",
-        "CHAT_MSG_RAID_BOSS_WHISPER",
-        "CHAT_MSG_RAID_WARNING",
-        "CHAT_MSG_SAY",
-        "CHAT_MSG_WHISPER",
-        "CHAT_MSG_YELL",
-        "CHAT_MSG_SYSTEM",
-        "CHAT_MSG_TEXT_EMOTE"
+    events = function(trigger)
+      if trigger.use_messageType and trigger.messageType and Private.chat_message_types[trigger.messageType] then
+        return { ["events"] = {trigger.messageType} }
+      end
+      return {
+        ["events"] = {
+          "CHAT_MSG_INSTANCE_CHAT",
+          "CHAT_MSG_INSTANCE_CHAT_LEADER",
+          "CHAT_MSG_BG_SYSTEM_ALLIANCE",
+          "CHAT_MSG_BG_SYSTEM_HORDE",
+          "CHAT_MSG_BG_SYSTEM_NEUTRAL",
+          "CHAT_MSG_BN_WHISPER",
+          "CHAT_MSG_CHANNEL",
+          "CHAT_MSG_EMOTE",
+          "CHAT_MSG_GUILD",
+          "CHAT_MSG_MONSTER_EMOTE",
+          "CHAT_MSG_MONSTER_PARTY",
+          "CHAT_MSG_MONSTER_SAY",
+          "CHAT_MSG_MONSTER_WHISPER",
+          "CHAT_MSG_MONSTER_YELL",
+          "CHAT_MSG_OFFICER",
+          "CHAT_MSG_PARTY",
+          "CHAT_MSG_PARTY_LEADER",
+          "CHAT_MSG_RAID",
+          "CHAT_MSG_RAID_LEADER",
+          "CHAT_MSG_RAID_BOSS_EMOTE",
+          "CHAT_MSG_RAID_BOSS_WHISPER",
+          "CHAT_MSG_RAID_WARNING",
+          "CHAT_MSG_SAY",
+          "CHAT_MSG_WHISPER",
+          "CHAT_MSG_YELL",
+          "CHAT_MSG_SYSTEM",
+          "CHAT_MSG_TEXT_EMOTE",
+          "CHAT_MSG_LOOT"
+        }
       }
-    },
+    end,
     name = L["Chat Message"],
     init = function(trigger)
       local ret = [[

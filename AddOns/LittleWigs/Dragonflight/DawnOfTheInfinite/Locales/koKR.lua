@@ -15,14 +15,14 @@ if L then
 
 	------ Murozond's Rise ------
 	L.infinite_twilight_magus = "무한의 황혼의 학자"
+	L.valow = "시간서약 수호자 발로우"
 	L.spurlok = "시간서약 파수꾼 스퍼로크"
 	L.lerai = "시간서약 여신 레라이"
-	L.valow = "시간서약 수호자 발로우"
 	L.timeline_marauder = "시간선 약탈자"
 	L.infinite_saboteur = "무한의 파괴자"
 	L.infinite_riftmage = "무한의 균열법사"
 	L.timelost_waveshaper = "잃어버린 시간의 물결구체자"
-	--L.timelost_aerobot = "Time-Lost Aerobot"
+	L.timelost_aerobot = "잃어버린 시간의 비행로봇"
 	L.chronaxie = "크로나시"
 	L.horde_destroyer = "호드 구축함"
 	L.alliance_destroyer = "얼라이언스 구축함"

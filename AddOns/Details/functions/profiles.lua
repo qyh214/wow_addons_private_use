@@ -495,6 +495,14 @@ function Details:ApplyProfile(profileName, bNoSave, bIsCopy)
 		Details.time_type = 2
 	end
 
+	--enable all captures, this is a fix for the old performance profiles which doesn't exiss anymore
+	Details.capture_real["damage"] = true
+	Details.capture_real["heal"] = true
+	Details.capture_real["energy"] = true
+	Details.capture_real["miscdata"] = true
+	Details.capture_real["aura"] = true
+	Details.capture_real["spellcast"] = true
+
 	return true
 end
 
@@ -1346,6 +1354,7 @@ local default_global_data = {
 		custom = {},
 		savedStyles = {},
 		savedCustomSpells = {},
+		userCustomSpells = {}, --spells modified by the user
 		savedTimeCaptures = {},
 		lastUpdateWarning = 0,
 		update_warning_timeout = 10,
@@ -1515,7 +1524,7 @@ local default_global_data = {
 			ctrl_click_close_tutorial = false,
 		},
 
-		performance_profiles = {
+		performance_profiles = { --deprecated
 			["RaidFinder"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
 			["Raid15"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
 			["Raid30"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
@@ -1594,7 +1603,9 @@ local default_global_data = {
 			mythicrun_chart_frame = {},
 			mythicrun_chart_frame_minimized = {},
 			mythicrun_chart_frame_ready = {},
-		},
+
+			mythicrun_time_type = 1, --1: combat time (the amount of time the player is in combat) 2: run time (the amount of time it took to finish the mythic+ run)
+		}, --implementar esse time_type quando estiver dando refresh na janela
 
 	--plugin window positions
 		plugin_window_pos = {},

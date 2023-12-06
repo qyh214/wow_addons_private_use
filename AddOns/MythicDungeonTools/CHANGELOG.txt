@@ -1,3 +1,15 @@
+- v4.3.1.2
+  - added option to display enemy forces count instead of percent in sidebar
+  - wrath classic fixes
+- v4.3.1.1
+  - portuguese translation fix
+- v4.3.1.0
+  - fixed route sharing
+- v4.3.0.0
+  - overhauled and re-enabled share button
+  - live mode will stay temporarily disabled until a future update
+- v4.2.0.10
+  - temporarily disabled share and live buttons - they will be back soon
 - v4.2.0.8
   - affix weeks
 - v4.2.0.7
