@@ -3,8 +3,11 @@ if not L then return end
 if L then
 	L.custom_on_cauldron_autotalk = "자동 대화"
 	--L.custom_on_cauldron_autotalk_desc = "[Alchemy] Instantly detoxify Decaying Cauldrons for a disease dispel buff."
+	--L.captive_tuskarr_freed = "Captive Tuskarr Freed"
+	--L.captive_tuskarr_freed_desc = "Show an alert when a Captive Tuskarr has been freed."
 
 	L.decaying_cauldron = "썩어가는 가마솥"
+	L.captive_tuskarr = "투스카르 포로"
 	L.decay_speaker = "부패의 예언자"
 	L.claw_fighter = "발톱 싸움꾼"
 	L.bonebolt_hunter = "뼈화살 사냥꾼"
@@ -21,7 +24,7 @@ if L then
 	L.infected_bear = "감염된 곰"
 	L.stinkbreath = "고약숨결"
 	L.rageclaw = "분노발톱"
-	L.rotbow_stalker = "부식활 추적기"
+	L.rotbow_ranger = "부식활 추적기"
 	L.skulking_gutstabber = "잠복하는 내장관통자"
 	L.fleshripper_vulture = "살점분리자 시체매"
 	L.filth_caller = "오물 소환사"

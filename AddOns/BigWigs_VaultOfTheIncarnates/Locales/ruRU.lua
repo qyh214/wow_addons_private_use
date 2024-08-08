@@ -5,7 +5,6 @@ if L then
 	L.custom_on_nameplate_fixate_desc = "Показывать метку на Бешеном Тарасекке, который зафиксировал вас.\n\nТребует включённых индикаторов здоровья врагов и соответствующего аддона (KuiNameplates, Plater)."
 
 	L.molten_cleave = "Фронтал"
-	L.incinerating_roar = "Рык"
 	L.molten_spikes = "Шипы"
 	L.collapsing_army = "Армия"
 	L.greater_flamerift = "Мифик адд"
@@ -14,7 +13,6 @@ end
 
 L = BigWigs:NewBossLocale("Terros", "ruRU")
 if L then
-	L.rock_blast = "Делёжка"
 	L.resonating_annihilation = "Аннигиляция"
 	L.awakened_earth = "Столп"
 	L.shattering_impact = "Войда"
@@ -33,8 +31,6 @@ if L then
 	L.meteor_axe = "Топор" -- Singular
 	L.meteor_axes_melee = "Мили делёжка"
 	L.meteor_axes_ranged = "Рендж делёжка"
-	L.conductive_marks = "Знаки" -- Conductive Marks
-	L.conductive_mark = "Знак" -- Singular
 
 	L.skipped_cast = "Пропущено %s (%d)"
 end
@@ -48,13 +44,10 @@ if L then
 	L.webs = "Сети"
 	L.web = "Паутина"
 	L.gossamer_burst = "Притягивание"
-	L.repelling_burst = "Отталкивание"
 end
 
 L = BigWigs:NewBossLocale("Dathea, Ascended", "ruRU")
 if L then
-	L.conductive_marks = "Знаки"
-	L.conductive_mark = "Знак"
 	L.raging_burst = "Новые торнадо"
 	L.cyclone = "Циклон"
 	L.crosswinds = "Торнадо движутся"
@@ -83,25 +76,20 @@ if L then
 	L.Storm = "буря"
 
 	-- Fire
-	L.magma_burst = "Лужи"
 	L.molten_rupture = "Волны"
 	L.searing_carnage = "Танец"
 	L.raging_inferno = "Соак лужи"
 
 	-- Frost
 	L.biting_chill = "Фрост ДоТ"
-	L.frigid_torrent = "Шары"
-	L.absolute_zero = "Делёжка"
 	L.absolute_zero_melee = "Мили делёжка"
 	L.absolute_zero_ranged = "Рендж делёжка"
 
 	-- Earth
-	L.enveloping_earth = "Абсорб хила"
 	L.erupting_bedrock = "Войд зоны"
 
 	-- Storm
 	L.lightning_crash = "Молния"
-	L.thundering_strike = "Соки"
 
 	-- General
 	L.primal_attunement = "Софт энрейдж"
@@ -112,18 +100,14 @@ end
 
 L = BigWigs:NewBossLocale("Broodkeeper Diurna", "ruRU")
 if L then
-	L.eggs_remaining = "Яиц осталось: %d!"
+	L.eggs_remaining = "Осталось %d |4яйцо:яиц:яйцо;!"
 	L.broodkeepers_bond = "Яиц осталось"
 	L.greatstaff_of_the_broodkeeper = "Великий Посох"
-	L.greatstaffs_wrath = "Лазер"
 	L.clutchwatchers_rage = "Ярость"
 	L.rapid_incubation = "Инкубация"
-	L.icy_shroud = "Абсорб"
 	L.broodkeepers_fury = "Стаки"
 	L.frozen_shroud = "Абсорб + Рут"
 	L.detonating_stoneslam = "Танк Соак"
-
-	-- L.add_count = "%s (%d-%d)"
 end
 
 L = BigWigs:NewBossLocale("Raszageth the Storm-Eater", "ruRU")
@@ -131,16 +115,11 @@ if L then
 	L.lighting_devastation_trigger = "глубокий вдох" -- Рашагет делает глубокий вдох...
 
 	-- Stage One: The Winds of Change
-	L.hurricane_wing = "Отталкивание"
 	L.volatile_current = "Искры"
 	L.thunderous_blast = "Танкбастер"
-	L.lightning_breath = "Дыхание"
 	L.lightning_strikes = "Войд зоны"
 	L.electric_scales = "Рейд урон"
 	L.electric_lash = "Хлыст"
-	-- Intermission: The Primalist Strike
-	L.lightning_devastation = "Дыхание"
-	L.shattering_shroud = "Хил Абсорб"
 	-- Stage Two: Surging Power
 	L.absorb_text = "%s (%.0f%%)"
 	L.stormsurge = "Щит"
@@ -152,7 +131,6 @@ if L then
 	L.fulminating_charge = "Вынос"
 	L.fulminating_charge_debuff = "Вынос"
 	-- Intermission: The Vault Falters
-	L.storm_break = "Телепорт"
 	L.ball_lightning = "Шарики"
 	-- Stage Three: Storm Incarnate
 	L.magnetic_charge = "Притягивание"

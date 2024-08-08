@@ -9,9 +9,13 @@ local detailsFramework = DF
 
 local _
 local tinsert = table.insert
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 local lower = string.lower
-local GetSpellBookItemInfo = GetSpellBookItemInfo
+local SpellBookItemTypeMap = Enum.SpellBookItemType and {[Enum.SpellBookItemType.Spell] = "SPELL", [Enum.SpellBookItemType.None] = "NONE", [Enum.SpellBookItemType.Flyout] = "FLYOUT", [Enum.SpellBookItemType.FutureSpell] = "FUTURESPELL", [Enum.SpellBookItemType.PetAction] = "PETACTION" } or {}
+local GetSpellBookItemInfo = GetSpellBookItemInfo or function(...) local si = C_SpellBook.GetSpellBookItemInfo(...) if si then return SpellBookItemTypeMap[si.itemType] or "NONE", si.spellID end end
+local SPELLBOOK_BANK_PLAYER = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
+local GetNumSpellTabs = GetNumSpellTabs or C_SpellBook.GetNumSpellBookSkillLines
+local GetSpellTabInfo = GetSpellTabInfo or function(tabLine) local skillLine = C_SpellBook.GetSpellBookSkillLineInfo(tabLine) if skillLine then return skillLine.name, skillLine.iconID, skillLine.itemIndexOffset, skillLine.numSpellBookItems, skillLine.isGuild, skillLine.offSpecID end end
 local unpack = unpack
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
@@ -205,11 +209,7 @@ local aura_panel_defaultoptions = {
 }
 
 function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, texts)
-	local options_text_template = DF:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
 	local options_dropdown_template = DF:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-	local options_switch_template = DF:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-	local options_slider_template = DF:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
-	local options_button_template = DF:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
 
 	local newAuraPanel = CreateFrame("frame", name, parent, "BackdropTemplate")
 	newAuraPanel.db = db
@@ -381,15 +381,28 @@ function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, tex
 			buffNameBlacklistEntry:ClearFocus()
 
 			if (text ~= "") then
-				--get the spellId
-				local spellId = getSpellIDFromSpellName(text)
-				if (not spellId) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
-					return
-				end
+				if (text:find(";")) then
+					for _, spellName in ipairs({strsplit(";", text)}) do
+						spellName = strtrim(spellName)
+						local spellId = getSpellIDFromSpellName(spellName)
 
-				--add the spellName to the blacklist
-				newAuraPanel.db.aura_tracker.buff_banned [spellId] = true
+						if (spellId) then
+							newAuraPanel.db.aura_tracker.buff_banned [spellId] = true
+						else
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found: " .. (spellName or ""))
+						end
+					end
+				else
+					--get the spellId
+					local spellId = getSpellIDFromSpellName(text)
+					if (not spellId) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
+						return
+					end
+
+					--add the spellName to the blacklist
+					newAuraPanel.db.aura_tracker.buff_banned [spellId] = true
+				end
 
 				--refresh the buff blacklist frame
 				newAuraPanel.buff_ignored:Refresh()
@@ -405,19 +418,36 @@ function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, tex
 			buffNameBlacklistEntry:ClearFocus()
 
 			if (text ~= "") then
-				if (not tonumber(text)) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID.")
-				end
+				if (text:find(";")) then
+					for _, spellName in ipairs({strsplit(";", text)}) do
+						spellName = strtrim(spellName)
+						if (not tonumber(spellName)) then
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID: " .. (spellName or ""))
+						end
+						
+						local spellId = getSpellIDFromSpellName(spellName)
 
-				--get the spellId
-				local spellId = getSpellIDFromSpellName(text)
-				if (not spellId) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
-					return
-				end
+						if (spellId) then
+							newAuraPanel.db.aura_tracker.buff_banned [spellId] = false
+						else
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found: " .. (spellName or ""))
+						end
+					end
+				else
+					if (not tonumber(text)) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID.")
+					end
 
-				--add the spellId to the blacklist
-				newAuraPanel.db.aura_tracker.buff_banned [spellId] = false
+					--get the spellId
+					local spellId = getSpellIDFromSpellName(text)
+					if (not spellId) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
+						return
+					end
+
+					--add the spellId to the blacklist
+					newAuraPanel.db.aura_tracker.buff_banned [spellId] = false
+				end
 
 				--refresh the buff blacklist frame
 				newAuraPanel.buff_ignored:Refresh()
@@ -433,15 +463,29 @@ function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, tex
 			debuffNameBlacklistEntry:ClearFocus()
 
 			if (text ~= "") then
-				--get the spellId
-				local spellId = getSpellIDFromSpellName(text)
-				if (not spellId) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
-					return
-				end
+				if (text:find(";")) then
+					for _, spellName in ipairs({strsplit(";", text)}) do
+						spellName = strtrim(spellName)
+						local spellId = getSpellIDFromSpellName(spellName)
 
-				--add the spellName to the blacklist
-				newAuraPanel.db.aura_tracker.debuff_banned [spellId] = true
+						if (spellId) then
+							newAuraPanel.db.aura_tracker.debuff_banned [spellId] = true
+						else
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found: " .. (spellName or ""))
+						end
+					end
+				else
+				
+					--get the spellId
+					local spellId = getSpellIDFromSpellName(text)
+					if (not spellId) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
+						return
+					end
+
+					--add the spellName to the blacklist
+					newAuraPanel.db.aura_tracker.debuff_banned [spellId] = true
+				end
 
 				--refresh the buff blacklist frame
 				newAuraPanel.debuff_ignored:Refresh()
@@ -456,19 +500,36 @@ function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, tex
 			debuffNameBlacklistEntry:ClearFocus()
 
 			if (text ~= "") then
-				if (not tonumber(text)) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID.")
-				end
+				if (text:find(";")) then
+					for _, spellName in ipairs({strsplit(";", text)}) do
+						spellName = strtrim(spellName)
+						if (not tonumber(spellName)) then
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID: " .. (spellName or ""))
+						end
+						
+						local spellId = getSpellIDFromSpellName(spellName)
 
-				--get the spellId
-				local spellId = getSpellIDFromSpellName(text)
-				if (not spellId) then
-					DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
-					return
-				end
+						if (spellId) then
+							newAuraPanel.db.aura_tracker.debuff_banned [spellId] = false
+						else
+							DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found: " .. (spellName or ""))
+						end
+					end
+				else
+					if (not tonumber(text)) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Invalid Spell-ID: " .. text)
+					end
 
-				--add the spellId to the blacklist
-				newAuraPanel.db.aura_tracker.debuff_banned [spellId] = false
+					--get the spellId
+					local spellId = getSpellIDFromSpellName(text)
+					if (not spellId) then
+						DetailsFramework.Msg({__name = "DetailsFramework"}, "Spell not found!")
+						return
+					end
+
+					--add the spellId to the blacklist
+					newAuraPanel.db.aura_tracker.debuff_banned [spellId] = false
+				end
 
 				--refresh the buff blacklist frame
 				newAuraPanel.debuff_ignored:Refresh()
@@ -629,202 +690,6 @@ function DF:CreateAuraConfigPanel(parent, name, db, changeCallback, options, tex
 
 	local scrollWidth = 208
 
-do --deprecated, using a scrollbox tempate from scrollbox.lua
-	local scrollHeight = 343
-	local lineAmount = 18
-	local lineHeight = 18
-	local backdropColor = {.8, .8, .8, 0.2}
-	local backdropColor_OnEnter = {.8, .8, .8, 0.4}
-
-	--aura scroll box default settings
-	local auraScrollDefaultSettings = {
-		show_spell_tooltip = false,
-		line_height = 18,
-		line_amount = 18,
-	}
-
-	local autoTrackList_LineOnEnter = function(self, capsule, value)
-		local flag = self.Flag
-		value = value or self.SpellID
-
-		if not flag then
-			GameCooltip2:Preset(2)
-			GameCooltip2:SetOwner(self, "left", "right", 2, 0)
-			GameCooltip2:SetOption("TextSize", 10)
-
-			local spellName, _, spellIcon = GetSpellInfo(value)
-			if (spellName) then
-				GameCooltip2:AddLine(spellName .. "(" .. value .. ")")
-				GameCooltip2:AddIcon(spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
-			end
-			GameCooltip2:Show()
-
-		else
-			local spellName, _, spellIcon = GetSpellInfo(value)
-			if (spellName and spellsWithSameName) then
-				local spellNameLower = spellName:lower()
-				local sameNameSpells = spellsWithSameName[spellNameLower]
-
-				if (sameNameSpells) then
-					GameCooltip2:Preset(2)
-					GameCooltip2:SetOwner(self, "left", "right", 2, 0)
-					GameCooltip2:SetOption("TextSize", 10)
-
-					for i, spellId in ipairs(sameNameSpells) do
-						GameCooltip2:AddLine(spellName .. " (" .. spellId .. ")")
-						GameCooltip2:AddIcon(spellIcon, 1, 1, 14, 14, .1, .9, .1, .9)
-					end
-
-					GameCooltip2:Show()
-				end
-			end
-		end
-	end
-
-	local autoTrackList_LineOnLeave = function()
-		GameCooltip2:Hide()
-	end
-
-
-	local createAuraScrollBox = function(scrollBoxParent, scrollBoxName, scrollBoxParentKey, scrollBoxTitle, databaseTable, removeAuraFunc, options)
-		local scrollOptions = {}
-		detailsFramework.OptionsFunctions.BuildOptionsTable(scrollOptions, auraScrollDefaultSettings, options)
-
-		local updateFunc = function(self, data, offset, totalLines)
-			for i = 1, totalLines do
-				local index = i + offset
-				local auraTable = data[index]
-				if (auraTable) then
-					local line = self:GetLine(i)
-					local spellId, spellName, spellIcon, lowerSpellName, flag = unpack(auraTable)
-
-					line.SpellID = spellId
-					line.SpellName = spellName
-					line.SpellNameLower = lowerSpellName
-					line.SpellIcon = spellIcon
-					line.Flag = flag
-
-					if (flag) then
-						line.name:SetText(spellName)
-					else
-						line.name:SetText(spellName .. "(" .. spellId .. ")")
-					end
-
-					line.icon:SetTexture(spellIcon)
-					line.icon:SetTexCoord(.1, .9, .1, .9)
-				end
-			end
-		end
-
-		local auraLineOnEnter = function(line)
-			if (scrollOptions.options.show_spell_tooltip and line.SpellID and GetSpellInfo(line.SpellID)) then
-				GameTooltip:SetOwner(line, "ANCHOR_CURSOR")
-				GameTooltip:SetSpellByID(line.SpellID)
-				GameTooltip:AddLine(" ")
-				GameTooltip:Show()
-			end
-
-			line:SetBackdropColor(unpack(backdropColor_OnEnter))
-		end
-
-		local auraLineOnLeave = function(self)
-			self:SetBackdropColor(unpack(backdropColor))
-			GameTooltip:Hide()
-		end
-
-		local onAuraRemoveButtonClick = function(self)
-			local spellId = self:GetParent().SpellID
-			databaseTable[spellId] = nil
-			databaseTable["" .. (spellId or "")] = nil -- cleanup...
-			scrollBoxParent[scrollBoxParentKey]:Refresh()
-			if (removeAuraFunc) then --upvalue
-				detailsFramework:QuickDispatch(removeAuraFunc)
-			end
-		end
-
-		local createLineFunc = function(self, index)
-			local line = CreateFrame("button", "$parentLine" .. index, self, "BackdropTemplate")
-			local lineHeight = scrollOptions.options.line_height
-
-			line:SetPoint("topleft", self, "topleft", 1, -((index - 1) * (lineHeight + 1)) - 1)
-			line:SetSize(scrollWidth - 2, lineHeight)
-			line:SetScript("OnEnter", autoTrackList_LineOnEnter)
-			line:HookScript("OnEnter", auraLineOnEnter)
-			line:SetScript("OnLeave", autoTrackList_LineOnLeave)
-			line:HookScript("OnLeave", auraLineOnLeave)
-
-			line:SetBackdrop({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
-			line:SetBackdropColor(unpack(backdropColor))
-
-			local icon = line:CreateTexture("$parentIcon", "overlay")
-			icon:SetSize(lineHeight - 2, lineHeight - 2)
-
-			local name = line:CreateFontString("$parentName", "overlay", "GameFontNormal")
-			DF:SetFontSize(name, 10)
-
-			local removeButton = CreateFrame("button", "$parentRemoveButton", line, "UIPanelCloseButton")
-			removeButton:SetSize(16, 16)
-			removeButton:SetScript("OnClick", onAuraRemoveButtonClick)
-			removeButton:SetPoint("topright", line, "topright")
-			removeButton:GetNormalTexture():SetDesaturated(true)
-
-			icon:SetPoint("left", line, "left", 2, 0)
-			name:SetPoint("left", icon, "right", 3, 0)
-
-			line.icon = icon
-			line.name = name
-			line.removebutton = removeButton
-
-			return line
-		end
-
-		local auraScrollBox = DF:CreateScrollBox(scrollBoxParent, scrollBoxName, updateFunc, databaseTable, scrollWidth, scrollHeight, scrollOptions.options.line_amount, scrollOptions.options.line_height)
-		DF:ReskinSlider(auraScrollBox)
-		scrollBoxParent[scrollBoxParentKey] = auraScrollBox
-		auraScrollBox.OriginalData = databaseTable
-
-		function auraScrollBox:Refresh()
-			local t = {}
-			local added = {}
-			for spellID, flag in pairs(auraScrollBox.OriginalData) do
-				local spellName, _, spellIcon = GetSpellInfo(spellID)
-				if (spellName and not added[tonumber(spellID) or 0]) then
-					local lowerSpellName = spellName:lower()
-					tinsert(t, {spellID, spellName, spellIcon, lowerSpellName, flag})
-					added[tonumber(spellID) or 0] = true
-				end
-			end
-
-			table.sort(t, function(t1, t2) return t1[4] < t2[4] end)
-
-			self:SetData(t)
-			self:Refresh()
-		end
-
-		function auraScrollBox:DoSetData(newDB)
-			self:SetData(newDB)
-			self.OriginalData = newDB
-			if (self.Refresh) then
-				self:Refresh()
-			else
-				self:Refresh()
-			end
-		end
-
-		local titleLabel = DF:CreateLabel(scrollBoxParent, scrollBoxTitle)
-		titleLabel.textcolor = "silver"
-		titleLabel.textsize = 10
-		titleLabel:SetPoint("bottomleft", auraScrollBox, "topleft", 0, 2)
-
-		for i = 1, lineAmount do
-			auraScrollBox:CreateLine(createLineFunc)
-		end
-
-		auraScrollBox:Refresh()
-		return auraScrollBox
-	end
-end
-
 	local onAuraRemoveCallback = function()
 		if (changeCallback) then
 			DF:QuickDispatch(changeCallback)
@@ -854,6 +719,11 @@ end
 	buffIgnoredAuraScrollBox:SetPoint("topleft", auraPanel_Auto, "topleft", 8 + scrollWidth + xLocation, y)
 	debuffTrackedAuraScrollBox:SetPoint("topleft", auraPanel_Auto, "topleft", 16 +(scrollWidth * 2) + xLocation, y)
 	buffTrackedAuraScrollBox:SetPoint("topleft", auraPanel_Auto, "topleft", 24 +(scrollWidth * 3) + xLocation, y)
+
+	buffTrackedAuraScrollBox:GetTitleFontString():SetText(newAuraPanel.LocTexts.BUFFS_TRACKED)
+	debuffTrackedAuraScrollBox:GetTitleFontString():SetText(newAuraPanel.LocTexts.DEBUFFS_TRACKED)
+	buffIgnoredAuraScrollBox:GetTitleFontString():SetText(newAuraPanel.LocTexts.BUFFS_IGNORED)
+	debuffIgnoredAuraScrollBox:GetTitleFontString():SetText(newAuraPanel.LocTexts.DEBUFFS_IGNORED)
 
 	newAuraPanel.buff_ignored = buffIgnoredAuraScrollBox
 	newAuraPanel.debuff_ignored = debuffIgnoredAuraScrollBox
@@ -1024,7 +894,7 @@ end
 			--check for more than one spellname
 			if (text:find(";")) then
 				for _, spellName in ipairs({strsplit(";", text)}) do
-					spellName = self:trim(spellName)
+					spellName = strtrim(spellName)
 					local spellID = getSpellIDFromSpellName(spellName)
 
 					if (spellID) then
@@ -1071,7 +941,7 @@ end
 			--check for more than one spellname
 			if (text:find(";")) then
 				for _, spellName in ipairs({strsplit(";", text)}) do
-					spellName = self:trim(spellName)
+					spellName = strtrim(spellName)
 					local spellID = getSpellIDFromSpellName(spellName)
 
 					if (spellID) then
@@ -1176,15 +1046,17 @@ end
 
 function DF:GetAllPlayerSpells(include_lower_case)
 	local playerSpells = {}
-	local tab, tabTex, offset, numSpells = GetSpellTabInfo(2)
-	for i = 1, numSpells do
-		local index = offset + i
-		local spellType, spellId = GetSpellBookItemInfo(index, "player")
-		if (spellType == "SPELL") then
-			local spellName = GetSpellInfo(spellId)
-			tinsert(playerSpells, spellName)
-			if (include_lower_case) then
-				tinsert(playerSpells, lower(spellName))
+	for i = 1, GetNumSpellTabs() do
+		local _, _, offset, numSpells = GetSpellTabInfo(i)
+		for i = 1, numSpells do
+			local index = offset + i
+			local spellType, spellId = GetSpellBookItemInfo(index, SPELLBOOK_BANK_PLAYER)
+			if (spellType == "SPELL") then
+				local spellName = GetSpellInfo(spellId)
+				tinsert(playerSpells, spellName)
+				if (include_lower_case) then
+					tinsert(playerSpells, lower(spellName))
+				end
 			end
 		end
 	end

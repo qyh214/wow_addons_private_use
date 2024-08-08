@@ -1,19 +1,8 @@
+local _, addon = ...
+
 local BIND_ACTION = "CLICK Narci_Achievement_MinimapButton:LeftButton";
 _G["BINDING_NAME_CLICK ".."Narci_Achievement_MinimapButton:LeftButton"] = "Open Narcissus Achievement Panel";
 
---local FadeFrame = NarciAPI_FadeFrame;
-local Color_Good = "|cff7cc576";     --124 197 118
-local Color_Good_r = 124/255;
-local Color_Good_g = 197/255;
-local Color_Good_b = 118/255;
-local Color_Bad = "|cffee3224";      --238 50 36
-local Color_Bad_r = 238/255;
-local Color_Bad_g = 50/255;
-local Color_Bad_b = 36/255;
-local Color_Alert = "|cfffced00";    --252 237 0
-local Color_Alert_r = 252/255;
-local Color_Alert_g = 237/255;
-local Color_Alert_b = 0;
 
 local L = Narci.L;
 local AchievementDB;
@@ -31,28 +20,6 @@ end
 
 local Structure = {
     --[[
-    [1] = {
-        name = L["Use Achievement Panel"],
-        type = "checkbox",
-        key = "UseAsDefault",
-        data = {
-            default = false,
-            onClickfunc = function(self)
-                local state = not AchievementDB.UseAsDefault;
-                AchievementDB.UseAsDefault = state;
-                self.Tick:SetShown(state);
-                Narci.UpdateAchievementSettings();     --defined in Narcissus\Modules\Achievement\Modules.lua
-                if state then
-                    self.Description:SetText(L["Use Achievement Panel Description"]);
-                else
-                    self.Description:SetText(REQUIRES_RELOAD);
-                end
-                ShowChildren(self, state);
-            end,
-
-            description = L["Use Achievement Panel Description"],
-        },
-    },
 
     [2] = {
         name = "Replace Toasts",
@@ -106,10 +73,33 @@ local Structure = {
     --]]
 
     {
+        name = L["Use Achievement Panel"],
+        type = "checkbox",
+        key = "UseAsDefault",
+        data = {
+            default = false,
+            onClickfunc = function(self)
+                local state = not AchievementDB.UseAsDefault;
+                AchievementDB.UseAsDefault = state;
+                self.Tick:SetShown(state);
+                Narci.UpdateAchievementSettings();     --defined in Narcissus\Modules\Achievement\Modules.lua
+                if state then
+                    self.Description:SetText(L["Use Achievement Panel Description"]);
+                else
+                    self.Description:SetText(REQUIRES_RELOAD);
+                end
+                ShowChildren(self, state);
+            end,
+
+            description = L["Use Achievement Panel Description"],
+        },
+    },
+
+    {
         name = UI_SCALE,
         type = "slider",
         key = "Scale",
-        data = { minValue = 1, maxValue = 1.25, step = 0.05, default = 1, decimal = 0.01,
+        data = { minValue = 1, maxValue = 1.25, step = 0.05, default = 1, decimal = 0.01, offsetX = 24,
             func = function(value) Narci_AchievementFrame:SetScale(value); AchievementDB.Scale = value; end,
         },
     },
@@ -177,7 +167,7 @@ local function CreateWidget(parent, widgetData, offset, widgetIndex)
             object.Label:SetText(widgetData.name);
         end
         local padding = 24;
-        object:SetPoint("TOP", parent, "TOP", 0, offset - padding);
+        object:SetPoint("TOP", parent, "TOP", data.offsetX or 0, offset - padding);
         height = 2 * padding;
 
     elseif type == "radio" then
@@ -337,6 +327,8 @@ local function LoadSettings(self)
     CreateWidget = nil;
     CreateSettings = nil;
     LoadSettings = nil;
+
+    addon.BookmarkUtil:Load();
 end
 
 local initialize = CreateFrame("Frame");

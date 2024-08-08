@@ -96,7 +96,7 @@ function Implementation:OnHide()
 	if(self.notInited) then return end
 
 	if(self.OnClose) then self:OnClose() end
-	if(self:AtBank()) then CloseBankFrame() end
+	if(self:AtBank()) then C_Bank.CloseBankFrame() end
 end
 
 --[[!
@@ -320,7 +320,7 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 		local questInfo = C_Container.GetContainerItemQuestInfo(bagID, slotID)
 		i.isQuestItem, i.questID, i.questActive = questInfo.isQuestItem, questInfo.questID, questInfo.isActive
 
-		i.name, _, _, _, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID = GetItemInfo(i.link)
+		i.name, _, _, _, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID = C_Item.GetItemInfo(i.link)
 		i.equipLoc = _G[i.equipLoc] -- INVTYPE to localized string
 
 		if i.id == PET_CAGE then
@@ -412,7 +412,7 @@ function Implementation:BAG_UPDATE(_, bagID, slotID)
 	elseif(bagID) then
 		self:UpdateBag(bagID)
 	else
-		for bagID = -3, 12 do
+		for bagID = -3, 17 do
 			self:UpdateBag(bagID)
 		end
 	end

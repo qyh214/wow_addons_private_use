@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 -- Lua APIs
 local tinsert, tremove, wipe = table.insert, table.remove, wipe
@@ -11,10 +14,11 @@ local GetScreenWidth, GetScreenHeight, CreateFrame, UnitName
   = GetScreenWidth, GetScreenHeight, CreateFrame, UnitName
 
 local AceGUI = LibStub("AceGUI-3.0")
-local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -99,6 +103,7 @@ function OptionsPrivate.CreateFrame()
   local color = CreateColorFromHexString("ff1f1e21") -- PANEL_BACKGROUND_COLOR
   local r, g, b = color:GetRGB()
   frame.Bg:SetColorTexture(r, g, b, 0.8)
+  frame.Bg.colorTexture = {r, g, b, 0.8}
 
   function OptionsPrivate.SetTitle(title)
     local text = "WeakAuras " .. WeakAuras.versionString
@@ -112,11 +117,7 @@ function OptionsPrivate.CreateFrame()
   frame:EnableMouse(true)
   frame:SetMovable(true)
   frame:SetResizable(true)
-  if frame.SetResizeBounds then
-    frame:SetResizeBounds(minWidth, minHeight)
-  else
-    frame:SetMinResize(minWidth, minHeight)
-  end
+  frame:SetResizeBounds(minWidth, minHeight)
   frame:SetFrameStrata("DIALOG")
   -- Workaround classic issue
   WeakAurasOptionsPortrait:SetTexture([[Interface\AddOns\WeakAuras\Media\Textures\logo_256_round.tga]])
@@ -152,7 +153,6 @@ function OptionsPrivate.CreateFrame()
 
     OptionsPrivate.Private.ClearFakeStates()
 
-
     for id, data in pairs(OptionsPrivate.Private.regions) do
       if data.region then
         data.region:Collapse()
@@ -175,6 +175,10 @@ function OptionsPrivate.CreateFrame()
 
     if OptionsPrivate.Private.personalRessourceDisplayFrame then
       OptionsPrivate.Private.personalRessourceDisplayFrame:OptionsClosed()
+    end
+
+    if frame.dynamicTextCodesFrame  then
+      frame.dynamicTextCodesFrame:Hide()
     end
 
     if frame.moversizer then
@@ -233,14 +237,12 @@ function OptionsPrivate.CreateFrame()
     if self.minimized then
       WeakAurasOptionsTitleText:Hide()
       self.buttonsContainer.frame:Hide()
-      self.texturePicker.frame:Hide()
-      self.iconPicker.frame:Hide()
-      self.modelPicker.frame:Hide()
-      self.importexport.frame:Hide()
-      self.update.frame:Hide()
-      self.texteditor.frame:Hide()
-      self.codereview.frame:Hide()
-      self.debugLog.frame:Hide()
+      for _, fn in ipairs({"TexturePicker", "IconPicker", "ModelPicker", "ImportExport", "TextEditor", "CodeReview", "UpdateFrame", "DebugLog"}) do
+        local obj = OptionsPrivate[fn](self, true)
+        if obj then
+          obj.frame:Hide()
+        end
+      end
       if self.newView then
         self.newView.frame:Hide()
       end
@@ -252,6 +254,7 @@ function OptionsPrivate.CreateFrame()
       self.tipFrame:Hide()
       self:HideTip()
       self.bottomRightResizer:Hide()
+      self.dynamicTextCodesFrame:Hide()
     else
       WeakAurasOptionsTitleText:Show()
       self.bottomRightResizer:Show()
@@ -263,50 +266,34 @@ function OptionsPrivate.CreateFrame()
       else
         self.buttonsContainer.frame:Hide()
         self.container.frame:Hide()
+        self.dynamicTextCodesFrame:Hide()
         self:HideTip()
       end
+      local widgets = {
+        { window = "texture",      title = L["Texture Picker"],       fn = "TexturePicker" },
+        { window = "icon",         title = L["Icon Picker"],          fn = "IconPicker" },
+        { window = "model",        title = L["Model Picker"],         fn = "ModelPicker" },
+        { window = "importexport", title = L["Import / Export"],      fn = "ImportExport" },
+        { window = "texteditor",   title = L["Code Editor"],          fn = "TextEditor" },
+        { window = "codereview",   title = L["Custom Code Viewer"],   fn = "CodeReview" },
+        { window = "debuglog",     title = L["Debug Log"],            fn = "DebugLog" },
+        { window = "update",       title = L["Update"],               fn = "UpdateFrame" },
+      }
 
-      if self.window == "texture" then
-        OptionsPrivate.SetTitle(L["Texture Picker"])
-        self.texturePicker.frame:Show()
-      else
-        self.texturePicker.frame:Hide()
+      for _, widget in ipairs(widgets) do
+        local obj = OptionsPrivate[widget.fn](self, true)
+        if self.window == widget.window then
+          OptionsPrivate.SetTitle(widget.title)
+          if obj then
+            obj.frame:Show()
+          end
+        else
+          if obj then
+            obj.frame:Hide()
+          end
+        end
       end
 
-      if self.window == "icon" then
-        OptionsPrivate.SetTitle(L["Icon Picker"])
-        self.iconPicker.frame:Show()
-      else
-        self.iconPicker.frame:Hide()
-      end
-
-      if self.window == "model" then
-        OptionsPrivate.SetTitle(L["Model Picker"])
-        self.modelPicker.frame:Show()
-      else
-        self.modelPicker.frame:Hide()
-      end
-
-      if self.window == "importexport" then
-        OptionsPrivate.SetTitle(L["Import / Export"])
-        self.importexport.frame:Show()
-      else
-        self.importexport.frame:Hide()
-      end
-
-      if self.window == "texteditor" then
-        OptionsPrivate.SetTitle(L["Code Editor"])
-        self.texteditor.frame:Show()
-      else
-        self.texteditor.frame:Hide()
-      end
-
-      if self.window == "codereview" then
-        OptionsPrivate.SetTitle(L["Custom Code Viewer"])
-        self.codereview.frame:Show()
-      else
-        self.codereview.frame:Hide()
-      end
       if self.window == "newView" then
         OptionsPrivate.SetTitle(L["New Template"])
         self.newView.frame:Show()
@@ -314,18 +301,6 @@ function OptionsPrivate.CreateFrame()
         if self.newView then
           self.newView.frame:Hide()
         end
-      end
-      if self.window == "update" then
-        OptionsPrivate.SetTitle(L["Update"])
-        self.update.frame:Show()
-      else
-        self.update.frame:Hide()
-      end
-      if self.window == "debuglog" then
-        OptionsPrivate.SetTitle(L["Debug Log"])
-        self.debugLog.frame:Show()
-      else
-        self.debugLog.frame:Hide()
       end
       if self.window == "default" then
         if self.loadProgessVisible then
@@ -349,7 +324,7 @@ function OptionsPrivate.CreateFrame()
 
 
   local minimizebutton = CreateFrame("Button", nil, frame, "MaximizeMinimizeButtonFrameTemplate")
-  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicEraOrWrath() and  10 or 0, 0)
+  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicOrCata() and  10 or 0, 0)
   minimizebutton:SetOnMaximizedCallback(function()
     frame.minimized = false
     local right, top = frame:GetRight(), frame:GetTop()
@@ -456,7 +431,7 @@ function OptionsPrivate.CreateFrame()
     return button.frame
   end
 
-  local discordButton = addFooter(L["Join Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/weakauras",
+  local discordButton = addFooter(L["Join Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/xhUHVCgAGy",
             L["Chat with WeakAuras experts on our Discord server."])
   discordButton:SetParent(tipFrame)
   discordButton:SetPoint("LEFT", tipFrame, "LEFT")
@@ -478,7 +453,7 @@ function OptionsPrivate.CreateFrame()
 
   local companionButton
   if not OptionsPrivate.Private.CompanionData.slugs then
-    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://weakauras.wtf",
+    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://discord.gg/xhUHVCgAGy",
             L["Keep your Wago imports up to date with the Companion App."])
     companionButton:SetParent(tipFrame)
     companionButton:SetPoint("RIGHT", wagoButton, "LEFT", -10, 0)
@@ -509,16 +484,6 @@ function OptionsPrivate.CreateFrame()
   container.content:SetPoint("TOPLEFT", 0, -28)
   container.content:SetPoint("BOTTOMRIGHT", 0, 0)
   frame.container = container
-
-  frame.texturePicker = OptionsPrivate.TexturePicker(frame)
-  frame.iconPicker = OptionsPrivate.IconPicker(frame)
-  frame.modelPicker = OptionsPrivate.ModelPicker(frame)
-  frame.importexport = OptionsPrivate.ImportExport(frame)
-  frame.texteditor = OptionsPrivate.TextEditor(frame)
-  frame.codereview = OptionsPrivate.CodeReview(frame)
-  frame.update = OptionsPrivate.UpdateFrame(frame)
-  frame.debugLog = OptionsPrivate.DebugLog(frame)
-
   frame.moversizer, frame.mover = OptionsPrivate.MoverSizer(frame)
 
   -- filter line
@@ -727,7 +692,7 @@ function OptionsPrivate.CreateFrame()
 
   -- Loaded section
   local loadedButton = AceGUI:Create("WeakAurasLoadedHeaderButton")
-  loadedButton:SetText(L["Loaded"])
+  loadedButton:SetText(L["Loaded/Standby"])
   loadedButton:Disable()
   loadedButton:EnableExpand()
   if odb.loadedCollapse then
@@ -747,16 +712,17 @@ function OptionsPrivate.CreateFrame()
   loadedButton:SetCollapseDescription(L["Collapse all loaded displays"])
   loadedButton:SetViewClick(function()
     local suspended = OptionsPrivate.Private.PauseAllDynamicGroups()
+
     if loadedButton.view.visibility == 2 then
-      for id, child in pairs(displayButtons) do
-        if OptionsPrivate.Private.loaded[id] ~= nil then
+      for _, child in ipairs(loadedButton.childButtons) do
+        if child:IsLoaded() then
           child:PriorityHide(2)
         end
       end
       loadedButton:PriorityHide(2)
     else
-      for id, child in pairs(displayButtons) do
-        if OptionsPrivate.Private.loaded[id] ~= nil then
+      for _, child in ipairs(loadedButton.childButtons) do
+        if child:IsLoaded() then
           child:PriorityShow(2)
         end
       end
@@ -766,14 +732,12 @@ function OptionsPrivate.CreateFrame()
   end)
   loadedButton.RecheckVisibility = function(self)
     local none, all = true, true
-    for id, child in pairs(displayButtons) do
-      if OptionsPrivate.Private.loaded[id] ~= nil then
-        if child:GetVisibility() ~= 2 then
-          all = false
-        end
-        if child:GetVisibility() ~= 0 then
-          none = false
-        end
+    for _, child in ipairs(loadedButton.childButtons) do
+      if child:GetVisibility() ~= 2 then
+        all = false
+      end
+      if child:GetVisibility() ~= 0 then
+        none = false
       end
     end
     local newVisibility
@@ -790,6 +754,7 @@ function OptionsPrivate.CreateFrame()
     end
   end
   loadedButton:SetViewDescription(L["Toggle the visibility of all loaded displays"])
+  loadedButton.childButtons = {}
   frame.loadedButton = loadedButton
 
   -- Not Loaded section
@@ -815,17 +780,13 @@ function OptionsPrivate.CreateFrame()
   unloadedButton:SetViewClick(function()
     local suspended = OptionsPrivate.Private.PauseAllDynamicGroups()
     if unloadedButton.view.visibility == 2 then
-      for id, child in pairs(displayButtons) do
-        if OptionsPrivate.Private.loaded[id] == nil then
-          child:PriorityHide(2)
-        end
+      for _, child in ipairs(unloadedButton.childButtons) do
+        child:PriorityHide(2)
       end
       unloadedButton:PriorityHide(2)
     else
-      for id, child in pairs(displayButtons) do
-        if OptionsPrivate.Private.loaded[id] == nil then
-          child:PriorityShow(2)
-        end
+      for _, child in ipairs(unloadedButton.childButtons) do
+        child:PriorityShow(2)
       end
       unloadedButton:PriorityShow(2)
     end
@@ -833,14 +794,12 @@ function OptionsPrivate.CreateFrame()
   end)
   unloadedButton.RecheckVisibility = function(self)
     local none, all = true, true
-    for id, child in pairs(displayButtons) do
-      if OptionsPrivate.Private.loaded[id] == nil then
-        if child:GetVisibility() ~= 2 then
-          all = false
-        end
-        if child:GetVisibility() ~= 0 then
-          none = false
-        end
+    for _, child in ipairs(unloadedButton.childButtons) do
+      if child:GetVisibility() ~= 2 then
+        all = false
+      end
+      if child:GetVisibility() ~= 0 then
+        none = false
       end
     end
     local newVisibility
@@ -857,8 +816,119 @@ function OptionsPrivate.CreateFrame()
     end
   end
   unloadedButton:SetViewDescription(L["Toggle the visibility of all non-loaded displays"])
+  unloadedButton.childButtons = {}
   frame.unloadedButton = unloadedButton
 
+  -- Sidebar used for Dynamic Text Replacements
+  local sidegroup = AceGUI:Create("WeakAurasInlineGroup")
+  sidegroup.frame:SetParent(frame)
+  sidegroup.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 17, -63);
+  sidegroup.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -17, 46);
+  sidegroup.frame:Show()
+  sidegroup:SetLayout("flow")
+
+  local dynamicTextCodesFrame = CreateFrame("Frame", "WeakAurasTextReplacements", sidegroup.frame, "PortraitFrameTemplate")
+  dynamicTextCodesFrame.Bg:SetColorTexture(unpack(frame.Bg.colorTexture))
+  ButtonFrameTemplate_HidePortrait(dynamicTextCodesFrame)
+  dynamicTextCodesFrame:SetPoint("TOPLEFT", sidegroup.frame, "TOPRIGHT", 20, 0)
+  dynamicTextCodesFrame:SetPoint("BOTTOMLEFT", sidegroup.frame, "BOTTOMRIGHT", 20, 0)
+  dynamicTextCodesFrame:SetWidth(250)
+  dynamicTextCodesFrame:SetScript("OnHide", function()
+    OptionsPrivate.currentDynamicTextInput = nil
+  end)
+  frame.dynamicTextCodesFrame = dynamicTextCodesFrame
+
+  local dynamicTextCodesFrameTitle
+  if dynamicTextCodesFrame.TitleContainer and dynamicTextCodesFrame.TitleContainer.TitleText then
+    dynamicTextCodesFrameTitle = dynamicTextCodesFrame.TitleContainer.TitleText
+  elseif dynamicTextCodesFrame.TitleText then
+    dynamicTextCodesFrameTitle = dynamicTextCodesFrame.TitleText
+  end
+  if dynamicTextCodesFrameTitle then
+    dynamicTextCodesFrameTitle:SetText("Dynamic Text Replacements")
+    dynamicTextCodesFrameTitle:SetJustifyH("CENTER")
+    dynamicTextCodesFrameTitle:SetPoint("LEFT", dynamicTextCodesFrame, "TOPLEFT")
+    dynamicTextCodesFrameTitle:SetPoint("RIGHT", dynamicTextCodesFrame, "TOPRIGHT", -10, 0)
+  end
+
+  local dynamicTextCodesLabel = AceGUI:Create("Label")
+  dynamicTextCodesLabel:SetText(L["Insert text replacement codes to make text dynamic."])
+  dynamicTextCodesLabel:SetFontObject(GameFontNormal)
+  dynamicTextCodesLabel:SetPoint("TOP", dynamicTextCodesFrame, "TOP", 0, -35)
+  dynamicTextCodesLabel:SetFontObject(GameFontNormalSmall2)
+  dynamicTextCodesLabel.frame:SetParent(dynamicTextCodesFrame)
+  dynamicTextCodesLabel.frame:Show()
+
+  local dynamicTextCodesScrollContainer = AceGUI:Create("SimpleGroup")
+  dynamicTextCodesScrollContainer.frame:SetParent(dynamicTextCodesFrame)
+  dynamicTextCodesScrollContainer.frame:SetPoint("TOP", dynamicTextCodesLabel.frame, "BOTTOM", 0, -15)
+  dynamicTextCodesScrollContainer.frame:SetPoint("LEFT", dynamicTextCodesFrame, "LEFT", 15, 0)
+  dynamicTextCodesScrollContainer.frame:SetPoint("BOTTOMRIGHT", dynamicTextCodesFrame, "BOTTOMRIGHT", -15, 5)
+  dynamicTextCodesScrollContainer:SetFullWidth(true)
+  dynamicTextCodesScrollContainer:SetFullHeight(true)
+  dynamicTextCodesScrollContainer:SetLayout("Fill")
+
+
+  local dynamicTextCodesScrollList = AceGUI:Create("ScrollFrame")
+  dynamicTextCodesScrollList:SetLayout("List")
+  dynamicTextCodesScrollList:SetPoint("TOPLEFT", dynamicTextCodesScrollContainer.frame, "TOPLEFT")
+  dynamicTextCodesScrollList:SetPoint("BOTTOMRIGHT", dynamicTextCodesScrollContainer.frame, "BOTTOMRIGHT")
+  dynamicTextCodesScrollList.frame:SetParent(dynamicTextCodesFrame)
+  dynamicTextCodesScrollList:FixScroll()
+  dynamicTextCodesScrollList.scrollframe:SetScript(
+    "OnScrollRangeChanged",
+    function(frame)
+      frame.obj:DoLayout()
+    end
+  )
+
+  dynamicTextCodesScrollList.scrollframe:SetScript(
+    "OnSizeChanged",
+    function(frame)
+      if frame.obj.scrollBarShown then
+        frame.obj.content.width = frame.obj.content.original_width - 10
+        frame.obj.scrollframe:SetPoint("BOTTOMRIGHT", -10, 0)
+      end
+    end
+  )
+
+
+  dynamicTextCodesFrame.scrollList = dynamicTextCodesScrollList
+  dynamicTextCodesFrame.label = dynamicTextCodesLabel
+  dynamicTextCodesFrame:Hide()
+
+  function OptionsPrivate.ToggleTextReplacements(data, widget, event)
+    -- If the text edit has focus when the user clicks on the button, we'll get two events:
+    -- a) The OnEditFocusLost
+    -- b) The ToggleButton OnClick event
+    -- Since we want to hide the text replacement window in that case,
+    -- ignore the ToggleButton if it is directly after the  OnEditFocusLost
+    local currentTime = GetTime()
+    if event == "ToggleButton"
+      and dynamicTextCodesFrame.lastCaller
+      and dynamicTextCodesFrame.lastCaller.event == "OnEditFocusLost"
+      and currentTime - dynamicTextCodesFrame.lastCaller.time < 0.2
+    then
+      return
+    end
+
+    dynamicTextCodesFrame.lastCaller = {
+      event = event,
+      time = currentTime,
+    }
+
+    if event == "OnEnterPressed" then
+      dynamicTextCodesFrame:Hide()
+    elseif event == "OnEditFocusGained" or not dynamicTextCodesFrame:IsShown() then
+      dynamicTextCodesFrame:Show()
+      if OptionsPrivate.currentDynamicTextInput ~= widget then
+        OptionsPrivate.UpdateTextReplacements(dynamicTextCodesFrame, data)
+      end
+      OptionsPrivate.currentDynamicTextInput = widget
+    elseif not dynamicTextCodesFrame:IsMouseOver() then -- Prevents hiding when clicking inside the frame
+      dynamicTextCodesFrame:Hide()
+    end
+  end
 
   frame.ClearOptions = function(self, id)
     aceOptions[id] = nil
@@ -919,7 +989,7 @@ function OptionsPrivate.CreateFrame()
 
     local optionTable = self:EnsureOptions(data, self.selectedTab)
     if optionTable then
-      AceConfig:RegisterOptionsTable("WeakAuras", optionTable)
+      AceConfigRegistry:RegisterOptionsTable("WeakAuras", optionTable, true)
     end
   end
 
@@ -1008,6 +1078,10 @@ function OptionsPrivate.CreateFrame()
 
     if data.controlledChildren and #data.controlledChildren == 0 then
       WeakAurasOptions:NewAura()
+    end
+
+    if frame.dynamicTextCodesFrame then
+      frame.dynamicTextCodesFrame:Hide()
     end
   end
 
@@ -1108,6 +1182,7 @@ function OptionsPrivate.CreateFrame()
         targetIsDynamicGroup = parentData and parentData.regionType == "dynamicgroup"
       end
     end
+    self.dynamicTextCodesFrame:Hide()
     self.moversizer:Hide()
     self.pickedOption = "New"
 
@@ -1122,7 +1197,7 @@ function OptionsPrivate.CreateFrame()
     containerScroll:SetLayout("flow")
     border:AddChild(containerScroll)
 
-    if GetAddOnEnableState(UnitName("player"), "WeakAurasTemplates") ~= 0 then
+    if C_AddOns.GetAddOnEnableState("WeakAurasTemplates") ~= Enum.AddOnEnableState.None then
       local simpleLabel = AceGUI:Create("Label")
       simpleLabel:SetFont(STANDARD_TEXT_FONT, 24, "OUTLINE")
       simpleLabel:SetColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
@@ -1275,7 +1350,7 @@ function OptionsPrivate.CreateFrame()
       end
     end
 
-    if self.pickedDisplay == id then
+    if self.pickedDisplay == id and (self.pickedDisplay == tab or tab == nil) then
       return
     end
 

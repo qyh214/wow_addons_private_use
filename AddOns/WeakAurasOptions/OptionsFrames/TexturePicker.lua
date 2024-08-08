@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 local GetAtlasInfo = C_Texture and  C_Texture.GetAtlasInfo or GetAtlasInfo
 
 -- Lua APIs
@@ -11,6 +14,7 @@ local CreateFrame = CreateFrame
 
 local AceGUI = LibStub("AceGUI-3.0")
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -37,7 +41,7 @@ local function CompareValues(a, b)
   end
 end
 
-local function GetAll(baseObject, path, property, default)
+local function GetAll(baseObject, paths, property, default)
   local valueFromPath = OptionsPrivate.Private.ValueFromPath
   if not property then
     return default
@@ -46,7 +50,7 @@ local function GetAll(baseObject, path, property, default)
   local result = default
   local first = true
   for child in OptionsPrivate.Private.TraverseLeafsOrAura(baseObject) do
-    local childObject = valueFromPath(child, path)
+    local childObject = valueFromPath(child, paths[child.id])
     if childObject and childObject[property] then
       if first then
         result = childObject[property]
@@ -61,10 +65,10 @@ local function GetAll(baseObject, path, property, default)
   return result
 end
 
-local function SetAll(baseObject, path, property, value, width, height, adjustSize)
+local function SetAll(baseObject, paths, property, value, width, height, adjustSize)
   local valueFromPath = OptionsPrivate.Private.ValueFromPath
   for child in OptionsPrivate.Private.TraverseLeafsOrAura(baseObject) do
-    local object = valueFromPath(child, path)
+    local object = valueFromPath(child, paths[child.id])
       if object then
         object[property] = value
         if adjustSize and width and height then
@@ -160,7 +164,7 @@ local function ConstructTexturePicker(frame)
       filter = filter:lower()
     end
     for texturePath, textureName in pairs(group.textures[uniquevalue]) do
-      if filter == nil or filter == "" or textureName:lower():match(filter) then
+      if filter == nil or filter == "" or textureName:lower():find(filter, 1, true) then
         tinsert(group.selectedGroupSorted, {texturePath, textureName})
       end
     end
@@ -234,7 +238,7 @@ local function ConstructTexturePicker(frame)
         pickedwidget = widget;
       end
     end
-    local width, height
+    local width, height, flipbookInfo
     if(pickedwidget) then
       pickedwidget:Pick();
       if not pickedwidget.texture.IsStopMotion then
@@ -243,23 +247,29 @@ local function ConstructTexturePicker(frame)
           width = atlasInfo.width
           height = atlasInfo.height
         end
+      else
+        flipbookInfo = OptionsPrivate.GetFlipbookTileSize(pickedwidget.texture.path)
+        if flipbookInfo then
+          width = flipbookInfo.tileWidth
+          height = flipbookInfo.tileHeight
+        end
       end
     end
 
     wipe(group.selectedTextures)
     group.selectedTextures[texturePath] = true
 
-    SetAll(self.baseObject, self.path, self.properties.texture, texturePath, width, height, self.adjustSize)
+    SetAll(self.baseObject, self.paths, self.properties.texture, texturePath, width, height, self.adjustSize)
 
     group:UpdateList();
     local status = dropdown.status or dropdown.localstatus
     dropdown.dropdown:SetText(dropdown.list[status.selected]);
   end
 
-  function group.Open(self, baseObject, path, properties, textures, SetTextureFunc, adjustSize)
+  function group.Open(self, baseObject, paths, properties, textures, SetTextureFunc, adjustSize)
     local valueFromPath = OptionsPrivate.Private.ValueFromPath
     self.baseObject = baseObject
-    self.path = path
+    self.paths = paths
     self.properties = properties
     self.textures = textures;
     self.SetTextureFunc = SetTextureFunc
@@ -268,29 +278,31 @@ local function ConstructTexturePicker(frame)
     self.adjustSize = adjustSize
 
     for child in OptionsPrivate.Private.TraverseLeafsOrAura(baseObject) do
-      local object = valueFromPath(child, path)
+      local object = valueFromPath(child, paths[child.id])
       if object and object[properties.texture] then
-        self.givenPath[child.id] = object[properties.texture]
-        self.selectedTextures[object[properties.texture]] = true
+        local texture = object[properties.texture]
+        self.givenPath[child.id] = texture
+        self.selectedTextures[texture] = true
+      else
+        self.givenPath[child.id] = ""
       end
     end
 
-    local colorAll = GetAll(baseObject, path, properties.color, {1, 1, 1, 1});
+    local colorAll = GetAll(baseObject, paths, properties.color, {1, 1, 1, 1});
     self.textureData = {
       r = colorAll[1] or 1,
       g = colorAll[2] or 1,
       b = colorAll[3] or 1,
       a = colorAll[4] or 1,
-      auraRotation = GetAll(baseObject, path, properties.auraRotation, 0),
-      texRotation = GetAll(baseObject, path, properties.rotation, 0),
-      mirror = GetAll(baseObject, path, properties.mirror, false),
-      blendMode = GetAll(baseObject, path, properties.blendMode, "ADD")
+      auraRotation = GetAll(baseObject, paths, properties.auraRotation, 0),
+      texRotation = GetAll(baseObject, paths, properties.rotation, 0),
+      mirror = GetAll(baseObject, paths, properties.mirror, false),
+      blendMode = GetAll(baseObject, paths, properties.blendMode, "ADD")
     }
 
     frame.window = "texture";
     frame:UpdateFrameVisible()
     group:UpdateList()
-    local _, givenPath = next(self.givenPath)
     local picked = false;
     for categoryName, category in pairs(self.textures) do
       if not(picked) then
@@ -321,7 +333,7 @@ local function ConstructTexturePicker(frame)
   function group.CancelClose()
     local valueFromPath = OptionsPrivate.Private.ValueFromPath
     for child in OptionsPrivate.Private.TraverseLeafsOrAura(group.baseObject) do
-      local childObject = valueFromPath(child, group.path)
+      local childObject = valueFromPath(child, group.paths[child.id])
       if childObject then
         childObject[group.properties.texture] = group.givenPath[child.id]
         WeakAuras.Add(child);
@@ -346,7 +358,7 @@ local function ConstructTexturePicker(frame)
   return group
 end
 
-function OptionsPrivate.TexturePicker(frame)
-  texturePicker = texturePicker or ConstructTexturePicker(frame)
+function OptionsPrivate.TexturePicker(frame, noConstruct)
+  texturePicker = texturePicker or (not noConstruct and ConstructTexturePicker(frame))
   return texturePicker
 end

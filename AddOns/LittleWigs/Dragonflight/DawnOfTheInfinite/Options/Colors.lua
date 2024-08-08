@@ -68,19 +68,21 @@ BigWigs:AddColors("The Infinite Dragonflight", {
 	[416139] = "purple",
 	[416152] = "red",
 	[416264] = "red",
+	[417413] = "blue",
 	["stages"] = "cyan",
 })
 
 BigWigs:AddColors("Dawn of the Infinite Trash", {
 	[407124] = "red",
 	[407125] = "orange",
-	[407205] = "orange",
+	[407205] = {"blue","orange"},
 	[407535] = "cyan",
 	[407891] = "yellow",
 	[407906] = "blue",
 	[411300] = "yellow",
 	[411407] = "red",
 	[411952] = "orange",
+	[411958] = "yellow",
 	[411994] = "red",
 	[412012] = "yellow",
 	[412063] = "orange",
@@ -96,7 +98,7 @@ BigWigs:AddColors("Dawn of the Infinite Trash", {
 	[413529] = "orange",
 	[413544] = {"blue","purple","yellow"},
 	[413607] = "red",
-	[413621] = "orange",
+	[413621] = {"blue","orange","red"},
 	[413622] = "yellow",
 	[415437] = "red",
 	[415769] = {"blue","yellow"},
@@ -110,4 +112,5 @@ BigWigs:AddColors("Dawn of the Infinite Trash", {
 	[419351] = "purple",
 	[419511] = "red",
 	[419516] = {"blue","orange","yellow"},
+	["rift_stability"] = "green",
 })

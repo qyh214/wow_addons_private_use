@@ -171,10 +171,8 @@ L["S_WORLDQUESTS"] = "Локальные задания"
 L["S_APOWER_AVAILABLE"] = "Доступно"
 L["S_APOWER_NEXTLEVEL"] = "Следующий уровень"
 L["S_DECREASESIZE"] = "Уменьшить размер"
---[[Translation missing --]]
-L["S_DUNGEON"] = "Dungeon"
---[[Translation missing --]]
-L["S_ENABLE"] = "Enable"
+L["S_DUNGEON"] = "Подземелье"
+L["S_ENABLE"] = "Включить"
 L["S_ENABLED"] = "Включено"
 L["S_ERROR_NOTIMELEFT"] = "Время выполнения задания истекло."
 L["S_ERROR_NOTLOADEDYET"] = "Задание ещё не загружено, подождите несколько секунд."
@@ -236,8 +234,7 @@ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Показать статус 
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Привязать к верху"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Только текущая зона"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Масштаб трэкера: %s"
---[[Translation missing --]]
-L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "Tracker Scale"
+L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "Масштаб трекера"
 L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Конфигурация трэкера"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_AUTO"] = "Автоматически"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_CUSTOM"] = "Вручную"
@@ -254,40 +251,35 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Время смены за�
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Сортировка по времени"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Смена через"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "На аккаунте"
---[[Translation missing --]]
-L["S_OPENWORLD"] = "Open World"
+L["S_OPENWORLD"] = "Открытый мир"
 L["S_OPTIONS_ACCESSIBILITY"] = "Доступность"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Флаг над заданием"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Выделять золотым кольцом"
 L["S_OPTIONS_ANIMATIONS"] = "С анимацией"
---[[Translation missing --]]
-L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
---[[Translation missing --]]
-L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
+L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Не показывать, если Вы уже в группе"
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Показать кнопку параметров"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Расположение карты по центру"
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Сначала вам нужно включить 'Масштаб окна карты', значение не было изменено."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Масштаб окна карты"
 L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Включить масштабирование окна карты"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN"] = "Open Options Panel"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "Open World Quest Tracker Options Menu"
---[[Translation missing --]]
-L["S_OPTIONS_PATHLINE"] = "Path Line"
---[[Translation missing --]]
-L["S_OPTIONS_QUEST_EMISSARY"] = "Emissary Quest Info"
+L["S_OPTIONS_OPEN"] = "Открыть панель параметров"
+L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "Открыть меню настроек World Quest Tracker"
+L["S_OPTIONS_PATHLINE"] = "Путевая линия"
+L["S_OPTIONS_QUEST_EMISSARY"] = "Информация о квесте 'Эмиссар'"
 L["S_OPTIONS_QUESTBLACKLIST"] = "Чёрный список заданий"
 L["S_OPTIONS_RESET"] = "Сброс"
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Показать кнопку фильтра"
+L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Показать кнопку 'Свернуть'"
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Показать кнопку сортировки"
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Кнопка 'Показать оставшееся время'"
 --[[Translation missing --]]
-L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "Показать фракции"
 --[[Translation missing --]]
 L["S_OPTIONS_TALKINGHEADS"] = "Supress Talking Heads"
 L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Без приоритета по времени"
---[[Translation missing --]]
-L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "Attach to Quest Log"
---[[Translation missing --]]
-L["S_OPTIONS_TRACKER_FLIGHTMASTER"] = "Oribos Flight Master"
+L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "Прикрепить к журналу квестов"
+L["S_OPTIONS_TRACKER_FLIGHTMASTER"] = "Мастер полетов Орибоса"
 L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Сбросить положение"
 L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Привязка к левой стороне"
 L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Привязка к правой стороне"
@@ -296,24 +288,29 @@ L["S_OPTIONS_WORLD_ICONSPERROW"] = "Quest Amount Per Row"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Организовать по карте"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Организовать по типу задания"
 --[[Translation missing --]]
-L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Attach To"
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
+L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Прикрепить к"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organize Quests By"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Только отслеживаемые"
 --[[Translation missing --]]
-L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
 --[[Translation missing --]]
-L["S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"] = "Group Finder"
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
 --[[Translation missing --]]
-L["S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"] = "Ignored Quests"
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
 --[[Translation missing --]]
-L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "Rares"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
---[[Translation missing --]]
-L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Гонка на Драконах"
+L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "Общие настройки"
+L["S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"] = "Поиск группы"
+L["S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"] = "Игнорируемые квесты"
+L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "Рарники"
+L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Трекер"
+L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "Карта мира"
+L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Карта зоны"
 L["S_OVERALL"] = "Всего"
 L["S_PARTY"] = "Группа"
 L["S_PARTY_DESC1"] = "Если квест помечен синей звездочкой - он есть у всех игроков в вашей группе."
@@ -330,8 +327,7 @@ L["S_QUESTTYPE_PROFESSION"] = "Профессия"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ресурсы"
 L["S_QUESTTYPE_TRADESKILL"] = "Материалы"
---[[Translation missing --]]
-L["S_RAID"] = "Raid"
+L["S_RAID"] = "Рейд"
 L["S_RAREFINDER_ADDFROMPREMADE"] = "Добавить редких мобов, найденных в заранее собранные группы"
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "нет, этого редкого моба в базе данных"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Всегда искать по-английски"
@@ -344,17 +340,16 @@ L["S_RAREFINDER_TOOLTIP_REMOVE"] = "Убрать"
 L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Поиск по другим мирам"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Обнаружил(а)"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "минут назад"
---[[Translation missing --]]
-L["S_SCALE"] = "Scale"
+L["S_SCALE"] = "Масштаб"
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker еще не загружен. Откройте карту для загрузки."
 L["S_SUMMARYPANEL_EXPIRED"] = "ИСТЕКШИЕ"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Последние 15 дней"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Статистика аккаунта"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Статистика персонажа"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Другие персонажи"
---[[Translation missing --]]
-L["S_TEXT_SIZE"] = "Text Size"
---[[Translation missing --]]
-L["S_TORGAST"] = "Torgasth"
+L["S_TEXT_SIZE"] = "Размер текста"
+L["S_TORGAST"] = "Торгаст"
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Прозрачность фона"
 L["S_TUTORIAL_AMOUNT"] = "показывает количество или уровень награды"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Кликните, чтобы отслеживать задание"
 L["S_TUTORIAL_PARTY"] = "Синей звездочкой помечаются те квесты, которые есть у каждого члена группы!"
@@ -369,8 +364,9 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[Нажмите здесь, чтобы пере
 Нажмите на |cFFFFAA11Вкл/Выкл - задания|r, чтобы скрыть местоположения заданий.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Эта кнопка открывает карту Расколотых островов."
 L["S_UNKNOWNQUEST"] = "Неизвестное задание"
+L["S_VISIBILITY"] = "Видимость"
 L["S_WHATSNEW"] = "Что нового?"
-L["S_WORLDBUTTONS_SHOW_TYPE"] = "Показать сводку"
+L["S_WORLDBUTTONS_SHOW_TYPE"] = "Сортировать по типу"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "По территориям"
 L["S_WORLDBUTTONS_TOGGLE_QUESTS"] = "Вкл/Выкл - задания"
 L["S_WORLDMAP_QUESTLOCATIONS"] = "Показать местоположения заданий"

@@ -5,7 +5,10 @@ local RegEvent = MySlot.regevent
 
 local f = CreateFrame("Frame", nil, UIParent)
 f.name = L["Myslot"]
-InterfaceOptions_AddCategory(f)
+
+local category = Settings.RegisterCanvasLayoutCategory(f, L["Myslot"])
+MySlot.settingcategory = category
+Settings.RegisterAddOnCategory(category)
 
 RegEvent("ADDON_LOADED", function()
     do
@@ -112,10 +115,28 @@ StaticPopupDialogs["MYSLOT_CONFIRM_CLEAR"] = {
         local tx = self.editBox:GetText()
 
         if tx == data then
-            MySlot:Clear(data)
+            MySlot:Clear(data, {
+                [1] = true,
+                [2] = true,
+                [3] = true,
+                [4] = true,
+                [5] = true,
+                [6] = true,
+                [7] = true,
+                [8] = true,
+                [9] = true,
+                [10] = true,
+                [11] = true,
+                [12] = true,
+                [13] = true,
+                [14] = true,
+                [15] = true,
+                ["ACCOUNT"] = true,
+                ["CHARACTOR"] = true,
+            })
         else
             MySlot:Print(L["Please type %s to confirm"]:format(data))
         end
-        
+
     end,
 }

@@ -20,19 +20,7 @@ if L then
 	L.bomber = "Schwarzteerbomber"
 end
 
-L = BigWigs:NewBossLocale("Sergeant Bainbridge", "deDE")
+L = BigWigs:NewBossLocale("Dread Captain Lockwood", "deDE")
 if L then
-	L.remaining = "%s auf %s, %d verbleibend"
-	L.remaining_boss = "%s auf BOSS, %d verbleibend"
-end
-
-L = BigWigs:NewBossLocale("Chopper Redhook", "deDE")
-if L then
-	L.remaining = "%s auf %s, %d verbleibend"
-	L.remaining_boss = "%s auf BOSS, %d verbleibend"
-end
-
-L = BigWigs:NewBossLocale("Viq'Goth", "deDE")
-if L then
-	L.demolishing_desc = "Warnungen und Timer für das Erscheinen des Verwüstenden Schreckens."
+	L.ordnance_dropped = "Instabile Munition fallengelassen"
 end

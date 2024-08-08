@@ -184,7 +184,6 @@ L["STRING_ENVIRONMENTAL_FATIGUE"] = "Ambiente (Fatica)"
 L["STRING_ENVIRONMENTAL_FIRE"] = "Ambiente (Fuoco)"
 L["STRING_ENVIRONMENTAL_LAVA"] = "Ambiente (Lava)"
 L["STRING_ENVIRONMENTAL_SLIME"] = "Ambiente (Slime)"
-L["STRING_EQUILIZING"] = "Condivisione data incontro"
 L["STRING_ERASE"] = "cancella"
 L["STRING_ERASE_DATA"] = "Cancella Tutti i Dati"
 L["STRING_ERASE_DATA_OVERALL"] = "Cancella i Dati Complessivi"
@@ -707,6 +706,30 @@ L["STRING_OPTIONS_MINIMAP_ANCHOR"] = "Minimappa:"
 L["STRING_OPTIONS_MINIMAP_DESC"] = "Mostra o Nascondi le icone minimappa"
 L["STRING_OPTIONS_MISCTITLE"] = "Impostazioni varie"
 L["STRING_OPTIONS_MISCTITLE2"] = "Questi controllano diverse opzioni."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Overall Segment DPS Calculation"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MAKEOVERALL"] = "Make Overall Segment"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MAKEOVERALL_DESC"] = "After the run is completed, this option creates a new segment containing all combat data from the run."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Panels"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Show End of M+ Panel"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Time in Combat"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "The overall segment for the Mythic+ run will use 'totalDamage / totalCombatTime' to calculate DPS."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeon Run Time"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "The overall segment for the Mythic+ run will calculate DPS using 'totalDamage / runTime'."
 L["STRING_OPTIONS_NICKNAME"] = "NIckname"
 L["STRING_OPTIONS_NICKNAME_DESC"] = "Imposta un nickname per te. I nickname vengono inviati ai membri della gilda e ai dettagli! lo usa al posto del nome del tuo personaggio."
 L["STRING_OPTIONS_OPEN_ROWTEXT_EDITOR"] = "Editor Righe di Testo"
@@ -1213,6 +1236,8 @@ L["STRING_REPORT_SINGLE_BUFFUPTIME"] = "buff durato per"
 L["STRING_REPORT_SINGLE_COOLDOWN"] = "cooldowns usati da"
 L["STRING_REPORT_SINGLE_DEATH"] = "Morte di"
 L["STRING_REPORT_SINGLE_DEBUFFUPTIME"] = "debuff durato per"
+--[[Translation missing --]]
+L["STRING_REPORT_TEXT"] = "Report"
 L["STRING_REPORT_TOOLTIP"] = "Condividi Risultati"
 L["STRING_REPORTFRAME_COPY"] = "Copia & Incolla"
 L["STRING_REPORTFRAME_CURRENT"] = "Corrente"

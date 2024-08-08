@@ -6,16 +6,18 @@
 	local _
 	local addonName, Details222 = ...
 
-	local bIsDragonflight = DetailsFramework.IsDragonflight()
+	---@cast Details222 details222
+
+	local bIsDragonflightOrAbove = DetailsFramework.IsDragonflightAndBeyond()
 	local CONST_CLIENT_LANGUAGE = DF.ClientLanguage
+
+	local GetSpellTexture = C_Spell.GetSpellTexture or GetSpellTexture
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --local pointers
 
 	local _IsInInstance = IsInInstance --api local
 	local UnitGUID = UnitGUID --api local
-	local strsplit = strsplit --api local
-
 	local setmetatable = setmetatable --lua local
 	local bitBand = bit.band --lua local
 	local bitBor = bit.bor --lua local
@@ -28,7 +30,6 @@
 
 	local GetNumDeclensionSets = _G.GetNumDeclensionSets
 	local DeclineName = _G.DeclineName
-
 	local pet_tooltip_frame = _G.DetailsPetOwnerFinder
 
 	local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
@@ -50,7 +51,10 @@
 	local container_misc = 		Details.container_type.CONTAINER_MISC_CLASS
 	local container_enemydebufftarget_target = Details.container_type.CONTAINER_ENEMYDEBUFFTARGET_CLASS
 
-	local container_pets = {}
+	---@type petcontainer
+	local petContainer = Details222.PetContainer
+	---@type table<guid, petdata>
+	local petCache = petContainer.Pets
 
 	--flags
 	local REACTION_HOSTILE	=	0x00000040
@@ -65,10 +69,8 @@
 	local OBJECT_TYPE_PLAYER =	0x00000400
 	local OBJECT_TYPE_PETS = 	OBJECT_TYPE_PET + OBJECT_TYPE_GUARDIAN
 
-	local debugPetname = false
-
 	local SPELLID_SANGUINE_HEAL = 226510
-	local sanguineActorName = GetSpellInfo(SPELLID_SANGUINE_HEAL)
+	local sanguineActorName = Details222.GetSpellInfo(SPELLID_SANGUINE_HEAL)
 
 
 ---attempt to get the owner of rogue's Akaari's Soul from Secrect Technique
@@ -174,19 +176,115 @@ local find_name_declension = function(tooltipString, playerName)
 	return false
 end
 
+local unitNameTitles = {
+    UNITNAME_TITLE_PET,
+    UNITNAME_TITLE_COMPANION,
+    UNITNAME_TITLE_GUARDIAN,
+    UNITNAME_TITLE_MINION,
+    UNITNAME_TITLE_CHARM,
+    UNITNAME_TITLE_CREATION,
+    UNITNAME_TITLE_SQUIRE
+}
+for i=1, #unitNameTitles do
+    unitNameTitles[i] = unitNameTitles[i]:gsub('%%s', '(.*)')
+end
+
 ---attempt to the owner of a pet using tooltip scan, if the owner isn't found, return nil
 ---@param petGUID string
 ---@param petName string
 ---@return string|nil ownerName
 ---@return string|nil ownerGUID
 ---@return integer|nil ownerFlags
-	function Details222.Pets.GetPetOwner(petGUID, petName)
+	function Details222.Pets.GetPetOwner(petGUID, petName) --this is under the Pets namespace, the new pet system is under the PetContainer namespace
+
+        local ownerGUID, ownerName, lineText
+
+        local cbMode = tonumber(GetCVar("colorblindMode")) or 0
+        if (bIsDragonflightOrAbove) then
+            local tooltipData = C_TooltipInfo.GetHyperlink('unit:'.. petGUID)
+            if (tooltipData) then
+                if (tooltipData.lines[1].leftText == '') then -- Assume this is an Akaari's soul / Storm Earth Fire tooltip
+                    ownerGUID = tooltipData.guid
+                elseif (tooltipData.lines[1].leftText == petName) then
+                    local lineTwo = tooltipData.lines[2 + cbMode]
+                    if (not lineTwo) then
+                        if (Details222.Debug.DebugPets or Details222.Debug.DebugPlayerPets) then
+					        Details:Msg("DebugPets|ActorContainer|Tooltip No LineTwo|PetName:", petName, "PetGUID:", petGUID, "ColorblindMode:", cbMode)
+                        end
+                        return
+                    elseif (lineTwo.type == 16 and lineTwo.guid) then
+                        ownerGUID = lineTwo.guid
+                    else
+                        lineText = lineTwo.leftText
+                    end
+                end
+            end
+        else
+            pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
+            pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
+
+            local line = _G['DetailsPetOwnerFinderTextLeft' .. (2 + cbMode)]
+            lineText = line and line:GetText()
+
+            if (not lineText or lineText == '') then
+                line = _G['DetailsPetOwnerFinderTextLeft1']
+                lineText = line and line:GetText()
+            end
+        end
+
+        if (lineText) then
+            for i=1, #unitNameTitles do
+                ownerName = lineText:match(unitNameTitles[i])
+                if (ownerName) then
+                    break
+                end
+            end
+
+            if (not ownerName) then
+                return
+            end
+
+            ---@type combat
+            local currentCombat = Details:GetCurrentCombat()
+
+            if (not currentCombat) then
+                return
+            end
+
+            local isInRaid = currentCombat.raid_roster[ownerName]
+            if (isInRaid) then
+                return ownerName, UnitGUID(ownerName), 0x514
+            end
+        elseif (ownerGUID and ownerGUID:sub(1,6) == 'Player') then
+            local playerGUID = ownerGUID
+            local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
+            if (actorObject) then
+                return actorObject.nome, playerGUID, actorObject.flag_original
+            end
+
+            local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
+            ownerName = guidCache[playerGUID]
+            if (ownerName) then
+                return ownerName, playerGUID, 0x514
+            end
+
+            if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
+                for enemyName, enemyToken in pairs(Details.arena_enemies) do
+                    if(UnitGUID(enemyToken) == ownerGUID) then
+                        return enemyName, ownerGUID, 0x548
+                    end
+                end
+            end
+        end
+
+        if true then return end
+
 		pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
 		pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
 
 		--C_TooltipInfo.GetHyperlink
 
-		if (bIsDragonflight) then
+		if (bIsDragonflightOrAbove) then
 			local tooltipData = pet_tooltip_frame:GetTooltipData() --is pet tooltip reliable with the new tooltips changes?
 			if (tooltipData) then
 				if (not tooltipData.args and tooltipData.lines[1].leftText == '') then --Assume this unit acts like Akaari's soul, where it returns the tooltip for the player instead, with line 1 blank.
@@ -264,25 +362,25 @@ end
 
 					elseif (lineType == 16) then --controller guid
 						--assuming the unit name always comes before the controller guid
-						local GUID = thisLine.guid
+						local guid = thisLine.guid
 						--very fast way to get an actorObject, this cache only lives while in combat
-						local actorObject = Details:GetActorFromCache(GUID)
+						local actorObject = Details:GetActorFromCache(guid)
 						if (actorObject) then
 							--Details:Msg("(debug) pet found (1)", petName, "owner:", actorObject.nome)
-							return actorObject.nome, GUID, actorObject.flag_original
+							return actorObject.nome, guid, actorObject.flag_original
 						else
 							--return the actor name for a guid, this cache lives for current combat until next segment
 							local guidCache = Details:GetParserPlayerCache()
-							local ownerName = guidCache[GUID]
+							local ownerName = guidCache[guid]
 							if (ownerName) then
 								--Details:Msg("(debug) pet found (2)", petName, "owner:", ownerName)
-								return ownerName, GUID, 0x514
+								return ownerName, guid, 0x514
 							end
 
 							if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
 								for enemyName, enemyToken in pairs(Details.arena_enemies) do
-									if(UnitGUID(enemyToken) == ownerGUID) then
-										return enemyName, ownerGUID, 0x548
+									if(UnitGUID(enemyToken) == guid) then
+										return enemyName, guid, 0x548
 									end
 								end
 							end
@@ -292,23 +390,25 @@ end
 			end
 		end
 
+		---@type combat
+		local currentCombat = Details:GetCurrentCombat()
+
 		local ownerName, ownerGUID, ownerFlags
-		if (not Details.tabela_vigente) then return end --Should exist at all times but load. Just in case.
+		if (not currentCombat) then return end --Should exist at all times but load. Just in case.
 
 		for i=1,3 do --Loop through the 3 texts on the PetOwnerFinder tooltip
 			local actorNameString = _G["DetailsPetOwnerFinderTextLeft"..i]
 			if (actorNameString and not ownerName) then --Tooltip line exists and we haven't found a valid match yes.
 				local actorName = actorNameString:GetText()
 				if (actorName and type(actorName) == "string") then
-					local isInRaid = Details.tabela_vigente.raid_roster[actorName]
+					local isInRaid = currentCombat.raid_roster[actorName]
 					if (isInRaid) then
 						ownerGUID = UnitGUID(actorName)
 						ownerName = actorName
 						ownerFlags = 0x514
 					else
-
 						if (CONST_CLIENT_LANGUAGE == "ruRU") then --If russian client, then test for declensions in the string of text.
-							for playerName, _ in pairs(Details.tabela_vigente.raid_roster) do
+							for playerName, _ in pairs(currentCombat.raid_roster) do
 								local pName = playerName
 								playerName = playerName:gsub("%-.*", "") --remove realm name
 								if (find_name_declension(actorName, playerName)) then
@@ -319,10 +419,10 @@ end
 								end
 							end
 						else
-
 							for playerName in actorName:gmatch("([^%s]+)") do
 								playerName = playerName:gsub(",", "")
-								local playerIsOnRaidCache = Details.tabela_vigente.raid_roster[playerName]
+                                playerName = playerName:gsub("'s$", "")
+								local playerIsOnRaidCache = currentCombat.raid_roster[playerName]
 								if (playerIsOnRaidCache) then
 									ownerGUID = UnitGUID(playerName)
 									ownerName = playerName
@@ -415,7 +515,7 @@ end
 		return ipairs(self._ActorTable)
 	end
 
-	---return a table<actorIndex, actorObject> for all actors stored in this Container
+	---return a table with actor[] for all actors stored in this container
 	---@return table
 	function actorContainer:GetActorTable()
 		return self._ActorTable
@@ -424,8 +524,8 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internals
 
-	---create a new actor container, can be a damage container, heal container, enemy container or utility container
-	---actors can be added by using newContainer.GetOrCreateActor
+	---create a new actor container, can be a damage container, heal container, resource container or utility container
+	---actors can be added by using the method newContainer:GetOrCreateActor(actorGuid, actorName, actorFlags, bShouldCreateActor)
 	---actors can be retrieved using the same function above
 	---@param containerType number
 	---@param combatObject table
@@ -508,138 +608,159 @@ end
 	local checkValidNickname = function(nickname, playerName)
 		if (nickname and type(nickname) == "string") then
 			nickname = nickname:trim()
+
 			if (nickname == "" or nickname:len() < 2) then
-				return playerName
+				return false
 			end
+
 			if (nickname:len() > 20) then
-				return playerName
+				return false
+			end
+
+			if (not UnitIsInMyGuild(playerName) and playerName ~= Details.playername) then
+				return false
 			end
 		else
-			return playerName
+			return false
 		end
-		return nickname
+
+		return true
 	end
+
+	local dungeonFollowersNpcs = {}
 
 	--read the actor flag
 	local readActorFlag = function(actorObject, ownerActorObject, actorSerial, actorFlags, actorName)
 		if (actorFlags) then
-			local _, zoneType = GetInstanceInfo()
+			local _, zoneType, instanceDifficultyId = GetInstanceInfo()
 
-			--on retail post 100200 patch, actorName is formatted as "name-realm"
-
-			--this is player actor
+			--if the actor is a player
 			if (bitBand(actorFlags, OBJECT_TYPE_PLAYER) ~= 0) then
-				if (not Details.ignore_nicktag) then
-					local actorNameAmbiguated = Ambiguate(actorName, "none")
-					actorObject.displayName = checkValidNickname(Details:GetNickname(actorNameAmbiguated, false, true), actorName) --defaults to player name
-					if (Details.remove_realm_from_name) then
-						actorObject.displayName = actorObject.displayName:gsub(("%-.*"), "")
+
+                    if (not Details.ignore_nicktag) then
+                        local actorNameAmbiguated = Ambiguate(actorName, "none")
+                        local nickname = Details:GetNickname(actorNameAmbiguated, false, true)
+                        if nickname then
+                            if checkValidNickname(nickname, actorName) then
+                                actorObject.displayName = nickname --defaults to player name
+                            end
+                        end
+                    end
+
+					--the actor does not have a nickname, use the character name instead
+					if (not actorObject.displayName) then
+						if (Details.remove_realm_from_name) then
+							actorObject.displayName = actorName:gsub(("%-.*"), "")
+						else
+							actorObject.displayName = actorName
+						end
 					end
-				end
 
-				if (not actorObject.displayName) then
-					if (Details.remove_realm_from_name) then
-						actorObject.displayName = actorName:gsub(("%-.*"), "")
-					else
-						actorObject.displayName = actorName
-					end
-				end
-
-				if (zoneType ~= "arena" and (Details.all_players_are_group or Details.immersion_enabled)) then
-					actorObject.grupo = true
-				end
-
-				--special spells to add into the group view - they are set within the parser.lua file
-				local spellId = Details.SpecialSpellActorsName[actorObject.nome]
-				if (spellId) then
-					actorObject.grupo = true
-					actorObject.spellicon = GetSpellTexture(spellId)
-				end
-
-				--check if this actor can be flagged as a unit in the player's group
-				if ((bitBand(actorFlags, IS_GROUP_OBJECT) ~= 0 and actorObject.classe ~= "UNKNOW" and actorObject.classe ~= "UNGROUPPLAYER") or Details:IsInCache(actorSerial)) then
-					actorObject.grupo = true
-					--check if this actor is a tank (player)
-					if (Details:IsATank(actorSerial)) then
-						actorObject.isTank = true
-					end
-				else
-					--if this is a pvp segment (combat) and the option to show pvp players as group is enabled
-					if (Details.pvp_as_group and (Details.tabela_vigente and Details.tabela_vigente.is_pvp) and Details.is_in_battleground) then
+				--group attributions
+					if (zoneType ~= "arena" and (Details.all_players_are_group or Details.immersion_enabled)) then
 						actorObject.grupo = true
 					end
-				end
 
-				--pvp duel - this functionality needs more development, the goal is to show the duel players as group members
-				if (Details.duel_candidates[actorSerial]) then
-					--check if is recent
-					if (Details.duel_candidates[actorSerial]+20 > GetTime()) then
+					--special spells that Details! converted them in actor, add them to the group view. the list of these spells are set within the parser.lua file
+					--they are added into the group view as they are considered important imformation
+					local spellId = Details.SpecialSpellActorsName[actorObject.nome]
+					if (spellId) then
 						actorObject.grupo = true
-						actorObject.enemy = true
+						actorObject.spellicon = GetSpellTexture(spellId)
 					end
-				end
 
-				if (zoneType == "arena") then
-					--local my_team_color = GetBattlefieldArenaFaction and GetBattlefieldArenaFaction() or 0
+					--check if this actor can be flagged as a unit in the player's group
+					local bIsValidGroupMember = bitBand(actorFlags, IS_GROUP_OBJECT) ~= 0 and actorObject.classe ~= "UNKNOW" and actorObject.classe ~= "UNGROUPPLAYER"
+					if (bIsValidGroupMember or Details:IsInCache(actorSerial)) then
+						actorObject.grupo = true
 
-					--my team
-					if (actorObject.grupo) then
-						actorObject.arena_ally = true
-						actorObject.arena_team = 0 -- former my_team_color | forcing the player team to always be the same color
+						--/dump Details:GetCurrentCombat():GetActor(1, "Captain Garrick").grupo
+						if (instanceDifficultyId == 205) then
+							dungeonFollowersNpcs[actorName] = true
+						end
 
-					--enemy team
+						--check if this actor is a tank (player)
+						if (Details:IsATank(actorSerial)) then
+							actorObject.isTank = true
+						end
 					else
-						actorObject.enemy = true
-						actorObject.arena_enemy = true
-						actorObject.arena_team = 1 -- former my_team_color
-
-						Details:GuessArenaEnemyUnitId(actorName)
+						--if this is a pvp combat and the option to show pvp players as group is enabled
+						local currentCombat = Details:GetCurrentCombat()
+						if (Details.pvp_as_group and currentCombat.is_pvp and Details.is_in_battleground) then
+							actorObject.grupo = true
+						end
 					end
 
-					local playerArenaInfo = Details.arena_table[actorName]
+					--pvp duel - this functionality needs more development, the goal is to show the duel players as group members
+					if (Details.duel_candidates[actorSerial]) then
+						--check if is recent
+						if (Details.duel_candidates[actorSerial]+20 > GetTime()) then
+							actorObject.grupo = true
+							actorObject.enemy = true
+						end
+					end
 
-					if (playerArenaInfo) then
-						actorObject.role = playerArenaInfo.role
-						if (playerArenaInfo.role == "NONE") then
+					if (zoneType == "arena") then
+						--local my_team_color = GetBattlefieldArenaFaction and GetBattlefieldArenaFaction() or 0
+
+						--my team
+						if (actorObject.grupo) then
+							actorObject.arena_ally = true
+							actorObject.arena_team = 0 -- former my_team_color | forcing the player team to always be the same color
+
+						--enemy team
+						else
+							actorObject.enemy = true
+							actorObject.arena_enemy = true
+							actorObject.arena_team = 1 -- former my_team_color
+
+							Details:GuessArenaEnemyUnitId(actorName)
+						end
+
+						local playerArenaInfo = Details.arena_table[actorName]
+
+						if (playerArenaInfo) then
+							actorObject.role = playerArenaInfo.role
+							if (playerArenaInfo.role == "NONE") then
+								local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(actorName)
+								if (role and role ~= "NONE") then
+									actorObject.role = role
+								end
+							end
+						else
+							local amountOpponents = GetNumArenaOpponentSpecs and GetNumArenaOpponentSpecs() or 5
+							local found = false
+							for i = 1, amountOpponents do
+								local name = Details:GetFullName("arena" .. i)
+								if (name == actorName) then
+									local spec = GetArenaOpponentSpec and GetArenaOpponentSpec(i)
+									if (spec) then
+										local id, name, description, icon, role, class = DetailsFramework.GetSpecializationInfoByID(spec) --thanks pas06
+										actorObject.role = role
+										actorObject.classe = class
+										actorObject.enemy = true
+										actorObject.arena_enemy = true
+										found = true
+									end
+								end
+							end
+
 							local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(actorName)
 							if (role and role ~= "NONE") then
 								actorObject.role = role
+								found = true
 							end
-						end
-					else
-						local amountOpponents = GetNumArenaOpponentSpecs and GetNumArenaOpponentSpecs() or 5
-						local found = false
-						for i = 1, amountOpponents do
-							local name = Details:GetFullName("arena" .. i)
-							if (name == actorName) then
-								local spec = GetArenaOpponentSpec and GetArenaOpponentSpec(i)
-								if (spec) then
-									local id, name, description, icon, role, class = DetailsFramework.GetSpecializationInfoByID(spec) --thanks pas06
+
+							if (not found and actorName == Details.playername) then
+								local role = UnitGroupRolesAssigned("player")
+								if (role and role ~= "NONE") then
 									actorObject.role = role
-									actorObject.classe = class
-									actorObject.enemy = true
-									actorObject.arena_enemy = true
-									found = true
 								end
 							end
 						end
 
-						local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(actorName)
-						if (role and role ~= "NONE") then
-							actorObject.role = role
-							found = true
-						end
-
-						if (not found and actorName == Details.playername) then
-							local role = UnitGroupRolesAssigned("player")
-							if (role and role ~= "NONE") then
-								actorObject.role = role
-							end
-						end
+						actorObject.grupo = true
 					end
-
-					actorObject.grupo = true
-				end
 
 				--player custom bar color
 				--at this position in the code, the color will replace colors from arena matches
@@ -649,7 +770,7 @@ end
 					end
 				end
 
-			--does this actor has an owner?
+			--does this actor has an owner? (a.k.a. is a pet)
 			elseif (ownerActorObject) then
 				actorObject.owner = ownerActorObject
 				actorObject.ownerName = ownerActorObject.nome
@@ -659,6 +780,9 @@ end
 				else
 					actorObject.displayName = actorName
 				end
+
+				--local npcId = Details:GetNpcIdFromGuid(actorSerial)
+				--local petCustomname = Details222.Pets.GetPetNameFromCustomSpells(actorObject.displayName, spellId, npcId)
 			else
 				--anything else that isn't a player or a pet
 				actorObject.displayName = actorName
@@ -681,28 +805,36 @@ end
 					end
 				end
 			end
+
+			if (instanceDifficultyId == 205) then
+				if (dungeonFollowersNpcs[actorName]) then
+					actorObject.grupo = true
+				end
+			end
 		end
 	end
 
+	--pet black list locally for this file
 	local petBlackList = {}
 
-	local petOwnerFound = function(ownerName, petGUID, petName, petFlags, self, ownerGUID, ownerFlags)
-		local ownerGuid = ownerGUID or UnitGUID(ownerName)
+	local petOwnerFound = function(ownerName, petGuid, petName, petFlags, self, ownerGuid, ownerFlags)
+		local ownerGuid = ownerGuid or UnitGUID(ownerName)
 		if (ownerGuid) then
-
 			-- 0xA00 is the flag for NPC controlled, NPC unit. 0x500 is the flag for Player Controlled, Player Unit.
 			-- Or those together with the last 2 hex bits for reaction/affiliation to 'guess' the correct flags.
 			if not ownerFlags then
 				local npcControlled = bitBand(petFlags, 0x200) ~= 0
-				ownerFlags = bitBor( npcControlled and 0xA00 or 0x500, bitBand(petFlags, 0xFF))
+				ownerFlags = bitBor(npcControlled and 0xA00 or 0x500, bitBand(petFlags, 0xFF))
 			end
-			Details.tabela_pets:AddPet(petGUID, petName, petFlags, ownerGuid, ownerName, ownerFlags)
-			local petNameWithOwner, ownerName, ownerGUID, ownerFlags = Details.tabela_pets:GetPetOwner(petGUID, petName, petFlags)
+
+			petContainer.AddPet(petGuid, petName, petFlags, ownerGuid, ownerName, ownerFlags)
+			--hashName is "petName <ownerName>"
+			local hashName, ownerName, ownerGUID, ownerFlags = petContainer.GetOwner(petGuid, petName)
 
 			local petOwnerActorObject
 
-			if (petNameWithOwner and ownerName) then
-				petName = petNameWithOwner
+			if (hashName and ownerName) then
+				petName = hashName
 				petOwnerActorObject = self:PegarCombatente(ownerGUID, ownerName, ownerFlags, true)
 			end
 
@@ -716,7 +848,7 @@ end
 	---@param actorName string
 	---@param actorFlags number
 	---@param bShouldCreateActor boolean
-	---@return table|nil, table|nil, string|nil
+	---@return actor|nil, actor|nil, actorname|nil
 	function actorContainer:PegarCombatente(actorSerial, actorName, actorFlags, bShouldCreateActor)
 		return self:GetOrCreateActor(actorSerial, actorName, actorFlags, bShouldCreateActor)
 	end
@@ -725,33 +857,48 @@ end
 	---@param actorName string
 	---@param actorFlags number
 	---@param bShouldCreateActor boolean
-	---@return table|nil, table|nil, string|nil
+	---@return actor|nil, actor|nil, actorname|nil
 	function actorContainer:GetOrCreateActor(actorSerial, actorName, actorFlags, bShouldCreateActor)
 		--need to check if the actor is a pet
 		local petOwnerObject
 		actorSerial = actorSerial or "ns"
 
-		if (container_pets[actorSerial]) then --this is a registered pet
-			local petName, ownerName, ownerGUID, ownerFlag = Details.tabela_pets:GetPetOwner(actorSerial, actorName, actorFlags)
-			if (petName and ownerName and ownerGUID ~= actorSerial) then
-				actorName = petName
-				petOwnerObject = self:PegarCombatente(ownerGUID, ownerName, ownerFlag, true)
+		--check if this actor is a pet and the pet is in the pet cache
+		if (petContainer.IsPetInCache(actorSerial)) then --this is a registered pet
+			--hashName is "petName <ownerName>"
+			--actorSerial: petGuid, actorName: petName
+			local hashName, ownerName, ownerGuid, ownerFlag = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
+
+			if (hashName and ownerName and ownerGuid and ownerGuid ~= actorSerial and ownerFlag) then
+				actorName = hashName
+				petOwnerObject = self:PegarCombatente(ownerGuid, ownerName, ownerFlag, true)
 			end
 
-		elseif (not petBlackList[actorSerial]) then --check if is a pet
-			petBlackList[actorSerial] = true
+			if (Details222.Debug.DebugPets or Details222.Debug.DebugPlayerPets) then
+				Details:Msg("DebugPets|ActorContainer|petContainer.IsPetInCache(actorSerial) = true")
+				if (hashName) then
+					Details:Msg("DebugPets|ActorContainer|Owner Found In Pet Cache|OwnerName:", ownerName, "Actor Hash:", hashName, "petOwnerObject:", petOwnerObject)
+				else
+					Details:Msg("DebugPets|ActorContainer|Pet Is Orphan|petContainer.GetOwner(", actorSerial, actorName, ") == nil")
+				end
+			end
 
+		--this actor isn't in the pet cache
+		elseif (not petBlackList[actorSerial]) then --check if is a pet
 			--try to find the owner
 			if (actorFlags and bitBand(actorFlags, OBJECT_TYPE_PETGUARDIAN) ~= 0) then
-				local ownerName, ownerGUID, ownerFlags = Details222.Pets.GetPetOwner(actorSerial, actorName)
-				if (ownerName and ownerGUID) then
-					--Don't pass ownerFlags just in case the cached owner happens to be an enemy last combat, but ally now.
-					local newPetName, ownerObject = petOwnerFound(ownerName, actorSerial, actorName, actorFlags, self, ownerGUID)
+				--hashName is "petName <ownerName>"
+				local hashName, ownerName, ownerGuid, ownerFlags = petContainer.GetOwner(actorSerial, actorName) --hashName, ownerName, ownerGuid, ownerFlags
+				if (ownerName and ownerGuid) then
+					--don't pass ownerFlags just in case the cached owner happens to be an enemy from last combat, but ally now.
+					local newPetName, ownerObject = petOwnerFound(ownerName, actorSerial, actorName, actorFlags, self, ownerGuid)
 					if (newPetName and ownerObject) then
 						actorName, petOwnerObject = newPetName, ownerObject
 					end
 				end
 			end
+
+			petBlackList[actorSerial] = true
 		end
 
 		--get the actor index in the hash map
@@ -846,19 +993,6 @@ end
 			if (petOwnerObject) then
 				AddUnique(petOwnerObject.pets, actorName)
 			end
-
-		elseif (self.tipo == container_energy_target) then --deprecated
-			newActor.mana = 0
-			newActor.e_rage = 0
-			newActor.e_energy = 0
-			newActor.runepower = 0
-			print("111111111111111111")
-
-		elseif (self.tipo == container_enemydebufftarget_target) then --deprecated
-			newActor.uptime = 0
-			newActor.actived = false
-			newActor.activedamt = 0
-			print("222222222222222222")
 		end
 
 		--sanguine affix
@@ -867,6 +1001,12 @@ end
 		end
 
 		--enemy player
+		if (Details.zone_type == "pvp") then
+			if (bitBand(actorFlags, REACTION_HOSTILE) ~= 0) then --is hostile
+				newActor.enemy = true
+			end
+		end
+
 		if (newActor.classe == "UNGROUPPLAYER") then --is a player
 			if (bitBand(actorFlags, REACTION_HOSTILE) ~= 0) then --is hostile
 				newActor.enemy = true
@@ -901,11 +1041,6 @@ end
 				end
 			end
 		end
-	end
-
-	function Details:UpdatePetCache()
-		container_pets = Details.tabela_pets.pets
-		Details:UpdatePetsOnParser()
 	end
 
 	function Details:ClearCCPetsBlackList()

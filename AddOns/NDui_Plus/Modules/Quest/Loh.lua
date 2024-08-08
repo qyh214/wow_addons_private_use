@@ -60,7 +60,7 @@ local Handler = CreateFrame("Frame")
 Handler:RegisterEvent("QUEST_LOG_UPDATE")
 Handler:RegisterEvent("QUEST_ACCEPTED")
 Handler:SetScript("OnEvent", function(self, event, ...)
-	if IsAddOnLoaded("BetterWorldQuests") then return end
+	if C_AddOns.IsAddOnLoaded("BetterWorldQuests") then return end
 	if not NDuiPlusDB["Misc"]["QuestHelper"] then return end
 
 	if(event == "QUEST_LOG_UPDATE") then
@@ -155,7 +155,7 @@ function Handler:GetCheckpoint()
 	local checkpoint
 	local index = 1
 	while(true) do
-		local exists, _, num, _, _, _, _, _, _, spellID = UnitAura("vehicle", index, "HARMFUL")
+		local exists, _, num, _, _, _, _, _, _, spellID = AuraUtil.UnpackAuraData(C_UnitAuras.GetAuraDataByIndex("vehicle", index, "HARMFUL"))
 		if(not exists) then
 			checkpoint = 0
 			break

@@ -4,7 +4,7 @@ local M = B:GetModule("Misc")
 local TT = B:GetModule("Tooltip")
 
 local pairs, select, next, type, unpack = pairs, select, next, type, unpack
-local UnitGUID, GetItemInfo, GetSpellInfo = UnitGUID, GetItemInfo, GetSpellInfo
+local UnitGUID, GetItemInfo = UnitGUID, C_Item.GetItemInfo
 local GetContainerItemLink = C_Container.GetContainerItemLink
 local GetInventoryItemLink = GetInventoryItemLink
 local EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation = EquipmentManager_UnpackLocation, EquipmentManager_GetItemInfoByLocation
@@ -134,7 +134,7 @@ function M:ItemLevel_UpdateTraits(button, id, link)
 			local selected = C_AzeriteEmpoweredItem_IsPowerSelected(empoweredItemLocation, powerID)
 			if selected then
 				local spellID = TT:Azerite_PowerToSpell(powerID)
-				local name, _, icon = GetSpellInfo(spellID)
+				local name, icon = C_Spell.GetSpellName(spellID), C_Spell.GetSpellTexture(spellID)
 				local texture = button["textureIcon"..i]
 				if name and texture then
 					texture:SetTexture(icon)
@@ -324,11 +324,17 @@ function M:ItemLevel_ScrappingUpdate()
 	self.iLvl:SetTextColor(color.r, color.g, color.b)
 end
 
-function M.ItemLevel_ScrappingShow(event, addon)
-	if addon == "Blizzard_ScrappingMachineUI" then
-		for button in pairs(ScrappingMachineFrame.ItemSlots.scrapButtons.activeObjects) do
+function M:ItemLevel_ScrappingSetup()
+	for button in self.ItemSlots.scrapButtons:EnumerateActive() do
+		if button and not button.iLvl then
 			hooksecurefunc(button, "RefreshIcon", M.ItemLevel_ScrappingUpdate)
 		end
+	end
+end
+
+function M.ItemLevel_ScrappingShow(event, addon)
+	if addon == "Blizzard_ScrappingMachineUI" then
+		hooksecurefunc(ScrappingMachineFrame, "SetupScrapButtonPool", M.ItemLevel_ScrappingSetup)
 
 		B:UnregisterEvent(event, M.ItemLevel_ScrappingShow)
 	end

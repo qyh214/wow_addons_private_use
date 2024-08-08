@@ -6,7 +6,7 @@ if (not detailsFramework or not DetailsFrameworkCanLoad) then
 end
 
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 local GameTooltip = GameTooltip
 local unpack = unpack
 
@@ -26,10 +26,12 @@ detailsFramework.ScrollBoxFunctions = {
 	Refresh = function(self)
 		--hide all frames and tag as not in use
 		self._LinesInUse = 0
+		--self.Frames has a list of frames used by the scrollbox
 		for index, frame in ipairs(self.Frames) do
 			if (not self.DontHideChildrenOnPreRefresh) then
 				frame:Hide()
 			end
+			--set the frame as not in use
 			frame._InUse = nil
 		end
 
@@ -39,6 +41,7 @@ detailsFramework.ScrollBoxFunctions = {
 			offset = self:GetOffsetFaux()
 		end
 
+		--before starting the refresh, check if there's a pre refresh function and call it
 		if (self.pre_refresh_func) then
 			detailsFramework:Dispatch(self.pre_refresh_func, self, self.data, offset, self.LineAmount)
 		end
@@ -83,6 +86,9 @@ detailsFramework.ScrollBoxFunctions = {
 		return self.Frames
 	end,
 
+	---@param self df_scrollbox
+	---@param offset number
+	---@return boolean
 	OnVerticalScroll = function(self, offset)
 		self:OnVerticalScrollFaux(offset, self.LineHeight, self.Refresh)
 		return true
@@ -109,14 +115,23 @@ detailsFramework.ScrollBoxFunctions = {
 		return newLine
 	end,
 
+	---Creates multiple lines in the scroll box.
+	---@param self df_scrollbox The DF_ScrollBox object.
+	---@param callback function The callback function to be called for each line.
+	---@param lineAmount number The number of lines to create.
 	CreateLines = function(self, callback, lineAmount)
 		for i = 1, lineAmount do
 			self:CreateLine(callback)
 		end
 	end,
 
+	---Retrieves a specific line from the scroll box.
+	---@param self df_scrollbox The DF_ScrollBox object.
+	---@param lineIndex number The index of the line to retrieve.
+	---@return frame line The line object at the specified index.
 	GetLine = function(self, lineIndex)
 		local line = self.Frames[lineIndex]
+		--print(self, line, line and line:GetName(), lineIndex, self:GetName())
 		if (line) then
 			line._InUse = true
 		end
@@ -125,33 +140,55 @@ detailsFramework.ScrollBoxFunctions = {
 		return line
 	end,
 
+	---Sets the data for the scroll box.
+	---@param data table The data to be set.
 	SetData = function(self, data)
 		self.data = data
+		self.data_original = data
 		if (self.OnSetData) then
 			detailsFramework:CoreDispatch((self:GetName() or "ScrollBox") .. ":OnSetData()", self.OnSetData, self, self.data)
 		end
 	end,
 
+	---Retrieves the data associated with the scrollbox.
+	---@param self df_scrollbox
+	---@return table The data associated with the scrollbox.
 	GetData = function(self)
 		return self.data
 	end,
 
+	---Retrieves the frames contained within the scrollbox.
+	---@param self df_scrollbox
+	---@return table The frames contained within the scrollbox.
 	GetFrames = function(self)
 		return self.Frames
 	end,
 
-	GetLines = function(self) --alias of GetFrames
+	---Retrieves the lines contained within the scrollbox.
+	---This is an alias of GetFrames.
+	---@param self df_scrollbox
+	---@return table The lines contained within the scrollbox.
+	GetLines = function(self)
 		return self.Frames
 	end,
 
+	---Retrieves the number of frames created within the scrollbox.
+	---@param self df_scrollbox
+	---@return number The number of frames created within the scrollbox.
 	GetNumFramesCreated = function(self)
 		return #self.Frames
 	end,
 
+	---get the amount of lines the scroll is currently showing
+	---@param self df_scrollbox
+	---@return number amountOfLines
 	GetNumFramesShown = function(self)
 		return self.LineAmount
 	end,
 
+	---set the max amount of lines the scroll can show
+	---@param self df_scrollbox
+	---@param newAmount number
 	SetNumFramesShown = function(self, newAmount)
 		--hide frames which won't be used
 		if (newAmount < #self.Frames) then
@@ -327,15 +364,16 @@ local grid_scrollbox_options = {
 }
 
 ---@class df_gridscrollbox : df_scrollbox
+---@field RefreshMe fun(self:df_gridscrollbox)
 
 ---create a scrollbox with a grid layout
 ---@param parent frame
 ---@param name string
----@param refreshFunc function
+---@param refreshFunc fun(button:frame, data:table)
 ---@param data table
----@param createColumnFrameFunc function
+---@param createColumnFrameFunc fun(line:frame, lineIndex:number, columnIndex:number)
 ---@param options df_gridscrollbox_options?
----@return unknown
+---@return df_gridscrollbox
 function detailsFramework:CreateGridScrollBox(parent, name, refreshFunc, data, createColumnFrameFunc, options)
     options = options or {}
 
@@ -375,6 +413,7 @@ function detailsFramework:CreateGridScrollBox(parent, name, refreshFunc, data, c
     end
 
     local onSetData = function(self, data)
+		self.data_original = data
         local newData = {}
 
         for i = 1, #data, columnsPerLine do
@@ -425,7 +464,161 @@ function detailsFramework:CreateGridScrollBox(parent, name, refreshFunc, data, c
     scrollBox.OnSetData = onSetData
     onSetData(scrollBox, data)
 
+	---@cast scrollBox df_gridscrollbox
 	return scrollBox
+end
+
+---@class df_gridscrollbox_menu : df_gridscrollbox
+---@field data_original table the data passed into :SetData()
+---@field searchBox df_searchbox
+---@field Select fun(self:df_gridscrollbox_menu, value:any, key:string) --select a line by a value on a key, example: :Select("Power Infusion", "spellName")
+
+---create a scrollbox with a grid layout to be used as a menu
+---@param parent frame
+---@param name string?
+---@param refreshMeFunc fun(gridScrollBox:df_gridscrollbox, searchText:string)
+---@param refreshButtonFunc fun(button:button, data:table)
+---@param clickFunc fun(button:button, data:table)
+---@param onCreateButton fun(button:button, lineIndex:number, columnIndex:number)
+---@param gridScrollBoxOptions df_gridscrollbox_options
+---@return df_gridscrollbox_menu
+function detailsFramework:CreateMenuWithGridScrollBox(parent, name, refreshMeFunc, refreshButtonFunc, clickFunc, onCreateButton, gridScrollBoxOptions)
+	local dataSelected = nil
+	local gridScrollBox
+
+	local onClickButtonSelectorButton = function(blizzButton, buttonDown, dfButton, data)
+		dataSelected = data
+		gridScrollBox:Refresh()
+		xpcall(clickFunc, geterrorhandler(), dfButton, data)
+	end
+
+    --create a search bar to filter the auras
+    local searchText = ""
+    local onSearchTextChangedCallback = function(self, ...)
+        local text = self:GetText()
+        searchText = string.lower(text)
+        dataSelected = nil
+        gridScrollBox:RefreshMe()
+    end
+
+	local searchBox = detailsFramework:CreateSearchBox(parent, onSearchTextChangedCallback)
+
+	---when the scroll is refreshing the line, the line will call this function for each selection button on it
+    ---@param button df_button
+    ---@param data table
+    local refreshLine = function(button, data)
+        button.data = data
+
+		if (data.tooltip) then
+			button.tooltip = data.tooltip
+		end
+
+        --set what happen when the user clicks the button
+        button:SetClickFunction(onClickButtonSelectorButton, button, data)
+
+		if (button.data == dataSelected) then
+			button.widget:SetBorderCornerColor(.9, .9, .9)
+		else
+			button.widget:SetBorderCornerColor(unpack(gridScrollBoxOptions.roundedFramePreset.border_color))
+		end
+
+		xpcall(refreshButtonFunc, geterrorhandler(), button, data)
+    end
+
+	--create a line
+    local createButton = function(line, lineIndex, columnIndex)
+        local width = gridScrollBoxOptions.width / gridScrollBoxOptions.columns_per_line - 5
+        local height = gridScrollBoxOptions.line_height
+        if (not height) then
+            height = 30
+        end
+
+        local button = detailsFramework:CreateButton(line, onClickButtonSelectorButton, width, height)
+        detailsFramework:AddRoundedCornersToFrame(button.widget, gridScrollBoxOptions.roundedFramePreset)
+        button.textsize = 11
+
+		line.button = button
+
+        button:SetHook("OnEnter", function(self)
+            local dfButton = self:GetObject()
+            GameCooltip:Reset()
+			if (dfButton.spellId) then
+            	GameCooltip:SetSpellByID(dfButton.spellId)
+				GameCooltip:SetOwner(self)
+				GameCooltip:Show()
+			end
+            self:SetBorderCornerColor(.9, .9, .9)
+        end)
+
+        button:SetHook("OnLeave", function(self)
+            GameCooltip:Hide()
+            local dfButton = self:GetObject()
+			if (dfButton.data == dataSelected) then
+				self:SetBorderCornerColor(.9, .9, .9)
+			else
+            	self:SetBorderCornerColor(unpack(gridScrollBoxOptions.roundedFramePreset.border_color))
+			end
+        end)
+
+		xpcall(onCreateButton, geterrorhandler(), button, lineIndex, columnIndex)
+
+        return button
+    end
+
+    gridScrollBox = detailsFramework:CreateGridScrollBox(parent, name, refreshLine, {}, createButton, gridScrollBoxOptions)
+	---@cast gridScrollBox df_gridscrollbox_menu
+
+    gridScrollBox:SetBackdrop({})
+    gridScrollBox:SetBackdropColor(0, 0, 0, 0)
+    gridScrollBox:SetBackdropBorderColor(0, 0, 0, 0)
+    gridScrollBox.__background:Hide()
+    gridScrollBox:Show()
+
+	gridScrollBox.searchBox = searchBox
+	searchBox:SetPoint("bottomleft", gridScrollBox, "topleft", 0, 2)
+	searchBox:SetWidth(gridScrollBoxOptions.width)
+
+	function gridScrollBox:Select(value, key)
+		local bFoundResult = false
+		local originalData
+
+		for _, data in ipairs(gridScrollBox.data_original) do
+			originalData = data
+
+			if (type(value) == string) then
+				value = value:lower()
+				local dataValue = data[key]:lower()
+				if (dataValue == value) then
+					dataSelected = originalData
+					bFoundResult = true
+					break
+				end
+			else
+				if (data[key] == value) then
+					dataSelected = originalData
+					bFoundResult = true
+					break
+				end
+			end
+		end
+
+		if (bFoundResult) then
+			for _, line in ipairs(gridScrollBox:GetFrames()) do
+				local button = line.button
+				if (button.data == originalData) then
+					gridScrollBox:Refresh()
+					onClickButtonSelectorButton(nil, nil, button, originalData)
+					break
+				end
+			end
+		end
+	end
+
+	function gridScrollBox:RefreshMe()
+		xpcall(refreshMeFunc, geterrorhandler(), gridScrollBox, searchBox:GetText())
+	end
+
+	return gridScrollBox
 end
 
 --Need to test this and check the "same_name_spells_add(value)" on the OnEnter function
@@ -468,7 +661,8 @@ local auraScrollDefaultSettings = {
 ---@param data table? --can be set later with :SetData()
 ---@param onAuraRemoveCallback function?
 ---@param options df_aurascrollbox_options?
-function detailsFramework:CreateAuraScrollBox(parent, name, data, onAuraRemoveCallback, options)
+---@param onSetupAuraClick function?
+function detailsFramework:CreateAuraScrollBox(parent, name, data, onAuraRemoveCallback, options, onSetupAuraClick)
     --hack the construction of the options table here, as the scrollbox is created much later
     options = options or {}
     local scrollOptions = {}
@@ -518,6 +712,11 @@ function detailsFramework:CreateAuraScrollBox(parent, name, data, onAuraRemoveCa
             GameTooltip:AddLine(" ")
             GameTooltip:Show()
         end
+
+		if (line.setupbutton:IsShown()) then
+			
+		end
+
         line:SetBackdropColor(unpack(options.backdrop_onenter))
 
 		local bTrackByName = line.Flag --the user entered the spell name to track the spell (and not a spellId)
@@ -603,12 +802,42 @@ function detailsFramework:CreateAuraScrollBox(parent, name, data, onAuraRemoveCa
         removeButton:SetPoint("topright", line, "topright", 0, 0)
         removeButton:GetNormalTexture():SetDesaturated(true)
 
+		local setupAuraButton = CreateFrame("button", "$parentSetupButton", line)
+		setupAuraButton:SetSize(16, 16)
+		setupAuraButton:SetPoint("right", removeButton, "left", -4, 0)
+		setupAuraButton:SetScript("OnClick", onSetupAuraClick)
+
+		line:SetScript("OnMouseUp", function(self, button)
+			if (onSetupAuraClick) then
+				setupAuraButton:Click()
+			end
+		end)
+
+		local clickToSetupText = setupAuraButton:CreateFontString("$parentText", "overlay", "GameFontNormal")
+		clickToSetupText:SetText("click to setup")
+		clickToSetupText:SetPoint("right", setupAuraButton, "left", -2, 0)
+		detailsFramework:SetFontSize(clickToSetupText, 9)
+
+		local setupAuraTexture = setupAuraButton:CreateTexture(nil, "overlay")
+		setupAuraTexture:SetAllPoints()
+		setupAuraTexture:SetTexture([[Interface\ICONS\INV_Misc_Wrench_01.blp]])
+		setupAuraTexture:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+
+		setupAuraButton.Texture = setupAuraTexture
+		setupAuraButton.Text = clickToSetupText
+
+		if (not onSetupAuraClick) then
+			setupAuraButton:Hide()
+		end
+
         iconTexture:SetPoint("left", line, "left", 2, 0)
         spellNameFontString:SetPoint("left", iconTexture, "right", 3, 0)
 
         line.icon = iconTexture
         line.name = spellNameFontString
         line.removebutton = removeButton
+		line.setupbutton = setupAuraButton
+		line.clicktosetuptext = clickToSetupText
 
         return line
     end
@@ -686,7 +915,23 @@ end
 
 
 detailsFramework.CanvasScrollBoxMixin = {
+	SetScrollSpeed = function(self, speed)
+		assert(type(speed) == "number", "CanvasScrollBox:SetScrollSpeed(speed): speed must be a number.")
+		self.scrollStep = speed
+	end,
 
+	GetScrollSpeed = function(self)
+		return self.scrollStep
+	end,
+
+	OnVerticalScroll = function(self, delta)
+		local scrollStep = self:GetScrollSpeed()
+		if (delta > 0) then
+			self:SetVerticalScroll(math.max(self:GetVerticalScroll() - scrollStep, 0))
+		else
+			self:SetVerticalScroll(math.min(self:GetVerticalScroll() + scrollStep, self:GetVerticalScrollRange()))
+		end
+	end,
 }
 
 local canvasScrollBoxDefaultOptions = {
@@ -706,6 +951,10 @@ local canvasScrollBoxDefaultOptions = {
 function detailsFramework:CreateCanvasScrollBox(parent, child, name, options)
 	---@type df_canvasscrollbox
 	local canvasScrollBox = CreateFrame("scrollframe", name or ("DetailsFrameworkCanvasScroll" .. math.random(50000, 10000000)), parent, "BackdropTemplate, UIPanelScrollFrameTemplate")
+	canvasScrollBox.scrollStep = 20
+	canvasScrollBox.minValue = 0
+
+	canvasScrollBox:SetScript("OnMouseWheel", detailsFramework.CanvasScrollBoxMixin.OnVerticalScroll)
 
 	detailsFramework:Mixin(canvasScrollBox, detailsFramework.CanvasScrollBoxMixin)
 	detailsFramework:Mixin(canvasScrollBox, detailsFramework.OptionsFunctions)

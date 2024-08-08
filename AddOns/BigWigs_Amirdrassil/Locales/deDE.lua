@@ -11,9 +11,6 @@ if L then
 	L.blistering_torment = "Kette"
 	L.twisting_blade = "Klingen"
 	L.marked_for_torment = "Qualen"
-	L.umbral_destruction = "Soak"
-	L.heart_stopper = "Heilungen absorbiert"
-	L.heart_stopper_single = "Heilung absorbiert"
 end
 
 L = BigWigs:NewBossLocale("Volcoross", "deDE")
@@ -21,9 +18,7 @@ if L then
 	L.custom_off_all_scorchtail_crash = "Alle Zauber anzeigen"
 	L.custom_off_all_scorchtail_crash_desc = "Zeigt Timer und Nachrichten für alle Zauber von Sengschweifsturz an, statt nur die Zauber auf Deiner Seite."
 
-	L.flood_of_the_firelands = "Soaks"
 	L.flood_of_the_firelands_single_wait = "Warten" -- Wait 3, Wait 2, Wait 1 countdown before soak debuff is applied
-	L.flood_of_the_firelands_single = "Soak"
 	L.scorchtail_crash = "Schweifschlag"
 	L.serpents_fury = "Flammen"
 	L.coiling_flames_single = "Flamme"
@@ -33,12 +28,12 @@ L = BigWigs:NewBossLocale("Council of Dreams", "deDE")
 if L then
 	L.agonizing_claws_debuff = "{421022} (Debuff)"
 
-	L.ultimate_boss = "Ultimate (%s)"
-	L.special_bar = "Ult [%s] (%d)"
-	L.special_mythic_bar = "Ult [%s/%s] (%d)"
+	L.custom_off_combined_full_energy = "Gemeinsame Leisten bei voller Energie (nur Mythisch)"
+	L.custom_off_combined_full_energy_desc = "Bündelt die Leisten der Fähigkeiten bei voller Energie in einer Leiste, wenn diese zur gleichen Zeit auftreten."
+
 	L.special_mechanic_bar = "%s [Ult] (%d)"
 
-	L.barreling_charge = "Ansturm"
+	L.constricting_thicket = "Ranken"
 	L.poisonous_javelin = "Wurfspeer"
 	L.song_of_the_dragon = "Lied"
 	L.polymorph_bomb = "Enten"
@@ -54,10 +49,8 @@ if L then
 	L.blazing_coalescence_on_boss_note = "Wenn es auf dem Boss ist"
 
 	L.scorching_roots = "Wurzeln"
-	L.furious_charge = "Ansturm"
-	L.blazing_thorns = "Ausweichen"
-	L.falling_embers = "Soaks"
-	L.fire_whirl = "Wirbel"
+	L.charred_brambles = "Wurzeln heilbar"
+	L.blazing_thorns = "Dornenspirale"
 end
 
 L = BigWigs:NewBossLocale("Nymue, Weaver of the Cycle", "deDE")
@@ -75,7 +68,6 @@ L = BigWigs:NewBossLocale("Smolderon", "deDE")
 if L then
 	L.brand_of_damnation = "Tank Soak"
 	L.lava_geysers = "Geysire"
-	L.flame_waves = "Wirbel"
 end
 
 L = BigWigs:NewBossLocale("Tindral Sageswift, Seer of the Flame", "deDE")
@@ -90,9 +82,13 @@ if L then
 	L.incarnation_moonkin = "Mondkingestalt"
 	L.incarnation_tree_of_flame = "Treantgestalt"
 	L.flaming_germination = "Samen"
-	L.suppressive_ember = "Heilungen absorbiert"
-	L.suppressive_ember_single = "Heilung absorbiert"
 	L.flare_bomb = "Federn"
+	L.too_close_to_edge = "Zu nah am Rand"
+	L.taking_damage_from_edge = "Du kriegst Schaden vom Rand"
+
+	L.fly_time = "Flugdauer"
+	L.fly_time_desc = "Zeigt eine Nachricht mit der Dauer des Fluges von einer Plattform zur nächsten in den Zwischenphasen an."
+	L.fly_time_msg = "Flugdauer: %.2f" -- Fly Time: 32.23
 end
 
 L = BigWigs:NewBossLocale("Fyrakk the Blazing", "deDE")
@@ -101,15 +97,12 @@ if L then
 
 	L.fyralaths_bite = "Frontal"
 	L.fyralaths_bite_mythic = "Frontals"
-	L.fyralaths_mark = "Mal"
 	L.darkflame_shades = "Schemen"
 	L.darkflame_cleave = "Mythische Soaks"
 
 	L.incarnate_intermission = "Zurückstoßen"
-	L.corrupt_removed = "Verderben vorbei (%.1fs verbleiben)" -- eg: Corrupt Over (5.0s remaining)
 
 	L.incarnate = "Abheben"
-	L.spirits_of_the_kaldorei = "Geister"
 	L.molten_gauntlet = "Fäuste"
 	L.mythic_debuffs = "Käfige" -- Shadow Cage & Molten Eruption
 
@@ -119,6 +112,10 @@ if L then
 	L.eternal_firestorm_message_full = "Feuersturm [Ewig]"
 
 	L.eternal_firestorm_swirl = "Ewiger Feuersturm Wirbel"
-	L.eternal_firestorm_swirl_desc = "Timer für Ewiger Feuersturm Wirbel."
-	L.eternal_firestorm_swirl_bartext = "Wirbel"
+	L.eternal_firestorm_swirl_desc = "Zeigt Timer für die Wirbel des Ewigen Feuersturms, denen ausgewichen werden muss."
+
+	L.flame_orb = "Flammenkugel"
+	L.shadow_orb = "Schattenkugel"
+	L.orb_message_flame = "Du bist Flamme"
+	L.orb_message_shadow = "Du bist Schatten"
 end

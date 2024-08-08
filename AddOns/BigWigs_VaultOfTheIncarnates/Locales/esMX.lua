@@ -5,7 +5,6 @@ if L then
 	-- L.custom_on_nameplate_fixate_desc = "Show an icon on the nameplate of Frenzied Tarasek that are fixed on you.\n\nRequires the use of Enemy Nameplates and a supported nameplate addon (KuiNameplates, Plater)."
 
 	-- L.molten_cleave = "Frontal"
-	-- L.incinerating_roar = "Roar"
 	-- L.molten_spikes = "Spikes"
 	-- L.collapsing_army = "Army"
 	-- L.greater_flamerift = "Mythic Add"
@@ -14,7 +13,6 @@ end
 
 L = BigWigs:NewBossLocale("Terros", "esMX")
 if L then
-	-- L.rock_blast = "Soak"
 	-- L.resonating_annihilation = "Annihilation"
 	-- L.awakened_earth = "Pillar"
 	-- L.shattering_impact = "Slam"
@@ -33,8 +31,6 @@ if L then
 	-- L.meteor_axe = "Axe" -- Singular
 	-- L.meteor_axes_melee = "Melee Axe"
 	-- L.meteor_axes_ranged = "Ranged Axe"
-	-- L.conductive_marks = "Marks" -- Conductive Marks
-	-- L.conductive_mark = "Mark" -- Singular
 
 	-- L.skipped_cast = "Skipped %s (%d)"
 end
@@ -48,13 +44,10 @@ if L then
 	-- L.webs = "Webs"
 	-- L.web = "Web"
 	-- L.gossamer_burst = "Grip"
-	-- L.repelling_burst = "Pushback"
 end
 
 L = BigWigs:NewBossLocale("Dathea, Ascended", "esMX")
 if L then
-	-- L.conductive_marks = "Marks"
-	-- L.conductive_mark = "Mark"
 	-- L.raging_burst = "New Tornadoes"
 	-- L.cyclone = "Pull In"
 	-- L.crosswinds = "Moving Tornadoes"
@@ -83,25 +76,20 @@ if L then
 	L.Storm = "Tormenta"
 
 	-- Fire
-	-- L.magma_burst = "Pools"
 	-- L.molten_rupture = "Waves"
 	-- L.searing_carnage = "Dance"
 	-- L.raging_inferno = "Soak Pools"
 
 	-- Frost
 	-- L.biting_chill = "Chill DoT"
-	-- L.frigid_torrent = "Orbs"
-	-- L.absolute_zero = "Soaks"
 	-- L.absolute_zero_melee = "Melee Soak"
 	-- L.absolute_zero_ranged = "Ranged Soak"
 
 	-- Earth
-	-- L.enveloping_earth = "Heal Absorb"
 	-- L.erupting_bedrock = "Quakes"
 
 	-- Storm
 	-- L.lightning_crash = "Zaps"
-	-- L.thundering_strike = "Soaks"
 
 	-- General
 	-- L.primal_attunement = "Soft Enrage"
@@ -115,15 +103,11 @@ if L then
 	-- L.eggs_remaining = "%d Eggs Remaining!"
 	-- L.broodkeepers_bond = "Eggs Remaining"
 	-- L.greatstaff_of_the_broodkeeper = "Greatstaff"
-	-- L.greatstaffs_wrath = "Laser"
 	-- L.clutchwatchers_rage = "Rage"
 	-- L.rapid_incubation = "Infuse Eggs"
-	-- L.icy_shroud = "Heal Absorb"
 	-- L.broodkeepers_fury = "Fury"
 	-- L.frozen_shroud = "Root Absorb"
 	-- L.detonating_stoneslam = "Tank Soak"
-
-	-- L.add_count = "%s (%d-%d)"
 end
 
 L = BigWigs:NewBossLocale("Raszageth the Storm-Eater", "esMX")
@@ -131,16 +115,11 @@ if L then
 	-- L.lighting_devastation_trigger = "deep breath" -- Raszageth takes a deep breath...
 
 	-- Stage One: The Winds of Change
-	-- L.hurricane_wing = "Pushback"
 	-- L.volatile_current = "Sparks"
 	-- L.thunderous_blast = "Blast"
-	-- L.lightning_breath = "Breath"
 	-- L.lightning_strikes = "Strikes"
 	-- L.electric_scales = "Raid Damage"
 	-- L.electric_lash = "Lash"
-	-- Intermission: The Primalist Strike
-	-- L.lightning_devastation = "Breath"
-	-- L.shattering_shroud = "Heal Absorb"
 	-- Stage Two: Surging Power
 	-- L.absorb_text = "%s (%.0f%%)"
 	-- L.stormsurge = "Absorb Shield"
@@ -152,7 +131,6 @@ if L then
 	-- L.fulminating_charge = "Charges"
 	-- L.fulminating_charge_debuff = "Charge"
 	-- Intermission: The Vault Falters
-	-- L.storm_break = "Teleport"
 	-- L.ball_lightning = "Balls"
 	-- Stage Three: Storm Incarnate
 	-- L.magnetic_charge = "Pull Charge"

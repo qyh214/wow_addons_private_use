@@ -9,11 +9,21 @@ mod:SetEncounterID(2667)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
+-- Localization
+--
+
+local L = mod:GetLocale()
+if L then
+	L.warmup_icon = "spell_holy_borrowedtime"
+end
+
+--------------------------------------------------------------------------------
 -- Initialization
 --
 
 function mod:GetOptions()
 	return {
+		"warmup",
 		{405696, "SAY"}, -- Chrono-faded
 		405431, -- Fragments of Time
 		414303, -- Unwind
@@ -30,8 +40,9 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	-- Unwind is not cast in M+, removed from dungeon journal in all difficulties
-	-- TODO apparently still cast in hardmode in 10.2 - any way to detect hardmode?
+	self:StopBar(CL.active) -- Warmup
+	-- Unwind is not cast in M+, removed from dungeon journal in all difficulties.
+	-- apparently still cast in hardmode in 10.2 - but no way to detect hardmode.
 	--self:CDBar(414303, 5.8) -- Unwind
 	self:CDBar(405431, 15.5) -- Fragments of Time
 	self:CDBar(405696, 30.1) -- Chrono-faded
@@ -40,6 +51,19 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:Warmup()
+	-- triggered from trash module on CHAT_MSG_MONSTER_YELL
+	-- 11.22 [CLEU] SPELL_AURA_REMOVED#Creature-198996#Manifested Timeways#413329#Sand Zone
+	-- 12.85 [CHAT_MSG_MONSTER_YELL] Even the Aspect of Time cannot be allowed to disrupt the timeways!#Manifested Timeways
+	-- 25.01 [UNIT_SPELLCAST_SUCCEEDED] Manifested Timeways -Timeways- [417483]
+	-- 26.24 [UNIT_SPELLCAST_SUCCEEDED] Manifested Timeways -Anchor Here- [45313]
+	-- 26.24 [UNIT_SPELLCAST_SUCCEEDED] Manifested Timeways -Timeways- [415269]
+	-- 26.24 [ENCOUNTER_START] 2667#Manifested Timeways
+	if self:MythicPlus() then -- the RP is longer in other difficulties
+		self:Bar("warmup", 13.4, CL.active, L.warmup_icon)
+	end
+end
 
 do
 	local playerList = {}
@@ -54,7 +78,7 @@ do
 		self:TargetsMessage(405696, "orange", playerList, 2)
 		self:PlaySound(405696, "alert", nil, playerList)
 		if self:Me(args.destGUID) then
-			self:Say(405696)
+			self:Say(405696, nil, nil, "Chronofaded")
 			-- ticks 4x as fast when standing in Accelerating Time so can't really do a countdown
 		end
 	end

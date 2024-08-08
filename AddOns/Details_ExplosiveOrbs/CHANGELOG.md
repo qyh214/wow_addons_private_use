@@ -1,14 +1,19 @@
-# Details!
+# Details!: Explosive Orbs (plugin)
 
-## [v10.2.0](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v10.2.0) (2023-11-09)
-[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v10.1.5...v10.2.0) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
+## [v11.0.0](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/tree/v11.0.0) (2024-07-24)
+[Full Changelog](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/compare/v10.2.5...v11.0.0) [Previous Releases](https://github.com/LiangYuxuan/Details_ExplosiveOrbs/releases)
 
-- chore: update toc  
-- refactor: deprecated to C\_AddOns  
+- chore: toc update  
 - test: update .luacheckrc  
 - test: update .luacheckrc  
 - test: update .luacheckrc  
-- chore(deps): update actions/checkout action to v4  
 - test: update .luacheckrc  
 - test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- test: update .luacheckrc  
+- chore(deps): update peter-evans/create-pull-request action to v6  
 - test: update .luacheckrc  

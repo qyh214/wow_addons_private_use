@@ -26,9 +26,9 @@ local pi = math.pi
 local pipi = math.pi*2
 local GetPlayerFacing = GetPlayerFacing
 
-local GetNumQuestLogRewardCurrencies = GetNumQuestLogRewardCurrencies
+local GetNumQuestLogRewardCurrencies = WorldQuestTrackerAddon.GetNumQuestLogRewardCurrencies
 local GetQuestLogRewardInfo = GetQuestLogRewardInfo
-local GetQuestLogRewardCurrencyInfo = GetQuestLogRewardCurrencyInfo
+local GetQuestLogRewardCurrencyInfo = WorldQuestTrackerAddon.GetQuestLogRewardCurrencyInfo
 local GetQuestLogRewardMoney = GetQuestLogRewardMoney
 local GetNumQuestLogRewards = GetNumQuestLogRewards
 local GetQuestInfoByQuestID = C_TaskQuest.GetQuestInfoByQuestID
@@ -318,7 +318,7 @@ function WorldQuestTracker.UpdateTrackerScale()
 end
 
 --cria o header
-local WorldQuestTrackerHeader = CreateFrame ("frame", "WorldQuestTrackerQuestsHeader", WorldQuestTrackerFrame, "ObjectiveTrackerHeaderTemplate") -- "ObjectiveTrackerHeaderTemplate"
+local WorldQuestTrackerHeader = CreateFrame ("frame", "WorldQuestTrackerQuestsHeader", WorldQuestTrackerFrame, "ObjectiveTrackerContainerHeaderTemplate") -- "ObjectiveTrackerHeaderTemplate"
 WorldQuestTrackerHeader.Text:SetText ("World Quest Tracker")
 local minimizeButton = CreateFrame ("button", "WorldQuestTrackerQuestsHeaderMinimizeButton", WorldQuestTrackerFrame, "BackdropTemplate")
 local minimizeButtonText = minimizeButton:CreateFontString (nil, "overlay", "GameFontNormal")
@@ -442,8 +442,33 @@ local TrackerIconButtonOnClick = function(self, button)
 
 	if (self.questID == C_SuperTrack.GetSuperTrackedQuestID()) then
 		WorldQuestTracker.SuperTracked = nil
-		--C_SuperTrack.SetSuperTrackedQuestID(0)
-		QuestSuperTracking_ChooseClosestQuest()
+		C_SuperTrack.SetSuperTrackedQuestID(0)
+		C_SuperTrack.ClearSuperTrackedContent()
+		C_SuperTrack.IsSuperTrackingMapPin()
+
+		--started on wow 11.0, the objective tracker isn't always selecting a quest to supertrack.
+		--[=[
+		["SetSuperTrackedMapPin"] = function,
+		["IsSuperTrackingMapPin"] = function,
+		["ClearSuperTrackedContent"] = function,
+		["ClearSuperTrackedMapPin"] = function,
+		["GetSuperTrackedVignette"] = function,
+		["GetHighestPrioritySuperTrackingType"] = function,
+		["SetSuperTrackedContent"] = function,
+		["SetSuperTrackedQuestID"] = function,
+		["IsSuperTrackingAnything"] = function,
+		["SetSuperTrackedVignette"] = function,
+		["GetSuperTrackedMapPin"] = function,
+		["IsSuperTrackingQuest"] = function,
+		["GetSuperTrackedContent"] = function,
+		["GetSuperTrackedQuestID"] = function,
+		["SetSuperTrackedUserWaypoint"] = function,
+		["IsSuperTrackingContent"] = function,
+		["IsSuperTrackingUserWaypoint"] = function,
+		["ClearAllSuperTracked"] = function,
+		["IsSuperTrackingCorpse"] = function,
+		--]=]
+
 		return
 	end
 
@@ -518,7 +543,7 @@ local buildTooltip = function(self)
 
 	--belongs to what faction
 	if (factionID) then
-		local factionName = GetFactionInfoByID (factionID)
+		local factionName = WorldQuestTracker.GetFactionDataByID (factionID)
 		if (factionName) then
 			if (capped) then
 				GameTooltip:AddLine (factionName, GRAY_FONT_COLOR:GetRGB())
@@ -670,7 +695,8 @@ end
 			--	BonusObjectiveTracker_UntrackWorldQuest(watchedWorldQuestID)
 			--end
 		--end
-		BonusObjectiveTracker_TrackWorldQuest(questID, 0)
+		--BonusObjectiveTracker_TrackWorldQuest(questID, 0)
+		QuestUtil.TrackWorldQuest(questID, Enum.QuestWatchType.Automatic) --0
 		C_SuperTrack.SetSuperTrackedQuestID(questID)
 	end
 --
@@ -756,17 +782,22 @@ function WorldQuestTracker.GetOrCreateTrackerWidget (index)
 	f.IconButton = IconButton
 
 	f.Circle = f:CreateTexture(nil, "overlay")
-	f.Circle:SetTexture([[Interface\Transmogrify\Transmogrify]])
-	f.Circle:SetTexCoord(381/512, 405/512, 93/512, 117/512)
-	f.Circle:SetSize(18, 18)
-	f.Circle:SetPoint("topleft", f, "topleft", -14, -1)
+	f.Circle:SetAtlas("transmog-nav-slot-selected")
+	f.Circle:SetSize(22, 22)
+	f.Circle:SetPoint("topleft", f, "topleft", -16, 0)
 	f.Circle:SetDesaturated (true)
 	f.Circle:SetAlpha(.7)
 
 	f.RewardAmount = f:CreateFontString (nil, "overlay", "ObjectiveFont")
 	f.RewardAmount:SetTextColor (titleColor.r, titleColor.g, titleColor.b)
-	f.RewardAmount:SetPoint("top", f.Circle, "bottom", 0, -2)
+	f.RewardAmount:SetPoint("top", f.Circle, "bottom", 1, 3)
 	DF:SetFontSize (f.RewardAmount, 10)
+
+	f.BackgroupTexture = f:CreateTexture(nil, "background")
+	f.BackgroupTexture:SetPoint("topleft", f, "topleft", -25, 2)
+	f.BackgroupTexture:SetPoint("bottomright", f, "bottomright", 20, -2)
+	f.BackgroupTexture:SetTexture([[Interface\AddOns\WorldQuestTracker\media\background_gradient.png]])
+	f.BackgroupTexture:SetVertexColor(0, 0, 0, .5)
 
 	local overlayBorder = f:CreateTexture(nil, "overlay", nil, 5)
 	local overlayBorder2 = f:CreateTexture(nil, "overlay", nil, 6)
@@ -1141,6 +1172,8 @@ function WorldQuestTracker.RefreshTrackerWidgets()
 				widget.numObjectives = quest.numObjectives
 				widget.SuperTrackButton.questID = quest.questID
 
+				widget.BackgroupTexture:SetVertexColor (0, 0, 0, WorldQuestTracker.db.profile.tracker_background_alpha)
+
 				widget.Title:SetText (title)
 				while (widget.Title:GetStringWidth() > TRACKER_TITLE_TEXTWIDTH_MAX) do
 					title = strsub (title, 1, #title-1)
@@ -1431,20 +1464,6 @@ function WorldQuestTracker.UpdateQuestsInArea()
 end
 
 
---ao completar uma world quest remover a quest do tracker e da refresh nos widgets
-hooksecurefunc ("BonusObjectiveTracker_OnTaskCompleted", function (questID, xp, money)
-	for i = #WorldQuestTracker.QuestTrackList, 1, -1 do
-		if (WorldQuestTracker.QuestTrackList[i].questID == questID) then
-			tremove (WorldQuestTracker.QuestTrackList, i)
-			WorldQuestTracker.RefreshTrackerWidgets()
-			break
-		end
-	end
-end)
-
-
-
-
 -- ~blizzard objective tracker
 function WorldQuestTracker.IsQuestOnObjectiveTracker (quest)
 	local tracker = ObjectiveTrackerFrame
@@ -1478,70 +1497,174 @@ function WorldQuestTracker.IsQuestOnObjectiveTracker (quest)
 	end
 end
 
-local getBlizzardObjectiveTrackerHeight = function()
-	local blizzObjectiveTracker = ObjectiveTrackerFrame
-	if (not blizzObjectiveTracker.initialized) then
+local latestTrackerPositionUpdate = GetTime()
+local bHasScheduledSizeUpdate = false
+
+local onObjectiveTrackerChanges = function() --this will be called several times in a single frame
+	if (ObjectiveTrackerFrame:IsCollapsed()) then
 		return
 	end
 
-	local y = 0
-
-	--get the height of the tracker
-	for i = 1, #blizzObjectiveTracker.MODULES do
-		local module = blizzObjectiveTracker.MODULES[i]
-		if (module.Header:IsShown()) then
-			y = y + module.contentsHeight
-			--this may need to be included on the new stuff for the tracker anchor
-			if (WorldQuestTracker.db.profile.groupfinder.tracker_buttons) then
-				for questID, block in pairs(module.usedBlocks) do
-					ff.HandleBTrackerBlock(questID, block)
-				end
-			end
+	local objectiveTrackerHeight = 0
+    for moduleFrame in pairs (ObjectiveTrackerManager.moduleToContainerMap) do
+		if (type(moduleFrame) == "table" and moduleFrame.GetObjectType and moduleFrame:GetObjectType() == "Frame" and moduleFrame:IsShown()) then
+        	objectiveTrackerHeight = objectiveTrackerHeight + moduleFrame:GetHeight()
 		end
+    end
+	WorldQuestTracker.TrackerHeight = objectiveTrackerHeight + 50
+
+	WorldQuestTracker.RefreshTrackerAnchor()
+
+	--need to refresh again on next tick due to some modules being updated after the tracker
+	if (not bHasScheduledSizeUpdate) then
+		C_Timer.After(0, WorldQuestTracker.OnObjectiveTrackerChanges)
+		bHasScheduledSizeUpdate = true
 	end
 end
 
+function WorldQuestTracker.OnObjectiveTrackerChanges()
+	--check the time to make sure only one update is triggered
+	if (GetTime() == latestTrackerPositionUpdate) then
+		return
+	end
+
+	latestTrackerPositionUpdate = GetTime()
+	onObjectiveTrackerChanges()
+	bHasScheduledSizeUpdate = false
+end
+
+if (ObjectiveTrackerManager) then
+	hooksecurefunc(ObjectiveTrackerManager, "ReleaseFrame", onObjectiveTrackerChanges)
+	hooksecurefunc(ObjectiveTrackerManager, "AcquireFrame", onObjectiveTrackerChanges)
+
+	ObjectiveTrackerFrame.Header.MinimizeButton:HookScript("OnClick", function()
+		if (ObjectiveTrackerFrame:IsCollapsed()) then
+			WorldQuestTracker.TrackerHeight = 35
+			WorldQuestTracker.RefreshTrackerAnchor()
+		end
+	end)
+else
+	C_Timer.After(0, function()
+		hooksecurefunc(ObjectiveTrackerManager, "ReleaseFrame", onObjectiveTrackerChanges)
+		hooksecurefunc(ObjectiveTrackerManager, "AcquireFrame", onObjectiveTrackerChanges)
+	end)
+end
+
+--ao completar uma world quest remover a quest do tracker e da refresh nos widgets
+hooksecurefunc(BonusObjectiveTracker, "OnQuestTurnedIn", function(self, questID)
+	for i = #WorldQuestTracker.QuestTrackList, 1, -1 do
+		if (WorldQuestTracker.QuestTrackList[i].questID == questID) then
+			local questRemoved = tremove(WorldQuestTracker.QuestTrackList, i)
+			WorldQuestTracker.RefreshTrackerWidgets()
+			onObjectiveTrackerChanges()
+			break
+		end
+	end
+end)
+
+local questEventFrame = CreateFrame("frame")
+questEventFrame:RegisterEvent("QUEST_TURNED_IN")
+questEventFrame:SetScript("OnEvent", function(self, event, ...)
+	C_Timer.After(0, onObjectiveTrackerChanges)
+end)
+
+hooksecurefunc(C_SuperTrack, "SetSuperTrackedQuestID", function()
+	C_Timer.After(0, onObjectiveTrackerChanges)
+end)
+
+hooksecurefunc(QuestUtil, "TrackWorldQuest", function()
+	C_Timer.After(0, onObjectiveTrackerChanges)
+end)
+
+hooksecurefunc(QuestUtil, "UntrackWorldQuest", function()
+	C_Timer.After(0, onObjectiveTrackerChanges)
+end)
+
+
+
+
+--[=[
+	["1"] = "ReleaseFrame",
+	["2"] = "ShowRewardsToast",
+	["3"] = "AddContainer",
+	["4"] = "OnVariablesLoaded",
+	["5"] = "HideRewardsToast",
+	["6"] = "HasRewardsToastForBlock",
+	["7"] = "UpdateModule",
+	["8"] = "SetTextSize",
+	["9"] = "OnCVarChanged",
+	["10"] = "UpdateAll",
+	["11"] = "UpdatePOIEnabled",
+	["12"] = "AssignModulesOrder",
+	["13"] = "OnPlayerEnteringWorld",
+	["14"] = "GetContainerForModule",
+	["15"] = "CanShowPOIs",
+	["16"] = "SetModuleContainer",
+	["17"] = "AcquireFrame",
+	["18"] = "SetOpacity",
+--]=]
+
+
+
+local bHooked = false
 --dispara quando o tracker da interface � atualizado, precisa dar refresh na nossa ancora
 local On_ObjectiveTracker_Update = function()
 	local blizzObjectiveTracker = ObjectiveTrackerFrame
-	if (not blizzObjectiveTracker.initialized) then
+	if (not blizzObjectiveTracker.init) then
 		return
 	end
 
 	WorldQuestTracker.UpdateQuestsInArea()
 
-
-
-	WorldQuestTracker.TrackerAttachToModule = nil
-
-	if (blizzObjectiveTracker.collapsed) then
-		WorldQuestTracker.TrackerHeight = 20
-	else
-		for moduleId = #blizzObjectiveTracker.MODULES_UI_ORDER, 1, -1 do
-			local module = blizzObjectiveTracker.MODULES_UI_ORDER[moduleId]
-			if (module.Header:IsShown()) then
-				WorldQuestTracker.TrackerAttachToModule = module
-				--for k,v in pairs(module) do
-				--	print(k)
-				--end
-				WorldQuestTracker.TrackerHeight = module.contentsHeight
-				break
-			end
-		end
+	if (not bHooked) then
+		bHooked = true
 	end
 
-	--update world quest tracker anchor
 	WorldQuestTracker.RefreshTrackerAnchor()
+
+	--[=[]] v7 up to v10
+		WorldQuestTracker.TrackerAttachToModule = nil
+
+		if (blizzObjectiveTracker.collapsed) then
+			WorldQuestTracker.TrackerHeight = 20
+		else
+			for moduleId = #blizzObjectiveTracker.MODULES_UI_ORDER, 1, -1 do
+				local module = blizzObjectiveTracker.MODULES_UI_ORDER[moduleId]
+				if (module.Header:IsShown()) then
+					WorldQuestTracker.TrackerAttachToModule = module
+					--for k,v in pairs(module) do
+					--	print(k)
+					--end
+					WorldQuestTracker.TrackerHeight = module.contentsHeight
+					break
+				end
+			end
+		end
+	--]=]
+	--update world quest tracker anchor
+	--WorldQuestTracker.RefreshTrackerAnchor()
+	
 end
 
---quando houver uma atualiza��o no quest tracker, atualizar as ancores do nosso tracker
-hooksecurefunc ("ObjectiveTracker_Update", function (reason, id)
+--quando houver uma atualiza��o no quest tracker, atualizar as ancoras do nosso tracker
+--hooksecurefunc ("ObjectiveTracker_Update", function (reason, id) --v10
+--	On_ObjectiveTracker_Update()
+--end)
+
+hooksecurefunc(ObjectiveTrackerManager, "UpdateAll", function()
+	On_ObjectiveTracker_Update() --v11
+end)
+hooksecurefunc(ObjectiveTrackerManager, "UpdateModule", function()
+	On_ObjectiveTracker_Update() --v11
+end)
+
+ObjectiveTrackerFrame.Header.MinimizeButton:HookScript("OnClick", function() --v11
 	On_ObjectiveTracker_Update()
 end)
 --quando o jogador clicar no bot�o de minizar o quest tracker, atualizar as ancores do nosso tracker
-ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:HookScript ("OnClick", function()
-	On_ObjectiveTracker_Update()
-end)
+--ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:HookScript ("OnClick", function() --v10
+--	On_ObjectiveTracker_Update()
+--end)
 
 function WorldQuestTracker:FullTrackerUpdate()
 	On_ObjectiveTracker_Update()

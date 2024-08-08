@@ -23,15 +23,22 @@ function MDT:LiveSession_Enable()
   self:UpdatePresetDropdownTextColor()
   self:SetThrottleValues()
   timer = C_Timer.NewTimer(2, function()
-    self.liveSessionRequested = false
-    local distribution = self:IsPlayerInGroup()
-    local preset = self:GetCurrentPreset()
-    local prefix = "[MDTLive: "
-    local dungeon = self:GetDungeonName(preset.value.currentDungeonIdx)
-    local presetName = preset.text
-    local name, realm = UnitFullName("player")
-    local fullName = name.."+"..realm
-    SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
+    local callback = function()
+      self.liveSessionRequested = false
+      local distribution = self:IsPlayerInGroup()
+      local preset = self:GetCurrentPreset()
+      local prefix = "[MDTLive: "
+      local dungeon = self:GetDungeonName(preset.value.currentDungeonIdx)
+      local presetName = preset.text
+      local name, realm = UnitFullName("player")
+      local fullName = name.."+"..realm
+      SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
+    end
+    local cancelCallback = function()
+      MDT:LiveSession_Disable()
+    end
+    local fireCancelOnClose = true
+    MDT:CheckPresetSize(callback, cancelCallback, fireCancelOnClose)
   end)
 end
 
@@ -58,7 +65,7 @@ function MDT:LiveSession_Disable()
   if timer then timer:Cancel() end
   self.liveSessionRequested = false
   self.main_frame.SendingStatusBar:Hide()
-  self:SetThrottleValues(true)
+  self:RestoreThrottleValues()
   if self.main_frame.LoadingSpinner then
     self.main_frame.LoadingSpinner:Hide()
     self.main_frame.LoadingSpinner.Anim:Stop()
@@ -151,7 +158,9 @@ function MDT:LiveSession_SendObject(obj)
     local distribution = self:IsPlayerInGroup()
     if distribution then
       local export = MDT:TableToString(obj, false, 5)
-      MDTcommsObject:SendCommMessage(self.liveSessionPrefixes.obj, export, distribution, nil, "ALERT")
+      local silent, fromLiveSession = true, true
+      MDTcommsObject:SendCommMessage(self.liveSessionPrefixes.obj, export, distribution, nil, "BULK", MDT.displaySendingProgress,
+        { distribution, nil, silent, fromLiveSession })
     end
   end
 end
@@ -207,7 +216,9 @@ function MDT:LiveSession_SendPreset(preset)
     local db = self:GetDB()
     preset.difficulty = db.currentDifficulty
     local export = MDT:TableToString(preset, false, 5)
-    MDTcommsObject:SendCommMessage(self.liveSessionPrefixes.preset, export, distribution, nil, "ALERT")
+    local silent, fromLiveSession = true, true
+    MDTcommsObject:SendCommMessage(self.liveSessionPrefixes.preset, export, distribution, nil, "BULK", MDT.displaySendingProgress,
+      { distribution, preset, silent, fromLiveSession })
   end
 end
 
@@ -228,23 +239,14 @@ function MDT:LiveSession_SendAffixWeek(week)
   end
 end
 
----sends boralus selector updates
-function MDT:LiveSession_SendBoralusSelector(faction)
-  local distribution = self:IsPlayerInGroup()
-  if distribution then
-    local msg = faction..""
-    MDTcommsObject:SendCommMessage(self.liveSessionPrefixes.bora, msg, distribution, nil, "ALERT")
-  end
-end
-
 do
-  local timer
+  local colorTimer
   ---LiveSession_QueueColorUpdate
   ---Disgusting workaround for shitty colorpicker
   ---Only send an update once a color of a pull has not changed for 0.2 seconds
   function MDT:LiveSession_QueueColorUpdate()
-    if timer then timer:Cancel() end
-    timer = C_Timer.NewTimer(0.2, function()
+    if colorTimer then colorTimer:Cancel() end
+    colorTimer = C_Timer.NewTimer(0.2, function()
       self:LiveSession_SendPulls(self:GetPulls())
     end)
   end

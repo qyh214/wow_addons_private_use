@@ -5,10 +5,6 @@ if L then
 	L.custom_on_fade_out_bars_desc = "1페이즈에서 거리에서 먼 보스들의 바를 임시로 비활성화."
 
 	L.coalescing_void = "보스에서 이격"
-	L.molten_eruption = "바닥 밟기"
-	L.swirling_flame = "회오리"
-	L.shadowflame_burst = "탱 머리 조심"
-	--L.plus = "%s + %s"
 
 	L.shadow_and_flame = "신화 디버프"
 end
@@ -16,7 +12,6 @@ end
 L = BigWigs:NewBossLocale("The Forgotten Experiments", "koKR")
 if L then
 	L.rending_charge_single = "돌진 대상"
-	L.massive_slam = "고개 주의"
 	L.unstable_essence_new = "정수 디버프"
 	L.custom_on_unstable_essence_high = "불안정한 정수 고중첩 알리기"
 	L.custom_on_unstable_essence_high_desc = "불안정한 정수 고중첩일때 일반창으로 중첩 알림."
@@ -44,12 +39,8 @@ end
 L = BigWigs:NewBossLocale("Rashok, the Elder", "koKR")
 if L then
 	L.doom_flames = "바닥 밟기"
-	L.shadowlave_blast = "전방 브레스"
 	L.charged_smash = "큰바닥 같이맞기"
 	L.energy_gained = "기력 회복: %d"
-
-	-- Mythic
-	--L.shadowflame_energy = "Heal Absorb"
 end
 
 L = BigWigs:NewBossLocale("The Vigilant Steward, Zskarn", "koKR")
@@ -89,7 +80,6 @@ if L then
 	L.emptiness_between_stars = "공허 위상"
 	L.void_slash = "탱커 전방기"
 
-	L.boss_immune = "넴드 면역"
 	L.ebon_might = "쫄 메즈 면역"
 end
 

@@ -242,13 +242,14 @@ local DFTalentImportMixin = {
             return false, LOADOUT_ERROR_BAD_STRING
         end
 
-        if serializationVersion ~= 1 then
+        local currentSerializationVersion = C_Traits.GetLoadoutSerializationVersion();
+        if serializationVersion ~= currentSerializationVersion then
             return false, LOADOUT_ERROR_SERIALIZATION_VERSION_MISMATCH
         end
 
         local classInfo = Internal.GetClassInfoBySpecID(specID);
 
-        C_ClassTalents.InitializeViewLoadout(specID, 70);
+        C_ClassTalents.InitializeViewLoadout(specID, GetMaxLevelForPlayerExpansion());
         C_ClassTalents.ViewLoadout({});
 
         local treeID = C_ClassTalents.GetTraitTreeForSpec(specID)
@@ -296,11 +297,14 @@ local DFTalentImportMixin = {
         return results;
     end,
 }
+
+local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 local DFTalentImport
 DFTalentImport = {
     ImportLoadout = function (...)
         LoadAddOn("Blizzard_ClassTalentUI")
-        Mixin(DFTalentImport, ClassTalentImportExportMixin, DFTalentImportMixin);
+        LoadAddOn("Blizzard_PlayerSpells")
+        Mixin(DFTalentImport, ClassTalentImportExportMixin, DFTalentImportMixin or {});
         return DFTalentImport.ImportLoadout(...)
     end
 }

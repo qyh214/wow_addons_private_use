@@ -12,7 +12,7 @@ local GetTrackingInfo, GetInstanceInfo, GetQuestID = GetTrackingInfo, GetInstanc
 local GetNumActiveQuests, GetActiveTitle, GetActiveQuestID, SelectActiveQuest = GetNumActiveQuests, GetActiveTitle, GetActiveQuestID, SelectActiveQuest
 local IsQuestCompletable, GetNumQuestItems, GetQuestItemLink, QuestIsFromAreaTrigger = IsQuestCompletable, GetNumQuestItems, GetQuestItemLink, QuestIsFromAreaTrigger
 local QuestGetAutoAccept, AcceptQuest, CloseQuest, CompleteQuest, AcknowledgeAutoAcceptQuest = QuestGetAutoAccept, AcceptQuest, CloseQuest, CompleteQuest, AcknowledgeAutoAcceptQuest
-local GetNumQuestChoices, GetQuestReward, GetItemInfo, GetQuestItemInfo = GetNumQuestChoices, GetQuestReward, GetItemInfo, GetQuestItemInfo
+local GetNumQuestChoices, GetQuestReward, GetQuestItemInfo = GetNumQuestChoices, GetQuestReward, GetQuestItemInfo
 local GetNumAvailableQuests, GetAvailableQuestInfo, SelectAvailableQuest = GetNumAvailableQuests, GetAvailableQuestInfo, SelectAvailableQuest
 local GetNumAutoQuestPopUps, GetAutoQuestPopUp, ShowQuestOffer, ShowQuestComplete = GetNumAutoQuestPopUps, GetAutoQuestPopUp, ShowQuestOffer, ShowQuestComplete
 local C_QuestLog_IsWorldQuest = C_QuestLog.IsWorldQuest
@@ -203,6 +203,9 @@ local ignoreInstances = {
 	[1571] = true, -- 枯法者
 	[1626] = true, -- 群星庭院
 }
+
+local QUEST_STRING = "cFF0000FF.-"..TRANSMOG_SOURCE_2
+
 QuickQuest:Register("GOSSIP_SHOW", function()
 	local npcID = GetNPCID()
 	if C.IgnoreQuestNPC[npcID] then return end
@@ -252,7 +255,7 @@ QuickQuest:Register("GOSSIP_SHOW", function()
 	local questGossipID
 	for i = 1, numOptions do
 		local option = gossipInfoTable[i]
-		if option.name and (strfind(option.name, "cFF0000FF") or option.flags == QuestLabelPrepend) then
+		if option.name and (strfind(option.name, QUEST_STRING) or option.flags == QuestLabelPrepend) then
 			numQuestGossips = numQuestGossips + 1
 			questGossipID = option.gossipOptionID
 		end
@@ -416,7 +419,7 @@ QuickQuest:Register("QUEST_COMPLETE", function()
 		for index = 1, choices do
 			local link = GetQuestItemLink("choice", index)
 			if link then
-				local value = select(11, GetItemInfo(link))
+				local value = select(11, C_Item.GetItemInfo(link))
 				local itemID = GetItemInfoFromHyperlink(link)
 				value = cashRewards[itemID] or value
 

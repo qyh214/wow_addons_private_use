@@ -1,10 +1,28 @@
-lightweight tag fd4f37c62545a9840ec1bf29a4d839d7ee7c29dc v1.4.9
+lightweight tag 1124b3092ff2e44f8878ae9246b1861254121432 v1.5.0
 Author:	Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:	Tue Nov 14 23:33:03 2023 -0500
+Date:	Sat Mar 23 19:52:14 2024 -0400
 
-commit fd4f37c62545a9840ec1bf29a4d839d7ee7c29dc
+commit 1124b3092ff2e44f8878ae9246b1861254121432
 Author: Meivyn <793322+Meivyn@users.noreply.github.com>
-Date:   Tue Nov 14 23:33:03 2023 -0500
+Date:   Sat Mar 23 19:52:14 2024 -0400
 
-    Add new world boss
+    Bump version
+
+commit 6b549e89008a8f91b2e3b67454b51a5d1d0192cc
+Author: Meivyn <793322+Meivyn@users.noreply.github.com>
+Date:   Sat Mar 23 18:57:58 2024 -0400
+
+    Better fix for Siege of Boralus
+
+commit cd999892ceda3a64640fa422456c62f83ac74b33
+Author: Meivyn <793322+Meivyn@users.noreply.github.com>
+Date:   Sat Mar 23 17:42:19 2024 -0400
+
+    `mapID` workaround is no longer needed
+
+commit 65342095fed96696596a476d2ad8310106817e2b
+Author: Meivyn <793322+Meivyn@users.noreply.github.com>
+Date:   Sat Mar 23 17:41:25 2024 -0400
+
+    Fix positioning of status frames
 

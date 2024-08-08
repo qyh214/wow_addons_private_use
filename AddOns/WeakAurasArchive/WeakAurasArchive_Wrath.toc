@@ -1,9 +1,0 @@
-## Interface: 30403
-## Title: WeakAuras Archive
-## Author: The WeakAuras Team
-## Version: 5.8.7
-## LoadOnDemand: 1
-## SavedVariables: WeakAurasArchive
-## Dependencies: WeakAuras
-
-WeakAurasArchive.lua

@@ -508,7 +508,7 @@ function frame:EQUIPMENT_SETS_CHANGED(...)
                     set.locations[inventorySlotId] = locations[inventorySlotId] -- Only update if the item has a location
 
                     local itemLink = Internal.GetItemLinkByLocation(location)
-                    if itemLink then
+                    if itemLink and itemLink ~= "" then
                         set.equipment[inventorySlotId] = itemLink
                         set.extras[inventorySlotId] = Internal.GetExtrasForLocation(location, set.extras[inventorySlotId] or {})
                         set.data[inventorySlotId] = Internal.EncodeItemData(itemLink, set.extras[inventorySlotId] and set.extras[inventorySlotId].azerite)
@@ -536,6 +536,7 @@ function frame:EQUIPMENT_SETS_CHANGED(...)
 
         if isNewSet then
             Internal.AddEquipmentSetToMapData(set)
+            Internal.Call("EquipmentSetCreated", set.setID);
         end
 
         equipmentSetMap[managerID] = set;
@@ -1679,12 +1680,22 @@ function frame:TRAIT_CONFIG_UPDATED(configID)
     Internal.RefreshSetFromConfigID(set, configID)
 end
 function frame:TRAIT_CONFIG_DELETED(configID)
-    if dfTalentTreeSetMap[configID] then
+    local set = dfTalentTreeSetMap[configID]
+    if set then
 --[==[@debug@
-        print(format(L["[BtWLoadouts]: Unflagged talent loadout \"%s\" as a blizzard talent tree."], dfTalentTreeSetMap[configID].name));
+        print(format(L["[BtWLoadouts]: Unflagged talent loadout \"%s\" as a blizzard talent tree."], set.name));
 --@end-debug@]==]
-        dfTalentTreeSetMap[configID].configID = nil;
-        dfTalentTreeSetMap[configID].character = nil;
+
+        -- If the set is in use we disconnect it from the Blizzard manager
+        -- otherwise we delete it
+        if set.useCount > 0 then
+            set.configID = nil;
+            set.character = nil;
+        else
+            Internal.DeleteSet(BtWLoadoutsSets.dftalents, set);
+        end
+
+        -- Clear map
         dfTalentTreeSetMap[configID] = nil;
     end
 end

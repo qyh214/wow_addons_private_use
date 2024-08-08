@@ -31,7 +31,7 @@ function mod:GetOptions()
 		-- Rira Hackclaw
 		{381444, "SAY"}, -- Savage Charge
 		savageChargeMarker,
-		377827, -- Bladestorm
+		{377827, "SAY"}, -- Bladestorm
 		-- Gashtooth
 		381694, -- Decayed Senses
 		378029, -- Gash Frenzy
@@ -55,7 +55,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "SavageChargeRemoved", 381416)
 	self:Log("SPELL_AURA_APPLIED", "BladestormStarting", 381835)
 	self:Log("SPELL_AURA_APPLIED", "BladestormFixateApplied", 377844)
-	self:Log("SPELL_AURA_REMOVED", "BladestormFixateRemoved", 377844)
 	self:Death("RiraHackclawDeath", 186122)
 
 	-- Gashtooth
@@ -106,7 +105,7 @@ function mod:SavageChargeApplied(args)
 	if self:Tank() or onMe then
 		self:PlaySound(381444, "warning", nil, args.destName)
 		if onMe then
-			self:Say(381444)
+			self:Say(381444, nil, nil, "Savage Charge")
 		end
 	else
 		self:PlaySound(381444, "alert", nil, args.destName)
@@ -144,6 +143,9 @@ do
 		self:TargetMessage(377827, "orange", args.destName, CL.casting:format(args.spellName))
 		self:PlaySound(377827, "long", nil, args.destName)
 		self:CDBar(377827, 59.5)
+		if self:Me(args.destGUID) then
+			self:Say(377827, nil, nil, "Bladestorm")
+		end
 	end
 
 	function mod:BladestormFixateApplied(args)
@@ -151,24 +153,21 @@ do
 		self:TargetMessage(377827, "orange", args.destName)
 		self:PlaySound(377827, "alarm", nil, args.destName)
 		if firstChannel then
+			-- no need to repeat the Say on the first channel because it will be the same player as the initial target
 			firstChannel = false
-			self:TargetBar(377827, 5, args.destName)
-		else
-			self:TargetBar(377827, 4, args.destName)
+		elseif self:Me(args.destGUID) then
+			self:Say(377827, nil, nil, "Bladestorm")
 		end
 	end
-end
-
-function mod:BladestormFixateRemoved(args)
-	self:StopBar(377827, args.destName) -- Bladestorm
 end
 
 function mod:RiraHackclawDeath(args)
 	self:StopBar(381444) -- Savage Charge
 	self:StopBar(377827) -- Bladestorm
-	-- Gashtooth will no longer cast Decayed Senses if Rira dies
+	-- Rira's death will prevent Gashtooth from casting Decayed Senses and Tricktotem from casting
+	-- Hextrick Totem, since they only cast their ultimates in response to Rira's command.
 	self:StopBar(381694) -- Decayed Senses
-	-- TODO does Rira dying prevent Hextrick Totem as well?
+	self:StopBar(381470) -- Hextrick Totem
 end
 
 -- Gashtooth
@@ -181,7 +180,7 @@ end
 
 function mod:DecayedSensesApplied(args)
 	-- can be spell reflected by Warriors
-	if self:Player(args.destFlags) and self:Dispeller("magic") then
+	if self:Friendly(args.destFlags) and self:Dispeller("magic") then
 		self:TargetMessage(381694, "purple", args.destName)
 		self:PlaySound(381694, "warning", nil, args.destName)
 	elseif self:Hostile(args.destFlags) then -- on boss
@@ -191,7 +190,7 @@ function mod:DecayedSensesApplied(args)
 end
 
 function mod:DecayedSensesRemoved(args)
-	if self:Player(args.destFlags) then
+	if self:Friendly(args.destFlags) then
 		self:Message(381694, "green", CL.removed:format(args.spellName))
 		self:PlaySound(381694, "info")
 	end
@@ -219,7 +218,7 @@ do
 	function mod:MarkedForButchery(args)
 		self:StopBar(CL.count:format(args.spellName, markedForButcheryCount))
 		markedForButcheryCount = markedForButcheryCount + 1
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 59.5, CL.count:format(args.spellName, markedForButcheryCount))
 	end
 end

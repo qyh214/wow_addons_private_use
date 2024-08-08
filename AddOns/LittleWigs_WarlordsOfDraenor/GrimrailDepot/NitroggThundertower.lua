@@ -152,11 +152,11 @@ do
 		self:PrimaryIcon(160681, player)
 		if self:Me(guid) then
 			self:Flash(160681)
-			self:Say(160681)
+			self:Say(160681, nil, nil, "Reloading")
 		end
 	end
 	function mod:Reloading(args)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 	end
 end
 

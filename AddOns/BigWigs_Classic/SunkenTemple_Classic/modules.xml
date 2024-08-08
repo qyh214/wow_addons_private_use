@@ -1,0 +1,16 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Script file="Atalalarion.lua"/>
+<Script file="FesteringRotslime.lua"/>
+<Script file="AtalaiDefenders.lua"/>
+<Script file="DreamscytheAndWeaver.lua"/>
+<Script file="JammalanAndOgom.lua"/>
+<Script file="MorphazAndHazzas.lua"/>
+<Script file="ShadeOfEranikus.lua"/>
+<Script file="AvatarOfHakkar.lua"/>
+
+<Include file="Locales\locales.xml"/>
+<Include file="Options\options.xml"/>
+
+</Ui>

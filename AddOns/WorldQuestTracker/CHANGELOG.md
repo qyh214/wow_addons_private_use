@@ -1,6 +1,6 @@
 # World Quest Tracker
 
-## [v10.2.0.486](https://github.com/Tercioo/World-Quest-Tracker/tree/v10.2.0.486) (2023-11-19)
-[Full Changelog](https://github.com/Tercioo/World-Quest-Tracker/compare/v10.2.0.485...v10.2.0.486) 
+## [v11.0.0.504](https://github.com/Tercioo/World-Quest-Tracker/tree/v11.0.0.504) (2024-08-01)
+[Full Changelog](https://github.com/Tercioo/World-Quest-Tracker/compare/v11.0.0.503...v11.0.0.504) 
 
-- More UI Cleanup  
+- Fixed two errors  

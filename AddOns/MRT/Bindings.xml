@@ -15,4 +15,12 @@
 	<Binding name="CLICK EXRTWM8:LeftButton" category="Method Raid Tools" />
 	<Binding name="CLICK EXRTCWM:LeftButton" category="Method Raid Tools" />
 	<Binding name="CLICK EXRTTOGGLENOTE:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM1CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM2CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM3CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM4CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM5CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM6CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM7CURSOR:LeftButton" category="Method Raid Tools" />
+	<Binding name="CLICK EXRTWM8CURSOR:LeftButton" category="Method Raid Tools" />
 </Bindings>

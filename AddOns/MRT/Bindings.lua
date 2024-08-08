@@ -13,7 +13,10 @@ local function make(name, command, description)
 end
 
 for i=1,8 do
-	make("EXRTWM"..i, "/clearworldmarker "..i.."\n/worldmarker "..i, _G["WORLD_MARKER"..i])
+	make("EXRTWM"..i, _G["SLASH_CLEAR_WORLD_MARKER1"].." "..i.."\n".._G["SLASH_WORLD_MARKER1"].." "..i, _G["WORLD_MARKER"..i])
 end
-make("EXRTCWM", "/clearworldmarker 0", REMOVE_WORLD_MARKERS)
+make("EXRTCWM", _G["SLASH_CLEAR_WORLD_MARKER1"].." 0", REMOVE_WORLD_MARKERS)
 make("EXRTTOGGLENOTE", "/rt note", ExRT.L.message)
+for i=1,8 do
+	make("EXRTWM"..i.."CURSOR", _G["SLASH_WORLD_MARKER1"].." [@cursor] "..i, _G["WORLD_MARKER"..i].." @ ".._G["MOUSE_LABEL"])
+end

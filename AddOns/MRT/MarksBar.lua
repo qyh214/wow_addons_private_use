@@ -332,7 +332,7 @@ ELib:FixPreloadFont(mainFrame.del,mainFrame.del.html,ExRT.F.defFont, 10)
 mainFrame.edges[3] = CreateEdge(3,383)
 
 mainFrame.wmarksbuts = CreateFrame("Frame",nil,mainFrame)
-mainFrame.wmarksbuts:SetSize(70,26)
+mainFrame.wmarksbuts:SetSize(ExRT.isCata and 14*3 or 14*5,26)
 local function MainFrameWMOnEnter(self)
 	self:SetBackdropBorderColor(0.7,0.7,0.7,1)
 end
@@ -350,10 +350,12 @@ mainFrame.wmarksbuts:SetScript("OnLeave",function()
 	mainFrame:OnLeave()
 end)
 
+local MAX_WM_BUTTONS = ExRT.isCata and 6 or 9
+mainFrame.wmarksbuts.bnum = MAX_WM_BUTTONS
 
 do
 	local wmarksbuts_backdrop = {bgFile = "",edgeFile = ExRT.F.defBorder,tile = false,edgeSize = 6}
-	for i=1,9 do
+	for i=1,MAX_WM_BUTTONS do
 		local frame = CreateFrame("Button","MRT_MarksBar_WorldMarkers_Kind1_"..i,mainFrame.wmarksbuts,BackdropTemplateMixin and "SecureActionButtonTemplate,BackdropTemplate" or "SecureActionButtonTemplate")	--FrameStack Fix
 		mainFrame.wmarksbuts[i] = frame
 		frame:SetSize(14,13)
@@ -363,14 +365,21 @@ do
 		frame:SetScript("OnEnter",MainFrameWMOnEnter)	
 		frame:SetScript("OnLeave",MainFrameWMOnLeave)
 		
-		if i < 9 then
+		if i < MAX_WM_BUTTONS then
 			frame:RegisterForClicks("AnyDown", "AnyUp")
-			frame:SetAttribute("type", "macro")
-			frame:SetAttribute("macrotext1", format("/wm %d", i))
-			frame:SetAttribute("macrotext2", format("/cwm %d", i))
-			if ExRT.locale == "ptBR" or ExRT.locale == "esES" or ExRT.locale == "esMX" or ExRT.locale == "ptPT" then
-				frame:SetAttribute("macrotext1", format(SLASH_WORLD_MARKER1.." %d", i))
-				frame:SetAttribute("macrotext2", format(SLASH_CLEAR_WORLD_MARKER1.." %d", i))
+			if ExRT.is11 then
+				frame:SetAttribute("type", "worldmarker")
+				frame:SetAttribute("marker", tostring(i))
+				frame:SetAttribute("action1", "set")
+				frame:SetAttribute("action2", "clear")
+			else
+				frame:SetAttribute("type", "macro")
+				frame:SetAttribute("macrotext1", format("/wm %d", i))
+				frame:SetAttribute("macrotext2", format("/cwm %d", i))
+				if ExRT.locale == "ptBR" or ExRT.locale == "esES" or ExRT.locale == "esMX" or ExRT.locale == "ptPT" then
+					frame:SetAttribute("macrotext1", format(SLASH_WORLD_MARKER1.." %d", i))
+					frame:SetAttribute("macrotext2", format(SLASH_CLEAR_WORLD_MARKER1.." %d", i))
+				end
 			end
 			frame:SetScript('OnEvent', MainFrameWMOnEvent)
 		else
@@ -380,7 +389,7 @@ do
 		end
 	
 		frame.t = frame:CreateTexture(nil, "BACKGROUND")
-		if i < 9 then
+		if i < MAX_WM_BUTTONS then
 			frame.t:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..module.db.worldMarksList[i])
 		else
 			frame.t:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\flare_del")
@@ -414,12 +423,12 @@ mainFrame.wmarksbuts.b:SetScript("OnLeave",function()
 	mainFrame:OnLeave()
 end)
 
-for i=1,9 do
+for i=1,MAX_WM_BUTTONS do
 	local frame = CreateFrame("Button","MRT_MarksBar_WorldMarkers_Kind2_"..i,mainFrame.wmarksbuts.b,"SecureActionButtonTemplate")	--FrameStack Fix
 	mainFrame.wmarksbuts.b[i] = frame
 	frame:SetSize(18,18)
 	frame.t = frame:CreateTexture(nil, "BACKGROUND")
-	if i == 9 then
+	if i == MAX_WM_BUTTONS then
 		frame.t:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\flare_del")
 	else
 		frame.t:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\blip")
@@ -432,14 +441,21 @@ for i=1,9 do
 	frame:SetScript("OnEnter",MainFrameWMKind2OnEnter)	
 	frame:SetScript("OnLeave", MainFrameWMKind2OnLeave)
 
-	if i < 9 then
+	if i < MAX_WM_BUTTONS then
 		frame:RegisterForClicks("AnyDown", "AnyUp")
-		frame:SetAttribute("type", "macro")
-		frame:SetAttribute("macrotext1", format("/wm %d", i))
-		frame:SetAttribute("macrotext2", format("/cwm %d", i))
-		if ExRT.locale == "ptBR" or ExRT.locale == "esES" or ExRT.locale == "esMX" or ExRT.locale == "ptPT" then
-			frame:SetAttribute("macrotext1", format(SLASH_WORLD_MARKER1.." %d", i))
-			frame:SetAttribute("macrotext2", format(SLASH_CLEAR_WORLD_MARKER1.." %d", i))
+		if ExRT.is11 then
+			frame:SetAttribute("type", "worldmarker")
+			frame:SetAttribute("marker", tostring(i))
+			frame:SetAttribute("action1", "set")
+			frame:SetAttribute("action2", "clear")
+		else
+			frame:SetAttribute("type", "macro")
+			frame:SetAttribute("macrotext1", format("/wm %d", i))
+			frame:SetAttribute("macrotext2", format("/cwm %d", i))
+			if ExRT.locale == "ptBR" or ExRT.locale == "esES" or ExRT.locale == "esMX" or ExRT.locale == "ptPT" then
+				frame:SetAttribute("macrotext1", format(SLASH_WORLD_MARKER1.." %d", i))
+				frame:SetAttribute("macrotext2", format(SLASH_CLEAR_WORLD_MARKER1.." %d", i))
+			end
 		end
 		frame:SetScript('OnEvent', MainFrameWMOnEvent)
 	else
@@ -550,10 +566,10 @@ local function modifymarkbars()
 		mainFrame.del:SetPoint("TOPLEFT", mainFrame.edges[2], 0, -18)
 		
 		mainFrame.wmarksbuts:SetPoint("TOPLEFT", mainFrame.edges[3], 0, -4)
-		for i=1,9 do
+		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
-				if i < 9 then
-					local t_pos = 9-i
+				if i < mainFrame.wmarksbuts.bnum then
+					local t_pos = mainFrame.wmarksbuts.bnum - i
 					mainFrame.wmarksbuts[i]:SetPoint("TOPLEFT", floor((t_pos-1)/2)*14, -((t_pos-1)%2)*13)
 				else
 					mainFrame.wmarksbuts[i]:SetPoint("TOPLEFT", floor((i-1)/2)*14, -((i-1)%2)*13)
@@ -563,11 +579,11 @@ local function modifymarkbars()
 			end
 		end
 		
-		mainFrame.wmarksbuts.b:SetSize(123+19*3,26)
+		mainFrame.wmarksbuts.b:SetSize(123+19*(ExRT.isCata and 0 or 3),26)
 		mainFrame.wmarksbuts.b:SetPoint("TOPLEFT", mainFrame,"BOTTOMLEFT",20, 3)
-		for i=1,9 do
+		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
-				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 19*(9-i)+6, -4)
+				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 19*(mainFrame.wmarksbuts.bnum-i)+6, -4)
 			else
 				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 19*(i-1)+6, -4)
 			end
@@ -601,7 +617,7 @@ local function modifymarkbars()
 		end
 
 		local worldMarksBool = VMRT.MarksBar.Show[3]
-		if ExRT.isClassic then
+		if ExRT.isClassic and not ExRT.isCata then
 			worldMarksBool = false
 		end
 	
@@ -611,8 +627,8 @@ local function modifymarkbars()
 		elseif worldMarksBool and VMRT.MarksBar.wmKind then
 			mainFrame.wmarksbuts:Show()
 			
-			posX = posX + 14*ceil(9 / 2)
-			totalWidth = totalWidth + 14*ceil(9 / 2)
+			posX = posX + 14*ceil(mainFrame.wmarksbuts.bnum / 2)
+			totalWidth = totalWidth + 14*ceil(mainFrame.wmarksbuts.bnum / 2)
 		end
 
 		mainFrame.edge:Show()
@@ -697,10 +713,10 @@ local function modifymarkbars()
 		mainFrame.del:SetPoint("TOPLEFT", mainFrame.edges[2], 4, -14)
 		
 		mainFrame.wmarksbuts:SetPoint("TOPLEFT", mainFrame.edges[3], 4, 0)
-		for i=1,9 do
+		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
-				if i < 9 then
-					local t_pos = 9-i
+				if i < mainFrame.wmarksbuts.bnum then
+					local t_pos = mainFrame.wmarksbuts.bnum - i
 					mainFrame.wmarksbuts[i]:SetPoint("TOPLEFT", ((t_pos-1)%2)*13, -floor((t_pos-1)/2)*14)
 				else
 					mainFrame.wmarksbuts[i]:SetPoint("TOPLEFT", ((i-1)%2)*13, -floor((i-1)/2)*14)
@@ -710,11 +726,11 @@ local function modifymarkbars()
 			end
 		end
 		
-		mainFrame.wmarksbuts.b:SetSize(26,123+19*3)
+		mainFrame.wmarksbuts.b:SetSize(26,123+19*(ExRT.isCata and 0 or 3))
 		mainFrame.wmarksbuts.b:SetPoint("TOPLEFT", mainFrame,"TOPRIGHT",-3,-20)
-		for i=1,9 do
+		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
-				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 4, -19*(9-i)-6)
+				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 4, -19*(mainFrame.wmarksbuts.bnum-i)-6)
 			else
 				mainFrame.wmarksbuts.b[i]:SetPoint("TOPLEFT", 4, -19*(i-1)-6)
 			end
@@ -748,7 +764,7 @@ local function modifymarkbars()
 		end
 
 		local worldMarksBool = VMRT.MarksBar.Show[3]
-		if ExRT.isClassic then
+		if ExRT.isClassic and not ExRT.isCata then
 			worldMarksBool = false
 		end
 	
@@ -758,8 +774,8 @@ local function modifymarkbars()
 		elseif worldMarksBool and VMRT.MarksBar.wmKind then
 			mainFrame.wmarksbuts:Show()
 			
-			posX = posX + 14*ceil(9 / 2)
-			totalWidth = totalWidth + 14*ceil(9 / 2)
+			posX = posX + 14*ceil(mainFrame.wmarksbuts.bnum / 2)
+			totalWidth = totalWidth + 14*ceil(mainFrame.wmarksbuts.bnum / 2)
 		end
 	
 		mainFrame.edge:Show()
@@ -1093,11 +1109,13 @@ function module.options:Load()
 	self.shtml1 = ELib:Text(self,L.MarksBarHelp,12):Size(670,200):Point(15,-505):Top()
 
 	if ExRT.isClassic then
-		self.chkEnable3:Hide()
-		self.chkEnable3kindhtml:Hide()
-		self.chkEnable3kind1:Hide()
-		self.chkEnable3kind2:Hide()
-		self.reverseWMMarksOrderChk:Hide()
+		if not ExRT.isCata then
+			self.chkEnable3:Hide()
+			self.chkEnable3kindhtml:Hide()
+			self.chkEnable3kind1:Hide()
+			self.chkEnable3kind2:Hide()
+			self.reverseWMMarksOrderChk:Hide()
+		end
 		self.chkEnable6:Hide()
 	end
 end

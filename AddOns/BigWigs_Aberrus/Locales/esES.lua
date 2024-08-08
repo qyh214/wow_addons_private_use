@@ -5,10 +5,6 @@ if L then
 	--L.custom_on_fade_out_bars_desc = "Fade out bars which belong to the boss that is out of range in stage 1."
 
 	--L.coalescing_void = "Run Away"
-	--L.molten_eruption = "Soaks"
-	--L.swirling_flame = "Tornadoes"
-	--L.shadowflame_burst = "Frontal Cone"
-	--L.plus = "%s + %s"
 
 	--L.shadow_and_flame = "Mythic Debuffs"
 end
@@ -16,7 +12,6 @@ end
 L = BigWigs:NewBossLocale("The Forgotten Experiments", "esES")
 if L then
 	--L.rending_charge_single = "First Charge"
-	--L.massive_slam = "Frontal Cone"
 	--L.unstable_essence_new = "New Bomb"
 	--L.custom_on_unstable_essence_high = "High Stacks Unstable Essence Say Messages"
 	--L.custom_on_unstable_essence_high_desc = "Say messages with the amount of stacks for your Unstable Essence debuff when they are high enough."
@@ -44,12 +39,8 @@ end
 L = BigWigs:NewBossLocale("Rashok, the Elder", "esES")
 if L then
 	--L.doom_flames = "Small Soaks"
-	--L.shadowlave_blast = "Frontal Cone"
 	--L.charged_smash = "Big Soak"
 	--L.energy_gained = "Energy Gained: %d"
-
-	-- Mythic
-	--L.shadowflame_energy = "Heal Absorb"
 end
 
 L = BigWigs:NewBossLocale("The Vigilant Steward, Zskarn", "esES")
@@ -89,7 +80,6 @@ if L then
 	--L.emptiness_between_stars = "Emptiness"
 	--L.void_slash = "Tank Frontal"
 
-	--L.boss_immune = "Boss Immune"
 	--L.ebon_might = "Adds Immune"
 end
 

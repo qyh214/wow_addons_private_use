@@ -39,7 +39,7 @@ tinsert(C.defaultThemes, function()
 	if not C.db["Skins"]["BlizzardSkins"] then return end
 
 	B.ReskinPortraitFrame(MerchantFrame)
-	B.ReskinDropDown(MerchantFrameLootFilter)
+	B.ReskinDropDown(MerchantFrame.FilterDropdown)
 	B.StripTextures(MerchantPrevPageButton)
 	B.ReskinArrow(MerchantPrevPageButton, "left")
 	B.StripTextures(MerchantNextPageButton)

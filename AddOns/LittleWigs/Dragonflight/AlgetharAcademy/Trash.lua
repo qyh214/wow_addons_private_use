@@ -32,6 +32,7 @@ local L = mod:GetLocale()
 if L then
 	L.custom_on_recruiter_autotalk = "Autotalk"
 	L.custom_on_recruiter_autotalk_desc = "Instantly pledge to the Dragonflight Recruiters for a buff."
+	L.custom_on_recruiter_autotalk_icon = "ui_chat"
 	L.critical_strike = "+5% Critical Strike"
 	L.haste = "+5% Haste"
 	L.mastery = "+Mastery"
@@ -77,7 +78,6 @@ function mod:GetOptions()
 		{388911, "TANK"}, -- Severing Slash
 		-- Spellbound Scepter
 		396812, -- Mystic Blast
-		388886, -- Arcane Rain
 		-- Arcane Ravager
 		388976, -- Riftbreath
 		{388984, "SAY"}, -- Vicious Ambush
@@ -132,8 +132,6 @@ function mod:OnBossEnable()
 
 	-- Spellbound Scepter
 	self:Log("SPELL_CAST_START", "MysticBlast", 396812)
-	self:Log("SPELL_CAST_START", "ArcaneRain", 388886)
-	self:Log("SPELL_CAST_SUCCESS", "ArcaneRainSuccess", 388886)
 
 	-- Arcane Ravager
 	self:Log("SPELL_CAST_START", "Riftbreath", 388976)
@@ -282,7 +280,7 @@ do
 		local t = args.time
 		if t - prev > 1 then
 			prev = t
-			self:Message(args.spellId, "purple", CL.casting:format(args.spellName))
+			self:Message(args.spellId, "purple")
 			self:PlaySound(args.spellId, "alarm")
 		end
 	end
@@ -292,23 +290,13 @@ end
 
 function mod:MysticBlast(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "warning")
-end
-
-function mod:ArcaneRain(args)
-	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
-end
-
-function mod:ArcaneRainSuccess(args)
-	self:Message(args.spellId, "orange")
-	self:PlaySound(args.spellId, "long")
 end
 
 -- Arcane Ravager
 
 function mod:Riftbreath(args)
-	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
 end
 
@@ -316,7 +304,7 @@ function mod:ViciousAmbush(args)
 	self:TargetMessage(args.spellId, "red", args.destName)
 	if self:Me(args.destGUID) then
 		self:PlaySound(args.spellId, "alarm")
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Vicious Ambush")
 	else
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
 	end
@@ -423,19 +411,23 @@ end
 
 do
 	local prev = 0
+	local prevSay = 0
 	function mod:AstralBombApplied(args)
 		local t = args.time
 		local onMe = self:Me(args.destGUID)
-		if t - prev > 1 or onMe then
+		if t - prev > 1.5 then
 			prev = t
 			self:TargetMessage(args.spellId, "yellow", args.destName)
 			if onMe then
-				self:PlaySound(args.spellId, "alarm")
-				self:Say(args.spellId)
-				self:SayCountdown(args.spellId, 3, nil, 2)
+				self:PlaySound(args.spellId, "info", nil, args.destName)
 			else
 				self:PlaySound(args.spellId, "alert", nil, args.destName)
 			end
+		end
+		if onMe and t - prevSay > 3 then
+			prevSay = t
+			self:Say(args.spellId, nil, nil, "Astral Bomb")
+			self:SayCountdown(args.spellId, 3, nil, 2)
 		end
 	end
 end

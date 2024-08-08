@@ -123,8 +123,8 @@ function module:ReskinRegions()
 	QueueStatusFrame:ClearAllPoints()
 	QueueStatusFrame:SetPoint("TOPRIGHT", QueueStatusButton, "TOPLEFT")
 
-	hooksecurefunc(QueueStatusButton, "SetPoint", function(button, _, _, _, x)
-		if x == -15 then
+	hooksecurefunc(QueueStatusButton, "SetPoint", function(button, _, _, _, x, y)
+		if not (x == -5 and y == -5) then
 			button:ClearAllPoints()
 			button:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -5, -5)
 		end
@@ -132,8 +132,9 @@ function module:ReskinRegions()
 
 	local queueIcon = Minimap:CreateTexture(nil, "ARTWORK")
 	queueIcon:SetPoint("CENTER", QueueStatusButton)
-	queueIcon:SetSize(50, 50)
-	queueIcon:SetTexture(DB.eyeTex)
+	queueIcon:SetSize(30, 30)
+	queueIcon:SetAtlas("Raid")
+
 	local anim = queueIcon:CreateAnimationGroup()
 	anim:SetLooping("REPEAT")
 	anim.rota = anim:CreateAnimation("Rotation")
@@ -164,11 +165,12 @@ function module:ReskinRegions()
 			self:SetTexture(DB.flagTex)
 		end
 		local function reskinDifficulty(frame)
+			if not frame then return end
 			frame.Border:Hide()
 			replaceFlag(frame.Background)
 			hooksecurefunc(frame.Background, "SetAtlas", replaceFlag)
 		end
-		reskinDifficulty(instDifficulty.Instance)
+		reskinDifficulty(instDifficulty.Default)
 		reskinDifficulty(instDifficulty.Guild)
 		reskinDifficulty(instDifficulty.ChallengeMode)
 	end
@@ -198,8 +200,13 @@ function module:ReskinRegions()
 	B.SetBD(Invt)
 	B.CreateFS(Invt, 16, DB.InfoColor..GAMETIME_TOOLTIP_CALENDAR_INVITES)
 
+	local lastInv = 0
 	local function updateInviteVisibility()
-		Invt:SetShown(C_Calendar.GetNumPendingInvites() > 0)
+		local thisTime = GetTime()
+		if thisTime - lastInv > 1 then
+			lastInv = thisTime
+			Invt:SetShown(C_Calendar.GetNumPendingInvites() > 0)
+		end
 	end
 	B:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES", updateInviteVisibility)
 	B:RegisterEvent("PLAYER_ENTERING_WORLD", updateInviteVisibility)
@@ -593,30 +600,19 @@ function module:Minimap_OnMouseWheel(zoom)
 	end
 end
 
-function module:BuildMinimapDropDown()
-	local dropdown = CreateFrame("Frame", "NDuiMiniMapTrackingDropDown", _G.UIParent, "UIDropDownMenuTemplate")
-	dropdown:SetID(1)
-	dropdown:SetClampedToScreen(true)
-	dropdown:Hide()
-	dropdown.noResize = true
-	_G.UIDropDownMenu_Initialize(dropdown, _G.MiniMapTrackingDropDown_Initialize, "MENU")
-
-	hooksecurefunc(_G.MinimapCluster.Tracking.Button, "Update", function()
-		if _G.UIDROPDOWNMENU_OPEN_MENU == dropdown then
-			UIDropDownMenu_RefreshAll(dropdown)
-		end
-	end)
-	B:LockCVar("minimapTrackingShowAll", "1")
-
-	module.MinimapTracking = dropdown
-end
-
 function module:Minimap_OnMouseUp(btn)
 	if btn == "MiddleButton" then
 		--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
 		ToggleCalendar()
 	elseif btn == "RightButton" then
-		ToggleDropDownMenu(1, nil, module.MinimapTracking, self, -100, 100)
+		local button = MinimapCluster.Tracking.Button
+		if button then
+			button:OpenMenu()
+			if button.menu then
+				button.menu:ClearAllPoints()
+				button.menu:SetPoint("CENTER", self, -100, 100)
+			end
+		end
 	else
 		Minimap:OnClick()
 	end
@@ -651,7 +647,7 @@ function module:ShowMinimapHelpInfo()
 end
 
 function module:SetupMinimap()
-	if IsAddOnLoaded("SexyMap") then C.db["Map"]["DisableMinimap"] = true end
+	if C_AddOns.IsAddOnLoaded("SexyMap") then C.db["Map"]["DisableMinimap"] = true end
 	if C.db["Map"]["DisableMinimap"] then return end
 
 	-- Shape and Position
@@ -673,7 +669,6 @@ function module:SetupMinimap()
 	self:UpdateMinimapScale()
 	self:ShowMinimapClock()
 	self:ShowCalendar()
-	self:BuildMinimapDropDown()
 
 	-- Minimap clicks
 	Minimap:EnableMouseWheel(true)
@@ -682,7 +677,6 @@ function module:SetupMinimap()
 
 	-- Hide Blizz
 	MinimapCluster:EnableMouse(false)
-	MinimapCluster.Tracking:Hide()
 	MinimapCluster.BorderTop:Hide()
 	MinimapCluster.ZoneTextButton:Hide()
 	Minimap:SetArchBlobRingScalar(0)
@@ -690,6 +684,10 @@ function module:SetupMinimap()
 	B.HideObject(Minimap.ZoomIn)
 	B.HideObject(Minimap.ZoomOut)
 	B.HideObject(MinimapCompassTexture)
+
+	_G.MinimapCluster.Tracking:SetAlpha(0)
+	_G.MinimapCluster.Tracking:SetScale(0.0001)
+
 
 	-- Add Elements
 	self:CreatePulse()

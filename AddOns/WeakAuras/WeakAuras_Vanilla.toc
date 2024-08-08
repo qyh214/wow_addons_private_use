@@ -1,7 +1,7 @@
-## Interface: 11500
-## Title: WeakAuras
-## Author: The WeakAuras Team
-## Version: 5.8.7
+## Interface: 11503
+## Title: |cffe8344fPatched|r WeakAuras
+## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
+## Version: 5.15.4
 ## X-Flavor: Vanilla
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
@@ -11,32 +11,32 @@
 ## X-Category: Interface Enhancements
 ## Globe-Post: WeakAurasOptions, WeakAurasModelPaths, WeakAurasTemplates
 ## X-Website: https://www.curseforge.com/wow/addons/weakauras
-## X-Curse-Project-ID: 65387
-## X-WoWI-ID: 24910
-## X-Wago-ID: VBNBxKx5
+## X-Curse-Project-ID: 0
+## X-WoWI-ID: 0
+## X-Wago-ID: 0
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: WeakAurasSaved
-## OptionalDeps: Ace3, LibCompress, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, Masque, GTFO, LibButtonGlow-1.0, LibSpellRange-1.0, LibRangeCheck-3.0, LibDBIcon-1.0, LibClassicDurations, LibClassicCasterino, LibGetFrame-1.0, !LibUIDropDownMenu, !!AddonLocale, BigWigs, DBM-Core
+## OptionalDeps: Ace3, LibCompress, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, Masque, GTFO, LibButtonGlow-1.0, LibSpellRange-1.0, LibRangeCheck-3.0, LibDBIcon-1.0, LibGetFrame-1.0, !LibUIDropDownMenu, !!AddonLocale, CustomNames, BigWigs, DBM-Core
 
 # External code + initialization
 embeds.xml
 
-# Client flavor specific libs
-Libs\LibClassicDurations\LibClassicDurations.xml
-Libs\LibClassicCasterino\LibClassicCasterino.lua
-Libs\LibClassicSpellActionCount-1.0\LibClassicSpellActionCount-1.0.lua
-
 Init.lua
+Compatibility.lua
 locales.xml
 ArchiveTypes\Repository.lua
 DefaultOptions.lua
 
 # Core files
+SubscribableObject.lua
+Features.lua
+Atlas_Vanilla.lua
 Types_Vanilla.lua
 Types.lua
 Prototypes.lua
 Profiling.lua
+Profiling.xml
 WeakAuras.lua
 History.lua
 Transmission.lua
@@ -55,7 +55,6 @@ AuraWarnings.lua
 AuraEnvironment.lua
 AuraEnvironmentWrappedSystems.lua
 DebugLog.lua
-SubscribableObject.lua
 
 # Region support
 RegionTypes\SmoothStatusBarMixin.lua

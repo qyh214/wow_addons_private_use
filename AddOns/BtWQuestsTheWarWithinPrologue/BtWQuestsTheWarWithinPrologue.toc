@@ -1,0 +1,67 @@
+## Interface: 110000, 110002
+## Title: BtWQuests: The War Within Prologue
+## Version: 1.0
+## Notes: The War Within Prologue quest data for BtWQuests
+## Author: Breen
+## Dependencies: BtWQuests
+## LoadOnDemand: 1
+## X-BtWQuests: The War Within Prologue
+## X-BtWQuests-Expansion: 10
+## X-BtWQuests-Expansion-Image: UI-Expansion 0 0.90625 0 0.8125
+## X-BtWQuests-AutoLoad: 1
+## X-Part-Of: BtWQuests
+## X-Curse-Project-ID: 
+## X-WoWI-ID: 
+## X-Wago-ID: 
+
+Defines.lua
+
+Database/Quests.lua
+Database/Quests.deDE.lua
+Database/Quests.esES.lua
+Database/Quests.esMX.lua
+Database/Quests.frFR.lua
+Database/Quests.itIT.lua
+Database/Quests.koKR.lua
+Database/Quests.ptBR.lua
+Database/Quests.ruRU.lua
+Database/Quests.zhCN.lua
+Database/Quests.zhTW.lua
+
+Database/NPCs.lua
+Database/NPCs.deDE.lua
+Database/NPCs.esES.lua
+Database/NPCs.esMX.lua
+Database/NPCs.frFR.lua
+Database/NPCs.itIT.lua
+Database/NPCs.koKR.lua
+Database/NPCs.ptBR.lua
+Database/NPCs.ruRU.lua
+Database/NPCs.zhCN.lua
+Database/NPCs.zhTW.lua
+
+Database/Objects.lua
+Database/Objects.deDE.lua
+Database/Objects.esES.lua
+Database/Objects.esMX.lua
+Database/Objects.frFR.lua
+Database/Objects.itIT.lua
+Database/Objects.koKR.lua
+Database/Objects.ptBR.lua
+Database/Objects.ruRU.lua
+Database/Objects.zhCN.lua
+Database/Objects.zhTW.lua
+
+Database/Index.enUS.lua
+Database/Index.deDE.lua
+Database/Index.esES.lua
+Database/Index.esMX.lua
+Database/Index.frFR.lua
+Database/Index.itIT.lua
+Database/Index.koKR.lua
+Database/Index.ptBR.lua
+Database/Index.ruRU.lua
+Database/Index.zhCN.lua
+Database/Index.zhTW.lua
+
+Prologue.lua

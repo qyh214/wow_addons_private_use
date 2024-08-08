@@ -1,6 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
@@ -10,7 +12,11 @@ local default = {
   icon = false,
   desaturate = false,
   iconSource = -1,
+  progressSource = {-1, "" },
+  adjustedMax = "",
+  adjustedMin = "",
   texture = "Blizzard",
+  textureSource = "LSM",
   width = 200,
   height = 15,
   orientation = "HORIZONTAL",
@@ -42,12 +48,31 @@ local default = {
   zoom = 0
 };
 
-Private.regionPrototype.AddAdjustedDurationToDefault(default);
+Private.regionPrototype.AddProgressSourceToDefault(default)
 Private.regionPrototype.AddAlphaToDefault(default);
 
 local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
 
 local properties = {
+  textureSource = {
+    display = {L["Bar Texture"], L["Selection Mode"]},
+    setter = "SetStatusBarTextureMode",
+    type = "list",
+    values = {
+      LSM = L["LibSharedMedia"],
+      Picker = L["Texture Picker"]
+    }
+  },
+  textureInput = {
+    display = {L["Bar Texture"], L["Texture Picker"]},
+    setter = "SetStatusBarTextureInput",
+    type = "texture",
+  },
+  texture = {
+    display = {L["Bar Texture"], L["LibSharedMedia"]},
+    setter = "SetStatusBarTextureLSM",
+    type = "textureLSM",
+  },
   barColor = {
     display = L["Bar Color/Gradient Start"],
     setter = "Color",
@@ -86,7 +111,7 @@ local properties = {
     values = {}
   },
   displayIcon = {
-    display = {L["Icon"], L["Fallback"]},
+    display = {L["Icon"], L["Manual"]},
     setter = "SetIcon",
     type = "icon",
   },
@@ -169,6 +194,7 @@ local function GetProperties(data)
   end
 
   auraProperties.iconSource.values = Private.IconSources(data)
+  auraProperties.progressSource.values = Private.GetProgressSourcesForUi(data)
   return auraProperties;
 end
 
@@ -400,10 +426,10 @@ local barPrototype = {
 
           local texture = self.additionalBarsTextures and self.additionalBarsTextures[index];
           if texture then
-            local texturePath = SharedMedia:Fetch("statusbar", texture) or ""
-            extraTexture:SetTexture(texturePath, extraTextureWrapMode, extraTextureWrapMode)
+            local texturePath = SharedMedia:Fetch("statusbar_atlas", texture, true) or SharedMedia:Fetch("statusbar", texture) or ""
+            Private.SetTextureOrAtlas(extraTexture, texturePath, extraTextureWrapMode, extraTextureWrapMode)
           else
-            extraTexture:SetTexture(self:GetStatusBarTexture(), extraTextureWrapMode, extraTextureWrapMode);
+            Private.SetTextureOrAtlas(extraTexture, self:GetStatusBarTexture(), extraTextureWrapMode, extraTextureWrapMode)
           end
 
           local xOffset = 0;
@@ -549,10 +575,10 @@ local barPrototype = {
 
   -- Blizzard like SetStatusBarTexture
   ["SetStatusBarTexture"] = function(self, texture)
-    self.fg:SetTexture(texture);
-    self.bg:SetTexture(texture);
+    Private.SetTextureOrAtlas(self.fg, texture)
+    Private.SetTextureOrAtlas(self.bg, texture)
     for index, extraTexture in ipairs(self.extraTextures) do
-      extraTexture:SetTexture(texture, extraTextureWrapMode, extraTextureWrapMode);
+      Private.SetTextureOrAtlas(extraTexture, texture, extraTextureWrapMode, extraTextureWrapMode)
     end
   end,
 
@@ -749,6 +775,17 @@ local function GetTexCoordZoom(texWidth)
   return unpack(texCoord)
 end
 
+local function FrameTick(self)
+  local expirationTime = self.expirationTime
+  local remaining = expirationTime - GetTime()
+  local duration = self.duration
+  local progress = duration ~= 0 and remaining / duration or 0;
+  if self.inverse then
+    progress = 1 - progress;
+  end
+  self:SetProgress(progress)
+end
+
 local funcs = {
   AnchorSubRegion = function(self, subRegion, anchorType, selfPoint, anchorPoint, anchorXOffset, anchorYOffset)
     if anchorType == "area" then
@@ -840,12 +877,7 @@ local funcs = {
     self.height = height;
     self:Scale(self.scalex, self.scaley);
   end,
-  SetValue = function(self, value, total)
-    local progress = 0;
-    if (total ~= 0) then
-      progress = value / total;
-    end
-
+  SetProgress = function(self, progress)
     if self.inverseDirection then
       progress = 1 - progress;
     end
@@ -857,22 +889,34 @@ local funcs = {
       self.bar:SetValue(progress);
     end
   end,
-  SetTime = function(self, duration, expirationTime, inverse)
-    local remaining = expirationTime - GetTime();
-    local progress = duration ~= 0 and remaining / duration or 0;
-    -- Need to invert?
-    if (
-      (self.inverseDirection and not inverse)
-      or (inverse and not self.inverseDirection)
-      )
-    then
+  UpdateValue = function(self)
+    local progress = 0;
+    if (self.total ~= 0) then
+      progress = self.value / self.total;
+    end
+
+    self:SetProgress(progress)
+
+    if self.FrameTick then
+      self.FrameTick = nil
+      self.subRegionEvents:RemoveSubscriber("FrameTick", self)
+    end
+  end,
+  UpdateTime = function(self)
+    local remaining = self.expirationTime - GetTime();
+    local progress = self.duration ~= 0 and remaining / self.duration or 0;
+    if self.inverse then
       progress = 1 - progress;
     end
-    if (self.smoothProgress) then
-      self.bar.targetValue = progress
-      self.bar:SetSmoothedValue(progress);
-    else
-      self.bar:SetValue(progress);
+    self:SetProgress(progress)
+
+    if self.paused and self.FrameTick then
+      self.FrameTick = nil
+      self.subRegionEvents:RemoveSubscriber("FrameTick", self)
+    end
+    if not self.paused and not self.FrameTick then
+      self.FrameTick = FrameTick
+      self.subRegionEvents:AddSubscriber("FrameTick", self)
     end
   end,
   SetInverse = function(self, inverse)
@@ -901,6 +945,40 @@ local funcs = {
     else
       self.bar:SetValue(self.bar:GetValue());
     end
+  end,
+
+  SetStatusBarTextureMode = function(self, mode)
+    if self.textureSource == mode then
+      return
+    end
+    self.textureSource = mode
+    self:UpdateStatusBarTexture()
+  end,
+
+  SetStatusBarTextureInput = function(self, texture)
+    if self.textureInput == texture then
+      return
+    end
+    self.textureInput = texture
+    self:UpdateStatusBarTexture()
+  end,
+
+  SetStatusBarTextureLSM = function(self, texture)
+    if self.texture == texture then
+      return
+    end
+    self.texture = texture
+    self:UpdateStatusBarTexture()
+  end,
+
+  UpdateStatusBarTexture = function(self)
+    local texturePath
+    if self.textureSource == "Picker" then
+      texturePath = self.textureInput or ""
+    else
+      texturePath = SharedMedia:Fetch("statusbar_atlas", self.texture, true) or SharedMedia:Fetch("statusbar", self.texture) or ""
+    end
+    self.bar:SetStatusBarTexture(texturePath)
   end,
 
   SetIconVisible = function(self, iconVisible)
@@ -1067,11 +1145,7 @@ local function create(parent)
   region.regionType = "aurabar"
   region:SetMovable(true);
   region:SetResizable(true);
-  if region.SetResizeBounds then
-    region:SetResizeBounds(1, 1)
-  else
-    region:SetMinResize(1, 1)
-  end
+  region:SetResizeBounds(1, 1)
 
   local bar = CreateFrame("Frame", nil, region);
   --- @cast bar table|Frame
@@ -1141,14 +1215,6 @@ local function create(parent)
   return region;
 end
 
-local function TimerTick(self)
-  local state = self.state
-  local duration = state.duration or 0
-  local adjustMin = self.adjustedMin or self.adjustedMinRel or 0;
-  local expirationTime = state.expirationTime and state.expirationTime > 0 and state.expirationTime or math.huge;
-  self:SetTime((duration ~= 0 and (self.adjustedMax or self.adjustedMaxRel) or duration) - adjustMin, expirationTime - adjustMin, state.inverse);
-end
-
 -- Modify a given region/display
 local function modify(parent, region, data)
   region.timer = nil
@@ -1200,8 +1266,11 @@ local function modify(parent, region, data)
   end
 
   -- Update texture settings
-  local texturePath = SharedMedia:Fetch("statusbar", data.texture) or "";
-  bar:SetStatusBarTexture(texturePath);
+  region.textureSource = data.textureSource
+  region.texture = data.texture
+  region.textureInput = data.textureInput
+
+  region:UpdateStatusBarTexture();
   bar:SetBackgroundColor(data.backgroundColor[1], data.backgroundColor[2], data.backgroundColor[3], data.backgroundColor[4]);
   -- Update spark settings
   Private.SetTextureOrAtlas(bar.spark, data.sparkTexture);
@@ -1258,114 +1327,22 @@ local function modify(parent, region, data)
       end);
       region.tooltipFrame:SetScript("OnLeave", Private.HideTooltip);
     end
-
-    region.tooltipFrame:EnableMouse(true);
+    region.tooltipFrame:EnableMouseMotion(true);
+    region.tooltipFrame:SetMouseClickEnabled(false);
   elseif region.tooltipFrame then
     -- Disable tooltip
-    region.tooltipFrame:EnableMouse(false);
+    region.tooltipFrame:EnableMouseMotion(false);
   end
 
-  function region:UpdateMinMax()
-    local state = region.state
-    local min
-    local max
-    if state.progressType == "timed" then
-      local duration = state.duration or 0
-      if region.adjustedMinRelPercent then
-        region.adjustedMinRel = region.adjustedMinRelPercent * duration
-      end
-
-      min = region.adjustedMin or region.adjustedMinRel or 0;
-
-      if duration == 0 then
-        max = 0
-      elseif region.adjustedMax then
-        max = region.adjustedMax
-      elseif region.adjustedMaxRelPercent then
-        region.adjustedMaxRel = region.adjustedMaxRelPercent * duration
-        max = region.adjustedMaxRel
-      else
-        max = duration
-      end
-    elseif state.progressType == "static" then
-      local total = state.total or 0;
-      if region.adjustedMinRelPercent then
-        region.adjustedMinRel = region.adjustedMinRelPercent * total
-      end
-      min = region.adjustedMin or region.adjustedMinRel or 0;
-
-      if region.adjustedMax then
-        max = region.adjustedMax
-      elseif region.adjustedMaxRelPercent then
-        region.adjustedMaxRel = region.adjustedMaxRelPercent * total
-        max = region.adjustedMaxRel
-      else
-        max = total
-      end
-    end
-    region.currentMin, region.currentMax = min, max
-  end
-
-  function region:GetMinMax()
-    return region.currentMin or 0, region.currentMax or 0
-  end
-
-  region.TimerTick = nil
+  region.FrameTick = nil
   function region:Update()
-    local state = region.state
-    region:UpdateMinMax()
-    if state.progressType == "timed" then
-      local expirationTime
-      if state.paused == true then
-        if not region.paused then
-          region:Pause()
-        end
-        if region.TimerTick then
-          region.TimerTick = nil
-          region.subRegionEvents:RemoveSubscriber("TimerTick", self)
-        end
-        expirationTime = GetTime() + (state.remaining or 0)
-      else
-        if region.paused then
-          region:Resume()
-        end
-        if not region.TimerTick then
-          region.TimerTick = TimerTick
-          region.subRegionEvents:AddSubscriber("TimerTick", self, true)
-        end
-        expirationTime = state.expirationTime and state.expirationTime > 0 and state.expirationTime or math.huge;
-      end
-      local duration = state.duration or 0
-
-      region:SetTime(region.currentMax - region.currentMin, expirationTime - region.currentMin, state.inverse);
-    elseif state.progressType == "static" then
-      if region.paused then
-        region:Resume()
-      end
-      local value = state.value or 0;
-      local total = state.total or 0;
-
-      region:SetValue(value - region.currentMin, region.currentMax - region.currentMin);
-      if region.TimerTick then
-        region.TimerTick = nil
-        region.subRegionEvents:RemoveSubscriber("TimerTick", region)
-      end
-    else
-      if region.paused then
-        region:Resume()
-      end
-      region:SetTime(0, math.huge)
-      if region.TimerTick then
-        region.TimerTick = nil
-        region.subRegionEvents:RemoveSubscriber("TimerTick", region)
-      end
-    end
-
+    region:UpdateProgress()
     region:UpdateIcon()
+  end
 
-    local duration = state.duration or 0
-    local effectiveInverse = (state.inverse and not region.inverseDirection) or (not state.inverse and region.inverseDirection);
-    region.bar:SetAdditionalBars(state.additionalProgress, region.overlays, region.overlaysTexture, region.currentMin, region.currentMax, effectiveInverse, region.overlayclip);
+  function region:SetAdditionalProgress(additionalProgress, currentMin, currentMax, inverse)
+    local effectiveInverse = (inverse and not region.inverseDirection) or (not inverse and region.inverseDirection);
+    region.bar:SetAdditionalBars(additionalProgress, region.overlays, region.overlaysTexture, currentMin, currentMax, effectiveInverse, region.overlayclip);
   end
 
   -- Scale update function

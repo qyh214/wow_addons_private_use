@@ -33,6 +33,9 @@ local UIDropDownMenu_EnableDropDown = UIDropDownMenu_EnableDropDown;
 local UIDropDownMenu_DisableDropDown = UIDropDownMenu_DisableDropDown;
 local UIDropDownMenu_SetSelectedValue = UIDropDownMenu_SetSelectedValue;
 
+local GetAddOnInfo = C_AddOns and C_AddOns.GetAddOnInfo or GetAddOnInfo;
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata;
+
 local format = string.format;
 
 local AddSet = Internal.AddSet;
@@ -94,12 +97,13 @@ local function CancelActivateProfile()
 		uiErrorTracking = nil
 	end)
 
+	local setID = target.setID
 	wipe(target);
 	wipe(targetstate);
 	HideLoadoutPopups()
 	eventHandler:UnregisterAllEvents();
 	eventHandler:Hide();
-	Internal.Call("LOADOUT_CHANGE_END")
+	Internal.Call("LoadoutActivateEnd", setID)
 	Internal.LogMessage("--- END ---")
 end
 Internal.CancelActivateProfile = CancelActivateProfile;
@@ -229,7 +233,11 @@ local function AddProfile()
 		set[segment.id] = {}
 	end
 
-    return AddSet("profiles", UpdateSetFilters(set))
+    local set = AddSet("profiles", UpdateSetFilters(set));
+
+	Internal.Call("LoadoutCreated", set.setID);
+
+	return set;
 end
 local function GetProfile(id)
     return BtWLoadoutsSets.profiles[id];
@@ -264,8 +272,12 @@ local function DeleteProfile(id)
 				superset.profileSet = nil;
 			end
 		end
+
+		id = set.setID;
 	end
 	DeleteSet(BtWLoadoutsSets.profiles, id);
+	
+	Internal.Call("LoadoutDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Loadouts;
 	local set = frame.set;
@@ -281,6 +293,7 @@ local function ActivateProfile(profile)
 		return;
 	end
 
+	target.setID = profile.setID
 	target.name = profile.name
 	target.state = targetstate
 
@@ -299,12 +312,12 @@ local function ActivateProfile(profile)
 	end
 
 	if not target.active then
-		Internal.Call("LOADOUT_CHANGE_START")
+		Internal.Call("LoadoutActivateStart", target.setID)
 		Internal.ClearLog()
 		Internal.LogMessage("--- START ---")
 		Internal.LogMessage(format("%s: %s", (select(2, GetAddOnInfo(ADDON_NAME))), (GetAddOnMetadata(ADDON_NAME, "Version"))))
 	else
-		Internal.Call("LOADOUT_CHANGE_APPEND")
+		Internal.Call("LoadoutActivateAppend", target.setID)
 		Internal.LogMessage("--- APPEND ---")
 	end
 
@@ -710,6 +723,9 @@ function eventHandler:UNIT_SPELLCAST_INTERRUPTED(_, castGUID, spellId, ...)
 	if spellId == specChangeInfo.spellId and IsChangingSpec(castGUID) then
 		CancelActivateProfile();
 		Internal.UpdateLauncher(GetActiveProfiles());
+	elseif spellId == 384255 then
+		CancelActivateProfile();
+		Internal.UpdateLauncher(GetActiveProfiles());
 	end
 end
 
@@ -1021,6 +1037,8 @@ function BtWLoadoutsSetsScrollListItemMixin:OnEnter()
 		frame.set[a.type][a.index], frame.set[a.type][b.index] = frame.set[a.type][b.index], frame.set[a.type][a.index]
 		a.index, b.index = b.index, a.index
 
+		Internal.Call("LoadoutUpdated", frame.set.setID);
+
 		-- Update the buttons with the flipped sets
 		self:Set(b)
 		currentDrag:Set(a)
@@ -1074,6 +1092,8 @@ function BtWLoadoutsSetsScrollListItemMixin:Remove()
 	assert(type(set[self.type]) == "table" and index ~= nil and index >= 1 and index <= #set[self.type])
 	table.remove(set[self.type], index);
 
+	Internal.Call("LoadoutUpdated", set.setID);
+
 	tab:Update()
 end
 function BtWLoadoutsSetsScrollListItemMixin:MoveUp()
@@ -1084,6 +1104,8 @@ function BtWLoadoutsSetsScrollListItemMixin:MoveUp()
 	assert(type(set[self.type]) == "table" and index > 1 and index <= #set[self.type])
 	set[self.type][index-1], set[self.type][index] = set[self.type][index], set[self.type][index-1]
 
+	Internal.Call("LoadoutUpdated", set.setID);
+
 	tab:Update()
 end
 function BtWLoadoutsSetsScrollListItemMixin:MoveDown()
@@ -1093,6 +1115,8 @@ function BtWLoadoutsSetsScrollListItemMixin:MoveDown()
 	local index = self.index
 	assert(type(set[self.type]) == "table" and index >= 1 and index < #set[self.type])
 	set[self.type][index+1], set[self.type][index] = set[self.type][index], set[self.type][index+1]
+
+	Internal.Call("LoadoutUpdated", set.setID);
 
 	tab:Update()
 end
@@ -1246,6 +1270,8 @@ function BtWLoadoutsLoadoutsMixin:OnShow()
 				classFile = set.specID and select(6, GetSpecializationInfoByID(set.specID))
 				set.character = self.temp[classFile or "NONE"] or shallowcopy(set.character)
 
+				Internal.Call("LoadoutUpdated", set.setID)
+
                 self:Update()
             end
         end
@@ -1274,6 +1300,8 @@ function BtWLoadoutsLoadoutsMixin:OnShow()
 					frame.set.character[arg1] = true
 				end
 
+				Internal.Call("LoadoutUpdated", frame.set.setID)
+
 				BtWLoadoutsFrame:Update()
 			end
 		end
@@ -1291,6 +1319,7 @@ end
 function BtWLoadoutsLoadoutsMixin:UpdateSetEnabled(value)
 	if self.set and self.set.disabled ~= not value then
 		self.set.disabled = not value;
+		Internal.Call("LoadoutUpdated", self.set.setID)
 		self:Update();
 	end
 end
@@ -1298,6 +1327,7 @@ function BtWLoadoutsLoadoutsMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
 		BtWLoadoutsHelpTipFlags["TUTORIAL_RENAME_SET"] = true
+		Internal.Call("LoadoutUpdated", self.set.setID)
 		self:Update();
 	end
 end

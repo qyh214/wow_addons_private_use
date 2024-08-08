@@ -2,14 +2,16 @@ if not WeakAuras.IsLibsOK() then
   return
 end
 
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 local L = WeakAuras.L
 
 -- Takes as input a table of display data and attempts to update it to be compatible with the current version
 --- Modernizes the aura data
 ---@param data auraData
-function Private.Modernize(data)
+function Private.Modernize(data, oldSnapshot)
   if not data.internalVersion or data.internalVersion < 2 then
     WeakAuras.prettyPrint(string.format("Data for '%s' is too old, can't modernize.", data.id))
     data.internalVersion = 2
@@ -1990,6 +1992,98 @@ function Private.Modernize(data)
     end
   end
 
+  if data.internalVersion < 71 then
+    if data.regionType == 'icon' or data.regionType == 'aurabar'
+       or data.regionType == 'progresstexture'
+       or data.regionType == 'stopmotion'
+    then
+      data.progressSource = {-1, ""}
+    else
+      data.progressSource = nil
+    end
+    if data.subRegions then
+      for index, subRegionData in ipairs(data.subRegions) do
+        if subRegionData.type == "subtick" then
+          local tick_placement = subRegionData.tick_placement
+          subRegionData.tick_placements = {}
+          subRegionData.tick_placements[1] = tick_placement
+          subRegionData.progressSources = {{-2, ""}}
+          subRegionData.tick_placement = nil
+        end
+      end
+    end
+  end
+
+  if data.internalVersion < 72 then
+    if WeakAuras.IsClassic() then
+      if data.model_path and data.modelIsUnit then
+        data.model_fileId = data.model_path
+      end
+    end
+  end
+
+  if data.internalVersion < 73 then
+    if data.conditions then
+      for conditionIndex, condition in ipairs(data.conditions) do
+        for changeIndex, change in ipairs(condition.changes) do
+          if type(change.property) == "string" then
+            change.property = string.gsub(change.property, "(sub.%d.tick_placement)(%d)", "%1s.%2")
+          end
+        end
+      end
+    end
+  end
+
+  if data.internalVersion < 74 then
+    for _, triggerData in ipairs(data.triggers) do
+      local t = triggerData.trigger
+      if t.type == "spell" and t.event == "Cooldown Progress (Spell)" then
+        if t.use_exact_spellName then
+          t.use_ignoreoverride = true
+        end
+      end
+    end
+  end
+
+  if data.internalVersion < 75 then
+    -- this commit from nov 2019 https://github.com/WeakAuras/WeakAuras2/commit/6d8f11c17422aeffdb82a0aa05181edfdd137896
+    -- changed adjustedMin & adjustedMax type from number to string (range => input)
+    -- but didn't include a migration
+    if type(data.adjustedMin) == "number" then
+      data.adjustedMin = tostring(data.adjustedMin)
+    end
+    if type(data.adjustedMax) == "number" then
+      data.adjustedMax = tostring(data.adjustedMax)
+    end
+    -- this commit https://github.com/WeakAuras/WeakAuras2/commit/dbcb70b1e4df262af82f63620b3b0d80741e6df2
+    -- set a default for adjustedMin & adjustedMax with an empty string
+    -- in Private.validate if type of value is different from type of default, value is set to default
+    -- which had effect to lose data if aura was made before nov 2019 ~ 2020
+    -- try detect data loss and restore from Archivist
+    if data.internalVersion == 74 and oldSnapshot then
+      local restoreMin = data.useAdjustededMin and data.adjustedMin == ""
+      local restoreMax = data.useAdjustededMax and data.adjustedMax == ""
+      if restoreMin or restoreMax then
+        if restoreMin and type(oldSnapshot.adjustedMin) == "number" then
+          data.adjustedMin = tostring(oldSnapshot.adjustedMin)
+        end
+        if restoreMax and type(oldSnapshot.adjustedMax) == "number" then
+          data.adjustedMax = tostring(oldSnapshot.adjustedMax)
+        end
+      end
+    end
+  end
+
   data.internalVersion = max(data.internalVersion or 0, WeakAuras.InternalVersion())
 end
 
+--- Returns true if Modernize will use data from last snapshot before a new one is done
+function Private.ModernizeNeedsOldSnapshot(data)
+  if data.internalVersion == 74 then
+    local restoreMin = data.useAdjustededMin and data.adjustedMin == ""
+    local restoreMax = data.useAdjustededMax and data.adjustedMax == ""
+    if restoreMin or restoreMax then
+      return true
+    end
+  end
+end

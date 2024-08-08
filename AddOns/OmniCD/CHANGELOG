@@ -1,0 +1,1168 @@
+------------------------------------------------------------------------------
+-- Dragonflight
+--
+v10.2.7.2802
+	Interrupt Bar can now be sorted by spell priority.
+	NameBar nil err fix.
+	Fixed multicharged spell opacity when it still has a charge left.
+	zhTW localization update.
+
+v10.2.7.2801
+	Raidframe icons can be sorted primarily by spelltype or spell priority.
+	Breath of Eons will correctly replace Deep Breath.
+	Frame option fixed and spelltype selector added back in ExtraBars. Use whichever is more convenient for you.
+
+v10.2.7.2800
+	- Updates
+	11.0 TWW compatibility updates.
+	RaidCD/Spell option revamped. (ExtraBar settings will reset)
+	Priority and Frame# can be set for each spell and/or batch processed by spelltype.
+	New option to redirect spells from disabled extrabars to raidframes.
+	New option to add border glow.
+	Custom on-use items are no longer limited to trinkets and mainhand.
+	Default profile updated with new settings.
+	Edited default spells will be cleared from your db.
+	Old profile strings are no longer compatible.
+	- Spells
+	Healthstone and Demonic Gateway can be tracked on all group members (added on cast).
+	Healthstone will sync in arena and party dungeons (start time may be off w/o sync).
+	Added Avenging Wrath (Holy, Paladin) as a separate Heal.
+	Added Blind (w/ Airborne Irritant) as a separate AOE CC.
+	Added Deep Breath (w/ Terror of the Skies) as a separate AOE CC.
+	Added Naturalize as a separate Dispel (was merged with Expunge).
+	Added Immolation Aura (w/ Cleansed by Flame) as a separate Dispel.
+	Added Thunderstorm w/ Thundershock as a separate Knockback.
+	Updated Voice of Harmony CDR to 1 sec per talent point (was 2 sec) - June 5, 2024 Hotfix.
+	Exhilaration for Survival Hunter added to sync. (4pc set bonus RNG)
+	- Bug Fixes
+	Queued inspections while in combat will be processed upon leaving combat. (doesn't affect synced units)
+	Fixed timer nil error.
+	Fixed incorrect empowered spellIDs.
+	Fixed Blinding Powder CDR.
+	Fixed Weyrnstone not showing when player is disabled.
+	Fixed Searing Glare's icon texture.
+	Fixed Incarnation: Tree of Life highlighting.
+	Fixed interrupted spell icon showing on other bars.
+	Fixed multicharged spells being sorted as active when it still has a charge left.
+
+v10.2.7.2791
+	Fixed Incarnation: Tree of Life incorrectly going on CD from procs.
+
+v10.2.7.2790
+	Fixed an issue where cancelling a timer would cancel all other active timers
+
+v10.2.7.2789
+	MAY 7, 2024 Hotfixes
+		Sigil of Silence cooldown increased to 90 seconds (was 60 seconds).
+		Cycle of Binding now reduces Sigil cooldowns by 2 seconds per trigger (was 3 seconds).
+		Disrupting Shout’s cooldown reduced to 75 seconds (was 90 seconds).
+	Time of Need (Evoker, Preservation) moved to External Defensives.
+	Added tank trinkets
+
+v10.2.7.2788
+	Fixed 2pc tier set bonus for Holy Paladin.
+	Embeded AceComm w/ ChatThrottleLib.
+		> No longer syncs with earlier versions of this addon.
+
+	Updated for Cataclysm Classic
+
+v10.2.7.2787
+	bump toc
+	Season 4 PvP trinkets added
+	Season 4 tier set bonus added
+
+v10.2.6.2786
+	bump toc
+	10.2.6 Class Updates
+		Casting Holy Word: Chastise with Divine Word active now refunds 15 seconds from the cooldown of Holy Word: Chastise.
+		Voice of Harmony now causes Holy Nova to reduce the cooldown of Chastise in addition to Holy Fire.
+		Lightwell cooldown reduced by 3 seconds when you cast Holy Word: Serenity or Holy Word: Sanctify.
+
+v10.2.5.2785
+	Fixed Float Like a Butterfly will correctly reduce Evasion and Feint by 0.5 sec per combo point spent (was 1 sec).
+	Hotfixes: March 12, 2024
+		Float Like a Butterfly (talent) effectiveness is now reduced by 50% in PvP combat.
+
+v10.2.5.2784
+	Dark Arbiter will correctly replace Summon Gargoyle.
+	Searing Glare cd fix.
+	Purification id fix.
+	nil err fix (on entering instance w/ Weyrnstone buff).
+
+v10.2.5.2783
+	Fixed Void Summoner CDR to include Smite by 4pc set bonus and Dark Reprimand
+	Death and Madness CD fixed to 10s (was 20s)
+
+v10.2.5.2782
+	Shadowfield will correctly be replaced by Mindbender (disc, talent)
+	Void Summoner (disc, talent) will correctly reduce the remaining Cd of Mindbender
+	Highlighting fixed/added for numerous spells
+	 - Ebon Might
+	 - Invoke Xuen, the White Tiger
+	 - Ultimate Sacrifice, Guardian of the Forgotten Queen, Blessing of Sanctuary, Divine Stead, Eye of Tyr
+	 - Empyreal Blaze, Ray of Hope, Shadowfiend, Mindbender
+	 - Feral Spirit, Healing Tide Totem, Earth/Fire/Storm Elemental
+
+v10.2.5.2781
+	Fixed option panel color picker for 10.2.5
+	Fixed option panel nil err (iss#672)
+	Added option to use class colors on icon names
+
+	January 23. 2024 Hotfixes
+	  Fury, PvP only
+	    Anger Management now reduces Recklessness and Ravager’s cooldown by 1 second per 15 rage spent (was 20 rage).
+
+v10.2.5.2780
+	Missing talent abilities after 10.2.5 will correctly show
+	Addon will no longer sync with older versions
+
+v10.2.5.2777
+	Fixed Cycle of Binding CDR when auras are refreshed.
+	Fixed Illuminated Sigils not adding a charge to Elysian Decree.
+
+v10.2.5.2776
+	Patch 10.2.5 - shared cd for healer pvp trinket updated
+	Added Sundering (Enhance Shaman, talent).
+	Added highlighting for key Summon abilities (e.g. Gargoyle, Demonic Tyrant, Infernal, Darkglare).
+	Berserk (Druid, Feral) spell-type fixed from CC to Offensive. This also fixes highlighting.
+	Cycle of Binding (Vengeance DH, talent) fixed: Elysian Decree will correctly reduce other Sigils' remaining CD.
+
+v10.2.0.2774
+	Added option to force disable talent-abilities by spec/zone. (e.g. disable Avenging Wrath for Prot/Ret in raids)
+	Updated Thief's Bargain CDR to 20% (December 5, 2023).
+	Updated Time Stop, Chrono Loop's CD to 45 sec (November 14, 2023).
+	Added trinkets: Fyrakk's Tainted Rageheart, Prophetic Stonescales.
+	All healing potions have been merged to 'Refreshing Healing Potion' and it's icon will change to whichever potion was used last.
+	Fixed Withering Healing Potion icons.
+	Fixed Arcane Surge not highlighting.
+	Unsynced unit CDR fixes:
+	Fixed Tirion's Devotion for Holy Paladins.
+	Fixed Shining Righteousness counting towards Holy Power spent.
+	Fixed Shield of Righteousness for Holy Paladins not counting towards Holy Power spent.
+
+v10.2.0.2773
+	Fixed incorrect sorting when a unit dies or resurrects on ver.2772
+	Added Dreamwalker's Healing Potion, Potion of Withering Dream, Potion of Withering Vitality (merged).
+	Added option to change icon texture for 'Trinket, Main Hand, Consumables' spell type.
+	Cell support update (test func removed)
+
+v10.2.0.2772
+	Patch 10.2 updates
+	Fixed an issue that prevented inspecting offline members when they came back online.
+
+v10.1.7.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+
+v10.1.7.2770
+	Shield Charge will correctly go on CD when used out of melee range.
+	Heavy Wingbests/Cloberring Sweep will correctly reduce the CD of Wing Buffet/Tail Swipe.
+	Accretion will correctly reduce Upheaval's remaining CD whenever you cast Eruption.
+
+v10.1.7.2769
+	Ultimate Sacrifice will correctly go on cooldown when used.
+	Ultimate Sacrifice CD fixed to 2min and benefits from Sacrifice of the Just.
+
+v10.1.7.2768
+	Patch 10.1.7 spell updates
+	PRIEST Angel's Mercy has been redesigned – Now reduces the cooldown of Desperate Prayer by 20 seconds.
+	AUGUST 21, 2023 Hotfixes - Dead of Winter now increases the cooldown of Remorseless Winter by 10 seconds (was 25 seconds).
+
+v10.1.5.2767
+	AUGUST 7, 2023 Hotfixes - San’layn now reduces the cooldown of Vampiric Embrace by 30 seconds (was 45 seconds)
+	AUGUST 3, 2023 Hotfixes - Fixed an issue where Flow State would not increase the cooldown recovery rate of Emerald Communion.
+	Undulating Sporecloak will correctly show for the player and non-synced units
+	Casting Fire Blast will correctly reduce the cooldown of cc abilities with Time Manipulation
+
+v10.1.5.2765
+	Undulating Sporecloak will correctly show for the player and non-synced units
+
+v10.1.5.2764
+	JULY 24, 2023 Hotfixes
+	- Angel's Mercy's cooldown reduction is now 25% effective in PvP Combat.
+	- Impish Instincts now reduces the cooldown of Demonic Circle by 3 seconds when triggered (was 2 seconds).
+	Fixed an issue where Bestow Weyrnstone would persist when casted on another player
+	Added Undulating Sporecloak, Well-Honed Insticts (passive procs)
+
+v10.1.5.2763
+	Symbol of Hope will correctly increase Obsidian Scales' cd recovery rate for Augmentation spec.
+
+v10.1.5.2762
+	Oppressing Roar w/ Overawe will correctly go on cooldown when used
+	Overawe will correctly reduce Oppressing Roar's cooldown for each enrage effect dispelled
+	Upheaval w/ Font of Magic will correctly go on cooldown when used
+
+v10.1.5.2761
+	Healbot fix
+
+v10.1.5.2760
+	Patch 10.1.5 updates
+
+v10.1.0.2759
+	nil err fix
+
+v10.1.0.2758
+	Fixed Rage of the Sleeper CD 90>60s
+	Fixed Improved Mass Dispel CDR 25>20s
+	Fixed Shadow Blades CD 180>120s
+
+v10.1.0.2757
+	Fixed Quick Witted CDR when interrupting Penance
+	Fixed Invigorating Shadowdust CDR
+	Fixed nil error on Flow State removal
+	Fixed Ironbark CD 60>45s (Guardian, APRIL 5, 2023 hotfixes)
+
+v10.1.0.2756
+	JUNE 5, 2023 hotfixes
+		Amplify Curse CD 30>60s
+		Teachings of the Satyr CDR 10>15s
+		Thunderlord CDR 1>1.5s
+	MAY 15, 2023 hotfixes
+		BM HUnter, Aberrus (4) Set bonus CDR 1>2s
+		Sharpen Blade CD 25>30s
+
+v10.1.0.2755
+	CDR fix/updates
+		Forbearance will no longer be affected by other CDR (e.g. Resolute Defender on Divine Shield)
+		Fixed Uther's Councel CDR for 10.1 (rank1 20% to rank2 15%/30%)
+		Fixed Inmost Light CDR for 10.1 (15% to 25%)
+		Fixed Chi Surge CDR (was incorrectly capped at 16 sec instead of 20 sec)
+		Updated Keg Smash CDR (was reducing Fortifying Brew by 5 sec instead of 3 sec. Bug fixed in 10.1)
+		Updated Tiger Palm CDR (was reducing to all Brew CD by 0.5 sec instead of 1 sec. Bug fixed in 10.1)
+	CD sync revamped
+		Fixed an issue that caused certain cooldowns to sync improperly. Recipients now check remaining time over starting time
+		Periodic sync has been removed and will now sync the followings directly like others
+			% chance to incur no cooldown
+			% chance to have its cooldown instantly reset when used
+		Messages are now compressed and will no longer communicates with older versions
+	10.1.5 compatibility updates
+		Frames created while in combat will have tooltips disabled until you leave combat
+
+v10.1.0.2753
+	Bar position will correctly update in combat when using non-Group sorting in Arena
+	Fixed Exhilaration and Trueshot CDR
+
+v10.1.0.2752
+	Max Number of Visible Icons will correctly work with Display Inactive Icons disabled
+	Healing Stream Totem will correctly add a charge if you have both talents as Restoration spec
+	Fixed Fortitude of the Bear CD
+
+v10.1.0.2751
+	Added Season 2 Obsidian PvP Trinkets
+	Added Embers of Neltharion Tier Set bonuses
+	Added option to use ElvUI's timer (in General menu)
+	Fixed spell tooltips showing a blank text if the spell hasn't been cached yet
+	Fixed option panel dropdown menu tooltip not showing
+
+v10.1.0.2750
+	Patch 10.1 updates
+	Blessing of the Bronze CDR added to non-Evoker classes
+
+v10.0.7.2748
+	Fixed CDR to Incarn: Guardian of Ursoc
+	nil error fix (nil mapInfo, nil info on sorting extraBars)
+	Added ElvUI Raid Wide Sorting
+
+v10.0.7.2747
+	Added option to limit the number of visible icons per unit
+	Added option to move icon names vertically
+	Added option to scale status bar names
+	Added option to rename Extra Bars
+	Fixed Divine Protection for Rets
+	Fixed Divine Purpose procs for Rets (HoJ CDR)
+	Fixed Fire Breath CD reduction for Preservation
+	Fixed anchor visibility not updating on zone change
+	Visibility by Group Size can be configured for each zone separately
+	Empowered spell will reset if the cast fails (simplified)
+	Lib updates - cell padding, flash button fix, dropdown fix
+
+	Hotfixes
+	MARCH 28, 2023
+	Holy Priest
+	Fixed a bug causing Symbol of Hope to reduce the cooldown of both Divine Protection and Shield of Vengeance for Retribution
+	Paladins. It will now only reduce the cooldown of Divine Protection.
+
+	10.1 PTR fixes
+
+v10.0.7.2746
+	Cloudburst Totem will correctly replace Healing Stream Totem
+	Casting Echo will correctly interact with Just in Time (Talent)
+	Tooltip frames now uses a generic frames other addons can modify
+	Removed Util\TooltipID (moved to dev ver)
+	Cleaned up OmniCC support
+	Removed ElvUI CD text support
+	CD timers will explicitly use Blizzard's CD text
+	ElvUI user can safely? enable Blizzard's CD text as WAs no longer show duplicate text
+	Fixed lib load order
+
+v10.0.7.2745
+	Patch 10.0.7 spell & modifier updates
+	Fixed Forbearance gray out effect incorrectly showing on Lay on Hands when it's used
+	Added additional sorting for the Raid Bar
+	Added UseIconAlpha for the Raid Bar
+	Interrupt spell types are no longer visible in the Raid CD tab
+	Addon will no longer sync with older versions (inspection will continue to work)
+
+	Lib updates
+	Battle Res Plugin:
+		Fixed Arclight Vital Connector (DF engineering) not consuming a brez charge instantly
+
+v10.0.5.2744
+	Fixed Celestial Alignment (Incarnation) with Orbital Strike talented
+	Fixed pixel shifting on icon frames causing malalignment
+	Fixed option panel taint error
+
+v10.0.5.2743
+	CD resets on encounter end will correctly use the unmodified base cooldown as a reference
+	Icons are now click through while Tooltips are enabled
+	Fixed Army of the Damned CDR by Epidemic
+	Fixed Blessing of Santuary CD
+	Fixed Kleptomania icon texture
+	Feb 6, 2023 Hotfixes
+
+v10.0.5.2742
+	Fixed missing talents after Patch 10.0.5
+	Avatar for Protection spec has been added as a separate spell
+
+v10.0.5.2741
+	Patch 10.0.5 updates
+
+	Fixed PvP Talent modifiers incorrectly being applied in non-PvP areas
+	Fixed Fortifying Brew (BW) spellID that caused CDR by Keg Smash, Tiger Palm, Blackout Combo to be ignored
+	Temp fix to match current bugged state:
+		Tiger Palm reduces all Brew (BM) cooldowns by 0.5 sec instead of 1.0 sec
+		Keg Smash reduces Fortifying Brew's CD by 5 sec instead of 3 sec
+	Tiger Palm and Keg Smash on enemies with Bonedust Brew active will correctly reduce all Brew cooldowns by 1 sec (was reducing Bonedust Brew only)
+
+v10.0.2.2740
+	Non-PvP talent changes made by non-synced units are now updated instantly
+	Fixed item inspection
+
+v10.0.2.2737
+	version update
+
+v10.0.2.2736
+	Fixed Time Spiral on non-Evoker classes
+	Fixed Lay on Hands, Sprint CD
+	Fixed interrupted spell & marker display for pet interrupts
+	Added Healing potion (doesn't check availability)
+
+v10.0.2.2735
+	Cooldowns will correctly reset inbetween solo shuffle rounds #3
+	Desperate Prayer w/ Angel's Mercy (Talent) has been added to Sync
+		:This is to fix the seemingly random Class/NPC spell damage not adding to CDR (e.g. Pyre, Dragonrage)
+	Fixed Dracthyr racials for Alliance
+	Major movement abilities will show the correct cooldown for new group members with Blessing of the Bronze (Dracthr, Buff)
+	Returned option to exclude player spells on Extra Bars
+	JANUARY 3, 2023 Hotfix to Gift of the Golden Val'kyr applied
+	JANUARY 9, 2023 Hotfix to Shield of Vengeance and Celestial Brew CD applied
+
+v10.0.2.2734
+	New Features
+		Added option panel scaling. (replaces option panel font settings)
+	Interrupt Bar
+		Interrupt spell types are now automatically added to the Interrupt Bar if enabled in the Spells tab.
+	Spells
+		Added Psyfiend (Priest, PvP Talent).
+	Bug Fixes
+		Fixed text wrapping on progressbar timers.
+		Trucate Name setting will correctly update without reloading UI.
+		Coldthirst (DK, Talent) will correctly reduce the cooldown of Mind Freeze by 3 sec instead of reducing it to 3 sec.
+		Sentinel (Prot Paladin, Talent) will correctly replace Avenging Wrath.
+		Incarnation: Chosen of Elune will correctly replace Celestial Alignment.
+	Blizzard Hotfixes
+		DECEMBER 14, 2022 Hotfix to Totemic Recall.
+		DECEMBER 20, 2022 Hotfix to Call Felhunter.
+
+v10.0.2.2733
+	1st Trinket slot item will correctly show.
+	Talent spells are no longer checked against character level.
+	Tweaked Healing Hands CDR to match the current bugged state.
+	Fixed Shadowfiend incorrectly showing when Mindbender talent is taken.
+	Fixed Shadowfiend icon.
+	Border thickness for icons are now fixed at 1px.
+
+v10.0.2.2732
+	Fixed anchoring in Arena Skirmishes.
+	Fixed Flow State (Evoker) progressively slowing down the CD recovery rate til it reaches 0.
+	Reworked Time Stop (Evoker, PvP Talent) and will now correctly interact with other CDRR modulators (e.g. Symbol of Hope).
+	Time Stop will apply to Wing Buffet and Tail Swipe Racial abilities.
+	Added Time Spiral free charge (Evoker).
+	Fixed Paladin talents that reduce CD by consuming Holy Power. (Matches the actual timers better but Sync is still required).
+	Fixed Psychic Scream CD.
+	Fixed interrupted spell icon and marker not showing.
+	Fixed Ray of Hope Highlight sticking.
+	Fixed nil error when the global CD recovery rate changes.
+	Fixed syntax errors.
+	Fixed font flags.
+	Fixed ElvUI's timer counter not showing.
+	Fixed Challenging Shout incorrectly showing when Disrupting Shout talent is taken.
+	Merged duplicate entries in modifiers.lua.
+	Readded profile by spec.
+	Readded progressbar border option.
+	Added option to move Name Bar to left of icon.
+	Tooltips are no longer saved to db and will return to it's disabled state when you logout or reload UI.
+	Updated spell CDs for DECEMBER 5, 2022 Hotfixes.
+
+v10.0.2.2731
+	Fixed nil error (converting old db)
+
+v10.0.2.2730
+	Dragonflight
+
+	Comm
+		Removed lib ACE3-Comm
+		Revamped cooldown sync
+	Spells & Modifiers
+		Updated spell & modifiers for DF
+		SL Covenant, Soulbind, and Runforge traits are now active in SL zones only (unfinished)
+		Readded BFA Azerite Power and Azerite Essence
+	Options
+		Revamped Raidbar (unfinished)
+	Addons Support
+		Addon frames are now cached to alleviate parsing hundreds of frame obj
+		Fixed anchoring for ElvUI raid frames
+
+------------------------------------------------------------------------------
+-- shadowlands
+--
+v9.2.7.2724
+	Fixed sync for cross realm group members
+
+v9.2.7.2723
+	Fixed nil err; Will of the Forsaken were missing table values
+
+v9.2.7.2722
+	Fixed an issue where Barbed Shot wasn't reducing Bestial Wrath's remaining CD when Qa'pla, Eredun War Order (Runeforge) is equipped.
+	Anchors will correctly update whenever lead/role changes when you're using VuhDo raid frames.
+	Added oUF_Ruri support.
+	bump toc.
+
+v9.2.5.2721
+	Season 4 PvP trinkets added.
+
+v9.2.5.2720
+	Season 4 PvP changes.
+	Localization update.
+
+v9.2.5.2720
+	Season 4 PvP changes.
+		Greater Fade (PvP Talent) now has a 60 second cooldown (was 45 seconds).
+		Invigorating Shadowdust (Runecarving Power) now reduces the cooldown of your other abilities by 10 seconds in PvP combat (was 20 seconds).
+		Call Felhunter (PvP Talent) cooldown increased to 30 seconds (was 24 seconds).
+	Localization update.
+
+v2.7.19
+	Blizzard Class Tuning Update
+		JUNE 28, 2022
+			Hunter
+				Craven Strategem (Runecarving Power) now reduces the cooldown of Feign Death by 5 seconds in PvP combat (was 15 seconds).
+			Mage
+				Flow of Time (Conduit) effectiveness reduced by 50% in PvP combat.
+			Monk
+				Chrysalis (PvP Talent) now reduces the cooldown of Life Cocoon by 45 seconds (was 30 seconds).
+			Priest
+				Ray of Hope (PvP Talent) cooldown is now 90 seconds (was 60 seconds).
+			Rogue
+				Float like a Butterfly (PvP Talent) now reduces the cooldown of Evasion and Feint by 0.5 seconds per combo point spent (was 1 second).
+			Warlock
+				Gateway Mastery (PvP Talent) now reduces the time between how often players can take your Demonic Gateway by 30 seconds (was 15 seconds).
+
+v2.7.18
+	TOC bump - 90205
+	9.2.5 Blizzard updates
+		Fixed an issue that caused Bone Shields consumed by Tombstone (Talent) to not reduce the cooldown of Blood Tap by the correct amount.
+		Reduced cooldown on Zen Focus Tea (PvP Talent) to 30 seconds (was 45).
+	Center preset added to Position option.
+	Cosmic Gladiator's Fastidious Resolve buff id added.
+	PvP Trinket added to Highlight selection.
+	Fixed icons being drawn under the raidframe on some raidframe addons.
+
+v2.7.17
+	Added new option 'Show Range'.
+	Added backup timers to remove Decrypted Urh Cypher, etc.
+	Added Seasons of Plenty (Runeforge) CDRR.
+	Added PitBull4 raid support,
+	Fixed an issue where Purify Soul would not activate with certain soulbind abilities.
+	Swiftmend will correctly show with Restoration Affinity.
+	Fixed option panel borders for addons w/ ui scaling.
+	Known Blizzard Bug:
+		Equinox under the effect of Blessing of Autumn incorrectly increases the remaining CD of Guardian Spirit w/ Guardian Angel.
+
+v2.7.16
+	Dancing Rune Weapon CDR fixed.
+	Observer cooldowns will no longer be tracked in the MDI setting.
+	Lib updates.
+
+v2.7.15
+	Blizzard Hotfixes
+		APRIL 26, 2022
+			Holy Priest
+				Divine Conversation (2-set bonus) now increases the CDR by 10sec in PvP (was 15sec).
+				Miracle Worker (PvP Talent) now reduces the cooldown of Holy Word: Serenity by 10% (was 20%).
+
+v2.7.14
+	Updated missing changes from patch 9.0.5 :0
+	Crimson Rune Weapon (DK, Runeforge) cooldown reduction increased to 5 seconds (was 3s).
+	Qa’pla, Eredun War Order (Hunter, Runeforge) now resets the cooldown of Kill Command (was reduces the cooldown by 5 seconds).
+	Divine Vision (Paladin, PvP Talent) now reduces the cooldown of Aura Mastery by 1 minute (was grants Shadow Resistance Aura).
+	Duskwalker’s Patch (Rogue, Runeforge) reduces Vendetta’s cooldown for every 30 Energy you expend (was 50 Energy).
+	Amplify Curse (Warlock, PvP Talent) cooldown reduced to 30 seconds (was 45 seconds).
+
+v2.7.13
+	Fixed an issue where sync could incorrectly reset the CD.
+	Bwonsamdi's Pact has been added back in for non-synced units. (doesn't support multiple buffs per target)
+	Crafted Unity Legendaries added.
+
+v2.7.12
+	Fixed Metamorphosis (Havoc) spell ID for sync.
+
+v2.7.11
+	Fixed lua error w/ tullaCC.
+	Shadowlands trinkets have been added back in.
+
+v2.7.10
+	Feature Updates
+		Removed Bwonsamdi's Pact (Priest, Runeforge). Affected major CDs are now directly synced.
+		Progress bar's animation/counter rate will follow it's CD recovery rate.
+		Show Player in Extra Bars option was removed and is now always enabled.
+	Bug Fixes
+		Emerald Slumber (Guardian Druid, PvP Talent) will no longer incorrectly affect group members.
+		Tricks of the Trade w/ Thick as Thieves (PvP Talent) will correctly go on CD after being activated.
+		Fixed an issue where reducing a CD would fail to update the progress bar counter text.
+		Fixed Shaman legendaries: Witch Doctor's Wolf Bones, Skybreaker's Fiery Demise, Seeds of Rampant Growth.
+	Blizzard Hotfixes
+		APRIL 4, 2022
+			Priest
+				Holy
+					Holy Ward’s (PvP Talent) cooldown increased to 45 seconds (was 30 seconds).
+
+v2.7.01
+	Encrypted event fix - Decrypted Urh Cypher CDRR
+
+v2.7.00
+	TL;DR
+		Spells with cooldown reduction that can't be detected are now directly synced with other users.
+		Fixed an issue where using an ability would incorrectly put the same ability for another unit on cooldown. <iss#322>
+		* AddOn will no longer communicate with earlier versions.
+
+
+	Revised Sync Mode
+		Spells with cooldown reduction that can't be detected are now directly synced with other users.
+		Synced Spell : Prerequisite
+			DK
+				Death Grip: Death's Reach (talent)
+				Death and Decay/Defile/Death Due): Crimson Scourge (passive)
+			DH
+				Eye Beam, Fel Devastation: Darkglare Boon (Runeforge)
+				Immolation Aura, Fel Devastation: Rapacious Hunger (set bonus)
+				All Sigils & Elysian Decree: Razelikh's Defilement (Runeforge)
+				Felblade: passive
+			Druid
+				Berserk/Incarnation: Heart of the Lion (Feral set bonus)
+			Hunter
+				Rapid Fire: Lethal Shots (talent)
+				Barbed Shot: Wild Call (passive)
+				Wildfire Bomb: Carve passive, Rylakstalker's Confounding Strikes (Runeforge), Mad bombardier (set bonus)
+				Harpoon: Terms of Engagement (talent)
+			Monk
+				Invoke Xuen, the White Tiger: Xuen's Bond (Conduit)
+				Purifying Brew: Mighty Pour (Runeforge)
+				Rising Sun Kick: Teachings of the Monastery (passive)
+				All Brews: Shaohao's Might (Runeforge)
+				Roll/Chi Torpedo: Tumbling Technique (Conduit)
+			Paladin
+				Avenging Wrath/Avenging Crusader: Dawn Will Come (Holy set bonus)
+				Wake of Ashes: Ashes to Ashes (Ret set bonus)
+				Avenger's Shield: Grand Crusader (passive), Holy Avenger's Engraved Sigil (Runeforge)
+			Shaman
+				Primordial Wave: Tumbling Waves (Conduit)
+				Fire/Storm Elemental: Fire Heart (Ele set bonus)
+				All Totems: Heal the Soul (Resto set bonus)
+			Warlock
+				Summon Darkglaire: Corrupting Leer (Conduit)
+			Warrior
+				Recklessness, Enraged Regeneration: Reckless Defense (Runeforge)
+			Covenant Sig
+				Purify Soul: Focusing Mantra (soulbind)
+				Fleshcraft: Resourceful Fleshcrafting (soulbind), passive
+				Soulshape: Stay on the Move (soulbind)
+			Spells affected by power/resource spenders (previous sync mode)
+
+			In raid instances, only the following spells are synced:
+				Fortifying Brew, Avenging Wrath, Ashen Hallow, Spirit Link/Healing Tide/Tremor/Wind Rush Totem.
+		* AddOn will no longer communicate with earlier versions.
+	Main hand on-use abilites can be added as 'Trinket & Main Hand'.
+	Spells
+		Added Cosmic Gladiator's Echoing Resolve. (display only)
+	CD Modifiers
+		Added cooldown rate modulation by Decrypted Urh Cypher (Seasonal affix). - not tested
+		Added cooldown rate modulation by Architect's Ingenuity core (Trinket).
+	Bug Fixes
+		Fixed an issue where using an ability would incorrectly put another unit with the same ability on cooldown. <iss#322>
+		Phial of Serenity will correctly go on cooldown with Forgelite Filter (soulbind ability).
+		Fixed Sinister Teachings' CDR (Runeforge) to Fallen Order for Mistweaver Monks.
+		Anger Management will no longer incorrectly be applied under the effect of Deadly Calm.
+		Black Ox Brew will correctly reset Purifying Brew.
+		Keg smash & Tiger palm will correctly reduce Black Ox Brew's CD.
+		Haunted Mask (Bwonsamdi's Pact, Runeforge) will correctly affect Benevolent Faerie's initial target only.
+		Emerald Slumber will no longer incorrectly increase it's own cooldown recovery rate.
+		Door of Shadows' cooldown recovery rate will be modulated by Intimidation Tactics only.
+
+	Blizzard Hotfixes
+		MARCH 14, 2022
+			Mage
+				Fire
+					Pyrokinesis (PvP Talent) now causes Fireball to reduce the cooldown of Combustion by 2 seconds (was 3 seconds).
+		MARCH 7, 2022
+			Druid
+				Feral
+					(2) Set Bonus: Berserk’s cooldown is now reduced by 0.7 seconds per combo point spent (was 0.5 seconds).
+
+v2.6.40
+	toc update 90200
+	Additional PvP trinkets added
+
+v2.6.38
+	Bug Fixes
+		Fixed an issue that caused Icy Propulsion's cooldown reduction to end prematurely.
+		Casting Condemn will correctly apply Anger Management's CDR for non-synced units.
+	Spells updated for 9.2
+	Removed options from the Interface menu d/t taint. Type /oc to open the option panel.
+
+v2.6.37
+	Bug Fixes
+		Sinful Delight (Runeforge) will correctly reduce Mirrors of Torment by 45seconds when it's dispelled.
+		Tiger Palm will no longer reduce Bonedust Brew's (Covenant) cooldown for MW and WW specs. <iss#332>
+		Walk with the Ox (Conduit) CDR will correctly be limited to once per 100ms (Shuffle).
+		Sinister Teachings (Runeforge) CDR will correctly be limited to once per 750ms.
+		CDR by haste is now applied after additive modifiers.
+	CD Modifiers
+		Shifting Powers CDR now applies to Alter Time for Arcane spec(was Frost & Fire only).
+		Kiss of Death (Runeforge) will reduce SW: Death cooldown by 12 seconds(was 8s).
+		Sinful Delight CDR on consuming Clearcast, Brain Freeze, and a Fireblast charge is now 4s(was 3s).
+		Tiger Palm and Keg Smash reduces Bonedust Brew's cooldown by an additional 1second while it's active for BM spec.
+
+v2.6.36
+	Bug Fixes
+		Icy Veins' highlighting will correctly be removed when the effect ends.
+		Guardian of the Ancient Kings w/ Glyph of the Queen will correctly start it's CD.
+	Non-synced units are now inspected every 5 seconds(was 15s) in arenas until the match begins.
+
+v2.6.35
+	Feature Updates
+		CTRL-clicking the spell in the 'Spells/RaidCD' tab will add it to the 'Spell Editor'.
+	Spells
+		Sinful Brand, Nether Portal, Impending Victory CD updated for 9.1.5
+	CD Modifiers
+		NF Priest, Benevolent Faerie Fermata (Conduit) added.
+		NF Priest, Bwonsamdi's Pact (Runeforge) added.
+	Bug Fixes
+		Kindred Spirits used on group members will correctly start it's CD and apply any existing CDR.
+		Fortifying Brew's CD when affected by both Benevolent Fae and Symbol of Hope will reduce the correct amount.
+		Switching Covenants will correctly remove previous Covenant spells for non-synced units.
+		Offline non-synced members will be re-inspected when they come back online to fix issues when the player has also been disconnected.
+		Fixed stack overflow error which can happen when using Icy Veins with Icy Propulsion and Thermal Void.
+	AshtToAsh UI support.
+	Grid2 by role support.
+
+v2.6.34
+	Fixed cooldown reduction with synced units.
+
+v2.6.33
+	Fixed cooldowns not resetting at the start of Mythic+.
+
+v2.6.32
+	Battle Res module removed d/t issues. This will no longer be integrated and be available as an external plugin only.
+	Prevent ACCESS_VIOLATION error.
+
+v2.6.31
+	Fixed nil error <iss#294>
+
+v2.6.30
+	Feature Updates
+		Battle Res module.
+		All supported UIs can now display individual unit CD bars in a raid.
+		CD bars are now grayed out for offline/dead units.
+		Interrupt bar - added option to display interrupted spell icon and target marker. <req#283>
+		Highlighting - all spell-types can be highlighted.
+		Compatibility updates for WoW: Classic Era.
+		Compatibility updates for WoW: 9.1.5 PTR.
+	Spells & CD Modifiers
+		Podtender (Night Fae Soulbind) added.
+		Pressure Points (PvP Talent) - Killing a player with Touch of Death reduces the remaining cooldown of Touch of Karma by 60 sec.
+		Death and Madness - If a target dies within 7 sec after being struck by your Shadow Word: Death, the cooldown is reset.
+		A murder of Crows - If the target dies while under attack, A Murder of Crows' cooldown is reset.
+		Shadowburn - Refunds a charge if the target dies within 5 sec.
+		Serrated Bone Spike (Rogue Covenant) - Refunds a charge when target dies.
+	Bug Fixes
+		Intimidation Tactics (Venthyr Soulbind) will correctly increase the CD recovery rate of Door of Shadows by 200% while below 50% health.
+		Seeds of Rampant Growth (Runeforge) will reduce the cooldown of Fae Transfusion on each pulse instead of damage.
+		Obedience will reduce the cooldown of Flagellation while it's active instead of it's haste buff.
+		Sinister Teachings will reduce the cooldown of Fallen Order from critical heals.
+		Fixed Flagellation's CD to 1.5 min.
+		Fixed Adaptation not applying shared CD on racial abilities when Adaptation isn't being tracked.
+		Fire Blast CD for Frost and Arcane Mages are correctly affected by haste.
+		Fixed Runeforge-Legendaries on certain slots.
+		Fixed Condemn (Warrior Covenant) spell ID.
+		Fixed CD recovery rate being lowered when an increased rate wasn't applied in certain situations.
+		Covenant detection will no longer be delayed for units that are still pending inspection.
+		Fixed Triple row/col layout and recharge color switching on reset. <iss#284>
+		GW2_UI fixed for 5.18.X. <req#286>
+	AltzUI support. <req#291>
+
+v2.6.21
+	Nil error fix - missing localization. <iss#278>
+	Localization update for koKR, ruRU, zhTW.
+
+v2.6.21
+	Added missing spells used for Covenant detection without Sync.
+
+v2.6.20
+	Feature Updates
+		Tracks Covenant Signature and Class abilities for group members without OmniCD.
+	Bug Fixes
+		Radiant Embers and Spheres' Harmony (Runecarving Power) fix.
+
+v2.6.20
+	Feature Updates
+		Ext Bar - CD groups can be selectively detached.
+		Ext Bar - CD groups added to Horizontal layout. <iss#265>
+		Ext Bar - New option to switch the status bar timer to a simple name bar. <iss#247>
+		Ext Bar - New option to grow columns left. <iss#268>
+		Ext Bar - New option to set status bar text offset.
+		Ext Bar - New option to hide status bar borders.
+	Tweaks
+		CD Bar's frame level adjusted to show above Grid2/Plexus raid frames. <iss#272>
+		Truncated names on the status bar will better fit the available space.
+	Bug Fixes
+		Nil error fix - casting Symbol of Hope while self bar is disabled. <iss#275>
+		Typo fix. <iss#260>
+	GW2 UI, ElvUI Raid/Raid40, Cell Raid frame support <iss#270>
+	Localization update for frFR
+
+v2.6.10
+	WoW: Shadowlands - Patch 9.1 Chains of Domination release update.
+	New Renown rewards that enhance Soulbind's Conduit row implemented.
+	New Runecarving powers added.
+	New trinkets added.
+	Class abilities updated for 9.1.
+	Cooldown and charge modifiers updated for 9.1.
+	Interrupt bar can be sorted by remaining time when the Status Bar Timer is disabled. #iss259
+
+v2.6.03
+	Highlighting will now work with merged spells.
+	Hunter ability - Misdirect will correctly be highlighted.
+	Fixed nil error on certain raid frame addons.
+	Localization updated for ruRU, zhTW, koKR
+
+v2.6.02
+	Glow animation changed.
+	Backend updates for enemy CD tracking.
+	Minor bug fixes.
+
+v2.6.01
+	Compatibility updates for WoW: Burning Crusade Classic.
+
+v2.5.22
+	Bug Fixes
+		iss#208: HealBot anchoring fixed.
+		iss#220: Group member's pet spell will correctly go on cooldown.
+		iss#221: Fixed inconsistent CDR on Guardian Spirit when Guardian Angel is talented.
+		iss#223: Fixed Icy Vein CDR by Icy-Propulsion (Conduit) when Thermal Void is talented.
+		iss#224: Fixed Unending Resolve CDR by Resolute Barrier (Conduit).
+		CD bars will update immediately when a user added spell is deleted.
+		Default fonts settings will display correctly for koKR locale.
+	Feature Updates
+		Raid Bar: Grow Upward option added.
+
+v2.5.21
+	Bug Fixes
+		Temp Fix applied to statusbar timer text not updating correctly.
+		Fixed statusbar leading spark showing on cast while disabled.
+
+v2.5.20
+	Toc ver 90005
+	Bug Fixes
+		ADDON_ACTION_BLOCKED error from taint fixed.
+		Minor bug fixes.
+	Feature Updates
+		Unit Bar: Triple row/column layout added.
+		Raid Bar: Multi-column layout added.
+		Spells: Class and Other category tabs were merged and the Edit button removed.
+		Raid CD: Empty spell groups are now hidden.
+		Status Bar: Added alpha setting to active bar, disable spark, and class color based on status.
+		Status Bar Timer: Changed to Blizzard's timer format.
+		New Profile sharing option added.
+		InvenRaidFrame3 (fix), Lime, and ShestakUI support added.
+
+v2.5.12
+	Blizzard PvP Hotfixes
+		FEBRUARY 1
+			Warrior
+				Master and Commander reduces the cooldown of Rallying Cry by 60 seconds (was 120 seconds).
+		FEBRUARY 9
+			Mage
+				Pyrokinesis reduces Combustion’s cooldown by 3 seconds (was 5 seconds).
+			Monk
+				Chrysalis reduces Life Cocoon’s cooldown by 40 seconds (was 25 seconds).
+	Fixed borders on some UF addons.
+
+v2.5.11a
+	Bug Fixes
+		Fixed sync failing in queued instances when character data isn't ready from the server.
+		Fixed Purify Soul prematurely starting it's CD and stack# resetting.
+		Fixed CDS not resetting upon entering Arena.
+	Feature Updates
+		VuhDo (Panel 2-5), RUF, KkthnxUI support added.
+
+v2.5.10
+	Bug Fixes
+		Fixed talent info not updating when a synced unit had show-player disabled.
+		Cooldown reduction by spending resources will correctly apply to synced players.
+		Combustion's CD reduction fixed.
+		Heartstop Aura (Frost DK - PvP Talent) will correctly apply reduced CD recovery rate. (Arena only)
+		|cffff2020None of the CD counter skins support modrate. Timers will fluctuate erratically whenever CD recovery rate is modulated.|r
+	Feature Updates
+		New Font and Texture option added.
+		Highlighting: Added a weaker glow effect and removed Animate option.
+		Raid support in dungeon instances for MDI.
+		ShadowUF-Raid1, Cell support.
+	Spell Updates
+		Blizzard HotFix applied.
+		Gift of the Naaru (Racial) for non-Paladin classes merged.
+
+v2.5.7
+	Bug Fixes
+		Fixed pre-existing group member's info not updating.
+		Fixed anchoring to Blizzard's non-raid style party frames.
+		Resetting timers will apply the correct icon alpha.
+	Feature Updates
+		Interrupt Bar: Added options to grow upward, reverse sort, and increased width limit to 999.
+		CDs > 3min will reset when a raid encounter ends.
+		HealBot support added.
+	Spell Updates
+		Emergency Failsafe (Mechagnome) passive racial added.
+
+v2.5.6
+	Bug Fixes
+		Fixed an issue that caused spell detection to stop working when a group member's unit ID changed.
+		Heartstop Aura (Frost DK - PvP Talent) will corectly apply reduced CD recovery rate.
+		Surge of Power procs will correctly register instead of throwing a lua error.
+		Primal Rage (Hunter pet ability) will correctly start it's CD when used from the pet bar.
+
+v2.5.5
+	Bug Fixes
+		Custom spells without an Item ID will no longer cause an error.
+		Running Test mode while disabled will no longer cause an error.
+		Fixed an issue that caused multiple frames to be created for the same unit.
+
+v2.5.4
+	Trinkets no longer show correctly if your teammate is using version-2.2.3 for BFA.
+	Bug Fixes
+		Fixed an issue that caused the wrong profile to load on zone change.
+		Guardian Druid: Berserk will correctly reduce Frenzied Regen's CD while it is active.
+	Feature Updates
+		Supported UIs: Interrupt/Raid bars are now usable in any group size.(beta)
+
+v2.5.3
+	Bug Fixes
+		Fixed an issue that caused covenant data to be cleared from synced units.
+		Fixed player spells in UIs with hidden player frames.
+
+v2.5.2
+	TL:DR
+		Bug fixes.
+		Added option to always show player's CD in the Interrupt/Raid bar.
+	Bug Fixes
+		Pandaren racial will correctly show for Horde factions.
+		Party Bars will no longer anchor to hidden frames.
+		Interrupt/Raid Bar will correctly show when the UI is toggled off and on.
+		Status bar timers will retain it's color state when reloading addon.
+		Fixed an issue that caused the wrong profile to load on entering LFG instances.
+	Feature Updates
+		General: Added option to always show player's CD in the Interrupt/Raid bar.
+		Interrupt Bar: Removed finish animation and changed timer format.
+		Outdoor/Scenario zones can now select which setting to use.
+		Plexus (Grid) support added.
+	Spell Updates
+		Fixed Foryfying Brew CD for Brewmaster Monk.
+		Removed Premonition from Disc Priest (PvP Talent).
+	Localization Updates
+		zhTW
+	Known Issues
+		Trinkets will not show if your group member is using ver 2.2.3. (no fix planned)
+
+v2.5.1
+	Bug Fixes
+		General: 'Show Player' will correctly update on zone change.
+		Spells: 'Clear All' will correctly clear all enabled spells instead of setting it back to default.
+		Fixed an issue that caused cross-addon communication to fail.
+	Icons
+		All borders have been reverted back to grow inward.
+		Default offset/padding values have changed accordingly.
+	Localization Updates
+		ruRU
+
+v2.5.0
+	TL;DR
+		Shadowlands release update.
+		New Interrupt and Raid-CD bars.
+		Still lighweight with minimal CPU usage.
+	Feature Updates
+		Ex Bars: New Interrupt and Raid-CD bars with optional progress timers added.
+		Highlights: Option to disable animation added.
+		Spell Editor: Spell can be spec-default while being a talent for others.
+		Spell Editor: Non-Class spells can now select any priority type.
+		Option settings are now fully customizable per instance zone.
+		Synchronizing CD reduction by spending resources is enabled for Rogues in Arenas only.
+		All frames are now created on demand and recycled.
+		Revamped spell detection for slight efficiency.
+		Better handling of large outdoor raids where members are constantly changing.
+		Removed all non-essential process in the background while not actively tracking CDs.
+	Spell Updates
+		Class abilities updated for Shadowlands. (700+ spells)
+		New Covenant abilities added.
+		New PvP/PvE Trinkets added.
+	Cooldown Modifiers
+		Class modifiers updated for Shadowlands.
+		New Runeforge-Legendaries, Covenants, and Soulbind-Conduits added.
+		Cooldown recovery-rate added for Heartstop Aura, Thundercharge, Blessing of Autumn. and Benevolent Fae.
+		Chance to proc and free charge mechanics were excluded. Everything else has been implemented.
+	Removed Features
+		Icons: 'Relative Scale' option.
+		Azerite, Essence, and Corruption effects.
+	Known Issues (from Blizzard)
+		Aspirant's Medallion used while under the effect of Thundercharge results in slower CD recovery when it ends.
+		Aspirant's Medallion used while under the effect of Blessing of Autumn results in slower CD recovery when it ends.
+		Thundercharge CD recovery rate doubling when casted on player. (temp fix applied)
+		Shifting Power's CD reduction not applying to Alter time for Arcane Mage. (temp fix applied)
+
+------------------------------------------------------------------------------
+-- Cataclysm
+--
+v4.4.0.2802
+	Interrupt Bar can now be sorted by spell priority.
+	NameBar nil err fix.
+	Fixed multicharged spell opacity when it still has a charge left.
+	zhTW localization update.
+
+v4.4.0.2800
+	RaidCD/Spell option revamped.
+	Fixed Scatter Shot (Hunter) as a base ability.
+	Fixed Word of Glory showing for Holy Paladin (no CD).
+	Fixed Combat readiness and Cloak of Shadow CD sharing.
+	Fixed Outbreak CD for Blood spec.
+	Glyphs will correctly update when switching talents.
+	Queued inspections while in combat will be processed upon leaving combat. (doesn't affect synced units)
+
+v4.4.0.2788
+	Cataclysm Classic beta (4.4.0.54525)
+
+		> NOTE: Set bonuses are currently inactive in beta.
+
+------------------------------------------------------------------------------
+-- WOTLKC
+--
+v3.4.3.2773
+	Added season 8 Wrathful Gladiator's set bonuses
+	Fixed incorrect sorting when a unit dies or resurrects on ver.2772
+	Added option to change icon texture for 'Trinket, Main Hand, Consumables' spell type.
+
+v3.4.3.2772
+	Fixed an issue that prevented inspecting offline members when they came back online.
+
+v3.4.3.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+	bump toc
+
+v3.4.2.2768
+	Cooldowns will correctly update when non-synced units change specialization
+
+v3.4.2.2762
+	bump toc
+
+v3.4.1.2755
+	Fixed an issue that prevented CD bars from attaching to the party frames
+	Readiness will no longer reset Roar of Sacrifice
+	Added arena season 7, 8 equip bonus items
+
+v3.4.1.2754
+	Fixed a critical error that caused all CD modifiers to be ignored. Incompatible table format after merging with retail wow
+	Fixed spells affected by Forbearance
+	Added arena season 7 set items
+
+v3.4.1.2752
+	Max Number of Visible Icons will correctly work with Display Inactive Icons disabled
+
+v3.4.1.2751
+	3.4.2 font flag fix
+	Added option to use ElvUI's timer (in General menu)
+	Fixed spell tooltips showing a blank text if the spell hasn't been cached yet
+	Fixed option panel dropdown menu tooltip not showing
+
+v3.4.1.2750
+	minor bug fixes
+
+v3.4.1.2744
+	Fixed option panel taint error
+
+v3.4.1.2743
+	Class abilities with a base cooldown of 2 minutes or more (with some exceptions, such as Reincarnation, Ritual of
+	Doom, Astral Recall, and Lay on Hands) will reset when an encounter ends
+	Added rest of WG pvp trinkets
+	Fixed nil error when Cold Snap is used while Frost Ward isn't being tracked
+	Jan 31, 2023 Hotfixes
+
+v3.4.1.2742
+	Titan-Forged Rune of Determination merged to PvP Trinket
+
+v3.4.1.2740
+	Fixed Set bonus inspection
+	Added Season 6 tier set bonuses
+
+v3.4.1.2737
+	Fixed dual spec inspection
+	Fixed nil error
+
+v3.4.1.2736
+	Compatibility updates for 3.4.1
+
+v3.4.0.2724
+	Fixed sync for cross realm group members
+
+v3.4.0.2723
+	The correct talents will show for whichever spec your group member has active on inital inspection.
+
+v3.4.0.2722
+
+	Wrath of the Lich King Classic release. (Build 45435)
+	Phase 1 (season 5, tier 7 sets added)
+
+------------------------------------------------------------------------------
+-- bcc
+--
+v2.5.4.2722
+	Fixed sync for cross realm group members
+
+v2.5.4.2722
+	NIL.
+
+v2.7.20
+	Merciless, Vengeful, Brutal Gladiator set items added.
+	Localization updated for ruRU, zhTW
+
+v2.7.15
+	Feign Death will no longer grey-out the icons.
+	Fixed an issue where logging back in would incorrectly grey-out the icons.
+	Group inspection is now done periodically until the arena match begins.
+
+v2.7.11
+	Bumped toc for 2.5.4
+
+v2.6.36
+	nil error fix
+
+v2.6.35-bcc
+	CTRL-clicking the spell in the 'Spells/RaidCD' tab will add it to the 'Spell Editor'.
+	Warlock Soulstone CD added.
+
+v2.6.30-bcc
+	Feature Updates
+		All supported UIs can now display individual unit CD bars in a raid.
+		CD bars are now grayed out for offline/dead units.
+		Interrupt bar - added option to display interrupted spell icon and target marker. <req#283>
+		Highlighting - all self casted spell types can be highlighted.
+		Compatibility updates for WoW: Classic Era.
+		Compatibility updates for WoW: 9.1.5 PTR.
+	Bug Fixes
+		Reincarnation will correctly go on CD when used. (Temp fix)
+		Stealth, Prowl, Shadowmeld will correctly go on CD when the effect ends instead of on cast.
+		Talent changes will now update for synced units.
+		Fixed Triple row/col layout and recharge color switching on reset. <iss#284>
+		GW2_UI fixed for 5.18.X. <req#286>
+	AltzUI support. <req#291>
+
+v2.6.10-bcc
+	Cooldowns will no longer reset when a raid encounter ends. #iss256
+	Mage ability - Cold Snap will correctly reset Frost/Fire Ward CD.
+	Interrupt bar can be sorted by remaining time when the Status Bar Timer is disabled. #iss259
+
+v2.6.03-bcc
+	Highlighting will now work with all spell ranks.
+	Rogue ability - Sprint (Rank 3) will correctly go on CD when used.
+
+v2.6.02-bcc
+	Fixed abilities with shared cooldown not starting it's timer.
+
+v2.6.01-bcc
+	Initial release for WoW: Burning Crusade Classic.
+
+------------------------------------------------------------------------------
+-- classic era
+--
+v1.15.3.2802
+	bump toc
+	Interrupt Bar can now be sorted by spell priority.
+	NameBar nil err fix.
+	Fixed multicharged spell opacity when it still has a charge left.
+	zhTW localization update.
+
+v1.15.2.2800
+	RaidCD/Spell option revamped.
+	Queued inspections while in combat will be processed upon leaving combat. (doesn't affect synced units)
+
+v1.15.2.2788
+	bump toc
+	Embeded AceComm w/ ChatThrottleLib.
+		> No longer syncs with earlier versions of this addon.
+
+v1.15.0.2775
+	Talent inspection will correctly work for group members without OmniCD
+
+v1.15.0.2774
+	bump toc
+
+v1.14.4.2773
+	Fixed incorrect sorting when a unit dies or resurrects on ver.2772
+	Added option to change icon texture for 'Trinket, Main Hand, Consumables' spell type.
+
+v1.14.4.2772
+	Fixed an issue that prevented inspecting offline members when they came back online.
+
+v1.14.4.2771
+	Extra Bars can now be used as additional CD bars that attach to each unit's raid frame.
+
+v1.14.4.2768
+	bump toc
+
+v1.14.3.2754
+	Fixed a critical error that caused all CD modifiers to be ignored. Incompatible table format after merging with retail wow
+
+v1.14.3.2752
+	Max Number of Visible Icons will correctly work with Display Inactive Icons disabled
+
+v1.14.3.2751
+	Added option to use ElvUI's timer (in General menu)
+	Fixed spell tooltips showing a blank text if the spell hasn't been cached yet
+	Fixed option panel dropdown menu tooltip not showing
+
+v1.14.3.2750
+	minor bug fixes
+
+v1.14.3.2724
+	Fixed sync for cross realm group members
+
+v1.14.3.2722
+
+	Classic Era re-release. (Build 44834)
+
+v2.7.00
+	toc update - 11402
+
+v2.6.35
+	CTRL-clicking the spell in the 'Spells/RaidCD' tab will add it to the 'Spell Editor'.
+	Warlock Soulstone CD added.
+	Tooltip borders fixed.
+
+v2.6.30
+	Initial release for WoW: Classic Era.

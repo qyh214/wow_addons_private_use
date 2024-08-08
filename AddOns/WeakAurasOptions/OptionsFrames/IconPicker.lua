@@ -1,14 +1,18 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 -- Lua APIs
 local pairs  = pairs
 
 -- WoW APIs
-local CreateFrame, GetSpellInfo = CreateFrame, GetSpellInfo
+local CreateFrame = CreateFrame
 
 local AceGUI = LibStub("AceGUI-3.0")
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -49,7 +53,7 @@ local function ConstructIconPicker(frame)
     if (tonumber(subname)) then
       local spellId = tonumber(subname);
       if (abs(spellId) < math.huge and tostring(spellId) ~= "nan") then
-        local name, _, icon = GetSpellInfo(spellId)
+        local name, _, icon = OptionsPrivate.Private.ExecEnv.GetSpellInfo(spellId)
         if name and icon then
           AddButton(name, icon)
         end
@@ -214,7 +218,7 @@ local function ConstructIconPicker(frame)
   return group
 end
 
-function OptionsPrivate.IconPicker(frame)
-  iconPicker = iconPicker or ConstructIconPicker(frame)
+function OptionsPrivate.IconPicker(frame, noConstruct)
+  iconPicker = iconPicker or (not noConstruct and ConstructIconPicker(frame))
   return iconPicker
 end

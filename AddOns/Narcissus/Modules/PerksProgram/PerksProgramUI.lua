@@ -2,8 +2,10 @@
 
 local _, addon = ...
 local DataProvider = addon.PerksProgramDataProvider;
+local TransmogDataProvider = addon.TransmogDataProvider;
 
 local L = Narci.L;
+local NarciAPI = NarciAPI;
 
 local BlizzardFrame;
 local PerksProgramUITooltip;
@@ -13,6 +15,81 @@ local AnimationButton, AnimationDropDown;
 
 local SELECTED_DATA;
 
+local C_Item = C_Item;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
+local C_PerksProgram = C_PerksProgram;
+local C_TransmogCollection = C_TransmogCollection;
+local EventRegistry = EventRegistry;
+
+
+-- User Settings --
+local MODEL_SETUP_ENABLED = false;   --Change the default model's animation and yaw
+local DEV_MODE = false;
+-------------------
+local CURRENCY_MARKUP = " |T4696085:0:0:0:0:64:64:6:58:6:58|t";
+
+local STAND_ANIMATION = 804;    --Stand Character Create
+
+local MODEL_SETUPS = {
+    INVTYPE_RANGED = {yaw = -1.52, animation = STAND_ANIMATION, sheathed = false},
+    INVTYPE_2HWEAPON = {yaw = 0.00, animation = STAND_ANIMATION, sheathed = false},
+    INVTYPE_WEAPON = {yaw = -2.10, animation = STAND_ANIMATION, sheathed = false},
+    INVTYPE_RANGEDRIGHT = {yaw = -1.83, animation = STAND_ANIMATION, sheathed = false},
+
+    STAFF =  {yaw = 2.13, animation = STAND_ANIMATION, sheathed = true},
+};
+
+local function GetPlayerActor()
+    return BlizzardFrame.ModelSceneContainerFrame.playerActor
+end
+
+local function SetupModelByItemID(actor, itemID)
+    if itemID then
+        local _, _, _, itemEquipLoc, _, classID, subclassID = GetItemInfoInstant(itemID);
+        local key = itemEquipLoc;
+
+        if classID == 2 and subclassID == 10 then
+            key = "STAFF";
+        end
+
+        local data = key and MODEL_SETUPS[key];
+
+        if data then
+            if data.yaw then
+                actor:SetYaw(data.yaw);
+            end
+
+            if data.sheathed ~= nil then
+                actor:SetSheathed(data.sheathed);
+            end
+        end
+
+        local animationID = (data and data.animation) or STAND_ANIMATION;
+        actor:StopAnimationKit();
+        actor:SetAnimationBlendOperation(0);  --LE_MODEL_BLEND_OPERATION_ANIM
+        actor:SetAnimation(animationID);
+
+        local sheathed = actor:GetSheathed();   --Re-sheathe so the actor can grip the weapon
+        actor:SetSheathed(not sheathed);
+        actor:SetSheathed(sheathed);
+    end
+end
+
+local function GetColorizedItemNameFromSource(sourceID, itemID)
+    if not itemID then
+        itemID = C_TransmogCollection.GetSourceItemID(sourceID);
+    end
+
+    if itemID then
+        local itemName, itemLink, itemQuality = C_Item.GetItemInfo(itemID);
+        if itemName and itemName ~= "" then
+            local hex = NarciAPI.GetItemQualityHexColor(itemQuality);
+            return "|cff"..hex..itemName.."|r", true
+        else
+            return itemID, false
+        end
+    end
+end
 
 local function SetButtonFontColor(fontString, colorIndex)
     if colorIndex == 1 then
@@ -24,6 +101,19 @@ local function SetButtonFontColor(fontString, colorIndex)
     end
 end
 
+local function GetSelectedMountTypeName()
+    local data = SELECTED_DATA;
+    if not (data and data.mountID and data.mountID ~= 0) then return end;
+    local mountTypeID = select(5, C_MountJournal.GetMountInfoExtraByID(data.mountID));
+    local mountTypeName;
+    if mountTypeID == 230 then --ground
+        mountTypeName = MOUNT_JOURNAL_FILTER_GROUND or "Ground";
+    elseif mountTypeID == 248 then  --flying
+        mountTypeName = MOUNT_JOURNAL_FILTER_FLYING or "Flying";
+    end
+    return mountTypeName
+end
+
 local function OnProductSelectedAfterModel(f, data)
     --Enum.PerksVendorCategoryType
     SELECTED_DATA = data;
@@ -32,26 +122,58 @@ local function OnProductSelectedAfterModel(f, data)
     local showExtraDetail;
     local showSheatheToggle = true;
 
-    if categoryID == 8 then
+    if categoryID == 8 then     --TransmogSet
+        --[[    --Showing child items has become a base feature
         if data.transmogSetID then
             ExtraDetailFrame:Show();
             local sourceIDs = C_TransmogSets.GetAllSourceIDs(data.transmogSetID);
             ExtraDetailFrame:DisplayEnsembleSources(sourceIDs);
             showExtraDetail = true;
         end
-    elseif categoryID == 3 then
+        --]]
+    elseif categoryID == 3 then     --Pet
         if data.speciesID then
             ExtraDetailFrame:DisplayPetInfo(data.speciesID);
             showExtraDetail = true;
         end
         showSheatheToggle = false;
-    elseif categoryID == 2 then
-        --mount
+    elseif categoryID == 2 then     --Mounts
+        --Mount: Add mountType (Ground, Flying, etc.) to CategoryText
+        --Now implemented by Blizzard
+        --[[
         showSheatheToggle = false;
+        local mountTypeName = GetSelectedMountTypeName();
+        if mountTypeName then
+            local defaultDetailsFrame = ExtraDetailFrame.parentFrame;   --PerksProgramDetailsFrameTemplate
+            if defaultDetailsFrame and defaultDetailsFrame.CategoryText then
+                C_Timer.After(0, function() --DetailsFrame also use EventRegistry for updating data, so we need to set a delay
+                    mountTypeName = GetSelectedMountTypeName();
+                    if mountTypeName then
+                        defaultDetailsFrame.CategoryText:SetText((PERKS_VENDOR_CATEGORY_MOUNT or "Mount").." - "..mountTypeName);
+                    end
+                end);
+            end
+        end
+        --]]
+    elseif categoryID == 1 then     --Transmog
+        if MODEL_SETUP_ENABLED then
+            local actor = PerksProgramFrame.ModelSceneContainerFrame.playerActor;
+            if actor then
+                SetupModelByItemID(actor, data.itemID);
+            end
+        end
+
+        local sourceID = data.itemModifiedAppearanceID;
+        local ownerSetInfo = TransmogDataProvider:GetOwnerSetInfo(sourceID);
+        if ownerSetInfo then
+            ExtraDetailFrame:Show();
+            ExtraDetailFrame:DisplayHiddenTransmogSet(ownerSetInfo, sourceID);
+            showExtraDetail = true;
+        end
     end
 
     if not showExtraDetail then
-        ExtraDetailFrame:HideFrame();
+        ExtraDetailFrame:Hide();
     end
 
     if ExtraDetailFrame.parentFrame then
@@ -69,7 +191,7 @@ local function GetPetTypeTexture(petTypeID, size)
     size = size or 16;
 
     if petTypeID and PET_TYPE_SUFFIX and PET_TYPE_SUFFIX[petTypeID] then
-        return string.format("|T%s:%d:%d:0:0:128:256:102:63:129:168|t", "Interface\\PetBattles\\PetIcon-"..PET_TYPE_SUFFIX[petTypeID], size, size);
+        return string.format("|T%s:%d:%d:0:0:128:256:102:63:129:168|t", "Interface/PetBattles/PetIcon-"..PET_TYPE_SUFFIX[petTypeID], size, size);
     else
         return "";
     end
@@ -83,7 +205,7 @@ local function SetupPetTooltip(tooltip, speciesID)
         local typeIconFomart = "|T%s:24:24|t|T%s:16:16:-4:0:128:256:102:63:129:168|t";
         for _, info in ipairs(petAbilityLevelInfo) do
             name, icon, typeID = C_PetJournal.GetPetAbilityInfo(info.abilityID);
-            icon = string.format(typeIconFomart, icon, "Interface\\PetBattles\\PetIcon-"..PET_TYPE_SUFFIX[typeID]);
+            icon = string.format(typeIconFomart, icon, "Interface/PetBattles/PetIcon-"..PET_TYPE_SUFFIX[typeID]);
             tooltip:AddLine(icon.." "..name, 1, 1, 1, true);
         end
         tooltip:Show();
@@ -178,30 +300,23 @@ end
 
 local function PerksProgramTooltip_ProcessInfo(f, info)
     --SharedTooltip_SetBackdropStyle(f, GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT_DARK);
-    local owner = f:GetOwner();
+    local owner = f:GetOwner();     --ScrollViewButton
     if not owner then return end;
 
     local viid = owner.perksVendorItemID;
+    if (not viid) and owner.GetElementData then
+        local data = owner:GetElementData();
+        viid = data and data.perksVendorItemID;
+    end
 
     if viid then
-        --PerksProgramProductButtonTemplate
-
-        --[[
-        local categoryID;
-        if owner.GetElementData then
-           local data = owner.GetElementData();
-           categoryID = data and data.perksVendorCategoryID;
-           if categoryID then
-                --Enum.PerksVendorCategoryType
-                if categoryID == 3 then --pet
-                    if data.speciesID then
-                        SetupPetTooltip(f, data.speciesID);
-                    end
-                end
-            end
+        local sourceID = DataProvider:GetVendorItemTransmogSourceID(viid);
+        if sourceID and TransmogDataProvider:IsSoucePartOfTransmogSet(sourceID) then
+            f:AddLine(" ");
+            f:AddLine(string.format(L["Format Item Belongs To Set"], TransmogDataProvider:GetOwnerSetName(sourceID)), 1, 0.82, 0, true);
         end
-        --]]
-
+        
+        --[[
         if not owner.purchased then
             --Show "unavailable" for historical items
             local seconds = C_PerksProgram.GetTimeRemaining(viid);
@@ -217,6 +332,7 @@ local function PerksProgramTooltip_ProcessInfo(f, info)
             f:AddLine(" ");
             f:AddLine(string.format(L["Perks Program Item Added In Format"], displayMonthName), 1, 0.82, 0, true);
         end
+        --]]
     end
 end
 
@@ -247,10 +363,74 @@ local function PerksProgramCurrencyFrame_OnEnter(f)
     end
 end
 
+local function CreateDevTool(owner)
+    local f = CreateFrame("Frame", nil, owner);
+    f:SetSize(16, 16);
+    f:SetPoint("TOP", owner, "TOP", 0, -16);
+
+    local line1 = f:CreateFontString(nil, "OVERLAY", "SystemFont_Shadow_Med3_Outline");
+    line1:SetJustifyH("CENTER");
+    line1:SetPoint("TOP", f, "TOP", 0, 0);
+    line1:SetTextColor(1, 0.82, 0);
+
+    local line2 = f:CreateFontString(nil, "OVERLAY", "SystemFont_Shadow_Med3_Outline");
+    line2:SetJustifyH("CENTER");
+    line2:SetPoint("TOP", f, "TOP", 0, -20);
+    line2:SetTextColor(1, 0.82, 0);
+
+    local function OnUpdate(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t > 0.2 then
+            self.t = 0;
+            local actorYaw = 0;
+            local cameraYaw = 0;
+            local effectiveYaw = 0;
+
+            if self.actor then
+                actorYaw = self.actor:GetYaw();
+            end
+
+            if self.camera then
+                cameraYaw = self.camera:GetYaw();
+            end
+
+            if self.baseCameraYaw then
+                local delta = cameraYaw - self.baseCameraYaw;
+                effectiveYaw = actorYaw - delta;
+            end
+
+            line2:SetText(string.format("Actor: |cffffffff%.2f|r   Camera: |cffffffff%.2f|r   Effective: |cffffffff%.2f|r", actorYaw, cameraYaw, effectiveYaw));
+        end
+    end
+
+    f.t = 0;
+    f:SetScript("OnUpdate", OnUpdate);
+
+    local function Callback(_, data)
+        f.actor = GetPlayerActor();
+        local DEFAULT_CAMERA_TAG = "primary";
+        f.camera = BlizzardFrame.ModelSceneContainerFrame.PlayerModelScene:GetCameraByTag(DEFAULT_CAMERA_TAG);
+        f.baseCameraYaw = f.camera:GetYaw();
+
+        local itemID = data.itemID;
+        local _, _, _, itemEquipLoc, _, classID, subclassID = GetItemInfoInstant(itemID);
+        itemEquipLoc = itemEquipLoc or "NOT_Equippable";
+        line1:SetText(string.format("ItemID: |cffffffff%s|r   EquipLoc: |cffffffff%s|r   Class: |cffffffff%s/%s|r", itemID, itemEquipLoc, classID, subclassID));
+    end
+
+    EventRegistry:RegisterCallback("PerksProgramModel.OnProductSelectedAfterModel", Callback, f);
+end
+
 local function Initialize()
     if not PerksProgramFrame then return end;
 
     BlizzardFrame = PerksProgramFrame;
+
+    MODEL_SETUP_ENABLED = NarcissusDB.TradingPostModifyDefaultPose;
+
+    if DEV_MODE then
+        CreateDevTool(BlizzardFrame);
+    end
 
     --Insert ExtraDetailFrame
     if BlizzardFrame.ProductsFrame and BlizzardFrame.ProductsFrame.PerksProgramProductDetailsContainerFrame and BlizzardFrame.ProductsFrame.PerksProgramProductDetailsContainerFrame.DetailsFrame then
@@ -301,7 +481,7 @@ local function Initialize()
 
         SheatheToggle = CreateFrame("Button", nil, f, "NarciPerksProgramSquareButtonTemplate");
         SheatheToggle:SetPoint("LEFT", f, "CENTER", 8, 0);
-        SheatheToggle.Icon:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\PerksProgram\\SheatheIconYellow");
+        SheatheToggle.Icon:SetTexture("Interface/AddOns/Narcissus/Art/Modules/PerksProgram/SheatheIconYellow");
 
         local function SheatheToggle_SetIcon(b, sheathed)
             if sheathed then
@@ -314,7 +494,7 @@ local function Initialize()
         SheatheToggle_SetIcon(SheatheToggle, true);
 
         local function SheatheToggle_OnClick(b)
-            local playerActor = BlizzardFrame.ModelSceneContainerFrame.playerActor;
+            local playerActor = GetPlayerActor();
             if not playerActor then return end;
             local sheathed = not playerActor:GetSheathed();
             playerActor:SetSheathed(sheathed);
@@ -353,7 +533,7 @@ local function Initialize()
 
         function SheatheToggle:SetState(perksVendorCategoryID)
             local enable = perksVendorCategoryID and (perksVendorCategoryID ~= 2) and (perksVendorCategoryID ~= 3);
-            local playerActor = BlizzardFrame.ModelSceneContainerFrame.playerActor;
+            local playerActor = GetPlayerActor();
             enable = enable and (playerActor and playerActor:IsShown());
             local sheathed = playerActor and playerActor:GetSheathed();
             SheatheToggle_SetIcon(self, sheathed);
@@ -371,7 +551,7 @@ local function Initialize()
 
         AnimationButton = CreateFrame("Button", nil, f, "NarciPerksProgramSquareButtonTemplate");
         AnimationButton:SetPoint("LEFT", SheatheToggle, "RIGHT", 4, 0);
-        AnimationButton.Icon:SetTexture("Interface\\AddOns\\Narcissus\\Art\\Modules\\PerksProgram\\AnimationIcon");
+        AnimationButton.Icon:SetTexture("Interface/AddOns/Narcissus/Art/Modules/PerksProgram/AnimationIcon");
 
         AnimationDropDown:SetParentButton(AnimationButton);
         AnimationDropDown:UpdateOptions();
@@ -438,15 +618,170 @@ function NarciPerksProgramItemDetailExtraFrameMixin:OnLoad()
     self:RegisterEvent("PERKS_PROGRAM_OPEN");
     self:RegisterEvent("PERKS_PROGRAM_CLOSE");
     self:SetEnsembleHeaderText();
-    EventRegistry:RegisterCallback("PerksProgramModel.OnProductSelectedAfterModel", OnProductSelectedAfterModel, self);
+
+    EventRegistry:RegisterCallback("PerksProgramModel.OnProductSelectedAfterModel", OnProductSelectedAfterModel, ExtraDetailFrame);
+    EventRegistry:RegisterCallback("PerksProgramFrame.OnShow", self.LoadUserSettings, self);
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:Init()
+    self.Init = nil;
+
+    if BlizzardFrame.ConfirmPurchase and BlizzardFrame.GetSelectedProduct then
+        hooksecurefunc("StaticPopup_Show", function(which)
+            if which == "PERKS_PROGRAM_CONFIRM_PURCHASE" then
+                self:TryShowPurchaseAlert();
+            end
+        end)
+
+        if StaticPopup1 then
+            StaticPopup1:HookScript("OnHide", function()
+                self:HidePurchaseAlert();
+            end);
+        end
+    end
+
+    if BlizzardFrame.ToggleHideArmorSetting then
+        hooksecurefunc(BlizzardFrame, "ToggleHideArmorSetting", function(_, playerArmorSetting)
+            DataProvider:SaveUserData("hidePlayerArmorSetting", playerArmorSetting);
+        end)
+    end
+
+    local att = self.AutoTryOnToggle;
+    self.autoDisplayTransmogSet = DataProvider:GetTimeLimitedData("autoDisplayTransmogSet");
+
+    local function att_UpdateVisual()
+        if self.autoDisplayTransmogSet then
+            att.Checkbox:SetTexCoord(0, 0.5, 0, 1);
+        else
+            att.Checkbox:SetTexCoord(0.5, 1, 0, 1);
+        end
+    end
+
+    do
+        local function OnClick()
+            self:ToggleAutoDisplayTransmogSet();
+            att_UpdateVisual();
+        end
+
+        local function OnEnter()
+            att.ButtonText:SetTextColor(1, 1, 1);
+        end
+
+        local function OnLeave()
+            att.ButtonText:SetTextColor(0.67, 0.67, 0.67);
+        end
+
+        att:SetScript("OnClick", OnClick);
+        att:SetScript("OnEnter", OnEnter);
+        att:SetScript("OnLeave", OnLeave);
+
+        OnLeave();
+        att_UpdateVisual();
+    end
+
+    att.ButtonText:SetText(L["Auto Try On All Items"]);
+
+    local buttonWidth = att:GetWidth();
+    local checkboxSize = 40;
+    local textWidth = att.ButtonText:GetWrappedWidth();
+    local visualCompensation = -8;
+    local gap = -2;
+    local offsetX = 0.5*(buttonWidth - checkboxSize - textWidth + visualCompensation);
+    att.Checkbox:ClearAllPoints();
+    att.Checkbox:SetPoint("LEFT", att, "LEFT", offsetX, 0);
+    att.ButtonText:ClearAllPoints();
+    att.ButtonText:SetPoint("LEFT", att.Checkbox, "RIGHT", gap, 0);
+
+    do
+        local HeaderMouseoverFrame = self.HeaderMouseoverFrame;
+
+        local function FitToText(f)
+            local width = self.HeaderText:GetWrappedWidth();
+            f:SetWidth(width + 16);
+        end
+
+        local function OnEnter(f)
+            if self.sourceIDs then
+                local n = 0;
+                local itemCosts = {};
+                local totalCosts = 0;
+                local price, purchased;
+                local name, loaded;
+                local allLoaded = true;
+
+                for _, sourceID in ipairs(self.sourceIDs) do
+                    name, loaded = GetColorizedItemNameFromSource(sourceID);
+                    if name then
+                        allLoaded = allLoaded and loaded;
+                        price, purchased = DataProvider:GetVendorItemPriceBySourceID(sourceID);
+                        if purchased then
+                            n = n + 1;
+                            itemCosts[n] = {name, 0};
+                        elseif price and price > 0 then
+                            n = n + 1;
+                            itemCosts[n] = {name, price};
+                            totalCosts = totalCosts + price;
+                        end
+                    end
+                end
+
+                if n > 0 then
+                    local tooltip = PerksProgramUITooltip;
+                    tooltip:Hide();
+                    tooltip:SetOwner(self, "ANCHOR_NONE");
+                    tooltip:SetPoint("BOTTOMRIGHT", self, "TOPLEFT", -8, 0);
+
+                    if totalCosts > 0 then
+                        tooltip:AddDoubleLine(L["Full Set Cost"], totalCosts..CURRENCY_MARKUP, 1, 0.82, 0, 1, 1, 1);
+                    else
+                        tooltip:AddDoubleLine(L["Full Set Cost"], "|A:perks-owned-small:0:0|a", 1, 0.82, 0, 1, 1, 1);
+                    end
+
+                    for _, data in ipairs(itemCosts) do
+                        if data[2] > 0 then
+                            tooltip:AddDoubleLine(data[1], data[2]..CURRENCY_MARKUP, 1, 1, 1, 1, 1, 1);  --interface/icons/tradingpostcurrency.blp
+                        else
+                            tooltip:AddDoubleLine(data[1], "|A:perks-owned-small:0:0|a", 1, 1, 1, 1, 1, 1);
+                        end
+                    end
+
+                    tooltip:Show();
+
+                    if not allLoaded then
+                        C_Timer.After(0.2, function()
+                            if f:IsVisible() and f:IsMouseOver() then
+                                OnEnter(f);
+                            end
+                        end);
+                    end
+                end
+            end
+
+        end
+
+        local function OnLeave(f)
+            PerksProgramUITooltip:Hide();
+        end
+
+        HeaderMouseoverFrame.FitToText = FitToText;
+
+        HeaderMouseoverFrame:SetScript("OnEnter", OnEnter);
+        HeaderMouseoverFrame:SetScript("OnLeave", OnLeave);
+    end
 end
 
 function NarciPerksProgramItemDetailExtraFrameMixin:OnEvent(event, ...)
-    if event == "PERKS_PROGRAM_OPEN" then
+    if event == "PERKS_PROGRAM_OPEN" then   --Alawys ON
         self:UnregisterEvent(event);
         Initialize();
-    elseif event == "PERKS_PROGRAM_CLOSE" then
+        self:Init();
+        self:LoadUserSettings();
+    elseif event == "PERKS_PROGRAM_CLOSE" then  --Alawys ON
         SELECTED_DATA = nil;
+        TransmogDataProvider:ClearTransmogSetCache();
+        self:SaveUserSettings();
+    elseif event == "PERKS_PROGRAM_PURCHASE_SUCCESS" or event == "PERKS_PROGRAM_REFUND_SUCCESS" then    --Dynamic
+        self:UpdateItemButtons();
     end
 end
 
@@ -456,9 +791,21 @@ function NarciPerksProgramItemDetailExtraFrameMixin:ReleaseButtons()
             button:ClearData();
         end
     end
+
+    self.Pointer:Hide();
+    self.Pointer:ClearAllPoints();
+    self.HeaderMouseoverFrame:Hide();
 end
 
-function NarciPerksProgramItemDetailExtraFrameMixin:AcquireButton(i)
+function NarciPerksProgramItemDetailExtraFrameMixin:PointAtButton(button)
+    if button then
+        self.Pointer:ClearAllPoints();
+        self.Pointer:SetPoint("TOP", button, "BOTTOM", 0, 0);
+        self.Pointer:Show();
+    end
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:AcquireSmallButton(i)
     if not self.buttons then
         self.buttons = {};
     end
@@ -473,51 +820,19 @@ function NarciPerksProgramItemDetailExtraFrameMixin:HideFrame()
         self:Hide();
         self:ReleaseButtons();
         self.HeaderText:SetText("");
+        self.sourceIDs = nil;
+        self.viewedSourceID = nil;
     end
 end
 
-local function CalculateInitialOffset(buttonSize, gap, numButtons, maxButtonPerRow)
+function NarciPerksProgramItemDetailExtraFrameMixin:CalculateInitialOffset(buttonSize, gap, numButtons, maxButtonPerRow)
     local spanX = (buttonSize + gap) * (math.min(numButtons, maxButtonPerRow)) - gap;
     return -0.5*spanX;
-end
-function NarciPerksProgramItemDetailExtraFrameMixin:DisplayEnsembleSources(sourceIDs)
-    self:ReleaseButtons();
-    local numItems = (sourceIDs and #sourceIDs) or 0;
-
-    if numItems > 1 then
-        local buttonSize = 32;
-        local buttonGap = 4;
-        local maxButtonPerRow = 8;
-        local col, row = 0, 0;
-
-        local buttonUnit = buttonSize + buttonGap;
-        local fromOffsetX = CalculateInitialOffset(buttonSize, buttonGap, numItems, maxButtonPerRow);
-
-        local button;
-
-        for i = 1, numItems do
-            col = col + 1;
-            if col > maxButtonPerRow then
-                col = 1;
-                row = row + 1;
-                fromOffsetX = CalculateInitialOffset(buttonSize, buttonGap, numItems - row*maxButtonPerRow, maxButtonPerRow);
-            end
-            button = self:AcquireButton(i);
-            button:ClearAllPoints();
-            button:SetPoint("TOPLEFT", self.HeaderText, "BOTTOM", fromOffsetX + (col - 1) * buttonUnit, -8 -row*buttonUnit);
-            button:SetTransmogSource(sourceIDs[i]);
-        end
-
-        self:SetEnsembleHeaderText();
-        self:SetHeight(14 + 8 + buttonUnit * (row +1) - buttonGap);
-        self:Show();
-    else
-        self:HideFrame();
-    end
 end
 
 function NarciPerksProgramItemDetailExtraFrameMixin:DisplayPetInfo(speciesID)
     self:ReleaseButtons();
+    self.AutoTryOnToggle:Hide();
 
     if speciesID then
         local _, _, petType, _, _, _, _, canBattle = C_PetJournal.GetPetInfoBySpeciesID(speciesID);
@@ -533,7 +848,7 @@ function NarciPerksProgramItemDetailExtraFrameMixin:DisplayPetInfo(speciesID)
         local col, row = 0, 0;
 
         local buttonUnit = buttonSize + buttonGap;
-        local fromOffsetX = CalculateInitialOffset(buttonSize, buttonGap, numItems, maxButtonPerRow);
+        local fromOffsetX = self:CalculateInitialOffset(buttonSize, buttonGap, numItems, maxButtonPerRow);
 
         local button;
 
@@ -542,9 +857,9 @@ function NarciPerksProgramItemDetailExtraFrameMixin:DisplayPetInfo(speciesID)
             if col > maxButtonPerRow then
                 col = 1;
                 row = row + 1;
-                fromOffsetX = CalculateInitialOffset(buttonSize, buttonGap, numItems - row*maxButtonPerRow, maxButtonPerRow);
+                fromOffsetX = self:CalculateInitialOffset(buttonSize, buttonGap, numItems - row*maxButtonPerRow, maxButtonPerRow);
             end
-            button = self:AcquireButton(i);
+            button = self:AcquireSmallButton(i);
             button:ClearAllPoints();
             button:SetPoint("TOPLEFT", self.HeaderText, "BOTTOM", fromOffsetX + (col - 1) * buttonUnit, -8 -row*(buttonSize + verticalGap));
             button:SetPetAbilityInfo(abilities[i], levels[i]);
@@ -569,8 +884,11 @@ function NarciPerksProgramItemDetailExtraFrameMixin:DisplayPetInfo(speciesID)
         end
         self:Show();
     else
-        self:HideFrame();
+        self:Hide();
     end
+
+    self:UnregisterEvent("PERKS_PROGRAM_PURCHASE_SUCCESS");
+    self:UnregisterEvent("PERKS_PROGRAM_REFUND_SUCCESS");
 end
 
 function NarciPerksProgramItemDetailExtraFrameMixin:SetEnsembleHeaderText(slotName)
@@ -578,8 +896,252 @@ function NarciPerksProgramItemDetailExtraFrameMixin:SetEnsembleHeaderText(slotNa
         self.HeaderText:SetText(slotName);
         self.HeaderText:SetTextColor(1, 1, 1);
     else
-        self.HeaderText:SetText("Includes:");
-        self.HeaderText:SetTextColor(0.5, 0.5, 0.5);
+        self.HeaderText:SetText(self.defaultHeaderText);
+        if self.defaultHeaderColor == 1 then
+            self.HeaderText:SetTextColor(1, 0.82, 0);
+        else
+            self.HeaderText:SetTextColor(0.5, 0.5, 0.5);
+        end
+    end
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:DisplayEnsembleSources(sourceIDs, hiddenTransmogSetMode, viewedSourceID)
+    self:ReleaseButtons();
+
+    local extraHeight = 0;
+
+    if hiddenTransmogSetMode then
+        self.AutoTryOnToggle:Show();
+        extraHeight = 24 + 16;
+        self.HeaderMouseoverFrame:Show();
+    else
+        self.AutoTryOnToggle:Hide();
+        self.HeaderMouseoverFrame:Hide();
+    end
+
+    local numItems = (sourceIDs and #sourceIDs) or 0;
+
+    if numItems > 1 then
+        local buttonSize = 32;
+        local buttonGap = 4;
+        local maxButtonPerRow = 8;
+        local col, row = 0, 0;
+
+        local buttonUnit = buttonSize + buttonGap;
+        local fromOffsetX = self:CalculateInitialOffset(buttonSize, buttonGap, numItems, maxButtonPerRow);
+        local fromOffsetY = -22;
+
+        local showItemName = hiddenTransmogSetMode == true;
+
+        local button;
+        local sourceID;
+
+        for i = 1, numItems do
+            sourceID = sourceIDs[i];
+            col = col + 1;
+            if col > maxButtonPerRow then
+                col = 1;
+                row = row + 1;
+                fromOffsetX = self:CalculateInitialOffset(buttonSize, buttonGap, numItems - row*maxButtonPerRow, maxButtonPerRow);
+            end
+            button = self:AcquireSmallButton(i);
+            button:ClearAllPoints();
+            button:SetPoint("TOPLEFT", self, "TOP", fromOffsetX + (col - 1) * buttonUnit, fromOffsetY -row*buttonUnit);
+            button:SetTransmogSource(sourceID);
+            button.showItemName = showItemName;
+
+            if sourceID == viewedSourceID then
+                self:PointAtButton(button);
+            end
+        end
+
+        self.defaultHeaderText = L["Include Header"];
+        self.defaultHeaderColor = 0;
+        self:SetEnsembleHeaderText();
+        self:SetHeight(14 + 8 + buttonUnit * (row +1) - buttonGap + extraHeight);
+        self:Show();
+        self.numActiveButtons = numItems;
+        self:RegisterEvent("PERKS_PROGRAM_PURCHASE_SUCCESS");
+        self:RegisterEvent("PERKS_PROGRAM_REFUND_SUCCESS");
+    else
+        self:HideFrame();
+        self.numActiveButtons = 0;
+    end
+
+    self.sourceIDs = sourceIDs;
+    self.viewedSourceID = viewedSourceID;
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:DisplayHiddenTransmogSet(setInfo, viewedSourceID)
+    local sourceIDs = setInfo.sources;
+    self:DisplayEnsembleSources(sourceIDs, true, viewedSourceID);
+    self.defaultHeaderText = setInfo.name;
+    self.defaultHeaderColor = 1;
+    self:SetEnsembleHeaderText();
+    self.HeaderMouseoverFrame:FitToText();
+
+    if self.autoDisplayTransmogSet then
+        local playerActor = GetPlayerActor();
+        if not playerActor then return end;
+        for _, sourceID in ipairs(sourceIDs) do
+            playerActor:TryOn(sourceID);
+        end
+    else
+
+    end
+
+    self:UpdateItemVisibility();
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:UpdateItemVisibility()
+    local button;
+    local hideItem = not self.autoDisplayTransmogSet;
+
+    for i = 1, self.numActiveButtons do
+        button = self.buttons[i];
+        if button.transmogSourceID == self.viewedSourceID then
+            button.hideItem = false;
+        else
+            button.hideItem = hideItem;
+        end
+        button:UpdateVisual();
+    end
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:UpdateItemButtons()
+    C_Timer.After(0.5, function()
+        local button;
+        for i = 1, self.numActiveButtons do
+            button = self.buttons[i];
+            if button.transmogSourceID then
+                button.GreenCheck:SetShown(C_TransmogCollection.PlayerKnowsSource(button.transmogSourceID));
+            end
+        end
+    end);
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:ToggleAutoDisplayTransmogSet()
+    self.autoDisplayTransmogSet = not self.autoDisplayTransmogSet;
+    DataProvider:SetTimeLimitedData("autoDisplayTransmogSet", self.autoDisplayTransmogSet);
+
+    if self.autoDisplayTransmogSet then
+        if self.sourceIDs then
+            local playerActor = GetPlayerActor();
+            if not playerActor then return end;
+            for _, sourceID in ipairs(self.sourceIDs) do
+                playerActor:TryOn(sourceID);
+            end
+        end
+    else
+        if self.viewedSourceID then
+            local playerActor = GetPlayerActor();
+            if not playerActor then return end;
+            playerActor:Undress();
+            playerActor:TryOn(self.viewedSourceID);
+        end
+    end
+
+    self:UpdateItemVisibility();
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:OnHide()
+    self:HideFrame();
+    self:UnregisterEvent("PERKS_PROGRAM_PURCHASE_SUCCESS");
+    self:UnregisterEvent("PERKS_PROGRAM_REFUND_SUCCESS");
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:TryShowPurchaseAlert()
+    if (self:IsVisible() and self.viewedSourceID and self.autoDisplayTransmogSet) then
+
+    else
+        return
+    end
+
+
+    local product = BlizzardFrame:GetSelectedProduct();
+    local sourceID = product and product.itemModifiedAppearanceID;
+    if sourceID == 0 then return end;
+
+    local f = self.PurchaseAlertFrame;
+    if not f then
+        f = CreateFrame("Frame", nil, self);
+        self.PurchaseAlertFrame = f;
+
+        local scale = 2;
+        local padding = 4;
+        local modelWidth = 78 * scale;
+        local modelHeight = 104 * scale;
+        f:SetSize(modelWidth + 2*padding, modelHeight + 2*padding);
+        f:SetPoint("CENTER", UIParent, "CENTER", 0, 0);
+
+        NarciAPI.NineSliceUtil.SetUpBorder(f, "genericChamferedBorder", nil, 0.25, 0.25, 0.25, 1, 7);
+        NarciAPI.NineSliceUtil.SetUpBackdrop(f, "genericChamferedBackground", nil, 0, 0, 0, 0.9, -8);
+
+        f.Model = CreateFrame("DressUpModel", nil, f);
+        f.Model:SetSize(modelWidth, modelHeight);
+        f.Model:SetPoint("CENTER", 0, 0);
+        f.Model:SetAutoDress(false);
+        f.Model:SetDoBlend(false);
+        NarciAPI.TransitionAPI.SetModelLight( f.Model, true, false, -1, 1, -1, 0.8, 1, 1, 1, 0.5, 1, 1, 1);
+
+        f.Model:SetScript("OnModelLoaded", function(m)
+            if m.cameraID then
+                Model_ApplyUICamera(f.Model, m.cameraID);
+            end
+
+            if m.sourceID then
+                m:TryOn(m.sourceID);
+            end
+        end)
+
+        f.Title = f:CreateFontString(nil, "OVERLAY", "SystemFont_Shadow_Med2_Outline");
+        f.Title:SetTextColor(1, 0.82, 0);
+        f.Title:SetJustifyH("CENTER");
+        f.Title:SetText(L["You Will Receive One Item"]);
+        f.Title:SetPoint("BOTTOM", f, "TOP", 0, 12);
+
+        f:SetFrameStrata("FULLSCREEN_DIALOG");
+    end
+
+    local itemID = C_TransmogCollection.GetSourceItemID(sourceID);
+    if not itemID then return end;
+
+    local Model = f.Model;
+    Model.cameraID = C_TransmogCollection.GetAppearanceCameraIDBySource(sourceID);
+    Model:ClearModel();
+
+    f:Show();
+
+    if NarciAPI.IsHoldableItem(itemID) then
+        Model.sourceID = nil;
+        Model:SetItem(itemID, sourceID);
+    else
+        Model.sourceID = sourceID;
+        Model:SetUseTransmogChoices(true);
+        Model:SetUseTransmogSkin(true);
+        Model:Undress();
+        NarciAPI.TransitionAPI.SetModelByUnit(Model, "player");
+        Model:FreezeAnimation(0, 0, 0);
+        Model:TryOn(sourceID);  --Model must be visible first
+    end
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:HidePurchaseAlert()
+    if self.PurchaseAlertFrame and self.PurchaseAlertFrame:IsShown() then
+        self.PurchaseAlertFrame:Hide();
+    end
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:SaveUserSettings()
+    --Save the status
+end
+
+function NarciPerksProgramItemDetailExtraFrameMixin:LoadUserSettings()
+    if not BlizzardFrame then return end;
+
+    if DataProvider:GetUserData("hidePlayerArmorSetting") and not BlizzardFrame.hidePlayerArmorSetting then
+        BlizzardFrame.hidePlayerArmorSetting = true;
+        EventRegistry:TriggerEvent("PerksProgram.OnPlayerHideArmorToggled");
     end
 end
 
@@ -600,6 +1162,19 @@ local function TransmogItemButton_OnEnter(self)
             elseif classID == 2 then    --Weapon Type
                 slotName = itemSubType;
             end
+
+            if self.showItemName then
+                local itemName, isLoaded = GetColorizedItemNameFromSource(self.transmogSourceID, itemID)
+                if isLoaded then
+                    slotName = string.format("%s - %s", slotName, itemName);
+                else
+                    C_Timer.After(0.2, function()
+                        if self:IsMouseOver() and self:IsVisible() then
+                            TransmogItemButton_OnEnter(self);
+                        end
+                    end);
+                end
+            end
         end
         ExtraDetailFrame:SetEnsembleHeaderText(slotName);
     end
@@ -609,23 +1184,53 @@ local function TransmogItemButton_OnLeave(self)
     ExtraDetailFrame:SetEnsembleHeaderText();
 end
 
-local function TransmogItemButton_OnClick(self)
-    local playerActor = BlizzardFrame.ModelSceneContainerFrame.playerActor;
-    if not playerActor then return end;
+local function SelectProductBySourceID(itemModifiedAppearanceID)
+    local f = BlizzardFrame.ProductsFrame;
 
-    self.hideItem = not self.hideItem;
-
-    local sourceInfo = C_TransmogCollection.GetSourceInfo(self.transmogSourceID);
-    if not sourceInfo then return end;
-
-    local slotID = C_Transmog.GetSlotForInventoryType(sourceInfo.invType);
-    if self.hideItem then
-        playerActor:UndressSlot(slotID);
-    else
-        playerActor:TryOn(self.transmogSourceID);
+    local frozenProductItemInfo = f.FrozenProductContainer:GetItemInfo();
+    if frozenProductItemInfo and frozenProductItemInfo.itemModifiedAppearanceID == itemModifiedAppearanceID then
+        f.FrozenProductContainer:SetSelected(true);
+        return true
     end
 
-    self:UpdateVisual();
+    local scrollContainer = f.ProductsScrollBoxContainer;
+    local scrollBox = scrollContainer.ScrollBox;
+    local index, foundElementData = scrollBox:FindByPredicate(function(elementData)
+        return elementData.itemModifiedAppearanceID == itemModifiedAppearanceID
+    end);
+    if foundElementData then
+        scrollContainer.selectionBehavior:SelectElementData(foundElementData);
+        scrollBox:ScrollToElementDataIndex(index);
+        return true
+    end
+
+    return false
+end
+
+local function TransmogItemButton_OnClick(self, button)
+    if button == "LeftButton" then
+        local playerActor = GetPlayerActor();
+        if not playerActor then return end;
+
+        self.hideItem = not self.hideItem;
+
+        local sourceInfo = C_TransmogCollection.GetSourceInfo(self.transmogSourceID);
+        if not sourceInfo then return end;
+
+        local slotID = C_Transmog.GetSlotForInventoryType(sourceInfo.invType);
+        if self.hideItem then
+            playerActor:UndressSlot(slotID);
+        else
+            playerActor:TryOn(self.transmogSourceID);
+        end
+        self:UpdateVisual();
+    elseif button == "RightButton" then
+        if self.transmogSourceID then
+            if SelectProductBySourceID(self.transmogSourceID) then
+                
+            end
+        end
+    end
 end
 
 --Pet Ability
@@ -651,9 +1256,9 @@ function NarciPerksProgramItemDetailButtonMixin:OnLeave()
     end
 end
 
-function NarciPerksProgramItemDetailButtonMixin:OnClick()
+function NarciPerksProgramItemDetailButtonMixin:OnClick(button)
     if self.onClickFunc then
-        self.onClickFunc(self);
+        self.onClickFunc(self, button);
     end
 end
 
@@ -671,6 +1276,8 @@ function NarciPerksProgramItemDetailButtonMixin:SetTransmogSource(sourceID)
     self.transmogSourceID = sourceID;
     self.hideItem = nil;
     self:UpdateVisual();
+
+    self.GreenCheck:SetShown(C_TransmogCollection.PlayerKnowsSource(sourceID));
 end
 
 function NarciPerksProgramItemDetailButtonMixin:SetPetAbilityInfo(abilityID, level)
@@ -692,6 +1299,7 @@ function NarciPerksProgramItemDetailButtonMixin:SetPetAbilityInfo(abilityID, lev
 
     self.hideItem = nil;
     self:UpdateVisual();
+    self.GreenCheck:Hide();
 end
 
 function NarciPerksProgramItemDetailButtonMixin:ClearData()
@@ -707,7 +1315,7 @@ function NarciPerksProgramItemDetailButtonMixin:UpdateVisual()
     if self.hideItem then
         self.Icon:SetDesaturated(true);
         self.Icon:SetVertexColor(0.72, 0.72, 0.72);
-        self.RedEye:Show();
+        self.RedEye:Hide(); --Always Hidden
     else
         self.Icon:SetDesaturated(false);
         self.Icon:SetVertexColor(1, 1, 1);
@@ -772,48 +1380,48 @@ local ANIMATIONS_MOUNT = {
     4,      --Walk
     5,      --Run
     13,     --Walk Backwards
-    135,    --Fly
+    94,     --Mount Special
     548,    --Mount Flight Idle
 };
 
 local ANIMATIONS_PLAYER_DEFAULT = {
-    0,
+    STAND_ANIMATION,
     4,  --Walk
     5,  --Run
 };
 
 local ANIMATIONS_PLAYER_MELEE_1H = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     26,
 };
 
 local ANIMATIONS_PLAYER_MELEE_2H = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     27, 28,
 };
 
 local ANIMATIONS_PLAYER_SHIELD = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     26, 1078,
 };
 
 local ANIMATIONS_PLAYER_BOW = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     29, 109,
 };
 
 local ANIMATIONS_PLAYER_CROSSBOW = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     836, 842,
 };
 
 local ANIMATIONS_PLAYER_GUN = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     48, 110,
 };
 
 local ANIMATIONS_PLAYER_CASTER = {
-    0, 4, 5,
+    STAND_ANIMATION, 4, 5,
     51, 52,
 };
 
@@ -1007,23 +1615,44 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
         local maxNameWidth = 0;
         local numberWidth, nameWidth;
 
+        numButtons = numButtons + 1;    --We use the first button as a checkbox/toggle
+
+        local offsetY = paddingV;
+
         for i = 1, numButtons do
             if not self.buttons[i] then
                 self.buttons[i] = CreateFrame("Button", nil, self, "NarciPerksProgramDropDownButtonTemplate");
                 self.buttons[i].id = i;
             end
             button = self.buttons[i];
-            button:ClearAllPoints();
-            button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -paddingV + (1-i)*buttonHeight);
 
-            if defaultOption and i == numButtons then
-                if self.defaultAnimationKitID then
-                    numberWidth, nameWidth = button:SetAnimationOption("Default", self.defaultAnimationKitID, true);
-                else
-                    numberWidth, nameWidth = button:SetAnimationOption("Default", defaultAnimationID);
+            button:ClearAllPoints();
+            button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -offsetY);
+
+            if i == 1 then
+                numberWidth, nameWidth = button:SetModelSetupToggle();
+                local dividerHeight = 12;
+                offsetY = offsetY + buttonHeight;
+                if not self.Divider then
+                    self.Divider = self:CreateTexture(nil, "OVERLAY");
+                    self.Divider:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -(offsetY + 0.5*dividerHeight));
+                    self.Divider:SetPoint("RIGHT", self, "RIGHT", 0, 0);
+                    self.Divider:SetColorTexture(0.2, 0.2, 0.2);
                 end
+                local pixel = NarciAPI.GetPixelForWidget(self, 1);
+                self.Divider:SetHeight(pixel);
+                offsetY = offsetY + dividerHeight;
             else
-                numberWidth, nameWidth = button:SetAnimationOption(self.getNameFunc(self.animationIDs[i]), self.animationIDs[i]);
+                if defaultOption and i == numButtons then
+                    if self.defaultAnimationKitID then
+                        numberWidth, nameWidth = button:SetAnimationOption("Default AnimKit", self.defaultAnimationKitID, true);
+                    else
+                        numberWidth, nameWidth = button:SetAnimationOption("Default Animation", defaultAnimationID);
+                    end
+                else
+                    numberWidth, nameWidth = button:SetAnimationOption(self.getNameFunc(self.animationIDs[i-1]), self.animationIDs[i-1]);
+                end
+                offsetY = offsetY + buttonHeight;
             end
 
             if numberWidth > maxNumberWidth then
@@ -1051,7 +1680,7 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
         end
 
         self:SetWidth(buttonWidth);
-        self:SetHeight(paddingV*2 + numButtons*buttonHeight);
+        self:SetHeight(offsetY + paddingV);
 
         if defaultOption then
             self:SelectButton(self.buttons[numButtons]);
@@ -1080,6 +1709,7 @@ function NarciPerksProgramAnimationDropDownMixin:OnShow()
 end
 
 function NarciPerksProgramAnimationDropDownMixin:OnHide()
+    self:Hide();
     self:UnregisterEvent("GLOBAL_MOUSE_DOWN");
     if self.parentButton then
         self.parentButton:SetScript("OnMouseWheel", nil);
@@ -1226,6 +1856,7 @@ function NarciPerksProgramDropDownButtonMixin:SetButtonFontColor(colorIndex)
 end
 
 function NarciPerksProgramDropDownButtonMixin:SetAnimationOption(name, id, isAnimKit)
+    self.onClickFunc = self.OnClick_Animation;
     self.OptionName:SetText(name);
     self.OptionNumber:SetWidth(0);
 
@@ -1237,7 +1868,8 @@ function NarciPerksProgramDropDownButtonMixin:SetAnimationOption(name, id, isAni
         self.OptionNumber:Show();
         numberWidth = self.OptionNumber:GetWrappedWidth();
     else
-        self.OptionNumber:Hide();
+        self.OptionNumber:SetText("--");
+        self.OptionNumber:Show();
         numberWidth = 0;
     end
 
@@ -1253,6 +1885,36 @@ function NarciPerksProgramDropDownButtonMixin:SetAnimationOption(name, id, isAni
     return numberWidth, nameWidth;
 end
 
+local function UpdateModelSetupCheckbox(dropdownButton)
+    if dropdownButton.Checkbox then
+        if MODEL_SETUP_ENABLED then
+            dropdownButton.Checkbox:SetTexCoord(0, 0.5, 0, 1);
+        else
+            dropdownButton.Checkbox:SetTexCoord(0.5, 1, 0, 1);
+        end
+    end
+end
+
+function NarciPerksProgramDropDownButtonMixin:SetModelSetupToggle()
+    self.onClickFunc = self.OnClick_ModelSetupToggle;
+    self.OptionName:SetText(L["Modify Default Pose"]);
+    self.OptionNumber:Hide();
+
+    local numberWidth = 0;
+    local nameWidth = self.OptionName:GetWrappedWidth()
+
+    if not self.Checkbox then
+        self.Checkbox = self:CreateTexture(nil, "OVERLAY");
+        self.Checkbox:SetPoint("LEFT", self, "LEFT", 6, 0);
+        self.Checkbox:SetSize(40, 40);
+        self.Checkbox:SetTexture("Interface/AddOns/Narcissus/Art/Modules/PerksProgram/TwoStateCheckbox");
+    end
+
+    UpdateModelSetupCheckbox(self);
+
+    return numberWidth, nameWidth
+end
+
 function NarciPerksProgramDropDownButtonMixin:SetElementSizes(numberWidth, buttonWidth)
     if numberWidth > 0 then
         self.OptionNumber:SetWidth(numberWidth);
@@ -1261,13 +1923,31 @@ function NarciPerksProgramDropDownButtonMixin:SetElementSizes(numberWidth, butto
 end
 
 function NarciPerksProgramDropDownButtonMixin:OnClick()
+    if self.onClickFunc then
+        self.onClickFunc(self);
+    end
+end
+
+function NarciPerksProgramDropDownButtonMixin:OnClick_Animation()
     AnimationDropDown:SelectButton(self, true);
 end
 
+function NarciPerksProgramDropDownButtonMixin:OnClick_ModelSetupToggle()
+    MODEL_SETUP_ENABLED = not MODEL_SETUP_ENABLED;
+    UpdateModelSetupCheckbox(self);
 
+    NarcissusDB.TradingPostModifyDefaultPose = MODEL_SETUP_ENABLED;
+
+    local actor = PerksProgramFrame.ModelSceneContainerFrame.playerActor;
+    if actor and SELECTED_DATA then
+        if MODEL_SETUP_ENABLED then
+            SetupModelByItemID(actor, SELECTED_DATA.itemID);
+        end
+    end
+end
 
 --[[
-if false then
+if true then
     local f = CreateFrame("Frame");
     f:RegisterEvent("PERKS_PROGRAM_OPEN");
     f:RegisterEvent("PERKS_PROGRAM_DATA_REFRESH");

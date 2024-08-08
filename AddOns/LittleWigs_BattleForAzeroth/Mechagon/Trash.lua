@@ -126,7 +126,7 @@ function mod:GetOptions()
 		-- Scraphound
 		299475, -- B.O.R.K.
 		-- Mechagon Renormalizer
-		{284219, "SAY", "FLASH"}, -- Shrink
+		{284219, "SAY", "DISPEL"}, -- Shrink
 		-- Mechagon Cavalry
 		301667, -- Rapid Fire
 		301681, -- Charge
@@ -242,7 +242,6 @@ function mod:OnBossEnable()
 	-- Mechagon Renormalizer
 	self:Log("SPELL_CAST_START", "Shrink", 284219)
 	self:Log("SPELL_AURA_APPLIED", "ShrinkApplied", 284219)
-	self:Log("SPELL_AURA_REMOVED", "ShrinkRemoved", 284219)
 	-- Mechagon Cavalry
 	self:Log("SPELL_CAST_START", "RapidFire", 301667)
 	self:Log("SPELL_CAST_START", "Charge", 301681)
@@ -414,7 +413,7 @@ do
 		self:TargetMessage(300188, "red", name)
 		self:PlaySound(300188, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(300188)
+			self:Say(300188, nil, nil, "Scrap Cannon")
 			self:Flash(300188)
 		end
 	end
@@ -528,25 +527,13 @@ function mod:Shrink(args)
 	self:PlaySound(args.spellId, "alert")
 end
 
-do
-	local timer = nil
-	function mod:ShrinkApplied(args)
-		local isOnMe = self:Me(args.destGUID)
-		if self:Dispeller("magic", nil, true) or isOnMe then
-			self:TargetMessage(args.spellId, "yellow", args.destName)
-			self:PlaySound(args.spellId, "info", nil, args.destName)
-			if isOnMe then
-				self:Say(args.spellId)
-				self:Flash(args.spellId)
-				timer = self:ScheduleRepeatingTimer("Say", 1.5, args.spellId)
-			end
-		end
-	end
-
-	function mod:ShrinkRemoved(args)
-		if self:Me(args.destGUID) and timer then
-			self:CancelTimer(timer)
-			timer = nil
+function mod:ShrinkApplied(args)
+	local isOnMe = self:Me(args.destGUID)
+	if self:Dispeller("magic", nil, args.spellId) or isOnMe then
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:PlaySound(args.spellId, "info", nil, args.destName)
+		if isOnMe then
+			self:Say(args.spellId, nil, nil, "Shrink")
 		end
 	end
 end
@@ -644,8 +631,8 @@ end
 -- Anti-Personnel Squirrel
 
 function mod:AntiPersonnelSquirrel(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
-	if not unit or IsItemInRange(33278, unit) then -- Burning Torch, 11yd
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
+	if not unit or self:UnitWithinRange(unit, 10) then
 		-- Display mesage without "near YOU" if the unit is not found
 		self:Message(args.spellId, "yellow", unit and CL.near:format(args.spellName))
 		self:PlaySound(args.spellId, "alarm")

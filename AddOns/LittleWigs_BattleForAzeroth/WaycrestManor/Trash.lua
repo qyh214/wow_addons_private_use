@@ -79,14 +79,12 @@ function mod:GetOptions()
 		264390, -- Spellbind
 		-- Coven Thornshaper
 		264050, -- Infected Thorn
-		278474, -- Effigy Reconstruction
 		{264038, "SAY"}, -- Uproot
 		-- Thornguard
-		264556, -- Tearing Strike
 		264150, -- Shatter
 		-- Matron Bryndle
 		265759, -- Splinter Spike
-		265760, -- Thorned Barrage
+		{265760, "TANK"}, -- Thorned Barrage
 		265741, -- Drain Soul Essence
 		-- Devouring Maggot
 		278444, -- Infest
@@ -119,7 +117,7 @@ function mod:GetOptions()
 		[263891] = L.heartsbane_vinetwister,
 		[264396] = L.runic_disciple,
 		[264050] = L.coven_thornshaper,
-		[264556] = L.thornguard,
+		[264150] = L.thornguard,
 		[265759] = L.matron_bryndle,
 		[278444] = L.devouring_maggot,
 		[271174] = L.pallid_gorger,
@@ -162,11 +160,9 @@ function mod:OnBossEnable()
 
 	-- Coven Thornshaper
 	self:Log("SPELL_CAST_START", "InfectedThorn", 264050)
-	self:Log("SPELL_CAST_START", "EffigyReconstruction", 278474)
 	self:Log("SPELL_CAST_START", "Uproot", 264038)
 
 	-- Thornguard
-	self:Log("SPELL_AURA_APPLIED", "TearingStrike", 264556)
 	self:Log("SPELL_CAST_START", "Shatter", 264150)
 
 	-- Matron Bryndle
@@ -248,6 +244,9 @@ end
 -- Thistle Acolyte
 
 function mod:DrainEssence(args)
+	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+		return
+	end
 	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
 end
@@ -269,6 +268,9 @@ end
 -- Dreadwing Raven
 
 function mod:PallidGlare(args)
+	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+		return
+	end
 	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alarm")
 end
@@ -299,11 +301,17 @@ end
 -- Runic Disciple
 
 function mod:SpectralTalisman(args)
+	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+		return
+	end
 	self:Message(args.spellId, "yellow")
 	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:Spellbind(args)
+	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+		return
+	end
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "warning")
 end
@@ -313,6 +321,9 @@ end
 do
 	local prev = 0
 	function mod:InfectedThorn(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
@@ -322,41 +333,24 @@ do
 	end
 end
 
-function mod:EffigyReconstruction(args)
-	self:Message(args.spellId, "red")
-	self:PlaySound(args.spellId, "alert")
-end
-
 do
 	local function printTarget(self, name, guid)
 		self:TargetMessage(264038, "orange", name) -- Uproot
 		self:PlaySound(264038, "alarm", nil, name) -- Uproot
 		if self:Me(guid) then
-			self:Say(264038) -- Uproot
+			self:Say(264038, nil, nil, "Uproot") -- Uproot
 		end
 	end
 
 	function mod:Uproot(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 	end
 end
 
 -- Thornguard
-
-do
-	local prev = 0
-	function mod:TearingStrike(args)
-		-- TODO seems to just go on tank, very frequently, probably just remove this
-		if self:Me(args.destGUID) then
-			local t = args.time
-			if t - prev > 1.5 then
-				prev = t
-				self:PersonalMessage(args.spellId)
-				self:PlaySound(args.spellId, "alert")
-			end
-		end
-	end
-end
 
 do
 	local prev = 0
@@ -378,8 +372,8 @@ function mod:SplinterSpike(args)
 end
 
 function mod:ThornedBarrage(args)
-	self:Message(args.spellId, "red")
-	self:PlaySound(args.spellId, "alarm")
+	self:Message(args.spellId, "purple")
+	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:DrainSoulEssence(args)
@@ -406,10 +400,13 @@ end
 do
 	local prev = 0
 	function mod:Retch(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
-			self:Message(args.spellId, "orange") -- TODO purple?
+			self:Message(args.spellId, "orange")
 			self:PlaySound(args.spellId, "alarm")
 		end
 	end
@@ -441,6 +438,8 @@ end
 do
 	local prev = 0
 	function mod:ShrapnelTrap(args)
+		-- these NPCs can be mind-controlled by Priests and this ability can be cast,
+		-- but don't suppress alerts as the traps still only harm players.
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
@@ -464,9 +463,19 @@ end
 
 -- Faceless Maiden
 
-function mod:HorrificVisage(args)
-	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "warning")
+do
+	local prev = 0
+	function mod:HorrificVisage(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "warning")
+		end
+	end
 end
 
 -- Marked Sister
@@ -475,7 +484,7 @@ function mod:RunicMarkApplied(args)
 	self:TargetMessage(args.spellId, "orange", args.destName)
 	self:PlaySound(args.spellId, "alarm", nil, args.destName)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Runic Mark")
 		self:SayCountdown(args.spellId, 6)
 	end
 end
@@ -497,7 +506,7 @@ function mod:DreadMarkApplied(args)
 	self:TargetMessage(args.spellId, "orange", args.destName)
 	self:PlaySound(args.spellId, "alarm", nil, args.destName)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Dread Mark")
 		self:SayCountdown(args.spellId, 6)
 	end
 end

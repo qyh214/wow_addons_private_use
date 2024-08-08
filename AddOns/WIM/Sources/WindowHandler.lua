@@ -17,7 +17,7 @@ local _G = _G;
 local CreateFrame = CreateFrame;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
-local GetMouseFocus = GetMouseFocus;
+local GetMouseFocus = WIM.GetMouseTopFocus;
 local table = table;
 local string = string;
 local IsShiftKeyDown = IsShiftKeyDown;
@@ -911,6 +911,7 @@ local function instantiateWindow(obj)
     widgets.chat_display:EnableMouse(true);
     widgets.chat_display:EnableMouseWheel(1);
     widgets.chat_display.widgetName = "chat_display";
+	widgets.chat_display._isWIM = true; -- flag that this is a WIM frame.
 
     widgets.msg_box = CreateFrame("EditBox", fName.."MsgBox", obj);
     widgets.msg_box:SetAutoFocus(false);
@@ -922,10 +923,10 @@ local function instantiateWindow(obj)
 
     -- Addmessage functions
     obj.AddMessage = function(self, msg, ...)
-	msg = applyStringModifiers(msg, self.widgets.chat_display);
-	self.widgets.chat_display:AddMessage(msg, ...);
+		msg = applyStringModifiers(msg, self.widgets.chat_display);
+		self.widgets.chat_display:AddMessage(msg, ...);
         updateScrollBars(self);
-	CallModuleFunction("OnWindowMessageAdded", self, msg, ...);
+		CallModuleFunction("OnWindowMessageAdded", self, msg, ...);
     end
 
     obj.AddMessageRaw = function(self, msg, ...)
@@ -933,11 +934,53 @@ local function instantiateWindow(obj)
     end
 
     obj.AddEventMessage = function(self, r, g, b, event, ...)
-        nextColor.r, nextColor.g, nextColor.b = r, g, b;
-	local str = applyMessageFormatting(self.widgets.chat_display, event, ...);
-	self:AddMessage(str, r, g, b);
-	self.msgWaiting = true;
-	self.lastActivity = _G.GetTime();
+		local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
+
+		nextColor.r, nextColor.g, nextColor.b = r, g, b;
+
+		local messageFormatter = function (msg)
+			return applyMessageFormatting(self.widgets.chat_display, event, msg or arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17);
+		end
+
+		local str = messageFormatter();
+
+		-- if censoring is supported by client
+		if (
+			_G.C_ChatInfo and
+			_G.C_ChatInfo.IsChatLineCensored and
+			_G.ChatHistory_GetAccessID and
+			_G.ChatHistory_GetAccessID and
+			_G.Chat_GetChatCategory
+		) then
+
+			local infoType = strsub(event, 10);
+			local chatGroup = _G.Chat_GetChatCategory(infoType);
+			local info = _G.ChatTypeInfo[infoType];
+
+			local chatTarget;
+			if chatType == 'CHANNEL' then
+				chatTarget = infoType .. arg8;
+			elseif chatType == 'WHISPER' then
+				chatTarget = arg2;
+			end
+
+			local isChatLineCensored = _G.C_ChatInfo.IsChatLineCensored(arg11);
+			local accessID = _G.ChatHistory_GetAccessID(chatGroup, chatTarget);
+			local typeID = _G.ChatHistory_GetAccessID(infoType, chatTarget, arg12 or arg13);
+
+			local eventArgs;
+			if isChatLineCensored then
+				eventArgs = packTable(...)
+			end
+
+			self:AddMessage(str, r, g, b, info.id, accessID, typeID, event, eventArgs, messageFormatter);
+		else
+			-- otherwise use old method
+			self:AddMessage(str, r, g, b);
+		end
+
+		self.msgWaiting = true;
+		self.lastActivity = _G.GetTime();
         if(self.tabStrip) then
                 self.tabStrip:UpdateTabs();
         end
@@ -1012,7 +1055,7 @@ local function instantiateWindow(obj)
         end
     end
 
-    obj.SendWho = function(self)
+    obj.SendWho = function(self,wCallback, invokeFriendListWho)
         if(self.type ~= "whisper") then
                 return;
         end
@@ -1114,6 +1157,41 @@ local function instantiateWindow(obj)
 						end
 					end
         		end
+        		if( invokeFriendListWho ) then
+					local function eventHandlerWho(self, event, ...)
+					    if event == "WHO_LIST_UPDATE" then
+					        local numResults = _G.C_FriendList.GetNumWhoResults();
+					        for i = 1, numResults do
+					            local info = _G.C_FriendList.GetWhoInfo(i);
+					            if( info.fullName == self.thUser ) then
+									self.WCallback({
+										Name = info.fullName or "",
+										Online = true,
+										Guild = info.fullGuildName or "",
+										Class = info.classStr or "",
+										Level = info.level or "",
+										Race = info.raceStr or "",
+										Zone = info.area or "",
+									});
+						            if wCallback then
+						                wCallback();
+						            end
+						            _G.C_FriendList.SetWhoToUi(false);
+						            -- close who frame
+						            _G.FriendsFrameCloseButton:Click();
+					            end
+					        end
+					        self:UnregisterEvent("WHO_LIST_UPDATE");
+					    end
+					end
+					_G.C_FriendList.SetWhoToUi(true);
+					local wFrame = CreateFrame("Frame");
+					wFrame:RegisterEvent("WHO_LIST_UPDATE");
+				    wFrame:SetScript("OnEvent", eventHandlerWho);
+				    wFrame.thUser = self.theUser;
+				    wFrame.WCallback = self.WhoCallback;
+				    _G.C_FriendList.SendWho("n-"..self.theUser);
+				end
         end
     end
 
@@ -1299,6 +1377,11 @@ local function instantiateWindow(obj)
                 return self:GetBottom() - WindowParent:GetBottom();
     end
 
+	obj.close = function (self)
+		self.widgets.close.forceShift = true;
+		self.widgets.close:Click();
+	end
+
     -- enforce that all core widgets have parentWindow set.
 	for _, w in pairs(obj.widgets) do
 		w.parentWindow = obj;
@@ -1425,7 +1508,7 @@ local function createWindow(userName, wtype)
         obj.type = wtype;
         loadWindowDefaults(obj); -- clear contents of window and revert back to it's initial state.
         dPrint("Window recycled '"..obj:GetName().."'");
-	CallModuleFunction("OnWindowCreated", obj);
+		CallModuleFunction("OnWindowCreated", obj);
         table.insert(windowsByAge, obj);
         table.sort(windowsByAge, function(a, b) return a.age > b.age; end);
         return obj;
@@ -1948,6 +2031,47 @@ RegisterWidgetTrigger("chat_display", "whisper,chat,w2w", "OnHyperlinkClick", fu
 
 	if t == 'player' then
 		_G.ChatFrame_OnHyperlinkShow(_G.DEFAULT_CHAT_FRAME, link, text, button);
+		return;
+	end
+
+	if t == 'censoredmessage' then
+		local hyperlinkLineID = _G.tonumber(n);
+
+		-- Uncensor this line so that the original text can be retrieved from C_ChatInfo.GetChatLineText.
+		_G.C_ChatInfo.UncensorChatLine(hyperlinkLineID);
+
+		local function DoesMessageLineIDMatch(message, r, g, b, infoID, accessID, typeID, event, eventArgs, MessageFormatter, ...)
+			-- eventArgs only present if the line was censored.
+			local lineID = eventArgs and eventArgs[11];
+			return lineID == hyperlinkLineID;
+		end
+
+		local _event = nil;
+		local _eventArgs = nil;
+		local function SetMessage(message, r, g, b, infoID, accessID, typeID, event, eventArgs, MessageFormatter, ...)
+			local lineID = eventArgs[11];
+
+			-- Original text is routed through the tts system, which prepends the message with "<player whispers> text.
+			local text = _G.C_ChatInfo.GetChatLineText(lineID);
+
+			-- The displayed message
+			local formattedText = MessageFormatter(text);
+
+			-- Report hyperlink is appended to the display message.
+			local reportHyperlink = _G.CENSORED_MESSAGE_REPORT:format(lineID);
+			formattedText = formattedText..reportHyperlink;
+
+			-- edit history entry.
+			if (modules.History and modules.History.ReplaceCensoredMessage) then
+				modules.History:ReplaceCensoredMessage(lineID, formattedText);
+			end
+
+			eventArgs[1] = text
+			return formattedText, r, g, b, infoID, accessID, typeID, event, eventArgs, MessageFormatter, ...;
+		end
+
+		self:TransformMessages(DoesMessageLineIDMatch, SetMessage)
+
 		return;
 	end
 

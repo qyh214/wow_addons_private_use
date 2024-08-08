@@ -22,7 +22,7 @@ local crumblingSlamCount = 0
 function mod:GetOptions()
 	return {
 		323001, -- Glass Shards
-		{322936, "TANK"}, -- Crumbling Slam
+		322936, -- Crumbling Slam
 		322943, -- Heave Debris
 		322711, -- Refracted Sinlight
 		339237, -- Sinlight Visions
@@ -39,9 +39,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "CrumblingSlam", 322936)
 	self:Log("SPELL_CAST_SUCCESS", "HeaveDebris", 322943)
 	self:Log("SPELL_CAST_START", "RefractedSinlight", 322711)
-	self:Log("SPELL_AURA_APPLIED", "SinlightVisionsApplied", 339237, 322977)
-
-	self:RegisterMessage("BigWigs_BarCreated", "BarCreated")
+	self:Log("SPELL_AURA_APPLIED", "SinlightVisionsApplied", 339237, 322977) -- Mythic, Heroic/Normal
 end
 
 function mod:OnEngage()
@@ -57,31 +55,14 @@ end
 --
 
 do
-	local function stopAtZeroSec(bar)
-		if bar.remaining < 0.15 then -- Pause at 0.0
-			bar:SetDuration(0.01) -- Make the bar look full
-			bar:Start()
-			bar:Pause()
-			bar:SetTimeVisibility(false)
-		end
-	end
-
-	function mod:BarCreated(_, _, bar, _, key)
-		if key == 322711 then -- Refracted Sinlight
-			bar:AddUpdateFunction(stopAtZeroSec)
-		end
-	end
-end
-
-do
 	local prev = 0
 	function mod:GlassShardsDamage(args)
 		if self:Me(args.destGUID) then
 			local t = args.time
-			if t-prev > 2 then
+			if t - prev > 2 then
 				prev = t
 				self:PersonalMessage(args.spellId, "underyou")
-				self:PlaySound(args.spellId, "underyou")
+				self:PlaySound(args.spellId, "underyou", nil, args.destName)
 			end
 		end
 	end
@@ -94,6 +75,8 @@ function mod:CrumblingSlam(args)
 	if refractedSinlightTime - GetTime() > 12.1 then
 		-- only the second Crumbling Slam of the fight is delayed
 		self:CDBar(args.spellId, crumblingSlamCount == 1 and 13.4 or 12.1)
+	else
+		self:StopBar(args.spellId)
 	end
 end
 
@@ -102,6 +85,8 @@ function mod:HeaveDebris(args)
 	self:PlaySound(args.spellId, "alarm")
 	if refractedSinlightTime - GetTime() > 12.1 then
 		self:CDBar(args.spellId, 12.1)
+	else
+		self:StopBar(args.spellId)
 	end
 end
 
@@ -109,12 +94,12 @@ function mod:RefractedSinlight(args)
 	refractedSinlightTime = GetTime() + 45
 	self:Message(args.spellId, "red", CL.beams)
 	self:PlaySound(args.spellId, "warning")
-	self:Bar(args.spellId, 47.3, CL.beams)
+	self:CDBar(args.spellId, 47.3, CL.beams)
 	self:CDBar(322936, 15.7) -- Crumbling Slam
 	self:CDBar(322943, 17.2) -- Heave Debris
 end
 
 function mod:SinlightVisionsApplied(args)
 	self:TargetMessage(339237, "orange", args.destName, CL.fear)
-	self:PlaySound(339237, "alert")
+	self:PlaySound(339237, "alert", nil, args.destName)
 end

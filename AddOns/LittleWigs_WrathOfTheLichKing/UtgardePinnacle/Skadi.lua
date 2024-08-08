@@ -33,12 +33,12 @@ do
 		self:TargetMessage(59322, "orange", player)
 		self:PlaySound(59322, "info", nil, player)
 		if self:Me(guid) then
-			self:Say(59322)
+			self:Say(59322, nil, nil, "Whirlwind")
 		end
 	end
 
 	function mod:Whirlwind(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:Bar(59322, 10, CL.cast:format(args.spellName))
 		self:CDBar(59322, 23)
 	end

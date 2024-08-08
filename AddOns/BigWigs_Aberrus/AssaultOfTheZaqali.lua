@@ -22,7 +22,6 @@ local magmaMysticCount = 1
 local blazingFocusCount = 0
 local myFlamingCudgelStacks = 0
 local tempBlockBigAddMsg = false
-local hasFixate, hasBeam = false, false
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -145,7 +144,6 @@ function mod:OnEngage()
 	blazingFocusCount = 0
 	myFlamingCudgelStacks = 0
 	tempBlockBigAddMsg = false
-	hasFixate, hasBeam = false, false
 
 	self:Bar(401258, 12) -- Heavy Cudgel
 	self:Bar(397383, self:Easy() and 26.5 or 28, L.add_bartext:format(L.molten_barrier, L.both, magmaMysticCount)) -- Molten Barrier
@@ -160,10 +158,13 @@ end
 --
 
 function mod:UNIT_HEALTH(event, unit)
-	if self:GetHealth(unit) < 28 then -- Stage 2 at 25% hp
+	local hp = self:GetHealth(unit)
+	if hp < 28 then -- Stage 2 at 25% hp
 		self:UnregisterUnitEvent(event, unit)
-		self:Message("stages", "cyan", CL.soon:format(CL.stage:format(2)), false)
-		self:PlaySound("stages", "info")
+		if hp > 25 then
+			self:Message("stages", "cyan", CL.soon:format(CL.stage:format(2)), false)
+			self:PlaySound("stages", "info")
+		end
 	end
 end
 
@@ -324,7 +325,7 @@ do
 	local timer = { 26.0, 22.0, 31.0, 21.0 } -- 22.0, 31.0, 21.0, 26.0 repeating
 	function mod:HeavyCudgel(args)
 		local unit = self:UnitTokenFromGUID(args.sourceGUID)
-		if not unit or IsItemInRange(116139, unit) then -- 50yd
+		if not unit or self:UnitWithinRange(unit, 60) then
 			self:Message(args.spellId, "purple")
 			self:PlaySound(args.spellId, "alert") -- frontal
 		end
@@ -340,8 +341,8 @@ function mod:HeavyCudgelApplied(args)
 		self:StackMessage(401258, "purple", args.destName, args.amount, 2)
 		self:PlaySound(401258, "alarm")
 	elseif self:Tank() or self:Healer() then
-		local playerUnit = self:UnitTokenFromGUID(args.destGUID)
-		if playerUnit and self:Tank(playerUnit) and IsItemInRange(116139, playerUnit) then -- Applied to a tank, tank is within 50yd
+		local unit = self:UnitTokenFromGUID(args.sourceGUID)
+		if unit and self:Tank(args.destName) and self:UnitWithinRange(unit, 45) then
 			self:StackMessage(401258, "purple", args.destName, args.amount, 2)
 		end
 	end
@@ -380,7 +381,7 @@ do
 	function mod:MagmaFlow(args)
 		if args.time - prev > 2 then
 			local unit = self:UnitTokenFromGUID(args.sourceGUID)
-			if not unit or IsItemInRange(116139, unit) then -- 50yd
+			if not unit or self:UnitWithinRange(unit, 45) then
 				prev = args.time
 				self:Message(409275, "orange")
 				self:PlaySound(409275, "alert")
@@ -411,7 +412,7 @@ function mod:BlazingSpearApplied(args)
 	if self:Me(args.destGUID) then
 		self:PersonalMessage(401401)
 		self:PlaySound(401401, "alarm") -- spread
-		self:Say(401401)
+		self:Say(401401, nil, nil, "Blazing Spear")
 	end
 end
 
@@ -421,7 +422,7 @@ do
 	function mod:ScorchingRoar(args)
 		if args.time - prev > 2 then
 			local unit = self:UnitTokenFromGUID(args.sourceGUID)
-			if not unit or IsItemInRange(116139, unit) then -- 50yd
+			if not unit or self:UnitWithinRange(unit, 45) then
 				prev = args.time
 				self:Message(args.spellId, "yellow")
 				self:PlaySound(args.spellId, "alert")
@@ -434,7 +435,7 @@ function mod:VolcanicShieldApplied(args)
 	if self:Me(args.destGUID) then
 		self:PersonalMessage(args.spellId, nil, CL.beam)
 		self:PlaySound(args.spellId, "warning")
-		self:Say(args.spellId, CL.beam)
+		self:Say(args.spellId, CL.beam, nil, "Beam")
 		self:SayCountdown(args.spellId, 5)
 	end
 end

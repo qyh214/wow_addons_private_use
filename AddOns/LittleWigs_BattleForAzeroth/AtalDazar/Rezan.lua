@@ -74,7 +74,7 @@ do
 				prev = t
 				self:PersonalMessage(257407)
 				self:PlaySound(257407, "alarm", "runaway", destName)
-				self:Say(257407)
+				self:Say(257407, nil, nil, "Pursuit")
 			end
 		end
 	end
@@ -87,7 +87,7 @@ do
 			self:TargetMessage(257407, "orange", name)
 			if self:Me(guid) then
 				self:PlaySound(257407, "alarm", "runaway", name)
-				self:Say(257407)
+				self:Say(257407, nil, nil, "Pursuit")
 			else
 				self:PlaySound(257407, "alert", nil, name)
 			end
@@ -95,7 +95,7 @@ do
 	end
 
 	function mod:PursuitStart(args)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 		pursuitCount = pursuitCount + 1
 		self:CDBar(257407, 35.2)
 	end

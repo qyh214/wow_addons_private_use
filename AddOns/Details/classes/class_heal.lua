@@ -20,7 +20,7 @@ local tinsert = table.insert
 local _math_min = math.min
 local _math_ceil = math.ceil
 --api locals
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = Details222.GetSpellInfo
 local _GetSpellInfo = _detalhes.getspellinfo
 local IsInRaid = IsInRaid
 local IsInGroup = IsInGroup
@@ -1062,17 +1062,17 @@ function healingClass:ToolTip_HealingDenied (instancia, numero, barra, keydown)
 
 	--Spells
 		table.sort (spellList, _detalhes.Sort2)
-		_detalhes:AddTooltipSpellHeaderText ("Spells", headerColor, #spellList, [[Interface\TUTORIALFRAME\UI-TutorialFrame-LevelUp]], 0.10546875, 0.89453125, 0.05859375, 0.6796875)
-		_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+		--_detalhes:AddTooltipSpellHeaderText ("Spells", headerColor, #spellList, [[Interface\TUTORIALFRAME\UI-TutorialFrame-LevelUp]], 0.10546875, 0.89453125, 0.05859375, 0.6796875)
+		--_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 
 		local ismaximized = false
 		if (keydown == "shift" or TooltipMaximizedMethod == 2 or TooltipMaximizedMethod == 3) then
-			GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
-			_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
+			--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
+			--_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
 			ismaximized = true
 		else
-			GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
-			_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+			--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
+			--_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 		end
 
 		local tooltip_max_abilities = _detalhes.tooltip.tooltip_max_abilities
@@ -1239,18 +1239,18 @@ function healingClass:ToolTip_HealingTaken (instancia, numero, barra, keydown)
 		end
 	end
 
-	_detalhes:AddTooltipSpellHeaderText (Loc ["STRING_FROM"], headerColor, #meus_curadores, [[Interface\TUTORIALFRAME\UI-TutorialFrame-LevelUp]], 0.10546875, 0.89453125, 0.05859375, 0.6796875)
-	_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+	--_detalhes:AddTooltipSpellHeaderText (Loc ["STRING_FROM"], headerColor, #meus_curadores, [[Interface\TUTORIALFRAME\UI-TutorialFrame-LevelUp]], 0.10546875, 0.89453125, 0.05859375, 0.6796875)
+	--_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 
 	local ismaximized = false
 
 	if (keydown == "shift" or TooltipMaximizedMethod == 2 or TooltipMaximizedMethod == 3) then
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
-		_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
+		--_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
 		ismaximized = true
 	else
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
-		_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
+		--_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 	end
 
 	_table_sort (meus_curadores, function(a, b) return a[2] > b[2] end)
@@ -1372,30 +1372,29 @@ function healingClass:ToolTip_HealingDone (instancia, numero, barra, keydown)
 
 	--TOP Curados
 	ActorSkillsContainer = self.targets
-	for target_name, amount in pairs(ActorSkillsContainer) do
+	for targetName, amount in pairs(ActorSkillsContainer) do
 		if (amount > 0) then
-
 			--translate cyrillic alphabet to western alphabet by Vardex (https://github.com/Vardex May 22, 2019)
 			if (instancia.row_info.textL_translit_text) then
-				target_name = Translit:Transliterate(target_name, "!")
+				targetName = Translit:Transliterate(targetName, "!")
 			end
 
-			tinsert(ActorHealingTargets, {target_name, amount, amount / ActorTotal * 100})
+			tinsert(ActorHealingTargets, {targetName, amount, amount / ActorTotal * 100})
 		end
 	end
 	_table_sort (ActorHealingTargets, _detalhes.Sort2)
 
 	--Mostra as habilidades no tooltip
-	_detalhes:AddTooltipSpellHeaderText (Loc ["STRING_SPELLS"], headerColor, #ActorHealingTable, [[Interface\RAIDFRAME\Raid-Icon-Rez]], 0.109375, 0.890625, 0.0625, 0.90625)
+	--_detalhes:AddTooltipSpellHeaderText (Loc ["STRING_SPELLS"], headerColor, #ActorHealingTable, [[Interface\RAIDFRAME\Raid-Icon-Rez]], 0.109375, 0.890625, 0.0625, 0.90625)
 
 	local ismaximized = false
 	if (keydown == "shift" or TooltipMaximizedMethod == 2 or TooltipMaximizedMethod == 3) then
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
-		_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay2)
+		--_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
 		ismaximized = true
 	else
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
-		_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, _detalhes.tooltip_key_size_width, _detalhes.tooltip_key_size_height, 0, 1, 0, 0.640625, _detalhes.tooltip_key_overlay1)
+		--_detalhes:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 	end
 
 	local tooltip_max_abilities = _detalhes.tooltip.tooltip_max_abilities

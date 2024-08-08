@@ -71,12 +71,12 @@ do
 		self:TargetMessage(372107, "yellow", name)
 		self:PlaySound(372107, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(372107)
+			self:Say(372107, nil, nil, "Molten Boulder")
 		end
 	end
 
 	function mod:MoltenBoulder(args)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 		self:Bar(args.spellId, 17)
 	end
 end

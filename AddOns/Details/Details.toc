@@ -1,10 +1,11 @@
-## Interface: 100200
+## Interface: 110000 
 ## Title: Details! Damage Meter
 ## Notes: Essential tool to impress that chick in your raid.
-## SavedVariables: _detalhes_global, __details_backup
+## Notes-ruRU: Незаменимый инструмент, чтобы произвести впечатление на цыпочку в вашем рейде.
+## SavedVariables: _detalhes_global, __details_backup, __details_debug
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
-## Version: #Details.20231201.12097.155
+## Version: #Details.12829.159
 ## IconTexture: Interface\AddOns\Details\images\minimap
 
 ## X-Curse-Project-ID: 61284
@@ -33,7 +34,9 @@ indent.lua
 core\util.lua
 functions\mixin.lua
 API.lua
+textures.lua
 
+functions\ej_cache.lua
 functions\events.lua
 functions\private.lua
 functions\profiles.lua
@@ -55,9 +58,10 @@ functions\currentdps.lua
 functions\report.lua
 functions\rowanimation.lua
 functions\raidinfo.lua
-functions\dungeon.lua
+functions\mythicdungeon\mythicdungeon.lua
+functions\mythicdungeon\data_capture.lua
+functions\mythicdungeon\segments.lua
 functions\pack.lua
-functions\mythicdungeon.lua
 functions\immersion.lua
 functions\schedules.lua
 functions\autorun.lua
@@ -70,7 +74,9 @@ functions\editmode.lua
 functions\warcraftlogs.lua
 functions\textures.lua
 functions\journal.lua
+functions\commentator.lua
 
+core\aura_scan.lua
 core\timemachine.lua
 
 frames\anime.lua
@@ -94,6 +100,9 @@ frames\window_breakdown\breakdown_spells_genericframes.lua
 frames\window_breakdown\breakdown_spells_spellframes.lua
 frames\window_breakdown\breakdown_spells_targetframes.lua
 frames\window_breakdown\breakdown_spells_phaseframes.lua
+frames\window_mythicplus\window_mythic_breakdown.lua
+frames\window_mythicplus\window_end_of_run.lua
+frames\window_mythicplus\window_chart.lua
 frames\window_report.lua
 frames\window_main.lua
 frames\window_custom.lua
@@ -118,6 +127,7 @@ frames\window_bookmark.lua
 frames\window_classcolor.lua
 frames\window_statistics.lua
 frames\window_aura_tracker.lua
+frames\window_debug.lua
 
 classes\class_error.lua
 classes\class_spelltable.lua

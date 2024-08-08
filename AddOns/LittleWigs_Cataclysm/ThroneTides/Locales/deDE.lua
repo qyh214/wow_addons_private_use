@@ -9,6 +9,14 @@ if L then
 	L.faceless_seer = "Gesichtsloser Seher"
 	L.faceless_watcher = "Gesichtsloser Beobachter"
 	L.tainted_sentry = "Besudelter Wachposten"
+
+	L.ozumat_warmup_trigger = "Die Bestie ist zurück! Das Wasser darf nicht verschmutzt werden!"
+end
+
+L = BigWigs:NewBossLocale("Lady Naz'jar", "deDE")
+if L then
+	L.high_tide_trigger1 = "Zu den Waffen, meine Diener! Entsteigt den eisigen Tiefen!"
+	L.high_tide_trigger2 = "Vernichtet die Eindringlinge! Überlasst sie den Großen Dunklen Weiten!"
 end
 
 L = BigWigs:NewBossLocale("Ozumat", "deDE")

@@ -19,6 +19,15 @@ mod:SetStage(1)
 local earthsurgeCount = 1
 
 --------------------------------------------------------------------------------
+-- Localization
+--
+
+local L = mod:GetLocale()
+if L then
+	L.warmup_icon = "achievement_dungeon_dawnoftheinfinite"
+end
+
+--------------------------------------------------------------------------------
 -- Initialization
 --
 
@@ -50,6 +59,7 @@ end
 
 function mod:OnEngage()
 	earthsurgeCount = 1
+	self:StopBar(CL.active) -- Warmup
 	self:SetStage(1)
 	self:CDBar(409261, 8.4) -- Extinction Blast
 	self:CDBar(414535, 16.0) -- Stonecracker Barrage
@@ -64,7 +74,7 @@ function mod:Warmup()
 	-- triggered from trash module
 	-- 267.93 [CHAT_MSG_MONSTER_YELL] So the titans' puppets have come to face me.#Iridikron
 	-- 301.78 [NAME_PLATE_UNIT_ADDED] Iridikron
-	self:Bar("warmup", 33.8, CL.active, "achievement_boss_infinitecorruptor")
+	self:Bar("warmup", 33.8, CL.active, L.warmup_icon)
 end
 
 function mod:ExtinctionBlast(args)
@@ -72,7 +82,7 @@ function mod:ExtinctionBlast(args)
 	self:TargetMessage(409261, "orange", args.destName)
 	if self:Me(args.destGUID) then
 		self:PlaySound(409261, "warning", nil, args.destName)
-		self:Say(409261)
+		self:Say(409261, nil, nil, "Extinction Blast")
 	else
 		self:PlaySound(409261, "alert", nil, args.destName)
 	end
@@ -122,7 +132,7 @@ function mod:PulverizingCreationsApplied(args)
 	-- happens simultaneously with Pulverizing Exhalation
 	-- affects 0 players in Heroic, 2 players in Mythic+, all players in hard mode
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId, CL.spawning:format(CL.add))
+		self:Say(args.spellId, CL.add_spawning, nil, "Add Spawning")
 	end
 end
 

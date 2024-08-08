@@ -199,13 +199,18 @@ function config_gui.create_color_picker(name, text, value, has_opacity, on_chang
 
   picker_frame:EnableMouse(true)
   picker_frame:SetScript("OnClick", function()
-    local on_color_picker_change = function(restore)
-      local new_r, new_g, new_b, new_a;
-      if restore then
-        new_r, new_g, new_b, new_a = unpack(restore);
-      else
-        new_a, new_r, new_g, new_b = OpacitySliderFrame:GetValue(), ColorPickerFrame:GetColorRGB();
-      end
+    local on_color_picker_change = function()
+      local new_r, new_g, new_b = ColorPickerFrame:GetColorRGB();
+      local new_a = ColorPickerFrame:GetColorAlpha();
+
+      picker_frame.color.value = {new_r, new_g, new_b, new_a}
+      picker_frame.color:SetColorTexture(new_r, new_g, new_b, new_a)
+
+      on_change(name, rgba_to_hex(new_r, new_g, new_b, new_a))
+    end
+
+    local on_color_picker_cancel = function()
+      local new_r, new_g, new_b, new_a = ColorPickerFrame:GetPreviousValues();
 
       picker_frame.color.value = {new_r, new_g, new_b, new_a}
       picker_frame.color:SetColorTexture(new_r, new_g, new_b, new_a)
@@ -215,13 +220,18 @@ function config_gui.create_color_picker(name, text, value, has_opacity, on_chang
 
     local r, g, b, a = unpack(picker_frame.color.value)
 
-    ColorPickerFrame.hasOpacity = has_opacity
-    ColorPickerFrame.opacity = a;
-    ColorPickerFrame.previousValues = {r, g, b, a};
-    ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = on_color_picker_change, on_color_picker_change, on_color_picker_change;
-    ColorPickerFrame:SetColorRGB(r, g, b);
-    ColorPickerFrame:Hide();
-    ColorPickerFrame:Show();
+    local info = {};
+    info.swatchFunc = on_color_picker_change;
+    info.hasOpacity = has_opacity
+    info.opacityFunc = on_color_picker_change
+    info.opacity = a;
+    info.r = r
+    info.g = g
+    info.b = b
+    info.a = a
+    info.cancelFunc = on_color_picker_cancel
+    
+    ColorPickerFrame:SetupColorPickerAndShow(info);
   end)
 
   -- color

@@ -243,6 +243,7 @@ DF.CooldownsBySpec = {
 			[231895] = 1, --Crusade (talent)
 			[205191] = 2, --Eye for an Eye (talent)
 			[184662] = 2, --Shield of Vengeance
+			[403876] = 2, --Divine Protection
 			[642] = 2, --Divine Shield
 			[1022] = 3, --Blessing of Protection
 			[6940] = 3, --Blessing of Sacrifice
@@ -1282,7 +1283,29 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --consumables
-if (DF.IsShadowlandsWow() or DF.IsDragonflight()) then --Temporary IsDragonFlight until I get the items together
+if (DF.IsWarWow()) then
+    --TWW TODO Get buff ids. Current alpha on 6/6 does not have all professions fully implemented.
+    DF.WeaponEnchantIds = {
+	}
+
+	DF.FlaskIDs = {
+	}
+
+	DF.FoodIDs = {
+		--TODO Get all buffs. Current alpha on 6/6 does not have all buffs.
+		[457173] = 1, -- Lowest Secondary Stat +273 30min (Pan Seared Mycobloom)
+        [457174] = 1, -- Lowest Secondary Stat +273 15min (Skewered Filet)
+	}
+
+	DF.PotionIDs = {
+	}
+
+	DF.FeastIDs = {
+	}
+
+	DF.RuneIDs = {
+	}
+elseif (DF.IsShadowlandsWow() or DF.IsDragonflight()) then --Temporary IsDragonFlight until I get the items together
 	DF.WeaponEnchantIds = {
 		[6188] = true, --shadowcore oil
 		[6190] = true, --embalmer's oil
@@ -1414,8 +1437,8 @@ elseif (DF.IsWotLKWow()) then
 	}
 	DF.FeastIDs = {}
 	DF.RuneIDs = {}
-
-elseif (DF.IsClassicWow()) then
+--~Cata temp
+elseif (DF.IsClassicWow() or DF.IsCataWow()) then
 	DF.PotionIDs = {}
 	DF.FeastIDs = {}
 	DF.RuneIDs = {}

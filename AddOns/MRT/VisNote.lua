@@ -1084,11 +1084,50 @@ function module.options:Load()
 
 		--231-240
 		{L.S_ZoneT31..": "..L.bossName[2677],{2238,0.45,0.53,1}},
-		
+		{L.S_ZoneT11_ToB..": "..L.bossName[1030],{294,0.53,0.20,4.5}},
+		{L.S_ZoneT11_ToB..": "..L.bossName[1032],{294,0.53,0.78,4}},
+		{L.S_ZoneT11_ToB..": "..L.bossName[1028],{295,0.42,0.46,2.5}},
+		{L.S_ZoneT11_ToB..": "..L.bossName[1029],{295,0.70,0.76,2.5}},
+		{L.S_ZoneT11_ToB..": "..L.bossName[1082],{296,0.53,0.43,1.5}},
+		{L.S_ZoneT11_BD..": "..L.bossName[1024],{285,0.27,0.57,5}},
+		{L.S_ZoneT11_BD..": "..L.bossName[1027],{285,0.65,0.57,5}},
+		{L.S_ZoneT11_BD..": "..L.bossName[1023],{286,0.24,0.70,5}},
+		{L.S_ZoneT11_BD..": "..L.bossName[1022],{286,0.47,0.31,3.5}},
+
+		--241-250
+		{L.S_ZoneT11_BD..": "..L.bossName[1025],{286,0.70,0.70,5}},
+		{L.S_ZoneT11_BD..": "..L.bossName[1026],{286,0.47,0.70,3.5}},
+		{L.S_ZoneT11_TotFW..": "..L.bossName[1035],{328,0.47,0.50,1.3}},
+		{L.S_ZoneT11_TotFW..": "..L.bossName[1034],{328,0.47,0.50,6}},
+		{L.S_ZoneT11_BH,{282,nil,nil,0.9}},
+		{L.S_ZoneT12..": "..L.bossName[1197],{367,0.20,0.33,3.5}},
+		{L.S_ZoneT12..": "..L.bossName[1204],{367,0.65,0.75,5}},
+		{L.S_ZoneT12..": "..L.bossName[1206],{367,0.62,0.44,4}},
+		{L.S_ZoneT12..": "..L.bossName[1205],{367,0.48,0.52,1.5}},
+		{L.S_ZoneT12..": "..L.bossName[1200],{367,0.49,0.35,4}},
+
+		--251-260
+		{L.S_ZoneT12..": "..L.bossName[1185],{369,0.51,0.78,4}},
+		{L.S_ZoneT12..": "..L.bossName[1203],{369,0.50,0.19,5}},
+		{L.S_ZoneT13..": "..L.bossName[1294],{410,0.51,0.53,0.9}},
+		{L.S_ZoneT13..": "..L.bossName[1295],{411,0.47,0.50,0.9}},
+		{L.S_ZoneT13..": "..L.bossName[1296],{412,0.52,0.52,0.9}},
+		{L.S_ZoneT32..": "..L.bossName[2902],{2292,0.51,0.39,2}},
+		{L.S_ZoneT32..": "..L.bossName[2917],{2291,0.45,0.69,2}},
+		{L.S_ZoneT32..": "..L.bossName[2898],{2293,0.59,0.30,2}},
+		{L.S_ZoneT32..": "..L.bossName[2918],{2292,0.38,0.60,2}},
+		{L.S_ZoneT32..": "..L.bossName[2919],{2294,0.55,0.75,4}},
+
+		--261-270
+		{L.S_ZoneT32..": "..L.bossName[2920],{2294,0.25,0.47,4}},
+		{L.S_ZoneT32..": "..L.bossName[2921],{2294,0.42,0.49,4}},
+		{L.S_ZoneT32..": "..L.bossName[2922],{2295,0.48,0.54,2}},
+
 	}
 	local mapsSorted = {
 		1,
 		{L.NoteColor,10,94,95,96,97,98,99},
+		{L.S_ZoneT32,263,262,261,260,259,258,257,256},
 		{L.S_ZoneT31,231,230,229,228,227,226,225,224},
 		{L.S_ZoneT30,209,208,207,206,205,204,203,202,201},
 		{L.S_ZoneT29VotI,185,184,183,182,181,180,179,178},
@@ -1104,7 +1143,41 @@ function module.options:Load()
 		{L.S_ZoneT22Uldir,9,8,11,7,6,5,4,2,3},
 		{DUNGEONS..": "..EXPANSION_NAME7,41,42,43,44,12,13,14,15,16,17,18,19},
 	}
-	if ExRT.isLK then
+	if ExRT.isCata then
+		mapsSorted = {
+			1,
+			{L.NoteColor,10,94,95,96,97,98,99},
+			{L.S_ZoneT13,253,254,255},
+			{L.S_ZoneT12,246,247,248,249,250,251,252},
+			{L.S_ZoneT11_ToB,232,233,234,235,236},
+			{L.S_ZoneT11_BD,237,238,239,240,241,242},
+			{L.S_ZoneT11_TotFW,243,244},
+			{L.S_ZoneT11_BH,245},
+			{"The Ruby Sanctum",168},
+			{"Icecrown Citadel [rooms]",210,211,212,213,214,215,216,217,218,219,220,223,221,222},
+			{"Icecrown Citadel",160,161,162,163,164,165,166,167},
+			{"Onyxia's Lair",169},
+			{"Trial of the Crusader",158,159},
+			{"Ulduar [visual]",186,187,188,189,190,191,192,193,194,195,196,197,198,199,200},
+			{"Ulduar",152,153,154,155,156,157},
+			{"The Eye of Eternity",170},
+			{"The Obsidian Sanctum",171},
+			{"Naxxramas",172,173,174,175,176,177},
+			{"Sunwell Plateau",139,140},
+			{"Battle for Mount Hyjal",135},
+			{"Black Temple",126,127,128,129,130,131,132,133},
+			{"Tempest Keep",138},
+			{"Serpentshrine Cavern",137},
+			{"Gruul's Lair",134},
+			{"Magtheridon's Lair",136},
+			{"Blackwing Lair","by Wollie",57,58,59,60,61,62,63,64},
+			{"Molten Core",65},
+			{"Naxxramas [classic]","by Wollie",71,72,73,74,75,76},
+			{"Ruins of Ahn'Qiraj",67},
+			{"Temple of Ahn'Qiraj",68,69,70},
+			{"Zul'gurub",66},
+		}
+	elseif ExRT.isLK then
 		mapsSorted = {
 			1,
 			{L.NoteColor,10,94,95,96,97,98,99},
@@ -1173,12 +1246,17 @@ function module.options:Load()
 						isTitle = true,
 					}
 				else
-					subList[#subList + 1] = {
-						text = maps[ p[j] ][1],
-						func = SelectMapDropDown_SetValue,
-						arg1 = maps[ p[j] ][2],
-						arg2 = mapsSorted[i][j],
-					}
+					local map = maps[ p[j] ]
+					if map then
+						subList[#subList + 1] = {
+							text = maps[ p[j] ][1],
+							func = SelectMapDropDown_SetValue,
+							arg1 = maps[ p[j] ][2],
+							arg2 = mapsSorted[i][j],
+						}
+					else
+						print('error','map '..p[j]..' not found')
+					end
 				end
 			end
 			self.SelectMapDropDown.List[#self.SelectMapDropDown.List + 1] = {
@@ -2703,6 +2781,23 @@ function module.options:Load()
 	--- Sync & data funcs ------
 	----------------------------
 
+	local function ConvertMapIDToString(n)
+		local res={} 
+		repeat 
+			table.insert(res,1,n%253) 
+			n=floor(n/253) 
+		until n==0 
+		for i=2,#res do 
+			res[i]=res[i]+1 
+		end 
+
+		local r = ""
+		for i=1,#res do 
+			r = r .. string.char(res[i])
+		end
+		return r
+	end
+
 	function self:GenerateString(live)
 		self:SaveData()
 
@@ -2731,7 +2826,7 @@ function module.options:Load()
 		byte: map number
 		]]
 
-		local str = live and "" or (string.char(254)..string.char(1)..string.char(DATA_VERSION)..string.char(#curr_data[1])..curr_data[1]..string.char(#(curr_data.name or "")+1)..(curr_data.name or "")..string.char(254)..string.char(2)..string.char(curr_map))
+		local str = live and "" or (string.char(254)..string.char(1)..string.char(DATA_VERSION)..string.char(#curr_data[1])..curr_data[1]..string.char(#(curr_data.name or "")+1)..(curr_data.name or "")..string.char(254)..string.char(2)..ConvertMapIDToString(curr_map))
 		local prevGroup,prevX,prevY,prevDiffX,prevDiffY
 
 		local function UpdateHeader(i)
@@ -3141,17 +3236,9 @@ function module.options:Load()
 	self.liveButton = ELib:Button(self,L.VisualNoteLiveSession):Size(90,20):Point("TOPLEFT",710,-55):OnClick(function(self)
 		if not isLiveSession then
 			module.options:GenerateString()
-			if ExRT.is10 or ExRT.isLK1 then
-				self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.26,0.09,1), CreateColor(0.20,0.41,0.25,1))
-			else
-				self.Texture:SetGradientAlpha("VERTICAL",0.05,0.26,0.09,1, 0.20,0.41,0.25,1)
-			end
+			self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.26,0.09,1), CreateColor(0.20,0.41,0.25,1))
 		else
-			if ExRT.is10 or ExRT.isLK1 then
-				self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
-			else
-				self.Texture:SetGradientAlpha("VERTICAL",0.05,0.06,0.09,1, 0.20,0.21,0.25,1)
-			end
+			self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
 		end
 		isLiveSession = not isLiveSession
 	end)

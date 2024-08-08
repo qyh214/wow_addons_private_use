@@ -26,7 +26,6 @@ local infusedFalloutCount = 1
 
 local L = mod:GetLocale()
 if L then
-	L.rock_blast = "Soak"
 	L.resonating_annihilation = "Annihilation"
 	L.awakened_earth = "Pillar"
 	L.shattering_impact = "Slam"
@@ -45,10 +44,10 @@ end
 local awakenedEarthMarker = mod:AddMarkerOption(false, "player", 1, 381315, 1, 2, 3, 4, 5, 6, 7, 8) -- Awakened Earth
 function mod:GetOptions()
 	return {
-		{380487, "SAY", "SAY_COUNTDOWN"}, -- Rock Blast
+		{380487, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Rock Blast
 		{381315, "SAY", "SAY_COUNTDOWN"}, -- Awakened Earth
 		awakenedEarthMarker,
-		377166, -- Resonating Annihilation
+		{377166, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Resonating Annihilation
 		382458, -- Resonant Aftermath
 		383073, -- Shattering Impact
 		376279, -- Concussive Slam
@@ -60,7 +59,7 @@ function mod:GetOptions()
 	},{
 		[391592] = CL.mythic,
 	},{
-		[380487] = L.rock_blast, -- Rock Blast (Soak)
+		[380487] = CL.soak, -- Rock Blast (Soak)
 		[377166] = L.resonating_annihilation, -- Resonating Annihilation (Annihilation)
 		[381315] = L.awakened_earth, -- Awakened Earth (Pillar)
 		[383073] = L.shattering_impact, -- Shattering Impact (Slam)
@@ -104,7 +103,7 @@ function mod:OnEngage()
 	frenziedfDevastationCount = 1
 	infusedFalloutCount = 1
 
-	self:Bar(380487, self:Mythic() and 3 or 6, CL.count:format(L.rock_blast, rockBlastCount)) -- Rock Blast
+	self:Bar(380487, self:Mythic() and 3 or 6, CL.count:format(CL.soak, rockBlastCount)) -- Rock Blast
 	self:Bar(376279, self:Mythic() and 11 or 16, CL.count:format(L.concussive_slam, concussiveSlamCount)) -- Concussive Slam
 	self:Bar(383073, self:Mythic() and 23 or 27, CL.count:format(L.shattering_impact, shatteringImpactCount)) -- Shattering Impact
 	self:Bar(377166, self:Mythic() and 88 or 90, CL.count:format(L.resonating_annihilation, resonatingAnnihilationCount)) -- Resonating Annihilation
@@ -120,7 +119,7 @@ end
 do
 	local count = 1
 	function mod:RockBlast(args)
-		self:StopBar(CL.count:format(L.rock_blast, rockBlastCount))
+		self:StopBar(CL.count:format(CL.soak, rockBlastCount))
 		rockBlastCount = rockBlastCount + 1
 		if shatteringImpactCount < 9 then -- Soft Enrage after 8
 			local cd
@@ -129,21 +128,20 @@ do
 			else
 				cd = rockBlastCount % 2 == 0 and 42.0 or 54.5
 			end
-			self:Bar(380487, cd, CL.count:format(L.rock_blast, rockBlastCount))
+			self:Bar(380487, cd, CL.count:format(CL.soak, rockBlastCount))
 		end
 		count = 1
 	end
 
 	function mod:RockBlastApplied(args)
-		self:TargetMessage(380487, "orange", args.destName, CL.count:format(L.rock_blast, rockBlastCount-1))
-		self:TargetBar(380487, 5.5, args.destName, CL.count:format(L.rock_blast, rockBlastCount-1))
+		self:TargetMessage(380487, "orange", args.destName, CL.count:format(CL.soak, rockBlastCount-1))
+		self:TargetBar(380487, 5.5, args.destName, CL.count:format(CL.soak, rockBlastCount-1))
 		if self:Me(args.destGUID) then
-			self:PersonalMessage(380487, nil, L.rock_blast)
-			self:PlaySound(380487, "warning")
-			self:Yell(380487, L.rock_blast)
+			self:Yell(380487, CL.soak, nil, "Soak")
 			self:YellCountdown(380487, 5.5)
+			self:PlaySound(380487, "warning", nil, args.destName)
 		else
-			self:PlaySound(380487, "alert")
+			self:PlaySound(380487, "alert", nil, args.destName)
 		end
 	end
 
@@ -151,7 +149,7 @@ do
 		if self:Me(args.destGUID) then
 			self:PersonalMessage(381315, nil , L.awakened_earth)
 			self:PlaySound(381315, "warning")
-			self:Say(381315, CL.count_rticon:format(L.awakened_earth, count, count))
+			self:Say(381315, CL.count_rticon:format(L.awakened_earth, count, count), nil, ("Pillar (%d{rt%d})"):format(count, count))
 			self:SayCountdown(381315, 6)
 		end
 		self:CustomIcon(awakenedEarthMarker, args.destName, count)
@@ -169,11 +167,12 @@ end
 function mod:ResonatingAnnihilation(args)
 	self:StopBar(CL.count:format(L.resonating_annihilation, resonatingAnnihilationCount))
 	self:Message(args.spellId, "red", CL.count:format(L.resonating_annihilation, resonatingAnnihilationCount))
-	self:PlaySound(args.spellId, "long")
+	self:CastBar(args.spellId, L.resonating_annihilation)
 	resonatingAnnihilationCount = resonatingAnnihilationCount + 1
 	if resonatingAnnihilationCount < 5 then -- Only 4
 		self:Bar(args.spellId, 96.5, CL.count:format(L.resonating_annihilation, resonatingAnnihilationCount))
 	end
+	self:PlaySound(args.spellId, "long")
 end
 
 function mod:ShatteringImpact(args)

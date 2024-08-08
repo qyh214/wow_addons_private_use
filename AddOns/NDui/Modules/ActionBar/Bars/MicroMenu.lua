@@ -39,6 +39,7 @@ function Bar:MicroButton_Create(parent, data)
 
 	if type(method) == "string" then
 		local button = _G[method]
+		if not button then return end
 		button:SetHitRectInsets(0, 0, 0, 0)
 		button:SetParent(bu)
 		button.__owner = bu
@@ -55,7 +56,7 @@ function Bar:MicroButton_Create(parent, data)
 		local hl = button:GetHighlightTexture()
 		Bar:MicroButton_SetupTexture(hl, texture)
 		hooksecurefunc(button, "SetHighlightAtlas", function()
-			hl:SetTexture(DB.MicroTex..texture)
+			button:SetHighlightTexture(DB.MicroTex..texture)
 			hl:SetBlendMode("ADD")
 		end)
 		if not C.db["Skins"]["ClassLine"] then hl:SetVertexColor(1, 1, 1) end
@@ -65,7 +66,7 @@ function Bar:MicroButton_Create(parent, data)
 			Bar:MicroButton_SetupTexture(flash, texture)
 			if not C.db["Skins"]["ClassLine"] then flash:SetVertexColor(1, 1, 1) end
 		end
-		if button.FlashContent then button.FlashContent:SetTexture(nil) end
+		if button.FlashContent then button.FlashContent:SetAlpha(0) end
 		if button.Portrait then button.Portrait:Hide() end
 		if button.Background then button.Background:SetAlpha(0) end
 		if button.PushedBackground then button.PushedBackground:SetAlpha(0) end
@@ -155,8 +156,8 @@ function Bar:MicroMenu()
 	-- Generate Buttons
 	local buttonInfo = {
 		{"player", "CharacterMicroButton"},
-		{"spellbook", "SpellbookMicroButton"},
-		{"talents", "TalentMicroButton"},
+		{"spellbook", "ProfessionMicroButton"},
+		{"talents", "PlayerSpellsMicroButton"},
 		{"achievements", "AchievementMicroButton"},
 		{"quests", "QuestLogMicroButton"},
 		{"guild", "GuildMicroButton"},
@@ -167,6 +168,7 @@ function Bar:MicroMenu()
 		{"help", "MainMenuMicroButton", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU")},
 		{"bags", function() ToggleAllBags() end, MicroButtonTooltipText(BAGSLOT, "OPENALLBAGS")},
 	}
+
 	for _, info in pairs(buttonInfo) do
 		Bar:MicroButton_Create(menubar, info)
 	end
@@ -192,5 +194,9 @@ function Bar:MicroMenu()
 		QueueStatusButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 30, -10)
 		QueueStatusButton:SetFrameLevel(5)
 		QueueStatusButton:SetScale(.9)
+	end
+
+	if MicroMenu and MicroMenu.UpdateHelpTicketButtonAnchor then
+		MicroMenu.UpdateHelpTicketButtonAnchor = B.Dummy
 	end
 end

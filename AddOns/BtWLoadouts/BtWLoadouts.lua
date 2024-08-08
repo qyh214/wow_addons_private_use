@@ -37,6 +37,7 @@ BTWLOADOUTS = ADDON_NAME
 BTWLOADOUTS_LOADOUT = L["Loadout"]
 BTWLOADOUTS_LOADOUTS = L["Loadouts"]
 BTWLOADOUTS_TALENTS = L["Talents"]
+BTWLOADOUTS_HERO_TALENTS = L["Hero Talents"]
 BTWLOADOUTS_PVP_TALENTS = L["PvP Talents"]
 BTWLOADOUTS_ESSENCES = L["Essences"]
 BTWLOADOUTS_SOULBINDS = L["Soulbinds"]
@@ -74,6 +75,7 @@ BTWLOADOUTS_STANCE_BAR_3 = L["Stance Bar 3"];
 BTWLOADOUTS_STANCE_BAR_4 = L["Stance Bar 4"];
 
 BTWLOADOUTS_POSSESS_BAR = L["Possess Bar"];
+BTWLOADOUTS_SKYRIDING_BAR = L["Skyriding Bar"];
 
 BINDING_HEADER_BTWLOADOUTS = L["BtWLoadouts"]
 BINDING_NAME_TOGGLE_BTWLOADOUTS = L["Toggle BtWLoadouts"]
@@ -799,7 +801,22 @@ do
 			end
 		end
 	end
+	local initialSpecs = {
+		[1446] = 71,
+		[1451] = 70,
+		[1448] = 253,
+		[1453] = 259,
+		[1452] = 256,
+		[1455] = 252,
+		[1444] = 262,
+		[1449] = 64,
+		[1454] = 265,
+		[1450] = 269,
+		[1447] = 102,
+		[1456] = 577,
+	};
 	function Internal.AreRestrictionsValidFor(restrictions, specID, covenantID, raceID)
+		specID = initialSpecs[specID] or specID;
 		if restrictions then
 			if restrictions.spec and next(restrictions.spec) and specID ~= nil then
 				if not restrictions.spec[specID] then
@@ -1928,6 +1945,12 @@ function BtWLoadoutsTalentButtonMixin:OnClick()
 		selected[talentID] = true;
 	end
 
+	if self.isPvP then
+		Internal.Call("PvPTalentSetUpdated", frame.set.setID);
+	else
+		Internal.Call("TalentSetUpdated", frame.set.setID);
+	end
+
 	grid:Update()
 end
 function BtWLoadoutsTalentButtonMixin:OnEnter()
@@ -2110,25 +2133,11 @@ end
 
 -- [[ CUSTOM EVENT HANDLING ]]
 
-local eventHandlers = {}
 function Internal.OnEvent(event, callback)
-	if not eventHandlers[event] then
-		eventHandlers[event] = {}
-	end
-
-	eventHandlers[event][callback] = true
+	EventRegistry:RegisterCallback("BtWLoadouts." .. event, callback);
 end
 function Internal.Call(event, ...)
-	local callbacks = eventHandlers[event]
-	local result = true
-	if callbacks then
-		for callback in pairs(callbacks) do
-			if callback(event, ...) == false then
-				result = false
-			end
-		end
-	end
-	return result
+	EventRegistry:TriggerEvent("BtWLoadouts." .. event, ...);
 end
 
 -- [[ Slash Command ]]

@@ -3,6 +3,7 @@ local Mixin,CreateFromMixins,CreateFrame,_G = Mixin,CreateFromMixins,CreateFrame
 local TOOLTIP_DEFAULT_COLOR,select = TOOLTIP_DEFAULT_COLOR,select;
 local TOOLTIP_DEFAULT_BACKGROUND_COLOR = TOOLTIP_DEFAULT_BACKGROUND_COLOR;
 local NORMAL_FONT_COLOR,HIGHLIGHT_FONT_COLOR,BLACK_FONT_COLOR = NORMAL_FONT_COLOR,HIGHLIGHT_FONT_COLOR,BLACK_FONT_COLOR;
+local NEW_FEATURE_SHADOW_COLOR,NEW_CAPS = NEW_FEATURE_SHADOW_COLOR,NEW_CAPS or NEW;
 local BackdropTemplateMixin = BackdropTemplateMixin;
 local GetPhysicalScreenSize = GetPhysicalScreenSize;
 local Round,Lerp,min,max = Round,Lerp,min,max;
@@ -79,6 +80,76 @@ if not PixelUtil then -- classic compatibilty
 	end
 end
 
+local function Create_NewFeature(parent,frameStrata,frameLevel,width,height,scale,shown)
+	local NewFeature = CreateFrame("Frame",nil,parent); -- ResizeLayoutFrame template unusable
+	--NewFeature:SetFrameStrata(frameStrata);
+	--NewFeature:SetFrameLevel(parent:GetFrameLevel()+frameLevel);
+	NewFeature:SetFrameLevel(frameLevel);
+	NewFeature:SetSize(width,height);
+	NewFeature:SetScale(scale);
+	NewFeature:SetShown(shown);
+
+	Mixin(NewFeature,NewFeatureLabelMixin);
+
+	-- <KeyValues>
+	NewFeature.animateFlow = true;
+	NewFeature.label = NEW_CAPS;
+	NewFeature.justifyH = "CENTER";
+	-- </KeyValues>
+	-- <Layers>
+		-- <Layer OVERLAY>
+	NewFeature.BGLabel = NewFeature:CreateFontString(nil,"OVERLAY","GameFontNormal_NoShadow");
+	NewFeature.BGLabel.ignoreInLayout = true;
+	NewFeature.BGLabel:SetDrawLayer("OVERLAY",1)
+	NewFeature.BGLabel:SetMaxLines(1);
+	NewFeature.BGLabel:SetJustifyH("CENTER")
+	NewFeature.BGLabel:SetText(NEW_CAPS);
+	NewFeature.BGLabel:SetTextColor(0.25,0.78,0.92,1 --[[NEW_FEATURE_SHADOW_COLOR:GetRGBA()]])
+	-- RAID_CLASS_COLORS.MAGE looks better on brighter backgrounds
+	NewFeature.BGLabel:SetPoint("CENTER",0.5,-0.5)
+
+	NewFeature.Label = NewFeature:CreateFontString(nil,"OVERLAY","GameFontHighlight");
+	NewFeature.Label:SetDrawLayer("OVERLAY",1)
+	NewFeature.Label:SetMaxLines(1)
+	NewFeature.Label:SetJustifyH("CENTER")
+	NewFeature.Label:SetText(NEW_CAPS)
+	NewFeature.Label:SetTextColor(0.25,0.78,0.92,1 --[[NEW_FEATURE_SHADOW_COLOR:GetRGBA()]])
+	NewFeature.Label:SetPoint("CENTER")
+
+	NewFeature.Glow = NewFeature:CreateTexture(nil,"OVERLAY",nil,1)
+	NewFeature.Glow:SetPoint("TOPLEFT",NewFeature.Label,-20,10)
+	NewFeature.Glow:SetPoint("BOTTOMRIGHT",NewFeature.Label,20,-10)
+	NewFeature.Glow:SetAtlas("collections-newglow")
+		-- </Layer OVERLAY>
+	-- </Layers>
+
+	-- <Animations>
+	NewFeature.Fade = NewFeature:CreateAnimationGroup()
+	NewFeature.Fade:SetLooping("REPEAT")
+	local A1 = NewFeature.Fade:CreateAnimation("Alpha")
+	A1:SetTarget(NewFeature.Glow)
+	A1:SetDuration(1.0)
+	A1:SetOrder(1)
+	A1:SetFromAlpha(1)
+	A1:SetToAlpha(0.5)
+	local A2 = NewFeature.Fade:CreateAnimation("Alpha")
+	A2:SetTarget(NewFeature.Glow)
+	A2:SetDuration(1.0)
+	A2:SetOrder(2)
+	A2:SetFromAlpha(0.5)
+	A2:SetToAlpha(1)
+	-- </Animations>
+	NewFeature.Fade:Play()
+
+	-- <Scripts>
+	NewFeature:SetScript("OnShow",NewFeature.OnShow);
+	--NewFeature:SetScript("OnLoad",NewFeature.OnLoad);
+	NewFeature:SetScript("OnHide",NewFeature.OnHide);
+	-- </Scripts>
+
+	return NewFeature
+end
+
 
 -- lua replacement of UIDropDownCustomMenuEntryTemplate
 function Create_DropDownCustomMenuEntry(name,parent,opts)
@@ -142,6 +213,14 @@ local function MenuButton_OnEnable(self)
 end
 local function MenuButton_OnDisable(self)
 	self.invisibleButton:Show();
+end
+
+function Update_DropDownMenuButton(name)
+	local button = _G[name];
+	if (button and button.NewFeature) then return end
+
+	button.NewFeature = Create_NewFeature(button,"FULLSCREEN_DIALOG",100,1,1,0.8,false);
+	button.NewFeature:SetPoint("LEFT", button.NormalText, "RIGHT", 20, 0);
 end
 
 function Create_DropDownMenuButton(name,parent,opts)
@@ -232,6 +311,9 @@ function Create_DropDownMenuButton(name,parent,opts)
 	button.invisibleButton:SetScript("OnEnter",UIDropDownMenuButtonInvisibleButton_OnEnter);
 	button.invisibleButton:SetScript("OnLeave",UIDropDownMenuButtonInvisibleButton_OnLeave);
 		-- </Button>
+		-- <Frame>
+	button.NewFeature = Create_NewFeature(button,"FULLSCREEN_DIALOG",100,1,1,0.8,false);
+		-- </Frame>
 	-- </Frames>
 
 	-- <Scripts>
@@ -247,6 +329,8 @@ function Create_DropDownMenuButton(name,parent,opts)
 	button.NormalText:SetPoint("LEFT",-5,0);
 	button:SetFontString(button.NormalText);
 	-- </ButtonText>
+
+	button.NewFeature:SetPoint("LEFT", button.NormalText, "RIGHT", 20, 0);
 
 	button:SetNormalFontObject("GameFontHighlightSmallLeft")
 	button:SetHighlightFontObject("GameFontHighlightSmallLeft");
@@ -478,7 +562,6 @@ function Create_LargeDropDownMenu(name,parent)
 
 	return menu;
 end
-
 
 -- lua replacement of UIDropDownMenu.xml
 if not _G.LibDropDownMenu_List1 then

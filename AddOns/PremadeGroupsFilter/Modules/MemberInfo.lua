@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,29 +22,55 @@ local PGF = select(2, ...)
 local L = PGF.L
 local C = PGF.C
 
-C.ROLE_ATLAS = {
-    ["TANK"] = "roleicon-tiny-tank",
-    ["HEALER"] = "roleicon-tiny-healer",
-    ["DAMAGER"] = "roleicon-tiny-dps",
-}
-C.LEADER_ATLAS = "groupfinder-icon-leader"
+--- Sets member info keyword values based on the search result info
+function PGF.PutSearchResultMemberInfos(resultID, searchResultInfo, env)
+    -- init to zero
+    env.ranged = 0
+    env.melees = 0
+    local specs = PGF.GetAllSpecializations()
+    for specID, specInfo in pairs(specs) do
+        env[specInfo.specKeyword] = 0
+        env[specInfo.classKeyword] = 0
+        env[specInfo.roleClassKeyword] = 0
+        env[specInfo.classRoleKeyword] = 0
+        env[specInfo.armor] = 0
+    end
+
+    -- increment keywords
+    for i = 1, searchResultInfo.numMembers do
+        local role, class, classLocalized, specLocalized = C_LFGList.GetSearchResultMemberInfo(resultID, i)
+        local specInfo = PGF.GetSpecializationInfoByLocalizedName(class, specLocalized)
+        if specInfo then
+            if specInfo.role == "DAMAGER" then
+                env.ranged = env.ranged + (specInfo.range and 1 or 0)
+                env.melees = env.melees + (specInfo.melee and 1 or 0)
+            end
+            env[specInfo.specKeyword] = env[specInfo.specKeyword] + 1
+            env[specInfo.classKeyword] = env[specInfo.classKeyword] + 1
+            env[specInfo.roleClassKeyword] = env[specInfo.roleClassKeyword] + 1
+            env[specInfo.classRoleKeyword] = env[specInfo.classRoleKeyword] + 1
+            env[specInfo.armor] = env[specInfo.armor] + 1
+        end
+    end
+
+    -- set aliases
+    env.augs = env.augmentation_evokers
+    env.discs = env.discipline_priests
+    env.ranged_strict = env.ranged
+    env.melees_strict = env.melees
+end
 
 function PGF.GetSearchResultMemberInfoTable(resultID, numMembers)
     local members = {}
     for i = 1, numMembers do
-        local role, class, classLocalized, specLocalized = C_LFGList.GetSearchResultMemberInfo(resultID, i)
-        local classColor = RAID_CLASS_COLORS[class] or NORMAL_FONT_COLOR
-        table.insert(members, {
-            role = role,
-            class = class,
-            classLocalized = classLocalized,
-            specLocalized = specLocalized,
-            classColor = classColor,
-            roleAtlas = C.ROLE_ATLAS[role],
-            roleMarkup = string.format("|A:%s:0:0:0:0|a", C.ROLE_ATLAS[role]),
-            isLeader = i == 1,
-            leaderMarkup = i == 1 and string.format("|A:%s:10:12:0:0|a", C.LEADER_ATLAS) or "",
-        })
+        local role, class, classLocalized, specLocalized, isLeader = C_LFGList.GetSearchResultMemberInfo(resultID, i)
+        local specInfo = PGF.GetSpecializationInfoByLocalizedName(class, specLocalized)
+        if specInfo then
+            local memberInfo = PGF.Table_Copy_Shallow(specInfo)
+            memberInfo.isLeader = isLeader
+            memberInfo.leaderMarkup = isLeader and string.format("|A:%s:10:12:0:0|a", C.LEADER_ATLAS) or ""
+            table.insert(members, memberInfo)
+        end
     end
     -- sort reverse by role -> tank, heal, dps; then by class
     table.sort(members, function(a, b)

@@ -18,7 +18,7 @@ function T:GetOrCreateMountTable(spell)
 	if not self.MountTable[spell] then
 		local index = C_MountJournal.GetMountFromSpell(spell)
 		if index then
-			local _, mSpell, _, _, _, sourceType = C_MountJournal.GetMountInfoByID(index)
+			local _, mSpell = C_MountJournal.GetMountInfoByID(index)
 			if spell == mSpell then
 				local _, _, source = C_MountJournal.GetMountInfoExtraByID(index)
 				self.MountTable[spell] = {source = source, index = index}
@@ -44,12 +44,12 @@ local function AddLine(self, source, isCollectedText, type, noadd)
 end
 
 function T:MountsSource()
-	if IsAddOnLoaded("MountsSource") then return end
+	if C_AddOns.IsAddOnLoaded("MountsSource") then return end
 
 	hooksecurefunc(GameTooltip, "SetUnitAura", function(self, ...)
 		if not T.db["MountsSource"] then return end
 
-		local id = select(10, UnitAura(...))
+		local id = select(10, AuraUtil.UnpackAuraData(C_UnitAuras.GetAuraDataByIndex(...)))
 		local table = id and T:GetOrCreateMountTable(id)
 		if table then
 			AddLine(self, table.source, T:IsCollected(id) and COLLECTED or NOT_COLLECTED, SOURCE)

@@ -5,6 +5,8 @@ local ELib,L = ExRT.lib,ExRT.L
 
 local LibDeflate = LibStub:GetLibrary("LibDeflate")
 
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned or ExRT.NULLfunc
+
 local VMRT = nil
 
 function module.main:ADDON_LOADED()
@@ -86,6 +88,23 @@ function module.options:Load()
 				self:ColorBorder()
 			end
 		end
+		if name and UnitName(name) and UnitGroupRolesAssigned(name) then
+			local role = UnitGroupRolesAssigned(name)
+			if role == "HEALER" then
+				self.roleIcon:SetAtlas("groupfinder-icon-role-large-heal")
+				self.roleIcon:Show()
+			elseif role == "DAMAGER" then
+				self.roleIcon:SetAtlas("groupfinder-icon-role-large-dps")
+				self.roleIcon:Show()
+			elseif role == "TANK" then
+				self.roleIcon:SetAtlas("groupfinder-icon-role-large-tank")
+				self.roleIcon:Show()
+			else
+				self.roleIcon:Hide()
+			end
+		else
+			self.roleIcon:Hide()
+		end
 		if isUser then
 			module.options:UpdateNotInList()
 		end
@@ -106,6 +125,11 @@ function module.options:Load()
 		edit.index = i
 
 		edit:Point("TOPLEFT",10+((i-1) % 10 < 5 and 0 or 165),-40-((i-1) % 5)*22-floor((i-1)/10)*132):OnChange(EditOnChange)
+
+		edit.roleIcon = edit:CreateTexture(nil, "BACKGROUND")
+		edit.roleIcon:SetPoint("RIGHT")
+		edit.roleIcon:SetSize(16,16)
+		edit.roleIcon:Hide()
 
 		edit:SetMovable(true)
 		edit:RegisterForDrag("LeftButton")
@@ -182,6 +206,11 @@ function module.options:Load()
 				edit.index = i
 				edit:Point("TOPLEFT",355,-40-(i-1)*14):OnChange(EditOnChange)
 
+				edit.roleIcon = edit:CreateTexture(nil, "BACKGROUND")
+				edit.roleIcon:SetPoint("RIGHT")
+				edit.roleIcon:SetSize(10,10)
+				edit.roleIcon:Hide()
+
 				edit:SetFont(edit:GetFont(),10,"")
 				edit:SetEnabled(false)
 		
@@ -192,10 +221,12 @@ function module.options:Load()
 
 			end
 			if type(notInList[i]) == "table" then
+				edit:SetText("")
 				edit:SetText(notInList[i][4])
 				edit.preclass = notInList[i][2]
 				edit.preName = notInList[i][1]
 			else
+				edit:SetText("")
 				edit:SetText(notInList[i])
 				edit.preclass = nil
 				edit.preName = nil

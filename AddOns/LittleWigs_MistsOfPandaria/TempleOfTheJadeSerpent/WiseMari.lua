@@ -92,7 +92,7 @@ function mod:CorruptedVortexApplied(args)
 	self:TargetMessage(args.spellId, "yellow", args.destName)
 	if self:Me(args.destGUID) then
 		self:PlaySound(args.spellId, "alarm")
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Corrupted Vortex")
 		self:SayCountdown(args.spellId, 6)
 	else
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
@@ -116,13 +116,13 @@ function mod:BubbleBurst(args)
 end
 
 function mod:CallWater(args)
-	self:DelayedMessage(-6327, 3, "red", CL.count:format(CL.add_spawned, addDeaths + 1), args.spellId, "alarm")
-	self:Bar(-6327, 3, CL.next_add, args.spellId)
+	self:DelayedMessage(-6327, 3, "red", CL.count:format(CL.add_spawned, addDeaths + 1), -6327, "alarm")
+	self:Bar(-6327, 3, CL.next_add)
 end
 
 function mod:AddDeath()
 	addDeaths = addDeaths + 1
-	self:Message(-6327, "green", nil, CL.add_killed:format(addDeaths, 4), 106526)
+	self:Message(-6327, "green", CL.add_killed:format(addDeaths, 4))
 	self:PlaySound(-6327, "info")
 end
 
@@ -134,7 +134,7 @@ do
 			if t - prev > 1.5 then
 				prev = t
 				self:PersonalMessage(args.spellId, "underyou")
-				self:PlaySound(args.spellId, "underyou")
+				self:PlaySound(args.spellId, "underyou", nil, args.destName)
 			end
 		end
 	end

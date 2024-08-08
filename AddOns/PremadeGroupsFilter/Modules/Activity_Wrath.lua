@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -212,6 +212,20 @@ C.ACTIVITY = {
     [1271] = { difficulty = 2, category = 114, mapID =  615 }, -- The Obsidian Sanctum (25 Heroic)
     [1272] = { difficulty = 2, category = 114, mapID =  624 }, -- Vault of Archavon (25 Heroic)
     [1273] = { difficulty = 2, category = 114, mapID =  616 }, -- The Eye of Eternity (25 Heroic)
+    [1517] = { difficulty = 1, category = 114, mapID =  732 }, -- Baradin Hold (10 Normal)
+    [1522] = { difficulty = 1, category = 114, mapID =  732 }, -- Baradin Hold (25 Normal)
+    [1523] = { difficulty = 1, category = 114, mapID =  669 }, -- Blackwing Descent (10 Normal)
+    [1524] = { difficulty = 1, category = 114, mapID =  669 }, -- Blackwing Descent (25 Normal)
+    [1525] = { difficulty = 2, category = 114, mapID =  669 }, -- Blackwing Descent (10 Heroic)
+    [1526] = { difficulty = 2, category = 114, mapID =  669 }, -- Blackwing Descent (25 Heroic)
+    [1527] = { difficulty = 1, category = 114, mapID =  671 }, -- The Bastion of Twilight (10 Normal)
+    [1528] = { difficulty = 1, category = 114, mapID =  671 }, -- The Bastion of Twilight (25 Normal)
+    [1529] = { difficulty = 2, category = 114, mapID =  671 }, -- The Bastion of Twilight (10 Heroic)
+    [1530] = { difficulty = 2, category = 114, mapID =  671 }, -- The Bastion of Twilight (25 Heroic)
+    [1531] = { difficulty = 1, category = 114, mapID =  754 }, -- Throne of the Four Winds (10 Normal)
+    [1532] = { difficulty = 1, category = 114, mapID =  754 }, -- Throne of the Four Winds (25 Normal)
+    [1533] = { difficulty = 2, category = 114, mapID =  754 }, -- Throne of the Four Winds (10 Heroicl)
+    [1534] = { difficulty = 2, category = 114, mapID =  754 }, -- Throne of the Four Winds (25 Heroic)
 }
 
 -- Return a default set if activity not found

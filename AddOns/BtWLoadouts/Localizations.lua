@@ -10,6 +10,9 @@ setmetatable(L, {
 })
 Internal.L = L
 
+local ACTION_BAR = HUD_EDIT_MODE_ACTION_BAR_LABEL or "Action Bar %d"
+local STANCE_BAR = HUD_EDIT_MODE_STANCE_BAR_LABEL or "Stance Bar %d"
+
 -- Fallbacks for items missing translations
 L["Talents"] = TALENTS
 L["PvP Talents"] = PVP_TALENTS
@@ -33,14 +36,14 @@ L["Scenarios"] = SCENARIOS
 L["Enabled"] = VIDEO_OPTIONS_ENABLED
 L["Soulbinds"] = COVENANT_PREVIEW_SOULBINDS
 
-L["Action Bar 2"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 2)
-L["Action Bar 3"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 3)
-L["Action Bar 4"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 4)
-L["Action Bar 5"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 5)
-L["Action Bar 6"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 6)
-L["Action Bar 7"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 7)
-L["Action Bar 8"] = format(HUD_EDIT_MODE_ACTION_BAR_LABEL, 8)
-L["Stance Bar 1"] = format("%s %d", HUD_EDIT_MODE_STANCE_BAR_LABEL, 1)
-L["Stance Bar 2"] = format("%s %d", HUD_EDIT_MODE_STANCE_BAR_LABEL, 2)
-L["Stance Bar 3"] = format("%s %d", HUD_EDIT_MODE_STANCE_BAR_LABEL, 3)
-L["Stance Bar 4"] = format("%s %d", HUD_EDIT_MODE_STANCE_BAR_LABEL, 4)
+L["Action Bar 2"] = format(ACTION_BAR, 2)
+L["Action Bar 3"] = format(ACTION_BAR, 3)
+L["Action Bar 4"] = format(ACTION_BAR, 4)
+L["Action Bar 5"] = format(ACTION_BAR, 5)
+L["Action Bar 6"] = format(ACTION_BAR, 6)
+L["Action Bar 7"] = format(ACTION_BAR, 7)
+L["Action Bar 8"] = format(ACTION_BAR, 8)
+L["Stance Bar 1"] = format("%s %d", STANCE_BAR, 1)
+L["Stance Bar 2"] = format("%s %d", STANCE_BAR, 2)
+L["Stance Bar 3"] = format("%s %d", STANCE_BAR, 3)
+L["Stance Bar 4"] = format("%s %d", STANCE_BAR, 4)

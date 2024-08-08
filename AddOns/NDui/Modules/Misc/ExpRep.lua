@@ -16,7 +16,6 @@ local ARTIFACT_POWER, ARTIFACT_RETIRED = ARTIFACT_POWER, ARTIFACT_RETIRED
 
 local UnitLevel, UnitXP, UnitXPMax, GetXPExhaustion, IsXPUserDisabled = UnitLevel, UnitXP, UnitXPMax, GetXPExhaustion, IsXPUserDisabled
 local BreakUpLargeNumbers, GetNumFactions, GetFactionInfo = BreakUpLargeNumbers, GetNumFactions, GetFactionInfo
-local GetWatchedFactionInfo = GetWatchedFactionInfo
 local HasArtifactEquipped, ArtifactBarGetNumArtifactTraitsPurchasableFromXP = HasArtifactEquipped, ArtifactBarGetNumArtifactTraitsPurchasableFromXP
 local IsWatchingHonorAsXP, UnitHonor, UnitHonorMax, UnitHonorLevel = IsWatchingHonorAsXP, UnitHonor, UnitHonorMax, UnitHonorLevel
 local IsPlayerAtEffectiveMaxLevel = IsPlayerAtEffectiveMaxLevel
@@ -41,6 +40,8 @@ function M:ExpBar_Update()
 	local rest = self.restBar
 	if rest then rest:Hide() end
 
+	local factionData = C_Reputation.GetWatchedFactionData()
+
 	if not IsPlayerAtEffectiveMaxLevel() then
 		local xp, mxp, rxp = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
 		self:SetStatusBarColor(0, .7, 1)
@@ -53,8 +54,12 @@ function M:ExpBar_Update()
 			rest:Show()
 		end
 		if IsXPUserDisabled() then self:SetStatusBarColor(.7, 0, 0) end
-	elseif GetWatchedFactionInfo() then
-		local _, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
+	elseif factionData then
+		local standing = factionData.reaction
+		local barMin = factionData.currentReactionThreshold
+		local barMax = factionData.nextReactionThreshold
+		local value = factionData.currentStanding
+		local factionID = factionData.factionID
 		if factionID and C_Reputation_IsMajorFaction(factionID) then
 			local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
 			value = majorFactionData.renownReputationEarned or 0
@@ -129,8 +134,14 @@ function M:ExpBar_UpdateTooltip()
 		if IsXPUserDisabled() then GameTooltip:AddLine("|cffff0000"..XP..LOCKED) end
 	end
 
-	if GetWatchedFactionInfo() then
-		local name, standing, barMin, barMax, value, factionID = GetWatchedFactionInfo()
+	local factionData = C_Reputation.GetWatchedFactionData()
+	if factionData then
+		local name = factionData.name
+		local standing = factionData.reaction
+		local barMin = factionData.currentReactionThreshold
+		local barMax = factionData.nextReactionThreshold
+		local value = factionData.currentStanding
+		local factionID = factionData.factionID
 		local standingtext
 		if factionID and C_Reputation_IsMajorFaction(factionID) then
 			local majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
@@ -140,7 +151,7 @@ function M:ExpBar_UpdateTooltip()
 			standingtext = RENOWN_LEVEL_LABEL..majorFactionData.renownLevel
 		else
 			local repInfo = C_GossipInfo_GetFriendshipReputation(factionID)
-			local friendID, friendRep, friendThreshold, nextFriendThreshold, friendTextLevel = repInfo.friendshipFactionID, repInfo.standing, repInfo.reactionThreshold, repInfo.nextThreshold, repInfo.text
+			local friendID, friendRep, friendThreshold, nextFriendThreshold = repInfo.friendshipFactionID, repInfo.standing, repInfo.reactionThreshold, repInfo.nextThreshold
 			local repRankInfo = C_GossipInfo_GetFriendshipReputationRanks(factionID)
 			local currentRank, maxRank = repRankInfo.currentLevel, repRankInfo.maxLevel
 			if friendID and friendID ~= 0 then
@@ -153,7 +164,7 @@ function M:ExpBar_UpdateTooltip()
 					barMax = barMin + 1e3
 					value = barMax - 1
 				end
-				standingtext = friendTextLevel
+				standingtext = repInfo.reaction
 			else
 				if standing == MAX_REPUTATION_REACTION then
 					barMax = barMin + 1e3
@@ -282,6 +293,7 @@ M:RegisterMisc("ExpRep", M.Expbar)
 
 -- Paragon reputation info
 function M:ParagonReputationSetup()
+	if DB.isWW then return end -- FIXME
 	if not C.db["Misc"]["ParagonRep"] then return end
 
 	hooksecurefunc("ReputationFrame_InitReputationRow", function(factionRow, elementData)

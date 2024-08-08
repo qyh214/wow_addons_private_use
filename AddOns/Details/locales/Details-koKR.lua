@@ -169,10 +169,9 @@ L["STRING_CUSTOM_TARGET_DESC"] = [=[행위자의 대상입니다.
 
 오른쪽에 있는 버튼은 공격대 전투 중 npc들의 목록을 표시합니다.]=]
 L["STRING_CUSTOM_TEMPORARILY"] = " (|cFFFFC000임시|r)"
---[[Translation missing --]]
-L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[To load a texture file in the World of Warcraft client you need a file in .TGA format and its width and height must be multiples of 8.
+L["STRING_CUSTOM_TEXTURE_GUIDE"] = [=[월드 오브 워크래프트 클라이언트에서 텍스쳐 파일을 열기 위해서는 .TGA 형식의 파일이 필요하며, 높이와 너비는 8의 배수여야 합니다.
 
-Place the texture inside /WoW Install Folder/retail/Interface/]=]
+텍스쳐를 /WoW Install Folder/retail/Interface/ 에 넣으십시요.]=]
 L["STRING_DAMAGE"] = "피해"
 L["STRING_DAMAGE_DPS_IN"] = "받은 DPS:"
 L["STRING_DAMAGE_FROM"] = "피해 출처"
@@ -194,7 +193,6 @@ L["STRING_ENVIRONMENTAL_FATIGUE"] = "환경피해 (피로)"
 L["STRING_ENVIRONMENTAL_FIRE"] = "환경피해 (화염)"
 L["STRING_ENVIRONMENTAL_LAVA"] = "환경피해 (용암)"
 L["STRING_ENVIRONMENTAL_SLIME"] = "환경피해 (독성)"
-L["STRING_EQUILIZING"] = "전투 데이터 공유"
 L["STRING_ERASE"] = "삭제"
 L["STRING_ERASE_DATA"] = "모든 데이터 초기화"
 L["STRING_ERASE_DATA_OVERALL"] = "종합 데이터 초기화"
@@ -409,16 +407,14 @@ L["STRING_OPTIONS_3D_UANCHOR"] = "상위 3D 모델:"
 L["STRING_OPTIONS_3D_UENABLED_DESC"] = "바 위에 3D 모델 프레임 사용을 켜거나 끕니다."
 L["STRING_OPTIONS_3D_USELECT_DESC"] = "상위 모델 바에 사용할 모델을 선택합니다."
 L["STRING_OPTIONS_ADVANCED"] = "고급"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "Aligned Text Columns"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS"] = "문자 행 정렬"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN"] = "자동 정렬"
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_AUTOALIGN_DESC"] = "각 문자의 길이에 따라 정렬이 자동으로 수행됩니다."
 --[[Translation missing --]]
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_DESC"] = "Disable brackets and separators and align bars texts in vertical columns"
 --[[Translation missing --]]
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET"] = "Text %d Offset"
---[[Translation missing --]]
-L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "Offset from right border"
+L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_OFFSET_DESC"] = "오른쪽 테두리와의 간격"
 --[[Translation missing --]]
 L["STRING_OPTIONS_ALIGNED_TEXT_COLUMNS_WARNING"] = "is enabled, separators and brackets aren't used"
 L["STRING_OPTIONS_ALPHAMOD_ANCHOR"] = "자동 숨기기:"
@@ -849,6 +845,30 @@ L["STRING_OPTIONS_MINIMAP_ANCHOR"] = "미니맵:"
 L["STRING_OPTIONS_MINIMAP_DESC"] = "미니맵 아이콘을 표시하거나 숨깁니다."
 L["STRING_OPTIONS_MISCTITLE"] = "기타 설정"
 L["STRING_OPTIONS_MISCTITLE2"] = "여러가지 옵션을 설정합니다."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Overall Segment DPS Calculation"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MAKEOVERALL"] = "Make Overall Segment"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MAKEOVERALL_DESC"] = "After the run is completed, this option creates a new segment containing all combat data from the run."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Panels"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Show End of M+ Panel"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Time in Combat"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "The overall segment for the Mythic+ run will use 'totalDamage / totalCombatTime' to calculate DPS."
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeon Run Time"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "The overall segment for the Mythic+ run will calculate DPS using 'totalDamage / runTime'."
 L["STRING_OPTIONS_NICKNAME"] = "별명"
 L["STRING_OPTIONS_NICKNAME_DESC"] = [=[당신의 별명을 정합니다.
 
@@ -1473,6 +1493,8 @@ L["STRING_REPORT_SINGLE_BUFFUPTIME"] = "강화 효과 유지 시간:"
 L["STRING_REPORT_SINGLE_COOLDOWN"] = "생존기 사용 :"
 L["STRING_REPORT_SINGLE_DEATH"] = "죽음:"
 L["STRING_REPORT_SINGLE_DEBUFFUPTIME"] = "약화 효과 유지 시간:"
+--[[Translation missing --]]
+L["STRING_REPORT_TEXT"] = "Report"
 L["STRING_REPORT_TOOLTIP"] = "결과 보고"
 L["STRING_REPORTFRAME_COPY"] = "복사 & 붙여넣기"
 L["STRING_REPORTFRAME_CURRENT"] = "현재"

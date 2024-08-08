@@ -1,7 +1,7 @@
 --[[-----------------------------------------------------------------------------
 Spin Box Widget
 -------------------------------------------------------------------------------]]
-local Type, Version = "WeakAurasSpinBox", 4
+local Type, Version = "WeakAurasSpinBox", 5
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then
   return
@@ -15,10 +15,10 @@ local tonumber, pairs = tonumber, pairs
 local PlaySound = PlaySound
 local CreateFrame, UIParent = CreateFrame, UIParent
 
-local progressLeftOffset = WeakAuras.IsClassicEraOrWrath() and -2 or -3
-local progressExtraWidth = WeakAuras.IsClassicEraOrWrath() and -2 or 0
-local progressTopOffset = WeakAuras.IsClassicEraOrWrath() and -3 or -2
-local progressBottomOffset = WeakAuras.IsClassicEraOrWrath() and 3 or 2
+local progressLeftOffset = WeakAuras.IsClassicOrCata() and -2 or -3
+local progressExtraWidth = WeakAuras.IsClassicOrCata() and -2 or 0
+local progressTopOffset = WeakAuras.IsClassicOrCata() and -3 or -2
+local progressBottomOffset = WeakAuras.IsClassicOrCata() and 3 or 2
 
 --[[-----------------------------------------------------------------------------
 Support functions
@@ -295,6 +295,7 @@ local function Constructor()
   editbox:SetHeight(19)
   editbox:SetJustifyH("CENTER")
   editbox:EnableMouse(true)
+  editbox:EnableMouseWheel(false)
   editbox:SetTextInsets(0, 0, 3, 3)
   editbox:SetScript("OnEnter", EditBox_OnEnter)
   editbox:SetScript("OnLeave", EditBox_OnLeave)
@@ -306,15 +307,6 @@ local function Constructor()
   end)
   editbox:SetScript("OnEditFocusLost", function(frame)
     UpdateHandleVisibility(frame.obj)
-  end)
-  editbox:SetScript("OnMouseWheel", function(self, delta)
-    if self:HasFocus() then
-      if delta == 1 then
-        SpinBox_OnValueUp(self)
-      else
-        SpinBox_OnValueDown(self)
-      end
-    end
   end)
 
   leftbutton:SetPoint("TOPLEFT", 2, -18)

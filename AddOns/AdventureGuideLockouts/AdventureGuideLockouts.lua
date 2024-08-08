@@ -147,11 +147,8 @@ end
 ---@return table @ instanceLockout
 function AddOn:GetInstanceLockout(instanceIndex)
     local instanceName, _, _, instanceDifficulty, locked, extended, _, _, _, difficultyName, numEncounters, numCompleted, _, instanceID = GetSavedInstanceInfo(instanceIndex)
-    if not locked and not extended then return end
-    if instanceID == 1544 then
-        numEncounters = 3 -- Fixes wrong encounters count for Assault on Violet Hold
-    elseif instanceID == 1822 then
-        numEncounters = 4 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
+    if not locked and not extended then
+        return
     end
 
     local _, _, isHeroic, _, displayHeroic, displayMythic, _, isLFR = GetDifficultyInfo(instanceDifficulty)
@@ -166,16 +163,17 @@ function AddOn:GetInstanceLockout(instanceIndex)
 
     local encounters = {}
     for encounterIndex = 1, numEncounters do
-        if instanceID == 1822 then
-            if self.playerFaction == "Alliance" and encounterIndex == 1 or self.playerFaction == "Horde" and encounterIndex == 2 then
-                encounterIndex = encounterIndex + 1 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
-            end
-        end
         local bossName, _, isKilled = GetSavedInstanceEncounterInfo(instanceIndex, encounterIndex)
         tinsert(encounters, {
             bossName = bossName,
             isKilled = isKilled
         })
+    end
+
+    if instanceID == 1544 then
+        numEncounters = 3 -- Fixes wrong encounters count for Assault on Violet Hold
+    elseif instanceID == 1822 then
+        numEncounters = 4 -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
     end
 
     return {
@@ -195,7 +193,9 @@ end
 ---@return table @ instanceLockout
 function AddOn:GetWorldBossLockout(instanceIndex)
     local instanceName, instanceID, locked, difficultyName, numEncounters, numCompleted, difficulty = self:GetSavedWorldBossInfo(instanceIndex)
-    if not locked then return end
+    if not locked then
+        return
+    end
 
     local encounters = {}
     local numAvailableEncounters = 0
@@ -266,14 +266,18 @@ function AddOn:CreateStatusFrame(button, orderIndex, difficulty)
             if encounter.isKilled then
                 r, g, b = RED_FONT_COLOR:GetRGB()
                 bossStatus = BOSS_DEAD
-            elseif encounter.isAvailable == false then
+            elseif encounter.isAvailable == false or frame.instanceInfo.complete then
                 r, g, b = GRAY_FONT_COLOR:GetRGB()
                 bossStatus = QUEUE_TIME_UNAVAILABLE
             else
                 r, g, b = GREEN_FONT_COLOR:GetRGB()
                 bossStatus = BOSS_ALIVE
             end
-            GameTooltip:AddDoubleLine(encounter.bossName, bossStatus, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
+            -- Fixes https://github.com/Meivyn/AdventureGuideLockouts/issues/1
+            local isAvailableForFaction = (self.playerFaction == "Horde" and i == 1) or (self.playerFaction == "Alliance" and i == 2)
+            if frame.instanceInfo.instanceID ~= 1822 or i ~= 1 and i ~= 2 or isAvailableForFaction then
+                GameTooltip:AddDoubleLine(encounter.bossName, bossStatus, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, r, g, b)
+            end
         end
         GameTooltip:Show()
     end)
@@ -349,34 +353,30 @@ function AddOn:UpdateInstanceStatusFrame(button, elementData)
         return
     end
 
-    for i = 1, #instances do
-        local instance = instances[i]
-        local frame = self.statusFrames[orderIndex] and self.statusFrames[orderIndex][instance.difficulty] or self:CreateStatusFrame(button, orderIndex, instance.difficulty)
-        if instance.complete then
-            frame.completeFrame:Show()
-            frame.progressFrame:Hide()
-        elseif instance.progress then
-            frame.completeFrame:Hide()
-            frame.progressFrame:SetText(instance.progress)
-            frame.progressFrame:Show()
+    -- This prevents ScrollTarget's OnSizeChanged callback from being fired with taint.
+    RunNextFrame(function()
+        for i = 1, #instances do
+            local instance = instances[i]
+            local frame = self.statusFrames[orderIndex] and self.statusFrames[orderIndex][instance.difficulty] or self:CreateStatusFrame(button, orderIndex, instance.difficulty)
+            if instance.complete then
+                frame.completeFrame:Show()
+                frame.progressFrame:Hide()
+            elseif instance.progress then
+                frame.completeFrame:Hide()
+                frame.progressFrame:SetText(instance.progress)
+                frame.progressFrame:Show()
+            end
+            frame.instanceInfo = instance
+            frame:Show()
         end
-        frame.instanceInfo = instance
 
-        -- This prevents ScrollTarget's OnSizeChanged callback from being fired with taint.
-        RunNextFrame(function() frame:Show() end)
-    end
-
-    self:UpdateStatusFramePosition(orderIndex)
+        self:UpdateStatusFramePosition(orderIndex)
+    end)
 end
 
 local function UpdateFrames()
-    local dataIndex = 1
-    local showRaid = EncounterJournal_IsRaidTabSelected(EncounterJournal)
     EncounterJournal.instanceSelect.ScrollBox:ForEachFrame(function(frame, elementData)
-        -- This fixes an issue with the original function not setting the mapID correctly in the data provider.
-        elementData.mapID = select(11, EJ_GetInstanceByIndex(dataIndex, showRaid))
         AddOn:UpdateInstanceStatusFrame(frame, elementData)
-        dataIndex = dataIndex + 1
     end)
 end
 

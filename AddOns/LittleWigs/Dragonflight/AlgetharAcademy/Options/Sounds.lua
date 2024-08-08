@@ -33,7 +33,8 @@ BigWigs:AddSounds("Echo of Doragosa", {
 	[374361] = "alarm",
 	[388822] = "alarm",
 	[388901] = "underyou",
-	[389011] = "alert",
+	[389011] = "info",
+	[439488] = "info",
 })
 
 BigWigs:AddSounds("Algeth'ar Academy Trash", {
@@ -42,12 +43,11 @@ BigWigs:AddSounds("Algeth'ar Academy Trash", {
 	[377912] = "alarm",
 	[377991] = "alert",
 	[378003] = "alarm",
-	[387843] = {"alarm","alert"},
+	[387843] = {"alert","info"},
 	[387910] = {"alarm","underyou"},
 	[387955] = "alert",
 	[388392] = "alert",
 	[388863] = "alert",
-	[388886] = {"alert","long"},
 	[388911] = "alarm",
 	[388976] = "alarm",
 	[388984] = {"alarm","alert"},
@@ -57,5 +57,5 @@ BigWigs:AddSounds("Algeth'ar Academy Trash", {
 	[389521] = "info",
 	[389536] = "info",
 	[390912] = "alarm",
-	[396812] = "warning",
+	[396812] = "alert",
 })

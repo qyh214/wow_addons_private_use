@@ -64,7 +64,8 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_REMOVED", "CorrosionRemoved", 407406)
 	self:Log("SPELL_AURA_APPLIED", "CorruptedMindApplied", 418346)
 	self:Log("SPELL_CAST_START", "BlightReclamation", 407159)
-	self:Log("SPELL_AURA_APPLIED", "BlightSeepDamage", 407147)
+	self:Log("SPELL_PERIODIC_DAMAGE", "BlightSeepDamage", 407147)
+	self:Log("SPELL_PERIODIC_MISSED", "BlightSeepDamage", 407147)
 
 	-- Ahnzon
 	self:Log("SPELL_CAST_SUCCESS", "NecroticWinds", 407978)
@@ -155,7 +156,7 @@ function mod:CorrosionApplied(args)
 		self:TargetBar(args.spellId, 15, args.destName)
 	end
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Corrosion")
 		if self:Mythic() then
 			self:YellCountdown(args.spellId, 15, nil, 5)
 		end
@@ -221,7 +222,7 @@ do
 	end
 
 	function mod:Necrofrost(args)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 		-- pull:133.9, 19.4, 42.5
 		necrofrostCount = necrofrostCount + 1
 		if necrofrostCount == 3 then
@@ -244,7 +245,7 @@ do
 			self:PlaySound(408029, "info", nil, args.destName)
 		end
 		if self:Me(args.destGUID) then
-			self:Say(408029)
+			self:Say(408029, nil, nil, "Necrofrost")
 		end
 		necrofrostGUID = args.sourceGUID
 		self:RegisterTargetEvents("MarkNecrofrost")
@@ -266,7 +267,7 @@ do
 		self:TargetMessage(408141, "orange", name)
 		self:PlaySound(408141, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(408141)
+			self:Say(408141, nil, nil, "Incinerating Blightbreath")
 		end
 		incineratingBlightbreathCount = incineratingBlightbreathCount + 1
 		if incineratingBlightbreathCount % 3 == 1 then -- 4, 7...

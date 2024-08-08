@@ -49,21 +49,21 @@ do -- Filter chat spam
         return false, msg, ...
     end
 
-    Internal.OnEvent("LOADOUT_CHANGE_START", function ()
+    Internal.OnEvent("LoadoutActivateStart", function ()
         ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", ChatFrame_FilterTalentChanges)
     end)
-    Internal.OnEvent("LOADOUT_CHANGE_END", function ()
+    Internal.OnEvent("LoadoutActivateEnd", function ()
         ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SYSTEM", ChatFrame_FilterTalentChanges)
     end)
 end
 
 do -- Prevent new spells from flying to the action bar
     local WasEventRegistered
-    Internal.OnEvent("LOADOUT_CHANGE_START", function ()
+    Internal.OnEvent("LoadoutActivateStart", function ()
         WasEventRegistered = IconIntroTracker:IsEventRegistered("SPELL_PUSHED_TO_ACTIONBAR")
         IconIntroTracker:UnregisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
     end)
-    Internal.OnEvent("LOADOUT_CHANGE_END", function ()
+    Internal.OnEvent("LoadoutActivateEnd", function ()
         if WasEventRegistered then
             IconIntroTracker:RegisterEvent("SPELL_PUSHED_TO_ACTIONBAR")
         end
@@ -192,12 +192,14 @@ local function AddTalentSet()
         specIndex = 1
     end
     local specID, specName = GetSpecializationInfo(specIndex);
-    return AddSet("talents", RefreshTalentSet({
+    local set = AddSet("talents", RefreshTalentSet({
         specID = specID,
         name = format(L["New %s Set"], specName),
         useCount = 0,
         talents = {},
     }))
+    Internal.Call("TalentSetCreated", set.setID);
+    return set
 end
 local function TalentSetDelay(set)
     for talentID in pairs(set.talents) do
@@ -330,6 +332,8 @@ local function DeleteTalentSet(id)
             end
 		end
 	end
+    
+	Internal.Call("TalentSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Talents;
 	local set = frame.set;

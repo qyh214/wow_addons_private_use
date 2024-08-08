@@ -237,7 +237,23 @@ function MDT:StringToTable(inString, fromChat)
   return deserialized
 end
 
-local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
+local checkChatframeInteractive
+do
+  local lastPrintTime = 0
+  checkChatframeInteractive = function(chatFrame)
+    if chatFrame and chatFrame.isUninteractable then
+      local currentTime = GetTime()
+      if currentTime - lastPrintTime >= 5 * 60 then
+        C_Timer.After(0.2, function()
+          print("MDT: |cFFFF0000Warning!|r "..L["chatNoninteractiveWarning"])
+        end)
+        lastPrintTime = currentTime
+      end
+    end
+  end
+end
+
+local function filterFunc(chatFrame, event, msg, player, l, cs, t, flag, channelId, ...)
   if flag == "GM" or flag == "DEV" or (event == "CHAT_MSG_CHANNEL" and type(channelId) == "number" and channelId > 0) then
     return
   end
@@ -254,6 +270,7 @@ local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
       local texture = "|TInterface\\AddOns\\"..AddonName.."\\Textures\\NnoggieMinimap:12|t"
       newMsg = "|cffe6cc80|Hgarrmission:mdt-"..characterName.."|h["..displayName.."]|h|r"
       remaining = remaining:sub(finish + 1)
+      checkChatframeInteractive(chatFrame)
     elseif (characterNameLive and displayNameLive) then
       characterNameLive = characterNameLive:gsub("|c[Ff][Ff]......", ""):gsub("|r", "")
       displayNameLive = displayNameLive:gsub("|c[Ff][Ff]......", ""):gsub("|r", "")
@@ -262,6 +279,7 @@ local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
           "|Hgarrmission:mdtlive-"..
           characterNameLive.."|h[".."|cFF00FF00Live Session: |cffe6cc80"..""..displayNameLive.."]|h|r"
       remaining = remaining:sub(finishLive + 1)
+      checkChatframeInteractive(chatFrame)
     else
       done = true
     end
@@ -341,11 +359,13 @@ hooksecurefunc("SetItemRef", function(link, text)
     end
     sender = name.."-"..realm
     local preset = MDT.transmissionCache[sender]
-    if preset then
+    if preset and type(preset) == "table" then
       MDT:Async(function()
         MDT:ShowInterfaceInternal(true)
         MDT:ImportPreset(CopyTable(preset))
       end, "showInterfaceChatImport")
+    else
+      print(string.format(L["receiveErrorUpdate"], sender))
     end
     return
   end
@@ -487,7 +507,6 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
           MDT:DungeonEnemies_UpdateTeeming()
           MDT:DungeonEnemies_UpdateInspiring()
           MDT:DungeonEnemies_UpdateSeasonalAffix()
-          MDT:DungeonEnemies_UpdateBoralusFaction(preset.faction)
           MDT:POI_UpdateAll()
           MDT:UpdateProgressbar()
           MDT:ReloadPullButtons()
@@ -635,20 +654,6 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
       end
     end
   end
-
-  --Siege of Boralus
-  if prefix == MDT.liveSessionPrefixes.bora then
-    if MDT.liveSessionActive then
-      local preset = MDT:GetCurrentLivePreset()
-      local faction = tonumber(message)
-      preset.faction = faction
-      if preset == MDT:GetCurrentPreset() then
-        MDT:UpdateBoralusSelector()
-        MDT:ReloadPullButtons()
-        MDT:UpdateProgressbar()
-      end
-    end
-  end
 end
 
 ---MakeSendingStatusBar
@@ -675,7 +680,7 @@ function MDT:MakeSendingStatusBar(f)
   statusbar.value:SetPoint("CENTER", statusbar, "CENTER", 0, 0)
   statusbar.value:SetFontObject(GameFontNormalSmall)
   statusbar.value:SetJustifyH("CENTER")
-  statusbar.value:SetJustifyV("CENTER")
+  statusbar.value:SetJustifyV("MIDDLE")
   statusbar.value:SetShadowOffset(1, -1)
   statusbar.value:SetTextColor(1, 1, 1)
   statusbar:Hide()
@@ -687,11 +692,6 @@ function MDT:MakeSendingStatusBar(f)
   statusbar:HookScript("OnHide", function(self)
     MDT.main_frame.bottomPanelString:Show()
   end)
-
-  if IsAddOnLoaded("ElvUI") and ElvUI then
-    local E, L, V, P, G = unpack(ElvUI)
-    statusbar:SetStatusBarTexture(E.media.normTex)
-  end
 end
 
 --callback for SendCommMessage
@@ -704,6 +704,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     local distribution = userArgs[1]
     local preset = userArgs[2]
     local silent = userArgs[3]
+    local fromLiveSession = userArgs[4]
     --restore "Send" and "Live" button
     if MDT.liveSessionActive then
       MDT.main_frame.LiveSessionButton:SetText(L["*Live*"])
@@ -717,7 +718,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     MDT.main_frame.LiveSessionButton:SetDisabled(false)
     MDT.main_frame.SendingStatusBar:Hide()
     --output chat link
-    if not silent then
+    if not silent and preset then
       local prefix = "[MDT_v2: "
       local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx)
       local presetName = preset.text
@@ -738,9 +739,11 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
       SendChatMessage(prefix..fullName.." - "..dungeon..": "..presetName.."]", distribution)
     end
     numActiveTransmissions = numActiveTransmissions - 1
-    MDT:RestoreThrottleValues()
+    if not fromLiveSession then MDT:RestoreThrottleValues() end
   end
 end
+
+MDT.displaySendingProgress = displaySendingProgress
 
 function MDT:GetPresetByUid(presetUid)
   local db = MDT:GetDB()

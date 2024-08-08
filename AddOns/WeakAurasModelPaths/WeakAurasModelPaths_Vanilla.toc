@@ -1,7 +1,7 @@
-## Interface: 11500
-## Title: WeakAuras Model Paths
-## Author: The WeakAuras Team
-## Version: 5.8.7
+## Interface: 11503
+## Title: |cffe8344fPatched|r WeakAuras Model Paths
+## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
+## Version: 5.15.4
 ## Notes: Model paths for WeakAuras
 ## Notes-esES: Las rutas de archivos de modelos en 3D para WeakAuras
 ## Notes-deDE: 3D-Model Pfade für WeakAuras

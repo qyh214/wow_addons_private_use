@@ -3,6 +3,7 @@ local Details = _G.Details
 local DF = _G.DetailsFramework
 local C_Timer = _G.C_Timer
 local addonName, Details222 = ...
+local GetSpellInfo = Details222.GetSpellInfo
 
 --get the sectionInfo and try to extract the spellID from it
 --sectionInfo is always a valid table
@@ -25,7 +26,7 @@ end
 ---@param tag any tag isn't used
 ---@param journalTypeString string
 ---@param idString string
-function Details222.EJCache.OnClickEncounterJournalLink(tag, journalTypeString, idString)
+function Details222.EJCache.OnClickEncounterJournalLink(tag, journalTypeString, idString) --not in use
     local journalType = tonumber(journalTypeString)
     local id = tonumber(idString)
 

@@ -366,7 +366,7 @@ function module:ProfileToText(isFullExport)
 		end
 	end
 	local strlist = ExRT.F.TableToText(new)
-	strlist[1] = (VMRT.Profile or "default"):gsub(",","")..","..(ExRT.isClassic and "1" or "0")..","..strlist[1]
+	strlist[1] = (VMRT.Profile or "default"):sub(1,200):gsub(",","")..","..(ExRT.isClassic and "1" or "0")..","..strlist[1]
 	local str = table.concat(strlist)
 
 	local compressed

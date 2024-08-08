@@ -1,8 +1,25 @@
 local AddonName, TemplatePrivate = ...
+---@class WeakAuras
 local WeakAuras = WeakAuras
 if not WeakAuras.IsRetail() then return end
 local L = WeakAuras.L
-local GetSpellInfo, tinsert, GetItemInfo, GetSpellDescription, C_Timer, Spell = GetSpellInfo, tinsert, GetItemInfo, GetSpellDescription, C_Timer, Spell
+local tinsert, C_Timer, Spell = tinsert, C_Timer, Spell
+
+local GetSpellInfo, GetSpellIcon, GetSpellDescription = GetSpellInfo, GetSpellTexture, GetSpellDescription
+-- TWW Compatibility, we don't use functions from Compatibility.lua because TemplatePrivate.Private isn't set yet
+if GetSpellInfo == nil then
+  GetSpellInfo = function(spellID)
+    if not spellID then
+      return nil
+    end
+    local spellInfo = C_Spell.GetSpellInfo(spellID)
+    if spellInfo then
+      return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange, spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID
+    end
+  end
+  GetSpellIcon = C_Spell.GetSpellTexture
+  GetSpellDescription = C_Spell.GetSpellDescription
+end
 
 -- The templates tables are created on demand
 local templates =
@@ -800,7 +817,7 @@ templates.class.PALADIN = {
         { spell = 386730, type = "buff", unit = "player", talent = 115466 }, -- Divine Resonance
         { spell = 387178, type = "buff", unit = "player", talent = 102576 }, -- Empyrean Legacy
         { spell = 387815, type = "buff", unit = "player", talent = 102539 }, -- Untempered Dedication
-        { spell = 388007, type = "buff", unit = "player", talent = 102579 }, -- Blessing of Summer
+        { spell = 388007, type = "buff", unit = "player", talent = 116183 }, -- Blessing of Summer
         { spell = 388019, type = "buff", unit = "player", talent = 102538 }, -- Maraad's Dying Breath
         { spell = 392939, type = "buff", unit = "player", talent = 102565 }, -- Veneration
         { spell = 394709, type = "buff", unit = "player", talent = 102544 }, -- Unending Light
@@ -859,7 +876,7 @@ templates.class.PALADIN = {
         { spell = 216331, type = "ability", buff = true, talent = 102568 }, -- Avenging Crusader
         { spell = 275773, type = "ability", requiresTarget = true }, -- Judgment
         { spell = 375576, type = "ability", requiresTarget = true, talent = 102465 }, -- Divine Toll
-        { spell = 388007, type = "ability", buff = true, talent = 102579 }, -- Blessing of Summer
+        { spell = 388007, type = "ability", buff = true, talent = 116183 }, -- Blessing of Summer
         { spell = 388010, type = "ability" }, -- Blessing of Autumn
         { spell = 391054, type = "ability" }, -- Intercession
         { spell = 414273, type = "ability", buff = true, talent = 115876}, -- Hand of Divinity
@@ -2684,7 +2701,7 @@ templates.class.MAGE = {
         { spell = 45438, type = "buff", unit = "player", talent = 80181 }, -- Ice Block
         { spell = 80353, type = "buff", unit = "player" }, -- Time Warp
         { spell = 108839, type = "buff", unit = "player", talent = 80162 }, -- Ice Floes
-        { spell = 110960, type = "buff", unit = "player", talent = 80152 }, -- Greater Invisibility
+        { spell = 110960, type = "buff", unit = "player", talent = 115877 }, -- Greater Invisibility
         { spell = 116014, type = "buff", unit = "player", talent = 80171 }, -- Rune of Power
         { spell = 116267, type = "buff", unit = "player", talent = 80172 }, -- Incanter's Flow
         { spell = 205025, type = "buff", unit = "player", talent = 80208 }, -- Presence of Mind
@@ -2754,7 +2771,7 @@ templates.class.MAGE = {
         { spell = 80353, type = "ability", buff = true }, -- Time Warp
         { spell = 108839, type = "ability", charges = true, buff = true, talent = 80162 }, -- Ice Floes
         { spell = 108853, type = "ability", requiresTarget = true }, -- Fire Blast
-        { spell = 110959, type = "ability", talent = 80152 }, -- Greater Invisibility
+        { spell = 110959, type = "ability", talent = 115877 }, -- Greater Invisibility
         { spell = 113724, type = "ability", talent = 80144 }, -- Ring of Frost
         { spell = 114923, type = "ability", requiresTarget = true, talent = 80199 }, -- Nether Tempest
         { spell = 153561, type = "ability", talent = 80146 }, -- Meteor
@@ -2816,7 +2833,7 @@ templates.class.MAGE = {
         { spell = 48108, type = "buff", unit = "player" }, -- Hot Streak!
         { spell = 80353, type = "buff", unit = "player" }, -- Time Warp
         { spell = 108839, type = "buff", unit = "player", talent = 80162 }, -- Ice Floes
-        { spell = 110960, type = "buff", unit = "player", talent = 80152 }, -- Greater Invisibility
+        { spell = 110960, type = "buff", unit = "player", talent = 115877 }, -- Greater Invisibility
         { spell = 116014, type = "buff", unit = "player", talent = 80171 }, -- Rune of Power
         { spell = 116267, type = "buff", unit = "player", talent = 80172 }, -- Incanter's Flow
         { spell = 190319, type = "buff", unit = "player", talent = 80275 }, -- Combustion
@@ -2880,7 +2897,7 @@ templates.class.MAGE = {
         { spell = 80353, type = "ability", buff = true }, -- Time Warp
         { spell = 108839, type = "ability", charges = true, buff = true, talent = 80162 }, -- Ice Floes
         { spell = 108853, type = "ability", charges = true, requiresTarget = true, talent = 80282 }, -- Fire Blast
-        { spell = 110959, type = "ability", talent = 80152 }, -- Greater Invisibility
+        { spell = 110959, type = "ability", talent = 115877 }, -- Greater Invisibility
         { spell = 113724, type = "ability", talent = 80144 }, -- Ring of Frost
         { spell = 153561, type = "ability", talent = 80146 }, -- Meteor
         { spell = 157981, type = "ability", talent = 80160 }, -- Blast Wave
@@ -2932,7 +2949,7 @@ templates.class.MAGE = {
         { spell = 45438, type = "buff", unit = "player", talent = 80181 }, -- Ice Block
         { spell = 80353, type = "buff", unit = "player" }, -- Time Warp
         { spell = 108839, type = "buff", unit = "player", talent = 80162 }, -- Ice Floes
-        { spell = 110960, type = "buff", unit = "player", talent = 80152 }, -- Greater Invisibility
+        { spell = 110960, type = "buff", unit = "player", talent = 115877 }, -- Greater Invisibility
         { spell = 116014, type = "buff", unit = "player", talent = 80171 }, -- Rune of Power
         { spell = 116267, type = "buff", unit = "player", talent = 80172 }, -- Incanter's Flow
         { spell = 190446, type = "buff", unit = "player", talent = 80244 }, -- Brain Freeze
@@ -3003,7 +3020,7 @@ templates.class.MAGE = {
         { spell = 84714, type = "ability", talent = 80242 }, -- Frozen Orb
         { spell = 108839, type = "ability", charges = true, buff = true, talent = 80162 }, -- Ice Floes
         { spell = 108853, type = "ability", requiresTarget = true }, -- Fire Blast
-        { spell = 110959, type = "ability", talent = 80152 }, -- Greater Invisibility
+        { spell = 110959, type = "ability", talent = 115877 }, -- Greater Invisibility
         { spell = 113724, type = "ability", talent = 80144 }, -- Ring of Frost
         { spell = 135029, type = "ability" }, -- Water Jet
         { spell = 153561, type = "ability", talent = 80146 }, -- Meteor
@@ -3308,7 +3325,7 @@ templates.class.WARLOCK = {
         { spell = 134477, type = "ability", unit = "pet", buff = true, debuff = true }, -- Threatening Presence
         { spell = 196277, type = "ability", charges = true, requiresTarget = true, usable = true, talent = 91520 }, -- Implosion
         { spell = 234153, type = "ability", requiresTarget = true }, -- Drain Life
-        { spell = 264057, type = "ability", requiresTarget = true, talent = 91537 }, -- Soul Strike
+        { spell = 264057, type = "ability", requiresTarget = true, talent = 91538 }, -- Soul Strike
         { spell = 264119, type = "ability", totem = true, talent = 91538 }, -- Summon Vilefiend
         { spell = 264130, type = "ability", talent = 91521 }, -- Power Siphon
         { spell = 264178, type = "ability", overlayGlow = true, requiresTarget = true, talent = 91544 }, -- Demonbolt
@@ -5326,7 +5343,7 @@ local function handleItem(item)
   if (item.spell) then
     local name, icon, _;
     if (item.type == "item") then
-      name, _, _, _, _, _, _, _, _, icon = GetItemInfo(item.spell);
+      name, _, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(item.spell);
       if (name == nil) then
         name = L["Unknown Item"] .. " " .. tostring(item.spell);
         waitingForItemInfo = true;
@@ -5349,7 +5366,7 @@ local function handleItem(item)
       item.title = item.titlePrefix .. item.title;
     end
     if (item.titleItemPrefix) then
-      local prefix = GetItemInfo(item.titleItemPrefix);
+      local prefix = C_Item.GetItemInfo(item.titleItemPrefix);
       if (prefix) then
         item.title = prefix .. "-" .. item.title;
       else
@@ -5484,7 +5501,7 @@ local function fixupIcons()
         if section.args then
           for _, item in pairs(section.args) do
             if (item.spell and (not item.type ~= "item")) then
-              local icon = select(3, GetSpellInfo(item.spell));
+              local icon = GetSpellIcon(item.spell)
               if (icon) then
                 item.icon = icon;
               end

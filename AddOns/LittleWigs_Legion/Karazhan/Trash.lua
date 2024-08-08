@@ -34,6 +34,7 @@ if L then
 	-- Opera Event
 	L.custom_on_autotalk = "Autotalk"
 	L.custom_on_autotalk_desc = "Instantly selects Barnes' gossip option to start the Opera Hall encounter."
+	L.custom_on_autotalk_icon = "ui_chat"
 	L.opera_hall_wikket_story_text = "Opera Hall: Wikket"
 	L.opera_hall_wikket_story_trigger = "Shut your jabber" -- Shut your jabber, drama man! The Monkey King got another plan!
 	L.opera_hall_westfall_story_text = "Opera Hall: Westfall Story"
@@ -250,7 +251,7 @@ end
 -- Chess Event
 
 function mod:RoyaltyApplied(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) then
 		self:Message(args.spellId, "red", CL.buff_other:format(args.destName, args.spellName))
 		self:PlaySound(args.spellId, "info")

@@ -93,6 +93,7 @@ function WorldQuestTracker.HighlightOnWorldMap(questID, scale, color)
 	scale = scale or 1
 	for questCounter, button in pairs(WorldQuestTracker.WorldMapSmallWidgets) do
 		if (button.questID == questID) then
+			--print(button.x, button.y)
 			do_highlight_on_quest(button, scale, color)
 		end
 	end
@@ -305,6 +306,8 @@ end
 
 local worldSquareBackdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1.8, bgFile = [[Interface\TARGETINGFRAME\UI-TargetingFrame-LevelBackground]], tile = true, tileSize = 16}
 
+local emptyFunction = function()end
+
 --cria uma square widget no world map ~world ~createworld ~createworldwidget
 --index and name are only for the glogal name
 local create_worldmap_square = function(mapName, index, parent)
@@ -314,6 +317,8 @@ local create_worldmap_square = function(mapName, index, parent)
 	button:SetFrameLevel(302)
 	button:SetBackdrop(worldSquareBackdrop)
 	button:SetBackdropColor(.1, .1, .1, .6)
+	button.OnLegendPinMouseEnter = emptyFunction
+	button.OnLegendPinMouseLeave = emptyFunction
 
 	button:SetScript("OnEnter", questButton_OnEnter)
 	button:SetScript("OnLeave", questButton_OnLeave)
@@ -391,7 +396,7 @@ local create_worldmap_square = function(mapName, index, parent)
 	overlayBorder2:SetPoint("topleft", 0, 0)
 	overlayBorder2:SetPoint("bottomright", 0, 0)
 
-	local borderAnimation = CreateFrame("frame", "$parentBorderShineAnimation", button, "AutoCastShineTemplate")
+	local borderAnimation = CreateFrame("frame", "$parentBorderShineAnimation", button, "AnimatedShineTemplate")
 	borderAnimation:SetFrameLevel(303)
 	borderAnimation:SetPoint("topleft", 2, -2)
 	borderAnimation:SetPoint("bottomright", -2, 2)
@@ -762,10 +767,10 @@ function WorldQuestTracker.InitializeWorldWidgets()
 
 	--schedule cleanup: anchors isn't used anymore in the new anchoring system
 	for mapId, configTable in pairs(WorldQuestTracker.mapTables) do
-		local anchor = CreateFrame("frame", nil, worldFramePOIs, "BackdropTemplate")
+		local anchor = CreateFrame("button", nil, worldFramePOIs, "BackdropTemplate")
 		anchor:SetSize(1, 1)
 
-		local anchorFrame = CreateFrame("frame", nil, worldFramePOIs, WorldQuestTracker.DataProvider:GetPinTemplate())
+		local anchorFrame = CreateFrame("button", nil, worldFramePOIs, WorldQuestTracker.DataProvider:GetPinTemplate())
 		anchorFrame.dataProvider = WorldQuestTracker.DataProvider
 		anchorFrame.worldQuest = true
 		anchorFrame.owningMap = WorldQuestTracker.DataProvider:GetMap()
@@ -784,7 +789,7 @@ function WorldQuestTracker.InitializeWorldWidgets()
 		anchorText:SetPoint("bottomleft", anchor, "topleft", 0, 0)
 		anchor.Title = anchorText
 
-		local factionFrame = CreateFrame("frame", "WorldQuestTrackerFactionFrame" .. mapId, worldFramePOIs, "BackdropTemplate")
+		local factionFrame = CreateFrame("button", "WorldQuestTrackerFactionFrame" .. mapId, worldFramePOIs, "BackdropTemplate")
 		table.insert(faction_frames, factionFrame)
 		factionFrame:SetSize(20, 20)
 		configTable.factionFrame = factionFrame
@@ -953,8 +958,7 @@ function WorldQuestTracker.UpdateWorldWidget(widget, questID, numObjectives, map
 		else
 			widget.trackingGlowBorder:Hide()
 			widget.trackingGlowInside:Hide()
-			--widget:SetAlpha(WorldQuestTrackerAddon.WorldWidgetAlpha)
-			widget:SetAlpha(WQT_WORLDWIDGET_BLENDED)
+			widget:SetAlpha(WorldQuestTracker.db.profile.world_summary_alpha)
 		end
 	end
 
@@ -1342,8 +1346,7 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap(noCache, showFade, isQues
 					local questID = quest [1]
 
 					local isWorldQuest = isWorldQuest(questID)
-						if (isWorldQuest) then
-
+					if (isWorldQuest) then
 						local numObjectives = quest [3]
 
 						--is a new quest?
@@ -1423,7 +1426,7 @@ function WorldQuestTracker.UpdateWorldQuestsOnWorldMap(noCache, showFade, isQues
 	else
 		local map = WorldQuestTrackerDataProvider:GetMap()
 		for pin in map:EnumeratePinsByTemplate("WorldQuestTrackerWorldMapPinTemplate") do
-		if (pin.Child) then
+			if (pin.Child) then
 				pin.Child:Hide()
 			end
 			map:RemovePin(pin)
@@ -1514,6 +1517,7 @@ lazyUpdate.ShownQuests = {}
 --list of all widgets created
 WorldQuestTracker.WorldMapSmallWidgets = {}
 
+--update the zone widgets in the world map
 local scheduledIconUpdate = function(questTable)
 	local questID, mapID, numObjectives, questCounter, questName, x, y = unpack(questTable)
 
@@ -1575,11 +1579,36 @@ local scheduledIconUpdate = function(questTable)
 	WorldQuestTracker.SetupWorldQuestButton(button, worldQuestType, rarity, isElite, tradeskillLineIndex, nil, nil, isCriteria, nil, mapID)
 
 	local newX, newY = HereBeDragons:TranslateZoneCoordinates(x, y, mapID, WorldMapFrame.mapID, false)
+
+	if (mapID == WorldQuestTracker.MapData.ZoneIDs.ZARALEK) then
+		if (x and y) then --no zaralek mapID, but zaralek quests shown on worldmap
+			newX = 0.75 + x * 0.25
+			newY = 0.75 + y * 0.25
+			--button.blackGradient:Hide()
+			--button.flagText:Hide()
+			--self.bgFlag:Hide()
+			WorldQuestTracker.ClearZoneWidget(button)
+			button.circleBorder:Show()
+		end
+
+	elseif (mapID == WorldQuestTracker.MapData.ZoneIDs.EMERALDDREAM) then
+		if (x and y) then --no zaralek mapID, but zaralek quests shown on worldmap
+			newX = 0.66 + x * 0.50
+			newY = 0.13 + y * 0.50
+			--button.blackGradient:Hide()
+			--button.flagText:Hide()
+			--self.bgFlag:Hide()
+			WorldQuestTracker.ClearZoneWidget(button)
+			button.circleBorder:Show()
+			WorldQuestTracker.AddExtraMapTexture(WorldQuestTracker.MapData.ZoneIDs.DRAGONISLES, [[Interface\AddOns\WorldQuestTracker\media\maps\emerald_dream]], 0.885, 0.38, 224, 224, mapID)
+		end
+	end
+
 	pin:SetPosition(newX, newY)
 	pin:SetSize(22, 22)
 	pin.IsInUse = true
 
-	button:SetAlpha(WorldQuestTrackerAddon.WorldWidgetSmallAlpha)
+	button:SetAlpha(WorldQuestTracker.db.profile.worldmap_widget_alpha)
 
 	button.highlight:SetSize(30, 30)
 	button.highlight:SetParent(button)

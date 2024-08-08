@@ -93,7 +93,7 @@ function mod:Conduction(args)
 	self:TargetMessage(args.spellId, "orange", args.destName)
 	if self:Me(args.destGUID) then
 		self:PlaySound(args.spellId, "warning")
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Conduction")
 		self:SayCountdown(args.spellId, 5)
 	end
 end
@@ -107,7 +107,7 @@ end
 do
 	local function printTarget(self, name, guid)
 		if self:Me(guid) then
-			self:Say(263309) -- Cyclone Strike
+			self:Say(263309, nil, nil, "Cyclone Strike") -- Cyclone Strike
 			self:Flash(263309) -- Cyclone Strike
 		end
 	end
@@ -117,7 +117,7 @@ do
 		if cycloneStrikeCount % 2 == 1 then
 			self:Bar(args.spellId, 13.5)
 		end
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 		self:Message(args.spellId, "yellow")
 		self:PlaySound(args.spellId, "alert")
 		self:CastBar(args.spellId, 2.5)

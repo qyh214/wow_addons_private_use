@@ -1,9 +1,6 @@
 local L = BigWigs:NewBossLocale("Odyn", "koKR")
 if not L then return end
 if L then
-	L.custom_on_autotalk = "자동 대화"
-	L.custom_on_autotalk_desc = "전투를 시작하는 대화 선택지를 즉시 선택합니다."
-
 	L.gossip_available = "대화 가능"
 	L.gossip_trigger = "정말 놀랍군! 발라리아르의 힘에 견줄 만큼 강력한 자를 보게 될 줄은 몰랐거늘, 이렇게 너희가 나타나다니."
 
@@ -23,9 +20,6 @@ end
 
 L = BigWigs:NewBossLocale("Halls of Valor Trash", "koKR")
 if L then
-	L.custom_on_autotalk = "자동 대화"
-	L.custom_on_autotalk_desc = "던전 내의 여러 대화 선택지를 즉시 선택합니다."
-
 	L.mug_of_mead = "벌꿀술 잔"
 	L.valarjar_thundercaller = "발라리아르 천둥술사"
 	L.storm_drake = "폭풍 비룡"

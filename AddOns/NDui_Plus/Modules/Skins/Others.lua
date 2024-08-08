@@ -126,46 +126,15 @@ function S:HandyNotes_Dragonflight()
 	end
 end
 
-local function TLX_SkinFrame(self)
-	B.StripTextures(self)
-	B.SetBD(self, nil, 0, 0, 0, 0)
-	self:ClearAllPoints()
-	self:SetPoint("TOPLEFT", _G.ClassTalentFrame, "TOPRIGHT", C.mult, 0)
-	self:SetPoint("BOTTOMLEFT", _G.ClassTalentFrame, "BOTTOMRIGHT", C.mult, 0)
-	S:Proxy("ReskinTrimScroll", self.ScrollBar)
-	S:Proxy("ReskinIconSelector", self.PopupFrame)
-	self.PopupFrame.SearchNotice:Hide()
+function S:BuyEmAll()
+	B.StripTextures(_G.BuyEmAllFrame)
+	B.SetBD(_G.BuyEmAllFrame, nil, 10, -10, -10, 10)
+	B.Reskin(_G.BuyEmAllOkayButton)
+	B.Reskin(_G.BuyEmAllCancelButton)
+	B.Reskin(_G.BuyEmAllStackButton)
+	B.Reskin(_G.BuyEmAllMaxButton)
 
-	for _, key in ipairs({"LoadButton", "SaveButton", "EditButton", "DeleteButton", "UpButton", "DownButton"}) do
-		S:Proxy("Reskin", self[key])
-	end
-
-	hooksecurefunc(self.ScrollBox, "Update", function()
-		for _, button in self.ScrollBox:EnumerateFrames() do
-			if not button.styled then
-				B.HideObject(button.Stripe)
-				button.BgTop:SetTexture("")
-				button.BgMiddle:SetTexture("")
-				button.BgBottom:SetTexture("")
-				B.ReskinIcon(button.icon)
-
-				button.HighlightBar:SetColorTexture(1, 1, 1, .25)
-				button.HighlightBar:SetDrawLayer("BACKGROUND")
-				button.SelectedBar:SetColorTexture(DB.r, DB.g, DB.b, .25)
-				button.SelectedBar:SetDrawLayer("BACKGROUND")
-				button.Check:SetAtlas("checkmark-minimal")
-
-				button.styled = true
-			end
-		end
-	end)
-end
-
-function S:TalentLoadoutsEx()
-	local TLX = _G.TLX
-	if not TLX then return end
-
-	hooksecurefunc(TLX.Frame, "OnLoad", TLX_SkinFrame)
+	B.CreateMF(_G.BuyEmAllFrame)
 end
 
 S:RegisterSkin("WorldQuestsList", S.WorldQuestsList)
@@ -175,7 +144,7 @@ S:RegisterSkin("BigWigs_Options", S.BigWigs_Options)
 S:RegisterSkin("LibQTip")
 S:RegisterSkin("SavedInstances", S.SavedInstances)
 S:RegisterSkin("HandyNotes_Dragonflight", S.HandyNotes_Dragonflight)
-S:RegisterSkin("TalentLoadoutsEx", S.TalentLoadoutsEx)
+S:RegisterSkin("BuyEmAll", S.BuyEmAll)
 
 -- Hide Toggle Button
 S.ToggleFrames = {}

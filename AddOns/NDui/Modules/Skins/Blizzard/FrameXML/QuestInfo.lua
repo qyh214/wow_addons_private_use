@@ -205,6 +205,12 @@ tinsert(C.defaultThemes, function()
 		end
 	end)
 
+	hooksecurefunc(QuestInfoQuestType, "SetTextColor", function(text, r, g, b)
+		if not (r == 1 and g == 1 and b == 1) then
+			text:SetTextColor(1, 1, 1)
+		end
+	end)
+
 	-- Change text colors
 	hooksecurefunc(QuestInfoRequiredMoneyText, "SetTextColor", ReplaceTextColor)
 	hooksecurefunc(QuestInfoSpellObjectiveLearnLabel, "SetTextColor", ReplaceTextColor)
@@ -214,6 +220,7 @@ tinsert(C.defaultThemes, function()
 		QuestInfoDescriptionHeader,
 		QuestInfoObjectivesHeader,
 		QuestInfoRewardsFrame.Header,
+		QuestInfoAccountCompletedNotice,
 	}
 	for _, font in pairs(yellowish) do
 		SetTextColor_Yellow(font)

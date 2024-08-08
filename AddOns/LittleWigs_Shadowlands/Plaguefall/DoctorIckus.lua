@@ -82,7 +82,7 @@ do
 		end
 	end
 	function mod:SlimeInjection(args)
-		self:GetBossTarget(printTarget, 0.1, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.1, args.sourceGUID)
 	end
 end
 
@@ -91,7 +91,6 @@ function mod:SlimeInjectionSuccess(args)
 end
 
 function mod:SlimeInjectionApplied(args)
-	local amount = args.amount or 0
 	self:StackMessageOld(args.spellId, args.destName, args.amount, "purple")
 	self:PlaySound(args.spellId, "info")
 end

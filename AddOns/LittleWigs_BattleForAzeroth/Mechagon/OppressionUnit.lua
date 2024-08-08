@@ -83,7 +83,7 @@ function mod:Wreck(args)
 end
 
 function mod:ReinforcementRelay(args)
-	self:Message(args.spellId, "orange", CL.spawning:format(CL.adds))
+	self:Message(args.spellId, "orange", CL.adds_spawning)
 	self:PlaySound(args.spellId, "alarm")
 	self:Bar(args.spellId, 32.8)
 	self:CDBar(296522, 15) -- Self-Destruct
@@ -107,7 +107,7 @@ function mod:FulminatingBurstApplied(args)
 	self:PlaySound(args.spellId, "info", nil, args.destName)
 	self:TargetBar(args.spellId, 9)
 	if self:Me(args.destGUID) then
-		self:Yell(args.spellId)
+		self:Yell(args.spellId, nil, nil, "Fulminating Burst")
 		self:YellCountdown(args.spellId, 9, nil, 5)
 	end
 end

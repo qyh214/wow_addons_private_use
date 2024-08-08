@@ -53,7 +53,7 @@ end
 
 function mod:HomingMissile(args)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Homing Missile")
 	end
 	self:TargetMessage(args.spellId, "red", args.destName)
 	self:PlaySound(args.spellId, "warning", nil, args.destName)
@@ -83,7 +83,7 @@ do
 	end
 
 	function mod:DrillSmash(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:Bar(args.spellId, 8.5)
 	end
 end

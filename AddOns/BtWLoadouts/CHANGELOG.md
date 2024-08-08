@@ -1,3 +1,62 @@
+# v1.19.0
+
+- Added support for Skyriding action bar
+- Fixed an issue importing Blizzard talent loadouts
+
+# v1.18.3
+
+- Updated talent sets to be automatically deleted if they are not in use when they are removed from the Blizzard loadouts
+- Fixed an error when toggling ignore on or off for action bar 8
+
+# v1.18.2
+
+- Fixed an issue with processing action bar items from the spell book
+
+# v1.18.1
+
+- Updated verison for 11.0.0
+
+# v1.18.0-beta
+
+- Added support for Hero Talent sets
+- Updated to cancel loading switching when the talent change spell is cancelled
+- Fixed an error when empty item links are found in Blizzard equipment sets
+
+# v1.17.1
+
+- Updated for 10.2.7
+
+# v1.17.0
+
+- Updated internal events to use the global EventRegistry and added events for all sets
+- Updated action bar restrictions dropdown items to be checkboxes
+- Fixed an error when creating conditions for Aberrus, the Shadowed Crucible raid
+- Fixed some errors with missing functions in The War Within
+
+# v1.16.0
+
+- Fixed an error when getting the current season for wow versions that dont support seasons
+- Fixed an error when viewing Dragonflight talent trees with nodes that have no cost
+- Fixed an error when viewing equipment sets for other characters
+- Fixed an issue where equipment sets could not be filtered by class unless they had a specialization restriction set
+- Fixed an issue where specialization restrictions would block Exile's Reach characters
+- Fixed some errors for characters in Exile's Reach
+- Updated for initial support on The War Within alpha
+- Updated for Dragonflight Season 4 and boilerplate The War Within season 1
+- Updated to only allow updating action bar sets when the set restrictions match the current character
+
+# v1.15.8
+
+- Fixed an issue with unique-equipped items not being categorized correctly
+
+# v1.15.7
+
+- Updated verison for 10.2.5
+
+# v1.15.6
+
+- Updated verison for 10.2.5
+
 # v1.15.5
 
 - Fixed an issue where macros were not being placed in action slots that already had macros

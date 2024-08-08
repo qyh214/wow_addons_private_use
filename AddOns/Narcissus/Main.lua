@@ -3,6 +3,8 @@ local _, addon = ...
 local MsgAlertContainer = addon.MsgAlertContainer;
 local TransitionAPI = addon.TransitionAPI;
 local SlotButtonOverlayUtil = addon.SlotButtonOverlayUtil;
+local TimerunningUtil = addon.TimerunningUtil;
+local TalentTreeDataProvider = addon.TalentTreeDataProvider;
 
 local Narci = Narci;
 
@@ -38,20 +40,22 @@ local outSine = addon.EasingFunctions.outSine;
 
 local GetToolbarButtonByButtonType = addon.GetToolbarButtonByButtonType;
 local TransmogDataProvider = addon.TransmogDataProvider;
+local ConfirmBinding = addon.ConfirmBinding;
 
 --local GetCorruptedItemAffix = NarciAPI_GetCorruptedItemAffix;
 local Narci_AlertFrame_Autohide = Narci_AlertFrame_Autohide;
 local C_Item = C_Item;
-local GetItemInfo = GetItemInfo;
+local GetItemInfo = C_Item.GetItemInfo;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local C_LegendaryCrafting = C_LegendaryCrafting;
 local C_TransmogCollection = C_TransmogCollection;
 local After = C_Timer.After;
 local ItemLocation = ItemLocation;
 local IsPlayerInAlteredForm = TransitionAPI.IsPlayerInAlteredForm;
 local InCombatLockdown = InCombatLockdown;
-local GetItemInfoInstant = GetItemInfoInstant;
 local GetInventoryItemTexture = GetInventoryItemTexture;
 local GetCameraZoom = GetCameraZoom;
+local GetSpellInfo = TransitionAPI.GetSpellInfo;
 
 local floor = math.floor;
 local max = math.max;
@@ -66,12 +70,6 @@ local ItemTooltip;
 local MiniButton = Narci_MinimapButton;
 local NarciThemeUtil = NarciThemeUtil;
 
-
-hooksecurefunc("StaticPopup_Show", function(name)
-	if name == "EXPERIMENTAL_CVAR_WARNING" then
-		StaticPopup_Hide(name);
-	end
-end)
 
 local EL = CreateFrame("Frame");	--Event Listener
 EL:Hide();
@@ -443,15 +441,22 @@ do
 		PLAYER_RACE_ID = 7;
 	elseif PLAYER_RACE_ID == 22 then
 		CameraUtil.GetRaceKey = CameraUtil.GetRaceKey_Worgen;
-	elseif PLAYER_RACE_ID == 52 or PLAYER_RACE_ID == 70 then
-		PLAYER_RACE_ID = 52;								--Dracthyr Horde -> Alliance
+	elseif PLAYER_RACE_ID == 52 or PLAYER_RACE_ID == 70 then	--Dracthyr Horde -> Alliance
+		PLAYER_RACE_ID = 52;
 		CameraUtil.GetRaceKey = CameraUtil.GetRaceKey_Dracthyr;
+	elseif PLAYER_RACE_ID == 84 or PLAYER_RACE_ID == 85 then	--Earthen
+		PLAYER_RACE_ID = 3;
 	end
 
 	local _, _, playerClassID = UnitClass("player");
 	if playerClassID == 11 then
 		CameraUtil.UpdateParameters = CameraUtil.UpdateParameters_Druid;
 		table.insert(EL.EVENTS_DYNAMIC, "UPDATE_SHAPESHIFT_FORM");
+	end
+
+	if (not ZoomValuebyRaceID[PLAYER_RACE_ID]) and (PLAYER_RACE_ID ~= 22 and PLAYER_RACE_ID ~= 52) then
+		print(("Narcissus: You are using race %d that doesn't have camera parameters"):format(PLAYER_RACE_ID))
+		PLAYER_RACE_ID = 1;
 	end
 end
 
@@ -1178,7 +1183,10 @@ function NarciItemButtonSharedMixin:RegisterErrorEvent()
 end
 
 function NarciItemButtonSharedMixin:UnregisterErrorEvent()
-	self:UnregisterEvent("UI_ERROR_MESSAGE");
+	if self.errorFrame then
+		self.errorFrame = nil;
+		self:UnregisterEvent("UI_ERROR_MESSAGE");
+	end
 end
 
 function NarciItemButtonSharedMixin:OnErrorMessage(...)
@@ -1188,8 +1196,11 @@ function NarciItemButtonSharedMixin:OnErrorMessage(...)
 end
 
 function NarciItemButtonSharedMixin:AnchorAlertFrame()
-	self:RegisterErrorEvent();
-	Narci_AlertFrame_Autohide:SetAnchor(self, -12, true);
+	if not self.errorFrame then
+		self.errorFrame = true;
+		self:RegisterErrorEvent();
+		Narci_AlertFrame_Autohide:SetAnchor(self, -12, true);
+	end
 end
 
 function NarciItemButtonSharedMixin:PlayGamePadAnimation()
@@ -1585,6 +1596,12 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 					effectiveLvl = effectiveLvl.."  "..rank.."  |cFFFFD100"..corruptionResistance.."|r";
 					borderTexKey = "BlackDragon";
 					itemVFX = "DragonFire";
+				elseif itemID == 210333 then		--Timerunning Thread
+					local rank = TimerunningUtil.GetThreadRank();
+					if rank > 0 then
+						rank = "|cff00ccff"..rank.."|r";
+						effectiveLvl = effectiveLvl.."  "..rank;
+					end
 				end
 			end
 
@@ -1977,13 +1994,14 @@ function NarciEquipmentSlotMixin:PreClick(button)
 
 end
 
-function NarciEquipmentSlotMixin:PostClick(button)
-	if CursorHasItem() then
+function NarciEquipmentSlotMixin:PostClick(button, down)
+	if CursorHasItem() and button == "LeftButton" then
 		EquipCursorItem(self:GetID());
 		return
 	end
 
 	ClearCursor();
+
 	if ( IsModifiedClick() ) then
 		if IsAltKeyDown() and button == "LeftButton" then
 			local action = EquipmentManager_UnequipItemInSlot(self:GetID())
@@ -2012,7 +2030,10 @@ function NarciEquipmentSlotMixin:PostClick(button)
 				Narci_EquipmentOption:SetFromSlotButton(self, true)
 			end
 		elseif button == "RightButton" then
-			self:AnchorAlertFrame();
+			local useKeyDown = C_CVar.GetCVarBool("ActionButtonUseKeyDown");
+			if (useKeyDown and down) or (not useKeyDown and not down) then
+				self:AnchorAlertFrame();
+			end
 		end
 	end
 end
@@ -2113,204 +2134,29 @@ function Narci_ShowStatTooltipDelayed(self)
 	--print("Narci_ShowStatTooltipDelayed")
 end
 
---/dump GetItemStats(GetInventoryItemLink("player", 8))
---/script DEFAULT_CHAT_FRAME:AddMessage("\124cff0070dd\124Hitem:152783::::::::120::::1:1672:\124h[Mac'Aree Focusing Amethyst]\124h\124r");
---/script DEFAULT_CHAT_FRAME:AddMessage("\124cff0070dd\124Hitem:152783::::::::120::::1:1657:\124h[Mac'Aree Focusing Amethyst]\124h\124r");
---/script DEFAULT_CHAT_FRAME:AddMessage("\124cff0070dd\124Hitem:158362::::::::120::::2:1557:4778:\124h[Lord Waycrest's Signet]\124h\124r");
---[[				 Stats sum						ilvl							ilvl+ from Gem
-	Ring		1.7626*ilvl - 246.88		(sum + 246.88) / 1.7626				40  / 1.7626 = 22.6937
---]]
-
-
 
 function NarciItemLevelFrameMixin:OnLoad()
 	--Declared in Modules\CharacterFrame\ItemLevelFrame.lua
 	ItemLevelFrame = self;
-
-	local function SideButton_OnEnter(f)
-		if f.onEnterFunc then
-			f.onEnterFunc(f);
-			FadeFrame(f.Highlight, 0.15, 1);
-		end
-	end
-
-	local function SideButton_OnLeave(f)
-		Narci:HideButtonTooltip();
-		FadeFrame(f.Highlight, 0.25, 0);
-	end
-
-	local function SideButton_ShowDetailedItemLevel(f)
-		if f.isSameLevel then
-			f.tooltipHeadline = string.format(f.tooltipFormat, f.Level:GetText());
-		else
-			f.tooltipHeadline = string.format(f.tooltipFormat, f.Level:GetText()) .. string.format("  (max %s)", f.avgItemLevel);
-		end
-		if f.avgItemLevelPvp and f.avgItemLevelPvp ~= 0 then
-			f.tooltipSpecial = string.format(STAT_AVERAGE_PVP_ITEM_LEVEL, f.avgItemLevelPvp);
-		else
-			f.tooltipSpecial = nil;
-		end
-		Narci_ShowButtonTooltip(f);
-	end
-
-	local function SideButton_ShowMajorFactionInfo(f)
-		DefaultTooltip:HideTooltip();
-		DefaultTooltip:SetOwner(f, "ANCHOR_NONE");
-		DefaultTooltip:SetPoint("BOTTOM", f, "TOP", 0, 2);
-		DefaultTooltip:SetText(DRAGONFLIGHT_LANDING_PAGE_TITLE);
-	
-		local factionIDs = C_MajorFactions.GetMajorFactionIDs();
-		local factionList = {};
-		if factionIDs and #factionIDs > 0 then
-			local factionData;
-			for _, majorFactionID in ipairs(factionIDs) do
-				factionData = C_MajorFactions.GetMajorFactionData(majorFactionID);
-				if factionData then
-					table.insert(factionList, factionData);
-				end
-			end
-
-			local function UnlockOrderSort(faction1, faction2)
-				if faction1.uiPriority then
-					return faction1.uiPriority < faction2.uiPriority;
-				else
-					return faction1.unlockOrder < faction2.unlockOrder;
-				end
-			end
-
-			table.sort(factionList, UnlockOrderSort);
-
-			--Embedded Frame
-			if not f.FactionListFrame then
-				f.FactionListFrame = CreateFrame("Frame", nil, f);
-				f.factionButtons = {};
-				f.FactionListFrame:SetWidth(154);
-			end
-
-			for i = 1, #f.factionButtons do
-				f.factionButtons[i]:Hide();
-			end
-
-			local maxTextWidth = 0;
-			local description, level, textWidth;
-			for i, data in ipairs(factionList) do
-				if not f.factionButtons[i] then
-					f.factionButtons[i] = CreateFrame("Frame", nil, f.FactionListFrame, "NarciGameTooltipEmbeddedIconTextFrame");
-					if i == 1 then
-						f.factionButtons[i]:SetPoint("TOPLEFT", f.FactionListFrame, "TOPLEFT", 0, 0);
-					else
-						f.factionButtons[i]:SetPoint("TOPLEFT", f.factionButtons[i - 1], "BOTTOMLEFT", 0, -6);
-					end
-				end
-				level = data.renownLevel or 0;
-				if level < 10 then
-					level = level.."  ";
-				end
-				if not data.isUnlocked then
-					description = MAJOR_FACTION_BUTTON_FACTION_LOCKED;
-				elseif C_MajorFactions.HasMaximumRenown(data.factionID) then
-					if C_Reputation.IsFactionParagon(data.factionID) then
-						local totalEarned, threshold = C_Reputation.GetFactionParagonInfo(data.factionID);
-						if totalEarned and threshold and threshold ~= 0 then
-							local paragonLevel = floor(totalEarned / threshold);
-							local currentValue = totalEarned - paragonLevel * threshold;
-							description = string.format("|cff00ccffP%s|r  %d/%d", paragonLevel, currentValue, threshold);
-						else
-							description = MAJOR_FACTION_MAX_RENOWN_REACHED;
-						end
-					else
-						description = MAJOR_FACTION_MAX_RENOWN_REACHED;
-					end
-				else
-					description = string.format("|cffffd100%s|r  %d/%d", level, data.renownReputationEarned, data.renownLevelThreshold);
-				end
-				f.factionButtons[i].Icon:SetAtlas(string.format("majorFactions_icons_%s512", data.textureKit), false);
-				f.factionButtons[i].Text:SetText(string.format("|cffffffff%s|r\n%s", data.name, description));
-				f.factionButtons[i].Text:SetTextColor(0.5, 0.5, 0.5);
-				f.factionButtons[i]:Show();
-
-				textWidth = f.factionButtons[i].Text:GetWrappedWidth();
-				if textWidth and textWidth > maxTextWidth then
-					maxTextWidth = textWidth;
-				end
-			end
-			local numButtons = #factionList;
-			f.FactionListFrame:SetHeight((28 + 6)*numButtons - 12);
-			f.FactionListFrame:SetWidth(floor(maxTextWidth + 0.5) + 28 + 6);
-
-			local function GameTooltip_InsertFrame(tooltipFrame, frame, verticalPadding)	-- this is an exact copy of GameTooltip_InsertFrame to avoid "Execution tainted"
-				verticalPadding = verticalPadding or 0;
-				local textSpacing = tooltipFrame:GetCustomLineSpacing() or 2;
-				local textHeight = Round(_G[tooltipFrame:GetName().."TextLeft2"]:GetLineHeight());
-				local neededHeight = Round(frame:GetHeight() + verticalPadding);
-				local numLinesNeeded = math.ceil(neededHeight / (textHeight + textSpacing));
-				local currentLine = tooltipFrame:NumLines();
-
-				if numLinesNeeded ~= nil then
-					for i = 1, numLinesNeeded do
-						tooltipFrame:AddLine(" ");
-					end
-				end
-
-				frame:SetParent(tooltipFrame);
-				frame:ClearAllPoints();
-				frame:SetPoint("TOPLEFT", tooltipFrame:GetName().."TextLeft"..(currentLine + 1), "TOPLEFT", 0, -verticalPadding);
-				if not tooltipFrame.insertedFrames then
-					tooltipFrame.insertedFrames = { };
-				end
-				local frameWidth = frame:GetWidth();
-				if tooltipFrame:GetMinimumWidth() < frameWidth then
-					tooltipFrame:SetMinimumWidth(frameWidth);
-				end
-				frame:Show();
-				tinsert(tooltipFrame.insertedFrames, frame);
-				return (numLinesNeeded * textHeight) + (numLinesNeeded - 1) * textSpacing;
-			end
-
-			GameTooltip_InsertFrame(DefaultTooltip, f.FactionListFrame, 6);
-		else
-			DefaultTooltip:AddLine(MAJOR_FACTION_BUTTON_FACTION_LOCKED, 0.5, 0.5, 0.5, true);
-		end
-		DefaultTooltip:Show();
-		DefaultTooltip:FadeIn();
-	end
-
-	local LeftButton = self.LeftButton;
-	LeftButton:SetScript("OnEnter", SideButton_OnEnter);
-	LeftButton:SetScript("OnLeave", SideButton_OnLeave);
-	LeftButton.onEnterFunc = SideButton_ShowDetailedItemLevel;
-	LeftButton.tooltipFormat = L["Equipped Item Level Format"];
-	LeftButton.tooltipLine1 = STAT_AVERAGE_ITEM_LEVEL_TOOLTIP;
-
-	local RightButton = self.RightButton;
-	RightButton:SetScript("OnEnter", SideButton_OnEnter);
-	RightButton:SetScript("OnLeave", SideButton_OnLeave);
-	RightButton.onEnterFunc = SideButton_ShowMajorFactionInfo;
+	self:Init();
 end
 
 
 local function UpdateCharacterInfoFrame(newLevel)
 	local level = newLevel or UnitLevel("player");
 
-	local _, currentSpecName;
-	local currentSpec = GetSpecialization();
-	if currentSpec then
-	   _, currentSpecName = GetSpecializationInfo(currentSpec);
-	else
-		currentSpecName = " ";
-	end
+	local specClassName = TalentTreeDataProvider:GetPlayerSpecClassName(true);	--colorized
 
-	local className, englishClass = UnitClass("player");
-	local _, _, _, rgbHex = GetClassColor(englishClass);
-	local frame = Narci_PlayerInfoFrame;
-	if currentSpecName then
+	if specClassName then
+		local frame = Narci_PlayerInfoFrame;
+		local levelNumber = "|cFFFFD100"..level.."|r";
 		local titleID = GetCurrentTitle();
 		local titleName = GetTitleName(titleID);
-		if titleName then
+		if titleName and titleName ~= "" then
 			titleName = strtrim(titleName); --delete the space in Title
-			frame.Miscellaneous:SetText(titleName.."  |  ".."|cFFFFD100"..level.."|r  ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
+			frame.Miscellaneous:SetText(titleName.."  |  "..levelNumber.."  "..specClassName);
 		else
-			frame.Miscellaneous:SetText("Level".." |cFFFFD100"..level.."|r  ".."|c"..rgbHex..currentSpecName.." "..className.."|r");
+			frame.Miscellaneous:SetText("|cFFFFD100Level|r "..levelNumber.."  "..specClassName);
 		end
 	end
 
@@ -2418,7 +2264,8 @@ function NarciEquipmentFlyoutButtonMixin:OnClick(button, down, isGamepad)
 		local action = EquipmentManager_EquipItemByLocation(self.location, self.slotID)
 		if action then
 			self:AnchorAlertFrame();
-			EquipmentManager_RunAction(action)
+			ConfirmBinding();
+			EquipmentManager_RunAction(action);
 		end
 		self:Disable();
 		if isGamepad then
@@ -2466,7 +2313,7 @@ function NarciEquipmentFlyoutButtonMixin:SetUp(maxItemLevel)
 		itemQuality = "Azerite";	--AzeriteEmpoweredItem
 	elseif C_AzeriteItem.IsAzeriteItem(itemLocation) then
 		itemQuality = "Heart";
-	elseif IsCorruptedItem(itemLink) then
+	elseif C_Item.IsCorruptedItem(itemLink) then
 		itemQuality = "NZoth";
 	elseif C_LegendaryCrafting.IsRuneforgeLegendary(itemLocation) then
 		itemQuality = "Runeforge";
@@ -3262,58 +3109,12 @@ end
 
 function Narci_SetPlayerName(self)
 	local playerName = UnitName("player");
-	self.PlayerName:SetShadowColor(0, 0, 0);
-	self.PlayerName:SetShadowOffset(2, -2);
-	self.PlayerName:SetText(playerName);
-	SmartFontType(self.PlayerName);
+	local editBox = self.PlayerName or self.MogNameEditBox;
+	editBox:SetShadowColor(0, 0, 0);
+	editBox:SetShadowOffset(2, -2);
+	editBox:SetText(playerName);
+	SmartFontType(editBox);
 end
-
-function Narci_AliasButton_SetState()
-	local editBox = Narci_PlayerInfoFrame.PlayerName;
-	local button = Narci_AliasButton;
-
-	if NarcissusDB_PC.UseAlias then
-		editBox:Enable();
-		editBox:SetText((NarcissusDB_PC.PlayerAlias or UnitName("player")));
-		button.Label:SetText(L["Use Player Name"]);
-	else
-		editBox:Disable();
-		editBox:SetText(UnitName("player"));
-		button.Label:SetText(L["Use Alias"]);
-	end
-
-	local LetterNum = editBox:GetNumLetters();
-	local w = max(LetterNum*16, 160);
-	editBox:SetWidth(w);
-
-	button:SetWidth(button.Label:GetWidth() + 12);
-end
-
-function Narci_AliasButton_OnClick(self)
-	local editBox = Narci_PlayerInfoFrame.PlayerName;
-	NarcissusDB_PC.UseAlias = not NarcissusDB_PC.UseAlias;
-
-	if NarcissusDB_PC.UseAlias then
-		self.Label:SetText(L["Use Player Name"]);
-		editBox:Enable();
-		editBox:SetFocus();
-		editBox:SetText(NarcissusDB_PC.PlayerAlias or UnitName("player"));
-		editBox:HighlightText();
-	else
-		self.Label:SetText(L["Use Alias"]);
-		local text = strtrim(editBox:GetText());
-		editBox:SetText(text);
-		NarcissusDB_PC.PlayerAlias = text;
-		editBox:Disable();
-		editBox:HighlightText(0,0)
-		editBox:SetText(UnitName("player"));
-	end
-	self:SetWidth(self.Label:GetWidth() + 12);
-	local LetterNum = editBox:GetNumLetters();
-	local w = max(LetterNum*16, 160);
-	editBox:SetWidth(w);
-end
-
 
 
 function Narci_Open()
@@ -3406,17 +3207,17 @@ function Narci_OpenGroupPhoto()
 		end
 		IS_OPENED = true;
 		CVarTemp:BackUp();
-		Toolbar:ShowUI("Narcissus");
+		Toolbar:ShowUI("PhotoMode");
 		ViewProfile:SaveView(5);
 		CameraUtil:UpdateParameters();
 		CameraMover:MakeActive();
 		SetCVar("test_cameraDynamicPitch", 1);
-		
+
 		local speedFactor = 180/(GetCVar("cameraYawMoveSpeed") or 180);
 		ZoomFactor.toSpeed = speedFactor*ZoomFactor.toSpeedBasic;
 		ZoomFactor.fromSpeed = speedFactor*ZoomFactor.fromSpeedBasic;
 		EL:Show();
-		
+
 		CameraMover:Pitch();
 
 		After(0, function()
@@ -3448,7 +3249,7 @@ function Narci_OpenGroupPhoto()
 				end)
 			end)
 		end)
-		
+
 		Narci.isActive = true;
 		MsgAlertContainer:Display();
 	end
@@ -3581,7 +3382,7 @@ local function GetWowHeadDressingRoomURL()
 end
 
 local function CopyTexts(textFormat, includeID)
-	local texts = Narci_XmogNameFrame.PlayerName:GetText() or "My Transmog";
+	local texts = Narci_XmogNameFrame.MogNameEditBox:GetText() or "My Transmog";
 	textFormat = textFormat or "text";
 
 	local source;
@@ -3690,7 +3491,7 @@ local function Narci_XmogButton_OnClick(self)
 		Narci_SnowEffect(false);
 		PlayLetteboxAnimation("OUT");
 
-		Narci_XmogNameFrame.PlayerName:SetText(Narci_PlayerInfoFrame.PlayerName:GetText())
+		Narci_XmogNameFrame.MogNameEditBox:SetText(Narci_PlayerInfoFrame.PlayerName:GetText())
 
 		Toolbar.TransmogListFrame:ShowUI();
 		Toolbar.showTransmogFrame = true;
@@ -3776,15 +3577,78 @@ end
 
 
 ------Photo Mode Toolbar------
+do
+	local IsInteractingWithDialogNPC = addon.IsInteractingWithDialogNPC;	--Prevent clash with DialogUI
 
+	hooksecurefunc("SetUIVisibility", function(state)
+		if IS_OPENED then		--when Narcissus hide the UI
+			if state then
+				MsgAlertContainer:SetDND(true);
+				Toolbar:UseLowerLevel(true);
+			else
+				local bar = Toolbar;
+				Toolbar.ExitButton:Show();
+				if not bar:IsShown() then
+					bar:Show();
+				end
+				MsgAlertContainer:SetDND(false);
+				bar:UseLowerLevel(false);
+			end
+		else						--when user hide the UI manually
+			if state then
+				--When player closes the full-screen world map, SetUIVisibility(true) fires twice, and WorldMapFrame:IsShown() returns true and false.
+				--Thus, use this VisibilityTracker instead to check if WorldMapFrame has been closed recently.
+				--WorldMapFrame.VisibilityTracker.state
+				MsgAlertContainer:Hide();
+				if Narci_Character:IsShown() then return end;
+				if not Toolbar:IsShown() then return end;
 
+				if not GetKeepActionCam() then
+					After(0.6, function()
+						ConsoleExec( "actioncam off" );
+					end)
+				end
+				Toolbar:HideUI();
+			else
+				if IsInteractingWithDialogNPC() then return end;
 
-hooksecurefunc("SetUIVisibility", function(state)
-	if IS_OPENED then		--when Narcissus hide the UI
-		if state then
+				local bar = Toolbar;
+				if not bar:IsShown() then
+					CVarTemp.shoulderOffset = GetCVar("test_cameraOverShoulder");
+				end
+				bar:ShowUI("Blizzard");
+				bar:FadeOut(true);
+			end
+		end
+	end)
+end
+
+--[[
+do  --UIParent OnShow/OnHide
+	local IsInteractingWithDialogNPC = addon.IsInteractingWithDialogNPC;	--Prevent clash with DialogUI
+
+	local frame = CreateFrame("Frame", nil, UIParent);
+
+	local function UIParent_OnShow()
+		if IS_OPENED then		--when Narcissus hide the UI
 			MsgAlertContainer:SetDND(true);
 			Toolbar:UseLowerLevel(true);
 		else
+			MsgAlertContainer:Hide();
+			if Narci_Character:IsShown() then return end;
+			if not Toolbar:IsShown() then return end;
+
+			if not GetKeepActionCam() then
+				After(0.6, function()
+					ConsoleExec( "actioncam off" );
+				end)
+			end
+			Toolbar:HideUI();
+		end
+	end
+
+	local function UIParent_OnHide()
+		if IS_OPENED then		--when Narcissus hide the UI
 			local bar = Toolbar;
 			Toolbar.ExitButton:Show();
 			if not bar:IsShown() then
@@ -3792,29 +3656,22 @@ hooksecurefunc("SetUIVisibility", function(state)
 			end
 			MsgAlertContainer:SetDND(false);
 			bar:UseLowerLevel(false);
-		end
-	else						--when user hide the UI manually
-		if state then
-			--When player closes the full-screen world map, SetUIVisibility(true) fires twice, and WorldMapFrame:IsShown() returns true and false.
-			--Thus, use this VisibilityTracker instead to check if WorldMapFrame has been closed recently.
-			--WorldMapFrame.VisibilityTracker.state
-			MsgAlertContainer:Hide();
-			if Narci_Character:IsShown() then return; end
-			if not GetKeepActionCam() then
-				After(0.6, function()
-					ConsoleExec( "actioncam off" );
-				end)
-			end
-			Toolbar:HideUI();
 		else
+			if IsInteractingWithDialogNPC() then return end;
+
 			local bar = Toolbar;
 			if not bar:IsShown() then
 				CVarTemp.shoulderOffset = GetCVar("test_cameraOverShoulder");
 			end
 			bar:ShowUI("Blizzard");
+			bar:FadeOut(true);
 		end
 	end
-end)
+
+    frame:SetScript("OnShow", UIParent_OnShow);
+    frame:SetScript("OnHide", UIParent_OnHide);
+end
+--]]
 
 do
 	--Slash Command
@@ -3864,11 +3721,15 @@ do
 		local c, m;
 
 		hooksecurefunc("ChatEdit_HandleChatType", function(editBox, msg, command, send)
-			c = command;
+			c = command;	--Auto capitalized by the game
 			m = msg;
 			if send == 1 then
-				if c and VALID_COMMANDS[c] then
-					callback(m);
+				if c then
+					if c == "/NARCISSUSGAMEPAD" then
+						Narci_Open();
+					elseif VALID_COMMANDS[c] then
+						callback(m);
+					end
 				end
 
 				c = nil;
@@ -4151,7 +4012,6 @@ EL:SetScript("OnEvent",function(self, event, ...)
 		self:UnregisterEvent(event);
 
 		After(2, function()
-			Narci_AliasButton_SetState();
 			StatsUpdator:Instant();
 			RadarChart:SetValue(0,0,0,0,1);
 			UpdateXmogName();
@@ -4176,7 +4036,7 @@ EL:SetScript("OnEvent",function(self, event, ...)
 		DefaultTooltip.offsetY = -16;
 		DefaultTooltip:SetIgnoreParentAlpha(true);
 	
-		if IsAddOnLoaded("DynamicCam") then
+		if C_AddOns.IsAddOnLoaded("DynamicCam") then
 			CVarTemp.isDynamicCamLoaded = true;
 			
 			--Check validity
@@ -4212,19 +4072,22 @@ EL:SetScript("OnEvent",function(self, event, ...)
 				CameraMover:UpdateMovementMethodForDynamicCam();
 			else
 				hooksecurefunc("CameraZoomIn", function(increment)
-					if IS_OPENED then
+					if IS_OPENED and (not Narci.groupPhotoMode) then
 						UpdateShoulderCVar:Start(-increment);
 					end
 				end)
 				
 				hooksecurefunc("CameraZoomOut", function(increment)
-					if IS_OPENED then
+					if IS_OPENED and (not Narci.groupPhotoMode) then
 						UpdateShoulderCVar:Start(increment);
 					end
 				end)
 			end
 		end)
 
+		if TimerunningUtil.IsTimerunningMode() then
+			Narci.deferGemManager = true;
+		end
 	elseif event == "PLAYER_EQUIPMENT_CHANGED" then
 		local slotID, isItem = ...;
 		USE_DELAY = false;
@@ -4715,35 +4578,107 @@ do
 	end
 end
 
---[[
-	C_BarberShop.GetAvailableCustomizations();
-	/run BarberShopFrame:SetPropagateKeyboardInput(true)
-	CharCustomizeFrame:SetCustomizationChoice
-    hooksecurefunc(CharCustomizeFrame, "SetCustomizationChoice", function(optionID, choiceID) print("Set ",optionID, choiceID) end)
-	hooksecurefunc(CharCustomizeFrame, "PreviewCustomizationChoice", function(optionID, choiceID) print("Preview ", optionID, choiceID) end)
-	Blizzard_CharacterCustomize
-	Blizzard_BarbershopUI
 
-	slotID shoulder ~ 3
-	C_Transmog.SetPending(self.transmogLocation, sourceID, self.activeCategory);
 
-	WardrobeCollectionFrame.ItemsCollectionFrame:SelectVisual()
-	/run WardrobeCollectionFrame.ItemsCollectionFrame.RightShoulderCheckbox:Show();
 
-	/run GetMouseFocus().transmogLocation = TransmogUtil.GetTransmogLocation(3, 0, 0)	--96875
+NarciCharacterUIPlayerNameEditBoxMixin = {};
 
-	New APIs:
-	CenterCamera();
+function NarciCharacterUIPlayerNameEditBoxMixin:OnLoad()
 
-	/run CenterCamera();
---]]
-
---Ember Court Correspondence
---https://wowpedia.fandom.com/wiki/Quill_of_Correspondence
---[[
-function SaveCurrentMail()
-	local m = OpenMailBodyText:GetTextData();
-	m.subject = OpenMailSubject:GetText();
-	NarciDevToolOutput.mail = m;
 end
---]]
+
+function NarciCharacterUIPlayerNameEditBoxMixin:OnShow()
+	self:UpdateSize();
+end
+
+function NarciCharacterUIPlayerNameEditBoxMixin:OnTextChanged()
+	SmartFontType(self)
+	self:UpdateSize();
+end
+
+function NarciCharacterUIPlayerNameEditBoxMixin:UpdateSize()
+	local numLetters = self:GetNumLetters();
+	local width = max(numLetters*16, 160);
+	self:SetWidth(width);
+end
+
+function NarciCharacterUIPlayerNameEditBoxMixin:SaveAndExit()
+	self:ClearFocus();
+	local text = strtrim(self:GetText());
+	self:SetText(text);
+	NarcissusDB_PC.PlayerAlias = text;
+end
+
+function NarciCharacterUIPlayerNameEditBoxMixin:OnEscapePressed()
+	self:SaveAndExit();
+end
+
+function NarciCharacterUIPlayerNameEditBoxMixin:OnEnterPressed()
+	self:SaveAndExit();
+end
+
+
+NarciCharacterUIAliasButtonMixin = {};
+
+function NarciCharacterUIAliasButtonMixin:OnLoad()
+	local keepInvisibleFrame = true;
+	NarciFadeUI.CreateFadeObject(self, keepInvisibleFrame);
+end
+
+function NarciCharacterUIAliasButtonMixin:OnEnter()
+	self.Label:SetTextColor(0, 0, 0);
+	self.Label:SetShadowColor(1, 1, 1);
+	self.Highlight:Show();
+end
+
+function NarciCharacterUIAliasButtonMixin:OnLeave()
+	self.Label:SetTextColor(0.25, 0.78, 0.92);
+	self.Label:SetShadowColor(0, 0, 0);
+	self.Highlight:Hide();
+end
+
+function NarciCharacterUIAliasButtonMixin:OnClick()
+	NarcissusDB_PC.UseAlias = not NarcissusDB_PC.UseAlias;
+	self:UpdateNames(true);
+end
+
+function NarciCharacterUIAliasButtonMixin:OnShow()
+	self:SetScript("OnShow", nil);
+	self:UpdateNames();
+end
+
+function NarciCharacterUIAliasButtonMixin:OnHide()
+	self:OnLeave();
+end
+
+function NarciCharacterUIAliasButtonMixin:UpdateSize()
+	self:SetWidth(self.Label:GetWidth() + 12);
+end
+
+function NarciCharacterUIAliasButtonMixin:UpdateNames(onClick)
+	local editBox = self:GetParent();
+
+	if NarcissusDB_PC.UseAlias then
+		self.Label:SetText(L["Use Player Name"]);
+		editBox:Enable();
+		editBox:SetText(NarcissusDB_PC.PlayerAlias or UnitName("player"));
+		if onClick then
+			editBox:SetFocus();
+			editBox:HighlightText();
+		end
+	else
+		self.Label:SetText(L["Use Alias"]);
+		local text = strtrim(editBox:GetText());
+		editBox:SetText(text);
+		NarcissusDB_PC.PlayerAlias = text;
+		editBox:Disable();
+		editBox:HighlightText(0,0)
+		editBox:SetText(UnitName("player"));
+	end
+
+	self:UpdateSize();
+	editBox:UpdateSize();
+end
+
+
+UIParent:UnregisterEvent("EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED");  --Disable EXPERIMENTAL_CVAR_WARNING

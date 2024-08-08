@@ -187,9 +187,10 @@ L["Find Related Creatures Description"] = "找到与目标同姓的其他生物�
 L["Find Relatives Hotkey"] = "按Tab搜索相关生物。";
 L["Find Relatives Hotkey Format"] = "按下%s开始查找。";
 L["Translate Names"] = "翻译姓名";
-L["Translate Names Description On"] = "获取目标译名并将其显示在...";
-L["Select A Language"] = "已选语言：";
-L["Select Multiple Languages"] = "已选语言：";
+L["Translate Names Description"] = "获取目标译名并将其显示在...";
+L["Translate Names Languages"] = "翻译为...";
+L["Select Language Single"] = "选择一种语言显示在姓名版上";
+L["Select Language Multiple"] = "选择显示在鼠标提示上的语言";
 L["Load on Demand"] = "按需加载";
 L["Load on Demand Description On"] = "在搜索功能被调用时再加载数据库。";
 L["Load on Demand Description Off"] = "数据库将在你登入时加载。";
@@ -219,7 +220,9 @@ L["Project Page"] = "项目主页";
 L["Press Copy Yellow"] = "按下|cffffd100".. NARCI_SHORTCUTS_COPY .."|r复制";
 L["New Option"] = NARCI_NEW_ENTRY_PREFIX.." 新".."|r"
 L["Expansion Features"] = "资料片特色";
-
+L["LFR Wing Details"] = "随机难度团本区域信息";
+L["LFR Wing Details Description"] = "在你单排随机难度的旧团本时，显示boss名称和进度情况。";
+L["Speedy Screenshot Alert"] = "让截图成功通知更快地消失";
 
 --模型控制面板--
 L["Ranged Weapon"] = "远程武器";
@@ -412,13 +415,16 @@ L["Points"] = "点数";
 L["Reward"] = "奖励";
 L["Date"] = "日期";
 L["Click And Hold"] = "按住鼠标左键";
+L["To Do List"] = "待办事项";
+L["Error Alert Bookmarks Too Many"] = "你最多同时选择%s个成就。";
+L["Instruction Add To To Do List"] = string.format("%s 左键 点击一个未完成的成就，可把它加入到你的待办事项里。", NARCI_MODIFIER_ALT);
 
 --Barbershop--
 L["Save New Look"] = "保存外观";
 L["No Available Slot"] = "保存栏位已满";
 L["Look Saved"] = "已保存";
 L["Cannot Save Forms"] = "不支持形态";
-L["Profiles"] = "存档管理";
+L["Profile"] = "存档管理";
 L["Share"] = "分享";
 L["Save Notify"] = "提示你保存新外观";
 L["Save Notify Tooltip"] = "在你应用一个套新外观后提示你是否保存。";
@@ -446,6 +452,11 @@ L["Decode Good"] = "解码成功";
 L["Barbershop Export Tooltip"] = "用当前外观生成一串可在网上分享的字符串。\n你可以修改冒号前的文字。";
 L["Settings And Share"] = "设置与分享";
 L["Loading Portraits"] = "生成头像";
+L["Private Profile"] = "个人";   --used by the current character
+L["Public Profile"] = "共用";     --shared among all your characters
+L["No Saves"] = "没有存档";
+L["Profile Type Tooltip"] = "选择当前角色所用档案。\n\n个人:|cffedd100 由此角色创建的档案|r\n\n共用:|cffedd100 可被你所有角色共用的档案|r";
+L["Profile Migration Okay"] = "好的"
 
 --Tutorial--
 L["Alert"] = "警告";
@@ -552,6 +563,8 @@ L["Socket Occupied"] = "插槽已被占用";
 S["Narcissus Played"] = "Narcissus使用时长";
 S["Format Since"] = "(自%s以来)";
 S["Screenshots"] = "使用Narcissus截图";
+S["Shadowlands Quests"] = "暗影界任务";
+S["Quest Text Reading Speed Format"] = "已完成: %s (%s个字)  阅读时长: %s (每分钟%s字)";
 
 --Turntable Showcase--
 L["Turntable"] = "转台";
@@ -587,9 +600,10 @@ L["Showcase Splash 4"] = "录制屏幕然后将视频转换为GIF动图。";
 L["Loop Animation"] = "循环播放动画";
 
 --Item Sets--
-L["Cycle Spec"] = "按Tab键切换专精";
+L["Cycle Spec"] = "使用滚轮切换专精";
 L["Paperdoll Splash 1"] = "使用套装指示器？";
 L["Paperdoll Splash 2"] = "选择主题色";
+L["Theme Changed"] = "主题色已改变";
 
 --Outfit Select--
 L["Outfit"] = "外观方案";
@@ -644,5 +658,88 @@ L["Send Mails"] = "发送右键";
 L["Create Auctions"] = "拍卖物品";
 L["Socket Items"] = "镶嵌宝石";
 
+--Perks Program--
+L["Perks Program Unclaimed Tender Format"] = "- 收集者宝箱中有 |cffffffff%s|r 枚未拾取的商贩标币。";     --PERKS_PROGRAM_UNCOLLECTED_TENDER
+L["Perks Program Unearned Tender Format"] = "- 旅行者日志中有 |cffffffff%s|r 枚待获取的商贩标币。";     --PERKS_PROGRAM_ACTIVITIES_UNEARNED
+L["Perks Program Item Added In Format"] = "加入于 %s";
+L["Perks Program Item Unavailable"] = "这个物品目前不可用。";
+L["Perks Program See Wares"] = "显示商品";
+L["Perks Program No Cache Alert"] = "与商栈商人交谈以获取本月的商品列表。";
+L["Perks Program Using Cache Alert"] = "正在使用你上次访问商栈时的数据。价格信息有可能不准确。";
+L["Modify Default Pose"] = "更改默认动作";   --Change the default pose/animation/camera yaw when viewing transmog items
+L["Include Header"] = "包含物品：";  --The transmog set includes...
+L["Auto Try On All Items"] = "自动试穿整套物品";
+L["Full Set Cost"] = "整套物品价格";   --Purchasing the full set will cost you x Trader's Tender
+L["You Will Receive One Item"] = "你将获得|cffffffff一件|r物品：";
+L["Format Item Belongs To Set"] = "这件物品属于套装|cffffffff[%s]|r";
+
+
 --Quest--
 L["Auto Display Quest Item"] = "自动阅读任务物品的文字说明";
+L["Drag To Move"] = "左击并拖动来移动位置";
+L["Middle Click Reset Position"] = "鼠标中键重置位置。"
+L["Change Position"] = "改变位置";
+
+
+--Timerunning--
+L["Primary Stat"] = "主属性";
+L["Stamina"] = "耐力"
+L["Crit"] = "爆击";
+L["Haste"] = "急速";
+L["Mastery"] = "精通";
+L["Versatility"] = "全能";
+
+L["Leech"] = "吸血";
+L["Speed"] = "加速";
+L["Format Stat EXP"] = "+%d%% 经验获取";
+L["Format Rank"] = "等级 %d";
+L["Cloak Rank"] = "披风等级";
+
+
+--Gem Manager--
+L["Gem Manager"] = "宝石管理器";
+L["Pandamonium Gem Category 1"] = "首要";
+L["Pandamonium Gem Category 2"] = "匠械";
+L["Pandamonium Gem Category 3"] = "棱彩";
+L["Pandamonium Slot Category 1"] = "胸部和腿部";
+L["Pandamonium Slot Category 2"] = "饰品";
+L["Pandamonium Slot Category 3"] = "项链和戒指";
+L["Gem Removal Instruction"] = "<右键点击移除此宝石>";
+L["Gem Removal No Tool"] = "你没有能取下这颗宝石的工具。";
+L["Gem Removal Bag Full"] = "背包里需要有空位才能取下此宝石！";
+L["Gem Removal Combat"] = "不能在战斗中更换宝石";
+L["Gemma Click To Activate"] = "<左键点击以激活>";
+L["Gemma Click To Insert"] = "<左键点击以镶嵌>";
+L["Gemma Click Twice To Insert"] = "<左键点击|cffffffff两次|r来镶嵌>";
+L["Gemma Click To Select"] = "<左键选择>";
+L["Gemma Click To Deselect"] = "<右键取消>";
+L["Stat Health Regen"] = "生命回复";
+L["Gem Uncollected"] = "未收集";
+L["No Sockets Were Found"] = "没有找到合适的插槽。";
+L["Click To Show Gem List"] = "<点击打开宝石列表>";
+L["Remix Gem Manager"] = "Remix宝石管理器";
+L["Select A Loadout"] = "选择方案";
+L["Loadout Equipped"] = "已装备";
+L["Loadout Equipped Partially"] = "部分装备";
+L["Last Used Loadout"] = "最近应用过";
+L["New Loadout"] = "新方案";
+L["New Loadout Blank"] = "创建一个空白的方案";
+L["New Loadout From Equipped"] = "使用已装备的宝石";
+L["Edit Loadout"] = "编辑";
+L["Delete Loadout One Click"] = "删除";
+L["Delete Loadout Long Click"] = "|cffff4800删除|r\n|cffcccccc(长按左键)|r";
+L["Select Gems"] = "选择";
+L["Equipping Gems"] = "装备中...";
+L["Pandamonium Sockets Available"] = "可用点数";
+L["Click To Open Gem Manager"] = "左键点击以打开宝石管理器";
+L["Loadout Save Failure Incomplete Choices"] = "|cffff4800没有选够足够的宝石|r";
+L["Loadout Save Failure Dupe Loadout Format"] = "|cffff4800此方案与|r%s相同";
+L["Loadout Save Failure Dupe Name Format"] = "|cffff4800方案名称重复|r";
+L["Loadout Save Failure No Name"] = "|cffff4800请为方案命名|r";
+
+L["Format Equipping Progress"] = "正在装备 %d/%d";
+L["Format Click Times To Equip Singular"] = "点击 |cff19ff19%d|r 次以装备";
+L["Format Click Times To Equip Plural"] = "点击 |cff19ff19%d|r 次以装备";   --|4Time:Times; cannot coexist with color code?
+L["Format Free Up Bag Slot"] = "背包中需腾出%d个格子";
+L["Format Number Items Selected"] = "%d 已选择";
+L["Format Gem Slot Stat Budget"] = "在 %s 中的宝石只有 %s%% 的效果"  --e.g. Gems in trinket are 75% effective

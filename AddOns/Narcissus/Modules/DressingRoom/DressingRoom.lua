@@ -1,6 +1,7 @@
 local _, addon = ...
 
 local TransitionAPI = addon.TransitionAPI;
+local CopyTable = addon.CopyTable;
 
 local _G = _G;
 local L = Narci.L;
@@ -482,7 +483,7 @@ end
 local Adaptor = {};
 
 function Adaptor:IsBetterWardrobeDressingRoomEnabled()
-    local hasBW = IsAddOnLoaded("BetterWardrobe");
+    local hasBW = C_AddOns.IsAddOnLoaded("BetterWardrobe");
     if hasBW then
         local db = BetterWardrobe_Options;
         if db then
@@ -502,7 +503,7 @@ function Adaptor:IsBetterWardrobeDressingRoomEnabled()
 end
 
 function Adaptor:IsAddOnDressUpEnabled()
-    return IsAddOnLoaded("DressUp");
+    return C_AddOns.IsAddOnLoaded("DressUp");
 end
 
 function Adaptor:IsConflictedAddOnLoaded()
@@ -624,7 +625,9 @@ local function DressingRoomOverlayFrame_Initialize()
         return;
     end
 
-    DressUpFrame.ModelScene:SetLightDiffuseColor(0.78, 0.78, 0.78);
+    if not NarcissusDB.KeepDressingRoomOriginalLight then
+        DressUpFrame.ModelScene:SetLightDiffuseColor(0.78, 0.78, 0.78);
+    end
 
     local frame = CreateFrame("Frame", "NarciDressingRoomOverlay", parentFrame, "NarciDressingRoomOverlayTemplate")
     CreateSlotButton(frame)
@@ -725,21 +728,36 @@ local function DressingRoomOverlayFrame_Initialize()
 
     --expensive call
     DressUpFrame.ModelScene:HookScript("OnDressModel", function(f, ...)
-        if not (DressingRoomOverlayFrame and SLOT_FRAME_ENABLED) then return end;
-        if not DressingRoomOverlayFrame.pauseUpdate then
-            DressingRoomOverlayFrame.pauseUpdate = true;
-            DressingRoomOverlayFrame.mode = "visual";
-            After(0, function()
-                if SLOT_FRAME_ENABLED and IsDressUpFrameMaximized() then
-                    DressingRoomOverlayFrame.SlotFrame:Show();
-                    DressingRoomOverlayFrame.OptionFrame:Show();
+        if not (DressingRoomOverlayFrame) then return end;
+
+        if SLOT_FRAME_ENABLED then
+            if not DressingRoomOverlayFrame.pauseUpdate then
+                DressingRoomOverlayFrame.pauseUpdate = true;
+                DressingRoomOverlayFrame.mode = "visual";
+                After(0, function()
+                    if SLOT_FRAME_ENABLED and IsDressUpFrameMaximized() then
+                        DressingRoomOverlayFrame.SlotFrame:Show();
+                        DressingRoomOverlayFrame.OptionFrame:Show();
+                        GetDressingSourceFromActor();
+                        if NarciDressingRoomGearTextsClipborad:IsVisible() then
+                            PrintItemList();
+                        end
+                    end
+                    DressingRoomOverlayFrame.pauseUpdate = nil;
+                end)
+            end
+        else
+            if not DressingRoomOverlayFrame.pauseUpdate then
+                DressingRoomOverlayFrame.pauseUpdate = true;
+                DressingRoomOverlayFrame.mode = "visual";
+                After(0, function()
                     GetDressingSourceFromActor();
                     if NarciDressingRoomGearTextsClipborad:IsVisible() then
                         PrintItemList();
                     end
-                end
-                DressingRoomOverlayFrame.pauseUpdate = nil;
-            end)
+                    DressingRoomOverlayFrame.pauseUpdate = nil;
+                end)
+            end
         end
     end)
 
@@ -748,7 +766,7 @@ local function DressingRoomOverlayFrame_Initialize()
         OutfitIconSelect.SelectionFrame:Show();
     end
 
-    local OutfitFrame = WardrobeOutfitFrame;
+    local OutfitFrame = WardrobeOutfitFrame;    --Removed in TWW
     if OutfitFrame then
         local protected1, protected2 = OutfitFrame:IsProtected();
         if not(protected1 or protected2) then
@@ -791,7 +809,7 @@ local function DressingRoomOverlayFrame_Initialize()
     --]]
 
     local popupInfo = StaticPopupDialogs["NAME_TRANSMOG_OUTFIT"];
-    if popupInfo then
+    if popupInfo and OutfitFrame then
         --!! Override "WardrobeOutfitFrameMixin:NewOutfit(name)" to provide the ability to select icon
         local function SaveNewOutfit(popup)
             local name = popup.editBox:GetText();
@@ -840,7 +858,7 @@ local function DressingRoomOverlayFrame_Initialize()
             if ValidPopupNames[name] then
                 --assume it's StaticPopup1
                 local popup = LocateTransmogPopup();
-                if popup and OutfitFrame.itemTransmogInfoList then
+                if popup and OutfitFrame and OutfitFrame.itemTransmogInfoList then
                     local editbox = popup.editBox;
                     editbox:ClearAllPoints();
                     if popup.text then

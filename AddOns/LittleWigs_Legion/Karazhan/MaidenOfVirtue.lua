@@ -57,14 +57,14 @@ do
 		self:TargetMessage(227789, "red", player)
 		self:PlaySound(227789, "alarm", nil, player)
 		if self:Me(guid) then
-			self:Say(227789)
+			self:Say(227789, nil, nil, "Sacred Ground")
 			self:Flash(227789)
 		end
 	end
 
 	function mod:SacredGround(args)
 		self:CDBar(args.spellId, 19.4)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 	end
 end
 
@@ -142,6 +142,6 @@ do
 
 	function mod:HolyBolt(args)
 		self:CDBar(args.spellId, 9.7)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 	end
 end

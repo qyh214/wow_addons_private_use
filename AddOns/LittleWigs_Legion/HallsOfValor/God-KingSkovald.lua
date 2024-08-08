@@ -108,14 +108,14 @@ end
 do
 	local function printTarget(self, player, guid)
 		if self:Me(guid) then
-			self:Say(193659)
+			self:Say(193659, nil, nil, "Felblaze Rush")
 		end
 		self:PrimaryIcon(193659, player)
 		self:TargetMessage(193659, "red", player)
 		self:PlaySound(193659, "alarm", nil, player)
 	end
 	function mod:FelblazeRush(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 10.9)
 	end
 	function mod:FelblazeRushEnd(args)

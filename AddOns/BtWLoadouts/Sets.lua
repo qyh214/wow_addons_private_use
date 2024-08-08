@@ -167,6 +167,8 @@ local function SetDropDownInit(self, set, index, segment, tab)
 
 		self:SetSelected(set[segment][index])
 
+		Internal.Call("LoadoutUpdated", set.setID);
+
 		CloseDropDownMenus()
         BtWLoadoutsFrame:Update();
     end)
@@ -285,13 +287,18 @@ Internal.SortSets = SortSets
 local races = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37}
 local classes = {}
 local specializations = {}
+local herotalents = {}
 do -- Build Spec List
 	local className, classFile, classID = UnitClass("player")
 
 	classes[#classes+1] = classID
 
 	for specIndex=1,GetNumSpecializationsForClassID(classID) do
-		specializations[#specializations+1] = (GetSpecializationInfoForClassID(classID, specIndex))
+		local specID = GetSpecializationInfoForClassID(classID, specIndex)
+		specializations[#specializations+1] = specID
+	end
+	for _,treeID in ipairs(Internal.GetHeroTalentTreeIDsByClassID(classID)) do
+		herotalents[#herotalents+1] = treeID
 	end
 
 	local playerClassID = classID;
@@ -303,6 +310,10 @@ do -- Build Spec List
 			for specIndex=1,GetNumSpecializationsForClassID(classID) do
 				local specID = GetSpecializationInfoForClassID(classID, specIndex);
 				specializations[#specializations+1] = specID
+			end
+			
+			for _,treeID in ipairs(Internal.GetHeroTalentTreeIDsByClassID(classID)) do
+				herotalents[#herotalents+1] = treeID
 			end
 		end
 	end
@@ -408,10 +419,14 @@ Internal.Filters = {
 	spec = {
 		name = L["Specialization"],
 		enumerate = function (limitations, includeLimitations, includeOther)
-			local limitRole, limitClassFile
+			local limitRole, limitHeroTalents, limitClassFile
 			if limitations then
 				limitRole = limitations.role
-				if limitations.character then
+				if limitations.herotalents then
+					limitHeroTalents = limitations.herotalents
+					local classData = C_CreatureInfo.GetClassInfo(Internal.GetClassIDByHeroTalentTreeID(limitations.herotalents))
+					limitClassFile = classData.classFile
+				elseif limitations.character then
 					local characterData = Internal.GetCharacterInfo(limitations.character)
 					limitClassFile = characterData.class
 				elseif limitations.class then
@@ -425,6 +440,7 @@ Internal.Filters = {
 					index = index + 1
 				until not tbl[index] or includeLimitations or (
 					(limitClassFile == nil or limitClassFile == (select(6, GetSpecializationInfoByID(tbl[index])))) and
+					(limitHeroTalents == nil or Internal.IsHeroTalentTreeValidForSpecID(limitHeroTalents, tbl[index])) and
 					(limitRole == nil or limitRole == (select(5, GetSpecializationInfoByID(tbl[index]))))
 				)
 
@@ -435,12 +451,32 @@ Internal.Filters = {
 
 					return index, tbl[index], name, not (
 						(limitClassFile == nil or limitClassFile == classFile) and
+						(limitHeroTalents == nil or Internal.IsHeroTalentTreeValidForSpecID(limitHeroTalents, tbl[index])) and
 						(limitRole == nil or limitRole == role)
 					)
 				elseif includeOther and index == #tbl + 1 then
 					return index, 0, L["Other"]
 				end
 			end, specializations, 0
+		end,
+	},
+	herotalents = {
+		name = L["Hero Talents"],
+		enumerate = function (limitations, includeLimitations, includeOther)
+			return function (tbl, index)
+				index = index + 1
+
+				if tbl[index] then
+					local tree = C_Traits.GetSubTreeInfo(Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, tbl[index])
+					local class = C_CreatureInfo.GetClassInfo(Internal.GetClassIDByHeroTalentTreeID(tbl[index]))
+					local classColor = C_ClassColor.GetClassColor(class.classFile);
+					local name = format("%s - %s", classColor:WrapTextInColorCode(class.className), tree.name)
+
+					return index, tbl[index], name
+				elseif includeOther and index == #tbl + 1 then
+					return index, 0, L["Other"]
+				end
+			end, herotalents, 0
 		end,
 	},
 	role = {

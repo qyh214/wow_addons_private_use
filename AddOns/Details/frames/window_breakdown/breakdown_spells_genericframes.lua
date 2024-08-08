@@ -6,11 +6,10 @@ local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 local unpack = unpack
 local GetTime = GetTime
 local CreateFrame = CreateFrame
-local GetSpellLink = GetSpellLink
+local GetSpellLink = GetSpellLink or C_Spell.GetSpellLink --api local
 local GetSpellInfo = GetSpellInfo
 local _GetSpellInfo = Details.GetSpellInfo
 local GameTooltip = GameTooltip
-local IsShiftKeyDown = IsShiftKeyDown
 local DF = DetailsFramework
 local tinsert = table.insert
 

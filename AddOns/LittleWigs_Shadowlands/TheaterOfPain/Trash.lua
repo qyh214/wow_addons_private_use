@@ -306,7 +306,7 @@ end
 
 -- Nekthara the Mangler / Heavin the Breaker
 function mod:InterruptingRoar(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 		self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "warning")
@@ -315,7 +315,7 @@ end
 
 -- Nekthara the Mangler / Rek the Hardened
 function mod:Whirlwind(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "alarm")
@@ -348,14 +348,14 @@ do
 	local function printTarget(self, name, guid)
 		self:TargetMessage(333861, "red", name)
 		if self:Me(guid) then
-			self:Say(333861)
+			self:Say(333861, nil, nil, "Ricocheting Blade")
 			self:PlaySound(333861, "warning", nil, name)
 		else
 			self:PlaySound(333861, "alert", nil, name)
 		end
 	end
 	function mod:RicochetingBlade(args)
-		local unit = self:GetUnitIdByGUID(args.sourceGUID)
+		local unit = self:UnitTokenFromGUID(args.sourceGUID)
 		if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 			self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
 		end
@@ -386,14 +386,14 @@ end
 
 -- Advent Nevermore
 function mod:SeismicStomp(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "alert")
 	end
 end
 function mod:UnbreakableGuard(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 		self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "info")
@@ -402,7 +402,7 @@ end
 
 -- Rek the Hardened
 function mod:UnbalancingBlow(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) and UnitCanAttack("player", unit) then
 		self:Message(args.spellId, "purple", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "alert")

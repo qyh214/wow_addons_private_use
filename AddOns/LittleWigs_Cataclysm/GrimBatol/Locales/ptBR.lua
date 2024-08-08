@@ -6,3 +6,15 @@ if L then
 	L.summon_message = "Corruptor Sem-Rosto Sumonado"
 	L.summon_trigger = "evoca um"
 end
+
+L = BigWigs:NewBossLocale("Grim Batol Trash", "ptBR")
+if L then
+	--L.twilight_earthcaller = "Twilight Earthcaller"
+	--L.twilight_brute = "Twilight Brute"
+	--L.twilight_destroyer = "Twilight Destroyer"
+	--L.twilight_beguiler = "Twilight Beguiler"
+	--L.twilight_warlock = "Twilight Warlock"
+	--L.twilight_flamerender = "Twilight Flamerender"
+	--L.twilight_lavabender = "Twilight Lavabender"
+	--L.faceless_corruptor = "Faceless Corruptor"
+end

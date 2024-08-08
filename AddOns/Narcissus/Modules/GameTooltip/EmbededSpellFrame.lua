@@ -1,5 +1,7 @@
-local GetItemSpell = GetItemSpell;
-local GetSpellInfo = GetSpellInfo;
+local _, addon = ...
+
+local GetItemSpell = C_Item.GetItemSpell;
+local GetSpellInfo = addon.TransitionAPI.GetSpellInfo;
 local GetSpellBaseCooldown = GetSpellBaseCooldown;
 
 

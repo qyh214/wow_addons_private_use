@@ -36,11 +36,13 @@ function mod:GetOptions()
 		-- Focusing Iris
 		{260805, "ICON"}, -- Focusing Iris
 		260773, -- Dire Ritual
-	}, {
+	},{
 		[260741] = -17738, -- Sister Briar
 		[260703] = -17739, -- Sister Malady
 		[260907] = -17740, -- Sister Solena
 		[260805] = 260805, -- Focusing Iris
+	},{
+		[260703] = CL.mark, -- Unstable Runic Mark (Mark)
 	}
 end
 
@@ -92,7 +94,7 @@ do
 	end
 
 	function mod:JaggedNettles(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 14.2)
 	end
 end
@@ -104,14 +106,14 @@ end
 -- Sister Malady (Stage 2)
 
 function mod:UnstableRunicMark(args)
-	self:Message(args.spellId, "orange")
+	self:Message(args.spellId, "orange", CL.marks)
 	self:PlaySound(args.spellId, "alarm")
-	self:CDBar(args.spellId, 12.1)
+	self:CDBar(args.spellId, 12.1, CL.marks)
 end
 
 function mod:UnstableRunicMarkApplied(args)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, CL.mark, nil, "Mark")
 		self:SayCountdown(args.spellId, 6)
 	end
 end
@@ -137,7 +139,7 @@ function mod:AuraOfDread(args)
 end
 
 function mod:SisterMaladyDeath(args)
-	self:StopBar(260703) -- Unstable Runic Mark
+	self:StopBar(CL.marks) -- Unstable Runic Mark
 end
 
 -- Sister Solena (Stage 1)
@@ -158,7 +160,7 @@ function mod:SoulManipulationRemovedFromBoss(args)
 	isMCApplied = false
 	if bossWithIris then -- safety-check for occasional disconnects
 		-- Move the icon away from the player and back to the boss
-		self:PrimaryIcon(260805, self:GetBossId(bossWithIris)) -- Focusing Iris
+		self:PrimaryIcon(260805, self:UnitTokenFromGUID(bossWithIris)) -- Focusing Iris
 	end
 end
 
@@ -173,12 +175,12 @@ function mod:ClaimTheIris(args)
 	self:Message(260805, "cyan", CL.other:format(self:SpellName(260805), args.sourceName)) -- Focusing Iris
 	self:PlaySound(260805, "long") -- Focusing Iris
 	if not isMCApplied then
-		self:PrimaryIcon(260805, self:GetBossId(bossWithIris)) -- Focusing Iris
+		self:PrimaryIcon(260805, self:UnitTokenFromGUID(bossWithIris)) -- Focusing Iris
 	end
 	-- stop and start boss ability timers
 	local mobId = self:MobId(bossWithIris)
 	if mobId == 131825 then -- Sister Briar
-		self:StopBar(260703) -- Unstable Runic Mark
+		self:StopBar(CL.marks) -- Unstable Runic Mark
 		self:StopBar(260907) -- Soul Manipulation
 		self:SetStage(3)
 		self:CDBar(260741, 7.3) -- Jagged Nettles
@@ -186,10 +188,10 @@ function mod:ClaimTheIris(args)
 		self:StopBar(260741) -- Jagged Nettles
 		self:StopBar(260907) -- Soul Manipulation
 		self:SetStage(2)
-		self:CDBar(260703, 7.7) -- Unstable Runic Mark
+		self:CDBar(260703, 7.7, CL.marks) -- Unstable Runic Mark
 	else -- 131824, Sister Solena
 		self:StopBar(260741) -- Jagged Nettles
-		self:StopBar(260703) -- Unstable Runic Mark
+		self:StopBar(CL.marks) -- Unstable Runic Mark
 		self:SetStage(1)
 		if not self:Solo() then
 			-- won't be cast if solo
@@ -197,7 +199,7 @@ function mod:ClaimTheIris(args)
 		end
 	end
 	-- start Dire Ritual timer based on the energy of the boss claiming the Focusing Iris
-	local unit = self:GetBossId(bossWithIris)
+	local unit = self:UnitTokenFromGUID(bossWithIris)
 	local timeUntilDireRitual = 75 * (1 - UnitPower(unit) / UnitPowerMax(unit))
 	if timeUntilDireRitual > 0 then
 		-- add 1.5s Claim the Iris cast time

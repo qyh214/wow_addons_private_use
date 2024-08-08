@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,18 +22,9 @@ local PGF = select(2, ...)
 local L = PGF.L
 local C = PGF.C
 
-local LOCKOUT_D = {
-    [1]  = C.NORMAL, -- normal dungeon
-    [2]  = C.HEROIC, -- heroic dungeon
-    [23] = C.MYTHIC, -- mythic dungeon
-    [14] = C.NORMAL, -- normal raid
-    [15] = C.HEROIC, -- heroic raid
-    [16] = C.MYTHIC, -- mythic raid
-}
-
 function PGF.IsMatchingInstance(lockoutName, activityName, lockoutDifficulty, activityDifficulty)
     -- no match if difficulty does not match
-    if not (LOCKOUT_D[lockoutDifficulty] == activityDifficulty) then return false end
+    if not (C.DIFFICULTY_MAP[lockoutDifficulty] == activityDifficulty) then return false end
     return PGF.IsMostLikelySameInstance(lockoutName, activityName)
 end
 
@@ -62,7 +53,9 @@ function PGF.GetLockoutInfo(activity, resultID)
             return numGroupDefeated, numPlayerDefeated, maxBosses, matching, groupAhead, groupBehind
         end
     end
-    return numGroupDefeated, 0, 0, 0, 0, 0
+    -- if there is no matching player lockout, groupAhead should be equal numGroupDefeated (#268)
+    -- return numGroupDefeated, numPlayerDefeated, maxBosses, matching, groupAhead, groupBehind
+    return numGroupDefeated, 0, 0, 0, numGroupDefeated, 0
 end
 
 function PGF.GetMatchingBossInfo(groupDefeatedBossNames, playerDefeatedBossesNames)

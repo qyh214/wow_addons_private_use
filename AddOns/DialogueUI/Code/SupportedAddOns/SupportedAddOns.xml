@@ -1,0 +1,8 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="SupportedAddOns.lua"/>
+
+    <Script file="Wholly.lua"/>
+    <Script file="Roleplay.lua"/>
+    <Script file="Pawn.lua"/>
+    <Script file="InteractiveWormholes.lua"/>
+</Ui>

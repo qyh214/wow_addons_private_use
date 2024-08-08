@@ -8,6 +8,10 @@ mod:RegisterEnableMob(201668) -- Neltharion
 mod:SetEncounterID(2684)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
+mod:SetPrivateAuraSounds({
+	410966, -- Volcanic Heart
+	{407182, option = 407221}, -- Rushing Darkness
+})
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -134,8 +138,6 @@ function mod:OnEngage()
 	end
 
 	self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1")
-	self:SetPrivateAuraSound(410953, 410966) -- Volcanic Heart
-	self:SetPrivateAuraSound(407221, 407182) -- Rushing Darkness
 end
 
 --------------------------------------------------------------------------------
@@ -144,10 +146,13 @@ end
 
 -- General
 function mod:UNIT_HEALTH(event, unit)
-	if self:GetHealth(unit) < 63 then -- P2 at 60%
+	local hp = self:GetHealth(unit)
+	if hp < 63 then -- P2 at 60%
 		self:UnregisterUnitEvent(event, unit)
-		self:Message("stages", "cyan", CL.soon:format(CL.stage:format(2)), false)
-		self:PlaySound("stages", "info")
+		if hp > 60 then
+			self:Message("stages", "cyan", CL.soon:format(CL.stage:format(2)), false)
+			self:PlaySound("stages", "info")
+		end
 	end
 end
 
@@ -225,7 +230,7 @@ do
 		markedPlayer = player
 		self:TargetMessage("wall_breaker", "yellow", player, L.wall_breaker_message, 407221)
 		if self:Me(guid) then
-			self:Say("wall_breaker", CL.rticon:format(L.wall_breaker_message, 6))
+			self:Say("wall_breaker", CL.rticon:format(L.wall_breaker_message, 6), nil, "Wall Breaker ({rt%6})")
 			self:SayCountdown("wall_breaker", 5)
 		end
 		if self:CheckOption("wall_breaker", "ICON") then
@@ -333,7 +338,7 @@ do
 		playerList[#playerList+1] = args.destName
 		if self:Me(args.destGUID) then
 			self:PlaySound(401010, "warning")
-			self:Say(401010)
+			self:Say(401010, nil, nil, "Corruption")
 		end
 		self:TargetsMessage(401010, "yellow", playerList, nil, msg)
 	end
@@ -417,7 +422,7 @@ function mod:SunderReality(args)
 	self:PlaySound(args.spellId, "alert")
 	sunderRealityCount = sunderRealityCount + 1
 	if sunderRealityCount < (self:Easy() and 8 or 5) then -- 4 sets heroic/mythic, 7 sets normal/lfr
-		self:CDBar(args.spellId, 29.2, CL.count:format(CL.portals, sunderRealityCount))
+		self:CDBar(args.spellId, 35.2, CL.count:format(CL.portals, sunderRealityCount))
 	end
 end
 
@@ -449,11 +454,11 @@ do
 		self:StopBar(msg)
 		self:Message(args.spellId, "red", CL.casting:format(msg))
 		self:PlaySound(args.spellId, "warning")
-		self:CastBar(args.spellId, 6, L.ebon_destruction)
+		self:CastBar(args.spellId, 12, L.ebon_destruction)
 		ebonDestructionCount = ebonDestructionCount + 1
 		-- 8+ are spam casted (7.3 cd)
 		if ebonDestructionCount < 8 then
-			self:CDBar(args.spellId, 30, CL.count:format(L.ebon_destruction, ebonDestructionCount))
+			self:CDBar(args.spellId, 36.5, CL.count:format(L.ebon_destruction, ebonDestructionCount))
 		end
 		castingEbonDestruction = true
 	end

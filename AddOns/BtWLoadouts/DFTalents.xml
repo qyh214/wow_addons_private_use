@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="DFTalents.lua"/>
 
-	<Frame name="BtWLoadoutsTalentSelectionChoiceFrameTemplate" mixin="BtWLoadoutsDFTalentSelectionChoiceFrameMixin" inherits="ResizeLayoutFrame" virtual="true">
+	<Frame name="BtWLoadoutsDFTalentSelectionChoiceFrameTemplate" mixin="BtWLoadoutsDFTalentSelectionChoiceFrameMixin" inherits="ResizeLayoutFrame" virtual="true">
 		<Scripts>
 			<OnLoad method="OnLoad"/>
 			<OnShow method="OnShow"/>
@@ -11,7 +11,7 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="BtWLoadoutsTalentFrameGateTemplate" mixin="TalentFrameGateMixin" clipChildren="true" virtual="true">
+	<Frame name="BtWLoadoutsDFTalentFrameGateTemplate" mixin="TalentFrameGateMixin" clipChildren="true" virtual="true">
 		<Size x="50" y="30"/>
 		<Layers>
 			<Layer level="OVERLAY">
@@ -113,7 +113,7 @@
 					</OnMouseUp>
 				</Scripts>
 			</DropDownToggleButton>
-			<Frame parentKey="SelectionChoiceFrame" inherits="BtWLoadoutsTalentSelectionChoiceFrameTemplate" enableMouse="true" frameLevel="2000"/>
+			<Frame parentKey="SelectionChoiceFrame" inherits="BtWLoadoutsDFTalentSelectionChoiceFrameTemplate" enableMouse="true" frameLevel="2000" fixedFrameLevel="true"/>
 			<ScrollFrame parentKey="Scroll" clipChildren="true" inherits="UIPanelScrollFrameCodeTemplate">
 				<Anchors>
                     <Anchor point="TOPLEFT" x="0" y="-34" />
@@ -142,6 +142,42 @@
 								<Anchors>
 									<Anchor point="TOPLEFT" x="0" y="0"/>
 								</Anchors>
+							</Frame>
+							<Frame parentKey="LeftSideArea" hidden="true">
+								<Size x="1" y="1"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="0"/>
+								</Anchors>
+								<Layers>
+									<Layer level="BACKGROUND">
+										<Texture setAllPoints="true">
+											<Color r="0.65" g="0.80" b="1" a="0.3"/>
+										</Texture>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnLoad>
+										self:GetParent():GetParent():GetParent().LeftSideArea = self;
+									</OnLoad>
+								</Scripts>
+							</Frame>
+							<Frame parentKey="RightSideArea" hidden="true">
+								<Size x="1" y="1"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="0"/>
+								</Anchors>
+								<Layers>
+									<Layer level="BACKGROUND">
+										<Texture setAllPoints="true">
+											<Color r="0.1" g="0.80" b="0.65" a="0.3"/>
+										</Texture>
+									</Layer>
+								</Layers>
+								<Scripts>
+									<OnLoad>
+										self:GetParent():GetParent():GetParent().RightSideArea = self;
+									</OnLoad>
+								</Scripts>
 							</Frame>
 							<Button text="BTWLOADOUTS_SPEC_TREE" parentKey="SpecTreeButton">
 								<Size x="100" y="22"/>

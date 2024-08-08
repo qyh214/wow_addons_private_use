@@ -1,4 +1,3 @@
-
 --------------------------------------------------------------------------------
 -- Module declaration
 --
@@ -44,20 +43,16 @@ end
 do
 	local function printTarget(self, player, guid)
 		if self:Me(guid) then
-			self:Say(-5293, 100) -- 100 = Charge
+			self:Say(-5293, CL.charge, nil, "Charge")
 		end
-		self:TargetMessageOld(-5293, player, "orange", nil, 100, -5293)
+		self:TargetMessageOld(-5293, player, "orange", nil, CL.charge, -5293)
 	end
 
 	local prev
 	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unit, castId, spellId)
 		if spellId == 36038 and castId ~= prev then -- Charge Targeting
 			prev = castId
-			if self:Classic() then
-				self:GetUnitTarget(printTarget, 0.4, self:UnitGUID(unit))
-			else
-				self:GetBossTarget(printTarget, 0.4, self:UnitGUID(unit))
-			end
+			self:GetUnitTarget(printTarget, 0.4, self:UnitGUID(unit))
 		end
 	end
 end

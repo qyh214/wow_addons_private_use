@@ -8,11 +8,12 @@ BigWigs:AddColors("Witherbark", {
 })
 
 BigWigs:AddColors("Ancient Protectors", {
-	[168082] = "red",
+	[168082] = {"red","yellow"},
 	[427459] = "yellow",
 	[427498] = "cyan",
 	[427509] = "cyan",
 	[427510] = "purple",
+	[427513] = "blue",
 })
 
 BigWigs:AddColors("Xeri'tac", {

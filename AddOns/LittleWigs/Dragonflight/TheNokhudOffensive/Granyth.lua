@@ -21,7 +21,10 @@ end
 -- Locals
 --
 
+local reloadingLanceGUID = nil
+local shardsOfStoneCount = 1
 local shardsOfStoneRemaining = 2
+local eruptionCount = 1
 
 --------------------------------------------------------------------------------
 -- Initialization
@@ -65,13 +68,16 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
+	reloadingLanceGUID = nil
+	shardsOfStoneCount = 1
 	shardsOfStoneRemaining = 2
-	self:CDBar(388283, 28.8) -- Eruption
-	self:CDBar(388817, 10.6) -- Shards of Stone
-	self:CDBar(385916, 15.5) -- Tectonic Stomp
+	eruptionCount = 1
 	if self:Mythic() then
 		self:CDBar(386320, 5.1) -- Summon Saboteur
 	end
+	self:CDBar(388817, 10.6, CL.count:format(self:SpellName(388817), shardsOfStoneCount)) -- Shards of Stone
+	self:CDBar(385916, 15.5) -- Tectonic Stomp
+	self:CDBar(388283, 28.8, CL.count:format(self:SpellName(388283), eruptionCount)) -- Eruption
 end
 
 --------------------------------------------------------------------------------
@@ -81,25 +87,26 @@ end
 -- Granyth
 
 function mod:Eruption(args)
-	self:StopBar(388817) -- Shards of Stone
-	self:StopBar(args.spellId)
-	self:Message(args.spellId, "red")
+	self:StopBar(CL.count:format(self:SpellName(388817), shardsOfStoneCount)) -- Shards of Stone
+	self:StopBar(CL.count:format(args.spellName, eruptionCount))
+	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "long")
 	self:CastBar(args.spellId, 6)
 end
 
 function mod:ShardsOfStone(args)
-	shardsOfStoneRemaining = shardsOfStoneRemaining - 1
-	self:Message(args.spellId, "yellow")
+	self:StopBar(CL.count:format(args.spellName, shardsOfStoneCount))
+	self:Message(args.spellId, "yellow", CL.count:format(args.spellName, shardsOfStoneCount))
 	self:PlaySound(args.spellId, "alert")
+	shardsOfStoneCount = shardsOfStoneCount + 1
+	shardsOfStoneRemaining = shardsOfStoneRemaining - 1
 	if shardsOfStoneRemaining > 0 then
-		self:CDBar(args.spellId, 13.3)
-	else
-		self:StopBar(args.spellId)
+		self:CDBar(args.spellId, 13.3, CL.count:format(args.spellName, shardsOfStoneCount))
 	end
 end
 
 function mod:TectonicStomp(args)
+	self:StopBar(args.spellId)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
 end
@@ -108,6 +115,7 @@ do
 	local saboteurGUID = nil
 
 	function mod:SummonSaboteur(args)
+		self:StopBar(386320)
 		local direction -- 386320 = W Lance, 386747 = NE Lance, 386748 = SE Lance
 		if args.spellId == 386320 then
 			direction = CL.west
@@ -138,25 +146,29 @@ end
 -- Dragonkiller Lance
 
 function mod:Reload(args)
-	self:Bar(386530, 25, args.spellName) -- Dragonkiller Lance
+	reloadingLanceGUID = args.sourceGUID
+	self:Bar(386530, 25, args.spellName)
 end
 
 function mod:ReloadSuccess(args)
-	self:Message(386530, "green", L.lance_ready) -- Dragonkiller Lance
-	self:PlaySound(386530, "info") -- Dragonkiller Lance
+	reloadingLanceGUID = nil
+	self:Message(386530, "green", L.lance_ready)
+	self:PlaySound(386530, "info")
 end
 
 function mod:Lanced(args)
 	shardsOfStoneRemaining = 2
-	self:Message(386530, "green", args.spellName) -- Dragonkiller Lance
-	self:PlaySound(386530, "info") -- Dragonkiller Lance
+	self:Message(386530, "green", args.spellName)
+	self:PlaySound(386530, "info")
 	self:StopBar(CL.cast:format(self:SpellName(388283))) -- Eruption
 	if self:Mythic() then
 		self:CDBar(386320, 5.3) -- Summon Saboteur
 	end
-	self:CDBar(388817, 15.4) -- Shards of Stone
+	self:CDBar(388817, 15.4, CL.count:format(self:SpellName(388817), shardsOfStoneCount)) -- Shards of Stone
 	self:CDBar(385916, 20.1) -- Tectonic Stomp
-	self:CDBar(388283, 33.1) -- Eruption 5s stun, 27s energy gain, ~1s delay
+	self:StopBar(CL.count:format(self:SpellName(388283), eruptionCount)) -- Eruption
+	eruptionCount = eruptionCount + 1
+	self:CDBar(388283, 33.1, CL.count:format(self:SpellName(388283), eruptionCount)) -- Eruption: 5s stun, 27s energy gain, ~1s delay
 end
 
 -- Nokhud Saboteur
@@ -167,5 +179,8 @@ function mod:Dismantle(args)
 end
 
 function mod:DismantleApplied(args)
-	self:StopBar(386921) -- Reload
+	-- only stop the Reload bar if the reloading lance is the one being Dismantled
+	if reloadingLanceGUID == args.destGUID then
+		self:StopBar(386921) -- Reload
+	end
 end

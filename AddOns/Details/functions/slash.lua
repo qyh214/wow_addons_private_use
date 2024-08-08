@@ -11,6 +11,7 @@ local UIParent = UIParent
 local UnitGUID = UnitGUID
 local tonumber= tonumber
 local LoggingCombat = LoggingCombat
+local GetSpellInfo = Details222.GetSpellInfo
 
 SLASH_PLAYEDCLASS1 = "/playedclass"
 function SlashCmdList.PLAYEDCLASS(msg, editbox)
@@ -121,6 +122,17 @@ function SlashCmdList.DETAILS (msg, editbox)
 		end
 
 		dumpt(returnTable)
+
+	elseif (command == "mythic+") then
+		local statName = "mythicdungeoncompletedDF2"
+		local mythicDungeonRuns = Details222.PlayerStats:GetStat(statName)
+
+		dumpt(mythicDungeonRuns)
+
+		for mapChallengeModeID, mapChallengeModeData in pairs(mythicDungeonRuns) do
+			local mapName = C_ChallengeMode.GetMapUIInfo(mapChallengeModeID)
+			print(mapName, mapChallengeModeData.level, mapChallengeModeData.completed, mapChallengeModeData.time)
+		end
 
 	elseif (command == "mergepetspells") then --deprecated
 		Details.merge_pet_abilities = not Details.merge_pet_abilities
@@ -372,28 +384,10 @@ function SlashCmdList.DETAILS (msg, editbox)
 		instance2.baseframe:SetPoint("bottomright", RightChatToggleButton, "topright", -1, 1)
 
 	elseif (msg == "pets") then
-		local petFrame = Details.PetFrame
-		if (not petFrame) then
-			petFrame = Details:CreateListPanel()
-			Details.PetFrame = petFrame
-		end
+		Details.DebugPets()
 
-		local i = 1
-		for k, v in pairs(Details.tabela_pets.pets) do
-			petFrame:add( k .. ": " ..  v[1] .. " | " .. v[2] .. " | " .. v[3] .. " | " .. v[6], i)
-			i = i + 1
-		end
-
-		petFrame:Show()
-
-	elseif (msg == "savepets") then
-		Details.tabela_vigente.saved_pets = {}
-
-		for k, v in pairs(Details.tabela_pets.pets) do
-			Details.tabela_vigente.saved_pets[k] = {v[1], v[2], v[3]}
-		end
-
-		Details:Msg("pet table has been saved on current combat.")
+	elseif (msg == "mypets") then
+		Details.DebugMyPets()
 
 	elseif (msg == "model") then
 		local frame = CreateFrame("PlayerModel");
@@ -576,11 +570,6 @@ function SlashCmdList.DETAILS (msg, editbox)
 				end
 			end
 		end
-
-	elseif (msg == "teste") then
-
-		local a, b = Details:GetEncounterEnd (1098, 3)
-		print(a, unpack(b))
 
 	elseif (msg == "yesno") then
 		--_detalhes:Show()
@@ -770,6 +759,57 @@ function SlashCmdList.DETAILS (msg, editbox)
 			end
 		end
 
+	elseif (command == "spellid") then
+		if (Details222.FocusedSpellId) then
+			local npcId = Details222.FocusedSpellId
+			if (not Details.id_frame) then
+				local backdrop = {
+					bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+					edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
+					tile = true, edgeSize = 1, tileSize = 5,
+				}
+
+				Details.id_frame = CreateFrame("Frame", "DetailsID", UIParent, "BackdropTemplate")
+				Details.id_frame:SetHeight(14)
+				Details.id_frame:SetWidth(120)
+				Details.id_frame:SetPoint("center", UIParent, "center")
+				Details.id_frame:SetBackdrop(backdrop)
+
+				table.insert(UISpecialFrames, "DetailsID")
+
+				Details.id_frame.texto = CreateFrame("editbox", nil, Details.id_frame, "BackdropTemplate")
+				Details.id_frame.texto:SetPoint("topleft", Details.id_frame, "topleft")
+				Details.id_frame.texto:SetAutoFocus(false)
+				Details.id_frame.texto:SetFontObject(GameFontHighlightSmall)
+				Details.id_frame.texto:SetHeight(14)
+				Details.id_frame.texto:SetWidth(120)
+				Details.id_frame.texto:SetJustifyH("CENTER")
+				Details.id_frame.texto:EnableMouse(true)
+				Details.id_frame.texto:SetBackdropColor(0, 0, 0, 0.5)
+				Details.id_frame.texto:SetBackdropBorderColor(0.3, 0.3, 0.30, 0.80)
+				Details.id_frame.texto:SetText("")
+				Details.id_frame.texto.perdeu_foco = nil
+
+				Details.id_frame.texto:SetScript("OnEnterPressed", function()
+					Details.id_frame.texto:ClearFocus()
+					Details.id_frame:Hide()
+				end)
+
+				Details.id_frame.texto:SetScript("OnEscapePressed", function()
+					Details.id_frame.texto:ClearFocus()
+					Details.id_frame:Hide()
+				end)
+
+			end
+
+			C_Timer.After(0.1, function()
+				Details.id_frame:Show()
+				Details.id_frame.texto:SetFocus()
+				Details.id_frame.texto:SetText("" .. npcId)
+				Details.id_frame.texto:HighlightText()
+			end)
+		end
+
 	elseif (command == "profile") then
 
 		local profile = rest:match("^(%S*)%s*(.-)$")
@@ -895,27 +935,14 @@ function SlashCmdList.DETAILS (msg, editbox)
 			print(Loc["STRING_DETAILS1"] .. "net diagnostic mode has been turned on.")
 		end
 
-	elseif (command == "debug") then
-		if (Details.debug) then
-			Details.debug = false
-			print(Loc ["STRING_DETAILS1"] .. "diagnostic mode has been turned off.")
-			return
-		else
-			Details.debug = true
-			print(Loc ["STRING_DETAILS1"] .. "diagnostic mode has been turned on.")
+	elseif (command == "m+debug") then
+		Details222.Debug.SetMythicPlusDebugState() --passing nothing will toggle the debug state
 
-			if (rest and rest ~= "") then
-				if (rest == "-clear") then
-					_detalhes_global.debug_chr_log = ""
-					print(Loc ["STRING_DETAILS1"] .. "log for characters has been wiped.")
-					return
-				end
-				Details.debug_chr = rest
-				_detalhes_global.debug_chr_log = _detalhes_global.debug_chr_log or ""
-				print(Loc ["STRING_DETAILS1"] .. "diagnostic for character " .. rest .. " turned on.")
-				return
-			end
-		end
+	elseif (command == "m+debugloot") then
+		Details222.Debug.SetMythicPlusLootDebugState() --passing nothing will toggle the debug state
+
+	elseif (command == "debug") then
+		Details.ShowDebugOptionsPanel()
 
 	--debug combat log
 	elseif (msg == "combatlog") then
@@ -1042,33 +1069,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 			1 --school =
 		)
 
-	elseif (msg == "ejloot") then
-		DetailsFramework.EncounterJournal.EJ_SelectInstance (669) -- hellfire citadel
-		DetailsFramework.EncounterJournal.EJ_SetDifficulty (16)
-
-		local r = {}
-		local total = 0
-
-		for i = 1, 100 do
-			local name, description, encounterID, rootSectionID, link = DetailsFramework.EncounterJournal.EJ_GetEncounterInfoByIndex (i, 669)
-			if (name) then
-				DetailsFramework.EncounterJournal.EJ_SelectEncounter (encounterID)
-				print(name, encounterID, DetailsFramework.EncounterJournal.EJ_GetNumLoot())
-
-				for o = 1, DetailsFramework.EncounterJournal.EJ_GetNumLoot() do
-					local name, icon, slot, armorType, itemID, link, encounterID = DetailsFramework.EncounterJournal.EJ_GetLootInfoByIndex (o)
-					r[slot] = r[slot] or {}
-					table.insert(r[slot], {itemID, encounterID})
-					total = total + 1
-				end
-			end
-		end
-
-		print("total loot", total)
-		_detalhes_global.ALOOT  = r
-
 	elseif (msg == "ilvl" or msg == "itemlevel" or msg == "ilevel") then
-
 		local item_amount = 16
 		local item_level = 0
 		local failed = 0
@@ -1285,7 +1286,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 		end
 
 		--create a new combat to be the overall for the mythic run
-		Details:EntrarEmCombate()
+		Details222.StartCombat()
 
 		--get the current combat just created and the table with all past segments
 		local newCombat = Details:GetCurrentCombat()
@@ -1317,26 +1318,11 @@ function SlashCmdList.DETAILS (msg, editbox)
 		newCombat.is_trash = false
 		Details:Msg("done merging, segments: " .. segmentsAdded .. ", total time: " .. DetailsFramework:IntegerToTimer(totalTime))
 
-		--[[ --mythic+ debug
-		--tag the segment as mythic overall segment
-		newCombat.is_mythic_dungeon = {
-			MapID = _detalhes.MythicPlus.Dungeon,
-			StartedAt = _detalhes.MythicPlus.StartedAt, --the start of the run
-			EndedAt = _detalhes.MythicPlus.EndedAt, --the end of the run
-			SegmentID = "overall", --segment number within the dungeon
-			--EncounterID = encounterID,
-			--EncounterName = encounterName,
-			RunID = _detalhes.MythicPlus.RunID,
-			OverallSegment = true,
-		}
-		--]]
-
 		--set some data
-		newCombat:SetStartTime (GetTime() - totalTime)
-		newCombat:SetEndTime (GetTime())
+		newCombat:SetStartTime(GetTime() - totalTime)
+		newCombat:SetEndTime(GetTime())
 
-		newCombat.data_inicio = startDate
-		newCombat.data_fim = endDate
+		newCombat:SetDate(startDate, endDate)
 
 		--immediatly finishes the segment just started
 		Details:SairDoCombate()
@@ -1453,7 +1439,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 			local tokenId = line:match("%s%s(.*)"):match("^(.-),")
 
 			if (tokenId == "ENCOUNTER_START") then
-				Details:StartCombat()
+				Details222.StartCombat()
 			end
 
 			if (tokenId == "ENCOUNTER_END") then
@@ -1521,14 +1507,6 @@ function SlashCmdList.DETAILS (msg, editbox)
 		print("profile name:", Details.always_use_profile_name)
 		print("version:", Details.build_counter >= Details.alpha_build_counter and Details.build_counter or Details.alpha_build_counter)
 
-	elseif (msg == "record") then
-
-
-			Details.ScheduleLoadStorage()
-			Details.TellDamageRecord = C_Timer.NewTimer(0.6, Details.PrintEncounterRecord)
-			Details.TellDamageRecord.Boss = 2032
-			Details.TellDamageRecord.Diff = 16
-
 	elseif (msg == "recordtest") then
 
 		local f = DetailsRecordFrameAnimation
@@ -1558,9 +1536,15 @@ function SlashCmdList.DETAILS (msg, editbox)
 	elseif (msg == "generateracialslist") then
 		Details.GenerateRacialSpellList()
 
-	elseif (msg == "survey") then
+	elseif (msg == "bug") then
+		dumpt(DETAILS_FAILED_ACTOR or {"No bug to report here."})
+
+	elseif (msg == "spellcat") then
 		Details.Survey.OpenSurveyPanel()
 
+	elseif (msg == "pstate") then
+		local sEngineState = Details222.Parser.GetState()
+		Details:Msg("Parser State:", sEngineState)
 	else
 
 		--if (_detalhes.opened_windows < 1) then
@@ -1964,9 +1948,11 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 		local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 		if (openRaidLib) then
 			if (not DetailsKeystoneInfoFrame) then
+				---@type detailsframework
+				local detailsFramework = DetailsFramework
 
 				local CONST_WINDOW_WIDTH = 614
-				local CONST_WINDOW_HEIGHT = 700
+				local CONST_WINDOW_HEIGHT = 720
 				local CONST_SCROLL_LINE_HEIGHT = 20
 				local CONST_SCROLL_LINE_AMOUNT = 30
 
@@ -1979,7 +1965,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 				local backdrop_color_inguild = {.5, .8, .5, 0.2}
 				local backdrop_color_on_enter_inguild = {.5, 1, .5, 0.4}
 
-				local f = DetailsFramework:CreateSimplePanel(UIParent, CONST_WINDOW_WIDTH, CONST_WINDOW_HEIGHT, "M+ Keystones (/key)", "DetailsKeystoneInfoFrame")
+				local f = detailsFramework:CreateSimplePanel(UIParent, CONST_WINDOW_WIDTH, CONST_WINDOW_HEIGHT, "M+ Keystones (/key)", "DetailsKeystoneInfoFrame")
 				f:SetPoint("center", UIParent, "center", 0, 0)
 
 				f:SetScript("OnMouseDown", nil) --disable framework native moving scripts
@@ -1990,15 +1976,46 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 				LibWindow.MakeDraggable(f)
 				LibWindow.RestorePosition(f)
 
-				local scaleBar = DetailsFramework:CreateScaleBar(f, Details.keystone_frame)
+				f:SetScript("OnEvent", function(self, event, ...)
+					if (f:IsShown()) then
+						if (event == "GUILD_ROSTER_UPDATE") then
+							self:RefreshData()
+						end
+					end
+				end)
+
+				local scaleBar = detailsFramework:CreateScaleBar(f, Details.keystone_frame)
 				f:SetScale(Details.keystone_frame.scale)
 
-				local statusBar = DetailsFramework:CreateStatusBar(f)
+				local statusBar = detailsFramework:CreateStatusBar(f)
 				statusBar.text = statusBar:CreateFontString(nil, "overlay", "GameFontNormal")
 				statusBar.text:SetPoint("left", statusBar, "left", 5, 0)
-				statusBar.text:SetText("By Terciob | From Details! Damage Meter|Built with Details! Framework | Data from Open Raid Library")
-				DetailsFramework:SetFontSize(statusBar.text, 11)
-				DetailsFramework:SetFontColor(statusBar.text, "gray")
+				statusBar.text:SetText("By Terciob | From Details! Damage Meter")
+				detailsFramework:SetFontSize(statusBar.text, 12)
+				detailsFramework:SetFontColor(statusBar.text, "gray")
+
+				local requestFromGuildButton = detailsFramework:CreateButton(f, function()
+					local guildName = GetGuildInfo("player")
+					if (guildName) then
+						f:RegisterEvent("GUILD_ROSTER_UPDATE")
+
+						C_Timer.NewTicker(1, function()
+							f:RefreshData()
+						end, 30)
+
+						C_Timer.After(30, function()
+							f:UnregisterEvent("GUILD_ROSTER_UPDATE")
+						end)
+						C_GuildInfo.GuildRoster()
+
+						openRaidLib.RequestKeystoneDataFromGuild()
+					end
+				end, 100, 22, "Request from Guild")
+				requestFromGuildButton:SetPoint("bottomleft", statusBar, "topleft", 2, 2)
+				requestFromGuildButton:SetTemplate(detailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE"))
+				requestFromGuildButton:SetIcon("UI-RefreshButton", 20, 20, "overlay", {0, 1, 0, 1}, "lawngreen")
+				requestFromGuildButton:SetFrameLevel(f:GetFrameLevel()+5)
+				f.RequestFromGuildButton = requestFromGuildButton
 
 				--header
 				local headerTable = {
@@ -2026,8 +2043,8 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					header_click_callback = headerOnClickCallback,
 				}
 
-				f.Header = DetailsFramework:CreateHeader(f, headerTable, headerOptions, "DetailsKeystoneInfoFrameHeader")
-				f.Header:SetPoint("topleft", f, "topleft", 5, -25)
+				f.Header = detailsFramework:CreateHeader(f, headerTable, headerOptions, "DetailsKeystoneInfoFrameHeader")
+				f.Header:SetPoint("topleft", f, "topleft", 3, -25)
 
 				--scroll
 				local refreshScrollLines = function(self, data, offset, totalLines)
@@ -2042,6 +2059,10 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local line = self:GetLine(i)
 
 							local unitName, level, mapID, challengeMapID, classID, rating, mythicPlusMapID, classIconTexture, iconTexCoords, mapName, inMyParty, isOnline, isGuildMember = unpack(unitTable)
+
+							if (mapName == "") then
+								mapName = "user need update details!"
+							end
 
 							local rioProfile
 							if (RaiderIO) then
@@ -2064,13 +2085,13 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							line.icon:SetTexCoord(L+0.02, R-0.02, T+0.02, B-0.02)
 
 							--remove the realm name from the player name (if any)
-							local unitNameNoRealm = DetailsFramework:RemoveRealmName(unitName)
+							local unitNameNoRealm = detailsFramework:RemoveRealmName(unitName)
 							line.playerNameText.text = unitNameNoRealm
 							line.keystoneLevelText.text = level
 							line.dungeonNameText.text = mapName
-							DetailsFramework:TruncateText(line.dungeonNameText, 240)
+							detailsFramework:TruncateText(line.dungeonNameText, 240)
 							line.classicDungeonNameText.text = "" --mapNameChallenge
-							DetailsFramework:TruncateText(line.classicDungeonNameText, 120)
+							detailsFramework:TruncateText(line.classicDungeonNameText, 120)
 							line.inMyParty = inMyParty > 0
 							line.inMyGuild = isGuildMember
 
@@ -2114,8 +2135,8 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					end
 				end
 
-				local scrollFrame = DetailsFramework:CreateScrollBox(f, "$parentScroll", refreshScrollLines, {}, CONST_WINDOW_WIDTH-10, CONST_WINDOW_HEIGHT-70, CONST_SCROLL_LINE_AMOUNT, CONST_SCROLL_LINE_HEIGHT)
-				DetailsFramework:ReskinSlider(scrollFrame)
+				local scrollFrame = detailsFramework:CreateScrollBox(f, "$parentScroll", refreshScrollLines, {}, CONST_WINDOW_WIDTH-10, CONST_WINDOW_HEIGHT-90, CONST_SCROLL_LINE_AMOUNT, CONST_SCROLL_LINE_HEIGHT)
+				detailsFramework:ReskinSlider(scrollFrame)
 				scrollFrame:SetPoint("topleft", f.Header, "bottomleft", -1, -1)
 				scrollFrame:SetPoint("topright", f.Header, "bottomright", 0, -1)
 
@@ -2146,7 +2167,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					line:SetBackdrop({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
 					line:SetBackdropColor(unpack(backdrop_color))
 
-					DetailsFramework:Mixin(line, DetailsFramework.HeaderFunctions)
+					detailsFramework:Mixin(line, detailsFramework.HeaderFunctions)
 
 					line:SetScript("OnEnter", lineOnEnter)
 					line:SetScript("OnLeave", lineOnLeave)
@@ -2156,19 +2177,19 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					icon:SetSize(CONST_SCROLL_LINE_HEIGHT - 2, CONST_SCROLL_LINE_HEIGHT - 2)
 
 					--player name
-					local playerNameText = DetailsFramework:CreateLabel(line)
+					local playerNameText = detailsFramework:CreateLabel(line, "")
 
 					--keystone level
-					local keystoneLevelText = DetailsFramework:CreateLabel(line)
+					local keystoneLevelText = detailsFramework:CreateLabel(line, "")
 
 					--dungeon name
-					local dungeonNameText = DetailsFramework:CreateLabel(line)
+					local dungeonNameText = detailsFramework:CreateLabel(line, "")
 
 					--classic dungeon name
-					local classicDungeonNameText = DetailsFramework:CreateLabel(line)
+					local classicDungeonNameText = detailsFramework:CreateLabel(line, "")
 
 					--player rating
-					local ratingText = DetailsFramework:CreateLabel(line)
+					local ratingText = detailsFramework:CreateLabel(line, "")
 
 					line.icon = icon
 					line.playerNameText = playerNameText
@@ -2198,8 +2219,29 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					newData.offlineGuildPlayers = {}
 					local keystoneData = openRaidLib.GetAllKeystonesInfo()
 
+					--[=[
+						["Exudragão"] =  {
+							["mapID"] = 2526,
+							["challengeMapID"] = 402,
+							["mythicPlusMapID"] = 0,
+							["rating"] = 215,
+							["classID"] = 13,
+							["level"] = 6,
+						},
+					--]=]
+
 					local guildUsers = {}
 					local totalMembers, onlineMembers, onlineAndMobileMembers = GetNumGuildMembers()
+
+					--[=[
+					local unitsInMyGroup = {
+						[Details:GetFullName("player")] = true,
+					}
+					for i = 1, GetNumGroupMembers() do
+						local unitName = Details:GetFullName("party" .. i)
+						unitsInMyGroup[unitName] = true
+					end
+					--]=]
 
 					--create a string to use into the gsub call when removing the realm name from the player name, by default all player names returned from GetGuildRosterInfo() has PlayerName-RealmName format
 					local realmNameGsub = "%-.*"
@@ -2229,7 +2271,15 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local coords = CLASS_ICON_TCOORDS
 							local _, class = GetClassInfo(classId)
 
-							local mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mythicPlusMapID) or ""
+							local mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mythicPlusMapID)
+							if (not mapName) then
+								mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.challengeMapID)
+							end
+							if (not mapName and keystoneInfo.mapID) then
+								mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mapID)
+							end
+
+							mapName = mapName or "map name not found"
 
 							--local mapInfoChallenge = C_Map.GetMapInfo(keystoneInfo.challengeMapID)
 							--local mapNameChallenge = mapInfoChallenge and mapInfoChallenge.name or ""
@@ -2289,18 +2339,23 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					--sort by player class
 					if (columnIndex == 1) then
 						sortByIndex = 5
+
 					--sort by player name
 					elseif (columnIndex == 2) then
 						sortByIndex = 1
+
 					--sort by keystone level
 					elseif (columnIndex == 3) then
 						sortByIndex = 2
+
 					--sort by dungeon name
 					elseif (columnIndex == 4) then
 						sortByIndex = 3
+
 					--sort by classic dungeon name
 					--elseif (columnIndex == 5) then
 					--	sortByIndex = 4
+
 					--sort by mythic+ ranting
 					elseif (columnIndex == 5) then
 						sortByIndex = 6
@@ -2321,7 +2376,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 						end
 					end
 
-					newData.offlineGuildPlayers = DetailsFramework.table.reverse(newData.offlineGuildPlayers)
+					newData.offlineGuildPlayers = detailsFramework.table.reverse(newData.offlineGuildPlayers)
 
 					--put players in the group at the top of the list
 					if (IsInGroup() and not IsInRaid()) then
@@ -2363,11 +2418,18 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 				f:SetScript("OnHide", function()
 					openRaidLib.UnregisterCallback(DetailsKeystoneInfoFrame, "KeystoneUpdate", "OnKeystoneUpdate")
 				end)
-			end
 
-			--call an update on the guild roster
-			if (C_GuildInfo and C_GuildInfo.GuildRoster) then
-				C_GuildInfo.GuildRoster()
+				f:SetScript("OnUpdate", function(self, deltaTime)
+					if (not self.lastUpdate) then
+						self.lastUpdate = 0
+					end
+
+					self.lastUpdate = self.lastUpdate + deltaTime
+					if (self.lastUpdate > 1) then
+						self.lastUpdate = 0
+						self.RefreshData()
+					end
+				end)
 			end
 
 			--show the frame
@@ -2375,15 +2437,24 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 
 			openRaidLib.RegisterCallback(DetailsKeystoneInfoFrame, "KeystoneUpdate", "OnKeystoneUpdate")
 
-			openRaidLib.WipeKeystoneData()
+			local guildName = GetGuildInfo("player")
+			if (guildName) then
+				--call an update on the guild roster
+				if (C_GuildInfo and C_GuildInfo.GuildRoster) then
+					C_GuildInfo.GuildRoster()
+				end
+				DetailsKeystoneInfoFrame.RequestFromGuildButton:Enable()
+			else
+				DetailsKeystoneInfoFrame.RequestFromGuildButton:Disable()
+			end
+
+			--openRaidLib.WipeKeystoneData()
 
 			if (IsInRaid()) then
 				openRaidLib.RequestKeystoneDataFromRaid()
 			elseif (IsInGroup()) then
 				openRaidLib.RequestKeystoneDataFromParty()
 			end
-
-			openRaidLib.RequestKeystoneDataFromGuild()
 
 			DetailsKeystoneInfoFrame.RefreshData()
 		end

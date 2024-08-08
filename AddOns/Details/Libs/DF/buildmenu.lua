@@ -11,6 +11,13 @@ local CreateFrame = CreateFrame
 local PixelUtil = PixelUtil
 local _
 
+---@class df_menu : frame
+---@field RefreshOptions fun()
+---@field widget_list table
+---@field widget_list_by_type table
+---@field widgetids table
+---@field GetWidgetById fun(optionsFrame: df_menu, id: string): table this should return a widget from the widgetids table
+
 ---@class df_menu_table : table
 ---@field text_template table
 ---@field id string an unique string or number to identify the button, from parent.widgetids[id], parent is the first argument of BuildMenu and BuildMenuVolatile
@@ -32,6 +39,7 @@ local _
 ---@field desc string
 ---@field descPhraseId string
 ---@field hooks table
+---@field include_default boolean
 
 ---@class df_menu_toggle : df_menu_table
 ---@field set function
@@ -97,10 +105,26 @@ detailsFramework.OptionsFrameMixin = {
 
 }
 
+local onWidgetSetInUse = function(widget, widgetTable)
+    if (widgetTable.childrenids) then
+        widget.childrenids = widgetTable.childrenids
+    end
+    widget.children_follow_enabled = widgetTable.children_follow_enabled
+
+    if (widgetTable.disabled) then
+        widget:Disable()
+    else
+        if (widget.IsEnabled and not widget:IsEnabled()) then
+            widget:Enable()
+        end
+    end
+end
+
 local setWidgetId = function(parent, widgetTable, widgetObject)
     if (widgetTable.id) then
         parent.widgetids[widgetTable.id] = widgetObject
     end
+    widgetTable.widget = widgetObject
 end
 
 local onEnterHighlight = function(self)
@@ -117,11 +141,22 @@ local onLeaveHighlight = function(self)
     end
 end
 
-local createOptionHighlightTexture = function(frame, label, widgetWidth)
+--control the highlight color, if true, use color one, if false, use color two
+--color one: .2, .2, .2, 0.5
+--color two: .3, .3, .3, 0.5
+local bHighlightColorOne = true
+
+---create a button and a texture to highlight the button when the mouse is over it
+---the button has the dimentions of the label and the widget
+---@param frame frame
+---@param label fontstring
+---@param widgetWidth number
+---@return unknown
+local createOptionHighlightFrame = function(frame, label, widgetWidth)
     frame = frame.widget or frame
     label = label.widget or label
 
-    local highlightFrame = CreateFrame("frame", nil, frame)
+    local highlightFrame = CreateFrame("button", nil, frame)
     highlightFrame:EnableMouse(true)
     highlightFrame:SetFrameLevel(frame:GetFrameLevel()-1)
 
@@ -133,20 +168,29 @@ local createOptionHighlightTexture = function(frame, label, widgetWidth)
 
     local highlightTexture = highlightFrame:CreateTexture(nil, "overlay")
     highlightTexture:SetColorTexture(1, 1, 1, 0.1)
+
     PixelUtil.SetPoint(highlightTexture, "topleft", highlightFrame, "topleft", 0, 0)
     PixelUtil.SetPoint(highlightTexture, "bottomright", highlightFrame, "bottomright", 0, 0)
     highlightTexture:Hide()
 
     local backgroundTexture = highlightFrame:CreateTexture(nil, "artwork")
-    backgroundTexture:SetColorTexture(1, 1, 1)
+    backgroundTexture:SetColorTexture(1, 1, 1, 0.5)
     backgroundTexture:SetVertexColor(.25, .25, .25, 0.5)
+
+    if (bHighlightColorOne) then
+        backgroundTexture:SetVertexColor(.2, .2, .2, 0.5)
+    else
+        backgroundTexture:SetVertexColor(.25, .25, .25, 0.5)
+    end
+    bHighlightColorOne = not bHighlightColorOne
+
     PixelUtil.SetPoint(backgroundTexture, "topleft", highlightFrame, "topleft", 0, 0)
     PixelUtil.SetPoint(backgroundTexture, "bottomright", highlightFrame, "bottomright", 0, 0)
 
     highlightFrame.highlightTexture = highlightTexture
     highlightFrame.parent = frame
 
-    return highlightTexture
+    return highlightFrame
 end
 
 local setLabelProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template)
@@ -165,6 +209,7 @@ local setLabelProperties = function(parent, widget, widgetTable, currentXOffset,
     end
 
     setWidgetId(parent, widgetTable, widget)
+    onWidgetSetInUse(widget, widgetTable)
 end
 
 local setDropdownProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth)
@@ -194,7 +239,7 @@ local setDropdownProperties = function(parent, widget, widgetTable, currentXOffs
         PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
 
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
     else
@@ -223,11 +268,32 @@ local setDropdownProperties = function(parent, widget, widgetTable, currentXOffs
         maxWidgetWidth = widget:GetWidth()
     end
 
+    onWidgetSetInUse(widget, widgetTable)
+
     return maxColumnWidth, maxWidgetWidth
+end
+
+local highlightFrameOnClickToggle = function(highlightFrame, mouseButton)
+    local parent = highlightFrame:GetParent()
+    local widget = parent.MyObject
+
+    local bNewState = not widget._get()
+    widget.OnSwitch(widget, nil, bNewState) --widget.OnSwitch = widgetTable.set
+
+    if (bNewState) then
+        widget:SetValue(true)
+    else
+        widget:SetValue(false)
+    end
+
+    if (widget._valueChangeHook) then
+        widget._valueChangeHook()
+    end
 end
 
 local setToggleProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, switchIsCheckbox, bUseBoxFirstOnAllWidgets, menuOptions, index, maxWidgetWidth)
     widget._get = widgetTable.get
+    widget._set = widgetTable.set
     widget.widget_type = "toggle"
     widget.OnSwitch = widgetTable.set
 
@@ -235,7 +301,52 @@ local setToggleProperties = function(parent, widget, widgetTable, currentXOffset
         widget:SetAsCheckBox()
     end
 
-    widget:SetValue(widgetTable.get())
+    if (widgetTable.children_follow_enabled) then
+        widget.SetValueOriginal = widget.SetValue --perhaps widgetTable.set()  --perhaps setscrip OnClick
+        widget._name = widgetTable.name
+
+        local newSetFunc = function(thisWidget, value)
+            --look for children ids
+            local childrenids = widgetTable.childrenids
+            --print(childrenids, type(childrenids))
+            if (type(childrenids) == "table") then
+                for i, childId in ipairs(childrenids) do
+                    local childWidget = parent:GetWidgetById(childId)
+                    --print("childWidget", childWidget)
+                    if (childWidget) then
+                        --if the children_follow_reverse is true, then the children will be enabled when the toogle is disabeld
+                        --this is used when the main toggle is a kind of "Do This Automatically", if is not doing it automatically
+                        --then the children should be enabled to set the options
+                        if (widgetTable.children_follow_reverse) then
+                            if (value) then
+                                childWidget:Disable()
+                            else
+                                childWidget:Enable()
+                            end
+                        else
+                            if (value) then
+                                childWidget:Enable()
+                            else
+                                childWidget:Disable()
+                            end
+                        end
+                    end
+                end
+            end
+
+            thisWidget.SetValueOriginal(thisWidget, value)
+            return value
+        end
+
+        widget:SetValue(widgetTable.get())
+        rawset(widget, "SetValue", newSetFunc)
+    else
+        if (widget.SetValueOriginal) then
+            rawset(widget, "SetValue", widget.SetValueOriginal)
+            rawset(widget, "SetValueOriginal", nil)
+        end
+        widget:SetValue(widgetTable.get())
+    end
 
     if (widgetWidth) then
         PixelUtil.SetWidth(widget.widget, widgetWidth)
@@ -256,17 +367,19 @@ local setToggleProperties = function(parent, widget, widgetTable, currentXOffset
     local extraPaddingY = 0
 
     if (bAlignAsPairs) then
-        PixelUtil.SetPoint(label, "topleft", widget:GetParent(), "topleft", currentXOffset, currentYOffset)
-        PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
-
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
+
+        widget._valueChangeHook = valueChangeHook
+        widget.highlightFrame:SetScript("OnClick", highlightFrameOnClickToggle)
+        PixelUtil.SetPoint(label, "topleft", widget:GetParent(), "topleft", currentXOffset, currentYOffset)
+        PixelUtil.SetPoint(widget.widget, "right", widget.highlightFrame, "right", -3, 0)
     else
         if (widgetTable.boxfirst or bUseBoxFirstOnAllWidgets) then
-            widget:SetPoint("left", label, "right", 2, 0)
-            label:SetPoint("topleft", parent, "topleft", currentXOffset, currentYOffset)
+            label:SetPoint("left", widget.widget or widget, "right", 2, 0)
+            widget:SetPoint("topleft", parent, "topleft", currentXOffset, currentYOffset)
 
             local nextWidgetTable = menuOptions[index+1]
             if (nextWidgetTable) then
@@ -301,23 +414,30 @@ local setToggleProperties = function(parent, widget, widgetTable, currentXOffset
         maxWidgetWidth = widget:GetWidth()
     end
 
+    onWidgetSetInUse(widget, widgetTable)
+
     return maxColumnWidth, maxWidgetWidth, extraPaddingY
 end
 
-local setRangeProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, bIsDecimals)
+local setRangeProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, bIsDecimals, bAttachSliderButtonsToLeft)
     widget._get = widgetTable.get
     widget.widget_type = "range"
     widget:SetTemplate(template)
+
+    widget.bAttachButtonsToLeft = bAttachSliderButtonsToLeft
+
+    local currentValue = widgetTable.get()
 
     if (bIsDecimals) then
         widget.slider:SetValueStep(0.01)
     else
         widget.slider:SetValueStep(widgetTable.step or 1)
+        currentValue = math.floor(currentValue)
     end
     widget.useDecimals = bIsDecimals
 
     widget.slider:SetMinMaxValues(widgetTable.min, widgetTable.max)
-    widget.slider:SetValue(widgetTable.get() or 0)
+    widget.slider:SetValue(currentValue or 0)
     widget.ivalue = widget.slider:GetValue()
 
     if (widgetWidth) then
@@ -358,9 +478,11 @@ local setRangeProperties = function(parent, widget, widgetTable, currentXOffset,
         PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
 
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
+
+        widget.bAttachButtonsToLeft = true
     else
         widget:SetPoint("left", label, "right", 2, 0)
         label:SetPoint("topleft", parent, "topleft", currentXOffset, currentYOffset)
@@ -374,6 +496,8 @@ local setRangeProperties = function(parent, widget, widgetTable, currentXOffset,
     if (widget:GetWidth() > maxWidgetWidth) then
         maxWidgetWidth = widget:GetWidth()
     end
+
+    onWidgetSetInUse(widget, widgetTable)
 
     return maxColumnWidth, maxWidgetWidth
 end
@@ -426,13 +550,16 @@ local setColorProperties = function(parent, widget, widgetTable, currentXOffset,
     label:ClearAllPoints()
 
     if (bAlignAsPairs) then
-        PixelUtil.SetPoint(label, "topleft", widget:GetParent(), "topleft", currentXOffset, currentYOffset)
-        PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
-
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
+
+        ----
+        widget._valueChangeHook = valueChangeHook
+        --widget.highlightFrame:SetScript("OnClick", highlightFrameOnClickToggle) --todo make this function for color picker color pick start
+        PixelUtil.SetPoint(label, "topleft", widget:GetParent(), "topleft", currentXOffset, currentYOffset)
+        PixelUtil.SetPoint(widget.widget, "right", widget.highlightFrame, "right", -3, 0)
     else
         if (widgetTable.boxfirst or bUseBoxFirstOnAllWidgets) then
             label:SetPoint("left", widget.widget, "right", 2, 0)
@@ -452,6 +579,8 @@ local setColorProperties = function(parent, widget, widgetTable, currentXOffset,
     if (widget:GetWidth() > maxWidgetWidth) then
         maxWidgetWidth = widget:GetWidth()
     end
+
+    onWidgetSetInUse(widget, widgetTable)
 
     return maxColumnWidth, maxWidgetWidth, extraPaddingY
 end
@@ -493,7 +622,7 @@ local setExecuteProperties = function(parent, widget, widgetTable, currentXOffse
         PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
 
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
     else
@@ -518,6 +647,8 @@ local setExecuteProperties = function(parent, widget, widgetTable, currentXOffse
     if (widget:GetWidth() > maxWidgetWidth) then
         maxWidgetWidth = widget:GetWidth()
     end
+
+    onWidgetSetInUse(widget, widgetTable)
 
     return maxColumnWidth, maxWidgetWidth, latestInlineWidget
 end
@@ -570,7 +701,7 @@ local setTextEntryProperties = function(parent, widget, widgetTable, currentXOff
         PixelUtil.SetPoint(widget.widget, "left", label, "left", nAlignAsPairsLength, 0)
 
         if (not widget.highlightFrame) then
-            local highlightFrame = createOptionHighlightTexture(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
+            local highlightFrame = createOptionHighlightFrame(widget, label, (widgetWidth or 140) + nAlignAsPairsLength + 5)
             widget.highlightFrame = highlightFrame
         end
     else
@@ -587,7 +718,42 @@ local setTextEntryProperties = function(parent, widget, widgetTable, currentXOff
         maxWidgetWidth = widget:GetWidth()
     end
 
+    onWidgetSetInUse(widget, widgetTable)
+
     return maxColumnWidth, maxWidgetWidth
+end
+
+local onMenuBuilt = function(parent)
+    --refresh the options to find children to disable or enable
+    if (parent.build_menu_options) then
+        for index, widgetTable in ipairs(parent.build_menu_options) do
+            if (widgetTable.children_follow_enabled) then --not found, bug
+                local widget = widgetTable.widget
+                local childrenids = widgetTable.childrenids
+                if (type(childrenids) == "table") then
+                    for i, childId in ipairs(childrenids) do
+                        local childWidget = parent:GetWidgetById(childId)
+                        if (childWidget) then
+                            local value = widget:GetValue()
+                            if (widgetTable.children_follow_reverse) then
+                                if (value) then
+                                    childWidget:Disable()
+                                else
+                                    childWidget:Enable()
+                                end
+                            else
+                                if (value) then
+                                    childWidget:Enable()
+                                else
+                                    childWidget:Disable()
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
 
 local refreshOptions = function(self)
@@ -618,6 +784,8 @@ local refreshOptions = function(self)
             end
         end
     end
+
+    onMenuBuilt(self)
 end
 
 detailsFramework.internalFunctions.RefreshOptionsPanel = refreshOptions
@@ -636,6 +804,8 @@ local parseOptionsTypes = function(menuOptions)
             widgetTable.type = "selectoutline"
         elseif (widgetTable.type == "anchordropdown") then
             widgetTable.type = "selectanchor"
+        elseif (widgetTable.type == "audiodropdown") then
+            widgetTable.type = "selectaudio"
         elseif (widgetTable.type == "dropdown") then
             widgetTable.type = "select"
 
@@ -658,12 +828,13 @@ local parseOptionsTable = function(menuOptions)
     local bAlignAsPairs = menuOptions.align_as_pairs
     local nAlignAsPairsLength = menuOptions.align_as_pairs_string_space or 160
     local nAlignAsPairsSpacing = menuOptions.align_as_pairs_spacing or 20
+    local bAttachSliderButtonsToLeft = menuOptions.slider_buttons_to_left
 
     --if a scrollbox is passed, the height can be ignored
     --the scrollBox child will be used as the parent, and the height of the child will be resized to fit the widgets
     local bUseScrollFrame = menuOptions.use_scrollframe
     local languageAddonId = menuOptions.language_addonId
-    return bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId
+    return bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId, bAttachSliderButtonsToLeft
 end
 
 local parseParent = function(bUseScrollFrame, parent, height, yOffset)
@@ -835,6 +1006,12 @@ local getMenuWidgetVolative = function(parent, widgetType, indexTable)
         end
     end
 
+    --clean children ids, children ids are used to disable or enable other widgets when a widget is disabled or enabled
+    if (widgetObject.childrenids) then
+        table.wipe(widgetObject.childrenids)
+    end
+    widgetObject.children_follow_enabled = nil
+
     return widgetObject
 end
 
@@ -895,6 +1072,8 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
     end
     detailsFramework:ClearOptionsPanel(parent)
 
+    bHighlightColorOne = true
+
     local amountLineWidgetAdded = 0
     local biggestColumnHeight = 0 --used to resize the scrollbox child when a scrollbox is passed
     local latestInlineWidget
@@ -915,9 +1094,12 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
     }
 
     parseOptionsTypes(menuOptions)
-    local bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId = parseOptionsTable(menuOptions)
+
+    local bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId, bAttachSliderButtonsToLeft = parseOptionsTable(menuOptions)
     parent, height = parseParent(bUseScrollFrame, parent, height, yOffset)
     local languageTable = parseLanguageTable(languageAddonId)
+
+    parent.build_menu_options = menuOptions
 
     for index, widgetTable in ipairs(menuOptions) do
         if (not widgetTable.hidden) then
@@ -952,14 +1134,14 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
 
                 --dropdowns
                 elseif (widgetTable.type:find("select")) then
-                    assert(widgetTable.get, "DetailsFramework:BuildMenu(): .get() not found in the widget table for 'select'")
+                    assert(widgetTable.get, "DetailsFramework:BuildMenu: .get() not found in the widget table for 'select'")
                     local dropdown = getMenuWidgetVolative(parent, "dropdown", widgetIndexes)
                     widgetCreated = dropdown
                     local defaultHeight = 18
 
                     do
                         if (widgetTable.type == "selectfont") then
-                            local func = detailsFramework:CreateFontListGenerator(widgetTable.set)
+                            local func = detailsFramework:CreateFontListGenerator(widgetTable.set, widgetTable.include_default)
                             dropdown:SetFunction(func)
 
                         elseif (widgetTable.type == "selectcolor") then
@@ -972,6 +1154,10 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
 
                         elseif (widgetTable.type == "selectoutline") then
                             local func = detailsFramework:CreateOutlineListGenerator(widgetTable.set)
+                            dropdown:SetFunction(func)
+
+                        elseif (widgetTable.type == "selectaudio") then
+                            local func = detailsFramework:CreateAudioListGenerator(widgetTable.set)
                             dropdown:SetFunction(func)
                         else
                             dropdown:SetFunction(widgetTable.values)
@@ -1015,7 +1201,7 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
                     slider.hasLabel.text = namePhrase
                     slider.hasLabel:SetTemplate(widgetTable.text_template or textTemplate)
 
-                    maxColumnWidth, maxWidgetWidth = setRangeProperties(parent, slider, widgetTable, currentXOffset, currentYOffset, sliderTemplate, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, widgetTable.usedecimals)
+                    maxColumnWidth, maxWidgetWidth = setRangeProperties(parent, slider, widgetTable, currentXOffset, currentYOffset, sliderTemplate, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, widgetTable.usedecimals, bAttachSliderButtonsToLeft)
                     amountLineWidgetAdded = amountLineWidgetAdded + 1
 
                 --color
@@ -1113,6 +1299,7 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
     end
 
     detailsFramework.RefreshUnsafeOptionsWidgets()
+    onMenuBuilt(parent)
 end
 
 local getDescripttionPhraseID = function(widgetTable, languageAddonId, languageTable)
@@ -1135,6 +1322,16 @@ end
 ---classes used by the menu builder on the menuOptions table on both functions BuildMenu and BuildMenuVolatile
 ---the menuOptions consists of a table with several tables inside in array, each table is a widget to be created
 ---class df_menu_label is used when the sub table of menuOptions has a key named "type" with the value "label" or "text"
+
+--[=[
+function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, height, useColon, textTemplate, dropdownTemplate, switchTemplate, switchIsCheckbox, sliderTemplate, buttonTemplate, valueChangeHook)
+    local tNow = debugprofilestop()
+    detailsFramework:BuildMenu22(parent, menuOptions, xOffset, yOffset, height, useColon, textTemplate, dropdownTemplate, switchTemplate, switchIsCheckbox, sliderTemplate, buttonTemplate, valueChangeHook)
+    local tEnd = debugprofilestop()
+    print("BuildMenu for", (menuOptions.Name or "--"), floor(tEnd - tNow), "ms")
+end
+--]=]
+
 function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, height, useColon, textTemplate, dropdownTemplate, switchTemplate, switchIsCheckbox, sliderTemplate, buttonTemplate, valueChangeHook)
     --how many widgets has been created on this line loop pass
     local amountLineWidgetAdded = 0
@@ -1145,11 +1342,16 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
     local maxColumnWidth = 0 --biggest width of widget + text size on the current column loop pass
     local maxWidgetWidth = 0 --biggest widget width on the current column loop pass
 
+    bHighlightColorOne = true
+
     --parse settings and the options table
     parseOptionsTypes(menuOptions)
-    local bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId = parseOptionsTable(menuOptions)
+
+    local bUseBoxFirstOnAllWidgets, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, nAlignAsPairsSpacing, bUseScrollFrame, languageAddonId, bAttachSliderButtonsToLeft = parseOptionsTable(menuOptions)
     parent, height = parseParent(bUseScrollFrame, parent, height, yOffset)
     local languageTable = parseLanguageTable(languageAddonId)
+
+    parent.build_menu_options = menuOptions
 
     if (not parent.widget_list) then
         detailsFramework:SetAsOptionsPanel(parent)
@@ -1193,13 +1395,13 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
 
             elseif (widgetTable.type:find("select")) then
                 ---@cast widgetTable df_menu_dropdown
-                assert(widgetTable.get, "DetailsFramework:BuildMenu(): .get not found in the widget table for 'select'")
+                assert(widgetTable.get, "DetailsFramework:BuildMenu: .get not found in the widget table for 'select'")
                 local defaultHeight = 18
 
                 local dropdown
                 do
                     if (widgetTable.type == "selectfont") then
-                        dropdown = detailsFramework:CreateFontDropDown(parent, widgetTable.set, widgetTable.get(), widgetWidth or 140, widgetHeight or defaultHeight, nil, "$parentWidget" .. index, dropdownTemplate)
+                        dropdown = detailsFramework:CreateFontDropDown(parent, widgetTable.set, widgetTable.get(), widgetWidth or 140, widgetHeight or defaultHeight, nil, "$parentWidget" .. index, dropdownTemplate, widgetTable.include_default)
 
                     elseif (widgetTable.type == "selectcolor") then
                         dropdown = detailsFramework:CreateColorDropDown(parent, widgetTable.set, widgetTable.get(), widgetWidth or 140, widgetHeight or defaultHeight, nil, "$parentWidget" .. index, dropdownTemplate)
@@ -1209,6 +1411,9 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
 
                     elseif (widgetTable.type == "selectoutline") then
                         dropdown = detailsFramework:CreateOutlineDropDown(parent, widgetTable.set, widgetTable.get(), widgetWidth or 140, widgetHeight or defaultHeight, nil, "$parentWidget" .. index, dropdownTemplate)
+
+                    elseif (widgetTable.type == "selectaudio") then
+                        dropdown = detailsFramework:CreateAudioDropDown(parent, widgetTable.set, widgetTable.get(), widgetWidth or 140, widgetHeight or defaultHeight, nil, "$parentWidget" .. index, dropdownTemplate)
                     else
                         dropdown = detailsFramework:NewDropDown(parent, nil, "$parentWidget" .. index, nil, widgetWidth or 140, widgetHeight or defaultHeight, widgetTable.values, widgetTable.get(), dropdownTemplate)
                     end
@@ -1263,7 +1468,7 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
             elseif (widgetTable.type == "range") then
                 ---@cast widgetTable df_menu_range
 
-                assert(widgetTable.get, "DetailsFramework:BuildMenu(): .get not found in the widget table for 'range'")
+                assert(widgetTable.get, "DetailsFramework:BuildMenu: .get not found in the widget table for 'range'")
                 local bIsDecimals = widgetTable.usedecimals
                 local slider = detailsFramework:NewSlider(parent, nil, "$parentWidget" .. index, nil, widgetWidth or 140, widgetHeight or 18, widgetTable.min, widgetTable.max, widgetTable.step, widgetTable.get(),  bIsDecimals, nil, nil, sliderTemplate)
 
@@ -1276,8 +1481,7 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
                 local namePhraseId = getNamePhraseID(widgetTable, languageAddonId, languageTable, true)
                 DetailsFramework.Language.RegisterObjectWithDefault(languageAddonId, label.widget, namePhraseId, formatOptionNameWithColon(widgetTable.name, useColon))
 
-                maxColumnWidth, maxWidgetWidth = setRangeProperties(parent, slider, widgetTable, currentXOffset, currentYOffset, sliderTemplate, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, bIsDecimals)
-
+                maxColumnWidth, maxWidgetWidth = setRangeProperties(parent, slider, widgetTable, currentXOffset, currentYOffset, sliderTemplate, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, bIsDecimals, bAttachSliderButtonsToLeft)
                 --store the widget created into the overall table and the widget by type
                 table.insert(parent.widget_list, slider)
                 table.insert(parent.widget_list_by_type.slider, slider)
@@ -1287,7 +1491,7 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
 
             elseif (widgetTable.type == "color") then
                 ---@cast widgetTable df_menu_color
-                assert(widgetTable.get, "DetailsFramework:BuildMenu(): .get not found in the widget table for 'color'")
+                assert(widgetTable.get, "DetailsFramework:BuildMenu: .get not found in the widget table for 'color'")
                 local colorpick = detailsFramework:NewColorPickButton(parent, "$parentWidget" .. index, nil, widgetTable.set, nil, buttonTemplate)
 
                 local descPhraseId = getDescripttionPhraseID(widgetTable, languageAddonId, languageTable)
@@ -1401,6 +1605,7 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
     end
 
     detailsFramework.RefreshUnsafeOptionsWidgets()
+    onMenuBuilt(parent)
 end
 
 

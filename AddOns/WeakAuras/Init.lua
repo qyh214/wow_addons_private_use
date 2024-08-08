@@ -1,10 +1,13 @@
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
+
+---@class WeakAuras
 WeakAuras = {}
+---@type table<string, string>
 WeakAuras.L = {}
 Private.frames = {}
-
-local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 
 --- @alias uid string
 --- @alias auraId string
@@ -14,6 +17,17 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field cloneId string?
 --- @field show boolean?
 --- @field changed boolean?
+--- @field paused boolean?
+--- @field remaining number?
+--- @field autoHide boolean|string|nil
+--- @field progressType "timed"|"static"|nil
+--- @field expirationTime number?
+--- @field duration number?
+--- @field name any?
+--- @field icon any?
+--- @field value number?
+--- @field total number?
+--- @field inverse boolean?
 
 --- @alias non_transmissable_field table<string, non_transmissable_field|boolean>
 
@@ -26,6 +40,11 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field raid table<string, boolean>
 
 --- @alias traverseFunction fun(): auraData
+
+---@class WARegion : Frame
+---@field state state
+---@field states state[]
+---@field regionType string
 
 --- @class Private
 --- @field ActivateAuraEnvironment fun(id: auraId?, cloneId: string?, state: state?, states: state[]?, config: boolean?)
@@ -50,10 +69,11 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field DebugLog debugLog
 --- @field dynamic_texts table<string, table>
 --- @field EndEvent fun(state: state): boolean?
---- @field EnsureRegion fun(id: auraId, cloneId: string?): Frame
+--- @field EnsureRegion fun(id: auraId, cloneId: string?): WARegion
 --- @field ExecEnv table
 --- @field event_prototypes table<string, prototypeData>
 --- @field event_categories table<string, {name: string, default: string }>
+--- @field Features Features
 --- @field FindUnusedId fun(prefix: string?): string
 --- @field FixGroupChildrenOrderForGroup fun(data: auraData)
 --- @field frames table<string, table>
@@ -79,8 +99,7 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field non_transmissable_fields_v2000 table<string, non_transmissable_field>
 --- @field orientation_types table<string, string>
 --- @field orientation_with_circle_types table<string, string>
---- @field ParseNumber fun (numString: string|number): number?
---- @field point_types table<string, string>
+--- @field ParseNumber fun (numString: string|number): number?, string?
 --- @field PreShowModels fun()
 --- @field PrintHelp fun()
 --- @field QuotedString fun(input: string): string
@@ -118,6 +137,7 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field UpdatedTriggerState fun(id: auraId)
 --- @field validate fun(input: table, default:table)
 --- @field watched_trigger_events table<auraId, table<integer, table<integer, boolean>>>
+--- @field RegisterRegionType fun(regionType: string, createFunction: function, modifyFunction: function, defaults: table, properties: table|function|nil, validate: function?))
 
 --- @alias triggerTypes
 --- | "aura"
@@ -141,7 +161,7 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field instance_size table|nil
 --- @field itemName string?
 --- @field itemSetName string?
---- @field itemTypeName table|ni
+--- @field itemTypeName table|nil
 --- @field range number?l
 --- @field realSpellName string?
 --- @field rune number?
@@ -150,8 +170,9 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field subeventSuffix string?
 --- @field type triggerTypes
 --- @field unit string?
---- @field use_showOn boolean|nil
 --- @field use_alwaystrue boolean|nil
+--- @field use_ignoreoverride boolean|nil
+--- @field use_showOn boolean|nil
 
 ---@class prototypeDataArgs
 ---@field name string
@@ -164,7 +185,6 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 ---@field store boolean?
 ---@field test string?
 
-
 ---@class prototypeData
 ---@field durationFunc (fun(trigger: triggerData): number, number, boolean?)|nil
 ---@field init (fun(trigger: triggerData):string?)|nil
@@ -172,11 +192,13 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 ---@field timedrequired boolean?
 ---@field GetNameAndIcon (fun(trigger: triggerData): string?, string?)|nil
 ---@field iconFunc (fun(trigger: triggerData): string?)|nil
+---@field loadFunc (fun(trigger: triggerData): nil)|nil
 ---@field nameFunc (fun(trigger: triggerData): string?)|nil
----@field events (fun(tigger: triggerData): table)|nil
----@field internal_events (fun(tigger: triggerData): table)|nil
+---@field events (fun(trigger: triggerData): table)|nil
+---@field internal_events (fun(trigger: triggerData): table)|nil
 ---@field name string
----@field statesParamater "unit"|"one"|"all"|nil
+---@field statesParameter "unit"|"one"|"all"|nil
+---@field progressType "timed"|"static"|"none"
 
 --- @class triggerUntriggerData
 --- @field trigger triggerData
@@ -323,11 +345,6 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 --- @field SerializeEx fun(self: LibSerialize,options: table, input: any)
 --- @field Deserialize fun(self: LibSerialize, input: string): table
 
---- @class LibClassicDurations
---- @field RegisterFrame fun(self: LibClassicDurations, frame: string)
---- @field Register fun(self: LibClassicDurations, frame: string)
---- @field GetAuraDurationByUnit fun(self: LibClassicDurations, unit: string, spellId: number, source: string?, name: string?)
-
 --- @class LibDeflate
 --- @field CompressDeflate fun(self: LibDeflate, input: string, options: table): string
 --- @field EncodeForPrint fun(self: LibDeflate, input: string): string)
@@ -358,60 +375,88 @@ local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetad
 WeakAuras.normalWidth = 1.3
 WeakAuras.halfWidth = WeakAuras.normalWidth / 2
 WeakAuras.doubleWidth = WeakAuras.normalWidth * 2
-local versionStringFromToc = GetAddOnMetadata("WeakAuras", "Version")
-local versionString = "5.8.7"
-local buildTime = "20231203164019"
+local versionStringFromToc = C_AddOns.GetAddOnMetadata("WeakAuras", "Version")
+local versionString = "5.15.4"
+local buildTime = "20240728005051"
 
-local flavorFromToc = GetAddOnMetadata("WeakAuras", "X-Flavor")
+local flavorFromToc = C_AddOns.GetAddOnMetadata("WeakAuras", "X-Flavor")
 local flavorFromTocToNumber = {
   Vanilla = 1,
   TBC = 2,
   Wrath = 3,
+  Cata = 4,
   Mainline = 10
 }
 local flavor = flavorFromTocToNumber[flavorFromToc]
 
---[==[@debug@
-if versionStringFromToc == "5.8.7" then
+
+if not versionString:find("beta", 1, true) then
+  WeakAuras.buildType = "release"
+else
+  WeakAuras.buildType = "beta"
+end
+
+--[=[@nothing@
+WeakAuras.buildType = "alpha"
+--@nothing@]=]
+
+--[=====[@experimental@
+WeakAuras.buildType = "pr"
+--@end-experimental@]=====]
+
+--[==[@nothing@
+if versionStringFromToc == "5.15.4" then
   versionStringFromToc = "Dev"
   buildTime = "Dev"
+  WeakAuras.buildType = "dev"
 end
---@end-debug@]==]
+--@nothing@]==]
 
 WeakAuras.versionString = versionStringFromToc
 WeakAuras.buildTime = buildTime
 WeakAuras.newFeatureString = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t"
 WeakAuras.BuildInfo = select(4, GetBuildInfo())
 
+---@return boolean result
 function WeakAuras.IsClassicEra()
   return flavor == 1
 end
 -- save compatibility with old auras
 WeakAuras.IsClassic = WeakAuras.IsClassicEra
 
-function WeakAuras.IsWrathClassic()
-  return flavor == 3
+---@return boolean result
+function WeakAuras.IsCataClassic()
+  return flavor == 4
 end
 
+---@return boolean result
 function WeakAuras.IsRetail()
   return flavor == 10
 end
 
-function WeakAuras.IsClassicEraOrWrath()
-  return WeakAuras.IsClassicEra() or WeakAuras.IsWrathClassic()
+---@return boolean result
+function WeakAuras.IsClassicOrCata()
+  return WeakAuras.IsClassicEra() or WeakAuras.IsCataClassic()
 end
 
-function WeakAuras.IsWrathOrRetail()
-  return WeakAuras.IsRetail() or WeakAuras.IsWrathClassic()
+---@return boolean result
+function WeakAuras.IsCataOrRetail()
+  return WeakAuras.IsCataClassic() or WeakAuras.IsRetail()
 end
 
+---@return boolean result
+function WeakAuras.IsTWW()
+  return WeakAuras.BuildInfo >= 110000
+end
+
+---@param ... string
 WeakAuras.prettyPrint = function(...)
   print("|cff9900ffWeakAuras:|r ", ...)
 end
 
 -- Force enable WeakAurasCompanion and Archive because some addon managers interfere with it
-EnableAddOn("WeakAurasCompanion")
-EnableAddOn("WeakAurasArchive")
+C_AddOns.EnableAddOn("WeakAurasCompanion")
+C_AddOns.EnableAddOn("WeakAurasArchive")
 
 local libsAreOk = true
 do
@@ -421,11 +466,6 @@ do
   }
   local LibStubLibs = {
     "CallbackHandler-1.0",
-    "AceConfig-3.0",
-    "AceConsole-3.0",
-    "AceGUI-3.0",
-    "AceEvent-3.0",
-    "AceGUISharedMediaWidgets-1.0",
     "AceTimer-3.0",
     "AceSerializer-3.0",
     "AceComm-3.0",
@@ -437,13 +477,7 @@ do
     "LibDBIcon-1.0",
     "LibGetFrame-1.0",
     "LibSerialize",
-    "LibUIDropDownMenu-4.0"
   }
-  if WeakAuras.IsClassicEra() then
-    tinsert(LibStubLibs, "LibClassicSpellActionCount-1.0")
-    tinsert(LibStubLibs, "LibClassicCasterino")
-    tinsert(LibStubLibs, "LibClassicDurations")
-  end
   if WeakAuras.IsRetail() then
     tinsert(LibStubLibs, "LibSpecialization")
     AddonCompartmentFrame:RegisterAddon({
@@ -451,7 +485,8 @@ do
       icon = "Interface\\AddOns\\WeakAuras\\Media\\Textures\\icon.blp",
       registerForAnyClick = true,
       notCheckable = true,
-      func = function(btn, arg1, arg2, checked, mouseButton)
+      func = function(button, menuInputData, menu)
+        local mouseButton = menuInputData.buttonName
         if mouseButton == "LeftButton" then
           if IsShiftKeyDown() then
             if not (WeakAuras.IsOptionsOpen()) then
@@ -463,18 +498,16 @@ do
         elseif mouseButton == "MiddleButton" then
           WeakAuras.ToggleMinimap()
         else
-          WeakAuras.RealTimeProfilingWindow:Toggle()
+          WeakAurasProfilingFrame:Toggle()
         end
       end,
-      funcOnEnter = function()
-        GameTooltip:SetOwner(AddonCompartmentFrame, "ANCHOR_TOPRIGHT")
-        GameTooltip:SetText(AddonName)
-        GameTooltip:AddLine(WeakAuras.L["|cffeda55fLeft-Click|r to toggle showing the main window."], 1, 1, 1, true)
-        GameTooltip:Show()
-        WeakAuras.GenerateTooltip(true)
+      funcOnEnter = function(button)
+        MenuUtil.ShowTooltip(button, function(tooltip)
+          WeakAuras.GenerateTooltip(true, tooltip)
+        end)
       end,
-      funcOnLeave = function()
-        GameTooltip:Hide()
+      funcOnLeave = function(button)
+        MenuUtil.HideTooltip(button)
       end,
     })
   end
@@ -500,7 +533,7 @@ function WeakAuras.IsLibsOK()
   return libsAreOk
 end
 
-if not WeakAuras.IsLibsOK() then
+if not libsAreOk then
   C_Timer.After(1, function()
     WeakAuras.prettyPrint("WeakAuras is missing necessary libraries. Please reinstall a proper package.")
   end)
@@ -511,7 +544,8 @@ end
 function Private.RegisterRegionType(_, _, _ ,_)
 end
 
---- @type fun(regionType: string, createOptions: function, icon: string|function, displayName: string, createThumbnail: function?, modifyThumbnail: function?, description: string?, templates: table?, getAnchors: function?)
+---@type fun(regionType: string, createOptions: function, icon: string|function, displayName: string, createThumbnail: function?, modifyThumbnail: function?, description: string?, templates: table?, getAnchors: function?)
+---@diagnostic disable-next-line: duplicate-set-field
 function Private.RegisterRegionOptions(_, _ , _ ,_ )
 end
 
@@ -527,9 +561,11 @@ end
 function Private.StopProfileAura(_)
 end
 
+---@type fun()
 function Private.StartProfileUID()
 end
 
+---@type fun()
 function Private.StopProfileUID()
 end
 
@@ -537,12 +573,15 @@ Private.ExecEnv = {}
 
 -- If WeakAuras shuts down due to being installed on the wrong target, keep the bindings from erroring
 --- @type fun(type: string)
+---@diagnostic disable-next-line: duplicate-set-field
 function WeakAuras.StartProfile(_)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function WeakAuras.StopProfile()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function WeakAuras.PrintProfile()
 end
 

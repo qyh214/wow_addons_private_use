@@ -84,8 +84,10 @@ end)
 
 local currentTab = "tab1"
 local function MakeEnemeyInfoFrame()
-  --frame
   local f = AceGUI:Create("Frame")
+  f.frame:SetParent(MDT.main_frame)
+  f.frame:SetFrameStrata("DIALOG")
+  MDT.enemyInfoFrame = f
   f:SetTitle(L["Enemy Info"])
   f:EnableResize(false)
   f.frame:SetMovable(false)
@@ -104,7 +106,6 @@ local function MakeEnemeyInfoFrame()
     return originalHide(self, ...);
   end
 
-  --tabGroup
   f.tabGroup = AceGUI:Create("TabGroup")
   local tabGroup = f.tabGroup
   tabGroup:SetTabs(
@@ -490,6 +491,11 @@ local spellBlacklist = {
   [228318] = true, -- enrage
   [374557] = true, -- brittle
   [387096] = true, -- pyrogenics
+  [454782] = true, -- Radiant Focus
+  [462597] = true, -- [DNT] In RP Combat
+  [434481] = true, -- Bombardments
+  [257069] = true, -- Watertight Shell
+  [324859] = true, -- Bramblethorn Entanglement
   --[X]  = true,
 }
 local lastEnemyIdx
@@ -510,9 +516,7 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
   local f = MDT.EnemyInfoFrame
   f:SetTitle(L[data.name])
   f.model:SetDisplayInfo(data.displayId or 39490)
-  if MDT:IsDragonflight() then
-    f.model:ResetModel()
-  end
+  f.model:ResetModel()
   if data.modelPosition then
     f.model:SetPosition(unpack(data.modelPosition))
   else
@@ -568,12 +572,6 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
         GameTooltip:Hide()
       end)
       f.characteristicsContainer:AddChild(icon)
-      if IsAddOnLoaded("AddOnSkins") then
-        if AddOnSkins then
-          local AS = unpack(AddOnSkins)
-          AS:SkinTexture(icon.image)
-        end
-      end
     end
   end
 
@@ -590,18 +588,28 @@ function MDT:UpdateEnemyInfoFrame(enemyIdx)
   end
   f.spellScrollContainer:SetLayout("Fill")
 
-  --spells
+  -- Spells
   f.spellScroll:ReleaseChildren()
   if data.spells then
-    for spellId, spellData in pairs(data.spells) do
+    -- Create a table to store spell IDs
+    local spellIds = {}
+    -- Insert all spell IDs into the table
+    for spellId in pairs(data.spells) do
       if MDT:GetDB().devMode or not spellBlacklist[spellId] then
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local spellButton = AceGUI:Create("MDTSpellButton")
-        spellButton:SetSpell(spellId, spellData)
-        spellButton:Initialize()
-        spellButton:Enable()
-        f.spellScroll:AddChild(spellButton)
+        table.insert(spellIds, spellId)
       end
+    end
+    -- Sort the spell IDs
+    table.sort(spellIds)     -- Sort in numerical order
+
+    -- Create spell buttons in sorted order
+    for _, spellId in ipairs(spellIds) do
+      local spellData = data.spells[spellId]
+      local spellButton = AceGUI:Create("MDTSpellButton")
+      spellButton:SetSpell(spellId, spellData)
+      spellButton:Initialize()
+      spellButton:Enable()
+      f.spellScroll:AddChild(spellButton)
     end
   end
 

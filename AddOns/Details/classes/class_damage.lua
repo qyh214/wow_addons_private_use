@@ -35,13 +35,16 @@
 	local GameTooltip = GameTooltip --api local
 	local IsInRaid = IsInRaid --api local
 	local IsInGroup = IsInGroup --api local
+    local GetSpellLink = GetSpellLink or C_Spell.GetSpellLink --api local
 
-	local GetSpellInfo = GetSpellInfo --api local
+	local GetSpellInfo = Details222.GetSpellInfo --api local
 	local _GetSpellInfo = Details.getspellinfo --details api
 	local stringReplace = Details.string.replace --details api
 
 	--show more information about spells
 	local debugmode = false
+
+	local GetSpellTexture = GetSpellTexture or C_Spell.GetSpellTexture
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --constants
@@ -325,6 +328,29 @@ function Details.Sort4Reverse(table1, table2) --[[exported]]
 		return true
 	end
 	return table1[4] < table2[4]
+end
+
+function Details:GetTextColor(instanceObject, textSide)
+	local actorObject = self
+	textSide = textSide or "left"
+
+	local bUseClassColor = false
+	if (textSide == "left") then
+		bUseClassColor = instanceObject.row_info.textL_class_colors
+	elseif (textSide == "right") then
+		bUseClassColor = instanceObject.row_info.textR_class_colors
+	end
+
+	if (bUseClassColor) then
+		local actorClass = actorObject.classe or "UNKNOW"
+		if (actorClass == "UNKNOW") then
+			return unpack(instanceObject.row_info.fixed_text_color)
+		else
+			return unpack(Details.class_colors[actorClass])
+		end
+	else
+		return unpack(instanceObject.row_info.fixed_text_color)
+	end
 end
 
 function Details:GetBarColor(actor) --[[exported]]
@@ -715,17 +741,22 @@ end
 		bs_tooltip_table = Targets
 		bs_tooltip_table.damage_total = total
 
+		--Details:FormatCooltipForSpells()
 		GameCooltip:SetOption("StatusBarTexture", "Interface\\AddOns\\Details\\images\\bar_serenity")
 
 		local spellname, _, spellicon = select(1, _GetSpellInfo(from_spell))
-		GameCooltip:AddLine(spellname .. " " .. Loc ["STRING_CUSTOM_ATTRIBUTE_DAMAGE"], nil, nil, headerColor, nil, 10)
-		GameCooltip:AddIcon (spellicon, 1, 1, 14, 14, 0.078125, 0.921875, 0.078125, 0.921875)
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
-		Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
+		--GameCooltip:AddLine(spellname .. " " .. Loc ["STRING_CUSTOM_ATTRIBUTE_DAMAGE"], nil, nil, headerColor, nil, 10)
+		--GameCooltip:AddIcon (spellicon, 1, 1, 14, 14, 0.078125, 0.921875, 0.078125, 0.921875)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+		--Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
 
 		local top = Targets[1] and Targets[1][2]
 
-		local lineHeight = Details.tooltip.line_height
+		local iconSize = Details.DefaultTooltipIconSize
+		GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+		GameCooltip:SetOption("AlignAsBlizzTooltipFrameHeightOffset", -6)
+		GameCooltip:SetOption("YSpacingMod", -6)
+		Details:AddRoundedCornerToTooltip()
 
 		for index, t in ipairs(Targets) do
 			GameCooltip:AddLine(Details:GetOnlyName(t[1]), Details:ToK(t[2]) .. " (" .. format("%.1f", t[2]/total*100) .. "%)")
@@ -737,24 +768,22 @@ end
 				local specID = Details:GetSpec(t[1])
 				if (specID) then
 					local texture, l, r, t, b = Details:GetSpecIcon (specID, false)
-					GameCooltip:AddIcon (texture, 1, 1, lineHeight, lineHeight, l, r, t, b)
+					GameCooltip:AddIcon (texture, 1, 1, iconSize, iconSize, l, r, t, b)
 				else
 					local texture, l, r, t, b = Details:GetClassIcon(class)
-					GameCooltip:AddIcon ("Interface\\AddOns\\Details\\images\\classes_small_alpha", 1, 1, lineHeight, lineHeight, l, r, t, b)
+					GameCooltip:AddIcon ("Interface\\AddOns\\Details\\images\\classes_small_alpha", 1, 1,iconSize,iconSize, l, r, t, b)
 				end
 
 			elseif (t[1] == Loc ["STRING_TARGETS_OTHER1"]) then
-				GameCooltip:AddIcon ("Interface\\AddOns\\Details\\images\\classes_small_alpha", 1, 1, lineHeight, lineHeight, 0.25, 0.49609375, 0.75, 1)
+				GameCooltip:AddIcon ("Interface\\AddOns\\Details\\images\\classes_small_alpha", 1, 1,iconSize,iconSize, 0.25, 0.49609375, 0.75, 1)
 			end
 		end
 
 		GameCooltip:AddLine(" ")
 		Details:AddTooltipReportLineText()
 
-		GameCooltip:SetOption("YSpacingMod", 0)
 		GameCooltip:SetOwner(thisLine)
 		GameCooltip:Show()
-
 	end
 
 	local function RefreshBarraBySpell (tabela, barra, instancia)
@@ -1152,9 +1181,15 @@ end
 
 			_table_sort(damage_taken_table, Details.Sort2)
 
-			Details:AddTooltipSpellHeaderText (Loc ["STRING_DAMAGE_FROM"], headerColor, #damage_taken_table, [[Interface\Addons\Details\images\icons]], 0.126953125, 0.1796875, 0, 0.0546875)
-			Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
-			GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+			local iconSize = Details.DefaultTooltipIconSize
+			GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+			GameCooltip:SetOption("AlignAsBlizzTooltipFrameHeightOffset", -6)
+			GameCooltip:SetOption("YSpacingMod", -6)
+			Details:AddRoundedCornerToTooltip()
+
+			--Details:AddTooltipSpellHeaderText (Loc ["STRING_DAMAGE_FROM"], headerColor, #damage_taken_table, [[Interface\Addons\Details\images\icons]], 0.126953125, 0.1796875, 0, 0.0546875)
+			--Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
+			--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
 
 			local min = 6
 			local ismaximized = false
@@ -1165,9 +1200,9 @@ end
 			end
 
 			if (ismaximized) then
-				GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+				--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
 			else
-				GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
+				--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
 			end
 
 			local top = damage_taken_table[1] and damage_taken_table[1][2]
@@ -1187,15 +1222,15 @@ end
 					end
 
 					if (classe == "UNKNOW") then
-						GameCooltip:AddIcon ("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, lineHeight, lineHeight, .25, .5, 0, 1)
+						GameCooltip:AddIcon ("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, iconSize, iconSize, .25, .5, 0, 1)
 					else
 
 						local specID = Details:GetSpec(t[1])
 						if (specID) then
 							local texture, l, r, t, b = Details:GetSpecIcon (specID, false)
-							GameCooltip:AddIcon (texture, 1, 1, lineHeight, lineHeight, l, r, t, b)
+							GameCooltip:AddIcon (texture, 1, 1, iconSize, iconSize, l, r, t, b)
 						else
-							GameCooltip:AddIcon ([[Interface\AddOns\Details\images\classes_small_alpha]], nil, nil, lineHeight, lineHeight, unpack(Details.class_coords [classe]))
+							GameCooltip:AddIcon ([[Interface\AddOns\Details\images\classes_small_alpha]], nil, nil, iconSize, iconSize, unpack(Details.class_coords [classe]))
 						end
 					end
 
@@ -1568,9 +1603,9 @@ end
 		local GameCooltip = GameCooltip
 
 		local spellname, _, spellicon = _GetSpellInfo(actor.damage_spellid)
-		Details:AddTooltipSpellHeaderText (spellname .. " " .. Loc ["STRING_VOIDZONE_TOOLTIP"], headerColor, #tooltip_void_zone_temp, spellicon, 0.078125, 0.921875, 0.078125, 0.921875)
-		Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
-		GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+		--Details:AddTooltipSpellHeaderText (spellname .. " " .. Loc ["STRING_VOIDZONE_TOOLTIP"], headerColor, #tooltip_void_zone_temp, spellicon, 0.078125, 0.921875, 0.078125, 0.921875)
+		--Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
+		--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
 
 		--for target_name, debuff_table in pairs(container) do
 		local first = tooltip_void_zone_temp [1] and tooltip_void_zone_temp [1][3]
@@ -1581,7 +1616,13 @@ end
 		tooltip_void_zone_temp.spellid = actor.damage_spellid
 		tooltip_void_zone_temp.current_actor = actor
 
-		local lineHeight = Details.tooltip.line_height
+		local iconSize = Details.DefaultTooltipIconSize
+		GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+		GameCooltip:SetOption("AlignAsBlizzTooltipFrameHeightOffset", -6)
+		GameCooltip:SetOption("YSpacingMod", -6)
+		Details:AddRoundedCornerToTooltip()
+
+		--local lineHeight = Details.tooltip.line_height
 
 		for index, t in ipairs(tooltip_void_zone_temp) do
 
@@ -1603,12 +1644,12 @@ end
 				local specID = Details:GetSpec(t[1])
 				if (specID) then
 					local texture, l, r, t, b = Details:GetSpecIcon (specID, false)
-					GameCooltip:AddIcon (texture, 1, 1, lineHeight, lineHeight, l, r, t, b)
+					GameCooltip:AddIcon (texture, 1, 1, iconSize, iconSize, l, r, t, b)
 				else
-					GameCooltip:AddIcon ([[Interface\AddOns\Details\images\classes_small_alpha]], nil, nil, lineHeight, lineHeight, unpack(Details.class_coords [classe]))
+					GameCooltip:AddIcon ([[Interface\AddOns\Details\images\classes_small_alpha]], nil, nil, iconSize, iconSize, unpack(Details.class_coords [classe]))
 				end
 			else
-				GameCooltip:AddIcon ("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, lineHeight, lineHeight, .25, .5, 0, 1)
+				GameCooltip:AddIcon ("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, iconSize, iconSize, .25, .5, 0, 1)
 			end
 
 			local _, _, _, _, _, r, g, b = Details:GetClass(t[1])
@@ -1735,6 +1776,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --main refresh function
 
+--~refresh
 ---@param instanceObject instance
 ---@param combatObject combat
 ---@param bForceUpdate boolean
@@ -1742,6 +1784,8 @@ end
 function damageClass:RefreshWindow(instanceObject, combatObject, bForceUpdate, bExportData)
 	---@type actorcontainer
 	local damageContainer = combatObject[class_type] --o que esta sendo mostrado -> [1] - dano [2] - cura --pega o container com ._NameIndexTable ._ActorTable
+
+	--print("updating the main window")
 
 	--not have something to show
 	if (#damageContainer._ActorTable < 1) then
@@ -1996,7 +2040,7 @@ function damageClass:RefreshWindow(instanceObject, combatObject, bForceUpdate, b
 											this_spell [2] = this_spell [2] + on_player
 											total = total + on_player
 										else
-											error("error - no spell id for DTBS friendly fire " .. spellid)
+											--error("error - no spell id for DTBS friendly fire " .. spellid)
 										end
 									end
 								end
@@ -2553,19 +2597,20 @@ end
 		--space between string4 and string3 (usually dps is 4 and total value is 3)
 		for lineId = 1, self:GetNumLinesShown() do
 			local thisLine = self:GetLine(lineId)
+			if (thisLine) then
+				--check strings 3 and 4
+				if (thisLine.lineText4:GetText() ~= "" and thisLine.lineText3:GetText() ~= "") then
+					--the length of the far right string determines the space between it and the next string in the left
+					local stringLength = thisLine.lineText4:GetStringWidth()
+					maxStringLength_StringFour = stringLength > maxStringLength_StringFour and stringLength or maxStringLength_StringFour
+				end
 
-			--check strings 3 and 4
-			if (thisLine.lineText4:GetText() ~= "" and thisLine.lineText3:GetText() ~= "") then
-				--the length of the far right string determines the space between it and the next string in the left
-				local stringLength = thisLine.lineText4:GetStringWidth()
-				maxStringLength_StringFour = stringLength > maxStringLength_StringFour and stringLength or maxStringLength_StringFour
-			end
-
-			--check strings 2 and 3
-			if (thisLine.lineText2:GetText() ~= "" and thisLine.lineText3:GetText() ~= "") then
-				--the length of the middle string determines the space between it and the next string in the left
-				local stringLength = thisLine.lineText3:GetStringWidth()
-				maxStringLength_StringThree = stringLength > maxStringLength_StringThree and stringLength or maxStringLength_StringThree
+				--check strings 2 and 3
+				if (thisLine.lineText2:GetText() ~= "" and thisLine.lineText3:GetText() ~= "") then
+					--the length of the middle string determines the space between it and the next string in the left
+					local stringLength = thisLine.lineText3:GetStringWidth()
+					maxStringLength_StringThree = stringLength > maxStringLength_StringThree and stringLength or maxStringLength_StringThree
+				end
 			end
 		end
 
@@ -2586,7 +2631,9 @@ end
 			--update the lines
 			for lineId = 1, self:GetNumLinesShown() do
 				local thisLine = self:GetLine(lineId)
-				thisLine.lineText3:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
+				if (thisLine) then
+					thisLine.lineText3:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
+				end
 			end
 		end
 
@@ -2607,7 +2654,9 @@ end
 				--update the lines
 				for lineId = 1, self:GetNumLinesShown() do
 					local thisLine = self:GetLine(lineId)
-					thisLine.lineText2:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
+					if (thisLine) then
+						thisLine.lineText2:SetPoint("right", thisLine.statusbar, "right", -newOffset, profileYOffset)
+					end
 				end
 			end
 		end
@@ -2618,7 +2667,7 @@ end
 
 			--check if there's something showing in this line
 			--check if the line is shown and if the text exists for sanitization
-			if (thisLine.minha_tabela and thisLine:IsShown() and thisLine.lineText1:GetText()) then
+			if (thisLine and thisLine.minha_tabela and thisLine:IsShown() and thisLine.lineText1:GetText()) then
 				local playerNameFontString = thisLine.lineText1
 				local text2 = thisLine.lineText2
 				local text3 = thisLine.lineText3
@@ -2630,10 +2679,10 @@ end
 				DetailsFramework:TruncateTextSafe(playerNameFontString, self.cached_bar_width - totalWidth) --this avoid truncated strings with ...
 
 				--these commented lines are for to create a cache and store the name already truncated there to safe performance
-					--local truncatedName = playerNameFontString:GetText()
-					--local actorObject = thisLine.minha_tabela
-					--actorObject.name_cached = truncatedName
-					--actorObject.name_cached_time = GetTime()
+				--local truncatedName = playerNameFontString:GetText()
+				--local actorObject = thisLine.minha_tabela
+				--actorObject.name_cached = truncatedName
+				--actorObject.name_cached_time = GetTime()
 			end
 		end
 	end
@@ -2641,7 +2690,7 @@ end
 
 --handle internal details! events
 local eventListener = Details:CreateEventListener()
-eventListener:RegisterEvent("COMBAT_PLAYER_ENTER", function()
+eventListener:RegisterEvent("COMBAT_PLAYER_ENTER", function(eventName, combatObject)
 	if (Details.CacheInLineMaxDistance) then
 		Details:Destroy(Details.CacheInLineMaxDistance)
 
@@ -2653,7 +2702,7 @@ eventListener:RegisterEvent("COMBAT_PLAYER_ENTER", function()
 	end
 end)
 
-local actor_class_color_r, actor_class_color_g, actor_class_color_b
+local classColor_Red, classColor_Green, classColor_Blue
 
 -- ~texts
 --[[exported]] function Details:SetInLineTexts(thisLine, valueText, perSecondText, percentText)
@@ -2992,7 +3041,7 @@ function damageClass:RefreshLine(instanceObject, lineContainer, whichRowLine, ra
 		bForceRefresh = true
 	end
 
-	actor_class_color_r, actor_class_color_g, actor_class_color_b = self:GetBarColor()
+	classColor_Red, classColor_Green, classColor_Blue = self:GetBarColor()
 
 	return self:RefreshLineValue(thisLine, instanceObject, previousData, bForceRefresh, percentNumber, bUseAnimations, total, instanceObject.top)
 end
@@ -3033,18 +3082,27 @@ function Details:ShowExtraStatusbar(thisLine, amount, extraAmount, totalAmount, 
 			extraStatusbar:SetPoint("topleft", thisLine, "topleft", (statusBarWidth * percent) - fillTheGapWidth, 0)
 		end
 
+		--check if the extra bar will be bigger than the window
+		local windowWidth = instanceObject:GetSize()
+		local lineWidth = thisLine:GetWidth() * (amount/topAmount)
+		local maxExtraBarWidth = windowWidth - lineWidth - initialOffset
+
+		if (extraStatusbarWidth > maxExtraBarWidth) then
+			extraStatusbarWidth = maxExtraBarWidth
+		end
+
 		extraStatusbar:SetWidth(extraStatusbarWidth)
 		extraStatusbar:SetFrameLevel(thisLine:GetFrameLevel() + 1)
 
 		extraStatusbar.OnEnterCallback = onEnterFunc
 		extraStatusbar.OnLeaveCallback = onLeaveFunc
 
-		if (Details.combat_log.evoker_calc_damage) then
-			extraStatusbar:SetAlpha(0.8)
-			extraStatusbar.defaultAlpha = 0.8
+		if (Details.combat_log.calc_evoker_damage) then
+			extraStatusbar:SetAlpha(0.2)
+			extraStatusbar.defaultAlpha = 0.2
 		else
-			extraStatusbar:SetAlpha(0.1)
-			extraStatusbar.defaultAlpha = 0.1
+			extraStatusbar:SetAlpha(0.7)
+			extraStatusbar.defaultAlpha = 0.7
 		end
 		extraStatusbar:Show()
 	else
@@ -3102,7 +3160,13 @@ function Details:RefreshLineValue(thisLine, instance, previousData, isForceRefre
 			Details.FadeHandler.Fader(thisLine, "out")
 
 			if (self.total_extra and self.total_extra > 0) then
-				handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+				if (self.spec == 1473) then
+					if (Details.combat_log.calc_evoker_damage) then
+						handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+					end
+				else
+					handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+				end
 			end
 
 			return self:RefreshBarra(thisLine, instance)
@@ -3119,12 +3183,18 @@ function Details:RefreshLineValue(thisLine, instance, previousData, isForceRefre
 				thisLine.last_value = percent --reseta o ultimo valor da barra
 
 				if (self.total_extra and self.total_extra > 0) then
-					handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+					if (self.spec == 1473) then
+						if (Details.combat_log.calc_evoker_damage) then
+							handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+						end
+					else
+						handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+					end
 				end
 
 				return self:RefreshBarra(thisLine, instance)
 
-			elseif (percent ~= thisLine.last_value) then --continua mostrando a mesma tabela ent�o compara a porcentagem
+			elseif (percent ~= thisLine.last_value) then
 				--apenas atualizar
 				if (bUseAnimations and self.spec ~= 1473) then
 					thisLine.animacao_fim = percent
@@ -3134,13 +3204,25 @@ function Details:RefreshLineValue(thisLine, instance, previousData, isForceRefre
 				thisLine.last_value = percent
 
 				if (self.total_extra and self.total_extra > 0) then
-					Details:ShowExtraStatusbar(thisLine, self.total, self.total_extra, totalValue, topValue, instance)
+					if (self.spec == 1473) then
+						if (Details.combat_log.calc_evoker_damage) then
+							handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+						end
+					else
+						Details:ShowExtraStatusbar(thisLine, self.total, self.total_extra, totalValue, topValue, instance)
+					end
 				end
 
 				return self:RefreshBarra(thisLine, instance)
 			else
 				if (self.total_extra and self.total_extra > 0) then
-					handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+					if (self.spec == 1473) then
+						if (Details.combat_log.calc_evoker_damage) then
+							handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+						end
+					else
+						handleShowExtraStatusbar(thisLine, self, instance, previousData, isForceRefresh, percent, bUseAnimations, totalValue, topValue)
+					end
 				end
 			end
 		end
@@ -3162,9 +3244,12 @@ function Details:SetBarLeftText(bar, instance, enemy, arenaEnemy, arenaAlly, usi
 		barNumber = bar.colocacao .. ". "
 	end
 
-	--translate cyrillic alphabet to western alphabet by Vardex (https://github.com/Vardex May 22, 2019)
 	if (instance.row_info.textL_translit_text) then
-		self.displayName = Translit:Transliterate(self.displayName, "!")
+		if (not self.transliteratedName) then
+			--translate cyrillic alphabet to western alphabet by Vardex (https://github.com/Vardex May 22, 2019)
+			self.transliteratedName = Translit:Transliterate(self.displayName, "!")
+		end
+		self.displayName = self.transliteratedName or self.displayName
 	end
 
 	if (enemy) then
@@ -3240,7 +3325,12 @@ end
 function Details:SetBarColors(bar, instance, r, g, b, a) --[[exported]] --~colors
 	a = a or 1
 
-	if (instance.row_info.texture_class_colors) then
+	local bUseClassColor = instance.row_info.texture_class_colors
+
+	if (self.customColor) then
+		bar.textura:SetVertexColor(r, g, b, a)
+
+	elseif (bUseClassColor) then
 		if (self.classe == "UNGROUPPLAYER") then
 			if (self.spec) then
 				local specId, specName, specDescription, specIcon, specRole, specClass = DetailsFramework.GetSpecializationInfoByID(self.spec)
@@ -3250,6 +3340,9 @@ function Details:SetBarColors(bar, instance, r, g, b, a) --[[exported]] --~color
 			end
 		end
 		bar.textura:SetVertexColor(r, g, b, a)
+	else
+		r, g, b, a = unpack(instance.row_info.fixed_texture_color)
+		bar.textura:SetVertexColor(r, g, b, a)
 	end
 
 	if (instance.row_info.texture_background_class_color) then
@@ -3257,18 +3350,23 @@ function Details:SetBarColors(bar, instance, r, g, b, a) --[[exported]] --~color
 	end
 
 	if (instance.row_info.textL_class_colors) then
-		bar.lineText1:SetTextColor(r, g, b, a)
+		local textColor_Red, textColor_Green, textColor_Blue = self:GetTextColor(instance, "left")
+		bar.lineText1:SetTextColor(textColor_Red, textColor_Green, textColor_Blue) --the r, g, b color passed are the color used on the bar, so if the bar is not using class color, the text is painted with the fixed color for the bar
 	end
 
 	if (instance.row_info.textR_class_colors) then
-		bar.lineText2:SetTextColor(r, g, b, a)
-		bar.lineText3:SetTextColor(r, g, b, a)
-		bar.lineText4:SetTextColor(r, g, b, a)
+		local textColor_Red, textColor_Green, textColor_Blue = self:GetTextColor(instance, "right")
+		bar.lineText2:SetTextColor(textColor_Red, textColor_Green, textColor_Blue)
+		bar.lineText3:SetTextColor(textColor_Red, textColor_Green, textColor_Blue)
+		bar.lineText4:SetTextColor(textColor_Red, textColor_Green, textColor_Blue)
 	end
 
 	if (instance.row_info.backdrop.use_class_colors) then
 		--get the alpha from the border color
 		local alpha = instance.row_info.backdrop.color[4]
+		if (not bUseClassColor) then
+			r, g, b = self:GetClassColor()
+		end
 		bar.lineBorder:SetVertexColor(r, g, b, alpha)
 	end
 end
@@ -3316,9 +3414,17 @@ function Details:SetClassIcon(texture, instance, class) --[[exported]] --~icons
 			end
 		end
 
-		local localizedClass, englishClass
+		local englishClass
 		if (self.serial ~= "") then
-			localizedClass, englishClass = GetPlayerInfoByGUID(self.serial)
+			local bResult, sResult = pcall(function() local lClass, eClass = GetPlayerInfoByGUID(self.serial or "") return eClass end) --will error with: nil, table and boolean
+			if (bResult) then
+				englishClass = sResult
+			else
+				local bIncludeStackTrace = true
+				--[[GLOBAL]] DETAILS_FAILED_ACTOR = Details:GenerateActorInfo(self, sResult, bIncludeStackTrace) --avoid the game gc and details gc from destroying the actor info
+				Details:Msg("Bug happend on GetPlayerInfoByGUID() class_damage.lua:3419. Use command '/details bug' to report.")
+				englishClass = "UNKNOW"
+			end
 		end
 
 		if (englishClass) then
@@ -3351,8 +3457,8 @@ function Details:SetClassIcon(texture, instance, class) --[[exported]] --~icons
 	elseif (class == "PET") then
 		texture:SetTexture(instance and instance.row_info.icon_file or [[Interface\AddOns\Details\images\classes_small]])
 		texture:SetTexCoord(0.25, 0.49609375, 0.75, 1)
-		actor_class_color_r, actor_class_color_g, actor_class_color_b = DetailsFramework:ParseColors(actor_class_color_r, actor_class_color_g, actor_class_color_b)
-		texture:SetVertexColor(actor_class_color_r, actor_class_color_g, actor_class_color_b)
+		classColor_Red, classColor_Green, classColor_Blue = DetailsFramework:ParseColors(classColor_Red, classColor_Green, classColor_Blue)
+		texture:SetVertexColor(classColor_Red, classColor_Green, classColor_Blue)
 
 	else
 		if (instance and instance.row_info.use_spec_icons) then
@@ -3384,7 +3490,7 @@ function Details:RefreshBarra(thisLine, instance, fromResize) --[[exported]]
 	end
 
 	if (fromResize) then
-		actor_class_color_r, actor_class_color_g, actor_class_color_b = self:GetBarColor()
+		classColor_Red, classColor_Green, classColor_Blue = self:GetBarColor()
 	end
 
 	--icon
@@ -3398,7 +3504,7 @@ function Details:RefreshBarra(thisLine, instance, fromResize) --[[exported]]
 	end
 
 	--texture color
-	self:SetBarColors(thisLine, instance, actor_class_color_r, actor_class_color_g, actor_class_color_b)
+	self:SetBarColors(thisLine, instance, classColor_Red, classColor_Green, classColor_Blue)
 
 	--left text
 	self:SetBarLeftText(thisLine, instance, enemy, arenaEnemy, arenaAlly, UsingCustomLeftText)
@@ -3447,6 +3553,9 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 						end
 					end
 				end
+
+				GameCooltip:AddLine(" ")
+				GameCooltip:AddIcon("", 1, 1, 5, 5)
 			end
 		end
 	else
@@ -3463,12 +3572,26 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 		---@type actorcontainer
 		local utilityContainer = combatObject:GetContainer(DETAILS_ATTRIBUTE_MISC)
 
+		---@type table<spellid, table<spellid, number, actorname, actorname, class, boolean>>
 		local buffUptimeTable = {}
 
-		--for each actor in the container
+		local CONST_SPELLID_EBONMIGHT = 395152
+		local CONST_SPELLID_PRESCIENCE = 410089
+		local CONST_SPELLID_BLACKATTUNEMENT = 403264
+		local CONST_SPELLID_BLISTERING_SCALES = 360827
+
+		---@type actor[]
+		local augmentationEvokers = {}
+
+		--prescience and ebon might updatime on each actor
 		for _, actorObject in utilityContainer:ListActors() do
 			---@type spellcontainer
 			local receivedBuffs = actorObject.received_buffs_spells
+
+			--check if the actor is an augmentation evoker
+			if (actorObject.spec == 1473) then
+				augmentationEvokers[#augmentationEvokers+1] = actorObject
+			end
 
 			if (receivedBuffs and actorObject:IsPlayer() and actorObject:IsGroupPlayer()) then
 				for sourceNameSpellId, spellTable in receivedBuffs:ListSpells() do
@@ -3477,20 +3600,28 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 						spellId = tonumber(spellId)
 						local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
 
-						if (spellName) then
+						if (spellName and spellId) then
 							sourceName = detailsFramework:RemoveRealmName(sourceName)
 							local targetName = actorObject:Name()
 							targetName = detailsFramework:RemoveRealmName(targetName)
 
 							local uptime = spellTable.uptime or 0
-							buffUptimeTable[#buffUptimeTable+1] = {spellId, uptime, sourceName, targetName, actorObject:Class()}
+							local bCanShowOnTooltip = true
+							buffUptimeTable[spellId] = buffUptimeTable[spellId] or {}
+							table.insert(buffUptimeTable[spellId], {spellId, uptime, sourceName, targetName, actorObject:Class(), bCanShowOnTooltip})
 						end
 					end
 				end
 			end
 		end
 
-		table.sort(buffUptimeTable, Details.Sort2)
+		for spellId, buffTable in pairs(buffUptimeTable) do
+			local totalUptime = 0
+			for i = 1, #buffTable do
+				totalUptime = totalUptime + buffTable[i][2]
+			end
+			table.sort(buffTable, Details.Sort2)
+		end
 
 		Details:FormatCooltipForSpells()
 		Details:AddTooltipSpellHeaderText(Loc ["STRING_SPELLS"], headerColor, #buffUptimeTable, Details.tooltip_spell_icon.file, unpack(Details.tooltip_spell_icon.coords))
@@ -3499,24 +3630,106 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 		local iconSize = 22
 		local iconBorderInfo = Details.tooltip.icon_border_texcoord
 
+		--add the total combat time into the tooltip
 		local combatTimeMinutes, combatTimeSeconds = math.floor(combatTime / 60), math.floor(combatTime % 60)
 		GameCooltip:AddLine("Combat Time", combatTimeMinutes .. "m " .. combatTimeSeconds .. "s" .. " (" .. format("%.1f", 100) .. "%)")
 		GameCooltip:AddIcon([[Interface\TARGETINGFRAME\UnitFrameIcons]], nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
-		Details:AddTooltipBackgroundStatusbar(false, 100, true, "green")
+		Details:AddTooltipBackgroundStatusbar(false, 100, true, "darkgreen")
 
-		if (#buffUptimeTable > 0) then
-			for i = 1, min(30, #buffUptimeTable) do
-				local uptimeTable = buffUptimeTable[i]
+		GameCooltip:AddLine("", "")
+		GameCooltip:AddIcon("", nil, nil, 1, 1)
+
+		local ebonMightTable = buffUptimeTable[CONST_SPELLID_EBONMIGHT][1]
+		if (ebonMightTable) then
+			local uptime = ebonMightTable[2]
+			local spellName, _, spellIcon = _GetSpellInfo(CONST_SPELLID_EBONMIGHT)
+			local uptimePercent = uptime / combatTime * 100
+			local sourceName = ebonMightTable[3]
+
+			if (uptime <= combatTime) then
+				local minutes, seconds = math.floor(uptime / 60), math.floor(uptime % 60)
+				if (minutes > 0) then
+					GameCooltip:AddLine(spellName, minutes .. "m " .. seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+					Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "darkgreen")
+				else
+					GameCooltip:AddLine(spellName, seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+					Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "darkgreen")
+				end
+
+				GameCooltip:AddIcon(spellIcon, nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
+			end
+		end
+
+		GameCooltip:AddLine("", "")
+		GameCooltip:AddIcon("", nil, nil, 1, 1)
+
+		for i = 1, #augmentationEvokers do --black attunement
+			local actorObject = augmentationEvokers[i]
+			if (actorObject:Name() == actorName) then
+				local buffUptimeSpellContainer = actorObject:GetSpellContainer("buff")
+				if (buffUptimeSpellContainer) then
+					local spellTable = buffUptimeSpellContainer:GetSpell(403264)
+					if (spellTable) then
+						local uptime = spellTable.uptime
+						local spellName, _, spellIcon = _GetSpellInfo(CONST_SPELLID_BLACKATTUNEMENT)
+						local uptimePercent = uptime / combatTime * 100
+
+						if (uptime <= combatTime) then
+							local minutes, seconds = math.floor(uptime / 60), math.floor(uptime % 60)
+							if (minutes > 0) then
+								GameCooltip:AddLine(spellName, minutes .. "m " .. seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+								Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, "darkgreen")
+							else
+								GameCooltip:AddLine(spellName, seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+								Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, "darkgreen")
+							end
+
+							GameCooltip:AddIcon(spellIcon, nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
+						end
+					end
+
+					local spellTable = buffUptimeSpellContainer:GetSpell(CONST_SPELLID_BLISTERING_SCALES)
+					if (spellTable) then
+						local uptime = spellTable.uptime
+						local spellName, _, spellIcon = _GetSpellInfo(CONST_SPELLID_BLISTERING_SCALES)
+						local uptimePercent = uptime / combatTime * 100
+
+						if (uptime <= combatTime) then
+							local minutes, seconds = math.floor(uptime / 60), math.floor(uptime % 60)
+							if (minutes > 0) then
+								GameCooltip:AddLine(spellName, minutes .. "m " .. seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+								Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, "darkgreen")
+							else
+								GameCooltip:AddLine(spellName, seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
+								Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, "darkgreen")
+							end
+
+							GameCooltip:AddIcon(spellIcon, nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
+						end
+					end
+				end
+			end
+		end
+
+		GameCooltip:AddLine("", "")
+		GameCooltip:AddIcon("", nil, nil, 1, 1)
+
+		--add the buff uptime into the tooltip
+		local allPrescienceTargets = buffUptimeTable[CONST_SPELLID_PRESCIENCE]
+		if (allPrescienceTargets and #allPrescienceTargets > 0) then
+			for i = 1, math.min(30, #allPrescienceTargets) do
+				local uptimeTable = allPrescienceTargets[i]
 
 				local spellId = uptimeTable[1]
 				local uptime = uptimeTable[2]
 				local sourceName = uptimeTable[3]
 				local targetName = uptimeTable[4]
 				local targetClass = uptimeTable[5]
+				local bCanShow = uptimeTable[6]
 
 				local uptimePercent = uptime / combatTime * 100
 
-				if (uptime > 0 and uptimePercent < 99.5) then
+				if (uptime > 0 and uptimePercent < 99.5 and bCanShow) then
 					local spellName, _, spellIcon = _GetSpellInfo(spellId)
 
 					if (sourceName) then
@@ -3529,10 +3742,10 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 						local minutes, seconds = math.floor(uptime / 60), math.floor(uptime % 60)
 						if (minutes > 0) then
 							GameCooltip:AddLine(spellName, minutes .. "m " .. seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
-							Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "green")
+							Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "darkgreen")
 						else
 							GameCooltip:AddLine(spellName, seconds .. "s" .. " (" .. format("%.1f", uptimePercent) .. "%)")
-							Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "green")
+							Details:AddTooltipBackgroundStatusbar(false, uptimePercent, true, sourceName and "darkgreen")
 						end
 
 						GameCooltip:AddIcon(spellIcon, nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
@@ -3541,6 +3754,81 @@ function damageClass.PredictedAugSpellsOnEnter(self)
 			end
 		else
 			GameCooltip:AddLine(Loc ["STRING_NO_SPELL"])
+		end
+
+		local evokerObject = combatObject:GetActor(DETAILS_ATTRIBUTE_MISC, actorName)
+
+		GameCooltip:AddLine(" ")
+		GameCooltip:AddIcon(" ", 1, 1, 10, 10)
+
+		if (evokerObject) then
+			GameCooltip:AddLine("Prescience Uptime by Amount of Applications")
+			local prescienceData = evokerObject.cleu_prescience_time
+
+			if (prescienceData) then
+				prescienceData = prescienceData.stackTime
+				local totalTimeWithPrescienceUp = 0
+
+				for amountOfPrescienceApplied, time in ipairs(prescienceData) do
+					totalTimeWithPrescienceUp = totalTimeWithPrescienceUp + time
+				end
+
+				for amountOfPrescienceApplied, time in ipairs(prescienceData) do
+					if (time > 0) then
+						local uptimePercent = time / combatTime * 100
+						local timeString = detailsFramework:IntegerToTimer(time)
+						GameCooltip:AddLine("Presciece Applied: " .. amountOfPrescienceApplied, timeString .. " (" .. format("%.1f", uptimePercent) .. "%)")
+						--5199639 prescience icon
+						GameCooltip:AddIcon([[Interface\AddOns\Details\images\spells\prescience_time]], nil, nil, iconSize, iconSize)
+						Details:AddTooltipBackgroundStatusbar(false, time/totalTimeWithPrescienceUp*100, true, "green")
+					end
+				end
+			end
+		end
+
+		--iterate among all the actors and find which one are healers, then get the amount of mana the evoker restored for that healer
+		---@type actorcontainer
+		local resourcesContainer = combatObject:GetContainer(DETAILS_ATTRIBUTE_ENERGY)
+		local manaRestoredToHealers = {}
+
+		for index, actorObject in resourcesContainer:ListActors() do
+			if (actorObject.spec == 1473) then --this is an aug evoker
+				local spellContainer = actorObject:GetSpellContainer("spell")
+				--local spellContainer = actorObject.spells
+				if (spellContainer) then
+					local sourceOfMagic = spellContainer:GetSpell(372571)
+					if (sourceOfMagic) then
+						for targetName, restoredAmount in pairs(sourceOfMagic.targets) do
+							manaRestoredToHealers[#manaRestoredToHealers+1] = {targetName, restoredAmount}
+						end
+					end
+				end
+			end
+		end
+
+		if (#manaRestoredToHealers > 0) then
+			GameCooltip:AddLine(" ")
+			GameCooltip:AddIcon(" ", 1, 1, 10, 10)
+			GameCooltip:AddLine("Mana Restored to Healers:")
+
+			table.sort(manaRestoredToHealers, Details.Sort2)
+
+			for i = 1, math.min(10, #manaRestoredToHealers) do
+				local targetName, restoredAmount = unpack(manaRestoredToHealers[i])
+				local targetActorObject = combatObject(DETAILS_ATTRIBUTE_ENERGY, targetName)
+
+				if (targetActorObject) then
+					local targetClass = targetActorObject:GetActorClass()
+					local targetName = detailsFramework:AddClassColorToText(targetName, targetClass)
+					targetName = detailsFramework:AddClassIconToText(targetName, targetName, targetClass)
+
+					GameCooltip:AddLine(targetName, Details:Format(restoredAmount))
+
+					local spellIcon = GetSpellTexture(372571)
+					GameCooltip:AddIcon(spellIcon, nil, nil, iconSize, iconSize, iconBorderInfo.L, iconBorderInfo.R, iconBorderInfo.T, iconBorderInfo.B)
+					Details:AddTooltipBackgroundStatusbar(false, 100, true, "dodgerblue")
+				end
+			end
 		end
 	end
 
@@ -3622,6 +3910,7 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 			if (ActorDamage == 0) then
 				ActorDamage = 0.00000001
 			end
+
 			local ActorSkillsContainer = self.spells._ActorTable
 			local ActorSkillsSortTable = {}
 
@@ -3633,6 +3922,13 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 				meu_tempo = self:Tempo()
 			elseif (Details.time_type == 2 or Details.use_realtimedps) then
 				meu_tempo = instancia.showing:GetCombatTime()
+			end
+
+			if (not meu_tempo) then
+				meu_tempo = instancia.showing:GetCombatTime()
+				if (Details.time_type == 3) then --time type 3 is deprecated
+					Details.time_type = 2
+				end
 			end
 
 			--add actor spells
@@ -3648,7 +3944,11 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 				local petActor = instancia.showing[class_type]:PegarCombatente (nil, petName)
 				if (petActor) then
 					for _spellid, _skill in pairs(petActor:GetActorSpells()) do
-						ActorSkillsSortTable [#ActorSkillsSortTable+1] = {_spellid, _skill.total, _skill.total/meu_tempo, petName:gsub((" <.*"), "")}
+						local formattedPetName = petName:gsub((" <.*"), "")
+						if (instancia.row_info.textL_translit_text) then
+							formattedPetName = Translit:Transliterate(formattedPetName, "!")
+						end
+						ActorSkillsSortTable [#ActorSkillsSortTable+1] = {_spellid, _skill.total, _skill.total/meu_tempo, formattedPetName}
 					end
 				end
 			end
@@ -3679,16 +3979,20 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 			end
 
 		--MOSTRA HABILIDADES
-			Details:AddTooltipSpellHeaderText (Loc ["STRING_SPELLS"], headerColor, #ActorSkillsSortTable, Details.tooltip_spell_icon.file, unpack(Details.tooltip_spell_icon.coords))
+			--Details:AddTooltipSpellHeaderText (Loc ["STRING_SPELLS"], headerColor, #ActorSkillsSortTable, Details.tooltip_spell_icon.file, unpack(Details.tooltip_spell_icon.coords))
 
 			if (is_maximized) then
 				--highlight shift key
-				GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
-				Details:AddTooltipHeaderStatusbar (r, g, b, 1)
+				--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+				--Details:AddTooltipHeaderStatusbar (r, g, b, 1)
 			else
-				GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
-				Details:AddTooltipHeaderStatusbar (r, g, b, barAlha)
+				--GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
+				--Details:AddTooltipHeaderStatusbar (r, g, b, barAlha)
 			end
+
+			GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+			GameCooltip:SetOption("YSpacingMod", -6)
+			local iconSize = Details.DefaultTooltipIconSize
 
 			local topAbility = ActorSkillsSortTable [1] and ActorSkillsSortTable [1][2] or 0.0001
 
@@ -3723,7 +4027,7 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 						GameCooltip:AddLine(nome_magia, FormatTooltipNumber (_, _math_floor(totalDPS)) .."   ("..percent.."%)")
 					end
 
-					GameCooltip:AddIcon (icone_magia, nil, nil, icon_size.W + 4, icon_size.H + 4, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
+					GameCooltip:AddIcon (icone_magia, nil, nil, iconSize, iconSize, icon_border.L, icon_border.R, icon_border.T, icon_border.B)
 					Details:AddTooltipBackgroundStatusbar (false, totalDamage/topAbility*100)
 				end
 			else
@@ -3746,7 +4050,7 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 						if (spellName) then
 							GameCooltip:AddLine(spellName, FormatTooltipNumber (_, damageDone) .. " (" .. _math_floor(damageDone / self.total * 100) .. "%)")
 							Details:AddTooltipBackgroundStatusbar (false, damageDone / self.total * 100)
-							GameCooltip:AddIcon (spellIcon, 1, 1, icon_size.W, icon_size.H, 0.1, 0.9, 0.1, 0.9)
+							GameCooltip:AddIcon (spellIcon, 1, 1, iconSize, iconSize, 0.1, 0.9, 0.1, 0.9)
 						end
 					end
 				end
@@ -3875,6 +4179,11 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 				local petDPS = damageTable[3]
 
 				petName = damageTable[1]:gsub(("%s%<.*"), "")
+
+				if (instance.row_info.textL_translit_text) then
+					petName = Translit:Transliterate(petName, "!")
+				end
+
 				if (instancia.sub_atributo == 1) then
 					GameCooltip:AddLine(petName, FormatTooltipNumber(_, petDamageDone) .. " (" .. math.floor(petDamageDone/self.total*100) .. "%)")
 				else
@@ -4023,84 +4332,89 @@ function damageClass:ReportSingleFragsLine (frag, instance, ShiftKeyDown, Contro
 	return Details:Reportar (report_table, {_no_current = true, _no_inverse = true, _custom = true})
 end
 
-function damageClass:ToolTip_Enemies (instancia, numero, barra, keydown)
-
-	local owner = self.owner
-	if (owner and owner.classe) then
-		r, g, b = unpack(Details.class_colors [owner.classe])
+---@param self actor
+---@param instanceObject instance
+function damageClass:ToolTip_Enemies(instanceObject, numero, barra, keydown)
+	--check if the actor has an owner, if it does, it's a pet
+	local ownerObject = self.owner
+	if (ownerObject and ownerObject.classe) then
+		r, g, b = unpack(Details.class_colors[ownerObject.classe])
 	else
-		r, g, b = unpack(Details.class_colors [self.classe])
+		r, g, b = unpack(Details.class_colors[self.classe])
 	end
 
-	local combat = instancia:GetShowingCombat()
-	local enemy_name = self:name()
+	local combatObject = instanceObject:GetCombat()
+	local enemyName = self:Name()
 
 	Details:Destroy(tooltip_temp_table) --fix for translit bug report, 'player' is nil
 
 	--enemy damage taken
 	local i = 1
-	local damage_taken = 0
-	for _, actor in ipairs(combat[1]._ActorTable) do
-		if (actor.grupo and actor.targets [self.nome]) then
-			local t = tooltip_temp_table [i]
-			if (not t) then
-				tooltip_temp_table [i] = {}
-				t = tooltip_temp_table [i]
+	local damageTaken = 0
+	---@type actorcontainer
+	local damageContainer = combatObject:GetContainer(DETAILS_ATTRIBUTE_DAMAGE)
+
+	---@type number, actor
+	for idx, actor in damageContainer:ListActors() do
+		if (actor:IsGroupPlayer() and actor.targets[enemyName]) then
+			---@type table<actor, number>
+			local agressorsTable = tooltip_temp_table[i]
+
+			if (not agressorsTable) then
+				tooltip_temp_table[i] = {}
+				agressorsTable = tooltip_temp_table[i]
 			end
-			t [1] = actor
-			t [2] = actor.targets [enemy_name] or 0
-			damage_taken = damage_taken + t [2]
+
+			agressorsTable[1] = actor
+			agressorsTable[2] = (actor.targets[enemyName]) or 0
+			damageTaken = damageTaken + agressorsTable[2]
+
 			i = i + 1
 		end
 	end
 
 	for o = i, #tooltip_temp_table do
-		local t = tooltip_temp_table [o]
+		local t = tooltip_temp_table[o]
 		t[2] = 0
 		t[1] = 0
 	end
 
 	_table_sort(tooltip_temp_table, Details.Sort2)
 
-	-- enemy damage taken
-	Details:AddTooltipSpellHeaderText (Loc ["STRING_DAMAGE_TAKEN_FROM"], headerColor, i-1, [[Interface\Buttons\UI-MicroStream-Red]], 0.1875, 0.8125, 0.15625, 0.78125)
-	GameCooltip:AddIcon ([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
-
-	Details:AddTooltipHeaderStatusbar (1, 1, 1, 0.5)
-
 	--build the tooltip
-	local top = (tooltip_temp_table [1] and tooltip_temp_table [1][2]) or 0
-	tooltip_temp_table.damage_total = damage_taken
+	local top = (tooltip_temp_table[1] and tooltip_temp_table[1][2]) or 0
+	tooltip_temp_table.damage_total = damageTaken
 
-	local lineHeight = Details.tooltip.line_height
+	local iconSize = Details.DefaultTooltipIconSize
+	GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+	GameCooltip:SetOption("YSpacingMod", -6)
 
 	for o = 1, i-1 do
+		local actorAggressor = tooltip_temp_table[o][1]
+		local damageDone = tooltip_temp_table[o][2]
+		local playerName = Details:GetOnlyName(actorAggressor:name())
 
-		local player = tooltip_temp_table [o][1]
-		local total = tooltip_temp_table [o][2]
-		local player_name = Details:GetOnlyName(player:name())
+		GameCooltip:AddLine(playerName .. " ", FormatTooltipNumber (_, damageDone) .." (" .. format("%.1f", (damageDone / damageTaken) * 100) .. "%)")
 
-		GameCooltip:AddLine(player_name .. " ", FormatTooltipNumber (_, total) .." (" .. format("%.1f", (total / damage_taken) * 100) .. "%)")
-
-		local classe = player:class()
+		local classe = actorAggressor:class()
 		if (not classe) then
 			classe = "UNKNOW"
 		end
+
 		if (classe == "UNKNOW") then
-			GameCooltip:AddIcon ("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, lineHeight, lineHeight, .25, .5, 0, 1)
+			GameCooltip:AddIcon("Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, iconSize, iconSize, .25, .5, 0, 1)
 		else
-			local specID = player.spec
+			local specID = actorAggressor.spec
 			if (specID) then
-				local texture, l, r, t, b = Details:GetSpecIcon (specID, false)
-				GameCooltip:AddIcon (texture, 1, 1, lineHeight, lineHeight, l, r, t, b)
+				local texture, l, r, t, b = Details:GetSpecIcon(specID, false)
+				GameCooltip:AddIcon(texture, 1, 1, iconSize, iconSize, l, r, t, b)
 			else
-				GameCooltip:AddIcon (instancia.row_info.icon_file, nil, nil, lineHeight, lineHeight, unpack(Details.class_coords [classe]))
+				GameCooltip:AddIcon(instanceObject.row_info.icon_file, nil, nil, iconSize, iconSize, unpack(Details.class_coords [classe]))
 			end
 		end
 
-		local r, g, b = unpack(Details.class_colors [classe])
-		GameCooltip:AddStatusBar (total/top*100, 1, r, g, b, 1, false, enemies_background)
-
+		local r, g, b = unpack(Details.class_colors[classe])
+		GameCooltip:AddStatusBar(damageDone/top*100, 1, r, g, b, 1, false, enemies_background)
 	end
 
 	GameCooltip:SetOption("StatusBarTexture", "Interface\\AddOns\\Details\\images\\bar_serenity")
@@ -4109,22 +4423,20 @@ function damageClass:ToolTip_Enemies (instancia, numero, barra, keydown)
 	GameCooltip:AddLine(" ")
 	GameCooltip:AddLine(Loc ["STRING_ATTRIBUTE_DAMAGE_ENEMIES_DONE"], FormatTooltipNumber (_, _math_floor(self.total)))
 	local half = 0.00048828125
-	GameCooltip:AddIcon (instancia:GetSkinTexture(), 1, 1, 14, 14, 0.005859375 + half, 0.025390625 - half, 0.3623046875, 0.3818359375)
+	GameCooltip:AddIcon (instanceObject:GetSkinTexture(), 1, 1, 14, 14, 0.005859375 + half, 0.025390625 - half, 0.3623046875, 0.3818359375)
 	GameCooltip:AddStatusBar (0, 1, r, g, b, 1, false, enemies_background)
 
-	local heal_actor = instancia.showing (2, self.nome)
+	local heal_actor = instanceObject.showing (2, self.nome)
 	if (heal_actor) then
 		GameCooltip:AddLine(Loc ["STRING_ATTRIBUTE_HEAL_ENEMY"], FormatTooltipNumber (_, _math_floor(heal_actor.heal_enemy_amt)))
 	else
 		GameCooltip:AddLine(Loc ["STRING_ATTRIBUTE_HEAL_ENEMY"], 0)
 	end
-	GameCooltip:AddIcon (instancia:GetSkinTexture(), 1, 1, 14, 14, 0.037109375 + half, 0.056640625 - half, 0.3623046875, 0.3818359375)
+	GameCooltip:AddIcon (instanceObject:GetSkinTexture(), 1, 1, 14, 14, 0.037109375 + half, 0.056640625 - half, 0.3623046875, 0.3818359375)
 	GameCooltip:AddStatusBar (0, 1, r, g, b, 1, false, enemies_background)
 
 	GameCooltip:AddLine(" ")
 	Details:AddTooltipReportLineText()
-
-	GameCooltip:SetOption("YSpacingMod", 0)
 
 	return true
 end
@@ -4207,30 +4519,35 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 	end
 
 	if (subAttribute == DETAILS_SUBATTRIBUTE_ENEMIES) then
-		Details:AddTooltipSpellHeaderText(Loc ["STRING_DAMAGE_TAKEN_FROM"], headerColor, #damageTakenDataSorted, [[Interface\Buttons\UI-MicroStream-Red]], 0.1875, 0.8125, 0.15625, 0.78125)
+		--Details:AddTooltipSpellHeaderText(Loc ["STRING_DAMAGE_TAKEN_FROM"], headerColor, #damageTakenDataSorted, [[Interface\Buttons\UI-MicroStream-Red]], 0.1875, 0.8125, 0.15625, 0.78125)
 	else
-		Details:AddTooltipSpellHeaderText(Loc ["STRING_FROM"], headerColor, #damageTakenDataSorted, [[Interface\Addons\Details\images\icons]], 0.126953125, 0.1796875, 0, 0.0546875)
+		--Details:AddTooltipSpellHeaderText(Loc ["STRING_FROM"], headerColor, #damageTakenDataSorted, [[Interface\Addons\Details\images\icons]], 0.126953125, 0.1796875, 0, 0.0546875)
 	end
 
 	if (bIsMaximized) then
 		--highlight
-		GameCooltip:AddIcon([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
-		if (subAttribute == DETAILS_SUBATTRIBUTE_ENEMIES) then
-			GameCooltip:AddStatusBar(100, 1, 0.7, g, b, 1)
-		else
-			Details:AddTooltipHeaderStatusbar(r, g, b, 1)
-		end
+		--GameCooltip:AddIcon([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay2)
+		--if (subAttribute == DETAILS_SUBATTRIBUTE_ENEMIES) then
+		--	GameCooltip:AddStatusBar(100, 1, 0.7, g, b, 1)
+		--else
+		--	Details:AddTooltipHeaderStatusbar(r, g, b, 1)
+		--end
 	else
-		GameCooltip:AddIcon([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
-		if (subAttribute == DETAILS_SUBATTRIBUTE_ENEMIES) then
-			GameCooltip:AddStatusBar(100, 1, 0.7, 0, 0, barAlha)
-		else
-			Details:AddTooltipHeaderStatusbar(r, g, b, barAlha)
-		end
+		--GameCooltip:AddIcon([[Interface\AddOns\Details\images\key_shift]], 1, 2, Details.tooltip_key_size_width, Details.tooltip_key_size_height, 0, 1, 0, 0.640625, Details.tooltip_key_overlay1)
+		--if (subAttribute == DETAILS_SUBATTRIBUTE_ENEMIES) then
+		--	GameCooltip:AddStatusBar(100, 1, 0.7, 0, 0, barAlha)
+		--else
+		--	Details:AddTooltipHeaderStatusbar(r, g, b, barAlha)
+		--end
 	end
 
-	local iconSize = Details.tooltip.icon_size
+	--local iconSize = Details.tooltip.icon_size
 	local iconBorderTexCoord = Details.tooltip.icon_border_texcoord
+
+	GameCooltip:SetOption("AlignAsBlizzTooltip", false)
+	GameCooltip:SetOption("AlignAsBlizzTooltipFrameHeightOffset", -6)
+	GameCooltip:SetOption("YSpacingMod", -6)
+	local iconSize = Details.DefaultTooltipIconSize
 
 	-- create a full list of incoming damage, before adding any lines to the tooltip, so we can sort them appropriately
 
@@ -4280,7 +4597,7 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 				local spellName, _, spellIcon = _GetSpellInfo(spellId)
 				local addTextArgs = {spellName .. " (|cFFFFFF00" .. thisActorName .. "|r)", Details:Format(valueAmount) .. " (" .. string.format("%.1f", (valueAmount / totalDamageTaken) * 100) .. "%)"}
 				---@type cooltip_icon
-				local addIconArgs = {spellIcon, 1, 1, iconSize.W, iconSize.H, iconBorderTexCoord.L, iconBorderTexCoord.R, iconBorderTexCoord.T, iconBorderTexCoord.B}
+				local addIconArgs = {spellIcon, 1, 1, iconSize, iconSize, iconBorderTexCoord.L, iconBorderTexCoord.R, iconBorderTexCoord.T, iconBorderTexCoord.B}
 
 				tinsert(lines_to_add, {
 					valueAmount,
@@ -4313,9 +4630,9 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 			end
 
 			if (class == "UNKNOW") then
-				addIconArgs = {"Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, iconSize.W, iconSize.H, .25, .5, 0, 1}
+				addIconArgs = {"Interface\\LFGFRAME\\LFGROLE_BW", nil, nil, iconSize, iconSize, .25, .5, 0, 1}
 			else
-				addIconArgs= {instance.row_info.icon_file, nil, nil, iconSize.W, iconSize.H, unpack(Details.class_coords [class])}
+				addIconArgs= {instance.row_info.icon_file, nil, nil, iconSize, iconSize, unpack(Details.class_coords [class])}
 			end
 			tinsert(lines_to_add, {amount, addLineArgs, addIconArgs})
 		end
@@ -4333,7 +4650,7 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 		GameCooltip:AddLine(" ")
 		GameCooltip:AddLine(Loc ["STRING_ATTRIBUTE_DAMAGE_DONE"], FormatTooltipNumber (_, _math_floor(self.total)))
 		local half = 0.00048828125
-		GameCooltip:AddIcon (instance:GetSkinTexture(), 1, 1, iconSize.W, iconSize.H, 0.005859375 + half, 0.025390625 - half, 0.3623046875, 0.3818359375)
+		GameCooltip:AddIcon (instance:GetSkinTexture(), 1, 1, iconSize, iconSize, 0.005859375 + half, 0.025390625 - half, 0.3623046875, 0.3818359375)
 		Details:AddTooltipBackgroundStatusbar()
 
 		local heal_actor = instance.showing (2, self.nome)
@@ -4342,7 +4659,7 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 		else
 			GameCooltip:AddLine(Loc ["STRING_ATTRIBUTE_HEAL_DONE"], 0)
 		end
-		GameCooltip:AddIcon (instance:GetSkinTexture(), 1, 1, iconSize.W, iconSize.H, 0.037109375 + half, 0.056640625 - half, 0.3623046875, 0.3818359375)
+		GameCooltip:AddIcon (instance:GetSkinTexture(), 1, 1, iconSize, iconSize, 0.037109375 + half, 0.056640625 - half, 0.3623046875, 0.3818359375)
 		Details:AddTooltipBackgroundStatusbar()
 	end
 
@@ -4997,7 +5314,7 @@ function damageClass:MontaInfoDamageDone() --I guess this fills the list of spel
 	---@type combat
 	local combatObject = instance:GetCombat()
 	---@type number
-	local diff = combatObject:GetDifficulty()
+	local diff, diffEngName = combatObject:GetDifficulty()
 	---@type string
 	local playerName = actorObject:Name()
 
@@ -5006,14 +5323,15 @@ function damageClass:MontaInfoDamageDone() --I guess this fills the list of spel
 	--guild ranking on a boss
 	--check if is a raid encounter and if is heroic or mythic
 	do
-		if (diff and (diff == 15 or diff == 16)) then
+		if (diff and (diff == 15 or diff == 16)) then --this might give errors
 			local db = Details.OpenStorage()
 			if (db) then
-				local bestRank, encounterTable = Details.storage:GetBestFromPlayer(diff, combatObject:GetBossInfo().id, "damage", playerName, true)
+				---@type details_storage_unitresult, details_encounterkillinfo
+				local bestRank, encounterTable = Details222.storage.GetBestFromPlayer(diffEngName, combatObject:GetBossInfo().id, "DAMAGER", playerName, true)
 				if (bestRank) then
 					--discover which are the player position in the guild rank
-					local playerTable, onEncounter, rankPosition = Details.storage:GetPlayerGuildRank (diff, combatObject:GetBossInfo().id, "damage", playerName, true)
-					local text1 = playerName .. " Guild Rank on " .. (combatObject:GetBossInfo().name or "") .. ": |cFFFFFF00" .. (rankPosition or "x") .. "|r Best Dps: |cFFFFFF00" .. Details:ToK2((bestRank[1] or 0) / encounterTable.elapsed) .. "|r (" .. encounterTable.date:gsub(".*%s", "") .. ")"
+					local rankPosition = Details222.storage.GetUnitGuildRank(diffEngName, combatObject:GetBossInfo().id, "DAMAGER", playerName, true)
+					local text1 = playerName .. " Guild Rank on " .. (combatObject:GetBossInfo().name or "") .. ": |cFFFFFF00" .. (rankPosition or "x") .. "|r Best Dps: |cFFFFFF00" .. Details:ToK2((bestRank.total or SMALL_NUMBER) / encounterTable.elapsed) .. "|r (" .. encounterTable.date:gsub(".*%s", "") .. ")"
 					breakdownWindowFrame:SetStatusbarText (text1, 10, "gray")
 				else
 					breakdownWindowFrame:SetStatusbarText()
@@ -5764,8 +6082,10 @@ function damageClass:BuildSpellDetails(spellBar, spellBlockContainer, blockIndex
 		local totalCasts = spellBar.amountCasts > 0 and spellBar.amountCasts or "(?)"
 		blockLine1.leftText:SetText(Loc ["STRING_CAST"] .. ": " .. totalCasts) --total amount of casts
 
-		if (trinketData[spellId] and combatObject.trinketProcs) then
-			local trinketProcData = combatObject.trinketProcs[actorName]
+		local trinketProcs = combatObject:GetTrinketProcsForPlayer(actorName)
+
+		if (trinketData[spellId] and trinketProcs) then
+			local trinketProcData = trinketProcs[actorName]
 			if (trinketProcData) then
 				local trinketProc = trinketProcData[spellId]
 				if (trinketProc) then

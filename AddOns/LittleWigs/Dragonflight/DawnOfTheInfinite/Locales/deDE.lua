@@ -10,6 +10,7 @@ if L then
 	L.timestream_anomaly = "Zeitstromanomalie"
 	L.infinite_infiltrator = "Ewiger Infiltrator"
 	L.risen_dragon = "Erweckter Drache"
+	L.iridikrons_creation = "Iridikrons Schöpfung"
 
 	L.iridikron_warmup_trigger = "Die Marionetten wollen sich mir also stellen."
 
@@ -33,4 +34,9 @@ if L then
 
 	L.custom_on_rift_autotalk = "Automatisch ansprechen"
 	L.custom_on_rift_autotalk_desc = "Sofort den Temporalriss öffnen lassen."
+	L.rift_opened = "Temporalriss geöffnet"
+	L.rift_stability = "Rissstabilität"
+	L.rift_stability_desc = "Eine Benachrichtigung anzeigen wenn der Temporalriss geöffnet wurde."
+
+	L.manifested_timeways_warmup_trigger = "Selbst der Aspekt der Zeit darf die Zeitwege nicht stören!"
 end

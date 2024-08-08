@@ -1,0 +1,30 @@
+﻿## Interface: 100207, 110000, 110002
+
+## Title: BigWigs |cffff0000+|r|cffffffffVoice: VV|r
+## Version: 10.4.0
+## Notes: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-zhCN: BigWigs附加模块，为团队首领技能播放语音提示 v8。
+## Notes-zhTW: BigWigs附加模組，為團隊首領技能播放語音提示。
+## Notes-deDE: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-frFR: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-itIT: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-koKR: 우두머리 능력에 대하여 텍스트 음성 변환 소리를 재생하는 BigWigs 플러그인입니다.
+## Notes-ruRU: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-ptBR: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-esES: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## Notes-esMX: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
+## IconTexture: Interface\AddOns\BigWigs_Voice_VV\Icons\VV_BW.tga
+## Author: Funkydude, Sehra, VV
+
+
+## X-BigWigs-LoadOn-CoreEnabled: 1
+## Dependencies: BigWigs
+## LoadOnDemand: 1
+
+## X-Category: Raid
+## X-License: All Rights Reserved. 
+## X-Curse-Project-ID: 305210
+
+
+Core.lua
+FilePaths.lua

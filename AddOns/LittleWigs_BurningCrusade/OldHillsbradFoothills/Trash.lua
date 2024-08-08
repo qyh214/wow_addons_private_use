@@ -25,6 +25,7 @@ local L = mod:GetLocale()
 if L then
 	L.custom_on_autotalk = "Autotalk"
 	L.custom_on_autotalk_desc = "Instantly select Erozion's, Thrall's and Taretha's gossip options."
+	L.custom_on_autotalk_icon = "ui_chat"
 
 	L.incendiary_bombs = "Incendiary Bombs"
 	L.incendiary_bombs_desc = "Display a message when an Incendiary Bomb is planted."
@@ -59,16 +60,30 @@ function mod:GOSSIP_SHOW()
 		-- If the player is in a group, do not free Thrall automatically,
 		-- because they may deny others a chance to turn in the quest.
 		local mobId = self:MobId(self:UnitGUID("npc"))
-		if mobId == 17876 and GetNumGroupMembers() > 0 then
+		if mobId == 17876 and not self:Solo() then
 			if self:Classic() then
+				-- no scenario APIs in Classic
 				return
 			else
-				local _, _, completed = C_Scenario.GetCriteriaInfo(2)
-				if not completed then return end
+				local info = C_ScenarioInfo.GetCriteriaInfo(2)
+				if info and not info.completed then return end
 			end
 		end
 
 		if self:GetGossipOptions() then
+			-- Erozion:
+			-- 33853:I need a pack of incendiary bombs.
+			-- Brazen:
+			-- 34081:I'm ready to go to Durnholde Keep.
+			-- Thrall:
+			-- 33364:We are ready to get you out of here, Thrall. Let's go!
+			-- 34372:Taretha cannot see you, Thrall.
+			-- 35171:The situation is rather complicated, Thrall. It would be best for you to head into the mountains now, before more of Blackmoore's men show up. We'll make sure Taretha is safe.
+			-- 34362:Tarren Mill.
+			-- 32900:We're ready, Thrall.
+			-- Taretha
+			-- 34893:Strange wizard?
+			-- 33525:We'll get you out, Taretha. Don't worry. I doubt the wizard would wander too far away.
 			self:SelectGossipOption(1)
 		end
 	end

@@ -18,7 +18,7 @@ local volcanicDisgorgeCount = 1
 local scorchtailCrashCount = 1
 local cataclysmJawsCount = 1
 local explosionCount = 1
-local playerSide = 421330
+local playerSide = "all"
 local showAllCasts = false
 
 --------------------------------------------------------------------------------
@@ -30,9 +30,7 @@ if L then
 	L.custom_off_all_scorchtail_crash = "Show All Casts"
 	L.custom_off_all_scorchtail_crash_desc = "Show timers and messages for all Scorchtail Crash casts instead of just for your side."
 
-	L.flood_of_the_firelands = "Soaks"
 	L.flood_of_the_firelands_single_wait = "Wait" -- Wait 3, Wait 2, Wait 1 countdown before soak debuff is applied
-	L.flood_of_the_firelands_single = "Soak"
 	L.scorchtail_crash = "Tail Slam"
 	L.serpents_fury = "Flames"
 	L.coiling_flames_single = "Flames"
@@ -53,7 +51,7 @@ function mod:GetOptions()
 		420415, -- Scorchtail Crash
 		423494, -- Tidal Blaze
 		{419054, "TANK"}, -- Molten Venom
-		{423117, "TANK"}, -- Cataclysm Jaws
+		{423117, "TANK", "EMPHASIZE"}, -- Cataclysm Jaws
 		421703, -- Serpent's Wrath
 		424218, -- Combusting Rage
 		{427201, "SAY", "SAY_COUNTDOWN"}, -- Coiling Eruption
@@ -61,7 +59,7 @@ function mod:GetOptions()
 		[427201] = "mythic",
 	},{
 		[421672] = L.serpents_fury, -- Serpent's Fury (Flames)
-		[420933] = L.flood_of_the_firelands, -- Flood of the Firelands (Soaks)
+		[420933] = CL.soaks, -- Flood of the Firelands (Soaks)
 		[421616] = CL.pools, -- Volcanic Disgorge (Pools)
 		[420415] = L.scorchtail_crash, -- Scorchtail Crash (Tail Slam)
 		[427201] = CL.explosion, -- Coiling Eruption (Explosion)
@@ -69,7 +67,8 @@ function mod:GetOptions()
 end
 
 function mod:OnBossEnable()
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED") -- Scorchtail Crash
+	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "boss1") -- Scorchtail Crash
+	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "PlayerCasts", "player")
 
 	self:Log("SPELL_CAST_START", "SerpentsFury", 421672)
 	self:Log("SPELL_AURA_APPLIED", "CoilingFlamesApplied", 421207)
@@ -77,7 +76,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "FloodOfTheFirelands", 420933)
 	self:Log("SPELL_CAST_START", "VolcanicDisgorge", 421616)
 	-- self:Log("SPELL_CAST_START", "ScorchtailCrash", 420415)
-	self:Log("SPELL_AURA_APPLIED", "MoltenVenomApplied", 419054)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MoltenVenomApplied", 419054)
 	self:Log("SPELL_CAST_START", "CataclysmJaws", 423117)
 	self:Log("SPELL_CAST_START", "SerpentsWrath", 421703)
@@ -99,14 +97,14 @@ function mod:OnEngage()
 	scorchtailCrashCount = 1
 	cataclysmJawsCount = 1
 	explosionCount = 1
-	playerSide = 421330
+	playerSide = "all"
 	showAllCasts = self:GetOption("custom_off_all_scorchtail_crash")
 
 	self:Bar(423117, 5, CL.count:format(self:SpellName(423117), cataclysmJawsCount)) -- Cataclysm Jaws
 	self:Bar(421672, 10, CL.count:format(L.serpents_fury, serpentsFuryCount)) -- Serpent's Fury
 	self:Bar(420415, 20, CL.count:format(L.scorchtail_crash, scorchtailCrashCount)) -- Scorchtail Crash
 	self:Bar(421616, 30, CL.count:format(CL.pools, volcanicDisgorgeCount)) -- Volcanic Disgorge
-	self:Bar(420933, 70, CL.count:format(L.flood_of_the_firelands, floodOfTheFirelandsCount)) -- Flood of the Firelands
+	self:Bar(420933, 70, CL.count:format(CL.soaks, floodOfTheFirelandsCount)) -- Flood of the Firelands
 end
 
 --------------------------------------------------------------------------------
@@ -123,44 +121,46 @@ do
 	}
 
 	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unit, _, spellId)
-		if unit == "boss1" then
-			if spellId == 421356 or spellId == 421359 or spellId == 421684 then -- Scorchtail Crash (left, right, either)
-				if showAllCasts then
-					-- raid leader mode
-					local msg = CL.count:format(L.scorchtail_crash, scorchtailCrashCount)
-					self:StopBar(msg)
-					self:Message(420415, "red", msg)
-					if spellId == 421684 or spellId == playerSide then
-						self:PlaySound(420415, "alarm")
-					end
-					scorchtailCrashCount = scorchtailCrashCount + 1
-					self:CDBar(420415, timer["all"][scorchtailCrashCount], CL.count:format(CL.count:format(L.scorchtail_crash, scorchtailCrashCount), scorchtailCrashCount))
-				elseif floodOfTheFirelandsCount == 1 or spellId == 421684 or spellId == playerSide then
-					last = GetTime()
-					self:StopBar(CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
-					self:Message(420415, "red", CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
+		if spellId == 421356 or spellId == 421359 or spellId == 421684 then -- Scorchtail Crash (left, right, either)
+			if showAllCasts or playerSide == "all" then
+				-- raid leader mode
+				local msg = CL.count:format(L.scorchtail_crash, scorchtailCrashCount)
+				self:StopBar(msg)
+				self:Message(420415, "red", msg)
+				if spellId == 421684 or spellId == playerSide then
 					self:PlaySound(420415, "alarm")
-					scorchtailCrashCount = scorchtailCrashCount + 1
-					self:CDBar(420415, timer[playerSide][scorchtailCrashCount], CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
 				end
-				-- local cd = timer[scorchtailCrashCount]
-				-- if cd then
-				-- 	local t = GetTime()
-				-- 	local offset = nextScorchtailCrash - t -- +/-2s auto correcting
-				-- 	cd = cd + offset
-				-- 	msg = CL.count:format(L[side[scorchtailCrashCount]]:format(L.scorchtail_crash), scorchtailCrashCount)
-				-- 	self:CDBar(420415, cd, msg)
-				-- 	nextScorchtailCrash = t + cd
-				-- end
+				scorchtailCrashCount = scorchtailCrashCount + 1
+				self:CDBar(420415, timer["all"][scorchtailCrashCount], CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
+			elseif floodOfTheFirelandsCount == 1 or spellId == 421684 or spellId == playerSide then
+				last = GetTime()
+				self:StopBar(CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
+				self:Message(420415, "red", CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
+				self:PlaySound(420415, "alarm")
+				scorchtailCrashCount = scorchtailCrashCount + 1
+				self:CDBar(420415, timer[playerSide][scorchtailCrashCount], CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
 			end
-		elseif (spellId == 421330 or spellId == 421331) and scorchtailCrashCount < 5 and UnitIsUnit("player", unit) then -- Left Side / Right Side
+			-- if cd then
+			-- 	local t = GetTime()
+			-- 	local offset = nextScorchtailCrash - t -- +/-2s auto correcting
+			-- 	cd = cd + offset
+			-- 	self:CDBar(420415, cd, CL.count:format(L.scorchtail_crash, scorchtailCrashCount))
+			-- 	nextScorchtailCrash = t + cd
+			-- end
+		end
+	end
+
+	function mod:PlayerCasts(_, unit, _, spellId)
+		if scorchtailCrashCount < 5 and (spellId == 421330 or spellId == 421331) then -- Left Side / Right Side
 			local oldSide = playerSide
 			if spellId == 421330 then -- Left Side
 				playerSide = 421356
 			elseif spellId == 421331 then -- Right Side
 				playerSide = 421359
 			end
-			-- first soak is between the 3rd and 4th cast, which forces the split
+			-- XXX this could use some work, first side after soaking (every soak?) is apparently random
+			-- first soak is between the 3rd and 4th cast, which forces the split (second: 8/9, third: 13/14)
+			-- so should leave cast 4/9/14 as 30s for both sides and then correct the next cast for your side (like raszageth deep breaths)
 			if scorchtailCrashCount == 4 and oldSide ~= playerSide and not showAllCasts then
 				local cd = timer[playerSide][scorchtailCrashCount]
 				local remaining = cd - (GetTime() - last)
@@ -175,7 +175,12 @@ function mod:SerpentsFury(args)
 	self:Message(args.spellId, "cyan", CL.count:format(L.serpents_fury, serpentsFuryCount))
 	self:PlaySound(args.spellId, "alert")
 	serpentsFuryCount = serpentsFuryCount + 1
-	self:Bar(args.spellId, 70, CL.count:format(L.serpents_fury, serpentsFuryCount))
+	if serpentsFuryCount < 5 then
+		self:Bar(args.spellId, 70, CL.count:format(L.serpents_fury, serpentsFuryCount))
+	elseif serpentsFuryCount == 5 then
+		self:Bar(421703, 78) -- Serpent's Wrath
+	end
+	-- self:Bar(421207, 7.5) -- Coiling Flames
 end
 
 do
@@ -184,9 +189,9 @@ do
 		if self:Me(args.destGUID) then
 			self:PersonalMessage(args.spellId, nil, L.coiling_flames_single)
 			self:PlaySound(args.spellId, "warning")
-			self:Say(args.spellId, L.coiling_flames_single)
+			self:Say(args.spellId, L.coiling_flames_single, nil, "Flames")
 			if self:Mythic() then
-				self:SayCountdown(args.spellId, 12, L.flood_of_the_firelands_single_wait) -- Wait countdown for Mythic, soak after
+				self:SayCountdown(args.spellId, 12, L.flood_of_the_firelands_single_wait, nil, "Wait") -- Wait countdown for Mythic, soak after
 			elseif not self:LFR() then
 				self:SayCountdown(args.spellId, 10)
 			end
@@ -206,11 +211,11 @@ do
 end
 
 function mod:FloodOfTheFirelands(args)
-	self:StopBar(CL.count:format(L.flood_of_the_firelands, floodOfTheFirelandsCount))
-	self:Message(args.spellId, "orange", CL.count:format(L.flood_of_the_firelands, floodOfTheFirelandsCount))
+	self:StopBar(CL.count:format(CL.soaks, floodOfTheFirelandsCount))
+	self:Message(args.spellId, "orange", CL.count:format(CL.soaks, floodOfTheFirelandsCount))
 	self:PlaySound(args.spellId, "long")
 	floodOfTheFirelandsCount = floodOfTheFirelandsCount + 1
-	self:Bar(args.spellId, 70, CL.count:format(L.flood_of_the_firelands, floodOfTheFirelandsCount))
+	self:Bar(args.spellId, 70, CL.count:format(CL.soaks, floodOfTheFirelandsCount))
 end
 
 do
@@ -218,7 +223,7 @@ do
 		self:TargetMessage(421616, "yellow", name, CL.count:format(CL.pools, volcanicDisgorgeCount-1))
 		if self:Me(guid) then
 			self:PlaySound(421616, "warning") -- move
-			self:Say(421616, CL.pools)
+			self:Say(421616, CL.pools, nil, "Pools")
 		else
 			self:PlaySound(421616, "alert")
 		end
@@ -251,20 +256,12 @@ end
 -- end
 
 function mod:MoltenVenomApplied(args)
-	local amount = args.amount or 1
-	if amount % 3 == 0 then
+	if args.amount % 3 == 0 then
 		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 6)
-		if self:Me(args.destGUID) then
-			self:PlaySound(args.spellId, "alarm") -- On you
-		end
 	end
 end
 
-function mod:CataclysmJaws(args)
-	self:StopBar(CL.count:format(args.spellName, cataclysmJawsCount))
-	self:Message(args.spellId, "purple", CL.count:format(args.spellName, cataclysmJawsCount))
-	self:PlaySound(args.spellId, "alarm")
-	cataclysmJawsCount = cataclysmJawsCount + 1
+do
 	local cdTable = {
 		[4] = 40,
 		[6] = 40,
@@ -272,7 +269,13 @@ function mod:CataclysmJaws(args)
 		[9] = 25,
 		[10] = 20,
 	}
-	self:Bar(args.spellId, cdTable[cataclysmJawsCount] or 30, CL.count:format(args.spellName, cataclysmJawsCount))
+	function mod:CataclysmJaws(args)
+		self:StopBar(CL.count:format(args.spellName, cataclysmJawsCount))
+		self:Message(args.spellId, "purple", CL.count:format(args.spellName, cataclysmJawsCount))
+		self:PlaySound(args.spellId, "alarm")
+		cataclysmJawsCount = cataclysmJawsCount + 1
+		self:Bar(args.spellId, cdTable[cataclysmJawsCount] or 30, CL.count:format(args.spellName, cataclysmJawsCount))
+	end
 end
 
 function mod:SerpentsWrath(args)
@@ -296,19 +299,19 @@ do
 	end
 end
 
-do
-	function mod:CoilingEruptionApplied(args)
-		if self:Me(args.destGUID) then
-			self:PersonalMessage(args.spellId, nil, L.flood_of_the_firelands_single)
-			self:PlaySound(args.spellId, "warning")
-			self:Yell(args.spellId, L.flood_of_the_firelands_single)
-			self:YellCountdown(args.spellId, 4, L.flood_of_the_firelands_single) -- Soak in 4
-		end
-	end
+-- Mythic
 
-	function mod:CoilingEruptionRemoved(args)
-		if self:Me(args.destGUID) then
-			self:CancelYellCountdown(args.spellId)
-		end
+function mod:CoilingEruptionApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId, nil, CL.soak)
+		self:PlaySound(args.spellId, "warning")
+		self:Yell(args.spellId, CL.soak, nil, "Soak")
+		self:YellCountdown(args.spellId, 4, CL.soak, nil, "Soak") -- Soak in 4
+	end
+end
+
+function mod:CoilingEruptionRemoved(args)
+	if self:Me(args.destGUID) then
+		self:CancelYellCountdown(args.spellId)
 	end
 end

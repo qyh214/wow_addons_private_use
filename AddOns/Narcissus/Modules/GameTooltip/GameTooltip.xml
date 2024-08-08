@@ -2,6 +2,7 @@
     <Script file="Delay.lua"/>
     <Script file="EmbededGemFrame.lua"/>
     <Script file="EmbededSpellFrame.lua"/>
+    <Script file="SpecialItems.lua"/>
     <Script file="GameTooltip.lua"/>
 
     <GameTooltip name="NarciGameTooltip" hidden="true" clampedToScreen="true" mixin="NarciGameTooltipMixin">
@@ -30,16 +31,16 @@
                     </Anchors>
                 </FontString>
                 <Texture name="$parentTexture1">
-                    <Size x="4" y="4"/>
+                    <Size x="12" y="12"/>
                 </Texture>
                 <Texture name="$parentTexture2">
-                    <Size x="4" y="4"/>
+                    <Size x="12" y="12"/>
                 </Texture>
                 <Texture name="$parentTexture3">
-                    <Size x="4" y="4"/>
+                    <Size x="12" y="12"/>
                 </Texture>
                 <Texture name="$parentTexture4">
-                    <Size x="4" y="4"/>
+                    <Size x="12" y="12"/>
                 </Texture>
             </Layer>
         </Layers>

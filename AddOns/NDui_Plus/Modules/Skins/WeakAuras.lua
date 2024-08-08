@@ -1,9 +1,9 @@
-local _, ns = ...
+local addonName, ns = ...
 local B, C, L, DB, P = unpack(ns)
 local S = P:GetModule("Skins")
 
 local _G = getfenv(0)
-local select, pairs, type = select, pairs, type
+local pairs, type = pairs, type
 local strfind = string.find
 local r, g, b = DB.r, DB.g, DB.b
 
@@ -28,25 +28,143 @@ local function removeBorder(frame)
 	end
 end
 
-local function SkinProfilingWindow(frame)
-	B.ReskinPortraitFrame(frame)
-	S:Proxy("ReskinMinMax", frame.MaxMinButtonFrame)
-	reskinChildButtons(frame)
+local function SkinProfilingLine(line)
+	if not line.styled then
+		P.ReskinFont(line.spike, 12)
+		P.ReskinFont(line.time, 12)
+		P.ReskinFont(line.progressBar.name, 12)
+
+		line.styled = true
+	end
 end
 
-local function SkinPrintProfile()
-	local frame = _G.WeakAurasProfilingReport
-	if frame and not frame.styled then
+local function SkinProfilingFrame(frame)
+	if not frame.styled then
 		B.ReskinPortraitFrame(frame)
+		S:Proxy("ReskinMinMax", frame.MaxMinButtonFrame)
+		S:Proxy("StripTextures", frame.ScrollBox)
+		S:Proxy("ReskinTrimScroll", frame.ScrollBar)
 
-		local scrollFrame = frame.messageFrame and frame.messageFrame:GetParent()
-		if scrollFrame then
-			S:Proxy("ReskinScroll", scrollFrame.ScrollBar)
+		hooksecurefunc(frame.ScrollBox, "Update", function(self)
+			self:ForEachFrame(SkinProfilingLine)
+		end)
+
+		local buttons = frame.buttons
+		if buttons then
+			S:Proxy("Reskin", buttons.report)
+			S:Proxy("Reskin", buttons.stop)
+			P.ReskinDropDown(buttons.modeDropDown)
+
+			local start = buttons.start
+			if start then
+				B.StripTextures(start)
+				B.Reskin(start)
+				start.Text:SetPoint("CENTER")
+				B.SetupArrow(start.Icon, "right")
+				start.Icon:SetPoint("RIGHT")
+				start.Icon:SetSize(14, 14)
+			end
+		end
+
+		local columnDisplay = frame.ColumnDisplay
+		if columnDisplay and columnDisplay.columnHeaders then
+			B.StripTextures(columnDisplay)
+			for header in columnDisplay.columnHeaders:EnumerateActive() do
+				if header:GetID() == 1 then
+					header:SetPoint("BOTTOMLEFT", 3, 1)
+				end
+
+				B.StripTextures(header)
+				local bg = B.CreateBDFrame(header, .25)
+				bg:SetPoint("TOPLEFT", 4, -2)
+				bg:SetPoint("BOTTOMRIGHT", 0, 2)
+
+				header:SetHighlightTexture(DB.bdTex)
+				local hl = header:GetHighlightTexture()
+				hl:SetVertexColor(DB.r, DB.g, DB.b, .25)
+				hl:SetInside(bg)
+			end
 		end
 
 		frame.styled = true
 	end
 end
+
+local function SkinProfilingReport(frame)
+	if not frame.styled then
+		B.ReskinPortraitFrame(frame)
+
+		local scrollBox = frame.ScrollBox
+		if scrollBox then
+			S:Proxy("ReskinTrimScroll", scrollBox.ScrollBar)
+			S:Proxy("StripTextures", scrollBox.messageFrame)
+			local bg = B.CreateBDFrame(scrollBox, .25)
+			bg:SetPoint("TOPLEFT", -1, 2)
+			bg:SetPoint("BOTTOMRIGHT", -22, -4)
+		end
+
+		frame.styled = true
+	end
+end
+
+local function resetUrlBox(self)
+	self:SetText(self.url)
+	self:HighlightText()
+	self:SetFocus()
+end
+
+local skinTips
+local function WeakAurasSkinTips()
+	if skinTips then skinTips:Show() return end
+
+	skinTips = CreateFrame("Frame", "NDuiPlus_SkinTips", UIParent)
+	tinsert(UISpecialFrames, "NDuiPlus_SkinTips")
+	skinTips:SetPoint("CENTER")
+	skinTips:SetSize(480, 200)
+	skinTips:SetFrameStrata("HIGH")
+	B.CreateMF(skinTips)
+	B.SetBD(skinTips)
+	B.CreateFS(skinTips, 16, L["WeakAuras Skins FAQ"], true, "TOP", 0, -8)
+	local close = B.CreateButton(skinTips, 16, 16, true, DB.closeTex)
+	close:SetPoint("TOPRIGHT", -6, -6)
+	close:SetScript("OnClick", function()
+		skinTips:Hide()
+	end)
+	local msg = strjoin(
+		"\n",
+		L["You are using Official WeakAuras, the skin of WeakAuras will not be loaded due to the limitation."],
+		L["If you want to use WeakAuras skin, please install |cff99ccffWeakAurasPatched|r or change the code manually."],
+		L["You can disable this alert via disabling WeakAuras Skin in |cff99ccffNDui|r Console."]
+	)
+	local fs = B.CreateFS(skinTips, 14, msg)
+	fs:SetWordWrap(true)
+	fs:SetJustifyH("LEFT")
+	fs:SetSpacing(8)
+	fs:ClearAllPoints()
+	fs:SetPoint("TOPLEFT", 12, -40)
+	fs:SetPoint("TOPRIGHT", -12, -40)
+	local box = B.CreateEditBox(skinTips, 450, 22)
+	box:SetPoint("BOTTOM", skinTips, "BOTTOM", 0, 22)
+	box.url = "https://github.com/Witnesscm/NDui_Plus/wiki/WeakAuras2%E2%80%90Skins%E2%80%90FAQ"
+	if DB.Client == "zhCN" or DB.Client == "zhTW" then
+		box.url = "https://github.com/Witnesscm/NDui_Plus/wiki/WeakAuras2%E2%80%90%E7%9A%AE%E8%82%A4%E2%80%90%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"
+	end
+	resetUrlBox(box)
+	box:SetScript("OnTextChanged", resetUrlBox)
+	box:SetScript("OnCursorChanged", resetUrlBox)
+	local copy = B.CreateFS(skinTips, 12, L["Press Ctrl+C to copy the URL"])
+	copy:ClearAllPoints()
+	copy:SetPoint("TOPLEFT", box, "BOTTOMLEFT", 0, -2)
+end
+
+local LINK_ID = "WeakAurasTips"
+
+hooksecurefunc("SetItemRef", function(link)
+	local linkType, arg1, arg2 = strsplit(":", link)
+	if linkType == "addon" and arg1 == addonName and arg2 == LINK_ID then
+		WeakAurasSkinTips()
+	end
+end)
 
 local function SkinWeakAurasOptions()
 	local frame = _G.WeakAurasOptions
@@ -54,7 +172,6 @@ local function SkinWeakAurasOptions()
 
 	B.ReskinPortraitFrame(frame)
 	S:Proxy("ReskinInput", frame.filterInput, 18)
-	S:Proxy("Reskin", _G.WASettingsButton)
 
 	-- Minimize, Close Button
 	B.ReskinClose(frame.CloseButton, frame)
@@ -79,79 +196,59 @@ local function SkinWeakAurasOptions()
 		magnetButton:SetPoint("LEFT", lockButton, "RIGHT", 2, 0)
 	end
 
-	-- Child Groups
-	local childGroups = {
-		"texturePicker",
-		"iconPicker",
-		"modelPicker",
-		"importexport",
-		"texteditor",
-		"codereview",
-		"update",
-		"debugLog",
-	}
+	-- Child Groups 
+	-- texteditor, icon, texture, model, update, importexport, codereview, debuglog
+	local childGroups = {}
+	hooksecurefunc(frame, "UpdateFrameVisible", function()
+		if frame.window == "default" then return end
 
-	for _, key in pairs(childGroups) do
-		local group = frame[key]
-		if group then
-			reskinChildButtons(group.frame)
-		end
-	end
+		if not childGroups[frame.window] then
+			for _, child in ipairs({frame:GetChildren()}) do
+				local group = child.obj
+				if group and group.Open and child:IsShown() then
+					for _, child2 in pairs {child:GetChildren()} do
+						local objType = child2:GetObjectType()
+						if objType == "Button" and child2.Text then
+							B.Reskin(child2)
+						elseif objType == "EditBox" then
+							B.ReskinInput(child2)
+						end
+					end
 
-	-- TextEditor
-	local texteditor = frame.texteditor and frame.texteditor.frame
-	if texteditor then
-		for _, child in pairs {texteditor:GetChildren()} do
-			if child.GetObjectType and child:GetObjectType() == "EditBox" then
-				B.ReskinInput(child)
-				break
+					if frame.window == "texteditor" then
+						local snippets = _G.WeakAurasSnippets
+						if snippets then
+							P.ReskinFrame(snippets)
+							reskinChildButtons(snippets)
+						end
+						local apiSearchFrame = _G.WeakAurasAPISearchFrame
+						if apiSearchFrame then
+							P.ReskinFrame(apiSearchFrame)
+						end
+
+						S:Proxy("Reskin", _G.WASettingsButton)
+						S:Proxy("ReskinInput", _G.WeakAurasAPISearchFilterInput)
+					elseif frame.window == "codereview" then
+						local codebox = group.codebox
+						local codeTree = group.codeTree
+						if codebox and codeTree then
+							codebox.frame:ClearAllPoints()
+							codebox.frame:SetPoint("TOPLEFT", codeTree.content, 5, 0)
+							codebox.frame:SetPoint("BOTTOMRIGHT", codeTree.content, -5, 0)
+						end
+					end
+
+					childGroups[frame.window] = group
+					break
+				end
 			end
 		end
-	end
-
-	-- CodeReview
-	local codereview = frame.codereview
-	if codereview then
-		hooksecurefunc(codereview, "Open", function(self)
-			local codebox = self.codebox
-			local codeTree = self.codeTree
-			if codebox and codeTree then
-				codebox.frame:ClearAllPoints()
-				codebox.frame:SetPoint("TOPLEFT", codeTree.content, 5, 0)
-				codebox.frame:SetPoint("BOTTOMRIGHT", codeTree.content, -5, 0)
-			end
-		end)
-	end
-
-	-- IconPicker
-	local iconPicker = frame.iconPicker and frame.iconPicker.frame
-	if iconPicker then
-		for _, child in pairs {iconPicker:GetChildren()} do
-			if child:GetObjectType() == "EditBox" then
-				B.ReskinInput(child, 20)
-			end
-		end
-	end
-
-	-- ModelPicker
-	local modelPicker = frame.modelPicker and frame.modelPicker.frame
-	if modelPicker and modelPicker.filterInput then
-		B.ReskinInput(modelPicker.filterInput, 18)
-	end
+	end)
 
 	-- Right Side Container
 	local container = frame.container and frame.container.content and frame.container.content:GetParent()
 	if container and container.bg then
 		container.bg:Hide()
-	end
-
-	-- WeakAurasSnippets
-	local snippets = _G.WeakAurasSnippets
-	if snippets then
-		B.StripTextures(snippets)
-		B.SetBD(snippets)
-		B.ReskinClose(snippets.CloseButton)
-		reskinChildButtons(snippets)
 	end
 
 	-- MoverSizer
@@ -180,18 +277,21 @@ local function SkinWeakAurasOptions()
 	end
 
 	-- TipPopup
-	for _, child in pairs {frame:GetChildren()} do
-		if child:GetFrameStrata() == "FULLSCREEN" and child.PixelSnapDisabled and child.backdropInfo then
-			B.StripTextures(child)
-			B.SetBD(child)
+	local tipPopup = frame.tipPopup
+	if tipPopup then
+		B.StripTextures(tipPopup)
+		B.SetBD(tipPopup)
 
-			for _, child2 in pairs {child:GetChildren()} do
-				if child2:GetObjectType() == "EditBox" then
-					B.ReskinInput(child2, 18)
-				end
+		for _, child in pairs {tipPopup:GetChildren()} do
+			if child:GetObjectType() == "EditBox" then
+				B.ReskinInput(child, 18)
 			end
-			break
 		end
+	end
+
+	local textCodesFrame = frame.dynamicTextCodesFrame
+	if textCodesFrame then
+		P.ReskinFrame(textCodesFrame)
 	end
 
 	frame.styled = true
@@ -229,13 +329,19 @@ function S:WeakAuras()
 	local WeakAuras = _G.WeakAuras
 	if not WeakAuras then return end
 
-	local profilingWindow = WeakAuras.RealTimeProfilingWindow
-	if profilingWindow then
-		hooksecurefunc(profilingWindow, "Init", SkinProfilingWindow)
+	local profilingFrame = _G.WeakAurasProfilingFrame
+	if profilingFrame then
+		profilingFrame:HookScript("OnShow", SkinProfilingFrame)
 	end
 
-	if WeakAuras.PrintProfile then
-		hooksecurefunc(WeakAuras, "PrintProfile", SkinPrintProfile)
+	local profilingReport = _G.WeakAurasProfilingReport
+	if profilingReport then
+		profilingReport:HookScript("OnShow", SkinProfilingReport)
+	end
+
+	if C.db["Skins"]["WeakAuras"] and not WeakAuras.Private then
+		local link = format("|cff99ccff|Haddon:%s:%s|h[%s]|h|r", addonName, LINK_ID, L["Click for details"])
+		P:Print(L["WeakAurasSkinTips"], link)
 	end
 end
 
@@ -427,9 +533,19 @@ function S:WeakAurasSpinBox(widget)
 	reskinStepper(widget.rightbutton, "right")
 end
 
+function S:WeakAurasSnippetButton(widget)
+	B.ReskinInput(widget.renameEditBox)
+	widget.renameEditBox.__bg:SetPoint("TOPLEFT", -2, 2)
+	widget.renameEditBox.__bg:SetPoint("BOTTOMRIGHT", 0, -2)
+end
+
 function S:WeakAurasTreeGroup(widget)
 	S:Ace3_Frame(widget)
 	widget.treeframe:GetChildren():HideBackdrop()
+end
+
+function S:WA_LSM30_StatusbarAtlas(widget)
+	S:Ace3_LibSharedMedia(widget)
 end
 
 S:RegisterSkin("WeakAuras", S.WeakAuras)
@@ -439,8 +555,11 @@ S:RegisterAceGUIWidget("WeakAurasDisplayButton")
 S:RegisterAceGUIWidget("WeakAurasNewButton")
 S:RegisterAceGUIWidget("WeakAurasPendingUpdateButton")
 S:RegisterAceGUIWidget("WeakAurasMultiLineEditBox")
+S:RegisterAceGUIWidget("WeakAuras-MultiLineEditBoxWithEnter", S.WeakAurasMultiLineEditBox)
 S:RegisterAceGUIWidget("WeakAurasLoadedHeaderButton")
 S:RegisterAceGUIWidget("WeakAurasIconButton")
 S:RegisterAceGUIWidget("WeakAurasTextureButton")
 S:RegisterAceGUIWidget("WeakAurasSpinBox")
+S:RegisterAceGUIWidget("WeakAurasSnippetButton")
+S:RegisterAceGUIWidget("WA_LSM30_StatusbarAtlas")
 S:RegisterAceGUIContainer("WeakAurasTreeGroup")

@@ -60,9 +60,10 @@ detailsFramework.TooltipHandlerMixin = {
 			end
 		end
 
-		if (tooltipText) then
+		if (tooltipText and tooltipText ~= "") then
 			GameCooltip:Preset(2)
 			GameCooltip:AddLine(tooltipText)
+			GameCooltip:ShowRoundedCorner()
 			GameCooltip:ShowCooltip(getFrame(self), "tooltip")
 		end
 	end,
@@ -947,5 +948,19 @@ detailsFramework.StatusBarFunctions = {
 		if (self.border and self.border.UpdateSizes and self.border.GetVertexColor) then
 			return self.border:GetVertexColor()
 		end
+	end,
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--frame mixin
+local createTexture = CreateFrame('Frame').CreateTexture -- need a local "original" CreateFrame
+
+detailsFramework.FrameFunctions = {
+	CreateTexture = function(self, name, drawLayer, templateName, subLevel)
+		local texture = createTexture(self, name, drawLayer, templateName, subLevel)
+        -- pixel perfection
+        texture:SetTexelSnappingBias(0)
+        texture:SetSnapToPixelGrid(false)
+        return texture
 	end,
 }

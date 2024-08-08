@@ -1,3 +1,5 @@
+
+local addonName, Details222 = ...
 local _detalhes = 		_G.Details
 local Loc = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
 local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
@@ -12,7 +14,7 @@ function _detalhes:OpenWelcomeWindow()
 	if (not window) then
 
 		--on first run, sincronize with guild
-		_detalhes.storage:DBGuildSync()
+		Details222.storage:DBGuildSync()
 
 		local index = 1
 		local pages = {}
@@ -467,10 +469,12 @@ local window_openned_at = time()
 			local new_window = function(self)
 				if (#_detalhes.tabela_instancias == 1) then
 					local newwindow = _detalhes:CreateInstance (true)
-					newwindow.baseframe:SetPoint("topleft", _detalhes.tabela_instancias[1].baseframe, "topright", 50, 0)
-					newwindow.baseframe:SetPoint("bottomleft", _detalhes.tabela_instancias[1].baseframe, "bottomright", 50, 0)
-					newwindow:SaveMainWindowPosition()
-					newwindow:RestoreMainWindowPosition()
+					if (newwindow) then
+						newwindow.baseframe:SetPoint("topleft", _detalhes.tabela_instancias[1].baseframe, "topright", 50, 0)
+						newwindow.baseframe:SetPoint("bottomleft", _detalhes.tabela_instancias[1].baseframe, "bottomright", 50, 0)
+						newwindow:SaveMainWindowPosition()
+						newwindow:RestoreMainWindowPosition()
+					end
 				end
 				self.MyObject:Disable()
 			end
@@ -1059,7 +1063,7 @@ local window_openned_at = time()
 
 			_detalhes.zone_type = "pvp"
 
-			_detalhes:EntrarEmCombate()
+			Details222.StartCombat()
 
 			_detalhes:StartTestBarUpdate()
 

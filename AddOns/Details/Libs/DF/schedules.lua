@@ -8,6 +8,8 @@ local C_Timer = _G.C_Timer
 local unpack = table.unpack or _G.unpack
 local GetTime = GetTime
 
+local CONST_DEBUG_ENABLED = false
+
 --make a namespace for schedules
 detailsFramework.Schedules = detailsFramework.Schedules or {}
 
@@ -67,10 +69,11 @@ local triggerScheduledLoop = function(tickerObject)
     local payload = tickerObject.payload
     local callback = tickerObject.callback
 
-    local result, errortext = pcall(callback, unpack(payload))
-    if (not result) then
-        detailsFramework:Msg("error on scheduler: ",tickerObject.path , tickerObject.name, errortext)
-    end
+    --local result, errortext = pcall(callback, unpack(payload))
+    local runOkay, result = xpcall(callback, geterrorhandler(), unpack(payload))
+    --if (not result) then
+    --    detailsFramework:Msg("error on scheduler: ",tickerObject.path , tickerObject.name, errortext)
+    --end
 
     local checkPointCallback = tickerObject.checkPointCallback
     if (checkPointCallback) then
@@ -127,10 +130,11 @@ local triggerScheduledTick = function(tickerObject)
     local payload = tickerObject.payload
     local callback = tickerObject.callback
 
-    local result, errortext = pcall(callback, unpack(payload))
-    if (not result) then
-        detailsFramework:Msg("error on scheduler: ",tickerObject.path , tickerObject.name, errortext)
-    end
+    local runOkay, result = xpcall(callback, geterrorhandler(), unpack(payload))
+    --local result, errortext = pcall(callback, unpack(payload))
+    --if (not result) then
+    --    detailsFramework:Msg("error on scheduler: ",tickerObject.path , tickerObject.name, errortext)
+    --end
     return result
 end
 
@@ -142,12 +146,16 @@ function detailsFramework.Schedules.NewTicker(time, callback, ...)
     newTicker.callback = callback
 
     --debug
-    newTicker.path = debugstack()
-    --
+    newTicker.path = CONST_DEBUG_ENABLED and debugstack() or ""
+
     return newTicker
 end
 
---schedule a task with an interval of @time
+--schedule a function/callback/ to run after 'time' with a payload passed in the varargs
+--return an object that can be used to cancel the scheduled task
+--difference from Schedules.After is that this function returns an object that can be used to cancel the scheduled task and also pass a payload to the callback
+--prompt example: schedule 'function variable name' to run after 'time' amount of seconds with payload 'variable name, variable name...'
+--prompt example: run 'function name' after 'time' leaving an object as reference
 function detailsFramework.Schedules.NewTimer(time, callback, ...)
     local payload = {...}
     local newTimer = C_Timer.NewTimer(time, triggerScheduledTick)
@@ -156,13 +164,14 @@ function detailsFramework.Schedules.NewTimer(time, callback, ...)
     newTimer.expireAt = GetTime() + time
 
     --debug
-    newTimer.path = debugstack()
-    --
+    newTimer.path = CONST_DEBUG_ENABLED and debugstack() or ""
 
     return newTimer
 end
 
---cancel an ongoing ticker, the native call tickerObject:Cancel() also works with no problem
+--cancel an ongoing ticker or timer, the native call tickerObject:Cancel() also works
+---prompt example: cancel schedule 'variable name'
+---@param tickerObject timer
 function detailsFramework.Schedules.Cancel(tickerObject)
     --ignore if there's no ticker object
     if (tickerObject) then
@@ -211,10 +220,12 @@ end
 ---execute each frame a small portion of a big task
 ---the callback function receives a payload, the current iteration index and the max iterations
 ---if the callback function return true, the task is finished
+---callback function signature: fun(payload: table, iterationCount:number, maxIterations:number):boolean return true if the task is finished
+---payload table is the same table passed as argument to LazyExecute()
 ---@param callback function
 ---@param payload table?
 ---@param maxIterations number?
----@param onEndCallback function?
+---@param onEndCallback function? execute when the task is finished or when maxIterations is reached
 function detailsFramework.Schedules.LazyExecute(callback, payload, maxIterations, onEndCallback)
     assert(type(callback) == "function", "DetailsFramework.Schedules.LazyExecute() param #1 'callback' must be a function.")
     maxIterations = maxIterations or 100000
@@ -226,12 +237,16 @@ function detailsFramework.Schedules.LazyExecute(callback, payload, maxIterations
         if (not bIsFinished) then
             iterationIndex = iterationIndex + 1
             if (iterationIndex > maxIterations) then
-                detailsFramework:QuickDispatch(onEndCallback, payload)
+                if (onEndCallback) then
+                    detailsFramework:QuickDispatch(onEndCallback, payload)
+                end
                 return
             end
             C_Timer.After(0, function() wrapFunc() end)
         else
-            detailsFramework:QuickDispatch(onEndCallback, payload)
+            if (onEndCallback) then
+                detailsFramework:QuickDispatch(onEndCallback, payload)
+            end
             return
         end
     end
@@ -241,6 +256,8 @@ function detailsFramework.Schedules.LazyExecute(callback, payload, maxIterations
     return payload
 end
 
+--Schedules a callback function to be executed after a specified time delay.
+--It uniquely identifies each scheduled task by an ID, cancel and replace any existing schedules with the same ID.
 function detailsFramework.Schedules.AfterById(time, callback, id, ...)
     if (not detailsFramework.Schedules.ExecuteTimerTable) then
         detailsFramework.Schedules.ExecuteTimerTable = {}
@@ -257,16 +274,44 @@ function detailsFramework.Schedules.AfterById(time, callback, id, ...)
     return newTimer
 end
 
+--Schedules a callback function to be executed after a specified time delay.
+--It uniquely identifies each scheduled task by an ID, if another schedule with the same id is made, it will be ignore until the previous one is finished.
+function detailsFramework.Schedules.AfterByIdNoCancel(time, callback, id, ...)
+    if (not detailsFramework.Schedules.ExecuteTimerTableNoCancel) then
+        detailsFramework.Schedules.ExecuteTimerTableNoCancel = {}
+    end
 
---schedule a task with an interval of @time without payload
+    local alreadyHaveTimer = detailsFramework.Schedules.ExecuteTimerTableNoCancel[id]
+    if (alreadyHaveTimer) then
+        return
+    end
+
+    local newTimer = detailsFramework.Schedules.NewTimer(time, callback, ...)
+    detailsFramework.Schedules.ExecuteTimerTableNoCancel[id] = newTimer
+
+    C_Timer.After(time, function()
+        detailsFramework.Schedules.ExecuteTimerTableNoCancel[id] = nil
+    end)
+
+    return newTimer
+end
+
+--schedule a function to be called after 'time'
+--prompt example: create a schedule that runs the function 'variable name' after 'time' amount of seconds
 function detailsFramework.Schedules.After(time, callback)
     C_Timer.After(time, callback)
 end
 
-function detailsFramework.Schedules.SetName(object, name)
-    object.name = name
-end
-
+--schedule a function to be called on the next frame
+--prompt example: run 'function name' on next tick
+---@param callback function
 function detailsFramework.Schedules.RunNextTick(callback)
     return detailsFramework.Schedules.After(0, callback)
+end
+
+--set a name to a scheduled object
+---@param object timer
+---@param name string
+function detailsFramework.Schedules.SetName(object, name)
+    object.name = name
 end

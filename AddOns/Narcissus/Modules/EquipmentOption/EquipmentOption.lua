@@ -24,22 +24,22 @@ else
     TOOLTIP_PREFIX = "";
 end
 
-local GetSpellDescription = GetSpellDescription;
-local GetItemSpell = GetItemSpell;
+local GetSpellDescription = addon.TransitionAPI.GetSpellDescription;
+local GetItemSpell = C_Item.GetItemSpell;
 
 local tinsert = table.insert;
 local tremove = table.remove;
 
 local FadeFrame = NarciFadeUI.Fade;
 local NarciAPI = NarciAPI;
-local IsItemDominationShard = NarciAPI.IsItemDominationShard;
+--local IsItemDominationShard = NarciAPI.IsItemDominationShard;
 local RemoveColorString = NarciAPI.RemoveColorString;
 local GetCachedItemTooltipTextByLine = NarciAPI.GetCachedItemTooltipTextByLine;
 local GetItemTempEnchantRequirement = NarciAPI.GetItemTempEnchantRequirement;
 local GetSocketTypes = GetSocketTypes;
 local C_Item = C_Item;
 
-local GetContainerItemLink = (C_Container and C_Container.GetContainerItemLink) or GetContainerItemLink;    --Dragonflight
+local GetContainerItemLink = C_Container.GetContainerItemLink;    --Dragonflight
 local GetInventoryItemLink = GetInventoryItemLink;
 
 
@@ -519,7 +519,7 @@ function NarciEquipmentOptionMixin:SetGemListForBlizzardUI(id1, id2)
         return
     end
 
-    local itemID, _, _, invType = GetItemInfoInstant(itemLink);
+    local itemID, _, _, invType = C_Item.GetItemInfoInstant(itemLink);
 
     local slotID = NarciAPI.GetSlotIDByInvType(invType);
     self.slotID = slotID;
@@ -546,7 +546,7 @@ function NarciEquipmentOptionMixin:SetGemListForBlizzardUI(id1, id2)
     if self.isDominationItem then
         local gemLink = GetExistingSocketLink(1);
         if gemLink then
-            local existingGemID, _, _, _, icon = GetItemInfoInstant(gemLink);
+            local existingGemID, _, _, _, icon = C_Item.GetItemInfoInstant(gemLink);
             NarciItemPushOverlay:WatchIcon(icon);
         else
             NarciItemPushOverlay:HideIfIdle();
@@ -766,7 +766,7 @@ function NarciEquipmentOptionMixin:UpdateCurrentList(resetScroll)
     end
 
     self.isListEmpty = numItems == 0;
-    self.ItemList.NoItemText:SetShown(self.isListEmpty and not (NarciItemSocketingActionButton:IsShown()));
+    self.ItemList.NoItemText:SetShown(self.isListEmpty);
     self.inUseGemID, self.inUsedEnchantID = GetAppliedEnhancement(self.itemLink);
     local newGemID = GetNewGemID(true);
 
@@ -976,7 +976,7 @@ function NarciEquipmentListTooltipMixin:SetItem(itemID)
             self:SetSpell(spellID);
         else
             local line;
-            if IsItemDominationShard(itemID) then
+            if false then  --IsItemDominationShard(itemID)
                 line = 5;
             else
                 if DataProvider:IsItemPrimordialStone(itemID) then
@@ -1081,6 +1081,10 @@ function NarciEquipmentListTooltipMixin:AnchorToButton(button)
 end
 
 local function ShouldAnchorToBlizzard()
+    if Narci.deferGemManager then
+        return false
+    end
+
     return NarcissusDB.GemManager and (not Narci_Character:IsShown()) and (not MainFrame:IsShown() or MainFrame.isNarcissusUI)
 end
 

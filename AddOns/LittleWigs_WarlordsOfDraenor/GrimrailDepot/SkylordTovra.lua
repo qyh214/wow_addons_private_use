@@ -68,7 +68,7 @@ end
 do
 	local function printTarget(self, player, guid)
 		if self:Me(guid) then
-			self:Say(162066)
+			self:Say(162066, nil, nil, "Freezing Snare")
 			self:Flash(162066)
 		end
 		self:TargetMessage(162066, "orange", player)
@@ -77,7 +77,7 @@ do
 
 	function mod:FreezingSnare(args)
 		self:Bar(args.spellId, 17)
-		self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 	end
 end
 
@@ -95,7 +95,7 @@ do
 	end
 
 	function mod:HuntersMark(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 20)
 	end
 

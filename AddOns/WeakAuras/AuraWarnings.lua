@@ -1,17 +1,17 @@
 if not WeakAuras.IsLibsOK() then return end
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 
 --- @alias AuraWarningSeverity
 --- | "info"
 --- | "sound"
+--- | "tts"
 --- | "warning"
 --- | "error"
 
---- @class AuraWarnings
---- @field UpdateWarning fun(uid: uid, key: string, severity: AuraWarningSeverity?, message: string?, printOnConsole: boolean?)
---- @field FormatWarnings fun(uid: uid): string?, string?, string?
-
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -26,7 +26,16 @@ local function OnDelete(event, uid)
 end
 
 Private.callbacks:RegisterCallback("Delete", OnDelete)
-Private.AuraWarnings = {}
+
+--- @class AuraWarnings
+--- @field UpdateWarning fun(uid: uid, key: string, severity: AuraWarningSeverity?, message: string?, printOnConsole: boolean?)
+--- @field FormatWarnings fun(uid: uid): string?, string?, string?
+Private.AuraWarnings = {
+  UpdateWarning = function(uid, key, severity, message, printOnConsole)
+  end,
+  FormatWarnings = function(uid)
+  end
+}
 
 function Private.AuraWarnings.UpdateWarning(uid, key, severity, message, printOnConsole)
   if not uid then
@@ -63,22 +72,33 @@ end
 local severityLevel = {
   info = 0,
   sound = 1,
-  warning = 2,
-  error = 3
+  tts = 2,
+  warning = 3,
+  error = 4
 }
 
 --- @type table<AuraWarningSeverity, string>
 local icons = {
   info = [[Interface/friendsframe/informationicon.blp]],
   sound = [[chatframe-button-icon-voicechat]],
-  warning = [[Interface/buttons/adventureguidemicrobuttonalert.blp]],
-  error =  [[Interface/DialogFrame/UI-Dialog-Icon-AlertNew]]
+  tts = [[chatframe-button-icon-tts]],
+  warning = [[services-icon-warning]],
+  error = [[Interface/HELPFRAME/HelpIcon-Bug]]
+}
+
+local tabs = {
+  tts_condition = "conditions",
+  sound_condition = "conditions",
+  tts_action = "action",
+  sound_action = "action",
+  spammy_event_warning = "trigger"
 }
 
 --- @type table<AuraWarningSeverity, string>
 local titles = {
   info = L["Information"],
   sound = L["Sound"],
+  tts = L["Text To Speech"],
   warning = L["Warning"],
   error = L["Error"],
 }
@@ -142,6 +162,47 @@ function Private.AuraWarnings.FormatWarnings(uid)
   result = AddMessages(result, messagePerSeverity["error"], icons["error"], mixedSeverity)
   result = AddMessages(result, messagePerSeverity["warning"], icons["warning"], mixedSeverity)
   result = AddMessages(result, messagePerSeverity["sound"], icons["sound"], mixedSeverity)
+  result = AddMessages(result, messagePerSeverity["tts"], icons["tts"], mixedSeverity)
   result = AddMessages(result, messagePerSeverity["info"], icons["info"], mixedSeverity)
   return icons[maxSeverity], titles[maxSeverity], result
+end
+
+function Private.AuraWarnings.GetAllWarnings(uid)
+  local results = {}
+  local thisWarnings
+  local data = Private.GetDataByUID(uid)
+  if data.regionType == "group" or data.regionType == "dynamicgroup" then
+    thisWarnings = {}
+    for child in Private.TraverseLeafs(data) do
+      local childWarnings = warnings[child.uid]
+      if childWarnings then
+        for key, warning in pairs(childWarnings) do
+          if not thisWarnings[key] then
+            thisWarnings[key] = {
+              severity = warning.severity,
+              message = warning.message,
+              auraId = child.id
+            }
+          end
+        end
+      end
+    end
+  else
+    thisWarnings = CopyTable(warnings[uid])
+    local auraId = Private.UIDtoID(uid)
+    for key in pairs(thisWarnings) do
+      thisWarnings[key].auraId = auraId
+    end
+  end
+  for key, warning in pairs(thisWarnings) do
+    results[warning.severity] = {
+      icon = icons[warning.severity],
+      prio = 5 + severityLevel[warning.severity],
+      title = titles[warning.severity] or warning.severity,
+      message = warning.message,
+      auraId = warning.auraId,
+      tab = tabs[key] or "information"
+    }
+  end
+  return results
 end

@@ -383,7 +383,15 @@ L["S_OPTIONS_QUESTBLACKLIST"] = "Quest Blacklist"
 --[[Translation missing --]]
 L["S_OPTIONS_RESET"] = "Reset"
 --[[Translation missing --]]
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Show Filter Button"
+--[[Translation missing --]]
 L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOWFACTIONS"] = "Show Factions"
 --[[Translation missing --]]
@@ -407,11 +415,25 @@ L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "By Zone"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "By Quest Type"
 --[[Translation missing --]]
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
+--[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Attach To"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organize Quests By"
 --[[Translation missing --]]
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
+--[[Translation missing --]]
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Only Tracked"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+--[[Translation missing --]]
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
 --[[Translation missing --]]
@@ -467,6 +489,8 @@ L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Spotted By"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "minutes ago"
 --[[Translation missing --]]
 L["S_SCALE"] = "Scale"
+--[[Translation missing --]]
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
 L["S_SUMMARYPANEL_EXPIRED"] = "SCADUTO"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Ultimi 15 Giorni"
 --[[Translation missing --]]
@@ -478,6 +502,8 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Altri Personaggi"
 L["S_TEXT_SIZE"] = "Text Size"
 --[[Translation missing --]]
 L["S_TORGAST"] = "Torgasth"
+--[[Translation missing --]]
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
 L["S_TUTORIAL_AMOUNT"] = "indica la quantità da ricevere"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clicca per tracciare una missione."
 --[[Translation missing --]]
@@ -495,6 +521,8 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[Click here to cycle among three types of summa
 Click |cFFFFAA11Toggle Quests|r to hide quest locations.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Questo pulsante mostra la mappa delle Isole Disperse."
 L["S_UNKNOWNQUEST"] = "Missione Sconosciuta"
+--[[Translation missing --]]
+L["S_VISIBILITY"] = "Visibility"
 L["S_WHATSNEW"] = "Cosa c'è di nuovo?"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Ordina per tipo"
 --[[Translation missing --]]

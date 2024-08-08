@@ -9,6 +9,15 @@ mod:SetEncounterID(2610)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
+-- Localization
+--
+
+local L = mod:GetLocale()
+if L then
+	L.warmup_icon = "achievement_dungeon_neltharus"
+end
+
+--------------------------------------------------------------------------------
 -- Locals
 --
 
@@ -52,6 +61,7 @@ function mod:OnEngage()
 	lavaSprayCount = 1
 	blazingChargeCount = 1
 	magmaTentacleCount = 2
+	self:StopBar(CL.active)
 	self:CDBar(375251, 7.2) -- Lava Spray
 	self:CDBar(375439, 19.1) -- Blazing Charge
 	-- casts at full Magma: 30s energy gain + ~.3s delay
@@ -64,7 +74,7 @@ end
 
 -- called from trash module
 function mod:Warmup()
-	self:Bar("warmup", 10.6, CL.active, "achievement_dungeon_neltharus")
+	self:Bar("warmup", 10.6, CL.active, L.warmup_icon)
 end
 
 do
@@ -120,7 +130,7 @@ do
 		self:TargetMessage(375251, "yellow", name)
 		self:PlaySound(375251, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(375251)
+			self:Say(375251, nil, nil, "Lava Spray")
 		end
 	end
 
@@ -148,7 +158,7 @@ function mod:BlazingCharge(args)
 	self:TargetMessage(375439, "red", args.destName)
 	self:PlaySound(375439, "alarm", nil, args.destName)
 	if self:Me(args.destGUID) then
-		self:Say(375439)
+		self:Say(375439, nil, nil, "Blazing Charge")
 	end
 	blazingChargeCount = blazingChargeCount + 1
 	if blazingChargeCount == 2 then

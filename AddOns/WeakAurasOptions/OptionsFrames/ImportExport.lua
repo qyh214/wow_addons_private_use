@@ -1,11 +1,15 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 -- WoW APIs
 local CreateFrame = CreateFrame
 
 local AceGUI = LibStub("AceGUI-3.0")
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -36,11 +40,20 @@ local function ConstructImportExport(frame)
 
   function group.Open(self, mode, id)
     if(frame.window == "texture") then
-      frame.texturePicker:CancelClose();
+      local texturepicker = OptionsPrivate.TexturePicker(frame, true)
+      if texturepicker then
+        texturepicker:CancelClose();
+      end
     elseif(frame.window == "icon") then
-      frame.iconPicker:CancelClose();
+      local iconpicker = OptionsPrivate.IconPicker(frame, true)
+      if iconpicker then
+        iconpicker:CancelClose();
+      end
     elseif(frame.window == "model") then
-      frame.modelPicker:CancelClose();
+      local modelpicker = OptionsPrivate.ModelPicker(frame, true)
+      if modelpicker then
+        modelpicker:CancelClose();
+      end
     end
     frame.window = "importexport";
     frame:UpdateFrameVisible()
@@ -51,7 +64,7 @@ local function ConstructImportExport(frame)
         if(mode == "export") then
           displayStr = OptionsPrivate.Private.DisplayToString(id, true);
         elseif(mode == "table") then
-          displayStr = OptionsPrivate.Private.DataToString(id);
+          displayStr = OptionsPrivate.Private.DataToString(id, true);
         end
         --input.editBox:SetMaxBytes(nil); Dragonflight doesn't accept nil
         input.editBox:SetScript("OnEscapePressed", function()
@@ -96,7 +109,7 @@ local function ConstructImportExport(frame)
   return group
 end
 
-function OptionsPrivate.ImportExport(frame)
-  importexport = importexport or ConstructImportExport(frame)
+function OptionsPrivate.ImportExport(frame, noConstruct)
+  importexport = importexport or (not noConstruct and ConstructImportExport(frame))
   return importexport
 end

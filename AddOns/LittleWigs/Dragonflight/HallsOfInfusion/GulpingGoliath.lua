@@ -76,12 +76,12 @@ do
 		self:TargetMessage(385531, "red", player)
 		self:PlaySound(385531, "alarm", nil, player)
 		if self:Me(guid) then
-			self:Say(385531)
+			self:Say(385531, nil, nil, "Belly Slam")
 		end
 	end
 
 	function mod:BellySlam(args)
-		self:GetBossTarget(printTarget, 0.2, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
 		self:Bar(args.spellId, 38.8)
 	end
 end

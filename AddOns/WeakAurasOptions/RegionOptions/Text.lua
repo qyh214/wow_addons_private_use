@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 local L = WeakAuras.L;
@@ -10,6 +13,8 @@ local indentWidth = 0.15
 local hiddenFontExtra = function()
   return OptionsPrivate.IsCollapsed("text", "text", "fontflags", true)
 end
+
+local dynamicTextInputs = {}
 
 local function createOptions(id, data)
   local function hideCustomTextOption()
@@ -39,12 +44,13 @@ local function createOptions(id, data)
   local options = {
     __title = L["Text Settings"],
     __order = 1,
+    __dynamicTextCodes = function()
+      local widget = dynamicTextInputs["displayText"]
+      OptionsPrivate.ToggleTextReplacements(data, widget, "ToggleButton")
+    end,
     displayText = {
       type = "input",
       width = WeakAuras.doubleWidth,
-      desc = function()
-        return L["Dynamic text tooltip"] .. OptionsPrivate.Private.GetAdditionalProperties(data)
-      end,
       multiline = true,
       name = L["Display Text"],
       order = 10,
@@ -58,6 +64,19 @@ local function createOptions(id, data)
         WeakAuras.UpdateThumbnail(data);
         OptionsPrivate.ResetMoverSizer();
       end,
+      control = "WeakAurasMultiLineEditBox",
+      callbacks = {
+        OnEditFocusGained = function(self)
+          local widget = dynamicTextInputs["displayText"]
+          OptionsPrivate.ToggleTextReplacements(data, widget, "OnEditFocusGained")
+        end,
+        OnEditFocusLost = function(self)
+          OptionsPrivate.ToggleTextReplacements(nil, nil, "OnEditFocusLost")
+        end,
+        OnShow = function(self)
+          dynamicTextInputs["displayText"] = self
+        end,
+      }
     },
     customTextUpdate = {
       type = "select",

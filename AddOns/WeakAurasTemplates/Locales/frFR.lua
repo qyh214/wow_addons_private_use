@@ -7,6 +7,18 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	--[[Translation missing --]]
+	L["(Dwarf)"] = "(Dwarf)"
+	--[[Translation missing --]]
+	L["(Dwarf/Human)"] = "(Dwarf/Human)"
+	--[[Translation missing --]]
+	L["(Human)"] = "(Human)"
+	--[[Translation missing --]]
+	L["(Night Elf)"] = "(Night Elf)"
+	--[[Translation missing --]]
+	L["(Troll)"] = "(Troll)"
+	--[[Translation missing --]]
+	L["(Undead)"] = "(Undead)"
 	L["< 4 stacks"] = "< à 4 stacks"
 	--[[Translation missing --]]
 	L["5 stacks"] = "5 stacks"
@@ -52,6 +64,8 @@ local L = WeakAuras.L
 	L["Create Auras"] = "Créer Auras"
 	L["debuff"] = "affaiblissement"
 	L["Debuffs"] = "Affaiblissements"
+	--[[Translation missing --]]
+	L["dps buff"] = "dps buff"
 	L["General"] = "Général"
 	L["Health"] = "Vie"
 	--[[Translation missing --]]
@@ -65,6 +79,8 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Mettez en surbrillance quand le sort est actif."
 	L["Hold CTRL to create multiple auras at once"] = "Maintenir CTRL pour créer plusieurs auras simultanément"
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
+	--[[Translation missing --]]
+	L["Master Channeler Rune"] = "Master Channeler Rune"
 	--[[Translation missing --]]
 	L["Max 3"] = "Max 3"
 	--[[Translation missing --]]
@@ -81,6 +97,8 @@ local L = WeakAuras.L
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du familier"
 	L["PvP Talents"] = "Talents JcJ"
+	--[[Translation missing --]]
+	L["regen buff"] = "regen buff"
 	L["Replace all existing triggers"] = "Remplacer tous les déclencheurs existant"
 	L["Replace Triggers"] = "Remplacer les déclencheurs"
 	L["Resources"] = "Ressources"

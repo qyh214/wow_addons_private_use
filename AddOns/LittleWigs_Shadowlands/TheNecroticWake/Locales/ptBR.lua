@@ -1,10 +1,5 @@
-local L = BigWigs:NewBossLocale("Nalthor the Rimebinder", "ptBR")
+local L = BigWigs:NewBossLocale("The Necrotic Wake Trash", "ptBR")
 if not L then return end
-if L then
-	L.aegis = "%s removido depois de %.1f segundos!"
-end
-
-L = BigWigs:NewBossLocale("The Necrotic Wake Trash", "ptBR")
 if L then
 	--L.amarth_warmup_trigger = "You will be brought to justice!"
 	L.corpse_harvester = "Cata-cadáver"
@@ -19,6 +14,7 @@ if L then
 	L.corpse_collector = "Coletor de Cadáveres"
 	L.kyrian_stitchwerk = "Suturado Kyriano"
 	L.flesh_crafter = "Artesão de Carne"
+	L.loyal_creation = "Criação Leal"
 	L.separation_assistant = "Assistente de Separação"
 	L.goregrind = "Raspatripa"
 	L.rotspew = "Cuspepodre"

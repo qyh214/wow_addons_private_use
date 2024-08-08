@@ -35,9 +35,6 @@ mod:RegisterEnableMob(
 
 local L = mod:GetLocale()
 if L then
-	L.custom_on_autotalk = "Autotalk"
-	L.custom_on_autotalk_desc = "Instantly selects various gossip options around the dungeon."
-
 	L.mug_of_mead = "Mug of Mead"
 	L.valarjar_thundercaller = "Valarjar Thundercaller"
 	L.storm_drake = "Storm Drake"
@@ -60,10 +57,11 @@ end
 -- Initialization
 --
 
+local autotalk = mod:AddAutoTalkOption(true)
 function mod:GetOptions()
 	return {
 		-- General
-		"custom_on_autotalk",
+		autotalk,
 		-- Mug of Mead
 		202298, -- Mug of Mead
 		-- Valarjar Thundercaller
@@ -105,7 +103,7 @@ function mod:GetOptions()
 		199726, -- Unruly Yell
 		200969, -- Call Ancestor
 	}, {
-		["custom_on_autotalk"] = "general",
+		[autotalk] = "general",
 		[202298] = L.mug_of_mead,
 		[215430] = L.valarjar_thundercaller,
 		[198888] = L.storm_drake,
@@ -202,18 +200,18 @@ end
 -- General
 
 function mod:GOSSIP_SHOW()
-	if self:GetOption("custom_on_autotalk") then
+	if self:GetOption(autotalk) then
 		if self:GetGossipID(44755) then
-			-- King Ranulf
+			-- King Ranulf, begin combat
 			self:SelectGossipID(44755)
 		elseif self:GetGossipID(44801) then
-			-- King Haldor
+			-- King Haldor, begin combat
 			self:SelectGossipID(44801)
 		elseif self:GetGossipID(44802) then
-			-- King Bjorn
+			-- King Bjorn, begin combat
 			self:SelectGossipID(44802)
 		elseif self:GetGossipID(44754) then
-			-- King Tor
+			-- King Tor, begin combat
 			self:SelectGossipID(44754)
 		end
 	end
@@ -237,7 +235,7 @@ function mod:Thunderstrike(args)
 	self:TargetBar(args.spellId, 3, args.destName)
 	if self:Me(args.destGUID) then
 		self:Flash(args.spellId)
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Thunderstrike")
 	end
 end
 
@@ -340,7 +338,7 @@ do
 		if self:Me(guid) then
 			self:PersonalMessage(199805)
 			self:PlaySound(199805, "alarm")
-			self:Say(199805)
+			self:Say(199805, nil, nil, "Crackle")
 		end
 	end
 	function mod:Crackle(args)
@@ -391,7 +389,7 @@ do
 		self:TargetMessage(199034, "yellow", name)
 		self:PlaySound(199034, "alert", nil, name)
 		if self:Me(guid) then
-			self:Say(199034)
+			self:Say(199034, nil, nil, "Valkyra's Advance")
 		end
 	end
 	function mod:ValkyrasAdvance(args)

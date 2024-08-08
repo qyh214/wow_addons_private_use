@@ -9,6 +9,10 @@ end
 local module = ExRT:New("InspectViewer",ExRT.L.InspectViewer)
 local ELib,L = ExRT.lib,ExRT.L
 
+local GetSpellInfo = ExRT.F.GetSpellInfo or GetSpellInfo
+local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
+local GetItemInfo, GetItemInfoInstant, GetItemQualityColor = C_Item and C_Item.GetItemInfo or GetItemInfo, C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant, C_Item and C_Item.GetItemQualityColor or GetItemQualityColor
+
 module.db.inspectDB = parentModule.db.inspectDB
 module.db.inspectDBAch = parentModule.db.inspectDBAch
 module.db.inspectQuery = parentModule.db.inspectQuery
@@ -53,39 +57,80 @@ module.db.specHasOffhand = {
 }
 
 module.db.socketsBonusIDs = {
-	[563]=true,
-	[564]=true,
-	[565]=true,
-	[572]=true,
-	[1808]=true,
-	[4802]=true,
-	[6935]=true,
-	[6672]=true,
-	[6514]=true,
-	[4231]=true,
-	[3522]=true,
-	[3475]=true,
-	[7947]=true,
-	[4802]=true,
-	[6514]=true,
-	[6672]=true,
-	[6935]=true,
-	[7576]=true,
-	[7580]=true,
-	[7935]=true,
-	[8289]=true,
-	[8780]=true,
-	[8781]=true,
-	[8782]=true,
-	[8810]=true,
+	[523]=true,	[563]=true,	[564]=true,	[565]=true,	[572]=true,
+	[608]=true,	[1808]=true,	[3475]=true,	[3522]=true,	[3574]=true,
+	[3620]=true,	[3629]=true,	[4802]=true,	[6452]=true,	[6514]=true,
+	[6672]=true,	[6935]=true,	[7576]=true,	[7580]=true,	[7935]=true,
+	[8155]=true,	[8289]=true,	[8780]=true,	[8781]=true,	[8782]=true,
+	[8810]=true,	[8827]=true,	[9228]=true,	[9413]=true,	[9436]=true,
+	[9438]=true,	[9512]=true,	[9516]=true,	[10370]=true,	[10397]=true,
+	[10531]=true,	[10589]=true,	[10596]=true,	[10601]=true,	[10608]=true,
+	[10615]=true,	[10622]=true,	[10629]=true,	[10636]=true,	[10643]=true,
+	[10650]=true,	[10657]=true,	[10659]=true,	[10666]=true,	[10674]=true,
+	[10681]=true,	[10688]=true,	[10695]=true,	[10702]=true,	[10709]=true,
+	[10716]=true,	[10733]=true,	[10734]=true,	[10735]=true,	[10736]=true,
+	[10737]=true,	[10738]=true,	[10739]=true,	[10740]=true,	[10741]=true,
+	[10742]=true,	[10743]=true,	[10776]=true,	[10775]=true,	[10774]=true,
+	[10773]=true,	[10772]=true,	[10771]=true,	[10770]=true,	[10769]=true,
+	[10768]=true,	[10767]=true,	[10766]=true,	[10719]=true,	[10712]=true,
+	[10705]=true,	[10698]=true,	[10691]=true,	[10684]=true,	[10677]=true,
+	[10670]=true,	[10663]=true,	[10658]=true,	[10651]=true,	[10644]=true,
+	[10637]=true,	[10630]=true,	[10623]=true,	[10616]=true,	[10609]=true,
+	[10602]=true,	[10597]=true,	[10591]=true,	[10835]=true,	[10836]=true,
+	[10838]=true,	[10868]=true,	[10878]=true,	[10879]=true,	[10880]=true,
+	[11145]=true,	[11146]=true,	[11147]=true,	[11148]=true,	[11149]=true,
+	[11150]=true,	[11151]=true,	[11152]=true,	[11153]=true,	[11154]=true,
+	[11307]=true,
 }
 
 local IS_LOW = UnitLevel'player' < 50
 local IS_BFA = UnitLevel'player' < 60
 local IS_SL = UnitLevel'player' >= 60
 local IS_DF = UnitLevel'player' >= 70 and not ExRT.isClassic
+local IS_TWW = UnitLevel'player' >= 71 and not ExRT.isClassic
 
-module.db.topEnchGems = IS_SL and {
+module.db.topEnchGems = IS_TWW and {
+	[3368]="DKWeapon:knight",
+	[3370]="DKWeapon:frost",
+	[3847]="DKWeapon:2h",
+
+	[217115]=true,
+	[213743]=true,
+	[213746]=true,
+	[213740]=true,
+	[213488]=true,
+	[213479]=true,
+	[213482]=true,
+	[213485]=true,
+	[213500]=true,
+	[213491]=true,
+	[213494]=true,
+	[213497]=true,
+	[213464]=true,
+	[213455]=true,
+	[213458]=true,
+	[213461]=true,
+	[213476]=true,
+	[213467]=true,
+	[213470]=true,
+	[213473]=true,
+	[213517]=true,
+	[213503]=true,
+	[213506]=true,
+	[213509]=true,
+	[213512]=true,
+
+	[7421]=true,	[7418]=true,	[7331]=true,	[7334]=true,	[7337]=true,
+	[7340]=true,	[7343]=true,	[7346]=true,	[7349]=true,	[7352]=true,
+	[7451]=true,	[7454]=true,	[7463]=true,	[7355]=true,	[7358]=true,
+	[7364]=true,	[7367]=true,	[7370]=true,	[7373]=true,	[7376]=true,
+	[7379]=true,	[7439]=true,	[7442]=true,	[7445]=true,	[7457]=true,
+	[7448]=true,	[7427]=true,	[7430]=true,	[7433]=true,	[7436]=true,
+	[7382]=true,	[7385]=true,	[7388]=true,	[7391]=true,	[7394]=true,
+	[7397]=true,	[7400]=true,	[7403]=true,	[7406]=true,	[7409]=true,
+	[7412]=true,	[7415]=true,	[7470]=true,	[7473]=true,	[7479]=true,
+	[7476]=true,	[7460]=true,	[7361]=true,	[7424]=true,	[7337]=true,
+} or IS_SL and {
 	[6202]="cloak:stamina:speed",
 	[6208]="cloak:stamina",
 	[6204]="cloak:stamina:leech",
@@ -236,7 +281,13 @@ module.db.topEnchGems = IS_SL and {
 
 
 module.db.achievementsList = {
-	{	--A
+	{	--N
+		L.S_ZoneT32,
+		40244,40247,40248,40249,40236,40237,40238,40239,40240,40241,40242,40243,40253,40254,
+	},{	--A
+		L.S_ZoneT31,
+		19344,19345,19346,19347,19335,19336,19337,19338,19339,19340,19341,19342,19343,19350,19351,
+	},{	--A
 		L.S_ZoneT30,
 		18160,18163,18164,18165,18167,18151,18152,18153,18154,18155,18156,18157,18158,18159,
 	},{	--VotI
@@ -320,7 +371,11 @@ module.db.achievementsList = {
 	},
 }
 module.db.achievementsList_statistic = {
-	{	--A
+	{	--N
+		0,0,0,0,{40267,40268,40269,40270},{40271,40272,40273,40274},{40275,40276,40277,40278},{40279,40280,40281,40282},{40283,40284,40285,40286},{40287,40288,40289,40290},{40291,40292,40293,40294},{40295,40296,40297,40298},
+	},{
+
+	},{	--A
 
 	},{	--VotI
 
@@ -404,7 +459,8 @@ do
 			end
 		end
 	end
-	--ELib:Frame(UIParent):SetScript('OnUpdate',function()local q=GetMouseFocus()if not q or not q.id then DInfo'nil' return end DInfo(q.id)end)
+	--ELib:Frame(UIParent):SetScript('OnUpdate',function()local q=GetMouseFoci()[1]if not q or not q.id then DInfo'nil' return end DInfo(q.id) if IsControlKeyDown()then R=R or{}if R[#R]~=q.id then R[#R+1]=q.id end end end)
+	--local s="" for i=1,#R do s=s..R[i].."," end GExRT.F.ShowText(s)
 end
 
 module.db.relicLocalizated = {
@@ -518,7 +574,7 @@ function module.options:Load()
 
 	local GetSpecializationInfoByID = GetSpecializationInfoByID
 	if ExRT.isClassic then
-		GetSpecializationInfoByID = ExRT.Classic.GetSpecializationInfoByID
+		GetSpecializationInfoByID = GetSpecializationInfoForSpecID or ExRT.Classic.GetSpecializationInfoByID
 	end
 
 	local function reloadChks(self)
@@ -639,8 +695,12 @@ function module.options:Load()
 		colorizeLowIlvl685 = 120
 	end
 	if IS_DF then
-		colorizeLowIlvl630 = 376
-		colorizeLowIlvl685 = 398
+		colorizeLowIlvl630 = 460
+		colorizeLowIlvl685 = 482
+	end
+	if IS_TWW then
+		colorizeLowIlvl630 = 597
+		colorizeLowIlvl685 = 623
 	end
 
 	self.chkItemsTrackDropDown = ELib:DropDown(self,300,6):Point(50,0):Size(50)
@@ -759,6 +819,16 @@ function module.options:Load()
 		EQUIPMENT_SETS_Fixed = EQUIPMENT_SETS_Fixed:gsub("%%s","")
 	end
 
+	local function SetFilter(filter, filterType, filterDropDownText)
+		module.db.filter = filter
+		module.db.filterType = filterType
+		module.options.talentsScrollFrame.prevState = nil
+		module.options.ScrollBar:SetValue(1)
+		module.options.ReloadPage()
+		ELib:DropDownClose()
+		module.options.filterDropDown:SetText(filterDropDownText)
+	end
+
 	self.filterDropDown.List = {
 		{text = L.InspectViewerClass, subMenu = {}},
 		{text = L.InspectViewerType, subMenu = {}},
@@ -771,42 +841,22 @@ function module.options:Load()
 			ELib:DropDownClose()
 		end, func = ItemsTrackDropDownClick},
 		{text = L.InspectViewerClear,func = function (self)
-			module.db.filter = nil
-			module.db.filterType = nil
-			module.options.ScrollBar:SetValue(1)
-			module.options.ReloadPage()
-			ELib:DropDownClose()
-			module.options.filterDropDown:SetText(L.InspectViewerFilter)
+			SetFilter(nil,nil,L.InspectViewerFilter)
 		end},
 	}
 	for i=1,#dropDownTable[1][1] do
 		self.filterDropDown.List[1].subMenu[i] = {text = L.classLocalizate[ dropDownTable[1][1][i] ],func = function (self,arg1)
-			module.db.filter = arg1
-			module.db.filterType = 1
-			module.options.ScrollBar:SetValue(1)
-			module.options.ReloadPage()
-			ELib:DropDownClose()
-			module.options.filterDropDown:SetText(L.InspectViewerFilterShort.. L.classLocalizate[ arg1 ] )
+			SetFilter(arg1,1,L.InspectViewerFilterShort.. L.classLocalizate[ arg1 ])
 		end, arg1 = dropDownTable[1][1][i]}
 	end
 	for i=1,#dropDownTable[2][1] do
 		self.filterDropDown.List[2].subMenu[i] = {text = dropDownTable[2][2][i],func = function (self,arg1,arg2)
-			module.db.filter = arg1
-			module.db.filterType = 2
-			module.options.ScrollBar:SetValue(1)
-			module.options.ReloadPage()
-			ELib:DropDownClose()
-			module.options.filterDropDown:SetText(L.InspectViewerFilterShort.. arg2 )
+			SetFilter(arg1,2,L.InspectViewerFilterShort.. arg2)
 		end, arg1 = dropDownTable[2][1][i], arg2 = dropDownTable[2][2][i]}
 	end
 	for i=1,#dropDownTable[3][1] do
 		self.filterDropDown.List[3].subMenu[i] = {text = dropDownTable[3][2][i],func = function (self,arg1,arg2)
-			module.db.filter = arg1
-			module.db.filterType = 3
-			module.options.ScrollBar:SetValue(1)
-			module.options.ReloadPage()
-			ELib:DropDownClose()
-			module.options.filterDropDown:SetText(L.InspectViewerFilterShort.. arg2 )
+			SetFilter(arg1,3,L.InspectViewerFilterShort.. arg2)
 		end, arg1 = dropDownTable[3][1][i], arg2 = dropDownTable[3][2][i]}
 	end
 	for i=1,#dropDownTable[4][1] do
@@ -817,12 +867,7 @@ function module.options:Load()
 			end
 		end
 		self.filterDropDown.List[4].subMenu[i] = {text = text,func = function (self,arg1)
-			module.db.filter = arg1
-			module.db.filterType = 4
-			module.options.ScrollBar:SetValue(1)
-			module.options.ReloadPage()
-			ELib:DropDownClose()
-			module.options.filterDropDown:SetText(L.InspectViewerFilterShort.. text )
+			SetFilter(arg1,4,L.InspectViewerFilterShort.. text)
 		end, arg1 = dropDownTable[4][1][i]}
 	end
 
@@ -992,7 +1037,7 @@ function module.options:Load()
 					if specIcon then
 						line.spec.texture:SetTexture(specIcon)
 						line.spec.id = spec
-					elseif ExRT.isClassic then
+					elseif ExRT.isClassic and not ExRT.isCata then
 						line.spec.texture:SetTexture("")
 						line.spec.id = nil
 					else
@@ -1148,7 +1193,7 @@ function module.options:Load()
 								line.otherInfo:Show()
 							end
 						end
-					elseif module.db.page == 2 and ExRT.is10 then
+					elseif module.db.page == 2 and not ExRT.isClassic then
 
 					elseif module.db.page == 2 then
 						line.ilvl:SetText(ilvl_def)
@@ -1481,17 +1526,9 @@ function module.options:Load()
 
 					local cR,cG,cB = ExRT.F.classColorNum(class)
 					if name and UnitName(name) then
-						if ExRT.is10 or ExRT.isLK1 then
-							line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0.5), CreateColor(cR,cG,cB, 0))
-						else
-							line.back:SetGradientAlpha("HORIZONTAL", cR,cG,cB, 0.5, cR,cG,cB, 0)
-						end
+						line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0.5), CreateColor(cR,cG,cB, 0))
 					else
-						if ExRT.is10 or ExRT.isLK1 then
-							line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0), CreateColor(cR,cG,cB, 0.5))
-						else
-							line.back:SetGradientAlpha("HORIZONTAL", cR,cG,cB, 0, cR,cG,cB, 0.5)
-						end
+						line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0), CreateColor(cR,cG,cB, 0.5))
 					end
 				else
 					for j=-1,18 do
@@ -1521,11 +1558,7 @@ function module.options:Load()
 
 					line.apinfo:SetText("")
 
-					if ExRT.is10 or ExRT.isLK1 then
-						line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
-					else
-						line.back:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0.5, 0, 0, 0, 0)
-					end
+					line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
 
 					line.perksData = nil
 				end
@@ -1542,7 +1575,7 @@ function module.options:Load()
 				end
 			end
 		end
-		if module.db.page == 2 and ExRT.is10 then
+		if module.db.page == 2 and not ExRT.isClassic then
 			counter = 0
 		end
 		for i=(counter+1),module.db.perPage do
@@ -1554,9 +1587,9 @@ function module.options:Load()
 		end
 		module.options.RaidIlvl()
 
-		module.options.talentsScrollFrame:SetShown(module.db.page == 2 and ExRT.is10)
-		module.options.ScrollBar:SetShown(not (module.db.page == 2 and ExRT.is10))
-		if module.db.page == 2 and ExRT.is10 then
+		module.options.talentsScrollFrame:SetShown(module.db.page == 2 and not ExRT.isClassic)
+		module.options.ScrollBar:SetShown(not (module.db.page == 2 and not ExRT.isClassic))
+		if module.db.page == 2 and not ExRT.isClassic then
 			local newmax = (floor(#nowDB / 2)+1)*module.options.talentsScrollFrame.HEIGHT
 			if select(2,module.options.talentsScrollFrame.ScrollBar.slider:GetMinMaxValues()) ~= newmax then
 				local val = module.options.talentsScrollFrame.ScrollBar.slider:GetValue()
@@ -1608,17 +1641,9 @@ function module.options:Load()
 						local class = data.class
 						local cR,cG,cB = ExRT.F.classColorNum(class)
 						if name and UnitName(name) then
-							if ExRT.is10 or ExRT.isLK1 then
-								line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0.5), CreateColor(cR,cG,cB, 0))
-							else
-								line.back:SetGradientAlpha("HORIZONTAL", cR,cG,cB, 0.5, cR,cG,cB, 0)
-							end
+							line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0.5), CreateColor(cR,cG,cB, 0))
 						else
-							if ExRT.is10 or ExRT.isLK1 then
-								line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0), CreateColor(cR,cG,cB, 0.5))
-							else
-								line.back:SetGradientAlpha("HORIZONTAL", cR,cG,cB, 0, cR,cG,cB, 0.5)
-							end
+							line.back:SetGradient("HORIZONTAL",CreateColor(cR,cG,cB, 0), CreateColor(cR,cG,cB, 0.5))
 						end
 
 						local classIconCoords = CLASS_ICON_TCOORDS[class]
@@ -1642,7 +1667,7 @@ function module.options:Load()
 						if specIcon then
 							line.spec.texture:SetTexture(specIcon)
 							line.spec.id = spec
-						elseif ExRT.isClassic then
+						elseif ExRT.isClassic and not ExRT.isCata then
 							line.spec.texture:SetTexture("")
 							line.spec.id = nil
 						else
@@ -1672,6 +1697,10 @@ function module.options:Load()
 	
 								icon.texture:SetDesaturated(true)
 								icon:SetAlpha(0.5)
+
+								if node.subTree and node.subTree ~= data.talentSubTree then
+									icon:Hide()
+								end
 							end
 	
 							for j=1,1000 do
@@ -1718,11 +1747,7 @@ function module.options:Load()
 							end
 						end
 					else
-						if ExRT.is10 or ExRT.isLK1 then
-							line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
-						else
-							line.back:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0.5, 0, 0, 0, 0)
-						end
+						line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 0.5), CreateColor(0, 0, 0, 0))
 					end
 					line:Show()
 				end
@@ -2062,11 +2087,7 @@ function module.options:Load()
 		line.back:SetPoint("TOPLEFT",0,0)
 		line.back:SetPoint("BOTTOMRIGHT",0,0)
 		line.back:SetColorTexture(1, 1, 1, 1)
-		if ExRT.is10 or ExRT.isLK1 then
-			line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 1), CreateColor(0, 0, 0, 0))
-		else
-			line.back:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 1, 0, 0, 0, 0)
-		end
+		line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 1), CreateColor(0, 0, 0, 0))
 
 		line.refreshArtifact = ELib:Button(line,REFRESH):Point("LEFT",245,0):Size(100,20):OnClick(Lines_RefreshArtifactButton_OnClick)
 		line.refreshArtifact:Hide()
@@ -2179,11 +2200,7 @@ function module.options:Load()
 		line.back:SetPoint("TOPLEFT",0,0)
 		line.back:SetPoint("BOTTOMRIGHT",0,0)
 		line.back:SetColorTexture(1, 1, 1, 1)
-		if ExRT.is10 or ExRT.isLK1 then
-			line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 1), CreateColor(0, 0, 0, 0))
-		else
-			line.back:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 1, 0, 0, 0, 0)
-		end
+		line.back:SetGradient("HORIZONTAL",CreateColor(0, 0, 0, 1), CreateColor(0, 0, 0, 0))
 
 		line.talentsIcons = {}
 		line.GetTalentIcon = Line_GetTalentIcon

@@ -1,8 +1,8 @@
-## Interface: 90207
+## Interface: 100207
 ## Title: Lib: ChatThrottleLib
 ## Notes: Embeddable chat throttling library with traffic shaping and priorities
 ## Author: Mikk
-## Version: 24
+## Version: 29
 ## LoadOnDemand: 1
 ## X-Category: Library
 ## X-Website: http://www.wowpedia.org/ChatThrottleLib

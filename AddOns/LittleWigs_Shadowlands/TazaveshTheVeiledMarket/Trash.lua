@@ -46,10 +46,12 @@ if L then
 	L.portal_authority = "Tazavesh Portal Authority"
 	L.custom_on_portal_autotalk = "Autotalk"
 	L.custom_on_portal_autotalk_desc = "Instantly open portals back to the entrance when talking to Broker NPCs."
+	L.custom_on_portal_autotalk_icon = "ui_chat"
 	L.trading_game = "Trading Game"
 	L.trading_game_desc = "Alerts with the right password during the Trading Game."
 	L.custom_on_trading_game_autotalk = "Autotalk"
 	L.custom_on_trading_game_autotalk_desc = "Instantly select the right password after the Trading Game has been completed."
+	L.custom_on_trading_game_autotalk_icon = "ui_chat"
 	L.password_triggers = {
 		["Ivory Shell"] = 53259,
 		["Sapphire Oasis"] = 53260,
@@ -404,7 +406,7 @@ do
 		self:TargetMessage(357512, "red", name)
 		self:PlaySound(357512, onMe and "warning" or "alert", nil, name)
 		if onMe then
-			self:Say(357512)
+			self:Say(357512, nil, nil, "Frenzied Charge")
 		end
 	end
 	function mod:FrenziedCharge(args)
@@ -428,7 +430,7 @@ do
 				prev = t
 				self:PersonalMessage(args.spellId)
 				self:PlaySound(args.spellId, "alarm")
-				self:Say(args.spellId, CL.bomb)
+				self:Say(args.spellId, CL.bomb, nil, "Bomb")
 				self:SayCountdown(args.spellId, 5)
 			end
 		end
@@ -443,7 +445,7 @@ end
 -- Support Officer
 function mod:RefractionShieldApplied(args)
 	if not self:Player(args.destFlags) then
-		local unit = self:GetUnitIdByGUID(args.sourceGUID)
+		local unit = self:UnitTokenFromGUID(args.sourceGUID)
 		if unit and UnitAffectingCombat(unit) then
 			self:Message(args.spellId, "yellow", CL.on:format(args.spellName, args.destName))
 			self:PlaySound(args.spellId, "warning")
@@ -554,7 +556,7 @@ do
 		-- we're using UNIT_TARGET as a proxy for the Scalebinder entering combat.
 		if mobId == 178141 and not registeredMobs[sourceGUID] then -- Murkbrine Scalebinder
 			registeredMobs[sourceGUID] = true
-			self:NameplateCDBar(355132, 7.2, sourceGUID) -- Invigorating Fish Stick
+			--self:Nameplate(355132, 7.2, sourceGUID) -- Invigorating Fish Stick
 		end
 	end
 	function mod:InvigoratingFishStick(args)
@@ -563,7 +565,7 @@ do
 
 		-- if for some reason this mob isn't registered already, register it so this bar won't be overwritten
 		registeredMobs[args.sourceGUID] = true
-		self:NameplateCDBar(args.spellId, 27.9, args.sourceGUID)
+		--self:Nameplate(args.spellId, 27.9, args.sourceGUID)
 	end
 end
 function mod:InvigoratingFishStickSpawned(args)

@@ -37,11 +37,12 @@ local L = Narci.L;
 local NarciAPI = NarciAPI;
 local TEXT_LOCALE = GetLocale();
 
-local GetItemInfoInstant = GetItemInfoInstant;
-local GetItemGem = GetItemGem;
-local GetItemStats = GetItemStats;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
+local GetItemGem = C_Item.GetItemGem;
+local GetItemStats = C_Item.GetItemStats;
 local GetInventoryItemLink = GetInventoryItemLink;
 local StripHyperlinks = StripHyperlinks;    --Added in 10.1.0
+local GetSpellInfo = addon.TransitionAPI.GetSpellInfo;
 
 local function IsArtifactRelic(item)
     --an alternative to IsArtifactRelicItem()
@@ -1733,7 +1734,7 @@ local function GetColorizedPrimordialStoneName(itemID)
     if name and name ~= "" then
         PrimordialStoneNames[itemID] = name;
     else
-        name = GetItemInfo(itemID);
+        name = C_Item.GetItemInfo(itemID);
     end
 
     return name

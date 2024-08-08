@@ -4,6 +4,5 @@ if L then
 	L.custom_on_markadd = "Sonnenzeloten markieren"
 	L.custom_on_markadd_desc = "Markiert den Sonnenzeloten mit {rt8}, benötigt Assistent oder Leiter."
 
-	L.add = "Konstrukt erscheint"
-	L.add_desc = "Warnung für das Erscheinen des Schildkonstruktes."
+	L.construct = "Schildkonstrukt der Himmelsnadel" -- NPC ID 76292
 end

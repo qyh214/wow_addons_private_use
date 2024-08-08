@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -58,15 +58,41 @@ C.ACTIVITY_ID_TO_KEYWORDS = {
 
 C.MAP_ID_TO_KEYWORDS = {
     -- Raids
-    [ 249] = { "wrath", "ony" }, -- Onyxia's Lair
-    [ 533] = { "wrath", "naxx" }, -- Naxxramas
+    [ 229] = { "classic", "ubrs" }, -- Upper Blackrock Spire
+    [ 249] = { "classic", "wrath", "ony" }, -- Onyxia's Lair
+    [ 309] = { "classic", "zg" }, -- Zul'Gurub
+    [ 409] = { "classic", "mc" }, -- Molten Core
+    [ 469] = { "classic", "bl" }, -- Blackwing Lair
+    [ 509] = { "classic", "aq20" }, -- Ahn'Qiraj Ruins
+    [ 531] = { "classic", "aq40" }, -- Ahn'Qiraj Temple
+    [ 532] = { "tbc", "kara" }, -- Karazhan
+    [ 533] = { "classic", "wrath", "naxx" }, -- Naxxramas
+    [ 534] = { "tbc", "hyjal" }, -- Hyjal Past
+    [ 544] = { "tbc", "mag" }, -- Magtheridon's Lair
+    [ 548] = { "tbc", "ssc" }, -- Serpentshrine Cavern
+    [ 550] = { "tbc", "tk" }, -- Tempest Keep
+    [ 564] = { "tbc", "bt" }, -- Black Temple
+    [ 565] = { "tbc", "gruul" }, -- Gruul's Lair
+    [ 568] = { "tbc", "za" }, -- Zul'Aman
+    [ 580] = { "tbc", "swp" }, -- The Sunwell
     [ 603] = { "wrath", "uld" }, -- Ulduar
     [ 615] = { "wrath", "os" }, -- The Obsidian Sanctum
     [ 616] = { "wrath", "eoe" }, -- The Eye of Eternity
     [ 624] = { "wrath", "voa" }, -- Vault of Archavon
     [ 631] = { "wrath", "icc" }, -- Icecrown Citadel
     [ 649] = { "wrath", "toc" }, -- Trial of the Crusader
+    [ 669] = { "cata", "bwd" }, -- Blackwing Descent
+    [ 671] = { "cata", "bot" }, -- The Bastion of Twilight
+    [ 720] = { "cata", "fl" }, -- Firelands
     [ 724] = { "wrath", "rs" }, -- Ruby Sanctum
+    [ 732] = { "cata", "bara" }, -- Baradin Hold
+    [ 754] = { "cata", "tfw" }, -- Throne of the Four Winds
+    [ 967] = { "cata", "ds" }, -- Dragon Soul
+    [ 996] = { "mists", "toes" }, -- Terrace of Endless Spring
+    [1008] = { "mists", "msv" }, -- Mogu'shan Vaults
+    [1009] = { "mists", "hof" }, -- Heart of Fear
+    [1098] = { "mists", "tot" }, -- Throne of Thunder
+    [1136] = { "mists", "soo" }, -- Siege of Orgrimmar
     [1205] = { "wod", "brf" }, -- Blackrock Foundry
     [1228] = { "wod", "hm" }, -- Highmaul
     [1448] = { "wod", "hfc" }, -- Hellfire Citadel
@@ -86,10 +112,20 @@ C.MAP_ID_TO_KEYWORDS = {
     [2522] = { "df", "voti" }, -- Vault of the Incarnates
     [2549] = { "df", "atdh", "amir" }, -- Amirdrassil, the Dream's Hope
     [2569] = { "df", "asc" }, -- Aberrus, the Shadowed Crucible
+    [2657] = { "tww", "np" }, -- Nerub-ar Palace
     -- Dungeons
     [ 643] = { "cata", "tott", "dfs3" }, -- Throne of the Tides
     [ 657] = { "cata", "vp", "dfs2" }, -- Vortex Pinnacle
-    [ 960] = { "mop", "tjs", "dfs1" }, -- Temple of the Jade Serpent
+    [ 670] = { "cata", "gb", "twws1" }, -- Grim Batol
+    [ 959] = { "mists", "spm" }, -- Shado-Pan Monastery
+    [ 960] = { "mists", "tjs", "dfs1" }, -- Temple of the Jade Serpent
+    [ 961] = { "mists", "ssb" }, -- Stormstout Brewery
+    [ 962] = { "mists", "gss" }, -- Gate of the Setting Sun
+    [ 994] = { "mists", "msp" }, -- Mogu'shan Palace
+    [1001] = { "mists", "sch" }, -- Scarlet Halls
+    [1004] = { "mists", "scm" }, -- Scarlet Monastery
+    [1007] = { "mists", "scholo" }, -- Scholomance
+    [1011] = { "mists", "snt" }, -- Siege of Niuzao Temple
     [1176] = { "wod", "sbg", "dfs1" }, -- Shadowmoon Burial Grounds
     [1195] = { "wod", "id", "sls4" }, -- Iron Docks
     [1208] = { "wod", "gd", "sls4" }, -- Grimrail Depot
@@ -110,7 +146,7 @@ C.MAP_ID_TO_KEYWORDS = {
     [1762] = { "bfa", "kr" }, -- Kings' Rest
     [1763] = { "bfa", "ad", "dfs3" }, -- Atal'Dazar
     [1771] = { "bfa", "td" }, -- Tol Dagor
-    [1822] = { "bfa", "sob", "siege" }, -- Siege of Boralus
+    [1822] = { "bfa", "sob", "siege", "twws1" }, -- Siege of Boralus
     [1841] = { "bfa", "tur", "undr", "dfs2" }, -- The Underrot
     [1862] = { "bfa", "wm", "dfs3" }, -- Waycrest Manor
     [1864] = { "bfa", "sots" }, -- Shrine of the Storm
@@ -118,23 +154,34 @@ C.MAP_ID_TO_KEYWORDS = {
     [2097] = { "bfa", "opm" }, -- Operation: Mechagon
     [2284] = { "sl", "sd" }, -- Sanguine Depths
     [2285] = { "sl", "soa" }, -- Spires of Ascension
-    [2286] = { "sl", "nw" }, -- The Necrotic Wake
+    [2286] = { "sl", "nw", "twws1" }, -- The Necrotic Wake
     [2287] = { "sl", "hoa" }, -- Halls of Atonement
     [2289] = { "sl", "pf" }, -- Plaguefall
-    [2290] = { "sl", "mots", "mists" }, -- Mists of Tirna Scithe
+    [2290] = { "sl", "mots", "mists", "twws1" }, -- Mists of Tirna Scithe
     [2291] = { "sl", "dos" }, -- De Other Side
     [2293] = { "sl", "top" }, -- Theater of Pain
     [2441] = { "sl", "taz" }, -- Tazavesh, the Veiled Market
-    [2451] = { "df", "lot", "uld", "dfs2" }, -- Uldaman: Legacy of Tyr
-    [2515] = { "df", "av", "dfs1" }, -- The Azure Vault
-    [2516] = { "df", "no", "dfs1" }, -- The Nokhud Offensive
-    [2519] = { "df", "nt", "nelt", "dfs2" }, -- Neltharus
-    [2520] = { "df", "bh", "dfs2" }, -- Brackenhide Hollow
-    [2521] = { "df", "rlp", "dfs1" }, -- Ruby Life Pools
-    [2526] = { "df", "aa", "dfs1" }, -- Algeth'ar Academy
-    [2527] = { "df", "hoi", "dfs2" }, -- Halls of Infusion
+    [2451] = { "df", "lot", "uld", "dfs2", "dfs4" }, -- Uldaman: Legacy of Tyr
+    [2515] = { "df", "av", "dfs1", "dfs4" }, -- The Azure Vault
+    [2516] = { "df", "no", "dfs1", "dfs4" }, -- The Nokhud Offensive
+    [2519] = { "df", "nt", "nelt", "dfs2", "dfs4" }, -- Neltharus
+    [2520] = { "df", "bh", "dfs2", "dfs4" }, -- Brackenhide Hollow
+    [2521] = { "df", "rlp", "dfs1", "dfs4" }, -- Ruby Life Pools
+    [2526] = { "df", "aa", "dfs1", "dfs4" }, -- Algeth'ar Academy
+    [2527] = { "df", "hoi", "dfs2", "dfs4" }, -- Halls of Infusion
     [2579] = { "df", "doti" }, -- Dawn of the Infinite
+    [2648] = { "tww", "rook" }, -- The Rookery
+    [2649] = { "tww", "psf" }, -- Priory of the Sacred Flame
+    [2651] = { "tww", "dfc" }, -- Darkflame Cleft
+    [2652] = { "tww", "sv", "twws1" }, -- The Stonevault
+    [2660] = { "tww", "arak", "twws1" }, -- Ara-Kara, City of Echoes
+    [2661] = { "tww", "brew" }, -- Cinderbrew Meadery
+    [2662] = { "tww", "dawn", "twws1" }, -- The Dawnbreaker
+    [2669] = { "tww", "cot", "twws1" }, -- City of Threads
 }
+
+-- Raider.io keywords can be found here:
+-- https://raider.io/api/v1/mythic-plus/static-data?expansion_id=10
 
 local function PutActivityKeywordsDefaults(env)
     for activityID, keywords in pairs(C.ACTIVITY_ID_TO_KEYWORDS) do

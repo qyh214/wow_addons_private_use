@@ -10,7 +10,7 @@ local C_Timer_After = C_Timer.After
 local C_FriendList_GetNumFriends = C_FriendList.GetNumFriends
 local C_FriendList_GetNumOnlineFriends = C_FriendList.GetNumOnlineFriends
 local C_FriendList_GetFriendInfoByIndex = C_FriendList.GetFriendInfoByIndex
-local BNet_GetClientEmbeddedAtlas, BNet_GetBattlenetClientAtlas, BNet_GetValidatedCharacterName = BNet_GetClientEmbeddedAtlas, BNet_GetBattlenetClientAtlas, BNet_GetValidatedCharacterName
+local BNet_GetClientEmbeddedAtlas, BNet_GetBattlenetClientAtlas, FriendsFrame_GetFormattedCharacterName = BNet_GetClientEmbeddedAtlas, BNet_GetBattlenetClientAtlas, FriendsFrame_GetFormattedCharacterName
 local BNGetNumFriends, GetRealZoneText, GetQuestDifficultyColor = BNGetNumFriends, GetRealZoneText, GetQuestDifficultyColor
 local HybridScrollFrame_GetOffset, HybridScrollFrame_Update = HybridScrollFrame_GetOffset, HybridScrollFrame_Update
 local C_BattleNet_GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
@@ -21,10 +21,10 @@ local InviteToGroup = C_PartyInfo.InviteUnit
 local BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL = BNET_CLIENT_WOW, UNKNOWN, GUILD_ONLINE_LABEL
 local FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND = FRIENDS_TEXTURE_ONLINE, FRIENDS_TEXTURE_AFK, FRIENDS_TEXTURE_DND
 local RAF_RECRUIT_FRIEND, RAF_RECRUITER_FRIEND = RAF_RECRUIT_FRIEND, RAF_RECRUITER_FRIEND
-local EXPANSION_NAME0, EXPANSION_NAME2 = EXPANSION_NAME0, EXPANSION_NAME2
+local EXPANSION_NAME0, EXPANSION_NAME3 = EXPANSION_NAME0, EXPANSION_NAME3
 local WOW_PROJECT_ID = WOW_PROJECT_ID or 1
 local WOW_PROJECT_60 = WOW_PROJECT_CLASSIC or 2
-local WOW_PROJECT_WRATH = 11
+local WOW_PROJECT_CATA = WOW_PROJECT_CATACLYSM_CLASSIC or 14
 local CLIENT_WOW_DIFF = "WoV" -- for sorting
 
 local r, g, b = DB.r, DB.g, DB.b
@@ -115,7 +115,7 @@ local function buildBNetTable(num)
 				local charName = gameAccountInfo.characterName
 				local client = gameAccountInfo.clientProgram
 				local class = gameAccountInfo.className or UNKNOWN
-				local zoneName = gameAccountInfo.areaName or UNKNOWN
+				local zoneName = gameAccountInfo.areaName
 				local level = gameAccountInfo.characterLevel
 				local gameText = gameAccountInfo.richPresence or ""
 				local isGameAFK = gameAccountInfo.isGameAFK
@@ -123,8 +123,9 @@ local function buildBNetTable(num)
 				local wowProjectID = gameAccountInfo.wowProjectID
 				local isMobile = gameAccountInfo.isWowMobile
 				local factionName = gameAccountInfo.factionName or UNKNOWN
+				local timerunningSeasonID = gameAccountInfo.timerunningSeasonID
 
-				charName = BNet_GetValidatedCharacterName(charName, battleTag, client)
+				charName = FriendsFrame_GetFormattedCharacterName(charName, battleTag, client, timerunningSeasonID)
 				class = DB.ClassList[class]
 
 				local status = FRIENDS_TEXTURE_ONLINE
@@ -136,13 +137,13 @@ local function buildBNetTable(num)
 
 				if wowProjectID == WOW_PROJECT_60 then
 					gameText = EXPANSION_NAME0
-				elseif wowProjectID == WOW_PROJECT_WRATH then
-					gameText = EXPANSION_NAME2
+				elseif wowProjectID == WOW_PROJECT_CATA then
+					gameText = EXPANSION_NAME3
 				end
 
 				local infoText = GetOnlineInfoText(client, isMobile, rafLinkType, gameText)
 				if client == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_ID then
-					infoText = GetOnlineInfoText(client, isMobile, rafLinkType, zoneName)
+					infoText = GetOnlineInfoText(client, isMobile, rafLinkType, zoneName or gameText)
 				end
 
 				if client == BNET_CLIENT_WOW and wowProjectID ~= WOW_PROJECT_ID then client = CLIENT_WOW_DIFF end
@@ -344,12 +345,16 @@ local function buttonOnEnter(self)
 			local gameText = gameAccountInfo.richPresence or ""
 			local wowProjectID = gameAccountInfo.wowProjectID
 			local clientString = BNet_GetClientEmbeddedAtlas(client, 16)
+			local timerunningSeasonID = gameAccountInfo.timerunningSeasonID
 			if client == BNET_CLIENT_WOW then
 				if charName ~= "" then -- fix for weird account
+					if timerunningSeasonID then
+						charName = TimerunningUtil.AddSmallIcon(charName) -- add timerunning tag on name
+					end
 					realmName = (DB.MyRealm == realmName or realmName == "") and "" or "-"..realmName
 
 					-- Get TBC realm name from richPresence
-					if wowProjectID == WOW_PROJECT_WRATH then
+					if wowProjectID == WOW_PROJECT_CATA then
 						local realm, count = gsub(gameText, "^.-%-%s", "")
 						if count > 0 then
 							realmName = "-"..realm

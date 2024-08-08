@@ -1,0 +1,23 @@
+## Interface: 100207
+## Title: OmniCD
+## Version: 10.2.7.2802
+## Author: Treebonker
+## Notes: Party cooldown tracker. /oc
+## X-Credits:
+## X-License: All Rights Reserved
+## X-Localizations: enUS, deDE, esMX, frFR, itIT, koKR, ruRU, zhCN, zhTW
+## X-Website: https://www.curseforge.com/wow/addons/omnicd
+## DefaultState: Disabled
+## SavedVariables: OmniCDDB
+## IconTexture: Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-logo64-c
+
+Libs\Embeds.xml
+Locales\locales.xml
+Core\Core.xml
+Modules\Spells\Core.lua
+Modules\Spells\Spells_Mainline.lua
+Modules\Spells\Azerite.lua
+Modules\Spells\Covenant.lua
+Modules\Spells\Modifiers_Mainline.lua
+Modules\Modules.xml
+Config\Config.xml

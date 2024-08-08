@@ -334,7 +334,7 @@ function Loader:Init()
     hooksecurefunc("Narci_Open", function()
         if Narci.isActive then
             KeyListener:Activate();
-            SelectActionGroup("CharacterFrame");
+            SelectActionGroup("EquipmentSlot");  --CharacterFrame
         else
             self:ExitGamePadMode();
         end
@@ -433,12 +433,3 @@ Loader:SetScript("OnEvent", function(self, event, ...)
         self:OnDisconnected(...);
     end
 end)
-
-
-
-SlashCmdList['NARCISSUSGAMEPAD'] = function(msg)
-	msg = string.lower(msg);
-    Narci_Open();
-end
-
-SLASH_NARCISSUSGAMEPAD1 = '/narcissusgamepad';

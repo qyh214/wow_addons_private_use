@@ -3297,7 +3297,7 @@ local function NPCBrowser_OnLoad(self)
 
         if not self.isDatabaseLoaded then
             local addOnName = "Narcissus_Database_NPC";
-            if IsAddOnLoaded(addOnName) then
+            if C_AddOns.IsAddOnLoaded(addOnName) then
                 self.isDatabaseLoaded = true;
             else
                 local timeStart = 0;
@@ -3316,15 +3316,15 @@ local function NPCBrowser_OnLoad(self)
                     end
                 end)
 
-                if GetAddOnEnableState( UnitName("player"), addOnName ) == 0 then
-                    EnableAddOn(addOnName);
+                if C_AddOns.GetAddOnEnableState( UnitName("player"), addOnName ) == 0 then
+                    C_AddOns.EnableAddOn(addOnName);
                 end
 
                 LoadingIndicator.Notes:SetText(L["Loading Database"]);
                 LoadingIndicator:Show();
 
                 After(0.2, function()
-                    local loaded, reason = LoadAddOn(addOnName);
+                    local loaded, reason = C_AddOns.LoadAddOn(addOnName);
                     if not loaded then
                         PlaySound(138528);
                         if reason == "DISABLED" then

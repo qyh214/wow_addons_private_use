@@ -10,6 +10,7 @@ if L then
 	L.timestream_anomaly = "시간의 흐름 변형물"
 	L.infinite_infiltrator = "무한의 침투요원"
 	L.risen_dragon = "되살아난 용"
+	L.iridikrons_creation = "이리디크론의 창조물"
 
 	--L.iridikron_warmup_trigger = "So the titans' puppets have come to face me."
 
@@ -33,4 +34,9 @@ if L then
 
 	L.custom_on_rift_autotalk = "자동 대화"
 	--L.custom_on_rift_autotalk_desc = "Instantly start channeling to open the Temporal Rift."
+	--L.rift_opened = "Temporal Rift Opened"
+	L.rift_stability = "균열 안정성"
+	--L.rift_stability_desc = "Show an alert when the Temporal Rift has been opened."
+
+	--L.manifested_timeways_warmup_trigger = "Even the Aspect of Time cannot be allowed to disrupt the timeways!"
 end

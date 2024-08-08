@@ -39,6 +39,7 @@ if L then
 	L.book_of_translocation = "Book of Translocation"
 	L.custom_on_book_autotalk = "Autotalk"
 	L.custom_on_book_autotalk_desc = "Instantly proceed to the next area when talking to Books of Translocation."
+	L.custom_on_book_autotalk_icon = "ui_chat"
 
 	L.shrieking_whelp = "Shrieking Whelp"
 	L.conjured_lasher = "Conjured Lasher"
@@ -85,6 +86,7 @@ function mod:GetOptions()
 		391118, -- Spellfrost Breath
 		-- Drakonid Breaker
 		396991, -- Bestial Roar
+		{391136, "SAY"}, -- Shoulder Slam
 	}, {
 		["custom_on_book_autotalk"] = L.book_of_translocation,
 		[397726] = L.shrieking_whelp,
@@ -143,6 +145,7 @@ function mod:OnBossEnable()
 
 	-- Drakonid Breaker
 	self:Log("SPELL_CAST_START", "BestialRoar", 396991)
+	self:Log("SPELL_CAST_START", "ShoulderSlam", 391136)
 end
 
 --------------------------------------------------------------------------------
@@ -200,9 +203,16 @@ end
 
 -- Conjured Lasher
 
-function mod:MysticVapors(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
+do
+	local prev = 0
+	function mod:MysticVapors(args)
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "alert")
+		end
+	end
 end
 
 -- Arcane Tender
@@ -218,7 +228,7 @@ function mod:ErraticGrowthApplied(args)
 		self:TargetMessage(375596, "orange", args.destName)
 		self:PlaySound(375596, "alarm", nil, args.destName)
 		if onMe then
-			self:Say(375596)
+			self:Say(375596, nil, nil, "Erratic Growth")
 		end
 	end
 end
@@ -295,5 +305,19 @@ end
 
 function mod:BestialRoar(args)
 	self:Message(args.spellId, "red")
-	self:PlaySound(args.spellId, "alarm")
+	self:PlaySound(args.spellId, "alert")
+end
+
+do
+	local function printTarget(self, name, guid)
+		self:TargetMessage(391136, "orange", name)
+		self:PlaySound(391136, "alarm", nil, name)
+		if self:Me(guid) then
+			self:Say(391136, nil, nil, "Shoulder Slam")
+		end
+	end
+
+	function mod:ShoulderSlam(args)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+	end
 end

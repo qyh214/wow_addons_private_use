@@ -45,7 +45,7 @@ local Handler = CreateFrame("Frame")
 Handler:RegisterEvent("QUEST_LOG_UPDATE")
 Handler:RegisterEvent("QUEST_ACCEPTED")
 Handler:SetScript("OnEvent", function(self, event, ...)
-	if IsAddOnLoaded("BetterWorldQuests") then return end
+	if C_AddOns.IsAddOnLoaded("BetterWorldQuests") then return end
 	if not NDuiPlusDB["Misc"]["QuestHelper"] then return end
 
 	if event == "QUEST_LOG_UPDATE" then
@@ -130,7 +130,7 @@ function Handler:Control(spellSet)
 	table.wipe(actionMessages)
 	table.wipe(actionResetSpells)
 	for spellID, actionIndex in next, spellSet do
-		actionMessages[(GetSpellInfo(spellID))] = actionIndex
+		actionMessages[(C_Spell.GetSpellName(spellID))] = actionIndex
 		actionResetSpells[spellID] = true
 
 		-- zhCN fix

@@ -1,0 +1,23 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Include file="Blackwing\modules.xml"/>
+<Include file="Blackwing\Locales\locales.xml"/>
+
+<Include file="Bastion\modules.xml"/>
+<Include file="Bastion\Locales\locales.xml"/>
+
+<Include file="Throne\modules.xml"/>
+<Include file="Throne\Locales\locales.xml"/>
+
+<Include file="Baradin\modules.xml"/>
+<Include file="Baradin\Locales\locales.xml"/>
+
+<Include file="Firelands\modules.xml"/>
+<Include file="Firelands\Locales\locales.xml"/>
+
+<Include file="DragonSoul\modules.xml"/>
+<Include file="DragonSoul\Locales\locales.xml"/>
+
+</Ui>
+

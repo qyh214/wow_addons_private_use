@@ -291,7 +291,7 @@ function advancedDeathLogs.mainFrame.BuildEncounterDeathsFrames() --called at th
                     local spellid = ev[2] --spellid
                     local amount = ev[3] --amount healed or damaged
                     local clock = ev[4] --time
-                    local life = ev[5] --health
+                    local healthPercent = ev[5] --health percent
                     local sourceName = ev[6] --source
 
                     column.hitTime.text = "-" .. string.format("%.1f", time - clock)
@@ -334,7 +334,7 @@ function advancedDeathLogs.mainFrame.BuildEncounterDeathsFrames() --called at th
                     column.hitSource.text = sourceName
 
                     --set the life statusbar
-                    column.healthBar.width = math.min(life, maxhealth) / maxhealth * 100 * 1.5
+                    column.healthBar.width = healthPercent * 100 * 1.5
 
                     --set the spell id
                     column.spellid = spellid

@@ -7,6 +7,12 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["(Dwarf)"] = "(矮人)"
+	L["(Dwarf/Human)"] = "(矮人/人類)"
+	L["(Human)"] = "(人類)"
+	L["(Night Elf)"] = "(夜精靈)"
+	L["(Troll)"] = "(食人妖)"
+	L["(Undead)"] = "(不死族)"
 	L["< 4 stacks"] = "< 4層"
 	L["5 stacks"] = "5層"
 	L["Abilities"] = "技能"
@@ -49,6 +55,7 @@ local L = WeakAuras.L
 	L["Create Auras"] = "建立提醒效果"
 	L["debuff"] = "減益"
 	L["Debuffs"] = "減益 DEBUFF/DOT"
+	L["dps buff"] = "dps增益"
 	L["General"] = "一般"
 	L["Health"] = "血量"
 	L["Highlight while action is queued."] = "顯著標示等待中的動作。"
@@ -61,6 +68,7 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "法術作用時顯著標示。"
 	L["Hold CTRL to create multiple auras at once"] = "按住 CTRL 鍵一次建立多個提醒效果"
 	L["Keeps existing triggers intact"] = "完整保留已經存在的觸發事件"
+	L["Master Channeler Rune"] = "大師通靈符文"
 	L["Max 3"] = "最大 3"
 	L["Max 4"] = "最大 4"
 	L["Next"] = "下一步"
@@ -75,6 +83,7 @@ local L = WeakAuras.L
 	L["Pet alive"] = "寵物活著"
 	L["Pet Behavior"] = "寵物動作"
 	L["PvP Talents"] = "PVP 天賦"
+	L["regen buff"] = "再生增益"
 	L["Replace all existing triggers"] = "取代所有已經存在的觸發"
 	L["Replace Triggers"] = "取代觸發"
 	L["Resources"] = "職業特殊資源"

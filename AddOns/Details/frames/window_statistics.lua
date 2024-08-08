@@ -4,6 +4,7 @@
 local Details = _G.Details
 local DF = _G.DetailsFramework
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
+local tocName, Details222 = ...
 local _
 
 --prefix used on sync statistics
@@ -43,7 +44,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
         table.insert(UISpecialFrames, "DetailsRaidHistoryWindow")
 
         function statisticsFrame.OpenDB()
-            local db = Details.storage:OpenRaidStorage()
+            local db = Details222.storage.OpenRaidStorage()
             if (not db) then
                 Details:Msg(Loc ["STRING_GUILDDAMAGERANK_DATABASEERROR"])
                 return
@@ -128,7 +129,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
             statisticsFrame.DownloadedSize = 0
             statisticsFrame.SyncStartTime = time()
 
-            Details.storage:DBGuildSync()
+            Details222.storage.DBGuildSync()
             statisticsFrame.GuildSyncButton:Disable()
 
             if (not statisticsFrame.SyncTexture) then

@@ -27,6 +27,8 @@ local L = mod:GetLocale()
 if L then
 	L.custom_on_autotalk = "Autotalk"
 	L.custom_on_autotalk_desc = "Instantly selects the gossip option to start the fight."
+	L.custom_on_autotalk_icon = "ui_chat"
+	L.warmup_icon = "achievement_dungeon_throne of the tides"
 end
 
 --------------------------------------------------------------------------------
@@ -35,9 +37,11 @@ end
 
 function mod:GetOptions()
 	return {
+		"warmup",
 		"stages",
 		-- Ink of Ozumat
 		{428407, "SAY"}, -- Blotting Barrage
+		428404, -- Blotting Darkness
 		428868, -- Putrid Roar
 		428530, -- Murk Spew
 		{428889, "TANK"}, -- Foul Bolt
@@ -53,16 +57,16 @@ function mod:GetOptions()
 end
 
 function mod:OnBossEnable()
-	-- TODO intial RP? probably from trash module
-	-- 0.77 [CHAT_MSG_MONSTER_SAY] The beast has returned! It must not pollute my waters!#Neptulon
-	-- 12.05 [NAME_PLATE_UNIT_ADDED] Ink of Ozumat
-
 	-- Stages
 	self:Death("InkOfOzumatDeath", 213770)
 
 	-- Ink of Ozumat
 	self:Log("SPELL_CAST_START", "BlottingBarrage", 428401)
 	self:Log("SPELL_AURA_APPLIED", "BlottingBarrageApplied", 428407)
+	self:Log("SPELL_AURA_REMOVED", "BlottingBarrageRemoved", 428407)
+	-- do not register AURA_APPLIED or PERIODIC_MISSED for Blotting Darkness, those events
+	-- are expected when you have Cleansing Flux.
+	self:Log("SPELL_PERIODIC_DAMAGE", "BlottingDarknessDamage", 428404)
 	self:Log("SPELL_CAST_START", "PutridRoar", 428868)
 	self:Log("SPELL_CAST_START", "MurkSpew", 428530)
 	self:Log("SPELL_CAST_START", "FoulBolt", 428889)
@@ -77,6 +81,7 @@ end
 
 function mod:OnEngage()
 	putridRoarCount = 1
+	self:StopBar(CL.active) -- Warmup
 	self:SetStage(1)
 	self:CDBar(428407, 5.7) -- Blotting Barrage
 	self:CDBar(428530, 10.6) -- Murk Spew
@@ -107,7 +112,7 @@ if mod:Classic() then
 	function mod:OnEngage()
 		self:SetStage(1)
 		-- this stage lasts 1:40 on both difficulties, EJ's entry is incorrect
-		self:Bar("stages", 100, CL.stage:format(1), "Achievement_Dungeon_Throne of the Tides") -- Yes, " " is the correct delimiter.
+		self:Bar("stages", 100, CL.stage:format(1), L.warmup_icon)
 		self:DelayedMessage("stages", 90, "cyan", CL.soon:format(CL.stage:format(2)))
 	end
 end
@@ -115,6 +120,15 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+-- Warmup
+
+function mod:Warmup()
+	-- triggered from trash module on CHAT_MSG_MONSTER_SAY
+	-- 0.77 [CHAT_MSG_MONSTER_SAY] The beast has returned! It must not pollute my waters!#Neptulon
+	-- 12.05 [NAME_PLATE_UNIT_ADDED] Ink of Ozumat
+	self:Bar("warmup", 11.3, CL.active, L.warmup_icon)
+end
 
 -- Stages
 
@@ -144,7 +158,29 @@ do
 		self:TargetsMessage(args.spellId, "red", playerList, 3)
 		self:PlaySound(args.spellId, "alarm", nil, playerList)
 		if self:Me(args.destGUID) then
-			self:Say(args.spellId)
+			self:Say(args.spellId, nil, nil, "Blotting Barrage")
+		end
+	end
+end
+
+do
+	local prev = 0
+
+	function mod:BlottingBarrageRemoved(args)
+		if self:Me(args.destGUID) then
+			-- Blotting Darkness spawns under each player that Blotting Barrage is removed from.
+			-- give some time to run out of Blotting Darkness by resetting prev here.
+			prev = args.time
+		end
+	end
+
+	function mod:BlottingDarknessDamage(args)
+		local t = args.time
+		-- suppress alerts for the tank, who is not allowed to leave melee range
+		if not self:Tank() and self:Me(args.destGUID) and t - prev > 2.1 then
+			prev = t
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou", nil, args.destName)
 		end
 	end
 end
@@ -197,6 +233,14 @@ end
 --------------------------------------------------------------------------------
 -- Classic Event Handlers
 --
+
+function mod:GOSSIP_SHOW()
+	if self:GetOption("custom_on_autotalk") and self:MobId(self:UnitGUID("npc")) == 40792 then
+		if self:GetGossipOptions() then
+			self:SelectGossipOption(1, true) -- auto confirm it
+		end
+	end
+end
 
 function mod:TidalSurge()
 	self:SetStage(3)

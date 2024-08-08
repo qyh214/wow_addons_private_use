@@ -9,6 +9,14 @@ if L then
 	L.faceless_seer = "Vidente ignoto"
 	L.faceless_watcher = "Vigía ignoto"
 	L.tainted_sentry = "Avizor corrupto"
+
+	--L.ozumat_warmup_trigger = "The beast has returned! It must not pollute my waters!"
+end
+
+L = BigWigs:NewBossLocale("Lady Naz'jar", "esES") or BigWigs:NewBossLocale("Lady Naz'jar", "esMX")
+if L then
+	--L.high_tide_trigger1 = "Take arms, minions! Rise from the icy depths!"
+	--L.high_tide_trigger2 = "Destroy these intruders! Leave them for the great dark beyond!"
 end
 
 L = BigWigs:NewBossLocale("Ozumat", "esES") or BigWigs:NewBossLocale("Ozumat", "esMX")

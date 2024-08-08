@@ -20,24 +20,7 @@ if L then
 	L.bomber = "Метатель черной смолы"
 end
 
-L = BigWigs:NewBossLocale("Sergeant Bainbridge", "ruRU")
-if L then
-	L.remaining = "%s на %s, %d осталось"
-	L.remaining_boss = "%s на БОССЕ, %d осталось"
-end
-
-L = BigWigs:NewBossLocale("Chopper Redhook", "ruRU")
-if L then
-	L.remaining = "%s на %s, %d осталось"
-	L.remaining_boss = "%s на БОССЕ, %d осталось"
-end
-
 L = BigWigs:NewBossLocale("Dread Captain Lockwood", "ruRU")
 if L then
-	L.ordanance_dropped = "Нестабильное орудие упало"
-end
-
-L = BigWigs:NewBossLocale("Viq'Goth", "ruRU")
-if L then
-	L.demolishing_desc = "Предупреждать и отображать таймер появления Крушащего ужаса."
+	L.ordnance_dropped = "Нестабильное орудие упало"
 end

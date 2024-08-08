@@ -6,13 +6,17 @@ local SharedMedia = LibStub:GetLibrary("LibSharedMedia-3.0")
 local unpack = unpack
 local GetTime = GetTime
 local CreateFrame = CreateFrame
-local GetSpellLink = GetSpellLink
-local GetSpellInfo = GetSpellInfo
+local GetSpellLink = GetSpellLink or C_Spell.GetSpellLink --api local
+local GetSpellInfo = Details222.GetSpellInfo
 local _GetSpellInfo = Details.GetSpellInfo
 local GameTooltip = GameTooltip
 local IsShiftKeyDown = IsShiftKeyDown
-local DF = DetailsFramework
 local tinsert = table.insert
+
+---@type detailsframework
+local DF = DetailsFramework
+---@type detailsframework
+local detailsFramework = DetailsFramework
 
 local spellsTab = DetailsSpellBreakdownTab
 local headerContainerType = spellsTab.headerContainerType
@@ -85,6 +89,24 @@ local updateTargetBar = function(targetBar, index, combatObject, scrollFrame, he
 
 		--statusbar color
 		targetBar.statusBar:SetStatusBarColor(1, 1, 1, 1)
+
+		local platerNameplates = _G.Plater
+		if (platerNameplates and targetActorObject) then
+			local npcId = tonumber(targetActorObject.aID)
+			if (npcId) then
+				local platerProfile = platerNameplates.db.profile
+				local npcColors = platerProfile.npc_colors
+				local platerNpcColorTable = npcColors[npcId]
+				if (platerNpcColorTable) then
+					if (platerNpcColorTable[1] == true) then
+						local color = platerNpcColorTable[3]
+						local r, g, b, a = DF:ParseColors(color)
+						targetBar.statusBar:SetStatusBarColor(r, g, b, a)
+					end
+				end
+			end
+		end
+
 		targetBar.combatTime = combatTime
 		targetBar.actorName = bkTargetData.name
 
@@ -126,7 +148,7 @@ local updateTargetBar = function(targetBar, index, combatObject, scrollFrame, he
 			textIndex = textIndex + 1
 
 		elseif (header.name == "percent") then
-			targetBar.percent = value / totalValue * 100 --totalValue is nil
+			targetBar.percent = value / math.max(totalValue, 0.001) * 100 --totalValue is nil
 			---@type string
 			local percentFormatted = string.format("%.1f", targetBar.percent) .. "%"
 			text:SetText(percentFormatted)
@@ -261,6 +283,38 @@ function spellsTab.CreateTargetContainer(tabFrame) --~create ~target ~createtarg
 	DF:ReskinSlider(targetScrollFrame)
 	targetScrollFrame:SetBackdrop({})
 	targetScrollFrame:SetAllPoints()
+
+	---@param self breakdownphasescrollframe
+	---@return breakdownreporttable
+	function targetScrollFrame:GetReportData()
+		local instance = spellsTab.GetInstance()
+		local data = targetScrollFrame:GetData()
+		local formatFunc = Details:GetCurrentToKFunction()
+		local actorObject = spellsTab.GetActor()
+		local displayId, subDisplayId = instance:GetDisplay()
+		local subDisplayName = Details:GetSubAttributeName(displayId, subDisplayId)
+		local combatName = instance:GetCombat():GetCombatName()
+
+		---@type breakdownreporttable
+		local reportData = {
+			title = "Target of " .. detailsFramework:RemoveRealmName(actorObject:Name()) .. " | " .. subDisplayName .. " | " .. combatName
+		}
+
+		local topValue = data[1] and data[1].total or 0
+
+		for i = 1, #data do
+			---@type breakdowntargettable
+			local dataTable = data[i]
+
+			reportData[#reportData+1] = {
+				name = dataTable.name,
+				amount = formatFunc(nil, dataTable.total),
+				percent = string.format("%.1f", dataTable.total / topValue * 100) .. "%",
+			}
+		end
+
+		return reportData
+	end
 
 	container:RegisterChildForDrag(targetScrollFrame)
 

@@ -306,9 +306,11 @@ function Config:CreatePanel()
 	panel.name = Addon.Name
 	panel.okay = Panel_OnSave
 	panel.cancel = Panel_OnCancel
-	panel.default  = Panel_OnDefaults
-	panel.refresh  = Panel_OnRefresh
-	InterfaceOptions_AddCategory(panel)
+	panel.OnDefault  = Panel_OnDefaults
+	panel.OnRefresh  = Panel_OnRefresh
+	local category, layout = Settings.RegisterCanvasLayoutCategory(panel, panel.name);
+	Settings.RegisterAddOnCategory(category);
+	panel.settingsCategory = category
 
 	return panel
 end
@@ -334,7 +336,6 @@ SLASH_AngryKeystones1 = "/akeys"
 SLASH_AngryKeystones2 = "/angrykeystones"
 function SlashCmdList.AngryKeystones(msg, editbox)
 	if optionPanel then
-		InterfaceOptionsFrame_OpenToCategory(optionPanel)
-		InterfaceOptionsFrame_OpenToCategory(optionPanel)
+		Settings.OpenToCategory(optionPanel.settingsCategory.ID)
 	end
 end

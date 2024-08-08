@@ -71,15 +71,11 @@ if L then
 	L.eggs_remaining = "%d Eggs Remaining!"
 	L.broodkeepers_bond = "Eggs Remaining"
 	L.greatstaff_of_the_broodkeeper = "Greatstaff"
-	L.greatstaffs_wrath = "Laser"
 	L.clutchwatchers_rage = "Rage"
 	L.rapid_incubation = "Infuse Eggs"
-	L.icy_shroud = "Heal Absorb"
 	L.broodkeepers_fury = "Fury"
 	L.frozen_shroud = "Root Absorb"
 	L.detonating_stoneslam = "Tank Soak"
-
-	L.add_count = "%s (%d-%d)"
 end
 
 --------------------------------------------------------------------------------
@@ -116,7 +112,7 @@ function mod:GetOptions()
 		{375457}, -- Chilling Tantrum
 		-- Drakonid Stormbringer
 		375653, -- Static Jolt
-		{375620, "SAY"}, -- Ionizing Charge
+		{375620, "ME_ONLY", "SAY", "ME_ONLY_EMPHASIZE"}, -- Ionizing Charge
 		stormBringerMarker,
 
 		-- Stage Two: A Broodkeeper Scorned
@@ -143,14 +139,14 @@ function mod:GetOptions()
 	}, {
 		[375809] = L.broodkeepers_bond, -- Broodkeeper's Bond (Eggs Remaining)
 		[380175] = L.greatstaff_of_the_broodkeeper, -- Greatstaff of the Broodkeeper (Greatstaff)
-		[375889] = L.greatstaffs_wrath, -- Greatstaff's Wrath (Laser)
+		[375889] = CL.laser, -- Greatstaff's Wrath (Laser)
 		[375829] = L.clutchwatchers_rage, -- Clutchwatcher's Rage (Rage)
 		[376073] = L.rapid_incubation, -- Rapid Incubation (Infuse Eggs)
-		[388716] = L.icy_shroud, -- Icy Shroud (Heal Absorb)
+		[388716] = CL.heal_absorb, -- Icy Shroud (Heal Absorb)
 		[-25129] = CL.adds, -- Primalist Reinforcements (Adds)
 		[375879] = L.broodkeepers_fury, --  Broodkeeper's Fury (Fury)
 		[392194] = L.greatstaff_of_the_broodkeeper, -- Empowered Greatstaff of the Broodkeeper (Greatstaff)
-		[380483] = L.greatstaffs_wrath, -- Empowered Greatstaff's Wrath (Laser)
+		[380483] = CL.laser, -- Empowered Greatstaff's Wrath (Laser)
 		[388918] = L.frozen_shroud, -- Frozen Shroud (Root Absorb)
 		[396264] = L.detonating_stoneslam, -- Detonating Stoneslam (Tank Soak)
 	}
@@ -233,8 +229,8 @@ function mod:OnEngage()
 	self:CDBar(375871, 8.5, CL.count:format(self:SpellName(375871), wildfireCount)) -- Wildfire
 	self:CDBar(376073, 13, CL.count:format(L.rapid_incubation, rapidIncubationCount)) -- Rapid Incubation
 	self:CDBar(380175, 17, CL.count:format(L.greatstaff_of_the_broodkeeper, greatstaffCount)) -- Greatstaff of the Broodkeeper
-	self:CDBar(-25129, self:Easy() and 35.7 or 33, L.add_count:format(CL.adds, primalReinforcementsCount, 1), "inv_dragonwhelpproto_blue") -- Primalist Reinforcements / Adds
-	self:CDBar(388716, 26.5, CL.count:format(L.icy_shroud, icyShroudCount)) -- Icy Shroud
+	self:CDBar(-25129, self:Easy() and 35.7 or 33, CL.count:format(CL.adds, primalReinforcementsCount), "inv_dragonwhelpproto_blue") -- Primalist Reinforcements / Adds
+	self:CDBar(388716, 26.5, CL.count:format(CL.heal_absorb, icyShroudCount)) -- Icy Shroud
 	self:Bar(375879, self:Easy() and 317 or 300, CL.stage:format(2)) -- Broodkeeper's Fury
 
 	if self:Mythic() then
@@ -343,9 +339,9 @@ end
 
 function mod:GreatstaffsWrathApplied(args)
 	if self:Me(args.destGUID) then
-		self:PersonalMessage(args.spellId, nil, L.greatstaffs_wrath)
+		self:PersonalMessage(args.spellId, nil, CL.laser)
 		self:PlaySound(args.spellId, "warning")
-		self:Say(args.spellId, L.greatstaffs_wrath)
+		self:Say(args.spellId, CL.laser, nil, "Laser")
 	end
 end
 
@@ -392,9 +388,9 @@ do
 end
 
 function mod:IcyShroud(args)
-	self:StopBar(CL.count:format(L.icy_shroud, icyShroudCount))
+	self:StopBar(CL.count:format(CL.heal_absorb, icyShroudCount))
 	self:StopBar(CL.count:format(L.frozen_shroud, icyShroudCount))
-	local text = self:GetStage() == 2 and L.frozen_shroud or L.icy_shroud
+	local text = self:GetStage() == 2 and L.frozen_shroud or CL.heal_absorb
 	self:Message(args.spellId, "yellow", CL.count:format(text, icyShroudCount))
 	self:PlaySound(args.spellId, "alert")
 	icyShroudCount = icyShroudCount + 1
@@ -562,9 +558,9 @@ do
 	function mod:IonizingChargeApplied(args)
 		playerList[#playerList+1] = args.destName
 		if self:Me(args.destGUID) then
-			self:Say(args.spellId)
-			self:PlaySound(args.spellId, "warning")
 			onMe = true
+			self:Say(args.spellId, nil, nil, "Ionizing Charge")
+			self:PlaySound(args.spellId, "warning")
 		end
 		self:TargetsMessage(args.spellId, "yellow", playerList)
 	end
@@ -604,7 +600,7 @@ function mod:BroodkeepersFury(args)
 		self:StopBar(CL.count:format(CL.adds, primalReinforcementsCount))
 		self:StopBar(CL.count:format(L.rapid_incubation, rapidIncubationCount))
 		self:StopBar(CL.count:format(L.greatstaff_of_the_broodkeeper, greatstaffCount)) -- Greatstaff of the Broodkeeper
-		self:StopBar(CL.count:format(L.icy_shroud, icyShroudCount)) -- Icy Shroud
+		self:StopBar(CL.count:format(CL.heal_absorb, icyShroudCount)) -- Icy Shroud
 
 		self:SetStage(2)
 		showFissures = true
@@ -668,7 +664,7 @@ function mod:DetonatingStoneslamApplied(args)
 	self:TargetMessage(args.spellId, "purple", args.destName, CL.count:format(L.detonating_stoneslam, detonatingStoneslamCount-1))
 	self:TargetBar(args.spellId, 6, args.destName, CL.count:format(L.detonating_stoneslam, detonatingStoneslamCount-1))
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId, L.detonating_stoneslam)
+		self:Say(args.spellId, L.detonating_stoneslam, nil, "Tank Soak")
 		self:SayCountdown(args.spellId, 6)
 	else
 		self:PlaySound(args.spellId, "warning") -- danger

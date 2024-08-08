@@ -10,6 +10,8 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
         return
     end
 
+    local unpack = unpack
+
     local languageInfo = {
 		language_addonId = addonId,
 	}
@@ -79,6 +81,7 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
 		{name = "WorldMapConfig",	    	text = "S_OPTTIONS_TAB_WORLDMAP_SETTINGS"},
 		{name = "ZoneMapConfig",			text = "S_OPTTIONS_TAB_ZONEMAP_SETTINGS"},
 		{name = "GroupFinderConfig",		text = "S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"},
+		{name = "DragonRacingConfig",		text = "S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"},
 		--{name = "RaresConfig",				text = "S_OPTTIONS_TAB_RARES_SETTINGS"},
 		--{name = "IgnoredQuestsPanel",		text = "S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"},
 	},
@@ -162,6 +165,7 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
     local worldMapSettingsFrame = tabContainer.AllFrames[3]
     local zoneMapSettingsFrame = tabContainer.AllFrames[4]
     local groupFinderSettingsFrame = tabContainer.AllFrames[5]
+    local dragonRaceSettingsFrame = tabContainer.AllFrames[6]
     --local raresSettingsFrame = tabContainer.AllFrames[6]
     --local ignoredQuestsSettingsFrame = tabContainer.AllFrames[7]
 
@@ -508,18 +512,6 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
             {
                 type = "toggle",
                 get = function()
-                    return DB.profile.show_faction_frame
-                end,
-                set = function(self, fixedparam, value)
-                    WorldQuestTracker.SetSetting("show_faction_frame", not WorldQuestTracker.db.profile.show_faction_frame)
-
-                end,
-                name = "S_OPTIONS_SHOWFACTIONS",
-                desc = "S_OPTIONS_SHOWFACTIONS",
-            },
-            {
-                type = "toggle",
-                get = function()
                     return DB.profile.hoverover_animations
                 end,
                 set = function(self, fixedparam, value)
@@ -596,6 +588,17 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                 end,
                 name = "S_MAPBAR_OPTIONSMENU_SOUNDENABLED",
                 desc = "S_MAPBAR_OPTIONSMENU_SOUNDENABLED",
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return DB.profile.close_blizz_popups.ABANDON_QUEST
+                end,
+                set = function(self, fixedparam, value)
+                    DB.profile.close_blizz_popups.ABANDON_QUEST = value
+                end,
+                name = "S_OPTTIONS_AUTOACCEPT_ABANDONQUEST",
+                desc = "S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC",
             },
 
             {type = "blank"},
@@ -704,8 +707,21 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
 
             {
                 type = "label",
-                get = function() return "Visibility" end,
+                get = function() return "S_VISIBILITY" end,
                 text_template = DF:GetTemplate("font", "ORANGE_FONT_TEMPLATE")
+            },
+
+            {
+                type = "toggle",
+                get = function()
+                    return DB.profile.show_faction_frame
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.SetSetting("show_faction_frame", not WorldQuestTracker.db.profile.show_faction_frame)
+
+                end,
+                name = "S_OPTIONS_SHOWFACTIONS",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 33 .. ":" .. 208 .. ":0:0:256:256:" .. (0) .. ":" .. (208) .. ":" .. (36+30) .. ":" .. (36+30+33) .. "|t\n\n" .. "S_OPTIONS_SHOWFACTIONS",
             },
             {
                 type = "toggle",
@@ -716,8 +732,86 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                     WorldQuestTracker.db.profile.show_world_shortcuts = not WorldQuestTracker.db.profile.show_world_shortcuts
                     WorldQuestTracker.SetShownWorldShortcuts()
                 end,
-                name = "Show World Shortcuts",
+                name = "S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON",
                 desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 36 .. ":" .. 80 .. ":0:0:256:256:" .. (0) .. ":" .. (80) .. ":" .. (0) .. ":" .. (36) .. "|t",
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.show_timeleft_button
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.show_timeleft_button = not WorldQuestTracker.db.profile.show_timeleft_button
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_OPTIONS_SHOW_TIMELEFT_BUTTON",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 30 .. ":" .. 210 .. ":0:0:256:256:" .. (0) .. ":" .. (210) .. ":" .. (37) .. ":" .. (37+30) .. "|t",
+            },
+
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.show_sort_button
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.show_sort_button = not WorldQuestTracker.db.profile.show_sort_button
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_OPTIONS_SHOW_SORT_BUTTON",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 30 .. ":" .. 210 .. ":0:0:256:256:" .. (0) .. ":" .. (210) .. ":" .. (37) .. ":" .. (37+30) .. "|t",
+            },
+
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.show_filter_button
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.show_filter_button = not WorldQuestTracker.db.profile.show_filter_button
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_OPTIONS_SHOW_FILTER_BUTTON",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 30 .. ":" .. 210 .. ":0:0:256:256:" .. (0) .. ":" .. (210) .. ":" .. (37) .. ":" .. (37+30) .. "|t",
+            },
+
+            {type = "blank"},
+
+            {
+                type = "range",
+                get = function() return WorldQuestTracker.db.profile.world_summary_alpha end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.world_summary_alpha = value
+                    WorldQuestTracker.UpdateZoneSummaryFrame()
+                    WorldQuestTracker.RefreshZoneSummaryAlpha()
+                end,
+                min = 0.5,
+                max = 1,
+                step = 0.01,
+                usedecimals = true,
+                thumbscale = 1.8,
+                name = "S_OPTIONS_WORLD_SUMMARY_ALPHA",
+                desc = "S_OPTIONS_WORLD_SUMMARY_ALPHA",
+            },
+
+            {
+                type = "range",
+                get = function() return WorldQuestTracker.db.profile.worldmap_widget_alpha end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.worldmap_widget_alpha = value
+                    local bForceUpdate = true
+                    if (WorldQuestTrackerAddon.GetCurrentZoneType() == "world") then
+                        WorldQuestTracker.UpdateWorldQuestsOnWorldMap(bForceUpdate)
+                    else
+                        WorldQuestTracker.UpdateZoneWidgets(bForceUpdate)
+                    end
+                end,
+                min = 0.5,
+                max = 1,
+                step = 0.01,
+                usedecimals = true,
+                thumbscale = 1.8,
+                name = "S_OPTIONS_WORLDMAP_WIDGET_ALPHA",
+                desc = "S_OPTIONS_WORLDMAP_WIDGET_ALPHA",
             },
 
             --
@@ -825,6 +919,21 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                 thumbscale = 1.8,
                 name = "S_MAPBAR_OPTIONSMENU_ARROWSPEED",
                 desc = "S_MAPBAR_OPTIONSMENU_ARROWSPEED",
+            },
+            {
+                type = "range",
+                get = function() return WorldQuestTracker.db.profile.tracker_background_alpha end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.tracker_background_alpha = value
+                    WorldQuestTracker.RefreshTrackerWidgets()
+                end,
+                min = 0,
+                max = 0.85,
+                step = 0.1,
+                usedecimals = true,
+                thumbscale = 1.8,
+                name = "S_TRACKEROPTIONS_BACKGROUNDALPHA",
+                desc = "S_TRACKEROPTIONS_BACKGROUNDALPHA",
             },
 
             {type = "blank"},
@@ -1120,6 +1229,9 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
         }
 
         DF:BuildMenu(zoneMapSettingsFrame, optionsTable, xStart, yStart, tabFrameHeight, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
+
+        --local zonesIgnoredOptionTable = {
+        --}
     end
 
     do --Group Finder Settings
@@ -1269,6 +1381,65 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
         }
 
         DF:BuildMenu(groupFinderSettingsFrame, optionsTable, xStart, yStart, tabFrameHeight, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
+    end
+
+    do
+        local optionsTable = {
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.dragon_racing.minimap_enabled
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.dragon_racing.minimap_enabled = value
+                    if (not value) then
+                        if (WorldQuestTrackerDragonRacingFrame and WorldQuestTrackerDragonRacingFrame:IsShown()) then
+                            WorldQuestTrackerDragonRacingFrame:Hide()
+                        end
+                    end
+                end,
+                name = "S_OPTTIONS_DRAGONRACE_MINIMAP",
+                desc = "S_OPTTIONS_DRAGONRACE_MINIMAP",
+            },
+            {
+                type = "range",
+                get = function() return WorldQuestTracker.db.profile.dragon_racing.minimap_scale end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.dragon_racing.minimap_scale = value
+                    if (WorldQuestTrackerDragonRacingFrame) then
+                        WorldQuestTrackerDragonRacingFrame:SetScale(value)
+                    end
+                end,
+                min = 0.65,
+                max = 2,
+                step = 0.1,
+                thumbscale = 1.8,
+                usedecimals = true,
+                name = "S_SCALE",
+                desc = "S_SCALE",
+            },
+
+            {
+                type = "color",
+                get = function()
+                    local r, g, b = unpack(WorldQuestTracker.db.profile.dragon_racing.minimap_track_color)
+                    return r, g, b
+                end,
+                set = function(widget, r, g, b)
+                    local colorTable = WorldQuestTracker.db.profile.dragon_racing.minimap_track_color
+                    colorTable[1], colorTable[2], colorTable[3] = r, g, b
+                    if (WorldQuestTrackerDragonRacingFrameMinimapTexture) then
+                        WorldQuestTrackerDragonRacingFrameMinimapTexture:SetVertexColor(r, g, b)
+                    end
+                end,
+                name = "S_OPTTIONS_DRAGONRACE_TRACKCOLOR",
+                desc = "S_OPTTIONS_DRAGONRACE_TRACKCOLOR",
+            },
+        }
+
+        optionsTable.always_boxfirst = true
+        optionsTable.language_addonId = addonId
+        DF:BuildMenu(dragonRaceSettingsFrame, optionsTable, xStart, yStart, tabFrameHeight, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
     end
 
     do --Rare Finder Settings

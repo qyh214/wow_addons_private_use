@@ -190,12 +190,12 @@ do
 		self:PlaySound(350101, "alert", nil, name)
 
 		if self:Me(guid) then
-			self:Say(350101)
+			self:Say(350101, nil, nil, "Chains of Damnation")
 		end
 	end
 
 	function mod:ChainsOfDamnation(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:Bar(args.spellId, 25.5)
 	end
 end

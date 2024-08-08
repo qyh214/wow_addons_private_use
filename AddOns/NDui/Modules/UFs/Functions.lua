@@ -192,16 +192,6 @@ function UF:CreateHealthBar(self)
 	UF:UpdateHealthBarColor(self)
 end
 
-function UF:UpdateRaidHealthMethod()
-	for _, frame in pairs(oUF.objects) do
-		if frame.mystyle == "raid" then
-			frame:SetHealthUpdateMethod(C.db["UFs"]["FrequentHealth"])
-			frame:SetHealthUpdateSpeed(C.db["UFs"]["HealthFrequency"])
-			frame.Health:ForceUpdate()
-		end
-	end
-end
-
 UF.VariousTagIndex = {
 	[1] = "",
 	[2] = "currentpercent",
@@ -531,6 +521,10 @@ end
 
 local function postUpdateRole(element, role)
 	if element:IsShown() then
+		if role == "DAMAGER" and C.db["UFs"]["ShowRoleMode"] == 3 then
+			element:Hide()
+			return
+		end
 		B.ReskinSmallRole(element, role)
 	end
 end
@@ -614,15 +608,17 @@ function UF:CreateIcons(self)
 	phase.Icon = icon
 	self.PhaseIndicator = phase
 
-	local ri = self:CreateTexture(nil, "OVERLAY")
-	if mystyle == "raid" then
-		ri:SetPoint("TOPRIGHT", self, 5, 5)
-	else
-		ri:SetPoint("TOPRIGHT", self, 0, 8)
+	if C.db["UFs"]["ShowRoleMode"] ~= 2 then
+		local ri = self:CreateTexture(nil, "OVERLAY")
+		if mystyle == "raid" then
+			ri:SetPoint("TOPRIGHT", self, 5, 5)
+		else
+			ri:SetPoint("TOPRIGHT", self, 0, 8)
+		end
+		ri:SetSize(15, 15)
+		ri.PostUpdate = postUpdateRole
+		self.GroupRoleIndicator = ri
 	end
-	ri:SetSize(15, 15)
-	ri.PostUpdate = postUpdateRole
-	self.GroupRoleIndicator = ri
 
 	local li = self:CreateTexture(nil, "OVERLAY")
 	li:SetPoint("TOPLEFT", self, -1, 8)
@@ -882,7 +878,9 @@ function UF.PostCreateButton(element, button)
 
 	button.Overlay:SetTexture(nil)
 	button.Stealable:SetAtlas("bags-newitem")
-	button:HookScript("OnMouseDown", AURA.RemoveSpellFromIgnoreList)
+	if AURA then
+		button:HookScript("OnMouseDown", AURA.RemoveSpellFromIgnoreList)
+	end
 
 	if element.disableCooldown then
 		hooksecurefunc(button, "SetSize", UF.UpdateIconTexCoord)
@@ -1393,8 +1391,7 @@ function UF:CreateClassPower(self)
 				bar.chargeParent:SetFrameLevel(8)
 			end
 			local chargeStar = bar.chargeParent:CreateTexture()
-			chargeStar:SetAtlas("VignetteKill")
-			chargeStar:SetDesaturated(true)
+			chargeStar:SetTexture(DB.starTex)
 			chargeStar:SetSize(14, 14)
 			chargeStar:SetPoint("CENTER", bars[i])
 			chargeStar:Hide()
@@ -1670,6 +1667,20 @@ function UF:CreateAddPower(self)
 	}
 end
 
+function UF:ToggleAddPower()
+	local frame = _G.oUF_Player
+	if not frame then return end
+
+	if C.db["UFs"]["AddPower"] then
+		if not frame:IsElementEnabled("AdditionalPower") then
+			frame:EnableElement("AdditionalPower")
+			frame.AdditionalPower:ForceUpdate()
+		end
+	elseif frame:IsElementEnabled("AdditionalPower") then
+		frame:DisableElement("AdditionalPower")
+	end
+end
+
 function UF:ToggleSwingBars()
 	local frame = _G.oUF_Player
 	if not frame then return end
@@ -1726,27 +1737,6 @@ function UF:CreateSwing(self)
 	self.Swing.Mainhand = main
 	self.Swing.Offhand = off
 	self.Swing.hideOoc = true
-end
-
-function UF:CreateQuakeTimer(self)
-	if not C.db["UFs"]["Castbars"] then return end
-
-	local bar = CreateFrame("StatusBar", nil, self)
-	bar:SetSize(C.db["UFs"]["PlayerCBWidth"], C.db["UFs"]["PlayerCBHeight"])
-	B.CreateSB(bar, true, 0, 1, 0)
-	bar:Hide()
-
-	bar.SpellName = B.CreateFS(bar, 12, "", false, "LEFT", 2, 0)
-	bar.Text = B.CreateFS(bar, 12, "", false, "RIGHT", -2, 0)
-	createBarMover(bar, L["QuakeTimer"], "QuakeTimer", {"BOTTOM", UIParent, "BOTTOM", 0, 200})
-
-	local icon = bar:CreateTexture(nil, "ARTWORK")
-	icon:SetSize(bar:GetHeight(), bar:GetHeight())
-	icon:SetPoint("RIGHT", bar, "LEFT", -3, 0)
-	B.ReskinIcon(icon, true)
-	bar.Icon = icon
-
-	self.QuakeTimer = bar
 end
 
 local scrolls = {}

@@ -36,14 +36,14 @@ local options = {
             imageWidth = titleImageConfig.width(),
             imageHeight = titleImageConfig.height(),
             imageCoords = F.GetTitleTexCoord
-        },
-        afterLogo = {
-            order = 3,
-            type = "description",
-            fontSize = "small",
-            name = " \n |cffff000010.2 Mythic+ Dungeon still working in progress.|r",
-            width = "full"
         }
+        -- afterLogo = {
+        --     order = 3,
+        --     type = "description",
+        --     fontSize = "small",
+        --     name = "",
+        --     width = "full"
+        -- }
     }
 }
 

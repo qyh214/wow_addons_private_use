@@ -7,9 +7,10 @@ local hasCentralize
 local updater = CreateFrame("Frame")
 local AuraList, FrameList, UnitIDTable, IntTable, IntCD, myTable, cooldownTable = {}, {}, {}, {}, {}, {}, {}
 local pairs, select, tinsert, tremove, wipe, strfind = pairs, select, table.insert, table.remove, table.wipe, strfind
-local InCombatLockdown, UnitAura, GetPlayerInfoByGUID, UnitInRaid, UnitInParty = InCombatLockdown, UnitAura, GetPlayerInfoByGUID, UnitInRaid, UnitInParty
-local GetTime, GetSpellInfo, GetSpellCooldown, GetSpellCharges, GetTotemInfo, IsPlayerSpell = GetTime, GetSpellInfo, GetSpellCooldown, GetSpellCharges, GetTotemInfo, IsPlayerSpell
-local GetItemCooldown, GetItemInfo, GetInventoryItemLink, GetInventoryItemCooldown = GetItemCooldown, GetItemInfo, GetInventoryItemLink, GetInventoryItemCooldown
+local InCombatLockdown, GetPlayerInfoByGUID, UnitInRaid, UnitInParty = InCombatLockdown, GetPlayerInfoByGUID, UnitInRaid, UnitInParty
+local GetTime, GetTotemInfo, IsPlayerSpell = GetTime, GetTotemInfo, IsPlayerSpell
+local GetItemCooldown, GetItemInfo, GetInventoryItemLink, GetInventoryItemCooldown = GetItemCooldown, C_Item.GetItemInfo, GetInventoryItemLink, GetInventoryItemCooldown
+local GetSpellName, GetSpellTexture = C_Spell.GetSpellName, C_Spell.GetSpellTexture
 
 -- DataConvert
 local function DataAnalyze(v)
@@ -379,18 +380,27 @@ function A:AuraWatch_UpdateCD()
 			local value = group.List[spellID]
 			if value then
 				if value.SpellID then
-					local name, _, icon = GetSpellInfo(value.SpellID)
-					local start, duration = GetSpellCooldown(value.SpellID)
-					local charges, maxCharges, chargeStart, chargeDuration = GetSpellCharges(value.SpellID)
+					local name, icon = GetSpellName(value.SpellID), GetSpellTexture(value.SpellID)
+
+					local cooldownInfo = C_Spell.GetSpellCooldown(value.SpellID)
+					local start = cooldownInfo and cooldownInfo.startTime
+					local duration = cooldownInfo and cooldownInfo.duration
+
+					local chargeInfo = C_Spell.GetSpellCharges(spellID)
+					local charges = chargeInfo and chargeInfo.currentCharges
+					local maxCharges = chargeInfo and chargeInfo.maxCharges
+					local chargeStart = chargeInfo and chargeInfo.cooldownStartTime
+					local chargeDuration = chargeInfo and chargeInfo.cooldownDuration
+
 					if group.Mode == "ICON" then name = nil end
 					if charges and maxCharges and maxCharges > 1 and charges < maxCharges then
 						A:AuraWatch_SetupCD(KEY, name, icon, chargeStart, chargeDuration, true, 1, value.SpellID, charges)
-					elseif start and duration > 3 then
+					elseif start and duration > C.db["AuraWatch"]["MinCD"] then
 						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, true, 1, value.SpellID)
 					end
 				elseif value.ItemID then
 					local start, duration = GetItemCooldown(value.ItemID)
-					if start and duration > 3 then
+					if start and duration > C.db["AuraWatch"]["MinCD"] then
 						local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(value.ItemID)
 						if group.Mode == "ICON" then name = nil end
 						A:AuraWatch_SetupCD(KEY, name, icon, start, duration, false, 2, value.ItemID)
@@ -498,9 +508,9 @@ function A:UpdateAuraWatchByFilter(unit, filter, inCombat)
 	local index = 1
 
 	while true do
-		local name, icon, count, _, duration, expires, caster, _, _, spellID, _, _, _, _, _, number1, number2 = UnitAura(unit, index, filter)
-		if not name then break end
-		A:AuraWatch_UpdateAura(unit, index, filter, name, icon, count, duration, expires, caster, spellID, (number1 == 0 and tonumber(number2) or tonumber(number1)), inCombat)
+		local auraData = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
+		if not auraData then break end
+		A:AuraWatch_UpdateAura(unit, index, filter, auraData.name, auraData.icon, auraData.applications, auraData.duration, auraData.expirationTime, auraData.sourceUnit, auraData.spellId, (auraData.points[1] == 0 and tonumber(auraData.points[2]) or tonumber(auraData.points[1])), inCombat)
 
 		index = index + 1
 	end
@@ -568,7 +578,7 @@ function A:AuraWatch_SetupInt(intID, itemID, duration, unitID, guid, sourceName)
 		frame.type = 2
 		frame.spellID = itemID
 	else
-		name, _, icon = GetSpellInfo(intID)
+		name, icon = GetSpellName(intID), GetSpellTexture(intID)
 		frame.type = 1
 		frame.spellID = intID
 	end
@@ -627,13 +637,6 @@ function A:IsAuraTracking(value, eventType, sourceGUID, sourceName, sourceFlags,
 end
 
 local cache = {}
-local soundKitID = SOUNDKIT.ALARM_CLOCK_WARNING_3
-
-local playSoundSpells = {
-	[396364] = true,
-	[396369] = true,
-	[240447] = true,
-}
 
 function A:AuraWatch_UpdateInt(event, ...)
 	if not IntCD.List then return end
@@ -665,7 +668,6 @@ function A:AuraWatch_UpdateInt(event, ...)
 
 			cache[timestamp] = spellID
 		end
-		if C.db["AuraWatch"]["QuakeRing"] and eventList[eventType] and playSoundSpells[spellID] then PlaySound(soundKitID, "Master") end -- 'Ding' on quake
 
 		if #cache > 666 then wipe(cache) end
 	end
@@ -745,7 +747,7 @@ function A:AuraWatch_Centralize(force)
 			local width = frame1.__width
 			local interval = frame1.__interval
 			frame1:ClearAllPoints()
-			frame1:SetPoint("CENTER", frame1.MoveHandle, "CENTER",  - (width+interval)/2 * (numIndex-2), 0)
+			frame1:SetPoint("CENTER", frame1.MoveHandle, "CENTER", - (width+interval)/2 * (numIndex-2), 0)
 		end
 	end
 end

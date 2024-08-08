@@ -1,9 +1,6 @@
 local L = BigWigs:NewBossLocale("Odyn", "esES") or BigWigs:NewBossLocale("Odyn", "esMX")
 if not L then return end
 if L then
-	--L.custom_on_autotalk = "Autotalk"
-	--L.custom_on_autotalk_desc = "Instantly selects the gossip option to start the fight."
-
 	--L.gossip_available = "Gossip available"
 	--L.gossip_trigger = "Most impressive! I never thought I would meet anyone who could match the Valarjar's strength... and yet here you stand."
 
@@ -23,9 +20,6 @@ end
 
 L = BigWigs:NewBossLocale("Halls of Valor Trash", "esES") or BigWigs:NewBossLocale("Halls of Valor Trash", "esMX")
 if L then
-	--L.custom_on_autotalk = "Autotalk"
-	--L.custom_on_autotalk_desc = "Instantly selects various gossip options around the dungeon."
-
 	L.mug_of_mead = "Jarra de hidromiel"
 	L.valarjar_thundercaller = "Clamatruenos Valarjar"
 	L.storm_drake = "Draco de tormenta"

@@ -46,7 +46,6 @@ local SOUND = media.MediaType and media.MediaType.SOUND or "sound"
 local mute = "Interface\\AddOns\\BigWigs\\Media\\Icons\\mute"
 local unmute = "Interface\\AddOns\\BigWigs\\Media\\Icons\\unmute"
 
-local inConfigMode = nil
 local activeRange = 0
 local activeRangeChecker = nil
 local activeSpellID = nil
@@ -65,12 +64,16 @@ local proxAnchor, proxTitle = nil, nil
 local CTimerAfter = BigWigsLoader.CTimerAfter
 local GameTooltip = CreateFrame("GameTooltip", "BigWigsProximityTooltip", UIParent, "GameTooltipTemplate")
 local UnitPosition = UnitPosition
+local IsItemInRange = BigWigsLoader.IsItemInRange
 local GetRaidTargetIndex, GetNumGroupMembers, GetTime = GetRaidTargetIndex, GetNumGroupMembers, GetTime
 local IsInRaid, IsInGroup, InCombatLockdown = IsInRaid, IsInGroup, InCombatLockdown
 local UnitIsDead, UnitIsUnit, UnitClass, UnitPhaseReason = UnitIsDead, UnitIsUnit, UnitClass, UnitPhaseReason
 local format = string.format
 local tinsert, tconcat, wipe = table.insert, table.concat, table.wipe
 local next, type, tonumber = next, type, tonumber
+
+local combatText = GARRISON_LANDING_STATUS_MISSION_COMBAT or "In Combat"
+local isWrath = BigWigsLoader.isWrath
 
 local OnOptionToggled = nil -- Function invoked when the proximity option is toggled on a module.
 
@@ -166,7 +169,7 @@ do
 	end
 
 	function isInRange(unit)
-		if activeRangeChecker then
+		if activeRangeChecker and (isWrath or not InCombatLockdown()) then
 			return activeRangeChecker(unit)
 		end
 	end
@@ -184,7 +187,6 @@ end
 -- Display Window
 --
 
-local testText
 local function onDragStart(self) self:StartMoving() end
 local function onDragStop(self)
 	self:StopMovingOrSizing()
@@ -204,9 +206,7 @@ end
 local locked = nil
 local function lockDisplay()
 	if locked then return end
-	if not inConfigMode then
-		proxAnchor:EnableMouse(false) -- Keep enabled during config mode
-	end
+	proxAnchor:EnableMouse(false)
 	proxAnchor:SetMovable(false)
 	proxAnchor:SetResizable(false)
 	proxAnchor:RegisterForDrag()
@@ -292,12 +292,6 @@ do
 		end
 	end
 
-	function testText()
-		--proxAnchor.playerDot:Hide()
-		proxAnchor.text:SetText("|cffaad372Legolasftw|r\n|cfff48cbaTirionman|r\n|cfffff468Sneakystab|r\n|cffc69b6dIamconanok|r")
-		proxAnchor.text:Show()
-	end
-
 	--------------------------------------------------------------------------------
 	-- Normal Proximity
 	--
@@ -321,7 +315,9 @@ do
 
 		proxTitle:SetFormattedText(L_proximityTitle, activeRange, anyoneClose)
 
-		if anyoneClose == 0 then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif anyoneClose == 0 then
 			proxAnchor.text:SetText("|cff777777:-)|r")
 		else
 			setText(tooClose)
@@ -342,7 +338,9 @@ do
 	function targetProximityText()
 		if functionToFire then CTimerAfter(0.05, functionToFire) else return end
 
-		if isInRange(proximityPlayer) then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif isInRange(proximityPlayer) then
 			proxTitle:SetFormattedText(L_proximityTitle, activeRange, 1)
 			local player = plugin:UnitName(proximityPlayer)
 			proxAnchor.text:SetText(coloredNames[player])
@@ -377,7 +375,9 @@ do
 
 		proxTitle:SetFormattedText(L_proximityTitle, activeRange, anyoneClose)
 
-		if anyoneClose == 0 then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif anyoneClose == 0 then
 			proxAnchor.text:SetText("|cff777777:-)|r")
 		else
 			setText(tooClose)
@@ -410,7 +410,9 @@ do
 
 		proxTitle:SetFormattedText(L_proximityTitle, activeRange, anyoneClose)
 
-		if anyoneClose == 0 then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif anyoneClose == 0 then
 			proxAnchor.text:SetText("|cffff0202> STACK <|r") -- XXX localize or remove?
 			if not db.sound then return end
 			local t = GetTime()
@@ -430,7 +432,9 @@ do
 	function reverseTargetProximityText()
 		if functionToFire then CTimerAfter(0.05, functionToFire) else return end
 
-		if isInRange(proximityPlayer) then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif isInRange(proximityPlayer) then
 			proxTitle:SetFormattedText(L_proximityTitle, activeRange, 1)
 			proxAnchor.text:SetText("|cff777777:-)|r")
 		else
@@ -463,7 +467,9 @@ do
 
 		proxTitle:SetFormattedText(L_proximityTitle, activeRange, anyoneClose)
 
-		if anyoneClose == 0 then
+		if InCombatLockdown() and not isWrath then
+			proxAnchor.text:SetFormattedText("|cff777777%s\n:-(|r", combatText)
+		elseif anyoneClose == 0 then
 			tinsert(tooClose, 1, "|cffff0202> STACK <|r") -- XXX localize or remove?
 			setText(tooClose)
 			if not db.sound then return end
@@ -521,7 +527,7 @@ do
 		tooltipFrame:SetHeight(40)
 		tooltipFrame:SetPoint("BOTTOM", proxAnchor, "TOP")
 		tooltipFrame:SetScript("OnEnter", function(self)
-			if not activeSpellID and not inConfigMode then return end
+			if not activeSpellID then return end
 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 			GameTooltip:SetHyperlink(format("spell:%d", activeSpellID or 44318))
 			GameTooltip:Show()
@@ -629,8 +635,6 @@ do
 		self:RegisterMessage("BigWigs_OnBossWipe", "BigWigs_OnBossDisable")
 		self:RegisterMessage("BigWigs_OnBossDisable")
 
-		self:RegisterMessage("BigWigs_StartConfigureMode")
-		self:RegisterMessage("BigWigs_StopConfigureMode")
 		self:RegisterMessage("BigWigs_ProfileUpdate", updateProfile)
 		updateProfile()
 	end
@@ -645,200 +649,184 @@ end
 -- Options
 --
 
-function plugin:BigWigs_StartConfigureMode()
-	if activeRange > 0 then
-		return -- Pointless trying to start configure mode if proximity has already been opened by a boss encounter.
-	end
-	inConfigMode = true
-	self:Test()
-end
-
-function plugin:BigWigs_StopConfigureMode()
-	inConfigMode = nil
-	if db.lock then
-		proxAnchor:EnableMouse(false) -- Mouse disabled whilst locked, but we enable it in test mode. Re-disable it.
-	end
-	self:Close(true)
-end
-
-do
-	local disabled = function() return plugin.db.profile.disabled end
-	plugin.pluginOptions = {
-		name = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Proximity:20|t ".. L.proximity_name,
-		type = "group",
-		order = 13,
-		get = function(info)
-			local key = info[#info]
-			if key == "font" then
-				for i, v in next, media:List(FONT) do
-					if v == db.fontName then return i end
-				end
-			elseif key == "soundName" then
-				for i, v in next, media:List(SOUND) do
-					if v == db.soundName then return i end
-				end
-			else
-				return db[key]
-			end
-		end,
-		set = function(info, value)
-			local key = info[#info]
-			if key == "font" then
-				db.fontName = media:List(FONT)[value]
-			elseif key == "soundName" then
-				db.soundName = media:List(SOUND)[value]
-			else
-				db[key] = value
-			end
-			plugin:RestyleWindow()
-		end,
-		args = {
-			disabled = {
-				type = "toggle",
-				name = L.disabled,
-				desc = L.disabledDisplayDesc,
-				order = 1,
-			},
-			lock = {
-				type = "toggle",
-				name = L.lock,
-				desc = L.lockDesc,
-				order = 2,
-				disabled = disabled,
-			},
-			font = {
-				type = "select",
-				name = L.font,
-				order = 3,
-				values = media:List(FONT),
-				width = "full",
-				itemControl = "DDI-Font",
-			},
-			fontSize = {
-				type = "range",
-				name = L.fontSize,
-				desc = L.fontSizeDesc,
-				order = 4,
-				max = 200,
-				min = 8,
-				softMax = 40,
-				step = 1,
-				width = "full",
-			},
-			soundName = {
-				type = "select",
-				name = L.sound,
-				order = 5,
-				values = media:List(SOUND),
-				width = "full",
-				itemControl = "DDI-Sound"
-				--disabled = disabled,
-			},
-			soundDelay = {
-				type = "range",
-				name = L.soundDelay,
-				desc = L.soundDelayDesc,
-				order = 6,
-				max = 10,
-				min = 1,
-				step = 1,
-				width = "full",
-				disabled = disabled,
-			},
-			showHide = {
-				type = "group",
-				name = L.showHide,
-				inline = true,
-				order = 7,
-				get = function(info)
-					local key = info[#info]
-					return db.objects[key]
-				end,
-				set = function(info, value)
-					local key = info[#info]
-					db.objects[key] = value
-					plugin:RestyleWindow()
-				end,
-				disabled = disabled,
-				args = {
-					title = {
-						type = "toggle",
-						name = L.title,
-						desc = L.titleDesc,
-						order = 1,
-					},
-					background = {
-						type = "toggle",
-						name = L.background,
-						desc = L.backgroundDesc,
-						order = 2,
-					},
-					sound = {
-						type = "toggle",
-						name = L.soundButton,
-						desc = L.soundButtonDesc,
-						order = 3,
-					},
-					close = {
-						type = "toggle",
-						name = L.closeButton,
-						desc = L.closeButtonDesc,
-						order = 4,
-					},
-					ability = {
-						type = "toggle",
-						name = L.abilityName,
-						desc = L.abilityNameDesc,
-						order = 5,
-					},
-					tooltip = {
-						type = "toggle",
-						name = L.tooltip,
-						desc = L.tooltipDesc,
-						order = 6,
-					},
-				},
-			},
-			exactPositioning = {
-				type = "group",
-				name = L.positionExact,
-				order = 8,
-				inline = true,
-				args = {
-					posx = {
-						type = "range",
-						name = L.positionX,
-						desc = L.positionDesc,
-						min = -2048,
-						max = 2048,
-						step = 1,
-						order = 1,
-						width = "full",
-					},
-					posy = {
-						type = "range",
-						name = L.positionY,
-						desc = L.positionDesc,
-						min = -2048,
-						max = 2048,
-						step = 1,
-						order = 2,
-						width = "full",
-					},
-				},
-			},
-			reset = {
-				type = "execute",
-				name = L.resetAll,
-				desc = L.resetProximityDesc,
-				func = function()
-					plugin.db:ResetProfile()
-				end,
-				order = 9,
-			},
-		},
-	}
-end
+--do
+--	local disabled = function() return plugin.db.profile.disabled end
+--	plugin.pluginOptions = {
+--		name = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Proximity:20|t ".. L.proximity_name,
+--		type = "group",
+--		order = 13,
+--		get = function(info)
+--			local key = info[#info]
+--			if key == "font" then
+--				for i, v in next, media:List(FONT) do
+--					if v == db.fontName then return i end
+--				end
+--			elseif key == "soundName" then
+--				for i, v in next, media:List(SOUND) do
+--					if v == db.soundName then return i end
+--				end
+--			else
+--				return db[key]
+--			end
+--		end,
+--		set = function(info, value)
+--			local key = info[#info]
+--			if key == "font" then
+--				db.fontName = media:List(FONT)[value]
+--			elseif key == "soundName" then
+--				db.soundName = media:List(SOUND)[value]
+--			else
+--				db[key] = value
+--			end
+--			plugin:RestyleWindow()
+--		end,
+--		args = {
+--			disabled = {
+--				type = "toggle",
+--				name = L.disabled,
+--				desc = L.disabledDisplayDesc,
+--				order = 1,
+--			},
+--			lock = {
+--				type = "toggle",
+--				name = L.lock,
+--				desc = L.lockDesc,
+--				order = 2,
+--				disabled = disabled,
+--			},
+--			font = {
+--				type = "select",
+--				name = L.font,
+--				order = 3,
+--				values = media:List(FONT),
+--				width = "full",
+--				itemControl = "DDI-Font",
+--			},
+--			fontSize = {
+--				type = "range",
+--				name = L.fontSize,
+--				desc = L.fontSizeDesc,
+--				order = 4,
+--				max = 200,
+--				min = 8,
+--				softMax = 40,
+--				step = 1,
+--				width = "full",
+--			},
+--			soundName = {
+--				type = "select",
+--				name = L.sound,
+--				order = 5,
+--				values = media:List(SOUND),
+--				width = "full",
+--				itemControl = "DDI-Sound"
+--				--disabled = disabled,
+--			},
+--			soundDelay = {
+--				type = "range",
+--				name = L.soundDelay,
+--				desc = L.soundDelayDesc,
+--				order = 6,
+--				max = 10,
+--				min = 1,
+--				step = 1,
+--				width = "full",
+--				disabled = disabled,
+--			},
+--			showHide = {
+--				type = "group",
+--				name = L.showHide,
+--				inline = true,
+--				order = 7,
+--				get = function(info)
+--					local key = info[#info]
+--					return db.objects[key]
+--				end,
+--				set = function(info, value)
+--					local key = info[#info]
+--					db.objects[key] = value
+--					plugin:RestyleWindow()
+--				end,
+--				disabled = disabled,
+--				args = {
+--					title = {
+--						type = "toggle",
+--						name = L.title,
+--						desc = L.titleDesc,
+--						order = 1,
+--					},
+--					background = {
+--						type = "toggle",
+--						name = L.background,
+--						desc = L.backgroundDesc,
+--						order = 2,
+--					},
+--					sound = {
+--						type = "toggle",
+--						name = L.soundButton,
+--						desc = L.soundButtonDesc,
+--						order = 3,
+--					},
+--					close = {
+--						type = "toggle",
+--						name = L.closeButton,
+--						desc = L.closeButtonDesc,
+--						order = 4,
+--					},
+--					ability = {
+--						type = "toggle",
+--						name = L.abilityName,
+--						desc = L.abilityNameDesc,
+--						order = 5,
+--					},
+--					tooltip = {
+--						type = "toggle",
+--						name = L.tooltip,
+--						desc = L.tooltipDesc,
+--						order = 6,
+--					},
+--				},
+--			},
+--			exactPositioning = {
+--				type = "group",
+--				name = L.positionExact,
+--				order = 8,
+--				inline = true,
+--				args = {
+--					posx = {
+--						type = "range",
+--						name = L.positionX,
+--						desc = L.positionDesc,
+--						min = -2048,
+--						max = 2048,
+--						step = 1,
+--						order = 1,
+--						width = "full",
+--					},
+--					posy = {
+--						type = "range",
+--						name = L.positionY,
+--						desc = L.positionDesc,
+--						min = -2048,
+--						max = 2048,
+--						step = 1,
+--						order = 2,
+--						width = "full",
+--					},
+--				},
+--			},
+--			reset = {
+--				type = "execute",
+--				name = L.resetAll,
+--				desc = L.resetProximityDesc,
+--				func = function()
+--					plugin.db:ResetProfile()
+--				end,
+--				order = 9,
+--			},
+--		},
+--	}
+--end
 
 -------------------------------------------------------------------------------
 -- Events
@@ -983,15 +971,6 @@ do
 	end
 end
 
-function plugin:Test()
-	self:Close(true)
-	if db.lock then
-		proxAnchor:EnableMouse(true) -- Mouse disabled whilst locked, enable it in test mode
-	end
-	testText()
-	proxAnchor:Show()
-end
-
 -------------------------------------------------------------------------------
 -- Slash command
 --
@@ -1017,28 +996,5 @@ SlashCmdList.BigWigs_Proximity = function(input)
 	end
 end
 
-SlashCmdList.BigWigs_ProximityTarget = function(input)
-	if not plugin:IsEnabled() then BigWigs:Enable() end
-	input = input:lower()
-	local range, target, reverse = input:match("^(%d+)%s*(%S*)%s*(%S*)$")
-	range = tonumber(range)
-	if not range or not target or (not UnitInRaid(target) and not UnitInParty(target)) then
-		BigWigs:Print("Usage: /proximitytarget 1-100 player [true]") -- XXX translate
-	else
-		if range > 0 then
-			plugin:Close(true)
-			customProximityOpen = range
-			customProximityTarget = target
-			customProximityReverse = reverse == "true"
-			plugin:Open(range, nil, nil, customProximityTarget, customProximityReverse)
-		else
-			customProximityOpen, customProximityTarget, customProximityReverse = nil, nil, nil
-			plugin:Close(true)
-		end
-	end
-end
-
 SLASH_BigWigs_Proximity1 = "/proximity"
 SLASH_BigWigs_Proximity2 = "/range"
-SLASH_BigWigs_ProximityTarget1 = "/proximitytarget"
-SLASH_BigWigs_ProximityTarget2 = "/rangetarget"

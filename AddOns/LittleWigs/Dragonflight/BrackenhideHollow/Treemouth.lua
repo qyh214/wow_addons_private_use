@@ -117,7 +117,7 @@ do
 		self:TargetMessage(376811, "yellow", name)
 		self:PlaySound(376811, "alert", nil, name)
 		if self:Me(guid) then
-			self:Say(376811)
+			self:Say(376811, nil, nil, "Decay Spray")
 		end
 	end
 
@@ -127,7 +127,7 @@ do
 		local t = args.time
 		if t - prev > 5 then
 			prev = t
-			self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+			self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		end
 		self:CDBar(args.spellId, 42.5)
 		-- Treemouth won't cast other abilities for 8.3 seconds after Decay Spray

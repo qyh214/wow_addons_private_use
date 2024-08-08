@@ -1,0 +1,11 @@
+﻿## Interface: 110002, 110000
+## Author: |cff44ff44 Aene|r - BurningBlade EU
+## Title: |cff00ff00EventsTracker|r
+## Version: 11.0.0.2
+## Notes: Tracking basic events in Dragonflight.
+## SavedVariables: EventsTrackerDB, EventsTrackerSetup
+
+# Locale
+Locale\Locale.xml
+
+EventsTracker.xml

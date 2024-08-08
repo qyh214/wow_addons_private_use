@@ -37,9 +37,9 @@ if L then
 	L.putrid_pyromancer = "Putrid Pyromancer"
 	L.addled_arcanomancer = "Addled Arcanomancer"
 
-	L.gate_opens = "Gate Opens"
-	L.gate_opens_desc = "Show a bar indicating when Undermage Kesalon will open the gate to Yalnu."
-	L.gate_opens_icon = "spell_fire_fireball02"
+	L.gate_open = CL.gate_open
+	L.gate_open_desc = "Show a bar indicating when Undermage Kesalon will open the gate to Yalnu."
+	L.gate_open_icon = "spell_fire_fireball02"
 
 	L.yalnu_warmup_trigger = "The portal is lost! We must stop this beast before it can escape!"
 end
@@ -51,7 +51,7 @@ end
 function mod:GetOptions()
 	return {
 		-- RP Timers
-		"gate_opens",
+		"gate_open",
 		-- Dreadpetal
 		{164886, "DISPEL"}, -- Dreadpetal Pollen
 		-- Everbloom Naturalist
@@ -144,10 +144,10 @@ function mod:ArchmageSolDefeated()
 	-- 38.84 [CLEU] SPELL_CAST_SUCCESS#Undermage Kesalon#170741#Pyroblast
 	-- 40.27 [CHAT_MSG_MONSTER_SAY] If that beast crosses through, the unchecked growth will choke the whole of Azeroth! Hurry!#Undermage Kesalon
 	-- ~42.26 Gate Despawns
-	self:Bar("gate_opens", 35.0, L.gate_opens, L.gate_opens_icon)
+	self:Bar("gate_open", 35.0, L.gate_open, L.gate_open_icon)
 end
 
-function mod:CHAT_MSG_MONSTER_YELL(_, msg, sender)
+function mod:CHAT_MSG_MONSTER_YELL(_, msg)
 	if msg == L.yalnu_warmup_trigger then
 		-- The portal is lost! We must stop this beast before it can escape!#Lady Baihu
 		local yalnuMod = BigWigs:GetBossModule("Yalnu", true)
@@ -162,7 +162,8 @@ end
 
 function mod:DreadpetalPollenApplied(args)
 	-- stacks relatively quickly, only dispels with movement (or by kiting)
-	if args.amount >= 6 and args.amount % 3 == 0 and (self:Me(args.destGUID) or self:Dispeller("movement", nil, args.spellId)) then
+	-- can be applied to NPCs by mind-controlled mobs
+	if args.amount >= 6 and args.amount % 3 == 0 and (self:Me(args.destGUID) or (self:Player(args.destFlags) and self:Dispeller("movement", nil, args.spellId))) then
 		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 9)
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
 	end
@@ -173,19 +174,25 @@ end
 do
 	local prev = 0
 	function mod:ChokingVines(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
 			self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "alert")
 		end
-		--self:NameplateCDBar(args.spellId, 21.8, args.sourceGUID)
+		--self:Nameplate(args.spellId, 21.8, args.sourceGUID)
 	end
 end
 
 do
 	local prev = 0
 	function mod:ChokingVinesApplied(args)
+		if not self:Player(args.destFlags) then -- don't alert if a NPC is debuffed (usually by a mind-controlled mob)
+			return
+		end
 		local t = args.time
 		if t - prev > 2 then
 			prev = t
@@ -204,13 +211,16 @@ end
 do
 	local prev = 0
 	function mod:EnragedGrowth(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
 			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "alert")
 		end
-		--self:NameplateCDBar(args.spellId, 14.6, args.sourceGUID)
+		--self:Nameplate(args.spellId, 14.6, args.sourceGUID)
 	end
 end
 
@@ -233,7 +243,7 @@ do
 		end
 		if onMe and t - prevSay > 3 then
 			prevSay = t
-			self:Say(args.spellId)
+			self:Say(args.spellId, nil, nil, "Venom Burst")
 		end
 	end
 end
@@ -243,6 +253,9 @@ end
 do
 	local prev = 0
 	function mod:HealingWaters(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
@@ -253,7 +266,7 @@ do
 				self:PlaySound(args.spellId, "alert")
 			end
 		end
-		--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
+		--self:Nameplate(args.spellId, 19.4, args.sourceGUID)
 	end
 end
 
@@ -317,8 +330,8 @@ do
 			self:Message(args.spellId, "orange")
 			self:PlaySound(args.spellId, "alarm")
 		end
+		--self:Nameplate(args.spellId, 16.9, args.sourceGUID)
 	end
-	--self:NameplateCDBar(args.spellId, 16.9, args.sourceGUID)
 end
 
 -- Twisted Abomination
@@ -332,8 +345,8 @@ do
 			self:Message(args.spellId, "red")
 			self:PlaySound(args.spellId, "alert")
 		end
+		--self:Nameplate(args.spellId, 15.8, args.sourceGUID)
 	end
-	--self:NameplateCDBar(args.spellId, 15.8, args.sourceGUID)
 end
 
 -- Infested Icecaller
@@ -341,7 +354,7 @@ end
 function mod:ColdFusion(args)
 	self:Message(args.spellId, "yellow")
 	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 21.8, args.sourceGUID)
+	--self:Nameplate(args.spellId, 21.8, args.sourceGUID)
 end
 
 -- Putrid Pyromancer
@@ -349,7 +362,7 @@ end
 function mod:CinderboltSalvo(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alert")
-	--self:NameplateCDBar(args.spellId, 18.2, args.sourceGUID)
+	--self:Nameplate(args.spellId, 18.2, args.sourceGUID)
 end
 
 -- Addled Arcanomancer
@@ -357,5 +370,5 @@ end
 function mod:SpatialDisruption(args)
 	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 19.4, args.sourceGUID)
+	--self:Nameplate(args.spellId, 19.4, args.sourceGUID)
 end

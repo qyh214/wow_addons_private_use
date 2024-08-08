@@ -13,8 +13,8 @@ local NarciAPI = NarciAPI;
 local C_Item = C_Item;
 local GetItemIconByID = C_Item.GetItemIconByID;
 local ResetCursor = ResetCursor;
-local GetItemInfo = GetItemInfo;
-local GetItemInfoInstant = GetItemInfoInstant;
+local GetItemInfo = C_Item.GetItemInfo;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local C_TransmogCollection = C_TransmogCollection;
 local C_TransmogSets = C_TransmogSets;
 
@@ -23,6 +23,7 @@ local CURRENCY_AMOUNT = 0;
 local CHECK_MARK = "|TInterface\\AddOns\\Narcissus\\Art\\BasicShapes\\CheckMark:12:12:0:0:32:32:0:32:0:32:124:197:118|t";
 local PREVIEW_MODEL_WIDTH, PREVIEW_MODEL_HEIGHT = 78*2, 104*2;
 local PREVIEW_MODEL_PADDING = 2;
+local MAX_ENTRY_PER_PAGE = 24;
 
 local function RemoveEnsembleLabel(itemName)
     if itemName then
@@ -178,17 +179,31 @@ function NarciPerksProgramProductListMixin:OnLoad()
     self.requireUpdate = true;
 end
 
-function NarciPerksProgramProductListMixin:Init()
-    NarciAPI.NineSliceUtil.SetUpBorder(self.BackgroundFrame, "genericChamferedBorder", nil, 0.25, 0.25, 0.25, 1, 7);
-    NarciAPI.NineSliceUtil.SetUpBackdrop(self.BackgroundFrame, "genericChamferedBackground", nil, 0, 0, 0, 0.9, -8);
-    self.Init = nil;
+function NarciPerksProgramProductListMixin:AcquireFrame(i)
+    if not self.Frames then
+        self.Frames = {};
+    end
+
+    if not self.Frames[i] then
+        local f = CreateFrame("Frame", nil, self);
+        self.Frames[i] = f;
+        f:SetUsingParentLevel(true);
+        NarciAPI.NineSliceUtil.SetUpBorder(f, "genericChamferedBorder", nil, 0.25, 0.25, 0.25, 1, 7);
+        NarciAPI.NineSliceUtil.SetUpBackdrop(f, "genericChamferedBackground", nil, 0, 0, 0, 0.9, -8);
+        local frameWidth, frameHeight = 240, 64;
+        f:SetSize(frameWidth, frameHeight);
+        if i == 1 then
+            f:SetAllPoints(true);
+        else
+            local frameGap = 8;
+            f:SetPoint("TOPLEFT", self.Frames[i - 1], "TOPRIGHT", frameGap, 0);
+        end
+    end
+
+    return self.Frames[i]
 end
 
 function NarciPerksProgramProductListMixin:OnShow()
-    if self.Init then
-        self:Init();
-    end
-
     if self.requireUpdate then
         self:UpdateList();
     end
@@ -197,6 +212,23 @@ function NarciPerksProgramProductListMixin:OnShow()
 
     if FrameToggle then
         FrameToggle:UpdateVisual();
+    end
+
+    self:UpdateScale();
+end
+
+function NarciPerksProgramProductListMixin:UpdateScale()
+    --We want to show the entire list so player can know at once how many items there are
+    --We don't use ScrollFrame, instead scale down the frame if needed
+    self:SetScale(1);
+    local yBottom = self:GetBottom();
+    local safeY = 12;   --Half the button height
+    if yBottom < safeY then
+        local yTop = self:GetTop();
+        local fullHeight = yTop - yBottom;
+        local bestHeight = yTop - safeY;
+        local bestScale = bestHeight/fullHeight;
+        self:SetScale(1);
     end
 end
 
@@ -226,7 +258,7 @@ function NarciPerksProgramProductListMixin:OnEvent(event, ...)
     end
 end
 
-function NarciPerksProgramProductListMixin:ShowInfoButton()
+function NarciPerksProgramProductListMixin:CreateInfoButton()
     if not self.InfoButton then
         local b = CreateFrame("Frame", nil, self, "NarciGenericInfoButtonTemplate");
         self.InfoButton = b;
@@ -236,13 +268,26 @@ function NarciPerksProgramProductListMixin:ShowInfoButton()
         b:SetHitRectInsets(0, 0, 0, 0);
         b.tooltipOffsetX = 12;
         b.tooltipName = "GameTooltip";
-        b.tooltipText = Narci.L["Perks Program Using Cache Alert"];
+        b.tooltipText = Narci.L["Perks Program Using Cache Alert"]
     end
+end
+
+function NarciPerksProgramProductListMixin:ShowInfoButton()
+    self:CreateInfoButton();
+    self.InfoButton:Show();
 end
 
 function NarciPerksProgramProductListMixin:HideInfoButton()
     if self.InfoButton then
         self.InfoButton:Hide();
+    end
+end
+
+function NarciPerksProgramProductListMixin:SetupNumItems(count)
+    self:CreateInfoButton();
+
+    if count and count > 0 then
+        self.InfoButton.tooltipText = Narci.L["Perks Program Using Cache Alert"].."\n|cff808080"..string.format(SINGLE_PAGE_RESULTS_TEMPLATE or "%d Items", count).."|r";
     end
 end
 
@@ -309,9 +354,16 @@ end
 
 function NarciPerksProgramProductListMixin:AcquireButton(index)
     if not ProductButtons[index] then
-        ProductButtons[index] = CreateFrame("Button", nil, self, "NarciPerksProgramProductListButtonTemplate");
+        ProductButtons[index] = CreateFrame("Button", nil, self.ContentFrame, "NarciPerksProgramProductListButtonTemplate");
     end
+    ProductButtons[index]:Show();
     return ProductButtons[index]
+end
+
+function NarciPerksProgramProductListMixin:ReleaseAllButtons()
+    for _, button in pairs(ProductButtons) do
+        button:Hide();
+    end
 end
 
 function NarciPerksProgramProductListMixin:UpdateList()
@@ -322,59 +374,196 @@ function NarciPerksProgramProductListMixin:UpdateList()
 
     if numItems > 0 then
         local sortedList = {};
-        for i = 1, numItems do
-            sortedList[i] = vendorItemIDs[i];
+        local numValid = 0;
+
+        for _, vendorItemID in ipairs(vendorItemIDs) do
+            if DataProvider:IsValidItem(vendorItemID) then
+                numValid = numValid + 1;
+                sortedList[numValid] = vendorItemID;
+            end
         end
 
         table.sort(sortedList, SortFunc_Category);
         self.vendorItemIDs = sortedList;
+        self.numItems = numValid;
+
+        local numButtons = numValid;
+        local lastCategory, categoryID;
+
+        for i = 1, numValid do
+            categoryID = DataProvider:GetVendorItemCategory(sortedList[i]);
+            if categoryID ~= lastCategory then
+                lastCategory = categoryID;
+                numButtons = numButtons + 1;
+            end
+        end
 
         if not ProductButtons then
             ProductButtons = {};
         end
 
-        local paddingTop = 6;
-        local paddingBottom = 8;
-        local buttonHeight = 24;
+        local maxPage = math.ceil(numButtons / MAX_ENTRY_PER_PAGE);
+        maxPage = math.ceil((numButtons + maxPage) / MAX_ENTRY_PER_PAGE);
 
-        local fullHeight;
-        local lastCategory;
-        local categoryID;
-        local vendorItemID;
-        local button;
-
-        local numButtons = 0;
-        for i = 1, numItems do
-            vendorItemID = sortedList[i];
-            categoryID = DataProvider:GetVendorItemCategory(vendorItemID);
-            if categoryID ~= lastCategory then
-                lastCategory = categoryID;
-                numButtons = numButtons + 1;
-                button = self:AcquireButton(numButtons);
-                button:ClearAllPoints();
-                button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -paddingTop + (1 - numButtons)*buttonHeight);
-                button:SetCategoryID(categoryID);
-            end
-            
-            numButtons = numButtons + 1;
-            button = self:AcquireButton(numButtons);
-            button:ClearAllPoints();
-            button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -paddingTop + (1 - numButtons)*buttonHeight);
-            button:SetVendorItemID(sortedList[i]);
+        --[[
+        if maxPage > 1 then
+            self:SetScript("OnMouseWheel", self.OnMouseWheel);
+        else
+            self:SetScript("OnMouseWheel", self.OnMouseWheel_Unused);
         end
+        --]]
 
-        self:SetHeight(paddingTop + paddingBottom + buttonHeight*numButtons);
+        self.maxPage = maxPage;
+        self:SetPage(self.page or 1, true);
+
         self.AlertText:Hide();
         self:ShowInfoButton();
+        self:SetupNumItems(numValid);
     else
         self.AlertText:SetText(Narci.L["Perks Program No Cache Alert"]);
         self.AlertText:Show();
         self:SetHeight( math.floor(self.AlertText:GetHeight() + 24.5) );
         self:HideInfoButton();
+        self:SetScript("OnMouseWheel", self.OnMouseWheel_Unused);
     end
 
     self.requireUpdate = nil;
 end
+
+function NarciPerksProgramProductListMixin:SetPage()
+    --We use multi-column list instead of scrollview so it straightforward shows how many items there are
+    self:ReleaseAllButtons();
+
+    local paddingTop = 6;
+    local paddingBottom = 8;
+    local buttonHeight = 24;
+    local numButtons = 0;
+    local numButtonThisPage = 0;
+    local numButtonFirstPage;
+
+    local lastCategory;
+    local categoryID;
+    local vendorItemID;
+    local button;
+
+    local containerIndex = 1;
+    local container = self:AcquireFrame(containerIndex);
+
+    for i = 1, self.numItems do
+        vendorItemID = self.vendorItemIDs[i];
+        if vendorItemID then
+            categoryID = DataProvider:GetVendorItemCategory(vendorItemID);
+            if categoryID ~= lastCategory then
+                lastCategory = categoryID;
+                numButtons = numButtons + 1;
+                numButtonThisPage = numButtonThisPage + 1;
+                button = self:AcquireButton(numButtons);
+                button:ClearAllPoints();
+                button:SetPoint("TOPLEFT", container, "TOPLEFT", 0, -paddingTop + (1 - numButtonThisPage)*buttonHeight);
+                button:SetCategoryID(categoryID);
+            end
+
+            numButtons = numButtons + 1;
+            numButtonThisPage = numButtonThisPage + 1;
+
+            if numButtonThisPage > MAX_ENTRY_PER_PAGE then
+                if not numButtonFirstPage then
+                    numButtonFirstPage = numButtons - 1;
+                end
+                container:SetHeight(paddingTop + paddingBottom + buttonHeight*(numButtonThisPage - 1));
+                numButtonThisPage = 1;
+                containerIndex = containerIndex + 1;
+                container = self:AcquireFrame(containerIndex);
+            end
+
+            button = self:AcquireButton(numButtons);
+            button:ClearAllPoints();
+            button:SetPoint("TOPLEFT", container, "TOPLEFT", 0, -paddingTop + (1 - numButtonThisPage)*buttonHeight);
+            button:SetVendorItemID(self.vendorItemIDs[i]);
+        end
+    end
+
+    if container and container ~= self.Frames[1] then
+        container:SetHeight(paddingTop + paddingBottom + buttonHeight*numButtonThisPage);
+    end
+
+    self:SetHeight(paddingTop + paddingBottom + buttonHeight*(numButtonFirstPage or numButtonThisPage));
+end
+
+--[[
+function NarciPerksProgramProductListMixin:SetPage(page, forceUpdate)
+    if page > self.maxPage then
+        page = self.maxPage;
+    elseif page < 1 then
+        page = 1;
+    end
+
+    if page ~= self.page or forceUpdate then
+        local fromIndex = (page - 1) * MAX_ENTRY_PER_PAGE + 1;
+        if not (self.vendorItemIDs[fromIndex]) then
+            return
+        end
+
+        self.page = page;
+        self:ReleaseAllButtons();
+
+        local paddingTop = 6;
+        local paddingBottom = 8;
+        local buttonHeight = 24;
+        local numButtons = 0;
+
+        local lastCategory;
+        local categoryID;
+        local vendorItemID;
+        local button;
+
+        for i = fromIndex, fromIndex + MAX_ENTRY_PER_PAGE - 1 do
+            vendorItemID = self.vendorItemIDs[i];
+            if vendorItemID then
+                categoryID = DataProvider:GetVendorItemCategory(vendorItemID);
+                if categoryID ~= lastCategory then
+                    lastCategory = categoryID;
+                    numButtons = numButtons + 1;
+                    button = self:AcquireButton(numButtons);
+                    button:ClearAllPoints();
+                    button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -paddingTop + (1 - numButtons)*buttonHeight);
+                    button:SetCategoryID(categoryID);
+                end
+                numButtons = numButtons + 1;
+                button = self:AcquireButton(numButtons);
+                button:ClearAllPoints();
+                button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -paddingTop + (1 - numButtons)*buttonHeight);
+                button:SetVendorItemID(self.vendorItemIDs[i]);
+            end
+        end
+
+        self:SetHeight(paddingTop + paddingBottom + buttonHeight*numButtons);
+    end
+end
+
+function NarciPerksProgramProductListMixin:SetPageByDelta(delta)
+    if not self.page then
+        self.page = 1;
+    end
+
+    local page = self.page;
+    if delta > 0 then
+        page = page - 1;
+    else
+        page = page + 1;
+    end
+
+    self:SetPage(page);
+end
+
+function NarciPerksProgramProductListMixin:OnMouseWheel_Unused()
+
+end
+
+function NarciPerksProgramProductListMixin:OnMouseWheel(delta)
+    self:SetPageByDelta(delta)
+end
+--]]
 
 local function ShowPreviewModel_OnUpdate(self, elapsed)
     self.updateDelay = self.updateDelay + elapsed;
@@ -424,7 +613,7 @@ function NarciPerksProgramProductListMixin:RequestUpdate(useDelay)
             self.updateDelay = -0.5;
             self:SetScript("OnUpdate", UpdateList_NextFrame);
         else
-            self:UpdateList();
+            self:UpdateList(true);
         end
     end
 end
@@ -477,13 +666,12 @@ local function PreviewModel_DisplayTransmogSetItem(transmogSetID, index, noFadeI
 
     local sourceID = itemModifiedAppearanceIDs[i];
     local itemID = C_TransmogCollection.GetSourceItemID(sourceID);
+    local cameraID = C_TransmogCollection.GetAppearanceCameraIDBySource(sourceID);
+    PreviewModel.cameraID = cameraID;
+
     if NarciAPI.IsHoldableItem(itemID) then
-        local cameraID = C_TransmogCollection.GetAppearanceCameraIDBySource(sourceID);
-        PreviewModel.cameraID = cameraID;
         PreviewModel:SetItem(itemID, sourceID);
     else
-        local cameraID = C_TransmogCollection.GetAppearanceCameraIDBySource(sourceID);
-        PreviewModel.cameraID = cameraID;
         PreviewModel:Undress();
         TransitionAPI.SetModelByUnit(PreviewModel, "player");
         PreviewModel:FreezeAnimation(0, 0, 0);
@@ -592,9 +780,11 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
         PreviewModel_Init();
     end
 
-    self.PreviewFrame.FadeIn:Stop();
-    self.PreviewFrame.ModelFadeIn:Stop();
-    self.PreviewFrame.CarouselText:Hide();
+    local pf = self.PreviewFrame;
+
+    pf.FadeIn:Stop();
+    pf.ModelFadeIn:Stop();
+    pf.CarouselText:Hide();
 
     local itemID, itemLink;
     if type(item) == "number" then
@@ -644,7 +834,7 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
                     if NarciAPI.IsHoldableItem(firstItemID) then
                         isArmor = false;
                         showCarousel = true;
-                        self.PreviewFrame.CarouselText:Show();
+                        pf.CarouselText:Show();
                         PreviewModel.t = 1.8;   --Refresh first item displays after 0.2 second in case item text isn't ready (2 seconds per item)
                         PreviewModel.transmogSetID = transmogSetID;
                         PreviewModel.itemIndex = 1;
@@ -656,11 +846,11 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
                             flavorText = "|cffffd100\""..flavorText.."\"|r";
                         end
                         self.flavorText = flavorText;
-                        self.PreviewFrame.Model.noFadeIn = true;
+                        pf.Model.noFadeIn = true;
                         PreviewModel_DisplayTransmogSetItem(transmogSetID, 1, true);
                     else
-                        self.PreviewFrame.CarouselText:SetText(string.format(SINGLE_PAGE_RESULTS_TEMPLATE or "%d Items", count));
-                        self.PreviewFrame.CarouselText:Show();
+                        pf.CarouselText:SetText(string.format(SINGLE_PAGE_RESULTS_TEMPLATE or "%d Items", count));
+                        pf.CarouselText:Show();
                         isArmor = true;
                     end
                 end
@@ -719,12 +909,12 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
             PreviewModel:SetScript("OnUpdate", PreviewModel_Turntable_OnUpdate);
         else
             PreviewModel:SetScript("OnUpdate", nil);
-            self.PreviewFrame:Hide();
+            pf:Hide();
             return
         end
     end
 
-    self.PreviewFrame:ClearAllPoints();
+    pf:ClearAllPoints();
 
     local anchorToButton;
     if FocusedButton then
@@ -736,9 +926,9 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
     end
 
     if anchorToButton then
-        self.PreviewFrame:SetPoint("LEFT", FocusedButton, "RIGHT", 8, 0);
+        pf:SetPoint("LEFT", FocusedButton, "RIGHT", 8, 0);
     else
-        self.PreviewFrame:SetPoint("TOPLEFT", self, "TOPRIGHT", 8, 0);
+        pf:SetPoint("TOPLEFT", self, "TOPRIGHT", 8, 0);
     end
 
 
@@ -784,19 +974,20 @@ function NarciPerksProgramProductListMixin:DisplayItem(item, vendorItemID)
     local quality = C_Item.GetItemQualityByID(itemID);
     local r, g, b = NarciAPI.GetItemQualityColor(quality);
 
-    self.PreviewFrame.ItemName:SetTextColor(r, g, b);
+    pf.ItemName:SetTextColor(r, g, b);
 
     if not showCarousel then
         --Item texts are already set up
-        self.PreviewFrame.ItemName:SetText(itemName);
-        self.PreviewFrame.ItemDescription:SetText(itemDesc);
+        pf.ItemName:SetText(itemName);
+        pf.ItemDescription:SetText(itemDesc);
         self.flavorText = flavorText;
     end
 
     self:AdjustPreviewFrameSize();
 
-    self.PreviewFrame.FadeIn:Play();
-    self.PreviewFrame:Show();
+    pf:SetFrameLevel(self:GetFrameLevel() + 10)
+    pf.FadeIn:Play();
+    pf:Show();
 
     --Item Tooltip
     --[[
@@ -1104,3 +1295,36 @@ C_TransmogSets.GetAllSourceIDs
 --]]
 
 --/script LoadAddOn("Blizzard_PerksProgram");ShowUIPanel(PerksProgramFrame);PerksProgramFrame:SetPropagateKeyboardInput(true);
+
+
+local function PrintUniqueVID()
+    --Debug
+    --Item must pass filter check, which remove category 0
+    --See: PerksProgramProducts_PassFilterCheck, PerksProgramFrame:GetFilterState(vendorItemInfo.perksVendorCategoryID)
+    local vendorItemIDs = C_PerksProgram.GetAvailableVendorItemIDs();
+    local unique = {};
+    for i, vendorItemID in ipairs(vendorItemIDs) do
+        if not unique[vendorItemID] then
+            unique[vendorItemID] = true;
+        end
+    end
+
+    local uniqueVendorItemIDs = {};
+
+    for vendorItemID in pairs(unique) do
+        table.insert(uniqueVendorItemIDs, vendorItemID);
+    end
+
+    table.sort(uniqueVendorItemIDs);
+
+    local GetInfo = C_PerksProgram.GetVendorItemInfo;
+    for i, vendorItemID in ipairs(uniqueVendorItemIDs) do
+        local info = GetInfo(vendorItemID);
+        if info then
+            print(vendorItemID, info.name);
+        else
+            print("No Info: "..vendorItemID);
+        end
+    end
+end
+NarciAPI.YeetTradingPostItemList = PrintUniqueVID;

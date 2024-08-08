@@ -3,15 +3,17 @@ local B, C, L, DB = unpack(ns)
 local M = B:GetModule("Misc")
 
 local pairs, unpack, tinsert, select = pairs, unpack, tinsert, select
-local GetSpellCooldown, GetSpellInfo, GetItemCooldown, GetItemCount, GetItemInfo = GetSpellCooldown, GetSpellInfo, GetItemCooldown, GetItemCount, GetItemInfo
-local IsPassiveSpell, IsCurrentSpell, IsPlayerSpell, UseItemByName = IsPassiveSpell, IsCurrentSpell, IsPlayerSpell, UseItemByName
-local GetProfessions, GetProfessionInfo, GetSpellBookItemInfo = GetProfessions, GetProfessionInfo, GetSpellBookItemInfo
+local GetItemCooldown = GetItemCooldown
+local IsPassiveSpell = C_Spell and C_Spell.IsSpellPassive or IsPassiveSpell
+local GetSpellBookItemInfo = C_SpellBook and C_SpellBook.GetSpellBookItemInfo or GetSpellBookItemInfo
+local IsPlayerSpell, UseItemByName = IsPlayerSpell, UseItemByName
+local GetProfessions, GetProfessionInfo = GetProfessions, GetProfessionInfo
 local PlayerHasToy, C_ToyBox_IsToyUsable, C_ToyBox_GetToyInfo = PlayerHasToy, C_ToyBox.IsToyUsable, C_ToyBox.GetToyInfo
 local C_TradeSkillUI_GetRecipeInfo, C_TradeSkillUI_GetTradeSkillLine = C_TradeSkillUI.GetRecipeInfo, C_TradeSkillUI.GetTradeSkillLine
 local C_TradeSkillUI_GetOnlyShowSkillUpRecipes, C_TradeSkillUI_SetOnlyShowSkillUpRecipes = C_TradeSkillUI.GetOnlyShowSkillUpRecipes, C_TradeSkillUI.SetOnlyShowSkillUpRecipes
 local C_TradeSkillUI_GetOnlyShowMakeableRecipes, C_TradeSkillUI_SetOnlyShowMakeableRecipes = C_TradeSkillUI.GetOnlyShowMakeableRecipes, C_TradeSkillUI.SetOnlyShowMakeableRecipes
 
-local BOOKTYPE_PROFESSION = BOOKTYPE_PROFESSION
+local BOOKTYPE_PROFESSION = BOOKTYPE_PROFESSION or 0
 local RUNEFORGING_ID = 53428
 local PICK_LOCK = 1804
 local CHEF_HAT = 134020
@@ -46,8 +48,8 @@ function M:UpdateProfessions()
 		if numSpells > 0 then
 			for i = 1, numSpells do
 				local slotID = i + spelloffset
-				if not IsPassiveSpell(slotID, BOOKTYPE_PROFESSION) then
-					local spellID = select(2, GetSpellBookItemInfo(slotID, BOOKTYPE_PROFESSION))
+				if not IsPassiveSpell(slotID) then
+					local spellID = GetSpellBookItemInfo(slotID, BOOKTYPE_PROFESSION).spellID
 					if i == 1 then
 						M:TradeTabs_Create(spellID)
 					else
@@ -61,7 +63,7 @@ function M:UpdateProfessions()
 	if isCook and PlayerHasToy(CHEF_HAT) and C_ToyBox_IsToyUsable(CHEF_HAT) then
 		M:TradeTabs_Create(nil, CHEF_HAT)
 	end
-	if GetItemCount(THERMAL_ANVIL) > 0 then
+	if C_Item.GetItemCount(THERMAL_ANVIL) > 0 then
 		M:TradeTabs_Create(nil, nil, THERMAL_ANVIL)
 	end
 end
@@ -71,7 +73,7 @@ function M:TradeTabs_Update()
 		local spellID = tab.spellID
 		local itemID = tab.itemID
 
-		if IsCurrentSpell(spellID) then
+		if spellID and C_Spell.IsCurrentSpell(spellID) then
 			tab:SetChecked(true)
 			tab.cover:Show()
 		else
@@ -83,7 +85,9 @@ function M:TradeTabs_Update()
 		if itemID then
 			start, duration = GetItemCooldown(itemID)
 		else
-			start, duration = GetSpellCooldown(spellID)
+			local cooldownInfo = C_Spell.GetSpellCooldown(spellID)
+			start = cooldownInfo and cooldownInfo.startTime
+			duration = cooldownInfo and cooldownInfo.duration
 		end
 		if start and duration and duration > 1.5 then
 			tab.CD:SetCooldown(start, duration)
@@ -96,7 +100,6 @@ function M:TradeTabs_Reskin()
 
 	for _, tab in pairs(tabList) do
 		tab:SetCheckedTexture(DB.pushedTex)
-		tab:GetRegions():Hide()
 		B.CreateBDFrame(tab)
 		local texture = tab:GetNormalTexture()
 		if texture then texture:SetTexCoord(unpack(DB.TexCoord)) end
@@ -109,13 +112,14 @@ function M:TradeTabs_Create(spellID, toyID, itemID)
 	if toyID then
 		_, name, texture = C_ToyBox_GetToyInfo(toyID)
 	elseif itemID then
-		name, _, _, _, _, _, _, _, _, texture = GetItemInfo(itemID)
+		name, _, _, _, _, _, _, _, _, texture = C_Item.GetItemInfo(itemID)
 	else
-		name, _, texture = GetSpellInfo(spellID)
+		name, texture = C_Spell.GetSpellName(spellID), C_Spell.GetSpellTexture(spellID)
 	end
 	if not name then return end -- precaution
 
-	local tab = CreateFrame("CheckButton", nil, ProfessionsFrame, "SpellBookSkillLineTabTemplate, SecureActionButtonTemplate")
+	local tab = CreateFrame("CheckButton", nil, ProfessionsFrame, "SecureActionButtonTemplate")
+	tab:SetSize(32, 32)
 	tab.tooltip = name
 	tab.spellID = spellID
 	tab.itemID = toyID or itemID
@@ -129,7 +133,8 @@ function M:TradeTabs_Create(spellID, toyID, itemID)
 		tab:SetAttribute(tab.type, spellID or name)
 	end
 	tab:SetNormalTexture(texture)
-	tab:GetHighlightTexture():SetColorTexture(1, 1, 1, .25)
+	tab:SetHighlightTexture(DB.bdTex)
+	tab:GetHighlightTexture():SetVertexColor(1, 1, 1, .25)
 	tab:Show()
 
 	tab.CD = CreateFrame("Cooldown", nil, tab, "CooldownFrameTemplate")

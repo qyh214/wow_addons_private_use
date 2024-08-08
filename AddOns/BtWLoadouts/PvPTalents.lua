@@ -212,6 +212,8 @@ local function RefreshPvPTalentSet(set)
 	end
 
     set.talents = talents
+	
+	Internal.Call("PvPTalentSetUpdated", set.setID);
 
     return UpdateSetFilters(set)
 end
@@ -221,12 +223,14 @@ local function AddPvPTalentSet()
         specIndex = 1
     end
     local specID, specName = GetSpecializationInfo(specIndex);
-    return AddSet("pvptalents", RefreshPvPTalentSet({
+    local set = AddSet("pvptalents", RefreshPvPTalentSet({
         specID = specID,
 		name = format(L["New %s Set"], specName),
 		useCount = 0,
         talents = {},
 	}))
+    Internal.Call("PvPTalentSetCreated", set.setID);
+	return set
 end
 local function GetPvPTalentSetsByName(name)
 	return Internal.GetSetsByName("pvptalents", name)
@@ -288,6 +292,8 @@ local function DeletePvPTalentSet(id)
             end
 		end
 	end
+    
+	Internal.Call("PvPTalentSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.PvPTalents;
 	local set = frame.set;
@@ -400,6 +406,7 @@ BtWLoadoutsPvPTalentsMixin = {}
 function BtWLoadoutsPvPTalentsMixin:OnLoad()
     self.RestrictionsDropDown:SetSupportedTypes("covenant", "race")
     self.RestrictionsDropDown:SetScript("OnChange", function ()
+		Internal.Call("PvPTalentSetUpdated", self.set.setID);
         self:Update()
     end)
 
@@ -449,6 +456,8 @@ function BtWLoadoutsPvPTalentsMixin:OnShow()
                     end
                 end
 
+				Internal.Call("PvPTalentSetUpdated", self.set.setID);
+
                 self:Update()
             end
         end
@@ -464,6 +473,7 @@ end
 function BtWLoadoutsPvPTalentsMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
+		Internal.Call("PvPTalentSetUpdated", self.set.setID);
 		self:Update();
 	end
 end

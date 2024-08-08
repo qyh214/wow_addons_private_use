@@ -6,6 +6,13 @@ local _
 local GameCooltip = GameCooltip
 local unpack = unpack
 
+local GetSpellInfo = GetSpellInfo or function(...)
+    local result = C_Spell.GetSpellInfo(...)
+    if result then
+        return result.name, 1, result.iconID
+    end
+end
+
 function advancedDeathLogs.RegisterDetailsHook()
     hooksecurefunc(Details, "ShowDeathTooltipFunction", function(instance, lineFrame, combatObject, deathTable)
         --in cases where the deathTable is from a copy, e.g. Overall Data, the cooldown_usage might not be available
@@ -13,8 +20,90 @@ function advancedDeathLogs.RegisterDetailsHook()
             return
         end
 
+        local deathEvents = deathTable[1]
         local timeOfDeath = deathTable[2]
         local gameCooltip = GameCooltip
+
+        local causeOfDeath = {}
+
+        for i = 1, #deathEvents do
+            local event = deathEvents[i]
+            local evType = event[1]
+
+            --check if this death event is a debuff or if a enemy spell cast
+            if (type(evType) == "number" and (evType == 4 or evType == 6)) then
+                local spellId = event[2]
+                local source = Details:GetOnlyName(event[6] or "")
+                local amountOfDamage = event[3]
+
+                --findsubtable arguments: table, index of the sub table, any value to find on that index in the sub table
+                local alreadyExistsOnIndex = detailsFramework.table.findsubtable(causeOfDeath, 1, spellId)
+                if (alreadyExistsOnIndex) then
+                    causeOfDeath[alreadyExistsOnIndex][2] = causeOfDeath[alreadyExistsOnIndex][2] + amountOfDamage
+                else
+                    causeOfDeath[#causeOfDeath+1] = {spellId, amountOfDamage, source}
+                end
+            end
+
+            if (type(evType) == "boolean" and evType == true) then
+                --this is a damage event
+                local spellId = event[2]
+                if (spellId ~= 1) then
+                    local amountOfDamage = event[3]
+                    local source = Details:GetOnlyName(event[6] or "")
+
+                    --findsubtable arguments: table, index of the sub table, any value to find on that index in the sub table
+                    local alreadyExistsOnIndex = detailsFramework.table.findsubtable(causeOfDeath, 1, spellId)
+                    if (alreadyExistsOnIndex) then
+                        causeOfDeath[alreadyExistsOnIndex][2] = causeOfDeath[alreadyExistsOnIndex][2] + amountOfDamage
+                    else
+                        causeOfDeath[#causeOfDeath+1] = {spellId, amountOfDamage, source}
+                    end
+                end
+            end
+        end
+
+        table.sort(causeOfDeath, function(a, b)
+            return a[2] > b[2]
+        end)
+
+        gameCooltip:AddLine("Spell Description:", "", 2, "yellow", "white", 14)
+        gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
+
+        local alreadyAddedToDeathCause = {}
+        for i = 1, 5 do
+            if (causeOfDeath[i]) then
+                local spellId, amountOfDamage, source = unpack(causeOfDeath[i] or {})
+                local spellName, spellRank, spellIcon, castTime, minRange, maxRange = GetSpellInfo(spellId)
+
+                if (not alreadyAddedToDeathCause[spellId] and not alreadyAddedToDeathCause[spellName]) then
+                    alreadyAddedToDeathCause[spellId] = true
+                    alreadyAddedToDeathCause[spellName] = true
+
+                    local GetSpellDescription = C_Spell and C_Spell.GetSpellDescription or GetSpellDescription
+                    local spellDescription = GetSpellDescription(spellId)
+
+                    if (spellDescription == "" and spellId ~= 149356) then
+                        spellDescription = _G.SEARCH_LOADING_TEXT
+                    end
+
+                    gameCooltip:AddLine(spellName, "", 2, 1, 1, 1, 1, 1, 1, 1, 1, 12)
+                    gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
+
+                    --two problems: 1) the spell description isn't breaking into a second line, 2) spell icon isn't showing in the second spell name line
+                    --solved the problem 1) by adding a fixed width and height size to the text added with AddLine
+                    --solved the problem 2) by adding an icon to each line
+
+                    gameCooltip:AddLine(spellDescription, nil, 2, 1, 1, 1, 1, 1, 1, 1, 1, 10, nil, nil, 190, 90)
+                    gameCooltip:AddIcon("", 2, 1, 1, 1, .1, .9, .1, .9)
+
+                    gameCooltip:AddLine("", "", 2, "white")
+                    gameCooltip:AddIcon("", 2, 1, 4, 4, .1, .9, .1, .9)
+                end
+            end
+        end
+
+        --[=[
         gameCooltip:AddLine("Used Before Death:", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
@@ -29,8 +118,12 @@ function advancedDeathLogs.RegisterDetailsHook()
 
         gameCooltip:AddLine(" ", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
+        --]=]
 
-        gameCooltip:AddLine("Cooldown Received:", "", 2, "white")
+        gameCooltip:AddLine("", "", 2)
+        gameCooltip:AddIcon("", 2, 1)
+
+        gameCooltip:AddLine("Cooldown Received:", "", 2, "yellow", "white", 14)
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
         local cooldownsReceived = deathTable["cooldown_received"] or {}
 
@@ -51,7 +144,7 @@ function advancedDeathLogs.RegisterDetailsHook()
         gameCooltip:AddLine(" ", "", 2, "white")
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
-        gameCooltip:AddLine("Cooldown Status:", "", 2, "white")
+        gameCooltip:AddLine("Cooldown Status:", "", 2, "yellow", "white", 14)
         gameCooltip:AddIcon("", 2, 1, 2, 2, .1, .9, .1, .9)
 
         for spellId, cooldownInfo in pairs(deathTable.cooldown_status) do
@@ -62,7 +155,7 @@ function advancedDeathLogs.RegisterDetailsHook()
             if (openRaidLib) then
                 local timeLeft, charges, timeOffset, duration, updateTime = openRaidLib.GetCooldownTimeFromCooldownInfo(cooldownInfo)
                 if (timeLeft == 0) then
-                    gameCooltip:AddLine(spellName, "|cFF11FF11good|r", 2, "white")
+                    gameCooltip:AddLine(spellName, "|cFF11FF11was ready|r", 2, "white")
                     gameCooltip:AddIcon(spellIcon, 2, 1, 16, 16, .1, .9, .1, .9)
                 else
                     gameCooltip:AddLine(spellName, "-" .. detailsFramework:IntegerToTimer(timeLeft), 2, "white")
@@ -71,7 +164,7 @@ function advancedDeathLogs.RegisterDetailsHook()
             end
         end
 
-        gameCooltip:SetOption("FixedWidthSub", 200)
+        gameCooltip:SetOption("FixedWidthSub", 210)
     end)
 
     -------------------------------------------------------------------------

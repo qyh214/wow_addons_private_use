@@ -185,13 +185,13 @@ do
 		self:TargetMessage(291928, "red", name)
 		self:PlaySound(291928, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(291928)
+			self:Say(291928, nil, nil, "Giga-Zap")
 			self:Flash(291928)
 		end
 	end
 
 	function mod:GigaZap(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		gigaZapCount = gigaZapCount + 1
 		if stage == 1 then
 			self:CDBar(291928, (gigaZapCount % 2 == 0) and 20.8 or 16) -- Longer timer when Cutting Beam is cast

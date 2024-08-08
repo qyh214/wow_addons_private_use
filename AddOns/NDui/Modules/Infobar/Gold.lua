@@ -21,6 +21,7 @@ local slotString = L["Bags"]..": %s%d"
 
 local profit, spent, oldMoney = 0, 0, 0
 local myName, myRealm = DB.MyName, DB.MyRealm
+myRealm = gsub(myRealm, "%s", "") -- fix for multi words realm name
 
 local crossRealms = GetAutoCompleteRealms()
 if not crossRealms or #crossRealms == 0 then
@@ -199,10 +200,14 @@ info.onEnter = function(self)
 		end
 	end
 	GameTooltip:AddLine(" ")
-	GameTooltip:AddDoubleLine(TOTAL..":", module:GetMoneyString(totalGold), .6,.8,1, 1,1,1)
+	local accountmoney = C_Bank.FetchDepositedMoney(Enum.BankType.Account)
+	if accountmoney > 0 then
+		GameTooltip:AddDoubleLine(ACCOUNT_BANK_PANEL_TITLE..":", module:GetMoneyString(accountmoney), .6,.8,1, 1,1,1)
+	end
+	GameTooltip:AddDoubleLine(TOTAL..":", module:GetMoneyString(totalGold + accountmoney), .6,.8,1, 1,1,1)
 
 	title = false
-	local chargeInfo = C_CurrencyInfo_GetCurrencyInfo(2533) -- Tier charges
+	local chargeInfo = C_CurrencyInfo_GetCurrencyInfo(2912) -- Tier charges
 	if chargeInfo then
 		if not title then
 			GameTooltip:AddLine(" ")

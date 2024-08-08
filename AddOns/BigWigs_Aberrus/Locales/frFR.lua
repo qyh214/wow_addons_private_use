@@ -5,10 +5,6 @@ if L then
 	L.custom_on_fade_out_bars_desc = "Fondu enchainé des barres du boss qui est hors de portée durant la phase 1"
 
 	L.coalescing_void = "Fuyez"
-	L.molten_eruption = "Soaks"
-	L.swirling_flame = "Tornades"
-	L.shadowflame_burst = "Cône Frontal"
-	--L.plus = "%s + %s"
 
 	L.shadow_and_flame = "Affaiblissements Mythiques"
 end
@@ -16,7 +12,6 @@ end
 L = BigWigs:NewBossLocale("The Forgotten Experiments", "frFR")
 if L then
 	L.rending_charge_single = "Première Charge"
-	L.massive_slam = "Cône Frontal"
 	L.unstable_essence_new = "Nouvelle Bombe"
 	L.custom_on_unstable_essence_high = "Message Dire quand Essence Instable est élevé"
 	L.custom_on_unstable_essence_high_desc = "Messages Dire avec le nombre de piles de votre Essence Instable quand il est suffisamment élevé."
@@ -44,12 +39,8 @@ end
 L = BigWigs:NewBossLocale("Rashok, the Elder", "frFR")
 if L then
 	L.doom_flames = "Petits Soaks"
-	L.shadowlave_blast = "Cône Frontal"
 	L.charged_smash = "Gros Soak"
 	L.energy_gained = "Energie Gagnée: %d"
-
-	-- Mythic
-	--L.shadowflame_energy = "Heal Absorb"
 end
 
 L = BigWigs:NewBossLocale("The Vigilant Steward, Zskarn", "frFR")
@@ -77,9 +68,9 @@ if L then
 	L.umbral_annihilation = "Annéantissement"
 	L.ebon_destruction = "Destruction d'ébène"
 
-	--L.wall_breaker = "Wall Breaker (Mythic)"
-	--L.wall_breaker_desc = "A player targeted by Rushing Darkness will be chosen as the wall breaker. They will be marked ({rt6}) and send a message in say chat. This is restricted to Mythic difficulty on stage 1."
-	--L.wall_breaker_message = "Wall Breaker"
+	L.wall_breaker = "Brise murs (Mythique)"
+	L.wall_breaker_desc = "Un joueur par ténèbres fulgurantes sera désigné comme briseur de murs. Ils seront marqués ({rt6}) et enverrons un message en dire. Cette mécanique est restreinte à la difficulté mythique, en première phase."
+	L.wall_breaker_message = "Brise murs"
 end
 
 L = BigWigs:NewBossLocale("Scalecommander Sarkareth", "frFR")
@@ -89,8 +80,7 @@ if L then
 	L.emptiness_between_stars = "Vide interstellaire"
 	L.void_slash = "Frontal sur le Tank"
 
-	--L.boss_immune = "Boss Immune"
-	--L.ebon_might = "Adds Immune"
+	L.ebon_might = "Adds immunisés"
 end
 
 L = BigWigs:NewBossLocale("Aberrus, the Shadowed Crucible Trash", "frFR")

@@ -377,4 +377,4 @@ function timer:enable()
   end
 end
 
-hooksecurefunc("Scenario_ChallengeMode_UpdateTime", on_update_time)
+hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", on_update_time)

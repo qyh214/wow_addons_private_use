@@ -50,14 +50,14 @@ end
 do
 	local function announce(self, target, guid)
 		if self:Me(guid) then
-			self:Say(15659)
+			self:Say(15659, nil, nil, "Chain Lightning")
 		end
 		self:TargetMessageOld(15659, target, "yellow")
 		self:PrimaryIcon(15659, target)
 	end
 
 	function mod:ChainLightning(args)
-		self:GetBossTarget(announce, 0.4, args.sourceGUID)
+		self:GetUnitTarget(announce, 0.4, args.sourceGUID)
 		self:CastBar(15659, 3)
 	end
 
@@ -78,7 +78,7 @@ function mod:FrostShockRemoved(args)
 end
 
 function mod:SummonElementals()
-	self:MessageOld(-5235, "red", nil, CL.spawned:format(CL.adds))
+	self:MessageOld(-5235, "red", nil, CL.adds_spawned)
 end
 
 do

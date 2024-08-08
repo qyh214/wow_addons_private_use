@@ -8,6 +8,18 @@ local L = WeakAuras.L
 
 -- WeakAuras/Templates
 	--[[Translation missing --]]
+	L["(Dwarf)"] = "(Dwarf)"
+	--[[Translation missing --]]
+	L["(Dwarf/Human)"] = "(Dwarf/Human)"
+	--[[Translation missing --]]
+	L["(Human)"] = "(Human)"
+	--[[Translation missing --]]
+	L["(Night Elf)"] = "(Night Elf)"
+	--[[Translation missing --]]
+	L["(Troll)"] = "(Troll)"
+	--[[Translation missing --]]
+	L["(Undead)"] = "(Undead)"
+	--[[Translation missing --]]
 	L["< 4 stacks"] = "< 4 stacks"
 	--[[Translation missing --]]
 	L["5 stacks"] = "5 stacks"
@@ -59,6 +71,8 @@ local L = WeakAuras.L
 	L["debuff"] = "debuff"
 	--[[Translation missing --]]
 	L["Debuffs"] = "Debuffs"
+	--[[Translation missing --]]
+	L["dps buff"] = "dps buff"
 	L["General"] = "Geral"
 	--[[Translation missing --]]
 	L["Health"] = "Health"
@@ -82,6 +96,8 @@ local L = WeakAuras.L
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
 	--[[Translation missing --]]
 	L["Keeps existing triggers intact"] = "Keeps existing triggers intact"
+	--[[Translation missing --]]
+	L["Master Channeler Rune"] = "Master Channeler Rune"
 	--[[Translation missing --]]
 	L["Max 3"] = "Max 3"
 	--[[Translation missing --]]
@@ -110,6 +126,8 @@ local L = WeakAuras.L
 	L["Pet Behavior"] = "Pet Behavior"
 	--[[Translation missing --]]
 	L["PvP Talents"] = "PvP Talents"
+	--[[Translation missing --]]
+	L["regen buff"] = "regen buff"
 	--[[Translation missing --]]
 	L["Replace all existing triggers"] = "Replace all existing triggers"
 	--[[Translation missing --]]

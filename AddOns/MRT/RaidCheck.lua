@@ -1,6 +1,9 @@
 local GlobalAddonName, ExRT = ...
 
 local IsEncounterInProgress, GetTime = IsEncounterInProgress, GetTime
+local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+local GetSpellInfo = ExRT.F.GetSpellInfo or GetSpellInfo
+local GetItemInfo, GetItemInfoInstant, GetItemCount  = C_Item and C_Item.GetItemInfo or GetItemInfo, C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant, C_Item and C_Item.GetItemCount or GetItemCount
 
 local VMRT = nil
 
@@ -35,14 +38,24 @@ module.db.tableFood = not ExRT.isClassic and {
 	[57325]=true,	[57358]=true,	[57325]=true,	[57365]=true,	[57329]=true,	[57332]=true,	[57329]=true,	[57334]=true,
 	[57371]=true,	[57360]=true,	[57079]=true,	[57097]=true,	[57334]=true,	[57139]=true,	[57286]=true,	[57100]=true,
 	[57102]=true,	[57288]=true,	[53284]=true,	[57111]=true,	[57286]=true,	[57107]=true,	[57288]=true,
+
+
+	--cata
+	[95879]=true,	[91338]=true,	[87635]=true,	[87552]=true,	[87549]=true,	[87556]=true,	[87564]=true,	[87554]=true,	[87562]=true,	
+	[87550]=true,	[87699]=true,	[87548]=true,	[87551]=true,	[87561]=true,	[87563]=true,	[87634]=true,	[87555]=true,	[87557]=true,	
+	[87558]=true,	[87559]=true,	[87697]=true,	[87560]=true,	[100368]=true,	[100373]=true,	[100375]=true,	[100377]=true,	[87565]=true,	
+	[87546]=true,	[87547]=true,	[87545]=true,
+
 }
 module.db.StaminaFood = {[201638]=true,[259457]=true,[288075]=true,[288074]=true,[297119]=true,[297040]=true,}
 
 module.db.tableFood_headers = ExRT.isClassic and {0,375} or {0,5,10,14}
-module.db.tableFlask =  not ExRT.isClassic and {
+module.db.tableFlask = not ExRT.isClassic and {
 	--Stamina,	Int,		Agi,		Str 
 	[251838]=25,	[251837]=25,	[251836]=25,	[251839]=25,
 	[298839]=38,	[298837]=38,	[298836]=38,	[298841]=38,
+
+	[432021]=38,	[432473]=38,	[431971]=38,	[431972]=38,	[431974]=38,	[431973]=38,
 } or {
 	[17629]=true,	[17627]=true,	[17628]=true,	[17626]=true,
 	[17538]=true,	[11474]=true,	[17539]=true,	[26276]=true,
@@ -73,6 +86,13 @@ module.db.tableFlask =  not ExRT.isClassic and {
 	[28497]=true,	[33721]=true,	[60347]=true,	[53749]=true,	[60346]=true,	[53746]=true,	[60345]=true,	[53764]=true,
 	[53748]=true,	[60344]=true,	[60341]=true,	[53763]=true,	[53751]=true,	[60340]=true,	[53747]=true,	[60343]=true,
 	[63729]=true,	
+
+	--cata
+	[79631]=true,	[109933]=true,	[79477]=true,	[79635]=true,	[79480]=true,	[79468]=true,	[79481]=true,	[79632]=true,	
+	[79474]=true,	[91722]=true,	[80532]=true,
+	[79471]=true,	[79470]=true,	[79472]=true,	[92731]=true,	[79469]=true,	[92729]=true,	[94160]=true,	[92730]=true,	
+	[92725]=true,
+
 }
 module.db.tableFlask_headers = ExRT.isClassic and {0,1} or {0,25,38}
 module.db.tablePotion = {
@@ -135,6 +155,21 @@ module.db.tablePotion = {
 	[371152]=true,
 	[371039]=true,
 	[371167]=true,
+
+	[431932]=true,
+	[431419]=true,
+	[431416]=true,
+	[431424]=true,
+	[431418]=true,
+	[460074]=true,
+	[431914]=true,
+	[431422]=true,
+	[431941]=true,
+	[431432]=true,
+	[431925]=true,
+	[453040]=true,
+	[453162]=true,
+	[453205]=true,
 }
 module.db.hsSpells = {
 	[6262] = true,
@@ -148,6 +183,9 @@ module.db.hsSpells = {
 	[307192] = true,
 
 	[370511] = true,
+
+	[431419] = true,
+	[431416] = true,
 }
 module.db.raidBuffs = {
 	{ATTACK_POWER_TOOLTIP or "AP","WARRIOR",6673,264761},
@@ -303,8 +341,20 @@ if not ExRT.isClassic and UnitLevel'player' > 50 then
 	module.db.tableAP = {[6673]=true,}
 end
 
-
-if ExRT.isLK then
+if ExRT.isCata then
+	module.db.classicBuffs = {
+		{"druid","5% Stats",136078,{[79061]=true,[90363]=true,[79063]=true}},	--Gift of the Wild
+		{"int","Int",135932,{[79058]=true,[61316]=true,[54424]=true,[79038]=true}},	--Arcane Intellect
+		{"spd","SPD",135932,{[79058]=true,[61316]=true,[52109]=true,[77747]=true,[53646]=true,[79038]=true}},
+		{"str","Str+Agi",132333,{[57330]=true,[93435]=true,[8076]=true,[6673]=true}},	--Battle Shout
+		{"ap","AP",136110,{[53138]=true,[19506]=true,[79102]=true,[30808]=true}},	--Battle Shout
+		{"stamina","Stamina",135987,{[79105]=true,[90364]=true,[6307]=true,[469]=true}},	--Power Word: Fortitude
+		{"mp5","MP5",135908,{[79102]=true,[5677]=true,[54424]=true}},
+		{"crit","Crit",136112,{[24932]=true,[393387]=true,[51470]=true,[51701]=true,[90309]=true,[24604]=true}},
+		{"hastecast","Cast speed",136057,{[24907]=true,[49868]=true,[2895]=true}},
+		{"hasteatk","ATK speed",136114,{[53290]=true,[55610]=true,[8515]=true}},
+	}
+elseif ExRT.isLK then
 	module.db.classicBuffs = {
 		{"druid","Druid",136078,{[48470]=9,[26991]=8,[21850]=7,[21849]=6,[1126]=1,[5232]=2,[5234]=4,[6756]=3,[8907]=5,[9884]=6,[9885]=7,[26990]=8,[48469]=9,[69381]=9}},	--Gift of the Wild
 		{"int","Int",135932,{[43002]=7,[27126]=6,[10157]=5,[10156]=4,[1461]=3,[1460]=2,[1459]=1,[23028]=5,[27127]=6,[42995]=7,[61316]=3,[61024]=7}},	--Arcane Intellect
@@ -335,7 +385,9 @@ else
 		{"stamina","Stamina",135987,{[1243]=1,[21562]=5,[21564]=6,[1244]=2,[1245]=3,[2791]=4,[10937]=5,[10938]=6,}},	--Power Word: Fortitude
 	}
 end
-if ExRT.isLK then
+if ExRT.isCata then
+
+elseif ExRT.isLK then
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bom","BoM",135908,{[19740]=1,[19834]=2,[19835]=3,[19836]=4,[19837]=5,[19838]=6,[25291]=7,[27140]=8,[48931]=9,[48932]=10,[25782]=6,[25916]=7,[27141]=8,[48933]=9,[48934]=10}}	--Blessing of Might
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bow","BoW",135970,{[19742]=1,[19850]=2,[19852]=3,[19853]=4,[19854]=5,[25290]=6,[27142]=7,[48935]=8,[48936]=9,[25894]=5,[25918]=6,[27143]=7,[48937]=8,[48938]=9}}	--Blessing of Wisdom
 	module.db.classicBuffs[#module.db.classicBuffs+1] = {"bok","BoK",135993,{[20217]=1,[25898]=1,[69378]=1}}	--Blessing of Kings
@@ -355,7 +407,14 @@ module.db.tableClassicBuff = {}
 if ExRT.isClassic then
 	for i=1,#module.db.classicBuffs do
 		for k,v in pairs(module.db.classicBuffs[i][4]) do
-			module.db.tableClassicBuff[k] = module.db.classicBuffs[i]
+			if module.db.tableClassicBuff[k] then
+				if type(module.db.tableClassicBuff[k])~="table" or not module.db.tableClassicBuff[k].multi then
+					module.db.tableClassicBuff[k] = {module.db.tableClassicBuff[k],multi=true}
+				end
+				tinsert(module.db.tableClassicBuff[k],module.db.classicBuffs[i])
+			else
+				module.db.tableClassicBuff[k] = module.db.classicBuffs[i]
+			end
 		end
 	end
 end
@@ -470,15 +529,15 @@ local function GetRunes(checkType)
 		local name,_,subgroup = GetRaidRosterInfo(j)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
-			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
-				if not spellId then
+			for i=1,60 do
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
 				else
-					local isRune = module.db.tableRunes[spellId]
+					local isRune = module.db.tableRunes[auraData.spellId]
 					if isRune then
 						f[isRune] = f[isRune] or {}
-						f[isRune][ #f[isRune]+1 ] = name
+						f[isRune][ #f[isRune]+1 ] = auraData.name
 						isAnyBuff = true
 						break
 					end
@@ -551,12 +610,14 @@ local function GetVRunes(checkType)
 		local name,_,subgroup = GetRaidRosterInfo(j)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
-			for i=1,40 do
-				local auraName = UnitAura(name, i,"HELPFUL")
-				if type(auraName)~='string' then
+			for i=1,60 do
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
+				elseif type(auraData.name)~='string' then
+
 				elseif vruneName then
-					local isRune = auraName:find(vruneName)
+					local isRune = auraData.name:find(vruneName)
 					if isRune then
 						f[1][ #f[1]+1 ] = name
 						isAnyBuff = true
@@ -595,10 +656,12 @@ local function GetFood(checkType)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
 			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,spellId,_,_,_,_,_,stats = UnitAura(name, i,"HELPFUL")
-				if not spellId then
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
 				else
+					local spellId = auraData.spellId
+					local stats = auraData.points and auraData.points[1]
 					local foodType = module.db.tableFood[spellId]
 					if foodType then
 						local _,unitRace = UnitRace(name)
@@ -695,18 +758,18 @@ local function GetFlask(checkType)
 		if name and subgroup <= gMax then
 			local isAnyBuff = nil
 			for i=1,40 do
-				local _,_,_,_,_,expires,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
-				if not spellId then
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
 				else
-					local flaskType = module.db.tableFlask[spellId]
+					local flaskType = module.db.tableFlask[auraData.spellId]
 					if flaskType then
 						if ExRT.isClassic then
 							flaskType = 1
 						end
 
 						f[flaskType] = f[flaskType] or {}
-						expires = expires or -1
+						local expires = auraData.expirationTime or -1
 						local lost = expires-_time
 						if expires == 0 or lost < 0 then
 							lost = 901
@@ -819,22 +882,22 @@ local function GetRaidBuffs(checkType)
 				end
 			end
 			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,auraSpellID = UnitAura(name, i,"HELPFUL")
-				if not auraSpellID then
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
 				else
 					if ExRT.isClassic then
-						local k = classicBuffsList[auraSpellID]
+						local k = classicBuffsList[auraData.spellId]
 						if k then
 							isAnyBuff[k] = true
 							isAnyBuff[buffsListLen + k] = true
 						end
 					else
 						for k=1,buffsListLen do
-							if (auraSpellID == buffsList[k][3]) or (buffsList[k][5] and buffsList[k][5][auraSpellID]) then
+							if (auraData.spellId == buffsList[k][3]) or (buffsList[k][5] and buffsList[k][5][auraData.spellId]) then
 								isAnyBuff[k] = true
 								isAnyBuff[buffsListLen + k] = true
-							elseif auraSpellID == buffsList[k][4] then
+							elseif auraData.spellId == buffsList[k][4] then
 								isAnyBuff[buffsListLen + k] = true
 							end
 						end
@@ -1010,11 +1073,11 @@ local function GetScrolls(checkType)
 		local name,_,subgroup = GetRaidRosterInfo(j)
 		if name and subgroup <= gMax then
 			for i=1,40 do
-				local _,_,_,_,_,expires,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
-				if not spellId then
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
 				else
-					local scrollType = module.db.tableScrolls[spellId]
+					local scrollType = module.db.tableScrolls[auraData.spellId]
 					if scrollType then
 						f[scrollType] = f[scrollType] or {}
 					end
@@ -1373,6 +1436,37 @@ function module.options:Load()
 		VMRT.RaidCheck.ConsDisableForStarter = self:GetChecked()
 	end)
 
+	--[[
+	self.chkReadyCheckConsumablesFlaskClick = ELib:Check(self.tab.tabs[3],L.RaidCheckConsFlaskClick,VMRT.RaidCheck.ConsFlaskClick):Point("TOPLEFT",self.chkReadyCheckConsumablesDisableForRL,"BOTTOMLEFT",0,-15):OnClick(function(self) 
+		VMRT.RaidCheck.ConsFlaskClick = self:GetChecked()
+	end)
+
+	self.chkReadyCheckConsumablesFlaskName = ELib:Edit(self.tab.tabs[3]):Size(100,20):Point("TOPLEFT",self.chkReadyCheckConsumablesFlaskClick,"BOTTOMLEFT",200,-5):Text(VMRT.RaidCheck.ConsFlaskName or "191320"):OnChange(function(self)
+		VMRT.RaidCheck.ConsFlaskName = tonumber(self:GetText() or "") or self:GetText()
+		if VMRT.RaidCheck.ConsFlaskName == "" then
+			VMRT.RaidCheck.ConsFlaskName = nil
+		end
+		local icon, name
+		if VMRT.RaidCheck.ConsFlaskName then
+			icon = select(5, GetItemInfoInstant(VMRT.RaidCheck.ConsFlaskName))
+
+			name = GetItemInfo(VMRT.RaidCheck.ConsFlaskName)
+
+			if not name and type(VMRT.RaidCheck.ConsFlaskName) == "number" then
+				local item = Item:CreateFromItemID(VMRT.RaidCheck.ConsFlaskName)
+				
+				item:ContinueOnItemLoad(function()
+					local name = item:GetItemName() 
+					local icon = item:GetItemIcon()
+					self:RightText((icon and "|T"..icon..":0|t" or "")..(name or "???"))
+				end)
+			end
+		end
+		self:RightText((icon and "|T"..icon..":0|t" or "")..(name or "???"))
+	end):LeftText(L.RaidCheckConsFlaskName):Tooltip(L.RaidCheckConsFlaskNameTooltip)
+	]]
+
+
 	if ExRT.isClassic then
 		self.tab.tabs[3].button:Hide()
 		--self.tab.tabs[1].button:Hide()
@@ -1430,11 +1524,11 @@ local function CheckPotionsOnPull()
 		local name,_,subgroup = GetRaidRosterInfo(j)
 		if name and subgroup <= gMax then
 			local b = nil
-			for i=1,40 do
-				local _,_,_,_,_,_,_,_,_,spellId = UnitAura(name, i,"HELPFUL")
-				if not spellId then
+			for i=1,60 do
+				local auraData = C_UnitAuras.GetAuraDataByIndex(name, i,"HELPFUL")
+				if not auraData then
 					break
-				elseif module.db.tablePotion[spellId] then
+				elseif module.db.tablePotion[auraData.spellId] then
 					module.db.potionList[name] = 1
 					b = true
 				end
@@ -1483,7 +1577,7 @@ do
 		--10,	--INVSLOT_HAND
 		--8,	--INVSLOT_FEET
 	}
-	if ExRT.is10 then
+	if not ExRT.isClassic then
 		wipe(KitSlots)
 	end
 	local L_EncName = "^"..L.RaidCheckReinforced
@@ -1547,7 +1641,7 @@ do
 		end
 
 		if not oilTypes then
-			oilTypes = ExRT.is10 and {
+			oilTypes = not ExRT.isClassic and {
 			} or {
 				{GetSpellInfo(320798),320798},
 				{GetSpellInfo(321389),321389},
@@ -1667,7 +1761,7 @@ if ExRT.isClassic then
 		RCW_iconsListHeaders[i] = nil
 		RCW_iconsListDebugIcons[i] = nil
 	end
-	if ExRT.isBC then
+	if ExRT.isBC and not ExRT.isCata then
 		RCW_liveToClassicDiff = RCW_liveToClassicDiff + 1
 		RCW_iconsList[#RCW_iconsList+1] = "scrolls"
 		RCW_iconsListHeaders[#RCW_iconsList] = "Scrolls"
@@ -1938,6 +2032,8 @@ local function CreateCol(line,key,i)
 	end
 end
 
+local RCW_CataFix = ExRT.isCata and 55 or 0
+
 local RCW_iconsList_ORIGIN = #RCW_iconsList
 function module.frame:UpdateCols()
 	for i=RCW_iconsList_ORIGIN+1,#RCW_iconsList do
@@ -1961,7 +2057,7 @@ function module.frame:UpdateCols()
 	end
 	for i=1,40 do
 		local line = module.frame.lines[i]
-		line:SetSize(420+60+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff+colsAdd*30,14)
+		line:SetSize(420+60+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff+colsAdd*30+RCW_CataFix,14)
 
 		local prevPointer = line[ RCW_iconsList[RCW_iconsList_ORIGIN].."pointer" ]
 
@@ -1996,7 +2092,7 @@ function module.frame:Create()
 		else
 			line:SetPoint("TOPLEFT", module.frame.lines[i-1], "BOTTOMLEFT", 0, -0)
 		end
-		line:SetSize(420+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff,14)
+		line:SetSize(420+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff+RCW_CataFix,14)
 
 		line.name = ELib:Text(line,"raid"..i):Size(130,12):Point("LEFT",20,0):Font(ExRT.F.defFont,12):Color():Shadow()
 
@@ -2026,11 +2122,7 @@ function module.frame:Create()
 		line.classLeft:SetPoint("RIGHT",5,0)
 		line.classLeft:SetColorTexture(1,1,1,1)
 
-		if ExRT.is10 or ExRT.isLK1 then
-			line.classLeft:SetGradient("VERTICAL",CreateColor(.24,.25,.30,1), CreateColor(.27,.28,.33,1))
-		else
-			line.classLeft:SetGradientAlpha("VERTICAL",.24,.25,.30,1,.27,.28,.33,1)
-		end
+		line.classLeft:SetGradient("VERTICAL",CreateColor(.24,.25,.30,1), CreateColor(.27,.28,.33,1))
 
 		line:SetScript("OnUpdate",RCW_LineOnUpdate)
 
@@ -2105,11 +2197,7 @@ do
 	line.back2:SetSize(WIDTH2,18)
 	line.back2:SetPoint("LEFT",line.back,"RIGHT")
 	line.back2:SetColorTexture(1,1,1)
-	if ExRT.is10 or ExRT.isLK1 then
-		line.back2:SetGradient("HORIZONTAL",CreateColor(cR1,cG1,cB1,1), CreateColor(cR1,cG1,cB1,0))
-	else
-		line.back2:SetGradientAlpha("HORIZONTAL",cR1,cG1,cB1,1,cR1,cG1,cB1,0)
-	end
+	line.back2:SetGradient("HORIZONTAL",CreateColor(cR1,cG1,cB1,1), CreateColor(cR1,cG1,cB1,0))
 
 	line.time = ELib:Text(module.frame.maximized,"40"):Point("TOPLEFT",line,5,-34):Font(ExRT.F.defFont,12):Color():Shadow()
 	line.time:Hide()
@@ -2148,11 +2236,7 @@ do
 
 		line.time:SetText("")
 		line.back:SetColorTexture(cR1,cG1,cB1)
-		if ExRT.is10 or ExRT.isLK1 then
-			line.back2:SetGradient("HORIZONTAL",CreateColor(cR1,cG1,cB1,1), CreateColor(cR1,cG1,cB1,0))
-		else
-			line.back2:SetGradientAlpha("HORIZONTAL",cR1,cG1,cB1,1,cR1,cG1,cB1,0)
-		end
+		line.back2:SetGradient("HORIZONTAL",CreateColor(cR1,cG1,cB1,1), CreateColor(cR1,cG1,cB1,0))
 		line.back:SetWidth(WIDTH - WIDTH2)
 
 		currR,currG,currB = cR1,cG1,cB1
@@ -2189,11 +2273,7 @@ do
 		local r,g,b = cfR - (cfR - ctR) * self:GetProgress(),cfG - (cfG - ctG) * self:GetProgress(),cfB - (cfB - ctB) * self:GetProgress()
 
 		line.back:SetColorTexture(r,g,b)
-		if ExRT.is10 or ExRT.isLK1 then
-			line.back2:SetGradient("HORIZONTAL",CreateColor(r,g,b,1), CreateColor(r,g,b,0))
-		else
-			line.back2:SetGradientAlpha("HORIZONTAL",r,g,b,1,r,g,b,0)
-		end
+		line.back2:SetGradient("HORIZONTAL",CreateColor(r,g,b,1), CreateColor(r,g,b,0))
 
 		currR,currG,currB = r,g,b
 	end)
@@ -2390,11 +2470,7 @@ function module.frame:UpdateRoster()
 			local classColor = classColorsTable[data.class]
 			local r,g,b = classColor and classColor.r or .7,classColor and classColor.g or .7,classColor and classColor.b or .7
 
-			if ExRT.is10 or ExRT.isLK1 then
-				line.classLeft:SetGradient("HORIZONTAL",CreateColor(r,g,b,.4), CreateColor(r,g,b,0))
-			else
-				line.classLeft:SetGradientAlpha("HORIZONTAL",r,g,b,.4,r,g,b,0)
-			end
+			line.classLeft:SetGradient("HORIZONTAL",CreateColor(r,g,b,.4), CreateColor(r,g,b,0))
 
 			line:Show()
 			line.mini:Show()
@@ -2468,16 +2544,16 @@ function module.frame:UpdateData(onlyLine)
 					end
 				end
 				for i=1,60 do
-					local name,icon,_,_,duration,expirationTime,_,_,_,spellId,_,_,_,_,_,val1 = UnitAura(line.unit, i,"HELPFUL")
-					if not spellId then
+					local auraData = C_UnitAuras.GetAuraDataByIndex(line.unit, i,"HELPFUL")
+					if not auraData then
 						break
-					elseif module.db.tableFood[spellId] then
-						local val = module.db.tableFood[spellId]
+					elseif module.db.tableFood[auraData.spellId] then
+						local val = module.db.tableFood[auraData.spellId]
 
 						line.food.texture:SetTexture(136000)
 						if type(val)~="number" then
 							val = ""
-						elseif module.db.tableFoodIsBest[spellId] then
+						elseif module.db.tableFoodIsBest[auraData.spellId] then
 							line.food.text:SetTextColor(0,1,0)
 						elseif val >= 30 or (UnitLevel'player' < 60 and val >= 10) then
 							line.food.text:SetTextColor(0,1,0)
@@ -2487,25 +2563,26 @@ function module.frame:UpdateData(onlyLine)
 						line.food.text:SetText(val)
 						line.food.tooltip = i
 
-						if expirationTime and expirationTime - currTime2 < 600 and expirationTime ~= 0 then
+						if auraData.expirationTime and auraData.expirationTime - currTime2 < 600 and auraData.expirationTime ~= 0 then
 							line.food.subIcon:Show()
 							line.food.texture:SetAlpha(.6)
 						end
 
 						buffCount = buffCount + 1
-					elseif icon == 134062 or icon == 132805 then
+					elseif auraData.icon == 134062 or auraData.icon == 132805 then
 						line.food.texture:SetTexture(134062)
 						line.food.text:SetText("")
-					elseif icon == 136000 then
+					elseif auraData.icon == 136000 then
 						line.food.texture:SetTexture(136000)
 						line.food.text:SetTextColor(1,1,1)
-						if val1 == 0 then val1 = nil end
+						local val1 = auraData.points and auraData.points[1]
+						if val1 and val1 == 0 then val1 = nil end
 						line.food.text:SetText(val1 or "")
 						line.food.tooltip = i
 
 						buffCount = buffCount + 1
-					elseif module.db.tableFlask[spellId] then
-						local val = module.db.tableFlask[spellId]
+					elseif module.db.tableFlask[auraData.spellId] then
+						local val = module.db.tableFlask[auraData.spellId]
 
 						local frame = line["flask"..(flaskCount == 1 and "" or tostring(flaskCount))]
 						line.flask:Point("CENTER",line.flaskpointer,"CENTER",-(line.flask.size or 18)*((flaskCount-1)/2),0)
@@ -2514,7 +2591,7 @@ function module.frame:UpdateData(onlyLine)
 							flaskCount = 4
 						end
 
-						frame.texture:SetTexture(icon)
+						frame.texture:SetTexture(auraData.icon)
 						if type(val)=='number' then
 							if (UnitLevel'player' >= 60 and val >= 38) or (val >= 14) then
 								frame.text:SetTextColor(0,1,0)
@@ -2527,7 +2604,7 @@ function module.frame:UpdateData(onlyLine)
 						end
 						frame.tooltip = i
 
-						if expirationTime and expirationTime - currTime2 < 600 and expirationTime ~= 0 then
+						if auraData.expirationTime and auraData.expirationTime - currTime2 < 600 and auraData.expirationTime ~= 0 then
 							frame.subIcon:Show()
 							frame.texture:SetAlpha(.6)
 						end
@@ -2535,8 +2612,8 @@ function module.frame:UpdateData(onlyLine)
 						frame:Show()
 
 						buffCount = buffCount + 1
-					elseif module.db.tableScrolls[spellId] and ExRT.isBC then
-						local val = module.db.tableScrolls[spellId]
+					elseif module.db.tableScrolls[auraData.spellId] and ExRT.isBC then
+						local val = module.db.tableScrolls[auraData.spellId]
 
 						local frame = line["scrolls"..(scrollCount == 1 and "" or tostring(scrollCount))]
 						line.scrolls:Point("CENTER",line.scrollspointer,"CENTER",-(line.scrolls.size or 18)*((scrollCount-1)/2),0)
@@ -2545,7 +2622,7 @@ function module.frame:UpdateData(onlyLine)
 							scrollCount = 4
 						end
 
-						frame.texture:SetTexture(icon)
+						frame.texture:SetTexture(auraData.icon)
 						if type(val)=='number' then
 							if (UnitLevel'player' >= 60 and val >= 38) or (val >= 14) then
 								frame.text:SetTextColor(0,1,0)
@@ -2558,7 +2635,7 @@ function module.frame:UpdateData(onlyLine)
 						end
 						frame.tooltip = i
 
-						if expirationTime and expirationTime - currTime2 < 180 and expirationTime ~= 0 then
+						if auraData.expirationTime and auraData.expirationTime - currTime2 < 180 and auraData.expirationTime ~= 0 then
 							frame.subIcon:Show()
 							frame.texture:SetAlpha(.6)
 						end
@@ -2566,23 +2643,23 @@ function module.frame:UpdateData(onlyLine)
 						frame:Show()
 
 						buffCount = buffCount + 1
-					elseif module.db.tableVantus[spellId] then
-						local val = module.db.tableVantus[spellId]
+					elseif module.db.tableVantus[auraData.spellId] then
+						local val = module.db.tableVantus[auraData.spellId]
 
-						line.vantus.texture:SetTexture(icon)
+						line.vantus.texture:SetTexture(auraData.icon)
 						line.vantus.text:SetTextColor(1,1,1)
 						line.vantus.text:SetText(val)
 
 						line.vantus.tooltip = i
-					elseif name and not ExRT.isClassic and vruneName and name:find(vruneName) then
-						line.vantus.texture:SetTexture(icon)
+					elseif auraData.name and not ExRT.isClassic and vruneName and auraData.name:find(vruneName) then
+						line.vantus.texture:SetTexture(auraData.icon)
 						line.vantus.text:SetText("")
 
 						line.vantus.tooltip = i
-					elseif module.db.tableRunes[spellId] and line.rune then
-						local val = module.db.tableRunes[spellId]
+					elseif module.db.tableRunes[auraData.spellId] and line.rune then
+						local val = module.db.tableRunes[auraData.spellId]
 
-						line.rune.texture:SetTexture((spellId == 270058 or spellId == 317065) and 840006 or (spellId == 347901 and 134078) or (spellId == 367405 and 134078) or icon)
+						line.rune.texture:SetTexture((auraData.spellId == 270058 or auraData.spellId == 317065) and 840006 or (auraData.spellId == 347901 and 134078) or (auraData.spellId == 367405 and 134078) or auraData.icon)
 						if val >= 18 then
 							line.rune.text:SetTextColor(0,1,0)
 							line.rune.text:SetText("")
@@ -2590,42 +2667,47 @@ function module.frame:UpdateData(onlyLine)
 							line.rune.text:SetTextColor(1,0,0)
 							line.rune.text:SetText(val)
 						end
-					elseif module.db.tableInt[spellId] and not ExRT.isClassic then
-						line.int.texture:SetTexture(icon)
+					elseif module.db.tableInt[auraData.spellId] and not ExRT.isClassic then
+						line.int.texture:SetTexture(auraData.icon)
 						line.int.text:SetText("")
 
 						buffCount = buffCount + 1
-					elseif module.db.tableAP[spellId] and not ExRT.isClassic then
-						line.ap.texture:SetTexture(icon)
+					elseif module.db.tableAP[auraData.spellId] and not ExRT.isClassic then
+						line.ap.texture:SetTexture(auraData.icon)
 						line.ap.text:SetText("")
 
 						buffCount = buffCount + 1
-					elseif module.db.tableStamina[spellId] and not ExRT.isClassic then
-						line.stam.texture:SetTexture(icon)
+					elseif module.db.tableStamina[auraData.spellId] and not ExRT.isClassic then
+						line.stam.texture:SetTexture(auraData.icon)
 						line.stam.text:SetText("")
 
 						buffCount = buffCount + 1
-					elseif module.db.tableVers[spellId] and not ExRT.isClassic then
-						line.vers.texture:SetTexture(icon)
+					elseif module.db.tableVers[auraData.spellId] and not ExRT.isClassic then
+						line.vers.texture:SetTexture(auraData.icon)
 						line.vers.text:SetText("")
 
 						buffCount = buffCount + 1
-					elseif module.db.tableMove[spellId] and not ExRT.isClassic then
-						line.move.texture:SetTexture(icon)
+					elseif module.db.tableMove[auraData.spellId] and not ExRT.isClassic then
+						line.move.texture:SetTexture(auraData.icon)
 						line.move.text:SetText("")
 
 						--buffCount = buffCount + 1
-					elseif ExRT.isClassic and module.db.tableClassicBuff[spellId] then
-						local data = module.db.tableClassicBuff[spellId]
+					elseif ExRT.isClassic and module.db.tableClassicBuff[auraData.spellId] then
+						local data = module.db.tableClassicBuff[auraData.spellId]
 
-						local key = data[1]
-						line[key].texture:SetTexture(icon)
+						for l=1,(data.multi and #data or 1) do
+							local bdata = data.multi and data[l] or data
 
-						local val = data[4][spellId]
-						line[key].text:SetText(val or "")
-
-						line[key].tooltip = "spell:"..spellId
-					elseif spellId == 20707 and line.ss then
+							local key = bdata[1]
+							line[key].texture:SetTexture(auraData.icon)
+	
+							local val = bdata[4][auraData.spellId]
+							if type(val)=="boolean" then val = "" end
+							line[key].text:SetText(val or "")
+	
+							line[key].tooltip = "spell:"..auraData.spellId
+						end
+					elseif auraData.spellId == 20707 and line.ss then
 						line.ss.texture:SetTexture(136210)
 					end
 				end
@@ -2760,7 +2842,7 @@ function module.frame:UpdateData(onlyLine)
 						if flaskNum >= 3 then line.flask3.texture:SetTexture(RCW_iconsListDebugIcons[2]) line.flask3:Show() end
 						if flaskNum >= 4 then line.flask4.texture:SetTexture(RCW_iconsListDebugIcons[2]) line.flask4:Show() end
 
-						if ExRT.isBC then
+						if ExRT.isBC and line.scrolls then
 							local scrollNum = self.testData[line.pos].scrollNum or math.random(0,4)
 							self.testData[line.pos].scrollNum = scrollNum
 	
@@ -3237,10 +3319,12 @@ addonMsgFrame:RegisterEvent("CHAT_MSG_ADDON")
 
 
 if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
+	local IS_DF = true
+
 	local consumables_size = 44
 
-	local rune_item_id = ExRT.is10 and 201325 or 181468
-	local rune_texture = ExRT.is10 and 4644002 or 134078
+	local rune_item_id = IS_DF and 201325 or 181468
+	local rune_texture = IS_DF and 4644002 or 134078
 
 	local wenchants = {
 		[6190] = {ench=6190,item=171286,icon=463544},
@@ -3387,7 +3471,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 			button.texture:SetTexture(3528447)
 			module.consumables.buttons.kit = button
 		elseif i == 4 then
-			button.texture:SetTexture(ExRT.is10 and 4622275 or 463543)
+			button.texture:SetTexture(IS_DF and 4622275 or 463543)
 			module.consumables.buttons.oil = button
 		elseif i == 5 then
 			button.texture:SetTexture(rune_texture)
@@ -3441,7 +3525,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 				self.buttons.hs:Hide()
 				totalButtons = totalButtons - 1
 			end
-			if ExRT.is10 then
+			if IS_DF then
 				self.buttons.kit:Hide()
 				totalButtons = totalButtons - 1
 
@@ -3465,34 +3549,34 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		local isShamanBuff
 
 		for i=1,60 do
-			local name,icon,count,dispelType,duration,expires,caster,isStealable,_,spellId = UnitAura("player", i, "HELPFUL")
-			if not spellId then
+			local auraData = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
+			if not auraData then
 				break
-			elseif module.db.tableFood[spellId] then
+			elseif module.db.tableFood[auraData.spellId] then
 				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
 				self.buttons.food.texture:SetDesaturated(false)
-				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((auraData.expirationTime-now)/60))
 				isFood = true
-			elseif icon == 136000 and not isFood then
+			elseif auraData.icon == 136000 and not isFood then
 				self.buttons.food.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
 				self.buttons.food.texture:SetDesaturated(false)
-				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
-			elseif module.db.tableFlask[spellId] then
+				self.buttons.food.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((auraData.expirationTime-now)/60))
+			elseif module.db.tableFlask[auraData.spellId] then
 				self.buttons.flask.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
 				self.buttons.flask.texture:SetDesaturated(false)
-				self.buttons.flask.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				self.buttons.flask.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((auraData.expirationTime-now)/60))
 				isFlask = true
-				if expires - now <= 600 then
+				if auraData.expirationTime - now <= 600 then
 					isFlask = false
 				end
-			elseif module.db.tableRunes[spellId] then
+			elseif module.db.tableRunes[auraData.spellId] then
 				self.buttons.rune.statustexture:SetTexture("Interface\\RaidFrame\\ReadyCheck-Ready")
 				self.buttons.rune.texture:SetDesaturated(false)
-				self.buttons.rune.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
+				self.buttons.rune.timeleft:SetFormattedText(GARRISON_DURATION_MINUTES,ceil((auraData.expirationTime-now)/60))
 				isRune = true
-			elseif spellId == 192106 then
-				isShamanBuff = format(GARRISON_DURATION_MINUTES,ceil((expires-now)/60))
-				if expires - now <= 600 then
+			elseif auraData.spellId == 192106 then
+				isShamanBuff = format(GARRISON_DURATION_MINUTES,ceil((auraData.expirationTime-now)/60))
+				if auraData.expirationTime - now <= 600 then
 					isShamanBuff = false
 				end
 			end
@@ -3511,7 +3595,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 
 		local flaskCount = GetItemCount(171276,false,false)
 		local flaskCanCount = GetItemCount(171280,false,false)
-		if ExRT.is10 then
+		if IS_DF then
 			flaskCount = 0
 			flaskCanCount = 0
 		end
@@ -3544,7 +3628,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		end
 
 
-		if not ExRT.is10 then
+		if not IS_DF then
 			local kitCount = GetItemCount(172347,false,true)
 			local kitNow, kitMax, kitTimeLeft = module:KitCheck()
 			if kitNow > 0 then
@@ -3702,12 +3786,12 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		end
 
 		local runeCount = GetItemCount(rune_item_id,false,true)
-		local runeUnlim = ExRT.is10 and 0 or GetItemCount(190384,false,true)
+		local runeUnlim = IS_DF and GetItemCount(211495,false,true) or GetItemCount(190384,false,true)
 		if runeUnlim and runeUnlim > 0 then
 			self.buttons.rune.count:SetText("")
 			if not InCombatLockdown() then
-				self.buttons.rune.texture:SetTexture(4224736)
-				local itemName = GetItemInfo(190384)
+				self.buttons.rune.texture:SetTexture(IS_DF and 348535 or 4224736)
+				local itemName = GetItemInfo(IS_DF and 211495 or 190384)
 				if itemName then
 					self.buttons.rune.click:SetAttribute("macrotext1", format("/stopmacro [combat]\n/use %s", itemName))
 					self.buttons.rune.click:Show()

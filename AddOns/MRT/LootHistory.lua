@@ -4,6 +4,8 @@ if ExRT.isClassic then
 	return
 end
 
+local GetItemInfo, GetItemInfoInstant  = C_Item and C_Item.GetItemInfo or GetItemInfo,  C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+
 local module = ExRT:New("LootHistory",ExRT.L.LootHistory)
 local ELib,L = ExRT.lib,ExRT.L
 
@@ -249,16 +251,10 @@ function module.options:Load()
 	function self.list:HoverMultitableListValue(isEnter,index,obj)
 		if not isEnter then
 			local line = obj.parent:GetParent()
-			line.HighlightTexture2:Hide()
 
 			GameTooltip_Hide()
 		else
 			local line = obj.parent:GetParent()
-
-			if not line.HighlightTexture2 then
-				line.HighlightTexture2 = ELib:Texture(line,"Interface\\QuestFrame\\UI-QuestLogTitleHighlight"):BlendMode("ADD"):Point("LEFT",0,0):Point("RIGHT",0,0):Size(0,15)
-			end
-			line.HighlightTexture2:Show()
 
 			local data = line.table
 			if index == 8 then

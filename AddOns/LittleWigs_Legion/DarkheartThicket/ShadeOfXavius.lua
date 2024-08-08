@@ -38,12 +38,12 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
-	self:CDBar(200182, 3.4) -- Festering Rip
+	self:CDBar(200182, 3.2) -- Festering Rip
 	if not self:Solo() then
 		self:CDBar(200185, 6.2) -- Nightmare Bolt
 	end
-	self:CDBar(200238, 16.7) -- Feed on the Weak
-	self:CDBar(200289, 25.5) -- Growing Paranoia
+	self:CDBar(200238, 15.4) -- Feed on the Weak
+	self:CDBar(200289, 22.7) -- Growing Paranoia
 end
 
 --------------------------------------------------------------------------------
@@ -66,26 +66,26 @@ do
 		self:TargetMessage(200289, "orange", player)
 		self:PlaySound(200289, "alarm", nil, player)
 		if self:Me(guid) then
-			self:Say(200289)
+			self:Say(200289, nil, nil, "Growing Paranoia")
 		end
 	end
 
 	function mod:GrowingParanoia(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
-		self:CDBar(args.spellId, 27.9)
-	end
-
-	function mod:GrowingParanoiaApplied(args)
-		self:PrimaryIcon(args.spellId, args.destName)
-	end
-
-	function mod:GrowingParanoiaRemoved(args)
-		self:PrimaryIcon(args.spellId)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+		self:CDBar(args.spellId, 22.7)
 	end
 end
 
+function mod:GrowingParanoiaApplied(args)
+	self:PrimaryIcon(args.spellId, args.destName)
+end
+
+function mod:GrowingParanoiaRemoved(args)
+	self:PrimaryIcon(args.spellId)
+end
+
 function mod:FeedOnTheWeak(args)
-	self:CDBar(args.spellId, 30.3)
+	self:CDBar(args.spellId, 19.4)
 end
 
 function mod:FeedOnTheWeakApplied(args)
@@ -102,14 +102,14 @@ do
 	end
 
 	function mod:NightmareBolt(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
-		self:CDBar(200185, 27.5)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+		self:CDBar(200185, 22.7)
 	end
 end
 
 function mod:WakingNightmareApplied(args)
 	if self:Me(args.destGUID) then
-		self:Yell(args.spellId)
+		self:Yell(args.spellId, nil, nil, "Waking Nightmare")
 		self:PersonalMessage(args.spellId)
 		self:PlaySound(args.spellId, "alarm")
 	end

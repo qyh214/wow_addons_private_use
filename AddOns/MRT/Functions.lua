@@ -8,6 +8,7 @@ local string_gsub, string_match = string.gsub, string.match
 local RAID_CLASS_COLORS, COMBATLOG_OBJECT_TYPE_MASK, COMBATLOG_OBJECT_CONTROL_MASK, COMBATLOG_OBJECT_REACTION_MASK, COMBATLOG_OBJECT_AFFILIATION_MASK, COMBATLOG_OBJECT_SPECIAL_MASK = RAID_CLASS_COLORS, COMBATLOG_OBJECT_TYPE_MASK, COMBATLOG_OBJECT_CONTROL_MASK, COMBATLOG_OBJECT_REACTION_MASK, COMBATLOG_OBJECT_AFFILIATION_MASK, COMBATLOG_OBJECT_SPECIAL_MASK
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned or ExRT.NULLfunc
 local GetRaidRosterInfo = GetRaidRosterInfo
+local GetItemInfo, GetItemInfoInstant  = C_Item and C_Item.GetItemInfo or GetItemInfo,  C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
 
 do
 	local antiSpamArr = {}
@@ -186,7 +187,12 @@ do
 		if not x then
 			x,y = ExRT.F.GetCursorPos(self)
 		end
-		local obj = GetMouseFocus()
+		local obj
+		if GetMouseFoci then
+			obj = GetMouseFoci()[1]
+		else
+			obj = GetMouseFocus()
+		end
 		if x > 0 and y > 0 and x < self:GetWidth() and y < self:GetHeight() and (obj == self or (childs and FindAllParents(self,obj))) then
 			return true
 		end
@@ -370,6 +376,7 @@ if ExRT.isDev then	--debug or debug ultra
 	end
 end
 
+local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
 function ExRT.F.LinkSpell(SpellID,SpellLink)
 	if not SpellLink then
 		SpellLink = GetSpellLink(SpellID)
@@ -543,6 +550,9 @@ do
 	local printTable = nil
 	local function cmp(t1,t2,r,p)
 		local c,t = 0,0
+		if type(t1) ~= "table" or type(t2) ~= "table" then
+			return c, t
+		end
 		p = p or "."
 		for k,v in pairs(t1) do
 			if type(v) == "table" then
@@ -871,7 +881,7 @@ function ExRT.F.vpairs(t)
 end
 
 function ExRT.F:SafeCall(func, ...)
-	local res, arg1, arg2, arg3, arg4, arg5, arg6, arg7 = xpcall(func, nil, ...)
+	local res, arg1, arg2, arg3, arg4, arg5, arg6, arg7 = xpcall(func, geterrorhandler(), ...)
 	if res then
 		return arg1, arg2, arg3, arg4, arg5, arg6, arg7
 	end
@@ -1936,11 +1946,97 @@ ExRT.GDB.ClassID = {
 	EVOKER=13,
 }
 
+if ExRT.isCata then
+	ExRT.GDB.ClassSpecializationList = {
+		WARRIOR = {746,815,845},	--Arms,Fury,Protection
+		PALADIN = {831,839,855},	--Holy,Protection,Retribution
+		HUNTER = {811,807,809},	--Beast Mastery,Marksmanship,Survival
+		ROGUE = {182,181,183},	--Assassination,Combat,Subtlety
+		PRIEST = {760,813,795},	--Discipline,Holy,Shadow
+		DEATHKNIGHT = {398,399,400},	--Blood,Frost,Unholy
+		SHAMAN = {261,263,262},	--Elemental,Enhancement,Restoration
+		MAGE = {799,851,823},	--Arcane,Fire,Frost
+		WARLOCK = {871,867,865},	--Affliction,Demonology,Destruction
+		DRUID = {752,750,748},	--Balance,Feral Combat,Restoration
+	}
+	 
+	ExRT.GDB.ClassSpecializationIcons = {
+		[181] = 132090,
+		[182] = 132292,
+		[183] = 132320,
+		[261] = 136048,
+		[262] = 136052,
+		[263] = 136051,
+		[398] = 135770,
+		[399] = 135773,
+		[400] = 135775,
+		[746] = 132355,
+		[748] = 136041,
+		[750] = 132276,
+		[752] = 136096,
+		[760] = 135940,
+		[795] = 136207,
+		[799] = 135932,
+		[807] = 236179,
+		[809] = 461113,
+		[811] = 461112,
+		[813] = 237542,
+		[815] = 132347,
+		[823] = 135846,
+		[831] = 135920,
+		[839] = 236264,
+		[845] = 132341,
+		[851] = 135810,
+		[855] = 135873,
+		[865] = 136186,
+		[867] = 136172,
+		[871] = 136145,
+	}
+	 
+	ExRT.GDB.ClassSpecializationRole = {
+		[181] = "MELEE",
+		[182] = "MELEE",
+		[183] = "MELEE",
+		[261] = "RANGE",
+		[262] = "HEAL",
+		[263] = "MELEE",
+		[398] = "TANK",
+		[399] = "MELEE",
+		[400] = "MELEE",
+		[746] = "MELEE",
+		[748] = "HEAL",
+		[750] = "MELEE",
+		[752] = "RANGE",
+		[760] = "HEAL",
+		[795] = "RANGE",
+		[799] = "RANGE",
+		[807] = "RANGE",
+		[809] = "RANGE",
+		[811] = "RANGE",
+		[813] = "HEAL",
+		[815] = "MELEE",
+		[823] = "RANGE",
+		[831] = "HEAL",
+		[839] = "TANK",
+		[845] = "TANK",
+		[851] = "RANGE",
+		[855] = "MELEE",
+		[865] = "RANGE",
+		[867] = "RANGE",
+		[871] = "RANGE",
+	}
+end
+
 
 if ExRT.isClassic then
 	--GetClassInfo
 	local classLocalizateEngine = {}
-	FillLocalizedClassList(classLocalizateEngine)
+	if LocalizedClassList then
+		local classList = LocalizedClassList()
+		MergeTable(classLocalizateEngine, classList)
+	elseif FillLocalizedClassList then
+		FillLocalizedClassList(classLocalizateEngine)
+	end
 
 	ExRT.Classic.GetClassInfo = function(id) 
 		return classLocalizateEngine[ ExRT.GDB.ClassList[id] ] or "unk" 
@@ -2000,6 +2096,35 @@ if ExRT.isClassic then
 		return id, data.name, data.desc, data.icon, data.role, ExRT.GDB.ClassList[data.class]
 	end
 end
+
+ExRT.GDB.JournalInstance = {
+{0,64,238,63,240,234,227,239,231,237,233,241,229,228,236,232,226,230,311,316,246,0,741,742,743,744},	--Classic
+{1,255,259,256,248,261,262,260,254,257,258,253,252,250,247,251,249,0,745,750,747,748,749,751,746,752},	--Burning Crusade
+{2,285,286,281,282,279,277,273,272,275,274,283,271,280,284,278,276,0,760,754,759,755,756,753,758,757,761},	--Wrath of the Lich King
+{3,64,63,77,65,70,66,68,71,67,69,76,184,185,186,0,73,72,78,74,75,187},	--Cataclysm
+{4,312,313,302,303,321,311,316,246,324,0,322,320,317,330,362,369},	--Mists of Pandaria
+{5,385,537,547,558,536,476,556,559,0,457,477,557,669},	--Warlords of Draenor
+{6,716,767,762,721,727,707,740,726,777,800,860,900,945,0,768,822,959,786,861,875,946},	--Legion
+{7,1012,1001,1041,968,1002,1023,1022,1021,1036,1030,1178,0,1028,1031,1176,1177,1179,1180},	--Battle for Azeroth
+{8,1189,1186,1182,1185,1183,1184,1188,1187,1194,0,1190,1193,1195,1192},	--Shadowlands
+{9,1197,1203,1198,1199,1196,1202,1201,1204,1209,0,1200,1207,1208,1205},	--Dragonflight
+{-1,65,68,313,537,556,767,762,721,740,800,1001,968,1022,1021,1197,1203,1198,1199,1196,1202,1201,1204,1209,0,1200,1207,1208,1205},	--Current Season
+{"11.0",10,1268,1267,1210,1269,1271,1272,1270,1274,0,1273,1278},	--The War Within
+}
+
+ExRT.GDB.MapIDToJournalInstance = {
+[2774]=1278,[2690]=1293,[2690]=1293,[2689]=1284,[2688]=1290,[2687]=1283,[2686]=1285,[2685]=1289,[2684]=1288,[2683]=1282,[2682]=1291,[2681]=1281,[2680]=1287,[2679]=1280,[2669]=1274,[2664]=1279,[2662]=1270,
+[2661]=1272,[2660]=1271,[2657]=1273,[2652]=1269,[2651]=1210,[2649]=1267,[2648]=1268,[2579]=1209,[2574]=1205,[2569]=1208,[2559]=1192,[2549]=1207,[2527]=1204,[2526]=1201,[2522]=1200,[2521]=1202,[2520]=1196,
+[2519]=1199,[2516]=1198,[2515]=1203,[2481]=1195,[2451]=1197,[2450]=1193,[2441]=1194,[2296]=1190,[2293]=1187,[2291]=1188,[2290]=1184,[2289]=1183,[2287]=1185,[2286]=1182,[2285]=1186,[2284]=1189,[2217]=1180,
+[2164]=1179,[2097]=1178,[2096]=1177,[2070]=1176,[1877]=1030,[1864]=1036,[1862]=1021,[1861]=1031,[1861]=1031,[1841]=1022,[1822]=1023,[1771]=1002,[1763]=968,[1762]=1041,[1754]=1001,[1753]=945,[1712]=946,
+[1677]=900,[1676]=875,[1651]=860,[1648]=861,[1594]=1012,[1571]=800,[1544]=777,[1530]=786,[1520]=959,[1520]=959,[1520]=959,[1516]=726,[1501]=740,[1493]=707,[1492]=727,[1477]=721,[1466]=762,[1458]=767,[1456]=716,
+[1448]=669,[1358]=559,[1279]=556,[1228]=557,[1228]=557,[1209]=476,[1208]=536,[1205]=457,[1195]=558,[1182]=547,[1176]=537,[1175]=385,[1136]=369,[1098]=362,[1011]=324,[1009]=330,[1008]=317,[1007]=246,[1004]=316,
+[1001]=311,[996]=322,[996]=322,[994]=321,[967]=187,[962]=303,[961]=302,[960]=313,[959]=312,[940]=186,[939]=185,[938]=184,[859]=76,[757]=75,[755]=69,[754]=74,[725]=67,[724]=761,[720]=78,[671]=72,[670]=71,
+[669]=73,[668]=276,[658]=278,[657]=68,[650]=284,[649]=757,[645]=66,[644]=70,[643]=65,[632]=280,[631]=758,[624]=753,[619]=271,[616]=756,[615]=755,[608]=283,[604]=274,[603]=759,[602]=275,[601]=272,[600]=273,
+[599]=277,[595]=279,[585]=249,[580]=752,[578]=282,[576]=281,[575]=286,[574]=285,[568]=77,[565]=746,[564]=751,[560]=251,[558]=247,[557]=250,[556]=252,[555]=253,[554]=258,[553]=257,[552]=254,[550]=749,[548]=748,
+[547]=260,[546]=262,[545]=261,[544]=747,[543]=248,[542]=256,[540]=259,[534]=750,[533]=754,[532]=745,[531]=744,[509]=743,[469]=742,[429]=230,[409]=741,[389]=226,[349]=232,[329]=236,[269]=255,[249]=760,[230]=228,
+[229]=229,[209]=241,[129]=233,[109]=237,[90]=231,[70]=239,[48]=227,[47]=234,[43]=240,[36]=63,[34]=238,[33]=64,
+}
 
 ExRT.GDB.EncountersList = {
 	{350,652,653,654,655,656,657,658,659,660,661,662},
@@ -2167,6 +2292,16 @@ ExRT.GDB.EncountersList = {
 	{2095,2609,2606,2623},
 	{2073,2582,2585,2583,2584},
 	{2082,2615,2616,2617,2618},
+	{2190,2666,2667,2668,2669,2670,2671,2672,2672,2673},
+
+	{"11.0",2316,2816,2861,2836},	--The Rookery:Dung
+	{"11.0",2308,2847,2835,2848},	--Priory of the Sacred Flame:Dung
+	{"11.0",2303,2829,2826,2787,2788},	--Darkflame Cleft:Dung
+	{"11.0",0,2854,2880,2888,2883},	--The Stonevault:Dung
+	{"11.0",0,2926,2906,2901},	--Ara-Kara, City of Echoes:Dung
+	{"11.0",2335,2900,2931,2929,2930},	--Cinderbrew Meadery:Dung
+	{"11.0",0,2837,2838,2839},	--The Dawnbreaker:Dung
+	{"11.0",2343,2907,2908,2905,2909},	--City of Threads:Dung
 
         {610,1721,1706,1720,1722,1719,1723,1705},--HM
 	{596,1696,1691,1693,1694,1689,1692,1690,1713,1695,1704},--BF
@@ -2187,13 +2322,169 @@ ExRT.GDB.EncountersList = {
 
 	{2119,2587,2639,2590,2592,2635,2605,2614,2607},	--voti
 	{2166,2688,2682,2687,2693,2680,2689,2683,2684,2685},	--a
-	{"10.2",2232,2820,2709,2737,2731,2728,2708,2824,2786,2677},	--d
+	{2232,2820,2709,2737,2731,2728,2708,2824,2786,2677},	--d
+
+	{"11.0",2292,2902,2917,2898,2918,2919,2920,2921,2922},	--Nerub-ar Palace:Raid
 }
+
+function ExRT.F.EJ_AutoScan()
+	local TIER_MIN = 11
+
+	local NEW_DATA = {
+		encounterIDtoEJ = {},
+		EncountersList_dung = {},
+		EncountersList_raid = {},
+		MapIDToJournalInstance = {},
+		JournalInstance = {-2},
+	}
+
+	local encounterMap = {}
+	local dungeonPosInsert = 1
+	for i=1,#ExRT.GDB.EncountersList do
+		local dung = ExRT.GDB.EncountersList[i]
+		if dung[1] == 610 then
+			dungeonPosInsert = i
+		end
+		for j=2,#dung do
+			encounterMap[ dung[j] ] = true
+		end
+	end
+	local instanceMap = {}
+	for i=1,#ExRT.GDB.JournalInstance do
+		local tier = ExRT.GDB.JournalInstance[i]
+		for j=2,#tier do
+			instanceMap[ tier[j] ] = true
+		end
+	end
+
+	for i=TIER_MIN,EJ_GetNumTiers() do
+		EJ_SelectTier(i)
+
+		for j=1,2 do
+			local isRaid = j == 1 and true or false
+
+			local instanceIndex = 1
+			while EJ_GetInstanceByIndex(instanceIndex,isRaid) do
+				local instanceID, iname, description, bgImage, buttonImage1, loreImage, buttonImage2, dungeonAreaMapID, link, shouldDisplayDifficulty, mapID = EJ_GetInstanceByIndex(instanceIndex,isRaid)
+	
+				EJ_SelectInstance(instanceID)
+				
+				local isNewInstance = true
+
+				local EncountersList_new = {dungeonAreaMapID}
+				if dungeonAreaMapID == 0 then
+					isNewInstance = false	--ignore world bosses
+				end
+	
+				local encounterIndex = 1
+				while EJ_GetEncounterInfoByIndex(encounterIndex, instanceID) do
+					local name, description, journalEncounterID, rootSectionID, link, journalInstanceID, dungeonEncounterID, instanceID = EJ_GetEncounterInfoByIndex(encounterIndex, instanceID)
+
+					EncountersList_new[#EncountersList_new+1] = dungeonEncounterID
+					if dungeonEncounterID and encounterMap[dungeonEncounterID] then
+						isNewInstance = false
+					end
+
+					if dungeonEncounterID and not ExRT.GDB.encounterIDtoEJ[dungeonEncounterID] then
+						NEW_DATA.encounterIDtoEJ[dungeonEncounterID] = journalEncounterID
+					end
+	
+					encounterIndex = encounterIndex + 1
+				end
+
+				if isNewInstance then
+					if isRaid then
+						tinsert(NEW_DATA.EncountersList_raid, EncountersList_new)
+					elseif isNewInstance then
+						tinsert(NEW_DATA.EncountersList_dung, EncountersList_new)
+					end
+
+					for k=2,#EncountersList_new do
+						encounterMap[ EncountersList_new[k] ] = true
+					end
+
+					--print('EncountersList','added',iname,encounterIndex-1)
+				end
+
+				if mapID and not ExRT.GDB.MapIDToJournalInstance[mapID] then
+					NEW_DATA.MapIDToJournalInstance[mapID] = instanceID
+
+					--print('MapIDToJournalInstance','added',iname)
+				end
+
+				if not instanceMap[instanceID] then
+					instanceMap[instanceID] = true
+
+					tinsert(NEW_DATA.JournalInstance, 2, instanceID)
+
+					--print('JournalInstance','added',iname)
+				end
+	
+				instanceIndex = instanceIndex + 1
+			end
+		end
+	end
+
+	VMRT.Addon.EJ_CHECK_VER = ExRT.clientUIinterface
+	VMRT.Addon.EJ_DATA = NEW_DATA
+	VMRT.Addon.EJ_CHECK_VER_PTR = ExRT.clientBuildVersion
+
+	ExRT.F.EJ_LoadData()
+end
+function ExRT.F.EJ_LoadData()
+	if not VMRT.Addon.EJ_DATA then
+		return
+	end
+	local NEW_DATA = VMRT.Addon.EJ_DATA
+
+	local encounterMap = {}
+	local dungeonPosInsert = 1
+	for i=1,#ExRT.GDB.EncountersList do
+		local dung = ExRT.GDB.EncountersList[i]
+		if dung[1] == 610 then
+			dungeonPosInsert = i
+		end
+		for j=2,#dung do
+			encounterMap[ dung[j] ] = true
+		end
+	end
+
+	for i=1,#NEW_DATA.EncountersList_raid do
+		local new_dung = NEW_DATA.EncountersList_raid[i]
+		if new_dung[2] and not encounterMap[ new_dung[2] ] then
+			tinsert(ExRT.GDB.EncountersList, new_dung)
+		end
+	end
+	for i=1,#NEW_DATA.EncountersList_dung do
+		local new_dung = NEW_DATA.EncountersList_dung[i]
+		if new_dung[2] and not encounterMap[ new_dung[2] ] then
+			tinsert(ExRT.GDB.EncountersList, dungeonPosInsert, new_dung)
+			dungeonPosInsert = dungeonPosInsert + 1
+		end
+	end
+
+	for k,v in pairs(NEW_DATA.MapIDToJournalInstance) do
+		if not ExRT.GDB.MapIDToJournalInstance[k] then
+			ExRT.GDB.MapIDToJournalInstance[k] = v
+		end
+	end
+	for k,v in pairs(NEW_DATA.encounterIDtoEJ) do
+		if not ExRT.GDB.encounterIDtoEJ[k] then
+			ExRT.GDB.encounterIDtoEJ[k] = v
+		end
+	end
+	if #NEW_DATA.JournalInstance > 1 then
+		tinsert(ExRT.GDB.JournalInstance,NEW_DATA.JournalInstance)
+	end
+end
 
 
 local ACTUAL_RAID = 1735
 local ACTUAL_DUNG = 1666
-if UnitLevel'player' > 60 then
+if UnitLevel'player' > 70 then
+	ACTUAL_DUNG = 2316
+	ACTUAL_RAID = 2292
+elseif UnitLevel'player' > 60 then
 	ACTUAL_DUNG = 2096
 	ACTUAL_RAID = 2119
 end
@@ -2217,9 +2508,28 @@ do
 			else
 				tremove(t, 1)
 			end
-		elseif t[1] == ACTUAL_DUNG then
+		elseif t[1] == 2096 then
 			--stop loop for old data
 			break
+		end
+	end
+	for i=#ExRT.GDB.JournalInstance,1,-1 do
+		local t = ExRT.GDB.JournalInstance[i]
+		if type(t[1]) == "string" then
+			if StringVerToNumber(t[1]) > ver_now then
+				tremove(ExRT.GDB.JournalInstance, i)
+			else
+				tremove(t, 1)
+			end
+		else
+			for j=#t,2,-1 do
+				if type(t[j]) == "string" then
+					if StringVerToNumber(t[j]) > ver_now then
+						tremove(t, j)
+					end
+					tremove(t, j)
+				end
+			end
 		end
 	end
 end

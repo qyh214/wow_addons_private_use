@@ -37,7 +37,7 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Enable
 function keystone:enable()
-  if IsAddOnLoaded("Blizzard_ChallengesUI") then
+  if C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI") then
     ChallengesKeystoneFrame:HookScript("OnShow", insert_keystone)
   else
     addon.register_event("ADDON_LOADED", on_addon_loaded)

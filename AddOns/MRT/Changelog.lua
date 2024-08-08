@@ -1,6 +1,90 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4890
+* updates
+
+v.4880
+* Fixes for 11.0 beta
+* Added Italian translation (by Grifo92)
+* Reminder: added load condition: always
+* Minor fixes
+
+v.4870
+* Note: added profiles
+* Reminder: all bosses are grouped in instance folders
+* Minor fixes
+
+v.4870-Cata
+* Note: added profiles
+* Minor fixes
+
+v.4870-Classic
+* Note: added profiles
+* Minor fixes
+
+v.4860
+* toc update
+* Raid cooldowns: added "Add spell" for class categories
+* Raid Groups: added role icons
+
+v.4860-Cata
+* fixes
+* Raid Groups: added role icons
+
+v.4850
+* Minor fixes
+
+v.4850-Cata
+* Cataclysm update
+* Raid cooldowns: added new spells
+* Marks Bar: added world marks
+* Note: added support for spec role
+* Inspect viewer: added specs
+
+v.4850-Classic
+* Minor fixes
+* toc update
+
+v.4840
+* New module: Reminder
+* Minor fixes
+
+v.4840-LK
+* New module: Reminder
+* Minor fixes
+
+v.4840-Classic
+* New module: Reminder
+* Minor fixes
+
+v.4825
+* Fixes
+
+v.4825-LK
+* Fixes
+
+v.4825-Classic
+* Fixes
+
+v.4820
+* New module: Interrupts
+* New module: Automarking
+* Raid cooldowns: added separate dispel spell for evoker healer
+* Raid Check: added DF rune
+* Fixes
+
+v.4820-LK
+* New module: Interrupts
+* New module: Automarking
+* toc update
+
+v.4820-Classic
+* New module: Interrupts
+* New module: Automarking
+* Saving log: added SoD raids
+* toc update
+
 v.4810
 * Minor fixes
 

@@ -55,17 +55,12 @@ function MDT:initToolbar(frame)
   frame.toolbar.widgetGroup = AceGUI:Create("SimpleGroup")
   frame.toolbar.widgetGroup.frame:ClearAllPoints()
   frame.toolbar.widgetGroup.frame:SetAllPoints(frame.toolbar)
+  frame.toolbar.widgetGroup.frame:SetParent(frame.toolbar)
   if not frame.toolbar.widgetGroup.frame.SetBackdrop then
     Mixin(frame.toolbar.widgetGroup.frame, BackdropTemplateMixin)
   end
   frame.toolbar.widgetGroup.frame:SetBackdropColor(0, 0, 0, 0)
-  --frame.toolbar.widgetGroup:SetWidth(350)
-  --frame.toolbar.widgetGroup:SetHeight(15)
-  --frame.toolbar.widgetGroup:SetPoint("TOP",frame.toolbar,"TOP",0,0)
-
   frame.toolbar.widgetGroup:SetLayout("Flow")
-  frame.toolbar.widgetGroup.frame:SetFrameStrata("High")
-  frame.toolbar.widgetGroup.frame:SetFrameLevel(7)
 
   MDT:FixAceGUIShowHide(frame.toolbar.widgetGroup, frame.toolbar)
 
@@ -114,7 +109,7 @@ function MDT:initToolbar(frame)
   local colorPicker = AceGUI:Create("ColorPicker")
   --colorPicker:SetHasAlpha(true)
   colorPicker:SetColor(db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b, db.toolbar.color.a)
-  colorPicker:SetCallback("OnValueConfirmed", function(widget, callbackName, r, g, b, a)
+  colorPicker:SetCallback("OnValueChanged", function(widget, callbackName, r, g, b, a)
     db.toolbar.color.r, db.toolbar.color.g, db.toolbar.color.b, db.toolbar.color.a = r, g, b, a
     colorPicker:SetColor(r, g, b, a)
   end)
@@ -283,7 +278,7 @@ end
 ---TexturePool
 local activeTextures = {}
 local texturePool = {}
-local notePoolCollection
+local noteFramePool
 local function getTexture()
   local size = tgetn(texturePool)
   if size == 0 then
@@ -311,7 +306,7 @@ function MDT:ReleaseAllActiveTextures()
     releaseTexture(tex)
   end
   twipe(activeTextures)
-  if notePoolCollection then notePoolCollection:ReleaseAll() end
+  if noteFramePool then noteFramePool:ReleaseAll() end
 end
 
 ---CreateBrushPreview
@@ -453,9 +448,9 @@ function MDT:OverrideScrollframeScripts()
     end
   end)
   --make notes draggable
-  if notePoolCollection then
+  if noteFramePool then
     if currentTool == "mover" then
-      for note, _ in pairs(notePoolCollection.pools.QuestPinTemplatenil.activeObjects) do
+      for _, note in pairs(noteFramePool.active) do
         note:SetMovable(true)
         note:RegisterForDrag("LeftButton")
         local xOffset, yOffset
@@ -491,7 +486,7 @@ function MDT:OverrideScrollframeScripts()
         end)
       end
     else
-      for note, _ in pairs(notePoolCollection.pools.QuestPinTemplatenil.activeObjects) do
+      for _, note in pairs(noteFramePool.active) do
         note:SetMovable(false)
         note:RegisterForDrag()
       end
@@ -507,8 +502,8 @@ function MDT:RestoreScrollframeScripts()
   frame.scrollFrame:SetScript("OnMouseDown", MDT.OnMouseDown)
   frame.scrollFrame:SetScript("OnMouseUp", MDT.OnMouseUp)
   --make notes not draggable
-  if notePoolCollection then
-    for note, _ in pairs(notePoolCollection.pools.QuestPinTemplatenil.activeObjects) do
+  if noteFramePool then
+    for _, note in pairs(noteFramePool.active) do
       note:SetMovable(false)
       note:RegisterForDrag()
     end
@@ -823,9 +818,8 @@ function MDT:HideAllPresetObjects()
     tex:Hide()
   end
   --notes
-  if notePoolCollection then
-    local notes = notePoolCollection.pools.QuestPinTemplatenil.activeObjects
-    for note, _ in pairs(notes) do
+  if noteFramePool then
+    for _, note in pairs(noteFramePool.active) do
       note:Hide()
     end
   end
@@ -1011,9 +1005,10 @@ end
 
 local function makeNoteEditbox()
   local editbox = AceGUI:Create("SimpleGroup")
+  editbox.frame:SetParent(MDT.main_frame)
   editbox:SetWidth(240)
   editbox:SetHeight(120)
-  editbox.frame:SetFrameStrata("HIGH")
+  editbox.frame:SetFrameStrata("DIALOG")
   editbox.frame:SetFrameLevel(50)
   if not editbox.frame.SetBackdrop then
     Mixin(editbox.frame, BackdropTemplateMixin)
@@ -1024,7 +1019,7 @@ local function makeNoteEditbox()
   editbox.multiBox:SetLabel(L["Note Text:"])
 
   editbox.multiBox:SetCallback("OnEnterPressed", function(widget, callbackName, text)
-    for note, _ in pairs(notePoolCollection.pools.QuestPinTemplatenil.activeObjects) do
+    for _, note in pairs(noteFramePool.active) do
       if note.noteIdx == editbox.noteIdx then
         note.tooltipText = text
         updateNoteObjText(text, note)
@@ -1054,43 +1049,18 @@ local function makeNoteEditbox()
   return editbox
 end
 
-local noteDropDown = CreateFrame("frame", "MDTNoteDropDown", nil, "UIDropDownMenuTemplate")
 local currentNote
-local noteMenu = {}
-do
-  tinsert(noteMenu, {
-    text = L["Edit"],
-    notCheckable = 1,
-    func = function()
+
+local function openContextMenu()
+  MenuUtil.CreateContextMenu(MDT.main_frame, function(ownerRegion, rootDescription)
+    rootDescription:CreateButton(L["Edit"], function()
       currentNote:OpenEditBox()
-    end
-  })
-  tinsert(noteMenu, {
-    text = " ",
-    notClickable = 1,
-    notCheckable = 1,
-    func = nil
-  })
-  tinsert(noteMenu, {
-    text = L["Delete"],
-    notCheckable = 1,
-    func = function()
+    end)
+    rootDescription:CreateButton(L["Delete"], function()
       deleteNoteObj(currentNote)
-    end
-  })
-  tinsert(noteMenu, {
-    text = " ",
-    notClickable = 1,
-    notCheckable = 1,
-    func = nil
-  })
-  tinsert(noteMenu, {
-    text = L["Close"],
-    notCheckable = 1,
-    func = function()
-      noteDropDown:Hide()
-    end
-  })
+    end)
+    rootDescription:CreateButton(L["Close"], function() end)
+  end)
 end
 
 local function POIButton_CalculateNumericTexCoords(index, color)
@@ -1105,38 +1075,32 @@ end
 
 ---DrawNote
 function MDT:DrawNote(x, y, text, objectIndex)
-  if not notePoolCollection then
-    notePoolCollection = CreateFramePoolCollection()
-    notePoolCollection:CreatePool("Button", MDT.main_frame.mapPanelFrame, "QuestPinTemplate")
+  if not noteFramePool then
+    noteFramePool = MDT.CreateFramePool("Button", MDT.main_frame.mapPanelFrame, "QuestPinTemplate")
   end
   local scale = MDT:GetScale()
   --setup
-  local note = notePoolCollection:Acquire("QuestPinTemplate")
-  -- FramePoolCollection_GetPoolKey is concatenating the sixth argument of CreatePool ("specialization").
-  -- This naive approach is just using toString on any value, even nil, which results in "nil" as a string.
-  -- Because of this our pool key is "QuestPinTemplatenil" instead of "QuestPinTemplate".
-  note.noteIdx = notePoolCollection.pools.QuestPinTemplatenil.numActiveObjects
+  local note = noteFramePool:Acquire()
+  note.noteIdx = #noteFramePool.active
   note.objectIndex = objectIndex
   note:ClearAllPoints()
   note:SetPoint("CENTER", MDT.main_frame.mapPanelTile1, "TOPLEFT", x, y)
   note:SetSize(12 * scale, 12 * scale)
-  note.NormalTexture:SetSize(15 * scale, 15 * scale)
-  note.PushedTexture:SetSize(15 * scale, 15 * scale)
-  note.HighlightTexture:SetSize(15 * scale, 15 * scale)
-  note.Display.Icon:SetSize(16 * scale, 16 * scale)
-  note.NormalTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
-  note.PushedTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
-  note.HighlightTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
-  note.Display.Icon:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
-  note.NormalTexture:SetTexCoord(0.500, 0.625, 0.375, 0.5)
-  note.PushedTexture:SetTexCoord(0.375, 0.500, 0.375, 0.5)
-  note.HighlightTexture:SetTexCoord(0.625, 0.750, 0.375, 0.5)
-  -- temporary fix for there not being enough textures in the atlas
-  -- should copy and fix the atlas instead
   local idx = note.noteIdx % 25
   if idx == 0 then idx = 1 end
+  note.NormalTexture:SetSize(15 * scale, 15 * scale)
+  note.NormalTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
+  note.NormalTexture:SetTexCoord(0.500, 0.625, 0.375, 0.5)
+  note.HighlightTexture:SetSize(15 * scale, 15 * scale)
+  note.HighlightTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
+  note.HighlightTexture:SetTexCoord(0.625, 0.750, 0.375, 0.5)
+  note.Display.Icon:SetSize(16 * scale, 16 * scale)
+  note.Display.Icon:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
   note.Display.Icon:SetTexCoord(POIButton_CalculateNumericTexCoords(idx, 0))
   note.Display.Icon:Show()
+  note.PushedTexture:SetSize(15 * scale, 15 * scale)
+  note.PushedTexture:SetTexture("Interface/WorldMap/UI-QuestPoi-NumberIcons")
+  note.PushedTexture:SetTexCoord(0.375, 0.500, 0.375, 0.5)
   note.tooltipText = text or ""
 
   note:RegisterForClicks("AnyUp")
@@ -1161,7 +1125,7 @@ function MDT:DrawNote(x, y, text, objectIndex)
       self:OpenEditBox()
     elseif button == "RightButton" then
       currentNote = note
-      EasyMenu(noteMenu, noteDropDown, "cursor", 0, -15, "MENU")
+      openContextMenu()
       if noteEditbox and noteEditbox.frame:IsShown() then
         noteEditbox.frame:Hide()
       end

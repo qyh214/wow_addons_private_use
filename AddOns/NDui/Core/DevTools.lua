@@ -17,12 +17,15 @@ local strfind, format, strsplit = string.find, string.format, string.split
 local gsub, pairs, tonumber, tostring = gsub, pairs, tonumber, tostring
 local floor, ceil = math.floor, math.ceil
 local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+local GetSpellDescription = C_Spell.GetSpellDescription
+local GetSpellName = C_Spell.GetSpellName
 
 DB.Devs = {
 	["寧德-加尔"] = true,
 	["图咿-万色星辰"] = true,
 	["打蛋獵手-地獄吼"] = true,
 	["Huniverster-Koranos"] = true,
+	["Therefire-TheseGoToEleven"] = true,
 }
 local function isDeveloper()
 	local rawName = gsub(DB.MyFullName, "%s", "")
@@ -57,11 +60,11 @@ end
 SLASH_NDUI_ENUMFRAME1 = "/nf"
 
 SlashCmdList["NDUI_DUMPSPELL"] = function(arg)
-	local name = GetSpellInfo(arg)
+	local name = GetSpellName(arg)
 	if not name then return end
 	local des = GetSpellDescription(arg)
 	print("|cff70C0F5------------------------")
-	print(" \124T"..GetSpellTexture(arg)..":16:16:::64:64:5:59:5:59\124t", DB.InfoColor..arg)
+	print(" \124T"..C_Spell.GetSpellTexture(arg)..":16:16:::64:64:5:59:5:59\124t", DB.InfoColor..arg)
 	print(NAME, DB.InfoColor..(name or "nil"))
 	print(DESCRIPTION, DB.InfoColor..(des or "nil"))
 	print("|cff70C0F5------------------------")
@@ -188,7 +191,7 @@ SLASH_NDUI_GET_ENCOUNTERS1 = "/getenc"
 
 SlashCmdList["NDUI_DUMPSPELLS"] = function(arg)
 	for spell in gmatch(arg, "%d+") do
-		local name = GetSpellInfo(spell)
+		local name = GetSpellName(spell)
 		if name then
 			print("module:RegisterDebuff(TIER, INSTANCE, BOSS, "..spell..") -- "..name)
 		end

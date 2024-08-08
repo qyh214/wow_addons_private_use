@@ -1,7 +1,10 @@
 if not WeakAuras.IsLibsOK() then return end
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 local SharedMedia = LibStub("LibSharedMedia-3.0")
@@ -43,6 +46,8 @@ local default = {
   rowSpace = 1,
   columnSpace = 1
 }
+
+Private.regionPrototype.AddAlphaToDefault(default);
 
 local controlPointFunctions = {
   ["SetAnchorPoint"] = function(self, point, relativeFrame, relativePoint, offsetX, offsetY)
@@ -1532,6 +1537,15 @@ local function modify(parent, region, data)
       Private.StartProfileSystem("dynamicgroup")
       Private.StartProfileAura(data.id)
       local numVisible, minX, maxX, maxY, minY = 0, nil, nil, nil, nil
+      local isRestricted = region:IsAnchoringRestricted()
+      if isRestricted and not WeakAuras.IsOptionsOpen() then
+        -- workaround for restricted anchor families (mostly PRD)
+        -- if region is in a restricted anchor family, we're not allowed to get the rect of its children
+        -- and via Blizzard's extremely finite wisdom, the personal resource display is one such restricted family
+        -- so, temporarily reanchor to unrestrict us & child auras
+        region:RealClearAllPoints()
+        region:SetPoint("CENTER", UIParent, "CENTER")
+      end
       for active, regionData in ipairs(self.sortedChildren) do
         if regionData.shown then
           numVisible = numVisible + 1
@@ -1576,6 +1590,8 @@ local function modify(parent, region, data)
       end
       if WeakAuras.IsOptionsOpen() then
         Private.OptionsFrame().moversizer:ReAnchor()
+      elseif isRestricted then
+        self:ReAnchor()
       end
       Private.StopProfileSystem("dynamicgroup")
       Private.StopProfileAura(data.id)

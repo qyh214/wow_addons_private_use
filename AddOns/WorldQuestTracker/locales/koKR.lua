@@ -283,7 +283,15 @@ L["S_OPTIONS_QUEST_EMISSARY"] = "Emissary Quest Info"
 L["S_OPTIONS_QUESTBLACKLIST"] = "퀘스트 차단 목록"
 L["S_OPTIONS_RESET"] = "재설정"
 --[[Translation missing --]]
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Show Filter Button"
+--[[Translation missing --]]
 L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "사절 표시"
 --[[Translation missing --]]
 L["S_OPTIONS_TALKINGHEADS"] = "Supress Talking Heads"
@@ -300,10 +308,24 @@ L["S_OPTIONS_WORLD_ICONSPERROW"] = "Quest Amount Per Row"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "지역별 정리"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "퀘스트 유형별 정리"
 --[[Translation missing --]]
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
+--[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Attach To"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organize Quests By"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "추적중인것만 표시"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+--[[Translation missing --]]
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
 --[[Translation missing --]]
@@ -350,6 +372,8 @@ L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "발견"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "전"
 --[[Translation missing --]]
 L["S_SCALE"] = "Scale"
+--[[Translation missing --]]
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
 L["S_SUMMARYPANEL_EXPIRED"] = "만료"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "최근 15일"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "계정 전체 시간 통계"
@@ -359,6 +383,8 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "다른 캐릭터"
 L["S_TEXT_SIZE"] = "Text Size"
 --[[Translation missing --]]
 L["S_TORGAST"] = "Torgasth"
+--[[Translation missing --]]
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
 L["S_TUTORIAL_AMOUNT"] = "받을 수 있는 보상의 양을 나타냅니다"
 L["S_TUTORIAL_CLICKTOTRACK"] = "퀘스트를 추적하려면 클릭하세요."
 L["S_TUTORIAL_PARTY"] = "파티 중일 때 모든 파티원이 수행 중인 퀘스트에 파란색 별이 표시됩니다!"
@@ -373,6 +399,8 @@ L["S_TUTORIAL_WORLDBUTTONS"] = [=[3가지 유형의 요약을 보려면 여기�
 퀘스트 지역을 숨기려면 |cFFFFAA11퀘스트 표시 전환|r을 클릭하세요.]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "이 버튼을 누르면 부서진 섬 지도로 변경됩니다."
 L["S_UNKNOWNQUEST"] = "알 수 없는 퀘스트"
+--[[Translation missing --]]
+L["S_VISIBILITY"] = "Visibility"
 L["S_WHATSNEW"] = "새 소식"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "유형 별 정렬"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "지역 별 정렬"

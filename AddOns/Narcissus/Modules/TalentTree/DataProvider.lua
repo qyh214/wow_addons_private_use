@@ -3,14 +3,19 @@ local _, addon = ...
 local DataProvider = {};
 addon.TalentTreeDataProvider = DataProvider;
 
+local GetSpellTexture = addon.TransitionAPI.GetSpellTexture;
+local GetSpellInfo = addon.TransitionAPI.GetSpellInfo;
 local C_ClassTalents = C_ClassTalents;
 local C_Traits = C_Traits;
-local GetNodeInfo = C_Traits and C_Traits.GetNodeInfo;
-local GetEntryInfo = C_Traits and C_Traits.GetEntryInfo;
+local GetNodeInfo = C_Traits.GetNodeInfo;
+local GetEntryInfo = C_Traits.GetEntryInfo;
+local UnitClass = UnitClass;
+local GetClassColor = GetClassColor;
 local GetSpecialization = GetSpecialization;
 local GetSpecializationInfo = GetSpecializationInfo;
 local GetNumSpecializations = GetNumSpecializations;
 
+local INPSECT_CONFIG_ID = -1;
 
 -- Should use C_Traits.GetConditionInfo, conditionInfo.ranksGranted and conditionInfo.isMet to check if the talent is granted for free
 -- But the API returns a table so I'd like to use this fast but less adaptive approach.
@@ -149,21 +154,24 @@ end
 
 
 function DataProvider:GetActiveLoadoutName()
+    local name;
     local specID = self:GetCurrentSpecID();
-    local configs = C_ClassTalents.GetConfigIDsBySpecID(specID);
-    local total = #configs;
 
-    if total == 0 then
-        return TALENT_FRAME_DROP_DOWN_DEFAULT or "Default Loadout";
-    else
-        local selectedID = C_ClassTalents.GetLastSelectedSavedConfigID(specID);
-        local name;
-        if selectedID then
-            local info = C_Traits.GetConfigInfo(selectedID);
-            name = info and info.name;
+    if specID then
+        local configs = C_ClassTalents.GetConfigIDsBySpecID(specID);
+        local total = #configs;
+
+        if total > 0 then
+            local selectedID = C_ClassTalents.GetLastSelectedSavedConfigID(specID);
+
+            if selectedID then
+                local info = C_Traits.GetConfigInfo(selectedID);
+                name = info and info.name;
+            end
         end
-        return name or TALENT_FRAME_DROP_DOWN_DEFAULT or "Default Loadout"
     end
+
+    return name or TALENT_FRAME_DROP_DOWN_DEFAULT or "Default Loadout"
 end
 
 function DataProvider:RefreshConfigIDs()
@@ -202,8 +210,10 @@ end
 
 function DataProvider:GetSelecetdConfigID()
     local specID = self:GetCurrentSpecID();
+    if not specID then return end;
+
     local selectedID = C_ClassTalents.GetLastSelectedSavedConfigID(specID);
-    
+
     if self:IsConfigIDValidForCurrentSpec(selectedID) then
         return selectedID
     else
@@ -306,14 +316,14 @@ end
 
 function DataProvider.GetComparisonNodeInfo(nodeID)
     if not ComparisonNodeInfoCache[nodeID] then
-        ComparisonNodeInfoCache[nodeID] = GetNodeInfo(-1, nodeID);
+        ComparisonNodeInfoCache[nodeID] = GetNodeInfo(INPSECT_CONFIG_ID, nodeID);
     end
     return ComparisonNodeInfoCache[nodeID]
 end
 
 function DataProvider.GetComparisonEntryInfo(entryID)
     if not ComparisonEntryInfoCache[entryID] then
-        ComparisonEntryInfoCache[entryID] = GetEntryInfo(-1, entryID);
+        ComparisonEntryInfoCache[entryID] = GetEntryInfo(INPSECT_CONFIG_ID, entryID);
     end
     return ComparisonEntryInfoCache[entryID]
 end
@@ -381,7 +391,7 @@ function DataProvider:SaveInpsectLoadout(newLoadoutName)
         return false, "Invalid Name"
     end
 
-    local configID = -1;
+    local configID = INPSECT_CONFIG_ID;
     local configInfo = C_Traits.GetConfigInfo(configID);
     local treeID = configInfo.treeIDs[1]
 	local nodeIDs = C_Traits.GetTreeNodes(treeID);
@@ -415,7 +425,7 @@ function DataProvider:GetLoadoutExportString()
     local exportStream = ExportUtil.MakeExportDataStream();
     local configID, specID;
     if self.inspectMode then
-        configID = -1;
+        configID = INPSECT_CONFIG_ID;
         specID = self:GetInspectSpecID();
     else
         configID = self:GetSelecetdConfigID();
@@ -580,6 +590,132 @@ function DataProvider:GetEndOfLineTraits()
 end
 
 NarciAPI.GetEndOfLineTraitInfo = DataProvider.GetEndOfLineTraits;
+
+
+function DataProvider:GetTraitNameByDefinitionID(definitionID)
+    local definitionInfo = C_Traits.GetDefinitionInfo(definitionID);
+    local spellID = definitionInfo and (definitionInfo.spellID or definitionInfo.overriddenSpellID);
+    local spellName = GetSpellInfo(spellID);
+    return spellName
+end
+
+
+do  --Hero Talents
+    function DataProvider:GetActiveHeroTalentTreeInfo(configID, specID)
+        if configID ~= INPSECT_CONFIG_ID then
+            self.activeSubTreeID = nil;
+        end
+
+        local subTreeIDs, requiredPlayerLevel = C_ClassTalents.GetHeroTalentSpecsForClassSpec(configID, specID);
+        if not subTreeIDs then return end;
+
+        for _, subTreeID in ipairs(subTreeIDs) do
+            local subTreeInfo = C_Traits.GetSubTreeInfo(configID, subTreeID);   --TWW Cache This
+            if subTreeInfo and subTreeInfo.isActive then
+                if configID ~= INPSECT_CONFIG_ID then
+                    self.activeSubTreeID = subTreeID;
+                end
+
+                return subTreeInfo
+            end
+        end
+    end
+
+    function DataProvider:GetPlayerActiveHeroTalentTreeInfo()
+        --local configID = C_ClassTalents.GetActiveConfigID()
+        --local specID = self:GetCurrentSpecID();
+        --return self:GetActiveHeroTalentTreeInfo(configID, specID)
+
+        local configID = C_ClassTalents.GetActiveConfigID()
+        local subTreeID = self:GetPlayerActiveSubTreeID();
+
+        if subTreeID then
+            return C_Traits.GetSubTreeInfo(configID, subTreeID)
+        end
+    end
+
+    function DataProvider:GetInspectActiveHeroTalentTreeInfo()
+        local configID = INPSECT_CONFIG_ID;
+        local specID = self:GetInspectSpecID();
+        return self:GetActiveHeroTalentTreeInfo(configID, specID)
+    end
+
+    function DataProvider:GetActiveSubTreeID(configID, specID)
+        local subTreeIDs, requiredPlayerLevel = C_ClassTalents.GetHeroTalentSpecsForClassSpec(configID, specID);
+        if not subTreeIDs then return end;
+
+        for _, subTreeID in ipairs(subTreeIDs) do
+            local subTreeInfo = C_Traits.GetSubTreeInfo(configID, subTreeID);
+            if subTreeInfo and subTreeInfo.isActive then
+                return subTreeID
+            end
+        end
+    end
+
+    function DataProvider:GetPlayerActiveSubTreeID()
+        --local configID = C_ClassTalents.GetActiveConfigID()
+        --local specID = self:GetCurrentSpecID();
+        --return self:GetActiveSubTreeID(configID, specID)
+        return C_ClassTalents.GetActiveHeroTalentSpec();
+    end
+
+    function DataProvider:GetInspectActiveSubTreeID()
+        local configID = INPSECT_CONFIG_ID;
+        local specID = self:GetInspectSpecID();
+        return self:GetActiveSubTreeID(configID, specID)
+    end
+
+    do
+        if addon.TransitionAPI.IsTWW() then
+            function DataProvider:GetPlayerHeroSpecName()
+                local subTreeInfo = self:GetPlayerActiveHeroTalentTreeInfo();
+                if subTreeInfo then
+                    return subTreeInfo.name;
+                end
+            end
+        else
+            function DataProvider:GetPlayerHeroSpecName()
+                return nil
+            end
+
+            function DataProvider:GetActiveSubTreeID(configID, specID)
+                return nil
+            end
+
+            function DataProvider:GetPlayerActiveSubTreeID()
+                return nil
+            end
+        end
+    end
+end
+
+function DataProvider:GetPlayerSpecClassName(colorized)
+    --e.g. Subtlety Rogue, Subtlety Deathstalker (if hero talents selected)
+
+    local className, englishClass = UnitClass("player");
+	local currentSpec = GetSpecialization();
+    local _, currentSpecName = GetSpecializationInfo(currentSpec);
+    local keyName;
+
+	if currentSpec then
+        keyName = self:GetPlayerHeroSpecName();
+	end
+
+    if not keyName then
+        keyName = className;
+    end
+
+    if not currentSpecName then
+        currentSpecName = "";
+    end
+
+    if colorized then
+        local _, _, _, rgbHex = GetClassColor(englishClass);
+        return "|c"..rgbHex..currentSpecName.." "..keyName.."|r"
+    else
+        return currentSpecName.." "..keyName
+    end
+end
 
 --[[
 function DataProvider:EncodeActiveLoadout()

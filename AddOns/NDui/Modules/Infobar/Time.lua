@@ -30,7 +30,7 @@ local C_TaskQuest_GetThreatQuests = C_TaskQuest.GetThreatQuests
 local C_TaskQuest_GetQuestInfoByQuestID = C_TaskQuest.GetQuestInfoByQuestID
 local C_AreaPoiInfo_GetAreaPOIInfo = C_AreaPoiInfo.GetAreaPOIInfo
 -- Localized
-local COMMUNITY_FEAST = GetSpellInfo(388961)
+local COMMUNITY_FEAST = C_Spell.GetSpellName(388961)
 
 local function updateTimerFormat(color, hour, minute)
 	if GetCVarBool("timeMgrUseMilitaryTime") then
@@ -98,9 +98,11 @@ local questlist = {
 	{name = L["Timewarped"], id = 45563, texture = 1530590},	-- MoP
 	{name = L["Timewarped"], id = 55499, texture = 1129683},	-- WoD
 	{name = L["Timewarped"], id = 64710, texture = 1467047},	-- Legion
-	{name = GetSpellInfo(388945), id = 70866},	-- SoDK
+	{name = C_Spell.GetSpellName(388945), id = 70866},	-- SoDK
 	{name = "", id = 70906, itemID = 200468},	-- Grand hunt
-	{name = "", id = 70893, itemID = 200095},	-- Community feast
+	{name = "", id = 70893, questName = true},	-- Community feast
+	{name = "", id = 79226, questName = true},	-- The big dig
+	{name = "", id = 78319, questName = true},	-- The superbloom
 }
 
 local lesserVisions = {58151, 58155, 58156, 58167, 58168}
@@ -244,7 +246,7 @@ local itemCache = {}
 local function GetItemLink(itemID)
 	local link = itemCache[itemID]
 	if not link then
-		link = select(2, GetItemInfo(itemID))
+		link = select(2, C_Item.GetItemInfo(itemID))
 		itemCache[itemID] = link
 	end
 	return link
@@ -266,11 +268,11 @@ info.onShiftDown = function()
 end
 
 local communityFeastTime = {
+	["CN"] = 1679747400, -- 20:30
 	["TW"] = 1679747400, -- 20:30
 	["KR"] = 1679747400, -- 20:30
 	["EU"] = 1679749200, -- 21:00
 	["US"] = 1679751000, -- 21:30
-	["CN"] = 1679751000, -- 21:30
 }
 
 info.onEnter = function(self)
@@ -327,7 +329,7 @@ info.onEnter = function(self)
 		if v.name and IsQuestFlaggedCompleted(v.id) then
 			if v.name == L["Timewarped"] and isTimeWalker and checkTexture(v.texture) or v.name ~= L["Timewarped"] then
 				addTitle(QUESTS_LABEL)
-				GameTooltip:AddDoubleLine(v.itemID and GetItemLink(v.itemID) or v.name, QUEST_COMPLETE, 1,1,1, 1,0,0)
+				GameTooltip:AddDoubleLine((v.itemID and GetItemLink(v.itemID)) or (v.questName and QuestUtils_GetQuestName(v.id)) or v.name, QUEST_COMPLETE, 1,1,1, 1,0,0)
 			end
 		end
 	end
@@ -449,7 +451,7 @@ info.onMouseUp = function(_, btn)
 	if btn == "RightButton" then
 		ToggleTimeManager()
 	elseif btn == "MiddleButton" then
-		if not WeeklyRewardsFrame then LoadAddOn("Blizzard_WeeklyRewards") end
+		if not WeeklyRewardsFrame then C_AddOns.LoadAddOn("Blizzard_WeeklyRewards") end
 		if InCombatLockdown() then
 			B:TogglePanel(WeeklyRewardsFrame)
 		else

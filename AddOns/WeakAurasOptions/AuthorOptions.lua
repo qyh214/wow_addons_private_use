@@ -59,8 +59,12 @@
       step (optional) -> like bigStep, but applies to number input as well
 ]]
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -1253,10 +1257,21 @@ typeControlAdders = {
       name = WeakAuras.newFeatureString .. name(option, "noMerge", L["Prevent Merging"]),
       desc = desc(option, "noMerge", L["If checked, then this group will not merge with other group when selecting multiple auras."]),
       order = order(),
-      width = WeakAuras.doubleWidth,
+      width = option.groupType =="simple" and WeakAuras.doubleWidth or WeakAuras.normalWidth,
       get = get(option, "noMerge"),
       set = set(data, option, "noMerge"),
     }
+    if option.groupType ~="simple" then
+      args[prefix .. "sortAlphabetically"] = {
+        type = "toggle",
+        name = WeakAuras.newFeatureString .. name(option, "sortAlphabetically", L["Sort"]),
+        desc = desc(option, "sortAlphabetically", L["If checked, then the combo box in the User settings will be sorted."]),
+        order = order(),
+        width = WeakAuras.normalWidth,
+        get = get(option, "sortAlphabetically"),
+        set = set(data, option, "sortAlphabetically"),
+      }
+    end
     if option.groupType ~="simple" then
       args[prefix .. "limitType"] = {
         type = "select",
@@ -1461,6 +1476,8 @@ local function up(data, options, index)
         local dereferencedParent = parent.references[id].options[parent.references[id].index]
         if dereferencedParent.nameSource == optionID then
           dereferencedParent.nameSource = optionID - 1
+        elseif dereferencedParent.nameSource == optionID - 1 then
+          dereferencedParent.nameSource = optionID
         end
       end
       OptionsPrivate.MoveCollapseDataUp(id, "author", path)
@@ -1490,6 +1507,8 @@ local function down(data, options, index)
         local dereferencedParent = parent.references[id].options[parent.references[id].index]
         if dereferencedParent.nameSource == optionID then
           dereferencedParent.nameSource = optionID + 1
+        elseif dereferencedParent.nameSource == optionID + 1 then
+          dereferencedParent.nameSource = optionID
         end
       end
       local childOptions = optionData.options
@@ -2121,6 +2140,7 @@ local function addUserModeOption(options, args, data, order, prefix, i)
             end
             WeakAuras.ClearAndUpdateOptions(data.id, true)
           end,
+          sorting = option.sortAlphabetically and OptionsPrivate.Private.SortOrderForValues(values) or nil
         }
         args[prefix .. "resetEntry"] = {
           type = "execute",

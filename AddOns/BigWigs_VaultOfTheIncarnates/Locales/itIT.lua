@@ -5,7 +5,6 @@ if L then
 	L.custom_on_nameplate_fixate_desc = "Mostra un'icona sulla barra del Tarasek Scagliafiamma che ti insegue.\n\nRichiede l'uso delle Barre del Bersaglio Nemichee un'addon delle Barre del bersaglio supportato (KuiNameplates, Plater)."
 
 	L.molten_cleave = "Frontale"
-	L.incinerating_roar = "Ruggito"
 	L.molten_spikes = "Spuntoni"
 	L.collapsing_army = "Armata"
 	L.greater_flamerift = "Add Mitico"
@@ -14,7 +13,6 @@ end
 
 L = BigWigs:NewBossLocale("Terros", "itIT")
 if L then
-	L.rock_blast = "Assorbi"
 	L.resonating_annihilation = "Annientamento"
 	L.awakened_earth = "Pilastri"
 	L.shattering_impact = "Contusione"
@@ -33,8 +31,6 @@ L.primal_blizzard = "Tormenta" -- Primal Blizzard
 	L.meteor_axe = "Ascia" -- Singular
 	L.meteor_axes_melee = "Ascia Corpo a Corpo"
 	L.meteor_axes_ranged = "Ascia a Distanza"
-	L.conductive_marks = "Marchi" -- Conductive Marks
-	L.conductive_mark = "Marchio" -- Singular
 
 	L.skipped_cast = "Saltato %s (%d)"
 end
@@ -48,13 +44,10 @@ if L then
 	L.webs = "Ragnatele"
 	L.web = "Ragnatela"
 	L.gossamer_burst = "Presa"
-	L.repelling_burst = "Respingimento"
 end
 
 L = BigWigs:NewBossLocale("Dathea, Ascended", "itIT")
 if L then
-	L.conductive_marks = "Marchi"
-	L.conductive_mark = "Marchio"
 	L.raging_burst = "Nuovi Tornado"
 	L.cyclone = "Trascinamento"
 	L.crosswinds = "Tornado in Movimento"
@@ -83,25 +76,20 @@ if L then
 	L.Storm = "Tempesta"
 
 	-- Fire
-	L.magma_burst = "Pozze"
 	L.molten_rupture = "Ondate"
 	L.searing_carnage = "Danza"
 	L.raging_inferno = "Assorbi Pozze"
 
 	-- Frost
 	L.biting_chill = "DoT Morsa Gelida"
-	L.frigid_torrent = "Globi"
-	L.absolute_zero = "Assorbimenti"
 	L.absolute_zero_melee = "Assorbimento Corpo a Corpo"
 	L.absolute_zero_ranged = "Assorbimento a Distanza"
 
 	-- Earth
-	L.enveloping_earth = "Assorbimento Cure"
 	L.erupting_bedrock = "Terremoti"
 
 	-- Storm
 	L.lightning_crash = "Fulmini"
-	L.thundering_strike = "Assorbimenti"
 
 	-- General
 	L.primal_attunement = "Rabbia Leggera"
@@ -115,15 +103,11 @@ if L then
 	L.eggs_remaining = "%d Uova Rimanenti!"
 	L.broodkeepers_bond = "Uova Rimanenti"
 	L.greatstaff_of_the_broodkeeper = "Granbastone"
-	L.greatstaffs_wrath = "Laser"
 	L.clutchwatchers_rage = "Rabbia"
 	L.rapid_incubation = "Infusione Uova"
-	L.icy_shroud = "Assorbimento Cure"
 	L.broodkeepers_fury = "Furia"
 	L.frozen_shroud = "Assorbimento Cure e Immobilizzazione"
 	L.detonating_stoneslam = "Assorbimento Difensore"
-
-	-- L.add_count = "%s (%d-%d)"
 end
 
 L = BigWigs:NewBossLocale("Raszageth the Storm-Eater", "itIT")
@@ -131,16 +115,11 @@ if L then
 	L.lighting_devastation_trigger = "respiro profondo" -- Raszageth takes a deep breath...
 
 	-- Stage One: The Winds of Change
-	L.hurricane_wing = "Respingimento"
 	L.volatile_current = "Scintilla"
 	L.thunderous_blast = "Detonazione"
-	L.lightning_breath = "Soffio"
 	L.lightning_strikes = "Assalti"
 	L.electric_scales = "Danno Incursione"
 	L.electric_lash = "Sferzata"
-	-- Intermission: The Primalist Strike
-	L.lightning_devastation = "Soffio"
-	L.shattering_shroud = "Assorbimento Cure"
 	-- Stage Two: Surging Power
 	L.absorb_text = "%s (%.0f%%)"
 	L.stormsurge = "Assorbimento Scudo"
@@ -152,7 +131,6 @@ if L then
 	L.fulminating_charge = "Cariche"
 	L.fulminating_charge_debuff = "Carica"
 	-- Intermission: The Vault Falters
-	L.storm_break = "Teletrasporto"
 	L.ball_lightning = "Sfere"
 	-- Stage Three: Storm Incarnate
 	L.magnetic_charge = "Carica Attirante"

@@ -319,7 +319,7 @@ DF:Mixin(DFSliderMetaFunctions, DF.ScriptHookMixin)
 			return
 		end
 
-		DetailsFrameworkSliderButtons1:ShowMe(slider)
+		DetailsFrameworkSliderButtons1:ShowMe(slider, object.bAttachButtonsToLeft)
 
 		local kill = object:RunHooksForWidget("OnEnter", slider, object)
 		if (kill) then
@@ -363,6 +363,14 @@ DF:Mixin(DFSliderMetaFunctions, DF.ScriptHookMixin)
 	local sliderButtonsParentFrame = DetailsFrameworkSliderButtons1 or CreateFrame("frame", "DetailsFrameworkSliderButtons1", UIParent, "BackdropTemplate")
 	sliderButtonsParentFrame:Hide()
 	sliderButtonsParentFrame:SetHeight(18) --width is set by setpoint
+
+	C_Timer.After(0, function()
+		if (not sliderButtonsParentFrame.__background) then
+			DetailsFramework:ApplyStandardBackdrop(sliderButtonsParentFrame) --ApplyStandardBackdrop loads after this file
+		end
+		sliderButtonsParentFrame:SetBackdropBorderColor(0, 0, 0, 0)
+		sliderButtonsParentFrame:SetBackdropColor(.05, .05, .05, .9)
+	end)
 	sliderButtonsParentFrame.isGoingToHide = false
 
 	local timeToHide = 0
@@ -375,11 +383,27 @@ DF:Mixin(DFSliderMetaFunctions, DF.ScriptHookMixin)
 		end
 	end
 
-	function sliderButtonsParentFrame:ShowMe(sliderFrame)
+	function sliderButtonsParentFrame:ShowMe(sliderFrame, bAnchorToLeft)
+		sliderButtonsParentFrame.bAnchorToLeft = bAnchorToLeft
 		sliderButtonsParentFrame:SetParent(sliderFrame)
 		sliderButtonsParentFrame:ClearAllPoints()
-		sliderButtonsParentFrame:SetPoint("bottomleft", sliderFrame, "topleft", -5, -5)
-		sliderButtonsParentFrame:SetPoint("bottomright", sliderFrame, "topright", 5, -5)
+
+		sliderButtonsParentFrame.buttonMinor:ClearAllPoints()
+		sliderButtonsParentFrame.buttonPlus:ClearAllPoints()
+
+		sliderButtonsParentFrame:SetWidth(35)
+
+		if (sliderButtonsParentFrame.bAnchorToLeft) then
+			sliderButtonsParentFrame:SetPoint("topright", sliderFrame, "topleft", 0, 0)
+			sliderButtonsParentFrame:SetPoint("bottomright", sliderFrame, "bottomleft", 0, 0)
+			sliderButtonsParentFrame.buttonPlus:SetPoint("right", sliderButtonsParentFrame, "right", -2, 0)
+			sliderButtonsParentFrame.buttonMinor:SetPoint("right", sliderButtonsParentFrame.buttonPlus, "left", 0, 0)
+		else
+			sliderButtonsParentFrame:SetPoint("topleft", sliderFrame, "topright", 2, 0)
+			sliderButtonsParentFrame:SetPoint("bottomleft", sliderFrame, "bottomright", 2, 0)
+			sliderButtonsParentFrame.buttonMinor:SetPoint("left", sliderButtonsParentFrame, "left", 2, 0)
+			sliderButtonsParentFrame.buttonPlus:SetPoint("left", sliderButtonsParentFrame.buttonMinor, "right", 0, 0)
+		end
 
 		sliderButtonsParentFrame:SetFrameStrata("FULLSCREEN")
 		sliderButtonsParentFrame:SetFrameLevel(sliderFrame:GetFrameLevel() + 1000)
@@ -399,10 +423,12 @@ DF:Mixin(DFSliderMetaFunctions, DF.ScriptHookMixin)
 		sliderButtonsParentFrame:SetScript("OnUpdate", onUpdateTimeToHide)
 	end
 
-	local buttonPlus = CreateFrame("button", "DetailsFrameworkSliderButtonsPlusButton", sliderButtonsParentFrame, "BackdropTemplate")
-	local buttonMinor = CreateFrame("button", "DetailsFrameworkSliderButtonsMinorButton", sliderButtonsParentFrame, "BackdropTemplate")
+	local buttonPlus = DetailsFrameworkSliderButtonsPlusButton or CreateFrame("button", "DetailsFrameworkSliderButtonsPlusButton", sliderButtonsParentFrame, "BackdropTemplate")
+	local buttonMinor = DetailsFrameworkSliderButtonsMinorButton or CreateFrame("button", "DetailsFrameworkSliderButtonsMinorButton", sliderButtonsParentFrame, "BackdropTemplate")
 	buttonPlus:SetFrameStrata(sliderButtonsParentFrame:GetFrameStrata())
 	buttonMinor:SetFrameStrata(sliderButtonsParentFrame:GetFrameStrata())
+	sliderButtonsParentFrame.buttonPlus = buttonPlus
+	sliderButtonsParentFrame.buttonMinor = buttonMinor
 
 	buttonPlus:SetScript("OnEnter", function(self)
 		if (sliderButtonsParentFrame.isGoingToHide) then
@@ -859,6 +885,28 @@ local get_switch_func = function(self)
 	return self.OnSwitch
 end
 
+local setCheckedTexture = function(self, texture, xOffSet, yOffSet, sizePercent, color)
+	if (texture) then
+		self.checked_texture:SetTexture(texture, "CLAMP", "CLAMP", "TRILINEAR")
+	end
+
+	if (xOffSet or yOffSet) then
+		self.checked_texture:SetPoint("center", self.button, "center", xOffSet or -1, yOffSet or -1)
+	else
+		self.checked_texture:SetPoint("center", self.button, "center", -1, -1)
+	end
+
+	if (sizePercent and type(sizePercent) == "number") then
+		local width = self:GetWidth() * sizePercent
+		self.checked_texture:SetSize(width, width)
+	end
+
+	if (color) then
+		local r, g, b, a = DF:ParseColors(color)
+		self.checked_texture:SetVertexColor(r, g, b, a)
+	end
+end
+
 local set_as_checkbok = function(self)
 	if self.is_checkbox and self.checked_texture then return end
 	local checked = self:CreateTexture(self:GetName() .. "CheckTexture", "overlay")
@@ -867,6 +915,10 @@ local set_as_checkbok = function(self)
 	local size_pct = self:GetWidth()/32
 	checked:SetSize(32 * size_pct, 32 * size_pct)
 	self.checked_texture = checked
+
+	self.SetCheckedTexture = setCheckedTexture
+	self.SetChecked = switch_set_value
+	self.GetChecked = switch_get_value
 
 	self._thumb:Hide()
 	self._text:Hide()
@@ -889,7 +941,7 @@ local set_as_checkbok = function(self)
 	end
 end
 
----@class df_checkbox : df_button
+---@class df_checkbox : df_button, df_widgets
 ---@field OnSwitch fun(self:df_checkbox, fixedValue:any, value:boolean)
 ---@field SetValue fun(self:df_button, value:boolean)
 ---@field GetValue fun(self:df_button):boolean
@@ -902,6 +954,7 @@ end
 ---@field GetSwitchFunction fun(self:df_button):function
 ---@field SetSwitchFunction fun(self:df_button, newOnSwitchFunction: function)
 ---@field GetCapsule fun(self:df_button):df_button capsule only exists in the actual frame of the encapsulated widget
+---@field SetCheckedTexture fun(self:df_button, texture:string)
 
 
 function DF:CreateSwitch(parent, onSwitch, defaultValue, width, height, leftText, rightText, member, name, colorInverted, switchFunc, returnFunc, withLabel, switch_template, label_template)
@@ -939,6 +992,7 @@ function DF:NewSwitch(parent, container, name, member, width, height, leftText, 
 
 	local slider = DF:NewButton(parent, container, name, member, width, height)
 	slider.HookList.OnSwitch = {}
+	slider.type = "switch"
 
 	slider.switch_func = switch_func
 	slider.return_func = return_func
@@ -1003,6 +1057,8 @@ function DF:NewSwitch(parent, container, name, member, width, height, leftText, 
 end
 
 function DFSliderMetaFunctions:SetTemplate(template)
+	template = DF:ParseTemplate(self.type, template)
+
 	--slider e switch
 	if (template.width) then
 		PixelUtil.SetWidth(self.widget, template.width)
@@ -1036,9 +1092,29 @@ function DFSliderMetaFunctions:SetTemplate(template)
 
 	if (template.thumbtexture) then
 		if (self.thumb) then
-			self.thumb:SetTexture(template.thumbtexture)
+			DF:SetAtlas(self.thumb, template.thumbtexture)
 		end
 	end
+
+	if (template.slider_left) then
+		if (self.slider_left) then
+			DF:SetAtlas(self.slider_left, template.slider_left)
+		end
+	end
+
+	if (template.slider_right) then
+		if (self.slider_right) then
+			DF:SetAtlas(self.slider_right, template.slider_right)
+		end
+	end
+
+	if (template.slider_middle) then
+		if (self.slider_middle) then
+			self:SetBackdrop(nil)
+			DF:SetAtlas(self.slider_middle, template.slider_middle)
+		end
+	end
+
 	if (template.thumbwidth) then
 		if (self.thumb) then
 			self.thumb:SetWidth(template.thumbwidth)
@@ -1056,6 +1132,18 @@ function DFSliderMetaFunctions:SetTemplate(template)
 		end
 	end
 
+	if (template.amount_color) then
+		DF:SetFontColor(self.amt, template.amount_color)
+	end
+
+	if (template.amount_outline) then
+		DF:SetFontOutline(self.amt, template.amount_outline)
+	end
+
+	if (template.amount_size) then
+		DF:SetFontSize(self.amt, template.amount_size)
+	end
+
 	--switch only
 	if (template.enabled_backdropcolor) then
 		local r, g, b, a = DF:ParseColors(template.enabled_backdropcolor)
@@ -1065,13 +1153,55 @@ function DFSliderMetaFunctions:SetTemplate(template)
 		local r, g, b, a = DF:ParseColors(template.disabled_backdropcolor)
 		self.backdrop_disabledcolor = {r, g, b, a}
 	end
+
+	if (template.is_checkbox) then
+		self:SetAsCheckBox()
+		self:SetCheckedTexture(template.checked_texture, template.checked_xoffset or 0, template.checked_yoffset or 0, template.checked_size_percent or 0.7, template.checked_color)
+	end
+
+	if (template.rounded_corner) then
+		self:SetBackdrop(nil)
+		DF:AddRoundedCornersToFrame(self.widget or self, template.rounded_corner)
+	end
 end
 
-function DF:CreateSlider (parent, w, h, min, max, step, defaultv, isDecemal, member, name, with_label, slider_template, label_template)
-	local slider, label = DF:NewSlider (parent, parent, name, member, w, h, min, max, step, defaultv, isDecemal, false, with_label, slider_template, label_template)
-	return slider, label
+--DF:Mixin(DFSliderMetaFunctions, DF.SetPointMixin)
+--DF:Mixin(DFSliderMetaFunctions, DF.FrameMixin)
+--DF:Mixin(DFSliderMetaFunctions, DF.TooltipHandlerMixin)
+
+---@class df_slider : slider, df_scripthookmixin, df_widgets
+---@field tooltip string?
+---@field widget slider
+---@field slider slider
+---@field type string
+---@field dframework boolean
+---@field SetTemplate fun(self:df_slider, template: table|string)
+---@field SetFixedParameter fun(value: any)
+---@field GetFixedParameter fun()
+---@field SetValueNoCallback fun(value: number)
+---@field SetThumbSize fun(width:number, height:number)
+---@field ClearFocus fun()
+
+---@param parent frame
+---@param width number? default 150
+---@param height number? default 20
+---@param minValue number? default 1
+---@param maxValue number? default 2
+---@param step number? default 1
+---@param defaultv number? default to minValue
+---@param isDecemal boolean? default false
+---@param member string?
+---@param name string?
+---@param label string?
+---@param sliderTemplate string|table|nil
+---@param labelTemplate string|table|nil
+---@return df_slider, df_label?
+function DF:CreateSlider (parent, width, height, minValue, maxValue, step, defaultv, isDecemal, member, name, label, sliderTemplate, labelTemplate)
+	local slider, labelText = DF:NewSlider(parent, parent, name, member, width, height, minValue, maxValue, step, defaultv, isDecemal, false, label, sliderTemplate, labelTemplate)
+	return slider, labelText
 end
 
+---@return df_slider, df_label?
 function DF:NewSlider (parent, container, name, member, width, height, minValue, maxValue, step, defaultValue, isDecemal, isSwitch, with_label, slider_template, label_template)
 	if (not name) then
 		name = "DetailsFrameworkSlider" .. DF.SliderCounter
@@ -1079,7 +1209,7 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 	end
 
 	if (not parent) then
-		return error("Details! FrameWork: parent not found.", 2)
+		error("Details! FrameWork: parent not found.", 2)
 	end
 
 	if (not container) then
@@ -1087,7 +1217,7 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 	end
 
 	if (name:find("$parent")) then
-		local parentName = DF.GetParentName(parent)
+		local parentName = DF:GetParentName(parent)
 		name = name:gsub("$parent", parentName)
 	end
 
@@ -1110,8 +1240,8 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 	step = step or 1
 	defaultValue = defaultValue or minValue
 
-	width = width or 130
-	height = height or 19
+	width = width or 160
+	height = height or 20
 
 	--default members
 	SliderObject.lockdown = false
@@ -1126,6 +1256,7 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 		SliderObject.slider:SetValueStep(0.01)
 	else
 		SliderObject.slider:SetValueStep(step)
+		SliderObject.slider:SetObeyStepOnDrag(true)
 	end
 
 	if (not APISliderFunctions) then
@@ -1159,6 +1290,22 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 	SliderObject.thumb:SetAlpha(0.7)
 	SliderObject.slider:SetThumbTexture (SliderObject.thumb)
 	SliderObject.slider.thumb = SliderObject.thumb
+
+	SliderObject.slider_left = SliderObject.slider:CreateTexture("$parentLeft", "artwork")
+	SliderObject.slider_left:SetPoint("topright", SliderObject.slider, "topleft", 0, 0)
+	SliderObject.slider_left:SetPoint("bottomright", SliderObject.slider, "bottomleft", 0, 0)
+	SliderObject.slider_left:SetWidth(11)
+
+	SliderObject.slider_right = SliderObject.slider:CreateTexture("$parentRight", "artwork")
+	SliderObject.slider_right:SetPoint("topleft", SliderObject.slider, "topright", 0, 0)
+	SliderObject.slider_right:SetPoint("bottomleft", SliderObject.slider, "bottomright", 0, 0)
+	SliderObject.slider_right:SetWidth(11)
+
+	SliderObject.slider_middle = SliderObject.slider:CreateTexture("$parentMiddle", "artwork")
+	SliderObject.slider_middle:SetPoint("topleft", SliderObject.slider_left, "topright", 0, 0)
+	SliderObject.slider_middle:SetPoint("bottomleft", SliderObject.slider_left, "bottomright", 0, 0)
+	SliderObject.slider_middle:SetPoint("topright", SliderObject.slider_right, "topleft", 0, 0)
+	SliderObject.slider_middle:SetPoint("bottomright", SliderObject.slider_right, "bottomleft", 0, 0)
 
 	if (not isSwitch) then
 		SliderObject.have_tooltip = "Right Click to Type the Value"

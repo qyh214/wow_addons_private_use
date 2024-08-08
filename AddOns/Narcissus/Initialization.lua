@@ -1,7 +1,7 @@
-local NARCI_VERSION_INFO = "1.4.7 b";
+local NARCI_VERSION_INFO = "1.6.7";
 
-local VERSION_DATE = 1701004539;
-local CURRENT_VERSION = 10407;
+local VERSION_DATE = 1722650000;
+local CURRENT_VERSION = 10607;
 local PREVIOUS_VERSION = CURRENT_VERSION;
 local TIME_SINCE_LAST_UPDATE = 0;
 
@@ -55,13 +55,14 @@ local DefaultValues = {
     MissingEnchantAlert = false,                --Show alert if the item isn't enchanted
 
     -- Photo Mode --
-    HideTextsWithUI = true,                     --Hide all texts when UI is hidden
+    HideTextsWithUI = false,                     --Hide all texts when UI is hidden
     UseEntranceVisual = true,
     ModelPanelScale = 1,
     ShrinkArea = 0,                             --Reduce the width of the area where you can control the model
     AutoPlayAnimation = false,                  --Play recommended animation when clicking a spell visual entry
     OutfitSortMethod = "name",                  --Filter for sorting outfits: (name alphabet/recently visited)
     LoopAnimation = false,                      --Photo Mode Loop Animation
+    SpeedyScreenshotAlert = true,               --Make "Screen Captured" message disappear faster
 
     -- Dressing Room --
     DressingRoom = true,                        --Enable dressing room module
@@ -80,7 +81,10 @@ local DefaultValues = {
     GemManager = true,                          --Enable gem manager for Blizzard item socketing frame
     OnlyShowOwnedUpgradeItem = true,            --Filter for gems/enchant scrolls
     ConduitTooltip = false,                     --Show conduit effects of higher ranks
+    SoloQueueLFRDetails = true,                 --Show LFR boss names and lockouts on GossipFrame 
     PaperDollWidget = true,                     --Show Domination/Class Set indicator on the Blizzard character pane
+        PaperDollWidget_ClassSet = true,
+        PaperDollWidget_Remix = true,
 
     -- Talent Tree --
     TalentTreeForInspection = true,
@@ -114,6 +118,9 @@ local DefaultValues = {
 
     -- Dragonriding --
     DragonridingTourWorldMapPin = true,         --Show Dragonriding Race location on continent map
+
+    -- Perks Program (Trading Post) --
+    TradingPostModifyDefaultPose = false,
 
     --# Initializationd in other files
     --["MinimapIconStyle = 1,                     --Change the icon of minimap button (Main.lua)
@@ -155,9 +162,11 @@ local TutorialMarkers = {
     "WeaponBrowser",
 };
 
+local DB;
+
 local function LoadDatabase()
     NarcissusDB = NarcissusDB or {};                            --Account-wide Variables
-    local db = NarcissusDB;
+    DB = NarcissusDB;
 
     NarciCreatureOptions = NarciCreatureOptions or {};          --Creature Database
     NarciAchievementOptions = NarciAchievementOptions or {};    --Achievement Settings
@@ -165,14 +174,14 @@ local function LoadDatabase()
     NarcissusDB_PC = NarcissusDB_PC or {};                      --Character-specific Variables
     NarcissusDB_PC.EquipmentSetDB = NarcissusDB_PC.EquipmentSetDB or {};
 
-    db.MinimapButton = db.MinimapButton or {};
-    db.MinimapButton.Position = db.MinimapButton.Position or math.rad(150);     --From 3 O'clock, counter-clockwise
+    DB.MinimapButton = DB.MinimapButton or {};
+    DB.MinimapButton.Position = DB.MinimapButton.Position or math.rad(150);     --From 3 O'clock, counter-clockwise
 
 
     --Migrate deprecated variables
-    if db.HideTextsWithUI == nil then
-        if db.PhotoModeButton and db.PhotoModeButton.HideTexts ~= nil then
-            db.HideTextsWithUI = db.PhotoModeButton.HideTexts;
+    if DB.HideTextsWithUI == nil then
+        if DB.PhotoModeButton and DB.PhotoModeButton.HideTexts ~= nil then
+            DB.HideTextsWithUI = DB.PhotoModeButton.HideTexts;
         end
     end
 
@@ -181,8 +190,8 @@ local function LoadDatabase()
     local type = type;
 
     for k, v in pairs(DefaultValues) do
-        if db[k] == nil or type(db[k]) ~= type(v) then
-            db[k] = v;
+        if DB[k] == nil or type(DB[k]) ~= type(v) then
+            DB[k] = v;
         end
     end
 
@@ -206,8 +215,8 @@ local function LoadDatabase()
 
 
     ---- Tutorial Markers ----
-    db.Tutorials = db.Tutorials or {};
-    local Tutorials = db.Tutorials;
+    DB.Tutorials = DB.Tutorials or {};
+    local Tutorials = DB.Tutorials;
     for _, v in pairs(TutorialMarkers) do
         if Tutorials[v] == nil then
             Tutorials[v] = true;   --True ~ will show tutorial
@@ -216,32 +225,32 @@ local function LoadDatabase()
 
 
     ---- Addon Update Info ----
-    if (not db.Version) or (type(db.Version) ~= "number") then    --Used for showing patch notes when opening Narcissus after an update
-        db.Version = 10000;
+    if (not DB.Version) or (type(DB.Version) ~= "number") then    --Used for showing patch notes when opening Narcissus after an update
+        DB.Version = 10000;
     end
 
-    if CURRENT_VERSION > db.Version then
-        PREVIOUS_VERSION = db.Version;
+    if CURRENT_VERSION > DB.Version then
+        PREVIOUS_VERSION = DB.Version;
         --wake SplashFrame
     end
 
-    if not db.installTime or type(db.installTime) ~= "number" then
-        db.installTime = (time and time()) or VERSION_DATE;
+    if not DB.installTime or type(DB.installTime) ~= "number" then
+        DB.installTime = (time and time()) or VERSION_DATE;
     end
 
     DefaultValues = nil;
     AchievementOptions = nil;
     TutorialMarkers = nil;
 
-    if db.SearchRelatives or db.TranslateName then
+    if DB.SearchRelatives or DB.TranslateName then
         C_Timer.After(0, function()
-            LoadAddOn("Narcissus_Database_NPC");
+            C_AddOns.LoadAddOn("Narcissus_Database_NPC");
         end)
     end
 
-    if db.SearchSuggestEnable then
+    if DB.SearchSuggestEnable then
         C_Timer.After(0, function()
-            LoadAddOn("Narcissus_BagFilter");
+            C_AddOns.LoadAddOn("Narcissus_BagFilter");
         end)
     end
 
@@ -254,10 +263,8 @@ local function LoadSettings()
         LoadDatabase();
     end
 
-    local db = NarcissusDB;
-
     for _, func in pairs(SettingFunctions) do
-        func(nil, db);
+        func(nil, DB);
     end
 
     C_Timer.After(0.08, function()
@@ -266,19 +273,63 @@ local function LoadSettings()
 end
 
 
-local CallbackList = {};
-CallbackList.PLAYER_ENTERING_WORLD = {};
-CallbackList.LOADING_SCREEN_DISABLED = {};
 
-local function AddFunctionToCallbackList(callback)
-    table.insert(CallbackList.PLAYER_ENTERING_WORLD, callback);
-end
-addon.AddInitializationCallback = AddFunctionToCallbackList;
+local CallbackRegistry = {};
+CallbackRegistry.events = {};
+addon.CallbackRegistry = CallbackRegistry;
 
-local function AddFunctionToCallbackList_LoadingComplete(callback)
-    table.insert(CallbackList.LOADING_SCREEN_DISABLED, callback);
+do
+    local tinsert = table.insert;
+    local type = type;
+    local ipairs = ipairs;
+
+    function CallbackRegistry:Register(event, func, owner)
+        if not self.events[event] then
+            self.events[event] = {};
+        end
+
+        local callbackType;
+
+        --callbackType:
+        --1. Function func(owner)
+        --2. Method owner:func()
+
+        if type(func) == "string" then
+            callbackType = 2;
+        else
+            callbackType = 1;
+        end
+
+        tinsert(self.events[event], {callbackType, func, owner});
+    end
+
+    function CallbackRegistry:Trigger(event, ...)
+        if self.events[event] then
+            for _, cb in ipairs(self.events[event]) do
+                if cb[1] == 1 then
+                    if cb[3] then
+                        cb[2](cb[3], ...);
+                    else
+                        cb[2](...);
+                    end
+                else
+                    cb[3][cb[2]](cb[3], ...);
+                end
+            end
+        end
+    end
 end
-addon.AddLoadingCompleteCallback = AddFunctionToCallbackList_LoadingComplete;
+
+
+local function AddCallback_FirstEnteringWorld(callback)
+    CallbackRegistry:Register("PLAYER_ENTERING_WORLD", callback);
+end
+addon.AddInitializationCallback = AddCallback_FirstEnteringWorld;
+
+local function AddCallback_LoadingComplete(callback)
+    CallbackRegistry:Register("LOADING_SCREEN_DISABLED", callback);
+end
+addon.AddLoadingCompleteCallback = AddCallback_LoadingComplete;
 
 
 local Initialization = CreateFrame("Frame");
@@ -298,23 +349,14 @@ Initialization:SetScript("OnEvent",function(self,event,...)
     elseif event == "PLAYER_ENTERING_WORLD" then
         self:UnregisterEvent(event);
         LoadSettings();
-
-        for i, callback in ipairs(CallbackList.PLAYER_ENTERING_WORLD) do
-            callback();
-        end
-
-        CallbackList.PLAYER_ENTERING_WORLD = nil;
+        CallbackRegistry:Trigger(event);
 
     elseif event == "LOADING_SCREEN_DISABLED" then
         self:UnregisterEvent(event);
 
         C_Timer.After(1, function()
-            for i, callback in ipairs(CallbackList.LOADING_SCREEN_DISABLED) do
-                callback();
-            end
-
+            CallbackRegistry:Trigger(event);
             self:SetScript("OnEvent", nil);
-            CallbackList = nil;
         end)
     end
 end);
@@ -333,7 +375,7 @@ local function GetAddOnVersionInfo(versionOnly)
         day = tonumber(day);
         month = tonumber(month);
         year = tonumber(year);
-        dateString = FormatShortDate(day, month, year);
+        dateString = (FormatShortDate and FormatShortDate(day, month, year)) or (string.join("/", day, month, year));
     end
 
     -- time since last update
@@ -393,7 +435,6 @@ do
     local function IsTOCVersionEqualOrNewerThan(v)
         return tocVersion >= v
     end
-
     addon.IsTOCVersionEqualOrNewerThan = IsTOCVersionEqualOrNewerThan;
 end
 
@@ -498,4 +539,16 @@ do
     end
 
     addon.CreateZoneTriggeredModule = CreateZoneTriggeredModule;
+end
+
+
+do  --DB Settings
+    local function IsModuleEnabled(dbKey)
+        if dbKey then
+            return DB[dbKey] == true
+        else
+            return false
+        end
+    end
+    addon.IsModuleEnabled = IsModuleEnabled;
 end

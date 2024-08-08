@@ -158,7 +158,7 @@ do
 		self:TargetsMessage(197558, "yellow", playerList, 4)
 		self:PlaySound(197558, "alarm", nil, playerList)
 		if self:Me(args.destGUID) then
-			self:Say(197558)
+			self:Say(197558, nil, nil, "Ravenous Leap")
 		end
 	end
 end
@@ -168,13 +168,13 @@ do
 		self:PrimaryIcon(196838, name)
 		self:TargetMessage(196838, "orange", name)
 		if self:Me(guid) then
-			self:Say(196838)
+			self:Say(196838, nil, nil, "Scent of Blood")
 			self:PlaySound(196838, "warning")
 		end
 	end
 
 	function mod:ScentOfBlood(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 34.1)
 		-- soonest any ability can happen after this is 18.2s
 		self:CDBar(196512, 18.2) -- Claw Frenzy

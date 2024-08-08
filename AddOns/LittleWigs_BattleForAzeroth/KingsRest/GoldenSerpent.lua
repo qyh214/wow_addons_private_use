@@ -50,14 +50,14 @@ do
 	end
 
 	function mod:SpitGold(args)
-		self:GetBossTarget(printTarget, 0.5, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.5, args.sourceGUID)
 		self:CDBar(args.spellId, 11)
 	end
 end
 
 function mod:SpitGoldApplied(args)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Spit Gold")
 		self:SayCountdown(args.spellId, 9)
 	end
 end

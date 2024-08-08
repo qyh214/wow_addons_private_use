@@ -23,7 +23,7 @@ end
 do
 	local function TrainAllButton_OnEnter(self)
 		GameTooltip:ClearLines()
-		GameTooltip:AddLine(format(L["TrainAllCost"], self.Count, GetCoinTextureString(self.Cost)), 1, 1, 1)
+		GameTooltip:AddLine(format(L["TrainAllCost"], self.Count, C_CurrencyInfo.GetCoinTextureString(self.Cost)), 1, 1, 1)
 		GameTooltip:Show()
 	end
 
@@ -102,13 +102,7 @@ do
 			local text = self.Text:GetText()
 			local title = text and strmatch(text, titleString)
 			if title then
-				title = gsub(title, " %- ", ".")
-
-				if ChatEdit_GetActiveWindow() then
-					ChatEdit_InsertLink(title)
-				else
-					ChatFrame_OpenChat(title, SELECTED_DOCK_FRAME)
-				end
+				ChatFrame_OpenChat(gsub(title, " %- ", "."), SELECTED_DOCK_FRAME)
 			end
 		end)
 

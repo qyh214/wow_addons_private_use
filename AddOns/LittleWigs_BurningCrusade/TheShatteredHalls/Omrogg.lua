@@ -34,7 +34,7 @@ end
 do
 	local function announce(self, target, guid)
 		if self:Me(guid) then
-			self:Say(-5894)
+			self:Say(-5894, nil, nil, "Beatdown")
 			self:Flash(-5894)
 		end
 		self:TargetMessageOld(-5894, target, "yellow", "warning", nil, nil, true)
@@ -44,11 +44,7 @@ do
 	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unit, castId, spellId)
 		if spellId == 30618 and castId ~= prev then -- Beatdown
 			prev = castId
-			if self:Classic() then
-				self:GetUnitTarget(announce, 0.4, self:UnitGUID(unit))
-			else
-				self:GetBossTarget(announce, 0.4, self:UnitGUID(unit))
-			end
+			self:GetUnitTarget(announce, 0.4, self:UnitGUID(unit))
 		end
 	end
 end

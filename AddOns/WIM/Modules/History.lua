@@ -8,6 +8,7 @@ local CreateFrame = CreateFrame;
 local date = date;
 local time = time;
 local select = select;
+local tonumber = tonumber;
 
 local DDM = WIM.libs.DropDownMenu;
 
@@ -27,7 +28,7 @@ db_defaults.history = {
     whispers = {
         friends = true,
         guild = true,
-        all = false
+        all = true
     },
     chat = {
         preview = true,
@@ -59,6 +60,7 @@ local tmpTable = {};
 local ViewTypes = {};
 
 local ChannelCache = {};
+local CensoredCache = {};
 
 local function clearTmpTable()
     for key, _ in pairs(tmpTable) do
@@ -120,6 +122,42 @@ local function createWidget()
     return button;
 end
 
+-- store a cached entry if a record is cached. This will be used by History:ReplaceCensoredMessage if original message is shown.
+local function cacheIfCensored (record, ...)
+	local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
+	local lineID = arg11;
+
+	local isChatLineCensored = _G.C_ChatInfo and _G.C_ChatInfo.IsChatLineCensored and _G.C_ChatInfo.IsChatLineCensored(lineID);
+
+	if (isChatLineCensored) then
+		CensoredCache[lineID] = record;
+		record.censored = true;
+
+		-- filter out Show Message link
+		record.msg = record.msg:gsub('|Hcensoredmessage:[^|]+|h.-|h', '');
+	end
+
+	return record;
+end
+
+-- replace a history record by lineID. Returns true is msg is updated.
+function History:ReplaceCensoredMessage(lineID, msg)
+	if (lineID and msg and CensoredCache[lineID]) then
+		-- filter out report link
+		msg = msg:gsub('|Hreportcensoredmessage:[^|]+|h.-|h', '');
+
+		if CensoredCache[lineID].msg ~= msg then
+			CensoredCache[lineID].msg = msg;
+			return true
+		end
+	end
+
+	return false;
+end
+
+local function safeName(user)
+	return string.lower(user or "")
+end
 
 --BNet_GetValidatedCharacterName
 local function recordWhisper(inbound, ...)
@@ -128,7 +166,7 @@ local function recordWhisper(inbound, ...)
 	   	return
 	end
     local db = db.history.whispers;
-    local win = windows.active.whisper[from] or windows.active.chat[from] or windows.active.w2w[from];
+    local win = windows.active.whisper[safeName(from)] or windows.active.chat[from] or windows.active.w2w[safeName(from)];
     if (win and (lists.gm[from] or db.all or (db.friends and (lists.friends[from] or win.isBN)) or (db.guild and lists.guild[from]))) then
         win.widgets.history:SetHistory(true);
         --If realid/btag whisper, we save them under btag to avoid caching issues
@@ -140,14 +178,14 @@ local function recordWhisper(inbound, ...)
 		end
         local history = getPlayerHistoryTable(from);
         history.info.gm = lists.gm[from];
-        table.insert(history, {
+        table.insert(history, cacheIfCensored({
             convo = from,
             type = 1, -- whisper
             inbound = inbound or false,
             from = inbound and from or env.character,
             msg = msg,
             time = _G.time();
-        });
+        }, ...));
         if(WIM.db.history.maxPer) then
             while(WIM.db.history.maxCount < #history) do
                 table.remove(history, 1);
@@ -301,14 +339,14 @@ local function recordChannelChat(recordAs, ChannelType, ...)
         local history = getPlayerHistoryTable(recordAs);
         history.info.chat = true;
         history.info.channelNumber = channelNumber;
-        table.insert(history, {
+        table.insert(history, cacheIfCensored({
             event = ChannelType,
             channelName = recordAs,
             type = 2, -- chat
             from = from,
             msg = msg,
             time = _G.time();
-        });
+        }, ...));
         if(WIM.db.history.chat.maxPer) then
             while(WIM.db.history.chat.maxCount < #history) do
                 table.remove(history, 1);
@@ -768,7 +806,7 @@ local function createHistoryViewer()
                 for convo, tbl in pairs(history[realm][character]) do
                     for i=1, #tbl do
                         if(searchResult(tbl[i].msg, self:GetText())) then
-                            table.insert(win.SEARCHLIST, tbl[i]);
+                            table.insert(win.SEARCHLIST, copyTable(tbl[i], {seq = i}));
                         end
                     end
                 end
@@ -777,13 +815,16 @@ local function createHistoryViewer()
                     for convo, tbl in pairs(convos) do
                         for i=1, #tbl do
                             if(searchResult(tbl[i].msg, self:GetText())) then
-                                table.insert(win.SEARCHLIST, tbl[i]);
+                                table.insert(win.SEARCHLIST, copyTable(tbl[i], {seq = i}));
                             end
                         end
                     end
                 end
             end
             table.sort(win.SEARCHLIST, function(a, b)
+				if (a.seq and b.seq) then
+					return tonumber(a.time.."."..a.seq) < tonumber(b.time.."."..b.seq)
+				end
                 return a.time < b.time;
             end);
             if(#win.SEARCHLIST > 0) then
@@ -1060,7 +1101,7 @@ local function createHistoryViewer()
             local tbl = history[realm][character][win.CONVO];
             if tbl then
            	   for i=1, #tbl do
-            	    table.insert(win.CONVOLIST, tbl[i]);
+            	    table.insert(win.CONVOLIST, copyTable(tbl[i], {seq = i}));
            	   end
            	else
            		ShowHistoryViewer()
@@ -1069,12 +1110,15 @@ local function createHistoryViewer()
             for char, tbl in pairs(history[realm]) do
                 if(tbl[win.CONVO]) then
                     for i=1, #tbl[win.CONVO] do
-                        table.insert(win.CONVOLIST, tbl[win.CONVO][i]);
+                        table.insert(win.CONVOLIST, copyTable(tbl[win.CONVO][i], {seq = i}));
                     end
                 end
             end
         end
         table.sort(win.CONVOLIST, function(a, b)
+			if (a.seq and b.seq) then
+				return tonumber(a.time.."."..a.seq) < tonumber(b.time.."."..b.seq)
+			end
             return a.time < b.time;
         end);
     end

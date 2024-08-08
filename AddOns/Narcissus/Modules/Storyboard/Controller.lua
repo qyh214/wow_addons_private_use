@@ -119,7 +119,7 @@ function StoryboardUtil.SetScene(storyboard, sceneName)
         light:SetAlpha(1);
     end
 
-    modelScene:SetLightType(2);
+    modelScene:SetLightType(1);
 
     --[[
     --Debug
@@ -231,7 +231,7 @@ local QuestItemTracker = CreateFrame("Frame");
 local match = string.match;
 local select = select;
 local tonumber = tonumber;
-local GetItemInfoInstant = GetItemInfoInstant;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local find = string.find;
 local LOOT_ITEM_SELF = string.gsub(LOOT_ITEM_SELF or "You receive loot: %s", "%%s", "");
 local QuestItemDB = {};
@@ -281,6 +281,11 @@ do
         if state == nil then
             state = db["AutoDisplayQuestItem"];
         end
+
+        if DialogueUI_DB and DialogueUI_DB.QuestItemDisplay then
+            state = false;
+        end
+
         if state then
             QuestItemTracker:EnableTracker()
         else

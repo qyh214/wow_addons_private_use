@@ -202,10 +202,10 @@ function BtWLoadoutsMinimapMenu_Init(self, level, menuList)
     end
 end
 
-Internal.OnEvent("LOADOUT_CHANGE_START", function ()
+Internal.OnEvent("LoadoutActivateStart", function ()
     BtWLoadoutsMinimapButton.ProgressAnim:Play()
 end)
-Internal.OnEvent("LOADOUT_CHANGE_END", function ()
+Internal.OnEvent("LoadoutActivateEnd", function ()
     BtWLoadoutsMinimapButton.ProgressAnim:Stop()
 end)
 

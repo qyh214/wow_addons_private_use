@@ -1,8 +1,7 @@
-## Interface: 100200
-## Plain Title: Narcissus
-## Version: 1.4.7
+## Interface: 110000, 110002
+## Version: 1.6.7
 
-## Title: |cffd177ffN|cffc480fba|cffb787f6r|cffa98ef2c|cff9a94edi|cff8a9ae9s|cff789fe5s|cff63a4e0u|cff48a8dcs|r
+## Title: Narcissus
 
 ## Notes: Immersive paperdoll frame and in-game studio. |n|cff959595Slash command: /narci|r
 ## Notes-zhCN: 为展示和分享而生的沉浸式角色界面|n|cff959595命令: /narci|r
@@ -22,7 +21,7 @@ Locales\Localization.xml
 LocalizedData\Localization.xml
 
 
-NarciDB\ExpansionTransition.xml
+NarciDB\APITransition.xml
 
 
 NarciDB\TitleManagerDB.lua
@@ -36,11 +35,12 @@ Modules\CharacterFrame\ClassSet.xml
 
 Widgets\NarciUITemplates.xml
 Widgets\WidgetTooltip.xml
+Widgets\UIFrameTooltip.lua
 Constants\Constants.xml
 
 Bridge\Bridge.xml
 
-Modules\CharacterFrame\Domination.xml
+#Modules\CharacterFrame\Domination.xml
 Modules\CharacterFrame\ItemLevelFrame.lua
 Modules\CharacterFrame\Enchant.lua
 Modules\CharacterFrame\TemporaryEnchant.xml
@@ -94,7 +94,7 @@ Modules\PerksProgram\Core.xml
 Modules\Achievement\Core.xml
 Modules\Statistics\Core.lua
 Modules\AddOnError\AddOnError.xml
-Modules\PrimordialStone\Core.xml
+#Modules\PrimordialStone\Core.xml
 
 #Modules\ParticleSystem\ParticleSystem.xml
 
@@ -117,3 +117,6 @@ Modules\PhotoModeNew\LightingPreset.xml
 
 Modules\Storyboard\Storyboard.xml
 Modules\DragonridingRaces\Main.xml
+Modules\GossipFrame\GossipFrame.xml
+
+Modules\GemManager\GemManager.xml

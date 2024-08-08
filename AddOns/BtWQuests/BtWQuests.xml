@@ -1,0 +1,437 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="BtWQuests.lua"/>
+
+	<Frame name="BtWQuestsOptionsMenu" mixin="BtWQuestsOptionsMenuMixin" inherits="BtWQuestsDropDownTemplate" hidden="false"/>
+
+	<Texture name="UI-BtWQuests-NavBorder" file="Interface\FrameGeneral\UI-Frame" virtual="true">
+		<Size x="22" y="33"/>
+		<TexCoords left="0.625" right="0.796875" top="0.0078125" bottom="0.265625"/>
+	</Texture>
+	
+	<Frame name="BarDropDownMenuTemplate" mixin="BtWQuestsDropDownMenuMixin" virtual="true">
+		<Size>
+			<AbsDimension x="144" y="32"/>
+		</Size>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Left">
+					<Size x="23" y="33"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="0"/>
+					</Anchors>
+					<TexCoords left="0.625" right="0.8046875" top="0.0078125" bottom="0.265625"/>>
+				</Texture>
+				<Texture parentKey="Middle">
+					<Size>
+						<AbsDimension x="100" y="28"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Left" relativePoint="TOPRIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="Right">
+					<Size x="23" y="33"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Middle" relativePoint="TOPRIGHT"/>
+					</Anchors>
+					<TexCoords left="0.625" right="0.8046875" top="0.0078125" bottom="0.265625"/>>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall" wordwrap="false" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="0" y="10"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT" x="0" y="4"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Icon" hidden="true">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" x="16" y="3"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="Button" name="$parentButton" motionScriptsWhileDisabled="true" >
+				<Size>
+					<AbsDimension x="24" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.Right" x="11" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						local parent = self:GetParent();
+						local myscript = parent:GetScript("OnEnter");
+						if(myscript ~= nil) then
+							myscript(parent);
+						end
+					</OnEnter>
+					<OnLeave>
+						local parent = self:GetParent();
+						local myscript = parent:GetScript("OnLeave");
+						if(myscript ~= nil) then
+							myscript(parent);
+						end
+					</OnLeave>
+					<OnClick>
+						self:GetParent():Toggle()
+						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+					</OnClick>
+				</Scripts>
+				<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up">
+					<Size>
+						<AbsDimension x="24" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</NormalTexture>
+				<PushedTexture name="$parentPushedTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down">
+					<Size>
+						<AbsDimension x="24" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</PushedTexture>
+				<DisabledTexture name="$parentDisabledTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Disabled">
+					<Size>
+						<AbsDimension x="24" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</DisabledTexture>
+				<HighlightTexture name="$parentHighlightTexture" file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD">
+					<Size>
+						<AbsDimension x="24" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT"/>
+					</Anchors>
+				</HighlightTexture>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnHide>
+				CloseDropDownMenus();
+			</OnHide>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWQuestsFrame" mixin="BtWQuestsMixin" inherits="PortraitFrameTemplate" toplevel="true" enableMouse="true" parent="UIParent" hidden="true" movable="true">
+		<Size x="800" y="496"/>
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0"/>
+		</Anchors>
+		<Frames>
+			<EditBox parentKey="SearchBox" inherits="BtWQuestsSearchBoxTemplate" letters="40">
+				<Size x="210" y="20"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-10" y="-32"/>
+				</Anchors>
+			</EditBox>
+			<Frame parentKey="SearchPreview" inherits="BtWQuestsSearchPreviewTemplate" hidden="true">
+				<Size x="0" y="24"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeKey="$parent.SearchBox"/>
+					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.SearchBox"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="SearchResults" inherits="BtWQuestsSearchResultsTemplate" hidden="true">
+				<Size x="600" y="400"/>
+				<Anchors>
+					<Anchor point="BOTTOM" x="0" y="7"/>
+				</Anchors>
+			</Frame>
+			<Button parentKey="NavBack">
+				<Size x="32" y="32"/>
+				<HitRectInsets left="5" right="5" top="5" bottom="5"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="51.1" y="5"/>
+				</Anchors>
+				<DisabledTexture file="Interface\Addons\BtWQuests\UI-Frame-BackButton-Disabled"/>
+				<NormalTexture file="Interface\Addons\BtWQuests\UI-Frame-BackButton-Up"/>
+				<PushedTexture file="Interface\Addons\BtWQuests\UI-Frame-BackButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnLoad>
+						self:Disable();
+					</OnLoad>
+					<OnClick>
+						self:GetParent():Back()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="NavForward">
+				<Size x="32" y="32"/>
+				<HitRectInsets left="5" right="5" top="5" bottom="5"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.NavBack" relativePoint="RIGHT" x="-9"/>
+				</Anchors>
+				<DisabledTexture file="Interface\Addons\BtWQuests\UI-Frame-ForwardButton-Disabled"/>
+				<NormalTexture file="Interface\Addons\BtWQuests\UI-Frame-ForwardButton-Up"/>
+				<PushedTexture file="Interface\Addons\BtWQuests\UI-Frame-ForwardButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnLoad>
+						self:Disable();
+					</OnLoad>
+					<OnClick>
+						self:GetParent():Forward()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="NavHere">
+				<Size x="32" y="32"/>
+				<HitRectInsets left="5" right="5" top="5" bottom="5"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.NavForward" relativePoint="RIGHT" x="-9"/>
+				</Anchors>
+				<DisabledTexture file="Interface\Addons\BtWQuests\UI-Frame-HereButton-Disabled"/>
+				<NormalTexture file="Interface\Addons\BtWQuests\UI-Frame-HereButton-Up"/>
+				<PushedTexture file="Interface\Addons\BtWQuests\UI-Frame-HereButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnLoad>
+						self:Disable();
+					</OnLoad>
+					<OnClick>
+						self:GetParent():Here()
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button parentKey="OptionsButton">
+				<Size x="32" y="32"/>
+				<HitRectInsets left="5" right="5" top="5" bottom="5"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.CloseButton" relativePoint="LEFT" x="8" y="0"/>
+				</Anchors>
+				<DisabledTexture file="Interface\Addons\BtWQuests\UI-Frame-OptionsButton-Disabled"/>
+				<NormalTexture file="Interface\Addons\BtWQuests\UI-Frame-OptionsButton-Up"/>
+				<PushedTexture file="Interface\Addons\BtWQuests\UI-Frame-OptionsButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+				<Scripts>
+					<OnClick>
+						BtWQuestsOptionsMenu:Toggle(self, 0, 0)
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Frame parentKey="CharacterDropDown" mixin="BtWQuestsCharacterDropDownMixin" inherits="BarDropDownMenuTemplate">
+				<Size x="156" y="32"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.OptionsButton" relativePoint="LEFT" x="-6" y="-4"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+				</Scripts>
+			</Frame>
+            
+			<Frame parentKey="navBar" inherits="BtWQuestsNavBarTemplate">
+				<Size x="500" y="34"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="61" y="-22"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="ExpansionDropDown" hidden="true" mixin="BtWQuestsExpansionDropDownMixin" inherits="BtWQuestsDropDownTemplate">
+				<Size x="156" y="32"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.navBar" relativePoint="RIGHT" x="20" y="-5"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+				</Scripts>
+			</Frame>
+
+			<Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-4" y="-60" />
+					<Anchor point="BOTTOMLEFT" x="4" y="5"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="ExpansionList" enableMouse="true" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Inset" x="0" y="-2" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" x="-3" y="0"/>
+				</Anchors>
+				<Frames>
+					<Button parentKey="Left">
+						<Size x="34" y="416"/>
+						<Anchors>
+							<Anchor point="LEFT" x="10"/>
+						</Anchors>
+						<NormalTexture file="Interface\ChatFrame\ChatFrameExpandArrow">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+							<TexCoords left="1" right="0" top="0" bottom="1"/>
+						</NormalTexture>
+						<DisabledTexture file="Interface\ChatFrame\ChatFrameExpandArrow" desaturated="true">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+							<TexCoords left="1" right="0" top="0" bottom="1"/>
+						</DisabledTexture>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent().ExpansionScroll = self:GetParent():GetParent().ExpansionScroll - 1
+								self:GetParent():GetParent():DisplayExpansionList()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Frame parentKey="Expansion1" inherits="BtWQuestsExpansionTemplate">
+						<Anchors>
+							<Anchor point="LEFT"/>
+						</Anchors>
+					</Frame>
+					<Frame parentKey="Expansion2" inherits="BtWQuestsExpansionTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Expansion1" relativePoint="RIGHT"/>
+						</Anchors>
+					</Frame>
+					<Frame parentKey="Expansion3" inherits="BtWQuestsExpansionTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Expansion2" relativePoint="RIGHT"/>
+						</Anchors>
+					</Frame>
+					<Button parentKey="Right">
+						<Size x="34" y="416"/>
+						<Anchors>
+							<Anchor point="RIGHT" x="-7"/>
+						</Anchors>
+						<NormalTexture file="Interface\ChatFrame\ChatFrameExpandArrow">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</NormalTexture>
+						<DisabledTexture file="Interface\ChatFrame\ChatFrameExpandArrow" desaturated="true">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</DisabledTexture>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent().ExpansionScroll = self:GetParent():GetParent().ExpansionScroll + 1
+								self:GetParent():GetParent():DisplayExpansionList()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Scripts>
+					<OnMouseUp>
+						if button == "RightButton" then
+							self:GetParent():ZoomOut()
+						end
+					</OnMouseUp>
+					<OnMouseWheel>
+						self:GetParent().ExpansionScroll = self:GetParent().ExpansionScroll - delta
+						self:GetParent():DisplayExpansionList()
+					</OnMouseWheel>
+				</Scripts>
+			</Frame>
+			<Frame parentKey="Category" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Inset" x="0" y="-2" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" x="-3" y="0"/>
+				</Anchors>
+				<Frames>
+					<ScrollFrame name="BtWQuestsCategoryScrollFrame" parentKey="Scroll" enableMouse="true" inherits="UIPanelScrollFrameCodeTemplate">
+						<Size x="785" y="424"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="5" y="-3"/>
+						</Anchors>
+						<Frames>
+							<Slider name="BtWQuestsFrameCategoryScrollBar" parentKey="ScrollBar" inherits="MinimalScrollBarTemplate">
+								<Anchors>
+									<Anchor point="TOPRIGHT" x="0" y="-17"/>
+									<Anchor point="BOTTOMRIGHT" x="0" y="17"/>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										self.trackBG:SetVertexColor(0.2, 0.13, 0.08, 0.25);
+									</OnLoad>
+								</Scripts>
+							</Slider>
+						</Frames>
+						<ScrollChild>
+							<Frame parentKey="Child">
+								<Size x="785" y="423"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="0"/>
+								</Anchors>
+								<Frames>
+								</Frames>
+							</Frame>
+						</ScrollChild>
+                        <Scripts>
+                            <OnMouseUp>
+                                if button == "RightButton" then
+                                    self:GetParent():GetParent():ZoomOut()
+                                end
+                            </OnMouseUp>
+                        </Scripts>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Frame parentKey="Chain" hidden="true" useParentLevel="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Inset" x="0" y="0" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" x="-3" y="0"/>
+				</Anchors>
+				<Frames>
+					<ScrollFrame name="BtWQuestsChainScrollFrame" mixin="BtWQuestsFrameChainViewMixin" parentKey="Scroll" enableMouse="true" inherits="BtWQuestsChainViewTemplate">
+						<Size x="785" y="424"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="5" y="-3"/>
+						</Anchors>
+                        <Scripts>
+                            <OnMouseUp>
+                                if button == "RightButton" then
+                                    self:GetParent():GetParent():ZoomOut()
+                                end
+                            </OnMouseUp>
+                        </Scripts>
+					</ScrollFrame>
+					
+					<GameTooltip name="BtWQuestsFrameChainTooltip" parentKey="Tooltip" inherits="BtWQuestsTooltipTemplate" frameStrata="MEDIUM">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="5" y="-3"/>
+						</Anchors>
+					</GameTooltip>
+				</Frames>
+                <Scripts>
+                    <OnShow function="BtWQuestsChainFrame_OnShow"/>
+                    <OnHide function="BtWQuestsChainFrame_OnHide"/>
+                    <OnEvent function="BtWQuestsChainFrame_OnEvent"/>
+                </Scripts>
+            </Frame>
+
+			<GameTooltip name="BtWQuestsFrameTooltip" parentKey="Tooltip" inherits="BtWQuestsTooltipTemplate"/>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+	</Frame>
+
+	<GameTooltip name="BtWQuestsTooltip" parent="UIParent" inherits="BtWQuestsTooltipTemplate"/>
+</Ui>

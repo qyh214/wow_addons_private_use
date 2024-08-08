@@ -25,10 +25,8 @@ local CONFIG_VALUES = {
   show_affixes_as_text = true,
   show_affixes_as_icons = false,
   hide_default_objectivetracker = true,
-  show_reapingtimer = true,
   scale = 1.0,
   show_pull_values = false,
-  show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
   align_right = false,
@@ -47,10 +45,6 @@ local CONFIG_VALUES = {
   color_current_pull = "FF00FF00",
   color_deathcounter = "FFFFFFFF",
   color_deathcounter_timelost = "FFFF0000",
-  color_prideful = "FFFFFFFF",
-  color_prideful_value = "FFFFFFFF",
-  color_prideful_value_warning = "FFFFFF00",
-  color_prideful_value_alert = "FFFF0000",
 }
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -132,10 +126,6 @@ local function on_category_colors_default()
     "color_current_pull",
     "color_deathcounter",
     "color_deathcounter_timelost",
-    -- "color_prideful",
-    -- "color_prideful_value",
-    -- "color_prideful_value_warning",
-    -- "color_prideful_value_alert",
   }
 
   for _, key in ipairs(colors) do
@@ -192,7 +182,7 @@ local function on_category_refresh(self)
 
   local checkboxes_general = {
     "insert_keystone",
-    "progress_tooltip",
+   "progress_tooltip", 
     "objective_time_inchat",
   }
 
@@ -305,9 +295,9 @@ local function on_category_refresh(self)
 
     "__separator__",
 
-    "show_pull_values",
-    "show_percent_numbers",
-    "show_absolute_numbers",
+    "show_pull_values",      
+    -- "show_percent_numbers",   -- :OnlyPercentValue
+    -- "show_absolute_numbers",  -- :OnlyPercentValue
 
     "__separator__",  
     
@@ -492,10 +482,6 @@ local function on_category_colors_refresh(self)
     "color_deathcounter",
     "color_deathcounter_timelost",
     -- "_line",
-    -- "color_prideful",
-    -- "color_prideful_value",
-    -- "color_prideful_value_warning",
-    -- "color_prideful_value_alert",
   }
 
   local colors_frames = {}
@@ -553,21 +539,27 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_options_category()
   -- main
-  category = CreateFrame("Frame")
-  category.name = addon_name
-  category.default = on_category_default
-  category.refresh = on_category_refresh
+  local frame = CreateFrame("Frame")
+  frame.name = addon_name
+  frame.OnDefault = on_category_default
+  frame.OnRefresh = on_category_refresh
 
-  InterfaceOptions_AddCategory(category)
+  local settings_category, _ = Settings.RegisterCanvasLayoutCategory(frame, frame.name)
+  settings_category.ID = frame.name
+	Settings.RegisterAddOnCategory(settings_category)
+  category = settings_category
 
   -- colors
-  category_colors = CreateFrame("Frame", nil, category)
-  category_colors.name = addon.t("lbl_colors")
-  category_colors.parent = category.name
-  category_colors.default = on_category_colors_default
-  category_colors.refresh = on_category_colors_refresh
+  local frame_colors = CreateFrame("Frame")
+  frame_colors.name = addon.t("lbl_colors")
+  frame_colors.parent = category.name
+  frame_colors.OnDefault = on_category_colors_default
+  frame_colors.OnRefresh = on_category_colors_refresh
 
-  InterfaceOptions_AddCategory(category_colors)
+  local settings_category_colors, _ = Settings.RegisterCanvasLayoutSubcategory(category, frame_colors, frame_colors.name)
+  settings_category_colors.ID = frame_colors.name
+  Settings.RegisterAddOnCategory(settings_category_colors)
+  category_colors = settings_category_colors
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

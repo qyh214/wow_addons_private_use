@@ -100,8 +100,8 @@ function mod:GetOptions()
 		-- Venture Co. War Machine
 		{269429, "TANK"}, -- Charged Shot
 		-- Mechanized Peacekeeper
-		{262412, "NAMEPLATEBAR"}, -- Energy Shield
 		263628, -- Charged Claw
+		--{262412, "NAMEPLATEBAR"}, -- Energy Shield
 	}, {
 		[268846] = L.tester,
 		[269302] = L.assassin,
@@ -119,7 +119,7 @@ function mod:GetOptions()
 		[269090] = L.specialist,
 		[263601] = L.taskmaster,
 		[269429] = L.warmachine,
-		[262412] = L.peacekeeper,
+		[263628] = L.peacekeeper,
 	}
 end
 
@@ -155,7 +155,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "ArtilleryBarrage", 269090)
 	self:Log("SPELL_AURA_APPLIED", "DesperateMeasuresApplied", 263601)
 	self:Log("SPELL_CAST_START", "ChargedShot", 269429)
-	self:Log("SPELL_CAST_START", "EnergyShield", 262412)
+	--self:Log("SPELL_CAST_START", "EnergyShield", 262412)
 	self:Log("SPELL_CAST_START", "ChargedClaw", 263628)
 	self:Log("SPELL_CAST_SUCCESS", "ChargedClawSuccess", 263628)
 end
@@ -171,7 +171,7 @@ function mod:EchoBlade(args)
 end
 
 function mod:ForceCannon(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) then
 		self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "alert", "watchstep")
@@ -219,7 +219,7 @@ do
 	local prev = 0
 	function mod:EarthShieldApplied(args)
 		local t = args.time
-		if t-prev > 1.5 and not UnitIsPlayer(args.destName) and self:Dispeller("magic", true) then
+		if t-prev > 1.5 and not self:Player(args.destFlags) and self:Dispeller("magic", true) then
 			prev = t
 			self:Message(args.spellId, "yellow", CL.other:format(args.spellName, args.destName))
 			self:PlaySound(args.spellId, "info")
@@ -241,7 +241,7 @@ end
 
 -- Stonefury
 function mod:FuriousQuake(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
+	local unit = self:UnitTokenFromGUID(args.sourceGUID)
 	if unit and UnitAffectingCombat(unit) then
 		self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
 		self:PlaySound(args.spellId, "warning", "interrupt")
@@ -261,7 +261,7 @@ do
 end
 
 function mod:TectonicBarrierApplied(args)
-	if not UnitIsPlayer(args.destName) then
+	if not self:Player(args.destFlags) then
 		self:Message(args.spellId, "red", CL.other:format(args.spellName, args.destName))
 		if self:Dispeller("magic", true) then
 			self:PlaySound(args.spellId, "alarm")
@@ -292,7 +292,7 @@ function mod:Repair(args)
 end
 
 function mod:OverchargeApplied(args)
-	if not UnitIsPlayer(args.destName) then
+	if not self:Player(args.destFlags) then
 		self:Message(args.spellId, "yellow", CL.other:format(args.spellName, args.destName))
 		if self:Dispeller("magic", true) then
 			self:PlaySound(args.spellId, "alarm")
@@ -302,7 +302,7 @@ end
 
 -- Venture Co. Mastermind
 function mod:AzeriteInjectionApplied(args)
-	if not UnitIsPlayer(args.destName) then
+	if not self:Player(args.destFlags) then
 		self:Message(args.spellId, "red", CL.other:format(args.spellName, args.destName))
 		if self:Dispeller("magic", true) then
 			self:PlaySound(args.spellId, "alarm")
@@ -345,7 +345,7 @@ do
 	function mod:MiningCharge(args)
 		local t = args.time
 		if t-prev > 1.5 then
-			local unit = self:GetUnitIdByGUID(args.sourceGUID)
+			local unit = self:UnitTokenFromGUID(args.sourceGUID)
 			if unit and UnitAffectingCombat(unit) then
 				prev = t
 				self:Message(args.spellId, "yellow")
@@ -362,7 +362,7 @@ function mod:BrainFreezeApplied(args)
 		self:PlaySound(args.spellId, "info", nil, args.destName)
 		self:TargetBar(args.spellId, 6, args.destName)
 		if self:Me(args.destGUID) then
-			self:Say(args.spellId)
+			self:Say(args.spellId, nil, nil, "Brain Freeze")
 		end
 	end
 end
@@ -401,7 +401,7 @@ end
 
 -- Taskmaster Askari
 function mod:DesperateMeasuresApplied(args)
-	if not UnitIsPlayer(args.destName) then
+	if not self:Player(args.destFlags) then
 		self:Message(args.spellId, "red", CL.other:format(args.spellName, args.destName))
 		self:PlaySound(args.spellId, "alarm")
 	end
@@ -413,9 +413,9 @@ function mod:ChargedShot(args)
 	self:PlaySound(args.spellId, "alarm")
 end
 
-function mod:EnergyShield(args)
-	self:NameplateBar(args.spellId, 22.5, args.sourceGUID)
-end
+--function mod:EnergyShield(args)
+	--self:Nameplate(args.spellId, 22.5, args.sourceGUID)
+--end
 
 function mod:ChargedClaw(args)
 	self:Message(args.spellId, "red")

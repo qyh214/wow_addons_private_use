@@ -5,10 +5,6 @@ if L then
 	L.custom_on_fade_out_bars_desc = "Скрывает панели способностей босса, который вне радиуса на 1 фазе."
 
 	L.coalescing_void = "Отбежка"
-	L.molten_eruption = "Соки"
-	L.swirling_flame = "Ветерки"
-	L.shadowflame_burst = "Фронтал"
-	--L.plus = "%s + %s"
 
 	L.shadow_and_flame = "Мифик дебафф"
 end
@@ -16,7 +12,6 @@ end
 L = BigWigs:NewBossLocale("The Forgotten Experiments", "ruRU")
 if L then
 	L.rending_charge_single = "Цель первого рывка"
-	L.massive_slam = "Фронтал"
 	L.unstable_essence_new = "Бомба каст"
 	L.custom_on_unstable_essence_high = "Сообщения в чат о высоких стаках Нестабильной Сущности"
 	L.custom_on_unstable_essence_high_desc = "Сообщать в чат о высоких стаках Нестабильной Сущности"
@@ -44,12 +39,8 @@ end
 L = BigWigs:NewBossLocale("Rashok, the Elder", "ruRU")
 if L then
 	L.doom_flames = "Малые соки"
-	L.shadowlave_blast = "Фронтал"
 	L.charged_smash = "Делёжка"
 	L.energy_gained = "Получено энергии: %d"
-
-	-- Mythic
-	--L.shadowflame_energy = "Heal Absorb"
 end
 
 L = BigWigs:NewBossLocale("The Vigilant Steward, Zskarn", "ruRU")
@@ -89,7 +80,6 @@ if L then
 	L.emptiness_between_stars = "Забвение"
 	L.void_slash = "Фронтал"
 
-	L.boss_immune = "Босс иммун"
 	L.ebon_might = "Ады иммун кик"
 end
 

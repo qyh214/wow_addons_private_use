@@ -1,4 +1,6 @@
 
+--lower instance: each instance has an ID, starts from 1 and goes on, the lower instance is the opened instance with the lower ID.
+--training dummy: a npc within major cities in world of warcraft where players can cast spells and attack to test their damage and healing output
 
 ---@alias plugintype
 ---| "SOLO"
@@ -50,6 +52,44 @@
 ---| "PLAYER_TARGET"
 ---| "DETAILS_PROFILE_APPLYED"
 
+---@class mythicdungeontrashinfo
+---@field ZoneName string
+---@field MapID number
+---@field Level number
+---@field EJID number
+
+---@class mythicdungeoninfo
+---@field StartedAt number?
+---@field EndedAt number?
+---@field WorldStateTimerStart number?
+---@field WorldStateTimerEnd number?
+---@field RunTime number?
+---@field TimeInCombat number?
+---@field SegmentID string?
+---@field RunID number?
+---@field OverallSegment boolean?
+---@field ZoneName string?
+---@field EJID number?
+---@field MapID number?
+---@field Level number?
+---@field OnTime boolean?
+---@field KeystoneUpgradeLevels number?
+---@field PracticeRun boolean?
+---@field OldDungeonScore number?
+---@field NewDungeonScore number?
+---@field IsAffixRecord boolean?
+---@field IsMapRecord boolean?
+---@field PrimaryAffix number?
+---@field IsEligibleForScore boolean?
+---@field UpgradeMembers table?
+---@field TimeLimit number?
+---@field DungeonName string?
+---@field DungeonID number?
+---@field DungeonTexture string?
+---@field DungeonBackgroundTexture string|number?
+---@field SegmentType number?
+---@field SegmentName string?
+
 ---@alias containertype number this container type is the number used to identify the actorcontainer type when using combat:GetContainer(containertype), can be 1, 2, 3, or 4.
 
 ---@alias actorclass string this is the class of the actor, can be "WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "DEATHKNIGHT", "SHAMAN", "MAGE", "WARLOCK", "MONK", "DRUID", "DEMONHUNTER"
@@ -75,16 +115,75 @@
 ---@field key6 petname pet name
 ---@field key7 guid pet guid
 
+---@class bossinfo : table .is_boss on combatObjects
+---@field diff_string string?
+---@field index number?
+---@field zone string?
+---@field encounter string?
+---@field mapid number?
+---@field try_number number?
+---@field name string?
+---@field ej_instance_id number?
+---@field id number?
+---@field unixtime unixtime?
+---@field diff number?
+---@field killed boolean?
+---@field bossimage texturepath|number?
+
 ---@class details
 ---@field pets table<guid, petinfo> store the pet guid as the key and the petinfo as the value
 ---@field SpellTableMixin spelltablemixin
----@field GetInstance fun(self: details) : instance
+---@field BreakdownWindowFrame breakdownwindow
+---@field PlayerBreakdown table
+---@field container_type table<containertype, string> [containertype] = "damage" or "heal" or "energy" or "utility"
+---@field TextureAtlas table<atlasname, df_atlasinfo>
+---@field playername string
+---@field breakdown_general profile_breakdown_settings
+---@field DefaultTooltipIconSize number default size of the icons in the tooltip, this also dictates the size of each line in the tooltip
+---@field 
+---@field 
+---@field GenerateActorInfo fun(self: details, actor: actor, errorText:string, bIncludeStack:boolean) : table<string, boolean|string|number> generates a table with the main attributes of the actor, this is mainly for debug purposes
+---@field DumpActorInfo fun(self: details, actor: actor) open a window showig the main attributes of an actor, this is mainly for debug purposes
+---@field GetDisplayClassByDisplayId fun(self: details, displayId: number) : table -return the class object for the given displayId (attributeId)
+---@field GetTextureAtlas fun(self: details, atlasName: atlasname) : df_atlasinfo return the texture atlas data
+---@field GetTextureAtlasTable fun(self: details) : table<atlasname, df_atlasinfo>[] return the table with the texture atlas data
+---@field Msg fun(self: details, msg: string) print a message to the chat frame
+---@field RemoveSegmentByCombatObject fun(self: details, combatObject: combat) : boolean, combat|nil remove the passed combatObject from the segments list
+---@field RemoveSegment fun(self: details, segmentIndex: number) : boolean, combat
+---@field GetCombatByUID fun(self: details, uniqueCombatId: uniquecombatid) : combat|boolean get a unique combat id and return the combat object
+---@field DoesCombatWithUIDExists fun(self: details, uniqueCombatId: uniquecombatid) : boolean
+---@field GetOverallCombat fun(self: details) : combat return the overall combat
+---@field SetCurrentCombat fun(self: details, combatObject: combat) set the current active combat
+---@field GetCurrentCombat fun(self: details) : combat return the current active combat
+---@field ResetSegmentData fun(self: details) reset all segments inclusing overall data
+---@field ResetSegmentOverallData fun(self: details) reset only the overall data
+---@field UpdateBreakdownPlayerList fun(self: details) update the player list in the breakdown window
+---@field GetLowerInstanceNumber fun(self: details) : number return the lower instance number
+---@field Name fun(self: details|actor, actor:actor?) : string return the name of the actor
+---@field SetSpecId fun(self: actor, specId: number) set the specId of the actor
+---@field GetOnlyName fun(self: details|actor, string: string?) : string return the name of the player without the realm name
+---@field GetRoleIcon fun(self: details, role: role) : string, number, number, number, number return the path to a texture file and the texture coordinates for the given role
+---@field GetSpecIcon fun(self: details, spec: number, useAlpha: boolean) : string, number, number, number, number return the path to a texture file and the texture coordinates for the given spec
+---@field GetActiveWindowFromBreakdownWindow fun(self: details) : instance return the window (instance) that requested to open the player breakdown window
+---@field OpenBreakdownWindow fun(self: details, instanceObject: instance, actorObject: actor, bFromAttributeChange: boolean?, bIsRefresh: boolean?, bIsShiftKeyDown: boolean?, bIsControlKeyDown: boolean?)
+---@field GetActorObjectFromBreakdownWindow fun(self: details) : actor return the actor object that is currently shown in the breakdown window
+---@field GetDisplayTypeFromBreakdownWindow fun(self: details) : number, number return the attribute and subattribute display type of the breakdown window
+---@field GetCombatFromBreakdownWindow fun(self: details) : combat return the combat beaing used in the breakdown window
+---@field GetInstance fun(self: details, instanceId: number) : instance return the instance object by its ID
 ---@field GetWindow fun(self: details) : instance this is an alias of GetInstance
----@field GetCombat fun(self: details) : combat
----@field GetSpellSchoolFormatedName fun(self: details, spellschool: spellschool) : string
+---@field GetCombat fun(self: details, segmentId:any) : combat return the combat object by its segmentId
+---@field GetSpellSchoolFormatedName fun(self: details, spellschool: spellschool) : string return the formated name of the spell school
 ---@field CommaValue fun(self: details, number: number) : string
 ---@field CreateEventListener fun(self: details) : table
 ---@field GetFullName fun(self: details, unitId: any, ambiguateString: any) : string create a CLEU compatible name of the unit passed, return string is in the format "playerName-realmName", the string will also be ambiguated using the ambiguateString passed
+---@field GetTextColor fun(self:actor, instanceObject: instance, textSide: string) : number, number, number, number
+---@field GetCombatSegments fun(self: details) : combat[] return a table with all the combat segments
+---@field ListInstances fun(self: details) : instance[] return a table with all the instances
+---@field UnpackMythicDungeonInfo fun(self: details, mythicDungeonInfo: mythicdungeoninfo) : boolean, segmentid, number, number, number, string, number, string, number, number, number unpack the mythic dungeon info and return the values
+---@field CreateRightClickToCloseLabel fun(self: details, parent: frame) : df_label return a df_label with the text "Right click to close", need to set point
+---@field 
+---@field 
+
 
 ---@class detailseventlistener : table
 ---@field RegisterEvent fun(self: detailseventlistener, event: detailsevent, callback: function)
@@ -103,66 +202,141 @@
 ---@field spec specializationid
 
 ---@class customspellinfo : {name: string, isPassive: boolean, itemId: number, icon: string|number}
----@class customiteminfo: {itemId: number, isPassive: boolean, nameExtra: string?, icon: string|number|nil}
+
+---@class customiteminfo: table
+---@field itemId number
+---@field isPassive boolean?
+---@field nameExtra string?
+---@field icon string|number|nil
+---@field onUse boolean?
+---@field isSummon boolean?
+---@field castId spellid?
+---@field defaultName string?
+---@field aura1 spellid?
+---@field aura2 spellid?
+
+---@class pvpcombatinfo : table
+---@field name string zone name
+---@field mapid number zone mapid
+
+---@class arenacombatinfo : table
+---@field name string zone name
+---@field zone string zone name
+---@field mapid number zone mapid
+
 ---@class savedspelldata : {key1: number, key2: string, key3: number}
 ---@class alternatepowertable : {last: number, total: number}
 
+---@class overallsegmentadded : table
+---@field name string combat name
+---@field elapsed number combat time
+---@field clock string start date
+---@field type number combat type
+
 ---@class combat : table
+---@field pvp boolean
+---@field data_fim string|number
+---@field data_inicio string|number
+---@field tempo_start gametime
+---@field segments_added overallsegmentadded[]
+---@field enemy string the name of the enemy in the combat, can be boss name, encounter name
+---@field contra string the name of the player enemy in a 1v1 pvp combat
+---@field bossTimers table[] stored timers for bigwigs and dbm
+---@field last_events_tables table[] where the death log of each player is stored
+---@field boss_hp number percentage of the health points of the boss
+---@field training_dummy boolean if true, the combat is against a training dummy
+---@field playerTalents table<actorname, string> [playerName] = "talent string"
+---@field bossName string? the name of the boss, if the combat has no unitId "boss1", this value is nil
+---@field 
+---@field 
+---@field __call table
+---@field __index table
+---@field zoneName string
+---@field mapId number
+---@field EncounterName string
+---@field bossIcon texturepath|textureid
 ---@field bIsClosed boolean if true the combat is closed (passed by the EndCombat() function)
 ---@field __destroyedBy string
 ---@field amountCasts {[string]: table<string, number>}
 ---@field instance_type instancetype "raid" or "party" or "pvp" or "arena" or "none" or "scenario"
 ---@field run_time number
----@field end_time number
----@field start_time number
+---@field start_time gametime
+---@field end_time gametime
 ---@field combat_counter number
 ---@field is_trash boolean while in raid this is set to true if the combat isn't raid boss, in dungeon this is set to true if the combat isn't a boss or if the dungeon isn't a mythic+
----@field raid_roster table<string, string> [unitName] = unitGUID
----@field overall_added boolean is true when the combat got added into the overall combat
----@field is_mythic_dungeon_trash boolean
+---@field is_boss bossinfo
+---@field is_world_trash_combat boolean when true this combat is a regular combat done in the world, not in a dungeon, raid, battleground, arena, ...
+---@field is_mythic_dungeon mythicdungeoninfo
 ---@field is_mythic_dungeon_run_id number
 ---@field is_mythic_dungeon_segment boolean
+---@field is_pvp pvpcombatinfo
+---@field is_arena arenacombatinfo
+---@field arena boolean
+---@field raid_roster table<string, string> [unitName] = unitGUID
+---@field overall_added boolean is true when the combat got added into the overall combat
 ---@field trinketProcs table<actorname, table<spellid, {cooldown: number, total: number}>>
+---@field _trashoverallalreadyadded boolean
 ---@field alternate_power table<actorname, alternatepowertable>
 ---@field totals {key1: table, key2: table, key3: table, key3: table}
 ---@field totals_grupo {key1: table, key2: table, key3: table, key3: table}
 ---@field __destroyed boolean
 ---@field PhaseData table
----@field is_boss table
----@field is_world_trash_combat boolean when true this combat is a regular combat done in the world, not in a dungeon, raid, battleground, arena, ...
 ---@field player_last_events table<string, table[]> record the latest events of each player, latter used to build the death log
----@field GetCombatType fun(combat: combat) : number
----@field GetCombatUID fun(combat: combat) : uniquecombatid
----@field GetTimeData fun(combat: combat, dataName: string) : table
----@field GetPhases fun(combat: combat) : table
----@field GetCombatTime fun(combat) : number
----@field GetRunTime fun(combat) : number
----@field GetDeaths fun(combat) : table --get the table which contains the deaths of the combat
----@field GetStartTime fun(combat: combat) : number
----@field SetStartTime fun(combat: combat, time: number)
----@field GetEndTime fun(combat: combat) : number
----@field GetDifficulty fun(combat: combat) : number return the dungeon or raid difficulty for boss fights
----@field GetEncounterCleuID fun(combat: combat) : number return the encounterId for boss fights, this number is gotten from the ENCOUNTER_START event
----@field GetBossInfo fun(combat: combat) : table a table containing many informations about the boss fight
----@field SetEndTime fun(combat: combat, time: number)
+---@field
+---@field LockActivityTime fun(self: combat)
+---@field CutDeathEventsByTime fun(self: combat, time: number?) remove death events by time, default 10 seconds
+---@field GetTotal fun(self: combat, attribute: number, subAttribute: number?, onlyGroup: boolean?) : number return the total amount of the requested attribute
+---@field GetCurrentPhase fun(self: combat) : number return the current phase of the combat or the phase where the combat ended
+---@field StoreTalents fun(self:combat)
+---@field FindEnemyName fun(self: combat) : string attempt to get the name of the enemy in the combat by getting the top most damaged unit by the player
+---@field GetTryNumber fun(self: combat) : number?
+---@field GetFormattedCombatTime fun(self: combat) : string
+---@field GetMSTime fun(self: combat) : number, number
+---@field GetSegmentSlotId fun(self: combat) : segmentid
+---@field GetCombatName fun(self: combat, bOnlyName: boolean?, bTryFind: boolean?) : string, number?, number?, number?, number? get the name of the combat
+---@field GetCombatIcon fun(self: combat) : df_atlasinfo, df_atlasinfo?
+---@field GetTrinketProcsForPlayer fun(self: combat, playerName: string) : table<spellid, trinketprocdata> return a key|value table containing the spellId as key and a table with information about the trinket as value
+---@field IsMythicDungeon fun(self: combat) : boolean, number return a boolean indicating if the combat is from a mythic+ dungeon, if true, also return the runId
+---@field GetMythicDungeonInfo fun(self: combat) : mythicdungeoninfo
+---@field GetCombatType fun(self: combat) : number
+---@field GetCombatUID fun(self: combat) : uniquecombatid
+---@field GetTimeData fun(self: combat, dataName: string) : table
+---@field GetPhases fun(self: combat) : table
+---@field GetCombatTime fun(self: combat) : number
+---@field GetRunTime fun(self: combat) : number return the elapsed time of a mythic+ dungeon run, if not exists, return the combat time
+---@field GetRunTimeNoDefault fun(self: combat) : number return the elapsed time of a mythic+ dungeon run, nil if not exists
+---@field GetDeaths fun(self: combat) : table --get the table which contains the deaths of the combat
+---@field GetStartTime fun(self: combat) : number
+---@field SetStartTime fun(self: combat, time: number)
+---@field GetEndTime fun(self: combat) : number
+---@field GetDifficulty fun(self: combat) : number, string return the dungeon or raid difficulty for boss fights as a number, the string is an english difficulty name in lower case which is not always present
+---@field GetEncounterCleuID fun(self: combat) : number return the encounterId for boss fights, this number is gotten from the ENCOUNTER_START event
+---@field GetBossInfo fun(self: combat) : bossinfo a table containing many informations about the boss fight
+---@field SetEndTime fun(self: combat, time: number)
 ---@field CopyDeathsFrom fun(combat1: combat, combat2: combat, bMythicPlus: boolean) copy the deaths from combat2 to combat1, use true on bMythicPlus if the combat is from a mythic plus run
----@field GetContainer fun(combat: combat, containerType: containertype) : actorcontainer get an actorcontainer, containerType can be 1 for damage, 2 heal, 3 resources, 4 utility
----@field GetSpellCastAmount fun(combat: combat, actorName: string, spellName: string) : number get the amount of times a spell was casted
----@field RemoveActorFromSpellCastTable fun(combat: combat, actorName: string)
----@field GetSpellCastTable fun(combat: combat, actorName: string|nil) : table
----@field GetSpellUptime fun(combat: combat, actorName: string, spellId: number, auraType: string|nil) : number get the uptime of a buff or debuff
----@field GetActor fun(combat: combat, containerType: number, playerName: string) : actor
----@field CreateAlternatePowerTable fun(combat: combat, actorName: string) : alternatepowertable
----@field GetCombatNumber fun(combat: combat) : number get a unique number representing the combatId, each combat has a unique number
----@field SetDate fun(combat: combat, startDate: string, endDate: string) set the start and end date of the combat, format: "H:M:S"
----@field GetDate fun(combat: combat) : string, string get the start and end date of the combat, format: "H:M:S"
----@field GetRoster fun(combat: combat) : table<string, string> get the roster of the combat, the table contains the names of the players in the combat
----@field InstanceType fun(combat: combat) : string get the instance type of the combat, can be "raid" or "party" or "pvp" or "arena" or "none"
----@field IsTrash fun(combat: combat) : boolean is true if the combat is a trash combat
+---@field GetContainer fun(self: combat, containerType: containertype) : actorcontainer get an actorcontainer, containerType can be 1 for damage, 2 heal, 3 resources, 4 utility
+---@field GetSpellCastAmount fun(self: combat, actorName: string, spellName: string) : number get the amount of times a spell was casted
+---@field RemoveActorFromSpellCastTable fun(self: combat, actorName: string)
+---@field GetSpellCastTable fun(self: combat, actorName: string|nil) : table
+---@field GetSpellUptime fun(self: combat, actorName: string, spellId: number, auraType: string|nil) : number get the uptime of a buff or debuff
+---@field GetActor fun(self: combat, containerType: number, playerName: string) : actor
+---@field CreateAlternatePowerTable fun(self: combat, actorName: string) : alternatepowertable
+---@field GetCombatNumber fun(self: combat) : number get a unique number representing the combatId, each combat has a unique number
+---@field SetDate fun(self: combat, startDate: string?, endDate: string?) set the start and end date of the combat, format: "H:M:S"
+---@field GetDate fun(self: combat) : string, string get the start and end date of the combat, format: "H:M:S"
+---@field GetRoster fun(self: combat) : table<string, string> get the roster of the combat, the table contains the names of the players in the combat
+---@field GetInstanceType fun(self: combat) : instancetype get the instance type of the combat, can be "raid" or "party" or "pvp" or "arena" or "none"
+---@field IsTrash fun(self: combat) : boolean is true if the combat is a trash combat
+---@field GetEncounterName fun(self: combat) : string get the name of the encounter
+---@field GetBossImage fun(self: combat) : texturepath|textureid get the icon of the encounter
+---@field SetDateToNow fun(self: combat, bSetStartDate: boolean?, bSetEndDate: boolean?) set the date to the current time. format: "H:M:S"
+---@field GetBossHealth fun(self: combat) : number get the percentage of the boss health when the combat ended
+---@field GetBossHealthString fun(self: combat) : string get the percentage of the boss health when the combat ended as a string
+---@field GetBossName fun(self: combat) : string? return the name of the unitId "boss1", nil if the unit doesn't existed during the combat
 
 ---@class actorcontainer : table contains two tables _ActorTable and _NameIndexTable, the _ActorTable contains the actors, the _NameIndexTable contains the index of the actors in the _ActorTable, making quick to reorder them without causing overhead
 ---@field need_refresh boolean when true the container is dirty and needs to be refreshed
----@field _ActorTable table array of actors
+---@field _ActorTable table a table containing all actors stored in the container
 ---@field _NameIndexTable table<string, number> [actorName] = actorIndex in the _ActorTable, actorcontainer:Remap() refreshes the _NameIndexTable
 ---@field GetActor fun(container: actorcontainer, actorName: string) get an actor by its name
 ---@field GetOrCreateActor fun(container: actorcontainer, actorSerial: guid, actorName: actorname, actorFlags: controlflags, bShouldCreateActor: boolean) get an actor by its name, if the actor doesn't exist it will be created
@@ -253,6 +427,7 @@
 ---@field serial string
 ---@field spec number
 ---@field grupo boolean
+---@field classe string
 ---@field fight_component boolean
 ---@field boss_fight_component boolean
 ---@field pvp_component boolean
@@ -278,12 +453,17 @@
 ---@field GetPets fun(actor: actor) : table<number, string> get a table with all pet names that belong to the player
 ---@field GetSpellList fun(actor: actor) : table<number, spelltable>
 ---@field GetSpellContainerNames fun(container: actorcontainer) : string[] get the table which contains the names of the spell containers
+---@field GetDisplayName fun(actor: actor) : string Get the display name of the actor. Display name is often the player name without the realm name.
+---@field GetActorSpells fun(actor: actor) : spellcontainer get the spell container of the actor
+---@field Pets fun(actor: actor) : petname[] get the pets of the actor
+---@field SetSpecId fun(actor: actor, specId: number) set the specId of the actor
+---@field 
 
 ---@class actordamage : actor
 ---@field friendlyfire_total number
 ---@field friendlyfire table<actorname, friendlyfiretable>
 ---@field damage_taken number amount of damage the actor took during the segment
----@field damage_from table<string, boolean> store the name of the actors which damaged the actor, format: [actorName] = true
+---@field damage_from table<actorname, boolean> store the name of the actors which damaged the actor, format: [actorName] = true
 ---@field totalabsorbed number amount of damage dealt by the actor by got absorbed by the target, this is a "ABSORB" type of miss but still counts as damage done
 ---@field augmentedSpellsContainer spellcontainer
 
@@ -340,6 +520,10 @@
 ---@field freezed boolean
 ---@field sub_atributo_last table
 ---@field row_info table
+---@field
+---@field
+---@field
+---@field GetActorBySubDisplayAndRank fun(self: instance, displayid: attributeid, subDisplay: attributeid, rank: number) : actor
 ---@field GetSize fun(instance: instance) : width, height
 ---@field GetInstanceGroup fun() : table
 ---@field GetCombat fun(instance: instance)
@@ -374,6 +558,10 @@
 ---@field maxTime number
 ---@field averageTime number
 
+---@class trinketprocdata : table
+---@field cooldown number
+---@field total number
+
 ---@class tabframe : frame this is the tab frame object for the breakdown window
 
 ---@class breakdownwindow : frame
@@ -382,6 +570,7 @@
 ---@field BreakdownPluginSelectionFrame frame frame which has buttons to select a plugin to show in the breakdown window
 ---@field BreakdownTabsFrame frame where the tab buttons are located (parent frame)
 ---@field RegisteredPluginButtons button[] table which contains plugins buttons that are registered to the breakdown window
+---@field PlayerSelectionHeader df_headerframe
 ---@field RefreshPlayerScroll fun() refresh the player scroll frame (shown in the left side of the breakdown window)
 ---@field RegisterPluginButton fun(button: button, pluginObject: table, pluginAbsolutename: string) register a plugin button to the breakdown window
 ---@field GetShownPluginObject fun() : table get the plugin object that is currently shown in the breakdown window
@@ -396,15 +585,43 @@
 ---@class breakdownexpandbutton : button
 ---@field texture texture
 
+---@class breakdownsegmentline : button
+---@field segmentText df_label
+---@field segmentIcon df_image
+---@field segmentSubIcon df_image
+---@field UpdateLine function
+---@field combatUniqueID uniquecombatid
+---@field isSelected boolean
+
+---@class breakdownsegmentdata
+---@field UID uniquecombatid
+---@field combatName string
+---@field combatIcon df_atlasinfo
+---@field combatIcon2 df_atlasinfo? used for the second icon in the segment line, this shows the trash or boss icon where the primary icon shows the mythic+ icon for example
+---@field r number
+---@field g number
+---@field b number
+
+---has formartted data to use while reporting data from the breakdown
+---@class breakdownreportdata : table
+---@field name string
+---@field amount string
+---@field percent string
+
+---@class breakdownreporttable : table contains 'title' with a string as title of the report and in the indexed part breakdownreporttable[]
+---@field title string the title of the report to send before the report data
+
 ---@class breakdownspellscrollframe : df_scrollboxmixin, scrollframe
 ---@field Header df_headerframe
----@field RefreshMe fun(scrollFrame: breakdownspellscrollframe, data: table|nil)
 ---@field SortKey string
 ---@field SortOrder string
+---@field RefreshMe fun(scrollFrame: breakdownspellscrollframe, data: table|nil)
+---@field GetReportData fun(scrollFrame: breakdownphasescrollframe) : breakdownreportdata[]
 
 ---@class breakdowntargetscrollframe : df_scrollboxmixin, scrollframe
 ---@field Header df_headerframe
 ---@field RefreshMe fun(scrollFrame: breakdowntargetscrollframe, data: table|nil)
+---@field GetReportData fun(scrollFrame: breakdownphasescrollframe) : breakdownreportdata[]
 
 ---@class breakdowngenericscrollframe : df_scrollboxmixin, scrollframe
 ---@field Header df_headerframe
@@ -413,6 +630,7 @@
 ---@class breakdownphasescrollframe : df_scrollboxmixin, scrollframe
 ---@field Header df_headerframe
 ---@field RefreshMe fun(scrollFrame: breakdownphasescrollframe, data: table|nil)
+---@field GetReportData fun(scrollFrame: breakdownphasescrollframe) : breakdownreportdata[]
 
 ---@class breakdownphasebar : button, df_headerfunctions
 ---@field index number
@@ -549,6 +767,11 @@
 ---@field centerText fontstring
 ---@field rightText fontstring
 
+---@class reportoverlaybutton : button
+---@field scrollFrame df_scrollbox
+---@field reportText fontstring
+---@field backgroundTexture texture
+
 ---@class breakdownspelltab
 ---@field selectedSpellBar breakdownspellbar
 ---@field TabFrame breakdownspellstab
@@ -564,6 +787,7 @@
 ---@field PhaseContainerFrame df_framecontainer
 ---@field GenericContainerFrameLeft df_framecontainer
 ---@field GenericContainerFrameRight df_framecontainer
+---@field ReportOverlays reportoverlaybutton[]
 ---@field GetActor fun() : actor
 ---@field GetCombat fun() : combat
 ---@field GetInstance fun() : instance
@@ -590,6 +814,7 @@
 ---@field CreateSpellScrollContainer fun(tabFrame: tabframe) : breakdownspellscrollframe
 ---@field CreateTargetBar fun(self: breakdowntargetscrollframe, index: number) : breakdowntargetbar
 ---@field CreateSpellBar fun(self: breakdownspellscrollframe, index: number) : breakdownspellbar
+---@field SetShownReportOverlay fun(bIsShown: boolean)
 
 ---@class timemachine : table
 ---@field Ticker fun() runs each second and check if actors are performing damage and healing actions, if the actor isn't, stop the activity time of that actor
@@ -603,4 +828,10 @@
 
 ---@class details222 : table
 ---@field TimeMachine timemachine
+---@field PetContainer petcontainer
 
+---@class profile_breakdown_settings : table
+---@field font_size number
+---@field font_color color
+---@field font_outline outline
+---@field font_face string

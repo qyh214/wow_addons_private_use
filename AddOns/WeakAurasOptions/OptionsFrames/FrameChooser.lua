@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 -- Lua APIs
 local pairs = pairs
@@ -8,6 +11,7 @@ local pairs = pairs
 local CreateFrame, IsMouseButtonDown, SetCursor, GetMouseFocus, MouseIsOver, ResetCursor
   = CreateFrame, IsMouseButtonDown, SetCursor, GetMouseFocus, MouseIsOver, ResetCursor
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -42,7 +46,13 @@ function OptionsPrivate.StartFrameChooser(data, path)
     else
       SetCursor("CAST_CURSOR");
 
-      local focus = GetMouseFocus();
+      local focus
+      if GetMouseFocus then
+        focus = GetMouseFocus()
+      elseif GetMouseFoci then
+        local foci = GetMouseFoci()
+        focus = foci[1] or nil
+      end
       local focusName;
 
       if(focus) then

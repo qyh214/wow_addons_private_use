@@ -1,9 +1,10 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="Skins.lua"/>
+	<Script file="Core.lua"/>
 	<Script file="Ace3.lua"/>
 	<Script file="AdiBags.lua"/>
 	<Script file="Auctionator.lua"/>
 	<Script file="BagSync.lua"/>
+	<Script file="BetterBags.lua"/>
 	<Script file="BtWLoadouts.lua"/>
 	<Script file="ButtonForge.lua"/>
 	<Script file="ExtVendorUI.lua"/>
@@ -19,7 +20,9 @@
 	<Script file="Others.lua"/>
 	<Script file="RareScanner.lua"/>
 	<Script file="Rematch.lua"/>
+	<Script file="ShadowDancer.lua"/>
 	<Script file="StdUi.lua"/>
+	<Script file="TalentLoadoutsEx.lua"/>
 	<Script file="tdBattlePetScript.lua"/>
 	<Script file="tdGUI.lua"/>
 	<Script file="TinyInspect.lua"/>

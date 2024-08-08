@@ -127,7 +127,8 @@ G.DefaultSettings = {
 		FilterEquipSet = false,
 		FilterAnima = false,
 		FilterRelic = false,
-		FilterStone = true,
+		FilterStone = false,
+		FilterAOE = true,
 	},
 	Auras = {
 		Reminder = true,
@@ -152,7 +153,7 @@ G.DefaultSettings = {
 		ClickThrough = false,
 		IconScale = 1,
 		DeprecatedAuras = false,
-		QuakeRing = false,
+		MinCD = 3,
 	},
 	UFs = {
 		Enable = true,
@@ -160,6 +161,7 @@ G.DefaultSettings = {
 		ShowAuras = true,
 		Arena = true,
 		Castbars = true,
+		AddPower = true,
 		SwingBar = false,
 		SwingWidth = 275,
 		SwingHeight = 3,
@@ -201,7 +203,6 @@ G.DefaultSettings = {
 		CPHeight = 5,
 		CPxOffset = 12,
 		CPyOffset = -2,
-		QuakeTimer = true,
 		LagString = true,
 		RuneTimer = true,
 		RaidBuffIndicator = true,
@@ -227,8 +228,6 @@ G.DefaultSettings = {
 		PartyAltPower = true,
 		PartyWatcherSync = true,
 		RaidTextScale = 1,
-		FrequentHealth = false,
-		HealthFrequency = .2,
 		ShowRaidBuff = false,
 		RaidBuffSize = 12,
 		BuffClickThru = true,
@@ -244,6 +243,7 @@ G.DefaultSettings = {
 		DescRole = true,
 		PlayerAbsorb = false,
 		AutoBuffs = false,
+		ShowRoleMode = 1,
 
 		PlayerWidth = 245,
 		PlayerHeight = 24,
@@ -341,6 +341,7 @@ G.DefaultSettings = {
 		WhisperSound = true,
 		BottomBox = false,
 		SysFont = false,
+		EditFont = 14,
 	},
 	Map = {
 		DisableMap = false,
@@ -421,6 +422,7 @@ G.DefaultSettings = {
 		DotSpells = {},
 		RaidTargetX = 0,
 		RaidTargetY = 3,
+		PlateRange = 45,
 
 		PlateWidth = 190,
 		PlateHeight = 8,
@@ -428,6 +430,7 @@ G.DefaultSettings = {
 		PlateCBOffset = -1,
 		CBTextSize = 14,
 		NameTextSize = 14,
+		NameTextOffset = 5,
 		HealthTextSize = 16,
 		HealthTextOffset = 5,
 		FriendPlateWidth = 190,
@@ -436,6 +439,7 @@ G.DefaultSettings = {
 		FriendPlateCBOffset = -1,
 		FriendCBTextSize = 14,
 		FriendNameSize = 14,
+		FriendNameOffset = 5,
 		FriendHealthSize = 16,
 		FriendHealthOffset = 5,
 		HarmWidth = 190,
@@ -477,7 +481,7 @@ G.DefaultSettings = {
 		FontScale = 1,
 	},
 	Tooltip = {
-		CombatHide = false,
+		HideInCombat = 1,
 		CursorMode = 1,
 		ItemQuality = false,
 		TipAnchor = 4,
@@ -956,6 +960,10 @@ local function togglePlayerAbsorb()
 	end
 end
 
+local function toggleAddPower()
+	B:GetModule("UnitFrames"):ToggleAddPower()
+end
+
 local function toggleUFClassPower()
 	B:GetModule("UnitFrames"):ToggleUFClassPower()
 end
@@ -970,10 +978,6 @@ end
 
 local function updateRaidTextScale()
 	B:GetModule("UnitFrames"):UpdateRaidTextScale()
-end
-
-local function updateRaidHealthMethod()
-	B:GetModule("UnitFrames"):UpdateRaidHealthMethod()
 end
 
 local function toggleCastBarLatency()
@@ -1123,15 +1127,15 @@ G.TabList = {
 	NewTag..L["Actionbar"],
 	L["Bags"],
 	L["Unitframes"],
-	L["RaidFrame"],
-	L["Nameplate"],
+	NewTag..L["RaidFrame"],
+	NewTag..L["Nameplate"],
 	L["PlayerPlate"],
 	L["Auras"],
 	L["Raid Tools"],
-	L["ChatFrame"],
+	NewTag..L["ChatFrame"],
 	L["Maps"],
 	L["Skins"],
-	L["Tooltip"],
+	NewTag..L["Tooltip"],
 	L["Misc"],
 	L["UI Settings"],
 	L["Profile"],
@@ -1184,14 +1188,14 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "UFs", "Portrait", L["UFs Portrait"].."*", nil, nil, togglePortraits},
 		{1, "UFs", "CCName", L["ClassColor Name"].."*", true, nil, updateUFTextScale},
 		{1, "UFs", "PlayerAbsorb", L["PlayerAbsorb"].."*", nil, nil, togglePlayerAbsorb, L["PlayerAbsorbTip"]},
+		{1, "UFs", "AddPower", L["AddPower"].."*", true, nil, toggleAddPower, L["AddPowerTip"]},
 		{3, "UFs", "UFTextScale", L["UFTextScale"].."*", nil, {.8, 1.5, .05}, updateUFTextScale},
 		{4, "UFs", "HealthColor", L["HealthColor"].."*", true, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"], L["ClearHealth"], L["ClearClass"]}, updateUFTextScale},
 		{},--blank
 		{1, "UFs", "Castbars", HeaderTag..L["UFs Castbar"], nil, setupCastbar},
 		{1, "UFs", "LagString", L["Castbar LagString"].."*", true, nil, toggleCastBarLatency},
 		{1, "UFs", "SwingBar", L["UFs SwingBar"].."*", nil, setupSwingBars, toggleSwingBars},
-		{1, "UFs", "QuakeTimer", L["UFs QuakeTimer"], true, nil, nil, L["QuakeTimerTip"]},
-		{1, "UFs", "PetCB", L["PetCastbar"]},
+		{1, "UFs", "PetCB", L["PetCastbar"], true},
 		{},--blank
 		{1, "UFs", "CombatText", HeaderTag..L["UFs CombatText"]},
 		{1, "UFs", "ScrollingCT", L["ScrollingCT"].."*", true},
@@ -1232,15 +1236,14 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{4, "UFs", "RaidHealthColor", L["HealthColor"].."*", nil, {L["Default Dark"], L["ClassColorHP"], L["GradientHP"], L["ClearHealth"], L["ClearClass"]}, updateRaidTextScale},
 		{4, "UFs", "RaidHPMode", L["HealthValueType"].."*", true, {DISABLE, L["ShowHealthPercent"], L["ShowHealthCurrent"], L["ShowHealthLoss"], L["ShowHealthLossPercent"]}, updateRaidTextScale, L["100PercentTip"]},
-		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
-		{1, "UFs", "SmartRaid", HeaderTag..L["SmartRaid"].."*", nil, nil, updateAllHeaders, L["SmartRaidTip"]},
+		{4, "UFs", "ShowRoleMode", NewTag..L["ShowRoleMode"], nil, {ALL, DISABLE, L["HideDPSRole"]}},
 		{3, "UFs", "RaidTextScale", L["UFTextScale"].."*", true, {.8, 1.5, .05}, updateRaidTextScale},
+		{1, "UFs", "ShowSolo", L["ShowSolo"].."*", nil, nil, updateAllHeaders, L["ShowSoloTip"]},
+		{1, "UFs", "SmartRaid", HeaderTag..L["SmartRaid"].."*", true, nil, updateAllHeaders, L["SmartRaidTip"]},
 		{1, "UFs", "TeamIndex", L["RaidFrame TeamIndex"].."*", nil, nil, updateTeamIndex},
+		{1, "UFs", "SpecRaidPos", L["Spec RaidPos"], true, nil, nil, L["SpecRaidPosTip"]},
 		{1, "UFs", "RCCName", L["ClassColor Name"].."*", nil, nil, updateRaidTextScale},
-		{1, "UFs", "FrequentHealth", HeaderTag..L["FrequentHealth"].."*", true, nil, updateRaidHealthMethod, L["FrequentHealthTip"]},
-		{1, "UFs", "HideTip", L["HideTooltip"].."*", nil, nil, updateRaidTextScale, L["HideTooltipTip"]},
-		{1, "UFs", "SpecRaidPos", L["Spec RaidPos"], nil, nil, nil, L["SpecRaidPosTip"]},
-		{3, "UFs", "HealthFrequency", L["HealthFrequency"].."*", true, {.1, .5, .05}, updateRaidHealthMethod, L["HealthFrequencyTip"]},
+		{1, "UFs", "HideTip", L["HideTooltip"].."*", true, nil, updateRaidTextScale, L["HideTooltipTip"]},
 	},
 	[5] = {
 		{1, "Nameplate", "Enable", HeaderTag..L["Enable Nameplate"], nil, setupNameplateSize, refreshNameplates},
@@ -1290,7 +1293,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{5, "Nameplate", "OffTankColor", L["OffTank Color"].."*", 3},
 		{},--blank
 		{1, "Nameplate", "CVarOnlyNames", L["CVarOnlyNames"], nil, nil, updatePlateCVars, L["CVarOnlyNamesTip"]},
-		{1, "Nameplate", "CVarShowNPCs", L["CVarShowNPCs"].."*", nil, nil, updatePlateCVars, L["CVarShowNPCsTip"]},
+		{1, "Nameplate", "CVarShowNPCs", L["CVarShowNPCs"].."*", true, nil, updatePlateCVars, L["CVarShowNPCsTip"]},
+		{3, "Nameplate", "PlateRange", NewTag..L["PlateRange"].."*", nil, {0, 60, 1}, updatePlateCVars, L["PlateRangeTip"]},
 		{3, "Nameplate", "VerticalSpacing", L["NP VerticalSpacing"].."*", true, {.5, 2.5, .1}, updatePlateCVars},
 		{3, "Nameplate", "MinScale", L["Nameplate MinScale"].."*", nil, {.5, 1, .1}, updatePlateCVars},
 		{3, "Nameplate", "MinAlpha", L["Nameplate MinAlpha"].."*", true, {.3, 1, .1}, updatePlateCVars},
@@ -1318,9 +1322,9 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{},--blank
 		{1, "AuraWatch", "Enable", HeaderTag..L["Enable AuraWatch"], nil, setupAuraWatch},
 		{1, "AuraWatch", "DeprecatedAuras", L["DeprecatedAuras"], true},
-		{1, "AuraWatch", "QuakeRing", L["QuakeRing"].."*"},
 		{1, "AuraWatch", "ClickThrough", L["AuraWatch ClickThrough"], nil, nil, nil, L["ClickThroughTip"]},
-		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], true, {.8, 2, .1}},
+		{3, "AuraWatch", "IconScale", L["AuraWatch IconScale"], nil, {.8, 2, .1}},
+		{3, "AuraWatch", "MinCD", NewTag..L["AuraWatch MinCD"].."*", true, {1, 60, 1}, nil, L["MinCDTip"]},
 		{},--blank
 		{1, "Auras", "Totems", HeaderTag..L["Enable Totembar"]},
 		{1, "Auras", "VerticalTotems", L["VerticalTotems"].."*", nil, nil, refreshTotemBar},
@@ -1360,8 +1364,11 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{3, "Chat", "ChatWidth", L["LockChatWidth"].."*", nil, {200, 600, 1}, updateChatSize},
 		{3, "Chat", "ChatHeight", L["LockChatHeight"].."*", true, {100, 500, 1}, updateChatSize},
 		{},--blank
+		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
+		{4, "Chat", "ChatBGType", L["ChatBGType"].."*", true, {DISABLE, L["Default Dark"], L["Gradient"]}, toggleChatBackground},
 		{1, "Chat", "Oldname", L["Default Channel"]},
-		{1, "Chat", "Sticky", L["Chat Sticky"].."*", true, nil, updateChatSticky},
+		{1, "Chat", "Sticky", L["Chat Sticky"].."*", nil, nil, updateChatSticky},
+		{3, "Chat", "EditFont", NewTag..L["EditFont"].."*", true, {10, 30, 1}, toggleEditBoxAnchor},
 		{1, "Chat", "Chatbar", L["ShowChatbar"]},
 		{1, "Chat", "WhisperColor", L["Differ WhisperColor"].."*", true},
 		{1, "Chat", "ChatItemLevel", L["ShowChatItemLevel"]},
@@ -1369,8 +1376,6 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Chat", "WhisperSound", L["WhisperSound"].."*", nil, nil, nil, L["WhisperSoundTip"]},
 		{1, "Chat", "BottomBox", L["BottomBox"].."*", true, nil, toggleEditBoxAnchor},
 		{1, "Chat", "SysFont", L["SysFont"], nil, nil, nil, L["SysFontTip"]},
-		{4, "ACCOUNT", "TimestampFormat", L["TimestampFormat"].."*", nil, {DISABLE, "03:27 PM", "03:27:32 PM", "15:27", "15:27:32"}},
-		{4, "Chat", "ChatBGType", L["ChatBGType"].."*", true, {DISABLE, L["Default Dark"], L["Gradient"]}, toggleChatBackground},
 		{},--blank
 		{1, "Chat", "EnableFilter", HeaderTag..L["Enable Chatfilter"]},
 		{1, "Chat", "BlockAddonAlert", L["Block Addon Alert"], true},
@@ -1435,8 +1440,7 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 	[12] = {
 		{3, "Tooltip", "Scale", L["Tooltip Scale"].."*", nil, {.5, 1.5, .1}},
 		{4, "Tooltip", "TipAnchor", L["TipAnchor"].."*", true, {L["TOPLEFT"], L["TOPRIGHT"], L["BOTTOMLEFT"], L["BOTTOMRIGHT"]}, nil, L["TipAnchorTip"]},
-		{1, "Tooltip", "CombatHide", L["Hide Tooltip"].."*"},
-		{1, "Tooltip", "ItemQuality", L["ShowItemQuality"].."*"},
+		{4, "Tooltip", "HideInCombat", NewTag..L["HideInCombat"].."*", nil, {DISABLE, "ALT", "SHIFT", "CTRL", ALWAYS}, nil, L["HideInCombatTip"]},
 		{4, "Tooltip", "CursorMode", L["Follow Cursor"].."*", true, {DISABLE, L["LEFT"], L["TOP"], L["RIGHT"]}},
 		{1, "Tooltip", "HideTitle", L["Hide Title"].."*"},
 		{1, "Tooltip", "HideRank", L["Hide Rank"].."*", true},
@@ -1447,7 +1451,8 @@ G.OptionList = { -- type, key, value, name, horizon, doubleline
 		{1, "Tooltip", "LFDRole", L["Group Roles"].."*"},
 		{1, "Tooltip", "TargetBy", L["Show TargetedBy"].."*", true},
 		{1, "Tooltip", "MythicScore", L["MDScore"].."*", nil, nil, nil, L["MDScoreTip"]},
-		{1, "Tooltip", "HideAllID", "|cffff0000"..L["HideAllID"], true},
+		{1, "Tooltip", "ItemQuality", L["ShowItemQuality"].."*", true},
+		{1, "Tooltip", "HideAllID", "|cffff0000"..L["HideAllID"]},
 		{},--blank
 		{1, "Tooltip", "AzeriteArmor", HeaderTag..L["Show AzeriteArmor"]},
 		{1, "Tooltip", "OnlyArmorIcons", L["Armor icons only"].."*", true},
@@ -1762,14 +1767,16 @@ local function CreateContactBox(parent, text, url, index)
 end
 
 local donationList = {
-	["爱发电"] = "33578473, normanvon, y368413, EK, msylgj, 夜丨灬清寒, akakai, reisen410, 其实你很帥, 萨菲尔, Antares, RyanZ, fldqw, Mario, 时光旧予, 食铁骑兵, 爱蕾丝的基总, 施然, 命运镇魂曲, 不可语上, Leo(En-布鲁), 忘川, 刘翰承, 悟空海外党, cncj, 暗月, 汪某人, 黑手, iraq120, 嗜血未冷, 我又不是妖怪, 养乐多, 无人知晓, 秋末旷夜-迪瑟洛克, Teo, 莉拉斯塔萨, 音尘绝, 刺王杀驾, 醉跌-凤凰之神, 灬麦加灬-阿古斯, 漂舟不系, 朵小熙, 山岸逢花, 乄阿财-帕奇维克, 乌鸦岭守墓饼-罗宁, 自在独踽踽-霜之哀伤, 御行宇航-碧玉矿洞, 末日伯爵-奥罗, 阿玛忆-白银之手, 零氪-罗宁, 粉色刘老头-黑曜石之锋, shadowlezi, 風雲再起-帕奇维克, congfeng, 东叫兽, solor, DC_Doraemon, 不明飞行物，Seraphinee-冰风岗，怜悯，小甜甜赵顶天-贫瘠之地，浅羽凝-湖畔镇，十方-火妖，科比小迷弟-哈霍兰，信仰之业-霜之哀伤，喷大水丶-奥罗，卓越，白色恶魔-风行者，Shadowbaner-死亡之翼，霸亡别姬-埃提耶什，惊雪-遗忘海岸，Ayukawa-布鲁，天天洗澡-德姆塞卡尔，江表之力牧-碧玉矿洞，射鸡大师-灰烬使者，星辰花，玛拉的万花筒-埃苏雷格，园城寺怜-维希度斯，泽尔里奇-席瓦莱恩，孤木不似林-无尽之海，悪夢灬旧城-伊森利恩，逸星-匕首岭，假胯宽不宽-哈霍兰，农富三拳-燃烧之刃，蛮多基尔-夏挚生，喻大脑壳-维希度斯，岁月碎月-法尔班克斯，随性丶丶-安苏，陈一发儿丷-死亡之翼，东谐西毒-祈福，大洋大洋大洋-厄运之槌，Spritejj-安苏，Kyrielight-憤怒使者，十六爸爸-巨人追猎者，一白夜一-燃烧之刃，一瓶东方树叶-怒炉，你乖一点-格瑞姆巴托，Zev-席瓦莱恩，大黑手丶-燃烧之刃，偶爾琳琳雨-暗影之月(亚服)，琉璃绯雪，片山城西-世界之树，江城之下-寒冰皇冠, 楓聖御雷，神奇的胖虎，北宸以及部分未备注名字的用户。",
+	["爱发电"] = "33578473, normanvon, y368413, EK, msylgj, 夜丨灬清寒, akakai, reisen410, 其实你很帥, 萨菲尔, Antares, RyanZ, fldqw, Mario, 时光旧予, 食铁骑兵, 爱蕾丝的基总, 施然, 命运镇魂曲, 不可语上, Leo(En-布鲁), 忘川, 刘翰承, 悟空海外党, cncj, 暗月, 汪某人, 黑手, iraq120, 嗜血未冷, 我又不是妖怪, 养乐多, 无人知晓, 秋末旷夜-迪瑟洛克, Teo, 莉拉斯塔萨, 音尘绝, 刺王杀驾, 醉跌-凤凰之神, 灬麦加灬-阿古斯, 漂舟不系, 朵小熙, 山岸逢花, 乄阿财-帕奇维克, 乌鸦岭守墓饼-罗宁, 自在独踽踽-霜之哀伤, 御行宇航-碧玉矿洞, 末日伯爵-奥罗, 阿玛忆-白银之手, 零氪-罗宁, 粉色刘老头-黑曜石之锋, shadowlezi, 風雲再起-帕奇维克, congfeng, 东叫兽, solor, DC_Doraemon, 不明飞行物，Seraphinee-冰风岗，怜悯，小甜甜赵顶天-贫瘠之地，浅羽凝-湖畔镇，十方-火妖，科比小迷弟-哈霍兰，信仰之业-霜之哀伤，喷大水丶-奥罗，卓越，白色恶魔-风行者，Shadowbaner-死亡之翼，霸亡别姬-埃提耶什，惊雪-遗忘海岸，Ayukawa-布鲁，天天洗澡-德姆塞卡尔，江表之力牧-碧玉矿洞，射鸡大师-灰烬使者，星辰花，玛拉的万花筒-埃苏雷格，园城寺怜-维希度斯，泽尔里奇-席瓦莱恩，孤木不似林-无尽之海，悪夢灬旧城-伊森利恩，逸星-匕首岭，假胯宽不宽-哈霍兰，农富三拳-燃烧之刃，蛮多基尔-夏挚生，喻大脑壳-维希度斯，岁月碎月-法尔班克斯，随性丶丶-安苏，陈一发儿丷-死亡之翼，东谐西毒-祈福，大洋大洋大洋-厄运之槌，Spritejj-安苏，Kyrielight-憤怒使者，十六爸爸-巨人追猎者，一白夜一-燃烧之刃，一瓶东方树叶-怒炉，你乖一点-格瑞姆巴托，Zev-席瓦莱恩，大黑手丶-燃烧之刃，偶爾琳琳雨-暗影之月(亚服)，琉璃绯雪，片山城西-世界之树，江城之下-寒冰皇冠, 楓聖御雷，神奇的胖虎，北宸，清风徐來，步履望星辰丶，Spiritcivet-Atiesh(美服)，Kaguya, Nataly-希瓦莱恩，露露缇娅丶-霜语以及部分未备注名字的用户。",
 	["Patreon"] = "Quentin, Julian Neigefind, silenkin, imba Villain, Zeyu Zhu, Kon Floros, Distortedmind87, Boldboy, taelle.",
-	["海豚加速器"] = "新用户7天畅游兑换码：|nndui",
+	["CurseForge"] = "A world of endless gaming possibilities for modders and gamers alike.|n|nKeep your NDui update to date.",
+	["新手盒子"] = "集插件更新工具和游戏助手为一体！|n|n你可以在此更新你的NDui",
+	["海豚加速器"] = "新用户7天畅游兑换码: |nndui",
 }
 local function CreateDonationIcon(parent, texture, name, xOffset)
 	local button = B.CreateButton(parent, 30, 30, true, texture)
 	button:SetPoint("BOTTOMLEFT", xOffset, 10)
-	button.title = format(L["Donation"], name)
+	button.title = name
 	B.AddTooltip(button, "ANCHOR_TOP", "|n"..donationList[name], "info")
 end
 
@@ -1816,7 +1823,11 @@ StaticPopupDialogs["RELOAD_NDUI"] = {
 function G:AddSponsor()
 	CreateDonationIcon(f, DB.afdianTex, "爱发电", 160)
 	CreateDonationIcon(f, DB.patreonTex, "Patreon", 200)
-	CreateDonationIcon(f, DB.sponsorTex, "海豚加速器", 240)
+	CreateDonationIcon(f, DB.curseforgeTex, "CurseForge", 240)
+	if DB.Client == "zhCN" or DB.Client == "zhTW" then
+		CreateDonationIcon(f, DB.boxTex, "新手盒子", 280)
+		CreateDonationIcon(f, DB.sponsorTex, "海豚加速器", 320)
+	end
 end
 
 local function OpenGUI()
@@ -1925,20 +1936,14 @@ local function OpenGUI()
 end
 
 function G:OnLogin()
-	local gui = CreateFrame("Button", "GameMenuFrameNDui", GameMenuFrame, "GameMenuButtonTemplate, BackdropTemplate")
-	gui:SetText(L["NDui Console"])
-	gui:SetPoint("TOP", GameMenuButtonAddons, "BOTTOM", 0, -21)
-	GameMenuFrame:HookScript("OnShow", function(self)
-		GameMenuButtonLogout:SetPoint("TOP", gui, "BOTTOM", 0, -21)
-		self:SetHeight(self:GetHeight() + gui:GetHeight() + 22)
-	end)
-
-	gui:SetScript("OnClick", function()
+	local function toggleGUI()
 		if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end
 		OpenGUI()
 		HideUIPanel(GameMenuFrame)
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-	end)
+	end
 
-	if C.db["Skins"]["BlizzardSkins"] then B.Reskin(gui) end
+	hooksecurefunc(GameMenuFrame, "InitButtons", function(self)
+		self:AddButton(L["NDui Console"], toggleGUI)
+	end)
 end

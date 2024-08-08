@@ -1,33 +1,29 @@
-# [5.8.7](https://github.com/WeakAuras/WeakAuras2/tree/5.8.7) (2023-12-03)
+# [5.15.4](https://github.com/WeakAuras/WeakAuras2/tree/5.15.4) (2024-07-27)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.8.6...5.8.7)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.15.3...5.15.4)
 
 ## Highlights
 
- - Updates for Season of Discovery
-- New option to treat charged combo point as 7 combo points (thanks to @weswigham for initial idea+PR)
-- Bug fixes 
+ - Class and Specialzation triggers now support class/spec conditions 
 
 ## Commits
 
-InfusOnWoW (9):
+Boneshock (1):
 
-- Show an warning on trying to update an aura that can't be updated
-- Add an option to treat a charged combo point as 7 combo points
-- Add CHAT_MSG_LOOT type
-- Tweak frame levels again a bit
-- Improve error message for auras without a region type
-- AuraBar: Fix property names for gradient colors
-- Author Options: Also sort Sound list for the user
-- Drangonflying Load Option
-- Templates: Fix talent load option for Holy Word: Sanctify
+- fix error when creating new reputation trigger
 
-Stanzilla (2):
+InfusOnWoW (6):
 
-- Bump minor
-- Bump Classic TOC for SoD
+- Class and Specialization Trigger: Add condition for class/spec
+- Triggers: Don't set state.icon if the icon is unknown
+- Model Sub Element: Fix model frame level
+- Model+Model Sub Element: Remove model_path
+- Model Sub Element: Fix Model option
+- Fix custom text function returning a table leading to a lua error
 
-mrbuds (1):
+mrbuds (3):
 
-- Classis SoD: include new spell ids in spell cache
+- Fix transmission of auras
+- submodel: change default on classic for an existing model
+- Model: change default on classic for an existing model
 

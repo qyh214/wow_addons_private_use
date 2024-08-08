@@ -141,12 +141,12 @@ do
 		self:TargetMessage(369677, "yellow", name)
 		self:PlaySound(369677, "alert", nil, name)
 		if self:Me(guid) then
-			self:Say(369677)
+			self:Say(369677, nil, nil, "Ricocheting Shield")
 		end
 	end
 
 	function mod:RicochetingShield(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		ricochetingShieldRemaining = ricochetingShieldRemaining - 1
 		if ricochetingShieldRemaining > 0 then
 			self:Bar(args.spellId, 17.0)

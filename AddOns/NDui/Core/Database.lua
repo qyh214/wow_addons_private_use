@@ -9,7 +9,29 @@ DB.Version = C_AddOns.GetAddOnMetadata("NDui", "Version")
 DB.Support = C_AddOns.GetAddOnMetadata("NDui", "X-Support")
 DB.Client = GetLocale()
 DB.ScreenWidth, DB.ScreenHeight = GetPhysicalScreenSize()
-DB.isNewPatch = select(4, GetBuildInfo()) >= 100205 -- 10.2.0
+DB.isNewPatch = select(4, GetBuildInfo()) >= 110002 -- 11.0.2
+DB.isWW = select(4, GetBuildInfo()) >= 110000 -- 11.0.0
+
+-- Deprecated
+if DB.isWW then -- FIXME
+	local function EasyMenu_Initialize( frame, level, menuList )
+		for index = 1, #menuList do
+			local value = menuList[index]
+			if (value.text) then
+				value.index = index
+				UIDropDownMenu_AddButton( value, level )
+			end
+		end
+	end
+	
+	function EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay )
+		if ( displayMode == "MENU" ) then
+			menuFrame.displayMode = displayMode
+		end
+		UIDropDownMenu_Initialize(menuFrame, EasyMenu_Initialize, displayMode, nil, menuList)
+		ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y, menuList, nil, autoHideDelay)
+	end
+end
 
 -- Colors
 DB.MyName = UnitName("player")
@@ -65,9 +87,6 @@ DB.arrowTex = Media.."TargetArrow"
 DB.starTex = Media.."Hutu\\star"
 DB.flagTex = Media.."Hutu\\flag"
 DB.MicroTex = Media.."Hutu\\Menu\\"
-DB.tankTex = Media.."Hutu\\Tank"
-DB.healTex = Media.."Hutu\\Healer"
-DB.dpsTex = Media.."Hutu\\DPS"
 DB.chatLogo = Media.."Hutu\\logoSmall"
 DB.logoTex = Media.."Hutu\\logo"
 DB.closeTex = Media.."Hutu\\close"
@@ -75,6 +94,8 @@ DB.ArrowUp = Media.."Hutu\\arrow"
 DB.afdianTex = Media.."Hutu\\Afdian"
 DB.patreonTex = Media.."Hutu\\Patreon"
 DB.sponsorTex = Media.."Hutu\\Sponsor"
+DB.curseforgeTex = Media.."Hutu\\CURSEFORGE"
+DB.boxTex = Media.."Hutu\\Box"
 DB.mailTex = "Interface\\Minimap\\Tracking\\Mailbox"
 DB.gearTex = "Interface\\WorldMap\\Gear_64"
 DB.eyeTex = "Interface\\Minimap\\Raid_Icon"		-- blue: \\Dungeon_Icon
@@ -254,6 +275,12 @@ DB.ReminderBuffs = {
 			pvp = true,
 			weaponIndex = 2,
 			spec = 2,
+		},
+		{	spells = {	-- 天怒
+				[462854] = true,
+			},
+			depend = 462854,
+			instance = true,
 		},
 	},
 	ROGUE = {

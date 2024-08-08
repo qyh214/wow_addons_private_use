@@ -35,6 +35,7 @@ local L = mod:GetLocale()
 if L then
 	L.custom_on_autotalk = "Autotalk"
 	L.custom_on_autotalk_desc = "Instantly selects the gossip options to get profession buffs."
+	L.custom_on_autotalk_icon = "ui_chat"
 
 	L.primalist_ravager = "Primalist Ravager"
 	L.primalist_geomancer = "Primalist Geomancer"
@@ -88,7 +89,7 @@ function mod:GetOptions()
 		-- Primalist Earthshaker
 		375384, -- Rumbling Earth
 		-- Primalist Galesinger
-		385141, -- Thunderstorm
+		437719, -- Thunderstrike
 		-- Primalist Icecaller
 		376171, -- Refreshing Tides
 		-- Glacial Proto-Dragon
@@ -110,7 +111,7 @@ function mod:GetOptions()
 		[374724] = L.flamecaller_aymi,
 		[375079] = L.squallbringer_cyraz,
 		[375384] = L.primalist_earthshaker,
-		[385141] = L.primalist_galesinger,
+		[437719] = L.primalist_galesinger,
 		[376171] = L.primalist_icecaller,
 		[375351] = L.glacial_protodragon,
 		[377341] = L.aqua_rager,
@@ -160,11 +161,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "RumblingEarth", 408388)
 
 	-- Primalist Galesinger
-	self:Log("SPELL_AURA_APPLIED", "ThunderstormDamage", 385168)
-	self:Log("SPELL_PERIODIC_DAMAGE", "ThunderstormDamage", 385168)
-	self:Log("SPELL_PERIODIC_MISSED", "ThunderstormDamage", 385168)
+	self:Log("SPELL_CAST_START", "Thunderstrike", 437719)
 
-	-- Primalist Galesinger
+	-- Primalist Icecaller
 	self:Log("SPELL_CAST_START", "RefreshingTides", 376171)
 
 	-- Glacial Proto-Dragon
@@ -236,7 +235,7 @@ do
 			self:Message(args.spellId, "orange")
 			self:PlaySound(args.spellId, "alarm")
 		end
-		--self:NameplateCDBar(args.spellId, 17.0, args.sourceGUID)
+		--self:Nameplate(args.spellId, 17.0, args.sourceGUID)
 	end
 end
 
@@ -268,7 +267,7 @@ do
 			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "alert")
 		end
-		--self:NameplateCDBar(args.spellId, 30.3, args.sourceGUID)
+		--self:Nameplate(args.spellId, 30.3, args.sourceGUID)
 	end
 end
 
@@ -281,18 +280,25 @@ do
 			self:Message(args.spellId, "purple")
 			self:PlaySound(args.spellId, "alarm")
 		end
-		--self:NameplateCDBar(args.spellId, 18.2, args.sourceGUID)
+		--self:Nameplate(args.spellId, 18.2, args.sourceGUID)
 	end
 end
 
 -- Dazzling Dragonfly
 
-function mod:Dazzle(args)
-	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
-		return
+do
+	local prev = 0
+	function mod:Dazzle(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "alarm")
+		end
 	end
-	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alarm")
 end
 
 -- Curious Swoglet
@@ -308,7 +314,6 @@ do
 				-- but always display the 9 stack warning for each player since 10 stacks kills instantly.
 				if amount == 9 or t - prev > 1 then
 					prev = t
-
 					-- insta-kill at 10 stacks
 					self:StackMessage(args.spellId, "red", args.destName, amount, 8)
 					if amount < 8 then
@@ -368,16 +373,16 @@ end
 -- Squallbringer Cyraz
 
 function mod:WhirlingFury(args)
-	-- this is cast only immediately after Gale Force Charge which has a minimum range
+	-- this is cast immediately after Gale Force Charge
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
-	self:CDBar(args.spellId, 22.5)
+	self:CDBar(args.spellId, 16.9)
 end
 
 function mod:ZephyrsCall(args)
 	self:Message(args.spellId, "cyan")
 	self:PlaySound(args.spellId, "long")
-	self:CDBar(args.spellId, 21.8)
+	self:CDBar(args.spellId, 24.2)
 end
 
 function mod:SquallbringerCyrazDeath(args)
@@ -404,18 +409,13 @@ end
 
 -- Primalist Galesinger
 
-do
-	local prev = 0
-	function mod:ThunderstormDamage(args)
-		if self:Me(args.destGUID) then
-			local t = args.time
-			if t - prev > 2 then
-				prev = t
-				self:PersonalMessage(385141, "underyou")
-				self:PlaySound(385141, "underyou")
-			end
-		end
+function mod:Thunderstrike(args)
+	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+		return
 	end
+	self:Message(args.spellId, "yellow")
+	self:PlaySound(args.spellId, "alert")
+	--self:Nameplate(args.spellId, 23.1, args.sourceGUID)
 end
 
 -- Primalist Icecaller
@@ -424,9 +424,9 @@ function mod:RefreshingTides(args)
 	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
 		return
 	end
-	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
-	--self:NameplateCDBar(args.spellId, 30.3, args.sourceGUID)
+	--self:Nameplate(args.spellId, 30.3, args.sourceGUID)
 end
 
 -- Glacial Proto-Dragon
@@ -434,13 +434,13 @@ end
 function mod:OceanicBreath(args)
 	self:Message(args.spellId, "purple")
 	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 18.2, args.sourceGUID)
+	--self:Nameplate(args.spellId, 18.2, args.sourceGUID)
 end
 
 function mod:DeepChill(args)
 	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "long")
-	--self:NameplateCDBar(args.spellId, 32.8, args.sourceGUID)
+	--self:Nameplate(args.spellId, 32.8, args.sourceGUID)
 end
 
 -- Aqua Rager

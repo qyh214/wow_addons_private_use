@@ -120,7 +120,7 @@ end
 local function refreshDefaultLootSpec()
 	if not currentSpecIndex or currentSpecIndex == 5 then return end
 	local mult = 3 + numSpecs
-	newMenu[numLocal - mult].text = format(LOOT_SPECIALIZATION_DEFAULT, select(2, GetSpecializationInfo(currentSpecIndex)))
+	newMenu[numLocal - mult].text = format(LOOT_SPECIALIZATION_DEFAULT, (select(2, GetSpecializationInfo(currentSpecIndex))) or NONE)
 end
 
 local function selectCurrentConfig(_, configID, specID)
@@ -200,7 +200,7 @@ local function BuildSpecMenu()
 	end
 
 	tinsert(newMenu, seperatorMenu)
-	tinsert(newMenu, {text = GetSpellInfo(384255), isTitle = true, notCheckable = true})
+	tinsert(newMenu, {text = C_Spell.GetSpellName(384255), isTitle = true, notCheckable = true})
 	tinsert(newMenu, {text = BLUE_FONT_COLOR:WrapTextInColorCode(TALENT_FRAME_DROP_DOWN_STARTER_BUILD), func = selectCurrentConfig,
 		arg1 = STARTER_BUILD,	checked = function() return C_ClassTalents.GetStarterBuildActive() end,
 	})
@@ -221,7 +221,7 @@ info.onMouseUp = function(self, btn)
 
 	if btn == "LeftButton" then
 		--if InCombatLockdown() then UIErrorsFrame:AddMessage(DB.InfoColor..ERR_NOT_IN_COMBAT) return end -- fix by LibShowUIPanel
-		ToggleTalentFrame(2)
+		PlayerSpellsUtil.ToggleClassTalentOrSpecFrame()
 	else
 		BuildSpecMenu()
 		EasyMenu(newMenu, B.EasyMenu, self, -80, 100, "MENU", 1)

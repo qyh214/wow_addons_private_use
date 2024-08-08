@@ -7,6 +7,12 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["(Dwarf)"] = "(Дворф)"
+	L["(Dwarf/Human)"] = "(Дворф/Человек)"
+	L["(Human)"] = "(Человек)"
+	L["(Night Elf)"] = "(Ночной эльф)"
+	L["(Troll)"] = "(Тролль)"
+	L["(Undead)"] = "(Нежить)"
 	L["< 4 stacks"] = "(менее 4 стаков)"
 	L["5 stacks"] = "(5 стаков)"
 	L["Abilities"] = "Способности"
@@ -49,6 +55,7 @@ local L = WeakAuras.L
 	L["Create Auras"] = "Создать"
 	L["debuff"] = "(дебафф)"
 	L["Debuffs"] = "Дебаффы"
+	L["dps buff"] = "(бафф урона)"
 	L["General"] = "Общее"
 	L["Health"] = "Здоровье"
 	L["Highlight while action is queued."] = "Выделяет индикацию, если действие в очереди."
@@ -61,6 +68,7 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Выделяет индикацию, если заклинание активно."
 	L["Hold CTRL to create multiple auras at once"] = "Удерживайте Ctrl для создания нескольких индикаций"
 	L["Keeps existing triggers intact"] = "Сохраняет существующие триггеры нетронутыми"
+	L["Master Channeler Rune"] = "(руна Мастер-чаротворец)"
 	L["Max 3"] = "(3 уровня усиления)"
 	L["Max 4"] = "(4 уровня усиления)"
 	L["Next"] = "Далее"
@@ -75,6 +83,7 @@ local L = WeakAuras.L
 	L["Pet alive"] = "Питомец жив"
 	L["Pet Behavior"] = "Поведение питомца"
 	L["PvP Talents"] = "PvP таланты"
+	L["regen buff"] = "(бафф восстановления маны)"
 	L["Replace all existing triggers"] = "Заменяет все существующие триггеры"
 	L["Replace Triggers"] = "Заменить триггеры"
 	L["Resources"] = "Ресурсы"

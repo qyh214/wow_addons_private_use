@@ -14,7 +14,13 @@ local unpack = table.unpack or unpack --lua local
 local type = type --lua local
 local floor = math.floor --lua local
 local loadstring = loadstring --lua local
-local CreateFrame = CreateFrame
+local G_CreateFrame = _G.CreateFrame
+local CreateFrame = function (frameType , name, parent, template, id)
+	local frame = G_CreateFrame(frameType , name, parent, template, id)
+	detailsFramework:Mixin(frame, detailsFramework.FrameFunctions)
+	frame:SetClipsChildren(false)
+	return frame
+end
 
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
@@ -33,6 +39,7 @@ local UnitIsTapDenied = UnitIsTapDenied
 local max = math.max
 local min = math.min
 local abs = math.abs
+local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
 
 local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
@@ -1457,8 +1464,22 @@ detailsFramework.CastFrameFunctions = {
 		end
 	end,
 
-	UpdateCastingInfo = function(self, unit)
-		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = CastInfo.UnitCastingInfo(unit)
+	UpdateCastingInfo = function(self, unit, ...)
+		local unitID, castID, spellID = ...
+		local name, text, texture, startTime, endTime, isTradeSkill, uciCastID, notInterruptible, uciSpellID = CastInfo.UnitCastingInfo(unit)
+		spellID = uciSpellID or spellID
+		castID = uciCastID or castID
+		
+		if spellID and (not name or not texture or not text) then
+			local siName, _, siIcon, siCastTime = GetSpellInfo(spellID)
+			texture = texture or siIcon
+			name = name or siName
+			text = text or siName
+			if not startTime then
+				startTime = GetTime()
+				endTime = startTime + siCastTime
+			end
+		end
 
 		--is valid?
 		if (not self:IsValid(unit, name, isTradeSkill, true)) then
@@ -1519,8 +1540,8 @@ detailsFramework.CastFrameFunctions = {
 		self:UpdateInterruptState()
 	end,
 
-	UNIT_SPELLCAST_START = function(self, unit)
-		self:UpdateCastingInfo(unit)
+	UNIT_SPELLCAST_START = function(self, unit, ...)
+		self:UpdateCastingInfo(unit, ...)
 		self:RunHooksForWidget("OnCastStart", self, self.unit, "UNIT_SPELLCAST_START")
 	end,
 
@@ -1570,7 +1591,20 @@ detailsFramework.CastFrameFunctions = {
 
 	UpdateChannelInfo = function(self, unit, ...)
 		local unitID, castID, spellID = ...
-		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = CastInfo.UnitChannelInfo (unit)
+		local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, uciSpellID, _, numStages = CastInfo.UnitChannelInfo (unit)
+		spellID = uciSpellID or spellID
+		castID = uciCastID or castID
+		
+		if spellID and (not name or not texture or not text) then
+			local siName, _, siIcon, siCastTime = GetSpellInfo(spellID)
+			texture = texture or siIcon
+			name = name or siName
+			text = text or siName
+			if not startTime then
+				startTime = GetTime()
+				endTime = startTime + siCastTime
+			end
+		end
 
 		--is valid?
 		if (not self:IsValid (unit, name, isTradeSkill, true)) then
@@ -1936,6 +1970,7 @@ function detailsFramework:CreateCastBar(parent, name, settingsOverride)
 	--mixins
 	detailsFramework:Mixin(castBar, detailsFramework.CastFrameFunctions)
 	detailsFramework:Mixin(castBar, detailsFramework.StatusBarFunctions)
+
 
 	castBar:CreateTextureMask()
 	castBar:AddMaskTexture(castBar.flashTexture)

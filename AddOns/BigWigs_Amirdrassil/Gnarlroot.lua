@@ -22,7 +22,7 @@ local torturedScreamCount = 1
 local shadowflameCleaveCount = 1
 local dreadfireBarrageCount = 1
 local intermissionCount = 0
-local myDreadfireBarrageStacks = 0
+local dreadfireBarrageOnMe = false
 local allowTankWarnings = true
 
 --------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ function mod:GetOptions()
 		{421972, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Controlled Burn
 		controlledBurnMarker,
 		422023, -- Shadow-Scorched Earth
-		{424352, "TANK"}, -- Dreadfire Barrage
+		{424352, "TANK", "EMPHASIZE"}, -- Dreadfire Barrage
 		422026, -- Tortured Scream
 		422039, -- Shadowflame Cleave
 		-- Stage Two: Agonizing Growth
@@ -117,18 +117,17 @@ function mod:OnEngage()
 	shadowflameCleaveCount = 1
 	dreadfireBarrageCount = 1
 	intermissionCount = 1
-	myDreadfireBarrageStacks = 0
+	dreadfireBarrageOnMe = false
 	allowTankWarnings = true
 	mobCollector = {}
 	taintedTreantMarks = {}
 
-	-- XXX these times are probably just within variance of each other
-	self:CDBar(422026, self:Easy() and 3.6 or 3.0, CL.count:format(L.tortured_scream, torturedScreamCount)) -- Tortured Scream
-	self:CDBar(424352, self:Easy() and 9.6 or 9.0, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
-	self:CDBar(421898, self:Easy() and 16.5 or 15.0, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
-	self:CDBar(421972, self:Heroic() and 32 or 36, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
-	self:CDBar(422039, self:Easy() and 22.4 or 20.0, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
-	self:CDBar("stages", 90, CL.count:format(CL.stage:format(2), intermissionCount), 421013) -- Doom Cultivation
+	self:CDBar(422026, 3.3, CL.count:format(L.tortured_scream, torturedScreamCount)) -- Tortured Scream
+	self:CDBar(424352, self:Easy() and 10 or 9, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
+	self:CDBar(421898, self:Easy() and 16.5 or 15, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
+	self:CDBar(422039, self:Easy() and 22.4 or 20, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
+	self:CDBar(421972, self:Mythic() and 36 or self:Heroic() and 32 or 35.3, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
+	self:CDBar("stages", 91, CL.count:format(CL.stage:format(2), intermissionCount), 421013) -- Doom Cultivation
 
 	if self:GetOption(taintedTreantMarker) then
 		self:RegisterTargetEvents("AddMarking")
@@ -175,7 +174,7 @@ do
 		playerList[args.destName] = count -- Set raid marker
 		if self:Me(args.destGUID) then
 			self:PlaySound(args.spellId, "warning")
-			self:Say(args.spellId, CL.count_rticon:format(CL.bomb, count, count))
+			self:Say(args.spellId, CL.count_rticon:format(CL.bomb, count, count), nil, ("Bomb (%d{rt%d})"):format(count, count))
 			self:SayCountdown(args.spellId, 6, count)
 		end
 		self:CustomIcon(controlledBurnMarker, args.destName, count)
@@ -193,7 +192,7 @@ end
 function mod:DreadfireBarrage(args)
 	allowTankWarnings = false
 	self:StopBar(CL.count:format(args.spellName, dreadfireBarrageCount))
-	self:Message(args.spellId, "purple", CL.count:format(args.spellName, dreadfireBarrageCount))
+	self:Message(args.spellId, "purple", CL.count:format(args.spellName, dreadfireBarrageCount), nil, true) -- Disable emphasize
 	dreadfireBarrageCount = dreadfireBarrageCount + 1
 
 	local cd
@@ -217,19 +216,21 @@ end
 function mod:DreadfireBarrageApplied(args)
 	local amount = args.amount or 1
 	if self:Me(args.destGUID) then
-		myDreadfireBarrageStacks = amount
+		dreadfireBarrageOnMe = true
 	end
 	if allowTankWarnings or amount % 5 == 0 then -- Only warn for the final stack, or every 5/10/15..
-		self:StackMessage(424352, "purple", args.destName, amount, 5)
-		if myDreadfireBarrageStacks == 0 and self:Tank() then -- No stacks on me
+		if not dreadfireBarrageOnMe and self:Tank() then -- No stacks on me
+			self:StackMessage(424352, "purple", args.destName, amount, 5)
 			self:PlaySound(424352, "warning") -- Taunt
+		else
+			self:StackMessage(424352, "purple", args.destName, amount, 100) -- Prevent emphasize when on you
 		end
 	end
 end
 
 function mod:DreadfireBarrageRemoved(args)
 	if self:Me(args.destGUID) then
-		myDreadfireBarrageStacks = 0
+		dreadfireBarrageOnMe = false
 	end
 end
 
@@ -241,7 +242,7 @@ function mod:TorturedScream(args)
 
 	local cd
 	if self:Mythic() then
-		local timer = { 3.0, 23.0, 28.0, 22.1, 0 }
+		local timer = { 3.0, 23.0, 28.0, 22.0, 0 }
 		cd = timer[torturedScreamCount]
 	elseif self:Easy() then
 		local timer = { 3.3, 25.5, 25.6, 26.7, 0 }
@@ -331,12 +332,12 @@ function mod:UprootedAgonyRemoved(args)
 	mobCollector = {}
 	taintedTreantMarks = {}
 
-	self:Bar(422026, 4.5, CL.count:format(L.tortured_scream, torturedScreamCount)) -- Tortured Scream
-	self:Bar(424352, self:Easy() and 14.3 or 10.4, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
-	self:Bar(421898, self:Easy() and 23.5 or 16.4, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
-	self:Bar(421972, self:Mythic() and 37.4 or self:Easy() and 44.5 or 33, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
-	self:Bar(422039, self:Easy() and 44 or 21.4, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
-	self:Bar("stages", 92.2, CL.count:format(CL.intermission, intermissionCount), 421013) -- Intermission / Doom Cultivation
+	self:CDBar(422026, self:LFR() and 4.4 or 5, CL.count:format(L.tortured_scream, torturedScreamCount)) -- Tortured Scream
+	self:CDBar(424352, self:Easy() and 11.4 or 10.4, CL.count:format(self:SpellName(424352), dreadfireBarrageCount)) -- Dreadfire Barrage
+	self:CDBar(421898, self:Easy() and 18 or 16.4, CL.count:format(CL.adds, flamingPestilenceCount)) -- Flaming Pestilence
+	self:CDBar(422039, self:Easy() and 24 or 21.4, CL.count:format(CL.frontal_cone, shadowflameCleaveCount)) -- Shadowflame Cleave
+	self:CDBar(421972, self:Heroic() and 33 or 37.4, CL.count:format(CL.bombs, controlledBurnCount)) -- Controlled Burn
+	self:CDBar("stages", 92.2, CL.count:format(CL.intermission, intermissionCount), 421013) -- Intermission / Doom Cultivation
 end
 
 -- Mythic
@@ -382,6 +383,6 @@ function mod:FlamingSapApplied(args)
 	if self:Me(args.destGUID) then
 		self:PersonalMessage(args.spellId)
 		self:PlaySound(args.spellId, "alarm")
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Flaming Sap")
 	end
 end

@@ -1,10 +1,10 @@
-## Interface: 100200
+## Interface: 100206
 ## Title: Adventure Guide Lockouts
 ## Notes: Adds instance status indicators to Adventure Guide.
 ## Notes-frFR: Ajoute des indicateurs de verrouillage d'instance au Guide de l'aventurier.
 ## Notes-ruRU: Добавляет индикаторы состояния подземелья в Путеводитель по приключениям.
 ## Author: alex_chrome, Meivyn
 ## IconTexture: Interface\EncounterJournal\UI-EJ-PortraitIcon
-## Version: 1.4.9
+## Version: 1.5.0
 
 AdventureGuideLockouts.lua

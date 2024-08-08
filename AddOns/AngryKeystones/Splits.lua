@@ -184,9 +184,12 @@ function Mod:SCENARIO_UPDATE()
 			AngryKeystones_Data.state.splitNames = Mod.splitNames
 			AngryKeystones_Data.state.mapID = mapID
 			for criteriaIndex = 1, numCriteria do
-				local criteriaString, criteriaType, completed = C_Scenario.GetCriteriaInfo(criteriaIndex)
-				Mod.splits[criteriaIndex] = completed
-				Mod.splitNames[criteriaIndex] = criteriaString
+				-- local criteriaString, criteriaType, completed = C_Scenario.GetCriteriaInfo(criteriaIndex)
+				local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
+				if criteriaInfo then
+					Mod.splits[criteriaIndex] = criteriaInfo.completed
+					Mod.splitNames[criteriaIndex] = criteriaInfo.description
+				end
 			end
 		end
 	end
@@ -209,17 +212,20 @@ function Mod:SCENARIO_CRITERIA_UPDATE()
 		end
 		local numCriteria = select(3, C_Scenario.GetStepInfo())
 		for criteriaIndex = 1, numCriteria do
-			local criteriaString, criteriaType, completed, quantity, totalQuantity, flags, _, quantityString, criteriaID, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
-			if not Mod.splitNames[criteriaIndex] then
-				Mod.splitNames[criteriaIndex] = criteriaString
-			end
-			if Mod.splits[criteriaIndex] == nil then Mod.splits[criteriaIndex] = false end
+			-- local criteriaString, criteriaType, completed, quantity, totalQuantity, flags, _, quantityString, criteriaID, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
+			local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
+			if criteriaInfo then
+				if not Mod.splitNames[criteriaIndex] then
+					Mod.splitNames[criteriaIndex] = criteriaInfo.description
+				end
+				if Mod.splits[criteriaIndex] == nil then Mod.splits[criteriaIndex] = false end
 
-			if completed and not Mod.splits[criteriaIndex] then
-				Mod.splits[criteriaIndex] = fresh or GetElapsedTime()
+				if criteriaInfo.completed and not Mod.splits[criteriaIndex] then
+					Mod.splits[criteriaIndex] = fresh or GetElapsedTime()
+				end
 			end
 		end
-		UpdateSplits(SCENARIO_CONTENT_TRACKER_MODULE, numCriteria, ScenarioObjectiveBlock)
+		UpdateSplits(ScenarioObjectiveTracker, numCriteria, ScenarioObjectiveTracker.ObjectivesBlock)
 	end
 end
 
@@ -249,8 +255,8 @@ function Mod:Startup()
 	self:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 	self:RegisterEvent("SCENARIO_UPDATE")
 	self:SCENARIO_UPDATE()
-	hooksecurefunc(SCENARIO_CONTENT_TRACKER_MODULE, "UpdateCriteria", UpdateSplits)
+	hooksecurefunc(ScenarioObjectiveTracker, "UpdateCriteria", UpdateSplits)
 	Addon.Config:RegisterCallback('splitsFormat', function()
-		UpdateSplits(SCENARIO_CONTENT_TRACKER_MODULE, nil, ScenarioObjectiveBlock)
+		UpdateSplits(ScenarioObjectiveTracker, nil, ScenarioObjectiveTracker.ObjectivesBlock)
 	end)
 end

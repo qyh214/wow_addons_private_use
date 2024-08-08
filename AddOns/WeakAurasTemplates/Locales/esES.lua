@@ -7,10 +7,14 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
-	--[[Translation missing --]]
-	L["< 4 stacks"] = "< 4 stacks"
-	--[[Translation missing --]]
-	L["5 stacks"] = "5 stacks"
+	L["(Dwarf)"] = "(Enano)"
+	L["(Dwarf/Human)"] = "(Enano/Humano)"
+	L["(Human)"] = "(Humano)"
+	L["(Night Elf)"] = "(Elfo de la noche)"
+	L["(Troll)"] = "(Trol)"
+	L["(Undead)"] = "(No-muerto)"
+	L["< 4 stacks"] = "< 4 acumulaciones"
+	L["5 stacks"] = "5 acumulaciones"
 	L["Abilities"] = "Habilidades"
 	L["Add Triggers"] = "Añadir activadores"
 	L["Always Active"] = "Siempre activo"
@@ -34,25 +38,24 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns red when out of range."] = "Siempre muestra el aura, se vuelve roja cuando está fuera de alcance."
 	L["Always shows the aura."] = "Siempre muestra el aura."
 	L["Back"] = "Volver"
-	--[[Translation missing --]]
-	L["Basic Show On Cooldown"] = "Basic Show On Cooldown"
-	--[[Translation missing --]]
-	L["Basic Show On Ready"] = "Basic Show On Ready"
+	L["Basic Show On Cooldown"] = "Mostrar en reutilización básico"
+	L["Basic Show On Ready"] = "Mostrar al estar listo básico"
 	L["Bloodlust/Heroism"] = "Ansia de sangre/Heroísmo"
 	L["buff"] = "beneficio"
 	L["Buffs"] = "Beneficios"
 	L["Cancel"] = "Cancelar"
-	L["Cast"] = "Castear"
+	L["Cast"] = "Lanzar"
 	L["Charge and Buff Tracking"] = "Seguimiento de cargas y beneficios"
 	L["Charge and Debuff Tracking"] = "Seguimiento de cargas y perjuicios"
 	L["Charge and Duration Tracking"] = "Seguimiento de cargas y duración"
 	L["Charge Tracking"] = "Seguimiento de cargas"
-	L["cooldown"] = "cooldown"
-	L["Cooldown Tracking"] = "Seguimiento de cooldown"
-	L["Cooldowns"] = "Cooldowns"
+	L["cooldown"] = "reutilización"
+	L["Cooldown Tracking"] = "Seguimiento de reutilización"
+	L["Cooldowns"] = "Reutilizaciones"
 	L["Create Auras"] = "Crear auras"
 	L["debuff"] = "perjuicio"
 	L["Debuffs"] = "Perjuicios"
+	L["dps buff"] = "beneficio de dps"
 	L["General"] = "General"
 	L["Health"] = "Salud"
 	L["Highlight while action is queued."] = "Resaltar mientras la acción está en cola."
@@ -65,10 +68,9 @@ local L = WeakAuras.L
 	L["Highlight while spell is active."] = "Resaltar mientras el hechizo está activo."
 	L["Hold CTRL to create multiple auras at once"] = "Mantén pulsado CTRL para crear varias auras a la vez"
 	L["Keeps existing triggers intact"] = "Mantiene intactos los activadores existentes"
-	--[[Translation missing --]]
-	L["Max 3"] = "Max 3"
-	--[[Translation missing --]]
-	L["Max 4"] = "Max 4"
+	L["Master Channeler Rune"] = "Runa de Maestro canalizador"
+	L["Max 3"] = "Máx. 3"
+	L["Max 4"] = "Máx. 4"
 	L["Next"] = "Siguiente"
 	L["Only show the aura if the target has the debuff."] = "Mostrar el aura solo si el objetivo tiene el perjuicio activo."
 	L["Only show the aura when the item is on cooldown."] = "Mostrar el aura solo cuando el objeto está en reutilización."
@@ -77,86 +79,54 @@ local L = WeakAuras.L
 	L["Only shows the aura if the target has the buff."] = "Muestra el aura solo si el objetivo tiene el beneficio activo."
 	L["Only shows the aura when the ability is on cooldown."] = "Mostrar el aura solo cuando la habilidad está en reutilización."
 	L["Only shows the aura when the ability is ready to use."] = "Mostrar el aura solo cuando la habilidad está lista para usar."
-	--[[Translation missing --]]
-	L["Other cooldown"] = "Other cooldown"
+	L["Other cooldown"] = "Otra reutilización"
 	L["Pet alive"] = "Mascota viva"
 	L["Pet Behavior"] = "Comportamiento de mascota"
-	--[[Translation missing --]]
-	L["PvP Talents"] = "PvP Talents"
+	L["PvP Talents"] = "Talentos de JcJ"
+	L["regen buff"] = "beneficio regen"
 	L["Replace all existing triggers"] = "Sustituir todos los activadores existentes"
 	L["Replace Triggers"] = "Sustituir activadores"
 	L["Resources"] = "Recursos"
-	--[[Translation missing --]]
-	L["Resources and Shapeshift Form"] = "Resources and Shapeshift Form"
-	--[[Translation missing --]]
-	L["Rogue cooldown"] = "Rogue cooldown"
-	--[[Translation missing --]]
-	L["Runes"] = "Runes"
-	--[[Translation missing --]]
-	L["Shapeshift Form"] = "Shapeshift Form"
-	--[[Translation missing --]]
-	L["Show Always, Glow on Missing"] = "Show Always, Glow on Missing"
-	--[[Translation missing --]]
-	L["Show Charges and Check Usable"] = "Show Charges and Check Usable"
-	--[[Translation missing --]]
-	L["Show Charges with Proc Tracking"] = "Show Charges with Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Charges with Range Tracking"] = "Show Charges with Range Tracking"
-	--[[Translation missing --]]
-	L["Show Charges with Usable Check"] = "Show Charges with Usable Check"
-	--[[Translation missing --]]
-	L["Show Cooldown and Action Queued"] = "Show Cooldown and Action Queued"
+	L["Resources and Shapeshift Form"] = "Recursos y cambio de forma"
+	L["Rogue cooldown"] = "Reutilización de pícaro"
+	L["Runes"] = "Runas"
+	L["Shapeshift Form"] = "Cambio de forma"
+	L["Show Always, Glow on Missing"] = "Siempre mostrar, resplandor si falta"
+	L["Show Charges and Check Usable"] = "Mostrar cargos y comprobar utilizable"
+	L["Show Charges with Proc Tracking"] = "Mostrar cargos con seguimiento de proc"
+	L["Show Charges with Range Tracking"] = "Mostrar cargos con seguimiento de rango"
+	L["Show Charges with Usable Check"] = "Mostrar cargas con comprobación que sea utilizable"
+	L["Show Cooldown and Action Queued"] = "Mostrar reutilización y acción en cola"
 	L["Show Cooldown and Buff"] = "Mostrar tiempo de reutilización y beneficio"
 	L["Show Cooldown and Buff and Check for Target"] = "Mostrar Tiempo de reutilización, Beneficio y Comprobar objetivo"
 	L["Show Cooldown and Buff and Check Usable"] = "Mostrar Tiempo de reutilización, Beneficio y Comprobar utilizable"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check for Target"] = "Show Cooldown and Check for Target"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check for Target & Proc Tracking"] = "Show Cooldown and Check for Target & Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check Usable"] = "Show Cooldown and Check Usable"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check Usable & Target"] = "Show Cooldown and Check Usable & Target"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check Usable, Proc Tracking"] = "Show Cooldown and Check Usable, Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Cooldown and Check Usable, Target & Proc Tracking"] = "Show Cooldown and Check Usable, Target & Proc Tracking"
+	L["Show Cooldown and Check for Target"] = [=[Mostrar reutilización y comprobar el objetivo
+​]=]
+	L["Show Cooldown and Check for Target & Proc Tracking"] = "Mostrar reutilización y objetivo y seguimiento de proc"
+	L["Show Cooldown and Check Usable"] = "Mostrar reutilización y comprobar que sea utilizable"
+	L["Show Cooldown and Check Usable & Target"] = "Mostrar reutilización y comprobar que sea utilizable y objetivo"
+	L["Show Cooldown and Check Usable, Proc Tracking"] = "Mostrar reutilización y comprobar que sea utilizable, seguimiento de proc"
+	L["Show Cooldown and Check Usable, Target & Proc Tracking"] = "Mostrar reutilización y comprobar que sea utilizable, objetivo y seguimiento de proc"
 	L["Show Cooldown and Debuff"] = "Mostrar Tiempo de reutilización y Perjuicio"
 	L["Show Cooldown and Debuff and Check for Target"] = "Mostrar Tiempo de reutilización, Perjuicio y Comprobar objetivo"
-	--[[Translation missing --]]
-	L["Show Cooldown and Duration"] = "Show Cooldown and Duration"
-	--[[Translation missing --]]
-	L["Show Cooldown and Duration and Check for Target"] = "Show Cooldown and Duration and Check for Target"
-	--[[Translation missing --]]
-	L["Show Cooldown and Duration and Check Usable"] = "Show Cooldown and Duration and Check Usable"
-	--[[Translation missing --]]
-	L["Show Cooldown and Proc Tracking"] = "Show Cooldown and Proc Tracking"
-	--[[Translation missing --]]
-	L["Show Cooldown and Totem Information"] = "Show Cooldown and Totem Information"
-	--[[Translation missing --]]
-	L["Show if Enchant Missing"] = "Show if Enchant Missing"
-	--[[Translation missing --]]
-	L["Show on Ready"] = "Show on Ready"
+	L["Show Cooldown and Duration"] = "Mostrar reutilización y duración"
+	L["Show Cooldown and Duration and Check for Target"] = "Mostrar reutilización y duración y comprobar para objetivo"
+	L["Show Cooldown and Duration and Check Usable"] = "Mostrar reutilización y duración y comprobar que sea utilizable"
+	L["Show Cooldown and Proc Tracking"] = "Mostrar reutilización y seguimiento de proc"
+	L["Show Cooldown and Totem Information"] = "Mostrar reutilización y información de tótem"
+	L["Show if Enchant Missing"] = "Mostrar si falta encantamiento"
+	L["Show on Ready"] = "Mostrar al estar listo"
 	L["Show Only if Buffed"] = "Mostrar solo si hay Beneficio activo"
 	L["Show Only if Debuffed"] = "Mostrar solo si hay Perjuicio activo"
-	--[[Translation missing --]]
-	L["Show Only if Enchanted"] = "Show Only if Enchanted"
-	--[[Translation missing --]]
-	L["Show Only if on Cooldown"] = "Show Only if on Cooldown"
-	--[[Translation missing --]]
-	L["Show Totem and Charge Information"] = "Show Totem and Charge Information"
-	--[[Translation missing --]]
-	L["Stance"] = "Stance"
-	--[[Translation missing --]]
-	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."
+	L["Show Only if Enchanted"] = "Mostrar solo si está encantado"
+	L["Show Only if on Cooldown"] = "Mostrar solo si está en tiempo de reutilización"
+	L["Show Totem and Charge Information"] = "Mostrar tótem y información de carga"
+	L["Stance"] = "Actitud"
+	L["Track the charge and proc, highlight while proc is active, turns red when out of range, blue on insufficient resources."] = "Realiza un seguimiento de la carga y el proc, resalta mientras el proc está activo, se vuelve rojo cuando está fuera de alcance, azul si hay recursos insuficientes."
 	L["Tracks the charge and the buff, highlight while the buff is active, blue on insufficient resources."] = "Realiza un seguimiento de la carga y el beneficio, resaltar cuando el beneficio está activo, azul si no hay recursos suficientes."
 	L["Tracks the charge and the debuff, highlight while the debuff is active, blue on insufficient resources."] = "Realiza un seguimiento de la carga y el perjuicio, resaltar cuando el perjuicio está activo, azul si no hay recursos suficientes."
-	--[[Translation missing --]]
-	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."
-	--[[Translation missing --]]
-	L["Unknown Item"] = "Unknown Item"
-	--[[Translation missing --]]
-	L["Unknown Spell"] = "Unknown Spell"
-	--[[Translation missing --]]
-	L["Warrior cooldown"] = "Warrior cooldown"
+	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Realiza un seguimiento de la carga y la duración del hechizo, resalta mientras el hechizo está activo, azul si hay recursos insuficientes."
+	L["Unknown Item"] = "Objeto desconocido"
+	L["Unknown Spell"] = "Hechizo desconocido"
+	L["Warrior cooldown"] = "Reutilización de guerrero"
 

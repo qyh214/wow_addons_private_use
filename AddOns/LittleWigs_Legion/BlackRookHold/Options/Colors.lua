@@ -2,7 +2,7 @@
 BigWigs:AddColors("Amalgam of Souls", {
 	[194956] = "purple",
 	[194966] = {"blue","orange"},
-	[195254] = "yellow",
+	[195254] = {"blue","yellow"},
 	[196078] = "cyan",
 	[196587] = "orange",
 	[196930] = "yellow",
@@ -32,6 +32,7 @@ BigWigs:AddColors("Kurtalos Ravencrest", {
 	[198820] = "yellow",
 	[199143] = "orange",
 	[199193] = "cyan",
+	[199368] = "green",
 	[201733] = {"blue","red"},
 	[202019] = "yellow",
 	["stages"] = "cyan",

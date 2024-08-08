@@ -8,6 +8,15 @@ local UnitClass = UnitClass
 local GetActionInfo = GetActionInfo
 local GetMacroBody = GetMacroBody
 local trim = strtrim
+local GetItemInfoInstant = C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
+local GetSpellInfo = C_Spell and C_Spell.GetSpellInfo and function (spell)
+	local tbl = C_Spell.GetSpellInfo(spell);
+	if not tbl then
+		return nil
+	end
+	return tbl.name, nil, tbl.iconID, tbl.castTime, tbl.minRange, tbl.maxRange, tbl.spellID, tbl.originalIconID
+end or GetSpellInfo
 
 local HelpTipBox_Anchor = Internal.HelpTipBox_Anchor;
 local HelpTipBox_SetText = Internal.HelpTipBox_SetText;
@@ -492,13 +501,24 @@ local function PickupActionTable(tbl, test, settings, activating)
             local index
             success = false
             if tbl.subType == "spell" then
-                for tabIndex = 1,min(2,GetNumSpellTabs()) do
-                    local offset, numEntries = select(3, GetSpellTabInfo(tabIndex))
-                    for spellIndex = offset,offset+numEntries do
-                        local skillType, id = GetSpellBookItemInfo(spellIndex, "spell")
-                        if skillType == "SPELL" and id == tbl.id then
+                if C_SpellBook and C_SpellBook.GetSpellBookSkillLineInfo then
+                    local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(Enum.SpellBookSkillLineIndex.MainSpec);
+                    for spellIndex = 1,skillLineInfo.itemIndexOffset + skillLineInfo.numSpellBookItems do
+                        local spellBookItem = C_SpellBook.GetSpellBookItemInfo(spellIndex, Enum.SpellBookSpellBank.Player);
+                        if spellBookItem.itemType == Enum.SpellBookItemType.Spell and spellBookItem.spellID == tbl.id then
                             index = spellIndex
                             break
+                        end
+                    end
+                else
+                    for tabIndex = 1,min(2,GetNumSpellTabs()) do
+                        local offset, numEntries = select(3, GetSpellTabInfo(tabIndex))
+                        for spellIndex = offset,offset+numEntries do
+                            local skillType, id = GetSpellBookItemInfo(spellIndex, "spell")
+                            if skillType == "SPELL" and id == tbl.id then
+                                index = spellIndex
+                                break
+                            end
                         end
                     end
                 end
@@ -518,7 +538,11 @@ local function PickupActionTable(tbl, test, settings, activating)
             if index then
                 success = true
                 if not test then
-                    PickupSpellBookItem(index, tbl.subType)
+                    if C_SpellBook and C_SpellBook.PickupSpellBookItem then
+                        C_SpellBook.PickupSpellBookItem(index, Enum.SpellBookSpellBank.Player)
+                    else
+                        PickupSpellBookItem(index, tbl.subType)
+                    end
                 end
             end
 
@@ -548,7 +572,11 @@ local function PickupActionTable(tbl, test, settings, activating)
                     if IsSpellKnown(tbl.id, false) or IsPlayerSpell(tbl.id) then
                         success = true
                         if not test then
-                            PickupSpell(tbl.id)
+                            if C_Spell and C_Spell.PickupSpell then
+                                C_Spell.PickupSpell(tbl.id)
+                            else
+                                PickupSpell(tbl.id)
+                            end
                         end
                     end
                 end
@@ -617,15 +645,26 @@ local function PickupActionTable(tbl, test, settings, activating)
                 success = false
                 msg = L["Flyout is not available"]
             else
-                -- Find the spell book index for the flyout
                 local index
-                for tabIndex = 1,min(2,GetNumSpellTabs()) do
-                    local offset, numEntries = select(3, GetSpellTabInfo(tabIndex))
-                    for spellIndex = offset,offset+numEntries do
-                        local skillType, id = GetSpellBookItemInfo(spellIndex, "spell")
-                        if skillType == "FLYOUT" and id == tbl.id then
+                -- Find the spell book index for the flyout
+                if C_SpellBook and C_SpellBook.GetSpellBookSkillLineInfo then
+                    local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(Enum.SpellBookSkillLineIndex.MainSpec);
+                    for spellIndex = 1,skillLineInfo.itemIndexOffset + skillLineInfo.numSpellBookItems do
+                        local spellBookItem = C_SpellBook.GetSpellBookItemInfo(spellIndex, Enum.SpellBookSpellBank.Player);
+                        if spellBookItem.itemType == Enum.SpellBookItemType.Flyout and spellBookItem.actionID == tbl.id then
                             index = spellIndex
                             break
+                        end
+                    end
+                else
+                    for tabIndex = 1,min(2,GetNumSpellTabs()) do
+                        local offset, numEntries = select(3, GetSpellTabInfo(tabIndex))
+                        for spellIndex = offset,offset+numEntries do
+                            local skillType, id = GetSpellBookItemInfo(spellIndex, "spell")
+                            if skillType == "FLYOUT" and id == tbl.id then
+                                index = spellIndex
+                                break
+                            end
                         end
                     end
                 end
@@ -633,7 +672,11 @@ local function PickupActionTable(tbl, test, settings, activating)
                     success = false
                     msg = L["Flyout is not in spell book"]
                 elseif not test then
-                    PickupSpellBookItem(index, "spell")
+                    if C_SpellBook and C_SpellBook.PickupSpellBookItem then
+                        C_SpellBook.PickupSpellBookItem(index, Enum.SpellBookSpellBank.Player)
+                    else
+                        PickupSpellBookItem(index, "spell")
+                    end
                 end
             end
         end
@@ -689,9 +732,6 @@ local function SetActon(slot, tbl)
 end
 
 local function IsActionBarSetActive(set)
-    for slot = 121,144 do
-        set.ignored[slot] = true
-    end
     for slot=1,181 do
         if not set.ignored[slot] then
             local action = set.actions[slot]
@@ -706,9 +746,6 @@ local function IsActionBarSetActive(set)
     return true;
 end
 local function ActivateActionBarSet(set, state)
-    for slot = 121,144 do
-        set.ignored[slot] = true
-    end
     local complete = true
     for slot=1,181 do
         if not set.ignored[slot] then
@@ -727,16 +764,17 @@ end
 local function RefreshActionBarSet(set)
     local actions = set.actions or {}
 
-    for slot = 121,144 do
-        set.ignored[slot] = true
-    end
     for slot = 1,181 do
         actions[slot] = GetActionInfoTable(slot)
     end
 
     set.actions = actions
 
-    return UpdateSetFilters(set)
+    UpdateSetFilters(set)
+                
+    Internal.Call("ActionBarSetUpdated", set.setID);
+
+    return set
 end
 local function AddActionBarSet()
     local classFile = select(2, UnitClass("player"))
@@ -757,17 +795,16 @@ local function AddActionBarSet()
         ignored[slot] = true
     end
 
-    return Internal.AddSet(BtWLoadoutsSets.actionbars, UpdateSetFilters({
+    local set = Internal.AddSet(BtWLoadoutsSets.actionbars, UpdateSetFilters({
         name = name,
         ignored = ignored,
         actions = actions,
     }))
+    Internal.Call("ActionBarSetCreated", set.setID);
+    return set
 end
 local function GetActionBarSet(id)
     local set = Internal.GetSet(BtWLoadoutsSets.actionbars, id)
-    for slot = 121,144 do
-        set.ignored[slot] = true
-    end
     return set
 end
 local function GetActionBarSetByName(id)
@@ -824,6 +861,8 @@ local function DeleteActionBarSet(id)
             end
         end
 	end
+    
+	Internal.Call("ActionBarSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.ActionBars;
 	local set = frame.set;
@@ -998,6 +1037,8 @@ function BtWLoadoutsActionButtonMixin:SetAction(actionType, ...)
 	local set = self:GetActionBarFrame().set;
 	if actionType == nil then -- Clearing slot
 		set.actions[self:GetID()] = nil;
+        
+        Internal.Call("ActionBarSetUpdated", set.setID);
 
 		self:Update();
 		return true;
@@ -1007,12 +1048,15 @@ function BtWLoadoutsActionButtonMixin:SetAction(actionType, ...)
 		tbl.type, tbl.id, tbl.subType, tbl.icon, tbl.name, tbl.macroText = actionType, ...
 
 		set.actions[self:GetID()] = tbl;
+        
+        Internal.Call("ActionBarSetUpdated", set.setID);
 		self:Update()
 	end
 end
 function BtWLoadoutsActionButtonMixin:SetIgnored(ignored)
 	local set = self:GetActionBarFrame().set;
 	set.ignored[self:GetID()] = ignored and true or nil;
+    Internal.Call("ActionBarSetUpdated", set.setID);
 	self:Update();
 end
 function BtWLoadoutsActionButtonMixin:Update()
@@ -1138,6 +1182,8 @@ function BtWLoadoutsIgnoreActionBarMixin:OnClick()
 		set.ignored[id] = setIgnored
 		self:GetParent().Slots[id]:Update()
 	end
+        
+    Internal.Call("ActionBarSetUpdated", set.setID);
 end
 
 local function DropDown_Initialize(self, level, menuList)
@@ -1145,9 +1191,14 @@ local function DropDown_Initialize(self, level, menuList)
     if set then
 		if (level or 1) == 1 then
             local info = UIDropDownMenu_CreateInfo()
+            info.isNotRadio = true
+			info.keepShownOnClick = true
+
             info.func = function (self, arg1, arg2, checked)
                 set.settings = set.settings or {}
-                set.settings.adjustCovenant = not checked
+                set.settings.adjustCovenant = checked
+                
+		        Internal.Call("ActionBarSetUpdated", set.setID);
 
                 BtWLoadoutsFrame:Update()
             end
@@ -1155,11 +1206,13 @@ local function DropDown_Initialize(self, level, menuList)
             info.text = L["Adjust Covenant Abilities"]
             UIDropDownMenu_AddButton(info, level)
 
-            
+            info.isNotRadio = false
             info.func = function (self, arg1, arg2, checked)
                 set.settings = set.settings or {}
-                set.settings.createMissingMacros = not checked
+                set.settings.createMissingMacros = checked
                 set.settings.createMissingMacrosCharacter = false
+                
+		        Internal.Call("ActionBarSetUpdated", set.setID);
 
                 BtWLoadoutsFrame:Update()
             end
@@ -1167,11 +1220,12 @@ local function DropDown_Initialize(self, level, menuList)
             info.text = L["Create Missing Macros"]
             UIDropDownMenu_AddButton(info, level)
 
-            
             info.func = function (self, arg1, arg2, checked)
                 set.settings = set.settings or {}
-                set.settings.createMissingMacrosCharacter = not checked
+                set.settings.createMissingMacrosCharacter = checked
                 set.settings.createMissingMacros = false
+                
+		        Internal.Call("ActionBarSetUpdated", set.setID);
 
                 BtWLoadoutsFrame:Update()
             end
@@ -1193,6 +1247,8 @@ BtWLoadoutsActionBarsMixin = {}
 function BtWLoadoutsActionBarsMixin:OnLoad()
     self.SettingsDropDown:SetSupportedTypes("covenant", "spec", "race")
     self.SettingsDropDown:SetScript("OnChange", function ()
+        Internal.Call("ActionBarSetUpdated", self.set.setID);
+
         self:Update()
     end)
 end
@@ -1206,6 +1262,7 @@ end
 function BtWLoadoutsActionBarsMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
+        Internal.Call("ActionBarSetUpdated", self.set.setID);
 		self:Update();
 	end
 end
@@ -1335,8 +1392,7 @@ function BtWLoadoutsActionBarsMixin:Update()
 	
 	local showingNPE = BtWLoadoutsFrame:SetNPEShown(set == nil, L["Action Bars"], L["Create different action bar layouts, including stealth, form, and stance bars. You can ignore specific action buttons or entire bars."])
         
-	self:GetParent().ExportButton:SetEnabled(true)
-    self:GetParent().RefreshButton:SetEnabled(true)
+	self:GetParent().ExportButton:SetEnabled(true);
     self:GetParent().ActivateButton:SetEnabled(true);
     self:GetParent().DeleteButton:SetEnabled(true);
 
@@ -1362,7 +1418,9 @@ function BtWLoadoutsActionBarsMixin:Update()
             if icon ~= nil and icon ~= 134400 then
                 slots[slot].icon = icon
             end
-		end
+        end
+
+        self:GetParent().RefreshButton:SetEnabled(Internal.AreRestrictionsValidForPlayer(set.restrictions));
 
 		local helpTipBox = self:GetParent().HelpTipBox;
         if not BtWLoadoutsHelpTipFlags["ACTIONBAR_IGNORE"] then

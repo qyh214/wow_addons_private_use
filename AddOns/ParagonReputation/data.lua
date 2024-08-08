@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.50 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.54 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -536,5 +536,23 @@ PR.PARAGON_DATA = {
 		[71023] = { -- Valdrakken Accord
 			factionID = 2510,
 			cache = 199475,
+		},
+	
+	--War Within
+		[79219] = { -- Council of Dornogal
+			factionID = 2590,
+			cache = 225239,
+		}, 
+		[79218] = { -- Hallowfall Arathi
+			factionID = 2570,
+			cache = 225246,
+		},
+		[79220] = { -- The Assembly of the Deep
+			factionID = 2594,
+			cache = 225245,
+		}, 
+		[79196] = { -- The Severed Threads
+			factionID = 2600,
+			cache = 225247,
 		},
 }

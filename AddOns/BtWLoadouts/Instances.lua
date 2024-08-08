@@ -219,6 +219,8 @@ if Internal.IsDragonflightPatch then
     instanceDifficulties[2441] = {2, 23} -- Tazavesh, the Veiled Market
 
     instanceDifficulties[2522] = raidDifficultiesAll -- Vault of the Incarnates
+    instanceDifficulties[2569] = raidDifficultiesAll -- Aberrus, the Shadowed Crucible
+    instanceDifficulties[2549] = raidDifficultiesAll -- Amirdrassil, the Dream's Hope
 
     if Internal.IsDragonflightSeason1 then
         instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
@@ -237,8 +239,6 @@ if Internal.IsDragonflightPatch then
         instanceDifficulties[1477] = { 8 } -- Halls of Valor
         instanceDifficulties[1571] = { 8 } -- Court of Stars
     elseif Internal.IsDragonflightSeason2 then
-        instanceDifficulties[2569] = raidDifficultiesAll -- Aberrus, the Shadowed Crucible
-
         instanceDifficulties[2519] = dungeonDifficultiesAll -- Neltharus
         instanceDifficulties[2520] = dungeonDifficultiesAll -- Brackenhide Hollow
         instanceDifficulties[2527] = dungeonDifficultiesAll -- Halls of Infusion
@@ -254,9 +254,7 @@ if Internal.IsDragonflightPatch then
         instanceDifficulties[1458] = { 8 } -- Neltharion's Lair
         instanceDifficulties[1754] = { 8 } -- Freehold
         instanceDifficulties[1841] = { 8 } -- The Underrot
-    else
-        instanceDifficulties[2549] = raidDifficultiesAll -- Amirdrassil, the Dream's Hope
-
+    elseif Internal.IsDragonflightSeason3 then
         instanceDifficulties[2519] = dungeonNonMythicPlus -- Neltharus
         instanceDifficulties[2520] = dungeonNonMythicPlus -- Brackenhide Hollow
         instanceDifficulties[2527] = dungeonNonMythicPlus -- Halls of Infusion
@@ -275,6 +273,18 @@ if Internal.IsDragonflightPatch then
         instanceDifficulties[1763] = { 8 } -- Atal'Dazar
         instanceDifficulties[1862] = { 8 } -- Waycrest Manor
         instanceDifficulties[2579] = { 2, 23,  8} -- Dawn of the Infinites
+    else
+        instanceDifficulties[2519] = dungeonDifficultiesAll -- Neltharus
+        instanceDifficulties[2520] = dungeonDifficultiesAll -- Brackenhide Hollow
+        instanceDifficulties[2527] = dungeonDifficultiesAll -- Halls of Infusion
+        instanceDifficulties[2451] = dungeonDifficultiesAll -- Uldaman: Legacy of Tyr
+
+        instanceDifficulties[2515] = dungeonDifficultiesAll -- The Azure Vault
+        instanceDifficulties[2516] = dungeonDifficultiesAll -- The Nokhud Offensive
+        instanceDifficulties[2521] = dungeonDifficultiesAll -- Ruby Life Pools
+        instanceDifficulties[2526] = dungeonDifficultiesAll -- Algeth'ar Academy
+
+        instanceDifficulties[2579] = { 2, 23 } -- Dawn of the Infinites
     end
 end
 Internal.dungeonDifficultiesAll = dungeonDifficultiesAll;
@@ -487,7 +497,7 @@ if Internal.IsDragonflightPatch then
                 1841, -- The Underrot
             }
         }
-    else
+    elseif Internal.IsDragonflightSeason3 then
         dungeonInfo[#dungeonInfo+1] = {
             name = L["Dragonflight"],
             instances = {
@@ -511,7 +521,30 @@ if Internal.IsDragonflightPatch then
                 1862, -- Waycrest Manor
             }
         }
+    else
+        dungeonInfo[#dungeonInfo+1] = {
+            name = L["Dragonflight"],
+            instances = {
+                2515, -- The Azure Vault
+                2516, -- The Nokhud Offensive
+                2521, -- Ruby Life Pools
+                2526, -- Algeth'ar Academy
+                2519, -- Neltharus
+                2520, -- Brackenhide Hollow
+                2527, -- Halls of Infusion
+                2451, -- Uldaman: Legacy of Tyr
+
+                2579, -- Dawn of the Infinites
+            }
+        }
     end
+end
+if Internal.IsTheWarWithinPatch then
+    dungeonInfo[#dungeonInfo+1] = {
+        name = L["The War Within"],
+        instances = {
+        }
+    }
 end
 local raidInfo = {
     {
@@ -617,12 +650,19 @@ if Internal.IsDragonflightPatch then
             2522, -- Vault of the Incarnates
         }
     }
-    if Internal.IsDragonflightSeason2 or Internal.IsDragonflightSeason3 then
+    if Internal.IsDragonflightSeason2 or Internal.IsDragonflightSeason3 or Internal.IsDragonflightSeason4 then
         tinsert(raidInfo[10].instances, 2569) -- Aberrus, the Shadowed Crucible
     end
-    if Internal.IsDragonflightSeason3 then
+    if Internal.IsDragonflightSeason3 or Internal.IsDragonflightSeason4 then
         tinsert(raidInfo[10].instances, 2549) -- Amirdrassil, the Dream's Hope
     end
+end
+if Internal.IsTheWarWithinPatch then
+    raidInfo[#raidInfo+1] = {
+        name = L["The War Within"],
+        instances = {
+        }
+    }
 end
 local scenarioInfo = {
 	{
@@ -680,14 +720,18 @@ local scenarioInfo = {
 		instances = {
 			{nil, 167, (function () return GetDifficultyInfo(167) end)()}, -- Torghast
 		},
+	},
+	{
+		name = L["Dragonflight"],
+		instances = {
+		},
+	},
+	{
+		name = L["The War Within"],
+		instances = {
+		},
 	}
 };
-if Internal.IsDragonflightPatch then
-    scenarioInfo[#scenarioInfo+1] = {
-        name = L["Dragonflight"],
-        instances = { }
-    }
-end
 local battlegroundInfo = {
 	{
 		name = L["Classic"],
@@ -765,6 +809,11 @@ local battlegroundInfo = {
 			998,  -- Temple of Kotmogu
 			1803, -- Seething Shore
 			2245, -- Deepwind Gorge
+		},
+	},
+	{
+		name = L["The War Within"],
+		instances = {
 		},
 	}
 };
@@ -2684,6 +2733,7 @@ if Internal.IsDragonflight then
             [10] = {132},
         }
     else
+        -- For DF season 4 these levels are incorrect but they dont really need to be correct
         affixesByLevel = {
             [2] = {10, 9},
             [4] = {7, 11, 6, 8, 123},

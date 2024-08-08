@@ -44,7 +44,6 @@ local function CreatePlayerStyle(self)
 		UF:ReskinTimerTrakcer(self)
 	end
 	if C.db["Map"]["DisableMinimap"] or not C.db["Misc"]["ExpRep"] then UF:CreateExpRepBar(self) end
-	if C.db["UFs"]["QuakeTimer"] then UF:CreateQuakeTimer(self) end
 end
 
 local function CreateTargetStyle(self)
@@ -407,6 +406,7 @@ function UF:OnLogin()
 			end
 		end
 
+		UF:ToggleAddPower()
 		UF:ToggleSwingBars()
 		UF:ToggleUFClassPower()
 		UF:UpdateTextScale()
@@ -758,8 +758,6 @@ function UF:OnLogin()
 			UF:CreateAndUpdateRaidHeader(true)
 			UF:UpdateRaidTeamIndex()
 		end
-
-		UF:UpdateRaidHealthMethod()
 
 		if C.db["UFs"]["SpecRaidPos"] then
 			local function UpdateSpecPos(event, ...)

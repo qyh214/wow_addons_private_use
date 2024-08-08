@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 local createCenterLines = true --- Creates only the middle lines
 local showNormalLines = false -- Show all alignment lines all the time
@@ -14,6 +17,7 @@ local pairs = pairs
 -- WoW APIs
 local IsShiftKeyDown, CreateFrame =  IsShiftKeyDown, CreateFrame
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
@@ -55,7 +59,7 @@ local function moveOnePxl(direction)
       elseif direction == "right" then
         data.xOffset = data.xOffset + oneX
       end
-      WeakAuras.Add(data, nil, true)
+      WeakAuras.Add(data, true)
       WeakAuras.UpdateThumbnail(data)
       OptionsPrivate.ResetMoverSizer()
       OptionsPrivate.Private.AddParents(data)
@@ -1345,7 +1349,7 @@ local function ConstructMoverSizer(parent)
             frame:SizingSetData(data, region:GetWidth(), region:GetHeight(), 0, 0, scale)
           end
           region:ResetPosition()
-          WeakAuras.Add(data, nil, true)
+          WeakAuras.Add(data, true)
           frame:ScaleCorners(region:GetWidth(), region:GetHeight())
           WeakAuras.FillOptions()
         end)
@@ -1383,7 +1387,7 @@ local function ConstructMoverSizer(parent)
         frame:SizingSetData(data, width, height, deltaX, deltaY, scale)
 
         region:ResetPosition()
-        WeakAuras.Add(data, nil, true)
+        WeakAuras.Add(data, true)
         OptionsPrivate.Private.AddParents(data)
         WeakAuras.UpdateThumbnail(data)
 

@@ -6,7 +6,7 @@ local GetModelLight = addon.TransitionAPI.GetModelLight;
 local SetGradient = addon.TransitionAPI.SetGradient;
 local SetModelByUnit = addon.TransitionAPI.SetModelByUnit;
 local SetModelCameraPosition = addon.TransitionAPI.SetCameraPosition;
-
+local CopyTable = addon.CopyTable;
 local GetAlternateFormInfo = C_PlayerInfo.GetAlternateFormInfo or HasAlternateForm;
 
 local Narci = Narci;
@@ -143,6 +143,9 @@ local TranslateValue_Male = {
 
 	[52] = {[1] = {-0.1, 1.02, -0.57},
 				[2] = {-0.8, 2.13, -0.55}},		--35 Dracthyr √
+
+	[84] = {[1] = {-0.1, 1.02, -0.57},
+				[2] = {-0.6, 1.24, 0.05}},		--84/85 Earthen √
 };
 
 local TranslateValue_Female = {
@@ -203,6 +206,9 @@ local TranslateValue_Female = {
 
 	[35] = {[1] = {0.3, 0.73, 0.111},
 				[2] = {-0.6, 0.98, 0.25}},		--35 Vulpera √
+
+	[84] = {[1] = {-0.1, 1.02, -0.57},
+				[2] = {-0.4, 1.15, 0.00}},		--84/85 Earthen √
 }
 
 TranslateValue_Female[36] = TranslateValue_Female[2];
@@ -236,6 +242,8 @@ local function ReAssignRaceID(raceID, custom)
 		if inAlternateForm then		--Human form is Worgen's alternate form
 			raceID = 10;	--blood elf
 		end
+	elseif raceID == 85 then	--Earthen
+		raceID = 84;
 	end
 
 	return raceID;
@@ -255,7 +263,7 @@ local function AssignModelPositionTable(race, gender)
 	end
 
 	if not TranslateValue then
-		print("AssignModelPositionTable Failed Unrecognized Race: "..raceID);
+		print("Narcissus: AssignModelPositionTable Failed Unrecognized Race: "..raceID);
 		TranslateValue = TranslateValue_Male[1];
 	end
 end
@@ -353,6 +361,7 @@ local function UpdateGroundShadowOption()
 
 	Narci_GroundShadowOption:ReAnchor(model, shadowFrame.Option);
 end
+
 
 -------------------------
 --Model Control Buttons--
@@ -939,6 +948,15 @@ local function UpdateGlobalCameraPitch(pitch)
 	GLOBAL_CAMERA_PITCH = pitch;
 end
 
+local function ResetAllCameraPitch()
+	GLOBAL_CAMERA_PITCH = pi/2;
+
+	for _, model in pairs(ModelFrames) do
+		model.cameraPitch = GLOBAL_CAMERA_PITCH;
+		UpdateCameraPitch(model, model.cameraPitch);
+	end
+end
+
 local function Smooth_Zoom_Update(self, elapsed)
 	self.t = self.t + elapsed
 	local EndPoint = self.EndPoint;
@@ -1388,7 +1406,7 @@ end
 local animationIDPresets = {
 	--from right to left
 	[1] = {110, 48, 109, 29, ["name"] = L["Ranged Weapon"],},
-	[2] = {962, 1242, 1240, 1076, ["name"] = L["Melee Animation"],},	--NARCI_MELEE_WEAPON
+	[2] = {962, 1242, 1240, 1076, ["name"] = L["Melee Animation"],},
 	[3] = {124, 51, 874, 940, ["name"] = L["Spellcasting"],},
 }
 
@@ -2498,6 +2516,7 @@ local function ExitGroupPhoto()
 	HighlightButton(SlotLayerButton, true);
 
 	ModelFrames[1] = PrimaryPlayerModel;
+	Narci.groupPhotoMode = false;
 end
 
 local function ShowIndexButtonLabel(self, bool)
@@ -2862,10 +2881,12 @@ end
 function NarciGenericModelMixin:OnMouseDown(button)
 	if ( button == "RightButton" and not self.mouseDown ) then
 		self:StartPanning();
-	else
-		if ( not button or button == "LeftButton" ) then
-			self.mouseDown = true;
-			self.rotationCursorStart, self.cameraPitchCursorStart = GetCursorPosition();
+	elseif button == "LeftButton" then
+		self.mouseDown = true;
+		self.rotationCursorStart, self.cameraPitchCursorStart = GetCursorPosition();
+	elseif button == "MiddleButton" then
+		if IsAltKeyDown() then
+			ResetAllCameraPitch();
 		end
 	end
 end
@@ -2934,7 +2955,7 @@ local inventoryTypeSlot = {
 };
 
 local function RedirectInventorySlot(itemID, widgetType)
-	local _, _, _, itemEquipLoc, _, itemClassID, itemSubClassID = GetItemInfoInstant(itemID);
+	local _, _, _, itemEquipLoc, _, itemClassID, itemSubClassID = C_Item.GetItemInfoInstant(itemID);
 	if itemClassID == 4 and itemSubClassID == 6 then	--shield ~ always offhand
 		return 2
 	elseif widgetType == 2 then	--CinematicModel
@@ -3373,15 +3394,6 @@ local function ModelIndexButton_ShowSelfLabelAndHideOthers(self)
 		ShowIndexButtonLabel(button, false);
 	end
 	ShowIndexButtonLabel(self, true);
-end
-
-local function CopyTable(table)
-	if not table then return; end;
-	local newTable = {};
-	for k, v in pairs(table) do
-		newTable[k] = v;
-	end
-	return newTable;
 end
 
 local function UpdateButtonOrder(button, newOrder)
@@ -3913,6 +3925,9 @@ function Narci_GroupPhotoToggle_OnClick(self)
 	Narci.showExitConfirm = true;
 
 	Narci_NPCBrowser:Init();
+
+	Narci.groupPhotoMode = true;
+	NarciScreenshotToolbar:ShowUI("PhotoMode");
 end
 
 
@@ -4039,7 +4054,6 @@ NarciActorPanelPopUpMixin = {};
 function NarciActorPanelPopUpMixin:OnShow()
 	self:RegisterEvent("PLAYER_TARGET_CHANGED");
 	self:RegisterEvent("MODIFIER_STATE_CHANGED");
-	
 
 	if UnitExists("target") then
 		self.AddTarget.isTypeLocked = not UnitIsPlayer("target");
@@ -4460,9 +4474,9 @@ end)
 ----------------------------------------------------
 function Narci:EquipmentItemByItemID(modelIndex, itemID, itemModID)
 	local appearanceID, sourceID = C_TransmogCollection.GetItemInfo(itemID, itemModID);
-	local name = GetItemInfo(itemID) or "";
+	local name = C_Item.GetItemInfo(itemID) or "";
 	After(0.1, function()
-		name = GetItemInfo(itemID) or "";
+		name = C_Item.GetItemInfo(itemID) or "";
 		print(name.." | ".."AppearanceID: "..appearanceID.."  ".." SourceID"..sourceID);
 	end)
 	
@@ -4915,3 +4929,32 @@ local function SetChromaKeyColor(r, g, b, a)
 end
 
 NarciPhotoModeAPI.SetChromaKeyColor = SetChromaKeyColor;
+
+
+
+--Play a sequence of animation on the actor
+local function Moodel_OnAnimFinished_PlaySequence(self)
+	self.sequenceIndex = self.sequenceIndex + 1;
+	local nextAnimationID = self.animationSequence[self.sequenceIndex];
+
+	if nextAnimationID then
+		self:SetAnimation(nextAnimationID, 0);
+	else
+		self:SetScript("OnAnimFinished", NarciGenericModelMixin.OnAnimFinished);
+		self.animationSequence = nil;
+		self.sequenceIndex = nil;
+	end
+end
+
+local function PlayAnimationSequenceOnModel(moldeIndex, ...)
+	-- ... animationIDs
+	local model = ModelFrames[moldeIndex];
+	if model and model:IsVisible() then
+		model.animationSequence = {...};
+		model.sequenceIndex = 1;
+		model:SetScript("OnAnimFinished", Moodel_OnAnimFinished_PlaySequence);
+		model:SetAnimation(model.animationSequence[1], 0);
+	end
+end
+
+Narci.PlayAnimationSequenceOnModel = PlayAnimationSequenceOnModel;

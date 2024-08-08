@@ -7,10 +7,15 @@ end
 local L = WeakAuras.L
 
 -- WeakAuras/Templates
+	L["(Dwarf)"] = "(Nano)"
+	L["(Dwarf/Human)"] = "(Nano/Umano)"
+	L["(Human)"] = "(Umano)"
+	L["(Night Elf)"] = "(Elfo della Notte)"
 	--[[Translation missing --]]
-	L["< 4 stacks"] = "< 4 stacks"
-	--[[Translation missing --]]
-	L["5 stacks"] = "5 stacks"
+	L["(Troll)"] = "(Troll)"
+	L["(Undead)"] = "(Non Morto)"
+	L["< 4 stacks"] = "< 4 accumuli"
+	L["5 stacks"] = "5 accumuli"
 	L["Abilities"] = "Abilità"
 	L["Add Triggers"] = "Aggiungi Inneschi"
 	L["Always Active"] = "Sempre Attivo"
@@ -18,8 +23,7 @@ local L = WeakAuras.L
 	L["Always show the aura, highlight it if debuffed."] = "Mostra sempre l'aura, evidenziata se c'è il debuff."
 	L["Always show the aura, turns grey if on cooldown."] = "Mostra sempre l'aura, diventa grigia se in ricarica."
 	L["Always show the aura, turns grey if the debuff not active."] = "Mostra sempre l'aura, diventa grigia se il debuff non è attivo."
-	--[[Translation missing --]]
-	L["Always shows highlights if enchant missing."] = "Always shows highlights if enchant missing."
+	L["Always shows highlights if enchant missing."] = "Mostra sempre gli highlights se manca l'incantesimo."
 	L["Always shows the aura, grey if buff not active."] = "Mostra sempre l'aura, grigia se il buff non è attivo."
 	L["Always shows the aura, highlight it if buffed."] = "Mostra sempre l'aura, evidenziata se c'è il buff."
 	L["Always shows the aura, highlight when active, turns blue on insufficient resources."] = "Mostra sempre l'aura, evidenziata quando attiva, diventa blu se la risorsa è insufficiente."
@@ -33,8 +37,7 @@ local L = WeakAuras.L
 	L["Always shows the aura, turns grey if the ability is not usable."] = "Mostra sempre l'aura, diventa grigia se l'abilità non è utilizzabile."
 	L["Always shows the aura, turns red when out of range, blue on insufficient resources."] = "Mostra sempre l'aura, diventa rossa quando fuori portata, blu se la risorsa è insufficiente."
 	L["Always shows the aura, turns red when out of range."] = "Mostra sempre l'aura,, diventa rossa quando fuori portata."
-	--[[Translation missing --]]
-	L["Always shows the aura."] = "Always shows the aura."
+	L["Always shows the aura."] = "Mostra sempre l'aura."
 	L["Back"] = "Indietro"
 	L["Basic Show On Cooldown"] = "Semplice Mostra in Ricarica"
 	--[[Translation missing --]]
@@ -44,26 +47,22 @@ local L = WeakAuras.L
 	L["Buffs"] = "Buffs"
 	L["Cancel"] = "Cancella"
 	L["Cast"] = "Lancia"
-	--[[Translation missing --]]
-	L["Charge and Buff Tracking"] = "Charge and Buff Tracking"
-	--[[Translation missing --]]
-	L["Charge and Debuff Tracking"] = "Charge and Debuff Tracking"
-	--[[Translation missing --]]
-	L["Charge and Duration Tracking"] = "Charge and Duration Tracking"
-	--[[Translation missing --]]
-	L["Charge Tracking"] = "Charge Tracking"
+	L["Charge and Buff Tracking"] = "Monitoraggio di cariche e potenziamenti"
+	L["Charge and Debuff Tracking"] = "Monitoraggio di cariche e penalità "
+	L["Charge and Duration Tracking"] = "Monitoraggio della carica e della durata"
+	L["Charge Tracking"] = "Monitoraggio della carica"
 	--[[Translation missing --]]
 	L["cooldown"] = "cooldown"
-	--[[Translation missing --]]
-	L["Cooldown Tracking"] = "Cooldown Tracking"
+	L["Cooldown Tracking"] = "Monitoraggio del Cooldown "
 	--[[Translation missing --]]
 	L["Cooldowns"] = "Cooldowns"
-	--[[Translation missing --]]
-	L["Create Auras"] = "Create Auras"
+	L["Create Auras"] = "Crea aure"
 	--[[Translation missing --]]
 	L["debuff"] = "debuff"
 	--[[Translation missing --]]
 	L["Debuffs"] = "Debuffs"
+	--[[Translation missing --]]
+	L["dps buff"] = "dps buff"
 	--[[Translation missing --]]
 	L["General"] = "General"
 	--[[Translation missing --]]
@@ -88,6 +87,8 @@ local L = WeakAuras.L
 	L["Hold CTRL to create multiple auras at once"] = "Hold CTRL to create multiple auras at once"
 	--[[Translation missing --]]
 	L["Keeps existing triggers intact"] = "Keeps existing triggers intact"
+	--[[Translation missing --]]
+	L["Master Channeler Rune"] = "Master Channeler Rune"
 	--[[Translation missing --]]
 	L["Max 3"] = "Max 3"
 	--[[Translation missing --]]
@@ -116,6 +117,8 @@ local L = WeakAuras.L
 	L["Pet Behavior"] = "Pet Behavior"
 	--[[Translation missing --]]
 	L["PvP Talents"] = "PvP Talents"
+	--[[Translation missing --]]
+	L["regen buff"] = "regen buff"
 	--[[Translation missing --]]
 	L["Replace all existing triggers"] = "Replace all existing triggers"
 	--[[Translation missing --]]

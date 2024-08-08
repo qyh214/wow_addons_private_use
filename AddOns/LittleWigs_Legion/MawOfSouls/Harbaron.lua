@@ -47,12 +47,12 @@ end
 do
 	local function printTarget(self, player, guid)
 		if self:Me(guid) then
-			self:Say(194325)
+			self:Say(194325, nil, nil, "Fragment")
 		end
 		self:TargetMessageOld(194325, player, "red", "warning")
 	end
 	function mod:Fragment(args)
-		self:GetBossTarget(printTarget, 0.4, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 		self:CDBar(args.spellId, 30)
 	end
 end

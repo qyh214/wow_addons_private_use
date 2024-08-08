@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -101,8 +101,6 @@ L["dialog.blfit"] = "嗜血/英勇 筛选"
 L["dialog.blfit.tooltip"] = "如果你的队伍中没人拥有嗜血/英勇，则勾选后将帮你过滤出已有嗜血/英勇的队伍；或者你加入后，仍有空位的队伍。当然，您独自申请队伍时，本项仍然适用。"
 L["dialog.brfit"] = "战复筛选"
 L["dialog.brfit.tooltip"] = "如果你的队伍中没人拥有战复技能，则勾选后将帮你过滤出已有战复能力的队伍；或者你加入后，仍有空位的队伍。当然，您独自申请队伍时，本项仍然适用。"
-L["dialog.dungeon.alert.single.title"] = "警告：你只选择了一个副本"
-L["dialog.dungeon.alert.single.info"] = "由于系统限制，当你仅搜索一个副本钥石时，建议可在游戏自带搜索框中输入副本名称的一部分，例如“自由镇”或“旋云 20”，这样操作将获得更多相关的结果。"
 L["dialog.matchingid"] = "副本进度匹配"
 L["dialog.matchingid.tooltip"] = "仅显示和您的副本进度完全匹配的团队。当然，如果您本周还没有击杀任何Boss，则会显示出所有的在建团队。"
 
@@ -128,5 +126,3 @@ L["settings.signupOnEnter.title"] = "使用回车键申请"
 L["settings.signupOnEnter.tooltip"] = "申请新队伍时自动添加“给队长留言”文本框，并按回车键确认您的申请。"
 L["settings.skipSignUpDialog.title"] = "跳过申请窗口"
 L["settings.skipSignUpDialog.tooltip"] = "如果可能，跳过职责选择/给队长留言并立即申请到该组。 按住 shift 以始终显示申请窗口。"
-L["settings.coloredApplications.title"] = "彩色申请"
-L["settings.coloredApplications.tooltip"] = "在史诗+队伍的待处理申请上显示红色背景，如果该队伍没有剩余的位置供您的角色使用。"

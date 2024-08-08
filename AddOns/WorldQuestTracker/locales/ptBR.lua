@@ -191,10 +191,8 @@ L["S_WORLDQUESTS"] = "Missões Mundiais"
 L["S_APOWER_AVAILABLE"] = "Disponível"
 L["S_APOWER_NEXTLEVEL"] = "Próximo nível"
 L["S_DECREASESIZE"] = "Diminuir tamanho"
---[[Translation missing --]]
 L["S_DUNGEON"] = "Dungeon"
---[[Translation missing --]]
-L["S_ENABLE"] = "Enable"
+L["S_ENABLE"] = "Ativo"
 L["S_ENABLED"] = "Ativado"
 L["S_ERROR_NOTIMELEFT"] = "Esta missão expirou."
 L["S_ERROR_NOTLOADEDYET"] = "Esta missão não foi carregada ainda, por favor aguarde alguns segundos."
@@ -256,8 +254,7 @@ L["S_MAPBAR_OPTIONSMENU_STATUSBAR_VISIBILITY"] = "Mostrar barra de status"
 L["S_MAPBAR_OPTIONSMENU_STATUSBARANCHOR"] = "Ancorar ao topo"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_CURRENTZONE"] = "Apenas zona atual"
 L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE"] = "Escala do rastreador: %s"
---[[Translation missing --]]
-L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "Tracker Scale"
+L["S_MAPBAR_OPTIONSMENU_TRACKER_SCALE_NAME"] = "Tamanho do Tracker"
 L["S_MAPBAR_OPTIONSMENU_TRACKERCONFIG"] = "Ajustes do rastreador"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_AUTO"] = "Posição automática"
 L["S_MAPBAR_OPTIONSMENU_TRACKERMOVABLE_CUSTOM"] = "Posição manual"
@@ -274,52 +271,59 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texto do Tempo Restante"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Ordem por Tempo"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Tempo Restante"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Na Conta"
---[[Translation missing --]]
-L["S_OPENWORLD"] = "Open World"
+L["S_OPENWORLD"] = "Mundo Aberto"
 L["S_OPTIONS_ACCESSIBILITY"] = "Acessibilidade"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Marcar Rastreador Extra"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Mostrar anel de recompensa"
 L["S_OPTIONS_ANIMATIONS"] = "Faça animações"
---[[Translation missing --]]
-L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
---[[Translation missing --]]
-L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
+L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Não mostrar se já estiver em grupo"
+L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Mostrar Botão de Opções"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Janela do Mapa Centralizada "
 L["S_OPTIONS_MAPFRAME_ERROR_SCALING_DISABLED"] = "Você precisa habilitar a 'Escala da janela do mapa' primeiro, nenhum valor foi alterado."
 L["S_OPTIONS_MAPFRAME_SCALE"] = "Escala da janela do mapa"
 L["S_OPTIONS_MAPFRAME_SCALE_ENABLED"] = "Habilitar escala da janela do mapa"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN"] = "Open Options Panel"
---[[Translation missing --]]
-L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "Open World Quest Tracker Options Menu"
---[[Translation missing --]]
-L["S_OPTIONS_PATHLINE"] = "Path Line"
---[[Translation missing --]]
-L["S_OPTIONS_QUEST_EMISSARY"] = "Emissary Quest Info"
+L["S_OPTIONS_OPEN"] = "Abrir painel de opções"
+L["S_OPTIONS_OPEN_FROM_INTERFACE_PANEL"] = "Abrir o painel de opções do World Quest Tracker"
+L["S_OPTIONS_PATHLINE"] = "Linha de Direção"
+L["S_OPTIONS_QUEST_EMISSARY"] = "Informação da Quest de Emissário"
 L["S_OPTIONS_QUESTBLACKLIST"] = "Lista negra de Missões"
 L["S_OPTIONS_RESET"] = "Redefinir"
---[[Translation missing --]]
-L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Mostrar botão de filtro"
+L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Mostrar botão de Minimizar"
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Mostrar botão de Organizar"
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Mostrar botão de Tempo Restante"
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Mostrar botão de Atalhos de Mundos"
 L["S_OPTIONS_SHOWFACTIONS"] = "Mostrar Facções"
---[[Translation missing --]]
-L["S_OPTIONS_TALKINGHEADS"] = "Supress Talking Heads"
+L["S_OPTIONS_TALKINGHEADS"] = "Não mostrar \"Talking Heads\""
 L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Sem prioridade por tempo restante"
---[[Translation missing --]]
-L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "Attach to Quest Log"
+L["S_OPTIONS_TRACKER_ATTACH_TO_QUESTLOG"] = "Posicionar ao Log de Quests"
 --[[Translation missing --]]
 L["S_OPTIONS_TRACKER_FLIGHTMASTER"] = "Oribos Flight Master"
 L["S_OPTIONS_TRACKER_RESETPOSITION"] = "Redefinir Posição"
 L["S_OPTIONS_WORLD_ANCHOR_LEFT"] = "Âncora do lado esquerdo"
 L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Âncora do lado direito"
---[[Translation missing --]]
-L["S_OPTIONS_WORLD_ICONSPERROW"] = "Quest Amount Per Row"
+L["S_OPTIONS_WORLD_ICONSPERROW"] = "Quantidade de quests por coluna"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organizar por mapa"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organizar por tipo de missão"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Attach To"
 --[[Translation missing --]]
 L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organize Quests By"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Apenas Rastreados"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+--[[Translation missing --]]
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "General Settings"
 --[[Translation missing --]]
@@ -366,6 +370,8 @@ L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Visto Por "
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "minutos atrás"
 --[[Translation missing --]]
 L["S_SCALE"] = "Scale"
+--[[Translation missing --]]
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
 L["S_SUMMARYPANEL_EXPIRED"] = "EXPIRADA"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Últimos 15 dias"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Estatísticas da Conta"
@@ -375,6 +381,8 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Outros Personagems"
 L["S_TEXT_SIZE"] = "Text Size"
 --[[Translation missing --]]
 L["S_TORGAST"] = "Torgasth"
+--[[Translation missing --]]
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
 L["S_TUTORIAL_AMOUNT"] = "indica a quantidade a receber"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Clique para rastrear a missão."
 L["S_TUTORIAL_PARTY"] = "Quando estiver em grupo, uma estrela azul é mostrada em missões em que todos do grupo estão!"
@@ -383,6 +391,8 @@ L["S_TUTORIAL_TIMELEFT"] = "indica o tempo restante (+4 horas, +90 minutos, +30 
 L["S_TUTORIAL_WORLDBUTTONS"] = "Clique aqui para alternar entre três tipos de resumos: - |cFFFFAA11Por tipo de missão|r - |cFFFFAA11Por Zona|r - |cFFFFAA11Nenhum|r Click |cFFFFAA11Alternar missões|r para ocultar locais de missões."
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Este botão mostra o mapa das Ilhas Partidas."
 L["S_UNKNOWNQUEST"] = "Missão desconhecida"
+--[[Translation missing --]]
+L["S_VISIBILITY"] = "Visibility"
 L["S_WHATSNEW"] = "O que tem de novo?"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Ordenar por tipo"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Ordenar por Zona"

@@ -1,9 +1,6 @@
 local L = BigWigs:NewBossLocale("Odyn", "deDE")
 if not L then return end
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
-	L.custom_on_autotalk_desc = "Wählt direkt die Dialogoption zum Starten des Kampfes."
-
 	L.gossip_available = "Dialog verfügbar"
 	L.gossip_trigger = "Höchst beeindruckend! Ich hielt die Kräfte der Valarjar stets für unerreicht... und dennoch steht Ihr hier vor mir."
 
@@ -23,9 +20,6 @@ end
 
 L = BigWigs:NewBossLocale("Halls of Valor Trash", "deDE")
 if L then
-	L.custom_on_autotalk = "Automatisch ansprechen"
-	L.custom_on_autotalk_desc = "Wählt direkt die Dialogoption zum Starten der Kämpfe."
-
 	L.mug_of_mead = "Metkrug"
 	L.valarjar_thundercaller = "Donnerrufer der Valarjar"
 	L.storm_drake = "Sturmdrache"

@@ -232,7 +232,7 @@
 										<Anchor point="TOPLEFT" relativeKey="$parent.Row9Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
-								<FontString parentKey="Row11Title" text="BTWLOADOUTS_POSSESS_BAR" inherits="GameFontNormalMed1" justifyH="RIGHT" hidden="true">
+								<FontString parentKey="Row11Title" text="BTWLOADOUTS_SKYRIDING_BAR" inherits="GameFontNormalMed1" justifyH="RIGHT">
 									<Size x="90" y="33"/>
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeKey="$parent.Row10Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
@@ -947,67 +947,67 @@
 								</Anchors>
 							</Button>
 							
-							<Button parentKey="Bar11Slot1" inherits="BtWLoadoutsActionButtonTemplate" id="1" hidden="true">
+							<Button parentKey="Bar11Slot1" inherits="BtWLoadoutsActionButtonTemplate" id="1">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Row11Title" relativePoint="TOPRIGHT" x="12" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot2" inherits="BtWLoadoutsActionButtonTemplate" id="2" hidden="true">
+							<Button parentKey="Bar11Slot2" inherits="BtWLoadoutsActionButtonTemplate" id="2">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot1" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot3" inherits="BtWLoadoutsActionButtonTemplate" id="3" hidden="true">
+							<Button parentKey="Bar11Slot3" inherits="BtWLoadoutsActionButtonTemplate" id="3">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot2" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot4" inherits="BtWLoadoutsActionButtonTemplate" id="4" hidden="true">
+							<Button parentKey="Bar11Slot4" inherits="BtWLoadoutsActionButtonTemplate" id="4">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot3" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot5" inherits="BtWLoadoutsActionButtonTemplate" id="5" hidden="true">
+							<Button parentKey="Bar11Slot5" inherits="BtWLoadoutsActionButtonTemplate" id="5">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot4" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot6" inherits="BtWLoadoutsActionButtonTemplate" id="6" hidden="true">
+							<Button parentKey="Bar11Slot6" inherits="BtWLoadoutsActionButtonTemplate" id="6">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot5" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot7" inherits="BtWLoadoutsActionButtonTemplate" id="7" hidden="true">
+							<Button parentKey="Bar11Slot7" inherits="BtWLoadoutsActionButtonTemplate" id="7">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot6" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot8" inherits="BtWLoadoutsActionButtonTemplate" id="8" hidden="true">
+							<Button parentKey="Bar11Slot8" inherits="BtWLoadoutsActionButtonTemplate" id="8">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot7" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot9" inherits="BtWLoadoutsActionButtonTemplate" id="9" hidden="true">
+							<Button parentKey="Bar11Slot9" inherits="BtWLoadoutsActionButtonTemplate" id="9">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot8" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot10" inherits="BtWLoadoutsActionButtonTemplate" id="10" hidden="true">
+							<Button parentKey="Bar11Slot10" inherits="BtWLoadoutsActionButtonTemplate" id="10">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot9" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot11" inherits="BtWLoadoutsActionButtonTemplate" id="11" hidden="true">
+							<Button parentKey="Bar11Slot11" inherits="BtWLoadoutsActionButtonTemplate" id="11">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot10" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="Bar11Slot12" inherits="BtWLoadoutsActionButtonTemplate" id="12" hidden="true">
+							<Button parentKey="Bar11Slot12" inherits="BtWLoadoutsActionButtonTemplate" id="12">
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar11Slot11" relativePoint="TOPRIGHT" x="2" y="0"/>
 								</Anchors>
 							</Button>
-							<Button parentKey="IgnoreBar11" inherits="BtWLoadoutsIgnoreActionBarTemplate" hidden="true">
+							<Button parentKey="IgnoreBar11" inherits="BtWLoadoutsIgnoreActionBarTemplate">
 								<KeyValues>
 									<KeyValue type="number" key="startID" value="121"/>
 									<KeyValue type="number" key="endID" value="132"/>
@@ -1290,7 +1290,7 @@
 							<Button parentKey="IgnoreBar15" inherits="BtWLoadoutsIgnoreActionBarTemplate">
 								<KeyValues>
 									<KeyValue type="number" key="startID" value="169"/>
-									<KeyValue type="number" key="endID" value="181"/>
+									<KeyValue type="number" key="endID" value="180"/>
 								</KeyValues>
 								<Anchors>
 									<Anchor point="TOPLEFT" relativeKey="$parent.Bar15Slot12" relativePoint="TOPRIGHT" x="2" y="0"/>

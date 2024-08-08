@@ -5,10 +5,6 @@ if L then
 	L.custom_on_fade_out_bars_desc = "第一階段時，淡出遠處首領的計時器。"
 
 	L.coalescing_void = "跑遠"
-	L.molten_eruption = "接圈"
-	L.swirling_flame = "旋風"
-	L.shadowflame_burst = "衝擊波"
-	--L.plus = "%s + %s"
 
 	L.shadow_and_flame = "暗焰易傷"
 end
@@ -16,7 +12,6 @@ end
 L = BigWigs:NewBossLocale("The Forgotten Experiments", "zhTW")
 if L then
 	L.rending_charge_single = "第一個衝鋒"
-	L.massive_slam = "衝擊波"
 	L.unstable_essence_new = "新炸彈"
 	L.custom_on_unstable_essence_high = "不穩定的精華：高層數喊話"
 	L.custom_on_unstable_essence_high_desc = "當你身上的不穩定的精華層數疊高後，持續喊話播報你的層數。"
@@ -44,12 +39,8 @@ end
 L = BigWigs:NewBossLocale("Rashok, the Elder", "zhTW")
 if L then
 	L.doom_flames = "接圈"
-	L.shadowlave_blast = "衝擊波"
 	L.charged_smash = "分攤"
 	L.energy_gained = "獲得能量：%d"
-
-	-- Mythic
-	--L.shadowflame_energy = "Heal Absorb"
 end
 
 L = BigWigs:NewBossLocale("The Vigilant Steward, Zskarn", "zhTW")
@@ -89,7 +80,6 @@ if L then
 	L.emptiness_between_stars = "空無"
 	L.void_slash = "正面斬擊"
 
-	L.boss_immune = "首領免疫"
 	L.ebon_might = "小怪免疫"
 end
 

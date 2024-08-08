@@ -35,6 +35,7 @@ function mod:GetOptions()
 		416139, -- Temporal Breath
 		-- Stage 2: Lord of the Infinite
 		416264, -- Infinite Corruption
+		417413, -- Temporal Scar
 	}, {
 		["stages"] = CL.general,
 		[416152] = -26751, -- Stage 1: We Are Infinite
@@ -54,6 +55,7 @@ function mod:OnBossEnable()
 
 	-- Stage 2: Lord of the Infinite
 	self:Log("SPELL_CAST_START", "InfiniteCorruption", 416264)
+	self:Log("SPELL_PERIODIC_DAMAGE", "TemporalScarDamage", 417413) -- don't alert on APPLIED
 end
 
 function mod:OnEngage()
@@ -151,6 +153,17 @@ end
 -- Stage 2: Lord of the Infinite
 
 function mod:InfiniteCorruption(args)
+	if self:GetStage() == 1 then
+		-- rarely a UNIT_DIED will not be logged for Infinite Keeper, so the stage will never
+		-- be incremented. this check ensures that the stage 2 timers will be used for other
+		-- abilities if Infinite Corruption (the first stage 2 ability) is ever cast while
+		-- the module is still in stage 1. this can also happen if you push the boss without
+		-- giving him time to summon all 4 Infinite Keepers. the actual stage 2 trigger is
+		-- probably just boss health.
+		self:StopBar(416152) -- Summon Infinite Keeper
+		self:SetStage(2)
+		self:CDBar(416139, 11.8) -- Temporal Breath
+	end
 	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "long")
 	infiniteCorruptionCount = infiniteCorruptionCount + 1
@@ -158,5 +171,17 @@ function mod:InfiniteCorruption(args)
 	if infiniteCorruptionCount == 2 then
 		-- the first Infinite Corruption resets the CD of Infinity Orb
 		self:CDBar(410904, 19.2) -- Infinity Orb
+	end
+end
+
+do
+	local prev = 0
+	function mod:TemporalScarDamage(args)
+		local t = args.time
+		if self:Me(args.destGUID) and t - prev > 2.25 then
+			prev = t
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou", nil, args.destName)
+		end
 	end
 end

@@ -297,6 +297,8 @@ local function RefreshConditionSet(set)
 
 	UpdateSetFilters(set)
 
+	Internal.Call("ConditionUpdated", set.setID);
+
 	return set
 end
 local function AddConditionSet()
@@ -310,6 +312,9 @@ local function AddConditionSet()
     };
 	UpdateSetFilters(set)
     BtWLoadoutsSets.conditions[set.setID] = set;
+
+	Internal.Call("ConditionCreated", set.setID);
+
     return set;
 end
 local function GetConditionSet(id)
@@ -328,6 +333,8 @@ local function DeleteConditionSet(id)
 	if type(id) == "table" then
 		id = id.setID;
 	end
+
+	Internal.Call("ConditionDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Conditions;
 	set = frame.set;
@@ -590,6 +597,8 @@ local function ProfilesDropDown_OnClick(self, arg1, arg2, checked)
 		set.character = tab.temp["NONE"] or shallowcopy(set.character)
 	end
 
+	Internal.Call("ConditionUpdated", set.setID);
+
 	BtWLoadoutsFrame:Update();
 end
 local function ProfilesDropDown_NewOnClick(self, arg1, arg2, checked)
@@ -610,6 +619,8 @@ local function ProfilesDropDown_NewOnClick(self, arg1, arg2, checked)
 		local subset = Internal.GetProfile(set.profileSet);
 		subset.useCount = (subset.useCount or 0) + 1;
 	end
+
+	Internal.Call("ConditionUpdated", set.setID);
 
 	BtWLoadoutsFrame.Profiles.set = newSet;
 	PanelTemplates_SetTab(BtWLoadoutsFrame, BtWLoadoutsFrame.Profiles:GetID());
@@ -732,6 +743,8 @@ local function ConditionTypeDropDown_OnClick(self, arg1, arg2, checked)
 	set.bossID = nil;
 	set.affixesID = nil;
 
+	Internal.Call("ConditionUpdated", set.setID);
+
 	BtWLoadoutsFrame:Update();
 end
 local function ConditionTypeDropDownInit(self, level, menuList)
@@ -781,6 +794,8 @@ local function InstanceDropDown_OnClick(self, arg1, arg2, checked)
 	if set.difficultyID ~= 8 then
 		set.affixesID = nil;
 	end
+
+	Internal.Call("ConditionUpdated", set.setID);
 
 	BtWLoadoutsFrame:Update();
 end
@@ -854,6 +869,8 @@ local function DifficultyDropDown_OnClick(self, arg1, arg2, checked)
 		set.affixesID = nil;
 	end
 
+	Internal.Call("ConditionUpdated", set.setID);
+
 	BtWLoadoutsFrame:Update();
 end
 local function DifficultyDropDownInit(self, level, menuList)
@@ -923,6 +940,8 @@ local function BossDropDown_OnClick(self, arg1, arg2, checked)
 
 	set.bossID = arg1;
 
+	Internal.Call("ConditionUpdated", set.setID);
+
 	BtWLoadoutsFrame:Update();
 end
 local function BossDropDownInit(self, level, menuList)
@@ -958,6 +977,8 @@ local function ScenarioDropDown_OnClick(self, arg1, arg2, checked)
 
 	set.instanceID = arg1;
 	set.difficultyID = arg2;
+
+	Internal.Call("ConditionUpdated", set.setID);
 
 	BtWLoadoutsFrame:Update();
 end
@@ -1001,6 +1022,8 @@ local function BattlegroundDropDown_OnClick(self, arg1, arg2, checked)
 
 	set.instanceID = arg1;
 	set.difficultyID = arg2;
+
+	Internal.Call("ConditionUpdated", set.setID);
 
 	BtWLoadoutsFrame:Update();
 end
@@ -1048,6 +1071,8 @@ local function AffixDropDown_OnClick(self, arg1, arg2, checked)
 	if set.affixesID == 0 then
 		set.affixesID = nil
 	end
+
+	Internal.Call("ConditionUpdated", set.setID);
 
 	BtWLoadoutsFrame:Update();
 end
@@ -1144,6 +1169,8 @@ function BtWLoadoutsConditionsMixin:OnShow()
 					end
 				end
 
+				Internal.Call("ConditionUpdated", frame.set.setID);
+
 				BtWLoadoutsFrame:Update()
 			end
 		end
@@ -1192,12 +1219,16 @@ end
 function BtWLoadoutsConditionsMixin:UpdateSetEnabled(value)
 	if self.set and self.set.disabled ~= value then
 		self.set.disabled = value;
+		Internal.Call("ConditionUpdated", self.set.setID);
 		self:Update();
 	end
 end
 function BtWLoadoutsConditionsMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
+		
+		Internal.Call("ConditionUpdated", self.set.setID);
+
 		self:Update();
 	end
 end
@@ -1219,6 +1250,9 @@ function BtWLoadoutsConditionsMixin:UpdateSetZone(value)
 		if valid then
 			--@TODO invalid zone?
 		end
+
+		Internal.Call("ConditionUpdated", self.set.setID);
+
 		self:Update();
 	end
 end

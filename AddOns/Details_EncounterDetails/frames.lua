@@ -43,7 +43,9 @@ do
 		end
 
 		local buildOptionsPanel = function()
-			local optionsFrame = encounterDetails:CreatePluginOptionsFrame("EncounterDetailsOptionsWindow", "Encounter Breakdown Options")
+			local pluginIcon = "Interface\\AddOns\\Details_EncounterDetails\\images\\icon"
+			local pluginIconCoords = {0.15, 0.85, 0.15, 0.85}
+			local optionsFrame = encounterDetails:CreatePluginOptionsFrame("EncounterDetailsOptionsWindow", "Encounter Breakdown Options", 3, pluginIcon, pluginIconCoords)
 			-- 1 = only when inside a raid map
 			-- 2 = only when in raid group
 			-- 3 = only after a boss encounter
@@ -131,7 +133,13 @@ do
 
 			}
 
-			detailsFramework:BuildMenu(optionsFrame, menu, 15, -75, 260)
+			local options_text_template = detailsFramework:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
+			local options_dropdown_template = detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
+			local options_switch_template = detailsFramework:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
+			local options_slider_template = detailsFramework:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
+			local options_button_template = detailsFramework:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
+
+			detailsFramework:BuildMenu(optionsFrame, menu, 15, -75, 260, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
 		end
 
 		encounterDetails.OpenOptionsPanel = function()
@@ -463,34 +471,41 @@ do
 		end
 
 		--segment selection
-		local buildSegmentosMenu = function(self)
-			local segmentList = Details:GetCombatSegments()
-			local resultTable = {}
+		C_Timer.After(5, function()
+			local buildSegmentosMenu = function(self)
+				local segmentList = Details:GetCombatSegments()
+				local resultTable = {}
 
-			for index, combate in ipairs(segmentList) do
-				if (combate.is_boss and combate.is_boss.index) then
-					--local l, r, t, b, icon = Details:GetBossIcon(combate.is_boss.mapid, combate.is_boss.index)
-					local bossIcon = Details:GetBossEncounterTexture(combate.is_boss.name)
-					resultTable[#resultTable+1] = {value = index, label = "#" .. index .. " " .. combate.is_boss.name, icon = bossIcon, iconsize = {32, 20}, texcoord = {0, 1, 0, 0.9}, onclick = encounterDetails.OpenAndRefresh}
+				for index, combate in ipairs(segmentList) do
+					if (combate.is_boss and combate.is_boss.index) then
+						local bossIcon = Details:GetBossEncounterTexture(combate.is_boss.id or combate.is_boss.encounter or combate.is_boss.name)
+						resultTable[#resultTable+1] = {
+							value = index,
+							label = "#" .. index .. " " .. (combate.is_boss.encounter or combate.is_boss.name or _G["UNKNOWN"]),
+							icon = bossIcon,
+							iconsize = {32, 20},
+							texcoord = {0, 1, 0, 0.9},
+							onclick = encounterDetails.OpenAndRefresh
+						}
+					end
 				end
+
+				return resultTable
 			end
 
-			return resultTable
-		end
+			--space between the 4 tab buttons and the segments and macro frames
+			local xSpacement = 20
+			--~dropdown
+			local segmentDropdown = detailsFramework:NewDropDown(edFrame, _, "$parentSegmentsDropdown", "segmentsDropdown", 218, 20, buildSegmentosMenu, nil)
+			segmentDropdown:SetPoint("left", edFrame.buttonSwitchPhases, "right", xSpacement, 0)
+			segmentDropdown:SetTemplate(detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE"))
 
-		--space between the 4 tab buttons and the segments and macro frames
-		local xSpacement = 20
-
-		--~dropdown
-		local segmentDropdown = detailsFramework:NewDropDown(edFrame, _, "$parentSegmentsDropdown", "segmentsDropdown", 218, 20, buildSegmentosMenu, nil)
-		segmentDropdown:SetPoint("left", edFrame.buttonSwitchPhases, "right", xSpacement, 0)
-		segmentDropdown:SetTemplate(detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE"))
-
-		--options button
-		local optionsButton = detailsFramework:NewButton(edFrame, nil, "$parentOptionsButton", "OptionsButton", 120, 20, encounterDetails.OpenOptionsPanel, nil, nil, nil, "Options")
-		optionsButton:SetPoint("left", segmentDropdown, "right", 10, 0)
-		optionsButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
-		optionsButton:SetIcon([[Interface\Buttons\UI-OptionsButton]], 14, 14, nil, {0, 1, 0, 1}, nil, 3)
+			--options button
+			local optionsButton = detailsFramework:NewButton(edFrame, nil, "$parentOptionsButton", "OptionsButton", 120, 20, encounterDetails.OpenOptionsPanel, nil, nil, nil, "Options")
+			optionsButton:SetPoint("left", segmentDropdown, "right", 10, 0)
+			optionsButton:SetTemplate(detailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
+			optionsButton:SetIcon([[Interface\Buttons\UI-OptionsButton]], 14, 14, nil, {0, 1, 0, 1}, nil, 3)
+		end)
 
 		--macro box
 		edFrame.MacroEditBox = detailsFramework:CreateTextEntry(edFrame, function()end, 300, 20)

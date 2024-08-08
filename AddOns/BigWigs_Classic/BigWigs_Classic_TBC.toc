@@ -1,0 +1,46 @@
+## Interface: 20504
+
+## Title: BigWigs [|cffeda55fClassic|r]
+## Title-zhCN: BigWigs [|cffeda55f经典旧世|r]
+## Title-zhTW: BigWigs [|cffeda55fClassic|r]
+## Title-deDE: BigWigs [|cffeda55fClassic|r]
+## Title-frFR: BigWigs [|cffeda55fClassique|r]
+## Title-itIT: BigWigs [|cffeda55fClassic|r]
+## Title-koKR: BigWigs [|cffeda55f오리지널|r]
+## Title-ruRU: BigWigs [|cffeda55fClassic|r]
+## Title-ptBR: BigWigs [|cffeda55fClassic|r]
+## Title-esES: BigWigs [|cffeda55fClassic|r]
+## Title-esMX: BigWigs [|cffeda55fClassic|r]
+## Notes: A collection of BigWigs modules from the Classic era.
+## Notes-zhCN: BigWigs 经典旧世模块。
+## Notes-zhTW: A collection of BigWigs modules from the Classic era.
+## Notes-deDE: Eine Sammlung von BigWigs-Modulen aus der Ära Classic.
+## Notes-frFR: Une collection de modules BigWigs de l'ère Classique.
+## Notes-itIT: A collection of BigWigs modules from the Classic era.
+## Notes-koKR: 오리지널 BigWigs 모듈 모음집입니다.
+## Notes-ruRU: A collection of BigWigs modules from the Classic era.
+## Notes-ptBR: A collection of BigWigs modules from the Classic era.
+## Notes-esES: A collection of BigWigs modules from the Classic era.
+## Notes-esMX: A collection of BigWigs modules from the Classic era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v11.0.15
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/BigWigsMods/BigWigs_Classic
+## X-Curse-Project-ID: 50625
+## X-WoWI-ID: 22095
+## X-Wago-ID: rNkPgm6a
+## X-BigWigs-LoadOn-InstanceId: 409, 469, 509, 531, 533, 309, 249
+## X-BigWigs-Minimum: 350
+
+MoltenCore\modules.xml
+BlackwingLair\modules.xml
+AQ20\modules.xml
+AQ40\modules.xml
+ZulGurub_Classic\modules.xml
+Naxxramas_Classic\modules.xml
+Onyxia_Classic\modules.xml

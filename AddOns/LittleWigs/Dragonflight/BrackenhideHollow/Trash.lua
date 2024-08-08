@@ -7,6 +7,7 @@ if not mod then return end
 mod.displayName = CL.trash
 mod:RegisterEnableMob(
 	194675, -- Decaying Cauldron
+	186766, -- Captive Tuskarr
 	186191, -- Decay Speaker
 	185508, -- Claw Fighter
 	185534, -- Bonebolt Hunter
@@ -24,7 +25,7 @@ mod:RegisterEnableMob(
 	189318, -- Infected Bear
 	187033, -- Stinkbreath
 	187192, -- Rageclaw
-	186208, -- Rotbow Stalker
+	186208, -- Rotbow Ranger
 	186242, -- Skulking Gutstabber
 	186246, -- Fleshripper Vulture
 	185656, -- Filth Caller
@@ -41,8 +42,13 @@ local L = mod:GetLocale()
 if L then
 	L.custom_on_cauldron_autotalk = "Autotalk"
 	L.custom_on_cauldron_autotalk_desc = "[Alchemy] Instantly detoxify Decaying Cauldrons for a disease dispel buff."
+	L.custom_on_cauldron_autotalk_icon = "ui_chat"
+	L.captive_tuskarr_freed = "Captive Tuskarr Freed"
+	L.captive_tuskarr_freed_desc = "Show an alert when a Captive Tuskarr has been freed."
+	L.captive_tuskarr_freed_icon = "inv_10_dungeonjewelry_primitive_trinket_tuskarrplushie_color1"
 
 	L.decaying_cauldron = "Decaying Cauldron"
+	L.captive_tuskarr = "Captive Tuskarr"
 	L.decay_speaker = "Decay Speaker"
 	L.claw_fighter = "Claw Fighter"
 	L.bonebolt_hunter = "Bonebolt Hunter"
@@ -59,7 +65,7 @@ if L then
 	L.infected_bear = "Infected Bear"
 	L.stinkbreath = "Stinkbreath"
 	L.rageclaw = "Rageclaw"
-	L.rotbow_stalker = "Rotbow Stalker"
+	L.rotbow_ranger = "Rotbow Ranger"
 	L.skulking_gutstabber = "Skulking Gutstabber"
 	L.fleshripper_vulture = "Fleshripper Vulture"
 	L.filth_caller = "Filth Caller"
@@ -70,15 +76,14 @@ end
 -- Initialization
 --
 
-local rotchantingTotemMarker = mod:AddMarkerOption(true, "npc", 7, 382435, 7) -- Rotchanting Totem
 local decayTotemMarker = mod:AddMarkerOption(true, "npc", 7, 381821, 7) -- Decay Totem
 function mod:GetOptions()
 	return {
 		-- Decaying Cauldron
 		"custom_on_cauldron_autotalk",
+		-- Captive Tuskarr
+		"captive_tuskarr_freed",
 		-- Decay Speaker
-		382435, -- Rotchanting Totem
-		rotchantingTotemMarker,
 		{367503, "SAY"}, -- Withering Burst
 		{368081, "DISPEL"}, -- Withering
 		-- Claw Fighter
@@ -116,10 +121,8 @@ function mod:GetOptions()
 		-- Rageclaw
 		{385832, "SAY"}, -- Bloodthirsty Charge
 		{385827, "DISPEL"}, -- Bloody Rage
-		-- Rotbow Stalker
-		384974, -- Scented Meat
-		-- Skulking Gutstabber
-		{385058, "DISPEL"}, -- Withering Poison
+		-- Rotbow Ranger
+		{384974, "DISPEL"}, -- Rotten Meat
 		-- Fleshripper Vulture
 		385029, -- Screech
 		-- Filth Caller
@@ -128,7 +131,8 @@ function mod:GetOptions()
 		{383087, "SAY"}, -- Withering Contagion
 	}, {
 		["custom_on_cauldron_autotalk"] = L.decaying_cauldron,
-		[382435] = L.decay_speaker,
+		["captive_tuskarr_freed"] = L.captive_tuskarr,
+		[367503] = L.decay_speaker,
 		[367484] = L.claw_fighter,
 		[368287] = L.bonebolt_hunter,
 		[367500] = L.bracken_warscourge,
@@ -143,14 +147,13 @@ function mod:GetOptions()
 		[373929] = L.infected_bear,
 		[388060] = L.stinkbreath,
 		[385832] = L.rageclaw,
-		[384974] = L.rotbow_stalker,
-		[385058] = L.skulking_gutstabber,
+		[384974] = L.rotbow_ranger,
 		[385029] = L.fleshripper_vulture,
 		[383399] = L.filth_caller,
 		[383087] = L.vile_rothexer,
 	}, {
 		[367484] = CL.fixate, -- Vicious Clawmangle (Fixate)
-		[384974] = CL.fixate, -- Scented Meat (Fixate)
+		[384974] = CL.fixate, -- Rotten Meat (Fixate)
 	}
 end
 
@@ -158,11 +161,10 @@ function mod:OnBossEnable()
 	-- Decaying Cauldron
 	self:RegisterEvent("GOSSIP_SHOW")
 
-	-- TODO Captive Tuskarr?
-	-- [UPDATE_UI_WIDGET] widgetID:4267, widgetType:8, widgetSetID:1, scriptedAnimationEffectID:0, modelSceneLayer:0, widgetScale:0, tooltipLoc:0, fontType:1, shownState:1, widgetSizeSetting:0, bottomPadding:0, enabledState:1, textSizeType:4, text:Tuskarr Freed: 4/5, orderIndex:0, layoutDirection:0, inAnimType:0, widgetTag:, hasTimer:false, outAnimType:0, tooltip:Free Tuskarr to goad Hackclaw's War-Band out into the open., hAlign:1
+	-- Captive Tuskarr
+	self:RegisterWidgetEvent(4267, "CaptiveTuskarrFreed", true)
 
 	-- Decay Speaker
-	self:Log("SPELL_SUMMON", "RotchantingTotemSummon", 382435)
 	self:Log("SPELL_CAST_START", "WitheringBurst", 367503)
 	self:Log("SPELL_AURA_APPLIED", "WitheringApplied", 368081)
 
@@ -223,11 +225,8 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "BloodthirstyCharge", 385832)
 	self:Log("SPELL_AURA_APPLIED", "BloodyRageApplied", 385827)
 
-	-- Rotbow Stalker
-	self:Log("SPELL_AURA_APPLIED", "ScentedMeatApplied", 384974)
-
-	-- Skulking Gutstabber
-	self:Log("SPELL_AURA_APPLIED", "WitheringPoisonApplied", 385058)
+	-- Rotbow Ranger
+	self:Log("SPELL_AURA_APPLIED", "RottenMeatApplied", 384974)
 
 	-- Fleshripper Vulture
 	self:Log("SPELL_CAST_START", "Screech", 385029)
@@ -258,36 +257,22 @@ function mod:GOSSIP_SHOW(event)
 	end
 end
 
--- Decay Speaker
+-- Captive Tuskarr
 
-do
-	local totemGUID = nil
-
-	function mod:RotchantingTotemSummon(args)
-		self:Message(args.spellId, "yellow", CL.spawned:format(args.destName))
-		self:PlaySound(args.spellId, "alert")
-		-- register events to auto-mark totem
-		if self:GetOption(rotchantingTotemMarker) then
-			totemGUID = args.destGUID
-			self:RegisterTargetEvents("MarkRotchantingTotem")
-		end
-	end
-
-	function mod:MarkRotchantingTotem(_, unit, guid)
-		if totemGUID == guid then
-			totemGUID = nil
-			self:CustomIcon(rotchantingTotemMarker, unit, 7)
-			self:UnregisterTargetEvents()
-		end
-	end
+function mod:CaptiveTuskarrFreed(_, text)
+	-- [UPDATE_UI_WIDGET] widgetID:4267, widgetType:8, text:Tuskarr Freed: 1/5
+	self:Message("captive_tuskarr_freed", "green", text, L.captive_tuskarr_freed_icon)
+	self:PlaySound("captive_tuskarr_freed", "info")
 end
+
+-- Decay Speaker
 
 do
 	local function printTarget(self, name, guid)
 		self:TargetMessage(367503, "orange", name)
 		self:PlaySound(367503, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(367503)
+			self:Say(367503, nil, nil, "Withering Burst")
 		end
 	end
 
@@ -383,7 +368,7 @@ end
 do
 	local prev = 0
 	function mod:RagestormDamage(args)
-		if self:Me(args.destGUID) and not self:Tank() then
+		if self:Me(args.destGUID) then
 			local t = args.time
 			if t - prev > 2 then
 				prev = t
@@ -406,13 +391,13 @@ end
 function mod:FishSlap(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
-	--self:NameplateCDBar(args.spellId, 20.6, args.sourceGUID)
+	--self:Nameplate(args.spellId, 20.6, args.sourceGUID)
 end
 
 function mod:FreshCatch(args)
 	self:Message(args.spellId, "yellow")
 	self:PlaySound(args.spellId, "info")
-	--self:NameplateCDBar(args.spellId, 15.8, args.sourceGUID)
+	--self:Nameplate(args.spellId, 15.8, args.sourceGUID)
 end
 
 -- Rotting Creek
@@ -445,9 +430,16 @@ function mod:Stomp(args)
 	self:PlaySound(args.spellId, "alarm")
 end
 
-function mod:NecroticBreath(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alarm")
+do
+	local prev = 0
+	function mod:NecroticBreath(args)
+		local t = args.time
+		if t - prev > 1.5 then
+			prev = t
+			self:Message(args.spellId, "red")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 -- Fetid Rotsinger
@@ -482,7 +474,7 @@ do
 		self:TargetMessage(374544, "red", name)
 		self:PlaySound(374544, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(374544)
+			self:Say(374544, nil, nil, "Burst of Decay")
 		end
 	end
 
@@ -532,7 +524,7 @@ do
 		self:TargetMessage(388060, "red", name)
 		self:PlaySound(388060, "alarm", nil, name)
 		if self:Me(guid) then
-			self:Say(388060)
+			self:Say(388060, nil, nil, "Stink Breath")
 		end
 	end
 
@@ -541,7 +533,7 @@ do
 			self:CancelTimer(timer)
 		end
 		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
-		self:CDBar(args.spellId, 17.0)
+		self:CDBar(args.spellId, 15.8)
 		timer = self:ScheduleTimer("StinkbreathDeath", 30)
 	end
 
@@ -551,7 +543,7 @@ do
 		end
 		self:Message(args.spellId, "orange")
 		self:PlaySound(args.spellId, "alarm")
-		self:CDBar(args.spellId, 23.1)
+		self:CDBar(args.spellId, 18.2)
 		timer = self:ScheduleTimer("StinkbreathDeath", 30)
 	end
 
@@ -572,7 +564,7 @@ do
 		self:TargetMessage(385832, "red", name)
 		self:PlaySound(385832, "alert", nil, name)
 		if self:Me(guid) then
-			self:Say(385832)
+			self:Say(385832, nil, nil, "Bloodthirsty Charge")
 		end
 	end
 
@@ -588,24 +580,14 @@ function mod:BloodyRageApplied(args)
 	end
 end
 
--- Rotbow Stalker
+-- Rotbow Ranger
 
-function mod:ScentedMeatApplied(args)
+function mod:RottenMeatApplied(args)
 	if self:Me(args.destGUID) and not self:Tank() then
 		self:PersonalMessage(args.spellId, nil, CL.fixate)
 		self:PlaySound(args.spellId, "warning")
-	elseif self:Healer() then
-		self:TargetMessage(args.spellId, "red", args.destName, CL.fixate)
-		self:PlaySound(args.spellId, "alert", nil, args.destName)
-	end
-end
-
--- Skulking Gutstabber
-
-function mod:WitheringPoisonApplied(args)
-	-- not dispelled by movement (presumably bugged)
-	if self:Dispeller("poison", nil, args.spellId) or self:Me(args.destGUID) then
-		self:TargetMessage(args.spellId, "yellow", args.destName)
+	elseif self:Dispeller("poison", nil, args.spellId) then
+		self:TargetMessage(args.spellId, "red", args.destName)
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
 	end
 end
@@ -648,7 +630,7 @@ function mod:WitheringContagion(args)
 	self:TargetMessage(args.spellId, "orange", args.destName, CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alarm", nil, args.destName)
 	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Withering Contagion")
 	end
 end
 

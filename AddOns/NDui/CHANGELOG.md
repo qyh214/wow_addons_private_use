@@ -1,19 +1,26 @@
 # NDui
 
-## [7.15.0](https://github.com/siweia/NDui/tree/7.15.0) (2023-11-29)
+## [8.0.0](https://github.com/siweia/NDui/tree/8.0.0) (2024-8-5)
 
-- Update DBM aura blocker.
-- Update default skins.
-- Update skin for Krowi_AchievementFilter.
-- Update skin for PremadeGroupsFilter.
-- Option to modify actionbar glow.
-- Update auras and nameplate filter.
-- Update aurawatch.
-- Update gossip automation in single option.
-- Update Rogue poison reminder.
-- Update tier sets list for new season.
-- Preupdates for patch 10.2.5.
-- Option to modify micromenu size.
-- Disable demonic gateway indicator.
-- Fix tradeskill search panel.
-- Update GUI and locales.
+- Remove options for frequency health update.
+- Update oUF.
+- Options to switch show roleicons mode.
+- Update skins.
+- Update warband bank money display.
+- Fix currency transfer taint.
+- Fix error in TradeTabs.
+- Correct community feast timer.
+- Option to modify nameplate max range.
+- Fix worldmap error with map reveal.
+- Fix nameplate mythic progress indicator.
+- Fix classcolor on whoframe.
+- Update bag search.
+- Add new bag filter for warband boe.
+- Update combo points for Rogue.
+- Update auras for hunter.
+- Update auto gossip with quest label.
+- Update aura reminder for Shaman.
+- Fix reputation level on reputation bar.
+- Separate option for chatframe fontsize.
+- Option to modify chatframe editbox fontsize.
+- Update rare reminder.

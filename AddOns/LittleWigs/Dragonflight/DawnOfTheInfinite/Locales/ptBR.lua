@@ -10,6 +10,7 @@ if L then
 	L.timestream_anomaly = "Anomalia do Fluxo Temporal"
 	L.infinite_infiltrator = "Infiltrador Infinito"
 	L.risen_dragon = "Dragão Reanimado"
+	L.iridikrons_creation = "Criação de Iridikron"
 
 	--L.iridikron_warmup_trigger = "So the titans' puppets have come to face me."
 
@@ -33,4 +34,9 @@ if L then
 
 	L.custom_on_rift_autotalk = "Conversa Automática"
 	--L.custom_on_rift_autotalk_desc = "Instantly start channeling to open the Temporal Rift."
+	--L.rift_opened = "Temporal Rift Opened"
+	L.rift_stability = "Estabilidade da Fenda"
+	--L.rift_stability_desc = "Show an alert when the Temporal Rift has been opened."
+
+	--L.manifested_timeways_warmup_trigger = "Even the Aspect of Time cannot be allowed to disrupt the timeways!"
 end

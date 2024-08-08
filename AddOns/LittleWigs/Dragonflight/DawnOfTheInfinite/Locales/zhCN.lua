@@ -10,6 +10,7 @@ if L then
 	L.timestream_anomaly = "时流畸体"
 	L.infinite_infiltrator = "永恒渗透者"
 	L.risen_dragon = "复生的巨龙"
+	L.iridikrons_creation = "伊律迪孔的造物"
 
 	L.iridikron_warmup_trigger = "没想到泰坦的傀儡居然要挑战我。"
 
@@ -33,4 +34,9 @@ if L then
 
 	L.custom_on_rift_autotalk = "自动对话"
 	L.custom_on_rift_autotalk_desc = "立即开始引导裂隙稳定度来打开时光裂隙。"
+	L.rift_opened = "时光裂隙已打开"
+	L.rift_stability = "裂隙稳定度"
+	L.rift_stability_desc = "时光裂隙已打开时显示警报。"
+
+	L.manifested_timeways_warmup_trigger = "就算是时光的守护者也不能扰乱时间之流！"
 end

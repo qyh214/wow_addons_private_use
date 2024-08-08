@@ -210,7 +210,7 @@ end
 do
 	local function printTarget(self, name, guid)
 		if self:Me(guid) then
-			self:Say(308308)
+			self:Say(308308, nil, nil, "Piercing Shot")
 		end
 	end
 
@@ -233,18 +233,13 @@ end
 
 do
 	local prev = 0
-	local function printTarget(self, name, guid)
-		local t = GetTime()
-		if t-prev > 1.5 and IsItemInRange(37727, name) then -- Ruby Acorn, 5yd
-			prev = t
-			self:Message(308481, "blue", CL.near:format(self:SpellName(308481)))
-			self:PlaySound(308481, "alarm")
-		end
-	end
-
 	function mod:RiftStrike(args)
 		-- Does an AoE around the target
-		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+		if args.time-prev > 1 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
 	end
 end
 
@@ -299,7 +294,7 @@ function mod:BlightEruption(args)
 	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "alarm")
 	if self:UnitDebuff("player", 308265) then -- Corrupted Blight
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Blight Eruption")
 	end
 end
 

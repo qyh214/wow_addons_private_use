@@ -9,21 +9,22 @@ local requestPartyKeystones
 -- Dragonflight Season 2
 -- 134:Entangling, 135：Afflicted, 136:Incorporeal
 local affixSchedule = {
-	-- Dragonflight Season 3  （Need to check if it's a continuation of the Season 2 wordplay? To be confirmed and re-entered）
-	[1]  = { [1]=8, [2]=136, [3]=10, }, -- Fortified  | Incorporeal | Sanguine
-	[2]  = { [1]=0, [2]=0,   [3]=9,  }, -- Tyrannical || 
-	[3]  = { [1]=0, [2]=0,   [3]=10, }, -- Fortified  || 
-	[4]  = { [1]=0, [2]=0,   [3]=9,  }, -- Tyrannical || 
-	[5]  = { [1]=0, [2]=0,   [3]=10, }, -- Fortified  || 
-	[6]  = { [1]=0, [2]=0,   [3]=9,  }, -- Tyrannical || 
-	[7]  = { [1]=0, [2]=0,   [3]=10, }, -- Fortified  || 
-	[8]  = { [1]=0, [2]=0,   [3]=9,  }, -- Tyrannical || 
-	[9]  = { [1]=0, [2]=0,   [3]=10, }, -- Fortified  || 
-	[10] = { [1]=0, [2]=0,   [3]=9,  }, -- Tyrannical || 
+	-- Dragonflight Season 3 (Sort:[1](Level 14+);[2](Level 7+);[3](Level 2+))
+	-- Information from(资料来自)：https://www.wowhead.com/cn/guide/mythic-plus-dungeons/dragonflight-season-3/overview
+	[1]  = { [1]=8,   [2]=136, [3]=10, },   -- Sanguine   | Incorporeal | Fortified
+	[2]  = { [1]=11,  [2]=134, [3]=9,  },   -- Bursting   | Entangling  | Tyrannical
+	[3]  = { [1]=123, [2]=3,   [3]=10, },   -- Spiteful   | Volcanic    | Fortified
+	[4]  = { [1]=6,   [2]=124, [3]=9,  },   -- Raging     | Storming    | Tyrannical
+	[5]  = { [1]=7,   [2]=134, [3]=10, },   -- Bolstering | Entangling  | Fortified
+	[6]  = { [1]=123, [2]=136, [3]=9,  },   -- Spiteful   | Incorporeal | Tyrannical
+	[7]  = { [1]=6,   [2]=135, [3]=10, },   -- Raging     | Afflicted   | Fortified
+	[8]  = { [1]=8,   [2]=3,   [3]=9,  },   -- Sanguine   | Volcanic    | Tyrannical
+	[9]  = { [1]=11,  [2]=124, [3]=10, },   -- Bursting   |Storming     | Fortified
+	[10] = { [1]=7,   [2]=135, [3]=9,  },   -- Bolstering |Afflicted    | Tyrannical
 }
 
 local scheduleEnabled = true
-local affixScheduleUnknown = true
+local affixScheduleUnknown = false
 local currentWeek
 local currentKeystoneMapID
 local currentKeystoneLevel

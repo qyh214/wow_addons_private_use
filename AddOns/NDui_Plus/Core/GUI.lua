@@ -1,5 +1,6 @@
 local addonName, ns = ...
 local B, C, L, DB, P = unpack(ns)
+local _, _, NL = unpack(_G.NDui)
 local G = P:RegisterModule("GUI")
 
 local cr, cg, cb = DB.r, DB.g, DB.b
@@ -130,7 +131,7 @@ G.TabList = {
 
 G.OptionList = { -- type, key, value, name, horizon, data, callback, tooltip, scripts
 	[1] = {
-		{1, "ActionBar", "ComboGlow", HeaderTag..L["ComboGlow"], nil, nil, nil, L["ComboGlowTip"]},
+		{1, "ActionBar", "FinisherGlow", HeaderTag..L["FinisherGlow"], nil, nil, nil, L["FinisherGlowTip"]},
 		{},
 		{1, "ActionBar", "GlobalFade", HeaderTag..L["GlobalFadeEnable"], nil, setupABFader},
 		{1, "ActionBar", "Bar1", L["Bar"].."1*", nil, nil, updateABFaderState},
@@ -181,6 +182,8 @@ G.OptionList = { -- type, key, value, name, horizon, data, callback, tooltip, sc
 		{1, "Skins", "WorldQuestTab", "WorldQuestTab"},
 		{1, "Skins", "ExtVendor", "Extended Vendor UI", true},
 		{1, "Skins", "AdiBags", "AdiBags"},
+		{1, "Skins", "BetterBags", "BetterBags", true},
+		{1, "Skins", "ShadowDancer", "ShadowDancer"},
 		{},
 		{1, "Skins", "HideToggle", L["HideToggle"].."*", nil, nil, updateToggleVisible},
 	},
@@ -219,10 +222,9 @@ G.OptionList = { -- type, key, value, name, horizon, data, callback, tooltip, sc
 		{1, "Misc", "GarrisonTabs", L["GarrisonTabs"], true, nil, nil, L["GarrisonTabsTip"]},
 		{1, "Misc", "ExtVendorUI", L["ExtVendorUI"]},
 		{1, "Misc", "ExtMacroUI", L["ExtMacroUI"], true, nil, nil ,L["ExtMacroUITip"]},
-		{1, "Misc", "ImprovedStableFrame", L["ImprovedStableFrame"]},
-		{1, "Misc", "GuildBankItemLevel", L["GuildBankItemLevel"], true},
-		{1, "Misc", "WormholeHelper", L["Wormhole Centrifuge Helper"]},
-		{1, "Misc", "TrainAll", L["TrainAll"], true, nil, nil, L["TrainAllTip"]},
+		{1, "Misc", "GuildBankItemLevel", L["GuildBankItemLevel"]},
+		{1, "Misc", "WormholeHelper", L["Wormhole Centrifuge Helper"], true},
+		{1, "Misc", "TrainAll", L["TrainAll"], nil, nil, nil, L["TrainAllTip"]},
 		{},
 		{1, "Misc", "LootSpecManager", HeaderTag..L["LootSpecManagerEnable"], nil, toggleLootSpecManager, nil, L["LootSpecManagerTip"]},
 		{},
@@ -543,9 +545,12 @@ function P:OpenGUI()
 	toggle:SetPoint("TOPLEFT", 25, -5)
 	B.AddTooltip(toggle, "ANCHOR_RIGHT", "NDui", "info")
 	toggle:SetScript("OnClick", function()
-		if _G.GameMenuFrameNDui then
-			_G.GameMenuFrameNDui:Click()
-			gui:Hide()
+		for button in _G.GameMenuFrame.buttonPool:EnumerateActive() do
+			if button:GetText() == NL["NDui Console"] then
+				button:Click()
+				gui:Hide()
+				break
+			end
 		end
 	end)
 
@@ -598,9 +603,14 @@ function G:SetupToggle()
 end
 
 function G:OnLogin()
-	local NDuiBtn = _G.GameMenuFrameNDui
-	if not NDuiBtn then return end
-	NDuiBtn:HookScript("PostClick",G.SetupToggle)
+	hooksecurefunc(_G.GameMenuFrame, "InitButtons", function(self)
+		for button in self.buttonPool:EnumerateActive() do
+			if button:GetText() == NL["NDui Console"] then
+				button:HookScript("PostClick", G.SetupToggle)
+				break
+			end
+		end
+	end)
 end
 
 SlashCmdList["NDUI_PLUS"] = function(msg)

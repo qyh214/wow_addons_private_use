@@ -86,7 +86,7 @@ do
 	local prev = 0
 	local function printTarget(self, player, guid)
 		if self:Me(guid) then
-			self:Say(260669)
+			self:Say(260669, nil, nil, "Propellant Blast")
 			self:Flash(260669)
 		end
 		self:TargetMessage(260669, "yellow", player)
@@ -100,6 +100,6 @@ do
 			self:Bar(args.spellId, 42)
 		end
 		self:PlaySound(args.spellId, "alert", "watchstep")
-		self:GetBossTarget(printTarget, 0.5, args.sourceGUID)
+		self:GetUnitTarget(printTarget, 0.5, args.sourceGUID)
 	end
 end

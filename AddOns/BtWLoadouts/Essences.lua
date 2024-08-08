@@ -109,16 +109,22 @@ local function RefreshEssenceSet(set)
 
     set.essences = essences
 
-    return UpdateSetFilters(set)
+    UpdateSetFilters(set)
+	
+	Internal.Call("EssenceSetUpdated", set.setID);
+
+	return set
 end
 local function AddEssenceSet()
     local role = select(5,GetSpecializationInfo(GetSpecialization()));
-    return AddSet("essences", RefreshEssenceSet({
+    local set = AddSet("essences", RefreshEssenceSet({
 		role = role,
 		name = format(L["New %s Set"], _G[role]);
 		useCount = 0,
         essences = {},
 	}))
+    Internal.Call("EssenceSetCreated", set.setID);
+	return set
 end
 local function GetEssenceSetsByName(name)
 	return Internal.GetSetsByName("essences", name)
@@ -242,6 +248,8 @@ local function DeleteEssenceSet(id)
             end
 		end
 	end
+    
+	Internal.Call("EssenceSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Essences;
 	local set = frame.set;
@@ -391,6 +399,8 @@ function BtWLoadoutsAzeriteMilestoneSlotMixin:OnClick()
 		selected[self.milestoneID] = nil;
 	end
 
+	Internal.Call("EssenceSetUpdated", essences.set.setID);
+
 	BtWLoadoutsFrame:Update();
 end
 
@@ -442,6 +452,8 @@ local function RoleDropDown_OnClick(self, arg1, arg2, checked)
 			set.essences[milestoneID] = essenceID;
 		end
 	end
+
+	Internal.Call("EssenceSetUpdated", set.setID);
 
 	BtWLoadoutsFrame:Update();
 end
@@ -505,6 +517,7 @@ BtWLoadoutsEssencesMixin = {}
 function BtWLoadoutsEssencesMixin:OnLoad()
     self.RestrictionsDropDown:SetSupportedTypes("spec", "race")
     self.RestrictionsDropDown:SetScript("OnChange", function ()
+		Internal.Call("EssenceSetUpdated", self.set.setID);
         self:Update()
     end)
 
@@ -537,6 +550,7 @@ end
 function BtWLoadoutsEssencesMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
+		Internal.Call("EssenceSetUpdated", self.set.setID);
 		self:Update();
 	end
 end

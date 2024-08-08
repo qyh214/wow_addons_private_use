@@ -1,5 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
-local AddonName, OptionsPrivate = ...
+---@type string
+local AddonName = ...
+---@class OptionsPrivate
+local OptionsPrivate = select(2, ...)
 
 local L = WeakAuras.L
 
@@ -21,7 +24,7 @@ local function getAuraMatchesList(name)
   if ids then
     local descText = ""
     for id, _ in pairs(ids) do
-      local _, _, icon = GetSpellInfo(id)
+      local icon = OptionsPrivate.Private.ExecEnv.GetSpellIcon(id)
       if icon then
         if descText == "" then
           descText = "|T"..icon..":0|t: "..id
@@ -113,20 +116,20 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
 
     if isExactSpellId then
       aura_options[iconOption].name = function()
-        return GetSpellInfo(WeakAuras.SafeToNumber(trigger[optionKey] and trigger[optionKey][i]))
+        return OptionsPrivate.Private.ExecEnv.GetSpellName(WeakAuras.SafeToNumber(trigger[optionKey] and trigger[optionKey][i]) or "")
       end
       aura_options[iconOption].image = function()
-        local icon = select(3, GetSpellInfo(trigger[optionKey] and trigger[optionKey][i]))
+        local icon = OptionsPrivate.Private.ExecEnv.GetSpellIcon(trigger[optionKey] and trigger[optionKey][i] or "")
         return icon and tostring(icon) or "", 18, 18
       end
       aura_options[iconOption].disabled = function()
-        return not trigger[optionKey] or not trigger[optionKey][i] or not select(3, GetSpellInfo(trigger[optionKey] and trigger[optionKey][i]))
+        return not trigger[optionKey] or not trigger[optionKey][i] or not OptionsPrivate.Private.ExecEnv.GetSpellIcon(trigger[optionKey] and trigger[optionKey][i])
       end
     else
       aura_options[iconOption].name = function()
         local spellId = trigger[optionKey] and trigger[optionKey][i] and WeakAuras.SafeToNumber(trigger[optionKey][i])
         if spellId then
-          return getAuraMatchesLabel(GetSpellInfo(spellId))
+          return getAuraMatchesLabel(OptionsPrivate.Private.ExecEnv.GetSpellName(spellId))
         else
           return getAuraMatchesLabel(trigger[optionKey] and trigger[optionKey][i])
         end
@@ -135,7 +138,7 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
       aura_options[iconOption].desc = function()
         local spellId = trigger[optionKey] and trigger[optionKey][i] and WeakAuras.SafeToNumber(trigger[optionKey][i])
         if spellId then
-          local name = GetSpellInfo(spellId)
+          local name = OptionsPrivate.Private.ExecEnv.GetSpellName(spellId)
           if name then
             local auraDesc = getAuraMatchesList(name)
             if auraDesc then
@@ -151,7 +154,7 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
         local icon
         local spellId = trigger[optionKey] and trigger[optionKey][i] and WeakAuras.SafeToNumber(trigger[optionKey][i])
         if spellId then
-          icon = select(3, GetSpellInfo(spellId))
+          icon = OptionsPrivate.Private.ExecEnv.GetSpellIcon(spellId)
         else
           icon = spellCache.GetIcon(trigger[optionKey] and trigger[optionKey][i])
         end
@@ -168,7 +171,7 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
       hidden = hiddenFunction,
       get = function(info)
         local rawString = trigger[optionKey] and trigger[optionKey][i] or ""
-        local spellName, _, _, _, _, _, spellID = GetSpellInfo(WeakAuras.SafeToNumber(rawString))
+        local spellName, _, _, _, _, _, spellID = OptionsPrivate.Private.ExecEnv.GetSpellInfo(WeakAuras.SafeToNumber(rawString))
         if spellName and spellID then
           return ("%s (%s)"):format(spellID, spellName) .. "\0" .. rawString
         else
@@ -736,7 +739,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       width = WeakAuras.doubleWidth,
       hidden = function()
         return not (trigger.type == "aura2" and trigger.unit ~= "multi")
-               or WeakAuras.IsClassicEraOrWrath()
+               or WeakAuras.IsClassicEra()
       end
     },
     fetchRaidMark = {
@@ -785,7 +788,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       order = 66.3,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")
-        and WeakAuras.IsRetail())
+        and WeakAuras.IsCataOrRetail())
       end,
     },
     actualSpec = {
@@ -798,7 +801,7 @@ local function GetBuffTriggerOptions(data, triggernum)
         return not (trigger.type == "aura2"
                     and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")
                     and trigger.useActualSpec
-                    and WeakAuras.IsRetail())
+                    and WeakAuras.IsCataOrRetail())
       end,
       order = 66.4
     },
@@ -811,7 +814,7 @@ local function GetBuffTriggerOptions(data, triggernum)
         return not (trigger.type == "aura2"
                     and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party")
                     and not trigger.useActualSpec
-                    and WeakAuras.IsRetail())
+                    and WeakAuras.IsCataOrRetail())
       end
     },
 
@@ -839,7 +842,7 @@ local function GetBuffTriggerOptions(data, triggernum)
     group_roleSpace = {
       type = "description",
       name = "",
-      order = 67.2,
+      order = 67.3,
       width = WeakAuras.normalWidth,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and not trigger.useGroupRole)
@@ -850,7 +853,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Filter by Raid Role"],
-      order = 67.1,
+      order = 67.4,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party"))
         or WeakAuras.IsRetail()
@@ -865,12 +868,12 @@ local function GetBuffTriggerOptions(data, triggernum)
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and trigger.useRaidRole)
         or WeakAuras.IsRetail()
       end,
-      order = 67.2
+      order = 67.5
     },
     raid_roleSpace = {
       type = "description",
       name = "",
-      order = 67.2,
+      order = 67.6,
       width = WeakAuras.normalWidth,
       hidden = function() return
         not (trigger.type == "aura2" and (trigger.unit == "group" or trigger.unit == "raid" or trigger.unit == "party") and not trigger.useRaidRole)
@@ -881,7 +884,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       type = "toggle",
       width = WeakAuras.normalWidth,
       name = L["Filter by Arena Spec"],
-      order = 67.3,
+      order = 67.8,
       hidden = function() return
         not (WeakAuras.IsRetail() and trigger.type == "aura2" and trigger.unit == "arena")
       end
@@ -894,12 +897,12 @@ local function GetBuffTriggerOptions(data, triggernum)
       hidden = function()
         return not (WeakAuras.IsRetail() and trigger.type == "aura2" and trigger.unit == "arena" and trigger.useArenaSpec)
       end,
-      order = 67.4
+      order = 67.9
     },
     arena_specSpace = {
       type = "description",
       name = "",
-      order = 67.4,
+      order = 67.91,
       width = WeakAuras.normalWidth,
       hidden = function()
         return not (WeakAuras.IsRetail() and trigger.type == "aura2" and trigger.unit == "arena" and not trigger.useArenaSpec)
@@ -976,7 +979,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       width = WeakAuras.normalWidth,
       name = L["Hostility"],
       values = OptionsPrivate.Private.hostility_types,
-      hidden = function() return not (trigger.type == "aura2" and trigger.unit == "nameplate" and trigger.useHostility) end,
+      hidden = function() return not (trigger.type == "aura2" and trigger.useHostility) end,
       order = 69.2
     },
     hostilitySpace = {

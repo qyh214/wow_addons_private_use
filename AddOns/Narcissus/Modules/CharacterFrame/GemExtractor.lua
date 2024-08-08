@@ -1,8 +1,8 @@
 local Narci = Narci;
 
 local After = C_Timer.After;
-local GetContainerNumFreeSlots = (C_Container and C_Container.GetContainerNumFreeSlots) or GetContainerNumFreeSlots;
-local GetItemCount = GetItemCount;
+local GetContainerNumFreeSlots = C_Container.GetContainerNumFreeSlots;
+local GetItemCount = C_Item.GetItemCount;
 local NUM_BAGS = NUM_BAG_SLOTS or 4;
 
 local REQUIREMENT_FORMAT = "|cff808080"..REQUIRES_LABEL.." %s|r";
@@ -287,10 +287,10 @@ function NarciItemSocketingActionButtonMixin:SetExtractAction()
     local itemID = EXTRACTOR_ITEM_ID;
     if CanPlayerRemoveGem(itemID) then
         local macroText = GetExtractAction();   --string.format("/use item:%s\r/click ItemSocketingSocket1", itemID);
-        
         self:SetAttribute("type1", "macro");
         self:SetAttribute("macrotext", macroText);
         self:AttemptToEnable();
+        self:RegisterForClicks("LeftButtonDown", "LeftButtonUp", "RightButtonDown", "RightButtonUp");
     else
         self:DisableButton();
     end

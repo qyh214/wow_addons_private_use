@@ -1,6 +1,9 @@
 
 local Details = _G.Details
+local addonName, Details222 = ...
 local L = LibStub("AceLocale-3.0"):GetLocale ( "Details" )
+
+local GetSpellInfo = Details222.GetSpellInfo
 
 --default weaktable
 Details.weaktable = {__mode = "v"}
@@ -56,7 +59,7 @@ function Details:OpenForge()
         local have_plugins_enabled
 
         for id, instanceTable in pairs(Details.EncounterInformation) do
-            if (Details.InstancesToStoreData [id]) then
+            if (Details:IsZoneIdFromCurrentExpansion(id)) then
                 have_plugins_enabled = true
                 break
             end

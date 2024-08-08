@@ -1,14 +1,16 @@
 local _, addon = ...
 local TransitionAPI = addon.TransitionAPI;
+local RoundToDigit = addon.Math.RoundToDigit;
 
 local C_Item = C_Item;
 local After = C_Timer.After;
-local GetItemInfo = GetItemInfo;
-local GetItemInfoInstant = GetItemInfoInstant;
+local GetItemInfo = C_Item.GetItemInfo;
+local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local UIFrameFadeIn = UIFrameFadeIn;
 local UIFrameFadeOut = UIFrameFadeOut;
 local FadeFrame = NarciFadeUI.Fade;
 local PlaySound = PlaySound;
+local GetMouseFocus = addon.TransitionAPI.GetMouseFocus;
 
 local find = string.find;
 local match = string.match;
@@ -361,7 +363,7 @@ Narci_FontColor = {
     ["Corrupt"] = {0.584, 0.428, 0.82, "|cff946dd1"},
 };
 
-local customQualityColors= {
+local CustomQualityColors= {
 	[0] = "9d9d9d",	--Poor
 	[1] = "ffffff",	--Common
 	[2] = "1eff00",	--Uncommon
@@ -374,15 +376,15 @@ local customQualityColors= {
 	[9] = "ffffff",
 };
 
-for index, hex in pairs(customQualityColors) do
-	customQualityColors[index] = NarciAPI_ConvertHexColorToRGB(hex, true);
+for index, hex in pairs(CustomQualityColors) do
+	CustomQualityColors[index] = NarciAPI_ConvertHexColorToRGB(hex, true);
 end
 
 local function GetCustomQualityColor(itemQuality)
-    if (not itemQuality) or (not customQualityColors[itemQuality]) then
+    if (not itemQuality) or (not CustomQualityColors[itemQuality]) then
         itemQuality = 1;
     end
-    return customQualityColors[itemQuality][1], customQualityColors[itemQuality][2], customQualityColors[itemQuality][3];
+    return CustomQualityColors[itemQuality][1], CustomQualityColors[itemQuality][2], CustomQualityColors[itemQuality][3];
 end
 
 NarciAPI.GetItemQualityColor = GetCustomQualityColor;
@@ -396,10 +398,10 @@ end
 NarciAPI.GetItemQualityColorByItemID = GetCustomQualityColorByItemID;
 
 local function GetCustomQualityHexColor(itemQuality)
-    if (not itemQuality) or (not customQualityColors[itemQuality]) then
+    if (not itemQuality) or (not CustomQualityColors[itemQuality]) then
         itemQuality = 1;
     end
-    return customQualityColors[itemQuality][4]
+    return CustomQualityColors[itemQuality][4]
 end
 
 NarciAPI.GetItemQualityHexColor = GetCustomQualityHexColor;
@@ -407,7 +409,7 @@ NarciAPI.GetItemQualityHexColor = GetCustomQualityHexColor;
 
 NarciAPI.GetItemQualityColorTable = function()
     local newTable = {};
-    for k, v in pairs(customQualityColors) do
+    for k, v in pairs(CustomQualityColors) do
         newTable[k] = v;
     end
     return newTable;
@@ -456,8 +458,8 @@ local EnchantInfo = Narci.EnchantData;
 local DoesItemExist = C_Item.DoesItemExist;
 local GetCurrentItemLevel = C_Item.GetCurrentItemLevel;
 local GetItemLink = C_Item.GetItemLink
-local GetItemStats = GetItemStats;
-local GetItemGem = GetItemGem;
+local GetItemStats = C_Item.GetItemStats;
+local GetItemGem = C_Item.GetItemGem;
 
 function NarciAPI_GetItemStats(itemLocation)
     local statsTable = {};
@@ -563,7 +565,7 @@ do
     local GetContainerItemID = (C_Container and C_Container.GetContainerItemID) or GetContainerItemID;
     local GetContainerItemLink = (C_Container and C_Container.GetContainerItemLink) or GetContainerItemLink;
     local GetInventoryItemID = GetInventoryItemID;
-    local GetItemCount = GetItemCount;
+    local GetItemCount = C_Item.GetItemCount;
 
     local function GetItemBagPosition(itemID, findHighestItemLevel)
         if findHighestItemLevel then
@@ -584,7 +586,6 @@ do
             end
 
             return id1, id2;
-
         else
             for bagID = 0, (NUM_BAG_SLOTS or 4) do
                 for slotID = 1, GetContainerNumSlots(bagID) do
@@ -766,6 +767,15 @@ end
 
 NarciAPI.GetBestSizeForPixel = GetBestSizeForPixel;
 
+local function GetObjectScreenSize(objectSize, scale)
+    local _, screenHeight = GetPhysicalScreenSize();
+    if not scale then
+        scale = UIParent:GetEffectiveScale();
+    end
+    return objectSize / ((768/SCREEN_HEIGHT)/scale)
+end
+
+NarciAPI.GetObjectScreenSize = GetObjectScreenSize;
 
 function NarciAPI_OptimizeBorderThickness(self)
     if not self.HasOptimized then
@@ -2914,14 +2924,8 @@ end
 NarciAPI.GetAllSelectedTalentIDsAndIcons = GetAllSelectedTalentIDsAndIcons;
 
 
-local round = function(number, digit)
-    digit = digit or 0;
-    local a = 10 ^ digit;
-    return math.floor(number * a + 0.5)/a
-end
-
 local function CreateColor(r, g, b)
-    return round(r/255, 4), round(g/255, 4), round(b/255, 4);
+    return RoundToDigit(r/255, 4), RoundToDigit(g/255, 4), RoundToDigit(b/255, 4);
 end
 
 NarciAPI.CreateColor = CreateColor;
@@ -3117,6 +3121,149 @@ end
 
 NarciAPI.IsPlayerAtMaxLevel = IsPlayerAtMaxLevel;
 
+
+do
+    local IsInteractingWithNpcOfType = C_PlayerInteractionManager.IsInteractingWithNpcOfType;
+    local TYPE_GOSSIP = Enum.PlayerInteractionType and Enum.PlayerInteractionType.Gossip or 3;
+    local TYPE_QUEST_GIVER = Enum.PlayerInteractionType and Enum.PlayerInteractionType.QuestGiver or 4;
+    local GetQuestID = GetQuestID;
+    local INTERACT_RECENELY = false;
+
+    local function IsInteractingWithDialogNPC()
+        if INTERACT_RECENELY then return true end;
+
+        local currentQuestID = GetQuestID();
+        return IsInteractingWithNpcOfType(TYPE_GOSSIP) or IsInteractingWithNpcOfType(TYPE_QUEST_GIVER) or (currentQuestID ~= nil and currentQuestID ~= 0)
+    end
+    addon.IsInteractingWithDialogNPC = IsInteractingWithDialogNPC;
+
+    local DialogEventHandler;
+
+    local function DialogEventHandler_Check()
+        if C_AddOns.IsAddOnLoaded("DialogueUI") then
+            local events = {
+                "GOSSIP_SHOW", "QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_COMPLETE", "QUEST_GREETING",
+            };
+
+            DialogEventHandler = CreateFrame("Frame");
+
+            for _, event in ipairs(events) do
+                DialogEventHandler:RegisterEvent(event)
+            end
+
+            local function OnUpdate(self, elapsed)
+                self.t = self.t + elapsed;
+                if self.t >= 1 then
+                    self:SetScript("OnUpdate", nil);
+                    self.t = nil;
+                    INTERACT_RECENELY = false;
+                end
+            end
+
+            DialogEventHandler:SetScript("OnEvent", function(self, event, ...)
+                self.t = 0;
+                INTERACT_RECENELY = true;
+                self:SetScript("OnUpdate", OnUpdate);
+            end);
+        end
+    end
+
+    addon.AddLoadingCompleteCallback(DialogEventHandler_Check);
+end
+
+do
+    local BindHelper;
+
+    local BindEvents = {
+        "ACTION_WILL_BIND_ITEM",
+        "EQUIP_BIND_REFUNDABLE_CONFIRM",
+        "EQUIP_BIND_TRADEABLE_CONFIRM",
+        "EQUIP_BIND_CONFIRM",
+        "END_BOUND_TRADEABLE",
+    };
+
+    local function HideStaticPopup()
+        if StaticPopup1 then
+            StaticPopup1:Hide();
+        end
+    end
+
+    local function ConfirmBinding()
+        if not BindHelper then
+            BindHelper = CreateFrame("Frame");
+            BindHelper:Hide();
+
+            BindHelper:SetScript("OnEvent", function(self, event, ...)
+                if event == "ACTION_WILL_BIND_ITEM" then
+                    if self.pending then
+                        self.pending = nil;
+                        C_Item.ActionBindsItem();
+                    end
+                elseif event == "EQUIP_BIND_REFUNDABLE_CONFIRM" or event == "EQUIP_BIND_TRADEABLE_CONFIRM" or event == "EQUIP_BIND_CONFIRM" then
+                    if self.pending then
+                        self.pending = nil;
+                        local slot = ...
+                        EquipPendingItem(slot);
+                    end
+                elseif event == "END_BOUND_TRADEABLE" then
+                    if self.pending then
+                        self.pending = nil;
+                        local reason = ...
+                        C_Item.EndBoundTradeable(reason);
+                    end
+                end
+
+                HideStaticPopup();
+
+                for _, v in ipairs(BindEvents) do
+                    self:UnregisterEvent(v);
+                end
+            end);
+
+            BindHelper:SetScript("OnUpdate", function(self, elapsed)
+                self.t = self.t + elapsed;
+                if self.t > 0.5 then
+                    self.t = nil;
+                    self.pending = nil;
+                    self:Hide();
+                    for _, v in ipairs(BindEvents) do
+                        self:UnregisterEvent(v);
+                    end
+                end
+            end);
+        end
+
+        for _, v in ipairs(BindEvents) do
+            BindHelper:RegisterEvent(v);
+        end
+
+        BindHelper.t = 0;
+        BindHelper.pending = true;
+        BindHelper:Show();
+    end
+    addon.ConfirmBinding = ConfirmBinding;
+end
+
+local function DoesItemExistByID(itemID)
+    itemID = GetItemInfoInstant(itemID)
+    return itemID ~= nil
+end
+addon.DoesItemExistByID = DoesItemExistByID;
+
+local function CopyTable(tbl)
+    --Blizzard TableUtil.lua
+    if not tbl then return; end;
+	local copy = {};
+	for k, v in pairs(tbl) do
+		if type(v) == "table" then
+			copy[k] = CopyTable(v);
+		else
+			copy[k] = v;
+		end
+	end
+	return copy;
+end
+addon.CopyTable = CopyTable;
 
 --[[
     /script DEFAULT_CHAT_FRAME:AddMessage("\124Hitem:narcissus:0:\124h[Test Link]\124h\124r");

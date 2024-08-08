@@ -8,26 +8,42 @@ mod:RegisterEnableMob(204931) -- Fyrakk
 mod:SetEncounterID(2677)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
+mod:SetPrivateAuraSounds({
+	{414186, extra = {414187, 421825, 421826, 421827, 421828, 421829}}, -- Blaze
+	419060, -- Firestorm
+	{426370, mythic = true}, -- Darkflame Cleave
+	422520, -- Greater Firestorm
+	{428988, mythic = true}, -- Molten Eruption
+	{428970, mythic = true}, -- Shadow Cage
+	425525, -- Eternal Firestorm
+})
 
 --------------------------------------------------------------------------------
 -- Timers
 --
 
-local timers = {
-	[1.5] = {
-		[414186] = {17, 12, 8, 0}, -- Blaze (Mythic Only)
-	},
-	[2] = {
-		[419123] = {5.5, 75, 80, 0}, -- Flamefall
-		[417431] = {18.5, 11, 60, 11, 11, 58, 11, 11}, -- Fyr'alath's Bite
-		[422518] = {35.5, 80.0, 0}, -- Greater Firestorm
-		[422524] = {58.5, 80.0, 0}, -- Shadowflame Devastation
-		[422032] = {17.5, 20.0, 25.0, 29.0, 26.0, 24.0, 25.0}, -- Spirits of the Kaldorei
-		[414186] = {20.5, 15, 25, 30, 26.9, 23, 30, 25}, -- Blaze
-		[412761] = {44.0, 80, 79.5, 0}, -- Incarnate
-		[417807] = {27.5, 16, 58.5, 16, 64.5, 16, 13.5}, -- Aflame
-	},
+local timersHeroic = {
+	[419123] = {5.5, 75, 80, 0}, -- Flamefall
+	[417431] = {18.5, 11, 60, 11, 11, 58, 11, 11}, -- Fyr'alath's Bite
+	[422518] = {35.5, 80, 0}, -- Greater Firestorm
+	[422524] = {58.5, 80, 0}, -- Shadowflame Devastation
+	[422032] = {20, 20, 25, 29, 26, 24, 25}, -- Spirits of the Kaldorei
+	[414186] = {20.2, 15, 25, 30, 26.9, 23, 30, 25}, -- Blaze
+	[412761] = {44.0, 80, 79.5, 0}, -- Incarnate
+	[417807] = {27.5, 16, 58.5, 16, 64.5, 16, 13.5}, -- Aflame
 }
+
+local timersMythic = {
+	[419123] = timersHeroic[419123], -- Flamefall
+	[417431] = timersHeroic[417431], -- Fyr'alath's Bite
+	[422518] = timersHeroic[422518], -- Greater Firestorm
+	[422524] = timersHeroic[422524], -- Shadowflame Devastation
+	[422032] = {20, 20, 25, 29, 26, 26.7, 27}, -- Spirits of the Kaldorei
+	[414186] = {20, 15, 25, 34, 23, 23, 34, 21}, -- Blaze
+	[412761] = timersHeroic[412761], -- Incarnate
+	[417807] = timersHeroic[417807], -- Aflame
+}
+local timers = mod:Mythic() and timersMythic or timersHeroic
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -50,6 +66,7 @@ local spiritsCount = 1
 local incarnateCount = 1
 local shadowflameDevastationCount = 1
 local flamefallCount = 1
+local shadowCageCount = 1
 local addCount = 0
 
 local eternalFirestormSwirlCount = 1
@@ -58,7 +75,7 @@ local apocalypseRoarCount = 1
 local infernalMawCount = 1
 
 local timerHandles = {}
-local scheduledCages = {}
+local myOrb = nil
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -70,15 +87,12 @@ if L then
 
 	L.fyralaths_bite = "Frontal"
 	L.fyralaths_bite_mythic = "Frontals"
-	L.fyralaths_mark = "Mark"
 	L.darkflame_shades = "Shades"
 	L.darkflame_cleave = "Mythic Soaks"
 
 	L.incarnate_intermission = "Knock Up"
-	L.corrupt_removed = "Corrupt Over (%.1fs remaining)" -- eg: Corrupt Over (5.0s remaining)
 
 	L.incarnate = "Fly Away"
-	L.spirits_of_the_kaldorei = "Spirits"
 	L.molten_gauntlet = "Gauntlet"
 	L.mythic_debuffs = "Cages" -- Shadow Cage & Molten Eruption
 
@@ -87,10 +101,14 @@ if L then
 	L.eternal_firestorm_shortened_bar = "Firestorm [E]" -- E for Eternal
 	L.eternal_firestorm_message_full = "Firestorm [Eternal]"
 
-	L.eternal_firestorm_swirl = "Eternal Firestorm Swirls"
-	L.eternal_firestorm_swirl_desc = "Timers for Eternal Firestorm Swirls."
+	L.eternal_firestorm_swirl = "Eternal Firestorm Pools"
+	L.eternal_firestorm_swirl_desc = "Show timers for when the Eternal Firestorm will spawn the pools that you need to avoid standing in."
 	L.eternal_firestorm_swirl_icon = 402736
-	L.eternal_firestorm_swirl_bartext = "Swirls"
+
+	L.flame_orb = "Flame Orb"
+	L.shadow_orb = "Shadow Orb"
+	L.orb_message_flame = "You are Flame"
+	L.orb_message_shadow = "You are Shadow"
 end
 
 --------------------------------------------------------------------------------
@@ -114,12 +132,14 @@ function mod:GetOptions()
 		425483, -- Incinerated (Damage)
 		-- Mythic
 		{430441, "OFF"}, -- Darkflame Shades
-		{426368, "CASTBAR", "PRIVATE"}, -- Darkflame Cleave
+		{426368, "PRIVATE", "CASTBAR"}, -- Darkflame Cleave
 
 		-- Intermission: Amirdrassil in Peril
 		{419144, "CASTBAR"}, -- Corrupt
 		421937, -- Shadowflame Orbs
 		429866, -- Shadowflame Eruption
+		{429906, "ME_ONLY_EMPHASIZE"}, -- Shadowbound
+		{429903, "ME_ONLY_EMPHASIZE"}, -- Flamebound
 
 		-- Stage Two: Children of the Stars
 		422032, -- Spirits of the Kaldorei
@@ -130,7 +150,6 @@ function mod:GetOptions()
 		422524, -- Shadowflame Devastation
 		419123, -- Flamefall
 		-- Mythic
-		{428971, "PRIVATE"}, -- Molten Eruption
 		{428970, "PRIVATE"}, -- Shadow Cage
 
 		-- Stage Three: Shadowflame Incarnate
@@ -150,20 +169,23 @@ function mod:GetOptions()
 		[419506] = -26666, -- Stage One: The Dream Render
 		[430441] = "mythic",
 		[419144] = -26667, -- Intermission: Amirdrassil in Peril
+		[429906] = "mythic",
 		[422032] = -26668, -- Stage Two: Children of the Stars
-		[428971] = "mythic",
+		[428970] = "mythic",
 		[422935] = -26670, -- Stage Three: Shadowflame Incarnate
 		[423601] = 423601, -- Seed of Amirdrassil
 		[430048] = "mythic",
 	},{
 		[417431] = L.fyralaths_bite.."/"..L.fyralaths_bite_mythic, -- Fyr'alath's Bite (Frontal/Frontals)
-		[417443] = L.fyralaths_mark, -- Fyr'alath's Mark (Mark)
+		[417443] = CL.mark, -- Fyr'alath's Mark (Mark)
 		[430441] = L.darkflame_shades, -- Darkflame Shades (Shades)
 		[426368] = L.darkflame_cleave, -- Darkflame Cleave (Mythic Soaks)
 		[421937] = CL.orbs, -- Shadowflame Orbs (Orbs)
-		[422032] = L.spirits_of_the_kaldorei, -- Spirits of the Kaldorei (Spirits)
+		[429906] = L.shadow_orb, -- Shadowbound (Shadow Orb)
+		[429903] = L.flame_orb, -- Flamebound (Flame Orb)
+		[422032] = CL.spirits, -- Spirits of the Kaldorei (Spirits)
 		[422518] = L.greater_firestorm_shortened_bar, -- Greater Firestorm (Firestorm [G])
-		[428970] = L.mythic_debuffs, -- Shadow Cage (Debuffs)
+		[428970] = L.mythic_debuffs, -- Shadow Cage (Cages)
 		[412761] = L.incarnate, -- Incarnate (Fly Away)
 		[422524] = CL.breath, -- Shadowflame Devastation (Breath)
 		[423717] = CL.absorb, -- Bloom (Absorb)
@@ -205,8 +227,13 @@ function mod:OnBossEnable()
 	-- self:Log("SPELL_CAST_SUCCESS", "ShadowflameOrbs", 421937) -- Scheduled
 	self:Log("SPELL_AURA_APPLIED", "ShadowflameEruptionApplied", 429866)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "ShadowflameEruptionApplied", 429866)
+	self:Log("SPELL_AURA_APPLIED", "ShadowboundApplied", 429906)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "ShadowboundApplied", 429906)
+	self:Log("SPELL_AURA_APPLIED", "FlameboundApplied", 429903)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "FlameboundApplied", 429903)
 
 	-- Stage Two: Children of the Stars
+	self:Log("SPELL_CAST_SUCCESS", "SpiritsOfTheKaldorei", 422032)
 	self:Log("SPELL_CAST_START", "GreaterFirestorm", 422518)
 	self:Log("SPELL_CAST_START", "Gauntlet", 428963, 428965) -- Molten Gauntlet, Shadow Gauntlet
 	self:Log("SPELL_CAST_START", "ExplodingCore", 428400)
@@ -230,7 +257,9 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
+	timers = self:Mythic() and timersMythic or timersHeroic
 	self:SetStage(1)
+
 	blazeCount = 1
 	fyralathsBiteCount = 1
 
@@ -250,7 +279,7 @@ function mod:OnEngage()
 	spiritsCount = 1
 	incarnateCount = 1
 	addCount = 0
-	scheduledCages = {}
+	myOrb = nil
 
 	self:Bar(420422, 4.0, CL.count:format(self:SpellName(420422), wildfireCount)) -- Wildfire
 	self:Bar(417431, 9.0, CL.count:format(self:Mythic() and L.fyralaths_bite_mythic or L.fyralaths_bite, fyralathsBiteCount)) -- Fyr'alath's Bite
@@ -268,20 +297,6 @@ function mod:OnEngage()
 	end
 
 	self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1")
-	self:SetPrivateAuraSound(414186, 414187) -- Blaze
-	self:SetPrivateAuraSound(414186, 421825)
-	self:SetPrivateAuraSound(414186, 421826)
-	self:SetPrivateAuraSound(414186, 421827)
-	self:SetPrivateAuraSound(414186, 421828)
-	self:SetPrivateAuraSound(414186, 421829)
-	self:SetPrivateAuraSound(419506, 419060) -- Firestorm
-	self:SetPrivateAuraSound(422518, 422520) -- Greater Firestorm
-	self:SetPrivateAuraSound(422935, 425525) -- Eternal Firestorm
-	if self:Mythic() then
-		self:SetPrivateAuraSound(426368, 426370) -- Darkflame Cleave
-		self:SetPrivateAuraSound(428971, 428988, "alarm") -- Molten Eruption
-		self:SetPrivateAuraSound(428970, 428970) -- Shadow Cage
-	end
 end
 
 function mod:BigWigs_EncounterEnd()
@@ -296,10 +311,13 @@ end
 --
 
 function mod:UNIT_HEALTH(event, unit)
-	if self:GetHealth(unit) < 72 then -- Intermission at 70%
+	local hp = self:GetHealth(unit)
+	if hp < 73 then -- Intermission at 70%
 		self:UnregisterUnitEvent(event, unit)
-		self:Message("stages", "cyan", CL.soon:format(CL.intermission), false) -- Intermission soon
-		self:PlaySound("stages", "info")
+		if hp > 70 then
+			self:Message("stages", "cyan", CL.soon:format(CL.intermission), false) -- Intermission soon
+			self:PlaySound("stages", "info")
+		end
 	end
 end
 
@@ -368,8 +386,12 @@ function mod:Blaze()
 		else
 			cd = blazeCount % 2 == 0 and 24 or 29.5
 		end
-	elseif stage == 1.5 or stage == 2 then
-		cd = timers[stage][414186][blazeCount]
+	elseif stage == 1.5 then
+		if blazeCount == 2 then
+			cd = 8
+		end
+	elseif stage == 2 then
+		cd = timers[414186][blazeCount]
 	else -- Stage 3
 		if self:Mythic() then
 			cd = blazeCount % 2 == 0 and 13.0 or 33.0
@@ -391,7 +413,7 @@ do
 			prev = args.time
 			self:StopBar(CL.count:format(args.spellName, aflameCount))
 			aflameCount = aflameCount + 1
-			self:Bar(args.spellId, self:GetStage() < 2 and (self:Easy() and 12.0 or 8.0) or timers[2][args.spellId][aflameCount], CL.count:format(args.spellName, aflameCount))
+			self:Bar(args.spellId, self:GetStage() < 2 and (self:Easy() and 12.0 or 8.0) or timers[args.spellId][aflameCount], CL.count:format(args.spellName, aflameCount))
 		end
 		if self:Me(args.destGUID) and amount % 5 == 1 then
 			self:StackMessage(args.spellId, "blue", args.destName, amount, 1)
@@ -420,14 +442,14 @@ function mod:FyralathsBite(args)
 	if self:GetStage() == 1 then
 		cd = fyralathsBiteCount % 3 == 1 and (self:Mythic() and 31.5 or 23.6) or 15
 	else
-		cd = timers[2][args.spellId][fyralathsBiteCount]
+		cd = timers[args.spellId][fyralathsBiteCount]
 	end
 	self:Bar(args.spellId, cd, CL.count:format(spellName, fyralathsBiteCount))
 end
 
 function mod:FyralathsMarkApplied(args)
 	local amount = args.amount or 1
-	self:StackMessage(args.spellId, "purple", args.destName, amount, 2, L.fyralaths_mark)
+	self:StackMessage(args.spellId, "purple", args.destName, amount, 2, CL.mark)
 	if self:Me(args.destGUID) then
 		self:PlaySound(args.spellId, "alarm")
 	elseif amount > 1 then -- Tank Swap?
@@ -481,21 +503,20 @@ function mod:Incarnate(args)
 			self:CancelTimer(timerHandles[414187])
 			timerHandles[414187] = nil
 		end
-		self:UnregisterUnitEvent("UNIT_HEALTH", "boss1")
 
 		self:SetStage(1.5) -- Intermission start
 		self:Bar(412761, 9.2, L.incarnate_intermission) -- Incarnate
 		self:Bar(419144, 13) -- Corrupt
 		if self:Mythic() then
 			blazeCount = 1
-			local cd = timers[1.5][414186][blazeCount]
+			local cd = 28
 			self:Bar(414186, cd, CL.count:format(self:SpellName(414186), blazeCount)) -- Blaze
 			timerHandles[414186] = self:ScheduleTimer("Blaze", cd)
 		end
 
 	else -- Stage 2 Incarnates
 		incarnateCount = incarnateCount + 1
-		self:Bar(args.spellId, timers[2][args.spellId][incarnateCount], CL.count:format(L.incarnate, incarnateCount)) -- Incarnate
+		self:Bar(args.spellId, timers[args.spellId][incarnateCount], CL.count:format(L.incarnate, incarnateCount)) -- Incarnate
 	end
 end
 
@@ -516,7 +537,11 @@ end
 
 function mod:ShadowflameOrbs()
 	self:StopBar(CL.count:format(CL.orbs, shadowflameOrbsCount))
-	self:Message(421937, "cyan", CL.incoming:format(CL.count:format(CL.orbs, shadowflameOrbsCount)))
+	if self:Mythic() and myOrb then
+		self:Message(421937, "cyan", CL.other:format(CL.count:format(CL.orbs, shadowflameOrbsCount), myOrb))
+	else
+		self:Message(421937, "cyan", CL.count:format(CL.orbs, shadowflameOrbsCount))
+	end
 	self:PlaySound(421937, "info")
 	shadowflameOrbsCount = shadowflameOrbsCount + 1
 	if shadowflameOrbsCount < 4 then
@@ -528,25 +553,49 @@ end
 
 do
 	local stacks = 0
-	local scheduled = nil
-	function mod:ShadowflameEruptionMessage()
-		self:Message(429866, "red", CL.stackyou:format(stacks, self:SpellName(429866)))
-		self:PlaySound(429866, "warning") -- big dot
-		scheduled = nil
+	local pName = nil
+	local function ShadowflameEruptionMessage()
+		mod:StackMessage(429866, "blue", pName, stacks, 1)
+		mod:PlaySound(429866, "warning", nil, pName) -- big dot
+		pName = nil
 	end
 	function mod:ShadowflameEruptionApplied(args)
 		if self:Me(args.destGUID) then
 			stacks = args.amount or 1
-			if not scheduled then
-				scheduled = self:ScheduleTimer("ShadowflameEruptionMessage", 1)
+			if not pName then -- Re-use as throttle
+				pName = args.destName
+				self:SimpleTimer(ShadowflameEruptionMessage, 1)
 			end
 		end
 	end
 end
 
+function mod:ShadowboundApplied(args)
+	if self:Me(args.destGUID) then
+		if args.amount then
+			self:StackMessage(args.spellId, "blue", args.destName, args.amount, 100, L.shadow_orb) -- Never emphasize stacks
+		else
+			myOrb = L.orb_message_shadow
+			self:PersonalMessage(args.spellId, "you", L.shadow_orb)
+		end
+		self:PlaySound(args.spellId, "alarm", nil, args.destName)
+	end
+end
+
+function mod:FlameboundApplied(args)
+	if self:Me(args.destGUID) then
+		if args.amount then
+			self:StackMessage(args.spellId, "blue", args.destName, args.amount, 100, L.flame_orb) -- Never emphasize stacks
+		else
+			myOrb = L.orb_message_flame
+			self:PersonalMessage(args.spellId, "you", L.flame_orb)
+		end
+		self:PlaySound(args.spellId, "alarm", nil, args.destName)
+	end
+end
+
 -- Stage Two: Children of the Stars
 function mod:CorruptRemoved(args)
-	local shieldTime = 30 - (args.time - corruptApplied)
 	self:StopBar(CL.cast:format(args.spellName)) -- Corrupt Castbar
 	self:StopBar(CL.count:format(self:SpellName(414186), blazeCount)) -- Blaze
 	if timerHandles[414186] then -- Blaze
@@ -559,7 +608,7 @@ function mod:CorruptRemoved(args)
 		timerHandles[421937] = nil
 	end
 
-	self:Message(419144, "cyan", L.corrupt_removed:format(shieldTime))
+	self:Message(419144, "cyan", CL.removed_after:format(args.spellName, args.time - corruptApplied))
 	self:Message("stages", "green", CL.stage:format(2), false)
 	self:PlaySound("stages", "long")
 
@@ -573,17 +622,16 @@ function mod:CorruptRemoved(args)
 	incarnateCount = 1
 	aflameCount = 1
 	addCount = 0
-	scheduledCages = {}
 
-	self:Bar(422518, timers[2][422518][firestormCount], CL.count:format(L.greater_firestorm_shortened_bar, firestormCount)) -- Greater Firestorm
-	self:Bar(419123, timers[2][419123][flamefallCount], CL.count:format(self:SpellName(419123), flamefallCount)) -- Flamefall
-	self:Bar(422524, timers[2][422524][shadowflameDevastationCount], CL.count:format(CL.breath, shadowflameDevastationCount)) -- Shadowflame Devastation
-	self:Bar(417431, timers[2][417431][fyralathsBiteCount], CL.count:format(L.fyralaths_bite, fyralathsBiteCount)) -- Fyr'alath's Bite
-	self:Bar(422032, timers[2][422032][spiritsCount], CL.count:format(L.spirits_of_the_kaldorei, spiritsCount)) -- Spirits of Kaldorei
-	self:Bar(412761, timers[2][412761][incarnateCount], CL.count:format(L.incarnate, incarnateCount)) -- Incarnate
-	self:Bar(417807, timers[2][417807][aflameCount], CL.count:format(self:SpellName(417807), aflameCount))
+	self:Bar(422518, timers[422518][firestormCount], CL.count:format(L.greater_firestorm_shortened_bar, firestormCount)) -- Greater Firestorm
+	self:Bar(419123, timers[419123][flamefallCount], CL.count:format(self:SpellName(419123), flamefallCount)) -- Flamefall
+	self:Bar(422524, timers[422524][shadowflameDevastationCount], CL.count:format(CL.breath, shadowflameDevastationCount)) -- Shadowflame Devastation
+	self:Bar(417431, timers[417431][fyralathsBiteCount], CL.count:format(L.fyralaths_bite, fyralathsBiteCount)) -- Fyr'alath's Bite
+	self:Bar(422032, timers[422032][spiritsCount], CL.count:format(CL.spirits, spiritsCount)) -- Spirits of Kaldorei
+	self:Bar(412761, timers[412761][incarnateCount], CL.count:format(L.incarnate, incarnateCount)) -- Incarnate
+	self:Bar(417807, timers[417807][aflameCount], CL.count:format(self:SpellName(417807), aflameCount))
 	if not self:Easy() then
-		local cd = timers[2][414186][blazeCount]
+		local cd = timers[414186][blazeCount]
 		self:Bar(414186, cd, CL.count:format(self:SpellName(414186), blazeCount))
 		timerHandles[414186] = self:ScheduleTimer("Blaze", cd) -- Trigger Next
 	end
@@ -592,14 +640,24 @@ end
 
 function mod:CHAT_MSG_MONSTER_YELL(_, _, sender)
 	if sender == L.spirits_trigger then
-		self:StopBar(CL.count:format(L.spirits_of_the_kaldorei, spiritsCount))
-		self:Message(422032, "green", CL.count:format(L.spirits_of_the_kaldorei, spiritsCount))
+		self:StopBar(CL.count:format(CL.spirits, spiritsCount))
+		self:Message(422032, "green", CL.count:format(CL.spirits, spiritsCount))
 		if self:Healer() then
 			self:PlaySound(422032, "alert")
 		end
 		spiritsCount = spiritsCount + 1
-		if self:Mythic() and spiritsCount > 6 then return end -- Max 6 waves in mythic
-		self:Bar(422032, timers[2][422032][spiritsCount], CL.count:format(L.spirits_of_the_kaldorei, spiritsCount))
+		local cd = timers[422032][spiritsCount]
+		if self:Mythic() and spiritsCount == 6 then -- all trees (no spirit yell), need to schedule
+			timerHandles[422032] = self:ScheduleTimer("CHAT_MSG_MONSTER_YELL", cd, nil, nil, L.spirits_trigger)
+		end
+		self:Bar(422032, cd, CL.count:format(CL.spirits, spiritsCount))
+	end
+end
+
+function mod:SpiritsOfTheKaldorei(args)
+	if not self.seeSpirits then
+		self.seeSpirits = true
+		self:Error("ID is now enabled.")
 	end
 end
 
@@ -609,22 +667,17 @@ function mod:GreaterFirestorm(args)
 	self:PlaySound(args.spellId, "alert")
 	-- tanks get a private aura
 	firestormCount = firestormCount + 1
-	self:Bar(args.spellId, timers[2][args.spellId][firestormCount], CL.count:format(L.greater_firestorm_shortened_bar, firestormCount))
+	self:Bar(args.spellId, timers[args.spellId][firestormCount], CL.count:format(L.greater_firestorm_shortened_bar, firestormCount))
 
 	addCount = 0
 	self:Bar(428963, 15, L.molten_gauntlet) -- Molten Gauntlet
 	self:Bar(428400, self:Mythic() and 53.8 or 68.3) -- Exploding Core
 	if self:Mythic() then
-		local count = (firestormCount-1) * 2
-		-- This keeps a consistent count for the cage timers, always 1-2 / 3-4 / 5-6
-		-- We schedule everything here, you wont get more than 2 sets per add wave
-		self:Bar(428970, 15, CL.count:format(L.mythic_debuffs, count - 1))
-		scheduledCages = {}
-		scheduledCages[0] = self:ScheduleTimer("Message", 15, 428970, "yellow", CL.count:format(L.mythic_debuffs, count - 1))
-		scheduledCages[2] = self:ScheduleTimer("PlaySound", 15, 428970, "info")
-		scheduledCages[3] = self:ScheduleTimer("Bar", 15, 428970, 23, CL.count:format(L.mythic_debuffs, count))
-		scheduledCages[4] = self:ScheduleTimer("Message", 38, 428970, "yellow", CL.count:format(L.mythic_debuffs, count))
-		scheduledCages[5] = self:ScheduleTimer("PlaySound", 38, 428970, "info")
+		-- This keeps a consistent count for the cage timers, always 1-2 / 3-4
+		shadowCageCount = (firestormCount - 1) * 2 - 1
+		local cd = 15
+		self:Bar(428970, cd, CL.count:format(L.mythic_debuffs, shadowCageCount))
+		timerHandles[428970] = self:ScheduleTimer("ShadowCage", cd)
 	end
 end
 
@@ -642,11 +695,18 @@ do
 	end
 end
 
--- function mod:ShadowCage()
--- 	self:Message(428970, "cyan")
--- 	self:Bar(428970, 23)
--- 	timerHandles[428970] = self:ScheduleTimer("ShadowCage", 23)
--- end
+function mod:ShadowCage()
+	self:Message(428970, "yellow", CL.count:format(L.mythic_debuffs, shadowCageCount))
+	self:PlaySound(428970, "info")
+	shadowCageCount = shadowCageCount + 1
+	if shadowCageCount % 2 == 0 then -- 2 per
+		local cd = 23
+		self:Bar(428970, cd, CL.count:format(L.mythic_debuffs, shadowCageCount))
+		timerHandles[428970] = self:ScheduleTimer("ShadowCage", cd)
+	else
+		timerHandles[428970] = nil
+	end
+end
 
 do
 	local prev = 0
@@ -666,16 +726,12 @@ function mod:ColossusDeath(args)
 		self:StopBar(428400) -- Exploding Core
 	end
 
-	if self:Mythic() and args.mobId == 207796 then -- Burning Colosus - do the cages also fizzle when Dark Colossus dies?
-		for i = 0, 5 do
-			if scheduledCages[i] then
-				self:CancelTimer(scheduledCages[i])
-				scheduledCages[i] = nil
-			end
+	if self:Mythic() and args.mobId == 207796 then -- Burning Colosus
+		self:StopBar(CL.count:format(L.mythic_debuffs, shadowCageCount)) -- Shadow Cage
+		if timerHandles[428970] then
+			self:CancelTimer(timerHandles[428970])
+			timerHandles[428970] = nil
 		end
-		local count = (firestormCount-1) * 2
-		self:StopBar(CL.count:format(L.mythic_debuffs, count - 1))
-		self:StopBar(CL.count:format(L.mythic_debuffs, count))
 	end
 end
 
@@ -684,7 +740,7 @@ function mod:Flamefall(args)
 	self:Message(args.spellId, "red", CL.count:format(args.spellName, flamefallCount))
 	self:PlaySound(args.spellId, "alarm")
 	flamefallCount = flamefallCount + 1
-	self:Bar(args.spellId, timers[2][args.spellId][flamefallCount], CL.count:format(args.spellName, flamefallCount))
+	self:Bar(args.spellId, timers[args.spellId][flamefallCount], CL.count:format(args.spellName, flamefallCount))
 end
 
 function mod:ShadowflameDevastation(args)
@@ -692,7 +748,7 @@ function mod:ShadowflameDevastation(args)
 	self:Message(args.spellId, "red", CL.count:format(CL.breath, shadowflameDevastationCount))
 	self:PlaySound(args.spellId, "long")
 	shadowflameDevastationCount = shadowflameDevastationCount + 1
-	self:Bar(args.spellId, timers[2][args.spellId][shadowflameDevastationCount], CL.count:format(CL.breath, shadowflameDevastationCount))
+	self:Bar(args.spellId, timers[args.spellId][shadowflameDevastationCount], CL.count:format(CL.breath, shadowflameDevastationCount))
 end
 
 -- Stage Three: Shadowflame Incarnate
@@ -703,7 +759,11 @@ function mod:EternalFirestormP3()
 	self:StopBar(CL.count:format(CL.breath, shadowflameDevastationCount)) -- Shadowflame Devastation
 	self:StopBar(CL.count:format(L.fyralaths_bite, fyralathsBiteCount)) -- Fyr'alath's Bite
 	self:StopBar(CL.count:format(L.fyralaths_bite_mythic, fyralathsBiteCount)) -- Fyr'alath's Bite
-	self:StopBar(CL.count:format(L.spirits_of_the_kaldorei, spiritsCount)) -- Spirits of the Kaldorei
+	self:StopBar(CL.count:format(CL.spirits, spiritsCount)) -- Spirits of the Kaldorei
+	if timerHandles[422032] then
+		self:CancelTimer(timerHandles[422032])
+		timerHandles[422032] = nil
+	end
 	self:StopBar(CL.count:format(self:SpellName(417807), aflameCount)) -- Aflame
 	self:StopBar(CL.count:format(L.incarnate, incarnateCount)) -- Incarnate
 	self:StopBar(CL.count:format(L.greater_firestorm_shortened_bar, firestormCount)) -- Greater Firestorm
@@ -739,7 +799,7 @@ function mod:EternalFirestormP3()
 		timerHandles[414186] = self:ScheduleTimer("Blaze", blazeCD)
 	end
 	if self:Mythic() then -- Unsure about other difficulty timers
-		self:Bar("eternal_firestorm_swirl", 4, CL.count:format(L.eternal_firestorm_swirl_bartext, eternalFirestormSwirlCount), 402736)
+		self:Bar("eternal_firestorm_swirl", 4, CL.count:format(CL.pools, eternalFirestormSwirlCount), 402736)
 		self:ScheduleTimer("EternalFirestormSwirlTimer", 4) -- Trigger Next
 	end
 end
@@ -750,7 +810,7 @@ function mod:EternalFirestorm()
 	self:PlaySound(422935, "alert")
 	-- personal sound warning from private aura
 	firestormCount = firestormCount + 1
-	local cd = self:Mythic() and 46 or 41
+	local cd = self:Mythic() and 46 or self:LFR() and 41.2 or 41 -- LFR is a bit longer and there's no enrage.. don't drift pls
 	self:Bar(422935, cd, CL.count:format(L.eternal_firestorm_shortened_bar, firestormCount))
 	self:ScheduleTimer("EternalFirestorm", cd)
 end
@@ -763,15 +823,15 @@ function mod:BloomApplied(args)
 end
 
 function mod:EternalFirestormSwirlTimer()
-	self:StopBar(CL.count:format(L.eternal_firestorm_swirl_bartext, eternalFirestormSwirlCount))
+	self:StopBar(CL.count:format(CL.pools, eternalFirestormSwirlCount))
 	-- No Messages or Sounds, just bars.
-	--self:Message("eternal_firestorm_swirl", "yellow", CL.count:format(L.eternal_firestorm_swirl_bartext, eternalFirestormSwirlCount), 402736)
+	--self:Message("eternal_firestorm_swirl", "yellow", CL.count:format(CL.pools, eternalFirestormSwirlCount), 402736)
 	--self:PlaySound("eternal_firestorm_swirl", "alert")
 	eternalFirestormSwirlCount = eternalFirestormSwirlCount + 1
 	local cdTable = {3.8, 6.2, 11.1, 11.5, 11.5, 5.1, 6.3, 12, 11.1, 11.7, 5, 6.5, 12.1, 11.0, 11.6, 5.0,  6.5, 11.8, 10.5, 11.8, 5, 6.5, 11.1, 10.5, 10.5}
 	local cd = cdTable[eternalFirestormSwirlCount]
 	if cd and cd > 0 then
-		self:Bar("eternal_firestorm_swirl", cd, CL.count:format(L.eternal_firestorm_swirl_bartext, eternalFirestormSwirlCount), 402736)
+		self:Bar("eternal_firestorm_swirl", cd, CL.count:format(CL.pools, eternalFirestormSwirlCount), 402736)
 		self:ScheduleTimer("EternalFirestormSwirlTimer", cd)
 	end
 end

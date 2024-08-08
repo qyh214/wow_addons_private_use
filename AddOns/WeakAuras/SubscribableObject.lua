@@ -1,14 +1,17 @@
 if not WeakAuras.IsLibsOK() then return end
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 
+---@class WeakAuras
 local WeakAuras = WeakAuras
 local L = WeakAuras.L
 
 --- @class SubscribableObject
 --- @field events table<string, frame[]> Subscribers ordered by "priority"
 --- @field subscribers table<string, frame> Subscribers lookup
---- @field callback table<string, fun():nil>
+--- @field callbacks table<string, fun():nil>
 --- @field ClearSubscribers fun(self: SubscribableObject)
 --- @field ClearCallbacks fun(self: SubscribableObject)
 --- @field AddSubscriber fun(self: SubscribableObject, event: string, subscriber: frame, highPriority: boolean?)
@@ -16,9 +19,12 @@ local L = WeakAuras.L
 --- @field SetOnSubscriptionStatusChanged fun(self: SubscribableObject, event: string, cb: fun())
 --- @field Notify fun(self: SubscribableObject, event: type, ...: any)
 --- @field HasSubscribers fun(self: SubscribableObject, event: string): boolean
---- @type SubscribableObject
 local SubscribableObject =
 {
+  events = {},
+  subscribers = {},
+  callbacks = {},
+
   --- @type fun(self: SubscribableObject)
   ClearSubscribers = function(self)
     self.events = {}
@@ -54,8 +60,6 @@ local SubscribableObject =
       end
     end
   end,
-
-
 
   --- @type fun(self: SubscribableObject, event: string, subscriber: frame)
   RemoveSubscriber = function(self, event, subscriber)
@@ -99,12 +103,5 @@ local SubscribableObject =
 }
 
 function Private.CreateSubscribableObject()
-  local system = {}
-  for f, func in pairs(SubscribableObject) do
-    system[f] = func
-    system.events = {}
-    system.subscribers = {}
-    system.callbacks = {}
-  end
-  return system
+  return CopyTable(SubscribableObject)
 end

@@ -148,6 +148,10 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 		end
 	end
 
+	local smember_fontsize = function(object, value)
+		return detailsFramework:SetFontSize(object.editbox, value)
+	end
+
 	--text horizontal pos
 	local smember_horizontalpos = function(object, value)
 		return object.editbox:SetJustifyH(string.lower(value))
@@ -162,6 +166,8 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 	TextEntryMetaFunctions.SetMembers["text"] = smember_text
 	TextEntryMetaFunctions.SetMembers["multiline"] = smember_multiline
 	TextEntryMetaFunctions.SetMembers["align"] = smember_horizontalpos
+	TextEntryMetaFunctions.SetMembers["fontsize"] = smember_fontsize
+	TextEntryMetaFunctions.SetMembers["textsize"] = smember_fontsize
 
 	TextEntryMetaFunctions.__newindex = function(object, key, value)
 		local func = TextEntryMetaFunctions.SetMembers[key]
@@ -281,7 +287,12 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 
 		if (textentry:IsEnabled()) then
 			textentry.current_bordercolor = textentry.current_bordercolor or {textentry:GetBackdropBorderColor()}
-			textentry:SetBackdropBorderColor(1, 1, 1, 1)
+			local onEnterBorderColor = object.onenter_backdrop_border_color
+			if (onEnterBorderColor) then
+				textentry:SetBackdropBorderColor(detailsFramework:ParseColors(onEnterBorderColor))
+			else
+				textentry:SetBackdropBorderColor(1, 1, 1, 0.6)
+			end
 		end
 	end
 
@@ -432,7 +443,8 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 
 	local OnTabPressed = function(textentry)
 		local capsule = textentry.MyObject
-		local kill = capsule:RunHooksForWidget("OnTabPressed", textentry, byUser, capsule)
+		local bByUser = false
+		local kill = capsule:RunHooksForWidget("OnTabPressed", textentry, bByUser, capsule)
 		if (kill) then
 			return
 		end
@@ -454,7 +466,7 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 		end
 
 		self:SetJustifyH("left")
-		self:SetJustifyV("center")
+        self:SetJustifyV("middle")
 		self:SetTextInsets(18, 14, 0, 0)
 
 		local magnifyingGlassTexture = self:CreateTexture(nil, "OVERLAY")
@@ -462,12 +474,14 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 		magnifyingGlassTexture:SetPoint("left", self.widget, "left", 4, 0)
 		magnifyingGlassTexture:SetSize(self:GetHeight()-10, self:GetHeight()-10)
 		magnifyingGlassTexture:SetAlpha(0.5)
+		self.MagnifyingGlassTexture = magnifyingGlassTexture
 
 		local searchFontString = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 		searchFontString:SetText("search")
 		searchFontString:SetAlpha(0.3)
 		searchFontString:SetPoint("left", magnifyingGlassTexture, "right", 2, 0)
 		detailsFramework:SetFontSize(searchFontString, 10)
+		self.SearchFontString = searchFontString
 
 		local clearSearchButton = CreateFrame("button", nil, self.widget, "UIPanelCloseButton")
 		clearSearchButton:SetPoint("right", self.widget, "right", -3, 0)
@@ -477,6 +491,7 @@ detailsFramework.TextEntryCounter = detailsFramework.TextEntryCounter or 1
 		clearSearchButton:GetHighlightTexture():SetAtlas("common-search-clearbutton")
 		clearSearchButton:GetPushedTexture():SetAtlas("common-search-clearbutton")
 		clearSearchButton:Hide()
+		self.ClearSearchButton = clearSearchButton
 
 		clearSearchButton:SetScript("OnClick", function()
 			self:SetText("")
@@ -512,11 +527,13 @@ function TextEntryMetaFunctions:SetTemplate(template)
 	if (template.backdrop) then
 		self.editbox:SetBackdrop(template.backdrop)
 	end
+
 	if (template.backdropcolor) then
 		local r, g, b, a = detailsFramework:ParseColors(template.backdropcolor)
 		self.editbox:SetBackdropColor(r, g, b, a)
 		self.onleave_backdrop = {r, g, b, a}
 	end
+
 	if (template.backdropbordercolor) then
 		local r, g, b, a = detailsFramework:ParseColors(template.backdropbordercolor)
 		self.editbox:SetBackdropBorderColor(r, g, b, a)
@@ -526,7 +543,39 @@ function TextEntryMetaFunctions:SetTemplate(template)
 		self.editbox.current_bordercolor[4] = a
 		self.onleave_backdrop_border_color = {r, g, b, a}
 	end
+
+	if (template.onentercolor) then
+		local r, g, b, a = detailsFramework:ParseColors(template.onentercolor)
+		self.onenter_backdrop = {r, g, b, a}
+		self:HookScript("OnEnter", detailsFramework.TemplateOnEnter)
+		self.__has_onentercolor_script = true
+	end
+
+	if (template.onleavecolor) then
+		local r, g, b, a = detailsFramework:ParseColors(template.onleavecolor)
+		self.onleave_backdrop = {r, g, b, a}
+		self:HookScript("OnLeave", detailsFramework.TemplateOnLeave)
+		self.__has_onleavecolor_script = true
+	end
+
+	if (template.onenterbordercolor) then
+		local r, g, b, a = detailsFramework:ParseColors(template.onenterbordercolor)
+		self.onenter_backdrop_border_color = {r, g, b, a}
+		if (not self.__has_onentercolor_script) then
+			self:HookScript("OnEnter", detailsFramework.TemplateOnEnter)
+		end
+	end
+
+	if (template.onleavebordercolor) then
+		local r, g, b, a = detailsFramework:ParseColors(template.onleavebordercolor)
+		self.onleave_backdrop_border_color = {r, g, b, a}
+		if (not self.__has_onleavecolor_script) then
+			self:HookScript("OnLeave", detailsFramework.TemplateOnLeave)
+		end
+	end
 end
+
+--TextEntryMetaFunctions.SetTemplate = DetailsFramework.SetTemplate
 
 ------------------------------------------------------------------------------------------------------------
 --object constructor
@@ -541,6 +590,7 @@ end
 ---@field text any
 ---@field multiline any
 ---@field align any
+---@field fontsize any
 ---@field ShouldOptimizeAutoComplete boolean?
 ---@field SetTemplate fun(self:df_textentry, template:table)
 ---@field Disable fun(self:df_textentry)
@@ -569,6 +619,7 @@ end
 ---@param labelTemplate table?
 ---@return df_textentry
 function detailsFramework:CreateTextEntry(parent, textChangedCallback, width, height, member, name, labelText, textentryTemplate, labelTemplate)
+---@diagnostic disable-next-line: return-type-mismatch
 	return detailsFramework:NewTextEntry(parent, parent, name, member, width, height, textChangedCallback, nil, nil, nil, labelText, textentryTemplate, labelTemplate)
 end
 
@@ -586,7 +637,7 @@ function detailsFramework:NewTextEntry(parent, container, name, member, width, h
 	end
 
 	if (name:find("$parent")) then
-		local parentName = detailsFramework.GetParentName(parent)
+		local parentName = detailsFramework:GetParentName(parent)
 		name = name:gsub("$parent", parentName)
 	end
 
@@ -623,6 +674,9 @@ function detailsFramework:NewTextEntry(parent, container, name, member, width, h
 	newTextEntryObject.editbox:SetText("")
 	newTextEntryObject.editbox:SetAutoFocus(false)
 	newTextEntryObject.editbox:SetFontObject("GameFontHighlightSmall")
+
+	newTextEntryObject.editbox:SetJustifyH("left")
+	newTextEntryObject.editbox:SetTextInsets(5, 3, 0, 0)
 
 	--editbox label
 	newTextEntryObject.editbox.label = newTextEntryObject.editbox:CreateFontString("$parent_Desc", "OVERLAY", "GameFontHighlightSmall")
@@ -712,6 +766,61 @@ function detailsFramework:NewTextEntry(parent, container, name, member, width, h
 	return newTextEntryObject, withLabel
 end
 
+---@class df_searchbox : df_textentry
+---@field ClearSearchButton button
+---@field MagnifyingGlassTexture texture
+---@field SearchFontString fontstring
+---@field BottomLineTexture texture
+---@field PressEnter fun(self:df_searchbox)
+---@field ClearFocus fun(self:df_searchbox)
+
+---create a search box with no backdrop, a magnifying glass icon and a clear search button
+---@param parent frame
+---@param callback any
+---@return df_searchbox
+function detailsFramework:CreateSearchBox(parent, callback)
+    local onSearchPressEnterCallback = function(_, _, text, self)
+        callback(self)
+    end
+
+    local searchBox = detailsFramework:CreateTextEntry(parent, onSearchPressEnterCallback, 220, 26)
+	---@cast searchBox df_searchbox
+
+    searchBox:SetAsSearchBox()
+    searchBox:SetTextInsets(25, 5, 0, 0)
+    searchBox:SetBackdrop(nil)
+    searchBox:SetHook("OnTextChanged", callback)
+
+    local file, size, flags = searchBox:GetFont()
+    searchBox:SetFont(file, 12, flags)
+    searchBox.ClearSearchButton:SetAlpha(0)
+
+    searchBox.BottomLineTexture = searchBox:CreateTexture(nil, "border")
+    searchBox.BottomLineTexture:SetPoint("bottomleft", searchBox.widget, "bottomleft", -15, 0)
+    searchBox.BottomLineTexture:SetPoint("bottomright", searchBox.widget, "bottomright", 0, 0)
+	local bUseAtlasSize = false
+    searchBox.BottomLineTexture:SetAtlas("common-slider-track")
+    searchBox.BottomLineTexture:SetHeight(8)
+
+	--create the button to clear the search box
+	searchBox.ClearSearchButton = CreateFrame("button", nil, searchBox.widget, "UIPanelCloseButton")
+	searchBox.ClearSearchButton:SetPoint("right", searchBox.widget, "right", -3, 0)
+	searchBox.ClearSearchButton:SetSize(10, 10)
+	searchBox.ClearSearchButton:SetAlpha(0.3)
+	searchBox.ClearSearchButton:GetNormalTexture():SetAtlas("common-search-clearbutton")
+	searchBox.ClearSearchButton:GetHighlightTexture():SetAtlas("common-search-clearbutton")
+	searchBox.ClearSearchButton:GetPushedTexture():SetAtlas("common-search-clearbutton")
+
+	searchBox.ClearSearchButton:SetScript("OnClick", function()
+		searchBox:SetText("")
+		searchBox:PressEnter()
+		searchBox:ClearFocus()
+	end)
+
+    return searchBox
+end
+
+
 function detailsFramework:NewSpellEntry(parent, func, width, height, param1, param2, member, name)
 	local editbox = detailsFramework:NewTextEntry(parent, parent, name, member, width, height, func, param1, param2)
 	return editbox
@@ -767,6 +876,9 @@ local AutoComplete_OnTextChanged = function(editboxWidget, byUser, capsule)
 		editboxWidget.ignore_textchange = nil
 	end
 	capsule.characters_count = chars_now
+
+	--call the other hooks for the widget
+	capsule:RunHooksForWidget("OnTextChanged", editboxWidget, byUser, capsule)
 end
 
 local AutoComplete_OnSpacePressed = function(editboxWidget, capsule)
@@ -1007,7 +1119,7 @@ end
 function detailsFramework:NewSpecialLuaEditorEntry(parent, width, height, member, name, nointent, showLineNumbers, bNoName)
 	if (not bNoName) then
 		if (name and name:find("$parent")) then
-			local parentName = detailsFramework.GetParentName(parent)
+			local parentName = detailsFramework:GetParentName(parent)
 			name = name:gsub("$parent", parentName)
 		end
 	else

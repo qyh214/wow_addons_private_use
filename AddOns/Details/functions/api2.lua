@@ -9,6 +9,8 @@ This is a high level API for Details! Damage Meter
 
 local addonName, Details222 = ...
 
+local GetSpellInfo = Details222.GetSpellInfo
+
 --local helpers
 local getCombatObject = function(segmentNumber)
 	---@type combat
@@ -53,7 +55,7 @@ local getSpellObject = function(playerObject, spellId, isLiteral)
 
 		elseif (parameterType == "number") then
 			--passed a number but with literal off, transform the spellId into a spell name
-			local spellName = GetSpellInfo(spellid)
+			local spellName = GetSpellInfo(spellId)
 			if (spellName) then
 				passedSpellName = spellName:lower()
 			end

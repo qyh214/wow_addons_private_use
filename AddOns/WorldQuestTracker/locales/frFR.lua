@@ -272,8 +272,7 @@ L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SHOWTEXT"] = "Texte temps restant"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_SORTBYTIME"] = "Trier par temps"
 L["S_MAPBAR_SORTORDER_TIMELEFTPRIORITY_TITLE"] = "Temps restant"
 L["S_MAPBAR_SUMMARYMENU_ACCOUNTWIDE"] = "Tous vos perso."
---[[Translation missing --]]
-L["S_OPENWORLD"] = "Open World"
+L["S_OPENWORLD"] = "Monde ouvert"
 L["S_OPTIONS_ACCESSIBILITY"] = "Accessibilité"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Marque de Traçage Supplémentaire"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Montrez l'Anneau de Récompense"
@@ -290,7 +289,11 @@ L["S_OPTIONS_PATHLINE"] = "Ligne de Trajet"
 L["S_OPTIONS_QUEST_EMISSARY"] = "Informations sur les Quêtes d'Émissaire"
 L["S_OPTIONS_QUESTBLACKLIST"] = "Liste Noire de Quêtes"
 L["S_OPTIONS_RESET"] = "Réinitialiser"
+L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Afficher le bouton de filtre"
 L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Afficher le Bouton de Réduction"
+L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Afficher le bouton de tri"
+L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Afficher le bouton de temps restant"
+L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Afficher les raccourcis pour le monde"
 L["S_OPTIONS_SHOWFACTIONS"] = "Afficher les Factions"
 L["S_OPTIONS_TALKINGHEADS"] = "Supprimer les Fenêtres de Discussion"
 L["S_OPTIONS_TIMELEFT_NOPRIORITY"] = "Pas de priorité par Temps Restant"
@@ -302,9 +305,23 @@ L["S_OPTIONS_WORLD_ANCHOR_RIGHT"] = "Ancrer du côté Droit"
 L["S_OPTIONS_WORLD_ICONSPERROW"] = "Nombre de quêtes par ligne"
 L["S_OPTIONS_WORLD_ORGANIZE_BYMAP"] = "Organiser par Cartes"
 L["S_OPTIONS_WORLD_ORGANIZE_BYTYPE"] = "Organiser par Type de Quêtes"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLD_SUMMARY_ALPHA"] = "Summary Alpha"
 L["S_OPTIONS_WORLDMAP_ANCHOR_TO"] = "Rattacher à"
 L["S_OPTIONS_WORLDMAP_ORGANIZEBY"] = "Organiser les quêtes par"
+--[[Translation missing --]]
+L["S_OPTIONS_WORLDMAP_WIDGET_ALPHA"] = "Pin Alpha"
 L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Seulement Suivies"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
+--[[Translation missing --]]
+L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
+--[[Translation missing --]]
+L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+--[[Translation missing --]]
+L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
 L["S_OPTTIONS_TAB_GENERAL_SETTINGS"] = "Paramètres Généraux"
 L["S_OPTTIONS_TAB_GROUPFINDER_SETTINGS"] = "Recherche de Groupe"
 L["S_OPTTIONS_TAB_IGNOREDQUESTS_SETTINGS"] = "Quêtes ignorées"
@@ -343,6 +360,8 @@ L["S_RAREFINDER_TOOLTIP_SEACHREALM"] = "Chercher sur d'autres royaumes"
 L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Repéré par"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "il y a Quelques Minutes"
 L["S_SCALE"] = "Échelle"
+--[[Translation missing --]]
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
 L["S_SUMMARYPANEL_EXPIRED"] = "EXPIRÉ"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Les 15 derniers jours"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Statistiques de votre compte "
@@ -351,6 +370,8 @@ L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Autres personnages"
 L["S_TEXT_SIZE"] = "Taille du texte"
 --[[Translation missing --]]
 L["S_TORGAST"] = "Torgasth"
+--[[Translation missing --]]
+L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
 L["S_TUTORIAL_AMOUNT"] = "Indique le montant à recevoir"
 L["S_TUTORIAL_CLICKTOTRACK"] = "Cliquez pour suivre une quête."
 L["S_TUTORIAL_PARTY"] = "Dans un groupe, une étoile bleue indique les quêtes que tous le groupe fait !"
@@ -365,6 +386,8 @@ Cliquez sur |cFFFFAA11Afficher les quêtes|r pour cacher les emplacements de qu�
 ]=]
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Ce bouton vous apporte la carte des îles brisées."
 L["S_UNKNOWNQUEST"] = "Quête inconnue"
+--[[Translation missing --]]
+L["S_VISIBILITY"] = "Visibility"
 L["S_WHATSNEW"] = "Quoi de Neuf ?"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Afficher par Type"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Trier par Zone"

@@ -1,10 +1,14 @@
 
+---@type details
 local Details = Details
-local GameTooltip = GameTooltip
+---@type detailsframework
 local detailsFramework = DetailsFramework
+
+local GameTooltip = GameTooltip
 local unpack = unpack
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
+
+local _
 
 Details.BuffUptimeSpellsToIgnore = {
     [186401] = true, --Sign of the Skirmisher
@@ -39,10 +43,12 @@ local createAuraTabOnBreakdownWindow = function(tab, frame)
     }
 
     local onEnterLine = function(self)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-        Details:GameTooltipSetSpellByID(self.spellID)
-        GameTooltip:Show()
-        self:SetBackdropColor(1, 1, 1, .2)
+        if (self.spellID) then
+            GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+            Details:GameTooltipSetSpellByID(self.spellID)
+            GameTooltip:Show()
+            self:SetBackdropColor(1, 1, 1, .2)
+        end
     end
 
     local onLeaveLine = function(self)
@@ -68,7 +74,9 @@ local createAuraTabOnBreakdownWindow = function(tab, frame)
 
         local iconTexture = line:CreateTexture("$parentIcon", "overlay")
         iconTexture:SetSize(scroll_line_height -2 , scroll_line_height - 2)
-        iconTexture:SetAlpha(0.834)
+        iconTexture:SetAlpha(0.924)
+        detailsFramework:SetMask(iconTexture, Details:GetTextureAtlas("iconmask"))
+
         local nameLabel = line:CreateFontString("$parentName", "overlay", "GameFontNormal")
         local uptimeLabel = line:CreateFontString("$parentUptime", "overlay", "GameFontNormal")
         local uptimePercentLabel = line:CreateFontString("$parentPercent", "overlay", "GameFontNormal")

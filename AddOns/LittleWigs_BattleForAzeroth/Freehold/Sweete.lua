@@ -20,7 +20,7 @@ function mod:GetOptions()
 		{257305, "SAY"}, -- Cannon Barrage
 		413136, -- Whirling Dagger
 		257316, -- Avast, ye!
-		{257314, "SAY", "FLASH"}, -- Black Powder Bomb
+		{257314, "SAY"}, -- Black Powder Bomb
 	}, nil, {
 		[257316] = CL.add,
 		[257314] = CL.fixate,
@@ -102,7 +102,7 @@ do
 
 	function mod:CannonBarrage(args)
 		if self:Me(args.destGUID) then
-			self:Say(args.spellId)
+			self:Say(args.spellId, nil, nil, "Cannon Barrage")
 			onMe = true
 		end
 		if not scheduled then
@@ -127,7 +127,7 @@ do
 	function mod:WhirlingDagger(args)
 		if args.spellId == 413131 then -- Stage 1
 			-- just applies the debuff to the targeted player in stage 1
-			self:GetBossTarget(printTarget, 0.3, args.sourceGUID)
+			self:GetUnitTarget(printTarget, 0.3, args.sourceGUID)
 		else -- 413136, Stage 2, 3
 			-- this chains to other players in stage 2 and 3 so target scanning isn't useful
 			self:Message(413136, "yellow")
@@ -155,9 +155,8 @@ function mod:BlackPowderBomb(args)
 	if args.sourceGUID ~= args.destGUID then -- The add buffs itself with the same spell id
 		self:TargetMessage(args.spellId, "yellow", args.destName, CL.fixate, args.spellId)
 		if self:Me(args.destGUID) then
-			self:PlaySound(args.spellId, "warning", "fixate")
-			self:Say(args.spellId, CL.fixate)
-			self:Flash(args.spellId)
+			self:PlaySound(args.spellId, "warning", nil, args.destName)
+			self:Say(args.spellId, CL.fixate, nil, "Fixate")
 		else
 			self:PlaySound(args.spellId, "alert", nil, args.destName)
 		end

@@ -16,9 +16,9 @@ local LibDeflate = LibStub("LibDeflate")
 do -- boilerplate & static values
 	Archivist.buildDate = "@build-time@"
 	Archivist.version = "v1.0.8"
-	--[==[@debug@
+	--[==[@nothing@
 		Archivist.debug = true
-	--@end-debug@]==]
+	--@nothing@]==]
 
 	Archivist.prototypes = {}
 	Archivist.storeMap = {}

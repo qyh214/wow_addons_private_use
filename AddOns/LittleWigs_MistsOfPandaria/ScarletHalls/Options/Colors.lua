@@ -1,13 +1,13 @@
 
 BigWigs:AddColors("Houndmaster Braun", {
-	[-5611] = {"green","yellow"},
 	[114259] = "orange",
+	[116140] = {"green","yellow"},
 })
 
 BigWigs:AddColors("Armsmaster Harlan", {
-	["blades"] = {"orange","yellow"},
-	["cleave"] = "yellow",
-	["help"] = "orange",
+	[-5378] = "cyan",
+	[111216] = {"green","orange"},
+	[111217] = "purple",
 })
 
 BigWigs:AddColors("Flameweaver Koegler", {

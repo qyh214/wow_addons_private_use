@@ -5,6 +5,7 @@ local outSine = addon.EasingFunctions.outSine;
 local inOutSine = addon.EasingFunctions.inOutSine
 local FadeFrame = NarciFadeUI.Fade;
 local L = Narci.L;
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded;
 
 local Minimap = Minimap;
 local After = C_Timer.After;
@@ -13,7 +14,7 @@ local sin = math.sin;
 local sqrt = math.sqrt;
 local atan2 = math.atan2;
 
-local GetMouseFocus = GetMouseFocus;
+local GetMouseFocus = addon.TransitionAPI.GetMouseFocus;
 
 local MiniButton;
 
@@ -705,7 +706,7 @@ function NarciMinimapButtonMixin:Init()
     local cornerRadius = 10;
 
     --Optimize this minimap button's radial offset
-    local IsAddOnLoaded = IsAddOnLoaded;
+
     if IsAddOnLoaded("AzeriteUI") then
         cornerRadius = 18;
         iconSize = 48;

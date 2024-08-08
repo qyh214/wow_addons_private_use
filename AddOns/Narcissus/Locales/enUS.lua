@@ -98,7 +98,7 @@ L["Use Alias"] = "Switch to Alias";
 L["Use Player Name"] = "Switch to "..CALENDAR_PLAYER_NAME;
 
 L["Minimap Tooltip Double Click"] = "Double-tap";
-L["Minimap Tooltip Left Click"] = "Left-click|r";
+L["Minimap Tooltip Left Click"] = "Left-click";
 L["Minimap Tooltip To Open"] = "|cffffffffOpen "..CHARACTER_INFO;
 L["Minimap Tooltip Module Panel"] = "|cffffffffOpen Module Panel";
 L["Minimap Tooltip Right Click"] = "Right-click";
@@ -154,9 +154,9 @@ L["Open Narcissus"] = "Open Narcissus";
 L["Character Panel"] = "Character Panel";
 L["Screen Effects"] ="Screen Effects";
 
+L["Gem List"] = "Gem List";
 L["Gemma"] = "\"Gemma\"";   --Don't translate
 L["Gemma Description"] = "Show a list of gems when socketing an item.";
-L["Gem Manager"] = "Gem Manager";
 L["Dressing Room"] = "Dressing Room";
 L["Dressing Room Description"] = "Bigger dressing room with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
 L["General"] = "General";   --General options
@@ -251,6 +251,9 @@ L["Project Page"] = "Project Page";
 L["Press Copy Yellow"] = "Press |cffffd100".. NARCI_SHORTCUTS_COPY .."|r to Copy";
 L["New Option"] = NARCI_NEW_ENTRY_PREFIX.." NEW".."|r"
 L["Expansion Features"] = "Expansion Features";
+L["LFR Wing Details"] = "LFR Wing Details";
+L["LFR Wing Details Description"] = "Show boss names and lockouts when you talk with solo queue LFR NPCs.";
+L["Speedy Screenshot Alert"] = "Make Screenshot Message Disappear Faster";
 
 --Model Control--
 L["Ranged Weapon"] = "Ranged Weapon";
@@ -459,16 +462,17 @@ L["Points"] = "Points";
 L["Reward"] = "Reward";
 L["Date"] = "Date";
 L["Click And Hold"] = "Click and Hold";
-L["Shadowlands Quests"] = "Missões das Terras Sombrias";
-L["Completed: %s (%s words)  Reading: %s (%s wpm)"] = "Concluído: %s (%s palavras)  Leitura: %s (%s ppm)";
+L["To Do List"] = "To-Do";
+L["Error Alert Bookmarks Too Many"] = "You may only bookmark %d achievements at a time.";
+L["Instruction Add To To Do List"] = string.format("%s Left Click on an unearned achievement to add it to your to-do list.", NARCI_MODIFIER_ALT);
 
 --Barbershop--
 L["Save New Look"] = "Save New Look";
 L["No Available Slot"] = "No Available Save Slot";
 L["Look Saved"] = "Look Saved";
 L["Cannot Save Forms"] = "Cannot Save This Form";
-L["Profiles"] = SOCIAL_SHARE_TEXT or "Share";
-L["Share"] = "Share";
+L["Profile"] = "Profile";
+L["Share"] =  SOCIAL_SHARE_TEXT or "Share";
 L["Save Notify"] = "Notify You to Save New Appearance";
 L["Save Notify Tooltip"] = "Notify you to save the customization after clicking Accept button.";
 L["Show Randomize Button"] = "Show Randomize Appearance Button";
@@ -495,6 +499,12 @@ L["Decode Good"] = "Decoded successfully.";
 L["Barbershop Export Tooltip"] = "Encodes the currently used customization into a string that can be shared online.\n\nYou may change any texts before the colon (:)";
 L["Settings And Share"] = (SETTINGS or "Settings") .." & ".. (SOCIAL_SHARE_TEXT or "Share");
 L["Loading Portraits"] = "Loading Portraits";
+L["Private Profile"] = "Private";   --used by the current character
+L["Public Profile"] = "Public";     --shared among all your characters
+L["Profile Type Tooltip"] = "Select the profile to use on this character.\n\nPrivate:|cffedd100 Profile created by the current character|r\n\nPublic:|cffedd100 Profile shared among all your characters|r";
+L["No Saves"] = "No Saves";
+L["Profile Migration Tooltip"] = "You can copy existing presets to the public profile.";
+L["Profile Migration Okay"] = "Okey dokey";
 
 --Tutorial--
 L["Alert"] = "Warning";
@@ -512,7 +522,7 @@ L["Guide Input Headline"] = "Manual Input";
 L["Guide Input Line1"] = "You may also input a SpellVisualKitID yourself. As of 9.0, Its cap is around 155,000.\nYou can use your mousewheel to try the next/previous ID.\nVery few IDs can crash the game.";
 L["Guide Equipment Manager Line1"] = "Double-click: Use a set\nRight-click: Edit a set.\n\nThis button's previous function has been moved to Preferences.";
 L["Guide Model Control Headline"] = "Model Control";
-L["Guide Model Control Line1"] = format("This model shares the same mouse actions you use in the dressing room, plus:\n\n1.Hold %s and Left Button: Rotate model around Y-axis.\n2.Hold %s and Right Button: Execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
+L["Guide Model Control Line1"] = string.format("This model shares the same mouse actions you use in the dressing room, plus:\n\n1.Hold %s and Left Button: Rotate model around Y-axis.\n2.Hold %s and Right Button: Execute scrubby zoom.", NARCI_MODIFIER_ALT, NARCI_MODIFIER_ALT);
 L["Guide Minimap Button Headline"] = "Minimap Button";
 L["Guide Minimap Button Line1"] = "Narcissus minimap button can now be handled by other addons.\nYou can change this option in the Preferences Panel. It may require a UI reload."
 L["Guide NPC Entrance Line1"] = "You can add any NPC into your scene."
@@ -645,9 +655,11 @@ L["Loop Animation Alert Kultiran"] = "Loop - currently broken on Kultiran male";
 L["Loop Animation"] = "Loop Animation";
 
 --Item Sets--
-L["Cycle Spec"] = "Press Tab to cycle through specs";
+L["Class Set Indicator"] = "Class Set Indicator";
+L["Cycle Spec"] = "Scroll to cycle through specs";
 L["Paperdoll Splash 1"] = "Enable class set indicator?";
 L["Paperdoll Splash 2"] = "Choose a theme";
+L["Theme Changed"] = "Theme Changed";   --the color theme has been changed
 
 --Outfit Select--
 L["Outfit"] = "Outfit";
@@ -702,6 +714,12 @@ L["Auto Filter Case"] = "Automatically filters items when you...";
 L["Send Mails"] = "Send Mails";
 L["Create Auctions"] = "Create Auctions";
 L["Socket Items"] = "Socket Items";
+L["Item Type Mailable"] = MAIL_LABEL or "Mailable";
+L["Item Type Auctionable"] = AUCTIONS or "Auctionable";
+L["Item Type Teleportation"] = TUTORIAL_TITLE35 or "Travel";
+L["Item Type Gems"] = AUCTION_CATEGORY_GEMS or "Gems";
+L["Item Type Reagent"] = PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC or "Crafting Reagent";
+
 
 --Perks Program--
 L["Perks Program Unclaimed Tender Format"] = "- You have |cffffffff%s|r uncollected tender in the Collector's Cache.";     --PERKS_PROGRAM_UNCOLLECTED_TENDER
@@ -711,9 +729,80 @@ L["Perks Program Item Unavailable"] = "This item is not currently available.";
 L["Perks Program See Wares"] = "Show wares";
 L["Perks Program No Cache Alert"] = "Speak with the Trading Posts vendors to see this month\'s wares.";
 L["Perks Program Using Cache Alert"] = "Using the cache from your last visit. The price data may not be accurate.";
+L["Modify Default Pose"] = "Modify Default Pose";   --Change the default pose/animation/camera yaw when viewing transmog items
+L["Include Header"] = "Includes:";  --The transmog set includes...
+L["Auto Try On All Items"] = "Auto Try On All Items";
+L["Full Set Cost"] = "Full Set Cost";   --Purchasing the full set will cost you x Trader's Tender
+L["You Will Receive One Item"] = "You will receive |cffffffffONE|r item:";
+L["Format Item Belongs To Set"] = "This item belongs to transmog set |cffffffff[%s]|r";
+
 
 --Quest--
 L["Auto Display Quest Item"] = "Auto Display Quest Item Descriptions";
 L["Drag To Move"] = "Drag to Move";
 L["Middle Click Reset Position"] = "Middle-click to reset position."
 L["Change Position"] = "Change Position";
+
+
+--Timerunning--
+L["Primary Stat"] = "Primary Stat";
+L["Stamina"] = ITEM_MOD_STAMINA_SHORT or "Stamina";
+L["Crit"] = ITEM_MOD_CRIT_RATING_SHORT or "Critical Strike";
+L["Haste"] = ITEM_MOD_HASTE_RATING_SHORT or "Haste";
+L["Mastery"] = ITEM_MOD_MASTERY_RATING_SHORT or "Mastery";
+L["Versatility"] = ITEM_MOD_VERSATILITY or "Versatility";
+
+L["Leech"] = ITEM_MOD_CR_LIFESTEAL_SHORT or "Leech";
+L["Speed"] = ITEM_MOD_CR_SPEED_SHORT or "Speed";
+L["Format Stat EXP"] = "+%d%% EXP Gain";
+L["Format Rank"] = AZERITE_ESSENCE_RANK or "Rank %d";
+L["Cloak Rank"] = "Cloak Rank";
+
+
+--Gem Manager--
+L["Gem Manager"] = "Gem Manager";
+L["Pandamonium Gem Category 1"] = "Major";      --Major Cooldown Abilities
+L["Pandamonium Gem Category 2"] = "Tinker";     --Tinker Gem
+L["Pandamonium Gem Category 3"] = PRISMATIC_GEM or "Prismatic";
+L["Pandamonium Slot Category 1"] = (INVTYPE_CHEST or "Chest")..", "..(INVTYPE_LEGS or "Legs");
+L["Pandamonium Slot Category 2"] = INVTYPE_TRINKET or "Trinket";
+L["Pandamonium Slot Category 3"] = (INVTYPE_NECK or "Neck")..", "..(INVTYPE_FINGER or "Finger");
+L["Gem Removal Instruction"] = "<Right click to remove this gem>";
+L["Gem Removal No Tool"] = "You don't have the tool to remove this gem intact.";
+L["Gem Removal Bag Full"] = "Free up bag space before removing this gem!";
+L["Gem Removal Combat"] = "Cannot change gem while in combat";
+L["Gemma Click To Activate"] = "<Left click to activate>";
+L["Gemma Click To Insert"] = "<Left click to insert>";
+L["Gemma Click Twice To Insert"] = "<Left click |cffffffffTWICE|r to insert>";
+L["Gemma Click To Select"] = "<Left click to select>";
+L["Gemma Click To Deselect"] = "<Right click to deselect>";
+L["Stat Health Regen"] = "Health Regen";
+L["Gem Uncollected"] = FOLLOWERLIST_LABEL_UNCOLLECTED or "Uncollected";
+L["No Sockets Were Found"] = "No compatible sockets were found.";
+L["Click To Show Gem List"] = "<Click to show gem list>";
+L["Remix Gem Manager"] = "Remix Gem Manager";
+L["Select A Loadout"] = "Select a Loadout";
+L["Loadout Equipped"] = "Equipped";
+L["Loadout Equipped Partially"] = "Partially Equipped";
+L["Last Used Loadout"] = "Last Used";
+L["New Loadout"] = TALENT_FRAME_DROP_DOWN_NEW_LOADOUT or "New Loadout";
+L["New Loadout Blank"] = "Create a Blank Loadout";
+L["New Loadout From Equipped"] = "Use Current Setup";
+L["Edit Loadout"] = EDIT or "Edit";
+L["Delete Loadout One Click"] = DELETE or "Delete";
+L["Delete Loadout Long Click"] = "|cffff4800"..(DELETE or "Delete").."|r\n|cffcccccc(click and hold)|r";
+L["Select Gems"] = LFG_LIST_SELECT or "Select";
+L["Equipping Gems"] = "Equipping...";
+L["Pandamonium Sockets Available"] = "Points Available";
+L["Click To Open Gem Manager"] = "Left click to open gem manager";
+L["Loadout Save Failure Incomplete Choices"] = "|cffff4800You have unselected gems.|r";
+L["Loadout Save Failure Dupe Loadout Format"] = "|cffff4800This loadout is the same as|r %s";
+L["Loadout Save Failure Dupe Name Format"] = "|cffff4800A loadout with that name already exists.|r";
+L["Loadout Save Failure No Name"] = "|cffff4800".. (TALENT_FRAME_DROP_DOWN_NEW_LOADOUT_PROMPT or "Enter a name for the new loadout") .."|r";
+
+L["Format Equipping Progress"] = "Equipping %d/%d";
+L["Format Click Times To Equip Singular"] = "Click |cff19ff19%d|r Time to Equip";
+L["Format Click Times To Equip Plural"] = "Click |cff19ff19%d|r Times to Equip";   --|4Time:Times; cannot coexist with color code?
+L["Format Free Up Bag Slot"] = "Free Up %d Bag Slots First";
+L["Format Number Items Selected"] = "%d Selected";
+L["Format Gem Slot Stat Budget"] = "Gems in %s are %s%% effective."  --e.g. Gems in trinket are 75% effective

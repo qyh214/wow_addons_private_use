@@ -6,7 +6,7 @@ end
 
 local VMRT = nil
 
-local GetSpellCharges, GetTime, floor = GetSpellCharges, GetTime, floor
+local GetSpellCharges, GetTime, floor, GetSpellTexture = ExRT.F.GetSpellCharges or GetSpellCharges, GetTime, floor, C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
 
 local module = ExRT:New("BattleRes",ExRT.L.BattleRes)
 local ELib,L = ExRT.lib,ExRT.L
@@ -27,7 +27,16 @@ function module.options:Load()
 	self.fixChk = ELib:Check(self,L.BattleResFix,VMRT.BattleRes.fix):Point(15,-55):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.BattleRes.fix = true
-			module.frame:Hide()
+			if VMRT.BattleRes.enabled then
+				local charges, maxCharges, started, duration = GetSpellCharges(20484)
+				if not maxCharges or maxCharges == 0 then
+					module.frame:Hide()
+					module:ResetStates()
+				end
+			else
+				module.frame:Hide()
+				module:ResetStates()
+			end
 			module.frame:SetMovable(false)
 		else
 			VMRT.BattleRes.fix = nil
@@ -128,7 +137,7 @@ function module.main:ADDON_LOADED()
 end
 
 do
-	local stateHidden
+	local stateHidden = true
 	local is0Charges
 	local isCooldownHidden
 	local cooldownStarted, cooldownDur, chargesNow
@@ -137,6 +146,9 @@ do
 	end
 	function module:timer(elapsed)
 		local charges, maxCharges, started, duration = GetSpellCharges(20484)
+		if charges == 0 and maxCharges == 0 then
+			charges, maxCharges, started, duration = nil
+		end
 		if not charges then
 			if not stateHidden then
 				if VMRT.BattleRes.fix then
@@ -198,6 +210,7 @@ end
 do
 	local frame = CreateFrame("Frame","MRTBattleRes",UIParent)
 	module.frame = frame
+	frame:Hide()
 	frame:SetSize(64,64)
 	frame:SetPoint("TOP", 0,-200)
 	frame:SetFrameStrata("HIGH")
@@ -248,6 +261,4 @@ do
 	frame.charge:SetFont(frame.charge:GetFont(),16,"OUTLINE")
 	frame.charge:SetShadowOffset(1,-1)
 	frame.charge:SetTextColor(1,1,1,1)
-	
-	frame:Hide()
 end

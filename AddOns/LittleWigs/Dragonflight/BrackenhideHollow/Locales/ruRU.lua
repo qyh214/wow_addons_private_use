@@ -3,8 +3,11 @@ if not L then return end
 if L then
 	L.custom_on_cauldron_autotalk = "Авторазговор"
 	L.custom_on_cauldron_autotalk_desc = "[Алхимия] Автоматически использовать котлы."
+	--L.captive_tuskarr_freed = "Captive Tuskarr Freed"
+	--L.captive_tuskarr_freed_desc = "Show an alert when a Captive Tuskarr has been freed."
 
 	L.decaying_cauldron = "Гниющий котел"
+	L.captive_tuskarr = "Пленный клыкарр"
 	L.decay_speaker = "Голос разложения"
 	L.claw_fighter = "Боец-коготь"
 	L.bonebolt_hunter = "Охотник-костестрел"
@@ -21,7 +24,7 @@ if L then
 	L.infected_bear = "Зараженный медведь"
 	L.stinkbreath = "Мерзорот"
 	L.rageclaw = "Яростный Коготь"
-	L.rotbow_stalker = "Стрелок гнили"
+	L.rotbow_ranger = "Стрелок гнили"
 	L.skulking_gutstabber = "Затаившийся брюхокол"
 	L.fleshripper_vulture = "Стервятник-шкуродер"
 	L.filth_caller = "Призывательница гнили"

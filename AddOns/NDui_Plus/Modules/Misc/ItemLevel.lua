@@ -26,7 +26,6 @@ function M:ItemLevel_UpdateGuildBank(tab, index)
 		if itemID == PET_CAGE then
 			local data = C_TooltipInfo.GetGuildBankItem(tab, index)
 			if data then
-				TooltipUtil.SurfaceArgs(data)
 				local speciesID, petLevel, breedQuality = data.battlePetSpeciesID, data.battlePetLevel, data.battlePetBreedQuality
 				if speciesID and speciesID > 0 then
 					level, quality = petLevel, breedQuality
@@ -34,7 +33,7 @@ function M:ItemLevel_UpdateGuildBank(tab, index)
 			end
 		else
 			level = B.GetItemLevel(link)
-			quality = select(3, GetItemInfo(link))
+			quality = select(3, C_Item.GetItemInfo(link))
 		end
 	end
 

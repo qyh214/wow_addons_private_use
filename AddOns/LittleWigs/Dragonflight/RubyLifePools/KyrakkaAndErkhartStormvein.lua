@@ -19,6 +19,7 @@ mod:SetStage(1)
 local L = mod:GetLocale()
 if L then
 	L.winds = "Winds"
+	L.warmup_icon = "achievement_dungeon_lifepools"
 end
 
 --------------------------------------------------------------------------------
@@ -34,15 +35,16 @@ local stageTwoFlamespitCount = 0
 
 function mod:GetOptions()
 	return {
+		"warmup",
 		"stages",
 		-- Kyrakka
-		381862, -- Infernocore
+		{381862, "SAY", "SAY_COUNTDOWN"}, -- Infernocore
 		381525, -- Roaring Firebreath
 		381602, -- Flamespit
 		-- Erkhart Stormvein
 		381517, -- Winds of Change
 		381516, -- Interrupting Cloudburst
-		{381512, "TANK_HEALER"}, -- Stormslam
+		{381512, "DISPEL"}, -- Stormslam
 	}, {
 		[381862] = -25365, -- Kyrakka
 		[381517] = -25369, -- Erkhart Stormvein
@@ -60,6 +62,7 @@ function mod:OnBossEnable()
 	-- Kyrakka
 	self:Log("SPELL_AURA_APPLIED", "InfernocoreApplied", 381862)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "InfernocoreApplied", 381862)
+	self:Log("SPELL_AURA_REMOVED", "InfernocoreRemoved", 381862)
 	self:Log("SPELL_CAST_START", "RoaringFirebreath", 381525)
 	self:Log("SPELL_CAST_START", "Flamespit", 381602, 381605) -- P1, P2
 
@@ -74,19 +77,28 @@ end
 function mod:OnEngage()
 	windsOfChangeCount = 0
 	stageTwoFlamespitCount = 0
+	self:StopBar(CL.active)
 	self:SetStage(1)
-	self:Bar(381525, 1.6) -- Roaring Firebreath
-	self:Bar(381512, 6.1) -- Stormslam
+	self:CDBar(381525, 1.6) -- Roaring Firebreath
+	if self:Tank() or self:Dispeller("magic", nil, 381512) then
+		self:CDBar(381512, 6.1) -- Stormslam
+	end
 	self:CDBar(381602, 15.7) -- Flamespit
 	if self:Mythic() then
-		self:Bar(381516, 9.7) -- Interrupting Cloudburst
+		self:CDBar(381516, 9.7) -- Interrupting Cloudburst
 	end
-	self:Bar(381517, 17, CL.other:format(L.winds, CL.north_west), "misc_arrowlup") -- Winds of Change
+	self:CDBar(381517, 17.0, CL.other:format(L.winds, CL.north_west), "misc_arrowlup") -- Winds of Change
 end
 
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+-- Warmup
+
+function mod:Warmup() -- called from trash module
+	self:Bar("warmup", 10.7, CL.active, L.warmup_icon)
+end
 
 -- Stages
 
@@ -95,7 +107,7 @@ function mod:UNIT_HEALTH(event, unit)
 	if self:GetHealth(unit) <= 50 then
 		self:UnregisterUnitEvent(event, "boss1")
 		self:UnregisterUnitEvent(event, "boss2")
-		self:Message("stages", "cyan", CL.soon:format(CL.stage:format(2)), false)
+		self:Message("stages", "cyan", CL.percent:format(50, CL.soon:format(CL.stage:format(2))), false)
 		self:PlaySound("stages", "info")
 	end
 end
@@ -138,6 +150,7 @@ end
 
 do
 	local prev = 0
+	local onMe = nil
 
 	function mod:InfernocoreApplied(args)
 		if self:Me(args.destGUID) then
@@ -151,7 +164,22 @@ do
 				end
 				self:PlaySound(args.spellId, "alarm")
 			end
-			self:TargetBar(args.spellId, 3, args.destName)
+			if not onMe then
+				onMe = true
+				self:Say(args.spellId, nil, nil, "Infernocore")
+			else
+				self:CancelSayCountdown(args.spellId)
+			end
+			self:SayCountdown(args.spellId, 4, nil, 2)
+			self:TargetBar(args.spellId, 4, args.destName)
+		end
+	end
+
+	function mod:InfernocoreRemoved(args)
+		if self:Me(args.destGUID) then
+			onMe = nil
+			self:StopBar(args.spellId, args.destName)
+			self:CancelSayCountdown(args.spellId)
 		end
 	end
 end
@@ -174,9 +202,9 @@ function mod:Flamespit(args)
 	else -- 381605, stage 2/3 Flamespit
 		stageTwoFlamespitCount = stageTwoFlamespitCount + 1
 		if stageTwoFlamespitCount == 1 then
-			self:Bar(381602, 15.8)
+			self:CDBar(381602, 15.8)
 		else
-			self:Bar(381602, 18.2)
+			self:CDBar(381602, 18.2)
 		end
 	end
 end
@@ -216,16 +244,22 @@ end
 function mod:InterruptingCloudburst(args)
 	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "warning")
-	self:Bar(args.spellId, 19.4)
+	self:CDBar(args.spellId, 19.4)
 end
 
 function mod:Stormslam(args)
-	self:Message(args.spellId, "purple")
-	self:PlaySound(args.spellId, "alarm")
-	self:CDBar(args.spellId, 17)
+	if self:Tank() then
+		self:Message(args.spellId, "purple")
+		self:PlaySound(args.spellId, "alarm")
+		self:CDBar(args.spellId, 17.0)
+	elseif self:Dispeller("magic", nil, args.spellId) then
+		self:CDBar(args.spellId, 17.0)
+	end
 end
 
 function mod:StormslamApplied(args)
-	self:StackMessage(381512, "purple", args.destName, args.amount, 2)
-	self:PlaySound(381512, "alert")
+	if self:Dispeller("magic", nil, 381512) then
+		self:StackMessage(381512, "purple", args.destName, args.amount, 2)
+		self:PlaySound(381512, "alert")
+	end
 end

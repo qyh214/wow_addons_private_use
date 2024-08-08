@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -- Premade Groups Filter
 -------------------------------------------------------------------------------
--- Copyright (C) 2022 Elotheon-Arthas-EU
+-- Copyright (C) 2024 Bernhard Saumweber
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -46,13 +46,6 @@ local PGFSettingsTable = {
         visible = true,
     },
     {
-        key = "coloredApplications",
-        type = "checkbox",
-        title = L["settings.coloredApplications.title"],
-        tooltip = L["settings.coloredApplications.tooltip"],
-        visible = true,
-    },
-    {
         key = "ratingInfo",
         type = "checkbox",
         title = L["settings.ratingInfo.title"],
@@ -64,21 +57,21 @@ local PGFSettingsTable = {
         type = "checkbox",
         title = L["settings.classCircle.title"],
         tooltip = L["settings.classCircle.tooltip"],
-        visible = PGF.IsRetail(),
+        visible = false, -- circle not available in wrath and provided by default in retail since 10.2.7
     },
     {
         key = "classBar",
         type = "checkbox",
         title = L["settings.classBar.title"],
         tooltip = L["settings.classBar.tooltip"],
-        visible = true,
+        visible = not PGF.IsRetail(),
     },
     {
         key = "leaderCrown",
         type = "checkbox",
         title = L["settings.leaderCrown.title"],
         tooltip = L["settings.leaderCrown.tooltip"],
-        visible = true,
+        visible = not PGF.IsRetail(),
     },
     {
         key = "oneClickSignUp",

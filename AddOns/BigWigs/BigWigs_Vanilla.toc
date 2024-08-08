@@ -1,4 +1,4 @@
-## Interface: 11500
+## Interface: 11502, 11503
 
 ## Title: BigWigs
 ## Notes: Modular, lightweight, non-intrusive approach to boss encounter warnings.
@@ -14,7 +14,7 @@
 ## Notes-ptBR: Abordagem modular, leve e não intrusiva para avisos em encontros com chefes.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
 ## Author: Funkydude, Nebula, Elvador, Justwait
-## Version: v305.2
+## Version: v351.1
 
 ## X-Category: Raid
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
@@ -24,7 +24,7 @@
 ## X-Wago-ID: 5NRegwG3
 
 ## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibSink-2.0, LibDBIcon-1.0, LibDDI-1.0, LibSpecialization, LibChatAnims, LibDualSpec-1.0
-## SavedVariables: BigWigs3DB, BigWigsIconDB, BigWigsStatsDB, BigWigsClassicDB, BigWigsStatsClassicDB
+## SavedVariables: BigWigs3DB, BigWigsIconDB, BigWigsStatsDB
 
 embeds.xml
 Init_Vanilla.lua

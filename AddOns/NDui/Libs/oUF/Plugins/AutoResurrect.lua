@@ -5,33 +5,34 @@
 local _, ns = ...
 local B, C, L, DB = unpack(ns)
 local oUF = ns.oUF
+local GetSpellName = C_Spell.GetSpellName
 
 local classList = {
 	["DEATHKNIGHT"] = {
-		combat = GetSpellInfo(61999),	-- Raise Ally
+		combat = GetSpellName(61999),	-- Raise Ally
 	},
 	["DRUID"] = {
-		combat = GetSpellInfo(20484),	-- Rebirth
-		ooc = GetSpellInfo(50769),		-- Revive
+		combat = GetSpellName(20484),	-- Rebirth
+		ooc = GetSpellName(50769),		-- Revive
 	},
 	["MONK"] = {
-		ooc = GetSpellInfo(115178),		-- Resuscitate
+		ooc = GetSpellName(115178),		-- Resuscitate
 	},
 	["PALADIN"] = {
-		ooc = GetSpellInfo(7328),		-- Redemption
-		combat = GetSpellInfo(391054),	-- 代祷Intercession
+		ooc = GetSpellName(7328),		-- Redemption
+		combat = GetSpellName(391054),	-- 代祷Intercession
 	},
 	["PRIEST"] = {
-		ooc = GetSpellInfo(2006),		-- Resurrection
+		ooc = GetSpellName(2006),		-- Resurrection
 	},
 	["SHAMAN"] = {
-		ooc = GetSpellInfo(2008),		-- Ancestral Spirit
+		ooc = GetSpellName(2008),		-- Ancestral Spirit
 	},
 	["WARLOCK"] = {
-		combat = GetSpellInfo(20707),	-- Soulstone
+		combat = GetSpellName(20707),	-- Soulstone
 	},
 	["EVOKER"] = {
-		ooc = GetSpellInfo(361227),		-- 生还Return
+		ooc = GetSpellName(361227),		-- 生还Return
 	},
 }
 
@@ -58,7 +59,7 @@ end
 local function setupAttribute(self)
 	if InCombatLockdown() then return end
 
-	if classList[DB.MyClass] and not IsAddOnLoaded("Clique") then
+	if classList[DB.MyClass] and not C_AddOns.IsAddOnLoaded("Clique") then
 		self:SetAttribute("*type3", "macro")
 		self:SetAttribute("macrotext3", macroBody(DB.MyClass))
 		self:UnregisterEvent("PLAYER_REGEN_ENABLED", setupAttribute)

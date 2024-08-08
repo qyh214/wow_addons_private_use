@@ -10,7 +10,7 @@
 -- @name LibSpellRange-1.0.lua
 
 local major = "SpellRange-1.0"
-local minor = 17
+local minor = 21
 
 assert(LibStub, format("%s requires LibStub.", major))
 
@@ -23,19 +23,41 @@ local wipe = _G.wipe
 local type = _G.type
 local select = _G.select
 
-local GetSpellTabInfo = _G.GetSpellTabInfo
-local GetNumSpellTabs = _G.GetNumSpellTabs
-local GetSpellBookItemInfo = _G.GetSpellBookItemInfo
-local GetSpellBookItemName = _G.GetSpellBookItemName
-local GetSpellLink = _G.GetSpellLink
-local GetSpellInfo = _G.GetSpellInfo
+local GetSpellBookItemInfo = _G.GetSpellBookItemInfo or _G.C_SpellBook.GetSpellBookItemType
+local GetSpellBookItemName = _G.GetSpellBookItemName or _G.C_SpellBook.GetSpellBookItemName
+local GetSpellLink = _G.GetSpellLink or _G.C_Spell.GetSpellLink
+local GetSpellInfo = _G.GetSpellInfo or _G.C_Spell.GetSpellName
 
-local IsSpellInRange = _G.IsSpellInRange
-local SpellHasRange = _G.SpellHasRange
+local IsSpellInRange = _G.IsSpellInRange or function(id, unit)
+  local result = C_Spell.IsSpellInRange(id, unit)
+  if result == true then
+    return 1
+  elseif result == false then
+    return 0
+  end
+  return nil
+end
+local isTWWSpellInRange = IsSpellInRange ~= _G.IsSpellInRange
+local IsSpellBookItemInRange = _G.IsSpellInRange or function(index, spellBank, unit)
+  local result = C_SpellBook.IsSpellBookItemInRange(index, spellBank, unit)
+  if result == true then
+    return 1
+  elseif result == false then
+    return 0
+  end
+  return nil
+end
+
+local SpellHasRange = _G.SpellHasRange or _G.C_Spell.SpellHasRange
+local isTWWSpellHasRange = SpellHasRange ~= _G.SpellHasRange
+local SpellBookHasRange = _G.SpellHasRange or _G.C_SpellBook.IsSpellBookItemInRange
 
 local UnitExists = _G.UnitExists
 local GetPetActionInfo = _G.GetPetActionInfo
 local UnitIsUnit = _G.UnitIsUnit
+
+local playerBook = _G.GetSpellBookItemName and "spell" or _G.Enum.SpellBookSpellBank.Player
+local petBook = _G.GetSpellBookItemName and "pet" or _G.Enum.SpellBookSpellBank.Pet
 
 -- isNumber is basically a tonumber cache for maximum efficiency
 Lib.isNumber = Lib.isNumber or setmetatable({}, {
@@ -94,7 +116,24 @@ Lib.petSpellHasRange = Lib.petSpellHasRange or {}
 local petSpellHasRange = Lib.petSpellHasRange
 
 -- Updates spellsByName and spellsByID
+
+local GetNumSpellTabs = _G.GetNumSpellTabs or C_SpellBook.GetNumSpellBookSkillLines
+local GetSpellTabInfo = _G.GetSpellTabInfo or function(index)
+	local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(index);
+	if skillLineInfo then
+		return	skillLineInfo.name,
+				skillLineInfo.iconID,
+				skillLineInfo.itemIndexOffset,
+				skillLineInfo.numSpellBookItems,
+				skillLineInfo.isGuild,
+				skillLineInfo.offSpecID,
+				skillLineInfo.shouldHide,
+				skillLineInfo.specID;
+	end
+end
+
 local function UpdateBook(bookType)
+	local book = bookType == "spell" and playerBook or petBook
 	local max = 0
 	for i = 1, GetNumSpellTabs() do
 		local _, _, offs, numspells, _, specId = GetSpellTabInfo(i)
@@ -110,12 +149,14 @@ local function UpdateBook(bookType)
 	wipe(spellsByID)
 	
 	for spellBookID = 1, max do
-		local type, baseSpellID = GetSpellBookItemInfo(spellBookID, bookType)
+		local type, baseSpellID = GetSpellBookItemInfo(spellBookID, book)
 		
 		if type == "SPELL" or type == "PETACTION" then
-			local currentSpellName = GetSpellBookItemName(spellBookID, bookType)
-			local link = GetSpellLink(currentSpellName)
-			local currentSpellID = tonumber(link and link:gsub("|", "||"):match("spell:(%d+)"))
+			local currentSpellName, _, currentSpellID = GetSpellBookItemName(spellBookID, book)
+			if not currentSpellID then
+				local link = GetSpellLink(currentSpellName)
+				currentSpellID = tonumber(link and link:gsub("|", "||"):match("spell:(%d+)"))
+			end
 
 			-- For each entry we add to a table,
 			-- only add it if there isn't anything there already.
@@ -209,11 +250,11 @@ function Lib.IsSpellInRange(spellInput, unit)
 	if isNumber[spellInput] then
 		local spell = spellsByID_spell[spellInput]
 		if spell then
-			return IsSpellInRange(spell, "spell", unit)
+			return IsSpellBookItemInRange(spell, playerBook, unit)
 		else
 			local spell = spellsByID_pet[spellInput]
 			if spell then
-				local petResult = IsSpellInRange(spell, "pet", unit)
+				local petResult = IsSpellBookItemInRange(spell, petBook, unit)
 				if petResult ~= nil then
 					return petResult
 				end
@@ -226,16 +267,19 @@ function Lib.IsSpellInRange(spellInput, unit)
 				end
 			end
 		end
+		if isTWWSpellInRange then
+			return IsSpellInRange(spellInput, unit)
+		end
 	else
 		local spellInput = strlowerCache[spellInput]
 		
 		local spell = spellsByName_spell[spellInput]
 		if spell then
-			return IsSpellInRange(spell, "spell", unit)
+			return IsSpellBookItemInRange(spell, playerBook, unit)
 		else
 			local spell = spellsByName_pet[spellInput]
 			if spell then
-				local petResult = IsSpellInRange(spell, "pet", unit)
+				local petResult = IsSpellBookItemInRange(spell, petBook, unit)
 				if petResult ~= nil then
 					return petResult
 				end
@@ -248,10 +292,8 @@ function Lib.IsSpellInRange(spellInput, unit)
 				end
 			end
 		end
-		
 		return IsSpellInRange(spellInput, unit)
 	end
-	
 end
 
 
@@ -272,29 +314,30 @@ function Lib.SpellHasRange(spellInput)
 	if isNumber[spellInput] then
 		local spell = spellsByID_spell[spellInput]
 		if spell then
-			return SpellHasRange(spell, "spell")
+			return SpellBookHasRange(spell, playerBook)
 		else
 			local spell = spellsByID_pet[spellInput]
 			if spell then
 				-- SpellHasRange seems to no longer work for pet spellbook.
-				return SpellHasRange(spell, "pet") or petSpellHasRange[spellInput] or false
+				return SpellBookHasRange(spell, petBook) or petSpellHasRange[spellInput] or false
 			end
+		end
+		if isTWWSpellHasRange then
+			return SpellHasRange(spellInput)
 		end
 	else
 		local spellInput = strlowerCache[spellInput]
 		
 		local spell = spellsByName_spell[spellInput]
 		if spell then
-			return SpellHasRange(spell, "spell")
+			return SpellBookHasRange(spell, playerBook)
 		else
 			local spell = spellsByName_pet[spellInput]
 			if spell then
 				-- SpellHasRange seems to no longer work for pet spellbook.
-				return SpellHasRange(spell, "pet") or petSpellHasRange[spellInput] or false
+				return SpellBookHasRange(spell, petBook) or petSpellHasRange[spellInput] or false
 			end
 		end
-		
 		return SpellHasRange(spellInput)
 	end
-	
 end

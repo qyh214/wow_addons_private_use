@@ -11,19 +11,14 @@ if L then
 	L.blistering_torment = "Cadena"
 	L.twisting_blade = "Espadas"
 	L.marked_for_torment = "Tormento"
-	L.umbral_destruction = "Soak"
-	L.heart_stopper = "Absorber curación"
-	L.heart_stopper_single = "Absorber curación"
 end
 
 L = BigWigs:NewBossLocale("Volcoross", "esES")
 if L then
-	--L.custom_off_all_scorchtail_crash = "Show All Casts"
-	--L.custom_off_all_scorchtail_crash_desc = "Show timers and messages for all Scorchtail Crash casts instead of just for your side."
+	L.custom_off_all_scorchtail_crash = "Enseñar todos los lanzamientos"
+	L.custom_off_all_scorchtail_crash_desc = "Enseñar temporizadores y mensajes para todos los lanzamientos de Choque Abrasacola en vez de solo los de tu lado."
 
-	L.flood_of_the_firelands = "Soaks"
-	--L.flood_of_the_firelands_single_wait = "Wait" -- Wait 3, Wait 2, Wait 1 countdown before soak debuff is applied
-	--L.flood_of_the_firelands_single = "Soak"
+	L.flood_of_the_firelands_single_wait = "Espera" -- Wait 3, Wait 2, Wait 1 countdown before soak debuff is applied
 	L.scorchtail_crash = "Golpe de Cola"
 	L.serpents_fury = "Llamas"
 	L.coiling_flames_single = "Llamas"
@@ -31,92 +26,95 @@ end
 
 L = BigWigs:NewBossLocale("Council of Dreams", "esES")
 if L then
-	--L.agonizing_claws_debuff = "{421022} (Debuff)"
+	L.agonizing_claws_debuff = "{421022} (Perjuicio)"
 
-	L.ultimate_boss = "Definitiva (%s)"
-	--L.special_bar = "Ult [%s] (%d)"
-	--L.special_mythic_bar = "Ult [%s/%s] (%d)"
-	--L.special_mechanic_bar = "%s [Ult] (%d)"
+	L.custom_off_combined_full_energy = "Barras de Energia Completamente Combinadas (Solo Mítico)"
+	L.custom_off_combined_full_energy_desc = "Combinar las barras de las habilidades que los jefes usan a plena energía en una unica barra, solo si se van a lanzar a la vez."
 
-	L.barreling_charge = "Carga"
-	L.poisonous_javelin = "Javalina"
-	--L.song_of_the_dragon = "Song"
+	L.special_mechanic_bar = "%s [Def] (%d)" -- Def is used for "Definitiva"
+
+	L.constricting_thicket = "Matorral"
+	L.poisonous_javelin = "Jabalina"
+	L.song_of_the_dragon = "Canción"
 	L.polymorph_bomb = "Patos"
 	L.polymorph_bomb_single = "Pato"
 end
 
 L = BigWigs:NewBossLocale("Larodar, Keeper of the Flame", "esES")
 if L then
-	--L.custom_on_repeating_yell_smoldering_suffocation = "Repeating Suffocation Health Yell"
-	--L.custom_on_repeating_yell_smoldering_suffocation_desc = "Repeating yell messages for Smoldering Suffocation to let others know when you are below 75% health."
+	L.custom_on_repeating_yell_smoldering_suffocation = "Repitiendo Aviso de Salud de Asfixia Humeante"
+	L.custom_on_repeating_yell_smoldering_suffocation_desc = "Repitiendo Aviso por Asfixia Humeante para informar al resto que estar por debajo del 75% de salud"
 
-	--L.blazing_coalescence_on_player_note = "When it's on you"
-	--L.blazing_coalescence_on_boss_note = "When it's on the boss"
+	L.blazing_coalescence_on_player_note = "Cuando esta en ti"
+	L.blazing_coalescence_on_boss_note = "Cuando esta en el boss"
 
 	L.scorching_roots = "Raíces"
-	L.furious_charge = "Carga"
-	L.blazing_thorns = "Esquivar"
-	L.falling_embers = "Soaks individuales"
-	L.fire_whirl = "Tornados"
+	L.charred_brambles = "Raíces Curables"
+	L.blazing_thorns = "Espinas llameantes"
 end
 
 L = BigWigs:NewBossLocale("Nymue, Weaver of the Cycle", "esES")
 if L then
-	--L.mythic_add_death = "%s Killed"
+	L.mythic_add_death = "%s Muerto"
 
 	L.continuum = "Nuevas Lineas"
-	--L.surging_growth = "New Soaks"
-	--L.ephemeral_flora = "Red Soak"
-	--L.viridian_rain = "Damage + Bombs"
-	--L.threads = "Threads" -- From the spell description of Impending Loom (429615) "threads of energy"
+	L.surging_growth = "Nuevos Soaks"
+	L.ephemeral_flora = "Soak Rojo"
+	L.viridian_rain = "Daño + Bombas"
+	L.threads = "Hilos" -- From the spell description of Impending Loom (429615) "threads of energy"
 end
 
 L = BigWigs:NewBossLocale("Smolderon", "esES")
 if L then
 	L.brand_of_damnation = "Sokeo de Tanque"
 	L.lava_geysers = "Géiseres"
-	L.flame_waves = "Tornados"
 end
 
 L = BigWigs:NewBossLocale("Tindral Sageswift, Seer of the Flame", "esES")
 if L then
-	--L.seed_soaked = "Seed soaked"
-	--L.all_seeds_soaked = "Seeds done!"
+	L.seed_soaked = "Semilla soakeada"
+	L.all_seeds_soaked = "Semillas acabadas!"
+
 	L.blazing_mushroom = "Hongos"
-	L.fiery_growth = "Dispels"
+	L.fiery_growth = "Disipaciones"
 	L.mass_entanglement = "Raíces"
-	L.incarnation_moonkin = "Forma de Pollo"
-	L.incarnation_tree_of_flame = "Forma de Arbol"
+	L.incarnation_moonkin = "Forma de lechúcico lunar"
+	L.incarnation_tree_of_flame = "Forma de antárbol"
 	L.flaming_germination = "Semillas"
-	--L.suppressive_ember = "Heal Absorbs"
-	--L.suppressive_ember_single = "Heal Absorb"
-	--L.flare_bomb = "Feathers"
+	L.flare_bomb = "Plumas"
+	L.too_close_to_edge = "Demasiado cerca del borde"
+	L.taking_damage_from_edge = "Recibiendo daño del borde"
+
+	--L.fly_time = "Fly Time"
+	--L.fly_time_desc = "Display a message showing you how long you took to fly over to the other platform in the intermissions."
+	--L.fly_time_msg = "Fly Time: %.2f" -- Fly Time: 32.23
 end
 
 L = BigWigs:NewBossLocale("Fyrakk the Blazing", "esES")
 if L then
 	L.spirits_trigger = "Espíritu de los kaldorei"
 
-	--L.fyralaths_bite = "Frontal"
-	--L.fyralaths_bite_mythic = "Frontals"
-	--L.fyralaths_mark = "Mark"
-	--L.darkflame_shades = "Shades"
-	--L.darkflame_cleave = "Mythic Soaks"
+	L.fyralaths_bite = "Frontal"
+	L.fyralaths_bite_mythic = "Frontales"
+	L.darkflame_shades = "Sombras"
+	L.darkflame_cleave = "Soaks de Mítico"
 
-	--L.incarnate_intermission = "Knock Up"
-	--L.corrupt_removed = "Corrupt Over (%.1fs remaining)" -- eg: Corrupt Over (5.0s remaining)
+	L.incarnate_intermission = "Empuje hacia arriba"
 
-	--L.incarnate = "Fly Away"
-	--L.spirits_of_the_kaldorei = "Spirits"
-	--L.molten_gauntlet = "Gauntlet"
-	--L.mythic_debuffs = "Cages" -- Shadow Cage & Molten Eruption
+	L.incarnate = "Salto al cielo"
+	L.molten_gauntlet = "Guantelete"
+	L.mythic_debuffs = "Jaulas" -- Shadow Cage & Molten Eruption
 
-	--L.greater_firestorm_shortened_bar = "Firestorm [G]" -- G for Greater
-	--L.greater_firestorm_message_full = "Firestorm [Greater]"
-	--L.eternal_firestorm_shortened_bar = "Firestorm [E]" -- E for Eternal
-	--L.eternal_firestorm_message_full = "Firestorm [Eternal]"
+	L.greater_firestorm_shortened_bar = "Tormenta de fuego [S]" -- S for "Superior"
+	L.greater_firestorm_message_full = "Tormenta de fuego [Superior]"
+	L.eternal_firestorm_shortened_bar = "Tormenta de fuego [E]" -- E for "Eterna"
+	L.eternal_firestorm_message_full = "Tormenta de fuego [Eterna]"
 
-	-- L.eternal_firestorm_swirl = "Eternal Firestorm Swirls"
-	-- L.eternal_firestorm_swirl_desc = "Timers for Eternal Firestorm Swirls."
-	-- L.eternal_firestorm_swirl_bartext = "Swirls"
+	--L.eternal_firestorm_swirl = "Eternal Firestorm Pools"
+	--L.eternal_firestorm_swirl_desc = "Show timers for when the Eternal Firestorm will spawn the pools that you need to avoid standing in."
+
+	--L.flame_orb = "Flame Orb"
+	--L.shadow_orb = "Shadow Orb"
+	--L.orb_message_flame = "You are Flame"
+	--L.orb_message_shadow = "You are Shadow"
 end

@@ -159,7 +159,6 @@ if L then
 	L.infinite_duress = mod:SpellName(404288) -- Infinite Duress
 
 	-- Stage Three: The Seas of Infinity
-	L.boss_immune = "Boss Immune"
 	L.cosmic_ascension = mod:SpellName(161862) -- Cosmic Ascension (Ascension)
 	L.scouring_eternity = mod:SpellName(123244) -- Scouring Eternity (Hide)
 	L.embrace_of_nothingness = mod:SpellName(371920) -- Embrace of Nothingness (Black Hole)
@@ -467,7 +466,7 @@ function mod:StageEnd(args)
 	self:StopBar(CL.stage:format(3))
 
 	if self:GetStage() == 2 then
-		self:Bar("stages", 11, L.boss_immune, args.spellId)
+		self:Bar("stages", 11, CL.immune, args.spellId)
 	end
 end
 
@@ -513,7 +512,7 @@ do
 		playerList[args.destName] = count -- Set raid marker
 		if self:Me(args.destGUID) then
 			self:PlaySound(args.spellId, "warning")
-			self:Say(args.spellId, CL.rticon:format(L.mass_disintergrate_single, count))
+			self:Say(args.spellId, CL.rticon:format(L.mass_disintergrate_single, count), nil, ("Disintegrate ({rt%d})"):format(count))
 			self:SayCountdown(args.spellId, 6, count)
 		end
 		self:TargetsMessage(args.spellId, "cyan", playerList, nil, CL.count:format(L.mass_disintergrate, massDisintergrateCount - 1))
@@ -644,9 +643,10 @@ function mod:VoidFractureApplied(args)
 		self:PersonalMessage(404218, nil, CL.bomb)
 		self:PlaySound(404218, "warning")
 		if args.spellId == 404218 then -- Initial say only for the Stage 2 debuffs
-			self:Say(404218, CL.bomb)
+			self:Say(404218, CL.bomb, nil, "Bomb")
 		end
-		local _, _, duration = self:UnitDebuff(args.destName, args.spellId) -- Duration depends on when bomb is picked up, so always different
+		local tbl = self:GetPlayerAura(args.spellId) -- Duration depends on when bomb is picked up, so always different
+		local duration = tbl.duration
 		if duration < 2 then -- dont countdown below 2, just run
 			self:SayCountdown(404218, duration, nil, duration < 3 and 2) -- If we are between 3 and 2, start countdown at 2
 		end
@@ -747,7 +747,7 @@ do
 		if self:Me(args.destGUID) then
 			onMe = true
 			self:TargetBar(404288, 16, args.destName, L.infinite_duress)
-			self:Say(404288, L.infinite_duress)
+			self:Say(404288, L.infinite_duress, nil, "Infinite Duress")
 			self:SayCountdown(404288, 16)
 			self:PlaySound(404288, "warning")
 		end
@@ -869,7 +869,7 @@ do
 		if self:Me(args.destGUID) then
 			self:PersonalMessage(args.spellId)
 			self:PlaySound(args.spellId, "warning")
-			self:Say(args.spellId, CL.rticon:format(args.spellName, icon))
+			self:Say(args.spellId, CL.rticon:format(args.spellName, icon), nil, ("Hurtling Barrage ({rt%d})"):format(icon))
 			self:SayCountdown(args.spellId, 7, icon)
 		end
 		self:CustomIcon(hurlingBarrageMarker, args.destName, icon)
@@ -903,7 +903,7 @@ function mod:EmbraceOfNothingnessApplied(args)
 	self:TargetMessage(args.spellId, "yellow", args.destName, CL.count:format(L.embrace_of_nothingness, embraceOfNothingnessCount-1))
 	if self:Me(args.destGUID) then
 		self:PlaySound(args.spellId, "warning")
-		self:Yell(args.spellId, L.embrace_of_nothingness)
+		self:Yell(args.spellId, L.embrace_of_nothingness, nil, "Black Hole")
 		self:YellCountdown(args.spellId, 8)
 	end
 end

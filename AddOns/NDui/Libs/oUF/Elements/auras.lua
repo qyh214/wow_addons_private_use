@@ -237,7 +237,7 @@ local function updateAura(element, unit, data, position)
 	* self     - the widget holding the aura buttons
 	* button   - the updated aura button (Button)
 	* unit     - the unit for which the update has been triggered (string)
-	* data     - the [UnitAuraInfo](https://wowpedia.fandom.com/wiki/Struct_UnitAuraInfo) object (table)
+	* data     - the [AuraData](https://warcraft.wiki.gg/wiki/Struct_AuraData) object (table)
 	* position - the actual position of the aura button (number)
 	--]]
 	if(element.PostUpdateButton) then
@@ -274,7 +274,7 @@ local function processData(element, unit, data)
 
 	* self - the widget holding the aura buttons
 	* unit - the unit for which the update has been triggered (string)
-	* data - [UnitAuraInfo](https://wowpedia.fandom.com/wiki/Struct_UnitAuraInfo) object (table)
+	* data - [AuraData](https://warcraft.wiki.gg/wiki/Struct_AuraData) object (table)
 
 	## Returns
 
@@ -324,7 +324,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 			auras.activeBuffs = table.wipe(auras.activeBuffs or {})
 			buffsChanged = true
 
-			local slots = {UnitAuraSlots(unit, buffFilter)}
+			local slots = {C_UnitAuras.GetAuraSlots(unit, buffFilter)}
 			for i = 2, #slots do -- #1 return is continuationToken, we don't care about it
 				local data = processData(auras, unit, C_UnitAuras.GetAuraDataBySlot(unit, slots[i]))
 				auras.allBuffs[data.auraInstanceID] = data
@@ -334,7 +334,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 
 				* self - the widget holding the aura buttons
 				* unit - the unit for which the update has been triggered (string)
-				* data - [UnitAuraInfo](https://wowpedia.fandom.com/wiki/Struct_UnitAuraInfo) object (table)
+				* data - [AuraData](https://warcraft.wiki.gg/wiki/Struct_AuraData) object (table)
 
 				## Returns
 
@@ -349,7 +349,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 			auras.activeDebuffs = table.wipe(auras.activeDebuffs or {})
 			debuffsChanged = true
 
-			slots = {UnitAuraSlots(unit, debuffFilter)}
+			slots = {C_UnitAuras.GetAuraSlots(unit, debuffFilter)}
 			for i = 2, #slots do
 				local data = processData(auras, unit, C_UnitAuras.GetAuraDataBySlot(unit, slots[i]))
 				auras.allDebuffs[data.auraInstanceID] = data
@@ -450,12 +450,12 @@ local function UpdateAuras(self, event, unit, updateInfo)
 				--[[ Override: Auras:SortBuffs(a, b)
 				Defines a custom sorting algorithm for ordering the auras.
 
-				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=DefaultAuraCompare).
+				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=symbol:DefaultAuraCompare).
 				--]]
 				--[[ Override: Auras:SortAuras(a, b)
 				Defines a custom sorting algorithm for ordering the auras.
 
-				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=DefaultAuraCompare).
+				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=symbol:DefaultAuraCompare).
 
 				Overridden by the more specific SortBuffs and/or SortDebuffs overrides if they are defined.
 				--]]
@@ -481,7 +481,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 				--[[ Override: Auras:SortDebuffs(a, b)
 				Defines a custom sorting algorithm for ordering the auras.
 
-				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=DefaultAuraCompare).
+				Defaults to [AuraUtil.DefaultAuraCompare](https://github.com/Gethe/wow-ui-source/search?q=symbol:DefaultAuraCompare).
 				--]]
 				table.sort(auras.sortedDebuffs, auras.SortDebuffs or auras.SortAuras or SortAuras)
 			end
@@ -489,35 +489,43 @@ local function UpdateAuras(self, event, unit, updateInfo)
 			numDebuffs = math.min(numDebuffs, numTotal - numVisible, #auras.sortedDebuffs)
 
 			if(auras.gap and numVisible > 0 and numDebuffs > 0) then
-				numVisible = numVisible + 1
-
-				local button = auras[numVisible]
-				if(not button) then
-					button = (auras.CreateButton or CreateButton) (auras, numVisible)
-					table.insert(auras, button)
-					auras.createdButtons = auras.createdButtons + 1
+				-- adjust the number of visible debuffs if there's an overflow
+				if(numVisible + numDebuffs == numTotal) then
+					numDebuffs = numDebuffs - 1
 				end
 
-				-- prevent the button from displaying anything
-				if(button.Cooldown) then button.Cooldown:Hide() end
-				if(button.Icon) then button.Icon:SetTexture() end
-				if(button.Overlay) then button.Overlay:Hide() end
-				if(button.Stealable) then button.Stealable:Hide() end
-				if(button.Count) then button.Count:SetText() end
+				-- double check and skip it if we end up with 0 after the adjustment
+				if(numDebuffs > 0) then
+					numVisible = numVisible + 1
 
-				button:EnableMouse(false)
-				button:Show()
+					local button = auras[numVisible]
+					if(not button) then
+						button = (auras.CreateButton or CreateButton) (auras, numVisible)
+						table.insert(auras, button)
+						auras.createdButtons = auras.createdButtons + 1
+					end
 
-				--[[ Callback: Auras:PostUpdateGapButton(unit, gapButton, position)
-				Called after an invisible aura button has been created. Only used by Auras when the `gap` option is enabled.
+					-- prevent the button from displaying anything
+					if(button.Cooldown) then button.Cooldown:Hide() end
+					if(button.Icon) then button.Icon:SetTexture() end
+					if(button.Overlay) then button.Overlay:Hide() end
+					if(button.Stealable) then button.Stealable:Hide() end
+					if(button.Count) then button.Count:SetText() end
 
-				* self      - the widget holding the aura buttons
-				* unit      - the unit that has the invisible aura button (string)
-				* gapButton - the invisible aura button (Button)
-				* position  - the position of the invisible aura button (number)
-				--]]
-				if(auras.PostUpdateGapButton) then
-					auras:PostUpdateGapButton(unit, button, numVisible)
+					button:EnableMouse(false)
+					button:Show()
+
+					--[[ Callback: Auras:PostUpdateGapButton(unit, gapButton, position)
+					Called after an invisible aura button has been created. Only used by Auras when the `gap` option is enabled.
+
+					* self      - the widget holding the aura buttons
+					* unit      - the unit that has the invisible aura button (string)
+					* gapButton - the invisible aura button (Button)
+					* position  - the position of the invisible aura button (number)
+					--]]
+					if(auras.PostUpdateGapButton) then
+						auras:PostUpdateGapButton(unit, button, numVisible)
+					end
 				end
 			end
 
@@ -583,7 +591,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 			buffs.active = table.wipe(buffs.active or {})
 			buffsChanged = true
 
-			local slots = {UnitAuraSlots(unit, buffFilter)}
+			local slots = {C_UnitAuras.GetAuraSlots(unit, buffFilter)}
 			for i = 2, #slots do
 				local data = processData(buffs, unit, C_UnitAuras.GetAuraDataBySlot(unit, slots[i]))
 				buffs.all[data.auraInstanceID] = data
@@ -692,7 +700,7 @@ local function UpdateAuras(self, event, unit, updateInfo)
 			debuffs.active = table.wipe(debuffs.active or {})
 			debuffsChanged = true
 
-			local slots = {UnitAuraSlots(unit, debuffFilter)}
+			local slots = {C_UnitAuras.GetAuraSlots(unit, debuffFilter)}
 			for i = 2, #slots do
 				local data = processData(debuffs, unit, C_UnitAuras.GetAuraDataBySlot(unit, slots[i]))
 				debuffs.all[data.auraInstanceID] = data

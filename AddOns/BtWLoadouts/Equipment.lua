@@ -12,6 +12,9 @@ local GetContainerItemLink = C_Container and C_Container.GetContainerItemLink or
 local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
 local GetVoidItemHyperlinkString = GetVoidItemHyperlinkString
 local GetItemUniqueness = GetItemUniqueness
+local GetItemInfoInstant = C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+local GetItemGem = C_Item and C_Item.GetItemGem or GetItemGem
+local GetItemInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
 
 local HelpTipBox_Anchor = Internal.HelpTipBox_Anchor;
 local HelpTipBox_SetText = Internal.HelpTipBox_SetText;
@@ -549,6 +552,20 @@ local itemUniquenessCache = {
     [132378] = {357, 2},
     [132369] = {357, 2},
 }
+local GetItemUniquenessByID = C_Item and C_Item.GetItemUniquenessByID;
+local GetItemUniqueness = GetItemUniquenessByID and function (itemInfo)
+	local isUnique, limitCategoryName, limitCategoryCount, limitCategoryID = GetItemUniquenessByID(itemInfo)
+
+	if not isUnique then
+		return nil, nil
+	end
+
+	if not limitCategoryName then
+		return -1, 1
+	end
+
+	return limitCategoryID, limitCategoryCount
+end or GetItemUniqueness;
 -- Returns the same as GetItemUniqueness except uses the above cache, also converts -1 family to itemID
 local function GetItemUniquenessCached(itemLink)
 	local itemID = GetItemInfoInstant(itemLink)
@@ -1220,6 +1237,8 @@ local function UpdateSetFilters(set)
     Internal.UpdateRestrictionFilters(set)
 
 	set.filters.character = set.character
+	local characterInfo = GetCharacterInfo(set.character);
+	set.filters.class = characterInfo and characterInfo.class;
 
     return set
 end
@@ -1307,7 +1326,11 @@ local function RefreshEquipmentSet(set)
 		C_EquipmentSet.SaveEquipmentSet(set.managerID)
 	end
 
-	return UpdateSetFilters(set)
+	UpdateSetFilters(set)
+	
+	Internal.Call("EquipmentSetUpdated", set.setID);
+
+	return set
 end
 local function AddEquipmentSet()
     local characterName, characterRealm = UnitFullName("player");
@@ -1325,6 +1348,7 @@ local function AddEquipmentSet()
         data = {},
 	}))
 	AddSetToMapData(result)
+    Internal.Call("EquipmentSetCreated", result.setID);
 	return result
 end
 local function GetEquipmentSetsByName(name)
@@ -1438,6 +1462,8 @@ local function DeleteEquipmentSet(id)
 			set.character = nil
 		end
 	end
+    
+	Internal.Call("EquipmentSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Equipment;
 	local set = frame.set;
@@ -1707,6 +1733,7 @@ function BtWLoadoutsItemSlotButtonMixin:SetItem(itemLink, bag, slot)
 
 		Internal.UpdateEquipmentSetItemInMapData(set, self:GetID(), previousLocation, nil)
 
+		Internal.Call("EquipmentSetUpdated", set.setID);
 		self:Update();
 		return true;
 	else
@@ -1745,6 +1772,8 @@ function BtWLoadoutsItemSlotButtonMixin:SetItem(itemLink, bag, slot)
 			set.data[self:GetID()] = EncodeItemData(itemLink, set.extras[self:GetID()] and set.extras[self:GetID()].azerite);
 
 			Internal.UpdateEquipmentSetItemInMapData(set, self:GetID(), previousLocation, set.locations[self:GetID()])
+			
+			Internal.Call("EquipmentSetUpdated", set.setID);
 
 			BtWLoadoutsFrame:Update(); -- Refresh everything, this'll update the error handling too
 			return true;
@@ -1755,6 +1784,7 @@ end
 function BtWLoadoutsItemSlotButtonMixin:SetIgnored(ignored)
 	local set = self:GetParent().set;
 	set.ignored[self:GetID()] = ignored and true or nil;
+	Internal.Call("EquipmentSetUpdated", set.setID);
 	BtWLoadoutsFrame:Update(); -- Refresh everything, this'll update the error handling too
 end
 function BtWLoadoutsItemSlotButtonMixin:Update()
@@ -1806,6 +1836,7 @@ BtWLoadoutsEquipmentMixin = {}
 function BtWLoadoutsEquipmentMixin:OnLoad()
     self.RestrictionsDropDown:SetSupportedTypes("covenant", "spec", "race")
     self.RestrictionsDropDown:SetScript("OnChange", function ()
+		Internal.Call("EquipmentSetUpdated", self.set.setID);
         self:Update()
     end)
 end
@@ -1975,7 +2006,7 @@ function BtWLoadoutsEquipmentMixin:Update()
 		self.Name:SetEnabled(set.managerID == nil or set.character == playerCharacter);
 
 		local model = self.Model;
-		if not characterInfo or character == playerCharacter then
+		if not characterInfo or character == playerCharacter or not model.SetCustomRace then
 			model:SetUnit("player");
 		else
 			model:SetCustomRace(characterInfo.race, characterInfo.sex);
@@ -3020,7 +3051,7 @@ if LibStub and LibStub:GetLibrary("LibItemSearch-1.2", true) then
 end
 
 -- Character deletion
-Internal.OnEvent("CHARACTER_DELETE", function (event, slug)
+Internal.OnEvent("CharacterDeleted", function (event, slug)
 	local sets = GetSetsForCharacter({}, slug)
 	for _,set in ipairs(sets) do
 		DeleteEquipmentSet(set.setID)

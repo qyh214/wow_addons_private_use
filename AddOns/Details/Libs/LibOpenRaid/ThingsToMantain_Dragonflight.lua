@@ -217,6 +217,7 @@ do
 		}
 
 		LIB_OPEN_RAID_ALL_POTIONS = {
+			[415569] = 1, --Dreamwalker's Healing Potion
 			[370511] = 1, --Refreshing Healing Potion
 			[371039] = 1, --Potion of Withering Vitality
 			[370607] = 1, --Aerated Mana Potion
@@ -229,6 +230,7 @@ do
 
 		--spellId of healing from potions
 		LIB_OPEN_RAID_HEALING_POTIONS = {
+			[415569] = 1, --Dreamwalker's Healing Potion
 			[370511] = 1, --Refreshing Healing Potion
 			[371039] = 1, --Potion of Withering Vitality
 			[6262] = 1, --Warlock's Healthstone
@@ -288,6 +290,7 @@ do
 			--defensive potions
 			[6262] = {cooldown = 60,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 10}, --Healthstone
 			[370511] = {cooldown = 300,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 10, shareid = 101}, --Refreshing Healing Potion
+			[415569] = {cooldown = 300, duration = 0, specs = {}, talent = false, charges = 1, class = "", type = 10, sharedid = 101}, -- Dreamwalker's Healing Potion
 
 			--attack potions
 			[371024] = {cooldown = 300,	duration = 30,	specs = {},	talent = false,	charges = 1, class = "", type = 11, shareid = 101}, --Elemental Potion of Power
@@ -340,23 +343,23 @@ do
 			[59542] = {cooldown = 180,	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = {[11] = true}, race = "Draenei",	class = "",	type = 9}, --Gift of the Naaru (Draenei)
 
 			--interrupts
-			[6552] = {class = "WARRIOR", specs = {71, 72, 73}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Pummel
-			[2139] = {class = "MAGE", specs = {62, 63, 64}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Counterspell
-			[15487] = {class = "PRIEST", specs = {258}, cooldown = 45, silence = 4, talent = false, cooldownWithTalent = 30, cooldownTalentId = 23137, type = 6, charges = 1}, --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
-			[1766] = {class = "ROGUE", specs = {259, 260, 261}, cooldown = 15, silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Kick
-			[96231] = {class = "PALADIN", specs = {66, 70}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Rebuke (protection and retribution)
-			[116705] = {class = "MONK", specs = {268, 269}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Spear Hand Strike (brewmaster and windwalker)
-			[57994] = {class = "SHAMAN", specs = {262, 263, 264}, cooldown = 12, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Wind Shear
-			[47528] = {class = "DEATHKNIGHT", specs = {250, 251, 252}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Mind Freeze
-			[106839] = {class = "DRUID", specs = {103, 104}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Skull Bash (feral, guardian)
-			[78675] = {class = "DRUID", specs = {102}, cooldown = 60, silence = 8, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Solar Beam (balance)
-			[147362] = {class = "HUNTER", specs = {253, 254}, cooldown = 24, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Counter Shot (beast mastery, marksmanship)
-			[187707] = {class = "HUNTER", specs = {255}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Muzzle (survival)
-			[183752] = {class = "DEMONHUNTER", specs = {577, 581}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Disrupt
-			[19647] = {class = "WARLOCK", specs = {265, 266, 267}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 417, type = 6, charges = 1}, --Spell Lock (pet felhunter ability)
-			[132409] = {class = "WARLOCK", specs = {}, cooldown = 24, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Spell Lock with felhunter Sacrified by Grimeoire of Sacrifice
-			[89766] = {class = "WARLOCK", specs = {266}, cooldown = 30, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 17252, type = 6, charges = 1}, --Axe Toss (pet felguard ability)
-			[351338] = {class = "EVOKER", specs = {1467, 1468}, cooldown = 40,	silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false,	charges = 1, type = 6}, --Quell (Evoker)
+			[6552] =	{duration = 0, class = "WARRIOR",	specs = {71, 72, 73}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Pummel
+			[2139] =	{duration = 0, class = "MAGE",	specs = {62, 63, 64}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Counterspell
+			[15487] =	{duration = 0, class = "PRIEST",	specs = {258}, cooldown = 45, silence = 4, talent = false, cooldownWithTalent = 30, cooldownTalentId = 23137, type = 6, charges = 1}, --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
+			[1766] =	{duration = 0, class = "ROGUE",	specs = {259, 260, 261}, cooldown = 15, silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Kick
+			[96231] =	{duration = 0, class = "PALADIN",	specs = {66, 70}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Rebuke (protection and retribution)
+			[116705] =	{duration = 0, class = "MONK",	specs = {268, 269}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Spear Hand Strike (brewmaster and windwalker)
+			[57994] =	{duration = 0, class = "SHAMAN",	specs = {262, 263, 264}, cooldown = 12, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Wind Shear
+			[47528] =	{duration = 0, class = "DEATHKNIGHT",	specs = {250, 251, 252}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Mind Freeze
+			[106839] =	{duration = 0, class = "DRUID",	specs = {103, 104}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Skull Bash (feral, guardian)
+			[78675] =	{duration = 0, class = "DRUID",	specs = {102}, cooldown = 60, silence = 8, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Solar Beam (balance)
+			[147362] =	{duration = 0, class = "HUNTER",	specs = {253, 254}, cooldown = 24, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Counter Shot (beast mastery, marksmanship)
+			[187707] =	{duration = 0, class = "HUNTER",	specs = {255}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Muzzle (survival)
+			[183752] =	{duration = 0, class = "DEMONHUNTER",	specs = {577, 581}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Disrupt
+			[19647] =	{duration = 0, class = "WARLOCK",	specs = {265, 266, 267}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 417, type = 6, charges = 1}, --Spell Lock (pet felhunter ability)
+			[132409] =	{duration = 0, class = "WARLOCK",	specs = {}, cooldown = 24, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Spell Lock with felhunter Sacrified by Grimeoire of Sacrifice
+			[89766] =	{duration = 0, class = "WARLOCK",	specs = {266}, cooldown = 30, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 17252, type = 6, charges = 1}, --Axe Toss (pet felguard ability)
+			[351338] =	{duration = 0, class = "EVOKER",	specs = {1467, 1468}, cooldown = 40,	silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false,	charges = 1, type = 6}, --Quell (Evoker)
 
 			--~paladin
 			-- 65 - Holy
@@ -373,6 +376,7 @@ do
 			[115750] = {cooldown = 90,	duration = 6,	specs = {65, 66, 70},	talent = false,	charges = 1,	class = "PALADIN",	type = 8}, --Blinding Light
 			[231895] = {cooldown = 120,	duration = 25,	specs = {70},				talent = false,	charges = 1,	class = "PALADIN",	type = 1}, --Crusade
 			[498] = {cooldown = 60,	duration = 8,	specs = {65},				talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Divine Protection
+			[403876] = {cooldown = 60,	duration = 8,	specs = {65},				talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Divine Protection Retribution
 			[642] = {cooldown = 300,	duration = 8,	specs = {65, 66, 70},	talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Divine Shield
 			[205191] = {cooldown = 60,	duration = 10,	specs = {70},				talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Eye for an Eye
 			[86659] = {cooldown = 300,	duration = 8,	specs = {66},				talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Guardian of Ancient Kings
@@ -548,6 +552,7 @@ do
 			[186387] = {cooldown = 30, duration = 6, 	specs = {},		 			talent = false, charges = 1, 	class = "HUNTER", 	type = 8}, --Bursting Shot
 			[236776] = {cooldown = 40, duration = 0, 	specs = {253, 254, 255},	talent = false, charges = 1, 	class = "HUNTER", 	type = 8}, --High Explosive Trap
 			[272682] = {cooldown = 45,	duration = 4,	specs = {253, 254, 255},	talent = false,	charges = 1,	class = "HUNTER",	type = 7}, --Master's Call
+			[359844] = {cooldown = 120, duration = 20,  specs = {253}, 				talent = true, charges = 1, 	class = "HUNTER", 	type = 1}, -- Call of the Wild
 			--Boar nil 62305 Master's Call
 			--Boar Tiranaa 54216 Master's Call
 			--Tiranaa Tiranaa 272682 Master's Call
@@ -734,6 +739,7 @@ do
 			[1966] = {cooldown = 15,	duration = 0,	specs = {},			talent = false,	charges = 1,	class = "ROGUE",	type = 2}, --Feint
 			[384631] = {cooldown = 90,	duration = 12,	specs = {261},				talent = false,	charges = 1,	class = "ROGUE",	type = 1}, --Flagellation
 			[277925] = {cooldown = 60,	duration = 4,	specs = {261},				talent = false,	charges = 1,	class = "ROGUE",	type = 1}, --Shuriken Tornado
+			[360194] = {cooldown = 120, duration = 16,  specs = {259}, 				talent = true, charges = 1, 	class = "ROGUE", 	type = 1}, -- Deathmark
 
 			--~evoker
 			-- 1467 - Devastation
@@ -773,6 +779,125 @@ do
 			[408233] = {cooldown = 60,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 5}, --Bestow Weyrnstone
 			[409311] = {cooldown = 12,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Prescience
 			--[412710] = {cooldown = 0,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 0}, --Timelessness
+		}
+
+		--list of all crowd control spells
+		--it is not transmitted to other clients
+		LIB_OPEN_RAID_CROWDCONTROL = {
+			[331866] = {cooldown = 0,	class = "COVENANT|VENTHYR"}, --Agent of Chaos
+			[334693] = {cooldown = 0,	class = "DEAHTKNIGHT"}, --Absolute Zero
+			[221562] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
+			[47528] = {cooldown = 15,	class = "DEATHKNIGHT"}, --Mind Freeze
+			[207167] = {cooldown = 60,	class = "DEATHKNIGHT"}, --Blinding Sleet
+			[91807] = {cooldown = 0,	class = "DEATHKNIGHT"}, --Shambling Rush
+			[108194] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
+			[211881] = {cooldown = 30,	class = "DEMONHUNTER"}, --Fel Eruption
+			[200166] = {cooldown = 0,	class = "DEMONHUNTER"}, --Metamorphosis
+			[217832] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison
+			[183752] = {cooldown = 15,	class = "DEMONHUNTER"}, --Disrupt
+			[207685] = {cooldown = 0,	class = "DEMONHUNTER"}, --Sigil of Misery
+			[179057] = {cooldown = 45,	class = "DEMONHUNTER"}, --Chaos Nova
+			[221527] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison with detainment talent
+			[339] = {cooldown = 0,		class = "DRUID"}, --Entangling Roots
+			[102359] = {cooldown = 30,	class = "DRUID"}, --Mass Entanglement
+			[93985] = {cooldown = 0,	class = "DRUID"}, --Skull Bash
+			[2637] = {cooldown = 0,		class = "DRUID"}, --Hibernate
+			[5211] = {cooldown = 60,	class = "DRUID"}, --Mighty Bash
+			[99] = {cooldown = 30,		class = "DRUID"}, --Incapacitating Roar
+			[127797] = {cooldown = 0,	class = "DRUID"}, --Ursol's Vortex
+			[203123] = {cooldown = 0,	class = "DRUID"}, --Maim
+			[45334] = {cooldown = 0,	class = "DRUID"}, --Immobilized
+			[33786] = {cooldown = 0,	class = "DRUID"}, --Cyclone
+			[236748] = {cooldown = 30,	class = "DRUID"}, --Intimidating Roar
+			[61391] = {cooldown = 0,	class = "DRUID"}, --Typhoon
+			[163505] = {cooldown = 0,	class = "DRUID"}, --Rake
+			[50259] = {cooldown = 0,	class = "DRUID"}, --Dazed
+			[372245] = {cooldown = 0,	class = "EVOKER"}, --Terror of the Skies
+			[360806] = {cooldown = 15,	class = "EVOKER"}, --Sleep Walk
+			[162480] = {cooldown = 0,	class = "HUNTER"}, --Steel Trap
+			[187707] = {cooldown = 15,	class = "HUNTER"}, --Muzzle
+			[147362] = {cooldown = 24,	class = "HUNTER"}, --Counter Shot
+			[190927] = {cooldown = 6,	class = "HUNTER"}, --Harpoon
+			[117526] = {cooldown = 45,	class = "HUNTER"}, --Binding Shot
+			[24394] = {cooldown = 0,	class = "HUNTER"}, --Intimidation
+			[117405] = {cooldown = 0,	class = "HUNTER"}, --Binding Shot
+			[19577] = {cooldown = 60,	class = "HUNTER"}, --Intimidation
+			[1513] = {cooldown = 0,		class = "HUNTER"}, --Scare Beast
+			[3355] = {cooldown = 30,	class = "HUNTER"}, --Freezing Trap
+			[203337] = {cooldown = 30,	class = "HUNTER"}, --Freezing trap with diamond ice talent
+			[31661] = {cooldown = 45,	class = "MAGE"}, --Dragon's Breath
+			[161353] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[277787] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[157981] = {cooldown = 30,	class = "MAGE"}, --Blast Wave
+			[82691] = {cooldown = 0,	class = "MAGE"}, --Ring of Frost
+			[118] = {cooldown = 0,		class = "MAGE"}, --Polymorph
+			[161354] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[157997] = {cooldown = 25,	class = "MAGE"}, --Ice Nova
+			[391622] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[28271] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[122] = {cooldown = 0,		class = "MAGE"}, --Frost Nova
+			[277792] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[61721] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[126819] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[61305] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[28272] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+			[2139] = {cooldown = 24,	class = "MAGE"}, --Counterspell
+			[198909] = {cooldown = 0,	class = "MONK"}, --Song of Chi-Ji
+			[119381] = {cooldown = 60,	class = "MONK"}, --Leg Sweep
+			[107079] = {cooldown = 120,	class = "MONK"}, --Quaking Palm
+			[116706] = {cooldown = 0,	class = "MONK"}, --Disable
+			[115078] = {cooldown = 45,	class = "MONK"}, --Paralysis
+			[116705] = {cooldown = 15,	class = "MONK"}, --Spear Hand Strike
+			[31935] = {cooldown = 15,	class = "PALADIN"}, --Avenger's Shield
+			[20066] = {cooldown = 15,	class = "PALADIN"}, --Repentance
+			[217824] = {cooldown = 0,	class = "PALADIN"}, --Shield of Virtue
+			[105421] = {cooldown = 0,	class = "PALADIN"}, --Blinding Light
+			[10326] = {cooldown = 15,	class = "PALADIN"}, --Turn Evil
+			[853] = {cooldown = 60,		class = "PALADIN"}, --Hammer of Justice
+			[96231] = {cooldown = 15,	class = "PALADIN"}, --Rebuke
+			[205364] = {cooldown = 30,	class = "PRIEST"}, --Dominate Mind
+			[64044] = {cooldown = 45,	class = "PRIEST"}, --Psychic Horror
+			[226943] = {cooldown = 0,	class = "PRIEST"}, --Mind Bomb
+			[15487] = {cooldown = 45,	class = "PRIEST"}, --Silence
+			[605] = {cooldown = 0,		class = "PRIEST"}, --Mind Control
+			[8122] = {cooldown = 45,	class = "PRIEST"}, --Psychic Scream
+			[200200] = {cooldown = 60,	class = "PRIEST"}, --Holy Word: Chastise
+			[200196] = {cooldown = 60,	class = "PRIEST"}, --Holy Word: Chastise
+			[9484] = {cooldown = 0,		class = "PRIEST"}, --Shackle Undead
+			[114404] = {cooldown = 20,	class = "PRIEST"}, --Void Tendril's Grasp
+			[6770] = {cooldown = 0,		class = "ROGUE"}, --Sap
+			[2094] = {cooldown = 120,	class = "ROGUE"}, --Blind
+			[1766] = {cooldown = 15,	class = "ROGUE"}, --Kick
+			[427773] = {cooldown = 0,	class = "ROGUE"}, --Blind
+			[408] = {cooldown = 20,		class = "ROGUE"}, --Kidney Shot
+			[1776] = {cooldown = 20,	class = "ROGUE"}, --Gouge
+			[1833] = {cooldown = 0,		class = "ROGUE"}, --Cheap Shot
+			[211015] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[269352] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[277778] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[64695] = {cooldown = 0,	class = "SHAMAN"}, --Earthgrab
+			[57994] = {cooldown = 12,	class = "SHAMAN"}, --Wind Shear
+			[197214] = {cooldown = 40,	class = "SHAMAN"}, --Sundering
+			[118905] = {cooldown = 0,	class = "SHAMAN"}, --Static Charge
+			[277784] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[309328] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[211010] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[210873] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[211004] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[51514] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+			[305485] = {cooldown = 30,	class = "SHAMAN"}, --Lightning Lasso
+			[89766] = {cooldown = 30,	class = "WARLOCK"}, --Axe Toss (pet felguard ability)
+			[6789] = {cooldown = 45,	class = "WARLOCK"}, --Mortal Coil
+			[118699] = {cooldown = 0,	class = "WARLOCK"}, --Fear
+			[710] = {cooldown = 0,		class = "WARLOCK"}, --Banish
+			[212619] = {cooldown = 60,	class = "WARLOCK"}, --Call Felhunter
+			[19647] = {cooldown = 24,	class = "WARLOCK"}, --Spell Lock
+			[30283] = {cooldown = 60,	class = "WARLOCK"}, --Shadowfury
+			[5484] = {cooldown = 40,	class = "WARLOCK"}, --Howl of Terror
+			[6552] = {cooldown = 15,	class = "WARRIOR"}, --Pummel
+			[132168] = {cooldown = 0,	class = "WARRIOR"}, --Shockwave
+			[132169] = {cooldown = 0,	class = "WARRIOR"}, --Storm Bolt
+			[5246] = {cooldown = 90,	class = "WARRIOR"}, --Intimidating Shout
 		}
 
 		--this table store all cooldowns the player currently have available
@@ -989,3 +1114,39 @@ do
 	end)
 	loadLibDatabase()
 end
+
+
+--[=[ code used to build the crowd control list
+for spellId, spellInfo in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+	if (spellInfo.type == 8) then
+		LIB_OPEN_RAID_CROWDCONTROL[spellId] = spellInfo
+	end
+end
+
+LIB_OPEN_RAID_CROWDCONTROL = {}
+
+C_Timer.After(5, function()
+	--for debugging, compares which crowd control spells are in the details framework that are not in the lib
+	local notInLib = {}
+
+	local DF_CrowdControlSpells = DetailsFramework.CrowdControlSpells
+	for spellId, className in pairs(DF_CrowdControlSpells) do
+		local spellName = GetSpellInfo(spellId)
+		if (spellName) then -- and not LIB_OPEN_RAID_CROWDCONTROL[spellId]
+			local spellCooldown = math.floor(GetSpellBaseCooldown(spellId)/1000)
+			notInLib[#notInLib+1] = {spellId, spellName, spellCooldown, className}
+		end
+	end
+
+	table.sort(notInLib, function(t1, t2) return t1[4] < t2[4] end)
+
+	--make a string like the one above
+	local result = ""
+	for i = 1, #notInLib do
+		local spellId, spellName, spellCooldown, className = unpack(notInLib[i])
+		result = result .. "["..spellId.."] =\t{cooldown = "..spellCooldown..",\t\tclass = \"" .. className .. "\"}, --" .. spellName .. "\n"
+	end
+
+	dumpt(result)
+end)
+--]=]

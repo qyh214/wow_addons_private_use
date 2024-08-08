@@ -31,6 +31,7 @@ All functions:
 	:Left([relativeX])	-> [move text to left side], relativeX default 2
 	:TextSize(size)
 	:AddColorState(isBorderInsteadText) -> Add red/green colors for [false: text; true: borders]
+	:TextButton()		-> Set clickable text
 -> ELib:DebugBack(parent)
 -> ELib:DropDown(parent,width,lines,template)
 	:SetText(str)		-> [set text]
@@ -49,6 +50,7 @@ All functions:
 	:TopText(text)		-> Add text at top
 	:BackgroundText(text)	-> Add text inside edit while not in focus
 	:ColorBorder(bool) or :ColorBorder(cR,cG,cB,cA) -> Set colors for border; [true: red; false: default]
+	:ExtraText(text)	-> Add text backgroung after main text
 -> ELib:Frame(parent,template)
 	:Texture(texture,layer)	-> create and/or set texture
 	:Texture(cR,cG,cB,cA,layer) -> create and/or set texture
@@ -162,7 +164,7 @@ CheckButton	ExRTRadioButtonModernTemplate
 local GlobalAddonName, ExRT = ...
 local isExRT = GlobalAddonName == "MRT"
 
-local libVersion = 43
+local libVersion = 45
 
 if type(ELib)=='table' and type(ELib.V)=='number' and ELib.V > libVersion then return end
 
@@ -311,7 +313,12 @@ do
 		if not x then
 			x,y = GetCursorPos(frame)
 		end
-		local obj = GetMouseFocus()
+		local obj
+		if GetMouseFoci then
+			obj = GetMouseFoci()[1]
+		else
+			obj = GetMouseFocus()
+		end
 		if x > 0 and y > 0 and x < frame:GetWidth() and y < frame:GetHeight() and (obj == frame or (childs and FindAllParents(frame,obj))) then
 			return true
 		end
@@ -725,11 +732,7 @@ function Templates:ExRTButtonModernTemplate(parent,isSecure)
 
 	self.Texture = self:CreateTexture(nil,"BACKGROUND")
 	self.Texture:SetColorTexture(1,1,1,1)
-	if ExRT.is10 or ExRT.isLK1 then
-		self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
-	else
-		self.Texture:SetGradientAlpha("VERTICAL",0.05,0.06,0.09,1, 0.20,0.21,0.25,1)
-	end
+	self.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.06,0.09,1), CreateColor(0.20,0.21,0.25,1))
 	self.Texture:SetPoint("TOPLEFT")
 	self.Texture:SetPoint("BOTTOMRIGHT")
 
@@ -1530,11 +1533,7 @@ do
 		return self
 	end
 	local function Widget_Gradient(self,...)
-		if ExRT.is10 or ExRT.isLK1 then
-			self:SetGradient(...,CreateColor(select(2,...)), CreateColor(select(6,...)))
-		else
-			self:SetGradientAlpha(...)
-		end
+		self:SetGradient(...,CreateColor(select(2,...)), CreateColor(select(6,...)))
 		return self
 	end
 	local function Widget_Texture(self,texture,cG,cB,cA)
@@ -2156,11 +2155,7 @@ do
 
 		tip.gradientTexture = tip:CreateTexture()
 		tip.gradientTexture:SetColorTexture(1,1,1,1)
-		if ExRT.is10 or ExRT.isLK1 then
-			tip.gradientTexture:SetGradient("VERTICAL",CreateColor(0,0,0,0), CreateColor(.8,.8,.8,.2))
-		else
-			tip.gradientTexture:SetGradientAlpha("VERTICAL",0,0,0,0,.8,.8,.8,.2)
-		end
+		tip.gradientTexture:SetGradient("VERTICAL",CreateColor(0,0,0,0), CreateColor(.8,.8,.8,.2))
 		tip.gradientTexture:SetPoint("TOPLEFT",2.5,-2.5)
 		tip.gradientTexture:SetPoint("BOTTOMRIGHT",-2.5,2.5)
 
@@ -2479,7 +2474,19 @@ do
 				CloseDropDownMenus() 
 			end,
 		}
-		EasyMenu(dropDownList, self.dropDown, "cursor", 10 , -15, "MENU")
+		if MenuUtil then
+			MenuUtil.CreateContextMenu(self.dropDown, function(ownerRegion, rootDescription)
+				for i=1,#dropDownList do
+					if dropDownList[i].isTitle then
+						rootDescription:CreateTitle(dropDownList[i].text)
+					else
+						rootDescription:CreateButton(dropDownList[i].text, dropDownList[i].func)
+					end
+				end
+			end)
+		else
+			EasyMenu(dropDownList, self.dropDown, "cursor", 10 , -15, "MENU")
+		end
 	end
 
 	local function Widget_SetSize(self,width,height)
@@ -2705,6 +2712,9 @@ do
 	end
 	local function Widget_OnChange(self,func)
 		self:SetScript("OnTextChanged",func)
+		if self.extraTextFunc then
+			self:extraTextFunc()
+		end
 		return self
 	end
 	local function Widget_OnFocus(self,gained,lost)
@@ -2727,6 +2737,14 @@ do
 			self.leftText:SetText(text)
 		else
 			self.leftText = ELib:Text(self,text,size or 11):Point("RIGHT",self,"LEFT",-5,0):Right()
+		end
+		return self
+	end
+	local function Widget_AddRightText(self,text,size)
+		if self.rightText then
+			self.rightText:SetText(text)
+		else
+			self.rightText = ELib:Text(self,text,size or 11):Point("LEFT",self,"RIGHT",5,0):Left()
 		end
 		return self
 	end
@@ -2768,6 +2786,30 @@ do
 		return self
 	end
 
+	local function ModExtraText_Func(self)
+		local script = self:GetScript("OnTextChanged")
+		self:SetScript("OnTextChanged",function(...)
+			for i=1,self:GetNumRegions() do
+				local region = select(i,self:GetRegions())
+				if region:GetObjectType() == "FontString" then
+					self.extraText:Point("LEFT",2+region:GetStringWidth()+5,0)
+					break
+				end
+			end
+			return script(...)
+		end)
+	end
+	local function Widget_AddExtraText(self,text)
+		if not self.extraText then
+			self.extraText = ELib:Text(self,"",10,"ChatFontNormal"):Point("RIGHT",-2,0):Color(.5,.5,.5)
+			self.extraTextFunc = ModExtraText_Func
+			self:extraTextFunc()
+		end
+
+		self.extraText:SetText(text)
+		return self
+	end
+
 	local function Widget_ColorBorder(self,cR,cG,cB,cA)
 		if type(cR)=="number" then
 			ELib:Templates_Border(self,cR,cG,cB,cA,1)
@@ -2801,11 +2843,7 @@ do
 		local self = ELib:Template(template,parent) or CreateFrame("EditBox",nil,parent,template or (BackdropTemplateMixin and "BackdropTemplate"))
 		if not template then
 			local GameFontNormal_Font = GameFontNormal:GetFont()
-			if ExRT.is10 or ExRT.isLK1 then
-				self:SetFont(GameFontNormal_Font,12,"")
-			else
-				self:SetFont(GameFontNormal_Font,12)
-			end
+			self:SetFont(GameFontNormal_Font,12,"")
 			self:SetBackdrop({bgFile = "Interface\\Buttons\\WHITE8X8",edgeFile = DEFAULT_BORDER,edgeSize = 8,tileSize = 0,insets = {left = 2.5,right = 2.5,top = 2.5,bottom = 2.5}})
 			self:SetBackdropColor(0, 0, 0, 0.8) 
 			self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
@@ -2828,10 +2866,12 @@ do
 			'InsideIcon',Widget_InsideIcon,
 			'AddSearchIcon',Widget_AddSearchIcon,
 			'LeftText',Widget_AddLeftText,
+			'RightText',Widget_AddRightText,
 			'TopText',Widget_AddLeftTop,
 			'BackgroundText',Widget_AddBackgroundText,
 			'ColorBorder',Widget_ColorBorder,
-			'GetTextHighlight',Widget_GetTextHighlight
+			'GetTextHighlight',Widget_GetTextHighlight,
+			'ExtraText',Widget_AddExtraText
 		)
 
 		return self
@@ -3102,11 +3142,7 @@ do
 		return self
 	end
 	local function Widget_SetVertical(self)
-		if ExRT.is10 or ExRT.isLK1 then
-			self.Texture:SetGradient("HORIZONTAL",CreateColor(0.20,0.21,0.25,1), CreateColor(0.05,0.06,0.09,1))
-		else
-			self.Texture:SetGradientAlpha("HORIZONTAL",0.20,0.21,0.25,1, 0.05,0.06,0.09,1)
-		end
+		self.Texture:SetGradient("HORIZONTAL",CreateColor(0.20,0.21,0.25,1), CreateColor(0.05,0.06,0.09,1))
 		self.TextObj = self:GetTextObj()
 		self.TextObj:SetPoint("CENTER",-5,0)
 		
@@ -3255,6 +3291,19 @@ do
 		return self
 	end
 
+	local function Widget_TextButtonClick(self)
+		self:GetParent():Click()
+	end
+	local function Widget_AddTextButton(self)
+		if self.textButton then
+			return self
+		end
+		self.textButton = CreateFrame("Button",nil,self)
+		self.textButton:SetAllPoints(self.text)
+		self.textButton:SetScript("OnClick",Widget_TextButtonClick)
+		return self
+	end
+
 	function ELib:Check(parent,text,state,template)
 		if template == 0 then
 			template = "UICheckButtonTemplate"
@@ -3274,6 +3323,7 @@ do
 		self.TextSize = Widget_TextSize
 		self.ColorState = Widget_ColorState
 		self.AddColorState = Widget_AddColorState
+		self.TextButton = Widget_AddTextButton
 
 		return self
 	end
@@ -3583,12 +3633,14 @@ do
 		end
 	end
 	local function ScrollListListMultitableEnter(self)
+		self:GetParent():SetHighlightLocked(true)
 		local mainFrame = self:GetParent().mainFrame
 		if mainFrame.HoverMultitableListValue then
 			mainFrame:HoverMultitableListValue(true,self.index,self)
 		end
 	end
 	local function ScrollListListMultitableLeave(self)
+		self:GetParent():SetHighlightLocked(false)
 		local mainFrame = self:GetParent().mainFrame
 		if mainFrame.HoverMultitableListValue then
 			mainFrame:HoverMultitableListValue(false,self.index,self)
@@ -4021,6 +4073,18 @@ do
 			parent:Hide()
 		end
 	end
+	local function PopupFrame_AddScrollFrame(self)
+		if self.C then
+			return self
+		end
+		self.C = ELib:ScrollFrame(self):Point("TOP",0,-20)
+		self._Size = self.Size
+		self.Size = function(self,w,h)
+			self.C:Size(w-10,h-25)
+			return self:_Size(w,h)
+		end
+		return self
+	end
 	function ELib:Popup(title,template)
 		if template == 0 then
 			template = "ExRTDialogTemplate"
@@ -4054,7 +4118,9 @@ do
 
 		self.Close:SetScript("OnClick",buttonClose_OnClick)
 
-		Mod(self)
+		Mod(self,
+			'AddScroll',PopupFrame_AddScrollFrame
+		)
 
 		return self
 	end
@@ -4611,7 +4677,7 @@ function ELib.ScrollDropDown.OnButtonEnter(self)
 	end
 	if self.tooltip then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:AddLine(self.tooltip)
+		GameTooltip:AddLine(type(self.tooltip)=="function" and self.tooltip() or self.tooltip)
 		GameTooltip:Show()
 	end
 	ELib.ScrollDropDown:CloseSecondLevel(self.Level)
@@ -6221,11 +6287,7 @@ function ELib:DecorationLine(parent,isGradient,layer,layerCounter)
 
 	if isGradient then
 		self:SetColorTexture(1,1,1,1)
-		if ExRT.is10 or ExRT.isLK1 then
-			self:SetGradient("VERTICAL",CreateColor(.24,.25,.30,1), CreateColor(.27,.28,.33,1))
-		else
-			self:SetGradientAlpha("VERTICAL",.24,.25,.30,1,.27,.28,.33,1)
-		end
+		self:SetGradient("VERTICAL",CreateColor(.24,.25,.30,1), CreateColor(.27,.28,.33,1))
 	else
 		self:SetColorTexture(.24,.25,.30,1)
 	end
@@ -6244,13 +6306,13 @@ do
 	end
 
 	local function ButtonLevel1Click(self)
-		local parent = self:GetParent():GetParent()
+		local parent = self.parent
 		local uid = self.uid
 		parent.stateExpand[uid] = not parent.stateExpand[uid]
 		parent:Update()
 	end
 	local function ButtonLevel2Click(self,...)
-		local parent = self:GetParent():GetParent():GetParent():GetParent()
+		local parent = self.parent
 		parent.ButtonClick(self,...)
 	end
 	local function ButtonLevel2OnDragStart(self)
@@ -6308,6 +6370,8 @@ do
 		end
 		local button = ELib:Button(self.C," "):OnClick(level == 1 and ButtonLevel1Click or ButtonLevel2Click)
 		self["button"..level][button] = true
+
+		button.parent = self
 
 		local textObj = button:GetTextObj()
 		textObj:ClearAllPoints()
@@ -6407,6 +6471,189 @@ do
 		return line
 	end
 
+	local function CheckStateExpandChanged(self,uid,sub)
+		return (self.stateExpand[uid] and not sub:IsShown()) or (not self.stateExpand[uid] and sub:IsShown())
+	end
+
+	local function CheckStateExpandChangedChilds(self,uid,subData)
+		if self.stateExpand[uid] and subData then
+			for j=1,#subData do
+				local subNow = subData[j]
+				if type(subNow) == "table" and subNow.isSubData then
+					local sub_uid = subNow.uid or subNow.name
+
+					local list = self["button"..1]
+					local btn
+					for v in pairs(list) do
+						if v.uid == sub_uid and v:IsShown() then
+							btn = v
+							break
+						end
+					end
+					if btn and CheckStateExpandChanged(self,sub_uid,btn.sub) then
+						return true
+					end
+				end
+			end
+		end
+	end
+
+	local function UpdateT1Button(self,now,isUpdateReq,topStart,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth,parent)
+		local uid = now.uid or now.name
+
+		local button = GetButton(self,1,uid or tostring(now))
+		if parent then
+			button:SetParent(parent)
+			button.sub.back:SetColorTexture(.3,.3,.3,.9)
+		else
+			button:SetParent(self.C)
+			button.sub.back:SetColorTexture(.2,.2,.2,.9)
+		end
+		button:Point("TOP",0,-topStart):Size(self.Width - 10 * (parent and 2 or 1),30)
+
+		local isUpdateReqPre = isUpdateReq
+		
+		isUpdateReq = isUpdateReq or (button.uid ~= button.prevUid) or CheckStateExpandChanged(self,uid,button.sub) or CheckStateExpandChangedChilds(self,uid,now.data)
+		if isUpdateReq then
+			button:SetText(now.name or "")
+			button.data = now
+			if self.ModButtonUpdate then
+				self:ModButtonUpdate(button,1)
+			end
+		end
+		button:Show()
+	
+		local subTop = 0
+		if self.stateExpand[uid] then
+			subTop = 5
+	
+			local subData = now.data
+			local widthNow = 0
+			if subData then
+				for j=1,#subData do
+					local subNow = subData[j]
+					if subNow == 0 then
+						widthNow = 0
+						subTop = subTop + BUTTON_HEIGHT + 5
+					elseif subNow == 1 then
+						widthNow = 0
+						subTop = subTop + BUTTON_HEIGHT + 5
+	
+						local line = GetLine(self,subNow..tostring(subData))
+						if isUpdateReq then
+							line:SetParent(button.sub)
+							line:NewPoint("TOPLEFT",0,-subTop+BUTTON_HEIGHT/2+4):Point("RIGHT",0,0)
+						end
+						line:Show()
+					elseif type(subNow) == "table" and subNow.isSubData then
+						widthNow = 0
+	
+						local expandHeight = UpdateT1Button(self,subNow,isUpdateReqPre,subTop,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth-5,button.sub)
+
+						subTop = subTop + 30 + expandHeight + 5
+					elseif type(subNow) == "string" then
+						if widthNow > 0 then
+							widthNow = 0
+							subTop = subTop + BUTTON_HEIGHT + 5
+						end
+	
+						local groupText = GetGroupText(self,subNow..tostring(subData))
+						if isUpdateReq then
+							groupText:SetParent(button.sub)
+							groupText:Point("TOPLEFT",15,-subTop):Size(buttonWidth,GROUP_HEIGHT)
+							groupText:SetText(subNow)
+						end
+						groupText:Show()
+	
+						subTop = subTop + GROUP_HEIGHT + 5
+					else
+						local subUid = subNow.uid or subNow.name
+						local subButton = GetButton(self,2,subUid or tostring(subNow))
+						if isUpdateReq then
+							subButton:SetParent(button.sub)
+							subButton:ClearAllPoints()
+							subButton:Point("TOPLEFT",5+widthNow,-subTop):Size(buttonWidth,BUTTON_HEIGHT)
+							subButton:SetText(subNow.name or "")
+							subButton.data = subNow
+	
+							if subNow.drag then
+								subButton:SetMovable(true)
+								subButton:RegisterForDrag("LeftButton")
+							else
+								subButton:SetMovable(false)
+							end
+	
+							if self.ModButtonUpdate then
+								self:ModButtonUpdate(subButton,2)
+							end
+						end
+						subButton:Show()
+	
+						widthNow = widthNow + buttonWidth + 10
+						if widthNow >= (self.Width - 20) then
+							widthNow = 0
+							subTop = subTop + BUTTON_HEIGHT + 5
+						end
+					end
+				end
+			end
+	
+			if isUpdateReq then
+				button.expandIcon.texture:SetTexCoord(0.25,0.3125,0.5,0.625)
+				button.sub:Show()
+				button.sub:SetHeight(5 + subTop + (widthNow > 0 and BUTTON_HEIGHT or 0))
+			end
+			subTop = subTop + 5 + (widthNow > 0 and BUTTON_HEIGHT or 0)
+		else
+			if isUpdateReq then
+				button.expandIcon.texture:SetTexCoord(0.375,0.4375,0.5,0.625)
+				button.sub:Hide()
+			end
+		end
+
+		return subTop
+	end
+	
+	local function CalculateHeight(self,subData,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth)
+		local subTop = 5
+		local widthNow = 0
+		for j=1,#subData do
+			local subNow = subData[j]
+			if subNow == 0 then
+				widthNow = 0
+				subTop = subTop + BUTTON_HEIGHT + 5
+			elseif subNow == 1 then
+				widthNow = 0
+				subTop = subTop + BUTTON_HEIGHT + 5
+			elseif type(subNow) == "table" and subNow.isSubData then
+				widthNow = 0
+				--subTop = subTop + BUTTON_HEIGHT + 5
+				local sub_uid = subNow.uid or subNow.name
+				local expandHeight, expandWidth = 0
+				if self.stateExpand[sub_uid] then
+					expandHeight, expandWidth = CalculateHeight(self,subNow.data,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth)
+
+					expandHeight = expandHeight + 5 + 5 + (expandWidth > 0 and BUTTON_HEIGHT or 0)
+				end
+				subTop = subTop + 30 + expandHeight + 5
+			elseif type(subNow) == "string" then
+				if widthNow > 0 then
+					widthNow = 0
+					subTop = subTop + BUTTON_HEIGHT + 5
+				end
+	
+				subTop = subTop + GROUP_HEIGHT + 5
+			else
+				widthNow = widthNow + buttonWidth + 5
+				if widthNow >= (self.Width - 20) then
+					widthNow = 0
+					subTop = subTop + BUTTON_HEIGHT + 5
+				end
+			end
+		end
+		return subTop, widthNow
+	end
+
 	local function Widget_Update(self,forceUpdate)
 		if not self.Width or not self.Height then
 			return
@@ -6454,129 +6701,14 @@ do
 				local subData = now.data
 				local widthNow = 0
 				if subData then
-					for j=1,#subData do
-						local subNow = subData[j]
-						if subNow == 0 then
-							widthNow = 0
-							subTop = subTop + BUTTON_HEIGHT + 5
-						elseif subNow == 1 then
-							widthNow = 0
-							subTop = subTop + BUTTON_HEIGHT + 5
-						elseif type(subNow) == "string" then
-							if widthNow > 0 then
-								widthNow = 0
-								subTop = subTop + BUTTON_HEIGHT + 5
-							end
-
-							subTop = subTop + GROUP_HEIGHT + 5
-						else
-							widthNow = widthNow + buttonWidth + 5
-							if widthNow >= (self.Width - 20) then
-								widthNow = 0
-								subTop = subTop + BUTTON_HEIGHT + 5
-							end
-						end
-					end
+					subTop, widthNow = CalculateHeight(self,subData,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth)
 				end
 
 				fromTop = fromTop + 5 + subTop + (widthNow > 0 and BUTTON_HEIGHT or 0)
 			end
 
 			if (topStart <= scroll + self.Height) and (fromTop >= scroll) then
-				local isUpdateReq = forceUpdate
-
-				local button = GetButton(self,1,uid or tostring(now))
-				button:Point("TOP",0,-topStart):Size(self.Width - 10,30)
-				
-				isUpdateReq = isUpdateReq or (button.uid ~= button.prevUid) or ((self.stateExpand[uid] and not button.sub:IsShown()) or (not self.stateExpand[uid] and button.sub:IsShown()))
-				if isUpdateReq then
-					button:SetText(now.name or "")
-					button.data = now
-					if self.ModButtonUpdate then
-						self:ModButtonUpdate(button,1)
-					end
-				end
-				button:Show()
-
-				if self.stateExpand[uid] then
-					local subTop = 5
-	
-					local subData = now.data
-					local widthNow = 0
-					if subData then
-						for j=1,#subData do
-							local subNow = subData[j]
-							if subNow == 0 then
-								widthNow = 0
-								subTop = subTop + BUTTON_HEIGHT + 5
-							elseif subNow == 1 then
-								widthNow = 0
-								subTop = subTop + BUTTON_HEIGHT + 5
-
-								local line = GetLine(self,subNow..tostring(subData))
-								if isUpdateReq then
-									line:SetParent(button.sub)
-									line:NewPoint("TOPLEFT",0,-subTop+BUTTON_HEIGHT/2+4):Point("RIGHT",0,0)
-								end
-								line:Show()
-							elseif type(subNow) == "string" then
-								if widthNow > 0 then
-									widthNow = 0
-									subTop = subTop + BUTTON_HEIGHT + 5
-								end
-	
-								local groupText = GetGroupText(self,subNow..tostring(subData))
-								if isUpdateReq then
-									groupText:SetParent(button.sub)
-									groupText:Point("TOPLEFT",15,-subTop):Size(buttonWidth,GROUP_HEIGHT)
-									groupText:SetText(subNow)
-								end
-								groupText:Show()
-	
-								subTop = subTop + GROUP_HEIGHT + 5
-							else
-								local subUid = subNow.uid or subNow.name
-								local subButton = GetButton(self,2,subUid or tostring(subNow))
-								if isUpdateReq then
-									subButton:SetParent(button.sub)
-									subButton:ClearAllPoints()
-									subButton:Point("TOPLEFT",5+widthNow,-subTop):Size(buttonWidth,BUTTON_HEIGHT)
-									subButton:SetText(subNow.name or "")
-									subButton.data = subNow
-
-									if subNow.drag then
-										subButton:SetMovable(true)
-										subButton:RegisterForDrag("LeftButton")
-									else
-										subButton:SetMovable(false)
-									end
-
-									if self.ModButtonUpdate then
-										self:ModButtonUpdate(subButton,2)
-									end
-								end
-								subButton:Show()
-
-								widthNow = widthNow + buttonWidth + 5
-								if widthNow >= (self.Width - 20) then
-									widthNow = 0
-									subTop = subTop + BUTTON_HEIGHT + 5
-								end
-							end
-						end
-					end
-	
-					if isUpdateReq then
-						button.expandIcon.texture:SetTexCoord(0.25,0.3125,0.5,0.625)
-						button.sub:Show()
-						button.sub:SetHeight(5 + subTop + (widthNow > 0 and BUTTON_HEIGHT or 0))
-					end
-				else
-					if isUpdateReq then
-						button.expandIcon.texture:SetTexCoord(0.375,0.4375,0.5,0.625)
-						button.sub:Hide()
-					end
-				end
+				UpdateT1Button(self,now,forceUpdate,topStart,BUTTON_HEIGHT,GROUP_HEIGHT,buttonWidth)
 			end
 		end
 		for level=1,2 do
@@ -6623,6 +6755,12 @@ do
 		parent:Update() 
 		self:UpdateButtons()
 	end
+	local function Widget_ResetScrollPos(self)
+		self.ScrollBar:SetValue(1)
+		self:Update()
+		self.ScrollBar:UpdateButtons()
+		return self
+	end
 	function ELib:ScrollButtonsList(parent)
 		local self = ELib:ScrollFrame(parent)
 
@@ -6632,6 +6770,7 @@ do
 		self.ScrollBar.slider:SetScript("OnValueChanged", Widget_ScrollOnChange)
 
 		self.Update = Widget_Update
+		self.ResetScroll = Widget_ResetScrollPos
 
 		self.stateExpand = {}
 

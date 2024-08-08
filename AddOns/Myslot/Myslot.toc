@@ -1,12 +1,20 @@
-## Interface: 100200
+## Interface: 110000
+## X-Curse-Project-ID: 48863
+## X-Wago-ID: BKpq0BGE
 ## Title: Myslot
 ## Notes: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
+## Notes-deDE: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
 ## Notes-esES: Myslot sirve para transferir opciones entre distintas cuentas. Comentarios a farmer1992@gmail.com
+## Notes-esMX: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
+## Notes-frFR: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
+## Notes-itIT: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
+## Notes-koKR: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
+## Notes-ptBR: Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com
 ## Notes-ruRU: Myslot предназначен для передачи настроек между аккаунтами. Обратная связь farmer1992@gmail.com
 ## Notes-zhCN: Myslot可以帮助你在账号之间共享配置。反馈：farmer1992@gmail.com
 ## Notes-zhTW: Myslot可以跨帳號綁定技能與按鍵設置。反饋通道：farmer1992@gmail.com
 ## Author: Boshi Lian(farmer1992@gmail.com)
-## Version: v5.11.1-v10.2.0
+## Version: v5.19.3
 ## SavedVariables: MyslotExports
 ## SavedVariablesPerCharacter: MyslotSettings
 ## IconTexture: Interface\AddOns\Myslot\Myslot

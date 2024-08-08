@@ -34,7 +34,7 @@ ELib:ShadowInside(Options)
 Options.bossButton:Hide()
 Options.backToInterface:SetScript("OnClick",function ()
 	MRT.Options.Frame:Hide()
-	if MRT.is10 or SettingsPanel then
+	if SettingsPanel then
 		SettingsPanel:Show()
 	else
 		InterfaceOptionsFrame:Show()
@@ -147,7 +147,7 @@ Options.modulesList:Update()
 
 MRT.Options.InBlizzardInterface = CreateFrame( "Frame", nil )
 MRT.Options.InBlizzardInterface.name = "Method Raid Tools"
-if MRT.is10 or SettingsPanel then
+if SettingsPanel then
 	local category = Settings.RegisterCanvasLayoutCategory(MRT.Options.InBlizzardInterface, "Method Raid Tools")
 	Settings.RegisterAddOnCategory(category)
 else
@@ -156,7 +156,7 @@ end
 MRT.Options.InBlizzardInterface:Hide()
 
 MRT.Options.InBlizzardInterface:SetScript("OnShow",function (self)
-	if MRT.is10 or SettingsPanel then
+	if SettingsPanel then
 		if SettingsPanel:IsShown() then
 			HideUIPanel(SettingsPanel)
 		end
@@ -170,7 +170,7 @@ MRT.Options.InBlizzardInterface:SetScript("OnShow",function (self)
 end)
 
 MRT.Options.InBlizzardInterface.button = ELib:Button(MRT.Options.InBlizzardInterface,"Method Raid Tools",0):Size(400,25):Point("TOP",0,-100):OnClick(function ()
-	if MRT.is10 or SettingsPanel then
+	if SettingsPanel then
 		if SettingsPanel:IsShown() then
 			HideUIPanel(SettingsPanel)
 		end
@@ -260,7 +260,7 @@ MiniMapIcon:SetScript("OnLeave", function(self)
 	self.anim:Stop()
 	self.iconMini:Hide()
 end)
-if MRT.is10 then
+if not MRT.isClassic then
 	MiniMapIcon.icon:SetSize(20,20)
 	MiniMapIcon.iconMini:SetSize(20,20)
 	MiniMapIcon.icon:SetPoint("CENTER",1,0)
@@ -469,6 +469,13 @@ function OptionsFrame:AddSnowStorm(maxSnowflake)
 	OptionsFrame.SnowStorm = sf
 	sf:SetPoint("TOPLEFT")
 	sf:SetPoint("BOTTOMRIGHT")
+
+	local resumeSnowFunc = function(self)
+		self:SetScript("OnUpdate",nil)
+		for i=1,self.snowlast do
+			self.snow[i].g:Play()
+		end
+	end
 	
 	sf.C = sf.C or CreateFrame("Frame", nil, sf) 
 	sf:SetScrollChild(sf.C)
@@ -534,6 +541,7 @@ function OptionsFrame:AddSnowStorm(maxSnowflake)
 		for i=maxSnowflake+1,#sf.snow do
 			local f = sf.snow[i]
 			f:Hide()
+			f.g:Pause()
 		end
 		sf.snowlast = 0
 		return
@@ -545,6 +553,11 @@ function OptionsFrame:AddSnowStorm(maxSnowflake)
 		f:Update()
 	end
 	local function AnimOnUpdate(self)
+		if not sf:IsVisible() then
+			sf:SetScript("OnUpdate",resumeSnowFunc)
+			self:GetParent():Pause()
+			return
+		end
 		local f = self.p
 		local p = self:GetProgress()
 		if p == 0 then
@@ -615,6 +628,7 @@ function OptionsFrame:AddSnowStorm(maxSnowflake)
 		
 			f:Update(true)
 		end
+		sf.snow[i].g:Play()
 		sf.snow[i]:Show()
 	end
 	sf.snowlast = maxSnowflake
@@ -629,6 +643,13 @@ function OptionsFrame:AddDeathStar(maxDeathStars,deathStarType)
 	sf.C = sf.C or CreateFrame("Frame", nil, sf) 
 	sf:SetScrollChild(sf.C)
 	sf.C:SetSize(Options:GetWidth(),Options:GetHeight())
+
+	local resumeSnowFunc = function(self)
+		self:SetScript("OnUpdate",nil)
+		for i=1,self.snowlast do
+			self.snow[i].g:Play()
+		end
+	end
 
 	maxDeathStars = maxDeathStars or 1
 
@@ -661,6 +682,7 @@ function OptionsFrame:AddDeathStar(maxDeathStars,deathStarType)
 		for i=maxDeathStars+1,#sf.snow do
 			local f = sf.snow[i]
 			f:Hide()
+			f.g:Pause()
 		end
 		sf.snowlast = 0
 		return
@@ -672,6 +694,11 @@ function OptionsFrame:AddDeathStar(maxDeathStars,deathStarType)
 		f:Update()
 	end
 	local function AnimOnUpdate(self)
+		if not sf:IsVisible() then
+			sf:SetScript("OnUpdate",resumeSnowFunc)
+			self:GetParent():Pause()
+			return
+		end
 		local f = self.p
 		local p = self:GetProgress()
 		if p == 0 then
@@ -783,10 +810,82 @@ function OptionsFrame:AddDeathStar(maxDeathStars,deathStarType)
 		
 			f:Update(true)
 		end
+		sf.snow[i].g:Play()
 		sf.snow[i]:Show()
 	end
 	sf.snowlast = maxDeathStars
 end
+
+function OptionsFrame:AddChest(chestType)
+	local sf = OptionsFrame.ChestFrame or CreateFrame("ScrollFrame", nil, Options)
+	OptionsFrame.ChestFrame = sf
+	sf:SetPoint("TOPLEFT")
+	sf:SetPoint("BOTTOMRIGHT")
+
+	sf.C = sf.C or CreateFrame("Frame", nil, sf) 
+	sf:SetScrollChild(sf.C)
+	sf.C:SetSize(Options:GetWidth(),Options:GetHeight())
+
+	local SCALE = 0.4
+
+	local captured
+	local function AddCaptured()
+		if captured then
+			return captured
+		end
+		local animated = CreateFrame("Button",nil,UIParent)
+		captured = animated
+		animated.texture = animated:CreateTexture()
+		animated.texture:SetAllPoints()
+		animated.texture:SetTexture([[Interface\AddOns\MRT\media\frieren.jpg]])
+		animated:SetFrameStrata("DIALOG")
+		
+		animated:SetPoint("CENTER")
+		animated:SetSize(256*1.5,256*1.5)
+		animated.texture:SetTexCoord(0,0.25,0,0.25)
+		
+		animated.frame = 0
+		animated.frame_max = 14
+		animated.tmr = 0
+		animated:SetScript("OnUpdate",function(self,elapsed)
+			self.tmr = self.tmr + elapsed
+			if self.tmr > 0.15 then
+				self.tmr = 0
+				self.frame = self.frame + 1
+		
+				if self.frame > self.frame_max then
+					self.frame = 1
+				end
+		
+				local w = self.frame % 4
+				local h = floor(self.frame / 4)
+				
+				self.texture:SetTexCoord(w * 0.25,(w + 1) * 0.25,h * 0.25,(h + 1) * 0.25)
+			end
+		end)
+		animated:SetScript("OnClick",function(self)
+			self:Hide()
+		end)
+	end
+
+	local chest = CreateFrame("Button",nil,sf.C)  
+	OptionsFrame.chestBut = chest
+	chest:SetSize(175*SCALE,130*SCALE) 
+	local x,y = math.random(130,Options:GetWidth()-175*SCALE),math.random(0,Options:GetHeight()-130*SCALE)
+	chest:SetPoint("TOPLEFT",x,-y)
+	chest:RegisterForClicks("LeftButtonDown","RightButtonDown")
+	chest:SetScript("OnClick",function(self,button) 
+		AddCaptured()
+		captured:Show()
+		self:Hide()
+	end)
+	chest.t = chest:CreateTexture()
+	chest.t:SetAllPoints()
+	chest.t:SetAtlas("ChallengeMode-Chest")
+
+	chest:RotateTextures(math.pi*2/360*(math.random(0,360)))
+end
+
 
 
 OptionsFrame_image = OptionsFrame:CreateTexture(nil,"ARTWORK")
@@ -858,11 +957,15 @@ OptionsFrame.dateChecks:SetScript("OnShow",function(self)
 	self:SetScript("OnShow",nil)
 	local today = date("*t",time())
 	local isChristmas, isSnowDay
+	local isFrierenFriday
 	if MRT.locale == "ruRU" then
 		if (today.month == 12 and today.day >= 23) or (today.month == 1 and today.day <= 4) then
 			isChristmas = true
 		end
 		if (today.month == 12 and today.day >= 30) or (today.month == 1 and today.day <= 2) then
+			isSnowDay = true
+		end
+		if (today.month == 12 and today.day >= 24 and today.day <= 25) then
 			isSnowDay = true
 		end
 	elseif MRT.locale == "deDE" or MRT.locale == "enGB" or MRT.locale == "enUS" or MRT.locale == "esES" or MRT.locale == "esMX" or MRT.locale == "frFR" or MRT.locale == "itIT" or MRT.locale == "ptBR" or MRT.locale == "ptPT" then
@@ -879,6 +982,13 @@ OptionsFrame.dateChecks:SetScript("OnShow",function(self)
 		if (today.month == 12 and today.day >= 31) or (today.month == 1 and today.day <= 1) then
 			isSnowDay = true
 		end
+	end
+	if (today.wday == 6 and today.day % 2 == 0) then
+		isFrierenFriday = true
+	end	
+	
+	if isFrierenFriday then
+		OptionsFrame:AddChest()
 	end
 
 	if isChristmas then
@@ -1183,7 +1293,7 @@ end
 OptionsFrame.Changelog = ELib:ScrollFrame(OptionsFrame):Size(680,180):Point("TOP",0,-335):OnShow(function(self)
 	local text = MRT.Options.Changelog or ""
 	text = text:gsub("(v%.%d+([^\n]*).-\n\n)",function(a,b)
-		if (b == "-Classic" and MRT.isClassic and not MRT.isBC) or (b == "-BC" and MRT.isBC and not MRT.isLK) or (b == "-LK" and MRT.isLK) or ((b ~= "-Classic" and b ~= "-BC" and b ~= "-LK") and not MRT.isClassic) then
+		if (b == "-Classic" and MRT.isClassic and not MRT.isBC) or (b == "-BC" and MRT.isBC and not MRT.isLK) or (b == "-LK" and MRT.isLK and not MRT.isCata) or (b == "-Cata" and MRT.isCata) or (b == "-LK" and MRT.isCata and tonumber(a:match("%d+") or "4841")<=4840) or ((b ~= "-Classic" and b ~= "-BC" and b ~= "-LK" and b ~= "-Cata") and not MRT.isClassic) then
 			return a
 		else
 			return ""

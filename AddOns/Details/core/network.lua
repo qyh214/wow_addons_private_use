@@ -3,6 +3,9 @@
 	local Loc = LibStub("AceLocale-3.0"):GetLocale( "Details" )
 	local _
 
+	---@type detailsframework
+	local detailsFramework = DetailsFramework
+
 	--register namespace
 	Details.network = {}
 
@@ -77,6 +80,30 @@
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --item level
+
+	local getHorizontalTalentsAsString = function()
+		local talents = ""
+		for i = 1, 7 do
+			for o = 1, 3 do
+				local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
+				if (selected) then
+					talents = "" .. talentID .. ","
+					break
+				end
+			end
+		end
+
+		--remove the comma after the last talent id
+		if (talents:sub(-1) == ",") then
+			talents = talents:sub(1, -2)
+		end
+
+		return talents
+	end
+
+	---send item level data to the group the player is in
+	---@param self details
+	---@return nil
 	function Details:SendCharacterData()
 		--only send if in group
 		if (not IsInGroup() and not IsInRaid()) then
@@ -87,7 +114,8 @@
 			return
 		end
 
-		--check the player level
+		--check the player level to be at least 60
+		---@type number
 		local playerLevel = UnitLevel("player")
 		if (not playerLevel) then
 			return
@@ -97,23 +125,52 @@
 
 		--delay to sent information again
 		if (Details.LastPlayerInfoSync and Details.LastPlayerInfoSync + 10 > GetTime()) then
-			--do not send info if recently sent
+			--do not send info if it was recently sent
 			return
 		end
 
-		--get player item level
+		--get the equipped player item level
 		local overall, equipped = GetAverageItemLevel()
 
+		local talentsAsString = ""
+
 		--get player talents
-		local talents = {}
-		for i = 1, 7 do
-			for o = 1, 3 do
-				local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
-				if (selected) then
-					tinsert(talents, talentID)
-					break
-				end
-			end
+		--depending on the game version, the talent API is different
+
+		--vertical tree
+		if (DetailsFramework.IsClassicWow()) then --vanilla
+			talentsAsString = ""
+
+		elseif (DetailsFramework.IsTBCWow()) then --burning crusade
+			talentsAsString = ""
+
+		elseif (DetailsFramework.IsWotLKWow()) then --wrath of the lich king
+			talentsAsString = ""
+
+		elseif (DetailsFramework.IsCataWow()) then --cataclysm
+			talentsAsString = ""
+		end
+
+		--horizontal pick one
+		if (DetailsFramework.IsPandaWow()) then
+			talentsAsString = getHorizontalTalentsAsString()
+
+		elseif (DetailsFramework.IsWarlordsWow()) then
+			talentsAsString = getHorizontalTalentsAsString()
+
+		elseif (DetailsFramework.IsLegionWow()) then
+			talentsAsString = getHorizontalTalentsAsString()
+
+		elseif (DetailsFramework.IsBFAWow()) then
+			talentsAsString = getHorizontalTalentsAsString()
+
+		elseif (DetailsFramework.IsShadowlandsWow()) then
+			talentsAsString = getHorizontalTalentsAsString()
+		end
+
+		--vertical, horizonal tree
+		if (DetailsFramework.IsDragonflight()) then
+			talentsAsString = detailsFramework:GetDragonlightTalentString()
 		end
 
 		--get the spec ID
@@ -130,13 +187,13 @@
 		local serial = UnitGUID("player")
 
 		if (IsInRaid()) then
-			Details:SendRaidData(CONST_ITEMLEVEL_DATA, serial, equipped, talents, currentSpec)
+			Details:SendRaidData(CONST_ITEMLEVEL_DATA, serial, equipped, talentsAsString, currentSpec)
 			if (Details.debugnet) then
 				Details:Msg("(debug) sent ilevel data to Raid")
 			end
 
 		elseif (IsInGroup()) then
-			Details:SendPartyData(CONST_ITEMLEVEL_DATA, serial, equipped, talents, currentSpec)
+			Details:SendPartyData(CONST_ITEMLEVEL_DATA, serial, equipped, talentsAsString, currentSpec)
 			if (Details.debugnet) then
 				Details:Msg("(debug) sent ilevel data to Party")
 			end
@@ -344,7 +401,7 @@
 				--return false
 			end
 
-			local IDs = Details.storage:GetIDsToGuildSync()
+			local IDs = Details222.storage.GetIDsToGuildSync()
 
 			if (IDs and IDs [1]) then
 				local from = UnitName("player")
@@ -356,7 +413,7 @@
 			return true
 
 		elseif (type == "L") then --RoC - the player received the IDs list and send back which IDs he doesn't have
-			local missingIds = Details.storage:CheckMissingIDsToGuildSync(data)
+			local missingIds = Details222.storage.CheckMissingIDsToGuildSync(data)
 
 			if (missingIds and missingIds[1]) then
 				local from = UnitName ("player")
@@ -366,7 +423,7 @@
 			return true
 
 		elseif (type == "G") then --RoS - the 'server' send the encounter dps table to the player which requested
-			local encounterData = Details.storage:BuildEncounterDataToGuildSync(data)
+			local encounterData = Details222.storage.BuildEncounterDataToGuildSync(data)
 
 			if (encounterData and encounterData[1]) then
 				local task = C_Timer.NewTicker(4, function(task)
@@ -395,14 +452,9 @@
 			return true
 
 		elseif (type == "A") then --RoC - the player received the dps table and should now add it to the db
-			Details.storage:AddGuildSyncData(data, player)
+			Details222.storage.AddGuildSyncData(data, player)
 			return true
 		end
-	end
-
-	function Details.network.HandleMissData(player, realm, coreVersion, data)
-		--soul rip from akaari's soul (LEGION ONLY)
-		--deprecated
 	end
 
 	function Details.network.ReceivedEnemyPlayer(player, realm, coreVersion, data)
@@ -423,8 +475,6 @@
 		[CONST_WIPE_CALL] = Details.network.Wipe_Call,
 
 		[CONST_GUILD_SYNC] = Details.network.GuildSync,
-
-		[CONST_ROGUE_SR] = Details.network.HandleMissData, --soul rip from akaari's soul (LEGION ONLY)
 
 		[CONST_PVP_ENEMY] = Details.network.ReceivedEnemyPlayer,
 

@@ -197,6 +197,18 @@ function DataProvider:GetVendorItemTransmogSetID(vendorItemID)
     end
 end
 
+function DataProvider:GetVendorItemTransmogSourceID(vendorItemID)
+    local info = self:GetAndCacheVendorItemInfo(vendorItemID);
+    if info and info.itemModifiedAppearanceID ~= 0 then
+        return info.itemModifiedAppearanceID
+    else
+        local cachedData = self:GetVendorItemInfoFromDatabase(vendorItemID);
+        if cachedData and cachedData.itemModifiedAppearanceID and cachedData.itemModifiedAppearanceID ~= 0 then
+            return cachedData.itemModifiedAppearanceID
+        end
+    end
+end
+
 function DataProvider:IsVendorItemPurchased(vendorItemID)
     local info = self:GetAndCacheVendorItemInfo(vendorItemID);
     if info then
@@ -263,6 +275,17 @@ function DataProvider:IsVendorItemPurchased(vendorItemID)
         end
 
         return info.purchased
+    end
+end
+
+function DataProvider:GetVendorItemPriceBySourceID(sourceID)
+    local vendorItemIDs = self:GetCurrentMonthItems();
+    if vendorItemIDs then
+        for _, vendorItemID in ipairs(vendorItemIDs) do
+            if self:GetVendorItemTransmogSourceID(vendorItemID) == sourceID then
+                return self:GetVendorItemPrice(vendorItemID), self:IsVendorItemPurchased(vendorItemID)
+            end
+        end
     end
 end
 
@@ -359,7 +382,13 @@ EventListener:SetScript("OnEvent", function(self, event, ...)
         end);
 
         DataProvider:UpdateActivePerksMonthInfo();
-        DataProvider:SaveCurrentMonthItems(vendorItemIDs);
+
+        if not self.monthItemUpdated then
+            self.monthItemUpdated = true;
+            local forceUpdate = true;
+            DataProvider:SaveCurrentMonthItems(vendorItemIDs, forceUpdate);
+        end
+
     elseif event == "PERKS_PROGRAM_CURRENCY_REFRESH" then
         DataProvider.ownedCurrencyAmount = nil;
     elseif event == "PERKS_PROGRAM_REFUND_SUCCESS" or event == "PERKS_PROGRAM_PURCHASE_SUCCESS" then
@@ -428,9 +457,10 @@ function DataProvider:GetCurrencyAmount()
     return self.ownedCurrencyAmount
 end
 
-function DataProvider:SaveCurrentMonthItems(vendorItemIDs)
+function DataProvider:SaveCurrentMonthItems(vendorItemIDs, forceUpdate)
+    --Sometimes not all items are immediately available on day 1
     local month = self:GetActivePerksDate();
-    if month ~= DB.CurrentMonthData.month then
+    if month ~= DB.CurrentMonthData.month or forceUpdate then
         local tbl = {};
         local total = 0;
         for i, id in ipairs(vendorItemIDs) do
@@ -468,6 +498,43 @@ function DataProvider:GetVendorItemAddedMonthName(vendorItemID)
     end
 end
 
+function DataProvider:IsValidItem(vendorItemID)
+    local categoryID = self:GetVendorItemCategory(vendorItemID);
+    return categoryID and categoryID ~=0 and categoryID ~= 128
+end
+
+
+do
+    local time = time;
+    local EpochToDate = NarciAPI.EpochToDate;
+
+    function DataProvider:SaveUserData(dataKey, data)
+        DB[dataKey] = data;
+    end
+
+    function DataProvider:GetUserData(dataKey)
+        return DB[dataKey]
+    end
+
+    function DataProvider:SetTimeLimitedData(dataKey, data)
+        --Data saved in DB that expire next month
+        local tbl = {};
+        tbl.timeChanged = time();
+        tbl.data = data;
+        self:SaveUserData(dataKey, tbl);
+    end
+
+    function DataProvider:GetTimeLimitedData(dataKey)
+        local data = self:GetUserData(dataKey);
+        if data then
+            local currentDate = EpochToDate(time());
+            local oldDate =  EpochToDate(data.timeChanged);
+            if currentDate.month == oldDate.month then
+                return data.data
+            end
+        end
+    end
+end
 
 
 local function LoadDatabase()

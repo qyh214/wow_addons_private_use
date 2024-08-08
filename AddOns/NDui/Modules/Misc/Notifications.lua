@@ -8,9 +8,10 @@ local GetInstanceInfo, PlaySound, print = GetInstanceInfo, PlaySound, print
 local IsPartyLFG, IsInRaid, IsInGroup, IsInInstance, IsInGuild = IsPartyLFG, IsInRaid, IsInGroup, IsInInstance, IsInGuild
 local UnitInRaid, UnitInParty, SendChatMessage = UnitInRaid, UnitInParty, SendChatMessage
 local UnitName, Ambiguate, GetTime = UnitName, Ambiguate, GetTime
-local GetSpellLink, GetSpellInfo, GetSpellCooldown = GetSpellLink, GetSpellInfo, GetSpellCooldown
+local GetSpellLink = C_Spell.GetSpellLink
+local GetSpellName = C_Spell.GetSpellName
 local GetActionInfo, GetMacroSpell, GetMacroItem = GetActionInfo, GetMacroSpell, GetMacroItem
-local GetItemInfo, GetItemInfoFromHyperlink = GetItemInfo, GetItemInfoFromHyperlink
+local GetItemInfoFromHyperlink = GetItemInfoFromHyperlink
 local C_Timer_After = C_Timer.After
 local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
 local C_VignetteInfo_GetVignetteInfo = C_VignetteInfo.GetVignetteInfo
@@ -90,6 +91,7 @@ local isIgnoredZone = {
 }
 local isIgnoredIDs = { -- todo: add option for this
 	[5485] = true, -- 海象人工具盒
+	[6149] = true, -- 奥妮克希亚龙蛋
 }
 
 local function isUsefulAtlas(info)
@@ -120,7 +122,8 @@ function M:RareAlert_Update(id)
 				local x, y = position:GetXY()
 				nameString = format(M.RareString, mapID, x*10000, y*10000, info.name, x*100, y*100, "")
 			end
-			print(currrentTime.." -> "..tex..DB.InfoColor..(nameString or info.name or ""))
+			local debugString = DB.isDeveloper and info.vignetteID or ""
+			print(currrentTime.." -> "..tex..DB.InfoColor..(nameString or info.name or "")..debugString)
 		end
 
 		if not C.db["Misc"]["RareAlertInWild"] or M.RareInstType == "none" then
@@ -407,7 +410,7 @@ local spellList = {
 
 function M:ItemAlert_Update(unit, castID, spellID)
 	if groupUnits[unit] and spellList[spellID] and (spellList[spellID] ~= castID) then
-		SendChatMessage(format(L["SpellItemAlertStr"], UnitName(unit), GetSpellLink(spellID) or GetSpellInfo(spellID)), M:GetMsgChannel())
+		SendChatMessage(format(L["SpellItemAlertStr"], UnitName(unit), GetSpellLink(spellID) or GetSpellName(spellID)), M:GetMsgChannel())
 		spellList[spellID] = castID
 	end
 end
@@ -573,7 +576,7 @@ local AddonDependency = {
 function M:CheckIncompatible()
 	local IncompatibleList = {}
 	for addon in pairs(IncompatibleAddOns) do
-		if IsAddOnLoaded(addon) then
+		if C_AddOns.IsAddOnLoaded(addon) then
 			tinsert(IncompatibleList, addon)
 		end
 	end
@@ -603,9 +606,9 @@ function M:CheckIncompatible()
 		disable.text:SetTextColor(1, .8, 0)
 		disable:SetScript("OnClick", function()
 			for _, addon in pairs(IncompatibleList) do
-				DisableAddOn(addon, true)
+				C_AddOns.DisableAddOn(addon)
 				if AddonDependency[addon] then
-					DisableAddOn(AddonDependency[addon], true)
+					C_AddOns.DisableAddOn(AddonDependency[addon])
 				end
 			end
 			ReloadUI()
@@ -625,7 +628,12 @@ end
 local lastCDSend = 0
 function M:SendCurrentSpell(thisTime, spellID)
 	local spellLink = GetSpellLink(spellID)
-	local charges, maxCharges, chargeStart, chargeDuration = GetSpellCharges(spellID)
+	local chargeInfo = C_Spell.GetSpellCharges(spellID)
+	local charges = chargeInfo and chargeInfo.currentCharges
+	local maxCharges = chargeInfo and chargeInfo.maxCharges
+	local chargeStart = chargeInfo and chargeInfo.cooldownStartTime
+	local chargeDuration = chargeInfo and chargeInfo.cooldownDuration
+
 	if charges and maxCharges then
 		if charges ~= maxCharges then
 			local remain = chargeStart + chargeDuration - thisTime
@@ -634,7 +642,10 @@ function M:SendCurrentSpell(thisTime, spellID)
 			SendChatMessage(format(L["ChargesCompleted"], spellLink, charges, maxCharges), M:GetMsgChannel())
 		end
 	else
-		local start, duration = GetSpellCooldown(spellID)
+		local cooldownInfo = C_Spell.GetSpellCooldown(spellID)
+		local start = cooldownInfo and cooldownInfo.startTime
+		local duration = cooldownInfo and cooldownInfo.duration
+
 		if start and duration > 0 then
 			local remain = start + duration - thisTime
 			SendChatMessage(format(L["CooldownRemaining"], spellLink, GetRemainTime(remain)), M:GetMsgChannel())
@@ -644,13 +655,13 @@ function M:SendCurrentSpell(thisTime, spellID)
 	end
 end
 
-function M:SendCurrentItem(thisTime, itemID, itemLink)
+function M:SendCurrentItem(thisTime, itemID, itemLink, itemCount)
 	local start, duration = GetItemCooldown(itemID)
 	if start and duration > 0 then
 		local remain = start + duration - thisTime
-		SendChatMessage(format(L["CooldownRemaining"], itemLink, GetRemainTime(remain)), M:GetMsgChannel())
+		SendChatMessage(format(L["CooldownRemaining"], itemLink.." x"..itemCount, GetRemainTime(remain)), M:GetMsgChannel())
 	else
-		SendChatMessage(format(L["CooldownCompleted"], itemLink), M:GetMsgChannel())
+		SendChatMessage(format(L["CooldownCompleted"], itemLink.." x"..itemCount), M:GetMsgChannel())
 	end
 end
 
@@ -663,20 +674,21 @@ function M:AnalyzeButtonCooldown()
 	if thisTime - lastCDSend < 1.5 then return end
 	lastCDSend = thisTime
 
-	local spellType, id = GetActionInfo(self._state_action)
+	local spellType, id, subType = GetActionInfo(self._state_action)
+	local itemCount = GetActionCount(self._state_action)
 	if spellType == "spell" then
 		M:SendCurrentSpell(thisTime, id)
 	elseif spellType == "item" then
-		local itemName, itemLink = GetItemInfo(id)
-		M:SendCurrentItem(thisTime, id, itemLink or itemName)
+		local itemName, itemLink = C_Item.GetItemInfo(id)
+		M:SendCurrentItem(thisTime, id, itemLink or itemName, itemCount)
 	elseif spellType == "macro" then
-		local spellID = GetMacroSpell(id)
+		local spellID = subType == "spell" and id or GetMacroSpell(id)
 		local _, itemLink = GetMacroItem(id)
 		local itemID = itemLink and GetItemInfoFromHyperlink(itemLink)
 		if spellID then
 			M:SendCurrentSpell(thisTime, spellID)
 		elseif itemID then
-			M:SendCurrentItem(thisTime, itemID, itemLink)
+			M:SendCurrentItem(thisTime, itemID, itemLink, itemCount)
 		end
 	end
 end
@@ -685,6 +697,7 @@ function M:SendCDStatus()
 	if not C.db["Actionbar"]["Enable"] then return end
 
 	local Bar = B:GetModule("Actionbar")
+	if not Bar then return end
 	for _, button in pairs(Bar.buttons) do
 		button:HookScript("OnMouseWheel", M.AnalyzeButtonCooldown)
 	end

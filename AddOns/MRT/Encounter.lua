@@ -96,9 +96,8 @@ function module.options:Load()
 
 	local updatesPerLast10sec = 0
 	local updatesPerLast10secLast = 0
-	
-	self.dropDown = ELib:DropDown(self,220,#module.db.diffPos):Size(235):Point(445+2,-31)
-	function self.dropDown:SetValue(newValue,resetDB)
+
+	local function UpdateDB(newValue,resetDB)
 		if module.db.dropDownNow ~= newValue then
 			module.db.scrollPos = 1
 			module.options.ScrollBar:SetValue(1)
@@ -117,6 +116,7 @@ function module.options:Load()
 		
 		local minPullTime = LegacyDiffs[ newDiff ] and 0 or 30
 		
+		local totalcount = 0
 		if not module.db.chachedDB then
 			for playerName,playerData in pairs(VMRT.Encounter.list) do
 				if not module.db.onlyMy or playerName == module.db.playerName then
@@ -202,6 +202,11 @@ function module.options:Load()
 								fb = firstBloodName,
 								i = raidIlvl,
 							}
+
+							totalcount = totalcount + 1
+							if totalcount % 500 == 0 then
+								coroutine.yield()
+							end
 						end
 					end			
 				end
@@ -253,6 +258,8 @@ function module.options:Load()
 					prev = eLine.mapID
 				end
 			end
+
+			coroutine.yield()
 			
 		end
 		
@@ -335,6 +342,14 @@ function module.options:Load()
 		module.options.ScrollBar:UpdateButtons()
 		module.options.FBframe:Hide()
 		module.options.PullsFrame:Hide()
+
+	end
+	
+	self.dropDown = ELib:DropDown(self,220,#module.db.diffPos):Size(235):Point(445+2,-31)
+	function self.dropDown:SetValue(newValue,resetDB)
+		ExRT.F:AddCoroutine(function()
+			UpdateDB(newValue,resetDB)
+		end)
 	end
 
 	for i=1,#module.db.diffPos do

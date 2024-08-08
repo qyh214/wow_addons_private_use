@@ -117,7 +117,7 @@ local function SetUpAffixes(block, affixes)
 end
 
 local function ShowBlock(timerID, elapsedTime, timeLimit)
-	local block = ScenarioChallengeModeBlock
+	local block = ScenarioObjectiveTracker.ChallengeModeBlock
 	local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
 	local dmgPct, healthPct = C_ChallengeMode.GetPowerLevelDamageHealthMod(level)
 	if Addon.Config.showLevelModifier then
@@ -131,8 +131,8 @@ if IsAddOnLoaded("!KalielsTracker") then
 	hooksecurefunc("KT_Scenario_ChallengeMode_UpdateTime", UpdateTime)
 	hooksecurefunc("KT_Scenario_ChallengeMode_ShowBlock", ShowBlock)
 else
-	hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
-	hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowBlock)
+	hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", UpdateTime)
+	hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "Activate", ShowBlock)
 end
 
 local keystoneWasCompleted = false
@@ -189,7 +189,7 @@ function Mod:Startup()
 	Addon.Config:RegisterCallback('smallAffixes', function()
 		local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
 		if affixes then
-			SetUpAffixes(ScenarioChallengeModeBlock, affixes)
+			SetUpAffixes(ScenarioObjectiveTracker.ChallengeModeBlock, affixes)
 		end
 	end)
 

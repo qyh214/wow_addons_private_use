@@ -9,6 +9,14 @@ if L then
 	L.faceless_seer = "無面先知"
 	L.faceless_watcher = "無面看守者"
 	L.tainted_sentry = "被感染的哨衛"
+
+	L.ozumat_warmup_trigger = "那頭怪物回來了!不能讓牠污染我的水!"
+end
+
+L = BigWigs:NewBossLocale("Lady Naz'jar", "zhTW")
+if L then
+	L.high_tide_trigger1 = "武裝吧，手下們!從冰冷的深海竄起!"
+	L.high_tide_trigger2 = "消滅這些入侵讓他們被渾沌黑暗吞噬!"
 end
 
 L = BigWigs:NewBossLocale("Ozumat", "zhTW")

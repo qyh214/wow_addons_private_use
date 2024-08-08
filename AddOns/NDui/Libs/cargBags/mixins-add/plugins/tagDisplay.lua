@@ -113,6 +113,12 @@ local function GetNumFreeSlots(name)
 		return GetContainerNumFreeSlots(-3)
 	elseif name == "BagReagent" then
 		return GetContainerNumFreeSlots(5)
+	elseif name == "AccountBank" then
+		local numFreeSlots = 0
+		for bagID = 13, 17 do
+			numFreeSlots = numFreeSlots + GetContainerNumFreeSlots(bagID)
+		end
+		return numFreeSlots
 	end
 end
 
@@ -122,12 +128,12 @@ tagPool["space"] = function(self)
 end
 
 tagPool["item"] = function(self, item)
-	local bags = GetItemCount(item, nil)
-	local total = GetItemCount(item, true)
+	local bags = C_Item.GetItemCount(item, nil)
+	local total = C_Item.GetItemCount(item, true)
 	local bank = total-bags
 
 	if(total > 0) then
-		return bags .. (bank and " ("..bank..")") .. createIcon(GetItemIcon(item), self.iconValues)
+		return bags .. (bank and " ("..bank..")") .. createIcon(C_Item.GetItemIconByID(item), self.iconValues)
 	end
 end
 
@@ -177,3 +183,16 @@ tagPool["money"] = function()
 	return str
 end
 tagEvents["money"] = { "PLAYER_MONEY" }
+
+tagPool["accountmoney"] = function()
+	local money = C_Bank.FetchDepositedMoney(Enum.BankType.Account) or 0
+	local str = ""
+	local gold, silver, copper = floor(money/1e4), floor(money/100) % 100, money % 100
+
+	if gold > 0 then str = str..BreakUpLargeNumbers(gold)..createAtlasCoin("gold").." " end
+	if silver > 0 then str = str..silver..createAtlasCoin("silver").." " end
+	if copper >= 0 then str = str..copper..createAtlasCoin("copper").." " end
+
+	return str
+end
+tagEvents["accountmoney"] = { "PLAYER_MONEY", "ACCOUNT_MONEY" }

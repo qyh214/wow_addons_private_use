@@ -125,12 +125,14 @@ local function AddSet()
         soulbindID = 7 -- Default to pelagos because why not
     end
     local soulbindData = GetSoulbindData(soulbindID)
-    return Internal.AddSet("soulbinds", RefreshSet({
+    local set = Internal.AddSet("soulbinds", RefreshSet({
         soulbindID = soulbindID,
 		name = format(L["New %s Set"], soulbindData.name),
 		useCount = 0,
         nodes = {},
     }))
+    Internal.Call("SoulbindSetCreated", set.setID);
+    return set
 end
 local function DeleteSet(id)
 	Internal.DeleteSet(BtWLoadoutsSets.soulbinds, id);
@@ -147,6 +149,8 @@ local function DeleteSet(id)
             end
 		end
 	end
+    
+	Internal.Call("SoulbindSetDeleted", id);
 
 	local frame = BtWLoadoutsFrame.Soulbinds;
 	local set = frame.set;
@@ -3041,6 +3045,7 @@ BtWLoadoutsSoulbindsMixin = {}
 function BtWLoadoutsSoulbindsMixin:OnLoad()
     self.RestrictionsDropDown:SetSupportedTypes("spec", "race")
     self.RestrictionsDropDown:SetScript("OnChange", function ()
+        Internal.Call("SoulbindSetUpdated", self.set.setID);
         self:Update()
     end)
 
@@ -3111,6 +3116,8 @@ function BtWLoadoutsSoulbindsMixin:OnShow()
                     self.tempConduits = {}
                 end
 
+                Internal.Call("SoulbindSetUpdated", set.setID);
+
                 self:Update()
             end
         end
@@ -3155,6 +3162,8 @@ function BtWLoadoutsSoulbindsMixin:OnShow()
                     end
                 end
 
+                Internal.Call("SoulbindSetUpdated", set.setID);
+
                 self:Update()
             end
         end
@@ -3169,6 +3178,7 @@ end
 function BtWLoadoutsSoulbindsMixin:UpdateSetName(value)
 	if self.set and self.set.name ~= not value then
 		self.set.name = value;
+        Internal.Call("SoulbindSetUpdated", self.set.setID);
 		self:Update();
 	end
 end
@@ -3366,6 +3376,8 @@ function BtWLoadoutsSoulbindsMixin:SetNodeEnabled(nodeID, enabled)
             end
             nodes[targetNode.ID] = enabled and true or nil
         end
+
+        Internal.Call("SoulbindSetUpdated", set.setID);
         
         self:Update()
     end
@@ -3394,6 +3406,8 @@ function BtWLoadoutsSoulbindsMixin:SetNodeConduit(nodeID, conduitID)
         end
     end
     conduits[nodeID] = conduitID
+    
+    Internal.Call("SoulbindSetUpdated", self.set.setID);
         
     self:Update()
 

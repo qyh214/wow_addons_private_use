@@ -8,6 +8,9 @@ mod:RegisterEnableMob(200912, 200913, 200918) -- Neldris, Thadrion, Rionthus
 mod:SetEncounterID(2693)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
+mod:SetPrivateAuraSounds({
+	406317, -- Rending Charge
+})
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -55,7 +58,6 @@ if L then
 	L.custom_on_unstable_essence_high_desc = "Say messages with the amount of stacks for your Unstable Essence debuff when they are high enough."
 
 	L.rending_charge_single = "First Charge"
-	L.massive_slam = "Frontal Cone"
 	L.unstable_essence_new = "New Bomb"
 	L.volatile_spew = "Dodges"
 	L.volatile_eruption = "Eruption"
@@ -74,7 +76,7 @@ function mod:GetOptions()
 		{406311, "TANK"}, -- Infused Strikes
 		407302, -- Infused Explosion
 		-- Neldris
-		{406358, "ICON", "SAY", "SAY_COUNTDOWN", "PRIVATE", "ME_ONLY_EMPHASIZE"}, -- Rending Charge
+		{406358, "PRIVATE", "ICON", "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Rending Charge
 		404472, -- Massive Slam
 		404713, -- Bellowing Roar
 		-- Thadrion
@@ -92,7 +94,7 @@ function mod:GetOptions()
 		[407327] = -26322, -- Thadrion
 		[406227] = -26329, -- Rionthus
 	},{
-		[404472] = L.massive_slam, -- Massive Slam (Frontal Cone)
+		[404472] = CL.frontal_cone, -- Massive Slam (Frontal Cone)
 		[404713] = CL.roar, -- Bellowing Roar (Roar)
 		[407327] = L.unstable_essence_new, -- Unstable Essence (New Bomb)
 		[405492] = L.volatile_spew, -- Volatile Spew (Dodges)
@@ -156,9 +158,7 @@ function mod:OnEngage()
 
 	self:Bar(404713, self:Mythic() and 6 or 11, CL.count:format(CL.roar, bellowingRoarCount)) -- Bellowing Roar
 	self:Bar(406358, self:Mythic() and 14 or 19, CL.count:format(self:SpellName(406358), rendingChargeCount)) -- Rending Charge
-	self:Bar(404472, self:Mythic() and 24 or 35, CL.count:format(L.massive_slam, massiveSlamCount)) -- Massive Slam
-
-	self:SetPrivateAuraSound(406358, 406317) -- Rending Charge
+	self:Bar(404472, self:Mythic() and 24 or 35, CL.count:format(CL.frontal_cone, massiveSlamCount)) -- Massive Slam
 end
 
 --------------------------------------------------------------------------------
@@ -221,7 +221,7 @@ function mod:Deaths(args)
 	end
 	if args.mobId == 200912 then -- Neldris
 		self:StopBar(CL.count:format(self:SpellName(406358), rendingChargeCount)) -- Rending Charge
-		self:StopBar(CL.count:format(L.massive_slam, massiveSlamCount)) -- Massive Slam
+		self:StopBar(CL.count:format(CL.frontal_cone, massiveSlamCount)) -- Massive Slam
 		self:StopBar(CL.count:format(CL.roar, bellowingRoarCount)) -- Bellowing Roar
 	elseif args.mobId == 200913 then -- Thadrion
 		self:StopBar(CL.count:format(L.unstable_essence_new, unstableEssenceCount)) -- Unstable Essence
@@ -267,7 +267,7 @@ do
 		if self:Me(guid) then
 			self:PersonalMessage(406358, nil, L.rending_charge_single)
 			--self:PlaySound(406358, "warning") -- The private aura sound should play
-			self:Say(406358, L.rending_charge_single)
+			self:Say(406358, L.rending_charge_single, nil, "First Charge")
 			self:SayCountdown(406358, 5)
 		end
 		self:PrimaryIcon(406358, player)
@@ -293,7 +293,7 @@ function mod:RendingChargeSuccess(args)
 end
 
 function mod:MassiveSlam()
-	local msg = CL.count:format(L.massive_slam, massiveSlamCount)
+	local msg = CL.count:format(CL.frontal_cone, massiveSlamCount)
 	self:StopBar(msg)
 	self:Message(404472, "yellow", msg)
 	self:PlaySound(404472, "alert")
@@ -302,7 +302,7 @@ function mod:MassiveSlam()
 	if self:Mythic() then
 		cd = massiveSlamCount % 2 == 0 and 18.0 or 37.0
 	end
-	self:Bar(404472, cd, CL.count:format(L.massive_slam, massiveSlamCount))
+	self:Bar(404472, cd, CL.count:format(CL.frontal_cone, massiveSlamCount))
 end
 
 function mod:BellowingRoar(args)
@@ -436,6 +436,6 @@ function mod:DisintegrateApplied(args)
 	if self:Me(args.destGUID) then
 		self:PersonalMessage(args.spellId)
 		self:PlaySound(args.spellId, "warning")
-		self:Say(args.spellId)
+		self:Say(args.spellId, nil, nil, "Disintegrate")
 	end
 end

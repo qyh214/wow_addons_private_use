@@ -1,6 +1,8 @@
 if not WeakAuras.IsLibsOK() then return end
---- @type string, Private
-local AddonName, Private = ...
+---@type string
+local AddonName = ...
+---@class Private
+local Private = select(2, ...)
 
 local L = WeakAuras.L;
 
@@ -28,6 +30,11 @@ Private.regionPrototype.AddAlphaToDefault(default);
 local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
 
 local properties = {
+  texture = {
+    display = L["Texture"],
+    setter = "SetTexture",
+    type = "texture",
+  },
   color = {
     display = L["Color"],
     setter = "Color",
@@ -79,11 +86,7 @@ local function create(parent)
   region.regionType = "texture"
   region:SetMovable(true);
   region:SetResizable(true);
-  if region.SetResizeBounds then
-    region:SetResizeBounds(1, 1)
-  else
-    region:SetMinResize(1, 1)
-  end
+  region:SetResizeBounds(1, 1)
 
   local texture = region:CreateTexture();
   texture:SetSnapToPixelGrid(false)
@@ -108,7 +111,6 @@ end
 
 local function modify(parent, region, data)
   Private.regionPrototype.modify(parent, region, data);
-  Private.SetTextureOrAtlas(region.texture, data.texture, data.textureWrapMode, data.textureWrapMode);
   region.texture:SetDesaturated(data.desaturate)
   region:SetWidth(data.width);
   region:SetHeight(data.height);
@@ -182,14 +184,24 @@ local function modify(parent, region, data)
   end
 
   function region:Update()
-    if region.state.texture then
-      local oldIsAtlas = region.texture.IsAtlas
-      Private.SetTextureOrAtlas(region.texture, region.state.texture, data.textureWrapMode, data.textureWrapMode)
-      if region.texture.IsAtlas ~= oldIsAtlas then
-        DoTexCoord()
-      end
+    if self.state.texture then
+      self:SetTexture(self.state.texture)
+    end
+    self:UpdateProgress()
+  end
+
+  function region:SetTexture(texture)
+    if self.textureName == texture then
+      return
+    end
+    self.textureName = texture
+    local oldIsAtlas = self.texture.IsAtlas
+    Private.SetTextureOrAtlas(self.texture, self.textureName, data.textureWrapMode, data.textureWrapMode);
+    if self.texture.IsAtlas ~= oldIsAtlas then
+      DoTexCoord()
     end
   end
+  region:SetTexture(data.texture)
 
   function region:Color(r, g, b, a)
     region.color_r = r;

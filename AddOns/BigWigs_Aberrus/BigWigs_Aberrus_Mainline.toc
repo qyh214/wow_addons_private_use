@@ -1,4 +1,4 @@
-## Interface: 100200
+## Interface: 100207, 110000, 110002
 
 ## Title: BigWigs [|cffeda55fAberrus, the Shadowed Crucible|r]
 ## Title-deDE: BigWigs [|cffeda55fAberrus, Schmelztiegel der Schatten|r]
@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 亚贝鲁斯，焰影熔炉模块
 ## Notes-zhTW: BigWigs 『朧影實驗場』亞貝魯斯模組
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v305.2
+## Version: v351.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

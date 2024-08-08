@@ -11,7 +11,7 @@ local FOREIGN_SERVER_LABEL, INTERACTIVE_SERVER_LABEL = FOREIGN_SERVER_LABEL, INT
 local LE_REALM_RELATION_COALESCED, LE_REALM_RELATION_VIRTUAL = LE_REALM_RELATION_COALESCED, LE_REALM_RELATION_VIRTUAL
 local UnitIsPVP, UnitFactionGroup, UnitRealmRelationship = UnitIsPVP, UnitFactionGroup, UnitRealmRelationship
 local UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND, UnitReaction = UnitIsConnected, UnitIsDeadOrGhost, UnitIsAFK, UnitIsDND, UnitReaction
-local InCombatLockdown, IsShiftKeyDown, GetItemInfo = InCombatLockdown, IsShiftKeyDown, GetItemInfo
+local InCombatLockdown, IsShiftKeyDown = InCombatLockdown, IsShiftKeyDown
 local GetCreatureDifficultyColor, UnitCreatureType, UnitClassification = GetCreatureDifficultyColor, UnitCreatureType, UnitClassification
 local UnitIsWildBattlePet, UnitIsBattlePetCompanion, UnitBattlePetLevel = UnitIsWildBattlePet, UnitIsBattlePetCompanion, UnitBattlePetLevel
 local UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel = UnitIsPlayer, UnitName, UnitPVPName, UnitClass, UnitRace, UnitLevel
@@ -52,7 +52,7 @@ function TT:UpdateFactionLine(lineData)
 	if not self:IsTooltipType(Enum.TooltipDataType.Unit) then return end
 
 	local unit = TT.GetUnit(self)
-	local unitClass = unit and UnitClass(unit)
+	local unitClass = unit and UnitIsPlayer(unit) and UnitClass(unit)
 	local unitCreature = unit and UnitCreatureType(unit)
 
 	local linetext = lineData.leftText
@@ -110,7 +110,7 @@ function TT:InsertRoleFrame(role)
 		f:SetSize(18, 18)
 		self.roleFrame = f
 	end
-	self.roleFrame:SetTexture(B.GetRoleTex(role))
+	B.ReskinSmallRole(self.roleFrame, role)
 	self.roleFrame:Show()
 end
 
@@ -149,9 +149,28 @@ function TT:ShowUnitMythicPlusScore(unit)
 	end
 end
 
+local function ShouldHideInCombat()
+	local index = C.db["Tooltip"]["HideInCombat"]
+	if index == 1 then
+		return true
+	elseif index == 2 then
+		return IsAltKeyDown()
+	elseif index == 3 then
+		return IsShiftKeyDown()
+	elseif index == 4 then
+		return IsControlKeyDown()
+	elseif index == 5 then
+		return false
+	end
+end
+
 function TT:OnTooltipSetUnit()
 	if self:IsForbidden() or self ~= GameTooltip then return end
-	if C.db["Tooltip"]["CombatHide"] and InCombatLockdown() then self:Hide() return end
+
+	if (not ShouldHideInCombat()) and InCombatLockdown() then
+		self:Hide()
+		return
+	end
 
 	local unit, guid = TT.GetUnit(self)
 	if not unit or not UnitExists(unit) then return end
@@ -164,7 +183,7 @@ function TT:OnTooltipSetUnit()
 		unitFullName = name.."-"..(realm or DB.MyRealm)
 		local pvpName = UnitPVPName(unit)
 		local relationship = UnitRealmRelationship(unit)
-		if not C.db["Tooltip"]["HideTitle"] and pvpName then
+		if not C.db["Tooltip"]["HideTitle"] and pvpName and pvpName ~= "" then
 			name = pvpName
 		end
 		if realm and realm ~= "" then
@@ -396,7 +415,7 @@ function TT:ReskinTooltip()
 	if data then
 		local link = data.guid and C_Item.GetItemLinkByGUID(data.guid) or data.hyperlink
 		if link then
-			local quality = select(3, GetItemInfo(link))
+			local quality = select(3, C_Item.GetItemInfo(link))
 			local color = DB.QualityColors[quality or 1]
 			if color then
 				self.bg:SetBackdropBorderColor(color.r, color.g, color.b)
@@ -632,7 +651,7 @@ TT:RegisterTooltips("NDui", function()
 		end
 	end)
 
-	if IsAddOnLoaded("BattlePetBreedID") then
+	if C_AddOns.IsAddOnLoaded("BattlePetBreedID") then
 		hooksecurefunc("BPBID_SetBreedTooltip", function(parent)
 			if parent == FloatingBattlePetTooltip then
 				TT.ReskinTooltip(BPBID_BreedTooltip2)
@@ -704,11 +723,6 @@ TT:RegisterTooltips("Blizzard_EncounterJournal", function()
 	EncounterJournalTooltip.Item1.IconBorder:SetAlpha(0)
 	EncounterJournalTooltip.Item2.icon:SetTexCoord(unpack(DB.TexCoord))
 	EncounterJournalTooltip.Item2.IconBorder:SetAlpha(0)
-end)
-
-TT:RegisterTooltips("Blizzard_Calendar", function()
-	CalendarContextMenu:HookScript("OnShow", TT.ReskinTooltip)
-	CalendarInviteStatusContextMenu:HookScript("OnShow", TT.ReskinTooltip)
 end)
 
 TT:RegisterTooltips("Blizzard_PerksProgram", function()

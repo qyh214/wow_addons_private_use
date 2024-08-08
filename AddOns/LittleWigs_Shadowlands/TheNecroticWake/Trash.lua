@@ -18,6 +18,8 @@ mod:RegisterEnableMob(
 	173016, -- Corpse Collector
 	172981, -- Kyrian Stitchwerk
 	165872, -- Flesh Crafter
+	165911, -- Loyal Creation
+	173044, -- Stitching Assistant
 	167731, -- Separation Assistant
 	163621, -- Goregrind
 	163620 -- Rotspew
@@ -42,6 +44,7 @@ if L then
 	L.corpse_collector = "Corpse Collector"
 	L.kyrian_stitchwerk = "Kyrian Stitchwerk"
 	L.flesh_crafter = "Flesh Crafter"
+	L.loyal_creation = "Loyal Creation"
 	L.separation_assistant = "Separation Assistant"
 	L.goregrind = "Goregrind"
 	L.rotspew = "Rotspew"
@@ -74,9 +77,9 @@ function mod:GetOptions()
 		335141, -- Dark Shroud
 		{327396, "SAY", "SAY_COUNTDOWN"}, -- Grim Fate
 		-- Skeletal Monstrosity
-		324394, -- Shatter
+		{324394, "TANK"}, -- Shatter
 		324387, -- Frigid Spikes
-		{324372, "CASTBAR"}, -- Reaping Winds
+		324372, -- Reaping Winds
 		-- Corpse Collector
 		338353, -- Goresplatter
 		-- Kyrian Stitchwerk
@@ -84,7 +87,9 @@ function mod:GetOptions()
 		{338357, "NAMEPLATEBAR"}, -- Tenderize
 		-- Flesh Crafter
 		327130, -- Repair Flesh
-		{323496, "SAY"}, -- Throw Cleaver
+		{323471, "SAY"}, -- Throw Cleaver
+		-- Loyal Creation
+		327240, -- Spine Crush
 		-- Separation Assistant
 		338606, -- Morbid Fixation
 		-- Goregrind
@@ -104,6 +109,7 @@ function mod:GetOptions()
 		[338353] = L.corpse_collector,
 		[338456] = L.kyrian_stitchwerk,
 		[327130] = L.flesh_crafter,
+		[327240] = L.loyal_creation,
 		[338606] = L.separation_assistant,
 		[333477] = L.goregrind,
 		[333479] = L.rotspew,
@@ -111,38 +117,73 @@ function mod:GetOptions()
 end
 
 function mod:OnBossEnable()
+	-- Warmup
 	self:RegisterEvent("CHAT_MSG_MONSTER_SAY")
 
+	-- Corpse Harvester
 	self:Log("SPELL_CAST_START", "DrainFluids", 334748)
+
+	-- Stitched Vanguard
 	self:Log("SPELL_CAST_START", "MeatShield", 323190)
+
+	-- Zolramus Gatekeeper
 	self:Log("SPELL_AURA_APPLIED", "ClingingDarkness", 323347)
 	self:Log("SPELL_CAST_START", "WrathOfZolramus", 322756)
+
+	-- Zolramus Necromancer
 	self:Log("SPELL_AURA_APPLIED", "AnimateDead", 321780)
+
+	-- Brittlebone Mage
 	self:Log("SPELL_CAST_START", "FrostboltVolley", 328667)
+
+	-- Skeletal Marauder
 	self:Log("SPELL_CAST_START", "RaspingScream", 324293)
 	self:Log("SPELL_AURA_APPLIED", "BoneshatterShieldApplied", 343470)
+
+	-- Zolramus Bonemender
 	self:Log("SPELL_CAST_START", "Bonemend", 335143)
 	self:Log("SPELL_CAST_START", "FinalBargain", 320822)
+
+	-- Nar'zudah
 	self:Log("SPELL_CAST_START", "DarkShroud", 335141)
-	self:Log("SPELL_CAST_SUCCESS", "DarkShroudSuccess", 335141)
 	self:Log("SPELL_AURA_REMOVED", "DarkShroudRemoved", 335141)
+	self:Log("SPELL_CAST_SUCCESS", "GrimFate", 327393)
 	self:Log("SPELL_AURA_APPLIED", "GrimFateApplied", 327396)
+	self:Log("SPELL_AURA_REMOVED", "GrimFateRemoved", 327396)
+	self:Death("NarzudahDeath", 165824)
+
+	-- Skeletal Monstrosity
 	self:Log("SPELL_CAST_START", "Shatter", 324394)
 	self:Log("SPELL_CAST_START", "FrigidSpikes", 324387)
 	self:Log("SPELL_CAST_SUCCESS", "ReapingWinds", 324372)
+	self:Death("SkeletalMonstrosityDeath", 165197)
+
+	-- Corpse Collector
 	self:Log("SPELL_CAST_START", "Goresplatter", 338353)
+
+	-- Kyrian Stitchwerk
 	self:Log("SPELL_CAST_START", "Mutilate", 338456)
 	self:Log("SPELL_CAST_START", "Tenderize", 338357)
-	self:Log("SPELL_CAST_START", "RepairFlesh", 327130)
-	self:Log("SPELL_CAST_START", "ThrowCleaver", 323496)
+
+	-- Flesh Crafter
+	self:Log("SPELL_CAST_SUCCESS", "RepairFlesh", 327130) -- SUCCESS on 327130 is when the interruptible channel begins
+	self:Log("SPELL_AURA_APPLIED", "ThrowCleaver", 323471)
+
+	-- Loyal Creation
+	self:Log("SPELL_CAST_START", "SpineCrush", 327240)
+
+	-- Separation Assistant
 	self:Log("SPELL_CAST_START", "MorbidFixation", 338606)
 	self:Log("SPELL_AURA_APPLIED", "MorbidFixationApplied", 338606)
 	self:Log("SPELL_AURA_REMOVED", "MorbidFixationRemoved", 338606)
-	self:Log("SPELL_CAST_START", "GutSlice", 333477)
-	self:Log("SPELL_CAST_START", "SpewDisease", 333479)
 
-	self:Death("SkeletalMonstrosityDeath", 165197)
-	self:Death("NarzudahDeath", 165824)
+	-- Goregrind
+	self:Log("SPELL_CAST_START", "GutSlice", 333477)
+	self:Death("GoregrindDeath", 163621)
+
+	-- Rotspew
+	self:Log("SPELL_CAST_START", "SpewDisease", 333479)
+	self:Death("RotspewDeath", 163620)
 end
 
 --------------------------------------------------------------------------------
@@ -150,10 +191,10 @@ end
 --
 
 -- Warmup
+
 function mod:CHAT_MSG_MONSTER_SAY(event, msg)
 	if msg == L.amarth_warmup_trigger then
 		self:UnregisterEvent(event)
-
 		-- Amarth Warmup
 		local amarthModule = BigWigs:GetBossModule("Amarth, The Reanimator", true)
 		if amarthModule then
@@ -164,6 +205,7 @@ function mod:CHAT_MSG_MONSTER_SAY(event, msg)
 end
 
 -- Corpse Harvester
+
 do
 	local prev = 0
 	function mod:DrainFluids(args)
@@ -173,13 +215,14 @@ do
 		local t = args.time
 		if t-prev > 0.5 then
 			prev = t
-			self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 			self:PlaySound(args.spellId, "alert")
 		end
 	end
 end
 
 -- Stitched Vanguard
+
 do
 	local prev = 0
 	function mod:MeatShield(args)
@@ -196,6 +239,7 @@ do
 end
 
 -- Zolramus Gatekeeper
+
 function mod:ClingingDarkness(args)
 	if self:Me(args.destGUID) or self:Healer() then
 		self:TargetMessage(args.spellId, "yellow", args.destName)
@@ -204,12 +248,13 @@ function mod:ClingingDarkness(args)
 end
 
 function mod:WrathOfZolramus(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red")
 	self:PlaySound(args.spellId, "alarm")
-	self:NameplateCDBar(args.spellId, 15.8, args.sourceGUID)
+	--self:Nameplate(args.spellId, 15.8, args.sourceGUID)
 end
 
 -- Zolramus Necromancer
+
 function mod:AnimateDead(args)
 	-- these NPCs can be mind-controlled by Priests but cannot cast Animate Dead while MC'd
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
@@ -217,6 +262,7 @@ function mod:AnimateDead(args)
 end
 
 -- Brittlebone Mage
+
 function mod:FrostboltVolley(args)
 	if self:MobId(args.sourceGUID) == 163126 then -- Brittlebone Mage, Amarth has adds that cast this spell
 		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by DKs
@@ -228,9 +274,10 @@ function mod:FrostboltVolley(args)
 end
 
 -- Skeletal Marauder
+
 function mod:RaspingScream(args)
 	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
+	self:PlaySound(args.spellId, "alarm")
 end
 
 function mod:BoneshatterShieldApplied(args)
@@ -239,6 +286,7 @@ function mod:BoneshatterShieldApplied(args)
 end
 
 -- Zolramus Bonemender
+
 function mod:Bonemend(args)
 	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
 		return
@@ -256,67 +304,108 @@ function mod:FinalBargain(args)
 end
 
 -- Nar'zudah
-function mod:DarkShroud(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alarm")
-end
 
-function mod:DarkShroudSuccess(args)
-	self:Bar(args.spellId, 23.5)
-end
+do
+	local timer
 
-function mod:DarkShroudRemoved(args)
-	self:Message(args.spellId, "yellow", CL.removed:format(args.spellName))
-	self:PlaySound(args.spellId, "info")
-end
-
-function mod:GrimFateApplied(args)
-	self:TargetMessage(args.spellId, "yellow", args.destName)
-	self:PlaySound(args.spellId, "alert", nil, args.destName)
-	if self:MobId(args.sourceGUID) == 165824 then -- Nar'zudah
-		self:CDBar(args.spellId, 17.4)
+	function mod:DarkShroud(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+		self:PlaySound(args.spellId, "alert")
+		self:CDBar(args.spellId, 22.7)
+		timer = self:ScheduleTimer("NarzudahDeath", 30)
 	end
-	if self:Me(args.destGUID) then
-		self:Say(args.spellId)
-		self:SayCountdown(args.spellId, 4)
-	end
-end
 
-function mod:NarzudahDeath(args)
-	self:StopBar(335141) -- Dark Shroud
-	self:StopBar(327396) -- Grim Fate
+	function mod:DarkShroudRemoved(args)
+		self:Message(args.spellId, "green", CL.removed:format(args.spellName))
+		self:PlaySound(args.spellId, "info")
+	end
+
+	function mod:GrimFate(args)
+		if self:MobId(args.sourceGUID) == 165824 then -- Nar'zudah
+			if timer then
+				self:CancelTimer(timer)
+			end
+			self:CDBar(327396, 20.7)
+			timer = self:ScheduleTimer("NarzudahDeath", 30)
+		end
+	end
+
+	function mod:GrimFateApplied(args)
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:PlaySound(args.spellId, "alarm", nil, args.destName)
+		if self:Me(args.destGUID) then
+			self:Say(args.spellId, nil, nil, "Grim Fate")
+			self:SayCountdown(args.spellId, 4)
+		end
+	end
+
+	function mod:GrimFateRemoved(args)
+		if self:Me(args.destGUID) then
+			self:CancelSayCountdown(args.spellId)
+		end
+	end
+
+	function mod:NarzudahDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(335141) -- Dark Shroud
+		self:StopBar(327396) -- Grim Fate
+	end
 end
 
 -- Skeletal Monstrosity
-function mod:Shatter(args)
-	self:Message(args.spellId, "purple", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, self:Tank() and "alarm" or "info")
-	self:CDBar(args.spellId, 15.7)
-end
 
-function mod:FrigidSpikes(args)
-	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
-	self:CDBar(args.spellId, 12.1)
-end
+do
+	local timer
 
-function mod:ReapingWinds(args)
-	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alarm")
-	self:CDBar(args.spellId, 20)
-	self:CastBar(args.spellId, 4)
-end
+	function mod:Shatter(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "purple")
+		self:PlaySound(args.spellId, "alert")
+		self:CDBar(args.spellId, 17.0)
+		timer = self:ScheduleTimer("SkeletalMonstrosityDeath", 30)
+	end
 
-function mod:SkeletalMonstrosityDeath(args)
-	self:StopBar(324394) -- Shatter
-	self:StopBar(324387) -- Rigid Spikes
+	function mod:FrigidSpikes(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "yellow")
+		self:PlaySound(args.spellId, "alert")
+		self:CDBar(args.spellId, 12.1)
+		timer = self:ScheduleTimer("SkeletalMonstrosityDeath", 30)
+	end
 
-	-- Reaping Winds
-	self:StopBar(324372)
-	self:StopBar(CL.cast:format(self:SpellName(324372)))
+	function mod:ReapingWinds(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "orange")
+		self:PlaySound(args.spellId, "alarm")
+		self:CDBar(args.spellId, 20.6)
+		timer = self:ScheduleTimer("SkeletalMonstrosityDeath", 30)
+	end
+
+	function mod:SkeletalMonstrosityDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(324394) -- Shatter
+		self:StopBar(324387) -- Rigid Spikes
+		self:StopBar(324372) -- Reaping Winds
+	end
 end
 
 -- Corpse Collector
+
 function mod:Goresplatter(args)
 	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
 		return
@@ -326,74 +415,66 @@ function mod:Goresplatter(args)
 end
 
 -- Kyrian Stitchwerk
+
 function mod:Mutilate(args)
 	if self:MobId(args.sourceGUID) ~= 164578 then -- Stitchflesh's Creation, add on Surgeon Stitchflesh
-		self:Message(args.spellId, "purple", CL.casting:format(args.spellName))
-		self:PlaySound(args.spellId, "alarm")
+		self:Message(args.spellId, "purple")
+		self:PlaySound(args.spellId, "alert")
 	end
 end
 
 function mod:Tenderize(args)
-	self:Message(args.spellId, "purple", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, self:Tank() and "alert" or "info")
+	self:Message(args.spellId, "purple")
+	self:PlaySound(args.spellId, "info")
 	-- This bar is here in case dps/pets taunt to let the tank drop stacks
-	self:NameplateCDBar(args.spellId, 12.2, args.sourceGUID)
+	--self:Nameplate(args.spellId, 12.2, args.sourceGUID)
 end
 
 -- Flesh Crafter
+
 function mod:RepairFlesh(args)
 	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
 		return
 	end
-	self:Message(args.spellId, "orange", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
 end
 
 do
-	local function printTarget(self, name, guid)
-		self:TargetMessage(323496, "yellow", name)
-		self:PlaySound(323496, "info", nil, name)
-		if self:Me(guid) then
-			self:Say(323496)
+	local prevOnMe = 0
+	function mod:ThrowCleaver(args)
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:PlaySound(args.spellId, "info", nil, args.destName)
+		local t = args.time
+		if self:Me(args.destGUID) and t - prevOnMe > 2 then
+			prevOnMe = t
+			self:Say(args.spellId, nil, nil, "Throw Cleaver")
 		end
 	end
-
-	function mod:ThrowCleaver(args)
-		-- The mob takes a long time to actually target the player
-		self:GetUnitTarget(printTarget, 2, args.sourceGUID)
-	end
 end
 
--- Separation Assistant
-do
-	local function printTarget(self, name, guid)
-		self:TargetMessage(338606, "yellow", name) -- Morbid Fixation
-		self:PlaySound(338606, self:Me(guid) and "alarm" or "info", nil, name) -- Morbid Fixation
-	end
+-- Loyal Creation
 
-	function mod:MorbidFixation(args)
-		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
-	end
-end
-
--- Goregrind
-function mod:GutSlice(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+function mod:SpineCrush(args)
+	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
 end
 
--- Rotspew
+-- Separation Assistant
+
 do
 	local function printTarget(self, name, guid)
-		self:TargetMessage(333479, "yellow", name)
-		self:PlaySound(333479, "alert", nil, name)
+		self:TargetMessage(338606, "yellow", name)
 		if self:Me(guid) then
-			self:Say(333479)
+			self:PlaySound(338606, "alarm", nil, name)
+		else
+			self:PlaySound(338606, "info", nil, name)
 		end
 	end
 
-	function mod:SpewDisease(args)
-		self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
+	function mod:MorbidFixation(args)
+		-- alert earlier using target scanning instead of watching the debuff
+		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
 	end
 end
 
@@ -403,4 +484,61 @@ end
 
 function mod:MorbidFixationRemoved(args)
 	self:StopBar(args.spellId, args.destName)
+end
+
+-- Goregrind
+
+do
+	local timer
+
+	function mod:GutSlice(args)
+		if timer then
+			self:CancelTimer(timer)
+		end
+		self:Message(args.spellId, "red")
+		self:CDBar(args.spellId, 14.5)
+		self:PlaySound(args.spellId, "alarm")
+		timer = self:ScheduleTimer("GoregrindDeath", 30)
+	end
+
+	function mod:GoregrindDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(333477) -- Gut Slice
+	end
+end
+
+-- Rotspew
+
+do
+	local timer
+
+	do
+		local function printTarget(self, name, guid)
+			self:TargetMessage(333479, "yellow", name)
+			self:PlaySound(333479, "alert", nil, name)
+			if self:Me(guid) then
+				self:Say(333479, nil, nil, "Spew Disease")
+			end
+		end
+
+		function mod:SpewDisease(args)
+			if timer then
+				self:CancelTimer(timer)
+			end
+			self:GetUnitTarget(printTarget, 0.2, args.sourceGUID)
+			self:CDBar(args.spellId, 12.1)
+			timer = self:ScheduleTimer("RotspewDeath", 30)
+		end
+	end
+
+	function mod:RotspewDeath()
+		if timer then
+			self:CancelTimer(timer)
+			timer = nil
+		end
+		self:StopBar(333479) -- Spew Disease
+	end
 end

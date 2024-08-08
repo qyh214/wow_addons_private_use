@@ -3,6 +3,7 @@
 
 do
 	WQT_VERSION = 414
+	ARROW_UPDATE_FREQUENCE = 0.2
 
 	--update quest type max when a new type of world quest is added to the filtering
 	WQT_QUESTTYPE_MAX = 		11			--[[global]]
@@ -80,6 +81,9 @@ do
 
 	local default_config = {
 		profile = {
+			ignore_maps = {
+				[1978] = false, --dragon isles
+			},
 			filters = {
 				pet_battles = true,
 				pvp = true,
@@ -92,6 +96,16 @@ do
 				trade_skill = true,
 				reputation_token = true,
 				racing = true,
+			},
+
+			dragon_racing = {
+				minimap_enabled = true,
+				minimap_scale = 1,
+				minimap_track_color = {1, 1, 1},
+			},
+
+			close_blizz_popups = {
+				ABANDON_QUEST = false,
 			},
 
 			sort_order = {
@@ -170,7 +184,10 @@ do
 				summary_widgets_per_row = 8,
 			},
 
-			disable_world_map_widgets = false,
+			disable_world_map_widgets = false, --a
+			show_filter_button = false, --a
+			show_sort_button = false, --a
+			show_timeleft_button = true, --a
 
 			show_emissary_info = true,
 
@@ -188,6 +205,9 @@ do
 			show_world_shortcuts = false,
 
 			last_news_time = 0,
+
+			world_summary_alpha = 0.843, --parei fazendo a substituição dos valores hardcoded to these values, parei na criação da opção de mudar o alpha, parei procurando as funções que atualiza of frames com o novo alpha
+			worldmap_widget_alpha = 0.843,
 
 			hoverover_animations = true, --hover and shown slider animations
 			anchor_options = {}, --store the anchor options of each anchor
@@ -222,6 +242,7 @@ do
 			tracker_scale = 1,
 			tracker_show_time = false,
 			tracker_textsize = 12,
+			tracker_background_alpha = 0.15,
 
 			talking_heads_heard = {},--a
 			talking_heads_torgast = false,--a
@@ -408,12 +429,72 @@ do
 		TimeBlipSize = 14,
 	}
 
-	WorldQuestTrackerAddon.WorldWidgetAlpha = .75
-	WorldQuestTrackerAddon.WorldWidgetSmallAlpha = .75
-
 	WorldQuestTracker.ChangeLogTable = {}
 end
 
 
 
+--old to new api of wow v11
+--C_Reputation.GetFactionDataByID
+if (not GetFactionInfoByID) then
+	WorldQuestTrackerAddon.GetFactionDataByID = function(id)
+		---@type factioninfo
+		local fD = C_Reputation.GetFactionDataByID(id) --sometimes he data isn't yet loaded, calling the function will make the client download the quest info.
+		if (not fD) then
+			return
+		end
 
+		return fD.name, fD.description, fD.currentStanding, 0, fD.nextReactionThreshold, fD.currentReactionThreshold, fD.atWarWith, fD.canToggleAtWar, fD.isHeader, fD.isCollapsed, fD.isHeaderWithRep, fD.isWatched, fD.isChild, fD.factionID,	fD.hasBonusRepGain, false
+
+		--[=[]]
+		--hasBonusRepGain=false,
+		--description="Centaur clans roam the Ohn'ahran Plains, where they follow the call of the wind and seek the thrill of the hunt.",
+		--isHeaderWithRep=false,
+		--isHeader=false,
+		--currentReactionThreshold=3000,
+		canSetInactive=true,
+		--atWarWith=false,
+		--isWatched=false,
+		--isCollapsed=false,
+		--canToggleAtWar=false,
+		--nextReactionThreshold=9000,
+		--factionID=2503,
+		--name="Maruuk Centaur",
+		--currentStanding=3000,
+		isAccountWide=true,
+		--isChild=false,
+		reaction=5
+		--]=]
+
+		--local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus = GetFactionInfoByID (id)
+		--return name
+	end
+else
+	WorldQuestTrackerAddon.GetFactionDataByID = GetFactionInfoByID
+end
+
+if (not GetNumQuestLogRewardCurrencies) then
+	WorldQuestTrackerAddon.GetNumQuestLogRewardCurrencies = function(questID)
+		---@type questrewardcurrencyinfo[]
+		local tQuestCurrencies = C_QuestLog.GetQuestRewardCurrencies(questID) or {}
+		return #tQuestCurrencies
+	end
+else
+	WorldQuestTrackerAddon.GetNumQuestLogRewardCurrencies = GetNumQuestLogRewardCurrencies
+end
+
+if (not GetQuestLogRewardCurrencyInfo) then
+	WorldQuestTrackerAddon.GetQuestLogRewardCurrencyInfo = function(currencyIndex, questID)
+		---@type questrewardcurrencyinfo[]
+		local tQuestCurrencies = C_QuestLog.GetQuestRewardCurrencies(questID)
+		tQuestCurrencies = tQuestCurrencies or {}
+		local questRewardCurrencyInfo = tQuestCurrencies[currencyIndex]
+		if (questRewardCurrencyInfo) then
+			return questRewardCurrencyInfo.name, questRewardCurrencyInfo.texture, questRewardCurrencyInfo.baseRewardAmount, questRewardCurrencyInfo.currencyID, questRewardCurrencyInfo.bonusRewardAmount
+		end
+	end
+else
+	WorldQuestTrackerAddon.GetQuestLogRewardCurrencyInfo = GetQuestLogRewardCurrencyInfo
+end
+
+--WorldQuestTrackerAddon.__debug = true

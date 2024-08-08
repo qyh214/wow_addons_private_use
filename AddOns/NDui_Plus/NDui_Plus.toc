@@ -1,9 +1,9 @@
-## Interface: 100200
+## Interface: 110000
 ## Title: |cff0080ffNDui|r Plus
 ## Author: Witness
 ## Notes: NDui Plugin
 ## RequiredDeps: NDui
-## Version: 1.8.8
+## Version: 11.0.2
 ## IconTexture: Interface\AddOns\NDui_Plus\Media\Texture\icon2
 ## SavedVariables: NDuiPlusDB
 ## SavedVariablesPerCharacter: NDuiPlusCharDB

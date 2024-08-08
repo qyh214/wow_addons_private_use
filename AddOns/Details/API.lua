@@ -153,6 +153,7 @@ DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASH = 11
 DETAILS_SEGMENTTYPE_MYTHICDUNGEON_OVERALL = 12
 DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASHOVERALL = 13
 DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSS = 14
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSSTRASH = 15
 DETAILS_SEGMENTTYPE_PVP_ARENA = 20
 DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND = 21
 
@@ -198,7 +199,7 @@ table members: name, mapid, zone@
 time = combat:GetCombatTime()
 @COMMENTreturns the length of the combat in seconds, if the combat is in progress, returns the current elapsed time.@
 
-minutes, seconds = GetFormatedCombatTime()
+minutes, seconds = GetMSTime()
 @COMMENTreturns the combat time formated with minutes and seconds.@
 
 startDate, endDate = combat:GetDate()
@@ -241,9 +242,6 @@ total = combat:GetTotal ( attribute, subAttribute [, onlyGroup] )
 
 mythictInfo = combat:GetMythicDungeonInfo()
 @COMMENTreturns a table with information about the mythic dungeon encounter.@
-
-mythicTrashInfo = combat:GetMythicDungeonTrashInfo()
-@COMMENTreturns a table with information about the trash cleanup for this combat.@
 
 isMythicDungeonSegment = combat:IsMythicDungeon()
 @COMMENTreturns if the segment is from a mythic dungeon.@
@@ -561,7 +559,7 @@ Details:GetSourceFromNpcId (npcId)
 return the npc name for the specific npcId.
 this is a expensive function, once you get a valid result, store the npc name somewhere.
 
-bestResult, encounterTable = Details.storage:GetBestFromPlayer (encounterDiff, encounterId, playerRole, playerName)
+bestResult, encounterTable = Details222.storage.GetBestFromPlayer (encounterDiff, encounterId, playerRole, playerName)
 query the storage for the best result of the player on the encounter.
 encounterDiff = raid difficult ID (15 for heroic, 16 for mythic).
 encounterId = may be found on "id" member getting combat:GetBossInfo().
@@ -570,7 +568,7 @@ playerName = name of the player to query (with server name if the player is from
 bestResult = integer, best damage or healing done on the boss made by the player.
 encounterTable = {["date"] = formated time() ["time"] = time() ["elapsed"] = combat time ["guild"] = guild name ["damage"] = all damage players ["healing"] = all healers}
 
-heal_or_damage_done = Details.storage:GetPlayerData (encounterDiff, encounterId, playerName)
+heal_or_damage_done = Details222.storage.GetUnitData (encounterDiff, encounterId, role, playerName)
 query the storage for previous ecounter data for the player.
 returns a numeric table with the damage or healing done by the player on all encounters found.
 encounterDiff = raid difficult ID (15 for heroic, 16 for mythic).

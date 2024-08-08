@@ -66,6 +66,165 @@ function Internal.UpdateClassInfo()
     end
 end
 
+local treesByClassID = {
+    [1] = { 60, 61, 62 }, -- Warrior
+    [2] = { 48, 49, 50 }, -- Paladin
+    [3] = { 42, 43, 44 }, -- Hunter
+    [4] = { 51, 52, 53 }, -- Rogue
+    [5] = { 18, 19, 20 }, -- Priest
+    [6] = { 31, 32, 33 }, -- Death Knight
+    [7] = { 54, 55, 56 }, -- Shaman
+    [8] = { 39, 40, 41 }, -- Mage
+    [9] = { 57, 58, 59 }, -- Warlock
+    [10] = { 64, 65, 66 }, -- Monk
+    [11] = { 21, 22, 23, 24 }, -- Druid
+    [12] = { 34, 35 }, -- Demon Hunter
+    [13] = { 36, 37, 38 }, -- Evoker
+}
+local treesBySpecID = {
+    [62] = { 39, 40 }, -- Arcane
+    [63] = { 39, 41 }, -- Fire
+    [64] = { 40, 41 }, -- Frost
+    [65] = { 49, 50 }, -- Holy
+    [66] = { 48, 49 }, -- Protection
+    [70] = { 48, 50 }, -- Retribution
+    [71] = { 60, 62 }, -- Arms
+    [72] = { 60, 61 }, -- Fury
+    [73] = { 61, 62 }, -- Protection
+    [102] = { 23, 24 }, -- Balance
+    [103] = { 21, 22 }, -- Feral
+    [104] = { 21, 24 }, -- Guardian
+    [105] = { 22, 23 }, -- Restoration
+    [250] = { 31, 33 }, -- Blood
+    [251] = { 32, 33 }, -- Frost
+    [252] = { 31, 32 }, -- Unholy
+    [253] = { 43, 44 }, -- Beast Mastery
+    [254] = { 42, 44 }, -- Marksmanship
+    [255] = { 42, 43 }, -- Survival
+    [256] = { 18, 20 }, -- Discipline
+    [257] = { 19, 20 }, -- Holy
+    [258] = { 18, 19 }, -- Shadow
+    [259] = { 52, 53 }, -- Assassination
+    [260] = { 51, 52 }, -- Outlaw
+    [261] = { 51, 53 }, -- Subtlety
+    [262] = { 55, 56 }, -- Elemental
+    [263] = { 54, 55 }, -- Enhancement
+    [264] = { 54, 56 }, -- Restoration
+    [265] = { 57, 58 }, -- Affliction
+    [266] = { 57, 59 }, -- Demonology
+    [267] = { 58, 59 }, -- Destruction
+    [268] = { 65, 66 }, -- Brewmaster
+    [269] = { 64, 65 }, -- Windwalker
+    [270] = { 64, 66 }, -- Mistweaver
+    [577] = { 34, 35 }, -- Havoc
+    [581] = { 34, 35 }, -- Vengeance
+    [1467] = { 36, 37 }, -- Devastation
+    [1468] = { 37, 38 }, -- Preservation
+    [1473] = { 36, 38 }, -- Augmentation
+}
+local specsByTreeID = {
+    [18] = { 256, 258 }, -- Voidweaver
+    [19] = { 257, 258 }, -- Archon
+    [20] = { 256, 257 }, -- Oracle
+    [21] = { 103, 104 }, -- Druid of the Claw
+    [22] = { 103, 105 }, -- Wildstalker
+    [23] = { 102, 105 }, -- Keeper of the Grove
+    [24] = { 102, 104 }, -- Elune's Chosen
+    [31] = { 250, 252 }, -- San'layn
+    [32] = { 251, 252 }, -- Rider of the Apocalypse
+    [33] = { 250, 251 }, -- Deathbringer
+    [34] = { 577, 581 }, -- Fel-Scarred
+    [35] = { 577, 581 }, -- Aldrachi Reaver
+    [36] = { 1467, 1473 }, -- Scalecommander
+    [37] = { 1467, 1468 }, -- Flameshaper
+    [38] = { 1468, 1473 }, -- Chronowarden
+    [39] = { 62, 63 }, -- Sunfury
+    [40] = { 62, 64 }, -- Spellslinger
+    [41] = { 63, 64 }, -- Frostfire
+    [42] = { 254, 255 }, -- Sentinel
+    [43] = { 253, 255 }, -- Pack Leader
+    [44] = { 253, 254 }, -- Dark Ranger
+    [48] = { 66, 70 }, -- Templar
+    [49] = { 65, 66 }, -- Lightsmith
+    [50] = { 65, 70 }, -- Herald of the Sun
+    [51] = { 260, 261 }, -- Trickster
+    [52] = { 259, 260 }, -- Fatebound
+    [53] = { 259, 261 }, -- Deathstalker
+    [54] = { 263, 264 }, -- Totemic
+    [55] = { 262, 263 }, -- Stormbringer
+    [56] = { 262, 264 }, -- Farseer
+    [57] = { 265, 266 }, -- Soul Harvester
+    [58] = { 265, 267 }, -- Hellcaller
+    [59] = { 266, 267 }, -- Diabolist
+    [60] = { 71, 72 }, -- Slayer
+    [61] = { 72, 73 }, -- Mountain Thane
+    [62] = { 71, 73 }, -- Colossus
+    [64] = { 269, 270 }, -- Conduit of the Celestials
+    [65] = { 268, 269 }, -- Shado-Pan
+    [66] = { 268, 270 }, -- Master of Harmony
+}
+local classByTreeID = {
+    [18] = 5, -- Voidweaver
+    [19] = 5, -- Archon
+    [20] = 5, -- Oracle
+    [21] = 11, -- Druid of the Claw
+    [22] = 11, -- Wildstalker
+    [23] = 11, -- Keeper of the Grove
+    [24] = 11, -- Elune's Chosen
+    [31] = 6, -- San'layn
+    [32] = 6, -- Rider of the Apocalypse
+    [33] = 6, -- Deathbringer
+    [34] = 12, -- Fel-Scarred
+    [35] = 12, -- Aldrachi Reaver
+    [36] = 13, -- Scalecommander
+    [37] = 13, -- Flameshaper
+    [38] = 13, -- Chronowarden
+    [39] = 8, -- Sunfury
+    [40] = 8, -- Spellslinger
+    [41] = 8, -- Frostfire
+    [42] = 3, -- Sentinel
+    [43] = 3, -- Pack Leader
+    [44] = 3, -- Dark Ranger
+    [48] = 2, -- Templar
+    [49] = 2, -- Lightsmith
+    [50] = 2, -- Herald of the Sun
+    [51] = 4, -- Trickster
+    [52] = 4, -- Fatebound
+    [53] = 4, -- Deathstalker
+    [54] = 7, -- Totemic
+    [55] = 7, -- Stormbringer
+    [56] = 7, -- Farseer
+    [57] = 9, -- Soul Harvester
+    [58] = 9, -- Hellcaller
+    [59] = 9, -- Diabolist
+    [60] = 1, -- Slayer
+    [61] = 1, -- Mountain Thane
+    [62] = 1, -- Colossus
+    [64] = 10, -- Conduit of the Celestials
+    [65] = 10, -- Shado-Pan
+    [66] = 10, -- Master of Harmony
+}
+function Internal.IsHeroTalentTreeValidForSpecID(treeID, specID)
+    for _,id in ipairs(specsByTreeID[treeID]) do
+        if id == specID then
+            return true
+        end
+    end
+    return false
+end
+function Internal.GetClassIDByHeroTalentTreeID(treeID)
+    return classByTreeID[treeID]
+end
+function Internal.GetSpecIDsByHeroTalentTreeID(treeID)
+    return specsByTreeID[treeID]
+end
+function Internal.GetHeroTalentTreeIDsByClassID(classID)
+	return treesByClassID[classID]
+end
+function Internal.GetHeroTalentTreeIDsBySpecID(specID)
+    return treesBySpecID[specID]
+end
+
 -- In very niche situations UnitFullName will not correctly respond with the realm
 -- but since player realm cant change while logged in we can just reuse the previous value
 local playerNameCache, playerRealmCache
@@ -8160,7 +8319,7 @@ do
 	function Internal.GetTreeInfoBySpecID(specID)
 		local result = BtWLoadoutsTraitsInfo.trees[specID] or trees[specID];
 		if not result then
-			C_ClassTalents.InitializeViewLoadout(specID, 70);
+			C_ClassTalents.InitializeViewLoadout(specID, GetMaxLevelForPlayerExpansion());
 			C_ClassTalents.ViewLoadout({});
 			Internal.UpdateTraitInfoFromConfig(specID, Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID);
 
@@ -8204,7 +8363,7 @@ do
 	end
 	function Internal.UpdateTraitInfoFromPlayer()
 		local specID = GetSpecializationInfo(GetSpecialization());
-		C_ClassTalents.InitializeViewLoadout(specID, 70);
+		C_ClassTalents.InitializeViewLoadout(specID, GetMaxLevelForPlayerExpansion());
 
 		local success = C_ClassTalents.ViewLoadout({});
 		if not success then
@@ -8413,7 +8572,7 @@ do
 	end
 end
 function Internal.DeleteCharacter(slug)
-	if Internal.Call("CHARACTER_DELETE", slug) then
+	if Internal.Call("CharacterDeleted", slug) then
 		BtWLoadoutsCharacterInfo[slug] = nil
 	end
 	BtWLoadoutsFrame:Update();
