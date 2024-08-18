@@ -9,8 +9,7 @@ BigWigs:AddColors("E.D.N.A.", {
 
 BigWigs:AddColors("Skarmorak", {
 	[422233] = "purple",
-	[423200] = "cyan",
-	[423228] = "green",
+	[423200] = {"cyan","green"},
 	[423538] = "orange",
 	[423572] = "green",
 })
@@ -26,7 +25,7 @@ BigWigs:AddColors("Master Machinists", {
 })
 
 BigWigs:AddColors("Void Speaker Eirich", {
-	[427461] = {"green","yellow"},
+	[427461] = {"blue","green","yellow"},
 	[427852] = "red",
 	[427869] = "orange",
 })

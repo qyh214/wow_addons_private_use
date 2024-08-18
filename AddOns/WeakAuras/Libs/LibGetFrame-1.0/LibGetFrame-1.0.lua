@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 60
+local MINOR_VERSION = 61
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -49,6 +49,7 @@ local defaultFramePriorities = {
   "^PitBull4_Groups_Party", -- pitbull4
   "^CompactRaid", -- blizz
   "^CompactParty", -- blizz
+  "^PartyFrame",
   -- player frame
   "^InvenUnitFrames_Player",
   "^SUFUnitplayer",
@@ -113,6 +114,7 @@ local defaultPartyFrames = {
   "^ElvUF_PartyGroup",
   "^oUF_.-Party",
   "^PitBull4_Groups_Party",
+  "^PartyFrame",
   "^CompactParty",
 }
 local getDefaultPartyFrames = function()
@@ -295,6 +297,22 @@ function lib.GetProfileData()
   return profileData or {}
 end
 
+-- if frame doesn't have a name, try to use the key from it's parent
+local function recurseGetName(frame)
+  local name = frame.GetName and frame:GetName() or nil
+  if name then
+     return name
+  end
+  local parent = frame.GetParent and frame:GetParent()
+  if parent then
+     for key, child in pairs(parent) do
+        if child == frame then
+           return (recurseGetName(parent) or "") .. "." .. key
+        end
+     end
+  end
+end
+
 local function ScanFrames(depth, frame, ...)
   coroutine.yield()
   if not frame then
@@ -307,10 +325,12 @@ local function ScanFrames(depth, frame, ...)
     end
     if frameType == "Button" then
       local unit = SecureButton_GetUnit(frame)
-      local name = frame:GetName()
-      if unit and frame:IsVisible() and name then
-        FrameToFrameName:Add(frame, name)
-        FrameToUnit:Add(frame, unit)
+      if unit and frame:IsVisible() then
+        local name = recurseGetName(frame)
+        if name then
+          FrameToFrameName:Add(frame, name)
+          FrameToUnit:Add(frame, unit)
+        end
       end
     end
   end

@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "itIT")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "Potete uccidere il mio Parassita della Lava!"
+	L.stage2_yell_trigger = "Inconcepibile" --Inconcepibile! Avete sconfitto il mio Verme della Lava! Forse posso bilanciare la situazione.
 
 	L.slump = "Crollo"
 	L.slump_desc = "Avvisa il crollo di Magmaw ed espone la sua testa, permettendo ai cavalcatori del rodeo di iniziare."
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "itIT")
 if L then
 	L.obnoxious_fiend = "Demonio Ripugnante" -- NPC ID 49740
-	L.air_phase_trigger = "Sì, correte! Con ogni passo il cuore batte più forte."
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "itIT")
 if L then
 	L.discharge = "Scarica"
-	L.stage3_yell_trigger = "Ho cercato di essere un'ospite cortese"
+	L.stage3_yell_trigger = "UCCIDERVI TUTTI" -- Ho cercato di essere un ospite cortese, ma non volete proprio morire! È ora di abbandonare ogni formalità e... UCCIDERVI TUTTI!
 	--L.too_close = "Dragons are too close"
 end

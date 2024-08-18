@@ -147,7 +147,7 @@ function UpdateInfoBoxList()
 				mod:SetInfo(433251, line + 1, CL.seconds:format(remaining))
 				mod:SetInfoBar(433251, line, remaining / 20)
 			else
-				if UnitIsDeadOrGhost(player) then
+				if mod:UnitIsDeadOrGhost(player) then
 					mod:SetInfo(433251, line + 1, CL.dead, 1, 0.2, 0.2)
 				else
 					if player == magneticPulsePlayer then

@@ -695,6 +695,10 @@ L["STRING_OPTIONS_MINIMAP_DESC"] = "Afficher ou masquer l'icône de la mini-cart
 L["STRING_OPTIONS_MISCTITLE"] = "Réglages divers"
 L["STRING_OPTIONS_MISCTITLE2"] = "Ceux-ci contrôlent plusieurs options."
 --[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Time To Auto Close"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
+--[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "Si un boss est lancé si on est en combat, cette option ferme le combat en cours et en lance un nouveau spécifiquement pour le boss."
 L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Calcul DPS global du segment"
@@ -967,6 +971,8 @@ L["STRING_OPTIONS_TEXT_LPOSITION"] = "Afficher le numéro"
 L["STRING_OPTIONS_TEXT_LPOSITION_DESC"] = "Afficher le numéro de position sur le côté gauche du nom du joueur."
 L["STRING_OPTIONS_TEXT_LTRANSLIT"] = "Translittérer"
 L["STRING_OPTIONS_TEXT_LTRANSLIT_DESC"] = "Faire en sorte que ces lettres russes que personne ne comprend soient présentées comme des lettres occidentales."
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Texte de droite :"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Activez ou désactivez le contour du texte de droite."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Icônes :"

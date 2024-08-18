@@ -1,7 +1,7 @@
-## Interface: 100207, 110000
+## Interface: 110002
 ## Title: |cffe8344fPatched|r WeakAuras Templates
 ## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.15.4
+## Version: 5.16.1
 ## IconTexture: Interface\AddOns\WeakAuras\Media\Textures\icon.blp
 ## Notes: Templates for WeakAuras
 ## X-Category: Interface Enhancements

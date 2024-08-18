@@ -131,7 +131,7 @@ function UF.HealthPostUpdate(element, unit, cur, max)
 	end
 	if useGradientClass then
 		local color
-		if UnitIsPlayer(unit) then
+		if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then
 			local _, class = UnitClass(unit)
 			color = self.colors.class[class]
 		elseif UnitReaction(unit, "player") then
@@ -1392,7 +1392,7 @@ function UF:CreateClassPower(self)
 			end
 			local chargeStar = bar.chargeParent:CreateTexture()
 			chargeStar:SetTexture(DB.starTex)
-			chargeStar:SetSize(14, 14)
+			chargeStar:SetSize(12, 12)
 			chargeStar:SetPoint("CENTER", bars[i])
 			chargeStar:Hide()
 			bars[i].chargeStar = chargeStar

@@ -115,6 +115,10 @@
 	--pets
 		local petCache = petContainer.Pets
 
+	--store the unit names from all group members
+		---@type table<guid, unitname>
+		local group_roster_name_cache = {}
+
 	--ignore deaths
 		local ignore_death_cache = {}
 	--cache
@@ -942,7 +946,6 @@
 				end
 
 				--local spellInfo = C_Spell.GetSpellInfo(spellId)
-				--print("1 spell:", spellId, spellInfo.name)
 				Details222.StartCombat(sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
 			else
 				--entrar em combate se for dot e for do jogador e o ultimo combate ter sido a mais de 10 segundos atr�s
@@ -953,7 +956,6 @@
 
 					--can't start a combat with a dot with the latest combat finished less than 10 seconds ago
 					if (Details.last_combat_time + 10 < _tempo) then
-						--print("2 spell:", spellId)
 						Details222.StartCombat(sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
 					end
 				end
@@ -1186,22 +1188,25 @@
 			thisEvent[3] = amount --amount of damage or healing
 			thisEvent[4] = time --parser time
 
-			--current unit heal
+			--current unit healh
 			if (targetActor.arena_enemy) then
 				--this is an arena enemy, get the heal with the unit Id
 				local unitId = Details.arena_enemies[targetName]
 				if (not unitId) then
 					unitId = Details:GuessArenaEnemyUnitId(targetName)
 				end
+
 				if (unitId) then
-					thisEvent[5] = UnitHealth(unitId) / UnitHealthMax(unitId)
+					local health = UnitHealth(unitId)
+					local maxHealth = max(UnitHealthMax(unitId), SMALL_FLOAT)
+					thisEvent[5] = health / maxHealth
 				else
 					thisEvent[5] = cacheAnything.arenaHealth[targetName] or 100000
 				end
 
 				cacheAnything.arenaHealth[targetName] = thisEvent[5]
 			else
-				thisEvent[5] = UnitHealth(targetName) / UnitHealthMax(targetName)
+				thisEvent[5] = UnitHealth(targetName) / max(UnitHealthMax(targetName), SMALL_FLOAT)
 			end
 
 			thisEvent[6] = sourceName --source name
@@ -1302,7 +1307,7 @@
 				thisEvent[2] = spellId --spellid || false if this is a battle ress line
 				thisEvent[3] = amount --amount of damage or healing
 				thisEvent[4] = time --parser time
-				thisEvent[5] = UnitHealth(targetName) / UnitHealthMax(targetName) --current unit heal
+				thisEvent[5] = UnitHealth(targetName) / max(UnitHealthMax(targetName), SMALL_FLOAT) --current unit heal
 				thisEvent[6] = sourceName --source name
 				thisEvent[7] = absorbed
 				thisEvent[8] = spellType or school
@@ -2662,12 +2667,12 @@
 						unitId = Details:GuessArenaEnemyUnitId(targetName)
 					end
 					if (unitId) then
-						thisEvent[5] = UnitHealth(unitId) / UnitHealthMax(unitId)
+						thisEvent[5] = UnitHealth(unitId) / max(UnitHealthMax(unitId), SMALL_FLOAT)
 					else
 						thisEvent[5] = 0
 					end
 				else
-					thisEvent[5] = UnitHealth(targetName) / UnitHealthMax(targetName)
+					thisEvent[5] = UnitHealth(targetName) / max(UnitHealthMax(targetName), SMALL_FLOAT)
 				end
 
 				thisEvent[6] = sourceName
@@ -5907,10 +5912,12 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	end
 
 	local keystoneLevels = {}
+	local playerRatings = {}
 	Details.KeystoneLevels = keystoneLevels
-	--save the keystone level for each of the 5 party members
+	Details.PlayerRatings = playerRatings
+	--save the keystone and rating level for each of the 5 party members
 
-	local saveGroupMembersKeystoneLevel = function()
+	local saveGroupMembersKeystoneAndRatingLevel = function()
 		wipe(keystoneLevels)
 		local libOpenRaid = LibStub("LibOpenRaid-1.0", true)
 
@@ -5922,6 +5929,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 					if (unitKeystoneInfo) then
 						local unitName = Details:GetFullName(unitId)
 						keystoneLevels[unitName] = unitKeystoneInfo.level
+						playerRatings[unitName] = unitKeystoneInfo.rating
 					end
 				end
 			end
@@ -5932,6 +5940,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				if (unitKeystoneInfo) then
 					local unitName = Details:GetFullName(unitId)
 					keystoneLevels[unitName] = unitKeystoneInfo.level
+					playerRatings[unitName] = unitKeystoneInfo.rating
 				end
 			end
 		end
@@ -5940,7 +5949,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	function Details222.CacheKeystoneForAllGroupMembers()
 		local _, instanceType, difficultyID = GetInstanceInfo()
 		if (instanceType == "party") then
-			saveGroupMembersKeystoneLevel()
+			saveGroupMembersKeystoneAndRatingLevel()
 		end
 	end
 
@@ -5948,7 +5957,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		Details222.MythicPlus.WorldStateTimerEndAt = time()
 
 		--wait until the keystone is updated and send it to the party
-		saveGroupMembersKeystoneLevel()
+		saveGroupMembersKeystoneAndRatingLevel()
 
 		---@type number mapID
 		---@type number level
@@ -6192,9 +6201,43 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		return Details.in_group
 	end
 
+	local update_persistant_unitname_cache = function()
+		Details.UpdatePersistantCacheTimer = nil
+
+		local unitIdCache
+
+		if (IsInRaid()) then
+			unitIdCache = Details222.UnitIdCache.Raid
+		else
+			unitIdCache = Details222.UnitIdCache.Party
+		end
+
+		for i, unitId in ipairs(unitIdCache) do
+			if (UnitExists(unitId)) then
+				local unitGUID = UnitGUID(unitId)
+				if (unitGUID) then
+					if (not group_roster_name_cache[unitGUID]) then
+						local unitFullName = Details:GetFullName(unitId)
+						if (unitFullName) then
+							group_roster_name_cache[unitGUID] = unitFullName
+						end
+					end
+				end
+			else
+				break
+			end
+		end
+	end
+
 	function Details.parser_functions:GROUP_ROSTER_UPDATE(...)
+		local bIsInGroup = IsInGroup() or IsInRaid()
+
+		if (not Details.UpdatePersistantCacheTimer) then
+			Details.UpdatePersistantCacheTimer = C_Timer.NewTimer(2, update_persistant_unitname_cache)
+		end
+
 		if (not Details.in_group) then
-			Details.in_group = IsInGroup() or IsInRaid()
+			Details.in_group = bIsInGroup
 
 			if (Details.in_group) then
 				--player entered in a group, cleanup and set the new enviromnent
@@ -6214,7 +6257,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 
 		else
-			Details.in_group = IsInGroup() or IsInRaid()
+			Details.in_group = bIsInGroup
 
 			if (not Details.in_group) then
 				--player left the group, run routines to cleanup the environment
@@ -6356,6 +6399,8 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--load auto run code
 		Details222.AutoRunCode.StartAutoRun()
 
+		update_persistant_unitname_cache()
+
 		Details.isLoaded = true
 	end
 
@@ -6400,8 +6445,17 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		end
 	end
 
-	function Details.parser_functions:UNIT_NAME_UPDATE(...)
+	function Details.parser_functions:UNIT_NAME_UPDATE(unitId)
 		Details:SchedulePetUpdate(5)
+		local unitGUID = UnitGUID(unitId)
+		if (unitGUID) then
+			if (unitGUID:match("^Pl")) then
+				local unitFullName = Details:GetFullName(unitId)
+				if (unitFullName) then
+					group_roster_name_cache[unitGUID] = unitFullName
+				end
+			end
+		end
 	end
 
 	function Details.parser_functions:PLAYER_TARGET_CHANGED(...)
@@ -6595,24 +6649,67 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	local eraNamedSpellsToID = {}
 
 	-- ~parserstart ~startparser ~cleu ~parser
-
 	function Details222.Parser.OnParserEvent()
 		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
-
 		local func = token_list[token]
+
 		if (func) then
+			who_name = group_roster_name_cache[who_serial] or who_name
+			target_name = group_roster_name_cache[target_serial] or target_name
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
+		end
+	end
+
+	function Details222.Parser.OnParserEventPVP()
+		local time, token, hidding, sourceGUID, sourceName, sourceFlags, sourceFlags2, targetGUID, targetName, targetFlags, targetFlags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
+		local func = token_list[token]
+
+		if (func) then
+			if (group_roster_name_cache[sourceGUID]) then
+				sourceName = group_roster_name_cache[sourceGUID]
+			else
+				if (sourceGUID:match("^Pl")) then
+					sourceName = sourceName:gsub("-%a+$", "")
+					group_roster_name_cache[sourceGUID] = sourceName
+				end
+			end
+
+			if (group_roster_name_cache[targetGUID]) then
+				targetName = group_roster_name_cache[targetGUID]
+			else
+				if (targetGUID:match("^Pl")) then
+					targetName = targetName:gsub("-%a+$", "")
+					group_roster_name_cache[targetGUID] = targetName
+				end
+			end
+
+			return func(nil, token, time, sourceGUID, sourceName, sourceFlags, targetGUID, targetName, targetFlags, targetFlags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
+		end
+	end
+
+	--open world out of combat spell damage
+	local outofcombat_spell_damage = function(unused, token, time, whoGUID, whoName, whoFlags, targetGUID, targetName, targetFlags, targetFlags2, ...)
+		--identify if the attacker is a group member
+		local IS_GROUP_OBJECT 	= 	0x00000007
+		local bIsValidGroupMember = bitBand(whoFlags, IS_GROUP_OBJECT) ~= 0
+		if (bIsValidGroupMember) then
+			token_list[token](nil, token, time, whoGUID, whoName, whoFlags, targetGUID, targetName, targetFlags, targetFlags2, ...)
 		end
 	end
 
 	local out_of_combat_interresting_events = {
 		["SPELL_SUMMON"] = parser.summon,
+		["SWING_DAMAGE"] = outofcombat_spell_damage,
+		["SPELL_DAMAGE"] = outofcombat_spell_damage,
 	}
 
+	--OutOfCombat parser is only used in open world to avoid getting information from people that are outside of the group
 	function Details222.Parser.OnParserEventOutOfCombat()
 		local time, token, hidding, who_serial, who_name, who_flags, who_flags2, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12 = CombatLogGetCurrentEventInfo()
 		local func = out_of_combat_interresting_events[token]
 		if (func) then
+			who_name = group_roster_name_cache[who_serial] or who_name
+			target_name = group_roster_name_cache[target_serial] or target_name
 			return func(nil, token, time, who_serial, who_name, who_flags, target_serial, target_name, target_flags, target_flags2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12)
 		end
 	end

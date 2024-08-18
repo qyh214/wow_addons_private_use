@@ -33,8 +33,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian Classic", "zhCN")
 if L then
 	L.engage_yell_trigger = "比赛现在开始"
-	L.landing_soon_trigger = "干得好，我的手下。"
-	L.stage2_yell_trigger = "燃烧吧！"
 	L.stage3_yell_trigger = "不可能"
 
 	L.shaman_class_call_yell_trigger = "萨满祭司"

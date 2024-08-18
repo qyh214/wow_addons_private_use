@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Script file="Kalecgos.lua"/>
+<Script file="Brutallus.lua"/>
+<Script file="Felmyst.lua"/>
+<Script file="Twins.lua"/>
+<Script file="Muru.lua"/>
+<Script file="KilJaeden.lua"/>
+
+<Include file="Locales\locales.xml"/>
+<Include file="Options\options.xml"/>
+
+</Ui>

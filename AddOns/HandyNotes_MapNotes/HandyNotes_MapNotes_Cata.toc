@@ -1,0 +1,27 @@
+## Interface: 40400
+## Version: 2.2.1
+## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
+## Notes: Displays instance entrances, ships and zeppelin iconsand a lot of other stuff
+## Notes-esES: Muestra entradas de instancia, barcos e íconos de Zeppeliny muchas otras cosas
+## Notes-esMX: Muestra entradas de instancia, barcos e íconos de Zeppeliny muchas otras cosas
+## Notes-ptBR: Exibe entradas de instância, navios e ícones do Zeppeline muitas outras coisas
+## Notes-zhTW: 顯示實例入口，船隻和齊柏林飛艇圖標和很多其他的東西
+## Notes-zhCN: 显示实例入口，船只和齐柏林飞艇图标和很多其他的东西
+## Notes-deDE: Zeigt Instanzeingänge, Schiffe und Zeppelin -Symbole an und viele andere Sachen
+## Notes-ruRU: Отображает входы экземпляра, корабли и значки Zeppelin и многое другое
+## Notes-koKR: 인스턴스 입구, 선박 및 제플린 아이콘을 표시합니다 그리고 다른 많은 것들
+## Notes-itIT: Visualizza ingressi di istanza, navi e icone zeppelin e molte altre cose
+## Notes-frFR: Affiche les entrées d'instance, les navires et les icônes Zeppelin et bien d'autres choses
+## Author: BadBoyBarny
+## X-License: All Rights Reserved
+## RequiredDeps: HandyNotes
+## OptionalDeps: TomTom
+## X-Curse-Project-ID: 912524
+## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, ruRU, itIT, ptBR, koKR, zhCN, zhTW
+## SavedVariables: HandyNotes_MapNotesCataclysmDB, MNMiniMapButtonCataDB
+
+
+ExternalLibs\ExternalLibs.xml
+Locales\Locales.xml
+Nodes\NodesCata.xml
+Core\CoreCata.xml

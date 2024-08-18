@@ -30,7 +30,9 @@ if mod:GetSeason() == 2 then
 			{20619, "CASTBAR"}, -- Magic Reflection
 			{21075, "CASTBAR"}, -- Damage Shield
 			20534, -- Teleport
-			{461056, "CASTBAR", "SAY", "SAY_COUNTDOWN", "ICON", "ME_ONLY_EMPHASIZE"}, -- Raging Flare
+			{461056, "CASTBAR", "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Raging Flare
+			364895, -- Fireball Volley
+			364908, -- Dark Mending
 		},nil,{
 			[20619] = CL.spell_reflection, -- Magic Reflection (Spell Reflection)
 		}
@@ -50,13 +52,13 @@ function mod:OnBossEnable()
 	if self:GetSeason() == 2 then
 		self:Log("SPELL_CAST_START", "RagingFlareStart", 461056)
 		self:Log("SPELL_CAST_SUCCESS", "RagingFlare", 461056)
+		self:Log("SPELL_CAST_START", "FireballVolleyDarkMending", 364895, 364908)
 	end
 end
 
 function mod:OnEngage()
 	self:CDBar(20534, 20) -- Teleport
 	self:Bar(self:CheckOption(20619, "BAR") and 20619 or 21075, 27, CL.next_ability, "INV_Misc_QuestionMark")
-	self:DelayedMessage(self:CheckOption(20619, "MESSAGE") and 20619 or 21075, 22, "orange", CL.custom_sec:format(CL.next_ability, 5))
 	if self:GetPlayerAura(458843) then -- Level 3 only
 		self:CDBar(461056, 16) -- Raging Flare
 	end
@@ -70,42 +72,63 @@ function mod:MagicReflection(args)
 	self:CastBar(args.spellId, 10, CL.spell_reflection)
 	self:Message(args.spellId, "red", CL.spell_reflection)
 	self:Bar(self:CheckOption(20619, "BAR") and 20619 or 21075, 30, CL.next_ability, "INV_Misc_QuestionMark")
-	self:DelayedMessage(self:CheckOption(20619, "MESSAGE") and 20619 or 21075, 25, "orange", CL.custom_sec:format(CL.next_ability, 5))
 	self:PlaySound(args.spellId, "info")
 end
 
 function mod:DamageShield(args)
 	self:CastBar(args.spellId, 10)
-	self:Message(args.spellId, "red")
+	self:Message(args.spellId, "yellow")
 	self:Bar(self:CheckOption(20619, "BAR") and 20619 or 21075, 30, CL.next_ability, "INV_Misc_QuestionMark")
-	self:DelayedMessage(self:CheckOption(20619, "MESSAGE") and 20619 or 21075, 25, "orange", CL.custom_sec:format(CL.next_ability, 5))
 	self:PlaySound(args.spellId, "info")
 end
 
-function mod:Teleport(args)
-	self:TargetMessage(args.spellId, "yellow", args.destName)
-	self:CDBar(args.spellId, 25) -- 25-30
-end
-
 do
-	local function printTarget(self, name, guid, elapsed)
-		self:PrimaryIcon(461056, name)
-		self:TargetMessage(461056, "red", name)
-		if self:Me(guid) then
-			self:Yell(461056, nil, nil, "Raging Flare")
-			self:YellCountdown(461056, 4-elapsed, nil, 2)
+	local prevTeleport = 0
+	function mod:Teleport(args)
+		prevTeleport = args.time
+		self:TargetMessage(args.spellId, "yellow", args.destName)
+		self:CDBar(args.spellId, 25) -- 25-30
+	end
+
+	do
+		local delay = false
+		local function printTarget(self, name, guid, elapsed)
+			self:TargetMessage(461056, "red", name)
+			if self:Me(guid) then
+				self:Yell(461056, nil, nil, "Raging Flare")
+				if delay then
+					elapsed = elapsed + 0.8
+				end
+				self:YellCountdown(461056, 4-elapsed, nil, 2)
+			end
+		end
+
+		function mod:RagingFlareStart(args)
+			self:StopBar(args.spellName)
+			if args.time-prevTeleport < 2 then -- Stupid threat reset messing with the target scanning tank (threat) check
+				delay = true
+				local guid = args.sourceGUID
+				self:SimpleTimer(function() self:GetUnitTarget(printTarget, 0.4, guid) end, 0.8)
+			else
+				self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
+			end
+			self:CastBar(args.spellId, 4)
+			self:PlaySound(args.spellId, "warning")
+		end
+
+		function mod:RagingFlare(args)
+			delay = false
+			self:CDBar(args.spellId, 26) -- Time to _START
 		end
 	end
+end
 
-	function mod:RagingFlareStart(args)
-		self:StopBar(args.spellName)
-		self:GetUnitTarget(printTarget, 0.4, args.sourceGUID)
-		self:CastBar(args.spellId, 4)
-		self:PlaySound(args.spellId, "warning")
-	end
-
-	function mod:RagingFlare(args)
-		self:PrimaryIcon(args.spellId)
-		self:CDBar(args.spellId, 26) -- Time to _START
+function mod:FireballVolleyDarkMending(args) -- Fireball Volley by Flamewaker Elite, Dark Mending by Flamewaker Healer, target filter means you only see one or the other
+	local isPossible, isReady = self:Interrupter(args.sourceGUID)
+	if isPossible then
+		self:Message(args.spellId, "orange")
+		if isReady then
+			self:PlaySound(args.spellId, "alert")
+		end
 	end
 end

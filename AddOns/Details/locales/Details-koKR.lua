@@ -846,6 +846,10 @@ L["STRING_OPTIONS_MINIMAP_DESC"] = "미니맵 아이콘을 표시하거나 숨�
 L["STRING_OPTIONS_MISCTITLE"] = "기타 설정"
 L["STRING_OPTIONS_MISCTITLE2"] = "여러가지 옵션을 설정합니다."
 --[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Time To Auto Close"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
+--[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
@@ -1190,6 +1194,8 @@ L["STRING_OPTIONS_TEXT_LPOSITION"] = "순위 표시"
 L["STRING_OPTIONS_TEXT_LPOSITION_DESC"] = "플레이어 이름 왼쪽에 순위를 표시합니다."
 L["STRING_OPTIONS_TEXT_LTRANSLIT"] = "번역"
 L["STRING_OPTIONS_TEXT_LTRANSLIT_DESC"] = "아무도 이해하지 못하는 러시아 문자를 서양 문자로 표현합니다."
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "우측 문자:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "우측 문자에 외곽선을 켜거나 끕니다."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "아이콘:"

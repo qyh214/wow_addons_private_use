@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="CataDefaults.lua"/>
+    <Script file="CataOptions.lua"/>
+    <Script file="CataMain.lua"/>
+    <Script file="CataMmb.lua"/>
+    <Script file="CataWmb.lua"/>
+    <Script file="CataFogOfWar.lua"/>
+</Ui>

@@ -1,0 +1,41 @@
+## Interface: 100207, 110000, 110002
+
+## Title: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-zhCN: BigWigs [|cffeda55f熊猫人之谜|r]
+## Title-zhTW: BigWigs [|cffeda55f潘達利亞之謎|r]
+## Title-deDE: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-frFR: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-itIT: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-koKR: BigWigs [|cffeda55f판다리아의 안개|r]
+## Title-ruRU: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-ptBR: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-esES: BigWigs [|cffeda55fMists of Pandaria|r]
+## Title-esMX: BigWigs [|cffeda55fMists of Pandaria|r]
+## Notes: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-zhCN: BigWigs 熊猫人之谜模块。
+## Notes-zhTW: BigWigs 潘達利亞之謎模組。
+## Notes-deDE: Eine Sammlung von BigWigs-Modulen aus der Ära Mists of Pandaria.
+## Notes-frFR: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-itIT: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-koKR: 판다리아의 안개 BigWigs 모듈 모음집입니다.
+## Notes-ruRU: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-ptBR: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-esES: A collection of BigWigs modules from the Mists of Pandaria era.
+## Notes-esMX: A collection of BigWigs modules from the Mists of Pandaria era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v10.2.10
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: 86782
+## X-WoWI-ID: 23493
+## X-Wago-ID: rN4VvxKD
+## X-BigWigs-ExtraMenu: -424
+## X-BigWigs-LoadOn-InstanceId: 996, 1008, 1009, 1098, 1136
+## X-BigWigs-LoadOn-WorldBoss: -376, 62346, -379, 60491, -504, 69099, -507, 69161, -554, 72057
+
+modules.xml
+

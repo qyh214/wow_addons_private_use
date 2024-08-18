@@ -1,0 +1,14 @@
+## Interface: 100207, 110000, 110002
+## Title: Personal Loot Helper
+## Version: v2.36
+## SavedVariables: PLH_META, PLH_PREFS, PLH_STATS
+## Notes: Simplifies trading of personal loot with other group members.
+## Author: cardinalm1, Elvenbane
+
+libs\LibStub\LibStub.lua
+libs\MSA-DropDownMenu-1.0\MSA-DropDownMenu-1.0.xml
+PersonalLootHelper-GlobalConstants.lua
+PersonalLootHelper-Trinkets.lua
+PersonalLootHelper-Util.lua
+PersonalLootHelper-Config.lua
+PersonalLootHelper-Core.lua

@@ -33,8 +33,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian Classic", "esES")
 if L then
 	--L.engage_yell_trigger = "Let the games begin"
-	L.landing_soon_trigger = "Bien hecho, esbirros."
-	--L.stage2_yell_trigger = "BURN! You wretches"
 	L.stage3_yell_trigger = "¡Imposible! ¡Levantaos, esbirros!"
 
 	L.shaman_class_call_yell_trigger = "Chamanes"

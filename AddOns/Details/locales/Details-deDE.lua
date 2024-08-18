@@ -834,6 +834,10 @@ L["STRING_OPTIONS_MINIMAP_DESC"] = "Minikartensymbol anzeigen/verstecken"
 L["STRING_OPTIONS_MISCTITLE"] = "Sonstige Einstellungen"
 L["STRING_OPTIONS_MISCTITLE2"] = "Dies kontrolliert etliche Optionen."
 --[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Time To Auto Close"
+--[[Translation missing --]]
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
+--[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
@@ -1175,6 +1179,8 @@ L["STRING_OPTIONS_TEXT_LPOSITION"] = "Nummer zeigen"
 L["STRING_OPTIONS_TEXT_LPOSITION_DESC"] = "Zeigt die Positionsnummer eines Spielers links vom Namen."
 L["STRING_OPTIONS_TEXT_LTRANSLIT"] = "Transliterieren"
 L["STRING_OPTIONS_TEXT_LTRANSLIT_DESC"] = "Stellt die russischen Buchstaben, die niemand versteht, in westliche Buchstaben da."
+--[[Translation missing --]]
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Rechter Text:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Aktiviert oder deaktiviert den Umriss des rechten Textes."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Symbole:"

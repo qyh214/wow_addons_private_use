@@ -33,8 +33,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian Classic", "zhTW")
 if L then
 	--L.engage_yell_trigger = "Let the games begin"
-	L.landing_soon_trigger = "幹得好，手下們。凡人的勇氣開始消退了！現在，我們就來看看他們怎麼面對黑石之王的力量吧！"
-	L.stage2_yell_trigger = "燃燒吧！一群廢物！燒吧！"
 	L.stage3_yell_trigger = "不可能！來吧，我的僕人！再次為你們的主人服務！"
 
 	L.shaman_class_call_yell_trigger = "薩滿，讓我看看你圖騰到底是什麼用處的"

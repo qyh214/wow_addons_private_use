@@ -74,8 +74,7 @@ local L = WeakAuras.L
 	L["%s, offset: %0.2f;%0.2f"] = "%s, 위치조정: %0.2f;%0.2f"
 	L["%s, Start Animation"] = "%s, 애니메이션 시작"
 	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000사용자 정의|r 텍스쳐에 |cFFFF0000%s|r 혼합 모드%s%s"
-	L["(Right click to rename)"] = [=[(우클릭하여 이름변경)
-]=]
+	L["(Right click to rename)"] = "(우클릭으로 이름 변경)"
 	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02x사용자 정의 색상|r"
 	L["|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"] = "|cff999999여러 유닛을 추적하는 활성 조건은 유닛 수 또는 일치 횟수 설정이 안된 상태에서 오라에 걸린 유닛이 없을때도 기본으로 활성화됩니다.|r"
 	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000참고:|r '%s'에만 설명을 지정합니다."
@@ -126,7 +125,7 @@ local L = WeakAuras.L
 	L["A 64x64 pixels icon"] = "64x64 픽셀 아이콘"
 	L["A group that dynamically controls the positioning of its children"] = "자식 위크오라의 위치를 동적으로 제어하는 그룹입니다"
 	L[ [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
-Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=] ] = "타이머가 기본 인터페이스 설정(일부 애드온에 의해 무시됨)에 따라 자동으로 표시됩니다. 이 타이머를 숨기거나 WeakAuras 텍스트로 타이머를 표시하고자 할 때 이 설정을 켜세요."
+Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=] ] = "타이머가 기본 인터페이스 설정(일부 애드온에 의해 설정이 무시됨)에 따라 자동으로 표시됩니다. 이 타이머를 숨기거나 WeakAuras의 텍스트를 사용해서 표시하고 싶으면 이 설정을 켜세요."
 	L["A Unit ID (e.g., party1)."] = "유닛 ID (예, party1)."
 	L["Actions"] = "동작"
 	L["Active Aura Filters and Info"] = "오라 필터와 정보 사용"
@@ -309,8 +308,7 @@ Off Screen]=] ] = "위크오라가 화면 밖에 있습니다"
 	L["Custom Options"] = "사용자 정의 옵션"
 	L["Custom Sort"] = "사용자 정의 정렬"
 	L["Custom Trigger"] = "사용자 정의 활성 조건"
-	L["Custom trigger event tooltip"] = [=[
-사용자 정의 활성 조건이 확인하도록 만들 이벤트를 선택하세요.쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
+	L["Custom trigger event tooltip"] = [=[사용자 정의 활성 조건이 확인하도록 만들 이벤트를 선택하세요.쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
 
 • "UNIT" 이벤트는 콜론을 사용해 등록할 유닛 ID를 정할 수 있습니다. 유닛ID는 유닛 종류별로 다른 것을 사용하며, "nameplate", "group", "raid", "party", "arena", "boss"가 포함됩니다.
 • "CLEU"를 COMBAT_LOG_EVENT_UNFILTERED 대신 사용할 수 있고 받고 싶은 "subEvents" 인자를 콜론으로 구분해서 지정할 수 있습니다.
@@ -318,8 +316,7 @@ Off Screen]=] ] = "위크오라가 화면 밖에 있습니다"
 
 |cFF4444FF예제:|r
 UNIT_POWER_UPDATE:player, UNIT_AURA:nameplate:group PLAYER_TARGET_CHANGED CLEU:SPELL_CAST_SUCCESS TRIGGER:3:1]=]
-	L["Custom trigger status tooltip"] = [=[
-사용자 정의 활성 조건이 확인하도록 만들 이벤트를 선택하세요.쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
+	L["Custom trigger status tooltip"] = [=[사용자 정의 활성 조건이 확인하도록 만들 이벤트를 선택하세요.쉼표나 공백을 사용해 여러 이벤트를 지정할 수 있습니다.
 
 • "UNIT" 이벤트는 콜론을 사용해 등록할 유닛 ID를 정할 수 있습니다. 유닛ID는 유닛 종류별로 다른 것을 사용하며, "nameplate", "group", "raid", "party", "arena", "boss"가 포함됩니다.
 • "CLEU"를 COMBAT_LOG_EVENT_UNFILTERED 대신 사용할 수 있고 받고 싶은 "subEvents" 인자를 콜론으로 구분해서 지정할 수 있습니다.
@@ -607,7 +604,7 @@ Can use \ to escape -.]=] ] = [=[필터 형식: '이름', '이름-서버', '-서
 	L["Load"] = "불러오기"
 	L["Loaded"] = "불러옴"
 	L["Loaded/Standby"] = "불러옴/대기중"
-	L["Lock Positions"] = "위치 잠금"
+	L["Lock Positions"] = "위치 고정"
 	L["Loop"] = "반복"
 	L["Low Mana"] = "마나 낮음"
 	L["Magnetically Align"] = "자석 정렬"

@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "ptBR")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "Você parece ter derrotado meu verme de lava."
+	L.stage2_yell_trigger = "meu verme de lava" -- Inconcebível! Talvez você consiga mesmo derrotar meu verme de lava! Quem sabe eu possa... virar o jogo um pouquinho.
 
 	L.slump = "Cair"
 	L.slump_desc = "Magorja cai e fica exposto, permitindo que o rodeio começe."
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "ptBR")
 if L then
 	L.obnoxious_fiend = "Diabrete Irritante" -- NPC ID 49740
-	L.air_phase_trigger = "Isso, fujam! Com cada passo, seus corações aceleram. Os batimentos, forte como trovôes... Chegam quase a ensurdecer. Vocês não vão escapar!"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "ptBR")
 if L then
 	L.discharge = "Descarga"
-	L.stage3_yell_trigger = "Eu tentei ser um anfitrião afável, mas vocês se recusaram a morrer! Está na hora de acabar com o fingimento e simplesmente... MATAR TODOS VOCÊS!"
+	L.stage3_yell_trigger = "MATAR TODOS VOCÊS" -- Eu tentei ser um anfitrião afável, mas vocês se recusaram a morrer! Está na hora de acabar com o fingimento e simplesmente... MATAR TODOS VOCÊS!
 	--L.too_close = "Dragons are too close"
 end

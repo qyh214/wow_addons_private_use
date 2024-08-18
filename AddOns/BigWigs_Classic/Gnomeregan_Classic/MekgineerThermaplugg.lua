@@ -348,7 +348,7 @@ function UpdateInfoBoxList()
 				mod:SetInfo(438735, line + 1, CL.seconds:format(remaining))
 				mod:SetInfoBar(438735, line, remaining / 30)
 			else
-				if UnitIsDeadOrGhost(player) then
+				if mod:UnitIsDeadOrGhost(player) then
 					mod:SetInfo(438735, line + 1, CL.dead, 1, 0.2, 0.2)
 				else
 					mod:SetInfo(438735, line + 1, CL.ready, 0.13, 1, 0.13)

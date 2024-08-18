@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "frFR")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "Inconcevable ! Vous pourriez vraiment vaincre mon ver de lave !"
+	L.stage2_yell_trigger = "Inconcevable" -- Inconcevable ! Vous pourriez vraiment vaincre mon ver de lave ! Je devrais peut-être... faire pencher la balance.
 
 	L.slump = "Affalement"
 	L.slump_desc = "Prévient quand le boss s'affale vers l'avant et s'expose, permettant ainsi au rodéo de commencer."
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "frFR")
 if L then
 	L.obnoxious_fiend = "Démon odieux" -- NPC ID 49740
-	L.air_phase_trigger = "Oui, fuyez ! Chaque foulée accélère votre cœur. Les battements résonnent comme le tonnerre... Assourdissant. Vous ne vous échapperez pas !"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "frFR")
 if L then
 	L.discharge = "Décharge"
-	L.stage3_yell_trigger = "J'ai tout fait pour être un hôte accommodant"
+	L.stage3_yell_trigger = "VOUS TUER TOUS" -- J’ai tout fait pour être un hôte accommodant, mais vous ne daignez pas mourir ! Oublions les bonnes manières et passons aux choses sérieuses… VOUS TUER TOUS !
 	--L.too_close = "Dragons are too close"
 end

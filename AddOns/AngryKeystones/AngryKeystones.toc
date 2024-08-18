@@ -1,11 +1,11 @@
-## Interface: 110000
+## Interface: 110002
 ## Title: Angry Keystones
 ## Notes: Displays additional information for Mythic Keystone dungeons
 ## Author: Ermad
 ## SavedVariables: AngryKeystones_Config, AngryKeystones_Data
 ## SavedVariablesPerCharacter: AngryKeystones_CharacterConfig
 ## OptionalDeps: !KalielsTracker
-## X-Packaged-Version: v0.31.1
+## X-Packaged-Version: v0.31.3
 
 embeds.xml
 

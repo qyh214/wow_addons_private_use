@@ -10,139 +10,77 @@ local L = WeakAuras.L
 	L[" and |cFFFF0000mirrored|r"] = "und |cFFFF0000gespiegelt|r"
 	--[[Translation missing --]]
 	L["-- Do not remove this comment, it is part of this aura: "] = "-- Do not remove this comment, it is part of this aura: "
-	--[[Translation missing --]]
-	L[" rotated |cFFFF0000%s|r degrees"] = " rotated |cFFFF0000%s|r degrees"
-	--[[Translation missing --]]
-	L["% - To show a percent sign"] = "% - To show a percent sign"
+	L[" rotated |cFFFF0000%s|r degrees"] = "rotiert um |cFFFF0000%s|r grad"
+	L["% - To show a percent sign"] = "% - Um ein Prozent Symbol zu erzeugen."
 	L["% of Progress"] = "Fortschritt in %"
 	L["%d |4aura:auras; added"] = "%d |4aura:auras; hinzugefügt"
 	L["%d |4aura:auras; deleted"] = "%d |4aura:auras; gelöscht"
 	L["%d |4aura:auras; modified"] = "%d |4aura:auras; geändert"
-	--[[Translation missing --]]
-	L["%d |4aura:auras; with meta data modified"] = "%d |4aura:auras; with meta data modified"
-	--[[Translation missing --]]
-	L["%d displays loaded"] = "%d displays loaded"
-	--[[Translation missing --]]
-	L["%d displays not loaded"] = "%d displays not loaded"
-	--[[Translation missing --]]
-	L["%d displays on standby"] = "%d displays on standby"
+	L["%d |4aura:auras; with meta data modified"] = "%d |4aura:auras; in denen meta daten modifiziert wurden"
+	L["%d displays loaded"] = "%d Auren geladen"
+	L["%d displays not loaded"] = "%d Auren nicht geladen"
+	L["%d displays on standby"] = "%d Auren auf standby"
 	L["%i auras selected"] = "%i Auren ausgew\\195\\164hlt"
-	--[[Translation missing --]]
 	L["%i."] = "%i."
-	--[[Translation missing --]]
 	L["%i. %s"] = "%i. %s"
-	--[[Translation missing --]]
 	L["%s - %i. Trigger"] = "%s - %i. Trigger"
-	--[[Translation missing --]]
-	L["%s - Alpha Animation"] = "%s - Alpha Animation"
-	--[[Translation missing --]]
-	L["%s - Color Animation"] = "%s - Color Animation"
-	--[[Translation missing --]]
-	L["%s - Condition Custom Chat %s"] = "%s - Condition Custom Chat %s"
-	--[[Translation missing --]]
-	L["%s - Condition Custom Check %s"] = "%s - Condition Custom Check %s"
-	--[[Translation missing --]]
-	L["%s - Condition Custom Code %s"] = "%s - Condition Custom Code %s"
-	--[[Translation missing --]]
-	L["%s - Custom Anchor"] = "%s - Custom Anchor"
-	--[[Translation missing --]]
-	L["%s - Custom Grow"] = "%s - Custom Grow"
-	--[[Translation missing --]]
-	L["%s - Custom Sort"] = "%s - Custom Sort"
-	--[[Translation missing --]]
-	L["%s - Custom Text"] = "%s - Custom Text"
-	--[[Translation missing --]]
-	L["%s - Finish"] = "%s - Finish"
-	--[[Translation missing --]]
-	L["%s - Finish Action"] = "%s - Finish Action"
-	--[[Translation missing --]]
-	L["%s - Finish Custom Text"] = "%s - Finish Custom Text"
-	--[[Translation missing --]]
-	L["%s - Init Action"] = "%s - Init Action"
-	--[[Translation missing --]]
-	L["%s - Main"] = "%s - Main"
-	--[[Translation missing --]]
-	L["%s - Option #%i has the key %s. Please choose a different option key."] = "%s - Option #%i has the key %s. Please choose a different option key."
-	--[[Translation missing --]]
-	L["%s - Rotate Animation"] = "%s - Rotate Animation"
-	--[[Translation missing --]]
-	L["%s - Scale Animation"] = "%s - Scale Animation"
-	--[[Translation missing --]]
+	L["%s - Alpha Animation"] = "%s - Alpha-Animation"
+	L["%s - Color Animation"] = "%s - Farb-Animation"
+	L["%s - Condition Custom Chat %s"] = "%s - Bedingung benutzerdefiniert Chat %s"
+	L["%s - Condition Custom Check %s"] = "%s - Bedingung Benutzerdefinierter Check %s"
+	L["%s - Condition Custom Code %s"] = "%s - Bedingung benutzerdefinierter Code %s"
+	L["%s - Custom Anchor"] = "%s - Benutzerdefinierter Anker"
+	L["%s - Custom Grow"] = "%s - Benutzerdefiniertes Wachstum"
+	L["%s - Custom Sort"] = "%s - Benutzerdefinierte Sortierung"
+	L["%s - Custom Text"] = "%s - Benutzerdefinierter Text"
+	L["%s - Finish"] = "%s - Ende"
+	L["%s - Finish Action"] = "%s - Endaktion"
+	L["%s - Finish Custom Text"] = "%s - Benutzerdefinierter Endtext"
+	L["%s - Init Action"] = "%s - Initialisierung"
+	L["%s - Main"] = "%s - Haupt"
+	L["%s - Option #%i has the key %s. Please choose a different option key."] = "Die %s - Option #%i hat bereits den Schlüssel %s. Bitte wähle einen anderen Optionsschlüssel."
+	L["%s - Rotate Animation"] = "%s - Rotierungsanimation"
+	L["%s - Scale Animation"] = "%s - Skalierungsanimation"
 	L["%s - Start"] = "%s - Start"
-	--[[Translation missing --]]
-	L["%s - Start Action"] = "%s - Start Action"
-	--[[Translation missing --]]
-	L["%s - Start Custom Text"] = "%s - Start Custom Text"
-	--[[Translation missing --]]
-	L["%s - Translate Animation"] = "%s - Translate Animation"
-	--[[Translation missing --]]
-	L["%s - Trigger Logic"] = "%s - Trigger Logic"
-	--[[Translation missing --]]
-	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"
-	--[[Translation missing --]]
-	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"
-	--[[Translation missing --]]
-	L["%s %u. Overlay Function"] = "%s %u. Overlay Function"
-	--[[Translation missing --]]
+	L["%s - Start Action"] = "%s - Startaktion"
+	L["%s - Start Custom Text"] = "%s - Benutzerdefiniertet Starttext"
+	L["%s - Translate Animation"] = "%s - Übersetzungsanimation"
+	L["%s - Trigger Logic"] = "%s - Triggerlogik"
+	L["%s %s, Lines: %d, Frequency: %0.2f, Length: %d, Thickness: %d"] = "%s %s, Linien: %d, Frequenz: %0.2f, Länge: %d, Breite: %d"
+	L["%s %s, Particles: %d, Frequency: %0.2f, Scale: %0.2f"] = "%s %s, Partikel: %d, Frequenz: %0.2f, Skalierung: %0.2f"
+	L["%s %u. Overlay Function"] = "%s %u. Overlay Funkion"
 	L["%s (%s)"] = "%s (%s)"
-	--[[Translation missing --]]
 	L["%s Alpha: %d%%"] = "%s Alpha: %d%%"
 	L["%s Color"] = "%s Farbe"
-	--[[Translation missing --]]
-	L["%s Custom Variables"] = "%s Custom Variables"
-	--[[Translation missing --]]
-	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"
-	--[[Translation missing --]]
-	L["%s Duration Function"] = "%s Duration Function"
-	--[[Translation missing --]]
-	L["%s Icon Function"] = "%s Icon Function"
-	--[[Translation missing --]]
-	L["%s Inset: %d%%"] = "%s Inset: %d%%"
-	--[[Translation missing --]]
-	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"
-	--[[Translation missing --]]
-	L["%s Keep Aspect Ratio"] = "%s Keep Aspect Ratio"
-	--[[Translation missing --]]
-	L["%s Name Function"] = "%s Name Function"
-	--[[Translation missing --]]
-	L["%s Stacks Function"] = "%s Stacks Function"
-	--[[Translation missing --]]
-	L["%s stores around %s KB of data"] = "%s stores around %s KB of data"
-	--[[Translation missing --]]
-	L["%s Texture"] = "%s Texture"
-	--[[Translation missing --]]
-	L["%s Texture Function"] = "%s Texture Function"
+	L["%s Custom Variables"] = "%s benutzerdefinierte Variablen"
+	L["%s Default Alpha, Zoom, Icon Inset, Aspect Ratio"] = "%s Standard Alpha, Zoom, Bild, Einsatz, Aspekt Ratio"
+	L["%s Duration Function"] = "%s Dauerfunktion"
+	L["%s Icon Function"] = "%s Bildfunktion"
+	L["%s Inset: %d%%"] = "%s Einsatz: %d%%"
+	L["%s is not a valid SubEvent for COMBAT_LOG_EVENT_UNFILTERED"] = "%s ist kein valides SubEvent für COMBAT_LOG_EVENT_UNFILTERED"
+	L["%s Keep Aspect Ratio"] = "%s Behalte Aspekt Ratio"
+	L["%s Name Function"] = "%s Namensfunktion"
+	L["%s Stacks Function"] = "%s Stapelfunkion"
+	L["%s stores around %s KB of data"] = "%s speichert um die %s KB an Daten"
+	L["%s Texture"] = "%s Textur"
+	L["%s Texture Function"] = "%s Texturfunktion"
 	L["%s total auras"] = "%s gesamte Auren"
-	--[[Translation missing --]]
-	L["%s Trigger Function"] = "%s Trigger Function"
-	--[[Translation missing --]]
-	L["%s Untrigger Function"] = "%s Untrigger Function"
-	--[[Translation missing --]]
-	L["%s X offset by %d"] = "%s X offset by %d"
-	--[[Translation missing --]]
-	L["%s Y offset by %d"] = "%s Y offset by %d"
-	--[[Translation missing --]]
+	L["%s Trigger Function"] = "%s Auslösefunktion"
+	L["%s Untrigger Function"] = "%s Umkehrauslöserfunkion"
+	L["%s X offset by %d"] = "%s X versatz um %d"
+	L["%s Y offset by %d"] = "%s Y versatz um %d"
 	L["%s Zoom: %d%%"] = "%s Zoom: %d%%"
 	L["%s, Border"] = "%s, Rahmen"
-	--[[Translation missing --]]
-	L["%s, Offset: %0.2f;%0.2f"] = "%s, Offset: %0.2f;%0.2f"
-	--[[Translation missing --]]
-	L["%s, offset: %0.2f;%0.2f"] = "%s, offset: %0.2f;%0.2f"
-	--[[Translation missing --]]
-	L["%s, Start Animation"] = "%s, Start Animation"
-	--[[Translation missing --]]
-	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"
+	L["%s, Offset: %0.2f;%0.2f"] = "%s, Versatz: %0.2f;%0.2f"
+	L["%s, offset: %0.2f;%0.2f"] = "%s, Versatz: %0.2f;%0.2f"
+	L["%s, Start Animation"] = "%s, Startanimation"
+	L["%s|cFFFF0000custom|r texture with |cFFFF0000%s|r blend mode%s%s"] = "%s|cFFFF0000benutzerdefinie|r Texture mit |cFFFF0000%s|r blendungsmodus%"
 	L["(Right click to rename)"] = "(Rechtsklick zum Umbenennen)"
-	--[[Translation missing --]]
-	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xCustom Color|r"
-	--[[Translation missing --]]
-	L["|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"] = "|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Note:|r This sets the description only on '%s'"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the URL on all selected auras"] = "|cFFE0E000Note:|r This sets the URL on all selected auras"
-	--[[Translation missing --]]
-	L["|cFFE0E000Note:|r This sets the URL on this group and all its members."] = "|cFFE0E000Note:|r This sets the URL on this group and all its members."
+	L["|c%02x%02x%02x%02xCustom Color|r"] = "|c%02x%02x%02x%02xbenutzerdefiniert Farbe|r"
+	L["|cff999999Triggers tracking multiple units will default to being active even while no affected units are found without a Unit Count or Match Count setting applied.|r"] = "|cff999999Trigger die multiplen Einheiten verfolgen sind standardmäßig aktiv, selbst wenn keine Einheiten gefunden werden, falls sie keinen UnitCount oder MatchCount Einstellung enthalten.|r"
+	L["|cFFE0E000Note:|r This sets the description only on '%s'"] = "|cFFE0E000Notiz|r Dies setzt die Beschreibung nur für '%s'"
+	L["|cFFE0E000Note:|r This sets the URL on all selected auras"] = "|cFFE0E000Notiz|r Dies setzt die URL für alle ausgewählten Auren"
+	L["|cFFE0E000Note:|r This sets the URL on this group and all its members."] = "|cFFE0E000Notiz:|r Dies setzt die URL für die Gruppe und alle Kinder"
 	--[[Translation missing --]]
 	L["|cFFFF0000Automatic|r length"] = "|cFFFF0000Automatic|r length"
 	--[[Translation missing --]]

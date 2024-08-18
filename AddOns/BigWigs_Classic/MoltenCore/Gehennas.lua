@@ -43,7 +43,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "RainOfFireDamage", 19717)
 	self:Log("SPELL_PERIODIC_DAMAGE", "RainOfFireDamage", 19717)
 	self:Log("SPELL_PERIODIC_MISSED", "RainOfFireDamage", 19717)
-	if self:Vanilla() then
+	if self:GetSeason() == 2 then
 		self:Log("SPELL_CAST_SUCCESS", "GehennasCurse", 461232)
 		self:Log("SPELL_AURA_APPLIED", "GehennasCurseApplied", 461232)
 		self:Log("SPELL_AURA_REMOVED", "GehennasCurseRemoved", 461232)
@@ -86,7 +86,7 @@ do
 	function mod:RainOfFireDamage(args)
 		if self:Me(args.destGUID) and args.time - prev > 2 then
 			prev = args.time
-			self:PersonalMessage(args.spellId, "underyou")
+			self:PersonalMessage(args.spellId, "aboveyou")
 			self:PlaySound(args.spellId, "underyou")
 		end
 	end

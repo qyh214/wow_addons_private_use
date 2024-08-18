@@ -127,7 +127,7 @@ local function ShowBlock(timerID, elapsedTime, timeLimit)
 	end
 end
 
-if IsAddOnLoaded("!KalielsTracker") then
+if C_AddOns.IsAddOnLoaded("!KalielsTracker") then
 	hooksecurefunc("KT_Scenario_ChallengeMode_UpdateTime", UpdateTime)
 	hooksecurefunc("KT_Scenario_ChallengeMode_ShowBlock", ShowBlock)
 else

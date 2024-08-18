@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "koKR")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "이런 곤란한 데가! 이러다간 내 용암"
+	L.stage2_yell_trigger = "이러다간 내 용암" -- 이런 곤란할 데가! 이러다간 내 용암 벌레가 정말 질 수도 있겠군! 그럼... 내가 상황을 좀 바꿔 볼까?
 
 	L.slump = "슬럼프"
 	L.slump_desc = "슬럼프 상태를 알립니다."
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "koKR")
 if L then
 	L.obnoxious_fiend = "불쾌한 마귀" -- NPC ID 49740
-	L.air_phase_trigger = "그래, 도망가라! 발을 디딜 때마다 맥박은 빨라지지. 점점 더 크게 울리는구나... 귀청이 터질 것만 같군! 넌 달아날 수 없다!"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "koKR")
 if L then
 	L.discharge = "번개 방출"
-	L.stage3_yell_trigger = "품위있는"
+	L.stage3_yell_trigger = "버리겠어" -- 품위 있는 집주인답게 행동하려 했건만, 네놈들이 도무지 죽질 않는군! 겉치레는 이제 집어치우자고. 그냥 모두 없애 버리겠어!
 	--L.too_close = "Dragons are too close"
 end

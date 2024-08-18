@@ -12,9 +12,9 @@ local tonumber = tonumber
 local tostring = tostring
 
 local GameTooltip = _G.GameTooltip
-local IsAddOnLoaded = IsAddOnLoaded
 local UnitGUID = UnitGUID
 
+local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 local C_QuestLog_GetInfo = C_QuestLog.GetInfo
 local C_QuestLog_GetLogIndexForQuestID = C_QuestLog.GetLogIndexForQuestID
 local TooltipDataProcessor_AddTooltipPostCall = TooltipDataProcessor.AddTooltipPostCall
@@ -22,7 +22,7 @@ local TooltipDataProcessor_AddTooltipPostCall = TooltipDataProcessor.AddTooltipP
 local Enum_TooltipDataType_Unit = Enum.TooltipDataType.Unit
 
 local function isWindToolsLoaded()
-	if IsAddOnLoaded("ElvUI_WindTools") then
+	if C_AddOns_IsAddOnLoaded("ElvUI_WindTools") then
 		local E = _G.ElvUI and _G.ElvUI[1]
 		if E and E.private and E.private.WT and E.private.WT.tooltips and E.private.WT.tooltips.objectiveProgress then
 			return true

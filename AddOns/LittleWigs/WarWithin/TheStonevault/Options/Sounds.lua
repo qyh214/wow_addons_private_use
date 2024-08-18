@@ -9,8 +9,7 @@ BigWigs:AddSounds("E.D.N.A.", {
 
 BigWigs:AddSounds("Skarmorak", {
 	[422233] = "alert",
-	[423200] = "long",
-	[423228] = "info",
+	[423200] = {"info","long"},
 	[423538] = "alarm",
 	[423572] = "info",
 })
@@ -26,7 +25,7 @@ BigWigs:AddSounds("Master Machinists", {
 })
 
 BigWigs:AddSounds("Void Speaker Eirich", {
-	[427461] = "info",
+	[427461] = {"info","warning"},
 	[427852] = "alert",
 	[427869] = "alarm",
 })

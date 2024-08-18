@@ -46,6 +46,7 @@ if mod:GetSeason() == 2 then
 			461131, -- Summon Core Hound
 		},nil,{
 			[19408] = CL.fear, -- Panic (Fear)
+			[19428] = CL.underyou:format(CL.fire), -- Conflagration (Fire under YOU)
 		}
 	end
 end
@@ -73,13 +74,10 @@ end
 -- Event Handlers
 --
 
-do
-	local prev = 0
-	function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, castGUID, spellId)
-		if spellId == 461131 and not castCollector[castGUID] then -- Summon Core Hound
-			castCollector[castGUID] = true
-			self:Sync("sum")
-		end
+function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, castGUID, spellId)
+	if (spellId == 461131 or spellId == 364727) and not castCollector[castGUID] then -- Summon Core Hound (Level 2+3, 1)
+		castCollector[castGUID] = true
+		self:Sync("sum")
 	end
 end
 

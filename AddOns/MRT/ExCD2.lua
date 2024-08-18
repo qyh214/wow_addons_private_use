@@ -14,6 +14,7 @@ local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
 local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
 local GetItemInfo, GetItemInfoInstant, GetItemSpell = C_Item and C_Item.GetItemInfo or GetItemInfo, C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant, C_Item and C_Item.GetItemSpell or GetItemSpell
 local GetCVar = C_CVar and C_CVar.GetCVar or C_CVar
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned or ExRT.NULLfunc
 
 local GetSpellLevelLearned = C_Spell and C_Spell.GetSpellLevelLearned or GetSpellLevelLearned
 if ExRT.isClassic then
@@ -219,7 +220,7 @@ end
 
 module.db.historyUsage = {}
 
-module.db.testMode = nil
+module.db.testMode = false
 module.db.isEncounter = nil
 
 local cdsNav_wipe,cdsNav_set = nil
@@ -3021,7 +3022,8 @@ do
 			) then 
 				data.vis = true
 
-				local col = CDECol[spellID..";"..(unitSpecID-3)] or CDECol[spellID..";1"] or def_col[spellID..";"..(unitSpecID-3)] or def_col[spellID..";1"] or db[3] or 1
+				local unitRole = data.checkRole and UnitGroupRolesAssigned(name)
+				local col = (data.checkRole and unitRole and CDECol[spellID..";"..unitRole]) or CDECol[spellID..";"..(unitSpecID-3)] or CDECol[spellID..";1"] or def_col[spellID..";"..(unitSpecID-3)] or def_col[spellID..";1"] or db[3] or 1
 				data.column = col
 
 				local forceUpdate
@@ -3747,6 +3749,8 @@ local function UpdateRoster()
 						local uSpecID = _db.specInDBase[_specID] or 4
 						local spellColumn = VMRT.ExCD2.CDECol[SpellID..";"..(uSpecID-3)] or VMRT.ExCD2.CDECol[SpellID..";1"] or _db.def_col[SpellID..";"..(uSpecID-3)] or _db.def_col[SpellID..";1"] or spellData[3] or 1
 
+						local checkRaidRole = (VMRT.ExCD2.CDECol[SpellID..";HEALER"] or VMRT.ExCD2.CDECol[SpellID..";TANK"] or VMRT.ExCD2.CDECol[SpellID..";DAMAGER"]) and true or false
+
 						local getSpellColumn = module.frame.colFrame[spellColumn]
 						local prior = nil
 						--[[
@@ -3808,6 +3812,7 @@ local function UpdateRoster()
 									h.icon = spellTexture
 									h.column = spellColumn
 									h.guid = h.guid or UnitGUID(name)
+									h.checkRole = checkRaidRole
 
 									alreadyInCds = true
 
@@ -3847,6 +3852,7 @@ local function UpdateRoster()
 								sort2 = secondPrior,
 								column = spellColumn,
 								guid = guid,
+								checkRole = checkRaidRole,
 							}
 							_C [#_C + 1] = new
 
@@ -6086,7 +6092,7 @@ function module.options:Load()
 	local SPELL_LINE_HEIGHT = 32
 
 	local function SpellsListLineOnUpdate(self)
-		if module.options.list.colBySpecFrame:IsShown() then
+		if module.options.list.colBySpecFrame:IsShown() or module.options.list.colByRoleFrame:IsShown() then
 			return
 		end
 		local alpha = 0.4
@@ -6099,6 +6105,12 @@ function module.options:Load()
 			self.colExpand:Show()
 		elseif not self:IsMouseOver() and self.colExpand:IsShown() then
 			self.colExpand:Hide()
+		end
+
+		if self:IsMouseOver() and not self.colExpand2:IsShown() then
+			self.colExpand2:Show()
+		elseif not self:IsMouseOver() and self.colExpand2:IsShown() then
+			self.colExpand2:Hide()
 		end
 	end
 	local function SpellsListTooltipFrameOnEnter(self)
@@ -6144,6 +6156,9 @@ function module.options:Load()
 	end
 	local function SpellsListLineColExpand(self)
 		module.options.list.colBySpecFrame:Open(self:GetParent(),self)
+	end
+	local function SpellsListLineColExpandRole(self)
+		module.options.list.colByRoleFrame:Open(self:GetParent(),self)
 	end
 	local function SpellsListChkOnClick(self)
 		if self.disabled then
@@ -6368,7 +6383,8 @@ function module.options:Load()
 	end
 	local function SpellsListColSetValue(self,value)
 		local isEnabled = VMRT.ExCD2.colSet[value] and VMRT.ExCD2.colSet[value].enabled
-	  	self.text:SetText(L.cd2AddSpellFrameColumnText.." "..(not isEnabled and "|cffff0000" or "|cffffffff")..value)
+		if value == 0 and self.zeroToNil then value = nil end
+	  	self.text:SetText(value and (L.cd2AddSpellFrameColumnText.." "..(not isEnabled and "|cffff0000" or "|cffffffff")..value) or UNUSED)
 		if self.lock then return end
 		if type(self.keystr) == "table" then
 			for i=1,#self.keystr do
@@ -6532,11 +6548,19 @@ function module.options:Load()
 		line.colBack:SetPoint("LEFT",line.col)
 		line.colBack:SetPoint("RIGHT",line.col)
 
-		line.colExpand = ELib:Button(line,L.cd2BySpec):Size(120,8):Point("LEFT",line.col,0,0):Point("BOTTOM",line,0,0):OnClick(SpellsListLineColExpand)
+		line.colExpand = ELib:Button(line,L.cd2BySpec):Size(90,8):Point("LEFT",line.col,(ExRT.isClassic and not ExRT.isLK) and 15 or -30,0):Point("BOTTOM",line,0,0):OnClick(SpellsListLineColExpand)
 		line.colExpand.Texture:SetGradient("VERTICAL",CreateColor(0.05,0.26,0.09,1), CreateColor(0.20,0.41,0.25,1))
 		local textObj = line.colExpand:GetTextObj()
 		textObj:SetFont(textObj:GetFont(),8,"")
 
+		line.colExpand2 = ELib:Button(line,L.cd2ByRole):Size(90,8):Point("LEFT",line.col,60,0):Point("BOTTOM",line,0,0):OnClick(SpellsListLineColExpandRole)
+		line.colExpand2.Texture:SetGradient("VERTICAL",CreateColor(0.26,0.05,0.09,1), CreateColor(0.41,0.20,0.25,1))
+		local textObj = line.colExpand2:GetTextObj()
+		textObj:SetFont(textObj:GetFont(),8,"")
+		if ExRT.isClassic and not ExRT.isLK then
+			line.colExpand2.Show = line.colExpand2.Hide
+			line.colExpand2:Hide()
+		end
 
 		line.prior = ELib:Slider(line,""):Size(120):Point("LEFT",line.col,"RIGHT",15,0):Range(0,100):SetTo(101):OnChange(SpellsListPrioritySetValue)
 		line.prior:SetObeyStepOnDrag(true)
@@ -6660,6 +6684,87 @@ function module.options:Load()
 			self.spec[i]:Hide()
 		end
 		self:SetHeight(SPELL_LINE_HEIGHT * #specs + 10)
+
+		self.data = line.data[1]
+
+		self:Show()
+	end
+
+
+	self.list.colByRoleFrame = CreateFrame("Frame",nil,self)
+	self.list.colByRoleFrame:SetWidth(155)
+	self.list.colByRoleFrame:SetFrameStrata("DIALOG")
+	self.list.colByRoleFrame.background = self.list.colByRoleFrame:CreateTexture(nil,"BACKGROUND")
+	self.list.colByRoleFrame.background:SetAllPoints()
+	self.list.colByRoleFrame.background:SetColorTexture(0,0,0,.8)
+	ELib:Border(self.list.colByRoleFrame,2,0.44,0.45,0.50,1)
+
+	self.list.colByRoleFrame.close = ELib:Button(self.list.colByRoleFrame,"x"):Size(155-2,10):Point("BOTTOM",0,0):OnClick(function(self) self:GetParent():Hide() end):Tooltip(L.cd2ByRoleTip)
+
+	self.list.colByRoleFrame:Hide()
+	self.list.colByRoleFrame.role = {}
+	function self.list.colByRoleFrame:Open(line,clickObj)
+		if self:IsShown() and self.data == line.data[1] then
+			self:Hide()
+			return
+		end
+
+		self:ClearAllPoints()
+		self:SetPoint("TOPRIGHT",clickObj,"BOTTOMRIGHT",5,-2)
+
+		local class = line.data_class
+		local spellID = line.data[1]
+
+		local r,g,b = ExRT.F.classColorNum(class)
+		self.background:SetColorTexture(r*0.5,g*0.5,b*0.5,1)
+
+		for i=1,3 do
+			local slider = self.role[i]
+			if not slider then
+				slider = ELib:Slider(self,UNUSED):Size(120):Point("RIGHT",self,"TOPRIGHT",-5,-3-SPELL_LINE_HEIGHT*(i-1)-SPELL_LINE_HEIGHT/2):Range(0,10):SetTo(0):OnChange(function(self,...) 
+					SpellsListColSetValue(self,...)
+					for j=1,#_C do
+						if _C[j].db[1] == line.data[1] then
+							_C[j].checkRole = (VMRT.ExCD2.CDECol[ line.data[1] ..";HEALER"] or VMRT.ExCD2.CDECol[ line.data[1] ..";TANK"] or VMRT.ExCD2.CDECol[ line.data[1] ..";DAMAGER"]) and true or false
+						end
+					end
+				end)
+				self.role[i] = slider
+				slider.zeroToNil = true
+				slider:SetObeyStepOnDrag(true)
+				slider.Low:Hide()
+				slider.High:Hide()
+				slider:SetScript("OnEnter",nil)
+				slider:SetScript("OnLeave",nil)
+				slider:HideBorders()
+				slider.Thumb:SetSize(12,12)
+				slider.Thumb:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\circle256")
+				slider.Thumb:SetVertexColor(0.44,0.45,0.50,1)
+				slider.backline = slider:CreateTexture(nil,"BACKGROUND")
+				slider.backline:SetColorTexture(0.44,0.45,0.50,0.7)
+				slider.backline:SetPoint("LEFT")
+				slider.backline:SetPoint("RIGHT")
+				slider.backline:SetHeight(4)
+				slider.Text:SetFont(GameFontHighlight:GetFont(),10,"")
+				slider.Text:SetTextColor(0.44,0.45,0.50,1)
+				slider:SetScript("OnMouseWheel",nil)
+
+				slider.icon = slider:CreateTexture(nil,"ARTWORK")
+				slider.icon:SetPoint("RIGHT",slider,"LEFT",-5,0)
+				slider.icon:SetSize(20,20)
+			end
+			slider.icon:SetAtlas(i == 1 and "groupfinder-icon-role-large-dps" or i == 2 and "groupfinder-icon-role-large-heal" or "groupfinder-icon-role-large-tank")
+
+			local colStr = line.data[1]..";"..(i == 1 and "DAMAGER" or i == 2 and "HEALER" or "TANK")
+			local col = VMRT.ExCD2.CDECol[colStr] or 0
+			slider.keystr = colStr
+			slider.lock = true
+			slider:SetTo(col)
+			slider.lock = false
+
+			slider:Show()
+		end
+		self:SetHeight(SPELL_LINE_HEIGHT * 3 + 10)
 
 		self.data = line.data[1]
 
@@ -12190,7 +12295,7 @@ module.db.AllSpells = {
 		nil,nil,{88625,60,0},nil,
 		isTalent=true,resetBy=200183,reduceCdAfterCast={{14914,336314},-4,{14914,390994},{-2,-4},585,-4,{585,196985},{-0.4,-0.8},{585,200183,nil,200183},-12,{585,338345},{-0.24,-0.352,-0.384,-0.416,-0.448,-0.48,-0.512,-0.544,-0.576,-0.608,-0.64,-0.672,-0.704,-0.736,-0.768},{585,338345,nil,200183},{-0.72,-1.056,-1.152,-1.248,-1.344,-1.44,-1.536,-1.632,-1.728,-1.824,-1.92,-2.016,-2.112,-2.208,-2.304}},
 		CLEU_SPELL_CAST_SUCCESS=[[
-			if spellID == 88625 IsAuraActive(sourceName,372760) then
+			if spellID == 88625 and IsAuraActive(sourceName,372760) then
 				local line = CDList[sourceName][88625]
 				if line then
 					line:ReduceCD(15)

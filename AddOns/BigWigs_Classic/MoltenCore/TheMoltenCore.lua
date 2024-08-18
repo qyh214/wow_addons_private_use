@@ -32,6 +32,7 @@ if L then
 	L.custom_on_linked_spam_desc = CL.link_say_option_desc
 	L.custom_on_linked_spam_icon = mod:GetMenuIcon("SAY")
 
+	L["460883_icon"] = "inv_elemental_primal_fire"
 	L.adds_icon = "spell_fire_elemental_totem"
 end
 
@@ -50,6 +51,7 @@ function mod:GetOptions()
 		"custom_on_linked_spam",
 		460887, -- Harmonic Tremor
 		{460885, "CASTBAR", "EMPHASIZE", "CASTBAR_COUNTDOWN"}, -- Doomsday
+		460883, -- Meteor
 		{"health", "INFOBOX"},
 		"adds",
 	},nil,{
@@ -80,6 +82,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_DAMAGE", "SpellDamage", "*")
 	self:Death("FirefighterDeaths", 228820)
 	self:Log("SPELL_CAST_SUCCESS", "ConjureFlame", 462619)
+	self:Log("SPELL_CAST_SUCCESS", "Meteor", 460883, 462778, 462779, 462780) -- 1, 2, 3, 4
 end
 
 function mod:OnEngage()
@@ -89,7 +92,7 @@ function mod:OnEngage()
 	firefighters = {}
 	lineCount = 3
 	self:OpenInfo("health", CL.other:format("BigWigs", CL.health))
-	self:CDBar("adds", 28.8, CL.adds, L.adds_icon)
+	self:CDBar("adds", 28, CL.adds, L.adds_icon)
 end
 
 --------------------------------------------------------------------------------
@@ -118,6 +121,7 @@ do
 		if self:Me(args.destGUID) then
 			heartOfAshOnMe = false
 			self:Say(args.spellId, CL.link_removed, true, "Link removed")
+			self:PersonalMessage(args.spellId, false, CL.link_removed)
 		end
 		self:CustomIcon(heartOfAshMarker, args.destName)
 	end
@@ -148,6 +152,7 @@ do
 		mySaySpamTarget = nil -- Sometimes only one of the two has a removed event (player death?) so just nil it for everyone
 		if self:Me(args.destGUID) then
 			self:Say(args.spellId, CL.link_removed, true, "Link removed")
+			self:PersonalMessage(args.spellId, false, CL.link_removed)
 		end
 		self:CustomIcon(heartOfCinderMarker, args.destName)
 	end
@@ -221,7 +226,7 @@ function mod:FirefighterDeaths(args)
 		local line = tbl[1]
 		self:SetInfoBar("health", line, 0)
 		self:SetInfo("health", line + 1, CL.dead)
-		if not next(tbl) then
+		if not next(firefighters) then
 			self:StopBar(CL.adds)
 		end
 	end
@@ -231,4 +236,17 @@ function mod:ConjureFlame()
 	self:CDBar("adds", 31, CL.adds, L.adds_icon)
 	self:Message("adds", "cyan", CL.adds_spawned, L.adds_icon)
 	self:PlaySound("adds", "info")
+end
+
+function mod:Meteor(args)
+	if args.spellId == 462778 then -- 2 Meteors
+		self:Message(460883, "red", CL.count:format(args.spellName, 2), L["460883_icon"])
+	elseif args.spellId == 462779 then -- 3 Meteors
+		self:Message(460883, "red", CL.count:format(args.spellName, 3), L["460883_icon"])
+	elseif args.spellId == 462780 then -- 4 Meteors
+		self:Message(460883, "red", CL.count:format(args.spellName, 4), L["460883_icon"])
+	else -- 460883, 1 Meteor
+		self:Message(460883, "red", CL.count:format(args.spellName, 1), L["460883_icon"])
+	end
+	self:PlaySound(460883, "alert")
 end

@@ -33,8 +33,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian Classic", "koKR")
 if L then
 	--L.engage_yell_trigger = "Let the games begin"
-	L.landing_soon_trigger = "적들의 사기가 떨어지고 있다"
-	L.stage2_yell_trigger = "불타라! 활활!"
 	L.stage3_yell_trigger = "말도 안 돼! 일어나라!"
 
 	L.shaman_class_call_yell_trigger = "주술사"

@@ -19,10 +19,6 @@ local L = WeakAuras.L
 	L["(Troll)"] = "(Troll)"
 	--[[Translation missing --]]
 	L["(Undead)"] = "(Undead)"
-	--[[Translation missing --]]
-	L["< 4 stacks"] = "< 4 stacks"
-	--[[Translation missing --]]
-	L["5 stacks"] = "5 stacks"
 	L["Abilities"] = "Habilidades"
 	L["Add Triggers"] = "Adicionar gatilhos"
 	L["Always Active"] = "Sempre ativo"
@@ -99,10 +95,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Master Channeler Rune"] = "Master Channeler Rune"
 	--[[Translation missing --]]
-	L["Max 3"] = "Max 3"
-	--[[Translation missing --]]
-	L["Max 4"] = "Max 4"
-	--[[Translation missing --]]
 	L["Next"] = "Next"
 	--[[Translation missing --]]
 	L["Only show the aura if the target has the debuff."] = "Only show the aura if the target has the debuff."
@@ -124,8 +116,6 @@ local L = WeakAuras.L
 	L["Pet alive"] = "Pet alive"
 	--[[Translation missing --]]
 	L["Pet Behavior"] = "Pet Behavior"
-	--[[Translation missing --]]
-	L["PvP Talents"] = "PvP Talents"
 	--[[Translation missing --]]
 	L["regen buff"] = "regen buff"
 	--[[Translation missing --]]

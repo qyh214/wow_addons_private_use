@@ -397,6 +397,11 @@ function module:TextToProfile(str,uncompressed)
 	end
 	decoded = nil
 
+	if not decompressed then
+		print('error: import string is broken')
+		return
+	end
+
 	local profileName,clientVersion,tableData = strsplit(",",decompressed,3)
 	decompressed = nil
 

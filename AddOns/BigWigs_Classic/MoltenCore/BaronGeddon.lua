@@ -8,10 +8,17 @@ mod:RegisterEnableMob(12056, 228433) -- Baron Geddon, Baron Geddon (Season of Di
 mod:SetEncounterID(668)
 
 --------------------------------------------------------------------------------
+-- Locals
+--
+
+local debuffCount = 0
+local debuffTime = 0
+
+--------------------------------------------------------------------------------
 -- Initialization
 --
 
-local livingBombMarker = mod:AddMarkerOption(true, "player", 8, 20475, 8, 7, 6) -- Living Bomb
+local livingBombMarker = mod:GetSeason() == 2 and mod:AddMarkerOption(true, "player", 8, 20475, 8, 7, 6) or mod:AddMarkerOption(true, "player", 8, 20475, 8) -- Living Bomb
 function mod:GetOptions()
 	return {
 		{20475, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE"}, -- Living Bomb
@@ -48,7 +55,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "Inferno", 19695)
 	self:Log("SPELL_CAST_SUCCESS", "Armageddon", 20478)
 	self:Log("SPELL_CAST_SUCCESS", "IgniteMana", 19659)
-	if self:Vanilla() then
+	self:Log("SPELL_AURA_APPLIED", "IgniteManaApplied", 19659)
+	self:Log("SPELL_AURA_REMOVED", "IgniteManaRemoved", 19659)
+	if self:GetSeason() == 2 then
 		self:Log("SPELL_CAST_SUCCESS", "LivingBomb", 465725, 461090, 461105) -- Level 1, Level 2, Level 3
 		self:Log("SPELL_AURA_APPLIED", "LivingBombAppliedSoD", 465725, 461090, 461105) -- Level 1, Level 2, Level 3
 		self:Log("SPELL_AURA_REMOVED", "LivingBombRemoved", 465725, 461090, 461105) -- Level 1, Level 2, Level 3
@@ -61,6 +70,8 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
+	debuffCount = 0
+	debuffTime = 0
 	self:CDBar(19659, 6) -- Ignite Mana
 end
 
@@ -139,9 +150,25 @@ function mod:ArmageddonSoD(args)
 end
 
 function mod:IgniteMana(args)
+	debuffTime = args.time
 	self:CDBar(args.spellId, 27)
 	self:Message(args.spellId, "yellow", CL.on_group:format(args.spellName))
 	self:PlaySound(args.spellId, "info")
+end
+
+function mod:IgniteManaApplied(args)
+	if self:Player(args.destFlags) and UnitPowerType(args.destName) == 0 then -- Players that are using mana, not pets
+		debuffCount = debuffCount + 1
+	end
+end
+
+function mod:IgniteManaRemoved(args)
+	if self:Player(args.destFlags) and UnitPowerType(args.destName) == 0 then -- Players that are using mana, not pets
+		debuffCount = debuffCount - 1
+		if debuffCount == 0 then
+			self:Message(args.spellId, "green", CL.removed_after:format(args.spellName, args.time-debuffTime))
+		end
+	end
 end
 
 do

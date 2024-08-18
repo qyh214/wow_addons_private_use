@@ -17,8 +17,20 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			13880, -- Magma Splash
+			461463, -- Falling Rocks
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MagmaSplashApplied", 13880)
+	if self:GetSeason() == 2  then
+		self:Log("SPELL_CAST_SUCCESS", "FallingRocks", 461463)
+	end
  end
 
 --------------------------------------------------------------------------------
@@ -40,4 +52,9 @@ function mod:MagmaSplashApplied(args)
 			end
 		end
 	end
+end
+
+function mod:FallingRocks(args)
+	self:Message(args.spellId, "red")
+	self:PlaySound(args.spellId, "warning")
 end

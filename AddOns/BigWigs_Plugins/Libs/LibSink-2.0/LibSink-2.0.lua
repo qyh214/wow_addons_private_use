@@ -4,7 +4,7 @@
 -- Sink-2.0
 
 local SINK20 = "LibSink-2.0"
-local SINK20_MINOR = 100002
+local SINK20_MINOR = 110002
 
 local sink = LibStub:NewLibrary(SINK20, SINK20_MINOR)
 if not sink then return end

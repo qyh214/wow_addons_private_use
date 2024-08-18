@@ -1,0 +1,48 @@
+## Interface: 30403
+
+## Title: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-zhCN: BigWigs [|cffeda55f燃烧的远征|r]
+## Title-zhTW: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-deDE: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-frFR: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-itIT: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-koKR: BigWigs [|cffeda55f불타는 성전|r]
+## Title-ruRU: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-ptBR: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-esES: BigWigs [|cffeda55fBurning Crusade|r]
+## Title-esMX: BigWigs [|cffeda55fBurning Crusade|r]
+## Notes: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-zhCN: BigWigs 燃烧的远征模块。
+## Notes-zhTW: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-deDE: Eine Sammlung von BigWigs-Modulen aus der Ära Burning Crusade.
+## Notes-frFR: Une collection de modules BigWigs de l'ère Burning Crusade.
+## Notes-itIT: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-koKR: 불타는 성전 BigWigs 모듈 모음집입니다.
+## Notes-ruRU: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-ptBR: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-esES: A collection of BigWigs modules from the Burning Crusade era.
+## Notes-esMX: A collection of BigWigs modules from the Burning Crusade era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v10.2.4
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/BigWigsMods/BigWigs_BurningCrusade
+## X-Curse-Project-ID: 50688
+## X-WoWI-ID: 22096
+## X-Wago-ID: v63oQL6b
+## X-BigWigs-LoadOn-InstanceId: 532, 534, 544, 548, 550, 564, 565, 580, 568
+## X-BigWigs-ExtraMenu: -1945
+## X-BigWigs-LoadOn-WorldBoss: -1944, 18728, -1948, 17711
+
+Hyjal\modules.xml
+Serpentshrine\modules.xml
+Outland\modules.xml
+Karazhan\modules.xml
+TheEye\modules.xml
+BlackTemple\modules.xml
+Sunwell\modules.xml
+ZulAman_Classic\modules.xml

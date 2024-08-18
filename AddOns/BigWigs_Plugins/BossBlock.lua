@@ -29,7 +29,7 @@ plugin.defaultDB = {
 	disableMusic = false,
 	disableAmbience = false,
 	disableErrorSpeech = false,
-	redirectToastMsgs = true,
+	redirectTheToasts = true,
 	toastsColor = {0.2, 1, 1},
 	blockDungeonToasts = true,
 }
@@ -58,7 +58,6 @@ local CheckElv = nil
 local RestoreAll
 local hideQuestTrackingTooltips = false
 local activatedModules = {}
-local registeredToasts = {}
 local latestKill = {}
 local bbFrame = CreateFrame("Frame")
 bbFrame:Hide()
@@ -183,37 +182,26 @@ plugin.pluginOptions = {
 					inline = true,
 					hidden = isClassic,
 					args = {
-						redirectToastMsgs = {
+						redirectTheToasts = {
 							type = "toggle",
 							name = L.redirectPopups,
 							desc = L.redirectPopupsDesc,
 							set = function(_, value)
-								plugin.db.profile.redirectToastMsgs = value
+								plugin.db.profile.redirectTheToasts = value
 								if value then
 									local _, _, _, _, _, _, _, id = GetInstanceInfo()
 									if zoneList[id] then -- Instances only
-										registeredToasts = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")}
+										local registeredToasts = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")}
 										for i = 1, #registeredToasts do
 											bbFrame.UnregisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS")
 										end
 										plugin:RegisterEvent("DISPLAY_EVENT_TOASTS")
+										for i = 1, #registeredToasts do
+											bbFrame.RegisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS")
+										end
 									end
 								else
 									plugin:UnregisterEvent("DISPLAY_EVENT_TOASTS")
-									if next(registeredToasts) then
-										-- In most cases this is just going to be the Blizz frame, but we need to try respect other potential addons
-										local extraSafety = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")} -- Remove anything that registered whilst we were active
-										for i = 1, #extraSafety do
-											bbFrame.UnregisterEvent(extraSafety[i], "DISPLAY_EVENT_TOASTS")
-										end
-										for i = 1, #registeredToasts do
-											bbFrame.RegisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS") -- The frames we removed when we enabled should be first
-										end
-										for i = 1, #extraSafety do
-											bbFrame.RegisterEvent(extraSafety[i], "DISPLAY_EVENT_TOASTS") -- Now restore the ones that registered when we were active
-										end
-										registeredToasts = {}
-									end
 								end
 							end,
 							width = "full",
@@ -231,7 +219,7 @@ plugin.pluginOptions = {
 							width = "full",
 							order = 2,
 							disabled = function()
-								return not plugin.db.profile.redirectToastMsgs
+								return not plugin.db.profile.redirectTheToasts
 							end,
 						},
 						blockDungeonToasts = {
@@ -241,7 +229,7 @@ plugin.pluginOptions = {
 							width = "full",
 							order = 3,
 							disabled = function()
-								return not plugin.db.profile.redirectToastMsgs
+								return not plugin.db.profile.redirectTheToasts
 							end,
 						},
 					},
@@ -418,12 +406,15 @@ do
 
 		if not isClassic then
 			local _, _, _, _, _, _, _, id = GetInstanceInfo()
-			if self.db.profile.redirectToastMsgs and zoneList[id] then -- Instances only
-				registeredToasts = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")}
+			if self.db.profile.redirectTheToasts and zoneList[id] then -- Instances only
+				local registeredToasts = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")}
 				for i = 1, #registeredToasts do
 					bbFrame.UnregisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS")
 				end
 				self:RegisterEvent("DISPLAY_EVENT_TOASTS")
+				for i = 1, #registeredToasts do
+					bbFrame.RegisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS")
+				end
 			end
 			self:RegisterEvent("TALKINGHEAD_REQUESTED")
 			local frame = ObjectiveTrackerFrame
@@ -443,23 +434,6 @@ function plugin:OnPluginDisable()
 	activatedModules = {}
 	latestKill = {}
 	RestoreAll(self)
-	if not isClassic and self.db.profile.redirectToastMsgs then
-		self:UnregisterEvent("DISPLAY_EVENT_TOASTS")
-		if next(registeredToasts) then
-			-- In most cases this is just going to be the Blizz frame, but we need to try respect other potential addons
-			local extraSafety = {GetFramesRegisteredForEvent("DISPLAY_EVENT_TOASTS")} -- Remove anything that registered whilst we were active
-			for i = 1, #extraSafety do
-				bbFrame.UnregisterEvent(extraSafety[i], "DISPLAY_EVENT_TOASTS")
-			end
-			for i = 1, #registeredToasts do
-				bbFrame.RegisterEvent(registeredToasts[i], "DISPLAY_EVENT_TOASTS") -- The frames we removed when we enabled should be first
-			end
-			for i = 1, #extraSafety do
-				bbFrame.RegisterEvent(extraSafety[i], "DISPLAY_EVENT_TOASTS") -- Now restore the ones that registered when we were active
-			end
-			registeredToasts = {}
-		end
-	end
 end
 
 -------------------------------------------------------------------------------
@@ -470,17 +444,17 @@ do
 	local delayedTbl = nil
 	local function printMessage(self, tbl)
 		if type(tbl.title) == "string" and #tbl.title > 2 then
-			self:SendMessage("BigWigs_Message", self, nil, (tbl.title):upper(), self.db.profile.toastsColor)
+			self:SendMessage("BigWigs_Message", self, nil, (tbl.title):upper(), self.db.profile.toastsColor, nil, nil, 4)
 		end
 		if delayedTbl and delayedTbl.title and #delayedTbl.title > 2 then
-			self:SendMessage("BigWigs_Message", self, nil, (delayedTbl.title):upper(), self.db.profile.toastsColor)
+			self:SendMessage("BigWigs_Message", self, nil, (delayedTbl.title):upper(), self.db.profile.toastsColor, nil, nil, 4)
 			delayedTbl.title = nil
 		end
 		if type(tbl.subtitle) == "string" and #tbl.subtitle > 2 then
-			self:SendMessage("BigWigs_Message", self, nil, tbl.subtitle, self.db.profile.toastsColor)
+			self:SendMessage("BigWigs_Message", self, nil, tbl.subtitle, self.db.profile.toastsColor, nil, nil, 4)
 		end
 		if type(tbl.instructionText) == "string" and #tbl.instructionText > 2 then
-			self:SendMessage("BigWigs_Message", self, nil, tbl.instructionText, self.db.profile.toastsColor)
+			self:SendMessage("BigWigs_Message", self, nil, tbl.instructionText, self.db.profile.toastsColor, nil, nil, 4)
 		end
 		if type(tbl.showSoundKitID) == "number" then
 			PlaySound(tbl.showSoundKitID)
@@ -515,8 +489,22 @@ do
 						C_Item.RequestLoadItemDataByID(itemID)
 					end
 				end
-			elseif not self.db.profile.blockDungeonToasts or (self.db.profile.blockDungeonToasts and tbl.eventToastID ~= 5) then -- Dungeon zone in popup
+			elseif tbl.eventToastID == 1 then -- Level up
+				-- tbl.title is "Level 42"
+				tbl.subtitle = nil -- Remove "You've Reached" text
 				printMessage(self, tbl)
+			elseif tbl.eventToastID == 156 then -- Talent point
+				-- tbl.title is "New Talent Point Available"
+				-- tbl.subtitle is "Your power increased!"
+				tbl.subtitle = tbl.title -- We only want the title, but we don't want it uppercase
+				tbl.title = nil
+				printMessage(self, tbl)
+			elseif tbl.eventToastID == 5 then -- Dungeon zone in popup
+				if not self.db.profile.blockDungeonToasts then
+					printMessage(self, tbl)
+				end
+			else --if tbl.eventToastID == 3 then -- New ability
+				return
 			end
 			RemoveCurrentToast()
 			self:DISPLAY_EVENT_TOASTS()
@@ -639,12 +627,8 @@ do
 				local _, _, diff = GetInstanceInfo()
 				local trackedAchievements = C_ContentTracking.GetTrackedIDs(2) -- Enum.ContentTrackingType.Achievement = 2
 				if not restoreObjectiveTracker and self.db.profile.blockObjectiveTracker and not next(trackedAchievements) and diff ~= 8 and not bbFrame.IsProtected(frame) then
-					restoreObjectiveTracker = bbFrame.GetParent(frame)
-					if restoreObjectiveTracker then
-						bbFrame.SetFixedFrameStrata(frame, true) -- Changing parent would change the strata & level, lock it first
-						bbFrame.SetFixedFrameLevel(frame, true)
-						bbFrame.SetParent(frame, bbFrame)
-					end
+					restoreObjectiveTracker = true
+					frame:SetAlpha(0) -- XXX FIXME
 				end
 			end
 		elseif not isVanilla then
@@ -718,9 +702,13 @@ do
 
 		if restoreObjectiveTracker then
 			local frame = not isClassic and ObjectiveTrackerFrame or Questie_BaseFrame or WatchFrame or QuestWatchFrame
-			bbFrame.SetParent(frame, restoreObjectiveTracker)
-			bbFrame.SetFixedFrameStrata(frame, false)
-			bbFrame.SetFixedFrameLevel(frame, false)
+			if not isClassic then
+				frame:SetAlpha(1) -- XXX FIXME
+			else
+				bbFrame.SetParent(frame, restoreObjectiveTracker)
+				bbFrame.SetFixedFrameStrata(frame, false)
+				bbFrame.SetFixedFrameLevel(frame, false)
+			end
 			restoreObjectiveTracker = nil
 		end
 	end
@@ -817,12 +805,13 @@ do
 		[1] = 1, -- Normal Dungeon
 		[2] = 1, -- Heroic Dungeon
 		[8] = 2, -- Mythic+ Keystone Dungeon
-		[23] = 2, -- Mythic Dungeon
 		[14] = 3, -- Normal Raid
 		[15] = 3, -- Heroic Raid
 		[16] = 3, -- Mythic Raid
 		[17] = 3, -- LFR
+		[23] = 2, -- Mythic Dungeon
 		[24] = 4, -- Timewalking Dungeon
+		[205] = 1, -- Follower Dungeon
 	}
 	function plugin:TALKINGHEAD_REQUESTED()
 		local _, _, diff = GetInstanceInfo()

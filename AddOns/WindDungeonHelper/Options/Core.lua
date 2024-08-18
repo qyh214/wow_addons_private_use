@@ -36,14 +36,15 @@ local options = {
             imageWidth = titleImageConfig.width(),
             imageHeight = titleImageConfig.height(),
             imageCoords = F.GetTitleTexCoord
+        },
+        afterLogo = {
+            order = 3,
+            type = "description",
+            fontSize = "small",
+            name = "|cffff0000" ..
+                L["I've just returned to World of Warcraft, and the next data update will be for TWW Season 1!"] .. "|r",
+            width = "full"
         }
-        -- afterLogo = {
-        --     order = 3,
-        --     type = "description",
-        --     fontSize = "small",
-        --     name = "",
-        --     width = "full"
-        -- }
     }
 }
 

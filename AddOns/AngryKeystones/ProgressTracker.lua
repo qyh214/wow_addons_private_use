@@ -38,7 +38,7 @@ function Mod:COMBAT_LOG_EVENT_UNFILTERED()
 			lastDied = tonumber(npc_id)
 			lastDiedTime = GetTime()
 			lastDiedName = destName
-			-- ProcessLasts()
+			ProcessLasts()
 		end
 		if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
 			if UnitIsFeignDeath(destName) then
@@ -61,13 +61,12 @@ function Mod:SCENARIO_CRITERIA_UPDATE()
 			-- local criteriaString, criteriaType, _, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
 			local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
 			if criteriaInfo and criteriaInfo.isWeightedProgress then
-				local quantityString = criteriaInfo.description
-				-- local currentQuantity = quantityString and tonumber( strsub(quantityString, 1, -2) )
-				local currentQuantity = criteriaInfo.quantity
+				local quantityString = criteriaInfo.quantityString
+				local currentQuantity = quantityString and tonumber( quantityString:match("%d+") )
 				if lastQuantity and currentQuantity < criteriaInfo.totalQuantity and currentQuantity > lastQuantity then
 					lastAmount = currentQuantity - lastQuantity
 					lastAmountTime = GetTime()
-					-- ProcessLasts()
+					ProcessLasts()
 				end
 				lastQuantity = currentQuantity
 				break
@@ -83,9 +82,8 @@ local function StartTime()
 		-- local criteriaString, criteriaType, _, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
 		local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
 		if criteriaInfo and criteriaInfo.isWeightedProgress then
-			-- local quantityString = criteriaInfo.description
-			-- lastQuantity = quantityString and tonumber( strsub(quantityString, 1, -2) )
-			lastQuantity = criteriaInfo.quantity
+			local quantityString = criteriaInfo.quantityString
+			lastQuantity = quantityString and tonumber( quantityString:match("%d+") )
 			break
 		end
 	end
@@ -191,29 +189,36 @@ function Mod:GeneratePreset()
 	return ret
 end
 
+function Mod:PLAYER_ENTERING_WORLD(...) CheckTime(GetWorldElapsedTimers()) end
 function Mod:WORLD_STATE_TIMER_START(...) local timerID = ...; CheckTime(timerID) end
 function Mod:WORLD_STATE_TIMER_STOP(...) local timerID = ...; StopTime(timerID) end
 function Mod:CHALLENGE_MODE_START(...) CheckTime(GetWorldElapsedTimers()) end
 function Mod:CHALLENGE_MODE_RESET(...) wipe(Mod.playerDeaths) end
 
 local function ProgressBar_SetValue(self, percent)
---[[
 	-- local _, _, _, _, totalQuantity, _, _, quantityString, _, _, _, _, _ = C_Scenario.GetCriteriaInfo(self.criteriaIndex)
-	local criteriaInfo
-	
+
+	local scenarioType = select(10, C_Scenario.GetInfo())
+
+	if scenarioType ~= LE_SCENARIO_TYPE_CHALLENGE_MODE then return end
+
 	local numCriteria = select(3, C_Scenario.GetStepInfo())
+	local criteriaInfo
+	local cInfo
 
 	for criteriaIndex = 1, numCriteria do
-		criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
-		if criteriaInfo and criteriaInfo.isWeightedProgress then break end
+		cInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
+		if cInfo and cInfo.isWeightedProgress then
+			criteriaInfo = cInfo
+			break
+		end
 	end
-	
+
 	if not criteriaInfo then return end
-	
+
 	local totalQuantity = criteriaInfo.totalQuantity
-	local quantityString = criteriaInfo.description
-	-- local currentQuantity = quantityString and tonumber( strsub(quantityString, 1, -2) )
-	local currentQuantity = criteriaInfo.quantity
+	local quantityString = criteriaInfo.quantityString
+	local currentQuantity = quantityString and tonumber( quantityString:match("%d+") )
 
 	if currentQuantity and totalQuantity then
 		if Addon.Config.progressFormat == 1 then
@@ -230,26 +235,33 @@ local function ProgressBar_SetValue(self, percent)
 			self.Bar.Label:SetFormattedText("%.2f%% (%.2f%%) - %d/%d (%d)", currentQuantity/totalQuantity*100, (totalQuantity-currentQuantity)/totalQuantity*100, currentQuantity, totalQuantity, totalQuantity - currentQuantity)
 		end
 	end
-]]--
 end
 
-function Mod:PLAYER_ENTERING_WORLD(...)
-	CheckTime(GetWorldElapsedTimers())
+local progressBarFound = false
+
+local function findProgressBar()
+
+	if progressBarFound then return end
+
 	local usedBars = ScenarioObjectiveTracker.usedProgressBars or {}
+
 	for _, bar in pairs(usedBars) do
 		if bar.used then
 			hooksecurefunc(bar, "SetValue", ProgressBar_SetValue)
+			progressBarFound = true
 			break
 		end
 	end
 end
 
+hooksecurefunc(ScenarioObjectiveTracker.ObjectivesBlock, "AddProgressBar", findProgressBar )
 
 local function DeathCount_OnEnter(self)
-	local timeLost = tonumber(self.Count:GetText()) * 5
+	local parent = self:GetParent()
+
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-	GameTooltip:SetText(CHALLENGE_MODE_DEATH_COUNT_TITLE:format(tonumber(self.Count:GetText())), 1, 1, 1)
-	GameTooltip:AddLine(CHALLENGE_MODE_DEATH_COUNT_DESCRIPTION:format(SecondsToClock(timeLost, false)))
+	GameTooltip:SetText(CHALLENGE_MODE_DEATH_COUNT_TITLE:format(parent.deathCount), 1, 1, 1)
+	GameTooltip:AddLine(CHALLENGE_MODE_DEATH_COUNT_DESCRIPTION:format(SecondsToClock(parent.timeLost, false)))
 
 	GameTooltip:AddLine(" ")
 	local list = {}

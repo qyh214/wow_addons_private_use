@@ -24,8 +24,6 @@ local adds_dead = 0
 local L = mod:GetLocale()
 if L then
 	L.engage_yell_trigger = "Let the games begin"
-	L.landing_soon_trigger = "Well done, my minions"
-	L.stage2_yell_trigger = "BURN! You wretches"
 	L.stage3_yell_trigger = "Impossible! Rise my"
 
 	L.shaman_class_call_yell_trigger = "Shamans"
@@ -76,10 +74,10 @@ function mod:GetOptions()
 end
 
 function mod:VerifyEnable(unit, mobId)
-	if mobId == 11583 then -- Nefarian
-		return true
-	else -- Lord Victor Nefarius, prevent enabling at Vael
+	if mobId == 10162 then -- Lord Victor Nefarius, prevent enabling at Vael
 		return self:UnitIsInteractable(unit)
+	else -- Nefarian, adds
+		return true
 	end
 end
 
@@ -195,14 +193,6 @@ end
 function mod:CHAT_MSG_MONSTER_YELL(_, msg)
 	if msg:find(L.engage_yell_trigger, nil, true) then
 		self:Engage()
-	elseif msg:find(L.landing_soon_trigger, nil, true) then
-		self:Message("stages", "cyan", CL.custom_sec:format(CL.stage:format(2), 10), false)
-		self:Bar("stages", 11, CL.stage:format(2), "INV_Misc_Head_Dragon_Black")
-		self:PlaySound("stages", "long")
-	elseif msg:find(L.stage2_yell_trigger, nil, true) then
-		self:SetStage(2)
-		self:Message("stages", "cyan", CL.stage:format(2), false)
-		self:PlaySound("stages", "info")
 	elseif msg:find(L.stage3_yell_trigger, nil, true) then
 		self:SetStage(3)
 		self:Message("stages", "cyan", CL.percent:format(20, CL.stage:format(3)), false)
@@ -218,7 +208,20 @@ function mod:CHAT_MSG_MONSTER_YELL(_, msg)
 	end
 end
 
-function mod:AddDied()
-	adds_dead = adds_dead + 1
-	self:Message("add", "green", CL.add_killed:format(adds_dead, 41), "INV_Misc_Head_Dragon_Black")
+do
+	local function Stage2(self)
+		self:SetStage(2)
+		self:Message("stages", "cyan", CL.stage:format(2), false)
+		self:PlaySound("stages", "info")
+	end
+	function mod:AddDied()
+		adds_dead = adds_dead + 1
+		self:Message("add", "green", CL.add_killed:format(adds_dead, 41), "INV_Misc_Head_Dragon_Black")
+		if adds_dead == 41 then
+			self:Message("stages", "cyan", CL.custom_sec:format(CL.stage:format(2), 12), false)
+			self:Bar("stages", 12, CL.stage:format(2), "INV_Misc_Head_Dragon_Black")
+			self:ScheduleTimer(Stage2, 12, self)
+			self:PlaySound("stages", "long")
+		end
+	end
 end

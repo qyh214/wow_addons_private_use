@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "zhCN")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "难以置信"
+	L.stage2_yell_trigger = "难以置信" -- 难以置信，你们竟然真要击败我的熔岩巨虫了！也许我可以帮你们……扭转局势。
 
 	L.slump = "弱点"
 	L.slump_desc = "当熔喉扑倒并暴露后脑时发出警报。需要骑乘。"
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "zhCN")
 if L then
 	L.obnoxious_fiend = "喧闹恶鬼" -- NPC ID 49740
-	L.air_phase_trigger = "对，跑吧！每跑一步你的心跳都会加快。这心跳声，洪亮如雷，震耳欲聋。你逃不掉的！"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "zhCN")
 if L then
 	L.discharge = "闪电倾泻"
-	L.stage3_yell_trigger = "我一直在尝试扮演好客的主人，可你们就是不肯受死！该卸下伪装了……杀光你们！"
+	L.stage3_yell_trigger = "我一直在尝试扮演好客的主人" -- 我一直在尝试扮演好客的主人，可你们就是不肯受死！该卸下伪装了……杀光你们！
 	--L.too_close = "Dragons are too close"
 end

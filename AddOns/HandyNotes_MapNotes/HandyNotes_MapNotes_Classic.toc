@@ -1,0 +1,29 @@
+## Interface: 11503
+## Version: 2.2.1
+## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
+## Notes: Displays instance entrances, ships and zeppelin icons
+## Notes-esES: Muestra entradas de instancia, barcos e íconos de Zeppelin
+## Notes-esMX: Muestra entradas de instancia, barcos e íconos de Zeppelin
+## Notes-ptBR: Exibe entradas de instância, navios e ícones do Zeppelin
+## Notes-zhTW: 顯示實例入口，船隻和齊柏林飛艇圖標
+## Notes-zhCN: 显示实例入口，船只和齐柏林飞艇图标
+## Notes-deDE: Zeigt Instanzeingänge, Schiffe und Zeppelin -Symbole an
+## Notes-ruRU: Отображает входы экземпляра, корабли и значки Zeppelin
+## Notes-koKR: 인스턴스 입구, 선박 및 제플린 아이콘을 표시합니다
+## Notes-itIT: Visualizza ingressi di istanza, navi e icone zeppelin
+## Notes-frFR: Affiche les entrées d'instance, les navires et les icônes Zeppelin
+## Author: BadBoyBarny
+## X-License: All Rights Reserved
+## RequiredDeps: HandyNotes
+## OptionalDeps: TomTom
+## X-Curse-Project-ID: 1007601
+## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, ruRU, itIT, ptBR, koKR, zhCN, zhTW
+## SavedVariables: HandyNotes_MapNotesClassicEraDB, MNMiniMapButtonClassicDB
+
+
+ExternalLibs\ExternalLibs.xml
+Locales\Locales.xml
+Nodes\NodesClassic.xml
+Core\CoreClassic.xml
+
+

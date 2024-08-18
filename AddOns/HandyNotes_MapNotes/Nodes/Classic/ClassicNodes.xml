@@ -1,0 +1,16 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="ClassicMinimapInfo.lua"/>
+    <Script file="ClassicZoneInfo.lua"/>
+    <Script file="ClassicZoneFP.lua"/>
+    <Script file="ClassicMinimapFP.lua"/>
+    <Script file="ClassicZoneGhost.lua"/>
+    <Script file="ClassicMinimapGhost.lua"/>
+    <Script file="ClassicContinentInfo.lua"/>
+    <Script file="ClassicWorldMapInfo.lua"/>
+    <Script file="ClassicFogOfWarNodes.lua"/>
+    <Script file="ClassicCapitals.lua"/>
+    <Script file="ClassicCapitalsMinimap.lua"/>
+    <Script file="ClassicPathsZoneNodes.lua"/>
+    <Script file="ClassicPathsMiniMapNodes.lua"/>
+    <Script file="ClassicBlizzAreaPoisNodesInfo.lua"/>
+</Ui>

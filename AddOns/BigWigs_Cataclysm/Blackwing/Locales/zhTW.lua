@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "zhTW")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "真難想像!看來你真有機會打敗我的蟲子!也許我可幫忙...扭轉戰局。"
+	L.stage2_yell_trigger = "真難想像" -- 真難想像!看來你真有機會打敗我的蟲子!也許我可幫忙...扭轉戰局。
 
 	L.slump = "撲倒"
 	L.slump_desc = "當熔喉撲倒並暴露時發出警報。"
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "zhTW")
 if L then
 	--L.obnoxious_fiend = "Obnoxious Fiend" -- NPC ID 49740
-	L.air_phase_trigger = "沒錯，逃吧!每一步都會讓你的心跳加速。跳得轟隆作響...震耳欲聾。你逃不掉的!"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "zhTW")
 if L then
 	L.discharge = "閃電釋放"
-	L.stage3_yell_trigger = "我本來只想略盡地主之誼"
+	L.stage3_yell_trigger = "我本來只想略盡地主之誼" -- 我本來只想略盡地主之誼，但是你們就是不肯痛快的受死!是時候拋下一切的虛偽...殺光你們就好!
 	--L.too_close = "Dragons are too close"
 end

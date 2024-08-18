@@ -50,7 +50,7 @@ local function UpdatePartyKeystones()
 	end
 
 	if not scheduleEnabled then return end
-	if not IsAddOnLoaded("Blizzard_ChallengesUI") then return end
+	if not C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI") then return end
 
 	local playerRealm = select(2, UnitFullName("player")) or ""
 
@@ -369,7 +369,7 @@ end
 
 function Mod:SetPartyKeystoneRequest()
 	requestPartyKeystones = true
-	if IsAddOnLoaded("Blizzard_ChallengesUI") and ChallengesFrame:IsShown() then
+	if C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI") and ChallengesFrame:IsShown() then
 		self:SendPartyKeystonesRequest()
 		UpdatePartyKeystones()
 	end

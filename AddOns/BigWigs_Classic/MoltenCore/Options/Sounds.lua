@@ -16,6 +16,7 @@ BigWigs:AddSounds("Gehennas", {
 })
 
 BigWigs:AddSounds("Garr", {
+	[19492] = "info",
 })
 
 BigWigs:AddSounds("Baron Geddon", {
@@ -27,32 +28,41 @@ BigWigs:AddSounds("Baron Geddon", {
 })
 
 BigWigs:AddSounds("Shazzrah", {
-	[19713] = "warning",
-	[19714] = "warning",
-	[19715] = "info",
+	[19713] = "alarm",
+	[19714] = "alarm",
+	[19715] = "alert",
 	[23138] = "long",
 	[460856] = {"info","warning"},
 })
 
 BigWigs:AddSounds("Sulfuron Harbinger", {
+	[19775] = "alert",
+	[19778] = "alarm",
+	[19779] = "info",
+	[461103] = "underyou",
 })
 
 BigWigs:AddSounds("Golemagg the Incinerator", {
 	[13880] = "alert",
+	[461463] = "warning",
 })
 
 BigWigs:AddSounds("Majordomo Executus", {
 	[20619] = "info",
 	[21075] = "info",
+	[364895] = "alert",
+	[364908] = "alert",
 	[461056] = "warning",
 })
 
 BigWigs:AddSounds("Ragnaros Classic", {
 	[20566] = "info",
+	[461062] = "underyou",
 	["stages"] = "long",
 })
 
 BigWigs:AddSounds("The Molten Core", {
+	[460883] = "alert",
 	[460885] = "long",
 	[460887] = "alarm",
 	[460895] = "warning",

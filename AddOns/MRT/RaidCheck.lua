@@ -428,7 +428,7 @@ module.db.RaidCheckReadyCheckTable = {}
 module.db.RaidCheckReadyPPLNum = 0
 module.db.RaidCheckReadyCheckHideSchedule = nil
 
-module.db.tableRunes = {[224001]=5,[270058]=6,[317065]=6,[347901]=18,[367405]=18,[393438]=87}
+module.db.tableRunes = {[224001]=5,[270058]=6,[317065]=6,[347901]=18,[367405]=18,[393438]=87,[453250]=87}
 
 module.db.durability = {}
 module.db.oil = {}
@@ -3320,11 +3320,12 @@ addonMsgFrame:RegisterEvent("CHAT_MSG_ADDON")
 
 if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 	local IS_DF = true
+	local IS_TWW = UnitLevel'player' > 70
 
 	local consumables_size = 44
 
-	local rune_item_id = IS_DF and 201325 or 181468
-	local rune_texture = IS_DF and 4644002 or 134078
+	local rune_item_id = IS_TWW and 224572 or IS_DF and 201325 or 181468
+	local rune_texture = IS_TWW and 4549102 or IS_DF and 4644002 or 134078
 
 	local wenchants = {
 		[6190] = {ench=6190,item=171286,icon=463544},
@@ -3368,6 +3369,21 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		[6525] = {ench=6525,item=198315,icon=4548898,q=3},
 		[6524] = {ench=6524,item=198314,icon=4548898,q=2},
 		[6523] = {ench=6523,item=198313,icon=4548898,q=1},
+		[7550] = {ench=7550,item=222509,icon=3622199,q=2},
+		[7531] = {ench=7531,item=222896,icon=4549251,q=3},
+		[7535] = {ench=7535,item=222888,icon=4549251,q=1},
+		[7543] = {ench=7543,item=222502,icon=3622195,q=1},
+		[7551] = {ench=7551,item=222510,icon=3622199,q=3},
+		[7532] = {ench=7532,item=222891,icon=4549251,q=1},
+		[7536] = {ench=7536,item=222889,icon=4549251,q=2},
+		[7544] = {ench=7544,item=222503,icon=3622195,q=2},
+		[7529] = {ench=7529,item=222894,icon=4549251,q=1},
+		[7533] = {ench=7533,item=222892,icon=4549251,q=2},
+		[7537] = {ench=7537,item=222890,icon=4549251,q=3},
+		[7545] = {ench=7545,item=222504,icon=3622195,q=3},
+		[7549] = {ench=7549,item=222508,icon=3622199,q=1},
+		[7530] = {ench=7530,item=222895,icon=4549251,q=2},
+		[7534] = {ench=7534,item=222893,icon=4549251,q=3},
 	}
 	local wenchants_items = {}
 	for k,v in pairs(wenchants) do
@@ -3787,7 +3803,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 
 		local runeCount = GetItemCount(rune_item_id,false,true)
 		local runeUnlim = IS_DF and GetItemCount(211495,false,true) or GetItemCount(190384,false,true)
-		if runeUnlim and runeUnlim > 0 then
+		if runeUnlim and runeUnlim > 0 and not IS_TWW then	--no rune yet
 			self.buttons.rune.count:SetText("")
 			if not InCombatLockdown() then
 				self.buttons.rune.texture:SetTexture(IS_DF and 348535 or 4224736)

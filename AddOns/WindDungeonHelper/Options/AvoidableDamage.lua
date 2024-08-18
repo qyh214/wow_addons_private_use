@@ -2,7 +2,7 @@ local W, F, L, P, O = unpack(select(2, ...))
 local AD = W:GetModule("AvoidableDamage")
 local name = UnitName("player")
 
-local GetSpellLink = GetSpellLink
+local C_Spell_GetSpellLink = C_Spell.GetSpellLink
 
 local tipsText =
     format(
@@ -274,7 +274,11 @@ O.avoidableDamage = {
                         local text = F.CreateColorString(L["Example"]) .. ": "
                         text =
                             text ..
-                            AD:GenerateOutput(W.db.avoidableDamage.custom.warningMessage, name, GetSpellLink(257274))
+                            AD:GenerateOutput(
+                                W.db.avoidableDamage.custom.warningMessage,
+                                name,
+                                C_Spell_GetSpellLink(257274)
+                            )
                         return text
                     end,
                     hidden = function()
@@ -298,7 +302,12 @@ O.avoidableDamage = {
                         local text = F.CreateColorString(L["Example"]) .. ": "
                         text =
                             text ..
-                            AD:GenerateOutput(W.db.avoidableDamage.custom.stacksMessage, name, GetSpellLink(257274), 3)
+                            AD:GenerateOutput(
+                                W.db.avoidableDamage.custom.stacksMessage,
+                                name,
+                                C_Spell_GetSpellLink(257274),
+                                3
+                            )
                         return text
                     end,
                     hidden = function()
@@ -325,7 +334,7 @@ O.avoidableDamage = {
                             AD:GenerateOutput(
                                 W.db.avoidableDamage.custom.spellMessage,
                                 name,
-                                GetSpellLink(257274),
+                                C_Spell_GetSpellLink(257274),
                                 nil,
                                 AD:FormatNumber(12345),
                                 87

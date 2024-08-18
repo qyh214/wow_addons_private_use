@@ -19,6 +19,7 @@ function mod:GetOptions()
 		19713, -- Shazzrah's Curse
 	},nil,{
 		[23138] = CL.teleport, -- Gate of Shazzrah (Teleport)
+		[19715] = CL.frontal_cone, -- Counterspell (Frontal Cone)
 		[19713] = CL.curse, -- Shazzrah's Curse (Curse)
 	}
 end
@@ -33,6 +34,7 @@ if mod:GetSeason() == 2 then
 			{460856, "CASTBAR", "EMPHASIZE"}, -- Reflect Magic
 		},nil,{
 			[23138] = CL.teleport, -- Gate of Shazzrah (Teleport)
+			[19715] = CL.frontal_cone, -- Counterspell (Frontal Cone)
 			[19713] = CL.curse, -- Shazzrah's Curse (Curse)
 		}
 	end
@@ -74,7 +76,7 @@ end
 function mod:MagicGroundingDeadenMagicApplied(args)
 	self:Message(args.spellId, "orange", CL.magic_buff_boss:format(args.spellName))
 	if self:Dispeller("magic", true) then
-		self:PlaySound(args.spellId, "warning")
+		self:PlaySound(args.spellId, "alarm")
 	end
 end
 
@@ -86,15 +88,15 @@ end
 
 function mod:Counterspell(args)
 	self:CDBar(args.spellId, self:GetSeason() == 2 and 9.6 or 15) -- 9.6-12.9 on SoD, 15-19 elsewhere
-	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "info")
+	self:Message(args.spellId, "yellow", CL.extra:format(args.spellName, CL.frontal_cone))
+	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:ShazzrahsCurse()
 	self:CDBar(19713, self:GetSeason() == 2 and 16.2 or 22.6, CL.curse) -- 16.2-21 on SoD, 22.6-25 elsewhere
 	self:Message(19713, "yellow", CL.curse)
 	if self:Dispeller("curse") then
-		self:PlaySound(19713, "warning")
+		self:PlaySound(19713, "alarm")
 	end
 end
 

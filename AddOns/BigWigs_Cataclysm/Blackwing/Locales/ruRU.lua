@@ -2,7 +2,7 @@
 local L = BigWigs:NewBossLocale("Magmaw", "ruRU")
 if not L then return end
 if L then
-	L.stage2_yell_trigger = "Непостижимо! Вы, кажется, можете уничтожить моего лавового червяка! Пожалуй, я помогу ему."
+	L.stage2_yell_trigger = "Непостижимо" -- Непостижимо! Вы, кажется, можете уничтожить моего лавового червяка! Пожалуй, я помогу ему.
 
 	L.slump = "Падение"
 	L.slump_desc = "Магмарь падает вперед открывая себя, позволяя начать родео."
@@ -25,7 +25,6 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "ruRU")
 if L then
 	L.obnoxious_fiend = "Гнусный бес" -- NPC ID 49740
-	L.air_phase_trigger = "Да, беги! С каждым шагом твое сердце бьется все быстрее. Эти громкие, оглушительные удары... Тебе некуда бежать!"
 	--L.circles = "Circles"
 end
 
@@ -37,6 +36,6 @@ end
 L = BigWigs:NewBossLocale("Nefarian", "ruRU")
 if L then
 	L.discharge = "Искровой разряд"
-	L.stage3_yell_trigger = "Я пытался следовать законам гостеприимства"
+	L.stage3_yell_trigger = "Я пытался следовать законам гостеприимства" -- Я пытался следовать законам гостеприимства, но вы всё никак не умрете! Придется отбросить условности и просто... УБИТЬ ВАС ВСЕХ!
 	--L.too_close = "Dragons are too close"
 end

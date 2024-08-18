@@ -60,11 +60,11 @@ function mod:GetOptions()
 	return {
 		"custom_on_autotalk",
 		-- Herald of Ansurek
-		{443437, "SAY"}, -- Shadows of Doubt
+		{443437, "SAY", "SAY_COUNTDOWN", "NAMEPLATE"}, -- Shadows of Doubt
 		-- Sureki Silkbinder
-		443430, -- Silk Binding
+		{443430, "NAMEPLATE"}, -- Silk Binding
 		-- Royal Swarmguard
-		443500, -- Earthshatter
+		{443500, "NAMEPLATE"}, -- Earthshatter
 		-- Xeph'itik
 		450784, -- Perfume Toss
 		451423, -- Gossamer Barrage
@@ -72,19 +72,19 @@ function mod:GetOptions()
 		-- Pale Priest
 		448047, -- Web Wrap
 		-- Eye of the Queen
-		451543, -- Null Slam
+		{451543, "NAMEPLATE"}, -- Null Slam
 		-- Covert Webmancer
-		452162, -- Mending Web
+		{452162, "NAMEPLATE"}, -- Mending Web
 		-- Royal Venomshell
-		434137, -- Venomous Spray
+		{434137, "NAMEPLATE"}, -- Venomous Spray
 		-- Unstable Test Subject
-		445813, -- Dark Barrage
+		{445813, "NAMEPLATE"}, -- Dark Barrage
 		-- Sureki Unnaturaler
-		446086, -- Void Wave
+		{446086, "NAMEPLATE"}, -- Void Wave
 		-- Elder Shadeweaver
-		446717, -- Umbral Weave
+		{446717, "NAMEPLATE"}, -- Umbral Weave
 		-- Hulking Warshell
-		447271, -- Tremor Slam
+		{447271, "NAMEPLATE"}, -- Tremor Slam
 	}, {
 		[443437] = L.herald_of_ansurek,
 		[443430] = L.sureki_silkbinder,
@@ -110,14 +110,20 @@ function mod:OnBossEnable()
 	self:RegisterEvent("GOSSIP_SHOW")
 
 	-- Herald of Ansurek
-	--self:Log("SPELL_CAST_SUCCESS", "ShadowsOfDoubt", 443436)
+	self:Log("SPELL_CAST_SUCCESS", "ShadowsOfDoubt", 443436)
 	self:Log("SPELL_AURA_APPLIED", "ShadowsOfDoubtApplied", 443437)
+	self:Log("SPELL_AURA_REMOVED", "ShadowsOfDoubtRemoved", 443437)
+	self:Death("HeraldOfAnsurekDeath", 220196)
 
 	-- Sureki Silkbinder
 	self:Log("SPELL_CAST_START", "SilkBinding", 443430)
+	self:Log("SPELL_INTERRUPT", "SilkBindingInterrupt", 443430)
+	self:Log("SPELL_CAST_SUCCESS", "SilkBindingSuccess", 443430)
+	self:Death("SurekiSilkbinderDeath", 220195)
 
 	-- Royal Swarmguard
 	self:Log("SPELL_CAST_START", "Earthshatter", 443500)
+	self:Death("RoyalSwarmguardDeath", 220197)
 
 	-- Xeph'itik
 	self:Log("SPELL_CAST_START", "PerfumeToss", 450784)
@@ -130,27 +136,38 @@ function mod:OnBossEnable()
 
 	-- Eye of the Queen
 	self:Log("SPELL_CAST_START", "NullSlam", 451543)
+	self:Death("EyeOfTheQueenDeath", 220003)
 
 	-- Covert Webmancer
 	self:Log("SPELL_CAST_START", "MendingWeb", 452162)
+	self:Log("SPELL_INTERRUPT", "MendingWebInterrupt", 452162)
+	self:Log("SPELL_CAST_SUCCESS", "MendingWebSuccess", 452162)
+	self:Death("CovertWebmancerDeath", 223844, 224732)
 
 	-- Royal Venomshell
 	self:Log("SPELL_CAST_START", "VenomousSpray", 434137)
+	self:Death("RoyalVenomshellDeath", 220730)
 
 	-- Unstable Test Subject
 	self:Log("SPELL_CAST_START", "DarkBarrage", 445813)
+	self:Death("UnstableTestSubjectDeath", 216328)
 
 	-- Sureki Unnaturaler
 	self:Log("SPELL_CAST_START", "VoidWave", 446086)
-
-	-- Elder Shadeweaver
-	self:Log("SPELL_CAST_START", "UmbralWeave", 446717)
-
-	-- Hulking Warshell
-	self:Log("SPELL_CAST_START", "TremorSlam", 447271)
+	self:Log("SPELL_INTERRUPT", "VoidWaveInterrupt", 446086)
+	self:Log("SPELL_CAST_SUCCESS", "VoidWaveSuccess", 446086)
+	self:Death("SurekiUnnaturalerDeath", 216339)
 
 	-- Congealed Droplet
 	self:Death("CongealedDropletDeath", 216329)
+
+	-- Elder Shadeweaver
+	self:Log("SPELL_CAST_START", "UmbralWeave", 446717)
+	self:Death("ElderShadeweaverDeath", 221102)
+
+	-- Hulking Warshell
+	self:Log("SPELL_CAST_START", "TremorSlam", 447271)
+	self:Death("HulkingWarshellDeath", 221103)
 end
 
 --------------------------------------------------------------------------------
@@ -203,16 +220,27 @@ end
 
 -- Herald of Ansurek
 
---function mod:ShadowsOfDoubt()
-	--self:Nameplate(443437, 13.9, args.sourceGUID)
---end
+function mod:ShadowsOfDoubt(args)
+	self:Nameplate(443437, 12.2, args.sourceGUID)
+end
 
 function mod:ShadowsOfDoubtApplied(args)
 	self:TargetMessage(args.spellId, "yellow", args.destName)
 	self:PlaySound(args.spellId, "alarm", nil, args.destName)
 	if self:Me(args.destGUID) then
 		self:Say(args.spellId, nil, nil, "Shadows of Doubt")
+		self:SayCountdown(args.spellId, 8)
 	end
+end
+
+function mod:ShadowsOfDoubtRemoved(args)
+	if self:Me(args.destGUID) then
+		self:CancelSayCountdown(args.spellId)
+	end
+end
+
+function mod:HeraldOfAnsurekDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Sureki Silkbinder
@@ -223,7 +251,19 @@ function mod:SilkBinding(args)
 	end
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
-	--self:Nameplate(args.spellId, 21.8, args.sourceGUID) -- recast if stunned, needs SUCCESS/INTERRUPT
+	self:Nameplate(args.spellId, 0, args.sourceGUID)
+end
+
+function mod:SilkBindingInterrupt(args)
+	self:Nameplate(443430, 20.9, args.destGUID)
+end
+
+function mod:SilkBindingSuccess(args)
+	self:Nameplate(args.spellId, 20.9, args.sourceGUID)
+end
+
+function mod:SurekiSilkbinderDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Royal Swarmguard
@@ -231,7 +271,11 @@ end
 function mod:Earthshatter(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
-	--self:Nameplate(args.spellId, 15.5, args.sourceGUID)
+	self:Nameplate(args.spellId, 14.6, args.sourceGUID)
+end
+
+function mod:RoyalSwarmguardDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Xeph'itik
@@ -301,15 +345,31 @@ end
 function mod:NullSlam(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
-	--self:Nameplate(args.spellId, 26.7, args.sourceGUID)
+	self:Nameplate(args.spellId, 26.7, args.sourceGUID)
 end
 
--- Covert Webmender
+function mod:EyeOfTheQueenDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
+-- Covert Webmancer
 
 function mod:MendingWeb(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
-	--self:Nameplate(args.spellId, 20.6, args.sourceGUID) -- recast if stunned, needs SUCCESS/INTERRUPT
+	self:Nameplate(args.spellId, 0, args.sourceGUID)
+end
+
+function mod:MendingWebInterrupt(args)
+	self:Nameplate(452162, 16.5, args.destGUID)
+end
+
+function mod:MendingWebSuccess(args)
+	self:Nameplate(args.spellId, 16.5, args.sourceGUID)
+end
+
+function mod:CovertWebmancerDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Royal Venomshell
@@ -317,7 +377,11 @@ end
 function mod:VenomousSpray(args)
 	self:Message(args.spellId, "yellow")
 	self:PlaySound(args.spellId, "long")
-	--self:Nameplate(args.spellId, 24.2, args.sourceGUID)
+	self:Nameplate(args.spellId, 24.2, args.sourceGUID)
+end
+
+function mod:RoyalVenomshellDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Unstable Test Subject
@@ -325,34 +389,41 @@ end
 function mod:DarkBarrage(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "long")
-	--self:Nameplate(args.spellId, 27.9, args.sourceGUID)
+	self:Nameplate(args.spellId, 27.9, args.sourceGUID)
+end
+
+function mod:UnstableTestSubjectDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Sureki Unnaturaler
 
-function mod:VoidWave(args)
-	if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
-		return
+do
+	local prev = 0
+	function mod:VoidWave(args)
+		if self:Friendly(args.sourceFlags) then -- these NPCs can be mind-controlled by Priests
+			return
+		end
+		local t = args.time
+		if t - prev > 1 then
+			prev = t
+			self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+			self:PlaySound(args.spellId, "alert")
+		end
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
 	end
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
-	--self:Nameplate(args.spellId, 16.4, args.sourceGUID) -- recast if stunned, needs SUCCESS/INTERRUPT
 end
 
--- Elder Shadeweaver
-
-function mod:UmbralWeave(args)
-	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "alert")
-	--self:Nameplate(args.spellId, 23.1, args.sourceGUID)
+function mod:VoidWaveInterrupt(args)
+	self:Nameplate(446086, 15.5, args.destGUID)
 end
 
--- Hulking Warshell
+function mod:VoidWaveSuccess(args)
+	self:Nameplate(args.spellId, 15.5, args.sourceGUID)
+end
 
-function mod:TremorSlam(args)
-	self:Message(args.spellId, "orange")
-	self:PlaySound(args.spellId, "alarm")
-	--self:Nameplate(args.spellId, 23.0, args.sourceGUID)
+function mod:SurekiUnnaturalerDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Congealed Droplet
@@ -375,4 +446,28 @@ do
 		end
 		prev = t
 	end
+end
+
+-- Elder Shadeweaver
+
+function mod:UmbralWeave(args)
+	self:Message(args.spellId, "yellow")
+	self:PlaySound(args.spellId, "alert")
+	self:Nameplate(args.spellId, 23.1, args.sourceGUID)
+end
+
+function mod:ElderShadeweaverDeath(args)
+	self:ClearNameplate(args.destGUID)
+end
+
+-- Hulking Warshell
+
+function mod:TremorSlam(args)
+	self:Message(args.spellId, "orange")
+	self:PlaySound(args.spellId, "alarm")
+	self:Nameplate(args.spellId, 23.0, args.sourceGUID)
+end
+
+function mod:HulkingWarshellDeath(args)
+	self:ClearNameplate(args.destGUID)
 end

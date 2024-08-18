@@ -53,7 +53,7 @@ L["Gossip Quest Option Prepend"] = "（任务）";   --Some gossip options start
 L["TTS Button Tooltip"] = "左键点击： 播放/停止阅读\n右键点击： 勾选自动播放";
 L["Item Is An Upgrade"] = "这件装备对你有提升";
 L["Identical Stats"] = "这两件装备的属性相同";
-L["Quest Completed On Account"] = "- 你的战团此前已经完成了这个任务。";
+L["Quest Completed On Account"] = "你的战团此前已经完成了这个任务。";
 
 --String Format
 L["Format Reputation Reward Tooltip"] = "在%2$s中的声望提高%1$d点";
@@ -123,6 +123,8 @@ L["Simplify Currency Rewards"] = "简化货币显示";
 L["Simplify Currency Rewards Desc"] = "用更小的图标来显示货币奖励，货币名称也会被省略。";
 L["Mark Highest Sell Price"] = "标记出最值钱的物品";
 L["Mark Highest Sell Price Desc"] = "在你选择任务奖励时标记出卖店价格最高的物品。";
+L["Use Blizzard Tooltip"] = "使用暴雪鼠标提示";
+L["Use Blizzard Tooltip Desc"] = "使用暴雪自带的鼠标提示来显示任务奖励详情。";
 L["Roleplaying"] = "角色扮演";
 L["Use RP Name In Dialogues"] = "对话中使用RP名字";
 L["Use RP Name In Dialogues Desc"] = "将对话文本中出现的本名替换为你RP角色的名字。";
@@ -153,6 +155,8 @@ L["Primary Control Key"] = "确认键";
 L["Primary Control Key Desc"] = "按下此按钮将自动选择第一个最佳选项，例如接受任务。"
 L["Press Button To Scroll Down"] = "按确认键来向下滚屏";
 L["Press Button To Scroll Down Desc"] = "如果当前页面盛不下所有任务文本，按下确认键会向下滚屏而不是接受任务。";
+L["Right Click To Close UI"] = "右键关闭界面";
+L["Right Click To Close UI Desc"] = "在对话界面上按右键即可关闭窗口。";
 
 L["Key Space"] = "空格";
 L["Key Interact"] = "交互键";
@@ -191,9 +195,12 @@ L["TTS Auto Stop Desc"] = "在你离开NPC时停止朗读文本。";
 --Tutorial
 L["Tutorial Settings Hotkey"] = "按下 [KEY:PC:F1] 来打开或关闭设置";
 L["Tutorial Settings Hotkey Console"] = "按下 [KEY:PC:F1] 或 [KEY:CONSOLE:MENU] 来打开或关闭设置";   --Use this if gamepad enabled
-
+L["Instuction Open Settings"] = "在与NPC交互时按下 [KEY:PC:F1] 来打开设置";    --Used in Game Menu - AddOns
+L["Instuction Open Settings Console"] = "在与NPC交互时按下 [KEY:PC:F1] 或 [KEY:CONSOLE:MENU] 来打开设置";
 
 --DO NOT TRANSLATE
+L["Abbrev Breakpoint 1000"] = "千";     --1,000 = 1K
+L["Abbrev Breakpoint 10000"] = "万";    --Reserved for Asian languages that have words for 10,000
 L["Match Stat Armor"] = "([,%d%.]+)点护甲";
 L["Match Stat Stamina"] = "([,%d%.]+) 耐力";
 L["Match Stat Strengh"] = "([,%d%.]+) 力量";

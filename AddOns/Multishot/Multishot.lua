@@ -336,10 +336,10 @@ function Multishot:ShowWatermark()
     -- 20231117 fix for nil zone string
     local zone = " "
     local zone1 = GetRealZoneText()
-    local zone2 = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player")).name
+    local map_id = C_Map.GetBestMapForUnit("player")
 
-    if zone2 then
-        zone = zone2
+    if map_id then
+        zone = C_Map.GetMapInfo(map_id).name
     end
 
     if zone1 then

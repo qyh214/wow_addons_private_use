@@ -39,7 +39,7 @@ L["Affixes"] = "詞綴"
 --[[Translation missing --]]
 L["Aggravated Skitterfly"] = "Aggravated Skitterfly"
 --[[Translation missing --]]
-L["Agile Pursuer"] = ""
+L["Agile Pursuer"] = "Agile Pursuer"
 L["Agitated Nimbus"] = "暴怒云气"
 L["Agronox"] = "阿格洛诺克斯"
 --[[Translation missing --]]
@@ -125,11 +125,11 @@ L["Anub'ar Webspinner"] = "Anub'ar Webspinner"
 --[[Translation missing --]]
 L["Anub'arak"] = "Anub'arak"
 --[[Translation missing --]]
-L["Anubikkaj"] = ""
+L["Anubikkaj"] = "Anubikkaj"
 --[[Translation missing --]]
 L["Anub'Rekhan"] = "Anub'Rekhan"
 --[[Translation missing --]]
-L["Anubzekt"] = ""
+L["Anubzekt"] = "Anubzekt"
 --[[Translation missing --]]
 L["Apex Blazewing"] = "Apex Blazewing"
 L["Apply to preset"] = "套用到路線"
@@ -166,9 +166,9 @@ L["Armored Overseer"] = "装甲监工"
 --[[Translation missing --]]
 L["Asaad"] = "Asaad"
 --[[Translation missing --]]
-L["Ascendant Viscoxria"] = ""
+L["Ascendant Viscoxria"] = "Ascendant Viscoxria"
 --[[Translation missing --]]
-L["Ascended Aristocrat"] = ""
+L["Ascended Aristocrat"] = "Ascended Aristocrat"
 L["Ash'Golm"] = "阿什高姆"
 L["Ashvane Cannoneer"] = "艾什凡炮手"
 L["Ashvane Commander"] = "艾什凡指挥官"
@@ -184,11 +184,11 @@ L["Ashvane Sniper"] = "艾什凡狙击手"
 L["Ashvane Spotter"] = "艾什凡观察员"
 L["Ashvane Warden"] = "艾什凡卫士"
 --[[Translation missing --]]
-L["Aspiring Forgehand"] = ""
+L["Aspiring Forgehand"] = "Aspiring Forgehand"
 L["Aspix"] = "阿斯匹克斯"
 L["Asset Manager"] = "资产经理"
 --[[Translation missing --]]
-L["Assistant Unnaturaler"] = ""
+L["Assistant Unnaturaler"] = "Assistant Unnaturaler"
 --[[Translation missing --]]
 L["Astral Attendant"] = "Astral Attendant"
 L["Astronos"] = "阿斯托诺斯"
@@ -200,7 +200,7 @@ L["Atal'Dazar"] = "阿塔達薩"
 L["Atal'Dazar Sublevel"] = "阿塔達薩"
 L["atalTeemingNote"] = "擁擠時請注意: %s%sG29 可能不會出現。%s G2 的擁擠敵人可能不會出現。%sG27 可能不會出現。"
 --[[Translation missing --]]
-L["Atik"] = ""
+L["Atik"] = "Atik"
 L["Atrium of Sethraliss"] = "瑟沙利斯中庭"
 --[[Translation missing --]]
 L["Attumen the Huntsman"] = "Attumen the Huntsman"
@@ -209,7 +209,7 @@ L["Auriaya"] = "Auriaya"
 L["Automatic Coloring"] = "自動著色"
 L["Automatically color pulls"] = "自動著色拉怪"
 --[[Translation missing --]]
-L["Avanoxx"] = ""
+L["Avanoxx"] = "Avanoxx"
 L["Avatar of Sethraliss"] = "塞塔里斯的化身"
 L["Awakened"] = "甦醒"
 L["Awakened A"] = "甦醒 A"
@@ -269,10 +269,10 @@ L["Baron Rivendare"] = "Baron Rivendare"
 --[[Translation missing --]]
 L["Batak"] = "Batak"
 --[[Translation missing --]]
-L["Battered"] = ""
+L["Battered"] = "Battered"
 L["Battle for Azeroth"] = "決戰艾澤拉斯"
 --[[Translation missing --]]
-L["Battle Scarab"] = ""
+L["Battle Scarab"] = "Battle Scarab"
 L["Battlefield Ritualist"] = "战场祭师"
 L["Beast"] = "野獸"
 L["Befouled Spirit"] = "亵渎之灵"
@@ -334,12 +334,12 @@ L["Blistering Steamrager"] = "Blistering Steamrager"
 L["Block Warden"] = "监狱守卫"
 L["Blood of the Corruptor"] = "腐蚀者之血"
 --[[Translation missing --]]
-L["Blood Overseer"] = ""
+L["Blood Overseer"] = "Blood Overseer"
 L["Bloodscent Felhound"] = "血气地狱犬"
 --[[Translation missing --]]
-L["Bloodstained Assistant"] = ""
+L["Bloodstained Assistant"] = "Bloodstained Assistant"
 --[[Translation missing --]]
-L["Bloodstained Webmage"] = ""
+L["Bloodstained Webmage"] = "Bloodstained Webmage"
 L["Bloodsworn Agent"] = "血誓代理"
 L["Bloodsworn Defiler"] = "血誓污染者"
 L["Bloodtainted Fury"] = "污血之怒"
@@ -348,7 +348,7 @@ L["Bloodthirsty Cub"] = "Bloodthirsty Cub"
 --[[Translation missing --]]
 L["Bloodthirsty Tundra Wolf"] = "Bloodthirsty Tundra Wolf"
 --[[Translation missing --]]
-L["Bloodworker"] = ""
+L["Bloodworker"] = "Bloodworker"
 L["Bolstering"] = "激勵"
 L["Bomb Tonk"] = "炸弹坦克"
 L["Bone Magus"] = "白骨魔导师"
@@ -471,7 +471,7 @@ L["Chrono-Lord Deios"] = "Chrono-Lord Deios"
 --[[Translation missing --]]
 L["Chrono-Lord Epoch"] = "Chrono-Lord Epoch"
 --[[Translation missing --]]
-L["CityofEchoes"] = ""
+L["CityofEchoes"] = "CityofEchoes"
 L["CityOfThreads"] = "蛛絲城"
 --[[Translation missing --]]
 L["Claw Fighter"] = "Claw Fighter"
@@ -510,7 +510,7 @@ L["Commander Zo'far"] = "指挥官佐·法"
 L["Commerce Enforcer"] = "贸易执行者"
 L["conflictPrompt"] = "MDT 偵測到你所安裝的某些插件會與地城規劃工具衝突，請移除下列的插件:"
 --[[Translation missing --]]
-L["Congealed Droplet"] = ""
+L["Congealed Droplet"] = "Congealed Droplet"
 L["Congealed Slime"] = "凝结软泥"
 --[[Translation missing --]]
 L["Conjured Lasher"] = "Conjured Lasher"
@@ -546,7 +546,7 @@ L["Cove Seagull"] = "海湾沙鸥"
 L["Coven Diviner"] = "女巫会占卜者"
 L["Coven Thornshaper"] = "女巫会塑棘者"
 --[[Translation missing --]]
-L["Covert Webmancer"] = ""
+L["Covert Webmancer"] = "Covert Webmancer"
 L["Cragmaw the Infested"] = "被感染的岩喉"
 L["Crawler Mine"] = "蛛形地雷"
 --[[Translation missing --]]
@@ -573,7 +573,7 @@ L["CryptOfTheAncients"] = "先祖墓穴"
 --[[Translation missing --]]
 L["Crystal Fury"] = "Crystal Fury"
 --[[Translation missing --]]
-L["Crystal Shard"] = ""
+L["Crystal Shard"] = "Crystal Shard"
 --[[Translation missing --]]
 L["Crystal Thrasher"] = "Crystal Thrasher"
 L["CrystalChamber"] = "水晶之廳"
@@ -594,13 +594,13 @@ L["Curious Swoglet"] = "Curious Swoglet"
 L["Cursed Falke"] = "被诅咒的飞鹰"
 L["Cursed Spire of Ny'alotha"] = "受诅之尼奥罗萨尖塔"
 --[[Translation missing --]]
-L["Cursedforge Honor Guard"] = ""
+L["Cursedforge Honor Guard"] = "Cursedforge Honor Guard"
 --[[Translation missing --]]
-L["Cursedforge Mender"] = ""
+L["Cursedforge Mender"] = "Cursedforge Mender"
 --[[Translation missing --]]
-L["Cursedforge Stoneshaper"] = ""
+L["Cursedforge Stoneshaper"] = "Cursedforge Stoneshaper"
 --[[Translation missing --]]
-L["Cursedheart Invader"] = ""
+L["Cursedheart Invader"] = "Cursedheart Invader"
 L["Custom"] = "自訂"
 L["Custom Color Palette"] = "自訂色盤"
 L["Customs Security"] = "海关保安"
@@ -678,7 +678,7 @@ L["Death Speaker"] = "亡语者"
 --[[Translation missing --]]
 L["Deathcharger Steed"] = "Deathcharger Steed"
 --[[Translation missing --]]
-L["Deathscreamer Ikentak"] = ""
+L["Deathscreamer Ikentak"] = "Deathscreamer Ikentak"
 --[[Translation missing --]]
 L["Decatriarch Wratheye"] = "Decatriarch Wratheye"
 --[[Translation missing --]]
@@ -760,6 +760,10 @@ L["Dokigg the Brutalizer"] = "残暴者多基格"
 L["Domatrax"] = "多玛塔克斯"
 L["Domina Venomblade"] = "多米娜·毒刃"
 --[[Translation missing --]]
+L["dotiLowerSublevel1"] = "Sublevel 1"
+--[[Translation missing --]]
+L["dotiUpperSublevel1"] = "Sublevel 1"
+--[[Translation missing --]]
 L["Draconic Illusion"] = "Draconic Illusion"
 --[[Translation missing --]]
 L["Draconic Image"] = "Draconic Image"
@@ -798,7 +802,7 @@ L["Dragonflight Season 3"] = "巨龍崛起第3季"
 L["Dragonflight Season 4"] = "巨龍崛起第4季"
 L["Dragonkin"] = "龍類"
 --[[Translation missing --]]
-L["Drahga Shadowburner"] = ""
+L["Drahga Shadowburner"] = "Drahga Shadowburner"
 --[[Translation missing --]]
 L["Drakkari Bat"] = "Drakkari Bat"
 --[[Translation missing --]]
@@ -887,10 +891,10 @@ L["Duskwatch Sentry"] = "暮色卫队哨兵"
 --[[Translation missing --]]
 L["Dwarven Bomber"] = "Dwarven Bomber"
 --[[Translation missing --]]
-L["E.D.N.A"] = ""
+L["E.D.N.A"] = "E.D.N.A"
 L["Earlier Version"] = "你有這個路線較早期的版本，名稱為 '%s'%s請問要更新原有的，還是複製成另一個新的版本?%s%s%s"
 --[[Translation missing --]]
-L["Earth Infused Golem"] = ""
+L["Earth Infused Golem"] = "Earth Infused Golem"
 --[[Translation missing --]]
 L["Earthen Custodian"] = "Earthen Custodian"
 --[[Translation missing --]]
@@ -922,7 +926,7 @@ L["Elder Leaxa"] = "长者莉娅克萨"
 --[[Translation missing --]]
 L["Elder Nadox"] = "Elder Nadox"
 --[[Translation missing --]]
-L["Elder Shadeweaver"] = ""
+L["Elder Shadeweaver"] = "Elder Shadeweaver"
 --[[Translation missing --]]
 L["Elder Stonebark"] = "Elder Stonebark"
 L["Elemental"] = "元素"
@@ -958,9 +962,9 @@ L["Enemy Info NPC Name"] = "名字"
 L["Enemy Info NPC Stealth"] = "隱形"
 L["Enemy Info NPC Stealth Detect"] = "偵測隱形"
 --[[Translation missing --]]
-L["Engine Speaker"] = ""
+L["Engine Speaker"] = "Engine Speaker"
 --[[Translation missing --]]
-L["Engorged Crawler"] = ""
+L["Engorged Crawler"] = "Engorged Crawler"
 L["Enraged Direhorn"] = "暴怒的恐角龙"
 --[[Translation missing --]]
 L["Enraged Mask"] = "Enraged Mask"
@@ -989,7 +993,7 @@ L["errorLabel1"] = "MDT has encountered errors."
 L["errorLabel2"] = "請將 MDT 更新到最新版本，並且到 GitHub 或 Discord 回報下列錯誤訊息。"
 L["errorLabel3"] = "按 CTRL + C 複製!"
 --[[Translation missing --]]
-L["Erudax"] = ""
+L["Erudax"] = "Erudax"
 L["Erudite Slayer"] = "艾瑞迪特屠杀者"
 --[[Translation missing --]]
 L["Erunak Stonespeaker"] = "Erunak Stonespeaker"
@@ -1025,7 +1029,7 @@ L["Eye of Sethraliss"] = "Eye of Sethraliss"
 --[[Translation missing --]]
 L["Eye of Taldaram"] = "Eye of Taldaram"
 --[[Translation missing --]]
-L["Eye Of The Queen"] = ""
+L["Eye Of The Queen"] = "Eye Of The Queen"
 --[[Translation missing --]]
 L["Eye Stalk"] = "Eye Stalk"
 L["Faceless Corruptor"] = "无面腐蚀者"
@@ -1108,13 +1112,13 @@ L["Forest Swarmer"] = "Forest Swarmer"
 --[[Translation missing --]]
 L["Forge Construct"] = "Forge Construct"
 --[[Translation missing --]]
-L["Forge Loader"] = ""
+L["Forge Loader"] = "Forge Loader"
 --[[Translation missing --]]
-L["Forgebound Mender"] = ""
+L["Forgebound Mender"] = "Forgebound Mender"
 --[[Translation missing --]]
 L["Forgemaster Gorek"] = "Forgemaster Gorek"
 --[[Translation missing --]]
-L["Forgemaster Throngus"] = ""
+L["Forgemaster Throngus"] = "Forgemaster Throngus"
 --[[Translation missing --]]
 L["Forgewrought Monstrosity"] = "Forgewrought Monstrosity"
 L["Forgotten Denizen"] = "被遗忘的居民"
@@ -1178,13 +1182,13 @@ L["Gazerax"] = "加泽拉克斯"
 L["General Bjarngrim"] = "General Bjarngrim"
 L["General Kaal"] = "卡尔将军"
 --[[Translation missing --]]
-L["General Umbriss"] = ""
+L["General Umbriss"] = "General Umbriss"
 --[[Translation missing --]]
 L["General Vezax"] = "General Vezax"
 L["General Xakal"] = "萨卡尔将军"
 L["Gerenth the Vile"] = "邪恶的格伦斯"
 --[[Translation missing --]]
-L["Ghastly Voidsoul"] = ""
+L["Ghastly Voidsoul"] = "Ghastly Voidsoul"
 L["Ghostly Baker"] = "幽灵面包师"
 L["Ghostly Chef"] = "幽灵厨师"
 L["Ghostly Councilor"] = "幽灵顾问"
@@ -1372,7 +1376,7 @@ L["helpPlatePresets"] = "管理、分享和協作路線"
 L["helpPlatePulls"] = "建立和管理拉怪%s點一下右鍵取得更多選項"
 L["Helya"] = "海拉"
 --[[Translation missing --]]
-L["Herald Of Ansurek"] = ""
+L["Herald Of Ansurek"] = "Herald Of Ansurek"
 --[[Translation missing --]]
 L["Herald Volazj"] = "Herald Volazj"
 --[[Translation missing --]]
@@ -1382,7 +1386,7 @@ L["High Adjudicator Aleez"] = "高阶裁决官阿丽兹"
 L["High Channeler Ryvati"] = "High Channeler Ryvati"
 L["High Contrast"] = "高對比"
 --[[Translation missing --]]
-L["High Speaker Eirich"] = ""
+L["High Speaker Eirich"] = "High Speaker Eirich"
 L["Hired Assassin"] = "雇来的刺客"
 L["HK-8 Aerial Oppression Unit"] = "HK-8型空中压制单位"
 --[[Translation missing --]]
@@ -1405,15 +1409,33 @@ L["Howling Gale"] = "Howling Gale"
 --[[Translation missing --]]
 L["Hulking Berserker"] = "Hulking Berserker"
 --[[Translation missing --]]
-L["Hulking Bloodguard"] = ""
+L["Hulking Bloodguard"] = "Hulking Bloodguard"
 --[[Translation missing --]]
-L["Hulking Warshell"] = ""
+L["Hulking Warshell"] = "Hulking Warshell"
 L["Humanoid"] = "人形生物"
 --[[Translation missing --]]
 L["Hungry Lasher"] = "Hungry Lasher"
 L["Hylbrande"] = "希尔布兰德"
 L["Hymdall"] = "海姆达尔"
 L["Hyrja"] = "赫娅"
+--[[Translation missing --]]
+L["icc"] = "Icecrown Citadel"
+--[[Translation missing --]]
+L["iccFloor1"] = "The Lower Citadel"
+--[[Translation missing --]]
+L["iccFloor2"] = "The Rampart of Skulls"
+--[[Translation missing --]]
+L["iccFloor3"] = "Deathbringer's Rise"
+--[[Translation missing --]]
+L["iccFloor4"] = "The Frost Queen's Lair"
+--[[Translation missing --]]
+L["iccFloor5"] = "The Upper Reaches"
+--[[Translation missing --]]
+L["iccFloor6"] = "Royal Quarters"
+--[[Translation missing --]]
+L["iccFloor7"] = "The Frozen Throne"
+--[[Translation missing --]]
+L["iccFloor8"] = "Frostmourne"
 --[[Translation missing --]]
 L["Ichoron"] = "Ichoron"
 L["Ickor Bileflesh"] = "艾柯尔·胆肉"
@@ -1507,7 +1529,7 @@ L["Interment Construct"] = "葬礼构造体"
 L["Interrogation Specialist"] = "审讯专员"
 L["Invalid import string"] = "無效的匯入字串"
 --[[Translation missing --]]
-L["Invoked Shadowflame Spirit"] = ""
+L["Invoked Shadowflame Spirit"] = "Invoked Shadowflame Spirit"
 --[[Translation missing --]]
 L["Ionar"] = "Ionar"
 --[[Translation missing --]]
@@ -1532,7 +1554,7 @@ L["Irontide Corsair"] = "铁潮海盗"
 L["Irontide Crackshot"] = "铁潮射手"
 L["Irontide Crusher"] = "铁潮打击者"
 --[[Translation missing --]]
-L["Irontide Curseblade"] = ""
+L["Irontide Curseblade"] = "Irontide Curseblade"
 L["Irontide Enforcer"] = "铁潮执行者"
 L["Irontide Marauder"] = "铁潮掠夺者"
 L["Irontide Mastiff"] = "铁潮猎犬"
@@ -1549,13 +1571,13 @@ L["Irontorch Commander"] = "Irontorch Commander"
 L["Ironwing Flamespitter"] = "铁翼喷火者"
 L["Ivanyr"] = "伊凡尔"
 --[[Translation missing --]]
-L["Ixin"] = ""
+L["Ixin"] = "Ixin"
 --[[Translation missing --]]
-L["Ixkreten The Unbreakable"] = ""
+L["Ixkreten The Unbreakable"] = "Ixkreten The Unbreakable"
 --[[Translation missing --]]
-L["Izo The Grand Splicer"] = ""
+L["Izo The Grand Splicer"] = "Izo The Grand Splicer"
 --[[Translation missing --]]
-L["Jabbing Flyer"] = ""
+L["Jabbing Flyer"] = "Jabbing Flyer"
 L["Jagged Hound"] = "锯齿猎犬"
 L["Jazshariu"] = "加兹沙尤"
 --[[Translation missing --]]
@@ -1576,7 +1598,7 @@ L["Keristrasza"] = "Keristrasza"
 --[[Translation missing --]]
 L["Khajin the Unyielding"] = "Khajin the Unyielding"
 --[[Translation missing --]]
-L["Kikatal The Harvester"] = ""
+L["Kikatal The Harvester"] = "Kikatal The Harvester"
 L["King"] = "国王"
 L["King A'akul"] = "阿库尔大王"
 L["King Bjorn"] = "布约恩国王"
@@ -1746,7 +1768,7 @@ L["Maniacal Soulbinder"] = "狂热的缚魂者"
 --[[Translation missing --]]
 L["Manifestation of Envy"] = "Manifestation of Envy"
 --[[Translation missing --]]
-L["Manifested Shadow"] = ""
+L["Manifested Shadow"] = "Manifested Shadow"
 --[[Translation missing --]]
 L["Manifested Timeways"] = "Manifested Timeways"
 --[[Translation missing --]]
@@ -1842,7 +1864,7 @@ L["Mogul Razdunk"] = "商业大亨拉兹敦克"
 --[[Translation missing --]]
 L["Molten Colossus"] = "Molten Colossus"
 --[[Translation missing --]]
-L["Molten Giant"] = ""
+L["Molten Giant"] = "Molten Giant"
 --[[Translation missing --]]
 L["Monstrous Corpse Spider"] = "Monstrous Corpse Spider"
 --[[Translation missing --]]
@@ -1866,12 +1888,12 @@ L["Murkbrine Shellcrusher"] = "浊盐碎壳者"
 L["Murkbrine Shorerunner"] = "浊盐滨奔者"
 L["Murkbrine Wavejumper"] = "浊盐跃波者"
 --[[Translation missing --]]
-L["Mutated Hatchling"] = ""
+L["Mutated Hatchling"] = "Mutated Hatchling"
 L["Mystic Ssa'veh"] = "秘术师萨维"
 L["Mythresh, Sky's Talons"] = "密斯雷什，苍穹之爪"
 L["Naeno Megacrash"] = "耐诺·万坠"
 --[[Translation missing --]]
-L["Nakt"] = ""
+L["Nakt"] = "Nakt"
 L["Nal'asha"] = "纳尔莎"
 L["Nalthor the Rimebinder"] = "缚霜者纳尔佐"
 L["Nal'tira"] = "纳尔提拉"
@@ -1916,7 +1938,7 @@ L["Neltharus"] = "奈薩魯斯堡"
 --[[Translation missing --]]
 L["neltharusChain"] = "Burning Chain"
 --[[Translation missing --]]
-L["Nerubian Hauler"] = ""
+L["Nerubian Hauler"] = "Nerubian Hauler"
 --[[Translation missing --]]
 L["Ner'zhul"] = "Ner'zhul"
 L["Netherspace"] = "虛空空間"
@@ -1931,21 +1953,21 @@ L["Night Watch Mariner"] = "守夜水手"
 L["Nightborne Reclaimer"] = "夜之子复国者"
 L["Nightborne Spellsword"] = "夜之子魔剑士"
 --[[Translation missing --]]
-L["Nightfall Commander"] = ""
+L["Nightfall Commander"] = "Nightfall Commander"
 --[[Translation missing --]]
-L["Nightfall Curseblade"] = ""
+L["Nightfall Curseblade"] = "Nightfall Curseblade"
 --[[Translation missing --]]
-L["Nightfall Dark Architect"] = ""
+L["Nightfall Dark Architect"] = "Nightfall Dark Architect"
 --[[Translation missing --]]
-L["Nightfall Darkcaster"] = ""
+L["Nightfall Darkcaster"] = "Nightfall Darkcaster"
 --[[Translation missing --]]
-L["Nightfall Ritualist"] = ""
+L["Nightfall Ritualist"] = "Nightfall Ritualist"
 --[[Translation missing --]]
-L["Nightfall Shadowalker"] = ""
+L["Nightfall Shadowalker"] = "Nightfall Shadowalker"
 --[[Translation missing --]]
-L["Nightfall Shadowmage"] = ""
+L["Nightfall Shadowmage"] = "Nightfall Shadowmage"
 --[[Translation missing --]]
-L["Nightfall Tactician"] = ""
+L["Nightfall Tactician"] = "Nightfall Tactician"
 L["Nightmare Dweller"] = "梦魇住民"
 L["Nitrogg Thundertower"] = "尼托格·雷塔"
 --[[Translation missing --]]
@@ -1995,7 +2017,7 @@ L["NPCs"] = "NPCs"
 --[[Translation missing --]]
 L["Nullmagic Hornswog"] = "Nullmagic Hornswog"
 --[[Translation missing --]]
-L["Nx"] = ""
+L["Nx"] = "Nx"
 L["Oakheart"] = "橡树之心"
 L["Oasis Security"] = "绿洲保安"
 L["Odyn"] = "奥丁"
@@ -2018,7 +2040,7 @@ L["Opera Hall: Wikket"] = "Opera Hall: Wikket"
 --[[Translation missing --]]
 L["Oppressive Banner"] = "Oppressive Banner"
 --[[Translation missing --]]
-L["Orator Krixvizk"] = ""
+L["Orator Krixvizk"] = "Orator Krixvizk"
 L["Ordnance Specialist"] = "军械专家"
 --[[Translation missing --]]
 L["Ore Elemental"] = "Ore Elemental"
@@ -2240,11 +2262,11 @@ L["Rainbow"] = "彩虹"
 L["Rampaging Clefthoof"] = "狂怒的裂蹄牛"
 L["Rancid Gasbag"] = "腐臭的气囊怪"
 --[[Translation missing --]]
-L["Rashanan"] = ""
+L["Rashanan"] = "Rashanan"
 L["Rat"] = "老鼠"
 L["Ravenous Dreadbat"] = "贪婪的恐惧蝠"
 --[[Translation missing --]]
-L["Ravenous Scarab"] = ""
+L["Ravenous Scarab"] = "Ravenous Scarab"
 --[[Translation missing --]]
 L["Ravenous Wolf"] = "Ravenous Wolf"
 L["Ravenshold"] = "玄鴉堡據點"
@@ -2276,7 +2298,7 @@ L["Refti Custodian"] = "Refti Custodian"
 L["Refti Defender"] = "Refti Defender"
 L["Regal Mistdancer"] = "皇家舞雾者"
 --[[Translation missing --]]
-L["Reinforced Drone"] = ""
+L["Reinforced Drone"] = "Reinforced Drone"
 L["Rek the Hardened"] = "老练的里克"
 L["Relentless"] = "無情"
 L["Remnant of Fury"] = "愤怒残余"
@@ -2285,9 +2307,9 @@ L["Rename Preset"] = "重新命名路線"
 L["Rename the preset"] = "重新命名路線"
 L["Repentance"] = "懺悔"
 --[[Translation missing --]]
-L["Reposing Knight"] = ""
+L["Reposing Knight"] = "Reposing Knight"
 --[[Translation missing --]]
-L["Repurposed Loaderbot"] = ""
+L["Repurposed Loaderbot"] = "Repurposed Loaderbot"
 L["Research Scribe"] = "研究铭文师"
 L["Reset"] = "重置"
 L["Reset %s?"] = "是否確定要重置 %s?"
@@ -2295,7 +2317,7 @@ L["Reset Preset"] = "重置路線"
 L["Reset the preset to the default state"] = "將路線重置為預設狀態"
 L["Restless Tides"] = "焦躁的海潮元素"
 --[[Translation missing --]]
-L["Retired Lord Vul'azak"] = ""
+L["Retired Lord Vul'azak"] = "Retired Lord Vul'azak"
 L["Return to Karazhan Lower"] = "重返卡拉贊下層"
 L["Return to Karazhan Upper"] = "重返卡拉贊上層"
 L["Return to the live preset"] = "返回即時連線中的路線"
@@ -2348,7 +2370,7 @@ L["Ritual of Bones"] = "Ritual of Bones"
 L["Ritualist Lesha"] = "祭祀者勒莎"
 L["Rixxa Fluxflame"] = "瑞克莎·流火"
 --[[Translation missing --]]
-L["Rock Smasher"] = ""
+L["Rock Smasher"] = "Rock Smasher"
 L["Rockback Gnasher"] = "岩背啮咬者"
 L["Rockback Snapper"] = "岩背撕咬者"
 L["Rockbound Pelter"] = "缚石剥皮者"
@@ -2378,11 +2400,11 @@ L["Rotting Maggot"] = "Rotting Maggot"
 L["Rotting Slimeclaw"] = "腐烂的粘液之爪"
 L["Rowdy Reveler"] = "吵闹的狂欢者"
 --[[Translation missing --]]
-L["Royal Acolyte"] = ""
+L["Royal Acolyte"] = "Royal Acolyte"
 --[[Translation missing --]]
-L["Royal Swarmguard"] = ""
+L["Royal Swarmguard"] = "Royal Swarmguard"
 --[[Translation missing --]]
-L["Royal Venomshell"] = ""
+L["Royal Venomshell"] = "Royal Venomshell"
 L["Ruby Overlook"] = "晶紅瞰臺"
 L["RubyLifePools"] = "晶紅生命之池"
 L["Ruin's Descent"] = "荒滅之淪"
@@ -2448,7 +2470,7 @@ L["Scourge Hulk"] = "Scourge Hulk"
 --[[Translation missing --]]
 L["Scourge Reanimator"] = "Scourge Reanimator"
 --[[Translation missing --]]
-L["Scrap Block"] = ""
+L["Scrap Block"] = "Scrap Block"
 L["Scrapbone Bully"] = "屑骨恶霸"
 L["Scrapbone Grinder"] = "屑骨碾肉者"
 L["Scrapbone Grunter"] = "屑骨低鸣者"
@@ -2474,7 +2496,7 @@ L["Sentient Oil"] = "有知觉的油"
 --[[Translation missing --]]
 L["Sentinel Talondras"] = "Sentinel Talondras"
 --[[Translation missing --]]
-L["Sentry Stagshell"] = ""
+L["Sentry Stagshell"] = "Sentry Stagshell"
 L["Separation Assistant"] = "分离助理"
 L["Sergeant Bainbridge"] = "拜恩比吉中士"
 L["Serpentrix"] = "瑟芬崔斯克"
@@ -2571,7 +2593,7 @@ L["Sjonnir The Ironshaper"] = "Sjonnir The Ironshaper"
 --[[Translation missing --]]
 L["Skadi the Ruthless"] = "Skadi the Ruthless"
 --[[Translation missing --]]
-L["Skarmorak"] = ""
+L["Skarmorak"] = "Skarmorak"
 --[[Translation missing --]]
 L["Skarvald the Constructor"] = "Skarvald the Constructor"
 L["Skeletal Hound"] = "骷髅猎犬"
@@ -2642,11 +2664,11 @@ L["Soul-Torn Champion"] = "失魂的勇士"
 L["Spare Parts"] = "备用部件"
 L["Spark Channeler"] = "火花引导者"
 --[[Translation missing --]]
-L["Speaker Brokk"] = ""
+L["Speaker Brokk"] = "Speaker Brokk"
 --[[Translation missing --]]
-L["Speaker Dorlita"] = ""
+L["Speaker Dorlita"] = "Speaker Dorlita"
 --[[Translation missing --]]
-L["Speaker Shadowcrown"] = ""
+L["Speaker Shadowcrown"] = "Speaker Shadowcrown"
 L["Spectral Apprentice"] = "鬼灵徒工"
 L["Spectral Attendant"] = "鬼灵随从"
 L["Spectral Beastmaster"] = "幽魂兽王"
@@ -2694,7 +2716,7 @@ L["Squallbringer Cyraz"] = "Squallbringer Cyraz"
 L["Stalagg"] = "Stalagg"
 L["Start or join the current |cFF00FF00Live Session|r"] = "開始或加入目前的|cFF00FF00即時連線|r"
 --[[Translation missing --]]
-L["Starved Crawler"] = ""
+L["Starved Crawler"] = "Starved Crawler"
 L["Static-charged Dervish"] = "静电充能苦修者"
 --[[Translation missing --]]
 L["Stealthling"] = "Stealthling"
@@ -2782,17 +2804,17 @@ L["Subterranean Proto-Dragon"] = "Subterranean Proto-Dragon"
 L["Sunken Denizen"] = "沉落的居民"
 L["Support Officer"] = "支援警官"
 --[[Translation missing --]]
-L["Sureki Conscript"] = ""
+L["Sureki Conscript"] = "Sureki Conscript"
 --[[Translation missing --]]
-L["Sureki Militant"] = ""
+L["Sureki Militant"] = "Sureki Militant"
 --[[Translation missing --]]
-L["Sureki Silkbinder"] = ""
+L["Sureki Silkbinder"] = "Sureki Silkbinder"
 --[[Translation missing --]]
-L["Sureki Unnaturaler"] = ""
+L["Sureki Unnaturaler"] = "Sureki Unnaturaler"
 --[[Translation missing --]]
-L["Sureki Venomblade"] = ""
+L["Sureki Venomblade"] = "Sureki Venomblade"
 --[[Translation missing --]]
-L["Sureki Webmage"] = ""
+L["Sureki Webmage"] = "Sureki Webmage"
 L["Surgeon Stitchflesh"] = "外科医生缝肉"
 --[[Translation missing --]]
 L["Surgical Assistant"] = "Surgical Assistant"
@@ -2872,7 +2894,7 @@ L["The Brood Pit"] = "The Brood Pit"
 L["The Burning Cauldron"] = "燃燒大鍋"
 L["The Cellar"] = "地窖"
 --[[Translation missing --]]
-L["The Coaglamation"] = ""
+L["The Coaglamation"] = "The Coaglamation"
 --[[Translation missing --]]
 L["The Construct Quarter"] = "The Construct Quarter"
 --[[Translation missing --]]
@@ -3021,6 +3043,12 @@ L["Titanium Vanguard"] = "Titanium Vanguard"
 L["T'lonja"] = "特隆加"
 L["To share a different preset while the live session is active simply navigate to the preferred preset and click the new 'Set to Live' Button next to the preset-dropdown"] = "在連線的過程中要分享不同的路線，只要切換到該路線，然後按下路線下拉選單旁新的 '設為即時連線' 按鈕。"
 L["tocNotes"] = "幫助你計算 M+ 的小怪%，規劃出最佳拉怪路線。"
+--[[Translation missing --]]
+L["togc"] = "Trial of the Grand Crusader"
+--[[Translation missing --]]
+L["togcFloor1"] = "The Argent Coliseum"
+--[[Translation missing --]]
+L["togcFloor2"] = "The Icy Depths"
 L["Toggle MDT"] = "切換顯示 MDT"
 L["Toggle Window"] = "切換顯示地城規劃工具"
 L["Toiling Groundskeeper"] = "劳苦的管理员"
@@ -3050,7 +3078,7 @@ L["Trickclaw Mystic"] = "Trickclaw Mystic"
 --[[Translation missing --]]
 L["Tricktotem"] = "Tricktotem"
 --[[Translation missing --]]
-L["Trilling Attendant"] = ""
+L["Trilling Attendant"] = "Trilling Attendant"
 L["Trixie Tazer"] = "崔克茜·击电"
 --[[Translation missing --]]
 L["Trollgore"] = "Trollgore"
@@ -3063,25 +3091,25 @@ L["Turbulent Squall"] = "Turbulent Squall"
 --[[Translation missing --]]
 L["Turn Evil"] = "Turn Evil"
 --[[Translation missing --]]
-L["Turned Speaker"] = ""
+L["Turned Speaker"] = "Turned Speaker"
 --[[Translation missing --]]
 L["Twilight Adherent"] = "Twilight Adherent"
 --[[Translation missing --]]
 L["Twilight Apostle"] = "Twilight Apostle"
 --[[Translation missing --]]
-L["Twilight Beguiler"] = ""
+L["Twilight Beguiler"] = "Twilight Beguiler"
 --[[Translation missing --]]
-L["Twilight Brute"] = ""
+L["Twilight Brute"] = "Twilight Brute"
 --[[Translation missing --]]
 L["Twilight Darkcaster"] = "Twilight Darkcaster"
 --[[Translation missing --]]
 L["Twilight Decapitator"] = ""
 --[[Translation missing --]]
-L["Twilight Destroyer"] = ""
+L["Twilight Destroyer"] = "Twilight Destroyer"
 --[[Translation missing --]]
-L["Twilight Earthcaller"] = ""
+L["Twilight Earthcaller"] = "Twilight Earthcaller"
 --[[Translation missing --]]
-L["Twilight Enforcer"] = ""
+L["Twilight Enforcer"] = "Twilight Enforcer"
 --[[Translation missing --]]
 L["Twilight Flamerender"] = "Twilight Flamerender"
 --[[Translation missing --]]
@@ -3092,9 +3120,9 @@ L["Twilight Guardian"] = "Twilight Guardian"
 --[[Translation missing --]]
 L["Twilight Initiate"] = "Twilight Initiate"
 --[[Translation missing --]]
-L["Twilight Lavabender"] = ""
+L["Twilight Lavabender"] = "Twilight Lavabender"
 --[[Translation missing --]]
-L["Twilight Overseer"] = ""
+L["Twilight Overseer"] = "Twilight Overseer"
 --[[Translation missing --]]
 L["Twilight Pyromancer"] = "Twilight Pyromancer"
 --[[Translation missing --]]
@@ -3102,7 +3130,7 @@ L["Twilight Shadowblade"] = "Twilight Shadowblade"
 --[[Translation missing --]]
 L["Twilight Slayer"] = "Twilight Slayer"
 --[[Translation missing --]]
-L["Twilight Warlock"] = ""
+L["Twilight Warlock"] = "Twilight Warlock"
 --[[Translation missing --]]
 L["Twilight Worshipper"] = "Twilight Worshipper"
 --[[Translation missing --]]
@@ -3120,6 +3148,8 @@ L["Ukhel Beastcaller"] = "Ukhel Beastcaller"
 L["Ukhel Corruptor"] = "Ukhel Corruptor"
 --[[Translation missing --]]
 L["Ukhel Deathspeaker"] = "Ukhel Deathspeaker"
+--[[Translation missing --]]
+L["Ukhel Willcrusher"] = "Ukhel Willcrusher"
 L["Ularogg Cragshaper"] = "乌拉罗格·塑山"
 L["Uldaman: Legacy of Tyr"] = "奧達曼：提爾的遺產"
 L["UldamanLegacyOfTyr"] = "奧達曼：提爾的遺產"
@@ -3169,7 +3199,7 @@ L["Unstable Larva"] = "Unstable Larva"
 --[[Translation missing --]]
 L["Unstable Squall"] = "Unstable Squall"
 --[[Translation missing --]]
-L["Unstable Test Subject"] = ""
+L["Unstable Test Subject"] = "Unstable Test Subject"
 --[[Translation missing --]]
 L["Unyielding Constrictor"] = "Unyielding Constrictor"
 L["Unyielding Contender"] = "不屈的参赛者"
@@ -3204,7 +3234,7 @@ L["Valarjar Shieldmaiden"] = "瓦拉加尔女武神"
 L["Valarjar Thundercaller"] = "瓦拉加尔唤雷者"
 L["Valarjar Trapper"] = "瓦拉加尔捕兽者"
 --[[Translation missing --]]
-L["Valiona"] = ""
+L["Valiona"] = "Valiona"
 --[[Translation missing --]]
 L["Valow, Timesworn Keeper"] = "Valow, Timesworn Keeper"
 --[[Translation missing --]]
@@ -3222,7 +3252,7 @@ L["Venomous Sniper"] = "喷毒狙击手"
 --[[Translation missing --]]
 L["Venomous Sniper Captain"] = "Venomous Sniper Captain"
 --[[Translation missing --]]
-L["Vent Stalker"] = ""
+L["Vent Stalker"] = "Vent Stalker"
 L["Ventunax"] = "雯图纳柯丝"
 L["Venture Co. Alchemist"] = "风险投资公司炼金师"
 L["Venture Co. Earthshaper"] = "风险投资公司塑地者"
@@ -3260,21 +3290,21 @@ L["Vileshard Hulk"] = "邪裂巨人"
 L["Vilethorn Blossom"] = "邪棘魔花"
 L["Viletongue Belcher"] = "邪舌喷火者"
 --[[Translation missing --]]
-L["Viqgoth"] = ""
+L["Viqgoth"] = "Viqgoth"
 L["Viq'Goth"] = "维克戈斯"
 L["Virtuous Lady"] = "贞善女士"
 L["Virulax Blightweaver"] = "维鲁拉克斯魔药编织者"
 L["Viz'aduum the Watcher"] = "监视者维兹艾德姆"
 --[[Translation missing --]]
-L["Void Bound Despoiler"] = ""
+L["Void Bound Despoiler"] = "Void Bound Despoiler"
 --[[Translation missing --]]
-L["Void Bound Howler"] = ""
+L["Void Bound Howler"] = "Void Bound Howler"
 L["Void Discharge"] = "虚空溢出物"
 L["Void Flayer"] = "剥灵者"
 --[[Translation missing --]]
 L["Void Spawn"] = "Void Spawn"
 --[[Translation missing --]]
-L["Void Touched Elemental"] = ""
+L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "虚触使者"
 L["Voidweaver Mal'thir"] = "纺虚者玛熙尔"
 L["Volatile Memory"] = "不稳定的内存器"
@@ -3287,7 +3317,7 @@ L["Volkhan"] = "Volkhan"
 L["Vol'zith the Whisperer"] = "低语者沃尔兹斯"
 L["VortexPinnacle"] = "漩渦尖塔"
 --[[Translation missing --]]
-L["Vx"] = ""
+L["Vx"] = "Vx"
 L["Vy Relic"] = "维型圣物"
 --[[Translation missing --]]
 L["Walk of the Makers"] = "Walk of the Makers"
@@ -3319,7 +3349,7 @@ L["Weald Shimmermoth"] = "仙野烁光蛾"
 L["Weaponized Crawler"] = "战争机械爬蛛"
 L["Weapons Tester"] = "武器测试员"
 --[[Translation missing --]]
-L["Web Marauder"] = ""
+L["Web Marauder"] = "Web Marauder"
 L["Welding Bot"] = "焊接"
 L["Wholesome Hostess"] = "保守的女招待"
 L["Wicked Oppressor"] = "邪恶的镇压者"
@@ -3331,7 +3361,7 @@ L["Wild Vortex"] = "Wild Vortex"
 L["Wilted Oak"] = "Wilted Oak"
 L["Windspeaker Heldis"] = "风语者海蒂丝"
 --[[Translation missing --]]
-L["Winged Carrier"] = ""
+L["Winged Carrier"] = "Winged Carrier"
 --[[Translation missing --]]
 L["Winter Revenant"] = "Winter Revenant"
 --[[Translation missing --]]
@@ -3368,7 +3398,7 @@ L["XB-488 Disposalbot"] = "XB-488 Disposalbot"
 --[[Translation missing --]]
 L["XD-175 Compactobot"] = "XD-175 Compactobot"
 --[[Translation missing --]]
-L["Xephitik"] = ""
+L["Xephitik"] = "Xephitik"
 --[[Translation missing --]]
 L["Xevozz"] = "Xevozz"
 --[[Translation missing --]]

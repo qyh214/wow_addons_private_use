@@ -439,7 +439,7 @@ do
 		VOICE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Voice",
 		BAR = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Bars",
 		CASTBAR = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Bars",
-		NAMEPLATEBAR = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Pulse", -- XXX temp
+		NAMEPLATE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Pulse", -- XXX temp
 		TANK = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Role_Tank",
 		HEALER = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Role_Healer",
 		EMPHASIZE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\EmphasizeMessage",
@@ -776,12 +776,22 @@ do
 						if m and m[mobId] then
 							local func = m[mobId]
 							args.mobId, args.destGUID, args.destName, args.destFlags, args.destRaidFlags, args.time = mobId, destGUID, destName, destFlags, destRaidFlags, time
-							if type(func) == "function" then
-								func(args)
-							else
-								self[func](self, args)
-							end
+							self[func](self, args)
 						end
+					end
+				end
+			elseif event == "SPELL_DISPEL" or event == "SPELL_INTERRUPT" then
+				for i = #enabledModules, 1, -1 do
+					local self = enabledModules[i]
+					local m = eventMap[self][event]
+					if m and (m[extraSpellId] or m["*"]) then
+						local func = m[extraSpellId] or m["*"]
+						-- DEVS! Please ask if you need args attached to the table that we've missed out!
+						args.sourceGUID, args.sourceName, args.sourceFlags, args.sourceRaidFlags = sourceGUID, sourceName, sourceFlags, sourceRaidFlags
+						args.destGUID, args.destName, args.destFlags, args.destRaidFlags = destGUID, destName, destFlags, destRaidFlags
+						args.spellId, args.spellName, args.spellSchool = spellId, spellName, spellSchool
+						args.time, args.extraSpellId, args.extraSpellName, args.amount = time, extraSpellId, amount, amount
+						self[func](self, args)
 					end
 				end
 			else
@@ -795,11 +805,7 @@ do
 						args.destGUID, args.destName, args.destFlags, args.destRaidFlags = destGUID, destName, destFlags, destRaidFlags
 						args.spellId, args.spellName, args.spellSchool = spellId, spellName, spellSchool
 						args.time, args.extraSpellId, args.extraSpellName, args.amount = time, extraSpellId, amount, amount
-						if type(func) == "function" then
-							func(args)
-						else
-							self[func](self, args)
-						end
+						self[func](self, args)
 					end
 				end
 			end
@@ -1609,6 +1615,17 @@ do
 	function boss:Ambiguate(name, context)
 		local newName = Ambiguate(name, context)
 		return newName
+	end
+end
+
+do
+	local UnitIsDeadOrGhost = loader.UnitIsDeadOrGhost
+	--- Returns true if the unit is dead or in ghost form.
+	-- @string unit unit token or name
+	-- @return boolean
+	function boss:UnitIsDeadOrGhost(unit)
+		local isDeadOrGhost = UnitIsDeadOrGhost(unit)
+		return isDeadOrGhost
 	end
 end
 
@@ -2458,10 +2475,10 @@ function boss:MessageOld(key, color, sound, text, icon)
 	end
 end
 
-function boss:Message(key, color, text, icon, disableEmphasize)
+function boss:Message(key, color, text, icon, disableEmphasize, customDisplayTime)
 	if checkFlag(self, key, C.MESSAGE) then
 		local isEmphasized = not disableEmphasize and band(self.db.profile[key], C.EMPHASIZE) == C.EMPHASIZE
-		self:SendMessage("BigWigs_Message", self, key, type(text) == "string" and text or spells[text or key], color, icon ~= false and icons[icon or key], isEmphasized)
+		self:SendMessage("BigWigs_Message", self, key, type(text) == "string" and text or spells[text or key], color, icon ~= false and icons[icon or key], isEmphasized, customDisplayTime)
 	end
 end
 
@@ -2591,7 +2608,7 @@ do
 				else
 					for i = 1, #player do
 						local playerInTable = player[i]
-						if playerInTable == myNameWithColor then
+						if playerInTable == myNameWithColor or playerInTable == myName then
 							self:PlaySound(key, sound)
 							break
 						end
@@ -2615,7 +2632,7 @@ do
 				local msg = textType == "string" and text or spells[text or key]
 				local texture = icon ~= false and icons[icon or textType == "number" and text or key]
 
-				if playersInTable == 1 and playerTable[1] == myNameWithColor then
+				if playersInTable == 1 and (playerTable[1] == myNameWithColor or playerTable[1] == myName) then
 					local meEmphasized = band(self.db.profile[key], C.ME_ONLY_EMPHASIZE) == C.ME_ONLY_EMPHASIZE
 					if not meEmphasized then -- We already did a ME_ONLY_EMPHASIZE print in :TargetsMessage
 						local emphasized = band(self.db.profile[key], C.EMPHASIZE) == C.EMPHASIZE
@@ -2655,7 +2672,7 @@ do
 		function boss:TargetsMessageOld(key, color, playerTable, playerCount, text, icon, customTime, markers)
 			local playersInTable = #playerTable
 			if band(self.db.profile[key], C.ME_ONLY) == C.ME_ONLY then -- We allow ME_ONLY even if MESSAGE off
-				if playerTable[playersInTable] == myNameWithColor and checkFlag(self, key, C.ME_ONLY) then -- Use checkFlag for the role check
+				if (playerTable[playersInTable] == myNameWithColor or playerTable[playersInTable] == myName) and checkFlag(self, key, C.ME_ONLY) then -- Use checkFlag for the role check
 					local isEmphasized = band(self.db.profile[key], C.EMPHASIZE) == C.EMPHASIZE or band(self.db.profile[key], C.ME_ONLY_EMPHASIZE) == C.ME_ONLY_EMPHASIZE
 					local textType = type(text)
 					local msg = textType == "string" and text or spells[text or key]
@@ -2676,7 +2693,7 @@ do
 					end)
 				end
 			elseif checkFlag(self, key, C.MESSAGE) then
-				if playerTable[playersInTable] == myNameWithColor and band(self.db.profile[key], C.ME_ONLY_EMPHASIZE) == C.ME_ONLY_EMPHASIZE then
+				if (playerTable[playersInTable] == myNameWithColor or playerTable[playersInTable] == myName) and band(self.db.profile[key], C.ME_ONLY_EMPHASIZE) == C.ME_ONLY_EMPHASIZE then
 					local textType = type(text)
 					local msg = textType == "string" and text or spells[text or key]
 					local texture = icon ~= false and icons[icon or textType == "number" and text or key]
@@ -3077,19 +3094,18 @@ do
 	-- @param key the option key
 	-- @number length the duration in seconds
 	-- @string guid Anchor to a unit's nameplate by GUID
-	-- @param[opt] icon the bar icon (spell id or texture name)
+	-- @param[opt] customIconOrText a custom icon (File ID as a number) or text to show text instead
 	-- @bool[opt] hideOnExpire Removes the icon when the duration expires instead of keeping it on screen
-	function boss:Nameplate(key, length, guid, icon, hideOnExpire)
-		if checkFlag(self, key, C.NAMEPLATEBAR) then
-			self:SendMessage("BigWigs_StartNameplate", self, guid, key, length, icons[icon or key], hideOnExpire)
-		end
+	function boss:Nameplate(key, length, guid, customIconOrText, hideOnExpire)
+		self:SendMessage("BigWigs_StartNameplate", self, guid, key, length, customIconOrText, hideOnExpire)
 	end
 
 	--- Stop showing a nameplate icon.
 	-- @param key the option key
 	-- @string guid nameplate unit's guid
-	function boss:StopNameplate(key, guid)
-		self:SendMessage("BigWigs_StopNameplate", self, guid, key)
+	-- @string[opt] text the specific text to clear, if clearing text instead of an icon
+	function boss:StopNameplate(key, guid, text)
+		self:SendMessage("BigWigs_StopNameplate", self, guid, key, text)
 	end
 
 	--- Clear everything on a nameplate.
@@ -3123,18 +3139,6 @@ end
 -- @string guid the hostile unit guid
 function boss:RemovePlateIcon(spellId, guid)
 	self:SendMessage("BigWigs_RemoveNameplateIcon", self, guid, spellId and icons[spellId])
-end
-
---- [DEPRECATED] Does nothing
-function boss:NameplateBar()
-end
-
---- [DEPRECATED] Does nothing
-function boss:NameplateCDBar()
-end
-
---- [DEPRECATED] Does nothing
-function boss:StopNameplateBar()
 end
 
 -------------------------------------------------------------------------------

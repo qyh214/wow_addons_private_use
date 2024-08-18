@@ -10,7 +10,7 @@
 -- @name LibSpellRange-1.0.lua
 
 local major = "SpellRange-1.0"
-local minor = 21
+local minor = 22
 
 assert(LibStub, format("%s requires LibStub.", major))
 
@@ -269,6 +269,8 @@ function Lib.IsSpellInRange(spellInput, unit)
 		end
 		if isTWWSpellInRange then
 			return IsSpellInRange(spellInput, unit)
+		else
+			return IsSpellInRange(GetSpellInfo(spellInput), unit)
 		end
 	else
 		local spellInput = strlowerCache[spellInput]
@@ -324,6 +326,8 @@ function Lib.SpellHasRange(spellInput)
 		end
 		if isTWWSpellHasRange then
 			return SpellHasRange(spellInput)
+		else
+			return SpellHasRange(GetSpellInfo(spellInput))
 		end
 	else
 		local spellInput = strlowerCache[spellInput]

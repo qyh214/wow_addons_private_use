@@ -185,6 +185,9 @@ end
 function mod:BroodAfflictionRemoved(args)
 	if self:Me(args.destGUID) then
 		debuffCount = debuffCount - 1
+		if args.spellId == 23170 then -- Brood Affliction: Bronze
+			self:PersonalMessage(23170, "removed", L.bronze)
+		end
 	end
 end
 

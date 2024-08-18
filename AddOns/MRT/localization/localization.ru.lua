@@ -600,6 +600,8 @@ L.cd2ColSetTextShowTargetName = "Показывать имя цели"
 L.cd2ClickKeyMod = "Модификаторы клавиш для нажатия"
 L.cd2SpellIsTalent = "Заклинание - талант"
 L.cd2SpellIsTalentTip = "Заклинание будет скрыто до тех пор, пока игрок первый раз не использует его"
+L.cd2ByRole = "по роли"
+L.cd2ByRoleTip = "Колонка для роли всегда в приоритете над любыми другими настройками"
 
 L.sallspellsEggClear = "Очистить"
 L.sallspellsEgg = "Лог заклинаний"

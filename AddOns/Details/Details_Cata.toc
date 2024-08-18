@@ -5,7 +5,7 @@
 ## SavedVariables: _detalhes_global, __details_backup, __details_debug
 ## SavedVariablesPerCharacter: _detalhes_database
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, LibWindow-1.1, LibDBIcon-1.0, NickTag-1.0, LibDataBroker-1.1, LibGraph-2.0
-## Version: #Details.12829.159
+## Version: #Details.12877.159
 ## IconTexture: Interface\AddOns\Details\images\minimap
 
 ## X-Curse-Project-ID: 61284
@@ -128,6 +128,7 @@ frames\window_classcolor.lua
 frames\window_statistics.lua
 frames\window_aura_tracker.lua
 frames\window_debug.lua
+frames\window_pro_file.lua
 
 classes\class_error.lua
 classes\class_spelltable.lua

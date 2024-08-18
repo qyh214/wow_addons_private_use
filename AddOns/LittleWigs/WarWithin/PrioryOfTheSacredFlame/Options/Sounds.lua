@@ -3,7 +3,7 @@ BigWigs:AddSounds("Captain Dailcry", {
 	[424414] = "alert",
 	[424419] = "warning",
 	[447270] = "alarm",
-	[447439] = "alert",
+	[447439] = {"alert","info"},
 })
 
 BigWigs:AddSounds("Baron Braunpyke", {
@@ -22,7 +22,7 @@ BigWigs:AddSounds("Prioress Murrpray", {
 })
 
 BigWigs:AddSounds("Priory of the Sacred Flame Trash", {
-	[424420] = {"alarm","warning"},
+	[424420] = {"info","warning"},
 	[424423] = "alert",
 	[424431] = "alert",
 	[424462] = "long",
@@ -31,7 +31,7 @@ BigWigs:AddSounds("Priory of the Sacred Flame Trash", {
 	[427346] = "info",
 	[427356] = "warning",
 	[427484] = "alarm",
-	[427583] = "long",
+	[427583] = "warning",
 	[427601] = "long",
 	[427609] = "alarm",
 	[427897] = "alarm",

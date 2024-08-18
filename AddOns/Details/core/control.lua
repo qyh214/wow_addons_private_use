@@ -437,9 +437,11 @@
 	end
 
 	function Details:ScheduleSyncPlayerActorData()
+		--do not sync if in battleground or arena
 		if ((IsInGroup() or IsInRaid()) and (Details.zone_type == "party" or Details.zone_type == "raid")) then
-			--do not sync if in battleground or arena
-			Details:SendCharacterData()
+			--do a random delay
+			local delay = RandomFloatInRange(1, 4)
+			C_Timer.After(delay, Details.SendCharacterData)
 		end
 	end
 
@@ -1338,7 +1340,9 @@
 		end
 	end
 
-	local bgColor, borderColor = {0, 0, 0, 0.8}, {0, 0, 0, 0} --{0.37, 0.37, 0.37, .75}, {.30, .30, .30, .3}
+	local bgColor, borderColor = {0, 0, 0, 0.8}, {0, 0, 0, 0.5} --{0.37, 0.37, 0.37, .75}, {.30, .30, .30, .3}
+	local backdrop = {bgFile = [[Interface\AddOns\Details\images\background83.png]], edgeFile = [[Interface\Buttons\WHITE8X8]], tile=true,
+	edgeSize = 1, tileSize = 64, insets = {left = 0, right = 0, top = 0, bottom = 0}}
 
 	function Details:FormatCooltipForSpells()
 		local GameCooltip = GameCooltip
@@ -1346,25 +1350,31 @@
 		GameCooltip:Reset()
 		GameCooltip:SetType("tooltip")
 
-		--GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background_dark_withline]])
-		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded.png]])
+		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background_dark_withline]])
+		--GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded.png]])
 
 		GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
 		GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)
 		GameCooltip:SetOption("TextColor", Details.tooltip.fontcolor)
 		GameCooltip:SetOption("TextColorRight", Details.tooltip.fontcolor_right)
 		GameCooltip:SetOption("TextShadow", Details.tooltip.fontshadow and "OUTLINE")
+		GameCooltip:SetOption("TextContour", Details.tooltip.fontcontour)
 
-		GameCooltip:SetOption("LeftBorderSize", -0) --offset between the left border and the left icon, default: 10 + offset
-		GameCooltip:SetOption("RightBorderSize", 0) --offset between the right border and the right icon, default: -10 + offset
-		GameCooltip:SetOption("VerticalOffset", 5) --amount of space to leave between the top border and the first line of the tooltip, default: 0
+		GameCooltip:SetOption("LeftBorderSize", -4) --offset between the left border and the left icon, default: 10 + offset
+		GameCooltip:SetOption("RightBorderSize", 4) --offset between the right border and the right icon, default: -10 + offset
+		GameCooltip:SetOption("TopBorderSize", -1) --offset between the right border and the right icon, default: -10 + offset
+
+		GameCooltip:SetOption("VerticalOffset", 5) --amount of space to offset each line from each other, default: 0, higher values = less space between
 		GameCooltip:SetOption("RightTextMargin", 0) --offset between the right text to the right icon, default: -3
 		GameCooltip:SetOption("AlignAsBlizzTooltip", false)
 		GameCooltip:SetOption("LineHeightSizeOffset", 4)
 		GameCooltip:SetOption("VerticalPadding", -4)
 		GameCooltip:SetOption("YSpacingMod", -6)
+		GameCooltip:SetOption("TooltipFrameHeightOffset", -6)
+		--IgnoreButtonAutoHeight is true
 
-		GameCooltip:SetBackdrop(1, Details.cooltip_preset2_backdrop, bgColor, borderColor)
+		--GameCooltip:SetBackdrop(1, Details.cooltip_preset2_backdrop, bgColor, borderColor)
+		GameCooltip:SetBackdrop(1, backdrop, {1, 1, 1, 1}, borderColor)
 	end
 
 	function Details:BuildInstanceBarTooltip(frame)
@@ -1372,13 +1382,24 @@
 		Details:FormatCooltipForSpells()
 		GameCooltip:SetOption("MinWidth", max(230, self.baseframe:GetWidth()*0.98))
 
+		if (frame.GetActor) then
+			local actor = frame:GetActor()
+			if (actor) then
+				local class = actor.classe
+				if (class) then
+					local classColor = RAID_CLASS_COLORS[class]
+					GameCooltip:SetBackdrop(1, backdrop, classColor, borderColor)
+					GameCooltip:SetColor(1, 0, 0, 0, 0.7)
+				end
+			end
+		end
+
 		local myPoint = Details.tooltip.anchor_point
 		local anchorPoint = Details.tooltip.anchor_relative
 		local x_Offset = Details.tooltip.anchor_offset[1]
 		local y_Offset = Details.tooltip.anchor_offset[2]
 
 		if (Details.tooltip.anchored_to == 1) then
-
 			GameCooltip:SetHost(frame, myPoint, anchorPoint, x_Offset, y_Offset)
 		else
 			GameCooltip:SetHost(DetailsTooltipAnchor, myPoint, anchorPoint, x_Offset, y_Offset)
@@ -1440,7 +1461,33 @@
 			end
 
 			Details:AddRoundedCornerToTooltip()
+
 			GameCooltip:ShowCooltip()
+
+			if (not Details.GameCooltipFrame1Shadow) then
+				Details.GameCooltipFrame1Shadow = GameCooltipFrame1:CreateTexture(nil, "background")
+				Details.GameCooltipFrame1Shadow:SetTexture([[Interface\AddOns\Details\images\shadow_square.png]], nil, nil, "TRILINEAR")
+				GameCooltipFrame1:HookScript("OnHide", function(self)
+					Details.GameCooltipFrame1Shadow:Hide()
+				end)
+			end
+
+			if (Details.tooltip.show_border_shadow) then
+				local offset = 1
+				if (GameCooltipFrame1:GetHeight() > 200) then
+					offset = 4
+				elseif (GameCooltipFrame1:GetHeight() > 150) then
+					offset = 3
+				elseif (GameCooltipFrame1:GetHeight() > 80) then
+					offset = 2
+				end
+
+				Details.GameCooltipFrame1Shadow:SetPoint("topleft", GameCooltipFrame1, "topleft", -offset, offset)
+				Details.GameCooltipFrame1Shadow:SetPoint("bottomright", GameCooltipFrame1, "bottomright", offset, -offset)
+				Details.GameCooltipFrame1Shadow:Show()
+			else
+				Details.GameCooltipFrame1Shadow:Hide()
+			end
 		end
 	end
 

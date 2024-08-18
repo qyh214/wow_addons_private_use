@@ -33,4 +33,5 @@ end
 function mod:AntimagicPulse(args)
 	self:Message(args.spellId, "yellow")
 	self:CDBar(args.spellId, 17)
+	self:PlaySound(args.spellId, "info")
 end

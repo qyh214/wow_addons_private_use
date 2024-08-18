@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.54 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.55 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -9,7 +9,7 @@
 local ADDON_NAME,ParagonReputation = ...
 local PR = ParagonReputation
 
-local GetAddOnMetadata = GetAddOnMetadata or C_AddOns.GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
 
 local COLOR_CHECK_LIST = {"BLUE","GREEN","YELLOW","ORANGE","RED"}
 local COLOR_CHECK_VALUE = {{0,.5,.9,1},{0,.6,.1,1},{.9,.7,0,1},{.75,.27,0,1},{1,.25,.62,1}}

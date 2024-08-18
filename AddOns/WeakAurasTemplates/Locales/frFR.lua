@@ -19,9 +19,6 @@ local L = WeakAuras.L
 	L["(Troll)"] = "(Troll)"
 	--[[Translation missing --]]
 	L["(Undead)"] = "(Undead)"
-	L["< 4 stacks"] = "< à 4 stacks"
-	--[[Translation missing --]]
-	L["5 stacks"] = "5 stacks"
 	L["Abilities"] = "Capacités"
 	L["Add Triggers"] = "Ajouter des déclencheurs"
 	L["Always Active"] = "Toujours actif"
@@ -81,10 +78,6 @@ local L = WeakAuras.L
 	L["Keeps existing triggers intact"] = "Garder intact les déclencheurs existants"
 	--[[Translation missing --]]
 	L["Master Channeler Rune"] = "Master Channeler Rune"
-	--[[Translation missing --]]
-	L["Max 3"] = "Max 3"
-	--[[Translation missing --]]
-	L["Max 4"] = "Max 4"
 	L["Next"] = "Suivant"
 	L["Only show the aura if the target has the debuff."] = "Montre l'aura que si la cible a l'affaiblissement."
 	L["Only show the aura when the item is on cooldown."] = "Afficher uniquement l'aura quand l'objet est en recharge."
@@ -96,7 +89,6 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Autre temps de recharge"
 	L["Pet alive"] = "Familier vivant"
 	L["Pet Behavior"] = "Comportement du familier"
-	L["PvP Talents"] = "Talents JcJ"
 	--[[Translation missing --]]
 	L["regen buff"] = "regen buff"
 	L["Replace all existing triggers"] = "Remplacer tous les déclencheurs existant"

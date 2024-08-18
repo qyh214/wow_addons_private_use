@@ -20,15 +20,11 @@ local unpack = unpack
 local wipe = wipe
 
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-local GetRealmName = GetRealmName
-local GetSpellLink = GetSpellLink
 local GetUnitName = GetUnitName
 local IsInGroup = IsInGroup
 local IsInInstance = IsInInstance
 local IsInRaid = IsInRaid
 local SendChatMessage = SendChatMessage
-local UnitBuff = UnitBuff
-local UnitDebuff = UnitDebuff
 local UnitGUID = UnitGUID
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitHealthMax = UnitHealthMax
@@ -39,7 +35,10 @@ local C_ChatInfo_GetRegisteredAddonMessagePrefixes = C_ChatInfo.GetRegisteredAdd
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local C_Map_GetBestMapForUnit = C_Map.GetBestMapForUnit
+local C_Spell_GetSpellLink = C_Spell.GetSpellLink
 local C_Timer_After = C_Timer.After
+local C_UnitAuras_GetBuffDataByIndex = C_UnitAuras.GetBuffDataByIndex
+local C_UnitAuras_GetDebuffDataByIndex = C_UnitAuras.GetDebuffDataByIndex
 
 local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE
@@ -422,8 +421,8 @@ end
 
 local function PlayerHasBuff(player, spellID)
     for i = 1, 40 do
-        local debuffID = select(10, UnitBuff(player, i))
-        if debuffID == spellID then
+        local aura = C_UnitAuras_GetBuffDataByIndex(player, i)
+        if aura and aura.spellId == spellID then
             return true
         end
     end
@@ -433,8 +432,8 @@ end
 
 local function PlayerHasDebuff(player, spellID)
     for i = 1, 40 do
-        local debuffID = select(10, UnitDebuff(player, i))
-        if debuffID == spellID then
+        local aura = C_UnitAuras_GetDebuffDataByIndex(player, i)
+        if aura and aura.spellId == spellID then
             return true
         end
     end
@@ -608,9 +607,9 @@ function AD:DamageAnnouncer(player)
             for name in pairs(meleeNPCs[player]) do
                 tinsert(names, name)
             end
-            spellLinks = spellLinks .. GetSpellLink(spellID) .. "(" .. strjoin(",", unpack(names)) .. ") "
+            spellLinks = spellLinks .. C_Spell_GetSpellLink(spellID) .. "(" .. strjoin(",", unpack(names)) .. ") "
         else
-            spellLinks = spellLinks .. GetSpellLink(spellID) .. " "
+            spellLinks = spellLinks .. C_Spell_GetSpellLink(spellID) .. " "
         end
         totalDamage = totalDamage + damage
     end

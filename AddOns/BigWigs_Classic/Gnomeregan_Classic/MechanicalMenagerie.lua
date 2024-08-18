@@ -118,8 +118,7 @@ function mod:OnEngage()
 end
 
 function mod:OnWin()
-	self:Message("run", "blue", L.run, false)
-	self:SimpleTimer(function() self:Message("run", "blue", L.run, false) end, 1)
+	self:Message("run", "blue", L.run, false, nil, 3)
 end
 
 --------------------------------------------------------------------------------

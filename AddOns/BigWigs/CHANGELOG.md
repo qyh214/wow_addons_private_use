@@ -1,11 +1,7 @@
 # BigWigs
 
-## [v351.1](https://github.com/BigWigsMods/BigWigs/tree/v351.1) (2024-08-06)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v351...v351.1) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
+## [v353.4](https://github.com/BigWigsMods/BigWigs/tree/v353.4) (2024-08-16)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v353.3...v353.4) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
 
-- Update koKR (#1743)  
-- Clean up pull timer code  
-- Core/BossPrototype: Fix docs  
-- Core/BossPrototype: Add `:ClearNameplate` and shuffle some args  
-- Update zhCN (#1741)  
-- Update zhCN (#1740)  
+- Plugins/BossBlock: Display toast messages for longer  
+- Plugins/Messages: Let messages define custom display times  

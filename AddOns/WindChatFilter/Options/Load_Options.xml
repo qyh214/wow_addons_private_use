@@ -1,8 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file='Core.lua'/>
-	<Script file='Advanced.lua'/>
-	<Script file='Rules.lua'/>
-	<Script file='Information.lua'/>
-	<Script file='BlackList.lua'/>
-	<Script file='GroupInviteGuard.lua'/>
-</Ui>

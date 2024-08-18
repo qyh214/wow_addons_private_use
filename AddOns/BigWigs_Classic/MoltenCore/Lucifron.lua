@@ -14,12 +14,13 @@ mod:SetEncounterID(663)
 local assignMarks = {}
 local curseCount = 0
 local curseTime = 0
+local markerCount = 1
 
 --------------------------------------------------------------------------------
 -- Initialization
 --
 
-local dominateMindMarker = mod:AddMarkerOption(true, "player", 1, 20604, 1, 2) -- Dominate Mind
+local dominateMindMarker = mod:GetSeason() == 2 and mod:AddMarkerOption(true, "player", 1, 20604, 1, 2, 3) or mod:AddMarkerOption(true, "player", 1, 20604, 1, 2) -- Dominate Mind
 function mod:GetOptions()
 	return {
 		19702, -- Impending Doom
@@ -40,7 +41,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "DominateMind", 20604)
 	self:Log("SPELL_AURA_APPLIED", "DominateMindApplied", 20604)
 	self:Log("SPELL_AURA_REMOVED", "DominateMindRemoved", 20604)
-	if self:Vanilla() then
+	if self:GetSeason() == 2 then
 		self:Log("SPELL_CAST_SUCCESS", "ImpendingDoom", 460931)
 		self:Log("SPELL_CAST_SUCCESS", "LucifronsCurse", 460932)
 		self:Log("SPELL_AURA_APPLIED", "LucifronsCurseApplied", 460932)
@@ -52,6 +53,7 @@ function mod:OnEngage()
 	assignMarks = {}
 	curseCount = 0
 	curseTime = 0
+	markerCount = 1
 	self:CDBar(19702, 7) -- Impending Doom
 	self:CDBar(19703, 11, CL.curse) -- Lucifron's Curse
 end
@@ -90,7 +92,8 @@ end
 
 function mod:DominateMind(args)
 	if not assignMarks[args.sourceGUID] then -- Each add gets its own marker it applies to players
-		assignMarks[args.sourceGUID] = next(assignMarks) and 2 or 1
+		assignMarks[args.sourceGUID] = markerCount
+		markerCount = markerCount + 1
 	end
 end
 
@@ -98,7 +101,6 @@ function mod:DominateMindApplied(args)
 	self:TargetBar(args.spellId, 15, args.destName, CL.mind_control_short)
 	self:TargetMessage(args.spellId, "orange", args.destName, CL.mind_control)
 	self:CustomIcon(dominateMindMarker, args.destName, assignMarks[args.sourceGUID])
-	--self:PlaySound(args.spellId, "warning")
 end
 
 function mod:DominateMindRemoved(args)

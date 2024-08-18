@@ -12,6 +12,9 @@ local UnitIsAFK, UnitIsDND, UnitIsDead, UnitIsGhost, UnitName, UnitExists = Unit
 local UnitIsWildBattlePet, UnitIsBattlePetCompanion, UnitBattlePetLevel = UnitIsWildBattlePet, UnitIsBattlePetCompanion, UnitBattlePetLevel
 local GetNumArenaOpponentSpecs, GetCreatureDifficultyColor = GetNumArenaOpponentSpecs, GetCreatureDifficultyColor
 
+-- Add scantip back, due to issue on ColorMixin
+local scanTip = CreateFrame("GameTooltip", "NDui_ScanTooltip", nil, "GameTooltipTemplate")
+
 local function ColorPercent(value)
 	local r, g, b
 	if value < 20 then
@@ -103,7 +106,7 @@ oUF.Tags.Methods["color"] = function(unit)
 
 	if UnitIsTapDenied(unit) then
 		return B.HexRGB(oUF.colors.tapped)
-	elseif UnitIsPlayer(unit) then
+	elseif UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then
 		return B.HexRGB(oUF.colors.class[class])
 	elseif reaction then
 		return B.HexRGB(oUF.colors.reaction[reaction])
@@ -249,6 +252,14 @@ oUF.Tags.Methods["npctitle"] = function(unit)
 			return "<"..guildName..">"
 		end
 	elseif not isPlayer and C.db["Nameplate"]["NameOnlyTitle"] then
+		scanTip:SetOwner(UIParent, "ANCHOR_NONE")
+		scanTip:SetUnit(unit)
+
+		local title = _G[format("NDui_ScanTooltipTextLeft%d", GetCVarBool("colorblindmode") and 3 or 2)]:GetText()
+		if title and not strfind(title, "^"..LEVEL) then
+			return title
+		end
+--[[
 		local data = not DB.isWW and C_TooltipInfo.GetUnit(unit) -- FIXME: ColorMixin error
 		if not data then return "" end
 
@@ -259,6 +270,7 @@ oUF.Tags.Methods["npctitle"] = function(unit)
 				return title
 			end
 		end
+]]
 	end
 end
 oUF.Tags.Events["npctitle"] = "UNIT_NAME_UPDATE"

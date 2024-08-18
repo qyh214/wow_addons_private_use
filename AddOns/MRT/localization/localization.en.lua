@@ -597,6 +597,8 @@ L.cd2ColSetTextShowTargetName = "Show target name"
 L.cd2ClickKeyMod = "Click key modifiers"
 L.cd2SpellIsTalent = "Spell is talent"
 L.cd2SpellIsTalentTip = "Spell will be hidden until very first usage by player"
+L.cd2ByRole = "by role"
+L.cd2ByRoleTip = "Role column always has priority over anything"
 
 L.sallspellsEggClear = "Clear"
 L.sallspellsEgg = "Combat log"

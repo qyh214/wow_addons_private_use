@@ -48,7 +48,6 @@ function mod:OnBossEnable()
 
 	self:Log("SPELL_AURA_APPLIED", "DominateMind", 14515)
 	self:Log("SPELL_CAST_SUCCESS", "DestroyEgg", 19873)
-	self:Log("SPELL_CAST_SUCCESS", "WarmingFlames", 23040)
 	self:Log("SPELL_AURA_APPLIED", "Conflagration", 23023)
 	self:Log("SPELL_AURA_REMOVED", "ConflagrationOver", 23023)
 end
@@ -83,20 +82,10 @@ function mod:DestroyEgg()
 	eggs = eggs + 1
 	self:Message("eggs", "green", L.eggs_message:format(eggs), L.eggs_icon)
 	if eggs == 30 then
-		self:ScheduleTimer("Stage2Backup", 4)
+		self:SetStage(2)
+		self:Message("stages", "cyan", CL.stage:format(2), false)
+		self:PlaySound("stages", "long")
 	end
-end
-
-function mod:Stage2Backup() -- Backup for Warming Flames sometimes not casting
-	if self:GetStage() ~= 2 then
-		self:WarmingFlames()
-	end
-end
-
-function mod:WarmingFlames() -- Stage 2
-	self:SetStage(2)
-	self:Message("stages", "cyan", CL.stage:format(2), false)
-	self:PlaySound("stages", "long")
 end
 
 function mod:Conflagration(args)

@@ -1,0 +1,26 @@
+## Interface: 110002
+## Version: 2.2.1
+## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
+## Notes: Shows instance entrances/exits and passageways, portals, ships and zeppelin symbols and many other things
+## Notes-esES: Muestra entradas/salidas y pasillos de instancias, portales, símbolos de barcos y zepelines y muchas otras cosas
+## Notes-esMX: Muestra entradas/salidas y pasillos de instancias, portales, símbolos de barcos y zepelines y muchas otras cosas
+## Notes-ptBR: Mostra entradas/saídas e passagens, portais, símbolos de navios e zepelim e muitas outras coisas
+## Notes-zhTW: 顯示實例入口/出口和通道、門戶、船舶和齊柏林飛船符號以及許多其他東西
+## Notes-zhCN: 显示实例入口/出口和通道、门户、船舶和齐柏林飞艇符号以及许多其他东西
+## Notes-deDE: Zeigt Instanz Eingänge/-Ausgänge und Durchgänge, Portale, Schiffe und Zeppelin Symbole und viele andere Sachen an
+## Notes-ruRU: Показывает входы/выходы, проходы, порталы, символы кораблей и дирижаблей и многое другое
+## Notes-koKR: 인스턴스 입구/출구 및 통로, 포털, 함선, 비행선 기호 및 기타 여러 가지를 표시합니다
+## Notes-itIT: Mostra istanze di ingressi/uscite e passaggi, portali, simboli di navi e zeppelin e molte altre cose
+## Notes-frFR: Affiche les entrées/sorties et passages de l'instance, les portails, les symboles de navires et de zeppelin et bien d'autres choses
+## Author: BadBoyBarny
+## X-License: All Rights Reserved
+## RequiredDeps: HandyNotes
+## X-Curse-Project-ID: 912524
+## X-Localizations: enUS, enGB, deDE, esES, esMX, frFR, ruRU, itIT, ptBR, koKR, zhCN, zhTW
+## IconTexture: Interface\AddOns\HandyNotes_MapNotes\Images\MNL4
+## SavedVariables: HandyNotes_MapNotesRetailDB, MNMiniMapButtonRetailDB
+
+ExternalLibs\ExternalLibs.xml
+Locales\Locales.xml
+Nodes\NodesRetail.xml
+Core\CoreRetail.xml

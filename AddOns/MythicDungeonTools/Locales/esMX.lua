@@ -39,7 +39,7 @@ L["Affected by:"] = "Afectado por:"
 L["Affixes"] = "Afijos"
 L["Aggravated Skitterfly"] = "Escurriposa agravada"
 --[[Translation missing --]]
-L["Agile Pursuer"] = ""
+L["Agile Pursuer"] = "Agile Pursuer"
 L["Agitated Nimbus"] = "Nimbo inquieto"
 L["Agronox"] = "Agronox"
 L["Ahn'kahar Slasher"] = "Mutilador Ahn'kahar"
@@ -98,10 +98,10 @@ L["Anub'ar Warrior"] = "Guerrero Anub'ar"
 L["Anub'ar Webspinner"] = "Tejerred Anub'ar"
 L["Anub'arak"] = "Anub'arak"
 --[[Translation missing --]]
-L["Anubikkaj"] = ""
+L["Anubikkaj"] = "Anubikkaj"
 L["Anub'Rekhan"] = "Anub'Rekhan"
 --[[Translation missing --]]
-L["Anubzekt"] = ""
+L["Anubzekt"] = "Anubzekt"
 L["Apex Blazewing"] = "Alardiente alfa"
 L["Apply to preset"] = "Aplicar a ruta"
 L["Aqua Rager"] = "Furibundo acuático"
@@ -129,9 +129,9 @@ L["Armored Mistral"] = "Mistral acorazado"
 L["Armored Overseer"] = "Sobrestante acorazado"
 L["Asaad"] = "Asaad"
 --[[Translation missing --]]
-L["Ascendant Viscoxria"] = ""
+L["Ascendant Viscoxria"] = "Ascendant Viscoxria"
 --[[Translation missing --]]
-L["Ascended Aristocrat"] = ""
+L["Ascended Aristocrat"] = "Ascended Aristocrat"
 L["Ash'Golm"] = "Ceniz'golm"
 L["Ashvane Cannoneer"] = "Cañonero de los Gobernalle"
 L["Ashvane Commander"] = "Comandante Gobernalle"
@@ -147,11 +147,11 @@ L["Ashvane Sniper"] = "Francotirador de los Gobernalle"
 L["Ashvane Spotter"] = "Avistador de los Gobernalle"
 L["Ashvane Warden"] = "Celador de los Gobernalle"
 --[[Translation missing --]]
-L["Aspiring Forgehand"] = ""
+L["Aspiring Forgehand"] = "Aspiring Forgehand"
 L["Aspix"] = "Aspix"
 L["Asset Manager"] = "Responsable de activos"
 --[[Translation missing --]]
-L["Assistant Unnaturaler"] = ""
+L["Assistant Unnaturaler"] = "Assistant Unnaturaler"
 L["Astral Attendant"] = "Auxiliar astral"
 L["Astronos"] = "Astronos"
 L["Atal'ai Deathwalker"] = "Caminamuerte Atal'ai"
@@ -162,7 +162,7 @@ L["Atal'Dazar"] = "Atal'Dazar"
 L["Atal'Dazar Sublevel"] = "Subnivel de Atal'Dazar"
 L["atalTeemingNote"] = "Nota en Bullente:%s&sG29 no siempre presente.%sEnemigos Bullentes de G2 no siempre presentes.%sG27 no siempre presente"
 --[[Translation missing --]]
-L["Atik"] = ""
+L["Atik"] = "Atik"
 L["Atrium of Sethraliss"] = "Atrio de Sethraliss"
 --[[Translation missing --]]
 L["Attumen the Huntsman"] = "Attumen the Huntsman"
@@ -170,7 +170,7 @@ L["Auriaya"] = "Auriaya"
 L["Automatic Coloring"] = "Coloreo automático"
 L["Automatically color pulls"] = "Colorea automáticamente pulls"
 --[[Translation missing --]]
-L["Avanoxx"] = ""
+L["Avanoxx"] = "Avanoxx"
 L["Avatar of Sethraliss"] = "Avatar de Sethraliss"
 L["Awakened"] = "Despierta"
 L["Awakened A"] = "Despierta A"
@@ -212,11 +212,11 @@ L["Barbed Spiderling"] = "Arañita espinosa"
 L["Baron Rivendare"] = "Barón Osahendido"
 L["Batak"] = "Batak"
 --[[Translation missing --]]
-L["Battered"] = ""
+L["Battered"] = "Battered"
 --[[Translation missing --]]
 L["Battle for Azeroth"] = "Battle for Azeroth"
 --[[Translation missing --]]
-L["Battle Scarab"] = ""
+L["Battle Scarab"] = "Battle Scarab"
 L["Battlefield Ritualist"] = "Ritualista del campo de batalla"
 L["Beast"] = "Bestia"
 L["Befouled Spirit"] = "Espíritu contaminado"
@@ -273,19 +273,19 @@ L["Blistering Steamrager"] = "Furibundo de vapor virulento"
 L["Block Warden"] = "Celador del módulo"
 L["Blood of the Corruptor"] = "Sangre del Corruptor"
 --[[Translation missing --]]
-L["Blood Overseer"] = ""
+L["Blood Overseer"] = "Blood Overseer"
 L["Bloodscent Felhound"] = "Can manáfago Sangresencia"
 --[[Translation missing --]]
-L["Bloodstained Assistant"] = ""
+L["Bloodstained Assistant"] = "Bloodstained Assistant"
 --[[Translation missing --]]
-L["Bloodstained Webmage"] = ""
+L["Bloodstained Webmage"] = "Bloodstained Webmage"
 L["Bloodsworn Agent"] = "Agente Jurasangre"
 L["Bloodsworn Defiler"] = "Profanador Jurasangre"
 L["Bloodtainted Fury"] = "Furia manchada de sangre"
 L["Bloodthirsty Cub"] = "Cachorro sanguinario"
 L["Bloodthirsty Tundra Wolf"] = "Lobo de tundra sanguinario"
 --[[Translation missing --]]
-L["Bloodworker"] = ""
+L["Bloodworker"] = "Bloodworker"
 L["Bolstering"] = "Potenciante"
 L["Bomb Tonk"] = "Bomba potente"
 L["Bone Magus"] = "Magus osario"
@@ -386,7 +386,7 @@ L["Chronikar"] = "Chronikar"
 L["Chrono-Lord Deios"] = "Cronolord Deios"
 L["Chrono-Lord Epoch"] = "Cronolord Época"
 --[[Translation missing --]]
-L["CityofEchoes"] = ""
+L["CityofEchoes"] = "CityofEchoes"
 --[[Translation missing --]]
 L["CityOfThreads"] = "City of Threads"
 L["Claw Fighter"] = "Luchador de zarpa"
@@ -426,7 +426,7 @@ Please remove or update the following AddOns:
 
 ]=]
 --[[Translation missing --]]
-L["Congealed Droplet"] = ""
+L["Congealed Droplet"] = "Congealed Droplet"
 L["Congealed Slime"] = "Baba coagulada"
 L["Conjured Lasher"] = "Azotador conjurado"
 --[[Translation missing --]]
@@ -455,7 +455,7 @@ L["Cove Seagull"] = "Gaviota de cala"
 L["Coven Diviner"] = "Adivina del aquelarre"
 L["Coven Thornshaper"] = "Urdespina del aquelarre"
 --[[Translation missing --]]
-L["Covert Webmancer"] = ""
+L["Covert Webmancer"] = "Covert Webmancer"
 L["Cragmaw the Infested"] = "Bocarrisco el Infestado"
 L["Crawler Mine"] = "Mina reptadora"
 L["Crawth"] = "Crawth"
@@ -475,7 +475,7 @@ L["Crypt Reaver"] = "Atracador de la cripta"
 L["CryptOfTheAncients"] = "Crypt of the Ancients"
 L["Crystal Fury"] = "Furia de cristal"
 --[[Translation missing --]]
-L["Crystal Shard"] = ""
+L["Crystal Shard"] = "Crystal Shard"
 L["Crystal Thrasher"] = "Descarnador de cristal"
 --[[Translation missing --]]
 L["CrystalChamber"] = "Crystal Chamber"
@@ -492,13 +492,13 @@ L["Curious Swoglet"] = "Cornisapito curioso"
 L["Cursed Falke"] = "Falco maldito"
 L["Cursed Spire of Ny'alotha"] = "Aguja maldita de Ny'alotha"
 --[[Translation missing --]]
-L["Cursedforge Honor Guard"] = ""
+L["Cursedforge Honor Guard"] = "Cursedforge Honor Guard"
 --[[Translation missing --]]
-L["Cursedforge Mender"] = ""
+L["Cursedforge Mender"] = "Cursedforge Mender"
 --[[Translation missing --]]
-L["Cursedforge Stoneshaper"] = ""
+L["Cursedforge Stoneshaper"] = "Cursedforge Stoneshaper"
 --[[Translation missing --]]
-L["Cursedheart Invader"] = ""
+L["Cursedheart Invader"] = "Cursedheart Invader"
 L["Custom"] = "Personalizar"
 L["Custom Color Palette"] = "Personalizar Paleta de Color"
 L["Customs Security"] = "Seguridad aduanera"
@@ -558,7 +558,7 @@ L["Death Knight Cavalier"] = "Hidalgo caballero de la Muerte"
 L["Death Speaker"] = "Portavoz de la muerte"
 L["Deathcharger Steed"] = "Corcel destrero de la Muerte"
 --[[Translation missing --]]
-L["Deathscreamer Ikentak"] = ""
+L["Deathscreamer Ikentak"] = "Deathscreamer Ikentak"
 L["Decatriarch Wratheye"] = "Descompotriarca Ojoiracundo"
 L["Decay Speaker"] = "Portavoz de la descomposición"
 L["Decayed Elder"] = "Ancestro descompuesto"
@@ -627,6 +627,10 @@ L["Dokigg the Brutalizer"] = "Dokigg el Brutalizador"
 L["Domatrax"] = "Domatrax"
 L["Domina Venomblade"] = "Domina Hojaveneno"
 --[[Translation missing --]]
+L["dotiLowerSublevel1"] = "Sublevel 1"
+--[[Translation missing --]]
+L["dotiUpperSublevel1"] = "Sublevel 1"
+--[[Translation missing --]]
 L["Draconic Illusion"] = "Draconic Illusion"
 --[[Translation missing --]]
 L["Draconic Image"] = "Draconic Image"
@@ -656,7 +660,7 @@ L["Dragonflight Season 3"] = "Dragonflight Season 3"
 L["Dragonflight Season 4"] = "Dragonflight Season 4"
 L["Dragonkin"] = "Dragonante"
 --[[Translation missing --]]
-L["Drahga Shadowburner"] = ""
+L["Drahga Shadowburner"] = "Drahga Shadowburner"
 L["Drakkari Bat"] = "Murciélago Drakkari"
 L["Drakkari Battle Rider"] = "Jinete de batalla Drakkari"
 L["Drakkari Colossus"] = "Coloso Drakkari"
@@ -725,10 +729,10 @@ L["Duskwatch Sentry"] = "Avizor Vigía del ocaso"
 --[[Translation missing --]]
 L["Dwarven Bomber"] = "Dwarven Bomber"
 --[[Translation missing --]]
-L["E.D.N.A"] = ""
+L["E.D.N.A"] = "E.D.N.A"
 L["Earlier Version"] = "Tienes una version anterior con el nombre de la ruta '%s'%s¿Quieres actualizarlo o crear una nueva copia?%s%s%s"
 --[[Translation missing --]]
-L["Earth Infused Golem"] = ""
+L["Earth Infused Golem"] = "Earth Infused Golem"
 L["Earthen Custodian"] = "Custodio terráneo"
 L["Earthen Guardian"] = "Guardián terráneo"
 L["Earthen Warder"] = "Depositario terráneo"
@@ -752,7 +756,7 @@ L["Elder Ironbranch"] = "Ancestro Hierrorrama"
 L["Elder Leaxa"] = "Anciana Leaxa"
 L["Elder Nadox"] = "Ancestro Nadox"
 --[[Translation missing --]]
-L["Elder Shadeweaver"] = ""
+L["Elder Shadeweaver"] = "Elder Shadeweaver"
 L["Elder Stonebark"] = "Ancestro Cortezapiedra"
 L["Elemental"] = "Elemental"
 L["Elfyra"] = "Elfyra"
@@ -787,9 +791,9 @@ L["Enemy Info NPC Name"] = "Nombre"
 L["Enemy Info NPC Stealth"] = "Sigilo"
 L["Enemy Info NPC Stealth Detect"] = "Detectar Sigilo"
 --[[Translation missing --]]
-L["Engine Speaker"] = ""
+L["Engine Speaker"] = "Engine Speaker"
 --[[Translation missing --]]
-L["Engorged Crawler"] = ""
+L["Engorged Crawler"] = "Engorged Crawler"
 L["Enraged Direhorn"] = "Cuernoatroz iracundo"
 L["Enraged Mask"] = "Máscara enfurecida"
 L["Enraged Spirit"] = "Espíritu iracundo"
@@ -813,7 +817,7 @@ L["errorLabel2"] = "Please update MDT to the latest version and visit either Git
 --[[Translation missing --]]
 L["errorLabel3"] = "Press CTRL + C to copy!"
 --[[Translation missing --]]
-L["Erudax"] = ""
+L["Erudax"] = "Erudax"
 L["Erudite Slayer"] = "Asesina erudita"
 L["Erunak Stonespeaker"] = "Erunak Hablapiedra"
 L["Etherdiver"] = "Colimbo de éter"
@@ -842,7 +846,7 @@ L["Eye of Azshara Sublevel"] = "Subnivel de Ojo de Azshara"
 L["Eye of Sethraliss"] = "Eye of Sethraliss"
 L["Eye of Taldaram"] = "Ojo de Taldaram"
 --[[Translation missing --]]
-L["Eye Of The Queen"] = ""
+L["Eye Of The Queen"] = "Eye Of The Queen"
 L["Eye Stalk"] = "Ojo acechador"
 L["Faceless Corruptor"] = "Corruptor ignoto"
 L["Faceless Horror"] = "Horror ignoto"
@@ -905,12 +909,12 @@ L["Forces+%: 5/200 (2.5%)"] = "Tropas+%: 5/200 (2.5%)"
 L["Forest Swarmer"] = "Enjambrista del bosque"
 L["Forge Construct"] = "Ensamblaje de forja"
 --[[Translation missing --]]
-L["Forge Loader"] = ""
+L["Forge Loader"] = "Forge Loader"
 --[[Translation missing --]]
-L["Forgebound Mender"] = ""
+L["Forgebound Mender"] = "Forgebound Mender"
 L["Forgemaster Gorek"] = "Maestro de forja Gorek"
 --[[Translation missing --]]
-L["Forgemaster Throngus"] = ""
+L["Forgemaster Throngus"] = "Forgemaster Throngus"
 L["Forgewrought Monstrosity"] = "Monstruosidad forjada"
 L["Forgotten Denizen"] = "Morador olvidado"
 L["Forgotten One"] = "Olvidado"
@@ -967,12 +971,12 @@ L["Gazerax"] = "Avizorax"
 L["General Bjarngrim"] = "General Bjarngrim"
 L["General Kaal"] = "General Kaal"
 --[[Translation missing --]]
-L["General Umbriss"] = ""
+L["General Umbriss"] = "General Umbriss"
 L["General Vezax"] = "General Vezax"
 L["General Xakal"] = "General Xakal"
 L["Gerenth the Vile"] = "Gerenth el Vil"
 --[[Translation missing --]]
-L["Ghastly Voidsoul"] = ""
+L["Ghastly Voidsoul"] = "Ghastly Voidsoul"
 L["Ghostly Baker"] = "Panadero fantasmal"
 L["Ghostly Chef"] = "Chef fantasmal"
 L["Ghostly Councilor"] = "Consejero fantasmal"
@@ -1105,7 +1109,11 @@ L["Hardened Steel Skycaller"] = "Clamacielos de acero endurecido"
 --[[Translation missing --]]
 L["hardResetButton"] = "Reset MDT"
 --[[Translation missing --]]
-L["hardResetPrompt"] = "Do you really want to reset all settings to default?\\n|cFFFF0000Try updating the AddOn to the latest version first!\\nOnly do this if MDT is not loading at all and is in a broken state.\\nThis will delete ALL YOUR ROUTES!|r\\nThis will reload the UI!"
+L["hardResetPrompt"] = [=[Do you really want to reset all settings to default?
+|cFFFF0000Try updating the AddOn to the latest version first!
+Only do this if MDT is not loading at all and is in a broken state.
+This will delete ALL YOUR ROUTES!|r
+This will reload the UI!]=]
 --[[Translation missing --]]
 L["hardResetPromptTitle"] = "Delete ALL settings"
 L["Harlan Sweete"] = "Harlan Sweete"
@@ -1144,7 +1152,7 @@ L["helpPlatePresets"] = "Gestiona, comparte y colabora en rutas"
 L["helpPlatePulls"] = "Crear y gestionar tus pulls%sClick derecho para más opciones"
 L["Helya"] = "Helya"
 --[[Translation missing --]]
-L["Herald Of Ansurek"] = ""
+L["Herald Of Ansurek"] = "Herald Of Ansurek"
 L["Herald Volazj"] = "Heraldo Volazj"
 --[[Translation missing --]]
 L["Hibernate"] = "Hibernate"
@@ -1152,7 +1160,7 @@ L["High Adjudicator Aleez"] = "Gran adjudicadora Aleez"
 L["High Channeler Ryvati"] = "Alta canalizadora Ryvati"
 L["High Contrast"] = "Contraste Alto"
 --[[Translation missing --]]
-L["High Speaker Eirich"] = ""
+L["High Speaker Eirich"] = "High Speaker Eirich"
 L["Hired Assassin"] = "Asesino contratado"
 L["HK-8 Aerial Oppression Unit"] = "Unidad de opresión aérea KPU7"
 L["Hodir"] = "Hodir"
@@ -1171,14 +1179,32 @@ L["Hourglass Tidesage"] = "Sabiomar del Reloj de Arena"
 L["Howling Gale"] = "Howling Gale"
 L["Hulking Berserker"] = "Rabioso descomunal"
 --[[Translation missing --]]
-L["Hulking Bloodguard"] = ""
+L["Hulking Bloodguard"] = "Hulking Bloodguard"
 --[[Translation missing --]]
-L["Hulking Warshell"] = ""
+L["Hulking Warshell"] = "Hulking Warshell"
 L["Humanoid"] = "Humanoide"
 L["Hungry Lasher"] = "Azotador hambriento"
 L["Hylbrande"] = "Hylbrande"
 L["Hymdall"] = "Hymdall"
 L["Hyrja"] = "Hyrja"
+--[[Translation missing --]]
+L["icc"] = "Icecrown Citadel"
+--[[Translation missing --]]
+L["iccFloor1"] = "The Lower Citadel"
+--[[Translation missing --]]
+L["iccFloor2"] = "The Rampart of Skulls"
+--[[Translation missing --]]
+L["iccFloor3"] = "Deathbringer's Rise"
+--[[Translation missing --]]
+L["iccFloor4"] = "The Frost Queen's Lair"
+--[[Translation missing --]]
+L["iccFloor5"] = "The Upper Reaches"
+--[[Translation missing --]]
+L["iccFloor6"] = "Royal Quarters"
+--[[Translation missing --]]
+L["iccFloor7"] = "The Frozen Throne"
+--[[Translation missing --]]
+L["iccFloor8"] = "Frostmourne"
 L["Ichoron"] = "Ícoron"
 L["Ickor Bileflesh"] = "Ickor Carnebilis"
 L["If the Minimap Button is enabled"] = "Si el Botón del Minimapa está activado"
@@ -1252,7 +1278,7 @@ L["Interment Construct"] = "Ensamblaje de sepelio"
 L["Interrogation Specialist"] = "Especialista en interrogatorios"
 L["Invalid import string"] = "Cadena de importación no válida"
 --[[Translation missing --]]
-L["Invoked Shadowflame Spirit"] = ""
+L["Invoked Shadowflame Spirit"] = "Invoked Shadowflame Spirit"
 L["Ionar"] = "Ionar"
 L["Iridikron"] = "Iridikron"
 L["Iridikron's Creation"] = "Creación de Iridikron"
@@ -1272,7 +1298,7 @@ L["Irontide Corsair"] = "Corsaria Marea de Hierro"
 L["Irontide Crackshot"] = "Escopetero Marea de Hierro"
 L["Irontide Crusher"] = "Triturador Marea de Hierro"
 --[[Translation missing --]]
-L["Irontide Curseblade"] = ""
+L["Irontide Curseblade"] = "Irontide Curseblade"
 L["Irontide Enforcer"] = "Déspota Marea de Hierro"
 L["Irontide Marauder"] = "Maleante Marea de Hierro"
 L["Irontide Mastiff"] = "Mastín Marea de Hierro"
@@ -1288,13 +1314,13 @@ L["Irontorch Commander"] = "Antorchaférrea comandante"
 L["Ironwing Flamespitter"] = "Alahierro escupefuego"
 L["Ivanyr"] = "Ivanyr"
 --[[Translation missing --]]
-L["Ixin"] = ""
+L["Ixin"] = "Ixin"
 --[[Translation missing --]]
-L["Ixkreten The Unbreakable"] = ""
+L["Ixkreten The Unbreakable"] = "Ixkreten The Unbreakable"
 --[[Translation missing --]]
-L["Izo The Grand Splicer"] = ""
+L["Izo The Grand Splicer"] = "Izo The Grand Splicer"
 --[[Translation missing --]]
-L["Jabbing Flyer"] = ""
+L["Jabbing Flyer"] = "Jabbing Flyer"
 L["Jagged Hound"] = "Can dentado"
 L["Jazshariu"] = "Jazshariu"
 L["Jedoga Shadowseeker"] = "Jedoga Buscasombras"
@@ -1310,7 +1336,7 @@ L["Kel'Thuzad"] = "Kel'Thuzad"
 L["Keristrasza"] = "Keristrasza"
 L["Khajin the Unyielding"] = "Khajin la Implacable"
 --[[Translation missing --]]
-L["Kikatal The Harvester"] = ""
+L["Kikatal The Harvester"] = "Kikatal The Harvester"
 L["King"] = "Rey"
 L["King A'akul"] = "Rey A'akul"
 L["King Bjorn"] = "Rey Bjorn"
@@ -1448,7 +1474,7 @@ L["Mangrove Ent"] = "Ent mangle"
 L["Maniacal Soulbinder"] = "Vinculador de almas maníaco"
 L["Manifestation of Envy"] = "Manifestación de la envidia"
 --[[Translation missing --]]
-L["Manifested Shadow"] = ""
+L["Manifested Shadow"] = "Manifested Shadow"
 L["Manifested Timeways"] = "Líneas temporales manifestadas"
 L["Marauding Geist"] = "Geist merodeador"
 L["Margrave Stradama"] = "Margravina Stradama"
@@ -1536,7 +1562,7 @@ L["mlJockeyNote"] = "Jinete de mecas 21 y 22 tienen que ser marcar en el momento
 L["Mogul Razdunk"] = "Mogul Razdunk"
 L["Molten Colossus"] = "Coloso fundido"
 --[[Translation missing --]]
-L["Molten Giant"] = ""
+L["Molten Giant"] = "Molten Giant"
 L["Monstrous Corpse Spider"] = "Araña cadáver monstruosa"
 L["Monstrous Decay"] = "Descomposición monstruosa"
 L["Monzumi"] = "Monzumi"
@@ -1555,12 +1581,12 @@ L["Murkbrine Shellcrusher"] = "Rompeconchas Salmuerasucia"
 L["Murkbrine Shorerunner"] = "Correcostas Salmuerasucia"
 L["Murkbrine Wavejumper"] = "Saltaolas Salmuerasucia"
 --[[Translation missing --]]
-L["Mutated Hatchling"] = ""
+L["Mutated Hatchling"] = "Mutated Hatchling"
 L["Mystic Ssa'veh"] = "Mística Ssa'veh"
 L["Mythresh, Sky's Talons"] = "Mythresh, Garfas del Cielo"
 L["Naeno Megacrash"] = "Naeno Megachoque"
 --[[Translation missing --]]
-L["Nakt"] = ""
+L["Nakt"] = "Nakt"
 L["Nal'asha"] = "Nal'asha"
 L["Nalthor the Rimebinder"] = "Nalthor Clamaescarcha"
 L["Nal'tira"] = "Nal'tira"
@@ -1596,7 +1622,7 @@ L["Neltharus"] = "Neltharus"
 --[[Translation missing --]]
 L["neltharusChain"] = "Burning Chain"
 --[[Translation missing --]]
-L["Nerubian Hauler"] = ""
+L["Nerubian Hauler"] = "Nerubian Hauler"
 L["Ner'zhul"] = "Ner'zhul"
 L["Netherspace"] = "Espacio Abisal"
 L["New"] = "Nuevo"
@@ -1609,21 +1635,21 @@ L["Night Watch Mariner"] = "Marino de la Guardia Nocturna"
 L["Nightborne Reclaimer"] = "Reivindicador Nocheterna"
 L["Nightborne Spellsword"] = "Hojahechizo Nocheterna"
 --[[Translation missing --]]
-L["Nightfall Commander"] = ""
+L["Nightfall Commander"] = "Nightfall Commander"
 --[[Translation missing --]]
-L["Nightfall Curseblade"] = ""
+L["Nightfall Curseblade"] = "Nightfall Curseblade"
 --[[Translation missing --]]
-L["Nightfall Dark Architect"] = ""
+L["Nightfall Dark Architect"] = "Nightfall Dark Architect"
 --[[Translation missing --]]
-L["Nightfall Darkcaster"] = ""
+L["Nightfall Darkcaster"] = "Nightfall Darkcaster"
 --[[Translation missing --]]
-L["Nightfall Ritualist"] = ""
+L["Nightfall Ritualist"] = "Nightfall Ritualist"
 --[[Translation missing --]]
-L["Nightfall Shadowalker"] = ""
+L["Nightfall Shadowalker"] = "Nightfall Shadowalker"
 --[[Translation missing --]]
-L["Nightfall Shadowmage"] = ""
+L["Nightfall Shadowmage"] = "Nightfall Shadowmage"
 --[[Translation missing --]]
-L["Nightfall Tactician"] = ""
+L["Nightfall Tactician"] = "Nightfall Tactician"
 L["Nightmare Dweller"] = "Habitante de la Pesadilla"
 L["Nitrogg Thundertower"] = "Nitrogg Torre del Trueno"
 --[[Translation missing --]]
@@ -1663,7 +1689,7 @@ L["Novos the Summoner"] = "Novos el Invocador"
 L["NPCs"] = "PNJs"
 L["Nullmagic Hornswog"] = "Cornisapo anulamagia"
 --[[Translation missing --]]
-L["Nx"] = ""
+L["Nx"] = "Nx"
 L["Oakheart"] = "Corazón de Roble"
 L["Oasis Security"] = "Seguridad del Oasis"
 L["Odyn"] = "Odyn"
@@ -1684,7 +1710,7 @@ L["Opera Hall Balcony"] = "Balcón de la Sala de la Ópera"
 L["Opera Hall: Wikket"] = "Opera Hall: Wikket"
 L["Oppressive Banner"] = "Estandarte opresivo"
 --[[Translation missing --]]
-L["Orator Krixvizk"] = ""
+L["Orator Krixvizk"] = "Orator Krixvizk"
 L["Ordnance Specialist"] = "Especialista de artillería"
 L["Ore Elemental"] = "Elemental de mineral"
 L["Ormorok the Tree-Shaper"] = "Ormorok el Talador"
@@ -1841,11 +1867,11 @@ L["Rainbow"] = "Arcoíris"
 L["Rampaging Clefthoof"] = "Uñagrieta arrasador"
 L["Rancid Gasbag"] = "Saco de gas rancio"
 --[[Translation missing --]]
-L["Rashanan"] = ""
+L["Rashanan"] = "Rashanan"
 L["Rat"] = "Rata"
 L["Ravenous Dreadbat"] = "Murciélago aterrador voraz"
 --[[Translation missing --]]
-L["Ravenous Scarab"] = ""
+L["Ravenous Scarab"] = "Ravenous Scarab"
 --[[Translation missing --]]
 L["Ravenous Wolf"] = "Ravenous Wolf"
 L["Ravenshold"] = "Bastión de los Cuervos"
@@ -1872,7 +1898,7 @@ L["Refti Custodian"] = "Custodio refti"
 L["Refti Defender"] = "Defensor refti"
 L["Regal Mistdancer"] = "Bailarín de la niebla regio"
 --[[Translation missing --]]
-L["Reinforced Drone"] = ""
+L["Reinforced Drone"] = "Reinforced Drone"
 L["Rek the Hardened"] = "Rek la Endurecida"
 L["Relentless"] = "Incansable"
 L["Remnant of Fury"] = "Remanente de furia"
@@ -1881,9 +1907,9 @@ L["Rename Preset"] = "Renombrar Ruta"
 L["Rename the preset"] = "Renombrar la ruta"
 L["Repentance"] = "Arrepentimiento"
 --[[Translation missing --]]
-L["Reposing Knight"] = ""
+L["Reposing Knight"] = "Reposing Knight"
 --[[Translation missing --]]
-L["Repurposed Loaderbot"] = ""
+L["Repurposed Loaderbot"] = "Repurposed Loaderbot"
 L["Research Scribe"] = "Escriba de investigación"
 L["Reset"] = "Reiniciar"
 L["Reset %s?"] = "Reiniciar %s?"
@@ -1891,7 +1917,7 @@ L["Reset Preset"] = "Reiniciar Ruta"
 L["Reset the preset to the default state"] = "Reiniciar la ruta al estado predeterminado"
 L["Restless Tides"] = "Mareas inquietas"
 --[[Translation missing --]]
-L["Retired Lord Vul'azak"] = ""
+L["Retired Lord Vul'azak"] = "Retired Lord Vul'azak"
 L["Return to Karazhan Lower"] = "Regreso a Karazhan inferior"
 L["Return to Karazhan Upper"] = "Regreso a Karazhan superior"
 L["Return to the live preset"] = "Volver a ruta en directo"
@@ -1931,7 +1957,7 @@ L["Ritual of Bones"] = "Ritual of Bones"
 L["Ritualist Lesha"] = "Ritualista Lesha"
 L["Rixxa Fluxflame"] = "Rixxa Flujollama"
 --[[Translation missing --]]
-L["Rock Smasher"] = ""
+L["Rock Smasher"] = "Rock Smasher"
 L["Rockback Gnasher"] = "Rechinador Rocalomo"
 L["Rockback Snapper"] = "Sacudidor Rocalomo"
 L["Rockbound Pelter"] = "Escoriador ligarroca"
@@ -1957,11 +1983,11 @@ L["Rotting Maggot"] = "Cresa en podredumbre"
 L["Rotting Slimeclaw"] = "Garrababosa putrefacta"
 L["Rowdy Reveler"] = "Juerguista pendenciera"
 --[[Translation missing --]]
-L["Royal Acolyte"] = ""
+L["Royal Acolyte"] = "Royal Acolyte"
 --[[Translation missing --]]
-L["Royal Swarmguard"] = ""
+L["Royal Swarmguard"] = "Royal Swarmguard"
 --[[Translation missing --]]
-L["Royal Venomshell"] = ""
+L["Royal Venomshell"] = "Royal Venomshell"
 --[[Translation missing --]]
 L["Ruby Overlook"] = "Ruby Overlook"
 --[[Translation missing --]]
@@ -2016,7 +2042,7 @@ L["Scourge Brute"] = "Tosco de la Plaga"
 L["Scourge Hulk"] = "Mole de la Plaga"
 L["Scourge Reanimator"] = "Reanimador de la Plaga"
 --[[Translation missing --]]
-L["Scrap Block"] = ""
+L["Scrap Block"] = "Scrap Block"
 L["Scrapbone Bully"] = "Abusón oseomorralla"
 L["Scrapbone Grinder"] = "Moledor oseomorralla"
 L["Scrapbone Grunter"] = "Gruñón oseomorralla"
@@ -2043,7 +2069,7 @@ L["Seneschal M'bara"] = "Senescal M'bara"
 L["Sentient Oil"] = "Aceite sensible"
 L["Sentinel Talondras"] = "Centinela Talondras"
 --[[Translation missing --]]
-L["Sentry Stagshell"] = ""
+L["Sentry Stagshell"] = "Sentry Stagshell"
 L["Separation Assistant"] = "Asistente de separación"
 L["Sergeant Bainbridge"] = "Sargento Bainbridge"
 L["Serpentrix"] = "Serpentrix"
@@ -2130,7 +2156,7 @@ L["Sister Solena"] = "Hermana Solena"
 L["Sjonnir The Ironshaper"] = "Sjonnir el Afilador"
 L["Skadi the Ruthless"] = "Skadi el Despiadado"
 --[[Translation missing --]]
-L["Skarmorak"] = ""
+L["Skarmorak"] = "Skarmorak"
 L["Skarvald the Constructor"] = "Skarvald el Constructor"
 L["Skeletal Hound"] = "Can esquelético"
 L["Skeletal Hunting Raptor"] = "Raptor de caza esquelético"
@@ -2184,11 +2210,11 @@ L["Soul-Torn Champion"] = "Campeón infausto"
 L["Spare Parts"] = "Piezas de repuesto"
 L["Spark Channeler"] = "Canalizador de chispas"
 --[[Translation missing --]]
-L["Speaker Brokk"] = ""
+L["Speaker Brokk"] = "Speaker Brokk"
 --[[Translation missing --]]
-L["Speaker Dorlita"] = ""
+L["Speaker Dorlita"] = "Speaker Dorlita"
 --[[Translation missing --]]
-L["Speaker Shadowcrown"] = ""
+L["Speaker Shadowcrown"] = "Speaker Shadowcrown"
 L["Spectral Apprentice"] = "Aprendiz espectral"
 L["Spectral Attendant"] = "Auxiliar espectral"
 L["Spectral Beastmaster"] = "Maestra de bestias espectral"
@@ -2230,7 +2256,7 @@ L["Squallbringer Cyraz"] = "Portapesares Cyraz"
 L["Stalagg"] = "Stalagg"
 L["Start or join the current |cFF00FF00Live Session|r"] = "Empieza o únete a la |cFF00FF00Sesión en Directo|r actual"
 --[[Translation missing --]]
-L["Starved Crawler"] = ""
+L["Starved Crawler"] = "Starved Crawler"
 L["Static-charged Dervish"] = "Místico cargado con electricidad estática"
 L["Stealthling"] = "Sigilita"
 L["Steelbreaker"] = "Rompeacero"
@@ -2291,17 +2317,17 @@ L["Subterranean Proto-Dragon"] = "Subterranean Proto-Dragon"
 L["Sunken Denizen"] = "Morador hundido"
 L["Support Officer"] = "Oficial de apoyo"
 --[[Translation missing --]]
-L["Sureki Conscript"] = ""
+L["Sureki Conscript"] = "Sureki Conscript"
 --[[Translation missing --]]
-L["Sureki Militant"] = ""
+L["Sureki Militant"] = "Sureki Militant"
 --[[Translation missing --]]
-L["Sureki Silkbinder"] = ""
+L["Sureki Silkbinder"] = "Sureki Silkbinder"
 --[[Translation missing --]]
-L["Sureki Unnaturaler"] = ""
+L["Sureki Unnaturaler"] = "Sureki Unnaturaler"
 --[[Translation missing --]]
-L["Sureki Venomblade"] = ""
+L["Sureki Venomblade"] = "Sureki Venomblade"
 --[[Translation missing --]]
-L["Sureki Webmage"] = ""
+L["Sureki Webmage"] = "Sureki Webmage"
 L["Surgeon Stitchflesh"] = "Cirujano Cosecarne"
 L["Surgical Assistant"] = "Auxiliar quirúrgico"
 L["Svala Sorrowgrave"] = "Svala Tumbapena"
@@ -2380,7 +2406,7 @@ L["The Brood Pit"] = "The Brood Pit"
 L["The Burning Cauldron"] = "The Burning Cauldron"
 L["The Cellar"] = "Bodega"
 --[[Translation missing --]]
-L["The Coaglamation"] = ""
+L["The Coaglamation"] = "The Coaglamation"
 --[[Translation missing --]]
 L["The Construct Quarter"] = "The Construct Quarter"
 L["The Crybaby Hozen"] = "El Hozen Llorica"
@@ -2534,6 +2560,12 @@ L["T'lonja"] = "T'lonja"
 L["To share a different preset while the live session is active simply navigate to the preferred preset and click the new 'Set to Live' Button next to the preset-dropdown"] = "Para compartir una ruta diferente mientras la Sesión en vivo está activa, simplemente navegé a la ruta preferida y haga click en el nuevo botón 'Establecer en Directo' junto al menú desplegable de rutas"
 L["tocNotes"] = "Herramienta para planificar y optimizar las rutas de mazmorras de Piedras Angulares"
 --[[Translation missing --]]
+L["togc"] = "Trial of the Grand Crusader"
+--[[Translation missing --]]
+L["togcFloor1"] = "The Argent Coliseum"
+--[[Translation missing --]]
+L["togcFloor2"] = "The Icy Depths"
+--[[Translation missing --]]
 L["Toggle MDT"] = "Toggle MDT"
 L["Toggle Window"] = "Activar Ventana"
 L["Toiling Groundskeeper"] = "Guardés esforzado"
@@ -2557,7 +2589,7 @@ L["Tribunal of the Ages"] = "Tribunal de las Eras"
 L["Trickclaw Mystic"] = "Mística zarpatruco"
 L["Tricktotem"] = "Trucotótem"
 --[[Translation missing --]]
-L["Trilling Attendant"] = ""
+L["Trilling Attendant"] = "Trilling Attendant"
 L["Trixie Tazer"] = "Trixie Descarga"
 L["Trollgore"] = "Cuernotrol"
 L["Trothak"] = "Trothak"
@@ -2567,22 +2599,22 @@ L["Turbulent Squall"] = "Borrasca turbulenta"
 --[[Translation missing --]]
 L["Turn Evil"] = "Turn Evil"
 --[[Translation missing --]]
-L["Turned Speaker"] = ""
+L["Turned Speaker"] = "Turned Speaker"
 L["Twilight Adherent"] = "Partidario Crepuscular"
 L["Twilight Apostle"] = "Apóstol Crepuscular"
 --[[Translation missing --]]
-L["Twilight Beguiler"] = ""
+L["Twilight Beguiler"] = "Twilight Beguiler"
 --[[Translation missing --]]
-L["Twilight Brute"] = ""
+L["Twilight Brute"] = "Twilight Brute"
 L["Twilight Darkcaster"] = "Taumaturgo oscuro Crepuscular"
 --[[Translation missing --]]
 L["Twilight Decapitator"] = ""
 --[[Translation missing --]]
-L["Twilight Destroyer"] = ""
+L["Twilight Destroyer"] = "Twilight Destroyer"
 --[[Translation missing --]]
-L["Twilight Earthcaller"] = ""
+L["Twilight Earthcaller"] = "Twilight Earthcaller"
 --[[Translation missing --]]
-L["Twilight Enforcer"] = ""
+L["Twilight Enforcer"] = "Twilight Enforcer"
 --[[Translation missing --]]
 L["Twilight Flamerender"] = "Twilight Flamerender"
 L["Twilight Frost Mage"] = "Mago de escarcha Crepuscular"
@@ -2590,14 +2622,14 @@ L["Twilight Grove"] = "Arboleda del Crepúsculo"
 L["Twilight Guardian"] = "Guardián Crepuscular"
 L["Twilight Initiate"] = "Iniciado Crepuscular"
 --[[Translation missing --]]
-L["Twilight Lavabender"] = ""
+L["Twilight Lavabender"] = "Twilight Lavabender"
 --[[Translation missing --]]
-L["Twilight Overseer"] = ""
+L["Twilight Overseer"] = "Twilight Overseer"
 L["Twilight Pyromancer"] = "Piromántico Crepuscular"
 L["Twilight Shadowblade"] = "Hoja de las Sombras Crepuscular"
 L["Twilight Slayer"] = "Destripador Crepuscular"
 --[[Translation missing --]]
-L["Twilight Warlock"] = ""
+L["Twilight Warlock"] = "Twilight Warlock"
 L["Twilight Worshipper"] = "Venerador Crepuscular"
 L["Twisted Abomination"] = "Abominación retorcida"
 L["Tyr, the Infinite Keeper"] = "Tyr, el Guardián Infinito"
@@ -2608,6 +2640,8 @@ L["Tyr's Vanguard"] = "Vanguardia de Tyr"
 L["Ukhel Beastcaller"] = "Clamabestias Ukhel"
 L["Ukhel Corruptor"] = "Corruptor Ukhel"
 L["Ukhel Deathspeaker"] = "Portavoz de la muerte Ukhel"
+--[[Translation missing --]]
+L["Ukhel Willcrusher"] = "Ukhel Willcrusher"
 L["Ularogg Cragshaper"] = "Ularogg Formarriscos"
 --[[Translation missing --]]
 L["Uldaman: Legacy of Tyr"] = "Uldaman: Legacy of Tyr"
@@ -2649,7 +2683,7 @@ L["Unstable Curator"] = "Conservador inestable"
 L["Unstable Larva"] = "Larva inestable"
 L["Unstable Squall"] = "Borrasca inestable"
 --[[Translation missing --]]
-L["Unstable Test Subject"] = ""
+L["Unstable Test Subject"] = "Unstable Test Subject"
 L["Unyielding Constrictor"] = "Constrictor implacable"
 L["Unyielding Contender"] = "Contendiente implacable"
 --[[Translation missing --]]
@@ -2686,7 +2720,7 @@ L["Valarjar Shieldmaiden"] = "Doncella escudera Valarjar"
 L["Valarjar Thundercaller"] = "Clamatruenos Valarjar"
 L["Valarjar Trapper"] = "Trampero Valarjar"
 --[[Translation missing --]]
-L["Valiona"] = ""
+L["Valiona"] = "Valiona"
 L["Valow, Timesworn Keeper"] = "Valow, vigilante vetusto"
 L["Varos Cloudstrider"] = "Varos Zancanubes"
 L["Vault Guard"] = "Guardia de cámara"
@@ -2699,7 +2733,7 @@ L["Venomous Ophidian"] = "Ofidio venenoso"
 L["Venomous Sniper"] = "Francotirador venenoso"
 L["Venomous Sniper Captain"] = "Capitán francotirador venenoso"
 --[[Translation missing --]]
-L["Vent Stalker"] = ""
+L["Vent Stalker"] = "Vent Stalker"
 L["Ventunax"] = "Ventunax"
 L["Venture Co. Alchemist"] = "Alquimista de Ventura y Cía."
 L["Venture Co. Earthshaper"] = "Modelador de tierra de Ventura y Cía."
@@ -2731,20 +2765,20 @@ L["Vileshard Hulk"] = "Mole Pizcavil"
 L["Vilethorn Blossom"] = "Flor Espinavil"
 L["Viletongue Belcher"] = "Eructador Lenguavil"
 --[[Translation missing --]]
-L["Viqgoth"] = ""
+L["Viqgoth"] = "Viqgoth"
 L["Viq'Goth"] = "Viq'Goth"
 L["Virtuous Lady"] = "Dama virtuosa"
 L["Virulax Blightweaver"] = "Hilaañublos virulax"
 L["Viz'aduum the Watcher"] = "Viz'aduum el Observador"
 --[[Translation missing --]]
-L["Void Bound Despoiler"] = ""
+L["Void Bound Despoiler"] = "Void Bound Despoiler"
 --[[Translation missing --]]
-L["Void Bound Howler"] = ""
+L["Void Bound Howler"] = "Void Bound Howler"
 L["Void Discharge"] = "Descarga de Vacío"
 L["Void Flayer"] = "Despellejador del Vacío"
 L["Void Spawn"] = "Engendro del Vacío"
 --[[Translation missing --]]
-L["Void Touched Elemental"] = ""
+L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "Emisaria tocada por el Vacío"
 L["Voidweaver Mal'thir"] = "Tejevacío mal'thir"
 L["Volatile Memory"] = "Recuerdo volátil"
@@ -2757,7 +2791,7 @@ L["Vol'zith the Whisperer"] = "Vol'zith la Susurradora"
 --[[Translation missing --]]
 L["VortexPinnacle"] = "Vortex Pinnacle"
 --[[Translation missing --]]
-L["Vx"] = ""
+L["Vx"] = "Vx"
 L["Vy Relic"] = "Reliquia Vy"
 --[[Translation missing --]]
 L["Walk of the Makers"] = "Walk of the Makers"
@@ -2783,7 +2817,7 @@ L["Weald Shimmermoth"] = "Polilla brillante de foresta"
 L["Weaponized Crawler"] = "Reptador armado"
 L["Weapons Tester"] = "Probador de armas"
 --[[Translation missing --]]
-L["Web Marauder"] = ""
+L["Web Marauder"] = "Web Marauder"
 L["Welding Bot"] = "Sueldabot"
 L["Wholesome Hostess"] = "Anfitriona saludable"
 L["Wicked Oppressor"] = "Opresora perversa"
@@ -2792,7 +2826,7 @@ L["Wild Vortex"] = "Vórtice salvaje"
 L["Wilted Oak"] = "Roble marchito"
 L["Windspeaker Heldis"] = "Hablavientos Heldis"
 --[[Translation missing --]]
-L["Winged Carrier"] = ""
+L["Winged Carrier"] = "Winged Carrier"
 L["Winter Revenant"] = "Aparecido invernal"
 L["Winter Rumbler"] = "Estruendor invernal"
 L["Wise Mari"] = "Maro el Sabio"
@@ -2820,7 +2854,7 @@ L["Xav the Unfallen"] = "Xav el Invicto"
 L["XB-488 Disposalbot"] = "Residuobot XG-488"
 L["XD-175 Compactobot"] = "Compactobot XD-175"
 --[[Translation missing --]]
-L["Xephitik"] = ""
+L["Xephitik"] = "Xephitik"
 L["Xevozz"] = "Xevozz"
 L["Xiang"] = "Xiang"
 L["Xira the Underhanded"] = "Xira la Furtiva"

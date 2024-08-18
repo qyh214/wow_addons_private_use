@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="SAVEDINSTANCES" header="SAVEDINSTANCES" category="ADDONS">
+    SavedInstances[1]:GetModule('Tooltip'):ToggleDetached();
+  </Binding>
+</Bindings>

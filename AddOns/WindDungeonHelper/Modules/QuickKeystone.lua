@@ -3,18 +3,16 @@ local QK = W:NewModule("QuickKeystone", "AceHook-3.0", "AceEvent-3.0")
 
 local _G = _G
 
-local IsAddOnLoaded = IsAddOnLoaded
-
+local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 local C_Container_GetContainerItemID = C_Container.GetContainerItemID
 local C_Container_GetContainerNumSlots = C_Container.GetContainerNumSlots
 local C_Container_UseContainerItem = C_Container.UseContainerItem
 local C_Item_IsItemKeystoneByID = C_Item.IsItemKeystoneByID
 
-
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS
 
 local function CheckElvUIWindTools()
-    if IsAddOnLoaded("ElvUI_WindTools") then
+    if C_AddOns_IsAddOnLoaded("ElvUI_WindTools") then
         local E = _G.ElvUI and _G.ElvUI[1]
         if E and E.db.WT.combat.quickKeystone.enable then
             return true
@@ -66,7 +64,7 @@ end
 function QK:ProfileUpdate()
     self.db = W.db.quickKeystone
 
-    if IsAddOnLoaded("Blizzard_ChallengesUI") then
+    if C_AddOns_IsAddOnLoaded("Blizzard_ChallengesUI") then
         self:UpdateHook()
     else
         self:RegisterEvent("ADDON_LOADED", "UpdateHook")

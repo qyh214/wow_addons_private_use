@@ -26,7 +26,6 @@ local shieldCollector = {}
 local L = mod:GetLocale()
 if L then
 	L.obnoxious_fiend = "Obnoxious Fiend" -- NPC ID 49740
-	L.air_phase_trigger = "Yes, run! With every step your heart quickens."
 	L.circles = "Circles"
 end
 

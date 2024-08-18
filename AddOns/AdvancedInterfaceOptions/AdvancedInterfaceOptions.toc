@@ -1,7 +1,7 @@
 ## Interface: 110000, 110002
 ## Title: Advanced Interface Options
 ## Author: Stanzilla, Semlar
-## Version: 2.0.0
+## Version: 2.1.0
 ## IconTexture: 134521
 ## Notes: Restores access to removed interface options in Legion
 ## X-Category: Interface Enhancements
@@ -20,6 +20,7 @@ utils.lua
 cvars.lua
 
 gui\GeneralConfigPanel.lua
+gui\CameraConfigPanel.lua
 gui\ChatConfigPanel.lua
 gui\CombatConfigPanel.lua
 gui\FloatingCombatTextConfigPanel.lua

@@ -32,7 +32,7 @@ local empowerLine = 9
 local L = mod:GetLocale()
 if L then
 	L.discharge = "Discharge"
-	L.stage3_yell_trigger = "I have tried to be an accommodating host"
+	L.stage3_yell_trigger = "KILL YOU ALL" -- I have tried to be an accommodating host, but you simply will not die! Time to throw all pretense aside and just... KILL YOU ALL!
 	L.too_close = "Dragons are too close"
 	L["77939_icon"] = "spell_nature_lightning"
 end

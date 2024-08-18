@@ -25,7 +25,6 @@ local bit_band = bit.band
 local tremove = tremove
 local strsplit = strsplit
 local type = type
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned or ExRT.NULLfunc
 local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
 
 local VMRT = nil
