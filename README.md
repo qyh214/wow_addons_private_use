@@ -14,6 +14,22 @@ LEG 时期全部为单体插件（支持直接单独插件使用，部分模块�
 
 插件包本身虽然可能提供八国语言，但目前只在简体中文客户端下使用，因此无法确保繁体中文等语言是否仍然可用。
 
+字体：鸿蒙（粗体用于除战斗信息以外的所有区域，黑体用于战斗数值）
+
+显示器：2k
+
+特别适配：奶萨（其他专精/职业可能需要自己使用/ndui 后，进行调整）
+
+版本：11.0 地心之战
+
+可用于国服/亚服简体中文客户端
+
+ndui 控制台命令： /ndui
+
+wa 字符串包含了鼠标指示、萨满监控、属性显示等，可以/wa 后选择相关组删除/调整位置
+
+所有插件，除了 WA 和 multshot 使用了社区更新维护版本，其他均可以通过 curse（推荐）等渠道进行单体更新。
+
 ## 使用方法
 
 将 addons 文件夹放置在`游戏根目录/_retail_/interface/`下，例如`D:\World of Warcraft\_retail_\interface\addons`，进入后便是插件列表，避免出现`D:\World of Warcraft\_retail_\interface\addons\addons`等情况。
@@ -56,9 +72,19 @@ LEG 时期全部为单体插件（支持直接单独插件使用，部分模块�
 - NGA：http://bbs.ngacn.cc/read.php?tid=7534350
 - github：https://github.com/Nukme/Multishot/releases
 
+WA 修改版更新地址：
+
+- https://github.com/wind-addons/WeakAurasPatched
+
+推荐使用高清图标：
+
+- https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition
+
 其他单体插件可用 curse 客户端管理，curse 客户端下载地址：https://www.curseforge.com/download/app
 
 wa 字符串更新客户端：https://github.com/WeakAuras/WeakAuras-Companion/releases
+
+使用 NDUI 配置的界面风格
 
 第三方工具：
 
@@ -90,4 +116,5 @@ wa 自用字符串、合集整理可访问：https://wago.io/p/shihuang214
 
 全部插件和配置文件的备份：
 
-- 黑盒工坊分享码：122950eO2d8Llzuk
+- 黑盒工坊分享码：122950eO2d8Llzuk 或者搜索秦始皇二一四
+- 新手盒子分享码：265783 或者搜索秦始皇二一四
