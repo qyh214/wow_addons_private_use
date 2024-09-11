@@ -12,6 +12,9 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [207471] = {
         name = "Witwe Arak'nai",
     },
+    [208782] = {
+        name = "Exekutor Nizrek",
+    },
     [211652] = {
         name = "Grünsprecher Na'layro",
     },
@@ -38,6 +41,12 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [213145] = {
         name = "Auralia Stahlstoß",
+    },
+    [213624] = {
+        name = "Magni Bronzebart",
+    },
+    [213625] = {
+        name = "Lady Jaina Prachtmeer",
     },
     [213840] = {
         name = "Gastwirt Brax",

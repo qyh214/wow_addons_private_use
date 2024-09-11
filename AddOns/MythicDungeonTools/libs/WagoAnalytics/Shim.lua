@@ -1,5 +1,7 @@
 local WagoAnalyticsShim = LibStub:NewLibrary("WagoAnalytics", 2)
 
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+
 if not WagoAnalyticsShim then
 	return
 end

@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v10.2.10
+## Version: v11.0.0
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid
@@ -36,6 +36,7 @@
 ## X-BigWigs-ExtraMenu: -424
 ## X-BigWigs-LoadOn-InstanceId: 996, 1008, 1009, 1098, 1136
 ## X-BigWigs-LoadOn-WorldBoss: -376, 62346, -379, 60491, -504, 69099, -507, 69161, -554, 72057
+## X-BigWigs-Minimum: 350
 
 modules.xml
 

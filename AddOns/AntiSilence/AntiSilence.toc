@@ -1,0 +1,13 @@
+## Interface: 30403
+## Title: |cffFFF000[谷歌]|r AntiSilence 聊天反和谐
+## Notes: 为禁止发送的敏感词自动添加干扰码
+## DefaultState: Enabled
+## Author: 他们都叫我谷歌
+## Version: v1.0.7
+
+## X-Category: Chat
+## X-License: GPL v2
+## X-Localizations: zhCN
+## X-Curse-Project-ID: 1060310
+
+AntiSilence.lua

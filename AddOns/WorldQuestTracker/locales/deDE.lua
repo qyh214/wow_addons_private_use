@@ -328,11 +328,13 @@ L["S_OPTIONS_ZONE_SHOWONLYTRACKED"] = "Nur verfolgte"
 --[[Translation missing --]]
 L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST"] = "Auto Accept Abandon Quests"
 --[[Translation missing --]]
-L["S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC"] = "Don't show the confirmation dialog when abandoning a quest."
---[[Translation missing --]]
 L["S_OPTTIONS_DRAGONRACE_MINIMAP"] = "Show Track Minimap"
 --[[Translation missing --]]
 L["S_OPTTIONS_DRAGONRACE_TRACKCOLOR"] = "Track Color"
+--[[Translation missing --]]
+L["S_OPTTIONS_NUMERATE_QUEST"] = "Enumerate Quests"
+--[[Translation missing --]]
+L["S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP"] = "Quest Scale by World Map"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_DRAGONRACE_SETTINGS"] = "Dragon Race"
 --[[Translation missing --]]
@@ -383,6 +385,14 @@ L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "Minuten vergangen"
 L["S_SCALE"] = "Scale"
 --[[Translation missing --]]
 L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
+--[[Translation missing --]]
+L["S_SPEEDRUN"] = "Speed Run"
+--[[Translation missing --]]
+L["S_SPEEDRUN_AUTO_ACCEPT"] = "Auto Accept Quests"
+--[[Translation missing --]]
+L["S_SPEEDRUN_AUTO_COMPLETE"] = "Auto Complete Quests"
+--[[Translation missing --]]
+L["S_SPEEDRUN_CANCEL_CINEMATIC"] = "Auto Skip Cinematics"
 L["S_SUMMARYPANEL_EXPIRED"] = "ABGELAUFEN"
 L["S_SUMMARYPANEL_LAST15DAYS"] = "Letzten 15 Tage"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Accountweite Statistik"

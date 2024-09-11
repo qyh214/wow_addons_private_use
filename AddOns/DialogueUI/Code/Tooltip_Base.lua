@@ -604,7 +604,7 @@ function TooltipBaseMixin:AddRightLine(text, r, g, b, wrapText, offsetY, sizeInd
     --Right line must come in pairs with a LeftLine
     --This will NOT start a new line
 
-    if not text then return end
+    if (not text) or (text == "") then return end
     local alignIndex = 3;
     local fs = self:AddText(text, r, g, b, wrapText, offsetY, sizeIndex, alignIndex);
     local n = self.numLines;
@@ -666,6 +666,18 @@ function TooltipBaseMixin:SetMaxTextWidth(maxTextWidth)
     self.maxTextWidth = maxTextWidth or FONTSTRING_MAX_WIDTH;
 end
 
+function TooltipBaseMixin:GetLeftLineText(row)
+    if self.grid[row] and self.grid[row][1] then
+        return self.grid[row][1]:GetText()
+    end
+end
+
+function TooltipBaseMixin:OverwriteLeftLineText(row, text)
+    if self.grid[row] and self.grid[row][1] then
+        return self.grid[row][1]:SetText(text)
+    end
+end
+
 
 local Tooltips = {};
 
@@ -696,6 +708,8 @@ addon.CreateTooltipBase = CreateTooltipBase;
 
 
 do
+    local CallbackRegistry = addon.CallbackRegistry;
+
     local function PostInputDeviceChanged(dbValue)
         for _, tooltip in ipairs(Tooltips) do
             if tooltip.HotkeyFrame then
@@ -703,7 +717,7 @@ do
             end
         end
     end
-    addon.CallbackRegistry:Register("PostInputDeviceChanged", PostInputDeviceChanged);
+    CallbackRegistry:Register("PostInputDeviceChanged", PostInputDeviceChanged);
 
     local function PostFontSizeChanged()
         PostInputDeviceChanged();
@@ -711,6 +725,9 @@ do
         local _;
         _, FONT_HEIGHT_MEDIUM = _G[FONT_MEDIUM]:GetFont();
         FONT_HEIGHT_MEDIUM = Round(FONT_HEIGHT_MEDIUM);
+
+        local widthMultiplier = max(1, FONT_HEIGHT_MEDIUM / 10);
+        FONTSTRING_MAX_WIDTH = widthMultiplier * (TOOLTIP_MAX_WIDTH - 2*TOOLTIP_PADDING);
     end
-    addon.CallbackRegistry:Register("PostFontSizeChanged", PostFontSizeChanged);
+    CallbackRegistry:Register("PostFontSizeChanged", PostFontSizeChanged);
 end

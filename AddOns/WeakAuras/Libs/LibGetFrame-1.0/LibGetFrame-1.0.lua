@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 61
+local MINOR_VERSION = 62
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -301,17 +301,28 @@ end
 local function recurseGetName(frame)
   local name = frame.GetName and frame:GetName() or nil
   if name then
-     return name
+    return name
   end
   local parent = frame.GetParent and frame:GetParent()
   if parent then
-     for key, child in pairs(parent) do
+    local parentKey = frame.GetParentKey and frame:GetParentKey()
+    if not parentKey then
+      for key, child in pairs(parent) do
         if child == frame then
-           return (recurseGetName(parent) or "") .. "." .. key
+          parentKey = key
+          break
         end
-     end
+      end
+    end
+    if parentKey then
+      return (recurseGetName(parent) or "") .. "." .. parentKey
+    end
   end
 end
+
+local notAUnitFrameTypeAttribute = {
+  cancelaura = true
+}
 
 local function ScanFrames(depth, frame, ...)
   coroutine.yield()
@@ -324,12 +335,15 @@ local function ScanFrames(depth, frame, ...)
       ScanFrames(depth + 1, frame:GetChildren())
     end
     if frameType == "Button" then
-      local unit = SecureButton_GetUnit(frame)
-      if unit and frame:IsVisible() then
-        local name = recurseGetName(frame)
-        if name then
-          FrameToFrameName:Add(frame, name)
-          FrameToUnit:Add(frame, unit)
+      local typeAttribute = frame:GetAttribute("type")
+      if not notAUnitFrameTypeAttribute[typeAttribute] then
+        local unit = SecureButton_GetUnit(frame)
+        if unit and frame:IsVisible() then
+          local name = recurseGetName(frame)
+          if name then
+            FrameToFrameName:Add(frame, name)
+            FrameToUnit:Add(frame, unit)
+          end
         end
       end
     end
@@ -455,7 +469,7 @@ local function GetUnitFrames(target, ignoredFrames)
 end
 
 local function ElvuiWorkaround(frame)
-  if C_AddOns.IsAddOnLoaded("ElvUI") and frame and frame:GetName():find("^ElvUF_") and frame.Health then
+  if C_AddOns.IsAddOnLoaded("ElvUI") and frame and frame:GetName() and frame:GetName():find("^ElvUF_") and frame.Health then
     return frame.Health
   else
     return frame

@@ -26,6 +26,7 @@ local sonsTracker = {}
 local sonsMarker = 8
 local lineCount = 3
 local castCollector = {}
+local firstSubmerge = true
 local UpdateInfoBoxList
 
 --------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ if L then
 	L.warmup_icon = "Achievement_boss_ragnaros"
 	L.adds_icon = "spell_fire_elemental_totem"
 
+	L.submerge_trigger = "COME FORTH,"
 	L.son = "Son of Flame" -- NPC ID 12143
 end
 
@@ -91,6 +93,8 @@ end
 function mod:OnBossEnable()
 	self:RegisterMessage("BigWigs_BossComm")
 
+	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+	self:Log("SPELL_CAST_SUCCESS", "RagnarosSubmergeVisual", 20567)
 	self:Log("SPELL_CAST_SUCCESS", "WrathOfRagnaros", 20566)
 	self:Log("SPELL_CAST_START", "SummonRagnarosStart", 19774)
 	self:Log("SPELL_CAST_SUCCESS", "SummonRagnaros", 19774)
@@ -112,6 +116,7 @@ function mod:OnEngage()
 	sonsMarker = 8
 	lineCount = 3
 	castCollector = {}
+	firstSubmerge = true
 	self:SetStage(1)
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 	self:CDBar(20566, 26, CL.knockback) -- Wrath of Ragnaros
@@ -126,6 +131,16 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:CHAT_MSG_MONSTER_YELL(_, msg)
+	if msg:find(L.submerge_trigger, nil, true) then
+		self:Sync("s2")
+	end
+end
+
+function mod:RagnarosSubmergeVisual()
+	self:Sync("s2")
+end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, castGUID, spellId)
 	if spellId == 20567 and not castCollector[castGUID] then -- Ragnaros Submerge Visual
@@ -208,7 +223,8 @@ function mod:Submerge()
 	self:SetStage(2)
 	timer = self:ScheduleTimer("Emerge", 90)
 	self:StopBar(CL.knockback)
-	if self:GetSeason() == 2 then
+	if self:GetSeason() == 2 and firstSubmerge then
+		firstSubmerge = false
 		self:Message("stages", "cyan", CL.percent:format(50, CL.stage:format(2)), L.warmup_icon)
 	else
 		self:Message("stages", "cyan", CL.stage:format(2), L.warmup_icon)

@@ -491,8 +491,6 @@ E.spellcast_cdreset = {
 }
 
 E.spellcast_cdr = E.BLANK
-E.spellcast_cdr_powerspender = E.BLANK
-E.sync_cdr_by_powerconsumed = E.BLANK
 
 
 
@@ -538,12 +536,6 @@ E.spell_auraapplied_processspell = {
 E.spell_dispel_cdstart = E.BLANK
 
 E.selfLimitedMinMaxReducer = E.BLANK
-E.spell_damage_cdr_totem = E.BLANK
-E.spell_damage_cdr_pet = E.BLANK
-E.spell_damage_cdr = E.BLANK
-E.spell_energize_cdr = E.BLANK
-E.spell_interrupt_cdr = E.BLANK
-E.cdrr_heartstopaura_blackList = E.BLANK
 E.runeforge_bonus_to_descid = E.BLANK
 E.runeforge_specid = E.BLANK
 E.runeforge_desc_to_powerid = E.BLANK
@@ -888,6 +880,6 @@ E.item_unity = E.BLANK
 
 E.sync_cooldowns = E.BLANK
 E.sync_in_raid = E.BLANK
-E.sync_periodic = E.BLANK
+E.sync_reset = E.BLANK
 
 E:ProcessSpellDB()

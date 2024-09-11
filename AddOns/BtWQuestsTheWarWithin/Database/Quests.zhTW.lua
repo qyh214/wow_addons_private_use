@@ -168,6 +168,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78472] = {
         name = "暗中光源 - 啟用",
     },
+    [78529] = {
+        name = "暴力衝擊",
+    },
     [78530] = {
         name = "殺死破壞者",
     },
@@ -405,6 +408,33 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78706] = {
         name = "至高代言者的秘密",
     },
+    [78713] = {
+        name = "地心之戰",
+    },
+    [78714] = {
+        name = "糟糕的歡迎典禮",
+    },
+    [78715] = {
+        name = "艾澤拉斯之聲",
+    },
+    [78716] = {
+        name = "慘痛的教訓",
+    },
+    [78717] = {
+        name = "神秘的警訊",
+    },
+    [78718] = {
+        name = "強化結界",
+    },
+    [78719] = {
+        name = "達拉然市民",
+    },
+    [78721] = {
+        name = "認識隊員",
+    },
+    [78722] = {
+        name = "前往卡茲阿爾加！",
+    },
     [78738] = {
         name = "缺席的代言者",
     },
@@ -534,6 +564,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78972] = {
         name = "收割之災",
     },
+    [78974] = {
+        name = "照顧甲蟲",
+    },
     [78996] = {
         name = "武器和戰士",
     },
@@ -575,6 +608,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79089] = {
         name = "聖化清理",
+    },
+    [79105] = {
+        name = "缺口",
+    },
+    [79106] = {
+        name = "斷絕",
     },
     [79107] = {
         name = "風暴過後",
@@ -1116,11 +1155,20 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79716] = {
         name = "我們腳下的歷史",
     },
+    [79717] = {
+        name = "潛入方式",
+    },
+    [79718] = {
+        name = "絲軸街頭異常",
+    },
     [79721] = {
         name = "要爆炸了",
     },
     [79722] = {
         name = "水溝難事",
+    },
+    [79723] = {
+        name = "物歸原主",
     },
     [79724] = {
         name = "泰坦遠征隊！",
@@ -1136,6 +1184,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79728] = {
         name = "大概沒事吧",
+    },
+    [79729] = {
+        name = "自我教育",
+    },
+    [79730] = {
+        name = "緊追不捨",
     },
     [79944] = {
         name = "狂怒裂隙",
@@ -1251,6 +1305,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80218] = {
         name = "抱著壞心「絲」",
     },
+    [80295] = {
+        name = "岩石、水和元素食料",
+    },
     [80312] = {
         name = "奄奄一息的請求",
     },
@@ -1266,8 +1323,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80316] = {
         name = "回到大海",
     },
+    [80321] = {
+        name = "出發",
+    },
     [80334] = {
         name = "破碎尖塔",
+    },
+    [80378] = {
+        name = "黑暗之光",
     },
     [80392] = {
         name = "布讓溫的宮殿的管理員",
@@ -1313,6 +1376,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80457] = {
         name = "服侍女王",
+    },
+    [80500] = {
+        name = "銅鬚一族",
     },
     [80502] = {
         name = "阿茲-卡罕特，別為我哭泣",
@@ -1422,6 +1488,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80689] = {
         name = "照顧歐斯加祖",
     },
+    [81465] = {
+        name = "豐富的神器",
+    },
     [81470] = {
         name = "隔牆有耳：盜竊織物",
     },
@@ -1505,6 +1574,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81510] = {
         name = "把它運走吧！",
+    },
+    [81512] = {
+        name = "道具與薰香",
     },
     [81514] = {
         name = "豐碩探究",
@@ -1611,8 +1683,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81798] = {
         name = "回去找茉艾拉",
     },
+    [81802] = {
+        name = "馭天者競速 - 風暴崗勘察賽道",
+    },
     [81806] = {
         name = "馭天者競速 - 礦石場急彎賽道",
+    },
+    [81819] = {
+        name = "馭天者競速 - 靜石彎道",
     },
     [81822] = {
         name = "馭天者競速 - 米雷達爾曲折賽道",
@@ -1650,6 +1728,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81929] = {
         name = "計畫如下",
     },
+    [81930] = {
+        name = "地心之戰",
+    },
     [81945] = {
         name = "前往阿拉希臨終之地",
     },
@@ -1670,6 +1751,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81965] = {
         name = "入侵干擾",
+    },
+    [81966] = {
+        name = "睡得跟石頭一樣沉",
     },
     [81969] = {
         name = "真正的結束",
@@ -1731,6 +1815,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82197] = {
         name = "預備兵格鬥場",
     },
+    [82206] = {
+        name = "進入暗影",
+    },
     [82212] = {
         name = "虛弱的獅子魚",
     },
@@ -1771,7 +1858,7 @@ BtWQuestsDatabase:UpdateQuestsTable({
         name = "文件？請便！",
     },
     [82237] = {
-        name = "升起瀑布",
+        name = "逆瀑而上",
     },
     [82248] = {
         name = "尋找法林",
@@ -1851,6 +1938,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82355] = {
         name = "特殊任務：燼蜂暴走",
     },
+    [82364] = {
+        name = "記錄不和諧處",
+    },
     [82366] = {
         name = "切勿使用",
     },
@@ -1922,6 +2012,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82536] = {
         name = "滲透行動",
+    },
+    [82580] = {
+        name = "信差任務：回收礦石",
     },
     [82583] = {
         name = "點燃心中烈火",
@@ -2073,6 +2166,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83092] = {
         name = "葬送的岩漿",
     },
+    [83101] = {
+        name = "取得資源",
+    },
     [83108] = {
         name = "每日診斷",
     },
@@ -2181,6 +2277,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83532] = {
         name = "聖落之地釣魚大賽",
     },
+    [83537] = {
+        name = "地熱寶石處理",
+    },
+    [83543] = {
+        name = "卡茲阿爾加的冒險",
+    },
     [83548] = {
         name = "多恩島",
     },
@@ -2199,6 +2301,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83616] = {
         name = "固若金湯",
     },
+    [83627] = {
+        name = "美好的開始",
+    },
     [83628] = {
         name = "放鬆緊繃",
     },
@@ -2211,6 +2316,15 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83639] = {
         name = "開放溝通",
     },
+    [83715] = {
+        name = "取回回收物",
+    },
+    [83718] = {
+        name = "護卵大作戰",
+    },
+    [83719] = {
+        name = "甲殼之語",
+    },
     [83749] = {
         name = "探究：水力發電壩",
     },
@@ -2222,6 +2336,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83761] = {
         name = "探究：深淵堡",
+    },
+    [83766] = {
+        name = "探究者之喚：恐怖地穴",
     },
     [83767] = {
         name = "探究者之喚：陷坑",

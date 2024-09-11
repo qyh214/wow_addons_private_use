@@ -166,8 +166,7 @@ L["Available features: %s"] = "可用的功能: %s"
 L["Avoidance (%)"] = "閃避 (%)"
 L["Avoidance Rating"] = "閃避分數"
 L["Ayamiss the Hunter"] = "『狩獵者』阿亞米斯"
---[[Translation missing --]]
-L["Azuregos"] = "Azuregos"
+L["Azuregos"] = "艾索雷苟斯"
 L["Back and Forth"] = "往返"
 L["Background"] = "背景"
 L["Background Color"] = "背景顏色"
@@ -188,6 +187,7 @@ L["BigWigs Message"] = "BigWigs 訊息"
 L["BigWigs Stage"] = "BigWigs 階段"
 L["BigWigs Timer"] = "BigWigs 計時條"
 L["Black Wing Lair"] = "黑翼之巢"
+L["Bleed"] = "流血"
 L["Blizzard Combat Text"] = "遊戲內建的浮動戰鬥文字"
 L["Blizzard Cooldown Reduction"] = "遊戲內建減少冷卻時間"
 L["Block"] = "格擋"
@@ -616,8 +616,8 @@ L["Hybrid"] = "混合"
 L["Icon"] = "圖示"
 L["Icon Function"] = "圖示功能"
 L["Icon Function (fallback state)"] = "圖示函數 (備用狀態)"
-L["Id"] = "Id"
 L["ID"] = "ID"
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"] = "如果你需要其他協助，請在 GitHub 新增問題，或拜訪我們的 Discord https://discord.gg/xhUHVCgAGy!"
 L["Ignore Dead"] = "忽略死者"
 L["Ignore Disconnected"] = "忽略離線者"
@@ -641,6 +641,8 @@ L["Include Bank"] = "包含銀行"
 L["Include Charges"] = "包含可用次數"
 L["Include Death Runes"] = "包含死亡符文"
 L["Include Pets"] = "包含寵物"
+L["Include Reagent Bank"] = "包含材料銀行"
+L["Include War Band Bank"] = "包含戰隊銀行"
 L["Incoming Heal"] = "即將獲得的治療"
 L["Increase Precision Below"] = "提高精確度，低於"
 L["Increases by one per stage or intermission."] = "每個階段或中場增加一個。"
@@ -650,8 +652,8 @@ L["Instakill"] = "秒殺"
 L["Install the addons BugSack and BugGrabber for detailed error logs."] = "安裝插件 BugSack 和 BugGrabber 以獲取詳細的錯誤紀錄。"
 L["Instance"] = "副本"
 L["Instance Difficulty"] = "副本難度"
-L["Instance Id"] = "副本 ID"
 L["Instance ID"] = "副本 ID"
+L["Instance Id"] = "副本 ID"
 L["Instance Info"] = "副本資訊"
 L["Instance Name"] = "副本名稱"
 L["Instance Size Type"] = "副本大小類型"
@@ -1073,6 +1075,7 @@ L["Right, then Centered Vertical"] = "向右，然後居中垂直"
 L["Right, then Down"] = "先右後下"
 L["Right, then Up"] = "先右後上"
 L["Role"] = "角色"
+L["Rollback snapshot is complete. Thank you for your patience!"] = "還原快照已完成。感謝您的耐心等待!"
 L["Rotate Animation"] = "旋轉動畫"
 L["Rotate Left"] = "向左旋轉"
 L["Rotate Right"] = "向右旋轉"
@@ -1235,14 +1238,17 @@ L["Sun"] = "太陽"
 L["Supports multiple entries, separated by commas"] = "支援輸入多個項目，使用逗號分隔。"
 L[ [=[Supports multiple entries, separated by commas
 ]=] ] = "支援輸入多個項目，使用逗號分隔。"
-L["Supports multiple entries, separated by commas. Escape ',' with \\"] = "支援輸入多個項目，使用逗號分隔。要將逗號當成一般文字請使用跳脫符號 \\"
+L["Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."] = "支援輸入多個項目，使用逗號分隔。用 \\ 跳脫 ','。前面加上 '-' 表示否定。"
+L["Supports multiple entries, separated by commas. Prefix with '-' for negation."] = "支援輸入多個項目，使用逗號分隔。前面加上 '-' 表示否定。"
 L[ [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
 Group Zone IDs must be prefixed with 'g', e.g. 'g277'. 
 Supports Area IDs from https://wago.tools/db2/AreaTable prefixed with 'a'. 
-Supports Instance IDs prefixed with 'i'.]=] ] = [=[支援輸入多個項目，使用逗號分隔。若要包含子區域 ID，請在開頭加上 'c'，例如 'c2022'。
-群組區域 ID 必須使用 'g' 開頭，例如 'g277'。
-支援 https://wago.tools/db2/AreaTable 中以 'a' 開頭的的區域 ID。
-支援 'i' 開頭的副本 ID。]=]
+Supports Instance IDs prefixed with 'i'.
+Entries can be prefixed with '-' to negate.]=] ] = [=[支援輸入多個項目，以逗號分隔。若要包含子區域 ID，請在前面加上 'c'，例如「c2022」。
+群組區域 ID 必須以 'g' 開頭，例如 'g277'。
+支援 https://wago.tools/db2/AreaTable 中以 'a' 開頭的區域 ID。
+支援以 'i' 開頭的副本 ID。
+項目前面可以加上 '-' 來表示否定。]=]
 L["Swing"] = "揮動"
 L["Swing Timer"] = "揮擊計時條"
 L["Swipe"] = "轉圈"
@@ -1334,6 +1340,7 @@ L["Total Unit Count"] = "單位數量總計"
 L["Total Units"] = "單位數量總計"
 L["Totem"] = "圖騰"
 L["Totem #%i"] = "圖騰 #%i"
+L["Totem Icon"] = "圖騰圖示"
 L["Totem Name"] = "圖騰名稱"
 L["Totem Name Pattern Match"] = "圖騰名稱模式符合"
 L["Totem Number"] = "圖騰編號"
@@ -1420,7 +1427,7 @@ Last upgrade: %s
 上次升級是: %s 
 
 |cffff0000在按下此按鈕之前，你應該先備份 WTF 資料夾。|r]=]
-L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras 在登入的過程中遇到錯誤。請將這個問題回報到 https://github.com/WeakAuras/Weakauras2/issues/new"
+L["WeakAuras is creating a rollback snapshot of your auras. This snapshot will allow you to revert to the current state of your auras if something goes wrong. This process may cause your framerate to drop until it is complete."] = "WeakAuras 正在建立提醒效果的還原快照。如果出現問題，此快照將允許您恢復到提醒效果目前的狀態。此過程可能會導致幀速下降，直到完成為止。"
 L["WeakAuras Profiling"] = "WeakAuras 效能分析"
 L["WeakAuras Profiling Report"] = "WeakAuras 分析報告"
 L["WeakAuras Version: %s"] = "WeakAuras 版本: %s"

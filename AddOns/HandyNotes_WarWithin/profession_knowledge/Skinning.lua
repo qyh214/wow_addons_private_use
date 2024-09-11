@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_SKINNING),
     -- active = ns.conditions.Profession(ns.PROF_WW_SKINNING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-skinning",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -67,10 +69,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6503,
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82596,
-    --     loot={224007}, -- Uses for Leftover Husks (How to Take Them Apart)
-    --     note="Buy from {npc::}",
-    --     parent=true, levels=true, translate={[2256]=true},
-    -- },
 }, KNOWLEDGE)

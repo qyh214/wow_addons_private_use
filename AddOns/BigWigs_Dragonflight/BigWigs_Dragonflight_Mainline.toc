@@ -1,0 +1,41 @@
+## Interface: 110005, 110000, 110002
+
+## Title: BigWigs [|cffeda55fDragonflight|r]
+## Title-zhCN: BigWigs [|cffeda55f巨龙时代|r]
+## Title-zhTW: BigWigs [|cffeda55f巨龍崛起|r]
+## Title-deDE: BigWigs [|cffeda55fDragonflight|r]
+## Title-frFR: BigWigs [|cffeda55fDragonflight|r]
+## Title-itIT: BigWigs [|cffeda55fDragonflight|r]
+## Title-koKR: BigWigs [|cffeda55fDragonflight|r]
+## Title-ruRU: BigWigs [|cffeda55fDragonflight|r]
+## Title-ptBR: BigWigs [|cffeda55fDragonflight|r]
+## Title-esES: BigWigs [|cffeda55fDragonflight|r]
+## Title-esMX: BigWigs [|cffeda55fDragonflight|r]
+## Notes: A collection of BigWigs modules from the Dragonflight era.
+## Notes-zhCN: BigWigs 巨龙时代模块。
+## Notes-zhTW: BigWigs 巨龍崛起模組。
+## Notes-deDE: A collection of BigWigs modules from the Dragonflight era.
+## Notes-frFR: A collection of BigWigs modules from the Dragonflight era.
+## Notes-itIT: A collection of BigWigs modules from the Dragonflight era.
+## Notes-koKR: A collection of BigWigs modules from the Dragonflight era.
+## Notes-ruRU: A collection of BigWigs modules from the Dragonflight era.
+## Notes-ptBR: A collection of BigWigs modules from the Dragonflight era.
+## Notes-esES: A collection of BigWigs modules from the Dragonflight era.
+## Notes-esMX: A collection of BigWigs modules from the Dragonflight era.
+
+## LoadOnDemand: 1
+## Dependencies: BigWigs
+## Version: v11.0.2
+## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
+
+## X-Category: Raid
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Website: https://github.com/BigWigsMods/BigWigs_Dragonflight
+## X-Curse-Project-ID: 1086065
+## X-Wago-ID: mNwQpeKo
+## X-BigWigs-LoadOn-InstanceId: 2522, 2569, 2549
+## X-BigWigs-ExtraMenu: -1978
+## X-BigWigs-LoadOn-WorldBoss: -2023, 193534, -2022, 193535, -2024, 193532, -2085, 193533, -2133, 199853, -2133, 199855, -2200, 209574
+## X-BigWigs-Minimum: 350
+
+modules.xml

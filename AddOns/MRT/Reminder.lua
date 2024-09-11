@@ -3230,6 +3230,7 @@ function module.options:Load()
 		[2119] = 2522,	--voti
 		[2166] = 2569,	--a
 		[2232] = 2549,	--adh
+		[2292] = 2657,	--n
 	}
 
 	self.SyncButton = ELib:Button(self.tab.tabs[1],L.ReminderSend):Point("TOPLEFT",self.AddButton,"BOTTOMLEFT",0,-5):Size(100,20):OnClick(function(self)
@@ -7925,6 +7926,8 @@ function module.options:Load()
 	self.quickStartFrame.img5:SetSize(91-3,49-28)
 	
 	self.quickStartFrame.text5 = ELib:Text(self.quickStartFrame,L.ReminderQuickStart5,12):Point("TOPLEFT",self.quickStartFrame.img5,"TOPRIGHT",10,0):Point("RIGHT",self.quickStartFrame,-10,0):Color()
+
+	self.quickStartFrame.url = ELib:Edit(self.quickStartFrame):Size(300,20):Point("BOTTOM",0,20):Text("https://www.method.gg/method-raid-tools-reminders"):LeftText(LFG_LIST_MORE or "More:")
 
 
 	self:UpdateData()

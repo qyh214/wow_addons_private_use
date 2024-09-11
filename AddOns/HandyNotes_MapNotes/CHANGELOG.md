@@ -1,13 +1,12 @@
 # MapNote
-## [2.2.1](https://github.com/Ssesmar/MapNote) (2024-08-17)
+## [2.3.0](https://github.com/Ssesmar/MapNote) (2024-09-10)
 - Note:
 
 -- MapNotes now works on every version of World of Warcraft. Classic Era / Cataclysm / Retail / PTR
 
-Version 2.2.1
 Retail:
 
-• some updates for TWW
+changed incorrect translation of the chat function "legacy" changed to "classic".
 
 - Description:
 

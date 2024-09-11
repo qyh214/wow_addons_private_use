@@ -1,7 +1,13 @@
 # LittleWigs
 
-## [v11.0.12](https://github.com/BigWigsMods/LittleWigs/tree/v11.0.12) (2024-08-16)
-[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.0.11...v11.0.12) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
+## [v11.0.23](https://github.com/BigWigsMods/LittleWigs/tree/v11.0.23) (2024-09-10)
+[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.0.22...v11.0.23) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
 
-- Classic/DemonFallCanyon/DiathorusTheSeeker: Broken ENCOUNTER event is now fixed  
-- Cataclysm/ZulGurub/Venoxis: Broken ENCOUNTER event is now fixed  
+- Delves/ZekvirsLair/Zekvir: Add boss module (#1146)  
+- toc updates  
+- bump toc  
+- Update frFR (#1145)  
+- Update frFR (#1142)  
+- Update zhTW  
+- Delves/Trash/Kobyss: Additional auto-gossip id  
+- Delves: Localization  

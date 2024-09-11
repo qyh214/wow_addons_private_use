@@ -105,7 +105,6 @@ P.DefaultSettings = {
 		tdBattlePetScript = true,
 		RareScanner = true,
 		WorldQuestTab = true,
-		ExtVendor = true,
 		AdiBags = true,
 		BetterBags = true,
 		ShadowDancer = true,
@@ -355,6 +354,12 @@ loader:SetScript("OnEvent", function(self, event, addon)
 				setmetatable(module.db, {__index=charDB})
 			elseif charDB then
 				module.db = charDB
+			end
+		end
+
+		for _, module in next, initQueue do
+			if module.OnInitialize then
+				xpcall(module.OnInitialize, P.ThrowError, module)
 			end
 		end
 

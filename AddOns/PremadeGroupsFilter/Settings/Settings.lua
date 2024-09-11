@@ -53,6 +53,13 @@ local PGFSettingsTable = {
         visible = true,
     },
     {
+        key = "specIcon",
+        type = "checkbox",
+        title = L["settings.specIcon.title"],
+        tooltip = L["settings.specIcon.tooltip"],
+        visible = PGF.SupportsSpecializations(),
+    },
+    {
         key = "classCircle",
         type = "checkbox",
         title = L["settings.classCircle.title"],
@@ -64,14 +71,21 @@ local PGFSettingsTable = {
         type = "checkbox",
         title = L["settings.classBar.title"],
         tooltip = L["settings.classBar.tooltip"],
-        visible = not PGF.IsRetail(),
+        visible = true,
     },
     {
         key = "leaderCrown",
         type = "checkbox",
         title = L["settings.leaderCrown.title"],
         tooltip = L["settings.leaderCrown.tooltip"],
-        visible = not PGF.IsRetail(),
+        visible = true,
+    },
+    {
+        key = "missingRoles",
+        type = "checkbox",
+        title = L["settings.missingRoles.title"],
+        tooltip = L["settings.missingRoles.tooltip"],
+        visible = true,
     },
     {
         key = "oneClickSignUp",
@@ -113,7 +127,9 @@ function PGFSettings:OnLoad()
     view:SetElementFactory(function(factory, elementData) self.CreateListItem(factory, elementData) end)
     ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, view)
 
-    Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(self, L["addon.name.long"]))
+    local category, layout = Settings.RegisterCanvasLayoutCategory(self, L["addon.name.long"])
+    Settings.RegisterAddOnCategory(category)
+    PGF.settingsCategory = category
 end
 
 function PGFSettings.CreateListItem(factory, elementData)
@@ -160,6 +176,10 @@ end
 
 function PGFSettings:OnRefresh()
     -- Options dialog opened
+end
+
+function PGF.OpenSettings()
+    Settings.OpenToCategory(PGF.settingsCategory.ID)
 end
 
 PGFSettings:SetScript("OnShow", PGFSettings.OnShow)

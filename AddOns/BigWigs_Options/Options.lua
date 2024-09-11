@@ -285,14 +285,10 @@ do
 		acr:RegisterOptionsTable("BigWigs: Colors Override", colorModule:SetColorOptions("dummy", "dummy"), true)
 		acr:RegisterOptionsTable("BigWigs: Sounds Override", soundModule:SetSoundOptions("dummy", "dummy"), true)
 
-		loader.RegisterMessage(options, "BigWigs_BossModuleRegistered", "Register")
-		loader.RegisterMessage(options, "BigWigs_PluginRegistered", "Register")
-
-		for name, module in BigWigs:IterateBossModules() do
-			options:Register("BigWigs_BossModuleRegistered", name, module)
-		end
-		for name, module in BigWigs:IteratePlugins() do
-			options:Register("BigWigs_PluginRegistered", name, module)
+		loader.RegisterMessage(options, "BigWigs_PluginOptionsReady")
+		local pluginOptions = BigWigs:GetPluginOptions()
+		for pluginName, optionsTbl in next, pluginOptions do
+			options:BigWigs_PluginOptionsReady(nil, pluginName, optionsTbl[1], optionsTbl[2])
 		end
 
 		-- Wait with nilling, we don't know how many addons will load during this same execution.
@@ -1003,8 +999,8 @@ local function populatePrivateAuraOptions(widget)
 				dropdown:SetUserData("module", module)
 				dropdown:SetCallback("OnValueChanged", function(widget, _, value)
 					local key = widget:GetUserData("key")
+					local default = widget:GetUserData("default")
 					local module = widget:GetUserData("module")
-					local default = widget:GetUserData("module")
 					value = soundList[value]
 					if value == default then
 						value = nil
@@ -1376,20 +1372,20 @@ do
 			"WrathOfTheLichKing",
 			"Cataclysm",
 		}
-	elseif loader.isBeta then
-		expansionHeader = {
-			"Classic",
-			"BurningCrusade",
-			"WrathOfTheLichKing",
-			"Cataclysm",
-			"MistsOfPandaria",
-			"WarlordsOfDraenor",
-			"Legion",
-			"BattleForAzeroth",
-			"Shadowlands",
-			"Dragonflight",
-			"TheWarWithin",
-		}
+	--elseif loader.isBeta then
+	--	expansionHeader = {
+	--		"Classic",
+	--		"BurningCrusade",
+	--		"WrathOfTheLichKing",
+	--		"Cataclysm",
+	--		"MistsOfPandaria",
+	--		"WarlordsOfDraenor",
+	--		"Legion",
+	--		"BattleForAzeroth",
+	--		"Shadowlands",
+	--		"Dragonflight",
+	--		"TheWarWithin",
+	--	}
 	else
 		expansionHeader = {
 			"Classic",
@@ -1402,6 +1398,7 @@ do
 			"BattleForAzeroth",
 			"Shadowlands",
 			"Dragonflight",
+			"TheWarWithin",
 		}
 	end
 
@@ -1690,31 +1687,26 @@ do
 end
 
 do
-	local registered, subPanelRegistry, pluginRegistry = {}, {}, {}
-	function options:Register(_, _, module)
-		if registered[module.name] then return end
-		registered[module.name] = true
-		if module.pluginOptions then
-			if type(module.pluginOptions) == "function" then
-				pluginRegistry[module.name] = module.pluginOptions
-			else
-				acOptions.args.general.args[module.name] = module.pluginOptions
-			end
-		elseif module.subPanelOptions then
-			local key = module.subPanelOptions.key
-			local opts = module.subPanelOptions.options
-			if type(opts) == "function" then
-				subPanelRegistry[key] = opts
-			else
-				acOptions.args[key] = opts
+	local registered, subPanelRegistry = {}, {}
+	function options:BigWigs_PluginOptionsReady(_, pluginName, pluginOptions, subPanelOptions)
+		if not registered[pluginName] then
+			if type(pluginOptions) == "table" then
+				registered[pluginName] = true
+				acOptions.args.general.args[pluginName] = pluginOptions
+			elseif type(subPanelOptions) == "table" then
+				registered[pluginName] = true
+				local key = subPanelOptions.key
+				local opts = subPanelOptions.options
+				if type(opts) == "function" then
+					subPanelRegistry[key] = opts
+				else
+					acOptions.args[key] = opts
+				end
 			end
 		end
 	end
 
 	function getOptions()
-		for key, opts in next, pluginRegistry do
-			acOptions.args.general.args[key] = opts()
-		end
 		for key, opts in next, subPanelRegistry do
 			acOptions.args[key] = opts()
 		end

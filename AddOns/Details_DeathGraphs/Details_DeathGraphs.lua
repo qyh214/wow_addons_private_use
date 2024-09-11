@@ -1,4 +1,4 @@
-
+--F
 local addonId, advancedDeathLogs = ...
 local Details = Details
 local detailsFramework = DetailsFramework

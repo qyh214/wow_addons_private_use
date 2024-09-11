@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_BLACKSMITHING),
     -- active = ns.conditions.Profession(ns.PROF_WW_BLACKSMITHING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-blacksmithing",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -67,10 +69,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6439,
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82631,
-    --     loot={224038}, -- Smithing After Saronite
-    --     note="Buy from {npc::}",
-    --     parent=true, levels=true, translate={[2256]=true},
-    -- },
 }, KNOWLEDGE)

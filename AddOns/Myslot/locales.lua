@@ -18,6 +18,9 @@ MySlot.L = L
 local locale = GetLocale()
 
 if locale == 'enUs' then
+L[" before Import"] = true
+L[" during Export"] = true
+L[" during Import"] = true
 L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = true
 L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = true
 L["[WARN] Ignore unsupported Slot Type [ %s ] , contact %s please"] = true
@@ -27,16 +30,21 @@ L["Are you SURE to delete '%s'?"] = true
 L["Are you SURE to import ?"] = true
 L["Bad importing text [CRC32]"] = true
 L["Bad importing text [TEXT]"] = true
+L["CLEAR"] = true
 L["Clear before Import"] = true
 L["Close"] = true
 L["DANGEROUS"] = true
 L["Export"] = true
 L["Feedback"] = true
 L["Force Import"] = true
+L["IGNORE"] = true
 L["Ignore during Export"] = true
 L["Ignore during Import"] = true
+L["Ignore missing item [id=%s]"] = true
+L["Ignore unattained companion [id=%s], %s"] = true
 L["Ignore unattained pet [id=%s]"] = true
 L["Ignore unknown macro [id=%s]"] = true
+L["Ignore unlearned skill [flyoutid=%s], %s"] = true
 L["Ignore unlearned skill [id=%s], %s"] = true
 L["Import"] = true
 L["Import is not allowed when you are in combat"] = true
@@ -53,6 +61,7 @@ L["Remove all Macros"] = true
 L["Remove everything in ActionBar"] = true
 L["Rename"] = true
 L["Skip bad CRC32"] = true
+L["Skyriding Bar"] = true
 L["Stance Action Bar"] = true
 L["Time"] = true
 L["TOC_NOTES"] = "Myslot is for transferring settings between accounts. Feedback farmer1992@gmail.com"
@@ -61,6 +70,12 @@ L["Unsaved"] = true
 L["Use random mount instead of an unattained mount"] = true
 
 elseif locale == 'deDE' then
+--[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
@@ -80,6 +95,8 @@ elseif locale == 'deDE' then
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 --[[Translation missing --]]
 --[[ L["Close"] = "Close"--]] 
@@ -92,13 +109,21 @@ elseif locale == 'deDE' then
 --[[Translation missing --]]
 --[[ L["Force Import"] = "Force Import"--]] 
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
 --[[Translation missing --]]
@@ -132,6 +157,8 @@ elseif locale == 'deDE' then
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
 --[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
+--[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Time"] = "Time"--]] 
@@ -145,6 +172,12 @@ elseif locale == 'deDE' then
 --[[ L["Use random mount instead of an unattained mount"] = "Use random mount instead of an unattained mount"--]] 
 
 elseif locale == 'esES' then
+--[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
@@ -160,6 +193,8 @@ L["Are you SURE to import ?"] = "¿Seguro que quieres importarlo?"
 L["Bad importing text [CRC32]"] = "Texto de importación incorrecto [CRC32]"
 L["Bad importing text [TEXT]"] = "Texto de importación incorrecto [TEXT]"
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 L["Close"] = "Cerrar"
 L["DANGEROUS"] = "PELIGROSO"
@@ -167,13 +202,21 @@ L["Export"] = "Exportar"
 L["Feedback"] = "Comentarios"
 L["Force Import"] = "Importación forzosa"
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 L["Ignore unlearned skill [id=%s], %s"] = "Ignora la facultad no obtenida [id=%s], %s"
 L["Import"] = "Importar"
 L["Import is not allowed when you are in combat"] = "No se puede importar mientras estás en combate"
@@ -194,6 +237,8 @@ L["Remove everything in ActionBar"] = "Borrar todo sobre las barras de acción"
 L["Rename"] = "Renombrar"
 L["Skip bad CRC32"] = "Se salta CRC32 maligno"
 --[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
+--[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 L["Time"] = "Hora"
 L["TOC_NOTES"] = "Myslot sirve para transferir opciones entre distintas cuentas. Comentarios a farmer1992@gmail.com"
@@ -202,6 +247,12 @@ L["Unsaved"] = "No está guardado"
 L["Use random mount instead of an unattained mount"] = "Usa una montura aleatoria en vez de una no disponible"
 
 elseif locale == 'esMX' then
+--[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
@@ -221,6 +272,8 @@ elseif locale == 'esMX' then
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 --[[Translation missing --]]
 --[[ L["Close"] = "Close"--]] 
@@ -233,13 +286,21 @@ elseif locale == 'esMX' then
 --[[Translation missing --]]
 --[[ L["Force Import"] = "Force Import"--]] 
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
 --[[Translation missing --]]
@@ -272,6 +333,8 @@ elseif locale == 'esMX' then
 --[[ L["Rename"] = "Rename"--]] 
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
@@ -287,49 +350,52 @@ elseif locale == 'esMX' then
 
 elseif locale == 'frFR' then
 --[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
+--[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore unsupported Slot Type [ %s ] , contact %s please"] = "[WARN] Ignore unsupported Slot Type [ %s ] , contact %s please"--]] 
---[[Translation missing --]]
---[[ L["<- share your profile here"] = "<- share your profile here"--]] 
+L["<- share your profile here"] = "partager votre profil"
 --[[Translation missing --]]
 --[[ L["All slots were restored"] = "All slots were restored"--]] 
---[[Translation missing --]]
---[[ L["Are you SURE to delete '%s'?"] = "Are you SURE to delete '%s'?"--]] 
---[[Translation missing --]]
---[[ L["Are you SURE to import ?"] = "Are you SURE to import ?"--]] 
+L["Are you SURE to delete '%s'?"] = "Êtes-vous sûr de supprimer '%s' ?"
+L["Are you SURE to import ?"] = "Êtes-vous sûr d'importer ?"
 --[[Translation missing --]]
 --[[ L["Bad importing text [CRC32]"] = "Bad importing text [CRC32]"--]] 
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
---[[ L["Clear before Import"] = "Clear before Import"--]] 
+--[[ L["CLEAR"] = "CLEAR"--]] 
+L["Clear before Import"] = "Effacer avant d'importer"
+L["Close"] = "Fermer"
+L["DANGEROUS"] = "DANGER"
+L["Export"] = "Exporter"
+L["Feedback"] = "Retour d'expérience"
+L["Force Import"] = "Forcer l'import"
 --[[Translation missing --]]
---[[ L["Close"] = "Close"--]] 
+--[[ L["IGNORE"] = "IGNORE"--]] 
+L["Ignore during Export"] = "Ignorer lors de l'exportation"
+L["Ignore during Import"] = "Ignorer lors de l'importation"
 --[[Translation missing --]]
---[[ L["DANGEROUS"] = "DANGEROUS"--]] 
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
 --[[Translation missing --]]
---[[ L["Export"] = "Export"--]] 
---[[Translation missing --]]
---[[ L["Feedback"] = "Feedback"--]] 
---[[Translation missing --]]
---[[ L["Force Import"] = "Force Import"--]] 
---[[Translation missing --]]
---[[ L["Ignore during Export"] = "Ignore during Export"--]] 
---[[Translation missing --]]
---[[ L["Ignore during Import"] = "Ignore during Import"--]] 
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
---[[Translation missing --]]
---[[ L["Import"] = "Import"--]] 
---[[Translation missing --]]
---[[ L["Import is not allowed when you are in combat"] = "Import is not allowed when you are in combat"--]] 
+L["Import"] = "Importer"
+L["Import is not allowed when you are in combat"] = "L'import n'est pas autorisée lorsque vous êtes au combat"
 --[[Translation missing --]]
 --[[ L["Key Binding"] = "Key Binding"--]] 
 --[[Translation missing --]]
@@ -356,6 +422,8 @@ elseif locale == 'frFR' then
 --[[ L["Rename"] = "Rename"--]] 
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
@@ -371,6 +439,12 @@ elseif locale == 'frFR' then
 
 elseif locale == 'itIT' then
 --[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
+--[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"--]] 
@@ -389,6 +463,8 @@ elseif locale == 'itIT' then
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 --[[Translation missing --]]
 --[[ L["Close"] = "Close"--]] 
@@ -401,13 +477,21 @@ elseif locale == 'itIT' then
 --[[Translation missing --]]
 --[[ L["Force Import"] = "Force Import"--]] 
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
 --[[Translation missing --]]
@@ -440,6 +524,8 @@ elseif locale == 'itIT' then
 --[[ L["Rename"] = "Rename"--]] 
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
@@ -455,6 +541,12 @@ elseif locale == 'itIT' then
 
 elseif locale == 'koKR' then
 --[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
+--[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"--]] 
@@ -473,6 +565,8 @@ elseif locale == 'koKR' then
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 --[[Translation missing --]]
 --[[ L["Close"] = "Close"--]] 
@@ -485,13 +579,21 @@ elseif locale == 'koKR' then
 --[[Translation missing --]]
 --[[ L["Force Import"] = "Force Import"--]] 
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
 --[[Translation missing --]]
@@ -524,6 +626,8 @@ elseif locale == 'koKR' then
 --[[ L["Rename"] = "Rename"--]] 
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
@@ -539,6 +643,12 @@ elseif locale == 'koKR' then
 
 elseif locale == 'ptBR' then
 --[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
+--[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"--]] 
@@ -557,6 +667,8 @@ elseif locale == 'ptBR' then
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 --[[Translation missing --]]
 --[[ L["Close"] = "Close"--]] 
@@ -569,13 +681,21 @@ elseif locale == 'ptBR' then
 --[[Translation missing --]]
 --[[ L["Force Import"] = "Force Import"--]] 
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unlearned skill [id=%s], %s"] = "Ignore unlearned skill [id=%s], %s"--]] 
 --[[Translation missing --]]
@@ -609,6 +729,8 @@ elseif locale == 'ptBR' then
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
 --[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
+--[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Time"] = "Time"--]] 
@@ -622,6 +744,12 @@ elseif locale == 'ptBR' then
 --[[ L["Use random mount instead of an unattained mount"] = "Use random mount instead of an unattained mount"--]] 
 
 elseif locale == 'ruRU' then
+--[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 --[[Translation missing --]]
@@ -638,6 +766,8 @@ L["Are you SURE to import ?"] = "Вы УВЕРЕНЫ, что хотите имп
 --[[Translation missing --]]
 --[[ L["Bad importing text [TEXT]"] = "Bad importing text [TEXT]"--]] 
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 L["Close"] = "Закрыть"
 L["DANGEROUS"] = "ОПАСНО "
@@ -645,13 +775,21 @@ L["Export"] = "Экспорт"
 L["Feedback"] = "Обратная связь"
 L["Force Import"] = "Принудительно импортировать"
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 L["Ignore unlearned skill [id=%s], %s"] = "Игнорировать невыученные навыки [id=%s], %s"
 L["Import"] = "Импорт"
 --[[Translation missing --]]
@@ -677,6 +815,8 @@ L["Rename"] = "Переименовать"
 --[[Translation missing --]]
 --[[ L["Skip bad CRC32"] = "Skip bad CRC32"--]] 
 --[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
+--[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 L["Time"] = "Время"
 L["TOC_NOTES"] = "Myslot предназначен для передачи настроек между аккаунтами. Обратная связь farmer1992@gmail.com"
@@ -687,8 +827,10 @@ L["Unsaved"] = "Не сохранять"
 --[[ L["Use random mount instead of an unattained mount"] = "Use random mount instead of an unattained mount"--]] 
 
 elseif locale == 'zhCN' then
---[[Translation missing --]]
---[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
+L[" before Import"] = "在导入之前"
+L[" during Export"] = "导入项目"
+L[" during Import"] = "导入项目"
+L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] 由于未知错误而忽略插槽， DEBUG INFO = [S=%s T=%s I=%s] 请将导入文本和 DEBUG INFO 发送给作者 %s"
 L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] 忽略不支持的按键绑定 [ %s ]，请通知作者 %s"
 L["[WARN] Ignore unsupported Slot Type [ %s ] , contact %s please"] = "[WARN] 忽略不支持的按键类型 [ %s ]，请通知作者 %s"
 L["<- share your profile here"] = "<- 分享你的配置"
@@ -697,16 +839,21 @@ L["Are you SURE to delete '%s'?"] = "确定要删除 '%s'"
 L["Are you SURE to import ?"] = "你确定要导入吗?"
 L["Bad importing text [CRC32]"] = "导入文本校验不合法 [CRC32] 通常是没有复制完全"
 L["Bad importing text [TEXT]"] = "导入文本校验不合法 [TEXT]"
+L["CLEAR"] = "清空"
 L["Clear before Import"] = "导入前清空"
 L["Close"] = "关闭"
 L["DANGEROUS"] = "危险行为"
 L["Export"] = "导出"
 L["Feedback"] = "问题/建议"
 L["Force Import"] = "强制导入"
+L["IGNORE"] = "忽略"
 L["Ignore during Export"] = "导出时忽略"
 L["Ignore during Import"] = "导入时忽略"
+L["Ignore missing item [id=%s]"] = "忽略未获得物品 [id=%s]"
+L["Ignore unattained companion [id=%s], %s"] = "忽略未获得宠物 [id=%s], %s"
 L["Ignore unattained pet [id=%s]"] = "忽略未获得宠物 [id=%s]"
 L["Ignore unknown macro [id=%s]"] = "忽略未知宏 [id=%s]"
+L["Ignore unlearned skill [flyoutid=%s], %s"] = "忽略未掌握技能[flyoutid=%s]：%s"
 L["Ignore unlearned skill [id=%s], %s"] = "忽略未掌握技能[id=%s]：%s"
 L["Import"] = "导入"
 L["Import is not allowed when you are in combat"] = "请在非战斗时候使用导入功能"
@@ -723,6 +870,8 @@ L["Remove all Macros"] = "删除所有宏"
 L["Remove everything in ActionBar"] = "清空全部按键摆放"
 L["Rename"] = "重命名"
 L["Skip bad CRC32"] = "忽略CRC32错误"
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 L["Stance Action Bar"] = "姿态动作条"
 L["Time"] = "时间"
 L["TOC_NOTES"] = "Myslot可以帮助你在账号之间共享配置。反馈：farmer1992@gmail.com"
@@ -731,6 +880,12 @@ L["Unsaved"] = "未保存"
 L["Use random mount instead of an unattained mount"] = "使用随机坐骑代替没有获得的坐骑"
 
 elseif locale == 'zhTW' then
+--[[Translation missing --]]
+--[[ L[" before Import"] = " before Import"--]] 
+--[[Translation missing --]]
+--[[ L[" during Export"] = " during Export"--]] 
+--[[Translation missing --]]
+--[[ L[" during Import"] = " during Import"--]] 
 --[[Translation missing --]]
 --[[ L["[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"] = "[WARN] Ignore slot due to an unknown error DEBUG INFO = [S=%s T=%s I=%s] Please send Importing Text and DEBUG INFO to %s"--]] 
 L["[WARN] Ignore unsupported Key Binding [ %s ] , contact %s please"] = "[WARN] 忽略不支援的按鍵設置：K = [ %s ] ，請通知作者 %s"
@@ -744,6 +899,8 @@ L["Are you SURE to import ?"] = "你確定要導入麼?"
 L["Bad importing text [CRC32]"] = "錯誤的導入字串[CRC32]"
 L["Bad importing text [TEXT]"] = "錯誤的導入字串[TEXT]"
 --[[Translation missing --]]
+--[[ L["CLEAR"] = "CLEAR"--]] 
+--[[Translation missing --]]
 --[[ L["Clear before Import"] = "Clear before Import"--]] 
 L["Close"] = "關閉"
 L["DANGEROUS"] = "危險"
@@ -751,13 +908,21 @@ L["Export"] = "導出"
 L["Feedback"] = "反饋"
 L["Force Import"] = "強制導入"
 --[[Translation missing --]]
+--[[ L["IGNORE"] = "IGNORE"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore during Export"] = "Ignore during Export"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore during Import"] = "Ignore during Import"--]] 
 --[[Translation missing --]]
+--[[ L["Ignore missing item [id=%s]"] = "Ignore missing item [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unattained companion [id=%s], %s"] = "Ignore unattained companion [id=%s], %s"--]] 
+--[[Translation missing --]]
 --[[ L["Ignore unattained pet [id=%s]"] = "Ignore unattained pet [id=%s]"--]] 
 --[[Translation missing --]]
 --[[ L["Ignore unknown macro [id=%s]"] = "Ignore unknown macro [id=%s]"--]] 
+--[[Translation missing --]]
+--[[ L["Ignore unlearned skill [flyoutid=%s], %s"] = "Ignore unlearned skill [flyoutid=%s], %s"--]] 
 L["Ignore unlearned skill [id=%s], %s"] = "忽略未習得技能 [id=%s], %s"
 L["Import"] = "導入"
 L["Import is not allowed when you are in combat"] = "請在非戰鬥狀態時使用導入功能"
@@ -777,6 +942,8 @@ L["Remove all Macros"] = "移除全部巨集"
 L["Remove everything in ActionBar"] = "清除全部快捷列"
 L["Rename"] = "重新命名"
 L["Skip bad CRC32"] = "略過CRC32錯誤"
+--[[Translation missing --]]
+--[[ L["Skyriding Bar"] = "Skyriding Bar"--]] 
 --[[Translation missing --]]
 --[[ L["Stance Action Bar"] = "Stance Action Bar"--]] 
 L["Time"] = "時間"

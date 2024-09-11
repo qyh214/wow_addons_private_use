@@ -318,7 +318,7 @@ end
 function mod:ExplosiveCindersRemoved(args)
 	if self:Me(args.destGUID) then
 		self:CancelSayCountdown(args.spellId)
-		self:StopBar(args.spellName, args.destName)
+		self:StopBar(CL.cast:format(CL.explosion))
 		self:PersonalMessage(args.spellId, "removed", CL.bomb)
 	end
 end

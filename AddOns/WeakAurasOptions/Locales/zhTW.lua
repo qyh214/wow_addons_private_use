@@ -112,6 +112,7 @@ local L = WeakAuras.L
 	L[ [=[A timer will automatically be displayed according to default Interface Settings (overridden by some addons).
 Enable this setting if you want this timer to be hidden, or when using a WeakAuras text to display the timer]=] ] = "時間數字會自動依照遊戲內建的選項 (或被其他插件取代) 來決定是否顯示。如果你想要隱藏這個時間數字，或是使用 WeakAuras  的文字來顯示時間，請啟用此設定。"
 	L["A Unit ID (e.g., party1)."] = "單位 ID (例如 party1)。"
+	L["Ace: Funkeh, Nevcairiel"] = "Ace: Funkeh, Nevcairiel"
 	L["Actions"] = "動作"
 	L["Active Aura Filters and Info"] = "啟用光環過濾以及訊息"
 	L["Actual Spec"] = "現實專精"
@@ -135,6 +136,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["Affected Unit Filters and Info"] = "受影響的單位過濾器和訊息"
 	L["Align"] = "對齊"
 	L["Alignment"] = "對齊方式"
+	L["All maintainers of the libraries we use, especially:"] = "我們使用函數庫的所有維護者，特別是："
 	L["All of"] = "全部的"
 	L["Allow Full Rotation"] = "允許完全旋轉"
 	L["Alpha"] = "透明度"
@@ -146,6 +148,7 @@ Enable this setting if you want this timer to be hidden, or when using a WeakAur
 	L["and %s"] = "以及 %s"
 	L["and aligned left"] = "和靠左對齊"
 	L["and aligned right"] = "和靠右對齊"
+	L["And our Patreons, Discord Regulars and Subscribers, and Friends of the Addon:"] = "還有我們的訂閱者、Discord常客和訂閱者以及插件之友："
 	L["and rotated left"] = "和向左旋轉"
 	L["and rotated right"] = "和向右旋轉"
 	L["and with width |cFFFF0000%s|r and %s"] = "、寬度 |cFFFF0000%s|r 和 %s"
@@ -409,7 +412,7 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L["Filter by Arena Spec"] = "依競技場專精過濾"
 	L["Filter by Class"] = "依職業過濾"
 	L["Filter by Group Role"] = "依角色職責過濾"
-	L["Filter by Nameplate Type"] = "依名條類型過濾"
+	L["Filter by Hostility"] = "依敵方過濾"
 	L["Filter by Npc ID"] = "依 NPC ID 過濾"
 	L["Filter by Raid Role"] = "依團隊角色職責過濾"
 	L["Filter by Specialization"] = "根據專精過濾"
@@ -417,8 +420,12 @@ UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 	L[ [=[Filter formats: 'Name', 'Name-Realm', '-Realm'.
 
 Supports multiple entries, separated by commas
-Can use \ to escape -.]=] ] = "過濾格式: '名字'、'名字-伺服器'、'-伺服器'。支援輸入多個項目，使用逗號分隔。要將 - 當成一般文字可使用跳脫符號 \\"
-	L["Filter to only dispellable de/buffs of the given type(s)"] = "只過濾給予類型的可驅散增減益"
+Can use \ to escape -.]=] ] = [=[過濾格式: '名字'、'名字-伺服器'、'-伺服器'。
+
+支援輸入多個項目，使用逗號分隔。
+要將 - 當成一般文字可使用跳脫符號 \]=]
+	L[ [=[Filter to only dispellable de/buffs of the given type(s)
+Bleed classification via LibDispel]=] ] = "只過濾被 LibDispel 分類為流血、可驅散的減益/增益效果。"
 	L["Find Auras"] = "尋找提醒效果"
 	L["Finish"] = "結束"
 	L["Finishing..."] = "快完成了..."
@@ -572,7 +579,13 @@ Can use \ to escape -.]=] ] = "過濾格式: '名字'、'名字-伺服器'、'-�
 	L["Left HUD position"] = "左方 HUD 位置"
 	L["Length"] = "長度"
 	L["Length of |cFFFF0000%s|r"] = "|cFFFF0000%s|r的長度"
+	L["LibCompress: Galmok"] = "LibCompress: Galmok"
+	L["LibCustomGlow: Dooez"] = "LibCustomGlow: Dooez"
+	L["LibDeflate: Yoursafety"] = "LibDeflate: Yoursafety"
+	L["LibDispel: Simpy"] = "LibDispel: Simpy"
+	L["LibSerialize: Sanjo"] = "LibSerialize: Sanjo"
 	L["LibSharedMedia"] = "LibSharedMedia"
+	L["LibSpecialization: Funkeh"] = "LibSpecialization: Funkeh"
 	L["Limit"] = "限制"
 	L["Line"] = "線"
 	L["Lines & Particles"] = "直線 & 粒子"
@@ -685,6 +698,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["or %s"] = "或 %s"
 	L["Orange Rune"] = "橘色符文"
 	L["Orientation"] = "方向"
+	L["Our translators (too many to name)"] = "我們的翻譯者（太多了，無法一一列舉）"
 	L["Outer"] = "外部"
 	L["Outline"] = "外框"
 	L["Overflow"] = "超出範圍"
@@ -877,6 +891,7 @@ every 3 events starting from 2nd and ending at 11th: 2-11/3]=] ] = [=[事件發�
 	L["Texture Wrap"] = "材質包覆"
 	L["Texture X Offset"] = "材質水平位移"
 	L["Texture Y Offset"] = "材質垂直位移"
+	L["Thanks"] = "感謝"
 	L["The addon ElvUI is enabled. It might add cooldown numbers to the swipe. You can configure these in the ElvUI settings"] = "ElvUI 插件已啟用，它可能會在倒數轉圈動畫上面加入冷卻時間數字，這些可以在 ElvUI 的設定中調整。"
 	L["The addon OmniCC is enabled. It might add cooldown numbers to the swipe. You can configure these in the OmniCC settings"] = "冷卻時間插件 OmniCC 已啟用，它可能會在倒數轉圈動畫上面加入冷卻時間數字，這些可以在 OmniCC 的設定中調整。"
 	L["The duration of the animation in seconds."] = "動畫的持續時間(秒)。"
@@ -976,6 +991,7 @@ Upgrade your version of WeakAuras or wait for next release before installing thi
 	L["View"] = "檢視"
 	L["View custom code"] = "檢視自訂程式碼"
 	L["Voice"] = "語音"
+	L["We thank"] = "我們感謝"
 	L["WeakAuras %s on WoW %s"] = "WeakAuras %s 在 WoW %s"
 	L["What do you want to do?"] = "你想要怎麼做?"
 	L["Whole Area"] = "整個區域"

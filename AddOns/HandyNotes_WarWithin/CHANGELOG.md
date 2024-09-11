@@ -1,5 +1,237 @@
 # Changelog
 
+## Changed in v54
+
+* Add data for the world bosses now that season one has begun (questids for the first one are all that's available for completion, but don't worry, I have more than just the concept of a plan for not just having them sit there annoyingly on your map...)
+
+## Changed in v53
+
+* Enhance the profession knowledge pins with specific icons for each profession
+* Don't display decorations or routes when HandyNotes itself is disabled
+
+## Changed in v52
+
+* Azj-Kahet: added the No Harm Ever Came From Reading A Book achievement
+
+## Changed in v51
+
+* Clicking to keep routes visible should now work more reliably
+* Hallowfall:
+    * Clicking Beledar to force the Spawn's points to show will now force them even if you have Adventurer of Hallowfall hidden
+    * Added the weekly reputation to Deathtide, hide its summoning items when you're carrying them
+    * Hide the Illusive Kobyss Lure points when you're carrying them
+    * Light's Blooming: fix the locations for the Farmhand Stash and Old Rotting Crate, and add the Surveyor's Box
+
+## Changed in v50
+
+* Hallowfall: add a missing Biblo Archivist book, and the random non-achievement Fisherman's Pouch
+* Stop some occasional taint caused by routes
+
+## Changed in v49
+
+* Hallowfall: removed a doubled-up Beledar's Spawn point
+* Map icons now have some interaction -- click on something you're interested in to highlight it, making it easier to see and causing any related points / routes to also be highlighted and stay visible
+
+## Changed in v48
+
+* Isle of Dorn: weekly reputation quests for Zovex and Rotfist (I finally gave up and just camped a character on their spawn point for an hour and a half)
+* Profession Knowledge: fill out the vendors in the City of Threads
+* Better notoriety-without-transmog calculation
+
+## Changed in v47
+
+* Hallowfall: clicking on Beledar will force the Beledar's Spawn locations to show regardless of your other settings, so you can help out even if you already have the mount
+* Show notable mobs that *only* have transmog in a different color, so you can still hunt for unknown transmog while prioritizing weekly reputation
+
+## Changed in v46
+
+* Hallowfall: shift the start of the shadow phase back 60 seconds, because nothing spawns until all the animations have finished playing out; also, show in the tooltip how long is remaining in the phase
+* Azj-Kahet: tweaks to mob positioning and paths, show the actual names for the Bladeguard and Hulk rather than their achievement-criteria names, and put in the daily quest ID for The One Left rather than just its weekly reputation quest, all thanks to sebid!
+
+## Changed in v45
+
+* Mounts and pets get better tooltips
+* Fix something that was making queries about mount and pet status more expensive than it should be
+
+## Changed in v44
+
+* Show armor-types in tooltip labels
+* Azj-Kahet: add remaining weekly reputations (thanks Twelve for some!)
+* Hallowfall: add some Darkened Arathi cosmetic treasures
+* Minor update to snuffling points
+
+## Changed in v43
+
+* Add a point for Osidion in Dornogal, so you know where to turn those gems in
+* Minor data updates across zones
+
+## Changed in v42
+
+* Hallowfall: explain how to summon Parasidious
+* Snuffling: give Disturbed Earth a localized name
+* A bunch of backend changes that shouldn't have any visible effect on anything
+
+## Changed in v41
+
+* Add snuffling-related Disturbed Earth points and vendor, hidden by default
+* Add reputation rewards to the one-time treasures/rares
+* Hide Khaz Algar Lore Hunter by default, since it's disabled by Blizzard
+* Hallowfall: a few more weekly reputation rewards
+
+## Changed in v40
+
+* Hallowfall: add a giant Beledar phase-change indicator to the map
+* Show the status for Delve achievements on their world map entrances
+* Add a few more weekly reputation rewards
+* Fix for the account-level checking of weekly reputation rewards
+
+## Changed in v39
+
+* Delves: add The Spiral Weave, Tak-Rethan Abyss, and The Underkeep
+* Ringing Deeps: add the weekly reputation for Disturbed Earthgorger
+
+## Changed in v38
+
+* Isle of Dorn:
+    * Added the hiding place for obtaining Dog as a pet, if you've brought him with you from Pandaria to Dalaran.
+    * More weekly reputation rewards.
+* Ringing Deeps: more weekly reputation rewards.
+* New filter option for treasures, so they can be turned down to only show "notable" ones just like the rares. You can use this to not be shown treasures you found on other characters, mostly.
+* New setting to allow achievement-progress from other characters to count for completion. This won't make a huge difference in this expansion, because with warbands *most* achievements have shared criteria-progress between characters already.
+
+## Changed in v37
+
+* Azj-Kahet:
+    * The treasure quests apparently got shuffled around a bit somewhere between the beta and now, so fixed various questids
+    * Added most of the remaining reputation rewards
+    * Flag Tka'ktath's mount item as only dropping at level 80
+* Hallowfall: added some more reputation rewards, fixed a typo in the quest ID for the Horror of the Shallows' reputation reward, and explained how to access Croakit
+* Fixed some weird interactions around the notability settings for mobs that have quest-items and transmog
+
+## Changed in v36
+
+* Hallowfall: improve Beledar's Spawn -- show the time until the shadow phase via entertaining abuse of the
+conditions system, add it to a group so it can be easily individually
+toggled because there's a lot of spawn points... also, add the weekly reputation reward
+* Hallowfall: add a bunch of weekly reputation rewards and make some minor tweaks
+* Azj-Kahet: start on weekly reputation rewards
+
+## Changed in v35
+
+* Provide settings for what counts as "notable" -- you can turn off things you don't care about now
+* Gather more of the weekly reputation quests, mostly from Ringing Deeps
+* Fix one last glyph in Azj-Kahet that wasn't clearing properly, thanks Christof Bruyland!
+
+## Changed in v34
+
+* Starting on tracking the weekly reputation from rares
+* Only count loot for notable mobs if it's likely to drop
+* Highlight notable loot in the tooltips if you're emphasizing notable mobs
+* Fix an issue where learning a new appearance from killing a mob wouldn't immediately flag that item as learned
+* Fairly massive backend rewrite of the loot system to support reputation being included; hopefully there aren't any terrible new bugs...
+
+## Changed in v33
+
+* More loot added to rares
+* Added some of the Elusive rares, and gated them behind you knowing Skinning
+* Isle of Dorn: fix the coords for Clawbreaker K'zithix, remove the Rowdy Rubble which doesn't seem to be appearing
+
+## Changed in v32
+
+* Show my tooltips for races on the Blizzard race POIs when enabled (in the Blizzard filters menu)
+* Dornogal: Tome of Polymorph: Mosswool
+* Fix non-npc non-treasure points without completion from being considered "found" always
+* Mostly for myself, but just in case... you can now alt-click the map button to quickly toggle showing found points
+
+## Changed in v31
+
+* Change how the "show npcs" setting works: it now has a submenu that lets you choose a filter, where you can choose to see *all* npcs, only npcs that you can currently get loot from (the default), or only npcs that you can get "notable" loot from
+* New setting to control whether unlearned transmog appearances count as notable
+* New setting to add some emphasis to the icons for NPCs that are notable
+* Fix the "show treasure" setting so that it *only* affects treasures -- it was also controlling other non-npc points
+
+## Changed in v30
+
+* Ringing Deeps: added locations for To All The Slimes I Love (hidden by default)
+* Ringing Deeps: give the Spore-Infused Shalewing a route
+* Ringing Deeps: add more locations for the rough shards for the Dusty Prospector's Chest
+* Hallowfall: consolidate some of the close-together Missing Lynx
+
+## Changed in v29
+
+* Delves: added Skittering Breach, The Sinkhole, and Nightfall Sanctum
+* Fix display of skyriding glyphs in Hallowfall and Azj-Kahet
+
+## Changed in v28
+
+* Added the Flat Earthen achievment
+* More loot added to rares
+
+## Changed in v27
+
+* Behavior change: count *exact* items for transmog-collection, rather than just appearance-from-any-item; previous behavior is available as a toggle in the settings
+* Rearranged the settings a bunch, because they were getting to be a bit cluttered
+* Fixed "open HandyNotes options" from the overlay dropdown so it properly goes all the way to the plugin's settings
+
+## Changed in v26
+
+* Hallowfall: Parasidious found (only one more adventurer rare remains missing!)
+* More loot across all zones
+* Fix group-names not showing properly in the main HandyNotes settings dialog
+
+## Changed in v25
+
+* Isle of Dorn: more loot for rares, thank Preheat!
+* Hallowfall: added the Sky-Captain's Sunken Cache, thanks Marthammor!
+* Azj-Kahet: added the Smelling History and Bookworm achievements
+
+## Changed in v24
+
+* Azj-Kahet: lots of new loot
+
+## Changed in v23
+
+* Ringing Deeps: added the Gobblin' with Glublurb achievement
+* Isle of Dorn: improve the final display of the Mosswool Flower
+
+## Changed in v22
+
+* Hallowfall: lots of new loot
+* Fixed the locations for some profession knowledge treasures that had moved since the beta (mostly in Dornogal)
+* Fixed the position of one chest in Kriegval's Rest
+
+## Changed in v21
+
+* Ringing Deeps: lots of new loot
+* Delves add some loot variation
+* Isle of Dorn: fix typo that was making the Pearlescent Shellcrabs show up when they shouldn't
+
+## Changed in v20
+
+* Ringing Deeps: Lurker of the Deeps has been found by the secret-finding discord
+
+## Changed in v19
+
+* Isle of Dorn: lots of new loot
+
+## Changed in v18
+
+* Hide the Turtle's Thanks treasure in Dornogal before it's actually present
+
+## Changed in v17
+
+* Support Map Pin Enhanced for waypoints
+
+## Changed in v16
+
+* Locations and timing-display for all the races
+* Add Regurgitated Mole Reins to Lurker of the Deeps based on the mount journal
+
+## Changed in v15
+
+* Delves: The Waterworks, The Dread Pit
+* Show delve chests on the minimap as well
+
 ## Changed in v14
 
 * Azj-Kahet: found Silk-Spun Supplies, Concealed Contraband

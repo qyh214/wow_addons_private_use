@@ -1,5 +1,5 @@
 ## Interface: 40400
-## Version: 2.2.1
+## Version: 2.3.0
 ## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
 ## Notes: Displays instance entrances, ships and zeppelin iconsand a lot of other stuff
 ## Notes-esES: Muestra entradas de instancia, barcos e íconos de Zeppeliny muchas otras cosas

@@ -134,7 +134,7 @@ local introOptions = {
         author = {
             order = 2,
             type = "description",
-            name = string.format("%s\n    %s\n\n", "|cFFFFD700" .. L["Author"] .. "|r", "dlui&dridzt (original), Nukme")
+            name = string.format("%s\n    %s\n\n", "|cFFFFD700" .. L["Author"] .. "|r", "Nukme")
         },
         repo = {
             order = 3,

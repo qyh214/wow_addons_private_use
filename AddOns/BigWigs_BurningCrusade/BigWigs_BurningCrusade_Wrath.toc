@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v10.2.4
+## Version: v11.0.0
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_legacy.tga
 
 ## X-Category: Raid
@@ -37,6 +37,7 @@
 ## X-BigWigs-LoadOn-InstanceId: 532, 534, 544, 548, 550, 564, 565, 580, 568
 ## X-BigWigs-ExtraMenu: -1945
 ## X-BigWigs-LoadOn-WorldBoss: -1944, 18728, -1948, 17711
+## X-BigWigs-Minimum: 350
 
 Hyjal\modules.xml
 Serpentshrine\modules.xml

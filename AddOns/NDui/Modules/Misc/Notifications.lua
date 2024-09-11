@@ -5,7 +5,7 @@ local M = B:GetModule("Misc")
 local format, gsub, strsplit, strfind = string.format, string.gsub, string.split, string.find
 local pairs, wipe, select = pairs, wipe, select
 local GetInstanceInfo, PlaySound, print = GetInstanceInfo, PlaySound, print
-local IsPartyLFG, IsInRaid, IsInGroup, IsInInstance, IsInGuild = IsPartyLFG, IsInRaid, IsInGroup, IsInInstance, IsInGuild
+local IsInRaid, IsInGroup, IsInInstance, IsInGuild = IsInRaid, IsInGroup, IsInInstance, IsInGuild
 local UnitInRaid, UnitInParty, SendChatMessage = UnitInRaid, UnitInParty, SendChatMessage
 local UnitName, Ambiguate, GetTime = UnitName, Ambiguate, GetTime
 local GetSpellLink = C_Spell.GetSpellLink
@@ -21,6 +21,9 @@ local C_ChatInfo_SendAddonMessage = C_ChatInfo.SendAddonMessage
 local C_ChatInfo_RegisterAddonMessagePrefix = C_ChatInfo.RegisterAddonMessagePrefix
 local C_ChallengeMode_GetActiveKeystoneInfo = C_ChallengeMode.GetActiveKeystoneInfo
 
+local function IsRandomGroup()
+	return IsPartyLFG() or C_PartyInfo.IsPartyWalkIn()
+end
 --[[
 	SoloInfo是一个告知你当前副本难度的小工具，防止我有时候单刷时进错难度了。
 	instList左侧是副本ID，你可以使用"/getid"命令来获取当前副本的ID；右侧的是副本难度，常用的一般是：2为5H，4为25普通，6为25H。
@@ -173,7 +176,7 @@ end
 	打断、偷取及驱散法术时的警报
 ]]
 function M:GetMsgChannel()
-	return IsPartyLFG() and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY"
+	return IsRandomGroup() and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY"
 end
 
 local infoType = {}
@@ -255,7 +258,7 @@ function M:InterruptAlert_Update(...)
 end
 
 function M:InterruptAlert_CheckGroup()
-	if IsInGroup() and (not C.db["Misc"]["InstAlertOnly"] or (IsInInstance() and not IsPartyLFG())) then
+	if IsInGroup() and (not C.db["Misc"]["InstAlertOnly"] or (IsInInstance() and not IsRandomGroup())) then
 		B:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
 	else
 		B:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED", M.InterruptAlert_Update)
@@ -386,6 +389,9 @@ for i = 1, 40 do
 end
 
 local spellList = {
+	[698] = true,		-- 拉人
+	[29893] = true,		-- 糖
+	[190336] = true,	-- 面包
 	[54710] = true,		-- 随身邮箱
 	[67826] = true,		-- 基维斯
 	[226241] = true,	-- 宁神圣典
@@ -402,19 +408,34 @@ local spellList = {
 	[345130] = true,	-- 9.0工程战复
 	[307157] = true,	-- 永恒药锅
 	[359336] = true,	-- 石头汤锅
-	[324029] = true,	-- 宁心圣典
+	[261602] = true,	-- 凯蒂的印哨
+	[376664] = true,	-- 欧胡纳栖枝
 
 	[2825]   = true,	-- 嗜血
 	[32182]  = true,	-- 英勇
 	[80353]  = true,	-- 时间扭曲
+	[90355] = true,		-- 远古狂乱，宠物
 	[264667] = true,	-- 原始暴怒，宠物
 	[272678] = true,	-- 原始暴怒，宠物掌控
 	[178207] = true,	-- 狂怒战鼓
 	[230935] = true,	-- 高山战鼓
 	[256740] = true,	-- 漩涡战鼓
 	[292686] = true,	-- 雷皮之槌
-	[309658] = true,	-- 死亡凶蛮战鼓
 	[390386] = true,	-- 守护巨龙之怒
+	[309658] = true,	-- 死亡凶蛮战鼓
+	[444257] = true,	-- 掣雷之鼓
+
+	[384893] = true,	-- 足以乱真的救急电缆11.0工程战复
+	[453949] = true,	-- 不可抗拒的红色按钮11.0工程战复工具
+	[453942] = true,	-- 阿加修理机器人11O   
+	[432877] = true,	-- 阿加合剂大锅
+	[433292] = true,	-- 阿加药水大锅
+	[455960] = true,	-- 全味炖煮
+	[457285] = true,	-- 午夜舞会盛宴
+	[457302] = true,	-- 特色寿司
+	[457487] = true,	-- 丰盛的全味炖煮(战团)
+	[462211] = true,	-- 丰盛的特色寿司(战团)
+	[462213] = true,	-- 丰盛的午夜舞会盛宴(战团)
 }
 
 function M:ItemAlert_Update(unit, castID, spellID)
@@ -665,7 +686,7 @@ function M:SendCurrentSpell(thisTime, spellID)
 end
 
 function M:SendCurrentItem(thisTime, itemID, itemLink, itemCount)
-	local start, duration = GetItemCooldown(itemID)
+	local start, duration = C_Item.GetItemCooldown(itemID)
 	if start and duration > 0 then
 		local remain = start + duration - thisTime
 		SendChatMessage(format(L["CooldownRemaining"], itemLink.." x"..itemCount, GetRemainTime(remain)), M:GetMsgChannel())

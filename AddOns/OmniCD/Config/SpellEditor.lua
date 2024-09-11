@@ -7,6 +7,7 @@ local GetSpellDescription = C_Spell and C_Spell.GetSpellDescription or GetSpellD
 local GetSpellInfo = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
 local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
+local GetItemIcon =  C_Item and C_Item.GetItemIconByID or GetItemIcon
 
 if E.preMoP then
 	GetNumSpecializationsForClassID = function() return 0 end
@@ -133,7 +134,7 @@ local setItem = function(info, v)
 	local id = GetSpellID(info)
 	if v == "" then
 		if option == "icon" then
-			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and GetItemIcon(OmniCDDB.cooldowns[id].item) or select(2, GetSpellTexture(E.iconFix[id] or id))
+			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and GetItemIcon(OmniCDDB.cooldowns[id].item) or select(2, GetSpellTexture(id))
 		else
 			OmniCDDB.cooldowns[id][option] = nil
 		end
@@ -315,14 +316,6 @@ local customSpellInfo = {
 		get = getItem,
 		set = setItem,
 	},
-	--[[
-	tt = {
-		hidden = isClassCategory,
-		name = "\n" .. L["Toggle \"Show Spell ID in Tooltips\" to retrieve item IDs"],
-		order = 13,
-		type = "description",
-	},
-	]]
 	lb3 = {
 		name = "", order = 14, type = "description",
 	},

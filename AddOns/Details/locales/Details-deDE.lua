@@ -853,12 +853,10 @@ L["STRING_OPTIONS_MPLUS_MERGETRASH"] = "Merge Trash"
 L["STRING_OPTIONS_MPLUS_PANELS_ANCHOR"] = "Panels"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_SHOWENDPANEL"] = "Show End of M+ Panel"
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Time in Combat"
+L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT"] = "Zeit im Kampf"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_TIME_INCOMBAT_DESC"] = "The overall segment for the Mythic+ run will use 'totalDamage / totalCombatTime' to calculate DPS."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeon Run Time"
+L["STRING_OPTIONS_MPLUS_TIME_RUNTIME"] = "Dungeonlaufzeit"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_TIME_RUNTIME_DESC"] = "The overall segment for the Mythic+ run will calculate DPS using 'totalDamage / runTime'."
 L["STRING_OPTIONS_NICKNAME"] = "Spitzname:"
@@ -1179,8 +1177,7 @@ L["STRING_OPTIONS_TEXT_LPOSITION"] = "Nummer zeigen"
 L["STRING_OPTIONS_TEXT_LPOSITION_DESC"] = "Zeigt die Positionsnummer eines Spielers links vom Namen."
 L["STRING_OPTIONS_TEXT_LTRANSLIT"] = "Transliterieren"
 L["STRING_OPTIONS_TEXT_LTRANSLIT_DESC"] = "Stellt die russischen Buchstaben, die niemand versteht, in westliche Buchstaben da."
---[[Translation missing --]]
-L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Textumriss"
 L["STRING_OPTIONS_TEXT_RIGHT_ANCHOR"] = "Rechter Text:"
 L["STRING_OPTIONS_TEXT_ROUTILINE_DESC"] = "Aktiviert oder deaktiviert den Umriss des rechten Textes."
 L["STRING_OPTIONS_TEXT_ROWICONS_ANCHOR"] = "Symbole:"

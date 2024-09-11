@@ -208,7 +208,7 @@ local function FindStartEndTime(self, now)
 	local active = info and info.active[self.spellID]
 	if active then
 
-		local modRate = active.iconModRate
+		local modRate = active.modRate
 		self.modRate = modRate
 		if modRate then
 			now = now or GetTime()

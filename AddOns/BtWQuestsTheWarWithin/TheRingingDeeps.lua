@@ -2741,6 +2741,25 @@ Database:AddMapRecursive(MAP_ID, {
     id = CATEGORY_ID,
 })
 
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.ByCandlelight)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.DarkRevelations)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheMonsterAndTheMachine)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheCaretakerOfBrunwinsTerrace)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.BrokenTools)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.RoutineMaintenance)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.DeadInTheDen)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.EnvenomedInvasion)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.Fearbreaker)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.IntoTheFog)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.Magmanificence)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.KoboldCultureAndIntegration)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.RampageAtNibelgazMine)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.AbysmalExtraction)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.RevengeInTheRumblingWastes)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain13)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TiredOfRest)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.FrolickingInTheFetidGrotto)
+
 --[==[@debug@
 Database:AddContinentItems(CONTINENT_ID, {
     {

@@ -642,20 +642,22 @@ local function firstLine(string)
 end
 
 local function CreateFunctionCache(exec_env)
-  local cache = {}
-  cache.Load = function(self, string)
-    if self[string] then
-      return self[string]
+  local cache = {
+    funcs = setmetatable({}, {__mode = "v"})
+  }
+  cache.Load = function(self, string, silent)
+    if self.funcs[string] then
+      return self.funcs[string]
     else
       local loadedFunction, errorString = loadstring(string, firstLine(string))
-      if errorString then
+      if errorString and not silent then
         print(errorString)
-      else
+      elseif loadedFunction then
         --- @cast loadedFunction -nil
         setfenv(loadedFunction, exec_env)
         local success, func = pcall(assert(loadedFunction))
         if success then
-          self[string] = func
+          self.funcs[string] = func
           return func
         end
       end
@@ -671,8 +673,8 @@ function WeakAuras.LoadFunction(string)
   return function_cache_custom:Load(string)
 end
 
-function Private.LoadFunction(string)
-  return function_cache_builtin:Load(string)
+function Private.LoadFunction(string, silent)
+  return function_cache_builtin:Load(string, silent)
 end
 
 function Private.GetSanitizedGlobal(key)

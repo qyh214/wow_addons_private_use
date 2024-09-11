@@ -2775,6 +2775,8 @@ L["Void Discharge"] = "Scarica del Vuoto"
 L["Void Flayer"] = "Scorticatore del Vuoto"
 L["Void Spawn"] = "Creatura del Vuoto"
 --[[Translation missing --]]
+L["Void Speaker Eirich"] = "Void Speaker Eirich"
+--[[Translation missing --]]
 L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "Emissaria Toccata dal Vuoto"
 L["Voidweaver Mal'thir"] = "Tessitore del Vuoto Mal'thir"

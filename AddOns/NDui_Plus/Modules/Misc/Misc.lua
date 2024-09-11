@@ -5,16 +5,25 @@ local M = P:RegisterModule("Misc")
 local _G = getfenv(0)
 local format, select = string.format, select
 
-M.MiscList = {}
+M.load = {}
+M.preload = {}
+
+function M:RegisterPreload(name, func)
+	self.preload[name] = func or self[name]
+end
 
 function M:RegisterMisc(name, func)
-	if not M.MiscList[name] then
-		M.MiscList[name] = func
+	self.load[name] = func or self[name]
+end
+
+function M:OnInitialize()
+	for name, func in next, self.preload do
+		xpcall(func, P.ThrowError)
 	end
 end
 
 function M:OnLogin()
-	for name, func in next, M.MiscList do
+	for name, func in next, self.load do
 		xpcall(func, P.ThrowError)
 	end
 end
@@ -117,51 +126,18 @@ do
 	P:AddCallbackForAddon("Blizzard_DebugTools", M.Blizzard_TableInspector)
 end
 
--- One-click learning all dragonriding skills
 do
-	local rootNodeID = 64066 -- first skill
-
-	local function Purchase(configID, nodeID)
-		local nodeInfo = C_Traits.GetNodeInfo(configID, nodeID)
-		if nodeInfo then
-			if not nodeInfo.meetsEdgeRequirements then return end
-
-			if nodeInfo.type == Enum.TraitNodeType.Selection then
-				C_Traits.SetSelection(configID, nodeID, nodeInfo.entryIDs[2]) -- choose second
-			else
-				if nodeInfo.ranksPurchased < nodeInfo.maxRanks then
-					C_Traits.PurchaseRank(configID, nodeID)
-				end
-			end
-
-			for _, edgeInfo in ipairs(nodeInfo.visibleEdges) do
-				Purchase(configID, edgeInfo.targetNode)
-			end
-		end
+	local function resetPanelWidth()
+		SetUIPanelAttribute(_G.ProfessionsFrame, "width", 0)
 	end
 
-	local function OnClick(self)
-		local treeID = self:GetParent():GetTalentTreeID()
-		local configID = C_Traits.GetConfigIDByTreeID(treeID)
-		Purchase(configID, rootNodeID)
-		C_Traits.CommitConfig(configID)
+	function M:ModifyProfessionsWidth()
+		resetPanelWidth()
+		_G.ProfessionsFrame.CraftingPage.CraftingOutputLog:HookScript("OnShow", resetPanelWidth)
+		_G.ProfessionsFrame.CraftingPage.CraftingOutputLog:HookScript("OnHide", resetPanelWidth)
+		_G.ProfessionsFrame.OrdersPage.OrderView.CraftingOutputLog:HookScript("OnShow", resetPanelWidth)
+		_G.ProfessionsFrame.OrdersPage.OrderView.CraftingOutputLog:HookScript("OnHide", resetPanelWidth)
 	end
 
-	function M:DragonridingTalent()
-		local button = CreateFrame("Button", nil, _G.GenericTraitFrame, "MagicButtonTemplate")
-		button:SetFrameStrata("HIGH")
-		button:SetSize(120, 26)
-		button:SetPoint("BOTTOMRIGHT", -75, 40)
-		button:SetText(L["Learn All"])
-		button:SetScript("OnClick", OnClick)
-		GlowEmitterFactory:Show(button, GlowEmitterMixin.Anims.NPE_RedButton_GreenGlow)
-
-		if C.db["Skins"]["BlizzardSkins"] then B.Reskin(button) end
-
-		hooksecurefunc(_G.GenericTraitFrame.Currency, "Setup", function(_, info)
-			button:SetShown((info and info.quantity or 0) > 0)
-		end)
-	end
-
-	P:AddCallbackForAddon("Blizzard_GenericTraitUI", M.DragonridingTalent)
+	P:AddCallbackForAddon("Blizzard_Professions", M.ModifyProfessionsWidth)
 end

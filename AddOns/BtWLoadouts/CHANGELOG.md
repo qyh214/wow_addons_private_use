@@ -1,3 +1,24 @@
+# v1.20.0
+
+- Added support for instance and difficulty filtering in the conditions sidebar
+- Added delves option to scenario conditions
+- Fixed raid difficulty order for Nerub-ar Palace
+
+# v1.19.3
+
+- Fixed Delete Character Data not deleting character data
+- Fixed issues selecting specialization restrictions for hero talents
+
+# v1.19.2
+
+- Fixed the order of action bars 2 through 5
+
+# v1.19.1
+
+- Updated conditions for Nerub-ar Palace
+- Fixed The War Within expansion check
+- Fixed hero talents showing errors when the current character is missing a required talent
+
 # v1.19.0
 
 - Added support for Skyriding action bar

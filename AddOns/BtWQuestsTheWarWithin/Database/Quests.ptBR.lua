@@ -12,6 +12,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [76338] = {
         name = "Um batedor de repolhos melhor",
     },
+    [76586] = {
+        name = "Semeando a Luz",
+    },
     [76588] = {
         name = "Defesa da chama",
     },
@@ -167,6 +170,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [78472] = {
         name = "Brilho no escuro - Ativar",
+    },
+    [78529] = {
+        name = "Impacto profundo",
     },
     [78530] = {
         name = "Morte aos sabotadores",
@@ -405,6 +411,33 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78706] = {
         name = "O segredo do Grão-mensageiro",
     },
+    [78713] = {
+        name = "A guerra interna",
+    },
+    [78714] = {
+        name = "Uma recepção ruim",
+    },
+    [78715] = {
+        name = "A voz de Azeroth",
+    },
+    [78716] = {
+        name = "Lições dolorosas",
+    },
+    [78717] = {
+        name = "Um alerta misterioso",
+    },
+    [78718] = {
+        name = "Proteções fortalecidas",
+    },
+    [78719] = {
+        name = "Cidadãos de Dalaran",
+    },
+    [78721] = {
+        name = "Conhecendo a equipe",
+    },
+    [78722] = {
+        name = "A Khaz Algar!",
+    },
     [78738] = {
         name = "Mensageiro ausente",
     },
@@ -534,6 +567,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78972] = {
         name = "Colheita caótica",
     },
+    [78974] = {
+        name = "Besourância",
+    },
     [78996] = {
         name = "Guerreiros querem armas",
     },
@@ -575,6 +611,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79089] = {
         name = "Limpeza consagrada",
+    },
+    [79105] = {
+        name = "Fenda",
+    },
+    [79106] = {
+        name = "Ruptura",
     },
     [79107] = {
         name = "Finda a tempestade",
@@ -1113,11 +1155,20 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79716] = {
         name = "A história sob nossos pés",
     },
+    [79717] = {
+        name = "Meios de admissão",
+    },
+    [79718] = {
+        name = "Turma da Rua das Meadas",
+    },
     [79721] = {
         name = "Essa vai ser fogo",
     },
     [79722] = {
         name = "Trabalho de sarjeta",
+    },
+    [79723] = {
+        name = "Repatriação via subtração",
     },
     [79724] = {
         name = "Expedição titânica!",
@@ -1133,6 +1184,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79728] = {
         name = "Provavelmente não é nada",
+    },
+    [79729] = {
+        name = "Vá se educar",
+    },
+    [79730] = {
+        name = "Perseguição obstinada",
     },
     [79944] = {
         name = "Fendas raivosas",
@@ -1248,6 +1305,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80218] = {
         name = "Más intenções em Lenhasseda",
     },
+    [80295] = {
+        name = "Pedras, água e forragem elemental",
+    },
     [80312] = {
         name = "Súplica asfixiada",
     },
@@ -1263,8 +1323,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80316] = {
         name = "Voltando para o mar",
     },
+    [80321] = {
+        name = "Partida",
+    },
     [80334] = {
         name = "Pináculos estilhaçados",
+    },
+    [80378] = {
+        name = "Uma luz da escuridão",
     },
     [80392] = {
         name = "A zeladora do Terraço de Brunwin",
@@ -1310,6 +1376,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80457] = {
         name = "Servindo à rainha",
+    },
+    [80500] = {
+        name = "A família Barbabronze",
     },
     [80502] = {
         name = "Não chore por mim, Azj-kahet",
@@ -1419,6 +1488,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80689] = {
         name = "Cuidando de Ausgazur",
     },
+    [81465] = {
+        name = "Artefatos aos montes",
+    },
     [81470] = {
         name = "No enxerimento: roubo de tecidos",
     },
@@ -1502,6 +1574,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81510] = {
         name = "Dando banda!",
+    },
+    [81512] = {
+        name = "Cenografia incensada",
     },
     [81514] = {
         name = "Imersões abundantes",
@@ -1608,8 +1683,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81798] = {
         name = "De volta à Moira",
     },
+    [81802] = {
+        name = "Corrida de Pilotagem Aérea - Vista da Vigia da Tempestade",
+    },
     [81806] = {
         name = "Corrida de Pilotagem Aérea - Meandros de Minerália",
+    },
+    [81819] = {
+        name = "Corrida de Pilotagem Aérea - Passagem das Águas Paradas",
     },
     [81822] = {
         name = "Corrida de Pilotagem Aérea - Meandros de Mereldar",
@@ -1644,6 +1725,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81929] = {
         name = "Eis o plano",
     },
+    [81930] = {
+        name = "A guerra interior",
+    },
     [81945] = {
         name = "À Queda de Arathi",
     },
@@ -1664,6 +1748,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81965] = {
         name = "Perturbação da invasão",
+    },
+    [81966] = {
+        name = "Dormiu feito pedra",
     },
     [81969] = {
         name = "No limiar do Limiar",
@@ -1724,6 +1811,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82197] = {
         name = "Rebuliço da reserva",
+    },
+    [82206] = {
+        name = "Sombras adentro",
     },
     [82212] = {
         name = "Peixe-leão fraco",
@@ -1839,6 +1929,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82355] = {
         name = "Designação especial: surto de cinzabelhas",
     },
+    [82364] = {
+        name = "Documentando Discórdia",
+    },
     [82367] = {
         name = "Gema Incrustada de Terra",
     },
@@ -1904,6 +1997,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82536] = {
         name = "Operação de resgate",
+    },
+    [82580] = {
+        name = "Missão de portador: recuperação de minério",
     },
     [82583] = {
         name = "Acendendo o fogo interior",
@@ -2052,6 +2148,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83092] = {
         name = "Um ígneo fim",
     },
+    [83101] = {
+        name = "Recorrendo a recursos",
+    },
     [83108] = {
         name = "Diagnóstico diário",
     },
@@ -2160,6 +2259,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83532] = {
         name = "Torneio de Pesca de Pouso Santo",
     },
+    [83537] = {
+        name = "Tratamento de gema geotérmica",
+    },
+    [83543] = {
+        name = "Aventurando-se em Khaz Algar",
+    },
     [83548] = {
         name = "Ilha de Dorn",
     },
@@ -2175,6 +2280,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83616] = {
         name = "Em meio à trincheira",
     },
+    [83627] = {
+        name = "O começo de algo belo",
+    },
     [83628] = {
         name = "Recuperação tensa",
     },
@@ -2187,6 +2295,15 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83639] = {
         name = "Comunicação aberta",
     },
+    [83715] = {
+        name = "Sucata resgatada",
+    },
+    [83718] = {
+        name = "Ovoxtraído",
+    },
+    [83719] = {
+        name = "A mais fina quitina",
+    },
     [83749] = {
         name = "Imersões: Usina Hidráulica",
     },
@@ -2198,6 +2315,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83761] = {
         name = "Imersões: O Subforte",
+    },
+    [83766] = {
+        name = "Chamado do Imersor: Fosso do Pavor",
     },
     [83767] = {
         name = "Chamado do Imersor: A Fossa",

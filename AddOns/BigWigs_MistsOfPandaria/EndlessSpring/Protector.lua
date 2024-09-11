@@ -234,8 +234,7 @@ function mod:BossDeaths(args)
 	self:StopBar(117309) -- Cleansing Waters, CD goes wack after kill
 
 	bossDead = bossDead + 1
-	if bossDead > 2 then
+	if bossDead == 3 then
 		self:Win()
 	end
 end
-

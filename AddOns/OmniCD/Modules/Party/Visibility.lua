@@ -182,6 +182,7 @@ local function UpdateRosterInfo(force, clearSession)
 			CM:DequeueInspect(guid)
 		elseif clearSession then
 			wipe(info.sessionItemData)
+			info.auras.session_flashHeal = nil
 		end
 	end
 
@@ -414,6 +415,7 @@ function P:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi, isRefresh)
 	if self.isInPvPInstance then
 		self:ResetAllIcons("joinedPvP")
 	end
+
 	if self.isInArena then
 		if not self.callbackTimers.arenaTicker then
 			self.callbackTimers.arenaTicker = C_Timer.NewTicker(12, inspectAllGroupMembers, 6)
@@ -424,6 +426,14 @@ function P:PLAYER_ENTERING_WORLD(isInitialLogin, isReloadingUi, isRefresh)
 			self.callbackTimers.arenaTicker = nil
 		end
 	end
+
+
+
+
+
+
+
+
 
 
 	self:GROUP_ROSTER_UPDATE(true, isRefresh)

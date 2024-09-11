@@ -505,6 +505,8 @@ if not db.activate.HideMapNote then
                     nodes[2215][73835929] = { name = "", dnID = L["Path"], mnID = 2255, type = "PathRO", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[2248][52915233] = { name = "", dnID = L["Entrance"], mnID = 2339, type = "PathLO", showInZone = true, showOnContinent = false, showOnMinimap = false }
                     nodes[2248][56233921] = { name = "", dnID = L["Entrance"], mnID = 2339, type = "PathL", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                    nodes[2248][46154704] = { name = "", dnID = L["Passage"], mnID = 2214, type = "PathU", showInZone = true, showOnContinent = false, showOnMinimap = false }
+                    nodes[2248][37427287] = { dnID = L["Passage"], name = "", mnID = 2214, type = "PathU", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 end
             end
 

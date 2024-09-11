@@ -1,6 +1,6 @@
 
 
-local dversion = 556
+local dversion = 565
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -34,7 +34,7 @@ local GetSpellBookItemName = GetSpellBookItemName or C_SpellBook.GetSpellBookIte
 local GetNumSpellTabs = GetNumSpellTabs or C_SpellBook.GetNumSpellBookSkillLines
 local GetSpellTabInfo = GetSpellTabInfo or function(tabLine) local skillLine = C_SpellBook.GetSpellBookSkillLineInfo(tabLine) if skillLine then return skillLine.name, skillLine.iconID, skillLine.itemIndexOffset, skillLine.numSpellBookItems, skillLine.isGuild, skillLine.offSpecID end end
 local SpellBookItemTypeMap = Enum.SpellBookItemType and {[Enum.SpellBookItemType.Spell] = "SPELL", [Enum.SpellBookItemType.None] = "NONE", [Enum.SpellBookItemType.Flyout] = "FLYOUT", [Enum.SpellBookItemType.FutureSpell] = "FUTURESPELL", [Enum.SpellBookItemType.PetAction] = "PETACTION" } or {}
-local GetSpellBookItemInfo = GetSpellBookItemInfo or function(...) local si = C_SpellBook.GetSpellBookItemInfo(...) if si then return SpellBookItemTypeMap[si.itemType] or "NONE", si.spellID end end
+local GetSpellBookItemInfo = GetSpellBookItemInfo or function(...) local si = C_SpellBook.GetSpellBookItemInfo(...) if si then return SpellBookItemTypeMap[si.itemType] or "NONE", (si.itemType == Enum.SpellBookItemType.Flyout or si.itemType == Enum.SpellBookItemType.PetAction) and si.actionID or si.spellID or si.actionID, si end end
 local SPELLBOOK_BANK_PLAYER = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
 local SPELLBOOK_BANK_PET = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Pet or "pet"
 local IsPassiveSpell = IsPassiveSpell or C_Spell.IsSpellPassive
@@ -1840,12 +1840,14 @@ function DF:GetAllTalents()
 						local borderTypes = Enum.TraitNodeEntryType
 						if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
 							local definitionId = traitEntryInfo.definitionID
-							local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-							local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-							local spellName, _, spellTexture = GetSpellInfo(spellId)
-							if (spellName) then
-								local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
-								allTalents[#allTalents+1] = talentInfo
+							if definitionId then
+								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+								local spellName, _, spellTexture = GetSpellInfo(spellId)
+								if (spellName) then
+									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
+									allTalents[#allTalents+1] = talentInfo
+								end
 							end
 						end
 					end
@@ -2017,6 +2019,10 @@ local startFlash_Method = function(self, fadeInTime, fadeOutTime, flashDuration,
 	flashAnimation:Play()
 end
 
+---create a flash animation for a frame
+---@param frame table
+---@param onFinishFunc function?
+---@param onLoopFunc function?
 function DF:CreateFlashAnimation(frame, onFinishFunc, onLoopFunc)
 	local flashAnimation = frame:CreateAnimationGroup()
 
@@ -2915,7 +2921,7 @@ end
 --DF.font_templates ["ORANGE_FONT_TEMPLATE"] = {color = "orange", size = 11, font = "Accidental Presidency"}
 --DF.font_templates ["OPTIONS_FONT_TEMPLATE"] = {color = "yellow", size = 12, font = "Accidental Presidency"}
 --DF.font_templates["ORANGE_FONT_TEMPLATE"] = {color = "orange", size = 10, font = DF:GetBestFontForLanguage()}
-DF.font_templates["ORANGE_FONT_TEMPLATE"] = {color = {1, 0.8235, 0, 1}, size = 12, font = DF:GetBestFontForLanguage()}
+DF.font_templates["ORANGE_FONT_TEMPLATE"] = {color = {1, 0.8235, 0, 1}, size = 11, font = DF:GetBestFontForLanguage()}
 --DF.font_templates["OPTIONS_FONT_TEMPLATE"] = {color = "yellow", size = 9.6, font = DF:GetBestFontForLanguage()}
 DF.font_templates["OPTIONS_FONT_TEMPLATE"] = {color = {1, 1, 1, 0.9}, size = 9.6, font = DF:GetBestFontForLanguage()}
 DF.font_templates["SMALL_SILVER"] = {color = "silver", size = 9, font = DF:GetBestFontForLanguage()}
@@ -3050,7 +3056,13 @@ DF.button_templates["STANDARD_GRAY"] = {
 	backdropcolor = {0.2, 0.2, 0.2, 0.502},
 	backdropbordercolor = {0, 0, 0, 0.5},
 	onentercolor = {0.4, 0.4, 0.4, 0.502},
+}
 
+DF.button_templates["OPAQUE_DARK"] = {
+	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Buttons\WHITE8X8]], tileSize = 8, tile = true},
+	backdropcolor = {0.2, 0.2, 0.2, 1},
+	backdropbordercolor = {0, 0, 0, 1},
+	onentercolor = {0.4, 0.4, 0.4, 1},
 }
 
 --sliders
@@ -4879,16 +4891,18 @@ function DF:GetCharacterTalents(bOnlySelected, bOnlySelectedHash)
 
 							if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
 								local definitionId = traitEntryInfo.definitionID
-								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-								local spellName, _, spellTexture = GetSpellInfo(spellId)
-								local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
-								if (spellName and bIsSelected) then
-									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
-									if (bOnlySelectedHash) then
-										talentList[spellId] = talentInfo
-									else
-										table.insert(talentList, talentInfo)
+								if definitionId then
+									local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+									local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+									local spellName, _, spellTexture = GetSpellInfo(spellId)
+									local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
+									if (spellName and bIsSelected) then
+										local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
+										if (bOnlySelectedHash) then
+											talentList[spellId] = talentInfo
+										else
+											table.insert(talentList, talentInfo)
+										end
 									end
 								end
 							end

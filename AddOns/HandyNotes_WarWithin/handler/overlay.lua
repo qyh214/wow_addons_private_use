@@ -77,6 +77,58 @@ do
     function OptionsDropdown.values(options, ...)
         return nodeValueOrFunc('values', options, ...)
     end
+
+    function OptionsDropdown.FillFromArgs(args, info, level)
+        wipe(info)
+        info.isNotRadio = true
+        info.keepShownOnClick = true
+        info.tooltipOnButton = true
+        info.func = function(button)
+            local checked = button.checked
+            local value = button.value
+            if (checked) then
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+            else
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+            end
+            local option = args[value]
+            if option.type == "execute" then
+                option.func()
+            else
+                ns.db[value] = checked
+            end
+            ns.HL:Refresh()
+        end
+
+        local sorted = {}
+        for key in pairs(args) do
+            table.insert(sorted, key)
+        end
+        table.sort(sorted, function(a, b)
+            return (args[a].order or 0) < (args[b].order or 0)
+        end)
+        for _, key in ipairs(sorted) do
+            local option = args[key]
+            if not option.dropdownHidden and (option.type == "toggle" or option.type == "execute") then
+                info.text = option.name
+                info.tooltipTitle = option.desc
+                info.value = key
+                if option.type == "toggle" then
+                    info.notCheckable = nil
+                    info.checked = ns.db[key]
+                elseif option.type == "execute" then
+                    info.notCheckable = true
+                    info.checked = nil
+                end
+                if option.disabled then
+                    info.disabled = option.disabled()
+                else
+                    info.disabled = nil
+                end
+                LibDD:UIDropDownMenu_AddButton(info, level)
+            end
+        end
+    end
 end
 local zoneGroups, zoneHasGroups, zoneAchievements, zoneHasAchievements, allGroups, hasGroups
 do
@@ -194,6 +246,11 @@ function ns.SetupMapOverlay()
         end
     end
     frame.OnMouseDown = function(self, button)
+        if IsAltKeyDown() then
+            -- undiscoverable debug helper:
+            ns.db.found = not ns.db.found
+            return ns.HL:Refresh()
+        end
         self.Icon:SetPoint("TOPLEFT", 8, -8);
         self.IconOverlay:Show()
 
@@ -225,15 +282,14 @@ function ns.SetupMapOverlay()
         if level == 1 then
             info.isTitle = true
             info.notCheckable = true
-            info.text = DISPLAY_OPTIONS
+            info.text = SHOW
             LibDD:UIDropDownMenu_AddButton(info, level)
 
-            info.isTitle = nil
-            info.disabled = nil
-            info.notCheckable = nil
+            wipe(info)
+            info.hasArrow = true
             info.isNotRadio = true
+            info.notCheckable = nil
             info.keepShownOnClick = true
-            info.tooltipOnButton = true
             info.func = function(button)
                 local checked = button.checked
                 local value = button.value
@@ -242,46 +298,36 @@ function ns.SetupMapOverlay()
                 else
                     PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
                 end
-                local option = ns.options.args.display.args[value]
-                local db = ns.db
-                if option.type == "execute" then
-                    option.func()
-                else
-                    db[value] = checked
-                end
+                ns.db[value] = checked
                 ns.HL:Refresh()
             end
 
-            local sorted = {}
-            for key in pairs(ns.options.args.display.args) do
-                table.insert(sorted, key)
-            end
-            table.sort(sorted, function(a, b)
-                return (ns.options.args.display.args[a].order or 0) < (ns.options.args.display.args[b].order or 0)
-            end)
-            for _, key in ipairs(sorted) do
-                local option = ns.options.args.display.args[key]
-                info.text = option.name
-                info.tooltipTitle = option.desc
-                info.value = key
-                if option.type == "toggle" then
-                    info.notCheckable = nil
-                    info.checked = ns.db[key]
-                elseif option.type == "execute" then
-                    info.notCheckable = true
-                    info.checked = nil
-                end
-                if option.disabled then
-                    info.disabled = option.disabled()
-                else
-                    info.disabled = nil
-                end
+            info.text = "NPCs"
+            info.checked = ns.db.show_npcs
+            info.value = "show_npcs"
+            LibDD:UIDropDownMenu_AddButton(info, level)
+
+            info.text = "Treasure"
+            info.checked = ns.db.show_treasure
+            info.value = "show_treasure"
+            LibDD:UIDropDownMenu_AddButton(info, level)
+
+            -- OptionsDropdown.FillFromArgs(ns.options.args.common.args.display.args.npcs.args, info, level)
+            OptionsDropdown.FillFromArgs(ns.options.args.common.args.display.args, info, level)
+            LibDD:UIDropDownMenu_AddSeparator(level)
+
+            local showZoneGroups = not (ns.hiddenConfig.groupsHiddenByZone and OptionsDropdown.isHidden(ns.options.args.data, "groupsHidden")) and zoneHasGroups(uiMapID)
+            local showZoneAchievements = not OptionsDropdown.isHidden(ns.options.args.data, "achievementsHidden") and zoneHasAchievements(uiMapID)
+
+            if showZoneGroups or showZoneAchievements then
+                wipe(info)
+                info.isTitle = true
+                info.notCheckable = true
+                info.text = "Nearby types"
                 LibDD:UIDropDownMenu_AddButton(info, level)
             end
 
-            LibDD:UIDropDownMenu_AddSeparator(level)
-
-            if not (ns.hiddenConfig.groupsHiddenByZone and OptionsDropdown.isHidden(ns.options, "groupsHidden")) and zoneHasGroups(uiMapID) then
+            if showZoneGroups then
                 local global = not ns.hiddenConfig.groupsHidden
                 wipe(info)
                 info.isNotRadio = true
@@ -311,7 +357,7 @@ function ns.SetupMapOverlay()
                     LibDD:UIDropDownMenu_AddButton(info, level)
                 end
             end
-            if not OptionsDropdown.isHidden(ns.options, "achievementsHidden") and zoneHasAchievements(uiMapID) then
+            if showZoneAchievements then
                 wipe(info)
                 info.isNotRadio = true
                 info.keepShownOnClick = true
@@ -329,36 +375,59 @@ function ns.SetupMapOverlay()
                 end
             end
 
+            if showZoneGroups or showZoneAchievements then
+                LibDD:UIDropDownMenu_AddSeparator(level)
+            end
+
+            local showAchievements = not OptionsDropdown.isHidden(ns.options.args.data, "achievementsHidden")
+            local showZones = not OptionsDropdown.isHidden(ns.options.args.data, "zonesHidden")
+            local showGroups = not OptionsDropdown.isHidden(ns.options.args.data, "groupsHidden") and hasGroups()
+
+            if showAchievements or showZones or showGroups then
+                wipe(info)
+                info.isTitle = true
+                info.notCheckable = true
+                info.text = "All types"
+                LibDD:UIDropDownMenu_AddButton(info, level)
+            end
+
             wipe(info)
             info.hasArrow = true
             info.keepShownOnClick = true
             info.notCheckable = true
 
-            local displayed = false
-            if not OptionsDropdown.isHidden(ns.options, "achievementsHidden") then
+            if showAchievements then
                 info.text = ACHIEVEMENTS
                 info.value = "achievementsHidden"
                 LibDD:UIDropDownMenu_AddButton(info, level)
-                displayed = true
             end
-
-            if not OptionsDropdown.isHidden(ns.options, "zonesHidden") then
+            if showZones then
                 info.text = ZONE
                 info.value = "zonesHidden"
                 LibDD:UIDropDownMenu_AddButton(info, level)
-                displayed = true
             end
-
-            if not OptionsDropdown.isHidden(ns.options, "groupsHidden") and hasGroups() then
+            if showGroups then
                 info.text = GROUP
                 info.value = "groupsHidden"
                 LibDD:UIDropDownMenu_AddButton(info, level)
-                displayed = true
             end
 
-            if displayed then
+            if showAchievements or showZones or showGroups then
                 LibDD:UIDropDownMenu_AddSeparator(level)
             end
+
+            wipe(info)
+            info.notCheckable = true
+
+            info.text = "What's notable?"
+            info.value = "notability"
+            info.hasArrow = true
+            LibDD:UIDropDownMenu_AddButton(info, level)
+
+            info.text = "More settings"
+            info.value = "settings"
+            info.hasArrow = true
+            LibDD:UIDropDownMenu_AddButton(info, level)
 
             info.text = "Open HandyNotes options"
             info.hasArrow = nil
@@ -370,10 +439,65 @@ function ns.SetupMapOverlay()
                 else
                     Settings.OpenToCategory('HandyNotes')
                 end
-                LibStub('AceConfigDialog-3.0'):SelectGroup('HandyNotes', 'plugins', myname:gsub("HandyNotes_", ""))
+                LibStub('AceConfigDialog-3.0'):SelectGroup('HandyNotes', 'plugins', (myname:gsub("HandyNotes_", "")))
             end
             LibDD:UIDropDownMenu_AddButton(info, level)
 
+        elseif level == 2 and (L_UIDROPDOWNMENU_MENU_VALUE == "show_npcs" or L_UIDROPDOWNMENU_MENU_VALUE == "show_treasure") then
+            wipe(info)
+            info.func = function(button, arg1)
+                local checked = button.checked
+                local value = button.value
+                if (checked) then
+                    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+                else
+                    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+                end
+                ns.db[value] = arg1
+                ns.HL:Refresh()
+            end
+            info.value = L_UIDROPDOWNMENU_MENU_VALUE .. "_filter"
+            info.keepShownOnClick = false
+
+            info.text = ALL
+            info.arg1 = "all"
+            info.checked = ns.db[info.value] == "all"
+            LibDD:UIDropDownMenu_AddButton(info, level)
+            info.text = "Will drop loot"
+            info.arg1 = "lootable"
+            info.checked = ns.db[info.value] == "lootable"
+            LibDD:UIDropDownMenu_AddButton(info, level)
+            info.text = "Will drop notable loot"
+            info.arg1 = "notable"
+            info.checked = ns.db[info.value] == "notable"
+            LibDD:UIDropDownMenu_AddButton(info, level)
+
+            if L_UIDROPDOWNMENU_MENU_VALUE == "show_npcs" then
+                LibDD:UIDropDownMenu_AddSeparator(level)
+                OptionsDropdown.FillFromArgs(ns.options.args.common.args.display.args.npcs.args, info, level)
+            end
+        elseif level == 2 and L_UIDROPDOWNMENU_MENU_VALUE == "notability" then
+            wipe(info)
+            OptionsDropdown.FillFromArgs(ns.options.args.common.args.notable.args, info, level)
+        elseif level == 2 and L_UIDROPDOWNMENU_MENU_VALUE == "settings" then
+            wipe(info)
+            info.isTitle = true
+            info.notCheckable = true
+            info.text = ns.options.args.common.args.found.name
+            LibDD:UIDropDownMenu_AddButton(info, level)
+            OptionsDropdown.FillFromArgs(ns.options.args.common.args.found.args, info, level)
+            wipe(info)
+            info.isTitle = true
+            info.notCheckable = true
+            info.text = ns.options.args.common.args.tooltips.name
+            LibDD:UIDropDownMenu_AddButton(info, level)
+            OptionsDropdown.FillFromArgs(ns.options.args.common.args.tooltips.args, info, level)
+            wipe(info)
+            info.isTitle = true
+            info.notCheckable = true
+            info.text = ns.options.args.common.args.fiddly.name
+            LibDD:UIDropDownMenu_AddButton(info, level)
+            OptionsDropdown.FillFromArgs(ns.options.args.common.args.fiddly.args, info, level)
         elseif level == 2 or level == 3 then
             local parent = L_UIDROPDOWNMENU_MENU_VALUE
             local currentZone = WorldMapFrame.mapID
@@ -398,7 +522,7 @@ function ns.SetupMapOverlay()
                 end
                 ns.HL:Refresh()
             end
-            local values = OptionsDropdown.values(ns.options, parent)
+            local values = OptionsDropdown.values(ns.options.args.data, parent)
             if parent == "achievementsHidden" then
                 local relevant = zoneAchievements(currentZone)
                 for _, achievementid in iterKeysByValue(values) do

@@ -3,6 +3,8 @@ local L = addon.L;
 local API = addon.API;
 local Clamp = API.Clamp;
 local ThemeUtil = addon.ThemeUtil;
+local TTSUtil = addon.TTSUtil;
+local PlaySound = addon.PlaySound;
 local InCombatLockdown = InCombatLockdown;
 local CreateFrame = CreateFrame;
 local type = type;
@@ -232,6 +234,7 @@ function DUIDialogSettingsMixin:UpdatePixel(scale)
     API.UpdateTextureSliceScale(self.Background);
     API.UpdateTextureSliceScale(self.BackgroundShadow);
     API.UpdateTextureSliceScale(self.PreviewBorder);
+    API.UpdateTextureSliceScale(self.Header.Selection);
 end
 
 function DUIDialogSettingsMixin:HighlightButton(button)
@@ -358,7 +361,7 @@ local function PrimaryControlKey_Interact_Tooltip()
     end
 end
 
-local function TTSHotkey_Tooltip()
+local function TTSHotkey_TooltipFunc()
     local device;
 
     if INPUT_DEVICE_ID == 1 then
@@ -376,12 +379,93 @@ local function TTSHotkey_Tooltip()
     return L["TTS Use Hotkey Tooltip "..device]
 end
 
+local function TTSVoice_TooltipFunc(self)
+    local dbValue = GetDBValue(self.dbKey);
+    return TTSUtil:GetVoiceName(dbValue)
+end
+
+local function TTSVoice_MenuButton_OnClick(menuButton)
+    local dbKey = menuButton.data.dbKey;
+    local voiceID = menuButton.id;
+    SetDBValue(dbKey, voiceID, true);
+    MainFrame:UpdateOptionButtonByDBKey(dbKey);
+end
+
+local function TTSVoice_AbbreviateName(text)
+    text = string.gsub(text, "^Microsoft", "");
+    return strtrim(text);
+end
+
+local function TTSVoice_GetChoices()
+    local voices = TTSUtil:GetAvailableVoices();
+    local choices = {};
+
+    for index, data in ipairs(voices) do
+        choices[index] = {
+            dbValue = data.voiceID,
+            tooltip = data.name,
+        }
+    end
+
+    return choices
+end
+
+local function ValueTextFormatter_TTSVoiceName(dropdownButton, dbValue)
+    --dbValue: voiceID
+    if INPUT_DEVICE_GAME_PAD then
+        dropdownButton.ValueText:SetText(dbValue);
+    else
+        local voiceName = TTSVoice_AbbreviateName(TTSUtil:GetVoiceName(dbValue));
+        addon.FontUtil:SetAutoScalingText(dropdownButton.ValueText, voiceName);
+    end
+end
+
+local function TTSVoice_BuildMenuData(dropdownButton, dbKey)
+    local voices = TTSUtil:GetAvailableVoices();
+    local total = voices and #voices or 0;
+
+    if total > 0 then
+        local menuData = {};
+        menuData.buttons = {};
+        menuData.buttonHeight = OPTION_WIDGET_SIZE;
+        menuData.buttonWidth = OPTION_WIDGET_SIZE * 8;
+        menuData.selectedID = GetDBValue(dbKey);
+        menuData.fitWidth = true;
+        menuData.autoScaling = true;
+
+        for i, data in ipairs(voices) do
+            menuData.buttons[i] = {
+                name = TTSVoice_AbbreviateName(data.name),
+                id = data.voiceID,
+                onClickFunc = TTSVoice_MenuButton_OnClick,
+                keptOpen = true,
+                dbKey = dbKey,
+            };
+        end
+
+        return menuData
+    end
+end
+
+local function WidgetManager_Move_OnClick()
+    addon.WidgetManager:TogglePopupAnchor();
+end
+
+local function WidgetManager_Reset_OnClick()
+    addon.WidgetManager:ResetPosition();
+end
+
+local function WidgetManagerPosition_Validation()
+    return addon.WidgetManager:IsUsingCustomPosition();
+end
+
 local function QuestItemDisplay_Move_OnClick()
-    addon.QuestItemDisplay:EnterEditMode();
+    addon.QuestItemDisplay:ToggleEditMode();
 end
 
 local function QuestItemDisplay_Reset_OnClick()
-    addon.QuestItemDisplay:ResetPosition();
+    local fromSettingsUI = true;
+    addon.QuestItemDisplay:ResetPosition(fromSettingsUI);
 end
 
 local function QuestItemDisplayPosition_Validation()
@@ -400,9 +484,16 @@ local function RPAddOn_ReplaceName_Tooltip()
     end
 end
 
-local Schematic = {
+local function OptionHasNoEffectDueToMobile()
+    --Size options have no effect due to MobileDeviceMode
+    if GetDBValue("MobileDeviceMode") == true then
+        return L["Mobile Device Mode Override Option"]
+    end
+end
+
+local Schematic = { --Scheme
     {
-        tabName = L["UI"],
+        tabName = L["UI"],  --Cate1
         options = {
             {type = "ArrowOption", name = L["Theme"], description = L["Theme Desc"], dbKey = "Theme", preview = "Theme", ratio = 2,
                 choices = {
@@ -410,7 +501,7 @@ local Schematic = {
                     {dbValue = 2, valueText = L["Theme Dark"]},
                 },
             },
-            {type = "ArrowOption", name = L["Frame Size"], description = L["Frame Size Desc"], dbKey = "FrameSize",
+            {type = "ArrowOption", name = L["Frame Size"], description = L["Frame Size Desc"], tooltip = OptionHasNoEffectDueToMobile, dbKey = "FrameSize",
                 choices = {
                     {dbValue = 0, valueText = L["Size Extra Small"]},
                     {dbValue = 1, valueText = L["Size Small"]},
@@ -418,7 +509,7 @@ local Schematic = {
                     {dbValue = 3, valueText = L["Size Large"]},
                 },
             },
-            {type = "ArrowOption", name = L["Font Size"], description = L["Font Size Desc"], dbKey = "FontSizeBase", realignAfterClicks = true,
+            {type = "ArrowOption", name = L["Font Size"], description = L["Font Size Desc"], tooltip = OptionHasNoEffectDueToMobile, dbKey = "FontSizeBase", realignAfterClicks = true,
                 choices = {
                     {dbValue = 0, valueText = "10"},
                     {dbValue = 1, valueText = "12"},
@@ -433,7 +524,7 @@ local Schematic = {
                 },
             },
             {type = "Checkbox", name = L["Hide UI"], description = L["Hide UI Desc"], dbKey = "HideUI"},
-            {type = "Checkbox", name = L["Hide Unit Names"], description = L["Hide Unit Names Desc"], dbKey = "HideUnitNames", parentKey = "HideUI", requiredParentValue = true},
+            {type = "Checkbox", name = L["Hide Unit Names"], description = L["Hide Unit Names Desc"], dbKey = "HideUnitNames", requiredParentValue = {HideUI = true}},
             {type = "Checkbox", name = L["Show Copy Text Button"], description = L["Show Copy Text Button Desc"], preview = "CopyTextButton", ratio = 1, dbKey = "ShowCopyTextButton"},
             {type = "Checkbox", name = L["Show NPC Name On Page"], description = L["Show NPC Name On Page Desc"], dbKey = "ShowNPCNameOnPage"},
 
@@ -448,7 +539,7 @@ local Schematic = {
     },
 
     {
-        tabName = L["Camera"],
+        tabName = L["Camera"],  --Cate2
         options = {
             {type = "ArrowOption", name = L["Camera Movement"], dbKey="CameraMovement",
                 choices = {
@@ -457,16 +548,16 @@ local Schematic = {
                     {dbValue = 2, valueText = L["Camera Movement Horizontal"]},
                 },
             },
-            {type = "Checkbox", name = L["Change FOV"], description = L["Change FOV Desc"], dbKey = "CameraChangeFov", parentKey = "CameraMovement", requiredParentValue = 1, preview = "CameraChangeFov", ratio = 2},
-            {type = "Checkbox", name = L["Maintain Camera Position"], description = L["Maintain Camera Position Desc"], dbKey = "CameraMovement1MaintainPosition", parentKey = "CameraMovement", requiredParentValue = 1},
-            --{type = "Checkbox", name = L["Maintain Camera Position"], description = L["Maintain Camera Position Desc"], dbKey = "CameraMovement2MaintainPosition", parentKey = "CameraMovement", requiredParentValue = 2, },
-            {type = "Checkbox", name = L["Maintain Offset While Mounted"], description = L["Maintain Offset While Mounted Desc"], dbKey = "CameraMovementMountedCamera", parentKey = "CameraMovement", requiredParentValue = {1, 2}},
-            {type = "Checkbox", name = L["Disable Camera Movement Instance"], description = L["Disable Camera Movement Instance Desc"], dbKey = "CameraMovementDisableInstance", parentKey = "CameraMovement", requiredParentValue = {1, 2}},
+            {type = "Checkbox", name = L["Change FOV"], description = L["Change FOV Desc"], dbKey = "CameraChangeFov", requiredParentValue = {CameraMovement = 1}, preview = "CameraChangeFov", ratio = 2},
+            {type = "Checkbox", name = L["Maintain Camera Position"], description = L["Maintain Camera Position Desc"], dbKey = "CameraMovement1MaintainPosition", {CameraMovement = 1}},
+            --{type = "Checkbox", name = L["Maintain Camera Position"], description = L["Maintain Camera Position Desc"], dbKey = "CameraMovement2MaintainPosition", {CameraMovement = 2}},
+            {type = "Checkbox", name = L["Maintain Offset While Mounted"], description = L["Maintain Offset While Mounted Desc"], dbKey = "CameraMovementMountedCamera", {CameraMovement = {1, 2}}},
+            {type = "Checkbox", name = L["Disable Camera Movement Instance"], description = L["Disable Camera Movement Instance Desc"], dbKey = "CameraMovementDisableInstance", parentKey = "CameraMovement", {CameraMovement = {1, 2}}},
         },
     },
 
     {
-        tabName = L["Control"],
+        tabName = L["Control"],  --Cate3
         options = {
             {type = "ArrowOption", name = L["Input Device"], dbKey = "InputDevice", description = L["Input Device Desc"],
                 choices = {
@@ -476,27 +567,36 @@ local Schematic = {
                     {dbValue = 4, valueText = L["Input Device Switch"], tooltip = L["Input Device Switch Tooltip"]},
                 },
             },
-            {type = "ArrowOption", name = L["Primary Control Key"], description = L["Primary Control Key Desc"], dbKey = "PrimaryControlKey", valueTextFormatter = ValueTextFormatter_PrimaryControlKey, hasHotkey = true, parentKey = "InputDevice", requiredParentValue = 1,
+            {type = "ArrowOption", name = L["Primary Control Key"], description = L["Primary Control Key Desc"], dbKey = "PrimaryControlKey", valueTextFormatter = ValueTextFormatter_PrimaryControlKey, hasHotkey = true, requiredParentValue = {InputDevice = 1},
                 choices = {
                     {dbValue = 1, valueText = L["Key Space"]},
                     {dbValue = 2, valueText = L["Key Interact"], tooltip = PrimaryControlKey_Interact_Tooltip},
                     {dbValue = 0, valueText = L["Key Disabled"], tooltip = L["Key Disabled Tooltip"]},
                 },
             },
-            {type = "Checkbox", name = L["Right Click To Close UI"], description = L["Right Click To Close UI Desc"], dbKey = "RightClickToCloseUI"},
+            {type = "Checkbox", name = L["Right Click To Close UI"], description = L["Right Click To Close UI Desc"], dbKey = "RightClickToCloseUI", requiredParentValue = {InputDevice = 1}},
 
             {type = "Subheader", name = L["Quest"]},
             {type = "Checkbox", name = L["Press Button To Scroll Down"], description = L["Press Button To Scroll Down Desc"], dbKey = "ScrollDownThenAcceptQuest"},
+
+            {type = "Subheader", name = L["Experimental Features"]},
+            {type = "Checkbox", name = L["Mobile Device Mode"], description = L["Mobile Device Mode Desc"], dbKey = "MobileDeviceMode"},
+            {type = "Checkbox", name = L["Emulate Swipe"], description = L["Emulate Swipe Desc"], dbKey = "EmulateSwipe"},
         },
     },
 
     {
-        tabName = L["Gameplay"],
+        tabName = L["Gameplay"],  --Cate4
         options = {
+            {type = "Checkbox", name = L["Auto Quest Popup"], description = L["Auto Quest Popup Desc"], dbKey = "AutoQuestPopup", preview = "AutoQuestPopup", ratio = 2},
+            {type = "Custom", name = L["Move Position"], icon = "Settings-Move.png", onClickFunc = WidgetManager_Move_OnClick, requiredParentValue = {AutoQuestPopup = true}},
+            {type = "Custom", name = L["Reset Position"], icon = "Settings-Reset.png", description = L["Quest Item Display Reset Position Desc"], validationFunc = WidgetManagerPosition_Validation, onClickFunc = WidgetManager_Reset_OnClick, requireSameParentValue = true},
+
             {type = "Checkbox", name = L["Quest Item Display"], description = L["Quest Item Display Desc"], dbKey = "QuestItemDisplay", preview = "QuestItemDisplay", ratio = 2},
-            {type = "Checkbox", name = L["Quest Item Display Hide Seen"], description = L["Quest Item Display Hide Seen Desc"], dbKey = "QuestItemDisplayHideSeen", parentKey = "QuestItemDisplay", requiredParentValue = true},
-            {type = "Custom", name = L["Move Position"], icon = "Settings-Move.png", parentKey = "QuestItemDisplay", requiredParentValue = true, onClickFunc = QuestItemDisplay_Move_OnClick},
-            {type = "Custom", name = L["Reset Position"], icon = "Settings-Reset.png", description = L["Quest Item Display Reset Position Desc"], parentKey = "QuestItemDisplay", requiredParentValue = true, validationFunc = QuestItemDisplayPosition_Validation, onClickFunc = QuestItemDisplay_Reset_OnClick},
+            {type = "Checkbox", name = L["Quest Item Display Hide Seen"], description = L["Quest Item Display Hide Seen Desc"], dbKey = "QuestItemDisplayHideSeen", requiredParentValue = {QuestItemDisplay = true}},
+            {type = "Checkbox", name = L["Quest Item Display Await World Map"], description = L["Quest Item Display Await World Map Desc"], dbKey = "QuestItemDisplayDynamicFrameStrata", parentKey = "QuestItemDisplay", requireSameParentValue = true},
+            {type = "Custom", name = L["Move Position"], icon = "Settings-Move.png", onClickFunc = QuestItemDisplay_Move_OnClick, requireSameParentValue = true},
+            {type = "Custom", name = L["Reset Position"], icon = "Settings-Reset.png", description = L["Quest Item Display Reset Position Desc"], validationFunc = QuestItemDisplayPosition_Validation, onClickFunc = QuestItemDisplay_Reset_OnClick, requireSameParentValue = true},
 
             {type = "Subheader", name = L["Gossip"]},
             {type = "Checkbox", name = L["Auto Select Gossip"], description = L["Auto Select Gossip Desc"], dbKey = "AutoSelectGossip"},
@@ -506,12 +606,42 @@ local Schematic = {
     },
 
     {
-        tabName = L["Accessibility"],
+        tabName = L["Accessibility"],  --Cate5
         options = {
             {type = "Checkbox", name = L["TTS"], description = L["TTS Desc"], dbKey = "TTSEnabled", preview = "TTSButton", ratio = 1},
-            {type = "Checkbox", name = L["TTS Use Hotkey"], description = L["TTS Use Hotkey Desc"], tooltip = TTSHotkey_Tooltip, dbKey = "TTSUseHotkey", parentKey = "TTSEnabled", requiredParentValue = true},
-            {type = "Checkbox", name = L["TTS Auto Play"], description = L["TTS Auto Play Desc"], dbKey = "TTSAutoPlay", parentKey = "TTSEnabled", requiredParentValue = true},
-            {type = "Checkbox", name = L["TTS Auto Stop"], description = L["TTS Auto Stop Desc"], dbKey = "TTSAutoStop", parentKey = "TTSEnabled", requiredParentValue = true},
+            {type = "Checkbox", name = L["TTS Use Hotkey"], description = L["TTS Use Hotkey Desc"], tooltip = TTSHotkey_TooltipFunc, dbKey = "TTSUseHotkey", parentKey = "TTSEnabled", requiredParentValue = {TTSEnabled = true}},
+            {type = "Checkbox", name = L["TTS Auto Play"], description = L["TTS Auto Play Desc"], dbKey = "TTSAutoPlay", requireSameParentValue = true},
+            {type = "Checkbox", name = L["TTS Skip Recent"], description = L["TTS Skip Recent Desc"], dbKey = "TTSSkipRecent", branchLevel = 2, requiredParentValue = {TTSEnabled = true, TTSAutoPlay = true}},
+            {type = "Checkbox", name = L["TTS Auto Stop"], description = L["TTS Auto Stop Desc"], dbKey = "TTSAutoStop", requiredParentValue = {TTSEnabled = true}},
+            {type = "Checkbox", name = L["TTS Stop On New"], description = L["TTS Stop On New Desc"], dbKey = "TTSStopOnNew", requireSameParentValue = true},
+            {type = "DropdownButton", name = L["TTS Voice Male"], description = L["TTS Voice Male Desc"], tooltip = TTSVoice_TooltipFunc, dbKey="TTSVoiceMale", valueTextFormatter = ValueTextFormatter_TTSVoiceName, choices = TTSVoice_GetChoices, requireSameParentValue = true},
+            {type = "DropdownButton", name = L["TTS Voice Female"], description = L["TTS Voice Female Desc"],  tooltip = TTSVoice_TooltipFunc, dbKey="TTSVoiceFemale", valueTextFormatter = ValueTextFormatter_TTSVoiceName, choices = TTSVoice_GetChoices, requireSameParentValue = true},
+            {type = "Checkbox", name = L["TTS Use Narrator"], description = L["TTS Use Narrator Desc"], dbKey = "TTSUseNarrator", requiredParentValue = {TTSEnabled = true}},
+            {type = "DropdownButton", name = L["TTS Voice Narrator"], description = L["TTS Voice Narrator Desc"],  tooltip = TTSVoice_TooltipFunc, dbKey="TTSVoiceNarrator", valueTextFormatter = ValueTextFormatter_TTSVoiceName, choices = TTSVoice_GetChoices, branchLevel = 2, requiredParentValue = {TTSEnabled = true, TTSUseNarrator = true}},
+            {type = "ArrowOption", name = L["TTS Rate"], dbKey = "TTSRate", description = L["TTS Rate Desc"], requiredParentValue = {TTSEnabled = true},
+                choices = {
+                    {dbValue = 1, valueText = "1"},
+                    {dbValue = 2, valueText = "2"},
+                    {dbValue = 3, valueText = "3"},
+                    {dbValue = 4, valueText = "4"},
+                    {dbValue = 5, valueText = "5"},
+                    {dbValue = 6, valueText = "6"},
+                },
+            },
+            {type = "ArrowOption", name = L["TTS Volume"], dbKey = "TTSVolume", description = L["TTS Volume Desc"], requireSameParentValue = true,
+                choices = {
+                    {dbValue = 5, valueText = "50%"},
+                    {dbValue = 6, valueText = "60%"},
+                    {dbValue = 7, valueText = "70%"},
+                    {dbValue = 8, valueText = "80%"},
+                    {dbValue = 9, valueText = "90%"},
+                    {dbValue = 10, valueText = "100%"},
+                },
+            },
+            {type = "Subheader", name = L["TTS Include Content"], requireSameParentValue = true},
+            {type = "Checkbox", name = L["TTS Content NPC Name"], dbKey = "TTSContentSpeaker", branchLevel = 2, requireSameParentValue = true},
+            {type = "Checkbox", name = L["TTS Content Quest Name"], dbKey = "TTSContentQuestTitle", branchLevel = 2, requireSameParentValue = true},
+            {type = "Checkbox", name = L["TTS Content Objective"], dbKey = "TTSContentObjective", branchLevel = 2, requireSameParentValue = true},
         },
     },
 };
@@ -521,6 +651,7 @@ local CloseButtonScripts = {};
 
 function CloseButtonScripts:OnClick()
     MainFrame:Hide();
+    PlaySound("CHECKBOX_ON");
 end
 
 function CloseButtonScripts:OnEnter()
@@ -550,6 +681,7 @@ local function RemoveWidget(widget)
     widget:ClearAllPoints();
     widget:SetParent(MainFrame);
     widget.HotkeyFrame = nil;
+    widget.valueTextFormatter = nil;
 end
 
 local function CreateOptionButton()
@@ -573,6 +705,15 @@ end
 
 local function OnAcquireArrowOption(widget)
     widget:SetTexture(ThemeUtil:GetTextureFile("Settings-ArrowOption.png"));
+end
+
+local function CreateDropdownButton()
+    local widget = CreateFrame("Button", nil, MainFrame, "DUIDialogSettingsDropdownButtonTemplate");
+    return widget
+end
+
+local function OnAcquireDropdownButton(widget)
+    widget:SetTexture(ThemeUtil:GetTextureFile("Settings-DropdownButton.png"));
 end
 
 
@@ -669,6 +810,7 @@ function DUIDialogSettingsMixin:Init()
     self.optionButtonPool = API.CreateObjectPool(CreateOptionButton, RemoveWidget);
     self.checkboxPool = API.CreateObjectPool(CreateCheckbox, RemoveWidget, OnAcquireCheckbox);
     self.arrowOptionPool = API.CreateObjectPool(CreateArrowOption, RemoveWidget, OnAcquireArrowOption);
+    self.dropdownButtonPool = API.CreateObjectPool(CreateDropdownButton, RemoveWidget, OnAcquireDropdownButton);
     self.texturePool = API.CreateObjectPool(CreateTexture);
 
     local function CreateHotkeyFrame()
@@ -684,7 +826,7 @@ function DUIDialogSettingsMixin:Init()
     end
 
     self.hotkeyFramePool = API.CreateObjectPool(CreateHotkeyFrame, RemoveHotkeyFrame);
-    
+
     self.numTabs = #Schematic;
 
     for i, tabData in ipairs(Schematic) do
@@ -852,6 +994,7 @@ function DUIDialogSettingsMixin:SelectTabByID(tabID, forceUpdate)
     self.optionButtonPool:Release();
     self.checkboxPool:Release();
     self.arrowOptionPool:Release();
+    self.dropdownButtonPool:Release();
     self.texturePool:Release();
     self.hotkeyFramePool:Release();
 
@@ -891,34 +1034,31 @@ function DUIDialogSettingsMixin:SelectTabByID(tabID, forceUpdate)
     local optionButton;
     local numShownOptions = 0;
     local isOptionValid;
-
+    local isLastRequirementMet;
     local dbKeyToWidget = {};
 
     for i, optionData in ipairs(tabData.options) do
-        if optionData.parentKey then
-            isOptionValid = false;
-            local requirement = optionData.requiredParentValue;
-            local dbValue = GetDBValue(optionData.parentKey);
-
-            if type(requirement) == "table" then
-                for _, requiredParentValue in ipairs(requirement) do
-                    if dbValue == requiredParentValue then
-                        isOptionValid = true;
-                        break
+        if optionData.requiredParentValue or optionData.requireSameParentValue then
+            if optionData.requireSameParentValue then
+                --For adjacent options that use the same parentKey
+                isOptionValid = isLastRequirementMet;
+            else
+                isOptionValid = true;
+                for parentKey, requiredValue in pairs(optionData.requiredParentValue) do
+                    local dbValue = GetDBValue(parentKey);
+                    if dbValue ~= requiredValue then
+                        isOptionValid = false;
+                    end
+                    if dbKeyToWidget[parentKey] then
+                        dbKeyToWidget[parentKey].isParentOption = true;
                     end
                 end
-            else
-                if dbValue == optionData.requiredParentValue then
-                    isOptionValid = true;
-                end
-            end
 
-
-            if dbKeyToWidget[optionData.parentKey] then
-                dbKeyToWidget[optionData.parentKey].isParentOption = true;
+                isLastRequirementMet = isOptionValid;
             end
         else
             isOptionValid = true;
+            isLastRequirementMet = false;
         end
 
         if isOptionValid and optionData.validationFunc then
@@ -992,6 +1132,19 @@ function DUIDialogSettingsMixin:ToggleUI()
     self:SetShown(not self:IsShown());
 end
 
+function DUIDialogSettingsMixin:GetOptionButtonByDBKey(dbKey)
+    if dbKey and self.dbKeyToWidget then
+        return self.dbKeyToWidget[dbKey]
+    end
+end
+
+function DUIDialogSettingsMixin:UpdateOptionButtonByDBKey(dbKey)
+    local optionButton = self:GetOptionButtonByDBKey(dbKey);
+    if optionButton and optionButton:IsVisible() and optionButton.optionData and optionButton.widget then
+        optionButton.widget:SetData(optionButton.optionData);
+    end
+end
+
 
 DUIDialogSettingsTabButtonMixin = {};
 
@@ -1014,6 +1167,7 @@ end
 
 function DUIDialogSettingsTabButtonMixin:OnClick()
     MainFrame:SelectTabByID(self.tabID);
+    PlaySound("CHECKBOX_ON");
 end
 
 function DUIDialogSettingsTabButtonMixin:SetName(name)
@@ -1058,7 +1212,7 @@ end
 function DUIDialogSettingsOptionMixin:OnClick(button)
     MainFrame:SetFocusedObject(self);
 
-    if self.widget and self.widget.OnClick and self.widget:IsEnabled() then
+    if self.widgetType == "Checkbox" and self.widget and self.widget.OnClick and self.widget:IsEnabled() then
         self.widget:OnClick(button);
     elseif self.optionData.onClickFunc then
         self.optionData.onClickFunc(self);
@@ -1068,20 +1222,26 @@ function DUIDialogSettingsOptionMixin:OnClick(button)
     self:OnEnter();
 end
 
-function DUIDialogSettingsOptionMixin:SetCheckbox(optionData)
-    self.widget = MainFrame.checkboxPool:Acquire();
+function DUIDialogSettingsOptionMixin:AttachWidget(widgetPool, rightOffsetRatio)
+    local right = (rightOffsetRatio and rightOffsetRatio * OPTION_WIDGET_SIZE) or 0;
+    self.widget = widgetPool:Acquire();
     self.widget:SetParent(self);
-    self.widget:SetPoint("RIGHT", self, "RIGHT", -BUTTON_PADDING_LARGE, 0);
+    self.widget:SetPoint("RIGHT", self, "RIGHT", -BUTTON_PADDING_LARGE -right, 0);
     self.widget:SetWidgetHeight(OPTION_WIDGET_SIZE);
+end
 
-    self.widget:SetChecked(GetDBValue(self.dbKey) == true);
+function DUIDialogSettingsOptionMixin:SetCheckbox(optionData)
+    self:AttachWidget(MainFrame.checkboxPool);
+    self.widget:SetData(optionData);
 end
 
 function DUIDialogSettingsOptionMixin:SetArrowOption(optionData)
-    self.widget = MainFrame.arrowOptionPool:Acquire();
-    self.widget:SetParent(self);
-    self.widget:SetPoint("RIGHT", self, "RIGHT", -BUTTON_PADDING_LARGE, 0);
-    self.widget:SetWidgetHeight(OPTION_WIDGET_SIZE);
+    self:AttachWidget(MainFrame.arrowOptionPool);
+    self.widget:SetData(optionData);
+end
+
+function DUIDialogSettingsOptionMixin:SetDropdownButton(optionData)
+    self:AttachWidget(MainFrame.dropdownButtonPool, 0.125);
     self.widget:SetData(optionData);
 end
 
@@ -1115,6 +1275,12 @@ function DUIDialogSettingsOptionMixin:SetData(optionData)
         self:SetCheckbox(optionData);
     elseif optionData.type == "ArrowOption" then
         self:SetArrowOption(optionData);
+    elseif optionData.type == "DropdownButton" then
+        if INPUT_DEVICE_GAME_PAD then   --We convert Dropdown to ArrowOption because of UX
+            self:SetArrowOption(optionData);
+        else
+            self:SetDropdownButton(optionData);
+        end
     elseif optionData.type == "Custom" then
         self:SetCustomButton(optionData);
     end
@@ -1136,13 +1302,15 @@ function DUIDialogSettingsOptionMixin:SetData(optionData)
 
     local nameOffset;
 
-    if optionData.parentKey then
-        nameOffset = OPTIONBUTTON_LABEL_OFFSET + 24;
+    if optionData.requiredParentValue or optionData.requireSameParentValue then
         local branch = MainFrame.texturePool:Acquire();
-        branch:SetSize(OPTIONBUTTON_HEIGHT*0.5, OPTIONBUTTON_HEIGHT*0.5);
+        local branchLevel = optionData.branchLevel or 1;
+        local branchWidth = OPTIONBUTTON_HEIGHT*0.5;
+        nameOffset = OPTIONBUTTON_LABEL_OFFSET + branchLevel * (branchWidth*0.5 + 10)
+        branch:SetSize(branchWidth, OPTIONBUTTON_HEIGHT*0.5);
         branch:SetTexture(ThemeUtil:GetTextureFile("Settings-SubOptionIcon.png"));
         branch:SetVertexColor(1, 1, 1, 0.5);
-        branch:SetPoint("BOTTOM", self, "LEFT", OPTIONBUTTON_LABEL_OFFSET + 2, 0);
+        branch:SetPoint("BOTTOMRIGHT", self, "LEFT", nameOffset - 8, 0);
         branch:SetParent(self);
     else
         nameOffset = OPTIONBUTTON_LABEL_OFFSET;
@@ -1165,333 +1333,509 @@ function DUIDialogSettingsOptionMixin:SetData(optionData)
 end
 
 
+do  --ArrowOption
+    DUIDialogSettingsArrowOptionMixin = {};
 
-
-DUIDialogSettingsArrowOptionMixin = {};
-
-local function ArrowButton_OnClick(self)
-    self:GetParent():SelectChoiceByDelta(self.delta);
-end
-
-local function ArrowButton_OnEnter(self)
-    self:GetParent():GetParent():OnEnter();
-end
-
-local function ArrowButton_OnLeave(self)
-    self:GetParent():GetParent():OnLeave();
-end
-
-local function ArrowButton_OnMouseDown(self)
-    if not self:IsEnabled() then return end;
-
-    if self.delta < 0 then
-        self.Texture:SetPoint("CENTER", -1, 0);
-    else
-        self.Texture:SetPoint("CENTER", 1, 0);
-    end
-end
-
-local function ArrowButton_OnMouseUp(self)
-    self.Texture:SetPoint("CENTER", 0, 0);
-end
-
-local function ArrowButton_OnEnable(self)
-    self:SetAlpha(1);
-end
-
-local function ArrowButton_OnDisable(self)
-    self:SetAlpha(DISABLED_TEXTURE_ALPHA);
-end
-
-local function RemoveBar(bar)
-    bar:Hide();
-    bar:ClearAllPoints();
-end
-
-local function OnAcquireBar(bar)
-    bar:SetTexture(ThemeUtil:GetTextureFile("Settings-ArrowOption.png"));
-end
-
-function DUIDialogSettingsArrowOptionMixin:OnLoad()
-    self.ValueText:SetPoint("TOP", self, "TOP", 0, ARROWOPTION_VALUETEXT_OFFSET_Y);
-
-    self.LeftArrow.delta = -1;
-    self.LeftArrow:SetScript("OnEnter", ArrowButton_OnEnter);
-    self.LeftArrow:SetScript("OnLeave", ArrowButton_OnLeave);
-    self.LeftArrow:SetScript("OnClick", ArrowButton_OnClick);
-    self.LeftArrow:SetScript("OnMouseDown", ArrowButton_OnMouseDown);
-    self.LeftArrow:SetScript("OnMouseUp", ArrowButton_OnMouseUp);
-    self.LeftArrow:SetScript("OnEnable", ArrowButton_OnEnable);
-    self.LeftArrow:SetScript("OnDisable", ArrowButton_OnDisable);
-
-    self.RightArrow.delta = 1;
-    self.RightArrow:SetScript("OnEnter", ArrowButton_OnEnter);
-    self.RightArrow:SetScript("OnLeave", ArrowButton_OnLeave);
-    self.RightArrow:SetScript("OnClick", ArrowButton_OnClick);
-    self.RightArrow:SetScript("OnMouseDown", ArrowButton_OnMouseDown);
-    self.RightArrow:SetScript("OnMouseUp", ArrowButton_OnMouseUp);
-    self.RightArrow:SetScript("OnEnable", ArrowButton_OnEnable);
-    self.RightArrow:SetScript("OnDisable", ArrowButton_OnDisable);
-
-    local function CreateBar()
-        local bar = self:CreateTexture(nil, "OVERLAY");
-        bar:SetTextureSliceMargins(1, 1, 1, 1);
-        bar:SetTextureSliceMode(1);
-        bar:SetTexCoord(0, 16/128, 124/128, 1);
-        return bar
+    local function ArrowButton_OnClick(self)
+        self:GetParent():SelectChoiceByDelta(self.delta);
+        PlaySound("CHECKBOX_ON");
     end
 
-    self.barPool = API.CreateObjectPool(CreateBar, RemoveBar, OnAcquireBar);
-end
-
-function DUIDialogSettingsArrowOptionMixin:SetNumChoices(numChoices, forceUpdate)
-    if numChoices ~= self.numChoices or forceUpdate then
-        self.barPool:Release();
-        self.numChoices = numChoices;
-        self.bars = {};
-        local barHeight = API.GetPixelForWidget(self, ARROWOTPION_BAR_HEIGHT);
-        local gap = API.GetPixelForWidget(self, 4);
-        local buttonWidth = self.LeftArrow:GetWidth();
-        local barShrink = 4;
-        local fromOffsetX = buttonWidth + barShrink;
-        local barWidth = (self:GetWidth() -2*barShrink - 2*buttonWidth - (numChoices - 1)*gap) / numChoices;
-        local bar;
-        for i = 1, numChoices do
-            bar = self.barPool:Acquire();
-            bar:SetSize(barWidth, barHeight);
-            bar:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", fromOffsetX + (gap + barWidth) * (i - 1), 2);
-            self.bars[i] = bar;
-        end
-    end
-end
-
-function DUIDialogSettingsArrowOptionMixin:GetCentralWidth()
-    return self:GetWidth() - 2*self.LeftArrow:GetWidth();
-end
-
-function DUIDialogSettingsArrowOptionMixin:SetWidgetWidth(width)
-    local centralWidth = self:GetCentralWidth();
-end
-
-function DUIDialogSettingsArrowOptionMixin:SetWidgetHeight(height)
-    self.LeftArrow.Texture:SetSize(height, height);
-    self.RightArrow.Texture:SetSize(height, height);
-    self:SetHeight(height);
-    self:SetWidth(height * ARROWOTPION_WIDTH_RATIO);
-end
-
-function DUIDialogSettingsArrowOptionMixin:SetValueTextByID(id)
-    if self.valueTextFormatter then
-        self.valueTextFormatter(self, self.choices[id].dbValue);
-    else
-        local valueText = self.choices[id].valueText;
-        self.ValueText:SetText(valueText);
-    end
-end
-
-function DUIDialogSettingsArrowOptionMixin:SelectChoiceByID(id)
-    if not self.choices[id] then
-        id = 1;
+    local function ArrowButton_OnEnter(self)
+        self:GetParent():GetParent():OnEnter();
     end
 
-    local choiceData = self.choices[id];
-    if choiceData then
-        self:SetValueTextByID(id);
+    local function ArrowButton_OnLeave(self)
+        self:GetParent():GetParent():OnLeave();
     end
 
-    self.selectedID = id;
+    local function ArrowButton_OnMouseDown(self)
+        if not self:IsEnabled() then return end;
 
-    for i, bar in ipairs(self.bars) do
-        if i == id then
-            bar:SetAlpha(1);
+        if self.delta < 0 then
+            self.Texture:SetPoint("CENTER", -1, 0);
         else
-            bar:SetAlpha(DISABLED_TEXTURE_ALPHA);
+            self.Texture:SetPoint("CENTER", 1, 0);
         end
     end
 
-    self.LeftArrow:SetEnabled(id ~= 1);
-    self.RightArrow:SetEnabled(id ~= self.numChoices);
-end
-
-function DUIDialogSettingsArrowOptionMixin:SelectNextChoice()
-    if ARROWOTPION_CYCLING then
-        self.selectedID = self.selectedID + 1;
-        if self.selectedID > self.numChoices then
-            self.selectedID = 1;
-        end
-    else
-        if self.selectedID < self.numChoices then
-            self.selectedID = self.selectedID + 1;
-        else
-            return false
-        end
+    local function ArrowButton_OnMouseUp(self)
+        self.Texture:SetPoint("CENTER", 0, 0);
     end
 
-    self:SelectChoiceByID(self.selectedID);
-    return true
-end
-
-function DUIDialogSettingsArrowOptionMixin:SelectPreviousChoice()
-    if ARROWOTPION_CYCLING then
-        self.selectedID = self.selectedID - 1;
-        if self.selectedID < 1 then
-            self.selectedID = self.numChoices;
-        end
-    else
-        if self.selectedID > 1 then
-            self.selectedID = self.selectedID - 1;
-        else
-            return false
-        end
+    local function ArrowButton_OnEnable(self)
+        self:SetAlpha(1);
     end
 
-    self:SelectChoiceByID(self.selectedID);
-    return true
-end
-
-function DUIDialogSettingsArrowOptionMixin:SelectChoiceByDelta(delta)
-    --right = 1, left = -1
-    local anyChange;
-
-    if delta > 0 then
-        anyChange = self:SelectNextChoice();
-    else
-        anyChange = self:SelectPreviousChoice();
+    local function ArrowButton_OnDisable(self)
+        self:SetAlpha(DISABLED_TEXTURE_ALPHA);
     end
 
-    if anyChange then
-        self:PostClick();
-    end
-end
-
-function DUIDialogSettingsArrowOptionMixin:PostClick()
-    local optionButton = self:GetParent();
-    MainFrame:SetFocusedObject(optionButton);
-
-    local value = self.choices[self.selectedID].dbValue;
-    SetDBValue(optionButton.dbKey, value);
-
-    if optionButton.isParentOption or optionButton.updateTabAfterClicks then
-        MainFrame:UpdateCurrentTab();
+    local function RemoveBar(bar)
+        bar:Hide();
+        bar:ClearAllPoints();
     end
 
-    if self.realignAfterClicks then
-        MainFrame:ReAlignToFocusedObject();
+    local function OnAcquireBar(bar)
+        bar:SetTexture(ThemeUtil:GetTextureFile("Settings-ArrowOption.png"));
     end
 
-    self:GetParent():OnEnter();
-end
-
-function DUIDialogSettingsArrowOptionMixin:SetData(optionData)
-    self.choices = optionData.choices;
-    self.dbKey = optionData.dbKey;
-    self.valueTextFormatter = optionData.valueTextFormatter;
-    self.realignAfterClicks = optionData.realignAfterClicks;
-
-    self:SetNumChoices(#self.choices);
-
-    if not optionData.hasHotkey then
-        self.ValueText:ClearAllPoints();
+    function DUIDialogSettingsArrowOptionMixin:OnLoad()
         self.ValueText:SetPoint("TOP", self, "TOP", 0, ARROWOPTION_VALUETEXT_OFFSET_Y);
+
+        self.LeftArrow.delta = -1;
+        self.LeftArrow:SetScript("OnEnter", ArrowButton_OnEnter);
+        self.LeftArrow:SetScript("OnLeave", ArrowButton_OnLeave);
+        self.LeftArrow:SetScript("OnClick", ArrowButton_OnClick);
+        self.LeftArrow:SetScript("OnMouseDown", ArrowButton_OnMouseDown);
+        self.LeftArrow:SetScript("OnMouseUp", ArrowButton_OnMouseUp);
+        self.LeftArrow:SetScript("OnEnable", ArrowButton_OnEnable);
+        self.LeftArrow:SetScript("OnDisable", ArrowButton_OnDisable);
+
+        self.RightArrow.delta = 1;
+        self.RightArrow:SetScript("OnEnter", ArrowButton_OnEnter);
+        self.RightArrow:SetScript("OnLeave", ArrowButton_OnLeave);
+        self.RightArrow:SetScript("OnClick", ArrowButton_OnClick);
+        self.RightArrow:SetScript("OnMouseDown", ArrowButton_OnMouseDown);
+        self.RightArrow:SetScript("OnMouseUp", ArrowButton_OnMouseUp);
+        self.RightArrow:SetScript("OnEnable", ArrowButton_OnEnable);
+        self.RightArrow:SetScript("OnDisable", ArrowButton_OnDisable);
+
+        local function CreateBar()
+            local bar = self:CreateTexture(nil, "OVERLAY");
+            bar:SetTextureSliceMargins(1, 1, 1, 1);
+            bar:SetTextureSliceMode(1);
+            bar:SetTexCoord(0, 16/128, 124/128, 1);
+            return bar
+        end
+
+        self.barPool = API.CreateObjectPool(CreateBar, RemoveBar, OnAcquireBar);
     end
 
-    local selectedID = 1;
-    local dbValue = GetDBValue(self.dbKey);
-
-    for id, choiceData in ipairs(self.choices) do
-        if dbValue == choiceData.dbValue then
-            selectedID = id;
-            break
+    function DUIDialogSettingsArrowOptionMixin:SetNumChoices(numChoices, forceUpdate)
+        if numChoices ~= self.numChoices or forceUpdate then
+            self.barPool:Release();
+            self.numChoices = numChoices;
+            self.bars = {};
+            local barHeight = API.GetPixelForWidget(self, ARROWOTPION_BAR_HEIGHT);
+            local gap = API.GetPixelForWidget(self, 4);
+            local buttonWidth = self.LeftArrow:GetWidth();
+            local barShrink = 4;
+            local fromOffsetX = buttonWidth + barShrink;
+            local barWidth = (self:GetWidth() -2*barShrink - 2*buttonWidth - (numChoices - 1)*gap) / numChoices;
+            local bar;
+            for i = 1, numChoices do
+                bar = self.barPool:Acquire();
+                bar:SetSize(barWidth, barHeight);
+                bar:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", fromOffsetX + (gap + barWidth) * (i - 1), 2);
+                self.bars[i] = bar;
+            end
         end
     end
 
-    self:SelectChoiceByID(selectedID);
-end
+    function DUIDialogSettingsArrowOptionMixin:GetCentralWidth()
+        return self:GetWidth() - 2*self.LeftArrow:GetWidth();
+    end
 
-function DUIDialogSettingsArrowOptionMixin:SetTexture(file)
-    self.LeftArrow.Texture:SetTexture(file);
-    self.LeftArrow.Highlight:SetTexture(file);
-    self.RightArrow.Texture:SetTexture(file);
-    self.RightArrow.Highlight:SetTexture(file);
-end
+    function DUIDialogSettingsArrowOptionMixin:SetWidgetWidth(width)
+        local centralWidth = self:GetCentralWidth();
+    end
 
-function DUIDialogSettingsArrowOptionMixin:GetSelectedChoiceTooltip()
-    if self.selectedID and self.choices and self.choices[self.selectedID] then
-        local tooltip = self.choices[self.selectedID].tooltip;
-        if type(tooltip) == "function" then
-            return tooltip()
+    function DUIDialogSettingsArrowOptionMixin:SetWidgetHeight(height)
+        self.LeftArrow.Texture:SetSize(height, height);
+        self.RightArrow.Texture:SetSize(height, height);
+        self:SetHeight(height);
+        self:SetWidth(height * ARROWOTPION_WIDTH_RATIO);
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:SetValueTextByID(id)
+        if self.valueTextFormatter then
+            self.valueTextFormatter(self, self.choices[id].dbValue);
         else
-            return tooltip
+            local valueText = self.choices[id].valueText;
+            self.ValueText:SetText(valueText);
         end
     end
-end
 
+    function DUIDialogSettingsArrowOptionMixin:SelectChoiceByIndex(id)
+        if not self.choices[id] then
+            id = 1;
+        end
 
+        local choiceData = self.choices[id];
+        if choiceData then
+            self:SetValueTextByID(id);
+        end
 
+        self.selectedID = id;
 
-DUIDialogSettingsCheckboxMixin = {};
+        for i, bar in ipairs(self.bars) do
+            if i == id then
+                bar:SetAlpha(1);
+            else
+                bar:SetAlpha(DISABLED_TEXTURE_ALPHA);
+            end
+        end
 
-function DUIDialogSettingsCheckboxMixin:OnEnter()
-    self:GetParent():OnEnter();
-end
-
-function DUIDialogSettingsCheckboxMixin:OnLeave()
-    self:GetParent():OnLeave();
-end
-
-function DUIDialogSettingsCheckboxMixin:SetTexture(file)
-    self.Background:SetTexture(file);
-    self.Check:SetTexture(file);
-end
-
-function DUIDialogSettingsCheckboxMixin:OnClick()
-    self:Toggle();
-
-    local optionButton = self:GetParent();
-    SetDBValue(optionButton.dbKey, self.checked);
-
-    if optionButton.isParentOption or optionButton.updateTabAfterClicks then
-        MainFrame:UpdateCurrentTab();
+        self.LeftArrow:SetEnabled(id ~= 1);
+        self.RightArrow:SetEnabled(id ~= self.numChoices);
     end
 
-    self:OnEnter();
-end
-
-function DUIDialogSettingsCheckboxMixin:SetChecked(state)
-    self.checked = state;
-    self.Check:SetShown(state);
-    if state then
-        self.Background:SetTexCoord(0.5, 1, 0, 0.5);
-    else
-        self.Background:SetTexCoord(0, 0.5, 0, 0.5);
-    end
-end
-
-function DUIDialogSettingsCheckboxMixin:GetChecked()
-    return self.checked == true
-end
-
-function DUIDialogSettingsCheckboxMixin:Toggle()
-    self.checked = not self.checked;
-    self:SetChecked(self.checked);
-end
-
-function DUIDialogSettingsCheckboxMixin:SetWidgetHeight(height)
-    self:SetSize(height, height);
-    self.Check:SetSize(height*0.5, height*0.5);
-end
-
-function DUIDialogSettingsCheckboxMixin:GetSelectedChoiceTooltip()
-    local optionButton = self:GetParent();
-    local tooltip = optionButton.optionData and optionButton.optionData.tooltip;
-    if tooltip then
-        if type(tooltip) == "function" then
-            return tooltip(self.checked)
+    function DUIDialogSettingsArrowOptionMixin:SelectNextChoice()
+        if ARROWOTPION_CYCLING then
+            self.selectedID = self.selectedID + 1;
+            if self.selectedID > self.numChoices then
+                self.selectedID = 1;
+            end
         else
-            return tooltip
+            if self.selectedID < self.numChoices then
+                self.selectedID = self.selectedID + 1;
+            else
+                return false
+            end
+        end
+
+        self:SelectChoiceByIndex(self.selectedID);
+        return true
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:SelectPreviousChoice()
+        if ARROWOTPION_CYCLING then
+            self.selectedID = self.selectedID - 1;
+            if self.selectedID < 1 then
+                self.selectedID = self.numChoices;
+            end
+        else
+            if self.selectedID > 1 then
+                self.selectedID = self.selectedID - 1;
+            else
+                return false
+            end
+        end
+
+        self:SelectChoiceByIndex(self.selectedID);
+        return true
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:SelectChoiceByDelta(delta)
+        --right = 1, left = -1
+        local anyChange;
+
+        if delta > 0 then
+            anyChange = self:SelectNextChoice();
+        else
+            anyChange = self:SelectPreviousChoice();
+        end
+
+        if anyChange then
+            self:PostClick();
+        end
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:PostClick()
+        local optionButton = self:GetParent();
+        MainFrame:SetFocusedObject(optionButton);
+
+        local value = self.choices[self.selectedID].dbValue;
+        SetDBValue(optionButton.dbKey, value, true);
+
+        if optionButton.isParentOption or optionButton.updateTabAfterClicks then
+            MainFrame:UpdateCurrentTab();
+        end
+
+        if self.realignAfterClicks then
+            MainFrame:ReAlignToFocusedObject();
+        end
+
+        self:GetParent():OnEnter();
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:SetData(optionData)
+        local choices = optionData.choices;
+
+        if type(choices) == "function" then
+            self.choices = choices(optionData.dbKey);
+        else
+            self.choices = choices;
+        end
+
+        self.dbKey = optionData.dbKey;
+        self.valueTextFormatter = optionData.valueTextFormatter;
+        self.realignAfterClicks = optionData.realignAfterClicks;
+
+        self:SetNumChoices(#self.choices);
+
+        if not optionData.hasHotkey then
+            self.ValueText:ClearAllPoints();
+            self.ValueText:SetPoint("TOP", self, "TOP", 0, ARROWOPTION_VALUETEXT_OFFSET_Y);
+        end
+
+        local selectedID = 1;
+        local dbValue = GetDBValue(self.dbKey);
+
+        for id, choiceData in ipairs(self.choices) do
+            if dbValue == choiceData.dbValue then
+                selectedID = id;
+                break
+            end
+        end
+
+        self:SelectChoiceByIndex(selectedID);
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:SetTexture(file)
+        self.LeftArrow.Texture:SetTexture(file);
+        self.LeftArrow.Highlight:SetTexture(file);
+        self.RightArrow.Texture:SetTexture(file);
+        self.RightArrow.Highlight:SetTexture(file);
+    end
+
+    function DUIDialogSettingsArrowOptionMixin:GetSelectedChoiceTooltip()
+        if self.selectedID and self.choices and self.choices[self.selectedID] then
+            local tooltip = self.choices[self.selectedID].tooltip;
+            if not tooltip then
+                local optionButton = self:GetParent();
+                tooltip = optionButton.optionData and optionButton.optionData.tooltip;
+            end
+            if type(tooltip) == "function" then
+                return tooltip()
+            else
+                return tooltip
+            end
         end
     end
 end
+
+
+do  --Checkbox
+    DUIDialogSettingsCheckboxMixin = {};
+
+    function DUIDialogSettingsCheckboxMixin:OnEnter()
+        self:GetParent():OnEnter();
+    end
+
+    function DUIDialogSettingsCheckboxMixin:OnLeave()
+        self:GetParent():OnLeave();
+    end
+
+    function DUIDialogSettingsCheckboxMixin:SetTexture(file)
+        self.Background:SetTexture(file);
+        self.Check:SetTexture(file);
+    end
+
+    function DUIDialogSettingsCheckboxMixin:OnClick()
+        self:Toggle();
+
+        local optionButton = self:GetParent();
+        SetDBValue(optionButton.dbKey, self.checked, true);
+
+        if optionButton.isParentOption or optionButton.updateTabAfterClicks then
+            MainFrame:UpdateCurrentTab();
+        end
+
+        self:OnEnter();
+
+        if self.checked then
+            PlaySound("CHECKBOX_ON");
+        else
+            PlaySound("CHECKBOX_OFF");
+        end
+    end
+
+    function DUIDialogSettingsCheckboxMixin:SetData(optionData)
+        self.dbKey = optionData.dbKey;
+        self:SetChecked(GetDBValue(optionData.dbKey) == true);
+    end
+
+    function DUIDialogSettingsCheckboxMixin:SetChecked(state)
+        self.checked = state;
+        self.Check:SetShown(state);
+        if state then
+            self.Background:SetTexCoord(0.5, 1, 0, 0.5);
+        else
+            self.Background:SetTexCoord(0, 0.5, 0, 0.5);
+        end
+    end
+
+    function DUIDialogSettingsCheckboxMixin:GetChecked()
+        return self.checked == true
+    end
+
+    function DUIDialogSettingsCheckboxMixin:Toggle()
+        self.checked = not self.checked;
+        self:SetChecked(self.checked);
+    end
+
+    function DUIDialogSettingsCheckboxMixin:SetWidgetHeight(height)
+        self:SetSize(height, height);
+        self.Check:SetSize(height*0.5, height*0.5);
+    end
+
+    function DUIDialogSettingsCheckboxMixin:GetSelectedChoiceTooltip()
+        local optionButton = self:GetParent();
+        local tooltip = optionButton.optionData and optionButton.optionData.tooltip;
+        if tooltip then
+            if type(tooltip) == "function" then
+                return tooltip(self.checked)
+            else
+                return tooltip
+            end
+        end
+    end
+end
+
+
+do  --DropdownButton
+    DUIDialogSettingsDropdownButtonMixin = {};
+
+    function DUIDialogSettingsDropdownButtonMixin:OnEnter()
+        self.Background:SetTexCoord(0, 1, 68/256, 132/256);
+        self:GetParent():OnEnter();
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:OnLeave()
+        self.Background:SetTexCoord(0, 1, 0, 64/256);
+        self:GetParent():OnLeave();
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:OnClick()
+        self:ToggleMenu();
+        PlaySound("CHECKBOX_ON");
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetTexture(file)
+        self.Background:SetTexture(file);
+        self.Arrow:SetTexture(file);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetWidgetHeight(height)
+        local width = 8*height; --ratio
+        self:SetSize(width, height);
+        local arrowSize = 0.5*height;
+        self.Arrow:SetSize(arrowSize, arrowSize);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:ToggleMenu()
+        self.menuShown = not self.menuShown;
+        if self.menuShown then
+            self:ShowMenu();
+        else
+            self:HideMenu();
+        end
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:ShowMenu()
+        self.menuShown = true;
+        self.Arrow:SetTexCoord(36/512, 68/512, 224/256, 1);
+        if true then
+            local menu = addon.GetDropdownMenu(self);
+            menu:SetOwner(self, MainFrame);
+            menu:Show();
+            menu:SetMenuData(TTSVoice_BuildMenuData(self, self.dbKey));
+        end
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:OnMenuClosed()
+        self.menuShown = nil;
+        self.Arrow:SetTexCoord(0/512, 32/512, 224/256, 1);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:HideMenu()
+        self.menuShown = nil;
+        self:OnMenuClosed();
+        if true then
+            addon.CloseDropdownMenu();
+        end
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetText(text)
+        self.ValueText:SetText(text);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetPadding(left)
+        self.ValueText:SetPoint("LEFT", self, "LEFT", left, 0);
+        self.Arrow:SetPoint("RIGHT", self, "RIGHT", -left, 0);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetValueTextByID(id)
+        if self.valueTextFormatter then
+            self.valueTextFormatter(self, self.choices[id].dbValue);
+        else
+            self.ValueText:SetText(id);
+        end
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SelectChoiceByIndex(id)
+        if not self.choices[id] then
+            id = 1;
+        end
+
+        local choiceData = self.choices[id];
+        if choiceData then
+            self.selectedID = id;
+            self:SetValueTextByID(id);
+            local dbKey = self.dbKey;
+            SetDBValue(dbKey, choiceData.dbValue, true);
+            MainFrame:UpdateOptionButtonByDBKey(dbKey);
+            self:GetParent():OnEnter();
+        end
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SelectChoiceByDelta(delta)
+        local id;
+
+        if not self.choices[id] then
+            id = 1;
+        end
+
+        if delta < 0 then
+            id = self.selectedID - 1;
+        else
+            id = self.selectedID + 1;
+        end
+
+        id = Clamp(id, 1, #self.choices);
+        self:SelectChoiceByIndex(id);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:SetData(optionData)
+        self.dbKey = optionData.dbKey;
+        self.valueTextFormatter = optionData.valueTextFormatter;
+
+        local choices = optionData.choices;
+
+        if type(choices) == "function" then
+            self.choices = choices(optionData.dbKey);
+        else
+            self.choices = choices;
+        end
+
+        local selectedID = 1;
+        local dbValue = GetDBValue(self.dbKey);
+
+        for id, data in ipairs(self.choices) do
+            if data.dbValue == dbValue then
+                selectedID = id;
+            end
+        end
+        self.selectedID = selectedID;
+
+        self:SetValueTextByID(selectedID);
+    end
+
+    function DUIDialogSettingsDropdownButtonMixin:GetSelectedChoiceTooltip()
+        local optionButton = self:GetParent();
+        local tooltip = optionButton.optionData and optionButton.optionData.tooltip;
+        if tooltip then
+            if type(tooltip) == "function" then
+                return tooltip(self)
+            else
+                return tooltip
+            end
+        end
+    end
+end
+
 
 do  --GamePad/Controller
     function DUIDialogSettingsMixin:ResetGamePadObjects()
@@ -1584,11 +1928,11 @@ do  --GamePad/Controller
             if gamepadButton == "PAD1" then
                 optionButton:OnClick();
             elseif gamepadButton == "PADDLEFT" then
-                if optionButton.widgetType == "ArrowOption" then
+                if optionButton.widgetType == "ArrowOption" or optionButton.widgetType == "DropdownButton" then
                     optionButton.widget:SelectChoiceByDelta(-1);
                 end
             elseif gamepadButton == "PADDRIGHT" then
-                if optionButton.widgetType == "ArrowOption" then
+                if optionButton.widgetType == "ArrowOption" or optionButton.widgetType == "DropdownButton" then
                     optionButton.widget:SelectChoiceByDelta(1);
                 end
             end
@@ -1603,9 +1947,6 @@ function DialogueUI_ShowSettingsFrame()
     MainFrame:ToggleUI();
 end
 
-function DialogueUI_AddonCompartmentOnEnterLeave(addonName, button)
-
-end
 
 do
     local function OnFontSizeChanged(baseFontSize, fontSizeID)
@@ -1633,6 +1974,11 @@ do
             widthMultiplier = 10;
             ARROWOTPION_WIDTH_RATIO = 6;
             ARROWOTPION_BAR_HEIGHT = 6;
+        elseif fontSizeID == 4 then   --For MobileDeviceMode
+            NUM_VISIBLE_OPTIONS = 7.5;
+            widthMultiplier = 10;
+            ARROWOTPION_WIDTH_RATIO = 6;
+            ARROWOTPION_BAR_HEIGHT = 6;
         else
             NUM_VISIBLE_OPTIONS = 8.5;
             widthMultiplier = 10;
@@ -1656,6 +2002,13 @@ do
                 widget.numChoices = 0;
             end
             f.arrowOptionPool:ProcessAllObjects(ModifyArrowOption);
+        end
+
+        if f.dropdownButtonPoolPool then
+            local function ModifyDropdownButton(widget)
+                widget:SetWidgetHeight(OPTION_WIDGET_SIZE);
+            end
+            f.dropdownButtonPoolPool:ProcessAllObjects(ModifyDropdownButton);
         end
 
         if f.hotkeyFramePool then

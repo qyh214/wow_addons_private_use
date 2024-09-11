@@ -6,7 +6,7 @@ local TT = B:GetModule("Tooltip")
 local select, max, strfind, format, strsplit = select, math.max, string.find, string.format, string.split
 local GetTime, CanInspect, NotifyInspect, ClearInspectPlayer, IsShiftKeyDown = GetTime, CanInspect, NotifyInspect, ClearInspectPlayer, IsShiftKeyDown
 local UnitGUID, UnitClass, UnitIsUnit, UnitIsPlayer, UnitIsVisible, UnitIsDeadOrGhost, UnitOnTaxi = UnitGUID, UnitClass, UnitIsUnit, UnitIsPlayer, UnitIsVisible, UnitIsDeadOrGhost, UnitOnTaxi
-local GetInventoryItemTexture, GetInventoryItemLink, GetItemGem, GetAverageItemLevel = GetInventoryItemTexture, GetInventoryItemLink, GetItemGem, GetAverageItemLevel
+local GetInventoryItemTexture, GetInventoryItemLink, GetAverageItemLevel = GetInventoryItemTexture, GetInventoryItemLink, GetAverageItemLevel
 local HEIRLOOMS = _G.HEIRLOOMS
 
 local levelPrefix = STAT_AVERAGE_ITEM_LEVEL..": "..DB.InfoColor
@@ -15,32 +15,32 @@ local resetTime, frequency = 900, .5
 local cache, weapon, currentUNIT, currentGUID = {}, {}
 
 TT.TierSets = {
-	-- WARRIOR
-	[217220] = true, [217219] = true, [217218] = true, [217217] = true, [217216] = true,
-	-- PALADIN
-	[217200] = true, [217199] = true, [217198] = true, [217197] = true, [217196] = true,
 	-- HUNTER
-	[217185] = true, [217184] = true, [217183] = true, [217182] = true, [217181] = true,
+	[212023] = true, [212021] = true, [212020] = true, [212019] = true, [212018] = true,
+	-- WARRIOR
+	[211987] = true, [211985] = true, [211984] = true, [211983] = true, [211982] = true,
+	-- PALADIN
+	[211996] = true, [211994] = true, [211993] = true, [211992] = true, [211991] = true,
 	-- ROGUE
-	[217210] = true, [217209] = true, [217208] = true, [217207] = true, [217206] = true,
+	[212041] = true, [212039] = true, [212038] = true, [212037] = true, [212036] = true,
 	-- PRIEST
-	[217204] = true, [217205] = true, [217203] = true, [217202] = true, [217201] = true,
-	-- DEATHKNIGHT
-	[217225] = true, [217224] = true, [217223] = true, [217222] = true, [217221] = true,
+	[212084] = true, [212083] = true, [212082] = true, [212086] = true, [212081] = true,
+	-- DK
+	[212005] = true, [212003] = true, [212002] = true, [212001] = true, [212000] = true,
 	-- SHAMAN
-	[217240] = true, [217239] = true, [217238] = true, [217237] = true, [217236] = true,
+	[212014] = true, [212012] = true, [212011] = true, [212010] = true, [212009] = true,
 	-- MAGE
-	[217234] = true, [217233] = true, [217232] = true, [217231] = true, [217235] = true,
+	[212095] = true, [212093] = true, [212092] = true, [212091] = true, [212090] = true,
 	-- WARLOCK
-	[217214] = true, [217215] = true, [217213] = true, [217212] = true, [217211] = true,
+	[212075] = true, [212074] = true, [212073] = true, [212077] = true, [212072] = true,
 	-- MONK
-	[217190] = true, [217189] = true, [217188] = true, [217187] = true, [217186] = true,
+	[212050] = true, [212048] = true, [212047] = true, [212046] = true, [212045] = true,
 	-- DRUID
-	[217195] = true, [217194] = true, [217193] = true, [217192] = true, [217191] = true,
-	-- DEMONHUNTER
-	[217230] = true, [217229] = true, [217228] = true, [217227] = true, [217226] = true,
+	[212059] = true, [212057] = true, [212056] = true, [212055] = true, [212054] = true,
+	-- DH
+	[212068] = true, [212066] = true, [212065] = true, [212064] = true, [212063] = true,
 	-- EVOKER
-	[217180] = true, [217179] = true, [217178] = true, [217177] = true, [217176] = true,
+	[212032] = true, [212030] = true, [212029] = true, [212028] = true, [212027] = true,
 }
 
 local formatSets = {
@@ -159,7 +159,7 @@ function TT:GetUnitItemLevel(unit)
 								local relics = {select(4, strsplit(":", itemLink))}
 								for i = 1, 3 do
 									local relicID = relics[i] ~= "" and relics[i]
-									local relicLink = select(2, GetItemGem(itemLink, i))
+									local relicLink = select(2, C_Item.GetItemGem(itemLink, i))
 									if relicID and not relicLink then
 										delay = true
 										break

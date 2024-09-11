@@ -995,6 +995,10 @@ Private.debuff_class_types = {
   none = L["None"]
 }
 
+if WeakAuras.IsRetail() then
+  Private.debuff_class_types.bleed = L["Bleed"]
+end
+
 ---@type table<string, string>
 Private.player_target_events = {
   PLAYER_TARGET_CHANGED = "target",
@@ -1165,8 +1169,9 @@ Private.faction_group = {
 ---@type table<number, string>
 Private.form_types = {};
 local function update_forms()
-  wipe(Private.form_types);
-  Private.form_types[0] = "0 - "..L["Humanoid"]
+  local oldForms = Private.form_types
+  Private.form_types = {}
+  Private.form_types[0] = "0 - " .. L["Humanoid"]
   for i = 1, GetNumShapeshiftForms() do
     local _, _, _, id = GetShapeshiftFormInfo(i);
     if(id) then
@@ -1175,6 +1180,9 @@ local function update_forms()
         Private.form_types[i] = i.." - "..name
       end
     end
+  end
+  if Private.OptionsFrame and not tCompare(oldForms, Private.form_types) then
+    Private.OptionsFrame():ReloadOptions()
   end
 end
 
@@ -1666,7 +1674,7 @@ local function InitializeReputations()
   local index = 1
   while index <= Private.ExecEnv.GetNumFactions() do
     local factionData = Private.ExecEnv.GetFactionDataByIndex(index)
-    if factionData.isHeader and factionData.isCollapsed then
+    if factionData and factionData.isHeader and factionData.isCollapsed then
       Private.ExecEnv.ExpandFactionHeader(index)
       collapsed[factionData.name] = true
     end
@@ -1676,24 +1684,26 @@ local function InitializeReputations()
   -- Process all faction data
   for i = 1, Private.ExecEnv.GetNumFactions() do
     local factionData = Private.ExecEnv.GetFactionDataByIndex(i)
-    if factionData.currentStanding > 0 or not factionData.isHeader then
-      local factionID = factionData.factionID
-      if factionID then
-        Private.reputations[factionID] = factionData.name
-        Private.reputations_sorted[factionID] = i
+    if factionData then
+      if factionData.currentStanding > 0 or not factionData.isHeader then
+        local factionID = factionData.factionID
+        if factionID then
+          Private.reputations[factionID] = factionData.name
+          Private.reputations_sorted[factionID] = i
+        end
+      else
+        local name = factionData.name
+        Private.reputations[name] = name
+        Private.reputations_sorted[name] = i
+        Private.reputations_headers[name] = true
       end
-    else
-      local name = factionData.name
-      Private.reputations[name] = name
-      Private.reputations_sorted[name] = i
-      Private.reputations_headers[name] = true
     end
   end
 
   -- Collapse headers back to their original state
   for i = Private.ExecEnv.GetNumFactions(), 1, -1 do
     local factionData = Private.ExecEnv.GetFactionDataByIndex(i)
-    if collapsed[factionData.name] then
+    if factionData and collapsed[factionData.name] then
       Private.ExecEnv.CollapseFactionHeader(i)
     end
   end

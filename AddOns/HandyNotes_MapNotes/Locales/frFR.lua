@@ -2,6 +2,14 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "frFR")
 if not L then return end
 
+--0.01
+L["Profiles"] = "Profils"
+L["This applies to the following tabs"] = "Cela s'applique aux onglets suivants"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "Une exception est la rétroaction dans le chat de la fonction de suppression ou de restauration des icônes. Ceux-ci sont toujours affichés!"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "Ici, vous pouvez activer ou désactiver tous les messages de discussion envoyés par les boutons MapNotes Minimap et Worldmap lorsque vous masquez ou affichez des icônes dessus"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "Ici, vous pouvez activer ou désactiver tous les messages de discussion envoyés depuis l'un de ces onglets MapNotes lorsque vous modifiez les paramètres"
+L["Only affects passage icons to instances and not path icons to zones"] = "Affecte uniquement les icônes de passage aux instances et non aux icônes de chemin vers les zones"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "En le désactivant, la frontière des icônes de zone de vos propres factions est également supprimée, car les icônes affichées ne sont automatiquement que pour votre propre faction"
 --0.1 profiles
 L["Profile has been changed"] = "Le profil a été modifié"
 L["Profile has been reset to default"] = "Le profil a été réinitialisé avec les paramètres par défaut"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "Synchronise l'onglet Capital avec l'onglet Capital Cities - Mini-carte"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "Cela désactive les fonctions de l'onglet Mini-carte Cities - Mini-carte et sont maintenant contrôlés ensemble via l'onglet Capital Cities"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "Cela a supprimé tous les paramètres pour Capitals - Mini Card et remplacé par les paramètres de l'onglet Capital Cities"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "Affiche des icônes de résumé spéciales de cartes contenant plusieurs informations différentes (donjons / raids / portails, etc.)"
+L["Points of interests"] = "Points d'intérêt"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "Désactive l'affichage de toutes les icônes Blizzard Dungeon and Raid sur la carte de la zone"
 --1 Capitals
 L["Leather Armor"] = "Armure de cuir"
 L["Heavy Armor"] = "Armure lourde"
@@ -142,6 +154,7 @@ L["gray all"] = "Tout gris"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "Color tout le monde! Donjons et raids attribués Gray également plusieurs points (si vous avez un ID)"
 L["enemy faction"] = "faction ennemie"
 L["Shows enemy faction (horde/alliance) icons"] = "Affiche les icônes de faction ennemie (horde/alliance)"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "Cependant, cela ne s'applique qu'à la carte Azeroth & Continent. Pas pour les zones + et la catégorie Capital +. Ceux-ci ont leur propre option d'activation pour les joueurs opposés"
 L["chat message"] = "Messages de chat" 
 L["Disables MapNotes status chat messages excluding core information"] = "NOUVELLES DE CHAT DES MAPNOTES DEACTIVE"
 L["Shows special transport icons like"] = "Montre des icônes de transport spéciales comme"

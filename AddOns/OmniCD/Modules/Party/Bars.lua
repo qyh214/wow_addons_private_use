@@ -71,6 +71,20 @@ function P:SetEnabledColorScheme(info)
 	end
 end
 
+
+local wwDamageSpells = {
+	[100780] = true,
+	[100784] = true,
+	[107428] = true,
+	[113656] = true,
+	[152175] = true,
+	[392983] = true,
+	[322109] = true,
+	[117952] = true,
+	[101546] = true,
+	[388193] = true,
+}
+
 local function CooldownBarFrame_OnEvent(self, event, ...)
 	local guid = self.guid
 	local info = P.groupInfo[guid]
@@ -80,10 +94,26 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 
 	if event == 'UNIT_SPELLCAST_SUCCEEDED' then
 
-
 		local unit, _, spellID = ...
 		if unit ~= info.unit and unit ~= UNIT_TO_PET[info.unit] then
 			return
+		end
+
+
+		if info.spec == 269 and wwDamageSpells[spellID] then
+			if info.lastComboStrikesID and info.lastComboStrikesID ~= spellID then
+
+				local icon = info.talentData[391330] and info.spellIcons[322109]
+				if icon and icon.active then
+					P:UpdateCooldown(icon, .6)
+				end
+
+				icon = info.talentData[392986] and info.spellIcons[123904]
+				if icon and icon.active then
+					P:UpdateCooldown(icon, info.auras.isSEF and .75 or .25)
+				end
+			end
+			info.lastComboStrikesID = spellID
 		end
 
 		if P.spell_enabled[spellID] or E.spell_modifiers[spellID] then
@@ -117,14 +147,6 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 					end
 				end
 			else
-
-
-				--[[
-				local percHealth = UnitHealth(unit) / UnitHealthMax(unit)
-				if percHealth > 0.5 and percHealth < 0.7 or percHealth > 0.9 then
-					E.Libs.CBH:Fire("OnBattleRezed")
-				end
-				]]
 				E.Libs.CBH:Fire("OnBattleRezed")
 			end
 
@@ -138,22 +160,6 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 		if unit ~= info.unit then
 			return
 		end
-
-		--[[ Patch 9.0 HSA no longer fires CLEU -> Patch 9.1 removed
-		if E.isBFA and P.isInArena then
-			if P:IsDebuffActive(unit, DEBUFF_HEARTSTOP_AURA) then
-				if not info.auras.isHeartStopped then
-					P.UpdateCDRR(info, 1/0.7)
-					info.auras.isHeartStopped = true
-				end
-			else
-				if info.auras.isHeartStopped then
-					P.UpdateCDRR(info, 0.7)
-					info.auras.isHeartStopped = nil
-				end
-			end
-		end
-		]]
 
 		if info.glowIcons[TOUCH_OF_KARMA] then
 			if not P:GetBuffDuration(unit, TOUCH_OF_KARMA) then
@@ -207,6 +213,8 @@ local function CooldownBarFrame_OnEvent(self, event, ...)
 end
 
 function P:HideBar(bar)
+	bar:Hide()
+
 	local guid = bar.guid
 	if self.groupInfo[guid] then
 		return
@@ -481,6 +489,19 @@ function P:SetBarBackdrop(barFrame)
 	end
 end
 
+local twwHeroTalents = {
+	[436358] = true,
+	[439843] = true,
+	[444347] = true,
+	[443328] = true,
+	[442726] = true,
+	[428933] = true,
+	[451235] = true,
+	[432472] = true,
+	[443454] = true,
+	[444995] = true,
+}
+
 function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 	local info = self.groupInfo[guid]
 	local class = info.class
@@ -515,14 +536,8 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 	if not E.preMoP and notUser then
 		frame:RegisterUnitEvent('PLAYER_SPECIALIZATION_CHANGED', unit)
 	end
-	if E.isBFA then
-		if self.isInArena then
-			frame:RegisterUnitEvent('UNIT_AURA', unit)
-		end
-	else
-		if info.glowIcons[TOUCH_OF_KARMA] or info.preactiveIcons[FEIGN_DEATH] then
-			frame:RegisterUnitEvent('UNIT_AURA', unit)
-		end
+	if info.glowIcons[TOUCH_OF_KARMA] or info.preactiveIcons[FEIGN_DEATH] then
+		frame:RegisterUnitEvent('UNIT_AURA', unit)
 	end
 	if info.isDead then
 		frame:RegisterUnitEvent('UNIT_HEALTH', unit)
@@ -550,8 +565,8 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 	local isInspectedUnit = info.spec
 	local lvl = info.level
 	local iconIndex = 0
-	local loginsessionData = self.loginsessionData[guid]
 
+	local loginsessionData = self.loginsessionData[guid]
 	if not CM.syncedGroupMembers[guid] and not info.shadowlandsData.covenantID and isInspectedUnit and loginsessionData then
 		for k, v in pairs(loginsessionData) do
 			if k == "covenantID" then
@@ -567,13 +582,22 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 		local found
 		AuraUtil.ForEachAura(unit, "HELPFUL", nil, function(_,_,_,_,_,_, source, _,_, id)
 
-			if id == 423510 then
-				info.auras[2050] = true
-				info.auras[34861] = true
-
-			elseif id == 410318 then
+			if id == 410318 then
 				found = true
 				info.itemData[205146] = true
+			end
+
+			local auraStr = E.auraMultString[id]
+			if auraStr then
+				if type(auraStr) == "table" then
+					local talentID = auraStr[2]
+					local talentRank = info.talentData[talentID]
+					if talentRank then
+						info.auras[ auraStr[1] ] = true
+					end
+				else
+					info.auras[auraStr] = true
+				end
 			end
 		end)
 		if info.itemData[205146] and not found then
@@ -614,7 +638,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 				elseif cat == "ESSENCE" then
 					isValidSpell = info.talentData[spec]
 				elseif not E.BOOKTYPE_CATEGORY[cat] then
-					isValidSpell = self:IsEquipped(info, item, item2) or info.sessionItemData[item]
+					isValidSpell = self:IsEquipped(info, item, item2) or (info.sessionItemData[item] and (item ~= 5512 or not info.talentData[386689]))
 				end
 			else
 				if cat == class then
@@ -629,7 +653,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 
 		if isValidSpell then
 			local cd = self:GetValueByType(spell.duration, guid, item2)
-			if not E.preMoP or not self.isInArena or cd < 900 then
+			if cd and (not E.preMoP or not self.isInArena or cd < 900) then
 				local buffID, iconTexture = spell.buff, spell.icon
 				local ch = self:GetValueByType(spell.charges, guid) or 1
 				local baseCooldown = cd
@@ -639,14 +663,32 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						if modData then
 							for k = 1, #modData, 2 do
 								local tal = modData[k]
-								local rank = self:IsSpecAndTalentForPvpStatus(tal, info)
+								local rank = self:IsTalentForPvpStatus(tal, info)
 								if rank then
 									local rt = modData[k+1]
-									rt = type(rt) == "table" and (rt[rank] or rt[1]) or rt
-									if (tal == 422748 or tal == 422894) and self.isPvP then
-										rt = rt / 2
+									if type(rt) == "table" then
+										local specRT = rt[isInspectedUnit]
+										if specRT then
+											if type(specRT) == "table" then
+												rt = specRT[rank] or specRT[1]
+												local pvpMult = self.isPvP and specRT[3]
+												if pvpMult then
+													rt = rt * pvpMult
+												end
+											else
+												rt = specRT
+											end
+										else
+											local pvpMult = self.isPvP and rt[3]
+											rt = rt[rank] or rt[1]
+											if pvpMult then
+												rt = rt * pvpMult
+											end
+										end
 									end
-									cd = cd - rt
+									if rt then
+										cd = cd - rt
+									end
 								end
 							end
 						end
@@ -664,11 +706,6 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						if modData and self.isInShadowlands then
 							local rankValue = info.talentData[modData]
 							if rankValue then
-								--[[ Dec 23, 2020 Hotfixed
-								if spellID == 212653 then
-									rankValue = rankValue / 2
-								end
-								]]
 								if self.isPvP and modData == 336636 then
 									rankValue = rankValue / 2
 								end
@@ -693,8 +730,29 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 								local rank = self:IsTalentForPvpStatus(tal, info)
 								if rank then
 									local mult = modData[k+1]
-									mult = type(mult) == "table" and (mult[rank] or mult[1]) or mult
-									cd = cd * mult
+									if type(mult) == "table" then
+										local specMult = mult[isInspectedUnit]
+										if specMult then
+											if type(specMult) == "table" then
+												mult = specMult[rank] or specMult[1]
+												local pvpMult = self.isPvP and specMult[3]
+												if pvpMult then
+													mult = 1 - ((1 - mult) * pvpMult)
+												end
+											else
+												mult = specMult
+											end
+										else
+											local pvpMult = self.isPvP and mult[3]
+											mult = mult[rank] or mult[1]
+											if pvpMult then
+												mult = 1 - ((1 - mult) * pvpMult)
+											end
+										end
+									end
+									if mult then
+										cd = cd * mult
+									end
 								end
 							end
 						end
@@ -728,19 +786,13 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						if modData then
 							for k = 1, #modData, 2 do
 								local tal = modData[k]
-								local rank = self:IsSpecAndTalentForPvpStatus(tal, info)
+								local rank = self:IsTalentForPvpStatus(tal, info)
 								if rank then
 									local charges = modData[k + 1]
 									charges = type(charges) == "table" and (charges[rank] or charges[1]) or charges
 									ch = ch + charges
 								end
 							end
-						end
-
-
-						modData = E.majorMovementAbilitiesByIDs[spellID]
-						if modData and not info.auras["isBlessingOfTheBronze"] and self:GetBuffDuration(unit, modData) then
-							info.auras["isBlessingOfTheBronze"] = true
 						end
 					elseif cat == "COVENANT" then
 						local covData = E.covenant_cdmod_conduits[spellID]
@@ -776,7 +828,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 						if modData then
 							for k = 1, #modData, 2 do
 								local tal = modData[k]
-								local rank = self:IsSpecAndTalentForPvpStatus(tal, info)
+								local rank = self:IsTalentForPvpStatus(tal, info)
 								if rank then
 									local rt = modData[k+1]
 									rt = type(rt) == "table" and (rt[rank] or rt[1]) or rt
@@ -784,6 +836,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 								end
 							end
 						end
+
 
 						if info.talentData[412713] then
 							cd = cd * 0.9
@@ -820,6 +873,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 				icon.type = spellType
 				icon.priority = E.db.spellPriority[spellID] or E.db.priority[spellType]
 				icon.category = cat
+				icon.isBookType = (E.BOOKTYPE_CATEGORY[cat] or cat == "COVENANT") and not twwHeroTalents[spellID]
 				icon.buff = buffID
 				icon.duration = cd and cd < 1 and 1 or cd
 				icon.baseCooldown = baseCooldown
@@ -831,6 +885,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 				icon.tooltipID = nil
 				icon.glowBorder = not extraBarFrame and E.db.highlight.glowBorder and E.db.spellGlow[spellID]
 				icon.Glow:Hide()
+				icon.modRate = info.spellModRates[spellID] or 1
 
 				self:HideOverlayGlow(icon)
 
@@ -845,11 +900,7 @@ function P:UpdateUnitBar(guid, isUpdateBarsOrGRU)
 
 					self:HighlightIcon(icon, true)
 
-
-
-
-
-					icon.cooldown:SetCooldown(active.startTime, active.duration, active.iconModRate)
+					icon.cooldown:SetCooldown(active.startTime, active.duration, active.modRate)
 					icon.active = active.charges or 0
 				else
 					icon.cooldown:Clear()

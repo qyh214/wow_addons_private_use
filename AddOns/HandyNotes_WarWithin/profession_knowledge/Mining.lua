@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_MINING),
     -- active = ns.conditions.Profession(ns.PROF_WW_MINING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-mining",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [53225301] = { -- 35329153
+    [36647929] = {
         quest=83907,
         loot={226333}, -- Dornogal Chisel
         vignette=6490,
@@ -68,10 +70,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6495,
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82614,
-    --     loot={224055}, -- A Rocky Start
-    --     note="Buy from {npc::}",
-    --     parent=true,
-    -- },
 }, KNOWLEDGE)

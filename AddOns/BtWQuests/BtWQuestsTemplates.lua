@@ -1569,6 +1569,14 @@ function BtWQuestsCharacterDropDownMixin:Initialize()
         info.checked = "-partysync" == current
         self:AddButton(info)
     end
+    if select(4, GetBuildInfo()) >= 110000 then
+        local info = self:CreateInfo();
+        info.text = BtWQuests.L["Warband"]
+        info.value = "-warband"
+        info.func = Select
+        info.checked = "-warband" == current
+        self:AddButton(info)
+    end
 
     local info = self:CreateInfo();
     info.text = RAID_CLASS_COLORS[select(2,UnitClass("player"))]:WrapTextInColorCode(player .. " (" .. UnitLevel("player") .. ")")

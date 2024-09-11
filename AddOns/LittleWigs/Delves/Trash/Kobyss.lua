@@ -1,4 +1,3 @@
-if not BigWigsLoader.isBeta then return end
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -10,6 +9,7 @@ mod:RegisterEnableMob(
 	228903, -- Brann Bronzebeard
 	220565, -- Raen Dawncavalyr (The Sinkhole gossip NPC)
 	214628, -- Partially-Chewed Goblin (Tek-Rethan Abyss gossip NPC)
+	215178, -- Vetiverian
 	214625, -- Kobyss Necromancer
 	220710, -- Leviathan Manipulator
 	214338, -- Kobyss Spearfisher
@@ -103,13 +103,18 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	if self:GetOption(autotalk) then
+	local info = self:GetWidgetInfo("delve", 6183)
+	local level = info and tonumber(info.tierText)
+	if (not level or level > 3) and self:GetOption(autotalk) then
 		if self:GetGossipID(121578) then -- The Sinkhole, start Delve (Raen Dawncavalyr)
 			-- 121578:|cFF0000FF(Delve)|r I'll take your special boots and recover missing relics from the kobyss.
 			self:SelectGossipID(121578)
 		elseif self:GetGossipID(120132) then -- Tek-Rethan Abyss, start Delve (Partially-Chewed Goblin)
 			-- 120132:|cFF0000FF(Delve)|r <Take the instruction manual and find the repair kits.>
 			self:SelectGossipID(120132)
+		elseif self:GetGossipID(120255) then -- Tek-Rethan Abyss, start Delve (Vetiverian)
+			-- 120255:|cFF0000FF(Delve)|r I'll rescue your friends from the kobyss.
+			self:SelectGossipID(120255)
 		end
 	end
 end

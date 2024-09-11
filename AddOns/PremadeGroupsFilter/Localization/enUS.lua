@@ -30,6 +30,7 @@ L["error.semantic.protected"] = "|cffff0000Semantic error in filter expression|r
 L["message.noplaystylefix"] = "Premade Groups Filter: Will not apply fix for 'Interface action failed because of an AddOn' errors because you don't seem to have a fully secured account and otherwise can't create premade groups. See addon FAQ for more information and how to fix this issue."
 L["message.settingsupgraded"] = "Premade Groups Filter: Migrated settings to version %s"
 
+L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "Reset"
 L["dialog.reset.confirm"] = "Really reset all fields?"
 L["dialog.refresh"] = "Search"
@@ -126,3 +127,7 @@ L["settings.signupOnEnter.title"] = "Sign Up On Enter"
 L["settings.signupOnEnter.tooltip"] = "Automatically focus the 'note to the group leader' text box when signing up for a new group and confirm your application by pressing enter."
 L["settings.skipSignUpDialog.title"] = "Skip Sign Up Dialog"
 L["settings.skipSignUpDialog.tooltip"] = "Skip the role and note prompt if possible and immediately sign up to the group. Hold shift to always show the dialog."
+L["settings.specIcon.title"] = "Show specialization"
+L["settings.specIcon.tooltip"] = "Shows an icon with the class specialization of each member in the premade group list."
+L["settings.missingRoles.title"] = "Show missing roles"
+L["settings.missingRoles.tooltip"] = "Shows the role icon of each empty slot in the premade group list."

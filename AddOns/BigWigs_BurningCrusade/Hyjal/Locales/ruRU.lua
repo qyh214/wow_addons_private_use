@@ -44,9 +44,4 @@ if L then
 	L.waveInc = "Идет %d волна!"
 	L.message = "%s через ~%d сек!"
 	L.waveMessage = "%d волна через ~%d сек!"
-
-	L.winterchillGossip = "Мои спутники и я – с вами, леди Праудмур."
-	L.anetheronGossip = "Мы готовы встретить любого, кого пошлет Архимонд, леди Праудмур."
-	L.kazrogalGossip = "Я с тобой, Тралл."
-	L.azgalorGossip = "Нам нечего бояться."
 end

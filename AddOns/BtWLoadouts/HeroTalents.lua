@@ -1,7 +1,7 @@
 local ADDON_NAME,Internal = ...
 local L = Internal.L
 
-BTWLOADOUTS_HERO_TALENTS_ACTIVE = Internal.IsTheWarWithinPatch
+BTWLOADOUTS_HERO_TALENTS_ACTIVE = Internal.IsTheWarWithinOrBeyond
 
 BtWLoadoutsHeroTalentTreeDropDownMixin = {}
 function BtWLoadoutsHeroTalentTreeDropDownMixin:OnShow()
@@ -102,7 +102,7 @@ local function UpdateSetFilters(set)
 
     local filters = set.filters
     filters.herotalents = set.subTreeID
-    filters.spec = filters.spec or Internal.GetSpecIDsByHeroTalentTreeID(set.subTreeID)
+    filters.spec = filters.spec or {unpack(Internal.GetSpecIDsByHeroTalentTreeID(set.subTreeID))} -- Clone the table
     
     local specID = filters.spec
     if type(specID) == "table" then
@@ -928,7 +928,7 @@ function BtWLoadoutsHeroTalentsMixin:Update(updatePosition, skipUpdateTree)
         
         set.restrictions = set.restrictions or {}
         self.RestrictionsDropDown:SetSelections(set.restrictions)
-        self.RestrictionsDropDown:SetLimitations("herotalents", treeID)
+        self.RestrictionsDropDown:SetLimitations("herotalents", subTreeID)
         self.RestrictionsButton:SetEnabled(true);
 
         if not self.Name:HasFocus() then
@@ -1221,7 +1221,9 @@ end
 function BtWLoadoutsHeroTalentsMixin:GetAndCacheEntryInfo(entryID)
 	local function GetEntryInfoCallback()
 		-- self.dirtyEntryIDSet[entryID] = nil;
-		return C_Traits.GetEntryInfo(C_ClassTalents.GetActiveConfigID() or Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, entryID);
+		local entryInfo = C_Traits.GetEntryInfo(C_ClassTalents.GetActiveConfigID() or Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, entryID);
+        entryInfo.isDisplayError = nil;
+        return entryInfo
 	end
 
 	return GetOrCreateTableEntryByCallback(self.entryInfoCache, entryID, GetEntryInfoCallback);
@@ -1367,5 +1369,4 @@ Internal.OnEvent("CharacterDeleted", function (event, slug)
 	for _,set in ipairs(sets) do
 		DeleteSet(set.setID)
 	end
-	return true
 end)

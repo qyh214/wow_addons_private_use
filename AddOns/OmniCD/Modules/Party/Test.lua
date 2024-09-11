@@ -2,6 +2,7 @@ local E, L = select(2, ...):unpack()
 local P = E.Party
 
 local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
 
 local TM = CreateFrame("Frame")
 

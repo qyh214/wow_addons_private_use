@@ -3,7 +3,7 @@ local P = E.Party
 
 local MIN_RESET_DURATION = ((E.isWOTLKC or E.isCata) or E.TocVersion > 90100) and 120 or 180
 
-function P:ResetCooldown(icon)
+function P:ResetCooldown(icon, resetAllCharges)
 	local info = self.groupInfo[icon.guid]
 	if not info then
 		return
@@ -17,9 +17,12 @@ function P:ResetCooldown(icon)
 
 
 	if (spellID == 45438 or spellID == 414658) and E.db.icons.showForbearanceCounter then
-		local timeLeft = self:GetDebuffDuration(info.unit, 41425)
-		if timeLeft then
-			self:StartCooldown(icon, timeLeft, nil, true)
+		local duration, expTime = self:GetDebuffDuration(info.unit, 41425)
+		if ( duration and duration > 0 ) then
+			duration = expTime - GetTime()
+			if duration > 0 then
+				self:StartCooldown(icon, duration, nil, true)
+			end
 			return
 		end
 	end
@@ -29,6 +32,14 @@ function P:ResetCooldown(icon)
 	local currCharges = active.charges
 	local statusBar = icon.statusBar
 	if maxcharges and currCharges and currCharges + 1 < maxcharges then
+		if resetAllCharges then
+			active.charges = maxcharges
+			icon.cooldown:Clear()
+			if statusBar then
+				self.OmniCDCastingBarFrame_OnEvent(statusBar.CastingBar, 'UNIT_SPELLCAST_FAILED')
+			end
+			return
+		end
 		currCharges = currCharges + 1
 		icon.count:SetText(currCharges)
 		active.charges = currCharges
@@ -50,7 +61,7 @@ function P:ResetCooldown(icon)
 	end
 end
 
-function P:UpdateCooldown(icon, reducedTime, auraMult, isDFSpaghetti)
+function P:UpdateCooldown(icon, reducedTime, updateActiveTimer)
 	local info = self.groupInfo[icon.guid]
 	if not info then
 		return
@@ -63,23 +74,25 @@ function P:UpdateCooldown(icon, reducedTime, auraMult, isDFSpaghetti)
 
 	local startTime = active.startTime
 	local duration = active.duration
-	local modRate = active.iconModRate or 1
-
-
-
-
-
-
-	if not E.isBFA and not isDFSpaghetti then
-		reducedTime = reducedTime * modRate
-	end
-
+	local modRate = active.modRate or 1
 	local now = GetTime()
-	if auraMult then
-		local elapsed = (now - startTime) * auraMult
+
+
+
+
+
+
+	reducedTime = reducedTime * modRate
+
+
+
+
+
+
+	if updateActiveTimer then
+		local elapsed = (now - startTime) * updateActiveTimer
 		startTime = now - elapsed
-		duration = duration * auraMult
-		reducedTime = reducedTime * auraMult
+		duration = duration * updateActiveTimer
 	end
 
 	startTime = startTime - reducedTime
@@ -126,45 +139,63 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 	end
 
 	local spellID = icon.spellID
+	local multiplier
+	local auraMult = E.spell_cdmod_by_aura_mult[spellID]
+	if auraMult then
+		for i = 1, #auraMult, 2 do
+			local auraString = auraMult[i + 1]
+			if info.auras[auraString] then
+				local mult = auraMult[i]
+				if mult == 0 and not isRecharge then
 
-	if not isRecharge and info.auras[spellID] then
-		return
+					if icon.active and info.auras.premonitionOfInsight then
+						self:UpdateCooldown(icon, info.talentData[440743] and 9.8 or 7)
+					end
+					return
+				end
+
+				multiplier = (multiplier or 1) * mult
+			end
+		end
 	end
 
-	info.active[spellID] = info.active[spellID] or {}
+	local ocd = cd
 
+
+	local isInsight
+	if not isRecharge and icon.isBookType then
+		if info.auras.glimpseOfClarity then
+			cd = cd - 3
+		end
+		if spellID ~= 428933 and info.auras.premonitionOfInsight then
+			isInsight = true
+			cd = cd - (info.talentData[440743] and 9.8 or 7)
+		end
+	end
+
+
+	if multiplier then
+		cd = cd * multiplier
+	end
+
+
+	local modRate = icon.modRate
+	cd = cd * modRate
+
+
+	info.active[spellID] = info.active[spellID] or {}
 	local active = info.active[spellID]
 	local currCharges = active.charges or icon.maxcharges
 	local now = GetTime()
 
-	if info.auras.isGlimpseOfClarity then
-		cd = cd - 3
-	end
-
-	local modRate = (E.BOOKTYPE_CATEGORY[icon.category] or E.spaghettiFix[spellID]) and info.modRate or 1
-
-	local spellModRate = info.spellModRates[spellID]
-	if spellModRate then
-		modRate = modRate * spellModRate
-	end
 
 
-	cd = cd * modRate
 
-	local auraMult = E.spell_cdmod_by_aura_mult[spellID]
-	if auraMult then
-		for i = 1, #auraMult, 2 do
-			local auraKeyOrID = auraMult[i + 1]
-			if info.auras[auraKeyOrID] then
-				local mult = auraMult[i]
-				if mult == 0 then
-					return
-				end
-				mult = mult or info.auras[auraKeyOrID]
-				cd = cd * mult
-			end
-		end
-	end
+
+
+
+
+
 
 	if currCharges then
 		if isRecharge then
@@ -177,24 +208,46 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 			icon.cooldown:SetCooldown(now, cd, modRate)
 		elseif currCharges == icon.maxcharges then
 			currCharges = currCharges - 1
+			if isInsight then
+				now = now - (ocd - cd)
+				cd = ocd * modRate
+			end
 			icon.cooldown:SetCooldown(now, cd, modRate)
 		elseif currCharges == 0 then
 
-
 			icon.cooldown:SetCooldown(now, cd, modRate)
 		else
-			currCharges = currCharges - 1
-			now = active.startTime
+			if isInsight then
+				local rt = active.duration - cd
+				local remainingTime = active.startTime + active.duration - now - rt
+				if remainingTime < 0 then
+					now = now + remainingTime
+				else
+					currCharges = currCharges - 1
+					now = active.startTime - rt
+				end
+				cd = active.duration
+				icon.cooldown:SetCooldown(now, cd, modRate)
+			else
+				currCharges = currCharges - 1
+				now = active.startTime
+				cd = active.duration
+			end
 		end
 		icon.count:SetText(currCharges)
 		active.charges = currCharges
 	else
+		if isInsight then
+			now = now - (ocd - cd)
+			cd = ocd * modRate
+		end
 		icon.cooldown:SetCooldown(now, cd, modRate)
 	end
 
 	active.startTime = now
 	active.duration = cd
-	active.iconModRate = modRate ~= 1 and modRate or nil
+	active.modRate = modRate
+
 	if E.selfLimitedMinMaxReducer[spellID] then
 		active.numHits = 0
 	end
@@ -240,9 +293,10 @@ function P:StartCooldown(icon, cd, isRecharge, noGlow)
 end
 
 function P:ResetAllIcons(reason, clearSession)
+	local notEncounterEnd = reason ~= "encounterEnd"
 	for guid, info in pairs(self.groupInfo) do
 		for spellID, icon in pairs(info.spellIcons) do
-			if reason ~= "encounterEnd" or (not E.spell_noreset_onencounterend[spellID] and icon.baseCooldown >= MIN_RESET_DURATION) then
+			if notEncounterEnd or (not E.spell_noreset_onencounterend[spellID] and icon.baseCooldown >= MIN_RESET_DURATION) then
 				local statusBar = icon.statusBar
 				if icon.active then
 
@@ -289,7 +343,8 @@ function P:ResetAllIcons(reason, clearSession)
 		end
 
 		for k, timer in pairs(info.callbackTimers) do
-			if type(timer) == "userdata" then
+
+			if type(timer) == "userdata" and (notEncounterEnd or k ~= "inCombatTicker") then
 				timer:Cancel()
 			end
 			info.callbackTimers[k] = nil

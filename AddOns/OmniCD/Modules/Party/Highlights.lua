@@ -55,11 +55,16 @@ RemoveHighlight_OnTimerEnd = function(icon)
 	if guid then
 		local info = P.groupInfo[guid]
 		if info and icon.isHighlighted then
-			local duration = P:GetBuffDuration(info.unit, icon.buff)
-			if not duration then
+			local duration, expTime = P:GetBuffDuration(info.unit, icon.buff)
+			if duration and duration > 0 then
+				duration = expTime - GetTime()
+				if duration > 0 then
+					icon.isHighlighted = C_Timer_NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(icon) end)
+				else
+					P:RemoveHighlight(icon)
+				end
+			else
 				P:RemoveHighlight(icon)
-			elseif duration > 0 then
-				icon.isHighlighted = C_Timer_NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(icon) end)
 			end
 		end
 	end
@@ -159,7 +164,7 @@ function P:HighlightIcon(icon, isRefresh)
 	end
 
 	local buff = icon.buff
-	if buff == 0 then
+	if buff == 0 or not E.spell_highlighted[buff] then
 		return
 	end
 
@@ -169,18 +174,20 @@ function P:HighlightIcon(icon, isRefresh)
 	end
 
 	local spellID = icon.spellID
-	local duration = E.summonedBuffDuration[spellID]
+	local duration, expTime = E.summonedBuffDuration[spellID]
 	if duration then
 		local active = info.active[spellID]
 		if active then
 			duration = duration - GetTime() + active.startTime
-			duration = duration > 0 and duration
 		end
 	else
-		duration = self:GetBuffDuration(info.unit, buff)
+		duration, expTime = self:GetBuffDuration(info.unit, buff)
+		if duration and duration > 0 then
+			duration = expTime - GetTime()
+		end
 	end
 
-	if duration then
+	if duration and duration > 0 then
 		if E.buffFixNoCLEU[buff] and (not E.isBFA or not self.isInArena) then
 			info.bar:RegisterUnitEvent('UNIT_AURA', info.unit)
 		end

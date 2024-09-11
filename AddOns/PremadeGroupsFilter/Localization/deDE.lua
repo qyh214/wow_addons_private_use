@@ -32,6 +32,7 @@ L["error.semantic.protected"] = "|cffff0000Semantischer Fehler im Filterausdruck
 L["message.noplaystylefix"] = "Premade Groups Filter: Der Fehler 'Interface-Aktion auf Grund eines Addons fehlgeschlagen' wird nicht automatisch behoben, da du anscheinend keinen vollständig gesicherten Account hast und ansonsten keine organisierten Gruppen erstellen kannst. Siehe Addon-FAQ für weitere Informationen und wie man dieses Problem behebt."
 L["message.settingsupgraded"] = "Premade Groups Filter: Einstellungen auf Version %s migriert"
 
+L["dialog.settings"] = GAMEMENU_OPTIONS
 L["dialog.reset"] = "Zurücksetzen"
 L["dialog.reset.confirm"] = "Wirklich alle Felder zurücksetzen?"
 L["dialog.refresh"] = "Suchen"
@@ -128,3 +129,7 @@ L["settings.signupOnEnter.title"] = "Anmelden mit Eingabetaste"
 L["settings.signupOnEnter.tooltip"] = "Fokussiert automatisch das Textfeld „Notiz für den Gruppenanführer“, wenn Ihr euch für eine neue Gruppe anmeldet, und bestätigt eure Anmeldung, indem Ihr die Eingabetaste drückt."
 L["settings.skipSignUpDialog.title"] = "Anmelde-Dialog überspringen"
 L["settings.skipSignUpDialog.tooltip"] = "Überspringt die Abfrage der Rolle und Notiz falls möglich und meldet euch sofort bei der Gruppe an. Haltet die Umschalttaste gedrückt, um den Dialog immer anzuzeigen."
+L["settings.specIcon.title"] = "Spezialisierung anzeigen"
+L["settings.specIcon.tooltip"] = "Zeigt ein Icon für die Klassenspezialisierung jedes Mitglieds bei organisierten Dungeongruppen."
+L["settings.missingRoles.title"] = "Fehlende Rollen zeigen"
+L["settings.missingRoles.tooltip"] = "Zeigt das Rollensymbol jedes freien Platzes bei organisierten Dungeongruppen."

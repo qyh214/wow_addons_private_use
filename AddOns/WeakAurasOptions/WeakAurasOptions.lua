@@ -761,11 +761,11 @@ local function LayoutDisplayButtons(msg)
     end
 
     local co2 = coroutine.create(func2);
-    OptionsPrivate.Private.dynFrame:AddAction("LayoutDisplayButtons2", co2);
+    OptionsPrivate.Private.Threads:Add("LayoutDisplayButtons2", co2);
   end
 
   local co1 = coroutine.create(func1);
-  OptionsPrivate.Private.dynFrame:AddAction("LayoutDisplayButtons1", co1);
+  OptionsPrivate.Private.Threads:Add("LayoutDisplayButtons1", co1);
 end
 
 function OptionsPrivate.DeleteAuras(auras, parents)
@@ -814,7 +814,7 @@ function OptionsPrivate.DeleteAuras(auras, parents)
   end
 
   local co1 = coroutine.create(func1)
-  OptionsPrivate.Private.dynFrame:AddAction("Deleting Auras", co1)
+  OptionsPrivate.Private.Threads:Add("Deleting Auras", co1)
 end
 
 function WeakAuras.ShowOptions(msg)
@@ -1146,7 +1146,8 @@ function OptionsPrivate.SortDisplayButtons(filter, overrideReset, id)
   tinsert(frame.buttonsScroll.children, frame.loadedButton);
 
   local aurasMatchingFilter = {}
-  local useTextFilter = filter and filter ~= ""
+  local useTextFilter = filter ~= ""
+  local filterTable = OptionsPrivate.Private.splitAtOr(filter)
   local topLevelLoadedAuras = {}
   local topLevelUnloadedAuras = {}
   local visible = {}
@@ -1184,10 +1185,12 @@ function OptionsPrivate.SortDisplayButtons(filter, overrideReset, id)
     end
 
     if useTextFilter then
-      if(id:lower():find(filter, 1, true)) then
-        aurasMatchingFilter[id] = true
-        for parent in OptionsPrivate.Private.TraverseParents(child.data) do
-          aurasMatchingFilter[parent.id] = true
+      for _, word in ipairs(filterTable) do
+        if(id:lower():find(word, 1, true)) then
+          aurasMatchingFilter[id] = true
+          for parent in OptionsPrivate.Private.TraverseParents(child.data) do
+            aurasMatchingFilter[parent.id] = true
+          end
         end
       end
     else
@@ -1576,7 +1579,7 @@ function OptionsPrivate.Drop(mainAura, target, action, area)
   end
 
   local co1 = coroutine.create(func1)
-  OptionsPrivate.Private.dynFrame:AddAction("Dropping Auras", co1)
+  OptionsPrivate.Private.Threads:Add("Dropping Auras", co1)
 end
 
 function OptionsPrivate.StartDrag(mainAura)

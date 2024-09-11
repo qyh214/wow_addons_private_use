@@ -195,6 +195,7 @@ L["BigWigs Message"] = "BigWigs Message"
 L["BigWigs Stage"] = "BigWigs Stage"
 L["BigWigs Timer"] = "BigWigs Timer"
 L["Black Wing Lair"] = "Black Wing Lair"
+L["Bleed"] = "Bleed"
 L["Blizzard Combat Text"] = "Blizzard Combat Text"
 L["Blizzard Cooldown Reduction"] = "Blizzard Cooldown Reduction"
 L["Block"] = "Block"
@@ -627,8 +628,8 @@ L["Hybrid"] = "Hybrid"
 L["Icon"] = "Icon"
 L["Icon Function"] = "Icon Function"
 L["Icon Function (fallback state)"] = "Icon Function (fallback state)"
-L["Id"] = "Id"
 L["ID"] = "ID"
+L["Id"] = "Id"
 L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"
 L["Ignore Dead"] = "Ignore Dead"
 L["Ignore Disconnected"] = "Ignore Disconnected"
@@ -652,6 +653,8 @@ L["Include Bank"] = "Include Bank"
 L["Include Charges"] = "Include Charges"
 L["Include Death Runes"] = "Include Death Runes"
 L["Include Pets"] = "Include Pets"
+L["Include Reagent Bank"] = "Include Reagent Bank"
+L["Include War Band Bank"] = "Include War Band Bank"
 L["Incoming Heal"] = "Incoming Heal"
 L["Increase Precision Below"] = "Increase Precision Below"
 L["Increases by one per stage or intermission."] = "Increases by one per stage or intermission."
@@ -661,8 +664,8 @@ L["Instakill"] = "Instakill"
 L["Install the addons BugSack and BugGrabber for detailed error logs."] = "Install the addons BugSack and BugGrabber for detailed error logs."
 L["Instance"] = "Instance"
 L["Instance Difficulty"] = "Instance Difficulty"
-L["Instance Id"] = "Instance Id"
 L["Instance ID"] = "Instance ID"
+L["Instance Id"] = "Instance Id"
 L["Instance Info"] = "Instance Info"
 L["Instance Name"] = "Instance Name"
 L["Instance Size Type"] = "Instance Size Type"
@@ -1099,6 +1102,7 @@ L["Right, then Centered Vertical"] = "Right, then Centered Vertical"
 L["Right, then Down"] = "Right, then Down"
 L["Right, then Up"] = "Right, then Up"
 L["Role"] = "Role"
+L["Rollback snapshot is complete. Thank you for your patience!"] = "Rollback snapshot is complete. Thank you for your patience!"
 L["Rotate Animation"] = "Rotate Animation"
 L["Rotate Left"] = "Rotate Left"
 L["Rotate Right"] = "Rotate Right"
@@ -1263,14 +1267,17 @@ L["Supports multiple entries, separated by commas"] = "Supports multiple entries
 L[ [=[Supports multiple entries, separated by commas
 ]=] ] = [=[Supports multiple entries, separated by commas
 ]=]
-L["Supports multiple entries, separated by commas. Escape ',' with \\"] = "Supports multiple entries, separated by commas. Escape ',' with \\"
+L["Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."
+L["Supports multiple entries, separated by commas. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Prefix with '-' for negation."
 L[ [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
 Group Zone IDs must be prefixed with 'g', e.g. 'g277'. 
 Supports Area IDs from https://wago.tools/db2/AreaTable prefixed with 'a'. 
-Supports Instance IDs prefixed with 'i'.]=] ] = [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
+Supports Instance IDs prefixed with 'i'.
+Entries can be prefixed with '-' to negate.]=] ] = [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
 Group Zone IDs must be prefixed with 'g', e.g. 'g277'. 
 Supports Area IDs from https://wago.tools/db2/AreaTable prefixed with 'a'. 
-Supports Instance IDs prefixed with 'i'.]=]
+Supports Instance IDs prefixed with 'i'.
+Entries can be prefixed with '-' to negate.]=]
 L["Swing"] = "Swing"
 L["Swing Timer"] = "Swing Timer"
 L["Swipe"] = "Swipe"
@@ -1362,6 +1369,7 @@ L["Total Unit Count"] = "Total Unit Count"
 L["Total Units"] = "Total Units"
 L["Totem"] = "Totem"
 L["Totem #%i"] = "Totem #%i"
+L["Totem Icon"] = "Totem Icon"
 L["Totem Name"] = "Totem Name"
 L["Totem Name Pattern Match"] = "Totem Name Pattern Match"
 L["Totem Number"] = "Totem Number"
@@ -1449,7 +1457,7 @@ Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwr
 Last upgrade: %s
 
 |cffff0000You should BACKUP your WTF folder BEFORE pressing this button.|r]=]
-L["WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."] = "WeakAuras has encountered an error during the login process. Please report this issue at https://github.com/WeakAuras/Weakauras2/issues/new."
+L["WeakAuras is creating a rollback snapshot of your auras. This snapshot will allow you to revert to the current state of your auras if something goes wrong. This process may cause your framerate to drop until it is complete."] = "WeakAuras is creating a rollback snapshot of your auras. This snapshot will allow you to revert to the current state of your auras if something goes wrong. This process may cause your framerate to drop until it is complete."
 L["WeakAuras Profiling"] = "WeakAuras Profiling"
 L["WeakAuras Profiling Report"] = "WeakAuras Profiling Report"
 L["WeakAuras Version: %s"] = "WeakAuras Version: %s"

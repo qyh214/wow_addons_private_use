@@ -1,4 +1,5 @@
 local ADDON_NAME, ns = ...
+local iconLink = "Interface\\Addons\\" .. ADDON_NAME .. "\\Images\\"
 
 function ns.ChangeToClassicImagesRetail()
 

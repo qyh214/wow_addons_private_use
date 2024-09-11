@@ -1,5 +1,5 @@
-local VERSION_TEXT = "v0.3.8";
-local VERSION_DATE = 1723280000;
+local VERSION_TEXT = "v0.4.6";
+local VERSION_DATE = 1725700000;
 
 
 local addonName, addon = ...
@@ -18,7 +18,7 @@ local DefaultValues = {
     FontSizeBase = 1,
     FrameOrientation = 2,                       --1:Left  2:Right(Default)
     HideUI = true,
-    HideUnitNames = false,
+        HideUnitNames = false,
     ShowCopyTextButton = false,
     ShowNPCNameOnPage = false,
     MarkHighestSellPrice = false,
@@ -38,21 +38,39 @@ local DefaultValues = {
     PrimaryControlKey = 1,                      --1: Space  2:Interact Key
     ScrollDownThenAcceptQuest = false,
     RightClickToCloseUI = true,
+    EmulateSwipe = true,
+    MobileDeviceMode = false,
 
+    WidgetManagerDummy = true,                  --Doesn't control anything, used as a trigger
+    AutoQuestPopup = true,
     QuestItemDisplay = false,
-    QuestItemDisplayHideSeen = false,
+        QuestItemDisplayHideSeen = false,
+        QuestItemDisplayDynamicFrameStrata = false,
     AutoSelectGossip = false,
     ForceGossip = false,
     NameplateDialogEnabled = false,
 
     TTSEnabled = false,
-    TTSUseHotkey = true,    --Default key R
-    TTSAutoPlay = false,
-    TTSAutoStop = true,     --Stop when leaving
+        TTSUseHotkey = true,    --Default key R
+        TTSAutoPlay = false,
+        TTSSkipRecent = false,  --Skip recently read texts
+        TTSAutoStop = true,     --Stop when leaving
+        TTSStopOnNew = true,    --Stop when reading new quest
+        TTSVoiceMale = 0,       --0: System default
+        TTSVoiceFemale = 0,
+        TTSUseNarrator = false,
+            TTSVoiceNarrator = 0,
+        TTSVolume = 10,
+        TTSRate = 0,
+            TTSContentSpeaker = false,
+            TTSContentQuestTitle = true,
+            TTSContentObjective = false,
+
 
     --Not shown in the Settings. Accessible by other means
     TooltipShowItemComparison = false,          --Tooltip
 
+    --WidgetManagerPosition = {x, y};
     --QuestItemDisplayPosition = {x, y};
 
     --Deprecated:
@@ -70,9 +88,9 @@ local function GetDBValue(dbKey)
 end
 addon.GetDBValue = GetDBValue;
 
-local function SetDBValue(dbKey, value)
+local function SetDBValue(dbKey, value, userInput)
     DB[dbKey] = value;
-    addon.CallbackRegistry:Trigger("SettingChanged."..dbKey, value);
+    addon.CallbackRegistry:Trigger("SettingChanged."..dbKey, value, userInput);
 end
 addon.SetDBValue = SetDBValue;
 
@@ -96,12 +114,16 @@ local function LoadDatabase()
 
     local type = type;
 
+
     for dbKey, defaultValue in pairs(DefaultValues) do
+        --Some settings are inter-connected so we load all values first
         if DB[dbKey] == nil or type(DB[dbKey]) ~= type(defaultValue) then
-            SetDBValue(dbKey, defaultValue);
-        else
-            SetDBValue(dbKey, DB[dbKey]);
+            DB[dbKey] = defaultValue;
         end
+    end
+
+    for dbKey, defaultValue in pairs(DefaultValues) do
+        SetDBValue(dbKey, DB[dbKey]);
     end
 
     if not DB.installTime or type(DB.installTime) ~= "number" then

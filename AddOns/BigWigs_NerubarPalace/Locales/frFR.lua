@@ -16,7 +16,7 @@ end
 L = BigWigs:NewBossLocale("Rasha'nan", "frFR")
 if L then
 	L.rolling_acid = "Vagues"
-	--L.spinnerets_strands = "Strands"
+	L.spinnerets_strands = "Brins"
 	L.enveloping_webs = "Toiles"
 	L.enveloping_web_say = "Toile" -- Singular of Webs
 	L.erosive_spray = "Écartez-vous"
@@ -25,11 +25,15 @@ end
 
 L = BigWigs:NewBossLocale("Broodtwister Ovi'nax", "frFR")
 if L then
-	L.sticky_web_say = "Toiles"
+	--L.sticky_web = "Webs"
+	L.sticky_web_say = "Toiles" -- Singular of Webs
 	L.infest_message = "Lance Infester sur vous !"
 	L.infest_say = "Parasites"
-	L.experimental_dosage_say = "Soak Œuf"
+	L.experimental_dosage = "Éclosion d'œufs"
+	L.experimental_dosage_say = "Casseur d'œufs"
+	L.ingest_black_blood = "Prochain conteneur"
 	L.unstable_infusion = "Tourbillons"
+
 	L.custom_on_experimental_dosage_marks = "Assignements Dosage expérimental"
 	L.custom_on_experimental_dosage_marks_desc = "Assigne des joueurs affectés par 'Dosage expérimental' à {rt6}{rt4}{rt3}{rt7} avec un priorité mélée > distant > soigneur. Affecte les messages dire et cible."
 end
@@ -39,4 +43,19 @@ if L then
 	L.assasination = "Fantômes"
 	L.twiligt_massacre = "Dashes"
 	L.nexus_daggers = "Dagues"
+end
+
+L = BigWigs:NewBossLocale("The Silken Court", "frFR")
+if L then
+	L.skipped_cast = "Incantation passée %s (%d)"
+
+	L.venomous_rain = "Pluie"
+	L.burrowed_eruption = "Enfouissement"
+	L.stinging_swarm = "Dispel debuffs"
+	L.strands_of_reality = "Frontal Takazj" -- S for Skeinspinner Takazj
+	L.impaling_eruption = "Frontal Anub'arash" -- A for Anub'arash
+	L.entropic_desolation = "S'enfuir"
+	L.cataclysmic_entropy = "Grosse explosion" -- Interrupt before it casts
+	L.spike_eruption = "Pointes"
+	L.unleashed_swarm = "Essaim"
 end

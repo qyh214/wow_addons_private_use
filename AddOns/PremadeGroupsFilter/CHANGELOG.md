@@ -1,7 +1,7 @@
 # Premade Groups Filter
 
-## [5.8.4](https://github.com/0xbs/premade-groups-filter/tree/5.8.4) (2024-08-14)
-[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/5.8.3...5.8.4) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
+## [6.0.2](https://github.com/0xbs/premade-groups-filter/tree/6.0.2) (2024-09-07)
+[Full Changelog](https://github.com/0xbs/premade-groups-filter/compare/6.0.1...6.0.2) [Previous Releases](https://github.com/0xbs/premade-groups-filter/releases)
 
-- Bump TOC to 110002  
-- Update bug\_report.md  
+- Update help tooltip  
+- Update Cata activity lists and keywords as well as documentation  

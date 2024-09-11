@@ -576,7 +576,7 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                     WorldQuestTracker.SetSetting("use_old_icons", not WorldQuestTracker.db.profile.use_old_icons)
                 end,
                 name = "S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS",
-                desc = "S_MAPBAR_OPTIONSMENU_EQUIPMENTICONS",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 49 .. ":" .. 87 .. ":0:0:256:256:" .. (0) .. ":" .. (87) .. ":" .. (131) .. ":" .. (131+49) .. "|t"
             },
             {
                 type = "toggle",
@@ -598,7 +598,18 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                     DB.profile.close_blizz_popups.ABANDON_QUEST = value
                 end,
                 name = "S_OPTTIONS_AUTOACCEPT_ABANDONQUEST",
-                desc = "S_OPTTIONS_AUTOACCEPT_ABANDONQUEST_DESC",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 36 .. ":" .. 173 .. ":0:0:256:256:" .. (80) .. ":" .. (253) .. ":" .. (0) .. ":" .. (36) .. "|t"
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return DB.profile.numerate_quests
+                end,
+                set = function(self, fixedparam, value)
+                    DB.profile.numerate_quests = value
+                end,
+                name = "S_OPTTIONS_NUMERATE_QUEST",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 30 .. ":" .. 90 .. ":0:0:256:256:" .. (0) .. ":" .. (90) .. ":" .. (100) .. ":" .. (130) .. "|t"
             },
 
             {type = "blank"},
@@ -617,7 +628,7 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                     WorldQuestTracker.SetSetting("pathdots", "enabled", value)
                 end,
                 name = "S_ENABLE",
-                desc = "S_ENABLE",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 30 .. ":" .. 134 .. ":0:0:256:256:" .. (91) .. ":" .. (225) .. ":" .. (100) .. ":" .. (130) .. "|t"
             },
 
             {type = "blank"},
@@ -721,7 +732,7 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
 
                 end,
                 name = "S_OPTIONS_SHOWFACTIONS",
-                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 33 .. ":" .. 208 .. ":0:0:256:256:" .. (0) .. ":" .. (208) .. ":" .. (36+30) .. ":" .. (36+30+33) .. "|t\n\n" .. "S_OPTIONS_SHOWFACTIONS",
+                desc = "|TInterface\\AddOns\\WorldQuestTracker\\media\\options_visibility_context:" .. 33 .. ":" .. 208 .. ":0:0:256:256:" .. (0) .. ":" .. (208) .. ":" .. (36+30) .. ":" .. (36+30+33) .. "|t",
             },
             {
                 type = "toggle",
@@ -813,6 +824,51 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
                 name = "S_OPTIONS_WORLDMAP_WIDGET_ALPHA",
                 desc = "S_OPTIONS_WORLDMAP_WIDGET_ALPHA",
             },
+
+            {type = "blank"},
+            {
+                type = "label",
+                get = function() return "S_SPEEDRUN" end,
+                text_template = DF:GetTemplate("font", "ORANGE_FONT_TEMPLATE")
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.speed_run.auto_accept
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.speed_run.auto_accept = not WorldQuestTracker.db.profile.speed_run.auto_accept
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_SPEEDRUN_AUTO_ACCEPT",
+                desc = "S_SPEEDRUN_AUTO_ACCEPT",
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.speed_run.auto_complete
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.speed_run.auto_complete = not WorldQuestTracker.db.profile.speed_run.auto_complete
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_SPEEDRUN_AUTO_COMPLETE",
+                desc = "S_SPEEDRUN_AUTO_COMPLETE",
+            },
+            {
+                type = "toggle",
+                get = function()
+                    return WorldQuestTracker.db.profile.speed_run.cancel_cinematic
+                end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.speed_run.cancel_cinematic = not WorldQuestTracker.db.profile.speed_run.cancel_cinematic
+                    WorldQuestTracker.RefreshStatusBarButtons()
+                end,
+                name = "S_SPEEDRUN_CANCEL_CINEMATIC",
+                desc = "S_SPEEDRUN_CANCEL_CINEMATIC",
+            },
+
+            
 
             --
 
@@ -1132,6 +1188,45 @@ function WorldQuestTrackerAddon.OpenOptionsPanel()
 
         DF:BuildMenu(worldMapSettingsFrame, optionsTable, xStart, yStart, tabFrameHeight, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
     end
+
+    do
+        local worldMapPinScaleFrame = CreateFrame("frame", "WorldQuestTrackerWorldMapPinScaleFrameOptions", worldMapSettingsFrame, "BackdropTemplate")
+        worldMapPinScaleFrame:SetPoint("topright", WQTOptionsPanelContainerWorldMapConfig, "topright", -5, yStart)
+        worldMapPinScaleFrame:SetSize(250, 300)
+
+        local optionsTable = {
+            {
+                type = "label",
+                get = function() return "S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP" end,
+                text_template = DF:GetTemplate("font", "ORANGE_FONT_TEMPLATE")
+            },
+        }
+
+        for hubMapID, scale in pairs(WorldQuestTracker.db.profile.world_map_hubscale) do
+            local mapInfo = C_Map.GetMapInfo(hubMapID)
+            optionsTable[#optionsTable+1] = {
+                type = "range",
+                get = function() return WorldQuestTracker.db.profile.world_map_hubscale[hubMapID] end,
+                set = function(self, fixedparam, value)
+                    WorldQuestTracker.db.profile.world_map_hubscale[hubMapID] = value
+                    WorldQuestTracker.UpdateWorldQuestsOnWorldMap()
+                end,
+                min = 0.6,
+                max = 1.5,
+                step = 1,
+                thumbscale = 1.8,
+                usedecimals = true,
+                name = mapInfo.name,
+                desc = "S_SCALE",
+            }
+        end
+
+        optionsTable.always_boxfirst = true
+        optionsTable.language_addonId = addonId
+
+        DF:BuildMenu(worldMapPinScaleFrame, optionsTable, xStart, -5, tabFrameHeight, false, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template, globalCallback)
+    end
+
 
     do --Zone Map Settings
         local optionsTable = {

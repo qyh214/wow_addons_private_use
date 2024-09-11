@@ -37,30 +37,30 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
 }, GLYPH{achievement=40703})
 
 ns.RegisterPoints(ns.HALLOWFALL, {
-    [62965184] = {criteria=69255, quest=40681}, -- The Fangs, Hallowfall
-    [57173259] = {criteria=69256, quest=40682}, -- Sina's Yearning, Hallowfall
-    [63656535] = {criteria=69257, quest=40683}, -- Sanguine Grasps, Hallowfall
-    [69944420] = {criteria=69258, quest=40684}, -- Dunelle's Kindness, Hallowfall
-    [62760721] = {criteria=69259, quest=40685}, -- Bleak Sand, Hallowfall
-    [43325275] = {criteria=69260, quest=40686}, -- Mereldar, Hallowfall
-    [35403385] = {criteria=69261, quest=40687}, -- Priory of the Sacred Flame, Hallowfall
-    [30795156] = {criteria=69262, quest=40688}, -- Fortune's Fall, Hallowfall
-    [45691230] = {criteria=69263, quest=40689}, -- Velhan's Claim, Hallowfall
-    [57686460] = {criteria=69264, quest=40690, note="Down between the ship and the dock"}, -- Tenir's Ascent, Hallowfall
+    [62965184] = {criteria=69255, note="Quite high up"}, -- The Fangs, Hallowfall
+    [57173259] = {criteria=69256,}, -- Sina's Yearning, Hallowfall
+    [63656535] = {criteria=69257,}, -- Sanguine Grasps, Hallowfall
+    [69944420] = {criteria=69258,}, -- Dunelle's Kindness, Hallowfall
+    [62760721] = {criteria=69259,}, -- Bleak Sand, Hallowfall
+    [43325275] = {criteria=69260,}, -- Mereldar, Hallowfall
+    [35403385] = {criteria=69261,}, -- Priory of the Sacred Flame, Hallowfall
+    [30795156] = {criteria=69262,}, -- Fortune's Fall, Hallowfall
+    [45691230] = {criteria=69263,}, -- Velhan's Claim, Hallowfall
+    [57686460] = {criteria=69264, note="Down between the ship and the dock"}, -- Tenir's Ascent, Hallowfall
 }, GLYPH{achievement=40704})
 
 ns.RegisterPoints(ns.AZJKAHET, {
-    [63311399] = {criteria=69265, quest=40691}, -- Arathi's End, Azj-Kahet
-    [46692129] = {criteria=69266, quest=40692, note="On ledge very high above"}, -- Siegehold, Azj-Kahet
-    [25144058] = {criteria=69267, quest=40693}, -- Ruptured Lake, Azj-Kahet
-    [43125702] = {criteria=69268, quest=40694}, -- Eye of Ansurek, Azj-Kahet
-    [58628980] = {criteria=69270, quest=40696}, -- Deepwalker Pass, Azj-Kahet
-    [66298505] = {criteria=69271, quest=40697}, -- The Maddening Deep, Azj-Kahet
-    [73218411] = {criteria=69272, quest=40698}, -- Rak-Ush, Azj-Kahet
-    [57615755] = {criteria=69273, quest=40699}, -- Silken Ward, Azj-Kahet
-    [70582519] = {criteria=69274, quest=40700}, -- Trickling Abyss, Azj-Kahet
-    [65435176] = {criteria=69275, quest=40701}, -- Untamed Valley, Azj-Kahet
+    [63311399] = {criteria=69265,}, -- Arathi's End, Azj-Kahet
+    [46692129] = {criteria=69266, note="On ledge very high above"}, -- Siegehold, Azj-Kahet
+    [25144058] = {criteria=69267, note="Up in the canopy"}, -- Ruptured Lake, Azj-Kahet
+    [43125702] = {criteria=69268,}, -- Eye of Ansurek, Azj-Kahet
+    [58628980] = {criteria=69270,}, -- Deepwalker Pass, Azj-Kahet
+    [66298505] = {criteria=69271,}, -- The Maddening Deep, Azj-Kahet
+    [73218411] = {criteria=69272,}, -- Rak-Ush, Azj-Kahet
+    [57615755] = {criteria=69273,}, -- Silken Ward, Azj-Kahet
+    [70582519] = {criteria=69274,}, -- Trickling Abyss, Azj-Kahet
+    [65435176] = {criteria=69275,}, -- Untamed Valley, Azj-Kahet
 }, GLYPH{achievement=40705})
 ns.RegisterPoints(ns.CITYOFTHREADS, {
-    [13323352] = {criteria=69269, quest=40695}, -- Old Sacrificial Pit, Azj-Kahet
+    [13323352] = {criteria=69269,}, -- Old Sacrificial Pit, Azj-Kahet
 }, GLYPH{achievement=40705, parent=true})

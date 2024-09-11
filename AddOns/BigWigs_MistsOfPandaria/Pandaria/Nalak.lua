@@ -125,11 +125,10 @@ do
 	function mod:StormcloudDamage(args)
 		if self:Me(args.destGUID) then
 			local t = GetTime()
-			if t-prev > 2 and not self:UnitDebuff("player", args.spellName) then
+			if t-prev > 2 and not openedForMe then
 				self:MessageOld(136340, "blue", "info", CL["underyou"]:format(args.spellName))
 				prev = t
 			end
 		end
 	end
 end
-

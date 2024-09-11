@@ -2561,7 +2561,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.0.2" then
+  if versionString == "11.0.3" then
     versionString = "Dev"
   end
   --@end-debug@]==]

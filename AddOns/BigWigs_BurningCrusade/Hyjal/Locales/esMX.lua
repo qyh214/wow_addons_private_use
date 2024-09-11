@@ -44,9 +44,4 @@ if L then
 	L.waveInc = "¡Oleada %d viene!"
 	L.message = "¡%s en ~%d seg!"
 	L.waveMessage = "¡Oleada %d en ~%d seg!"
-
-	L.winterchillGossip = "Mis compañeros y yo estamos contigo, Lady Valiente."
-	L.anetheronGossip = "Estamos listos para cualquier cosa que Archimonde nos mande, lady Valiente."
-	L.kazrogalGossip = "Estoy contigo, Thrall."
-	L.azgalorGossip = "No tenemos nada que temer."
 end

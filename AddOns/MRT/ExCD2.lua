@@ -11534,6 +11534,10 @@ module.db.AllSpells = {
 	{236320,"WARRIOR,PVP",3,--Боевое знамя
 		nil,{236320,90,15},nil,nil,
 		isTalent=true},
+	{436358,"WARRIOR",3,--Demolish
+		{436358,45,0},
+		isTalent=true},
+
 
 
 
@@ -12863,7 +12867,7 @@ module.db.AllSpells = {
 		isTalent=true,durationDiff={462443,3}},
 	{114052,"SHAMAN,HEAL",3,--Перерождение
 		nil,nil,nil,{114052,180,15},
-		isTalent=true,durationDiff={462443,3}},
+		isTalent=true,durationDiff={462443,3},cdDiff={462440,-60}},
 	{114050,"SHAMAN,DPS",3,--Перерождение
 		nil,{114050,180,15},nil,nil,
 		isTalent=true,cdDiff={462440,-60}},
@@ -13004,7 +13008,10 @@ module.db.AllSpells = {
 		nil,{355580,90,0},nil,nil,
 		isTalent=true},
 	{444995,"SHAMAN",3,--Surging Totem
-		nil,nil,{444995,30,0},nil,
+		nil,nil,{444995,30,0},{444995,30,0},
+		isTalent=true},
+	{108270,"SHAMAN",3,--Stone Bulwark Totem
+		{108270,180,30},
 		isTalent=true},
 
 
@@ -13013,7 +13020,37 @@ module.db.AllSpells = {
 		isTalent=true,stopDurWithAuraFade={342246,110909},startCdAfterAuraApply={110909,342246},cdDiff={342249,-10}},
 	{235313,"MAGE,DEF",3,--Пылающая преграда
 		nil,nil,{235313,25,0},nil,
-		isTalent=true},
+		isTalent=true,
+		CLEU_PREP=[[
+			var_235313 = {}
+		]],CLEU_SPELL_AURA_APPLIED=[[
+			if spellID == 235313 and destName and session_gGUIDs[destName][382800] then
+				if var_235313[destName] then
+					var_235313[destName]:Cancel()
+				end
+				var_235313[destName] = C_Timer.NewTicker(1,function()
+					local line = CDList[destName][235313]
+					if line then
+						line:ReduceCD(0.3)
+					end
+				end, 60)
+			end
+		]],CLEU_SPELL_AURA_REMOVED=[[
+			if spellID == 235313 and destName then
+				if session_gGUIDs[destName][382800] then
+					if var_235313[destName] then
+						var_235313[destName]:Cancel()
+						var_235313[destName] = nil
+					end
+				end
+				if session_gGUIDs[destName][455428] then
+					local line = CDList[destName][235313]
+					if line then
+						line:ReduceCD(4)
+					end
+				end
+			end
+		]]},
 	{1953,	"MAGE,MOVE",4,--Скачок
 		{1953,15,0},nil,nil,nil,
 		cdDiff={382268,{-2,-4},336636,{-2,-2.2,-2.4,-2.6,-2.8,-3,-3.2,-3.4,-3.6,-3.8,-4,-4.2,-4.4,-4.6,-4.8}},hideWithTalent=212653,ignoreUseWithAura=375240,changeCdWithAura={381750,"*0.85"},resetBy={{342245,342249}}},
@@ -13140,10 +13177,40 @@ module.db.AllSpells = {
 		]]},
 	{11426,	"MAGE,DEF",3,--Ледяная преграда
 		nil,nil,nil,{11426,25,0},
-		isTalent=true,stopDurWithAuraFade=11426,resetBy=235219},
+		isTalent=true,stopDurWithAuraFade=11426,resetBy=235219,
+		CLEU_PREP=[[
+			var_11426 = {}
+		]],CLEU_SPELL_AURA_APPLIED=[[
+			if spellID == 11426 and destName and session_gGUIDs[destName][382800] then
+				if var_11426[destName] then
+					var_11426[destName]:Cancel()
+				end
+				var_11426[destName] = C_Timer.NewTicker(1,function()
+					local line = CDList[destName][11426]
+					if line then
+						line:ReduceCD(0.3)
+					end
+				end, 60)
+			end
+		]],CLEU_SPELL_AURA_REMOVED=[[
+			if spellID == 11426 and destName then
+				if session_gGUIDs[destName][382800] then
+					if var_11426[destName] then
+						var_11426[destName]:Cancel()
+						var_11426[destName] = nil
+					end
+				end
+				if session_gGUIDs[destName][455428] then
+					local line = CDList[destName][11426]
+					if line then
+						line:ReduceCD(4)
+					end
+				end
+			end
+		]]},
 	{45438,	"MAGE,DEF",3,--Ледяная глыба
 		{45438,240,10},nil,nil,nil,
-		isTalent=true,cdDiff={336613,{-25,-28,-30,-33,-35,-38,-40,-43,-45,-48,-50,-53,-55,-58,-60},382424,{-30,-60}},stopDurWithAuraFade=45438,resetBy=235219},
+		isTalent=true,cdDiff={336613,{-25,-28,-30,-33,-35,-38,-40,-43,-45,-48,-50,-53,-55,-58,-60},382424,{-30,-60}},stopDurWithAuraFade=45438,resetBy=235219,sameSpell={45438,414659,414658},durationDiff={414659,-4}},
 	{12472,	"MAGE,DPS",3,--Стылая кровь
 		nil,nil,nil,{12472,120,25},
 		isTalent=true,durationDiff={155149,5},cdDiff={296320,"*0.80"},hideWithTalent=198144,
@@ -13195,7 +13262,37 @@ module.db.AllSpells = {
 		isTalent=true,startCdAfterAuraFade=205025},
 	{235450,"MAGE,DEF",4,--Призматический барьер
 		nil,{235450,25,0},nil,nil,
-		isTalent=true,cdDiff={235463,"*0"}},
+		isTalent=true,cdDiff={235463,"*0"},
+		CLEU_PREP=[[
+			var_235450 = {}
+		]],CLEU_SPELL_AURA_APPLIED=[[
+			if spellID == 235450 and destName and session_gGUIDs[destName][382800] then
+				if var_235450[destName] then
+					var_235450[destName]:Cancel()
+				end
+				var_235450[destName] = C_Timer.NewTicker(1,function()
+					local line = CDList[destName][235450]
+					if line then
+						line:ReduceCD(0.3)
+					end
+				end, 60)
+			end
+		]],CLEU_SPELL_AURA_REMOVED=[[
+			if spellID == 235450 and destName then
+				if session_gGUIDs[destName][382800] then
+					if var_235450[destName] then
+						var_235450[destName]:Cancel()
+						var_235450[destName] = nil
+					end
+				end
+				if session_gGUIDs[destName][455428] then
+					local line = CDList[destName][235450]
+					if line then
+						line:ReduceCD(4)
+					end
+				end
+			end
+		]]},
 	{475,	"MAGE,DISPEL",5,--Снятие проклятия
 		{475,8,0},nil,nil,nil,
 		isTalent=true,isDispel=true},
@@ -13858,7 +13955,7 @@ module.db.AllSpells = {
 		isTalent=true,cdDiff={329802,-54}},
 	{102558,"DRUID,DEFTANK",3,--Воплощение: Страж Урсока
 		nil,nil,nil,{102558,180,30},nil,
-		isTalent=true,cdDiff={339062,-30,329802,-54}},
+		isTalent=true,cdDiff={339062,-30,329802,-54},reduceCdAfterCast={{22842,393414},-0.4,{192081,393414},-1.6,{6807,393414},-1.6,{400254,393414},-1.6,{236716,393414},-1.6}},
 	{102543,"DRUID,DPS",3,--Воплощение: король джунглей
 		nil,nil,{102543,180,30},nil,nil,
 		isTalent=true,cdDiff={329802,-54},reduceCdAfterCast={{274837,340053,103},-0.2,{106785,340053,103},-0.2,{202028,340053,103},-0.2,{5221,340053,103},-0.2,{1822,340053,103},-0.2,{106830,340053,103},-0.2}},

@@ -177,7 +177,7 @@
             </EditBox>
 
             <Button name="BtWLoadoutsConditionsAffixesDropDownList" mixin="BtWLoadoutsConditionsAffixesMixin" toplevel="true" frameStrata="FULLSCREEN_DIALOG" hidden="true">
-                <Size x="400" y="155"/>
+                <Size x="460" y="155"/>
                 <KeyValues>
                     <KeyValue type="number" key="maxWidth" value="400"/>
                 </KeyValues>

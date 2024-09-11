@@ -13,6 +13,7 @@ mod:SetPrivateAuraSounds({
 	438141, -- Twilight Massacre
 	{435534, extra = {436663, 436664, 436665, 436666, 436671, 436677}}, -- Regicide
 })
+mod:SetStage(1)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -53,9 +54,9 @@ function mod:GetOptions()
 		{440576, "TANK"}, -- Chasmal Gash
 
 		-- Stage Two: Starless Night
-		435405, -- Starless Night
+		{435405, "CASTBAR"}, -- Starless Night
 		-- {435534, "PRIVATE"}, -- Regicide PA Sounds only
-		442277, -- Eternal Night
+		{442277, "CASTBAR"}, -- Eternal Night
 	}, {
 		[436867] = -28741, -- Stage One: The Phantom Blade
 		[435405] = -28742, -- Stage Two: Starless Night
@@ -70,6 +71,13 @@ function mod:GetOptions()
 	}
 end
 
+function mod:OnRegister()
+	self:SetSpellRename(439409, CL.orbs) -- Dark Visera (Orbs)
+	self:SetSpellRename(438245, L.twiligt_massacre) -- Twilight Massacre (Dashes)
+	self:SetSpellRename(437620, CL.rifts) -- Nether Rift (Rifts)
+	self:SetSpellRename(439576, L.nexus_daggers) -- Nexus Daggers (Daggers)
+end
+
 function mod:OnBossEnable()
 	-- Stage One: The Phantom Blade
 	self:Log("SPELL_CAST_SUCCESS", "Assassination", 436867, 442573, 440650) -- 3, 4, 5 targets
@@ -81,10 +89,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "ChasmalGashApplied", 440576)
 	-- Stage Two: Starless Night
 	self:Log("SPELL_CAST_START", "StarlessNight", 435405)
+	self:Log("SPELL_AURA_REMOVED", "StarlessNightOver", 435405)
 	self:Log("SPELL_CAST_START", "EternalNight", 442277)
 end
 
 function mod:OnEngage()
+	self:SetStage(1)
 	assassinationCount = 1
 	twilightMassacreCount = 1
 	netherRiftCount = 1
@@ -190,11 +200,12 @@ function mod:ChasmalGashApplied(args)
 end
 
 -- Stage Two: Starless Night
-
 function mod:StarlessNight(args)
+	self:SetStage(2)
 	self:StopBar(CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:Message(args.spellId, "cyan", CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:PlaySound(args.spellId, "long")
+	self:CastBar(args.spellId, 24, CL.count:format(CL.stage:format(2), starlessNightCount))
 	starlessNightCount = starlessNightCount + 1
 	local cd = 130.0
 	if starlessNightCount == 3 then
@@ -204,9 +215,14 @@ function mod:StarlessNight(args)
 	end
 end
 
+function mod:StarlessNightOver()
+	self:SetStage(1)
+end
+
 function mod:EternalNight(args)
+	self:SetStage(2)
 	self:StopBar(CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:Message(args.spellId, "red", CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:PlaySound(args.spellId, "long")
-	self:Bar(args.spellId, 34, 15097) -- 15097 = Enrage (cast hits the entire room and ramps)
+	self:CastBar(args.spellId, 34, CL.count:format(CL.stage:format(2), starlessNightCount))
 end

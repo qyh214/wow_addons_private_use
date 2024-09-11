@@ -1,3 +1,5 @@
+local addonName = ...
+
 local BtWQuestsDatabase = BtWQuestsDatabase
 local BtWQuestsCharacters = BtWQuestsCharacters
 
@@ -19,11 +21,7 @@ end
 local GetQuestLogIsAutoComplete = C_QuestLog and C_QuestLog.GetInfo and function (questLogIndex)
     return C_QuestLog.GetInfo(questLogIndex).isAutoComplete
 end or GetQuestLogIsAutoComplete or function () return false end
-local ShowQuestDetails = QuestMapFrame_OpenToQuestDetails and function (questID)
-    QuestMapFrame_OpenToQuestDetails(questID)
-
-    return true
-end or function (questID)
+local ShowQuestDetails = QuestMapFrame_OpenToQuestDetails or function (questID)
     local mapID
     local quest = BtWQuestsDatabase:GetQuestByID(questID)
     if IsQuestComplete(questID) then
@@ -51,10 +49,12 @@ local function CanCompleteQuest(questLogIndex)
     return IsQuestComplete(GetQuestIDForQuestIndex(questLogIndex)) and GetQuestLogIsAutoComplete(questLogIndex)
 end
 local GetAddOnMetadata = GetAddOnMetadata or C_AddOns.GetAddOnMetadata
+local GetMouseFocus = GetMouseFocus or function ()
+    return GetMouseFoci()[1]
+end
 
-function BtWQuestsDragonflight_OnAddonCompartmentClick()
+function BtWQuests_OnAddonCompartmentClick()
     BtWQuestsFrame:Show()
-    BtWQuestsFrame:SelectExpansion(BtWQuests.Constant.Expansions.Dragonflight)
 end
 
 BtWQuestsFrameChainViewMixin = {}
@@ -719,13 +719,13 @@ function BtWQuestsMixin:DisplayCurrentExpansion(scrollTo)
 
     local expansion = BtWQuestsDatabase:GetExpansionByID(self:GetExpansion());
     if expansion == nil then
-        print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: Dragonflight"))
+        print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: The War Within"))
         return;
     end
     expansion:Load()
     local items = expansion:GetItemList(self:GetCharacter(), not categoryHeaders, filterCompleted, filterIgnored)
     if #items == 0 then -- Somehow selected an empty expansion, probably means all the BtWQuests modules are disabled
-        print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: Dragonflight"))
+        print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: The War Within"))
     end
     self:DisplayItemList(items, scrollTo)
 end
@@ -949,16 +949,21 @@ function BtWQuestsMixin:OnEvent(event, ...)
                 if expansion then
                     expansion:Load()
                 else
-                    print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: Dragonflight"))
+                    print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: The War Within"))
                 end
             end
 
-            -- hooksecurefunc("QuestObjectiveTracker_OnOpenDropDown", function (self)
-            --     BtWQuests_AddOpenChainMenuItem(self, self.activeFrame.id)
-            -- end)
-            -- hooksecurefunc(QuestMapQuestOptionsDropDown, "initialize", function (self)
-            --     BtWQuests_AddOpenChainMenuItem(self, self.questID)
-            -- end)
+            if Menu then
+                Menu.ModifyMenu("MENU_QUEST_OBJECTIVE_TRACKER", function(owner, rootDescription, contextData)
+                    local frame = GetMouseFoci()[1]:GetParent();
+                    local questID = frame.id;
+                    BtWQuests_AddOpenChainMenuItem(owner, rootDescription, questID)
+                end);
+                Menu.ModifyMenu("MENU_QUEST_MAP_LOG_TITLE", function(owner, rootDescription, contextData)
+                    local questID = owner.questID;
+                    BtWQuests_AddOpenChainMenuItem(owner, rootDescription, questID)
+                end);
+            end
 
             if select(5, GetAddOnInfo("BtWQuestsEditor")) == "DEMAND_LOADED" then
                 Settings = Settings + {
@@ -1077,7 +1082,7 @@ function BtWQuestsMixin:OnShow()
                 if expansion then
                     self:SelectExpansion(BtWQuestsDatabase:GetFirstExpansion():GetID(), nil, true)
                 else
-                    print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: Dragonflight"))
+                    print(format(L["BTWQUESTS_NO_EXPANSION_ERROR"], "BtWQuests: The War Within"))
                 end
             end
         end
@@ -1196,21 +1201,15 @@ function BtWQuests_ShowMapWithWaypoint(mapId, x, y, name)
 end
 
 -- [[ Quest To Chain ]]
-function BtWQuests_AddOpenChainMenuItem(self, questID)
+function BtWQuests_AddOpenChainMenuItem(owner, rootDescription, questID)
     local item = BtWQuestsDatabase:GetQuestItem(questID, BtWQuestsCharacters:GetPlayer())
     if item then
-        local info = UIDropDownMenu_CreateInfo()
-        info.text = L["BTWQUESTS_OPEN_QUEST_CHAIN"]
-        info.func = function(self, questID, item)
+        rootDescription:CreateDivider()
+        rootDescription:CreateTitle(addonName)
+        rootDescription:CreateButton(L["BTWQUESTS_OPEN_QUEST_CHAIN"], function()
             BtWQuestsFrame:SelectCharacter(UnitName("player"), GetRealmName())
             BtWQuestsFrame:SelectItem(item.item)
-        end
-        info.arg1 = questID
-        info.arg2 = item
-        info.notCheckable = 1;
-        info.checked = false;
-        info.noClickSound = 1;
-        UIDropDownMenu_AddButton(info, UIDROPDOWN_MENU_LEVEL)
+        end)
     end
 end
 

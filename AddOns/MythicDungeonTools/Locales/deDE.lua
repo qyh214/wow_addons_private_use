@@ -2506,6 +2506,8 @@ L["Void Discharge"] = "Leerenentladung"
 L["Void Flayer"] = "Leerenschinder"
 L["Void Spawn"] = "Ausgeburt der Leere"
 --[[Translation missing --]]
+L["Void Speaker Eirich"] = "Void Speaker Eirich"
+--[[Translation missing --]]
 L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "Leerenberührte Abgesandte"
 L["Voidweaver Mal'thir"] = "Leerenweber Mal'thir"

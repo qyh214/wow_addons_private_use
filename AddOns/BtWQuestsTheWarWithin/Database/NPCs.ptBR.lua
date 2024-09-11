@@ -39,6 +39,12 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [213145] = {
         name = "Aurália Golpeaço",
     },
+    [213624] = {
+        name = "Magni Barbabronze",
+    },
+    [213625] = {
+        name = "Grã-senhora Jaina Proudmore",
+    },
     [213840] = {
         name = "Estalajadeiro Brax",
     },
@@ -170,6 +176,9 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [226792] = {
         name = "Rancheiro Edidito",
+    },
+    [227217] = {
+        name = "Trameiro",
     },
     [227222] = {
         name = "Isebel Refulgrado",

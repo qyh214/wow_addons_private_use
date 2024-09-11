@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_TAILORING),
     -- active = ns.conditions.Profession(ns.PROF_WW_TAILORING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-tailoring",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [54616373] = { -- 63192331
+    [61521852] = {
         quest=83922,
         loot={226348}, -- Dornogal Seam Ripper
         vignette=6505,
@@ -65,12 +67,6 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         quest=83929,
         loot={226355}, -- Nerubian's Pincushion
         vignette=6512,
-        parent=true, levels=true, translate={[2256]=true},
-    },
-    [50601680] = {
-        quest=82634,
-        loot={224036}, -- And That's A Web-Wrap!
-        note="Buy from {npc:218190:Saaria}",
         parent=true, levels=true, translate={[2256]=true},
     },
 }, KNOWLEDGE)

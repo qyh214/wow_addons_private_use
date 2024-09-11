@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_ALCHEMY),
     -- active = ns.conditions.Profession(ns.PROF_WW_ALCHEMY, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-alchemy",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [47207040] = { -- or 32456034 or 3061994
+    [32456034] = {
         quest=83840,
         loot={226265}, -- Earthen Iron Powder
         vignette=6425,
@@ -53,7 +55,7 @@ ns.RegisterPoints(ns.HALLOWFALL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.AZJKAHET, {
-    [44476052] = { -- 42875725
+    [42875725] = {
         quest=83847,
         loot={226272}, -- Dark Apothecary's Vial
         vignette=6432,
@@ -66,10 +68,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6431,
         parent=true, levels=true, translate={[2256]=true},
     },
-    [55604700] = {
-        quest=82633,
-        loot={224024}, -- Theories of Bodily Transmutation, Chapter 8
-        note="Buy from {npc:224337:Zara'azj the Magnificent}",
-        parent=true, levels=true, translate={[2256]=true},
-    }
 }, KNOWLEDGE)

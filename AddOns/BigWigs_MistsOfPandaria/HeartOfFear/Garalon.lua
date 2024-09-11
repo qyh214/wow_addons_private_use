@@ -14,6 +14,7 @@ mod:RegisterEnableMob(63191, 63053) -- Garalon, Garalon's Leg
 local legCounter, crushCounter = 4, 0
 local mendLegTimerRunning = nil
 local pheromonesOnMe = false
+local won = false
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -61,13 +62,14 @@ function mod:OnBossEnable()
 
 	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 
-	self:Death("Win", 62164, 63191)
+	self:Death("BossDeaths", 62164, 63191)
 end
 
 function mod:OnEngage(diff)
 	legCounter, crushCounter = 4, 0
 	mendLegTimerRunning = nil
 	pheromonesOnMe = false
+	won = false
 
 	self:Berserk(self:Heroic() and 420 or 720)
 	self:Bar(122735, 11) -- Furious Swipe
@@ -179,3 +181,9 @@ function mod:Phase2()
 	self:MessageOld(-6294, "green", "info", "33% - "..CL["phase"]:format(2))
 end
 
+function mod:BossDeaths()
+	if not won then
+		won = true
+		self:Win()
+	end
+end

@@ -37,6 +37,7 @@ ns.icons = {
 ["StablemasterN"] = iconLink .. "StablemasterN",
 ["StablemasterH"] = iconLink .. "StablemasterH",
 ["StablemasterA"] = iconLink .. "StablemasterA",
+["TradingPost"] = iconLink .. "TradingPost",
 -- Icons if enemy faction is disabled for General zone icons
 ["OriginalInnkeeperA"] = iconLink .. "InnkeeperA",
 ["OriginalInnkeeperH"] = iconLink .. "InnkeeperH",
@@ -64,7 +65,7 @@ ns.icons = {
 ["ZonePvEVendorA"] = iconLink .. "PvEVendorA",
 ["ZonePvPVendorA"] = iconLink .. "PvPVendorA",
 --Professions MN New
-["ProfessionOrders"] = "interface/minimap/tracking/profession.blp",
+["ProfessionOrders"] = iconLink .. "CraftingOrders",
 ["Engineer"] = iconLink .. "Engineering",
 ["Alchemy"] = iconLink .. "Alchemy",
 ["Blacksmith"] = iconLink .. "Blacksmithing",
@@ -111,7 +112,7 @@ ns.icons = {
 ["ClassicOriginalFishing"] = "interface/icons/trade_fishing.blp",
 ["ClassicOriginalCooking"] = "interface/icons/inv_misc_food_15.blp",
 --Professions New
-["ProfessionOrdersNew"] = "interface/minimap/tracking/profession.blp",
+["ProfessionOrdersNew"] = iconLink .. "CraftingOrders",
 ["EngineerNew"] = iconLink .. "Engineering",
 ["AlchemyNew"] = iconLink .. "Alchemy",
 ["BlacksmithNew"] = iconLink .. "Blacksmithing",
@@ -136,7 +137,7 @@ ns.icons = {
 ["LLG"] = "Interface/Icons/artifactability_HavocDemonHunter_AnguishoftheDeceiver",
 ["LMOP"] = "Interface/CharacterFrame/TEMPORARYPORTRAIT-FEMALE-PANDAREN",
 ["LWotlk"] = "interface/lfgframe/ui-lfr-portrait",
-["TWW"] = "interface/icons/inv_achievement_raid_progenitorraid_anduin.blp",
+["TWW"] = "interface/characterframe/temporaryportrait-female-voidelf.blp",
 --paths
 ["PathO"] = iconLink .. "PathO",
 ["PathRO"] = iconLink .. "PathRO",
@@ -279,6 +280,7 @@ TextIconMailboxA = TextIcon(iconLink .. "MailboxA", 50, 50, 1 ,50, 1, 50)
 TextIconStablemasterN = TextIcon(iconLink .. "StablemasterN", 50, 50, 1 ,50, 1, 50)
 TextIconStablemasterH = TextIcon(iconLink .. "StablemasterH", 50, 50, 1 ,50, 1, 50)
 TextIconStablemasterA = TextIcon(iconLink .. "StablemasterA", 50, 50, 1 ,50, 1, 50)
+TextIconTradingPost = TextIcon(iconLink .. "TradingPost", 50, 50, 1 ,50, 1, 50)
 --Cities
 TextIconOrgrimmar = TextIcon("interface/icons/spell_arcane_teleportorgrimmar.blp", 50, 50, 1, 50, 1, 50)
 TextIconThunderBluff = TextIcon("interface/icons/spell_arcane_teleportthunderbluff.blp", 50, 50, 1, 50, 1, 50)
@@ -302,7 +304,7 @@ TextIconValdrakken = TextIcon("interface/icons/spell_arcane_teleportvaldrakken.b
 TextIconDornogal = TextIcon("interface/icons/inv_spell_arcane_telepotdornogal.blp", 50, 50, 1, 50, 1, 50)
 TextIconDarkMoon = TextIcon(iconLink .. "DarkMoon", 50, 50, 1, 50, 1, 50)
 --profession
-TextIconProfessionOrders = TextIcon("interface/minimap/tracking/profession.blp", 50, 50, 1, 50, 1, 50)
+TextIconProfessionOrders = TextIcon(iconLink .. "CraftingOrders", 50, 50, 1, 50, 1, 50)
 TextIconEngineer = TextIcon(iconLink .. "Engineering", 50, 50, 1, 50, 1, 50)
 TextIconAlchemy = TextIcon(iconLink .. "Alchemy", 50, 50, 1, 50, 1, 50)
 TextIconBlacksmith = TextIcon(iconLink .. "Blacksmithing", 50, 50, 1, 50, 1, 50)
@@ -451,7 +453,6 @@ TextIconGilneanF = TextIcon("interface/characterframe/temporaryportrait-female-g
 TextIconB11M = TextIcon"interface/characterframe/temporaryportrait-male-bloodelf"
 TextIconOrcF = TextIcon("Interface/CharacterFrame/TemporaryPortrait-Female-Orc")
 TextIconUndeadF = TextIcon("interface/characterframe/temporaryportrait-female-scourge")
-
 
 -- 1 number --self.IconFileX = IconFileX or 0    -- the total X (horizontal) pixels in the image file - not just the icon we want
 -- 2 number --self.IconFileY = IconFileY or 0    -- the total Y (vertical) pixels in the image file

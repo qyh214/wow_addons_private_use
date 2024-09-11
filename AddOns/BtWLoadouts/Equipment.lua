@@ -3056,5 +3056,4 @@ Internal.OnEvent("CharacterDeleted", function (event, slug)
 	for _,set in ipairs(sets) do
 		DeleteEquipmentSet(set.setID)
 	end
-	return true
 end)

@@ -1,5 +1,6 @@
 local E, L = select(2, ...):unpack()
 local OmniCDC = E.Libs.OmniCDC
+local EnableAddOn = C_AddOns and C_AddOns.EnableAddOn or EnableAddOn
 
 OmniCDC.StaticPopupDialogs["OMNICD_CUSTOM_UF_MSG"] = {
 	text = format("%s%s:|r %s", E.userClassHexColor, E.AddOn, L["Changing party display options in your UF addon while OmniCD is active will break the anchors. Type (/oc rl) to fix the anchors"]),

@@ -1,4 +1,3 @@
-if not BigWigsLoader.isBeta then return end
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -16,6 +15,7 @@ mod:RegisterEnableMob(
 	220003, -- Eye of the Queen
 	223844, -- Covert Webmancer
 	224732, -- Covert Webmancer
+	220423, -- Retired Lord Vul'azak
 	220777, -- Executor Nizrek (warmup NPC)
 	220730, -- Royal Venomshell
 	216328, -- Unstable Test Subject
@@ -123,7 +123,7 @@ function mod:OnBossEnable()
 
 	-- Royal Swarmguard
 	self:Log("SPELL_CAST_START", "Earthshatter", 443500)
-	self:Death("RoyalSwarmguardDeath", 220197)
+	self:Death("RoyalSwarmguardDeath", 220197, 220423) -- Royal Swarmguard, Retired Lord Vul'azak
 
 	-- Xeph'itik
 	self:Log("SPELL_CAST_START", "PerfumeToss", 450784)
@@ -204,7 +204,7 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	if self:GetOption("custom_on_autotalk")then
+	if self:GetOption("custom_on_autotalk") then
 		if self:GetGossipID(122351) then -- Rogue
 			-- 122351:<Sabotage the device and steal some of its power.>\r\n[Requires Rogue, Priest, or at least 25 skill in Khaz Algar Engineering.]|r
 			self:SelectGossipID(122351)

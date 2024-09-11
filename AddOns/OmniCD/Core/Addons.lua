@@ -129,36 +129,6 @@ local unitFrameData = {
 		[4] = 1,
 		[5] = 5,
 	},
-	--[[ pre v12.85
-	{
-		[1] = "ElvUI-Raid",
-		[2] = "ElvUF_RaidGroup%dUnitButton",
-		[3] = "unit",
-		[4] = 1,
-		[5] = 5,
-	},
-	{
-		[1] = "ElvUI-Raid-RWS", -- 'Raid Wide Sorting'
-		[2] = "ElvUF_RaidGroup1UnitButton",
-		[3] = "unit",
-		[4] = 1,
-		[5] = 40,
-	},
-	{
-		[1] = "ElvUI-Raid40",
-		[2] = "ElvUF_Raid40Group%dUnitButton",
-		[3] = "unit",
-		[4] = 1,
-		[5] = 5,
-	},
-	{
-		[1] = "ElvUI-Raid40-RWS",
-		[2] = "ElvUF_Raid40Group1UnitButton",
-		[3] = "unit",
-		[4] = 1,
-		[5] = 40,
-	},
-	]]
 	{
 		[1] = "Tukui",
 		[2] = "TukuiPartyUnitButton",
@@ -375,12 +345,6 @@ function E:UnitFrames()
 		end
 
 		self:SetActiveUnitFrameData()
-
-		--[[ remove nag
-		if not self.global.disableElvMsg then
-			self.Libs.OmniCDC.StaticPopup_Show("OMNICD_CUSTOM_UF_MSG")
-		end
-		]]
 	end
 end
 

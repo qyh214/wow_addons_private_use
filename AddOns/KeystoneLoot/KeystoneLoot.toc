@@ -1,0 +1,47 @@
+## Interface: 110002
+## Title: |cff9d5db8KeystoneLoot|r
+## Notes: Shows the items from the mythic plus instances in a compact overview
+## Notes-ruRU: Компактный аддон, который показывает уровни предметов из подземелий М+
+## Author: Selina Ruesch
+## X-Email: selina.ruesch@gmail.com
+## Version: 1.9.1
+## IconTexture: Interface\Icons\INV_Relics_Hourglass_02
+## SavedVariables: KeystoneLootDB
+## SavedVariablesPerCharacter: KeystoneLootCharDB
+
+locale\_controller.lua
+locale\enUS.lua
+locale\deDE.lua
+locale\esES.lua
+locale\frFR.lua
+locale\itIT.lua
+locale\koKR.lua
+locale\ptBR.lua
+locale\ruRU.lua
+locale\zhCN.lua
+locale\zhTW.lua
+
+database\items.lua
+database\dungeons.lua
+database\catalyst.lua
+database\raids.lua
+
+xui\overview_frame.lua
+xui\minimap_button.lua
+xui\dropdown_menu.lua
+xui\options_button.lua
+xui\tab_button.lua
+xui\filter_button.lua
+xui\dungeon_frame.lua
+xui\item_button.lua
+xui\loot_reminder_frame.lua
+xui\catalyst_frame.lua
+xui\dungeons_tab.lua
+xui\raid_frame.lua
+xui\raid_tab_button.lua
+xui\raids_tab.lua
+
+upgrade_item.lua
+database.lua
+keystone_tooltip.lua
+app.lua

@@ -14,6 +14,7 @@ local FriendshipBar = addon.FriendshipBar;
 local PlaySound = addon.PlaySound;
 local IsAutoSelectOption = addon.IsAutoSelectOption;
 local GetDBBool = addon.GetDBBool;
+local SwipeEmulator = addon.SwipeEmulator;
 local IS_MODERN_WOW = not addon.IS_CLASSIC;
 
 local FadeFrame = API.UIFrameFade;
@@ -40,6 +41,8 @@ local FONT_SIZE = 12;
 local TEXT_SPACING = FONT_SIZE*0.35;                 --Font Size /3
 local PARAGRAPH_SPACING = 4*TEXT_SPACING;           --4 * TEXT_SPACING
 local PARAGRAPH_BUTTON_SPACING = 2*FONT_SIZE;    --Font Size * 2
+
+local CONTENT_BLEEDING = 16.0;    --ContentFrame is sometimes ClipChildren and there may be an overlay frame that got clipped.
 
 local CreateFrame = CreateFrame;
 local C_CampaignInfo = C_CampaignInfo;
@@ -76,7 +79,7 @@ local SetPortraitTexture = SetPortraitTexture;
 local AcceptQuest = AcceptQuest;
 local GetQuestPortraitGiver = GetQuestPortraitGiver;
 local GetNumQuestChoices = GetNumQuestChoices;
-local AcknowledgeAutoAcceptQuest = AcknowledgeAutoAcceptQuest;
+local AcknowledgeAutoAcceptQuest = API.AcknowledgeAutoAcceptQuest;
 
 
 local After = C_Timer.After;
@@ -113,23 +116,7 @@ local function ScrollFrame_Easing(self, elapsed)
         end
     end
 
-    self.topDividerAlpha = self.value/24;
-    if self.topDividerAlpha > 1 then
-        self.topDividerAlpha = 1;
-    elseif self.topDividerAlpha < 0 then
-        self.topDividerAlpha = 0;
-    end
-    self.borderTop:SetAlpha(self.topDividerAlpha);
-
-    self.BottomDividerAlpha = (self.range - self.value)/24;
-    if self.BottomDividerAlpha > 1 then
-        self.BottomDividerAlpha = 1;
-    elseif self.BottomDividerAlpha < 0 then
-        self.BottomDividerAlpha = 0;
-    end
-    self.borderBottom:SetAlpha(self.BottomDividerAlpha);
-
-    self:SetVerticalScroll(self.value);
+    self:SetOffset(self.value);
 end
 
 
@@ -189,8 +176,7 @@ end
 
 function DUIDialogBaseMixin:UpdateFrameBaseOffset(viewportWidth)
     if not viewportWidth then
-        local width, height = WorldFrame:GetSize();
-        viewportWidth = math.min(width, height * 16/9);
+        viewportWidth = API.GetBestViewportSize();
     end
 
     local offsetRatio = FRAME_OFFSET_RATIO;
@@ -210,8 +196,7 @@ function DUIDialogBaseMixin:UpdateFrameBaseOffset(viewportWidth)
 end
 
 function DUIDialogBaseMixin:UpdateFrameSize()
-    local viewportWidth, viewportHeight = WorldFrame:GetSize(); --height unaffected by screen resolution
-    viewportWidth = math.min(viewportWidth, viewportHeight * 16/9);
+    local viewportWidth, viewportHeight = API.GetBestViewportSize();
 
     AlertFrame:ClearAllPoints();
     local alertFrameOffset = 36;
@@ -269,15 +254,15 @@ function DUIDialogBaseMixin:UpdateFrameSize()
 
     self.FrontFrame.FooterDivider:ClearAllPoints();
     self.FrontFrame.FooterDivider:SetPoint("CENTER", self.FrontFrame, "BOTTOM", 0, footerOffset);
-    self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", paddingH, -42);
-    self.ScrollFrame:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -paddingH, footerOffset);
+    self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -42);
+    self.ScrollFrame:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, footerOffset);
 
     local scrollFrameBaseHeight = self.ScrollFrame:GetHeight();
     self.ScrollFrame.range = 0;
     self.scrollFrameBaseHeight = scrollFrameBaseHeight;
     self.scrollViewHeight = scrollFrameBaseHeight;
 
-    local contentWidth = frameWidth - 2*paddingH;
+    local contentWidth = frameWidth;    -- - 2*paddingH + 2*CONTENT_BLEEDING;
     local contentHeight = Round(scrollFrameBaseHeight);
     self.ContentFrame:SetWidth(Round(contentWidth));
     self.ContentFrame:SetHeight(contentHeight);     --Irrelevant
@@ -319,7 +304,7 @@ function DUIDialogBaseMixin:OnLoad()
     MainFrame = self;
     addon.DialogueUI = self;
 
-    TooltipFrame:SetParent(self);
+    --TooltipFrame:SetParent(self);
     TooltipFrame:SetShowDelay(0.25);
 
     AlertFrame:SetParent(self);
@@ -384,10 +369,33 @@ function DUIDialogBaseMixin:OnLoad()
         else
             self:ScrollBy(offsetPerScroll);
         end
-    end
 
-    self.ScrollFrame:SetScript("OnMouseWheel", ScrollFrame_OnMouseWheel);
+        SwipeEmulator:StopWatching();
+    end
     self.ScrollFrame.OnMouseWheel = ScrollFrame_OnMouseWheel;
+    self.ScrollFrame:SetScript("OnMouseWheel", ScrollFrame_OnMouseWheel);
+
+    local function ScrollFrame_SetOffset(f, value)
+        f.topDividerAlpha = value/24;
+        if f.topDividerAlpha > 1 then
+            f.topDividerAlpha = 1;
+        elseif f.topDividerAlpha < 0 then
+            f.topDividerAlpha = 0;
+        end
+        f.borderTop:SetAlpha(f.topDividerAlpha);
+
+        f.BottomDividerAlpha = (f.range - value)/24;
+        if f.BottomDividerAlpha > 1 then
+            f.BottomDividerAlpha = 1;
+        elseif f.BottomDividerAlpha < 0 then
+            f.BottomDividerAlpha = 0;
+        end
+        f.borderBottom:SetAlpha(f.BottomDividerAlpha);
+
+        f:SetVerticalScroll(value);
+    end
+    self.ScrollFrame.SetOffset = ScrollFrame_SetOffset;
+
 
     local function CreateFontString()
         local fontString = self.ContentFrame:CreateFontString(nil, "ARTWORK", "DUIFont_Quest_Paragraph");
@@ -401,7 +409,11 @@ function DUIDialogBaseMixin:OnLoad()
         fontString:ClearAllPoints();
     end
 
-    self.fontStringPool = API.CreateObjectPool(CreateFontString, RemoveFontString);
+    local function OnAcquireFontString(fontString)
+        fontString:SetSpacing(TEXT_SPACING);
+    end
+
+    self.fontStringPool = API.CreateObjectPool(CreateFontString, RemoveFontString, OnAcquireFontString);
 
 
     local function CreateOptionButton()
@@ -753,7 +765,7 @@ function DUIDialogBaseMixin:UseQuestLayout(state)
             local topOffset = (28 + 40) * FRAME_SIZE_MULTIPLIER;
             self.scrollViewHeight = self.scrollFrameBaseHeight - 40 * FRAME_SIZE_MULTIPLIER;
             --self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", PADDING_H, -PADDING_TOP + topOffset);
-            self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -topOffset);
+            self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -topOffset);
             self.FrontFrame.Header:Show();
             self.FrontFrame.HeaderDivider:Hide();
             FriendshipBar:Hide();
@@ -774,8 +786,10 @@ function DUIDialogBaseMixin:UseQuestLayout(state)
 
         if questID and API.IsQuestFlaggedCompletedOnAccount(questID) then
             self.WarbandCompleteAlert:Show();
+            self.FrontFrame.Header.Title:SetPoint("RIGHT", self.FrontFrame.Header, "RIGHT", -56, 2);
         else
             self.WarbandCompleteAlert:Hide();
+            self.FrontFrame.Header.Title:SetPoint("RIGHT", self.FrontFrame.Header, "RIGHT", -8, 2);
         end
 
     elseif self.questLayout or forceUpdate then
@@ -783,7 +797,7 @@ function DUIDialogBaseMixin:UseQuestLayout(state)
         self.questID = nil;
         self.scrollViewHeight = self.scrollFrameBaseHeight;
         --self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", PADDING_H, -PADDING_TOP);
-        self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -42);
+        self.ScrollFrame:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -42);
         self.FrontFrame.Header:Hide();
         self.BackgroundDecor:Hide();
         self.FrontFrame.QuestPortrait:FadeOut();
@@ -868,35 +882,7 @@ end
 function DUIDialogBaseMixin:ScrollBy(offset)
     local f = self.ScrollFrame;
     local value = f.scrollTarget or f:GetVerticalScroll();
-    
     self:ScrollTo(value + offset);
-
-    --[[
-    if offset > 0 and value < f.range then
-        anyChange = true;
-        value = value + offset;
-        if value > f.range then
-            value = f.range;
-        end
-    elseif offset < 0 and value > 0 then
-        anyChange = true;
-        value = value + offset;
-        if value < 0 then
-            value = 0;
-        end
-    end
-
-    if anyChange then
-        f.scrollTarget = value;
-        if not self.questLayout then
-            FadeFrame(f.borderTop, 0.25, 1);
-        end
-        if value < f.range then
-            FadeFrame(f.borderBottom, 0.25, 1);
-        end
-        f:SetScript("OnUpdate", ScrollFrame_Easing);
-    end
-    --]]
 end
 
 function DUIDialogBaseMixin:ScrollToBottom()
@@ -935,6 +921,7 @@ function DUIDialogBaseMixin:SetScrollable(scrollable)
         self.ContentFrame:ClearAllPoints();
         self.ContentFrame:SetParent(self.ScrollFrame.ScrollChild);
         self.ContentFrame:SetPoint("TOPLEFT", self.ScrollFrame.ScrollChild, "TOPLEFT", 0, 0);
+        self.ContentFrame:SetWidth(self.contentWidth);
         self.FrontFrame.FooterDivider:Show();
 
     elseif (not scrollable) and (self.ContentFrame.scrollable or forceUpdate) then
@@ -944,6 +931,8 @@ function DUIDialogBaseMixin:SetScrollable(scrollable)
         self.ContentFrame:SetPoint("TOPLEFT", self.ScrollFrame, "TOPLEFT", 0, 0);
         self.ContentFrame:SetPoint("BOTTOMRIGHT", self.ScrollFrame, "BOTTOMRIGHT", 0, 0);
     end
+
+    SwipeEmulator:SetScrollable(scrollable);
 end
 
 function DUIDialogBaseMixin:IsScrollable()
@@ -963,10 +952,9 @@ function DUIDialogBaseMixin:SetScrollRange(contentHeight)
         if range < 12 then
             range = 12;
         end
+        range = Round(range + 36);
 
-        range = range + 36;
-
-        self.ScrollFrame.range = Round(range);
+        self.ScrollFrame.range = range;
         self.FrontFrame.FooterDivider:Show();
         self.FrontFrame.FooterDivider:SetAlpha(1);
     else
@@ -1025,8 +1013,8 @@ end
 function DUIDialogBaseMixin:InsertText(offsetY, text)
 	--Add no spacing
 	local fs = self:AcquireLeftFontString();
-	fs:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
-	fs:SetPoint("RIGHT", self.ContentFrame, "RIGHT", 0, 0);
+	fs:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
+	fs:SetPoint("RIGHT", self.ContentFrame, "RIGHT", -PADDING_H * FRAME_SIZE_MULTIPLIER, 0);
 	fs:SetText(text);
 	offsetY = Round(offsetY + fs:GetHeight());
 	return offsetY
@@ -1041,19 +1029,28 @@ function DUIDialogBaseMixin:FormatParagraph(offsetY, text)
     local paragraphs = API.SplitParagraph(text);
 	local firstObject, lastObject;
 
-    for i, paragraphText in ipairs(paragraphs) do
+    if paragraphs and #paragraphs > 0 then
+        for i, paragraphText in ipairs(paragraphs) do
+            local fs = self:AcquireLeftFontString();
+            if not firstObject then
+                firstObject = fs;
+            end
+            fs:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
+            fs:SetPoint("RIGHT", self.ContentFrame, "RIGHT", -PADDING_H * FRAME_SIZE_MULTIPLIER, 0);
+            fs:SetText(paragraphText);
+            offsetY = Round(offsetY + fs:GetHeight() + PARAGRAPH_SPACING);
+            lastObject = fs;
+        end
+        offsetY = offsetY - PARAGRAPH_SPACING;
+    else
+        --For QuestGreeting where the NPC says nothing
         local fs = self:AcquireLeftFontString();
-		if not firstObject then
-			firstObject = fs;
-		end
-        fs:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
-        fs:SetPoint("RIGHT", self.ContentFrame, "RIGHT", 0, 0);
-        fs:SetText(paragraphText);
-        offsetY = Round(offsetY + fs:GetHeight() + PARAGRAPH_SPACING);
-		lastObject = fs;
+        firstObject = fs;
+        fs:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
+        fs:SetPoint("RIGHT", self.ContentFrame, "RIGHT", -PADDING_H * FRAME_SIZE_MULTIPLIER, 0);
+        fs:SetText(" ");
+        lastObject = fs;
     end
-
-    offsetY = offsetY - PARAGRAPH_SPACING;
 
     return offsetY, firstObject, lastObject
 end
@@ -1074,7 +1071,7 @@ function DUIDialogBaseMixin:HandleInitialLoadingComplete()
         --We handle quests that are auto accepted upon logging in
         --If the player talks to an NPC immediately after the initial loading screen, our UI won't turn visible
         local questID = GetQuestID();
-        if questID and questID ~= 0 then    --Some quests are auto accepted and closed by the game
+        if (self.deferredEvent == "GOSSIP_SHOW" or self.deferredEvent == "QUEST_GREETING") or (questID and questID ~= 0) then    --Some quests are auto accepted and closed by the game
             self:ShowUI(self.deferredEvent);
         end
         self.deferredEvent = nil;
@@ -1114,8 +1111,9 @@ function DUIDialogBaseMixin:HandleGossip()
     end
 
     local autoSelectGossip = GetDBBool("AutoSelectGossip");
+    local onlyOption = #options == 1;
 
-    if (not GetDBBool("ForceGossip")) and (not anyQuest) and (#options == 1) and (not ForceGossip()) then
+    if (not GetDBBool("ForceGossip")) and (not anyQuest) and (onlyOption) and (not ForceGossip()) then
         if options[1].selectOptionWhenOnlyOption then
             C_GossipInfo.SelectOptionByIndex(options[1].orderIndex);
             return false
@@ -1128,9 +1126,9 @@ function DUIDialogBaseMixin:HandleGossip()
         end
     end
 
-    if autoSelectGossip then
+    if (not anyQuest) and autoSelectGossip then
         for i, data in ipairs(options) do
-            if IsAutoSelectOption(data.gossipOptionID) then
+            if IsAutoSelectOption(data.gossipOptionID, onlyOption) then
                 C_GossipInfo.SelectOption(data.gossipOptionID);
                 API.PrintMessage(L["Auto Select"], data.name);
                 return false
@@ -1210,6 +1208,7 @@ function DUIDialogBaseMixin:HandleGossip()
         questIndex = questIndex + 1;
         questInfo.isOnQuest = false;
         questInfo.isAvailableQuest = true;
+        questInfo.isComplete = false;
         questInfo.originalOrder = questIndex;
         questInfo.index = i;
         quests[questIndex] = questInfo;
@@ -1219,6 +1218,9 @@ function DUIDialogBaseMixin:HandleGossip()
         questIndex = questIndex + 1;
         questInfo.isOnQuest = true;     --there is a delay between C_Gossip and C_QuestLog.IsOnQuest
         questInfo.isAvailableQuest = false;
+        if questInfo.isComplete == nil then
+            questInfo.isComplete = false;
+        end
         questInfo.originalOrder = questIndex;
         questInfo.index = i;
         quests[questIndex] = questInfo;
@@ -1316,9 +1318,18 @@ function DUIDialogBaseMixin:HandleGossip()
     return true
 end
 
-function DUIDialogBaseMixin:HandleQuestDetail()
+function DUIDialogBaseMixin:HandleQuestDetail(playFadeIn)
     self:ReleaseAllObjects();
     self:UseQuestLayout(true);
+
+    if self.handlerArgs and self.handlerArgs[1] and self.handlerArgs[1] ~= 0 then
+        local questStartItemID = self.handlerArgs[1];
+        local icon = C_Item.GetItemIconByID(questStartItemID);
+        if icon then
+            self.FrontFrame.Header.Portrait:SetTexture(icon);
+        end
+    end
+
 
     local fs, text;
 
@@ -1338,7 +1349,7 @@ function DUIDialogBaseMixin:HandleQuestDetail()
         --Subtitle: Quest Objectives
         offsetY = offsetY + PARAGRAPH_SPACING;
         local subheader = self:AcquireAndSetSubHeader(L["Quest Objectives"]);
-        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
         offsetY = Round(offsetY + subheader.size);
 
         --Objective Texts
@@ -1382,7 +1393,7 @@ function DUIDialogBaseMixin:HandleQuestDetail()
 
         offsetY = offsetY + PARAGRAPH_SPACING;
         local subheader = self:AcquireAndSetSubHeader( (#rewardList == 1 and L["Reward"]) or L["Rewards"] );
-        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
         offsetY = Round(offsetY + subheader.size);
 
         offsetY = self:FormatRewards(offsetY, rewardList);
@@ -1393,7 +1404,7 @@ function DUIDialogBaseMixin:HandleQuestDetail()
     local AcceptButton = self:AcquireAcceptButton(true);
     local ExitButton = self:AcquireExitButton();
 
-    if API.IsQuestAutoAccepted() then
+    if API.IsQuestAutoAccepted() or API.IsPlayerOnQuest(self.questID) then
         AcceptButton:SetButtonAlreadyOnQuest();
         ExitButton:SetButtonCloseAutoAcceptQuest();
         self.acknowledgeAutoAcceptQuest = true;
@@ -1404,23 +1415,27 @@ function DUIDialogBaseMixin:HandleQuestDetail()
 
     self.questIsFromGossip = nil;
 
-    self:FadeInContentFrame();
+    if playFadeIn then
+        self:FadeInContentFrame();
+    end
+
+    addon.WidgetManager:RemoveQuestPopUpByID(self.questID);
 
     return true
 end
 
-function DUIDialogBaseMixin:HandleQuestAccepted(questID)
-    --QUEST_ACCEPTED
+function DUIDialogBaseMixin:HandleQuestAccepted(questID, classicQuestID)
+    --QUEST_ACCEPTED (In Classic) questLogIndex, questID
     if self.handler == "HandleQuestDetail" then
         local currentQuestID = GetQuestID();
-        if currentQuestID and currentQuestID ~= 0 and currentQuestID == questID then
+        if classicQuestID then
+            questID = classicQuestID;
+        end
+        if (currentQuestID and currentQuestID ~= 0) and (questID and questID == currentQuestID) then
             local AcceptButton = self:AcquireAcceptButton(true);
             local ExitButton = self:AcquireExitButton();
             AcceptButton:SetButtonAlreadyOnQuest();
             ExitButton:SetButtonCloseAutoAcceptQuest();
-
-            --local title = C_QuestLog.GetTitleForQuestID(questID);
-            --print(questID, title)
         end
     end
 end
@@ -1442,7 +1457,7 @@ local function CalulateLockDuration(rawCopper)
     end
 end
 
-function DUIDialogBaseMixin:HandleQuestProgress()
+function DUIDialogBaseMixin:HandleQuestProgress(playFadeIn)
     self:ReleaseAllObjects();
     self:UseQuestLayout(true);
 
@@ -1470,7 +1485,7 @@ function DUIDialogBaseMixin:HandleQuestProgress()
 
             offsetY = offsetY + PARAGRAPH_SPACING;
             local subheader = self:AcquireAndSetSubHeader(L["Costs"]);
-            subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+            subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
             offsetY = Round(offsetY + subheader.size);
 
             local itemList = {
@@ -1497,7 +1512,7 @@ function DUIDialogBaseMixin:HandleQuestProgress()
         if anyActualItems then
             offsetY = offsetY + PARAGRAPH_SPACING;
             local subheader = self:AcquireAndSetSubHeader(L["Requirements"]);
-            subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+            subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
             offsetY = Round(offsetY + subheader.size);
         end
 
@@ -1522,7 +1537,9 @@ function DUIDialogBaseMixin:HandleQuestProgress()
 
     self:SetScrollRange(offsetY);
 
-    self:FadeInContentFrame();
+    if playFadeIn then
+        self:FadeInContentFrame();
+    end
 
     return true
 end
@@ -1533,7 +1550,7 @@ function DUIDialogBaseMixin:IsRewardChosen()
     return numRewardChoices <= 1 or (choiceID ~= nil);
 end
 
-function DUIDialogBaseMixin:HandleQuestComplete()
+function DUIDialogBaseMixin:HandleQuestComplete(playFadeIn)
     self:ReleaseAllObjects();
     self:UseQuestLayout(true);
 
@@ -1559,7 +1576,7 @@ function DUIDialogBaseMixin:HandleQuestComplete()
 
         offsetY = offsetY + PARAGRAPH_SPACING;
         local subheader = self:AcquireAndSetSubHeader( (#rewardList == 1 and L["Reward"]) or L["Rewards"] );
-        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
         offsetY = Round(offsetY + subheader.size);
 
         offsetY = self:FormatRewards(offsetY, rewardList);
@@ -1573,7 +1590,9 @@ function DUIDialogBaseMixin:HandleQuestComplete()
 
     self:SetScrollRange(offsetY);
 
-    self:FadeInContentFrame();
+    if playFadeIn then
+        self:FadeInContentFrame();
+    end
 
     return true
 end
@@ -1614,6 +1633,7 @@ function DUIDialogBaseMixin:HandleQuestGreeting()
         local questInfo = {
             index = i,
             title = title,
+            isComplete = false,
             questID = questID,
             isOnQuest = false,
             isTrivial = isTrivial,
@@ -1700,7 +1720,7 @@ function DUIDialogBaseMixin:GetQuestFinishedDelay()
     if (self.numAvailableQuests and self.numAvailableQuests > 1) or QuestIsFromAreaTrigger() then
         return 0.5
     else
-        return 0
+        return 0.03
     end
 end
 
@@ -1742,7 +1762,7 @@ function DUIDialogBaseMixin:HandleGossipConfirm(gossipID, warningText, cost)
     if cost and cost > 0 then
         offsetY = offsetY + PARAGRAPH_SPACING;
         local subheader = self:AcquireAndSetSubHeader(L["Costs"]);
-        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", 0, -offsetY);
+        subheader:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", PADDING_H * FRAME_SIZE_MULTIPLIER, -offsetY);
         offsetY = Round(offsetY + subheader.size);
 
         local itemList = {
@@ -1795,14 +1815,21 @@ local function Predicate_ActiveChoiceButton(itemButton)
     return itemButton.type == "choice" and itemButton:IsShown()
 end
 
+function DUIDialogBaseMixin:IsChoosingReward()
+    return self.chooseItems == true
+end
+
 function DUIDialogBaseMixin:SelectRewardChoice(choiceID)
     if not self.chooseItems then return end;    --Handled in Formatter when building reward choices
 
     local claimQuestReward;
     if INPUT_DEVICE_GAME_PAD then
         self.GamePadFocusIndicator:Hide();
-        if choiceID == self.rewardChoiceID then
-            claimQuestReward = true;
+        --Briefly paused in case the button becomes too sensitive and claim the reward by accident
+        if not API.CheckActionThrottled("GamePadChooseQuestReward") then
+            if choiceID == self.rewardChoiceID then
+                claimQuestReward = true;
+            end
         end
     end
 
@@ -1812,6 +1839,7 @@ function DUIDialogBaseMixin:SelectRewardChoice(choiceID)
 
     if claimQuestReward and CompleteButton:IsEnabled() then
         CompleteButton:Click("LeftButton");
+        TooltipFrame:HideTooltip();
     end
 
     local buttons = self.itemButtonPool:GetObjectsByPredicate(Predicate_ActiveChoiceButton);
@@ -1859,6 +1887,21 @@ function DUIDialogBaseMixin:FlashRewardChoices()
             button:PlaySheen();
         end
     end
+end
+
+function DUIDialogBaseMixin:RequestItemUpgrade()
+    if self.isRequestingItemLevel then return end;
+    self.isRequestingItemLevel = true;
+
+    After(0.25, function()
+        self.isRequestingItemLevel = nil;
+        local playAnimation = self:IsChoosingReward();
+        self.itemButtonPool:ProcessActiveObjects(function(button)
+            if button.isEquippable and button.objectType == "item" and button.type and button.index and API.IsRewardItemUpgrade(button.type, button.index) then
+                button:ShowUpgradeIcon(playAnimation);
+            end
+        end);
+    end);
 end
 
 function DUIDialogBaseMixin:RequestSellPrice(isRequery)
@@ -1983,7 +2026,7 @@ local Handler = {
     ["QUEST_GREETING"] = "HandleQuestGreeting",     --Similar to GOSSIP_SHOW
 };
 
-function DUIDialogBaseMixin:ShowUI(event)
+function DUIDialogBaseMixin:ShowUI(event, ...)
     if self.isGameLoading then
         self.deferredEvent = event;
         return
@@ -2000,7 +2043,9 @@ function DUIDialogBaseMixin:ShowUI(event)
 
     if Handler[event] then
         self.handler = Handler[event];
-        shouldShowUI = self[ Handler[event] ](self);
+        self.handlerArgs = { ... };
+        local playFadeIn = true;
+        shouldShowUI = self[ Handler[event] ](self, playFadeIn);
     end
 
     if not shouldShowUI then return end;
@@ -2030,6 +2075,7 @@ end
 
 function DUIDialogBaseMixin:OnShow()
     KeyboardControl:SetParentFrame(self);
+    SwipeEmulator:SetOwner(self.ScrollFrame);
 
     self:RegisterEvent("GOSSIP_SHOW");
     self:RegisterEvent("GOSSIP_CLOSED");
@@ -2073,7 +2119,10 @@ function DUIDialogBaseMixin:OnHide()
     self.selectedGossipIndex = nil;
     self.consumeGossipClose = nil;
     self.questIsFromGossip = nil;
+    self.chooseItems = nil;
     self.handler = nil;
+    self.handlerArgs = nil;
+    self.questID = nil;
     self.contentHeight = 0;
 
     self:UnregisterEvent("GOSSIP_SHOW");
@@ -2108,8 +2157,9 @@ function DUIDialogBaseMixin:OnHide()
 end
 
 function DUIDialogBaseMixin:OnMouseUp(button)
-    if button == "RightButton" and GetDBBool("RightClickToCloseUI") then
-        self:CloseDialogInteraction();
+    if button == "RightButton" and GetDBBool("RightClickToCloseUI") and self:IsMouseMotionFocus() then
+        self:Hide();
+        --self:CloseDialogInteraction();
     end
 end
 
@@ -2143,7 +2193,32 @@ function DUIDialogBaseMixin:HighlightButton(optionButton)
 end
 
 function DUIDialogBaseMixin:UpdateRewards()
-    self.itemButtonPool:CallActive("Refresh");
+    if self.questLayout and self.handler then
+        --New items might appear after "QUEST_ITEM_UPDATE"
+        --self.itemButtonPool:CallActive("Refresh");
+
+        if not self.rewardUpdator then
+            self.rewardUpdator = CreateFrame("Frame", self);
+            self.rewardUpdator:SetScript("OnHide", function(f)
+                f:Hide();
+            end);
+        end
+
+        local function UpdateRewards_OnUpdate(f, elapsed)
+            f.t = f.t + elapsed;
+            if f.t > 0.5 then
+                f.t = nil;
+                f:SetScript("OnUpdate", nil);
+                if self.questLayout and self.handler then
+                    self[self.handler](self);
+                end
+            end
+        end
+
+        self.rewardUpdator.t = 0;
+        self.rewardUpdator:SetScript("OnUpdate", UpdateRewards_OnUpdate);
+        self.rewardUpdator:Show();
+    end
 end
 
 function DUIDialogBaseMixin:OnEvent(event, ...)
@@ -2155,8 +2230,7 @@ function DUIDialogBaseMixin:OnEvent(event, ...)
         self.keepGossipHistory = false;
         self.selectedGossipIndex = nil;
     elseif event == "QUEST_ACCEPTED" then
-        local questID = ...
-        self:HandleQuestAccepted(questID);
+        self:HandleQuestAccepted(...);
     elseif event == "QUEST_LOG_UPDATE" then
         if self.hasActiveGossipQuests then
             self.keepGossipHistory = false;
@@ -2285,17 +2359,12 @@ do  --Clipboard
         return str
     end
 
-    local function ConcatenateQuestIDTitle(previousText, includeID)
+    local function ConcatenateQuestIDTitle(previousText)
         local questID = GetQuestID();
         local title = GetQuestTitle();
         local idFormat = "[Quest: %d] %s";
         if questID and questID ~= 0 then
-            local text;
-            if includeID then
-                text = idFormat:format(questID, title);
-            else
-                text = title
-            end
+            local text = idFormat:format(questID, title);
             if previousText then
                 previousText = JoinText(previousText, text);
             else
@@ -2362,21 +2431,57 @@ do  --Clipboard
         return previousText
     end
 
-    function DUIDialogBaseMixin:GetContent(clipboardMode)
-        --For TTS and Clipboard
-        --clipboardMode = true includes item rewards and IDs
+    function DUIDialogBaseMixin:GetContentForTTS()
+        local content = {};
 
+        local GetGossipText = API.GetGossipText;
+        local GetQuestText = API.GetQuestText;
+
+        local npcName, npcID = API.GetCurrentNPCInfo();
+        if npcName and npcID then
+            content.speaker = npcName;
+        end
+
+        local questID = GetQuestID();
+        if questID and questID ~= 0 then
+            content.title = GetQuestTitle();
+        end
+
+        if self.handler == "HandleGossip" then
+            content.body = GetGossipText();
+
+        elseif self.handler == "HandleQuestDetail" then
+            content.body = GetQuestText("Detail");
+
+            local objective = GetObjectiveText();
+            if objective and objective ~= "" then
+                content.objective = JoinText(L["Quest Objectives"], "", objective);
+            end
+
+        elseif self.handler == "HandleQuestProgress" then
+            content.body = GetQuestText("Progress");
+
+        elseif self.handler == "HandleQuestComplete" then
+            content.body = GetQuestText("Complete");
+
+        elseif self.handler == "HandleQuestGreeting" then
+            content.body = GetQuestText("Greeting");
+
+        end
+
+        return content
+    end
+
+    function DUIDialogBaseMixin:GetContentForClipboard()
         local str;
 
         local GetGossipText = API.GetGossipText;
         local GetQuestText = API.GetQuestText;
 
-        if clipboardMode then
-            local npcName, npcID = API.GetCurrentNPCInfo();
-            if npcName and npcID then
-                local idFormat = "[NPC: %d] %s";
-                str = idFormat:format(npcID, npcName);
-            end
+        local npcName, npcID = API.GetCurrentNPCInfo();
+        if npcName and npcID then
+            local idFormat = "[NPC: %d] %s";
+            str = idFormat:format(npcID, npcName);
         end
 
         if self.handler == "HandleGossip" then
@@ -2388,27 +2493,25 @@ do  --Clipboard
                 str = gossipText;
             end
 
-            if clipboardMode then
-                local availableQuests = GetAvailableQuests();
-                local activeQuests = GetActiveQuests();
-                local options = GetOptions();
-                tsort(options, SortFunc_GossipOrder);
+            local availableQuests = GetAvailableQuests();
+            local activeQuests = GetActiveQuests();
+            local options = GetOptions();
+            tsort(options, SortFunc_GossipOrder);
 
-                if #availableQuests > 0 then
-                    str = str..ConcatenateQuestTable(availableQuests);
-                end
+            if #availableQuests > 0 then
+                str = str..ConcatenateQuestTable(availableQuests);
+            end
 
-                if #activeQuests > 0 then
-                    str = str..ConcatenateQuestTable(activeQuests);
-                end
+            if #activeQuests > 0 then
+                str = str..ConcatenateQuestTable(activeQuests);
+            end
 
-                if #options > 0 then
-                    str = str..ConcatenateOptionTable(options);
-                end
+            if #options > 0 then
+                str = str..ConcatenateOptionTable(options);
             end
 
         elseif self.handler == "HandleQuestDetail" then
-            str = ConcatenateQuestIDTitle(str, clipboardMode);
+            str = ConcatenateQuestIDTitle(str);
             str = JoinText(str, "", GetQuestText("Detail"));
 
             local objective = GetObjectiveText();
@@ -2416,83 +2519,74 @@ do  --Clipboard
                 str = JoinText(str, "", L["Quest Objectives"], "", objective);
             end
 
-            if clipboardMode then
-                str = ConcatenateRewards(str);
-            end
+            str = ConcatenateRewards(str);
 
         elseif self.handler == "HandleQuestProgress" then
-            str = ConcatenateQuestIDTitle(str, clipboardMode);
+            str = ConcatenateQuestIDTitle(str);
             str = JoinText(str, "", GetQuestText("Progress"));
 
-            if clipboardMode then
-                local numRequiredItems = GetNumQuestItems();
-                local numRequiredCurrencies = GetNumQuestCurrencies();
-                local numRequiredMoney = GetQuestMoneyToGet();
+            local numRequiredItems = GetNumQuestItems();
+            local numRequiredCurrencies = GetNumQuestCurrencies();
+            local numRequiredMoney = GetQuestMoneyToGet();
 
-                if numRequiredItems > 0 or numRequiredMoney > 0 or numRequiredCurrencies > 0 then
-                    str = JoinText(str, "", L["Requirements"]);
+            if numRequiredItems > 0 or numRequiredMoney > 0 or numRequiredCurrencies > 0 then
+                str = JoinText(str, "", L["Requirements"]);
 
-                    if numRequiredMoney > 0 then
-                        local colorized = false;
-                        local noAbbreviation = true;
-                        local moneyText = API.GenerateMoneyText(numRequiredMoney, colorized, noAbbreviation);
-                        str = JoinText(str, moneyText);
-                    end
+                if numRequiredMoney > 0 then
+                    local colorized = false;
+                    local noAbbreviation = true;
+                    local moneyText = API.GenerateMoneyText(numRequiredMoney, colorized, noAbbreviation);
+                    str = JoinText(str, moneyText);
+                end
 
-                    if numRequiredItems > 0 then
-                        str = JoinText(str, ConcatenateQuestItems("required", numRequiredItems));
-                    end
+                if numRequiredItems > 0 then
+                    str = JoinText(str, ConcatenateQuestItems("required", numRequiredItems));
+                end
 
-                    if numRequiredCurrencies > 0 then
-                        str = JoinText(str, ConcatenateCurrencies("required", numRequiredCurrencies));
-                    end
+                if numRequiredCurrencies > 0 then
+                    str = JoinText(str, ConcatenateCurrencies("required", numRequiredCurrencies));
                 end
             end
 
         elseif self.handler == "HandleQuestComplete" then
-            str = ConcatenateQuestIDTitle(str, clipboardMode);
+            str = ConcatenateQuestIDTitle(str);
             str = JoinText(str, "", GetQuestText("Complete"));
-
-            if clipboardMode then
-                str = ConcatenateRewards(str);
-            end
+            str = ConcatenateRewards(str);
 
         elseif self.handler == "HandleQuestGreeting" then
-            str = ConcatenateQuestIDTitle(str, clipboardMode);
+            str = ConcatenateQuestIDTitle(str);
             str = JoinText(str, "", GetQuestText("Greeting"));
 
-            if clipboardMode then
-                local numAvailableQuests = GetNumAvailableQuests();
-                local availableQuests = {};
-                for i = 1, numAvailableQuests do
-                    local title = GetAvailableTitle(i);
-                    local isTrivial, frequency, isRepeatable, isLegendary, questID = GetAvailableQuestInfo(i);
-                    local questInfo = {
-                        title = title,
-                        questID = questID,
-                    };
-                    tinsert(availableQuests, questInfo);
-                end
+            local numAvailableQuests = GetNumAvailableQuests();
+            local availableQuests = {};
+            for i = 1, numAvailableQuests do
+                local title = GetAvailableTitle(i);
+                local isTrivial, frequency, isRepeatable, isLegendary, questID = GetAvailableQuestInfo(i);
+                local questInfo = {
+                    title = title,
+                    questID = questID,
+                };
+                tinsert(availableQuests, questInfo);
+            end
 
-                if numAvailableQuests > 0 then
-                    str = str..ConcatenateQuestTable(availableQuests);
-                end
+            if numAvailableQuests > 0 then
+                str = str..ConcatenateQuestTable(availableQuests);
+            end
 
-                local numActiveQuests = GetNumActiveQuests();
-                local activeQuests = {};
-                for i = 1, numActiveQuests do
-                    local title, isComplete = GetActiveTitle(i);
-                    local questID = GetActiveQuestID(i);
-                    local questInfo = {
-                        title = title,
-                        questID = questID,
-                    };
-                    tinsert(activeQuests, questInfo);
-                end
+            local numActiveQuests = GetNumActiveQuests();
+            local activeQuests = {};
+            for i = 1, numActiveQuests do
+                local title, isComplete = GetActiveTitle(i);
+                local questID = GetActiveQuestID(i);
+                local questInfo = {
+                    title = title,
+                    questID = questID,
+                };
+                tinsert(activeQuests, questInfo);
+            end
 
-                if numActiveQuests > 0 then
-                    str = str..ConcatenateQuestTable(activeQuests);
-                end
+            if numActiveQuests > 0 then
+                str = str..ConcatenateQuestTable(activeQuests);
             end
         end
 
@@ -2500,7 +2594,7 @@ do  --Clipboard
     end
 
     function DUIDialogBaseMixin:SendContentToClipboard()
-        local str = self:GetContent(true);
+        local str = self:GetContentForClipboard();
 
         if str then
             if StripHyperlinks then
@@ -2528,6 +2622,7 @@ do  --Quest Rewards
         -- 4 x 2 Grid Layout:
         -- ItemButton: 2x2
         -- SmallItemButton: 1x1
+        local baseOffsetX = PADDING_H * FRAME_SIZE_MULTIPLIER;
         local chooseItems = self.chooseItems;
 
         local itemButtonWidth = self.halfFrameWidth;
@@ -2553,9 +2648,9 @@ do  --Quest Rewards
 
                 sizeX = (INPUT_DEVICE_GAME_PAD and 4) or 2;
 
-                local isChoosingRewards = data.chooseItems;
+                local isChoosingReward = data.chooseItems;
 
-                if isChoosingRewards then
+                if isChoosingReward then
                     backgroundID = 2;
                     offsetY = self:InsertText(offsetY, REWARD_CHOOSE);		--Choose
                 else
@@ -2578,7 +2673,7 @@ do  --Quest Rewards
                         object:SetRewardChoiceCurrency(orderIndex, onlyChoice);
                     end
 
-                    object:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", offsetX, -offsetY);
+                    object:SetPoint("TOPLEFT", self.ContentFrame, "TOPLEFT", baseOffsetX + offsetX, -offsetY);
                     offsetX = offsetX + 2*gridWidth + 2*ITEM_BUTTON_SPACING;
 
                     if INPUT_DEVICE_GAME_PAD or orderIndex % 2 == 0 then
@@ -2600,18 +2695,21 @@ do  --Quest Rewards
                     offsetY = offsetY + ITEM_BUTTON_SPACING;
                 end
 
-                if isChoosingRewards then
+                if isChoosingReward then
                     self:RequestSellPrice();
                 end
             else
-                if data.title then
+                if data.header then
+                    GridLayout:FlagPreviousRowFull();
                     object = self:AcquireLeftFontString();
-                    object:SetText(data.title);
+                    object:SetText(data.header);
                     actualSizeX = 4;
                     sizeY = 1;
-                else
-                    local method = data[1];
+                    GridLayout:PlaceObject(object, actualSizeX, sizeY, self.ContentFrame, baseOffsetX, -offsetY);
+                end
 
+                local method = data[1];
+                if method then
                     if data.small then
                         sizeX = 1;
                         sizeY = 1;
@@ -2623,12 +2721,11 @@ do  --Quest Rewards
                     end
 
                     object:SetBaseGridSize(sizeX, gridWidth, ITEM_BUTTON_SPACING);
-
                     object[method](object, data[2], data[3], data[4], data[5]);
                     actualSizeX = object:GetActualGridTaken() or sizeX;
-                end
 
-                GridLayout:PlaceObject(object, actualSizeX, sizeY, self.ContentFrame, 0, -offsetY);
+                    GridLayout:PlaceObject(object, actualSizeX, sizeY, self.ContentFrame, baseOffsetX, -offsetY);
+                end
             end
         end
 
@@ -2889,10 +2986,12 @@ do
     CallbackRegistry:Register("PostFontSizeChanged", PostFontSizeChanged);
 
     local FrameSizeIndexScale = {
+        --Ceil: 1/0.618
         [0] = 0.9,
         [1] = 1.0,
         [2] = 1.1,
         [3] = 1.25,
+        [4] = 1.4;
     };
 
     local function Settings_FrameOrientation()
@@ -2905,7 +3004,13 @@ do
 
     local function Settings_FrameSize(dbValue)
         --1: 1.0, 2: 1.1, 3:1.25
-        local newScale = dbValue and FrameSizeIndexScale[dbValue]
+
+        if GetDBBool("MobileDeviceMode") then
+            dbValue = 4;
+        end
+
+        local newScale = dbValue and FrameSizeIndexScale[dbValue];
+
         if newScale and newScale ~= FRAME_SIZE_MULTIPLIER then
             FRAME_SIZE_MULTIPLIER = newScale;
 
@@ -2921,7 +3026,7 @@ do
     end
     CallbackRegistry:Register("SettingChanged.FrameSize", Settings_FrameSize);
 
-    local function Settings_HideUI(dbValue)
+    local function Settings_HideUI(dbValue, useInput)
         ExperienceBar:SetShown(dbValue == true);
     end
     CallbackRegistry:Register("SettingChanged.HideUI", Settings_HideUI);

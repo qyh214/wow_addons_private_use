@@ -2310,7 +2310,7 @@ L["STRING_OPTIONS_CMISC"] = "Collect Misc"
 L["STRING_OPTIONS_CMISC_DESC"] = [=[Enable capture of:
 
 - |cFFFFFF00Crowd Control Break|r
-- |cFFFFFF00Dispells|r
+- |cFFFFFF00Dispels|r
 - |cFFFFFF00Interrupts|r
 - |cFFFFFF00Resurrection|r
 - |cFFFFFF00Deaths|r]=]

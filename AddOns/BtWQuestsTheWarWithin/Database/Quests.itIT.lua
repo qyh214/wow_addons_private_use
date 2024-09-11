@@ -168,6 +168,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78472] = {
         name = "Luce nell'oscurità - Attivazione",
     },
+    [78529] = {
+        name = "Impatto violento",
+    },
     [78530] = {
         name = "Sterminare i sabotatori",
     },
@@ -405,6 +408,33 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78706] = {
         name = "Il segreto del Gran Oratore",
     },
+    [78713] = {
+        name = "La guerra interna",
+    },
+    [78714] = {
+        name = "Una pessima accoglienza",
+    },
+    [78715] = {
+        name = "La voce di Azeroth",
+    },
+    [78716] = {
+        name = "Lezioni dolorose",
+    },
+    [78717] = {
+        name = "Un avvertimento misterioso",
+    },
+    [78718] = {
+        name = "Rafforzare le protezioni",
+    },
+    [78719] = {
+        name = "Cittadini di Dalaran",
+    },
+    [78721] = {
+        name = "Conoscere la squadra",
+    },
+    [78722] = {
+        name = "A Khaz Algar!",
+    },
     [78738] = {
         name = "Oratore assente",
     },
@@ -534,6 +564,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78972] = {
         name = "Raccolto nel caos",
     },
+    [78974] = {
+        name = "Mentalità da scarabeo",
+    },
     [78996] = {
         name = "Armi e armate",
     },
@@ -575,6 +608,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79089] = {
         name = "Pulizia consacrata",
+    },
+    [79105] = {
+        name = "Breccia",
+    },
+    [79106] = {
+        name = "Perforazione",
     },
     [79107] = {
         name = "Dopo la tempesta",
@@ -1113,11 +1152,20 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79716] = {
         name = "La storia sotto di noi",
     },
+    [79717] = {
+        name = "Metodi d'accesso",
+    },
+    [79718] = {
+        name = "Gli Irregolari dei Grovigli",
+    },
     [79721] = {
         name = "Fuoco in buca",
     },
     [79722] = {
         name = "Lavoro da bassifondi",
+    },
+    [79723] = {
+        name = "Rimpatrio per sottrazione",
     },
     [79724] = {
         name = "Una spedizione titanica!",
@@ -1133,6 +1181,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79728] = {
         name = "Probabilmente non è niente",
+    },
+    [79729] = {
+        name = "Coltiva la conoscenza",
+    },
+    [79730] = {
+        name = "Inseguimento tenace",
     },
     [79944] = {
         name = "Fenditure furenti",
@@ -1248,6 +1302,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80218] = {
         name = "C'è sotto qualcosa a Selvasetosa",
     },
+    [80295] = {
+        name = "Rocce, acqua e carne elementale",
+    },
     [80312] = {
         name = "Supplica senza fiato",
     },
@@ -1263,8 +1320,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80316] = {
         name = "Ritorno in mare",
     },
+    [80321] = {
+        name = "Partenza",
+    },
     [80334] = {
         name = "Guglie a pezzi",
+    },
+    [80378] = {
+        name = "Una luce dell'oscurità",
     },
     [80392] = {
         name = "La sorvegliante della Terrazza di Brunwin",
@@ -1310,6 +1373,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80457] = {
         name = "Servire la Regina",
+    },
+    [80500] = {
+        name = "La famiglia dei Barbabronzea",
     },
     [80502] = {
         name = "Non piangere per me, Azj-Kahet",
@@ -1419,6 +1485,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80689] = {
         name = "Cura di Ausgazur",
     },
+    [81465] = {
+        name = "Manufatti in abbondanza",
+    },
     [81470] = {
         name = "Informazioni Segrete: Furto di Tessuti",
     },
@@ -1502,6 +1571,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81510] = {
         name = "All'avventura!",
+    },
+    [81512] = {
+        name = "Scenografie e incenso",
     },
     [81514] = {
         name = "Scorribande Fruttuose",
@@ -1608,8 +1680,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81798] = {
         name = "Ritorno da Moira",
     },
+    [81802] = {
+        name = "Corsa Calcacieli - Perizia del Presidio della Tempesta",
+    },
     [81806] = {
         name = "Corsa Calcacieli - Curve di Mineralia",
+    },
+    [81819] = {
+        name = "Corsa Calcacieli - Passo di Pietraferma",
     },
     [81822] = {
         name = "Corsa Calcacieli - Meandri di Mereldar",
@@ -1644,6 +1722,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81929] = {
         name = "Ecco il piano",
     },
+    [81930] = {
+        name = "La guerra interna",
+    },
     [81945] = {
         name = "Verso Fine degli Arathi",
     },
@@ -1664,6 +1745,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81965] = {
         name = "Sventare un'invasione",
+    },
+    [81966] = {
+        name = "Dormire come un sasso",
     },
     [81969] = {
         name = "Fine alla Fine",
@@ -1724,6 +1808,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82197] = {
         name = "Finimondo di riserva",
+    },
+    [82206] = {
+        name = "Nelle ombre",
     },
     [82212] = {
         name = "Un Pesce Leone debole",
@@ -1842,6 +1929,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82355] = {
         name = "Incarico speciale: assalto delle Api di Cenere",
     },
+    [82364] = {
+        name = "Documentare un disaccordo",
+    },
     [82366] = {
         name = "NON USARE",
     },
@@ -1913,6 +2003,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82536] = {
         name = "Operazione di esfiltrazione",
+    },
+    [82580] = {
+        name = "Missione del corriere: recupero minerali",
     },
     [82583] = {
         name = "Accendi il fuoco interiore",
@@ -2064,6 +2157,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83092] = {
         name = "Una fine ignea",
     },
+    [83101] = {
+        name = "In cerca di risorse",
+    },
     [83108] = {
         name = "Letture giornaliere",
     },
@@ -2172,6 +2268,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83532] = {
         name = "Gara di pesca dei Precipizi Sacri",
     },
+    [83537] = {
+        name = "Trattamento di gemme geotermali",
+    },
+    [83543] = {
+        name = "All'avventura a Khaz Algar",
+    },
     [83548] = {
         name = "Isola di Dorn",
     },
@@ -2187,6 +2289,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83616] = {
         name = "Ben radicata",
     },
+    [83627] = {
+        name = "L'inizio di qualcosa di meraviglioso",
+    },
     [83628] = {
         name = "Recupero teso",
     },
@@ -2199,6 +2304,15 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83639] = {
         name = "Comunicazioni aperte",
     },
+    [83715] = {
+        name = "Merce recuperata rivendicata",
+    },
+    [83718] = {
+        name = "Uovestrazione",
+    },
+    [83719] = {
+        name = "La chitina innanzitutto",
+    },
     [83749] = {
         name = "Scorribande: l'Acquedotto",
     },
@@ -2210,6 +2324,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83761] = {
         name = "Scorribande: il Sottoforte",
+    },
+    [83766] = {
+        name = "Chiamata alla Scorribanda: Fossa del Terrore",
     },
     [83767] = {
         name = "Chiamata alla Scorribanda: Voragine",

@@ -27,6 +27,7 @@ end
 
 local function reskinQuestIcons(_, block)
 	reskinQuestIcon(block.ItemButton)
+	reskinQuestIcon(block.rightEdgeFrame)
 end
 
 local function reskinHeader(header)
@@ -48,7 +49,6 @@ local function reskinBarTemplate(bar)
 	bar:SetStatusBarTexture(DB.normTex)
 	bar:SetStatusBarColor(r, g, b)
 	bar.bg = B.SetBD(bar)
-	B:SmoothBar(bar)
 end
 
 local function reskinBar(self, key)

@@ -1,6 +1,9 @@
 local GlobalAddonName, ExRT = ...
 
 ExRT.Options.Changelog = [=[
+v.4910
+* Fixes
+
 v.4900
 * Raid cooldowns: added "column for raid/party role" option
 * Fixes

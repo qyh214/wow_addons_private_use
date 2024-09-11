@@ -1,6 +1,6 @@
 
 
-local dversion = 563
+local dversion = 569
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -1840,12 +1840,14 @@ function DF:GetAllTalents()
 						local borderTypes = Enum.TraitNodeEntryType
 						if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
 							local definitionId = traitEntryInfo.definitionID
-							local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-							local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-							local spellName, _, spellTexture = GetSpellInfo(spellId)
-							if (spellName) then
-								local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
-								allTalents[#allTalents+1] = talentInfo
+							if definitionId then
+								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+								local spellName, _, spellTexture = GetSpellInfo(spellId)
+								if (spellName) then
+									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
+									allTalents[#allTalents+1] = talentInfo
+								end
 							end
 						end
 					end
@@ -4889,16 +4891,18 @@ function DF:GetCharacterTalents(bOnlySelected, bOnlySelectedHash)
 
 							if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
 								local definitionId = traitEntryInfo.definitionID
-								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-								local spellName, _, spellTexture = GetSpellInfo(spellId)
-								local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
-								if (spellName and bIsSelected) then
-									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
-									if (bOnlySelectedHash) then
-										talentList[spellId] = talentInfo
-									else
-										table.insert(talentList, talentInfo)
+								if definitionId then
+									local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+									local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+									local spellName, _, spellTexture = GetSpellInfo(spellId)
+									local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
+									if (spellName and bIsSelected) then
+										local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
+										if (bOnlySelectedHash) then
+											talentList[spellId] = talentInfo
+										else
+											table.insert(talentList, talentInfo)
+										end
 									end
 								end
 							end
@@ -4995,11 +4999,12 @@ end
 
 function DF:AddRoleIconToText(text, role, size)
 	if (role and type(role) == "string") then
-		local coords = GetTexCoordsForRole(role)
+		local coords = roleTexcoord2[role]
 		if (coords) then
 			if (type(text) == "string" and role ~= "NONE") then
 				size = size or 14
-				text = "|TInterface\\LFGFRAME\\UI-LFG-ICON-ROLES:" .. size .. ":" .. size .. ":0:0:256:256:" .. roleTexcoord[role] .. "|t " .. text
+				local coordsToString = floor(coords[1]*256) .. ":" .. floor(coords[2]*256) .. ":" .. floor(coords[3]*256) .. ":" .. floor(coords[4]*256)
+				text = "|TInterface\\LFGFRAME\\UI-LFG-ICON-ROLES:" .. size .. ":" .. size .. ":0:0:256:256:" .. coordsToString .. "|t " .. text
 				return text
 			end
 		end
@@ -5719,6 +5724,10 @@ function _G.__benchmark(bNotPrintResult)
 		print("Elapsed Time:", elapsed)
 		return elapsed
 	end
+end
+
+function DF:DebugTexture(texture, left, right, top, bottom)
+	return DF:PreviewTexture(texture, left, right, top, bottom)
 end
 
 function DF:PreviewTexture(texture, left, right, top, bottom)

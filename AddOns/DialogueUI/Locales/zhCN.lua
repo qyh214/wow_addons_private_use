@@ -6,7 +6,7 @@ local L = addon.L;
 
 
 L["Quest Frequency Daily"] = "日常";
-L["Quest Frequency Weekly"] = "周长";
+L["Quest Frequency Weekly"] = "周常";
 
 L["Quest Type Repeatable"] = "可重复";
 L["Quest Type Trivial"] = "低等级";    --Low-level quest
@@ -54,6 +54,7 @@ L["TTS Button Tooltip"] = "左键点击： 播放/停止阅读\n右键点击： 
 L["Item Is An Upgrade"] = "这件装备对你有提升";
 L["Identical Stats"] = "这两件装备的属性相同";
 L["Quest Completed On Account"] = "你的战团此前已经完成了这个任务。";
+L["New Quest Available"] = "发现新任务";
 
 --String Format
 L["Format Reputation Reward Tooltip"] = "在%2$s中的声望提高%1$d点";
@@ -88,6 +89,7 @@ L["Option Disabled"] = "已禁用";
 L["Move Position"] = "移动";
 L["Reset Position"] = "重置位置";
 L["Drag To Move"] = "左键点击并拖拽以移动该窗口。";
+L["Middle Click To Reset Position"] = "中键点击以重置位置。";
 
 L["Quest"] = "任务";
 L["Gossip"] = "对话";
@@ -157,6 +159,12 @@ L["Press Button To Scroll Down"] = "按确认键来向下滚屏";
 L["Press Button To Scroll Down Desc"] = "如果当前页面盛不下所有任务文本，按下确认键会向下滚屏而不是接受任务。";
 L["Right Click To Close UI"] = "右键关闭界面";
 L["Right Click To Close UI Desc"] = "在对话界面上按右键即可关闭窗口。";
+L["Experimental Features"] = "实验性";
+L["Emulate Swipe"] = "模拟滑动手势";
+L["Emulate Swipe Desc"] = "在对话界面上点击并拖拽来滚动页面。";
+L["Mobile Device Mode"] = "移动设备模式";
+L["Mobile Device Mode Desc"] = "实验性功能：\n\n增大界面和字号来让文本在小屏幕设备上也可清晰分辨。";
+L["Mobile Device Mode Override Option"] = "此选项暂时不起作用，因为你已在控制选项里开启“移动设备”模式";
 
 L["Key Space"] = "空格";
 L["Key Interact"] = "交互键";
@@ -166,10 +174,17 @@ L["Use Default Control Key Alert"] = "将继续使用 [KEY:PC:SPACE] 作为确�
 L["Key Disabled"] = "不做设定";
 L["Key Disabled Tooltip"] = "不再使用确认键。\n\n你将无法通过按键盘的方式来接受任务。";
 
+L["Auto Quest Popup"] = "自动任务弹窗";
+L["Auto Quest Popup Desc"] = "如果一个新任务是由拾取物品或进入某区域后自动触发的，先用小弹窗显示这个任务。\n\n那些在你登录后就自动弹出的任务可能不满足我们的判定条件。";
+L["Popup Position"] = "弹窗位置";    --Pop-up window position
+L["Widget Is Docked Generic"] = "此窗口与其他弹窗停靠在一起。";   --Indicate a window is docked with other pop-up windows
+L["Widget Is Docked Named"] = "%s与其他弹窗停靠在一起。";
 L["Quest Item Display"] = "任务物品说明";
 L["Quest Item Display Desc"] = "自动显示任务物品上的说明，并且允许你在不打开背包的情况下就能使用它。";
 L["Quest Item Display Hide Seen"] = "忽略见过的物品";
 L["Quest Item Display Hide Seen Desc"] = "忽略你账号上角色见过的物品。";
+L["Quest Item Display Await World Map"] = " 等待世界地图";
+L["Quest Item Display Await World Map Desc"] = "当你打开世界地图时，将正在显示的任务物品说明隐藏并暂停自动关闭倒计时。";
 L["Quest Item Display Reset Position Desc"] = "重置窗口位置。";
 L["Auto Select"] = "自动选择";
 L["Auto Select Gossip"] = "自动选择对话选项";
@@ -189,8 +204,28 @@ L["TTS Use Hotkey Tooltip PlayStation"] = "[KEY:PS:LT]";
 L["TTS Use Hotkey Tooltip Switch"] = "[KEY:SWITCH:LT]";
 L["TTS Auto Play"] = "自动播放";
 L["TTS Auto Play Desc"] = "自动朗读对话文本。";
+L["TTS Skip Recent"] = "跳过最近朗读过的内容";
+L["TTS Skip Recent Desc"] = "跳过最近朗读过的内容。";
 L["TTS Auto Stop"] = "离开时停止";
 L["TTS Auto Stop Desc"] = "在你离开NPC时停止朗读文本。";
+L["TTS Stop On New"] = "开始新对话时停止";
+L["TTS Stop On New Desc"] = "在你浏览新对话时停止之前在朗读的文本。";
+L["TTS Voice Male"] = "男性角色声音";
+L["TTS Voice Male Desc"] = "当你与男性角色交互时使用此声音：";
+L["TTS Voice Female"] = "女性角色声音";
+L["TTS Voice Female Desc"] = "当你与女性角色交互时使用此声音：";
+L["TTS Use Narrator"] = "旁白";
+L["TTS Use Narrator Desc"] = "使用另一种声音来朗读NPC名字、任务名称、任务目标以及任何尖括号内的内容。";
+L["TTS Voice Narrator"] = "声音";
+L["TTS Voice Narrator Desc"] = "旁白将使用此声音：";
+L["TTS Volume"] = "音量";
+L["TTS Volume Desc"] = "调节朗读声音的音量。";
+L["TTS Rate"] = "语速";
+L["TTS Rate Desc"] = "调节朗读声音的语速。";
+L["TTS Include Content"] = "朗读以下内容";
+L["TTS Content NPC Name"] = "NPC名字";
+L["TTS Content Quest Name"] = "任务名称";
+L["TTS Content Objective"] = "任务目标";
 
 --Tutorial
 L["Tutorial Settings Hotkey"] = "按下 [KEY:PC:F1] 来打开或关闭设置";

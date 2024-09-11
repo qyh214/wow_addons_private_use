@@ -4,27 +4,18 @@ ns.defaults = {
 
   profile = {
 
-    --FogOfWarr
-      colorR = 1,
-      colorG = 1,
-      colorB = 1,
-      colorA = 1,
-      FogOfWarColorR = 1,
-      FogOfWarColorG = 0,
-      FogOfWarColorB = 0,
-      FogOfWarColorA = 1,
-      colorR_Reduce = 0.65,
-      colorG_Reduce = 0.65,
-      colorB_Reduce = 0.65,
-      colorA_Reduce = 0.65,
-
     --0 General tab
       journal = true,
       tomtom = true,
       extraInformation = true,
       assignedgray = true,
       graymultipleID = true,
+      CoreChatMassage = true,
+      MmbWmbChatMessage = true,
       ChatMassage = false,
+      ZoneChanged = true,
+      ZoneChangedDetail = false,
+      RestoreAllIcons = false,
       RestoreZoneDeletedIcons = false,
       RestoreContinentDeletedIcons = false,
       RestoreAzerothDeletedIcons = false,
@@ -76,8 +67,8 @@ ns.defaults = {
     -- MiniMap General
       MiniMapGeneralScale = 1.5,
       MiniMapGeneralAlpha = 1,
-      showMiniMapFP = true, -- Classic+
-      showMiniMapGhost = true, -- Classic+
+      showMiniMapFP = true, -- only Classic+
+      showMiniMapGhost = true, -- only Classic+
       showMiniMapInnkeeper = true,
       showMiniMapAuctioneer = true,
       showMiniMapBank = true,
@@ -88,6 +79,7 @@ ns.defaults = {
       showMiniMapTransmogger = true,
       showMiniMapStablemaster = true,
       showMiniMapItemUpgrade = true,
+      showMiniMapCatalyst = true,
     -- MiniMap Paths
       MiniMapPathsScale = 1.5,
       MiniMapPathsAlpha = 1,
@@ -132,6 +124,7 @@ ns.defaults = {
       ZonesGeneralAlpha = 1,
       showZoneFP = true, -- Classic+
       showZoneGhost = true, -- Classic+
+      ZoneMapNotesIcons = false,
       showZoneInnkeeper = true,
       showZoneAuctioneer = true,
       showZoneBank = true,
@@ -142,6 +135,7 @@ ns.defaults = {
       showZoneTransmogger = true,
       showZoneStablemaster = true,
       showZoneItemUpgrade = true,
+      showZoneCatalyst = true,
     -- Zone Path
       ZonesPathsScale = 1.5,
       ZonesPathsAlpha = 1,
@@ -188,7 +182,7 @@ ns.defaults = {
       showAzerothTransport = true,
       showAzerothOldVanilla = true,
       showAzerothLFR = true,
-      showAzerothFP = true, -- only classic
+      showAzerothFP = true, -- only classic +
       showAzerothKalimdor = true,
       showAzerothEasternKingdom = true,
       showAzerothNorthrend = true,
@@ -256,7 +250,7 @@ ns.defaults = {
       showCapitalsMultiple = true,
 
     --Capital Transport
-      CapitalsTransportScale = 1,
+      CapitalsTransportScale = 1.5,
       CapitalsTransportAlpha = 1,
       showCapitalsPortals = true,
       showCapitalsZeppelins = true,
@@ -267,7 +261,7 @@ ns.defaults = {
       showCapitalsFP = true,
 
     -- Capital Professions
-      CapitalsProfessionsScale = 1,
+      CapitalsProfessionsScale = 1.5,
       CapitalsProfessionsAlpha = 1,
       showCapitalsProfessionOrders = true,
       showCapitalsAlchemy = true,
@@ -286,7 +280,7 @@ ns.defaults = {
       showCapitalsEnchanting = true,
 
     --Capital General
-      CapitalsGeneralScale = 1,
+      CapitalsGeneralScale = 1.5,
       CapitalsGeneralAlpha = 1,
       showCapitalsMapNotes = true,
       showCapitalsInnkeeper = true,
@@ -303,6 +297,7 @@ ns.defaults = {
       showCapitalsMailbox = true,
       showCapitalsGhost = true,
       showCapitalsStablemaster = true,
+      showCapitalsTradingPost = true,
 
     --7 Capitals Minimap
       showMinimapCapitals = true,
@@ -329,7 +324,7 @@ ns.defaults = {
       showMinimapCapitalsDarkmoon = true,
 
     --Capital Minimap Instances
-      MinimapCapitalsInstanceScale = 1,
+      MinimapCapitalsInstanceScale = 1.5,
       MinimapCapitalsInstanceAlpha = 1,
       showMinimapCapitalsRaids = true,
       showMinimapCapitalsDungeons = true,
@@ -337,7 +332,7 @@ ns.defaults = {
       showMinimapCapitalsMultiple = true,
 
     --Capital Minimap Transport
-      MinimapCapitalsTransportScale = 1,
+      MinimapCapitalsTransportScale = 1.5,
       MinimapCapitalsTransportAlpha = 1,
       showMinimapCapitalsPortals = true,
       showMinimapCapitalsZeppelins = true,
@@ -348,7 +343,7 @@ ns.defaults = {
       showMinimapCapitalsFP = true,
 
     -- Capital Minimap Professions
-      MinimapCapitalsProfessionsScale = 1,
+      MinimapCapitalsProfessionsScale = 1.5,
       MinimapCapitalsProfessionsAlpha = 1,
       showMinimapCapitalsProfessionOrders = true,
       showMinimapCapitalsAlchemy = true,
@@ -367,7 +362,7 @@ ns.defaults = {
       showMinimapCapitalsEnchanting = true,
 
     --Capital Minimap General
-      MinimapCapitalsGeneralScale = 1,
+      MinimapCapitalsGeneralScale = 1.5,
       MinimapCapitalsGeneralAlpha = 1,   
       showMinimapCapitalsMapNotes = true,     
       showMinimapCapitalsInnkeeper = true,
@@ -384,6 +379,7 @@ ns.defaults = {
       showMinimapCapitalsMailbox = true,
       showMinimapCapitalsGhost = true,
       showMinimapCapitalsStablemaster = true,
+      showMinimapCapitalsTradingPost = true,
 
     --10 ns.Addon.db.profile.activate.
       activate = {
@@ -398,14 +394,14 @@ ns.defaults = {
         ClassicBank = true,
         ClassicProfession = false,
         ClassicClassicProfession = false,
+        MapNotesIcons = true,
         RemoveBlizzPOIs = true,
+        RemoveBlizzInstances = true,
         FogOfWar = true,
         MistOfTheUnexplored = true,
         FogOfWarAlphaReduce = false,
         SyncZoneAndMinimap = false,
         SyncCapitalsAndMinimap = false,
-        ZoneChanged = true,
-        ZoneChangedDetail = false,
       --MiniMap
         MiniMapEnemyFaction = true,
         MiniMapInstances = true,
@@ -419,14 +415,14 @@ ns.defaults = {
         ZoneGeneral = true,
         ZonePaths = true,
       --activate tab
-        CosmosMap = true, -- activate tab
-        Azeroth = true, -- activate tab
-        Continent = true, -- activate tab
-        ZoneMap = true, -- activate tab
-        DungeonMap = true, -- activate tab
-        MiniMap = true, -- activate tab
-        Capitals = true, -- activate tab
-        MinimapCapitals = true, -- activate tab
+        CosmosMap = true,
+        Azeroth = true,
+        Continent = true,
+        ZoneMap = true,
+        DungeonMap = true,
+        MiniMap = true,
+        Capitals = true,
+        MinimapCapitals = true,
       --Capitals
         CapitalsEnemyFaction = true,
         CapitalsInstances = true,
@@ -441,29 +437,48 @@ ns.defaults = {
         MinimapCapitalsGeneral = true,
       },
 
-    },
-  char = {
+    --11 deleted icons function
+      deletedIcons = {
 
-    AzerothDeletedIcons = {
-      ['*'] = {},
-    },
-    ContinentDeletedIcons = {
-      ['*'] = {},
-    },
-    ZoneDeletedIcons = {
-      ['*'] = {},
-    },
-    MinimapZoneDeletedIcons = {
-      ['*'] = {},
-    },
-    DungeonDeletedIcons = {
-      ['*'] = {},
-    },
-    CapitalsDeletedIcons = {
-      ['*'] = {},
-    },
-    MinimapCapitalsDeletedIcons = {
-      ['*'] = {},
-    },
+        AzerothDeletedIcons = {
+          ['*'] = {},
+        },
+        ContinentDeletedIcons = {
+          ['*'] = {},
+        },
+        ZoneDeletedIcons = {
+          ['*'] = {},
+        },
+        MinimapZoneDeletedIcons = {
+          ['*'] = {},
+        },
+        DungeonDeletedIcons = {
+          ['*'] = {},
+        },
+        CapitalsDeletedIcons = {
+          ['*'] = {},
+        },
+        MinimapCapitalsDeletedIcons = {
+          ['*'] = {},
+        },
+      },
+
+    --12 FogOfWarColor
+      FogOfWarColor = {
+        --FogOfWar
+          colorR = 1,
+          colorG = 1,
+          colorB = 1,
+          colorA = 1,
+          FogOfWarColorR = 1,
+          FogOfWarColorG = 0,
+          FogOfWarColorB = 0,
+          FogOfWarColorA = 1,
+          colorR_Reduce = 0.65,
+          colorG_Reduce = 0.65,
+          colorB_Reduce = 0.65,
+          colorA_Reduce = 0.65,
+      }
   },
+
 }

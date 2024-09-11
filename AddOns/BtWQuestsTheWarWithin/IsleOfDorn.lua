@@ -39,6 +39,7 @@ Chain.TempChain28 = 110138
 Chain.TempChain29 = 110139
 Chain.TempChain30 = 110140
 Chain.TempChain31 = 110141
+Chain.TempChain32 = 110142
 Chain.OtherAlliance = 110197
 Chain.OtherHorde = 110198
 Chain.OtherBoth = 110199
@@ -1434,6 +1435,10 @@ Database:AddChain(Chain.TempChain21, {
     expansion = EXPANSION_ID,
     range = LEVEL_RANGE,
     prerequisites = LEVEL_PREREQUISITES,
+    active = {
+        type = "quest",
+        id = 82441,
+    },
     completed = {
         type = "quest",
         id = 82467,
@@ -1513,6 +1518,10 @@ Database:AddChain(Chain.TempChain25, {
     expansion = EXPANSION_ID,
     range = LEVEL_RANGE,
     prerequisites = LEVEL_PREREQUISITES,
+    active = {
+        type = "quest",
+        ids = { 83082, 83081, }
+    },
     completed = {
         type = "quest",
         id = 83087,
@@ -1780,6 +1789,129 @@ Database:AddChain(Chain.TempChain31, {
             id = Chain.TempChain27,
             x = 1,
             embed = true,
+        },
+    },
+})
+Database:AddChain(Chain.TempChain32, {
+    name = BtWQuests_GetAchievementName(40860), -- A Star of Dorn
+    category = CATEGORY_ID,
+    expansion = EXPANSION_ID,
+    range = LEVEL_RANGE,
+    prerequisites = LEVEL_PREREQUISITES,
+    active = {
+        type = "quest",
+        ids = { 82775, 82781, 82782, 82784 },
+    },
+    completed = {
+        type = "quest",
+        ids = { 82775, 82781, 82782, 82784 },
+        count = 4,
+    },
+    items = {
+        {
+            type = "npc",
+            id = 214296,
+            x = 1,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 79150,
+            x = 1,
+            aside = true,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "currency",
+            id = 2900,
+            amount = 8,
+            x = -1,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 79282,
+            aside = true,
+        },
+        {
+            type = "npc",
+            id = 215748,
+            x = -1,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "currency",
+            id = 2900,
+            amount = 10,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 82775,
+            x = -1,
+        },
+        {
+            type = "npc",
+            id = 217248,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "currency",
+            id = 2900,
+            amount = 14,
+            x = -1,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 82781,
+        },
+        {
+            type = "npc",
+            id = 215745,
+            x = -1,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "currency",
+            id = 2900,
+            amount = 21,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 82782,
+            x = -1,
+        },
+        {
+            type = "npc",
+            id = 215744,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 82784,
+            x = 1,
         },
     },
 })
@@ -2162,6 +2294,10 @@ Database:AddCategory(CATEGORY_ID, {
             type = "chain",
             id = Chain.TempChain31,
         },
+        {
+            type = "chain",
+            id = Chain.TempChain32,
+        },
 --[==[@debug@
         {
             type = "chain",
@@ -2192,6 +2328,26 @@ Database:AddMapRecursive(MAP_ID, {
     type = "category",
     id = CATEGORY_ID,
 })
+
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.BreakingPoint)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.EarthenFissures)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheFirstBlow)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.SporesOfDread)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.BehindClosedDoors)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.SevenSoldiers)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.LostLordOfTheStorm)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.HopeAnAnomaly)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheHermit)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.ATitanicExpedition)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.RememberMeEarthen)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.BrotherhoodInTheSkolzgalWood)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.AllOreNothing)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain14)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain21)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain25)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain30)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain31)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain32)
 
 --[==[@debug@
 Database:AddContinentItems(CONTINENT_ID, {

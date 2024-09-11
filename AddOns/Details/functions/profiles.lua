@@ -1100,6 +1100,7 @@ local default_profile = {
 			quick_detection = false,
 			faster_updates = false,
 			use_animation_accel = true,
+			no_helptips = false,
 		},
 
 	--tooltip
@@ -1707,6 +1708,10 @@ local default_global_data = {
 		exp90temp = {
 			delete_damage_TCOB = true, --delete damage on the concil of blood encounter
 		},
+
+	third_party = {
+		openraid_notecache = {},
+	},
 }
 
 Details.default_global_data = default_global_data

@@ -12,6 +12,9 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [207471] = {
         name = "Viuda Arak'nai",
     },
+    [208782] = {
+        name = "Ejecutor Nizrek",
+    },
     [211652] = {
         name = "Hablaverde Na'layro",
     },
@@ -38,6 +41,12 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [213145] = {
         name = "Auralia Golpacero",
+    },
+    [213624] = {
+        name = "Magni Barbabronce",
+    },
+    [213625] = {
+        name = "Lady Jaina Valiente",
     },
     [213840] = {
         name = "Tabernero Brax",

@@ -1,8 +1,6 @@
 ----- AUTO GENERATED - DO NOT EDIT
 
 BtWQuestsDatabase:AddObjectsTable({
-    [217724] = {
-    },
     [411756] = {
         name = "Fallen Earthen",
     },

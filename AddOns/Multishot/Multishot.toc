@@ -1,9 +1,9 @@
 ## Interface: 110002
 ## Title: Multishot Fan Update
-## Notes: Takes screenshots of memorable events in your World of Warcraft career.
-## Version: 11.0.2.1
-## Author: dlui & dridzt
-## X-Maintainer: Nukme 
+## Notes: Automatically screenshot memorable moments of your journey in World of Warcraft .
+## Version: 11.0.2.2
+## Author: Nukme
+## X-OriginalAuthors: dlui & dridzt
 ## X-Repository: https://github.com/Nukme/Multishot
 ## X-NGA_Feedback: https://bbs.nga.cn/read.php?tid=7534350
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3

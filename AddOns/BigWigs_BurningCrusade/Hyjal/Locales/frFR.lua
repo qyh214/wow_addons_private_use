@@ -44,9 +44,4 @@ if L then
 	L.waveInc = "Arrivée de la %d|4ère:ème; vague !"
 	L.message = "%s dans ~%d sec. !"
 	L.waveMessage = "%d|4ère:ème; vague dans ~%d sec. !"
-
-	L.winterchillGossip = "Mes compagnons et moi sommes à vos côtés, dame Portvaillant."
-	L.anetheronGossip = "Nous sommes prêts à affronter tout ce qu'Archimonde pourra mettre sur notre chemin, dame Portvaillant."
-	L.kazrogalGossip = "Je suis avec vous, Thrall."
-	L.azgalorGossip = "Nous n'avons rien à craindre."
 end

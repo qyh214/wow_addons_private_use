@@ -1,7 +1,7 @@
 ## Interface: 11503
 ## Title: |cffe8344fPatched|r WeakAuras Options
 ## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.16.1
+## Version: 5.17.1
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
 ## Notes-deDE: Optionen für WeakAuras

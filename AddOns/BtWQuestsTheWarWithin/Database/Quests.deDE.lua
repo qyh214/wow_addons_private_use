@@ -168,6 +168,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78472] = {
         name = "Leuchten im Dunkeln - Aktivieren",
     },
+    [78529] = {
+        name = "Gewaltsamer Einschlag",
+    },
     [78530] = {
         name = "Tötet die Saboteure",
     },
@@ -405,6 +408,33 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78706] = {
         name = "Das Geheimnis des Obersten Sprechers",
     },
+    [78713] = {
+        name = "Der Krieg im Inneren",
+    },
+    [78714] = {
+        name = "Ein dürftiger Empfang",
+    },
+    [78715] = {
+        name = "Azeroths Stimme",
+    },
+    [78716] = {
+        name = "Schmerzhafte Lektionen",
+    },
+    [78717] = {
+        name = "Eine mysteriöses Warnung",
+    },
+    [78718] = {
+        name = "Stärken der Schutze",
+    },
+    [78719] = {
+        name = "Bürger von Dalaran",
+    },
+    [78721] = {
+        name = "Das Team",
+    },
+    [78722] = {
+        name = "Auf nach Khaz Algar!",
+    },
     [78738] = {
         name = "Abwesender Sprecher",
     },
@@ -534,6 +564,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [78972] = {
         name = "Erntechaos",
     },
+    [78974] = {
+        name = "Alles für den Käfer",
+    },
     [78996] = {
         name = "Waffen und Krieger",
     },
@@ -575,6 +608,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79089] = {
         name = "Geweihte Reinigung",
+    },
+    [79105] = {
+        name = "Bresche",
+    },
+    [79106] = {
+        name = "Bruch",
     },
     [79107] = {
         name = "Nach dem Sturm",
@@ -1116,11 +1155,20 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79716] = {
         name = "Die Geschichte unter unseren Füßen",
     },
+    [79717] = {
+        name = "Infiltration mal anders",
+    },
+    [79718] = {
+        name = "Straßensonderkommando der Stränge",
+    },
     [79721] = {
         name = "Achtung, Granate!",
     },
     [79722] = {
         name = "Gossenarbeit",
+    },
+    [79723] = {
+        name = "Rückführung durch Subtraktion",
     },
     [79724] = {
         name = "Eine titanische Expedition!",
@@ -1136,6 +1184,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [79728] = {
         name = "Ist wahrscheinlich gar nichts",
+    },
+    [79729] = {
+        name = "Selbststudium",
+    },
+    [79730] = {
+        name = "Hartnäckige Verfolgung",
     },
     [79944] = {
         name = "Rasende Risse",
@@ -1251,6 +1305,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80218] = {
         name = "Unfug im Seidenwald",
     },
+    [80295] = {
+        name = "Felsen, Wasser und Elementarfutter",
+    },
     [80312] = {
         name = "Keuchende Bitte",
     },
@@ -1266,8 +1323,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80316] = {
         name = "Rückkehr ins Meer",
     },
+    [80321] = {
+        name = "Abreise",
+    },
     [80334] = {
         name = "Zerschmetterte Spitzen",
+    },
+    [80378] = {
+        name = "Ein Licht der Dunkelheit",
     },
     [80392] = {
         name = "Die Verwalterin von Brunwins Terrasse",
@@ -1313,6 +1376,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80457] = {
         name = "Im Dienst der Königin",
+    },
+    [80500] = {
+        name = "Die Bronzebart-Familie",
     },
     [80502] = {
         name = "Weint nicht um mich, Azj-Kahet",
@@ -1422,6 +1488,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [80689] = {
         name = "Ausgazurs Fürsorge",
     },
+    [81465] = {
+        name = "Artefakte im Überfluss",
+    },
     [81470] = {
         name = "Lauschen: Diebisches Weben",
     },
@@ -1505,6 +1574,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81510] = {
         name = "Abtauchen",
+    },
+    [81512] = {
+        name = "Requisiten und Räucherwerk",
     },
     [81514] = {
         name = "Großzügige Tiefen",
@@ -1611,8 +1683,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81798] = {
         name = "Kehrt zu Moira zurück.",
     },
+    [81802] = {
+        name = "Drachenreiterrennen - Sturmpostenstudie",
+    },
     [81806] = {
         name = "Drachenreiterrennen - Erzgrubenecken",
+    },
+    [81819] = {
+        name = "Drachenreiterrennen - Stillsteinslalom",
     },
     [81822] = {
         name = "Drachenreiterrennen - Mereldarmäander",
@@ -1647,6 +1725,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81929] = {
         name = "So wird das ablaufen",
     },
+    [81930] = {
+        name = "Der Krieg im Inneren",
+    },
     [81945] = {
         name = "Nach Arathis Ende",
     },
@@ -1667,6 +1748,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81965] = {
         name = "Störung der Invasion",
+    },
+    [81966] = {
+        name = "Geschlafen wie ein Stein",
     },
     [81969] = {
         name = "Das Ende des Endes",
@@ -1727,6 +1811,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82197] = {
         name = "Reservenremmidemmi",
+    },
+    [82206] = {
+        name = "In die Schatten",
     },
     [82212] = {
         name = "Schwacher Löwenfisch",
@@ -1845,6 +1932,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82355] = {
         name = "Spezialauftrag: Glutbienenansturm",
     },
+    [82364] = {
+        name = "Dokumentation der Dissonanz",
+    },
     [82366] = {
         name = "NICHT BENUTZEN",
     },
@@ -1916,6 +2006,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [82536] = {
         name = "Exfiltrationsoperation",
+    },
+    [82580] = {
+        name = "Kuriermission: Erzsammlung",
     },
     [82583] = {
         name = "Das innere Feuer entzünden",
@@ -2067,6 +2160,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83092] = {
         name = "Ein feuriges Ende",
     },
+    [83101] = {
+        name = "Ressourcenhunger",
+    },
     [83108] = {
         name = "Carpe Diagnosem",
     },
@@ -2172,6 +2268,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83532] = {
         name = "Angelfest von Heilsturz",
     },
+    [83537] = {
+        name = "Geothermale Edelsteinbehandlung",
+    },
+    [83543] = {
+        name = "Abenteuer in Khaz Algar",
+    },
     [83548] = {
         name = "Insel von Dorn",
     },
@@ -2187,6 +2289,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83616] = {
         name = "Die Verschanzte",
     },
+    [83627] = {
+        name = "Der Anfang von etwas Wunderschönem",
+    },
     [83628] = {
         name = "Angespannte Rettung",
     },
@@ -2199,6 +2304,15 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83639] = {
         name = "Offene Kommunikation",
     },
+    [83715] = {
+        name = "Beanspruchtes Bergungsgut",
+    },
+    [83718] = {
+        name = "Eierentzug",
+    },
+    [83719] = {
+        name = "Das sind Chitinworte",
+    },
     [83749] = {
         name = "Tiefen: Die Wasserwerke",
     },
@@ -2210,6 +2324,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83761] = {
         name = "Tiefen: Die Tiefenfestung",
+    },
+    [83766] = {
+        name = "Ruf des Tiefenforschers: Terrorschacht",
     },
     [83767] = {
         name = "Ruf des Tiefenforschers: Der Krater",

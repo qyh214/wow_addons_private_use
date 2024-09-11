@@ -1,0 +1,11 @@
+## Interface: 100000
+## Title: |cff98a0f9黑神话悟空|r |cffffa300资源包|r
+## Notes-zhCN: 灵魂复苏制作的黑神话悟空WA素材包
+## IconTexture: Interface\AddOns\SharedMedia_BMW\Icons\BMW_logo.tga
+## Author: 灵魂复苏
+## 素材: 游戏科学
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibSharedMedia-3.0\lib.xml
+embeds.xml
+BMWMedia.lua 

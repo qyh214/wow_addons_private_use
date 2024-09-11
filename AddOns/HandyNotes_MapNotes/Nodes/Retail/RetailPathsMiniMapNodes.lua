@@ -533,6 +533,8 @@ if not db.activate.HideMapNote then
                     minimap[2213][46747707] = { name = "", dnID = L["Path"], mnID = 2213, type = "PathLU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[2248][52915233] = { name = "", dnID = L["Entrance"], mnID = 2339, type = "PathLO", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     minimap[2248][56233921] = { name = "", dnID = L["Entrance"], mnID = 2339, type = "PathL", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2248][46154704] = { name = "", dnID = L["Passage"], mnID = 2214, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2248][37427287] = { dnID = L["Passage"], name = "", mnID = 2214, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end

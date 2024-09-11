@@ -35,6 +35,7 @@ local string = string
 
 -- Create the object class
 -- Adapted from http://lua-users.org/wiki/ObjectOrientationTutorial
+
 IconClass = {}
 IconClass.__index = IconClass
 

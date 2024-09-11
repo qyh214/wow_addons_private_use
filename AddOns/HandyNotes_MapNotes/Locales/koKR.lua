@@ -2,6 +2,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "koKR")
 if not L then return end
 
+--0.01
+L["Profiles"] = "프로필"
+L["This applies to the following tabs"] = "다음 탭에 적용됩니다"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "아이콘을 삭제하거나 복원하기위한 함수의 채팅의 피드백은 예외입니다. 이것들은 항상 표시됩니다!"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "여기에서 MapNotes 미니맵 및 월드맵 버튼 위에 아이콘을 숨기거나 표시할 때 전송되는 모든 채팅 메시지를 활성화하거나 비활성화할 수 있습니다"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "여기에서 설정을 변경할 때 이러한 MapNotes 탭 중 하나에서 전송된 모든 채팅 메시지를 활성화하거나 비활성화할 수 있습니다"
+L["Only affects passage icons to instances and not path icons to zones"] = "구역에 대한 경로 아이콘이 아닌 인스턴스에 대한 구절 아이콘에만 영향을 미칩니다"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "이를 비활성화함으로써, 자신의 파벌의 구역 아이콘의 경계도 제거됩니다"
 --0.1 profiles
 L["Profile has been changed"] = "프로필이 변경되었습니다"
 L["Profile has been reset to default"] = "프로필이 기본 설정으로 재설정되었습니다"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "자본탭을수도 미니 카드탭과 동기화합니다"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "이것은 수도 미니 카드탭의 기능을 비활성화하며 이제 수도 도시탭을 통해 함께 통제되고 있습니다"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "이것은 수도 -미니 카드의 모든 설정을 삭제하고 수도 도시탭의 설정으로 대체되었습니다"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "여러 가지 정보 (던전/공습/포털 등)가 포함 된 특수 Mapnotes 요약 아이콘을 표시합니다."
+L["Points of interests"] = "관심 지점"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "구역 카드의 모든 눈보라의 디스플레이 및 레이드 아이콘의 디스플레이를 비활성화합니다."
 --1 Capitals
 L["Leather Armor"] = "가죽 갑옷"
 L["Heavy Armor"] = "중갑옷"
@@ -142,6 +154,7 @@ L["gray all"] = "모든 회색"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "모두 색상! 지정된 던전 및 Raids 회색도 여러 포인트 (ID가있는 경우)"
 L["enemy faction"] = "적 세력"
 L["Shows enemy faction (horde/alliance) icons"] = "적 진영(호드/얼라이언스) 아이콘을 표시합니다"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "그러나 이것은 아제로스 및 대륙지도에만 적용됩니다. Zones + & Capital + 카테고리가 아닙니다. 이들은 반대하는 플레이어를위한 고유 한 활성화 옵션이 있습니다"
 L["chat message"] = "채팅 메시지" 
 L["Disables MapNotes status chat messages excluding core information"] = "핵심 정보를 제외한 Mapnotes 상태 채팅 뉴스 비활성화"
 L["Shows special transport icons like"] = "특별한 교통 아이콘을 보여줍니다"

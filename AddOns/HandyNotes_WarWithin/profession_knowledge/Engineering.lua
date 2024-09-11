@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_ENGINEERING),
     -- active = ns.conditions.Profession(ns.PROF_WW_ENGINEERING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-engineering",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [66906192] = {
+    [64795279] = {
         quest=83867,
         loot={226293}, -- Dornogal Spectacles
         vignette=6450,
@@ -65,12 +67,6 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         quest=83873,
         loot={226299}, -- Emptied Venom Canister
         vignette=6456,
-        parent=true, levels=true, translate={[2256]=true},
-    },
-    [46802020] = {
-        quest=82632,
-        loot={224052}, -- Clocks, Gears, Sprockets, and Legs
-        note="Buy from {npc:218195:Rukku}",
         parent=true, levels=true, translate={[2256]=true},
     },
 }, KNOWLEDGE)

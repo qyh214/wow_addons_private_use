@@ -104,20 +104,6 @@ local barSettingsToExport = {
 	"spacing",
 	"visibleBarLimit",
 	"visibleBarLimitEmph",
-	-- "fontSizeNameplate", -- Do nameplate bars need their own export checkbox?
-	-- "nameplateWidth",
-	-- "nameplateAutoWidth",
-	-- "nameplateHeight",
-	-- "nameplateAlpha",
-	-- "nameplateOffsetY",
-	-- "nameplateGrowUp",
-	-- XXX Clickable Bars are not exported right now. Separate checkbox?
-	-- "interceptMouse",
-	-- "onlyInterceptOnKeypress",
-	-- "interceptKey",
-	-- "LeftButton",
-	-- "MiddleButton",
-	-- "RightButton",
 }
 
 local messageSettingsToExport = {
@@ -174,6 +160,58 @@ local countdownColorsToExport = {
 	"fontColor",
 }
 
+local nameplateSettingsToExport = {
+	-- Icons
+	"iconGrowDirection",
+	"iconGrowDirectionStart",
+	"iconSpacing",
+	"iconWidth",
+	"iconHeight",
+	"iconOffsetX",
+	"iconOffsetY",
+	"iconAutoScale",
+	"iconCooldownNumbers",
+	"iconFontName",
+	"iconFontSize",
+	"iconFontColor",
+	"iconFontOutline",
+	"iconFontMonochrome",
+	"iconCooldownEdge",
+	"iconCooldownSwipe",
+	"iconCooldownInverse",
+	"iconExpireGlow",
+	"iconExpireGlowType",
+	"iconZoom",
+	"iconAspectRatio",
+	"iconDesaturate",
+	"iconColor",
+	"iconGlowColor",
+	"iconGlowFrequency",
+	"iconGlowPixelLines",
+	"iconGlowPixelLength",
+	"iconGlowPixelThickness",
+	"iconGlowAutoCastParticles",
+	"iconGlowAutoCastScale",
+	"iconGlowProcStartAnim",
+	"iconGlowProcAnimDuration",
+	"iconBorder",
+	"iconBorderSize",
+	"iconBorderColor",
+
+	-- Text
+	"textGrowDirection",
+	"textGrowDirectionStart",
+	"textSpacing",
+	"textOffsetX",
+	"textOffsetY",
+	"textFontName",
+	"textFontSize",
+	"textFontColor",
+	"textOutline",
+	"textMonochrome",
+	"textUppercase",
+}
+
 -- Default Options
 local sharingExportOptionsSettings = {
 	exportBarPositions = true,
@@ -185,6 +223,7 @@ local sharingExportOptionsSettings = {
 	exportBarColors = true,
 	exportMessageColors = true,
 	exportCountdownColors = true,
+	exportNameplateSettings = true,
 }
 
 local sharingImportOptionsSettings = {}
@@ -222,6 +261,7 @@ local function GetExportString()
 	local barSettings = BigWigs:GetPlugin("Bars")
 	local messageSettings = BigWigs:GetPlugin("Messages")
 	local countdownSettings = BigWigs:GetPlugin("Countdown")
+	local nameplateSettings = BigWigs:GetPlugin("Nameplates")
 
 	if sharingExportOptionsSettings.exportBarPositions then
 		exportOptions["barPositions"] = exportProfileSettings(barPositionsToExport, barSettings.db.profile)
@@ -259,6 +299,10 @@ local function GetExportString()
 		exportOptions["countdownColors"] = exportProfileSettings(countdownColorsToExport, countdownSettings.db.profile) -- Not part of color plugin
 	end
 
+	if sharingExportOptionsSettings.exportNameplateSettings then
+		exportOptions["nameplateSettings"] = exportProfileSettings(nameplateSettingsToExport, nameplateSettings.db.profile)
+	end
+
 	local serialized = LibSerialize:Serialize(exportOptions)
 	local compressed = LibDeflate:CompressDeflate(serialized)
 	local compressedForPrint = LibDeflate:EncodeForPrint(compressed)
@@ -292,8 +336,13 @@ local function IsOptionGroupAvailable(group)
 			return true
 		end
 	end
+	if group == "other" then
+		if IsOptionInString("nameplateSettings") then
+			return true
+		end
+	end
 	if group == "any" then
-		if IsOptionGroupAvailable("bars") or IsOptionGroupAvailable("messages") or IsOptionGroupAvailable("countdown") then
+		if IsOptionGroupAvailable("bars") or IsOptionGroupAvailable("messages") or IsOptionGroupAvailable("countdown") or IsOptionGroupAvailable("other") then
 			return true
 		end
 	end
@@ -304,7 +353,7 @@ do
 
 	local function PreProcess(data)
 		importedTableData = data
-		for k, v in pairs(data) do
+		for k, _ in pairs(data) do
 			importStringOptions[k] = true
 		end
 		return true
@@ -344,6 +393,7 @@ do
 		local messageplugin = BigWigs:GetPlugin("Messages")
 		local countdownPlugin = BigWigs:GetPlugin("Countdown")
 		local colorplugin = BigWigs:GetPlugin("Colors")
+		local nameplatePlugin = BigWigs:GetPlugin("Nameplates")
 
 		-- Colors are stored for each plugin/module (e.g. BigWigs_Plugins_Colors for the defaults, BigWigs_Bosses_* for bosses)
 		-- We only want to modify the defaults with these imports right now.
@@ -381,6 +431,7 @@ do
 		importSettings('importCountdownPositions', 'countdownPositions', countdownPositionsToExport, countdownPlugin, L.imported_countdown_position)
 		importSettings('importCountdownSettings', 'countdownSettings', countdownSettingsToExport, countdownPlugin, L.imported_countdown_settings)
 		importSettings('importCountdownColors', 'countdownColors', countdownColorsToExport, countdownPlugin, L.imported_countdown_color) -- Not part of color plugin
+		importSettings('importNameplateSettings', 'nameplateSettings', nameplateSettingsToExport, nameplatePlugin, L.imported_nameplate_settings)
 
 		if #imported == 0 then
 			BigWigs:Print(L.no_import_message)
@@ -434,6 +485,9 @@ do
 		if IsOptionInString("countdownColors") then
 			sharingImportOptionsSettings.importCountdownColors = true
 		end
+		if IsOptionInString("nameplateSettings") then
+			sharingImportOptionsSettings.importNameplateSettings = true
+		end
 		sharingModule:SaveData()
 	end
 	local _, addonTable = ...
@@ -466,7 +520,7 @@ local sharingOptions = {
 				order = 2,
 				width = "full",
 				set = function(i, value)
-					local processed = sharingModule:DecodeImportString(value)
+					sharingModule:DecodeImportString(value)
 					sharingImportOptionsSettings[i[#i]] = value
 				end,
 				get = function(i) return sharingImportOptionsSettings[i[#i]] end,
@@ -575,6 +629,23 @@ local sharingOptions = {
 						order = 10,
 						width = 1,
 						disabled = function() return not IsOptionInString("countdownColors") end,
+					},
+				},
+			},
+			otherSettings = {
+				type = "group",
+				name = L.other_settings,
+				inline = true,
+				order = 20,
+				hidden = function() return (not isImportStringAvailable() or not IsOptionGroupAvailable("other")) end,
+				args = {
+					importNameplateSettings = {
+						type = "toggle",
+						name = L.NAMEPLATE,
+						desc = L.nameplate_settings_import_desc,
+						order = 1,
+						width = 1,
+						disabled = function() return not IsOptionInString("nameplateSettings") end,
 					},
 				},
 			},
@@ -702,6 +773,21 @@ local sharingOptions = {
 						name = L.colors,
 						desc = L.color_export_countdown_desc,
 						order = 10,
+						width = 1,
+					},
+				},
+			},
+			otherSettings = {
+				type = "group",
+				name = L.other_settings,
+				inline = true,
+				order = 15,
+				args = {
+					exportNameplateSettings = {
+						type = "toggle",
+						name = L.NAMEPLATE,
+						desc = L.nameplate_settings_export_desc,
+						order = 20,
 						width = 1,
 					},
 				},

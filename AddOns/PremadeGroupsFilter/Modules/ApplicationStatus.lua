@@ -25,16 +25,36 @@ local C = PGF.C
 PGF.hardDeclinedGroups = {}
 PGF.softDeclinedGroups = {}
 
-function PGF.GetDeclinedGroupsKey(searchResultInfo)
-    return searchResultInfo.activityID .. searchResultInfo.leaderName
+function PGF.GetAppStatus(resultID, optionalSearchResultInfo)
+    local searchResultInfo = optionalSearchResultInfo or C_LFGList.GetSearchResultInfo(resultID)
+    local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID)
+    local isApplication = appStatus ~= "none" or pendingStatus
+    local isDeclined = appStatus == "declined" or appStatus == "declined_delisted" or appStatus == "declined_full"
+    if LFGListFrame.declines then
+        if not isDeclined and LFGListFrame.declines[searchResultInfo.partyGUID] then
+            isDeclined = true
+            appStatus = LFGListFrame.declines[searchResultInfo.partyGUID]
+        end
+    end
+    return appStatus, isApplication, isDeclined
+end
+
+function PGF.GetGroupKey(searchResultInfo)
+    if searchResultInfo.partyGUID then -- retail now provides a partyGUID
+        return searchResultInfo.partyGUID
+    elseif searchResultInfo.leaderName then -- leaderName is not available for very new groups
+        return searchResultInfo.activityID .. searchResultInfo.leaderName
+    else
+        return nil
+    end
 end
 
 function PGF.IsDeclinedGroup(lookupTable, searchResultInfo)
-    if searchResultInfo.leaderName then -- leaderName is not available for brand new groups
-        local lastDeclined = lookupTable[PGF.GetDeclinedGroupsKey(searchResultInfo)] or 0
-        if lastDeclined > time() - C.DECLINED_GROUPS_RESET then
-            return true
-        end
+    local key = PGF.GetGroupKey(searchResultInfo)
+    if not key then return false end
+    local lastDeclined = lookupTable[key] or 0
+    if lastDeclined > time() - C.DECLINED_GROUPS_RESET then
+        return true
     end
     return false
 end
@@ -50,10 +70,11 @@ end
 function PGF.OnLFGListApplicationStatusUpdated(id, newStatus)
     -- possible newStatus: declined, declined_full, declined_delisted, timedout
     local searchResultInfo = C_LFGList.GetSearchResultInfo(id)
-    if not searchResultInfo.leaderName then return end -- leaderName is not available for brand new groups
+    local key = PGF.GetGroupKey(searchResultInfo)
+    if not key then return end
     if newStatus == "declined" then
-        PGF.hardDeclinedGroups[PGF.GetDeclinedGroupsKey(searchResultInfo)] = time()
+        PGF.hardDeclinedGroups[key] = time()
     elseif newStatus == "declined_delisted" or newStatus == "timedout" then
-        PGF.softDeclinedGroups[PGF.GetDeclinedGroupsKey(searchResultInfo)] = time()
+        PGF.softDeclinedGroups[key] = time()
     end
 end

@@ -2,6 +2,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "itIT")
 if not L then return end
 
+--0.01
+L["Profiles"] = "Profili"
+L["This applies to the following tabs"] = "Questo vale per le seguenti schede"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "Un'eccezione è il feedback nella chat dalla funzione per l'eliminazione o il ripristino delle icone. Questi sono sempre visualizzati!"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "Qui puoi abilitare o disabilitare tutti i messaggi di chat inviati dai pulsanti della minimappa e della mappa del mondo di MapNotes quando nascondi o mostri le icone sopra di essi"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "Qui puoi abilitare o disabilitare tutti i messaggi di chat inviati da una di queste schede di MapNotes quando modifichi le impostazioni"
+L["Only affects passage icons to instances and not path icons to zones"] = "Colpisce solo le icone di passaggio alle istanze e non alle icone del percorso nelle zone"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "Disattivandolo, viene rimosso anche il bordo delle icone della zona delle proprie fazioni, poiché le icone visualizzate sono automaticamente solo per la propria fazione"
 --0.1 profiles
 L["Profile has been changed"] = "Il profilo è stato modificato"
 L["Profile has been reset to default"] = "Il profilo è stato ripristinato alle impostazioni predefinite"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "Sincronizza la scheda Capitale con la scheda Capital Cities - Minikarte"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "Ciò disattiva le funzioni della scheda Capital Cities - Minikarte e ora vengono controllati insieme tramite la scheda Capital Cities"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "Ciò ha eliminato tutte le impostazioni per Capitals - Mini Card e sostituite dalle impostazioni nella scheda Capital Cities"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "Visualizza speciali icone di riepilogo delle mapnotes contenenti diverse informazioni (dungeon/raid/portali, ecc.)"
+L["Points of interests"] = "Punti di interesse"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "Disattiva il display di tutte le icone Dungeon e Raid sulla scheda Zona"
 --1 Capitals
 L["Leather Armor"] = "Armatura di cuoio"
 L["Heavy Armor"] = "Armatura pesante"
@@ -142,6 +154,7 @@ L["gray all"] = "Tutto grigio"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "Colora tutti! Dungeon e raid assegnati grigi anche più punti (se hai un ID)"
 L["enemy faction"] = "fazione nemica"
 L["Shows enemy faction (horde/alliance) icons"] = "Mostra le icone della fazione nemica (orda/alleanza)"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "Tuttavia, questo vale solo per la mappa Azeroth & Continent. Non per le zone + e il capitale + categoria. Questi hanno la propria opzione di attivazione per i giocatori avversari"
 L["chat message"] = "Messaggi di chat" 
 L["Disables MapNotes status chat messages excluding core information"] = "Notizie di chat di stato mapnotes disattivate ad eccezione delle informazioni fondamentali"
 L["Shows special transport icons like"] = "Mostra icone speciali di trasporto come"

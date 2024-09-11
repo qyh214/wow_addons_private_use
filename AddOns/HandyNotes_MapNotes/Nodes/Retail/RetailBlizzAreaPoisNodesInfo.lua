@@ -64,5 +64,8 @@ ns.BlizzAreaPoisInfo = {
     6138, -- Mechagon Zuldazar Travel
     7341, -- Zeppelin Durotar
     7339, -- Ship Icon The Waking Shores to OG
-    
+}
+
+ns.BlizzLinkedUiMapID = {
+    2214, -- Deep Entrance Dornogal
 }

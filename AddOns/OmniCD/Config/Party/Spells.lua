@@ -255,12 +255,6 @@ function P:AddSpellTypeSpell(spells, tab, spellID, class, type, icon, name, item
 				},
 			},
 		}
-		if E.consumableIDs[spellID] then
-			t[category].args[sId].disabled = function(info)
-				local zone = info[2]
-				return zone ~= "party" and zone ~= "arena"
-			end
-		end
 	end
 
 	if tab ~= "list_OFFENSIVE" then
@@ -327,12 +321,6 @@ function P:AddSpellTypeSpell(spells, tab, spellID, class, type, icon, name, item
 				},
 			}
 		}
-		if E.consumableIDs[spellID] then
-			t[type].args[sId].disabled = function(info)
-				local zone = info[2]
-				return zone ~= "party" and zone ~= "arena"
-			end
-		end
 	end
 
 	if class == "TRINKET" and itemID and itemID > 0 and t[type] then
@@ -341,21 +329,35 @@ function P:AddSpellTypeSpell(spells, tab, spellID, class, type, icon, name, item
 			item:ContinueOnItemLoad(function()
 				local itemName = item:GetItemName()
 				if itemName then
-					t[type].args[sId].name = itemName
+					t[type].args[sId].args.spells.name = itemName
+
+					if E.hash_spelldb[spellID] then
+						E.hash_spelldb[spellID].name = itemName
+					end
 				end
 			end)
 		end
 	end
-	if (E.isDF or E.isClassic) and t[category] then
-		local spell = Spell:CreateFromSpellID(spellID)
-		spell:ContinueOnSpellLoad(function()
-			if E.isClassic then
-				t[category].args[sId].desc = spell:GetSpellDescription()
-			else
-				t[category].args[sId].tooltipHyperlink = GetSpellLink(spellID)
+	local spell = Spell:CreateFromSpellID(spellID)
+	spell:ContinueOnSpellLoad(function()
+		if E.isClassic then
+			local tooltip = spell:GetSpellDescription()
+			if t[category] then
+				t[category].args[sId].args.spells.desc = tooltip
 			end
-		end)
-	end
+			if t[type] then
+				t[type].args[sId].args.spells.desc = tooltip
+			end
+		else
+			local tooltip = GetSpellLink(spellID)
+			if t[category] then
+				t[category].args[sId].args.spells.tooltipHyperlink = tooltip
+			end
+			if t[type] then
+				t[type].args[sId].args.spells.tooltipHyperlink = tooltip
+			end
+		end
+	end)
 end
 
 local spellTabs = {

@@ -92,6 +92,18 @@ L.killed = "%s убит"
 L.mob_killed = "%s убит (%d/%d)"
 L.mob_remaining = "%s убит, %d осталось"
 
+-- NPCs for follower dungeons
+L.garrick = "Капитан Гэррик" -- AI paladin tank (NPC 209057)
+L.garrick_short = "*Гэррик"
+L.meredy = "Мереди Крепкая Охота" -- AI mage dps (NPC 209059)
+L.meredy_short = "*Мереди"
+L.shuja = "Шуджа Люторез" -- AI shaman dps (NPC 214390)
+L.shuja_short = "*Шуджа"
+L.crenna = "Кренна Дочь Земли" -- AI druid healer (NPC 209072)
+L.crenna_short = "*Кренна"
+L.austin = "Остин Хаксворт" -- AI hunter dps (NPC 209065)
+L.austin_short = "*Остин"
+
 -- Localizers note:
 -- The default mod:Berserk(600) uses spell ID 26662 to get the Berserk name
 L.custom_start = "%s вступает в бой - %s через %d мин"
@@ -208,7 +220,7 @@ L.mark = "Знак" -- Short name for abilites with "Mark" in the name, for exam
 L.marks = "Знаки" -- Plural of L.marks
 L.mind_control = "Контроль над разумом" -- Any kind of Mind Control ability, where a player loses control of their character
 L.mind_control_short = "КР" -- Short version of Mind Control, mainly for bars
-L.soak = "Сока" -- Abilities you have to stand in on purpose to soak the damage, like a sponge soaks water. Commonly for abilities that split damage between everyone standing in them.
+L.soak = "Соак" -- Abilities you have to stand in on purpose to soak the damage, like a sponge soaks water. Commonly for abilities that split damage between everyone standing in them.
 L.soaks = "Соки" -- Plural of L.soak
 L.spell_reflection = "Отражение заклинаний" -- Any ability that reflects spells
 L.parasite = "Паразит" -- Any ability where a parasite is involved e.g. "Parasitic Infection", "Parasitic Growth", etc

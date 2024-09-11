@@ -64,6 +64,11 @@ function P:ResetModule(isModuleDisabled)
 	end
 	self.callbackTimers = {}
 
+
+
+
+
+
 	CM:Disable()
 	CD:Disable()
 
@@ -76,7 +81,7 @@ function P:ResetModule(isModuleDisabled)
 	E.Libs.CBH:Fire("OnShutdown")
 end
 
-function P:Refresh(full)
+function P:Refresh()
 	if not self.enabled then
 		return
 	end
@@ -195,94 +200,55 @@ end
 
 if AuraUtil and AuraUtil.ForEachAura then
 	P.GetBuffDuration = function(_, unit, spellID)
-		local remainingTime
-		AuraUtil.ForEachAura(unit, "HELPFUL", nil, function(_,_,_,_, duration, expTime, _,_,_, id)
+		local dur, expTime
+		AuraUtil.ForEachAura(unit, "HELPFUL", nil, function(_,_,_,_, duration, expirationTime, _,_,_, id)
 			if id == spellID then
-				if duration > 0 then
-					remainingTime = expTime - GetTime()
-					remainingTime = remainingTime > 0 and remainingTime
-				end
+				dur, expTime = duration, expirationTime
 				return true
 			end
 		end)
-		return remainingTime
-	end
-
-	P.IsDebuffActive = function(_, unit, spellID)
-		local isActive
-		AuraUtil.ForEachAura(unit, "HARMFUL", nil, function(_,_,_,_,_,_,_,_,_, id)
-			if id == spellID then
-				isActive = true
-				return true
-			end
-		end)
-		return isActive
+		return dur, expTime
 	end
 
 	P.GetDebuffDuration = function(_, unit, spellID)
-		local remainingTime
-		AuraUtil.ForEachAura(unit, "HARMFUL", nil, function(_,_,_,_, duration, expTime, _,_,_, id)
+		local dur, expTime
+		AuraUtil.ForEachAura(unit, "HARMFUL", nil, function(_,_,_,_, duration, expirationTime, _,_,_, id)
 			if id == spellID then
-				if duration > 0 then
-					remainingTime = expTime - GetTime()
-					remainingTime = remainingTime > 0 and remainingTime
-				end
+				dur, expTime = duration, expirationTime
 				return true
 			end
 		end)
-		return remainingTime
+		return dur, expTime
 	end
 else
-	local UnitBuff = UnitBuff
-	local UnitDebuff = UnitDebuff
+	local UnitBuff = C_UnitAuras and C_UnitAuras.GetBuffDataByIndex or UnitBuff
+	local UnitDebuff = C_UnitAuras and C_UnitAuras.GetDebuffDataByIndex or UnitDebuff
 
 	P.GetBuffDuration = E.isClassic and function(_, unit, spellID)
 		for i = 1, 50 do
-			local _,_,_,_, duration, expTime, _,_,_, id = UnitBuff(unit, i)
+			local _,_,_,_, duration, expirationTime, _,_,_, id = UnitBuff(unit, i)
 			if not id then return end
 			id = E.spell_merged[id] or id
 			if id == spellID then
-				if duration > 0 then
-					local remainingTime = expTime - GetTime()
-					return remainingTime > 0 and remainingTime
-				end
-				return
+				return duration, expirationTime
 			end
 		end
 	end or function(_, unit, spellID)
 		for i = 1, 50 do
-			local _,_,_,_, duration, expTime, _,_,_, id = UnitBuff(unit, i)
+			local _,_,_,_, duration, expirationTime, _,_,_, id = UnitBuff(unit, i)
 			if not id then return end
 			if id == spellID then
-				if duration > 0 then
-					local remainingTime = expTime - GetTime()
-					return remainingTime > 0 and remainingTime
-				end
-				return
-			end
-		end
-	end
-
-	P.IsDebuffActive = function(_, unit, spellID)
-		for i = 1, 50 do
-			local _,_,_,_,_,_,_,_,_, id = UnitDebuff(unit, i)
-			if not id then return end
-			if id == spellID then
-				return true
+				return duration, expirationTime
 			end
 		end
 	end
 
 	P.GetDebuffDuration = function(_, unit, spellID)
 		for i = 1, 50 do
-			local _,_,_,_, duration, expTime,_,_,_, id = UnitDebuff(unit, i)
+			local _,_,_,_, duration, expirationTime,_,_,_, id = UnitDebuff(unit, i)
 			if not id then return end
 			if id == spellID then
-				if duration > 0 then
-					local remainingTime = expTime - GetTime()
-					return remainingTime > 0 and remainingTime
-				end
-				return
+				return duration, expirationTime
 			end
 		end
 	end
@@ -319,7 +285,7 @@ function P:IsTalentForPvpStatus(talentID, info)
 end
 
 
-local specIDs = { [71]=true,[72]=true,[73]=true,[65]=true,[66]=true,[70]=true,[253]=true,[254]=true,[255]=true,[259]=true,[260]=true,[261]=true,[256]=true,[257]=true,[258]=true,[250]=true,[251]=true,[252]=true,[262]=true,[263]=true,[264]=true,[62]=true,[63]=true,[64]=true,[265]=true,[266]=true,[267]=true,[268]=true,[269]=true,[270]=true,[102]=true,[103]=true,[104]=true,[105]=true,[577]=true,[581]=true,[1467]=true,[1468]=true, }
+local specIDs = { [71]=true,[72]=true,[73]=true,[65]=true,[66]=true,[70]=true,[253]=true,[254]=true,[255]=true,[259]=true,[260]=true,[261]=true,[256]=true,[257]=true,[258]=true,[250]=true,[251]=true,[252]=true,[262]=true,[263]=true,[264]=true,[62]=true,[63]=true,[64]=true,[265]=true,[266]=true,[267]=true,[268]=true,[269]=true,[270]=true,[102]=true,[103]=true,[104]=true,[105]=true,[577]=true,[581]=true,[1467]=true,[1468]=true,[1473]=true }
 local covenantIDs = { [321076]=true,[321079]=true,[321077]=true,[321078]=true, }
 
 

@@ -1,6 +1,7 @@
 local _, addon = ...
 local L = addon.L;
 local API = addon.API;
+local CallbackRegistry = addon.CallbackRegistry;
 local PixelUtil = addon.PixelUtil;
 local TooltipFrame = addon.SharedTooltip;
 local GossipDataProvider = addon.GossipDataProvider;
@@ -8,6 +9,7 @@ local PlaySound = addon.PlaySound;
 local ThemeUtil = addon.ThemeUtil;
 local GetPrimaryControlKey = addon.KeyboardControl.GetPrimaryControlKey;
 local RewardTooltipCode = addon.RewardTooltipCode;
+local SwipeEmulator = addon.SwipeEmulator;
 
 -- User Settings
 local SHOW_QUEST_TYPE_TEXT = true;
@@ -46,6 +48,7 @@ local IsEquippableItem = API.IsEquippableItem;
 local GetSpellName = API.GetSpellName;      --TWW
 local GetItemCount = C_Item.GetItemCount;
 local strlen = string.len;
+local After = C_Timer.After;
 local C_GossipInfo = C_GossipInfo;
 local CompleteQuest = CompleteQuest;
 local CloseQuest = CloseQuest;
@@ -57,6 +60,7 @@ local GetQuestReward = GetQuestReward;
 local SelectActiveQuest = SelectActiveQuest;        --QUEST_GREETING
 local SelectAvailableQuest = SelectAvailableQuest;  --QUEST_GREETING
 local BreakUpLargeNumbers = BreakUpLargeNumbers;
+local GetQuestItemLink = GetQuestItemLink;
 
 
 local MAJOR_FACTION_REPUTATION_REWARD_ICON_FORMAT = [[Interface\Icons\UI_MajorFaction_%s]];
@@ -105,6 +109,21 @@ local CUSTOM_ICONS = {
 };
 
 
+local RedirectTextureKit = {
+    candle = true,
+    flame = true,
+    storm = true,
+    web = true,
+}
+local function GetMajorFactionIcon(textureKit)
+    if not textureKit then return end;
+    if RedirectTextureKit[textureKit] then
+        return "Interface/AddOns/DialogueUI/Art/GameAssets/ui_majorfactions_"..textureKit
+    else
+        return MAJOR_FACTION_REPUTATION_REWARD_ICON_FORMAT:format(textureKit)
+    end
+end
+
 local function Anim_ShiftButtonCentent_OnUpdate(optionButton, elapsed)
     optionButton.t = optionButton.t + elapsed;
     local offset;
@@ -137,7 +156,7 @@ local function OnClickFunc_SelectOption(gossipButton)
 
     --Classic
     if gossipButton.isTrainer or GossipDataProvider:DoesOptionOpenUI(gossipButton.gossipOptionID) then
-        addon.CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
+        CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
     end
 
     C_GossipInfo.SelectOptionByIndex(gossipButton.id);
@@ -172,7 +191,7 @@ local function OnClickFunc_AcceptQuest(acceptButton, fromMouseClick)
 		QuestFrame.dialog = StaticPopup_Show("CONFIRM_ACCEPT_PVP_QUEST");
 	else
 		if ( QuestFrame.autoQuest ) then
-			AcknowledgeAutoAcceptQuest();
+			API.AcknowledgeAutoAcceptQuest();
 		else
 			AcceptQuest();
 		end
@@ -226,6 +245,7 @@ local function OnClickFunc_GetRewardAndCompleteQuest(completeButton)
         --if ( money and money > 0 ) then
         --    StaticPopup_Show("CONFIRM_COMPLETE_EXPENSIVE_QUEST");
         --end
+        CallbackRegistry:Trigger("TriggerQuestFinished");   --In some cases game doesn't fire QUEST_FINISHED after completing a quest?
         GetQuestReward(choiceID);
     end
 end
@@ -330,6 +350,12 @@ end
 function DUIDialogOptionButtonMixin:OnClick(button)
     if button == "LeftButton" or button == "GamePad" then
         if self.onClickFunc then
+            if button ~= "GamePad" and SwipeEmulator:ShouldConsumeClick() then
+                --KeyboardControl sends custom "button" type here
+                --Pressing key is also deemed as "GamePad"
+                --We only consume "MouseClick" when Swiping gesture finished
+                return
+            end
             --PlaySound("DIALOG_OPTION_CLICK");
             return self.onClickFunc(self, button == "LeftButton");
         end
@@ -444,7 +470,7 @@ function DUIDialogOptionButtonMixin:SetQuestTypeText(questInfo, requery)
             elseif questInfo.frequency == 3 or questInfo.isMeta then    --TWW Meta Quest
                 typeText = API.GetQuestTimeLeft(questInfo.questID, true);
                 if (not requery) and (not typeText) then
-                    C_Timer.After(0.5, function()
+                    After(0.5, function()
                         if self:IsVisible() and self.questID and self.questID == questInfo.questID then
                             self:SetQuestTypeText(questInfo, true)
                         end
@@ -806,8 +832,6 @@ function DUIDialogOptionButtonMixin:SetParentHighlightTexture(parentHighlightFra
             parentHighlightFrame.FrontTexture:SetTexture(ThemeUtil:GetTextureFile(data.frontTexture));
         end
     end
-
-
     parentHighlightFrame.FrontTexture:SetWidth(18); --self:GetHeight() --TextureSlice bugged, we use constant width now
     parentHighlightFrame.FrontTexture:ClearAllPoints();
     parentHighlightFrame.FrontTexture:SetHeight(self:GetHeight());
@@ -1099,6 +1123,7 @@ function ItemButtonSharedMixin:OnRelease()
     self:ClearAllPoints();
     self:Hide();
     self:SetScript("OnUpdate", nil);
+    self:RemoveButtonMarker();
 end
 
 function ItemButtonSharedMixin:RemoveTextureBorder(state)
@@ -1173,11 +1198,48 @@ function ItemButtonSharedMixin:GetActualGridTaken()
     return self.gridTakenX
 end
 
-function ItemButtonSharedMixin:ShowOverflowIcon()
-    local iconFrame = addon.DialogueUI.iconFramePool:Acquire();
-    iconFrame:SetCurrencyOverflow();
-    iconFrame:SetParent(self);
-    iconFrame:SetPoint("CENTER", self.Icon, "TOPRIGHT", -2, -2);
+do  --Additional Button Overlay/Marker/Icon
+    function ItemButtonSharedMixin:DoesButtonHaveMarker(markerName)
+        --Item Button update individually so we want to avoid dulicate markers
+        if self.markers then
+            return self.markers[markerName] == true;
+        else
+            return false
+        end
+    end
+
+    function ItemButtonSharedMixin:RemoveButtonMarker()
+        if self.markers then
+            self.markers = nil;
+        end
+    end
+
+    function ItemButtonSharedMixin:FlagButtonMarker(markerName)
+        if not self.markers then
+            self.markers = {};
+        end
+        self.markers[markerName] = true;
+    end
+
+    function ItemButtonSharedMixin:ShowOverflowIcon()
+        if self:DoesButtonHaveMarker("overflow") then return end;
+        self:FlagButtonMarker("overflow");
+
+        local iconFrame = addon.DialogueUI.iconFramePool:Acquire();
+        iconFrame:SetCurrencyOverflow();
+        iconFrame:SetParent(self);
+        iconFrame:SetPoint("CENTER", self.Icon, "TOPRIGHT", -2, -2);
+    end
+
+    function ItemButtonSharedMixin:ShowUpgradeIcon(playAnimation)
+        if self:DoesButtonHaveMarker("upgrade") then return end;
+        self:FlagButtonMarker("upgrade");
+
+        local iconFrame = addon.DialogueUI.iconFramePool:Acquire();
+        iconFrame:SetItemIsUpgrade(playAnimation);
+        iconFrame:SetParent(self);
+        iconFrame:SetPoint("CENTER", self.Icon, "BOTTOMLEFT", 1, 5);
+    end
 end
 
 function ItemButtonSharedMixin:GetClipboardOutput()
@@ -1193,8 +1255,11 @@ function ItemButtonSharedMixin:GetClipboardOutput()
     elseif self.objectType == "reputation" then
         idFormat = "[FactionID: %s]";
         id = self.factionID;
-        name = self.factionName.." "..self.rewardAmount
-
+        name = self.factionName.." "..self.rewardAmount;
+    elseif self.objectType == "currency" then
+        idFormat = "[CurrencyID: %s]";
+        id = self.currencyID;
+        name = self.Name:GetText().." "..self.rewardAmount;
     elseif self.objectType == "skill" then
         local skillName, skillIcon, skillPoints = GetRewardSkillPoints();
         name = skillName .. " "..skillPoints;
@@ -1293,6 +1358,16 @@ function DUIDialogItemButtonMixin:UpdatePixel(scale)
 end
 
 function DUIDialogItemButtonMixin:OnClick(button)
+    if self.objectType == "item" and IsControlKeyDown() then
+        --I'm reluctant to add Dressing Room support due to potential taint (DressUpFrame), but if that's what the users want
+        local link = GetQuestItemLink(self.type, self.index);
+        if link and API.IsDressableItem(link) and not InCombatLockdown() then
+            CallbackRegistry:Trigger("PlayerInteraction.ShowUI", true);
+            DressUpVisual(link);
+            return
+        end
+    end
+
     if self.type == "choice" then
         if button == "GamePad" then
             addon.DialogueUI:SelectRewardChoice(self.index);
@@ -1431,21 +1506,48 @@ function DUIDialogItemButtonMixin:SetItem(questInfoType, index)
 
     local name, texture, count, quality, isUsable, itemID, questRewardContextFlags = GetQuestItemInfo(questInfoType, index);    --no itemID in Classic; questRewardContextFlags TWW
 
+    if not itemID then
+        local link = GetQuestItemLink(questInfoType, index);    --For Classic
+        if link then
+            itemID = API.GetItemIDFromHyperlink(link);
+        end
+    end
+
     self.itemID = itemID;
+    self.rewardAmount = count;
     self.Icon:SetTexture(texture);
     self:SetItemName(name, quality);
     self:SetItemCount(count);
 
+    local isEquippable = itemID and IsEquippableItem(itemID);
     local itemOverlayID;
 
     if not isUsable then
         itemOverlayID = "alert";
     elseif itemID and IsCosmeticItem(itemID) then
         itemOverlayID = "cosmetic";
-    elseif itemID and IsEquippableItem(itemID) then
+    elseif itemID and isEquippable then
         itemOverlayID = quality;
     else
         itemOverlayID = quality;
+    end
+
+    if isEquippable then
+        --Equipment's count is always 1. No itemID in Classic
+        --Inventory Itemlink may not be immediately available
+        self.isEquippable = true;
+        if not self:DoesButtonHaveMarker("upgrade") then
+            local isUpgrade, isReady = API.IsRewardItemUpgrade(questInfoType, index);
+            if isReady then
+                if isUpgrade then
+                    self:ShowUpgradeIcon();
+                end
+            else
+                addon.DialogueUI:RequestItemUpgrade();
+            end
+        end
+    else
+        self.isEquippable = nil;
     end
 
     self:SetItemOverlay(itemOverlayID);
@@ -1499,6 +1601,7 @@ function DUIDialogItemButtonMixin:SetCurrency(questInfoType, index)
     if not amount then
         amount = 1;
     end
+    self.rewardAmount = amount;
 
     self:SetItemName(name, quality);
     self.Icon:SetTexture(texture);
@@ -1558,7 +1661,7 @@ function DUIDialogItemButtonMixin:SetMajorFactionReputation(reputationRewardInfo
 	--self.Name:SetText(QUEST_REPUTATION_REWARD_TITLE:format(self.factionName));
 	--self.RewardAmount:SetText(AbbreviateNumbers(self.rewardAmount));
 
-	local majorFactionIcon = MAJOR_FACTION_REPUTATION_REWARD_ICON_FORMAT:format(majorFactionData.textureKit);
+	local majorFactionIcon = GetMajorFactionIcon(majorFactionData.textureKit);
 	self.Icon:SetTexture(majorFactionIcon);
     self.Name:SetText(factionName.. " +"..rewardAmount);
     self:SetItemCount(nil);
@@ -1569,6 +1672,7 @@ end
 function DUIDialogItemButtonMixin:SetRewardspell(spellID, icon, name)
     self.dynamicResize = true;
     self.objectType = "spell";
+    self.type = "reward";
     self.spellID = spellID;
     self.itemID = nil;
     self.currencyID = nil;
@@ -1589,6 +1693,7 @@ end
 function DUIDialogItemButtonMixin:SetRewardSkill(skillIcon, skillPoints, skillName, skillLineID)
     self.dynamicResize = true;
     self.objectType = "skill";
+    self.type = "reward";
     self.spellID = nil;
     self.itemID = nil;
     self.skillLineID = skillLineID;
@@ -1605,6 +1710,7 @@ end
 function DUIDialogItemButtonMixin:SetRewardTitle(titleName)
     self.dynamicResize = true;
     self.objectType = "title";
+    self.type = "reward";
     self.spellID = nil;
     self.itemID = nil;
 
@@ -1633,6 +1739,7 @@ function DUIDialogItemButtonMixin:SetRewardHonor(honor)
 
     self.dynamicResize = true;
     self.objectType = "honor";
+    self.type = "reward";
     self.spellID = nil;
     self.itemID = nil;
 
@@ -1651,6 +1758,7 @@ function DUIDialogItemButtonMixin:SetRewardFollower(followerID)
 
     self.dynamicResize = true;
     self.objectType = "follower";
+    self.type = "reward";
     self.spellID = nil;
     self.itemID = nil;
     self.followerID = followerID;
@@ -1805,7 +1913,7 @@ function DUIDialogSmallItemButtonMixin:SetMajorFactionReputation(reputationRewar
 	local factionName = majorFactionData.name;
 	local rewardAmount = reputationRewardInfo.rewardAmount;
 
-	local majorFactionIcon = MAJOR_FACTION_REPUTATION_REWARD_ICON_FORMAT:format(majorFactionData.textureKit);
+	local majorFactionIcon = GetMajorFactionIcon(majorFactionData.textureKit);
 	self.Icon:SetTexture(majorFactionIcon);
     self:RemoveTextureBorder(true);
     self:SetItemName(rewardAmount);
@@ -1985,7 +2093,7 @@ end
 
 function DUIDialogInputBoxMixin:SetFocus()
     self:ClearText();
-    C_Timer.After(0, function()
+    After(0, function()
         --Avoid OnKeyDown propagation
         self.EditBox:SetFocus();
     end);
@@ -2123,20 +2231,87 @@ end
 do
     DUIDialogIconFrameMixin = {};
 
+    local inOutSine = addon.EasingFunctions.outSine;
+
+    local function IconAnimation_FlyUp(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t > 0 then
+            self.offsetY = inOutSine(self.t, self.fromY, self.toY, self.duration);
+            self.alpha = self.alpha + 4*elapsed;
+
+            if self.alpha > 1 then
+                self.alpha = 1;
+            end
+
+            if self.alpha > 0 then
+                self:SetAlpha(self.alpha);
+            else
+                self:SetAlpha(0);
+            end
+
+            if self.t >= self.duration then
+                self:SetScript("OnUpdate", nil);
+                self.Icon:SetPoint("CENTER", self, "CENTER", 0, self.toY);
+                self.t = nil;
+                self.alpha = nil;
+                self.offsetY = nil;
+                self.fromY = nil;
+                self.toY = nil;
+                self.duration = nil;
+            else
+                self.Icon:SetPoint("CENTER", self, "CENTER", 0, self.offsetY);
+            end
+        else
+            self:SetAlpha(0);
+        end
+    end
+
     function DUIDialogIconFrameMixin:Remove()
         self:ClearAllPoints();
         self:Hide();
         self.Icon:SetTexture(nil);
+        if self.t then
+            self:SetScript("OnUpdate", nil);
+            self:SetAlpha(1);
+            self.t = nil;
+            self.alpha = nil;
+        end
+    end
+
+    function DUIDialogIconFrameMixin:AllPoints(state)
+        self.Icon:ClearAllPoints();
+        if state then
+            self.Icon:SetAllPoints(true);
+        end
     end
 
     function DUIDialogIconFrameMixin:SetCurrencyOverflow()
         self:SetSize(14, 14);
+        self:AllPoints(true);
         self.Icon:SetTexture(ICON_PATH.."CurrencyOverflow.png");
     end
 
     function DUIDialogIconFrameMixin:SetHighestSellPrice()
         self:SetSize(15, 15);
+        self:AllPoints(true);
         self.Icon:SetTexture(ICON_PATH.."Coin-Gold.png");
+    end
+
+    function DUIDialogIconFrameMixin:SetItemIsUpgrade(playAnimation)
+        self:SetSize(32, 32);
+        self:AllPoints(false);
+        self.Icon:SetSize(32, 32);
+        self.Icon:SetTexture(ICON_PATH.."ItemIsUpgrade.png");
+        self.Icon:SetPoint("CENTER", self, "CENTER", 0, 0);
+        if playAnimation then
+            self.t = -0.5;
+            self.alpha = 0;
+            self.fromY = -12;
+            self.toY = 0;
+            self.duration = 0.5;
+            self:SetAlpha(0);
+            self:SetScript("OnUpdate", IconAnimation_FlyUp);
+        end
     end
 end
 
@@ -2193,9 +2368,9 @@ do
     function DUIDialogQuestPortraitMixin:OnHide()
         self:SetScript("OnUpdate", nil);
         self:Hide();
-        self:SetFrameAlpha(0);
         self.alpha = 0;
         self.Model:ClearModel();
+        self:SetFrameAlpha(0);
     end
 
     function DUIDialogQuestPortraitMixin:SetFrameAlpha(alpha)
@@ -2241,7 +2416,7 @@ do
         addon.DialogueUI:OnSettingsChanged();
     end
 
-    addon.CallbackRegistry:Register("SettingChanged.QuestTypeText", Settings_QuestTypeText);
+    CallbackRegistry:Register("SettingChanged.QuestTypeText", Settings_QuestTypeText);
 
 
     local function Settings_InputDevice(dbValue)
@@ -2276,9 +2451,9 @@ do
             GAME_PAD_CONFIRM_KEY = nil;
         end
 
-        addon.CallbackRegistry:Trigger("PostInputDeviceChanged", dbValue);
+        CallbackRegistry:Trigger("PostInputDeviceChanged", dbValue);
     end
-    addon.CallbackRegistry:Register("SettingChanged.InputDevice", Settings_InputDevice);
+    CallbackRegistry:Register("SettingChanged.InputDevice", Settings_InputDevice);
 end
 
 
@@ -2303,11 +2478,10 @@ do
 
         --BUTTON_PADDING_LARGE = baseFontSize
         HOTKEYFRAME_PADDING = math.min(8, (BUTTON_HEIGHT_LARGE - HOTKEYFRAME_SIZE)/2);
-        BUTTON_PADDING_LARGE = (2*HOTKEYFRAME_PADDING + HOTKEYFRAME_SIZE - baseFontSize)/2
+        BUTTON_PADDING_LARGE = (2*HOTKEYFRAME_PADDING + HOTKEYFRAME_SIZE - baseFontSize)/2;
         --print("HOTKEYFRAME_PADDING", HOTKEYFRAME_PADDING)
 
-        addon.CallbackRegistry:Trigger("PostFontSizeChanged");
+        CallbackRegistry:Trigger("PostFontSizeChanged");
     end
-
-    addon.CallbackRegistry:Register("FontSizeChanged", OnFontSizeChanged);
+    CallbackRegistry:Register("FontSizeChanged", OnFontSizeChanged);
 end

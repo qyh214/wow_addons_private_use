@@ -792,7 +792,7 @@ Database:AddChain(Chain.StrikingSteel, {
             },
         },
         {
-            name = L["BTWQUESTS_WAIT_FOR_WEEKLY_RESET"],
+            name = format(L["BTWQUESTS_WAIT_DAYS"], 2),
             active = {
                 type = "quest",
                 id = 82217,
@@ -1206,18 +1206,21 @@ Database:AddChain(Chain.TheWeightOfDuty, {
             id = 79159,
             x = 0,
             connections = {
-                1, 2, 
+                1,
             },
         },
         {
             type = "quest",
             id = 79160,
-            aside = true,
-            x = -1,
+            x = 0,
+            connections = {
+                1,
+            },
         },
         {
             type = "quest",
-            id = 79162,
+            id = 79162, -- Moved
+            x = 0,
         },
     },
 })
@@ -1694,11 +1697,8 @@ Database:AddChain(Chain.MemoriesOfTheSky, {
             active = {
                 {
                     type = "quest",
-                    id = 80678,
-                },
-                {
-                    type = "quest",
-                    id = 82749,
+                    ids = { 80678, 82749, },
+                    count = 2,
                 },
             },
             completed = {
@@ -1731,11 +1731,8 @@ Database:AddChain(Chain.MemoriesOfTheSky, {
             active = {
                 {
                     type = "quest",
-                    id = 82810,
-                },
-                {
-                    type = "quest",
-                    id = 82749,
+                    ids =  { 82810, 82749, },
+                    count = 2,
                 },
             },
             completed = {
@@ -2500,6 +2497,26 @@ Database:AddMapRecursive(MAP_ID, {
     type = "category",
     id = CATEGORY_ID,
 })
+
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheGuidingStar)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.GatheringShadows)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.HopeInSolidarity)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.LightToVelhansClaim)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.ThePriory)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.StrikingSteel)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.LostInTheDarkness)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheSkysTheLimit)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.CrushingDepths)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheLastMageOfHallowfall)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheWeightOfDuty)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.ApartForPurpose)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.RestAtLast)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.AnOrphansDilemma)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheMysteriousChef)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.WhatGrowsInTheDark)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.SuspiciousMinds)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.MemoriesOfTheSky)
+
 
 --[==[@debug@
 Database:AddContinentItems(CONTINENT_ID, {

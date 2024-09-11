@@ -7,7 +7,7 @@ if not mod then return end
 mod:RegisterEnableMob(31125)
 -- mod:SetEncounterID(1126)
 -- mod:SetRespawnTime(30)
-mod.toggleOptions = {58663, "charge", {58678, "MESSAGE", "ICON"}, {58965, "FLASH", "ICON"}, "berserk"}
+mod.toggleOptions = {58663, "charge", {58678, "MESSAGE", "ICON"}, {58965, "FLASH"}, "berserk"}
 
 --------------------------------------------------------------------------------
 -- Localization

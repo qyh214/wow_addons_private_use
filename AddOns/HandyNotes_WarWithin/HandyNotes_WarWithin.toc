@@ -1,8 +1,9 @@
-## Interface: 110002, 110000
+## Interface: 110002
 ## Title: HandyNotes: The War Within Treasures and Rares
 ## Notes: Where are the hidden treasures in the War Within?
 ## Author: Kemayo
-## Version: v14
+## Version: v54
+## IconTexture: Interface\Icons\Ability_Spy
 ## DefaultState: enabled
 ## X-Category: Map
 ## X-eMail: kemayo @ gmail DOT com
@@ -31,8 +32,10 @@ achievements\KhazAlgarLoreHunter.lua
 achievements\Races.lua
 
 shared\Delves.lua
+shared\Snuffling.lua
+shared\WorldBosses.lua
 
-#profession_knowledge\Masters.lua
+profession_knowledge\Masters.lua
 profession_knowledge\Alchemy.lua
 profession_knowledge\Blacksmithing.lua
 profession_knowledge\Enchanting.lua

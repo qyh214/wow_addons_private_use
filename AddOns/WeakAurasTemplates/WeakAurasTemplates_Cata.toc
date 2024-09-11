@@ -1,7 +1,7 @@
 ## Interface: 40400
 ## Title: |cffe8344fPatched|r WeakAuras Templates
 ## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.16.1
+## Version: 5.17.1
 ## Notes: Templates for WeakAuras
 ## X-Category: Interface Enhancements
 ## Globe-Main: WeakAuras

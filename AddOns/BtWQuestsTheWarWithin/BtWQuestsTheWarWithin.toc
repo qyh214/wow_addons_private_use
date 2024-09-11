@@ -1,6 +1,6 @@
 ## Interface: 110002
 ## Title: BtWQuests: The War Within
-## Version: 0.1-beta
+## Version: 2.0
 ## Notes: The War Within quest data for BtWQuests
 ## Author: Breen
 ## Dependencies: BtWQuests
@@ -11,11 +11,23 @@
 ## X-BtWQuests-Expansion-Image: UI-Expansion 0 0.90625 0 0.8125
 ## X-BtWQuests-AutoLoad: 1
 ## X-Part-Of: BtWQuests
-## X-Curse-Project-ID: 
-## X-WoWI-ID: 26399
-## X-Wago-ID:
+## X-Curse-Project-ID: 1010391
+## X-WoWI-ID: 26776
+## X-Wago-ID: bGoMAr60
 
 Defines.lua
+
+Localization.lua
+Localization.deDE.lua
+Localization.esES.lua
+Localization.esMX.lua
+Localization.frFR.lua
+Localization.itIT.lua
+Localization.koKR.lua
+Localization.ptBR.lua
+Localization.ruRU.lua
+Localization.zhCN.lua
+Localization.zhTW.lua
 
 Database/Quests.lua
 Database/Quests.deDE.lua
@@ -52,6 +64,18 @@ Database/Objects.ptBR.lua
 Database/Objects.ruRU.lua
 Database/Objects.zhCN.lua
 Database/Objects.zhTW.lua
+
+Database/Index.enUS.lua
+Database/Index.deDE.lua
+Database/Index.esES.lua
+Database/Index.esMX.lua
+Database/Index.frFR.lua
+Database/Index.itIT.lua
+Database/Index.koKR.lua
+Database/Index.ptBR.lua
+Database/Index.ruRU.lua
+Database/Index.zhCN.lua
+Database/Index.zhTW.lua
 
 General.lua
 IsleOfDorn.lua

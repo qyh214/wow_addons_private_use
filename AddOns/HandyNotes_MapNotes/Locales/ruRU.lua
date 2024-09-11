@@ -2,6 +2,14 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "ruRU")
 if not L then return end
 
+--0.01
+L["Profiles"] = "Профили"
+L["This applies to the following tabs"] = "Это относится к следующим вкладкам"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "Исключением является обратная связь в чате из функции для удаления или восстановления значков. Они всегда отображаются!"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "Здесь вы можете включить или отключить все сообщения чата, отправляемые кнопками «Миникарта MapNotes» и «Карта мира», когда вы скрываете или показываете значки над ними"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "Здесь вы можете включить или отключить все сообщения чата, отправляемые с одной из этих вкладок MapNotes при изменении настроек"
+L["Only affects passage icons to instances and not path icons to zones"] = "Только влияет на значки прохода на экземпляры, а не значки пути к зонам"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "Деактивируя его, граница значков зон ваших собственных фракций также удаляется, так как отображаемые значки автоматически только для вашей собственной фракции"
 --0.1 profiles
 L["Profile has been changed"] = "Профиль был изменен"
 L["Profile has been reset to default"] = "Профиль был сброшен в настройки по умолчанию"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "Синхронизирует вкладку «Капитал» с вкладкой «Столицы - Миникарте»"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "Это деактивирует функции вкладки «Столицы - Миникарте» и теперь контролируется вместе с помощью вкладки «Столицы»"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "Это удалило все настройки для «Капиталов - мини -карта» и заменено настройками на вкладке «Столичные города»"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "Отображает специальные значки MapNotes, содержащие несколько различных деталей информации (Dungeons/Raids/Portals и т. Д.)"
+L["Points of interests"] = "Точки интересов"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "Деактивирует отображение всех значков Blizzard Dungeon и Raid на карте зоны"
 --1 Capitals
 L["Leather Armor"] = "Кожаная броня"
 L["Heavy Armor"] = "Тяжелая броня"
@@ -142,6 +154,7 @@ L["gray all"] = "Все серые"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "Раскрасьте все! Присвоенные подземелья и рейды серые также несколько точек (если у вас есть идентификатор)"
 L["enemy faction"] = "вражеская фракция"
 L["Shows enemy faction (horde/alliance) icons"] = "Показывает значки вражеской фракции (орды/альянса)"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "Тем не менее, это относится только к карте Ацерота и Континента. Не для зон + и категории капитала +. У них есть свой собственный вариант активации для противодействующих игроков"
 L["chat message"] = "Сообщения чата"
 L["Disables MapNotes status chat messages excluding core information"] = "Деактивированные новости о статусе MapNotes, за исключением основной информации"
 L["Shows special transport icons like"] = "Показывает специальные транспортные иконки, как"

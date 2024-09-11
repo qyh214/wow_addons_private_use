@@ -1,6 +1,6 @@
 ## Interface: 40400
 ## Title: OmniCD
-## Version: 4.4.0.2802
+## Version: 4.4.0.2804
 ## Author: Treebonker
 ## Notes: Party cooldown tracker. /oc
 ## X-Credits:

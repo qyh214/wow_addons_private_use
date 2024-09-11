@@ -10,6 +10,8 @@ mod:RegisterEnableMob(
 	164921, -- Drust Harvester
 	164920, -- Drust Soulcleaver
 	164926, -- Drust Boughbreaker
+	357703, -- Depleted Anima Seed
+	357707, -- Depleted Anima Seed
 	163058, -- Mistveil Defender
 	171772, -- Mistveil Defender
 	173720, -- Mistveil Gorgegullet
@@ -53,8 +55,10 @@ end
 -- Initialization
 --
 
+local autotalk = mod:AddAutoTalkOption(true)
 function mod:GetOptions()
 	return {
+		autotalk,
 		-- Tirnenn Villager
 		{321968, "NAMEPLATE"}, -- Bewildering Pollen
 		{322486, "NAMEPLATE"}, -- Overgrowth
@@ -98,6 +102,7 @@ function mod:GetOptions()
 		-- Spinemaw Gorger
 		{326021, "NAMEPLATE"}, -- Acid Globule
 	}, {
+		[autotalk] = CL.general,
 		[321968] = L.tirnenn_villager,
 		[322938] = L.drust_harvester,
 		[322569] = L.drust_soulcleaver,
@@ -117,75 +122,9 @@ function mod:GetOptions()
 	}
 end
 
--- XXX remove when 11.0.2 is live everywhere
-if not BigWigsLoader.isBeta then
-	function mod:GetOptions()
-		return {
-			-- Tirnenn Villager
-			{321968, "NAMEPLATE"}, -- Bewildering Pollen
-			{322486, "NAMEPLATE"}, -- Overgrowth
-			-- Drust Harvester
-			{322938, "NAMEPLATE"}, -- Harvest Essence
-			-- Drust Soulcleaver
-			{322569, "TANK", "NAMEPLATE"}, -- Hand of Thros
-			{322557, "DISPEL", "NAMEPLATE"}, -- Soul Split
-			-- Drust Boughbreaker
-			324909, -- Furious Thrashing
-			{324923, "NAMEPLATE"}, -- Bramble Burst
-			-- Mistveil Defender
-			331718, -- Spear Flurry
-			-- Mistveil Gorgegullet
-			340304, -- Poisonous Secretions
-			340305, -- Crushing Leap
-			{340300, "TANK_HEALER"}, -- Tongue Lashing
-			-- Mistveil Guardian
-			331743, -- Bucking Rampage
-			-- Mistveil Matriarch
-			340189, -- Pool of Radiance
-			340160, -- Radiant Breath
-			{340208, "TANK_HEALER"}, -- Shred Armor
-			-- Mistveil Nightblossom
-			{340289, "TANK_HEALER"}, -- Triple Bite
-			{340279, "DISPEL"}, -- Poisonous Discharge
-			-- Mistveil Shaper
-			{324776, "NAMEPLATE"}, -- Bramblethorn Coat
-			-- Mistveil Stalker
-			{325021, "ME_ONLY", "NAMEPLATE"}, -- Mistveil Tear
-			-- Mistveil Stinger
-			{325224, "SAY", "NAMEPLATE"}, -- Anima Injection
-			-- Mistveil Tender
-			{324914, "DISPEL", "NAMEPLATE"}, -- Nourish the Forest
-			-- Spinemaw Acidgullet
-			{325418, "ME_ONLY", "SAY", "NAMEPLATE"}, -- Volatile Acid
-			-- Spinemaw Staghorn
-			{340544, "NAMEPLATE"}, -- Stimulate Regeneration
-			{326046, "DISPEL", "NAMEPLATE"}, -- Stimulate Resistance
-			-- Spinemaw Gorger
-			{326021, "NAMEPLATE"}, -- Acid Globule
-		}, {
-			[321968] = L.tirnenn_villager,
-			[322938] = L.drust_harvester,
-			[322569] = L.drust_soulcleaver,
-			[324909] = L.drust_boughbreaker,
-			[331718] = L.mistveil_defender,
-			[340304] = L.mistveil_gorgegullet,
-			[331743] = L.mistveil_guardian,
-			[340189] = L.mistveil_matriarch,
-			[340289] = L.mistveil_nightblossom,
-			[324776] = L.mistveil_shaper,
-			[325021] = L.mistveil_stalker,
-			[325224] = L.mistveil_stinger,
-			[324914] = L.mistveil_tender,
-			[325418] = L.spinemaw_acidgullet,
-			[340544] = L.spinemaw_staghorn,
-			[326021] = L.spinemaw_gorger,
-		}
-	end
-end
-
 function mod:OnBossEnable()
-	-- Interrupts
-	self:Log("SPELL_INTERRUPT", "Interrupt", "*")
+	-- Autotalk
+	self:RegisterEvent("GOSSIP_SHOW")
 
 	-- Tirnenn Villager
 	self:Log("SPELL_CAST_START", "BewilderingPollen", 321968)
@@ -212,13 +151,8 @@ function mod:OnBossEnable()
 	self:Death("DrustBoughbreakerDeath", 164926)
 
 	-- Mistveil Defender
-	if BigWigsLoader.isBeta then
-		self:Log("SPELL_CAST_START", "MistWard", 463256)
-		self:Log("SPELL_CAST_START", "Expel", 463248)
-	else
-		-- XXX remove when 11.0.2 is live everywhere
-		self:Log("SPELL_CAST_START", "SpearFlurry", 331718)
-	end
+	self:Log("SPELL_CAST_START", "MistWard", 463256)
+	self:Log("SPELL_CAST_START", "Expel", 463248)
 	self:Death("MistveilDefenderDeath", 171772, 163058)
 
 	-- Mistveil Gorgegullet
@@ -228,11 +162,7 @@ function mod:OnBossEnable()
 	self:Death("MistveilGorgegulletDeath", 173720)
 
 	-- Mistveil Guardian
-	if BigWigsLoader.isBeta then
-		self:Log("SPELL_CAST_START", "AnimaSlash", 463217)
-	else
-		self:Log("SPELL_CAST_START", "BuckingRampage", 331743) -- XXX remove with 11.0.2
-	end
+	self:Log("SPELL_CAST_START", "AnimaSlash", 463217)
 	self:Death("MistveilGuardianDeath", 166276)
 
 	-- Mistveil Matriarch
@@ -249,7 +179,7 @@ function mod:OnBossEnable()
 
 	-- Mistveil Shaper
 	self:Log("SPELL_CAST_START", "BramblethornCoat", 324776)
-	---self:Log("SPELL_INTERRUPT", "BramblethornCoatInterrupt", 324776) -- TODO parser doesn't support this yet
+	self:Log("SPELL_INTERRUPT", "BramblethornCoatInterrupt", 324776)
 	self:Log("SPELL_CAST_SUCCESS", "BramblethornCoatSuccess", 324776)
 	self:Death("MistveilShaperDeath", 166275)
 
@@ -265,7 +195,7 @@ function mod:OnBossEnable()
 
 	-- Mistveil Tender
 	self:Log("SPELL_CAST_START", "NourishTheForest", 324914)
-	---self:Log("SPELL_INTERRUPT", "NourishTheForestInterrupt", 324914) -- TODO parser doesn't support this yet
+	self:Log("SPELL_INTERRUPT", "NourishTheForestInterrupt", 324914)
 	self:Log("SPELL_CAST_SUCCESS", "NourishTheForestSuccess", 324914)
 	self:Log("SPELL_AURA_APPLIED", "NourishTheForestApplied", 324914)
 	self:Death("MistveilTenderDeath", 166299)
@@ -278,7 +208,7 @@ function mod:OnBossEnable()
 	-- Spinemaw Staghorn
 	self:Log("SPELL_CAST_SUCCESS", "StimulateRegeneration", 340544)
 	self:Log("SPELL_CAST_START", "StimulateResistance", 326046)
-	---self:Log("SPELL_INTERRUPT", "StimulateResistanceInterrupt", 326046) -- TODO parser doesn't support this yet
+	self:Log("SPELL_INTERRUPT", "StimulateResistanceInterrupt", 326046)
 	self:Log("SPELL_CAST_SUCCESS", "StimulateResistanceSuccess", 326046)
 	self:Death("SpinemawStaghornDeath", 167111)
 
@@ -292,15 +222,17 @@ end
 -- Event Handlers
 --
 
--- Interrupts
+-- Autotalk
 
-function mod:Interrupt(args)
-	if args.extraSpellId == 324776 then -- Bramblethorn Coat
-		self:Nameplate(324776, 22.3, args.destGUID)
-	elseif args.extraSpellId == 324914 then -- Nourish the Forest
-		self:Nameplate(324914, 13.1, args.destGUID)
-	elseif args.extraSpellId == 326046 then -- Stimulate Resistance
-		self:Nameplate(326046, 15.2, args.destGUID)
+function mod:GOSSIP_SHOW()
+	if self:GetOption(autotalk) then
+		if self:GetGossipID(52979) then -- Depleted Anima Seed after first boss
+			-- 52979:Activate Seed (Allows players to resurrect at this location upon dying.)
+			self:SelectGossipID(52979)
+		elseif self:GetGossipID(52980) then -- Depleted Anima Seed after second boss
+			-- 52980:Activate Seed (Allows players to resurrect at this location upon dying.)
+			self:SelectGossipID(52980)
+		end
 	end
 end
 
@@ -459,22 +391,6 @@ function mod:MistveilDefenderDeath(args)
 	self:ClearNameplate(args.destGUID)
 end
 
--- XXX remove when 11.0.2 is live everywhere
-do
-	local prev = 0
-	function mod:SpearFlurry(args)
-		local t = args.time
-		if t - prev > 1.5 then
-			local unit = self:UnitTokenFromGUID(args.sourceGUID)
-			if unit and UnitAffectingCombat(unit) then
-				prev = t
-				self:Message(args.spellId, "purple")
-				self:PlaySound(args.spellId, "alert")
-			end
-		end
-	end
-end
-
 -- Mistveil Gorgegullet
 
 do
@@ -527,18 +443,6 @@ function mod:AnimaSlash(args)
 	self:Message(args.spellId, "purple")
 	self:PlaySound(args.spellId, "alert")
 	self:Nameplate(args.spellId, 14.6, args.sourceGUID)
-end
-
-do
-	local prev = 0
-	function mod:BuckingRampage(args) -- XXX remove with 11.0.2
-		local t = args.time
-		if t - prev > 1.5 then
-			prev = t
-			self:Message(args.spellId, "red")
-			self:PlaySound(args.spellId, "alarm")
-		end
-	end
 end
 
 function mod:MistveilGuardianDeath(args)
@@ -648,9 +552,9 @@ function mod:BramblethornCoat(args)
 	self:Nameplate(args.spellId, 0, args.sourceGUID)
 end
 
---function mod:BramblethornCoatInterrupt(args)
-	--self:Nameplate(args.extraSpellId, 22.3, args.destGUID)
---end
+function mod:BramblethornCoatInterrupt(args)
+	self:Nameplate(324776, 22.3, args.destGUID)
+end
 
 function mod:BramblethornCoatSuccess(args)
 	self:Nameplate(args.spellId, 22.3, args.sourceGUID)
@@ -701,9 +605,9 @@ function mod:NourishTheForest(args)
 	self:Nameplate(args.spellId, 0, args.sourceGUID)
 end
 
---function mod:NourishTheForestInterrupt(args)
-	--self:Nameplate(args.extraSpellId, 16.4, args.destGUID)
---end
+function mod:NourishTheForestInterrupt(args)
+	self:Nameplate(324914, 16.4, args.destGUID)
+end
 
 function mod:NourishTheForestSuccess(args)
 	self:Nameplate(args.spellId, 16.4, args.sourceGUID)
@@ -752,9 +656,9 @@ function mod:StimulateResistance(args)
 	self:Nameplate(args.spellId, 0, args.sourceGUID)
 end
 
---function mod:StimulateResistanceInterrupt(args)
-	--self:Nameplate(args.extraSpellId, 15.2, args.destGUID)
---end
+function mod:StimulateResistanceInterrupt(args)
+	self:Nameplate(326046, 15.2, args.destGUID)
+end
 
 function mod:StimulateResistanceSuccess(args)
 	if self:Dispeller("magic", true, args.spellId) and not self:Friendly(args.destFlags) then

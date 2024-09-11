@@ -41,7 +41,7 @@ BigWigs:AddSounds("Baleroc", {
 BigWigs:AddSounds("Majordomo Staghelm", {
 	[98374] = "alert",
 	[98379] = "alert",
-	[98450] = "alarm",
+	[98450] = "warning",
 	[98476] = "long",
 })
 

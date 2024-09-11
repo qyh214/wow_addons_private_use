@@ -2,6 +2,14 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "deDE")
 if not L then return end
 
+--0.01
+L["Profiles"] = "Profile"
+L["This applies to the following tabs"] = "Dies bezieht sich auf folgende Registerkarten"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "Eine Ausnahme ist die Rückmeldung im Chat von der Funktion zum Löschen oder Wiederherstellen von Symbolen. Diese werden immer angezeigt!"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "Hier können Sie alle Chat-Nachrichten aktivieren oder deaktivieren, die von MapNotes Minikartenknopf und Weltkartenknopf gesendet werden, wenn Sie Symbole ausblenden oder anzeigen"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "Hier können Sie alle Chat-Nachrichten aktivieren oder deaktivieren, die von einer dieser Registerkarten von MapNotes gesendet werden, wenn Sie die Einstellungen ändern"
+L["Only affects passage icons to instances and not path icons to zones"] = "Betrifft nur Durchgangssymbole zu Instanzen und keine Wegesymbole zu Zonen"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "Durch das deaktivieren, wird zusätzlich die Umrandung der Zonen Symbolen der eigenen Fraktionen entfernt, da die jetzt angezeigten Symbole nur für die eigene Fraktion verfügbar sind"
 --0.1 profiles
 L["Profile has been changed"] = "Profil wurde gewechselt"
 L["Profile has been reset to default"] = "Profil wurde auf die Standardeinstellungen zurückgesetzt"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "Synchronisiert die Registerkarte „Hauptstädte“ mit der Registerkarte „Hauptstädte – Minikarte“"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "Dadurch werden die Funktionen der Registerkarte „Hauptstädte – Minikarte“ deaktiviert und werden nun gemeinsam über die Registerkarte „Hauptstädte“ gesteuert"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "Dadurch werden alle Einstellungen für „Hauptstädte – Minikarte“ gelöscht und durch die Einstellungen auf der Registerkarte „Hauptstädte“ ersetzt"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "Zeigt spezielle zusammengefasste MapNotes Symbole an, die verschiedene Informationen enthalten (Dungeons/Raids/Portale usw.)"
+L["Points of interests"] = "Punkt von Interesse"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "Deaktiviert die Anzeige aller Blizzard Dungeon und Schlachtzug Symbole auf der Zonenkarte"
 --1 Capitals
 L["Leather Armor"] = "Lederrüstung"
 L["Heavy Armor"] = "Kettenrüstung"
@@ -142,6 +154,7 @@ L["gray all"] = "Alle Grau"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "Färbt ALLE! zugewiesenen Dungeons und Raids grau auch Mehrfachpunkte (wenn du eine ID hast)"
 L["enemy faction"] = "Feindliche Fraktion"
 L["Shows enemy faction (horde/alliance) icons"] = "Zeigt Symbole der feindlichen Fraktion (Horde/Allianz)"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "Dies gilt jedoch nur für die Azeroth & Kontinent-Karten. Nicht für die Karten der Kategorie „Zonen +“ und „Hauptstadt +“. Diese verfügen über eine eigene Aktivierungsmöglichkeit für gegnerische Spieler"
 L["chat message"] = "Chatnachrichten"
 L["Disables MapNotes status chat messages excluding core information"] = "Deaktiviert MapNotes Status Chatnachrichten ausgenommen von Kerninformationen"
 L["Shows special transport icons like"] = "Zeigt spezielle Transport symbole an wie"
@@ -222,8 +235,8 @@ L["Shadowlands"] = "Schattenlande"
 L["Dragon Isles"] = "Dracheninseln"
 --8 Core spec
 L["Shift function"] = "Shift-Funktion"
-L["-> MiniMapButton <-"] = "-> MiniMapknopf <-"
-L["-> WorldMapButton <-"] = "-> Weltkartenknopf <-"
+L["-> MiniMapButton <-"] = "-> MiniMapKnopf <-"
+L["-> WorldMapButton <-"] = "-> WeltKartenKnopf <-"
 L["MapNotes menu window"] = "MapNotes-Menüfenster"
 L["All set icons have been restored"] = "Alle eingestellten Symbole wurden wiederhergestellt"
 L["All MapNotes icons have been hidden"] = "Alle MapNotes-Symbole wurden ausgeblendet"
@@ -409,7 +422,7 @@ L["Reforge"] = "Umschmieden"
 L["Khaz Algar"] = "Khaz Algar"
 L["Dornogal"] = "Dornogal"
 L["Catalyst"] = "Katalysator"
-L["Merchant for Renown items"] = "Händler für Ruhm Gegenstände"
+L["Merchant for Renown items"] = "Ruhmreicher Rüstmeister"
 L["Council of Dornogal"] = "Rat von Dornogal"
 L["The Assembly of the Deeps"] = "Der Konvent der Tiefen"
 L["Hallowfall Arathi"] = "Arathi von Heilsturz"

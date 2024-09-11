@@ -1,6 +1,7 @@
 local L = BigWigs:NewBossLocale("Ragnaros Classic", "ruRU")
 if not L then return end
 if L then
+	L.submerge_trigger = "ПРИБЫВАЙТЕ ЕЩЕ"
 	L.son = "Сын пламени" -- NPC ID 12143
 end
 

@@ -1,12 +1,17 @@
 local myname, ns = ...
 
+-- 83264 for random-drop of 225226 Striated Inkstone
+-- 83262 for 225227 Wax-Sealed Records in Deep-Lost Satchel
+
 local KNOWLEDGE = {
     note = "This can only be looted once per character.",
     currency=2790,
     requires = ns.conditions.Profession(ns.PROF_WW_INSCRIPTION),
     -- active = ns.conditions.Profession(ns.PROF_WW_INSCRIPTION, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-inscription",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -68,10 +73,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         note="Inside",
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82636,
-    --     loot={224053}, -- Eight Views on Defense against Hostile Runes
-    --     note="Buy from {npc::}",
-    --     parent=true, levels=true, translate={[2256]=true},
-    -- },
 }, KNOWLEDGE)

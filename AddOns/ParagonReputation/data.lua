@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.55 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.57 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -550,9 +550,21 @@ PR.PARAGON_DATA = {
 		[79220] = { -- The Assembly of the Deep
 			factionID = 2594,
 			cache = 225245,
-		}, 
+		},
 		[79196] = { -- The Severed Threads
 			factionID = 2600,
 			cache = 225247,
+		},
+		[83739] = { -- The General
+			factionID = 2605,
+			cache = 226045,
+		},
+		[83740] = { -- The Vizier
+			factionID = 2607,
+			cache = 226100,
+		},
+		[83738] = { -- The Weaver
+			factionID = 2601,
+			cache = 226103,
 		},
 }

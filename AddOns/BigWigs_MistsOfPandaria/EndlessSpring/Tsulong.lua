@@ -60,6 +60,8 @@ function mod:VerifyEnable(unit)
 end
 
 function mod:OnBossEnable()
+	self:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+
 	self:Log("SPELL_CAST_START", "SunBreath", 122855)
 	self:Log("SPELL_CAST_SUCCESS", "ShadowBreath", 122752)
 	self:Log("SPELL_CAST_SUCCESS", "Terrorize", 123011)
@@ -69,7 +71,6 @@ function mod:OnBossEnable()
 	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "target", "boss1", "boss2", "boss3")
 	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "EngageCheck")
 
-	self:BossYell("Win", L["kill_yell"])
 	self:Death("EmbodiedTerrorDeath", 62969)
 end
 
@@ -85,6 +86,13 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:CHAT_MSG_MONSTER_YELL(_, msg)
+	if msg:find(L.kill_yell, nil, true) then
+		self:UnregisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "target", "boss1", "boss2", "boss3")
+		self:Win()
+	end
+end
 
 function mod:SunbeamSpawn()
 	self:MessageOld(122789, "green", nil, L["sunbeam_spawn"])
@@ -140,8 +148,10 @@ do
 	end
 
 	local prev = 0
-	function mod:UNIT_SPELLCAST_SUCCEEDED(_, unitId, _, spellId)
+	function mod:UNIT_SPELLCAST_SUCCEEDED(event, unitId, _, spellId)
 		if spellId == 124176 then
+			self:UnregisterEvent("CHAT_MSG_MONSTER_YELL")
+			self:UnregisterUnitEvent(event, "target", "boss1", "boss2", "boss3")
 			self:Win() -- Gold Active
 		elseif unitId:find("boss", nil, true) then
 			if spellId == 123252 then -- Dread Shadows Cancel (start of day phase)

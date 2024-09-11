@@ -47,6 +47,16 @@ WorldQuestTracker.MapData.ZoneIDs = {
 	--Main Hub
 		AZEROTH =		947,
 
+	--wow11
+		KHAZALGAR = 	2274,
+		RINGINGDEEPS =	2214,
+		DORN = 			2248,
+		AZJKAHET = 		2255,
+		AZJKAHET_LOWER =	2256,
+		HALLOWFALL = 	2215,
+		CITYTHREADS = 	2213,
+		CITYTHREADS_LOWER =	2216,
+
 	--Dragonflight
 		DRAGONISLES = 	1978,
 		AZURESSPAN = 	2024,
@@ -112,10 +122,37 @@ WorldQuestTracker.DotLineScale = {
 	[zoneIDs.DRAGONISLES] = 2,
 	[2112] = 2, --valdrakken
 	[zoneIDs.EMERALDDREAM] = 2,
+
+	[zoneIDs.RINGINGDEEPS] = 3,
+	[zoneIDs.DORN] = 3,
+	[zoneIDs.AZJKAHET] = 3,
+	[zoneIDs.AZJKAHET_LOWER] = 3,
+	[zoneIDs.HALLOWFALL] = 3,
+	[zoneIDs.CITYTHREADS] = 3,
+	[zoneIDs.CITYTHREADS_LOWER] = 3,
+}
+
+WorldQuestTracker.MapData.ZoneToHub = {
+	[zoneIDs.DORN] = zoneIDs.KHAZALGAR,
+	[zoneIDs.HALLOWFALL] = zoneIDs.KHAZALGAR,
+	[zoneIDs.RINGINGDEEPS] = zoneIDs.KHAZALGAR,
+	[zoneIDs.AZJKAHET] = zoneIDs.KHAZALGAR,
+	[zoneIDs.AZJKAHET_LOWER] = zoneIDs.KHAZALGAR,
+	[zoneIDs.CITYTHREADS] = zoneIDs.KHAZALGAR,
+	[zoneIDs.CITYTHREADS_LOWER] = zoneIDs.KHAZALGAR,
 }
 
 --all zones with world quests
 WorldQuestTracker.MapData.WorldQuestZones = {
+	--wow 11
+		[zoneIDs.DORN] = true,
+		[zoneIDs.HALLOWFALL] = true,
+		[zoneIDs.RINGINGDEEPS] = true,
+		[zoneIDs.AZJKAHET] = true,
+		[zoneIDs.AZJKAHET_LOWER] = true,
+		[zoneIDs.CITYTHREADS] = true,
+		[zoneIDs.CITYTHREADS_LOWER] = true,
+
 	--Dragonflight
 		[zoneIDs.AZURESSPAN] = 		true,
 		[zoneIDs.THALDRASZUS] = 	true,
@@ -186,6 +223,7 @@ WorldQuestTracker.MapData.DragonflightZones = {
 
 --quest hub by expansion
 WorldQuestTracker.MapData.ExpMaps = {
+	[zoneIDs.KHAZALGAR] = 11,
 	[zoneIDs.DRAGONISLES] = 10,
 	[zoneIDs.THESHADOWLANDS] = 9,
 	[zoneIDs.ZANDALAR] = 8,
@@ -194,8 +232,19 @@ WorldQuestTracker.MapData.ExpMaps = {
 	[zoneIDs.BROKENISLES] = 7,
 }
 
+WorldQuestTracker.MapData.HubMapIconsScale = {
+	[zoneIDs.DRAGONISLES] = 0.85,
+	[zoneIDs.THESHADOWLANDS] = 1,
+	[zoneIDs.ZANDALAR] = 0.9,
+	[zoneIDs.KULTIRAS] = 0.9,
+	[zoneIDs.AZEROTH] = 1,
+	[zoneIDs.BROKENISLES] = 0.30,
+	[zoneIDs.KHAZALGAR] = 0.95,
+}
+
 --list of map ids for world quest hubs
 WorldQuestTracker.MapData.QuestHubs = {
+	[zoneIDs.KHAZALGAR] = true, --wow11 hub
 	[zoneIDs.DRAGONISLES] = true, --dragon isles hub
 	[zoneIDs.THESHADOWLANDS] = true, --shadowlands hub
 	[zoneIDs.BROKENISLES] = true, --dalaran (~rev)
@@ -207,6 +256,57 @@ WorldQuestTracker.MapData.QuestHubs = {
 
 --world map anchors
 WorldQuestTracker.mapTables = {
+	--dlc 10 (tww)
+	[zoneIDs.RINGINGDEEPS] = 		{
+		widgets = {},
+		Anchor_X = 0.995,
+		Anchor_Y = 0.65,
+		GrowRight = false,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
+	[zoneIDs.HALLOWFALL] = 		{
+		widgets = {},
+		Anchor_X = 0.002,
+		Anchor_Y = 0.28,
+		GrowRight = true,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
+	[zoneIDs.DORN] = 		{
+		widgets = {},
+		Anchor_X = 0.3,
+		Anchor_Y = 0.12,
+		GrowRight = true,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
+	[zoneIDs.AZJKAHET] = 		{
+		widgets = {},
+		Anchor_X = 0.002,
+		Anchor_Y = 0.78,
+		GrowRight = true,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
+	[zoneIDs.AZJKAHET_LOWER] = 		{
+		widgets = {},
+		Anchor_X = 0.002,
+		Anchor_Y = 0.88,
+		GrowRight = true,
+		show_on_map = {
+			[zoneIDs.KHAZALGAR] = true,
+		},
+	},
+
 	--Dragon Isles (Dragonflight)
 
 		[zoneIDs.AZURESSPAN] = 		{
@@ -635,28 +735,16 @@ WorldQuestTracker.MapData.ResourceIcons = {
 	[1397630] = true, --order resources LEGION
 }
 
---which faction set to be used by the map id
---this table isn't being in use at the moment
-WorldQuestTracker.MapData.FactionByMapID = { --not in use
-	[zoneIDs.ZANDALAR] = "BFA",
-	[zoneIDs.KULTIRAS] = "BFA",
-	[zoneIDs.AZEROTH] = "BFA",
-
-	[619] = "LEGION", --brosken isles map
-	[905] = "LEGION", --argus map
-
-	[zoneIDs.ZULDAZAAR] = 	"BFA",
-	[zoneIDs.NAZMIR] = 		"BFA",
-	[zoneIDs.VOLDUN] = 		"BFA",
-	[zoneIDs.TIRAGARDE] = 	"BFA",
-	[zoneIDs.STORMSONG] = 	"BFA",
-	[zoneIDs.DRUSTVAR] = 	"BFA",
-}
-
 --start of ~factions
 
 -- texture ID of the reward when the world quest reward is a faction rep token
 WorldQuestTracker.MapData.ReputationIcons = {
+	--DLC 10 (tww)
+	[5891369] = true, --Council of Dornogal
+	[5891367] = true, --The Assembly of the Deeps
+	[5891368] = true, --Hallowfall Arathi
+	[5891370] = true, --The Severed Threads
+
 	--Dragonflight
 	[4687627] = true, --Maruuk Centaur
 	[4687628] = true, --Dragonscale Expedition
@@ -695,6 +783,12 @@ WorldQuestTracker.MapData.ReputationIcons = {
 ---list of relevant factions
 ---@type table<factionid, boolean>
 WorldQuestTracker.MapData.AllFactionIds = {
+	--DLC 10 (tww)
+	[2590] = true, --Council of Dornogal
+	[2594] = true, --The Assembly of the Deeps
+	[2570] = true, --Hallowfall Arathi
+	[2600] = true, --The Severed Threads
+
 	--Dragonflight Factions
 	[2503] = true, --Maruuk Centaur
 	--[2506] = true, --Dragonflight
@@ -744,6 +838,12 @@ WorldQuestTracker.MapData.AllFactionIds = {
 
 ---@type table<factionid, mapid>
 WorldQuestTracker.MapData.FactionMapId = {
+	--DLC 10 (tww)
+	[2590] = zoneIDs.DORN, --Council of Dornogal
+	[2594] = zoneIDs.RINGINGDEEPS, --The Assembly of the Deeps
+	[2570] = zoneIDs.HALLOWFALL, --Hallowfall Arathi
+	[2600] = zoneIDs.AZJKAHET, --The Severed Threads
+
 	--Dragonflight
 	[2503] = zoneIDs.OHNAHRANPLAINS, --Maruuk Centaur
 	[2507] = zoneIDs.WAKINGSHORES, --Dragonscale Expedition
@@ -764,6 +864,12 @@ WorldQuestTracker.MapData.FactionMapId = {
 
 ---@type table<factionid, string|number>
 WorldQuestTracker.MapData.FactionIcons = {
+	--DLC 10 (tww)
+	[2590] = 5891369, --Council of Dornogal
+	[2594] = 5891367, --The Assembly of the Deeps
+	[2570] = 5891368, --Hallowfall Arathi
+	[2600] = 5891370, --The Severed Threads
+
 	--Dragonflight
 	[2503] = 4687627, --Maruuk Centaur
 	[2507] = 4687628, --Dragonscale Expedition
@@ -809,6 +915,13 @@ WorldQuestTracker.MapData.FactionIcons = {
 	[1894] = "Interface\\ICONS\\INV_Legion_Faction_Warden", --The Wardens
 	[1948] = "Interface\\ICONS\\INV_Legion_Faction_Valarjar", --Valarjar
 --	/run for i =1, 3000 do local N={WorldQuestTracker.GetFactionDataByID(i)}if(N[1])then print(N[1].." "..N[14])end end
+}
+
+local WOW11Factions = { --DLC10 (tww)
+	[2590] = true, --Council of Dornogal
+	[2594] = true, --The Assembly of the Deeps
+	[2570] = true, --Hallowfall Arathi
+	[2600] = true, --The Severed Threads
 }
 
 local DragonflightFactions = {
@@ -873,9 +986,17 @@ local LegionFactions = {
 	[1948] = true, --Valarjar
 }
 
+WorldQuestTracker.MapData.OverrideMapId = {
+	--wow11
+	[zoneIDs.AZJKAHET_LOWER] =	zoneIDs.AZJKAHET,
+	[zoneIDs.CITYTHREADS] =		zoneIDs.AZJKAHET,
+	[zoneIDs.CITYTHREADS_LOWER] =	zoneIDs.AZJKAHET,
+}
+
 --what are the factionIds belong to the map
 WorldQuestTracker.MapData.ReputationByMap = {
 	--world maps
+		[zoneIDs.KHAZALGAR] = WOW11Factions,
 		[zoneIDs.DRAGONISLES] = DragonflightFactions,
 		[zoneIDs.THESHADOWLANDS] = ShadowlandsFactions,
 		[zoneIDs.KULTIRAS] = BFAFactions,
@@ -885,6 +1006,15 @@ WorldQuestTracker.MapData.ReputationByMap = {
 		[zoneIDs.ARGUS] = LegionFactions,
 
 	--zones
+		--wow11
+		[zoneIDs.DORN] = WOW11Factions,
+		[zoneIDs.RINGINGDEEPS] = WOW11Factions,
+		[zoneIDs.HALLOWFALL] = WOW11Factions,
+		[zoneIDs.AZJKAHET] = WOW11Factions,
+		[zoneIDs.AZJKAHET_LOWER] = WOW11Factions,
+		[zoneIDs.CITYTHREADS] = WOW11Factions,
+		[zoneIDs.CITYTHREADS_LOWER] = WOW11Factions,
+
 		--Dragonflight
 		[zoneIDs.OHNAHRANPLAINS] = DragonflightFactions,
 		[zoneIDs.WAKINGSHORES] = DragonflightFactions,
@@ -941,7 +1071,8 @@ WorldQuestTracker.MapData.IgnoredRewardTexures = {
 }
 
 WorldQuestTracker.MapData.QuestTypeIcons = {
-	[WQT_QUESTTYPE_APOWER] = {name = L["S_QUESTTYPE_ARTIFACTPOWER"], icon = [[Interface\AddOns\WorldQuestTracker\media\icon_artifactpower_red_roundT]], coords = {0, 1, 0, 1}},
+	--[WQT_QUESTTYPE_APOWER] = {name = L["S_QUESTTYPE_ARTIFACTPOWER"], icon = [[Interface\AddOns\WorldQuestTracker\media\icon_artifactpower_red_roundT]], coords = {0, 1, 0, 1}},
+	[WQT_QUESTTYPE_APOWER] = {name = L["S_QUESTTYPE_ARTIFACTPOWER"], icon = 2967113, coords = {0, 1, 0, 1}},
 	[WQT_QUESTTYPE_GOLD] = {name = L["S_QUESTTYPE_GOLD"], icon = [[Interface\GossipFrame\auctioneerGossipIcon]], coords = {0, 1, 0, 1}},
 	[WQT_QUESTTYPE_RESOURCE] = {name = L["S_QUESTTYPE_RESOURCE"], icon = [[Interface\AddOns\WorldQuestTracker\media\resource_iconT]], coords = {0, 1, 0, 1}},
 	[WQT_QUESTTYPE_EQUIPMENT] = {name = L["S_QUESTTYPE_EQUIPMENT"], icon = [[Interface\PaperDollInfoFrame\UI-EquipmentManager-Toggle]], coords = {0, 1, 0, 1}},

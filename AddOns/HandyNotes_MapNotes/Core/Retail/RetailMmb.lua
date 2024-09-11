@@ -278,10 +278,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapKalimdor then
           ns.Addon.db.profile.showMiniMapKalimdor = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kalimdor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kalimdor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapKalimdor = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kalimdor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kalimdor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Eastern Kingdom
       elseif (C_Map.GetBestMapForUnit("player") == 13 or C_Map.GetBestMapForUnit("player") == 14 or C_Map.GetBestMapForUnit("player") == 15 or C_Map.GetBestMapForUnit("player") == 16 or C_Map.GetBestMapForUnit("player") == 17 or C_Map.GetBestMapForUnit("player") == 18 
@@ -296,10 +300,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapEasternKingdom then
           ns.Addon.db.profile.showMiniMapEasternKingdom = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Eastern Kingdom"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Eastern Kingdom"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapEasternKingdom = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Eastern Kingdom"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Eastern Kingdom"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Outland
       elseif (C_Map.GetBestMapForUnit("player") == 100 or C_Map.GetBestMapForUnit("player") == 102 or C_Map.GetBestMapForUnit("player") == 104 or C_Map.GetBestMapForUnit("player") == 105 or C_Map.GetBestMapForUnit("player") == 107 or C_Map.GetBestMapForUnit("player") == 108
@@ -307,10 +315,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapOutland then
           ns.Addon.db.profile.showMiniMapOutland = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Outland"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Outland"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapOutland = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Outland"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Outland"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Northrend
       elseif (C_Map.GetBestMapForUnit("player") == 114 or C_Map.GetBestMapForUnit("player") == 115 or C_Map.GetBestMapForUnit("player") == 116 or C_Map.GetBestMapForUnit("player") == 117 or C_Map.GetBestMapForUnit("player") == 118 or C_Map.GetBestMapForUnit("player") == 119
@@ -318,10 +330,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapNorthrend then
           ns.Addon.db.profile.showMiniMapNorthrend = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Northrend"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Northrend"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapNorthrend = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Northrend"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Northrend"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Pandaria
       elseif (C_Map.GetBestMapForUnit("player") == 371 or C_Map.GetBestMapForUnit("player") == 376 or C_Map.GetBestMapForUnit("player") == 379 or C_Map.GetBestMapForUnit("player") == 388 or C_Map.GetBestMapForUnit("player") == 390 or C_Map.GetBestMapForUnit("player") == 418
@@ -330,10 +346,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapPandaria then
           ns.Addon.db.profile.showMiniMapPandaria = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Pandaria"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Pandaria"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapPandaria = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Pandaria"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Pandaria"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Draenor
       elseif (C_Map.GetBestMapForUnit("player") == 525 or C_Map.GetBestMapForUnit("player") == 534 or C_Map.GetBestMapForUnit("player") == 535 or C_Map.GetBestMapForUnit("player") == 539 or C_Map.GetBestMapForUnit("player") == 542 or C_Map.GetBestMapForUnit("player") == 543
@@ -341,10 +361,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapDraenor then
           ns.Addon.db.profile.showMiniMapDraenor = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Draenor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Draenor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapDraenor = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Draenor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Draenor"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Broken Isles
       elseif (C_Map.GetBestMapForUnit("player") == 630 or C_Map.GetBestMapForUnit("player") == 634 or C_Map.GetBestMapForUnit("player") == 641 or C_Map.GetBestMapForUnit("player") == 646 or C_Map.GetBestMapForUnit("player") == 650 or C_Map.GetBestMapForUnit("player") == 652
@@ -353,30 +377,42 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapBrokenIsles then
           ns.Addon.db.profile.showMiniMapBrokenIsles = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Broken Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Broken Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapBrokenIsles = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Broken Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Broken Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Zandalar
       elseif (C_Map.GetBestMapForUnit("player") == 862 or C_Map.GetBestMapForUnit("player") == 863 or C_Map.GetBestMapForUnit("player") == 864 or C_Map.GetBestMapForUnit("player") == 1355 or C_Map.GetBestMapForUnit("player") == 1528)
       then
         if not ns.Addon.db.profile.showMiniMapZandalar then
           ns.Addon.db.profile.showMiniMapZandalar = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Zandalar"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Zandalar"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapZandalar = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Zandalar"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Zandalar"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Kul Tiras
       elseif (C_Map.GetBestMapForUnit("player") == 895 or C_Map.GetBestMapForUnit("player") == 896 or C_Map.GetBestMapForUnit("player") == 942 or C_Map.GetBestMapForUnit("player") == 1462 or C_Map.GetBestMapForUnit("player") == 1169)
       then
         if not ns.Addon.db.profile.showMiniMapKulTiras then
           ns.Addon.db.profile.showMiniMapKulTiras = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kul Tiras"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kul Tiras"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapKulTiras = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kul Tiras"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Kul Tiras"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Shadowlands
       elseif (C_Map.GetBestMapForUnit("player") == 1525 or C_Map.GetBestMapForUnit("player") == 1533 or C_Map.GetBestMapForUnit("player") == 1536 or C_Map.GetBestMapForUnit("player") == 1543 or C_Map.GetBestMapForUnit("player") == 1565 or C_Map.GetBestMapForUnit("player") == 1961
@@ -384,10 +420,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapShadowlands then
           ns.Addon.db.profile.showMiniMapShadowlands = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Shadowlands"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Shadowlands"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapShadowlands = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Shadowlands"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Shadowlands"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Dragon Isles
       elseif (C_Map.GetBestMapForUnit("player") == 2022 or C_Map.GetBestMapForUnit("player") == 2023 or C_Map.GetBestMapForUnit("player") == 2024 or C_Map.GetBestMapForUnit("player") == 2025 or C_Map.GetBestMapForUnit("player") == 2026 or C_Map.GetBestMapForUnit("player") == 2133
@@ -395,20 +435,28 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showMiniMapDragonIsles then
           ns.Addon.db.profile.showMiniMapDragonIsles = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapDragonIsles = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Khaz Algar
       elseif (C_Map.GetBestMapForUnit("player") == 2248 or C_Map.GetBestMapForUnit("player") == 2214 or C_Map.GetBestMapForUnit("player") == 2215 or C_Map.GetBestMapForUnit("player") == 2255 or C_Map.GetBestMapForUnit("player") == 2256 or C_Map.GetBestMapForUnit("player") == 2213 or C_Map.GetBestMapForUnit("player") == 2216)
       then
         if not ns.Addon.db.profile.showMiniMapKhazAlgar then
           ns.Addon.db.profile.showMiniMapKhazAlgar = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showMiniMapKhazAlgar = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Dragon Isles"] .. " " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       end
     end
@@ -436,10 +484,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneKalimdor then
           ns.Addon.db.profile.showZoneKalimdor = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneKalimdor = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kalimdor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Eastern Kingdom
       elseif (C_Map.GetBestMapForUnit("player") == 13 or C_Map.GetBestMapForUnit("player") == 14 or C_Map.GetBestMapForUnit("player") == 15 or C_Map.GetBestMapForUnit("player") == 16 or C_Map.GetBestMapForUnit("player") == 17 or C_Map.GetBestMapForUnit("player") == 18 
@@ -454,10 +506,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneEasternKingdom then
           ns.Addon.db.profile.showZoneEasternKingdom = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneEasternKingdom = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Eastern Kingdom"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Outland
       elseif (C_Map.GetBestMapForUnit("player") == 100 or C_Map.GetBestMapForUnit("player") == 102 or C_Map.GetBestMapForUnit("player") == 104 or C_Map.GetBestMapForUnit("player") == 105 or C_Map.GetBestMapForUnit("player") == 107 or C_Map.GetBestMapForUnit("player") == 108
@@ -465,10 +521,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneOutland then
           ns.Addon.db.profile.showZoneOutland = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneOutland = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Outland"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Northrend
       elseif (C_Map.GetBestMapForUnit("player") == 114 or C_Map.GetBestMapForUnit("player") == 115 or C_Map.GetBestMapForUnit("player") == 116 or C_Map.GetBestMapForUnit("player") == 117 or C_Map.GetBestMapForUnit("player") == 118 or C_Map.GetBestMapForUnit("player") == 119
@@ -476,10 +536,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneNorthrend then
           ns.Addon.db.profile.showZoneNorthrend = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneNorthrend = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Northrend"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Pandaria
       elseif (C_Map.GetBestMapForUnit("player") == 371 or C_Map.GetBestMapForUnit("player") == 376 or C_Map.GetBestMapForUnit("player") == 379 or C_Map.GetBestMapForUnit("player") == 388 or C_Map.GetBestMapForUnit("player") == 390 or C_Map.GetBestMapForUnit("player") == 418
@@ -488,10 +552,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZonePandaria then
           ns.Addon.db.profile.showZonePandaria = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZonePandaria = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Pandaria"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Draenor
       elseif (C_Map.GetBestMapForUnit("player") == 525 or C_Map.GetBestMapForUnit("player") == 534 or C_Map.GetBestMapForUnit("player") == 535 or C_Map.GetBestMapForUnit("player") == 539 or C_Map.GetBestMapForUnit("player") == 542 or C_Map.GetBestMapForUnit("player") == 543
@@ -499,10 +567,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneDraenor then
           ns.Addon.db.profile.showZoneDraenor = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneDraenor = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Draenor"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Broken Isles
       elseif (C_Map.GetBestMapForUnit("player") == 630 or C_Map.GetBestMapForUnit("player") == 634 or C_Map.GetBestMapForUnit("player") == 641 or C_Map.GetBestMapForUnit("player") == 646 or C_Map.GetBestMapForUnit("player") == 650 or C_Map.GetBestMapForUnit("player") == 652
@@ -511,30 +583,42 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneBrokenIsles then
           ns.Addon.db.profile.showZoneBrokenIsles = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneBrokenIsles = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Broken Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Zandalar
       elseif (C_Map.GetBestMapForUnit("player") == 862 or C_Map.GetBestMapForUnit("player") == 863 or C_Map.GetBestMapForUnit("player") == 864 or C_Map.GetBestMapForUnit("player") == 1355 or C_Map.GetBestMapForUnit("player") == 1528)
       then
         if not ns.Addon.db.profile.showZoneZandalar then
           ns.Addon.db.profile.showZoneZandalar = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneZandalar = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Zandalar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Kul Tiras
       elseif (C_Map.GetBestMapForUnit("player") == 895 or C_Map.GetBestMapForUnit("player") == 896 or C_Map.GetBestMapForUnit("player") == 942 or C_Map.GetBestMapForUnit("player") == 1462 or C_Map.GetBestMapForUnit("player") == 1169)
       then
         if not ns.Addon.db.profile.showZoneKulTiras then
           ns.Addon.db.profile.showZoneKulTiras = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneKulTiras = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Kul Tiras"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Shadowlands
       elseif (C_Map.GetBestMapForUnit("player") == 1525 or C_Map.GetBestMapForUnit("player") == 1533 or C_Map.GetBestMapForUnit("player") == 1536 or C_Map.GetBestMapForUnit("player") == 1543 or C_Map.GetBestMapForUnit("player") == 1565 or C_Map.GetBestMapForUnit("player") == 1961
@@ -542,10 +626,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneShadowlands then
           ns.Addon.db.profile.showZoneShadowlands = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneShadowlands = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Shadowlands"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       --Dragon Isles
       elseif (C_Map.GetBestMapForUnit("player") == 2022 or C_Map.GetBestMapForUnit("player") == 2023 or C_Map.GetBestMapForUnit("player") == 2024 or C_Map.GetBestMapForUnit("player") == 2025 or C_Map.GetBestMapForUnit("player") == 2026 or C_Map.GetBestMapForUnit("player") == 2133
@@ -553,20 +641,28 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
       then
         if not ns.Addon.db.profile.showZoneDragonIsles then
           ns.Addon.db.profile.showZoneDragonIsles = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Dragon Isles"]  .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Dragon Isles"]  .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneDragonIsles = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
        --Khaz Algar
       elseif (C_Map.GetBestMapForUnit("player") == 2248 or C_Map.GetBestMapForUnit("player") == 2214 or C_Map.GetBestMapForUnit("player") == 2215 or C_Map.GetBestMapForUnit("player") == 2255 or C_Map.GetBestMapForUnit("player") == 2256 or C_Map.GetBestMapForUnit("player") == 2213 or C_Map.GetBestMapForUnit("player") == 2216)
       then
         if not ns.Addon.db.profile.showZoneKhazAlgar then
           ns.Addon.db.profile.showZoneKhazAlgar = true
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Khaz Algar"]  .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Khaz Algar"]  .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cff00ff00" .. L["are shown"])
+          end
         else
           ns.Addon.db.profile.showZoneKhazAlgar = false
-          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          if ns.Addon.db.profile.MmbWmbChatMessage then
+            print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL, L["icons"], "|cffff0000" .. L["are hidden"])
+          end
         end
       end
     end
@@ -586,10 +682,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
     then
       if not ns.Addon.db.profile.activate.MinimapCapitals then
         ns.Addon.db.profile.activate.MinimapCapitals = true
-        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. MINIMAP_LABEL, L["Capitals"], L["icons"], "|cff00ff00" .. L["are shown"])
+        if ns.Addon.db.profile.MmbWmbChatMessage then
+          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. MINIMAP_LABEL, L["Capitals"], L["icons"], "|cff00ff00" .. L["are shown"])
+        end
       else
         ns.Addon.db.profile.activate.MinimapCapitals = false
-        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. MINIMAP_LABEL, L["Capitals"], L["icons"], "|cffff0000" .. L["are hidden"])
+        if ns.Addon.db.profile.MmbWmbChatMessage then
+          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. MINIMAP_LABEL, L["Capitals"], L["icons"], "|cffff0000" .. L["are hidden"])
+        end
       end
     end
 
@@ -608,10 +708,14 @@ local info = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
     then
       if not ns.Addon.db.profile.activate.Capitals then
         ns.Addon.db.profile.activate.Capitals = true
-        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
+        if ns.Addon.db.profile.MmbWmbChatMessage then
+          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cff00ff00" .. L["are shown"])
+        end
       else
         ns.Addon.db.profile.activate.Capitals = false
-        print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
+        if ns.Addon.db.profile.MmbWmbChatMessage then
+          print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["synchronizes"] .. " " .. L["Capitals"] .. " & " ..  L["Capitals"] .. " - " .. MINIMAP_LABEL .. " " .. L["icons"], "|cffff0000" .. L["are hidden"])
+        end
       end
     end
 

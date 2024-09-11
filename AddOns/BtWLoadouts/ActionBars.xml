@@ -166,34 +166,34 @@
 										<Anchor point="TOPLEFT" relativeKey="$parent.Row1Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
-								<FontString parentKey="Row3Title" text="BTWLOADOUTS_ACTION_BAR_2" inherits="GameFontNormalMed1" justifyH="RIGHT">
+								<FontString parentKey="Row6Title" text="BTWLOADOUTS_ACTION_BAR_2" inherits="GameFontNormalMed1" justifyH="RIGHT">
 									<Size x="90" y="33"/>
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeKey="$parent.Row2Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
-								<FontString parentKey="Row4Title" text="BTWLOADOUTS_ACTION_BAR_3" inherits="GameFontNormalMed1" justifyH="RIGHT">
+								<FontString parentKey="Row5Title" text="BTWLOADOUTS_ACTION_BAR_3" inherits="GameFontNormalMed1" justifyH="RIGHT">
 									<Size x="90" y="33"/>
 									<Anchors>
-										<Anchor point="TOPLEFT" relativeKey="$parent.Row3Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
+										<Anchor point="TOPLEFT" relativeKey="$parent.Row6Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
-								<FontString parentKey="Row5Title" text="BTWLOADOUTS_ACTION_BAR_4" inherits="GameFontNormalMed1" justifyH="RIGHT">
-									<Size x="90" y="33"/>
-									<Anchors>
-										<Anchor point="TOPLEFT" relativeKey="$parent.Row4Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
-									</Anchors>
-								</FontString>
-								<FontString parentKey="Row6Title" text="BTWLOADOUTS_ACTION_BAR_5" inherits="GameFontNormalMed1" justifyH="RIGHT">
+								<FontString parentKey="Row4Title" text="BTWLOADOUTS_ACTION_BAR_4" inherits="GameFontNormalMed1" justifyH="RIGHT">
 									<Size x="90" y="33"/>
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeKey="$parent.Row5Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
+								<FontString parentKey="Row3Title" text="BTWLOADOUTS_ACTION_BAR_5" inherits="GameFontNormalMed1" justifyH="RIGHT">
+									<Size x="90" y="33"/>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeKey="$parent.Row4Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
+									</Anchors>
+								</FontString>
 								<FontString parentKey="Row13Title" text="BTWLOADOUTS_ACTION_BAR_6" inherits="GameFontNormalMed1" justifyH="RIGHT">
 									<Size x="90" y="33"/>
 									<Anchors>
-										<Anchor point="TOPLEFT" relativeKey="$parent.Row6Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
+										<Anchor point="TOPLEFT" relativeKey="$parent.Row3Title" relativePoint="BOTTOMLEFT" x="0" y="-6"/>
 									</Anchors>
 								</FontString>
 								<FontString parentKey="Row14Title" text="BTWLOADOUTS_ACTION_BAR_7" inherits="GameFontNormalMed1" justifyH="RIGHT">

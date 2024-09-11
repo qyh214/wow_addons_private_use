@@ -103,7 +103,7 @@ end
 function WeakAuras.split(input)
   input = input or "";
   local ret = {};
-  local split, element = true, nil
+  local split, element = nil, nil
   split = input:find("[,%s]");
   while(split) do
     element, input = input:sub(1, split-1), input:sub(split+1);
@@ -114,6 +114,38 @@ function WeakAuras.split(input)
   end
   if(input ~= "") then
     tinsert(ret, input);
+  end
+  return ret;
+end
+
+local function findFirstOf(input, words, start, plain)
+  local startPos, endPos
+  for _, w in ipairs(words) do
+    local s, e = input:find(w, start, plain)
+    if s and (not startPos or startPos > s) then
+      startPos, endPos = s, e
+    end
+  end
+  return startPos, endPos
+end
+
+---@param input string
+---@return string[] subStrings
+function Private.splitAtOr(input)
+  input = input or ""
+  local ret = {}
+  local splitStart, splitEnd, element = nil, nil, nil
+  local separators = { "|", " or "}
+  splitStart, splitEnd = findFirstOf(input, separators, 1, true);
+  while(splitStart) do
+    element, input = input:sub(1, splitStart -1 ), input:sub(splitEnd + 1)
+    if(element ~= "") then
+      tinsert(ret, element)
+    end
+    splitStart, splitEnd = findFirstOf(input, separators, 1, true);
+  end
+  if(input ~= "") then
+    tinsert(ret, input)
   end
   return ret;
 end
@@ -2236,19 +2268,21 @@ do
     end,
     Schedule = function(self, expirationTime, id)
       if (not self.expirationTime[id] or expirationTime < self.expirationTime[id]) and expirationTime > 0 then
-        if self.handles[id] then
-          timer:CancelTimer(self.handles[id])
-          self.handles[id] = nil
-          self.expirationTime[id] = nil
-        end
-
+        self:Cancel(id)
         local duration = expirationTime - GetTime()
         if duration > 0 then
           self.handles[id] = timer:ScheduleTimerFixed(self.Recheck, duration, self, id)
           self.expirationTime[id] = expirationTime
         end
       end
-    end
+    end,
+    Cancel = function(self, id)
+      if self.handles[id] then
+        timer:CancelTimer(self.handles[id])
+        self.handles[id] = nil
+        self.expirationTime[id] = nil
+      end
+    end,
   }
 
   local function FetchSpellCooldown(self, id)
@@ -2387,7 +2421,7 @@ do
   --- @field name string
   --- @field icon number
   --- @field id number
-  --- @field watched number[]
+  --- @field watched table<number, boolean>
 
   -- Basic details like name, icon, charges, times per effective spell id
   -- Also contains the mapping from effective spell id to watched
@@ -2428,16 +2462,19 @@ do
 
     -- Helper functions
     AddEffectiveSpellId = function(self, effectiveSpellId, userSpellId)
+      if self.data[effectiveSpellId] then
+        self.data[effectiveSpellId].watched[userSpellId] = (self.data[effectiveSpellId].watched[userSpellId] or 0) + 1
+        return
+      end
+
       local name, _, icon, _, _, _, spellId = Private.ExecEnv.GetSpellInfo(effectiveSpellId)
       self.data[effectiveSpellId] = {
         name = name,
         icon = icon,
         id = spellId,
-        watched = { effectiveSpellId }
+        watched = {}
       }
-      if effectiveSpellId ~= userSpellId then
-        tinsert(self.data[effectiveSpellId].watched, userSpellId)
-      end
+      self.data[effectiveSpellId].watched[userSpellId] = 1
 
       local spellDetail = self.data[effectiveSpellId]
       spellDetail.known = WeakAuras.IsSpellKnownIncludingPet(effectiveSpellId)
@@ -2474,18 +2511,12 @@ do
               -- There are lots of cases to consider here:
 
               -- For the new effective spell id
-              -- a) We are already tracking it, only add the wathed spell ids
-              -- b) We aren't tracking it yet add it
-              if self.data[newEffectiveSpellId] then
-                tinsert(self.data[newEffectiveSpellId].watched, userSpellId)
-              else
-                self:AddEffectiveSpellId(newEffectiveSpellId, userSpellId)
-              end
+              self:AddEffectiveSpellId(newEffectiveSpellId, userSpellId)
 
               local oldSpellDetail = self.data[oldEffectiveSpellId]
               local newSpellDetail = self.data[newEffectiveSpellId]
 
-              -- Check whether we need to emit the SPEL_CHARGES_CHANGED or SPELL_COOLDOWN_READY events
+              -- Check whether we need to emit the SPELL_CHARGES_CHANGED or SPELL_COOLDOWN_READY events
               local chargesChanged = oldSpellDetail.charges ~= newSpellDetail.charges or oldSpellDetail.count ~= newSpellDetail.count
                 or oldSpellDetail.chargesMax ~= newSpellDetail.maxCharges
               local oldCharge = oldSpellDetail.charges or oldSpellDetail.count or 0
@@ -2498,9 +2529,14 @@ do
               -- For the old effective spell id
               -- * Remove the spell from watched
               -- * If we removed the last mapping, remove the spell details of the effective spell id
-              tremove(oldSpellDetail.watched, userSpellId)
-              if #oldSpellDetail.watched == 0 then
-                self.data[oldEffectiveSpellId] = nil
+              if oldSpellDetail.watched[userSpellId] == 1 then
+                oldSpellDetail.watched[userSpellId] = nil
+                if next(self.data[oldEffectiveSpellId].watched) == nil then
+                  self.data[oldEffectiveSpellId] = nil
+                  RecheckHandles:Cancel(oldEffectiveSpellId)
+                end
+              else
+                oldSpellDetail.watched[userSpellId] = oldSpellDetail.watched[userSpellId] - 1
               end
 
               -- Finally update the watchedSpellIds mapping
@@ -2626,33 +2662,27 @@ do
 
       local effectiveSpellId = Private.ExecEnv.GetEffectiveSpellId(userSpellId, useExact, followoverride)
 
-      self.watchedSpellIds[userSpellId] = self. watchedSpellIds[userSpellId] or {}
+      self.watchedSpellIds[userSpellId] = self.watchedSpellIds[userSpellId] or {}
       self.watchedSpellIds[userSpellId][useExact] = self.watchedSpellIds[userSpellId][useExact] or {}
       if self.watchedSpellIds[userSpellId][useExact][followoverride] == effectiveSpellId then
-        -- We are already watching userSpellId and have the mapping to effectiveSpellId
-        -- Nothing t odo then
+        -- We are already watching userSpellId in the exact useExact/followoverride mode, so there's
+        -- nothing to do then
         return
       end
 
       -- We aren't watching userSpellId yet
       self.watchedSpellIds[userSpellId][useExact][followoverride] = effectiveSpellId
-
-      if self.data[effectiveSpellId] then
-        -- But we are already tracking the effectiveSpellId, so only add the mapping
-        if not tContains(self.data[effectiveSpellId].watched, userSpellId) then
-          tinsert(self.data[effectiveSpellId].watched, userSpellId)
-        end
-        return
-      end
-
       self:AddEffectiveSpellId(effectiveSpellId, userSpellId)
     end,
 
     SendEventsForSpell = function(self, effectiveSpellId, event, ...)
       local watchedSpells = self.data[effectiveSpellId] and self.data[effectiveSpellId].watched
+      Private.ScanEventsByID(event, effectiveSpellId, ...)
       if watchedSpells then
-        for _, userSpellId in ipairs(watchedSpells) do
-          Private.ScanEventsByID(event, userSpellId, ...)
+        for userSpellId in pairs(watchedSpells) do
+          if userSpellId ~= effectiveSpellId then
+            Private.ScanEventsByID(event, userSpellId, ...)
+          end
         end
       end
     end,
@@ -3831,6 +3861,13 @@ function Private.ExecEnv.CheckTotemName(totemName, triggerTotemName, triggerTote
   end
 
   return true
+end
+
+function Private.ExecEnv.CheckTotemIcon(totemIcon, triggerTotemIcon, operator)
+  if not triggerTotemIcon then
+    return true
+  end
+  return (totemIcon == triggerTotemIcon) == (operator == "==")
 end
 
 -- Queueable Spells

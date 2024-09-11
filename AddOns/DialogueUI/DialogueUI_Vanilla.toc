@@ -1,5 +1,5 @@
-## Interface: 11503
-## Version: 0.3.8
+## Interface: 11504, 11505
+## Version: 0.4.6
 
 ## Title: Dialogue UI
 
@@ -12,8 +12,6 @@
 ## AddonCompartmentFunc: DialogueUI_ShowSettingsFrame
 
 
-
-
 Initialization.lua
 Locales\Localization.xml
 Fonts.xml
@@ -23,12 +21,12 @@ Code\Utility.xml
 Code\Sound.lua
 Code\Camera.lua
 Code\Tooltip.xml
-Code\ScrollBar.lua
-Code\ScrollView.lua
+Code\Scroll.xml
 Code\Settings.xml
 Code\GossipDataProvider.xml
 Code\NameplateGossip.lua
 Code\UI.xml
+Code\WidgetManager.xml
 Code\Core.lua
 
 Code\SupportedAddOns\SupportedAddOns.xml

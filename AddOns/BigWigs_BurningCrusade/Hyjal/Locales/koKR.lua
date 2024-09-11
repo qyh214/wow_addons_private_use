@@ -44,9 +44,4 @@ if L then
 	L.waveInc = "%d번째 공격 시작!"
 	L.message = "%s 약 %d초 이내!"
 	L.waveMessage = "%d번째 공격! 약 %d초 이내"
-
-	L.winterchillGossip = "제 동료와 저는 프라우드무어님, 당신과 함께"..(UnitSex("player") == 3 and "" or " ").."하겠습니다."
-	L.anetheronGossip = "아키몬드가 어떤 군대를 보내던 우리는 준비가 되어 있습니다, 프라우드무어 님."
-	L.kazrogalGossip = "당신과 함께 하겠"..(UnitSex("player") == 3 and "어요" or "습니다")..", 대족장님."
-	L.azgalorGossip = "두려워할 것은 아무것도 없"..(UnitSex("player") == 3 and "어요" or "습니다").."."
 end

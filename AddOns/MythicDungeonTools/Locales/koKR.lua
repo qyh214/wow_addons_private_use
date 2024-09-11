@@ -2753,6 +2753,8 @@ L["Void Discharge"] = "공허 점액"
 L["Void Flayer"] = "공허 절단자"
 L["Void Spawn"] = "공허의 피조물"
 --[[Translation missing --]]
+L["Void Speaker Eirich"] = "Void Speaker Eirich"
+--[[Translation missing --]]
 L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "공허에 물든 사절"
 L["Voidweaver Mal'thir"] = "공허술사 말티르"

@@ -55,11 +55,6 @@ if L then
 	L.waveInc = "Wave %d incoming!"
 	L.message = "%s in ~%d sec!"
 	L.waveMessage = "Wave %d in ~%d sec!"
-
-	L.winterchillGossip = "My companions and I are with you, Lady Proudmoore."
-	L.anetheronGossip = "We are ready for whatever Archimonde might send our way, Lady Proudmoore."
-	L.kazrogalGossip = "I am with you, Thrall."
-	L.azgalorGossip = "We have nothing to fear."
 end
 
 --------------------------------------------------------------------------------

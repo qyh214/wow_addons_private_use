@@ -2,6 +2,14 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "zhTW")
 if not L then return end
 
+--0.01
+L["Profiles"] = "概況"
+L["This applies to the following tabs"] = "這適用於以下選項卡"
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = "聊天中的反饋是刪除或還原圖標的函數中的反饋。 這些總是顯示！"
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = "在這裡，當您隱藏或顯示 MapNotes 小地圖和世界地圖按鈕上的圖示時，您可以啟用或停用它們發送的所有聊天訊息"
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = "更改設定時，您可以在此處啟用或停用從這些 MapNotes 標籤之一發送的所有聊天訊息"
+L["Only affects passage icons to instances and not path icons to zones"] = "僅影響實例的段落圖標，而不影響到區域的圖標"
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = "通過停用它，您自己派系的區域圖標的邊界也被刪除，因為顯示的圖標僅適用於您自己的派系"
 --0.1 profiles
 L["Profile has been changed"] = "設定檔已更改"
 L["Profile has been reset to default"] = "設定檔已重置為默認值"
@@ -36,6 +44,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = "將主城標籤與主城 - 小地圖標籤同步"
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = "這會禁用主城 - 小地圖標籤中的功能, 現在由主城標籤共同控制"
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = "這將刪除所有主城 - 小地圖設置並用主城標籤中的設置替換它們"
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = "顯示特殊的MAPNOTES摘要圖標，其中包含幾個不同的信息（地牢/RAIDS/Portals等）"
+L["Points of interests"] = "興趣點"
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = "停用在區域卡上的所有暴雪地牢和突襲圖標的顯示"
 --1 Capitals
 L["Leather Armor"] = "皮甲"
 L["Heavy Armor"] = "重甲"
@@ -142,6 +154,7 @@ L["gray all"] = "全部灰色"
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = "將所有人標記為灰色！已分配的副本和團隊也有多個灰色點（如果你有ID）"
 L["enemy faction"] = "敵對陣營"
 L["Shows enemy faction (horde/alliance) icons"] = "顯示敵對陣營（部落/聯盟）圖示"
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = "但是，這僅適用於Azeroth＆Ocontent地圖。 不適合區域 +和資本 +類別。 這些有自己的激活選項"
 L["chat message"] = "聊天訊息"
 L["Disables MapNotes status chat messages excluding core information"] = "禁用MapNotes狀態聊天訊息，不包括核心信息"
 L["Shows special transport icons like"] = "顯示特殊交通工具圖示如"

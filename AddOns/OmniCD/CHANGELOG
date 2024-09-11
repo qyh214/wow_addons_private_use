@@ -1,6 +1,27 @@
 ------------------------------------------------------------------------------
 -- Dragonflight
 --
+v11.0.2.2804
+	Combustion highlight will correctly be removed
+	sync modrate fix
+	taking demonic healthstone talent will remove preexisting normal healthstone icon
+	additional 11.0 trinkets added
+	zhCN localization update
+
+v11.0.2.2803
+	Release for WoW: TWW
+
+	* Global modrates are now saved per spell/icon to fix conditional applications.
+	* Forbearance on Divine Shield will no longer show a dedicated timer and instead will darken the icon like Blessing of Protection.
+	* Comatbatlog no longer checks for unit reaction/type as it could return incorrect results.
+	* Fixed an issue that caused Healthstone's schedule timer to cancel when a raid encounter ends.
+	* Spells eligible for sync will now check for pvp status.
+	* Fixed HideBar func (was missing Hide fx).
+	* Fixed spell option tooltips and item effects will correctly sort by item name.
+	* Impish Instincts (Warlock, pvp talent) will correctly trigger on physical damage only.
+	* Gateway Mastery (Warlock, pvp talent) will correctly apply to all group members.
+	* Blessing of the Bronze (Evoker) CDR fixed for other classes (was incorrectly using src guid).
+
 v10.2.7.2802
 	Interrupt Bar can now be sorted by spell priority.
 	NameBar nil err fix.
@@ -940,6 +961,9 @@ v2.5.0
 ------------------------------------------------------------------------------
 -- Cataclysm
 --
+v4.4.0.2803
+	minor bug fix
+
 v4.4.0.2802
 	Interrupt Bar can now be sorted by spell priority.
 	NameBar nil err fix.
@@ -1100,6 +1124,9 @@ v2.6.01-bcc
 ------------------------------------------------------------------------------
 -- classic era
 --
+v1.15.3.2803
+	minor bug fix
+
 v1.15.3.2802
 	bump toc
 	Interrupt Bar can now be sorted by spell priority.

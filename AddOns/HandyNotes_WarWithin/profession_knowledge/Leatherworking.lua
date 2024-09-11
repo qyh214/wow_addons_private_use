@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_LEATHERWORKING),
     -- active = ns.conditions.Profession(ns.PROF_WW_LEATHERWORKING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-leatherworking",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [70702865] = {
+    [68202334] = {
         quest=83898,
         loot={226324}, -- Earthen Lacing Tools
         vignette=6481,
@@ -68,10 +70,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6487,
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82626,
-    --     loot={224056}, -- Uses for Leftover Husks (After You Take Them Apart)
-    --     note="Buy from {npc::}",
-    --     parent=true, levels=true, translate={[2256]=true},
-    -- },
 }, KNOWLEDGE)

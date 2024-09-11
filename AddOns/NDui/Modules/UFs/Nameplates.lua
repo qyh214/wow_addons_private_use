@@ -70,6 +70,9 @@ function UF:SetupCVars()
 	SetCVar("nameplateSelectedScale", 1)
 	SetCVar("nameplateLargerScale", 1)
 	SetCVar("nameplateGlobalScale", 1)
+	SetCVar("NamePlateHorizontalScale", 1)
+	SetCVar("NamePlateVerticalScale", 1)
+	SetCVar("NamePlateClassificationScale", 1)
 
 	SetCVar("nameplateShowSelf", 0)
 	SetCVar("nameplateResourceOnTarget", 0)
@@ -569,7 +572,7 @@ local NPClassifies = {
 }
 
 function UF:AddCreatureIcon(self)
-	local icon = self:CreateTexture(nil, "ARTWORK")
+	local icon = self.Health:CreateTexture(nil, "ARTWORK")
 	icon:SetTexture(DB.starTex)
 	icon:SetPoint("RIGHT", self.nameText, "LEFT", 10, 0)
 	icon:SetSize(18, 18)
@@ -863,6 +866,11 @@ end
 local DisabledElements = {
 	"Health", "Castbar", "HealPredictionAndAbsorb", "PvPClassificationIndicator", "ThreatIndicator"
 }
+
+local SoftTargetBlockElements = {
+	"Auras", "RaidTargetIndicator",
+}
+
 function UF:UpdatePlateByType()
 	local name = self.nameText
 	local hpval = self.healthValue
@@ -870,9 +878,28 @@ function UF:UpdatePlateByType()
 	local raidtarget = self.RaidTargetIndicator
 	local questIcon = self.questIcon
 
-	name:SetShown(not self.widgetsOnly)
-	name:ClearAllPoints()
+	if self.widgetsOnly then
+		name:Hide()
+	else
+		name:Show()
+		name:UpdateTag()
+		name:ClearAllPoints()
+	end
 	raidtarget:ClearAllPoints()
+
+	if self.isSoftTarget then
+		for _, element in pairs(SoftTargetBlockElements) do
+			if self:IsElementEnabled(element) then
+				self:DisableElement(element)
+			end
+		end
+	else
+		for _, element in pairs(SoftTargetBlockElements) do
+			if not self:IsElementEnabled(element) then
+				self:EnableElement(element)
+			end
+		end
+	end
 
 	if self.plateType == "NameOnly" then
 		for _, element in pairs(DisabledElements) do
@@ -921,7 +948,7 @@ end
 function UF:RefreshPlateType(unit)
 	self.reaction = UnitReaction(unit, "player")
 	self.isFriendly = self.reaction and self.reaction >= 4 and not UnitCanAttack("player", unit)
-	self.isSoftTarget = GetCVarBool("SoftTargetIconGameObject") and UnitIsUnit(unit, "softinteract")
+	self.isSoftTarget = UnitIsUnit(unit, "softinteract")
 	if C.db["Nameplate"]["NameOnlyMode"] and self.isFriendly or self.widgetsOnly or self.isSoftTarget then
 		self.plateType = "NameOnly"
 	elseif C.db["Nameplate"]["FriendPlate"] and self.isFriendly then
@@ -954,7 +981,6 @@ function UF:OnUnitSoftTargetChanged(previousTarget, currentTarget)
 			unitFrame.previousType = nil
 			UF.RefreshPlateType(unitFrame, unitFrame.unit)
 			UF.UpdateTargetChange(unitFrame)
-			unitFrame.RaidTargetIndicator:ForceUpdate()
 		end
 	end
 end

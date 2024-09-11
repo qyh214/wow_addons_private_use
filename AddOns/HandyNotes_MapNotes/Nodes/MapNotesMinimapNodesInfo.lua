@@ -756,5 +756,11 @@ minimap[2214] = { } -- The Ringing Deeps
 -- Dungeon map nodes
 minimap[2315] = { } -- The Rookery - Inside Dungeon Map
 minimap[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map
-
+minimap[2359] = { } -- The Dawnbreaker - Inside Dungeon Map
+minimap[2308] = { } -- Priory of the Sacred Flame - Inside Dungeon Map
+minimap[2341] = { } -- The Stonevault - Inside Dungeon Map
+minimap[2303] = { } -- Darkflame Cleft - Inside Dungeon Map
+minimap[2357] = { } -- Ara-Kara, City of Echoes - Inside Dungeon Map
+minimap[2343] = { } -- City of Threads - Inside Dungeon Map
+minimap[2292] = { } -- Nerub-ar Palace - Inside Dungeon Map
 end

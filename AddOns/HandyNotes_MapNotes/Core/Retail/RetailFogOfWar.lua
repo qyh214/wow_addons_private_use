@@ -1,16 +1,14 @@
 local ADDON_NAME, ns = ...
 
-local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
+local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 ns.FogOfWar = HandyNotes:NewModule("FogOfWarButton", "AceHook-3.0", "AceEvent-3.0")
 
 local mod, floor, ceil, tonumber = math.fmod, math.floor, math.ceil, tonumber
 local ipairs, pairs = ipairs, pairs
-local db
 
 function ns.FogOfWar:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("HandyNotes_MapNotesRetailDB", ns.defaults)
-	db = self.db.profile
-	self.db.global.errata = nil
+	self.db = LibStub("AceDB-3.0"):New("FogOfWarColorDB", ns.defaults)
+	self:SetEnabledState(HandyNotes:GetModule("FogOfWarButton"))
 end
 
 function ns.FogOfWar:OnEnable()
@@ -24,15 +22,16 @@ function ns.FogOfWar:OnDisable()
 end
 
 function ns.FogOfWar:Refresh()
-	db = self.db.profile
 	if not self:IsEnabled() then return end
 
-	for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
-		pin:RefreshOverlays(true)
+	if WorldMapFrame:IsShown() then
+		for pin in WorldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
+			pin:RefreshOverlays(true)
+		end
 	end
 end
 
-local mapData = ns.FogOfWarDataRetail
+local mapData = ns.FogOfWarDataRetail or {}
 function ns.FogOfWar:MapExplorationPin_RefreshOverlays(pin, fullUpdate)
 
 	-- remove color tint from active overlays
@@ -142,19 +141,24 @@ function ns.FogOfWar:MapExplorationPin_RefreshOverlays(pin, fullUpdate)
 end
 
 function ns.FogOfWar:GetOverlayColor()
-	return db.colorR, db.colorG, db.colorB, db.colorA
+	return ns.FogOfWar.colorR, ns.FogOfWar.colorG, ns.FogOfWar.colorB, ns.FogOfWar.colorA
 end
 
 function ns.FogOfWar:SetOverlayColor(info, r, g, b, a)
-	db.colorR, db.colorG, db.colorB, db.colorA = r, g, b, a
+	ns.FogOfWar.colorR, ns.FogOfWar.colorG, ns.FogOfWar.colorB, ns.FogOfWar.colorA = r, g, b, a
 	if self:IsEnabled() then self:Refresh() end
 end
 
 function ns.FogOfWar:GetFogOfWarColor()
-	return db.FogOfWarColorR, db.FogOfWarColorG, db.FogOfWarColorB, db.FogOfWarColorA
+	return ns.FogOfWar.FogOfWarColorR, ns.FogOfWar.FogOfWarColorG, ns.FogOfWar.FogOfWarColorB, ns.FogOfWar.FogOfWarColorA
 end
 
 function ns.FogOfWar:SetFogOfWarColor(info, FoWr, FoWg, FoWb, FoWa)
-	db.FogOfWarColorR, db.FogOfWarColorG, db.FogOfWarColorB, db.FogOfWarColorA = FoWr, FoWg, FoWb, FoWa
-	if self:IsEnabled() then self:Refresh() end
+	ns.FogOfWar.FogOfWarColorR, ns.FogOfWar.FogOfWarColorG, ns.FogOfWar.FogOfWarColorB, ns.FogOfWar.FogOfWarColorA = FoWr, FoWg, FoWb, FoWa
+	if WorldMapFrame:IsShown() then 
+		if self:IsEnabled() then self:Refresh() end
+	end
 end
+
+-- remove data from global scope
+ns.FogOfWarDataRetail = nil

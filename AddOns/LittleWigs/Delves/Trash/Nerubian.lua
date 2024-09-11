@@ -1,4 +1,3 @@
-if not BigWigsLoader.isBeta then return end
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -44,6 +43,12 @@ end
 
 function mod:OnRegister()
 	self.displayName = L.nerubian_trash
+	self:SetSpellRename(450714, CL.frontal_cone) -- Jagged Barbs (Frontal Cone)
+	self:SetSpellRename(449318, CL.bomb) -- Shadows of Strife (Bomb)
+	self:SetSpellRename(450546, CL.shield) -- Webbed Aegis (Shield)
+	self:SetSpellRename(450509, CL.frontal_cone) -- Wide Swipe (Frontal Cone)
+	self:SetSpellRename(433410, CL.fear) -- Fearful Shriek (Fear)
+	self:SetSpellRename(450197, CL.charge) -- Skitter Charge (Charge)
 end
 
 local autotalk = mod:AddAutoTalkOption(true)
@@ -54,7 +59,7 @@ function mod:GetOptions()
 		450714, -- Jagged Barbs
 		450637, -- Leeching Swarm
 		-- Nerubian Darkcaster
-		449318, -- Shadows of Strife
+		{449318, "SAY", "SAY_COUNTDOWN"}, -- Shadows of Strife
 		-- Nerubian Captain / Nerubian Marauder
 		450546, -- Webbed Aegis
 		450509, -- Wide Swipe
@@ -64,13 +69,20 @@ function mod:GetOptions()
 		450197, -- Skitter Charge
 		-- Nerubian Webspinner
 		433448, -- Web Launch
-	}, {
+	},{
 		[450714] = L.nerubian_lord,
 		[449318] = L.nerubian_darkcaster,
 		[450546] = L.nerubian_captain,
 		[433410] = L.chittering_fearmonger,
 		[450197] = L.skittering_swarmer,
 		[433448] = L.nerubian_webspinner,
+	},{
+		[450714] = CL.frontal_cone, -- Jagged Barbs (Frontal Cone)
+		[449318] = CL.bomb, -- Shadows of Strife (Bomb)
+		[450546] = CL.shield, -- Webbed Aegis (Shield)
+		[450509] = CL.frontal_cone, -- Wide Swipe (Frontal Cone)
+		[433410] = CL.fear, -- Fearful Shriek (Fear)
+		[450197] = CL.charge, -- Skitter Charge (Charge)
 	}
 end
 
@@ -84,9 +96,12 @@ function mod:OnBossEnable()
 
 	-- Nerubian Darkcaster
 	self:Log("SPELL_CAST_START", "ShadowsOfStrife", 449318)
+	self:Log("SPELL_AURA_APPLIED", "ShadowsOfStrifeApplied", 449318)
+	self:Log("SPELL_AURA_REMOVED", "ShadowsOfStrifeRemoved", 449318)
 
 	-- Nerubian Captain / Nerubian Marauder
 	self:Log("SPELL_CAST_START", "WebbedAegis", 450546)
+	self:Log("SPELL_AURA_APPLIED", "WebbedAegisApplied", 450546)
 	self:Log("SPELL_CAST_START", "WideSwipe", 450509)
 
 	-- Chittering Fearmonger
@@ -106,7 +121,9 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	if self:GetOption(autotalk) then
+	local info = self:GetWidgetInfo("delve", 6183)
+	local level = info and tonumber(info.tierText)
+	if (not level or level > 3) and self:GetOption(autotalk) then
 		if self:GetGossipID(121408) then -- Skittering Breach, start Delve (Lamplighter Havrik Chayvn)
 			-- 121408:|cFF0000FF(Delve)|r I'll go deeper in and stop the nerubian ritual.
 			self:SelectGossipID(121408)
@@ -138,7 +155,7 @@ end
 -- Nerubian Lord
 
 function mod:JaggedBarbs(args)
-	self:Message(args.spellId, "orange")
+	self:Message(args.spellId, "orange", CL.frontal_cone)
 	self:PlaySound(args.spellId, "alarm")
 end
 
@@ -150,15 +167,37 @@ end
 -- Nerubian Darkcaster
 
 function mod:ShadowsOfStrife(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red", CL.casting:format(CL.bomb))
 	self:PlaySound(args.spellId, "alert")
+end
+
+function mod:ShadowsOfStrifeApplied(args)
+	if self:Me(args.destGUID) then
+		self:Say(args.spellId, CL.bomb, nil, "Bomb")
+		self:SayCountdown(args.spellId, 8)
+	end
+end
+
+function mod:ShadowsOfStrifeRemoved(args)
+	if self:Me(args.destGUID) then
+		self:CancelSayCountdown(args.spellId)
+	end
 end
 
 -- Nerubian Captain / Nerubian Marauder
 
 function mod:WebbedAegis(args)
-	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+	self:Message(args.spellId, "red", CL.casting:format(CL.shield))
 	self:PlaySound(args.spellId, "alert")
+end
+
+function mod:WebbedAegisApplied(args)
+	if self:Player(args.destFlags) then
+		self:TargetMessage(args.spellId, "green", args.destName)
+	else
+		self:Message(args.spellId, "red", CL.other:format(CL.shield, args.destName))
+		self:PlaySound(args.spellId, "alert")
+	end
 end
 
 do
@@ -167,7 +206,7 @@ do
 		local t = args.time
 		if t - prev > 2 then
 			prev = t
-			self:Message(args.spellId, "purple")
+			self:Message(args.spellId, "purple", CL.frontal_cone)
 			self:PlaySound(args.spellId, "alarm")
 		end
 	end
@@ -176,14 +215,14 @@ end
 -- Chittering Fearmonger
 
 function mod:FearfulShriek(args)
-	self:Message(args.spellId, "orange")
+	self:Message(args.spellId, "orange", CL.fear)
 	self:PlaySound(args.spellId, "alarm")
 end
 
 -- Skittering Swarmer
 
 function mod:SkitterCharge(args)
-	self:Message(args.spellId, "yellow")
+	self:Message(args.spellId, "yellow", CL.charge)
 	self:PlaySound(args.spellId, "alarm")
 end
 

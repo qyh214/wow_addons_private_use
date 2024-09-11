@@ -127,13 +127,13 @@ local function ShowBlock(timerID, elapsedTime, timeLimit)
 	end
 end
 
-if C_AddOns.IsAddOnLoaded("!KalielsTracker") then
-	hooksecurefunc("KT_Scenario_ChallengeMode_UpdateTime", UpdateTime)
-	hooksecurefunc("KT_Scenario_ChallengeMode_ShowBlock", ShowBlock)
-else
+-- if C_AddOns.IsAddOnLoaded("!KalielsTracker") then
+--	hooksecurefunc("KT_Scenario_ChallengeMode_UpdateTime", UpdateTime)
+--	hooksecurefunc("KT_Scenario_ChallengeMode_ShowBlock", ShowBlock)
+-- else
 	hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", UpdateTime)
 	hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "Activate", ShowBlock)
-end
+-- end
 
 local keystoneWasCompleted = false
 function Mod:PLAYER_ENTERING_WORLD()

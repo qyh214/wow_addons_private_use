@@ -12,14 +12,22 @@ local AutoSelectGossip = {
     [107827] = 1,           --Trading Post
     [107825] = 1,           --Trading Post
     [107826] = 1,           --Trading Post
+    [121665] = 1,           --Trading Post (Dornagal)
+    [121672] = 1,           --Trading Post (Dornagal)
+
+    [123145] = 1,           --Scouting Map, Dornagal
+    [123493] = 1,           --Delver's Guide, Dornagal
+    [122660] = 1,           --Explorers' League Supplies, Dornagal
+    [120910] = 1,           --Breem, Dornagal Flight Master
 };
 
 local function IsAutoSelectOption(gossipOptionID, onlyOption)
     if gossipOptionID then
+        if AutoSelectGossip[gossipOptionID] == true then
+            return true
+        end
         if onlyOption then
             return AutoSelectGossip[gossipOptionID] == 1
-        else
-            return AutoSelectGossip[gossipOptionID] == true
         end
     end
     return false

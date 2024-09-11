@@ -11,7 +11,6 @@
     <Script file="ChatFrame.lua"/>
     <Script file="FriendshipBar.lua"/>
     <Script file="UI.lua"/>
-    <Script file="QuestItemDisplay.lua"/>
     <Script file="Tutorial.lua"/>
 
     <Frame name="DUIDialogHotkeyTemplate" mixin="DUIDialogHotkeyFrameMixin" hidden="false" virtual="true">
@@ -63,7 +62,7 @@
         </Layers>
     </Frame>
 
-    <Frame name="DUIDialogIconFrameTemplate" mixin="DUIDialogIconFrameMixin" useParentLevel="true" virtual="true">
+    <Frame name="DUIDialogIconFrameTemplate" mixin="DUIDialogIconFrameMixin" useParentLevel="false" virtual="true">
         <Size x="14" y="14"/>
         <Layers>
             <Layer level="OVERLAY" textureSubLevel="6">
@@ -365,7 +364,7 @@
                                 <FontString parentKey="Title" inherits="DUIFont_Quest_Title_18" justifyH="LEFT" justifyV="BOTTOM" text="Quest Title">
                                     <Anchors>
                                         <Anchor point="LEFT" relativeKey="$parent" relativePoint="LEFT" x="53" y="2"/>
-                                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-8" y="3"/>
+                                        <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-8" y="2"/>
                                     </Anchors>
                                 </FontString>
                                 <FontString parentKey="Subtitle" inherits="DUIFont_QuestType_Left" justifyH="LEFT" justifyV="BOTTOM" hidden="false">

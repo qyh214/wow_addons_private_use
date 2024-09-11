@@ -3304,6 +3304,8 @@ L["Void Flayer"] = "剥灵者"
 --[[Translation missing --]]
 L["Void Spawn"] = "Void Spawn"
 --[[Translation missing --]]
+L["Void Speaker Eirich"] = "Void Speaker Eirich"
+--[[Translation missing --]]
 L["Void Touched Elemental"] = "Void Touched Elemental"
 L["Void-Touched Emissary"] = "虚触使者"
 L["Voidweaver Mal'thir"] = "纺虚者玛熙尔"

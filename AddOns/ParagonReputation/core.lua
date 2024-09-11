@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.55 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.57 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -54,7 +54,7 @@ local function AddParagonRewardsToTooltip(self,tooltip,rewards)
 end
 
 -- [GameTooltip] Show the GameTooltip with the Item Reward on mouseover. (Thanks Brudarek)
-function ParagonReputation:Tooltip(self,info)
+function ParagonReputation:Tooltip(self)
 	if not self.questID or not PR.PARAGON_DATA[self.questID] then return end
 	EmbeddedItemTooltip:ClearLines()
 	EmbeddedItemTooltip:SetOwner(self,"ANCHOR_RIGHT")
@@ -64,6 +64,8 @@ function ParagonReputation:Tooltip(self,info)
 	EmbeddedItemTooltip:AddLine(" ")
 	EmbeddedItemTooltip:AddLine(string.format(ARCHAEOLOGY_COMPLETION,self.count))
 	EmbeddedItemTooltip:AddLine(" ")
+	EmbeddedItemTooltip:SetClampedToScreen(true)
+	EmbeddedItemTooltip.paragon_clamp = true
 	EmbeddedItemTooltip:Show()
 end
 
@@ -151,8 +153,14 @@ end
 
 -- [Reputation Frame] Change the Reputation Bars accordingly.
 local function UpdateBar(self)
-	if not self.Content then return end
+	if not self.Content or not self.Content.ReputationBar then return end
 	if self.factionID and C_Reputation.IsFactionParagon(self.factionID) then
+		if not self.paragon_hook and self.ShowParagonRewardsTooltip then
+			hooksecurefunc(self,"ShowParagonRewardsTooltip",function(_self)
+				PR:Tooltip(_self)
+			end)
+			self.paragon_hook = true
+		end
 		local data = C_Reputation.GetFactionDataByID(self.factionID)
 		local currentValue,threshold,rewardQuestID,hasRewardPending = C_Reputation.GetFactionParagonInfo(self.factionID)
 		self.count = floor(currentValue/threshold)-(hasRewardPending and 1 or 0)
@@ -206,32 +214,25 @@ local function UpdateBar(self)
 	else
 		self.count = nil
 		self.questID = nil
-		if self.Content.ReputationBar and self.Content.ReputationBar.ParagonOverlay then self.Content.ReputationBar.ParagonOverlay:Hide() end
+		if self.Content.ReputationBar.ParagonOverlay then self.Content.ReputationBar.ParagonOverlay:Hide() end
 	end
 end
 
 -- [Reputation Frame] Hook the Reputation Frame.
-local hook = false
-ReputationFrame:HookScript("OnShow",function(self)
-	if hook then return end
-	for _,children in ipairs({self.ScrollBox.ScrollTarget:GetChildren()}) do
-		if children.Initialize then
-			hooksecurefunc(children,"Initialize",function(_self)
-				UpdateBar(_self)
-			end)
-		end
-		UpdateBar(children)
-		if children.ShowParagonRewardsTooltip then
-			hooksecurefunc(children,"ShowParagonRewardsTooltip",function(_self)
-				PR:Tooltip(_self)
-			end)
-		end
+for _,children in ipairs({ReputationFrame.ScrollBox.ScrollTarget:GetChildren()}) do
+	if children.Initialize then
+		hooksecurefunc(children,"Initialize",function(self)
+			UpdateBar(self)
+		end)
 	end
-	hooksecurefunc(ReputationEntryMixin,"Initialize",function(_self)
-		UpdateBar(_self)
-	end)
-	hooksecurefunc(ReputationEntryMixin,"ShowParagonRewardsTooltip",function(_self)
-		PR:Tooltip(_self)
-	end)
-	hook = true
+	UpdateBar(children)
+end
+hooksecurefunc(ReputationEntryMixin,"Initialize",function(self)
+	UpdateBar(self)
+end)
+EmbeddedItemTooltip:HookScript("OnHide",function(self)
+	if self.paragon_clamp then
+		self:SetClampedToScreen(false)
+		self.paragon_clamp = nil
+	end
 end)

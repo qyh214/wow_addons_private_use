@@ -1,7 +1,14 @@
 local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
-
+--0.01
+L["Profiles"] = true
+L["This applies to the following tabs"] = true
+L["An exception is the feedback in the chat from the function for deleting or restoring icons. These are always displayed!"] = true
+L["Here you can enable or disable all chat messages sent by MapNotes Minimap and Worldmap buttons when you hide or show icons over them"] = true
+L["Here you can enable or disable all chat messages sent from one of these MapNotes tabs when you change the settings"] = true
+L["Only affects passage icons to instances and not path icons to zones"] = true
+L["By deactivating it, the border of the zone icons of your own factions is also removed, as the displayed icons are automatically only for your own faction"] = true
 --0.1 profiles
 L["Profile has been changed"] = true
 L["Profile has been reset to default"] = true
@@ -36,6 +43,10 @@ L["This will delete all Minimap settings and replace them with those from Zones 
 L["Synchronizes the Capitals tab with the Capitals - Minimap tab"] = true
 L["Which deactivates the functions from the Capitals - Minimap tab and is now controlled together by the Capitals tab"] = true
 L["This will delete all Capitals - Minimap settings and replace them with those from Capitals tab"] = true
+--0.6 MapNotes icons and hide blizzard POIs
+L["Displays special MapNotes summary icons containing several different pieces of information (dungeons/raids/portals, etc.)"] = true
+L["Points of interests"] = true
+L["Disables the display of all Blizzard Dungeon and Raid icons on the zone map"] = true
 --1 Capitals
 L["Leather Armor"] = true
 L["Heavy Armor"] = true
@@ -142,6 +153,7 @@ L["gray all"] = true
 L["Colors EVERYONE! Assigned dungeons and raids also have multiple points in gray (if you have an ID)"] = true
 L["enemy faction"] = true
 L["Shows enemy faction (horde/alliance) icons"] = true
+L["However, this only applies to the Azeroth & continent map. Not for Zones + & Capital + category. These have their own activation option for opposing players"] = true
 L["chat message"] = true
 L["Disables MapNotes status chat messages excluding core information"] = true
 L["Shows special transport icons like"] = true

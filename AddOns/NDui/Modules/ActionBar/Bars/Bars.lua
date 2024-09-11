@@ -200,10 +200,14 @@ function Bar:ReassignBindings()
 
 	for index = 1, 8 do
 		local frame = Bar.headers[index]
-		for _, button in next, frame.buttons do
-			for _, key in next, {GetBindingKey(button.keyBoundTarget)} do
-				if key and key ~= "" then
-					SetOverrideBindingClick(frame, false, key, button:GetName(), "Keybind")
+		if frame then
+			ClearOverrideBindings(frame)
+	
+			for _, button in next, frame.buttons do
+				for _, key in next, {GetBindingKey(button.keyBoundTarget)} do
+					if key and key ~= "" then
+						SetOverrideBindingClick(frame, false, key, button:GetName())
+					end
 				end
 			end
 		end
@@ -215,7 +219,9 @@ function Bar:ClearBindings()
 
 	for index = 1, 8 do
 		local frame = Bar.headers[index]
-		ClearOverrideBindings(frame)
+		if frame then
+			ClearOverrideBindings(frame)
+		end
 	end
 end
 
@@ -316,6 +322,21 @@ function Bar:CreateBars()
 	end)
 end
 
+function Bar:UpdateOverlays()
+	local eventFrame = LAB.eventFrame
+	if not eventFrame then return end
+
+	if C.db["Actionbar"]["ShowGlow"] then
+		eventFrame.showGlow = true
+		eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+		eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+	else
+		eventFrame.showGlow = false
+		eventFrame:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+		eventFrame:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+	end
+end
+
 function Bar:OnLogin()
 	Bar.buttons = {}
 	Bar:MicroMenu()
@@ -324,6 +345,7 @@ function Bar:OnLogin()
 
 	Bar.movers = {}
 	Bar:CreateBars()
+	Bar:UpdateOverlays()
 	Bar:CreateExtrabar()
 	Bar:CreateLeaveVehicle()
 	Bar:CreatePetbar()

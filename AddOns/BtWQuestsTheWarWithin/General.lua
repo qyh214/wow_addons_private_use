@@ -4,6 +4,7 @@ local EXPANSION_ID = BtWQuests.Constant.Expansions.TheWarWithin
 local Category = BtWQuests.Constant.Category.TheWarWithin
 local Chain = BtWQuests.Constant.Chain.TheWarWithin
 local ALLIANCE_RESTRICTIONS, HORDE_RESTRICTIONS = 924, 923
+local THREADS_OF_FATE_RESTRICTION = BtWQuests.Constant.Restrictions.TheWarWithinToF
 local ACHIEVEMENT_ID = 20597
 local LEVEL_RANGE = {68, 80}
 local LEVEL_PREREQUISITES = {
@@ -22,40 +23,49 @@ Chain.Chapter05 = 110006
 
 Database:AddChain(Chain.Introduction, {
     name = BtWQuests.L["Introduction"],
-    questline = 0,
+    questline = 5638,
     expansion = EXPANSION_ID,
     range = LEVEL_RANGE,
     major = true,
     prerequisites = LEVEL_PREREQUISITES,
     active = {
         type = "quest",
-        id = 0,
+        ids = { 81930, 78713 },
         status = {'active', 'completed'},
     },
     completed = {
         type = "quest",
-        id = 78529,
+        ids = { 83543, 78529, }
     },
     items = {
         {
-            type = "npc",
-            id = 219252,
-            x = 0,
-            connections = {
-                1, 
+            variations = {
+                {
+                    type = "area",
+                    id = 1519,
+                    locations = {
+                        [84] = {
+                            {
+                                x = 0.629261,
+                                y = 0.7229,
+                            },
+                        },
+                    },
+                    restrictions = 924,
+                },
+                {
+                    type = "area",
+                    id = 1637,
+                    locations = {
+                        [85] = {
+                            {
+                                x = 0.508051,
+                                y = 0.780649,
+                            },
+                        },
+                    },
+                },
             },
-        },
-        {
-            type = "quest",
-            id = 79197,
-            x = 0,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 79333,
             x = 0,
             connections = {
                 1, 
@@ -65,12 +75,12 @@ Database:AddChain(Chain.Introduction, {
             variations = {
                 {
                     type = "quest",
-                    id = 79328,
-                    restrictions = 923,
+                    id = 81930,
+                    restrictions = 924,
                 },
                 {
                     type = "quest",
-                    id = 82153,
+                    id = 78713,
                 },
             },
             x = 0,
@@ -80,7 +90,7 @@ Database:AddChain(Chain.Introduction, {
         },
         {
             type = "quest",
-            id = 83271,
+            id = 78714,
             x = 0,
             connections = {
                 1, 
@@ -88,7 +98,7 @@ Database:AddChain(Chain.Introduction, {
         },
         {
             type = "quest",
-            id = 83286,
+            id = 78715,
             x = 0,
             connections = {
                 1, 
@@ -96,7 +106,7 @@ Database:AddChain(Chain.Introduction, {
         },
         {
             type = "quest",
-            id = 83315,
+            id = 78716,
             x = 0,
             connections = {
                 1, 
@@ -104,7 +114,104 @@ Database:AddChain(Chain.Introduction, {
         },
         {
             type = "quest",
-            id = 79344,
+            id = 80500,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 81966,
+            breadcrumb = true,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78717,
+            x = 0,
+            connections = {
+                1, 2, 3, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78719,
+            x = -2,
+            connections = {
+                3, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78721,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78718,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78722,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 79105,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 79106,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 80321,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            variations = {
+                {
+                    type = "quest",
+                    id = 78529,
+                    restrictions = {
+                        type = "quest",
+                        id = 78529,
+                        status = {'active', 'completed'}
+                    }
+                },
+                {
+                    type = "quest",
+                    id = 83543,
+                    restrictions = THREADS_OF_FATE_RESTRICTION,
+                },
+                {
+                    type = "quest",
+                    id = 78529,
+                }
+            },
             x = 0,
         },
     },
@@ -128,7 +235,7 @@ Database:AddChain(Chain.AgainstTheCurrent, {
     },
     active = {
         type = "quest",
-        id = 79197,
+        id = 79333,
         status = {'active', 'completed'},
     },
     completed = {
@@ -702,16 +809,77 @@ Database:AddChain(Chain.Chapter05, {
     },
     active = {
         type = "quest",
-        id = 0,
+        id = 78941,
         status = {'active', 'completed'},
     },
     completed = {
         type = "quest",
-        id = 0,
+        id = 83503,
     },
     items = {
+        {
+            type = "npc",
+            id = 223944,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78941,
+            x = 0,
+            connections = {
+                1, 2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78942,
+            x = -1,
+            connections = {
+                3, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78943,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78950,
+            x = 1,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 78948,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 83503,
+            x = 0,
+        },
     },
 })
+local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded;
+if not IsAddOnLoaded("BtWQuestsTheWarWithinPrologue") then
+    BtWQuestsDatabase:AddExpansionItems(EXPANSION_ID, {
+        {
+            type = "chain",
+            id = Chain.Introduction,
+        },
+    })
+end
 BtWQuestsDatabase:AddExpansionItems(EXPANSION_ID, {
     {
         type = "chain",
@@ -729,4 +897,15 @@ BtWQuestsDatabase:AddExpansionItems(EXPANSION_ID, {
         type = "chain",
         id = Chain.TheMachinesMarchToWar,
     },
+    {
+        type = "chain",
+        id = Chain.Chapter05,
+    },
 })
+
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.Introduction)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.AgainstTheCurrent)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TiesThatBind)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.NewsFromBelow)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheMachinesMarchToWar)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.Chapter05)

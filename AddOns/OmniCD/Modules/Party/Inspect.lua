@@ -431,6 +431,12 @@ local function FindSetBonus(info, specBonus, list)
 				if numEquipped and numEquipped >= numRequired then
 					info.talentData[bonusID] = "S"
 					if list then list[#list + 1] = bonusID .. ":S" end
+
+					local bonusID2 = specBonus[3]
+					if bonusID2 and numEquipped >= specBonus[4] then
+						info.talentData[bonusID2] = "S"
+						if list then list[#list + 1] = bonusID2 .. ":S" end
+					end
 				end
 				return bonusID
 			end
@@ -573,9 +579,20 @@ local function GetEquippedItemData(info, unit, specID, list)
 	return moveToStale
 end
 
-local talentIDFix = { [103211]=377779,[103216]=343240,[103224]=377623, }
 
-local talentChargeFix = { [36554]={[259]=1,[261]=1},[191634]=true,[47568]=true,[5394]=true }
+local talentIDFix = {
+	[103211] = 377779,
+	[103216] = 343240,
+	[103224] = 377623
+}
+
+
+local talentChargeFix = {
+	[36554] = { [259]=1, [261]=1 },
+	[191634] = true,
+	[47568] = true,
+	[5394] = true
+}
 
 local MAX_NUM_TALENTS = MAX_NUM_TALENTS or ((E.isWOTLKC or E.isCata) and 31 or 25)
 
@@ -622,7 +639,7 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 								local definitionInfo = C_Traits.GetDefinitionInfo(definitionID)
 								local spellID = definitionInfo.spellID
 								spellID = talentIDFix[activeEntryID] or spellID
-								if spellID then
+								if spellID and (not treeNode.subTreeID or treeNode.subTreeActive) then
 									if talentChargeFix[spellID] then
 										if talentChargeFix[spellID] == true then
 											if info.talentData[spellID] then
@@ -936,11 +953,11 @@ end
 
 local function FindValidSpellID(info, v)
 	if type(v) ~= "table" then
-		return info.spec == v or (info.talentData[v] and true)
+		return info.spec == v or (P:IsTalentForPvpStatus(v, info) and true)
 	end
 	if v[1] > 0 then
-		for id in pairs(v) do
-			if info.talentData[id] then
+		for _, id in pairs(v) do
+			if info.spec == id or P:IsTalentForPvpStatus(id, info) then
 				return true
 			end
 		end
@@ -949,24 +966,27 @@ local function FindValidSpellID(info, v)
 		for i = 1, #v, 2 do
 			local tid, sid = v[i], v[i + 1]
 			tid = i == 1 and -tid or tid
-			spellID = info.talentData[tid] and sid
+			spellID = P:IsTalentForPvpStatus(tid, info) and sid
 		end
 		return spellID or true
 	end
 end
 
 function CM:UpdateCooldownSyncIDs(info)
-	if E.preCata or info.isAdminObsForMDI then return end
 	wipe(self.cooldownSyncIDs)
+	if info.isAdminObsForMDI then return end
+	local notRaid = P.zone ~= "raid"
 	for id, t in E.pairs(E.sync_cooldowns.ALL, E.sync_cooldowns[E.userClass]) do
-		local spellID
-		for i = 1, #t do
-			local v = t[i]
-			spellID = not v or FindValidSpellID(info, v)
-			if not spellID then break end
-		end
-		if spellID then
-			self.cooldownSyncIDs[spellID == true and id or spellID] = { 0, -1 }
+		if notRaid or E.sync_in_raid[id] then
+			local spellID
+			for i = 1, #t do
+				local v = t[i]
+				spellID = not v or FindValidSpellID(info, v)
+				if not spellID then break end
+			end
+			if spellID then
+				self.cooldownSyncIDs[spellID == true and id or spellID] = { 0, -1 }
+			end
 		end
 	end
 	self:ToggleCooldownSync()
@@ -1009,7 +1029,9 @@ function CM:InspectUser()
 	local encodedData = LibDeflate:EncodeForWoWAddonChannel(compressedData)
 	self.serializedSyncData = encodedData
 
-	self:UpdateCooldownSyncIDs(info)
+	if not E.preCata then
+		self:UpdateCooldownSyncIDs(info)
+	end
 
 	if P.groupInfo[E.userGUID] then
 		P:UpdateUnitBar(E.userGUID)

@@ -44,9 +44,4 @@ if L then
 	L.waveInc = "第 %d 波即將來臨！"
 	L.message = "%s 約 %d 秒後來臨!"
 	L.waveMessage = "第 %d 波約 %d 秒後來臨!"
-
-	L.winterchillGossip = "我和我的同伴都與你同在，普勞德摩爾女士。"
-	L.anetheronGossip = "不管阿克蒙德要派誰來對付我們，我們都已經準備好了，普勞德摩爾女士。"
-	L.kazrogalGossip = "我與你同在，索爾。"
-	L.azgalorGossip = "我們無所畏懼。"
 end

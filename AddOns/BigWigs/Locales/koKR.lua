@@ -47,6 +47,8 @@ L.offline = "접속 종료"
 
 L.missingAddOnPopup = "|cFF436EEE%s|r 애드온이 없습니다!"
 L.missingAddOnRaidWarning = "|cFF436EEE%s|r 애드온이 없습니다! 이 지역에는 타이머가 표시되지 않습니다!"
+L.outOfDateAddOnPopup = "|cFF436EEE%s|r 애드온이 오래되었습니다!"
+L.outOfDateAddOnRaidWarning = "|cFF436EEE%s|r 애드온이 오래되었습니다! 이 애드온에는 버그가 있거나, 기능이 누락되었거나, 타이머가 완전히 잘못될 수 있습니다."
 L.disabledAddOn = "|cFF436EEE%s|r 애드온이 비활성화 중이므로 타이머를 표시할 수 없습니다."
 L.removeAddOn = "'|cFF436EEE%s|r'|1이;가; '|cFF436EEE%s|r'|1으로;로; 대체되었으므로 제거해주세요."
 L.alternativeName = "%s (|cFF436EEE%s|r)"
@@ -67,7 +69,7 @@ L.expansionNames = {
 	"내부 전쟁", -- The War Within
 }
 L.littleWigsExtras = {
-	["LittleWigs_Delves"] = "Delves",
+	["LittleWigs_Delves"] = "구렁",
 	["LittleWigs_CurrentSeason"] = "현재 시즌",
 }
 
@@ -175,17 +177,20 @@ L.dispeller = "|cFFFF0000무효화 시전자만 경보합니다.|r "
 
 -- Sharing.lua
 L.import = "가져오기"
-L.import_info = "문자열을 입력한 후 가져올 설정을 선택할 수 있습니다.\n가져오기 문자열에 설정이 포함되어 있지 않으면 선택할 수 없습니다.\n\n이 가져오기는 일반 설정에만 영향을 미치며 보스별 설정에는 영향을 미치지 않습니다."
+L.import_info = "문자열을 입력한 후 가져올 설정을 선택할 수 있습니다.\n가져오기 문자열에 설정이 포함되어 있지 않으면 선택할 수 없습니다.\n\n|cffff4411이 가져오기는 일반 설정에만 영향을 미치며 보스별 설정에는 영향을 미치지 않습니다.|r"
 L.import_info_active = "가져오고 싶은 부분을 선택한 후 가져오기 버튼을 클릭하세요."
 L.import_info_none = "|cFFFF0000가져오기 문자열이 호환되지 않거나 오래되었습니다.|r"
 L.export = "내보내기"
-L.export_info = "내보내고 다른 사람과 공유할 설정을 선택하세요.\n\n일반 설정만 공유할 수 있으며 보스별 설정에는 영향을 미치지 않습니다."
+L.export_info = "내보내고 다른 사람과 공유할 설정을 선택하세요.\n\n|cffff4411일반 설정만 공유할 수 있으며 보스별 설정에는 영향을 미치지 않습니다.|r"
 L.export_string = "내보내기 문자열"
 L.export_string_desc = "설정을 공유하려면 이 BigWigs 문자열을 복사하세요."
 L.import_string = "가져오기 문자열"
 L.import_string_desc = "가져오려는 BigWigs 문자열을 여기에 붙여넣으세요."
 L.position = "위치"
 L.settings = "설정"
+L.other_settings = "기타 설정"
+L.nameplate_settings_import_desc = "모든 이름표 설정 가져오기."
+L.nameplate_settings_export_desc = "모든 이름표 설정 내보내기."
 L.position_import_bars_desc = "바의 위치(앵커)를 가져옵니다."
 L.position_import_messages_desc = "메시지의 위치(앵커)를 가져옵니다."
 L.position_import_countdown_desc = "카운트다운의 위치(앵커)를 가져옵니다."
@@ -220,6 +225,7 @@ L.imported_message_colors = "메시지 색상"
 L.imported_countdown_position = "카운트다운 위치"
 L.imported_countdown_settings = "카운트다운 설정"
 L.imported_countdown_color = "카운트다운 색상"
+L.imported_nameplate_settings = "이름표 설정"
 
 -- Statistics
 L.statistics = "통계"

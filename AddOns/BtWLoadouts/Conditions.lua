@@ -249,6 +249,8 @@ local function UpdateSetFilters(set)
 	end
 
 	filters.instanceType = set.type
+	filters.instance = set.instanceID
+	filters.difficulty = set.difficultyID
 
 	filters.disabled = set.disabled ~= true and 0 or 1
 
@@ -283,8 +285,16 @@ local function RefreshConditionSet(set)
 	if difficultyID == 8 then -- In M+
 		local affixes = GetCurrentAffixes();
 		if affixes then
-			for i=1,4 do
-				set["affixID" .. i] = affixes[i] and affixes[i].id or nil
+			-- Handle Xal'atath's Guile rearranging affixes
+			if affixes[4] == 147 then
+				set["affixID" .. 1] = 147
+				for i=1,3 do
+					set["affixID" .. (i + 1)] = affixes[i] and affixes[i].id or nil
+				end
+			else
+				for i=1,4 do
+					set["affixID" .. i] = affixes[i] and affixes[i].id or nil
+				end
 			end
 		end
 		-- if affixes then
@@ -416,8 +426,16 @@ function Internal.UpdateConditionsForAffixes()
 	if difficultyID == 23 then -- In a mythic dungeon (not M+)
 		local affixes = GetCurrentAffixes();
 		if affixes then
-			for i=1,4 do
-				affixIDs[i] = affixes[i] and affixes[i].id or nil
+			-- Handle Xal'atath's Guile rearranging affixes
+			if affixes[4] == 147 then
+				affixIDs[1] = 147
+				for i=1,3 do
+					affixIDs[(i + 1)] = affixes[i] and affixes[i].id or nil
+				end
+			else
+				for i=1,4 do
+					affixIDs[i] = affixes[i] and affixes[i].id or nil
+				end
 			end
 		-- 	-- Ignore the 4th (seasonal) affix
 		-- 	affixesID = Internal.GetAffixesInfo(affixes[1].id, affixes[2].id, affixes[3].id).id
@@ -1081,14 +1099,16 @@ do
 	BtWLoadoutsConditionsAffixesMixin = {}
 	function BtWLoadoutsConditionsAffixesMixin:OnLoad()
 		self.Buttons = {}
+
+		local x = 20
 		for index,level in Internal.AffixesLevels() do
-			local x = ((index - 1) * 90) + 20
 			local y = -17
 			local relativeTo
+
+			local columnWidth = 0
 			for _,affix in Internal.Affixes(level) do
 				local name = self:GetName() .. "Button" .. affix
 				local button = CreateFrame("Button", name, self, "BtWLoadoutsConditionsAffixesDropDownButton", affix);
-				button:SetWidth(85);
 				if relativeTo then
 					button:SetPoint("TOP", relativeTo, "BOTTOM", 0, -5);
 				else
@@ -1097,6 +1117,8 @@ do
 
 				local fullname, icons, mask = select(2, Internal.GetAffixesName(affix));
 				_G[name .. "NormalText"]:SetText(icons);
+				columnWidth = math.max(columnWidth, _G[name .. "NormalText"]:GetWidth())
+
 				button.mask = mask;
 
 				button.keepShownOnClick = true
@@ -1110,7 +1132,15 @@ do
 				button:Show();
 				relativeTo = button;
 			end
+			for _,affix in Internal.Affixes(level) do
+				local name = self:GetName() .. "Button" .. affix
+				_G[name]:SetWidth(columnWidth + 10)
+			end
+
+			x = x + columnWidth + 30
 		end
+		self:SetWidth(x - 40)
+		self:SetHeight(5 * 20 + 32)
 		hooksecurefunc("CloseDropDownMenus", function ()
 			if not MouseIsOver(self) then
 				self:Hide();
@@ -1317,7 +1347,7 @@ function BtWLoadoutsConditionsMixin:Update()
 	self:GetParent():SetTitle(L["Conditions"]);
 	local sidebar = BtWLoadoutsFrame.Sidebar
 
-	sidebar:SetSupportedFilters("spec", "class", "role", "character", "instanceType", "disabled")
+	sidebar:SetSupportedFilters("spec", "class", "role", "character", "instanceType", "instance", "difficulty", "disabled")
 	sidebar:SetSets(BtWLoadoutsSets.conditions)
 	sidebar:SetCollapsed(BtWLoadoutsCollapsed.conditions)
 	sidebar:SetCategories(BtWLoadoutsCategories.conditions)

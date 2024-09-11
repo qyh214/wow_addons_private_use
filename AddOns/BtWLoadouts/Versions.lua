@@ -16,43 +16,49 @@ local seasons = {
         [10] = 1683644400,
         [11] = 1699974000,
         [12] = 1713884400,
+        [13] = 1725980400,
     },
     [2] = {
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
+        [13] = 1726095600,
     },
     [3] = {
         [9] = 1670990400,
         [10] = 1683691200,
         [11] = 1700020800,
         [12] = 1713931200,
+        [13] = 1726027200,
     },
     [4] = {
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
+        [13] = 1726095600,
     },
     [5] = {
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
+        [13] = 1726095600,
     },
     [72] = {
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
+        [13] = 1726095600,
     },
 };
 local GetCurrentSeason = C_MythicPlus and C_MythicPlus.GetCurrentSeason or function ()
     return 0
 end
 local function IsSeason(season)
-    -- C_MythicPlus.GetCurrentSeason isnt always available during first login sp we fallback to date checking.
+    -- C_MythicPlus.GetCurrentSeason isnt always available during first login so we fallback to date checking.
     -- In the future it might be worth using something else or delaying season checks
     local current = GetCurrentSeason()
     if current > 0 then
@@ -74,28 +80,28 @@ local function IsSeason(season)
     return true
 end
 
-Internal.IsShadowlandsPatch = IsAtleastBuild(90000)
-Internal.IsChainsOfDominationPatch = IsAtleastBuild(90100)
-Internal.IsEternitysEndPatch = IsAtleastBuild(90200)
-Internal.IsDragonflightPatch = IsAtleastBuild(100000)
-Internal.IsTheWarWithinPatch = IsAtleastBuild(110000)
+Internal.IsDragonflightOrBeyond = IsAtleastBuild(100000)
+Internal.IsTheWarWithinOrBeyond = IsAtleastBuild(110000)
 Internal.Is100000 = IsBuild(100000)
 Internal.Is100002 = IsBuild(100002)
 Internal.Is100005 = IsBuild(100005)
 Internal.Is100007 = IsBuild(100007)
-Internal.Is100100 = IsAtleastBuild(100100)
-Internal.Is100105 = IsAtleastBuild(100105)
+Internal.Is100100 = IsBuild(100100)
+Internal.Is100105 = IsBuild(100105)
+Internal.Is100200 = IsBuild(100200)
 
 Internal.IsBattleForAzeroth = IsExpansion(LE_EXPANSION_BATTLE_FOR_AZEROTH or 7)
 Internal.IsShadowlands = IsExpansion(LE_EXPANSION_SHADOWLANDS or 8)
 Internal.IsDragonflight = IsExpansion(LE_EXPANSION_DRAGONFLIGHT or 9)
-Internal.IsTheWarWithin = IsExpansion(LE_EXPANSION_11_0 or 10)
+Internal.IsTheWarWithin = IsExpansion(LE_EXPANSION_WAR_WITHIN or 10)
 
-Internal.IsShadowlandsSeason1 = IsSeason(5)
-Internal.IsShadowlandsSeason2 = IsSeason(6)
-Internal.IsShadowlandsSeason3 = IsSeason(7)
-Internal.IsShadowlandsSeason4 = IsSeason(8)
-Internal.IsDragonflightSeason1 = IsSeason(9)
-Internal.IsDragonflightSeason2 = IsSeason(10)
-Internal.IsDragonflightSeason3 = IsSeason(11)
-Internal.IsDragonflightSeason4 = IsSeason(12)
+Internal.IsBattleForAzerothSeason1 = Internal.IsBattleForAzeroth and IsSeason(4)
+Internal.IsShadowlandsSeason1 = Internal.IsShadowlands and IsSeason(5)
+Internal.IsShadowlandsSeason2 = Internal.IsShadowlands and IsSeason(6)
+Internal.IsShadowlandsSeason3 = Internal.IsShadowlands and IsSeason(7)
+Internal.IsShadowlandsSeason4 = Internal.IsShadowlands and IsSeason(8)
+Internal.IsDragonflightSeason1 = Internal.IsDragonflight and IsSeason(9)
+Internal.IsDragonflightSeason2 = Internal.IsDragonflight and IsSeason(10)
+Internal.IsDragonflightSeason3 = Internal.IsDragonflight and IsSeason(11)
+Internal.IsDragonflightSeason4 = Internal.IsDragonflight and IsSeason(12)
+Internal.IsTheWarWithinSeason1 = Internal.IsTheWarWithin -- and IsSeason(13)

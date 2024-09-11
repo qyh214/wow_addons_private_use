@@ -112,7 +112,7 @@ function WorldQuestTracker.AddQuestToTracker(self, questID, mapID)
 		return
 	end
 
-	if (WorldQuestTracker.db.profile.tomtom.enabled and TomTom and IsAddOnLoaded ("TomTom")) then
+	if (WorldQuestTracker.db.profile.tomtom.enabled and TomTom and C_AddOns.IsAddOnLoaded("TomTom")) then
 		WorldQuestTracker.AddQuestTomTom (self.questID, self.mapID or mapID)
 		--return true
 	end
@@ -194,9 +194,9 @@ function WorldQuestTracker.RemoveAllQuestsFromTracker()
 				end
 			end
 			--quest summary
-			for _, widget in pairs (WorldQuestTracker.WorldSummaryQuestsSquares) do
-				if (widget:IsShown() and widget.questID == questID) then
-					widget.onEndTrackAnimation:Play()
+			for _, summarySquare in pairs (WorldQuestTracker.WorldSummaryQuestsSquares) do
+				if (summarySquare:IsShown() and summarySquare.questID == questID) then
+					summarySquare.onEndTrackAnimation:Play()
 				end
 			end
 		else

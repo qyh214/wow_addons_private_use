@@ -507,6 +507,50 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [213620] = {
+        name = "Thrall",
+        locations = {
+            [81] = {
+                {
+                    x = 0.419606,
+                    y = 0.450442,
+                },
+            },
+        },
+    },
+    [213624] = {
+        name = "Magni Bronzebeard",
+        locations = {
+            [2321] = {
+                {
+                    x = 0.500598,
+                    y = 0.651946,
+                },
+            },
+        },
+    },
+    [213625] = {
+        name = "Lady Jaina Proudmoore",
+        locations = {
+            [2321] = {
+                {
+                    x = 0.49521,
+                    y = 0.585742,
+                },
+            },
+        },
+    },
+    [213627] = {
+        name = "Archmage Khadgar",
+        locations = {
+            [629] = {
+                {
+                    x = 0.428815,
+                    y = 0.598807,
+                },
+            },
+        },
+    },
     [213634] = {
         name = "Dagran Thaurissan II",
         locations = {
@@ -642,6 +686,50 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [214271] = {
+        name = "General Steelstrike",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.716405,
+                    y = 0.592089,
+                },
+            },
+        },
+    },
+    [214273] = {
+        name = "Anduin Wrynn",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.645292,
+                    y = 0.617816,
+                },
+            },
+        },
+    },
+    [214276] = {
+        name = "Lady Jaina Proudmoore",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.685459,
+                    y = 0.64153,
+                },
+            },
+        },
+    },
+    [214296] = {
+        name = "Stage Manager Huberta",
+        locations = {
+            [2248] = {
+                {
+                    x = 0.564361,
+                    y = 0.513814,
+                },
+            },
+        },
+    },
     [214356] = {
         name = "Vix'aron",
         locations = {
@@ -741,6 +829,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [214651] = {
+        name = "Moira Thaurissan",
+        locations = {
+            [629] = {
+                {
+                    x = 0.404355,
+                    y = 0.540313,
+                },
+            },
+        },
+    },
     [214663] = {
         name = "High Speaker Brinthe",
         locations = {
@@ -748,6 +847,28 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.562721,
                     y = 0.749223,
+                },
+            },
+        },
+    },
+    [214665] = {
+        name = "Archmage Drenden",
+        locations = {
+            [629] = {
+                {
+                    x = 0.56394,
+                    y = 0.332783,
+                },
+            },
+        },
+    },
+    [214669] = {
+        name = "Brann Bronzebeard",
+        locations = {
+            [629] = {
+                {
+                    x = 0.470241,
+                    y = 0.490983,
                 },
             },
         },
@@ -770,6 +891,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.671695,
                     y = 0.641258,
+                },
+            },
+        },
+    },
+    [214908] = {
+        name = "Alleria Windrunner",
+        locations = {
+            [2305] = {
+                {
+                    x = 0.504321,
+                    y = 0.504469,
                 },
             },
         },
@@ -1203,6 +1335,39 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [215744] = {
+        name = "Burkhalt",
+        locations = {
+            [2248] = {
+                {
+                    x = 0.567956,
+                    y = 0.522226,
+                },
+            },
+        },
+    },
+    [215745] = {
+        name = "Rabaan",
+        locations = {
+            [2248] = {
+                {
+                    x = 0.567852,
+                    y = 0.521682,
+                },
+            },
+        },
+    },
+    [215748] = {
+        name = "Wendeline",
+        locations = {
+            [2248] = {
+                {
+                    x = 0.568095,
+                    y = 0.521958,
+                },
+            },
+        },
+    },
     [215781] = {
         name = "Moira Thaurissan",
         locations = {
@@ -1309,6 +1474,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.569053,
                     y = 0.162924,
+                },
+            },
+        },
+    },
+    [216046] = {
+        name = "Tka'ktath",
+        locations = {
+            [2255] = {
+                {
+                    x = 0.628726,
+                    y = 0.663677,
                 },
             },
         },
@@ -1657,6 +1833,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [217248] = {
+        name = "Elma",
+        locations = {
+            [2248] = {
+                {
+                    x = 0.567713,
+                    y = 0.521944,
+                },
+            },
+        },
+    },
     [217255] = {
         name = "Ag'thax",
         locations = {
@@ -1851,6 +2038,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.779461,
                     y = 0.303234,
+                },
+            },
+        },
+    },
+    [217692] = {
+        name = "Ar'syn",
+        locations = {
+            [2213] = {
+                {
+                    x = 0.319744,
+                    y = 0.224588,
                 },
             },
         },
@@ -2071,6 +2269,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.524181,
                     y = 0.501869,
+                },
+            },
+        },
+    },
+    [218171] = {
+        name = "Shalba",
+        locations = {
+            [2213] = {
+                {
+                    x = 0.454168,
+                    y = 0.135575,
                 },
             },
         },
@@ -2328,6 +2537,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [219885] = {
+        name = "Anduin Wrynn",
+        locations = {
+            [2307] = {
+                {
+                    x = 0.726316,
+                    y = 0.578947,
+                },
+            },
+        },
+    },
     [219899] = {
         name = "Batzvara",
         locations = {
@@ -2478,6 +2698,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.625718,
                     y = 0.792083,
+                },
+            },
+        },
+    },
+    [220688] = {
+        name = "Alleria Windrunner",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.359303,
+                    y = 0.354589,
                 },
             },
         },

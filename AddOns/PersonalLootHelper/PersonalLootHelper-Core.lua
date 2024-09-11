@@ -134,6 +134,8 @@ CHANGELOG:
 	
 ]]--
 
+local GetItemInfo = GetItemInfo or C_Item.GetItemInfo
+
 -- Constants to control inspection process
 local DELAY_BETWEEN_INSPECTIONS_LONG	= 12	-- in seconds
 local DELAY_BETWEEN_INSPECTIONS_SHORT	= 0.2	-- in seconds
@@ -570,7 +572,7 @@ local lootedItems = {}  					-- array of items looted by player; keyed by name-r
 --[[ UTILITY FUNCTIONS ]]--
 
 local function GetItemPrimaryAttribute(item)
-	local stats = GetItemStats(item)
+	local stats = C_Item.GetItemStats(item)
 	if stats ~= nil then
 		for stat, value in pairs(stats) do
 			if _G[stat] == ITEM_MOD_STRENGTH_SHORT or _G[stat] == ITEM_MOD_INTELLECT_SHORT or _G[stat] == ITEM_MOD_AGILITY_SHORT then
@@ -1313,7 +1315,7 @@ local function UpdateLootedItemsDisplay()
 				
 				-- BoE Label
 				
-				if lootedItem[FULL_ITEM_INFO][FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP then
+				if lootedItem[FULL_ITEM_INFO][FII_BIND_TYPE] == Enum.ItemBind.OnEquip then
 					CreateLabel("BoE ", COLOR_BOE, labels[labelIndex], 'TOPRIGHT')
 				end
 
@@ -2055,7 +2057,7 @@ end
 local function ShouldBeEvaluated(fullItemInfo)
 	return fullItemInfo[FII_IS_EQUIPPABLE]
 		and (fullItemInfo[FII_QUALITY] == Enum.ItemQuality.Rare or fullItemInfo[FII_QUALITY] == Enum.ItemQuality.Epic)
-		and (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_ACQUIRE or (fullItemInfo[FII_BIND_TYPE] == LE_ITEM_BIND_ON_EQUIP and not PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE]))
+		and (fullItemInfo[FII_BIND_TYPE] == Enum.ItemBind.OnAcquire or (fullItemInfo[FII_BIND_TYPE] == Enum.ItemBind.OnEquip and not PLH_PREFS[PLH_PREFS_NEVER_OFFER_BOE]))
 --		and (not fullItemInfo[FII_IS_AZERITE_ITEM])
 end		
 
@@ -2151,7 +2153,7 @@ local function PerformNotify(fullItemInfo, looterName)
 					end
 				end			
 			end
-		elseif not IsPLHUser(looterName) and fullItemInfo[FII_BIND_TYPE] ~= LE_ITEM_BIND_ON_EQUIP and not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0, true) then
+		elseif not IsPLHUser(looterName) and fullItemInfo[FII_BIND_TYPE] ~= Enum.ItemBind.OnEquip and not IsAnUpgradeForCharacter(fullItemInfo, looterName, 0, true) then
 			if shouldAddLootedItem(fullItemInfo) then
 				AddLootedItem(fullItemInfo, looterName)
 				UpdateLootedItemsDisplay()
@@ -2164,6 +2166,7 @@ end
 
 -- Event handler for CHAT_MSG_LOOT event
 local function LootReceivedEvent(self, event, ...)
+	PLH_SendDebugMessage('LootReceivedEvent')
 	local LOOT_ITEM_SELF_PATTERN 			= _G.LOOT_ITEM_SELF:gsub('%%s', '(.+)')				-- You receive loot: (.+)
 	local LOOT_ITEM_PATTERN					= _G.LOOT_ITEM:gsub('%%s', '(.+)')					-- (.+) receives loot: (.+)
 --[[
@@ -2213,6 +2216,7 @@ local function LootReceivedEvent(self, event, ...)
 	end
 
 	if lootedItem then
+		PLH_SendDebugMessage('Looted Item: ' .. lootedItem)
 		local fullItemInfo = GetFullItemInfo(lootedItem)
 		PerformNotify(fullItemInfo, PLH_GetFullName(looter))
 	end
@@ -2841,10 +2845,10 @@ function PLH_TestInv()
 	local fii
 	
     for bag = 0, NUM_BAG_SLOTS do
-        for slot = 1, GetContainerNumSlots(bag) do
+        for slot = 1, C_Container.GetContainerNumSlots(bag) do
 --          itemID = GetContainerItemID(bag, slot)
 --			item = select(7, GetContainerItemInfo(bag, slot))
-			item = GetContainerItemLink(bag, slot)
+			item = C_Container.GetContainerItemLink(bag, slot)
 			if IsEquippableItem(item) then
 				print(item)
 				fii = GetFullItemInfo(item)

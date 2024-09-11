@@ -1597,12 +1597,34 @@ local enchantBySpellID = {
     [406295] = 6828, -- Apply Lambent Armor Kit
     [406298] = 6829, -- Apply Lambent Armor Kit
     [406299] = 6830, -- Apply Lambent Armor Kit
-    [411461] = 6903, -- FX Testing - Enchant Visual - KM [DNT]
     [411897] = 6904, -- Apply Shadowed Belt Clasp
     [411898] = 6905, -- Apply Shadowed Belt Clasp
     [411899] = 6906, -- Apply Shadowed Belt Clasp
     [426327] = 7052, -- Incandescent Essence
+    [441296] = 7282, -- Inscribe Pickaxe
+    [445445] = 7320, -- Test Enchant - MM
+    [446284] = 7323, -- 10FX - Weapon Enchant - Sha - All Weapons
+    [455829] = 7526, -- Algari Weaverline
+    [457618] = 7529, -- Daybreak Spellthread
+    [457619] = 7530, -- Daybreak Spellthread
+    [457620] = 7531, -- Daybreak Spellthread
+    [457621] = 7532, -- Sunset Spellthread
+    [457622] = 7533, -- Sunset Spellthread
+    [457623] = 7534, -- Sunset Spellthread
+    [457624] = 7535, -- Weavercloth Spellthread
+    [457625] = 7536, -- Weavercloth Spellthread
+    [457626] = 7537, -- Weavercloth Spellthread
+    [451826] = 7593, -- Apply Defender's Armor Kit
+    [451827] = 7594, -- Apply Defender's Armor Kit
+    [451828] = 7595, -- Apply Defender's Armor Kit
+    [451829] = 7596, -- Apply Dual Layered Armor Kit
+    [451830] = 7597, -- Apply Dual Layered Armor Kit
+    [451831] = 7598, -- Apply Dual Layered Armor Kit
+    [451821] = 7599, -- Apply Stormbound Armor Kit
+    [451824] = 7600, -- Apply Stormbound Armor Kit
+    [451825] = 7601, -- Apply Stormbound Armor Kit
 }
+
 local itemChangedData = {}
 function frame:ITEM_CHANGED(previousHyperlink, newHyperlink)
     itemChangedData[1], itemChangedData[2] = previousHyperlink, newHyperlink

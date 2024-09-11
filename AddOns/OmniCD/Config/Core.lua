@@ -296,16 +296,6 @@ local function GetOptions()
 									dialogControl = "Link-OmniCD",
 									get = function() return "https://www.curseforge.com/wow/addons/omniauras" end,
 								},
-								--[[
-								omnisort = {
-									name = "OmniSort",
-									desc = "Party group sorter with auto-adjusting keybinds and macros",
-									order = 2,
-									type = "input",
-									dialogControl = "Link-OmniCD",
-									get = function() return "https://www.curseforge.com/wow/addons/omnisort" end,
-								},
-								]]
 							}
 						} or nil,
 					}

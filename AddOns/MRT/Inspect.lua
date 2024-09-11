@@ -220,6 +220,8 @@ local function InspectNext()
 					AchievementFrameComparison:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 					ExRT.F.Timer(AchievementFrameComparison.RegisterEvent, inspectForce and 1 or 2.5, AchievementFrameComparison, "INSPECT_ACHIEVEMENT_READY")
 				end
+				if ACHIEVEMENT_FUNCTIONS and not ACHIEVEMENT_FUNCTIONS.categoryIndex then ACHIEVEMENT_FUNCTIONS.categoryIndex = 1 end
+
 				ClearAchievementComparisonUnit()
 				SetAchievementComparisonUnit(name)
 			end

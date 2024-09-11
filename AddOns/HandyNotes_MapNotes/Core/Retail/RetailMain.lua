@@ -165,6 +165,7 @@ ns.nodes[uiMapId][coord] = nodes[uiMapId][coord]
     if nodeData.www and nodeData.showWWW == true then
       tooltip:AddDoubleLine(nodeData.www, nil, nil, false)
     end
+  
      	tooltip:Show()
   end
 end
@@ -213,7 +214,7 @@ do
 			return _copy(object)
 	end
 
-	local function iter(t, prestate) -- Azeroth / Zone / Minimap / Inside Dungeon settings
+	local function iter(t, prestate, uiMapID) -- Azeroth / Zone / Minimap / Inside Dungeon settings
 
 		if not t then return end
 
@@ -255,18 +256,32 @@ do
                         or value.type == "InnkeeperH" or value.type == "InnkeeperA" or value.type == "MailboxN" or value.type == "MailboxH" or value.type == "MailboxA" or value.type == "PvPVendorH" or value.type == "PvPVendorA" 
                         or value.type == "PvEVendorH" or value.type == "PvEVendorA" or value.type == "MMInnkeeperH" or value.type == "MMInnkeeperA" or value.type == "MMStablemasterH" or value.type == "MMStablemasterA"
                         or value.type == "MMMailboxH" or value.type == "MMMailboxA" or value.type == "MMPvPVendorH" or value.type == "MMPvPVendorA" or value.type == "MMPvEVendorH" or value.type == "MMPvEVendorA" 
-                        or value.type == "ZonePvEVendorH" or value.type == "ZonePvPVendorH" or value.type == "ZonePvEVendorA" or value.type == "ZonePvPVendorA"
+                        or value.type == "ZonePvEVendorH" or value.type == "ZonePvPVendorH" or value.type == "ZonePvEVendorA" or value.type == "ZonePvPVendorA" or value.type == "TradingPost"
 
-      ns.AllZoneIDs = ns.KalimdorIDs 
-                      or ns.EasternKingdomIDs 
-                      or ns.OutlandIDs 
-                      or ns.NorthrendIDs 
-                      or ns.PandariaIDs 
+      ns.AllZoneIDs = ns.KalimdorIDs
+                      or ns.EasternKingdomIDs
+                      or ns.OutlandIDs
+                      or ns.NorthrendIDs
+                      or ns.DraenorIDs
+                      or ns.PandariaIDs
                       or ns.BrokenIslesIDs
-                      or ns.ZandalarIDs 
-                      or ns.KulTirasIDs 
-                      or ns.ShadowlandIDs 
+                      or ns.ZandalarIDs
+                      or ns.KulTirasIDs
+                      or ns.ShadowlandIDs
                       or ns.DragonIsleIDs
+                      or ns.KhazAlgar
+
+      ns.MapType0 = mapInfo.mapType == 0 -- Cosmic map
+      ns.MapType1 = mapInfo.mapType == 1 -- World map
+      ns.MapType2 = mapInfo.mapType == 2 -- Continent maps
+      ns.MapType3 = mapInfo.mapType == 3 -- Zone maps
+      ns.MapType4 = mapInfo.mapType == 4 -- Dungeon maps
+      ns.MapType5 = mapInfo.mapType == 5 -- Micro maps
+      ns.MapType6 = mapInfo.mapType == 6 -- Orphan maps
+
+      ns.ContinentIDs = WorldMapFrame:GetMapID() == 12 or WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 101 or WorldMapFrame:GetMapID() == 113 or WorldMapFrame:GetMapID() == 424 or WorldMapFrame:GetMapID() == 619
+                      or WorldMapFrame:GetMapID() == 875 or WorldMapFrame:GetMapID() == 876 or WorldMapFrame:GetMapID() == 905 or WorldMapFrame:GetMapID() == 1978 or WorldMapFrame:GetMapID() == 1550 or WorldMapFrame:GetMapID() == 572
+                      or WorldMapFrame:GetMapID() == 2274 or WorldMapFrame:GetMapID() == 948
 
       ns.CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85 or WorldMapFrame:GetMapID() == 90 
                       or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 111 or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 
@@ -275,6 +290,16 @@ do
                       or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161 or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 
                       or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 2339
                       or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2266
+
+      ns.AllianceCapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87 or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 393 or WorldMapFrame:GetMapID() == 394
+                      or WorldMapFrame:GetMapID() == 1161 or WorldMapFrame:GetMapID() == 622 or WorldMapFrame:GetMapID() == 582
+
+      ns.HordeCapitalsIDs = WorldMapFrame:GetMapID() == 85 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 88 or WorldMapFrame:GetMapID() == 110 or WorldMapFrame:GetMapID() == 90 or WorldMapFrame:GetMapID() == 392
+                      or WorldMapFrame:GetMapID() == 391 or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 624 or WorldMapFrame:GetMapID() == 590
+
+      ns.NeutralCapitalIDs = WorldMapFrame:GetMapID() == 2339 or WorldMapFrame:GetMapID() == 111 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 1672
+                      or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 269
+                      or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407
 
       ns.CapitalMiniMapIDs = C_Map.GetBestMapForUnit("player") == 84 or C_Map.GetBestMapForUnit("player") == 87 or C_Map.GetBestMapForUnit("player") == 89 or C_Map.GetBestMapForUnit("player") == 103 or C_Map.GetBestMapForUnit("player") == 85 or C_Map.GetBestMapForUnit("player") == 90 
                       or C_Map.GetBestMapForUnit("player") == 86 or C_Map.GetBestMapForUnit("player") == 88 or C_Map.GetBestMapForUnit("player") == 110 or C_Map.GetBestMapForUnit("player") == 111 or C_Map.GetBestMapForUnit("player") == 125 or C_Map.GetBestMapForUnit("player") == 126 
@@ -291,7 +316,7 @@ do
                       or WorldMapFrame:GetMapID() == 106 or WorldMapFrame:GetMapID() == 199 or WorldMapFrame:GetMapID() == 327 or WorldMapFrame:GetMapID() == 460 or WorldMapFrame:GetMapID() == 461 or WorldMapFrame:GetMapID() == 462 
                       or WorldMapFrame:GetMapID() == 468 or WorldMapFrame:GetMapID() == 1527 or WorldMapFrame:GetMapID() == 198 or WorldMapFrame:GetMapID() == 249
           
-      ns.EasternKingdomIDs = WorldMapFrame:GetMapID() == 13 or WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
+      ns.EasternKingdomIDs = WorldMapFrame:GetMapID() == 14 or WorldMapFrame:GetMapID() == 15 or WorldMapFrame:GetMapID() == 16 or WorldMapFrame:GetMapID() == 17 or WorldMapFrame:GetMapID() == 18 
                       or WorldMapFrame:GetMapID() == 19 or WorldMapFrame:GetMapID() == 21 or WorldMapFrame:GetMapID() == 22 or WorldMapFrame:GetMapID() == 23 or WorldMapFrame:GetMapID() == 25 or WorldMapFrame:GetMapID() == 26 
                       or WorldMapFrame:GetMapID() == 27 or WorldMapFrame:GetMapID() == 28 or WorldMapFrame:GetMapID() == 30 or WorldMapFrame:GetMapID() == 32 or WorldMapFrame:GetMapID() == 33 or WorldMapFrame:GetMapID() == 34 
                       or WorldMapFrame:GetMapID() == 35 or WorldMapFrame:GetMapID() == 36 or WorldMapFrame:GetMapID() == 37 or WorldMapFrame:GetMapID() == 42 or WorldMapFrame:GetMapID() == 47 or WorldMapFrame:GetMapID() == 48 
@@ -389,12 +414,6 @@ do
         alpha = db.MiniMapPathsAlpha
       end
 
-      -- Profession icons in Capitals
-      if ns.professionIcons and ns.CapitalMiniMapIDs and (value.showOnMinimap == false) then
-        scale = db.CapitalsProfessionsScale
-        alpha = db.CapitalsProfessionsAlpha
-      end
-
       -- inside Dungeon
       if (mapInfo.mapType == 4 or mapInfo.mapType == 6) and not ns.CapitalIDs and not ns.ZoneIDs then 
           scale = db.dungeonScale
@@ -449,6 +468,12 @@ do
         alpha = db.ZonesPathsAlpha
       end
 
+      -- Capitals Profession icons 
+      if ns.CapitalIDs and ns.professionIcons and (value.showOnMinimap == false) then
+        scale = db.CapitalsProfessionsScale
+        alpha = db.CapitalsProfessionsAlpha
+      end
+
       -- Capitals General (Innkeeper/Exit/Passage) icons
       if ns.CapitalIDs and ns.generalIcons and (value.showOnMinimap == false) then
         scale = db.CapitalsGeneralScale
@@ -467,11 +492,6 @@ do
         alpha = db.CapitalsInstanceAlpha
       end
       
-      if WorldMapFrame:GetMapID() == 2274 then -- PTR: Khaz Algar - The War Within. Continent Scale atm on Beta a Zone not a Continent!!
-        scale = db.continentScale
-        alpha = db.continentAlpha
-      end
-
       if t.uiMapId == 947 then-- Azeroth World Map
         scale = db.azerothScale
         alpha = db.azerothAlpha
@@ -693,7 +713,7 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() ==
       return
   end
 
-  if (button == "LeftButton") and IsAltKeyDown() then
+  if (button == "RightButton") and IsAltKeyDown() then
     StaticPopup_Show ("Delete_Icon?")
   end
 
@@ -708,7 +728,6 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() ==
   if (button == "MiddleButton" and mnID3 and not IsShiftKeyDown() and not IsAltKeyDown()) then
       WorldMapFrame:SetMapID(mnID3)
   end
-
 
   if not ns.Addon.db.profile.activate.ShiftWorld then
 
@@ -809,9 +828,6 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() ==
       end
       if WorldMapFrame:IsMaximized() then 
         WorldMapFrame:Minimize() 
-        if not ns.Addon.db.profile.ChatMassage then 
-          print("\n" .. TextIconMNL4:GetIconString() .. " " .. "|cffff0000Map|r|cff00ccffNotes |r" .. "|cffffff00" .. L["Information because you just used an instance icon with a maximized map"] .. "|r" .. "\n" .. TextIconMNL4:GetIconString() .. " " .. "|cffff0000Map|r|cff00ccffNotes |r" .. "|cffffff00" .. L["If the dungeon map is not maximized, you have to press the button once that would open your world map!"]) 
-        end 
       end
       EncounterJournal_OpenJournal(difficulty, dungeonID)
       _G.EncounterJournal:SetScript("OnShow", nil)
@@ -832,7 +848,7 @@ end
 function Addon:ZONE_CHANGED_NEW_AREA()
   local mapID = C_Map.GetBestMapForUnit("player")
   if mapID then
-    if ns.Addon.db.profile.activate.ZoneChanged then
+    if ns.Addon.db.profile.ZoneChanged then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. C_Map.GetMapInfo(mapID).name .. "  <==")
     end
   end
@@ -840,7 +856,7 @@ end
 
 local subzone = GetSubZoneText()
 function Addon:ZONE_CHANGED_INDOORS()
-    if ns.Addon.db.profile.activate.ZoneChanged and ns.Addon.db.profile.activate.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
+    if ns.Addon.db.profile.ZoneChanged and ns.Addon.db.profile.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. "|cff00ff00" .. GetZoneText() .. " " .. "|cff00ccff" .. GetSubZoneText().. "|cff00ff00" .. "  <==")
     end
 end
@@ -848,43 +864,67 @@ end
 function Addon:ZONE_CHANGED()
   local mapID = C_Map.GetBestMapForUnit("player")
   if mapID then
-    if ns.Addon.db.profile.activate.ZoneChanged and ns.Addon.db.profile.activate.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
+    if ns.Addon.db.profile.ZoneChanged and ns.Addon.db.profile.ZoneChangedDetail and not ns.CapitalMiniMapIDs then
       print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00" .. " " .. L["Location"] .. ": ", "|cff00ff00" .. "==>  " .. GetZoneText() .. " " .. "|cff00ccff" .. GetSubZoneText() .. "|cff00ff00" .. "  <==")
     end
   end
 end
 
-function Addon:OnProfileChanged(event, database, newProfileKey)
-	db = database.profile
-  ns.Addon:FullUpdate()
-  ReloadUI();
+function Addon:OnProfileChanged(event, database, profileKeys)
+  db = database.profile
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
+  end
+  ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
 end
 
-function Addon:OnProfileReset(event, database, newProfileKey)
+function Addon:OnProfileReset(event, database, profileKeys)
 	db = database.profile
-  ns.Addon:FullUpdate()
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
+  wipe(ns.dbChar.CapitalsDeletedIcons)
+  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbChar.CapitalsDeletedIcons)
+  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbChar.AzerothDeletedIcons)
+  wipe(ns.dbChar.ContinentDeletedIcons)
+  wipe(ns.dbChar.ZoneDeletedIcons)
+  wipe(ns.dbChar.MinimapZoneDeletedIcons)
+  wipe(ns.dbChar.DungeonDeletedIcons)
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
+  end
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
 end
 
-function Addon:OnProfileCopied(event, database, newProfileKey)
+function Addon:OnProfileCopied(event, database, profileKeys)
 	db = database.profile
-  ns.Addon:FullUpdate()
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
+  end
+  ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
 end
 
-function Addon:OnProfileDeleted (event, database, newProfileKey)
+function Addon:OnProfileDeleted(event, database, profileKeys)
 	db = database.profile
-  ns.Addon:FullUpdate()
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
   HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  if ns.Addon.db.profile.CoreChatMassage then
+    print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
+  end
+  ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
@@ -909,8 +949,12 @@ function Addon:PLAYER_LOGIN() -- OnInitialize()
 	self.db.RegisterCallback(self, "OnProfileReset", "OnProfileReset")
   self.db.RegisterCallback(self, "OnProfileDeleted", "OnProfileDeleted")
 
+  -- default profile database
   db = self.db.profile
-  ns.dbChar = self.db.char
+  -- deleted icons database
+  ns.dbChar = self.db.profile.deletedIcons
+  -- FogOfWar color database
+  ns.FogOfWar = self.db.profile.FogOfWarColor
 
   -- Register options 
   HandyNotes:RegisterPluginDB("MapNotes", pluginHandler, ns.options)
@@ -928,10 +972,10 @@ function Addon:PLAYER_LOGIN() -- OnInitialize()
   Addon:RegisterEvent("ZONE_CHANGED_INDOORS")
 
   -- Check if MapNotes vs Blizzard is true then remove Blizzard Pins
-  if ns.Addon.db.profile.activate.RemoveBlizzPOIs then
+  if ns.Addon.db.profile.activate.RemoveBlizzInstances then
     SetCVar("showDungeonEntrancesOnMap", 0)
-  elseif not ns.Addon.db.profile.activate.RemoveBlizzPOIs then
-      SetCVar("showDungeonEntrancesOnMap", 1)
+  elseif not ns.Addon.db.profile.activate.RemoveBlizzInstances then
+    SetCVar("showDungeonEntrancesOnMap", 1)
   end
 
   if ns.Addon.db.profile.activate.HideMMB then -- minimap button
@@ -950,12 +994,15 @@ function Addon:PLAYER_LOGIN() -- OnInitialize()
     if (not ns.Addon.db.profile.activate.RemoveBlizzPOIs or ns.Addon.db.profile.activate.HideMapNote) then return end
 
     for pin in WorldMapFrame:EnumeratePinsByTemplate("AreaPOIPinTemplate") do
+
       for _, poiID in pairs(ns.BlizzAreaPoisInfo) do
+
         local poi = C_AreaPoiInfo.GetAreaPOIInfo(WorldMapFrame:GetMapID(), pin.areaPoiID)
         if (poi ~= nil and poi.areaPoiID == poiID) then
             WorldMapFrame:RemovePin(pin)
         end
       end
+
     end
   end
 

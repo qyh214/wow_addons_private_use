@@ -259,6 +259,13 @@ if not db.activate.HideMapNote then
         --###############################
             nodes[2315][88524713] = { mnID = 2339, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- The Rookery
             nodes[2335][24825244] = { mnID = 2339, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- The Rookery
+            nodes[2359][76357843] = { mnID = 2215, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- The Dawnbreaker
+            nodes[2308][79764764] = { mnID = 2215, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Priory of the Sacred Flame
+            nodes[2341][53291111] = { mnID = 2214, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- The Stonevault
+            nodes[2303][16726791] = { mnID = 2214, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Darkflame Cleft
+            nodes[2357][86577850] = { mnID = 2216, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Ara-Kara, City of Echoes
+            nodes[2343][46460933] = { mnID = 2256, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- City of Threads
+            nodes[2292][72131053] = { mnID = 2256, name = BATTLEGROUND_INSTANCE .. "-" .. L["Exit"], type = "Exit", showInZone = true } -- Nerub-ar Palace
           end
     
     

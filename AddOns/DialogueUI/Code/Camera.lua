@@ -10,13 +10,17 @@ addon.SetCameraController(CameraUtil);
 local HIDE_UI = false;
 local HIDE_UNIT_NAMES = false;
 local CHANGE_FOV = false;
+local DISABLE_IN_INSTANCE = false;
 local FOV_DEFAULT = 90;
 local FOV_ZOOMED_IN = 75;
 local FOCUS_STRENGTH_PITCH = 1.0;
-local FOCUS_SHOULDER_OFFSET = 1.5;
+local FOCUS_SHOULDER_OFFSET_DEFAULT = 1.5;
+local FOCUS_SHOULDER_OFFSET = FOCUS_SHOULDER_OFFSET_DEFAULT;
 local MOUNTED_CAMERA_ENABLED = true;
-local MOUNTED_CAMERA_MULTIPLIER = 5.725;  --1.85 (Netherwing)     1.25(Renewed Proto)
+local MOUNTED_CAMERA_MULTIPLIER = 4.8;  --1.85 (Netherwing)     1.25(Renewed Proto)   (update 5.725)
 ------------------
+local PAN_MULTIPLIER = 1.0;
+local PLAYER_IS_SHAPESHIFTER = false;
 
 local DeltaLerp = API.DeltaLerp;
 local Esaing_OutSine = addon.EasingFunctions.outSine;
@@ -43,12 +47,16 @@ UIParent:UnregisterEvent("EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED");  --Disable EX
 
 local FadeHelper = CreateFrame("Frame");
 
+local OFFSET_INFO = {};
+
 local CVar_TargetFocus = {  --Can be used in combat
     test_cameraTargetFocusInteractEnable = 1,
     test_cameraTargetFocusInteractStrengthPitch = 0,
     test_cameraTargetFocusInteractStrengthYaw = 0,
     test_cameraOverShoulder = FOCUS_SHOULDER_OFFSET,
     test_cameraHeadMovementStrength = 0,
+    CameraKeepCharacterCentered = 0,        --11.0.2 Fix
+    CameraReduceUnexpectedMovement = 0,     --11.0.2 Fix
 };
 
 local CVar_UnitText = {     --Shouldn't be used in combat
@@ -65,11 +73,18 @@ local CVar_UnitText = {     --Shouldn't be used in combat
 	UnitNameNPC = 0,
 	UnitNameInteractiveNPC = 0,
 	UnitNameHostleNPC = 0,
-	--chatBubbles = 0,
 };
 
 local CVar_Backup = {};
 
+local function BackupAndSetCVar(cvar, value)
+    if CVar_Backup[cvar] == nil then
+        CVar_Backup[cvar] = GetCVar(cvar);
+    end
+    if value ~= nil then
+        SetCVar(cvar, value);
+    end
+end
 
 function CameraUtil:SetDefaultCameraMode(mode)
     --0: No Zoom
@@ -88,19 +103,23 @@ function CameraUtil:ChangeCVars()
     if self.cameraMode == 1 then
         --ConsoleExec("actioncam on");
         for cvar, value in pairs(CVar_TargetFocus) do
-            CVar_Backup[cvar] = GetCVar(cvar);
-            SetCVar(cvar, value);
+            BackupAndSetCVar(cvar, value);
         end
     elseif self.cameraMode == 2 then
-        local cvar = "test_cameraOverShoulder";
-        CVar_Backup[cvar] = GetCVar(cvar);
+        BackupAndSetCVar("test_cameraOverShoulder", nil);
+        BackupAndSetCVar("CameraKeepCharacterCentered", 0);
+        BackupAndSetCVar("CameraReduceUnexpectedMovement", 0);
     end
 
-    if (not InCombatLockdown()) and HIDE_UNIT_NAMES then
+    if (not InCombatLockdown()) and (HIDE_UNIT_NAMES and HIDE_UI) then
         for cvar, value in pairs(CVar_UnitText) do
-            CVar_Backup[cvar] = GetCVar(cvar);
-            SetCVar(cvar, value);
+            BackupAndSetCVar(cvar, value);
         end
+    end
+
+    if CHANGE_FOV then
+        FOV_DEFAULT = GetCVar("cameraFov") or 90;
+        BackupAndSetCVar("cameraFov", nil);
     end
 
     self:ListenEvent(true);
@@ -133,12 +152,29 @@ function CameraUtil:RestoreCombatCVar()
     end
 end
 
+function CameraUtil:SetHideUnitNames(state)
+    --Trigger by clicking checkbox manually
+    if state then
+        if not InCombatLockdown() then
+            self.cvarStored = true;
+            for cvar, value in pairs(CVar_UnitText) do
+                if CVar_Backup[cvar] == nil then
+                    CVar_Backup[cvar] = GetCVar(cvar);
+                    SetCVar(cvar, value);
+                end
+            end
+        end
+    else
+        self:RestoreCombatCVar();
+    end
+end
+
 function CameraUtil:OnEvent(event, ...)
     if event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
         self:OnMountChanged();
-    elseif event == "PLAYER_ENTERING_WORLD" then
-        self:UpdateInstance();
-    else
+    elseif event == "UPDATE_SHAPESHIFT_FORM" then
+        self:RequestUpdateShapeshiftForm(0.0);
+    else    --Logout
         self:RestoreCVars();
     end
 end
@@ -220,8 +256,12 @@ function CameraUtil:MoveCameraToFinalPosition()
     SetCameraOverShoulder(offset);
 end
 
+function CameraUtil:ShouldUseOffset()
+    return self.isActive and self.cameraMode ~= 0
+end
+
 function CameraUtil:OnMountChanged()
-    if (not self.isActive) or (self.cameraMode == 0) then return end;
+    if not self:ShouldUseOffset()then return end;
 
     local changed;
 
@@ -229,7 +269,6 @@ function CameraUtil:OnMountChanged()
         if not self.isMounted then
             self:UpdateMounted();
             changed = true;
-
             --GetMountID();
         end
     else
@@ -247,7 +286,7 @@ end
 function CameraUtil:OnUIOrientationChanged()
     self:UpdateMounted();
 
-    if self.isActive and self.cameraMode ~= 0 then
+    if self:ShouldUseOffset() then
         self:MoveCameraToFinalPosition();
     end
 end
@@ -259,18 +298,25 @@ function CameraUtil:ListenEvent(state)
         self:RegisterEvent("PLAYER_QUITING");
         self:RegisterEvent("PLAYER_CAMPING");
         self:RegisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
+        if PLAYER_IS_SHAPESHIFTER then
+            self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
+        end
         self:SetScript("OnEvent", self.OnEvent);
     else
         self:UnregisterEvent("PLAYER_LOGOUT");
         self:UnregisterEvent("PLAYER_QUITING");
         self:UnregisterEvent("PLAYER_CAMPING");
         self:UnregisterEvent("PLAYER_MOUNT_DISPLAY_CHANGED");
+        if PLAYER_IS_SHAPESHIFTER then
+            self:UnregisterEvent("UPDATE_SHAPESHIFT_FORM");
+        end
         self:SetScript("OnEvent", nil);
     end
 end
 
 local function GetShoulderOffsetByZoom(zoom)
-	return zoom * 0.3283 - 0.02
+	--return zoom * 0.3283 - 0.02
+    return (zoom * 0.4314 + 0.1057) * PAN_MULTIPLIER
 end
 
 CameraUtil.offsetMultiplier = 1;
@@ -349,7 +395,6 @@ end
 local function ZoomIn_FocusNPC_OnUpdate(self, elapsed)
     self.t = self.t + elapsed;
 
-
     local pitch = Esaing_OutSine(self.t, 88,  15, CAMERA_MOVEMENT_DURATION);
     local targetStrengh = Esaing_OutSine(self.t, 0.0, FOCUS_STRENGTH_PITCH, CAMERA_MOVEMENT_DURATION);
 
@@ -384,7 +429,6 @@ end
 function CameraUtil:Intro_FocusNPC()
     --SaveView(5)   --We can't use this to restore pitch because it breaks Camera Following Style
 
-    SetCVar("CameraKeepCharacterCentered", 0);
     self.cameraMode = 1;
     self.oldZoom = GetCameraZoom();
     self.t = 0;
@@ -393,7 +437,6 @@ function CameraUtil:Intro_FocusNPC()
 end
 
 function CameraUtil:Intro_PanCamera()
-    SetCVar("CameraKeepCharacterCentered", 0);
     self.cameraMode = 2;
     self.t = 0;
     self.shoulderOffset = tonumber(GetCVar("test_cameraOverShoulder"));
@@ -411,27 +454,31 @@ function CameraUtil:Intro_PanCamera()
 end
 
 function CameraUtil:Intro_ZoomToObject()
-    SetCVar("CameraKeepCharacterCentered", 0);
     self.oldZoom = GetCameraZoom();
     self.t = 0;
     self:ZoomTo(3);
 end
 
 function CameraUtil:OnInteractionStart()
-
+    --Reserved for DynamicCam
 end
 
 function CameraUtil:OnInteractionStop()
-
+    --Reserved for DynamicCam
 end
 
 function CameraUtil:InitiateInteraction()
     self.isActive = true;
 
     self:UpdateMounted();
+
+    if PLAYER_IS_SHAPESHIFTER then
+        self:UpdateShapeshiftForm();
+    end
+
     FadeHelper:FadeOutUI();
 
-    if self.defaultCameraMode == 0 or self.inInstance then
+    if self.defaultCameraMode == 0 or (DISABLE_IN_INSTANCE and IsInInstance()) then
         self:Intro_None();
     else
         if (self.defaultCameraMode == 1) and UnitExists("npc") and (not UnitIsUnit("npc", "player")) then
@@ -455,6 +502,8 @@ end
 
 function CameraUtil:Restore()
     self.isActive = false;
+    self:SetScript("OnUpdate", nil);
+    self:StopUpdatingForm();
 
     if not self:RestoreCVars() then
         return
@@ -464,11 +513,9 @@ function CameraUtil:Restore()
     ConsoleExec("pitchlimit 88");
 
     if self.fovChanged then
-        SetCVar("cameraFov", FOV_DEFAULT);
         self.fovChanged = nil;
     end
 
-    self:SetScript("OnUpdate", nil);
     FadeHelper:FadeInUI();
 
     if self.oldZoom then
@@ -482,12 +529,32 @@ end
 function CameraUtil:OnFovSettingsChanged()
     if not (self.isActive and self.cameraMode == 1) then return end;
 
+    local cvar = "cameraFov";
+
     if CHANGE_FOV then
-        self.fovChanged = true;
-        SetCVar("cameraFov", FOV_ZOOMED_IN);
+        if not self.fovChanged then
+            self.fovChanged = true;
+            BackupAndSetCVar(cvar, FOV_ZOOMED_IN);
+        end
     else
-        self.fovChanged = nil;
-        SetCVar("cameraFov", FOV_DEFAULT);
+        if self.fovChanged then
+            self.fovChanged = nil;
+            if CVar_Backup[cvar] ~= nil then
+                SetCVar(cvar, CVar_Backup[cvar]);
+                CVar_Backup[cvar] = nil;
+            end
+        end
+    end
+end
+
+do  --Calibrator
+    function CameraUtil:EnterCalibartorMode()
+        self:SetScript("OnUpdate", nil);
+    end
+
+    function CameraUtil:ExitCalibartorMode()
+        if not self.isActive then return end;
+        self:InitiateInteraction();
     end
 end
 
@@ -519,6 +586,18 @@ function FadeHelper:ShowUIParentInstantly()
     ShowUIParent(true);
 end
 
+function FadeHelper:HideUIParentInstantly()
+    self:SetScript("OnUpdate", nil);
+    self.t = 0;
+    self.alpha = 0;
+
+    if not InCombatLockdown() then
+        self.fadeDelta = -1;
+        UIParent:SetAlpha(1);
+        SetUIVisibility(false);
+    end
+end
+
 addon.CallbackRegistry:Register("PlayerInteraction.ShowUI", "ShowUIParentInstantly", FadeHelper);  --For Classic
 
 
@@ -546,6 +625,7 @@ function FadeHelper:SnapToFadeResult(inCombat)
         elseif not inCombat then
             ShowUIParent(false);
         end
+        self.fadeDelta = nil;
     end
 end
 
@@ -631,10 +711,6 @@ function CameraUtil:OnEnterCombatDuringInteraction()
     end
 end
 
-function CameraUtil:UpdateInstance()
-    self.inInstance = IsInInstance();
-end
-
 
 do
     local function Settings_CameraMovement(dbValue)
@@ -653,24 +729,30 @@ do
     end
     addon.CallbackRegistry:Register("SettingChanged.CameraMovementMountedCamera", Settings_CameraMovementMountedCamera);
 
-    local function Settings_HideUI(dbValue)
+    local function Settings_HideUI(dbValue, userInput)
         HIDE_UI = dbValue == true;
+        if userInput and CameraUtil.isActive then
+            if HIDE_UI then
+                FadeHelper:HideUIParentInstantly();
+                CameraUtil:SetHideUnitNames(HIDE_UNIT_NAMES);
+            else
+                FadeHelper:ShowUIParentInstantly();
+                CameraUtil:SetHideUnitNames(false);
+            end
+        end
     end
     addon.CallbackRegistry:Register("SettingChanged.HideUI", Settings_HideUI);
 
-    local function Settings_HideUnitNames(dbValue)
+    local function Settings_HideUnitNames(dbValue, userInput)
         HIDE_UNIT_NAMES = dbValue == true;
+        if userInput and CameraUtil.isActive then
+            CameraUtil:SetHideUnitNames(HIDE_UNIT_NAMES);
+        end
     end
     addon.CallbackRegistry:Register("SettingChanged.HideUnitNames", Settings_HideUnitNames);
 
     local function Settings_CameraMovementDisableInstance(dbValue)
-        if dbValue == true then
-            CameraUtil:RegisterEvent("PLAYER_ENTERING_WORLD");
-            CameraUtil:UpdateInstance();
-        else
-            CameraUtil:UnregisterEvent("PLAYER_ENTERING_WORLD");
-            CameraUtil.inInstance = nil;
-        end
+        DISABLE_IN_INSTANCE = dbValue == true;
     end
     addon.CallbackRegistry:Register("SettingChanged.CameraMovementDisableInstance", Settings_CameraMovementDisableInstance);
 
@@ -742,4 +824,85 @@ do  --DynamicCam
     end
 
     addon.CallbackRegistry:Register("PLAYER_ENTERING_WORLD", CheckRequiredMethods);
+end
+
+
+do  --Update Parameters Based On Player Form
+    local _, _, playerClassID = UnitClass("player");
+    if playerClassID == 11 then
+        PLAYER_IS_SHAPESHIFTER = true;
+    end
+
+    OFFSET_INFO = {
+        DruidForm_1 = 1.0,          --Cat
+        DruidForm_2 = 1.0,          --Tree of Life  (untested)
+        DruidForm_3 = 1.1,          --Travel (Run)
+        DruidForm_4 = 0.9,          --Swim
+        DruidForm_5 = 0.9,          --Bear
+        DruidForm_27 = 0.55,        --Fly Swift
+        DruidForm_29 = 0.55,        --Fly
+        DruidForm_31 = 1.0          --Moonkin
+    };
+
+    local function Updator_OnUpdate(self, elapsed)
+        self.t = self.t + elapsed;
+        if self.t > 0 then
+            self.t = 0;
+            self:SetScript("OnUpdate", nil);
+            if CameraUtil.isActive then
+                CameraUtil:UpdateShapeshiftForm(true);
+            end
+        end
+    end
+
+    function CameraUtil:UpdateShapeshiftForm(setToFinalValue)
+        local newOffset;
+
+        if PLAYER_IS_SHAPESHIFTER then
+            local formID = API.GetShapeshiftFormID();
+            if formID then
+                if formID == 31 then
+                    local glyphID = API.GetGlyphIDForSpell(24858);		--Moonkin form with Glyph of Stars use regular configuration
+                    if glyphID and glyphID == 114301 then
+                        formID = 0;
+                    end
+                end
+
+                local key = "DruidForm_"..formID;
+                newOffset = OFFSET_INFO[key];
+                if newOffset then
+                    PAN_MULTIPLIER = newOffset / FOCUS_SHOULDER_OFFSET_DEFAULT;
+                end
+            end
+        end
+
+        if not newOffset then
+            newOffset = FOCUS_SHOULDER_OFFSET_DEFAULT;
+            PAN_MULTIPLIER = 1.0;
+        end
+
+        if newOffset ~= FOCUS_SHOULDER_OFFSET then
+            FOCUS_SHOULDER_OFFSET = newOffset;
+            if setToFinalValue and self:ShouldUseOffset() then
+                CameraUtil:MoveCameraToFinalPosition();
+            end
+        end
+    end
+
+    function CameraUtil:StopUpdatingForm()
+        if self.updator then
+            self.updator.t = 0;
+            self.updator:SetScript("OnUpdate", nil);
+        end
+    end
+
+    function CameraUtil:RequestUpdateShapeshiftForm(delay)
+        if not self.updator then
+            self.updator = CreateFrame("Frame", nil, self);
+        end
+
+        delay = (delay and -delay) or 0;
+        self.updator.t = delay;
+        self.updator:SetScript("OnUpdate", Updator_OnUpdate);
+    end
 end

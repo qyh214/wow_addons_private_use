@@ -7,7 +7,7 @@ if not mod then return end
 mod:RegisterEnableMob(36678, 37562, 37697) -- Putricide, Gas Cloud (Red Ooze), Volatile Ooze (Green Ooze)
 -- mod:SetEncounterID(1102)
 -- mod:SetRespawnTime(30)
-mod.toggleOptions = {{70447, "ICON"}, {70672, "FLASH"}, 70351, 71255, {72295, "SAY", "FLASH"}, 72451, {70911, "ICON", "FLASH"}, "phase", "berserk"}
+mod.toggleOptions = {{70447, "ICON"}, {70672, "FLASH"}, 70351, 71255, {72295, "SAY", "FLASH"}, 72451, {70911, "FLASH"}, "phase", "berserk"}
 mod.optionHeaders = {
 	[70447] = CL.phase:format(1),
 	[71255] = CL.phase:format(2),

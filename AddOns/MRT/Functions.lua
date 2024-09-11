@@ -2297,10 +2297,10 @@ ExRT.GDB.EncountersList = {
 	{"11.0",2316,2816,2861,2836},	--The Rookery:Dung
 	{"11.0",2308,2847,2835,2848},	--Priory of the Sacred Flame:Dung
 	{"11.0",2303,2829,2826,2787,2788},	--Darkflame Cleft:Dung
-	{"11.0",0,2854,2880,2888,2883},	--The Stonevault:Dung
-	{"11.0",0,2926,2906,2901},	--Ara-Kara, City of Echoes:Dung
+	{"11.0",2341,2854,2880,2888,2883},	--The Stonevault:Dung
+	{"11.0",2357,2926,2906,2901},	--Ara-Kara, City of Echoes:Dung
 	{"11.0",2335,2900,2931,2929,2930},	--Cinderbrew Meadery:Dung
-	{"11.0",0,2837,2838,2839},	--The Dawnbreaker:Dung
+	{"11.0",2359,2837,2838,2839},	--The Dawnbreaker:Dung
 	{"11.0",2343,2907,2908,2905,2909},	--City of Threads:Dung
 
         {610,1721,1706,1720,1722,1719,1723,1705},--HM

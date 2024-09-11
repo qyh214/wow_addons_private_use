@@ -2,6 +2,7 @@
 BigWigs:AddSounds("Shadowcrown", {
 	[425264] = "alarm",
 	[426735] = "alert",
+	[428086] = "alert",
 	[445996] = "long",
 	[451026] = "warning",
 	[453140] = "long",
@@ -31,6 +32,7 @@ BigWigs:AddSounds("The Dawnbreaker Trash", {
 	[431304] = "alert",
 	[431309] = {"alert","info"},
 	[431349] = "alarm",
+	[431364] = "alert",
 	[431494] = "alarm",
 	[432448] = "alarm",
 	[432520] = "alert",

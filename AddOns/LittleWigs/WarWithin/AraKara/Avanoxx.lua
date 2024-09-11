@@ -1,4 +1,3 @@
-if not BigWigsLoader.isBeta then return end
 --------------------------------------------------------------------------------
 -- Module Declaration
 --
@@ -19,14 +18,26 @@ local gossamerOnslaughtCount = 1
 local nextVoraciousBite = 0
 
 --------------------------------------------------------------------------------
+-- Localization
+--
+
+local L = mod:GetLocale()
+if L then
+	L.warmup_icon = "inv_achievement_dungeon_arak-ara"
+end
+
+--------------------------------------------------------------------------------
 -- Initialization
 --
 
 function mod:GetOptions()
 	return {
+		"warmup",
 		{438471, "TANK_HEALER"}, -- Voracious Bite
 		438476, -- Alerting Shrill
 		438473, -- Gossamer Onslaught
+		434830, -- Vile Webbing
+		{436614, "DISPEL"}, -- Web Wrap
 		-- Mythic
 		446794, -- Insatiable
 	}, {
@@ -38,6 +49,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "VoraciousBite", 438471)
 	self:Log("SPELL_CAST_START", "AlertingShrill", 438476)
 	self:Log("SPELL_CAST_START", "GossamerOnslaught", 438473)
+	self:Log("SPELL_AURA_APPLIED", "VileWebbingApplied", 434830)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "VileWebbingApplied", 434830)
+	self:Log("SPELL_AURA_APPLIED", "WebWrapApplied", 436614)
+
+	-- Mythic
 	self:Log("SPELL_AURA_APPLIED", "InsatiableApplied", 446794)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "InsatiableApplied", 446794)
 end
@@ -47,6 +63,7 @@ function mod:OnEngage()
 	voraciousBiteCount = 1
 	alertingShrillCount = 1
 	gossamerOnslaughtCount = 1
+	self:StopBar(CL.active)
 	self:CDBar(438471, 3.0, CL.count:format(self:SpellName(438471), voraciousBiteCount)) -- Voracious Bite
 	self:CDBar(438476, 10.6, CL.count:format(self:SpellName(438476), alertingShrillCount)) -- Alerting Shrill
 	self:CDBar(438473, 30.1, CL.count:format(self:SpellName(438473), gossamerOnslaughtCount)) -- Gossamer Onslaught
@@ -55,6 +72,12 @@ end
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:Warmup() -- triggered from trash module on CHAT_MSG_RAID_BOSS_EMOTE
+	-- 0.0 [CHAT_MSG_RAID_BOSS_EMOTE] The Attendants have been silenced... something emerges!#Avanoxx
+	-- 17.3 [NAME_PLATE_UNIT_ADDED] Avanoxx
+	self:Bar("warmup", 17.3, CL.active, L.warmup_icon)
+end
 
 function mod:VoraciousBite(args)
 	local t = GetTime()
@@ -98,6 +121,25 @@ function mod:GossamerOnslaught(args)
 	end
 	self:PlaySound(args.spellId, "long")
 end
+
+function mod:VileWebbingApplied(args)
+	if self:Me(args.destGUID) then
+		local amount = args.amount or 1
+		if amount % 2 == 0 then -- alert 2, 4, stuns at 6
+			self:StackMessage(args.spellId, "blue", args.destName, amount, 3)
+			self:PlaySound(args.spellId, "underyou")
+		end
+	end
+end
+
+function mod:WebWrapApplied(args)
+	if self:Me(args.destGUID) or self:Dispeller("magic", nil, args.spellId) then
+		self:TargetMessage(args.spellId, "orange", args.destName)
+		self:PlaySound(args.spellId, "warning", nil, args.destName)
+	end
+end
+
+-- Mythic
 
 do
 	local prev = 0

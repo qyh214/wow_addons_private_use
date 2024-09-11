@@ -1,0 +1,49 @@
+## Interface: 40400
+## Title: RSA
+## Notes: Easy Spell Announcements!
+## Author: Raeli
+## Version: 5.3.1
+## SavedVariables: RSADB, RSA5
+## OptionalDeps: Ace3, LibDualSpec-1.0, LibSink-2.0
+## X-Credits: Jenneth, Rowaasr13, Xadurk
+
+## X-Curse-Project-ID: 21464
+## X-WoWI-ID: 25709
+## X-Wago-ID: 25NR4EK3
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+Localisation\Locale-deDE.lua
+Localisation\Locale-enUS.lua
+Localisation\Locale-esES.lua
+Localisation\Locale-frFR.lua
+Localisation\Locale-itIT.lua
+Localisation\Locale-koKR.lua
+Localisation\Locale-ruRU.lua
+Localisation\Locale-zhCN.lua
+Localisation\Locale-zhTW.lua
+
+Init.lua
+
+Tools\Helpers.lua
+Tools\SendMessage.lua
+Tools\Comm.lua
+
+SpellData\DeathKnight.lua
+SpellData\Druid.lua
+SpellData\Hunter.lua
+SpellData\Mage.lua
+SpellData\Paladin.lua
+SpellData\Priest.lua
+SpellData\Rogue.lua
+SpellData\Shaman.lua
+SpellData\Warlock.lua
+SpellData\Warrior.lua
+SpellData\Racials.lua
+SpellData\Utilities.lua
+
+Tools\Monitor.lua
+
+Options.lua

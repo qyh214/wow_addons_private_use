@@ -230,7 +230,7 @@ local SendAddonMessage, CTimerAfter = C_ChatInfo.SendAddonMessage, C_Timer.After
 local pName = UnitName("player")
 
 do
-	local _, result = C_ChatInfo.RegisterAddonMessagePrefix("LibSpec")
+	local result = C_ChatInfo.RegisterAddonMessagePrefix("LibSpec")
 	if type(result) == "number" and result > 2 then
 		error("LibSpecialization: Failed to register the addon prefix.")
 	end
@@ -246,13 +246,13 @@ do
 			timerInstance = false
 			if IsInGroup(2) then
 				if currentRole then -- Cataclysm Feral Druids
-					local _, result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "INSTANCE_CHAT")
+					local result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "INSTANCE_CHAT")
 					if result == 9 then
 						timerInstance = true
 						CTimerAfter(3, SendToInstance)
 					end
 				else
-					local _, result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "INSTANCE_CHAT")
+					local result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "INSTANCE_CHAT")
 					if result == 9 then
 						timerInstance = true
 						CTimerAfter(3, SendToInstance)
@@ -281,13 +281,13 @@ do
 			timerGroup = false
 			if IsInGroup(1) then
 				if currentRole then -- Cataclysm Feral Druids
-					local _, result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "RAID") -- RAID auto downgrades to PARTY as needed
+					local result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "RAID") -- RAID auto downgrades to PARTY as needed
 					if result == 9 then
 						timerGroup = true
 						CTimerAfter(3, SendToGroup)
 					end
 				else
-					local _, result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "RAID") -- RAID auto downgrades to PARTY as needed
+					local result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "RAID") -- RAID auto downgrades to PARTY as needed
 					if result == 9 then
 						timerGroup = true
 						CTimerAfter(3, SendToGroup)

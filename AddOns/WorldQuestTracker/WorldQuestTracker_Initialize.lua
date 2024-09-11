@@ -105,7 +105,7 @@ do
 			},
 
 			close_blizz_popups = {
-				ABANDON_QUEST = false,
+				ABANDON_QUEST = true,
 			},
 
 			sort_order = {
@@ -176,7 +176,7 @@ do
 
 			world_map_config = {
 				onmap_show = true,
-				onmap_scale_offset = 0.6,
+				onmap_scale_offset = 1.0,
 				summary_show = true,
 				summary_scale = 0.95,
 				summary_showby = "bytype", --"bytype" or "byzone"
@@ -184,10 +184,19 @@ do
 				summary_widgets_per_row = 8,
 			},
 
+			world_map_hubscale = {},
+
+			speed_run = {
+				auto_accept = false,
+				auto_complete = false,
+				cancel_cinematic = false,
+			},
+
 			disable_world_map_widgets = false, --a
 			show_filter_button = false, --a
 			show_sort_button = false, --a
 			show_timeleft_button = true, --a
+			numerate_quests = true,
 
 			show_emissary_info = true,
 
@@ -206,8 +215,8 @@ do
 
 			last_news_time = 0,
 
-			world_summary_alpha = 0.843, --parei fazendo a substituição dos valores hardcoded to these values, parei na criação da opção de mudar o alpha, parei procurando as funções que atualiza of frames com o novo alpha
-			worldmap_widget_alpha = 0.843,
+			world_summary_alpha = 0.934, --parei fazendo a substituição dos valores hardcoded to these values, parei na criação da opção de mudar o alpha, parei procurando as funções que atualiza of frames com o novo alpha
+			worldmap_widget_alpha = 0.933,
 
 			hoverover_animations = true, --hover and shown slider animations
 			anchor_options = {}, --store the anchor options of each anchor
@@ -264,9 +273,13 @@ do
 			quest_summary_minimized = false,
 			show_summary_minimize_button = true,
 
+			pins_discovered = {
+				["worldquest-Capstone-questmarker-epic-Locked"] = {},
+			},
+
 			zone_map_config = {
 				summary_show = true,
-				quest_summary_scale = 1,
+				quest_summary_scale = 1.2,
 				show_widgets = true,
 				scale = 1,
 			},
@@ -321,6 +334,7 @@ do
 	--create the addon object
 	local WorldQuestTracker = DF:CreateAddOn("WorldQuestTrackerAddon", "WQTrackerDB", default_config)
 	WorldQuestTracker.__debug = false
+	WorldQuestTracker.MapChangedTime = time()-1
 
 	--create the group finder and rare finder frames
 	CreateFrame("frame", "WorldQuestTrackerFinderFrame", UIParent, "BackdropTemplate")
@@ -432,8 +446,6 @@ do
 	WorldQuestTracker.ChangeLogTable = {}
 end
 
-
-
 --old to new api of wow v11
 --C_Reputation.GetFactionDataByID
 if (not GetFactionInfoByID) then
@@ -490,7 +502,7 @@ if (not GetQuestLogRewardCurrencyInfo) then
 		tQuestCurrencies = tQuestCurrencies or {}
 		local questRewardCurrencyInfo = tQuestCurrencies[currencyIndex]
 		if (questRewardCurrencyInfo) then
-			return questRewardCurrencyInfo.name, questRewardCurrencyInfo.texture, questRewardCurrencyInfo.baseRewardAmount, questRewardCurrencyInfo.currencyID, questRewardCurrencyInfo.bonusRewardAmount
+			return questRewardCurrencyInfo.name, questRewardCurrencyInfo.texture, questRewardCurrencyInfo.totalRewardAmount, questRewardCurrencyInfo.currencyID, questRewardCurrencyInfo.bonusRewardAmount
 		end
 	end
 else

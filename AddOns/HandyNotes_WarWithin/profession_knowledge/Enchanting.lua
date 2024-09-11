@@ -6,7 +6,9 @@ local KNOWLEDGE = {
     requires = ns.conditions.Profession(ns.PROF_WW_ENCHANTING),
     -- active = ns.conditions.Profession(ns.PROF_WW_ENCHANTING, 25),
     group = "professionknowledge",
-    texture=ns.atlas_texture("VignetteLoot", {r=0.5,g=1,b=1,}),
+    atlas="worldquest-icon-enchanting",
+    backdrop=ns.atlas_texture("CircleMask", {r=0.5, g=1, b=1}),
+    border=ns.atlas_texture("AutoQuest-badgeborder", 1.1),
     -- minimap = true,
 }
 
@@ -18,7 +20,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [59286628] = {
+    [58025691] = {
         quest=83859,
         loot={226285}, -- Silver Dornogal Rod
         vignette=6442,
@@ -67,10 +69,4 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         vignette=6447,
         parent=true, levels=true, translate={[2256]=true},
     },
-    -- [] = {
-    --     quest=82635,
-    --     loot={224050}, -- Web Sparkles: Pretty and Powerful
-    --     note="Buy from {npc::}",
-    --     parent=true,
-    -- },
 }, KNOWLEDGE)

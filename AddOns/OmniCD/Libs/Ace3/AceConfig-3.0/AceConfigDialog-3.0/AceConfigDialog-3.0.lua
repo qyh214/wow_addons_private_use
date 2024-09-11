@@ -17,7 +17,7 @@ local OmniCDC =	 LibStub("OmniCDC")
 --[[ s r
 local MAJOR, MINOR = "AceConfigDialog-3.0", 86
 ]]
-local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 96
+local MAJOR, MINOR = "AceConfigDialog-3.0-OmniCD", 97
 -- e
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
@@ -1588,12 +1588,11 @@ local function FeedOptions(appName, options,container,rootframe,path,group,inlin
 						]]
 						if controlType == "InlineGroupList-OmniCD" then
 							control:SetLayout("Flow-NowrapFix-OmniCD") -- fixed width
-							-- set title, tooltip, class
-							local desc = GetOptionsMemberValue("desc", v, options, path, appName)
+							-- set spell name, mo tooltip, class bg on title frame
+							local desc = v.tooltipHyperlink or v.desc
 							local class = v.arg -- get it directly, since we're just returning
 							control:SetTitle(name, desc, class)
 							control.width = "fill"
-
 							-- set image on title frame
 							local image = GetOptionsMemberValue("image", v, options, path, appName)
 							local imageCoords = GetOptionsMemberValue("imageCoords", v, options, path, appName)

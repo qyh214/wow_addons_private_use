@@ -799,6 +799,19 @@ function module.options:Load()
 				"_DEMONHUNTER_DEATHKNIGHT_WARLOCK",
 			},
 		}
+	elseif ExRT.isLK then
+		dropDownTable[1][1][ #dropDownTable[1][1]+1 ] = "DEATHKNIGHT"
+		dropDownTable[4] = {
+			{
+				"_PALADIN_PRIEST_WARLOCK",
+				"_ROGUE_MAGE_DRUID_DEATHKNIGHT",
+				"_WARRIOR_HUNTER_SHAMAN",
+			},
+		}
+		if ExRT.isMoP then
+			dropDownTable[1][1][ #dropDownTable[1][1]+1 ] = "MONK"
+			dropDownTable[4][3] = "_WARRIOR_HUNTER_SHAMAN_MONK"
+		end
 	else
 		dropDownTable[4] = {
 			{

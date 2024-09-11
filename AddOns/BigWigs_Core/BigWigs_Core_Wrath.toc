@@ -23,7 +23,7 @@
 ## Notes-esES: Núcleo de BigWigs.
 ## Notes-esMX: Núcleo de BigWigs.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v353.4
+## Version: v357.3
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
