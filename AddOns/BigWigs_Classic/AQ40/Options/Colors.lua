@@ -50,6 +50,7 @@ BigWigs:AddColors("Ouro", {
 	[26102] = "red",
 	[26103] = "orange",
 	[26615] = {"green","yellow"},
+	[1215744] = "yellow",
 	["stages"] = {"cyan","yellow"},
 })
 

@@ -195,8 +195,8 @@ L["TTS Auto Stop Desc"] = "Detiene la lectura cuando te alejas del NPC.";
 --Tutorial
 L["Tutorial Settings Hotkey"] = "Presiona [KEY:PC:F1] para alternar al menú de Ajustes";
 L["Tutorial Settings Hotkey Console"] = "Presiona [KEY:PC:F1] o [KEY:CONSOLE:MENU] para alternar al menú de Ajustes";   --Usa esto si el gamepad está habilitado
-L["Instuction Open Settings"] = "Para abrir Ajustes, presiona [KEY:PC:F1] mientras interactúas con un NPC.";
-L["Instuction Open Settings Console"] = "Para abrir Ajustes, presiona [KEY:PC:F1] o [KEY:CONSOLE:MENU] mientras interactúas con un NPC.";
+L["Instruction Open Settings"] = "Para abrir Ajustes, presiona [KEY:PC:F1] mientras interactúas con un NPC.";
+L["Instruction Open Settings Console"] = "Para abrir Ajustes, presiona [KEY:PC:F1] o [KEY:CONSOLE:MENU] mientras interactúas con un NPC.";
 
 --DO NOT TRANSLATE
 L["Match Stat Armor"] = "([,%d%.]+) p. de armadura";
@@ -206,3 +206,25 @@ L["Match Stat Agility"] = "([,%d%.]+) Agilidad";
 L["Match Stat Intellect"] = "([,%d%.]+) Intelecto";
 L["Match Stat Spirit"] = "([,%d%.]+) Espíritu";
 L["Match Stat DPS"] = "([,%d%.]+) p. de daño por segundo";
+
+L["Show Answer"] = "Mostrar solución.";
+L["Quest Failed Pattern"] = "^No se pudo completar";
+L["AutoCompleteQuest HallowsEnd"] = "Cubo de caramelos";     --Quest:28981
+
+--Asking for Directions-- (match the name to replace gossip icon)
+L["Pin Auction House"] = "Casa de Subastas";
+L["Pin Bank"] = "Banco";
+L["Pin Barber"] = "Peluquero";
+L["Pin Battle Pet Trainer"] = "Instructor de mascotas de duelo";
+L["Pin Crafting Orders"] = "Pedidos de fabricación";
+L["Pin Flight Master"] = "Maestro de vuelo";
+L["Pin Great Vault"] = "Gran bóveda";
+L["Pin Inn"] = "Posada";
+L["Pin Item Upgrades"] = "Mejoras de objetos";
+L["Pin Mailbox"] = "Buzón";
+L["Pin Other Continents"] = "Otros continentes";
+L["Pin POI"] = "Puntos de interés";
+L["Pin Profession Trainer"] = "Instructor de profesión";
+L["Pin Rostrum"] = "Estrado de transformación";
+L["Pin Stable Master"] = "Maestro de establos";
+L["Pin Trading Post"] = "Puesto de venta";

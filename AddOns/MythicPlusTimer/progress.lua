@@ -90,7 +90,7 @@ local function on_combat_log_event_unfiltered()
     end
   end
 
-  -- :OnlyPercentValue :NoCountDatabase ... we no longer build our own enemy count database
+  -- :NoCountDatabase ... we no longer build our own enemy count database
   -- -- skip if not a party kill event
   -- if sub_event ~= "PARTY_KILL" then
   --   return
@@ -233,18 +233,16 @@ local function on_tooltip_set_unit(tooltip)
   local name = criteriaInfo.description
 
   local text = ""
-  -- :OnlyPercentValue
-  text = text .. quantity_percent .. "%"
-  -- if addon.c("show_percent_numbers") then
-  --   text = text .. quantity_percent .. "%"
-  -- end
-  -- if addon.c("show_absolute_numbers") then   
-  --   if addon.c("show_percent_numbers") then
-  --     text = text .. " (+" .. value .. ")"
-  --   else
-  --     text = text .. value
-  --   end
-  -- end
+  if addon.c("show_percent_numbers") then
+    text = text .. quantity_percent .. "%"
+  end
+  if addon.c("show_absolute_numbers") then   
+    if addon.c("show_percent_numbers") then
+      text = text .. " (+" .. value .. ")"
+    else
+      text = text .. value
+    end
+  end
 
   tooltip:AddDoubleLine(name .. ": +" .. text)
 end
@@ -337,7 +335,7 @@ function progress.resolve_npc_progress_value(npc_id, is_teeming)
     is_mdt_value = true
   end
 
-  -- :OnlyPercentValue :NoCountDatabase
+  -- :NoCountDatabase
   -- if not value or value == 0 then 
   --   value = get_progress_value(npc_id, is_teeming)
   --   is_mdt_value = false
@@ -357,7 +355,7 @@ end
 function progress:enable()
   -- register events
   addon.register_event("COMBAT_LOG_EVENT_UNFILTERED", on_combat_log_event_unfiltered)
-  -- addon.register_event("SCENARIO_CRITERIA_UPDATE", on_scenario_criteria_update) -- :OnlyPercentValue :NoCountDatabase
+  -- addon.register_event("SCENARIO_CRITERIA_UPDATE", on_scenario_criteria_update) -- :NoCountDatabase
   addon.register_event("UNIT_THREAT_LIST_UPDATE", on_unit_threat_list_update)
   addon.register_event("ENCOUNTER_END", on_combat_end)
   addon.register_event("PLAYER_REGEN_ENABLED", on_combat_end)

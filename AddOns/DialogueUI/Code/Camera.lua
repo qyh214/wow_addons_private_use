@@ -18,9 +18,12 @@ local FOCUS_SHOULDER_OFFSET_DEFAULT = 1.5;
 local FOCUS_SHOULDER_OFFSET = FOCUS_SHOULDER_OFFSET_DEFAULT;
 local MOUNTED_CAMERA_ENABLED = true;
 local MOUNTED_CAMERA_MULTIPLIER = 4.8;  --1.85 (Netherwing)     1.25(Renewed Proto)   (update 5.725)
+local HIDE_SPARKLES = false;
+local ZOOM_MUTIPLIER = 1.0;
 ------------------
 local PAN_MULTIPLIER = 1.0;
 local PLAYER_IS_SHAPESHIFTER = false;
+local NO_CHANGE_FLAG = 255;
 
 local DeltaLerp = API.DeltaLerp;
 local Esaing_OutSine = addon.EasingFunctions.outSine;
@@ -46,6 +49,7 @@ local UIParent = UIParent;
 UIParent:UnregisterEvent("EXPERIMENTAL_CVAR_CONFIRMATION_NEEDED");  --Disable EXPERIMENTAL_CVAR_WARNING
 
 local FadeHelper = CreateFrame("Frame");
+addon.UIParentFadeHelper = FadeHelper;
 
 local OFFSET_INFO = {};
 
@@ -81,7 +85,7 @@ local function BackupAndSetCVar(cvar, value)
     if CVar_Backup[cvar] == nil then
         CVar_Backup[cvar] = GetCVar(cvar);
     end
-    if value ~= nil then
+    if (value ~= nil) and (value ~= NO_CHANGE_FLAG) then
         SetCVar(cvar, value);
     end
 end
@@ -121,6 +125,10 @@ function CameraUtil:ChangeCVars()
         FOV_DEFAULT = GetCVar("cameraFov") or 90;
         BackupAndSetCVar("cameraFov", nil);
     end
+
+    local outline = (HIDE_UI and HIDE_SPARKLES and 0) or nil;
+    BackupAndSetCVar("graphicsOutlineMode", outline);   --This hides the outline immediately. But the sparkle effects when UI is hidden is controlled by "Outline"
+    BackupAndSetCVar("Outline", outline);           --This fails to hide the outline when the UI is fading
 
     self:ListenEvent(true);
 end
@@ -166,6 +174,25 @@ function CameraUtil:SetHideUnitNames(state)
         end
     else
         self:RestoreCombatCVar();
+    end
+end
+
+function CameraUtil:SetHideOutlineSparkles(state)
+    local cvars = {
+        "graphicsOutlineMode",
+        "Outline",
+    };
+
+    if state then
+        for _, cvar in pairs(cvars) do
+            BackupAndSetCVar(cvar, 0);
+        end
+    else
+        for _, cvar in pairs(cvars) do
+            if CVar_Backup[cvar] ~= nil then
+                SetCVar(cvar, CVar_Backup[cvar]);
+            end
+        end
     end
 end
 
@@ -354,6 +381,7 @@ function CameraUtil:OnModelEvaluationComplete(modelHeight)
     if not (self.isActive and self.cameraMode == 1) then return end;
 
     local zoom;
+
     if modelHeight < 2 then
         zoom = 2.0
     elseif modelHeight < 2.6 then    --Pandaren, Elf
@@ -373,7 +401,10 @@ function CameraUtil:OnModelEvaluationComplete(modelHeight)
         end
     end
 
+    self.bestTargetZoom = zoom;
+
     if zoom then
+        zoom = zoom * ZOOM_MUTIPLIER;
         self:ZoomTo(zoom, true);
     end
 end
@@ -476,7 +507,7 @@ function CameraUtil:InitiateInteraction()
         self:UpdateShapeshiftForm();
     end
 
-    FadeHelper:FadeOutUI();
+    self.bestTargetZoom = nil;
 
     if self.defaultCameraMode == 0 or (DISABLE_IN_INSTANCE and IsInInstance()) then
         self:Intro_None();
@@ -493,6 +524,9 @@ function CameraUtil:InitiateInteraction()
 
     self:OnInteractionStart();
     self:ChangeCVars();
+
+    local caller = addon.DialogueUI;
+    FadeHelper:FadeOutUI(caller);
 
     if self.cameraMode == 1 then
         local offset = self.offsetMultiplier * FOCUS_SHOULDER_OFFSET;
@@ -516,7 +550,8 @@ function CameraUtil:Restore()
         self.fovChanged = nil;
     end
 
-    FadeHelper:FadeInUI();
+    local caller = addon.DialogueUI;
+    FadeHelper:FadeInUI(caller);
 
     if self.oldZoom then
         self:ZoomTo(self.oldZoom);
@@ -577,7 +612,7 @@ local function ShowUIParent(state)
             MovieFrame.uiParentShown = true;
         end
     else
-        SetUIVisibility(false);
+        FadeHelper:HideUIParentInstantly();
     end
 end
 
@@ -585,6 +620,7 @@ function FadeHelper:ShowUIParentInstantly()
     self:SnapToFadeResult();
     ShowUIParent(true);
 end
+CallbackRegistry:Register("PlayerInteraction.ShowUI", "ShowUIParentInstantly", FadeHelper);  --For Classic
 
 function FadeHelper:HideUIParentInstantly()
     self:SetScript("OnUpdate", nil);
@@ -595,10 +631,27 @@ function FadeHelper:HideUIParentInstantly()
         self.fadeDelta = -1;
         UIParent:SetAlpha(1);
         SetUIVisibility(false);
+        if HIDE_UI and HIDE_SPARKLES then
+            self.t = 2;
+            self:SetScript("OnUpdate", self.HideSparkles_OnUpdate);
+        end
     end
 end
 
-addon.CallbackRegistry:Register("PlayerInteraction.ShowUI", "ShowUIParentInstantly", FadeHelper);  --For Classic
+function FadeHelper:HideSparkles_OnUpdate(elapsed)
+    --The game turns unit outline into sparkles when Alt+Z
+    --We have to /console Outline 0 constantly to remove this effect
+    --Frequency is affected by FPS
+
+    self.t = self.t + elapsed;
+    if self.t >= 1.0 then
+        self.t = 0;
+        if CameraUtil.cvarStored then   --Avoid changing this CVar during AKF Logout
+            SetCVar("Outline", 0);
+        end
+    end
+end
+
 
 
 local ALPHA_UPDATE_INTERVAL = 1/30;
@@ -655,8 +708,10 @@ function FadeHelper:FadeOut_OnUpdate(elapsed)
     end
 end
 
-function FadeHelper:FadeOutUI()
+function FadeHelper:FadeOutUI(caller)
     if not HIDE_UI then return end;
+
+    self.owner = caller;
 
     --UI: UIParent
     if self.fadeDelta == -1 or (not UIParent:IsShown()) then
@@ -678,7 +733,11 @@ function FadeHelper:FadeOutUI()
     end
 end
 
-function FadeHelper:FadeInUI()
+function FadeHelper:FadeInUI(caller)
+    if caller and caller ~= self.owner then
+        return
+    end
+
     if self.fadeDelta == 1 then
         return
     end
@@ -703,6 +762,10 @@ function FadeHelper:FadeInUI()
     end
 end
 
+function FadeHelper:SetOwner(owner)
+    self.owner = owner;
+end
+
 
 function CameraUtil:OnEnterCombatDuringInteraction()
     self:RestoreCombatCVar()
@@ -716,18 +779,18 @@ do
     local function Settings_CameraMovement(dbValue)
         CameraUtil:SetDefaultCameraMode(dbValue)
     end
-    addon.CallbackRegistry:Register("SettingChanged.CameraMovement", Settings_CameraMovement);
+    CallbackRegistry:Register("SettingChanged.CameraMovement", Settings_CameraMovement);
 
     local function Settings_CameraChangeFov(dbValue)
         CHANGE_FOV = dbValue == true;
         CameraUtil:OnFovSettingsChanged()
     end
-    addon.CallbackRegistry:Register("SettingChanged.CameraChangeFov", Settings_CameraChangeFov);
+    CallbackRegistry:Register("SettingChanged.CameraChangeFov", Settings_CameraChangeFov);
 
     local function Settings_CameraMovementMountedCamera(dbValue)
         MOUNTED_CAMERA_ENABLED = dbValue == true;
     end
-    addon.CallbackRegistry:Register("SettingChanged.CameraMovementMountedCamera", Settings_CameraMovementMountedCamera);
+    CallbackRegistry:Register("SettingChanged.CameraMovementMountedCamera", Settings_CameraMovementMountedCamera);
 
     local function Settings_HideUI(dbValue, userInput)
         HIDE_UI = dbValue == true;
@@ -735,13 +798,18 @@ do
             if HIDE_UI then
                 FadeHelper:HideUIParentInstantly();
                 CameraUtil:SetHideUnitNames(HIDE_UNIT_NAMES);
+                if addon.DialogueUI:IsShown() then
+                    FadeHelper.owner = addon.DialogueUI;
+                elseif addon.BookUI:IsShown() then
+                    FadeHelper.owner = addon.BookUI;
+                end
             else
                 FadeHelper:ShowUIParentInstantly();
                 CameraUtil:SetHideUnitNames(false);
             end
         end
     end
-    addon.CallbackRegistry:Register("SettingChanged.HideUI", Settings_HideUI);
+    CallbackRegistry:Register("SettingChanged.HideUI", Settings_HideUI);
 
     local function Settings_HideUnitNames(dbValue, userInput)
         HIDE_UNIT_NAMES = dbValue == true;
@@ -749,12 +817,12 @@ do
             CameraUtil:SetHideUnitNames(HIDE_UNIT_NAMES);
         end
     end
-    addon.CallbackRegistry:Register("SettingChanged.HideUnitNames", Settings_HideUnitNames);
+    CallbackRegistry:Register("SettingChanged.HideUnitNames", Settings_HideUnitNames);
 
     local function Settings_CameraMovementDisableInstance(dbValue)
         DISABLE_IN_INSTANCE = dbValue == true;
     end
-    addon.CallbackRegistry:Register("SettingChanged.CameraMovementDisableInstance", Settings_CameraMovementDisableInstance);
+    CallbackRegistry:Register("SettingChanged.CameraMovementDisableInstance", Settings_CameraMovementDisableInstance);
 
     local function Settings_FrameOrientation(dbValue)
         if dbValue == 1 then
@@ -765,6 +833,37 @@ do
         CameraUtil:OnUIOrientationChanged();
     end
     CallbackRegistry:Register("SettingChanged.FrameOrientation", Settings_FrameOrientation);
+
+    local function Settings_HideOutlineSparkles(dbValue, userInput)
+        HIDE_SPARKLES = (dbValue == true) and addon.IsToCVersionEqualOrNewerThan(110000);
+        if userInput and CameraUtil.isActive then
+            Settings_HideUI(HIDE_UI, userInput);
+            if HIDE_UI then
+                if not HIDE_SPARKLES then
+                    CameraUtil:SetHideOutlineSparkles(HIDE_SPARKLES);
+                end
+            end
+        end
+    end
+    CallbackRegistry:Register("SettingChanged.HideOutlineSparkles", Settings_HideOutlineSparkles);
+
+    local ZoomMultiplierValues = {
+        [1] = 1.0,
+        [2] = 1.5,
+        [3] = 2.0,
+        [4] = 2.5,
+        [5] = 3.0,
+    };
+    local function Settings_CameraZoomMultiplier(dbValue, userInput)
+        ZOOM_MUTIPLIER = ZoomMultiplierValues[dbValue] or 1.0;
+        if userInput and CameraUtil.isActive and CameraUtil.bestTargetZoom then
+            local oldZoom = CameraUtil.oldZoom;
+            local zoom = CameraUtil.bestTargetZoom * ZOOM_MUTIPLIER;
+            CameraUtil:ZoomTo(zoom);
+            CameraUtil.oldZoom = oldZoom;
+        end
+    end
+    addon.CallbackRegistry:Register("SettingChanged.CameraZoomMultiplier", Settings_CameraZoomMultiplier);
 end
 
 
@@ -823,7 +922,7 @@ do  --DynamicCam
         return true
     end
 
-    addon.CallbackRegistry:Register("PLAYER_ENTERING_WORLD", CheckRequiredMethods);
+    CallbackRegistry:Register("PLAYER_ENTERING_WORLD", CheckRequiredMethods);
 end
 
 

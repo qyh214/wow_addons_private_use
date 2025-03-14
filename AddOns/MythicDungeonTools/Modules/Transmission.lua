@@ -354,18 +354,29 @@ hooksecurefunc("SetItemRef", function(link, text)
     local sender = link:sub(17, string.len(link))
     local name, realm = string.match(sender, "(.*)+(.*)")
     if (not name) or (not realm) then
-      print(string.format(L["receiveErrorUpdate"], sender))
+      local msg = "\nsender: "..sender
+      local escapedText = text:gsub("|", "||")
+      msg = msg.."\nfull text: "..escapedText
+      local cache = MDT.U.TableToString(MDT.transmissionCache)
+      MDT:OnError(msg, cache, "MDT failed to import preset from chat link")
       return
     end
+    -- to get the displayName (name of the preset) we need to get everything between the starting and closing brackets
+    local displayName = text:match("%[(.-)%]")
     sender = name.."-"..realm
-    local preset = MDT.transmissionCache[sender]
+    local preset = MDT.transmissionCache[sender][displayName]
     if preset and type(preset) == "table" then
       MDT:Async(function()
         MDT:ShowInterfaceInternal(true)
         MDT:ImportPreset(CopyTable(preset))
       end, "showInterfaceChatImport")
     else
-      print(string.format(L["receiveErrorUpdate"], sender))
+      local msg = "\nparsed displayName: "..displayName
+      msg = msg.."\nsender: "..sender
+      local escapedText = text:gsub("|", "||")
+      msg = msg.."\nfull text: "..escapedText
+      local cache = MDT.U.TableToString(MDT.transmissionCache)
+      MDT:OnError(msg, cache, "MDT failed to import preset from chat link")
     end
     return
   end
@@ -391,7 +402,11 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   --the user still decides if he wants to click the chat link and add the preset to his db
   if prefix == presetCommPrefix then
     local preset = MDT:StringToTable(message, false)
-    MDT.transmissionCache[fullName] = preset
+    local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
+    local presetName = preset.text
+    local displayName = dungeon..": "..presetName
+    MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
+    MDT.transmissionCache[fullName][displayName] = preset
     --live session preset
     if MDT.liveSessionActive and MDT.liveSessionAcceptingPreset and preset.uid == MDT.livePresetUID then
       if MDT:ValidateImportPreset(preset) then
@@ -473,7 +488,6 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
         MDT:ReloadPullButtons()
         if updateSeasonal then
           MDT:DungeonEnemies_UpdateSeasonalAffix()
-          MDT.main_frame.sidePanel.difficultyWarning:Toggle(difficulty)
           MDT:POI_UpdateAll()
           MDT:KillAllAnimatedLines()
           MDT:DrawAllAnimatedLines()
@@ -647,7 +661,10 @@ function MDTcommsObject:OnCommReceived(prefix, message, distribution, sender)
   if prefix == MDT.liveSessionPrefixes.preset then
     if MDT.liveSessionActive then
       local preset = MDT:StringToTable(message, false)
-      MDT.transmissionCache[fullName] = preset
+      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
+      local displayName = dungeon..": "..preset.text
+      MDT.transmissionCache[fullName] = MDT.transmissionCache[fullName] or {}
+      MDT.transmissionCache[fullName][displayName] = preset
       if MDT:ValidateImportPreset(preset) then
         MDT.livePresetUID = preset.uid
         MDT:ImportPreset(preset, true)
@@ -720,7 +737,7 @@ local function displaySendingProgress(userArgs, bytesSent, bytesToSend)
     --output chat link
     if not silent and preset then
       local prefix = "[MDT_v2: "
-      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx)
+      local dungeon = MDT:GetDungeonName(preset.value.currentDungeonIdx, true)
       local presetName = preset.text
       local name, realm = UnitFullName("player")
 

@@ -98,9 +98,9 @@ end
 --
 
 if loader.isRetail or loader.isCata then
-	function mod:ENCOUNTER_START(_, id)
+	function mod:ENCOUNTER_START(_, encounterId)
 		for _, module in next, bosses do
-			if module:GetEncounterID() == id and not module:IsEnabled() then
+			if module:IsEncounterID(encounterId) and not module:IsEnabled() then
 				module:Enable()
 				if UnitGUID("boss1") then -- Only if _START fired after IEEU
 					module:Engage()
@@ -109,9 +109,9 @@ if loader.isRetail or loader.isCata then
 		end
 	end
 else
-	function mod:ENCOUNTER_START(_, id)
+	function mod:ENCOUNTER_START(_, encounterId)
 		for _, module in next, bosses do
-			if module:GetEncounterID() == id then
+			if module:IsEncounterID(encounterId) then
 				if not module:IsEnabled() then
 					module:Enable()
 				end
@@ -195,14 +195,6 @@ function core:RegisterEnableMob(module, ...)
 			end
 		end
 	end
-end
-
-function core:GetEnableMobs()
-	local t = {}
-	for k,v in next, enablemobs do
-		t[k] = v
-	end
-	return t
 end
 
 -------------------------------------------------------------------------------
@@ -331,6 +323,10 @@ do
 	local function CheckIfLeavingDelve(_, oldId, newId)
 		if zoneList[oldId] and not zoneList[newId] then
 			DisableCore() -- Leaving a Delve
+		elseif zoneList[newId] then
+			-- Joining a delve but we were already enabled from something
+			DisableCore()
+			--core:Enable() -- We rely on the 0 second delay from the loader to re-enable the core
 		end
 	end
 	function core:Enable(unit)

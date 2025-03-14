@@ -5,6 +5,8 @@
 local mod = BigWigs:NewBoss("Baleroc", 720, 196)
 if not mod then return end
 mod:RegisterEnableMob(53494)
+mod:SetEncounterID(1200)
+mod:SetRespawnTime(30)
 
 local countdownTargets = mod:NewTargetList()
 local countdownCounter, shardCounter = 1, 0
@@ -47,9 +49,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Shards", 99259)
 	self:Log("SPELL_CAST_START", "Blades", 99352, 99350)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "Torment", 99256)
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 53494)
 end
 
 function mod:OnEngage()

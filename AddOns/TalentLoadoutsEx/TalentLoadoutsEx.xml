@@ -1,0 +1,24 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="modules\addon.lua"/>
+	<Include file="modules\command.lua"/>
+	<Include file="modules\dialog.lua"/>
+	<Include file="modules\data.lua"/>
+	<Include file="modules\export.lua"/>
+	<Include file="modules\frame.lua"/>
+	<Include file="modules\icon.lua"/>
+	<Include file="modules\import.lua"/>
+	<Include file="modules\link.lua"/>
+	<Include file="modules\list.lua"/>
+	<Include file="modules\node.lua"/>
+	<Include file="modules\popup.lua"/>
+	<Include file="modules\preset.lua"/>
+	<Include file="modules\simc.lua"/>
+	<Include file="modules\util.lua"/>
+	<Include file="modules\validator.lua"/>
+	<Include file="modules\weakauras.lua"/>
+
+	<Include file="frames\list.xml"/>
+	<Include file="frames\main.xml"/>
+
+	<Include file="modules\main.lua"/>
+</Ui>

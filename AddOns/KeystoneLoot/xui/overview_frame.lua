@@ -32,7 +32,7 @@ Frame:SetScript('OnShow', OnShow);
 Frame:SetScript('OnHide', OnHide);
 
 Frame:SetPortraitToAsset('Interface\\Icons\\INV_Relics_Hourglass_02');
-Frame:SetTitle((Translate['%s (%s Season %d)']):format('KeystoneLoot', EXPANSION_NAME10, 1));
+Frame:SetTitle((Translate['%s (%s Season %d)']):format('KeystoneLoot', EXPANSION_NAME10, 2));
 
 table.insert(UISpecialFrames, Frame:GetName());
 

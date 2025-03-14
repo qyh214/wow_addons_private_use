@@ -1,0 +1,13 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="GossipDataProvider.lua"/>
+    <Script file="GossipData_Icon.lua"/>
+    <Script file="GossipData_AutoSelect.lua"/>
+    <Script file="GossipData_Racing.lua"/>
+    <Script file="GossipData_LFRQueue.lua"/>
+    <Script file="GossipData_ShowUI.lua"/>
+    <Script file="GossipData_Hint.lua"/>
+    <Script file="GossipData_AutoQuest.lua"/>
+    <Script file="GossipData_Teleport.lua"/>
+
+    <Script file="ItemData_Container.lua"/>
+</Ui>

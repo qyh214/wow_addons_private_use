@@ -323,8 +323,8 @@ L["Icons"] = "Icônes"
 L["Immunity"] = "Immunité"
 L["Import"] = "Importer"
 L["Import Profile"] = "Importer un profil"
-L["Importing `%s` will create a new profile."] = "L'importation de `%s` créera un nouveau profil."
-L["Importing `%s` will merge new spells to your list and overwrite same spells."] = "L'importation de `%s` fusionnera les nouveaux sorts dans votre liste et écrasera les sorts identiques."
+L["Importing '%s' will create a new profile."] = "L'importation de `%s` créera un nouveau profil."
+L["Importing '%s' will merge new spells to your list and overwrite same spells."] = "L'importation de `%s` fusionnera les nouveaux sorts dans votre liste et écrasera les sorts identiques."
 --[[Translation missing --]]
 L["Importing Custom Spells will reload UI. Press Cancel to abort."] = "Importing Custom Spells will reload UI. Press Cancel to abort."
 --[[Translation missing --]]

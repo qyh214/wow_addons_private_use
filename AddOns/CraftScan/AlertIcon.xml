@@ -1,0 +1,222 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <Script file="AlertIcon.lua"/>
+
+    <Frame name="CraftScanScannerMenu" mixin="CraftScanScannerMenuMixin" hidden="true" movable="true">
+        <Size x="53" y="53"/>
+        <KeyValues>
+            <KeyValue key="defaultWidth" value="53" type="number"/>
+            <KeyValue key="defaultHeight" value="53" type="number"/>
+            <KeyValue key="defaultGlowWidth" value="46" type="number"/>
+            <KeyValue key="defaultGlowHeight" value="46" type="number"/>
+        </KeyValues>
+        <Anchors>
+            <Anchor point="CENTER" x="0" y="0"/>
+        </Anchors>
+        <Frames>
+            <Button name="$parentButton" parentKey="PageButton" mixin="CraftScanPageButtonMixin" movable="true" registerForClicks="LeftButtonUp">
+                <Size x="53" y="53"/>
+                <KeyValues>
+                    <KeyValue key="defaultWidth" value="53" type="number"/>
+                    <KeyValue key="defaultHeight" value="53" type="number"/>
+                    <KeyValue key="defaultGlowWidth" value="46" type="number"/>
+                    <KeyValue key="defaultGlowHeight" value="46" type="number"/>
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="CENTER" x="0" y="0"/>
+                </Anchors>
+                <HitRectInsets>
+                    <AbsInset left="5" right="10" top="5" bottom="10"/>
+                </HitRectInsets>
+                <Layers>
+                    <Layer level="BORDER">
+                        <Texture name="$parentPortraitBorder" atlas="Soulbinds_Tree_Ring_Disabled" parentKey="PortraitBorder">
+                            <Size x="56" y="56"/>
+                            <Anchors>
+                                <Anchor point="CENTER" x="0" y="0" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="BORDER">
+                        <Texture name="$parentPortrait" parentKey="Portrait">
+                            <Size x="44" y="44"/>
+                            <Anchors>
+                                <Anchor point="CENTER" x="0" y="-2" />
+                            </Anchors>
+                        </Texture>
+                        <MaskTexture parentKey="CircleMask" file="Interface\CharacterFrame\TempPortraitAlphaMask" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.Portrait" x="2" y="0"/>
+                                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Portrait" x="-2" y="4"/>
+                            </Anchors>
+                            <MaskedTextures>
+                                <MaskedTexture childKey="Portrait"/>
+                            </MaskedTextures>
+                        </MaskTexture>
+                        <Texture name="$parentGlowUp" atlas="Soulbinds_Tree_Ring_Glow" parentKey="GlowUp" hidden="true">
+                            <Size x="54" y="54"/>
+                            <Anchors>
+                                <Anchor point="CENTER" x="0" y="0" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="AlertBG" hidden="true" alpha="0" atlas="GarrLanding-MinimapAlertBG">
+                            <Size x="250" y="45"/>
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <Texture parentKey="LoopingGlow" hidden="true" alpha="0" alphaMode="ADD" atlas="GarrLanding-CircleGlow" useAtlasSize="true">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                        <Texture parentKey="SideToastGlow" hidden="true" alpha="0" alphaMode="ADD" atlas="GarrLanding-SideToast-Glow" useAtlasSize="true">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="AlertText" hidden="true" alpha="0" justifyH="LEFT" inherits="GameFontHighlightLeft">
+                            <Size y="45"/>
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="RIGHT" x="4" y="0"/>
+                            </Anchors>
+                        </FontString>
+                        <Texture parentKey="CircleGlow" hidden="true" alpha="1" alphaMode="ADD" atlas="GarrLanding-CircleGlow" useAtlasSize="true">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                        <Texture parentKey="SoftButtonGlow" hidden="true" alpha="1" alphaMode="ADD" atlas="GarrLanding-SideToast-Glow" useAtlasSize="true">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Animations>
+                    <AnimationGroup parentKey="MinimapLoopPulseAnim" looping="REPEAT">
+                        <Alpha childKey="LoopingGlow" duration="0.5" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Alpha childKey="LoopingGlow" startDelay="0.5" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
+                        <Scale childKey="LoopingGlow" duration="0.75" order="1" fromScaleX="0.75" fromScaleY="0.75" toScaleX="1.1" toScaleY="1.1"/>
+                        <Scripts>
+                            <OnPlay>
+                        self:GetParent().LoopingGlow:Show();
+                            </OnPlay>
+                            <OnStop>
+                        self:GetParent().LoopingGlow:Hide();
+                            </OnStop>
+                            <OnFinished>
+                        self:GetParent().LoopingGlow:Hide();
+                            </OnFinished>
+                        </Scripts>
+                    </AnimationGroup>
+                    <AnimationGroup parentKey="MinimapPulseAnim" setToFinalAlpha="true">
+                        <Alpha childKey="CircleGlow" duration="0.1" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Alpha childKey="CircleGlow" startDelay="0.1" duration="0.5" order="1" fromAlpha="1" toAlpha="0"/>
+                        <Scale childKey="CircleGlow" duration="0.25" order="1" fromScaleX="0.75" fromScaleY="0.75" toScaleX="1.75" toScaleY="1.75"/>
+                        <Alpha childKey="SoftButtonGlow" duration="0.5" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Alpha childKey="SoftButtonGlow" startDelay="0.5" duration="0.5" order="1" fromAlpha="1" toAlpha="0"/>
+                        <Scale childKey="SoftButtonGlow" duration="0.75" order="1" fromScaleX="1" fromScaleY="1" toScaleX="1.5" toScaleY="1.5"/>
+                        <Scripts>
+                            <OnPlay>
+                        self:GetParent().CircleGlow:Show();
+                        self:GetParent().SoftButtonGlow:Show();
+                            </OnPlay>
+                            <OnStop>
+                        self:GetParent().CircleGlow:Hide();
+                        self:GetParent().SoftButtonGlow:Hide();
+                            </OnStop>
+                            <OnFinished>
+                        self:GetParent().CircleGlow:Hide();
+                        self:GetParent().SoftButtonGlow:Hide();
+                            </OnFinished>
+                        </Scripts>
+                    </AnimationGroup>
+                    <AnimationGroup parentKey="MinimapAlertAnim" setToFinalAlpha="true">
+                        <Alpha childKey="AlertText" duration="0.25" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Alpha childKey="AlertBG" duration="0.25" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Scale childKey="AlertBG" duration="0.25" order="1" fromScaleX="0.1" fromScaleY="1" toScaleX="1" toScaleY="1">
+                            <Origin point="CENTER"/>
+                        </Scale>
+                        <Alpha childKey="SideToastGlow" duration="0.5" order="1" fromAlpha="0" toAlpha="1"/>
+                        <Alpha childKey="SideToastGlow" startDelay="0.5" duration="0.5" order="1" fromAlpha="1" toAlpha="0"/>
+                        <Scale childKey="SideToastGlow" duration="0.5" order="1" fromScaleX="1" fromScaleY="1" toScaleX="2" toScaleY="1">
+                            <Origin point="RIGHT"/>
+                        </Scale>
+                        <Alpha childKey="AlertText" parentKey="AlertTextFade" startDelay="60" duration="0.25" order="2" fromAlpha="1" toAlpha="0"/>
+                        <Alpha childKey="AlertBG" parentKey="AlertBGFade" startDelay="60" duration="0.25" order="2" fromAlpha="1" toAlpha="0"/>
+                        <Scale childKey="AlertBG" parentKey="AlertBGShrink" startDelay="60" duration="0.25" order="2" fromScaleX="1" fromScaleY="1" toScaleX="0.1" toScaleY="1">
+                            <Origin point="RIGHT"/>
+                        </Scale>
+                        <Scripts>
+                            <OnPlay>
+                        CraftScanScannerMenu.AlertBGButton:Show();
+                        self:GetParent().AlertBG:Show();
+                        self:GetParent().AlertText:Show();
+                        self:GetParent().SideToastGlow:Show();
+                        self:GetParent().MinimapPulseAnim:Play();
+                            </OnPlay>
+                            <OnStop>
+                        CraftScanScannerMenu.AlertBGButton:Hide();
+                        self:GetParent().AlertBG:Hide();
+                        self:GetParent().AlertText:Hide();
+                        self:GetParent().SideToastGlow:Hide();
+                        self:GetParent().MinimapPulseAnim:Stop();
+                            </OnStop>
+                            <OnFinished>
+                        CraftScanScannerMenu.AlertBGButton:Hide();
+                        self:GetParent().AlertBG:Hide();
+                        self:GetParent().AlertText:Hide();
+                        self:GetParent().SideToastGlow:Hide();
+                        self:GetParent().MinimapPulseAnim:Stop();
+                        GarrisonMinimap_CheckQueuedHelpTip(self:GetParent());
+                            </OnFinished>
+                        </Scripts>
+                    </AnimationGroup>
+                </Animations>
+
+                <Scripts>
+                    <OnClick method="OnClick"/>
+                    <OnEnter method="OnEnter"/>
+                    <OnLeave method="OnLeave"/>
+                </Scripts>
+                <NormalTexture atlas="Soulbinds_Tree_Ring_Disabled" useAtlasSize="true"/>
+                <PushedTexture atlas="Soulbinds_Tree_Ring" useAtlasSize="true"/>
+                <HighlightTexture alphaMode="ADD" atlas="Soulbinds_Tree_Ring" useAtlasSize="true" />
+            </Button>
+
+            <Button name="AlertBGButton" parentKey="AlertBGButton" mixin="CraftScanBannerMixin" registerForClicks="LeftButtonUp, RightButtonUp, MiddleButtonUp" hidden="true">
+                <Size x="250" y="45"/>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="HighlightTexture" atlas="auctionhouse-ui-row-highlight" alphaMode="ADD" alpha="0.3" hidden="true">
+                            <Size x="160" y="35"/>
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="LEFT" x="20"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentButton" relativePoint="CENTER"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick method="OnClick"/>
+                    <OnEnter method="OnEnter"/>
+                    <OnLeave method="OnLeave"/>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+
+</Ui>

@@ -5,7 +5,7 @@ if GetLocale() ~= "ruRU" then
 end
 
 local L = BtWQuests.L
-L["ACCOUNT_BOUND_SETTINGS"] = "Настройки, привязанные к учетной записи"
+L["ACCOUNT_BOUND_SETTINGS"] = "Настройки, связанные с учетной записью"
 L["ALLIANCE_ZONES"] = "Локации Альянса"
 L["BTWQUESTS_ACTIVE"] = "Активный"
 L["BTWQUESTS_ALLIED_RACE"] = "Союзные Расы"
@@ -68,7 +68,9 @@ L["BTWQUESTS_TOOLTIP_RESTRICTIONS"] = "Ограничения:"
 L["BTWQUESTS_TOOLTIP_REWARDS"] = "Награды:"
 L["BTWQUESTS_TOY"] = "Игрушка"
 L["BTWQUESTS_VIEW_ALL"] = "Посмотреть все"
+L["BTWQUESTS_WAIT_DAYS"] = "Подождите %d |4дня:дней;"
 L["BTWQUESTS_WAIT_FOR_DAILY_RESET"] = "Дождитесь ежедневного сброса заданий"
+L["BTWQUESTS_WAIT_FOR_WEEKLY_RESET"] = "Ждать еженедельного сброса"
 L["BTWQUESTS_WORLD_QUESTS"] = "Локальные задания"
 L["FACTION_REWARD"] = "Фракция: %s"
 L["GROUP_COMPLETED"] = "Группа завершена"

@@ -48,6 +48,7 @@ local instanceDifficulties = {
     [ 469] = { 9, 18}, -- Blackwing Lair
     [ 509] = { 3}, -- Ruins of Ahn'Qiraj
     [ 531] = { 9, 18}, -- Temple of Ahn'Qiraj
+    [2792] = {14, 15, 17}, -- Blackrock Depths
 
     -- The Burning Crusade
     [ 558] = { 1,  2}, -- Auchenai Crypts
@@ -227,7 +228,9 @@ local instanceDifficulties = {
     [2661] = { 205, 1,  2, 23 }, -- Cinderbrew Meadery
     [2652] = { 205, 1,  2, 23 }, -- The Stonevault
     [2669] = { 205, 1,  2, 23 }, -- City of Threads
+    [2773] = { 205, 1,  2, 23 }, -- Operation: Floodgate
     [2657] = { 220, 17, 14, 15, 16 }, -- Nerub-ar Palace
+    [2769] = { 14, 15, 16, 17, 220 }, -- Liberation of Undermine
 }
 if Internal.IsDragonflightSeason1 then
     instanceDifficulties[2515] = { 1, 2, 23, 8 } -- The Azure Vault
@@ -275,6 +278,17 @@ elseif Internal.IsTheWarWithinSeason1 then
     instanceDifficulties[2286] = { 8 } -- The Necrotic Wake
     instanceDifficulties[1822] = { 8 } -- Siege of Boralus
     instanceDifficulties[ 670] = { 8 } -- Grim Batol
+elseif Internal.IsTheWarWithinSeason2 then
+    instanceDifficulties[2661] = { 205, 1, 2, 23, 8 } -- Cinderbrew Meadery
+    instanceDifficulties[2651] = { 205, 1, 2, 23, 8 } -- Darkflame Cleft
+    instanceDifficulties[2649] = { 205, 1, 2, 23, 8, 216 } -- Priory of the Sacred Flame
+    instanceDifficulties[2648] = { 205, 1, 2, 23, 8, 216 } -- The Rookery
+
+    instanceDifficulties[2773] = { 205, 1, 2, 23, 8 } -- Operation: Floodgate
+
+    instanceDifficulties[2293] = { 8 } -- Theater of Pain
+    instanceDifficulties[2097] = { 8 } -- Operation: Mechagon
+    instanceDifficulties[1594] = { 8 } -- The MOTHERLODE!!
 end
 Internal.dungeonDifficultiesAll = { 205, 1, 2, 23, 8 };
 Internal.raidDifficultiesAll = { 220, 17, 14, 15, 16 };
@@ -465,6 +479,7 @@ local dungeonInfo = {
             2661, -- Cinderbrew Meadery
             2652, -- The Stonevault
             2669, -- City of Threads
+            2773, -- Operation: Floodgate
         }
     },
 }
@@ -494,6 +509,11 @@ elseif Internal.IsTheWarWithinSeason1 then
     instances[#instances+1] = 2286 -- The Necrotic Wake
     instances[#instances+1] = 1822 -- Siege of Boralus
     instances[#instances+1] =  670 -- Grim Batol
+elseif Internal.IsTheWarWithinSeason2 then
+    local instances = dungeonInfo[11].instances;
+    instances[#instances+1] = 2293 -- Theater of Pain
+    instances[#instances+1] = 2097 -- Operation: Mechagon
+    instances[#instances+1] = 1594 -- The MOTHERLODE!!
 end
 local raidInfo = {
     {
@@ -503,6 +523,7 @@ local raidInfo = {
              469, -- Blackwing Lair
              509, -- Ruins of Ahn'Qiraj
              531, -- Temple of Ahn'Qiraj
+            2792, -- Blackrock Depths
         }
     },
     {
@@ -598,12 +619,12 @@ local raidInfo = {
         }
     },
     {
-        
         name = L["The War Within"],
         instances = {
             2657, -- Nerub-ar Palace
+            2769, -- Liberation of Undermine
         }
-    }
+    },
 }
 local scenarioInfo = {
 	{
@@ -999,6 +1020,16 @@ local instanceBosses = {
         1549, -- The Twin Emperors
         1550, -- Ouro
         1551, -- C'Thun
+    },
+    [2792] = { -- Blackrock Depths
+        2663, -- Lord Roccor
+        2664, -- Bael'Gar
+        2665, -- Lord Incendius
+        2666, -- Golem Lord Argelmach
+        2667, -- The Seven
+        2668, -- General Angerforge
+        2669, -- Ambassador Flamelash
+        2670, -- Emperor Dagran Thaurissan
     },
 
     -- The Burning Crusade
@@ -2166,6 +2197,12 @@ local instanceBosses = {
         2600, -- The Coaglamation
         2596, -- Izo, the Grand Splicer
     },
+    [2773] = { -- Operation: Floodgate
+        2648, -- Big M.O.M.M.A.
+        2649, -- Demolition Duo
+        2650, -- Swampface
+        2651, -- Geezle Gigazap
+    },
     [2657] = { -- Nerub-ar Palace
         2607, -- Ulgrax the Devourer
         2611, -- The Bloodbound Horror
@@ -2175,6 +2212,16 @@ local instanceBosses = {
         2601, -- Nexus-Princess Ky'veza
         2608, -- The Silken Court
         2602, -- Queen Ansurek
+    },
+    [2769] = { -- Liberation of Undermine
+        2639, -- Vexie and the Geargrinders
+        2640, -- Cauldron of Carnage
+        2641, -- Rik Reverb
+        2642, -- Stix Bunkjunker
+        2653, -- Sprocketmonger Lockenstock
+        2644, -- The One-Armed Bandit
+        2645, -- Mug'Zee, Heads of Security
+        2646, -- Chrome King Gallywix
     },
 }
 -- A map of npc ids to JournalInstanceID, this might not be the bosses npc id,
@@ -2284,7 +2331,7 @@ local npcIDToBossID = {
     [209090] = 2565, -- Tindral Sageswift, Seer of the Flame
     -- [204931] = 2519, -- Fyrakk the Blazing
 
-    --The war Within
+    --The War Within
     -- Nerub-ar Palace
     [215657] = 2607, -- Ulgrax the Devourer
     [214502] = 2611, -- The Bloodbound Horror
@@ -2294,7 +2341,18 @@ local npcIDToBossID = {
     [217748] = 2601, -- Nexus-Princess Ky'veza
     [217489] = 2608, -- The Silken Court
     [217491] = 2608, -- The Silken Court
-    -- [0] = 2602, -- Queen Ansurek
+    [218370] = 2602, -- Queen Ansurek
+
+    -- Liberation of Undermine
+    [225821] = 2639, -- Vexie and the Geargrinders
+    [229181] = 2640, -- Cauldron of Carnage
+    [229177] = 2640, -- Cauldron of Carnage
+    [228648] = 2641, -- Rik Reverb
+    [230322] = 2642, -- Stix Bunkjunker
+    [230583] = 2653, -- Sprocketmonger Lockenstock
+    [228458] = 2644, -- The One-Armed Bandit
+    [229953] = 2645, -- Mug'Zee, Heads of Security
+    -- [] = 2646, -- Chrome King Gallywix
 };
 -- Although area ids are unique we map them with instance ids so we can translate
 -- area names by instance. We translate them because we cant get the area id where
@@ -2369,6 +2427,13 @@ local InstanceAreaIDToBossID = {
     },
     [2549] = { -- Amirdrassil, the Dream's Hope
         [15049] = 2557, -- Volcoross
+    },
+    [2769] = { -- ALiberation of Undermine
+        [15646] = 2639, -- Vexie and the Geargrinders
+        [15652] = 2640, -- Cauldron of Carnage
+        [15654] = 2641, -- Rik Reverb
+        [15647] = 2642, -- Stix Bunkjunker
+        [15648] = 2653, -- Sprocketmonger Lockenstock
     },
 };
 -- This is for bosses that have their own unique world map
@@ -2737,10 +2802,16 @@ local uiMapIDToBossID = {
     [2308] = 2571, -- Captain Dailcry
     -- Ara-Kara, City of Echoes
     [2358] = 2585, -- Ki'katal the Harvester
+    -- Operation: Floodgate
+    [2388] = 2651, -- Geezle Gigazap
     -- Nerub-ar Palace
     [2291] = 2611, -- The Bloodbound Horror
     [2293] = 2599, -- Sikran, Captain of the Sureki
     [2295] = 2602, -- Queen Ansurek
+    -- Liberation of Undermine
+    [2408] = 2644, -- The One-Armed Bandit
+    [2411] = 2645, -- Mug'Zee, Heads of Security
+    [2409] = 2646, -- Chrome King Gallywix
 }
 Internal.instanceDifficulties = instanceDifficulties;
 Internal.dungeonInfo = dungeonInfo;
@@ -2815,9 +2886,16 @@ elseif Internal.IsDragonflightSeason4 then
         [7] = {135, 136, 134, 124, 3},
         [10] = {},
     }
-else -- if Internal.IsTheWarWithinSeason1 then
+elseif Internal.IsTheWarWithinSeason1 then
     affixesByLevel = {
         [2] = {148, 158, 159, 160, 147},
+        [4] = {10, 9},
+        [7] = {152},
+        [10] = {},
+    }
+else -- if Internal.IsTheWarWithinSeason2 then
+    affixesByLevel = {
+        [2] = {148, 158, 162, 160, 147},
         [4] = {10, 9},
         [7] = {152},
         [10] = {},

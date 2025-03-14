@@ -36,7 +36,7 @@ if not db.activate.HideMapNote then
 
                     if self.db.profile.showCapitalsFirstAid then
                         nodes[1454][37608720] = { name = PROFESSIONS_FIRST_AID, type = "FirstAid", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                        nodes[1454][34008440] = { name = PROFESSIONS_FIRST_AID, type = "FirstAid", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        --nodes[1454][34008440] = { name = PROFESSIONS_FIRST_AID, type = "FirstAid", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
                     end
 
                     if self.db.profile.showCapitalsAlchemy then
@@ -911,7 +911,7 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.CapitalsProfessions then
 
                     if self.db.profile.showCapitalsFirstAid then
-                        nodes[1457][51601360] = { name = PROFESSIONS_FIRST_AID, type = "FirstAid", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        nodes[1457][51733043] = { name = PROFESSIONS_FIRST_AID, type = "FirstAid", showInZone = true, showOnContinent = false, showOnMinimap = false, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
                     end
 
                     if self.db.profile.showCapitalsAlchemy then

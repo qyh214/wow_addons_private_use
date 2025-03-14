@@ -391,6 +391,8 @@ L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
 --[[Translation missing --]]
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
+--[[Translation missing --]]
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOWFACTIONS"] = "Show Factions"
@@ -450,6 +452,8 @@ L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+--[[Translation missing --]]
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "Totale"
 L["S_PARTY"] = "Gruppo"
 --[[Translation missing --]]

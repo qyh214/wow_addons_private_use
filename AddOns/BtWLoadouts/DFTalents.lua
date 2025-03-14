@@ -194,6 +194,9 @@ local function GetByName(name)
     return Internal.GetSetByName(BtWLoadoutsSets.dftalents, name, SetIsValid)
 end
 local function IsSetActive(set)
+    if not C_SpecializationInfo.CanPlayerUseTalentSpecUI() then -- Player below level 10
+        return true
+    end
     local configID = C_ClassTalents.GetActiveConfigID();
     if not configID then -- New character without an active config?
         return true
@@ -706,6 +709,7 @@ function BtWLoadoutsDFTalentsMixin:OnLoad()
 	self.dirtyNodeIDSet = {};
 	self.condInfoCache = {};
 	self.dirtyCondIDSet = {};
+	self.subTreeInfoCache = {};
 	self.panOffsetX = 0;
 	self.panOffsetY = 0;
 
@@ -1202,7 +1206,7 @@ function BtWLoadoutsDFTalentsMixin:OnDrag()
     end
 end
 function BtWLoadoutsDFTalentsMixin:GetMaxWidth()
-    return 1300
+    return 1400
 end
 function BtWLoadoutsDFTalentsMixin:BeginScrollDrag()
     local scroll = self.Scroll;
@@ -1424,6 +1428,13 @@ end
 function BtWLoadoutsDFTalentsMixin:AddConditionsToTooltip()
     
 end
+function BtWLoadoutsDFTalentsMixin:GetAndCacheSubTreeInfo(subTreeID)
+	local function GetSubTreeInfoCallback()
+		return C_Traits.GetSubTreeInfo(Constants.TraitConsts.VIEW_TRAIT_CONFIG_ID, subTreeID);
+	end
+
+	return GetOrCreateTableEntryByCallback(self.subTreeInfoCache, subTreeID, GetSubTreeInfoCallback);
+end
 function BtWLoadoutsDFTalentsMixin:MarkNodeDirty(nodeID)
     local nodeInfo = self:GetAndCacheNodeInfo(nodeID);
     for _,edge in ipairs(nodeInfo.visibleEdges) do
@@ -1485,10 +1496,16 @@ end
 function BtWLoadoutsDFTalentsMixin:ShouldInstantiateNode(nodeID, nodeInfo)
 	-- Overrides TalentFrameBaseMixin.
 	-- SubTreeSelection nodes are used to track what SubTrees are active under the hood, but we use a bespoke UI for them for Hero Talents (see HeroTalentsContainer)
-	return nodeInfo.type ~= Enum.TraitNodeType.SubTreeSelection;
+    return nodeInfo.type ~= Enum.TraitNodeType.SubTreeSelection;
 end
 function BtWLoadoutsDFTalentsMixin:InstantiateTalentButton(nodeID, nodeInfo)
 	nodeInfo = nodeInfo or self:GetAndCacheNodeInfo(nodeID);
+
+    -- if nodeInfo.type == Enum.TraitNodeType.SubTreeSelection then
+    --     print(nodeInfo.posX, nodeInfo.posY);
+    --     nodeInfo.posX = 8250
+    --     nodeInfo.posY = 1800
+    -- end
 
 	if (not nodeInfo.isVisible and not self:ShouldInstantiateInvisibleButtons()) or not self:ShouldInstantiateNode(nodeID, nodeInfo) then
 		return nil;

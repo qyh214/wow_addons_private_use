@@ -4,6 +4,7 @@ local Config = Addon:NewModule('Config')
 local configVersion = 1
 local configDefaults = {
 	progressTooltip = true,
+	progressTooltipMDT = false,
 	progressFormat = 1,
 	autoGossip = true,
 	cosRumors = false,
@@ -256,7 +257,7 @@ Panel_OnRefresh = function(self)
 		checkboxes = {}
 		dropdowns = {}
 
-		local checkboxes_order = { "silverGoldTimer", "autoGossip", "progressTooltip", "completionMessage", "hideTalkingHead", "resetPopup", "announceKeystones", "schedule" }
+		local checkboxes_order = { "silverGoldTimer", "autoGossip", "progressTooltip", "progressTooltipMDT", "completionMessage", "hideTalkingHead", "resetPopup", "announceKeystones", "schedule" }
 		if Addon.Locale:HasRumors() then table.insert(checkboxes_order, 5, "cosRumors") end
 
 		for i,key in ipairs(checkboxes_order) do

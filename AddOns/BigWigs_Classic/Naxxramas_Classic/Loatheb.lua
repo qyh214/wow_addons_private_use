@@ -42,16 +42,35 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			{29865, "OFF"}, -- Poison Aura
+			29204, -- Inevitable Doom
+			30281, -- Remove Curse
+			29234, -- Summon Spore
+			1225419, -- Necrotic Aura
+			29232, -- Fungal Bloom
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "PoisonAura", 29865)
 	self:Log("SPELL_CAST_SUCCESS", "InevitableDoom", 29204)
 	self:Log("SPELL_CAST_SUCCESS", "RemoveCurse", 30281)
 	self:Log("SPELL_CAST_SUCCESS", "SummonSpore", 29234)
-	self:Log("SPELL_AURA_APPLIED", "CorruptedMindApplied", 29184, 29195, 29197, 29199) -- Priest, Druid, Paladin, Shaman
-	self:Log("SPELL_AURA_REMOVED", "CorruptedMindRemoved", 29184, 29195, 29197, 29199)
-	self:Log("SPELL_AURA_APPLIED", "InitialCorruptedMindApplied", 29185, 29194, 29196, 29198) -- Priest, Druid, Paladin, Shaman
-	self:Log("SPELL_AURA_REMOVED", "InitialCorruptedMindRemoved", 29185, 29194, 29196, 29198)
 	self:Log("SPELL_AURA_APPLIED", "FungalBloomApplied", 29232)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "NecroticAura", 1225419)
+		self:Log("SPELL_AURA_APPLIED", "NecroticAuraApplied", 1225419)
+		self:Log("SPELL_AURA_REMOVED", "NecroticAuraRemoved", 1225419)
+	else
+		self:Log("SPELL_AURA_APPLIED", "CorruptedMindApplied", 29184, 29195, 29197, 29199) -- Priest, Druid, Paladin, Shaman
+		self:Log("SPELL_AURA_REMOVED", "CorruptedMindRemoved", 29184, 29195, 29197, 29199)
+		self:Log("SPELL_AURA_APPLIED", "InitialCorruptedMindApplied", 29185, 29194, 29196, 29198) -- Priest, Druid, Paladin, Shaman
+		self:Log("SPELL_AURA_REMOVED", "InitialCorruptedMindRemoved", 29185, 29194, 29196, 29198)
+	end
 end
 
 function mod:OnEngage()
@@ -67,13 +86,34 @@ function mod:OnEngage()
 	self:Bar(29204, 120, CL.count:format(self:SpellName(29204), doomCount)) -- Inevitable Doom
 
 	-- Corrupted Mind
-	self:OpenInfo(29184, "|T136122:0:0:0:0:64:64:4:60:4:60|t".. self:SpellName(29184), numInfoLines)
-	self:SimpleTimer(UpdateHealerList, 0.1)
+	if self:GetSeason() == 2 then
+		self:Bar(1225419, 11.4) -- Necrotic Aura
+	else
+		self:OpenInfo(29184, "|T136122:0:0:0:0:64:64:4:60:4:60|t".. self:SpellName(29184), numInfoLines) -- Corrupted Mind
+		self:SimpleTimer(UpdateHealerList, 0.1)
+	end
 end
 
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
+
+function mod:NecroticAura(args)
+	self:Bar(args.spellId, 21)
+end
+
+function mod:NecroticAuraApplied(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId)
+	end
+end
+
+function mod:NecroticAuraRemoved(args)
+	if self:Me(args.destGUID) then
+		self:PersonalMessage(args.spellId, "removed")
+		self:PlaySound(args.spellId, "long")
+	end
+end
 
 function mod:PoisonAura(args)
 	self:Message(args.spellId, "yellow")

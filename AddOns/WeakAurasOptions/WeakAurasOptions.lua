@@ -549,7 +549,7 @@ local function OnRename(event, uid, oldid, newid)
   end
 
   OptionsPrivate.StopGrouping()
-  OptionsPrivate.SortDisplayButtons()
+  OptionsPrivate.SortDisplayButtons(nil, true)
 
   frame:OnRename(uid, oldid, newid)
 
@@ -571,45 +571,47 @@ local function OptionsFrame()
   end
 end
 
----@type fun(msg: string, Private: Private)
-function WeakAuras.ToggleOptions(msg, Private)
-  if not Private then
-    return
-  end
-  if not OptionsPrivate.Private then
-    OptionsPrivate.Private = Private
-    Private.OptionsFrame = OptionsFrame
-    for _, fn in ipairs(OptionsPrivate.registerRegions) do
-      fn()
+if not WeakAuras.ToggleOptions then
+  ---@type fun(msg: string, Private: Private)
+  function WeakAuras.ToggleOptions(msg, Private)
+    if not Private then
+      return
     end
-    OptionsPrivate.Private.callbacks:RegisterCallback("AuraWarningsUpdated", function(event, uid)
-      local id = OptionsPrivate.Private.UIDtoID(uid)
-      if displayButtons[id] then
-        -- The button does not yet exists if a new aura is created
-        displayButtons[id]:UpdateWarning()
+    if not OptionsPrivate.Private then
+      OptionsPrivate.Private = Private
+      Private.OptionsFrame = OptionsFrame
+      for _, fn in ipairs(OptionsPrivate.registerRegions) do
+        fn()
       end
-      local data = Private.GetDataByUID(uid)
-      if data and data.parent then
-        local button = OptionsPrivate.GetDisplayButton(data.parent);
-        if button then
-          button:UpdateParentWarning()
+      OptionsPrivate.Private.callbacks:RegisterCallback("AuraWarningsUpdated", function(event, uid)
+        local id = OptionsPrivate.Private.UIDtoID(uid)
+        if displayButtons[id] then
+          -- The button does not yet exists if a new aura is created
+          displayButtons[id]:UpdateWarning()
         end
-      end
-    end)
+        local data = Private.GetDataByUID(uid)
+        if data and data.parent then
+          local button = OptionsPrivate.GetDisplayButton(data.parent);
+          if button then
+            button:UpdateParentWarning()
+          end
+        end
+      end)
 
-    OptionsPrivate.Private.callbacks:RegisterCallback("ScanForLoads", AfterScanForLoads)
-    OptionsPrivate.Private.callbacks:RegisterCallback("AboutToDelete", OnAboutToDelete)
-    OptionsPrivate.Private.callbacks:RegisterCallback("Rename", OnRename)
-    OptionsPrivate.Private.OpenUpdate = OptionsPrivate.OpenUpdate
-  end
+      OptionsPrivate.Private.callbacks:RegisterCallback("ScanForLoads", AfterScanForLoads)
+      OptionsPrivate.Private.callbacks:RegisterCallback("AboutToDelete", OnAboutToDelete)
+      OptionsPrivate.Private.callbacks:RegisterCallback("Rename", OnRename)
+      OptionsPrivate.Private.OpenUpdate = OptionsPrivate.OpenUpdate
+    end
 
-  if(frame and frame:IsVisible()) then
-    WeakAuras.HideOptions();
-  elseif (InCombatLockdown()) then
-    WeakAuras.prettyPrint(L["Options will open after combat ends."])
-    reopenAfterCombat = true;
-  else
-    WeakAuras.ShowOptions(msg);
+    if(frame and frame:IsVisible()) then
+      WeakAuras.HideOptions();
+    elseif (InCombatLockdown()) then
+      WeakAuras.prettyPrint(L["Options will open after combat ends."])
+      reopenAfterCombat = true;
+    else
+      WeakAuras.ShowOptions(msg);
+    end
   end
 end
 
@@ -726,9 +728,11 @@ local function LayoutDisplayButtons(msg)
       for id, button in pairs(displayButtons) do
         if OptionsPrivate.Private.loaded[id] then
           button:PriorityShow(1);
+          coroutine.yield()
         end
       end
       OptionsPrivate.Private.OptionsFrame().loadedButton:RecheckVisibility()
+      coroutine.yield()
     end
     OptionsPrivate.Private.ResumeAllDynamicGroups(suspended)
 
@@ -2256,4 +2260,3 @@ function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, h
 
   return next(seenSymbols) ~= nil
 end
-WeakAuras.OptionsPrivate = OptionsPrivate

@@ -1,0 +1,31 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Include file="templates/TabButton.xml" />
+    <Include file="templates/Heading.xml" />
+    <Include file="templates/SubHeading.xml" />
+    <Include file="templates/Inset.xml" />
+    <Include file="templates/CopyAndPaste.xml" />
+    <Include file="templates/Tooltip.xml" />
+    <Include file="templates/DataTab.xml" />
+    <Include file="templates/ResultsListing.xml" />
+    <Include file="templates/ResultsRow.xml" />
+    <Include file="templates/TableResultsRow.xml" />
+    <Include file="templates/StringColumnHeader.xml" />
+    <Include file="templates/Cell.xml" />
+    <Include file="templates/StringCell.xml" />
+
+    <Include file="UpgradeFrame.xml" />
+
+    <Include file="tabs/info/Info.xml" />
+    
+    <Include file="tabs/mythicPlus/MythicPlus.xml" />
+    <Include file="tabs/mythicPlus/MythicPlusRow.xml" />
+    
+    <Include file="tabs/raid/Raid.xml" />
+    <Include file="tabs/raid/RaidRow.xml" />
+    
+    <Include file="tabs/upgrade/Upgrade.xml" />
+    <Include file="tabs/upgrade/UpgradeRow.xml" />
+    
+    <Include file="tabs/crafting/Crafting.xml" />
+    <Include file="tabs/crafting/CraftingRow.xml" />
+</Ui>

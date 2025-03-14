@@ -83,6 +83,22 @@ function Button:GetList()
 	info.args = not KeystoneLootDB.minimapButtonEnabled;
 	info.func = function (enable)
 		KeystoneLootDB.minimapButtonEnabled = enable;
+
+		if (LibStub) then
+			local LDBIcon = LibStub('LibDBIcon-1.0', true);
+			if (LDBIcon) then
+				KeystoneLootDB.minimapButton.hide = not enable;
+
+				if (enable) then
+					LDBIcon:Show('KeystoneLoot');
+				else
+					LDBIcon:Hide('KeystoneLoot');
+				end
+
+				return;
+			end
+		end
+
 		KeystoneLoot:UpdateMinimapButton();
 	end;
 	table.insert(_list, info);
@@ -144,7 +160,7 @@ function Button:GetList()
 	table.insert(_list, info);
 
 	local info = {};
-	info.text = YELLOW_FONT_COLOR:WrapTextInColorCode(NEW:upper())..' '..NORMAL_FONT_COLOR:WrapTextInColorCode(Translate['Highlighting']); -- TODO: -NEU- Später wieder entfernen.
+	info.text = NORMAL_FONT_COLOR:WrapTextInColorCode(Translate['Highlighting']);
 	info.checked = false;
 	info.notCheckable = true;
 	info.disabled = true;

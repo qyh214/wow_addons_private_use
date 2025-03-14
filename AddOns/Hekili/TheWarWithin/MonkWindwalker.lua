@@ -1,5 +1,5 @@
 -- MonkWindwalker.lua
--- October 2023
+-- January 2025
 
 if UnitClassBase( "player" ) ~= "MONK" then return end
 
@@ -39,170 +39,182 @@ spec:RegisterResource( Enum.PowerType.Mana )
 spec:RegisterTalents( {
     -- Monk
     ancient_arts                   = { 101184, 344359, 2 }, -- Reduces the cooldown of Paralysis by 15 sec and the cooldown of Leg Sweep by 10 sec.
+    aspect_of_harmony              = { 101223, 450508, 1 }, -- Store vitality from 10% of your damage dealt and 30% of your healing. For 10 sec after casting Thunder Focus Tea your spells and abilities draw upon the stored vitality to deal 40% additional healing over 8 sec.
+    balanced_stratagem             = { 101230, 450889, 1 }, -- Casting a Physical spell or ability increases the damage and healing of your next Fire or Nature spell or ability by 3%, and vice versa. Stacks up to 5.
     bounce_back                    = { 101177, 389577, 1 }, -- When a hit deals more than 12% of your maximum health, reduce all damage you take by 20% for 4 sec. This effect cannot occur more than once every 30 seconds.
     bounding_agility               = { 101161, 450520, 1 }, -- Roll and Chi Torpedo travel a small distance further.
     calming_presence               = { 101153, 388664, 1 }, -- Reduces all damage taken by 3%.
     celerity                       = { 101183, 115173, 1 }, -- Reduces the cooldown of Roll by 5 sec and increases its maximum number of charges by 1.
     celestial_determination        = { 101180, 450638, 1 }, -- While your Celestial is active, you cannot be slowed below 90% normal movement speed.
-    chi_burst                      = { 101159, 460485, 1 }, -- Your damaging spells and abilities have a chance to activate Chi Burst, allowing you to hurl a torrent of Chi energy up to 40 yds forward, dealing 33,650 Nature damage to all enemies, and 28,888 healing to the Monk and all allies in its path. Healing reduced beyond 5 targets.
+    chi_burst                      = { 101159, 460485, 1 }, -- Your damaging spells and abilities have a chance to activate Chi Burst, allowing you to hurl a torrent of Chi energy up to 40 yds forward, dealing 33,390 Nature damage to all enemies, and 26,961 healing to the Monk and all allies in its path. Healing and damage reduced beyond 5 targets. 
     chi_proficiency                = { 101169, 450426, 2 }, -- Magical damage done increased by 5% and healing done increased by 5%.
     chi_torpedo                    = { 101183, 115008, 1 }, -- Torpedoes you forward a long distance and increases your movement speed by 30% for 10 sec, stacking up to 2 times.
-    chi_wave                       = { 101159, 450391, 1 }, -- Every 15 sec, your next Rising Sun Kick or Vivify releases a wave of Chi energy that flows through friends and foes, dealing 2,082 Nature damage or 5,515 healing. Bounces up to 7 times to targets within 25 yards.
+    chi_wave                       = { 101159, 450391, 1 }, -- Every 15 sec, your next Rising Sun Kick or Vivify releases a wave of Chi energy that flows through friends and foes, dealing 5,366 Nature damage or 9,191 healing. Bounces up to 7 times to targets within 25 yards.
+    clarity_of_purpose             = { 101228, 451017, 1 }, -- Casting Vivify stores 13,629 vitality, increased based on your recent Gusts of Mist.
     clash                          = { 101154, 324312, 1 }, -- You and the target charge each other, meeting halfway then rooting all targets within 6 yards for 4 sec.
+    coalescence                    = { 101227, 450529, 1 }, -- When Aspect of Harmony heals, it has a chance to spread to a nearby ally. When you directly heal an affected target, it has a chance to intensify. Targets damaged or healed by your Aspect of Harmony take 20% increased damage or healing from you.
     crashing_momentum              = { 101149, 450335, 1 }, -- Targets you Roll through are snared by 40% for 5 sec.
-    dance_of_the_wind              = { 101137, 432181, 1 }, -- Your dodge chance is increased by 10% and an additional 10% every 4 sec until you dodge an attack, stacking up to 9 times.
+    dance_of_the_wind              = { 101137, 432181, 1 }, -- Your physical damage taken is reduced by 10% and an additional 10% every 4 sec until you receive a physical attack.
     detox                          = { 101150, 218164, 1 }, -- Removes all Poison and Disease effects from the target.
     diffuse_magic                  = { 101165, 122783, 1 }, -- Reduces magic damage you take by 60% for 6 sec, and transfers all currently active harmful magical effects on you back to their original caster if possible.
     disable                        = { 101149, 116095, 1 }, -- Reduces the target's movement speed by 50% for 15 sec, duration refreshed by your melee attacks. Targets already snared will be rooted for 8 sec instead.
     elusive_mists                  = { 101144, 388681, 1 }, -- Reduces all damage taken by you and your target while channeling Soothing Mists by 6%.
+    endless_draught                = { 101225, 450892, 1 }, -- Thunder Focus Tea has 1 additional charge.
     energy_transfer                = { 101151, 450631, 1 }, -- Successfully interrupting an enemy reduces the cooldown of Paralysis and Roll by 5 sec.
     escape_from_reality            = { 101176, 394110, 1 }, -- After you use Transcendence: Transfer, you can use Transcendence: Transfer again within 10 sec, ignoring its cooldown.
     expeditious_fortification      = { 101174, 388813, 1 }, -- Fortifying Brew cooldown reduced by 30 sec.
-    fast_feet                      = { 101185, 388809, 1 }, -- Rising Sun Kick deals 70% increased damage. Spinning Crane Kick deals 10% additional damage.
+    fast_feet                      = { 101185, 388809, 1 }, -- Rising Sun Kick deals 70% increased damage. Spinning Crane Kick deals 10% additional damage. 
     fatal_touch                    = { 101178, 394123, 1 }, -- Touch of Death increases your damage by 5% for 30 sec after being cast and its cooldown is reduced by 90 sec.
     ferocity_of_xuen               = { 101166, 388674, 1 }, -- Increases all damage dealt by 2%.
-    flow_of_chi                    = { 101170, 450569, 1 }, -- You gain a bonus effect based on your current health. Above 90% health: Movement speed increased by 5%. This bonus stacks with similar effects. Between 90% and 35% health: Damage taken reduced by 5%. Below 35% health: Healing received increased by 10%.
-    fortifying_brew                = { 101173, 115203, 1 }, -- Turns your skin to stone for 15 sec.
+    flow_of_chi                    = { 101170, 450569, 1 }, -- You gain a bonus effect based on your current health. Above 90% health: Movement speed increased by 5%. This bonus stacks with similar effects. Between 90% and 35% health: Damage taken reduced by 5%. Below 35% health: Healing received increased by 10%. 
+    fortifying_brew                = { 101173, 115203, 1 }, -- Turns your skin to stone for 15 sec, increasing your current and maximum health by 20%, reducing all damage you take by 20%.
     grace_of_the_crane             = { 101146, 388811, 1 }, -- Increases all healing taken by 6%.
+    harmonic_gambit                = { 101224, 450870, 1 }, -- During Aspect of Harmony, Rising Sun Kick, Blackout Kick, and Tiger Palm also withdraw vitality to damage enemies.
     hasty_provocation              = { 101158, 328670, 1 }, -- Provoked targets move towards you at 50% increased speed.
-    healing_winds                  = { 101171, 450560, 1 }, -- Transcendence: Transfer immediately heals you for 15% of your maximum health.
+    healing_winds                  = { 101171, 450560, 1 }, -- Transcendence: Transfer immediately heals you for 10% of your maximum health.
     improved_touch_of_death        = { 101140, 322113, 1 }, -- Touch of Death can now be used on targets with less than 15% health remaining, dealing 35% of your maximum health in damage.
     ironshell_brew                 = { 101174, 388814, 1 }, -- Increases your maximum health by an additional 10% and your damage taken is reduced by an additional 10% while Fortifying Brew is active.
     jade_walk                      = { 101160, 450553, 1 }, -- While out of combat, your movement speed is increased by 15%.
     lighter_than_air               = { 101168, 449582, 1 }, -- Roll causes you to become lighter than air, allowing you to double jump to dash forward a short distance once within 5 sec, but the cooldown of Roll is increased by 2 sec.
+    manifestation                  = { 101222, 450875, 1 }, -- Chi Burst and Chi Wave deal 50% increased damage and healing.
+    mantra_of_purity               = { 101229, 451036, 1 }, -- When cast on yourself, your single-target healing spells heal for 10% more and restore an additional 21,261 health over 6 sec.
+    mantra_of_tenacity             = { 101229, 451029, 1 }, -- Fortifying Brew grants 20% Stagger.
     martial_instincts              = { 101179, 450427, 2 }, -- Increases your Physical damage done by 5% and Avoidance increased by 4%.
-    paralysis                      = { 101142, 115078, 1 }, -- Incapacitates the target for 1 min. Limit 1. Damage will cancel the effect.
+    overwhelming_force             = { 101220, 451024, 1 }, -- Rising Sun Kick, Blackout Kick, and Tiger Palm deal 15% additional damage to enemies in a line in front of you. Damage reduced above 5 targets.
+    paralysis                      = { 101142, 115078, 1 }, -- Incapacitates the target for 1 min. Limit 1. Damage may cancel the effect.
+    path_of_resurgence             = { 101226, 450912, 1 }, -- Chi Wave increases vitality stored by 25% for 5 sec.
     peace_and_prosperity           = { 101163, 450448, 1 }, -- Reduces the cooldown of Ring of Peace by 5 sec and Song of Chi-Ji's cast time is reduced by 0.5 sec.
     pressure_points                = { 101141, 450432, 1 }, -- Paralysis now removes all Enrage effects from its target.
     profound_rebuttal              = { 101135, 392910, 1 }, -- Expel Harm's critical healing is increased by 50%.
+    purified_spirit                = { 101224, 450867, 1 }, -- When Aspect of Harmony ends, any remaining vitality is expelled as healing over 8 sec, split among nearby targets.
     quick_footed                   = { 101158, 450503, 1 }, -- The duration of snare effects on you is reduced by 20%.
     ring_of_peace                  = { 101136, 116844, 1 }, -- Form a Ring of Peace at the target location for 5 sec. Enemies that enter will be ejected from the Ring.
-    rising_sun_kick                = { 101186, 107428, 1 }, -- Kick upwards, dealing 29,875 Physical damage, and reducing the effectiveness of healing on the target for 10 sec.
+    rising_sun_kick                = { 101186, 107428, 1 }, -- Kick upwards, dealing 69,425 Physical damage, and reducing the effectiveness of healing on the target for 10 sec.
+    roar_from_the_heavens          = { 101221, 451043, 1 }, -- Tiger's Lust grants 20% movement speed to up to 2 allies near its target.
     rushing_reflexes               = { 101154, 450154, 1 }, -- Your heightened reflexes allow you to react swiftly to the presence of enemies, causing you to quickly lunge to the nearest enemy in front of you within 10 yards after you Roll.
     save_them_all                  = { 101157, 389579, 1 }, -- When your healing spells heal an ally whose health is below 35% maximum health, you gain an additional 10% healing for the next 4 sec.
     song_of_chiji                  = { 101136, 198898, 1 }, -- Conjures a cloud of hypnotic mist that slowly travels forward. Enemies touched by the mist fall asleep, Disoriented for 20 sec.
-    soothing_mist                  = { 101143, 115175, 1 }, -- Heals the target for 161,473 over 7.2 sec. While channeling, Enveloping Mist and Vivify may be cast instantly on the target.
+    soothing_mist                  = { 101143, 115175, 1 }, -- Heals the target for 158,707 over 7.4 sec. While channeling, Enveloping Mist and Vivify may be cast instantly on the target.
     spear_hand_strike              = { 101152, 116705, 1 }, -- Jabs the target in the throat, interrupting spellcasting and preventing any spell from that school of magic from being cast for 3 sec.
     spirits_essence                = { 101138, 450595, 1 }, -- Transcendence: Transfer snares targets within 10 yds by 70% for 4 sec when cast.
     strength_of_spirit             = { 101135, 387276, 1 }, -- Expel Harm's healing is increased by up to 100%, based on your missing health.
-    summon_white_tiger_statue      = { 101162, 450639, 1 }, -- Invoking Xuen, the White Tiger also spawns a White Tiger Statue at your location that pulses 6,009 damage to all enemies every 2 sec for 10 sec.
+    summon_white_tiger_statue      = { 101162, 450639, 1 }, -- Invoking Xuen, the White Tiger also spawns a White Tiger Statue at your location that pulses 7,530 damage to all enemies every 2 sec for 10 sec.
     swift_art                      = { 101155, 450622, 1 }, -- Roll removes a snare effect once every 30 sec.
     tiger_tail_sweep               = { 101182, 264348, 1 }, -- Increases the range of Leg Sweep by 4 yds.
     tigers_lust                    = { 101147, 116841, 1 }, -- Increases a friendly target's movement speed by 70% for 6 sec and removes all roots and snares.
+    tigers_vigor                   = { 101221, 451041, 1 }, -- Casting Tiger's Lust reduces the remaining cooldown on Roll by 5 sec.
     transcendence                  = { 101167, 101643, 1 }, -- Split your body and spirit, leaving your spirit behind for 15 min. Use Transcendence: Transfer to swap locations with your spirit.
     transcendence_linked_spirits   = { 101176, 434774, 1 }, -- Transcendence now tethers your spirit onto an ally for 1 |4hour:hrs;. Use Transcendence: Transfer to teleport to your ally's location.
-    vigorous_expulsion             = { 101156, 392900, 1 }, -- Expel Harm's healing increased by 5% and critical strike chance increased by 15%.
-    vivacious_vivification         = { 101145, 388812, 1 }, -- Every 10 sec, your next Vivify becomes instant and its healing is increased by 40%. This effect also reduces the energy cost of Vivify by 75%.
+    vigorous_expulsion             = { 101156, 392900, 1 }, -- Expel Harm's healing increased by 5% and critical strike chance increased by 15%. 
+    vivacious_vivification         = { 101145, 388812, 1 }, -- Every 10 sec, your next Vivify becomes instant and its healing is increased by 40%. This effect also reduces the energy cost of Vivify by 75%. 
+    way_of_a_thousand_strikes      = { 101226, 450965, 1 }, -- Rising Sun Kick, Blackout Kick, and Tiger Palm contribute 30% additional vitality.
     winds_reach                    = { 101148, 450514, 1 }, -- The range of Disable is increased by 5 yds. The duration of Crashing Momentum is increased by 3 sec and its snare now reduces movement speed by an additional 20%.
     windwalking                    = { 101175, 157411, 1 }, -- You and your allies within 10 yards have 10% increased movement speed. Stacks with other similar effects.
-    yulons_grace                   = { 101165, 414131, 1 }, -- Find resilience in the flow of chi in battle, gaining a magic absorb shield for 2.0% of your max health every 2 sec in combat, stacking up to 10%.
+    yulons_grace                   = { 101165, 414131, 1 }, -- Find resilience in the flow of chi in battle, gaining a magic absorb shield for 0.6% of your max health every 3 sec in combat, stacking up to 6%.
 
     -- Windwalker
     acclamation                    = { 101036, 451432, 1 }, -- Rising Sun Kick increases the damage your target receives from you by 3% for 12 sec. Multiple instances may overlap.
     ascension                      = { 101037, 115396, 1 }, -- Increases your maximum Chi by 1, maximum Energy by 20, and your Energy regeneration by 10%.
-    brawlers_intensity             = { 101038, 451485, 1 }, -- The cooldown of Rising Sun Kick is reduced by 1.0 sec and the damage of Blackout Kick is increased by 15%.
-    combat_wisdom                  = { 101217, 121817, 1 }, -- While out of combat, your Chi balances to 2 instead of depleting to empty. Every 15 sec, your next Tiger Palm also casts Expel Harm and deals 30% additional damage.  Expel Harm Expel negative chi from your body, healing for 48,455 and dealing 10% of the amount healed as Nature damage to an enemy within 20 yards.
-    communion_with_wind            = { 101041, 451576, 1 }, -- Strike of the Windlord's cooldown is reduced by 10 sec and its damage is increased by 20%.
-    courageous_impulse             = { 101061, 451495, 1 }, -- The Blackout Kick! effect also increases the damage of your next Blackout Kick by 125%.
-    crane_vortex                   = { 101055, 388848, 1 }, -- Spinning Crane Kick damage increased by 20% and its radius is increased by 15%.
+    brawlers_intensity             = { 101038, 451485, 1 }, -- The cooldown of Rising Sun Kick is reduced by 1.0 sec and the damage of Blackout Kick is increased by 12%.
+    combat_wisdom                  = { 101217, 121817, 1 }, -- While out of combat, your Chi balances to 2 instead of depleting to empty. Every 15 sec, your next Tiger Palm also casts Expel Harm and deals 30% additional damage.  Expel Harm Expel negative chi from your body, healing for 67,608 and dealing 10% of the amount healed as Nature damage to an enemy within 20 yards.
+    communion_with_wind            = { 101041, 451576, 1 }, -- Strike of the Windlord's cooldown is reduced by 10 sec and its damage is increased by 100%.
+    courageous_impulse             = { 101061, 451495, 1 }, -- The Blackout Kick! effect also increases the damage of your next Blackout Kick by 350%.
+    crane_vortex                   = { 101055, 388848, 1 }, -- Spinning Crane Kick damage increased by 30% and its radius is increased by 15%.
     dance_of_chiji                 = { 101060, 325201, 1 }, -- Spending Chi has a chance to make your next Spinning Crane Kick free and deal an additional 200% damage.
-    darting_hurricane              = { 102250, 459839, 1 }, -- After you cast Strike of the Windlord, the global cooldown of your next 2 Tiger Palms is reduced by 50%. Your damaging spells and abilities have a chance to grant 1 stack of Darting Hurricane.
     drinking_horn_cover            = { 101052, 391370, 1 }, -- The duration of Storm, Earth, and Fire is extended by 0.25 sec for every Chi you spend.
-    dual_threat                    = { 101213, 451823, 1 }, -- Your auto attacks have a 20% chance to instead kick your target dealing 16,224 Physical damage and increasing your damage dealt by 5% for 5 sec.
+    dual_threat                    = { 101213, 451823, 1 }, -- Your auto attacks have a 20% chance to instead kick your target dealing 18,513 Physical damage and increasing your damage dealt by 5% for 5 sec.
     energy_burst                   = { 101056, 451498, 1 }, -- When you consume Blackout Kick!, you have a 100% chance to generate 1 Chi.
     ferociousness                  = { 101035, 458623, 1 }, -- Critical Strike chance increased by 2%. This effect is increased by 100% while Xuen, the White Tiger is active.
-    fists_of_fury                  = { 101218, 113656, 1 }, -- Pummels all targets in front of you, dealing 75,113 Physical damage to your primary target and 40,561 damage to all other enemies over 3.6 sec. Deals reduced damage beyond 5 targets. Can be channeled while moving.
-    flurry_of_xuen                 = { 101216, 452137, 1 }, -- Your spells and abilities have a chance to activate Flurry of Xuen, unleashing a barrage of deadly swipes to deal 24,036 Physical damage in a 10 yd cone, damage reduced beyond 5 targets. Invoking Xuen, the White Tiger activates Flurry of Xuen.
+    fists_of_fury                  = { 101218, 113656, 1 }, -- Pummels all targets in front of you, dealing 102,854 Physical damage to your primary target and 55,541 damage to all other enemies over 3.7 sec. Deals reduced damage beyond 5 targets. Can be channeled while moving.
+    flurry_of_xuen                 = { 101216, 452137, 1 }, -- Your spells and abilities have a chance to activate Flurry of Xuen, unleashing a barrage of deadly swipes to deal 58,433 Physical damage in a 10 yd cone, damage reduced beyond 5 targets. Invoking Xuen, the White Tiger activates Flurry of Xuen.
     fury_of_xuen                   = { 101211, 396166, 1 }, -- Your Combo Strikes grant a stacking 1% chance for your next Fists of Fury to grant 3% critical strike, haste, and mastery and invoke Xuen, The White Tiger for 10 sec.
     gale_force                     = { 101045, 451580, 1 }, -- Targets hit by Strike of the Windlord have a 100% chance to be struck for 10% additional Nature damage from your spells and abilities for 10 sec.
-    glory_of_the_dawn              = { 101039, 392958, 1 }, -- Rising Sun Kick has a chance equal to 100% of your haste to trigger a second time, dealing 21,199 Physical damage and restoring 1 Chi.
-    hardened_soles                 = { 101047, 391383, 1 }, -- Blackout Kick critical strike chance increased by 5% and critical damage increased by 10%.
+    glory_of_the_dawn              = { 101039, 392958, 1 }, -- Rising Sun Kick has a chance equal to 100% of your haste to trigger a second time, dealing 49,264 Physical damage and restoring 1 Chi.
+    hardened_soles                 = { 101047, 391383, 1 }, -- Blackout Kick critical strike chance increased by 10% and critical damage increased by 18%.
     hit_combo                      = { 101216, 196740, 1 }, -- Each successive attack that triggers Combo Strikes in a row grants 1% increased damage, stacking up to 5 times.
     inner_peace                    = { 101214, 397768, 1 }, -- Increases maximum Energy by 30. Tiger Palm's Energy cost reduced by 5.
-    invoke_xuen                    = { 101206, 123904, 1 }, -- Summons an effigy of Xuen, the White Tiger for 20 sec. Xuen attacks your primary target, and strikes 3 enemies within 10 yards every 0.9 sec with Tiger Lightning for 3,088 Nature damage. Every 4 sec, Xuen strikes your enemies with Empowered Tiger Lightning dealing 8% of the damage you have dealt to those targets in the last 4 sec.
-    invoke_xuen_the_white_tiger    = { 101206, 123904, 1 }, -- Summons an effigy of Xuen, the White Tiger for 20 sec. Xuen attacks your primary target, and strikes 3 enemies within 10 yards every 0.9 sec with Tiger Lightning for 3,088 Nature damage. Every 4 sec, Xuen strikes your enemies with Empowered Tiger Lightning dealing 8% of the damage you have dealt to those targets in the last 4 sec.
-    invokers_delight               = { 101207, 388661, 1 }, -- You gain 15% haste for 20 sec after summoning your Celestial.
-    jade_ignition                  = { 101050, 392979, 1 }, -- Whenever you deal damage to a target with Fists of Fury, you gain a stack of Chi Energy up to a maximum of 30 stacks. Using Spinning Crane Kick will cause the energy to detonate in a Chi Explosion, dealing 17,426 Nature damage to all enemies within 8 yards, reduced beyond 5 targets. The damage is increased by 5% for each stack of Chi Energy.
-    jadefire_fists                 = { 101044, 457974, 1 }, -- At the end of your Fists of Fury channel, you release a Jadefire Stomp. This can occur once every 25 sec.  Jadefire Stomp Strike the ground fiercely to expose a path of jade for 30 sec that increases your movement speed by 20% while inside, dealing 4,807 Nature damage to up to 5 enemies, and restoring 10,499 health to up to 5 allies within 30 yds caught in the path. Up to 5 enemies caught in the path suffer an additional 7,812 damage.
+    invoke_xuen                    = { 101206, 123904, 1 }, -- Summons an effigy of Xuen, the White Tiger for 20 sec. Xuen attacks your primary target, and strikes 3 enemies within 10 yards every 0.9 sec with Tiger Lightning for 3,870 Nature damage. Every 4 sec, Xuen strikes your enemies with Empowered Tiger Lightning dealing 8% of the damage you have dealt to those targets in the last 4 sec.
+    invoke_xuen_the_white_tiger    = { 101206, 123904, 1 }, -- Summons an effigy of Xuen, the White Tiger for 20 sec. Xuen attacks your primary target, and strikes 3 enemies within 10 yards every 0.9 sec with Tiger Lightning for 3,870 Nature damage. Every 4 sec, Xuen strikes your enemies with Empowered Tiger Lightning dealing 8% of the damage you have dealt to those targets in the last 4 sec.
+    invokers_delight               = { 101207, 388661, 1 }, -- You gain 15% haste for 20 sec after summoning your Celestial. 
+    jade_ignition                  = { 101050, 392979, 1 }, -- Whenever you deal damage to a target with Fists of Fury, you gain a stack of Chi Energy up to a maximum of 30 stacks. Using Spinning Crane Kick will cause the energy to detonate in a Chi Explosion, dealing 26,831 Nature damage to all enemies within 8 yards, reduced beyond 5 targets. The damage is increased by 5% for each stack of Chi Energy.
+    jadefire_fists                 = { 101044, 457974, 1 }, -- At the end of your Fists of Fury channel, you release a Jadefire Stomp. This can occur once every 25 sec.  Jadefire Stomp Strike the ground fiercely to expose a path of jade for 30 sec that increases your movement speed by 20% while inside, dealing 6,201 Nature damage to up to 5 enemies, and restoring 12,767 health to up to 5 allies within 30 yds caught in the path. Up to 5 enemies caught in the path suffer an additional 9,689 damage.
     jadefire_harmony               = { 101042, 391412, 1 }, -- Enemies and allies hit by Jadefire Stomp are affected by Jadefire Brand, increasing your damage and healing against them by 6% for 10 sec.
-    jadefire_stomp                 = { 101044, 388193, 1 }, -- Strike the ground fiercely to expose a path of jade for 30 sec that increases your movement speed by 20% while inside, dealing 4,807 Nature damage to up to 5 enemies, and restoring 10,499 health to up to 5 allies within 30 yds caught in the path. Up to 5 enemies caught in the path suffer an additional 7,812 damage.
+    jadefire_stomp                 = { 101044, 388193, 1 }, -- Strike the ground fiercely to expose a path of jade for 30 sec that increases your movement speed by 20% while inside, dealing 6,201 Nature damage to up to 5 enemies, and restoring 12,767 health to up to 5 allies within 30 yds caught in the path. Up to 5 enemies caught in the path suffer an additional 9,689 damage.
     knowledge_of_the_broken_temple = { 101203, 451529, 1 }, -- Whirling Dragon Punch grants 4 stacks of Teachings of the Monastery and its damage is increased by 20%. Teachings of the Monastery can now stack up to 8 times.
-    last_emperors_capacitor        = { 101058, 392989, 1 }, -- Chi spenders increase the damage of your next Crackling Jade Lightning by 200% and reduce its cost by 5%, stacking up to 20 times.
-    martial_mixture                = { 101057, 451454, 1 }, -- Blackout Kick increases the damage of your next Tiger Palm by 10%, stacking up to 12 times.
-    memory_of_the_monastery        = { 101209, 454969, 1 }, -- Tiger Palm's chance to activate Blackout Kick! is increased by 15% and consuming Teachings of the Monastery grants you 1.0% haste for 5 sec equal to the amount of stacks consumed.
-    meridian_strikes               = { 101038, 391330, 1 }, -- When you Combo Strike, the cooldown of Touch of Death is reduced by 0.35 sec. Touch of Death deals an additional 15% damage.
+    last_emperors_capacitor        = { 104129, 392989, 1 }, -- Chi spenders increase the damage of your next Crackling Jade Lightning by 400% and reduce its cost by 5%, stacking up to 20 times.
+    martial_mixture                = { 101057, 451454, 1 }, -- Blackout Kick increases the damage of your next Tiger Palm by 8%, stacking up to 30 times.
+    memory_of_the_monastery        = { 101209, 454969, 1 }, -- Tiger Palm's chance to activate Blackout Kick! is increased by 25% and consuming Teachings of the Monastery grants you 1.0% haste for 5 sec equal to the amount of stacks consumed.
+    meridian_strikes               = { 101038, 391330, 1 }, -- When you Combo Strike, the cooldown of Touch of Death is reduced by 0.60 sec. Touch of Death deals an additional 15% damage.
     momentum_boost                 = { 101048, 451294, 1 }, -- Fists of Fury's damage is increased by 100% of your haste and Fists of Fury does 10% more damage each time it deals damage, resetting when Fists of Fury ends. Your auto attack speed is increased by 60% for 8 sec after Fists of Fury ends.
     ordered_elements               = { 101051, 451463, 1 }, -- During Storm, Earth, and Fire, Rising Sun Kick reduces Chi costs by 1 for 7 sec and Blackout Kick reduces the cooldown of affected abilities by an additional 1 sec. Activating Storm, Earth, and Fire resets the remaining cooldown of Rising Sun Kick and grants 2 Chi.
     path_of_jade                   = { 101043, 392994, 1 }, -- Increases the initial damage of Jadefire Stomp by 10% per target hit by that damage, up to a maximum of 50% additional damage.
-    power_of_the_thunder_king      = { 102251, 459809, 1 }, -- Crackling Jade Lightning now chains to 4 additional targets and its channel time is reduced by 50%.
+    power_of_the_thunder_king      = { 104128, 459809, 1 }, -- Crackling Jade Lightning now chains to 4 additional targets at 80% effectiveness and its channel time is reduced by 50%.
     revolving_whirl                = { 101203, 451524, 1 }, -- Whirling Dragon Punch has a 100% chance to activate Dance of Chi-Ji and its cooldown is reduced by 5 sec.
-    rising_star                    = { 101205, 388849, 1 }, -- Rising Sun Kick damage increased by 10% and critical strike damage increased by 10%.
-    rushing_jade_wind              = { 101046, 451505, 1 }, -- Strike of the Windlord applies Mark of the Crane to all enemies struck and summons a whirling tornado around you, causing 35,742 Physical damage over 11.7 sec to all enemies within 8 yards. Deals reduced damage beyond 5 targets.
+    rising_star                    = { 101205, 388849, 1 }, -- Rising Sun Kick damage increased by 15% and critical strike damage increased by 10%.
+    rushing_jade_wind              = { 101046, 451505, 1 }, -- Strike of the Windlord summons a whirling tornado around you, causing 69,013 Physical damage over 12.0 sec to all enemies within 8 yards. Deals reduced damage beyond 5 targets.
     sequenced_strikes              = { 101059, 451515, 1 }, -- You have a 100% chance to gain Blackout Kick! after consuming Dance of Chi-Ji.
-    shadowboxing_treads            = { 101062, 392982, 1 }, -- Blackout Kick damage increased by 10% and strikes an additional 2 targets at 70% effectiveness.
+    shadowboxing_treads            = { 101062, 392982, 1 }, -- Blackout Kick damage increased by 10% and strikes an additional 2 targets at 80% effectiveness.
     singularly_focused_jade        = { 101043, 451573, 1 }, -- Jadefire Stomp's initial hit now strikes 1 target, but deals 500% increased damage and healing.
+    slicing_winds                  = { 102250, 1217413, 1 }, -- Envelop yourself in razor-sharp winds, then lunge forward dealing 119,251 Nature damage to enemies in your path. Damage reduced beyond 5 enemies. Hold to increase lunge distance.
     spiritual_focus                = { 101052, 280197, 1 }, -- Every 2 Chi you spend reduces the cooldown of Storm, Earth, and Fire by 0.5 sec.
     storm_earth_and_fire           = { 101053, 137639, 1 }, -- Split into 3 elemental spirits for 15 sec, each spirit dealing 40% of normal damage and healing. You directly control the Storm spirit, while Earth and Fire spirits mimic your attacks on nearby enemies. While active, casting Storm, Earth, and Fire again will cause the spirits to fixate on your target.
-    strike_of_the_windlord         = { 101215, 392983, 1 }, -- Strike with both fists at all enemies in front of you, dealing 81,275 Physical damage and reducing movement speed by 50% for 6 sec.
-    teachings_of_the_monastery     = { 101054, 116645, 1 }, -- Tiger Palm causes your next Blackout Kick to strike an additional time, stacking up to 4. Blackout Kick has a 12% chance to reset the remaining cooldown on Rising Sun Kick.
-    thunderfist                    = { 101040, 392985, 1 }, -- Strike of the Windlord grants you 4 stacks of Thunderfist and an additional stack for each additional enemy struck. Thunderfist discharges upon melee strikes, dealing 42,063 Nature damage.
-    touch_of_the_tiger             = { 101049, 388856, 1 }, -- Tiger Palm damage increased by 25%.
+    strike_of_the_windlord         = { 101215, 392983, 1 }, -- Strike with both fists at all enemies in front of you, dealing 185,487 Physical damage and reducing movement speed by 50% for 6 sec.
+    teachings_of_the_monastery     = { 101054, 116645, 1 }, -- Tiger Palm causes your next Blackout Kick to strike an additional time, stacking up to 8. Blackout Kick has a 12% chance to reset the remaining cooldown on Rising Sun Kick. 
+    thunderfist                    = { 101040, 392985, 1 }, -- Strike of the Windlord grants you 4 stacks of Thunderfist and an additional stack for each additional enemy struck. Thunderfist discharges upon melee strikes, dealing 23,999 Nature damage.
+    touch_of_the_tiger             = { 101049, 388856, 1 }, -- Tiger Palm damage increased by 40%.
     transfer_the_power             = { 101212, 195300, 1 }, -- Blackout Kick, Rising Sun Kick, and Spinning Crane Kick increase damage dealt by your next Fists of Fury by 3%, stacking up to 10 times.
-    whirling_dragon_punch          = { 101204, 152175, 1 }, -- Performs a devastating whirling upward strike, dealing 63,094 damage to all nearby enemies and an additional 36,054 damage to the first target struck. Damage reduced beyond 5 targets. Only usable while both Fists of Fury and Rising Sun Kick are on cooldown.
+    whirling_dragon_punch          = { 101204, 152175, 1 }, -- Performs a devastating whirling upward strike, dealing 86,397 damage to all nearby enemies and an additional 53,663 damage to the first target struck. Damage reduced beyond 5 targets. Only usable while both Fists of Fury and Rising Sun Kick are on cooldown.
     xuens_battlegear               = { 101210, 392993, 1 }, -- Rising Sun Kick critical strikes reduce the cooldown of Fists of Fury by 4 sec. When Fists of Fury ends, the critical strike chance of Rising Sun Kick is increased by 40% for 5 sec.
-    xuens_bond                     = { 101208, 392986, 1 }, -- Abilities cast by you or your Storm, Earth, and Fire clones that activate Combo Strikes reduce the cooldown of Invoke Xuen, the White Tiger by 0.25 sec, and Xuen's damage is increased by 15%.
+    xuens_bond                     = { 101208, 392986, 1 }, -- Invoke Xuen, the White Tiger's damage is increased by 30% and its cooldown is reduced by 30 sec.
 
     -- Shado-Pan
-    against_all_odds               = { 101253, 450986, 1 }, -- Flurry Strikes increase your Agility by 1% for 6 sec, stacking up to 20 times.
-    efficient_training             = { 101251, 450989, 1 }, -- Energy spenders deal an additional 15% damage. Every 50 Energy spent reduces the cooldown of Storm, Earth, and Fire by 1 sec.
-    flurry_strikes                 = { 101248, 450615, 1, "shadopan" }, -- Every 51,076 damage you deal generates a Flurry Charge. For each 400 energy you spend, unleash all Flurry Charges, dealing 6,009 Physical damage per charge.
-    high_impact                    = { 101247, 450982, 1 }, -- Enemies who die within 5 sec of being damaged by a Flurry Strike explode, dealing 12,018 physical damage to uncontrolled enemies within 8 yds.
+    against_all_odds               = { 101253, 450986, 1 }, -- Flurry Strikes increase your Agility by 1% for 5 sec, stacking up to 20 times.
+    efficient_training             = { 101251, 450989, 1 }, -- Energy spenders deal an additional 20% damage. Every 50 Energy spent reduces the cooldown of Storm, Earth, and Fire by 1 sec.
+    flurry_strikes                 = { 101248, 450615, 1, "shadowpan" }, -- Every 263,060 damage you deal generates a Flurry Charge. For each 240 energy you spend, unleash all Flurry Charges, dealing 25,253 Physical damage per charge. 
+    high_impact                    = { 101247, 450982, 1 }, -- Enemies who die within 10 sec of being damaged by a Flurry Strike explode, dealing 15,060 physical damage to uncontrolled enemies within 8 yds.
     lead_from_the_front            = { 101254, 450985, 1 }, -- Chi Burst, Chi Wave, and Expel Harm now heal you for 20% of damage dealt.
-    martial_precision              = { 101246, 450990, 1 }, -- Your attacks penetrate 10% armor.
-    one_versus_many                = { 101250, 450988, 1 }, -- Damage dealt by Fists of Fury and Keg Smash counts as double towards Flurry Charge generation. Fists of Fury damage increased by 10%. Keg Smash damage increased by 30%.
+    martial_precision              = { 101246, 450990, 1 }, -- Your attacks penetrate 12% armor.
+    one_versus_many                = { 101250, 450988, 1 }, -- Damage dealt by Fists of Fury and Keg Smash counts as double towards Flurry Charge generation. Fists of Fury damage increased by 15%. Keg Smash damage increased by 35%.
     predictive_training            = { 101245, 450992, 1 }, -- When you dodge or parry an attack, reduce all damage taken by 10% for the next 6 sec.
     pride_of_pandaria              = { 101247, 450979, 1 }, -- Flurry Strikes have 15% additional chance to critically strike.
     protect_and_serve              = { 101254, 450984, 1 }, -- Your Vivify always heals you for an additional 30% of its total value.
-    veterans_eye                   = { 101249, 450987, 1 }, -- Striking the same target 5 times within 2 sec grants 1% Haste. Multiple instances of this effect may overlap, stacking up to 10 times.
+    veterans_eye                   = { 101249, 450987, 1 }, -- Striking the same target 5 times within 2 sec grants 1% Haste, stacking up to 10 times.
     vigilant_watch                 = { 101244, 450993, 1 }, -- Blackout Kick deals an additional 20% critical damage and increases the damage of your next set of Flurry Strikes by 10%.
     whirling_steel                 = { 101245, 450991, 1 }, -- When your health drops below 50%, summon Whirling Steel, increasing your parry chance and avoidance by 15% for 6 sec. This effect can not occur more than once every 180 sec.
-    wisdom_of_the_wall             = { 101252, 450994, 1 }, -- Every 10 Flurry Strikes, become infused with the Wisdom of the Wall, gaining one of the following effects for 20 sec. Critical strike damage increased by 30%. Dodge and Critical Strike chance increased by 25% of your Versatility bonus. Flurry Strikes deal 12,018 Shadow damage to all uncontrolled enemies within 6 yds. Effect of your Mastery increased by 25%.
+    wisdom_of_the_wall             = { 101252, 450994, 1 }, -- Every 10 Flurry Strikes, become infused with the Wisdom of the Wall, gaining one of the following effects for 16 sec. Critical strike damage increased by 30%. Dodge and Critical Strike chance increased by 25% of your Versatility bonus. Flurry Strikes deal 24,096 Shadow damage to all uncontrolled enemies within 6 yds. Effect of your Mastery increased by 25%. 
 
     -- Conduit of the Celestials
     august_dynasty                 = { 101235, 442818, 1 }, -- Casting Jadefire Stomp increases the damage of your next Rising Sun Kick by 30%. This effect can only activate once every 8 sec.
-    celestial_conduit              = { 101243, 443028, 1, "conduit_of_the_celestials" }, -- The August Celestials empower you, causing you to radiate 721,085 Nature damage onto enemies and 69,221 healing onto up to 5 injured allies within 15 yds over 3.6 sec, split evenly among them. Healing and damage increased by 6% per enemy struck, up to 30%. You may move while channeling, but casting other healing or damaging spells cancels this effect.
-    chijis_swiftness               = { 101240, 443566, 1 }, -- Your movement speed is increased by 75% during Celestial Conduit and by 15% for 3 sec after being assisted by any Celestial.
-    courage_of_the_white_tiger     = { 101242, 443087, 1 }, -- Tiger Palm has a chance to cause Xuen to claw your target for 30,045 Physical damage, healing a nearby ally for 25% of the damage done. Invoke Xuen, the White Tiger guarantees your next cast activates this effect.
-    flight_of_the_red_crane        = { 101234, 443255, 1 }, -- Rushing Jade Wind and Spinning Crane Kick have a chance to cause Chi-Ji to increase your energy regeneration by 20% for 6 sec and quickly rush to 5 enemies, dealing 12,018 Physical damage to each target struck.
-    heart_of_the_jade_serpent      = { 101237, 443294, 1 }, -- Consuming 45 Chi causes your next Strike of the Windlord to call upon Yu'lon to decrease the cooldown time of Rising Sun Kick, Fists of Fury, Strike of the Windlord, and Whirling Dragon Punch by 75% for 8 sec. The channel time of Fists of Fury is reduced by 50% while Yu'lon is active.
-    inner_compass                  = { 101235, 443571, 1 }, -- You switch between alignments after an August Celestial assists you, increasing a corresponding secondary stat by 3%. Crane Stance: Haste Tiger Stance: Critical Strike Ox Stance: Versatility Serpent Stance: Mastery
+    celestial_conduit              = { 101243, 443028, 1, "conduit_of_the_celestials" }, -- The August Celestials empower you, causing you to radiate 2.3 million Nature damage onto enemies and 222,232 healing onto up to 5 injured allies within 15 yds over 3.8 sec, split evenly among them. Healing and damage increased by 6% per enemy struck, up to 30%. You may move while channeling, but casting other healing or damaging spells cancels this effect. 
+    chijis_swiftness               = { 101240, 443566, 1 }, -- Your movement speed is increased by 75% during Celestial Conduit and by 15% for 3 sec after being assisted by any Celestial. 
+    courage_of_the_white_tiger     = { 101242, 443087, 1 }, -- Tiger Palm has a chance to cause Xuen to claw your target for 50,309 Physical damage, healing a nearby ally for 25% of the damage done. Invoke Xuen, the White Tiger guarantees your next cast activates this effect.
+    flight_of_the_red_crane        = { 101234, 443255, 1 }, -- Rushing Jade Wind and Spinning Crane Kick have a chance to cause Chi-Ji to increase your energy regeneration by 20% for 6 sec and quickly rush to 5 enemies, dealing 29,812 Physical damage to each target struck.
+    heart_of_the_jade_serpent      = { 101237, 443294, 1 }, -- Strike of the Windlord calls upon Yu'lon to decrease the cooldown time of Fists of Fury, Strike of the Windlord, Rising Sun Kick, Flying Serpent Kick, and Whirling Dragon Punch by 75% for 6 sec. The channel time of Fists of Fury is reduced by 50% while Yu'lon is active.
+    inner_compass                  = { 101235, 443571, 1 }, -- You switch between alignments after an August Celestial assists you, increasing a corresponding secondary stat by 2%. Crane Stance: Haste Tiger Stance: Critical Strike Ox Stance: Versatility Serpent Stance: Mastery
     jade_sanctuary                 = { 101238, 443059, 1 }, -- You heal for 10% of your maximum health instantly when you activate Celestial Conduit and receive 15% less damage for its duration. This effect lingers for an additional 8 sec after Celestial Conduit ends.
     niuzaos_protection             = { 101238, 442747, 1 }, -- Fortifying Brew grants you an absorb shield for 25% of your maximum health.
     restore_balance                = { 101233, 442719, 1 }, -- Gain Rushing Jade Wind while Xuen, the White Tiger is active.
-    strength_of_the_black_ox       = { 101241, 443110, 1 }, -- After Xuen assists you, your next Blackout Kick refunds 2 stacks of Teachings of the Monastery and causes Niuzao to stomp at your target's location, dealing 12,018 damage to nearby enemies, reduced beyond 5 targets.
+    strength_of_the_black_ox       = { 101241, 443110, 1 }, -- After Xuen assists you, your next Blackout Kick refunds 2 stacks of Teachings of the Monastery and causes Niuzao to stomp at your target's location, dealing 29,812 damage to nearby enemies, reduced beyond 5 targets.
     temple_training                = { 101236, 442743, 1 }, -- Fists of Fury and Spinning Crane Kick deal 10% more damage.
     unity_within                   = { 101239, 443589, 1 }, -- Celestial Conduit can be recast once during its duration to call upon all of the August Celestials to assist you at 200% effectiveness. Unity Within is automatically cast when Celestial Conduit ends if not used before expiration.
     xuens_guidance                 = { 101236, 442687, 1 }, -- Teachings of the Monastery has a 15% chance to refund a charge when consumed. The damage of Tiger Palm is increased by 10%.
     yulons_knowledge               = { 101233, 443625, 1 }, -- Rushing Jade Wind's duration is increased by 4 sec.
 } )
 
-
 -- PvP Talents
-spec:RegisterPvpTalents( {
-    absolute_serenity   = 5641, -- (455945) Celestial Conduit now prevents incapacitate, disorient, snare, and root effects for its duration.
+spec:RegisterPvpTalents( { 
+    absolute_serenity   = 5641, -- (455945) Celestial Conduit now prevents all crowd control for its duration.
     grapple_weapon      = 3052, -- (233759) You fire off a rope spear, grappling the target's weapons and shield, returning them to you for 5 sec.
-    perpetual_paralysis = 5448, -- (357495) Paralysis range reduced by 5 yards, but spreads to 2 new enemies when removed.
-    predestination      = 3744, -- (345829) Killing a player with Touch of Death reduces the remaining cooldown of Touch of Karma by 60 sec.
-    reverse_harm        =  852, -- (342928) Increases the healing done by Expel Harm by 30%.
-    ride_the_wind       =   77, -- (201372) Flying Serpent Kick clears all snares from you when used and forms a path of wind in its wake, causing all allies who stand in it to have 30% increased movement speed and to be immune to movement slowing effects.
-    rising_dragon_sweep = 5643, -- (460276) Whirling Dragon Punch knocks enemies up into the air and causes them to fall slowly until they reach the ground.
+    perpetual_paralysis = 5448, -- (357495) 
+    predestination      = 3744, -- (345829) 
+    ride_the_wind       =   77, -- (201372) 
+    rising_dragon_sweep = 5643, -- (460276) 
     rodeo               = 5644, -- (355917) Every 3 sec while Clash is off cooldown, your next Clash can be reactivated immediately to wildly Clash an additional enemy. This effect can stack up to 3 times.
-    stormspirit_strikes = 5610, -- (411098) Striking more than one enemy with Fists of Fury summons a Storm Spirit to focus your secondary target for 25 sec, which will mimic any of your attacks that do not also strike the target for 25% of normal damage.
+    stormspirit_strikes = 5610, -- (411098) 
     tigereye_brew       =  675, -- (247483) Consumes up to 10 stacks of Tigereye Brew to empower your Physical abilities with wind for 2 sec per stack consumed. Damage of your strikes are reduced, but bypass armor. For each 3 Chi you consume, you gain a stack of Tigereye Brew.
-    turbo_fists         = 3745, -- (287681) Fists of Fury now reduces all targets movement speed by 90%, and you Parry all attacks while channelling Fists of Fury.
-    wind_waker          = 3737, -- (357633) Your movement enhancing abilities increases Windwalking on allies by 10%, stacking 2 additional times. Movement impairing effects are removed at 3 stacks.
+    turbo_fists         = 3745, -- (287681) 
+    wind_waker          = 3737, -- (357633) 
 } )
-
 
 -- Auras
 spec:RegisterAuras( {
@@ -220,7 +232,8 @@ spec:RegisterAuras( {
     bok_proc = {
         id = 116768,
         type = "Magic",
-        max_stack = 1,
+        duration = 15,
+        max_stack = 2,
     },
     bounce_back = {
         id = 390239,
@@ -266,7 +279,7 @@ spec:RegisterAuras( {
     -- TODO: This is a stub until BrM is implemented.
     counterstrike = {
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Taking $w1 damage every $t1 sec.
     -- https://wowhead.com/beta/spell=117952
@@ -280,8 +293,8 @@ spec:RegisterAuras( {
     -- Your dodge chance is increased by $w1% until you dodge an attack.
     dance_of_the_wind = {
         id = 432180,
-        duration = 10.0,
-        max_stack = 1,
+        duration = 3600,
+        max_stack = 9
     },
     -- Talent: Your next Spinning Crane Kick is free and deals an additional $325201s1% damage.
     -- https://wowhead.com/beta/spell=325202
@@ -291,11 +304,11 @@ spec:RegisterAuras( {
         max_stack = 2,
         copy = { 286587, "dance_of_chiji_azerite" }
     },
-    darting_hurricane = {
+   --[[darting_hurricane = {
         id = 459841,
         duration = 10,
         max_stack = 2
-    },
+    },--]]
     -- Talent: Spell damage taken reduced by $m1%.
     -- https://wowhead.com/beta/spell=122783
     diffuse_magic = {
@@ -349,7 +362,7 @@ spec:RegisterAuras( {
     },
     heart_of_the_jade_serpent_cdr = {
         id = 443421,
-        duration = 8,
+        duration = 6,
         max_stack = 1
     },
     heart_of_the_jade_serpent_cdr_celestial = {
@@ -479,12 +492,12 @@ spec:RegisterAuras( {
         mechanic = "stun",
         max_stack = 1
     },
-    mark_of_the_crane = {
+    --[[mark_of_the_crane = {
         id = 228287,
         duration = 15,
         max_stack = 1,
         no_ticks = true
-    },
+    },--]]
     -- The damage of your next Tiger Palm is increased by $w1%.
     martial_mixture = {
         id = 451457,
@@ -521,7 +534,7 @@ spec:RegisterAuras( {
     -- Reduces the Chi Cost of your abilities by $s1.
     ordered_elements = {
         id = 451462,
-        duration = 7.0,
+        duration = 3600,
         max_stack = 1,
     },
     -- Talent: Incapacitated.
@@ -617,9 +630,6 @@ spec:RegisterAuras( {
         id = 280184,
         duration = 6,
         max_stack = 1
-    },
-    tea_of_plenty_rsk = {
-        -- Stub until MW is loaded.
     },
     teachings_of_the_monastery = {
         id = 202090,
@@ -777,20 +787,33 @@ spec:RegisterAuras( {
     },
 } )
 
+-- The War Within
+spec:RegisterGear( "tww2", 229298, 212045, 229301, 229299, 229297 )
+spec:RegisterAuras( {
+    -- 2-set
+    -- https://www.wowhead.com/ptr-2/spell=1216182/winning-streak // https://www.wowhead.com/ptr-2/spell=1215717/monk-windwalker-11-1-class-set-2pc
+    -- [Your spells and abilities have a chance to activate a Winning Streak! increasing the damage of your Rising Sun Kick and Spinning Crane Kick by 3% stacking up to 10 times. Rising Sun Kick and Spinning Crane Kick have a 15% chance to remove Winning Streak!] = {
+    winning_streak = {
+        id = 1216182,
+        duration = 3600,
+        max_stack = 10
+    },
+    -- https://www.wowhead.com/ptr-2/spell=1216498/cashout // https://www.wowhead.com/ptr-2/spell=1215718/monk-windwalker-11-1-class-set-4pc
+    cashout = {
+        id = 1216498,
+        duration = 30,
+        max_stack = 10
+    },
+} )
 
-
+-- Dragonflight
 spec:RegisterGear( "tier31", 207243, 207244, 207245, 207246, 207248 )
-
-
--- Tier 30
 spec:RegisterGear( "tier30", 202509, 202507, 202506, 202505, 202504 )
 spec:RegisterAura( "shadowflame_vulnerability", {
     id = 411376,
     duration = 15,
     max_stack = 1
 } )
-
-
 spec:RegisterGear( "tier29", 200360, 200362, 200363, 200364, 200365, 217188, 217190, 217186, 217187, 217189 )
 spec:RegisterAuras( {
     kicks_of_flowing_momentum = {
@@ -805,11 +828,11 @@ spec:RegisterAuras( {
     }
 } )
 
+-- Legacy
 spec:RegisterGear( "tier19", 138325, 138328, 138331, 138334, 138337, 138367 )
 spec:RegisterGear( "tier20", 147154, 147156, 147152, 147151, 147153, 147155 )
 spec:RegisterGear( "tier21", 152145, 152147, 152143, 152142, 152144, 152146 )
 spec:RegisterGear( "class", 139731, 139732, 139733, 139734, 139735, 139736, 139737, 139738 )
-
 spec:RegisterGear( "cenedril_reflector_of_hatred", 137019 )
 spec:RegisterGear( "cinidaria_the_symbiote", 133976 )
 spec:RegisterGear( "drinking_horn_cover", 137097 )
@@ -824,7 +847,6 @@ spec:RegisterGear( "prydaz_xavarics_magnum_opus", 132444 )
 spec:RegisterGear( "salsalabims_lost_tunic", 137016 )
 spec:RegisterGear( "sephuzs_secret", 132452 )
 spec:RegisterGear( "the_emperors_capacitor", 144239 )
-
 spec:RegisterGear( "soul_of_the_grandmaster", 151643 )
 spec:RegisterGear( "stormstouts_last_gasp", 151788 )
 spec:RegisterGear( "the_wind_blows", 151811 )
@@ -832,6 +854,7 @@ spec:RegisterGear( "the_wind_blows", 151811 )
 
 spec:RegisterStateTable( "combos", {
     blackout_kick = true,
+    celestial_conduit = true,
     chi_burst = true,
     chi_wave = true,
     crackling_jade_lightning = true,
@@ -842,6 +865,7 @@ spec:RegisterStateTable( "combos", {
     flying_serpent_kick = true,
     rising_sun_kick = true,
     rushing_jade_wind = true,
+    slicing_wind = true,
     spinning_crane_kick = true,
     strike_of_the_windlord = true,
     tiger_palm = true,
@@ -850,16 +874,16 @@ spec:RegisterStateTable( "combos", {
     whirling_dragon_punch = true
 } )
 
-local prev_combo, actual_combo, virtual_combo
+local prev_combo, actual_combo = "none", "none"
 
-spec:RegisterStateExpr( "last_combo", function () return virtual_combo or actual_combo end )
+spec:RegisterStateExpr( "last_combo", function () return actual_combo end )
 
 spec:RegisterStateExpr( "combo_break", function ()
-    return this_action == virtual_combo and combos[ virtual_combo ]
+    return this_action == last_combo
 end )
 
 spec:RegisterStateExpr( "combo_strike", function ()
-    return not combos[ this_action ] or this_action ~= virtual_combo
+    return not combos[ this_action ] or this_action ~= last_combo
 end )
 
 
@@ -871,10 +895,11 @@ spec:RegisterCombatLogEvent( function( _, subtype, _, sourceGUID, sourceName, _,
         if not ability then return end
 
         if ability == "tiger_palm" and subtype == "SPELL_MISSED" and not state.talent.hit_combo.enabled then
-            if ns.castsAll[1] == "tiger_palm" then ns.castsAll[1] = "none" end
-            if ns.castsAll[2] == "tiger_palm" then ns.castsAll[2] = "none" end
-            if ns.castsOn[1] == "tiger_palm" then ns.castsOn[1] = "none" end
-            actual_combo = "none"
+            if ns.castsAll[1] == "tiger_palm" then table.remove( ns.castsAll, 1 ) end
+            if ns.castsAll[2] == "tiger_palm" then table.remove( ns.castsAll, 2 ) end
+            if ns.castsOn[1] == "tiger_palm" then table.remove( ns.castsOn, 1 ) end
+
+            actual_combo = ns.castsOn[ 1 ] or "none"
 
             Hekili:ForceUpdate( "WW_MISSED" )
 
@@ -891,6 +916,20 @@ end )
 
 
 local chiSpent = 0
+local orderedElementsMod = 0
+
+--[[spec:RegisterHook( "prespend", function( amt, resource, overcap, clean )
+
+    if resource == "chi" then
+        if talent.ordered_elements.enabled and buff.storm_earth_and_fire.up then
+            amt = max( 0, amt - 1 )
+        end
+        if covenant.kyrian then return weapons_of_order( amt ), resource, overcap, true end
+    end
+
+    return amt, resource, overcap, true
+
+end )--]]
 
 spec:RegisterHook( "spend", function( amt, resource )
     if resource == "chi" and amt > 0 then
@@ -907,6 +946,11 @@ spec:RegisterHook( "spend", function( amt, resource )
         if talent.last_emperors_capacitor.enabled or legendary.last_emperors_capacitor.enabled then
             addStack( "the_emperors_capacitor" )
         end
+    elseif resource == "energy" then
+        if amt > 50 and talent.efficient_training.enabled then
+            reduceCooldown( "storm_earth_and_fire", 1 )
+        end
+
     end
 end )
 
@@ -924,10 +968,10 @@ spec:RegisterHook( "runHandler", function( key, noStart )
         else
             if talent.hit_combo.enabled then addStack( "hit_combo" ) end
             if azerite.fury_of_xuen.enabled or talent.fury_of_xuen.enabled then addStack( "fury_of_xuen" ) end
-            if ( talent.xuens_bond.enabled or conduit.xuens_bond.enabled ) and cooldown.invoke_xuen.remains > 0 then reduceCooldown( "invoke_xuen", 0.2 ) end
+            -- if ( talent.xuens_bond.enabled or conduit.xuens_bond.enabled ) and cooldown.invoke_xuen.remains > 0 then reduceCooldown( "invoke_xuen", 0.2 ) end
             if talent.meridian_strikes.enabled and cooldown.touch_of_death.remains > 0 then reduceCooldown( "touch_of_death", 0.6 ) end
         end
-        virtual_combo = key
+        last_combo = key
     end
 end )
 
@@ -949,21 +993,12 @@ spec:RegisterHook( "reset_precast", function ()
 
     chiSpent = 0
 
-    if actual_combo == "tiger_palm" and chi.current < 2 and now - action.tiger_palm.lastCast > 0.2 then
-        actual_combo = "none"
-    end
-
     if buff.rushing_jade_wind.up then setCooldown( "rushing_jade_wind", 0 ) end
 
     if buff.casting.up and buff.casting.v1 == action.spinning_crane_kick.id then
         removeBuff( "casting" )
         -- Spinning Crane Kick buff should be up.
     end
-
-    spinning_crane_kick.count = nil
-
-    virtual_combo = actual_combo or "no_action"
-    -- reverse_harm_target = nil
 
     if buff.weapons_of_order_ww.up then
         state:QueueAuraExpiration( "weapons_of_order_ww", noop, buff.weapons_of_order_ww.expires )
@@ -981,37 +1016,18 @@ spec:RegisterHook( "IsUsable", function( spell )
 end )
 
 
-spec:RegisterStateTable( "spinning_crane_kick", setmetatable( { onReset = function( self ) self.count = nil end },
-    { __index = function( t, k )
-            if k == "count" then
-                return max( GetSpellCount( action.spinning_crane_kick.id ), active_dot.mark_of_the_crane )
-
-            elseif k == "modifier" then
-                local mod = 1
-                -- Windwalker:
-                if state.spec.windwalker then
-                    -- Mark of the Crane (Cyclone Strikes) + Calculated Strikes (Conduit)
-                    mod = mod * ( 1 + ( t.count * ( conduit.calculated_strikes.enabled and 0.28 or 0.18 ) ) )
-                end
-
-                -- Crane Vortex (Talent)
-                mod = mod * ( 1 + 0.1 * talent.crane_vortex.rank )
-
-                -- Kicks of Flowing Momentum (Tier 29 Buff)
-                mod = mod * ( buff.kicks_of_flowing_momentum.up and 1.3 or 1 )
-
-                -- Brewmaster: Counterstrike (Buff)
-                mod = mod * ( buff.counterstrike.up and 2 or 1 )
-
-                -- Fast Feet (Talent)
-                mod = mod * ( 1 + 0.05 * talent.fast_feet.rank )
-                return mod
-
-            elseif k == "max" then
-                return spinning_crane_kick.count >= min( cycle_enemies, 5 )
-
+--[[spec:RegisterStateTable( "fight_style", setmetatable( { onReset = function( self ) self.count = nil end },
+        { __index = function( t, k )
+            if k == "patchwerk" then
+                return boss
+            elseif k == "dungeonroute" then
+                return false -- this option seems more likely to yeet cooldowns even for dying trash
+            elseif k == "dungeonslice" then
+                return not boss
+            elseif k == "Dungeonslice" then -- to account for the typo in SIMC
+                return not boss
             end
-    end } ) )
+        end } ) )--]]
 
 spec:RegisterStateExpr( "alpha_tiger_ready", function ()
     if not pvptalent.alpha_tiger.enabled then
@@ -1019,7 +1035,7 @@ spec:RegisterStateExpr( "alpha_tiger_ready", function ()
     elseif debuff.recently_challenged.down then
         return true
     elseif cycle then return
-        active_dot.recently_challenged < active_enemies
+    active_dot.recently_challenged < active_enemies
     end
     return false
 end )
@@ -1047,10 +1063,33 @@ spec:RegisterTotem( "black_ox_statue", 627607 )
 
 spec:RegisterUnitEvent( "UNIT_POWER_UPDATE", "player", nil, function( event, unit, resource )
     if resource == "CHI" then
+        if UnitPower( "player", Enum.PowerType.Chi ) < 2 and ns.castsOn[ 1 ] == "tiger_palm" then table.remove( ns.castsOn, 1 ) end
         Hekili:ForceUpdate( event, true )
     end
 end )
 
+local empowered_cast_time
+max_empower = 4
+
+do
+    local stages = {
+        1.4 * 0.25,
+        1.4 * 0.5,
+        1.4 * 0.75,
+        1.4,
+    }
+
+    empowered_cast_time = setfenv( function()
+        local power_level = args.empower_to or max_empower
+
+        return stages[ power_level ] * haste
+    end, state )
+end
+
+spec:RegisterStateExpr( "orderedElementsMod", function()
+    if not talented.ordered_elements.enabled or buff.storm_earth_and_fire.down then return 0 end
+    return 1
+end )
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -1064,23 +1103,53 @@ spec:RegisterAbilities( {
 
         spend = function ()
             if buff.bok_proc.up then return 0 end
-            return weapons_of_order( ( level < 17 and 3 or 1 ) - ( buff.ordered_elements.up and 1 or 0 ) )
+            return 3 - orderedElementsMod
         end,
         spendType = "chi",
 
         startsCombat = true,
         texture = 574575,
 
-        cycle = function()
+        --[[cycle = function()
             if cycle_enemies == 1 then return end
-        
+
             if level > 32 and cycle_enemies > active_dot.mark_of_the_crane and active_dot.mark_of_the_crane < 5 and debuff.mark_of_the_crane.up then
                 if Hekili.ActiveDebug then Hekili:Debug( "Recommending swap to target missing Mark of the Crane debuff." ) end
                 return "mark_of_the_crane"
             end
-        end,
+        end,--]]
 
         handler = function ()
+            local kicks = buff.teachings_of_the_monastery.up and buff.teachings_of_the_monastery.stack or 1
+            local hits = min( talent.shadowboxing_treads.enabled and 3 or 1, true_active_enemies ) * kicks
+
+            if buff.bok_proc.up then
+                removeStack( "bok_proc" )
+                if talent.energy_burst.enabled then gain( 1, "chi" ) end
+                if set_bonus.tier21_4pc > 0 then gain( 1, "chi" ) end
+            end
+
+            if talent.martial_mixture.up then
+                addStack( "martial_mixture", nil, hits )
+            end
+
+            reduceCooldown( "rising_sun_kick", ( buff.ordered_elements.up and 2 or 1 ) )
+            reduceCooldown( "fists_of_fury", ( buff.ordered_elements.up and 2 or 1 ) )
+
+            if buff.teachings_of_the_monastery.up then
+                if talent.memory_of_the_monastery.enabled then
+                    addStack( "memory_of_the_monastery", nil, buff.teachings_of_the_monastery.stack )
+                end
+                removeBuff( "teachings_of_the_monastery" )
+                if buff.strength_of_the_black_ox.up then
+                    removeBuff( "strength_of_the_black_ox" )
+                    addStack( "teachings_of_the_monastery", nil, 2 )
+                end
+            end
+            if talent.eye_of_the_tiger.enabled then applyDebuff( "target", "eye_of_the_tiger" ) end
+            if talent.transfer_the_power.enabled then addStack( "transfer_the_power", nil, kicks ) end
+
+            -- Legacy
             if buff.blackout_reinforcement.up then
                 removeBuff( "blackout_reinforcement" )
                 if set_bonus.tier31_4pc > 0 then
@@ -1090,31 +1159,7 @@ spec:RegisterAbilities( {
                     reduceCooldown( "whirling_dragon_punch", 3 )
                 end
             end
-            if buff.bok_proc.up then
-                removeBuff( "bok_proc" )
-                if talent.energy_burst.enabled then gain( 1, "chi" ) end
-                if set_bonus.tier21_4pc > 0 then gain( 1, "chi" ) end
-            end
 
-            if level > 22 then
-                reduceCooldown( "rising_sun_kick", ( buff.weapons_of_order.up and 2 or 1 ) + ( buff.ordered_elements.up and 1 or 0 ) )
-                reduceCooldown( "fists_of_fury", ( buff.weapons_of_order.up and 2 or 1 ) + ( buff.ordered_elements.up and 1 or 0 ) )
-            end
-
-            if buff.teachings_of_the_monastery.up then
-                if talent.memory_of_the_monastery.enabled then
-                    addStack( "memory_of_the_monastery", nil, buff.teachings_of_the_monastery.stack )
-                end
-                removeBuff( "teachings_of_the_monastery" )
-            end
-
-            if talent.eye_of_the_tiger.enabled then applyDebuff( "target", "eye_of_the_tiger" ) end
-            if level > 32 then
-                applyDebuff( "target", "mark_of_the_crane" )
-                if talent.shadowboxing_treads.enabled then active_dot.mark_of_the_crane = min( active_dot.mark_of_the_crane + 2, active_enemies ) end
-            end
-            if talent.ordered_elements.enabled then applyBuff( "ordered_elements" ) end
-            if talent.transfer_the_power.enabled then addStack( "transfer_the_power" ) end
         end,
     },
 
@@ -1196,7 +1241,8 @@ spec:RegisterAbilities( {
     -- Channel Jade lightning, causing $o1 Nature damage over $117952d to the target$?a154436[, generating 1 Chi each time it deals damage,][] and sometimes knocking back melee attackers.
     crackling_jade_lightning = {
         id = 117952,
-        cast = 0,
+        cast = 2,
+        channeled = true,
         cooldown = 0,
         gcd = "spell",
         school = "nature",
@@ -1208,6 +1254,10 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyBuff( "crackling_jade_lightning" )
+
+        end,
+
+        finish = function ()
             removeBuff( "the_emperors_capacitor" )
         end,
     },
@@ -1346,15 +1396,14 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "physical",
 
-        spend = function ()
-            return weapons_of_order( buff.ordered_elements.up and 2 or 3 )
-        end,
+        spend = function() return 3 - orderedElementsMod end,
         spendType = "chi",
 
         tick_time = function () return haste end,
 
         start = function ()
-            removeBuff( "fists_of_flowing_momentum" )
+            -- Standard effects / talents
+
             removeBuff( "transfer_the_power" )
 
             if buff.fury_of_xuen.stack >= 50 then
@@ -1367,20 +1416,26 @@ spec:RegisterAbilities( {
                 applyBuff( "whirling_dragon_punch", min( cooldown.fists_of_fury.remains, cooldown.rising_sun_kick.remains ) )
             end
 
+            -- Hero Talents
+
+            -- The War Within
+            if set_bonus.tww2 >= 4 then removeBuff( "cashout" ) end
+
+            -- PvP
             if pvptalent.turbo_fists.enabled then
                 applyDebuff( "target", "heavyhanded_strikes", action.fists_of_fury.cast_time + 2 )
             end
 
-            if legendary.pressure_release.enabled then
-                -- TODO: How much to generate?  Do we need to queue it?  Special buff generator?
-            end
-
+            -- Legacy
             if set_bonus.tier29_2pc > 0 then applyBuff( "kicks_of_flowing_momentum", nil, set_bonus.tier29_4pc > 0 and 3 or 2 ) end
             if set_bonus.tier30_4pc > 0 then
                 applyDebuff( "target", "shadowflame_vulnerability" )
                 active_dot.shadowflame_vulnerability = active_enemies
             end
+            removeBuff( "fists_of_flowing_momentum" )
         end,
+
+
 
         tick = function ()
             if legendary.jade_ignition.enabled then
@@ -1404,6 +1459,7 @@ spec:RegisterAbilities( {
         school = "physical",
 
         talent = "flying_serpent_kick",
+        notalent = "slicing_winds",
         startsCombat = false,
 
         -- Sync to the GCD even though it's not really on it.
@@ -1464,7 +1520,7 @@ spec:RegisterAbilities( {
     invoke_xuen = {
         id = 123904,
         cast = 0,
-        cooldown = 120,
+        cooldown = function() return 120 - ( 30 * talent.xuens_bond.rank ) end,
         gcd = "spell",
         school = "nature",
 
@@ -1507,22 +1563,28 @@ spec:RegisterAbilities( {
         end,
     },
 
-    -- Talent: Incapacitates the target for $d. Limit 1. Damage will cancel the effect.
     paralysis = {
         id = 115078,
         cast = 0,
-        cooldown = function() return talent.improved_paralysis.enabled and 30 or 45 end,
+        cooldown = function() return 45 - ( 7.5 * talent.ancient_arts.rank ) end,
         gcd = "spell",
         school = "physical",
 
         spend = 20,
         spendType = "energy",
+        toggle = function() if talent.pressure_points.enabled then return "interrupts" end end,
 
         talent = "paralysis",
-        startsCombat = false,
+        startsCombat = true,
+
+        usable = function () if talent.pressure_points.enabled then
+            return buff.dispellable_enrage.up end
+            return true
+        end,
 
         handler = function ()
             applyDebuff( "target", "paralysis" )
+            if talent.pressure_points.enabled then removeBuff( "dispellable_enrage" ) end
         end,
     },
 
@@ -1561,55 +1623,38 @@ spec:RegisterAbilities( {
         id = 107428,
         cast = 0,
         cooldown = function ()
-            return ( ( buff.tea_of_plenty_rsk.up and 1 or 10 ) - ( talent.brawlers_intensity.enabled and 1 or 0 ) ) * haste
+            return ( 10 - talent.brawlers_intensity.rank ) * haste
         end,
         gcd = "spell",
         school = "physical",
 
-        spend = function ()
-            return weapons_of_order( buff.ordered_elements.up and 1 or 2 )
-        end,
+        spend = function() return 2 - orderedElementsMod end,
         spendType = "chi",
 
         talent = "rising_sun_kick",
         startsCombat = true,
 
-        cycle = function()
-            if cycle_enemies == 1 then return end
-        
-            if level > 32 and cycle_enemies > active_dot.mark_of_the_crane and active_dot.mark_of_the_crane < 5 and debuff.mark_of_the_crane.up then
-                if Hekili.ActiveDebug then Hekili:Debug( "Recommending swap to target missing Mark of the Crane debuff." ) end
-                return "mark_of_the_crane"
-            end
-        end,
-
         handler = function ()
-            applyDebuff( "target", "rising_sun_kick" )
-            removeStack( "tea_of_plenty_rsk" )
+
             removeBuff( "chi_wave" )
 
-            if buff.kicks_of_flowing_momentum.up then
-                removeStack( "kicks_of_flowing_momentum" )
-                if set_bonus.tier29_4pc > 0 then addStack( "fists_of_flowing_momentum" ) end
-            end
-
             if talent.acclamation.enabled then applyDebuff( "target", "acclamation", nil, debuff.acclamation.stack + 1 ) end
-
-            if level > 32 then applyDebuff( "target", "mark_of_the_crane" ) end
-
-            if talent.ordered_elements.enabled and buff.storm_earth_and_fire.up then applyBuff( "ordered_elements" ) end
-
             if talent.transfer_the_power.enabled then addStack( "transfer_the_power" ) end
 
             if talent.whirling_dragon_punch.enabled and cooldown.fists_of_fury.remains > 0 then
                 applyBuff( "whirling_dragon_punch", min( cooldown.fists_of_fury.remains, cooldown.rising_sun_kick.remains ) )
             end
 
-            if azerite.sunrise_technique.enabled then applyDebuff( "target", "sunrise_technique" ) end
 
+            -- Legacy
+            if azerite.sunrise_technique.enabled then applyDebuff( "target", "sunrise_technique" ) end
             if buff.weapons_of_order.up then
                 applyBuff( "weapons_of_order_ww" )
                 state:QueueAuraExpiration( "weapons_of_order_ww", noop, buff.weapons_of_order_ww.expires )
+            end
+            if buff.kicks_of_flowing_momentum.up then
+                removeStack( "kicks_of_flowing_momentum" )
+                if set_bonus.tier29_4pc > 0 then addStack( "fists_of_flowing_momentum" ) end
             end
         end,
     },
@@ -1682,6 +1727,22 @@ spec:RegisterAbilities( {
         end,
     }, ]]
 
+    -- Envelop yourself in razor-sharp winds, then lunge forward dealing 118,070 Nature damage to enemies in your path. Damage reduced beyond 5 enemies. Hold to increase lunge distance.
+    slicing_winds = {
+        id = 1217413,
+        cast = empowered_cast_time,
+        cooldown = 30,
+        gcd = "totem",
+        empowered = true,
+
+        talent = "slicing_winds",
+        startsCombat = false,
+        texture = 1029596,
+
+        handler = function ()
+        end,
+    },
+
     -- Talent: Heals the target for $o1 over $d.  While channeling, Enveloping Mist$?s227344[, Surging Mist,][]$?s124081[, Zen Pulse,][] and Vivify may be cast instantly on the target.$?s117907[    Each heal has a chance to cause a Gust of Mists on the target.][]$?s388477[    Soothing Mist heals a second injured ally within $388478A2 yds for $388477s1% of the amount healed.][]
     soothing_mist = {
         id = 115175,
@@ -1730,7 +1791,9 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "physical",
 
-        spend = function () return buff.dance_of_chiji.up and 0 or weapons_of_order( buff.ordered_elements.up and 1 or 2 ) end,
+        spend = function () if buff.dance_of_chiji.up then return 0 end
+            return 2 - orderedElementsMod
+        end,
         spendType = "chi",
 
         startsCombat = true,
@@ -1744,7 +1807,7 @@ spec:RegisterAbilities( {
             removeBuff( "chi_energy" )
             if buff.dance_of_chiji.up then
                 if set_bonus.tier31_2pc > 0 then applyBuff( "blackout_reinforcement" ) end
-                if talent.sequenced_strikes.enabled then applyBuff( "bok_proc" ) end
+                if talent.sequenced_strikes.enabled then addStack( "bok_proc" ) end
                 removeStack( "dance_of_chiji" )
             end
 
@@ -1773,6 +1836,9 @@ spec:RegisterAbilities( {
         talent = "storm_earth_and_fire",
         startsCombat = false,
         nobuff = "storm_earth_and_fire",
+        texture = function()
+            return buff.storm_earth_and_fire.up and 236188 or 136038
+        end,
 
         toggle = function ()
             if settings.sef_one_charge then
@@ -1824,7 +1890,7 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "physical",
 
-        spend = function() return buff.ordered_elements.up and 1 or 2 end,
+        spend = function() return 2 - orderedElementsMod end,
         spendType = "chi",
 
         talent = "strike_of_the_windlord",
@@ -1832,11 +1898,11 @@ spec:RegisterAbilities( {
 
         handler = function ()
             applyDebuff( "target", "strike_of_the_windlord" )
-            if talent.darting_hurricane.enabled then addStack( "darting_hurricane", nil, 2 ) end
+            -- if talent.darting_hurricane.enabled then addStack( "darting_hurricane", nil, 2 ) end
             if talent.gale_force.enabled then applyDebuff( "target", "gale_force" ) end
             if talent.rushing_jade_wind.enabled then
-                applyDebuff( "target", "mark_of_the_crane" )
-                active_dot.mark_of_the_crane = true_active_enemies
+                --[[applyDebuff( "target", "mark_of_the_crane" )
+                active_dot.mark_of_the_crane = true_active_enemies--]]
                 applyBuff( "rushing_jade_wind" )
             end
             if talent.thunderfist.enabled then addStack( "thunderfist", nil, 4 + ( true_active_enemies - 1 ) ) end
@@ -1856,28 +1922,14 @@ spec:RegisterAbilities( {
 
         startsCombat = true,
 
-        cycle = function()
-            if cycle_enemies == 1 then return end
-        
-            if level > 32 and cycle_enemies > active_dot.mark_of_the_crane and active_dot.mark_of_the_crane < 5 and debuff.mark_of_the_crane.up then
-                if Hekili.ActiveDebug then Hekili:Debug( "Recommending swap to target missing Mark of the Crane debuff." ) end
-                return "mark_of_the_crane"
-            end
-        end,
-
-        buff = function () return prev_gcd[1].tiger_palm and buff.hit_combo.up and "hit_combo" or nil end,
-
         handler = function ()
             gain( 2, "chi" )
             removeBuff( "martial_mixture" )
-            removeStack( "darting_hurricane" )
 
             if buff.combat_wisdom.up then
                 class.abilities.expel_harm.handler()
                 removeBuff( "combat_wisdom" )
             end
-
-            if level > 32 then applyDebuff( "target", "mark_of_the_crane" ) end
 
             if talent.eye_of_the_tiger.enabled then
                 applyDebuff( "target", "eye_of_the_tiger" )
@@ -1893,6 +1945,11 @@ spec:RegisterAbilities( {
                     applyDebuff( "target", "recently_challenged" )
                 end
             end
+
+            --[[if buff.darting_hurricane.up then
+                setCooldown( "global_cooldown", cooldown.global_cooldown.remains * 0.75 )
+                removeStack( "darting_hurricane" )
+            end--]]
         end,
     },
 
@@ -1947,7 +2004,7 @@ spec:RegisterAbilities( {
         -- Non-players can be executed as soon as their current health is below player's max health.
         -- All targets can be executed under 15%, however only at 35% damage.
         usable = function ()
-            return ( talent.improved_touch_of_death.enabled and target.health.pct < 15 ) or ( target.class == "npc" and target.health_current < health.max ), "requires low health target"
+            return ( talent.improved_touch_of_death.enabled and target.health_pct < 15 ) or ( target.class == "npc" and target.health_current < health.current ), "requires low health target"
         end,
 
         handler = function ()
@@ -2027,8 +2084,8 @@ spec:RegisterAbilities( {
         gcd = "spell",
         school = "nature",
 
-        spend = 0.038,
-        spendType = "mana",
+        spend = function() return buff.vivacious_vivification.up and 2 or 8 end,
+        spendType = "energy",
 
         startsCombat = false,
 
@@ -2091,7 +2148,7 @@ spec:RegisterOptions( {
     damage = true,
     damageExpiration = 8,
 
-    potion = "potion_of_spectral_agility",
+    potion = "tempered_potion",
 
     package = "Windwalker",
 
@@ -2101,8 +2158,8 @@ spec:RegisterOptions( {
 spec:RegisterSetting( "allow_fsk", false, {
     name = strformat( "Use %s", Hekili:GetSpellLinkWithTexture( spec.abilities.flying_serpent_kick.id ) ),
     desc = strformat( "If unchecked, %s will not be recommended despite generally being used as a filler ability.\n\n"
-        .. "Unchecking this option is the same as disabling the ability via |cFFFFD100Abilities|r > |cFFFFD100|W%s|w|r > |cFFFFD100|W%s|w|r > |cFFFFD100Disable|r.",
-        Hekili:GetSpellLinkWithTexture( spec.abilities.flying_serpent_kick.id ), spec.name, spec.abilities.flying_serpent_kick.name ),
+            .. "Unchecking this option is the same as disabling the ability via |cFFFFD100Abilities|r > |cFFFFD100|W%s|w|r > |cFFFFD100|W%s|w|r > |cFFFFD100Disable|r.",
+            Hekili:GetSpellLinkWithTexture( spec.abilities.flying_serpent_kick.id ), spec.name, spec.abilities.flying_serpent_kick.name ),
     type = "toggle",
     width = "full",
     get = function () return not Hekili.DB.profile.specs[ 269 ].abilities.flying_serpent_kick.disabled end,
@@ -2122,8 +2179,8 @@ spec:RegisterSetting( "optimize_reverse_harm", false, {
 spec:RegisterSetting( "sef_one_charge", false, {
     name = strformat( "%s: Reserve 1 Charge for Cooldowns Toggle", Hekili:GetSpellLinkWithTexture( spec.abilities.storm_earth_and_fire.id ) ),
     desc = strformat( "If checked, %s can be recommended while Cooldowns are disabled, as long as you will retain 1 remaining charge.\n\n"
-        .. "If |W%s's|w |cFFFFD100Required Toggle|r is changed from |cFF00B4FFDefault|r, this feature is disabled.",
-        Hekili:GetSpellLinkWithTexture( spec.abilities.storm_earth_and_fire.id ), spec.abilities.storm_earth_and_fire.name ),
+            .. "If |W%s's|w |cFFFFD100Required Toggle|r is changed from |cFF00B4FFDefault|r, this feature is disabled.",
+            Hekili:GetSpellLinkWithTexture( spec.abilities.storm_earth_and_fire.id ), spec.abilities.storm_earth_and_fire.name ),
     type = "toggle",
     width = "full",
 } )
@@ -2131,7 +2188,7 @@ spec:RegisterSetting( "sef_one_charge", false, {
 spec:RegisterSetting( "tok_damage", 1, {
     name = strformat( "%s: Required Incoming Damage", Hekili:GetSpellLinkWithTexture( spec.abilities.touch_of_karma.id ) ),
     desc = strformat( "If set above zero, %s will only be recommended if you have taken this percentage of your maximum health in damage in the past 3 seconds.",
-        Hekili:GetSpellLinkWithTexture( spec.abilities.touch_of_karma.id ) ),
+            Hekili:GetSpellLinkWithTexture( spec.abilities.touch_of_karma.id ) ),
     type = "range",
     min = 0,
     max = 99,
@@ -2171,4 +2228,4 @@ spec:RegisterSetting( "use_diffuse", false, {
 } )
 
 
-spec:RegisterPack( "Windwalker", 20240901, [[Hekili:T3ZIUnoos(TeCaUD2RtAB54U7mRJbUBUdy7b3T3Gn9I5awmXwrwowtll5tsUtNfb(B)ksjkrrYIK6HZJzASa7K2sQQIvvSEkw6MX385BUELBM)n)vNroxm6YrJpF8eNXtNEZ1zpSZ)MR3569f37G)iYDl8))lbrRU3n8l(jKl9qyS7kcisJ3N4bxEtw2U0F4DV7UGSn7V9CV4TVlny7(q3SG4iVe31zK)T37Unm(23LTX)(K7H7mi6D7sIxhe6N(UFoX)V5gSc(J)2I)74OVSOcJNtE0BU(29bHzFk6MBvt5taQzNVh8ZV)sGGcwTYp)E9tHhMCVNn6YZgn(hoS86GT)4HL73raZHF6WpLFXpE2KrWf)3cdJV)WYphCNFYHL)SB42dlZIpS82eF3VCy5Fji7WYFmE7TWpLgV1plyRFkpqCUudgCMcx8V5h6(TdlJ35hrqr8(S0Gv(WFSgWsCA6HLRdUBtwDO6Gc1pCMZ7Hl(5nai(fxaG)cL1EZ1HbPzPubT)A39Hzl8c9D)Qp8l)vQ83pY92q)v38VFZ1UEeb1nxNeKgeD3I09rl(sG3xU5AVhGhArMBYD(aSGN7AVKGm)KaxIaz96Z3L4NMUpXFXU4GOSZ3V7WYbhwsG3x9xalWTba7z5SdlVGEbV44WvX3hD(AcXTiE9I17tE48e)TUbrWnohUXCzwsWUCAY5m4rzuqgiFrO90DbrreQh03I8z0Fj16rKzlsZsc(IpLuOK)k3ipFcz4Tj43copndu7pS8QdlDuUoaYBIcMcqvtqOQmIE0IDGAepXm8WsIW)UhOGC6ukYYCd9bwiSkipHVRN)5fa8WYhFS2t8(r0N4e9p0PfSCHfoSupFlrd8m6FdaSC9s5jzauafO7OIhyZ6ITXrUPaL)aJ)mZ8DciyrXDdWDyjHMViwC7(K0SkknFTqH5TXFzbyvWJQkrw2Ny4zpT2JhNSYpXF1c)q)TWZKwcMNzsi)6Mu)huirag8KsYg2I91ZZLFm(89GXXqap53tjuvFtvG)067b9akmnlWnCHxC0Q9bzv35SAAeyRigTovHIwbXZykB8DtYyu2V5UYFrQFcybeSkTkHNrB(Uxus30NtJwoy4lWJyWUsdxJqs9g7liBSl3nhV3BdHUw57MTHFdpCNtrmbiXMLmIMMfNSDbznVzHB0QfRds8l5X2kCRTn7B79JsxClGV62qor7DWK3brFngC8MclZqIRigFMaHCpudkCsTGxJz8u1SW3BT3Ms2cqN78ZjY8L7g4klOgtpp3OmLgOBnQmXMBgf8iZ0kPeCtvOyCbjxBQxDFaz1vBlUKi3Ecsnw)icwbgvsiHRUkX9U4Of72h5TP3X(Ly(GvQJYJ(cTV7G)ZI1Xj8UR0Q9LRDNBEomoEv4(0SsZg2yrBqlTUOMbmEuRK67IVhuvdIwVpfU7AAB8RkeCAFuBTcRkJ4zgAepJXce72qWTpevRAIXC0fGT6pYe4QiNCzEHIu6gxqYFB83iCGmig9vPC(LrOCSG1mU5PY8jy4jo8RK7L(q1TYA6EgOn6ZzAI(0jhbnqkDr73QsnKoN5EFi3(S8TOluAEMpw(XtRXqwhUpj5HcV0wiNq9OMamkQGIU7LALGe6VSYgqB(B35NedMt8CHKAdaxTmgnHaVuD0dfeC(oNcEeKABee0aOwhDhJ2riCmpE9CokiyhZJK6CrKqAEmUNte)lYIxqtvygGU78wLN3WFIUjCGrXQAZjtRwz3hKUkEBPoOBy4ICyPlpsKfnMdr9gKLcdKx71)B(E7P61B9RhFkAwggaAn2OQnYZXLQy(CFvjvvV2CW8M2h7x4D3b)YIcgrLnaNlrOQw4VnpFAw1oSXb2DGz3hymRvUGXv(0kPr3uatho5yUD5r9jwmxzgNEbDim7Jy0exWI(RG6(su89awUR073TjG3mWtg4QiSEaP2eLrJIAYbl2J(rvhbPObb0gKIvnGcEvoO(ACsM)30YKWT15G54)fIToeQgZRVLunsflgAHBhlxWy79WcyaDVNmTBUWwwUFDot0ucsbZTmGISwWIdGePiPUkavhVD3nYPKsqY(q3KWhGet92Nc8zYZOmY(sGTXnbwbpOpCqhmx39k)DydzX4HRuvvTH2zbSeusvovdcuZRM0xHcyQASTXAfBBkRpfkxaIrnul7rmsIl3giefA5LPaRXEfL4ddnz7qwWPYw0yEMMUQGRxtfHNH5u0(LPDBq4cLsrhvuZnWuuX8PkzOr1d3rhCA1SLLDieX75lTDLEx9QApr05qBjRcDNnbzlOpyLntDBXjuaMjD9HgQPnmyKIfAsiSsrl8120RYtplO5bw0xiLQhe7dx7gdr)r7J8nA6QBnLkrQxm5fGSEVqhybSWAxDoAznugUqFG3V3nu7AfPfTzSlD60cWBJ2QOg(R4UykSpy(vWT85cv4SI3eHsLDDTgSLj9zO8FkOxvgN61K)qQGIfwo1L603BDAV26060PBwwO)Dals0eqj)rzFpQVF2C1HgZ4JVeAsYP1RxRoTe6n0XE9(kOXrQxqno0k1wfuK(ah5yYBeZvoX(aY(Go0W5N9UyHLrBpuzZpYZF1KIocLHf42l((RHLwSyZEu9Sn7n17OwBrkp0ytW4clx5cQV8VZsogzliA3yBkEuzbZIM0yLFi8qmq7jRX3EcLVHRMiennYdZjspYhvakIYjcbH5eOveuVxVTMTwEb1Lu8A9PSiXyUjSKYF(6EaMxKNZkU3xVK4MYgU1A1E1AuCJ0XrBHO9bTzY61GxGTtat9dZ9N9CJgwsde6q09O(AYZK)tKQMfP(xNASOOOnB0(L9RHod800AY(TZa23csvpChDGzQsx21zarFr1sKf3Vwz(d16H1y(YKH2Mbrl2TDnQT2(O2znSBR5nOYunu7)wqiAh07PPfef9c4gf9bG3HpHubDV8a8b)hKC8aZ(Ez88EF3eW)E0kw5mZWpTx7IZ)V1kq7phZYF16AeoSEFdkliqDVrgplcMQWhSxd2uLjxj4yyBtQphx4RUaHdxL8xH7H)ZA3WuXkr)FsbWHL)8NoSmyneMXxDdczpvYI8ZS5g30f(FdyerUHl2fqWUOosnG(3tbi(5KGOVq0QQ2XsYin)FSGCKcZpyHf4iJD7zYfXTgW)FOTpslyjcDpsm81eGmoA5X6yIXaR4SXDy5OA0lxdZYKRUQo0EHs0wspkql36XkEzeOLcsQkYt03NS06hl202C(klomvBnkdTMJ48kXuMCvdRry)h5geaLZKGyaFp0yAts2EfnREoQHVbKzYvhudOQxN6CXCXlzzL8dWxHt)YQh(bXMai32jHWDuOQm1snbHdSlH)G7rwbECAUYhdLuF2WL2L4t8z4kBy)w2zcpGu4V1(EGyi1ZpIujIhiNKM9fEgQuzSThXLRjAIcuxgSKsxfKlhgNVpSsWHCFooCn0Szv8LlGWYUcwj3L8PxZrbNB1YuEQ77TUwKc))yrvIWa5wscCWt48hjQKuf3oZ(24r8UWi)L69ocXYR0acjFUhyl)EtqQ4fpUkG9IqlC98cD3sh7aLPXyJSJNtmLx2v7DV2iykvbMxE8d5s0Bq9wDmQEQgZkFHUvlSOXHO48o2ULNH(rcbROoktuZqpzsAtVxO2l0lr2qDnVDa3RlH0jpuXpBC3X69GDyW86gcByr1gq5xf)M84n2gN6ffk3FSeTPVN6Z4QaPHALwYirpyMSAijTVCs9nzJTBBAx4ZJh1B0GnBd523RrWYLeLILszK)LoDzVRkFXfc5SEM4zCb1RWVTCmOZCpSCtI)6REdBkWC)93F(9X3dsZv5JcMD(HHxnE0O3p6D0o(Dg7SO(M5)m5FFy5Nk(HzVZfyHWklSjq2zYLJU4D58NZi8NZa(Zzu(Zzu(ZBM)j6fpS8)fU6BbXdDAPqUHIr9soIdsz6(NZIYXneSvb6al2T)F(pb7H3g)nbZEgtoSU9iD7pfmnz81xWG6JdxaNQwhAcRacJBxg18knR81jU3ruGTn3Ag3ddmADLq4v5QGNNn(CsAS7tbcgqxPdp2LDuEzJz9FILsTHAOeQNmm6qikjRSjpVA)UgzkNiDRBuG3I7sc8xdRvVnQYW)7CvR4Qq(vv10Z3fsPJezc9SH5)aKFNQ6BWxHsJDL2PDK(yliDNksF1V5MShIhAxqyOB5lwHFi51QyDizhP2QE0bvKNd5Qnmho5A(7MfTa83cPCbXDcgLIsvxRLNil89M59cERYxQRxTc4jJuVaXR3ZRdH12hwbShGacsbB4gQVZRyzM06mtSkN2wziBo1cf0l6RVDoM5ojdOb)O5vcYqC9kZAoRw51AY43Rg9pML5SuqykEfLkZPsIsR1uc53RfTr1PHNHwip)VF0oQviMY8Upctzo2g(Nrsyq9kUAX7trjz)A8iIus8NyQggV0h0DtuwHavNMf8CmmMIWq7QmhU1lEgHLkd12w(SD6oyCw5J0IIulSWrKnjBnObtipDsT240ttAgfG710mGRQ8AkpVbksGWcryUVB7goBQ5XTBOh1ju24zzGjhOIZ9b9gInw8)YkWAYf0C83qB8GXPexdorEvRiRz6LQAQFvKKo0gTv4YWJ6ZUebtnluVJ)7sT1lTgDUp6bf3lEc1n1wGVgBAJZIOoTA9(JPPrMlcTB0kzJYhE12EsprxMn83MdwIx1B)n13LUj8vnNBnxF5f0WaKQb18Pdh65tXYLasaYwTYqOOJOtWpWZm36VLBqQvD7QsMd7Ef9C2G3PuPZKIWccV2cZpYtprSqDYuCEuQvnc7n1jCtizmQ48xHKNM2eYm403P2Oga50gxlhTMFirSufTBZtVNeFKshjK2h)MzjdwQB2FafE(d4TRtUoRmLA2jbcX10bqK6Je5qtgFuTiMRBrK6))bXz45VsPZoT1rREfh0aiBkkNzlwkplFMuS7Ox3JRobEhGy80G(4SfYwZcNCNSJYrKPtgrmQENNM0Z6H5sZz8j35Zg7MMaMQ)SAd4Od1GS2C(EE(pMztQ9kDjE2YQfmW3h3C)HzCZPQEVE90z9cKvF1pHu7LBY)4R9rsZEV3nHWfHhJ(jily7U4eqtyDCYHLVP(jz4nhwMa(6a10v5F90oS0DpOV6Mr(bVnUr3bw(p8t)xbrWLM8dKd4seGs6LFJChab4r(0SP4kmwmChdh)TtFoGjV1tbGQYW63HQiuNQgQv9NraMYnU54dXlvdXQwBiar5EEicXXoQbPItmVaS1CM6LqcIetyWtjGaKXs1tlWVqnWRh9OaSvhAPeOrupqhsrcyX4WmscHF44Twqum7bq7mgrNxCM)lQ6J9nb43HiazpS(cLiGn7QQITOUxnF4GSjKFmOiaDvtifjWISbSpuA)icBrDAIISg9jtAlYeZZualyPHkbEK929QiM(TWT)fXtqup7yOctqSKwgYTamLcfxcGiIWwaWd)KM4IPR2getmc7RtXV(ecZokM)ourm8kM8PaKXEXDSe6Di(4(hIi(i6joW7FYINVhCQHfl8tqygyXk3hRQN(OIrADQaom0mwjdaiPb9eiDCquJ7bwOdI0rQhgcqhThh2IGoA48vlDJeisFikXIJ8OetmcY6PyINGKsxh5(VwJR8n9tqLLVmvVrmaqP5KL4cfB7MI3YyrflnJKirSGOuj9kalGc0z3JbUB5qXPz8xIU5FpkD)ocSi3a5qwfaMWZpS5Xrhw(pOOczC68R)zsNIYsE4WYvbPucfJczv2pT5u4XlOkeO3cDET6R9e1(Ag6iHCCCHEp4k6zHU7m0vUdS25BSz7cpw6gARaHBCdBlhYU5ovUGNqy2XicooqT)Bmv)drKCkkEWYpYmQHR03GglHEV0ZOJjSrIZ5fpSrIdTJ6XhVUongPE09ArVhJS7(41bWJNl1Xis4owa)NHglECYhfbz9u(OyTHRJCFSAk1R7cWQEuhTnG16NwNgWeeMrlaOYiKYkgdAVPFcpc9Kj9gXqBmoqsK4eI4SyMEuFEFuIh1JdeBbQJEGkDzRa6lpkvQ269bLIb0)GqPsgw6dkfdO)bHsrcs8OAVrk0I(G7Gb0oXDE9qPiXvDuLJYbv3hShuO2j(ZRdALeibziIUljEnDgMs(hBdsjrNcbpKxc4IamUJe1uG3b2i4cIHy5HLFkl)HOLAERpKcbqwzBCHF2hOYhiWoFU6d3xKx4(vKb0RFaiYt(bGaid7O)bDWS(Pm)TP)6BPJtvVn83TB0dvy9WYOycW)2UqY7WFyfCxr(Rd5Zkvgs)Zhwc0EbAk(yraSXFLa0v8)KdhMVpimKBfvaYm2Ts5g0FkA)2B9ZJZkmod4NFAlRM5xwvSCYyRNeW1nxdXHTjo5MRVoy7psE33PmD27VE65L1R)F9Q3rKvKAU)wYGj9k8ITtKHfpp8usFtsEBW6R081m5Wp9VCyz(NHeEWK)1kH8S0hbzwRmy4jY7LF8rdJ5LtF8rYONzqTXoZSRMmIslOFPq4jp23CKCEdrZM77gYBPFhsUI(ziHcYAFNq4bJ4hyGCWvQNrE2IpdiMFQQpuhVLW49YUAmL9rwPKZu2SjdYx(SHu9CNbCNeL5JmJIAvQfblxiGfaTcyHXqk)uCygXLnPPgszjQPq3GIfPVRgMrexnERHkbo3vtThu5hKdfazmO9s4Bp(ihd6Qrp(iHpo)dp(it3wQ5BNkYJBa5a)B8f2mhYMzMaY6Pj9RR5uDjV6C2gnjJDkg9ZeM1qdgwQezAcT40bNOZKMsBtotTGOrMC0MSHQeYIdkzcqorD8ddorDea6xMdoXiVCOA8b7puIVth0KHAY8jJuYPvZOvnGJ)ddlz8iL8eJtozcds)5MBMtZiWXieOJAceB6f3cj3XM1JTYuZ6l(ZX9OnP(YKepP9cJhprlZ05LlZ05fkZSIMlJpJq0Lhb23w7K4MhVXq5pLnZhFXG84GuCnhhWFztOSbdHOPMnDatqj2SFA0wZMCkCFCNo6kbBznVpv9YtdjOC9sdXtiETRgNhRmBx)JpkgAiN0a)7f1G2WmhkGkNhFu5xcQkoIihmN2NEkLtdjrOJrpFA()zYG8gEmBkSKl)tj2cK6w9tJnQyKrek3oXVtNx2PIv2wLsf8rttEgCwkaUHuzGIP4zrqd8ZRpyrl(tg0xK)08mB8PCuSTpuJ2jkt4sCTX1ObYorwGeItLwiwHHfCV6nhTGzO7lH0Pf6QtYvghJPY2goY4rwcBmv1cDEnmue7S1(KevK3gK3kBCTx9uvvgWO5zITX3xaR6t)9kWvRka2bXb1MefOqsyFJkWHWDlizsI5l)C(9xHgUK6nsUdZnonF60bLE6lFXPyMUM)(rdor(YNwBzsl7Xw3VDgrT4kN8GcmnTWMz6UkhE6L7g47KmBlx1WqHLTPIHTbjeHoccoxZkdWFa1xlGindQCRTaW5teDIfpRGpRIwZJlqTMOGksTz5n2DPyAOOsJIspQgGAx5yfXyjAQP6rXjzGXKlzZX3CNlhyiFSPyeHedhDLILCRLc5s16QxVUk3Mv)2amVLQTYogDHjAYr16sa9LVzECA)3RAadwTlqlxNwiWcui8UOrI(q1VpavPc2aigycWs0x3b6fL)IyGWXuUu1X2ogRjmIR2ehYUTjCw6OMikdOTMvrwmROksQvRv6cJuE3PK8pSpwQ5JNwY3Qh(ZPTMvyYvtUrQpYyhkEFOqTwGm4WWPIn4ZXS5JVSUF1c6b9vheJQQT5tKuAx0c1ORcBTCZVVzxvm7((ttgOu4LRbQBa)oOiIS(Z3anRS(eGQ23YSQ0N(GSi6q1wYmz)f1AspYnuak6qDSVXSQaFyTrI71LuUvGnKaFk2xOyT0dKdF3iHqWgQj(yTuoQH36dwqnjXG8c4wAOx8vNTpvwWdP3kTfIrKlAQoJrps1Lt6ZSyOvUViPLJTspTmwtfU2yLyHlnO(zzzvgtnrslIaw1iktKTNi8H47tufhv1ESXQcO6udY3(HMnPdrlGjxw9nqQRFxEpyNsxESCmx0yWyJluAO4n1EA5t3fnrtMykl1EVBibVEfsOUDQHCYrc7v0bZSjM2NxuWkNZU4qX3Oqf4YJ(QJ0PqFQB5E2fMIf6cnurB8ZOR6hcEvuy1Re1)XQODvv8OUjZoxkVgdytQXVWlWhqy5lntFJbzLiX(Veqk0B4IQSbgCR0Xnu1XYB83HfJRjw6m9AYmqShI5Tk0uFIKKWwxxSsIxBfgkfk2tbAqL1vHR)qzdQWvUgs1O(cvdPiQY6n30SvGbnE3ANLAsFk1gir5DtT2wSi9(1QbT2fOKj)Bx9rX(2sm5JN7KoMT16ThZQhl((wOLh2a1(JDHDR8a8cRaRhRqeBDeHDUauckitTOsTIHA3ztosHpW0z4)qHXICbpXCmWuYeKE9JEvX3Fc0g1un7UzZpVmA4gxLMF2NM)wM4mGLXZOM(0gkfEJa3X3ZZfLPSPFUoQPjvnXFz)PWCmqsBRw7lNDZ9dLCeRGV96VnPoJwPRpFYatVaHAO3NWMoCC4rp51ZxdG65nV9rVw0fmylR0BlLJp39bOLKTj1Vw1kal3(1pM9q1Im1qaznLgQGBnLiwD9Ui9qrs3RHVkUFqxkJ)ywr8LXvAMIqbdWQxVTHSdECP3OXZ0xnY47vr)7vr)3Pvrpx)2qf0P3KC1ZdSDidisj6IfXsP1txj2vAiQ3lVogpeHdIqMi1Cl4vsPLTLvN7dWCjFrWGDvrQ9W3ox0MSRpFIgBngs4z(yt9RwrYT5AqQdJHsjw8Y4pOJSo1L5U7IKgeUyBYxVJuxpPWCXruVavW00T9f2juRlH7yOmpB91ZQ52fp29EWwBA0SvLQsP5cp(mQW3SQl3uYsiMgTu5XDF1hymbKVlpfQ0yF1E2B6fP2k3uOz2DKAUrZ8pm08MAHlkerTuHGfIWTPH0Q0E1rvnX(AUF8Ss3rV3TL)yxrooEl7gyvPfg7AgV2IECORuGY03Cz6t6tfLQkewLoK0TRorC97t1w()NpPGqbed6X61NN1BllsCl248CxG481l2BirGLVre4fZP3T0CuknTcTQURVJZtmuc666GD1su7k9SDsgue09YolYTbSjwlfRk68nzW)7M))]] )
+spec:RegisterPack( "Windwalker", 20250228, [[Hekili:S3ZApooUr(BPXb4Xo3294NZStq3g4UnzrYGlBwKzc2diiTSSSST2wwYNK80th0q)2VIK6bPel(WwUFSz(Y8WIQQI1BwSi1TJU9Z3(PvUz(3(tJhoE2WjdhD14rtF3W3F7NYEyV)TFAVR3DUBG)rK7o4p)LGOv37gENFc5rpeg7UIaI04djEWJ3MLTp93)23UjiB7HLx5fV7TPb7oe6Mfeh5L4UoJ8)9E7YW4LVnBR)9j3dJmi6T7tIxhe6N(2FoX)V5gSc(h)nN)sC0Do1y8kYRE7NwEiim7phD7szu(4rJaQzVVh8ZV7dabfSALpBS(PWltg7LdhF54V)3NV4Z)YVKV4t(UPXr5lgNV4WEcaZ)y(hlh2OzWW(Hq3KGShk(9PxoA8LdFh87Fky3p04LME5WpWGn)d)U8fURwL4NMc)(F8hZxeKMEWh(ROl3aC18fFj9Q8fWSlvamtbW8)EWhOT1bFL)jdhbqKmIXOuX3F5KHWd)VcdJVhMObB8tYx8ZUH7YxKfNVyzIV7D5l(tbzW0lE3s4NsJ35NfSZpLhiJ)GcmmMWC(B(HUFnFr8E)ickIpKLgScMsXRbSetMXRd2SnteQ4097VCmH1(5Tai(fxaG)cv)42pfgKMLsu1w7ggUeukH)9prvF9JCxg6V62)7B)KhiN8tcCH)12G8fZZxmlFrV8fEKPOtAwsWDGsQRhrBKOMeeffeTXbumJ8DUlaakvnjjypBe)yjUYa1jCCXbDg6kq(KACTmeadWCyyba3e7b3SAWLreOo7b5jaRmcvV29qyMJxOV7x8vZAwEy96Rw5g557eV2ba(VgCvAgqE5lUHAgCcmSXxofuWCt24dclLmnkvSNytCiX3zFCqu2vh2trobDFX3buO2faQJlUoFX0cQkoCv89rxTMOmqO(1hsE4Qe)DUbrPuE00AQnjiLqRPhIogMUjCPMeQOixg3cOHPO0q)8feJOnpWK2mv3m3qFG1aGIiW9D98VQ4LZx84JcVX7gsFJlu)sdAjGlvYUAhXs(YsfUQPjLvKbqbme3qz7GNBNDXrUPaL)qjB5A9JeqGtXOb42VIqztcNLhssZQPu2CHcZLX35aHi8OQiKP9fAE3bcVECYk)e)vo(H(7G3jTcmpZKa756uRlDbam4jvKny68LRyYVs(89qKYqapSXubv5dQg8deTT8akmnlWn0XloA1HGS6rETGgb2mQKwB76TI4lzkB9DtYkPSF1DLVtQFcejbCKTkHNrRF0ov0n99uOLd(kd8ib(Q1WviKq85(tZqnJnIC5e)6hSWCJJGIp4TL8oR8DZ2siQ3P2DRokQg03VnijK47AvI7M4iN9hI8Oy49QXqAwCYohcA264gTYzDqIFLEHPkK9ocDKv(0bVbmiDwhd5IkO1oRuHO2E)RqIvPolbvCr)PxOCeL6(brFjgYinfy9HK0Bk15iqGL1tVIeFC4PJrCHWBzNryVFVkTQ9(mIIX22cpXHQtEfloefNu3c1AQSqibKCmzSbkbQLT2WyQCwlpCTA3xkJh)HtqFfXOqGii4y0WUhjOMhJWt7QqRItd1mTkMwlleuyC8QWdPzNMRrUuuKAjsNi6YCl(EqfliA9HuascAj8uPk5cEYy2Gb6VkjJXjkv8gHNfMUCyQtc87lfoYqpt(ui0t36cwilJ)kHoYG1ETkLlpbfRsyKYWmfqhm5Jd)cb0u9sr)z6gtpLP6ETIuDhZqGAEpULcESkM)QQfV1NZfdZcXrQxq(LbmAMWSFD4HKKhkseiTzkA915dRKpiKwL68Kgn0udnAe1QXfcPMqesWis5zpKrIhCGPZcq2F3E)KyWdIN7ExijN4KsjjHP8b5jfvWKygCfKy22drqUqGIy0gbLf7ffd5I5La0cvDG6JI6KJSej60dpyGTlot7AWgJhtOfUyj3FfrP0jl2HUgPRbSSXBfBbt)oQ1EpTkBY9tnREcDFq6Q4DvkjUHHomyPAHXy5NogpsuFTKkNPtrwqUzzH(BGOmAYwsY4AyHPl7pIkJP5Pufhu)qBV(GMzeEsmJJ0pvH0NMXOG3ftbWhQs706xTHlQwbOhBrfVEzyKGAlCI19Hp3d4xCkMT1Ewh)b9UCWZ4OS(EtnoFInGjZdL8GvUGqNpKgvBOaMJ5epmnUHDjw0xqUXDc6uMm3y8KKmj)RALsV4dqwk(XhsDc2T)qyQFJqFY0vQQlK0aqTYOBSM1OBuMNmnLANV3ffFpaUnvUvxMaUaaZFiFGqFztvDCe1z11EwHxxadTW0BaHN(JHZPorkZtPTzdwKdZ52LjMZWjwK7ds5Y6BqLvnC6naLmvS3oTit9fq1qBR5L88kq2WFt7YA0ENDWJBwQOcq8qOBs4doRJ9oKc8ps6kst5G8asv0C26MaK7dLdQMaQgrAw8oq707bVqGNxSjm)0iknzreqd4M9TKHwLIMu1LMjIP0oUcuTQhVceOsAPiUCtoJUA5x6GH636lXjz(FvPzAv4XQma06fCI(6oRSi2K0xO7tbfy4XIAn37RZGVTqrMdKr8mkv7BIPvvSTa1IqrMPQZLlvTNTQDCt(CxPkxZizwzjBrigLkRTfnyUINoKVef1AqILNyQfoSnXkcw1Id9fB7XdBNv1uZsfBbhgonqlrHGEkUx3lKV5uLPf3ZGngerCbYf3yi1kAdzCRKobqyd7HHw28gyvHktzVpuqZVRYyP1(9PK9kp(Vin(N8Vlim43NV4VeVkyDa51i9WI3wFVM9WsaKvz(IhIpKV4(GWqiDd4xjTW0LzXxUNgrkikFXQdrqcGel8(fTEt0Mq)l9JGCdJYi9XcPzCgCfJDUpXNq1UzY4MS2IkGu3T1(EzoUPE(rKSBFGu9Hd7QNFkgJewCmy)N6Nv)6FXfy4Wtj)RWd(KKji(fQYWAvaROPCsc1PWiV8T1(5QLBTmCA4RUC7Ovu5bgiRJX3U6Pcr4RXDiKpHSYA2GeKVVa2u3P69hRg5iVtdCxoy))pyI7b8jPLqIsHT2HhzfT(PHQ5qHK9SD9HWqhqVFlrjZPAheTRitA9DYvCN(wj05sqwHM0aHbQfOvltqBH0FV4CZiMX8JHLRFlLNm0g1RNupdcuUEd0ZlX0ZefgYGk38jY(wa(CDyo4t9xthEa1zCw7wjtV)Aj1aRkH4(517s)OHcQTiTHG(jZauo3iZ8bqw51dvKN8OnJMYfeaxiv0EgUEEHU7Ondm)wyRv(1lxOjggijZ8EgagAjlRBmu()llNRYu7VMvNu(S9VUQ0PYfIKXkR5loUPNwJEEDtQFhELZ6gcTkJL6uNbHSZwImMfMOrw8AsHwv)90xS1dRCjkY)12el6M93WM(LtO9XS)wiJXFogZmTAvmKnoG9FCiTwCda83tbk5Zjbr3rw5fT5Jly2zL)yw7w5uae)vAs1PQqjrc4r26ZBBT73vldqvnd4w)w(IHcKj3saYu1SAvyBQuSvrgsWgh1Jpf5iPiq1b8tvtvnR(qBjWpu4F6i4ILPcjrFTeL8eNxfMYA3KBce2FGzzLV4NtcIb89G10wlr6n0Y1YrnLTZnifj0dw9cAJpfiHluZfcB5iVKfOKYOpLXbFFt30Qd5ixjs(0ROB1Zu1iysa2y719kXiRUxTAjmJGXAUddGI(8c3pjr)Qgx0e0sD(1dR2qchqH6X49veQlD3qt8hyp3LkekGQmP8Gb0)B9FUrn)Tbn2T4ID7CW3ZGYdvYv53P1(Vo7BCdQr08BGx7ZMCWtmQLj54Y6hSXTNTMoESZotossnrxXyrARbrrSI1WRLGWtbrpd(kJ69wnBS(3AnDLlPqBRPJVTkg2ey8ESKkeTQWrnYNPGaE(Af2bvYiTAB0b0Qx6Rz)sAXfLNlaDZRZ8C3attB3ZkjBJihrOlQk)s250QB3C14DcXtyliZ55uQZN60nRgNQMewtkK6tJQQX2lxcf(UXRI3QjwN(AS(YUzLvEko1iYBxCV)9OHsvCygoRDhfvHtBZvxTtMsZ2mt5jwq(w5o3K8Igzr7kiZdTb9MQrXtnkjoDhbHJ5aI1miIStRdE8d9oP4vsoTw)ZWg80I(RtUavRyqrV9FuTAHvnSKEQ7zQVXXMPy2Z20v4TAwMNUgHurJJxQ8h8u3oHk646xInnNIEU(iBjmdZLA(tt3pQQzZSPZSTSMsQW6VXAwBU9ACsR6EsQu6aTkH2031VEA2slIezGQ15OzlBgnYg)C2020kDY1w0G5Uxr)iRWtk3QweAW3z8RB0dPZnTPnGnXvU9DUPIE2vjcv2AHAv5uP1OSGlNVo3SEBivUtn63joGmkBaLRe7DfKYiKPQM5M0)hxy7kg5S3RQ6VjDlrvBBWy41ndsx05PzQQsFfhTrhxubifZBcKXnT1kRKuorcefSVR2WH7GC7CByKRP64A7CmnLpE8qERP44vvR6xJP9PIy(6wVeGJFYDf1OrZAvpzepKVuhj(0znbVAUutov8YZPjRCeu4joaCddzUqYkBqf0Mv2neSKH8)D2F4F9VGyEqsyCGu2df8eOTdEen9u5lOrAiAlEUowZmzUXytA)Kd7ZOfwG2buRHSkPB7E1ehDanKFieNAphe2btUCv2OR26M6altZHaVk3ELpES0hRMVWgJrcM(kOe66eXOJgzkAKl(5C9NkUyJZcENBuGNZMKa)1WCLT5bkti6BCvt8pTewPACejUnbOl9FaIWuf(ajXpTLlC8Xr6JmG05kY0QF1n5WHiN9bHHUvv83pKuV)1HetBLb3obvKNd5Qjmho5kBF2ORIzjKDdKvg48kkLLTbEG3ZQt8t1dED6mmE7i1XYFLjG5BDv(jiEsdVQewJjZff7R6RFP1ywwwInZQ(RI4RpVhrog5uDs(uUyonlWQgBT3jMmHoPu)TmS5TnfxPD01vn8PDZVdJICKrLlzvnZGIr5BB1fgsp1gsh10TLCO2et6gHOnNLtq(QRd103()65dxzzFrzzVzjUX6VW6Hkn36GMX30puKgsSvbF00tEDz)iQP8dsSaFzAGOmPQV190g0EZIwHQ2vcJQ3TyT7WZt8zLClFUUvv1t6URHg1)FWoz8)tY3lHG0gFMhauNaAwKVfgbRdi1hc(FUKVhePIhAE63cc3nGIuW6IZo)Q4O3adyRlj5s)O4dB2cdNqzGJ68f)iH6zFIh(rc9Rpb2FR005QZU16qGgn6N6B2CXMnSrxSlwuzDDBO04O9mR0lNIxAfDFOjv0PNf3J2NTPG22(q9U)CHQuz6DCQE907bJZuYY1AzqPV5RlKChfuoN2RdWxl3b3gFfjRS5OmcvA2LgdVmUvRrRR5bTfhTBWunB9I(SGMlKejAqJsDB0RSG5LnFHo7L5hDZeABk61tlRz023gIhhEqp)apRTuO1tdJBZqZvkN(uR3PVluSXDhx8gvAS4l5R0xBHiZS77utuS0SeycSn5ykyet5Kd9I1qvghI1Wt3aRFjLx2aXeav0DHD05GqArB0FEj0ToI55VsVLXTwOpRXkSm990DAou0INE1xO1uuR6UOwG2mYzLSBaAlALZop(WXCJKBtZGISYoJMhO4xtOBJck9EEU0o)DCxF31dx2AsWgRrRXqrulf38U9Tj8tJbHusbjhehK1MB0IWXAnYj8(ILhit0NSIoivllONLL1vX1rB5QupPg42SJCtN1aRpDjyzZTuRrw669yH6lqHJCPCp5NanT9SUSPXCvtdfxOI90urwXSg0CZmQR8U69lO848Gz680hZctdyQIdcDbhm4mEeJYuE5bBKZtHUExX9a8R3tAHI7s4xiN0IPt5Ju184vieIAQfNFm1oSn(CvmvynnyhfIPw4wwjHvOky)rHyQMQK9KFuiMI7NswrY7QJcbiz(IFcPIl3Y(aVpgwWXNU3nHWZGxJ(fchYOiojRyxPEJ41k2BYxKa(9bvWvSpU55lCpa6IUzKFWBRB0gWZy(h)FcIGhr(wR)dXrakPp(nT3dwaEKBDAjpPKpdJO)OVo45aM8UCAauzEJ(guBc13lhQ1njsdy2U7ro)qC0i5GSE7mAaY27ZrlqIWnLC6mBaBfNFZwizMCK04YOPbcqUQAEAb(7KdCX0RAaB55E1c0FVCqJEXM0alAVauAIWXdpBZLXikMNrq3SgzYnMAvcTxiG)vaJz85JYr85067)wtVzyFF4(nicqCQ1PULXqs7k20ah4L0Pfkq8FQE)BAGoZ2ShtrD3YcrCI)KGKUuo9HZM1(eehjivuOjBsDDhmfznljrdSGvXIwGFYtG4EcIZf(liLMcAj3DkTalI9WjM38uKWqvlcTbmBT40waereEeam)JswKy9fJ(BSAbINzYkR4u7AhrHW8vSfFnitdoQqTuKAIZIZCJ45XPcpYpUoMc0XQbARhBeqF5rPTm57ckfdO)BcL2YFxxqPya9FtOuKAACw930k7NUG7Gb0tI786Hsrs37Skhh1Q(dDb7bfQNe)51bTknrIIIG)gRYJaj5goPmU8htEJT(lj9lFdGR6J2IwZJImIB2B8nqbAVZBg3L8T0WoomAMANWEb8ecZtCvcNhOIOHDcvyV7HO6Db4uRshc07KAFFoHnIv7lEyJe38e1JBhxG9UDq1xgHv9LUSIfJqklYzBRmW21QUGHHa6oYGfB3Q6ckhr5SBf1iiPlRfjsWItS(xpdBOXzPeNyiRJkXj6McCIC)VvnEZTaMGep4edZGvb4JOeMfaejfHJaGst2U6Yq9nDrQ2DWsck0aKd)MnMvdWJDiGne6Dfpv4ElQt4RhbLDE5Jkx4wA3SY4tMilSG681B09qeXRrhXbqRO4jSg2NqyEIUKppqfjc1lsOITaLos9cBPjDf4X2R2Ukwd26foLw(781tBpd5y)u0jjiwPDXS68wEONjW)kGXCg73fK0KqoZJnWHMtrzlKD(BHlSK87cwf261AECTAaD0JZLPi4eJz9QLUpFA9trwY6zPeiyiRJkbcwhiDIC)PD3QLlaiIwYraqPlzAFIpz4UVOwXec07SeUqGFi4hwYfbsdSGmklXfZuR6(eO4QROPjJ0bzlM6khwp7ZKNs5ZVL01oVwLNxO3zYHUVMjiq8CtXDe)(1j0Z)4FMg(IauYDxd7CLMViKCStHNF7NGGwBJtU9tFky3pqo8QXRdcRUIlsVQkE3)5nVL0SnbWYc)oYhpMBciMzR99YCCt98JixdapqU1FoSl)JYE7YVMtS3w4t6039f3Wd(30(RP1831RVURFIhFKGT6pgMZh)4JxGWGg0Rp945QOtTE8X(ykE1WfXpZGEKErs4cqJJ(r8PxmnUEwn4LpYb9WIa94Ju8I9ruA(ia2DjDWbkjnL06dHHoGGFlrC6qKMxBZ9Sup1Nn6RN1RVgXWJpIjbhu9iKxLjajug2fC28rVVNntN52YSaAKCBF2t4M(86jd1lK7yBLc6qLkDxGMEycREeUXCWRLbUtOsGM(t6lsf3mQxFQ24OHvQb1rTqjJbTMnJ0zbq2R0haK12F2OPGlO2mNIB9FxpVqxyfeb0BurCEgLZC9mauEBdMpUhYWE8rYJNX(Rj9yRh76zWSV6F2Rjl6XhBC)f0thrGOUsI9ui3aPf7Zh2wchI5uj)J)h5l(5yA0iUXTN(lFxW6BOmeK7r4ApaCgGaL7ZeOTmfzts5u6nes9)aiM)in2jqu)z2D(T7xCdcP)e9X10OOMhPlu9)AMFseOYSpOq1BTBykBo(3H)EXNzDTAk)uLC5J7W(VoKWXmWLvns4D)R0nK0G3Q(878De2Rx2nJi8qQeAsVM6B94UGqMpup0f2E02iyAdeaySbckzd)q5ExRhNvBZTi(kJl1wTGIL)aBdnbHysqCsq2d6rexZRkGQgmTBMzoOyx1gsac4a6cIki1ISKbDdXBeXt37Rn4B7eQjp2cYb()4tSRhRhqGYC4sYvog3iPXEsD(1dROFqavBXseK8V8s3n0KkaI6UutEvQWfKqLFlFQdjuR5t8YWFPCsFh23cai56)s8QG1bK0Gjjq7T1NCdQXFH)dbY88lUP)VpimmFXg4xHq)3Dzw8L7P34AbqMZRoeTXpMCHb1)lqg0K3BtO)Lq(yXhIYiFPbsd2LsY9wkjw7yLmVb1GRPP4wFl6uReuvAQbugqTpORQmoUPW)xLdicJKj0eVGEjitJ7rIUzZq9f5Cie93W8ihGqYeXKebnHazoMtZEieK7m2Cs8Hm)E6t8PPlo8yNGTNMSxgul6eOAELloNrTZBr(3Tw5qvuFalLHlSjJtAwbqAYk4aWZNmWe9ozKScsGmhq(EaJWurufSIfk8f(v(yQ)67w5Ur5QLKKOW4HiGU67R7rd6rZKdAc3Gs5hpKriAXVrUhn4hpSW3mj(4IpZ(mXxJrUyRTv1z5GoF2SEv5Yv1WjLzOo)Dd7Dr7htY)UwZLMTXo3VEjjn3BgxSeon3vRxRBuvFxF6vwpa(9ZOxHVY6RbUbf)uRAYq8IEYGGZdG0vf3JAsdisXhvgopFACDx7Jh9tjZ1f8zz0kZ9JWvdhMkHW3rfIAbJdO7MNUNbdt8wNgHaKCFZvzmi7kHfuVmzEHawbTwkoix5EmLIIQlm(dAR)bgsLEn4wnB0XsXGAlnaTloZqTSY8n0ryvRoU93ep6sGBTs(6izCRUxU7nWMtRdzr2rJCgOQSIyRQpl4SzLkAmSGx0vnuGIgNiNQYy0437HQ)cMTntvc4axOuEsFy7VfD2QfEoNdyeJW92OClqo)VuhxvvtrWxDzbtq1lKRRxUg5581MZGu4OXBlOdXEnyakbiU2hd5h6IcYC699vvEU9rca1VbYNsHASQSiRFqmeFb(rpuu2vsw(SIePAblWImYLifAw)WABE7eZZ6vuoaBEPpmWYxy0quTMglhLNLxewI76v(6BkUAL)Dt6jLTWSOuD1)tnXE3Pe2KwsZtbaY8Ru6LRldhljsHCpP68)BU3nCR0QQB3Qf36PWLyrkpDp3(KHOS0olNICN8kJduCoSdKqJhb65lLkK9zFfRYqjLI6cq8oP(78EWdsZIvhIuXQUgiTH0Q8f2SvYofHm(cHmrktDsm1yZgr(T61z13OiMZNuu5mjZG6uwLyNwwWnUffECtdJwVOXGURDSCAEaO761KQAemB2rYJ6JBkjl1WAZWrYYrCGgvNJJg1Pos3aqUYLyHcKAd)JWvfQnRiZdnJXYRF(66ayHl0Q3(u0S051PQ0OglmrHyRQTEKQpIYJlAg746j6CfuubVXxonFrgwf8yBPfoxeDXAAlysfKnpFjr39xpvxcusIeOB(OnhMYjxJqpsCPwHQFBx)Z6QUi6u8KRkQ1awNc)l8ALceMPfgZGXjufuj6nCPwAHl3AD6NVc4wrdDDDpRa83k9Pb(OVq32k3SFIyTnurEkMRaGugsRJAwnxAvQhljOZJgPPOqr9gzka1QmOkafjalUH)gOzk6tXAwCRpDWTBXq7ubnfQT6tjfO5ORuA)MiPA9Xsw9KkM3ZsH0B2RJk5rk0b72AEZbi5fHBmx8A8WWsRdA9SrDb0RJk8kRW2DvQUgNz7jx9SgQGZmOSYnxsGnoLSSe)TIXkR4)QJ)pFKjH)UQQqew4nUoRadNowAK(mUJfVCu3odgzk2bc7cgsl9PIOqT(CRmG1F4J7vUG0H2(2A2(cRaNnHK76QsQ3r3rMvW0QfXR(Y2qX2SAtUlhVoOnt9UM7REDMNxt(JdZNXTMbNTBt1Hns7C(KAWG9fEgN(Ec39OUHN8KVboka0jAdFE2KS6eDpY6XBOC65E3xmKm1PoDuBaJHMphNBjuTcDBdtBj)jQGQt)uX2POjK75zhvq4Uh)MQmQClvAJR0m0cKyE6(MS(aP2OuSB(oUyqrHQYG1AQVLSSC96CHXPdeRQRfY9MWbzwBFvD7MQ1A4AdF6QQlLB06uTy4uv)W0ujtg276Dt0o96NhfWVTpGnsGaCu(pyhuV)z(IpVnif(tcpkFXpt)aQddm5H8fP799cGOxWsXH)h8NX3NkEg(wcPGDhSId2b4LEu(wfh9gyaBb)6eafFyZwy4Kph707ZPFK4aoFrmm8FK4(2mr25HrOlMcwp7iJcFzU1MMr7M6T1GXDE29tgrlSZNw6js2MXOUj8TZftNVpDDdzjxFJBrITplLxOHFzU4xBJ8wmG))Y7Qz3eggg8BdAOjnjkdTtJJ7XaemkOo1biwrAJN(5M2cLeBh70wOAt7YeOM44e)33xJrkeLex4oe4JKT2VJe25talyZbfkf5halcb7NLovPkh(4fguEthZ4VZdkkth57fvI8StZstAqdvv80zh(42YG61qPjWdep3H770uaR0MV0zj(zfAaQodohpS1ufA1uIsfSkdmqag(oIC6JWVQBzus9GPKPU)AepQsZpPnyqKk0KbjuhAW8ZS1n0VMo6i9jgw5(YkvTR7YxQwKen17sRzQw(T3040fb9b)UfT(sR6ECyqZQidTvvG6Xx3AsAwbs3xRsnxfzEKuPIphYqnU7c02UwS62VeqllhxjUY3ux5ZPJrIrHsT((OBdMedldElew(nVDADlgwsArcjlYYjqwYeyiCVzitGi2jSJHSVP)eeTxepSGD9UAtTLdJ9lMiSDdZxiAtB8G0W71B2DmUNQ6HCVsP5YVw3eXNQEw)NgZVxGOphFUq5xOCJCx0PdD7YCx1beDhoPDXnQHdjLusG1UmkzLTkYhT7mZls3eNbETGShoDkfkwB33MKD8Ga4fzMjb7H84uI3LOMiqOJpCCFMrlyAvORHKnYxXNp3tmHOJ8Nl2M8(8nhsIxdpv1Bnn6Vw9do)5rwFo3SoWhAQ5xUj05dcVGoFd1voKPDa7QPXv0lHKYHCjH4OMs3J)z32v)Buj1lzVMoz1hloCeS32NKc5auvOrCA(7D96u4azHFcweJJ0jGJieWiCb0uaGjc4sW9X8vjGHX2Vk6XEk356Avp1kdx1x(VJArFsTLlP6IwpthpMvzg1FvMr9sL5Sm4Vz)(]] )

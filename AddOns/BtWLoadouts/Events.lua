@@ -1623,6 +1623,9 @@ local enchantBySpellID = {
     [451821] = 7599, -- Apply Stormbound Armor Kit
     [451824] = 7600, -- Apply Stormbound Armor Kit
     [451825] = 7601, -- Apply Stormbound Armor Kit
+    [1216517] = 7652, -- Apply Charged Armor Kit
+    [1216518] = 7653, -- Apply Charged Armor Kit
+    [1216519] = 7654, -- Apply Charged Armor Kit
 }
 
 local itemChangedData = {}

@@ -586,6 +586,7 @@ local setColorProperties = function(parent, widget, widgetTable, currentXOffset,
 end
 
 local setExecuteProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, textTemplate, latestInlineWidget)
+    ---@cast widget df_button
     widget._get = widgetTable.get
     widget.widget_type = "execute"
     widget:SetTemplate(template)
@@ -595,7 +596,7 @@ local setExecuteProperties = function(parent, widget, widgetTable, currentXOffse
 
     --button icon
     if (widgetTable.icontexture) then
-        widget:SetIcon(widgetTable.icontexture, nil, nil, nil, widgetTable.icontexcoords, nil, nil, 2)
+        widget:SetIcon(widgetTable.icontexture, widget:GetHeight()-2, widget:GetHeight()-2, nil, widgetTable.icontexcoords, nil, nil, 2)
     end
 
     textTemplate = widgetTable.text_template or textTemplate or detailsFramework.font_templates["ORANGE_FONT_TEMPLATE"]
@@ -651,6 +652,36 @@ local setExecuteProperties = function(parent, widget, widgetTable, currentXOffse
     onWidgetSetInUse(widget, widgetTable)
 
     return maxColumnWidth, maxWidgetWidth, latestInlineWidget
+end
+
+local setImageProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset)
+    --.texture .width .height .filterType .texcoord
+    if (type(widgetTable.texture) == "table") then
+        local r, g, b, a = detailsFramework:ParseColors(widgetTable.texture)
+        widget:SetColorTexture(r, g, b, a)
+    else
+        widget:SetTexture(widgetTable.texture, "CLAMP", "CLAMP", widgetTable.filterType)
+    end
+
+    widget:SetSize(widgetTable.width, widgetTable.height)
+
+    local left, right, top, bottom = 0, 1, 0, 1
+    if (widgetTable.texcoord) then
+        left, right, top, bottom = unpack(widgetTable.texcoord)
+    end
+    widget:SetTexCoord(left, right, top, bottom)
+
+    if (widgetTable.vertexcolor) then
+        local r, g, b, a = detailsFramework:ParseColors(widgetTable.vertexcolor)
+        widget:SetVertexColor(r, g, b, a)
+    else
+        widget:SetVertexColor(1, 1, 1, 1)
+    end
+
+    setWidgetId(parent, widgetTable, widget)
+
+    widget:ClearAllPoints()
+    widget:SetPoint("topleft", parent, "topleft", currentXOffset, currentYOffset)
 end
 
 local setTextEntryProperties = function(parent, widget, widgetTable, currentXOffset, currentYOffset, template, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, textTemplate, latestInlineWidget)
@@ -888,6 +919,7 @@ function detailsFramework:SetAsOptionsPanel(frame)
         ["button"] = {}, -- "execute"
         ["textentry"] = {}, --
         ["label"] = {}, --"text"
+        ["image"] = {},
     }
     frame.widgetids = {}
     frame.GetWidgetById = getFrameById
@@ -996,6 +1028,15 @@ local getMenuWidgetVolative = function(parent, widgetType, indexTable)
             widgetObject:ClearHooks()
         end
         indexTable[widgetType] = indexTable[widgetType] + 1
+
+    elseif (widgetType == "image") then
+        widgetObject = parent.widget_list_by_type[widgetType][indexTable[widgetType]]
+        if (not widgetObject) then
+            widgetObject = parent:CreateTexture("$parentWidget" .. widgetType .. indexTable[widgetType], "overlay")
+            table.insert(parent.widget_list, widgetObject)
+            table.insert(parent.widget_list_by_type[widgetType], widgetObject)
+        end
+        indexTable[widgetType] = indexTable[widgetType] + 1
     end
 
     --if the widget is inside the no combat table, remove it
@@ -1081,6 +1122,7 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
     local currentYOffset = yOffset or 0
     local maxColumnWidth = 0 --biggest width of widget + text size on the current column loop pass
     local maxWidgetWidth = 0 --biggest widget width on the current column loop pass
+    local canvasFrame = parent
 
     --which is the next widget to get from the pool
     local widgetIndexes = {
@@ -1249,6 +1291,15 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
 
                     maxColumnWidth, maxWidgetWidth = setTextEntryProperties(parent, textentry, widgetTable, currentXOffset, currentYOffset, buttonTemplate, widgetWidth, widgetHeight, bAlignAsPairs, nAlignAsPairsLength, valueChangeHook, maxColumnWidth, maxWidgetWidth, textTemplate)
                     amountLineWidgetAdded = amountLineWidgetAdded + 1
+
+                --image
+                elseif (widgetTable.type == "image") then
+                    local image = getMenuWidgetVolative(parent, "image", widgetIndexes)
+                    widgetCreated = image
+
+                    setImageProperties(parent, image, widgetTable, currentXOffset, currentYOffset)
+
+                    amountLineWidgetAdded = amountLineWidgetAdded + 1
                 end --end loop
 
                 if (widgetTable.nocombat) then
@@ -1297,6 +1348,12 @@ function detailsFramework:BuildMenuVolatile(parent, menuOptions, xOffset, yOffse
             end
         end
     end
+    
+    if (bUseScrollFrame) then
+        canvasFrame:GetParent().RefreshOptions = function()
+            parent:RefreshOptions()
+        end
+    end
 
     detailsFramework.RefreshUnsafeOptionsWidgets()
     onMenuBuilt(parent)
@@ -1341,6 +1398,7 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
     local currentYOffset = yOffset or 0
     local maxColumnWidth = 0 --biggest width of widget + text size on the current column loop pass
     local maxWidgetWidth = 0 --biggest widget width on the current column loop pass
+    local canvasFrame = parent
 
     bHighlightColorOne = true
 
@@ -1556,6 +1614,20 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
 
                 widgetCreated = textentry
                 amountLineWidgetAdded = amountLineWidgetAdded + 1
+
+            elseif (widgetTable.type == "image") then
+                local image = parent:CreateTexture("$parentMenuImage" .. index, "overlay")
+
+                setImageProperties(parent, image, widgetTable, currentXOffset, currentYOffset)
+
+                currentYOffset = currentYOffset - widgetTable.height + 10
+
+                --store the widget created into the overall table and the widget by type
+                table.insert(parent.widget_list, image)
+                table.insert(parent.widget_list_by_type.textentry, image)
+
+                widgetCreated = image
+                amountLineWidgetAdded = amountLineWidgetAdded + 1
             end
 
             if (widgetTable.nocombat) then
@@ -1602,6 +1674,9 @@ function detailsFramework:BuildMenu(parent, menuOptions, xOffset, yOffset, heigh
 
     if (bUseScrollFrame) then
         parent:SetHeight(biggestColumnHeight * -1)
+        canvasFrame:GetParent().RefreshOptions = function()
+            parent:RefreshOptions()
+        end
     end
 
     detailsFramework.RefreshUnsafeOptionsWidgets()

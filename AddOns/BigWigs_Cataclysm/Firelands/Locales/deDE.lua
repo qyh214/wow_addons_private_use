@@ -73,6 +73,7 @@ if L then
 	L.immolationyou_message = "Brandfalle"
 	L.crystal = "Kristallgefängnisfalle"
 	L.crystal_desc = "Warnt, unter wen Shannox die Kristallgefängnisfalle ablegt."
+	L.facerage_trigger = "An die Gurgel!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "deDE")

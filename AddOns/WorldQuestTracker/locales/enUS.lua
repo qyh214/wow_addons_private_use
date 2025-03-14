@@ -2,8 +2,11 @@ local addonId = ...
 local languageTable = DetailsFramework.Language.RegisterLanguage(addonId, "enUS")
 local L = languageTable
 
-L["S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP"] = "Quest Scale by World Map"
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
 
+
+L["S_OPTTIONS_QUESTLOCATIONSCALE_BYWORLDMAP"] = "Quest Scale by World Map"
 L["S_SPEEDRUN"] = "Speed Run"
 L["S_SPEEDRUN_AUTO_ACCEPT"] = "Auto Accept Quests"
 L["S_SPEEDRUN_AUTO_COMPLETE"] = "Auto Complete Quests"
@@ -318,6 +321,7 @@ L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Show Filter Button"
 L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
 L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "Show Factions"
 L["S_OPTIONS_TALKINGHEADS"] = "Supress Talking Heads"
@@ -348,6 +352,7 @@ L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "Rares"
 L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "Overall"
 L["S_PARTY"] = "Party"
 L["S_PARTY_DESC1"] = "Quests with a blue star means all party members have the quest."

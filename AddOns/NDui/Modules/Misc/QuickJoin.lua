@@ -76,10 +76,17 @@ function M:AddAutoAcceptButton()
 	bu:SetPoint("BOTTOMLEFT", ApplicationViewerFrame.InfoBackground, 12, 5)
 	B.CreateFS(bu, 14, _G.LFG_LIST_AUTO_ACCEPT, "system", "LEFT", 24, 0)
 
+	local isCN = GetCVar("portal") == "CN"
 	local lastTime = 0
 	local function clickInviteButton(button)
 		if button.applicantID and button.InviteButton:IsEnabled() then
-			button.InviteButton:Click()
+			if C.db["Chat"]["Freedom"] and isCN then
+				ConsoleExec("portal CN")
+			end
+			C_LFGList.InviteApplicant(button.applicantID)
+			if C.db["Chat"]["Freedom"] and isCN then
+				ConsoleExec("portal TW")
+			end
 		end
 	end
 
@@ -111,7 +118,7 @@ function M:ShowLeaderOverallScore()
 	local resultID = self.resultID
 	local searchResultInfo = resultID and C_LFGList_GetSearchResultInfo(resultID)
 	if searchResultInfo then
-		local activityInfo = C_LFGList_GetActivityInfoTable(searchResultInfo.activityID, nil, searchResultInfo.isWarMode)
+		local activityInfo = C_LFGList_GetActivityInfoTable(searchResultInfo.activityIDs[1], nil, searchResultInfo.isWarMode)
 		if activityInfo then
 			local showScore = activityInfo.isMythicPlusActivity and searchResultInfo.leaderOverallDungeonScore
 				or activityInfo.isRatedPvpActivity and searchResultInfo.leaderPvpRatingInfo and searchResultInfo.leaderPvpRatingInfo.rating

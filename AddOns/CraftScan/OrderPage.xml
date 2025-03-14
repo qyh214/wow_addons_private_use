@@ -1,0 +1,729 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+	<Script file="OrderPage.lua"/>
+	<Script file="CustomExplanations.lua"/>
+
+	<Button name="CraftScanCrafterOrderListElementTemplate" mixin="CraftScanCrafterOrderListElementMixin" registerForClicks="LeftButtonUp, RightButtonUp, MiddleButtonUp" virtual="true">
+		<Size y="20"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="HighlightTexture" atlas="auctionhouse-ui-row-highlight" alphaMode="ADD" setAllPoints="true" hidden="true"/>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Button name="CraftScanAnalyticsTableListElementTemplate" mixin="CraftScanAnalyticsTableListElementMixin" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true">
+		<Size y="20"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="HighlightTexture" atlas="auctionhouse-ui-row-highlight" alphaMode="ADD" setAllPoints="true" hidden="true"/>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+			<OnHide method="OnHide"/>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="CraftScan_CrafterToggleTemplate" mixin="CraftScan_CrafterToggleMixin" virtual="true">
+		<KeyValues>
+			<KeyValue key="ppconfig_key" value="scanning_enabled|visual_alert_enabled|sound_alert_enabled" type="string"/>
+		</KeyValues>
+		<Size x="18" y="18"/>
+		<Scripts>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</CheckButton>
+
+	<Button name="CraftScan_TabButtonTemplate" inherits="TabSystemButtonArtTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_TabButtonMixin" motionScriptsWhileDisabled="true" virtual="true">
+		<Size x="10" y="22"/>
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="CraftScan_ProxyEnabledTemplate" mixin="CraftScan_ProxyEnabledMixin" virtual="true">
+		<Size x="18" y="18"/>
+		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormal" parentKey="Text">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
+					</Anchors>
+					<Scripts>
+						<OnLoad function="UICheckButtonFontString_SetParentKeyAlias"/>
+					</Scripts>
+				</FontString>
+			</Layer>
+		</Layers>
+		<NormalTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+		<PushedTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+		<CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
+		<DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
+	</CheckButton>
+
+
+
+	<Button name="CraftScan_OpenProfessionButtonTemplate" inherits="CraftScan_TabButtonTemplate" mixin="CraftScan_OpenProfessionButtonMixin" virtual="true">
+		<Scripts>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Frame name="CraftScan_AutoReplyConfirmationTemplate" toplevel="true" frameStrata="DIALOG" enableMouse="true" hidden="true" parent="UIParent" virtual="true">
+		<Size x="195" y="180"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="Label" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true" text="Auto replies are enabled.">
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="TOP" x="0" y="-42"/>
+					</Anchors>
+				</FontString>
+				<FontString name="Label2" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true" text="Are you still here?">
+					<Anchors>
+						<Anchor point="CENTER" relativeTo="Label" relativePoint="TOP" x="0" y="-42"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+			<Button name="$parentKeepEnabled" inherits="GameMenuButtonTemplate" mixin="CraftScan_AutoReplyKeepEnabledMixin" text="Yes">
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="Label2" relativePoint="TOP" x="0" y="-42"/>
+				</Anchors>
+				<Scripts>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+			<Button name="$parentDisable" inherits="GameMenuButtonTemplate" mixin="CraftScan_AutoReplyDisableMixin" text="No" motionScriptsWhileDisabled="true">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentKeepEnabled" relativePoint="BOTTOM" x="0" y="-1"/>
+				</Anchors>
+				<Scripts>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+
+	<Button name="CraftScanCrafterListElementTemplate" mixin="CraftScanCrafterListElementMixin" virtual="true">
+		<Size y="22"/>
+		<Frames>
+			<CheckButton name="EnabledCheckBox" parentKey="EnabledCheckBox" inherits="CraftScan_CrafterToggleTemplate">
+				<KeyValues>
+					<KeyValue key="ppconfig_key" value="scanning_enabled" type="string"/>
+					<KeyValue key="enabled_tooltip" value="Scanning is enabled." type="string"/>
+					<KeyValue key="disabled_tooltip" value="Scanning is disabled." type="string"/>
+					<KeyValue key="indeterminate_atlas" value="glues-characterSelect-icon-minus-hover" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="LEFT"/>
+				</Anchors>
+				<NormalTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+				<PushedTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+				<CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
+				<DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
+			</CheckButton>
+			<CheckButton name="VisualAlertCheckBox" parentKey="VisualAlertCheckBox" inherits="CraftScan_CrafterToggleTemplate">
+				<KeyValues>
+					<KeyValue key="ppconfig_key" value="visual_alert_enabled" type="string"/>
+					<KeyValue key="enabled_tooltip" value="Visual alerts are enabled." type="string"/>
+					<KeyValue key="disabled_tooltip" value="Visual alerts are disabled." type="string"/>
+					<KeyValue key="indeterminate_atlas" value="UI-HUD-MicroMenu-Questlog-Down" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="RIGHT" x="-18"/>
+				</Anchors>
+				<Size x="20" y="20" />
+				<NormalTexture atlas="UI-HUD-MicroMenu-Questlog-Disabled" useAtlasSize="true"/>
+				<CheckedTexture atlas="UI-HUD-MicroMenu-Questlog-Mouseover" useAtlasSize="true"/>
+			</CheckButton>
+			<CheckButton name="SoundAlertCheckBox" parentKey="SoundAlertCheckBox" inherits="CraftScan_CrafterToggleTemplate">
+				<KeyValues>
+					<KeyValue key="ppconfig_key" value="sound_alert_enabled" type="string"/>
+					<KeyValue key="enabled_tooltip" value="Sound alerts are enabled (the WeakAuras sound library is required)." type="string"/>
+					<KeyValue key="disabled_tooltip" value="Sound alerts are muted." type="string"/>
+					<KeyValue key="indeterminate_atlas" value="glues-characterSelect-icon-minus-hover" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="RIGHT" x="0"/>
+				</Anchors>
+				<NormalTexture atlas="voicechat-icon-headphone-off" useAtlasSize="true"/>
+				<CheckedTexture atlas="voicechat-icon-headphone-on" useAtlasSize="true"/>
+			</CheckButton>
+		</Frames>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="HoverBackground" parentKey="HoverBackground" atlas="Professions_Recipe_Hover" useAtlasSize="true" alpha="0.5" hidden="true">
+					<Anchors>
+						<Anchor relativeKey="$parent" point="TOPLEFT" x="-10"/>
+						<Anchor relativeKey="$parent" point="BOTTOMRIGHT" x="-5"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="CrafterName" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" x="20"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="PrimaryCrafterIcon" atlas="auctionhouse-icon-favorite" mixin="CraftScan_PrimaryCrafterIconMixin" hidden="true">
+					<Size x="13" y="13"/>
+					<Anchors>
+						<Anchor relativeKey="$parent.CrafterName" point="LEFT" relativePoint="RIGHT" x="2"/>
+					</Anchors>
+					<Scripts>
+						<OnShow method="OnShow"/>
+						<OnHide method="OnHide"/>
+					</Scripts>
+				</Texture>
+				<Texture parentKey="LinkedAccountIcon" atlas="questlog-questtypeicon-group" mixin="CraftScan_LinkedAccountIconMixin" hidden="true">
+					<Size x="13" y="13"/>
+					<Anchors>
+						<!-- This anchor can be dynamically changed by PrimaryCrafterIcon OnShow -->
+						<Anchor relativeKey="$parent.CrafterName" point="LEFT" relativePoint="RIGHT" x="2"/>
+					</Anchors>
+					<Scripts>
+						<OnEnter method="OnEnter"/>
+						<OnLeave method="OnLeave"/>
+					</Scripts>
+				</Texture>
+				<FontString parentKey="ProfessionName" inherits="Number14FontWhite" justifyH="RIGHT" setAllPoints="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="RIGHT" x="-60"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="ProfessionIcon">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="RIGHT" x="-40"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnClick method="OnClick"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+
+	<!-- See the comment in OrderPage.lua onLoad() for why we can't be part of the professions frame. -->
+	<!-- <Frame name="CraftScanCraftingOrderPage" parent="ProfessionsFrame" setAllPoints="true" mixin="CraftScanCraftingOrderPageMixin" hidden="true"> -->
+	<Frame name="CraftScanCraftingOrderPage" parent="UIParent" setAllPoints="true" mixin="CraftScanCraftingOrderPageMixin" inherits="PortraitFrameTemplateNoCloseButton" hidden="true" toplevel="true">
+		<Size x="1105" y="658"/>
+		<Anchors>
+			<Anchor point="BOTTOMLEFT" relativeTo="CraftScanScannerMenuButton" relativePoint="TOP" x="0" y="0"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+		</Scripts>
+		<Frames>
+
+			<Button parentKey="CloseButton" inherits="UIPanelCloseButtonDefaultAnchors"/>
+
+			<Button parentKey="SettingsButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonUp,RightButtonUp" mixin="CraftScan_OpenSettingsButtonMixin" frameLevel="510">
+				<Size x="120" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="CraftScanCraftingOrderPage" relativePoint="TOPRIGHT" x="-32" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+
+			<Button parentKey="ReleaseNotesButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonUp" mixin="CraftScan_ReleaseNotesButtonMixin" frameLevel="510">
+				<Size x="120" y="22"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.SettingsButton" relativePoint="LEFT" x="-2" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+
+			<Frame parentKey="BrowseFrame" setAllPoints="true">
+				<Size x="1105" y="658"/>
+				<Frames>
+					<Frame parentKey="LeftPanel">
+						<Size x="300" y="505"/>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture parentKey="Background" atlas="Professions-background-summarylist" setAllPoints="true"/>
+								<Texture name="HeaderSeparator" parentKey="HeaderSeparator" atlas="Professions_Recipe_Hover" alpha="1">
+									<Size y="2" />
+									<Anchors>
+										<Anchor relativeKey="$parent" point="TOPLEFT" x="-10" y="-30"/>
+										<Anchor relativeKey="$parent" point="TOPRIGHT" x="-10" y="-30"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame parentKey="LinkAccountControls">
+								<Size x="300" y="35"/>
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" />
+									<Anchor point="BOTTOMLEFT" />
+								</Anchors>
+								<Frames>
+									<Frame parentKey="BackgroundNineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate">
+										<KeyValues>
+											<KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+										</KeyValues>
+										<Anchors>
+											<Anchor point="TOPLEFT"/>
+											<Anchor point="BOTTOMRIGHT"/>
+										</Anchors>
+									</Frame>
+
+									<Button parentKey="LinkAccountButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_LinkAccountButtonMixin">
+										<Size x="140" y="22"/>
+										<Anchors>
+											<Anchor point="BOTTOM" relativePoint="BOTTOM" x="0" y="6"/>
+										</Anchors>
+										<Scripts>
+											<OnShow method="OnShow"/>
+											<OnLoad method="OnLoad"/>
+											<OnClick method="OnClick"/>
+										</Scripts>
+									</Button>
+
+									<CheckButton parentKey="ProxyReceiveEnabled" inherits="CraftScan_ProxyEnabledTemplate" hidden="true">
+										<KeyValues>
+											<KeyValue key="key" value="proxy_receive_enabled" type="string"/>
+											<KeyValue key="tooltip" value="RECEIVE_PROXY_ORDERS_TOOLTIP" type="string"/>
+										</KeyValues>
+										<Anchors>
+											<Anchor point="BOTTOMLEFT" relativeKey="$parent.LinkAccountButton" relativePoint="TOPLEFT" x="0" y="0"/>
+										</Anchors>
+									</CheckButton>
+
+									<CheckButton parentKey="ProxySendEnabled" inherits="CraftScan_ProxyEnabledTemplate" hidden="true">
+										<KeyValues>
+											<KeyValue key="key" value="proxy_send_enabled" type="string"/>
+											<KeyValue key="tooltip" value="PROXY_ORDERS_TOOLTIP" type="string"/>
+										</KeyValues>
+										<Anchors>
+											<Anchor point="BOTTOMLEFT" relativeKey="$parent.ProxyReceiveEnabled" relativePoint="TOPLEFT" x="0" y="0"/>
+										</Anchors>
+									</CheckButton>
+								</Frames>
+							</Frame>
+
+							<Frame parentKey="CrafterList" mixin="CraftScan_CrafterListMixin">
+								<Size x="300" y="505"/>
+								<Anchors>
+									<Anchor point="TOPLEFT"/>
+									<Anchor point="BOTTOMLEFT" relativeKey="$parent.LinkAccountControls" relativePoint="TOPLEFT" />
+								</Anchors>
+								<Frames>
+									<Frame parentKey="BackgroundNineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate">
+										<KeyValues>
+											<KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+										</KeyValues>
+										<Anchors>
+											<Anchor point="TOPLEFT"/>
+											<Anchor point="BOTTOMRIGHT"/>
+										</Anchors>
+									</Frame>
+
+
+									<Button parentKey="CrafterListAllButton" inherits="CraftScanCrafterListElementTemplate" mixin="CraftScan_CrafterListAllButtonMixin">
+										<Size y="20"/>
+										<Anchors>
+											<Anchor point="TOPRIGHT" x="-23" y="-8"/>
+											<Anchor point="TOPLEFT" x="13" y="-8"/>
+										</Anchors>
+									</Button>
+									<Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.CrafterListAllButton" relativePoint="BOTTOMLEFT" x="-5" y="-7"/>
+											<Anchor point="BOTTOMRIGHT" x="-20" y="5"/>
+										</Anchors>
+									</Frame>
+									<EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="0" y="0"/>
+											<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+										</Anchors>
+									</EventFrame>
+								</Frames>
+								<Scripts>
+									<OnShow method="OnShow"/>
+								</Scripts>
+							</Frame>
+
+							<Frame parentKey="LinkedAccountList" mixin="CraftScan_LinkedAccountListMixin" hidden="true">
+								<Size x="300" y="105"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.CrafterList" relativePoint="BOTTOMLEFT" />
+									<Anchor point="BOTTOMLEFT" relativeKey="$parent.LinkAccountControls" relativePoint="TOPLEFT" />
+								</Anchors>
+								<Layers>
+									<Layer level="BACKGROUND">
+										<Texture name="HeaderSeparator" parentKey="HeaderSeparator" atlas="Professions_Recipe_Hover" alpha="1">
+											<Size y="2" />
+											<Anchors>
+												<Anchor relativeKey="$parent" point="TOPLEFT" x="-10" y="-30"/>
+												<Anchor relativeKey="$parent" point="TOPRIGHT" x="-10" y="-30"/>
+											</Anchors>
+										</Texture>
+									</Layer>
+									<Layer level="ARTWORK">
+										<FontString parentKey="Title" inherits="GameFontNormal">
+											<Size y="20" x="200"/>
+											<Anchors>
+												<Anchor point="TOPRIGHT" x="-23" y="-8"/>
+												<Anchor point="TOPLEFT" x="13" y="-8"/>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+								<Frames>
+									<Frame parentKey="BackgroundNineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate">
+										<KeyValues>
+											<KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+										</KeyValues>
+										<Anchors>
+											<Anchor point="TOPLEFT"/>
+											<Anchor point="BOTTOMRIGHT"/>
+										</Anchors>
+									</Frame>
+
+									<Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.Title" relativePoint="BOTTOMLEFT" x="-5" y="-7"/>
+											<Anchor point="BOTTOMRIGHT" x="-20" y="0"/>
+										</Anchors>
+									</Frame>
+									<EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="0" y="0"/>
+											<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="3"/>
+										</Anchors>
+									</EventFrame>
+								</Frames>
+								<Scripts>
+									<OnShow method="OnShow"/>
+								</Scripts>
+							</Frame>
+
+						</Frames>
+						<Anchors>
+							<Anchor point="TOPLEFT" x="5" y="-92"/>
+							<Anchor point="BOTTOMLEFT" y="5"/>
+						</Anchors>
+					</Frame>
+
+					<Frame parentKey="OrderList">
+						<Size y="250"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.LeftPanel" relativePoint="TOPRIGHT"/>
+							<Anchor point="TOPRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT"/>
+							<!-- <Anchor point="BOTTOMLEFT" relativeKey="$parent.LeftPanel" relativePoint="RIGHT"/> -->
+							<!-- <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="RIGHT"/> -->
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture parentKey="Background" atlas="auctionhouse-background-index" useAtlasSize="false">
+									<Anchors>
+										<Anchor point="TOPLEFT" x="3" y="-22"/>
+										<Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame parentKey="HeaderContainer">
+								<Size y="20"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="3" y="-1"/>
+									<Anchor point="TOPRIGHT" x="-25" y="-1"/>
+								</Anchors>
+							</Frame>
+							<Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate">
+								<KeyValues>
+									<KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+								</KeyValues>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="-19"/>
+									<Anchor point="BOTTOMRIGHT" x="-22" y="0"/>
+								</Anchors>
+							</Frame>
+							<Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
+									<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT" x="-14" y="0"/>
+								</Anchors>
+							</Frame>
+							<EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="0" y="-2"/>
+									<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="18"/>
+								</Anchors>
+							</EventFrame>
+						</Frames>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString parentKey="ResultsText" inherits="GameFontNormal" hidden="true">
+									<Anchors>
+										<Anchor point="TOP" relativeKey="$parent.ScrollBox" relativePoint="TOP" x="0" y="-20"/>
+										<Anchor point="LEFT" x="45"/>
+										<Anchor point="RIGHT" x="-67"/>
+									</Anchors>
+									<Shadow>
+										<Offset>
+											<AbsDimension x="1" y="-1"/>
+										</Offset>
+										<Color r="0" g="0" b="0"/>
+									</Shadow>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+
+					<Button parentKey="AddonToggleButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_AddonToggleButtonMixin" motionScriptsWhileDisabled="true">
+						<Size x="120" y="22"/>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.LeftPanel" relativePoint="TOPLEFT" x="5" y="5"/>
+						</Anchors>
+						<Scripts>
+							<OnClick method="OnClick"/>
+							<OnEnter method="OnEnter"/>
+							<OnLeave method="OnLeave"/>
+						</Scripts>
+					</Button>
+
+					<Button parentKey="AutoReplyButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_AutoReplyButtonMixin" motionScriptsWhileDisabled="true">
+						<Size x="140" y="22"/>
+
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.AddonToggleButton" relativePoint="TOPRIGHT" x="5" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+							<OnClick method="OnClick"/>
+							<OnEnter method="OnEnter"/>
+							<OnLeave method="OnLeave"/>
+						</Scripts>
+					</Button>
+
+					<Button parentKey="CustomGreetingButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_CustomGreetingButtonMixin">
+						<Size x="120" y="22"/>
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeKey="$parent.OrderList" relativePoint="TOPRIGHT" x="-5" y="5"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+							<OnClick method="OnClick"/>
+						</Scripts>
+					</Button>
+
+					<CheckButton parentKey="BusyCheckButton" mixin="CraftScan_BusyCheckButtonMixin">
+						<Size x="18" y="18"/>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+							<OnClick method="OnClick"/>
+							<OnEnter method="OnEnter"/>
+							<OnLeave method="OnLeave"/>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" inherits="GameFontNormal" parentKey="Text">
+									<Anchors>
+										<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
+									</Anchors>
+									<Scripts>
+										<OnLoad function="UICheckButtonFontString_SetParentKeyAlias"/>
+									</Scripts>
+								</FontString>
+							</Layer>
+						</Layers>
+						<NormalTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+						<PushedTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+						<CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
+						<DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativeKey="$parent.CustomGreetingButton" relativePoint="TOPLEFT" x="0" y="0"/>
+						</Anchors>
+					</CheckButton>
+
+					<DropdownButton parentKey="ResetAnalyticsButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_ResetAnalyticsButtonMixin">
+						<Size x="120" y="22"/>
+						<Anchors>
+							<Anchor point="RIGHT" relativeKey="$parent.CustomGreetingButton" relativePoint="LEFT" x="-5" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+						</Scripts>
+					</DropdownButton>
+
+					<DropdownButton parentKey="CustomExplanationsButton" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonDown" mixin="CraftScan_CustomExplanationsButtonMixin">
+						<Size x="120" y="22"/>
+						<Anchors>
+							<Anchor point="RIGHT" relativeKey="$parent.ResetAnalyticsButton" relativePoint="LEFT" x="-5" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad method="OnLoad"/>
+						</Scripts>
+					</DropdownButton>
+
+					<Frame parentKey="AnalyticsTable" mixin="CraftScanAnalyticsTableMixin">
+						<Size x="300" y="250"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.OrderList" relativePoint="BOTTOMLEFT" />
+							<Anchor point="TOPRIGHT" relativeKey="$parent.OrderList" relativePoint="BOTTOMRIGHT" />
+							<Anchor point="BOTTOMLEFT" y="6" />
+							<Anchor point="BOTTOMRIGHT" y="6" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture parentKey="Background" atlas="auctionhouse-background-index" useAtlasSize="false">
+									<Anchors>
+										<Anchor point="TOPLEFT" x="3" y="-22"/>
+										<Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+						<Frames>
+							<Frame parentKey="HeaderContainer">
+								<Size y="20"/>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="3" y="-1"/>
+									<Anchor point="TOPRIGHT" x="-25" y="-1"/>
+								</Anchors>
+							</Frame>
+							<Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate">
+								<KeyValues>
+									<KeyValue key="layoutType" value="InsetFrameTemplate" type="string"/>
+								</KeyValues>
+								<Anchors>
+									<Anchor point="TOPLEFT" x="0" y="-19"/>
+									<Anchor point="BOTTOMRIGHT" x="-22" y="0"/>
+								</Anchors>
+							</Frame>
+							<Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.Background" relativePoint="TOPLEFT"/>
+									<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Background" relativePoint="BOTTOMRIGHT" x="-14" y="0"/>
+								</Anchors>
+							</Frame>
+							<EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="0" y="-2"/>
+									<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="2"/>
+								</Anchors>
+							</EventFrame>
+						</Frames>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString parentKey="ResultsText" inherits="GameFontNormal" hidden="true">
+									<Anchors>
+										<Anchor point="TOP" relativeKey="$parent.ScrollBox" relativePoint="TOP" x="0" y="-20"/>
+										<Anchor point="LEFT" x="45"/>
+										<Anchor point="RIGHT" x="-67"/>
+									</Anchors>
+									<Shadow>
+										<Offset>
+											<AbsDimension x="1" y="-1"/>
+										</Offset>
+										<Color r="0" g="0" b="0"/>
+									</Shadow>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnShow method="OnShow"/>
+						</Scripts>
+					</Frame>
+
+					<Button parentKey="ResizeButton" mixin="CraftScan_ResizeOrderListButtonMixin" frameStrata="HIGH" toplevel="true" hidden="false">
+						<Size x="16" y="16"/>
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeKey="$parent.OrderList" x="-5" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnMouseDown method="OnMouseDown"/>
+							<OnMouseUp method="OnMouseUp"/>
+						</Scripts>
+						<NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
+						<HighlightTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
+						<PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
+					</Button>
+
+				</Frames>
+			</Frame>
+		</Frames>
+	</Frame>
+
+	<Button name="CraftScan_OpenChatOrdersButtonTemplate" inherits="CraftScan_TabButtonTemplate" mixin="CraftScan_OpenChatOrdersButtonMixin" virtual="true">
+		<Scripts>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Button name="CraftScan_LinkedAccountListElementTemplate" mixin="CraftScan_LinkedAccountListElementMixin" registerForClicks="RightButtonUp" virtual="true">
+		<Size y="22"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="StatusIcon">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="4" y="-3"/>
+					</Anchors>
+				</Texture>
+
+				<Texture name="HoverBackground" parentKey="HoverBackground" atlas="Professions_Recipe_Hover" useAtlasSize="true" alpha="0.5" hidden="true">
+					<Anchors>
+						<Anchor relativeKey="$parent" point="TOPLEFT" x="-10"/>
+						<Anchor relativeKey="$parent" point="BOTTOMRIGHT" x="-5"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="AccountName" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" x="20"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="LinkState" inherits="Number14FontWhite" justifyH="RIGHT" setAllPoints="true">
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="RIGHT" x="-10"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+</Ui>

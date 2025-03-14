@@ -1,0 +1,138 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame
+        name="ItemUpgradeTipUpgradeTemplate"
+        virtual="true"
+        parent="UIParent"
+        mixin="ItemUpgradeTipDisplayMixin"
+        topLevel="true"
+        hidden="true"
+        movable="true"
+        inherits="DefaultPanelTemplate"
+        clampedToScreen="true"
+    >
+        <Size x="700" y="530" />
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnShow method="OnShow" />
+            <OnHide method="OnHide" />
+            <OnDragStart>
+                self:StartMoving()
+            </OnDragStart>
+            <OnDragStop>
+                self:StopMovingOrSizing()
+            </OnDragStop>
+        </Scripts>
+
+        <Anchors>
+            <Anchor point="CENTER" />
+        </Anchors>
+
+        <Frames>
+            <Frame parentKey="TitleContainer" frameLevel="510">
+                <Size x="200" y="20"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="35" y="-1"/>
+                    <Anchor point="TOPRIGHT" x="-29" y="-1"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitleText" inherits="GameFontNormal" parentKey="TitleText" wordwrap="false">
+                            <Anchors>
+                                <Anchor point="TOP" x="0" y="-5"/>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentBreadcrumb" inherits="GameFontNormal" parentKey="Breadcrumb" wordwrap="false" text="Settings">
+                            <Anchors>
+                                <Anchor point="RIGHT" relativeKey="$parent.TitleText" relativePoint="RIGHT" x="0" />
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButtonDefaultAnchors"/>
+                    
+            <Frame parentKey="MythicPlusFrame" inherits="ItemUpgradeTipMythicPlusDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="MythicPlus" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
+                </Anchors>
+            </Frame>
+
+            <Frame parentKey="RaidFrame" inherits="ItemUpgradeTipRaidDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Raid" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
+                </Anchors>
+            </Frame>
+
+            <Frame parentKey="UpgradeFrame" inherits="ItemUpgradeTipUpgradeDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Upgrade" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
+                </Anchors>
+            </Frame>
+
+            <Frame parentKey="CraftingFrame" inherits="ItemUpgradeTipCraftingDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Crafting" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="50" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipInfoDisplayTemplate" parentArray="Views">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Info" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="20" y="-50" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="20" />
+                </Anchors>
+            </Frame>
+
+            <Button name="$parentMythicPlusTab" parentKey="MythicPlusTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_MYTHICPLUS">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="MythicPlus" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_MYTHICPLUS" type="global" />
+                </KeyValues>
+            </Button>
+            <Button name="$parentRaidTab" parentKey="RaidTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_RAID">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Raid" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_RAID" type="global" />
+                </KeyValues>
+            </Button>
+            <Button name="$parentUpgradeTab" parentKey="UpgradeTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_UPGRADE_TRACKS">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Upgrade" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_UPGRADE_TRACKS" type="global" />
+                </KeyValues>
+            </Button>
+            <Button name="$parentCraftingTab" parentKey="CraftingTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_CRAFTING">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Crafting" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_CRAFTING" type="global" />
+                </KeyValues>
+            </Button>
+            <Button name="$parentInfoTab" parentKey="InfoTab" inherits="ItemUpgradeTipTabButtonTemplate" text="ITEMUPGRADETIP_L_INFO">
+                <KeyValues>
+                    <KeyValue key="displayMode" value="Info" type="string" />
+                    <KeyValue key="title" value="ITEMUPGRADETIP_L_INFO" type="global" />
+                </KeyValues>
+            </Button>
+        </Frames>
+    </Frame>
+</Ui>

@@ -18,26 +18,40 @@ function mod:GetOptions()
 		423588, -- Barrier of Light
 		423664, -- Embrace the Light
 		{444546, "SAY"}, -- Purify
+		425556, -- Sanctified Ground
 		{444608, "HEALER"}, -- Inner Fire
 		451605, -- Holy Flame
+		-- Mythic
+		{428169, "CASTBAR", "CASTBAR_COUNTDOWN"}, -- Blinding Light
+	}, {
+		[428169] = CL.mythic,
 	}
 end
 
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "BarrierOfLight", 423588)
 	self:Log("SPELL_AURA_REMOVED", "BarrierOfLightRemoved", 423588)
-	self:Log("SPELL_INTERRUPT", "EmbraceTheLightInterrupted", "*")
+	self:Log("SPELL_INTERRUPT", "EmbraceTheLightInterrupted", 423664)
 	self:Log("SPELL_CAST_SUCCESS", "Purify", 444546)
 	self:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER") -- Purify
+	self:Log("SPELL_PERIODIC_DAMAGE", "SanctifiedGroundDamage", 425556)
+	self:Log("SPELL_PERIODIC_MISSED", "SanctifiedGroundDamage", 425556)
 	self:Log("SPELL_CAST_START", "InnerFire", 444608)
 	self:Log("SPELL_CAST_START", "HolyFlame", 451605)
+
+	-- Mythic
+	self:Log("SPELL_CAST_START", "BlindingLight", 428169)
 end
 
 function mod:OnEngage()
 	self:SetStage(1)
-	self:CDBar(451605, 7.1) -- Holy Flame
+	self:CDBar(451605, 6.3) -- Holy Flame
 	self:CDBar(444546, 13.1) -- Purify
-	self:CDBar(444608, 15.6) -- Inner Fire
+	if self:Mythic() then
+		self:CDBar(428169, 13.8) -- Blinding Light
+	end
+	-- cast at 100 energy: starts at 25 energy. 15s energy gain + delay
+	self:CDBar(444608, 15.4) -- Inner Fire
 end
 
 function mod:VerifyEnable(unit)
@@ -57,6 +71,9 @@ do
 		self:StopBar(444546) -- Purify
 		self:StopBar(444608) -- Inner Fire
 		self:StopBar(451605) -- Holy Flame
+		if self:Mythic() then
+			self:StopBar(428169) -- Blinding Light
+		end
 		self:SetStage(2)
 		self:Message(args.spellId, "cyan", CL.percent:format(50, args.spellName))
 		self:PlaySound(args.spellId, "long")
@@ -70,39 +87,67 @@ do
 end
 
 function mod:EmbraceTheLightInterrupted(args)
-	if args.extraSpellId == 423664 then -- Embrace the Light
-		self:Message(423664, "green", CL.interrupted_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
-		self:PlaySound(423664, "info")
-		self:SetStage(1)
-		self:CDBar(444546, 6.3) -- Purify
-		self:CDBar(444608, 9.9) -- Inner Fire
-		self:CDBar(451605, 12.3) -- Holy Flame
+	self:Message(423664, "green", CL.interrupted_by:format(args.extraSpellName, self:ColorName(args.sourceName)))
+	self:SetStage(1)
+	if self:Mythic() then
+		self:CDBar(451605, 13.4) -- Holy Flame
+		-- cast at 100 energy: 20s energy gain
+		self:CDBar(444608, 20.0) -- Inner Fire
+		self:CDBar(444546, 20.1) -- Purify
+		self:CDBar(428169, 23.1) -- Blinding Light
+	else -- Normal, Heroic
+		self:CDBar(444546, 9.1) -- Purify
+		self:CDBar(451605, 9.8) -- Holy Flame
+		-- cast at 100 energy: 20s energy gain
+		self:CDBar(444608, 20.0) -- Inner Fire
 	end
+	self:PlaySound(423664, "info")
 end
 
 function mod:Purify(args)
 	self:Message(args.spellId, "orange", CL.incoming:format(args.spellName))
-	self:PlaySound(args.spellId, "alarm")
 	self:CDBar(args.spellId, 28.8)
+	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:CHAT_MSG_RAID_BOSS_WHISPER(_, msg)
 	if msg:find("425556", nil, true) then -- Purify
 		-- [CHAT_MSG_RAID_BOSS_WHISPER] |TInterface\\ICONS\\Ability_Paladin_TowerofLight.BLP:20|t %s targets you with |cFFFF0000|Hspell:425556|h[Purifying Light]|h|r!#Eternal Flame
 		self:PersonalMessage(444546)
-		self:PlaySound(444546, "warning")
 		self:Say(444546, nil, nil, "Purify")
+		self:PlaySound(444546, "warning")
+	end
+end
+
+do
+	local prev = 0
+	function mod:SanctifiedGroundDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 2 then
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
+		end
 	end
 end
 
 function mod:InnerFire(args)
 	self:Message(args.spellId, "red")
-	self:PlaySound(args.spellId, "info")
+	-- cast at 100 energy: 2s cast time + 20s energy gain + delay
 	self:CDBar(args.spellId, 22.6)
+	self:PlaySound(args.spellId, "info")
 end
 
 function mod:HolyFlame(args)
 	self:Message(args.spellId, "yellow")
-	self:PlaySound(args.spellId, "alert")
 	self:CDBar(args.spellId, 12.1)
+	self:PlaySound(args.spellId, "alarm")
+end
+
+-- Mythic
+
+function mod:BlindingLight(args)
+	self:Message(args.spellId, "red")
+	self:CastBar(args.spellId, 4)
+	self:CDBar(args.spellId, 24.2)
+	self:PlaySound(args.spellId, "warning")
 end

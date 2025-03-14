@@ -2,11 +2,12 @@
 BigWigs:AddSounds("Chopper Redhook", {
 	[257288] = "alarm",
 	[257326] = "alarm",
-	[257348] = "alert",
-	[257459] = {"alarm","warning"},
-	[257585] = "warning",
+	[257348] = {"alarm","alert"},
+	[257459] = "warning",
+	[257585] = "alarm",
+	[272662] = "info",
 	[273721] = "info",
-	["adds"] = "long",
+	[274002] = "long",
 })
 
 BigWigs:AddSounds("Sergeant Bainbridge", {
@@ -14,9 +15,9 @@ BigWigs:AddSounds("Sergeant Bainbridge", {
 	[260924] = "alarm",
 	[260954] = "warning",
 	[261428] = "alert",
+	[274002] = "long",
 	[277965] = {"alert","info"},
 	[279761] = "alert",
-	["adds"] = "long",
 })
 
 BigWigs:AddSounds("Dread Captain Lockwood", {
@@ -42,23 +43,31 @@ BigWigs:AddSounds("Viq'Goth", {
 	[269456] = "warning",
 	[270185] = "alarm",
 	[270590] = "warning",
-	[275014] = "warning",
+	[275014] = "alert",
 	["stages"] = "long",
 })
 
 BigWigs:AddSounds("Siege of Boralus Trash", {
+	[256616] = "alert",
 	[256627] = "alarm",
-	[256640] = "alarm",
+	[256640] = {"alarm","underyou"},
+	[256709] = "alert",
 	[256957] = {"alert","warning"},
+	[257168] = "alert",
 	[257169] = "warning",
 	[257170] = "long",
-	[257288] = "alert",
+	[257270] = "alarm",
+	[257288] = "alarm",
+	[257732] = "alert",
 	[268260] = "alarm",
 	[272421] = "info",
 	[272546] = "alarm",
 	[272571] = "alert",
+	[272588] = "alert",
+	[272662] = "info",
 	[272711] = "info",
 	[275826] = {"alarm","alert"},
 	[275835] = "info",
 	[454437] = "alarm",
+	[454440] = "alert",
 })

@@ -159,6 +159,7 @@ if RSA.IsRetail() then
 				[281402] = true, -- Dazar'alor
 				[344597] = true, -- Oribos
 				[395289] = true, -- Valdrakken
+				[446534] = true, -- Dornogal
 			},
 			configDisplay = {
 				isDefault = true,
@@ -263,6 +264,7 @@ if RSA.IsRetail() then
 				[281404] = true, -- Dazar'alor
 				[344587] = true, -- Oribos
 				[395277] = true, -- Valdrakken
+				[446540] = true, -- Dornogal
 			},
 			configDisplay = {
 				isDefault = true,

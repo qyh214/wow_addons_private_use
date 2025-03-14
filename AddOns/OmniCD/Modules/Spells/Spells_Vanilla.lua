@@ -207,7 +207,6 @@ E.spell_db = {
 		{ spellID = 26297, duration = 180, type = "racial", race = 8 },
 		{ spellID = 20572, duration = 120, type = "racial", race = 2 },
 		{ spellID = 20589, duration = 105, type = "racial", race = 7 },
-		{ spellID = 28880, duration = 180, type = "racial", race = 11 },
 		{ spellID = 20600, duration = 180, type = "racial", race = 1 },
 		{ spellID = 20580, duration = 10, type = "racial", race = 4 },
 		{ spellID = 20594, duration = 180, type = "racial", race = 3 },
@@ -220,7 +219,6 @@ E.spell_db = {
 
 E.buffFix = E.BLANK
 E.buffFixNoCLEU = E.BLANK
-E.spellNameToID = {}
 E.summonedBuffDuration = E.BLANK
 
 E.spellDefaults = {
@@ -244,7 +242,7 @@ E.spellDefaults = {
 	19577,
 	19503,
 	19386,
-	34490,
+
 	19263,
 	23989,
 	19574,

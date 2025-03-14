@@ -1,3 +1,20 @@
+# MythicPlusTimer 6.4.0
+
+- Update for WoW 11.1.0
+
+# MythicPlusTimer 6.3.1
+
+- Fixed configuration toggle slash command
+
+# MythicPlusTimer 6.3.0
+
+- Update chest timers according to challengers peril (By melisekm (https://github.com/melisekm), thanks)
+- Update for WoW 11.0.5
+
+# MythicPlusTimer 6.2.0
+
+- Re-Enable absolute enemy forces number if available
+
 # MythicPlusTimer 6.1.0
 
 - Re-Enable % value in the enemy tooltips (Requires MDT - https://github.com/Nnoggie/MythicDungeonTools)

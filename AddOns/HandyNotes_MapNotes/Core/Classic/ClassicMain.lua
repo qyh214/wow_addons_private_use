@@ -62,7 +62,6 @@ function pluginHandler:OnEnter(uiMapId, coord)
 
 	local instances = { strsplit("\n", nodeData.name) }
 
-
 	updateextraInformation()
 	
 	for i, v in pairs(instances) do
@@ -226,7 +225,7 @@ do
 
       ns.paths = value.type == "PathO" or value.type == "PathRO" or value.type == "PathLO" or value.type == "PathU" or value.type == "PathLU" or value.type == "PathRU" or value.type == "PathL" or value.type == "PathR"
       
-      ns.professions = value.type == "Alchemy" or value.type == "Engineer" or value.type == "Cooking" or value.type == "Fishing" or value.type == "Archaeology" or value.type == "Mining" or value.type == "Jewelcrafting" or value.type == "Blacksmith" or value.type == "Leatherworking" or value.type == "Skinning" or value.type == "Tailoring" or value.type == "Herbalism" or value.type == "Inscription" or value.type == "Enchanting" or value.type == "FishingClassic" or value.type == "ProfessionOrders"
+      ns.professions = value.type == "Alchemy" or value.type == "Engineer" or value.type == "Cooking" or value.type == "Fishing" or value.type == "Archaeology" or value.type == "Mining" or value.type == "Jewelcrafting" or value.type == "Blacksmith" or value.type == "Leatherworking" or value.type == "Skinning" or value.type == "Tailoring" or value.type == "Herbalism" or value.type == "Inscription" or value.type == "Enchanting" or value.type == "FirstAid" or value.type == "FishingClassic" or value.type == "ProfessionOrders"
 
       ns.instances = value.type == "Dungeon" or value.type == "Raid" or value.type == "PassageDungeon" or value.type == "PassageDungeonRaidMulti" or value.type == "PassageRaid" or value.type == "VInstance" or value.type == "PassageDungeon" or value.type == "Multiple" or value.type == "LFR" or value.type == "Gray"
 
@@ -234,6 +233,8 @@ do
 
       ns.capitalgenerals = value.type == "Exit" or value.type == "PassageUpL" or value.type == "PassageDownL" or value.type == "PassageRightL" or value.type == "PassageLeftL" or value.type == "Innkeeper" or value.type == "Auctioneer" or value.type == "Bank" or value.type == "MNL" or value.type == "Barber" or value.type == "Transmogger" or value.type == "ItemUpgrade" or value.type == "PvPVendor" or value.type == "PvEVendor" or value.type == "MNL" or value.type == "DragonFlyTransmog" or value.type == "Catalyst" or value.type == "PathO" or value.type == "PathRO" or value.type == "PathLO" or value.type == "PathU" or value.type == "PathLU" or value.type == "PathRU" or value.type == "PathL" or value.type == "PathR" or value.type == "BlackMarket" or value.type == "Mailbox"
 
+      ns.classes = value.type == "Druid" or value.type == "Hunter" or value.type == "Mage" or value.type == "Paladin" or value.type == "Priest" or value.type == "Rogue" or value.type == "Shaman" or value.type == "Warlock" or value.type == "Warrior"
+      
       ns.CapitalIDs =
         --Cataclysm
         WorldMapFrame:GetMapID() == 1454 or -- Orgrimmar
@@ -348,6 +349,12 @@ do
         alpha = db.MinimapCapitalsInstanceAlpha
       end
 
+      -- Capitals Classes icons
+      if ns.CapitalMiniMapIDs and ns.classes and (value.showOnMinimap == true) then
+        scale = db.MinimapCapitalsClassesScale
+        alpha = db.MinimapCapitalsClassesAlpha
+      end
+
       -- Capitals Minimap General (Innkeeper/Exit/Passage) icons
       if ns.CapitalMiniMapIDs and ns.capitalgenerals and (value.showOnMinimap == true) then
         scale = db.MinimapCapitalsGeneralScale
@@ -370,13 +377,14 @@ do
       if ns.CapitalIDs and ns.instances and (value.showOnMinimap == false) then
         scale = db.CapitalsInstanceScale
         alpha = db.CapitalsInstanceAlpha
-      end   
-      
-      if WorldMapFrame:GetMapID() == 2274 then -- PTR: Khaz Algar - The War Within. Continent Scale atm on Beta a Zone not a Continent!!
-        scale = db.continentScale
-        alpha = db.continentAlpha
       end
 
+      -- Capitals Classes icons
+      if ns.CapitalIDs and ns.classes and (value.showOnMinimap == false) then
+        scale = db.CapitalsClassesScale
+        alpha = db.CapitalsClassesAlpha
+      end
+      
       if t.uiMapId == 947 then-- Azeroth World Map
         scale = db.azerothScale
         alpha = db.azerothAlpha
@@ -542,7 +550,6 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() 
                    or WorldMapFrame:GetMapID() == 1947 or WorldMapFrame:GetMapID() == 1457 or WorldMapFrame:GetMapID() == 1453 or WorldMapFrame:GetMapID() == 1455
                    or WorldMapFrame:GetMapID() == 1955 or WorldMapFrame:GetMapID() == 86 or WorldMapFrame:GetMapID() == 125 or WorldMapFrame:GetMapID() == 126 
 
-
   StaticPopupDialogs["Delete_Icon?"] = {
     text = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. ": " .. L["Delete this icon"] .. " ? " .. TextIconMNL4:GetIconString(),
     button1 = YES,
@@ -694,7 +701,6 @@ local Addon = CreateFrame("Frame")
 Addon:RegisterEvent("PLAYER_LOGIN")
 Addon:SetScript("OnEvent", function(self, event, ...) return self[event](self, ...)end)
 
-
 local function updateStuff()
   updateextraInformation()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
@@ -791,6 +797,12 @@ function Addon:PLAYER_LOGIN()
   Addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   Addon:RegisterEvent("ZONE_CHANGED")
   Addon:RegisterEvent("ZONE_CHANGED_INDOORS")
+
+  -- Check for Class
+  ns.AutomaticClassDetectionCapital()
+
+  -- Check for Professions
+  ns.AutomaticProfessionDetection()
 
   if ns.Addon.db.profile.activate.HideMMB then -- minimap button
     MNMMBIcon:Hide("MNMiniMapButton")

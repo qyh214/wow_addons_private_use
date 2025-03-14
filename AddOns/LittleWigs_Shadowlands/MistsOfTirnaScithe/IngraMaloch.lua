@@ -68,6 +68,22 @@ function mod:OnEngage()
 	self:CDBar(323149, 35.3, CL.count:format(self:SpellName(323149), embraceDarknessCount)) -- Embrace Darkness
 end
 
+function mod:VerifyEnable(_, mobId)
+	if mobId == 164804 then -- Droman Oulfarran is friendly after the fight
+		local info = C_ScenarioInfo.GetCriteriaInfo(1)
+		return info and not info.completed
+	end
+	return true
+end
+
+function mod:OnWin()
+	local trashMod = BigWigs:GetBossModule("Mists of Tirna Scithe Trash", true)
+	if trashMod then
+		trashMod:Enable()
+		trashMod:IngraMalochDefeated()
+	end
+end
+
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
@@ -108,11 +124,12 @@ do
 end
 
 function mod:DromansWrath(args)
-	self:Message(args.spellId, "green")
-	self:PlaySound(args.spellId, "long")
+	self:Message(args.spellId, "green", CL.casting:format(args.spellName))
 end
 
 function mod:DromansWrathApplied(args)
+	self:Message(args.spellId, "green", CL.onboss:format(args.spellName))
+	self:PlaySound(args.spellId, "long")
 	self:StopBar(CL.count:format(self:SpellName(323149), embraceDarknessCount))
 	self:SetStage(2)
 	self:CastBar(args.spellId, 15)

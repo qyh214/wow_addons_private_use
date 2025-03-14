@@ -11,6 +11,7 @@ local GetInventoryItemQuality, GetInventoryItemID = GetInventoryItemQuality, Get
 local GetTalentInfoClassic = GetTalentInfo
 local C_SpecializationInfo_GetInspectSelectedPvpTalent
 local GetItemInfo, GetItemInfoInstant  = C_Item and C_Item.GetItemInfo or GetItemInfo,  C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded
 if ExRT.isClassic then
 	GetInspectSpecialization = function () return 0 end
 	if not ExRT.isCata then
@@ -197,6 +198,21 @@ local function CheckForSuccesInspect(name)
 	end
 end
 
+
+local function forbidden()end
+local exec_env = setmetatable({}, { __index = function(t, k)
+	if k == "_G" then
+		return t
+	elseif k == "ShowUIPanel" then
+		return forbidden
+	else
+		return _G[k]
+	end
+end})
+
+local rereg_auto = nil
+local rereg_auto2 = nil
+
 local lastCheckNext = {}
 local inspectLastTime = 0
 local function InspectNext()
@@ -205,7 +221,7 @@ local function InspectNext()
 	end
 	local nowTime = GetTime()
 	for name,timeAdded in pairs(module.db.inspectQuery) do
-		if name and UnitName(name) and (not ExRT.isClassic or (not InCombatLockdown() and CheckInteractDistance(name,1))) and CanInspect(name) and (not lastCheckNext[name] or nowTime - lastCheckNext[name] > 30) and (ExRT.isClassic or (select(4,UnitPosition'player') == select(4,UnitPosition(name)))) then
+		if name and UnitName(name) and (not ExRT.isClassic or (not InCombatLockdown() and CheckInteractDistance(name,1))) and CanInspect(name) and (not lastCheckNext[name] or nowTime - lastCheckNext[name] > 30) then
 			lastCheckNext[name] = nowTime
 			if ExRT.isLK then
 				MuteSoundFile(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
@@ -218,12 +234,45 @@ local function InspectNext()
 			if (VMRT and VMRT.InspectViewer and VMRT.InspectViewer.EnableA4ivs) and not module.db.inspectDBAch[name] and not ExRT.isClassic then
 				if AchievementFrameComparison then
 					AchievementFrameComparison:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
-					ExRT.F.Timer(AchievementFrameComparison.RegisterEvent, inspectForce and 1 or 2.5, AchievementFrameComparison, "INSPECT_ACHIEVEMENT_READY")
+					module.db.blizzinterfaceunloaded = true
+					if rereg_auto then
+						rereg_auto:Cancel()
+					end
+					rereg_auto = C_Timer.NewTimer(10,function() 
+						if module.db.blizzinterfaceunloaded then
+							AchievementFrameComparison:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
+						end
+						rereg_auto = nil
+					end)
 				end
-				if ACHIEVEMENT_FUNCTIONS and not ACHIEVEMENT_FUNCTIONS.categoryIndex then ACHIEVEMENT_FUNCTIONS.categoryIndex = 1 end
 
-				ClearAchievementComparisonUnit()
-				SetAchievementComparisonUnit(name)
+				if (AchievementFrame_DisplayComparison and not ExRT.isClassic and false) then
+					local func = AchievementFrame_DisplayComparison
+					local def_env = getfenv(func)
+					setfenv(func, exec_env)
+					func(name)
+					setfenv(func, def_env)
+					if AchievementFrame_DisplayComparison:IsShown() then
+						HideUIPanel(AchievementFrame_DisplayComparison)
+					end
+				else
+					ClearAchievementComparisonUnit()
+					SetAchievementComparisonUnit(name)
+				end
+			end
+
+			if InspectPVPFrame and not INSPECTED_UNIT then
+				InspectPVPFrame:UnregisterEvent("INSPECT_HONOR_UPDATE")
+				module.db.blizzinterfaceunloaded2 = true
+				if rereg_auto2 then
+					rereg_auto2:Cancel()
+				end
+				rereg_auto2 = C_Timer.NewTimer(10,function() 
+					if module.db.blizzinterfaceunloaded2 then
+						InspectPVPFrame:RegisterEvent("INSPECT_HONOR_UPDATE")
+					end
+					rereg_auto2 = nil
+				end)
 			end
 
 			module.db.inspectQuery[name] = nil
@@ -656,12 +705,12 @@ end
 
 function module:Enable()
 	module:RegisterTimer()
-	module:RegisterEvents('PLAYER_SPECIALIZATION_CHANGED','INSPECT_READY','UNIT_INVENTORY_CHANGED','PLAYER_EQUIPMENT_CHANGED','GROUP_ROSTER_UPDATE','ZONE_CHANGED_NEW_AREA','INSPECT_ACHIEVEMENT_READY','CHALLENGE_MODE_START','ENCOUNTER_START','ENCOUNTER_END')
+	module:RegisterEvents('PLAYER_SPECIALIZATION_CHANGED','INSPECT_READY','UNIT_INVENTORY_CHANGED','PLAYER_EQUIPMENT_CHANGED','GROUP_ROSTER_UPDATE','ZONE_CHANGED_NEW_AREA','INSPECT_ACHIEVEMENT_READY','CHALLENGE_MODE_START','ENCOUNTER_START','ENCOUNTER_END','UNIT_SPELLCAST_SUCCEEDED')
 	module:RegisterAddonMessage()
 end
 function module:Disable()
 	module:UnregisterTimer()
-	module:UnregisterEvents('PLAYER_SPECIALIZATION_CHANGED','INSPECT_READY','UNIT_INVENTORY_CHANGED','PLAYER_EQUIPMENT_CHANGED','GROUP_ROSTER_UPDATE','ZONE_CHANGED_NEW_AREA','INSPECT_ACHIEVEMENT_READY','CHALLENGE_MODE_START','ENCOUNTER_START','ENCOUNTER_END')
+	module:UnregisterEvents('PLAYER_SPECIALIZATION_CHANGED','INSPECT_READY','UNIT_INVENTORY_CHANGED','PLAYER_EQUIPMENT_CHANGED','GROUP_ROSTER_UPDATE','ZONE_CHANGED_NEW_AREA','INSPECT_ACHIEVEMENT_READY','CHALLENGE_MODE_START','ENCOUNTER_START','ENCOUNTER_END','UNIT_SPELLCAST_SUCCEEDED')
 	module:UnregisterAddonMessage()
 end
 
@@ -721,6 +770,36 @@ function module.main:PLAYER_SPECIALIZATION_CHANGED(arg)
 
 		module.db.inspectQuery[name] = GetTime()
 		module.db.inspectNotItemsOnly[name] = true
+	end
+end
+
+function module.main:UNIT_SPELLCAST_SUCCEEDED(unitID,castGUID,spellID)
+	if unitID and (spellID == 384255 or spellID == 200749) and UnitName(unitID) then
+		local name = UnitCombatlogname(unitID)
+
+		module:AddToQueue(name) 
+
+		--spec change
+		if spellID == 200749 then
+			--------> ExCD2
+			VMRT.ExCD2.gnGUIDs[name] = nil
+	
+			local _,class = UnitClass(name)
+			if cooldownsModule.db.spell_talentsList[class] then
+				for specID,specTalents in pairs(cooldownsModule.db.spell_talentsList[class]) do
+					for _,spellID in pairs(specTalents) do
+						if type(spellID) == "number" then
+							cooldownsModule.db.session_gGUIDs[name] = -spellID
+						end
+					end
+				end
+			end
+	
+			cooldownsModule:ClearSessionDataReason(name,"talent","pvptalent","autotalent")
+	
+			cooldownsModule:UpdateAllData()
+			--------> / ExCD2
+		end
 	end
 end
 
@@ -1134,6 +1213,14 @@ do
 	local lastInspectTime,lastInspectGUID = 0
 	module.db.acivementsIDs = {} 
 	function module.main:INSPECT_ACHIEVEMENT_READY(guid)
+		if module.db.blizzinterfaceunloaded and AchievementFrameComparison then
+			AchievementFrameComparison:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
+			module.db.blizzinterfaceunloaded = nil
+		end
+		if module.db.blizzinterfaceunloaded2 and InspectPVPFrame then
+			InspectPVPFrame:UnregisterEvent("INSPECT_HONOR_UPDATE")
+			module.db.blizzinterfaceunloaded2 = nil
+		end
 		if RaidInCombat() then
 			return
 		end

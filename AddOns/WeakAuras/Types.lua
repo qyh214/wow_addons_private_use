@@ -131,6 +131,10 @@ if WeakAuras.IsClassicEra() then
   Private.big_number_types.BreakUpLargeNumbers = nil
 end
 ---@type table<string, string>
+Private.big_number_types_with_disable = CopyTable(Private.big_number_types)
+Private.big_number_types_with_disable["disable"] = L["Disabled"]
+
+---@type table<string, string>
 Private.round_types = {
   floor = L["Floor"],
   ceil = L["Ceil"],
@@ -500,6 +504,61 @@ Private.format_types = {
         end, next(timePointProperty) ~= nil
       else
         return formatter, next(timePointProperty) ~= nil
+      end
+    end
+  },
+  Money = {
+    display = L["Money"],
+    AddOptions = function(symbol, hidden, addOption)
+      addOption(symbol .. "_money_format", {
+        type = "select",
+        name = L["Format Gold"],
+        width = WeakAuras.normalWidth,
+        values = Private.big_number_types_with_disable,
+        hidden = hidden
+      })
+      addOption(symbol .. "_money_precision", {
+        type = "select",
+        name = L["Coin Precision"],
+        width = WeakAuras.normalWidth,
+        values = Private.money_precision_types,
+        hidden = hidden
+      })
+    end,
+    CreateFormatter = function(symbol, get)
+      local format = get(symbol .. "_money_format", "AbbreviateNumbers")
+      local precision = get(symbol .. "_money_precision", 3)
+
+      return function(value)
+        if type(value) ~= "number" then
+          return ""
+        end
+        local gold = floor(value / 1e4)
+        local silver = floor(value / 100 % 100)
+        local copper = value % 100
+
+        if (format == "AbbreviateNumbers") then
+          gold = simpleFormatters.AbbreviateNumbers(gold)
+        elseif (format == "BreakUpLargeNumbers") then
+          gold = simpleFormatters.BreakUpLargeNumbers(gold)
+        elseif (format == "AbbreviateLargeNumbers") then
+          gold = simpleFormatters.AbbreviateLargeNumbers(gold)
+        end
+
+        local formatCode
+        if precision == 1 then
+          formatCode = "%s%s"
+        elseif precision == 2 then
+          formatCode = "%s%s %d%s"
+        else
+          formatCode = "%s%s %d%s %d%s"
+        end
+
+        return string.format(formatCode,
+          tostring(gold), Private.coin_icons.gold,
+          silver, Private.coin_icons.silver,
+          copper, Private.coin_icons.copper
+        )
       end
     end
   },
@@ -1246,16 +1305,13 @@ for k, v in pairs(Private.point_types) do
 end
 
 Private.default_types_for_anchor["ALL"] = {
-  display = L["Whole Area"],
+  display = L["Full Region"],
   type = "area"
 }
 
----@type table<string, string>
-Private.aurabar_anchor_areas = {
-  icon = L["Icon"],
-  fg = L["Foreground"],
-  bg = L["Background"],
-  bar = L["Full Bar"],
+Private.anchor_mode = {
+  area = L["Fill Area"],
+  point = L["Attach to Point"]
 }
 
 Private.inverse_point_types = {
@@ -1533,6 +1589,20 @@ for id, str in pairs(Private.combatlog_spell_school_types) do
   Private.combatlog_spell_school_types_for_ui[id] = ("%.3d - %s"):format(id, str)
 end
 
+---@type table<string, string>
+Private.coin_icons = {
+  ["gold"] = "|Tinterface/moneyframe/ui-goldicon:0|t",
+  ["silver"] = "|Tinterface/moneyframe/ui-silvericon:0|t",
+  ["copper"] = "|Tinterface/moneyframe/ui-coppericon:0|t"
+}
+
+---@type table<number, string>
+Private.money_precision_types = {
+  [1] = "123 " .. Private.coin_icons.gold,
+  [2] = "123 " .. Private.coin_icons.gold .. " 45 " .. Private.coin_icons.silver,
+  [3] = "123 " .. Private.coin_icons.gold .. " 45 " .. Private.coin_icons.silver .. " 67 " .. Private.coin_icons.copper
+}
+
 if WeakAuras.IsRetail() then
   Private.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize
   Private.GetCurrencyIDFromLink = C_CurrencyInfo.GetCurrencyIDFromLink
@@ -1773,6 +1843,7 @@ Private.orientation_types = {
   VERTICAL_INVERSE = L["Top to Bottom"]
 }
 
+---@type table<string, string>
 Private.orientation_with_circle_types = {
   HORIZONTAL_INVERSE = L["Left to Right"],
   HORIZONTAL = L["Right to Left"],
@@ -1810,18 +1881,20 @@ WeakAuras.spec_types_specific = {}
 
 ---@type table<number, string>
 Private.spec_types_all = {}
+Private.specs_sorted = {}
 local function update_specs()
-  local cataFix = WeakAuras.IsCataClassic() and -1 or 0 -- see https://github.com/Stanzilla/WoWUIBugs/issues/559
-  for classFileName, classID in pairs(WeakAuras.class_ids) do
+  for _, classFileName in pairs(WeakAuras.classes_sorted) do
+    local classID = WeakAuras.class_ids[classFileName]
     WeakAuras.spec_types_specific[classFileName] = {}
-    local numSpecs = WeakAuras.IsCataClassic() and 3 or GetNumSpecializationsForClassID(classID)
+    local numSpecs = WeakAuras.IsCataClassic() and 3 or GetNumSpecializationsForClassID(classID) -- see https://github.com/Stanzilla/WoWUIBugs/issues/559
     for i = 1, numSpecs do
-      local specId, tabName, _, icon = GetSpecializationInfoForClassID(classID, i + cataFix);
+      local specId, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
       if tabName then
         tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
         local classColor = WA_GetClassColor(classFileName)
         Private.spec_types_all[specId] = CreateAtlasMarkup(GetClassAtlas(classFileName:lower()))
         .. "|T"..(icon or "error")..":0|t "..(WrapTextInColorCode(tabName, classColor) or "error");
+        tinsert(Private.specs_sorted, specId)
       end
     end
   end
@@ -1974,6 +2047,8 @@ Private.texture_types = {
     ["2888300"] = "Demonic Core Vertical",
     ["4699056"] = "Essence Burst",
     ["4699057"] = "Snapfire",
+    ["6160020"] = "Arcane Soul",
+    ["6160021"] = "Hyperthermia",
   },
   ["Icons"] = {
     ["165558"] = "Paw",
@@ -2892,13 +2967,11 @@ if WeakAuras.IsClassicOrCata() then
 end
 
 ---@type table<string, string>
-if WeakAuras.IsCataOrRetail() then
-  Private.role_types = {
-    TANK = INLINE_TANK_ICON.." "..TANK,
-    DAMAGER = INLINE_DAMAGER_ICON.." "..DAMAGER,
-    HEALER = INLINE_HEALER_ICON.." "..HEALER
-  }
-end
+Private.role_types = {
+  TANK = INLINE_TANK_ICON.." "..TANK,
+  DAMAGER = INLINE_DAMAGER_ICON.." "..DAMAGER,
+  HEALER = INLINE_HEALER_ICON.." "..HEALER
+}
 
 ---@type table<string, string>
 Private.group_member_types = {
@@ -3053,6 +3126,7 @@ Private.cast_types = {
 }
 
 -- register sounds
+LSM:Register("sound", "Heartbeat Single", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\HeartbeatSingle.ogg")
 LSM:Register("sound", "Batman Punch", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BatmanPunch.ogg")
 LSM:Register("sound", "Bike Horn", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BikeHorn.ogg")
 LSM:Register("sound", "Boxing Arena Gong", "Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BoxingArenaSound.ogg")
@@ -3207,8 +3281,8 @@ end
 -- register options font
 LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraMono-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 -- Other Fira fonts
-LSM:Register("font", "Fira Sans Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
-LSM:Register("font", "Fira Sans Condensed Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Black.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Heavy.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
+LSM:Register("font", "Fira Sans Condensed Black", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Heavy.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "Fira Sans Condensed Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSansCondensed-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "Fira Sans Medium", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\FiraSans-Medium.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
 LSM:Register("font", "PT Sans Narrow Regular", "Interface\\Addons\\WeakAuras\\Media\\Fonts\\PTSansNarrow-Regular.ttf", LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_ruRU)
@@ -3326,7 +3400,9 @@ Private.bufftrigger_2_progress_behavior_types = {
 ---@type table<string, string>
 Private.bufftrigger_2_preferred_match_types = {
   showLowest = L["Least remaining time"],
-  showHighest = L["Most remaining time"]
+  showHighest = L["Most remaining time"],
+  showLowestSpellId = L["Lowest Spell Id"],
+  showHighestSpellId = L["Highest Spell Id"],
 }
 
 ---@type table<string, string>
@@ -3531,7 +3607,8 @@ Private.update_categories = {
       "url",
       "desc",
       "version",
-      "semver"
+      "semver",
+      "wagoID", -- i don't *love* that we're so closely tied to wago, but eh
     },
     default = true,
     label = L["Meta Data"],
@@ -3731,7 +3808,6 @@ Private.author_option_fields = {
   header = {
     useName = false,
     text = "",
-    noMerge = false
   },
   group = {
     groupType = "simple",
@@ -3900,7 +3976,15 @@ Private.difficulty_info = {
   [176] = {
     size = "twentyfive",
     difficulty = "heroic",
-  }
+  },
+  [186] = {
+    size = "fortyman",
+    difficulty = "normal",
+  },
+  [226] = {
+    size = "twenty",
+    difficulty = "normal",
+  },
 }
 
 Private.glow_types = {
@@ -4111,23 +4195,7 @@ WeakAuras.StopMotion.texture_types.Basic = {
 }
 
 WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAuras\\Media\\Textures\\stopmotion"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\circle"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\checkmark"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\redx"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\leftarc"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\rightarc"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Basic\\fireball"] = { count = 7, rows = 5, columns = 5 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\AURARUNE8"] = { count = 256, rows = 16, columns = 16 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionv"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionw"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionf"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Runes\\legionword"] = { count = 64, rows = 8, columns = 8 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\CellRing"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Gadget"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Radar"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\RadarComplex"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Saber"] = { count = 32, rows = 8, columns = 4 }
-WeakAuras.StopMotion.texture_data["Interface\\AddOns\\WeakAurasStopMotion\\Textures\\Kaitan\\Waveform"] = { count = 32, rows = 8, columns = 4 }
+
 
 WeakAuras.StopMotion.animation_types = {
   loop = L["Loop"],

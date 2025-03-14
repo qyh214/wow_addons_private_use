@@ -31,7 +31,7 @@ function Reward:init(id, extra)
 end
 function Reward:Name(color) return UNKNOWN end
 function Reward:Icon() return 134400 end -- question mark
-function Reward:Obtained(for_tooltip)
+function Reward:Obtained(ignore_notable)
     local result
     if self.quest then
         if C_QuestLog.IsQuestFlaggedCompleted(self.quest) or C_QuestLog.IsOnQuest(self.quest) then
@@ -40,7 +40,7 @@ function Reward:Obtained(for_tooltip)
         if self.warband and C_QuestLog.IsQuestFlaggedCompletedOnAccount(self.quest) then
             return true
         end
-        if for_tooltip or ns.db.quest_notable then
+        if ignore_notable or ns.db.quest_notable then
             result = false
         end
     end
@@ -48,7 +48,7 @@ function Reward:Obtained(for_tooltip)
         if C_QuestLog.IsQuestFlaggedCompleted(self.questComplete) then
             return true
         end
-        if for_tooltip or ns.db.quest_notable then
+        if ignore_notable or ns.db.quest_notable then
             result = false
         end
     end
@@ -112,7 +112,7 @@ function Reward:TooltipLabelColor()
     return NORMAL_FONT_COLOR
 end
 function Reward:ObtainedTag()
-    local known = self:Obtained(true) -- for_tooltip
+    local known = self:Obtained(true) -- ignore_notable
     if known == nil then return end
     return " " .. CreateAtlasMarkup(known and ATLAS_CHECK or ATLAS_CROSS)
 end
@@ -136,13 +136,30 @@ function ns.rewards.Currency:Name(color)
             ("%s x %d"):format(name, self.amount) or
             name
     end
-    return self:Super("Name", color)
+    return self:super("Name", color)
 end
 function ns.rewards.Currency:Icon()
     local info = C_CurrencyInfo.GetBasicCurrencyInfo(self.id)
     if info and info.icon then
         return info.icon
     end
+end
+function ns.rewards.Currency:Notable()
+    if self.faction then
+        -- if this is faction-reputation, consider it non-notable once your reputation is maxed out
+        -- TODO: revisit this for paragon reps later?
+        if C_Reputation.IsMajorFaction(self.faction) then
+            if C_MajorFactions.HasMaximumRenown(self.faction) then
+                return false
+            end
+        else
+            local data = C_Reputation.GetFactionDataByID(self.faction)
+            if data and data.currentReactionThreshold == data.nextReactionThreshold then
+                return false
+            end
+        end
+    end
+    return self:super("Notable")
 end
 function ns.rewards.Currency:TooltipLabel()
     return self.faction and REPUTATION or CURRENCY

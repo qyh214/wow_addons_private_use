@@ -1,27 +1,19 @@
 local E, L = select(2, ...):unpack()
 local P = E.Party
 
-local GetSpellInfo = GetSpellInfo or function(spellID)
-	if not spellID then
-		return nil;
-	end
-
-	local spellInfo = C_Spell.GetSpellInfo(spellID);
-	if spellInfo then
-		return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange, spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID;
-	end
-end
-
 local markEnhancedDesc = {}
 for k, v in pairs(E.spell_marked) do
 	if not C_Spell.DoesSpellExist(k) or (v ~= true and not C_Spell.DoesSpellExist(v)) then
 		E.spell_marked[k] = nil
-
+		--[==[@debug@
+		E.write("Removing invalid spell_marked ID:" , k)
+		--@end-debug@]==]
 	else
 		local id = v == true and k or v
-		local name, _, icon = GetSpellInfo(id)
-		name = format("|T%s:18|t %s", icon, name)
-		markEnhancedDesc[#markEnhancedDesc + 1] = name
+		local spellInfo = C_Spell.GetSpellInfo(id)
+		if spellInfo then
+			markEnhancedDesc[#markEnhancedDesc + 1] = format("|T%s:18|t %s", spellInfo.originalIconID, spellInfo.name)
+		end
 	end
 end
 markEnhancedDesc = table.concat(markEnhancedDesc, "\n")

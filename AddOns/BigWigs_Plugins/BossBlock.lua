@@ -351,28 +351,28 @@ do
 		if self.db.profile.disableSfx then
 			local sfx = GetCVar("Sound_EnableSFX")
 			if sfx == "0" then
-				BigWigs:Print(L.userNotifySfx);
+				BigWigs:Print(L.userNotifySfx)
 			end
 			SetCVar("Sound_EnableSFX", "1")
 		end
 		if self.db.profile.disableMusic then
 			local music = GetCVar("Sound_EnableMusic")
 			if music == "0" then
-				BigWigs:Print(L.userNotifyMusic);
+				BigWigs:Print(L.userNotifyMusic)
 			end
 			SetCVar("Sound_EnableMusic", "1")
 		end
 		if self.db.profile.disableAmbience then
 			local ambience = GetCVar("Sound_EnableAmbience")
 			if ambience == "0" then
-				BigWigs:Print(L.userNotifyAmbience);
+				BigWigs:Print(L.userNotifyAmbience)
 			end
 			SetCVar("Sound_EnableAmbience", "1")
 		end
 		if self.db.profile.disableErrorSpeech then
 			local errorSpeech = GetCVar("Sound_EnableErrorSpeech")
 			if errorSpeech == "0" then
-				BigWigs:Print(L.userNotifyErrorSpeech);
+				BigWigs:Print(L.userNotifyErrorSpeech)
 			end
 			SetCVar("Sound_EnableErrorSpeech", "1")
 		end
@@ -422,7 +422,7 @@ end
 
 do
 	local delayedTbl = nil
-	local levelUpTbl = nil
+	local levelUpTbl, gainLifeTbl = nil, nil
 	local CL = BigWigsAPI:GetLocale("BigWigs: Common")
 	local function printMessage(self, tbl)
 		if delayedTbl and tbl == delayedTbl then
@@ -464,6 +464,7 @@ do
 		[222]=true,[217]=true,[212]=true,[260]=true,[220]=true,[219]=true,[218]=true,[221]=true,[223]=true,
 		[213]=true,[215]=true,[178]=true,[209]=true,[214]=true,[216]=true,
 		[208]=true,[211]=true,[224]=true,[225]=true,[210]=true,
+		[279]=true,[280]=true,[281]=true,[282]=true,[283]=true,[284]=true,[285]=true,[286]=true,
 	}
 	function plugin:DISPLAY_EVENT_TOASTS()
 		local tbl = GetNextToastToDisplay()
@@ -533,6 +534,19 @@ do
 					-- tbl.subtitle is "Respawn Point Unlocked!"
 					tbl.title = nil -- Remove title, keep subtitle only
 					tbl.bwDuration = 4
+					gainLifeTbl = tbl
+					self:SimpleTimer(function() gainLifeTbl = nil printMessage(self, tbl) end, 0.5) -- Delay to allow time for the +1 life toast to merge, if one is rewarded
+				elseif tbl.eventToastID == 263 then -- +1 Life
+					-- tbl.title is "+1 Life"
+					if gainLifeTbl then -- We merge this into the discovery/respawn toast
+						gainLifeTbl.subtitle = CL.extra:format(gainLifeTbl.subtitle, tbl.title) -- Combine
+						gainLifeTbl.iconFileID = tbl.iconFileID
+					end
+				elseif tbl.eventToastID == 256 or tbl.eventToastID == 258 then -- 0 lives / 1 life remaining
+					-- tbl.title is "0 Lives Remaining" / "One Life Remaining!"
+					tbl.subtitle = tbl.title
+					tbl.title = nil
+					tbl.bwDuration = 3
 					printMessage(self, tbl)
 				elseif branSkills[tbl.eventToastID] then -- Brann Ability, Brann power increase
 					-- tbl.title is "Combat Curios" / "Explorer's Ammunition Journal"
@@ -541,16 +555,16 @@ do
 					tbl.title = nil
 					tbl.bwDuration = 3
 					printMessage(self, tbl)
-				elseif tbl.eventToastID == 5 then -- Dungeon zone in popup
-					if not self.db.profile.blockZoneInToasts then
-						tbl.bwDuration = 2
-						printMessage(self, tbl)
-					end
 				elseif tbl.eventToastID == 199 then -- Feature unlock
 					-- tbl.title is "Hero Talents"
 					-- tbl.subtitle is "Feature Unlocked!"
 					-- We just hide this as we already show that you unlocked a point alongside the level up message
 					tbl.title = nil
+				elseif tbl.eventToastID == 277 then -- Nemesis Strongbox Upgraded
+					-- tbl.title is "Nemesis Strongbox Upgraded"
+					tbl.subtitle = tbl.title
+					tbl.title = nil
+					printMessage(self, tbl)
 				else -- Something we don't support, pass to Blizz to process
 					return
 				end
@@ -990,7 +1004,9 @@ do
 		[-2238] = { -- Amirdrassil
 			function() return latestKill[1] == 2565 end, -- After killing Tindral, flying into the tree
 			function() return latestKill[1] == 2519 and GetTime()-latestKill[2] < 6 end, -- After killing Fyrakk, but don't trigger when talking to the NPC after killing him
-		}
+		},
+		[-2292] = true, -- Nerub-ar Palace, Ulgrax defeat
+		[-2296] = true, -- Nerub-ar Palace, Ansurek defeat
 	}
 
 	-- Cinematic skipping hack to workaround an item (Vision of Time) that creates cinematics in Siege of Orgrimmar.

@@ -20,7 +20,7 @@ local L = DF.Language.GetLanguageTable(addonId)
 local ff = WorldQuestTrackerFinderFrame
 local rf = WorldQuestTrackerRareFrame
 
-
+local GetQuestsForPlayerByMapID = C_TaskQuest.GetQuestsForPlayerByMapID or C_TaskQuest.GetQuestsOnMap
 
 ff.cannot_group_quest = {}
 
@@ -1218,6 +1218,10 @@ ff:SetScript("OnEvent", function (self, event, questID, arg2, arg3)
 	elseif (event == "QUEST_ACCEPTED") then
 		--> get quest data
 
+		if (not questID) then
+			return
+		end
+
 		local isInArea, isOnMap = GetTaskInfo(questID)
 
 		-->  do the regular checks
@@ -1285,6 +1289,10 @@ ff:SetScript("OnEvent", function (self, event, questID, arg2, arg3)
 
 
 	elseif (event == "QUEST_TURNED_IN") then
+		if (not questID) then
+			return
+		end
+
 		local isWorldQuest = isWorldQuest(questID)
 		if (isWorldQuest) then
 			ff.WorldQuestFinished (questID)
@@ -1415,7 +1423,7 @@ ff:SetScript("OnEvent", function (self, event, questID, arg2, arg3)
 end)
 
 function ff.CheckForQuestsInTheArea()
-	local allQuestsInTheMap = C_TaskQuest.GetQuestsForPlayerByMapID(WorldQuestTracker.GetCurrentStandingMapAreaID())
+	local allQuestsInTheMap = GetQuestsForPlayerByMapID(WorldQuestTracker.GetCurrentStandingMapAreaID())
 	if (allQuestsInTheMap) then
 		for index, questInfo in ipairs(allQuestsInTheMap) do
 			local questId = questInfo.questId

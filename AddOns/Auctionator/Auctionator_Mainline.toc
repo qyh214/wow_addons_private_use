@@ -1,6 +1,6 @@
-## Interface: 110000, 110002
+## Interface: 110007, 110100
 ## Title: Auctionator
-## Version: 11.0.11
+## Version: 268
 ## Author: Borjamacare, plusmouse
 ## X-Website: https://www.curseforge.com/wow/addons/auctionator
 ## X-Category: Auction/Economy
@@ -8,20 +8,31 @@
 ## Notes: A lightweight addon that makes it easy and fast to buy, sell and manage auctions
 ## Notes-esES: Un addon liviano que hace que comprar, vender y administrar subastas sea fácil y rápido
 ## Notes-esMX: Un addon liviano que hace que comprar, vender y administrar subastas sea fácil y rápido
+## Notes-zhCN: 一款轻量级拍卖行插件，让购买、出售和管理拍卖等物品变得简单快捷
+## Category-enUS: Auctions
+## Category-deDE: Auktionen
+## Category-esES: Subastas
+## Category-esMX: Subastas
+## Category-frFR: Ventes
+## Category-itIT: Aste
+## Category-koKR: 경매
+## Category-ptBR: Leilões
+## Category-ruRU: Лоты
+## Category-zhCN: 拍卖
+## Category-zhTW: 拍賣
 ## SavedVariables: AUCTIONATOR_CONFIG, AUCTIONATOR_SAVEDVARS, AUCTIONATOR_SHOPPING_LISTS, AUCTIONATOR_PRICE_DATABASE, AUCTIONATOR_POSTING_HISTORY, AUCTIONATOR_VENDOR_PRICE_CACHE, AUCTIONATOR_RECENT_SEARCHES, AUCTIONATOR_SELLING_GROUPS
 ## SavedVariablesPerCharacter: AUCTIONATOR_CHARACTER_CONFIG
 ## OptionalDeps: LibAHTab
 ## IconTexture: Interface\AddOns\Auctionator\Images\Logo
 
 Libs\Manifest.xml
-Libs_Mainline\Manifest.xml
+Libs_ModernAH\Manifest.xml
 
 Locales\Manifest.xml
 
-Imports_Mainline\Manifest.xml
-Assets_Mainline.xml
+Imports_ModernAH\Manifest.xml
+Assets_ModernAH.xml
 
 Source\Manifest.xml
 Source_Mainline\Manifest.xml
-
-Embeds\json.lua
+Source_ModernAH\Manifest.xml

@@ -1,0 +1,10 @@
+lightweight tag c3e95605be348a4474c856a0a13d4722b4f9244e patch-11.1.0-02
+Author:	Dave Hendler <sollaires@gmail.com>
+Date:	Mon Mar 3 15:14:27 2025 -0800
+
+commit c3e95605be348a4474c856a0a13d4722b4f9244e
+Author: Dave Hendler <sollaires@gmail.com>
+Date:   Mon Mar 3 15:14:27 2025 -0800
+
+    Support Ctrl-X in addition to Ctrl-C or automatic closing
+

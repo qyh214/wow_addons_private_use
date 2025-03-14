@@ -20,22 +20,23 @@ local GetItemInfoInstant = C_Item.GetItemInfoInstant;
 local C_PerksProgram = C_PerksProgram;
 local C_TransmogCollection = C_TransmogCollection;
 local EventRegistry = EventRegistry;
+local hooksecurefunc = hooksecurefunc;
+local After = C_Timer.After;
 
 
 -- User Settings --
-local MODEL_SETUP_ENABLED = false;   --Change the default model's animation and yaw
+local CHANGE_POSE = false;   --Change the default model's animation and yaw
 local DEV_MODE = false;
 -------------------
 local CURRENCY_MARKUP = " |T4696085:0:0:0:0:64:64:6:58:6:58|t";
 
 local STAND_ANIMATION = 804;    --Stand Character Create
-
+local MOUNT_SPECIAL_ANIM_KIT = 1371;    --See https://www.townlong-yak.com/framexml/live/Blizzard_PerksProgram/Blizzard_PerksProgramModel.lua
 local MODEL_SETUPS = {
     INVTYPE_RANGED = {yaw = -1.52, animation = STAND_ANIMATION, sheathed = false},
     INVTYPE_2HWEAPON = {yaw = 0.00, animation = STAND_ANIMATION, sheathed = false},
     INVTYPE_WEAPON = {yaw = -2.10, animation = STAND_ANIMATION, sheathed = false},
     INVTYPE_RANGEDRIGHT = {yaw = -1.83, animation = STAND_ANIMATION, sheathed = false},
-
     STAFF =  {yaw = 2.13, animation = STAND_ANIMATION, sheathed = true},
 };
 
@@ -114,6 +115,37 @@ local function GetSelectedMountTypeName()
     return mountTypeName
 end
 
+local function UpdateProductModelAnimation(data, userInput)
+    local categoryID = data.perksVendorCategoryID;
+    if categoryID == 1 then --Transmog
+        if CHANGE_POSE then
+            local actor = PerksProgramFrame.ModelSceneContainerFrame.playerActor;
+            if actor then
+                SetupModelByItemID(actor, data.itemID);
+            end
+            if userInput then
+                actor:SetAnimation(0);
+                AnimationDropDown:SelectAnimationByIndex(1);
+            end
+        end
+    elseif categoryID == 2 then --Mount
+        local actor = PerksProgramFrame.ModelSceneContainerFrame.MainModelScene:GetActorByTag("mount");
+        if actor then
+            if not CHANGE_POSE then
+                actor:PlayAnimationKit(MOUNT_SPECIAL_ANIM_KIT);
+                if userInput then
+                    AnimationDropDown:SelectAnimationByIndex(AnimationDropDown.maxIndex);
+                end
+            elseif userInput then
+                actor:SetAnimation(0);
+                AnimationDropDown:SelectAnimationByIndex(1);
+            end
+        end
+    elseif categoryID == 3 then --Pet
+
+    end
+end
+
 local function OnProductSelectedAfterModel(f, data)
     --Enum.PerksVendorCategoryType
     SELECTED_DATA = data;
@@ -121,6 +153,8 @@ local function OnProductSelectedAfterModel(f, data)
     local categoryID = data.perksVendorCategoryID;
     local showExtraDetail;
     local showSheatheToggle = true;
+
+    UpdateProductModelAnimation(data);
 
     if categoryID == 8 then     --TransmogSet
         --[[    --Showing child items has become a base feature
@@ -146,7 +180,7 @@ local function OnProductSelectedAfterModel(f, data)
         if mountTypeName then
             local defaultDetailsFrame = ExtraDetailFrame.parentFrame;   --PerksProgramDetailsFrameTemplate
             if defaultDetailsFrame and defaultDetailsFrame.CategoryText then
-                C_Timer.After(0, function() --DetailsFrame also use EventRegistry for updating data, so we need to set a delay
+                After(0, function() --DetailsFrame also use EventRegistry for updating data, so we need to set a delay
                     mountTypeName = GetSelectedMountTypeName();
                     if mountTypeName then
                         defaultDetailsFrame.CategoryText:SetText((PERKS_VENDOR_CATEGORY_MOUNT or "Mount").." - "..mountTypeName);
@@ -155,14 +189,8 @@ local function OnProductSelectedAfterModel(f, data)
             end
         end
         --]]
-    elseif categoryID == 1 then     --Transmog
-        if MODEL_SETUP_ENABLED then
-            local actor = PerksProgramFrame.ModelSceneContainerFrame.playerActor;
-            if actor then
-                SetupModelByItemID(actor, data.itemID);
-            end
-        end
 
+    elseif categoryID == 1 then     --Transmog
         local sourceID = data.itemModifiedAppearanceID;
         local ownerSetInfo = TransmogDataProvider:GetOwnerSetInfo(sourceID);
         if ownerSetInfo then
@@ -426,7 +454,7 @@ local function Initialize()
 
     BlizzardFrame = PerksProgramFrame;
 
-    MODEL_SETUP_ENABLED = NarcissusDB.TradingPostModifyDefaultPose;
+    CHANGE_POSE = NarcissusDB.TradingPostChangePost;
 
     if DEV_MODE then
         CreateDevTool(BlizzardFrame);
@@ -748,7 +776,7 @@ function NarciPerksProgramItemDetailExtraFrameMixin:Init()
                     tooltip:Show();
 
                     if not allLoaded then
-                        C_Timer.After(0.2, function()
+                        After(0.2, function()
                             if f:IsVisible() and f:IsMouseOver() then
                                 OnEnter(f);
                             end
@@ -767,6 +795,118 @@ function NarciPerksProgramItemDetailExtraFrameMixin:Init()
 
         HeaderMouseoverFrame:SetScript("OnEnter", OnEnter);
         HeaderMouseoverFrame:SetScript("OnLeave", OnLeave);
+    end
+
+    do  --Fixed Mount Speical, Attack Animation Checkboxes status not saved issue
+        --NOTE: We instead disable the two checkboxes because we already have equivalents (animation dropdown)
+
+        local ff = BlizzardFrame.FooterFrame;
+        local mc = BlizzardFrame.ModelSceneContainerFrame;
+
+        if BlizzardFrame.SetMountSpecialPreviewOnClick then
+            BlizzardFrame:SetMountSpecialPreviewOnClick(false);
+        end
+
+        if BlizzardFrame.PlayerSetAttackAnimationOnClick then
+            BlizzardFrame:PlayerSetAttackAnimationOnClick(false);
+        end
+
+        if mc and ff.ToggleHideArmor and ff.TogglePlayerPreview then
+            local function HideCheckboxes()
+                ff.ToggleHideArmor:SetPoint("LEFT", ff.RotateButtonContainer, "LEFT", -18, 0);
+                ff.TogglePlayerPreview:SetPoint("LEFT", ff.RotateButtonContainer, "LEFT", -18, 0);
+
+                if ff.ToggleMountSpecial then
+                    ff.ToggleMountSpecial:Hide();
+                end
+
+                if ff.ToggleAttackAnimation then
+                    ff.ToggleAttackAnimation:Hide();
+                end
+            end
+
+            After(0, function()
+                EventRegistry:UnregisterCallback("PerksProgram.OnMountSpecialPreviewSet", PerksProgramFrame.ModelSceneContainerFrame);
+                EventRegistry:UnregisterCallback("PerksProgram.OnPlayerAttackAnimationSet", PerksProgramFrame.ModelSceneContainerFrame);
+                HideCheckboxes();
+            end);
+        end
+
+        --This method may not be secure:
+        C_PerksProgram.IsMountSpecialAnimToggleEnabled = function() return false end;
+        C_PerksProgram.IsAttackAnimToggleEnabled = function() return false end;
+
+        --[[    --The actual fix
+
+        if (mc and mc.OnMountSpecialPreviewSet and mc.OnPlayerAttackAnimationSet)
+        and (BlizzardFrame.SetMountSpecialPreviewOnClick and BlizzardFrame.PlayerSetAttackAnimationOnClick)
+        and (ff and ff.OnProductSelected and ff.ToggleMountSpecial and ff.ToggleAttackAnimation) then
+            ff.ToggleMountSpecial:HookScript("OnClick", function(f)
+                local isChecked = f:GetChecked();
+                DataProvider:SaveUserData("mountSpecialAnimPlaying", isChecked);
+            end);
+
+            ff.ToggleAttackAnimation:HookScript("OnClick", function(f)
+                local isChecked = f:GetChecked();
+                DataProvider:SaveUserData("attackAnimationPlaying", isChecked);
+            end);
+
+            local EventSolver = CreateFrame("Frame", nil, BlizzardFrame);
+            EventSolver:Hide();
+            EventSolver:SetScript("OnHide", function()
+                EventSolver.t = 0;
+                EventSolver:Hide();
+            end);
+            EventSolver:SetScript("OnShow", function()
+                EventSolver.t = 0;
+            end);
+
+            EventSolver:SetScript("OnUpdate", function(f, elapsed)
+                f.t = f.t + elapsed;
+                if f.t > 0 then
+                    f:Hide();
+
+                    if ff.ToggleMountSpecial:IsShown() then
+                        local isChecked = DataProvider:GetUserData("mountSpecialAnimPlaying");
+                        --BlizzardFrame:SetMountSpecialPreviewOnClick(isChecked);
+                        ff.ToggleMountSpecial:SetChecked(isChecked);
+                        mc:OnMountSpecialPreviewSet(isChecked);
+                    end
+
+                    if ff.ToggleAttackAnimation:IsShown() then
+                        local isChecked = DataProvider:GetUserData("attackAnimationPlaying");
+                        --BlizzardFrame:PlayerSetAttackAnimationOnClick(isChecked);
+                        ff.ToggleAttackAnimation:SetChecked(isChecked);
+                        mc:OnPlayerAttackAnimationSet(isChecked);
+                    end
+                end
+            end);
+
+            function EventSolver:Start()
+                EventSolver.t = 0;
+                EventSolver:Show();
+            end
+
+            After(0, function()
+                EventRegistry:UnregisterCallback("PerksProgram.OnMountSpecialPreviewSet", PerksProgramFrame.ModelSceneContainerFrame);
+                EventRegistry:UnregisterCallback("PerksProgram.OnPlayerAttackAnimationSet", PerksProgramFrame.ModelSceneContainerFrame);
+
+                EventRegistry:RegisterCallback("PerksProgramModel.OnProductSelectedAfterModel", function()
+                    EventSolver:Start();
+                end);
+
+                EventRegistry:RegisterCallback("PerksProgram.OnMountSpecialPreviewSet", function()
+                    EventSolver:Start();
+                end);
+
+                EventRegistry:RegisterCallback("PerksProgram.OnPlayerAttackAnimationSet", function()
+                    EventSolver:Start();
+                end);
+
+                EventSolver:Start();
+            end)
+        end
+        --]]
     end
 end
 
@@ -1009,7 +1149,7 @@ function NarciPerksProgramItemDetailExtraFrameMixin:UpdateItemVisibility()
 end
 
 function NarciPerksProgramItemDetailExtraFrameMixin:UpdateItemButtons()
-    C_Timer.After(0.5, function()
+    After(0.5, function()
         local button;
         for i = 1, self.numActiveButtons do
             button = self.buttons[i];
@@ -1168,7 +1308,7 @@ local function TransmogItemButton_OnEnter(self)
                 if isLoaded then
                     slotName = string.format("%s - %s", slotName, itemName);
                 else
-                    C_Timer.After(0.2, function()
+                    After(0.2, function()
                         if self:IsMouseOver() and self:IsVisible() then
                             TransmogItemButton_OnEnter(self);
                         end
@@ -1593,21 +1733,25 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
 
         local defaultAnimationID = self.defaultAnimationID;
         local defaultOption = defaultAnimationID or self.defaultAnimationKitID;
-        
+
+        if self.mode == "mount" then
+            self.defaultAnimationKitID = MOUNT_SPECIAL_ANIM_KIT;
+            defaultOption = MOUNT_SPECIAL_ANIM_KIT;
+            defaultAnimationID = nil;
+        end
+
         if defaultAnimationID then
             for i = 1, #self.animationIDs do
                 if self.animationIDs[i] == defaultAnimationID then
-                    defaultOption = false;
+                    defaultOption = nil;
                     break
                 end
             end
         end
 
-        if defaultOption then
+        if defaultOption then   --Add a "Default" button if the default animation isn't on our animation list
             numButtons = numButtons + 1;
         end
-
-        self.numButtons = numButtons;
 
         local button;
 
@@ -1619,17 +1763,19 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
 
         local offsetY = paddingV;
 
+        local animationButtonIndex = 0;
+        self.indexedButtons = {};
+
         for i = 1, numButtons do
             if not self.buttons[i] then
                 self.buttons[i] = CreateFrame("Button", nil, self, "NarciPerksProgramDropDownButtonTemplate");
-                self.buttons[i].id = i;
             end
             button = self.buttons[i];
 
             button:ClearAllPoints();
             button:SetPoint("TOPLEFT", self, "TOPLEFT", 0, -offsetY);
 
-            if i == 1 then
+            if i == 1 then  --Modify Default Pose
                 numberWidth, nameWidth = button:SetModelSetupToggle();
                 local dividerHeight = 12;
                 offsetY = offsetY + buttonHeight;
@@ -1643,11 +1789,14 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
                 self.Divider:SetHeight(pixel);
                 offsetY = offsetY + dividerHeight;
             else
+                animationButtonIndex = animationButtonIndex + 1;
+                self.indexedButtons[animationButtonIndex] = button;
+                button.index = animationButtonIndex;
                 if defaultOption and i == numButtons then
                     if self.defaultAnimationKitID then
-                        numberWidth, nameWidth = button:SetAnimationOption("Default AnimKit", self.defaultAnimationKitID, true);
+                        numberWidth, nameWidth = button:SetAnimationOption(L["Default Animation"], self.defaultAnimationKitID, true);
                     else
-                        numberWidth, nameWidth = button:SetAnimationOption("Default Animation", defaultAnimationID);
+                        numberWidth, nameWidth = button:SetAnimationOption(L["Default Animation"], defaultAnimationID);
                     end
                 else
                     numberWidth, nameWidth = button:SetAnimationOption(self.getNameFunc(self.animationIDs[i-1]), self.animationIDs[i-1]);
@@ -1663,6 +1812,8 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
             end
             button:SetButtonFontColor(1);
         end
+
+        self.maxIndex = animationButtonIndex;
 
         maxNumberWidth = math.floor(maxNumberWidth + 0.5);
         local buttonWidth =  math.floor(12 + maxNumberWidth + 12 + maxNameWidth + 12 + 0.5);
@@ -1682,10 +1833,14 @@ function NarciPerksProgramAnimationDropDownMixin:Build()
         self:SetWidth(buttonWidth);
         self:SetHeight(offsetY + paddingV);
 
-        if defaultOption then
-            self:SelectButton(self.buttons[numButtons]);
+        if CHANGE_POSE then
+            self:SelectAnimationByIndex(1);
         else
-            self:SelectButtonByAnimID(defaultAnimationID);
+            if defaultOption then
+                self:SelectButton(self.buttons[numButtons]);
+            else
+                self:SelectButtonByAnimID(defaultAnimationID);
+            end
         end
     end
 end
@@ -1758,7 +1913,7 @@ function NarciPerksProgramAnimationDropDownMixin:SelectButton(button, click)
             end
         end
     end
-    self.selectedButtonID = button.id;
+    self.selectedButtonIndex = button.index;
     self:HighlightButton();
 
     if click then
@@ -1766,10 +1921,10 @@ function NarciPerksProgramAnimationDropDownMixin:SelectButton(button, click)
     end
 end
 
-function NarciPerksProgramAnimationDropDownMixin:SelectButtonByID(id, click)
-    if self.buttons then
-        for i, b in ipairs(self.buttons) do
-            if i == id then
+function NarciPerksProgramAnimationDropDownMixin:SelectAnimationByIndex(index, click)
+    if self.indexedButtons then
+        for i, b in ipairs(self.indexedButtons) do
+            if i == index then
                 b.isSelected = true;
                 b:SetButtonFontColor(3);
                 if click then
@@ -1781,7 +1936,7 @@ function NarciPerksProgramAnimationDropDownMixin:SelectButtonByID(id, click)
             end
         end
     end
-    self.selectedButtonID = id;
+    self.selectedButtonIndex = index;
 end
 
 function NarciPerksProgramAnimationDropDownMixin:SelectButtonByAnimID(animID, click)
@@ -1790,7 +1945,7 @@ function NarciPerksProgramAnimationDropDownMixin:SelectButtonByAnimID(animID, cl
             if b.animationID == animID then
                 b.isSelected = true;
                 b:SetButtonFontColor(3);
-                self.selectedButtonID = b.id;
+                self.selectedButtonIndex = b.index;
                 if click then
                     AnimationDropDown_PlayAnimation(self.actor, b);
                 end
@@ -1803,24 +1958,24 @@ function NarciPerksProgramAnimationDropDownMixin:SelectButtonByAnimID(animID, cl
 end
 
 function NarciPerksProgramAnimationDropDownMixin:OnMouseWheel(delta)
-    if not self.selectedButtonID then
-        self.selectedButtonID = 0;
+    if not self.selectedButtonIndex then
+        self.selectedButtonIndex = 0;
     end
-    if not self.numButtons then
-        self.numButtons = 1;
+    if not self.maxIndex then
+        self.maxIndex = 1;
     end
     if delta < 0 then
-        self.selectedButtonID = self.selectedButtonID + 1;
-        if self.selectedButtonID > self.numButtons then
-            self.selectedButtonID = 1;
+        self.selectedButtonIndex = self.selectedButtonIndex + 1;
+        if self.selectedButtonIndex > self.maxIndex then
+            self.selectedButtonIndex = 1;
         end
     else
-        self.selectedButtonID = self.selectedButtonID - 1;
-        if self.selectedButtonID < 1 then
-            self.selectedButtonID = self.numButtons;
+        self.selectedButtonIndex = self.selectedButtonIndex - 1;
+        if self.selectedButtonIndex < 1 then
+            self.selectedButtonIndex = self.maxIndex;
         end
     end
-    self:SelectButtonByID(self.selectedButtonID, true);
+    self:SelectAnimationByIndex(self.selectedButtonIndex, true);
 end
 
 
@@ -1841,10 +1996,19 @@ function NarciPerksProgramDropDownButtonMixin:OnEnter()
     else
         AnimationDropDown:HighlightButton();
     end
+
+    if self.tooltip then
+        local tooltip = PerksProgramUITooltip;
+        tooltip:SetOwner(self, "ANCHOR_RIGHT");
+        tooltip:SetText(self.OptionName:GetText(), 1, 1, 1);
+        tooltip:AddLine(self.tooltip, 1, 0.82, 0, true);
+        tooltip:Show();
+    end
 end
 
 function NarciPerksProgramDropDownButtonMixin:OnLeave()
     AnimationDropDown:HighlightButton();
+    PerksProgramUITooltip:Hide();
     if not self.isSelected then
         self:SetButtonFontColor(1);
     end
@@ -1887,7 +2051,7 @@ end
 
 local function UpdateModelSetupCheckbox(dropdownButton)
     if dropdownButton.Checkbox then
-        if MODEL_SETUP_ENABLED then
+        if CHANGE_POSE then
             dropdownButton.Checkbox:SetTexCoord(0, 0.5, 0, 1);
         else
             dropdownButton.Checkbox:SetTexCoord(0.5, 1, 0, 1);
@@ -1912,6 +2076,8 @@ function NarciPerksProgramDropDownButtonMixin:SetModelSetupToggle()
 
     UpdateModelSetupCheckbox(self);
 
+    self.tooltip = L["Modify Default Pose Tooltip"];
+
     return numberWidth, nameWidth
 end
 
@@ -1933,16 +2099,12 @@ function NarciPerksProgramDropDownButtonMixin:OnClick_Animation()
 end
 
 function NarciPerksProgramDropDownButtonMixin:OnClick_ModelSetupToggle()
-    MODEL_SETUP_ENABLED = not MODEL_SETUP_ENABLED;
+    CHANGE_POSE = not CHANGE_POSE;
     UpdateModelSetupCheckbox(self);
+    NarcissusDB.TradingPostChangePost = CHANGE_POSE;
 
-    NarcissusDB.TradingPostModifyDefaultPose = MODEL_SETUP_ENABLED;
-
-    local actor = PerksProgramFrame.ModelSceneContainerFrame.playerActor;
-    if actor and SELECTED_DATA then
-        if MODEL_SETUP_ENABLED then
-            SetupModelByItemID(actor, SELECTED_DATA.itemID);
-        end
+    if SELECTED_DATA then
+        UpdateProductModelAnimation(SELECTED_DATA, true);
     end
 end
 
@@ -1955,10 +2117,11 @@ if true then
     f:SetScript("OnEvent", function(self, event, ...)
         print(event, ...)
         if event == "PERKS_PROGRAM_OPEN" then
-            C_Timer.After(0, function()
+            After(0.5, function()
                 PerksProgramFrame:SetPropagateKeyboardInput(true);
                 --PerksProgramFrame:SetToplevel(false);
                 --PerksProgramFrame:SetFrameStrata("LOW");
+                SetUIVisibility(true)
             end);
         end
     end);

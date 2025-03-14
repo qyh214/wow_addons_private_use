@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Ragnaros", 720, 198)
 if not mod then return end
 mod:RegisterEnableMob(52409, 53231) --Ragnaros, Lava Scion
+mod:SetEncounterID(1203)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -90,15 +92,14 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "BurningWound", 99399)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "BurningWound", 99399)
 
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 52409)
 	self:Death("SonDeaths", 53140) -- Son of Flame
 end
 
 function mod:OnEngage()
 	self:Bar(98237, 25, L["hand_bar"])
-	self:Bar(98710, 30, lavaWaves)
+	self:CDBar(98710, 30, lavaWaves)
+	self:CDBar(98164, 15) -- Magma Trap
+	self:CDBar(98263, 5) -- Wrath of Ragnaros
 	self:OpenProximity("proximity", 6)
 	self:Berserk(1080)
 	lavaWavesCD, dreadflameCD = 30, 40
@@ -118,25 +119,23 @@ end
 --
 
 function mod:Phase4()
-	--10% Yell is Phase 4 for heroic, and victory for normal
-	if self:Heroic() then
-		self:StopBar(livingMeteor)
-		self:StopBar(lavaWaves)
-		self:StopBar(98498) -- Molten Seed
-		phase = 4
-		 -- not sure if we want a different option key or different icon
-		self:MessageOld(98953, "green", nil, CL["phase"]:format(phase))
-		self:Bar(100479, 34) -- Breadth of Frost
-		self:Bar(100714, 51) -- Cloudburst
-		self:Bar(100646, 68) -- Entraping Roots
-		self:Bar(100604, 90) -- Empower Sulfuras
-	else
-		self:Win()
-	end
+	if not self:Heroic() then return end
+
+	self:StopBar(livingMeteor)
+	self:StopBar(lavaWaves)
+	self:StopBar(98498) -- Molten Seed
+	phase = 4
+	-- not sure if we want a different option key or different icon
+	self:MessageOld(98953, "green", nil, CL["phase"]:format(phase))
+	self:Bar(100479, 34) -- Breadth of Frost
+	self:Bar(100714, 51) -- Cloudburst
+	self:Bar(100646, 68) -- Entraping Roots
+	self:Bar(100604, 80) -- Empower Sulfuras
 end
 
 function mod:Dreadflame()
-	if not self:UnitDebuff("player", self:SpellName(100757)) then return end -- No Deluge on you = you don't care
+	-- 100713 on difficulty 5
+	if not self:UnitDebuff("player", self:SpellName(100757), 100713) then return end -- No Deluge on you = you don't care
 	self:MessageOld(100675, "red", "alarm")
 	self:Bar(100675, dreadflameCD)
 	if dreadflameCD > 10 then
@@ -206,19 +205,20 @@ function mod:IntermissionEnd()
 		self:OpenProximity("proximity", 6)
 		if self:Heroic() then
 			self:CDBar(98498, 15) -- Molten Seed
-			self:Bar(98710, 7.5, lavaWaves)
+			self:CDBar(98710, 5, lavaWaves)
 			self:Bar(100171, 40) -- World in Flames
 		else
 			self:Bar(98498, 22.7) -- Molten Seed
-			self:Bar(98710, 55, lavaWaves)
+			self:CDBar(98710, 15, lavaWaves)
 		end
 	elseif phase == 2 then
+		lavaWavesCD = 30
 		engulfingCD = 30
 		if self:Heroic() then
 			self:Bar(100171, engulfingCD) -- World in Flames
 		end
 		self:CDBar(99317, 52) -- Living Meteor
-		self:Bar(98710, 55, lavaWaves)
+		self:CDBar(98710, 15, lavaWaves)
 		self:RegisterUnitEvent("UNIT_AURA", "FixatedCheck", "player")
 		self:UnregisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "boss1")
 	end
@@ -231,9 +231,7 @@ function mod:HandofRagnaros(args)
 end
 
 function mod:WrathofRagnaros(args)
-	if self:Difficulty() == 5 then
-		self:CDBar(args.spellId, 25)
-	end
+	self:CDBar(args.spellId, 25.5)
 end
 
 function mod:SplittingBlow(args)
@@ -252,14 +250,15 @@ function mod:SplittingBlow(args)
 	self:StopBar(lavaWaves)
 	self:StopBar(98263) -- Wrath of Ragnaros
 	self:StopBar(98498) -- Molten Seed
+	self:StopBar(98164) -- Magma Trap
 end
 
 function mod:SulfurasSmash(args)
-	if phase == 1 and self:Difficulty() ~= 5 then
-		self:CDBar(98263, 12)
+	if phase == 1 and self:BarTimeLeft(98263) < 12.5 then
+		self:CDBar(98263, 12.5) -- Wrath of Ragnaros
 	end
 	self:MessageOld(args.spellId, "yellow", "info", lavaWaves)
-	self:Bar(args.spellId, lavaWavesCD, lavaWaves)
+	self:CDBar(args.spellId, lavaWavesCD, lavaWaves)
 end
 
 function mod:WorldInFlames(args)
@@ -314,8 +313,8 @@ do
 			if t-prev > 5 then
 				prev = t
 				self:MessageOld(98498, "orange", "alarm")
-				self:Bar(98498, 12, L["seed_explosion"])
-				self:Bar(98498, 60)
+				self:Bar(98498, 11, L["seed_explosion"])
+				self:Bar(98498, 61.4)
 			end
 		elseif self:SpellName(spellId) == self:SpellName(98333) then
 			self:Error(("Found new id %d"):format(spellId)) -- XXX 98333 is the id on hc25, check normal

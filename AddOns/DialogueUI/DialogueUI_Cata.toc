@@ -1,5 +1,5 @@
-## Interface: 40400, 40401
-## Version: 0.4.6
+## Interface: 40402
+## Version: 0.6.3
 
 ## Title: Dialogue UI
 
@@ -17,16 +17,20 @@ Locales\Localization.xml
 Fonts.xml
 API.xml
 
-Code\Utility.xml
+Code\Utility\Utility.xml
 Code\Sound.lua
 Code\Camera.lua
-Code\Tooltip.xml
-Code\Scroll.xml
-Code\Settings.xml
-Code\GossipDataProvider.xml
+Code\SharedUITemplates\SharedUITemplates.xml
+Code\Tooltip\Tooltip.xml
+Code\Scroll\Scroll.xml
+Code\Settings\Settings.xml
+Code\GossipData\GossipDataProvider.xml
 Code\NameplateGossip.lua
-Code\UI.xml
-Code\WidgetManager.xml
+Code\Dialogue\DialogueUI.xml
+Code\Book\BookUI.xml
+Code\Widget\WidgetManager.xml
 Code\Core.lua
+
+#Code\Skimmer\Skimmer.xml
 
 Code\SupportedAddOns\SupportedAddOns.xml

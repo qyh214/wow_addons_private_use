@@ -63,10 +63,13 @@ end
 L = BigWigs:NewBossLocale("Blackwing Lair Trash", "esES")
 if L then
 	L.wyrmguard_overseer = "Vermiguardia Garramortal / Sobrestante Garramortal" -- NPC 12460 / 12461
+	L.sandstorm = "Tormenta de arena"
 
 	L.target_vulnerability = "Anuncios de vulnerabilidad de objetivo"
 	L.target_vulnerability_desc = "Cuando tu objetivo es un Vermiguardia Garramortal o un Sobrestante Garramortal, muestra un anuncio sobre qué vulnerabilidad tiene."
 	L.target_vulnerability_message = "Vulnerabilidad de objetivo: %s"
 	L.detect_magic_missing_message = "Falta Detectar magia en tu objetivo"
 	L.detect_magic_warning = "Un mago debe lanzar \124cff71d5ff\124Hspell:2855:0\124h[Detectar magia]\124h\124r en tu objetivo para que funcionen los anuncios de vulnerabilidad."
+
+	L.warlock = "Brujo Alanegra" -- NPC 12459
 end

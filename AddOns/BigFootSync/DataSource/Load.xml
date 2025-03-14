@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/FrameXML/UI_shared.xsd">
+    <Script file="Player.lua"/>
+    <Script file="Talent.lua"/>
+    <Script file="Equipment.lua"/>
+    <Script file="Profession.lua"/>
+    <Script file="Achievement.lua"/>
+    <Script file="Mount.lua"/>
+    <Script file="WoWToken.lua"/>
+    <Script file="TradingPost.lua"/>
+    <Script file="SavedInstance.lua"/>
+</Ui>

@@ -5,6 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Ultraxion", 967, 331)
 if not mod then return end
 mod:RegisterEnableMob(55294, 56667) -- Ultraxion, Thrall
+mod:SetEncounterID(1297)
 
 --------------------------------------------------------------------------------
 -- Locales
@@ -73,15 +74,11 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "HourofTwilight", 106371)
 	self:Log("SPELL_AURA_APPLIED", "FadingLight", 109075, 105925) -- Normal/Tank
 
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
 	self:BossYell("Warmup", L["warmup_trigger"])
 	self:Emote("Gift", L["crystal_icon"])
 	self:Emote("Dreams", L["crystal_green_icon"])
 	self:Emote("Magic", L["crystal_blue_icon"])
 	self:Emote("Loop", L["crystal_bronze_icon"])
-
-	self:Death("Win", 55294)
 end
 
 function mod:Warmup()
@@ -136,14 +133,18 @@ do
 	function mod:FadingLight(args)
 		lightTargets[#lightTargets + 1] = args.destName
 		if self:Me(args.destGUID) then
-			local _, _, duration = self:UnitDebuff("player", args.spellName)
-			self:Bar("lightself", duration, L["lightself_bar"], args.spellId)
+			local tbl = self:GetPlayerAura(args.spellId)
+			if tbl and tbl.duration then
+				self:Bar("lightself", tbl.duration, L["lightself_bar"], args.spellId)
+			end
 			self:Flash("lightself", args.spellId)
 		else -- This is mainly a tanking assist
 			if args.spellId == 105925 then
 				self:Flash("lighttank", args.spellId)
-				local _, _, duration = self:UnitDebuff(args.destName, args.spellName)
-				self:Bar("lighttank", duration, L["lighttank_bar"]:format(args.destName), args.spellId)
+				local tbl = self:GetPlayerAura(args.spellId)
+				if tbl and tbl.duration then
+					self:Bar("lighttank", tbl.duration, L["lighttank_bar"]:format(args.destName), args.spellId)
+				end
 				self:TargetMessageOld("lighttank", args.destName, "yellow", "alarm", L["lighttank_message"], args.spellId, true)
 			end
 		end

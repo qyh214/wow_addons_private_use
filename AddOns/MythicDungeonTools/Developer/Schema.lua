@@ -83,6 +83,14 @@ local schemas = {
             type = "number"
           },
           {
+            name = "itemType",
+            type = "number"
+          },
+          {
+            name = "itemIndex",
+            type = "number"
+          },
+          {
             name = "chainIndex",
             type = "number"
           },
@@ -393,6 +401,30 @@ local schemas = {
             fields = {
               {
                 name = "interruptible",
+                type = "boolean"
+              },
+              {
+                name = "magic",
+                type = "boolean"
+              },
+              {
+                name = "poison",
+                type = "boolean"
+              },
+              {
+                name = "disease",
+                type = "boolean"
+              },
+              {
+                name = "curse",
+                type = "boolean"
+              },
+              {
+                name = "bleed",
+                type = "boolean"
+              },
+              {
+                name = "enrage",
                 type = "boolean"
               },
             },

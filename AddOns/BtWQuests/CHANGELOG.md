@@ -1,3 +1,59 @@
+# v2.51.1
+
+- Fixed an issue preventing uploads to Wago.io
+
+# v2.51.0
+
+- Updated for 11.1
+- Added Underline questlines
+- Fixed some questlines in the Isle Of Dorn not showing as active correctly
+- Fixed the breadcrumbs for All Good Things in Azj-Kahet
+- Updated prerequisites and active status for a number of quests in The Ringing Deeps and Hallowfall
+- Fixed some errors with map pins in 11.1
+- Added Quest category for 11.1 addon list
+
+# v2.50.2
+
+- Added Lingering Shadows questline
+- Added A Song of Secrets questline
+
+# v2.50.1
+
+- Updated for 11.0.7
+
+# v2.50.0
+
+- Fixed an issue handling player auras
+
+# v2.49.0
+
+- Fixed an issue with Chromie Time 
+
+# v2.48.4
+
+- Updated for 11.0.5
+
+# v2.48.3
+
+- Fixed the completion check for The Priory questline in Hallowfall
+
+# v2.48.2
+
+- Fixed error opening quest chain The Flame Within in Hallowfall
+
+# v2.48.1
+
+- Added raid questline To Kill a Queen
+
+# v2.48.0
+
+- Added Honor Your Efforts questlines in Hallowfall
+- Added The Flame Within questlines in Hallowfall
+- Added Socialized Medicine questline in Azj-Kahet
+- Updated some prerequisites for Azj-Kahet questlines
+- Fixed issue where player level for alts could be lost and cause errors
+- Fixed error reading faction data
+
 # v2.47.1
 
 - Added A Light in the Dark campaign questline

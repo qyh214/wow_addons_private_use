@@ -1,8 +1,8 @@
-## Interface: 11503, 30403, 40400, 110002
+## Interface: 11506, 40402, 110100
 
 ## Author: StormFX
 ## Title: AceGUI-3.0: SFX Widgets
-## Version: 1.3.10
+## Version: 1.3.12
 
 ## IconTexture: Interface\AddOns\AceGUI-3.0_SFX-Widgets\Textures\Icon
 ## OptionalDeps: Ace3

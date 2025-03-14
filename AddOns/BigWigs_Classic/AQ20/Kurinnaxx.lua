@@ -41,7 +41,7 @@ end
 
 function mod:OnEngage()
 	self:RegisterEvent("UNIT_HEALTH")
-	self:CDBar(25648, 8) -- Sand Trap
+	self:CDBar(25648, 8, nil, L["25648_icon"]) -- Sand Trap
 end
 
 --------------------------------------------------------------------------------

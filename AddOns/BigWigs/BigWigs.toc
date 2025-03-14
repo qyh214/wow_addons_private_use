@@ -1,4 +1,4 @@
-## Interface: 110005, 110000, 110002
+## Interface: 110005, 110007, 110100
 
 ## Title: BigWigs
 ## Notes: Modular, lightweight, non-intrusive approach to boss encounter warnings.
@@ -14,7 +14,7 @@
 ## Notes-ptBR: Abordagem modular, leve e não intrusiva para avisos em encontros com chefes.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
 ## Author: Funkeh, Nebula, Justwait, Delk
-## Version: v357.3
+## Version: v375.2
 
 ## X-Credits: Ammo, Elvador, Vhaarr
 ## X-Category: Raid

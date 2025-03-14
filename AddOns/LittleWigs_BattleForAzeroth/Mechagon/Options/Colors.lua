@@ -33,12 +33,13 @@ BigWigs:AddColors("HK-8 Aerial Oppression Unit", {
 })
 
 BigWigs:AddColors("Tussle Tonks", {
-	[282801] = {"blue","green"},
-	[283422] = {"blue","yellow"},
-	[285020] = "red",
+	[282801] = {"cyan","green"},
+	[283422] = {"blue","orange"},
 	[285152] = {"blue","yellow"},
-	[285344] = "orange",
-	[285388] = "red",
+	[1215065] = "purple",
+	[1215102] = "yellow",
+	[1216431] = "red",
+	[1216443] = "cyan",
 })
 
 BigWigs:AddColors("K.U.-J.0.", {
@@ -50,18 +51,19 @@ BigWigs:AddColors("K.U.-J.0.", {
 
 BigWigs:AddColors("Machinist's Garden", {
 	[285440] = "red",
-	[285454] = {"blue","orange","yellow"},
-	[294855] = {"blue","orange"},
-	["activate_plant"] = "orange",
+	[285454] = {"blue","orange","red"},
+	[294853] = "cyan",
+	[294855] = {"blue","yellow"},
 })
 
 BigWigs:AddColors("King Mechagon", {
-	[283551] = "red",
+	[283551] = "yellow",
 	[291613] = "orange",
-	[291626] = "red",
+	[291626] = {"blue","red"},
 	[291865] = "orange",
 	[291928] = {"blue","red"},
-	[292290] = "yellow",
+	[292264] = {"blue","red"},
+	[292290] = "purple",
 	["button"] = {"blue","cyan"},
 	["hardmode"] = "yellow",
 	["stages"] = "cyan",
@@ -69,23 +71,17 @@ BigWigs:AddColors("King Mechagon", {
 
 BigWigs:AddColors("Operation: Mechagon Trash", {
 	[284219] = {"blue","orange","yellow"},
-	[293670] = {"blue","red"},
 	[293683] = "green",
 	[293729] = "yellow",
-	[293827] = "orange",
-	[293861] = "yellow",
+	[293827] = "red",
+	[293861] = "orange",
 	[293930] = "red",
 	[293986] = "red",
-	[294015] = "yellow",
 	[294103] = "orange",
-	[294180] = {"blue","orange"},
 	[294195] = {"blue","yellow"},
-	[294290] = "orange",
-	[294324] = "red",
-	[294349] = "red",
 	[294884] = "orange",
-	[295169] = "orange",
-	[297128] = "orange",
+	[295169] = "yellow",
+	[297128] = "red",
 	[297133] = "yellow",
 	[299438] = {"blue","purple"},
 	[299474] = {"blue","red"},
@@ -113,4 +109,8 @@ BigWigs:AddColors("Operation: Mechagon Trash", {
 	[301667] = "red",
 	[301681] = "orange",
 	[303941] = "yellow",
+	[1215409] = "yellow",
+	[1215411] = "purple",
+	[1215412] = "red",
+	[1217819] = {"blue","orange"},
 })

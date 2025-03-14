@@ -59,6 +59,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_PERIODIC_MISSED", "ToxinDamage", 25989)
 
 	self:Log("SPELL_DAMAGE", "FrostDamage", "*")
+	self:Log("SPELL_PERIODIC_DAMAGE", "FrostDamage", "*")
 	self:Log("SWING_DAMAGE", "SwingDamage", "*")
 
 	self:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
@@ -96,7 +97,7 @@ end
 
 if mod:Vanilla() then
 	function mod:FrostDamage(args)
-		if args.spellSchool == 0x10 and self:MobId(args.destGUID) == 15299 then -- 0x10 is Frost
+		if bit.band(args.spellSchool, 0x10) == 0x10 and self:MobId(args.destGUID) == 15299 then -- 0x10 is Frost
 			frostCount = frostCount + 1
 			if frostCount < 170 and frostCount % 20 == 0 then
 				self:Message("freeze", "green", L.freeze_warn_frost:format(frostCount, 170-frostCount), L.freeze_icon)
@@ -114,7 +115,7 @@ if mod:Vanilla() then
 	end
 else
 	function mod:FrostDamage(args)
-		if args.spellSchool == 0x10 and self:MobId(args.destGUID) == 15299 then -- 0x10 is Frost
+		if bit.band(args.spellSchool, 0x10) == 0x10 and self:MobId(args.destGUID) == 15299 then -- 0x10 is Frost
 			frostCount = frostCount + 1
 			if frostCount < 20 and frostCount % 3 == 0 then
 				self:Message("freeze", "green", L.freeze_warn_frost:format(frostCount, 20-frostCount), L.freeze_icon)
@@ -152,10 +153,11 @@ function mod:CHAT_MSG_MONSTER_EMOTE(_, msg)
 end
 
 function mod:UNIT_TARGET(_, unit)
-	if self:MobId(self:UnitGUID(unit.."target")) == 15667 then -- Glob of Viscidus
-		swingCount = -1
+	if self:MobId(self:UnitGUID(unit.."target")) == 15667 and swingCount ~= -1 then -- Glob of Viscidus
 		frostCount = 0
 		self:StopBar(L.freeze_warn3)
 		self:StopBar(25991) -- Poison Bolt Volley
+		self:Message("freeze", "green", tostring(swingCount), false)
+		swingCount = -1
 	end
 end

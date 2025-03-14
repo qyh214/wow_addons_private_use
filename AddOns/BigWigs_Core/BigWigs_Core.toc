@@ -1,4 +1,4 @@
-## Interface: 110005, 110000, 110002
+## Interface: 110005, 110007, 110100
 
 ## Title: BigWigs [|cffeda55fCore|r]
 ## Title-zhCN: BigWigs [|cffeda55f核心|r]
@@ -23,7 +23,7 @@
 ## Notes-esES: Núcleo de BigWigs.
 ## Notes-esMX: Núcleo de BigWigs.
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v357.3
+## Version: v375.2
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

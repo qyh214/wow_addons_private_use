@@ -9,14 +9,20 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [76169] = {
         name = "Une lueur dans l’ombre",
     },
+    [76247] = {
+        name = "Alimenter les flammes du foyer",
+    },
     [76338] = {
         name = "Un meilleur ravageur de choux",
+    },
+    [76586] = {
+        name = "Propager la lumière",
     },
     [76588] = {
         name = "Défense de la flamme",
     },
     [76599] = {
-        name = "Pile entre les gyro-optiques - Activer",
+        name = "Pile entre les Gyro-optiques – Activer",
     },
     [76733] = {
         name = "La chasse à la patate",
@@ -163,7 +169,7 @@ BtWQuestsDatabase:UpdateQuestsTable({
         name = "Le Proscenium",
     },
     [78472] = {
-        name = "Une lueur dans l’ombre - Activer",
+        name = "Briller dans le noir – Activer",
     },
     [78529] = {
         name = "Impact violent",
@@ -1044,6 +1050,18 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79556] = {
         name = "Formation sur le tas",
     },
+    [79559] = {
+        name = "Le Chevalier Vert-de-gras",
+    },
+    [79561] = {
+        name = "Seigneur des géants",
+    },
+    [79563] = {
+        name = "La Dame du lac",
+    },
+    [79564] = {
+        name = "Le retour du gras",
+    },
     [79565] = {
         name = "Les bougies de Tocard",
     },
@@ -1232,6 +1250,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80082] = {
         name = "Retour à Gundargaz",
+    },
+    [80096] = {
+        name = "La pelle dans la pierre",
+    },
+    [80144] = {
+        name = "Le Vain-Graal",
     },
     [80145] = {
         name = "Le Filon",
@@ -1599,8 +1623,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81615] = {
         name = "Mèche courte",
     },
+    [81630] = {
+        name = "Protocole d’activation",
+    },
     [81655] = {
         name = "Pièce de viande juteuse de krolusk",
+    },
+    [81656] = {
+        name = "Rien à jeter",
     },
     [81661] = {
         name = "Vers la cime Éplorée",
@@ -1679,6 +1709,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81802] = {
         name = "Course draconique – Survol du guet de la Tempête",
+    },
+    [81804] = {
+        name = "Course draconique – Élan de la lande",
     },
     [81806] = {
         name = "Course draconique – Virages de Mineroc",
@@ -1875,6 +1908,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82291] = {
         name = "Choc des robots",
     },
+    [82292] = {
+        name = "Collectionneuse de pierres",
+    },
     [82293] = {
         name = "La puissance de l’amour",
     },
@@ -1956,6 +1992,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82451] = {
         name = "Préservation des peluches",
     },
+    [82455] = {
+        name = "Plus de pain",
+    },
     [82456] = {
         name = "Mâche donc ça",
     },
@@ -1998,6 +2037,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82536] = {
         name = "Opération d’exfiltration",
     },
+    [82552] = {
+        name = "Dans tous ses états",
+    },
     [82580] = {
         name = "Mission de messagerie : récupération de minerai",
     },
@@ -2028,8 +2070,11 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82682] = {
         name = "Dégustation d’élémentaires",
     },
+    [82690] = {
+        name = "Ombres persistantes",
+    },
     [82706] = {
-        name = "Gouffres : recherche dans Khaz Algar",
+        name = "Gouffres : recherche dans le monde",
     },
     [82768] = {
         name = "Pêche aux nuages",
@@ -2148,14 +2193,125 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83087] = {
         name = "La vieille garde",
     },
+    [83088] = {
+        name = "Collection caustique",
+    },
+    [83089] = {
+        name = "Des lunettes aux gélanautes",
+    },
+    [83091] = {
+        name = "Bien que pour vos yeux",
+    },
     [83092] = {
         name = "Fin ignée",
+    },
+    [83096] = {
+        name = "Bienvenue à Terremine",
     },
     [83101] = {
         name = "En quête de ressources",
     },
     [83108] = {
         name = "Diagnostics du jour",
+    },
+    [83109] = {
+        name = "Le Grimla Express",
+    },
+    [83114] = {
+        name = "Ruban rouge",
+    },
+    [83115] = {
+        name = "Dans le chaudron",
+    },
+    [83116] = {
+        name = "Potion et commotion",
+    },
+    [83117] = {
+        name = "Chasse aux indices",
+    },
+    [83118] = {
+        name = "Consultation des horaires",
+    },
+    [83119] = {
+        name = "Ça vaut la peine d’essayer",
+    },
+    [83120] = {
+        name = "Voler les clés",
+    },
+    [83121] = {
+        name = "Gestion des actifs",
+    },
+    [83122] = {
+        name = "Effondrement du marché",
+    },
+    [83123] = {
+        name = "Une erreur mineure",
+    },
+    [83124] = {
+        name = "Guetteur O.I.S.E.A.U.",
+    },
+    [83125] = {
+        name = "Augmentation des prix",
+    },
+    [83126] = {
+        name = "Invasion éthérienne",
+    },
+    [83127] = {
+        name = "Course contre la montre",
+    },
+    [83128] = {
+        name = "Secourir les otages",
+    },
+    [83129] = {
+        name = "Nulle part où se cacher",
+    },
+    [83130] = {
+        name = "Victoire amère",
+    },
+    [83137] = {
+        name = "Quand l’aubaine explose",
+    },
+    [83138] = {
+        name = "Fin de journée",
+    },
+    [83139] = {
+        name = "Messages contradictoires",
+    },
+    [83140] = {
+        name = "Environnement de travail inhospitalier",
+    },
+    [83141] = {
+        name = "Enquêtes sur les mines",
+    },
+    [83142] = {
+        name = "Ordre de grandeur",
+    },
+    [83143] = {
+        name = "Un travail honnête",
+    },
+    [83144] = {
+        name = "Carnage",
+    },
+    [83145] = {
+        name = "Prévention de la paranoïa",
+    },
+    [83146] = {
+        name = "La pompe prisée de Pamsy",
+    },
+    [83147] = {
+        name = "Affaires sanglantes",
+    },
+    [83148] = {
+        name = "Froid extrême",
+    },
+    [83149] = {
+        name = "Vengez-les",
+    },
+    [83150] = {
+        name = "Élargissement du plan",
+    },
+    [83151] = {
+        name = "Direction Terremine",
     },
     [83152] = {
         name = "Maintenance magmatique",
@@ -2175,14 +2331,89 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83162] = {
         name = "Remettez-le en place !",
     },
+    [83163] = {
+        name = "Division dans la KapitalRisk",
+    },
     [83165] = {
         name = "Robot récalcitrant",
+    },
+    [83167] = {
+        name = "Les yeux venus du ciel",
+    },
+    [83168] = {
+        name = "Une traînée de Sang noir",
+    },
+    [83169] = {
+        name = "Un long chemin depuis Baie-du-Butin",
+    },
+    [83170] = {
+        name = "Ah non, pas encore !",
+    },
+    [83171] = {
+        name = "Un régal pour les yeux endoloris",
+    },
+    [83172] = {
+        name = "Transfert de Sang noir",
+    },
+    [83173] = {
+        name = "Nettoyage du dépôt",
+    },
+    [83174] = {
+        name = "Un vieil ami",
+    },
+    [83175] = {
+        name = "Une autre pièce du puzzle",
+    },
+    [83176] = {
+        name = "Comme un pressentiment",
     },
     [83181] = {
         name = "Amitié jusqu’au bout",
     },
     [83182] = {
         name = "Un héritage sanglant",
+    },
+    [83194] = {
+        name = "Tirs nourris",
+    },
+    [83195] = {
+        name = "À la volonté du peuple",
+    },
+    [83196] = {
+        name = "Dispersion !",
+    },
+    [83197] = {
+        name = "À qui appartiennent ces rues ?",
+    },
+    [83198] = {
+        name = "Marine arrière",
+    },
+    [83199] = {
+        name = "À la rescousse",
+    },
+    [83200] = {
+        name = "En avant toutes, moussaillons",
+    },
+    [83201] = {
+        name = "Livraison rapide",
+    },
+    [83202] = {
+        name = "Ça s’anime",
+    },
+    [83203] = {
+        name = "En joue",
+    },
+    [83204] = {
+        name = "Le machin",
+    },
+    [83205] = {
+        name = "Production en berne",
+    },
+    [83206] = {
+        name = "Les rues nous appartiennent",
+    },
+    [83207] = {
+        name = "Ma cible principale",
     },
     [83229] = {
         name = "Mission spéciale : agitation dans les profondeurs",
@@ -2249,6 +2480,42 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83339] = {
         name = "Brise-aiguillon",
+    },
+    [83417] = {
+        name = "Hors l’aloi",
+    },
+    [83418] = {
+        name = "Le manteau parfait",
+    },
+    [83419] = {
+        name = "La liste d’invités parfaite",
+    },
+    [83420] = {
+        name = "La perfection dans l’assiette",
+    },
+    [83421] = {
+        name = "Le mariage parfait",
+    },
+    [83442] = {
+        name = "Sur le grill",
+    },
+    [83445] = {
+        name = "Un parfum de tromperie",
+    },
+    [83446] = {
+        name = "Mesure suspensive",
+    },
+    [83484] = {
+        name = "Rat-é !",
+    },
+    [83485] = {
+        name = "Boissons fortes",
+    },
+    [83486] = {
+        name = "Télétravail",
+    },
+    [83487] = {
+        name = "Risques du métier",
     },
     [83497] = {
         name = "Un ami préoccupé",
@@ -2340,11 +2607,194 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83930] = {
         name = "Vermifuge miracle",
     },
+    [83933] = {
+        name = "La Kaja’Côte",
+    },
     [84022] = {
         name = "Réunir les Fils tranchés",
     },
+    [84121] = {
+        name = "Une petite assurance",
+    },
+    [84122] = {
+        name = "Coupez les caméras",
+    },
+    [84140] = {
+        name = "Touche-à-tout",
+    },
+    [84141] = {
+        name = "Canettes à arnaque",
+    },
+    [84142] = {
+        name = "Un point c’est trou",
+    },
+    [84214] = {
+        name = "Le boulot",
+    },
+    [84215] = {
+        name = "L’équipe",
+    },
+    [84216] = {
+        name = "Le coup",
+    },
+    [84217] = {
+        name = "Un haut vol",
+    },
+    [84218] = {
+        name = "La fuite",
+    },
+    [84298] = {
+        name = "OFFRE D’EMPLOI : Kaja’Curiosité",
+    },
+    [84300] = {
+        name = "Raffiner, réparer, recommencer",
+    },
+    [84301] = {
+        name = "Maladie minérale",
+    },
+    [84302] = {
+        name = "Itération créative",
+    },
+    [84303] = {
+        name = "Application expérimentale",
+    },
+    [84304] = {
+        name = "Une migraine à se cogner la tête contre un cristal",
+    },
+    [84376] = {
+        name = "Propriété dévaluée",
+    },
+    [84378] = {
+        name = "Assurance locative",
+    },
+    [84379] = {
+        name = "Problème de locataires",
+    },
+    [84380] = {
+        name = "Espèces sonnantes et mitraillantes",
+    },
+    [84381] = {
+        name = "Renégociations",
+    },
     [84392] = {
         name = "Un petit creux dans le grand trou",
+    },
+    [84439] = {
+        name = "Kaja’conclusions",
+    },
+    [84621] = {
+        name = "Éperons d’écurie",
+    },
+    [84667] = {
+        name = "Le G.O.L.E.M. du progrès",
+    },
+    [84672] = {
+        name = "Ramassage des ordures",
+    },
+    [84673] = {
+        name = "L’inventeur le plus passable au monde",
+    },
+    [84674] = {
+        name = "Le G.O.L.E.M. s’affole !",
+    },
+    [84675] = {
+        name = "Duel dans les combles",
+    },
+    [84683] = {
+        name = "Dans le caniveau",
+    },
+    [84821] = {
+        name = "Taupinement biologique",
+    },
+    [84885] = {
+        name = "Vous avez demandé la SgPA, ne quittez pas",
+    },
+    [84891] = {
+        name = "Sg-PAF le rat radioactif",
+    },
+    [84892] = {
+        name = "Sg-PAF le crocodilien",
+    },
+    [84893] = {
+        name = "Sg-PAF le capitaine",
+    },
+    [85174] = {
+        name = "Allez-y.",
+    },
+    [85409] = {
+        name = "Si tu poucaves, on te marave",
+    },
+    [85410] = {
+        name = "L’ombre immense de Terremine",
+    },
+    [85438] = {
+        name = "Ou sinon",
+    },
+    [85444] = {
+        name = "Famille d’adoption",
+    },
+    [85449] = {
+        name = "Changement de phase",
+    },
+    [85450] = {
+        name = "Plan d’évacuation",
+    },
+    [85562] = {
+        name = "Plus coriaces que prévu",
+    },
+    [85711] = {
+        name = "Commentaires spontanés",
+    },
+    [85724] = {
+        name = "Repousser l’invasion",
+    },
+    [85780] = {
+        name = "Dos au mur",
+    },
+    [85941] = {
+        name = "Une juste correction",
+    },
+    [86204] = {
+        name = "Libération de Terremine : la maison perd",
+    },
+    [86271] = {
+        name = "Repos mental",
+    },
+    [86272] = {
+        name = "Contrer le Sang noir",
+    },
+    [86273] = {
+        name = "Une visite de l’atelier",
+    },
+    [86274] = {
+        name = "Solution d’automatisation",
+    },
+    [86275] = {
+        name = "Un problème de nuisibles ?",
+    },
+    [86276] = {
+        name = "Sur le terrain",
+    },
+    [86277] = {
+        name = "Fini de manger des asticots",
+    },
+    [86297] = {
+        name = "Le moral reflète la hiérarchie",
+    },
+    [86408] = {
+        name = "Ma gargote",
+    },
+    [86417] = {
+        name = "Appel",
+    },
+    [86575] = {
+        name = "Roquettes roll",
+    },
+    [86697] = {
+        name = "Équipe de nettoyage",
+    },
+    [87008] = {
+        name = "Mariage aux petits oignons",
     },
 })
 ]])()

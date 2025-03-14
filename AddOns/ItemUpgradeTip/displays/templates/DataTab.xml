@@ -1,0 +1,28 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame
+        name="ItemUpgradeTipDataTabDisplayTemplate"
+        virtual="true"
+        mixin="ItemUpgradeTipDataTabDisplayMixin"
+        hidden="true"
+    >
+        <Scripts>
+            <OnLoad method="OnLoad" />
+        </Scripts>
+
+        <Frames>
+            <Frame parentKey="ResultsListing" inherits="ItemUpgradeTipResultsListingTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-20" y="-20" />
+                </Anchors>
+            </Frame>
+
+            <Frame parentKey="ResultsListingInset" inherits="ItemUpgradeTipInsetDarkTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.ResultsListing" relativePoint="TOPLEFT" x="-5" y="-24" />
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.ResultsListing" relativePoint="BOTTOMRIGHT" y="2" />
+                </Anchors>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

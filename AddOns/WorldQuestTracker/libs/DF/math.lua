@@ -31,6 +31,7 @@ DF.Math = {}
 ---@field GetBezierPoint fun(value: number, point1: table, point2: table, point3: table) : number find a point in a bezier curve
 ---@field LerpNorm fun(minValue: number, maxValue: number, value: number) : number normalized value 0-1 result in the value on the range given, e.g 200-400 range with a value of .5 result in 300
 ---@field LerpLinearColor fun(deltaTime: number, interpSpeed: number, r1: number, g1: number, b1: number, r2: number, g2: number, b2: number) : number, number, number change the color by the deltaTime
+---@field InvertInRange fun(minValue: number, maxValue: number, value: number) : number invert the value in a range, example: InvertInRange(0, 1, 0.75) return 0.25, InvertInRange(0, 100, 75) return 25, InvertInRange(-1, 1, 0.5) return -0.5, InvertInRange(-3, 1, -0.75) return -2.25
 ---@field IsNearlyEqual fun(value1: number, value2: number, tolerance: number) : boolean check if a number is near another number by a tolerance
 ---@field IsNearlyZero fun(value: number, tolerance: number) : boolean check if a number is near zero
 ---@field IsWithin fun(minValue: number, maxValue: number, value: number, isInclusive: boolean) : boolean check if a number is within a two other numbers, if isInclusive is true, it'll  include the max value
@@ -43,6 +44,7 @@ DF.Math = {}
 ---@field GetNinePoints fun(object: uiobject) : df_ninepoints
 ---@field GetClosestPoint fun(ninePoints: df_ninepoints, coordinate: df_coordinate) : anchorid
 ---@field GetVectorLength fun(vectorX: number, vectorY: number, vectorZ: number?) : number return the magnitude of a vector
+---@field GetSortFractionFromString fun(str: string) : number return a fraction based on the string first two leters, useful for sorting cases where the number repeats
 
 ---@class df_coordinate : table
 ---@field x number
@@ -123,6 +125,12 @@ function DF.Math.GetNinePoints(object)
 	return ninePoints
 end
 
+function DF.Math.GetSortFractionFromString(str)
+	local name = string.upper(str) .. "ZZ"
+	local byte1 = abs(string.byte(name, 2)-91) / 1000000
+	return byte1 + abs(string.byte(name, 1)-91) / 10000
+end
+
 function DF.Math.GetVectorLength(vectorX, vectorY, vectorZ)
 	if (not vectorZ) then
 		return (vectorX * vectorX + vectorY * vectorY) ^ 0.5
@@ -135,6 +143,11 @@ function DF.Math.RandomFraction(minValue, maxValue)
     minValue = minValue or 0
     maxValue = maxValue or 1
     return DF.Math.MapRangeClamped(0, 1, minValue, maxValue, math.random())
+end
+
+---invert the value in a range, example: InvertInRange(0, 1, 0.75) return 0.25, InvertInRange(0, 100, 75) return 25, InvertInRange(-1, 1, 0.5) return -0.5, InvertInRange(-3, 1, -0.75) return -2.25
+function DF.Math.InvertInRange(minValue, maxValue, value)
+	return DF.Math.GetRangeValue(minValue, maxValue, 1 - DF.Math.GetRangePercent(minValue, maxValue, value))
 end
 
 ---find distance between two units

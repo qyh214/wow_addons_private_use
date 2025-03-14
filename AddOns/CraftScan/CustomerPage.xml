@@ -1,0 +1,132 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+    <Script file="CustomerPage.lua"/>
+
+    <Button name="CraftScan_FindCrafterButtonTemplate" inherits="UIPanelButtonTemplate" registerForClicks="LeftButtonUp" mixin="CraftScan_FindCrafterButtonMixin" virtual="true">
+        <Size x="120" y="22"/>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </Button>
+
+    <Button name="CraftScan_FoundCrafterListElementTemplate" mixin="CraftScan_FoundCrafterListElementMixin" virtual="true">
+        <Size y="22"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="HoverBackground" parentKey="HoverBackground" atlas="Professions_Recipe_Hover" useAtlasSize="true" alpha="0.5" hidden="true">
+                    <Anchors>
+                        <Anchor relativeKey="$parent" point="TOPLEFT" x="-10"/>
+                        <Anchor relativeKey="$parent" point="BOTTOMRIGHT" x="-5"/>
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="CrafterName" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true" />
+                <FontString parentKey="Commission" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true">
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="RIGHT" x="-100" y="0"/>
+                    </Anchors>
+                </FontString>
+                <Texture parentKey="ItsMeIcon" atlas="auctionhouse-icon-favorite" mixin="CraftScan_ItsMeIconMixin" hidden="true">
+                    <Size x="13" y="13"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="LEFT" x="0" y="0" />
+                    </Anchors>
+                    <Scripts>
+                        <OnEnter method="OnEnter"/>
+                        <OnLeave method="OnLeave"/>
+                    </Scripts>
+                </Texture>
+
+                <Texture parentKey="BusyIcon" atlas="perks-clock-large" mixin="CraftScan_BusyIconMixin" hidden="true">
+                    <Size x="14" y="14"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.CrafterName" relativePoint="RIGHT" x="5" y="0" />
+                    </Anchors>
+                    <Scripts>
+                        <OnEnter method="OnEnter"/>
+                        <OnLeave method="OnLeave"/>
+                    </Scripts>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Scripts>
+            <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
+    </Button>
+
+
+    <Frame name="CraftScan_FoundCrafterPageTemplate" inherits="DefaultPanelFlatTemplate" parent="UIParent" movable="true" enableMouse="true" virtual="true">
+        <Size x="400" y="565" />
+
+        <Frames>
+            <Button parentKey="ClosePanelButton" inherits="UIPanelCloseButtonDefaultAnchors" />
+
+            <Frame parentKey="CrafterList" mixin="CraftScan_FoundCrafterListMixin">
+                <Size x="300" y="505"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="6" y="-25"/>
+                    <Anchor point="BOTTOMRIGHT" x="6" y="3" />
+                </Anchors>
+                <Frames>
+                    <Button parentKey="Header" inherits="CraftScan_FoundCrafterListElementTemplate">
+                        <Size y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="6" y="0"/>
+                            <Anchor point="TOPRIGHT" x="0" y="0"/>
+                        </Anchors>
+                    </Button>
+
+                    <Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="0" y="-24"/>
+                            <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+                        </Anchors>
+                    </Frame>
+                    <EventFrame parentKey="ScrollBar" inherits="MinimalScrollBar">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="0" y="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
+                        </Anchors>
+                    </EventFrame>
+                </Frames>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture name="HeaderSeparator" parentKey="HeaderSeparator" atlas="Professions_Recipe_Hover" alpha="1">
+                            <Size y="1" />
+                            <Anchors>
+                                <Anchor relativeKey="$parent" point="TOPLEFT" x="-10" y="-22"/>
+                                <Anchor relativeKey="$parent" point="TOPRIGHT" x="-10" y="-22"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="ResultsText" inherits="GameFontNormal" hidden="true">
+                            <Anchors>
+                                <Anchor point="TOP" relativeKey="$parent.ScrollBox" relativePoint="TOP" x="0" y="-22"/>
+                            </Anchors>
+                            <Shadow>
+                                <Offset>
+                                    <AbsDimension x="1" y="-1"/>
+                                </Offset>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnHide method="OnHide"/>
+                </Scripts>
+            </Frame>
+
+
+        </Frames>
+    </Frame>
+
+
+
+</Ui>

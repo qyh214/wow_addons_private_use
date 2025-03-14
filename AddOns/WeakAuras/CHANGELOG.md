@@ -1,47 +1,38 @@
-# [5.17.1](https://github.com/WeakAuras/WeakAuras2/tree/5.17.1) (2024-09-07)
+# [5.19.5](https://github.com/WeakAuras/WeakAuras2/tree/5.19.5) (2025-03-10)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.17.0...5.17.1)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.19.4...5.19.5)
 
 ## Highlights
 
- - The options now have a "Thanks" button where we list all our supporters, thanks for being awesome!
-- Fixed a bug with cooldown tracking
-- Item Count triggers can now use reagent/account bank API 
+No new features this release, just fixes to some minor bugs
 
 ## Commits
 
-InfusOnWoW (7):
+InfusOnWoW (9):
 
-- Ensure that talent data is up to date on initial login
-- Fix Lua Error in Cooldown Tracking
-- Item Count: Add support for reagent/account bank api (#5389)
 - Update Discord List
-- Options: Add a Thanks button
-- Update Atlas File List from wago.tools
-- Update Atlas File List from wago.tools
-
-Jon (1):
-
-- Fix percent progress validation and parsing (#5381)
+- Update Discord List
+- Stop Motion Sub Element: Fix setting of custom row/colum etc settings
+- Partially revert 4e628f546befa7
+- Being in Excavation Site 9 IsInInstance() returns false
+- Texture Sub Element: Don't resize main aura on atlas selection
+- Workaround boss unit stupidity by Blizzard
+- Workaround INSTANCE_ENGAGE_UNIT with incosistent UnitGUID/UnitExists
+- Remove Stop Motion texture data
 
 Stanzilla (2):
 
 - Update WeakAurasModelPaths from wago.tools
 - Update WeakAurasModelPaths from wago.tools
 
-dependabot[bot] (1):
+dependabot[bot] (4):
 
-- Bump cbrgm/mastodon-github-action from 2.1.5 to 2.1.8
+- Bump cbrgm/mastodon-github-action from 2.1.12 to 2.1.13
+- Bump tsickert/discord-webhook from 6.0.0 to 7.0.0
+- Bump leafo/gh-actions-luarocks from 4 to 5
+- Bump leafo/gh-actions-lua from 10 to 11
 
-emptyrivers (2):
+emptyrivers (1):
 
-- fux a small mem leak as user edits custom code
-- close a hole in the sandbox
-
-mrbuds (4):
-
-- fix (#5390)
-- fix keys with wrong type after export from wago
-- Fix data for auras with holes in multiEntry fields
-- Removing an element of a multyEntry field could leave an empty space in the list, fix #5361
+- remove spurious enUS translations
 

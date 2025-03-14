@@ -1,0 +1,7 @@
+## Interface: 30403
+## Version: 2024/09/19
+## Title: Lib: RealmInfo(CN)
+## Author: enderneko
+
+LibStub\LibStub.lua
+LibRealmInfoCN.lua

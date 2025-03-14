@@ -129,22 +129,22 @@ if not db.activate.HideMapNote then
             end
 
             if self.db.profile.showMiniMapMultiple then
-              minimap[71][64864997] = { mnID = 75, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
-              minimap[74][30857356] = { mnID = 75, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
+              minimap[71][64864997] = { mnID = 75, hideInfo = true, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
+              minimap[74][30857356] = { mnID = 75, hideInfo = true, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
             end
 
           end
 
         --Kalimdor Multiple
           if self.db.profile.showMiniMapMultiple and not db.activate.ClassicIcons then  
-            minimap[71][64864997] = { mnID = 75, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
-            minimap[74][30857356] = { mnID = 75, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
+            minimap[71][64864997] = { mnID = 75, hideInfo = true, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
+            minimap[74][30857356] = { mnID = 75, hideInfo = true, id = { 187, 750, 279, 255, 251, 184, 185, 186, }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dragon Soul, The Battle for Mount Hyjal, The Culling of Stratholme, Black Morass, Old Hillsbrad Foothills, End Time, Well of Eternity, Hour of Twilight Heroic
           end
 
 
         -- Kalimdor LFR
           if self.db.profile.showMiniMapLFR then
-            minimap[75][63122722] = { id = { 187 }, name = L["Auridormi"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
+            minimap[75][63122722] = { hideInfo = true, id = { 187 }, name = L["Auridormi"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
           end
 
         end
@@ -225,13 +225,13 @@ if not db.activate.HideMapNote then
             minimap[469][32793702] = { mnID = 30, dnID = L["Way to the Instance Entrance"], id = 231, type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Gnomeregan
             minimap[27][31393804] = { mnID = 30, dnID = L["Way to the Instance Entrance"], id = 231, type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Gnomeregan     
             minimap[51][69675353] = { dnID = L["Way to the Instance Entrance"], id = 237, type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Temple of Atal'hakkar 
-            minimap[36][20643322] = { mnID = 33, id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+            minimap[36][20643322] = { mnID = 33, hideInfo = true, id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
             minimap[32][35268404] = { mnID = 33, name = "", type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
             minimap[15][58543698] = { dnID = L["Way to the Instance Entrance"], id = 239, name = "", type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Uldaman (Secondary Entrance) 
             minimap[23][43251854] = { dnID = L["Way to the Instance Entrance"], id = 236, lfgid = 274, type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true }-- Stratholme Service Entrance 
-            minimap[33][68635371] = { mnID = 34, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Caverns
-            minimap[33][65896169] = { mnID = 34, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Caverns
-            minimap[33][45004700] = { mnID = 35, id = { 741, 228 }, name = L["Way to the Instance Entrance"], type = "PassageRaid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
+            minimap[33][68635371] = { mnID = 34, hideInfo = true, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Caverns
+            minimap[33][65896169] = { mnID = 34, hideInfo = true, id = { 66 }, name = L["Way to the Instance Entrance"], type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Caverns
+            minimap[33][45004700] = { mnID = 35, hideInfo = true, id = { 741, 228 }, name = L["Way to the Instance Entrance"], type = "PassageRaid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
             minimap[34][58792725] = { mnID = 33, dnID = DUNGEON_FLOOR_BURNINGSTEPPES14, name = "", type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
             minimap[35][58168728] = { mnID = 33, dnID = DUNGEON_FLOOR_BURNINGSTEPPES14, name = "", type = "PassageDungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
 
@@ -244,7 +244,7 @@ if not db.activate.HideMapNote then
           if db.activate.ClassicIcons then
 
             if self.db.profile.showMiniMapMultiple then
-              minimap[36][20643322] = { mnID = 33, id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
+              minimap[36][20643322] = { mnID = 33, hideInfo = true, id = { 741, 742, 66, 228, 229, 559 }, name = L["Way to the Instance Entrance"], type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
               --minimap[36][20643322] = { mnID = 33, name = "", type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Molten Core, Blackwing Lair, Blackrock Caverns, Blackrock Depths, Lower Blackrock Spire, Upper Blackrock Spire 
             end
 
@@ -262,7 +262,7 @@ if not db.activate.HideMapNote then
             end
 
             if self.db.profile.showMiniMapRaids then
-              minimap[33][45004700] = { mnID = 35, id = { 741, 228 }, name = L["Way to the Instance Entrance"], type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
+              minimap[33][45004700] = { mnID = 35, hideInfo = true, id = { 741, 228 }, name = L["Way to the Instance Entrance"], type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blackrock Depths
             end
 
           end
@@ -270,22 +270,22 @@ if not db.activate.HideMapNote then
           
         --Eastern Kingdom ContinentOldVanilla
           if self.db.profile.showMiniMapOldVanilla then
-            minimap[23][35722308] = { mnID = 166, name = L["Secret Entrance"] .. " " .. L["(Wards of the Dread Citadel - Achievement)"] .. " - " .. L["Old Version"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true }-- Old Naxxramas version - Secret Entrance - Wards of the Dread Citadel 
+            minimap[23][35722308] = { mnID = 166, name = L["Secret Entrance"] .. " " .. L["(Wards of the Dread Citadel - Achievement)"] .. " - " .. L["Old Version"], type = "VInstanceR", showInZone = false, showOnContinent = false, showOnMinimap = true }-- Old Naxxramas version - Secret Entrance - Wards of the Dread Citadel 
             minimap[19][48275496] = { name = L["Old Keyring \n You get the Scarlet Key in the \n [Loot-Filled Pumpkin] from [Hallow's End Event] or from the [Auction House] \n now you can activate the [Old Keyring] here \n to activate old dungeonversions from the Scarlet Monastery"], type = "VKey1", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery Key for Old dungeons 
             minimap[2070][83723082] = { name = L["Old Keyring \n You get the Scarlet Key in the \n [Loot-Filled Pumpkin] from [Hallow's End Event] or from the [Auction House] \n now you can activate the [Old Keyring] here \n to activate old dungeonversions from the Scarlet Monastery"], type = "VKey1", showInZone = false, showOnContinent = false, showOnMinimap = true  } -- Scarlet Monastery Key for Old dungeons 
-            minimap[18][82333243] = { mnID = 19, name = L["Use the Old Keyring"], dnID = L["Graveyard"] .. " - " .. L["Old Version"] .. "\n" .. L["Cathedral"] .. " - " .. L["Old Version"] .. "\n" .. L["Library"] .. " - " .. L["Old Version"] .. "\n" .. L["Armory"] .. " - " .. L["Old Version"], type = "MultiVInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery Key for Old dungeons
-            minimap[2070][82333243] = { mnID = 19, name = L["Use the Old Keyring"], dnID = L["Graveyard"] .. " - " .. L["Old Version"] .. "\n" .. L["Cathedral"] .. " - " .. L["Old Version"] .. "\n" .. L["Library"] .. " - " .. L["Old Version"] .. "\n" .. L["Armory"] .. " - " .. L["Old Version"], type = "MultiVInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery Key for Old dungeons
+            minimap[18][82333243] = { mnID = 19, name = L["Use the Old Keyring"], dnID = L["Graveyard"] .. " - " .. L["Old Version"] .. "\n" .. L["Cathedral"] .. " - " .. L["Old Version"] .. "\n" .. L["Library"] .. " - " .. L["Old Version"] .. "\n" .. L["Armory"] .. " - " .. L["Old Version"], type = "MultiVInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery Key for Old dungeons
+            minimap[2070][82333243] = { mnID = 19, name = L["Use the Old Keyring"], dnID = L["Graveyard"] .. " - " .. L["Old Version"] .. "\n" .. L["Cathedral"] .. " - " .. L["Old Version"] .. "\n" .. L["Library"] .. " - " .. L["Old Version"] .. "\n" .. L["Armory"] .. " - " .. L["Old Version"], type = "MultiVInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery Key for Old dungeons
             minimap[2070][83812772] = { id = 316, name ="", type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery
             minimap[2070][85483158] = { id = 311, name ="", type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Halls 
-            minimap[18][85353028] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Cathedral 
-            minimap[19][78882223] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Cathedral"
-            minimap[18][85153180] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Library 
-            minimap[19][78255762] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery -"
-            minimap[18][85573138] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Armory
-            minimap[19][86414766] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Mona"
-            minimap[18][84763039] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Graveyard 
-            minimap[19][68832372] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Graveyard  
-            minimap[22][69767181] = { mnID = 306, name = L["Secret Entrance"] .. " " .. L["(Memory of Scholomance - Achievement)"] .. " - " .. L["Old Version"], type = "VInstance", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Old Scholomance version - Memory of Scholomance - Secret Entrance Old Scholomance version
+            minimap[18][85353028] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Cathedral 
+            minimap[19][78882223] = { mnID = 304, name = L["Cathedral"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Cathedral"
+            minimap[18][85153180] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Library 
+            minimap[19][78255762] = { mnID = 303, name = L["Library"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery -"
+            minimap[18][85573138] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Armory
+            minimap[19][86414766] = { mnID = 304, name = L["Armory"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Mona"
+            minimap[18][84763039] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Graveyard 
+            minimap[19][68832372] = { mnID = 302, name = L["Graveyard"] .. " - " .. L["Old Version"] .. " - " .. L["Use the Old Keyring"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Scarlet Monastery - Graveyard  
+            minimap[22][69767181] = { mnID = 306, name = L["Secret Entrance"] .. " " .. L["(Memory of Scholomance - Achievement)"] .. " - " .. L["Old Version"], type = "VInstanceD", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Old Scholomance version - Memory of Scholomance - Secret Entrance Old Scholomance version
           end
         end
 
@@ -435,8 +435,8 @@ if not db.activate.HideMapNote then
 
         -- Pandaria LFR
           if self.db.profile.showMiniMapLFR then
-            minimap[390][83153063] = { id = { 317, 330, 362, 320 }, name = L["Lorewalker Han"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
-            minimap[1530][83712804] = { id = { 317, 330, 362, 320 }, name = L["Lorewalker Han"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
+            minimap[390][83153063] = { hideInfo = true, id = { 317, 330, 362, 320 }, name = L["Lorewalker Han"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
+            minimap[1530][83712804] = { hideInfo = true, id = { 317, 330, 362, 320 }, name = L["Lorewalker Han"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Garrison to Ashran
           end
         end
 
@@ -516,7 +516,7 @@ if not db.activate.HideMapNote then
 
         --Broken Isles Raids without ClassicIcons
           if self.db.profile.showMiniMapPassage and not db.activate.ClassicIcons then
-            minimap[680][43346230] = { name = L["Way to the Instance Entrance"], id = { 726, 786 }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Arcway
+            minimap[680][43346230] = { name = L["Way to the Instance Entrance"], hideInfo = true, id = { 726, 786 }, type = "PassageDungeonRaidMulti", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Arcway
           end
 
 
@@ -524,7 +524,7 @@ if not db.activate.HideMapNote then
           if db.activate.ClassicIcons then
 
             if self.db.profile.showMiniMapMultiple then
-              minimap[680][43346230] = { name = L["Way to the Instance Entrance"], id = { 726, 786 }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Arcway
+              minimap[680][43346230] = { name = L["Way to the Instance Entrance"], hideInfo = true, id = { 726, 786 }, type = "MultipleM", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Arcway
             end
           end
 
@@ -620,7 +620,7 @@ if not db.activate.HideMapNote then
           if self.db.profile.showMiniMapLFR then
 
             if self.faction == "Horde" or db.activate.MiniMapEnemyFaction then
-              minimap[895][75112192] = { mnID = 1161, name = L["Kiku"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
+              minimap[895][75112192] = { mnID = 1161, name = L["Kiku"] .. "\n" .. L["Registrant"] .. " - " .. RAID_FINDER .. "\n" .. " ", hideInfo = true, id = { 1176, 1031, 1179, 1036 }, type = "LFR", showInZone = false, showOnContinent = false, showOnMinimap = true }
             end
           end
 
@@ -720,10 +720,11 @@ if not db.activate.HideMapNote then
             if self.db.profile.showMiniMapDungeons then
   
               -- Dungeon minimap above Blizzards Icons to make it Clickable for maximized Maps
-              minimap[2214][59662149] = { id = 1210, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Darkflame Cleft
+              minimap[2214][55452162] = { id = 1210, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Darkflame Cleft
               minimap[2215][41324933] = { id = 1267, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Priory of the Sacred Flame
               minimap[2215][54906313] = { id = 1270, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Dawnbreaker
-              minimap[2214][46860856] = { id = 1269, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Stonevault
+              minimap[2214][42700856] = { id = 1269, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Stonevault
+              minimap[2214][42083948] = { id = 1298, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Operation: Floodgate
               minimap[2248][45234108] = { id = 1268, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Rookery
               minimap[2248][76584378] = { id = 1272, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Cinderbrew Meadery
               minimap[2255][46746917] = { id = 1274, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- City of Threads
@@ -734,36 +735,51 @@ if not db.activate.HideMapNote then
               minimap[2213][49538100] = { id = 1271, type = "Dungeon", dnID = DUNGEON_FLOOR_GILNEAS2, showInZone = false, showOnContinent = false, showOnMinimap = true } -- Ara-Kara, City of Echoes
               minimap[2213][44191124] = { id = 1274, type = "Dungeon", showInZone = false, showOnContinent = false, showOnMinimap = true } -- City of Threads
             end
-  
-  
+
+
           -- Khaz Algar Raids
             if self.db.profile.showMiniMapRaids then
-  
+
             -- Raid minimap above Blizzards Icons to make it Clickable for maximized Maps
               minimap[2255][43559029] = { id = 1273, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nerub-ar Palace
               minimap[2256][43559029] = { id = 1273, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nerub-ar Palace
               minimap[2213][35047242] = { id = 1273, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nerub-ar Palace              
-              minimap[2216][35047242] = { id = 1273, type = "Raid", dnID = DUNGEON_FLOOR_GILNEAS3, showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nerub-ar Palace              
+              minimap[2216][35047242] = { id = 1273, type = "Raid", dnID = DUNGEON_FLOOR_GILNEAS3, showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nerub-ar Palace
+              minimap[2346][41554877] = { id = 1296, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Liberation of Undermine
             end
-  
-  
-          -- Khaz Algar Passage
-            if self.db.profile.showMiniMapPassage and not db.activate.ClassicIcons then
-              --minimap[2023][18855124] = { id = 1207, type = "PassageRaid", showInZone = false, showOnContinent = false, showOnMinimap = true }-- Amirdrassil, the Dream's Hope
+
+          -- Khaz Algar Delves
+            if self.db.profile.showMiniMapPassage then 
+              -- Azj-Kathet
+              minimap[2255][54917231] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2259, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Tak-Rethan-Abyss
+              minimap[2255][51858822] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2299, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Underkeep
+              minimap[2255][32757683] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2348, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zekvir's Lair
+              minimap[2255][45732253] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2347, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Spiral Weave
+              minimap[2213][10023383] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2348, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Zekvir's Lair
+              minimap[2213][56576350] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2299, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Underkeep
+              minimap[2213][67272122] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2259, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Tak-Rethan-Abyss
+              minimap[2216][67272122] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2259, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Tak-Rethan-Abyss
+              -- Hallowfall
+              minimap[2215][70643095] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2312, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Mycomancer Cavern
+              minimap[2215][66716170] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2310, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Skittering Breach
+              minimap[2215][50715050] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2301, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Sinkhole
+              minimap[2215][35324593] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2277, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Nightfall Sanctum
+              -- The Ringing Deeps
+              minimap[2214][46114791] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2251, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Waterworks
+              minimap[2214][69403862] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2302, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- The Dread Pit
+              minimap[2214][76859810] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2396, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Excavation Site 9
+              -- Isle of Dorn
+              minimap[2248][38907328] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2269, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Earthcrawl Mines
+              minimap[2248][52526626] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2249, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Fungal Folly
+              minimap[2248][61644271] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2396, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Kriegval's Rest
+              -- Undermine
+              minimap[2346][53870930] = { name = "", TransportName = L["Way to the Instance Entrance"], delveID = 2425, type = "DelvesPassage", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Kriegval's Rest
+
             end
-  
-  
-          -- Khaz Algar ClassicIcons
-            if db.activate.ClassicIcons then
-  
-              if self.db.profile.showMiniMapRaids then
-               --minimap[2023][18855124] = { id = 1207, type = "Raid", showInZone = false, showOnContinent = false, showOnMinimap = true }-- Amirdrassil, the Dream's Hope
-              end
-            end
-  
+
         end
 
-        
+
       end
   end
 end

@@ -1,0 +1,57 @@
+## Interface: 110100
+## Title: ItemUpgradeTip
+## Notes: Add information to item tooltips for item upgrade costs
+## OptionalDeps: _DebugLog
+## AddonCompartmentFuncOnEnter: ItemUpgradeTip_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: ItemUpgradeTip_OnAddonCompartmentLeave
+## AddonCompartmentFunc: ItemUpgradeTip_OnAddonCompartmentClick
+## IconTexture: 463447
+## SavedVariables: ItemUpgradeTipDB
+## Author: Belazor
+## Version: v3.6.1
+## Group: ItemUpgradeTip
+## Category-enUS: Equipment
+## Category-deDE: Ausrüstung
+## Category-esES: Equipo
+## Category-esMX: Equipo
+## Category-frFR: Équipement
+## Category-itIT: Equipaggiamento
+## Category-koKR: 장비
+## Category-ptBR: 
+## Category-ruRU: снаряжение
+## Category-zhCN: 装备
+## Category-zhTW: 裝備
+## X-Curse-Project-ID: 709548
+## X-WoWI-ID: 26580
+## X-Wago-ID: WYK938NL
+## X-Source-URL: https://github.com/belazor-wow/ItemUpgradeTip
+## X-Issues-URL: https://github.com/belazor-wow/ItemUpgradeTip/issues
+
+embeds.xml
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Init.lua
+Debug.lua
+
+Manifest.xml
+
+upgradeHandlers\Heirloom.lua
+upgradeHandlers\Flightstones.lua
+upgradeHandlers\Valorstones.lua
+upgradeHandlers\Anima.lua
+upgradeHandlers\Honor.lua
+upgradeHandlers\Conquest.lua
+
+Tooltip.lua
+ItemUpgradeTip.lua

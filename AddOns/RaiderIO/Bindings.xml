@@ -1,0 +1,15 @@
+<Bindings>
+
+	<Binding name="RAIDERIO_REPLAYUI_TOGGLE" category="BINDING_CATEGORY_RAIDERIO" header="RAIDERIO_REPLAYUI">
+		RaiderIO.ReplayUI_Toggle()
+	</Binding>
+
+	<Binding name="RAIDERIO_REPLAYUI_TIMING_BOSS" category="BINDING_CATEGORY_RAIDERIO">
+		RaiderIO.ReplayUI_SetTiming("BOSS")
+	</Binding>
+
+	<Binding name="RAIDERIO_REPLAYUI_TIMING_DUNGEON" category="BINDING_CATEGORY_RAIDERIO">
+		RaiderIO.ReplayUI_SetTiming("DUNGEON")
+	</Binding>
+
+</Bindings>

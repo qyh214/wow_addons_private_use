@@ -97,8 +97,6 @@ local triggerInfos = {}
 
 local watched_trigger_events = Private.watched_trigger_events
 
-local UnitGroupRolesAssigned = WeakAuras.IsCataOrRetail() and UnitGroupRolesAssigned or function() return "DAMAGER" end
-
 -- Active scan functions used to quickly check which apply to a aura instance
 -- keyed on unit, debuffType, spellname, with a scan object value
 local scanFuncName = {}
@@ -642,10 +640,14 @@ local function FindBestMatchData(time, id, triggernum, triggerInfo, matchedUnits
     for index, auraData in pairs(unitData) do
       local remCheck = true
       if triggerInfo.remainingFunc and auraData.expirationTime then
-        local modRate = auraData.modRate or 1
-        local remaining = (auraData.expirationTime - time) / modRate
-        remCheck = triggerInfo.remainingFunc(remaining)
-        nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+        if auraData.duration == 0 then
+          remCheck = false
+        else
+          local modRate = auraData.modRate or 1
+          local remaining = (auraData.expirationTime - time) / modRate
+          remCheck = triggerInfo.remainingFunc(remaining)
+          nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+        end
       end
 
       if remCheck then
@@ -679,10 +681,14 @@ local function FindBestMatchDataForUnit(time, id, triggernum, triggerInfo, unit)
   for index, auraData in pairs(matchDataByTrigger[id][triggernum][unit]) do
     local remCheck = true
     if triggerInfo.remainingFunc and auraData.expirationTime then
-      local modRate = auraData.modRate or 1
-      local remaining = (auraData.expirationTime - time) / modRate
-      remCheck = triggerInfo.remainingFunc(remaining)
-      nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+      if auraData.expirationTime == 0 then
+        remCheck = false
+      else
+        local modRate = auraData.modRate or 1
+        local remaining = (auraData.expirationTime - time) / modRate
+        remCheck = triggerInfo.remainingFunc(remaining)
+        nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+      end
     end
 
     if remCheck then
@@ -1578,10 +1584,14 @@ local function UpdateTriggerState(time, id, triggernum)
         for index, auraData in pairs(unitData) do
           local remCheck = true
           if triggerInfo.remainingFunc and auraData.expirationTime then
-            local modRate = auraData.modRate or 1
-            local remaining = (auraData.expirationTime - time) / modRate
-            remCheck = triggerInfo.remainingFunc(remaining)
-            nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+            if auraData.expirationTime == 0 then
+              remCheck = false
+            else
+              local modRate = auraData.modRate or 1
+              local remaining = (auraData.expirationTime - time) / modRate
+              remCheck = triggerInfo.remainingFunc(remaining)
+              nextCheck = calculateNextCheck(triggerInfo.remainingCheck, remaining, auraData.expirationTime, modRate, nextCheck)
+            end
           end
 
           if remCheck then
@@ -2202,6 +2212,13 @@ end
 local Buff2Frame = CreateFrame("Frame")
 Private.frames["WeakAuras Buff2 Frame"] = Buff2Frame
 
+local brokenUnitMap = {
+  arena1 = "boss6",
+  arena2 = "boss7",
+  arena3 = "boss8",
+  arena4 = "boss9",
+  arena5 = "boss10"
+}
 
 local function EventHandler(frame, event, arg1, arg2, ...)
   Private.StartProfileSystem("bufftrigger2")
@@ -2282,6 +2299,10 @@ local function EventHandler(frame, event, arg1, arg2, ...)
       ScanGroupUnit(time, matchDataChanged, nil, "vehicle")
     end
   elseif event == "UNIT_AURA" then
+    if brokenUnitMap[arg1] and not UnitExists(arg1) then
+      arg1 = brokenUnitMap[arg1]
+    end
+
     if newAPI then
       -- arg1: unit
       -- arg2: unitAuraUpdateInfo
@@ -2998,19 +3019,32 @@ local function createScanFunc(trigger)
   end
 end
 
-local function highestExpirationTime(bestMatch, auraMatch)
-  if bestMatch.expirationTime and auraMatch.expirationTime then
-    return auraMatch.expirationTime > bestMatch.expirationTime
-  end
-  return true
-end
-
-local function lowestExpirationTime(bestMatch, auraMatch)
-  if bestMatch.expirationTime and auraMatch.expirationTime then
-    return auraMatch.expirationTime < bestMatch.expirationTime
-  end
-  return false
-end
+local matchCombineFunctions = {
+  showHighest = function(bestMatch, auraMatch)
+    if bestMatch.expirationTime and auraMatch.expirationTime then
+      return auraMatch.expirationTime > bestMatch.expirationTime
+    end
+    return true
+  end,
+  showLowest = function(bestMatch, auraMatch)
+    if bestMatch.expirationTime and auraMatch.expirationTime then
+      return auraMatch.expirationTime < bestMatch.expirationTime
+    end
+    return false
+  end,
+  showLowestSpellId  = function(bestMatch, auraMatch)
+    if bestMatch.spellId and auraMatch.spellId then
+      return auraMatch.spellId < bestMatch.spellId
+    end
+    return false
+  end,
+  showHighestSpellId  = function(bestMatch, auraMatch)
+    if bestMatch.spellId and auraMatch.spellId then
+      return auraMatch.spellId > bestMatch.spellId
+    end
+    return false
+  end,
+}
 
 local function GreaterEqualOne(x)
   return x >= 1
@@ -3159,7 +3193,7 @@ function BuffTrigger.Add(data)
       local effectiveIgnoreDisconnected = groupTrigger and trigger.ignoreDisconnected
       local effectiveIgnoreInvisible = groupTrigger and trigger.ignoreInvisible
       local effectiveNameCheck = groupTrigger and trigger.useUnitName and trigger.unitName
-      local effectiveNpcId = trigger.unit == "nameplate" and trigger.useNpcId and Private.ExecEnv.ParseStringCheck(trigger.npcId)
+      local effectiveNpcId = (trigger.unit == "nameplate" or trigger.unit == "boss") and trigger.useNpcId and Private.ExecEnv.ParseStringCheck(trigger.npcId)
       local effectiveInRange = WeakAuras.IsRetail() and groupTrigger and trigger.inRange
 
       if trigger.unit == "multi" then
@@ -3206,7 +3240,7 @@ function BuffTrigger.Add(data)
         remainingCheck = trigger.unit ~= "multi" and CanHaveMatchCheck(trigger) and trigger.useRem and tonumber(trigger.rem) or 0,
         id = id,
         triggernum = triggernum,
-        compareFunc = trigger.combineMode == "showHighest" and highestExpirationTime or lowestExpirationTime,
+        compareFunc = matchCombineFunctions[trigger.combineMode] or matchCombineFunctions["showLowest"],
         unitExists = showIfInvalidUnit,
         fetchTooltip = not IsSingleMissing(trigger) and trigger.unit ~= "multi" and trigger.fetchTooltip,
         fetchRole = WeakAuras.IsCataOrRetail() and trigger.unit ~= "multi" and trigger.fetchRole,
@@ -4278,7 +4312,8 @@ function BuffTrigger.InitMultiAura()
 end
 
 function BuffTrigger.HandleMultiEvent(frame, event, ...)
-  Private.StartProfileSystem("bufftrigger2 - multi")
+  local system = "bufftrigger2 - multi - " .. event
+  Private.StartProfileSystem(system)
   if event == "COMBAT_LOG_EVENT_UNFILTERED" then
     CombatLog(CombatLogGetCurrentEventInfo())
   elseif event == "UNIT_TARGET" then
@@ -4308,7 +4343,7 @@ function BuffTrigger.HandleMultiEvent(frame, event, ...)
     end
     wipe(matchDataMulti)
   end
-  Private.StopProfileSystem("bufftrigger2 - multi")
+  Private.StopProfileSystem(system)
 end
 
 function BuffTrigger.GetTriggerDescription(data, triggernum, namestable)

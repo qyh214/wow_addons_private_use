@@ -29,6 +29,7 @@ ns.icons = {
 ["ItemUpgrade"] = iconLink .. "ItemUpgrade",
 ["DragonFlyTransmog"] = iconLink .. "DragonFlyTransmog",
 ["Catalyst"] = iconLink .. "Catalyst",
+["Zidormi"] = "interface/worldmap/chatbubble_64grey.blp",
 ["BlackMarket"] = iconLink .. "BlackMarket",
 ["Mailbox"] = "interface/minimap/tracking/mailbox.blp",
 ["MailboxN"] = iconLink .. "MailboxN",
@@ -65,6 +66,7 @@ ns.icons = {
 ["ZonePvEVendorA"] = iconLink .. "PvEVendorA",
 ["ZonePvPVendorA"] = iconLink .. "PvPVendorA",
 --Professions MN New
+["ProfessionsMixed"] = "interface/minimap/tracking/profession.blp",
 ["ProfessionOrders"] = iconLink .. "CraftingOrders",
 ["Engineer"] = iconLink .. "Engineering",
 ["Alchemy"] = iconLink .. "Alchemy",
@@ -150,14 +152,21 @@ ns.icons = {
 --instance
 ["LFR"] = iconLink .. "LFR",
 ["Dungeon"] = iconLink .. "Dungeon", 
-["Raid"] = iconLink .. "Raid", 
+["Raid"] = iconLink .. "Raid",
+["Delves"] = iconLink .. "Delves",
+["DelvesPassage"] = iconLink .. "DelvesPassage",
 ["VInstance"] = iconLink .. "vanillaInstance",
+["VInstanceD"] = iconLink .. "vanillaInstance",
+["VInstanceR"] = iconLink .. "vanillaInstance",
 ["MultiVInstance"] = iconLink .. "multivanillaInstance",
+["MultiVInstanceD"] = iconLink .. "multivanillaInstance",
+["MultiVInstanceR"] = iconLink .. "multivanillaInstance",
 ["VKey1"] = iconLink .. "vkey1",
 ["MultipleM"] = iconLink .. "multipleM",
 ["MultipleD"] = iconLink .. "multipleD",
 ["MultipleR"] = iconLink .. "multipleR",
 ["Gray"] = iconLink .. "gray",
+["GrayALL"] = iconLink .. "grayALL",
 --zeppelin
 ["Zeppelin"] = iconLink .. "portal",
 ["HZeppelin"] = iconLink .. "hportal",
@@ -216,8 +225,10 @@ ns.icons = {
 ["PassageDungeonRaidMulti"] = iconLink .. "PassageDungeonRaidMulti", 
 ["PassageRaidMulti"] = iconLink .. "passageRaidMulti",
 ["PassageDungeonMulti"] = iconLink .. "PassageDungeonMulti",
+["PassageCaveUp"] = iconLink .. "passageCaveUp", 
+["PassageCaveDown"] = iconLink .. "passageCaveDown", 
 --inside dungeon icons
-["Exit"] = "interface/glues/login/glues-checkbox-check.blp",
+["Exit"] = iconLink .. "Exit",
 ["PassageUpL"] = iconLink .. "passageupL",
 ["PassageDownL"] = iconLink .. "passagedownL",
 ["PassageRightL"] = iconLink .. "passagerightL",
@@ -229,6 +240,8 @@ ns.icons = {
 ["WayGateGolden"] = iconLink .. "WayGateGolden",
 ["WayGateGreen"] = iconLink .. "WayGateGreen",
 ["Carriage"] = iconLink .. "Carriage",
+["TorghastUp"] = iconLink .. "TorghastUp",
+["MoleMachine"] = iconLink .. "MoleMachine",
 --travel
 ["TravelL"] = iconLink .. "travelL",
 ["TravelM"] = iconLink .. "travelm",
@@ -248,7 +261,24 @@ ns.icons = {
 ["GilneanF"] = "interface/characterframe/temporaryportrait-female-gilnean",
 ["KulM"] = "interface/characterframe/temporaryportrait-male-kultiran",
 ["DwarfF"] = "interface/characterframe/temporaryportrait-female-dwarf",
+--classes
+["Druid"] = "interface/icons/classicon_druid",
+["Hunter"] = "interface/icons/classicon_hunter",
+["Mage"] = "interface/icons/classicon_mage",
+["Paladin"] = "interface/icons/classicon_paladin",
+["Priest"] = "interface/icons/classicon_priest",
+["Rogue"] = "interface/icons/classicon_rogue",
+["Shaman"] = "interface/icons/classicon_shaman",
+["Warlock"] = "interface/icons/classicon_warlock",
+["Warrior"] = "interface/icons/classicon_warrior",
 }
+
+-- 1 number --self.IconFileX = IconFileX or 0    -- the total X (horizontal) pixels in the image file - not just the icon we want
+-- 2 number --self.IconFileY = IconFileY or 0    -- the total Y (vertical) pixels in the image file
+-- 3 number --self.StartX = StartX or 0        -- The starting point in the file where the icon begins, counted from the left border, in pixels
+-- 4 number --self.EndX = EndX or 0            -- The ending point in the file where the icon ends, counted from the left border, in pixels
+-- 5 number --self.StartY = StartY or 0        -- The starting point in the file where the icon begins, counted from the top border, in pixels
+-- 6 number --self.EndY = EndY or 0            -- The ending point in the file where the icon ends, counted from the top border, in pixels
 
 TextIcon = IconClass
 TextIconMNL4 = TextIcon(iconLink .. "MNL4", 50, 50, 1, 50, 1, 50)
@@ -273,6 +303,7 @@ TextIconPvEVendorA = TextIcon(iconLink .. "PvEVendorA", 50, 50, 1 ,50, 1, 50)
 TextIconItemUpgrade = TextIcon("interface/minimap/tracking/upgradeitem-32x32.blp", 50, 50, 1 ,50, 1, 50)
 TextIconDragonFlyTransmog = TextIcon(iconLink .. "DragonFlyTransmog", 50, 50, 1 ,50, 1, 50)
 TextIconCatalyst = TextIcon(iconLink .. "Catalyst", 50, 50, 1 ,50, 1, 50)
+TextIconZidormi = TextIcon("interface/worldmap/chatbubble_64grey.blp", 50, 50, 1 ,50, 1, 50)
 TextIconMailbox = TextIcon("interface/minimap/tracking/mailbox.blp", 50, 50, 1 ,50, 1, 50)
 TextIconMailboxN = TextIcon(iconLink .. "MailboxN", 50, 50, 1 ,50, 1, 50)
 TextIconMailboxH = TextIcon(iconLink .. "MailboxH", 50, 50, 1 ,50, 1, 50)
@@ -302,8 +333,8 @@ TextIconStormshield = TextIcon("interface/icons/spell_arcane_teleportstormshield
 TextIconOribos = TextIcon("interface/icons/spell_arcane_teleportoribos.blp", 50, 50, 1, 50, 1, 50)
 TextIconValdrakken = TextIcon("interface/icons/spell_arcane_teleportvaldrakken.blp", 50, 50, 1, 50, 1, 50)
 TextIconDornogal = TextIcon("interface/icons/inv_spell_arcane_telepotdornogal.blp", 50, 50, 1, 50, 1, 50)
-TextIconDarkMoon = TextIcon(iconLink .. "DarkMoon", 50, 50, 1, 50, 1, 50)
 --profession
+TextIconProfessionsMixed = TextIcon("interface/minimap/tracking/profession.blp", 50, 50, 1, 50, 1, 50)
 TextIconProfessionOrders = TextIcon(iconLink .. "CraftingOrders", 50, 50, 1, 50, 1, 50)
 TextIconEngineer = TextIcon(iconLink .. "Engineering", 50, 50, 1, 50, 1, 50)
 TextIconAlchemy = TextIcon(iconLink .. "Alchemy", 50, 50, 1, 50, 1, 50)
@@ -359,6 +390,8 @@ TextIconPassageHPortal = TextIcon(iconLink .. "passageHPortal", 50, 50, 1, 50, 1
 TextIconPassageAPortal = TextIcon(iconLink .. "passageAPortal", 50, 50, 1, 50, 1, 50)
 TextIconWayGateGolden = TextIcon(iconLink .. "WayGateGolden", 50, 50, 1, 50, 1, 50)
 TextIconWayGateGreen = TextIcon(iconLink .. "WayGateGreen", 50, 50, 1, 50, 1, 50)
+TextIconDarkMoon = TextIcon(iconLink .. "DarkMoon", 70, 70, 1, 50, 1, 50)
+TextIconTorghastUp = TextIcon(iconLink .. "TorghastUp", 50, 50, 1, 50, 1, 50)
 --portal Old
 TextIconPortalOld = TextIcon(iconLink .. "portalOld", 50, 50, 1, 50, 1, 50) 
 TextIconHPortalOld = TextIcon(iconLink .. "hportalOld", 50, 50, 1, 50, 1, 50)
@@ -375,6 +408,8 @@ TextIconPathL = TextIcon(iconLink .. "PathL", 50, 50, 1, 50, 1, 50)
 TextIconLFR = TextIcon(iconLink .. "LFR", 50, 50, 1, 50, 1, 50)
 TextIconDungeon = TextIcon(iconLink .. "Dungeon", 50, 50, 1, 50, 1, 50)
 TextIconRaid = TextIcon(iconLink .. "Raid", 50, 50, 1, 50, 1, 50)
+TextIconDelves = TextIcon(iconLink .. "Delves", 50, 50, 1, 50, 1, 50)
+TextIconDelvesPassage = TextIcon(iconLink .. "DelvesPassage", 50, 50, 1, 50, 1, 50)
 TextIconVInstance = TextIcon(iconLink .. "vanillaInstance", 50, 50, 1, 50, 1, 50)
 TextIconMultiVInstance = TextIcon(iconLink .. "multivanillaInstance", 50, 50, 1, 50, 1, 50)
 TextIconVKey1 = TextIcon(iconLink .. "vkey1", 50, 50, 1, 50, 1, 50)
@@ -391,6 +426,7 @@ TextIconPassageDungeonRaidMultiM = TextIcon(iconLink .. "PassageDungeonRaidMulti
 TextIconPassageDungeonMultiM = TextIcon(iconLink .. "PassageDungeonMulti", 50, 50, 1, 50, 1, 50)
 TextIconPassageRaidMultiM = TextIcon(iconLink .. "PassageRaidMulti", 50, 50, 1, 50, 1, 50)
 TextIconLocked = TextIcon(iconLink .. "gray", 50, 50, 1, 50, 1, 50)
+TextIconLockedALL = TextIcon(iconLink .. "grayALL", 50, 50, 1, 50, 1, 50)
 --zeppelin
 TextIconZeppelin = TextIcon(iconLink .. "portal", 70, 70, 1, 50, 1, 50)
 TextIconHZeppelin = TextIcon(iconLink .. "hportal", 70, 70, 1, 50, 1, 50)
@@ -405,8 +441,11 @@ TextIconAShip = TextIcon(iconLink .. "aportal", 70, 70, 1, 50, 1, 50)
 TextIconShipOld = TextIcon(iconLink .. "shipOld", 70, 70, 1, 50, 1, 50)
 TextIconHShipOld = TextIcon(iconLink .. "shipHOld", 70, 70, 1, 50, 1, 50)
 TextIconAShipOld = TextIcon(iconLink .. "shipAOld", 70, 70, 1, 50, 1, 50)
+--passage World
+TextIconPassageCaveUp = TextIcon(iconLink .. "PassageCaveUp", 50, 50, 1, 50, 1, 50)
+TextIconPassageCaveDown = TextIcon(iconLink .. "PassageCaveDown", 50, 50, 1, 50, 1, 50)
 --inside dungeon icons
-TextIconExit = TextIcon("interface/glues/login/glues-checkbox-check.blp", 50, 50, 1, 50, 1, 50)
+TextIconExit = TextIcon(iconLink .. "Exit", 50, 50, 1, 50, 1, 50)
 TextIconPassageup = TextIcon(iconLink .. "PassageUpL", 50, 50, 1, 50, 1, 50)
 TextIconPassagedown = TextIcon(iconLink .. "PassageDownL", 50, 50, 1, 50, 1, 50)
 TextIconPassageright = TextIcon(iconLink .. "PassageRightL", 50, 50, 1, 50, 1, 50)
@@ -425,6 +464,7 @@ TextIconOgreWaygate = TextIcon("Interface/Minimap/Vehicle-AllianceWarlockPortal"
 TextIconToyTransport = TextIcon("interface/icons/inv_tailoring_elekkplushie.blp", 50, 50, 1, 50, 1, 50)
 TextIconMirror = TextIcon(iconLink .. "mirror", 50, 50, 1, 50, 1, 50)
 TextIconCarriage = TextIcon("interface/minimap/vehicle-carriage", 60, 60, 1, 50, 1, 50)
+TextIconMoleMachine = TextIcon(iconLink .. "MoleMachine", 60, 60, 1, 50, 1, 50)
 --information
 TextIconCheck = TextIcon("Interface/Buttons/UI-CheckBox-Up", 50, 50, 1, 50, 1, 50)
 TextIconHorde = TextIcon("interface/pvprankbadges/pvprankhorde")
@@ -453,10 +493,13 @@ TextIconGilneanF = TextIcon("interface/characterframe/temporaryportrait-female-g
 TextIconB11M = TextIcon"interface/characterframe/temporaryportrait-male-bloodelf"
 TextIconOrcF = TextIcon("Interface/CharacterFrame/TemporaryPortrait-Female-Orc")
 TextIconUndeadF = TextIcon("interface/characterframe/temporaryportrait-female-scourge")
-
--- 1 number --self.IconFileX = IconFileX or 0    -- the total X (horizontal) pixels in the image file - not just the icon we want
--- 2 number --self.IconFileY = IconFileY or 0    -- the total Y (vertical) pixels in the image file
--- 3 number --self.StartX = StartX or 0        -- The starting point in the file where the icon begins, counted from the left border, in pixels
--- 4 number --self.EndX = EndX or 0            -- The ending point in the file where the icon ends, counted from the left border, in pixels
--- 5 number --self.StartY = StartY or 0        -- The starting point in the file where the icon begins, counted from the top border, in pixels
--- 6 number --self.EndY = EndY or 0            -- The ending point in the file where the icon ends, counted from the top border, in pixels
+--classes
+TextIconClassDruid = TextIcon("interface/icons/classicon_druid")
+TextIconClassHunter = TextIcon("interface/icons/classicon_hunter")
+TextIconClassMage = TextIcon("interface/icons/classicon_mage")
+TextIconClassPaladin = TextIcon("interface/icons/classicon_paladin")
+TextIconClassPriest = TextIcon("interface/icons/classicon_priest")
+TextIconClassRogue = TextIcon("interface/icons/classicon_rogue")
+TextIconClassShaman = TextIcon("interface/icons/classicon_shaman")
+TextIconClassWarlock = TextIcon("interface/icons/classicon_warlock")
+TextIconClassWarrior = TextIcon("interface/icons/classicon_warrior")

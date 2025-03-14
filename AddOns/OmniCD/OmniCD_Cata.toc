@@ -1,20 +1,20 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: OmniCD
-## Version: 4.4.0.2804
-## Author: Treebonker
 ## Notes: Party cooldown tracker. /oc
-## X-Credits:
+## Author: Treebonker
+## Version: v2.8.13
+## DefaultState: Enabled
+## SavedVariables: OmniCDDB
+## OptionalDeps: Ace3, LibOmniCDC, LibDeflate, LibSharedMedia-3.0, UTF8, LibDualSpec-1.0
+## IconTexture: Interface\AddOns\OmniCD\Media\omnicd-logo64-c
 ## X-License: All Rights Reserved
 ## X-Localizations: enUS, deDE, esMX, frFR, itIT, koKR, ruRU, zhCN, zhTW
 ## X-Website: https://www.curseforge.com/wow/addons/omnicd
-## DefaultState: Disabled
-## SavedVariables: OmniCDDB
+## X-Curse-Project-ID: 306489
 
-Libs\Embeds.xml
-Locales\locales.xml
+Embeds.xml
+Locales\Locales.xml
 Core\Core.xml
-Modules\Spells\Core.lua
-Modules\Spells\Spells_Cata.lua
-Modules\Spells\Modifiers_Cata.lua
+Modules\Spells\Spells_Cata.xml
 Modules\Modules.xml
 Config\Config.xml

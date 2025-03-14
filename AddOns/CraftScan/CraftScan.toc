@@ -1,0 +1,55 @@
+## Interface: 110100
+## Title: CraftScan
+## Version: 1.3.16
+## Notes: Scans chat for potential work orders
+## Author: Stevin
+## Category: Professions
+## X-Curse-Project-ID: 1028358
+## X-Wago-ID: rN4V3jKD
+## X-WoWI-ID: 26847
+## SavedVariables: CraftScan_DB
+## IconTexture: Interface\Icons\Trade_blacksmithing
+
+embeds.xml
+
+Libs/LibSerialize.lua
+Libs/LibDeflate.lua
+
+Consts.lua
+
+Locals/enUS.lua
+Locals/deDE.lua
+Locals/itIT.lua
+Locals/ruRU.lua
+Locals/ptBR.lua
+Locals/frFR.lua
+Locals/esES.lua
+Locals/esMX.lua
+Locals/koKR.lua
+Locals/zhTW.lua
+Locals/zhCN.lua
+Locals/Localization.lua
+
+Utils/Utils.xml
+Utils/ReleaseNotes.xml
+Utils/Dialog.xml
+Utils/TooltipPlot.lua
+Utils/Comm.lua
+Utils/FStrings.lua
+Utils/Debug.lua
+
+RecipeSchematicMenu.xml
+
+AlertIcon.xml
+
+ChatScanner.lua
+
+OrderTableTemplate.xml
+
+AnalyticsTableTemplate.xml
+
+OrderPage.xml
+
+Settings.xml
+
+CustomerPage.xml

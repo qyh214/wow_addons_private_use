@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Majordomo Staghelm", 720, 197)
 if not mod then return end
 mod:RegisterEnableMob(52571, 53619) --Staghelm, Druid of the Flame
+mod:SetEncounterID(1185)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locales
@@ -59,15 +61,12 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "Adrenaline", 97238)
 	self:Log("SPELL_AURA_APPLIED", "CatForm", 98374)
 	self:Log("SPELL_AURA_APPLIED", "ScorpionForm", 98379)
+	self:Log("SPELL_AURA_REMOVED", "FormCanceled", 98374, 98379)
 	self:Log("SPELL_CAST_SUCCESS", "LeapingFlames", 98476)
 	self:Log("SPELL_CAST_START", "RecklessLeap", 99629)
 	self:Log("SPELL_AURA_APPLIED", "SearingSeedsApplied", 98450)
 	self:Log("SPELL_AURA_REMOVED", "SearingSeedsRemoved", 98450)
 	self:Log("SPELL_CAST_START", "BurningOrbs", 98451)
-
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 52571)
 end
 
 function mod:OnEngage()
@@ -161,6 +160,14 @@ function mod:ScorpionForm(args)
 	self:Bar(98474, specialCD[specialCounter]) -- Flame Scythe
 end
 
+function mod:FormCanceled(args)
+	if args.spellId == 98379 then -- Scorpion Form
+		self:StopBar(98474) -- Flame Scythe
+	elseif args.spellId == 98374 then -- Cat Form
+		self:StopBar(98476) -- Leaping Flames
+	end
+end
+
 function mod:SearingSeedsRemoved(args)
 	if self:Me(args.destGUID) then
 		self:CancelSayCountdown(args.spellId)
@@ -184,7 +191,6 @@ do
 	--end
 
 	function mod:SearingSeedsApplied(args)
-		self:StopBar(98476) -- Leaping Flames
 		if self:Me(args.destGUID) then
 			self:PersonalMessage(args.spellId, "you", CL.bomb)
 			local tbl = self:GetPlayerAura(args.spellId) -- Duration is different for everyone

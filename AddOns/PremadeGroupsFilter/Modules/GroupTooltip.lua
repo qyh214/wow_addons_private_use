@@ -29,7 +29,7 @@ function PGF.AddClassSpecListing(tooltip, resultID, searchResultInfo)
     local members = PGF.GetSearchResultMemberInfoTable(resultID, searchResultInfo.numMembers)
     for _, m in pairs(members) do
         local roleClassSpec
-        if m.specLocalized and m.specLocalized ~= "" then -- no real specs in Wrath
+        if m.specLocalized and m.specLocalized ~= "" then -- no real specs in classic editions
             roleClassSpec = string.format("%s %s - %s %s", m.roleMarkup, m.classLocalized, m.specLocalized, m.leaderMarkup)
         else
             roleClassSpec = string.format("%s %s %s", m.roleMarkup, m.classLocalized, m.leaderMarkup)
@@ -45,14 +45,16 @@ function PGF.AddClassCountListing(tooltip, resultID, searchResultInfo)
     local roles = {}
     local classInfo = {}
     for i = 1, searchResultInfo.numMembers do
-        local role, class, classLocalized = C_LFGList.GetSearchResultMemberInfo(resultID, i)
-        classInfo[class] = {
-            name = classLocalized,
-            color = RAID_CLASS_COLORS[class] or NORMAL_FONT_COLOR
-        }
-        if not roles[role] then roles[role] = {} end
-        if not roles[role][class] then roles[role][class] = 0 end
-        roles[role][class] = roles[role][class] + 1
+        local role, class, classLocalized = PGF.GetSearchResultMemberInfo(resultID, i)
+        if role and class then -- can be nil, see #297
+            classInfo[class] = {
+                name = classLocalized or "?",
+                color = RAID_CLASS_COLORS[class] or NORMAL_FONT_COLOR
+            }
+            if not roles[role] then roles[role] = {} end
+            if not roles[role][class] then roles[role][class] = 0 end
+            roles[role][class] = roles[role][class] + 1
+        end
     end
 
     for role, classes in pairs(roles) do
@@ -69,7 +71,7 @@ end
 function PGF.OnLFGListUtilSetSearchEntryTooltip(tooltip, resultID, autoAcceptOption)
     if not PremadeGroupsFilterSettings.classNamesInTooltip then return end
 
-    local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
+    local searchResultInfo = PGF.GetSearchResultInfo(resultID)
     local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
 
     -- do not show members where Blizzard already does that

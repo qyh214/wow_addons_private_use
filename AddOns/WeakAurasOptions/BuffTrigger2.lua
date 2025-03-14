@@ -170,10 +170,13 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
       order = baseOrder + i / 100 + 0.0003,
       hidden = hiddenFunction,
       get = function(info)
-        local rawString = trigger[optionKey] and trigger[optionKey][i] or ""
+        local rawString = trigger[optionKey] and trigger[optionKey][i]
+        if not rawString then return "" end
         local spellName, _, _, _, _, _, spellID = OptionsPrivate.Private.ExecEnv.GetSpellInfo(WeakAuras.SafeToNumber(rawString))
         if spellName and spellID then
           return ("%s (%s)"):format(spellID, spellName) .. "\0" .. rawString
+        elseif WeakAuras.SafeToNumber(rawString) then
+          return ("%s (%s)"):format(rawString, L["Unknown Spell"]) .. "\0" .. rawString
         else
           return rawString .. "\0" .. rawString
         end
@@ -186,10 +189,9 @@ local function CreateNameOptions(aura_options, data, trigger, size, isExactSpell
           if isExactSpellId then
             trigger[optionKey][i] = v
           else
-            local spellId = tonumber(v)
+            local _, spellId = WeakAuras.spellCache.CorrectAuraName(v)
             if spellId then
-              WeakAuras.spellCache.CorrectAuraName(v)
-              trigger[optionKey][i] = v
+              trigger[optionKey][i] = tostring(spellId)
             else
               trigger[optionKey][i] = spellCache.BestKeyMatch(v)
             end
@@ -1014,14 +1016,14 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = L["Filter by Npc ID"],
       order = 69.31,
       hidden = function() return
-        not (trigger.type == "aura2" and trigger.unit == "nameplate")
+        not (trigger.type == "aura2" and (trigger.unit == "nameplate" or trigger.unit == "boss"))
       end
     },
     npcId = {
       type = "input",
       width = WeakAuras.normalWidth,
       name = L["Npc ID"],
-      hidden = function() return not (trigger.type == "aura2" and trigger.unit == "nameplate" and trigger.useNpcId) end,
+      hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "nameplate" or trigger.unit == "boss") and trigger.useNpcId) end,
       order = 69.32,
       desc = L["Supports multiple entries, separated by commas"]
     },
@@ -1030,7 +1032,7 @@ local function GetBuffTriggerOptions(data, triggernum)
       name = "",
       order = 69.33,
       width = WeakAuras.normalWidth,
-      hidden = function() return not (trigger.type == "aura2" and trigger.unit == "nameplate" and not trigger.useNpcId) end
+      hidden = function() return not (trigger.type == "aura2" and (trigger.unit == "nameplate" or trigger.unit == "boss") and not trigger.useNpcId) end
     },
 
     ignoreSelf = {

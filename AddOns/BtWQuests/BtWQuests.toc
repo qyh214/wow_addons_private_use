@@ -1,6 +1,6 @@
-## Interface: 100207, 110000, 110002
+## Interface: 110007, 110100
 ## Title: BtWQuests
-## Version: 2.47.1
+## Version: 2.51.1
 ## Notes: 
 ## Author: Breen
 ## SavedVariables: BtWQuests_Characters BtWQuests_AccountSettings
@@ -10,6 +10,17 @@
 ## X-Curse-Project-ID: 280369
 ## X-WoWI-ID: 24680
 ## X-Wago-ID: yQKyzeG7
+## Category-enUS: Quests
+## Category-deDE: Quests
+## Category-esES: Misiones
+## Category-esMX: Misiones
+## Category-frFR: Quêtes
+## Category-itIT: Missioni
+## Category-koKR: 퀘스트
+## Category-ptBR: Missões
+## Category-ruRU: Задания
+## Category-zhCN: 任务
+## Category-zhTW: 任務
 
 Defines.lua
 BtWQuestsCharacters.lua

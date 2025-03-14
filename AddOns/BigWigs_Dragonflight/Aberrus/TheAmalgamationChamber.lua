@@ -18,6 +18,8 @@ mod:SetStage(1)
 -- Locals
 --
 
+local bars = {}
+
 -- Essence of Shadow
 local coalescingVoidCount = 1
 local umbralDetonationCount = 1
@@ -157,6 +159,7 @@ function mod:OnBossEnable()
 end
 
 function mod:OnEngage()
+	bars = {}
 	self:SetStage(1)
 
 	-- Essence of Shadow
@@ -202,7 +205,7 @@ function mod:IsEternalBlazeInRange()
 end
 
 do
-	local normalAnchor, emphasizeAnchor, colors
+	local colors
 
 	local essenceOfShadowAbilities = {
 		[403459] = true, -- Coalescing Void
@@ -272,30 +275,16 @@ do
 
 	function mod:CheckBossRange()
 		if not self:GetOption("custom_on_fade_out_bars") then return end
-		if normalAnchor then
-			for k in next, normalAnchor.bars do
-				if k:Get("bigwigs:module") == self and k:Get("bigwigs:option") then
-					handleBarColor(self, k)
-				end
-			end
-		end
-		if emphasizeAnchor then
-			for k in next, emphasizeAnchor.bars do
-				if k:Get("bigwigs:module") == self and k:Get("bigwigs:option") then
-					handleBarColor(self, k)
-				end
+		for k in next, bars do
+			if k:Get("bigwigs:module") == self and k:Get("bigwigs:option") then
+				handleBarColor(self, k)
 			end
 		end
 	end
 
 	function mod:BarCreated(_, _, bar, _, key)
 		if not self:GetOption("custom_on_fade_out_bars") or self:GetStage() ~= 1 then return end
-		local anchor = bar:Get("bigwigs:anchor")
-		if anchor.position == "normalPosition" then
-			normalAnchor = anchor
-		else
-			emphasizeAnchor = anchor
-		end
+		bars[bar] = true
 		if essenceOfShadowAbilities[key] then
 			if not self:IsEssenceOfShadowInRange() then
 				fadeOutBar(self, bar)
@@ -309,12 +298,7 @@ do
 
 	function mod:BarEmphasized(_, _, bar)
 		if not self:GetOption("custom_on_fade_out_bars") then return end
-		local anchor = bar:Get("bigwigs:anchor")
-		if anchor.position == "normalPosition" then
-			normalAnchor = anchor
-		else
-			emphasizeAnchor = anchor
-		end
+		bars[bar] = true
 		if bar:Get("bigwigs:module") == self and bar:Get("bigwigs:option") then
 			handleBarColor(self, bar)
 		end

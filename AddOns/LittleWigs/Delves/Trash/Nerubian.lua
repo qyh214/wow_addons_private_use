@@ -13,10 +13,12 @@ mod:RegisterEnableMob(
 	220462, -- Weaver's Instructions (The Spiral Weave gossip NPC)
 	218103, -- Nerubian Lord
 	208242, -- Nerubian Darkcaster
+	220485, -- Peculiar Nerubian
 	216584, -- Nerubian Captain
 	228954, -- Nerubian Marauder
 	216583, -- Chittering Fearmonger
 	208245, -- Skittering Swarmer
+	220148, -- Gem Hoarder
 	216621, -- Nerubian Webspinner
 	219810 -- Nerubian Ritualist
 )
@@ -51,7 +53,7 @@ function mod:OnRegister()
 	self:SetSpellRename(450197, CL.charge) -- Skitter Charge (Charge)
 end
 
-local autotalk = mod:AddAutoTalkOption(true)
+local autotalk = mod:AddAutoTalkOption(false)
 function mod:GetOptions()
 	return {
 		autotalk,
@@ -61,7 +63,7 @@ function mod:GetOptions()
 		-- Nerubian Darkcaster
 		{449318, "SAY", "SAY_COUNTDOWN"}, -- Shadows of Strife
 		-- Nerubian Captain / Nerubian Marauder
-		450546, -- Webbed Aegis
+		{450546, "DISPEL"}, -- Webbed Aegis
 		450509, -- Wide Swipe
 		-- Chittering Fearmonger
 		433410, -- Fearful Shriek
@@ -112,6 +114,12 @@ function mod:OnBossEnable()
 
 	-- Nerubian Webspinner
 	self:Log("SPELL_CAST_SUCCESS", "WebLaunch", 433448)
+
+	-- also enable the Rares module
+	local raresModule = BigWigs:GetBossModule("Underpin Rares", true)
+	if raresModule then
+		raresModule:Enable()
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -121,9 +129,7 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	local info = self:GetWidgetInfo("delve", 6183)
-	local level = info and tonumber(info.tierText)
-	if (not level or level > 3) and self:GetOption(autotalk) then
+	if self:GetOption(autotalk) then
 		if self:GetGossipID(121408) then -- Skittering Breach, start Delve (Lamplighter Havrik Chayvn)
 			-- 121408:|cFF0000FF(Delve)|r I'll go deeper in and stop the nerubian ritual.
 			self:SelectGossipID(121408)
@@ -155,8 +161,10 @@ end
 -- Nerubian Lord
 
 function mod:JaggedBarbs(args)
-	self:Message(args.spellId, "orange", CL.frontal_cone)
-	self:PlaySound(args.spellId, "alarm")
+	if self:MobId(args.sourceGUID) == 218103 then -- Nerubian Lord
+		self:Message(args.spellId, "orange", CL.frontal_cone)
+		self:PlaySound(args.spellId, "alarm")
+	end
 end
 
 function mod:LeechingSwarm(args)
@@ -187,25 +195,31 @@ end
 -- Nerubian Captain / Nerubian Marauder
 
 function mod:WebbedAegis(args)
-	self:Message(args.spellId, "red", CL.casting:format(CL.shield))
-	self:PlaySound(args.spellId, "alert")
+	local mobId = self:MobId(args.sourceGUID)
+	if mobId == 216584 or mobId == 228954 then -- Nerubian Captain, Nerubian Marauder
+		self:Message(args.spellId, "red", CL.casting:format(CL.shield))
+		self:PlaySound(args.spellId, "alert")
+	end
 end
 
 function mod:WebbedAegisApplied(args)
-	if self:Player(args.destFlags) then
-		self:TargetMessage(args.spellId, "green", args.destName)
-	else
-		self:Message(args.spellId, "red", CL.other:format(CL.shield, args.destName))
-		self:PlaySound(args.spellId, "alert")
+	local mobId = self:MobId(args.sourceGUID)
+	if self:Dispeller("magic", true, args.spellId) and (mobId == 216584 or mobId == 228954) then -- Nerubian Captain, Nerubian Marauder
+		if self:Player(args.destFlags) then
+			self:TargetMessage(args.spellId, "green", args.destName, CL.shield)
+		else
+			self:Message(args.spellId, "red", CL.other:format(CL.shield, args.destName))
+			self:PlaySound(args.spellId, "alert")
+		end
 	end
 end
 
 do
 	local prev = 0
 	function mod:WideSwipe(args)
-		local t = args.time
-		if t - prev > 2 then
-			prev = t
+		local mobId = self:MobId(args.sourceGUID)
+		if args.time - prev > 2 and (mobId == 216584 or mobId == 228954) then -- Nerubian Captain, Nerubian Marauder
+			prev = args.time
 			self:Message(args.spellId, "purple", CL.frontal_cone)
 			self:PlaySound(args.spellId, "alarm")
 		end
@@ -222,8 +236,10 @@ end
 -- Skittering Swarmer
 
 function mod:SkitterCharge(args)
-	self:Message(args.spellId, "yellow", CL.charge)
-	self:PlaySound(args.spellId, "alarm")
+	if self:MobId(args.sourceGUID) == 208245 then -- Skittering Swarmer
+		self:Message(args.spellId, "yellow", CL.charge)
+		self:PlaySound(args.spellId, "alarm")
+	end
 end
 
 -- Nerubian Webspinner

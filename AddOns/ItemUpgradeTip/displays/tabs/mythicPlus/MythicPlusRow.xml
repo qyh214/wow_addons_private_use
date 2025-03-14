@@ -1,0 +1,24 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+   <Frame
+      name="ItemUpgradeTipMythicPlusRowTemplate"
+      mixin="ItemUpgradeTipMythicPlusRowMixin"
+      inherits="ItemUpgradeTipResultsRowTemplate"
+      virtual="true"
+      enableMouse="true"
+   >
+      <Scripts>
+         <OnHide method="OnHide" />
+      </Scripts>
+      <Layers>
+         <Layer level="OVERLAY">
+            <Texture parentKey="NormalTexture" atlas="auctionhouse-rowstripe-1">
+               <Anchors>
+                  <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="18" />
+                  <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
+               </Anchors>
+            </Texture>
+         </Layer>
+      </Layers>
+
+   </Frame>
+</Ui>

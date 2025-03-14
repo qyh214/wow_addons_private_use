@@ -21,6 +21,7 @@ mod:SetStage(0.5)
 -- Locals
 --
 
+local hardMode = false
 local mobsKilled = 0
 local mobsNeeded = {
 	3, -- Wave 1: 3x Swarmbot
@@ -52,7 +53,6 @@ local mobsNeeded = {
 local L = mod:GetLocale()
 if L then
 	L.awakening_the_machine = "Awakening the Machine"
-
 	L.stages_desc = "Show an alert when a new wave of enemies spawns."
 	L.stages_icon = "inv_cape_armor_earthencivilian_d_02_silver"
 
@@ -113,6 +113,7 @@ end
 
 function mod:OnBossEnable()
 	-- Waves
+	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "npc", "softfriend")
 	self:RegisterWidgetEvent(5573, "Waves")
 	self:Death("MobDeath", 229691, 229695, 229769, 229729) -- 229778 is covered in :AutomaticIronstriderDeath
 	self:Log("SPELL_CAST_SUCCESS", "MobDeath", 288774, 462826) -- Shutdown, Self Destruct
@@ -151,14 +152,33 @@ end
 -- Waves
 
 do
-	local waveStart = 0
+	local eventStart, waveStart = 0, 0
+
+	local prev
+	function mod:UNIT_SPELLCAST_SUCCEEDED(_, _, castGUID, spellId)
+		if spellId == 433923 and castGUID ~= prev then -- [DNT] Kuldas Machine Speaker Ritual - Cosmetic Channel
+			prev = castGUID
+			eventStart = GetTime()
+			hardMode = false
+			local stage = self:GetStage()
+			if stage < 1 then
+				stage = 0
+			end
+			self:Bar("stages", 5, CL.wave:format(stage + 1), L.stages_icon)
+		end
+	end
 
 	function mod:Waves(_, text)
 		waveStart = GetTime()
 		mobsKilled = 0
+		if not hardMode and waveStart - eventStart < 2 then
+			-- if the wave immediately following gossip happens in under 2s (expected 5s) then we are in hard mode
+			hardMode = true
+		end
 		-- [UPDATE_UI_WIDGET] widgetID:5573, widgetType:8, text:Wave 20
 		local wave = tonumber(text:match("%d+"))
 		if wave and wave ~= 0 then -- widget is reset to 0 once you kill the Awakened Phalanx
+			self:StopBar(CL.wave:format(wave))
 			self:SetStage(wave)
 			self:Message("stages", "cyan", CL.wave_count:format(wave, 20), L.stages_icon)
 			self:PlaySound("stages", "info")
@@ -171,17 +191,20 @@ do
 	end
 
 	function mod:MobDeath()
-		mobsKilled = mobsKilled + 1
-		local stage = self:GetStage()
-		if mobsKilled == mobsNeeded[stage] then
-			-- the next wave check is a repeating 10s timer based on the wave start. there is a 2s minimum duration
-			-- between killing the last mob and starting the next wave, so the bar will range from 2-12s.
-			local nextWave = 12 - (GetTime() - waveStart + 2) % 10
-			if stage % 5 == 0 then
-				self:Bar("stages", nextWave, CL.intermission, L.stages_icon)
-				self:ScheduleTimer("Intermission", nextWave)
-			else
-				self:Bar("stages", nextWave, CL.wave:format(stage + 1), L.stages_icon)
+		-- disable wave timers in hard mode, as the wave interval is very short and the intermissions are skipped
+		if not hardMode then
+			mobsKilled = mobsKilled + 1
+			local stage = self:GetStage()
+			if mobsKilled == mobsNeeded[stage] then
+				-- the next wave check is a repeating 5s timer based on the wave start. there is a 2s minimum duration
+				-- between killing the last mob and starting the next wave, so the bar will range from 2-7s.
+				local nextWave = 7 - (GetTime() - waveStart + 2) % 5
+				if stage % 5 == 0 then
+					self:Bar("stages", nextWave, CL.intermission, L.stages_icon)
+					self:ScheduleTimer("Intermission", nextWave)
+				else
+					self:Bar("stages", nextWave, CL.wave:format(stage + 1), L.stages_icon)
+				end
 			end
 		end
 	end

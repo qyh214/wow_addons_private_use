@@ -1,4 +1,4 @@
---Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.6.4
+--Coutesy of ZamestoTV. Thank you!    --Translator: ZamestoTV as of 1.7.5
 
 if not (GetLocale() == "ruRU") then
     return;
@@ -110,8 +110,16 @@ L["Minimap Tooltip Shift Right Click"] = "Shift + ПКМ";
 L["Minimap Tooltip Hide Button"] = "|cffffffffСкрыть эту кнопку|r"
 L["Minimap Tooltip Middle Button"] = "|CFFFF1000Средняя кнопка |cffffffffСброс камеры";
 L["Minimap Tooltip Set Scale"] = "Установите Масштаб: |cffffffff/narci [масштаб 0.8~1.2]";
+L["MinimapButton Enable Instruction"] = "|cffffd100Вы отключили кнопку миникарты Narcissus. Вы можете ввести|r |cffffffff/narci minimap|r |cffffd100чтобы снова включить ее.|r";
+L["MinimapButton Reenabled"] = "|cffffd100Вы включили кнопку миникарты Narcissus.|r";
+L["MinimapButton LibDBIcon"] = "Использовать LibDBIcon";
+L["MinimapButton LibDBIcon Desc"] = "Используйте LibDBIcon для создания кнопки мини-карты.\nВы видите эту опцию, потому что у вас установлена ​​библиотека LibDBIcon-1.0 или дополнение, интегрирующее эту библиотеку.";
+L["MinimapButton LibDBIcon Hide"] = "Скрыть кнопку";
 L["Corrupted Item Parser"] = "|cffffffffПереключить парсер порченого предмета|r";
 L["Toggle Dressing Room"] = "|cffffffffПереключить на "..DRESSUP_FRAME.."|r";
+L["Reset Camera"] = "Сбросить камеру";
+L["Character UI"] = "Интерфейс персонажа";
+L["Module Menu"] = "Меню модуля";
 
 L["Layout"] = "Место";
 L["Symmetry"] = "Симметрия";
@@ -177,6 +185,8 @@ L["Text Width"] = "Ширина Текста";
 L["Truncate Text"] = "Усечение Текста";
 L["Stat Sheet"] = "Статический Лист";
 L["Minimap Button"] = "Кнопка на Миникарте";
+L["Show Minimap Button"] = "Кнопка - Показать миникарту";
+L["Add To AddOn Compartment"] = "Добавить в Аддон";
 L["Fade Out"] = "Появляется при наведении мыши";
 L["Fade Out Description"] = "Кнопка исчезает, когда вы убираете курсор от нее.";
 L["Hotkey"] = "Клавиша";
@@ -310,7 +320,6 @@ L["Animation Tooltip"] = "Просмотр, поиск анимации";
 L["Animation Variation"] = "Вариация";
 L["Reset Slider"] = "Сбросить до нуля";    --reset the value of the slider to zero
 
-
 --Spell Visual Browser--
 L["Visuals"] = "Визуал";
 L["Visual ID"] = "Визуал ID";
@@ -338,6 +347,12 @@ L["History Panel Note"] = "Примененные визуальные эффе�
 L["Return"] = "Вернуться";
 L["Close"] = "Закрыть";
 L["Change Pack"] = "Изменить пакет";
+L["FindVisual Tooltip"] = "Покажите мне, как найти SpellVisualKitID";
+L["FindVisual Guide 1"] = "Найти SpellID, используя Spell Name.";
+L["FindVisual Guide 2"] = "Найдите SpellVisualID, используя SpellID на:";
+L["FindVisual Guide 3"] = "Найти |cffccccccSpellVisualKitID|r используя SpellVisualID на:";
+L["FindVisual Guide 4"] = "Введите |cffccccccSpellVisualKitID|r в поле визуального редактирования Narcissus. Вы не гарантированно найдете совпадение на шагах 2 или 3, и визуальное отображение не всегда корректно.";
+
 
 --Dressing Room--
 L["Undress"] = "Без одежды";
@@ -356,7 +371,9 @@ L["Switch Form To Visage"] = "Переключить на форму |cffffffff 
 L["Switch Form To Dracthyr"] = "Переключить на форму |cffffffff Драктир|r";
 L["Switch Form To Worgen"] = "Переключить на форму |cffffffff Ворген|r";
 L["Switch Form To Human"] = "Переключить на форму |cffffffff Человек|r";
-L["InGame Command"] = "Внутриигровая команда";																 
+L["InGame Command"] = "Внутриигровая команда";	
+L["Hide Player Items"] = "Скрыть предметы игрока";
+L["Hide Player Items Tooltip"] = "Скрыть все, что не относится к этому набору предметов.";															 
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -400,6 +417,7 @@ L["NavBar Saved Sets"] = "Сохранено";   --A Saved Equipment Set
 L["NavBar Incomplete Sets"] = INCOMPLETE;
 L["Icon Selector"] = "Переключатель Иконок";
 L["Delete Equipment Set Tooltip"] = "Удалить Набор\n|cff808080(нажмите и удерживайте кнопку)|r";
+L["New Set"] = PAPERDOLL_NEWEQUIPMENTSET or "Новый набор";
 
 --Corruption System
 L["Corruption System"] = "Порча";
@@ -717,6 +735,12 @@ L["Auto Filter Case"] = "Автоматически фильтрует пред�
 L["Send Mails"] = "Отправляете почту";
 L["Create Auctions"] = "Создаете аукцион";
 L["Socket Items"] = "Сокеты";
+L["Item Type Mailable"] = MAIL_LABEL or "Почта";
+L["Item Type Auctionable"] = AUCTIONS or "Аукцион";
+L["Item Type Teleportation"] = TUTORIAL_TITLE35 or "Путешествие";
+L["Item Type Gems"] = AUCTION_CATEGORY_GEMS or "Камни";
+L["Item Type Reagent"] = PROFESSIONS_MODIFIED_CRAFTING_REAGENT_BASIC or "Реагент для профессии";
+
 
 --Perks Program--
 L["Perks Program Unclaimed Tender Format"] = "- У вас есть |cffffffff%s|r несобранные Торговые жетоны в сундуке коллекционера.";     --PERKS_PROGRAM_UNCOLLECTED_TENDER
@@ -727,11 +751,13 @@ L["Perks Program See Wares"] = "Показать товары";
 L["Perks Program No Cache Alert"] = "Поговорите с продавцами торговой лавки, чтобы увидеть товары этого месяца.";
 L["Perks Program Using Cache Alert"] = "Использование кеша с вашего последнего посещения. Данные о цене могут быть неточными.";
 L["Modify Default Pose"] = "Изменить позу по умолчанию";   --Change the default pose/animation/camera yaw when viewing transmog items
+L["Modify Default Pose Tooltip"] = "При включении измените стандартную анимацию боя или анимацию средства передвижения в WoW на \"Стоять\" и отрегулируйте вращение, чтобы лучше представить предмет.";
 L["Include Header"] = "Включает:";  --The transmog set includes...
 L["Auto Try On All Items"] = "Автоматическая примерка всех предметов";
 L["Full Set Cost"] = "Стоимость полного комплекта";   --Purchasing the full set will cost you x Trader's Tender
 L["You Will Receive One Item"] = "Вы получите |cffffffffОДИН|r предмет:";
 L["Format Item Belongs To Set"] = "Этот предмет входит в набор трансмогрификации |cffffffff[%s]|r";
+L["Default Animation"] = "Анимация по умолчанию";
 
 
 --Quest--
@@ -796,6 +822,7 @@ L["Loadout Save Failure Incomplete Choices"] = "|cffff4800У вас есть н�
 L["Loadout Save Failure Dupe Loadout Format"] = "|cffff4800Эта загрузка такая же, как|r %s";
 L["Loadout Save Failure Dupe Name Format"] = "|cffff4800Загрузка с таким названием уже существует.|r";
 L["Loadout Save Failure No Name"] = "|cffff4800".. (TALENT_FRAME_DROP_DOWN_NEW_LOADOUT_PROMPT or "Введите название для новой загрузки") .."|r";
+L["Empty Socket"] = GLYPH_EMPTY or "Пустой";
 
 L["Format Equipping Progress"] = "Экипировано %d/%d";
 L["Format Click Times To Equip Singular"] = "Нажмите |cff19ff19%d|r Время экипироваться";
@@ -803,3 +830,10 @@ L["Format Click Times To Equip Plural"] = "Нажмите |cff19ff19%d|r Вре�
 L["Format Free Up Bag Slot"] = "Освободить %d слоты для сумки в первую очередь";
 L["Format Number Items Selected"] = "%d Выбрано";
 L["Format Gem Slot Stat Budget"] = "Камни в %s являются %s%% эффективными."  --e.g. Gems in trinket are 75% effective
+
+
+--Game Pad--
+L["GamePad Select"] = "Выбрать";
+L["GamePad Cancel"] = "Отмена";
+L["GamePad Use"] = "Использовать";
+L["GamePad Equip"] = "Экипировка";

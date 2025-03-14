@@ -1,4 +1,7 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Font name="DUIFont_Test" inherits="GameFontNormal" virtual="true" justifyV="MIDDLE" justifyH="CENTER">
+    </Font>
+
     <FontFamily name="DUIFontFamily_Serif_18" virtual="true"> <!--Quest Title Header-->
         <Member alphabet="roman">
             <Font font="Interface\AddOns\DialogueUI\Fonts\frizqt__.ttf" height="18">
@@ -160,6 +163,29 @@
         </Member>
     </FontFamily>
 
+    <FontFamily name="DUIFontFamily_Trajan_18" virtual="true"> <!--Book Title-->
+        <Member alphabet="roman">
+            <Font font="Interface\AddOns\DialogueUI\Fonts\TrajanPro3SemiBold.ttf" height="18">
+            </Font>
+        </Member>
+        <Member alphabet="korean">
+            <Font font="Fonts\2002.TTF" height="18">
+            </Font>
+        </Member>
+        <Member alphabet="simplifiedchinese">
+            <Font font="Fonts\ARKai_T.ttf" height="18">
+            </Font>
+        </Member>
+        <Member alphabet="traditionalchinese">
+            <Font font="Fonts\blei00d.TTF" height="18">
+            </Font>
+        </Member>
+        <Member alphabet="russian">
+            <Font font="Interface\AddOns\DialogueUI\Fonts\frizqt___cyr.ttf" height="18">
+            </Font>
+        </Member>
+    </FontFamily>
+
 
     <Font name="DUIFont_Quest_Title_18" inherits="DUIFontFamily_Serif_18" virtual="true" justifyV="TOP" justifyH="LEFT">
         <Color r="0.19" g="0.17" b="0.13"/>
@@ -187,6 +213,10 @@
 
     <Font name="DUIFont_Quest_Disabled" inherits="DUIFontFamily_Serif_12" virtual="true" justifyV="TOP" justifyH="LEFT">
         <Color r="0.50" g="0.36" b="0.24"/>
+    </Font>
+
+    <Font name="DUIFont_Quest_MultiLanguage" inherits="DUIFontFamily_Serif_12" virtual="true" justifyV="TOP" justifyH="LEFT">
+        <Color r="0.416" g="0.18" b="0.165"/>
     </Font>
 
 
@@ -271,6 +301,31 @@
     </Font>
 
 
+    <Font name="DUIFont_Book_Title" inherits="DUIFontFamily_Trajan_18" virtual="true" justifyV="TOP" justifyH="CENTER">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+    <Font name="DUIFont_Book_H3" inherits="DUIFontFamily_Serif_18" virtual="true" justifyV="TOP" justifyH="LEFT">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+    <Font name="DUIFont_Book_H2" inherits="DUIFontFamily_Serif_16" virtual="true" justifyV="TOP" justifyH="LEFT">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+    <Font name="DUIFont_Book_H1" inherits="DUIFontFamily_Serif_16" virtual="true" justifyV="TOP" justifyH="LEFT">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+    <Font name="DUIFont_Book_Paragraph" inherits="DUIFontFamily_Serif_12" virtual="true" justifyV="TOP" justifyH="LEFT">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+    <Font name="DUIFont_Book_10" inherits="DUIFontFamily_Serif_10" virtual="true" justifyV="TOP" justifyH="CENTER">
+        <Color r="0.19" g="0.17" b="0.13"/>
+    </Font>
+
+
     <!--AutoFit FontString-->
     <Font name="DUIFont_Constant_10" inherits="DUIFontFamily_Serif_10" virtual="true" justifyV="MIDDLE" justifyH="CENTER">
         <Color r="0.19" g="0.17" b="0.13"/>
@@ -279,4 +334,7 @@
     <Font name="DUIFont_Constant_8" inherits="DUIFontFamily_Serif_8" virtual="true" justifyV="MIDDLE" justifyH="CENTER">
         <Color r="0.19" g="0.17" b="0.13"/>
     </Font>
+
+
+    <Font name="DUIFont_Dummy" inherits="DUIFontFamily_Serif_12" virtual="true"/>
 </Ui>

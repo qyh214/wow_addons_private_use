@@ -1,10 +1,11 @@
-## Interface: 110002
-## Title: |cffe8344fPatched|r WeakAuras Model Paths
-## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.17.1
+## Interface: 110100
+## Title: WeakAuras Model Paths
+## Author: The WeakAuras Team
+## Version: 5.19.5
 ## IconTexture: Interface\AddOns\WeakAuras\Media\Textures\icon.blp
 ## Notes: Model paths for WeakAuras
-## Notes-esES: Las rutas de archivos de modelos en 3D para WeakAuras
+## Notes-esES: Las rutas de modelos para WeakAuras
+## Notes-esMX: Las rutas de modelos para WeakAuras
 ## Notes-deDE: 3D-Model Pfade für WeakAuras
 ## Notes-ruRU: Ссылки на файлы моделей WeakAuras
 ## Notes-zhTW: WeakAuras的模組路徑

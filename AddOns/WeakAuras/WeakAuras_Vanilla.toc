@@ -1,19 +1,20 @@
-## Interface: 11503
-## Title: |cffe8344fPatched|r WeakAuras
-## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.17.1
+## Interface: 11506
+## Title: WeakAuras
+## Author: The WeakAuras Team
+## Version: 5.19.5
 ## X-Flavor: Vanilla
 ## Notes: A powerful, comprehensive utility for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
+## Notes-esMX: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
 ## Notes-deDE: Ein leistungsfähiges, umfassendes Addon zur grafischen Darstellung von Informationen von Auren, Cooldowns, Timern und vielem mehr.
 ## Notes-ruRU: Мощный, многосторонний инструмент для отображения графики и информации, основанной на баффах, дебаффах и других триггерах.
 ## Notes-zhTW: 一個強大且全面實用的顯示圖形和訊息基於增益，減益和其它觸發。
 ## X-Category: Interface Enhancements
 ## Globe-Post: WeakAurasOptions, WeakAurasModelPaths, WeakAurasTemplates
 ## X-Website: https://www.curseforge.com/wow/addons/weakauras
-## X-Curse-Project-ID: 0
-## X-WoWI-ID: 0
-## X-Wago-ID: 0
+## X-Curse-Project-ID: 65387
+## X-WoWI-ID: 24910
+## X-Wago-ID: VBNBxKx5
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: WeakAurasSaved
@@ -51,6 +52,7 @@ GenericTrigger.lua
 BossMods.lua
 
 # Helper Systems
+TSUHelpers.lua
 AuraWarnings.lua
 AuraEnvironment.lua
 AuraEnvironmentWrappedSystems.lua
@@ -59,13 +61,19 @@ DebugLog.lua
 # Region support
 RegionTypes\SmoothStatusBarMixin.lua
 RegionTypes\RegionPrototype.lua
+RegionTypes\Empty.lua
+BaseRegions\TextureCoords.lua
+BaseRegions\CircularProgressTexture.lua
+BaseRegions\LinearProgressTexture.lua
 RegionTypes\ProgressTexture.lua
+BaseRegions\Texture.lua
 RegionTypes\Texture.lua
 RegionTypes\AuraBar.lua
 RegionTypes\Icon.lua
 RegionTypes\Text.lua
 RegionTypes\Group.lua
 RegionTypes\DynamicGroup.lua
+BaseRegions\StopMotion.lua
 RegionTypes\StopMotion.lua
 RegionTypes\Model.lua
 
@@ -76,6 +84,10 @@ SubRegionTypes\Border.lua
 SubRegionTypes\Glow.lua
 SubRegionTypes\Tick.lua
 SubRegionTypes\Model.lua
+SubRegionTypes\StopMotion.lua
+SubRegionTypes\Texture.lua
+SubRegionTypes\CircularProgressTexture.lua
+SubRegionTypes\LinearProgressTexture.lua
 
 #Misc
 DiscordList.lua

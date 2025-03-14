@@ -26,7 +26,7 @@ local demo_steps = {
     completed = false,
     cur_value = 42,
     final_value = 123,
-    quantity = "42%",
+    is_weighted_progress = true,
   },
 }
 
@@ -348,27 +348,33 @@ local function resolve_time_info(step_index, current_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
+local function resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress, is_percent_value)
   -- enemy forces
   if is_weighted_progress then
     local quantity_number = cur_value
 
     -- percentage
-    -- :OnlyPercentValue
-    local quantity_percent = cur_value 
-    -- local quantity_percent = (cur_value / final_value) * 100
-    -- local mult = 10 ^ 2
-    -- quantity_percent = math.floor(quantity_percent * mult + 0.5) / mult
-    -- if quantity_percent > 100 then
-    --   quantity_percent = 100
-    -- end
+    local quantity_percent = 0
+    if is_percent_value then
+      quantity_percent = cur_value 
+    else 
+      quantity_percent = (cur_value / final_value) * 100
+      local mult = 10 ^ 2
+      quantity_percent = math.floor(quantity_percent * mult + 0.5) / mult
+      if quantity_percent > 100 then
+        quantity_percent = 100
+      end
+    end
 
     -- set to 100% if completed (needed if enemy forces is the last criteria which gets completed, quantity is not updated to 100% in this case)
     if completed then
       quantity_percent = 100
-      -- :OnlyPercentValue
-      quantity_number = 100
-      -- quantity_number = final_value
+
+      if is_percent_value then
+        quantity_number = 100
+      else 
+        quantity_number = final_value
+      end
 
       current_run.quantity_completed = true
     end
@@ -395,19 +401,17 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
       local mult = 10 ^ 2
       pull_in_percent = math.floor(pull_in_percent * mult + 0.5) / mult
       
-      -- :OnlyPercentValue
-      pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
-      -- if addon.c("show_percent_numbers") then
-      --   pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
-      -- end
+      if addon.c("show_percent_numbers") then
+        pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
+      end
 
-      -- if addon.c("show_absolute_numbers") then
-      --   if addon.c("show_percent_numbers") then
-      --     pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
-      --   else
-      --     pull_value_text = pull_value_text .. "+" .. pull_value
-      --   end
-      -- end
+      if addon.c("show_absolute_numbers") then
+        if addon.c("show_percent_numbers") then
+          pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
+        else
+          pull_value_text = pull_value_text .. "+" .. pull_value
+        end
+      end
 
       pull_value_text = pull_value_text .. "|r"
 
@@ -422,30 +426,34 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
     -- resolve text
     local percent_text = ""
-    -- :OnlyPercentValue
-    percent_text = " " .. quantity_percent .. "%"
-    -- if addon.c("show_percent_numbers") then
-    --   percent_text = " " .. quantity_percent .. "%"
-    -- end
-    
+
+    if is_percent_value then
+      percent_text = " " .. quantity_percent .. "%"
+    else
+      if addon.c("show_percent_numbers") then
+        percent_text = " " .. quantity_percent .. "%"
+      end
+    end
+
     local absolute_number = ""
-    -- :OnlyPercentValue
-    -- if addon.c("show_absolute_numbers") then
-    --   local missing_absolute = final_value - quantity_number
-    --   if missing_absolute == 0 then
-    --     missing_absolute = ""
-    --   else
-    --     missing_absolute = " - " .. missing_absolute
-    --   end
+    if not is_percent_value then
+      if addon.c("show_absolute_numbers") then
+        local missing_absolute = final_value - quantity_number
+        if missing_absolute == 0 then
+          missing_absolute = ""
+        else
+          missing_absolute = " - " .. missing_absolute
+        end
 
-    --   absolute_number = quantity_number .. "/" .. final_value .. missing_absolute
+        absolute_number = quantity_number .. "/" .. final_value .. missing_absolute
 
-    --   if addon.c("show_percent_numbers") then
-    --     absolute_number = " (" .. absolute_number .. ")"
-    --   else
-    --     absolute_number = " " .. absolute_number
-    --   end
-    -- end
+        if addon.c("show_percent_numbers") then
+          absolute_number = " (" .. absolute_number .. ")"
+        else
+          absolute_number = " " .. absolute_number
+        end
+      end
+    end
 
     if completed or not addon.c("show_enemy_forces_bar") then
       if completed then
@@ -561,12 +569,20 @@ function criteria.update()
 
   for i = 1, steps do
     local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
-    criteria.update_step(i, current_run, criteriaInfo.description, criteriaInfo.completed, criteriaInfo.quantity, criteriaInfo.totalQuantity, criteriaInfo.isWeightedProgress)
+
+    local cur_value = criteriaInfo.quantity
+    local is_percent_value = criteriaInfo.isWeightedProgress
+    if criteriaInfo.isWeightedProgress and criteriaInfo.quantityString then
+      cur_value = tonumber(string.sub(criteriaInfo.quantityString, 1, string.len(criteriaInfo.quantityString) - 1))
+      is_percent_value = false
+    end
+
+    criteria.update_step(i, current_run, criteriaInfo.description, criteriaInfo.completed, cur_value, criteriaInfo.totalQuantity, criteriaInfo.isWeightedProgress, is_percent_value)
   end
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
+function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress, is_percent_value)
   -- resolve frame
   local step_frame
   if is_weighted_progress and (not completed) and addon.c("show_enemy_forces_bar") then
@@ -596,7 +612,12 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
     -- enemy forces bar
     if step_frame == enemy_forces_bar then
-      local quantity_percent = cur_value / 100.0
+      local quantity_percent = 0
+      if is_percent_value then
+        quantity_percent = cur_value / 100.0
+      else 
+        quantity_percent = cur_value / final_value
+      end
 
       enemy_forces_bar:SetValue(quantity_percent)
 
@@ -617,7 +638,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   local time_info = resolve_time_info(step_index, current_run)
 
   -- resolve step info
-  local step_info = resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
+  local step_info = resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress, is_percent_value)
 
   -- set text
   local objective_text = string.format("|c%s%s%s", color, step_info, time_info)
@@ -665,7 +686,7 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 function criteria.update_demo_criteria(demo_run)
   for i, step in ipairs(demo_steps) do
-    criteria.update_step(i, demo_run, step.name, step.completed, step.cur_value, step.final_value, step.quantity)
+    criteria.update_step(i, demo_run, step.name, step.completed, step.cur_value, step.final_value, step.is_weighted_progress)
   end
 end
 

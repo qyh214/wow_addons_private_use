@@ -122,8 +122,8 @@ local nodes = ns.nodes
         -- The War Within    
             if self.db.profile.showCosmosKhazAlgar then
                 nodes[946][67806930] = { mnID = 2274, name = EXPANSION_NAME10, type = "TWW", showInZone = true } -- Expansion Logo
-                nodes[946][67807400] = { mnID = 2274, id = { 1273 }, type = "Raid", showInZone = true } -- Raids
-                nodes[946][67807850] = { mnID = 2274, id = { 1210, 1267, 1270, 1269, 1268, 1271, 1272, 1274 }, type = "Dungeon", showInZone = true } -- Dungeons
+                nodes[946][67807400] = { mnID = 2274, id = { 1273, 1296 }, type = "Raid", showInZone = true } -- Raids
+                nodes[946][67807850] = { mnID = 2274, id = { 1210, 1267, 1270, 1269, 1268, 1271, 1272, 1274, 1298 }, type = "Dungeon", showInZone = true } -- Dungeons
                 nodes[946][67808300] = { mnID = 2274, name = "", type = "Portal", showInZone = true, TransportName = L["Dornogal"] .. " " .. L["Portals"] .. "\n" .. " ==> " .. STORMWIND .. "\n" .. " ==> " .. ORGRIMMAR } -- Portals 
             end
             

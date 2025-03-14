@@ -5,6 +5,7 @@
 local mod = BigWigs:NewBoss("Yor'sahj the Unsleeping", 967, 325)
 if not mod then return end
 mod:RegisterEnableMob(55312)
+mod:SetEncounterID(1295)
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -67,12 +68,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "DeepCorruption", 105171)
 	self:Log("SPELL_AURA_APPLIED", "Bolt", 104849, 105416)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "Bolt", 104849, 105416)
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 
 	self:Log("SPELL_DAMAGE", "AcidPulse", 105573)
 	self:Log("SPELL_MISSED", "AcidPulse", 105573)
-
-	self:Death("Win", 55312)
 end
 
 function mod:OnEngage()

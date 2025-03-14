@@ -55,8 +55,6 @@ local function GetOptions()
 			args = {
 				Home = {
 
-
-
 					name = format("|T%s:18|t %s", E.Libs.OmniCDC.texture.logo, E.AddOn),
 					order = 0,
 					type = "group",
@@ -79,35 +77,35 @@ local function GetOptions()
 							name = L["Version"],
 							order = 2,
 							type = "input",
-							dialogControl = "Info-OmniCD",
+							dialogControl = "Info-OmniCDC",
 							get = getFieldText,
 						},
 						Author = {
 							name = L["Author"],
 							order = 3,
 							type = "input",
-							dialogControl = "Info-OmniCD",
+							dialogControl = "Info-OmniCDC",
 							get = getFieldText,
 						},
 						supportedUis = {
 							name = L["Supported UI"],
 							order = 4,
 							type = "input",
-							dialogControl = "Info-OmniCD",
+							dialogControl = "Info-OmniCDC",
 							get = getFieldText,
 						},
 						localizations = {
 							name = LANGUAGES_LABEL,
 							order = 5,
 							type = "input",
-							dialogControl = "Info-OmniCD",
+							dialogControl = "Info-OmniCDC",
 							get = getFieldText,
 						},
 						translations = {
 							name = BUG_CATEGORY15,
 							order = 6,
 							type = "input",
-							dialogControl = "Info-OmniCD",
+							dialogControl = "Info-OmniCDC",
 							get = getFieldText,
 						},
 						pd2 = {
@@ -218,28 +216,28 @@ local function GetOptions()
 									name = "/oc t:",
 									order = 5,
 									type = "input",
-									dialogControl = "Info-OmniCD",
+									dialogControl = "Info-OmniCDC",
 									get = function() return L["Toggle test frames for current zone."] end,
 								},
 								reload = {
 									name = "/oc rl:",
 									order = 6,
 									type = "input",
-									dialogControl = "Info-OmniCD",
+									dialogControl = "Info-OmniCDC",
 									get = function() return L["Reload addon."] end,
 								},
 								resetTimers = {
 									name = "/oc rt:",
 									order = 7,
 									type = "input",
-									dialogControl = "Info-OmniCD",
+									dialogControl = "Info-OmniCDC",
 									get = function() return L["Reset all cooldown timers."] end,
 								},
 								resetDB = {
 									name = "/oc rt db:",
 									order = 8,
 									type = "input",
-									dialogControl = "Info-OmniCD",
+									dialogControl = "Info-OmniCDC",
 									get = function() return L["Clean wipe the savedvariable file. |cffff2020Warning|r: This can not be undone!"] end,
 								},
 
@@ -255,7 +253,7 @@ local function GetOptions()
 									desc = L["Press Ctrl+C to copy URL"],
 									order = 1,
 									type = "input",
-									dialogControl = "Link-OmniCD",
+									dialogControl = "Link-OmniCDC",
 									get = function() return "https://www.curseforge.com/wow/addons/omnicd/issues" end,
 								},
 								translate = {
@@ -263,7 +261,7 @@ local function GetOptions()
 									desc = L["Press Ctrl+C to copy URL"],
 									order = 2,
 									type = "input",
-									dialogControl = "Link-OmniCD",
+									dialogControl = "Link-OmniCDC",
 									get = function() return "https://www.curseforge.com/wow/addons/omnicd/localization" end,
 								},
 							}
@@ -278,9 +276,19 @@ local function GetOptions()
 									desc = L["Press Ctrl+C to copy URL"],
 									order = 1,
 									type = "input",
-									dialogControl = "Link-OmniCD",
+									dialogControl = "Link-OmniCDC",
 									get = function() return "https://www.curseforge.com/wow/addons/omnicd-battleres" end,
 								},
+								--[[
+								enemyCD = {
+									name = L["Enemy CD"],
+									desc = L["Press Ctrl+C to copy URL"],
+									order = 2,
+									type = "input",
+									dialogControl = "Link-OmniCDC",
+									get = function() return "" end,
+								},
+								]]
 							}
 						} or nil,
 						otherAddOns = E.isDF and {
@@ -293,7 +301,7 @@ local function GetOptions()
 									desc = "Track important buffs and debuffs on any Blizzard frame",
 									order = 1,
 									type = "input",
-									dialogControl = "Link-OmniCD",
+									dialogControl = "Link-OmniCDC",
 									get = function() return "https://www.curseforge.com/wow/addons/omniauras" end,
 								},
 							}
@@ -348,13 +356,13 @@ end
 
 function E:SetupOptions()
 	self.Libs.OmniCDC.texture = self.Libs.OmniCDC.texture or {
-		logo	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-logo64]],
-		recent	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-recent]],
-		resizer	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bullet-resizer]],
-		plus	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-plus]],
-		minus	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-minus]],
-		arrow	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-dn]],
-		arrowb	= [[Interface\AddOns\OmniCD\Config\Libs\Media\omnicd-bg-gnav2-dn-b]],
+		logo	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-logo64]],
+		recent	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-recent]],
+		resizer	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-bullet-resizer]],
+		plus	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-bg-gnav2-plus]],
+		minus	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-bg-gnav2-minus]],
+		arrow	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-bg-gnav2-dn]],
+		arrowb	= [[Interface\AddOns\OmniCD\Libs\LibOmniCDC\Media\omnicd-bg-gnav2-dn-b]],
 	}
 	self.Libs.OmniCDC.SetOptionFontDefaults(nil, nil)
 	self.Libs.ACR:RegisterOptionsTable(self.AddOn, GetOptions, true)
@@ -385,6 +393,7 @@ end
 
 function E:RefreshProfile(currentProfile)
 	currentProfile = currentProfile or self.DB:GetCurrentProfile()
-	self.DB.keys.profile = currentProfile .. ":D"
+
+	self.DB.keys.profile = ""
 	self.DB:SetProfile(currentProfile)
 end

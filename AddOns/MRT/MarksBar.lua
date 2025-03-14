@@ -189,7 +189,7 @@ mainFrame.edges[1] = CreateEdge(1,4)
 mainFrame.markbuts = {}
 do
 	local markbuts_backdrop = {bgFile = ExRT.F.barImg,edgeFile = ExRT.F.defBorder,tile = false,edgeSize = 8}
-	for i=1,16 do
+	for i=1,8 do
 		local frame = CreateFrame("Frame",nil,mainFrame, BackdropTemplateMixin and "BackdropTemplate")
 		mainFrame.markbuts[i] = frame
 		frame:SetSize(26,26)
@@ -332,7 +332,7 @@ ELib:FixPreloadFont(mainFrame.del,mainFrame.del.html,ExRT.F.defFont, 10)
 mainFrame.edges[3] = CreateEdge(3,383)
 
 mainFrame.wmarksbuts = CreateFrame("Frame",nil,mainFrame)
-mainFrame.wmarksbuts:SetSize(ExRT.isCata and 14*3 or 14*5,26)
+mainFrame.wmarksbuts:SetSize(14*5,26)
 local function MainFrameWMOnEnter(self)
 	self:SetBackdropBorderColor(0.7,0.7,0.7,1)
 end
@@ -350,7 +350,7 @@ mainFrame.wmarksbuts:SetScript("OnLeave",function()
 	mainFrame:OnLeave()
 end)
 
-local MAX_WM_BUTTONS = ExRT.isCata and 6 or 9
+local MAX_WM_BUTTONS = 9
 mainFrame.wmarksbuts.bnum = MAX_WM_BUTTONS
 
 do
@@ -367,7 +367,7 @@ do
 		
 		if i < MAX_WM_BUTTONS then
 			frame:RegisterForClicks("AnyDown", "AnyUp")
-			if ExRT.is11 then
+			if true then
 				frame:SetAttribute("type", "worldmarker")
 				frame:SetAttribute("marker", tostring(i))
 				frame:SetAttribute("action1", "set")
@@ -443,7 +443,7 @@ for i=1,MAX_WM_BUTTONS do
 
 	if i < MAX_WM_BUTTONS then
 		frame:RegisterForClicks("AnyDown", "AnyUp")
-		if ExRT.is11 then
+		if true then
 			frame:SetAttribute("type", "worldmarker")
 			frame:SetAttribute("marker", tostring(i))
 			frame:SetAttribute("action1", "set")
@@ -579,7 +579,7 @@ local function modifymarkbars()
 			end
 		end
 		
-		mainFrame.wmarksbuts.b:SetSize(123+19*(ExRT.isCata and 0 or 3),26)
+		mainFrame.wmarksbuts.b:SetSize(123+19*(3),26)
 		mainFrame.wmarksbuts.b:SetPoint("TOPLEFT", mainFrame,"BOTTOMLEFT",20, 3)
 		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
@@ -600,17 +600,17 @@ local function modifymarkbars()
 		
 		mainFrame.edges[1]:SetPoint("TOPLEFT",4,0)
 		if not VMRT.MarksBar.Show[1] then
-			for i=1,16 do
+			for i=1,8 do
 				mainFrame.markbuts[i]:Hide()
 			end
 		else
 			for i=1,8 do
 				mainFrame.markbuts[i]:Show()
 			end
-			local showExtraMarks = RAID_TARGET_USE_EXTRA
-			for i=9,16 do
-				mainFrame.markbuts[i]:SetShown(showExtraMarks)
-			end
+			local showExtraMarks = false
+			--for i=9,16 do
+			--	mainFrame.markbuts[i]:SetShown(showExtraMarks)
+			--end
 			
 			posX = posX + 222 + (showExtraMarks and 224 or 0)
 			totalWidth = totalWidth + 222 + (showExtraMarks and 224 or 0)
@@ -726,7 +726,7 @@ local function modifymarkbars()
 			end
 		end
 		
-		mainFrame.wmarksbuts.b:SetSize(26,123+19*(ExRT.isCata and 0 or 3))
+		mainFrame.wmarksbuts.b:SetSize(26,123+19*(3))
 		mainFrame.wmarksbuts.b:SetPoint("TOPLEFT", mainFrame,"TOPRIGHT",-3,-20)
 		for i=1,mainFrame.wmarksbuts.bnum do
 			if VMRT.MarksBar.WMarksReverse then
@@ -747,17 +747,17 @@ local function modifymarkbars()
 		
 		mainFrame.edges[1]:SetPoint("TOPLEFT",0,-posX)
 		if not VMRT.MarksBar.Show[1] then
-			for i=1,16 do
+			for i=1,8 do
 				mainFrame.markbuts[i]:Hide()
 			end
 		else
 			for i=1,8 do
 				mainFrame.markbuts[i]:Show()
 			end
-			local showExtraMarks = RAID_TARGET_USE_EXTRA
-			for i=9,16 do
-				mainFrame.markbuts[i]:SetShown(showExtraMarks)
-			end
+			local showExtraMarks = false
+			--for i=9,16 do
+			--	mainFrame.markbuts[i]:SetShown(showExtraMarks)
+			--end
 			
 			posX = posX + 224 + (showExtraMarks and 224 or 0)
 			totalWidth = totalWidth + 224 + (showExtraMarks and 224 or 0)

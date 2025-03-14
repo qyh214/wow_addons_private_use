@@ -47,6 +47,7 @@ Chain.TempChain23 = 110333
 Chain.TempChain24 = 110334
 Chain.TempChain25 = 110335
 Chain.TempChain26 = 110336
+Chain.TempChain27 = 110337
 Chain.OtherAlliance = 110397
 Chain.OtherHorde = 110398
 Chain.OtherBoth = 110399
@@ -598,7 +599,7 @@ Database:AddChain(Chain.ThePriory, {
     },
     completed = {
         type = "quest",
-        id = 82628,
+        id = 79649,
     },
     items = {
         {
@@ -690,6 +691,7 @@ Database:AddChain(Chain.ThePriory, {
         {
             type = "quest",
             id = 79650,
+            aside = true,
             x = 0,
         },
     },
@@ -870,6 +872,11 @@ Database:AddChain(Chain.LostInTheDarkness, {
         {
             type = "level",
             level = 80
+        },
+        {
+            type = "chain",
+            id = BtWQuests.Constant.Chain.TheWarWithin.AgainstTheCurrent,
+            upto = 79197,
         }
     },
     active = {
@@ -1158,30 +1165,6 @@ Database:AddChain(Chain.TheWeightOfDuty, {
                 { level = 73, },
             }
         },
-        {
-            type = "chain",
-            id = BtWQuests.Constant.Chain.TheWarWithin.TheRingingDeeps.TheMonsterAndTheMachine,
-            restrictions = NOT_THREADS_OF_FATE_RESTRICTION,
-            lowPriority = true,
-        },
-        {
-            type = "chain",
-            id = Chain.TheGuidingStar,
-            restrictions = NOT_THREADS_OF_FATE_RESTRICTION,
-            lowPriority = true,
-        },
-        {
-            type = "chain",
-            id = Chain.GatheringShadows,
-            restrictions = NOT_THREADS_OF_FATE_RESTRICTION,
-            lowPriority = true,
-        },
-        {
-            type = "chain",
-            id = Chain.HopeInSolidarity,
-            restrictions = NOT_THREADS_OF_FATE_RESTRICTION,
-            upto = 78607,
-        },
     },
     active = {
         type = "quest",
@@ -1305,6 +1288,7 @@ Database:AddChain(Chain.RestAtLast, {
     },
     items = {
         -- Unknown requirement, probably around 78607, level 80
+        -- Wowhead comment says both 83497 and 79165 are breadcrumbs
         {
             variations = {
                 {
@@ -1771,6 +1755,12 @@ Database:AddChain(Chain.TempChain19, {
             type = "level",
             level = 80,
         },
+        -- Based on PTR level 80 without campaign there is a requirement for this
+    },
+    active = {
+        type = "quest",
+        id = 79232,
+        status = { "active", "completed" }
     },
     completed = {
         type = "quest",
@@ -1840,6 +1830,11 @@ Database:AddChain(Chain.TempChain21, {
             restrictions = NOT_THREADS_OF_FATE_RESTRICTION,
             upto = 78607,
         },
+    },
+    active = {
+        type = "quest",
+        id = 82894,
+        status = { "active", "completed" }
     },
     completed = {
         type = "quest",
@@ -2033,6 +2028,76 @@ Database:AddChain(Chain.TempChain26, { -- Breadcrumb to another npc
         {
             type = "quest",
             id = 81990,
+            x = 0,
+        },
+    },
+})
+Database:AddChain(Chain.TempChain27, {
+    name = { -- The Flame Within
+        type = "quest",
+        id = 81692,
+    },
+    category = CATEGORY_ID,
+    expansion = EXPANSION_ID,
+    range = LEVEL_RANGE,
+    prerequisites = {
+        {
+            type = "level",
+            level = 80,
+        },
+        {
+            type = "chain",
+            id = Chain.TempChain19,
+        },
+        {
+            type = "currency",
+            id = 2901,
+            amount = 11,
+        },
+    },
+    active = {
+        type = "quest",
+        id = 81692,
+    },
+    completed = {
+        type = "quest",
+        id = 81896,
+    },
+    items = {
+        {
+            type = "npc",
+            id = 214380,
+            x = 0,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 81692,
+            x = 0,
+            connections = {
+                1, 2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 81751,
+            x = -1,
+            connections = {
+                2, 
+            },
+        },
+        {
+            type = "quest",
+            id = 81869,
+            connections = {
+                1, 
+            },
+        },
+        {
+            type = "quest",
+            id = 81896,
             x = 0,
         },
     },
@@ -2459,11 +2524,15 @@ Database:AddCategory(CATEGORY_ID, {
             type = "chain",
             id = Chain.MemoriesOfTheSky,
         },
---[==[@debug@
         {
             type = "chain",
             id = Chain.TempChain19,
         },
+        {
+            type = "chain",
+            id = Chain.TempChain27,
+        },
+--[==[@debug@
         {
             type = "chain",
             id = Chain.TempChain21,
@@ -2516,6 +2585,8 @@ BtWQuestsDatabase:AddQuestItemsForChain(Chain.TheMysteriousChef)
 BtWQuestsDatabase:AddQuestItemsForChain(Chain.WhatGrowsInTheDark)
 BtWQuestsDatabase:AddQuestItemsForChain(Chain.SuspiciousMinds)
 BtWQuestsDatabase:AddQuestItemsForChain(Chain.MemoriesOfTheSky)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain19)
+BtWQuestsDatabase:AddQuestItemsForChain(Chain.TempChain27)
 
 
 --[==[@debug@

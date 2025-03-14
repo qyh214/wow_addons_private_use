@@ -1,0 +1,29 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="templates/DisplayMixin.lua" />
+    <Script file="templates/TabButtonMixin.lua" />
+    <Script file="templates/HeadingMixin.lua" />
+    <Script file="templates/SubHeadingMixin.lua" />
+    <Script file="templates/CopyAndPasteMixin.lua" />
+    <Script file="templates/TooltipMixin.lua" />
+    <Script file="templates/DataTabMixin.lua" />
+    <Script file="templates/ResultsListingMixin.lua" />
+    <Script file="templates/ResultsRowMixin.lua" />
+    <Script file="templates/TableResultsRowMixin.lua" />
+    <Script file="templates/StringColumnHeaderMixin.lua" />
+    <Script file="templates/Cell.lua" />
+    <Script file="templates/StringCell.lua" />
+
+    <Script file="tabs/info/InfoMixin.lua" />
+    
+    <Script file="tabs/mythicPlus/MythicPlusMixin.lua" />
+    <Script file="tabs/mythicPlus/MythicPlusRowMixin.lua" />
+    
+    <Script file="tabs/raid/RaidMixin.lua" />
+    <Script file="tabs/raid/RaidRowMixin.lua" />
+    
+    <Script file="tabs/upgrade/UpgradeMixin.lua" />
+    <Script file="tabs/upgrade/UpgradeRowMixin.lua" />
+    
+    <Script file="tabs/crafting/CraftingMixin.lua" />
+    <Script file="tabs/crafting/CraftingRowMixin.lua" />
+</Ui>

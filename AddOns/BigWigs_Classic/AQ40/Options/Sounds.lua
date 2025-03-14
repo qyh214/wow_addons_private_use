@@ -46,6 +46,7 @@ BigWigs:AddSounds("Ouro", {
 	[26102] = "alert",
 	[26103] = "alarm",
 	[26615] = "info",
+	[1215744] = "warning",
 	["stages"] = "long",
 })
 

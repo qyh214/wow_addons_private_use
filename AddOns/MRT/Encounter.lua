@@ -344,10 +344,15 @@ function module.options:Load()
 		module.options.PullsFrame:Hide()
 
 	end
+
+	function module.options:IsLocked()
+		return module.db.prevCor and coroutine.status(module.db.prevCor) ~= "dead"
+	end
 	
 	self.dropDown = ELib:DropDown(self,220,#module.db.diffPos):Size(235):Point(445+2,-31)
 	function self.dropDown:SetValue(newValue,resetDB)
-		ExRT.F:AddCoroutine(function()
+		if module.options:IsLocked() then return end
+		module.db.prevCor = ExRT.F:AddCoroutine(function()
 			UpdateDB(newValue,resetDB)
 		end)
 	end
@@ -645,6 +650,7 @@ function module.options:Load()
 	
 	local prevScroll = nil
 	self.ScrollBar = ELib:ScrollBar(self.borderList):Size(16,self.borderList:GetHeight()-27+18):Point("TOPRIGHT",-4,-22):Range(1,1):OnChange(function(self,event)
+		if module.options:IsLocked() then return end
 		event = ExRT.F.Round(event)
 		if prevScroll == event then
 			return
@@ -710,6 +716,7 @@ function module.options:Load()
 	self.dropDown:SetValue(#module.db.diffPos)
 	
 	self:SetScript("OnMouseWheel",function (self,delta)
+		if module.options:IsLocked() then return end
 		local min,max = self.ScrollBar:GetMinMaxValues()
 		local val = self.ScrollBar:GetValue()
 		if (val - delta) < min then

@@ -1,5 +1,5 @@
 -- Classes.lua
--- July 2024
+-- January 2025
 
 local addon, ns = ...
 local Hekili = _G[ addon ]
@@ -53,13 +53,6 @@ local specTemplate = {
     damageRange = 0,
     damagePets = false,
 
-    throttleRefresh = false,
-    regularRefresh = 0.5,
-    combatRefresh = 0.25,
-
-    throttleTime = false,
-    maxTime = 20,
-
     -- Toggles
     custom1Name = "Custom 1",
     custom2Name = "Custom 2",
@@ -86,6 +79,8 @@ local specTemplate = {
             criteria = nil
         }
     },
+
+    placeboBar = 3,
 
     ranges = {},
     settings = {},
@@ -179,11 +174,6 @@ local HekiliSpecMixin = {
             timeTo = function( x )
                 return state:TimeToResource( r.state, x )
             end,
-
-            --[[ reset = function()
-                wipe( r.state.times )
-                wipe( r.state.values )
-            end ]]
         }, mt_resource )
         r.state.regenModel = regen
         r.state.meta = meta or {}
@@ -599,15 +589,15 @@ local HekiliSpecMixin = {
 
         data.key = potion
 
-        if data.copy then
-            if type( data.copy ) == "table" then
-                for _, key in ipairs( data.copy ) do
+        if data.items then
+            if type( data.items ) == "table" then
+                for _, key in ipairs( data.items ) do
                     self.potions[ key ] = data
                     CommitKey( key )
                 end
             else
-                self.potions[ data.copy ] = data
-                CommitKey( data.copy )
+                self.potions[ data.items ] = data
+                CommitKey( data.items )
             end
         end
 
@@ -678,6 +668,7 @@ local HekiliSpecMixin = {
                 self.pseudoAbilities = self.pseudoAbilities + 1
                 data.id = -1000 * self.id - self.pseudoAbilities
             end
+            a.id = data.id
         end
 
         if data.id and type( data.id ) == "function" then
@@ -730,7 +721,7 @@ local HekiliSpecMixin = {
             end
         end
 
-        if ( a.velocity or a.flightTime ) and a.impact then
+        if ( a.velocity or a.flightTime ) and a.impact and a.isProjectile == nil then
             a.isProjectile = true
         end
 
@@ -758,7 +749,7 @@ local HekiliSpecMixin = {
                     if name then
                         if not a.name or a.name == a.key then a.name = name end
                         if not a.link or a.link == a.key then a.link = link end
-                        a.texture = a.texture or texture
+                        if not a.funcs.texture then a.texture = a.texture or texture end
 
                         if a.suffix then
                             a.actualName = name
@@ -1024,16 +1015,17 @@ local HekiliSpecMixin = {
 
     RegisterPet = function( self, token, id, spell, duration, ... )
         CommitKey( token )
-
+    
+        -- Register the main pet.
         self.pets[ token ] = {
             id = type( id ) == "function" and setfenv( id, state ) or id,
             token = token,
             spell = spell,
             duration = type( duration ) == "function" and setfenv( duration, state ) or duration
         }
-
+    
+        -- Process copies.
         local n = select( "#", ... )
-
         if n and n > 0 then
             for i = 1, n do
                 local copy = select( i, ... )
@@ -1041,14 +1033,70 @@ local HekiliSpecMixin = {
             end
         end
     end,
+    
 
-    RegisterTotem = function( self, token, id )
+    RegisterPets = function( self, pets )
+        for token, data in pairs( pets ) do
+            -- Extract fields from the pet definition.
+            local id = data.id
+            local spell = data.spell
+            local duration = data.duration
+            local copy = data.copy
+    
+            -- Register the pet and handle the copy field if it exists.
+            if copy then
+                self:RegisterPet( token, id, spell, duration, copy )
+            else
+                self:RegisterPet( token, id, spell, duration )
+            end
+        end
+    end,
+
+
+    RegisterTotem = function( self, token, id, ... )
+        -- Register the primary totem.
         self.totems[ token ] = id
         self.totems[ id ] = token
-
+    
+        -- Handle copies if provided.
+        local n = select( "#", ... )
+        if n and n > 0 then
+            for i = 1, n do
+                local copy = select( i, ... )
+                self.totems[ copy ] = id
+                self.totems[ id ] = copy
+            end
+        end
+    
+        -- Commit the primary token.
         CommitKey( token )
     end,
 
+    RegisterTotems = function( self, totems )
+        for token, data in pairs( totems ) do
+            local id = data.id
+            local copy = data.copy
+    
+            -- Register the primary totem.
+            self.totems[ token ] = id
+            self.totems[ id ] = token
+    
+            -- Register any copies (aliases).
+            if copy then
+                if type( copy ) == "string" then
+                    self.totems[ copy ] = id
+                    self.totems[ id ] = copy
+                elseif type( copy ) == "table" then
+                    for _, alias in ipairs( copy ) do
+                        self.totems[ alias ] = id
+                        self.totems[ id ] = alias
+                    end
+                end
+            end
+    
+            CommitKey( token )
+        end
+    end,
 
     GetSetting = function( self, info )
         local setting = info[ #info ]
@@ -1228,7 +1276,6 @@ ns.isDefault = function( name, category )
     return false
 end
 
-
 function Hekili:NewSpecialization( specID, isRanged, icon )
 
     if not specID or specID < 0 then return end
@@ -1264,6 +1311,7 @@ function Hekili:NewSpecialization( specID, isRanged, icon )
         resources = {},
         resourceAuras = {},
         primaryResource = nil,
+        primaryStat = nil,
 
         talents = {},
         pvptalents = {},
@@ -1315,7 +1363,6 @@ function Hekili:NewSpecialization( specID, isRanged, icon )
     return spec
 end
 
-
 function Hekili:GetSpecialization( specID )
     if not specID then return class.specs[ 0 ] end
     return class.specs[ specID ]
@@ -1351,6 +1398,38 @@ all:RegisterAuras( {
         aliasMode = "first",
         aliasType = "buff",
         duration = 3600,
+    },
+
+    -- The War Within M+ Affix auras
+    -- Haste
+    cosmic_ascension = {
+        id = 461910,
+        duration = 30,
+        max_stack = 1
+    },
+    -- Crit
+    rift_essence = {
+        id = 465136,
+        duration = 30,
+        max_stack = 1
+    },
+    -- Mastery
+    void_essence = {
+        id = 463767,
+        duration = 30,
+        max_stack = 1
+    },
+    -- CDR & Vers
+    voidbinding = {
+        id = 462661,
+        duration = 30,
+        max_stack = 1
+    },
+    -- Priory of the Sacred Flame
+    blessing_of_the_sacred_flame = {
+        id = 435088,
+        duration = 1800,
+        max_stack = 1
     },
 
     -- Can be used in GCD calculation.
@@ -1416,7 +1495,7 @@ all:RegisterAuras( {
     },
 
     bloodlust = {
-        alias = { "ancient_hysteria", "bloodlust_actual", "drums_of_deathly_ferocity", "fury_of_the_aspects", "heroism", "netherwinds", "primal_rage", "time_warp" },
+        alias = { "ancient_hysteria", "bloodlust_actual", "drums_of_deathly_ferocity", "fury_of_the_aspects", "heroism", "netherwinds", "primal_rage", "time_warp", "harriers_cry" },
         aliasMode = "first",
         aliasType = "buff",
         duration = 3600,
@@ -1456,6 +1535,13 @@ all:RegisterAuras( {
         duration = 40,
         max_stack = 1,
         shared = "player",
+    },
+
+    harriers_cry = {
+        id = 466904,
+        duration = 40,
+        max_stack = 1,
+        shared = "player"
     },
 
     mark_of_the_wild = {
@@ -1620,7 +1706,7 @@ all:RegisterAuras( {
     -- Mastery increased by $w1% and auto attacks have a $h% chance to instantly strike again.
     skyfury = {
         id = 462854,
-        duration = 3600.0,
+        duration = 3600,
         max_stack = 1,
         shared = "player",
         dot = "buff"
@@ -1759,13 +1845,20 @@ all:RegisterAuras( {
                     t.v3 = 0
                     t.caster = unit
 
-                    if unit == "target" and Hekili.DB.profile.filterCasts then
-                        local filters = Hekili.DB.profile.castFilters
-                        local npcid = state.target.npcid
+                    if unit == "target" and Hekili.DB.profile.toggles.interrupts.filterCasts then
+                        local filters = class.interruptibleFilters
+                        local zone = state.instance_id
+                        local npcid = state.target.npcid or -1
 
-                        if npcid and filters[ npcid ] and not filters[ npcid ][ spellID ] then
-                            if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' ignored per user preference.", spell ) end
-                            removeDebuff( "casting" )
+                        if filters then
+                            local interruptible = filters[ zone ][ npcid ][ spellID ]
+
+                            if not interruptible then
+                                if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' not interruptible per user preference.", spell ) end
+                                t.v2 = 1
+                            elseif interruptible == "testing" then
+                                t.v2 = 0
+                            end
                         end
                     end
 
@@ -1792,11 +1885,18 @@ all:RegisterAuras( {
                         removeBuff( "casting" )
                     elseif unit == "target" and Hekili.DB.profile.filterCasts then
                         local filters = Hekili.DB.profile.castFilters
-                        local npcid = state.target.npcid
+                        local zone = state.instance_id
+                        local npcid = state.target.npcid or -1
 
-                        if npcid and filters[ npcid ] and not filters[ npcid ][ spellID ] then
-                            if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' ignored per user preference.", spell ) end
-                            removeDebuff( "casting" )
+                        if filters then
+                            local interruptible = filters[ zone ][ npcid ][ spellID ]
+
+                            if not interruptible then
+                                if Hekili.ActiveDebug then Hekili:Debug( "Cast '%s' not interruptible per user preference.", spell ) end
+                                t.v2 = 1
+                            elseif interruptible == "testing" then
+                                t.v2 = 0
+                            end
                         end
                     end
 
@@ -1998,6 +2098,136 @@ all:RegisterAuras( {
         end,
     },
 
+    disoriented = {  -- Disorients (e.g., Polymorph, Dragon’s Breath, Blind)
+        duration = 10,
+        generate = function( t )
+            local max_events = GetActiveLossOfControlDataCount()
+
+            if max_events > 0 then
+                local spell, start, duration, remains = "none", 0, 0, 0
+
+                for i = 1, max_events do
+                    local event = GetActiveLossOfControlData( i )
+
+                    if event.locType == "CONFUSE"
+                        and event.startTime and event.startTime > 0
+                        and event.timeRemaining and event.timeRemaining > 0
+                        and event.timeRemaining > remains then
+
+                        spell = event.spellID
+                        start = event.startTime
+                        duration = event.duration
+                        remains = event.timeRemaining
+                    end
+                end
+
+                if start + duration > query_time then
+                    t.count = 1
+                    t.expires = start + duration
+                    t.applied = start
+                    t.duration = duration
+                    t.caster = "anybody"
+                    t.v1 = spell
+                    return
+                end
+            end
+
+            t.count = 0
+            t.expires = 0
+            t.applied = 0
+            t.duration = 10
+            t.caster = "nobody"
+            t.v1 = 0
+        end,
+    },
+
+    feared = {
+        duration = 10,
+        generate = function( t )
+            local max_events = GetActiveLossOfControlDataCount()
+
+            if max_events > 0 then
+                local spell, start, duration, remains = "none", 0, 0, 0
+
+                for i = 1, max_events do
+                    local event = GetActiveLossOfControlData( i )
+
+                    if ( event.locType == "FEAR" or event.locType == "FEAR_MECHANIC" or event.locType == "HORROR" )
+                        and event.startTime and event.startTime > 0
+                        and event.timeRemaining and event.timeRemaining > 0
+                        and event.timeRemaining > remains then
+
+                        spell = event.spellID
+                        start = event.startTime
+                        duration = event.duration
+                        remains = event.timeRemaining
+                    end
+                end
+
+                if start + duration > query_time then
+                    t.count = 1
+                    t.expires = start + duration
+                    t.applied = start
+                    t.duration = duration
+                    t.caster = "anybody"
+                    t.v1 = spell
+                    return
+                end
+            end
+
+            t.count = 0
+            t.expires = 0
+            t.applied = 0
+            t.duration = 10
+            t.caster = "nobody"
+            t.v1 = 0
+        end,
+    },
+
+    incapacitated = {  -- Effects like Sap, Freezing Trap, Gouge
+        duration = 10,
+        generate = function( t )
+            local max_events = GetActiveLossOfControlDataCount()
+
+            if max_events > 0 then
+                local spell, start, duration, remains = "none", 0, 0, 0
+
+                for i = 1, max_events do
+                    local event = GetActiveLossOfControlData( i )
+
+                    if event.locType == "STUN"
+                        and event.startTime and event.startTime > 0
+                        and event.timeRemaining and event.timeRemaining > 0
+                        and event.timeRemaining > remains then
+
+                        spell = event.spellID
+                        start = event.startTime
+                        duration = event.duration
+                        remains = event.timeRemaining
+                    end
+                end
+
+                if start + duration > query_time then
+                    t.count = 1
+                    t.expires = start + duration
+                    t.applied = start
+                    t.duration = duration
+                    t.caster = "anybody"
+                    t.v1 = spell
+                    return
+                end
+            end
+
+            t.count = 0
+            t.expires = 0
+            t.applied = 0
+            t.duration = 10
+            t.caster = "nobody"
+            t.v1 = 0
+        end,
+        copy = "sapped"
+    },
+
     rooted = {
         duration = 10,
         generate = function( t )
@@ -2049,6 +2279,50 @@ all:RegisterAuras( {
                     local event = GetActiveLossOfControlData( i )
 
                     if event.locType == "SNARE" and event.startTime and event.startTime > 0 and event.timeRemaining and event.timeRemaining > 0 and event.timeRemaining > remains then
+                        spell = event.spellID
+                        start = event.startTime
+                        duration = event.duration
+                        remains = event.timeRemaining
+                    end
+                end
+
+                if start + duration > query_time then
+                    t.count = 1
+                    t.expires = start + duration
+                    t.applied = start
+                    t.duration = duration
+                    t.caster = "anybody"
+                    t.v1 = spell
+                    return
+                end
+            end
+
+            t.count = 0
+            t.expires = 0
+            t.applied = 0
+            t.duration = 10
+            t.caster = "nobody"
+            t.v1 = 0
+        end,
+        copy = "slowed"
+    },
+
+    stunned = {  -- Shorter stuns (e.g., Kidney Shot, Cheap Shot, Bash)
+        duration = 10,
+        generate = function( t )
+            local max_events = GetActiveLossOfControlDataCount()
+
+            if max_events > 0 then
+                local spell, start, duration, remains = "none", 0, 0, 0
+
+                for i = 1, max_events do
+                    local event = GetActiveLossOfControlData( i )
+
+                    if event.locType == "STUN_MECHANIC"
+                        and event.startTime and event.startTime > 0
+                        and event.timeRemaining and event.timeRemaining > 0
+                        and event.timeRemaining > remains then
+
                         spell = event.spellID
                         start = event.startTime
                         duration = event.duration
@@ -2317,11 +2591,22 @@ all:RegisterAuras( {
     },
 } )
 
-
 do
     -- Dragonflight Potions
     -- There are multiple items for each potion, and there are also Toxic potions that people may not want to use.
-    local df_potions = {
+    local exp_potions = {
+        {
+            name = "tempered_potion",
+            items = { 212971, 212970, 212969, 212265, 212264, 212263 }
+        },
+        {
+            name = "potion_of_unwavering_focus",
+            items = { 212965, 212964, 212963, 212259, 212258, 212257 }
+        },
+        {
+            name = "frontline_potion",
+            items = { 212968, 212967, 212966, 212262, 212261, 212260 }
+        },
         {
             name = "elemental_potion_of_ultimate_power",
             items = { 191914, 191913, 191912, 191383, 191382, 191381 }
@@ -2330,35 +2615,122 @@ do
             name = "elemental_potion_of_power",
             items = { 191907, 191906, 191905, 191389, 191388, 191387 }
         },
+        {
+            name = "algari_healing_potion",
+            items = { 211878, 211879, 211880 }
+        },
+        {
+            name = "cavedwellers_delight",
+            items = { 212242, 212243, 212244 }
+        }
     }
 
-    all:RegisterAuras( {
-        elemental_potion_of_ultimate_power = {
-            id = 371028,
-            duration = 30,
-            max_stack = 1
-        },
-        elemental_potion_of_power = {
-            id = 371024,
-            duration = 30,
-            max_stack = 1
-        },
-        potion = {
-            alias = { "elemental_potion_of_ultimate_power", "elemental_potion_of_power" },
-            aliasMode = "first",
-            aliasType = "buff",
-            duration = 30
-        }
+    all:RegisterAura( "fake_potion", {
+        duration = 30,
+        max_stack = 1,
     } )
 
-    local function getValidPotion()
-        for _, potion in ipairs( df_potions ) do
+    local first_potion, first_potion_key
+    local potion_items = {}
+
+    all:RegisterHook( "reset_precast", function ()
+        wipe( potion_items )
+        for _, potion in ipairs( exp_potions ) do
             for _, item in ipairs( potion.items ) do
-                if GetItemCount( item, false ) > 0 then return item, potion.name end
+                if GetItemCount( item, false ) > 0 then
+                    potion_items[ potion.name ] = item
+                    break
+                end
             end
         end
-    end
+    end )
 
+    all:RegisterAura( "potion", {
+        alias = { "fake_potion" },
+        aliasMode = "first",
+        aliasType = "buff",
+        duration = 30
+    } )
+
+    local GetItemInfo = C_Item.GetItemInfo
+
+    for _, potion in ipairs( exp_potions ) do
+        local potionItem = Item:CreateFromItemID( potion.items[ #potion.items ] )
+
+        -- all:RegisterAbility( potion.name, {} ) -- Create stub.
+
+        potionItem:ContinueOnItemLoad( function()
+            all:RegisterAbility( potion.name, {
+                name = potionItem:GetItemName(),
+                listName = potionItem:GetItemLink(),
+                cast = 0,
+                cooldown = 300,
+                gcd = "off",
+
+                startsCombat = false,
+                toggle = "potions",
+
+                item = function ()
+                    return potion_items[ potion.name ] or potion.items[ #potion.items ]
+                end,
+                items = potion.items,
+                bagItem = true,
+                texture = potionItem:GetItemIcon(),
+
+                handler = function ()
+                    applyBuff( potion.name )
+                end,
+            } )
+
+            class.abilities[ potion.name ] = all.abilities[ potion.name ]
+
+            class.potions[ potion.name ] = {
+                name = potionItem:GetItemName(),
+                link = potionItem:GetItemLink(),
+                item = potion.items[ #potion.items ]
+            }
+
+            class.potionList[ potion.name ] = "|T" .. potionItem:GetItemIcon() .. ":0|t |cff00ccff[" .. potionItem:GetItemName() .. "]|r"
+
+            for i, item in ipairs( potion.items ) do
+                if not first_potion then
+                    first_potion_key = potion.name
+                    first_potion = item
+                end
+
+                local each_potion = Item:CreateFromItemID( item )
+
+                if not each_potion:IsItemEmpty() then
+                    each_potion:ContinueOnItemLoad( function()
+                        local _, spell = GetItemSpell( item )
+
+                        if not spell then Hekili:Error( "No spell found for item %d.", item ) return false end
+
+                        if not all.auras[ potion.name ] then
+                            all:RegisterAura( potion.name, {
+                                id = spell,
+                                duration = 30,
+                                max_stack = 1,
+                                copy = { spell }
+                            } )
+
+                            class.auras[ spell ] = all.auras[ potion.name ]
+                        else
+                            local existing = all.auras[ potion.name ]
+                            if not existing.copy then existing.copy = {} end
+                            insert( existing.copy, spell )
+                            all.auras[ spell ] = all.auras[ potion.name ]
+                            class.auras[ spell ] = all.auras[ potion.name ]
+                        end
+
+                        return true
+                    end )
+                else
+                    Hekili:Error( "Item %d is empty.", item )
+                end
+            end
+        end )
+    end
 
     all:RegisterAbility( "potion", {
         name = "Potion",
@@ -2370,38 +2742,32 @@ do
         startsCombat = false,
         toggle = "potions",
 
-        item = function ()
-            return getValidPotion()
+        consumable = function() return state.args.potion or settings.potion or first_potion_key or "tempered_potion" end,
+        item = function()
+            if state.args.potion and class.abilities[ state.args.potion ] then return class.abilities[ state.args.potion ].item end
+            if spec.potion and class.abilities[ spec.potion ] then return class.abilities[ spec.potion ].item end
+            if first_potion and class.abilities[ first_potion ] then return class.abilities[ first_potion ].item end
+            return 191387
         end,
         bagItem = true,
 
-        timeToReady = function ()
-            local item = getValidPotion()
-
-            if item then
-                local start, dur = GetItemCooldown( item )
-                return max( 0, start + dur - query_time )
-            end
-
-            return 3600
-        end,
-
         handler = function ()
-            local item, effect = getValidPotion()
+            local use = all.abilities.potion
+            use = use and use.consumable
 
-            if item and effect then
-                applyBuff( effect )
+            if use and use ~= "global_cooldown" then
+                class.abilities[ use ].handler()
+                setCooldown( use, action[ use ].cooldown )
             end
         end,
 
         usable = function ()
-            if getValidPotion() ~= nil then return true end
-            return false, "no valid potions found in inventory"
+            return potion_items[ all.abilities.potion.item ], "no valid potions found in inventory"
         end,
+
+        copy = "potion_default"
     } )
 end
-
-
 
 
 
@@ -2760,31 +3126,29 @@ all:RegisterAbilities( {
     },
 
     healthstone = {
-        name = function () return ( GetItemInfo( 5512 ) ) or "Healthstone" end,
-        listName = function ()
-            local _, link, _, _, _, _, _, _, _, tex = GetItemInfo( 5512 )
-            if link and tex then return "|T" .. tex .. ":0|t " .. link end
-            return "|cff00ccff[Healthstone]|r"
-        end,
+        name = "Healthstone",
+        listName = "|T538745:0|t |cff00ccff[Healthstone]|r",
         cast = 0,
         cooldown = function () return time > 0 and 3600 or 60 end,
         gcd = "off",
 
-        item = 5512,
+        item = function() return talent.pact_of_gluttony.enabled and 224464 or 5512 end,
+        items = { 224464, 5512 },
         bagItem = true,
 
         startsCombat = false,
-        texture = 538745,
+        texture = function() return talent.pact_of_gluttony.enabled and 538744 or 538745 end,
 
         usable = function ()
-            if GetItemCount( 5512 ) == 0 then return false, "requires healthstone in bags"
-            elseif not IsUsableItem( 5512 ) then return false, "healthstone on CD"
+            local item = talent.pact_of_gluttony.enabled and 224464 or 5512
+            if GetItemCount( item ) == 0 then return false, "requires healthstone in bags"
+            elseif not IsUsableItem( item ) then return false, "healthstone on CD"
             elseif health.current >= health.max then return false, "must be damaged" end
             return true
         end,
 
         readyTime = function ()
-            local start, duration = GetItemCooldown( 5512 )
+            local start, duration = GetItemCooldown( talent.pact_of_gluttony.enabled and 224464 or 5512 )
             return max( 0, start + duration - query_time )
         end,
 
@@ -2975,1840 +3339,6 @@ all:RegisterAbility( "touch_of_the_void", {
 } )
 
 
--- 8.3 - WORLD
--- Corruption Curse that impacts resource costs.
-
-all:RegisterAura( "hysteria", {
-    id = 312677,
-    duration = 30,
-    max_stack = 99
-} )
-
-
--- BFA TRINKETS
--- EQUIPPED EFFECTS
-all:RegisterAuras( {
-    -- Darkmoon Deck: Squalls
-    suffocating_squall = { id = 276132, duration = 26, max_stack = 1 }, -- I made up max duration (assume 13 card types and 2s per card).
-
-    -- Construct Overcharger
-    titanic_overcharge = { id = 278070, duration = 10, max_stack = 8 },
-
-    -- Xalzaix's Veiled Eye
-    xalzaixs_gaze = { id = 278158, duration = 20, max_stack = 1 },
-
-    -- Syringe of Bloodborne Infirmity
-    wasting_infection = { id = 278110, duration = 12, max_stack = 1 },
-    critical_prowess = { id = 278109, duration = 6, max_stack = 5 },
-
-    -- Frenetic Corpuscle
-    frothing_rage = { id = 278140, duration = 45, max_stack = 4 },
-
-    -- Tear of the Void
-    voidspark = { id = 278831, duration = 14, max_stack = 1 },
-
-    -- Prism of Dark Intensity
-    dark_intensity = { id = 278378, duration = 18, max_stack = 6,
-        meta = {
-            -- Stacks every 3 seconds until expiration; should generalize this kind of thing...
-            stacks = function ( aura )
-                if aura.up then return 1 + floor( ( query_time - aura.applied ) / 3 ) end
-                return 0
-            end
-        }
-    },
-
-    -- Plume of the Seaborne Avian
-    seaborne_tempest = { id = 278382, duration = 10, max_stack = 1 },
-
-    -- Drust-Runed Icicle
-    chill_of_the_runes = { id = 278862, duration = 12, max_stack = 1 },
-
-    -- Permafrost-Encrusted Heart
-    coldhearted_instincts = { id = 278388, duration = 15, max_stack = 5, copy = "cold_hearted_instincts",
-        meta = {
-            -- Stacks every 3 seconds until expiration; should generalize this kind of thing...
-            stacks = function ( aura )
-                if aura.up then return 1 + floor( ( query_time - aura.applied ) / 3 ) end
-                return 0
-            end
-        }
-    },
-
-    -- Spiritbound Voodoo Burl
-    coalesced_essence = { id = 278224, duration = 12, max_stack = 1 },
-
-    -- Wing Bone of the Budding Tempest
-    avian_tempest = { id = 278253, duration = 10, max_stack = 5 },
-
-    -- Razorcrest of the Enraged Matriarch
-    winged_tempest = { id = 278248, duration = 16, max_stack = 1 },
-
-    -- Hurricane Heart
-    hurricane_within = { id = 161416, duration = 12, max_stack = 6,
-        meta = {
-            -- Stacks every 2 seconds until expiration; should generalize this kind of thing...
-            stacks = function ( aura )
-                if aura.up then return 1 + floor( ( query_time - aura.applied ) / 2 ) end
-                return 0
-            end
-        }
-    },
-
-    -- Kraulok's Claw
-    krauloks_strength = { id = 278287, duration = 10, max_stack = 1 },
-
-    -- Doom's Hatred
-    blood_hatred = { id = 278356, duration = 10, max_stack = 1 },
-
-    -- Lion's Grace
-    lions_grace = { id = 278815, duration = 10, max_stack = 1 },
-
-    -- Landoi's Scrutiny
-    landois_scrutiny = { id = 281544, duration = 15, max_stack = 1 },
-
-    -- Leyshock's Grand Compilation
-    precision_module = { id = 281791, duration = 15, max_stack = 3 }, -- Crit.
-    iteration_capacitor = { id = 281792, duration = 15, max_stack = 3 }, -- Haste.
-    efficiency_widget = { id = 281794, duration = 15, max_stack = 3 }, -- Mastery.
-    adaptive_circuit = { id = 281795, duration = 15, max_stack = 3 }, -- Versatility.
-    leyshocks_grand_compilation = {
-        alias = { "precision_module", "iteration_capacitor", "efficiency_widget", "adaptive_circuit" },
-        aliasMode = "longest",
-        aliasType = "buff",
-        duration = 15,
-    },
-
-    -- Twitching Tentacle of Xalzaix
-    lingering_power_of_xalzaix = { id = 278155, duration = 30, max_stack = 5 },
-    uncontained_power = { id = 278156, duration = 12, max_stack = 1 },
-
-    -- Surging Alchemist Stone
-    -- I believe these buffs are recycled a lot...
-    agility = { id = 60233, duration = 15, max_stack = 1 },
-    intellect = { id = 60234, duration = 15, max_stack = 1 },
-    strength = { id = 60229, duration = 15, max_stack = 1 },
-
-    -- Harlan's Loaded Dice
-    loaded_die_mastery = { id = 267325, duration = 15, max_stack = 1 },
-    loaded_die_haste = { id = 267327, duration = 15, max_stack = 1 },
-    loaded_die_critical_strike = { id = 267331, duration = 15, max_stack = 1 },
-    loaded_die = {
-        alias = { "loaded_die_mastery", "loaded_die_haste", "loaded_die_critical_strike" },
-        aliasMode = "longest",
-        aliasType = "buff",
-        duration = 15,
-    },
-
-    -- Tiny Electromental in a Jar
-    phenomenal_power = { id = 267179, duration = 30, max_stack = 12 },
-
-    -- Rezan's Gleaming Eye
-    rezans_gleaming_eye = { id = 271103, duration = 15, max_stack = 1 },
-
-    -- Azerokk's Resonating Heart
-    resonating_elemental_heart = { id = 268441, duration = 15, max_stack = 1 },
-
-    -- Gore-Crusted Butcher's Block
-    butchers_eye = { id = 271104, duration = 15, max_stack = 1 },
-
-    -- Briny Barnacle
-    choking_brine = { id = 268194, duration = 6, max_stack = 1 },
-
-    -- Conch of Dark Whispers
-    conch_of_dark_whispers = { id = 271071, duration = 15, max_stack = 1 },
-
-    -- Dead Eye Spyglass
-    dead_ahead = { id = 268756, duration = 10, max_stack = 1 },
-    dead_ahead_crit = { id = 268769, duration = 10, max_stack = 5 },
-
-    -- Lingering Sporepods
-    lingering_spore_pods = { id = 268062, duration = 4, max_stack = 1 },
-
-} )
-
-
--- BFA TRINKETS/ITEMS
--- Ny'alotha
-
-all:RegisterAbility( "manifesto_of_madness", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 174103,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "manifesto_of_madness_chapter_one" )
-    end,
-} )
-
-all:RegisterAuras( {
-    manifesto_of_madness_chapter_one = {
-        id = 313948,
-        duration = 10,
-        max_stack = 1
-    },
-
-    manifesto_of_madness_chapter_two = {
-        id = 314040,
-        duration = 10,
-        max_stack = 1
-    }
-} )
-
-
-all:RegisterAbility( "forbidden_obsidian_claw", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 173944,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyDebuff( "target", "obsidian_claw" )
-    end,
-} )
-
-all:RegisterAura( "obsidian_claw", {
-    id = 313148,
-    duration = 8.5,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "sigil_of_warding", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 173940,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "stoneskin", 8 )
-    end,
-} )
-
-all:RegisterAura( "stoneskin", {
-    id = 313060,
-    duration = 16,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "writhing_segment_of_drestagath", {
-    cast = 0,
-    cooldown = 80,
-    gcd = "off",
-
-    item = 173946,
-    toggle = "cooldowns",
-} )
-
-
-all:RegisterAbility( "lingering_psychic_shell", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 174277,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "" )
-    end,
-} )
-
-all:RegisterAura( "psychic_shell", {
-    id = 314585,
-    duration = 8,
-    max_stack = 1
-} )
-
-
-
-
--- Azshara's EP
-all:RegisterAbility( "orgozoas_paralytic_barb", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 168899,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "paralytic_spines" )
-    end,
-} )
-
-all:RegisterAura( "paralytic_spines", {
-    id = 303350,
-    duration = 15,
-    max_stack = 1
-} )
-
-all:RegisterAbility( "azsharas_font_of_power", {
-    cast = 4,
-    channeled = true,
-    cooldown = 120,
-    gcd = "spell",
-
-    item = 169314,
-    toggle = "cooldowns",
-
-    start = function ()
-        applyBuff( "latent_arcana_channel" )
-    end,
-
-    breakchannel = function ()
-        removeBuff( "latent_arcana_channel" )
-        applyBuff( "latent_arcana" )
-    end,
-
-    finish = function ()
-        removeBuff( "latent_arcana_channel" )
-        applyBuff( "latent_arcana" )
-    end,
-
-    copy = { "latent_arcana" }
-} )
-
-all:RegisterAuras( {
-    latent_arcana = {
-        id = 296962,
-        duration = 30,
-        max_stack = 5
-    },
-
-    latent_arcana_channel = {
-        id = 296971,
-        duration = 4,
-        max_stack = 1
-    }
-} )
-
-
-all:RegisterAbility( "shiver_venom_relic", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "spell",
-
-    item = 168905,
-    toggle = "cooldowns",
-
-    usable = function ()
-        if debuff.shiver_venom.stack < 5 then return false, "shiver_venom is not at max stacks" end
-        return true
-    end,
-
-    aura = "shiver_venom",
-    cycle = "shiver_venom",
-
-    handler = function()
-        removeDebuff( "target", "shiver_venom" )
-    end,
-} )
-
-all:RegisterAura( "shiver_venom", {
-    id = 301624,
-    duration = 20,
-    max_stack = 5
-} )
-
-
-do
-    -- local coralGUID, coralApplied, coralStacks = "none", 0, 0
-
-    -- Ashvane's Razor Coral, 169311
-    all:RegisterAbility( "ashvanes_razor_coral", {
-        cast = 0,
-        cooldown = 20,
-        gcd = "off",
-
-        item = 169311,
-        toggle = "cooldowns",
-
-        --[[ usable = function ()
-            if active_dot.razor_coral > 0 and target.unit ~= coralGUID then
-                return false, "current target does not have razor_coral applied"
-            end
-            return true
-        end, ]]
-
-        handler = function ()
-            if active_dot.razor_coral > 0 then
-                removeDebuff( "target", "razor_coral" )
-                active_dot.razor_coral = 0
-
-                applyBuff( "razor_coral_crit" )
-                setCooldown( "ashvanes_razor_coral", 20 )
-            else
-                applyDebuff( "target", "razor_coral" )
-            end
-        end
-    } )
-
-
-    --[[
-    local HandleRazorCoral = function( event )
-        if not state.equipped.ashvanes_razor_coral then return end
-
-        if event == "COMBAT_LOG_EVENT_UNFILTERED" then
-            local _, subtype, _, sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName = CombatLogGetCurrentEventInfo()
-
-            if sourceGUID == state.GUID and ( subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REFRESH" or subtype == "SPELL_AURA_APPLIED_DOSE" ) then
-                if spellID == 303568 and destGUID then
-                    coralGUID = destGUID
-                    coralApplied = GetTime()
-                    coralStacks = ( subtype == "SPELL_AURA_APPLIED_DOSE" ) and ( coralStacks + 1 ) or 1
-                elseif spellID == 303570 then
-                    -- Coral was removed.
-                    coralGUID = "none"
-                    coralApplied = 0
-                    coralStacks = 0
-                end
-            end
-        else
-            coralGUID = "none"
-            coralApplied = 0
-            coralStacks = 0
-        end
-    end
-
-    RegisterEvent( "COMBAT_LOG_EVENT_UNFILTERED", HandleRazorCoral )
-    RegisterEvent( "PLAYER_REGEN_ENABLED", HandleRazorCoral )
-
-    all:RegisterStateExpr( "coral_time_to_30", function()
-        if coralGUID == 0 then return 3600 end
-        return Hekili:GetTimeToPctByGUID( coralGUID, 30 ) - ( offset + delay )
-    end ) ]]
-
-    all:RegisterAuras( {
-        razor_coral = {
-            id = 303568,
-            duration = 120,
-            max_stack = 100, -- ???
-            copy = "razor_coral_debuff",
-            generate = function( t, auraType )
-                local name, icon, count, debuffType, duration, expirationTime, caster, stealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, nameplateShowAll, timeMod, value1, value2, value3 = FindUnitDebuffByID( "target", 303568, "PLAYER" )
-
-                if name then
-                    -- It's on our actual target, trust it.
-                    t.name = name
-                    t.count = count > 0 and count or 1
-                    t.expires = expirationTime
-                    t.applied = expirationTime - duration
-                    t.caster = "player"
-                    return
-
-                --[[ elseif coralGUID ~= "none" then
-                    t.name = class.auras.razor_coral.name
-                    t.count = coralStacks > 0 and coralStacks or 1
-                    t.applied = coralApplied > 0 and coralApplied or state.query_time
-                    t.expires = coralApplied > 0 and ( coralApplied + 120 ) or ( state.query_time + Hekili:GetDeathClockByGUID( coralGUID ) )
-                    t.caster = "player"
-
-                    return ]]
-                end
-
-                t.name = class.auras.razor_coral.name
-                t.count = 0
-                t.applied = 0
-                t.expires = 0
-
-                t.caster = "nobody"
-            end,
-        },
-
-        razor_coral_crit = {
-            id = 303570,
-            duration = 20,
-            max_stack = 1,
-        }
-    } )
-end
-
--- Dribbling Inkpod
-all:RegisterAura( "conductive_ink", {
-    id = 302565,
-    duration = 60,
-    max_stack = 999, -- ???
-    copy = "conductive_ink_debuff"
-} )
-
-
--- Edicts of the Faithless, 169315
-
--- Vision of Demise, 169307
-all:RegisterAbility( "vision_of_demise", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 169307,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "vision_of_demise" )
-    end
-} )
-
-all:RegisterAura( "vision_of_demise", {
-    id = 303431,
-    duration = 10,
-    max_stack = 1
-} )
-
-
--- Aquipotent Nautilus, 169305
-all:RegisterAbility( "aquipotent_nautilus", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 169305,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyDebuff( "target", "surging_flood" )
-    end
-} )
-
-all:RegisterAura( "surging_flood", {
-    id = 302580,
-    duration = 4,
-    max_stack = 1
-} )
-
-
--- Chain of Suffering, 169308
-all:RegisterAbility( "chain_of_suffering", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 169308,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "chain_of_suffering" )
-    end,
-} )
-
-all:RegisterAura( "chain_of_suffering", {
-    id = 297036,
-    duration = 25,
-    max_stack = 1
-} )
-
-
--- Mechagon
-do
-    all:RegisterGear( "pocketsized_computation_device", 167555 )
-    all:RegisterGear( "cyclotronic_blast", 167672 )
-    all:RegisterGear( "harmonic_dematerializer", 167677 )
-
-    all:RegisterAura( "cyclotronic_blast", {
-        id = 293491,
-        duration = function () return 2.5 * haste end,
-        max_stack = 1
-    } )
-
-    --[[ all:RegisterAbility( "pocketsized_computation_device", {
-        -- key = "pocketsized_computation_device",
-        cast = 0,
-        cooldown = 120,
-        gcd = "spell",
-
-        -- item = 167555,
-        texture = 2115322,
-        bind = { "cyclotronic_blast", "harmonic_dematerializer", "inactive_red_punchcard" },
-        startsCombat = true,
-
-        unlisted = true,
-
-        usable = function() return false, "no supported red punchcard installed" end,
-        copy = "inactive_red_punchcard"
-    } ) ]]
-
-    all:RegisterAbility( "cyclotronic_blast", {
-        id = 293491,
-        known = function () return equipped.cyclotronic_blast end,
-        cast = function () return 1.5 * haste end,
-        channeled = function () return cooldown.cyclotronic_blast.remains > 0 end,
-        cooldown = function () return equipped.cyclotronic_blast and 120 or 0 end,
-        gcd = "spell",
-
-        item = 167672,
-        itemCd = 167555,
-        itemKey = "cyclotronic_blast",
-
-        texture = 2115322,
-        bind = { "pocketsized_computation_device", "inactive_red_punchcard", "harmonic_dematerializer" },
-        startsCombat = true,
-
-        toggle = "cooldowns",
-
-        usable = function ()
-            return equipped.cyclotronic_blast, "punchcard not equipped"
-        end,
-
-        handler = function()
-            setCooldown( "global_cooldown", 2.5 * haste )
-            applyBuff( "casting", 2.5 * haste )
-        end,
-
-        copy = "pocketsized_computation_device"
-    } )
-
-    all:RegisterAura( "harmonic_dematerializer", {
-        id = 293512,
-        duration = 300,
-        max_stack = 99
-    } )
-
-    all:RegisterAbility( "harmonic_dematerializer", {
-        id = 293512,
-        known = function () return equipped.harmonic_dematerializer end,
-        cast = 0,
-        cooldown = 15,
-        gcd = "spell",
-
-        item = 167677,
-        itemCd = 167555,
-        itemKey = "harmonic_dematerializer",
-
-        texture = 2115322,
-
-        bind = { "pocketsized_computation_device", "cyclotronic_blast", "inactive_red_punchcard" },
-
-        startsCombat = true,
-
-        usable = function ()
-            return equipped.harmonic_dematerializer, "punchcard not equipped"
-        end,
-
-        handler = function ()
-            addStack( "harmonic_dematerializer", nil, 1 )
-        end
-    } )
-
-
-    -- Hyperthread Wristwraps
-    all:RegisterAbility( "hyperthread_wristwraps", {
-        id = 300142,
-        cast = 0,
-        cooldown = 120,
-        gcd = "off",
-
-        handler = function ()
-            -- Gain 5 seconds of CD for the last 3 spells.
-            for i = 1, 3 do
-                local ability = prev[i].spell
-
-                if ability and ability ~= "no_action" then
-                    gainChargeTime( ability, 5 )
-                end
-            end
-        end,
-
-        copy = "hyperthread_wristwraps_300142"
-    } )
-
-    local hyperthread_blocks = {
-        berserking      = true,
-        arcane_torrent  = true,
-        blood_fury      = true,
-        shadowmeld      = true,
-        stoneform       = true,
-        darkflight      = true,
-        rocket_barrage  = true,
-        lights_judgment = true,
-        arcane_pulse    = true,
-        fireblood       = true,
-        ancestral_call  = true,
-        haymaker        = true,
-        bag_of_tricks   = true
-    }
-
-
-    local first_remains = setmetatable( {}, {
-        __index = function( t, k )
-            if hyperthread_blocks[ k ] then return 0 end
-
-            local slot = 0
-            local counted = 0
-            for i = 1, 10 do
-                if not hyperthread_blocks[ state.prev[ i ].spell ] then
-                    counted = counted + 1
-                end
-
-                if counted == 4 then break end
-
-                if state.prev[ i ].spell == k then
-                    slot = i
-                end
-            end
-
-            if slot > 0 then return 3 - slot end
-            return 0
-        end
-    } )
-
-    all:RegisterStateTable( "hyperthread_wristwraps", setmetatable( {
-    }, {
-        __index = function( t, k )
-            if type( k ) == "string" then
-                if k == "first_remains" then return first_remains end
-                if k == "count" then return state.hyperthread_wristwraps end
-
-                if hyperthread_blocks[ k ] then return 0 end
-
-                local count = 0
-                local counted = 0
-                for i = 1, 10 do
-                    if not hyperthread_blocks[ state.sprev[ i ].spell ] then
-                        counted = counted + 1
-                    end
-
-                    if counted == 4 then break end
-
-                    if state.prev[ i ].spell == k then
-                        count = count + 1
-                    end
-                end
-
-                return count
-            end
-        end,
-    } ) )
-
-
-    all:RegisterAbility( "neural_synapse_enhancer", {
-        cast = 0,
-        cooldown = 45,
-        gcd = "off",
-
-        item = 168973,
-
-        handler = function ()
-            applyBuff( "enhance_synapses" )
-        end,
-
-        copy = "enhance_synapses_300612"
-    } )
-
-    all:RegisterAura( "enhance_synapses", {
-        id = 300612,
-        duration = 15,
-        max_stack = 1
-    } )
-
-    all:RegisterAbility( "wraps_of_electrostatic_potential", {
-        cast = 0,
-        cooldown = 60,
-        gcd = "off",
-
-        item = 169069,
-
-        handler = function()
-            applyDebuff( "target", "electrostatic_induction" )
-        end,
-
-        auras = {
-            electrostatic_induction = {
-                id = 300145,
-                duration = 8,
-                max_stack = 1
-            }
-        }
-    } )
-end
-
-
--- Shockbiter's Fang
-all:RegisterAbility( "shockbiters_fang", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 169318,
-    toggle = "cooldowns",
-
-    handler = function () applyBuff( "shockbitten" ) end
-} )
-
-all:RegisterAura( "shockbitten", {
-    id = 303953,
-    duration = 12,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "living_oil_canister", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 158216,
-
-    copy = "living_oil_cannister"
-} )
-
-
--- Remote Guidance Device, 169769
-all:RegisterAbility( "remote_guidance_device", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 169769,
-    toggle = "cooldowns",
-} )
-
-
--- Modular Platinum Plating, 168965
-all:RegisterAbility( "modular_platinum_plating", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 168965,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "platinum_plating", nil, 4 )
-    end
-} )
-
-all:RegisterAura( "platinum_plating", {
-    id = 299869,
-    duration = 30,
-    max_stack = 4
-} )
-
-
--- Crucible
-all:RegisterAbility( "pillar_of_the_drowned_cabal", {
-    cast = 0,
-    cooldown = 30,
-    gcd = "spell", -- ???
-
-    item = 167863,
-    toggle = "defensives", -- ???
-
-    handler = function () applyBuff( "mariners_ward" ) end
-} )
-
-all:RegisterAura( "mariners_ward", {
-    id = 295411,
-    duration = 90,
-    max_stack = 1,
-} )
-
-
--- Abyssal Speaker's Guantlets (PROC)
-all:RegisterAura( "ephemeral_vigor", {
-    id = 295431,
-    duration = 60,
-    max_stack = 1
-} )
-
-
--- Fathom Dredgers (PROC)
-all:RegisterAura( "dredged_vitality", {
-    id = 295134,
-    duration = 8,
-    max_stack = 1
-} )
-
-
--- Gloves of the Undying Pact
-all:RegisterAbility( "gloves_of_the_undying_pact", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 167219,
-    toggle = "defensives", -- ???
-
-    handler = function() applyBuff( "undying_pact" ) end
-} )
-
-all:RegisterAura( "undying_pact", {
-    id = 295193,
-    duration = 6,
-    max_stack = 1
-} )
-
-
--- Insurgent's Scouring Chain (PROC)
-all:RegisterAura( "scouring_wake", {
-    id = 295141,
-    duration = 20,
-    max_stack = 1
-} )
-
-
--- Mindthief's Eldritch Clasp (PROC)
-all:RegisterAura( "phantom_pain", {
-    id = 295527,
-    duration = 180,
-    max_stack = 1,
-} )
-
-
--- Leggings of the Aberrant Tidesage
--- HoT spell ID not found.
-
--- Zaxasj's Deepstriders (EFFECT)
-all:RegisterAura( "deepstrider", {
-    id = 295167,
-    duration = 3600,
-    max_stack = 1
-} )
-
-
--- Trident of Deep Ocean
--- Custody of the Deep (shield proc)
-all:RegisterAura( "custody_of_the_deep_shield", {
-    id = 292675,
-    duration = 40,
-    max_stack = 1
-} )
--- Custody of the Deep (mainstat proc)
-all:RegisterAura( "custody_of_the_deep_buff", {
-    id = 292653,
-    duration = 60,
-    max_stack = 3
-} )
-
-
--- Malformed Herald's Legwraps
-all:RegisterAbility( "malformed_heralds_legwraps", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 167835,
-    toggle = "cooldowns",
-
-    usable = function () return buff.movement.down end,
-    handler = function () applyBuff( "void_embrace" ) end,
-} )
-
-all:RegisterAura( "void_embrace", {
-    id = 295174,
-    duration = 12,
-    max_stack = 1,
-} )
-
-
--- Idol of Indiscriminate Consumption
-all:RegisterAbility( "idol_of_indiscriminate_consumption", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 167868,
-    toggle = "cooldowns",
-
-    handler = function() gain( 2.5 * 7000 * active_enemies, "health" ) end,
-} )
-
-
--- Lurker's Insidious Gift
-all:RegisterAbility( "lurkers_insidious_gift", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 167866,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "insidious_gift" )
-        applyDebuff( "suffering" )
-    end
-} )
-
-all:RegisterAura( "insidious_gift", {
-    id = 295408,
-    duration = 30,
-    max_stack = 1
-} )
-all:RegisterAura( "suffering", {
-    id = 295413,
-    duration = 30,
-    max_stack = 30,
-    meta = {
-        stack = function ()
-            return buff.insidious_gift.up and floor( 30 - buff.insidious_gift.remains ) or 0
-        end
-    }
-} )
-
-
--- Void Stone
-all:RegisterAbility( "void_stone", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 167865,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "umbral_shell" )
-    end,
-} )
-
-all:RegisterAura( "umbral_shell", {
-    id = 295271,
-    duration = 12,
-    max_stack = 1
-} )
-
-
--- ON USE
--- Kezan Stamped Bijou
-all:RegisterAbility( "kezan_stamped_bijou", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 165662,
-    toggle = "cooldowns",
-
-    handler = function () applyBuff( "kajamite_surge" ) end
-} )
-
-all:RegisterAura( "kajamite_surge", {
-    id = 285475,
-    duration = 12,
-    max_stack = 1,
-} )
-
-
--- Sea Giant's Tidestone
-all:RegisterAbility( "sea_giants_tidestone", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 165664,
-    toggle = "cooldowns",
-
-    handler = function () applyBuff( "ferocity_of_the_skrog" ) end
-} )
-
-all:RegisterAura( "ferocity_of_the_skrog", {
-    id = 285482,
-    duration = 12,
-    max_stack = 1
-} )
-
-
--- Ritual Feather
-all:RegisterAbility( "ritual_feather_of_unng_ak", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 165665,
-    toggle = "cooldowns",
-
-    handler = function () applyBuff( "might_of_the_blackpaw" ) end
-} )
-
-all:RegisterAura( "might_of_the_blackpaw", {
-    id = 285489,
-    duration = 16,
-    max_stack = 1
-} )
-
-
--- Battle of Dazar'alor
-all:RegisterAbility( "invocation_of_yulon", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 165568,
-    toggle = "cooldowns",
-} )
-
-
-all:RegisterAbility( "ward_of_envelopment", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 165569,
-    toggle = "defensives",
-
-    handler = function() applyBuff( "enveloping_protection" ) end
-} )
-
-all:RegisterAura( "enveloping_protection", {
-    id = 287568,
-    duration = 10,
-    max_stack = 1
-} )
-
-
--- Everchill Anchor debuff.
-all:RegisterAura( "everchill", {
-    id = 289525,
-    duration = 12,
-    max_stack = 10
-} )
-
-
--- Incandescent Sliver
-all:RegisterAura( "incandescent_luster", {
-    id = 289523,
-    duration = 20,
-    max_stack = 10
-} )
-
-all:RegisterAura( "incandescent_mastery", {
-    id = 289524,
-    duration = 20,
-    max_stack = 1
-} )
-
-
-
-all:RegisterAbility( "variable_intensity_gigavolt_oscillating_reactor", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 165572,
-    toggle = "cooldowns",
-
-    buff = "vigor_engaged",
-    usable = function ()
-        if buff.vigor_engaged.stack < 6 then return false, "has fewer than 6 stacks" end
-        return true
-    end,
-    handler = function() applyBuff( "oscillating_overload" ) end
-} )
-
-all:RegisterAura( "vigor_engaged", {
-    id = 287916,
-    duration = 3600,
-    max_stack = 6
-    -- May need to emulate the stacking portion.
-} )
-
-all:RegisterAura( "vigor_cooldown", {
-    id = 287967,
-    duration = 6,
-    max_stack = 1
-} )
-
-all:RegisterAura( "oscillating_overload", {
-    id = 287917,
-    duration = 6,
-    max_stack = 1
-} )
-
-
--- Diamond-Laced Refracting Prism
-all:RegisterAura( "diamond_barrier", {
-    id = 288034,
-    duration = 10,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "grongs_primal_rage", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 165574,
-    toggle = "cooldowns",
-
-    handler = function()
-        applyBuff( "primal_rage" )
-        setCooldown( "global_cooldown", 4 )
-    end
-} )
-
-all:RegisterAura( "primal_rage", {
-    id = 288267,
-    duration = 4,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "tidestorm_codex", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 165576,
-    toggle = "cooldowns",
-} )
-
-
--- Bwonsamdi's Bargain
-all:RegisterAura( "bwonsamdis_due", {
-    id = 288193,
-    duration = 300,
-    max_stack = 1
-} )
-
-all:RegisterAura( "bwonsamdis_bargain_fulfilled", {
-    id = 288194,
-    duration = 360,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "mirror_of_entwined_fate", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 165578,
-    toggle = "defensives",
-
-    handler = function() applyDebuff( "player", "mirror_of_entwined_fate" ) end
-} )
-
-all:RegisterAura( "mirror_of_entwined_fate", {
-    id = 287999,
-    duration = 30,
-    max_stack = 1
-} )
-
-
--- Kimbul's Razor Claw
-all:RegisterAura( "kimbuls_razor_claw", {
-    id = 288330,
-    duration = 6,
-    tick_time = 2,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "ramping_amplitude_gigavolt_engine", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 165580,
-    toggle = "cooldowns",
-
-    handler = function() applyBuff( "r_a_g_e" ) end
-} )
-
-all:RegisterAura( "rage", {
-    id = 288156,
-    duration = 18,
-    max_stack = 15,
-    copy = "r_a_g_e"
-} )
-
-
--- Crest of Pa'ku
-all:RegisterAura( "gift_of_wind", {
-    id = 288304,
-    duration = 15,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "endless_tincture_of_fractional_power", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 152636,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        -- I don't know the auras it applies...
-    end
-} )
-
-
-all:RegisterAbility( "mercys_psalter", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 155564,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "potency" )
-    end,
-} )
-
-all:RegisterAura( "potency", {
-    id = 268523,
-    duration = 15,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "clockwork_resharpener", {
-    cast = 0,
-    cooldown = 60, -- no CD reported in-game yet.
-    gcd = "off",
-
-    item = 161375,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "resharpened" )
-    end,
-} )
-
-all:RegisterAura( "resharpened", {
-    id = 278376,
-    duration = 14,
-    max_stack = 7,
-    meta = {
-        -- Stacks every 2 seconds until expiration; should generalize this kind of thing...
-        stacks = function ( aura )
-            if aura.up then return 1 + floor( ( query_time - aura.applied ) / 2 ) end
-            return 0
-        end
-    }
-} )
-
-
-all:RegisterAbility( "azurethos_singed_plumage", {
-    cast = 0,
-    cooldown = 88,
-    gcd = "off",
-
-    item = 161377,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "ruffling_tempest" )
-    end,
-} )
-
-all:RegisterAura( "ruffling_tempest", {
-    id = 278383,
-    duration = 15,
-    max_stack = 1,
-    -- Actually decrements but doesn't appear to use stacks to implement itself.
-} )
-
-
-all:RegisterAbility( "galecallers_beak", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 161379,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "gale_call" )
-    end,
-} )
-
-all:RegisterAura( "gale_call", {
-    id = 278385,
-    duration = 15,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "sublimating_iceshard", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 161382,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "sublimating_power" )
-    end,
-} )
-
-all:RegisterAura( "sublimating_power", {
-    id = 278869,
-    duration = 14,
-    max_stack = 1,
-    -- Decrements after 6 sec but doesn't appear to use stacks to convey this...
-} )
-
-
-all:RegisterAbility( "tzanes_barkspines", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 161411,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "barkspines" )
-    end,
-} )
-
-all:RegisterAura( "barkspines", {
-    id = 278227,
-    duration = 10,
-    max_stack = 1,
-} )
-
-
---[[ Redundant Ancient Knot of Wisdom???
-all:RegisterAbility( "sandscoured_idol", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 161417,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "secrets_of_the_sands" )
-    end,
-} )
-
-all:RegisterAura( "secrets_of_the_sands", {
-    id = 278267,
-    duration = 20,
-    max_stack = 1,
-} ) ]]
-
-
-all:RegisterAbility( "deployable_vibro_enhancer", {
-    cast = 0,
-    cooldown = 105,
-    gcd = "off",
-
-    item = 161418,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "vibro_enhanced" )
-    end,
-} )
-
-all:RegisterAura( "vibro_enhanced", {
-    id = 278260,
-    duration = 12,
-    max_stack = 4,
-    meta = {
-        -- Stacks every 2 seconds until expiration; should generalize this kind of thing...
-        stacks = function ( aura )
-            if aura.up then return 1 + floor( ( query_time - aura.applied ) / 3 ) end
-            return 0
-        end
-    }
-} )
-
-
-all:RegisterAbility( "dooms_wake", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 161462,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "dooms_wake" )
-    end,
-} )
-
-all:RegisterAura( "dooms_wake", {
-    id = 278317,
-    duration = 16,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "dooms_fury", {
-    cast = 0,
-    cooldown = 105,
-    gcd = "off",
-
-    item = 161463,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "bristling_fury" )
-    end,
-} )
-
-all:RegisterAura( "bristling_fury", {
-    id = 278364,
-    duration = 18,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "lions_guile", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 161473,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "lions_guile" )
-    end,
-} )
-
-all:RegisterAura( "lions_guile", {
-    id = 278806,
-    duration = 16,
-    max_stack = 10,
-    meta = {
-        stack = function( t ) return t.down and 0 or min( 6, 1 + ( ( query_time - t.app ) / 2 ) ) end,
-    }
-} )
-
-
-all:RegisterAbility( "lions_strength", {
-    cast = 0,
-    cooldown = 105,
-    gcd = "off",
-
-    item = 161474,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "lions_strength" )
-    end,
-} )
-
-all:RegisterAura( "lions_strength", {
-    id = 278819,
-    duration = 18,
-    max_stack = 1,
-} )
-
-all:RegisterAbility( "mr_munchykins", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 155567,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "tea_time" )
-    end,
-} )
-
-all:RegisterAura( "tea_time", {
-    id = 268504,
-    duration = 15,
-    max_stack = 1,
-} )
-
-all:RegisterAbility( "bygone_bee_almanac", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 163936,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "process_improvement" )
-    end,
-} )
-
-all:RegisterAura( "process_improvement", {
-    id = 281543,
-    duration = 12,
-    max_stack = 1,
-} ) -- extends on spending resources, could hook here...
-
-
-all:RegisterAbility( "mydas_talisman", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 158319,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "touch_of_gold" )
-    end,
-} )
-
-all:RegisterAura( "touch_of_gold", {
-    id = 265954,
-    duration = 20,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "merekthas_fang", {
-    cast = 3,
-    channeled = true,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 158367,
-    toggle = "cooldowns",
-
-    -- not sure if this debuffs during the channel...
-} )
-
-
-all:RegisterAbility( "razdunks_big_red_button", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 159611,
-    toggle = "cooldowns",
-
-    velocity = 10,
-} )
-
-
-all:RegisterAbility( "galecallers_boon", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 159614,
-    toggle = "cooldowns",
-
-    usable = function () return buff.movement.down end,
-    handler = function ()
-        applyBuff( "galecallers_boon" )
-    end,
-} )
-
-all:RegisterAura( "galecallers_boon", {
-    id = 268311,
-    duration = 10,
-    max_stack = 1,
-    meta = {
-        expires = function( t ) return max( 0, action.galecallers_boon.lastCast + 10 ) end
-    }
-} )
-
-
-all:RegisterAbility( "ignition_mages_fuse", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 159615,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "ignition_mages_fuse" )
-    end,
-} )
-
-all:RegisterAura( "ignition_mages_fuse", {
-    id = 271115,
-    duration = 20,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "lustrous_golden_plumage", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 159617,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "golden_luster" )
-    end,
-} )
-
-all:RegisterAura( "golden_luster", {
-    id = 271107,
-    duration = 20,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "mchimbas_ritual_bandages", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 159618,
-    toggle = "defensives",
-
-    handler = function ()
-        applyBuff( "ritual_wraps" )
-    end,
-} )
-
-all:RegisterAura( "ritual_wraps", {
-    id = 265946,
-    duration = 6,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "rotcrusted_voodoo_doll", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 159624,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyDebuff( "target", "rotcrusted_voodoo_doll" )
-    end,
-} )
-
-all:RegisterAura( "rotcrusted_voodoo_doll", {
-    id = 271465,
-    duration = 6,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "vial_of_animated_blood", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 159625,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "blood_of_my_enemies" )
-    end,
-} )
-
-all:RegisterAura( "blood_of_my_enemies", {
-    id = 268836,
-    duration = 18,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "jes_howler", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 159627,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "motivating_howl" )
-    end,
-} )
-
-all:RegisterAura( "motivating_howl", {
-    id = 266047,
-    duration = 12,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "balefire_branch", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 159630,
-    toggle = "cooldowns",
-    proc = "intellect",
-
-    handler = function ()
-        applyBuff( "kindled_soul" )
-    end,
-} )
-
-all:RegisterAura( "kindled_soul", {
-    id = 268998,
-    duration = 20,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "sanguinating_totem", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 160753,
-    toggle = "defensives",
-} )
-
-
-all:RegisterAbility( "fetish_of_the_tormented_mind", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 160833,
-    toggle = "defensives",
-
-    handler = function ()
-        applyDebuff( "target", "doubting_mind" )
-    end,
-} )
-
-all:RegisterAura( "doubting_mind", {
-    id = 273559,
-    duration = 5,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "whirlwings_plumage", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 158215,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "gryphons_pride" )
-    end,
-} )
-
-all:RegisterAura( "gryphons_pride", {
-    id = 268550,
-    duration = 20,
-    max_stack = 1,
-} )
-
-
-
 -- PvP Trinkets
 -- Medallions
 do
@@ -4912,7 +3442,9 @@ do
         { "verdant_aspirants_badge_of_ferocity", 209763 },
         { "verdant_gladiators_badge_of_ferocity", 209343 },
         { "forged_aspirants_badge_of_ferocity", 218421 },
-        { "forged_gladiators_badge_of_ferocity", 218713 }
+        { "forged_gladiators_badge_of_ferocity", 218713 },
+        { "prized_aspirants_badge_of_ferocity", 229491 },
+        { "prized_gladiators_badge_of_ferocity", 229780 }
     }
 
     local pvp_badges_copy = {}
@@ -4937,7 +3469,7 @@ do
         cooldown = 120,
         gcd = "off",
 
-        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713 },
+        items = { 162966, 161902, 165223, 165058, 167528, 167380, 172849, 172669, 175884, 175921, 185161, 185197, 186906, 186866, 192352, 192295, 201449, 201807, 205778, 205708, 209763, 209343, 218421, 218713, 229491, 229780 },
         texture = 135884,
 
         toggle = "cooldowns",
@@ -5013,7 +3545,11 @@ do
         obsidian_gladiators_emblem = 205710,
         verdant_aspirants_emblem = 209766,
         verdant_combatants_emblem = 208309,
-        verdant_gladiators_emblem = 209345
+        verdant_gladiators_emblem = 209345,
+        algari_competitors_emblem = 219933,
+        forged_gladiators_emblem = 218715,
+        prized_aspirants_emblem = 229494,
+        prized_gladiators_emblem = 229782
     }
 
     local pvp_emblems_copy = {}
@@ -5047,7 +3583,7 @@ do
             end
             return e
         end,
-        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345 },
+        items = { 162898, 161675, 165221, 165056, 167378, 167526, 172667, 172847, 178334, 178447, 185242, 185282, 186946, 186868, 192392, 192297, 201452, 201809, 204166, 205781, 205710, 209766, 208309, 209345, 219933, 218715, 229494, 229782 },
         toggle = "cooldowns",
 
         handler = function ()
@@ -5144,221 +3680,6 @@ all:RegisterAbility( "corrupted_gladiators_maledict", {
 } )
 
 
---[[ WiP: Timewarped Trinkets
-do
-    local timewarped_trinkets = {
-        { "runed_fungalcap",                127184, "shell_of_deterrence",              31771,  20,     1 },
-        { "icon_of_the_silver_crescent",    129850, "blessing_of_the_silver_crescent",  194645, 20,     1 },
-        { "essence_of_the_martyr",          129851, "essence_of_the_martyr",            194637, 20,     1 },
-        { "gnomeregan_autoblocker_601",     129849, "gnome_ingenuity",                  194543, 40,     1 },
-        { "emblem_of_fury",                 129937, "lust_for_battle_str",              194638, 20,     1 },
-        { "bloodlust_brooch",               129848, "lust_for_battle_agi",              194632, 20,     1 },
-        {}
-
-    }
-
-    { "vial_of_the_sunwell",            133462, "vessel_of_the_naaru",              45059,  3600,   1 }, -- vessel_of_the_naaru on-use 45064, 120 sec CD.
-end ]]
-
-
--- Galewind Chimes
-all:RegisterAura( "galewind_chimes", {
-    id = 268518,
-    duration = 8,
-    max_stack = 1,
-} )
-
--- Gilded Loa Figurine
-all:RegisterAura( "will_of_the_loa", {
-    id = 273974,
-    duration = 10,
-    max_stack = 1,
-} )
-
--- Emblem of Zandalar
-all:RegisterAura( "speed_of_the_spirits", {
-    id = 273992,
-    duration = 8,
-    max_stack = 1,
-} )
-
--- Dinobone Charm
-all:RegisterAura( "primal_instinct", {
-    id = 273988,
-    duration = 7,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "pearl_divers_compass", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 158162,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "true_north" )
-    end,
-} )
-
-all:RegisterAura( "true_north", {
-    id = 273935,
-    duration = 12,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "first_mates_spyglass", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 158163,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "spyglass_sight" )
-    end,
-} )
-
-all:RegisterAura( "spyglass_sight", {
-    id = 273955,
-    duration = 15,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "plunderbeards_flask", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 158164,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "bolstered_spirits" )
-    end,
-} )
-
-all:RegisterAura( "bolstered_spirits", {
-    id = 273942,
-    duration = 10,
-    max_stack = 10,
-} )
-
-
-all:RegisterAura( "sound_barrier", {
-    id = 268531,
-    duration = 8,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "vial_of_storms", {
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-
-    item = 158224,
-    toggle = "cooldowns",
-} )
-
-
-all:RegisterAura( "sirens_melody", {
-    id = 268512,
-    duration = 6,
-    max_stack = 1,
-} )
-
-
-all:RegisterAura( "tick", {
-    id = 274430,
-    duration = 6,
-    max_stack = 1,
-} )
-
-all:RegisterAura( "tock", {
-    id = 274431,
-    duration = 6,
-    max_stack = 1,
-} )
-
-all:RegisterAura( "soulguard", {
-    id = 274459,
-    duration = 12,
-    max_stack = 1,
-} )
-
-
-all:RegisterAbility( "berserkers_juju", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 161117,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "berserkers_frenzy" )
-    end,
-} )
-
-all:RegisterAura( "berserkers_frenzy", {
-    id = 274472,
-    duration = 10,
-    max_stack = 1,
-} )
-
-
-all:RegisterGear( "ancient_knot_of_wisdom", 161417, 166793 )
-
-all:RegisterAbility( "ancient_knot_of_wisdom", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = function ()
-        if equipped[161417] then return 161417 end
-        return 166793
-    end,
-    items = { 167417, 166793 },
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "wisdom_of_the_forest_lord" )
-    end,
-} )
-
-all:RegisterAura( "wisdom_of_the_forest_lord", {
-    id = 278267,
-    duration = 20,
-    max_stack = 5
-} )
-
-
-all:RegisterAbility( "knot_of_ancient_fury", {
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-
-    item = 166795,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "fury_of_the_forest_lord" )
-    end,
-} )
-
-all:RegisterAura( "fury_of_the_forest_lord", {
-    id = 278231,
-    duration = 12,
-    max_stack = 1
-} )
-
-
 -- BREWFEST
 all:RegisterAbility( "brawlers_statue", {
     cast = 0,
@@ -5380,51 +3701,6 @@ all:RegisterAura( "drunken_evasiveness", {
 } )
 
 
--- Various Timewalking Trinkets
-all:RegisterAbility( "wrathstone", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 45263,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "wrathstone" )
-    end,
-
-    auras = {
-        wrathstone = {
-            id = 64800,
-            duration = 20,
-            max_stack = 1
-        }
-    }
-} )
-
-
-all:RegisterAbility( "skardyns_grace", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 133282,
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "speed_of_thought" )
-    end,
-
-    auras = {
-        speed_of_thought = {
-            id = 92099,
-            duration = 35,
-            max_stack = 1
-        }
-    }
-} )
-
-
 -- HALLOW'S END
 all:RegisterAbility( "the_horsemans_sinister_slicer", {
     cast = 0,
@@ -5433,543 +3709,6 @@ all:RegisterAbility( "the_horsemans_sinister_slicer", {
 
     item = 117356,
     toggle = "cooldowns",
-} )
-
-
-
--- LEGION LEGENDARIES
-all:RegisterGear( "rethus_incessant_courage", 146667 )
-    all:RegisterAura( "rethus_incessant_courage", { id = 241330 } )
-
-all:RegisterGear( "vigilance_perch", 146668 )
-    all:RegisterAura( "vigilance_perch", { id = 241332, duration =  60, max_stack = 5 } )
-
-all:RegisterGear( "the_sentinels_eternal_refuge", 146669 )
-    all:RegisterAura( "the_sentinels_eternal_refuge", { id = 241331, duration = 60, max_stack = 5 } )
-
-all:RegisterGear( "prydaz_xavarics_magnum_opus", 132444 )
-    all:RegisterAura( "xavarics_magnum_opus", { id = 207428, duration = 30 } )
-
-
-
-all:RegisterAbility( "draught_of_souls", {
-    cast = 0,
-    cooldown = 80,
-    gcd = "off",
-
-    item = 140808,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "fel_crazed_rage", 3 )
-        setCooldown( "global_cooldown", 3 )
-    end,
-} )
-
-all:RegisterAura( "fel_crazed_rage", {
-    id = 225141,
-    duration = 3,
-})
-
-
-all:RegisterAbility( "faulty_countermeasure", {
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-
-    item = 137539,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "sheathed_in_frost" )
-    end
-} )
-
-all:RegisterAura( "sheathed_in_frost", {
-    id = 214962,
-    duration = 30
-} )
-
-
-all:RegisterAbility( "feloiled_infernal_machine", {
-    cast = 0,
-    cooldown = 80,
-    gcd = "off",
-
-    item = 144482,
-
-    toggle = "cooldowns",
-
-    handler = function ()
-        applyBuff( "grease_the_gears" )
-    end,
-} )
-
-all:RegisterAura( "grease_the_gears", {
-    id = 238534,
-    duration = 20
-} )
-
-
-all:RegisterAbility( "ring_of_collapsing_futures", {
-    item = 142173,
-    spend = 0,
-    cast = 0,
-    cooldown = 15,
-    gcd = "off",
-
-    readyTime = function () return debuff.temptation.remains end,
-    handler = function ()
-        applyDebuff( "player", "temptation", 30, debuff.temptation.stack + 1 )
-    end
-} )
-
-all:RegisterAura( "temptation", {
-    id = 234143,
-    duration = 30,
-    max_stack = 20
-} )
-
-
-all:RegisterAbility( "forgefiends_fabricator", {
-    item = 151963,
-    spend = 0,
-    cast = 0,
-    cooldown = 30,
-    gcd = "off",
-} )
-
-
-all:RegisterAbility( "horn_of_valor", {
-    item = 133642,
-    spend = 0,
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-    toggle = "cooldowns",
-    handler = function () applyBuff( "valarjars_path" ) end
-} )
-
-all:RegisterAura( "valarjars_path", {
-    id = 215956,
-    duration = 30,
-    max_stack = 1
-} )
-
-
-all:RegisterAbility( "kiljaedens_burning_wish", {
-    item = 144259,
-
-    cast = 0,
-    cooldown = 75,
-    gcd = "off",
-
-    texture = 1357805,
-
-    toggle = "cooldowns",
-} )
-
-
-all:RegisterAbility( "might_of_krosus", {
-    item = 140799,
-    spend = 0,
-    cast = 0,
-    cooldown = 30,
-    gcd = "off",
-    handler = function () if active_enemies > 3 then setCooldown( "might_of_krosus", 15 ) end end
-} )
-
-
-all:RegisterAbility( "ring_of_collapsing_futures", {
-    item = 142173,
-    spend = 0,
-    cast = 0,
-    cooldown = 15,
-    gcd = "off",
-    readyTime = function () return debuff.temptation.remains end,
-    handler = function () applyDebuff( "player", "temptation", 30, debuff.temptation.stack + 1 ) end
-} )
-
-all:RegisterAura( "temptation", {
-    id = 234143,
-    duration = 30,
-    max_stack = 20
-} )
-
-
-all:RegisterAbility( "specter_of_betrayal", {
-    item = 151190,
-    spend = 0,
-    cast = 0,
-    cooldown = 45,
-    gcd = "off",
-} )
-
-
-all:RegisterAbility( "tiny_oozeling_in_a_jar", {
-    item = 137439,
-    spend = 0,
-    cast = 0,
-    cooldown = 20,
-    gcd = "off",
-    usable = function () return buff.congealing_goo.stack == 6 end,
-    handler = function () removeBuff( "congealing_goo" ) end
-} )
-
-all:RegisterAura( "congealing_goo", {
-    id = 215126,
-    duration = 60,
-    max_stack = 6
-} )
-
-
-all:RegisterAbility( "umbral_moonglaives", {
-    item = 147012,
-    spend = 0,
-    cast = 0,
-    cooldown = 90,
-    gcd = "off",
-    toggle = "cooldowns",
-} )
-
-
-all:RegisterAbility( "unbridled_fury", {
-    item = 139327,
-    spend = 0,
-    cast = 0,
-    cooldown = 120,
-    gcd = "off",
-    toggle = "cooldowns",
-    handler = function () applyBuff( "wild_gods_fury" ) end
-} )
-
-all:RegisterAura( "wild_gods_fury", {
-    id = 221695,
-    duration = 30
-} )
-
-
-all:RegisterAbility( "vial_of_ceaseless_toxins", {
-    item = 147011,
-    spend = 0,
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-    toggle = "cooldowns",
-    handler = function () applyDebuff( "target", "ceaseless_toxin", 20 ) end
-} )
-
-all:RegisterAura( "ceaseless_toxin", {
-    id = 242497,
-    duration = 20
-} )
-
-
-all:RegisterAbility( "tome_of_unraveling_sanity", {
-    item = 147019,
-    spend = 0,
-    cast = 0,
-    cooldown = 60,
-    gcd = "off",
-    toggle = "cooldowns",
-    handler = function () applyDebuff( "target", "insidious_corruption", 12 ) end
-} )
-
-all:RegisterAura( "insidious_corruption", {
-    id = 243941,
-    duration = 12
-} )
-all:RegisterAura( "extracted_sanity", {
-    id = 243942,
-    duration =  24
-} )
-
-all:RegisterGear( "aggramars_stride", 132443 )
-all:RegisterAura( "aggramars_stride", {
-    id = 207438,
-    duration = 3600
-} )
-
-all:RegisterGear( "sephuzs_secret", 132452 )
-all:RegisterAura( "sephuzs_secret", {
-    id = 208051,
-    duration = 10
-} )
-all:RegisterAbility( "buff_sephuzs_secret", {
-    name = "Sephuz's Secret (ICD)",
-    cast = 0,
-    cooldown = 30,
-    gcd = "off",
-
-    unlisted = true,
-    usable = function () return false end,
-} )
-
-all:RegisterGear( "archimondes_hatred_reborn", 144249 )
-all:RegisterAura( "archimondes_hatred_reborn", {
-    id = 235169,
-    duration = 10,
-    max_stack = 1
-} )
-
-all:RegisterGear( "amanthuls_vision", 154172 )
-all:RegisterAura( "glimpse_of_enlightenment", {
-    id = 256818,
-    duration = 12
-} )
-all:RegisterAura( "amanthuls_grandeur", {
-    id = 256832,
-    duration = 15
-} )
-
-all:RegisterGear( "insignia_of_the_grand_army", 152626 )
-
-all:RegisterGear( "eonars_compassion", 154172 )
-all:RegisterAura( "mark_of_eonar", {
-    id = 256824,
-    duration = 12
-} )
-all:RegisterAura( "eonars_verdant_embrace", {
-    id = function ()
-        if class.file == "SHAMAN" then return 257475 end
-        if class.file == "DRUID" then return 257470 end
-        if class.file == "MONK" then return 257471 end
-        if class.file == "PALADIN" then return 257472 end
-        if class.file == "PRIEST" then
-            if spec.discipline then return 257473 end
-            if spec.holy then return 257474 end
-        end
-        return 257475
-    end,
-    duration = 20,
-    copy = { 257470, 257471, 257472, 257473, 257474, 257475 }
-} )
-all:RegisterAura( "verdant_embrace", {
-    id = 257444,
-    duration = 30
-} )
-
-
-all:RegisterGear( "aggramars_conviction", 154173 )
-all:RegisterAura( "celestial_bulwark", {
-    id = 256816,
-    duration = 14
-} )
-all:RegisterAura( "aggramars_fortitude", {
-    id = 256831,
-    duration = 15
- } )
-
-all:RegisterGear( "golganneths_vitality", 154174 )
-all:RegisterAura( "golganneths_thunderous_wrath", {
-    id = 256833,
-    duration = 15
-} )
-
-all:RegisterGear( "khazgoroths_courage", 154176 )
-all:RegisterAura( "worldforgers_flame", {
-    id = 256826,
-    duration = 12
-} )
-all:RegisterAura( "khazgoroths_shaping", {
-    id = 256835,
-    duration = 15
-} )
-
-all:RegisterGear( "norgannons_prowess", 154177 )
-all:RegisterAura( "rush_of_knowledge", {
-    id = 256828,
-    duration = 12
-} )
-all:RegisterAura( "norgannons_command", {
-    id = 256836,
-    duration = 15,
-    max_stack = 6
-} )
-
-
--- Legion TW
-all:RegisterAbilities( {
-    windscar_whetstone = {
-        cast = 0,
-        cooldown = 120,
-        gcd = "off",
-
-        item = 137486,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-            applyBuff( "slicing_maelstrom" )
-        end,
-
-        proc = "damage",
-
-        auras = {
-            slicing_maelstrom = {
-                id = 214980,
-                duration = 6,
-                max_stack = 1
-            }
-        }
-    },
-
-    giant_ornamental_pearl = {
-        cast = 0,
-        cooldown = 60,
-        gcd = "off",
-
-        item = 137369,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-            applyBuff( "gaseous_bubble" )
-        end,
-
-        auras = {
-            gaseous_bubble = {
-                id = 214971,
-                duration = 8,
-                max_stack = 1
-            }
-        }
-    },
-
-    bottled_hurricane = {
-        cast = 0,
-        gcd = "off",
-
-        item = 137369,
-
-        toggle = "cooldowns",
-
-        buff = "gathering_clouds",
-
-        handler = function ()
-            removeBuff( "gathering_clouds" )
-        end,
-
-        auras = {
-            gathering_clouds = {
-                id = 215294,
-                duration = 60,
-                max_stack = 10
-            }
-        }
-    },
-
-    shard_of_rokmora = {
-        cast = 0,
-        cooldown = 120,
-        gcd = "off",
-
-        item = 137338,
-
-        toggle = "defensives",
-
-        handler = function ()
-            applyBuff( "crystalline_body" )
-        end,
-
-        auras = {
-            crystalline_body = {
-                id = 214366,
-                duration = 30,
-                max_stack = 1
-            }
-        }
-    },
-
-    talisman_of_the_cragshaper = {
-        cast = 0,
-        cooldown = 60,
-        gcd = "off",
-
-        item = 137344,
-
-        toggle = "defensives",
-
-        handler = function ()
-            applyBuff( "stance_of_the_mountain" )
-        end,
-
-        auras = {
-            stance_of_the_mountain = {
-                id = 214423,
-                duration = 15,
-                max_stack = 1
-            }
-        }
-    },
-
-    tirathons_betrayal = {
-        cast = 0,
-        cooldown = 75,
-        gcd = "off",
-
-        item = 137537,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-            applyBuff( "darkstrikes" )
-        end,
-
-        auras = {
-            darkstrikes = {
-                id = 215658,
-                duration = 15,
-                max_stack = 1
-            }
-        }
-    },
-
-    orb_of_torment = {
-        cast = 0,
-        cooldown = 120,
-        gcd = "off",
-
-        item = 137538,
-
-        toggle = "defensives",
-
-        handler = function ()
-            applyDebuff( "target", "soul_sap" )
-        end,
-
-        auras = {
-            soul_sap = {
-                id = 215936,
-                duration = 20,
-                max_stack = 1
-            }
-        }
-    },
-
-    moonlit_prism = {
-        cast = 0,
-        cooldown = 90,
-        gcd = "off",
-
-        item = 137541,
-
-        toggle = "cooldowns",
-
-        handler = function ()
-            applyBuff( "elunes_light" )
-        end,
-
-        auras = {
-            elunes_light = {
-                id = 215648,
-                duration = 20,
-                max_stack = 20
-            }
-        }
-    },
 } )
 
 
@@ -6020,31 +3759,35 @@ end
 
 
 ns.addHook = function( hook, func )
-    class.hooks[ hook ] = func
+    insert( class.hooks[ hook ], func )
 end
 
 
 do
     local inProgress = {}
+    local vars = {}
 
-    ns.callHook = function( hook, ... )
-        if class.hooks[ hook ] and not inProgress[ hook ] then
-            local a1, a2, a3, a4, a5
+    local function load_args( ... )
+        local count = select( "#", ... )
+        if count == 0 then return end
 
-            inProgress[ hook ] = true
-            for _, hook in ipairs( class.hooks[ hook ] ) do
-                a1, a2, a3, a4, a5 = hook ( ... )
-            end
-            inProgress[ hook ] = nil
-
-            if a1 ~= nil then
-                return a1, a2, a3, a4, a5
-            else
-                return ...
-            end
+        for i = 1, count do
+            vars[ i ] = select( i, ... )
         end
+    end
 
-        return ...
+    ns.callHook = function( event, ... )
+        if not class.hooks[ event ] or inProgress[ event ] then return ... end
+        wipe( vars )
+        load_args( ... )
+
+        inProgress[ event ] = true
+        for i, hook in ipairs( class.hooks[ event ] ) do
+            load_args( hook( unpack( vars ) ) )
+        end
+        inProgress[ event ] = nil
+
+        return unpack( vars )
     end
 end
 
@@ -6276,6 +4019,7 @@ function Hekili:SpecializationChanged()
 
     wipe( class.auras )
     wipe( class.abilities )
+    wipe( class.hooks )
     wipe( class.talents )
     wipe( class.pvptalents )
     wipe( class.powers )
@@ -6296,7 +4040,7 @@ function Hekili:SpecializationChanged()
     end
 
     for i = 1, 4 do
-        local id, name, _, _, role = GetSpecializationInfo( i )
+        local id, name, _, _, role, primaryStat = GetSpecializationInfo( i )
 
         if not id then break end
 
@@ -6317,6 +4061,14 @@ function Hekili:SpecializationChanged()
                 state.role.tank = true
             else
                 state.role.healer = true
+            end
+
+            if primaryStat == 1 then
+                state.spec.primaryStat = "strength"
+            elseif primaryStat == 2 then
+                state.spec.primaryStat = "agility"
+            else
+                state.spec.primaryStat = "intellect"
             end
 
             state.spec[ state.spec.key ] = true
@@ -6389,14 +4141,18 @@ function Hekili:SpecializationChanged()
                     class.pvptalents[ talent ] = id
                 end
 
-                class.hooks = spec.hooks or {}
-                --[[ for name, func in pairs( spec.hooks ) do
-                    class.hooks[ name ] = func
-                end ]]
-
                 class.variables = spec.variables
 
-                class.potionList.default = "|cFFFFD100Default|r"
+                class.potionList.default = "|T967533:0|t |cFFFFD100Default|r"
+            end
+
+            if specID == currentID or specID == 0 then
+                for event, hooks in pairs( spec.hooks ) do
+                    for _, hook in ipairs( hooks ) do
+                        class.hooks[ event ] = class.hooks[ event ] or {}
+                        insert( class.hooks[ event ], hook )
+                    end
+                end
             end
 
             for res, model in pairs( spec.resources ) do
@@ -6405,6 +4161,7 @@ function Hekili:SpecializationChanged()
                     state[ res ] = model.state
                 end
             end
+
             if rawget( state, "runes" ) then state.rune = state.runes end
 
             for k, v in pairs( spec.auras ) do

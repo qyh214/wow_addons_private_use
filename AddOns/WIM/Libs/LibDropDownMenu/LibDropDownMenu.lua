@@ -1,5 +1,5 @@
 
-local MAJOR, MINOR = "LibDropDownMenu", tonumber((gsub("r43","r",""))) or 9999;
+local MAJOR, MINOR = "LibDropDownMenu", tonumber((gsub("r49","r",""))) or 9999;
 local lib = LibStub:NewLibrary(MAJOR, MINOR);
 
 if not lib then return end

@@ -1,0 +1,77 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame
+        name="ItemUpgradeTipInfoDisplayTemplate"
+        mixin="ItemUpgradeTipInfoDisplayMixin"
+        virtual="true"
+    >
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnShow method="OnShow" />
+        </Scripts>
+        <Frames>
+            <Frame parentKey="Inset" inherits="ItemUpgradeTipInsetDarkTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="0" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipHeadingFrame" parentKey="AuthorHeading">
+                <KeyValues>
+                    <KeyValue key="headingText" value="ITEMUPGRADETIP_L_AUTHOR" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="RIGHT" relativeKey="$parent" relativePoint="CENTER" x="-150" />
+                    <Anchor point="TOP" relativeKey="$parent" relativePoint="TOP" y="-150" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipSubHeadingFrame" parentKey="Author">
+                <KeyValues>
+                    <KeyValue key="subHeadingText" value="Ilyxiana@Ravencrest" type="string" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.AuthorHeading" relativePoint="BOTTOMLEFT" y="10" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipHeadingFrame" parentKey="VersionHeading">
+                <KeyValues>
+                    <KeyValue key="headingText" value="ITEMUPGRADETIP_L_VERSION" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.AuthorHeading" relativePoint="TOPRIGHT" x="140" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipSubHeadingFrame" parentKey="Version">
+                <KeyValues>
+                    <KeyValue key="subHeadingText" value="ItemUpgradeTip.Version" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.VersionHeading" relativePoint="BOTTOMLEFT" y="10" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipHeadingFrame" parentKey="EngageHeading">
+                <KeyValues>
+                    <KeyValue key="headingText" value="ITEMUPGRADETIP_L_CONTACT" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Author" relativePoint="BOTTOMLEFT" y="-20" />
+                </Anchors>
+            </Frame>
+
+            <Frame inherits="ItemUpgradeTipCopyAndPasteFrame" parentKey="BugReportLink">
+                <KeyValues>
+                    <KeyValue key="labelText" value="ITEMUPGRADETIP_L_BUG_REPORT_SUGGEST" type="global" />
+                    <KeyValue key="copyText" value="https://github.com/belazor-wow/ItemUpgradeTip/issues" type="string" />
+                    <KeyValue key="tooltipTitleText" value="ITEMUPGRADETIP_L_BUG_REPORT_SUGGEST_TOOLTIP" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.EngageHeading" relativePoint="BOTTOMLEFT" />
+                </Anchors>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

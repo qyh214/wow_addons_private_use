@@ -2421,6 +2421,7 @@ L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Externals Widgets"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "These options control the behavior of many foreign widgets."
 L["STRING_OPTIONS_GENERAL"] = "General Settings"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "General:"
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "\"Space Between Windows\""
 L["STRING_OPTIONS_HIDE_ICON"] = "Hide Icon"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = [=[When enabled, the icon representing the selected display isn't shown.
 

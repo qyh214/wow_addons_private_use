@@ -131,11 +131,24 @@ local currency = {
   3028, -- Restored Coffer Key
   3056, -- Kej
   3008, -- Valorstones
+  2813, -- Harmonized Silk
   2914, -- Weathered Harbinger Crest
   2915, -- Carved Harbinger Crest
   2916, -- Runed Harbinger Crest
   2917, -- Gilded Harbinger Crest
   3023, -- 11.0 Professions - Personal Tracker - S1 Spark Drops (Hidden)
+  3100, -- Bronze Celebration Token
+  3090, -- Flame-Blessed Iron
+  3218, -- Empty Kaja'Cola Can
+  3220, -- Vintage Kaja'Cola Can
+  3226, -- Market Research
+  3116, -- Essence of Kaja'mite
+  3107, -- Weathered Undermine Crest
+  3108, -- Carved Undermine Crest
+  3109, -- Runed Undermine Crest
+  3110, -- Gilded Undermine Crest
+  3132, -- 11.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
+  3216, -- Bounty's Remnants
 }
 SI.currency = currency
 
@@ -203,6 +216,11 @@ local specialCurrency = {
       id = 173363, -- Vessel of Horrific Visions
     },
   },
+  [3028] = { -- Restored Coffer Key
+    relatedItem = {
+      id = 229899, -- Coffer Key Shard
+    },
+  },
 }
 SI.specialCurrency = specialCurrency
 
@@ -224,6 +242,7 @@ Module.OverrideName = {
   [2800] = L["Loot Spark of Awakening"], -- 10.2.6 Professions - Personal Tracker - S4 Spark Drops (Hidden)
   [3010] = L["Loot Antique Bronze Bullion"], -- 10.2.6 Rewards - Personal Tracker - S4 Dinar Drops (Hidden)
   [3023] = L["Loot Spark of Omens"], -- 11.0 Professions - Personal Tracker - S1 Spark Drops (Hidden)
+  [3132] = L["Loot Spark of Fortunes"], -- 11.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
 }
 
 Module.OverrideTexture = {
@@ -232,12 +251,13 @@ Module.OverrideTexture = {
   [2800] = 4693222, -- 10.2.6 Professions - Personal Tracker - S4 Spark Drops (Hidden)
   [3010] = 4555657, -- 10.2.6 Rewards - Personal Tracker - S4 Dinar Drops (Hidden)
   [3023] = 5929759, -- 11.0 Professions - Personal Tracker - S1 Spark Drops (Hidden)
+  [3132] = 5929757, -- 11.1 Professions - Personal Tracker - S2 Spark Drops (Hidden)
 }
 
 function Module:OnEnable()
   self:RegisterEvent("PLAYER_MONEY", "UpdateCurrency")
   self:RegisterBucketEvent("CURRENCY_DISPLAY_UPDATE", 0.25, "UpdateCurrency")
-  self:RegisterEvent("BAG_UPDATE", "UpdateCurrencyItem")
+  self:RegisterEvent("BAG_UPDATE_DELAYED", "UpdateCurrencyItem")
 end
 
 function Module:UpdateCurrency()

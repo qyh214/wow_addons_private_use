@@ -1,0 +1,5 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Include file="dataProviders/index.xml" />
+  <Include file="mixins/index.xml" />
+  <Include file="displays/index.xml" />
+</Ui>

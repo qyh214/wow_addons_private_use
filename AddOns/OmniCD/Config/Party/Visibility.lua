@@ -4,7 +4,7 @@ local P = E.Party
 local sliderTimer
 
 local visibility = {
-	name = format("|cff20ff20%s", L["Visibility"]),
+	name = L["Visibility"],
 	order = 0,
 	type = "group",
 	get = function(info) return E.profile.Party.visibility[ info[#info] ] end,

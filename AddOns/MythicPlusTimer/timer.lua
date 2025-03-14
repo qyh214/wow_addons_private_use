@@ -170,6 +170,28 @@ local function update_frame_points()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function calculate_chest_timers(current_run)
+  -- Calculate base chest timers
+  local two_chest_timer = current_run.max_time * 0.8
+  local three_chest_timer = current_run.max_time * 0.6
+
+  -- Affix ID for "Challenger's Peril"
+  local challenger_peril_affix_id = 152
+
+  -- Adjust timers if the specific affix is present
+  for _, affix_id in ipairs(current_run.affixes) do
+    if affix_id == challenger_peril_affix_id then
+      local old_timer = current_run.max_time - 90
+      two_chest_timer = old_timer * 0.8 + 90
+      three_chest_timer = old_timer * 0.6 + 90
+      break
+    end
+  end
+
+  return two_chest_timer, three_chest_timer
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 local function on_update_time(_, elapsed_time)
   -- hide default tracker (on every time update because we can only hide it out of combat)
   if main then
@@ -251,7 +273,8 @@ local function on_update_time(_, elapsed_time)
   end
 
   -- chest timer
-  local two_chest_time = current_run.max_time * 0.8
+  local two_chest_time, three_chest_time = calculate_chest_timers(current_run)
+
   local time_left_2 = two_chest_time - elapsed_time
   if time_left_2 < 0 then
     time_left_2 = 0
@@ -259,7 +282,6 @@ local function on_update_time(_, elapsed_time)
 
   current_run.time_left_2 = time_left_2
 
-  local three_chest_time = current_run.max_time * 0.6
   local time_left_3 = three_chest_time - elapsed_time
   if time_left_3 < 0 then
     time_left_3 = 0

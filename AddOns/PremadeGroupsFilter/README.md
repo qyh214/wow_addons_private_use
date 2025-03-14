@@ -2,7 +2,7 @@
 
 Premade Groups Filter helps you limit the search results of the LFG Premade Groups tool. You can filter by difficulty or for groups with a specific composition of members, e.g. one tank, no heals and 3 dps. Filtering is done using a separate window next to the list of groups. Advanced users are able to enter powerful filter expressions to find exactly what they are looking for.
 
-![Premade Groups Filter next to the LFG Premade Groups window filtering for all mythic dungeons that still need a tank and already have a healer](Screenshots/Screenshot_01_Dungeons.jpg)
+![Premade Groups Filter next to the LFG Premade Groups window filtering for all mythic dungeons that still need a tank and already have a healer](Screenshots/Screenshot_01_Dungeons.png)
 
 Examples of what can easily be found with Premade Groups Filter:
 
@@ -19,6 +19,7 @@ Examples of what can easily be found with Premade Groups Filter:
 * PvP Rating
 * Number of members
 * Number of tanks, heals and DPS
+* Dungeon selection
 
 
 ### Advanced Expression Query Box
@@ -33,14 +34,18 @@ Examples of what can easily be found with Premade Groups Filter:
 
 * **Class Names in Tooltip** - Shows a list of classes by role in the tooltip of a premade group.
 * **Colored Group Name** - Shows group name in green if group is new and in red if you've previously been declined. Shows activity name in red if you have a lockout on that instance.
-* **Circle in Class Color** - Shows a circle in class color in the background of each role in the premade dungeon group list.
 * **Bar in Class Color** - Shows a small bar in class color below each role in the premade dungeon group list.
 * **Show Group Leader** - Shows a small crown above the group leader's role in the premade dungeon group list.
 * **Group Leader Rating** - Shows the Mythic+ or PvP rating of the group leader in the premade group list.
+* **Rating in Raider.IO Colors** - Use the Raider.IO rating color scheme for Mythic+ ratings if the Raider.IO addon is loaded.
+* **Show Specialization** - Shows an icon with the class specialization of each member in the premade group list.
+* **Show Missing Roles** - Shows the role icon of each empty slot in the premade group list.
 * **One Click Sign Up** - Sign up for a group directly by clicking on it, instead of selecting it first, then clicking sign up.
+* **Cancel Oldest Application** - If you have the maximum number of pending applications, click on any group to cancel your oldest application first, then click again to apply.
 * **Persist Sign Up Note** - Persists the 'note to the group leader' when signing up to different groups. By default, the note is deleted when a new group is selected.
 * **Sign Up On Enter** - Automatically focus the 'note to the group leader' text box when signing up for a new group and confirm your application by pressing enter.
 * **Skip Sign Up Dialog** - Skip the role and note prompt if possible and immediately sign up to the group. Hold shift to always show the dialog.
+* **Sign up to Declined Groups** - Restore the old behavior before TWW and allow to sign up to groups that previously declined you.
 
 
 ### Resources

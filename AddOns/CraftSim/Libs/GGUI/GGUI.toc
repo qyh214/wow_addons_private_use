@@ -1,0 +1,11 @@
+## Interface: 100100
+
+## Title: Lib: Genju GUI
+## Notes: Simpler UI Widget Wrappers
+## Author: Genjuwow
+## Version: 2.1.23
+## X-Category: Library
+## X-License: GPL v2
+
+LibStub\LibStub.lua
+lib.xml

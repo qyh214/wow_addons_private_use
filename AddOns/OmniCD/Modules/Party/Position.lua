@@ -1,9 +1,7 @@
 local E = select(2, ...):unpack()
 local P = E.Party
 
-local _G = _G
-local GetNumGroupMembers, IsInRaid, UnitGUID = GetNumGroupMembers, IsInRaid, UnitGUID
-local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+LibStub("AceHook-3.0"):Embed(P)
 
 local isColdStartDC = true
 
@@ -53,7 +51,10 @@ end
 
 function P:FindRelativeFrame(guid)
 	if E.customUF.active then
-		if E.db.position.uf ~= "auto" then
+		if E.db.position.uf == "HealBot" then
+			local f = HealBot_Panel_RaidButton(guid)
+			return f and f.gref.Back
+		elseif E.db.position.uf ~= "auto" then
 			local frames, unitKey = E.customUF.frames, E.customUF.unit
 			local n = #frames
 			for i = 1, n do
@@ -66,15 +67,23 @@ function P:FindRelativeFrame(guid)
 			end
 			return
 		end
-		for _, data in pairs(E.customUF.enabledList) do
-			local frames, unitKey = data.frames, data.unit
-			local n = #frames
-			for i = 1, n do
-				local name = frames[i]
-				local f = _G[name]
-				local unit = f and (f[unitKey] or f:GetAttribute("unit"))
-				if E.UNIT_TO_PET[unit] and UnitGUID(unit) == guid and f:IsVisible() then
+		for addon, data in pairs(E.customUF.enabledList) do
+			if addon == "HealBot" then
+				local f = HealBot_Panel_RaidButton(guid)
+				f = f and f.gref.Back
+				if f and f:IsVisible() then
 					return f
+				end
+			else
+				local frames, unitKey = data.frames, data.unit
+				local n = #frames
+				for i = 1, n do
+					local name = frames[i]
+					local f = _G[name]
+					local unit = f and (f[unitKey] or f:GetAttribute("unit"))
+					if E.UNIT_TO_PET[unit] and UnitGUID(unit) == guid and f:IsVisible() then
+						return f
+					end
 				end
 			end
 		end
@@ -115,6 +124,7 @@ function P:FindRelativeFrame(guid)
 	else
 		if self:CompactFrameIsActive(isInRaid) or self.isInTestMode then
 			if not self.isCompactFrameSetShown then return end
+
 			local compactFrame = not self.keepGroupsTogether and COMPACT_RAID or (isInRaid and COMPACT_RAID_KGT or COMPACT_PARTY)
 			local n = #compactFrame
 			for i = 1, n do
@@ -138,28 +148,17 @@ function P:FindRelativeFrame(guid)
 	end
 end
 
-function P:SetAnchorPosition(frame)
-	frame.anchor:ClearAllPoints()
-	frame.anchor:SetPoint(self.anchorPoint, frame, self.point)
-end
-
-function P:SetOffset(frame)
-	frame.container:ClearAllPoints()
-
-	frame.container:SetPoint("TOPLEFT", frame, self.containerOfsX, self.containerOfsY)
-end
-
-local function SetContainerPosition(frame, relFrame, showRange)
-	for raidBarIndex, container in pairs(frame.exContainers) do
+local function SetUnitBarPosition(frame, relFrame, showRange)
+	for raidBarIndex, unitBar in pairs(frame.activeUnitBars) do
 		if ( showRange ) then
-			container:SetParent(relFrame)
-			container:SetFrameLevel(10)
+			unitBar:SetParent(relFrame)
+			unitBar:SetFrameLevel(10)
 		else
-			container:SetParent(UIParent)
+			unitBar:SetParent(UIParent)
 		end
-		container:ClearAllPoints()
+		unitBar:ClearAllPoints()
 		local f = P.extraBars["raidBar" .. raidBarIndex]
-		container:SetPoint(f.point, relFrame, f.relativePoint, f.containerOfsX, f.containerOfsY)
+		unitBar:SetPoint(f.point, relFrame, f.relativePoint, f.containerOfsX, f.containerOfsY)
 	end
 end
 
@@ -170,7 +169,7 @@ function P:UpdatePosition(isRefreshMembers)
 
 	if isColdStartDC then
 		isColdStartDC = nil
-		if IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") then
+		if C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") then
 			self:UpdateCompactFrameSystemSettings()
 		end
 	end
@@ -186,7 +185,7 @@ function P:UpdatePosition(isRefreshMembers)
 			E.LoadPosition(frame)
 			frame:Show()
 		else
-			local relFrame = self:FindRelativeFrame(guid)
+			local relFrame = P:FindRelativeFrame(guid)
 			if relFrame then
 				if showRange then
 					frame:SetParent(relFrame)
@@ -196,15 +195,13 @@ function P:UpdatePosition(isRefreshMembers)
 				end
 				frame:ClearAllPoints()
 				frame:SetPoint(point, relFrame, relPoint)
-
-				SetContainerPosition(frame, relFrame, showRange)
+				SetUnitBarPosition(frame, relFrame, showRange)
 				frame:Show()
 			end
 		end
-
 		if not isRefreshMembers then
-			self:SetAnchorPosition(frame)
-			self:SetOffset(frame)
+			frame:SetContainerOffset()
+			frame:SetAnchorPosition()
 		end
 	end
 end
@@ -229,11 +226,11 @@ do
 	end
 
 	function P:HookFunc()
-		if self.enabled and E.db.position and not E.db.position.detached then
+		if self.enabled and not self.disabled and not E.db.position.detached then
 			if not hookTimer then
 				hookTimer = C_Timer.NewTimer(0.5, UpdatePosition_OnTimerEnd)
 			end
-			if E.isDF and self.isInTestMode and not E.customUF.active and not P.isInEditMode then
+			if E.isDF and self.isInTestMode and not E.customUF.active and not self.isInEditMode then
 				self:Test()
 				E:ACR_NotifyChange()
 			end
@@ -259,12 +256,35 @@ do
 		pauseTimer = C_Timer.NewTimer(6, ResetPause)
 	end
 
+	local function OnRefreshMemebers()
+		if not pauseTimer and not P.disabled and not E.db.position.detached
+			and EditModeManagerFrame:GetSettingValue(Enum.EditModeSystem.UnitFrame, Enum.EditModeUnitFrameSystemIndices.Party, Enum.EditModeUnitFrameSetting.SortPlayersBy) ~= 1 then
+			UpdatePosition_OnRefreshMembers()
+		end
+	end
+
+	function P:UpdateZoneHooks(disable)
+		if not E.isDF or not C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") or not C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") then
+			return
+		end
+		local isHooked = self:IsHooked(CompactPartyFrame, "RefreshMembers")
+		if not isHooked and self.isInArena and not disable then
+			if CompactPartyFrame_RefreshMembers then
+				self:SecureHook("CompactPartyFrame_RefreshMembers", OnRefreshMemebers)
+			else
+				self:SecureHook(CompactPartyFrame, "RefreshMembers", OnRefreshMemebers)
+			end
+		elseif isHooked and (disable or not self.isInArena) then
+			self:Unhook(CompactPartyFrame, "RefreshMembers")
+		end
+	end
+
 	function P:SetHooks()
 		if self.hooked then
 			return
 		end
 
-		if not IsAddOnLoaded("Blizzard_CompactRaidFrames") or not IsAddOnLoaded("Blizzard_CUFProfiles") then
+		if not C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") or not C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") then
 			return
 		end
 
@@ -273,29 +293,29 @@ do
 
 		if E.isDF then
 
-			hooksecurefunc("CompactRaidFrameManager_SetSetting", function(arg)
+			self:SecureHook("CompactRaidFrameManager_SetSetting", function(arg)
 				if arg == "IsShown" then
 					local isShown = CompactRaidFrameManager_GetSetting("IsShown")
-					if P.isCompactFrameSetShown ~= isShown then
-						P.isCompactFrameSetShown = isShown
-						P:HookFunc()
+					if self.isCompactFrameSetShown ~= isShown then
+						self.isCompactFrameSetShown = isShown
+						self:HookFunc()
 					end
 				end
 			end)
 
 
-			hooksecurefunc(EditModeManagerFrame, "UpdateRaidContainerFlow", function()
-				if P.isInEditMode then
-					P.keepGroupsTogether = EditModeManagerFrame:ShouldRaidFrameShowSeparateGroups()
-					P:HookFunc()
+			self:SecureHook(EditModeManagerFrame, "UpdateRaidContainerFlow", function()
+				if self.isInEditMode then
+					self.keepGroupsTogether = EditModeManagerFrame:ShouldRaidFrameShowSeparateGroups()
+					self:HookFunc()
 				end
 			end)
 
 
-			hooksecurefunc("UpdateRaidAndPartyFrames", function()
-				if P.isInEditMode then
-					P.useRaidStylePartyFrames = EditModeManagerFrame:UseRaidStylePartyFrames()
-					P:HookFunc()
+			self:SecureHook("UpdateRaidAndPartyFrames", function()
+				if self.isInEditMode then
+					self.useRaidStylePartyFrames = EditModeManagerFrame:UseRaidStylePartyFrames()
+					self:HookFunc()
 				end
 			end)
 
@@ -312,60 +332,49 @@ do
 
 
 
+
+
+
+
+
+			--[[
 			if CompactPartyFrame_RefreshMembers then
-				hooksecurefunc("CompactPartyFrame_RefreshMembers", function()
-					if not pauseTimer and not P.disabled and P.isInArena and not E.db.position.detached
-						and EditModeManagerFrame:GetSettingValue(Enum.EditModeSystem.UnitFrame, Enum.EditModeUnitFrameSystemIndices.Party, Enum.EditModeUnitFrameSetting.SortPlayersBy) ~= 1 then
-						UpdatePosition_OnRefreshMembers()
-					end
-				end)
+				self:SecureHook("CompactPartyFrame_RefreshMembers", OnRefreshMemebers)
 			else
-				hooksecurefunc(CompactPartyFrame, "RefreshMembers", function()
-					if not pauseTimer and not P.disabled and P.isInArena and not E.db.position.detached
-						and EditModeManagerFrame:GetSettingValue(Enum.EditModeSystem.UnitFrame, Enum.EditModeUnitFrameSystemIndices.Party, Enum.EditModeUnitFrameSetting.SortPlayersBy) ~= 1 then
-						UpdatePosition_OnRefreshMembers()
-					end
-				end)
+				self:SecureHook(CompactPartyFrame, "RefreshMembers", OnRefreshMemebers)
 			end
+			]]
 
-			EventRegistry:RegisterCallback("EditMode.Enter", function()
-				P.isInEditMode = true
-			end)
 
 			EventRegistry:RegisterCallback("EditMode.Exit", function()
-				P.isInEditMode = nil
-
-				if P.isInTestMode then
-					P:Test()
+				self.isInEditMode = nil
+				if self.isInTestMode then
+					self:Test()
 					E:ACR_NotifyChange()
 				end
 			end)
+
+			EventRegistry:RegisterCallback("EditMode.Enter", function()
+				self.isInEditMode = true
+			end)
 		else
-			hooksecurefunc("CompactUnitFrameProfiles_ApplyProfile", function(profile)
-				if P:CompactFrameIsActive() then
-					P:HookFunc()
+			self:SecureHook("CompactUnitFrameProfiles_ApplyProfile", function(profile)
+				if self:CompactFrameIsActive() then
+					self:HookFunc()
 				end
 			end)
 
-			hooksecurefunc("CompactRaidFrameManager_SetSetting", function(arg)
+			self:SecureHook("CompactRaidFrameManager_SetSetting", function(arg)
 				if arg == "IsShown" then
 					local isShown = CompactRaidFrameManager_GetSetting("IsShown")
-					if P.isCompactFrameSetShown ~= isShown then
-						P.isCompactFrameSetShown = isShown
-						P:HookFunc()
+					if self.isCompactFrameSetShown ~= isShown then
+						self.isCompactFrameSetShown = isShown
+						self:HookFunc()
 					end
 				elseif arg == "KeepGroupsTogether" then
-					P.keepGroupsTogether = CompactRaidFrameManager_GetSetting("KeepGroupsTogether")
+					self.keepGroupsTogether = CompactRaidFrameManager_GetSetting("KeepGroupsTogether")
 				end
 			end)
-
-
-
-
-
-
-
-
 		end
 
 		self.hooked = true

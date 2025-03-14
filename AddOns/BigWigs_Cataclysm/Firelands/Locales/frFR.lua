@@ -73,6 +73,7 @@ if L then
 	L.immolationyou_message = "Piège d'immolation"
 	L.crystal = "Piège de cristal"
 	L.crystal_desc = "Prévient en dessous de qui Shannox incante un piège de cristal."
+	L.facerage_trigger = "À la gorge !"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "frFR")

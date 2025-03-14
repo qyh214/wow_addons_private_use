@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "LibGetFrame-1.0"
-local MINOR_VERSION = 62
+local MINOR_VERSION = 64
 if not LibStub then
   error(MAJOR_VERSION .. " requires LibStub.")
 end
@@ -40,6 +40,7 @@ local defaultFramePriorities = {
   "^LUFHeaderraid", -- luf
   "^AshToAshUnit%d+Unit%d+", -- AshToAsh
   "^Cell", -- Cell
+  "^XPerl_Raid_Grp", -- xperl
   -- party frames
   "^AleaUI_GroupHeader", -- Alea
   "^SUFHeaderparty", --suf
@@ -47,6 +48,7 @@ local defaultFramePriorities = {
   "^ElvUF_PartyGroup", -- elv
   "^oUF_.-Party", -- generic oUF
   "^PitBull4_Groups_Party", -- pitbull4
+  "^XPerl_party%d", -- xperl
   "^CompactRaid", -- blizz
   "^CompactParty", -- blizz
   "^PartyFrame",
@@ -57,6 +59,7 @@ local defaultFramePriorities = {
   "^PitBull4_Frames_Player",
   "^ElvUF_Player",
   "^oUF_.-Player",
+  "^XPerl_Player",
   "^PlayerFrame",
 }
 local getDefaultFramePriorities = function()
@@ -72,6 +75,7 @@ local defaultPlayerFrames = {
   "ElvUF_Player",
   "oUF_.-Player",
   "oUF_PlayerPlate",
+  "XPerl_Player",
   "PlayerFrame",
 }
 local getDefaultPlayerFrames = function()
@@ -87,6 +91,7 @@ local defaultTargetFrames = {
   "oUF_.-Target",
   "TargetFrame",
   "^hbExtra_HealUnit",
+  "XPerl_Target"
 }
 local getDefaultTargetFrames = function()
   return CopyTable(defaultTargetFrames)
@@ -101,6 +106,7 @@ local defaultTargettargetFrames = {
   "oUF_.-TargetTarget",
   "oUF_ToT",
   "TargetTargetFrame",
+  "XPerl_TargetTarget"
 }
 local getDefaultTargettargetFrames = function()
   return CopyTable(defaultTargettargetFrames)
@@ -114,6 +120,7 @@ local defaultPartyFrames = {
   "^ElvUF_PartyGroup",
   "^oUF_.-Party",
   "^PitBull4_Groups_Party",
+  "^XPerl_party%d",
   "^PartyFrame",
   "^CompactParty",
 }
@@ -123,6 +130,7 @@ end
 lib.getDefaultPartyFrames = getDefaultPartyFrames
 local defaultPartyTargetFrames = {
   "SUFChildpartytarget%d",
+  "XPerl_party%dtargetFrame"
 }
 local getDefaultPartyTargetFrames = function()
   return CopyTable(defaultPartyTargetFrames)
@@ -134,6 +142,7 @@ local defaultFocusFrames = {
   "LUFUnitfocus",
   "FocusFrame",
   "^hbExtra_HealUnit",
+  "^XPerl_Focus"
 }
 local getDefaultFocusFrames = function()
   return CopyTable(defaultFocusFrames)
@@ -154,6 +163,7 @@ local defaultRaidFrames = {
   "^LimeGroup",
   "^SUFHeaderraid",
   "^LUFHeaderraid",
+  "^XPerl_Raid_Grp",
   "^CompactRaid",
 }
 local getDefaultRaidFrames = function()
@@ -667,7 +677,8 @@ function lib.GetUnitNameplate(unit)
       return nameplate.unitFrame.Health
     elseif nameplate.unitFramePlater and nameplate.unitFramePlater.healthBar then
       -- plater
-      return nameplate.unitFramePlater.healthBar
+      -- fallback to default nameplate in case plater is not on screen and uses blizzard default (module disabled, force-blizzard functionality)
+      return nameplate.unitFramePlater.PlaterOnScreen and nameplate.unitFramePlater.healthBar or (nameplate.UnitFrame and nameplate.UnitFrame.healthBar) or nameplate
     elseif nameplate.kui and nameplate.kui.HealthBar then
       -- kui
       return nameplate.kui.HealthBar

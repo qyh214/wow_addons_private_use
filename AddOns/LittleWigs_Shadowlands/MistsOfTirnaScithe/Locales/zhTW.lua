@@ -4,6 +4,7 @@ if L then
 	L.tirnenn_villager = "木靈村民"
 	L.drust_harvester = "司特收割者"
 	L.drust_soulcleaver = "佐司特斬魂者"
+	--L.drust_spiteclaw = "Drust Spiteclaw"
 	L.drust_boughbreaker = "佐司特斷枝者"
 	L.mistveil_defender = "霧紗防衛者"
 	L.mistveil_gorgegullet = "霧紗暴食之喉"
@@ -17,6 +18,10 @@ if L then
 	L.spinemaw_acidgullet = "脊喉噴毒蟲"
 	L.spinemaw_staghorn = "脊喉雄角蟲"
 	--L.spinemaw_gorger = "Spinemaw Gorger"
+	--L.gormling_larva = "Gormling Larva"
+	--L.spinemaw_reaver = "Spinemaw Reaver"
+
+	--L.gate_open_desc = "Show a bar indicating when the gate to the next area will open after defeating each boss."
 end
 
 L = BigWigs:NewBossLocale("Mistcaller", "zhTW")

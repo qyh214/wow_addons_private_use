@@ -15,7 +15,7 @@ if SpellFlashCore and not SpellFlashCore.LS then
     a.print(L["Old uncompletable version of SFC detected, shuttingdown. \r\n Please update other copies of SFC before use."])
     return
 end
-SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20240730150302") or tonumber(date("%Y%m%d%H%M%S")))
+SpellFlashCore = LibStub:NewLibrary("SpellFlashCore", tonumber("20240915150302") or tonumber(date("%Y%m%d%H%M%S")))
 if not SpellFlashCore then return end
 SpellFlashCore.LS = true
 local FrameNames = {}
@@ -51,7 +51,7 @@ local GetSpellInfo, GetSpellSubtext = C_Spell.GetSpellInfo, C_Spell.GetSpellSubt
 
 local ItemCache = setmetatable({}, {__index = function(t, v) if C_Item.GetItemInfo(v) then t[v] = {C_Item.GetItemInfo(v)} return t[v] end return EmptyTable end})
 function SpellFlashCore.GetItemInfo(id)
-    if type(id) == "string" then return GetItemInfo(id) end
+    if type(id) == "string" then return C_Item.GetItemInfo(id) end
     return unpack(ItemCache[id])
 end
 local GetItemInfo = SpellFlashCore.GetItemInfo
@@ -72,7 +72,7 @@ end
 
 function SpellFlashCore.ItemName(ItemID)
     if type(ItemID) == "number" then
-        return (GetItemInfo(ItemID))
+        return (C_Item.GetItemInfo(ItemID))
     end
     return ItemID
 end
@@ -284,7 +284,7 @@ local function FrameScriptCheck(script,tipe)
             if script == _G["PetActionButton" .. i]:GetScript("OnClick") then return true end
         end
     elseif tipe == "Action" then
-        local BarNames = {"Action","MultiBarBottomRight","MultiBarBottomLeft","MultiBarRight","MultiBarLeft","MultiBar5","MultiBar6","MultiBar7"}
+        local BarNames = {"Action","MultiBarBottomRight","MultiBarBottomLeft","MultiBarRight","MultiBarLeft","MultiBar5","MultiBar6","MultiBar7","MultiBarRightAction","MultiBarLeftAction","MultiBarBottomRightAction","MultiBarBottomLeftAction","MultiBar5Action","MultiBar6Action","MultiBar7Action"}
         for _, BarName in pairs(BarNames) do
             for i=1, 12, 1 do
                 local button = _G[BarName .. "Button" .. i]
@@ -318,6 +318,8 @@ local function RegisterFrames()
     local LAB = {
         original = LibStub:GetLibrary("LibActionButton-1.0", true),
         elvui = LibStub:GetLibrary("LibActionButton-1.0-ElvUI", true),
+        NDui = LibStub:GetLibrary("LibActionButton-1.0-NDui", true),
+        UI = LibStub:GetLibrary("LibActionButton-1.0-UI", true)
     }
 
     for _, lib in pairs(LAB) do
@@ -692,7 +694,7 @@ local function StartUp()
     if LOADING then
         a:SetTimer("RegisterFrames", 2, 0, RegisterFrames)
         a:SetTimer("RegisterButtons", 2, 0, RegisterButtons)
-        LOADING = nil
+        LOADING = false
     end
 end
 Event.PLAYER_ENTERING_WORLD = StartUp

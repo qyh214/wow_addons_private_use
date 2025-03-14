@@ -82,6 +82,9 @@ end
 
 local function GetSelectedHeroSubTree()
     local subTreeIDs = C_ClassTalents.GetHeroTalentSpecsForClassSpec();
+    if not subTreeIDs then
+        return nil
+    end
 
     local configID = C_ClassTalents.GetActiveConfigID();
     if configID ~= nil then
@@ -291,7 +294,7 @@ local function IsSetActive(set)
         end
     end
 
-    return true;
+    return not (C_ClassTalents.HasUnspentHeroTalentPoints());
 end
 local function IsNodeEntryOnCooldown(nodeEntryID)
     local configID = C_ClassTalents.GetActiveConfigID();
@@ -1060,9 +1063,6 @@ function BtWLoadoutsHeroTalentsMixin:OnDrag()
         scroll:SetHorizontalScroll(scrollX)
         scroll:SetVerticalScroll(scrollY)
     end
-end
-function BtWLoadoutsHeroTalentsMixin:GetMaxWidth()
-    return 1300
 end
 function BtWLoadoutsHeroTalentsMixin:BeginScrollDrag()
     local scroll = self.Scroll;

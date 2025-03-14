@@ -301,6 +301,16 @@ local defaultItem = cargBags:NewItemTable()
 	@param i <table> [optional]
 	@return i <table>
 ]]
+local iLvlClassIDs = {
+	[Enum.ItemClass.Gem] = Enum.ItemGemSubclass.Artifactrelic,
+	[Enum.ItemClass.Armor] = 0,
+	[Enum.ItemClass.Weapon] = 0,
+}
+local function isItemHasLevel(item)
+	local index = iLvlClassIDs[item.classID]
+	return index and (index == 0 or index == item.subClassID)
+end
+
 function Implementation:GetItemInfo(bagID, slotID, i)
 	i = i or defaultItem
 	for k in pairs(i) do i[k] = nil end
@@ -313,7 +323,7 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 	if info then
 		i.texture, i.count, i.locked, i.quality, i.link, i.id, i.hasPrice = info.iconFileID, info.stackCount, info.isLocked, (info.quality or 1), info.hyperlink, info.itemID, (not info.hasNoValue)
 
-		i.isInSet, i.setName = C_Container.GetContainerItemEquipmentSetInfo(bagID, slotID)
+		--i.isInSet, i.setName = C_Container.GetContainerItemEquipmentSetInfo(bagID, slotID)
 
 		i.cdStart, i.cdFinish, i.cdEnable = C_Container.GetContainerItemCooldown(bagID, slotID)
 
@@ -322,6 +332,10 @@ function Implementation:GetItemInfo(bagID, slotID, i)
 
 		i.name, _, _, _, _, i.type, i.subType, _, i.equipLoc, _, _, i.classID, i.subClassID = C_Item.GetItemInfo(i.link)
 		i.equipLoc = _G[i.equipLoc] -- INVTYPE to localized string
+
+		if isItemHasLevel(i) then
+			i.ilvl = B.GetItemLevel(i.link, i.bagId ~= -1 and i.bagId, i.slotId)
+		end
 
 		if i.id == PET_CAGE then
 			local petID, petLevel, petName = strmatch(i.link, "|H%w+:(%d+):(%d+):.-|h%[(.-)%]|h")

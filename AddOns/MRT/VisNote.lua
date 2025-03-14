@@ -1122,11 +1122,21 @@ function module.options:Load()
 		{L.S_ZoneT32..": "..L.bossName[2920],{2294,0.25,0.47,4}},
 		{L.S_ZoneT32..": "..L.bossName[2921],{2294,0.42,0.49,4}},
 		{L.S_ZoneT32..": "..L.bossName[2922],{2295,0.48,0.54,2}},
+		{L.S_ZoneT33..": "..L.bossName[3009],{2406,0.47,0.46,1.5}},
+		{L.S_ZoneT33..": "..L.bossName[3010],{2406,0.50,0.18,1.5}},
+		{L.S_ZoneT33..": "..L.bossName[3011],{2406,0.36,0.20,1.5}},
+		{L.S_ZoneT33..": "..L.bossName[3012],{2406,0.56,0.79,1.5}},
+		{L.S_ZoneT33..": "..L.bossName[3013],{2406,0.30,0.77,1.5}},
+		{L.S_ZoneT33..": "..L.bossName[3014],{2408,0.48,0.48,2}},
+		{L.S_ZoneT33..": "..L.bossName[3015],{2411,0.50,0.75,3}},
 
+		--271-280
+		{L.S_ZoneT33..": "..L.bossName[3016],{2409,0.52,0.77,3}},
 	}
 	local mapsSorted = {
 		1,
 		{L.NoteColor,10,94,95,96,97,98,99},
+		{L.S_ZoneT33,271,270,269,268,267,266,265,264},
 		{L.S_ZoneT32,263,262,261,260,259,258,257,256},
 		{L.S_ZoneT31,231,230,229,228,227,226,225,224},
 		{L.S_ZoneT30,209,208,207,206,205,204,203,202,201},
@@ -3753,6 +3763,7 @@ do
 	local frame = CreateFrame("Frame",nil,UIParent,BackdropTemplateMixin and "BackdropTemplate")
 	module.popup = frame
 
+	frame:Hide()
 	frame:SetBackdrop({bgFile="Interface\\Addons\\"..GlobalAddonName.."\\media\\White"})
 	frame:SetBackdropColor(0.05,0.05,0.07,0.98)
 	frame:SetSize(250,65)
@@ -3808,5 +3819,4 @@ do
 		frame:Show()
 	end
 
-	frame:Hide()
 end

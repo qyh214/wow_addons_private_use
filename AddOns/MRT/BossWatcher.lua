@@ -4055,7 +4055,7 @@ function BWInterfaceFrameLoad()
 				if spellID == -1 then
 					spellName = L.BossWatcherReportTotal
 				elseif spellName then
-					spellName = "|T"..spellIcon..":0|t "..spellName
+					spellName = "|T"..(spellIcon or "")..":0|t "..spellName
 				else
 					spellName = spellID
 				end

@@ -73,6 +73,7 @@ if L then
 	L.immolationyou_message = "Обжигающая ловушка"
 	L.crystal = "Кристаллическая ловушка"
 	L.crystal_desc = "Объявлять, когда Шэннокс бросает кристаллическую ловушку."
+	L.facerage_trigger = "Хватай за горло!"
 end
 
 L = BigWigs:NewBossLocale("Baleroc", "ruRU")

@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "末日黑洞在玩家和首领之间来回弹跳时发出警报。"
 	L.ball_yell = "Gul'kafh an'qov N'Zoth。"
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "末日黑洞弹跳"
 	L.bounce_desc = "末日黑洞弹跳计数。"
 

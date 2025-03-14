@@ -34,12 +34,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [48243504] = {
+    [45173504] = {
         quest=83876,
         loot={226302}, -- Earthen Digging Fork
         vignette=6459,
     },
-    [52916581] = {
+    [49546581] = {
         quest=83877,
         loot={226303}, -- Fungarian Slicer's Knife
         vignette=6460,

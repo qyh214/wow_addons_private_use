@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Shannox", 720, 195)
 if not mod then return end
 mod:RegisterEnableMob(53691, 53695, 53694) --Shannox, Rageface, Riplimb
+mod:SetEncounterID(1205)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -27,6 +29,7 @@ if L then
 	L.crystal = "Crystal Trap"
 	L.crystal_desc = "Warn whom Shannox casts a Crystal Trap under."
 	L.crystal_icon = 99836
+	L.facerage_trigger = "Go for the throat!"
 end
 L = mod:GetLocale()
 
@@ -36,28 +39,30 @@ L = mod:GetLocale()
 
 function mod:GetOptions()
 	return {
-		100002, {100129, "ICON"}, "berserk",
-		"immolation", {"immolationyou", "FLASH"}, {"crystal", "SAY", "FLASH"},
-	}, {
+		100002, -- Hurl Spear
+		{100129, "ICON"}, -- Face Rage
+		"berserk",
+		"immolation",
+		{"immolationyou", "FLASH"},
+		{"crystal", "SAY", "FLASH"},
+	},{
 		[100002] = "general",
 		["immolation"] = L["traps_header"],
 	}
 end
 
 function mod:OnBossEnable()
-	self:Log("SPELL_AURA_APPLIED", "WaryDog", 99838)
+	self:Log("SPELL_AURA_APPLIED", "ImmolationTrapApplied", 99838)
 	self:Log("SPELL_CAST_SUCCESS", "FaceRage", 99945, 99947)
 	self:Log("SPELL_AURA_REMOVED", "FaceRageRemoved", 99945, 99947)
-	self:Log("SPELL_CAST_SUCCESS", "HurlSpear", 99978)
+	self:Log("SPELL_CAST_SUCCESS", "HurlSpear", 99978, 100002) -- Retail?, Cataclysm Classic
 	self:Log("SPELL_SUMMON", "Traps", 99836, 99839) -- Throw Crystal Prison Trap, Throw Immolation Trap
-
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 53691)
+	self:BossYell("FaceRageTrigger", L["facerage_trigger"]) -- BossYell is more accurate than SPELL_CAST_SUCCESS for Face Rage cooldown
 end
 
 function mod:OnEngage()
 	self:Bar(100002, 23) -- Hurl Spear
+	self:CDBar(100129, 15) -- Face Rage
 	self:Berserk(600)
 end
 
@@ -103,7 +108,7 @@ do
 	end
 end
 
-function mod:WaryDog(args)
+function mod:ImmolationTrapApplied(args)
 	-- We use the Immolation Trap IDs as we only want to warn for Wary after a
 	-- Immolation Trap not a Crystal Trap, which also applies Wary.
 	local creatureId = self:MobId(args.destGUID)
@@ -128,3 +133,6 @@ function mod:FaceRageRemoved(args)
 	self:PrimaryIcon(100129)
 end
 
+function mod:FaceRageTrigger()
+	self:CDBar(100129, 30)
+end

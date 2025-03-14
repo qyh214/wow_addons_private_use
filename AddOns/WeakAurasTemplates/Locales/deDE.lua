@@ -59,8 +59,6 @@ local L = WeakAuras.L
 	L["Bloodlust/Heroism"] = "Kampfrausch/Heldentum"
 	L["buff"] = "buff"
 	L["Buffs"] = "Buffs"
-	L["Cancel"] = "Abbrechen"
-	L["Cast"] = "Zauberwirken"
 	--[[Translation missing --]]
 	L["Charge and Buff Tracking"] = "Charge and Buff Tracking"
 	--[[Translation missing --]]
@@ -79,8 +77,6 @@ local L = WeakAuras.L
 	L["Debuffs"] = "Debuffs"
 	--[[Translation missing --]]
 	L["dps buff"] = "dps buff"
-	L["General"] = "Allgemein"
-	L["Health"] = "Gesundheit"
 	--[[Translation missing --]]
 	L["Highlight while action is queued."] = "Highlight while action is queued."
 	--[[Translation missing --]]
@@ -120,7 +116,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Other cooldown"] = "Other cooldown"
 	L["Pet alive"] = "Begleiter am Leben"
-	L["Pet Behavior"] = "Begleiterverhalten"
 	--[[Translation missing --]]
 	L["regen buff"] = "regen buff"
 	L["Replace all existing triggers"] = "Ersetzt alle vorhandenen Auslöser "
@@ -198,7 +193,6 @@ local L = WeakAuras.L
 	--[[Translation missing --]]
 	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."
 	L["Unknown Item"] = "Unbekannter Gegenstand"
-	L["Unknown Spell"] = "Unbekannter Zauber"
 	--[[Translation missing --]]
 	L["Warrior cooldown"] = "Warrior cooldown"
 

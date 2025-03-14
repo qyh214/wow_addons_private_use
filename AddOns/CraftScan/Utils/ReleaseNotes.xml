@@ -1,0 +1,73 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+    <Script file="Utils/ReleaseNotes.lua"/>
+
+    <Frame name="CraftScan_RecentUpdatesSectionTemplate" virtual="true">
+        <Size y="1" x="360" />
+        <Anchors>
+            <Anchor point="TOP" />
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Header" inherits="Number14FontWhite" justifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="TOP" y="-30" />
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="Version" inherits="GameFontWhiteSmall" justifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.Header" relativePoint="TOPRIGHT" x="5" y="-2" />
+                    </Anchors>
+                </FontString>
+                <Texture parentKey="Line" atlas="Professions-QualityPane-Divider" useAtlasSize="true">
+                    <Anchors>
+                        <Anchor point="TOP" relativeKey="$parent.Header" relativePoint="BOTTOM" y="-5" />
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="Body" inherits="Number14FontWhite" justifyH="LEFT" wordwrap="true">
+                    <Size x="360" />
+                    <Anchors>
+                        <Anchor point="TOP" relativeKey="$parent.Line" relativePoint="BOTTOM" y="-5" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="CraftScanRecentUpdatesFrameTemplate" inherits="DefaultPanelFlatTemplate" mixin="CraftScan_RecentUpdatesMixin" parent="UIParent" movable="true" enableMouse="true" frameStrata="DIALOG" virtual="true">
+        <Size x="400" y="400" />
+        <Anchors>
+            <Anchor point="CENTER" relativePoint="CENTER" />
+        </Anchors>
+        <Frames>
+            <ScrollFrame parentKey="ScrollFrame" name="$parentScrollFrame" inherits="ScrollFrameTemplate">
+                <KeyValues>
+                    <KeyValue key="scrollBarX" value="-17" type="number"/>
+                    <KeyValue key="scrollBarTopY" value="-30" type="number"/>
+                    <KeyValue key="scrollBarBottomY" value="5" type="number"/>
+                </KeyValues>
+                <Frames>
+                    <Frame parentKey="Content" name="$parentContent">
+                        <Size y="400" x="400" />
+                        <Anchors>
+                            <Anchor point="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" />
+                        </Anchors>
+                    </Frame>
+                </Frames>
+                <Anchors>
+                    <Anchor point="TOPLEFT" y="-15" />
+                    <Anchor point="BOTTOMRIGHT" y="15" />
+                </Anchors>
+            </ScrollFrame>
+            <Button parentKey="ClosePanelButton" inherits="UIPanelCloseButtonDefaultAnchors" />
+        </Frames>
+        <Scripts>
+            <OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+
+
+</Ui>

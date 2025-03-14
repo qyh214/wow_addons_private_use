@@ -6,25 +6,26 @@ local rowCount = 3
 local requestPartyKeystones
 
 -- 1:Overflowing, 2:Skittish, 3:Volcanic, 4:Necrotic, 5:Teeming, 6:Raging, 7:Bolstering, 8:Sanguine, 9:Tyrannical, 10:Fortified, 11:Bursting, 12:Grievous, 13:Explosive, 14:Quaking, 16:Infested, 117: Reaping, 119:Beguiling 120:Awakened, 121:Prideful, 122:Inspiring, 123:Spiteful, 124:Storming
--- Dragonflight Season 2
 -- 134:Entangling, 135：Afflicted, 136:Incorporeal
+-- TWW 
+-- 147:Xal’atath’s Guile, 148:Xal’atath’s Bargain: Ascendant,158:Xal'atath's Bargain: Voidbound, 159:Xal'atath's Bargain: Oblivion, 160:Xal’atath’s Bargain: Devour, 162:Xal’atath’s Bargain: Pulsar
+-- Season 2  
+-- 9, 10, 147, 148, 158, 160, 162,
 local affixSchedule = {
-	-- Dragonflight Season 3 (Sort:[1](Level 14+);[2](Level 7+);[3](Level 2+))
-	-- Information from(资料来自)：https://www.wowhead.com/cn/guide/mythic-plus-dungeons/dragonflight-season-3/overview
-	[1]  = { [1]=8,   [2]=136, [3]=10, },   -- Sanguine   | Incorporeal | Fortified
-	[2]  = { [1]=11,  [2]=134, [3]=9,  },   -- Bursting   | Entangling  | Tyrannical
-	[3]  = { [1]=123, [2]=3,   [3]=10, },   -- Spiteful   | Volcanic    | Fortified
-	[4]  = { [1]=6,   [2]=124, [3]=9,  },   -- Raging     | Storming    | Tyrannical
-	[5]  = { [1]=7,   [2]=134, [3]=10, },   -- Bolstering | Entangling  | Fortified
-	[6]  = { [1]=123, [2]=136, [3]=9,  },   -- Spiteful   | Incorporeal | Tyrannical
-	[7]  = { [1]=6,   [2]=135, [3]=10, },   -- Raging     | Afflicted   | Fortified
-	[8]  = { [1]=8,   [2]=3,   [3]=9,  },   -- Sanguine   | Volcanic    | Tyrannical
-	[9]  = { [1]=11,  [2]=124, [3]=10, },   -- Bursting   |Storming     | Fortified
-	[10] = { [1]=7,   [2]=135, [3]=9,  },   -- Bolstering |Afflicted    | Tyrannical
+	-- TWW Season 2 (Sort:[1](Level 4+);[2](Level 7+);[3](Level 10+);[4](Level 12+))
+	-- Information from(资料来自)：https://www.wowhead.com/guide/mythic-plus-dungeons/the-war-within-season-2/overview
+	{ [1]=148, [2] =9 , [3]=10, [4]=147, }, -- (1) Xal’atath’s Bargain: Ascendant | Tyrannical | Fortified  | Xal’atath’s Guile
+	{ [1]=162, [2] =10, [3]=9 , [4]=147, }, -- (2) Xal’atath’s Bargain: Pulsar    | Fortified  | Tyrannical | Xal’atath’s Guile
+	{ [1]=158, [2] =9 , [3]=10, [4]=147, }, -- (3) Xal’atath’s Bargain: Voidbound | Tyrannical | Fortified  | Xal’atath’s Guile
+	{ [1]=160, [2] =10, [3]=9 , [4]=147, }, -- (4) Xal’atath’s Bargain: Devour    | Fortified  | Tyrannical | Xal’atath’s Guile
+	{ [1]=162, [2] =9 , [3]=10, [4]=147, }, -- (5) Xal’atath’s Bargain: Pulsar    | Tyrannical | Fortified  | Xal’atath’s Guile
+	{ [1]=148, [2] =10, [3]=9 , [4]=147, }, -- (6) Xal’atath’s Bargain: Ascendant | Fortified  | Tyrannical | Xal’atath’s Guile
+	{ [1]=160, [2] =9 , [3]=10, [4]=147, }, -- (7) Xal’atath’s Bargain: Devour    | Tyrannical | Fortified  | Xal’atath’s Guile
+	{ [1]=158, [2] =10, [3]=9 , [4]=147, }, -- (8) Xal’atath’s Bargain: Voidbound | Fortified  | Tyrannical | Xal’atath’s Guile
 }
 
 local scheduleEnabled = true
-local affixScheduleUnknown = false
+local affixScheduleUnknown = true
 local currentWeek
 local currentKeystoneMapID
 local currentKeystoneLevel
@@ -219,7 +220,7 @@ function Mod:Blizzard_ChallengesUI()
 
 		local affixes = {}
 		local prevAffix
-		for j = 3, 1, -1 do
+		for j = 4, 1, -1 do
 			local affix = makeAffix(entry)
 			if prevAffix then
 				affix:SetPoint("RIGHT", prevAffix, "LEFT", -4, 0)
@@ -250,8 +251,6 @@ function Mod:Blizzard_ChallengesUI()
 	label:SetWordWrap(true)
 	if affixScheduleUnknown then
 		label:SetText(Addon.Locale.scheduleUnknown)
-	else
-		label:SetText(Addon.Locale.scheduleMissingKeystone)
 	end
 	frame.Label = label
 
@@ -332,14 +331,10 @@ function Mod:CheckAffixes()
 
 	if currentAffixes then
 		for index, affixes in ipairs(affixSchedule) do
-			local matches = 0
-			for _, affix in ipairs(currentAffixes) do
-				if affix.id == affixes[1] or affix.id == affixes[2] or affix.id == affixes[3] then
-					matches = matches + 1
-				end
-			end
-			if matches >= 3 then
+			if affixes[1] == currentAffixes[1].id and affixes[2] == currentAffixes[2].id and affixes[3] == currentAffixes[3].id and affixes[4] == currentAffixes[4].id then
 				currentWeek = index
+				affixScheduleUnknown = false
+				break
 			end
 		end
 	end

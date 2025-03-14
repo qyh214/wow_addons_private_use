@@ -4,6 +4,7 @@ local _, myfullname = C_AddOns.GetAddOnInfo(myname)
 local races = {}
 
 EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", function()
+    if C_AddOns.IsAddOnLoaded("ContinentalRacing") then return end
     local showing
     local function ShowTooltipForRace(race, name, description)
         local tooltip = GetAppropriateTooltip()
@@ -104,12 +105,12 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
 })
 ns.RegisterPoints(ns.RINGINGDEEPS, {
     -- quest, {achievements}, {currencies}
-    [40861131] = Race(80237, {20311, 20314, 20317}, {2941, 2947, 2953}), -- Earthenworks Weave
-    [42232744] = Race(80238, {20320, 20323, 20326}, {2942, 2948, 2954}), -- Ringing Deeps Ramble
-    [67913479] = Race(80239, {20329, 20332, 20335}, {2943, 2949, 2955}), -- Chittering Concourse
-    [52474686] = Race(80240, {20338, 20341, 20344}, {2944, 2950, 2956}), -- Cataract River Cruise
-    [66646868] = Race(80242, {20347, 20350, 20353}, {2945, 2951, 2957}), -- Taelloch Twist
-    [63557513] = Race(80243, {20356, 20359, 20362}, {2946, 2952, 2958}), -- Opportunity Point Amble
+    [38261131] = Race(80237, {20311, 20314, 20317}, {2941, 2947, 2953}), -- Earthenworks Weave
+    [39542744] = Race(80238, {20320, 20323, 20326}, {2942, 2948, 2954}), -- Ringing Deeps Ramble
+    [63593479] = Race(80239, {20329, 20332, 20335}, {2943, 2949, 2955}), -- Chittering Concourse
+    [49134686] = Race(80240, {20338, 20341, 20344}, {2944, 2950, 2956}), -- Cataract River Cruise
+    [62406868] = Race(80242, {20347, 20350, 20353}, {2945, 2951, 2957}), -- Taelloch Twist
+    [59517513] = Race(80243, {20356, 20359, 20362}, {2946, 2952, 2958}), -- Opportunity Point Amble
 })
 ns.RegisterPoints(ns.HALLOWFALL, {
     -- quest, {achievements}, {currencies}
@@ -130,4 +131,17 @@ ns.RegisterPoints(ns.AZJKAHET, {
     [71343636] = Race(80280, {20450, 20453, 20456}, {2980, 2986, 2992}), -- Rak-Ahat Rush
     [23814835] = Race(80281, {20459, 20462, 20465}, {2981, 2987, 2993}), -- Pit Plunge
     [40183220] = Race(80282, {20468, 20471, 20474}, {2982, 2988, 2994}), -- Siegehold Scuttle
+})
+ns.RegisterPoints(ns.UNDERMINE, {
+    -- quest, {achievements}, {currencies}
+    -- Skyrocketing
+    [39032869] = Race(85071, {40914, 40917}, {3119, 3121}), -- Skyrocketing Sprint
+    [33787623] = Race(85097, {40920, 40923}, {3122, 3123}), -- The Heaps Leap
+    [39221137] = Race(85099, {40926, 40929}, {3124, 3125}), -- Scrapshop Shot
+    [25504213] = Race(85101, {40932, 40935}, {3126, 3127}), -- Rags to Riches Rush
+    -- Breaknecking (hide before No More Walking Here (87581?))
+    [26005300] = Race(85900, {41059, 41062}, {3181, 3182}), -- Breakneck Bolt
+    [43507800] = Race(85902, {41065, 41068}, {3183, 3184}), -- Junkyard Jaunt
+    [39505400] = Race(85904, {41071, 41074}, {3185, 3186}), -- Casino Cruise
+    [47504400] = Race(85906, {41077, 41080}, {3187, 3188}), -- Sandy Scuttle
 })

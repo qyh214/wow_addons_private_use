@@ -1,0 +1,36 @@
+## Interface: 110007
+## Author: KittenBall
+## Version: 2.0.27
+## Title: ImprovedAddonList
+## Title-zhCN: 暴雪插件列表增强
+## IconTexture: Interface\AddOns\ImprovedAddonList\Media\icon.png
+## Notes: Replace Blizzard's addon list, display more addon information, and provide addon set functionality.
+## Notes-zhCN: 替换暴雪的插件列表，展示更多插件信息，并提供插件集功能。
+## DefaultState: enabled
+## SavedVariables: ImprovedAddonListSaved
+## X-Website: https://github.com/GreenhairTurtle/ImprovedAddonList
+## X-Curse-Project-ID: 515814
+## X-Wago-ID: baNDLJNo
+
+
+Lib\LibStub.lua
+Lib\AceLocale-3.0.lua
+Lib\LibCustomGlow-1.0.lua
+
+Locales\enUS.lua
+Locales\zhCN.lua
+
+Tools.lua
+Repository.lua
+UI.lua
+AddonList.xml
+AddonDetail.lua
+AddonSet.xml
+AddonSetChoiceDialog.xml
+AddonListTooltips.xml
+Settings.xml
+AddonSettings.lua
+AddonSetSettings.lua
+Init.lua
+Condition.xml
+Cmd.lua

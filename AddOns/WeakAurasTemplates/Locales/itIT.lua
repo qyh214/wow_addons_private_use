@@ -43,8 +43,6 @@ local L = WeakAuras.L
 	L["Bloodlust/Heroism"] = "Brama di Sangue/Eroismo"
 	L["buff"] = "buff"
 	L["Buffs"] = "Buffs"
-	L["Cancel"] = "Cancella"
-	L["Cast"] = "Lancia"
 	L["Charge and Buff Tracking"] = "Monitoraggio di cariche e potenziamenti"
 	L["Charge and Debuff Tracking"] = "Monitoraggio di cariche e penalità "
 	L["Charge and Duration Tracking"] = "Monitoraggio della carica e della durata"
@@ -61,10 +59,6 @@ local L = WeakAuras.L
 	L["Debuffs"] = "Debuffs"
 	--[[Translation missing --]]
 	L["dps buff"] = "dps buff"
-	--[[Translation missing --]]
-	L["General"] = "General"
-	--[[Translation missing --]]
-	L["Health"] = "Health"
 	--[[Translation missing --]]
 	L["Highlight while action is queued."] = "Highlight while action is queued."
 	--[[Translation missing --]]
@@ -107,8 +101,6 @@ local L = WeakAuras.L
 	L["Other cooldown"] = "Other cooldown"
 	--[[Translation missing --]]
 	L["Pet alive"] = "Pet alive"
-	--[[Translation missing --]]
-	L["Pet Behavior"] = "Pet Behavior"
 	--[[Translation missing --]]
 	L["regen buff"] = "regen buff"
 	--[[Translation missing --]]
@@ -195,8 +187,6 @@ local L = WeakAuras.L
 	L["Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."] = "Tracks the charge and the duration of spell, highlight while the spell is active, blue on insufficient resources."
 	--[[Translation missing --]]
 	L["Unknown Item"] = "Unknown Item"
-	--[[Translation missing --]]
-	L["Unknown Spell"] = "Unknown Spell"
 	--[[Translation missing --]]
 	L["Warrior cooldown"] = "Warrior cooldown"
 

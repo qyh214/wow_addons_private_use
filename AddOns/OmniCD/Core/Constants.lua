@@ -1,8 +1,5 @@
 local E, L = select(2, ...):unpack()
 
-local GetSpellInfo = C_Spell and C_Spell.GetSpellName or GetSpellInfo
-
-
 do
 	L["Arena"] = ARENA
 	L["Battlegrounds"] = BATTLEGROUNDS
@@ -15,7 +12,7 @@ do
 	L["Interrupt"] = LOC_TYPE_INTERRUPT
 	L["Dispels"] = DISPELS
 	L["Other"] = OTHER
-	L["PvP Trinket"] = GetSpellInfo(42292) or GetSpellInfo(283167) or L["PvP Trinket"]
+	L["PvP Trinket"] = C_Spell.GetSpellName(42292) or C_Spell.GetSpellName(283167) or L["PvP Trinket"]
 	L["Racial Traits"] = type(RACIAL_TRAITS) == "string" and gsub(RACIAL_TRAITS, ":", "") or L["Racial Traits"]
 	L["Disarm"] = LOC_TYPE_DISARM
 	L["Root"] = LOC_TYPE_ROOT
@@ -111,7 +108,7 @@ E.TEXTURES = E.preMoP and {
 	["TRINKET"] = "Interface\\Icons\\inv_misc_armorkit_10",
 } or {
 	["White8x8"] = "Interface\\BUTTONS\\White8x8",
-
+	--["CLASS"] = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
 	["CLASS"] = "Interface\\Icons\\classicon_",
 	["PVPTRINKET"] = "Interface\\Icons\\ability_pvp_gladiatormedallion",
 	["RACIAL"] = "Interface\\Icons\\Achievement_character_human_female",
@@ -134,128 +131,13 @@ E.STR = {
 }
 
 E.HEX_C = {
-
-
-
-	[1]			= "|CFFFF5B00",
-	[2]			= "|cff0291b0",
-	[5]			= "|cff7bbb4e",
-	[11]			= "|cff99cdff",
-	[14]			= "|cffA63416",
-
-	[321076]		= "|cff2aa2ff",
-	[321079]		= "|cffe40d0d",
-	[321077]		= "|cff80b5fd",
-	[321078]		= "|cff17c864",
-
-	["PERFORMANCE_BLUE"]	= "|cff99cdff",
-	["BR31_MINT"]		= "|cff99ffcd",
-	["CURSE_ORANGE"]	= "|cfff16436",
-	["TWITCH_PURPLE"]	= "|cff9146ff",
-	["OMNICD_RED"]		= "|cffc10003",
-	["OMNICD_MAROON"]	= "|cff69000b",
-	["NORMAL_FONT"]		= "|cffffd200",
-	["HIGHLIGHT_FONT"]	= "|cffffffff",
-	["RED_FONT"]		= "|cffff2020",
-	["GREEN_FONT"]		= "|cff20ff20",
-	["GRAY_FONT"]		= "|cff808080",
-	["YELLOW_FONT"]		= "|cffffff00",
-	["LIGHTYELLOW_FONT"]	= "|cffffff9a",
-	["ORANGE_FONT"]		= "|cffff7f3f",
-	["ACHIEVEMENT"]		= "|cffffff00",
-	["BATTLENET_FONT"]	= "|cff82c5ff",
-	["DISABLED_FONT"]	= "|cff7f7f7f",
-	["CLOSE"]		= "|r",
-}
-
-E.RGB_C = {
-	["PERFORMANCE_BLUE"] = { 0.596, 0.808, 1.0 },
-	["BR31_MINT"] = { 0.6, 1.0, 0.804 },
-	["CURSE_ORANGE"] = { 0.945, 0.392, 0.212 },
-	["TWITCH_PURPLE"] = { 0.569, 0.275, 1.0 },
-	["OMNICD_RED"] = { 0.757, 0.0, 0.012 },
-	["OMNICD_MAROON"] = { 0.412, 0.0, 0.043 },
-	["NORMAL_FONT"] = { 1.0, 0.82, 0.0 },
-	["HIGHLIGHT_FONT"] = { 1.0, 1.0, 1.0 },
-	["RED_FONT"] = { 1.0, 0.1, 0.1 },
-	["DIM_RED_FONT"] = { 0.8, 0.1, 0.1 },
-	["GREEN_FONT"] = { 0.1, 1.0, 0.1 },
-	["GRAY_FONT"] = { 0.5, 0.5, 0.5 },
-	["YELLOW_FONT"] = { 1.0, 1.0, 0.0 },
-	["LIGHTYELLOW_FONT"] = { 1.0, 1.0, 0.6 },
-	["ORANGE_FONT"] = { 1.0, 0.5, 0.25 },
-	["PASSIVE_SPELL_FONT"] = { 0.77, 0.64, 0.0 },
-	["BATTLENET_FONT"] = { 0.510, 0.773, 1.0 },
-	["TRANSMOGRIFY_FONT"] = { 1, 0.5, 1 },
-}
-
-E.DARK_THEME = {
-	["FRAME_BG"] = { 0.05, 0.05, 0.05, 0.75 },
-	["FRAME_BORDER"] = { 0, 0, 0, 1 },
-	["TREE_CONTENT_BG"] = { 0.05, 0.05, 0.05, 0.75 },
-	["TREE_CONTENT_BORDER"] = { 0, 0, 0 },
-	["TREE_NAV_BG"] = { 0.05, 0.05, 0.05, 0.75 },
-	["TREE_NAV_BORDER"] = { 0, 0, 0 },
-	["TREE_NAV_BUTTON_BG"] = { 0.412, 0.0, 0.043 },
-	["TREE_NAV_BUTTON_BORDER"] = { 0, 0, 0 },
-	["TREE_NAV_BUTTON_DELIMITER"] = { 0.569, 0.275, 1.0 },
-	["TREE_DRAGGER_HIGHLIGHT"] = { 1, 1, 1, 0.8 },
-	["TREE_DRAGGER"] = { 1, 1, 1, 0 },
-	["TREE_SCROLL_THUMB"] = { 0.3, 0.3, 0.3 },
-	["TREE_SCROLL_THUMB_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["TREE_SCROLL_BG"] = { 0, 0, 0, 0.4 },
-	["TREE_ICON_BORDER"] = { 0.5, 0.5, 0.5 },
-	["TAB_CONTENT_BG"] = { 0.1, 0.1, 0.1, 0.5 },
-	["TAB_CONTENT_BORDER"] = { 0, 0, 0 },
-	["TAB_BUTTON_BG"] = { 0.412, 0.0, 0.043 },
-	["TAB_BUTTON"] = { 0.1, 0.1, 0.1, 0.5 },
-	["TAB_BUTTON_BORDER"] = { 0, 0, 0 },
-	["SCROLL_THUMB"] = { 0.3, 0.3, 0.3 },
-	["SCROLL_THUMB_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["SCROLL_BG"] = { 0, 0, 0, 0.4 },
-	["INLINE_GRP_BORDER"] = { 0, 0, 0 },
-	["INLINE_GRP_BG"] = { 0, 0, 0, 0.25 },
-	["DROPDOWN_BG"] = { 0.15, 0.15, 0.2 },
-	["DROPDOWN_BORDER"] = { 0, 0, 0 },
-	["DROPDOWN_CONTENT_BG"] = { 0.12, 0.12, 0.17 },
-	["DROPDOWN_CONTENT_BORDER"] = { 0, 0, 0 },
-	["DROPDOWN_SLIDER_BG"] = { 0, 0, 0, 0.4 },
-	["DROPDOWN_SLIDER_BORDER"] = { 0, 0, 0 },
-	["DROPDOWN_SLIDER_THUMB"] = { 0.3, 0.3, 0.3 },
-	["DROPDOWN_ITEM_LINEBREAK"] = { 0.5, 0.5, 0.5 },
-	["SLIDER_THUMB_DISABLED"] = { 0.5, 0.5, 0.5 },
-	["SLIDER_THUMB_HIGHLIGHT"] = { 1, 1, 1 },
-	["SLIDER_THUMB"] = { 0.8, 0.624, 0.0 },
-	["SLIDER_HANDLE_LEFT_DISABLED"] = { 0.5, 0.5, 0.5 },
-	["SLIDER_HANDLE_LEFT"] = { 0.8, 0.624, 0.0 },
-	["SLIDER_HANDLE_RIGHT"] = { 0.2, 0.2, 0.25 },
-	["SLIDER_HANDLE_RIGHT_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["SLIDER_EDITBOX_BORDER_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["SLIDER_EDITBOX_BORDER"] = { 0.2, 0.2, 0.25 },
-	["SLIDER_EDITBOX_BG"] = { 0, 0, 0, 0.5 },
-	["CHECKBOX_BORDER_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["CHECKBOX_BORDER"] = { 0.2, 0.2, 0.25 },
-	["CHECKBOX_BG"] = { 0, 0, 0 },
-	["CHECKBOX_BG_DISABLED"] = { 0.5, 0.5, 0.5 },
-	["CHECKBOX_ICON_BORDER"] = { 0.2, 0.2, 0.05 },
-	["ICON_BORDER_HIGHLIGHT"] = { 0.5, 0.5, 0.5 },
-	["ICON_BORDER"] = { 0.2, 0.2, 0.25 },
-	["ICON_BG"] = { 0, 0, 0, 0 },
-	["BUTTON_DISABLED_BG"] = { 0.2, 0.2, 0.2 },
-	["BUTTON_ENABLED_BG"] = { 0.725, 0.008, 0.008 },
-	["BUTTON_BORDER"] = { 0, 0, 0 },
-	["BUTTON_BG"] = { 0.0, 0.6, 0.4 },
-	["COLORSWATCH_BORDER"] = { 0, 0, 0 },
-	["COLORSWATCH"] = { 1, 1, 1 },
-	["COLORSWATCH_DISABLED"] = { 0.5, 0.5, 0.5 },
-
-	["DISABLED_TEXT"] = { 0.5, 0.5, 0.5 },
-	["NORMAL_FONT"] = { 1.0, 0.82, 0.0 },
-	["HIGHLIGHT_FONT"] = { 1.0, 1.0, 1.0 },
-}
-
-E.LIGHT_THEME = {
-
+	[1] = "|cff99cdff",
+	[2] = "|cff0291b0",
+	[5] = "|cff7bbb4e",
+	[11] = "|cff99cdff",
+	[14] = "|cffA63416",
+	["CURSE_ORANGE"] = "|cfff16436",
+	["TWITCH_PURPLE"] = "|cff9146ff",
 }
 
 E.BOOKTYPE_CATEGORY = {
@@ -294,37 +176,15 @@ E.RAID_TARGET_MARKERS = {
 	[0x00000080] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:0|t",
 }
 
-E.L_GLOW_ATLAS ={
-	["bags-glow-white"] = ICON_TAG_RAID_TARGET_SKULL3,
-	["bags-glow-green"] = ICON_TAG_RAID_TARGET_TRIANGLE3,
-	["bags-glow-blue"] = ICON_TAG_RAID_TARGET_SQUARE3,
-	["bags-glow-purple"] = ICON_TAG_RAID_TARGET_DIAMOND3,
-	["bags-glow-orange"] = ICON_TAG_RAID_TARGET_CIRCLE3,
-	["bags-glow-artifact"] = ICON_TAG_RAID_TARGET_STAR3,
-}
-
-E.L_ALIGN = {
-	["CENTER"] = L["CENTER"],
-	["TOPLEFT"] = L["LEFT"],
-	["TOPRIGHT"] = L["RIGHT"],
-}
-
-E.TANK_SPEC = {
-	[250] = true,
-	[581] = true,
-	[104] = true,
-	[268] = true,
-	[66] = true,
-	[73] = true,
-}
-
 E.HEALER_SPEC = {
-	[105] = 90,
-	[270] = 90,
 	[65] = 90,
+	[105] = 90,
 	[256] = 90,
 	[257] = 90,
 	[264] = 90,
+	[270] = 90,
 	[1468] = 90,
 	["default"] = 120,
 }
+
+E.BLANK = {}

@@ -4,7 +4,10 @@
 
 local mod, CL = BigWigs:NewBoss("Surgeon Stitchflesh", 2286, 2392)
 if not mod then return end
-mod:RegisterEnableMob(162689) -- Surgeon Stitchflesh
+mod:RegisterEnableMob(
+	164578, -- Stitchflesh's Creation
+	162689 -- Surgeon Stitchflesh
+)
 mod:SetEncounterID(2389)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
@@ -32,7 +35,7 @@ function mod:GetOptions()
 		{343556, "SAY"}, -- Morbid Fixation
 		320359, -- Escape
 		-- Stitchflesh's Creation
-		{322681, "SAY", "SAY_COUNTDOWN"}, -- Meat Hook
+		{322681, "SAY", "SAY_COUNTDOWN", "ME_ONLY_EMPHASIZE", "NAMEPLATE"}, -- Meat Hook
 		{320376, "TANK"}, -- Mutilate
 	}, {
 		[320358] = CL.stage:format(1),
@@ -45,8 +48,11 @@ function mod:OnBossEnable()
 	-- Stage 1
 	self:Log("SPELL_CAST_START", "AwakenCreation", 320358)
 	self:Log("SPELL_CAST_SUCCESS", "EmbalmingIchor", 327664, 334476) -- Stage 1, Stage 2
+	self:Log("SPELL_PERIODIC_DAMAGE", "EmbalmingIchorDamage", 320366)
+	self:Log("SPELL_PERIODIC_MISSED", "EmbalmingIchorDamage", 320366)
 	self:Log("SPELL_AURA_APPLIED", "StitchneedleApplied", 320200)
-	self:Log("SPELL_AURA_APPLIED", "NoxiousFogApplied", 327100)
+	self:Log("SPELL_PERIODIC_DAMAGE", "NoxiousFogDamage", 327100)
+	self:Log("SPELL_PERIODIC_MISSED", "NoxiousFogDamage", 327100)
 
 	-- Stage 2
 	self:Log("SPELL_CAST_START", "SeverFlesh", 334488)
@@ -57,6 +63,7 @@ function mod:OnBossEnable()
 
 	-- Stitchflesh's Creation
 	self:Log("SPELL_AURA_APPLIED", "FesteringRotApplied", 334321) -- Stitchflesh's Creation spawned
+	self:Log("SPELL_CAST_SUCCESS", "MeatHook", 322681)
 	self:Log("SPELL_AURA_APPLIED", "MeatHookApplied", 322681) -- Player is targeted by Meat Hook
 	self:Log("SPELL_AURA_REMOVED", "MeatHookRemoved", 322681)
 	self:Log("SPELL_AURA_APPLIED", "MeatHookHit", 322548) -- Surgeon Stitchflesh pulled down
@@ -73,6 +80,8 @@ function mod:OnEngage()
 	if creationGUID then -- Stitchflesh's Creation
 		stitchfleshsCreationCollector[creationGUID] = 1
 		self:CDBar(322681, 10.5, CL.count:format(self:SpellName(322681), 1)) -- Meat Hook
+		--self:Nameplate(320376, 6.1, creationGUID) -- Mutilate
+		self:Nameplate(322681, 10.5, creationGUID) -- Meat Hook
 	end
 end
 
@@ -96,15 +105,30 @@ function mod:EmbalmingIchor(args)
 	-- timer would just be noise, 18.6 in Stage 1 and 11.3 in Stage 2
 end
 
+do
+	local prev = 0
+	function mod:EmbalmingIchorDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 1.75 then
+			prev = args.time
+			self:PersonalMessage(334476, "underyou")
+			self:PlaySound(334476, "underyou")
+		end
+	end
+end
+
 function mod:StitchneedleApplied(args)
 	self:TargetMessage(args.spellId, "orange", args.destName)
 	self:PlaySound(args.spellId, "alert", nil, args.destName)
 end
 
-function mod:NoxiousFogApplied(args)
-	if self:Me(args.destGUID) then
-		self:PersonalMessage(args.spellId, "underyou")
-		self:PlaySound(args.spellId, "underyou")
+do
+	local prev = 0
+	function mod:NoxiousFogDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 1.5 then
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
+		end
 	end
 end
 
@@ -155,7 +179,19 @@ end
 function mod:FesteringRotApplied(args)
 	-- this is applied on a new Stitchflesh's Creation when it spawns
 	stitchfleshsCreationCollector[args.destGUID] = awakenCreationCount - 1
-	self:CDBar(322681, 12.3, CL.count:format(self:SpellName(322681), awakenCreationCount - 1)) -- Meat Hook
+	self:CDBar(322681, 10.1, CL.count:format(self:SpellName(322681), awakenCreationCount - 1)) -- Meat Hook
+	--self:Nameplate(320376, 7.4, args.destGUID) -- Mutilate
+	self:Nameplate(322681, 10.1, args.destGUID) -- Meat Hook
+end
+
+function mod:MeatHook(args)
+	if stitchfleshsCreationCollector[args.sourceGUID] then
+		-- the mob should always be in the collector at this point unless you reload mid-fight with adds up,
+		-- in which case you just won't get a bar for existing adds. the count in the Meat Hook bar corresponds
+		-- to the add's spawn order.
+		self:CDBar(args.spellId, 18.2, CL.count:format(args.spellName, stitchfleshsCreationCollector[args.sourceGUID]))
+	end
+	self:Nameplate(322681, 18.2, args.sourceGUID) -- Meat Hook
 end
 
 do
@@ -168,12 +204,6 @@ do
 			self:Say(args.spellId, nil, nil, "Meat Hook")
 			self:SayCountdown(args.spellId, 4)
 			self:PlaySound(args.spellId, "warning")
-		end
-		if stitchfleshsCreationCollector[args.sourceGUID] then
-			-- the mob should always be in the collector at this point unless you reload mid-fight with adds up,
-			-- in which case you just won't get a bar for existing adds. the count in the Meat Hook bar corresponds
-			-- to the add's spawn order.
-			self:CDBar(args.spellId, 18.2, CL.count:format(args.spellName, stitchfleshsCreationCollector[args.sourceGUID]))
 		end
 	end
 end
@@ -197,13 +227,6 @@ function mod:MeatHookHit(args)
 	end
 end
 
-function mod:StitchfleshsCreationDeath(args)
-	if stitchfleshsCreationCollector[args.destGUID] then
-		self:StopBar(CL.count:format(self:SpellName(322681), stitchfleshsCreationCollector[args.destGUID])) -- Meat Hook
-		stitchfleshsCreationCollector[args.destGUID] = nil
-	end
-end
-
 do
 	local prev = 0
 	function mod:Mutilate(args)
@@ -212,7 +235,15 @@ do
 			prev = t
 			self:Message(args.spellId, "purple")
 			self:PlaySound(args.spellId, "alert")
-			-- 12.1s timer per add, would just be noise
 		end
+		--self:Nameplate(args.spellId, 12.1, args.sourceGUID)
 	end
+end
+
+function mod:StitchfleshsCreationDeath(args)
+	if stitchfleshsCreationCollector[args.destGUID] then
+		self:StopBar(CL.count:format(self:SpellName(322681), stitchfleshsCreationCollector[args.destGUID])) -- Meat Hook
+		stitchfleshsCreationCollector[args.destGUID] = nil
+	end
+	self:ClearNameplate(args.destGUID)
 end

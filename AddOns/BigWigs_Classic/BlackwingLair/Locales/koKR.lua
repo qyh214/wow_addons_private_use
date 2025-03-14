@@ -63,10 +63,13 @@ end
 L = BigWigs:NewBossLocale("Blackwing Lair Trash", "koKR")
 if L then
 	L.wyrmguard_overseer = "죽음의발톱 고룡수호병 / 죽음의발톱 감독관" -- NPC 12460 / 12461
+	L.sandstorm = "모래폭풍"
 
 	--L.target_vulnerability = "Target Vulnerability Warnings"
 	--L.target_vulnerability_desc = "When your target is a Death Talon Wyrmguard or a Death Talon Overseer, show a warning for what vulnerability it has."
 	--L.target_vulnerability_message = "Target Vulnerability: %s"
 	L.detect_magic_missing_message = "마법 감지 is missing from your target"
 	L.detect_magic_warning = "A Mage must cast \124cff71d5ff\124Hspell:2855:0\124h[마법 감지]\124h\124r on your target for vulnerability warnings to work."
+
+	L.warlock = "검은날개 흑마법사" -- NPC 12459
 end

@@ -45,6 +45,8 @@ local default = {
   borderBackdrop = "Blizzard Tooltip"
 };
 
+Private.regionPrototype.AddAlphaToDefault(default)
+
 local screenWidth, screenHeight = math.ceil(GetScreenWidth() / 20) * 20, math.ceil(GetScreenHeight() / 20) * 20;
 
 local properties = {
@@ -75,7 +77,13 @@ local function GetProperties(data)
 end
 
 local regionFunctions = {
-  Update = function() end
+  Update = function() end,
+  SetAlpha = function(self, alpha)
+    self.alpha = alpha
+    if self.model then
+      self.model:SetAlpha(alpha)
+    end
+  end
 }
 
 -- Called when first creating a new region/display
@@ -96,8 +104,6 @@ local function create(parent)
   for k, v in pairs (regionFunctions) do
     region[k] = v
   end
-
-  region.AnchorSubRegion = Private.regionPrototype.AnchorSubRegion
 
   -- Return complete region
   return region;
@@ -188,6 +194,7 @@ local function AcquireModel(region, data)
 end
 
 local function ReleaseModel(model)
+  model:SetAlpha(1)
   model:SetKeepModelOnHide(false)
   model:Hide()
   model:UnregisterEvent("UNIT_MODEL_CHANGED");
@@ -309,6 +316,9 @@ local function modify(parent, region, data)
       region.model = AcquireModel(self, data)
     else
       ConfigureModel(region, region.model, data)
+    end
+    if type(data.alpha) == "number" then
+      region:SetAlpha(data.alpha)
     end
   end
 

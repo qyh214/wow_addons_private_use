@@ -1,6 +1,6 @@
 # Auctionator
 
-## [11.0.11](https://github.com/Auctionator/Auctionator/tree/11.0.11) (2024-08-31)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/11.0.10...11.0.11) 
+## [268](https://github.com/Auctionator/Auctionator/tree/268) (2025-03-09)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/267...268) 
 
-- [Fixes #1559] Fix lua error when changing away from the Selling tab  
+- [Fixes #1654] Retail: Fix missing prices in AH item tooltips  

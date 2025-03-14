@@ -102,7 +102,7 @@ function mod:CHAT_MSG_MONSTER_YELL(_, msg)
 	if msg:find(L.wave_trigger1a, nil, true) or msg:find(L.wave_trigger1b, nil, true) then
 		addsAlive = 7
 		self:SetStage(1)
-		self:Message("stages", "cyan", CL.stage:format(1), false)
+		self:Message("stages", "cyan", CL.wave_count:format(1, 8), false)
 		self:PlaySound("stages", "info")
 	end
 end
@@ -180,9 +180,9 @@ function mod:AddsDie()
 		addsAlive = 7
 		self:SetStage(stage)
 		if stage == 8 then
-			self:Message("stages", "cyan", CL.other:format(CL.stage:format(stage), CL.boss), false)
+			self:Message("stages", "cyan", CL.other:format(CL.wave_count:format(stage, 8), CL.boss), false)
 		else
-			self:Message("stages", "cyan", CL.stage:format(stage), false)
+			self:Message("stages", "cyan", CL.wave_count:format(stage, 8), false)
 		end
 		self:PlaySound("stages", "info")
 	end

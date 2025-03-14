@@ -2615,14 +2615,18 @@ end
 local AuraItemMixin = CreateFromMixins(ItemMixin);
 function AuraItemMixin:IsCompleted(database, item, character)
     local id = self:GetID(database, item);
-    local index = 1
-    local name, _, count, _, _, _, _, _, _, spellId = UnitAura("player", index)
-    while name do
-        if spellId == id then
-            return true
+    if C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID then
+        return not not C_UnitAuras.GetPlayerAuraBySpellID(id)
+    else
+        local index = 1
+        local name, _, count, _, _, _, _, _, _, spellId = UnitAura("player", index)
+        while name do
+            if spellId == id then
+                return true
+            end
+            index = index + 1
+            name, _, count, _, _, _, _, _, _, spellId = UnitAura("player", index)
         end
-        index = index + 1
-        name, _, count, _, _, _, _, _, _, spellId = UnitAura("player", index)
     end
 end
 
@@ -2783,10 +2787,10 @@ end
 local ChromieTimeItemMixin = CreateFromMixins(ItemMixin);
 function ChromieTimeItemMixin:IsCompleted(database, item, character)
     local chromieId = character:GetChromieTimeID()
-    if item.id then
+    if item.id ~= -1 then
         return item.id == chromieId
     else
-        return chromieId >= 0
+        return chromieId > 0
     end
 end
 

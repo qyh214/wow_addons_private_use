@@ -1,0 +1,17 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame
+        name="ItemUpgradeTipStringColumnHeaderTemplate"
+        mixin="ItemUpgradeTipStringColumnHeaderTemplateMixin"
+        inherits="ColumnDisplayButtonShortTemplate"
+        parentKey="header" enableMouse="true" virtual="true"
+    >
+        <Size y="19" />
+
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnMouseUp method="OnMouseUp" />
+            <OnEnter method="OnEnter" />
+            <OnLeave method="OnLeave" />
+        </Scripts>
+    </Frame>
+</Ui>

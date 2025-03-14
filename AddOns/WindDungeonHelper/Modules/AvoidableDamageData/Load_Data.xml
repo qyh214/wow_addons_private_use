@@ -1,7 +1,15 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Include file="AlgetharAcademy.lua"/>
+	<Include file="AraKaraCityOfEchoes.lua"/>
+	<Include file="AtalDazar.lua"/>
+	<Include file="BlackRookHold.lua"/>
+	<Include file="CityOfThreads.lua"/>
 	<Include file="CourtOfStars.lua"/>
+	<Include file="DarkheartThicket.lua"/>
+	<Include file="DawnOfTheInfinite.lua"/>
 	<Include file="DeOtherSide.lua"/>
+	<Include file="Everbloom.lua"/>
+	<Include file="GrimBatol.lua"/>
 	<Include file="GrimrailDepot.lua"/>
 	<Include file="HallsOfAtonement.lua"/>
 	<Include file="HallsOfValor.lua"/>
@@ -15,20 +23,17 @@
 	<Include file="RubyLifePools.lua"/>
 	<Include file="SanguineDepths.lua"/>
 	<Include file="ShadowmoonBurialGrounds.lua"/>
+	<Include file="SiegeOfBoralus.lua"/>
 	<Include file="SpiresOfAscension.lua"/>
 	<Include file="TazaveshSoleahsGambit.lua"/>
 	<Include file="TazaveshStreetsOfWonder.lua"/>
 	<Include file="TempleOfTheJadeSerpent.lua"/>
 	<Include file="TheaterOfPain.lua"/>
 	<Include file="TheAzureVault.lua"/>
+	<Include file="TheDawnbreaker.lua"/>
 	<Include file="TheNecroticWake.lua"/>
 	<Include file="TheNokhudOffensive.lua"/>
-	<!-- Dragoflight Season 3 -->
-	<Include file="AtalDazar.lua"/>
-	<Include file="BlackRookHold.lua"/>
-	<Include file="DarkheartThicket.lua"/>
-	<Include file="Everbloom.lua"/>
+	<Include file="TheStonevault.lua"/>
 	<Include file="ThroneOfTheTides.lua"/>
 	<Include file="WaycrestManor.lua"/>
-	<Include file="DawnOfTheInfinite.lua"/>
 </Ui>

@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame name="ItemUpgradeTipTooltip" mixin="ItemUpgradeTipTooltipMixin" virtual="true">
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnEnter method="OnEnter" />
+            <OnLeave method="OnLeave" />
+        </Scripts>
+    </Frame>
+</Ui>

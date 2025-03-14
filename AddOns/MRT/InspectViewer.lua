@@ -57,30 +57,63 @@ module.db.specHasOffhand = {
 }
 
 module.db.socketsBonusIDs = {
-	[523]=true,	[563]=true,	[564]=true,	[565]=true,	[572]=true,
-	[608]=true,	[1808]=true,	[3475]=true,	[3522]=true,	[3574]=true,
-	[3620]=true,	[3629]=true,	[4802]=true,	[6452]=true,	[6514]=true,
-	[6672]=true,	[6935]=true,	[7576]=true,	[7580]=true,	[7935]=true,
-	[8155]=true,	[8289]=true,	[8780]=true,	[8781]=true,	[8782]=true,
-	[8810]=true,	[8827]=true,	[9228]=true,	[9413]=true,	[9436]=true,
-	[9438]=true,	[9512]=true,	[9516]=true,	[10370]=true,	[10397]=true,
-	[10531]=true,	[10589]=true,	[10596]=true,	[10601]=true,	[10608]=true,
-	[10615]=true,	[10622]=true,	[10629]=true,	[10636]=true,	[10643]=true,
-	[10650]=true,	[10657]=true,	[10659]=true,	[10666]=true,	[10674]=true,
-	[10681]=true,	[10688]=true,	[10695]=true,	[10702]=true,	[10709]=true,
-	[10716]=true,	[10733]=true,	[10734]=true,	[10735]=true,	[10736]=true,
-	[10737]=true,	[10738]=true,	[10739]=true,	[10740]=true,	[10741]=true,
-	[10742]=true,	[10743]=true,	[10776]=true,	[10775]=true,	[10774]=true,
-	[10773]=true,	[10772]=true,	[10771]=true,	[10770]=true,	[10769]=true,
-	[10768]=true,	[10767]=true,	[10766]=true,	[10719]=true,	[10712]=true,
-	[10705]=true,	[10698]=true,	[10691]=true,	[10684]=true,	[10677]=true,
-	[10670]=true,	[10663]=true,	[10658]=true,	[10651]=true,	[10644]=true,
-	[10637]=true,	[10630]=true,	[10623]=true,	[10616]=true,	[10609]=true,
-	[10602]=true,	[10597]=true,	[10591]=true,	[10835]=true,	[10836]=true,
-	[10838]=true,	[10868]=true,	[10878]=true,	[10879]=true,	[10880]=true,
-	[11145]=true,	[11146]=true,	[11147]=true,	[11148]=true,	[11149]=true,
-	[11150]=true,	[11151]=true,	[11152]=true,	[11153]=true,	[11154]=true,
-	[11307]=true,
+	[3]=true,	[497]=true,	[523]=true,	[563]=true,	[564]=true,
+	[565]=true,	[572]=true,	[608]=true,	[715]=true,	[716]=true,
+	[717]=true,	[718]=true,	[719]=true,	[721]=true,	[722]=true,
+	[723]=true,	[724]=true,	[725]=true,	[726]=true,	[727]=true,
+	[728]=true,	[729]=true,	[730]=true,	[731]=true,	[732]=true,
+	[733]=true,	[734]=true,	[735]=true,	[736]=true,	[737]=true,
+	[738]=true,	[739]=true,	[740]=true,	[741]=true,	[742]=true,
+	[743]=true,	[744]=true,	[745]=true,	[746]=true,	[747]=true,
+	[748]=true,	[749]=true,	[750]=true,	[751]=true,	[752]=true,
+	[1808]=true,	[3475]=true,	[3522]=true,	[4231]=true,	[4802]=true,
+	[6514]=true,	[6672]=true,	[6935]=true,	[7576]=true,	[7580]=true,
+	[7935]=true,	[7947]=true,	[8289]=true,	[8780]=true,	[8781]=true,
+	[8782]=true,	[8810]=true,	[9413]=true,	[9436]=true,	[9438]=true,
+	[9516]=true,	[10397]=true,	[10531]=true,	[10589]=true,	[10596]=true,
+	[10601]=true,	[10608]=true,	[10615]=true,	[10622]=true,	[10629]=true,
+	[10636]=true,	[10643]=true,	[10650]=true,	[10657]=true,	[10659]=true,
+	[10666]=true,	[10674]=true,	[10681]=true,	[10688]=true,	[10695]=true,
+	[10702]=true,	[10709]=true,	[10716]=true,	[10733]=true,	[10734]=true,
+	[10735]=true,	[10736]=true,	[10737]=true,	[10738]=true,	[10739]=true,
+	[10740]=true,	[10741]=true,	[10742]=true,	[10743]=true,	[10776]=true,
+	[10775]=true,	[10774]=true,	[10773]=true,	[10772]=true,	[10771]=true,
+	[10770]=true,	[10769]=true,	[10768]=true,	[10767]=true,	[10766]=true,
+	[10719]=true,	[10712]=true,	[10705]=true,	[10698]=true,	[10691]=true,
+	[10684]=true,	[10677]=true,	[10670]=true,	[10663]=true,	[10658]=true,
+	[10651]=true,	[10644]=true,	[10637]=true,	[10630]=true,	[10623]=true,
+	[10616]=true,	[10609]=true,	[10602]=true,	[10597]=true,	[10591]=true,
+	[10599]=true,	[10606]=true,	[10613]=true,	[10620]=true,	[10627]=true,
+	[10634]=true,	[10641]=true,	[10648]=true,	[10655]=true,	[10662]=true,
+	[10669]=true,	[10676]=true,	[10683]=true,	[10690]=true,	[10697]=true,
+	[10704]=true,	[10711]=true,	[10718]=true,	[10755]=true,	[10756]=true,
+	[10757]=true,	[10758]=true,	[10759]=true,	[10760]=true,	[10761]=true,
+	[10762]=true,	[10763]=true,	[10764]=true,	[10765]=true,	[10593]=true,
+	[10603]=true,	[10610]=true,	[10617]=true,	[10624]=true,	[10631]=true,
+	[10638]=true,	[10645]=true,	[10652]=true,	[10661]=true,	[10668]=true,
+	[10675]=true,	[10682]=true,	[10689]=true,	[10696]=true,	[10703]=true,
+	[10710]=true,	[10717]=true,	[10744]=true,	[10745]=true,	[10746]=true,
+	[10747]=true,	[10748]=true,	[10749]=true,	[10750]=true,	[10751]=true,
+	[10752]=true,	[10753]=true,	[10754]=true,	[10835]=true,	[10836]=true,
+	[10838]=true,	[10878]=true,	[10879]=true,	[10880]=true,	[10891]=true,
+	[10892]=true,	[10893]=true,	[10894]=true,	[10895]=true,	[10896]=true,
+	[10897]=true,	[10898]=true,	[10899]=true,	[10900]=true,	[10901]=true,
+	[10902]=true,	[10903]=true,	[10904]=true,	[10905]=true,	[10906]=true,
+	[10907]=true,	[10908]=true,	[10909]=true,	[10910]=true,	[10911]=true,
+	[10912]=true,	[10913]=true,	[10914]=true,	[10915]=true,	[10916]=true,
+	[10917]=true,	[10918]=true,	[10919]=true,	[10920]=true,	[10921]=true,
+	[10922]=true,	[10923]=true,	[10924]=true,	[10925]=true,	[10926]=true,
+	[10927]=true,	[10928]=true,	[10929]=true,	[10930]=true,	[10931]=true,
+	[10932]=true,	[10933]=true,	[10934]=true,	[10935]=true,	[10936]=true,
+	[10937]=true,	[10938]=true,	[10939]=true,	[10940]=true,	[10941]=true,
+	[10942]=true,	[10943]=true,	[10944]=true,	[10945]=true,	[10946]=true,
+	[10947]=true,	[10948]=true,	[11145]=true,	[11146]=true,	[11147]=true,
+	[11148]=true,	[11149]=true,	[11150]=true,	[11151]=true,	[11152]=true,
+	[11153]=true,	[11154]=true,	[11165]=true,	[11166]=true,	[11167]=true,
+	[11168]=true,	[11169]=true,	[11170]=true,	[11171]=true,	[11172]=true,
+	[11173]=true,	[11174]=true,	[11180]=true,	[11181]=true,	[11182]=true,
+	[11183]=true,	[11184]=true,	[11185]=true,	[11186]=true,	[11187]=true,
+	[11188]=true,	[11189]=true,	[11307]=true,
 }
 
 local IS_LOW = UnitLevel'player' < 50
@@ -89,47 +122,74 @@ local IS_SL = UnitLevel'player' >= 60
 local IS_DF = UnitLevel'player' >= 70 and not ExRT.isClassic
 local IS_TWW = UnitLevel'player' >= 71 and not ExRT.isClassic
 
+module.db.topEnchGemsCheap = {
+[7380]=true,[7381]=true,[7382]=true,[7329]=true,[7330]=true,[7331]=true,[7335]=true,[7335]=true,[7336]=true,[7336]=true,[7337]=true,[7337]=true,[7386]=true,[7387]=true,[7388]=true,[7341]=true,[7342]=true,[7343]=true,[7392]=true,[7393]=true,[7394]=true,[7394]=true,[7347]=true,[7348]=true,[7349]=true,
+[217115]=true,[217114]=true,[217113]=true,
+}
+
 module.db.topEnchGems = IS_TWW and {
 	[3368]="DKWeapon:knight",
 	[3370]="DKWeapon:frost",
 	[3847]="DKWeapon:2h",
 
-	[217115]=true,
-	[213743]=true,
-	[213746]=true,
-	[213740]=true,
-	[213488]=true,
-	[213479]=true,
-	[213482]=true,
-	[213485]=true,
-	[213500]=true,
-	[213491]=true,
-	[213494]=true,
-	[213497]=true,
-	[213464]=true,
-	[213455]=true,
-	[213458]=true,
-	[213461]=true,
-	[213476]=true,
-	[213467]=true,
-	[213470]=true,
-	[213473]=true,
-	[213517]=true,
-	[213503]=true,
-	[213506]=true,
-	[213509]=true,
-	[213512]=true,
+	[213453]=1,	[213454]=2,	[213455]=3,	[213456]=1,	[213457]=2,
+	[213458]=3,	[213459]=1,	[213460]=2,	[213461]=3,	[213462]=1,
+	[213463]=2,	[213464]=3,	[213465]=1,	[213466]=2,	[213467]=3,
+	[213468]=1,	[213469]=2,	[213470]=3,	[213471]=1,	[213472]=2,
+	[213473]=3,	[213474]=1,	[213475]=2,	[213476]=3,	[213477]=1,
+	[213478]=2,	[213479]=3,	[213480]=1,	[213481]=2,	[213482]=3,
+	[213483]=1,	[213484]=2,	[213485]=3,	[213486]=1,	[213487]=2,
+	[213488]=3,	[213489]=1,	[213490]=2,	[213491]=3,	[213492]=1,
+	[213493]=2,	[213494]=3,	[213495]=1,	[213496]=2,	[213497]=3,
+	[213498]=1,	[213499]=2,	[213500]=3,	[213501]=1,	[213502]=2,
+	[213503]=3,	[213504]=1,	[213505]=2,	[213506]=3,	[213507]=1,
+	[213508]=2,	[213509]=3,	[213510]=1,	[213511]=2,	[213512]=3,
+	[213515]=1,	[213516]=2,	[213517]=3,	[213738]=1,	[213739]=2,
+	[213740]=3,	[213741]=1,	[213742]=2,	[213743]=3,	[213744]=1,
+	[213745]=2,	[213746]=3,	[217113]=1,	[217114]=2,	[217115]=3,
+	[221896]=1,	[221897]=2,	[221898]=3,	[221900]=1,	[221901]=2,
+	[221902]=3,	[221904]=1,	[221905]=2,	[221906]=3,	[221908]=1,
+	[221909]=2,	[221910]=3,
 
-	[7421]=true,	[7418]=true,	[7331]=true,	[7334]=true,	[7337]=true,
-	[7340]=true,	[7343]=true,	[7346]=true,	[7349]=true,	[7352]=true,
-	[7451]=true,	[7454]=true,	[7463]=true,	[7355]=true,	[7358]=true,
-	[7364]=true,	[7367]=true,	[7370]=true,	[7373]=true,	[7376]=true,
-	[7379]=true,	[7439]=true,	[7442]=true,	[7445]=true,	[7457]=true,
-	[7448]=true,	[7427]=true,	[7430]=true,	[7433]=true,	[7436]=true,
-	[7382]=true,	[7385]=true,	[7388]=true,	[7391]=true,	[7394]=true,
-	[7397]=true,	[7400]=true,	[7403]=true,	[7406]=true,	[7409]=true,
-	[7412]=true,	[7415]=true,	[7470]=true,	[7473]=true,	[7479]=true,
-	[7476]=true,	[7460]=true,	[7361]=true,	[7424]=true,	[7337]=true,
+	[7419]=1,	[7420]=2,	[7421]=3,	[7416]=1,	[7417]=2,
+	[7418]=3,	[7422]=1,	[7423]=2,	[7329]=1,	[7330]=2,
+	[7331]=3,	[7332]=1,	[7333]=2,	[7334]=3,	[7335]=1,
+	[7336]=2,	[7337]=3,	[7338]=1,	[7339]=2,	[7340]=3,
+	[7341]=1,	[7342]=2,	[7343]=3,	[7344]=1,	[7345]=2,
+	[7346]=3,	[7347]=1,	[7348]=2,	[7349]=3,	[7350]=1,
+	[7351]=2,	[7352]=3,	[7449]=1,	[7450]=2,	[7451]=3,
+	[7452]=1,	[7453]=2,	[7454]=3,	[7461]=1,	[7462]=2,
+	[7463]=3,	[7353]=1,	[7354]=2,	[7355]=3,	[7356]=1,
+	[7357]=2,	[7358]=3,	[7362]=1,	[7363]=2,	[7364]=3,
+	[7359]=1,	[7360]=2,	[7365]=1,	[7366]=2,	[7367]=3,
+	[7368]=1,	[7369]=2,	[7370]=3,	[7371]=1,	[7372]=2,
+	[7373]=3,	[7374]=1,	[7375]=2,	[7376]=3,	[7377]=1,
+	[7378]=2,	[7379]=3,	[7437]=1,	[7438]=2,	[7439]=3,
+	[7440]=1,	[7441]=2,	[7442]=3,	[7443]=1,	[7444]=2,
+	[7445]=3,	[7455]=1,	[7456]=2,	[7457]=3,	[7446]=1,
+	[7447]=2,	[7448]=3,	[7425]=1,	[7426]=2,	[7427]=3,
+	[7428]=1,	[7429]=2,	[7430]=3,	[7431]=1,	[7432]=2,
+	[7433]=3,	[7434]=1,	[7435]=2,	[7436]=3,	[7380]=1,
+	[7381]=2,	[7382]=3,	[7383]=1,	[7384]=2,	[7385]=3,
+	[7386]=1,	[7387]=2,	[7388]=3,	[7389]=1,	[7390]=2,
+	[7391]=3,	[7392]=1,	[7393]=2,	[7394]=3,	[7395]=1,
+	[7396]=2,	[7397]=3,	[7398]=1,	[7399]=2,	[7400]=3,
+	[7401]=1,	[7402]=2,	[7403]=3,	[7404]=1,	[7405]=2,
+	[7406]=3,	[7407]=1,	[7408]=2,	[7409]=3,	[7410]=1,
+	[7411]=2,	[7412]=3,	[7413]=1,	[7414]=2,	[7415]=3,
+	[7468]=1,	[7469]=2,	[7470]=3,	[7471]=1,	[7472]=2,
+	[7473]=3,	[7477]=1,	[7478]=2,	[7479]=3,	[7474]=1,
+	[7475]=2,	[7476]=3,	[7458]=1,	[7459]=2,	[7460]=3,
+	[7361]=3,	[7424]=3,	[7335]=1,	[7336]=2,	[7337]=3,
+
+	[7493]=1,	[7494]=2,	[7495]=3,	[7496]=1,	[7497]=2,
+	[7498]=3,	[7500]=1,	[7501]=2,	[7502]=3,	[7529]=1,
+	[7530]=2,	[7531]=3,	[7532]=1,	[7533]=2,	[7534]=3,
+	[7535]=1,	[7536]=2,	[7537]=3,	[7538]=1,	[7539]=1,
+	[7540]=1,	[7543]=1,	[7544]=2,	[7545]=3,	[7546]=1,
+	[7547]=2,	[7548]=3,	[7549]=1,	[7550]=2,	[7551]=3,
+	[7593]=1,	[7594]=2,	[7595]=3,	[7596]=1,	[7597]=2,
+	[7598]=3,	[7599]=1,	[7600]=2,	[7601]=3,
 } or IS_SL and {
 	[6202]="cloak:stamina:speed",
 	[6208]="cloak:stamina",
@@ -281,7 +341,10 @@ module.db.topEnchGems = IS_TWW and {
 
 
 module.db.achievementsList = {
-	{	--N
+	{	--LoD
+		L.S_ZoneT33,
+		41222,41225,41226,41227,41228,41229,41230,41231,41232,41233,41234,41235,41236,41298,41297,
+	},{	--N
 		L.S_ZoneT32,
 		40244,40247,40248,40249,40236,40237,40238,40239,40240,40241,40242,40243,40253,40254,
 	},{	--A
@@ -371,7 +434,9 @@ module.db.achievementsList = {
 	},
 }
 module.db.achievementsList_statistic = {
-	{	--N
+	{	--LoD
+		0,0,0,0,0,{41299,41300,41301,41302},{41303,41304,41305,41306},{41307,41308,41309,41310},{41311,41312,41313,41314},{41315,41316,41317,41318},{41319,41320,41321,41322},{41323,41324,41325,41326},{41327,41328,41329,41330},
+	},{	--N
 		0,0,0,0,{40267,40268,40269,40270},{40271,40272,40273,40274},{40275,40276,40277,40278},{40279,40280,40281,40282},{40283,40284,40285,40286},{40287,40288,40289,40290},{40291,40292,40293,40294},{40295,40296,40297,40298},
 	},{
 
@@ -682,7 +747,11 @@ function module.options:Load()
 	module.db.colorizeNoGems = VMRT.InspectViewer.ColorizeNoGems
 	module.db.colorizeNoTopEnchGems = VMRT.InspectViewer.ColorizeNoTopEnchGems
 	module.db.colorizeLowIlvl685 = VMRT.InspectViewer.ColorizeLowIlvl685
+	module.db.colorizeLowIlvlCustom = VMRT.InspectViewer.ColorizeLowIlvlCustom
+	module.db.colorizeLowIlvlCustomN = type(VMRT.InspectViewer.ColorizeLowIlvlCustomN) == "number" and VMRT.InspectViewer.ColorizeLowIlvlCustomN or 600
 	module.db.colorizeNoValorUpgrade = VMRT.InspectViewer.ColorizeNoValorUpgrade
+	module.db.minEnchRank = VMRT.InspectViewer.TopEnchGemsMinRank
+	module.db.checkCheap = VMRT.InspectViewer.TopEnchGemsCheckCheap
 
 	local colorizeLowIlvl630 = 233
 	local colorizeLowIlvl685 = 252
@@ -699,12 +768,73 @@ function module.options:Load()
 		colorizeLowIlvl685 = 482
 	end
 	if IS_TWW then
-		colorizeLowIlvl630 = 597
-		colorizeLowIlvl685 = 623
+		colorizeLowIlvl630 = 606
+		colorizeLowIlvl685 = 619
 	end
 
-	self.chkItemsTrackDropDown = ELib:DropDown(self,300,6):Point(50,0):Size(50)
+	self.chkItemsTrackDropDown = ELib:DropDown(self,300,8):Point(50,0):Size(50)
 	self.chkItemsTrackDropDown:Hide()
+
+	local enchRankSubMenu
+
+	enchRankSubMenu = {
+		{text = L.RaidCheckMinRank, isTitle = true},
+		{text = "|A:Professions-ChatIcon-Quality-Tier1:20:20|a 1 ("..L.InspectViewerCheap..")", radio = true, arg1 = 1, checkState = (module.db.minEnchRank or 3) == 1 and module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = 1
+			module.db.checkCheap = true
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 1 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+		{text = "|A:Professions-ChatIcon-Quality-Tier2:20:20|a 2 ("..L.InspectViewerCheap..")", radio = true, arg1 = 2, checkState = (module.db.minEnchRank or 3) == 2 and module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = 2
+			module.db.checkCheap = true
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 2 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+		{text = "|A:Professions-ChatIcon-Quality-Tier3:20:20|a 3 ("..L.InspectViewerCheap..")", radio = true, arg1 = 3, checkState = (module.db.minEnchRank or 3) == 3 and module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = nil
+			module.db.checkCheap = true
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 3 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+		{text = "|A:Professions-ChatIcon-Quality-Tier1:20:20|a 1", radio = true, arg1 = 4, checkState = (module.db.minEnchRank or 3) == 1 and not module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = 1
+			module.db.checkCheap = false
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 4 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+		{text = "|A:Professions-ChatIcon-Quality-Tier2:20:20|a 2", radio = true, arg1 = 5, checkState = (module.db.minEnchRank or 3) == 2 and not module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = 2
+			module.db.checkCheap = false
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 5 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+		{text = "|A:Professions-ChatIcon-Quality-Tier3:20:20|a 3", radio = true, arg1 = 6, checkState = (module.db.minEnchRank or 3) == 3 and not module.db.checkCheap, func = function(self,checked)
+			module.db.minEnchRank = nil
+			module.db.checkCheap = false
+			VMRT.InspectViewer.TopEnchGemsMinRank = module.db.minEnchRank
+			VMRT.InspectViewer.TopEnchGemsCheckCheap = module.db.checkCheap
+			module.options.ReloadPage()
+			for k,v in pairs(enchRankSubMenu) do if v.radio then v.checkState = v.arg1 == 6 end end
+			ELib.ScrollDropDown.UpdateChecks()
+		end},
+	}
+
 	self.chkItemsTrackDropDown.List = {
 		{text = L.InspectViewerColorizeNoEnch,checkable = true,checkState = module.db.colorizeNoEnch, checkFunc = function(self,checked) 
 			module.db.colorizeNoEnch = checked
@@ -720,7 +850,7 @@ function module.options:Load()
 			module.db.colorizeNoTopEnchGems = checked
 			VMRT.InspectViewer.ColorizeNoTopEnchGems = checked
 			module.options.ReloadPage()
-		end,func = ItemsTrackDropDownClick},
+		end,func = ItemsTrackDropDownClick, subMenu=enchRankSubMenu},
 		{text = format(L.InspectViewerColorizeLowIlvl,colorizeLowIlvl630),checkable = true,checkState = module.db.colorizeLowIlvl, checkFunc = function(self,checked) 
 			module.db.colorizeLowIlvl = checked
 			VMRT.InspectViewer.ColorizeLowIlvl = checked
@@ -731,6 +861,22 @@ function module.options:Load()
 			VMRT.InspectViewer.ColorizeLowIlvl685 = checked
 			module.options.ReloadPage()
 		end,func = ItemsTrackDropDownClick},
+		{text = L.InspectViewerColorizeLowIlvlCustom,checkable = true,checkState = module.db.colorizeLowIlvlCustom, checkFunc = function(self,checked) 
+			module.db.colorizeLowIlvlCustom = checked
+			VMRT.InspectViewer.ColorizeLowIlvlCustom = checked
+			module.options.ReloadPage()
+		end,func = ItemsTrackDropDownClick},
+		{
+			text = "",
+			isTitle = true,	
+			slider = {min = 500, max = 800, val = module.db.colorizeLowIlvlCustomN, func = function(self,val)
+				val = floor(val + .5)
+				module.db.colorizeLowIlvlCustomN = val
+				VMRT.InspectViewer.ColorizeLowIlvlCustomN = val
+				self:GetParent().data.slider.val = val
+				module.options.ReloadPage()
+			end}
+		},
 		--[[
 		{text = L.InspectViewerColorizeNoValorUpgrade,checkable = true,checkState = module.db.colorizeNoValorUpgrade, checkFunc = function(self,checked)
 			module.db.colorizeNoValorUpgrade = checked
@@ -955,13 +1101,28 @@ function module.options:Load()
 				local isTop = true
 				if ench ~= "0" and ench ~= "" then
 					ench = tonumber(ench)
-					if not module.db.topEnchGems[ench] then
+
+					local enchLevel = module.db.topEnchGems[ench]
+					if 
+						not enchLevel or 
+						(
+						 type(enchLevel) == "number" and 
+						 ((enchLevel + (not module.db.topEnchGemsCheap[ench] and 3 or 0)) < ((module.db.minEnchRank or 3) + (module.db.checkCheap and 0 or 3)))
+						)
+					then
 						isTop = false
 					end
 				end
 				if gem ~= "0" and gem ~= "" then
 					gem = tonumber(gem)
-					if not module.db.topEnchGems[gem] then
+					local enchLevel = module.db.topEnchGems[gem]
+					if 
+						not enchLevel or 
+						(
+						 type(enchLevel) == "number" and 
+						 ((enchLevel + (not module.db.topEnchGemsCheap[gem] and 3 or 0)) < ((module.db.minEnchRank or 3) + (module.db.checkCheap and 0 or 3)))
+						)
+					then
 						isTop = false
 					end
 				end
@@ -1142,13 +1303,29 @@ function module.options:Load()
 									itemLevel = items_ilvl[slotID] or itemLevel
 									icon.text:SetText("|c"..(itemColor or "ffffffff")..(itemLevel or ""))
 
+									local isSlotForEnchant = 
+										(slotID == 2 and IS_LOW) or 
+										(slotID == 15 and IS_LOW) or 
+										slotID == 11 or 
+										slotID == 12 or 
+										(slotID == 16) or 
+										(slotID == 17 and module.db.specHasOffhand[spec or 0]) or 
+										(slotID == 15 and IS_SL) or 
+										(slotID == 8 and (IS_DF or (module:GetSpecMainStat(spec)=="agi" and IS_SL))) or 
+										(slotID == 9 and (IS_DF or (module:GetSpecMainStat(spec)=="int" and IS_SL))) or 
+										(slotID == 10 and ((module:GetSpecMainStat(spec)=="str" and IS_SL) and not IS_DF)) or 
+										(slotID == 5 and IS_SL) or 
+										(slotID == 7 and IS_DF)
+
 									if not ExRT.isClassic and (
-										(enchantID == 0 and ((slotID == 2 and IS_LOW) or (slotID == 15 and IS_LOW) or slotID == 11 or slotID == 12 or (slotID == 16) or (slotID == 17 and module.db.specHasOffhand[spec or 0]) or (slotID == 15 and IS_SL) or (slotID == 8 and ((module:GetSpecMainStat(spec)=="agi" and IS_SL) or IS_DF)) or (slotID == 9 and ((module:GetSpecMainStat(spec)=="int" and IS_SL) or IS_DF)) or (slotID == 10 and ((module:GetSpecMainStat(spec)=="str" and IS_SL) and not IS_DF)) or (slotID == 5 and IS_SL) or (slotID == 7 and IS_DF)) and module.db.colorizeNoEnch) or
+										(enchantID == 0 and isSlotForEnchant and module.db.colorizeNoEnch) or
 										(items_ilvl[slotID] and items_ilvl[slotID] > 0 and items_ilvl[slotID] < colorizeLowIlvl630 and module.db.colorizeLowIlvl) or
 										(module.db.colorizeNoGems and ExRT.F.IsBonusOnItem(item,module.db.socketsBonusIDs) and IsItemHasNotGem(item)) or 
 										(module.db.colorizeNoGems and (slotID == 16 or slotID == 17) and itemQuality == 6 and IsArtifactItemHasNot3rdGem(item)) or 
-										(module.db.colorizeNoTopEnchGems and not IsTopEnchAndGems(item) and ((slotID == 2 and IS_LOW) or (slotID == 15 and IS_LOW) or slotID == 11 or slotID == 12 or (slotID == 16) or (slotID == 17 and module.db.specHasOffhand[spec or 0]) or (slotID == 15 and IS_SL) or (slotID == 8 and ((module:GetSpecMainStat(spec)=="agi" and IS_SL) or IS_DF)) or (slotID == 9 and ((module:GetSpecMainStat(spec)=="int" and IS_SL) or IS_DF)) or (slotID == 10 and ((module:GetSpecMainStat(spec)=="str" and IS_SL) and not IS_DF)) or (slotID == 5 and IS_SL))) or
-										(items_ilvl[slotID] and items_ilvl[slotID] > 0 and items_ilvl[slotID] < colorizeLowIlvl685 and module.db.colorizeLowIlvl685)
+										(module.db.colorizeNoTopEnchGems and not IsTopEnchAndGems(item) and isSlotForEnchant) or
+										(items_ilvl[slotID] and items_ilvl[slotID] > 0 and items_ilvl[slotID] < colorizeLowIlvl685 and module.db.colorizeLowIlvl685) or
+										(module.db.colorizeLowIlvlCustom and items_ilvl[slotID] and items_ilvl[slotID] > 0 and items_ilvl[slotID] < module.db.colorizeLowIlvlCustomN)
+										
 									) then
 										icon.border:Show()
 									end
@@ -1913,6 +2090,10 @@ function module.options:Load()
 			ELib.Tooltip.Link(self,self.link,classID,specID)
 			if module.db.page == 4 and self.additional then
 				ELib.Tooltip:Add(nil,self.additional,false,true)
+			end
+			if IsShiftKeyDown() and IsAltKeyDown() and type(self.link)=="string" then
+				local itemLinkModded = self.link:match("item:[%d:%-]+")
+				ELib.Tooltip:Add(nil,{itemLinkModded},false,true)
 			end
 		end
 	end

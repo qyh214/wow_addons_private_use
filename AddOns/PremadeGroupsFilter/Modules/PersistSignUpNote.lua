@@ -26,7 +26,7 @@ local didApplyPatch = false
 local originalFunc = LFGListApplicationDialog_Show
 local patchedFunc = function(self, resultID)
     if resultID then
-        local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
+        local searchResultInfo = PGF.GetSearchResultInfo(resultID);
         --if ( searchResultInfo.activityID ~= self.activityID ) then
         --    C_LFGList.ClearApplicationTextFields();
         --end

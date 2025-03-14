@@ -1,0 +1,10 @@
+## Interface: 110007, 110010
+## Title: |cff00ffffMoose|rLight
+## Version: R3.8a
+## Author: EK (Linodas@Illidan-US)
+## Notes: adjust gamma when player enter some zones and dungeons.
+## IconTexture: "Interface\\Buttons\\WHITE8x8"
+## Notes-zhTW: 進入某些地區時自動更改畫面亮度。
+## Notes-zhCN: 进入某些地区时自动更改画面亮度。
+
+MooseLight.lua

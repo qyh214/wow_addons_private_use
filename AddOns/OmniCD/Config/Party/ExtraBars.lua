@@ -33,6 +33,7 @@ local getColor = function(info)
 	end
 	return c.r, c.g, c.b, c.a
 end
+
 local setColor = function(info, r, g, b, a)
 	local key, bar, ele, option = info[2], info[4], info[#info-1], info[#info]
 	local c = E.profile.Party[key].extraBars[bar][ele][option]
@@ -96,16 +97,16 @@ local sortByValues = {
 		[7] = format("%s>%s", L["Cooldown Remaining"], ROLE),
 		[8] = format("%s>%s", L["Cooldown Remaining"], CLASS),
 		[16] = format("%s>%s", L["Cooldown Remaining"], L["Priority"]),
-
-
-
-
+		--[11] = GROUP,
+		--[12] = NAME,
+		--[13] = format("%s>%s", L["Cooldown Remaining"], GROUP),
+		--[14] = format("%s>%s", L["Cooldown Remaining"], NAME),
 	},
 	raidBar2 = {
-		[3] = format("%s>%s>%s", L["Priority"], CLASS, ID),
-		[4] = format("%s>%s>%s", CLASS, L["Priority"], ID),
-		[9] = format("%s>%s>%s>%s", L["Cooldown Remaining"], L["Priority"], CLASS, ID),
-		[10] = format("%s>%s>%s>%s", L["Cooldown Remaining"], CLASS, L["Priority"], ID),
+		[3] = L["Priority"],
+		[4] = CLASS,
+		[9] = format("%s>%s", L["Cooldown Remaining"], L["Priority"]),
+		[10] = format("%s>%s", L["Cooldown Remaining"], CLASS),
 	},
 }
 
@@ -125,7 +126,7 @@ local progressBarColorInfo = {
 		name = "",
 		order = 1,
 		type = "color",
-		dialogControl = "ColorPicker-OmniCD",
+		dialogControl = "ColorPicker-OmniCDC",
 		hasAlpha = notTextColor,
 		width = 0.5,
 
@@ -134,7 +135,7 @@ local progressBarColorInfo = {
 		name = "",
 		order = 2,
 		type = "color",
-		dialogControl = "ColorPicker-OmniCD",
+		dialogControl = "ColorPicker-OmniCDC",
 		hasAlpha = notTextColor,
 		width = 0.5,
 	},
@@ -150,7 +151,7 @@ local progressBarColorInfo = {
 		name = "",
 		order = 3,
 		type = "color",
-		dialogControl = "ColorPicker-OmniCD",
+		dialogControl = "ColorPicker-OmniCDC",
 		hasAlpha = notTextColor,
 		width = 0.5,
 	},
@@ -158,7 +159,7 @@ local progressBarColorInfo = {
 		name = "",
 		order = 4,
 		type = "multiselect",
-		dialogControl = "Dropdown-OmniCD",
+		dialogControl = "Dropdown-OmniCDC",
 		values = {
 			active = L["Active"],
 			inactive = L["Inactive"],
@@ -192,10 +193,12 @@ local extraBarsInfo = {
 		enabled = {
 			disabled = false,
 			name = ENABLE,
-
-
-
-
+			--[[
+			desc = function(info)
+				return info[4] == "raidBar1" and format("%s\n\n|cffffd200%s", L["Move your group's Interrupt spells to the Interrupt Bar."], L["Interrupt spell types are automatically added to this bar."])
+				or format("%s\n\n|cffffd200%s", L["Move your group's Raid Cooldowns to the Raid Bar."], L["Select the spells you want to move from the \'Raid CD\' tab. The spell must be enabled from the \'Spells\' tab first."])
+			end,
+			]]
 			order = 1,
 			type = "toggle",
 		},
@@ -271,14 +274,14 @@ local extraBarsInfo = {
 					desc = format("%s\n\n%s", L["Select the spell types you want to display on this column."], L["You can mangage spell types for all bars from the Frame option"]),
 					order = 1,
 					type = "multiselect",
-					dialogControl = "Dropdown-OmniCD",
+					dialogControl = "Dropdown-OmniCDC",
 					values = E.L_PRIORITY,
 					get = function(info, k) return E.profile.Party[ info[2] ].frame[k] == P.extraBars[ info[4] ].index end,
 					set = function(info, k, state)
 						local key = info[2]
 						local value = state and P.extraBars[ info[4] ].index or 0
 						E.profile.Party[key].frame[k] = value
-
+						
 						for id, v in pairs(E.profile.Party[key].spellFrame) do
 							if E.hash_spelldb[id].type == k and v == value then
 								E.profile.Party[key].spellFrame[id] = nil
@@ -311,7 +314,7 @@ local extraBarsInfo = {
 						return sortByValues[ info[4] ] or sortByValues.raidBar2
 					end,
 					sorting = function(info)
-						return info[4] == "raidBar1" and {1,5,6,15,2,7,8,16} or nil
+						return info[4] == "raidBar1" and {1,5,6,15,2,7,8,16} or nil 
 					end,
 				},
 				sortDirection = {
@@ -563,7 +566,7 @@ local extraBarsInfo = {
 					type = "range",
 					min = 50, max = 999, softMax = 300, step = 1,
 				},
-
+				
 				textOfsX = {
 					name = L["Name Offset X"],
 					order = 18,
@@ -594,7 +597,7 @@ local extraBarsInfo = {
 								end
 								local statusBar = icon.statusBar
 								local castingBar = statusBar.CastingBar
-								statusBar.name = name
+								statusBar.name = name 
 								castingBar.name = name
 								statusBar.Text:SetText(name)
 								castingBar.Text:SetText(name)
@@ -639,9 +642,8 @@ local extraBarsInfo = {
 						E.profile.Party[key].extraBars[bar].name = value
 						if P:IsCurrentZone(key) then
 							local frame = P.extraBars[bar]
-							local db = frame.db
 							P:UpdateExBarPositionValues()
-							P:SetExAnchor(frame, db)
+							frame:SetExAnchor()
 						end
 					end,
 				},
@@ -672,7 +674,7 @@ local extraBarsInfo = {
 					func = function(info)
 						local key, bar = info[2], info[4]
 						E.profile.Party[key].extraBars[bar] = E:DeepCopy(C.Party[key].extraBars[bar])
-						E:RefreshProfile()
+						E:RefreshProfile() 
 					end,
 					confirm = E.ConfirmAction,
 				},
@@ -687,23 +689,21 @@ end
 
 local sliderTimer = {}
 local updatePixelObj = function(key, frame, db, noDelay)
-	P:UpdateExBarBackdrop(frame, db)
-	P:UpdateExBarPositionValues()
-	P:SetExIconLayout(key)
-	P:SetExAnchor(frame, db)
+	frame:UpdateExBarBackdrop(db)
+	frame:UpdateLayout()
+	frame:SetExAnchor()
 	if not noDelay then
 		sliderTimer[key] = nil
 	end
 end
 
-function P:ConfigExSize(key, noDelay)
+function P:ConfigExSize(key)
+	self:UpdateExBarPositionValues()
 	local frame = self.extraBars[key]
 	local db = E.db.extraBars[key]
-	self:SetExScale(frame, db)
+	frame:SetExScale()
 	if E.db.icons.displayBorder or (db.layout == "vertical" and db.progressBar) then
-		if noDelay then
-			updatePixelObj(key, frame, db, noDelay)
-		elseif not sliderTimer[key] then
+		if not sliderTimer[key] then
 			sliderTimer[key] = E.TimerAfter(0.3, updatePixelObj, key, frame, db)
 		end
 	end

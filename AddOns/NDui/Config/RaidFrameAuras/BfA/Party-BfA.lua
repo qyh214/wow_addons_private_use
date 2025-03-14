@@ -21,6 +21,7 @@ module:RegisterDebuff(TIER, INSTANCE, 0, 272874) -- 践踏
 module:RegisterDebuff(TIER, INSTANCE, 0, 273470) -- 一枪毙命
 module:RegisterDebuff(TIER, INSTANCE, 0, 272834) -- 粘稠的口水
 module:RegisterDebuff(TIER, INSTANCE, 0, 272713) -- 碾压重击
+module:RegisterDebuff(TIER, INSTANCE, 0, 463182) -- 炽烈弹射
 
 INSTANCE = 1022 -- 地渊孢林
 module:RegisterSeasonSpells(TIER, INSTANCE)
@@ -74,6 +75,7 @@ module:RegisterDebuff(TIER, INSTANCE, 0, 256044) -- 致命狙击
 module:RegisterDebuff(TIER, INSTANCE, 0, 256474) -- 竭心毒剂
 
 INSTANCE = 1012 -- 暴富矿区
+module:RegisterSeasonSpells(TIER, INSTANCE)
 module:RegisterDebuff(TIER, INSTANCE, 0, 263074) -- 溃烂撕咬
 module:RegisterDebuff(TIER, INSTANCE, 0, 280605) -- 脑部冻结
 module:RegisterDebuff(TIER, INSTANCE, 0, 257337) -- 电击之爪

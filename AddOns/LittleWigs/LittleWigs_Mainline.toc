@@ -1,4 +1,4 @@
-## Interface: 110005, 110000, 110002
+## Interface: 110005, 110007, 110100
 
 ## Title: LittleWigs
 ## Notes: Boss warnings for 5-man dungeons & scenarios.
@@ -23,9 +23,9 @@
 
 ## Dependencies: BigWigs
 ## LoadOnDemand: 1
-## Version: v11.0.23
+## Version: v11.1.13
 
-## X-BigWigs-Minimum: 356
-## X-BigWigs-LoadOn-InstanceId: 2648,2649,2651,2652,2660,2661,2662,2669, 2710, 2664,2679,2680,2681,2682,2683,2684,2685,2686,2687,2688,2689,2690
+## X-BigWigs-Minimum: 371
+## X-BigWigs-LoadOn-InstanceId: 2648,2649,2651,2652,2660,2661,2662,2669,2773, 2710, 2664,2679,2680,2681,2682,2683,2684,2685,2686,2687,2688,2689,2690,2815,2826,2831
 WarWithin\modules.xml
 Delves\modules.xml

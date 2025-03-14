@@ -29,13 +29,13 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [47053485] = {
+    [44063485] = {
         quest=83900,
         loot={226326}, -- Underground Stropping Compound
         vignette=6483,
         note="Inside the house",
     },
-    [64306535] = {
+    [60216535] = {
         quest=83901,
         loot={226327}, -- Earthen Awl
         vignette=6484,

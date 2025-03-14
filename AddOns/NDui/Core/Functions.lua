@@ -151,7 +151,7 @@ do
 
 	function B.UnitColor(unit)
 		local r, g, b = 1, 1, 1
-		if UnitIsPlayer(unit) then
+		if UnitIsPlayer(unit) or UnitInPartyIsAI(unit) then
 			local class = select(2, UnitClass(unit))
 			if class then
 				r, g, b = B.ClassColor(class)
@@ -381,7 +381,7 @@ do
 		if self.GetNumRegions then
 			for i = 1, self:GetNumRegions() do
 				local region = select(i, self:GetRegions())
-				if region and region.IsObjectType and region:IsObjectType("Texture") then
+				if region and region.IsObjectType and region:IsObjectType("Texture") and not region.isIgnored then
 					if kill and type(kill) == "boolean" then
 						B.HideObject(region)
 					elseif tonumber(kill) then
@@ -404,8 +404,8 @@ do
 	local lockedCVars = {}
 
 	function B:LockCVar(name, value)
-		SetCVar(name, value)
 		lockedCVars[name] = value
+		SetCVar(name, value)
 	end
 
 	function B:UpdateCVars(var, state)
@@ -1037,7 +1037,7 @@ do
 	end
 
 	-- WowTrimScrollBar
-	function B:ReskinTrimScroll()
+	function B:ReskinTrimScroll(noTaint)
 		B.StripTextures(self)
 		reskinScrollArrow(self.Back, "up", true)
 		reskinScrollArrow(self.Forward, "down", true)
@@ -1045,6 +1045,7 @@ do
 			self.Track:DisableDrawLayer("ARTWORK")
 		end
 
+		if noTaint then return end
 		local thumb = self:GetThumb()
 		if thumb then
 			thumb:DisableDrawLayer("ARTWORK")

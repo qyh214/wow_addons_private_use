@@ -237,6 +237,9 @@ L["CONFIRM_PURCHASE_OF_X_FOR_X"] = "Confirmar compra de %s por %s?"
 L["CONFIRM_UNHIDE_ALL"] = "Tem certeza de que deseja desocultar todos os itens ocultos?"
 L["CONFIRM_X_TOTAL_PRICE_X"] = "Confirmar %s, preço total %s."
 L["CONTINUE"] = "Continuar"
+L["CONTRIBUTE_HEADER"] = "|cff04cca4O desenvolvimento consome tempo. Considere apoiar|r"
+L["CONTRIBUTE_TOOLTIP_HEADER"] = "Sobre doações"
+L["CONTRIBUTE_TOOLTIP_TEXT"] = "Auctionator teve milhares de horas investidas em desenvolvimento e suporte para atingir seu estado atual nos últimos anos. Fazer uma doação é uma forma de apoiar este projeto indefinidamente."
 L["CONTRIBUTORS_HEADER"] = "Contribuidores"
 L["COPY_ITEM_ADDED"] = [=[Copiou %s para %s
 ]=]

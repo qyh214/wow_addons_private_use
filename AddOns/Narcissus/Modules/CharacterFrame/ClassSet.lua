@@ -6,9 +6,10 @@ local TEXTURE_PATH = "Interface\\AddOns\\Narcissus\\Art\\Widgets\\Progenitor\\";
 local GetInventoryItemID = GetInventoryItemID;
 local GetSpellDescription = addon.TransitionAPI.GetSpellDescription;
 local GetSpecializationInfo = GetSpecializationInfo;
-local GetSetBonusesForSpecializationByItemID = C_Item.GetSetBonusesForSpecializationByItemID;     --Deprecated
+local GetSetBonusesForSpecializationByItemID = C_Item.GetSetBonusesForSpecializationByItemID;
 local GetNumSpecializations = GetNumSpecializations;
 local InCombatLockdown = InCombatLockdown;
+local DoesPlayerHaveAnyItems = addon.PrivateAPI.DoesPlayerHaveAnyItems;
 
 local FadeFrame = NarciFadeUI.Fade;
 local strtrim = strtrim;
@@ -29,16 +30,46 @@ local candidateSlots = {
 };
 
 
-local isLastestClassSetItem = {};
-local classSetGroup = {};
+local LatestClassSetItem = {};
+local ClassSetItemByRaid = {};
+local ClassSetGroup = {};
 
 local function SetClassSetGroup(items, key)
     --key determines item border art
-    classSetGroup[key] = items;
+    ClassSetGroup[key] = items;
 end
 
-do
-    local spider = {
+local function FlagRaidItemAcquired(raidKey)
+    if NarcissusDB_PC then
+        NarcissusDB_PC["ClassSetAcquired_"..raidKey] = true;
+    end
+end
+
+local function HasPlayerAcquiredItemFromThisRaid(raidKey)
+    return NarcissusDB_PC and NarcissusDB_PC["ClassSetAcquired_"..raidKey]
+end
+
+do  --Old: Individual itemID
+    --Maybe switch to C_LootJournal.GetItemSetItems in the future, but unnecessary atm
+
+    ClassSetItemByRaid.Undermine = {
+        229238, 229236, 229235, 229234, 229233,
+        229326, 229325, 229324, 229328, 229323,
+        229265, 229263, 229262, 229261, 229260,
+        229292, 229290, 229289, 229288, 229287,
+        229337, 229335, 229334, 229333, 229332,
+        229247, 229245, 229244, 229243, 229242,
+        229301, 229299, 229298, 229297, 229296,
+        229346, 229344, 229343, 229342, 229341,
+        229274, 229272, 229271, 229270, 229269,
+        229283, 229281, 229280, 229279, 229278,
+        229310, 229308, 229307, 229306, 229305,
+        229319, 229317, 229316, 229315, 229314,
+        229256, 229254, 229253, 229252, 229251,
+    };
+    SetClassSetGroup(ClassSetItemByRaid.Undermine, 4);
+
+    ClassSetItemByRaid.Spider = {
         212005, 212003, 212002, 212001, 212000,
         212068, 212066, 212065, 212064, 212063,
         212059, 212057, 212056, 212055, 212054,
@@ -53,50 +84,40 @@ do
         212075, 212074, 212073, 212077, 212072,
         211987, 211985, 211984, 211983, 211982,
     };
+    SetClassSetGroup(ClassSetItemByRaid.Spider, 3);
 
 
-    SetClassSetGroup(spider, 3);
+    local function LoadLatestItems()
+        --Use lastest items if:
+        --1. Reach a certain date (1 month after release)
+        --2. Player has acquired a class set item from the new raid
 
+        local due = 1744070400;     --Tuesday, April 8, 2025 12:00:00 AM
+        local raidKey = "Undermine";
+        local time = time and time() or due;
+        local newRaidItems;
 
-    local awakened = {
-        217236, 217237, 217238, 217239, 217240,
-        217235, 217231, 217232, 217233, 217234,
-        217226, 217227, 217228, 217229, 217230,
-        217221, 217222, 217223, 217224, 217225,
-        217216, 217217, 217218, 217219, 217220,
-        217211, 217212, 217213, 217215, 217214,
-        217206, 217207, 217208, 217209, 217210,
-        217201, 217202, 217203, 217205, 217204,
-        217196, 217197, 217198, 217199, 217200,
-        217191, 217192, 217193, 217194, 217195,
-        217186, 217187, 217188, 217189, 217190,
-        217181, 217182, 217183, 217184, 217185,
-        217176, 217177, 217178, 217179, 217180,
-    };
+        if time >= due or HasPlayerAcquiredItemFromThisRaid(raidKey) or DoesPlayerHaveAnyItems(ClassSetItemByRaid[raidKey]) then
+            FlagRaidItemAcquired(raidKey);
+            newRaidItems = ClassSetItemByRaid.Undermine;
+        else
+            newRaidItems = ClassSetItemByRaid.Spider;
+        end
 
-    SetClassSetGroup(awakened, 3);
-
-
-    local newRaidItems;
-    if UnitLevel("player") >= 80 then
-        newRaidItems = spider;
-    else
-        newRaidItems = awakened;
+        for _, itemID in pairs(newRaidItems) do
+            LatestClassSetItem[itemID] = true;
+        end
     end
-
-
-    for _, itemID in pairs(newRaidItems) do
-        isLastestClassSetItem[itemID] = true;
-    end
+    addon.AddLoadingCompleteCallback(LoadLatestItems);
 end
 
 
 local function IsItemClassSet(itemID)
-    return (itemID and isLastestClassSetItem[itemID])
+    return (itemID and LatestClassSetItem[itemID])
 end
 
 local function GetClassSetGroup()
-    return classSetGroup
+    return ClassSetGroup
 end
 
 local NUM_OWNED = 0;
@@ -205,6 +226,8 @@ local function Indicator_OnMouseWheel(self, delta)
 end
 
 
+
+
 NarciClassSetTooltipMixin = {};
 
 function NarciClassSetTooltipMixin:OnShow()
@@ -285,7 +308,7 @@ function NarciClassSetTooltipMixin:Init()
 end
 
 function NarciClassSetTooltipMixin:DisplayBonus(specIndex)
-    local numOwned, _, exampleItemID = GetEquippedSet();     --debug
+    local numOwned, _, exampleItemID = GetEquippedSet();
 
     --Spec
     specIndex = specIndex or GetSpecialization();
@@ -312,43 +335,43 @@ function NarciClassSetTooltipMixin:DisplayBonus(specIndex)
     local specID = GetSpecializationInfo(specIndex);
     if specID and exampleItemID then
         local spells = GetSetBonusesForSpecializationByItemID(specID, exampleItemID);
-        if spells then
+        if spells then  --Can be nil on the first request
             spell1, spell2 = unpack(spells);
             text1 = FormatText(GetSpellDescription(spell1));
             text2 = FormatText(GetSpellDescription(spell2));
         end
     end
 
-    if not text1 then
-        text1 = "Bonus #1";
-    end
-    if not text1 then
-        text1 = "Bonus #2";
-    end
-
-    local fullyLoaded;
+    local fullyLoaded = true;
 
     if text1 and text1 ~= "" then
-        fullyLoaded = true;
-        self.spell1 = nil;
+
     else
-        self.spell1 = spell1;
-        C_Spell.RequestLoadSpellData(spell1);
+        fullyLoaded = false;
+        text1 = nil;
+        if spell1 then
+            C_Spell.RequestLoadSpellData(spell1);
+        end
     end
 
     if text2 and text2 ~= "" then
-        fullyLoaded = fullyLoaded and true;
-        self.spell2 = nil;
+
     else
-        self.spell2 = spell2;
-        C_Spell.RequestLoadSpellData(spell2);
+        fullyLoaded = false;
+        text2 = nil;
+        if spell2 then
+            C_Spell.RequestLoadSpellData(spell2);
+        end
     end
 
     if fullyLoaded then
         self:UnregisterEvent("SPELL_DATA_LOAD_RESULT");
     else
         self:RegisterEvent("SPELL_DATA_LOAD_RESULT");
-        return
+        self.t = 0;
+        self:SetScript("OnUpdate", self.OnUpdate);
+        text1 = text1 or RETRIEVING_DATA;
+        text2 = text2 or RETRIEVING_DATA;
     end
 
     SetBonusText(self.Effect1, text1, numOwned >= 2);
@@ -360,6 +383,8 @@ function NarciClassSetTooltipMixin:DisplayBonus(specIndex)
 end
 
 function NarciClassSetTooltipMixin:Refresh()
+    self:SetScript("OnUpdate", nil);
+
     if self:IsVisible() and self.specIndex then
         self:DisplayBonus(self.specIndex);
     end
@@ -430,11 +455,20 @@ end
 function NarciClassSetTooltipMixin:OnHide()
     self:Hide();
     self:SetAlpha(0);
+    self:SetScript("OnUpdate", nil);
+end
+
+function NarciClassSetTooltipMixin:OnUpdate(elapsed)
+    self.t = self.t + elapsed;
+    if self.t > 0.2 then
+        self.t = 0;
+        self:Refresh();
+    end
 end
 
 
 
-local function DelayedTooltip_OnUpdate(self, elapsed)
+local function OnUpdate_ShowTooltipAfterDelay(self, elapsed)
     self.t = self.t + elapsed;
     if self.t > 0 then
         self:SetScript("OnUpdate", nil);
@@ -472,7 +506,7 @@ end
 
 function NarciClassSetIndicatorMixin:OnEnter()
     self.t = -0.2;
-    self:SetScript("OnUpdate", DelayedTooltip_OnUpdate);
+    self:SetScript("OnUpdate", OnUpdate_ShowTooltipAfterDelay);
     self.Highlight:Show();
     self.Highlight.Shine:Play();
 end
@@ -596,6 +630,8 @@ end
 function NarciClassSetIndicatorMixin:SetNotification(text)
     self.Notification:SetText(text);
 end
+
+
 
 
 --Splash--

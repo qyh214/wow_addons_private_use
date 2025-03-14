@@ -1398,6 +1398,7 @@ local default_global_data = {
 		current_exp_raid_encounters = {},
 		encounter_journal_cache = {}, --store a dump of the encounter journal
 		installed_skins_cache = {},
+		last_10days_cache_cleanup = 0,
 
 		auto_change_to_standard = true,
 
@@ -1446,6 +1447,11 @@ local default_global_data = {
 		all_switch_config = {
 			scale = 1,
 			font_size = 10,
+		},
+
+	--information about the transcriptor frame
+		transcriptor_frame = {
+			scale = 1,
 		},
 
 	--keystone window
@@ -1623,6 +1629,10 @@ local default_global_data = {
 			shield_overheal = false,
 			--compute the energy wasted by players when they current energy is equal to the maximum energy
 			energy_overflow = false,
+			--compute avoidance for tanks
+			tank_avoidance = false,
+			--compute resources
+			energy_resources = false,
 		},
 
 	--aura creation frame libwindow
@@ -1653,7 +1663,7 @@ local default_global_data = {
 				grow_direction = "left",
 			},
 
-			autoclose_time = 40,
+			autoclose_time = 90,
 
 			mythicrun_time_type = 1, --1: combat time (the amount of time the player is in combat) 2: run time (the amount of time it took to finish the mythic+ run)
 		}, --implementar esse time_type quando estiver dando refresh na janela

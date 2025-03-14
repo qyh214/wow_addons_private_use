@@ -9,9 +9,9 @@ mod:SetEncounterID(2920)
 mod:SetRespawnTime(30)
 mod:SetPrivateAuraSounds({
 	436870, -- Assassination
-	{437343, extra = {463273, 463276}}, -- Queensbane (Also A & B) XXX Initial spell not private yet, but they flagged the other 2 already.
+	{437343, 463273, 463276}, -- Queensbane (Also A & B) XXX Initial spell not private yet, but they flagged the other 2 already.
 	438141, -- Twilight Massacre
-	{435534, extra = {436663, 436664, 436665, 436666, 436671, 436677}}, -- Regicide
+	{435534, 436663, 436664, 436665, 436666, 436671}, -- Regicide
 })
 mod:SetStage(1)
 
@@ -102,8 +102,8 @@ function mod:OnEngage()
 	voidShreddersCount = 1
 	starlessNightCount = 1
 
-	self:Bar(440377, 6.0, CL.count:format(self:SpellName(440377), voidShreddersCount)) -- Void Shredders
-	self:Bar(436867, 10.0, CL.count:format(L.assasination, assassinationCount)) -- Assassination
+	self:Bar(436867, 8.5, CL.count:format(L.assasination, assassinationCount)) -- Assassination
+	self:Bar(440377, 10.0, CL.count:format(self:SpellName(440377), voidShreddersCount)) -- Void Shredders
 	self:Bar(437620, 22.0, CL.count:format(CL.rifts, netherRiftCount)) -- Nether Rift
 	self:Bar(438245, 34.0, CL.count:format(L.twiligt_massacre, twilightMassacreCount)) -- Twilight Massacre
 	self:Bar(439576, 45.0, CL.count:format(L.nexus_daggers, nexusDaggersCount)) -- Nexus Daggers
@@ -129,15 +129,15 @@ end
 do
 	local prev = 0
 	function mod:QueensbaneApplied(args)
-		if args.time - prev > 2 then
+		if not self:Easy() and args.time - prev > 2 then
 			prev = args.time
-			self:Bar(439409, 10, CL.orbs) -- Dark Viscera
+			self:Bar(439409, 9, CL.orbs) -- Dark Viscera
 		end
 		if self:Me(args.destGUID) then
 			self:PersonalMessage(args.spellId)
 			self:PlaySound(args.spellId, "alarm")
 			if not self:Easy() then
-				self:SayCountdown(args.spellId, 10)
+				self:SayCountdown(args.spellId, 9)
 			end
 		end
 	end
@@ -165,14 +165,24 @@ function mod:NetherRift(args)
 	end
 end
 
-function mod:NexusDaggers(args)
-	if self:MobId(args.sourceGUID) == 217748 then -- boss, not phantoms
-		self:StopBar(CL.count:format(L.nexus_daggers, nexusDaggersCount))
-		self:Message(args.spellId, "yellow", CL.count:format(L.nexus_daggers, nexusDaggersCount))
-		self:PlaySound(args.spellId, "alarm")
-		nexusDaggersCount = nexusDaggersCount + 1
-		if nexusDaggersCount < 7 then
-			self:Bar(args.spellId, nexusDaggersCount % 2 == 0 and 30.0 or 100.0, CL.count:format(L.nexus_daggers, nexusDaggersCount))
+do
+	local daggerCastedCount = 0
+	function mod:NexusDaggers(args)
+		if self:MobId(args.sourceGUID) == 217748 then -- boss, not phantoms
+			self:StopBar(CL.count:format(L.nexus_daggers, nexusDaggersCount))
+			self:Message(args.spellId, "yellow", CL.count:format(L.nexus_daggers, nexusDaggersCount))
+			self:PlaySound(args.spellId, "alarm")
+			nexusDaggersCount = nexusDaggersCount + 1
+			if nexusDaggersCount < 7 then
+				self:Bar(args.spellId, nexusDaggersCount % 2 == 0 and 30.0 or 100.0, CL.count:format(L.nexus_daggers, nexusDaggersCount))
+			end
+			daggerCastedCount = 0
+		else -- phantoms
+			daggerCastedCount = daggerCastedCount + 1
+			if daggerCastedCount == 5 then
+				self:Message(args.spellId, "cyan", CL.over:format(L.nexus_daggers))
+				self:PlaySound(args.spellId, "info")
+			end
 		end
 	end
 end
@@ -183,8 +193,8 @@ function mod:VoidShredders(args)
 	self:PlaySound(args.spellId, "alert")
 	voidShreddersCount = voidShreddersCount + 1
 	if voidShreddersCount < 10 then
-		local timer = { 30.0, 66.0, 34.0 } -- 6.0, 34.0, 30.0, 66.0, 34.0, 30.0, 66.0
-		local cd = timer[voidShreddersCount % 3 + 1]
+		-- 10.0, 30.0, 30.0, 70.0, 30.0, 30.0, 70.0, 30.0, 30.0
+		local cd = voidShreddersCount % 3 == 1 and 70 or 30
 		self:Bar(args.spellId, cd, CL.count:format(args.spellName, voidShreddersCount))
 	end
 end
@@ -205,7 +215,7 @@ function mod:StarlessNight(args)
 	self:StopBar(CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:Message(args.spellId, "cyan", CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:PlaySound(args.spellId, "long")
-	self:CastBar(args.spellId, 24, CL.count:format(CL.stage:format(2), starlessNightCount))
+	self:CastBar(args.spellId, 29, CL.count:format(CL.stage:format(2), starlessNightCount))
 	starlessNightCount = starlessNightCount + 1
 	local cd = 130.0
 	if starlessNightCount == 3 then
@@ -224,5 +234,5 @@ function mod:EternalNight(args)
 	self:StopBar(CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:Message(args.spellId, "red", CL.count:format(CL.stage:format(2), starlessNightCount))
 	self:PlaySound(args.spellId, "long")
-	self:CastBar(args.spellId, 34, CL.count:format(CL.stage:format(2), starlessNightCount))
+	self:CastBar(args.spellId, 38, CL.count:format(CL.stage:format(2), starlessNightCount))
 end

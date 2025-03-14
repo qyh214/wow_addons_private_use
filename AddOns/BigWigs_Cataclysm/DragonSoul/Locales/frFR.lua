@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "Boule de Vide qui rebondit contre les joueurs et le boss."
 	L.ball_yell = "Gul'kafh an'qov N'Zoth."
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "Rebond de la Boule de Vide"
 	L.bounce_desc = "Compteur des rebonds de la Boule de Vide."
 

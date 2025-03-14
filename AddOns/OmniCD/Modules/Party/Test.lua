@@ -1,9 +1,6 @@
 local E, L = select(2, ...):unpack()
 local P = E.Party
 
-local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
-local LoadAddOn = C_AddOns and C_AddOns.LoadAddOn or LoadAddOn
-
 local TM = CreateFrame("Frame")
 
 local addOnTestMode = {}
@@ -11,10 +8,12 @@ local config = {}
 
 addOnTestMode.Grid2 = function(isTestEnabled)
 	if not Grid2Options or not Grid2Options.editedTheme or not Grid2Options.editedTheme.layout
-	or not Grid2Options.editedTheme.layout.layouts or not Grid2Options.editedTheme.layout.layouts["solo"] then return end
+	or not Grid2Options.editedTheme.layout.layouts or not Grid2Options.editedTheme.layout.layouts["solo"] then
+		return
+	end
 	if isTestEnabled then
-		if not IsAddOnLoaded("Grid2Options") then
-			LoadAddOn("Grid2Options")
+		if not C_AddOns.IsAddOnLoaded("Grid2Options") then
+			C_AddOns.LoadAddOn("Grid2Options")
 		end
 
 		config.Grid2 = Grid2Options.editedTheme.layout.layouts["solo"]
@@ -28,7 +27,9 @@ addOnTestMode.Grid2 = function(isTestEnabled)
 end
 
 addOnTestMode.VuhDo = function(isTestEnabled)
-	if not VUHDO_CONFIG or not VUHDO_CONFIG["HIDE_PANELS_SOLO"] then return end
+	if not VUHDO_CONFIG or not VUHDO_CONFIG["HIDE_PANELS_SOLO"] then
+		return
+	end
 	if isTestEnabled then
 		config.VuhDo = VUHDO_CONFIG["HIDE_PANELS_SOLO"]
 		VUHDO_CONFIG["HIDE_PANELS_SOLO"] = false
@@ -43,7 +44,9 @@ addOnTestMode.ElvUI = function(isTestEnabled)
 end
 
 addOnTestMode.Aptechka = function(isTestEnabled)
-	if not Aptechka or not Aptechka.db or not Aptechka.db.profile or not Aptechka.db.profile.showSolo then return end
+	if not Aptechka or not Aptechka.db or not Aptechka.db.profile or not Aptechka.db.profile.showSolo then
+		return
+	end
 	if isTestEnabled then
 		config.Aptechka = Aptechka.db.profile.showSolo
 		Aptechka.db.profile.showSolo = true
@@ -53,9 +56,11 @@ addOnTestMode.Aptechka = function(isTestEnabled)
 	Aptechka:ReconfigureProtected()
 end
 
---[[
+--[[ solo uses CellSoloFramePlayer
 addOnTestMode.Cell = function(isTestEnabled)
-	if not CellDB or not CellDB["general"] or not CellDB["general"]["showSolo"] then return end
+	if not CellDB or not CellDB["general"] then
+		return
+	end
 	if isTestEnabled then
 		config.Cell = CellDB["general"]["showSolo"]
 		CellDB["general"]["showSolo"] = true
@@ -77,7 +82,7 @@ function TM:Test(key)
 	P.isInTestMode = not P.isInTestMode
 
 	if P.isInTestMode then
-		if not E.db.position.detached and groupSize < 1 and activeCustomUF and not addOnTestMode[activeCustomUF] then
+		if not E.db.position.detached and groupSize < 1 and activeCustomUF and activeCustomUF ~= "auto" and not addOnTestMode[activeCustomUF] then
 			E.write(format(E.STR.UNSUPPORTED_ADDON, activeCustomUF))
 		end
 
@@ -90,8 +95,6 @@ function TM:Test(key)
 			if not activeCustomUF then
 				if E.isDF then
 					if (groupSize == 0 or not P:CompactFrameIsActive()) and not P.isInEditMode then
-
-
 						ShowUIPanel(EditModeManagerFrame)
 					end
 
@@ -101,7 +104,7 @@ function TM:Test(key)
 						return
 					end
 				else
-					if IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") then
+					if C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") then
 						CompactRaidFrameManager:Show()
 						CompactRaidFrameContainer:Show()
 					else
@@ -118,11 +121,8 @@ function TM:Test(key)
 		if not self.indicator then
 			self.indicator = CreateFrame("Frame", nil, UIParent, "OmniCDTemplate")
 			self.indicator.anchor.background:SetColorTexture(0, 0, 0, 1)
-			if E.isDF or E.isCata or E.isWOTLKC341 or E.isClassic1144 then
-				self.indicator.anchor.background:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 1), CreateColor(1, 1, 1, 0))
-			else
-				self.indicator.anchor.background:SetGradientAlpha("Horizontal", 1, 1, 1, 1, 1, 1, 1, 0)
-			end
+
+			self.indicator.anchor.background:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 1), CreateColor(1, 1, 1, 0))
 			self.indicator.anchor:SetHeight(15)
 			self.indicator.anchor:EnableMouse(false)
 			self.indicator:SetScript("OnHide", nil)
@@ -136,8 +136,10 @@ function TM:Test(key)
 		self.indicator.anchor.text:SetFormattedText("%s - %s", L["Test"], E.L_ALL_ZONE[key])
 		self.indicator.anchor:SetWidth(self.indicator.anchor.text:GetWidth() + 20)
 
+
 		self:RegisterEvent('PLAYER_LEAVING_WORLD')
 
+		P.isInShadowlands = E.isSL or (E.postBFA and not P.isInPvPInstance and P:IsInShadowlands())
 		P:Refresh()
 
 		local frame = P.groupInfo[E.userGUID].bar
@@ -156,6 +158,7 @@ function TM:Test(key)
 	else
 		if not activeCustomUF then
 			if E.isDF then
+
 				if P.isInEditMode then
 					if P.inLockdown then
 						self:EndTestOOC()
@@ -198,12 +201,14 @@ function TM:PLAYER_REGEN_ENABLED()
 			if P.isInEditMode then
 				HideUIPanel(EditModeManagerFrame)
 			end
-		elseif IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") and (P:GetEffectiveNumGroupMembers() == 0 or not P:CompactFrameIsActive()) then
+		elseif C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") and (P:GetEffectiveNumGroupMembers() == 0 or not P:CompactFrameIsActive()) then
 			CompactRaidFrameManager:Hide()
 			CompactRaidFrameContainer:Hide()
 		end
+	--[[
 	elseif E.customUF.active == "Cell" then
 		Cell:Fire("UpdateVisibility", "solo")
+	]]
 	end
 	self:UnregisterEvent('PLAYER_REGEN_ENABLED')
 end
@@ -218,8 +223,7 @@ function P:Test(key)
 	key = type(key) == "table" and key[2] or key
 	self.testZone = key
 	key = key or self.zone
-	key = key == "none" and E.profile.Party.noneZoneSetting or (key == "scenario" and E.profile.Party.scenarioZoneSetting) or key
-	E.db = E.profile.Party[key]
+	E.db = E:GetCurrentZoneSettings(key)
 	E:SetActiveUnitFrameData()
 
 	TM:Test(key)

@@ -1,8 +1,6 @@
 local E, L, C = select(2, ...):unpack()
 local PS = E.ProfileSharing
 
-
-
 local selectedProfileType, selectedProfileSrc, selectedProfileDest
 local selectedProfileZone, selectedProfileOption
 local tbl = {}
@@ -60,11 +58,11 @@ local ProfileSharing = {
 			inline = true,
 			args = {
 				lb1 = {
-					name = format(L["Importing \`%s\` will create a new profile."], PS.profileTypeValues.all),
+					name = format(L["Importing \'%s\' will create a new profile."], PS.profileTypeValues.all),
 					order = 0, type = "description",
 				},
 				lb2 = {
-					name = format(L["Importing \`%s\` will merge new spells to your list and overwrite same spells."], PS.profileTypeValues.cds),
+					name = format(L["Importing \'%s\' will merge new spells to your list and overwrite same spells."], PS.profileTypeValues.cds),
 					order = 1, type = "description",
 				},
 				openImportDialog = {

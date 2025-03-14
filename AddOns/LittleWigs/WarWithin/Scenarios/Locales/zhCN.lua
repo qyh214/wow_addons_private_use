@@ -2,7 +2,6 @@ local L = BigWigs:NewBossLocale("Awakening the Machine", "zhCN")
 if not L then return end
 if L then
 	L.awakening_the_machine = "主机觉醒"
-
 	L.stages_desc = "新一波敌人出现时显示警告。"
 
 	L.corrupted_machinist = "被腐蚀的机械师"

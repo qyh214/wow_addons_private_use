@@ -1,0 +1,8 @@
+## Interface: 110005, 110007, 110100
+## Title: 顾衣衿(少女音)语音包-GYJMEIMEIDB
+## Notes: 11.1twwS2赛季wa的触发器及语音模组 当前作者:顾衣衿(少女音版本)
+## IconTexture: Interface\AddOns\GYJMEIMEIDB\Media\Textures\icon.tga
+## Author: SatouYumei,GYJ,Causese
+
+db.lua
+functions.lua

@@ -6,8 +6,8 @@ local boss = {
 
 ns.RegisterPoints(ns.ISLEOFDORN, {
     [50005880] = { -- Kordac
-        quest=nil,
-        worldquest=nil,
+        quest=81630, -- This is the world quest
+        worldquest=81630,
         npc=229334,
         loot={
             225730, -- Stone Gaze Ceinture
@@ -24,7 +24,7 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
 }, boss)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [65008760] = { -- Aggregation of Horrors
+    [60868760] = { -- Aggregation of Horrors
         quest=83466,
         worldquest=82653,
         npc=220999,
@@ -43,9 +43,9 @@ ns.RegisterPoints(ns.RINGINGDEEPS, {
 }, boss)
 
 ns.RegisterPoints(ns.HALLOWFALL, {
-    [45401740] = { -- Shurrai
-        quest=nil,
-        worldquest=nil,
+    [45401740] = { -- Shurrai, Atrocity of the Undersea
+        quest=83467,
+        worldquest=81653,
         npc=221224,
         loot={
             225730, -- Stone Gaze Ceinture
@@ -63,8 +63,8 @@ ns.RegisterPoints(ns.HALLOWFALL, {
 
 ns.RegisterPoints(ns.CITYOFTHREADS, {
     [17103340] = { -- Orta
-        quest=nil,
-        worldquest=nil,
+        quest=81624, -- this is the worldquest; a separate one didn't trip
+        worldquest=81624,
         npc=221067,
         loot={
             225730, -- Stone Gaze Ceinture
@@ -79,3 +79,22 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
         },
     },
 }, boss)
+
+ns.RegisterPoints(ns.UNDERMINE, {
+    [49601720] = { -- The Gobfather
+        quest=85088, -- 89401 is the account-loot weekly, I think?
+        worldquest=85089, -- The Main Event, also
+        npc=231821,
+        loot={
+            232725, -- Pilot's Oiled Trousers
+            232726, -- Well-Trodden Mechanic's Shoes
+            232727, -- Cavern Stalker's Trophy Girdle
+            232728, -- Darkfuse Dinner Jacket
+            232729, -- Horn-Adorned Chausses
+            232730, -- Cauldron Master Cleats
+            232731, -- Steadfast Contender's Breastplate
+            232732, -- Champion's Gilded Stompers
+            232733, -- Gobfather's Gold Medal
+        },
+    },
+})

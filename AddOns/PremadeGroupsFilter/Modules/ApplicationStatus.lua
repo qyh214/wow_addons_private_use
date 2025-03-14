@@ -24,9 +24,10 @@ local C = PGF.C
 
 PGF.hardDeclinedGroups = {}
 PGF.softDeclinedGroups = {}
+PGF.canceledGroups = {}
 
 function PGF.GetAppStatus(resultID, optionalSearchResultInfo)
-    local searchResultInfo = optionalSearchResultInfo or C_LFGList.GetSearchResultInfo(resultID)
+    local searchResultInfo = optionalSearchResultInfo or PGF.GetSearchResultInfo(resultID)
     local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID)
     local isApplication = appStatus ~= "none" or pendingStatus
     local isDeclined = appStatus == "declined" or appStatus == "declined_delisted" or appStatus == "declined_full"
@@ -49,32 +50,47 @@ function PGF.GetGroupKey(searchResultInfo)
     end
 end
 
-function PGF.IsDeclinedGroup(lookupTable, searchResultInfo)
+local function IsGroupInTable(lookupTable, searchResultInfo)
     local key = PGF.GetGroupKey(searchResultInfo)
     if not key then return false end
-    local lastDeclined = lookupTable[key] or 0
-    if lastDeclined > time() - C.DECLINED_GROUPS_RESET then
+    local lastSeen = lookupTable[key] or 0
+    if lastSeen > time() - C.DECLINED_GROUPS_RESET then
         return true
     end
     return false
 end
 
 function PGF.IsHardDeclinedGroup(searchResultInfo)
-    return PGF.IsDeclinedGroup(PGF.hardDeclinedGroups, searchResultInfo)
+    return IsGroupInTable(PGF.hardDeclinedGroups, searchResultInfo)
 end
 
 function PGF.IsSoftDeclinedGroup(searchResultInfo)
-    return PGF.IsDeclinedGroup(PGF.softDeclinedGroups, searchResultInfo)
+    return IsGroupInTable(PGF.softDeclinedGroups, searchResultInfo)
+end
+
+function PGF.IsCanceledGroup(searchResultInfo)
+    return IsGroupInTable(PGF.canceledGroups, searchResultInfo)
+end
+
+function PGF.HandleLFGListFrameDeclineStatus(key)
+    if PGF.IsRetail() and PremadeGroupsFilterSettings.signUpDeclined and LFGListFrame.declines then
+        LFGListFrame.declines[key] = nil -- remove from Blizzard's list to allow re-applying to groups
+        LFGListSearchPanel_UpdateResults(LFGListFrame.SearchPanel) -- update but don't sort
+    end
 end
 
 function PGF.OnLFGListApplicationStatusUpdated(id, newStatus)
     -- possible newStatus: declined, declined_full, declined_delisted, timedout
-    local searchResultInfo = C_LFGList.GetSearchResultInfo(id)
+    local searchResultInfo = PGF.GetSearchResultInfo(id)
     local key = PGF.GetGroupKey(searchResultInfo)
     if not key then return end
     if newStatus == "declined" then
         PGF.hardDeclinedGroups[key] = time()
-    elseif newStatus == "declined_delisted" or newStatus == "timedout" then
+        PGF.HandleLFGListFrameDeclineStatus(key)
+    elseif newStatus == "declined_delisted" or newStatus == "declined_full" or newStatus == "timedout" then
         PGF.softDeclinedGroups[key] = time()
+        PGF.HandleLFGListFrameDeclineStatus(key)
+    elseif newStatus == "cancelled" then
+        PGF.canceledGroups[key] = time()
     end
 end

@@ -184,6 +184,7 @@ end
 local enemyExclusions = {
     [23775]  = true,      -- Head of the Horseman
     [120651] = true,      -- Explosives
+    [128652] = true,      -- Viq'Goth (Siege of Boralus - untargetable background boss)
     [156227] = true,      -- Neferset Denizen
     [160966] = true,      -- Thing from Beyond?
     [161895] = true,      -- Thing from Beyond?
@@ -204,6 +205,8 @@ local enemyExclusions = {
     [168112] = 329636,    -- Kaal (when shielded)
     [193760] = true,      -- Surging Ruiner (Raszageth) -- gives bad range information.
     [204560] = true,      -- Incorporeal Being
+    [229296] = true,      -- Orb of Ascendance (TWW S1 Affix)
+    [218884] = true,      -- Silken Court: Scattershell Scarab
 }
 
 local requiredForInclusion = {
@@ -412,12 +415,10 @@ do
 
                             if not excluded and checkPlates then
                                 local _, maxR = RC:GetRange( unit )
-                                excluded = maxR == nil or maxR > checkPlates
-
-                                range = maxR or range
+                                excluded = maxR ~= nil and maxR > checkPlates
 
                                 if debugging and excluded then
-                                    details = format( "%s\n    - Excluded by range (%d > %d).", details, range, checkPlates )
+                                    details = format( "%s\n    - Excluded by range (%d > %d).", details, maxR, checkPlates )
                                 end
                             end
 
@@ -481,9 +482,7 @@ do
 
                                 if not excluded and checkPlates then
                                     local _, maxR = RC:GetRange( unit )
-                                    excluded = maxR == nil or maxR > checkPlates
-
-                                    range = maxR or range
+                                    excluded = maxR ~= nil and maxR > checkPlates
 
                                     if debugging and excluded then
                                         details = format( "%s\n    - Excluded by range (%d > %d).", details, maxR, checkPlates )
@@ -812,11 +811,12 @@ ns.compositeDebuffCount = function( ... )
     return n
 end
 
-ns.conditionalDebuffCount = function(req1, req2, ...)
+ns.conditionalDebuffCount = function(req1, req2, req3, ...)
     local n = 0
 
     req1 = class.auras[req1] and class.auras[req1].id
     req2 = class.auras[req2] and class.auras[req2].id
+    req3 = class.auras[req3] and class.auras[req3].id
 
     for i = 1, select("#", ...) do
         local debuff = select(i, ...)
@@ -825,9 +825,7 @@ ns.conditionalDebuffCount = function(req1, req2, ...)
 
         if debuff then
             for unit in pairs(debuff) do
-                local reqExp =
-                    (req1 and debuffs[req1] and debuffs[req1][unit]) or (req2 and debuffs[req2] and debuffs[req2][unit])
-                if reqExp then
+                if (req1 and debuffs[req1] and debuffs[req1][unit]) or (req2 and debuffs[req2] and debuffs[req2][unit]) or (req3 and debuffs[req3] and debuffs[req3][unit]) then
                     n = n + 1
                 end
             end
@@ -1044,11 +1042,9 @@ do
             local a = class.auras[ aura ]
             local window = a and a.duration or grace
             local friendly = a and ( a.friendly or a.dot == "buff" ) or false
-            local expires = not ( a and a.no_ticks or friendly )
 
             for unit, entry in pairs( targets ) do
-                -- NYI: Check for dot vs. debuff, since debuffs won't 'tick'
-                if expires and now - entry.last_seen > window then
+                if now - entry.last_seen > window then
                     ns.trackDebuff( aura, unit )
                 elseif special == "combatExit" and not friendly then
                     -- Hekili:Error( format( "Auditor removed an aura %d from %s after exiting combat.", aura, unit ) )
@@ -1307,7 +1303,8 @@ do
 
         for k, v in pairs(db) do
             if not CheckEnemyExclusion( k ) and v.lastHealth > percent then
-                time = max( time, max( 0, v.deathTime ) )
+                local scale = ( percent - v.deathPercent ) / ( v.lastHealth - v.deathPercent )
+                time = max( time, max( 0, v.deathTime * scale ) )
                 validUnit = true
             end
         end

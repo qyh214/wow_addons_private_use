@@ -51,12 +51,31 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			1215744, -- Blinding Admiration
+			26103, -- Sweep
+			26102, -- Sand Blast
+			26615, -- Berserk
+			"scarab",
+			"stages",
+		},nil,{
+			[1215744] = CL.fear, -- Blinding Admiration (Fear)
+			[26103] = CL.knockback, -- Sweep (Knockback)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Sweep", 26103)
 	self:Log("SPELL_CAST_START", "SandBlast", 26102)
 	self:Log("SPELL_AURA_APPLIED", "BerserkApplied", 26615)
 	self:Log("SPELL_CAST_SUCCESS", "SummonOuroMounds", 26058) -- Submerge
 	self:Log("SPELL_SUMMON", "SummonOuroScarabs", 26060) -- Emerge
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_AURA_APPLIED", "BlindingAdmirationApplied", 1215744)
+	end
 end
 
 function mod:OnEngage()
@@ -67,6 +86,9 @@ function mod:OnEngage()
 	self:Bar("stages", 180, L.submerge_bar, "misc_arrowdown")
 	self:CDBar(26103, 22.6, CL.knockback) -- Sweep
 	self:CDBar(26102, 24.2) -- Sand Blast
+	if self:GetSeason() == 2 then
+		self:Bar(1215744, 30, CL.fear) -- Blinding Admiration
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -76,7 +98,7 @@ end
 function mod:Sweep(args)
 	self:Message(args.spellId, "orange", CL.knockback)
 	self:DelayedMessage(args.spellId, 16, "orange", CL.custom_sec:format(CL.knockback, 5))
-	self:Bar(args.spellId, 21, CL.knockback)
+	self:CDBar(args.spellId, 21, CL.knockback)
 	self:PlaySound(args.spellId, "alarm")
 end
 
@@ -102,6 +124,9 @@ function mod:SummonOuroMounds() -- Submerge
 	self:StopBar(L.submerge_bar)
 	self:StopBar(CL.knockback) -- Sweep
 	self:StopBar(26102) -- Sand Blast
+	if self:GetSeason() == 2 then
+		self:StopBar(CL.fear) -- Blinding Admiration
+	end
 
 	self:Message("stages", "cyan", L.submerge_message, "misc_arrowdown")
 	self:Bar("stages", 30, L.emerge_bar, "misc_arrowlup")
@@ -122,17 +147,33 @@ do
 
 			-- Sweep
 			self:DelayedMessage(26103, 16, "orange", CL.custom_sec:format(CL.knockback, 5))
-			self:Bar(26103, 21, CL.knockback)
+			self:CDBar(26103, 21, CL.knockback)
 
 			-- Sand Blast
 			self:DelayedMessage(26102, 17, "red", CL.custom_sec:format(self:SpellName(26102), 5))
-			self:Bar(26102, 22)
+			self:CDBar(26102, 22)
 
 			-- Scarab Despawn
 			scarabCount = scarabCount + 1
 			self:Bar("scarab", 60, CL.count:format(L.scarab_bar, scarabCount), L.scarab_icon)
 
+			if self:GetSeason() == 2 then
+				self:Bar(1215744, 30, CL.fear) -- Blinding Admiration
+			end
+
 			self:PlaySound("stages", "long")
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:BlindingAdmirationApplied(args)
+		if args.time - prev > 10 then
+			prev = args.time
+			self:Message(args.spellId, "yellow", CL.fear)
+			self:Bar(args.spellId, 30, CL.fear)
+			self:PlaySound(args.spellId, "warning")
 		end
 	end
 end

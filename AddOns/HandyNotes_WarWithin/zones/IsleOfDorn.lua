@@ -6,6 +6,8 @@ Arrival post-intro is 83622
 
 Magni and Merrix chat after restoration: 84815
 Alleria and Anduin chat after restoration: 84335
+Lufsela chat after Rook Rally: 84813
+Merrix and Olbarig chat after Titanic Failsafe: 82541
 
 Earthern coffer 6230
 38523951 - in cave from 36354156
@@ -223,6 +225,27 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
         },
         note="{npc:225486:Dog} will be here if you've completed their quest chain across previous expansions. If you haven't... go recruit them as part of the Tillers in Pandaria, then get them to move from your Draenor garrison to the Legion version of Dalaran...",
         minimap=true,
+    },
+
+    [29063621] = {
+        loot={220770}, -- Void-Scarred Stormhammer
+        requires=ns.conditions.Class("HUNTER"),
+        note="Use to call down {npc:213428:Aradan} to tame in {zone:2315:The Rookery}",
+        atlas="paw-icon",
+        backdrop=ns.atlas_texture("CircleMask", {r=0, g=0, b=0}),
+        border=ns.atlas_texture("pet-list_default-ring", 1.2),
+    },
+})
+
+ns.RegisterPoints(2315, {-- The Rookery (Landing)
+    [11851904] = {
+        label="{npc:213428:Aradan}",
+        requires=ns.conditions.Class("HUNTER"),
+        active=ns.conditions.Item(220770), -- Void-Scarred Stormhammer
+        note="Collect the {item:220770:Void-Scarred Stormhammer} in {zone:2248:Isle of Dorn} first. Get here by going up the stairs after jumping down after {npc:209230:Kyrioss}. Use the {item:220770:Void-Scarred Stormhammer} to call down {npc:213428:Aradan} to tame.",
+        atlas="paw-icon",
+        backdrop=ns.atlas_texture("CircleMask", {r=0, g=0, b=0}),
+        border=ns.atlas_texture("pet-list_default-ring", 1.2),
     },
 })
 

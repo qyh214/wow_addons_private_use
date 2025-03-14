@@ -63,10 +63,13 @@ end
 L = BigWigs:NewBossLocale("Blackwing Lair Trash", "ruRU")
 if L then
 	L.wyrmguard_overseer = "Змеестраж Когтя Смерти / Надзиратель Когтя Смерти" -- NPC 12460 / 12461
+	L.sandstorm = "Песчаная буря"
 
 	--L.target_vulnerability = "Target Vulnerability Warnings"
 	--L.target_vulnerability_desc = "When your target is a Death Talon Wyrmguard or a Death Talon Overseer, show a warning for what vulnerability it has."
 	--L.target_vulnerability_message = "Target Vulnerability: %s"
 	L.detect_magic_missing_message = "Распознавание магии is missing from your target"
 	L.detect_magic_warning = "A Mage must cast \124cff71d5ff\124Hspell:2855:0\124h[Распознавание магии]\124h\124r on your target for vulnerability warnings to work."
+
+	L.warlock = "Чернокнижник Крыла Тьмы" -- NPC 12459
 end

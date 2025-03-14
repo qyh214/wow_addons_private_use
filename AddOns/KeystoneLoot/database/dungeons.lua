@@ -1,15 +1,15 @@
 local AddonName, KeystoneLoot = ...;
 
 local _dungeonList = {
-	[13] = {
-		{ --[[name = "Ara-Kara, Stadt der Echos",]] challengeModeId = 503, teleportSpellId = 445417, bgTexture = 5912546, lootTable = { 221152, 221156, 221160, 221164, 219316, 221153, 221157, 221161, 221165, 219317, 221150, 221154, 221158, 221162, 219314, 221151, 221155, 221159, 221163 } },
-		{ --[[name = "Das Steingewölbe,]] challengeModeId = 501, teleportSpellId = 445269, bgTexture = 5912554, lootTable = { 221090, 221094, 219300, 221075, 221079, 221083, 221087, 221091, 221095, 219301, 226683, 221076, 221080, 221084, 221088, 221092, 219302, 221073, 221077, 221081, 221085, 221089, 219303, 221074, 221078, 219315, 221086, 221082 } },
-		{ --[[name = "Die Morgenbringer",]] challengeModeId = 505, teleportSpellId = 445414, bgTexture = 5912552, lootTable = { 221133, 221137, 221141, 221145, 221149, 221134, 221138, 221142, 221146, 221135, 221139, 221143, 221147, 219313, 221140, 219311, 221132, 221136, 221202, 221144, 221148, 219312 } },
-		{ --[[name = "Stadt der Fäden",]] challengeModeId = 502, teleportSpellId = 445416, bgTexture = 5912548, lootTable = { 221183, 221187, 221168, 221172, 221176, 219320, 221184, 221188, 221169, 221173, 221177, 219321, 221185, 221189, 219319, 221166, 221170, 221174, 219318, 221182, 221186, 221180, 221181, 221167, 221171, 221175, 221179, 221178 } },
-		{ --[[name = "Die Nebel von Tirna Scithe",]] challengeModeId = 375, teleportSpellId = 354464, bgTexture = 3759909, lootTable = { 178692, 178700, 178708, 182142, 183473, 178693, 178701, 178709, 183253, 181844, 182206, 182384, 178694, 178702, 178710, 183491, 183514, 183485, 183229, 183199, 178695, 178703, 178711, 181466, 182129, 182767, 182964, 181775, 178696, 178704, 178712, 182754, 181734, 183266, 182335, 181539, 178697, 178705, 178713, 182143, 182347, 183336, 182651, 181462, 178698, 183494, 182305, 183132, 180935, 183463, 178714, 178691, 178699, 178707, 178715, 178706, 182448, 182582, 182686 } },
-		{ --[[name = "Die Nekrotische Schneise",]] challengeModeId = 376, teleportSpellId = 354462, bgTexture = 3759910, lootTable = { 182646, 182385, 183481, 181641, 182622, 183512, 178732, 183402, 181709, 181843, 183471, 178772, 178780, 183387, 178733, 178741, 178749, 183482, 181600, 181759, 178781, 181700, 178734, 178742, 178750, 182772, 182750, 183373, 178782, 182633, 178735, 178743, 181712, 182960, 183492, 181383, 178783, 183278, 178736, 178744, 181738, 182136, 182111, 183505, 178748, 182201, 178737, 178745, 182295, 181974, 181982, 178777, 178740, 178730, 178738, 182778, 182345, 182321, 178779, 178778, 182440, 178731, 178739, 178751 } },
-		{ --[[name = "Die Belagerung von Boralus",]] challengeModeId = 353, teleportSpellId = (UnitFactionGroup("player") == "Alliance" and 445418 or 464256), bgTexture = 2178272, lootTable = { 159973, 231825, 159320, 162541, 159651, 231818, 231826, 231827, 159322, 159968, 159622, 159386, 159969, 159237, 159434, 159379, 159427, 231822, 231830, 159428, 159251, 159650, 159372, 159649, 159972, 159623, 159250, 159429, 231824, 159256, 159309, 159965, 159461 } },
-		{ --[[name = "Grim Batol",]] challengeModeId = 507, teleportSpellId = 445424, bgTexture = 522354, lootTable = { 133298, 133302, 133306, 157614, 133283, 133287, 133291, 133295, 133299, 133303, 133354, 157615, 133284, 133288, 133292, 133296, 133300, 133304, 157612, 133374, 133285, 133289, 133293, 133297, 133301, 133305, 157613, 133282, 133286, 133290, 133294, 133363 } },
+	[14] = {
+		{ --[[name = "Operation: Schleuse",]] challengeModeId = 525, teleportSpellId = 1216786, bgTexture = 6422412, lootTable = { 234490, 234494, 234498, 234502, 234506, 234491, 232542, 234499, 234503, 234507, 234492, 232543, 234500, 234504, 232545, 234496, 234495, 234493, 234497, 234501, 236768, 232541, 234505 } },
+		{ --[[name = "Metbrauerei Glutbräu",]] challengeModeId = 506, teleportSpellId = 445440, bgTexture = 5912547, lootTable = { 221059, 221063, 221067, 221071, 221052, 221056, 221060, 219297, 221068, 221072, 221053, 221057, 221061, 221065, 221069, 221201, 221054, 221058, 221062, 219299, 221070, 221198, 221064, 221051, 221055, 219298 } },
+		{ --[[name = "Die Brutstätte",]] challengeModeId = 500, teleportSpellId = 445443, bgTexture = 5912553, lootTable = { 219296, 221036, 221040, 221044, 221048, 221033, 221037, 221041, 221045, 221049, 219294, 221034, 221038, 221197, 221046, 221050, 219295, 221035, 221039, 221043, 221047, 221032, 221042 } },
+		{ --[[name = "Dunkelflammenspalt",]] challengeModeId = 504, teleportSpellId = 445441, bgTexture = 5912549, lootTable = { 221098, 219304, 221106, 221110, 221114, 221099, 221103, 221107, 221111, 225548, 221096, 221100, 219306, 221108, 221112, 221102, 221104, 221115, 221097, 221101, 221105, 221109, 221113, 219307, 219305 } },
+		{ --[[name = "Priorat der Heiligen Flamme",]] challengeModeId = 499, teleportSpellId = 445444, bgTexture = 5912551, lootTable = { 221121, 221125, 221129, 219308, 221203, 221118, 221122, 221126, 221130, 221200, 221119, 221123, 221127, 221131, 219310, 221116, 221120, 221124, 221128, 221117, 219309 } },
+		{ --[[name = "Das RIESENFLÖZ!!",]] challengeModeId = 247, teleportSpellId = (UnitFactionGroup("player") == "Alliance" and 467553 or 467555), bgTexture = 2178274, lootTable = { 159611, 158359, 235416, 159462, 159226, 159612, 159305, 235417, 155864, 159361, 235418, 235419, 159638, 159725, 161135, 235420, 159639, 159663, 235460, 159679, 159451, 158341, 159357, 158357, 159641, 159287, 158350, 159240, 235415, 159235, 159231, 159336, 158353 } },
+		{ --[[name = "Mechagon - Werkstatt,]] challengeModeId = 370, teleportSpellId = 373274, bgTexture = 3025325, lootTable = { 168982, 168967, 168975, 168983, 235811, 168976, 169378, 235812, 168985, 235222, 168962, 168978, 168986, 235223, 168955, 168971, 232546, 235224, 168964, 168972, 168980, 199921, 168969, 168988, 235809, 168957, 168965, 168973, 169608, 168989, 168966, 168968, 235226, 168958, 169344, 168974, 235810 } },
+		{ --[[name = "Theater der Schmerzen",]] challengeModeId = 382, teleportSpellId = 354467, bgTexture = 3759914, lootTable = { 178806, 178872, 178868, 178801, 178795, 178799, 178865, 178869, 178811, 178804, 178803, 178792, 178796, 178800, 178866, 178808, 178864, 178805, 178789, 178793, 178797, 178863, 178867, 178809, 178810, 178871, 178807, 178794, 178798, 178802, 178870 } },
 	}
 };
 
@@ -68,16 +68,16 @@ end
 
 
 local _keystoneItemLevel = {
-	[13] = {
-		[2] = { endOfRun = { level = 597, text = 'Champion' }, greatVault = { level = 606, text = 'Champion' } },
-		[3] = { endOfRun = { level = 597, text = 'Champion' }, greatVault = { level = 610, text = 'Hero' } },
-		[4] = { endOfRun = { level = 600, text = 'Champion' }, greatVault = { level = 610, text = 'Hero' } },
-		[5] = { endOfRun = { level = 603, text = 'Champion' }, greatVault = { level = 613, text = 'Hero' } },
-		[6] = { endOfRun = { level = 606, text = 'Champion' }, greatVault = { level = 613, text = 'Hero' } },
-		[7] = { endOfRun = { level = 610, text = 'Hero' }, greatVault = { level = 616, text = 'Hero' } },
-		[8] = { endOfRun = { level = 610, text = 'Hero' }, greatVault = { level = 619, text = 'Hero' } },
-		[9] = { endOfRun = { level = 613, text = 'Hero' }, greatVault = { level = 619, text = 'Hero' } },
-		[10] = { endOfRun = { level = 613, text = 'Hero' }, greatVault = { level = 623, text = 'Myth' } }
+	[14] = {
+		[2] = { endOfRun = { level = 639, text = 'Champion' }, greatVault = { level = 649, text = 'Hero' } },
+		[3] = { endOfRun = { level = 639, text = 'Champion' }, greatVault = { level = 649, text = 'Hero' } },
+		[4] = { endOfRun = { level = 642, text = 'Champion' }, greatVault = { level = 652, text = 'Hero' } },
+		[5] = { endOfRun = { level = 645, text = 'Champion' }, greatVault = { level = 652, text = 'Hero' } },
+		[6] = { endOfRun = { level = 649, text = 'Hero' }, greatVault = { level = 655, text = 'Hero' } },
+		[7] = { endOfRun = { level = 649, text = 'Hero' }, greatVault = { level = 658, text = 'Hero' } },
+		[8] = { endOfRun = { level = 652, text = 'Hero' }, greatVault = { level = 658, text = 'Hero' } },
+		[9] = { endOfRun = { level = 652, text = 'Hero' }, greatVault = { level = 658, text = 'Hero' } },
+		[10] = { endOfRun = { level = 655, text = 'Hero' }, greatVault = { level = 662, text = 'Myth' } }
 	}
 };
 
@@ -92,32 +92,32 @@ end
 
 
 local _itemlevels = {
-	[13] = {
+	[14] = {
 		{ id = 'champion', text = 'Champion', entries = {
-			{ itemLevel = 597, bonusId = 10313, text = ITEM_GOOD_COLOR_CODE..'597|r | +2 +3' },
-			{ itemLevel = 600, bonusId = 10314, text = ITEM_GOOD_COLOR_CODE..'600|r | +4' },
-			{ itemLevel = 603, bonusId = 10315, text = ITEM_GOOD_COLOR_CODE..'603|r | +5' },
-			{ itemLevel = 606, bonusId = 10316, text = ITEM_GOOD_COLOR_CODE..'606|r | +6' },
-			{ itemLevel = 610, bonusId = 10317, text = ITEM_SUPERIOR_COLOR_CODE..'610|r | '..ITEM_UPGRADE },
-			{ itemLevel = 613, bonusId = 10318, text = ITEM_SUPERIOR_COLOR_CODE..'613|r | '..ITEM_UPGRADE },
-			{ itemLevel = 616, bonusId = 10319, text = ITEM_SUPERIOR_COLOR_CODE..'616|r | '..ITEM_UPGRADE },
-			{ itemLevel = 619, bonusId = 10320, text = ITEM_SUPERIOR_COLOR_CODE..'619|r | '..ITEM_UPGRADE }
+			{ itemLevel = 636, bonusId = 11977, text = ITEM_GOOD_COLOR_CODE..'636|r | +0' },
+			{ itemLevel = 639, bonusId = 11978, text = ITEM_GOOD_COLOR_CODE..'639|r | +2 +3' },
+			{ itemLevel = 642, bonusId = 11979, text = ITEM_GOOD_COLOR_CODE..'642|r | +4' },
+			{ itemLevel = 645, bonusId = 11980, text = ITEM_GOOD_COLOR_CODE..'645|r | +5' },
+			{ itemLevel = 649, bonusId = 11981, text = ITEM_SUPERIOR_COLOR_CODE..'649|r | '..ITEM_UPGRADE },
+			{ itemLevel = 652, bonusId = 11982, text = ITEM_SUPERIOR_COLOR_CODE..'652|r | '..ITEM_UPGRADE },
+			{ itemLevel = 655, bonusId = 11983, text = ITEM_SUPERIOR_COLOR_CODE..'655|r | '..ITEM_UPGRADE },
+			{ itemLevel = 658, bonusId = 11984, text = ITEM_SUPERIOR_COLOR_CODE..'658|r | '..ITEM_UPGRADE }
 		} },
 		{ id = 'hero', text = 'Hero', entries = {
-			{ itemLevel = 610, bonusId = 10329, text = ITEM_SUPERIOR_COLOR_CODE..'610|r | +7 +8' },
-			{ itemLevel = 613, bonusId = 10330, text = ITEM_SUPERIOR_COLOR_CODE..'613|r | +9 +10' },
-			{ itemLevel = 616, bonusId = 10331, text = ITEM_SUPERIOR_COLOR_CODE..'616|r | '..ITEM_UPGRADE },
-			{ itemLevel = 619, bonusId = 10332, text = ITEM_SUPERIOR_COLOR_CODE..'619|r | '..ITEM_UPGRADE },
-			{ itemLevel = 623, bonusId = 10333, text = ITEM_EPIC_COLOR_CODE..'623|r | '..ITEM_UPGRADE },
-			{ itemLevel = 626, bonusId = 10334, text = ITEM_EPIC_COLOR_CODE..'626|r | '..ITEM_UPGRADE }
+			{ itemLevel = 649, bonusId = 11985, text = ITEM_SUPERIOR_COLOR_CODE..'649|r | +6 +7' },
+			{ itemLevel = 652, bonusId = 11986, text = ITEM_SUPERIOR_COLOR_CODE..'652|r | +8 +9' },
+			{ itemLevel = 655, bonusId = 11987, text = ITEM_SUPERIOR_COLOR_CODE..'655|r | +10' },
+			{ itemLevel = 658, bonusId = 11988, text = ITEM_SUPERIOR_COLOR_CODE..'658|r | '..ITEM_UPGRADE },
+			{ itemLevel = 662, bonusId = 11989, text = ITEM_EPIC_COLOR_CODE..'662|r | '..ITEM_UPGRADE },
+			{ itemLevel = 665, bonusId = 11990, text = ITEM_EPIC_COLOR_CODE..'665|r | '..ITEM_UPGRADE }
 		} },
 		{ id = 'myth', text = 'Great Vault', entries = {
-			{ itemLevel = 623, bonusId = 10260, text = ITEM_EPIC_COLOR_CODE..'623|r | +10' },
-			{ itemLevel = 626, bonusId = 10259, text = ITEM_EPIC_COLOR_CODE..'626|r | '..ITEM_UPGRADE },
-			{ itemLevel = 629, bonusId = 10258, text = ITEM_EPIC_COLOR_CODE..'629|r | '..ITEM_UPGRADE },
-			{ itemLevel = 632, bonusId = 10257, text = ITEM_EPIC_COLOR_CODE..'632|r | '..ITEM_UPGRADE },
-			{ itemLevel = 636, bonusId = 10298, text = ITEM_LEGENDARY_COLOR_CODE..'636|r | '..ITEM_UPGRADE },
-			{ itemLevel = 639, bonusId = 10299, text = ITEM_LEGENDARY_COLOR_CODE..'639|r | '..ITEM_UPGRADE }
+			{ itemLevel = 662, bonusId = 11991, text = ITEM_EPIC_COLOR_CODE..'662|r | +10' },
+			{ itemLevel = 665, bonusId = 11992, text = ITEM_EPIC_COLOR_CODE..'665|r | '..ITEM_UPGRADE },
+			{ itemLevel = 668, bonusId = 11993, text = ITEM_EPIC_COLOR_CODE..'668|r | '..ITEM_UPGRADE },
+			{ itemLevel = 672, bonusId = 11994, text = ITEM_EPIC_COLOR_CODE..'672|r | '..ITEM_UPGRADE },
+			{ itemLevel = 675, bonusId = 11995, text = ITEM_LEGENDARY_COLOR_CODE..'675|r | '..ITEM_UPGRADE },
+			{ itemLevel = 678, bonusId = 11996, text = ITEM_LEGENDARY_COLOR_CODE..'678|r | '..ITEM_UPGRADE }
 		} }
 	}
 };

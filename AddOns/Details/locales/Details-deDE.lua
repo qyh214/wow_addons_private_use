@@ -699,6 +699,7 @@ L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Externe Widgets"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Diese Optionen bestimmen das Verhalten vieler fremder Widgets."
 L["STRING_OPTIONS_GENERAL"] = "Allgemeine Einstellungen"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "Allgemein:"
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "Abstand zwischen den Fenstern"
 L["STRING_OPTIONS_HIDE_ICON"] = "Symbol verstecken"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = [=[Aktiviert: Das Symbol des entsprechenden Fensters wird nicht gezeigt.
 
@@ -833,16 +834,13 @@ L["STRING_OPTIONS_MINIMAP_ANCHOR"] = "Minikarte:"
 L["STRING_OPTIONS_MINIMAP_DESC"] = "Minikartensymbol anzeigen/verstecken"
 L["STRING_OPTIONS_MISCTITLE"] = "Sonstige Einstellungen"
 L["STRING_OPTIONS_MISCTITLE2"] = "Dies kontrolliert etliche Optionen."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Time To Auto Close"
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Zeit bis zum automatischen Schließen"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the Show End of M+ Panel automatically."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "New Combat on Boss Pull"
+L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT"] = "Neuer Kampf bei Boss Pull"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_BOSSNEWCOMBAT_DESC"] = "If a boss is pulled while in combat, this option closes the current combat encounter and initiates a new one for the boss."
---[[Translation missing --]]
-L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "Overall Segment DPS Calculation"
+L["STRING_OPTIONS_MPLUS_DPS_ANCHOR"] = "DPS-Berechnung für das gesamte Segment"
 --[[Translation missing --]]
 L["STRING_OPTIONS_MPLUS_MAKEOVERALL"] = "Make Overall Segment"
 --[[Translation missing --]]
@@ -1411,7 +1409,7 @@ L["STRING_OPTIONSMENU_TITLETEXT"] = "Titelleiste: Text"
 L["STRING_OPTIONSMENU_TOOLTIP"] = "Tooltips"
 L["STRING_OPTIONSMENU_WALLPAPER"] = "Fenster: Hintergrund"
 L["STRING_OPTIONSMENU_WINDOW"] = "Fenster: Allgemein"
-L["STRING_OPTIONSMENU_WINDOWBODY"] = "Fenster-Körper"
+L["STRING_OPTIONSMENU_WINDOWBODY"] = "Fenster: Allgemein"
 L["STRING_OVERALL"] = "Gesamt"
 L["STRING_OVERHEAL"] = "Überheilung"
 L["STRING_OVERHEALED"] = "überheilt"
@@ -1473,7 +1471,6 @@ L["STRING_REPORT_SINGLE_BUFFUPTIME"] = "Stärkungszauberlaufzeit für"
 L["STRING_REPORT_SINGLE_COOLDOWN"] = "Cooldown benutzt von"
 L["STRING_REPORT_SINGLE_DEATH"] = "Tod von"
 L["STRING_REPORT_SINGLE_DEBUFFUPTIME"] = "Schwächungszauberlaufzeit für"
---[[Translation missing --]]
 L["STRING_REPORT_TEXT"] = "Report"
 L["STRING_REPORT_TOOLTIP"] = "Ergebnisbericht"
 L["STRING_REPORTFRAME_COPY"] = "Kopieren & Einfügen"

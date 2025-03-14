@@ -223,8 +223,8 @@ function mod:UNIT_HEALTH(event, unit)
 end
 
 function mod:FlameLashApplied(args)
-	local unit = self:GetUnitIdByGUID(args.sourceGUID)
-	if unit and self:Tanking(unit, args.destName) then
+	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID, true)
+	if unit and targetUnit and self:Tanking(unit, targetUnit) then
 		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 2)
 	end
 end

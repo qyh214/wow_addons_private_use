@@ -90,10 +90,10 @@ local function updateProfile()
 	if not media:IsValid(STATUSBAR, db.texture) then
 		db.texture = plugin.defaultDB.texture
 	end
-	if db.fontSize < 1 or db.fontSize > 200 then
+	if db.fontSize < 10 or db.fontSize > 200 then
 		db.fontSize = plugin.defaultDB.fontSize
 	end
-	if db.fontSizeEmph < 1 or db.fontSizeEmph > 200 then
+	if db.fontSizeEmph < 10 or db.fontSizeEmph > 200 then
 		db.fontSizeEmph = plugin.defaultDB.fontSizeEmph
 	end
 	if db.outline ~= "NONE" and db.outline ~= "OUTLINE" and db.outline ~= "THICKOUTLINE" then
@@ -152,7 +152,7 @@ local function updateProfile()
 	end
 	if db.normalPosition[5] ~= plugin.defaultDB.normalPosition[5] then
 		local frame = _G[db.normalPosition[5]]
-		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" then
+		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
 			db.normalPosition = plugin.defaultDB.normalPosition
 		end
 	end
@@ -173,7 +173,7 @@ local function updateProfile()
 	end
 	if db.expPosition[5] ~= plugin.defaultDB.expPosition[5] then
 		local frame = _G[db.expPosition[5]]
-		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" then
+		if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
 			db.expPosition = plugin.defaultDB.expPosition
 		end
 	end
@@ -531,9 +531,7 @@ do
 						desc = L.fontSizeDesc,
 						width = 2,
 						order = 2,
-						max = 200, softMax = 72,
-						min = 1,
-						step = 1,
+						softMax = 100, max = 200, min = 10, step = 1,
 					},
 					visibleBarLimit = {
 						type = "range",
@@ -602,9 +600,7 @@ do
 						desc = L.fontSizeDesc,
 						width = 2,
 						order = 7,
-						max = 200, softMax = 72,
-						min = 1,
-						step = 1,
+						softMax = 100, max = 200, min = 10, step = 1,
 					},
 					visibleBarLimitEmph = {
 						type = "range",
@@ -690,7 +686,7 @@ do
 								end,
 								set = function(_, value)
 									local frame = _G[value]
-									if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" then
+									if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
 										return
 									end
 									if value ~= plugin.defaultDB.normalPosition[5] then
@@ -806,7 +802,7 @@ do
 								end,
 								set = function(_, value)
 									local frame = _G[value]
-									if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" then
+									if type(frame) ~= "table" or type(frame.GetObjectType) ~= "function" or type(frame.IsForbidden) ~= "function" or frame:IsForbidden() then
 										return
 									end
 									if value ~= plugin.defaultDB.expPosition[5] then
@@ -917,11 +913,14 @@ do
 end
 
 local function barStopped(event, bar)
-	local a = bar:Get("bigwigs:anchor")
-	if a and a.bars and a.bars[bar] then
-		currentBarStyler.BarStopped(bar)
-		a.bars[bar] = nil
-		rearrangeBars(a)
+	local anchorText = bar:Get("bigwigs:anchor")
+	if anchorText then
+		local anchor = anchorText == "expPosition" and emphasizeAnchor or normalAnchor
+		if anchor and anchor.bars and anchor.bars[bar] then
+			currentBarStyler.BarStopped(bar)
+			anchor.bars[bar] = nil
+			rearrangeBars(anchor)
+		end
 	end
 end
 
@@ -1268,7 +1267,7 @@ function plugin:CreateBar(module, key, text, time, icon, isApprox)
 	local bar = candy:New(media:Fetch(STATUSBAR, db.texture), width, height)
 	bar:Set("bigwigs:module", module)
 	bar:Set("bigwigs:option", key)
-	bar:Set("bigwigs:anchor", normalAnchor)
+	bar:Set("bigwigs:anchor", "normalPosition")
 	normalAnchor.bars[bar] = true
 	bar:SetIcon(db.icon and icon or nil)
 	bar:SetLabel(text)
@@ -1327,7 +1326,8 @@ do
 				bar:SetTimeCallback(moveBar, db.emphasizeTime)
 			end
 		end
-		rearrangeBars(bar:Get("bigwigs:anchor"))
+		local anchor = bar:Get("bigwigs:anchor") == "expPosition" and emphasizeAnchor or normalAnchor
+		rearrangeBars(anchor)
 		self:SendMessage("BigWigs_BarCreated", self, bar, module, key, text, time, icon, isApprox)
 		-- Check if :EmphasizeBar(bar) was run and trigger the callback.
 		-- Bit of a roundabout method to approaching this so that we purposely keep callbacks firing last.
@@ -1345,7 +1345,7 @@ function plugin:EmphasizeBar(bar, freshBar)
 	if db.emphasizeMove then
 		normalAnchor.bars[bar] = nil
 		emphasizeAnchor.bars[bar] = true
-		bar:Set("bigwigs:anchor", emphasizeAnchor)
+		bar:Set("bigwigs:anchor", "expPosition")
 	end
 	if not freshBar then
 		currentBarStyler.BarStopped(bar) -- Only call BarStopped on bars that have already started (ApplyStyle was called on them first)

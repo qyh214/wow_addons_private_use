@@ -16,6 +16,9 @@ local db = ns.Addon.db.profile
         --General Scale/Alpha
         db.MinimapCapitalsGeneralScale = db.CapitalsGeneralScale
         db.MinimapCapitalsGeneralAlpha = db.CapitalsGeneralAlpha
+        --Classes Scale/Alpha
+        db.MinimapCapitalsClassesScale = db.CapitalsClassesScale
+        db.MinimapCapitalsClassesAlpha = db.CapitalsClassesAlpha
     end
 
     if db.activate.SyncZoneAndMinimap then
@@ -31,14 +34,19 @@ local db = ns.Addon.db.profile
         -- Transport Scale/Alpha
         db.MiniMapTransportScale = db.ZoneTransportScale
         db.MiniMapTransportAlpha = db.ZoneTransportAlpha
+        -- Professions Scale/Alpha
+        db.MiniMapProfessionsScale = db.ZoneProfessionsScale
+        db.MiniMapProfessionsAlpha = db.ZoneProfessionsAlpha
         -- General Scale/Alpha
-        db.MiniMapGeneralScale = db.ZonesGeneralScale
-        db.MiniMapGeneralAlpha = db.ZonesGeneralAlpha
+        db.MiniMapGeneralScale = db.ZonesGeneralScale -- old sync, but atm needed for Classic+
+        db.MiniMapGeneralAlpha = db.ZonesGeneralAlpha -- old sync, but atm needed for Classic+
+        db.MiniMapGeneralScale = db.ZoneGeneralScale -- new sync for ns.SyncSingleScaleAlpha()
+        db.MiniMapGeneralAlpha = db.ZoneGeneralAlpha -- new sync for ns.SyncSingleScaleAlpha()
         -- General Scale/Alpha
         db.MiniMapPathsScale = db.ZonesPathsScale
         db.MiniMapPathsAlpha = db.ZonesPathsAlpha
     end
-
+    
 end
 
 function ns.SyncWithMinimap(self)
@@ -53,6 +61,7 @@ local db = ns.Addon.db.profile
         db.activate.MinimapCapitalsTransporting = db.activate.CapitalsTransporting
         db.activate.MinimapCapitalsProfessions = db.activate.CapitalsProfessions
         db.activate.MinimapCapitalsGeneral = db.activate.CapitalsGeneral
+        db.activate.MinimapCapitalsClasses = db.activate.CapitalsClasses
         -- Capitals Capitals
         self.db.profile.showMinimapCapitalsOrgrimmar = self.db.profile.showCapitalsOrgrimmar
         self.db.profile.showMinimapCapitalsThunderBluff = self.db.profile.showCapitalsThunderBluff
@@ -91,6 +100,7 @@ local db = ns.Addon.db.profile
         -- Capitals Professions    
         self.db.profile.activate.MinimapCapitalsProfessions = self.db.profile.activate.CapitalsProfessions
         self.db.profile.showMinimapCapitalsProfessionOrders = self.db.profile.showCapitalsProfessionOrders
+        self.db.profile.showMinimapCapitalsProfessionDetection = self.db.profile.showCapitalsProfessionDetection
         self.db.profile.showMinimapCapitalsAlchemy = self.db.profile.showCapitalsAlchemy
         self.db.profile.showMinimapCapitalsLeatherworking = self.db.profile.showCapitalsLeatherworking
         self.db.profile.showMinimapCapitalsEngineer = self.db.profile.showCapitalsEngineer
@@ -99,13 +109,13 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsCooking = self.db.profile.showCapitalsCooking
         self.db.profile.showMinimapCapitalsFishing = self.db.profile.showCapitalsFishing
         self.db.profile.showMinimapCapitalsArchaeology = self.db.profile.showCapitalsArchaeology
-        self.db.profile.showMinimapCapitalsMining =self.db.profile.showCapitalsMining
+        self.db.profile.showMinimapCapitalsMining = self.db.profile.showCapitalsMining
         self.db.profile.showMinimapCapitalsJewelcrafting = self.db.profile.showCapitalsJewelcrafting
         self.db.profile.showMinimapCapitalsBlacksmith = self.db.profile.showCapitalsBlacksmith
-        self.db.profile.showMinimapCapitalsLeatherworking = self.db.profile.showCapitalsLeatherworking
         self.db.profile.showMinimapCapitalsHerbalism = self.db.profile.showCapitalsHerbalism
         self.db.profile.showMinimapCapitalsInscription = self.db.profile.showCapitalsInscription
         self.db.profile.showMinimapCapitalsEnchanting = self.db.profile.showCapitalsEnchanting
+        self.db.profile.showMinimapCapitalsFirstAid = self.db.profile.showCapitalsFirstAid
         -- Capital General
         self.db.profile.showMinimapCapitalsMapNotes = self.db.profile.showCapitalsMapNotes
         self.db.profile.showMinimapCapitalsInnkeeper = self.db.profile.showCapitalsInnkeeper
@@ -114,6 +124,7 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsBank = self.db.profile.showCapitalsBank
         self.db.profile.showMinimapCapitalsBarber = self.db.profile.showCapitalsBarber
         self.db.profile.showMinimapCapitalsTransmogger = self.db.profile.showCapitalsTransmogger
+        self.db.profile.showMinimapCapitalsMailbox = self.db.profile.showCapitalsMailbox
         self.db.profile.showMinimapCapitalsPvPVendor = self.db.profile.showCapitalsPvPVendor
         self.db.profile.showMinimapCapitalsPvEVendor = self.db.profile.showCapitalsPvEVendor
         self.db.profile.showMinimapCapitalsItemUpgrade = self.db.profile.showCapitalsItemUpgrade
@@ -121,6 +132,18 @@ local db = ns.Addon.db.profile
         self.db.profile.showMinimapCapitalsCatalyst = self.db.profile.showCapitalsCatalyst
         self.db.profile.showMinimapCapitalsStablemaster = self.db.profile.showCapitalsStablemaster
         self.db.profile.showMinimapCapitalsTradingPost = self.db.profile.showCapitalsTradingPost
+        self.db.profile.showMinimapCapitalsWeaponMasters = self.db.profile.showCapitalsWeaponMasters
+        -- Capital Classes
+        self.db.profile.showMinimapCapitalsClassAutomatically = self.db.profile.showCapitalsClassAutomatically
+        self.db.profile.showMinimapCapitalsClassDruid = self.db.profile.showCapitalsClassDruid
+        self.db.profile.showMinimapCapitalsClassHunter = self.db.profile.showCapitalsClassHunter
+        self.db.profile.showMinimapCapitalsClassMage = self.db.profile.showCapitalsClassMage
+        self.db.profile.showMinimapCapitalsClassPaladin = self.db.profile.showCapitalsClassPaladin
+        self.db.profile.showMinimapCapitalsClassPriest = self.db.profile.showCapitalsClassPriest
+        self.db.profile.showMinimapCapitalsClassRogue = self.db.profile.showCapitalsClassRogue
+        self.db.profile.showMinimapCapitalsClassShaman = self.db.profile.showCapitalsClassShaman
+        self.db.profile.showMinimapCapitalsClassWarlock = self.db.profile.showCapitalsClassWarlock
+        self.db.profile.showMinimapCapitalsClassWarrior = self.db.profile.showCapitalsClassWarrior
     end
 
     if db.activate.SyncZoneAndMinimap then
@@ -130,14 +153,16 @@ local db = ns.Addon.db.profile
         db.activate.MiniMap = db.activate.ZoneMap
         db.activate.MiniMapInstances = db.activate.ZoneInstances
         db.activate.MiniMapTransporting = db.activate.ZoneTransporting
+        db.activate.MiniMapProfessions = db.activate.ZoneProfessions
         db.activate.MiniMapGeneral = db.activate.ZoneGeneral
-        db.activate.MiniMapPaths = db.activate.ZonePaths
         -- Icons
         self.db.profile.showMiniMapRaids = self.db.profile.showZoneRaids
         self.db.profile.showMiniMapDungeons = self.db.profile.showZoneDungeons
         self.db.profile.showMiniMapPassage = self.db.profile.showZonePassage
         self.db.profile.showMiniMapMultiple = self.db.profile.showZoneMultiple
+        self.db.profile.showMiniMapDelves = self.db.profile.activate.ShowBlizzDelves
         self.db.profile.showMiniMapPortals = self.db.profile.showZonePortals
+        self.db.profile.showMiniMapDarkmoon = self.db.profile.showZoneDarkmoon
         self.db.profile.showMiniMapZeppelins = self.db.profile.showZoneZeppelins
         self.db.profile.showMiniMapShips = self.db.profile.showZoneShips
         self.db.profile.showMiniMapTransport = self.db.profile.showZoneTransport
@@ -149,6 +174,8 @@ local db = ns.Addon.db.profile
         self.db.profile.showMiniMapLFR = self.db.profile.showZoneLFR
         self.db.profile.showMiniMapFP = self.db.profile.showZoneFP
         self.db.profile.showMiniMapGhost = self.db.profile.showZoneGhost
+        self.db.profile.showMiniMapMapNotesIcons = self.db.profile.showZoneMapNotesIcons
+        self.db.profile.showMiniMapHordeAllyIcons = self.db.profile.showZoneHordeAllyIcons
         self.db.profile.showMiniMapPaths = self.db.profile.showZonePaths
         self.db.profile.showMiniMapStablemaster = self.db.profile.showZoneStablemaster
         self.db.profile.showMiniMapInnkeeper = self.db.profile.showZoneInnkeeper
@@ -161,6 +188,25 @@ local db = ns.Addon.db.profile
         self.db.profile.showMiniMapTransmogger = self.db.profile.showZoneTransmogger
         self.db.profile.showMiniMapItemUpgrade = self.db.profile.showZoneItemUpgrade
         self.db.profile.showMiniMapCatalyst = self.db.profile.showZoneCatalyst
+        self.db.profile.showMiniMapZidormi = self.db.profile.showZoneZidormi
+        -- Zone Professions    
+        self.db.profile.activate.MiniMapProfessions = self.db.profile.activate.ZoneProfessions
+        self.db.profile.showMiniMapProfessionOrders = self.db.profile.showZoneProfessionOrders
+        self.db.profile.showMiniMapProfessionDetection = self.db.profile.showZoneProfessionDetection
+        self.db.profile.showMiniMapAlchemy = self.db.profile.showZoneAlchemy
+        self.db.profile.showMiniMapLeatherworking = self.db.profile.showZoneLeatherworking
+        self.db.profile.showMiniMapEngineer = self.db.profile.showZoneEngineer
+        self.db.profile.showMiniMapSkinning = self.db.profile.showZoneSkinning
+        self.db.profile.showMiniMapTailoring = self.db.profile.showZoneTailoring
+        self.db.profile.showMiniMapCooking = self.db.profile.showZoneCooking
+        self.db.profile.showMiniMapFishing = self.db.profile.showZoneFishing
+        self.db.profile.showMiniMapArchaeology = self.db.profile.showZoneArchaeology
+        self.db.profile.showMiniMapMining = self.db.profile.showZoneMining
+        self.db.profile.showMiniMapJewelcrafting = self.db.profile.showZoneJewelcrafting
+        self.db.profile.showMiniMapBlacksmith = self.db.profile.showZoneBlacksmith
+        self.db.profile.showMiniMapHerbalism = self.db.profile.showZoneHerbalism
+        self.db.profile.showMiniMapInscription = self.db.profile.showZoneInscription
+        self.db.profile.showMiniMapEnchanting = self.db.profile.showZoneEnchanting
 
         -- Zones
         self.db.profile.showMiniMapKalimdor = self.db.profile.showZoneKalimdor

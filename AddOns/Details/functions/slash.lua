@@ -654,7 +654,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 		if (UnitExists("target")) then
 			local serial = UnitGUID("target")
 			if (serial) then
-				local npcId = _G.detailsFramework:GetNpcIdFromGuid(serial)
+				local npcId = _G.DetailsFramework:GetNpcIdFromGuid(serial)
 				if (npcId) then
 
 					if (not Details.id_frame) then
@@ -1367,7 +1367,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 
 		while (nextID [1]) do
 			--get the deepest section in the hierarchy
-			local ID = tremove(nextID)
+			local ID = table.remove(nextID)
 			local sectionInfo = C_EncounterJournal.GetSectionInfo (ID)
 
 			if (sectionInfo) then
@@ -1901,7 +1901,7 @@ function Details:ReplaceKeystoneCommand(addonObject, memberName, ...)
 		if (keystoneCallbacks[i].addonObject == addonObject) then
 			--check if the memberName is the same
 			if (keystoneCallbacks[i].memberName == memberName) then
-				tremove(keystoneCallbacks, i)
+				table.remove(keystoneCallbacks, i)
 				return false
 			end
 		end
@@ -2374,7 +2374,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 					for i = #newData, 1, -1 do
 						local keystoneTable = newData[i]
 						if (not keystoneTable[12]) then
-							tremove(newData, i)
+							table.remove(newData, i)
 							newData.offlineGuildPlayers[#newData.offlineGuildPlayers+1] = keystoneTable
 						end
 					end
@@ -2388,7 +2388,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local keystoneTable = newData[i]
 							if (keystoneTable[11] > 0) then
 								playersInTheParty[#playersInTheParty+1] = keystoneTable
-								tremove(newData, i)
+								table.remove(newData, i)
 							end
 						end
 
@@ -4234,8 +4234,4 @@ C_Timer.After(0, function()
 		end
 	end
 end)
-
-
-
-
 

@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Beth'tilac", 720, 192)
 if not mod then return end
 mod:RegisterEnableMob(52498)
+mod:SetEncounterID(1197)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -62,10 +64,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "Kiss", 99506)
 	self:Log("SPELL_CAST_START", "Devastate", 99052)
 	self:Log("SPELL_CAST_SUCCESS", "Flare", 99859)
-
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 52498)
 end
 
 function mod:OnEngage()

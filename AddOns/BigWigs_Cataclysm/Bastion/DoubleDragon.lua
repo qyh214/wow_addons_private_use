@@ -184,7 +184,6 @@ function mod:BlackoutApplied(args)
 end
 
 function mod:BlackoutRemoved(args)
-	self:StopBar(args.spellName)
 	if self:Me(args.destGUID) then
 		self:CancelYellCountdown(args.spellId)
 	end

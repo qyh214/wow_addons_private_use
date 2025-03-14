@@ -28,15 +28,15 @@ local timersNormal = { -- 8:26
 	[442428] = {43.3, 40.1, 55.9, 40.0, 58.2, 40.1, 58.2, 40.0, 58.3, 40.0}, -- Decimate
 	[439559] = {36.2, 52.3, 42.5, 53.4, 44.9, 53.4, 44.9, 53.4, 44.9, 53.4}, -- Rain of Arrows
 }
-local timersHeroic = { -- 5:22
-	[439511] = {6.2, 23.2, 23.1, 22.7, 27.2, 23.1, 22.8, 23.1, 30.4, 23.1, 23.1, 23.1, 27.9, 22.7}, -- Captain's Flourish
-	[433517] = {17.8, 45.5, 51.1, 42.3, 57.1, 42.5, 54.7}, -- Phase Blades
-	[442428] = {42.5, 38.5, 59.7, 39.0, 58.3, 38.9}, -- Decimate
-	[439559] = {35.4, 53.2, 43.0, 53.2, 44.9, 53.5}, -- Rain of Arrows
+local timersHeroic = { -- 8:29
+	[439511] = {7.1, 23.1, 23.1, 23.0, 25.5, 23.1, 23.1, 23.1, 29.1, 23.0, 23.1, 23.1, 29.2, 23.1, 23.0, 23.1, 29.1, 23.1, 23.1, 23.1, 28.7}, -- Captain's Flourish
+	[433517] = {18.9, 46.1, 49.8, 42.6, 55.8, 42.5, 55.9, 42.5, 55.9, 42.5, 55.9}, -- Phase Blades
+	[442428] = {43.4, 38.8, 57.1, 40.0, 58.2, 40.1, 58.3, 40.1, 58.3, 40.1}, -- Decimate
+	[439559] = {35.1, 52.2, 43.8, 53.4, 44.8, 53.4, 44.9, 53.4, 44.9, 53.4}, -- Rain of Arrows
 }
 local timersMythic = { -- 8:08
 	[439511] = {6.9, 25.8, 25.1, 25.7, 18.7, 28.1, 28.0, 27.1, 15.8, 28.1, 28.1, 27.3, 15.3, 28.2, 27.1, 28.0, 15.4, 28.1, 27.2, 28.0}, -- Captain's Flourish
-	[433517] = {16.5, 27.3, 27.2, 42.1, 28.1, 28.2, 43.9, 28.2, 28.1, 41.6, 27.9, 28.0, 43.8, 28.0, 28.1}, -- Phase Blades
+	[433517] = {13.0, 27.3, 27.2, 42.1, 28.1, 28.2, 43.9, 28.2, 28.1, 41.6, 27.9, 28.0, 43.8, 28.0, 28.1}, -- Phase Blades
 	[442428] = {51.2, 26.6, 75.6, 27.1, 72.0, 28.1, 70.8, 27.9, 70.7, 28.0}, -- Decimate
 	[439559] = {22.8, 42.3, 55.5, 26.8, 27.1, 45.1, 27.0, 26.6, 45.5, 26.7, 26.7, 45.0, 26.9, 26.8}, -- Rain of Arrows
 }
@@ -48,15 +48,15 @@ local timers = mod:Mythic() and timersMythic or mod:Easy() and timersNormal or t
 
 function mod:GetOptions()
 	return {
+		"berserk",
 		{433517, "PRIVATE"}, -- Phase Blades
 			434860, -- Cosmic Wound
-		{442428, "PRIVATE", "SAY", "SAY_COUNTDOWN"}, -- Decimate
+		{442428, "PRIVATE"}, -- Decimate
 			459273, -- Cosmic Shards
 		456420, -- Shattering Sweep
-		{439511, "TANK"}, -- Captain's Flourish
+		{439511, "TANK_HEALER"}, -- Captain's Flourish
 			{438845, "TANK"}, -- Expose
 			{432969, "TANK"}, -- Phase Lunge
-			{435410, "TANK"}, -- Pierced Defences
 		439559, -- Rain of Arrows
 	}, nil, {
 		[433517] = CL.charge, -- Phase Blades (Charge)
@@ -67,7 +67,6 @@ end
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "PhaseBlades", 433475)
 	self:Log("SPELL_AURA_APPLIED", "CosmicWoundApplied", 434860)
-	self:RegisterEvent("CHAT_MSG_RAID_BOSS_WHISPER") -- Decimate Targetting
 	self:Log("SPELL_CAST_START", "Decimate", 442428)
 	self:Log("SPELL_AURA_APPLIED", "CosmicShardsApplied", 459273)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "CosmicShardsApplied", 459273)
@@ -77,18 +76,23 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "ExposeApplied", 438845)
 	self:Log("SPELL_CAST_START", "PhaseLunge", 435403)
 	self:Log("SPELL_CAST_SUCCESS", "PhaseLungeSuccess", 435403)
-	self:Log("SPELL_AURA_APPLIED", "PiercedDefencesApplied", 435410)
-	self:Log("SPELL_AURA_APPLIED_DOSE", "PiercedDefencesApplied", 435410)
+	self:Log("SPELL_AURA_APPLIED", "PhaseLungeApplied", 435410)
+	self:Log("SPELL_AURA_APPLIED_DOSE", "PhaseLungeApplied", 435410)
 	self:Log("SPELL_CAST_START", "RainOfArrows", 439559)
 end
 
 function mod:OnEngage()
 	timers = self:Mythic() and timersMythic or self:Easy() and timersNormal or timersHeroic
+
 	phaseBladesCount = 1
 	decimateCount = 1
 	shatteringSweepCount = 1
 	captainsFlourishCount = 1
 	rainOfArrowsCount = 1
+
+	if not self:Easy() then
+		self:Berserk(self:Mythic() and 481 or 391, true)
+	end
 
 	self:CDBar(439511, timers[439511][1], CL.count:format(CL.tank_combo, captainsFlourishCount)) -- Captain's Flourish
 	self:CDBar(433517, timers[433517][1], CL.count:format(CL.charge, phaseBladesCount)) -- Phase Blades
@@ -115,20 +119,9 @@ function mod:CosmicWoundApplied(args)
 	end
 end
 
-function mod:CHAT_MSG_RAID_BOSS_WHISPER(_, msg)
-	--|TInterface\\\\ICONS\\\\INV_Polearm_2H_NerubianRaid_D_01.blp:20|t You have been targeted by |cFFFF0000|Hspell:459349|h[Decimate]|h|r!
-	if msg:find("459349", nil, true) then
-		self:PersonalMessage(442428)
-		self:Say(442428, nil, nil, "Decimate")
-		self:SayCountdown(442428, 5.5)
-		self:PlaySound(442428, "warning")
-	end
-end
-
 function mod:Decimate(args)
 	self:StopBar(CL.count:format(args.spellName, decimateCount))
-	self:Message(args.spellId, "yellow", CL.count:format(args.spellName, decimateCount))
-	self:PlaySound(args.spellId, "alert")
+	self:Message(args.spellId, "orange", CL.count:format(args.spellName, decimateCount))
 	decimateCount = decimateCount + 1
 	self:CDBar(args.spellId, timers[args.spellId][decimateCount], CL.count:format(args.spellName, decimateCount))
 end
@@ -187,8 +180,8 @@ function mod:PhaseLungeSuccess(args)
 	self:StopBar(432969)
 end
 
-function mod:PiercedDefencesApplied(args)
-	self:TargetMessage(args.spellId, "purple", args.destName)
+function mod:PhaseLungeApplied(args)
+	self:TargetMessage(432969, "purple", args.destName)
 end
 
 function mod:RainOfArrows(args)

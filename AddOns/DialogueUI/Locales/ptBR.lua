@@ -208,8 +208,8 @@ L["TTS Content Quest Name"] = "Título da Missão";
 --Tutorial
 L["Tutorial Settings Hotkey"] = "Pressione [KEY:PC:F1] para alternar Configurações";     --Shown when interacting with an NPC with this addon for the first time
 L["Tutorial Settings Hotkey Console"] = "Pressione [KEY:PC:F1] ou [KEY:CONSOLE:MENU] para alternar Configurações";   --Use this if gamepad enabled
-L["Instuction Open Settings"] = "Para abrir Configurações, pressione [KEY:PC:F1] enquanto estiver interagindo com um NPC.";    --Used in Game Menu - AddOns
-L["Instuction Open Settings Console"] = "Para abrir Configurações, pressione [KEY:PC:F1] ou [KEY:CONSOLE:MENU] enquanto estiver interagindo com um NPC.";
+L["Instruction Open Settings"] = "Para abrir Configurações, pressione [KEY:PC:F1] enquanto estiver interagindo com um NPC.";    --Used in Game Menu - AddOns
+L["Instruction Open Settings Console"] = "Para abrir Configurações, pressione [KEY:PC:F1] ou [KEY:CONSOLE:MENU] enquanto estiver interagindo com um NPC.";
 
 --DO NOT TRANSLATE
 L["Abbrev Breakpoint 1000"] = FIRST_NUMBER_CAP_NO_SPACE or "K";     --1,000 = 1K
@@ -221,3 +221,26 @@ L["Match Stat Agility"] = "([,%d%.]+) Agilidade";
 L["Match Stat Intellect"] = "([,%d%.]+) Intelecto";
 L["Match Stat Spirit"] = "([,%d%.]+) Espírito";
 L["Match Stat DPS"] = "([,%d%.]+) de dano por segundo";
+
+L["Show Answer"] = "Mostrar solução.";
+L["Quest Failed Pattern"] = "^A entrega de";
+L["AutoCompleteQuest HallowsEnd"] = "Balde de Doces";     --Quest:28981
+
+--Asking for Directions-- (match the name to replace gossip icon)
+L["Pin Auction House"] = "Casa de Leilões";
+L["Pin Bank"] = "Banco";
+L["Pin Barber"] = "Barbeiro";
+L["Pin Battle Pet Trainer"] = "Adestramento de Batalha";
+L["Pin Crafting Orders"] = "Pedidos de criação";
+L["Pin Flight Master"] = "Mestre de Voo";
+L["Pin Great Vault"] = "Grande Cofre";
+L["Pin Inn"] = "Estalagem";
+L["Pin Item Upgrades"] = "Aprimoramento de Itens";
+L["Pin Mailbox"] = "Caixa de Correio";
+L["Pin Other Continents"] = "Outros continentes";
+L["Pin POI"] = "Pontos de Interesse";
+L["Pin Profession Trainer"] = "Instrutores de Profissão";
+L["Pin Rostrum"] = "Tribuna de Transformação";
+L["Pin Stable Master"] = "Mestre de Estábulo";
+L["Pin Trading Post"] = "Posto Comercial";
+L["Pin Transmogrifier"] = "Transmogrificador";

@@ -1307,6 +1307,22 @@ if RSA.IsCata() then
 				},
 			},
 		},
+		['powerWordBarrier'] = {
+			spellID = 62618,
+			configDisplay = {
+				isDefault = true,
+				disabledChannels = {whisper = true},
+			},
+			events = {
+				['SPELL_CAST_SUCCESS'] = {
+					messages = {"[LINK] activated!",},
+				},
+				['RSA_END_TIMER'] = {
+					duration = 10,
+					messages = {"[LINK] finished!",},
+				},
+			},
+		},
 		['psychicHorror'] = {
 			spellID = 64044,
 			configDisplay = {

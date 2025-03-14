@@ -1,10 +1,5 @@
 local E = select(2, ...):unpack()
 
-local unpack = unpack
-local tinsert = table.insert
-local tremove = table.remove
-local C_Timer_After = C_Timer.After
-
 function E:DeepCopy(source, blackList)
 	local copy = {}
 	if type(source) == "table" then
@@ -177,7 +172,7 @@ end
 
 E.TimerAfter = function(delay, func, ...)
 	local args = {...}
-	C_Timer_After(delay < 0 and 0 or delay, #args > 0 and function() func(unpack(args)) end or func)
+	C_Timer.After(delay < 0 and 0 or delay, #args > 0 and function() func(unpack(args)) end or func)
 	return true
 end
 
@@ -201,5 +196,3 @@ end
 E.write = function(...)
 	print(E.userClassHexColor .. "OmniCD|r: ", ...)
 end
-
-E.BLANK = {}

@@ -164,19 +164,23 @@ G.OptionList = { -- type, key, value, name, horizon, data, callback, tooltip, sc
 		{4, "RoleStyle", "Index", L["Role Style"], nil, {}},
 		{L["Addon Skin"]},
 		{1, "Skins", "Ace3", "AceGUI-3.0"},
-		{1, "Skins", "InboxMailBag", "Inbox MailBag", true},
-		{1, "Skins", "TinyInspect", "TinyInspect"},
-		{1, "Skins", "ButtonForge", "Button Forge", true},
-		{1, "Skins", "ls_Toasts", "ls_Toasts"},
-		{1, "Skins", "WhisperPop", "WhisperPop", true},
-		{1, "Skins", "Immersion", "Immersion"},
-		{1, "Skins", "MeetingStone", "MeetingStone", true},
-		{1, "Skins", "tdBattlePetScript", "tdBattlePetScript"},
-		{1, "Skins", "RareScanner", "RareScanner", true},
-		{1, "Skins", "WorldQuestTab", "WorldQuestTab"},
 		{1, "Skins", "AdiBags", "AdiBags", true},
-		{1, "Skins", "BetterBags", "BetterBags"},
-		{1, "Skins", "ShadowDancer", "ShadowDancer", true},
+		{1, "Skins", "Auctionator", "Auctionator"},
+		{1, "Skins", "BetterBags", "BetterBags", true},
+		{1, "Skins", "BtWLoadouts", "BtWLoadouts"},
+		{1, "Skins", "BtWQuests", "BtWQuests", true},
+		{1, "Skins", "ButtonForge", "Button Forge"},
+		{1, "Skins", "Immersion", "Immersion", true},
+		{1, "Skins", "InboxMailBag", "Inbox MailBag"},
+		{1, "Skins", "ls_Toasts", "ls_Toasts", true},
+		{1, "Skins", "MeetingStone", "MeetingStone"},
+		{1, "Skins", "RareScanner", "RareScanner", true},
+		{1, "Skins", "ShadowDancer", "ShadowDancer"},
+		{1, "Skins", "SimpleAddonManager", "SimpleAddonManager", true},
+		{1, "Skins", "tdBattlePetScript", "tdBattlePetScript"},
+		{1, "Skins", "TinyInspect", "TinyInspect", true},
+		{1, "Skins", "WhisperPop", "WhisperPop"},
+		{1, "Skins", "WorldQuestTab", "WorldQuestTab", true},
 		{},
 		{1, "Skins", "HideToggle", L["HideToggle"].."*", nil, nil, updateToggleVisible},
 	},
@@ -216,7 +220,7 @@ G.OptionList = { -- type, key, value, name, horizon, data, callback, tooltip, sc
 		{1, "Misc", "ExtVendorUI", L["ExtVendorUI"]},
 		{1, "Misc", "ExtMacroUI", L["ExtMacroUI"], true, nil, nil ,L["ExtMacroUITip"]},
 		{1, "Misc", "GuildBankItemLevel", L["GuildBankItemLevel"]},
-		{1, "Misc", "WormholeHelper", L["Wormhole Centrifuge Helper"], true},
+		{1, "Misc", "WormholeHelper", L["Wormhole Helper"], true},
 		{1, "Misc", "TrainAll", L["TrainAll"], nil, nil, nil, L["TrainAllTip"]},
 		{},
 		{1, "Misc", "LootSpecManager", HeaderTag..L["LootSpecManagerEnable"], nil, toggleLootSpecManager, nil, L["LootSpecManagerTip"]},
@@ -605,21 +609,3 @@ function G:OnLogin()
 		end
 	end)
 end
-
-SlashCmdList["NDUI_PLUS"] = function(msg)
-	local status = P:VersionCheck_Compare(DB.Version, P.SupportVersion)
-	if status == "IsOld" then
-		P:Print(format(L["Version Check"], P.SupportVersion))
-		return
-	end
-
-	if msg:lower() == "debug" then
-		NDuiPlusDB["Debug"] = not NDuiPlusDB["Debug"]
-		_G.DEFAULT_CHAT_FRAME:AddMessage("|cFF70B8FFNDui_Plus:|r Debug " .. format(NDuiPlusDB["Debug"] and "on" or "off"))
-	else
-		P:OpenGUI()
-		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-	end
-end
-SLASH_NDUI_PLUS1 = "/ndp"
-SLASH_NDUI_PLUS2 = "/nduiplus"

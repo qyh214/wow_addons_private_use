@@ -6,6 +6,7 @@ local mod, CL = BigWigs:NewBoss("Madness of Deathwing", 967, 333)
 if not mod then return end
 -- Thrall, Deathwing, Arm Tentacle, Arm Tentacle, Wing Tentacle, Mutated Corruption
 mod:RegisterEnableMob(56103, 56173, 56167, 56846, 56168, 56471)
+mod:SetEncounterID(1299)
 
 local canEnable = true
 local curPercent = 100
@@ -73,7 +74,6 @@ end
 
 function mod:OnBossEnable()
 	self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", nil, "boss1", "boss2", "boss3", "boss4")
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 
 	self:Log("SPELL_CAST_SUCCESS", "ElementiumBolt", 105651)
 	self:Log("SPELL_CAST_SUCCESS", "Impale", 106400)
@@ -86,7 +86,6 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_REMOVED", "ParasiteRemoved", 108649)
 
 	self:BossYell("Engage", L["engage_trigger"])
-	self:Log("SPELL_CAST_SUCCESS", "Win", 110063) -- Astral Recall
 	self:Death("TentacleKilled", 56471)
 end
 
@@ -189,7 +188,7 @@ function mod:Shrapnel(args)
 		local you = CL["you"]:format(args.spellName)
 		self:MessageOld(args.spellId, "red", "long", you)
 		self:Flash(args.spellId)
-		self:Bar(args.spellId, 7, you)
+		self:Bar(args.spellId, 6, you)
 	end
 end
 

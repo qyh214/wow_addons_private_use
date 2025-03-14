@@ -826,10 +826,10 @@ local align_rows = function(self)
 			if (rowType == "text") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local text = tremove(line.text_available)
+					local text = table.remove(line.text_available)
 					if (not text) then
 						self:CreateRowText (line)
-						text = tremove(line.text_available)
+						text = table.remove(line.text_available)
 					end
 					table.insert(line.text_inuse, text)
 					text:SetPoint("left", line, "left", self._anchors [#self._anchors], 0)
@@ -841,10 +841,10 @@ local align_rows = function(self)
 			elseif (rowType == "entry") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local entry = tremove(line.entry_available)
+					local entry = table.remove(line.entry_available)
 					if (not entry) then
 						self:CreateRowEntry (line)
-						entry = tremove(line.entry_available)
+						entry = table.remove(line.entry_available)
 					end
 					table.insert(line.entry_inuse, entry)
 					entry:SetPoint("left", line, "left", self._anchors [#self._anchors], 0)
@@ -869,10 +869,10 @@ local align_rows = function(self)
 			elseif (rowType == "checkbox") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local checkbox = tremove(line.checkbox_available)
+					local checkbox = table.remove(line.checkbox_available)
 					if (not checkbox) then
 						self:CreateCheckbox (line)
-						checkbox = tremove(line.checkbox_available)
+						checkbox = table.remove(line.checkbox_available)
 					end
 
 					table.insert(line.checkbox_inuse, checkbox)
@@ -892,10 +892,10 @@ local align_rows = function(self)
 			elseif (rowType == "button") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local button = tremove(line.button_available)
+					local button = table.remove(line.button_available)
 					if (not button) then
 						self:CreateRowButton (line)
-						button = tremove(line.button_available)
+						button = table.remove(line.button_available)
 					end
 					table.insert(line.button_inuse, button)
 					button:SetPoint("left", line, "left", self._anchors [#self._anchors], 0)
@@ -938,10 +938,10 @@ local align_rows = function(self)
 			elseif (rowType == "icon") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local icon = tremove(line.icon_available)
+					local icon = table.remove(line.icon_available)
 					if (not icon) then
 						self:CreateRowIcon (line)
-						icon = tremove(line.icon_available)
+						icon = table.remove(line.icon_available)
 					end
 					table.insert(line.icon_inuse, icon)
 					icon:SetPoint("left", line, "left", self._anchors [#self._anchors] + ( ((row.width or 22) - 22) / 2), 0)
@@ -951,10 +951,10 @@ local align_rows = function(self)
 			elseif (rowType == "texture") then
 				for i = 1, #self.scrollframe.lines do
 					local line = self.scrollframe.lines [i]
-					local texture = tremove(line.texture_available)
+					local texture = table.remove(line.texture_available)
 					if (not texture) then
 						self:CreateRowTexture (line)
-						texture = tremove(line.texture_available)
+						texture = table.remove(line.texture_available)
 					end
 					table.insert(line.texture_inuse, texture)
 					texture:SetPoint("left", line, "left", self._anchors [#self._anchors] + ( ((row.width or 22) - 22) / 2), 0)
@@ -1019,42 +1019,42 @@ local update_rows = function(self, updated_rows)
 
 	for index, row in ipairs(self.scrollframe.lines) do
 		for i = #row.text_inuse, 1, -1 do
-			table.insert(row.text_available, tremove(row.text_inuse, i))
+			table.insert(row.text_available, table.remove(row.text_inuse, i))
 		end
 		for i = 1, #row.text_available do
 			row.text_available[i]:Hide()
 		end
 
 		for i = #row.entry_inuse, 1, -1 do
-			table.insert(row.entry_available, tremove(row.entry_inuse, i))
+			table.insert(row.entry_available, table.remove(row.entry_inuse, i))
 		end
 		for i = 1, #row.entry_available do
 			row.entry_available[i]:Hide()
 		end
 
 		for i = #row.button_inuse, 1, -1 do
-			table.insert(row.button_available, tremove(row.button_inuse, i))
+			table.insert(row.button_available, table.remove(row.button_inuse, i))
 		end
 		for i = 1, #row.button_available do
 			row.button_available[i]:Hide()
 		end
 
 		for i = #row.checkbox_inuse, 1, -1 do
-			table.insert(row.checkbox_available, tremove(row.checkbox_inuse, i))
+			table.insert(row.checkbox_available, table.remove(row.checkbox_inuse, i))
 		end
 		for i = 1, #row.checkbox_available do
 			row.checkbox_available[i]:Hide()
 		end
 
 		for i = #row.icon_inuse, 1, -1 do
-			table.insert(row.icon_available, tremove(row.icon_inuse, i))
+			table.insert(row.icon_available, table.remove(row.icon_inuse, i))
 		end
 		for i = 1, #row.icon_available do
 			row.icon_available[i]:Hide()
 		end
 
 		for i = #row.texture_inuse, 1, -1 do
-			table.insert(row.texture_available, tremove(row.texture_inuse, i))
+			table.insert(row.texture_available, table.remove(row.texture_inuse, i))
 		end
 		for i = 1, #row.texture_available do
 			row.texture_available[i]:Hide()
@@ -1505,7 +1505,7 @@ if ((ColorPickerFrame and ColorPickerFrame.SetupColorPickerAndShow) or toc >= 10
 
 	local color_pick_func_cancel = function()
 		local r, g, b, a = ColorPickerFrame.previousValues.r, ColorPickerFrame.previousValues.g, ColorPickerFrame.previousValues.b, ColorPickerFrame.previousValues.a
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b) --error here: attempt to index field 'Content' (a nil value)
+		ColorPickerFrame:SetColorRGB(r, g, b)
 		ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
 	end
 
@@ -1986,6 +1986,25 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+local on_drag_start = function(self)
+	if (not self.bIsDragging) then
+		self.bIsDragging = true
+		self:StartMoving()
+	end
+end
+
+local on_drag_stop = function(self)
+	self.bIsDragging = false
+	self:StopMovingOrSizing()
+end
+
+function detailsFramework:MakeDraggable(frame)
+	frame:SetMovable(true)
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetScript("OnDragStart", on_drag_start)
+	frame:SetScript("OnDragStop", on_drag_stop)
+end
 
 local simple_panel_mouse_down = function(self, button)
 	if (button == "RightButton") then
@@ -3079,7 +3098,7 @@ end
 
 local do_SMA = function(value, max_value)
 	if (#SMA_table == 10) then
-		tremove(SMA_table, 1)
+		table.remove(SMA_table, 1)
 	end
 
 	SMA_table [#SMA_table + 1] = value
@@ -3191,10 +3210,10 @@ local chart_panel_add_data = function(self, graphicData, color, name, elapsedTim
 		end
 	end
 
-	tremove(content, 1)
-	tremove(content, 1)
-	tremove(content, #graphicData)
-	tremove(content, #graphicData)
+	table.remove(content, 1)
+	table.remove(content, 1)
+	table.remove(content, #graphicData)
+	table.remove(content, #graphicData)
 
 	if (maxValue > LibGraphChartFrame.max_value) then
 		--normalize previous data
@@ -3520,7 +3539,7 @@ local gframe_reset = function(self)
 	end
 	if (self.GraphLib_Lines_Used) then
 		for i = #self.GraphLib_Lines_Used, 1, -1 do
-			local line = tremove(self.GraphLib_Lines_Used)
+			local line = table.remove(self.GraphLib_Lines_Used)
 			table.insert(self.GraphLib_Lines, line)
 			line:Hide()
 		end
@@ -3863,7 +3882,7 @@ end
 ---@field GetData fun(self:df_scrollbox): table
 ---@field OnSetData fun(self:df_scrollbox, data:table)? if exists, this function is called after the SetData with the same parameters
 ---@field ScrollBar statusbar
----@field
+---@field RefreshMe fun(...:any) virtual, implement if the data need to be manipulated, must call :SetData() and :Refresh()
 
 ---create a scrollbox with the methods :Refresh() :SetData() :CreateLine()
 ---@param parent table
@@ -3916,26 +3935,44 @@ end
 -- ~resizers
 
 --these options are copied to the object with object:BuildOptionsTable()
+---@class df_resizergrip_options
+---@field width number?
+---@field height number?
+---@field use_default_scripts boolean?
+---@field should_mirror_left_texture boolean?
+---@field normal_texture string|number?
+---@field highlight_texture string|number?
+---@field pushed_texture string|number?
+
 local rezieGripOptions = {
 	width = 32,
 	height = 32,
+	use_default_scripts = true,
 	should_mirror_left_texture = true,
 	normal_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Up]],
 	highlight_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Highlight]],
 	pushed_texture = [[Interface\CHATFRAME\UI-ChatIM-SizeGrabber-Down]],
 }
 
+---@class df_resizergrip : button, df_optionsmixin
+---@field options df_resizergrip_options
+
 ---create the two resize grips for a frame, one in the bottom left and another in the bottom right
 ---@param parent frame
----@param options table|nil
+---@param options df_resizergrip_options?
 ---@param leftResizerName string|nil
 ---@param rightResizerName string|nil
 ---@return frame, frame
 function detailsFramework:CreateResizeGrips(parent, options, leftResizerName, rightResizerName)
 	local parentName = parent:GetName()
 
+	---@type df_resizergrip
 	local leftResizer = _G.CreateFrame("button", leftResizerName or (parentName and "$parentLeftResizer"), parent, "BackdropTemplate")
+	---@type df_resizergrip
 	local rightResizer = _G.CreateFrame("button", rightResizerName or (parentName and "$parentRightResizer"), parent, "BackdropTemplate")
+
+	leftResizer:SetFrameLevel(parent:GetFrameLevel() + 20)
+	rightResizer:SetFrameLevel(parent:GetFrameLevel() + 20)
 
 	detailsFramework:Mixin(leftResizer, detailsFramework.OptionsFunctions)
 	detailsFramework:Mixin(rightResizer, detailsFramework.OptionsFunctions)
@@ -3959,6 +3996,22 @@ function detailsFramework:CreateResizeGrips(parent, options, leftResizerName, ri
 		leftResizer:GetNormalTexture():SetTexCoord(1, 0, 0, 1)
 		leftResizer:GetHighlightTexture():SetTexCoord(1, 0, 0, 1)
 		leftResizer:GetPushedTexture():SetTexCoord(1, 0, 0, 1)
+	end
+
+	if (leftResizer.options.use_default_scripts) then
+		leftResizer:SetScript("OnMouseDown", function(self)
+			parent:StartSizing("BOTTOMLEFT")
+		end)
+		leftResizer:SetScript("OnMouseUp", function(self)
+			parent:StopMovingOrSizing()
+		end)
+
+		rightResizer:SetScript("OnMouseDown", function(self)
+			parent:StartSizing("BOTTOMRIGHT")
+		end)
+		rightResizer:SetScript("OnMouseUp", function(self)
+			parent:StopMovingOrSizing()
+		end)
 	end
 
 	return leftResizer, rightResizer
@@ -4004,6 +4057,199 @@ function detailsFramework:ApplyStandardBackdrop(frame, bUseSolidColor, alphaScal
 
 	frame.__background:SetAlpha(alpha * alphaScale)
 end
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---boss selector
+
+---@class df_bossscrollselector : df_scrollbox
+---@field options df_bossscrollselector_options
+---@field callback function
+---@field callback_args any[]
+---@field SetCallback fun(self:df_bossscrollselector, callback:function, ...)
+
+---@class df_bossscrollselector_options : table
+---@field width number
+---@field height number
+---@field line_height number
+---@field line_amount number
+---@field show_icon boolean
+---@field show_name boolean
+---@field name_size number
+---@field name_color any
+---@field icon_coords table
+---@field icon_size table
+
+---@class df_bossscrollselector_line : button
+---@field index number
+---@field bossId number
+---@field bossIcon texture
+---@field bossName fontstring
+---@field bossRaidName fontstring
+---@field selectedInidicator texture
+
+---@type df_bossscrollselector_options
+local bossSelectorDefaultOptions = {
+	width = 200,
+	height = 400,
+	line_height = 40,
+	line_amount = 10,
+	show_icon = true,
+	icon_coords = {0, 1, 0, 1},
+	icon_size = {70, 36},
+	show_name = false,
+	name_size = 10,
+	name_color = "wheat",
+}
+
+detailsFramework.BossScrollSelectorMixin = {
+	---@param self df_bossscrollselector
+	---@param index number
+	---@return frame
+	CreateLine = function(self, index)
+		---@type df_bossscrollselector_line
+		local line = CreateFrame("button", "$parentLine" .. index, self, "BackdropTemplate")
+
+		line:SetPoint("topleft", self, "topleft", 1, -((index-1) * (self.options.line_height+1)) - 1)
+		line:SetSize(self.options.width - 2, self.options.line_height)
+		line:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+		detailsFramework:ApplyStandardBackdrop(line)
+
+		--line:SetScript("OnEnter", onEnterBossLine)
+		--line:SetScript("OnLeave", onLeaveBossLine)
+
+		line.index = index
+
+		local selectedInidicator = line:CreateTexture(nil, "border")
+		selectedInidicator:SetPoint("topleft", line, "topleft", 1, -1)
+		selectedInidicator:SetPoint("bottomright", line, "bottomright", -1, 1)
+		selectedInidicator:SetColorTexture(1, 1, 1, 0.4)
+		selectedInidicator:Hide()
+		line.selectedInidicator = selectedInidicator
+
+		--boss icon
+		local bossIcon = line:CreateTexture("$parentIcon", "overlay")
+		bossIcon:SetSize(self.options.line_height + 30, self.options.line_height-4)
+		bossIcon:SetPoint("left", line, "left", 2, 0)
+		line.bossIcon = bossIcon
+
+		local bossName = line:CreateFontString(nil, "overlay", "GameFontNormal")
+		local bossRaid = line:CreateFontString(nil, "overlay", "GameFontNormal")
+		bossName:SetPoint("left", bossIcon, "right", -8, 6)
+		bossRaid:SetPoint("topleft", bossName, "bottomleft", 0, -2)
+		detailsFramework:SetFontSize(bossName, 10)
+		detailsFramework:SetFontSize(bossRaid, 9)
+		detailsFramework:SetFontColor(bossRaid, "silver")
+
+		detailsFramework:CreateHighlightTexture(line)
+
+		line.bossName = bossName
+		line.bossRaidName = bossRaid
+
+		return line
+	end,
+
+	---@param self df_bossscrollselector
+	---@param data df_encounterinfo[]
+	---@param offset number
+	---@param totalLines number
+	Refresh = function(self, data, offset, totalLines)
+		--update boss scroll
+		for i = 1, totalLines do
+			local index = i + offset
+			local thisData = data[index]
+			if (thisData) then
+				---@type df_bossscrollselector_line
+				---@diagnostic disable-next-line: assign-type-mismatch
+				local line = self:GetLine(i)
+
+				local instanceId = thisData.instanceId
+				---@type df_instanceinfo
+				local instanceData = detailsFramework.Ejc.GetInstanceInfo(instanceId)
+
+				local bossName = thisData.name
+				local bossRaidName = instanceData.name
+				local bossIcon = thisData.creatureIcon
+				local bossIconCoords = thisData.creatureIconCoords
+				local bossId = thisData.journalEncounterId
+
+				--update the line
+				line.bossName:SetText(bossName)
+				line.bossName:SetPoint("left", line.bossIcon, "right", -8, 6)
+				detailsFramework:TruncateText(line.bossName, 130)
+				line.bossRaidName:SetText(bossRaidName)
+				detailsFramework:TruncateText(line.bossRaidName, 130)
+
+				line.bossIcon:SetTexture(bossIcon)
+				line.bossIcon:SetSize(unpack(self.options.icon_size))
+				line.bossIcon:SetTexCoord(unpack(bossIconCoords))
+
+				line.bossIcon:SetPoint("left", line, "left", 2, 0)
+				line.bossName:Show()
+				line.bossRaidName:Show()
+
+				line.bossId = bossId
+				line.index = index
+				line:Show()
+			end
+		end
+	end,
+
+	SetCallback = function(self, callback, ...)
+		self.callback_args = {...}
+		self.callback = callback
+
+		local function onClick(line)
+			callback(line.index, unpack(self.callback_args))
+		end
+
+		local allLines = self:GetLines()
+		for index, line in ipairs(allLines) do
+			line:SetScript("OnClick", onClick)
+		end
+	end
+}
+
+---create a scrollbox with a list of bosses from an instance
+---@param instanceId any accept instanceId, ejInstanceId or instanceName
+---@param parent uiobject
+---@param name string|nil
+---@param options df_bossscrollselector_options?
+---@param callback function? the function to call when a boss is clicked
+---@param ... any additional arguments to pass to the callback
+---@return df_bossscrollselector
+function detailsFramework:CreateBossScrollSelectorForInstance(instanceId, parent, name, options, callback, ...)
+	local refreshFunc = detailsFramework.BossScrollSelectorMixin.Refresh
+	local createLineFunc = detailsFramework.BossScrollSelectorMixin.CreateLine
+
+	---@type df_encounterinfo[]
+	local arrayOfBosses = detailsFramework.Ejc.GetAllEncountersFromInstance(instanceId)
+
+	options = options or {}
+	---@cast options df_bossscrollselector_options
+	detailsFramework.table.deploy(options, bossSelectorDefaultOptions)
+
+	---@type df_bossscrollselector
+	---@diagnostic disable-next-line: assign-type-mismatch
+	local bossScrollFrame = detailsFramework:CreateScrollBox(parent, name, refreshFunc, arrayOfBosses, options.width, options.height, options.line_amount, options.line_amount)
+	bossScrollFrame.options = options
+	bossScrollFrame.SetCallback = detailsFramework.BossScrollSelectorMixin.SetCallback
+
+	--create the scrollbox lines
+	for i = 1, options.line_amount do
+		bossScrollFrame:CreateLine(createLineFunc)
+	end
+
+	if (callback) then
+		bossScrollFrame:SetCallback(callback, ...)
+	end
+
+	detailsFramework:ReskinSlider(bossScrollFrame)
+	detailsFramework:ApplyStandardBackdrop(bossScrollFrame)
+
+	bossScrollFrame:Refresh()
+	return bossScrollFrame
+end
+
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- ~title bar
@@ -4120,6 +4366,7 @@ local default_radiogroup_options = {
 ---@field FadeIn fun(self:df_checkboxgroup)
 ---@field FadeOut fun(self:df_checkboxgroup)
 ---@field GetAllCheckboxes fun(self:df_checkboxgroup):df_radiogroup_checkbox[]
+---@field ExecuteOnAllCheckboxes fun(self:df_checkboxgroup, func:function) fun(radioGroup, checkbox, param, optionId)
 ---@field GetCheckbox fun(self:df_checkboxgroup, checkboxId:number):df_radiogroup_checkbox
 ---@field CreateCheckbox fun(self:df_checkboxgroup):df_radiogroup_checkbox
 ---@field ResetAllCheckboxes fun(self:df_checkboxgroup)
@@ -4127,7 +4374,8 @@ local default_radiogroup_options = {
 ---@field RefreshCheckbox fun(self:df_checkboxgroup, checkbox:df_radiogroup_checkbox, optionTable:table, optionId:number)
 
 local radio_checkbox_onclick_extraspace = function(self)
-	self:GetParent():GetObject():OnSwitch() --as the parent of self is a Switch object from DetailsFramework, it need to run :GetObject() to get the capsule object
+	self:GetParent():GetObject():OnSwitch(self:GetParent():GetObject()._param, not self:GetParent():GetObject():GetValue()) --as the parent of self is a Switch object from DetailsFramework, it need to run :GetObject() to get the capsule object
+	self:GetParent():GetObject():GetParent():Refresh()
 end
 
 ---@type df_radiogroupmixin
@@ -4220,6 +4468,13 @@ detailsFramework.RadioGroupCoreFunctions = {
 		end
 
 		return checkbox
+	end,
+
+	ExecuteOnAllCheckboxes = function(self, func)
+		local checkBoxList = self:GetAllCheckboxes()
+		for _, checkbox in ipairs(checkBoxList) do
+			detailsFramework:QuickDispatch(func, self, checkbox, checkbox._param, checkbox._optionid)
+		end
 	end,
 
 	ResetAllCheckboxes = function(self)
@@ -4317,7 +4572,7 @@ detailsFramework.RadioGroupCoreFunctions = {
 			end
 		end
 
-		checkbox.__width = width + (checkbox.Icon:IsShown() and (checkbox.Icon:GetWidth() + 2)) + (checkbox.Label:GetStringWidth()) + 2
+		checkbox.__width = width + (checkbox.Icon:IsShown() and (checkbox.Icon:GetWidth() + (self.AnchorOptions.icon_offset_x or 0))) + (checkbox.Label:GetUnboundedStringWidth()) + (self.options.text_padding or 2)
 		checkbox.widget.__width = checkbox.__width
 
 		checkbox.__height = height + (checkbox.Icon:IsShown() and (checkbox.Icon:GetHeight() + 2))
@@ -4341,7 +4596,7 @@ detailsFramework.RadioGroupCoreFunctions = {
 			self:RefreshCheckbox(checkbox, optionsTable, optionId)
 			totalWidth = totalWidth + checkbox.__width
 
-			checkbox.extraSpaceToClick:SetWidth(checkbox.__width)
+			checkbox.extraSpaceToClick:SetWidth(checkbox.__width - checkbox:GetWidth()) -- total __width contains checkbox size which we don't need here
 
 			if (checkbox:GetHeight() > maxHeight) then
 				maxHeight = checkbox:GetHeight()
@@ -4403,9 +4658,9 @@ detailsFramework.RadioGroupCoreFunctions = {
 }
 
 ---@class df_radiooptions : table
----@field name string|table can be a regular string or a locTable
----@field get fun():any?
----@field set fun(self:df_radiooptions, param, value)
+---@field name string|table? can be a regular string or a locTable
+---@field get fun()?
+---@field set fun(self:df_radiooptions, param, value)?
 ---@field param any?
 ---@field texture string?
 ---@field texcoord table?
@@ -4418,7 +4673,8 @@ detailsFramework.RadioGroupCoreFunctions = {
 ---@field backdrop_color table?
 ---@field backdrop_border_color table?
 ---@field checkbox_template string?
----@field on_click_option fun(self:df_checkboxgroup, checkbox:df_radiogroup_checkbox, param:any, optionId:number)
+---@field on_click_option fun(self:df_checkboxgroup, checkbox:df_radiogroup_checkbox, param:any, optionId:number)?
+---@field on_create_checkbox fun(self:df_checkboxgroup, checkbox:df_radiogroup_checkbox)?
 
 --[=[
 	radionOptions: an index table with options for the radio group {name = "", set = func (self, param, value), param = value, get = func, texture = "", texcoord = {}}
@@ -4890,688 +5146,6 @@ function detailsFramework:CreateBorderFrame(parent, name)
 	return f
 end
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---horizontal scroll frame
-
-local timeline_options = {
-	width = 400,
-	height = 700,
-	line_height = 20,
-	line_padding = 1,
-
-	show_elapsed_timeline = true,
-	elapsed_timeline_height = 20,
-
-	--space to put the player/spell name and icons
-	header_width = 150,
-
-	--how many pixels will be use to represent 1 second
-	pixels_per_second = 20,
-
-	scale_min = 0.15,
-	scale_max = 1,
-
-	backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	backdrop_color = {0, 0, 0, 0.2},
-	backdrop_color_highlight = {.2, .2, .2, 0.4},
-	backdrop_border_color = {0.1, 0.1, 0.1, .2},
-
-	slider_backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	slider_backdrop_color = {0, 0, 0, 0.2},
-	slider_backdrop_border_color = {0.1, 0.1, 0.1, .2},
-
-	title_template = "ORANGE_FONT_TEMPLATE",
-	text_tempate = "OPTIONS_FONT_TEMPLATE",
-
-	on_enter = function(self)
-		self:SetBackdropColor(unpack(self.backdrop_color_highlight))
-	end,
-	on_leave = function(self)
-		self:SetBackdropColor(unpack(self.backdrop_color))
-	end,
-
-	block_on_enter = function(self)
-
-	end,
-	block_on_leave = function(self)
-
-	end,
-}
-
-local elapsedtime_frame_options = {
-	backdrop = {bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true},
-	backdrop_color = {.3, .3, .3, .7},
-
-	text_color = {1, 1, 1, 1},
-	text_size = 12,
-	text_font = "Arial Narrow",
-	text_outline = "NONE",
-
-	height = 20,
-
-	distance = 200, --distance in pixels between each label informing the time
-	distance_min = 50, --minimum distance in pixels
-	draw_line = true, --if true it'll draw a vertical line to represent a segment
-	draw_line_color = {1, 1, 1, 0.2},
-	draw_line_thickness = 1,
-}
-
-detailsFramework.TimeLineElapsedTimeFunctions = {
-	--get a label and update its appearance
-	GetLabel = function(self, index)
-		local label = self.labels [index]
-
-		if (not label) then
-			label = self:CreateFontString(nil, "artwork", "GameFontNormal")
-			label.line = self:CreateTexture(nil, "artwork")
-			label.line:SetColorTexture(1, 1, 1)
-			label.line:SetPoint("topleft", label, "bottomleft", 0, -2)
-			self.labels [index] = label
-		end
-
-		detailsFramework:SetFontColor(label, self.options.text_color)
-		detailsFramework:SetFontSize(label, self.options.text_size)
-		detailsFramework:SetFontFace (label, self.options.text_font)
-		detailsFramework:SetFontOutline (label, self.options.text_outline)
-
-		if (self.options.draw_line) then
-			label.line:SetVertexColor(unpack(self.options.draw_line_color))
-			label.line:SetWidth(self.options.draw_line_thickness)
-			label.line:Show()
-		else
-			label.line:Hide()
-		end
-
-		return label
-	end,
-
-	Reset = function(self)
-		for i = 1, #self.labels do
-			self.labels [i]:Hide()
-		end
-	end,
-
-	Refresh = function(self, elapsedTime, scale)
-		local parent = self:GetParent()
-
-		self:SetHeight(self.options.height)
-		local effectiveArea = self:GetWidth() --already scaled down width
-		local pixelPerSecond = elapsedTime / effectiveArea --how much 1 pixels correlate to time
-
-		local distance = self.options.distance --pixels between each segment
-		local minDistance = self.options.distance_min --min pixels between each segment
-
-		--scale the distance between each label showing the time with the parent's scale
-		distance = distance * scale
-		distance = max(distance, minDistance)
-
-		local amountSegments = ceil (effectiveArea / distance)
-
-		for i = 1, amountSegments do
-			local label = self:GetLabel (i)
-			local xOffset = distance * (i - 1)
-			label:SetPoint("left", self, "left", xOffset, 0)
-
-			local secondsOfTime = pixelPerSecond * xOffset
-
-			label:SetText(detailsFramework:IntegerToTimer(floor(secondsOfTime)))
-
-			if (label.line:IsShown()) then
-				label.line:SetHeight(parent:GetParent():GetHeight())
-			end
-
-			label:Show()
-		end
-	end,
-}
-
---creates a frame to show the elapsed time in a row
-function detailsFramework:CreateElapsedTimeFrame(parent, name, options)
-	local elapsedTimeFrame = CreateFrame("frame", name, parent, "BackdropTemplate")
-
-	detailsFramework:Mixin(elapsedTimeFrame, detailsFramework.OptionsFunctions)
-	detailsFramework:Mixin(elapsedTimeFrame, detailsFramework.LayoutFrame)
-	detailsFramework:Mixin(elapsedTimeFrame, detailsFramework.TimeLineElapsedTimeFunctions)
-
-	elapsedTimeFrame:BuildOptionsTable(elapsedtime_frame_options, options)
-
-	elapsedTimeFrame:SetBackdrop(elapsedTimeFrame.options.backdrop)
-	elapsedTimeFrame:SetBackdropColor(unpack(elapsedTimeFrame.options.backdrop_color))
-
-	elapsedTimeFrame.labels = {}
-
-	return elapsedTimeFrame
-end
-
-
-detailsFramework.TimeLineBlockFunctions = {
-	--self is the line
-	SetBlock = function(self, index, blockInfo)
-		--get the block information
-		--see what is the current scale
-		--adjust the block position
-
-		local block = self:GetBlock (index)
-
-		--need:
-			--the total time of the timeline
-			--the current scale of the timeline
-			--the elapsed time of this block
-			--icon of the block
-			--text
-			--background color
-
-	end,
-
-	SetBlocksFromData = function(self)
-		local parent = self:GetParent():GetParent()
-		local data = parent.data
-		local defaultColor = parent.defaultColor --guarantee to have a value
-
-		self:Show()
-
-		--none of these values are scaled, need to calculate
-		local pixelPerSecond = parent.pixelPerSecond
-		local totalLength = parent.totalLength
-		local scale = parent.currentScale
-
-		pixelPerSecond = pixelPerSecond * scale
-
-		local headerWidth = parent.headerWidth
-
-		--dataIndex stores which line index from the data this line will use
-		--lineData store members: .text .icon .timeline
-		local lineData = data.lines[self.dataIndex]
-
-		self.spellId = lineData.spellId
-
-		--if there's an icon, anchor the text at the right side of the icon
-		--this is the title and icon of the title
-		if (lineData.icon) then
-			self.icon:SetTexture(lineData.icon)
-			if (lineData.coords) then
-				self.icon:SetTexCoord(unpack(lineData.coords))
-			else
-				self.icon:SetTexCoord(.1, .9, .1, .9)
-			end
-			self.text:SetText(lineData.text or "")
-			self.text:SetPoint("left", self.icon.widget, "right", 2, 0)
-		else
-			self.icon:SetTexture(nil)
-			self.text:SetText(lineData.text or "")
-			self.text:SetPoint("left", self, "left", 2, 0)
-		end
-
-		if (self.dataIndex % 2 == 1) then
-			self:SetBackdropColor(0, 0, 0, 0)
-		else
-			local r, g, b, a = unpack(self.backdrop_color)
-			self:SetBackdropColor(r, g, b, a)
-		end
-
-		self:SetWidth(5000)
-
-		local timelineData = lineData.timeline
-		local spellId = lineData.spellId
-		local useIconOnBlock = data.useIconOnBlocks
-
-		local baseFrameLevel = parent:GetFrameLevel() + 10
-
-		for i = 1, #timelineData do
-			local blockInfo = timelineData[i]
-
-			local timeInSeconds = blockInfo[1]
-			local length = blockInfo[2]
-			local isAura = blockInfo[3]
-			local auraDuration = blockInfo[4]
-			local blockSpellId = blockInfo[5]
-
-			local payload = blockInfo.payload
-
-			local xOffset = pixelPerSecond * timeInSeconds
-			local width = pixelPerSecond * length
-
-			if (timeInSeconds < -0.2) then
-				xOffset = xOffset / 2.5
-			end
-
-			local block = self:GetBlock(i)
-			block:Show()
-			block:SetFrameLevel(baseFrameLevel + i)
-
-			PixelUtil.SetPoint(block, "left", self, "left", xOffset + headerWidth, 0)
-
-			block.info.spellId = blockSpellId or spellId
-			block.info.time = timeInSeconds
-			block.info.duration = auraDuration
-			block.info.payload = payload
-
-			if (useIconOnBlock) then
-				local iconTexture = lineData.icon
-				if (blockSpellId) then
-					iconTexture = GetSpellTexture(blockSpellId)
-				end
-
-				block.icon:SetTexture(iconTexture)
-				block.icon:SetTexCoord(.1, .9, .1, .9)
-				block.icon:SetAlpha(.834)
-				block.icon:SetSize(self:GetHeight(), self:GetHeight())
-
-				if (timeInSeconds < -0.2) then
-					block.icon:SetDesaturated(true)
-				else
-					block.icon:SetDesaturated(false)
-				end
-
-				PixelUtil.SetSize(block, self:GetHeight(), self:GetHeight())
-
-				if (isAura) then
-					block.auraLength:Show()
-					block.auraLength:SetWidth(pixelPerSecond * isAura)
-					block:SetWidth(max(pixelPerSecond * isAura, 16))
-				else
-					block.auraLength:Hide()
-				end
-
-				block.background:SetVertexColor(0, 0, 0, 0)
-			else
-				block.background:SetVertexColor(0, 0, 0, 0)
-				PixelUtil.SetSize(block, max(width, 16), self:GetHeight())
-				block.auraLength:Hide()
-			end
-		end
-	end,
-
-	GetBlock = function(self, index)
-		local block = self.blocks [index]
-		if (not block) then
-			block = CreateFrame("frame", nil, self, "BackdropTemplate")
-			self.blocks [index] = block
-
-			local background = block:CreateTexture(nil, "background")
-			background:SetColorTexture(1, 1, 1, 1)
-			local icon = block:CreateTexture(nil, "artwork")
-			local text = block:CreateFontString(nil, "artwork")
-			local auraLength = block:CreateTexture(nil, "border")
-
-			background:SetAllPoints()
-			icon:SetPoint("left")
-			text:SetPoint("left", icon, "left", 2, 0)
-			auraLength:SetPoint("topleft", icon, "topleft", 0, 0)
-			auraLength:SetPoint("bottomleft", icon, "bottomleft", 0, 0)
-			auraLength:SetColorTexture(1, 1, 1, 1)
-			auraLength:SetVertexColor(1, 1, 1, 0.1)
-
-			block.icon = icon
-			block.text = text
-			block.background = background
-			block.auraLength = auraLength
-
-			block:SetScript("OnEnter", self:GetParent():GetParent().options.block_on_enter)
-			block:SetScript("OnLeave", self:GetParent():GetParent().options.block_on_leave)
-
-			block:SetMouseClickEnabled(false)
-			block.info = {}
-		end
-
-		return block
-	end,
-
-	Reset = function(self)
-		--attention, it doesn't reset icon texture, text and background color
-		for i = 1, #self.blocks do
-			self.blocks [i]:Hide()
-		end
-		self:Hide()
-	end,
-}
-
-detailsFramework.TimeLineFunctions = {
-	GetLine = function(self, index)
-		local line = self.lines [index]
-		if (not line) then
-			--create a new line
-			line = CreateFrame("frame", "$parentLine" .. index, self.body, "BackdropTemplate")
-			detailsFramework:Mixin(line, detailsFramework.TimeLineBlockFunctions)
-			self.lines [index] = line
-
-			local lineHeader = CreateFrame("frame", nil, line, "BackdropTemplate")
-			lineHeader:SetPoint("topleft", line, "topleft", 0, 0)
-			lineHeader:SetPoint("bottomleft", line, "bottomleft", 0, 0)
-			lineHeader:SetScript("OnEnter", self.options.header_on_enter)
-			lineHeader:SetScript("OnLeave", self.options.header_on_leave)
-
-			line.lineHeader = lineHeader
-
-			--store the individual textures that shows the timeline information
-			line.blocks = {}
-			line.SetBlock = detailsFramework.TimeLineBlockFunctions.SetBlock
-			line.GetBlock = detailsFramework.TimeLineBlockFunctions.GetBlock
-
-			--set its parameters
-
-			if (self.options.show_elapsed_timeline) then
-				line:SetPoint("topleft", self.body, "topleft", 1, -((index-1) * (self.options.line_height + 1)) - 2 - self.options.elapsed_timeline_height)
-			else
-				line:SetPoint("topleft", self.body, "topleft", 1, -((index-1) * (self.options.line_height + 1)) - 1)
-			end
-			line:SetSize(1, self.options.line_height) --width is set when updating the frame
-
-			line:SetScript("OnEnter", self.options.on_enter)
-			line:SetScript("OnLeave", self.options.on_leave)
-			line:SetMouseClickEnabled(false)
-
-			line:SetBackdrop(self.options.backdrop)
-			line:SetBackdropColor(unpack(self.options.backdrop_color))
-			line:SetBackdropBorderColor(unpack(self.options.backdrop_border_color))
-
-			local icon = detailsFramework:CreateImage(line, "", self.options.line_height, self.options.line_height)
-			icon:SetPoint("left", line, "left", 2, 0)
-			line.icon = icon
-
-			local text = detailsFramework:CreateLabel(line, "", detailsFramework:GetTemplate("font", self.options.title_template))
-			text:SetPoint("left", icon.widget, "right", 2, 0)
-			line.text = text
-
-			line.backdrop_color = self.options.backdrop_color or {.1, .1, .1, .3}
-			line.backdrop_color_highlight = self.options.backdrop_color_highlight or {.3, .3, .3, .5}
-		end
-
-		return line
-	end,
-
-	ResetAllLines = function(self)
-		for i = 1, #self.lines do
-			self.lines[i]:Reset()
-		end
-	end,
-
-	AdjustScale = function(self, index)
-
-	end,
-
-	--todo
-	--make the on enter and leave tooltips
-	--set icons and texts
-	--skin the sliders
-
-	RefreshTimeLine = function(self)
-		--debug
-		--self.currentScale = 1
-
-		--calculate the total width
-		local pixelPerSecond = self.options.pixels_per_second
-		local totalLength = self.data.length or 1
-		local currentScale = self.currentScale
-
-		self.scaleSlider:Enable()
-
-		--how many pixels represent 1 second
-		local bodyWidth = totalLength * pixelPerSecond * currentScale
-		self.body:SetWidth(bodyWidth + self.options.header_width)
-		self.body.effectiveWidth = bodyWidth
-
-		--reduce the default canvas size from the body with and don't allow the max value be negative
-		local newMaxValue = max(bodyWidth - (self:GetWidth() - self.options.header_width), 0)
-
-		--adjust the scale slider range
-		local oldMin, oldMax = self.horizontalSlider:GetMinMaxValues()
-		self.horizontalSlider:SetMinMaxValues(0, newMaxValue)
-		self.horizontalSlider:SetValue(detailsFramework:MapRangeClamped(oldMin, oldMax, 0, newMaxValue, self.horizontalSlider:GetValue()))
-
-		local defaultColor = self.data.defaultColor or {1, 1, 1, 1}
-
-		--cache values
-		self.pixelPerSecond = pixelPerSecond
-		self.totalLength = totalLength
-		self.defaultColor = defaultColor
-		self.headerWidth = self.options.header_width
-
-		--calculate the total height
-		local lineHeight = self.options.line_height
-		local linePadding = self.options.line_padding
-
-		local bodyHeight = (lineHeight + linePadding) * #self.data.lines
-		self.body:SetHeight(bodyHeight)
-		self.verticalSlider:SetMinMaxValues(0, max(bodyHeight - self:GetHeight(), 0))
-		self.verticalSlider:SetValue(0)
-
-		--refresh lines
-		self:ResetAllLines()
-		for i = 1, #self.data.lines do
-			local line = self:GetLine(i)
-			line.dataIndex = i --this index is used inside the line update function to know which data to get
-			line.lineHeader:SetWidth(self.options.header_width)
-			line:SetBlocksFromData() --the function to update runs within the line object
-		end
-
-		--refresh elapsed time frame
-		--the elapsed frame must have a width before the refresh function is called
-		self.elapsedTimeFrame:ClearAllPoints()
-		self.elapsedTimeFrame:SetPoint("topleft", self.body, "topleft", self.options.header_width, 0)
-		self.elapsedTimeFrame:SetPoint("topright", self.body, "topright", 0, 0)
-		self.elapsedTimeFrame:Reset()
-
-		self.elapsedTimeFrame:Refresh(self.data.length, self.currentScale)
-	end,
-
-	SetData = function(self, data)
-		self.data = data
-		self:RefreshTimeLine()
-	end,
-
-	GetData = function(self)
-		return self.data
-	end,
-}
-
---creates a regular scroll in horizontal position
-function detailsFramework:CreateTimeLineFrame(parent, name, options, timelineOptions)
-	local width = options and options.width or timeline_options.width
-	local height = options and options.height or timeline_options.height
-	local scrollWidth = 800 --placeholder until the timeline receives data
-	local scrollHeight = 800 --placeholder until the timeline receives data
-
-	local frameCanvas = CreateFrame("scrollframe", name, parent, "BackdropTemplate")
-
-	detailsFramework:Mixin(frameCanvas, detailsFramework.TimeLineFunctions)
-	detailsFramework:Mixin(frameCanvas, detailsFramework.OptionsFunctions)
-	detailsFramework:Mixin(frameCanvas, detailsFramework.LayoutFrame)
-
-	frameCanvas.data = {}
-	frameCanvas.lines = {}
-	frameCanvas.currentScale = 0.5
-	frameCanvas:SetSize(width, height)
-
-	detailsFramework:ApplyStandardBackdrop(frameCanvas)
-
-	local frameBody = CreateFrame("frame", nil, frameCanvas, "BackdropTemplate")
-	frameBody:SetSize(scrollWidth, scrollHeight)
-
-	frameCanvas:SetScrollChild(frameBody)
-	frameCanvas.body = frameBody
-
-	frameCanvas:BuildOptionsTable(timeline_options, options)
-
-	--create elapsed time frame
-	frameCanvas.elapsedTimeFrame = detailsFramework:CreateElapsedTimeFrame(frameBody, frameCanvas:GetName() and frameCanvas:GetName() .. "ElapsedTimeFrame", timelineOptions)
-
-	local thumbColor = 0.95
-	local scrollBackgroudColor = {0.05, 0.05, 0.05, 0.7}
-
-	--create horizontal slider
-		local horizontalSlider = CreateFrame("slider", frameCanvas:GetName() .. "HorizontalSlider", parent, "BackdropTemplate")
-		horizontalSlider.bg = horizontalSlider:CreateTexture(nil, "background")
-		horizontalSlider.bg:SetAllPoints(true)
-		horizontalSlider.bg:SetColorTexture(unpack(scrollBackgroudColor))
-		frameCanvas.horizontalSlider = horizontalSlider
-
-		horizontalSlider:SetBackdrop(frameCanvas.options.slider_backdrop)
-		horizontalSlider:SetBackdropColor(unpack(frameCanvas.options.slider_backdrop_color))
-		horizontalSlider:SetBackdropBorderColor(unpack(frameCanvas.options.slider_backdrop_border_color))
-
-		horizontalSlider.thumb = horizontalSlider:CreateTexture(nil, "OVERLAY")
-		horizontalSlider.thumb:SetTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
-		horizontalSlider.thumb:SetSize(24, 24)
-		horizontalSlider.thumb:SetVertexColor(thumbColor, thumbColor, thumbColor, 0.95)
-		horizontalSlider:SetThumbTexture(horizontalSlider.thumb)
-
-		horizontalSlider:SetOrientation("horizontal")
-		horizontalSlider:SetSize(width + 20, 20)
-		horizontalSlider:SetPoint("topleft", frameCanvas, "bottomleft")
-		horizontalSlider:SetMinMaxValues(0, scrollWidth)
-		horizontalSlider:SetValue(0)
-		horizontalSlider:SetScript("OnValueChanged", function(self)
-			local _, maxValue = horizontalSlider:GetMinMaxValues()
-			local stepValue = ceil(ceil(self:GetValue() * maxValue) / max(maxValue, SMALL_FLOAT))
-			if (stepValue ~= horizontalSlider.currentValue) then
-				horizontalSlider.currentValue = stepValue
-				frameCanvas:SetHorizontalScroll(stepValue)
-			end
-		end)
-
-	--create scale slider
-		local scaleSlider = CreateFrame("slider", frameCanvas:GetName() .. "ScaleSlider", parent, "BackdropTemplate")
-		scaleSlider.bg = scaleSlider:CreateTexture(nil, "background")
-		scaleSlider.bg:SetAllPoints(true)
-		scaleSlider.bg:SetColorTexture(unpack(scrollBackgroudColor))
-		scaleSlider:Disable()
-		frameCanvas.scaleSlider = scaleSlider
-
-		scaleSlider:SetBackdrop(frameCanvas.options.slider_backdrop)
-		scaleSlider:SetBackdropColor(unpack(frameCanvas.options.slider_backdrop_color))
-		scaleSlider:SetBackdropBorderColor(unpack(frameCanvas.options.slider_backdrop_border_color))
-
-		scaleSlider.thumb = scaleSlider:CreateTexture(nil, "OVERLAY")
-		scaleSlider.thumb:SetTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
-		scaleSlider.thumb:SetSize(24, 24)
-		scaleSlider.thumb:SetVertexColor(thumbColor, thumbColor, thumbColor, 0.95)
-		scaleSlider:SetThumbTexture(scaleSlider.thumb)
-
-		scaleSlider:SetOrientation("horizontal")
-		scaleSlider:SetSize(width + 20, 20)
-		scaleSlider:SetPoint("topleft", horizontalSlider, "bottomleft", 0, -2)
-		scaleSlider:SetMinMaxValues(frameCanvas.options.scale_min, frameCanvas.options.scale_max)
-		scaleSlider:SetValue(detailsFramework:GetRangeValue(frameCanvas.options.scale_min, frameCanvas.options.scale_max, 0.5))
-
-		scaleSlider:SetScript("OnValueChanged", function(self)
-			local stepValue = ceil(self:GetValue() * 100) / 100
-			if (stepValue ~= frameCanvas.currentScale) then
-				local current = stepValue
-				frameCanvas.currentScale = stepValue
-				frameCanvas:RefreshTimeLine()
-			end
-		end)
-
-	--create vertical slider
-		local verticalSlider = CreateFrame("slider", frameCanvas:GetName() .. "VerticalSlider", parent, "BackdropTemplate")
-		verticalSlider.bg = verticalSlider:CreateTexture(nil, "background")
-		verticalSlider.bg:SetAllPoints(true)
-		verticalSlider.bg:SetColorTexture(unpack(scrollBackgroudColor))
-		frameCanvas.verticalSlider = verticalSlider
-
-		verticalSlider:SetBackdrop(frameCanvas.options.slider_backdrop)
-		verticalSlider:SetBackdropColor(unpack(frameCanvas.options.slider_backdrop_color))
-		verticalSlider:SetBackdropBorderColor(unpack(frameCanvas.options.slider_backdrop_border_color))
-
-		verticalSlider.thumb = verticalSlider:CreateTexture(nil, "OVERLAY")
-		verticalSlider.thumb:SetTexture("Interface\\Buttons\\UI-ScrollBar-Knob")
-		verticalSlider.thumb:SetSize(24, 24)
-		verticalSlider.thumb:SetVertexColor(thumbColor, thumbColor, thumbColor, 0.95)
-		verticalSlider:SetThumbTexture(verticalSlider.thumb)
-
-		verticalSlider:SetOrientation("vertical")
-		verticalSlider:SetSize(20, height - 2)
-		verticalSlider:SetPoint("topleft", frameCanvas, "topright", 0, 0)
-		verticalSlider:SetMinMaxValues(0, scrollHeight)
-		verticalSlider:SetValue(0)
-		verticalSlider:SetScript("OnValueChanged", function(self)
-		    frameCanvas:SetVerticalScroll(self:GetValue())
-		end)
-
-	--mouse scroll
-		frameCanvas:EnableMouseWheel(true)
-		frameCanvas:SetScript("OnMouseWheel", function(self, delta)
-			local minValue, maxValue = horizontalSlider:GetMinMaxValues()
-			local currentHorizontal = horizontalSlider:GetValue()
-
-			if (IsShiftKeyDown() and delta < 0) then
-				local amountToScroll = frameBody:GetHeight() / 20
-				verticalSlider:SetValue(verticalSlider:GetValue() + amountToScroll)
-
-			elseif (IsShiftKeyDown() and delta > 0) then
-				local amountToScroll = frameBody:GetHeight() / 20
-				verticalSlider:SetValue(verticalSlider:GetValue() - amountToScroll)
-
-			elseif (IsControlKeyDown() and delta > 0) then
-				scaleSlider:SetValue(min(scaleSlider:GetValue() + 0.1, 1))
-
-			elseif (IsControlKeyDown() and delta < 0) then
-				scaleSlider:SetValue(max(scaleSlider:GetValue() - 0.1, 0.15))
-
-			elseif (delta < 0 and currentHorizontal < maxValue) then
-				local amountToScroll = frameBody:GetWidth() / 20
-				horizontalSlider:SetValue(currentHorizontal + amountToScroll)
-
-			elseif (delta > 0 and maxValue > 1) then
-				local amountToScroll = frameBody:GetWidth() / 20
-				horizontalSlider:SetValue(currentHorizontal - amountToScroll)
-
-			end
-		end)
-
-	--mouse drag
-	frameBody:SetScript("OnMouseDown", function(self, button)
-		local x = GetCursorPosition()
-		self.MouseX = x
-
-		frameBody:SetScript("OnUpdate", function(self, deltaTime)
-			local x = GetCursorPosition()
-			local deltaX = self.MouseX - x
-			local current = horizontalSlider:GetValue()
-			horizontalSlider:SetValue(current +(deltaX * 1.2) *((IsShiftKeyDown() and 2) or(IsAltKeyDown() and 0.5) or 1))
-			self.MouseX = x
-		end)
-	end)
-
-	frameBody:SetScript("OnMouseUp", function(self, button)
-		frameBody:SetScript("OnUpdate", nil)
-	end)
-
-	return frameCanvas
-end
-
-
---[=[
-local f = CreateFrame("frame", "TestFrame", UIParent)
-f:SetPoint("center")
-f:SetSize(900, 420)
-f:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,	insets = {left = 1, right = 1, top = 0, bottom = 1}})
-
-local scroll = DF:CreateTimeLineFrame (f, "$parentTimeLine", {width = 880, height = 400})
-scroll:SetPoint("topleft", f, "topleft", 0, 0)
-
---need fake data to test fills
-scroll:SetData ({
-	length = 360,
-	defaultColor = {1, 1, 1, 1},
-	lines = {
-			{text = "player 1", icon = "", timeline = {
-				--each table here is a block shown in the line
-				--is an indexed table with: [1] time [2] length [3] color (if false, use the default) [4] text [5] icon [6] tooltip: if number = spellID tooltip, if table is text lines
-				{1, 10}, {13, 11}, {25, 7}, {36, 5}, {55, 18}, {76, 30}, {105, 20}, {130, 11}, {155, 11}, {169, 7}, {199, 16}, {220, 18}, {260, 10}, {290, 23}, {310, 30}, {350, 10}
-			}
-		}, --end of line 1
-	},
-})
-
-
-f:Hide()
-
---scroll.body:SetScale(0.5)
-
---]=]
-
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --error message box
 
@@ -5714,7 +5288,7 @@ detailsFramework.ListboxFunctions = {
 	end,
 
 	deleteEntry = function(self, button, data, index)
-		tremove(data, index)
+		table.remove(data, index)
 		--get the line, get the scrollframe
 		self:GetParent():GetParent():Refresh()
 	end,
@@ -5907,3 +5481,90 @@ end
 
 --]=]
 
+--[=[
+
+--show data panel
+function detailsFramework:ShowData(data)
+	if (not DetailsFrameworkDataPanel) then
+		local mainFrame = detailsFramework:CreateSimplePanel(UIParent, 800, 600, "Show Data", "DetailsFrameworkShowDataPanel")
+		mainFrame:SetPoint("center", UIParent, "center", 0, 0)
+
+		--header
+		local headerTable = {
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+			{text = "", width = 75},
+		}
+		local headerOptions = {
+			padding = 2,
+		}
+
+		mainFrame.Header = DF:CreateHeader(mainFrame, headerTable, headerOptions)
+		mainFrame.Header:SetPoint("topleft", mainFrame, "topleft", 5, headerY)
+
+		local refreshFunc = function(self, data, offset, totalLines) --~refresh
+			local ToK = Details:GetCurrentToKFunction()
+
+			for i = 1, totalLines do
+				local index = i + offset
+				local thisData = data[index]
+				if (thisData) then
+					local line = self:GetLine(i)
+				end
+			end
+		end
+
+		local createLineFunc = function(self, index)
+			local line = CreateFrame("button", "$parentLine" .. index, self,"BackdropTemplate")
+			line:SetPoint("topleft", self, "topleft", 1, -((index-1)*(scroll_line_height+1)) - 1)
+			line:SetSize(scroll_width - 2, scroll_line_height)
+
+			line:SetBackdrop({bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
+			line:SetBackdropColor(unpack(backdrop_color))
+			-- ~createline --~line
+			DF:Mixin(line, DF.HeaderFunctions)
+
+			--columns
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+			local column1 = DF:CreateTextEntry(line, function()end, DetailsScrollDamage.Header:GetColumnWidth(2), scroll_line_height, _, _, _, dropdownTemplate)
+
+			line:AddFrameToHeaderAlignment(icon)
+			line:AddFrameToHeaderAlignment(spellNameText)
+			line:AddFrameToHeaderAlignment(damageText)
+			line:AddFrameToHeaderAlignment(timeText)
+			line:AddFrameToHeaderAlignment(spellIDText)
+
+			line:AlignWithHeader(DetailsScrollDamage.Header, "left")
+
+			line.Icon = icon
+			line.IconFrame = iconFrame
+			line.DamageText = damageText
+			line.TimeText = timeText
+			line.SpellIDText = spellIDText
+			line.SpellNameText = spellNameText
+
+			return line
+		end
+	end
+
+	local dataPanel = DetailsFrameworkDataPanel
+	local scrollBox = dataPanel.ScrollBox
+	scrollBox:SetData(data)
+	scrollBox:Refresh()
+
+end
+
+--]=]

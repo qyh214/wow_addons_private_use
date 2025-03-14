@@ -50,7 +50,7 @@ ns.defaults = {
       showMiniMapDragonIsles = true,
       showMiniMapKhazAlgar = true,
     -- MiniMap Instance
-      MiniMapInstanceScale = 2,
+      MiniMapInstanceScale = 1.5,
       MiniMapInstanceAlpha = 1,
       showMiniMapRaids = true,
       showMiniMapDungeons = true,
@@ -103,7 +103,7 @@ ns.defaults = {
       showZoneDragonIsles = true,
       showZoneKhazAlgar = true,
     -- Zone Instance
-      ZoneInstanceScale = 2,
+      ZoneInstanceScale = 1.5,
       ZoneInstanceAlpha = 1,
       showZoneRaids = true,
       showZoneDungeons = true,
@@ -242,7 +242,7 @@ ns.defaults = {
       showCapitalsDarkmoon = true,
 
     --Capital Instances
-      CapitalsInstanceScale = 2,
+      CapitalsInstanceScale = 1.5,
       CapitalsInstanceAlpha = 1,
       showCapitalsRaids = true,
       showCapitalsDungeons = true,
@@ -264,6 +264,7 @@ ns.defaults = {
       CapitalsProfessionsScale = 1,
       CapitalsProfessionsAlpha = 1,
       showCapitalsProfessionOrders = true,
+      showCapitalsProfessionDetection = false,
       showCapitalsAlchemy = true,
       showCapitalsEngineer = true,
       showCapitalsCooking = true,
@@ -278,6 +279,7 @@ ns.defaults = {
       showCapitalsHerbalism = true,
       showCapitalsInscription = true,
       showCapitalsEnchanting = true,
+      showCapitalsFirstAid = true,
 
     --Capital General
       CapitalsGeneralScale = 1,
@@ -297,6 +299,21 @@ ns.defaults = {
       showCapitalsMailbox = true,
       showCapitalsGhost = true,
       showCapitalsStablemaster = true,
+      showCapitalsWeaponMasters = true,
+
+      --Capital Classes
+      CapitalsClassesScale = 1,
+      CapitalsClassesAlpha = 1,
+      showCapitalsClassDetection = true,
+      showCapitalsClassDruid = false,
+      showCapitalsClassHunter = false,
+      showCapitalsClassMage = false,
+      showCapitalsClassPaladin = false,
+      showCapitalsClassPriest = false,
+      showCapitalsClassRogue = false,
+      showCapitalsClassShaman = false,
+      showCapitalsClassWarlock = false,
+      showCapitalsClassWarrior = false,
 
     --7 Capitals Minimap
       showMinimapCapitals = true,
@@ -345,6 +362,7 @@ ns.defaults = {
       MinimapCapitalsProfessionsScale = 1,
       MinimapCapitalsProfessionsAlpha = 1,
       showMinimapCapitalsProfessionOrders = true,
+      showMinimapCapitalsProfessionDetection = false,
       showMinimapCapitalsAlchemy = true,
       showMinimapCapitalsEngineer = true,
       showMinimapCapitalsCooking = true,
@@ -359,6 +377,7 @@ ns.defaults = {
       showMinimapCapitalsHerbalism = true,
       showMinimapCapitalsInscription = true,
       showMinimapCapitalsEnchanting = true,
+      showMinimapCapitalsFirstAid = true,
 
     --Capital Minimap General
       MinimapCapitalsGeneralScale = 1,
@@ -378,6 +397,21 @@ ns.defaults = {
       showMinimapCapitalsMailbox = true,
       showMinimapCapitalsGhost = true,
       showMinimapCapitalsStablemaster = true,
+      showMinimapCapitalsWeaponMasters = true,
+
+      --Capital Minimap Classes
+      MinimapCapitalsClassesScale = 1,
+      MinimapCapitalsClassesAlpha = 1,
+      showMinimapCapitalsClassDetection = true,
+      showMinimapCapitalsClassDruid = false,
+      showMinimapCapitalsClassHunter = false,
+      showMinimapCapitalsClassMage = false,
+      showMinimapCapitalsClassPaladin = false,
+      showMinimapCapitalsClassPriest = false,
+      showMinimapCapitalsClassRogue = false,
+      showMinimapCapitalsClassShaman = false,
+      showMinimapCapitalsClassWarlock = false,
+      showMinimapCapitalsClassWarrior = false,
 
     --10 ns.Addon.db.profile.activate.
       activate = {
@@ -425,12 +459,14 @@ ns.defaults = {
         CapitalsTransporting = true,
         CapitalsProfessions = true,
         CapitalsGeneral = true,
+        CapitalsClasses = true,
       --Capitals Minimap
         MinimapCapitalsEnemyFaction = true,
         MinimapCapitalsInstances = true,
         MinimapCapitalsTransporting = true,
         MinimapCapitalsProfessions = true,
         MinimapCapitalsGeneral = true,
+        MinimapCapitalsClasses = true,
       },
 
     },

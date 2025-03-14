@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "Leere der Apokalypse, welche von den Spielern abprallt und den Boss schwächt."
 	L.ball_yell = "Gul'kafh an'qov N'Zoth."
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "Abprallen der Leerenkugel"
 	L.bounce_desc = "Zählt, wie häufig die Leerenkugel abprallt."
 

@@ -22,19 +22,24 @@ if L then
 	L.bomb_tonk = "Bomba Tonk"
 	L.rocket_tonk = "Giocattolo a Razzo"
 	L.waste_processing_unit = "Unità di Processazione"
-	L.living_waste = "Spazzatura Vivente"
+	--L.metal_gunk = "Metal Gunk"
+	--L.junkyard_d0g = "Junkyard D.0.G."
 	L.mechagon_tinkerer = "Meccanista di Meccagon"
 	L.anti_personnel_squirrel = "Scoiattolo Anti-Uomo"
 	L.defense_bot_mk_iii = "Difesabot v3"
 	L.blastatron_x80 = "Detonatron X-80"
 	L.mechagon_mechanic = "Meccanico di Meccagon"
 	L.workshop_defender = "Difensore del Laboratorio"
-	--L.junkyard_d0g = "Junkyard D.0.G."
 end
 
 L = BigWigs:NewBossLocale("Tussle Tonks", "itIT")
 if L then
 	-- L.warmup_trigger = "Now this is a statistical anomaly! Our visitors are still alive!"
+end
+
+L = BigWigs:NewBossLocale("K.U.-J.0.", "itIT")
+if L then
+	--L.safe = "Safe"
 end
 
 L = BigWigs:NewBossLocale("King Mechagon", "itIT")

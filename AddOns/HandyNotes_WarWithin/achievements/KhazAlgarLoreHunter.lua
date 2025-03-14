@@ -15,11 +15,11 @@ ns.RegisterPoints(ns.ISLEOFDORN, {
 }, LORE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [39311739] = {criteria=69374, quest=82049, vignette=6191}, -- A Skull on a Sign
-    [64945613] = {criteria=69378, quest=82054, vignette=6195}, -- Kobold Warning Sign
-    [51467243] = {criteria=69376, quest=82052, vignette=6193}, -- Submerged Sign
-    [71364240] = {criteria=69375, quest=82051, vignette=6192}, -- Warning: Collapsed Tunnel
-    [50215826] = {criteria=69377, quest=82053, vignette=6194}, -- Wax-Drenched Sign
+    [36811739] = {criteria=69374, quest=82049, vignette=6191}, -- A Skull on a Sign
+    [60815613] = {criteria=69378, quest=82054, vignette=6195}, -- Kobold Warning Sign
+    [48187243] = {criteria=69376, quest=82052, vignette=6193}, -- Submerged Sign
+    [66824240] = {criteria=69375, quest=82051, vignette=6192}, -- Warning: Collapsed Tunnel
+    [47015826] = {criteria=69377, quest=82053, vignette=6194}, -- Wax-Drenched Sign
 }, LORE)
 
 ns.RegisterPoints(ns.HALLOWFALL, {

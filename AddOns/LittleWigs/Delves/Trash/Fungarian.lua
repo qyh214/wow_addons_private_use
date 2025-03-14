@@ -2,7 +2,7 @@
 -- Module Declaration
 --
 
-local mod, CL = BigWigs:NewBoss("Fungarian Delve Trash", {2664, 2679}) -- Fungal Folly, Mycomancer Cavern
+local mod, CL = BigWigs:NewBoss("Fungarian Delve Trash", {2664, 2679, 2683}) -- Fungal Folly, Mycomancer Cavern, The Waterworks
 if not mod then return end
 mod:RegisterEnableMob(
 	210677, -- Stoneguard Benston (Fungal Folly gossip NPC)
@@ -14,13 +14,17 @@ mod:RegisterEnableMob(
 	220293, -- Aliya Hillhelm (Mycomancer Cavern gossip NPC)
 	219779, -- Alekk (Mycomancer Cavern gossip NPC)
 	220354, -- Chief Dinaire (Mycomancer Cavern gossip NPC)
+	233985, -- Prospera Cogwail (The Waterworks gossip NPC)
 	213434, -- Sporbit
 	225708, -- Sporbit (Bogpiper summon)
+	207450, -- Fungal Stabber
+	207453, -- Fungal Rotspreader
 	207456, -- Fungal Speartender
 	207468, -- Gnarled Reviver
 	210478, -- Infected Beast
 	207454, -- Fungal Gutter
 	207460, -- Fungarian Flinger
+	207459, -- Fungal Rotcaster
 	220432 -- Particularly Bad Guy
 )
 
@@ -38,6 +42,7 @@ if L then
 	L.infected_beast = "Infected Beast"
 	L.fungal_gutter = "Fungal Gutter"
 	L.fungarian_flinger = "Fungarian Flinger"
+	L.fungal_rotcaster = "Fungal Rotcaster"
 	L.particularly_bad_guy = "Particularly Bad Guy"
 end
 
@@ -53,12 +58,12 @@ function mod:OnRegister()
 	self:SetSpellRename(372529, CL.fear) -- Hideous Laughter (Fear)
 end
 
-local autotalk = mod:AddAutoTalkOption(true)
+local autotalk = mod:AddAutoTalkOption(false)
 function mod:GetOptions()
 	return {
 		autotalk,
 		-- Sporbit
-		427710, -- Sporesplosion
+		1217589, -- Sporesplosion
 		-- Fungal Speartender
 		414944, -- Battle Roar
 		424891, -- Vine Spear
@@ -71,10 +76,12 @@ function mod:GetOptions()
 		-- Fungarian Flinger
 		425040, -- Rotwave Volley
 		425042, -- Sporewave
+		-- Fungal Rotcaster
+		{424750, "DISPEL"}, -- Infectious Spores
 		-- Particularly Bad Guy
 		372529, -- Hideous Laughter
 	},{
-		[427710] = L.sporbit,
+		[1217589] = L.sporbit,
 		[414944] = L.fungal_speartender,
 		[424773] = L.gnarled_reviver,
 		[424798] = L.infected_beast,
@@ -94,7 +101,7 @@ function mod:OnBossEnable()
 	self:RegisterEvent("GOSSIP_SHOW")
 
 	-- Sporbit
-	self:Log("SPELL_CAST_START", "Sporespolosion", 427710)
+	self:Log("SPELL_CAST_START", "Sporespolosion", 1217589)
 
 	-- Fungal Speartender
 	self:Log("SPELL_CAST_START", "BattleRoar", 414944)
@@ -113,8 +120,18 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "RotwaveVolley", 425040)
 	self:Log("SPELL_CAST_START", "Sporewave", 425042)
 
+	-- Fungal Rotcaster
+	self:Log("SPELL_CAST_START", "InfectiousSpores", 424750)
+	self:Log("SPELL_AURA_APPLIED", "InfectiousSporesApplied", 424738)
+
 	-- Particularly Bad Guy
 	self:Log("SPELL_CAST_START", "HideousLaughter", 372529)
+
+	-- also enable the Rares module
+	local raresModule = BigWigs:GetBossModule("Underpin Rares", true)
+	if raresModule then
+		raresModule:Enable()
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -124,9 +141,7 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	local info = self:GetWidgetInfo("delve", 6183)
-	local level = info and tonumber(info.tierText)
-	if (not level or level > 3) and self:GetOption(autotalk) then
+	if self:GetOption(autotalk) then
 		if self:GetGossipID(111366) then -- Fungal Folly, start Delve (Stoneguard Benston)
 			-- 111366:I'll dive into this cavern and get your friends back.
 			self:SelectGossipID(111366)
@@ -163,6 +178,9 @@ function mod:GOSSIP_SHOW()
 		elseif self:GetGossipID(121541) then -- Mycomancer Cavern, continue Delve (Chief Dinaire)
 			-- 121541:|cFF0000FF(Delve)|r Go get the treasure while I handle whatever is about to attack us.
 			self:SelectGossipID(121541)
+		elseif self:GetGossipID(125513) then -- The Waterworks, start delve (Prospera Cogwail)
+			-- 125513:|cFF0000FF(Delve)|r Give me the wrench, I'll make sure this job is finished.
+			self:SelectGossipID(125513)
 		end
 	end
 end
@@ -172,10 +190,8 @@ end
 do
 	local prev = 0
 	function mod:Sporespolosion(args)
-		local unit = self:UnitTokenFromGUID(args.sourceGUID)
-		local t = args.time
-		if t - prev > 2.5 and unit and self:UnitWithinRange(unit, 40) then -- cast while RP fighting, only alert if within range
-			prev = t
+		if args.time - prev > 2.5 then
+			prev = args.time
 			self:Message(args.spellId, "orange")
 			self:PlaySound(args.spellId, "alarm")
 		end
@@ -231,6 +247,20 @@ end
 function mod:Sporewave(args)
 	self:Message(args.spellId, "orange")
 	self:PlaySound(args.spellId, "alarm")
+end
+
+-- Fungal Rotcaster
+
+function mod:InfectiousSpores(args)
+	self:Message(args.spellId, "yellow")
+	self:PlaySound(args.spellId, "alarm")
+end
+
+function mod:InfectiousSporesApplied(args)
+	if self:Me(args.destGUID) or (self:Dispeller("disease", nil, 424750) and self:Player(args.destFlags)) then
+		self:TargetMessage(424750, "yellow", args.destName)
+		self:PlaySound(424750, "info", nil, args.destName)
+	end
 end
 
 -- Particularly Bad Guy

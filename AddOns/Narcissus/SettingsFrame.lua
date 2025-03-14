@@ -18,11 +18,6 @@ local WIDGET_GAP = 16;
 
 local IS_DRAGONFLIGHT = addon.IsDragonflight();
 
-local function IsDragonflightFeature()
-    return IS_DRAGONFLIGHT
-end
-
-
 local L = Narci.L;
 local BIND_ACTION_NARCISSUS = "CLICK Narci_MinimapButton:LeftButton";
 _G["BINDING_NAME_"..BIND_ACTION_NARCISSUS] = L["Binding Name Open Narcissus"];
@@ -32,6 +27,7 @@ local CategoryButtons;
 local CategoryOffsets;
 local CategoryTabs;
 local OptionButtons;
+local AllObjects;
 local WidgetGroups;
 local MainFrame;
 local AlertMessageFrame;
@@ -45,6 +41,7 @@ local SCROLL_LOCKED = false;        --Lock scroll if user is assigning a hotkey
 
 
 local math = math;
+local tinsert = table.insert;
 local GetCursorPosition = GetCursorPosition;
 local SliderUpdator = CreateFrame("Frame");
 
@@ -797,7 +794,7 @@ local LoveGenerator = {};
 function LoveGenerator.HeartAnimationOnStop(animGroup)
     local tex = animGroup:GetParent();
     tex:Hide();
-    table.insert(LoveGenerator.recyledTextures, tex);
+    tinsert(LoveGenerator.recyledTextures, tex);
 end
 
 function LoveGenerator:GetHeart()
@@ -1308,15 +1305,20 @@ function MinimapButtonSkin.CreateOptions(parentLabel, parent, anchorTo, fromOffs
 
     MinimapButtonSkin:UpdateAlignment();
 
-    table.insert(OptionButtons, MinimapButtonSkin);
+    tinsert(OptionButtons, MinimapButtonSkin);
 
     local newHeight = row * (buttonHeight + gap) - gap;
     local newObj = self.container;
+
+    newObj.UpdateState = function()
+        MinimapButtonSkin:UpdateState();
+    end
 
     return newHeight, newObj
 end
 
 function MinimapButtonSkin:UpdateAlignment()
+    if not self.buttonWidth then return end;
     local parentWidth = MainFrame.ScrollFrame:GetWidth();
     --local gap = (parentWidth - 2 * PADDING_H)/self.buttonPerRow;
     local gap = (parentWidth - 2 * 30 - (self.buttonWidth*self.buttonPerRow))/(self.buttonPerRow - 1);
@@ -1347,6 +1349,10 @@ function MinimapButtonSkin:UpdateState()
     end
 end
 
+local function UseAddonCompartment_OnValueChanged(self, state)
+    NarciAPI.AddToAddonCompartment(state);      --Defined in MinimapButton.lua
+end
+
 local function MinimapButtonToggle_OnValueChanged(self, state)
     SettingFunctions.ShowMinimapButton(state);
     if state then
@@ -1358,6 +1364,18 @@ local function MinimapButtonFadeOut_OnValueChanged(self, state)
     SettingFunctions.FadeOutMinimapButton(state);
 end
 
+local function Minimap_HandledByLeatrix()
+    return not C_AddOns.IsAddOnLoaded("Leatrix_Plus")
+end
+
+--[[
+local function MinimapButtonLibDBIcon_OnValueChanged(self, state)
+    if not Narci_MinimapButton:HasLibDBIcon() then return end
+
+    NarcissusDB.UseLibDBIcon = state;
+    Narci_MinimapButton:ResolveVisibility();
+end
+--]]
 
 
 local LanguageSelector = {};
@@ -1754,23 +1772,24 @@ local function AddObjectAsChild(childObject, isTextObject)
     local i;
 
     if isTextObject then
-        i = #OptionButtons;
+        i = #AllObjects;
     else
-        i = #OptionButtons - 1;
+        i = #AllObjects;
     end
-    parentObj = OptionButtons[i];
+    parentObj = AllObjects[i];
 
     while parentObj and parentObj.isChild do
         i = i - 1;
-        parentObj = OptionButtons[i];
+        parentObj = AllObjects[i];
     end
 
     if parentObj then
         if not parentObj.children then
             parentObj.children = {};
         end
-        table.insert(parentObj.children, childObject);
+        tinsert(parentObj.children, childObject);
         childObject.isChild = true;
+        --print(childObject.widgetType, childObject.key, parentObj.key)
     end
 end
 
@@ -1808,7 +1827,8 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
 
     if isTextObject then
         obj = parent:CreateFontString(nil, "OVERLAY", "NarciFontMedium13");
-    
+        obj.widgetType = widgetType;
+
         if widgetData.alignToCenter then
             obj:SetPoint("TOP", anchorTo, "TOP", 0, offsetY);
             obj:SetJustifyH("CENTER");
@@ -1838,12 +1858,13 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
 
         for i = 1, numButtons do
             obj = CreateFrame("Button", nil, parent, "NarciSettingsSharedButtonTemplate");
-            table.insert(OptionButtons, obj);
+            tinsert(OptionButtons, obj);
             obj:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", offsetX + ((widgetData.level and widgetData.level * BUTTON_LEVEL_OFFSET) or 0), offsetY + (1 - i) * (24 + 0.5*WIDGET_GAP));
             obj:SetButtonType("radio");
             obj.groupID = groupID;
             obj.id = i;
             obj.key = widgetData.key;
+            obj.widgetType = widgetType;
             obj:SetLabelText(widgetData.texts[i]);
 
             if widgetData.previewImage and not preview then
@@ -1876,10 +1897,11 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
 
     elseif widgetType == "checkbox" then
         obj = CreateFrame("Button", nil, parent, "NarciSettingsSharedButtonTemplate");
-        table.insert(OptionButtons, obj);
+        tinsert(OptionButtons, obj);
         obj:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", offsetX + ((widgetData.level and widgetData.level * BUTTON_LEVEL_OFFSET) or 0), offsetY);
         obj:SetButtonType("checkbox");
         obj.key = widgetData.key;
+        obj.widgetType = widgetType;
         obj:SetLabelText(widgetData.text);
         SetTextColorByID(obj.Label, 2);
         obj.onValueChangedFunc = widgetData.onValueChangedFunc;
@@ -1909,11 +1931,12 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
     elseif widgetType == "slider" then
         obj = CreateFrame("Frame", nil, parent, "NarciSettingsSliderTemplate");
         local slider = obj.Slider;
-        table.insert(OptionButtons, slider);
+        tinsert(OptionButtons, slider);
         obj:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", offsetX + ((widgetData.level and widgetData.level * BUTTON_LEVEL_OFFSET) or 0), offsetY);
         SetTextColorByID(obj.Label, 2);
         SetTextColorByID(slider.ValueText, 2);
         obj.Label:SetText(widgetData.text);
+        obj.widgetType = widgetType;
         slider.key = widgetData.key;
         slider.valueFormatFunc = widgetData.valueFormatFunc;
         slider.convertionFunc = widgetData.convertionFunc;
@@ -1940,9 +1963,10 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
         --print(left - right);
     elseif widgetType == "keybinding" then
         obj = CreateFrame("Button", nil, parent, "NarciSettingsKeybindingButtonTemplate");
-        table.insert(OptionButtons, obj);
+        tinsert(OptionButtons, obj);
         obj:SetPoint("TOP", anchorTo, "TOP", (widgetData.level and widgetData.level * BUTTON_LEVEL_OFFSET) or 0, offsetY);
         obj.Label:SetText(widgetData.text);
+        obj.widgetType = widgetType;
         if widgetData.externalAction then
             obj:SetExternalAction(widgetData.externalAction);
         else
@@ -1959,13 +1983,19 @@ local function CreateWidget(parent, anchorTo, offsetX, offsetY, widgetData)
         end
     end
 
+    tinsert(AllObjects, obj);
+
     if widgetData.setupFunc then
         local extraHeight, newObject = widgetData.setupFunc(obj, parent, anchorTo, offsetY - height);
         if extraHeight then
             height = height + extraHeight;
         end
         if newObject and widgetData.isChild then
+            if not newObject.UpdateState then
+                newObject.UpdateState = function() end;
+            end
             AddObjectAsChild(newObject);
+            tinsert(AllObjects, newObject);
         end
     end
 
@@ -2033,12 +2063,14 @@ local Categories = {
     {name = L["Minimap Button"], level = 0, key = "minimapButton",
         widgets = {
             {type = "header", level = 0, text = L["Minimap Button"]},
-            {type = "checkbox", level = 1, key = "ShowMinimapButton", text = ENABLE, onValueChangedFunc = MinimapButtonToggle_OnValueChanged},
-                {type = "checkbox", level = 3, customButtonScript = true, text = RESET_POSITION or "Reset Position", isChild = true, setupFunc = ResetMinimapPosition_Setup},
-                {type = "checkbox", level = 3, key = "ShowModulePanelOnMouseOver", text = L["Show Module Panel Gesture"], isChild = true, onValueChangedFunc = ShowMinimapModulePanel_OnValueChanged},
-                {type = "checkbox", level = 3, key = "IndependentMinimapButton", text = L["Independent Minimap Button"], isChild = true, onValueChangedFunc = IndependentMinimapButtonToggle_OnValueChanged},
-                {type = "checkbox", level = 3, key = "FadeButton", text = L["Fade Out Description"], isChild = true, onValueChangedFunc = MinimapButtonFadeOut_OnValueChanged},
-                {type = "subheader", level = 3, text = L["Style"], extraTopPadding = 1, isChild = true, setupFunc = MinimapButtonSkin.CreateOptions},
+            {type = "checkbox", level = 1, key = "UseAddonCompartment", text = L["Add To AddOn Compartment"], onValueChangedFunc = UseAddonCompartment_OnValueChanged},
+            {type = "checkbox", level = 1, key = "ShowMinimapButton", text = L["Show Minimap Button"], onValueChangedFunc = MinimapButtonToggle_OnValueChanged},
+                {type = "checkbox", level = 3, customButtonScript = true, text = RESET_POSITION or "Reset Position", isChild = true, setupFunc = ResetMinimapPosition_Setup, validityCheckFunc = Minimap_HandledByLeatrix},
+                {type = "checkbox", level = 3, key = "ShowModulePanelOnMouseOver", text = L["Show Module Panel Gesture"], isChild = true, onValueChangedFunc = ShowMinimapModulePanel_OnValueChanged, validityCheckFunc = Minimap_HandledByLeatrix},
+                {type = "checkbox", level = 3, key = "IndependentMinimapButton", text = L["Independent Minimap Button"], isChild = true, onValueChangedFunc = IndependentMinimapButtonToggle_OnValueChanged, validityCheckFunc = Minimap_HandledByLeatrix},
+                {type = "checkbox", level = 3, key = "FadeButton", text = L["Fade Out Description"], isChild = true, onValueChangedFunc = MinimapButtonFadeOut_OnValueChanged, validityCheckFunc = Minimap_HandledByLeatrix},
+                {type = "subheader", level = 3, text = L["Style"], extraTopPadding = 1, isChild = true, setupFunc = MinimapButtonSkin.CreateOptions, validityCheckFunc = Minimap_HandledByLeatrix},
+                --{type = "checkbox", level = 3, extraTopPadding = 2, key = "UseLibDBIcon", text = L["MinimapButton LibDBIcon"], description = L["MinimapButton LibDBIcon Desc"], isChild = true, onValueChangedFunc = MinimapButtonLibDBIcon_OnValueChanged, validityCheckFunc = function() return Narci_MinimapButton:HasLibDBIcon() end},
         },
     },
 
@@ -2091,7 +2123,7 @@ local Categories = {
 };
 
 local function InsertCategory(newCategory)
-    table.insert(Categories, #Categories -1, newCategory);
+    tinsert(Categories, #Categories -1, newCategory);
 end
 
 if IS_DRAGONFLIGHT then
@@ -2296,6 +2328,7 @@ local function SetupFrame()
     CategoryOffsets = {};
     CategoryTabs = {};
     OptionButtons = {};
+    AllObjects = {};
     WidgetGroups = {};
 
     local obj;
@@ -2444,13 +2477,6 @@ function NarciSettingsFrameMixin:OnLoad()
     end);
 
     if IS_DRAGONFLIGHT and SettingsPanel then
-        if false then
-            --don't create our tab on the SettingsPanel until the tain issue being resolved.
-            self.Background = self:CreateTexture(nil, "BACKGROUND", nil, -1);
-            self.Background:Hide();
-            return
-        end
-    
         self.Background = CreateFrame("Frame", nil, SettingsPanel);
         self.Background:SetFrameStrata("LOW");
         self.Background:SetFixedFrameStrata(true);
@@ -2467,7 +2493,7 @@ function NarciSettingsFrameMixin:OnLoad()
         local category = Settings.RegisterCanvasLayoutCategory(panel, "Narcissus");
         Settings.RegisterAddOnCategory(category);
 
-    else
+    elseif InterfaceOptions_AddCategory then
         self.Background = self:CreateTexture(nil, "BACKGROUND", nil, -1);
         self.Background:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0);
         self.Background:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0);
@@ -3602,12 +3628,20 @@ local function GetSettingsButtonByDBKey(dbKey)
         end
     end
 end
-
 NarciAPI.GetSettingsButtonByDBKey = GetSettingsButtonByDBKey;
-
-
 
 
 function Narci_PreferenceButton_OnClick(self)
     MainFrame:ToggleUI();
+end
+
+
+function NarciAPI.ToggleSettings()
+    if SettingsPanel and SettingsPanel:IsVisible() then return end;  --Player is viewing Options
+
+    if MainFrame:IsShown() then
+        MainFrame:CloseUI();
+    else
+        MainFrame:ShowUI(nil, true);
+    end
 end

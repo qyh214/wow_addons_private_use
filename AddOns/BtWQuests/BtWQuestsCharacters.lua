@@ -102,7 +102,7 @@ local accountPlayerLevel = 0
 local function GetAccountPlayerLevel()
     if accountPlayerLevel == 0 then
         for _,v in pairs(BtWQuests_Characters or {}) do
-            accountPlayerLevel = math.max(accountPlayerLevel, v.level)
+            accountPlayerLevel = math.max(accountPlayerLevel, v.level or 0)
         end
     end
     return math.max(accountPlayerLevel, UnitLevel("player") or 0)
@@ -144,7 +144,7 @@ function BtWQuestsCharactersCharacterMixin:GetClassString()
     return ClassMap[self.t.class].classFile
 end
 function BtWQuestsCharactersCharacterMixin:GetLevel()
-    return self.t.level
+    return self.t.level or 0
 end
 function BtWQuestsCharactersCharacterMixin:GetSex()
     return self.t.sex
@@ -908,7 +908,7 @@ local function GetFactions(tbl)
     for i=1,numEntries do
         -- local name, _, standing, barMin, barMax, barValue, _, _, _, _, _, _, _, factionID = GetFactionInfo(i);
         local factionData = GetFactionDataByIndex(i);
-        if factionData.factionID ~= nil then
+        if factionData and factionData.factionID ~= nil then
             local data = temp[factionData.factionID] or {};
             if data[1] ~= nil then
                 wipe(data);
@@ -1102,14 +1102,13 @@ function BtWQuestsCharacters:OnEvent(event, ...)
     if event == "COVENANT_CHOSEN" or event == "PLAYER_LOGIN" then
         character.covenantID = C_Covenants and C_Covenants.GetActiveCovenantID() or nil
         character.friendships = GetFriendships(character.friendships, self.friendships or {});
-
     end
     if event == "PLAYER_LOGOUT" then
         character.faction = UnitFactionGroup("player");
         character.sex = UnitSex("player");
         character.class = select(3, UnitClass("player"));
         character.race = select(2, UnitRace("player"));
-        character.level = UnitLevel("player");
+        character.level = UnitLevel("player") or character.level;
         
         character.reputations = GetFactions(character.reputations);
         character.friendships = GetFriendships(character.friendships, self.friendships or {});

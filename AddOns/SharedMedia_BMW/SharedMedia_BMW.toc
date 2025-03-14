@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface:110005
 ## Title: |cff98a0f9黑神话悟空|r |cffffa300资源包|r
 ## Notes-zhCN: 灵魂复苏制作的黑神话悟空WA素材包
 ## IconTexture: Interface\AddOns\SharedMedia_BMW\Icons\BMW_logo.tga

@@ -207,7 +207,7 @@ function Details.ShowDeathTooltip(instance, lineFrame, combatObject, deathTable)
 	for i, event in ipairs(events) do
 		--local currentHP = event[5] * 100
 		--local healthPercent = floor(currentHP / maxHP * 100)
-		local healthPercent = floor(event[5] * 100)
+		local healthPercent = floor((event[5] or 0) * 100)
 		if (healthPercent > 100) then
 			healthPercent = 100
 		end
@@ -403,7 +403,7 @@ local ReportSingleDeathFunc = function(IsCurrent, IsReverse, AmtLines)
 		t [#t+1] = table [1] .. table [4] .. table [2] .. table [3]
 	end
 
-	local title = tremove(t, 1)
+	local title = table.remove(t, 1)
 	t = Details.table.reverse(t)
 	tinsert(t, 1, title)
 
@@ -556,10 +556,10 @@ function atributo_misc:ReportSingleBuffUptimeLine(misc_actor, instance)
 	local buffs = {}
 	local combat_time = floor(instance.showing:GetCombatTime())
 
-	for spellid, spell in pairs(misc_actor.buff_uptime_spells._ActorTable) do
-		if (spell.uptime > 0) then -- and percent < 99.5
-			local percent = spell.uptime / combat_time * 100
-			buffs [#buffs+1] = {spellid, {spell.uptime, percent}}
+	for spellid, spellTable in pairs(misc_actor.buff_uptime_spells._ActorTable) do
+		if (spellTable.uptime and spellTable.uptime > 0) then -- and percent < 99.5
+			local percent = spellTable.uptime / combat_time * 100
+			buffs [#buffs+1] = {spellid, {spellTable.uptime, percent}}
 		end
 	end
 
@@ -574,9 +574,11 @@ function atributo_misc:ReportSingleDebuffUptimeLine(misc_actor, instance)
 	local debuffs = {}
 	local combat_time = instance.showing:GetCombatTime()
 
-	for spellid, spell in pairs(misc_actor.debuff_uptime_spells._ActorTable) do
-		local percent = spell.uptime / combat_time * 100
-		debuffs [#debuffs+1] = {spellid, {spell.uptime, percent}}
+	for spellid, spellTable in pairs(misc_actor.debuff_uptime_spells._ActorTable) do
+		if (spellTable.uptime) then
+			local percent = spellTable.uptime / combat_time * 100
+			debuffs [#debuffs+1] = {spellid, {spellTable.uptime, percent}}
+		end
 	end
 
 	table.sort(debuffs, sort_buff_report)
@@ -591,10 +593,6 @@ end
 ---index[4] is the class of the player
 ---index[5] is the max health
 ---index[6] is the time of the fight as string
----@field death boolean
----@field last_cooldown table
----@field dead_at number --combat time when the player died
----@field spec number
 
 ---update a row in an instance(window) showing death logs
 ---@param deathTable table
@@ -958,6 +956,11 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 
 	local tabela_anterior = esta_barra.minha_tabela
 
+	---@cast instancia instance
+
+	---@type combat
+	local combatObject = instancia:GetCombat()
+
 	esta_barra.minha_tabela = self
 	esta_barra.colocacao = lugar
 
@@ -986,6 +989,32 @@ function atributo_misc:RefreshLine(instancia, barras_container, whichRowLine, lu
 		porcentagem = ""
 	else
 		porcentagem = porcentagem .. "%"
+	end
+
+	if (instancia.show_interrupt_casts) then
+		if (sub_atributo == DETAILS_SUBATTRIBUTE_INTERRUPT) then --interrupts
+			--get the interrupt spell for this actor class from libOpenRaid
+			if (LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS) then
+				---@type table<spellname, table>
+				local classInterrupts = LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[self.classe]
+				if (classInterrupts) then
+					---@type table<spellname, number> number is the amount of casts
+					local spellCasts = combatObject.amountCasts[self.nome]
+					local amountOfInterruptsCasted = 0
+					--iterating between the spells that are interrupts for this class
+					for spellNameOrId in pairs(classInterrupts) do
+						--if the actor casted this spell
+						if (spellCasts[spellNameOrId]) then
+							amountOfInterruptsCasted = amountOfInterruptsCasted + spellCasts[spellNameOrId]
+						end
+					end
+
+					if (amountOfInterruptsCasted > 0) then
+						meu_total = meu_total .. " (" .. tostring(amountOfInterruptsCasted) .. ")"
+					end
+				end
+			end
+		end
 	end
 
 	local rightText = meu_total .. bars_brackets[1] .. porcentagem .. bars_brackets[2]
@@ -1722,6 +1751,8 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 		local pot_usage = {}
 		local focus_augmentation = {}
 
+		--print("Combat Ended - details - classutility, OPMODE:", sOperationType)
+
 		for buffIndex = 1, 41 do
 			---@type aurainfo
 			local auraInfo = C_UnitAuras.GetAuraDataByIndex("player", buffIndex, "HELPFUL")
@@ -1743,6 +1774,7 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 							end
 						end
 
+						--add the uptime, closing the aura time if passing 'BUFF_UPTIME_OUT' on sOperationType
 						Details.parser:add_buff_uptime(nil, GetTime(), playerGUID, playerName, 0x00000417, playerGUID, playerName, 0x00000417, 0x0, spellId, auraName, sOperationType)
 					end
 				end
@@ -1800,7 +1832,9 @@ function atributo_misc:ToolTipDebuffUptime(instancia, numero, barra)
 	local _combat_time = instancia.showing:GetCombatTime()
 
 	for _spellid, _tabela in pairs(minha_tabela) do
-		debuffs_usados [#debuffs_usados+1] = {_spellid, _tabela.uptime}
+		if (_tabela.uptime and _tabela.uptime > 0) then
+			debuffs_usados [#debuffs_usados+1] = {_spellid, _tabela.uptime}
+		end
 	end
 	table.sort(debuffs_usados, Details.Sort2)
 

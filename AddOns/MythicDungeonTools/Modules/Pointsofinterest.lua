@@ -77,6 +77,9 @@ local createPlayerAssignmentContextMenu = function(frame)
       local function SetSelected(p)
         frame.playerAssignmentString:SetText(p)
         MDT:POI_SetPOIAssignment(MDT:GetCurrentSubLevel(), frame.poiIdx, p)
+        if frame.setAssigned then
+          frame.setAssigned()
+        end
       end
       rootDescription:CreateRadio(player, IsSelected, SetSelected, player)
     end
@@ -90,6 +93,9 @@ local createPlayerAssignmentContextMenu = function(frame)
       local function SetSelected(p)
         frame.playerAssignmentString:SetText(p)
         MDT:POI_SetPOIAssignment(MDT:GetCurrentSubLevel(), frame.poiIdx, p)
+        if frame.setAssigned then
+          frame.setAssigned()
+        end
       end
       rootDescription:CreateRadio(classString, IsSelected, SetSelected, classString)
     end
@@ -97,6 +103,9 @@ local createPlayerAssignmentContextMenu = function(frame)
     rootDescription:CreateButton(L["dropdownClear"], function()
       frame.playerAssignmentString:SetText()
       MDT:POI_SetPOIAssignment(MDT:GetCurrentSubLevel(), frame.poiIdx, nil)
+      if frame.setUnassigned then
+        frame.setUnassigned()
+      end
     end)
   end)
 end
@@ -743,6 +752,369 @@ local function POI_SetOptions(frame, type, poi)
     frame:SetScript("OnEnter", function()
       GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
       GameTooltip:SetSpellByID(374288)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "nwItem" then
+    local assignment = MDT:POI_GetPOIAssignment(MDT:GetCurrentSubLevel(), frame.poiIdx)
+    local itemInfo = {
+      [1] = {
+        name = L["Bloody Javelin"],
+        texture = 3054897,
+        spellId = 328351,
+      },
+      [2] = {
+        name = L["Discharged Anima"],
+        texture = 3528288,
+        spellId = 328406,
+      },
+      [3] = {
+        name = L["Discarded Shield"],
+        texture = 3155390,
+        spellId = 325189,
+      }
+    }
+    frame.Texture:SetTexture(itemInfo[poi.itemType].texture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame.setAssigned = function()
+      frame.Texture:SetDesaturated(false)
+      frame.HighlightTexture:SetDesaturated(false)
+    end
+
+    frame.setUnassigned = function()
+      frame.Texture:SetDesaturated(true)
+      frame.HighlightTexture:SetDesaturated(true)
+    end
+
+    if assignment then
+      frame.setAssigned()
+    else
+      frame.setUnassigned()
+    end
+
+    frame:SetSize(16, 16)
+    frame.Texture:SetSize(16, 16)
+    frame.HighlightTexture:SetSize(16, 16)
+
+    frame.playerAssignmentString = frame.playerAssignmentString or frame:CreateFontString()
+    frame.playerAssignmentString:ClearAllPoints()
+    frame.playerAssignmentString:SetFontObject("GameFontNormalSmall")
+    frame.playerAssignmentString:SetJustifyH(poi.textAnchor or "LEFT")
+    frame.playerAssignmentString:SetJustifyV("MIDDLE")
+    frame.playerAssignmentString:SetFont(frame.playerAssignmentString:GetFont(), 10, "OUTLINE", "")
+    frame.playerAssignmentString:SetPoint(poi.textAnchor or "LEFT", frame, poi.textAnchorTo or "RIGHT", 0, 0)
+    frame.playerAssignmentString:SetTextColor(1, 1, 1, 1)
+    frame.playerAssignmentString:SetText(assignment)
+    frame.playerAssignmentString:SetScale(1)
+    frame.playerAssignmentString:Show()
+
+    frame:SetScript("OnClick", function()
+      createPlayerAssignmentContextMenu(frame)
+    end)
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemInfo[poi.itemType].spellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(L["Click to assign player"], 1, 1, 1)
+      GameTooltip:AddTexture(itemInfo[poi.itemType].texture)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "stonevaultItem" then
+    local itemTexture = 3528441
+    local itemDescription = L["imbuedIronBarDescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(462500)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "cityOfThreadsItem" then
+    local itemTexture = 135888
+    local itemSpellId = 448305
+    local itemDescription = L["stolenPowerDescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+
+  if type == "araKaraItem" then
+    local itemTexture = 237431
+    local itemSpellId = 439208
+    local itemDescription = L["araKaraItemDescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "prioryItem" then
+    local itemTexture = 523893
+    local itemSpellId = 435088
+    local itemDescription = L["prioryItemDescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "brewItemA" then
+    local itemTexture = 4548850
+    local itemSpellId = 439698
+    local itemDescription = L["brewItemADescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(16, 16)
+    frame.Texture:SetSize(16, 16)
+    frame.HighlightTexture:SetSize(16, 16)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "brewItemB" then
+    local itemTexture = 451169
+    local itemSpellId = 439005
+    local itemDescription = L["brewItemBDescription"]
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(16, 16)
+    frame.Texture:SetSize(16, 16)
+    frame.HighlightTexture:SetSize(16, 16)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(itemDescription, 1, 1, 1)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "motherlodeItem" then
+    local itemTexture = 310733
+    local itemSpellId = 257481
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "workshopItem" then
+    local itemTexture = 1405803
+    local itemSpellId = 282943
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(12, 12)
+    frame.Texture:SetSize(12, 12)
+    frame.HighlightTexture:SetSize(12, 12)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "floodgateItem" then
+    local itemTexture = 986484
+    local itemSpellId = 464294
+
+    frame.Texture:SetTexture(itemTexture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(20, 20)
+    frame.Texture:SetSize(20, 20)
+    frame.HighlightTexture:SetSize(20, 20)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip:SetSpellByID(itemSpellId)
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "mistsItem" then
+    local itemInfo = {
+      [1] = {
+        name = L["Overgrown Roots"],
+        description = L["overgrownRootsDescription"],
+        texture = 134413,
+        size = 10,
+      },
+      [2] = {
+        spellId = 340162,
+        texture = 1029746,
+        size = 10,
+      },
+      [3] = {
+        spellId = 340158,
+        texture = 134527,
+        size = 10,
+      },
+      [4] = {
+        name = L["Depleted Anima Seed"],
+        description = L["depletedAnimaSeedDescription"],
+        texture = 4554354,
+        size = 10,
+      },
+      [5] = {
+        name = L["Depleted Anima Seed"],
+        description = L["depletedAnimaSeedDescription"].."\n\n"..L["overgrownRootsDescription"],
+        texture = 4554354,
+        size = 10,
+      },
+    }
+    local info = itemInfo[poi.itemType]
+
+    frame.Texture:SetTexture(info.texture)
+    frame.HighlightTexture:SetAtlas("bags-innerglow")
+
+    frame:SetSize(info.size, info.size)
+    frame.Texture:SetSize(info.size, info.size)
+    frame.HighlightTexture:SetSize(info.size, info.size)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      if info.spellId then
+        GameTooltip:SetSpellByID(info.spellId)
+      else
+        GameTooltip_SetTitle(GameTooltip, info.name)
+        GameTooltip:AddLine(info.description, 1, 1, 1, true)
+        GameTooltip:AddTexture(info.texture)
+      end
+      GameTooltip:Show()
+      frame.HighlightTexture:Show()
+    end)
+    frame:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+      frame.HighlightTexture:Hide()
+    end)
+  end
+  if type == "dungeonEntrance" then
+    frame.HighlightTexture:SetAtlas("Dungeon")
+    frame.Texture:SetAtlas("Dungeon")
+
+    frame:SetSize(32, 32)
+    frame.Texture:SetSize(32, 32)
+    frame.HighlightTexture:SetSize(32, 32)
+
+    frame:SetScript("OnEnter", function()
+      GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+      GameTooltip_SetTitle(GameTooltip, L["Dungeon Entrance"])
       GameTooltip:Show()
       frame.HighlightTexture:Show()
     end)

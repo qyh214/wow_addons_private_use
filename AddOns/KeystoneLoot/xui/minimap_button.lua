@@ -146,6 +146,42 @@ IconBorder:SetTexture('Interface\\Minimap\\MiniMap-TrackingBorder');
 
 
 function KeystoneLoot:UpdateMinimapButton()
+	if (LibStub and not Frame.LDBIcon) then
+		Frame.LDBIcon = true;
+
+		local dataObject = {
+			label = 'KeystoneLoot',
+			tocname = 'KeystoneLoot',
+			type = 'launcher',
+			icon = 'Interface\\Icons\\INV_Relics_Hourglass_02',
+			OnClick = OnClick,
+			OnEnter = OnEnter,
+			OnLeave = OnLeave
+		}
+
+		local LDB = LibStub('LibDataBroker-1.1', true);
+		if (LDB) then
+			LDB:NewDataObject('KeystoneLoot', dataObject);
+		end
+
+		local LDBIcon = LibStub('LibDBIcon-1.0', true);
+		if (LDBIcon) then
+			if (KeystoneLootDB.minimapButton == nil) then
+				KeystoneLootDB.minimapButton = {};
+			end
+
+			LDBIcon:Register('KeystoneLoot', dataObject, KeystoneLootDB.minimapButton);
+
+			if (KeystoneLootDB.minimapButton.hide) then
+				LDBIcon:Hide('KeystoneLoot');
+			end
+
+			Frame:SetParent(UIParent);
+			Frame:Hide();
+			return;
+		end
+	end
+
 	Frame:SetShown(KeystoneLootDB.minimapButtonEnabled);
 	Frame:SetPoint(GetPosition(KeystoneLootDB.minimapButtonPosition, 5));
 end

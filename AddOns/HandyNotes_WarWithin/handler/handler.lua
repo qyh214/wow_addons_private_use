@@ -7,7 +7,6 @@ local HL = LibStub("AceAddon-3.0"):NewAddon(myname, "AceEvent-3.0")
 ns.HL = HL
 
 local HBD = LibStub("HereBeDragons-2.0")
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 ns.DEBUG = C_AddOns.GetAddOnMetadata(myname, "Version") == '@'..'project-version@'
 
@@ -167,7 +166,8 @@ function ns.RegisterPoints(zone, points, defaults)
             table.insert(route, 1, coord)
             ns.points[zone][route[#route]] = setmetatable({
                 label=route.label or (point.npc and ("Path to {npc:%s}"):format(point.npc) or "Path to treasure"),
-                atlas=route.atlas or "poi-door", scale=route.scale or 0.95, minimap=true, texture=false,
+                atlas=route.atlas or "poi-door", scale=route.scale or 0.95, texture=false,
+                minimap=true, worldmap=route.worldmap,
                 note=route.note or false,
                 loot=upgradeloot(route.loot),
                 routes={route},
@@ -183,7 +183,7 @@ function ns.RegisterPoints(zone, points, defaults)
                     label=nearby.label or (point.npc and "Related to nearby NPC" or "Related to nearby treasure"),
                     atlas=nearby.atlas or "playerpartyblip",
                     texture=nearby.texture or false,
-                    minimap=true, worldmap=false, scale=0.95,
+                    minimap=true, worldmap=nearby.worldmap, scale=0.95,
                     note=nearby.note or false,
                     loot=upgradeloot(nearby.loot), active=nearby.active,
                     _coord=ncoord, _uiMapID=zone,
@@ -286,13 +286,14 @@ function ns.RegisterVignettes(zone, vignettes, defaults)
         defaults = ns.nodeMaker(defaults)
     end
     for vignetteID, point in pairs(vignettes) do
+        point = defaults and defaults(point) or point
+
         point._coord = point._coord or 0
         point._uiMapID = zone
         point.vignette = vignetteID
         point.always = true
         point.label = false
-
-        point = defaults and defaults(point) or point
+        point.loot = upgradeloot(point.loot)
 
         intotable(ns.POIsToPoints, point.areaPoi, point)
         intotable(ns.VignetteIDsToPoints, point.vignette, point)
@@ -429,13 +430,19 @@ local completeColor = CreateColor(0, 1, 0, 1)
 local incompleteColor = CreateColor(1, 0, 0, 1)
 local function render_string(s, context)
     if type(s) == "function" then s = s(context) end
-    return s:gsub("{(%l+):([^:}]+):?([^}]*)}", function(variant, id, fallback)
+    return s:gsub("{([^:}]+):([^:}]+):?([^}]*)}", function(variant, id, fallback)
         local mainid, subid = id:match("(%d+)%.(%d+)")
         mainid, subid = mainid and tonumber(mainid), subid and tonumber(subid)
         id = tonumber(id)
+        -- TODO: multiple variants?
+        local mainvariant, subvariant = variant:match("(%l+)%.(%l+)")
+        if subvariant then
+            variant = mainvariant
+        end
         if variant == "item" then
             local name, link, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(id)
             if link and icon then
+                if subvariant == "plain" then return name end
                 return quick_texture_markup(icon) .. " " .. link:gsub("[%[%]]", "")
             end
         elseif variant == "spell" then
@@ -449,6 +456,7 @@ local function render_string(s, context)
                 name, _, icon = GetSpellInfo(id)
             end
             if name and icon then
+                if subvariant == "plain" then return name end
                 return quick_texture_markup(icon) .. " " .. name
             end
         elseif variant == "quest" or variant == "worldquest" or variant == "questname" then
@@ -457,24 +465,31 @@ local function render_string(s, context)
                 -- we bypass the normal fallback mechanism because we want the quest completion status
                 name = fallback ~= "" and fallback or (variant .. ':' .. id)
             end
-            if variant == "questname" then return name end
+            if variant == "questname" or subvariant == "plain" then return name end
             local completed = C_QuestLog.IsQuestFlaggedCompleted(id)
             return CreateAtlasMarkup(variant == "worldquest" and "worldquest-tracker-questmarker" or "questnormal") ..
                 (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
         elseif variant == "questid" then
+            if subvariant == "plain" then return id end
             return CreateAtlasMarkup("questnormal") .. (C_QuestLog.IsQuestFlaggedCompleted(id) and completeColor or incompleteColor):WrapTextInColorCode(id)
         elseif variant == "achievement" or variant == "achievementname" then
             if mainid and subid then
-                local criteria, _, completed = ns.GetCriteria(mainid, subid)
+                local criteria, _, completed, _, _, completedBy = ns.GetCriteria(mainid, subid)
                 if criteria then
-                    if variant == "achievementname" then return criteria end
+                    if variant == "achievementname" or subvariant == "plain" then return criteria end
+                    if subvariant == "character" then
+                        completed = completedBy == ns.playerName
+                    end
                     return (completed and completeColor or incompleteColor):WrapTextInColorCode(criteria)
                 end
                 id = 'achievement:'..mainid..'.'..subid
             else
-                local _, name, _, completed = GetAchievementInfo(id)
+                local _, name, _, completed, _, _, _, _, _, _, _, _, wasEarnedByMe = GetAchievementInfo(id)
                 if name and name ~= "" then
-                    if variant == "achievementname" then return name end
+                    if variant == "achievementname" or subvariant == "plain" then return name end
+                    if subvariant == "character" then
+                        completed = wasEarnedByMe
+                    end
                     return CreateAtlasMarkup("storyheader-cheevoicon") .. " " .. (completed and completeColor or incompleteColor):WrapTextInColorCode(name)
                 end
             end
@@ -486,6 +501,7 @@ local function render_string(s, context)
         elseif variant == "currency" then
             local info = C_CurrencyInfo.GetCurrencyInfo(id)
             if info then
+                if subvariant == "plain" then return info.name end
                 return quick_texture_markup(info.iconFileID) .. " " .. info.name
             end
         elseif variant == "currencyicon" then
@@ -495,10 +511,13 @@ local function render_string(s, context)
             end
         elseif variant == "covenant" then
             local data = C_Covenants.GetCovenantData(id)
-            return COVENANT_COLORS[id]:WrapTextInColorCode(data and data.name or ns.covenants[id])
+            local name = data and data.name or ns.covenants[id]
+            if subvariant == "plain" then return name end
+            return COVENANT_COLORS[id]:WrapTextInColorCode(name)
         elseif variant == "majorfaction" then
             local info = C_MajorFactions.GetMajorFactionData(id)
             if info and info.name then
+                if subvariant == "plain" then return info.name end
                 return CreateAtlasMarkup(("majorFactions_icons_%s512"):format(info.textureKit)) .. " " .. info.name
             end
         elseif variant == "faction" then
@@ -517,6 +536,7 @@ local function render_string(s, context)
         elseif variant == "garrisontalent" then
             local info = C_Garrison.GetTalentInfo(id)
             if info then
+                if subvariant == "plain" then return info.name end
                 return quick_texture_markup(info.icon) .. " " .. (info.researched and completeColor or incompleteColor):WrapTextInColorCode(info.name)
             end
         elseif variant == "profession" then
@@ -752,7 +772,7 @@ local function work_out_texture(point)
             npc_texture = atlas_texture("DungeonSkull", 1)
         end
         if ns.db.show_npcs_emphasizeNotable and ns.PointIsNotable(point, true) then
-            if point.loot and ns.hasNotableLoot(point.loot, true) then
+            if (not point.loot) or ns.hasNotableLoot(point.loot, true) then
                 -- still notable without transmog
                 return notable_npc_texture
             end
@@ -873,7 +893,7 @@ local function tooltip_criteria(tooltip, achievement, criteriaid, ignore_quantit
     local criteria, _, complete, _, _, completedBy, flags, _, quantityString = ns.GetCriteria(achievement, criteriaid) -- include hidden
     -- by this current character, or by any character if the setting says it's okay
     if completedBy and not complete then
-        name = TEXT_MODE_A_STRING_VALUE_TYPE:format(name, GREEN_FONT_COLOR:WrapTextInColorCode(completedBy))
+        criteria = TEXT_MODE_A_STRING_VALUE_TYPE:format(criteria, GREEN_FONT_COLOR:WrapTextInColorCode(completedBy))
     end
     local r, g, b = (complete and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
     if quantityString and not ignore_quantityString then
@@ -1012,7 +1032,7 @@ local function handle_tooltip(tooltip, point, skip_label)
         if isHidden then
             tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, RED_FONT_COLOR:GetRGB())
         end
-        local r, g, b = (isHidden and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+        local r, g, b = (isHidden and RED_FONT_COLOR or GREEN_FONT_COLOR):GetRGB()
         tooltip:AddLine(
             ns.render_string(ns.conditions.summarize(point.hide_before), point),
             r, g, b, true
@@ -1023,7 +1043,7 @@ local function handle_tooltip(tooltip, point, skip_label)
         if isHidden then
             tooltip:AddLine(COMMUNITY_TYPE_UNAVAILABLE, RED_FONT_COLOR:GetRGB())
         end
-        local r, g, b = (isHidden and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+        local r, g, b = (isHidden and RED_FONT_COLOR or GREEN_FONT_COLOR):GetRGB()
         tooltip:AddLine(
             ns.render_string(ns.conditions.summarize(point.requires), point),
             r, g, b, true
@@ -1042,8 +1062,17 @@ local function handle_tooltip(tooltip, point, skip_label)
         tooltip:AddDoubleLine(GROUP, (render_string(ns.groups[point.group] or point.group, point)))
     end
 
-    if point.quest and ns.db.tooltip_questid then
-        tooltip:AddDoubleLine("QuestID", render_string_list(point, "questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
+    if point.quest then
+        local isAvailable = not ns.allQuestsComplete(point.quest)
+        local r, g, b = (isAvailable and GREEN_FONT_COLOR or RED_FONT_COLOR):GetRGB()
+        tooltip:AddDoubleLine(
+            " ",
+            isAvailable and AVAILABLE or GOAL_COMPLETED,
+            1, 1, 1, r, g, b, true
+        )
+        if ns.db.tooltip_questid then
+            tooltip:AddDoubleLine("QuestID", render_string_list(point, "questid", point.quest), NORMAL_FONT_COLOR:GetRGB())
+        end
     end
 
     if ns.DEBUG then
@@ -1177,7 +1206,7 @@ function HLHandler:OnEnter(uiMapID, coord)
     handle_tooltip_by_coord(tooltip, uiMapID, coord)
 end
 
-local function showAchievement(button, achievement)
+local function showAchievement(achievement)
     if OpenAchievementFrameToAchievement then
         OpenAchievementFrameToAchievement(achievement)
     else
@@ -1192,7 +1221,7 @@ local function showAchievement(button, achievement)
     end
 end
 
-local function createWaypoint(button, uiMapID, coord)
+local function createWaypoint(uiMapID, coord)
     local x, y = HandyNotes:getXY(coord)
     if MapPinEnhanced and MapPinEnhanced.AddPin then
         MapPinEnhanced:AddPin{
@@ -1251,28 +1280,28 @@ do
     end
 end
 
-local function hideNode(button, uiMapID, coord)
+local function hideNode(uiMapID, coord)
     ns.hidden[uiMapID][coord] = true
     HL:Refresh()
 end
-local function hideAchievement(button, achievement)
+local function hideAchievement(achievement)
     ns.db.achievementsHidden[achievement] = true
     HL:Refresh()
 end
-local function hideGroup(button, uiMapID, coord)
+local function hideGroup(uiMapID, coord)
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
     if not (point and point.group) then return end
     ns.db.groupsHidden[point.group] = true
     HL:Refresh()
 end
-local function hideGroupZone(button, uiMapID, coord)
+local function hideGroupZone(uiMapID, coord)
     local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
     if not (point and point.group) then return end
     ns.db.groupsHiddenByZone[uiMapID][point.group] = true
     HL:Refresh()
 end
 
-local function sendToChat(button, uiMapID, coord)
+local function sendToChat(uiMapID, coord)
     local title = get_point_info_by_coord(uiMapID, coord)
     local x, y = HandyNotes:getXY(coord)
     local message = ("%s|cffffff00|Hworldmap:%d:%d:%d|h[%s]|h|r"):format(
@@ -1293,130 +1322,57 @@ local function sendToChat(button, uiMapID, coord)
     end
 end
 
-local function closeAllDropdowns()
-    LibDD:CloseDropDownMenus(1)
-end
-
 do
-    local currentZone, currentCoord
-    local function generateMenu(button, level)
-        local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
-        if not (level and point) then return end
-        local info = LibDD:UIDropDownMenu_CreateInfo()
-        if (level == 1) then
-            -- Create the title of the menu
-            info.isTitle = 1
-            info.text = myfullname
-            info.notCheckable = 1
-            LibDD:UIDropDownMenu_AddButton(info, level)
-            wipe(info)
-
-            if point.achievement then
-                -- Waypoint menu item
-                info.text = OBJECTIVES_VIEW_ACHIEVEMENT
-                info.notCheckable = 1
-                info.func = showAchievement
-                info.arg1 = point.achievement
-                LibDD:UIDropDownMenu_AddButton(info, level)
-                wipe(info)
-            end
-
-            if TomTom or (C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(currentZone)) then
-                -- Waypoint menu item
-                info.text = "Create waypoint"
-                info.notCheckable = 1
-                info.func = createWaypoint
-                info.arg1 = currentZone
-                info.arg2 = currentCoord
-                LibDD:UIDropDownMenu_AddButton(info, level)
-                wipe(info)
-            end
-            -- Specifically for TomTom, since it supports multiples:
-            if TomTom and ns.PointHasRelatedPointsInZone(currentZone, point) then
-                info.text = render_string(("Create waypoint for all %s"):format(point.group and (ns.groups[point.group] or point.group) or ("{achievement:%d}"):format(point.achievement)), point)
-                info.notCheckable = 1
-                info.func = createWaypointForAll
-                info.arg1 = currentZone
-                info.arg2 = currentCoord
-                LibDD:UIDropDownMenu_AddButton(info, level)
-                wipe(info)
-            end
-
-            if _G.MAP_PIN_HYPERLINK then
-                info.text = COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT -- Link to chat
-                info.notCheckable = 1
-                info.func = sendToChat
-                info.arg1 = currentZone
-                info.arg2 = currentCoord
-                LibDD:UIDropDownMenu_AddButton(info, level)
-                wipe(info)
-            end
-
-            -- Hide menu item
-            info.text         = "Hide node"
-            info.notCheckable = 1
-            info.func         = hideNode
-            info.arg1         = currentZone
-            info.arg2         = currentCoord
-            LibDD:UIDropDownMenu_AddButton(info, level)
-            wipe(info)
-
-            if point.achievement then
-                -- Waypoint menu item
-                info.text = render_string("Hide all {achievement:" .. point.achievement .. "} in all zones")
-                info.notCheckable = 1
-                info.func = hideAchievement
-                info.arg1 = point.achievement
-                LibDD:UIDropDownMenu_AddButton(info, level)
-                wipe(info)
-            end
-
-            if point.group then
-                if not ns.hiddenConfig.groupsHiddenByZone then
-                    local map = C_Map.GetMapInfo(currentZone)
-                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group, point) .. " in " .. (map and map.name or "this zone")
-                    info.notCheckable = 1
-                    info.func = hideGroupZone
-                    info.arg1 = currentZone
-                    info.arg2 = currentCoord
-                    LibDD:UIDropDownMenu_AddButton(info, level)
-                    wipe(info)
-                end
-                if not ns.hiddenConfig.groupsHidden then
-                    info.text = "Hide all " .. render_string(ns.groups[point.group] or point.group, point) .. " in all zones"
-                    info.notCheckable = 1
-                    info.func = hideGroup
-                    info.arg1 = currentZone
-                    info.arg2 = currentCoord
-                    LibDD:UIDropDownMenu_AddButton(info, level)
-                    wipe(info)
-                end
-            end
-
-            -- Close menu item
-            info.text         = "Close"
-            info.func         = closeAllDropdowns
-            info.notCheckable = 1
-            LibDD:UIDropDownMenu_AddButton(info, level)
-            wipe(info)
+    local generateMenu = function(owner, rootDescription, uiMapID, coord, point)
+        rootDescription:SetTag("MENU_WORLD_MAP_CONTEXT_"..myname)
+        rootDescription:CreateTitle(myfullname)
+        if point.achievement then
+            rootDescription:CreateButton(OBJECTIVES_VIEW_ACHIEVEMENT, showAchievement, point.achievement)
         end
+        if TomTom or (C_Map and C_Map.CanSetUserWaypointOnMap and C_Map.CanSetUserWaypointOnMap(uiMapID)) then
+            rootDescription:CreateButton("Create waypoint", function() createWaypoint(uiMapID, coord) end)
+        end
+        -- Specifically for TomTom, since it supports multiples:
+        if TomTom and ns.PointHasRelatedPointsInZone(uiMapID, point) then
+            rootDescription:CreateButton(
+                render_string(("Create waypoint for all %s"):format(point.group and (ns.groups[point.group] or point.group) or ("{achievement:%d}"):format(point.achievement)), point),
+                function() createWaypointForAll(uiMapID, coord) end
+            )
+        end
+        if _G.MAP_PIN_HYPERLINK then
+            -- Link to chat
+            rootDescription:CreateButton(COMMUNITIES_INVITE_MANAGER_LINK_TO_CHAT, function() sendToChat(uiMapID, coord) end)
+        end
+        -- Hide menu item
+        rootDescription:CreateButton("Hide this point", function() hideNode(uiMapID, coord) end)
+        if point.achievement then
+            rootDescription:CreateButton(render_string("Hide {achievement:" .. point.achievement .. "}", point), hideAchievement, point.achievement)
+        end
+        if point.group then
+            if not ns.hiddenConfig.groupsHiddenByZone then
+                rootDescription:CreateButton(
+                    render_string(("Hide %s only in {zone:%s}"):format(ns.groups[point.group] or point.group, uiMapID), point),
+                    function() hideGroupZone(uiMapID, coord) end
+                )
+            end
+            if not ns.hiddenConfig.groupsHidden then
+                rootDescription:CreateButton(
+                    render_string(("Hide %s in all zones"):format(ns.groups[point.group] or point.group), point),
+                    function() hideGroup(uiMapID, coord) end
+                )
+            end
+        end
+        -- Close menu item
+        rootDescription:CreateButton(CLOSE, function() return MenuResponse.CloseAll end)
     end
 
-    local HL_Dropdown
     function HLHandler:OnClick(button, down, uiMapID, coord)
         if down then return end
-        currentZone = uiMapID
-        currentCoord = coord
         -- given we're in a click handler, this really *should* exist, but just in case...
-        local point = ns.points[currentZone] and ns.points[currentZone][currentCoord]
+        local point = ns.points[uiMapID] and ns.points[uiMapID][coord]
         if point then
             if button == "RightButton" then
-                if not HL_Dropdown then
-                    HL_Dropdown = LibDD:Create_UIDropDownMenu(myname .. "PointDropdown")
-                    LibDD:UIDropDownMenu_SetInitializeFunction(HL_Dropdown, generateMenu)
-                    LibDD:UIDropDownMenu_SetDisplayMode(HL_Dropdown, "MENU")
-                end
-                LibDD:ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
+                MenuUtil.CreateContextMenu(nil, generateMenu, uiMapID, coord, point)
                 return
             end
             if button == "LeftButton" and IsShiftKeyDown() and _G.MAP_PIN_HYPERLINK then
@@ -1509,6 +1465,8 @@ function HL:OnInitialize()
     if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
         self:RegisterEvent("SHOW_LOOT_TOAST", "RefreshOnEvent")
         self:RegisterEvent("GARRISON_FOLLOWER_ADDED", "RefreshOnEvent")
+        self:RegisterEvent("UNIT_ENTERING_VEHICLE", "RefreshOnUnitEvent", "player")
+        self:RegisterEvent("UNIT_EXITED_VEHICLE", "RefreshOnUnitEvent", "player")
     end
     -- This is sometimes spammy, but is the only thing that tends to get us casts:
     self:RegisterEvent("CRITERIA_UPDATE", "RefreshOnEvent")
@@ -1523,6 +1481,8 @@ function HL:OnInitialize()
     if ns.DecorationWorldMapDataProvider then
         WorldMapFrame:AddDataProvider(ns.DecorationWorldMapDataProvider)
     end
+
+    self:FillCaches()
 end
 
 do
@@ -1542,6 +1502,11 @@ do
     function HL:RefreshOnEvent(event)
         bucket:Show()
     end
+    function HL:RefreshOnUnitEvent(requiredUnit, event, unit)
+        if unit == requiredUnit then
+            bucket:Show()
+        end
+    end
     function HL:RefreshProviders()
         if ns.RouteWorldMapDataProvider then
             ns.RouteWorldMapDataProvider:RefreshAllData()
@@ -1553,6 +1518,35 @@ do
             ns.DecorationWorldMapDataProvider:RefreshAllData()
         end
     end
+end
+
+function HL:FillCaches()
+    local CacheWalker = coroutine.wrap(function()
+        local count = 0
+        for uiMapID, coords in pairs(ns.points) do
+            for coord, point in pairs(coords) do
+                if point.loot then
+                    for _, item in pairs(point.loot) do
+                        item:Cache()
+                    end
+                    count = count + 1
+                end
+                if count % 10 == 0 then
+                    coroutine.yield(count, false)
+                end
+            end
+        end
+        coroutine.yield(count, true)
+    end)
+    if ns.DEBUG then print(("%s: starting caching"):format(myname)) end
+    local ticker
+    ticker = C_Timer.NewTicker(0.1, function()
+        local count, finished = CacheWalker()
+        if finished then
+            ticker:Cancel()
+            if ns.DEBUG then print(("%s: done caching %d points"):format(myname, count)) end
+        end
+    end)
 end
 
 hooksecurefunc(AreaPOIPinMixin, "TryShowTooltip", function(self)

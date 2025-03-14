@@ -12,7 +12,7 @@ local strfind = string.find
 -- Generate our version variables
 --
 
-local BIGWIGS_VERSION = 357
+local BIGWIGS_VERSION = 375
 local BIGWIGS_RELEASE_STRING, BIGWIGS_VERSION_STRING
 local versionQueryString, versionResponseString = "Q^%d^%s^%d^%s", "V^%d^%s^%d^%s"
 local customGuildName = false
@@ -24,9 +24,11 @@ do
 	local _, tbl = ...
 	tbl.loaderPublic = public
 	tbl.loaderPrivate = mod
+	tbl.version = BIGWIGS_VERSION
 	public.isRetail = tbl.isRetail
 	public.isClassic = tbl.isClassic
 	public.isVanilla = tbl.isVanilla
+	public.season = tbl.season
 	public.isSeasonOfDiscovery = tbl.isSeasonOfDiscovery
 	public.isTBC = tbl.isTBC
 	public.isWrath = tbl.isWrath
@@ -39,7 +41,7 @@ do
 	local ALPHA = "ALPHA"
 
 	local releaseType
-	local myGitHash = "1509ecf" -- The ZIP packager will replace this with the Git hash.
+	local myGitHash = "29164ad" -- The ZIP packager will replace this with the Git hash.
 	local releaseString
 	--[=[@alpha@
 	-- The following code will only be present in alpha ZIPs.
@@ -52,6 +54,7 @@ do
 		releaseType = REPO
 		public.usingBigWigsRepo = true
 	end
+	tbl.versionHash = myGitHash
 
 	if releaseType == REPO then
 		releaseString = L.sourceCheckout:format(BIGWIGS_VERSION)
@@ -92,7 +95,7 @@ local tooltipFunctions = {}
 local next, tonumber, type, strsplit, strsub = next, tonumber, type, strsplit, string.sub
 local SendAddonMessage, RegisterAddonMessagePrefix, CTimerAfter, CTimerNewTicker = C_ChatInfo.SendAddonMessage, C_ChatInfo.RegisterAddonMessagePrefix, C_Timer.After, C_Timer.NewTicker
 local GetInstanceInfo, GetBestMapForUnit, GetMapInfo = GetInstanceInfo, C_Map.GetBestMapForUnit, C_Map.GetMapInfo
-local Ambiguate, UnitName, UnitGUID = Ambiguate, UnitName, UnitGUID
+local Ambiguate, UnitName, UnitGUID = Ambiguate, UnitNameUnmodified or UnitName, UnitGUID
 local debugstack, print = debugstack, print
 local myLocale = GetLocale()
 
@@ -117,6 +120,7 @@ public.RegisterAddonMessagePrefix = RegisterAddonMessagePrefix
 public.SendAddonMessage = SendAddonMessage
 public.SetRaidTarget = SetRaidTarget
 public.SendChatMessage = SendChatMessage
+public.UnitCanAttack = UnitCanAttack
 public.UnitDetailedThreatSituation = UnitDetailedThreatSituation
 public.UnitThreatSituation = UnitThreatSituation
 public.UnitGUID = UnitGUID
@@ -125,10 +129,12 @@ public.UnitHealthMax = UnitHealthMax
 public.UnitIsDeadOrGhost = UnitIsDeadOrGhost
 public.UnitName = UnitName
 public.UnitSex = UnitSex
-public.isTestBuild = GetCurrentRegion() == 72 -- PTR/beta
+public.UnitTokenFromGUID = UnitTokenFromGUID
+public.isTestBuild = GetCurrentRegion() == 72 or GetCurrentRegion() == 90 -- PTR/beta
 do
 	local _, _, _, build = GetBuildInfo()
 	public.isBeta = build >= 120000
+	public.isNext = build >= 110105
 end
 
 -- Version
@@ -159,6 +165,7 @@ local fakeZones = { -- Fake zones used as GUI menus
 	[-947]=true, -- Azeroth
 	[-1647]=true, -- Shadowlands
 	[-1978]=true, -- Dragon Isles
+	[-2274]=true, -- Khaz Algar
 }
 
 do
@@ -260,6 +267,7 @@ do
 			},
 			zones = {
 				[2657] = "BigWigs_NerubarPalace",
+				[2769] = "BigWigs_LiberationOfUndermine",
 			}
 		}
 	end
@@ -281,6 +289,8 @@ do
 		[531] = c, -- Ahn'Qiraj Temple
 		[2789] = public.isSeasonOfDiscovery and c or nil, -- The Tainted Scar (Lord Kazzak) [Classic Season of Discovery Only]
 		[2791] = public.isSeasonOfDiscovery and c or nil, -- Storm Cliffs (Azuregos) [Classic Season of Discovery Only]
+		[2804] = public.isSeasonOfDiscovery and c or nil, -- The Crystal Vale (Thunderaan) [Classic Season of Discovery Only]
+		[2832] = public.isSeasonOfDiscovery and c or nil, -- Nightmare Grove (Emeriss/Lethon/Taerar/Ysondre) [Classic Season of Discovery Only]
 		--[[ BigWigs: The Burning Crusade ]]--
 		[-101] = bc, -- Outland (Fake Menu)
 		[-1945] = bc, -- Outland (Fake Menu) [Classic Only]
@@ -344,12 +354,14 @@ do
 		[2569] = df, -- Aberrus, the Shadowed Crucible
 		[2549] = df, -- Amirdrassil, the Dream's Hope
 		--[[ BigWigs: The War Within ]]--
+		[-2274] = tww, -- Khaz Algar (Fake Menu)
 		[2657] = tww, -- Nerub'ar Palace
+		[2769] = tww, -- Liberation of Undermine
 
 		--[[ LittleWigs: Classic ]]--
 		[33] = not (public.isVanilla or public.isTBC or public.isWrath) and lw_cata or nil, -- Shadowfang Keep
 		--[34] = lw_c, -- The Stockade
-		[36] = not (public.isVanilla or public.isTBC or public.isWrath) and lw_cata or nil, -- Deadmines
+		[36] = public.isRetail and {lw_c, lw_cata} or public.isCata and lw_cata or lw_c, -- Deadmines
 		--[43] = lw_c, -- Wailing Caverns
 		--[47] = lw_c, -- Razorfen Kraul
 		--[48] = lw_c, -- Blackfathom Deeps
@@ -358,15 +370,16 @@ do
 		--[109] = lw_c, -- Sunken Temple
 		--[129] = lw_c, -- Razorfen Downs
 		--[189] = lw_c, -- Scarlet Monastery
-		--[209] = lw_c, -- Zul'Farrak
+		[209] = lw_c, -- Zul'Farrak
 		[229] = lw_c, -- Blackrock Spire
 		--[230] = lw_c, -- Blackrock Depths
 		--[289] = lw_c, -- Scholomance
-		--[329] = lw_c, -- Stratholme
+		[329] = lw_c, -- Stratholme
 		--[349] = lw_c, -- Maraudon
 		--[389] = lw_c, -- Ragefire Chasm
-		--[429] = lw_c, -- Dire Maul
+		[429] = lw_c, -- Dire Maul
 		[2784] = public.isSeasonOfDiscovery and lw_c or nil, -- Demon Fall Canyon [Classic Season of Discovery Only]
+		[2875] = public.isSeasonOfDiscovery and lw_c or nil, -- Karazhan Crypts [Classic Season of Discovery Only]
 		--[[ LittleWigs: The Burning Crusade ]]--
 		[540] = lw_bc, -- Hellfire Citadel: The Shattered Halls
 		[542] = lw_bc, -- Hellfire Citadel: The Blood Furnace
@@ -412,7 +425,7 @@ do
 		[939] = lw_cata, -- Well of Eternity
 		[940] = lw_cata, -- Hour of Twilight
 		[657] = lw_cata, -- The Vortex Pinnacle
-		[670] = public.isRetail and {lw_cata, lw_cs} or lw_cata, -- Grim Batol
+		[670] = lw_cata, -- Grim Batol
 		--[[ LittleWigs: Mists of Pandaria ]]--
 		[959] = lw_mop, -- Shado-Pan Monastery
 		[960] = lw_mop, -- Temple of the Jade Serpent
@@ -453,24 +466,24 @@ do
 		[1754] = lw_bfa, -- Freehold
 		[1762] = lw_bfa, -- King's Rest
 		[1864] = lw_bfa, -- Shrine of the Storm
-		[1822] = public.isRetail and {lw_bfa, lw_cs} or lw_bfa, -- Siege of Boralus
+		[1822] = lw_bfa, -- Siege of Boralus
 		[1877] = lw_bfa, -- Temple of Sethraliss
-		[1594] = lw_bfa, -- The Undermine
+		[1594] = public.isRetail and {lw_bfa, lw_cs} or lw_bfa, -- The Motherlode!!
 		[1771] = lw_bfa, -- Tol Dagor
 		[1841] = lw_bfa, -- Underrot
 		[1862] = lw_bfa, -- Waycrest Manor
-		[2097] = lw_bfa, -- Operation: Mechagon
+		[2097] = public.isRetail and {lw_bfa, lw_cs} or lw_bfa, -- Operation: Mechagon
 		[2212] = lw_bfa, -- Horrific Vision of Orgrimmar
 		[2213] = lw_bfa, -- Horrific Vision of Stormwind
 		--[[ LittleWigs: Shadowlands ]]--
 		[2284] = lw_s, -- Sanguine Depths
 		[2285] = lw_s, -- Spires of Ascension
-		[2286] = public.isRetail and {lw_s, lw_cs} or lw_s, -- The Necrotic Wake
+		[2286] = lw_s, -- The Necrotic Wake
 		[2287] = lw_s, -- Halls of Atonement
 		[2289] = lw_s, -- Plaguefall
-		[2290] = public.isRetail and {lw_s, lw_cs} or lw_s, -- Mists of Tirna Scithe
+		[2290] = lw_s, -- Mists of Tirna Scithe
 		[2291] = lw_s, -- De Other Side
-		[2293] = lw_s, -- Theater of Pain
+		[2293] = public.isRetail and {lw_s, lw_cs} or lw_s, -- Theater of Pain
 		[2441] = lw_s, -- Tazavesh, the Veiled Market
 		--[[ LittleWigs: Dragonflight ]]--
 		[2451] = lw_df, -- Uldaman: Legacy of Tyr
@@ -483,15 +496,16 @@ do
 		[2527] = lw_df, -- Halls of Infusion
 		[2579] = lw_df, -- Dawn of the Infinite
 		--[[ LittleWigs: The War Within ]]--
-		[2648] = lw_tww, -- The Rookery
-		[2649] = lw_tww, -- Priory of the Sacred Flame
-		[2651] = lw_tww, -- Darkflame Cleft
-		[2652] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- The Stonevault
-		[2660] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Ara-Kara, City of Echoes
-		[2661] = lw_tww, -- Cinderbrew Meadery
-		[2662] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- The Dawnbreaker
-		[2669] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- City of Threads
+		[2648] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- The Rookery
+		[2649] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Priory of the Sacred Flame
+		[2651] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Darkflame Cleft
+		[2652] = lw_tww, -- The Stonevault
+		[2660] = lw_tww, -- Ara-Kara, City of Echoes
+		[2661] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Cinderbrew Meadery
+		[2662] = lw_tww, -- The Dawnbreaker
+		[2669] = lw_tww, -- City of Threads
 		[2710] = lw_tww, -- Awakening the Machine
+		[2773] = public.isRetail and {lw_tww, lw_cs} or lw_tww, -- Operation: Floodgate
 		--[[ LittleWigs: Delves ]]--
 		[2664] = lw_delves, -- Fungal Folly
 		[2679] = lw_delves, -- Mycomancer Cavern
@@ -506,6 +520,9 @@ do
 		[2688] = lw_delves, -- The Spiral Weave
 		[2689] = lw_delves, -- Tak-Rethan Abyss
 		[2690] = lw_delves, -- The Underkeep
+		[2815] = lw_delves, -- Excavation Site 9
+		[2826] = lw_delves, -- Sidestreet Sluice
+		[2831] = lw_delves, -- Demolition Dome
 
 		--[[ Capping ]]--
 		[30] = cap, -- Alterac Valley
@@ -538,7 +555,8 @@ do
 		[-630] = -619, [-634] = -619, [-641] = -619, [-650] = -619, [-680] = -619, -- Broken Isles
 		[-942] = -947, -- Azeroth/BfA
 		[-1536] = -1647, [-1565] = -1647, [-1525] = -1647, [-1533] = -1647, -- Shadowlands
-		[-2022] = -1978, [-2023] = -1978, [-2024] = -1978, [-2085] = -1978, -- Dragon Isles
+		[-2022] = -1978, [-2023] = -1978, [-2024] = -1978, [-2085] = -1978, [-2133] = -1978, [-2200] = -1978, -- Dragon Isles
+		[-2214] = -2274, [-2215] = -2274, [-2213] = -2274, [-2248] = -2274, [-2346] = -2274, -- Khaz Algar
 	}
 end
 
@@ -1108,12 +1126,12 @@ function mod:ADDON_LOADED(addon)
 	self:BigWigs_CoreOptionToggled(nil, "fakeDBMVersion", self.isFakingDBM)
 
 	local num = tonumber(C_CVar.GetCVar("Sound_NumChannels")) or 0
-	if num < 64 then
-		C_CVar.SetCVar("Sound_NumChannels", "64") -- Blizzard keeps screwing with addon sound priority so we force this minimum
+	if num < 90 then
+		C_CVar.SetCVar("Sound_NumChannels", "90") -- 64 is the default, enforce a little higher as a minimum to prevent sound clipping issues with addons
 	end
 	num = tonumber(C_CVar.GetCVar("Sound_MaxCacheSizeInBytes")) or 0
-	if num < 67108864 then
-		C_CVar.SetCVar("Sound_MaxCacheSizeInBytes", "67108864") -- Set the cache to the "Small (64MB)" setting as a minimum
+	if num < 134217728 then
+		C_CVar.SetCVar("Sound_MaxCacheSizeInBytes", "134217728") -- "Large (128MB)" is the default, enforce it as a minimum
 	end
 
 	--bwFrame:UnregisterEvent("ADDON_LOADED")
@@ -1281,6 +1299,7 @@ do
 		LittleWigs_Dragonflight = true,
 		-- Dynamic content
 		BigWigs_NerubarPalace = true,
+		BigWigs_LiberationOfUndermine = true,
 	}
 	-- Try to teach people not to force load our modules.
 	for i = 1, GetNumAddOns() do
@@ -1351,7 +1370,7 @@ do
 		--itIT = "Italian (itIT)",
 		--koKR = "Korean (koKR)",
 		--esES = "Spanish (esES)",
-		--esMX = "Spanish (esMX)",
+		esMX = "Spanish (esMX)",
 		--deDE = "German (deDE)",
 		--ptBR = "Portuguese (ptBR)",
 		--frFR = "French (frFR)",
@@ -1359,14 +1378,16 @@ do
 	local realms = {
 		--[542] = locales.frFR, -- frFR
 		--[3207] = locales.ptBR, [3208] = locales.ptBR, [3209] = locales.ptBR, [3210] = locales.ptBR, [3234] = locales.ptBR, -- ptBR
-		--[1425] = locales.esMX, [1427] = locales.esMX, [1428] = locales.esMX, -- esMX
+		[1425] = locales.esMX, [1427] = locales.esMX, [1428] = locales.esMX, -- esMX
 		--[1309] = locales.itIT, [1316] = locales.itIT, -- itIT
 		--[1378] = locales.esES, [1379] = locales.esES, [1380] = locales.esES, [1381] = locales.esES, [1382] = locales.esES, [1383] = locales.esES, -- esES
 	}
 	local language = locales[myLocale]
 	local realmLanguage = realms[GetRealmID()]
 	if public.isRetail and (language or realmLanguage) then
-		delayedMessages[#delayedMessages+1] = ("BigWigs is missing translations for %s. Can you help? Ask us on Discord for more info."):format(language or realmLanguage)
+		delayedMessages[#delayedMessages+1] = ("BigWigs is missing translations for %s."):format(language or realmLanguage)
+		delayedMessages[#delayedMessages+1] = "Can you help?"
+		delayedMessages[#delayedMessages+1] = "Ask us on Discord for more info."
 	end
 
 	if #delayedMessages > 0 then
@@ -1461,12 +1482,12 @@ end
 --
 
 do
-	local DBMdotRevision = "20240903061113" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
-	local DBMdotDisplayVersion = "11.0.5" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
-	local DBMdotReleaseRevision = "20240903000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
+	local DBMdotRevision = "20250312072616" -- The changing version of the local client, changes with every new zip using the project-date-integer packager replacement.
+	local DBMdotDisplayVersion = "11.1.9" -- "N.N.N" for a release and "N.N.N alpha" for the alpha duration.
+	local DBMdotReleaseRevision = "20250312000000" -- Hardcoded time, manually changed every release, they use it to track the highest release version, a new DBM release is the only time it will change.
 	local protocol = 3
 	local versionPrefix = "V"
-	local PForceDisable = 14
+	local PForceDisable = 16
 
 	local timer = nil
 	local function sendDBMMsg()

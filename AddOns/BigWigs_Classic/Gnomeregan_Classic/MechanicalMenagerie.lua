@@ -118,7 +118,7 @@ function mod:OnEngage()
 end
 
 function mod:OnWin()
-	self:Message("run", "blue", L.run, false, nil, 3)
+	self:Message("run", "blue", L.run, false, nil, 3) -- Stay onscreen for 3s
 end
 
 --------------------------------------------------------------------------------

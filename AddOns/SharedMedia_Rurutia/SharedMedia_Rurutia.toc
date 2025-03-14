@@ -1,0 +1,14 @@
+## Interface: 100207, 110000, 110002, 110005, 110007, 110100
+## Title:|cffff559a露|r|cffff559a露|r|cffff5a9b的|r|cffff6aa0副|r|cffff7ea7本|r|cffff94af语|r|cffffabb7音|r|cffffb5bb·|r|cffffc5c1地|r|cffffd2c7心|r|cffffe8d0之|r|cfffff3d4战|r
+## Title-zhCN:|cffff559a露|r|cffff559a露|r|cffff5a9b的|r|cffff6aa0副|r|cffff7ea7本|r|cffff94af语|r|cffffabb7音|r|cffffb5bb·|r|cffffc5c1地|r|cffffd2c7心|r|cffffe8d0之|r|cfffff3d4战|r
+## Title-zhTW:|cffff559a露|r|cffff559a露|r|cffff5a9b的|r|cffff6aa0副|r|cffff7ea7本|r|cffff94af語|r|cffffabb7音|r|cffffb5bb·|r|cffffc5c1地|r|cffffd2c7心|r|cffffe8d0之|r|cfffff3d4戰|r
+## DefaultState: enabled
+## Author: 露露緹婭@Bilibili
+## Version: 1.4.0
+## Notes: Sharedmedia_Rurutia。露露的语音和材质包（正式服地心之战用）。|n此项为露露的语音WA正常工作所必须的语音文件。|n语音录制&材质制作：|cffff559a露露緹婭@Bilibili|r，抖音：|cffff559a露露缇娅|r，斗鱼9593311。
+## IconTexture: Interface\AddOns\SharedMedia_Rurutia\Icon\Rurutia_Logo_64R.tga
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+embeds.xml
+MyMedia.lua

@@ -953,6 +953,7 @@ local function populatePrivateAuraOptions(widget)
 
 	local privateAuraSoundOptions = widget:GetUserData("privateAuraSoundOptions")
 	local soundList = LibStub("LibSharedMedia-3.0"):List("sound")
+	local defaultSound = soundModule:GetDefaultSound("privateaura")
 	-- preserve module order
 	for _, module in ipairs(widget:GetUserData("moduleList")) do
 		local options = privateAuraSoundOptions[module]
@@ -965,9 +966,8 @@ local function populatePrivateAuraOptions(widget)
 			scrollFrame:AddChild(header)
 			for _, option in ipairs(options) do
 				local spellId = option[1]
-				local default = soundModule:GetDefaultSound("privateaura")
 				local key = ("pa_%d"):format(spellId)
-				local id = option.option or spellId
+				local id = option.tooltip or spellId
 
 				local name = loader.GetSpellName(id)
 				local texture = loader.GetSpellTexture(id)
@@ -976,18 +976,17 @@ local function populatePrivateAuraOptions(widget)
 				icon:SetImage(texture, 0.07, 0.93, 0.07, 0.93)
 				icon:SetImageSize(40, 40)
 				icon:SetRelativeWidth(0.1)
-				icon:SetUserData("bossOption", id)
+				icon:SetUserData("spellId", id)
 				icon:SetUserData("updateTooltip", true)
 				icon:SetCallback("OnEnter", function(widget)
 					bwTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
-					bwTooltip:SetSpellByID(widget:GetUserData("bossOption"))
+					bwTooltip:SetSpellByID(widget:GetUserData("spellId"))
 					bwTooltip:Show()
 				end)
 				icon:SetCallback("OnLeave", bwTooltip_Hide)
 
 				local dropdown = AceGUI:Create("SharedDropdown")
 				if option.mythic then
-					-- dropdown:SetLabel(name .. _G.CreateTextureMarkup(521749, 256, 64, 24, 24, 0.5, 0.625, 0.5, 1)) -- 521749 = Interface\EncounterJournal\UI-EJ-Icons
 					dropdown:SetLabel(name .. "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Mythic:20|t")
 				else
 					dropdown:SetLabel(name)
@@ -995,7 +994,7 @@ local function populatePrivateAuraOptions(widget)
 				dropdown:SetList(soundList, nil, "DDI-Sound")
 				dropdown:SetRelativeWidth(0.88)
 				dropdown:SetUserData("key", key)
-				dropdown:SetUserData("default", default)
+				dropdown:SetUserData("default", defaultSound)
 				dropdown:SetUserData("module", module)
 				dropdown:SetCallback("OnValueChanged", function(widget, _, value)
 					local key = widget:GetUserData("key")
@@ -1007,7 +1006,7 @@ local function populatePrivateAuraOptions(widget)
 					end
 					module.db.profile[key] = value
 				end)
-				local value = module.db.profile[key] or default
+				local value = module.db.profile[key] or defaultSound
 				for i, v in next, soundList do
 					if v == value then
 						dropdown:SetValue(i)
@@ -1032,7 +1031,7 @@ local function populatePrivateAuraOptions(widget)
 	reset:SetCallback("OnClick", function(widget)
 		for module, options in next, widget:GetUserData("privateAuraSoundOptions") do
 			for _, option in next, options do
-				local key = "pa_" .. option[1]
+				local key = ("pa_%d"):format(option[1])
 				module.db.profile[key] = nil
 			end
 		end
@@ -1075,24 +1074,24 @@ local function populateToggleOptions(widget, module)
 	scrollFrame:PauseLayout()
 
 	-- Add a small text label to the top right displaying the boss encounter ID
-	if module:GetEncounterID() then
+	local encounterId, multiple = module:GetEncounterID()
+	if encounterId then
 		local idLabel = AceGUI:Create("Label")
-		idLabel.label:SetFormattedText(L.optionsKey, module:GetEncounterID())
+		idLabel.label:SetFormattedText(L.optionsKey, multiple and module:TableToString({module:GetEncounterID()}) or encounterId)
 		idLabel:SetColor(0.65, 0.65, 0.65)
 		idLabel:SetFullWidth(true)
 		idLabel.label:SetJustifyH("RIGHT")
 		scrollFrame:AddChild(idLabel)
 	end
 
-	local id = module.instanceId
-
 	local sDB = BigWigsStatsDB
 	local journalId = module:GetJournalID()
-	if not journalId and module:GetAllowWin() and module:GetEncounterID() then
-		journalId =  -(module:GetEncounterID()) -- Fallback to show stats for modules with no journal ID, but set to allow win
+	if not journalId and module:GetAllowWin() and encounterId then
+		journalId = -(encounterId) -- Fallback to show stats for modules with no journal ID, but set to allow win
 	end
-	if journalId and id and id > 0 and sDB and sDB[id] and sDB[id][journalId] then
-		sDB = sDB[id][journalId]
+	local instanceId = type(module.instanceId) == "table" and module.instanceId[1] or module.instanceId
+	if journalId and instanceId and instanceId > 0 and sDB and sDB[instanceId] and sDB[instanceId][journalId] then
+		sDB = sDB[instanceId][journalId]
 
 		if next(sDB) then -- Create statistics table
 			local statGroup = AceGUI:Create("InlineGroup")
@@ -1276,12 +1275,12 @@ function showToggleOptions(widget, event, group, noScrollReset)
 	end
 end
 
-local function onZoneShow(treeWidget, id)
+local function onZoneShow(treeWidget, instanceIdOrMapId)
 	-- Make sure all the bosses for this zone are loaded.
-	loader:LoadZone(id)
+	loader:LoadZone(instanceIdOrMapId)
 
 	-- Grab the module list from this zone
-	local moduleList = loader:GetZoneMenus()[id]
+	local moduleList = loader:GetZoneMenus()[instanceIdOrMapId]
 	if type(moduleList) ~= "table" then return end -- No modules registered
 
 	local zoneList, zoneSort, privateAuraSoundOptions = {}, {}, nil
@@ -1314,7 +1313,7 @@ local function onZoneShow(treeWidget, id)
 	innerContainer:SetTitle(L.selectEncounter)
 	innerContainer:SetLayout("Flow")
 	innerContainer:SetCallback("OnGroupSelected", showToggleOptions)
-	innerContainer:SetUserData("zone", id)
+	innerContainer:SetUserData("zone", instanceIdOrMapId)
 	innerContainer:SetUserData("moduleList", moduleList)
 	innerContainer:SetUserData("privateAuraSoundOptions", privateAuraSoundOptions)
 	innerContainer:SetGroupList(zoneList, zoneSort)
@@ -1409,10 +1408,10 @@ do
 	local function onTreeGroupSelected(widget, event, value)
 		visibleSpellDescriptionWidgets = {}
 		widget:ReleaseChildren()
-		local zoneId = value:match("\001(-?%d+)$")
+		local instanceIdOrMapId = value:match("\001(-?%d+)$")
 		local bigwigsContent = value:match("(BigWigs_%a+)$")
-		if zoneId then
-			onZoneShow(widget, tonumber(zoneId))
+		if instanceIdOrMapId then
+			onZoneShow(widget, tonumber(instanceIdOrMapId))
 		elseif bigwigsContent and not loader.currentExpansion.bigWigsBundled[value] then -- Any BigWigs content except bundled expansion headers
 			local addonState = loader:GetAddOnState(bigwigsContent)
 			local string = addonState == "MISSING" and L.missingAddOnPopup or addonState == "DISABLED" and L.disabledAddOn

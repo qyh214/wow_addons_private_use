@@ -1,7 +1,7 @@
-## Interface: 11503
-## Title: |cffe8344fPatched|r WeakAuras Archive
-## Author: Patched by |cff48a295ang2hou|r, Original WeakAuras made by The WeakAuras Team
-## Version: 5.17.1
+## Interface: 11506
+## Title: WeakAuras Archive
+## Author: The WeakAuras Team
+## Version: 5.19.5
 ## LoadOnDemand: 1
 ## SavedVariables: WeakAurasArchive
 ## Dependencies: WeakAuras

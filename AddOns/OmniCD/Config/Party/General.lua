@@ -1,4 +1,4 @@
-local E, L = select(2, ...):unpack()
+local E, L, C = select(2, ...):unpack()
 local P = E.Party
 
 local general = {
@@ -41,6 +41,12 @@ local general = {
 				if src then
 					E.profile.Party[key] = E:DeepCopy(E.profile.Party[src])
 					E.profile.Party[key].general.zoneSelected = src
+
+					for sId in pairs(C.Party[key].spells) do
+						if not E.profile.Party[src].spells[sId] then
+							E.profile.Party[key].spells[sId] = false
+						end
+					end
 				end
 				P:Refresh()
 			end,

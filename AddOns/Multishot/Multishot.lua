@@ -24,6 +24,7 @@ function Multishot:OnEnable()
     self:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
     self:RegisterEvent("ENCOUNTER_END")
     self:RegisterEvent("SCREENSHOT_FAILED", "Debug")
+    self:RegisterEvent("ISLAND_COMPLETED") --20250131 Nukme
     -- self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     if Multishot.configDB.global.timeLineEnable then
         self.timeLineTimer = self:ScheduleRepeatingTimer("TimeLineProgress", 5)
@@ -205,39 +206,72 @@ end
 function Multishot:ENCOUNTER_END(strEvent, ...)
     if not Multishot.configDB.global.encounter_success then
         return
-    else
-        local encoutnerID, encounterName, difficultyID, raidsize, endstatus = ...
-        if endstatus == 1 then
-            local solo, inParty, inRaid
-            if IsInRaid() then
-                inRaid = true
-            elseif IsInGroup() then
-                inParty = true
-            else
-                solo = true
-            end
-            if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
-                    (inParty and Multishot.configDB.global.groupstatus["2party"]) or
-                    (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
-                return
-            end
-            if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
-                return
-            end
-            if Multishot_dbBlacklist[encoutnerID] then
-                return
-            end
-            if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[player .. encoutnerID] then
-                return
-            end
-            Multishot.historyDB.char.history[player .. encoutnerID] = true
-            isDelayed = encoutnerID -- FLAG
-            if isDelayed then
-                self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
-                isDelayed = nil
-            end
-        end
     end
+
+    local encoutnerID, encounterName, difficultyID, raidsize, endstatus = ...
+
+    if endstatus ~= 1 then
+        return
+    end
+
+    local solo = false
+    local inParty = false
+    local inRaid = false
+    if IsInRaid() then
+        inRaid = true
+    elseif IsInGroup() then
+        inParty = true
+    else
+        solo = true
+    end
+
+    if inRaid and not Multishot.configDB.global.groupstatus["3raid"] then
+        return
+    end
+
+    if inParty and not Multishot.configDB.global.groupstatus["2party"] then
+        return
+    end
+
+    if solo and not Multishot.configDB.global.groupstatus["1solo"] then
+        return
+    end
+
+    -- if not ((solo and Multishot.configDB.global.groupstatus["1solo"]) or
+    --         (inParty and Multishot.configDB.global.groupstatus["2party"]) or
+    --         (inRaid and Multishot.configDB.global.groupstatus["3raid"])) then
+    --     return
+    -- end
+
+    if difficultyID and not Multishot.configDB.global.difficulty[difficultyID] then
+        return
+    end
+
+    if Multishot_dbBlacklist[encoutnerID] then
+        return
+    end
+
+    if Multishot.configDB.global.firstkill and Multishot.historyDB.char.history[player .. encoutnerID] then
+        return
+    end
+
+    Multishot.historyDB.char.history[player .. encoutnerID] = true
+    isDelayed = encoutnerID -- FLAG
+    if isDelayed then
+        self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. isDelayed)
+        isDelayed = nil
+    end
+end
+
+function Multishot:ISLAND_COMPLETED(strEvent, ...)
+    if not Multishot.configDB.global.island_completed then
+        return
+    end
+
+    local mapID, winner = ...
+    -- print("mapID: " .. mapID .. ", winner: " .. winner)
+
+    self:ScheduleTimer("CustomScreenshot", Multishot.configDB.global.delay2, strEvent .. mapID)
 end
 
 function Multishot:SCREENSHOT_SUCCEEDED(strEvent)

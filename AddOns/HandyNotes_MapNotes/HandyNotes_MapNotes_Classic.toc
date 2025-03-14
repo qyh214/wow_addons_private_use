@@ -1,6 +1,16 @@
-## Interface: 11503
-## Version: 2.3.0
+## Interface: 11506
+## Version: 2.7.0
 ## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
+## Title-esES: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r
+## Title-esMX: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r
+## Title-ptBR: HandyNotes: |cffff0000Mapa|r|cff00ccffNotas|r
+## Title-zhTW: HandyNotes: |cffff0000地圖|r|cff00ccff筆記|r
+## Title-zhCN: HandyNotes: |cffff0000地图|r|cff00ccff笔记|r
+## Title-deDE: HandyNotes: |cffff0000Karten|r|cff00ccffNotizen|r
+## Title-ruRU: HandyNotes: |cffff0000Карта|r|cff00ccffЗаметки|r
+## Title-koKR: HandyNotes: |cffff0000지도|r|cff00ccffN노트|r
+## Title-itIT: HandyNotes: |cffff0000Mappa|r|cff00ccffNote|r
+## Title-frFR: HandyNotes: |cffff0000Carte|r|cff00ccffNotes|r
 ## Notes: Displays instance entrances, ships and zeppelin icons
 ## Notes-esES: Muestra entradas de instancia, barcos e íconos de Zeppelin
 ## Notes-esMX: Muestra entradas de instancia, barcos e íconos de Zeppelin

@@ -292,6 +292,8 @@ L["S_OPTIONS_SHOW_FILTER_BUTTON"] = "Mostrar botão de filtro"
 L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Mostrar botão de Minimizar"
 L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Mostrar botão de Organizar"
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Mostrar botão de Tempo Restante"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Mostrar botão de Atalhos de Mundos"
 L["S_OPTIONS_SHOWFACTIONS"] = "Mostrar Facções"
 L["S_OPTIONS_TALKINGHEADS"] = "Não mostrar \"Talking Heads\""
@@ -340,6 +342,8 @@ L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+--[[Translation missing --]]
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "Em Geral"
 L["S_PARTY"] = "Grupo"
 L["S_PARTY_DESC1"] = "Uma estrela azul na quest significa que todos do grupo a possuem."

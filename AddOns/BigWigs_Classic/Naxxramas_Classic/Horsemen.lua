@@ -56,6 +56,10 @@ end
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_SUCCESS", "Mark", 28832, 28833, 28834, 28835) -- Mark of Korth'azz, Mark of Blaumeux, Mark of Mograine, Mark of Zeliek
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MarkApplied", 28832, 28833, 28834, 28835)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "Mark", 1226221, 1226219, 1226220, 1226218) -- Mark of Korth'azz, Mark of Blaumeux, Mark of Mograine, Mark of Zeliek
+		self:Log("SPELL_AURA_APPLIED_DOSE", "MarkApplied", 1226221, 1226219, 1226220, 1226218)
+	end
 	self:Log("SPELL_CAST_SUCCESS", "Meteor", 28884)
 	self:Log("SPELL_CAST_SUCCESS", "VoidZone", 28863)
 	self:Log("SPELL_CAST_SUCCESS", "HolyWrath", 28883)

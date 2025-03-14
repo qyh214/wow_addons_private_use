@@ -2,7 +2,7 @@ local AddonName, KeystoneLoot = ...;
 
 
 function KeystoneLoot:GetSeasonId()
-	return 13; -- 13 = TWW Season 1
+	return 14; -- 14 = TWW Season 2
 end
 
 

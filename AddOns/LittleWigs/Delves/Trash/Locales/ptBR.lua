@@ -9,7 +9,22 @@ if L then
 	--L.infected_beast = "Infected Beast"
 	--L.fungal_gutter = "Fungal Gutter"
 	--L.fungarian_flinger = "Fungarian Flinger"
+	L.fungal_rotcaster = "Lança-podre Fúngico"
 	--L.particularly_bad_guy = "Particularly Bad Guy"
+end
+
+L = BigWigs:NewBossLocale("Goblin Delve Trash", "ptBR")
+if L then
+	--L.goblin_trash = "Goblin Trash"
+
+	--L.bopper_bot = "Bopper Bot"
+	--L.aerial_support_bot = "Aerial Support Bot"
+	--L.masked_freelancer = "Masked Freelancer"
+	--L.underpaid_brute = "Underpaid Brute"
+	--L.drill_sergeant = "Drill Sergeant"
+	L.punchy_thug = "Capanga Murrão"
+	L.flinging_flicker = "Pisca-pisca Lançador"
+	L.bomb_bot = "Bombômato"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "ptBR")
@@ -30,6 +45,8 @@ if L then
 	--L.kobyss_witherer = "Kobyss Witherer"
 	--L.wandering_gutter = "Wandering Gutter"
 	--L.crazed_predator = "Crazed Predator"
+	L.deepwater_makura = "Makura de Águas Profundas"
+	L.kobyss_trickster = "Trapaceiro Kobyss"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "ptBR")
@@ -56,6 +73,17 @@ if L then
 	--L.shadow_elemental = "Shadow Elemental"
 end
 
+L = BigWigs:NewBossLocale("Old God Delve Trash", "ptBR")
+if L then
+	--L.old_god_trash = "Old God Trash"
+
+	--L.dark_walker = "Dark Walker"
+	--L.hideous_amalgamation = "Hideous Amalgamation"
+	--L.coagulated_mass = "Coagulated Mass"
+	--L.silent_slitherer = "Silent Slitherer"
+	L.amalgamized_mass = "Massa Amalgamada"
+end
+
 L = BigWigs:NewBossLocale("The Underkeep Trash", "ptBR")
 if L then
 	--L.ascended_webfriar = "Ascended Webfriar"
@@ -64,18 +92,20 @@ if L then
 	--L.web_marauder = "Web Marauder"
 end
 
-L = BigWigs:NewBossLocale("Delve Rares", "ptBR")
+L = BigWigs:NewBossLocale("Underpin Rares", "ptBR")
 if L then
-	--L.rares = "Rares"
+	--L.rares = "Underpin Rares"
 
-	--L.stolen_loader = "Stolen Loader"
-	--L.invasive_sporecap = "Invasive Sporecap"
-	--L.reno_jackson = "Reno Jackson"
-	--L.sir_finley_mrgglton = "Sir Finley Mrgglton"
 	--L.treasure_wraith = "Treasure Wraith"
-	--L.venombite = "Venombite"
-	--L.kasdru = "Kas'dru"
-	--L.tala = "Tala"
-	--L.velo = "Velo"
-	--L.anubvir = "Anub'vir"
+	--L.treasure_crab = "Treasure Crab"
+	--L.hovering_menace = "Hovering Menace"
+	--L.malfunctioning_pummeler = "Malfunctioning Pummeler"
+	--L.underpins_adoring_fan = "Underpin's Adoring Fan"
+	--L.underpins_well_connected_friend = "Underpin's Well-Connected Friend"
+	--L.underpins_explosive_ally = "Underpin's Explosive Ally"
+	--L.underpins_bodyguards_intern = "Underpin's Bodyguard's Intern"
+	--L.aggressively_lost_hobgoblin = "Aggressively Lost Hobgoblin"
+	--L.the_underpin = "The Underpin (Random Spawn)"
+
+	--L.underpin_retreat_trigger = "People always messin' around on my perfectly legal, deeded land!"
 end

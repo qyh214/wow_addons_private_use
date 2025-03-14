@@ -142,8 +142,8 @@ L.sendBreak = "Envoi d'un temps de pause aux utilisateurs de BigWigs et DBM."
 L.breakStarted = "Temps de pause lancé par %2$s (%1$s)."
 L.breakStopped = "Temps de pause annulé par %s."
 L.breakBar = "Temps de pause"
-L.breakMinutes = "Fin de la pause dans %d |4minute:minutes; !"
-L.breakSeconds = "Fin de la pause dans %d |4seconde:secondes; !"
+L.breakMinutes = "Fin de la pause dans %d |4minute:minutes; !"
+L.breakSeconds = "Fin de la pause dans %d |4seconde:secondes; !"
 L.breakFinished = "Le temps de pause est terminé !"
 
 -----------------------------------------------------------------------
@@ -348,8 +348,10 @@ L.resetNameplateIconsDesc = "Réinitialise toutes les options liées aux icônes
 L.nameplateTextSettings = "Paramètres de texte"
 L.fixate_test = "Fixe Test" -- Text that displays to test on the frame
 L.resetNameplateTextDesc = "Réinitialise toutes les options liées au texte des barres d'infos."
-L.autoScale = "Mise à l'échelle automatique"
-L.autoScaleDesc = "Change automatiquement l'échelle par rapport à celle de la barre d'infos."
+L.glowAt = "Commencer la surbrillance (secondes)"
+L.glowAt_desc = "Choisissez combien il doit rester de secondes sur le temps de recharge afin d'activer la surbrillance."
+--L.headerIconSizeTarget = "Icon size of your current target"
+--L.headerIconSizeOthers = "Icon size of all other targets"
 
 -- Glow types as part of LibCustomGlow
 L.pixelGlow = "Surbrillance discontinue"

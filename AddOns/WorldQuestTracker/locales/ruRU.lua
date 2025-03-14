@@ -273,6 +273,8 @@ L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Показать кнопку 'Сверн
 L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Показать кнопку сортировки"
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Кнопка 'Показать оставшееся время'"
 --[[Translation missing --]]
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
+--[[Translation missing --]]
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "Показать фракции"
 --[[Translation missing --]]
@@ -313,6 +315,8 @@ L["S_OPTTIONS_TAB_RARES_SETTINGS"] = "Рарники"
 L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Трекер"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "Карта мира"
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Карта зоны"
+--[[Translation missing --]]
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "Всего"
 L["S_PARTY"] = "Группа"
 L["S_PARTY_DESC1"] = "Если квест помечен синей звездочкой - он есть у всех игроков в вашей группе."

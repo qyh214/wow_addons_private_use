@@ -46,7 +46,7 @@ ns.PTR = buildNum > 110000
 
 ns.Patrons = "|cFFFFD100Current Status|r\n\n"
     .. "All existing specializations are currently supported, though healer priorities are experimental and focused on rotational DPS only.\n\n"
-    .. "If you find odd recommendations or other issues, please follow the |cFFFFD100Issue Reporting|r link below and submit all the necessary information to have your issue investigated.\n\n"
+    .. "If you find odd recommendations or other issues, please follow the |cFFFFD100Issue Reports|r link below and submit all the necessary information to have your issue investigated.\n\n"
     .. "Please do not submit tickets for routine priority updates (i.e., from SimulationCraft).  I will routinely update those when they are published.  Thanks!"
 
 do
@@ -256,6 +256,27 @@ function Hekili:SaveDebugSnapshot( dispName )
 				v.log[ i ] = nil
 			end
 
+            -- Store previous spell data.
+            local prevString = "\nprevious_spells:"
+
+            -- Skip over the actions in the "prev" table that were added to computed the next recommended ability in the queue.
+            local i, j = ( #state.predictions + 1 ), 1
+            local spell = state.prev[i].spell or "no_action"
+
+            if spell == "no_action" then
+                prevString = prevString .. "  no history available"
+            else
+                local numHistory = #state.prev.history
+                while i <= numHistory and spell ~= "no_action" do
+                    prevString = format( "%s\n   %d - %s", prevString, j, spell )
+                    i, j = i + 1, j + 1
+                    spell = state.prev[i].spell or "no_action"
+                end
+            end
+            prevString = prevString .. "\n\n"
+
+            insert( v.log, 1, prevString )
+
             -- Store aura data.
             local auraString = "\nplayer_buffs:"
             local now = GetTime()
@@ -287,7 +308,6 @@ function Hekili:SaveDebugSnapshot( dispName )
 
                 auraString = format( "%s\n   %6d - %-40s - %3d - %-6.2f", auraString, spellId, key or ( "*" .. formatKey( name ) ), count > 0 and count or 1, expirationTime > 0 and ( expirationTime - now ) or 3600 )
             end
-
 
             if not UnitExists( "target" ) then
                 auraString = auraString .. "\n\ntarget_auras:  target does not exist"
@@ -321,17 +341,30 @@ function Hekili:SaveDebugSnapshot( dispName )
                 end
             end
 
-            auraString = auraString .. "\n\n"
-
             insert( v.log, 1, auraString )
             insert( v.log, 1, "targets:  " .. ( Hekili.TargetDebug or "no data" ) )
             insert( v.log, 1, self:GenerateProfile() )
+
+
+            local performance
+            local pInfo = HekiliEngine.threadUpdates
+
+            -- TODO: Include # of active displays, number of icons displayed.
+
+            if pInfo then
+                performance = string.format( "\n\nPerformance\n"
+                    .. "|| Updates || Updates / sec || Avg. Work || Avg. Time || Avg. Frames || Peak Work || Peak Time || Peak Frames || FPS || Work Cap ||\n"
+                    .. "|| %7d || %13.2f || %9.2f || %9.2f || %11.2f || %9.2f || %9.2f || %11.2f || %3d || %8.2f ||",
+                    pInfo.updates, pInfo.updatesPerSec, pInfo.meanWorkTime, pInfo.meanClockTime, pInfo.meanFrames, pInfo.peakWorkTime, pInfo.peakClockTime, pInfo.peakFrames, GetFramerate() or 0, Hekili.maxFrameTime or 0 )
+            end
+
+            if performance then insert( v.log, performance ) end
 
             local custom = ""
 
             local pack = self.DB.profile.packs[ state.system.packName ]
             if not pack.builtIn then
-                custom = format( " |cFFFFA700(Custom: %s[%d])|r", state.spec.name, state.spec.id )
+                custom = format( " |cFFFFA700(*%s[%d])|r", state.spec.name, state.spec.id )
             end
 
             local overview = format( "%s%s; %s|r", state.system.packName, custom, dispName or state.display )
@@ -363,7 +396,7 @@ function Hekili:SaveDebugSnapshot( dispName )
 
     -- Limit screenshot to once per login.
     if snapped then
-        if Hekili.DB.profile.screenshot and not hasScreenshotted then
+        if Hekili.DB.profile.screenshot and ( not hasScreenshotted or Hekili.ManualSnapshot ) then
             Screenshot()
             hasScreenshotted = true
         end

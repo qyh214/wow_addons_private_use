@@ -9,6 +9,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [76169] = {
         name = "Una luz en la oscuridad",
     },
+    [76247] = {
+        name = "La llama del hogar",
+    },
     [76338] = {
         name = "Un machacarrepollos mejorado",
     },
@@ -1053,6 +1056,18 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [79556] = {
         name = "Capacitación laboral",
     },
+    [79559] = {
+        name = "El Caballero Verdín",
+    },
+    [79561] = {
+        name = "Señor de los gigantes",
+    },
+    [79563] = {
+        name = "La Dama del Lago",
+    },
+    [79564] = {
+        name = "El regreso del Caballero Verdín",
+    },
     [79565] = {
         name = "Velas de Janky",
     },
@@ -1241,6 +1256,12 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [80082] = {
         name = "De vuelta en Gundargaz",
+    },
+    [80096] = {
+        name = "La pala en la piedra",
+    },
+    [80144] = {
+        name = "El Roto Grial",
     },
     [80145] = {
         name = "El Filón",
@@ -1608,8 +1629,14 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [81615] = {
         name = "Mecha corta",
     },
+    [81630] = {
+        name = "Protocolo de activación",
+    },
     [81655] = {
         name = "Carne jugosa de krolusko",
+    },
+    [81656] = {
+        name = "Nada que desperdiciar",
     },
     [81661] = {
         name = "Hacia el Alto en Pena",
@@ -1688,6 +1715,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [81802] = {
         name = "Carrera de jinete celestial - Sondeo de Vigía de la Tormenta",
+    },
+    [81804] = {
+        name = "Carrera de jinete celestial - Los Caminos del Bosque",
     },
     [81806] = {
         name = "Carrera de jinete celestial - Curvas de Menas Rocosas",
@@ -1807,7 +1837,7 @@ BtWQuestsDatabase:UpdateQuestsTable({
         name = "Embajadas y enviados",
     },
     [82156] = {
-        name = "Asignación especial: Cuando las minas se agitan",
+        name = "Asignación especial: Perturbaciones en las Minas",
     },
     [82195] = {
         name = "Óxido y redención",
@@ -1887,6 +1917,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82291] = {
         name = "Riña robótica",
     },
+    [82292] = {
+        name = "Coleccionista de rocas",
+    },
     [82293] = {
         name = "El poder de la amistad",
     },
@@ -1959,6 +1992,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82451] = {
         name = "Preservación de peluches",
     },
+    [82455] = {
+        name = "Basta de migajas",
+    },
     [82456] = {
         name = "Come esto",
     },
@@ -2001,6 +2037,9 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82536] = {
         name = "Operación de exfiltración",
     },
+    [82552] = {
+        name = "Exaltación",
+    },
     [82580] = {
         name = "Misión de mensajería: Recuperación de menas",
     },
@@ -2031,8 +2070,11 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [82682] = {
         name = "Entremeses elementales",
     },
+    [82690] = {
+        name = "Sombras Tenaces",
+    },
     [82706] = {
-        name = "Abismos: Investigación en Khaz Algar",
+        name = "Abismos: Investigación mundial",
     },
     [82768] = {
         name = "Pesca en las nubes",
@@ -2151,14 +2193,125 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83087] = {
         name = "La vieja guardia",
     },
+    [83088] = {
+        name = "Coleccionables cáusticos",
+    },
+    [83089] = {
+        name = "Gafas geniales para goblins",
+    },
+    [83091] = {
+        name = "Cúbrete los ojos",
+    },
     [83092] = {
         name = "Un final ígneo",
+    },
+    [83096] = {
+        name = "Minahonda te da la bienvenida",
     },
     [83101] = {
         name = "Búsqueda de recursos",
     },
     [83108] = {
         name = "Diagnóstico diario",
+    },
+    [83109] = {
+        name = "El expreso Grimla",
+    },
+    [83114] = {
+        name = "Burocracia",
+    },
+    [83115] = {
+        name = "Involucrados",
+    },
+    [83116] = {
+        name = "Conmoción por la poción",
+    },
+    [83117] = {
+        name = "En busca de una pista",
+    },
+    [83118] = {
+        name = "Consulta de cronograma",
+    },
+    [83119] = {
+        name = "Un intento que vale la pena",
+    },
+    [83120] = {
+        name = "El robo de las llaves",
+    },
+    [83121] = {
+        name = "Administración de recursos",
+    },
+    [83122] = {
+        name = "Un golpe al mercado",
+    },
+    [83123] = {
+        name = "Minas y mentiras",
+    },
+    [83124] = {
+        name = "Observación de A.V.E.",
+    },
+    [83125] = {
+        name = "Escalada de precios",
+    },
+    [83126] = {
+        name = "Invasión etérea",
+    },
+    [83127] = {
+        name = "Carrera contra el reloj",
+    },
+    [83128] = {
+        name = "Rescata a los nuestros",
+    },
+    [83129] = {
+        name = "Sin escapatoria",
+    },
+    [83130] = {
+        name = "Una victoria amarga",
+    },
+    [83137] = {
+        name = "Cuando la oportunidad explota la puerta",
+    },
+    [83138] = {
+        name = "El final del día",
+    },
+    [83139] = {
+        name = "Mensajes confusos",
+    },
+    [83140] = {
+        name = "Ambiente laboral hostil",
+    },
+    [83141] = {
+        name = "Examina la mina",
+    },
+    [83142] = {
+        name = "Orden de magnitud",
+    },
+    [83143] = {
+        name = "Un trabajo honesto",
+    },
+    [83144] = {
+        name = "Purga de sangre",
+    },
+    [83145] = {
+        name = "Prevención de paranoia",
+    },
+    [83146] = {
+        name = "Una bomba bombástica",
+    },
+    [83147] = {
+        name = "Asuntos sangrientos",
+    },
+    [83148] = {
+        name = "Frío eXtremo",
+    },
+    [83149] = {
+        name = "Hora de venganza",
+    },
+    [83150] = {
+        name = "Un plan en expansión",
+    },
+    [83151] = {
+        name = "Camino a Minahonda",
     },
     [83152] = {
         name = "Magmacidio",
@@ -2178,14 +2331,89 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83162] = {
         name = "¡Devuélvelo, vuélvelo!",
     },
+    [83163] = {
+        name = "Una aventura venturosa",
+    },
     [83165] = {
         name = "Robot de malos modales",
+    },
+    [83167] = {
+        name = "Ojos desde las alturas",
+    },
+    [83168] = {
+        name = "Un rastro de sangre negra",
+    },
+    [83169] = {
+        name = "Un camino sin fin desde Bahía del Botín",
+    },
+    [83170] = {
+        name = "¡No de nuevo!",
+    },
+    [83171] = {
+        name = "Fuego para los ojos",
+    },
+    [83172] = {
+        name = "Relevo en el Basural",
+    },
+    [83173] = {
+        name = "Limpieza del depósito",
+    },
+    [83174] = {
+        name = "Nuestro buen amigo",
+    },
+    [83175] = {
+        name = "Otra pieza del rompecabezas",
+    },
+    [83176] = {
+        name = "Solo una corazonada",
     },
     [83181] = {
         name = "Mejores amigos, mismos finales",
     },
     [83182] = {
         name = "Una herencia sangrienta",
+    },
+    [83194] = {
+        name = "Bajo fuego",
+    },
+    [83195] = {
+        name = "Reúne al pueblo",
+    },
+    [83196] = {
+        name = "¡Dispérsense!",
+    },
+    [83197] = {
+        name = "¿Quién se apoderó de las calles?",
+    },
+    [83198] = {
+        name = "Depuración portuaria",
+    },
+    [83199] = {
+        name = "Nuevos problemas, nuevas recetas",
+    },
+    [83200] = {
+        name = "Ni un paso más, escoria",
+    },
+    [83201] = {
+        name = "Entrega expeditiva",
+    },
+    [83202] = {
+        name = "A arremangarse",
+    },
+    [83203] = {
+        name = "Armas sangrientas",
+    },
+    [83204] = {
+        name = "El chirimbolo",
+    },
+    [83205] = {
+        name = "Producción interrumpida",
+    },
+    [83206] = {
+        name = "Amos de la calle",
+    },
+    [83207] = {
+        name = "Nadie como ella",
     },
     [83229] = {
         name = "Asignación especial: Cuando las minas se agitan",
@@ -2252,6 +2480,42 @@ BtWQuestsDatabase:UpdateQuestsTable({
     },
     [83339] = {
         name = "El terror de las torres",
+    },
+    [83417] = {
+        name = "Una familia muy normal",
+    },
+    [83418] = {
+        name = "El abrigo perfecto",
+    },
+    [83419] = {
+        name = "La lista de invitados perfecta",
+    },
+    [83420] = {
+        name = "Un menú perfecto",
+    },
+    [83421] = {
+        name = "La boda perfecta",
+    },
+    [83442] = {
+        name = "Revoltijo industrial",
+    },
+    [83445] = {
+        name = "Algo huele mal",
+    },
+    [83446] = {
+        name = "Cese y desista",
+    },
+    [83484] = {
+        name = "Rata por accidente",
+    },
+    [83485] = {
+        name = "Pociones potentes",
+    },
+    [83486] = {
+        name = "Trabajo remoto",
+    },
+    [83487] = {
+        name = "Baya problema",
     },
     [83497] = {
         name = "Un amigo preocupado",
@@ -2343,11 +2607,194 @@ BtWQuestsDatabase:UpdateQuestsTable({
     [83930] = {
         name = "Solución de tratamiento vermicida",
     },
+    [83933] = {
+        name = "Kaja'Costa",
+    },
     [84022] = {
         name = "Uniendo los Hilos Cortados",
     },
+    [84121] = {
+        name = "Un poco de seguridad",
+    },
+    [84122] = {
+        name = "Fuera cámaras",
+    },
+    [84140] = {
+        name = "Caddie con predisposición",
+    },
+    [84141] = {
+        name = "Latas arteras",
+    },
+    [84142] = {
+        name = "Bomba en uno",
+    },
+    [84214] = {
+        name = "El trabajo",
+    },
+    [84215] = {
+        name = "El equipo",
+    },
+    [84216] = {
+        name = "El plan",
+    },
+    [84217] = {
+        name = "Golpe en las alturas",
+    },
+    [84218] = {
+        name = "La huida",
+    },
+    [84298] = {
+        name = "SE BUSCA EMPLEADO: Kaja'Singularidad",
+    },
+    [84300] = {
+        name = "Refinar, reparar, repetir",
+    },
+    [84301] = {
+        name = "Un trabajo pedregoso",
+    },
+    [84302] = {
+        name = "Iteración creativa",
+    },
+    [84303] = {
+        name = "Aplicación experimental",
+    },
+    [84304] = {
+        name = "Cabeza dura como una gema",
+    },
+    [84376] = {
+        name = "Propiedad devaluada",
+    },
+    [84378] = {
+        name = "Seguro de alquiler",
+    },
+    [84379] = {
+        name = "Inquilinos incautados",
+    },
+    [84380] = {
+        name = "Armas en alquiler",
+    },
+    [84381] = {
+        name = "Renegociaciones",
+    },
     [84392] = {
         name = "El estómago rugiente",
+    },
+    [84439] = {
+        name = "Kaja'Conclusiones",
+    },
+    [84621] = {
+        name = "Espuelas de escudero",
+    },
+    [84667] = {
+        name = "El G.O.L.E.M. del progreso",
+    },
+    [84672] = {
+        name = "Tratamiento de residuos",
+    },
+    [84673] = {
+        name = "El inventor más aceptable del mundo",
+    },
+    [84674] = {
+        name = "¡Al G.O.L.E.M. se le zafan las tuercas!",
+    },
+    [84675] = {
+        name = "Violencia en el desván",
+    },
+    [84683] = {
+        name = "Sumidos en problemas",
+    },
+    [84821] = {
+        name = "Estafermo biológico",
+    },
+    [84885] = {
+        name = "Trabajar para G.E.T.A.",
+    },
+    [84891] = {
+        name = "Rata radioactiva para G.E.T.A.",
+    },
+    [84892] = {
+        name = "Cocodriliano para G.E.T.A.",
+    },
+    [84893] = {
+        name = "El Capitán para G.E.T.A.",
+    },
+    [85174] = {
+        name = "Manos a la obra",
+    },
+    [85409] = {
+        name = "Para soplones, moretones",
+    },
+    [85410] = {
+        name = "La gran sombra de Minahonda",
+    },
+    [85438] = {
+        name = "O si no...",
+    },
+    [85444] = {
+        name = "La familia se elige",
+    },
+    [85449] = {
+        name = "Cambio de fase",
+    },
+    [85450] = {
+        name = "Plan de evacuación",
+    },
+    [85562] = {
+        name = "Más resilientes que nunca",
+    },
+    [85711] = {
+        name = "Comentarios no solicitados",
+    },
+    [85724] = {
+        name = "Expulsa a los invasores",
+    },
+    [85780] = {
+        name = "Justo donde lo queremos",
+    },
+    [85941] = {
+        name = "Ajuste de actitud",
+    },
+    [86204] = {
+        name = "Liberación de Minahonda: La casa pierde",
+    },
+    [86271] = {
+        name = "Reposo de la Cordura",
+    },
+    [86272] = {
+        name = "Batalla contra la sangre negra",
+    },
+    [86273] = {
+        name = "Visita al taller",
+    },
+    [86274] = {
+        name = "Automatización al rescate",
+    },
+    [86275] = {
+        name = "Llamen al exterminador",
+    },
+    [86276] = {
+        name = "Puesta en práctica",
+    },
+    [86277] = {
+        name = "No más comida para gusanos",
+    },
+    [86297] = {
+        name = "El liderazgo dicta la moral",
+    },
+    [86408] = {
+        name = "Mi agujero en la pared",
+    },
+    [86417] = {
+        name = "Todo listo",
+    },
+    [86575] = {
+        name = "Un cohete o dos",
+    },
+    [86697] = {
+        name = "Personal de limpieza",
+    },
+    [87008] = {
+        name = "Planificación de bodas amateur",
     },
 })
 ]])()

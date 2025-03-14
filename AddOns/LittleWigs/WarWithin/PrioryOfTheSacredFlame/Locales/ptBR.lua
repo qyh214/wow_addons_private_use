@@ -10,13 +10,21 @@ if L then
 	--L.taener_duelmal = "Taener Duelmal"
 	--L.arathi_knight = "Arathi Knight"
 	--L.arathi_footman = "Arathi Footman"
+	L.fervent_sharpshooter = "Atiradora de Elite Fervorosa"
+	L.war_lynx = "Lince de Guerra"
 	--L.devout_priest = "Devout Priest"
-	--L.fanatical_mage = "Fanatical Mage"
+	L.fanatical_conjuror = "Conjuradora Fanática"
 	--L.lightspawn = "Lightspawn"
 	L.ardent_paladin = "Paladino Ardente"
+	L.zealous_templar = "Templária Zelosa"
 	--L.risen_mage = "Risen Mage"
 	--L.sir_braunpyke = "Sir Braunpyke"
 
 	--L.baron_braunpyke_warmup_trigger = "They've served their purpose. Baron, demonstrate your worth."
 	--L.custom_on_autotalk_desc = "|cFFFF0000Requires Priest or Paladin.|r Automatically select the NPC dialog option that grants you the 'Blessing of the Sacred Flame' aura."
+end
+
+L = BigWigs:NewBossLocale("Baron Braunpyke", "ptBR")
+if L then
+	--L.charges = "%d charges"
 end

@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "플레이어와 보스 사이를 오가는 공허 구슬입니다."
 	L.ball_yell = "굴카와스 언고브 느조스."
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "공허 구슬 튕김"
 	L.bounce_desc = "구슬이 튕긴 횟수를 카운트합니다."
 

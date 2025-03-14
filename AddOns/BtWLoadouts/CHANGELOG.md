@@ -1,3 +1,42 @@
+# v1.20.9
+
+- Fixed an error switching specializations
+
+# v1.20.8
+
+- Updated for 11.1.0
+- Fixed a bug where adding Equipment Set tooltip lines could break other lines wrapping
+
+# v1.20.7
+
+- Updated for 11.0.7
+
+# v1.20.6
+
+- Fixed a issue showing some debug info
+
+# v1.20.5
+
+- Fixed error trying to get hero talents when unavailable
+- Fixed an issue trying to activate talent sets on characters below level 10
+
+# v1.20.4
+
+- Fixed an issue where Hero Talent trees would be considered active when there are still points available
+
+# v1.20.3
+
+- Updated for 11.0.5
+
+# v1.20.2
+
+- Fixed missing Dracthyr and Earthern from the race restrictions
+
+# v1.20.1
+
+- Updated the maximum width of the talent pane
+- Updated the Hero Talents pane to no longer allowed horizontal resizing
+
 # v1.20.0
 
 - Added support for instance and difficulty filtering in the conditions sidebar

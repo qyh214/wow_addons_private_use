@@ -123,8 +123,17 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225454] = {
         name = "Garde-paix Hektare",
     },
+    [225481] = {
+        name = "Gélanaute Kazzandra",
+    },
+    [225500] = {
+        name = "Grimla Pétimanche",
+    },
     [225555] = {
         name = "Gris-gris",
+    },
+    [225571] = {
+        name = "Renzik \"le kriss\"",
     },
     [225582] = {
         name = "Contremaîtresse Duinth",
@@ -135,8 +144,20 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225608] = {
         name = "Prospera Grincerouage",
     },
+    [225669] = {
+        name = "Alleria Coursevent",
+    },
+    [225756] = {
+        name = "Monte Gazleu",
+    },
     [226255] = {
         name = "Ciboulette",
+    },
+    [226569] = {
+        name = "Snap Graissevelin",
+    },
+    [226728] = {
+        name = "Humphrey Court-gosier",
     },
     [226750] = {
         name = "Etterca l'assermentée à Freya",
@@ -149,6 +170,30 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [227222] = {
         name = "Ysabel Luisegaard",
+    },
+    [228158] = {
+        name = "Tirenouille",
+    },
+    [228286] = {
+        name = "Skedgit Cendrepan",
+    },
+    [229236] = {
+        name = "Monte Gazleu",
+    },
+    [230554] = {
+        name = "Vieux Lowe",
+    },
+    [230841] = {
+        name = "Le Chevalier Vert-de-gras",
+    },
+    [233235] = {
+        name = "Gerry Crassejabot",
+    },
+    [233420] = {
+        name = "Benny Roquettoie",
+    },
+    [233482] = {
+        name = "Monte Gazleu",
     },
 })
 ]])()

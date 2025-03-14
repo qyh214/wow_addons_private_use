@@ -34,6 +34,7 @@ local HaveQuestData = HaveQuestData
 local isWorldQuest = QuestUtils_IsQuestWorldQuest
 local GetQuestInfoByQuestID = C_TaskQuest.GetQuestInfoByQuestID
 local GetQuestTimeLeftMinutes = C_TaskQuest.GetQuestTimeLeftMinutes
+local GetQuestsForPlayerByMapID = C_TaskQuest.GetQuestsForPlayerByMapID or C_TaskQuest.GetQuestsOnMap
 
 local _
 
@@ -231,6 +232,9 @@ function WorldQuestTracker:OnInit()
 	for hubMapID, defaultScale in pairs(WorldQuestTracker.MapData.HubMapIconsScale) do
 		if (not WorldQuestTracker.db.profile.world_map_hubscale[hubMapID]) then
 			WorldQuestTracker.db.profile.world_map_hubscale[hubMapID] = defaultScale
+		end
+		if (WorldQuestTracker.db.profile.world_map_hubenabled[hubMapID] == nil) then
+			WorldQuestTracker.db.profile.world_map_hubenabled[hubMapID] = true
 		end
 	end
 
@@ -505,7 +509,7 @@ function WorldQuestTracker:OnInit()
 			WorldQuestTracker.RemoveQuestFromCache(questID)
 
 			if (isWorldQuest(questID)) then --wait, is this inception?
-				local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData (questID)
+				local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData (questID)
 				local questHistory = WorldQuestTracker.db.profile.history
 
 				--check if the map is opened in the player screen
@@ -1095,12 +1099,12 @@ function SlashCmdList.WQTRACKER (msg, editbox)
 			WorldQuestTracker:Msg("Character level too low for shadowlands, minimum is 51 for alts.")
 		end
 
-		local bastionQuests = C_TaskQuest.GetQuestsForPlayerByMapID(1533, 1533)
+		local bastionQuests = GetQuestsForPlayerByMapID(1533, 1533)
 		WorldQuestTracker:Msg("Finding quests on Bastion Map")
 		if (bastionQuests and type(bastionQuests) == "table") then
 			WorldQuestTracker:Msg("Found quests, amount:", #bastionQuests)
 		else
-			WorldQuestTracker:Msg("Blizzard's GetQuestsForPlayerByMapID() returned invalid data.")
+			WorldQuestTracker:Msg("Blizzard's GetQuestsOnMap() returned invalid data.")
 		end
 
 	elseif (msg == "debug") then
@@ -1130,7 +1134,7 @@ function SlashCmdList.WQTRACKER (msg, editbox)
 			tinsert (info, "Name: " .. (widget.GetName and widget:GetName() or "-No Name-"))
 
 			if (widget.questID) then
-				local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData (widget.questID)
+				local title, factionID, tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex, allowDisplayPastCritical, gold, goldFormated, rewardName, rewardTexture, numRewardItems, itemName, itemTexture, itemLevel, quantity, quality, isUsable, itemID, isArtifact, artifactPower, isStackable, stackAmount = WorldQuestTracker.GetOrLoadQuestData (widget.questID)
 				tinsert (info, "QuestID: " .. widget.questID .. " Quest Name: " .. (title or "-No Name-"))
 			else
 				tinsert (info, "QuestID: no questID found")

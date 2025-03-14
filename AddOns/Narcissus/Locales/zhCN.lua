@@ -73,11 +73,19 @@ L["Minimap Tooltip Module Panel"] = "|cffffffff显示组件面板";
 L["Minimap Tooltip Right Click"] = "右键";
 L["Minimap Tooltip Shift Left Click"] = "Shift + 左键";
 L["Minimap Tooltip Shift Right Click"] = "Shift + 右键";
-L["Minimap Tooltip Hide Button"] = "|cffffffff隐藏此按钮|r"
-L["Minimap Tooltip Middle Button"] = "|CFFFF1000中键 |cffffffff重置相机参数";
+L["Minimap Tooltip Hide Button"] = "隐藏此按钮"
+L["Minimap Tooltip Middle Button"] = "|CFFFF1000中键 |cffffffff重置摄像机参数";
 L["Minimap Tooltip Set Scale"] = "设置缩放: |cffffffff/narci [有效范围 0.8~1.2]";
+L["MinimapButton Enable Instruction"] = "|cffffd100已隐藏Narcissus小地图按钮。你可以输入以下命令来重新启用它：|r |cffffffff/narci minimap|r";
+L["MinimapButton Reenabled"] = "|cffffd100你已启用Narcissus小地图按钮。|r";
+L["MinimapButton LibDBIcon"] = "使用LibDBIcon";
+L["MinimapButton LibDBIcon Desc"] = "使用LibDBIcon来创建小地图按钮。\n你可以看见此选项因为你已安装LibDBIcon或植入了这个库的插件。";
+L["MinimapButton LibDBIcon Hide"] = "隐藏按钮";
 L["Corrupted Item Parser"] = "|cffffffff打开腐蚀物品链接解析器|r";
-L["Toggle Dressing Room"] = "|cffffffff打开"..DRESSUP_FRAME.."|r";
+L["Toggle Dressing Room"] = "|cffffffff打开试衣间|r";
+L["Reset Camera"] = "重置摄像机参数";
+L["Character UI"] = "角色界面";
+L["Module Menu"] = "模块菜单";
 
 L["Layout"] = "布局";
 L["Symmetry"] = "对称";
@@ -113,6 +121,8 @@ L["Double Tap Description"] = "连按两下打开角色面板的快捷键来打�
 L["Override"] = "是否覆盖";
 L["Invalid Key"] = "无效的组合键";
 L["Minimap Button"] = "小地图按钮";
+L["Show Minimap Button"] = "显示小地图按钮";
+L["Add To AddOn Compartment"] = "加入到插件数字按钮里";
 L["Shortcuts"] = "快捷方式";
 L["Image Filter"] = "滤镜";
 L["Image Filter Description"] = "除暗角以外的所有滤镜都会在幻化模式被暂时禁用。";
@@ -171,7 +181,7 @@ L["Interactive Area"] = "交互区域";
 L["Use Bust Shot"] = "使用半身像";
 L["Use Escape Button"] = "按下|cffffdd10(Esc)|r键来退出角色界面。";
 L["Use Escape Button Description"] = "你也可以点击隐藏在屏幕右上角的X按钮来退出。";
-L["Show Module Panel Gesture"] = "鼠标悬停时显示模块面板";
+L["Show Module Panel Gesture"] = "鼠标悬停时显示模块菜单";
 L["Independent Minimap Button"] = "不受其他插件控制";
 L["AFK Screen"] = "AFK画面";
 L["Keep Standing"] = "保持站立";
@@ -315,7 +325,13 @@ L["Add to MogIt Wishlist"] = "加入MogIt愿望清单";
 L["Show Taint Solution"] = "如何避免此问题？";
 L["Taint Solution Step1"] = "1.重载界面。";
 L["Taint Solution Step2"] = "2."..NARCI_MODIFIER_CONTROL.."+左键点击物品来打开试衣间。";
+L["Switch Form To Visage"] = "切换到|cffffffff幻容|r形态";
+L["Switch Form To Dracthyr"] = "切换到|cffffffff龙希尔|r形态";
+L["Switch Form To Worgen"] = "切换到|cffffffff狼|r形态";
+L["Switch Form To Human"] = "切换到|cffffffff人|r形态";
 L["InGame Command"] = "游戏内命令";
+L["Hide Player Items"] = "隐藏玩家装备";
+L["Hide Player Items Tooltip"] = "移除不属于此套装的装备。";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -667,11 +683,13 @@ L["Perks Program See Wares"] = "显示商品";
 L["Perks Program No Cache Alert"] = "与商栈商人交谈以获取本月的商品列表。";
 L["Perks Program Using Cache Alert"] = "正在使用你上次访问商栈时的数据。价格信息有可能不准确。";
 L["Modify Default Pose"] = "更改默认动作";   --Change the default pose/animation/camera yaw when viewing transmog items
+L["Modify Default Pose Tooltip"] = "勾选此选项将默认动画改为“站立”，并调整人物的面向来更清晰地展示武器外观。";
 L["Include Header"] = "包含物品：";  --The transmog set includes...
 L["Auto Try On All Items"] = "自动试穿整套物品";
 L["Full Set Cost"] = "整套物品价格";   --Purchasing the full set will cost you x Trader's Tender
 L["You Will Receive One Item"] = "你将获得|cffffffff一件|r物品：";
 L["Format Item Belongs To Set"] = "这件物品属于套装|cffffffff[%s]|r";
+L["Default Animation"] = "默认动画";
 
 
 --Quest--
@@ -736,6 +754,7 @@ L["Loadout Save Failure Incomplete Choices"] = "|cffff4800没有选够足够的�
 L["Loadout Save Failure Dupe Loadout Format"] = "|cffff4800此方案与|r%s相同";
 L["Loadout Save Failure Dupe Name Format"] = "|cffff4800方案名称重复|r";
 L["Loadout Save Failure No Name"] = "|cffff4800请为方案命名|r";
+L["Empty Socket"] = "空插槽";
 
 L["Format Equipping Progress"] = "正在装备 %d/%d";
 L["Format Click Times To Equip Singular"] = "点击 |cff19ff19%d|r 次以装备";
@@ -743,3 +762,10 @@ L["Format Click Times To Equip Plural"] = "点击 |cff19ff19%d|r 次以装备"; 
 L["Format Free Up Bag Slot"] = "背包中需腾出%d个格子";
 L["Format Number Items Selected"] = "%d 已选择";
 L["Format Gem Slot Stat Budget"] = "在 %s 中的宝石只有 %s%% 的效果"  --e.g. Gems in trinket are 75% effective
+
+
+--Game Pad--
+L["GamePad Select"] = "选择";
+L["GamePad Cancel"] = "取消";
+L["GamePad Use"] = "使用";
+L["GamePad Equip"] = "装备";

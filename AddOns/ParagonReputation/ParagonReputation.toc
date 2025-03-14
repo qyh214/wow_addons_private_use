@@ -1,12 +1,23 @@
-## Interface: 110002
+## Interface: 110100
 ## Title: |cff0088eeParagon|r Reputation
 ## Author: |cffabd473Fail|r |cffff4000US-Ragnaros|r
-## Version: 1.57
+## Version: 1.60
 ## Notes: Better visualization of Paragon Factions on the Reputation Frame.
 ## IconTexture: 3753261
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: ParagonReputationDB
+## Category: User Interface
+## Category-deDE: Benutzerinterface
+## Category-esES: Interfaz de usuario
+## Category-esMX: Interfaz de usuario
+## Category-frFR: Interface utilisateur
+## Category-itIT: Interfaccia utente
+## Category-koKR: 사용자 인터페이스
+## Category-ptBR: Interface do usuário
+## Category-ruRU: Интерфейс пользователя
+## Category-zhCN: 用户界面
+## Category-zhTW: 使用者介面
 
 data.lua
 localization.lua

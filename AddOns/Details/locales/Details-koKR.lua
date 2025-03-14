@@ -711,6 +711,8 @@ L["STRING_OPTIONS_EXTERNALS_TITLE"] = "외부 위젯"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "여러 외부 위젯의 작동 방법을 조절하는 옵션입니다."
 L["STRING_OPTIONS_GENERAL"] = "일반 설정"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "일반:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "\"Space Between Windows\""
 L["STRING_OPTIONS_HIDE_ICON"] = "아이콘 숨기기"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = [=[활성화하면 선택한 디스플레이를 나타내는 아이콘을 표시하지 않습니다.
 

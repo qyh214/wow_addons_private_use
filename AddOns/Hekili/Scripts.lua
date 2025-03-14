@@ -221,7 +221,7 @@ local function HandleDeprecatedOperators( str, opStr, prefix  )
                 local char = right:sub(i, i)
 
                 if char == "(" then
-                    i = i + right:sub( i ):match("^(%b())" ):len()
+                    i = i + right:sub( i ):match( "^(%b())" ):len()
                 elseif mathBreak[char] or char == ")" then
                     eos = i - 1
                     break
@@ -439,29 +439,31 @@ do
     end
 
     local timely = {
-        { "^(d?e?buff%.[a-z0-9_]+)%.down$"     , "%1.remains"      },
-        { "^(dot%.[a-z0-9_]+)%.down$"          , "%1.remains"      },
-        { "^!?(d?e?buff%.[a-z0-9_]+)%.up$"     , "%1.remains"      },
-        { "^!?(dot%.[a-z0-9_]+)%.up$"          , "%1.remains"      },
-        { "^!?(d?e?buff%.[a-z0-9_]+)%.react$"  , "%1.remains"      },
-        { "^!?(dot%.[a-z0-9_]+)%.react$"       , "%1.remains"      },
-        { "^!?(d?e?buff%.[a-z0-9_]+)%.ticking$", "%1.remains"      },
-        { "^!?(dot%.[a-z0-9_]+)%.ticking$"     , "%1.remains"      },
-        { "^!?(d?e?buff%.[a-z0-9_]+)%.remains$", "%1.remains"      },
-        { "^!?ticking"                         , "remains"         },
-        { "^!?remains$"                        , "remains"         },
-        { "^!?up$"                              , "remains"         },
-        { "^down$"                             , "remains"         },
-        { "^refreshable$"                      , "time_to_refresh" },
-        { "^time>=?(.-)$"                      , "0.01+%1-time"    },
+        { "^(d?e?buff%.[a-z0-9_]+)%.down$"          , "%1.remains"                        },
+        { "^(dot%.[a-z0-9_]+)%.down$"               , "%1.remains"                        },
+        { "^!?(d?e?buff%.[a-z0-9_]+)%.up$"          , "%1.remains"                        },
+        { "^!?(dot%.[a-z0-9_]+)%.up$"               , "%1.remains"                        },
+        { "^!?(d?e?buff%.[a-z0-9_]+)%.react$"       , "%1.remains"                        },
+        { "^!?(dot%.[a-z0-9_]+)%.react$"            , "%1.remains"                        },
+        { "^!?(d?e?buff%.[a-z0-9_]+)%.ticking$"     , "%1.remains"                        },
+        { "^!?(dot%.[a-z0-9_]+)%.ticking$"          , "%1.remains"                        },
+        { "^!?(d?e?buff%.[a-z0-9_]+)%.remains$"     , "%1.remains"                        },
+        { "^!?ticking"                              , "remains"                           },
+        { "^!?remains$"                             , "remains"                           },
+        { "^!?up$"                                  , "remains"                           },
+        { "^down$"                                  , "remains"                           },
+        { "^refreshable$"                           , "time_to_refresh"                   },
+        { "^buff%.([a-z0-9_]+)%.refreshable$"       , "buff.%1.time_to_refresh"           },
+        { "^debuff%.([a-z0-9_]+)%.refreshable$"     , "debuff.%1.time_to_refresh"         },
+        { "^dot%.([a-z0-9_]+)%.refreshable$"        , "debuff.%1.time_to_refresh"         },
 
-        { "^gcd.remains$"            , "gcd.remains"      },
-        { "^gcd.remains<?=(.+)$"     , "gcd.remains-%1"   },
-        { "^swing.([a-z_]+).remains$", "swing.%1.remains" },
-
-        { "^(.-)%.deficit<=?(.-)$"         , "0.01+%1.timeTo(%1.max-(%2))" },
-        { "^(.-)%.deficit>=?(.-)$"         , "0.01+%1.timeTo(%1.max-(%2))" },
-        { "^(.-)%.percent[<>=]+(.-)$"      , "0.01+%1.timeTo(%1.max*(%2/100))" },
+        { "^time>=?(.-)$"                           , "0.01+%1-time"                      },
+        { "^gcd.remains$"                           , "gcd.remains"                       },
+        { "^gcd.remains<?=(.+)$"                    , "gcd.remains-%1"                    },
+        { "^swing.([a-z_]+).remains$"               , "swing.%1.remains"                  },
+        { "^(.-)%.deficit<=?(.-)$"                  , "0.01+%1.timeTo(%1.max-(%2))"       },
+        { "^(.-)%.deficit>=?(.-)$"                  , "0.01+%1.timeTo(%1.max-(%2))"       },
+        { "^target%.health%.pe?r?ce?n?t[<>=]+(.-)$" , "0.01+target['time_to_pct_' .. %1]" },
 
         { "^cooldown%.([a-z0-9_]+)%.ready$"                      , "cooldown.%1.remains"                      },
         { "^cooldown%.([a-z0-9_]+)%.up$"                         , "cooldown.%1.remains"                      },
@@ -497,6 +499,8 @@ do
         { "^!?(dot%.[a-z0-9_]+)%.ss_buffed$"        , "%1.remains"                                                     }, -- Assassination
         { "^dot%.([a-z0-9_]+).haste_pct_next_tick$" , "0.01+query_time+(dot.%1.last_tick+dot.%1.tick_time)-query_time" }, -- Assassination
         { "^!?stealthed.(.-)_remains<=?(.-)$"       , "stealthed.%1_remains-%2"                                        },
+        { "^buff.envenom.max_stack_remains$"        , "buff.envenom.max_stack_remains"                                 },
+        { "^buff.envenom.max_stack_remains<=?(.-)$" , "0.1+buff.envenom.max_stack_remains-(%1)"                        },
         { "^!?stealthed%.(normal)$"                 , "stealthed.%1_remains"                                          },
         { "^!?stealthed%.(vanish)$"                 , "stealthed.%1_remains"                                          },
         { "^!?stealthed%.(mantle)$"                 , "stealthed.%1_remains"                                          },
@@ -517,8 +521,10 @@ do
         { "^!?time_to_hpg[<=]=?(.-)$" , "time_to_hpg-%1"       }, -- Retribution Paladin
         { "^!?consecration.up"        , "consecration.remains" }, -- Prot        Paladin
 
-        { "^!?contagion<=?(.-)"  , "contagion-%1"           }, -- Affliction Warlock
-        { "^time_to_imps%.(.+)$" , "time_to_imps[%1]"       }, -- Demo       Warlock
+        { "^!?contagion<=?(.-)"  , "contagion-%1"                 }, -- Affliction Warlock
+        { "^time_to_imps%.(.+)$" , "time_to_imps[%1]"             }, -- Demo Warlock
+        { "^!?diabolic_ritual$"  , "buff.diabolic_ritual.remains" }, -- Warlocks
+        { "^!?demonic_art$"      , "buff.demonic_art.remains"     },
 
         { "^active_bt_triggers$"       , "time_to_bt_triggers(0)"    }, -- Feral Druid w/ Bloodtalons.
         { "^active_bt_triggers<?=0$"   , "time_to_bt_triggers(0)"    }, -- Feral Druid w/ Bloodtalons.
@@ -530,6 +536,7 @@ do
 
         { "^!?fiery_brand_dot_primary_remains$", "fiery_brand_dot_primary_remains" }, -- Vengeance
         { "^!?fiery_brand_dot_primary_ticking$", "fiery_brand_dot_primary_remains" }, -- Vengeance
+
 
         { "^!?variable%.([a-z0-9_]+)$", "safenum(variable.%1)"                        },
         { "^!?variable%.([a-z0-9_]+)<=?(.-)$", "0.01+%2-safenum(variable.%1)"         },
@@ -628,7 +635,7 @@ do
             for key in pairs( GetResourceInfo() ) do
                 if lhs == key then
                     if comp == ">" then
-                        return true, "0.01 + " .. lhs .. ".timeTo( " .. rhs .. " )"
+                        return true, "0.01 + " .. lhs .. ".timeTo( " .. rhs .. " ), " .. lhs .. ".timeTo( 1 + ( " .. rhs .. " ) )"
                     elseif moreOrEqual[ comp ] then
                         return true, lhs .. ".timeTo( " .. rhs .. " )"
                     end
@@ -636,16 +643,32 @@ do
 
                 if rhs == key then
                     if comp == "<" then
-                        return true, "0.01 + " .. rhs .. ".timeTo( " .. lhs .. " )"
+                        return true, "0.01 + " .. rhs .. ".timeTo( " .. lhs .. " ), " .. rhs .. ".timeTo( 1 + ( " .. lhs .. " ) )"
                     elseif lessOrEqual[ comp ] then
                         return true, rhs .. ".timeTo( " .. lhs .. " )"
+                    end
+                end
+
+                if lhs == ( key .. ".percent" ) or lhs == ( key .. ".pct" ) then
+                    if comp == ">" then
+                        return true, "0.01 + " .. key .. ".timeTo( " .. key .. ".max * ( " .. rhs .. " / 100 ) ), " .. key .. ".timeTo( 1 + " .. key .. ".max * ( ( " .. rhs .. " ) / 100 ) )"
+                    elseif moreOrEqual[ comp ] then
+                        return true, key .. ".timeTo( " .. key .. ".max * ( " .. rhs .. " / 100 ) ), " .. key .. ".timeTo( 1 + " .. key .. ".max * ( ( " .. rhs .. " ) / 100 ) )"
+                    end
+                end
+
+                if rhs == ( key .. ".percent" ) or rhs == ( key .. ".pct" ) then
+                    if comp == "<" then
+                        return true, "0.01 + " .. key .. ".timeTo( " .. key .. ".max * ( " .. lhs .. " / 100 ) ), " .. key .. ".timeTo( 1 + " .. key .. ".max * ( ( " .. lhs .. " ) / 100 ) )"
+                    elseif lessOrEqual[ comp ] then
+                        return true, key .. ".timeTo( " .. key .. ".max * ( " .. lhs .. " / 100 ) ), " .. key .. ".timeTo( 1 + " .. key .. ".max * ( ( " .. lhs .. " ) / 100 ) )"
                     end
                 end
             end
 
             if lhs == "rune" then
                 if comp == ">" then
-                    return true, "0.01 + rune.timeTo( " .. rhs .. " )"
+                    return true, "0.01 + rune.timeTo( " .. rhs .. " ), rune.timeTo( 1 + ( " .. rhs .. " ) )"
                 elseif moreOrEqual[ comp ] then
                     return true, "rune.timeTo( " .. rhs .. " )"
                 end
@@ -653,7 +676,7 @@ do
 
             if rhs == "rune" then
                 if comp == "<" then
-                    return true, "0.01 + rune.timeTo( " .. lhs .. " )"
+                    return true, "0.01 + rune.timeTo( " .. lhs .. " ), rune.timeTo( 1 + ( " .. lhs .. " ) )"
                 elseif lessOrEqual[ comp ] then
                     return true, "rune.timeTo( " .. lhs .. " )"
                 end
@@ -1176,6 +1199,7 @@ local newModifiers = {
     default = 'raw',
     empower_to = 'raw',
     for_next = 'raw',
+    extra_amount = 'raw',
     line_cd = 'raw',
     max_cycle_targets = 'raw',
     sec = 'raw',
@@ -1283,6 +1307,7 @@ local function ConvertScript( node, hasModifiers, header )
     state.scriptID = header
 
     state.this_action = node.action
+    state.this_list = header:match( "^(.-):" ) or "default"
 
     local t = node.criteria and node.criteria ~= "" and node.criteria
     local clean = SimToLua( t )
@@ -1478,7 +1503,9 @@ scripts.ConvertScript = ConvertScript
 
 function scripts:CheckScript( scriptID, action, elem )
     local prev_action = state.this_action
-    if action then state.this_action = action end
+    if action then
+        state.this_action = action
+    end
 
     local script = self.DB[ scriptID ]
 
@@ -1629,7 +1656,7 @@ function scripts:LoadScripts()
                     local script = ConvertScript( data, true, scriptID )
 
                     if script.Error then
-                        Hekili:Error( "Error in " .. scriptID .. " conditions:  " .. script.Error )
+                        Hekili:Error( "Error in " .. scriptID .. " conditions:  " .. ( script.rs or "null" ) .. "\n\n" .. script.Error )
                     end
 
                     script.action = data.action
@@ -1849,7 +1876,7 @@ function Hekili:LoadScript( pack, list, id )
     local script = ConvertScript( data, true, scriptID )
 
     if script.Error then
-        Hekili:Error( "Error in " .. scriptID .. " conditions:  " .. script.SimC .. "\n    " .. script.Error )
+        Hekili:Error( "Error in " .. scriptID .. " conditions:  " .. ( script.rs or "null" ) .. "\n\n" .. script.Error )
     end
 
     if data.action == "call_action_list" or data.action == "run_action_list" then

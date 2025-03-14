@@ -22,7 +22,7 @@ end
 local RoleIconTextures = {
 	TANK = W.Media.Icons.sunUITank,
 	HEALER = W.Media.Icons.sunUIHealer,
-	DAMAGER = W.Media.Icons.sunUIDPS
+	DAMAGER = W.Media.Icons.sunUIDPS,
 }
 
 local function GetIconString(role, mode)

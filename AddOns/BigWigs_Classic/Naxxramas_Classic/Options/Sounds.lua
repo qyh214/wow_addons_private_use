@@ -42,6 +42,7 @@ BigWigs:AddSounds("Loatheb", {
 	[29204] = "warning",
 	[29234] = "info",
 	[30281] = "alert",
+	[1225419] = "long",
 })
 
 BigWigs:AddSounds("Anub'Rekhan", {

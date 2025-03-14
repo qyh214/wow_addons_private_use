@@ -209,11 +209,17 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
             elseif WorldMapFrame:GetMapID() == 2274 then
                 if ns.Addon.db.profile.showContinentKhazAlgar then
                     ns.Addon.db.profile.showContinentKhazAlgar = false
+                        WorldMapFrame:Hide()
+                        OpenWorldMap(uiMapID)
+                        WorldMapFrame:SetMapID(2274)
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Khaz Algar"], L["icons"], "|cffff0000" .. L["are hidden"])
                     end
                 else
                     ns.Addon.db.profile.showContinentKhazAlgar = true
+                    WorldMapFrame:Hide()
+                    OpenWorldMap(uiMapID)
+                    WorldMapFrame:SetMapID(2274)
                     if ns.Addon.db.profile.MmbWmbChatMessage then
                         print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. "|cffffff00 ".. L["Continent map"], L["Khaz Algar"], L["icons"], "|cff00ff00" .. L["are shown"])
                     end
@@ -233,7 +239,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
             or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
             or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
             or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-            or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500)
+            or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
         then
         
             if not ns.Addon.db.profile.activate.DungeonMap then
@@ -251,7 +257,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         end
 
         -- Zones without Sync function
-        if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 5 or info.mapType == 6) then
+        if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
             --Kalimdor
             if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
                 or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
@@ -429,7 +435,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             --Khaz Algar
-            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 or WorldMapFrame:GetMapID() == 2216)
+            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
+                or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
             then
                 if not ns.Addon.db.profile.showZoneKhazAlgar then
                     ns.Addon.db.profile.showZoneKhazAlgar = true
@@ -446,7 +453,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         end
 
         -- Zones Sync function
-        if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 5 or info.mapType == 6) then
+        if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3  or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
             --Kalimdor
             if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
                 or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
@@ -624,7 +631,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
                     end
                 end
             -- Khaz Algar    
-            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 or WorldMapFrame:GetMapID() == 2216) 
+            elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213
+                or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346) 
             then
                 if not ns.Addon.db.profile.showZoneKhazAlgar then
                     ns.Addon.db.profile.showZoneKhazAlgar = true
@@ -763,7 +771,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
     end
        
     -- Zones without Sync function
-    if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 5 or info.mapType == 6) then
+    if not ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
         --Kalimdor
         if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
             or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
@@ -842,7 +850,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Dragon Isles"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
-        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 or WorldMapFrame:GetMapID() == 2216)
+        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
+            or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["Khaz Algar"] .. " " .. L["Zones"] .. "-" .. BRAWL_TOOLTIP_MAPS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
@@ -850,7 +859,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
     end
 
     -- Zones Sync function
-    if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 5 or info.mapType == 6) then
+    if ns.Addon.db.profile.activate.SyncZoneAndMinimap and (info.mapType == 3 or info.mapType == 4 or info.mapType == 5 or info.mapType == 6) then
         --Kalimdor
         if (WorldMapFrame:GetMapID() == 1 or WorldMapFrame:GetMapID() == 7 or WorldMapFrame:GetMapID() == 10 or WorldMapFrame:GetMapID() == 11 or WorldMapFrame:GetMapID() == 57 or WorldMapFrame:GetMapID() == 62 
             or WorldMapFrame:GetMapID() == 63 or WorldMapFrame:GetMapID() == 64 or WorldMapFrame:GetMapID() == 65 or WorldMapFrame:GetMapID() == 66 or WorldMapFrame:GetMapID() == 67 or WorldMapFrame:GetMapID() == 68 
@@ -929,7 +938,8 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Dragon Isles"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
         --Khaz Algar
-        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 or WorldMapFrame:GetMapID() == 2216)
+        elseif (WorldMapFrame:GetMapID() == 2248 or WorldMapFrame:GetMapID() == 2214 or WorldMapFrame:GetMapID() == 2215 or WorldMapFrame:GetMapID() == 2255 or WorldMapFrame:GetMapID() == 2256 or WorldMapFrame:GetMapID() == 2213 
+            or WorldMapFrame:GetMapID() == 2216 or WorldMapFrame:GetMapID() == 2369 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346)
         then
             GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. L["synchronizes"] .. " " .. L["Khaz Algar"] .. " " .. L["Zones"] .. " & " .. MINIMAP_LABEL .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
             GameTooltip:Show()
@@ -947,7 +957,7 @@ local info = C_Map.GetMapInfo(WorldMapFrame:GetMapID())
         or WorldMapFrame:GetMapID() == 626 or WorldMapFrame:GetMapID() == 627 or WorldMapFrame:GetMapID() == 628 or WorldMapFrame:GetMapID() == 629 or WorldMapFrame:GetMapID() == 1161
         or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670 or WorldMapFrame:GetMapID() == 1671 
         or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 407 or WorldMapFrame:GetMapID() == 2339 
-        or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500) 
+        or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 499 or WorldMapFrame:GetMapID() == 500 or WorldMapFrame:GetMapID() == 2322 or WorldMapFrame:GetMapID() == 2346) 
     then
         GameTooltip:AddLine(HELPFRAME_REPORT_PLAYER_RIGHT_CLICK .. " => " .. "|cffff0000".. DUNGEONS .. "|cffffcc00" .. " " .. L["icons"] .. " " .. SHOW .. " / " .. HIDE,1,1,1)
         GameTooltip:Show()

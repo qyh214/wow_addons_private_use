@@ -41,10 +41,10 @@ function ns.rewards.Item:TooltipLabelColor()
     return self:super('TooltipLabelColor')
 end
 function ns.rewards.Item:Icon() return (select(5, C_Item.GetItemInfoInstant(self.id))) end
-function ns.rewards.Item:Obtained(for_tooltip, ...)
-    local result = self:super("Obtained", for_tooltip, ...)
+function ns.rewards.Item:Obtained(ignore_notable, ...)
+    local result = self:super("Obtained", ignore_notable, ...)
     if ns.CLASSICERA then return result and GetItemCount(self.id, true) > 0 end
-    if not result and (for_tooltip or ns.db.transmog_notable) and self.CanLearnAppearance(self.id) then
+    if not result and (ignore_notable or ns.db.transmog_notable) and self.CanLearnAppearance(self.id) then
         return self.HasAppearance(self.id, ns.db.transmog_specific)
     end
     return result

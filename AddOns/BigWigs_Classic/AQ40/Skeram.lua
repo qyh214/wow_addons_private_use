@@ -29,7 +29,7 @@ end
 
 function mod:GetOptions()
 	return {
-		{785, "ICON"}, -- True Fulfillment
+		{785, "ICON", "SAY", "SAY_COUNTDOWN"}, -- True Fulfillment
 		20449, -- Teleport
 		26192, -- Arcane Explosion
 		747, -- Summon Images
@@ -63,10 +63,17 @@ do
 		self:TargetMessage(args.spellId, "yellow", args.destName, CL.mind_control)
 		self:TargetBar(args.spellId, 20, args.destName, CL.mind_control_short)
 		self:PrimaryIcon(args.spellId, args.destName)
+		if self:Me(args.destGUID) then
+			self:Say(args.spellId, CL.mind_control, nil, "Mind Control")
+			self:SayCountdown(args.spellId, 20, 8, 18)
+		end
 		self:PlaySound(args.spellId, "alert", nil, args.destName)
 	end
 	function mod:TrueFulfillmentRemoved(args)
 		self:StopBar(CL.mind_control_short, args.destName)
+		if self:Me(args.destGUID) then
+			self:CancelSayCountdown(args.spellId)
+		end
 		if args.destGUID == prevMindControl then
 			prevMindControl = nil
 			self:PrimaryIcon(args.spellId)

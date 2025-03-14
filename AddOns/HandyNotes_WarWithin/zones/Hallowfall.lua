@@ -121,8 +121,8 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         criteria=69695,
         quest=83298, -- questions trip 83300, 83301, 83302, 83303, 83304, 83305
         loot={
-                {225659, toy=true}, -- Arathi Book Collection
-                ns.rewards.Currency(ns.CURRENCY_ARATHI, 150),
+            {225659, toy=true}, -- Arathi Book Collection
+            ns.rewards.Currency(ns.CURRENCY_ARATHI, 150),
         },
         note="Answer riddles from {npc:221630:Ryfus Sacredpyr}; you need to find the books for {achievement:40622:Biblo Archivist} for the correct answers to appear",
         level=73, -- not to talk to him, but to get any of the books for answers...
@@ -148,6 +148,7 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         },
         level=75,
         note="Hanging from the cathedral",
+        vignette=6175,
     },
     [50061382] = { -- Lost Necklace
         criteria=69699,
@@ -213,54 +214,95 @@ ns.RegisterPoints(ns.HALLOWFALL, {
             206350, -- Radiant Remnant
             ns.rewards.Currency(ns.CURRENCY_RESONANCE, 5),
         },
-    },
-    [62013176] = {
-        label="Hillhelm Lunchbox",
-        quest=82996,
-        loot={
-            226019, -- Darkened Arathi Shoulderguards (cosmetic)
-            206350, -- Radiant Remnant
-            ns.rewards.Currency(ns.CURRENCY_RESONANCE, 5),
-        },
+        vignette=6537,
     },
     [56091455] = {
         label="Fisherman's Pouch",
         quest=81518,
-        loot={},
-        vignette=6103,
-    },
-    [65432715] = {
-        label="Surveyor's Box",
-        quest=34341,
         loot={
-            226019, -- Darkened Arathi Shoulderguards (cosmetic)
             206350, -- Radiant Remnant
             ns.rewards.Currency(ns.CURRENCY_RESONANCE, 3),
         },
-        vignette=6536,
+        vignette=6103,
     },
 })
 
 ns.RegisterPoints(ns.HALLOWFALL, {
-    [66561515] = {
+    [62013176] = {
+        label="Hillhelm Lunchbox",
+        quest=82996,
+        vignette=6352,
+    },
+    [65193399] = {
+        label="Hillhelm Lunchbox",
+        quest=82996,
+        vignette=6352,
+    },
+    [65432715] = {
+        label="Surveyor's Box",
+        quest=84341,
+        vignette=6536,
+    },
+    [64732948] = {
+        label="Harvest Box",
+        quest=80420,
+        vignette=6071,
+    },
+    [65652946] = {
+        label="Harvest Box",
+        quest=80420,
+        vignette=6071,
+    },
+    [64492879] = {
+        label="Fieldhand Stash",
+        quest=84337,
+        vignette=6533,
+    },
+}, {
+    loot={
+        226019, -- Darkened Arathi Shoulderguards (cosmetic)
+        206350, -- Radiant Remnant
+        ns.rewards.Currency(ns.CURRENCY_RESONANCE, 3),
+    },
+    note="Only visible with a light source ({item:211872:Patrol Torch}, {item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher}, etc)",
+    minimap=true, scale=0.9,
+    hide_before=ns.WORLDQUESTS,
+})
+
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [66561514] = {
         label="Captain Lancekat's Discretionary Funds",
-        quest=nil, -- 80337 popped near here?
+        quest=81612,
         path=66011863,
+        vignette=6108,
     },
-    [63073074] = {
+    [61633265] = { -- directly saw
         label="Farmhand Stash",
-        quest=nil,
+        quest=80590,
+        vignette=6092,
     },
-    [64903330] = {
+    [63073074] = { -- wowhead comments
+        label="Farmhand Stash",
+        quest=80590,
+        vignette=6092,
+    },
+    [64513159] = { -- directly saw the vignette for this one
         label="Old Rotting Crate",
-        quest=nil,
+        quest=84339,
+        vignette=6534,
+    },
+    [64903330] = { -- wowhead comments swear it's here
+        label="Old Rotting Crate",
+        quest=84339,
+        vignette=6534,
     },
 }, {
     loot={
         226016, -- Darkened Tabard of the Arathi (cosmetic)
     },
-    note="Only visible with a light source ({item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher})",
-    minimap=true,
+    note="Only visible with a light source ({item:211872:Patrol Torch}, {item:220756:Flickering Torch}, {item:217344:Sentry Flare Launcher}, etc)",
+    minimap=true, scale=0.9,
+    hide_before=ns.WORLDQUESTS,
 })
 
 ns.RegisterPoints(ns.HALLOWFALL, {
@@ -373,7 +415,7 @@ ns.RegisterPoints(ns.HALLOWFALL, {
     [69274372] = {criteria={69001, 69002},}, -- Moog, Iggy
     [63302940] = {criteria=7, note="Light the lesser keyflame"}, -- Nightclaw
     [63262811] = {criteria=8, note="Light the blooming keyflame"}, -- Shadowpouncer
-    [63792932] = {criteria=9, note="Light the blooming keyflame"}, -- Purrlock
+    [63792962] = {criteria=9, note="Light the blooming keyflame"}, -- Purrlock
     [61193054] = {criteria=10,}, -- Miral Murder-Mittens
     [64441857] = {criteria={11, 12},}, -- Fuzzy, Furball
     [61922081] = {criteria=13,}, -- Dander
@@ -381,6 +423,75 @@ ns.RegisterPoints(ns.HALLOWFALL, {
     achievement=40625,
     atlas="WildBattlePet", color={r=0.75, g=1, b=0},
     minimap=true,
+})
+
+-- Flamegard's Hope
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [43215177] = {
+        achievement=20594,
+        -- quest=79081, -- daily
+        atlas="GreenCross", minimap=true,
+        note="Use any healing ability on {npc:220225:Injured Soldier}, once a day.\nHealed today: {quest:79081:Tracking quest}",
+    },
+})
+
+-- Lost and Found
+local lostAndFound=function(data)
+    return {
+        achievement=40618,
+        criteria=data.criteria,
+        quest=data.quest,
+        label=("{item:%d} to {npc:%d}"):format(data.item, data.npc),
+        hide_before=ns.conditions.Item(data.item),
+        atlas="QuestBlob",
+    }
+end
+ns.RegisterPoints(ns.HALLOWFALL, {
+    -- From Time Lost (80678)
+    [65453223] = lostAndFound{item=219810, npc=215527, criteria=68932, quest=80681}, -- Broken Bracelet -> Keyrra Flamestonge
+    [43285544] = lostAndFound{item=219809, npc=218486, criteria=68933, quest=80679}, -- Plush Lynx -> Phillip Taversil
+    [43485173] = lostAndFound{item=219524, npc=217338, criteria=68934, quest=80680}, -- Tarnished Compass -> Grave Offering Location
+    -- From Time Found (82810)
+    [41643476] = lostAndFound{item=224266, npc=226051, criteria=68942, quest=82845}, -- Ivory Tinderbox -> Haverd Sunhart
+    [42355500] = lostAndFound{item=224267, npc=213145, criteria=68943, quest=82846}, -- Dented Spear -> Auralia Steelstrike
+    [43974971] = lostAndFound{item=224268, npc=217813, criteria=68945, quest=82849}, -- Filigreed Cleric -> Kiera Horth
+    -- From Time Borrowed (82813)
+    [43185018] = lostAndFound{item=224274, npc=220859, criteria=68935, quest=82815}, -- Sturdy Locket -> Amy Lychenstone (patrols)
+    [69254383] = lostAndFound{item=224273, npc=217609, criteria=68937, quest=82832}, -- Wooden Figure -> Barahl Lynflayme
+    [48423889] = lostAndFound{item=224272, npc=222813, criteria=68940, quest=82835}, -- Calcified Journal -> Lorel Ironglen
+})
+
+-- Mereldar Menace
+ns.RegisterPoints(ns.HALLOWFALL, {
+    [41895552] = {criteria={67121, 67122, 67123, 67124, 67125}}, -- Orphanage
+    [42265254] = {criteria={67126, 67127, 67128}}, -- Training Ground
+    [44245123] = {criteria={67129, 67130,}}, -- Steelstrike Residence
+}, {
+    achievement=40151,
+    label="{achievement:40151:Mereldar Menace}",
+    note="Find the tiny {npc:219916:Throw Rock Vehicle} on the ground",
+    texture=ns.atlas_texture("Professions_Tracking_Ore", {r=1, g=0.5, b=1}),
+    minimap=true,
+})
+ns.RegisterPoints(ns.HALLOWFALL, {
+    -- From Orphanage
+    [41845564] = {criteria=67121, note="From the Orphanage"}, -- Orphanage Window
+    [42545551] = {criteria=67122, note="From the Orphanage"}, -- Notice Board
+    [42455439] = {criteria=67123, note="From the Orphanage"}, -- Food Stall
+    [42355491] = {criteria=67124, note="From the Orphanage"}, -- Fountain
+    [42295439] = {criteria=67125, note="From the Orphanage"}, -- Spice Stall
+    -- From Training Ground
+    [42975268] = {criteria=67126, note="From the Training Ground"}, -- Light and Flame
+    [43025235] = {criteria=67127, note="From the Training Ground"}, -- Lamplighter Doorway
+    [41325296] = {criteria=67128, note="From the Training Ground"}, -- Barracks Doorway
+    -- From Steelstrike Residence
+    [43505078] = {criteria=67129, note="From the Steelstrike Residence"}, -- Holy Oil
+    [44685177] = {criteria=67130, note="From the Steelstrike Residence"}, -- Airship Drafting Board
+}, {
+    achievement=40151,
+    requires=ns.conditions.Vehicle(219916), -- Throwing Rock
+    atlas="XMarksTheSpot",
+    minimap=true, worldmap=false,
 })
 
 -- Rares
@@ -709,6 +820,7 @@ ns.RegisterPoints(ns.HALLOWFALL, {
         quest=82563,
         npc=206977, -- Disturbed Dirt (206978) > Fungus Growth (206980) > Fungus Mound (206981) > Fungal Mass (206993) > Parasidious
         loot={
+            ns.rewards.Currency(ns.CURRENCY_ARATHI, 150, {quest=84057}),
             221250, -- Creeping Lasher Machete
             221264, -- Fungarian Mystic's Cluster
             223005, -- String of Fungal Fruits

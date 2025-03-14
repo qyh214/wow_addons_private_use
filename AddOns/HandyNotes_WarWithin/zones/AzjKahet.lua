@@ -2,6 +2,10 @@ local myname, ns = ...
 
 --[[
 Notes:
+
+Anub'azal's pheromones (siegehold): spellid 430649, questid 81628
+Weaver's Azj-Kahet Pheromones (burrows): spellid 434977, questid 81625
+Nizrek's Azj-Kahet Pheromones (umbral bazar, skeins, burrows): spellid 434980, questid 81623
 ]]
 
 local addThreadsRep = function(amount, quest, loot, append)
@@ -18,9 +22,14 @@ ns.RegisterPoints(ns.AZJKAHET, {
     [34076105] = { -- Concealed Contraband
         criteria=70381,
         quest=82525,
-        loot=addThreadsRep(50, false, {}, true),
+        loot=addThreadsRep(50, false, {
+            220228, -- Quartz Growth
+            220237, -- Shining Amethyst Cluster
+            220224, -- Iridescent Integument
+        }, true),
         level=74,
         path={33846068, 33796026, 34015980, 34365949, 35555918},
+        vignette=6288,
     },
     [78623320] = { -- "Weaving Supplies"
         criteria=69643,
@@ -81,12 +90,13 @@ ns.RegisterPoints(ns.AZJKAHET, {
             224441, -- Weavercloth Bandage
         }, true),
         path={67462755, 66882761, 66692773, 66342805, 66142810, 65582772},
+        vignette=6285,
     },
 }, {
     achievement=40828,
     levels=true,
 })
-ns.RegisterPoints(2256, { -- Azj-Kahet Lower
+ns.RegisterPoints(ns.AZJKAHETLOWER, { -- Azj-Kahet Lower
     [62728795] = { -- Memory Cache (confirm lower)
         criteria=69615,
         quest=82520,
@@ -126,7 +136,7 @@ ns.RegisterPoints(ns.CITYOFTHREADS, {
 -- Itsy Bitsy Spider
 ns.RegisterPoints(ns.AZJKAHET, {
     -- [] = {criteria=68972,}, -- Webster (227217)
-    [55654395] = {criteria=68973,}, -- Spindle (216213) (this coord isn't giving me completion...)
+    [55654395] = {criteria=68973,}, -- Spindle (216213) (this coord isn't giving me completion... 44255678 did as 216217, but it's temporary while Spindle's a questgiver there)
     -- [] = {criteria=68974,}, -- Swift (226133 or 220666)
     -- [] = {criteria=68976,}, -- Ru'murh (...14 different npc ids)
     -- [] = {criteria=68977,}, -- Thimble (220568)
@@ -209,6 +219,33 @@ ns.RegisterPoints(ns.AZJKAHET, {
     label="{npc:227452:Another You}",
     note="Find {npc:227452:Another You} and tell it to go home. You may need to talk to the flight master nearby before it appears. It'll /whisper you when you're close.",
     texture=ns.atlas_texture("notoriety-32x32", {r=0, g=1, b=1}), minimap=true, levels=true,
+})
+
+-- Back to the Wall
+-- https://www.wowhead.com/achievement=40620/back-to-the-wall
+
+ns.RegisterPoints(ns.AZJKAHET, {
+    [65901335] = {},
+    [64951100] = {},
+    [65101058] = {},
+    [64241006] = {},
+    [65080784] = {},
+    [64880760] = {},
+    [64720438] = {},
+    [64740440] = {},
+    [61690791] = {},
+    [60280928] = {},
+    [60270939] = {},
+    [62000428] = {},
+    [61210398] = {},
+    [63060098] = {},
+    [63800073] = {},
+    [63880010] = {},
+    -- [48465780] = {}, -- the wowhead page says this, but I am skeptical
+}, {
+    achievement=40620,
+    note="Requires {quest:81965:Invasion Disruption} or {quest:82414:Special Assignment A Pound of Cure}. Respawns slowly.",
+    atlas="poi-soulspiritghost", minimap=true,
 })
 
 -- Rares
@@ -405,7 +442,7 @@ ns.RegisterPoints(ns.AZJKAHET, {
     levels=true,
 })
 
-ns.RegisterPoints(2256, { -- Azj-Kahet Lower
+ns.RegisterPoints(ns.AZJKAHETLOWER, { -- Azj-Kahet Lower
     [65688051] = { -- Harvester Qixt
         criteria=69667,
         quest=82036, -- 84079

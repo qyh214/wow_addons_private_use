@@ -10,7 +10,7 @@ mod:SetRespawnTime(30)
 mod:SetStage(1)
 mod:SetPrivateAuraSounds({
 	410966, -- Volcanic Heart
-	{407182, option = 407221}, -- Rushing Darkness
+	{407182, tooltip = 407221}, -- Rushing Darkness
 })
 
 --------------------------------------------------------------------------------

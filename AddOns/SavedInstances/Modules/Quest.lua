@@ -148,6 +148,20 @@ local _specialQuests = {
   [66388] = { name = L["Disturbed Dirt / Expedition Scout's Pack"] .. " - " .. C_Spell_GetSpellName(25229) }, -- Jewelcrafting
   [66389] = { name = L["Disturbed Dirt / Expedition Scout's Pack"] .. " - " .. C_Spell_GetSpellName(25229) }, -- Jewelcrafting
 
+  -- TWW
+  [81090] = { name = L["Alchemy Thaumaturgy"], daily = true }, -- Alchemy Thaumaturgy
+
+  -- TWW Algari Treatise
+  [83727] = { lid = 222550 }, -- Algari Treatise on Enchanting
+  [83728] = { lid = 222621 }, -- Algari Treatise on Engineering
+  [83729] = { lid = 222552 }, -- Algari Treatise on Herbalism
+  [83730] = { lid = 222548 }, -- Algari Treatise on Inscription
+  [83731] = { lid = 222551 }, -- Algari Treatise on Jewelcrafting
+  [83732] = { lid = 222549 }, -- Algari Treatise on Leatherworking
+  [83733] = { lid = 222553 }, -- Algari Treatise on Mining
+  [83734] = { lid = 222649 }, -- Algari Treatise on Skinning
+  [83735] = { lid = 222547 }, -- Algari Treatise on Tailoring
+
   -- Old Vanilla Bosses during Anniversary Event
   [47461] = { daily = true, name = L["Lord Kazzak"] }, -- Lord Kazzak
   [47462] = { daily = true, name = L["Azuregos"] }, -- Azuregos
@@ -483,6 +497,111 @@ local QuestExceptions = {
   [78821] = "Weekly", -- Blooming Dreamseeds
   [79226] = "Weekly", -- The Big Dig: Traitor's Rest
 
+  -- TWW
+  -- Lesser Keyflame
+  [76169] = "Weekly", -- Glow in the Dark
+  [76394] = "Weekly", -- Shadows of Flavor
+  [76600] = "Weekly", -- Right Between the Gyros-Optics
+  [76733] = "Weekly", -- Tater Trawl
+  [76997] = "Weekly", -- Lost in Shadows
+  [78656] = "Weekly", -- Hose It Down
+  [78915] = "Weekly", -- Squashing the Threat
+  [78933] = "Weekly", -- The Sweet Eclipse
+  [78972] = "Weekly", -- Harvest Havoc
+  [79158] = "Weekly", -- Seeds of Salvation
+  [79173] = "Weekly", -- Supply the Effort
+  [79216] = "Weekly", -- Web of Manipulation
+  [79346] = "Weekly", -- Chew On That
+  [80004] = "Weekly", -- Crab Grab
+  [80562] = "Weekly", -- Blossoming Delight
+  [81574] = "Weekly", -- Sporadic Growth
+  [81632] = "Weekly", -- Lizard Looters
+  -- PvP
+  [47148] = "Weekly", -- Something Different
+  [80184] = "Weekly", -- Preserving in Battle
+  [80185] = "Weekly", -- Preserving Solo
+  [80186] = "Weekly", -- Preserving in War
+  [80187] = "Weekly", -- Preserving in Skirmishes
+  [80188] = "Weekly", -- Preserving in Arenas
+  [80189] = "Weekly", -- Preserving Teamwork
+  -- World PvP
+  [81793] = "Weekly", -- Sparks of War: Isle of Dorn
+  [81794] = "Weekly", -- Sparks of War: The Ringing Deeps
+  [81795] = "Weekly", -- Sparks of War: Hallowfall
+  [81796] = "Weekly", -- Sparks of War: Azj-Kahet
+  -- The Severed Threads
+  [80592] = "AccountWeekly", -- Forge a Pact
+  [80670] = "Weekly", -- Eyes of the Weaver
+  [80671] = "Weekly", -- Blade of the General
+  [80672] = "Weekly", -- Hand of the Vizier
+  -- Special Assignments
+  [82355] = "Weekly", -- Special Assignment: Cinderbee Surge (Completing)
+  [81649] = "Weekly", -- Special Assignment: Titanic Resurgence (Completing)
+  [81691] = "Weekly", -- Special Assignment: Shadows Below (Completing)
+  [83229] = "Weekly", -- Special Assignment: When the Deeps Stir (Completing)
+  [82852] = "Weekly", -- Special Assignment: Lynx Rescue (Completing)
+  [82787] = "Weekly", -- Special Assignment: Rise of the Colossals (Completing)
+  [82414] = "Weekly", -- Special Assignment: A Pound of Cure (Completing)
+  [82531] = "Weekly", -- Special Assignment: Bombs from Behind (Completing)
+  -- Other Weeklies
+  [82449] = "Weekly", -- The Call of the Worldsoul
+  [83240] = "Weekly", -- The Theater Troupe
+  [84370] = "AccountWeekly", -- The Key to Success
+  [83333] = "Weekly", -- Gearing Up for Trouble
+  [82946] = "Weekly", -- Rollin' Down in the Deeps
+  -- Worldsoul Weeklies
+  [82458] = "Weekly", -- Worldsoul: Renown
+  [82482] = "Weekly", -- Worldsoul: Snuffling
+  [82516] = "Weekly", -- Worldsoul: Forging a Pact
+  [82483] = "Weekly", -- Worldsoul: Spreading the Light
+  [82453] = "Weekly", -- Worldsoul: Encore!
+  [82489] = "Weekly", -- Worldsoul: The Dawnbreaker
+  [82659] = "Weekly", -- Worldsoul: Nerub-ar Palace
+  [82678] = "Weekly", -- Archives: The First Disc
+  [82679] = "Weekly", -- Archives: Seeking History
+  [82490] = "Weekly", -- Worldsoul: Priory of the Sacred Flame
+  [82491] = "Weekly", -- Worldsoul: Ara-Kara, City of Echoes
+  [82492] = "Weekly", -- Worldsoul: City of Threads
+  [82493] = "Weekly", -- Worldsoul: The Dawnbreaker
+  [82494] = "Weekly", -- Worldsoul: Ara-Kara, City of Echoes
+  [82496] = "Weekly", -- Worldsoul: City of Threads
+  [82497] = "Weekly", -- Worldsoul: The Stonevault
+  [82498] = "Weekly", -- Worldsoul: Darkflame Cleft
+  [82499] = "Weekly", -- Worldsoul: Priory of the Sacred Flame
+  [82500] = "Weekly", -- Worldsoul: The Rookery
+  [82501] = "Weekly", -- Worldsoul: The Dawnbreaker
+  [82502] = "Weekly", -- Worldsoul: Ara-Kara, City of Echoes
+  [82503] = "Weekly", -- Worldsoul: Cinderbrew Meadery
+  [82504] = "Weekly", -- Worldsoul: City of Threads
+  [82505] = "Weekly", -- Worldsoul: The Stonevault
+  [82506] = "Weekly", -- Worldsoul: Darkflame Cleft
+  [82507] = "Weekly", -- Worldsoul: Priory of the Sacred Flame
+  [82508] = "Weekly", -- Worldsoul: The Rookery
+  [82509] = "Weekly", -- Worldsoul: Nerub-ar Palace
+  [82510] = "Weekly", -- Worldsoul: Nerub-ar Palace
+  [82511] = "Weekly", -- Worldsoul: Awakening Machine
+  [82512] = "Weekly", -- Worldsoul: World Boss
+  [82488] = "Weekly", -- Worldsoul: Darkflame Cleft
+  [82487] = "Weekly", -- Worldsoul: The Stonevault
+  [82486] = "Weekly", -- Worldsoul: The Rookery
+  [82485] = "Weekly", -- Worldsoul: Cinderbrew Meadery
+  [82452] = "Weekly", -- Worldsoul: World Quests
+  [82495] = "Weekly", -- Worldsoul: Cinderbrew Meadery
+  [82706] = "Weekly", -- Delves: Khaz Algar Research
+  [82707] = "Weekly", -- Delves: Earthen Defense
+  [82709] = "Weekly", -- Delves: Percussive Archaeology
+  [82711] = "Weekly", -- Delves: Lost and Found
+  [82712] = "Weekly", -- Delves: Trouble Up and Down Khaz Algar
+  [82746] = "Weekly", -- Delves: Breaking Tough to Loot Stuff
+  -- TWW Profession Services
+  [84133] = "Weekly", -- Alchemy Services Requested
+  [84127] = "Weekly", -- Blacksmithing Services Requested
+  [84128] = "Weekly", -- Engineering Services Requested
+  [84129] = "Weekly", -- Inscription Services Requested
+  [84130] = "Weekly", -- Jewelcrafting Services Requested
+  [84131] = "Weekly", -- Leatherworking Services Requested
+  [84132] = "Weekly", -- Tailoring Services Requested
+
   -- General
   -- Darkmoon Faire
   [7905] = "Regular", -- Darkmoon Faire referral -- old addon versions misidentified this as monthly
@@ -505,17 +624,19 @@ local QuestExceptions = {
   [58458] = "AccountWeekly", -- Pet Battle Challenge: Blackrock Depths
 
   -- Weekend Event
-  [72728] = "Weekly", -- The World Awaits - World Quests
-  [72727] = "Weekly", -- A Burning Path Through Time - TBC Timewalking
-  [72726] = "Weekly", -- A Frozen Path Through Time - WLK Timewalking
-  [72810] = "Weekly", -- A Shattered Path Through Time - CTM Timewalking
-  [72725] = "Weekly", -- A Shrouded Path Through Time - MOP Timewalking
-  [72724] = "Weekly", -- A Savage Path Through Time - WOD Timewalking
-  [72719] = "Weekly", -- A Fel Path Through Time - LEG Timewalking
-  [72723] = "Weekly", -- A Call to Battle - Battlegrounds
-  [72722] = "Weekly", -- Emissary of War - Mythic Dungeons
-  [72721] = "AccountWeekly", -- The Very Best - PvP Pet Battles
-  [72720] = "Weekly", -- The Arena Calls - Arena Skirmishes
+  [83363] = "Weekly", -- A Burning Path Through Time - TBC Timewalking
+  [83365] = "Weekly", -- A Frozen Path Through Time - WLK Timewalking
+  [83359] = "Weekly", -- A Shattered Path Through Time - CTM Timewalking
+  [83362] = "Weekly", -- A Shrouded Path Through Time - MOP Timewalking
+  [83364] = "Weekly", -- A Savage Path Through Time - WOD Timewalking
+  [83360] = "Weekly", -- A Fel Path Through Time - LEG Timewalking
+  [86731] = "Weekly", -- An Original Path Through Time - CLA Timewalking
+  [83345] = "Weekly", -- A Call to Battle - Battlegrounds
+  [83347] = "Weekly", -- Emissary of War - Mythic Dungeons
+  [83357] = "AccountWeekly", -- The Very Best - PvP Pet Battles
+  [83358] = "Weekly", -- The Arena Calls - Arena Skirmishes
+  [83366] = "Weekly", -- The World Awaits - World Quests
+  [84776] = "Weekly", -- A Call to Delves - Delves
 }
 SI.QuestExceptions = QuestExceptions
 
@@ -530,6 +651,7 @@ local TimewalkingItemQuest = {
   [55498] = 1971, -- The Shimmering Crystal - WOD Timewalking - Alliance
   [55499] = 1971, -- The Shimmering Crystal - WOD Timewalking - Horde
   [64710] = 2274, -- Whispering Felflame Crystal - LEG Timewalking
+  [83285] = 2634, -- The Ancient Scroll - CLA Timewalking
 }
 
 for questID, tbl in pairs(TimewalkingItemQuest) do

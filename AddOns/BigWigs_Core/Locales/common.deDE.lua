@@ -225,3 +225,11 @@ L.soaks = "Soaks" -- Plural of L.soak
 L.spell_reflection = "Zauberreflexion" -- Any ability that reflects spells
 L.parasite = "Parasit" -- Any ability where a parasite is involved e.g. "Parasitic Infection", "Parasitic Growth", etc
 L.rooted = "Bewegungsunfähig" -- Any ability that roots you in place, preventing you from moving
+
+-- Common ability name replacements A-Z
+L.dodge = "Ausweichen" -- When you need to continually run around to dodge abilities, like missiles landing on the ground under you
+L.health_drain = "Gesundheit entziehen" -- Any ability that drains health from the player
+L.smash = "Schmettern" -- Short for any ability with the name "smash" in it e.g. "Darkrift Smash" or "Seismic Smash" or "Arcing Smash"
+L.spike = "Stachel" -- Short for any ability with the name "spike" in it e.g. "Glacial Spike" or "Fel Spike" or "Volatile Spike"
+L.spikes = "Stacheln" -- Plural of L.spike
+L.waves = "Wellen" -- Multiple waves of a bad ability coming from a boss, like waves in the ocean

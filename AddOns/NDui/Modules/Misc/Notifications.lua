@@ -93,8 +93,8 @@ local isIgnoredZone = {
 	[2111] = true,	-- 黑海岸前线
 }
 local defaultList = {
-	[5485] = true, -- 海象人工具盒
 	[6149] = true, -- 奥妮克希亚龙蛋
+	[6699] = true, -- 错放的奇珍，地下堡
 }
 local isIgnoredIDs = {}
 
@@ -223,6 +223,7 @@ local blackList = {
 	[354051] = true,	-- 轻盈步
 	[355689] = true,	-- 山崩
 	[386770] = true,	-- 极寒
+	[378760] = true,	-- 冰霜撕咬
 }
 
 function M:IsAllyPet(sourceFlags)
@@ -232,6 +233,8 @@ function M:IsAllyPet(sourceFlags)
 end
 
 function M:InterruptAlert_Update(...)
+	if C.db["Misc"]["LeaderOnly"] and not (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then return end -- only alert for leader, needs review
+
 	local _, eventType, _, sourceGUID, sourceName, sourceFlags, _, _, destName, _, _, spellID, _, _, extraskillID, _, _, auraType = ...
 	if not sourceGUID or sourceName == destName then return end
 
@@ -424,6 +427,7 @@ local spellList = {
 	[390386] = true,	-- 守护巨龙之怒
 	[309658] = true,	-- 死亡凶蛮战鼓
 	[444257] = true,	-- 掣雷之鼓
+	[466904] = true, 	-- 鹞鹰尖啸
 
 	[384893] = true,	-- 足以乱真的救急电缆11.0工程战复
 	[453949] = true,	-- 不可抗拒的红色按钮11.0工程战复工具
@@ -439,6 +443,8 @@ local spellList = {
 }
 
 function M:ItemAlert_Update(unit, castID, spellID)
+	if C.db["Misc"]["LeaderOnly"] and not (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then return end -- only alert for leader, needs review
+
 	if groupUnits[unit] and spellList[spellID] and (spellList[spellID] ~= castID) then
 		SendChatMessage(format(L["SpellItemAlertStr"], UnitName(unit), GetSpellLink(spellID) or GetSpellName(spellID)), M:GetMsgChannel())
 		spellList[spellID] = castID
@@ -454,6 +460,8 @@ local bloodLustDebuffs = {
 }
 
 function M:CheckBloodlustStatus(...)
+	if C.db["Misc"]["LeaderOnly"] and not (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then return end -- only alert for leader, needs review
+
 	local _, eventType, _, sourceGUID, _, _, _, _, _, _, _, spellID = ...
 	if eventType == "SPELL_AURA_REMOVED" and bloodLustDebuffs[spellID] and sourceGUID == myGUID then
 		SendChatMessage(format(L["BloodlustStr"], GetSpellLink(spellID), M.factionSpell), M:GetMsgChannel())

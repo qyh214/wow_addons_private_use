@@ -34,7 +34,7 @@ function Mod:COMBAT_LOG_EVENT_UNFILTERED()
 		if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
 				and bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_NPC) > 0
 				and (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) > 0 or bit.band(destFlags, COMBATLOG_OBJECT_REACTION_NEUTRAL) > 0) then
-			local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
+			local npc_id = select(6, strsplit("-", destGUID))
 			lastDied = tonumber(npc_id)
 			lastDiedTime = GetTime()
 			lastDiedName = destName
@@ -114,16 +114,31 @@ local function OnTooltipSetUnit(tooltip)
 		local name, unit = tooltip:GetUnit()
 		local guid = unit and UnitGUID(unit)
 		if guid then
-			local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", guid)
+			local npc_id = select(6, strsplit("-", guid))
 			npc_id = tonumber(npc_id)
-			local info = AngryKeystones_Data.progress[npc_id]
-			local preset = progressPresets[npc_id]
-			if info or preset then
+			local value
+
+			if Addon.Config.progressTooltipMDT and MDT then
+				value = MDT:GetEnemyForces(npc_id)
+			else
+				local info = AngryKeystones_Data.progress[npc_id]
+
+				if info then
+					local valueCount
+					for amount, count in pairs(info) do
+						if not valueCount or count > valueCount or (count == valueCount and amount < value) then
+							value = amount
+							valueCount = count
+						end
+					end
+				end
+			end
+
+			if value then
 				local numCriteria = select(3, C_Scenario.GetStepInfo())
 				local total
 				local progressName
 				for criteriaIndex = 1, numCriteria do
-					-- local criteriaString, _, _, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(criteriaIndex)
 					local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
 					if criteriaInfo and criteriaInfo.isWeightedProgress then
 						progressName = criteriaInfo.description
@@ -132,19 +147,7 @@ local function OnTooltipSetUnit(tooltip)
 					end
 				end
 
-				local value, valueCount
-				if info then
-					for amount, count in pairs(info) do
-						if not valueCount or count > valueCount or (count == valueCount and amount < value) then
-							value = amount
-							valueCount = count
-						end
-					end
-				end
-				if preset and (not value or valueCount == 1) then
-					value = preset
-				end
-				if value and total then
+				if total then
 					local forcesFormat = format(" - %s: %%s", progressName)
 					local text
 					if Addon.Config.progressFormat == 1 or Addon.Config.progressFormat == 4 then

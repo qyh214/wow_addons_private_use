@@ -11,7 +11,7 @@ local L = Internal.L
 	@return {function} {table} {startIndex} ipairs style
 ]]
 
-local races = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37}
+local races = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 52, 70, 84, 85}
 local classes = {}
 local specializations = {}
 local herotalents = {}

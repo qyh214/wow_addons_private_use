@@ -31,6 +31,7 @@ P.DefaultSettings = {
 		Casting = true,
 		Health = true,
 		Vehicle = true,
+		DynamicFlight = true,
 		Bar1 = false,
 		Bar2 = false,
 		Bar3 = false,
@@ -56,10 +57,10 @@ P.DefaultSettings = {
 		MinAlpha = .1,
 		MaxAlpha = 1,
 		RolePos = false,
-		RolePoint = 2,
-		RoleXOffset = 5,
-		RoleYOffset = 5,
-		RoleSize = 12,
+		RolePoint = 1,
+		RoleXOffset = 0,
+		RoleYOffset = 1,
+		RoleSize = 14,
 	},
 	Chat = {
 		Emote = false,
@@ -95,19 +96,23 @@ P.DefaultSettings = {
 	},
 	Skins = {
 		Ace3 = true,
-		InboxMailBag = true,
-		ButtonForge = true,
-		ls_Toasts = true,
-		WhisperPop = true,
-		Immersion = true,
-		TinyInspect = true,
-		MeetingStone = true,
-		tdBattlePetScript = true,
-		RareScanner = true,
-		WorldQuestTab = true,
 		AdiBags = true,
+		Auctionator = true,
 		BetterBags = true,
+		BtWLoadouts = true,
+		BtWQuests = true,
+		ButtonForge = true,
+		Immersion = true,
+		InboxMailBag = true,
+		ls_Toasts = true,
+		MeetingStone = true,
+		RareScanner = true,
 		ShadowDancer = true,
+		SimpleAddonManager = true,
+		tdBattlePetScript = true,
+		TinyInspect = true,
+		WhisperPop = true,
+		WorldQuestTab = true,
 		HideToggle = false,
 	},
 	Tooltip = {
@@ -301,6 +306,44 @@ function P:GetModule(name)
 
 	return modules[name]
 end
+
+-- Command
+function P:AddCommand(name, keys, func)
+	if not SlashCmdList["NDUI_PLUS_" .. name] then
+		SlashCmdList["NDUI_PLUS_" .. name] = func
+
+		if type(keys) == "table" then
+			for i, key in next, keys do
+				if strsub(key, 1, 1) ~= "/" then
+					key = "/" .. key
+				end
+				_G["SLASH_NDUI_PLUS_" .. name .. i] = key
+			end
+		else
+			if strsub(keys, 1, 1) ~= "/" then
+				keys = "/" .. keys
+			end
+			_G["SLASH_NDUI_PLUS_" .. name .. "1"] = keys
+		end
+	end
+end
+
+SlashCmdList["NDUI_PLUS"] = function(msg)
+	local status = P:VersionCheck_Compare(DB.Version, P.SupportVersion)
+	if status == "IsOld" then
+		P:Print(format(L["Version Check"], P.SupportVersion))
+		return
+	end
+
+	if msg and strlen(msg) > 0 then
+		P:Developer_Command(msg:lower())
+	else
+		P:OpenGUI()
+		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+	end
+end
+SLASH_NDUI_PLUS1 = "/ndp"
+SLASH_NDUI_PLUS2 = "/nduiplus"
 
 function P:Initialize()
 	local status = P:VersionCheck_Compare(DB.Version, P.SupportVersion)

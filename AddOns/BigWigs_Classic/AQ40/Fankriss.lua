@@ -2,10 +2,16 @@
 -- Module Declaration
 --
 
-local mod = BigWigs:NewBoss("Fankriss the Unyielding", 531, 1545)
+local mod, CL = BigWigs:NewBoss("Fankriss the Unyielding", 531, 1545)
 if not mod then return end
 mod:RegisterEnableMob(15510)
 mod:SetEncounterID(712)
+
+--------------------------------------------------------------------------------
+-- Locals
+--
+
+local wormCount = 1
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -34,6 +40,13 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "Entangle", 720, 731, 1121)
 end
 
+function mod:OnEngage()
+	wormCount = 1
+	if self:GetSeason() == 2 then
+		self:CDBar(25832, 20, CL.count:format(self:SpellName(25832), wormCount), L["25832_icon"])
+	end
+end
+
 --------------------------------------------------------------------------------
 -- Event Handlers
 --
@@ -47,8 +60,20 @@ function mod:MortalWound(args)
 end
 
 function mod:SummonWorm(args)
-	self:Message(25832, "cyan", args.spellName, L["25832_icon"])
-	self:PlaySound(25832, "warning")
+	if self:GetSeason() == 2 then
+		if args.spellId == 518 then
+			local msg = CL.count:format(args.spellName, wormCount)
+			self:StopBar(msg)
+			self:Message(25832, "cyan", msg, L["25832_icon"])
+			wormCount = wormCount + 1
+			self:CDBar(25832, 30, CL.count:format(args.spellName, wormCount), L["25832_icon"])
+			self:PlaySound(25832, "warning")
+		end
+	else
+		self:Message(25832, "cyan", CL.count:format(args.spellName, wormCount), L["25832_icon"])
+		wormCount = wormCount + 1
+		self:PlaySound(25832, "warning")
+	end
 end
 
 function mod:Entangle(args)

@@ -32,7 +32,7 @@ local covenant_db = {
 		{ spellID = 323546, duration = 180, type = "covenant", spec = 321079 },
 	},
 	["HUNTER"] = {
-
+		{ spellID = 325028, duration = 45, type = "covenant", spec = 321078 },
 		{ spellID = 324149, duration = 30, type = "covenant", spec = 321079 },
 		{ spellID = 308491, duration = 60, type = "covenant", spec = 321076 },
 		{ spellID = 328231, duration = 120, type = "covenant", spec = 321077 },
@@ -40,7 +40,7 @@ local covenant_db = {
 	["MAGE"] = {
 		{ spellID = 324220, duration = 180, type = "covenant", spec = 321078 },
 		{ spellID = 314793, duration = 90, type = "covenant", spec = 321079 },
-
+		{ spellID = 307443, duration = 30, type = "covenant", spec = 321076 },
 
 	},
 	["MONK"] = {
@@ -70,7 +70,7 @@ local covenant_db = {
 	["ROGUE"] = {
 
 
-
+		{ spellID = 328305, duration = 90, type = "covenant", spec = 321077 },
 
 	},
 	["SHAMAN"] = {

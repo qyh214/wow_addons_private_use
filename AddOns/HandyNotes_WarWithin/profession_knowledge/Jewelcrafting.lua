@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [48523517] = {
+    [45433517] = {
         quest=83892,
         loot={226318}, -- Carved Stone File
         vignette=6475,
     },
-    [56985463] = {
+    [53355463] = {
         quest=83893,
         loot={226319}, -- Jeweler's Delicate Drill
         vignette=6476,

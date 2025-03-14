@@ -3,12 +3,9 @@ local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "ruRU")
 L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = "%d: ID способности. %d-%d: ID способности - ID таланта (помечает способность, если выбран талант)."
---[[Translation missing --]]
 L[ [=[%d: spellID.
-%d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = [=[%d: spellID.
-%d-%d: spellID-talentID (Mark spell if talent is selected).]=]
---[[Translation missing --]]
-L["[Show Numbers for Cooldowns] must be disabled in Blizzard's 'Options/Action Bars' menu."] = "[Show Numbers for Cooldowns] must be disabled in Blizzard's 'Options/Action Bars' menu."
+%d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = "%d: spellID. %d-%d:spellID-talentID (отметить заклинание, если выбран талант)."
+L["[Show Numbers for Cooldowns] must be disabled in Blizzard's 'Options/Action Bars' menu."] = "[Показывать цифры для восстановления] необходимо отключить в меню 'Параметры/панели действий' Blizzard."
 L["[Show Numbers for Cooldowns] must be enabled in Blizzard's 'Options/Action Bars' menu when using Blizzard's cooldown numbers."] = "Необходимо включить [Показывать Обратный Отчет для Способностей] в меню 'Настройки/Панели команд' если Вы используете обратный отчет Blizzard для иконок способностей."
 L["|cff9d9d9d * Scenarios and Outdoor Zones will use Arena settings."] = "|cff9d9d9d * Сценарии и зоны мира будут использовать настройки 'Арены'."
 L["|cffff2020Friendly CD module must be enabled for the corresponding instance zone."] = "|cffff2020Модуль перезарядки союзников должен быть включен в соответсвующей зоне."
@@ -16,8 +13,7 @@ L["|cffff2020Glow and Highlights are never applied on cropped icons. \"Border\" 
 L["|cffff2020Important!|r Covenant and Soulbind Conduit data can only be acquired from group members with OmniCD installed."] = "|cffff2020Важно!|r Данные Ковенанта и Медиума членов группы могут быть получены, только если эти члены группы используют OmniCD."
 L["> 1 minute"] = "> 1 минуты"
 L["0: Disable option"] = "0: Отключить опцию"
---[[Translation missing --]]
-L["0: Raid Frame, 1: Interrupt Bar, 2-8: Extra Bar"] = "0: Raid Frame, 1: Interrupt Bar, 2-8: Extra Bar"
+L["0: Raid Frame, 1: Interrupt Bar, 2-8: Extra Bar"] = "0: Фрейм рейда, 1: Панель прерываний, 2-8: Дополнительная панель"
 L["2nd Row Icons (Double Row Layout)"] = "Вторая строка иконок (при использовании 'двойной строки')"
 L["2px Border"] = "Граница в два пикселя"
 L["A new update is available. |cff99cdff(%s)"] = "Доступно новое обновление. |cff99cdff(%s)"
@@ -30,24 +26,20 @@ L["Add to Alerts"] = "Добавить к оповещениям"
 L["Addons with raid frame scaling will also cause the icons to scale."] = "Аддоны, изменяющие размеры панелей рейда также изменят размер иконок."
 L[ [=[Adjust value until the truncate symbol [...] disappears.
 |cffff20200: Disable option]=] ] = "Изменяйте значение пока символ укорачивания [...] не пропадет. |cffff20200: Выключить опцию"
---[[Translation missing --]]
 L[ [=[Adjust value until the truncate symbol [...] disappears.
-|cffff20200: Disable option]=] ] = [=[Adjust value until the truncate symbol [...] disappears.
-|cffff20200: Disable option]=]
+|cffff20200: Disable option]=] ] = "Изменяйте значение пока символ укорачивания [...] не пропадет. |cffff20200: Выключить опцию"
 L["Alerts"] = "Оповещения"
 L["All user set values will be lost. Do you want to proceed?"] = "Все настройки будут сброшены. Вы хотите продолжить?"
 L["Always attach to Blizzard frames. By default, bars attach to whichever frame is visible, and if both are visible UF addon take precedence over Blizzard"] = "Всегда прикрепляться к фреймам Blizzard. По умолчанию иконки прикрепляются к видимому фрейму, и если оба видимы, то прикрепляется к аддону для юнитфреймов"
 L["Always Bottom"] = "Всегда снизу"
---[[Translation missing --]]
-L["Always Show"] = "Always Show"
+L["Always Show"] = "Всегда показывать"
 L["Always Show Cooldown Numbers"] = "Всегда показывать цифры перезарядки"
 L["Always Top"] = "Всегда сверху"
 L["Anchor"] = "Точка закрепления"
 L["Anchor Point"] = "Положение точки закрепления"
 L["Anchor Position"] = "Позиция точки закрепления"
 L["Animate"] = "Анимировать"
---[[Translation missing --]]
-L["AOE CC"] = "AOE CC"
+L["AOE CC"] = "AOE Контроль"
 L["Apply 'Icons' alpha settings to the status bar"] = "Применять прозрачность иконок ко всей полоске статуса"
 L["Ascending"] = "По возрастанию"
 L["Assign Raid Cooldowns."] = "Задать Рейд-способности."
@@ -67,8 +59,7 @@ L["Border Color"] = "Цвет границы"
 L["Border Thickness"] = "Толщина границы"
 L["Borders retain 1px width regardless of the UI scale"] = "Границы будут иметь ширину в 1 пиксель вне зависимости от размера UI"
 L["Borders retain 1px width regardless of the UI scale. Need to reload the UI when the UI or icon scale changes"] = "Границы будут иметь ширину в 1 пиксель вне зависимости от размера UI. Необходимо перезагрузить UI для применения изменений"
---[[Translation missing --]]
-L["Both"] = "Both"
+L["Both"] = "Оба"
 L["BOTTOM"] = "СНИЗУ"
 L["BOTTOMLEFT"] = "СНИЗУ СЛЕВА"
 L["BOTTOMRIGHT"] = "СНИЗУ СПРАВА"
@@ -92,11 +83,9 @@ L["Clean wipe the savedvariable file. |cffff2020Warning|r: This can not be undon
 L["Column"] = "Колонки"
 L["Column Padding"] = "Промежуток между колонками"
 L["Commands:"] = "Команды: "
---[[Translation missing --]]
-L["Condition"] = "Condition"
+L["Condition"] = "Условие"
 L["Convert the status bar timer to a simple name display by disabling all timer functions. The 'Name' color scheme will be retained."] = "Преобразует полосу статуса с таймером в простое имя и выключает всю функциональность таймера. Будет использоваться цветовая схема 'Имя'."
---[[Translation missing --]]
-L["Convert to additional CD bars that attach to each unit's raid frame."] = "Convert to additional CD bars that attach to each unit's raid frame."
+L["Convert to additional CD bars that attach to each unit's raid frame."] = "Преобразует в дополнительные полосы перезарядки, которые прикрепляются к фреймам рейда для индивидуальных юнитов."
 L["Convert to Name Bar"] = "Преобразовать в именную полосу"
 L["Cooldown"] = "Перезарядка"
 L["Cooldown Remaining"] = "Времени перезарядки осталось"
@@ -106,7 +95,7 @@ L["Copy Default"] = "Скопировать по умолчанию"
 L["Copy selected zone settings to the current zone"] = "Скопировать выбранные настройки зоны в текущую зону"
 L["Copy Settings From:"] = "Скопировать настройки из:"
 L["Copy Zone Segments"] = "Скопировать сегменты зоны"
-L["Counter CC"] = "Контр контроль"
+L["Counter CC"] = "Анти-контроль"
 L["Counter Color"] = "Цвет времени перезарядки"
 L["Counter Size"] = "Размер времени перезарядки"
 L["Covenant"] = "Ковенант"
@@ -171,18 +160,12 @@ L["Font Outline"] = "Окантовка шрифта"
 L["Font Shadow"] = "Тень шрифта"
 L["Fonts"] = "Шрифты"
 L["For double/triple layout, it will limit the number of icons per line"] = "Для расположения иконок, использующих двойной/тройной ряд/столбец, ограничит количество иконок в ряду"
---[[Translation missing --]]
-L["Force Disable"] = "Force Disable"
---[[Translation missing --]]
-L["Frame"] = "Frame"
---[[Translation missing --]]
-L["Freedom"] = "Freedom"
---[[Translation missing --]]
-L["Glow"] = "Glow"
---[[Translation missing --]]
-L["Glow Border"] = "Glow Border"
---[[Translation missing --]]
-L["Glow condition can be changed from the Highlighting tab."] = "Glow condition can be changed from the Highlighting tab."
+L["Force Disable"] = "Принудительное отключение"
+L["Frame"] = "Фрейм"
+L["Freedom"] = "Свобода"
+L["Glow"] = "Свечение"
+L["Glow Border"] = "Свечение границы"
+L["Glow condition can be changed from the Highlighting tab."] = "Условие Свечения может быть изменено используя вкладку \"Подсвечивание\"."
 L["Glow Icons"] = "Подсвечивать иконки"
 L["Group member must have OmniCD to detect cooldown reduction by Glyphs."] = "У члена группы должен быть OmniCD, чтобы обнаружить уменьшение времени восстановления с помощью символов."
 L["Group member must have OmniCD to detect cooldown reduction with a chance to proc and Soulbind Conduits."] = "У члена группы должен быть OmniCD, чтобы обнаружить сокращение времени восстановления с шансом срабатывания и связывания душ."
@@ -193,14 +176,11 @@ L["Group Size"] = "Размер группы"
 L["Group Type"] = "Тип группы"
 L["Grow Columns Left"] = "Колонки растут влево"
 L["Grow Rows Upward"] = "Ряды растут вверх"
---[[Translation missing --]]
-L["Hard CC"] = "Hard CC"
+L["Hard CC"] = "Полный Контроль"
 L["Having \"BOTTOM\" in the anchor point, icons grow upward, otherwise downward"] = "Если в точке закрепления указано \"ВНИЗУ\", то иконки растут вверх, иначе вниз"
 L["Having \"RIGHT\" in the anchor point, icons grow left, otherwise right"] = "Если в точке закрепления указано \"СПРАВА\", то иконки растут влево, иначе вправо"
---[[Translation missing --]]
-L["Heal"] = "Heal"
---[[Translation missing --]]
-L["Healthstone and Demonic Gateway are added on cast"] = "Healthstone and Demonic Gateway are added on cast"
+L["Heal"] = "Исцеление"
+L["Healthstone and Demonic Gateway are added on cast"] = "Камень Здоровья и Демонические Врата появляются при использовании"
 L["Help Translate"] = "Помощь в переводе"
 L["Hide Border"] = "Скрывать границы"
 L["Hide Disabled Spells"] = "Скрывать отключенные способности"
@@ -228,8 +208,8 @@ L["Icons"] = "Иконки"
 L["Immunity"] = "Неуязвимости"
 L["Import"] = "Импорт"
 L["Import Profile"] = "Импорт профиля"
-L["Importing `%s` will create a new profile."] = "Импортирование `%s` создаст новый профиль."
-L["Importing `%s` will merge new spells to your list and overwrite same spells."] = "Импортирование `%s` добавит новые способности в Ваш список и перезапишет одинаковые существующие."
+L["Importing '%s' will create a new profile."] = "Импортирование `%s` создаст новый профиль."
+L["Importing '%s' will merge new spells to your list and overwrite same spells."] = "Импортирование `%s` добавит новые способности в Ваш список и перезапишет одинаковые существующие."
 L["Importing Custom Spells will reload UI. Press Cancel to abort."] = "Импортирование модифицированных способностей перезагрузит интерфейс."
 L["Inactive"] = "Неактивно"
 L["Inactive Icon Opacity"] = "Прозрачность неактивной иконки"
@@ -263,8 +243,7 @@ L["MM:SS Threshold"] = "Порог Минут:Секунд"
 L["Mouseovering the icon will show the interrupted spell information regardless of 'Show Tooltip' option."] = "Наведение курсора над иконкой покажет информацию о прервавшей способности вне зависимости от настройки \"Показывать всплывающие подсказки\""
 L["Move your group's Interrupt spells to the Interrupt Bar."] = "Перемещает 'Прерывания' Вашей группы в 'Полосу Прерываний'."
 L["Move your group's Raid Cooldowns to the Raid Bar."] = "Перемещает Рейдовые Способности в Полосу Рейда."
---[[Translation missing --]]
-L["Movement"] = "Movement"
+L["Movement"] = "Движение"
 L["Multiselect"] = "Выбрать несколько"
 L["Name Bar"] = "Именная полоса"
 L["Name Offset X"] = "Сдвиг имени по Х"
@@ -279,16 +258,11 @@ L["Notify Updates"] = "Оповещать об обновлениях"
 L["Offensive"] = "Атакующие"
 L["Offset X"] = "Сдвиг по X"
 L["Offset Y"] = "Сдвиг по Y"
---[[Translation missing --]]
-L["Only applies to spells that have Glow enabled in the Spells tab"] = "Only applies to spells that have Glow enabled in the Spells tab"
---[[Translation missing --]]
+L["Only applies to spells that have Glow enabled in the Spells tab"] = "Применяется только к способностям у которых включено Свечение во вкладке \"Способности\""
 L[ [=[Only for talent abilities.
-Current ability for this specialization will no longer be tracked while you are in the selected zone(s)]=] ] = [=[Only for talent abilities.
-Current ability for this specialization will no longer be tracked while you are in the selected zone(s)]=]
---[[Translation missing --]]
-L["Override spell-type frame."] = "Override spell-type frame."
---[[Translation missing --]]
-L["Override spell-type priority."] = "Override spell-type priority."
+Current ability for this specialization will no longer be tracked while you are in the selected zone(s)]=] ] = "Только для талантов. Выбраная способность для этой специализации не будет отслеживатся в выбранных зонах."
+L["Override spell-type frame."] = "Переопределить фрейм типа способности."
+L["Override spell-type priority."] = "Переопределить приоритет типа способности."
 L["Padding"] = "Промежуток"
 L["Padding X"] = "Промежуток по X"
 L["Padding Y"] = "Промежуток по Y"
@@ -321,10 +295,8 @@ L["Raid Defensive"] = "Рейдовая 'Защитная'"
 L["Raid Frames for testing doesn't exist for %s. If it fails to load, configure OmniCD while in a group or temporarily set it to 'Manual Mode'."] = "Рейдовые фреймы для настройки не существуют для %s. Если они не загружаются, настраивайте OmniCD в группе или временно включите 'Ручной режим'."
 L["Raid Movement"] = "Рейдовое передвижение"
 L["Recharge"] = "Перезарядка"
---[[Translation missing --]]
-L["Redirect Spells"] = "Redirect Spells"
---[[Translation missing --]]
-L["Redirect spells to the raid frame instead of removing them when this bar is disabled."] = "Redirect spells to the raid frame instead of removing them when this bar is disabled."
+L["Redirect Spells"] = "Заклинания перенаправления"
+L["Redirect spells to the raid frame instead of removing them when this bar is disabled."] = "Перенаправлять способности на фрейм рейда вместо того чтобы убирать их когда эта полоса выключена."
 L["Reload addon."] = "Перезагрузить аддон."
 L["Reload UI?"] = "Перезагрузить интерфейс?"
 L["Rename Bar"] = "Переименовать Полосу"
@@ -342,21 +314,17 @@ L["Row"] = "Ряды"
 L["Row Breakpoint"] = "Разделение рядов"
 L["Same category units are sorted alphabetically in ascending order"] = "Юниты из одной категории отсортированы по алфавиту"
 L["Select a spell type to enable all spells in that category for all classes"] = "Выберите тип способности, чтобы включить все подобные способности для всех классов"
---[[Translation missing --]]
-L["Select a value lower than Breakpoint1"] = "Select a value lower than Breakpoint1"
+L["Select a value lower than Breakpoint1"] = "Выберете значение ниже чем Breakpoint1"
 L["Select addon to override auto anchoring"] = "Выбирает аддон для переопределения автофиксации"
 L["Select how the player frame is displayed inside the party frame"] = "Задать как показан фрейм игрока внутри фреймов группы"
 L["Select the column(s) that you want the rows to grow upwards."] = "Выбирает колонку/колонки, которые должны расти влево."
 L["Select the column(s) that you want to detach and position manually."] = "Выбирает колонки, которые должны быть отсоединены и расположены вручную."
---[[Translation missing --]]
-L["Select the frame to use as default for each spell type."] = "Select the frame to use as default for each spell type."
+L["Select the frame to use as default for each spell type."] = "Выберите фрейм, который будет использоваться по умолчанию для каждого типа заклинания."
 L["Select the group size for which you want to set the spell bar position"] = "Выбирает размер группы, для которой изменять позицию полос со способностями"
 L["Select the highest priority spell type to use as the start of the 2nd row"] = "Выбирает с какого типа способностей начинать вторую строку иконок"
 L["Select the highest priority spell type to use as the start of the 3rd row"] = "Выбирает с какого типа способностей начинать третью строку иконок"
---[[Translation missing --]]
-L["Select the highest spell priority to use as the start of the 2nd row"] = "Select the highest spell priority to use as the start of the 2nd row"
---[[Translation missing --]]
-L["Select the highest spell priority to use as the start of the 3rd row"] = "Select the highest spell priority to use as the start of the 3rd row"
+L["Select the highest spell priority to use as the start of the 2nd row"] = "Выберите самый высокий приоритет заклинания, который будет использоваться в качестве начала 2-го ряда"
+L["Select the highest spell priority to use as the start of the 3rd row"] = "Выберите самый высокий приоритет заклинания, который будет использоваться в качестве начала 3-го ряда"
 L["Select the icon layout"] = "Выбирает расположение иконок"
 L["Select the spell types you want to display on this column."] = "Выбирает типы способностей, которые Вы хотите отображать на этой колонке."
 L["Select the spells you want to move from the 'Raid CD' tab. The spell must be enabled from the 'Spells' tab first."] = "Выберите заклинания, которые вы хотите переместить, на вкладке «Рейд CD». Заклинание должно быть активировано на вкладке «Заклинания»."
@@ -412,20 +380,17 @@ L["Show Tooltip"] = "Показывать всплывающие подсказ�
 L["Show Trinket Only"] = "Показывать только PvP-аксессуар"
 L["Size"] = "Размер"
 L["Slash Commands"] = "Команды, доступные через '/'"
---[[Translation missing --]]
-L["Soft CC"] = "Soft CC"
+L["Soft CC"] = "Частичный Контроль"
 L["Sort Direction"] = "Направление сортировки"
 L["Sort Order"] = "Направление сортировки"
 L["Source Profile"] = "Исходный профиль"
 L["Spacing"] = "Расстояние между"
 L["Spell Editor"] = "Редактор способностей"
 L["Spell ID"] = "ID способности"
---[[Translation missing --]]
-L["Spell Priority"] = "Spell Priority"
+L["Spell Priority"] = "Приоритет заклинаний"
 L["Spell Types"] = "Типы способностей"
 L["Spells"] = "Способности"
---[[Translation missing --]]
-L["Spell-Type Priority"] = "Spell-Type Priority"
+L["Spell-Type Priority"] = "Приоритет Типа Способности"
 L["Status Bar"] = "Полоса статуса"
 L["Status Bar Timer"] = "Таймер полосы статуса"
 L["Strong Yellow Glow"] = "Яркая желтая подсветка"
@@ -434,10 +399,8 @@ L["Swipe Opacity"] = "Прозрачность анимации перезаря
 L["Synchronize"] = "Синхронизировать"
 L["Talent Ability"] = "Талант"
 L["Talent ID"] = "ID Таланта"
---[[Translation missing --]]
-L["Tank Defensive"] = "Tank Defensive"
---[[Translation missing --]]
-L["Taunt"] = "Taunt"
+L["Tank Defensive"] = "Защитные Танка"
+L["Taunt"] = "Провокации"
 L["Test"] = "Проверка"
 L["Test frames will be hidden once player is out of combat"] = "Проверочные окна будут спрятаны после выхода из боя"
 L["Test Mode Disabled: Non-Blizzard party frames"] = "Проверка невозможна: не используются фреймы группы Blizzard"
@@ -463,10 +426,8 @@ L["Trinket Items"] = "Аксессуары"
 L["Truncate Name"] = "Укорачивать имена"
 L["UI Scale Changed."] = "Размер интерфейса был изменен"
 L["Unit CD bars are limited to 5 man groups unless Blizzard Raid Frames are used."] = "Если не используются рейд-фреймы Blizzard, то полосы перезарядки для юнитов ограничены группами до 5 игроков"
---[[Translation missing --]]
-L["Unusable"] = "Unusable"
---[[Translation missing --]]
-L["Usable"] = "Usable"
+L["Unusable"] = "Неиспользуемый"
+L["Usable"] = "Полезное"
 L["Usage:"] = "Использование:"
 L["Use a semi-colon(;) to seperate multiple IDs."] = "Используйте отточие(;), чтобы разделить несколько ID."
 L["Use Default"] = "Использовать по умолчанию"
@@ -479,8 +440,7 @@ L["Use this setting for all group sizes"] = "Использовать эту н�
 L["Use Triple Column"] = "Тройная колонка"
 L["Use Triple Row"] = "Тройная строка"
 L["Use Zone Settings From:"] = "Использовать настройки зоны из:"
---[[Translation missing --]]
-L["Utility"] = "Utility"
+L["Utility"] = "Полезное"
 L["Utils"] = "Утилиты"
 L["Value 'Manual Position' includes Interrupt and Raid Bar's saved positions."] = "Настройка 'Ручная Позиция' также учитывает сохраненные позиции 'Прерываний' и 'Полосы рейда'."
 L["Version"] = "Версия"
@@ -489,8 +449,6 @@ L["Vertical + CD Groups"] = "Вертикально с КД-Группами"
 L["Vertical Groups"] = "Вертикальные группы"
 L["Visibility"] = "Отображение"
 L["Weak Purple Glow"] = "Тусклая желтая подсветка"
---[[Translation missing --]]
-L["You can mangage spell types for all bars from the Frame option"] = "You can mangage spell types for all bars from the Frame option"
---[[Translation missing --]]
-L["You can override this setting on individual spells from the Spells tab."] = "You can override this setting on individual spells from the Spells tab."
+L["You can mangage spell types for all bars from the Frame option"] = "Вы можете управлять типами заклинаний для всех панелей с помощью опции 'Фрейм'"
+L["You can override this setting on individual spells from the Spells tab."] = "Вы можете переопределить эту настроку на уровне способностей во вкладке \"Способности\"."
 L["You must manually enable either the 'Party Frames' or 'Raid Frames' in Blizzard's 'HUD Edit Mode'."] = "Необходимо включить 'Панели Группы' или 'Панели Рейда' в 'Настройке Интерфейса' Blizzard."

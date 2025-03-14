@@ -248,10 +248,7 @@ function RSA.Monitor.ProcessSpell(profileName, extraSpellID, extraSpellName, ext
 	local longName = destName
 	if RSA.db.profile.general.globalAnnouncements.removeServerNames == true then
 		if destName and destGUID then
-			local _, _, _, _, _, _, _, realmName = GetPlayerInfoByGUID(destGUID)
-			if realmName then
-					destName = gsub(destName, '-'..realmName, '')
-			end
+			destName = Ambiguate(destName, 'short')
 		end
 	end
 

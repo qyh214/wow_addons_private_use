@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Hagara the Stormbinder", 967, 317)
 if not mod then return end
 mod:RegisterEnableMob(55689)
+mod:SetEncounterID(1296)
+mod:SetRespawnTime(32)
 
 --------------------------------------------------------------------------------
 -- Locales
@@ -12,6 +14,7 @@ mod:RegisterEnableMob(55689)
 
 local playerTbl = mod:NewTargetList()
 local nextPhase, nextPhaseIcon
+local lanceCount = 1
 
 --------------------------------------------------------------------------------
 -- Localization
@@ -37,9 +40,9 @@ L = mod:GetLocale()
 
 function mod:GetOptions()
 	return {
-		{104448, "FLASH"}, 105256, {105316, "PROXIMITY"}, {109325, "ICON", "FLASH", "PROXIMITY", "SAY"},
+		{104448, "FLASH"}, 105256, {109325, "ICON", "FLASH", "PROXIMITY", "SAY"},
 		105409,
-		{-4159, "TANK_HEALER"}, 108934, "nextphase", "berserk"
+		{-4159, "TANK_HEALER"}, {105316, "PROXIMITY"}, 108934, "nextphase", "berserk"
 	}, {
 		[104448] = L["ice_next"],
 		[105409] = L["lightning_next"],
@@ -58,10 +61,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "WaterShield", 105409)
 	self:Log("SPELL_AURA_APPLIED", "FrostFlakeApplied", 109325)
 	self:Log("SPELL_AURA_REMOVED", "FrostFlakeRemoved", 109325)
-
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 55689)
+	self:Log("SPELL_SUMMON", "IceLance", 105297)
 end
 
 function mod:OnEngage()
@@ -69,6 +69,8 @@ function mod:OnEngage()
 	-- need to find a way to determine which one is at first after engage
 	-- apart from looking at her weapon enchants
 	self:Bar("nextphase", 30, L["lightning_or_frost"], L["nextphase_icon"])
+	self:CDBar(105316, 10) -- Ice Lance
+	lanceCount = 1
 end
 
 --------------------------------------------------------------------------------
@@ -117,6 +119,8 @@ function mod:Feedback(args)
 	self:Bar(args.spellId, 15)
 	self:Bar("nextphase", 63, nextPhase, nextPhaseIcon)
 	self:Bar(-4159, 20) -- Focused Assault
+	self:CDBar(105316, 11) -- Ice Lance
+	lanceCount = 0
 end
 
 function mod:IceTombStart(args)
@@ -136,6 +140,21 @@ do
 		if not scheduled then
 			scheduled = true
 			self:ScheduleTimer(iceTomb, 0.1)
+		end
+	end
+end
+
+do
+	local prev = 0
+	function mod:IceLance(args)
+		if args.time-prev > 5 then
+			prev = args.time
+			lanceCount = lanceCount + 1
+			if lanceCount < 2 then
+				self:CDBar(105316, 30)
+			else
+				self:StopBar(105316)
+			end
 		end
 	end
 end

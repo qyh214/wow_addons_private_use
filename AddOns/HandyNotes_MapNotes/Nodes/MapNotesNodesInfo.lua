@@ -690,6 +690,8 @@ nodes[1550] = { } -- Shadowlands
 nodes[1565] = { } -- Ardenweald
 nodes[1670] = { } -- Oribos
 nodes[1671] = { } -- Oribos Uppder Side
+nodes[1911] = { } -- Torghast
+nodes[1912] = { } -- Torghast Rune
 nodes[1961] = { } -- Korthia
 nodes[1970] = { } -- Zereth Mortis 
 nodes[2016] = { } -- Tazavesh, the Veiled Market
@@ -706,6 +708,7 @@ nodes[1735] = { } -- Castle Nathria
 nodes[1989] = { } -- Tazavesh, the Veiled Market
 nodes[1998] = { } -- Sanctum of Domination  
 nodes[2047] = { } -- Sepulcher of the First Ones
+nodes[2051] = { } -- Sepulcher of the First Ones
 
 --############################
 --####### Dragonflight #######
@@ -752,6 +755,10 @@ nodes[2215] = { } -- Hallowfall
 nodes[2213] = { } -- Nerub'ar
 nodes[2216] = { } -- Nerub'ar_Lower
 nodes[2214] = { } -- The Ringing Deeps
+nodes[2367] = { } -- Chamber of Memory
+nodes[2369] = { } -- Siren Isle
+nodes[2322] = { } -- Hall of Awakening
+nodes[2346] = { } -- Undermine
 -- Dungeon map nodes
 nodes[2315] = { } -- The Rookery - Inside Dungeon Map
 nodes[2335] = { } -- The Cinderbrew Meadery - Inside Dungeon Map
@@ -761,5 +768,23 @@ nodes[2341] = { } -- The Stonevault - Inside Dungeon Map
 nodes[2303] = { } -- Darkflame Cleft - Inside Dungeon Map
 nodes[2357] = { } -- Ara-Kara, City of Echoes - Inside Dungeon Map
 nodes[2343] = { } -- City of Threads - Inside Dungeon Map
+nodes[2387] = { } -- Operation: Floodgate - Inside Dungeon Map
 nodes[2292] = { } -- Nerub-ar Palace - Inside Dungeon Map
+-- Delves map nodes
+nodes[2259] = { } -- Tak-Rethan-Abyss - Inside Dungeon Map
+nodes[2299] = { } -- The Underkeep - Inside Dungeon Map
+nodes[2348] = { } -- Zekvir's Lair - Inside Dungeon Map
+nodes[2347] = { } -- The Spiral Weave - Inside Dungeon Map
+nodes[2312] = { } -- Mycomancer Cavern - Inside Dungeon Map
+nodes[2310] = { } -- Skittering Breach - Inside Dungeon Map
+nodes[2301] = { } -- The Sinkhole - Inside Dungeon Map
+nodes[2277] = { } -- Nightfall Sanctum - Inside Dungeon Map
+nodes[2251] = { } -- The Waterworks - Inside Dungeon Map
+nodes[2302] = { } -- The Waterworks - Inside Dungeon Map
+nodes[2269] = { } -- Earthcrawl Mines - Inside Dungeon Map
+nodes[2249] = { } -- Fungal Folly - Inside Dungeon Map
+nodes[2250] = { } -- Kriegval's Rest - Inside Dungeon Map
+nodes[2396] = { } -- Rowdy Rifts - Inside Dungeon Map
+nodes[2423] = { } -- Sidestreet Sluice - Inside Dungeon Map
+nodes[2420] = { } -- Sidestreet Sluice - The Pits - Inside Dungeon Map
 end

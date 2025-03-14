@@ -596,6 +596,8 @@ L["STRING_OPTIONS_EXTERNALS_TITLE"] = "Widget Esterni"
 L["STRING_OPTIONS_EXTERNALS_TITLE2"] = "Queste opzioni controllano il comportamento di molti widget esterni."
 L["STRING_OPTIONS_GENERAL"] = "Impostazioni Generali"
 L["STRING_OPTIONS_GENERAL_ANCHOR"] = "Generale:"
+--[[Translation missing --]]
+L["STRING_OPTIONS_GROUPING_HORIZONTAL_GAP"] = "\"Space Between Windows\""
 L["STRING_OPTIONS_HIDE_ICON"] = "Nascondi Icona"
 L["STRING_OPTIONS_HIDE_ICON_DESC"] = "Quando attivo, l'icona che rappresenta il display selezionato non viene mostrata. |cFFFFFF00Importante|r: dopo aver abilitato l'icona, si consiglia di regolare la posizione del testo del titolo."
 L["STRING_OPTIONS_HIDECOMBATALPHA_DESC"] = "Cambia la trasparenza in questo valore quando il tuo personaggio corrisponde alla regola scelta. |cFFFFFF00Zero|r: completamente nascosto, non può interagire all'interno della finestra. |cFFFFFF001 - 100|r: completamente nascosto, non può interagire all'interno della finestra."

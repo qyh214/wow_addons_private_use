@@ -9,7 +9,22 @@ if L then
 	L.infected_beast = "Infiziertes Wildtier"
 	L.fungal_gutter = "Pilzschlitzer"
 	L.fungarian_flinger = "Fungianischer Werfer"
+	L.fungal_rotcaster = "Pilzverfallwirker"
 	L.particularly_bad_guy = "Besonders fieser Bösewicht"
+end
+
+L = BigWigs:NewBossLocale("Goblin Delve Trash", "deDE")
+if L then
+	L.goblin_trash = "Goblin Trash"
+
+	L.bopper_bot = "Bopperbot"
+	L.aerial_support_bot = "Luftunterstützungsbot"
+	L.masked_freelancer = "Maskierter Freiberufler"
+	L.underpaid_brute = "Unterbezahlter Schläger"
+	L.drill_sergeant = "Ausbildungsoffizier"
+	L.punchy_thug = "Schlagfertiger Schläger"
+	L.flinging_flicker = "Schleuderflacker"
+	L.bomb_bot = "Bombenbot"
 end
 
 L = BigWigs:NewBossLocale("Kobold Delve Trash", "deDE")
@@ -30,6 +45,8 @@ if L then
 	L.kobyss_witherer = "Siecherer der Kobyss"
 	L.wandering_gutter = "Wandernder Ausweider"
 	L.crazed_predator = "Rasendes Raubtier"
+	L.deepwater_makura = "Tiefwassermakura"
+	L.kobyss_trickster = "Trickser der Kobyss"
 end
 
 L = BigWigs:NewBossLocale("Nerubian Delve Trash", "deDE")
@@ -56,6 +73,17 @@ if L then
 	L.shadow_elemental = "Schattenelementar"
 end
 
+L = BigWigs:NewBossLocale("Old God Delve Trash", "deDE")
+if L then
+	L.old_god_trash = "Alter Gott Trash"
+
+	L.dark_walker = "Dunkelwandler"
+	L.hideous_amalgamation = "Schreckliches Gemisch"
+	L.coagulated_mass = "Geronnene Masse"
+	L.silent_slitherer = "Stiller Kriecher"
+	L.amalgamized_mass = "Verschmolzene Masse"
+end
+
 L = BigWigs:NewBossLocale("The Underkeep Trash", "deDE")
 if L then
 	L.ascended_webfriar = "Aufgestiegener Netzmönch"
@@ -64,18 +92,20 @@ if L then
 	L.web_marauder = "Netzmarodeur"
 end
 
-L = BigWigs:NewBossLocale("Delve Rares", "deDE")
+L = BigWigs:NewBossLocale("Underpin Rares", "deDE")
 if L then
-	L.rares = "Seltene Gegner"
+	L.rares = "Lorenboss Rares"
 
-	L.stolen_loader = "Gestohlener Lader"
-	L.invasive_sporecap = "Invasive Sporenkappe"
-	L.reno_jackson = "Reno Jackson"
-	L.sir_finley_mrgglton = "Sir Finley Mrrgglton"
 	L.treasure_wraith = "Schatzgespenst"
-	--L.venombite = "Venombite"
-	L.kasdru = "Kas'dru"
-	L.tala = "Tala"
-	L.velo = "Velo"
-	L.anubvir = "Anub'vir"
+	L.treasure_crab = "Schatzkrabbe"
+	L.hovering_menace = "Schwebende Bedrohung"
+	L.malfunctioning_pummeler = "Defekter Verprügler"
+	L.underpins_adoring_fan = "Schwärmender Fan des Lorenbosses"
+	L.underpins_well_connected_friend = "Gut vernetzter Freund des Lorenbosses"
+	L.underpins_explosive_ally = "Explosiver Verbündeter des Lorenbosses"
+	L.underpins_bodyguards_intern = "Praktikant des Leibwächters des Lorenbosses"
+	L.aggressively_lost_hobgoblin = "Wirklich verirrter Hobgoblin"
+	L.the_underpin = "Der Lorenboss (Zufälliges Erscheinen)"
+
+	--L.underpin_retreat_trigger = "People always messin' around on my perfectly legal, deeded land!"
 end

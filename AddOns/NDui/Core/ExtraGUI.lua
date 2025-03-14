@@ -66,6 +66,13 @@ local function clearEdit(options)
 	end
 end
 
+local function toggleOptionsPanel(option)
+	local dd = option.__owner
+	for i = 1, #dd.panels do
+		dd.panels[i]:SetShown(i == option.index)
+	end
+end
+
 local function updateRaidDebuffs()
 	B:GetModule("UnitFrames"):UpdateRaidDebuffs()
 end
@@ -111,47 +118,29 @@ function G:SetupRaidDebuffs(parent)
 		end)
 	end
 
-	local maxLevel = UnitLevel("player") > 70
+	--local maxLevel = UnitLevel("player") > 70
+
 	local dungeons = {}
-
-	if maxLevel then
-		for dungeonID = 1267, 1274 do
-			if dungeonID ~= 1273 then
-				AddNewDungeon(dungeons, dungeonID)
-			end
+	for dungeonID = 1267, 1274 do
+		if dungeonID ~= 1273 then
+			AddNewDungeon(dungeons, dungeonID)
 		end
-		AddNewDungeon(dungeons, 1210) -- 暗焰裂口
-		AddNewDungeon(dungeons, 71) -- 格瑞姆巴托
-		AddNewDungeon(dungeons, 1023) -- 围攻伯拉勒斯
-		AddNewDungeon(dungeons, 1182) -- 通灵战潮
-		AddNewDungeon(dungeons, 1184) -- 塞兹仙林的迷雾
-	else
-		for dungeonID = 1196, 1204 do
-			if dungeonID ~= 1200 then
-				AddNewDungeon(dungeons, dungeonID)
-			end
-		end
-		AddNewDungeon(dungeons, 1209)  -- 永恒黎明
-		AddNewDungeon(dungeons, 65)  -- 潮汐王座
-		AddNewDungeon(dungeons, 556)  -- 永茂林地
-		AddNewDungeon(dungeons, 740)  -- 黑鸦堡垒
-		AddNewDungeon(dungeons, 762)  -- 黑心林地
-		AddNewDungeon(dungeons, 968)  -- 阿塔达萨
-		AddNewDungeon(dungeons, 1021)  -- 维克雷斯庄园
 	end
+	AddNewDungeon(dungeons, 1210) -- 暗焰裂口
+	AddNewDungeon(dungeons, 71) -- 格瑞姆巴托
+	AddNewDungeon(dungeons, 1023) -- 围攻伯拉勒斯
+	AddNewDungeon(dungeons, 1182) -- 通灵战潮
+	AddNewDungeon(dungeons, 1184) -- 塞兹仙林的迷雾
 
-	local raids
-	if maxLevel then
-		raids = {
-			[1] = EJ_GetInstanceInfo(1273), -- 尼鲁巴尔王宫
-		}
-	else
-		raids = {
-			[1] = EJ_GetInstanceInfo(1200),
-			[2] = EJ_GetInstanceInfo(1208),
-			[3] = EJ_GetInstanceInfo(1207),
-		}
-	end
+	AddNewDungeon(dungeons, 1298) -- 水闸行动
+	AddNewDungeon(dungeons, 1187) -- 伤逝剧场
+	AddNewDungeon(dungeons, 1178) -- 麦卡贡行动
+	AddNewDungeon(dungeons, 1012) -- 暴富矿区！！
+
+	local raids = {
+		[1] = EJ_GetInstanceInfo(1273), -- 尼鲁巴尔王宫
+		[2] = EJ_GetInstanceInfo(1296), -- Liberation of Undermine
+	}
 
 	options[1] = G:CreateDropdown(frame, DUNGEONS.."*", 120, -30, dungeons, L["Dungeons Intro"], 130, 30)
 	options[1]:Hide()
@@ -1074,10 +1063,10 @@ function G:SetupUnitFrame(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 
 	local sliderRange = {
-		["Player"] = {100, 400},
-		["Focus"] = {100, 400},
-		["Pet"] = {100, 400},
-		["Boss"] = {100, 400},
+		["Player"] = {100, 500},
+		["Focus"] = {100, 500},
+		["Pet"] = {100, 500},
+		["Boss"] = {100, 500},
 	}
 
 	local defaultValue = { -- healthWidth, healthHeight, powerHeight, healthTag, powerTag, powerOffset, nameOffset
@@ -1087,8 +1076,8 @@ function G:SetupUnitFrame(parent)
 		["Boss"] = {150, 22, 2, 5, 5, 2, 0},
 	}
 
-	local function createOptionGroup(parent, title, offset, value, func)
-		createOptionTitle(parent, title, offset)
+	local function createOptionGroup(parent, offset, value, func)
+		createOptionTitle(parent, "", offset)
 		createOptionDropdown(parent, L["HealthValueType"], offset-50, G.HealthValues, L["100PercentTip"], "UFs", value.."HPTag", defaultValue[value][4], func)
 		local mult = 0
 		if value ~= "Pet" then
@@ -1116,7 +1105,6 @@ function G:SetupUnitFrame(parent)
 		end
 		UF:UpdateUFAuras()
 	end
-	createOptionGroup(scroll.child, L["Player&Target"], -10, "Player", updatePlayerSize)
 
 	local function updateFocusSize()
 		local frame = _G.oUF_Focus
@@ -1126,7 +1114,6 @@ function G:SetupUnitFrame(parent)
 			UF.UpdateFramePowerTag(frame)
 		end
 	end
-	createOptionGroup(scroll.child, L["FocusUF"], -550, "Focus", updateFocusSize)
 
 	local subFrames = {_G.oUF_Pet, _G.oUF_ToT, _G.oUF_FocusTarget}
 	local function updatePetSize()
@@ -1135,7 +1122,6 @@ function G:SetupUnitFrame(parent)
 			UF.UpdateFrameHealthTag(frame)
 		end
 	end
-	createOptionGroup(scroll.child, L["Pet&*Target"], -1090, "Pet", updatePetSize)
 
 	local function updateBossSize()
 		for _, frame in pairs(ns.oUF.objects) do
@@ -1146,7 +1132,37 @@ function G:SetupUnitFrame(parent)
 			end
 		end
 	end
-	createOptionGroup(scroll.child, L["Boss&Arena"], -1500, "Boss", updateBossSize)
+
+	local options = {
+		[1] = L["Player&Target"],
+		[2] = L["FocusUF"],
+		[3] = L["Pet&*Target"],
+		[4] = L["Boss&Arena"],
+	}
+	local data = {
+		[1] = {"Player", updatePlayerSize},
+		[2] = {"Focus", updateFocusSize},
+		[3] = {"Pet", updatePetSize},
+		[4] = {"Boss", updateBossSize},
+	}
+
+	local dd = G:CreateDropdown(scroll.child, "", 40, -15, options, nil, 180, 28)
+	dd:SetFrameLevel(20)
+	dd.Text:SetText(options[1])
+	dd:SetBackdropBorderColor(1, .8, 0, .5)
+	dd.panels = {}
+
+	for i = 1, #options do
+		local panel = CreateFrame("Frame", nil, scroll.child)
+		panel:SetSize(260, 1)
+		panel:SetPoint("TOP", 0, -30)
+		panel:Hide()
+		createOptionGroup(panel, -10, data[i][1], data[i][2])
+
+		dd.panels[i] = panel
+		dd.options[i]:HookScript("OnClick", toggleOptionsPanel)
+	end
+	toggleOptionsPanel(dd.options[1])
 end
 
 function G:SetupRaidFrame(parent)
@@ -1375,7 +1391,7 @@ function G:SetupCastbar(parent)
 			castbar.mover:SetSize(width+height+5, height+5)
 		end
 	end
-	createOptionGroup(scroll.child, L["Player Castbar"], -170, "Player", updatePlayerCastbar)
+	createOptionGroup(scroll.child, L["Player Castbar"], -150, "Player", updatePlayerCastbar)
 
 	local function updateTargetCastbar()
 		local castbar = _G.oUF_Target and _G.oUF_Target.Castbar
@@ -1387,7 +1403,7 @@ function G:SetupCastbar(parent)
 			castbar.mover:SetSize(width+height+5, height+5)
 		end
 	end
-	createOptionGroup(scroll.child, L["Target Castbar"], -390, "Target", updateTargetCastbar)
+	createOptionGroup(scroll.child, L["Target Castbar"], -350, "Target", updateTargetCastbar)
 
 	local function updateFocusCastbar()
 		local castbar = _G.oUF_Focus and _G.oUF_Focus.Castbar
@@ -1399,7 +1415,7 @@ function G:SetupCastbar(parent)
 			castbar.mover:SetSize(width+height+5, height+5)
 		end
 	end
-	createOptionGroup(scroll.child, L["Focus Castbar"], -610, "Focus", updateFocusCastbar)
+	createOptionGroup(scroll.child, L["Focus Castbar"], -550, "Focus", updateFocusCastbar)
 
 	panel:HookScript("OnHide", function()
 		local playerCB = _G.oUF_Player and _G.oUF_Player.Castbar
@@ -1483,9 +1499,9 @@ function G:SetupBagFilter(parent)
 		[9] = "FilterGoods",
 		[10] = "FilterQuest",
 		[11] = "FilterAnima",
-		[12] = "FilterRelic",
-		[13] = "FilterStone",
-		[14] = "FilterAOE",
+		[12] = "FilterStone",
+		[13] = "FilterAOE",
+		[14] = "FilterLower",
 	}
 
 	local BAG = B:GetModule("Bags")
@@ -1599,14 +1615,14 @@ function G:SetupNameplateSize(parent)
 		["enemy"] = {"PlateWidth", "PlateHeight", "NameTextSize","HealthTextSize", "HealthTextOffset", "PlateCBHeight", "CBTextSize", "PlateCBOffset", "HarmWidth", "HarmHeight", "NameTextOffset"},
 		["friend"] = {"FriendPlateWidth", "FriendPlateHeight", "FriendNameSize","FriendHealthSize", "FriendHealthOffset", "FriendPlateCBHeight", "FriendCBTextSize", "FriendPlateCBOffset", "HelpWidth", "HelpHeight", "FriendNameOffset"},
 	}
-	local function createOptionGroup(parent, title, offset, value, func, isEnemy)
-		createOptionTitle(parent, title, offset)
+	local function createOptionGroup(parent, offset, value, func, isEnemy)
+		createOptionTitle(parent, "", offset)
 		createOptionSlider(parent, L["Width"], 50, 500, 190, offset-60, optionValues[value][1], func, "Nameplate")
 		createOptionSlider(parent, L["Height"], 5, 50, 8, offset-130, optionValues[value][2], func, "Nameplate")
 		createOptionSlider(parent, L["InteractWidth"], 50, 500, 190, offset-200, optionValues[value][9], func, "Nameplate")
 		createOptionSlider(parent, L["InteractHeight"], 5, 50, 8, offset-270, optionValues[value][10], func, "Nameplate")
 		createOptionSlider(parent, L["NameTextSize"], 10, 50, 14, offset-340, optionValues[value][3], func, "Nameplate")
-		createOptionSlider(parent, L["NameTextOffset"], -100, 50, 5, offset-410, optionValues[value][11], func, "Nameplate")
+		createOptionSlider(parent, L["Name Offset"], -100, 50, 5, offset-410, optionValues[value][11], func, "Nameplate")
 		createOptionSlider(parent, L["HealthTextSize"], 10, 50, 16, offset-480, optionValues[value][4], func, "Nameplate")
 		createOptionSlider(parent, L["Health Offset"], -50, 50, 5, offset-550, optionValues[value][5], func, "Nameplate")
 		createOptionSlider(parent, L["Castbar Height"], 5, 50, 8, offset-620, optionValues[value][6], func, "Nameplate")
@@ -1619,8 +1635,32 @@ function G:SetupNameplateSize(parent)
 	end
 
 	local UF = B:GetModule("UnitFrames")
-	createOptionGroup(scroll.child, L["HostileNameplate"], -10, "enemy", UF.RefreshAllPlates, true)
-	createOptionGroup(scroll.child, L["FriendlyNameplate"], -1000, "friend", UF.RefreshAllPlates)
+	local options = {
+		[1] = L["HostileNameplate"],
+		[2] = L["FriendlyNameplate"],
+	}
+
+	local dd = G:CreateDropdown(scroll.child, "", 40, -15, options, nil, 180, 28)
+	dd:SetFrameLevel(20)
+	dd.Text:SetText(options[1])
+	dd:SetBackdropBorderColor(1, .8, 0, .5)
+	dd.panels = {}
+
+	for i = 1, #options do
+		local panel = CreateFrame("Frame", nil, scroll.child)
+		panel:SetSize(260, 1)
+		panel:SetPoint("TOP", 0, -30)
+		panel:Hide()
+		if i == 1 then
+			createOptionGroup(panel, -10, "enemy", UF.RefreshAllPlates, true)
+		else
+			createOptionGroup(panel, -10, "friend", UF.RefreshAllPlates)
+		end
+
+		dd.panels[i] = panel
+		dd.options[i]:HookScript("OnClick", toggleOptionsPanel)
+	end
+	toggleOptionsPanel(dd.options[1])
 end
 
 function G:SetupNameOnlySize(parent)
@@ -1701,16 +1741,10 @@ function G:SetupActionBar(parent)
 	local dd = G:CreateDropdown(scroll.child, "", 40, -15, options, nil, 180, 28)
 	dd:SetFrameLevel(20)
 	dd.Text:SetText(options[1])
+	dd:SetBackdropBorderColor(1, .8, 0, .5)
 	dd.panels = {}
 
-	local function toggleOptionsPanel(option)
-		for i = 1, #dd.panels do
-			dd.panels[i]:SetShown(i == option.index)
-		end
-	end
-
 	for i = 1, #options do
-		local value = options[i]
 		local panel = CreateFrame("Frame", nil, scroll.child)
 		panel:SetSize(260, 1)
 		panel:SetPoint("TOP", 0, -30)
@@ -1723,11 +1757,10 @@ function G:SetupActionBar(parent)
 		else
 			createOptionGroup(panel, -10, "Bar"..i)
 		end
-		dd.panels[i] = panel
 
+		dd.panels[i] = panel
 		dd.options[i]:HookScript("OnClick", toggleOptionsPanel)
 	end
-
 	toggleOptionsPanel(dd.options[1])
 end
 
@@ -1807,19 +1840,29 @@ function G:SetupUFAuras(parent)
 	}
 	local buffOptions = {DISABLE, L["ShowAll"], L["ShowDispell"]}
 	local debuffOptions = {DISABLE, L["ShowAll"], L["BlockOthers"]}
+	local growthOptions = {}
+	for i = 1, 4 do
+		growthOptions[i] = UF.AuraDirections[i].name
+	end
 
-	local function createOptionGroup(parent, title, offset, value, func, isBoss)
+	local function createOptionGroup(parent, offset, value, func, isBoss)
 		local default = defaultData[value]
-		createOptionTitle(parent, title, offset)
-		createOptionDropdown(parent, L["BuffType"], offset-50, buffOptions, nil, "UFs", value.."BuffType", default[1], func)
-		createOptionDropdown(parent, L["DebuffType"], offset-110, debuffOptions, nil, "UFs", value.."DebuffType", default[2], func)
-		createOptionSlider(parent, L["MaxBuffs"], 1, 40, default[4], offset-180, value.."NumBuff", func)
-		createOptionSlider(parent, L["MaxDebuffs"], 1, 40, default[5], offset-250, value.."NumDebuff", func)
+		createOptionTitle(parent, "", offset)
 		if isBoss then
-			createOptionSlider(parent, "Buff "..L["IconsPerRow"], 5, 20, default[3], offset-320, value.."BuffPerRow", func)
-			createOptionSlider(parent, "Debuff "..L["IconsPerRow"], 5, 20, default[3], offset-390, value.."DebuffPerRow", func)
+			offset = offset + 130
 		else
-			createOptionSlider(parent, L["IconsPerRow"], 5, 20, default[3], offset-320, value.."AurasPerRow", func)
+			createOptionDropdown(parent, L["GrowthDirection"], offset-50, growthOptions, "", "UFs", value.."AuraDirec", 1, func)
+			createOptionSlider(parent, L["yOffset"], 0, 200, 10, offset-110, value.."AuraOffset", func)
+		end
+		createOptionDropdown(parent, L["BuffType"], offset-180, buffOptions, nil, "UFs", value.."BuffType", default[1], func)
+		createOptionDropdown(parent, L["DebuffType"], offset-240, debuffOptions, nil, "UFs", value.."DebuffType", default[2], func)
+		createOptionSlider(parent, L["MaxBuffs"], 1, 40, default[4], offset-300, value.."NumBuff", func)
+		createOptionSlider(parent, L["MaxDebuffs"], 1, 40, default[5], offset-370, value.."NumDebuff", func)
+		if isBoss then
+			createOptionSlider(parent, "Buff "..L["IconsPerRow"], 5, 20, default[3], offset-440, value.."BuffPerRow", func)
+			createOptionSlider(parent, "Debuff "..L["IconsPerRow"], 5, 20, default[3], offset-510, value.."DebuffPerRow", func)
+		else
+			createOptionSlider(parent, L["IconsPerRow"], 5, 20, default[3], offset-440, value.."AurasPerRow", func)
 		end
 	end
 
@@ -1827,12 +1870,40 @@ function G:SetupUFAuras(parent)
 	createOptionCheck(parent, offset-35, L["DesaturateIcon"], "UFs", "Desaturate", UF.UpdateUFAuras, L["DesaturateIconTip"])
 	createOptionCheck(parent, offset-70, L["DebuffColor"], "UFs", "DebuffColor", UF.UpdateUFAuras, L["DebuffColorTip"])
 
-	createOptionGroup(parent, L["PlayerUF"], offset-140, "Player", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["TargetUF"], offset-550, "Target", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["TotUF"], offset-960, "ToT", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["PetUF"], offset-1370, "Pet", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["FocusUF"], offset-1780, "Focus", UF.UpdateUFAuras)
-	createOptionGroup(parent, L["BossFrame"], offset-2190, "Boss", UF.UpdateUFAuras, true)
+	local options = {
+		[1] = L["PlayerUF"],
+		[2] = L["TargetUF"],
+		[3] = L["TotUF"],
+		[4] = L["PetUF"],
+		[5] = L["FocusUF"],
+		[6] = L["BossFrame"],
+	}
+	local data = {
+		[1] = "Player",
+		[2] = "Target",
+		[3] = "ToT",
+		[4] = "Pet",
+		[5] = "Focus",
+		[6] = "Boss",
+	}
+
+	local dd = G:CreateDropdown(scroll.child, "", 40, -135, options, nil, 180, 28)
+	dd:SetFrameLevel(20)
+	dd.Text:SetText(options[1])
+	dd:SetBackdropBorderColor(1, .8, 0, .5)
+	dd.panels = {}
+
+	for i = 1, #options do
+		local panel = CreateFrame("Frame", nil, scroll.child)
+		panel:SetSize(260, 1)
+		panel:SetPoint("TOP", 0, -30)
+		panel:Hide()
+		createOptionGroup(panel, -130, data[i], UF.UpdateUFAuras, i == 6)
+
+		dd.panels[i] = panel
+		dd.options[i]:HookScript("OnClick", toggleOptionsPanel)
+	end
+	toggleOptionsPanel(dd.options[1])
 end
 
 function G:SetupActionbarStyle(parent)

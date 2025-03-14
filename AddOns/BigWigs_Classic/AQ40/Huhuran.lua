@@ -35,6 +35,13 @@ function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED", "EnrageFrenzy", 26051)
 	self:Log("SPELL_DISPEL", "EnrageFrenzyDispelled", "*")
 	self:Log("SPELL_AURA_APPLIED", "BerserkApplied", 26068)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "WyvernSting", 1215753)
+		self:Log("SPELL_AURA_APPLIED", "WyvernStingApplied", 1215753)
+		self:Log("SPELL_AURA_REMOVED", "WyvernStingRemoved", 1215753)
+		self:Log("SPELL_AURA_APPLIED", "EnrageFrenzy", 1215755)
+		self:Log("SPELL_AURA_APPLIED", "BerserkApplied", 1215885)
+	end
 end
 
 function mod:OnEngage()
@@ -52,9 +59,9 @@ end
 function mod:WyvernSting(args)
 	poisonCount = 0
 	poisonTime = args.time
-	self:CDBar(args.spellId, 25) -- Can randomly be way higher than 25
-	self:Message(args.spellId, "red", CL.on_group:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
+	self:CDBar(26180, 25) -- Can randomly be way higher than 25
+	self:Message(26180, "red", CL.on_group:format(args.spellName))
+	self:PlaySound(26180, "alert")
 end
 
 function mod:WyvernStingApplied(args)
@@ -67,16 +74,16 @@ function mod:WyvernStingRemoved(args)
 	if self:Player(args.destFlags) then -- Players, not pets
 		poisonCount = poisonCount - 1
 		if poisonCount == 0 then
-			self:Message(args.spellId, "green", CL.removed_after:format(args.spellName, args.time-poisonTime))
+			self:Message(26180, "green", CL.removed_after:format(args.spellName, args.time-poisonTime))
 		end
 	end
 end
 
 function mod:EnrageFrenzy(args)
-	self:CDBar(args.spellId, 14.5)
-	self:Message(args.spellId, "yellow", CL.buff_boss:format(args.spellName))
+	self:CDBar(26051, 14.5)
+	self:Message(26051, "yellow", CL.buff_boss:format(args.spellName))
 	if self:Dispeller("enrage", true) then
-		self:PlaySound(args.spellId, "alarm")
+		self:PlaySound(26051, "alarm")
 	end
 end
 

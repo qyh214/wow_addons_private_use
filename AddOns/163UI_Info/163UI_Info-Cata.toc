@@ -1,0 +1,13 @@
+## Interface: 40400
+## Title: |cff880303[163UI]|r Info
+## Version: r20241009
+## Author: NetEase Inc.
+## IconTexture: Interface\AddOns\!!!163UI!!!\Media\Textures\UI2-logo
+## SavedVariables: DDPFGlobal
+## SavedVariablesPerCharacter: 
+
+load.xml
+
+## Title: DD Broker
+## Title-zhCN: DD数据同步插件
+## X-Vendor: NetEase

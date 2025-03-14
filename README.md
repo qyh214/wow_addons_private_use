@@ -118,3 +118,7 @@ wa 自用字符串、合集整理可访问：https://wago.io/p/shihuang214
 
 - 黑盒工坊分享码：122950eO2d8Llzuk 或者搜索秦始皇二一四
 - 新手盒子分享码：265783 或者搜索秦始皇二一四
+
+编辑模式删除
+https://ds.163.com/feed/66aef2dc156f2a5710467156/
+/run Enum.EditModeLayoutType.Server = 2

@@ -774,6 +774,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [214380] = {
+        name = "Raen Dawncavalyr",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.432846,
+                    y = 0.564001,
+                },
+            },
+        },
+    },
     [214402] = {
         name = "Alleria Windrunner",
         locations = {
@@ -1657,6 +1668,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [216566] = {
+        name = "The Verdigrease Knight",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.669051,
+                    y = 0.785815,
+                },
+            },
+        },
+    },
     [216567] = {
         name = "Janky",
         locations = {
@@ -1785,6 +1807,17 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.621932,
                     y = 0.396319,
+                },
+            },
+        },
+    },
+    [217128] = {
+        name = "Speaker Kuldas",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.474733,
+                    y = 0.319359,
                 },
             },
         },
@@ -2394,6 +2427,50 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [218837] = {
+        name = "Arfur",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.667284,
+                    y = 0.784612,
+                },
+            },
+        },
+    },
+    [218864] = {
+        name = "Gullhead",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.667675,
+                    y = 0.785847,
+                },
+            },
+        },
+    },
+    [218866] = {
+        name = "Walkmay",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.66813,
+                    y = 0.78504,
+                },
+            },
+        },
+    },
+    [218878] = {
+        name = "Marline",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.667837,
+                    y = 0.784425,
+                },
+            },
+        },
+    },
     [219135] = {
         name = "Wenren Althal",
         locations = {
@@ -2443,8 +2520,8 @@ BtWQuestsDatabase:AddNPCsTable({
         locations = {
             [2339] = {
                 {
-                    x = 0.646681,
-                    y = 0.268656,
+                    x = 0.627128,
+                    y = 0.217337,
                 },
             },
         },
@@ -3398,6 +3475,28 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [224395] = {
+        name = "Orweyna",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.629749,
+                    y = 0.674924,
+                },
+            },
+        },
+    },
+    [224397] = {
+        name = "Hannan",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.629849,
+                    y = 0.675748,
+                },
+            },
+        },
+    },
     [224602] = {
         name = "Danagh",
         locations = {
@@ -3453,6 +3552,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [224740] = {
+        name = "Orweyna",
+        locations = {
+            [2215] = {
+                {
+                    x = 0.249026,
+                    y = 0.516069,
+                },
+            },
+        },
+    },
     [224741] = {
         name = "Dolena",
         locations = {
@@ -3460,6 +3570,50 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.699442,
                     y = 0.325756,
+                },
+            },
+        },
+    },
+    [224857] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.584496,
+                    y = 0.647093,
+                },
+            },
+        },
+    },
+    [224866] = {
+        name = "Orweyna",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.644612,
+                    y = 0.797585,
+                },
+            },
+        },
+    },
+    [224874] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.645767,
+                    y = 0.797688,
+                },
+            },
+        },
+    },
+    [224913] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.603916,
+                    y = 0.871286,
                 },
             },
         },
@@ -3585,6 +3739,39 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [225481] = {
+        name = "Slimediver Kazzandra",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.406438,
+                    y = 0.870675,
+                },
+            },
+        },
+    },
+    [225500] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.241631,
+                    y = 0.514145,
+                },
+            },
+        },
+    },
+    [225523] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.397901,
+                    y = 0.243072,
+                },
+            },
+        },
+    },
     [225533] = {
         name = "Therkan",
         locations = {
@@ -3603,6 +3790,28 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.465175,
                     y = 0.303263,
+                },
+            },
+        },
+    },
+    [225570] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.181325,
+                    y = 0.509632,
+                },
+            },
+        },
+    },
+    [225571] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [2339] = {
+                {
+                    x = 0.422189,
+                    y = 0.269846,
                 },
             },
         },
@@ -3629,6 +3838,72 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [225587] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.659157,
+                    y = 0.755025,
+                },
+            },
+        },
+    },
+    [225591] = {
+        name = "Pamsy",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.695505,
+                    y = 0.841941,
+                },
+            },
+        },
+    },
+    [225596] = {
+        name = "Orweyna",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.718636,
+                    y = 0.804663,
+                },
+            },
+        },
+    },
+    [225597] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.714244,
+                    y = 0.834854,
+                },
+            },
+        },
+    },
+    [225598] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.705238,
+                    y = 0.887293,
+                },
+            },
+        },
+    },
+    [225599] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.704941,
+                    y = 0.887639,
+                },
+            },
+        },
+    },
     [225608] = {
         name = "Prospera Cogwail",
         locations = {
@@ -3651,6 +3926,138 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [225618] = {
+        name = "Pamsy",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.437409,
+                    y = 0.609931,
+                },
+            },
+        },
+    },
+    [225624] = {
+        name = "Marin Noggenfogger",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.274576,
+                    y = 0.708313,
+                },
+            },
+        },
+    },
+    [225625] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.27472,
+                    y = 0.710187,
+                },
+            },
+        },
+    },
+    [225635] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.460766,
+                    y = 0.785754,
+                },
+            },
+        },
+    },
+    [225637] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.459441,
+                    y = 0.789294,
+                },
+            },
+        },
+    },
+    [225638] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.534661,
+                    y = 0.71078,
+                },
+            },
+        },
+    },
+    [225639] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.533551,
+                    y = 0.71069,
+                },
+            },
+        },
+    },
+    [225645] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [862] = {
+                {
+                    x = 0.222358,
+                    y = 0.5447,
+                },
+            },
+        },
+    },
+    [225648] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [862] = {
+                {
+                    x = 0.220852,
+                    y = 0.577164,
+                },
+            },
+        },
+    },
+    [225659] = {
+        name = "Orweyna",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.434568,
+                    y = 0.61076,
+                },
+            },
+        },
+    },
+    [225669] = {
+        name = "Alleria Windrunner",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.294514,
+                    y = 0.69503,
+                },
+            },
+        },
+    },
+    [225686] = {
+        name = "Baron Revilgaz",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.307538,
+                    y = 0.394718,
+                },
+            },
+        },
+    },
     [225711] = {
         name = "General Steelstrike",
         locations = {
@@ -3662,6 +4069,72 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [225719] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.556902,
+                    y = 0.635414,
+                },
+            },
+        },
+    },
+    [225730] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.586398,
+                    y = 0.594613,
+                },
+            },
+        },
+    },
+    [225756] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.390007,
+                    y = 0.247304,
+                },
+            },
+        },
+    },
+    [225757] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.396688,
+                    y = 0.242208,
+                },
+            },
+        },
+    },
+    [225772] = {
+        name = "Pamsy",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.714703,
+                    y = 0.835266,
+                },
+            },
+        },
+    },
+    [225847] = {
+        name = "Venture Supervisor",
+        locations = {
+            [862] = {
+                {
+                    x = 0.236438,
+                    y = 0.601823,
+                },
+            },
+        },
+    },
     [225857] = {
         name = "Lerrenai Fayn",
         locations = {
@@ -3669,6 +4142,83 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.679988,
                     y = 0.442095,
+                },
+            },
+        },
+    },
+    [225867] = {
+        name = "Marin Noggenfogger",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.584923,
+                    y = 0.332786,
+                },
+            },
+        },
+    },
+    [225868] = {
+        name = "Baron Revilgaz",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.584318,
+                    y = 0.331823,
+                },
+            },
+        },
+    },
+    [225870] = {
+        name = "Fleet Master Seahorn",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.639838,
+                    y = 0.171845,
+                },
+            },
+        },
+    },
+    [225871] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.453079,
+                    y = 0.575065,
+                },
+            },
+        },
+    },
+    [225873] = {
+        name = "Orweyna",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.452167,
+                    y = 0.575721,
+                },
+            },
+        },
+    },
+    [225876] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.564069,
+                    y = 0.676907,
+                },
+            },
+        },
+    },
+    [225878] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.565471,
+                    y = 0.447353,
                 },
             },
         },
@@ -3750,6 +4300,50 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [226518] = {
+        name = "Papa Kraz Torquewrench",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.253321,
+                    y = 0.420048,
+                },
+            },
+        },
+    },
+    [226522] = {
+        name = "Neenee Torquewrench",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.253192,
+                    y = 0.418305,
+                },
+            },
+        },
+    },
+    [226569] = {
+        name = "Snap Vellumgrease",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.322289,
+                    y = 0.309947,
+                },
+            },
+        },
+    },
+    [226660] = {
+        name = "Dirk Greasedealer",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.486753,
+                    y = 0.407383,
+                },
+            },
+        },
+    },
     [226672] = {
         name = "Orweyna",
         locations = {
@@ -3757,6 +4351,39 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.492631,
                     y = 0.602071,
+                },
+            },
+        },
+    },
+    [226703] = {
+        name = "Snap Vellumgrease",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.272244,
+                    y = 0.354277,
+                },
+            },
+        },
+    },
+    [226710] = {
+        name = "Alley Rat",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.330947,
+                    y = 0.843186,
+                },
+            },
+        },
+    },
+    [226728] = {
+        name = "Humphrey Shortswig",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.381859,
+                    y = 0.884799,
                 },
             },
         },
@@ -3871,6 +4498,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [227499] = {
+        name = "Orweyna",
+        locations = {
+            [2339] = {
+                {
+                    x = 0.422996,
+                    y = 0.273688,
+                },
+            },
+        },
+    },
     [227523] = {
         name = "Brann Bronzebeard",
         locations = {
@@ -3882,6 +4520,17 @@ BtWQuestsDatabase:AddNPCsTable({
             },
         },
     },
+    [227531] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.629942,
+                    y = 0.783892,
+                },
+            },
+        },
+    },
     [227544] = {
         name = "Brann Bronzebeard",
         locations = {
@@ -3889,6 +4538,589 @@ BtWQuestsDatabase:AddNPCsTable({
                 {
                     x = 0.558624,
                     y = 0.438582,
+                },
+            },
+        },
+    },
+    [227691] = {
+        name = "Orweyna",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.658572,
+                    y = 0.754351,
+                },
+            },
+        },
+    },
+    [227758] = {
+        name = "Alleria Windrunner",
+        locations = {
+            [2339] = {
+                {
+                    x = 0.423702,
+                    y = 0.268841,
+                },
+            },
+        },
+    },
+    [227937] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [862] = {
+                {
+                    x = 0.221929,
+                    y = 0.544349,
+                },
+            },
+        },
+    },
+    [228017] = {
+        name = "Zirdo",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.7253,
+                    y = 0.791301,
+                },
+            },
+        },
+    },
+    [228074] = {
+        name = "Angorla",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.710812,
+                    y = 0.441188,
+                },
+            },
+        },
+    },
+    [228132] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [862] = {
+                {
+                    x = 0.221088,
+                    y = 0.576809,
+                },
+            },
+        },
+    },
+    [228158] = {
+        name = "Ripsnoodle",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.651939,
+                    y = 0.598599,
+                },
+            },
+        },
+    },
+    [228214] = {
+        name = "Pamsy",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.705793,
+                    y = 0.885838,
+                },
+            },
+        },
+    },
+    [228286] = {
+        name = "Skedgit Cinderbangs",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.432569,
+                    y = 0.828432,
+                },
+            },
+        },
+    },
+    [228333] = {
+        name = "Skedgit Cinderbangs",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.511513,
+                    y = 0.372542,
+                },
+            },
+        },
+    },
+    [228341] = {
+        name = "Skedgit Cinderbangs",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.616168,
+                    y = 0.32295,
+                },
+            },
+        },
+    },
+    [228393] = {
+        name = "Bruxie Slyhook",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.329605,
+                    y = 0.520754,
+                },
+            },
+        },
+    },
+    [228566] = {
+        name = "Jazz Mokkitz",
+        locations = {
+            [862] = {
+                {
+                    x = 0.199823,
+                    y = 0.564402,
+                },
+            },
+        },
+    },
+    [228857] = {
+        name = "Mama Keara",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.396261,
+                    y = 0.684943,
+                },
+            },
+        },
+    },
+    [228860] = {
+        name = "\"Gabby\" Gabi",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.396106,
+                    y = 0.683077,
+                },
+            },
+        },
+    },
+    [228894] = {
+        name = "Orweyna",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.705786,
+                    y = 0.886824,
+                },
+            },
+        },
+    },
+    [229223] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.455495,
+                    y = 0.417796,
+                },
+            },
+        },
+    },
+    [229233] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.330414,
+                    y = 0.480215,
+                },
+            },
+        },
+    },
+    [229235] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.617271,
+                    y = 0.719981,
+                },
+            },
+        },
+    },
+    [229236] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.423191,
+                    y = 0.513935,
+                },
+            },
+        },
+    },
+    [229242] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.308003,
+                    y = 0.392797,
+                },
+            },
+        },
+    },
+    [229243] = {
+        name = "Renzik \"The Shiv\"",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.617884,
+                    y = 0.718845,
+                },
+            },
+        },
+    },
+    [229246] = {
+        name = "Grimla Fizzlecrank",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.452151,
+                    y = 0.421307,
+                },
+            },
+        },
+    },
+    [229261] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.26921,
+                    y = 0.720627,
+                },
+            },
+        },
+    },
+    [230235] = {
+        name = "Skaggit",
+        locations = {
+            [2339] = {
+                {
+                    x = 0.732821,
+                    y = 0.062531,
+                },
+            },
+        },
+    },
+    [230238] = {
+        name = "Skaggit",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.693092,
+                    y = 0.480679,
+                },
+            },
+        },
+    },
+    [230242] = {
+        name = "Bargus",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.674927,
+                    y = 0.419708,
+                },
+            },
+        },
+    },
+    [230268] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.56311,
+                    y = 0.67239,
+                },
+            },
+        },
+    },
+    [230271] = {
+        name = "Bargus",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.488631,
+                    y = 0.184265,
+                },
+            },
+        },
+    },
+    [230554] = {
+        name = "Old Man Lowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.274156,
+                    y = 0.624305,
+                },
+            },
+        },
+    },
+    [230555] = {
+        name = "Pitz Lowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.276843,
+                    y = 0.621544,
+                },
+            },
+        },
+    },
+    [230841] = {
+        name = "The Verdigrease Knight",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.68091,
+                    y = 0.804552,
+                },
+            },
+        },
+    },
+    [231140] = {
+        name = "Bargus",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.481541,
+                    y = 0.439456,
+                },
+            },
+        },
+    },
+    [231143] = {
+        name = "Bargus",
+        locations = {
+            [2375] = {
+                {
+                    x = 0.40144,
+                    y = 0.70719,
+                },
+            },
+        },
+    },
+    [231517] = {
+        name = "Pitz Lowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.37252,
+                    y = 0.52975,
+                },
+            },
+        },
+    },
+    [232132] = {
+        name = "Dawn",
+        locations = {
+            [2339] = {
+                {
+                    x = 0.41856,
+                    y = 0.261649,
+                },
+            },
+        },
+    },
+    [232180] = {
+        name = "Old Man Lowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.396937,
+                    y = 0.614481,
+                },
+            },
+        },
+    },
+    [232491] = {
+        name = "Pamsy",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.72298,
+                    y = 0.82285,
+                },
+            },
+        },
+    },
+    [232660] = {
+        name = "Void Elf Archer",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.29466,
+                    y = 0.694733,
+                },
+            },
+        },
+    },
+    [233235] = {
+        name = "Gerry Clogcraw",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.440497,
+                    y = 0.500989,
+                },
+            },
+        },
+    },
+    [233296] = {
+        name = "Fleet Master Seahorn",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.639675,
+                    y = 0.171629,
+                },
+            },
+        },
+    },
+    [233390] = {
+        name = "Pamsy",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.485403,
+                    y = 0.776232,
+                },
+            },
+        },
+    },
+    [233420] = {
+        name = "Benny Gooserocket",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.684482,
+                    y = 0.964558,
+                },
+            },
+        },
+    },
+    [233482] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.436092,
+                    y = 0.510959,
+                },
+            },
+        },
+    },
+    [233501] = {
+        name = "Bargus",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.435343,
+                    y = 0.284932,
+                },
+            },
+        },
+    },
+    [234048] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.616476,
+                    y = 0.624601,
+                },
+            },
+        },
+    },
+    [234293] = {
+        name = "Stitchoaf",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.674467,
+                    y = 0.969407,
+                },
+            },
+        },
+    },
+    [234294] = {
+        name = "Trixxie Boltcrank",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.672635,
+                    y = 0.98155,
+                },
+            },
+        },
+    },
+    [234551] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.508592,
+                    y = 0.345318,
+                },
+            },
+        },
+    },
+    [234728] = {
+        name = "Orweyna",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.485582,
+                    y = 0.773554,
+                },
+            },
+        },
+    },
+    [235216] = {
+        name = "Starving Snapdragon Runt",
+        locations = {
+            [2369] = {
+                {
+                    x = 0.709822,
+                    y = 0.486318,
+                },
+            },
+        },
+    },
+    [235238] = {
+        name = "Monte Gazlowe",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.572318,
+                    y = 0.447169,
+                },
+            },
+        },
+    },
+    [235849] = {
+        name = "Blackwater Bruiser",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.639675,
+                    y = 0.171629,
                 },
             },
         },

@@ -1,11 +1,11 @@
-## Interface: 110000, 110002
+## Interface: 110100
 ## Title: SavedInstances
 ## Notes: Tracks Raid, Instance, World Boss lockouts for all your characters, daily/weekly quests, currencies, trade cooldowns, and more!
 ## Notes-ruRU: Отслеживает прогресс в рейдах и подземельях, также блокировки мировых боссов для всех Ваших персонажей, также ежедневные/еженедельные квесты, валюту и многое другое!
 ## Author: oscarucb and the Saved Instances Community
-## Version: 11.0.3
+## Version: 11.1.0
 ## IconTexTure: Interface\AddOns\SavedInstances\Media\Icon.tga
-## X-ReleaseDate: 2024-08-27T07:56:13Z
+## X-ReleaseDate: 2025-03-05T20:50:30Z
 ## X-License: All Rights Reserved
 ## X-Category: Raid
 ## X-LoadOn-Always: delayed
@@ -14,6 +14,17 @@
 ## OptionalDeps: Ace3, CallbackHandler-1.0, LibDataBroker-1.1, LibDBIcon-1.0, LibQTip-1.0
 ## SavedVariables: SavedInstancesDB
 ## LoadManagers: AddonLoader
+## Category-enUS: Dungeons & Raids
+## Category-deDE: Dungeons & Schlachtzüge
+## Category-esES: Mazmorras y bandas
+## Category-esMX: Calabozos y bandas
+## Category-frFR: Donjons et raids
+## Category-itIT: Spedizioni e incursioni
+## Category-koKR: 던전 및 공격대
+## Category-ptBR: Masmorras e Raides
+## Category-ruRU: Подземелья и рейды
+## Category-zhCN: 地下城和团队副本
+## Category-zhTW: 地城與團隊
 
 # external code + initialization
 embeds.xml
@@ -35,7 +46,6 @@ Modules\BonusRoll.lua
 Modules\Calling.lua
 Modules\Currency.lua
 Modules\Emissary.lua
-Modules\LFR.lua
 Modules\MythicPlus.lua
 Modules\Paragon.lua
 Modules\Progress.lua

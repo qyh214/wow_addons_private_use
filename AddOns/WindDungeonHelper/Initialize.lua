@@ -5,7 +5,7 @@ local GetLocale = GetLocale
 
 local C_AddOns_GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 
-local Engine = LibStub("AceAddon-3.0"):NewAddon(addonName)
+local Engine = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceEvent-3.0")
 local Locale = LibStub("AceLocale-3.0"):GetLocale(addonName, true)
 
 addon[1] = Engine

@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "Сфера, которая отскакивает от игроков и босса."
 	L.ball_yell = "Гул'каф ан'ков Н'Зот."
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "Отскок Сферы"
 	L.bounce_desc = "Счетчик для отскакиваний сферы."
 

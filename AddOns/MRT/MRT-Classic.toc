@@ -1,9 +1,9 @@
-## Interface: 11503, 40400
+## Interface: 40402, 11506
 ## Title: Method Raid Tools
 ## Author: ykiigor
 ## Notes: Method Raid Tools
 ## SavedVariables: VMRT
-## Version: 4910
+## Version: 5140
 core.lua
 Functions.lua
 embeds.xml
@@ -16,6 +16,7 @@ localization\localization.tw.lua
 localization\localization.kr.lua
 localization\localization.it.lua
 localization\localization.lua
+Data.lua
 BlizzFix.lua
 Options.lua
 Note.lua

@@ -1,7 +1,7 @@
 local E, L, C = select(2, ...):unpack()
 
 local LSM = E.Libs.LSM
-LSM:Register("font", "PT Sans Narrow", "Interface\\Addons\\OmniCD\\Libs\\Fonts\\PTSansNarrow-Bold.ttf", bit.bor(LSM.LOCALE_BIT_western, LSM.LOCALE_BIT_ruRU))
+LSM:Register("font", "PT Sans Narrow", "Interface\\Addons\\OmniCD\\Media\\Fonts\\PTSansNarrow-Bold.ttf", bit.bor(LSM.LOCALE_BIT_western, LSM.LOCALE_BIT_ruRU))
 LSM:Register("statusbar", "OmniCD Flat", "Interface\\Addons\\OmniCD\\Media\\omnicd-texture_flat.blp")
 
 local LSM_Font = {}
@@ -61,13 +61,6 @@ for k, v in pairs(defaultFonts) do
 	C.General.fonts[k].ofsY = v[8]
 end
 
-local flagFixForDF = {
-	["NONE"] = "",
-
-
-
-}
-
 function E:SetFontProperties(fontString, db)
 	local ofsX, flag = db.ofsX, db.flag
 	if db.font == "Homespun" then
@@ -75,24 +68,11 @@ function E:SetFontProperties(fontString, db)
 	end
 	fontString:SetShadowOffset(ofsX, -ofsX)
 	fontString:SetShadowColor(db.r, db.g, db.b, ofsX == 0 and 0 or 1)
-
-	flag = (self.isDF or self.isCata or self.isWOTLKC341 or self.isClassic1144) and flagFixForDF[flag] or flag
-	fontString:SetFont(LSM:Fetch("font", db.font), db.size, flag)
+	fontString:SetFont(LSM:Fetch("font", db.font), db.size, flag == "NONE" and "" or flag)
 end
 
 function E.Party:ConfigTextures()
-	local texture = E.Libs.LSM:Fetch("statusbar", E.profile.General.textures.statusBar.bar)
-	for _, frame in pairs(self.extraBars) do
-		for i = 1, frame.numIcons do
-			local icon = frame.icons[i]
-			local statusBar = icon.statusBar
-			if statusBar then
-				statusBar.BG:SetTexture(texture)
-				statusBar.CastingBar:SetStatusBarTexture(texture)
-				statusBar.CastingBar.BG:SetTexture(E.Libs.LSM:Fetch("statusbar", E.profile.General.textures.statusBar.BG))
-			end
-		end
-	end
+	self:UpdateStatusBarTextures()
 end
 
 function E:ConfigTextures()
@@ -278,7 +258,7 @@ local General = {
 									name = L["MM:SS Color"],
 									order = 2,
 									type = "color",
-									dialogControl = "ColorPicker-OmniCD",
+									dialogControl = "ColorPicker-OmniCDC",
 									get = getTextColor,
 									set = setTextColor,
 								},
@@ -287,7 +267,7 @@ local General = {
 									name = L["MM Color"],
 									order = 3,
 									type = "color",
-									dialogControl = "ColorPicker-OmniCD",
+									dialogControl = "ColorPicker-OmniCDC",
 									get = getTextColor,
 									set = setTextColor,
 								},

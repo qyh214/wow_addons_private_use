@@ -135,6 +135,24 @@ function S:BuyEmAll()
 	B.CreateMF(_G.BuyEmAllFrame)
 end
 
+function S:OmniCD_HandleIcon(barFrame, iconIndex)
+	local icon = barFrame.icons[iconIndex]
+	if not icon.__shadow then
+		icon.__shadow = B.CreateSD(icon)
+	end
+	icon.icon:SetTexCoord(unpack(DB.TexCoord))
+end
+
+function S:OmniCD()
+	local OmniCD = _G.OmniCD
+	if not OmniCD then return end
+
+	local Party = OmniCD[1].Party
+	if Party.AcquireIcon then
+		hooksecurefunc(Party, "AcquireIcon", S.OmniCD_HandleIcon)
+	end
+end
+
 S:RegisterSkin("WorldQuestsList", S.WorldQuestsList)
 S:RegisterSkin("PremadeGroupsFilter", S.PremadeGroupsFilter)
 S:RegisterSkin("MogPartialSets", S.MogPartialSets)
@@ -143,6 +161,7 @@ S:RegisterSkin("LibQTip")
 S:RegisterSkin("SavedInstances", S.SavedInstances)
 S:RegisterSkin("Krowi_WorldMapButtons")
 S:RegisterSkin("BuyEmAll", S.BuyEmAll)
+S:RegisterSkin("OmniCD", S.OmniCD)
 
 -- Hide Toggle Button
 S.ToggleFrames = {}

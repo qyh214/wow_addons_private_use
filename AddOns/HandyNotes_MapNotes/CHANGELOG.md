@@ -1,18 +1,11 @@
 # MapNote
-## [2.3.0](https://github.com/Ssesmar/MapNote) (2024-09-10)
-- Note:
-
--- MapNotes now works on every version of World of Warcraft. Classic Era / Cataclysm / Retail / PTR
-
-Retail:
-
-changed incorrect translation of the chat function "legacy" changed to "classic".
-
+## [2.7.0](https://github.com/Ssesmar/MapNote) (2025-03-11)
+    
 - Description:
 
 REQUIRES --> HandyNotes <-- to be installed                                                                                    
 
-    A collection of various icons on various maps from previous expansions up to Dragonflight. Displays raid and dungeon entrances, portals, ships, zeppelins, exits and passage icons
+    A collection of various icons on various maps from previous expansions up to The War Within. Displays raid and dungeon entrances, portals, ships, zeppelins, exits and passage icons
     Displays Horde and Alliance icons that can also be activated by the other faction
     All symbols are clickable (except on the minimap) and have a function
 

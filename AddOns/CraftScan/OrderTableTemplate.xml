@@ -1,0 +1,145 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+	<Script file="OrderTableTemplate.lua"/>
+
+	<Frame name="CraftScanTableCellTextTemplate" mixin="CraftScanTableCellTextMixin" virtual="true">
+		<Size x="0" y="16"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString parentKey="Text" inherits="Number14FontWhite" justifyH="LEFT" setAllPoints="true"/>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="CraftScanCrafterTableCellItemNameTemplate" mixin="CraftScanCrafterTableCellItemNameMixin" virtual="true">
+		<Size x="0" y="16"/>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="Icon">
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="LEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="2">
+				<Texture parentKey="IconBorder" atlas="auctionhouse-itemicon-small-border" useAtlasSize="false">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.Icon"/>
+					</Anchors>
+				</Texture>
+
+				<FontString parentKey="Text" inherits="Number14FontWhite" justifyH="LEFT" maxLines="1">
+					<Size x="0" y="1"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="4" y="-1"/>
+						<Anchor point="RIGHT" x="1"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Frame name="CraftScanCrafterTableCellTimeTemplate" mixin="CraftScanCrafterTableCellTimeMixin" passThroughButtons="LeftButton, RightButton" virtual="true">
+		<Size x="0" y="16"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString parentKey="Text" inherits="Number14FontGray" justifyH="RIGHT">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-15" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="-20" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+	<Frame name="CraftScanCrafterTableCellCrafterNameTemplate" mixin="CraftScanCrafterTableCellCrafterNameMixin" inherits="CraftScanTableCellTextTemplate" virtual="true"/>
+	<Frame name="CraftScanCrafterTableCellProfessionNameTemplate" mixin="CraftScanCrafterTableCellProfessionNameMixin" inherits="CraftScanTableCellTextTemplate" virtual="true"/>
+	<Frame name="CraftScanCrafterTableCellCustomerNameTemplate" mixin="CraftScanCrafterTableCellCustomerNameMixin" inherits="CraftScanTableCellTextTemplate" virtual="true"/>
+	<Frame name="CraftScanCrafterTableCellInteractionTemplate" mixin="CraftScanCrafterTableCellInteractionMixin" inherits="CraftScanTableCellTextTemplate" virtual="true">
+		<Size x="0" y="16"/>
+		<Frames>
+			<Button name="CraftScanChatPopOutButton" parentKey="Chat" frameStrata="MEDIUM" mixin="CraftScanChatPopOutButtonMixin" registerForClicks="LeftButtonUp, RightButtonUp">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="LEFT" x="32" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnClick method="OnClick"/>
+				</Scripts>
+				<NormalTexture file="Interface\ChatFrame\UI-ChatWhisperIcon"/>
+				<!-- <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/> -->
+				<!-- <DisabledTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Disabled"/> -->
+				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="SelectedHighlight" name="$parentPinkOverlay" file="Interface\ChatFrame\UI-ChatWhisperIcon" hidden="true">
+							<Size x="14" y="14" />
+							<Color r="1" g="0" b="1" />
+							<!-- Pink color -->
+						</Texture>
+					</Layer>
+				</Layers>
+
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="PlayerIcon">
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" x="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="CustomerIcon">
+					<Size x="14" y="14"/>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" x="16"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<Button name="CraftScanCrafterTableHeaderStringTemplate" mixin="CraftScanCrafterTableHeaderStringMixin" inherits="ColumnDisplayButtonShortTemplate" virtual="true">
+		<Size x="0" y="19"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="Arrow" atlas="auctionhouse-ui-sortarrow" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Text" relativePoint="RIGHT" x="3" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Button name="CraftScanOutputButtonTemplate" inherits="CircularGiantItemButtonTemplate" registerForClicks="LeftButtonUp, RightButtonUp" virtual="true">
+		<Size x="47" y="47"/>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="5">
+				<FontString parentKey="Count" inherits="NumberFontNormalLarge" justifyH="RIGHT">
+					<Anchors>
+						<Anchor point="BOTTOM" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-4" y="1"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="3">
+				<Texture parentKey="CountShadow" atlas="BattleBar-SwapPetShadow" alpha=".8">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.Count" relativePoint="TOPLEFT" x="-10" y="10"/>
+						<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Count" relativePoint="BOTTOMRIGHT" x="10" y="-10"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Button>
+
+</Ui>

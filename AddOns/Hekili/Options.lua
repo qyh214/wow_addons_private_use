@@ -42,10 +42,10 @@ local IsHarmfulSpell = C_Spell.IsSpellHarmful or _G.IsHarmfulSpell
 local IsHelpfulSpell = C_Spell.IsSpellHelpful or _G.IsHelpfulSpell
 local IsPressHoldReleaseSpell = C_Spell.IsPressHoldReleaseSpell or _G.IsPressHoldReleaseSpell
 
-local GetNumSpellTabs = C_SpellBook.GetNumSpellBookSkillLines;
+local GetNumSpellTabs = C_SpellBook.GetNumSpellBookSkillLines
 
 local GetSpellTabInfo = function(index)
-    local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(index);
+    local skillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo(index)
     if skillLineInfo then
         return	skillLineInfo.name, 
                 skillLineInfo.iconID, 
@@ -54,7 +54,7 @@ local GetSpellTabInfo = function(index)
                 skillLineInfo.isGuild, 
                 skillLineInfo.offSpecID,
                 skillLineInfo.shouldHide,
-                skillLineInfo.specID;
+                skillLineInfo.specID
     end
 end
 
@@ -63,9 +63,9 @@ local GetSpellInfo = ns.GetUnpackedSpellInfo
 local GetSpellDescription = C_Spell.GetSpellDescription
 
 local GetSpellCharges = function(spellID)
-    local spellChargeInfo = C_Spell.GetSpellCharges(spellID);
+    local spellChargeInfo = C_Spell.GetSpellCharges(spellID)
     if spellChargeInfo then
-        return spellChargeInfo.currentCharges, spellChargeInfo.maxCharges, spellChargeInfo.cooldownStartTime, spellChargeInfo.cooldownDuration, spellChargeInfo.chargeModRate;
+        return spellChargeInfo.currentCharges, spellChargeInfo.maxCharges, spellChargeInfo.cooldownStartTime, spellChargeInfo.cooldownDuration, spellChargeInfo.chargeModRate
     end
 end
 
@@ -86,7 +86,7 @@ local oneTimeFixes = {
         if s then s.enhancedRecheck = true end
     end, ]]
 
-    updateMaxRefreshToNewSpecOptions_20220222 = function( p )
+    --[[ updateMaxRefreshToNewSpecOptions_20220222 = function( p )
         for id, spec in pairs( p.specs ) do
             if spec.settings.maxRefresh then
                 spec.settings.combatRefresh = 1 / spec.settings.maxRefresh
@@ -94,7 +94,7 @@ local oneTimeFixes = {
                 spec.settings.maxRefresh = nil
             end
         end
-    end,
+    end, ]]
 
     forceEnableAllClassesOnceDueToBug_20220225 = function( p )
         for id, spec in pairs( p.specs ) do
@@ -157,7 +157,18 @@ local oneTimeFixes = {
             havoc.version = 20240727
         end
     end,
-  }
+
+    removeOldThrottles_20241115 = function( p )
+        for id, spec in pairs( p.specs ) do
+            spec.throttleRefresh = nil
+            spec.combatRefresh   = nil
+            spec.regularRefresh  = nil
+
+            spec.throttleTime    = nil
+            spec.maxTime         = nil
+        end
+    end,
+}
 
 
 function Hekili:RunOneTimeFixes()
@@ -508,15 +519,19 @@ do
 
                     mode = {
                         key = "ALT-SHIFT-N",
+                        value = "automatic",
                         -- type = "AutoSingle",
                         automatic = true,
                         single = true,
-                        value = "automatic",
+                        reactive = "false",
+                        dual = "false",
+                        aoe = "false",
                     },
 
                     cooldowns = {
                         key = "ALT-SHIFT-R",
                         value = true,
+                        infusion = false,
                         override = false,
                         separate = false,
                     },
@@ -530,12 +545,15 @@ do
                     potions = {
                         key = "",
                         value = false,
+                        override = false,
                     },
 
                     interrupts = {
                         key = "ALT-SHIFT-I",
                         value = true,
                         separate = false,
+                        filterCasts = false,
+                        castRemainingThreshold = 0.25,
                     },
 
                     essences = {
@@ -562,7 +580,7 @@ do
                 },
 
                 specs = {
-                    ['**'] = specTemplate
+                    -- ['**'] = specTemplate
                 },
 
                 packs = {
@@ -728,635 +746,7 @@ do
                 },
 
                 filterCasts = true,
-                castFilters = {
-                    [75713] = {
-                        desc = "Shadowmoon Burial Grounds - Shadowmoon Bone-Mender",
-                        [152818] = "Shadow Mend",
-                    },
-                    [76057] = {
-                        desc = "Shadowmoon Burial Grounds - Carrion Worm",
-                        [153395] = "Body Slam",
-                    },
-                    [75459] = {
-                        desc = "Shadowmoon Burial Grounds - Plagued Bat",
-                        [153524] = "Plague Spit",
-                    },
-                    [76446] = {
-                        desc = "Shadowmoon Burial Grounds - Shadowmoon Dominator",
-                        [156776] = "Rending Voidlash",
-                    },
-                    [81820] = {
-                        desc = "The Everbloom - Everbloom Mender",
-                        [164887] = "Healing Waters",
-                        [164965] = "Choking Vines",
-                    },
-                    [81819] = {
-                        desc = "The Everbloom - Everbloom Naturalist",
-                        [164965] = "Choking Vines",
-                    },
-                    [81985] = {
-                        desc = "The Everbloom - Everbloom Cultivator",
-                        [165213] = "Enraged Growth",
-                    },
-                    [83892] = {
-                        desc = "The Everbloom - Life Warden Gola",
-                        [168082] = "Revitalize",
-                    },
-                    [84957] = {
-                        desc = "The Everbloom - Putrid Pyromancer",
-                        [169839] = "Pyroblast",
-                    },
-                    [97197] = {
-                        desc = "Halls of Valor - Valarjar Purifier",
-                        [192563] = "Cleansing Flames",
-                    },
-                    [95769] = {
-                        desc = "Darkheart Thicket - Mindshattered Screecher",
-                        [200630] = "Unnerving Screech",
-                    },
-                    [100527] = {
-                        desc = "Darkheart Thicket - Dreadfire Imp",
-                        [201399] = "Dread Inferno",
-                    },
-                    [91006] = {
-                        desc = "Neltharion's Lair - Rockback Gnasher",
-                        [202181] = "Stone Gaze",
-                    },
-                    [101991] = {
-                        desc = "Darkheart Thicket - Nightmare Dweller",
-                        [204243] = "Tormenting Eye",
-                    },
-                    [104274] = {
-                        desc = "Court of Stars - Baalgar the Watchful",
-                        [207980] = "Disintegration Beam",
-                    },
-                    [104247] = {
-                        desc = "Court of Stars - Duskwatch Arcanist",
-                        [209410] = "Nightfall Orb",
-                    },
-                    [104270] = {
-                        desc = "Court of Stars - Guardian Construct",
-                        [209413] = "Suppress",
-                        [225100] = "Charging Station",
-                    },
-                    [104295] = {
-                        desc = "Court of Stars - Blazing Imp",
-                        [211401] = "Drifting Embers",
-                    },
-                    [104300] = {
-                        desc = "Court of Stars - Shadow Mistress",
-                        [211470] = "Bewitch",
-                    },
-                    [95834] = {
-                        desc = "Halls of Valor - Valarjar Mystic",
-                        [215433] = "Holy Radiance",
-                    },
-                    [100532] = {
-                        desc = "Darkheart Thicket - Bloodtainted Burster",
-                        [225562] = "Blood Metamorphosis",
-                    },
-                    [102788] = {
-                        desc = "Black Rook Hold - Felspite Dominator",
-                        [227913] = "Felfrenzy",
-                    },
-                    [122986] = {
-                        desc = "Atal'Dazar - Wild Skyscreamer",
-                        [255041] = "Terrifying Screech",
-                    },
-                    [128434] = {
-                        desc = "Atal'Dazar - Feasting Skyscreamer",
-                        [255041] = "Terrifying Screech",
-                    },
-                    [129788] = {
-                        desc = "Freehold - Irontide Bonesaw",
-                        [257397] = "Healing Balm",
-                    },
-                    [126919] = {
-                        desc = "Freehold - Irontide Stormcaller",
-                        [257736] = "Thundering Squall",
-                    },
-                    [129600] = {
-                        desc = "Freehold - Bilge Rat Brinescale",
-                        [257784] = "Frost Blast",
-                    },
-                    [122965] = {
-                        desc = "Atal'Dazar - Vol'kaal",
-                        [259572] = "Noxious Stench",
-                    },
-                    [133379] = {
-                        desc = "Temple of Sethraliss - Adderis",
-                        [263365] = "A Peal of Thunder",
-                    },
-                    [131812] = {
-                        desc = "Waycrest Manor - Heartsbane Soulcharmer",
-                        [263959] = "Soul Volley",
-                    },
-                    [131685] = {
-                        desc = "Waycrest Manor - Runic Disciple",
-                        [264390] = "Spellbind",
-                    },
-                    [131821] = {
-                        desc = "Waycrest Manor - Faceless Maiden",
-                        [264407] = "Horrific Visage",
-                    },
-                    [131492] = {
-                        desc = "The Underrot - Devout Blood Priest",
-                        [265089] = "Dark Reconstitution",
-                        [265091] = "Gift of G'huun",
-                    },
-                    [135049] = {
-                        desc = "Waycrest Manor - Dreadwing Raven",
-                        [265346] = "Pallid Glare",
-                    },
-                    [133912] = {
-                        desc = "The Underrot - Bloodsworn Defiler",
-                        [265433] = "Withering Curse",
-                        [265523] = "Summon Spirit Drain Totem",
-                    },
-                    [134112] = {
-                        desc = "Waycrest Manor - Matron Christiane",
-                        [265876] = "Ruinous Volley",
-                    },
-                    [135365] = {
-                        desc = "Waycrest Manor - Matron Alma",
-                        [265876] = "Ruinous Volley",
-                    },
-                    [133835] = {
-                        desc = "The Underrot - Feral Bloodswarmer",
-                        [266106] = "Sonic Screech",
-                    },
-                    [134284] = {
-                        desc = "The Underrot - Fallen Deathspeaker",
-                        [266209] = "Wicked Frenzy",
-                        [272183] = "Raise Dead",
-                    },
-                    [131864] = {
-                        desc = "Waycrest Manor - Gorak Tul",
-                        [266225] = "Darkened Lightning",
-                    },
-                    [137830] = {
-                        desc = "Waycrest Manor - Pallid Gorger",
-                        [271174] = "Retch",
-                    },
-                    [134024] = {
-                        desc = "Waycrest Manor - Devouring Maggot",
-                        [278444] = "Infest",
-                    },
-                    [142587] = {
-                        desc = "Waycrest Manor - Devouring Maggot",
-                        [278444] = "Infest",
-                    },
-                    [133685] = {
-                        desc = "The Underrot - Befouled Spirit",
-                        [278755] = "Harrowing Despair",
-                    },
-                    [122969] = {
-                        desc = "Atal'Dazar - Zanchuli Witch-Doctor",
-                        [279118] = "Unstable Hex",
-                    },
-                    [170044] = {
-                        desc = "Maldraxxus - Venthyr Apprentice",
-                        [345202] = "Absolution",
-                    },
-                    [185529] = {
-                        desc = "Brackenhide Hollow - Bracken Warscourge",
-                        [367500] = "Hideous Cackle",
-                    },
-                    [193178] = {
-                        desc = "The Azure Span - Blightfur",
-                        [367500] = "Hideous Cackle",
-                    },
-                    [195135] = {
-                        desc = "Brackenhide Hollow - Bracken Warscourge",
-                        [367500] = "Hideous Cackle",
-                    },
-                    [186191] = {
-                        desc = "Brackenhide Hollow - Decay Speaker",
-                        [367503] = "Withering Burst",
-                        [382474] = "Decay Surge",
-                    },
-                    [184132] = {
-                        desc = "Uldaman - Earthen Warder",
-                        [369365] = "Curse of Stone",
-                    },
-                    [184301] = {
-                        desc = "Uldaman - Cavern Seeker",
-                        [369411] = "Sonic Burst",
-                    },
-                    [186420] = {
-                        desc = "Uldaman - Earthen Weaver",
-                        [369465] = "Hail of Stone",
-                    },
-                    [184580] = {
-                        desc = "Uldaman - Olaf",
-                        [369602] = "Defensive Bulwark",
-                    },
-                    [204046] = {
-                        desc = "Valdrakken - Olaf",
-                        [369602] = "Defensive Bulwark",
-                    },
-                    [184022] = {
-                        desc = "Uldaman - Stonevault Geomancer",
-                        [369675] = "Chain Lightning",
-                    },
-                    [186658] = {
-                        desc = "Uldaman - Stonevault Geomancer",
-                        [369675] = "Chain Lightning",
-                    },
-                    [189265] = {
-                        desc = "Neltharus - Qalashi Bonetender",
-                        [372223] = "Mending Clay",
-                    },
-                    [189470] = {
-                        desc = "Neltharus - Lava Flare",
-                        [372538] = "Melt",
-                    },
-                    [186220] = {
-                        desc = "Brackenhide Hollow - Brackenhide Shaper",
-                        [372711] = "Infuse Corruption",
-                    },
-                    [188067] = {
-                        desc = "Ruby Life Pools - Flashfrost Chillweaver",
-                        [372743] = "Ice Shield",
-                    },
-                    [189886] = {
-                        desc = "Ruby Life Pools - Blazebound Firestorm",
-                        [373017] = "Roaring Blaze",
-                    },
-                    [193462] = {
-                        desc = "The Nokhud Offensive - Batak",
-                        [373395] = "Bloodcurdling Shout",
-                    },
-                    [199717] = {
-                        desc = "The Nokhud Offensive - Nokhud Defender",
-                        [373395] = "Bloodcurdling Shout",
-                    },
-                    [190342] = {
-                        desc = "Halls of Infusion - Containment Apparatus",
-                        [374045] = "Expulse",
-                    },
-                    [190345] = {
-                        desc = "Halls of Infusion - Primalist Geomancer",
-                        [374066] = "Earth Shield",
-                    },
-                    [190348] = {
-                        desc = "Halls of Infusion - Primalist Ravager",
-                        [374080] = "Blasting Gust",
-                    },
-                    [190340] = {
-                        desc = "Halls of Infusion - Refti Defender",
-                        [374339] = "Demoralizing Shout",
-                    },
-                    [186226] = {
-                        desc = "Brackenhide Hollow - Fetid Rotsinger",
-                        [374544] = "Burst of Decay",
-                    },
-                    [190362] = {
-                        desc = "Halls of Infusion - Dazzling Dragonfly",
-                        [374563] = "Dazzle",
-                    },
-                    [190368] = {
-                        desc = "Halls of Infusion - Flamecaller Aymi",
-                        [374699] = "Cauterize",
-                        [374706] = "Pyretic Burst",
-                    },
-                    [191164] = {
-                        desc = "The Azure Vault - Arcane Tender",
-                        [375596] = "Erratic Growth",
-                    },
-                    [196115] = {
-                        desc = "The Azure Vault - Arcane Tender",
-                        [375596] = "Erratic Growth",
-                    },
-                    [190377] = {
-                        desc = "Halls of Infusion - Primalist Icecaller",
-                        [376171] = "Refreshing Tides",
-                    },
-                    [189901] = {
-                        desc = "Neltharus - Warlord Sargha",
-                        [376780] = "Magma Shield",
-                    },
-                    [190407] = {
-                        desc = "Halls of Infusion - Aqua Rager",
-                        [377341] = "Tidal Divergence",
-                    },
-                    [192333] = {
-                        desc = "Algeth'ar Academy - Alpha Eagle",
-                        [377389] = "Call of the Flock",
-                    },
-                    [190405] = {
-                        desc = "Halls of Infusion - Infuser Sariya",
-                        [377402] = "Aqueous Barrier",
-                    },
-                    [187155] = {
-                        desc = "The Azure Vault - Rune Seal Keeper",
-                        [377488] = "Icy Bindings",
-                    },
-                    [184335] = {
-                        desc = "Uldaman - Infinite Agent",
-                        [377500] = "Hasten",
-                    },
-                    [186125] = {
-                        desc = "Brackenhide Hollow - Tricktotem",
-                        [377950] = "Greater Healing Rapids",
-                    },
-                    [192788] = {
-                        desc = "Neltharus - Qalashi Thaumaturge",
-                        [378282] = "Molten Core",
-                    },
-                    [184300] = {
-                        desc = "Uldaman - Ebonstone Golem",
-                        [381593] = "Thunderous Clap",
-                    },
-                    [185528] = {
-                        desc = "Brackenhide Hollow - Trickclaw Mystic",
-                        [382249] = "Earth Bolt",
-                    },
-                    [185656] = {
-                        desc = "Brackenhide Hollow - Filth Caller",
-                        [382474] = "Decay Surge",
-                    },
-                    [187315] = {
-                        desc = "Brackenhide Hollow - Disease Slasher",
-                        [382787] = "Decay Claws",
-                    },
-                    [194467] = {
-                        desc = "Brackenhide Hollow - Brackenhide Slasher",
-                        [382787] = "Decay Claws",
-                    },
-                    [193944] = {
-                        desc = "Neltharus - Qalashi Lavamancer",
-                        [382791] = "Molten Barrier",
-                    },
-                    [189464] = {
-                        desc = "Neltharus - Qalashi Irontorch",
-                        [384161] = "Mote of Combustion",
-                    },
-                    [190207] = {
-                        desc = "Ruby Life Pools - Primalist Cinderweaver",
-                        [384194] = "Cinderbolt",
-                    },
-                    [191847] = {
-                        desc = "The Nokhud Offensive - Nokhud Plainstomper",
-                        [384365] = "Disruptive Shout",
-                    },
-                    [192800] = {
-                        desc = "The Nokhud Offensive - Nokhud Lancemaster",
-                        [384365] = "Disruptive Shout",
-                    },
-                    [197650] = {
-                        desc = "Ohn'ahran Plains - Tarolekk, the Stomper",
-                        [384365] = "Disruptive Shout",
-                    },
-                    [186116] = {
-                        desc = "Brackenhide Hollow - Gutshot",
-                        [384633] = "Master's Call",
-                    },
-                    [186339] = {
-                        desc = "The Nokhud Offensive - Teera",
-                        [384808] = "Guardian Wind",
-                    },
-                    [186246] = {
-                        desc = "Brackenhide Hollow - Fleshripper Vulture",
-                        [385029] = "Screech",
-                    },
-                    [194894] = {
-                        desc = "The Nokhud Offensive - Primalist Stormspeaker",
-                        [386015] = "Summon Squall",
-                        [386024] = "Tempest",
-                        [386025] = "Tempest",
-                    },
-                    [186741] = {
-                        desc = "The Azure Vault - Arcane Elemental",
-                        [386546] = "Waking Bane",
-                    },
-                    [195696] = {
-                        desc = "The Nokhud Offensive - Primalist Thunderbeast",
-                        [387125] = "Thunderstrike",
-                    },
-                    [195927] = {
-                        desc = "The Nokhud Offensive - Soulharvester Galtmaa",
-                        [387411] = "Death Bolt Volley",
-                    },
-                    [195928] = {
-                        desc = "The Nokhud Offensive - Soulharvester Duuren",
-                        [387411] = "Death Bolt Volley",
-                    },
-                    [195929] = {
-                        desc = "The Nokhud Offensive - Soulharvester Tumen",
-                        [387411] = "Death Bolt Volley",
-                    },
-                    [195930] = {
-                        desc = "The Nokhud Offensive - Soulharvester Mandakh",
-                        [387411] = "Death Bolt Volley",
-                    },
-                    [196102] = {
-                        desc = "The Azure Vault - Conjured Lasher",
-                        [387564] = "Mystic Vapors",
-                    },
-                    [195877] = {
-                        desc = "The Nokhud Offensive - Risen Mystic",
-                        [387596] = "Swift Wind",
-                    },
-                    [196203] = {
-                        desc = "Algeth'ar Academy - Ethereal Restorer",
-                        [387955] = "Celestial Shield",
-                    },
-                    [196044] = {
-                        desc = "Algeth'ar Academy - Unruly Textbook",
-                        [388392] = "Monotonous Lecture",
-                    },
-                    [196045] = {
-                        desc = "Algeth'ar Academy - Corrupted Manafiend",
-                        [388862] = "Surge",
-                        [388863] = "Mana Void",
-                    },
-                    [197985] = {
-                        desc = "Ruby Life Pools - Flame Channeler",
-                        [392451] = "Flashfire",
-                    },
-                    [197535] = {
-                        desc = "Ruby Life Pools - High Channeler Ryvati",
-                        [392924] = "Shock Blast",
-                    },
-                    [189235] = {
-                        desc = "Neltharus - Overseer Lahar",
-                        [395427] = "Burning Roar",
-                    },
-                    [199037] = {
-                        desc = "Halls of Infusion - Primalist Shocktrooper",
-                        [395694] = "Elemental Focus",
-                    },
-                    [59555] = {
-                        desc = "Temple of the Jade Serpent - Haunting Sha",
-                        [395859] = "Haunting Scream",
-                    },
-                    [59546] = {
-                        desc = "Temple of the Jade Serpent - The Talking Fish",
-                        [395872] = "Sleepy Soliloquy",
-                    },
-                    [59552] = {
-                        desc = "Temple of the Jade Serpent - The Crybaby Hozen",
-                        [396018] = "Fit of Rage",
-                    },
-                    [59544] = {
-                        desc = "Temple of the Jade Serpent - The Nodding Tiger",
-                        [396073] = "Cat Nap",
-                    },
-                    [196548] = {
-                        desc = "Algeth'ar Academy - Ancient Branch",
-                        [396640] = "Healing Touch",
-                    },
-                    [196576] = {
-                        desc = "Algeth'ar Academy - Spellbound Scepter",
-                        [396812] = "Mystic Blast",
-                    },
-                    [193373] = {
-                        desc = "The Nokhud Offensive - Nokhud Thunderfist",
-                        [397394] = "Deadly Thunder",
-                    },
-                    [200126] = {
-                        desc = "Temple of the Jade Serpent - Fallen Waterspeaker",
-                        [397889] = "Tidal Burst",
-                    },
-                    [200137] = {
-                        desc = "Temple of the Jade Serpent - Depraved Mistweaver",
-                        [397914] = "Defiling Mist",
-                    },
-                    [75979] = {
-                        desc = "Shadowmoon Burial Grounds - Exhumed Spirit",
-                        [398206] = "Death Blast",
-                    },
-                    [204206] = {
-                        desc = "Dawn of the Infinite - Horde Farseer",
-                        [407891] = "Healing Wave",
-                    },
-                    [45912] = {
-                        desc = "The Vortex Pinnacle - Wild Vortex",
-                        [410870] = "Cyclone",
-                    },
-                    [205363] = {
-                        desc = "Dawn of the Infinite - Time-Lost Waveshaper",
-                        [411300] = "Fish Bolt Volley",
-                    },
-                    [205727] = {
-                        desc = "Dawn of the Infinite - Time-Lost Rocketeer",
-                        [412233] = "Rocket Bolt Volley",
-                    },
-                    [205337] = {
-                        desc = "Dawn of the Infinite - Infinite Timebender",
-                        [412378] = "Dizzying Sands",
-                    },
-                    [205158] = {
-                        desc = "Dawn of the Infinite - Spurlok, Timesworn Sentinel",
-                        [412922] = "Binding Grasp",
-                    },
-                    [138187] = {
-                        desc = "The Underrot - Grotesque Horror",
-                        [413044] = "Dark Echoes",
-                    },
-                    [201223] = {
-                        desc = "Dawn of the Infinite - Infinite Twilight Magus",
-                        [413607] = "Corroding Volley",
-                    },
-                    [206066] = {
-                        desc = "Dawn of the Infinite - Timestream Leech",
-                        [415437] = "Enervate",
-                    },
-                    [206140] = {
-                        desc = "Dawn of the Infinite - Coalesced Time",
-                        [415770] = "Infinite Bolt Volley",
-                    },
-                    [199000] = {
-                        desc = "Dawn of the Infinite - Chrono-Lord Deios",
-                        [416139] = "Temporal Breath",
-                    },
-                    [199748] = {
-                        desc = "Dawn of the Infinite - Timeline Marauder",
-                        [417481] = "Displace Chronosequence",
-                    },
-                    [208698] = {
-                        desc = "Dawn of the Infinite - Infinite Riftmage",
-                        [418200] = "Infinite Burn",
-                    },
-                    [83893] = {
-                        desc = "The Everbloom - Earthshaper Telu",
-                        [427460] = "Toxic Bloom",
-                    },
-                    [40943] = {
-                        desc = "Throne of the Tides - Gilgoblin Aquamage",
-                        [429176] = "Aquablast",
-                    },
-
-                    [187771] = {
-                        desc = "Vault of the Incarnates - Kadros Icewrath",
-                        [372315] = "Frost Spike",
-                    },
-                    [187768] = {
-                        desc = "Vault of the Incarnates - Dathea Stormlash",
-                        [372394] = "Lightning Bolt",
-                    },
-                    [190686] = {
-                        desc = "Vault of the Incarnates - Frozen Destroyer",
-                        [374623] = "Frost Binds",
-                    },
-                    [191232] = {
-                        desc = "Vault of the Incarnates - Drakonid Stormbringer",
-                        [375653] = "Static Jolt",
-                    },
-                    [191206] = {
-                        desc = "Vault of the Incarnates - Primalist Mage",
-                        [375716] = "Ice Barrage",
-                    },
-                    [194647] = {
-                        desc = "Vault of the Incarnates - Thunder Caller",
-                        [384273] = "Storm Bolt",
-                    },
-                    [194990] = {
-                        desc = "Vault of the Incarnates - Stormseeker Acolyte",
-                        [385553] = "Storm Bolt",
-                    },
-                    [199233] = {
-                        desc = "Vault of the Incarnates - Flamescale Captain",
-                        [396040] = "Pyroblast",
-                    },
-                    [199703] = {
-                        desc = "Aberrus, the Shadowed Crucible - Magma Mystic",
-                        [397386] = "Lava Bolt",
-                    },
-                    [202971] = {
-                        desc = "Aberrus, the Shadowed Crucible - Null Glimmer",
-                        [404754] = "Blasting Scream",
-                    },
-                    [201288] = {
-                        desc = "Aberrus, the Shadowed Crucible - Sundered Champion",
-                        [406911] = "Brutal Cauterization",
-                    },
-                    [205619] = {
-                        desc = "Aberrus, the Shadowed Crucible - Sarek Cinderbreath",
-                        [406911] = "Brutal Cauterization",
-                    },
-                    [202969] = {
-                        desc = "Aberrus, the Shadowed Crucible - Empty Recollection",
-                        [411302] = "Cosmic Volley",
-                    },
-                    [210290] = {
-                        desc = "Amirdrassil, the Dream's Hope - Firelands Flameguard",
-                        [425381] = "Blazing Pulse",
-                    },
-                    [211904] = {
-                        desc = "Amirdrassil, the Dream's Hope - Tainted Treant",
-                        [425816] = "Blazing Pollen",
-                    },
-                    [210423] = {
-                        desc = "Amirdrassil, the Dream's Hope - Keeper of the Dream",
-                        [425995] = "Tranquility",
-                    },
-                    [208459] = {
-                        desc = "Amirdrassil, the Dream's Hope - Fiery Treant",
-                        [426524] = "Fiery Flourish",
-                    },
-                },
+                castRemainingThreshold = 0.25,
 
                 iconStore = {
                     hide = false,
@@ -1404,7 +794,8 @@ do
         local option = info[ n ]
 
         if type(val) == 'string' then val = val:trim() end
-        if shareDB[ option ] then shareDB[ option ] = val; return end
+        if shareDB[ option ] then shareDB[ option ] = val
+return end
 
         shareDB.displays[ option ] = val
         shareDB.export = ""
@@ -2096,7 +1487,8 @@ do
                             pos = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeXY( info ); return "Position" end,
+                                name = function( info ) rangeXY( info )
+return "Position" end,
                                 order = 10,
 
                                 args = {
@@ -2691,7 +2083,8 @@ do
                             pos = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Position" end,
                                 order = 3,
                                 args = {
                                     anchor = {
@@ -3239,7 +2632,8 @@ do
                             position = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Position" end,
                                 order = 3,
                                 args = {
                                     anchor = {
@@ -3337,7 +2731,8 @@ do
                             position = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Text Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Text Position" end,
                                 order = 3,
                                 args = {
                                     anchor = {
@@ -3415,7 +2810,8 @@ do
                             pos = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Position" end,
                                 order = 2,
                                 args = {
                                     anchor = {
@@ -3481,6 +2877,14 @@ do
                                 order = 1.1
                             },
 
+                            desaturate = {
+                                type = "toggle",
+                                name = format( "%s Desaturate", NewFeature ),
+                                desc = "Desaturate the primary icon when you should wait before using the ability.",
+                                width = 1.49,
+                                order = 1.15
+                            },
+
                             break01 = {
                                 type = "description",
                                 name = " ",
@@ -3504,7 +2908,8 @@ do
                             pos = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Position" end,
                                 order = 3,
                                 args = {
                                     anchor = {
@@ -3575,7 +2980,8 @@ do
                             pos = {
                                 type = "group",
                                 inline = true,
-                                name = function( info ) rangeIcon( info ); return "Position" end,
+                                name = function( info ) rangeIcon( info )
+return "Position" end,
                                 order = 2,
                                 args = {
                                     anchor = {
@@ -3684,7 +3090,8 @@ do
 
                         posRow = {
                             type = "group",
-                            name = function( info ) rangeXY( info, true ); return "Position" end,
+                            name = function( info ) rangeXY( info, true )
+return "Position" end,
                             inline = true,
                             order = 2,
                             args = {
@@ -4149,7 +3556,8 @@ do
                                                 local hasDisplay = false
 
                                                 for key, value in pairs( shareDB.displays ) do
-                                                    if value then hasDisplay = true; break end
+                                                    if value then hasDisplay = true
+break end
                                                 end
 
                                                 return not hasDisplay
@@ -4360,9 +3768,15 @@ do
 
         for line in apl:gmatch( "\n([^\n^$]*)") do
             local newComment = line:match( "^# (.+)" )
-            if newComment then comment = newComment end
+            if newComment then
+                if comment then
+                    comment = comment .. ' ' .. newComment
+                else
+                    comment = newComment
+                end
+            end
 
-            local list, action = line:match( "^actions%.(%S-)%+?=/?([^\n^$]*)" )
+            local list, action = line:match( "^[ +]?actions%.(%S-)%+?=/?([^\n^$]*)" )
 
             if list and action then
                 lists[ list ] = lists[ list ] or ""
@@ -4373,7 +3787,20 @@ do
                 end
 
                 if comment then
-                    action = action .. ',description=' .. comment:gsub( ",", ";" )
+                    -- Comments can have the form 'Caption::Description'.
+                    -- Any whitespace around the '::' is truncated.
+                    local caption, description= comment:match( "(.+)::(.*)" )
+                    if caption and description then
+                        -- Truncate whitespace and change commas to semicolons.
+                        caption = caption:gsub( "%s+$", "" ):gsub( ",", ";" )
+                        description = description:gsub( "^%s+", "" ):gsub( ",", ";" )
+                        -- Replace "[<texture-id>]" in the caption with the escape sequence for the texture.
+                        caption = caption:gsub( "%[(%d+)%]", "|T%1:0|t" )
+                        action = action .. ',caption=' .. caption .. ',description=' .. description
+                    else
+                        -- Change commas to semicolons.
+                        action = action .. ',description=' .. comment:gsub( ",", ";" )
+                    end
                     comment = nil
                 end
 
@@ -4544,8 +3971,13 @@ do
         self.DB.profile.specs[ spec ] = self.DB.profile.specs[ spec ] or {}
         self.DB.profile.specs[ spec ][ option ] = val
 
-        if option == "package" then self:UpdateUseItems(); self:ForceUpdate( "SPEC_PACKAGE_CHANGED" )
+        if option == "package" then self:UpdateUseItems()
+self:ForceUpdate( "SPEC_PACKAGE_CHANGED" )
         elseif option == "enabled" then ns.StartConfiguration() end
+
+        if WeakAuras and WeakAuras.ScanEvents then
+            WeakAuras.ScanEvents( "HEKILI_SPEC_OPTION_CHANGED", option, val )
+        end
 
         Hekili:UpdateDamageDetectionForCLEU()
     end
@@ -4555,7 +3987,7 @@ do
         local n = #info
         local spec, option = info[1], info[n]
 
-        spec = specIDByName[ spec ]
+        if type( spec ) == 'string' then spec = specIDByName[ spec ] end
         if not spec then return end
 
         self.DB.profile.specs[ spec ] = self.DB.profile.specs[ spec ] or {}
@@ -4939,7 +4371,8 @@ do
 
                             if detected then
                                 for page, text in pairs( detected.upper ) do
-                                    if found == false then output = output .. "\n"; found = true end
+                                    if found == false then output = output .. "\n"
+found = true end
                                     output = format( "%s\n|cFFFFD100%s|r detected on action page |cFFFFD100%d.", output, text, page )
                                 end
                             end
@@ -5642,13 +5075,13 @@ do
                     args = {
                         core = {
                             type = "group",
-                            name = "Core",
+                            name = "Specialization Settings",
                             desc = "Core features and specialization options for " .. specs[ id ] .. ".",
                             order = 1,
                             args = {
                                 enabled = {
                                     type = "toggle",
-                                    name = "Enabled",
+                                    name = specs[ id ] .. " Enabled",
                                     desc = "If checked, the addon will provide priority recommendations for " .. name .. " based on the selected priority list.",
                                     order = 0,
                                     width = "full",
@@ -5670,7 +5103,7 @@ do
                                     name = "Priority",
                                     desc = "The addon will use the selected package when making its priority recommendations.",
                                     order = 1,
-                                    width = 2.85,
+                                    width = 1.5,
                                     values = function( info, val )
                                         wipe( packs )
 
@@ -5706,10 +5139,24 @@ do
                                     width = 0.15,
                                 },
 
+                                potion = {
+                                    type = "select",
+                                    name = "Potion",
+                                    desc = "Unless otherwise specified in the priority, the selected potion will be recommended.",
+                                    order = 3,
+                                    width = 1.5,
+                                    values = class.potionList,
+                                    get = function()
+                                        local p = self.DB.profile.specs[ id ].potion or class.specs[ id ].options.potion or "default"
+                                        if not class.potionList[ p ] then p = "default" end
+                                        return p
+                                    end,
+                                },
+
                                 blankLine1 = {
                                     type = 'description',
                                     name = '',
-                                    order = 1.2,
+                                    order = 2,
                                     width = 'full'
                                 },
                             },
@@ -5728,8 +5175,10 @@ do
                                     type = "description",
                                     name = "These settings control how targets are counted when generating ability recommendations.\n\nBy default, the number of "
                                         .. "targets is shown on the bottom-right of the primary icon in the Primary and AOE displays, unless only one target is "
-                                        .. "detected.\n\n",
+                                        .. "detected.\n\n"
+                                        .. "Your true in-game target is always counted. \n\n|cFFFF0000WARNING:|r 'Soft' targets from the Action Targeting system are not presently supported.\n\n",
                                     width = "full",
+                                    fontSize = "medium",
                                     order = 0.01
                                 },
                                 yourTarget = {
@@ -5764,10 +5213,10 @@ do
                                     args = {
                                         damagePets = {
                                             type = "toggle",
-                                            name = "Enemies Damaged by Minions",
+                                            name = "Include Enemies Damaged by Your Pets and Minions",
                                             desc = "If checked, the addon will count enemies that your pets or minions have hit (or hit you) within the past several seconds.  "
                                                 .. "This may give misleading target counts if your pet/minions are spread out over the battlefield.",
-                                            order = 1,
+                                            order = 2,
                                             width = "full",
                                         },
 
@@ -5781,13 +5230,13 @@ do
                                             min = 1,
                                             max = 10,
                                             step = 0.1,
-                                            order = 2,
-                                            width = "full",
+                                            order = 1,
+                                            width = 1.5,
                                         },
 
                                         damageDots = {
                                             type = "toggle",
-                                            name = "DOTted / Debuffed Enemies",
+                                            name = "Include Enemies With Your DOTs / Debuffs",
                                             desc = "When checked, enemies that have your debuffs or damage-over-time effects will be counted as targets, regardless of their location on the battlefield.\n\n"
                                                 .. "This may not be ideal for melee specializations, as enemies may wander away after you've applied your dots/bleeds.  If |cFFFFD100Count Nameplates|r is "
                                                 .. "enabled, enemies that are no longer in range will be filtered.\n\n"
@@ -5810,19 +5259,112 @@ do
                                 },
                                 nameplates = {
                                     type = "toggle",
-                                    name = "Count Nameplates",
-                                    desc = "If checked, enemy nameplates within the specified radius will be counted as enemy targets.\n\n"
+                                    name = "Count Nameplates Near You",
+                                    desc = "If checked, enemy nameplates within the specified radius of your character will be counted as enemy targets.\n\n"
                                         .. AtlasToString( "common-icon-checkmark" ) .. " Recommended for melee specializations using a range of 10 yds or fewer\n\n"
                                         .. AtlasToString( "common-icon-redx" ) .. " Discouraged for ranged specializations.",
                                     width = "full",
                                     order = 0.1,
                                 },
 
+                                petbased = {
+                                    type = "toggle",
+                                    name = "Count Targets Near Your Pet",
+                                    desc = function ()
+                                        local msg = "If checked and properly configured, the addon will count targets near your pet as valid targets, when your target is also within range of your pet."
+
+                                        if Hekili:HasPetBasedTargetSpell() then
+                                            local spell = Hekili:GetPetBasedTargetSpell()
+                                            local link = Hekili:GetSpellLinkWithTexture( spell )
+
+                                            msg = msg .. "\n\n" .. link .. "|w|r is on your action bar and will be used for all your " .. UnitClass( "player" ) .. " pets."
+                                        else
+                                            msg = msg .. "\n\n|cFFFF0000Requires pet ability on one of your action bars.|r"
+                                        end
+
+                                        if GetCVar( "nameplateShowEnemies" ) == "1" then
+                                            msg = msg .. "\n\nEnemy nameplates are |cFF00FF00enabled|r and will be used to detect targets near your pet."
+                                        else
+                                            msg = msg .. "\n\n|cFFFF0000Requires enemy nameplates.|r"
+                                        end
+
+                                        return msg
+                                    end,
+                                    width = "full",
+                                    hidden = function ()
+                                        return Hekili:GetPetBasedTargetSpells() == nil
+                                    end,
+                                    order = 0.2
+                                },
+
+                                petbasedGuidance = {
+                                    type = "description",
+                                    name = function ()
+                                        local out
+
+                                        if not self:HasPetBasedTargetSpell() then
+                                            out = "For pet-based detection to work, you must take an ability from your |cFF00FF00pet's spellbook|r and place it on one of |cFF00FF00your|r action bars.\n\n"
+                                            local spells = Hekili:GetPetBasedTargetSpells()
+
+                                            if not spells then return " " end
+
+                                            out = out .. "For %s, %s is recommended due to its range.  It will work for all your pets."
+
+                                            if spells.count > 1 then
+                                                out = out .. "\nAlternative(s): "
+                                            end
+
+                                            local n = 1
+
+                                            local link = Hekili:GetSpellLinkWithTexture( spells.best )
+                                            out = format( out, UnitClass( "player" ), link )
+                                            for spell in pairs( spells ) do
+                                                if type( spell ) == "number" and spell ~= spells.best then
+                                                    n = n + 1
+
+                                                    link = Hekili:GetSpellLinkWithTexture( spell )
+
+                                                    if n == 2 and spells.count == 2 then
+                                                        out = out .. link .. "."
+                                                    elseif n ~= spells.count then
+                                                        out = out .. link .. ", "
+                                                    else
+                                                        out = out .. "and " .. link .. "."
+                                                    end
+                                                end
+                                            end
+                                        end
+
+                                        if GetCVar( "nameplateShowEnemies" ) ~= "1" then
+                                            if not out then
+                                                out = "|cFFFF0000WARNING!|r  Pet-based target detection requires |cFFFFD100enemy nameplates|r to be enabled."
+                                            else
+                                                out = out .. "\n\n|cFFFF0000WARNING!|r  Pet-based target detection requires |cFFFFD100enemy nameplates|r to be enabled."
+                                            end
+                                        end
+
+                                        return out
+                                    end,
+                                    fontSize = "medium",
+                                    width = "full",
+                                    disabled = function ( info, val )
+                                        if Hekili:GetPetBasedTargetSpells() == nil then return true end
+                                        if self.DB.profile.specs[ id ].petbased == false then return true end
+                                        if self:HasPetBasedTargetSpell() and GetCVar( "nameplateShowEnemies" ) == "1" then return true end
+
+                                        return false
+                                    end,
+                                    order = 0.21,
+                                    hidden = function ()
+                                        return not self.DB.profile.specs[ id ].petbased
+                                    end
+                                },
+
                                 npGroup = {
                                     type = "group",
                                     inline = true,
                                     name = "Nameplate Detection",
-                                    order = 0.2,
+                                    order = 0.11,
                                     hidden = function ()
                                         return not self.DB.profile.specs[ id ].nameplates
                                     end,
@@ -5895,7 +5437,7 @@ do
                                             desc = "If |cFFFFD100Count Nameplates|r is enabled, enemies within this range will be included in target counts.\n\n"
                                                 .. "This setting is only available if |cFFFFD100Show Enemy Nameplates|r and |cFFFFD100Show All Nameplates|r are both enabled.",
                                             width = "full",
-                                            order = 1.7,
+                                            order = 0.1,
                                             min = 0,
                                             max = 100,
                                             step = 1,
@@ -5964,95 +5506,8 @@ do
                                         }, ]]
 
                                         -- Pet-Based Cluster Detection
-                                        petbased = {
-                                            type = "toggle",
-                                            name = "Count Targets Near Your Pet",
-                                            desc = function ()
-                                                local msg = "If checked and properly configured, the addon will count targets near your pet as valid targets, when your target is also within range of your pet."
 
-                                                if Hekili:HasPetBasedTargetSpell() then
-                                                    local spell = Hekili:GetPetBasedTargetSpell()
-                                                    local link = Hekili:GetSpellLinkWithTexture( spell )
 
-                                                    msg = msg .. "\n\n" .. link .. "|w|r is on your action bar and will be used for all your " .. UnitClass( "player" ) .. " pets."
-                                                else
-                                                    msg = msg .. "\n\n|cFFFF0000Requires pet ability on one of your action bars.|r"
-                                                end
-
-                                                if GetCVar( "nameplateShowEnemies" ) == "1" then
-                                                    msg = msg .. "\n\nEnemy nameplates are |cFF00FF00enabled|r and will be used to detect targets near your pet."
-                                                else
-                                                    msg = msg .. "\n\n|cFFFF0000Requires enemy nameplates.|r"
-                                                end
-
-                                                return msg
-                                            end,
-                                            width = "full",
-                                            hidden = function ()
-                                                return Hekili:GetPetBasedTargetSpells() == nil
-                                            end,
-                                            order = 3.1
-                                        },
-
-                                        petbasedGuidance = {
-                                            type = "description",
-                                            name = function ()
-                                                local out
-
-                                                if not self:HasPetBasedTargetSpell() then
-                                                    out = "For pet-based detection to work, you must take an ability from your |cFF00FF00pet's spellbook|r and place it on one of |cFF00FF00your|r action bars.\n\n"
-                                                    local spells = Hekili:GetPetBasedTargetSpells()
-
-                                                    if not spells then return " " end
-
-                                                    out = out .. "For %s, %s is recommended due to its range.  It will work for all your pets."
-
-                                                    if spells.count > 1 then
-                                                        out = out .. "\nAlternative(s): "
-                                                    end
-
-                                                    local n = 1
-
-                                                    local link = Hekili:GetSpellLinkWithTexture( spells.best )
-                                                    out = format( out, UnitClass( "player" ), link )
-                                                    for spell in pairs( spells ) do
-                                                        if type( spell ) == "number" and spell ~= spells.best then
-                                                            n = n + 1
-
-                                                            link = Hekili:GetSpellLinkWithTexture( spell )
-
-                                                            if n == 2 and spells.count == 2 then
-                                                                out = out .. link .. "."
-                                                            elseif n ~= spells.count then
-                                                                out = out .. link .. ", "
-                                                            else
-                                                                out = out .. "and " .. link .. "."
-                                                            end
-                                                        end
-                                                    end
-                                                end
-
-                                                if GetCVar( "nameplateShowEnemies" ) ~= "1" then
-                                                    if not out then
-                                                        out = "|cFFFF0000WARNING!|r  Pet-based target detection requires |cFFFFD100enemy nameplates|r to be enabled."
-                                                    else
-                                                        out = out .. "\n\n|cFFFF0000WARNING!|r  Pet-based target detection requires |cFFFFD100enemy nameplates|r to be enabled."
-                                                    end
-                                                end
-
-                                                return out
-                                            end,
-                                            fontSize = "medium",
-                                            width = "full",
-                                            disabled = function ( info, val )
-                                                if Hekili:GetPetBasedTargetSpells() == nil then return true end
-                                                if self.DB.profile.specs[ id ].petbased == false then return true end
-                                                if self:HasPetBasedTargetSpell() and GetCVar( "nameplateShowEnemies" ) == "1" then return true end
-
-                                                return false
-                                            end,
-                                            order = 3.11,
-                                        }
                                     }
                                 },
 
@@ -6072,7 +5527,7 @@ do
 
                                 cycle = {
                                     type = "toggle",
-                                    name = "Recommend Changing Targets |TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t",
+                                    name = "Allow Target Swaps |TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t",
                                     desc = "When target swapping is enabled, an icon (|TInterface\\Addons\\Hekili\\Textures\\Cycle:0|t) may be shown when you should use an ability on a different target.\n\n" ..
                                         "This works well for some specs that simply want to apply a debuff to another target (like Windwalker), but can be less-effective for specializations that are concerned with " ..
                                         "maintaining dots/debuffs based on their durations (like Affliction).\n\nThis feature is targeted for improvement in a future update.",
@@ -6104,8 +5559,8 @@ do
 
                                 aoe = {
                                     type = "range",
-                                    name = "AOE Display:  Minimum Targets",
-                                    desc = "When the AOE Display is shown (or the Primary display is in AOE mode), its recommendations will assume that there are at least this many targets available.",
+                                    name = "Minimum Targets for Dedicated AOE Recommendations",
+                                    desc = "When the AOE display is shown (or AOE mode is active), its recommendations will assume that there are at least this many targets available. \n\nThis can be useful with the Dual display mode to guarantee your AOE priority is shown if it doesn't normally change until, for example, 5 targets. \n\nUsing a setting of 5 would make sure the right priority is followed for \"AOE\" mode. Different values may be optimal different specializations and builds.",
                                     width = "full",
                                     min = 2,
                                     max = 10,
@@ -6145,95 +5600,196 @@ do
                             name = "Performance",
                             order = 10,
                             args = {
-                                throttleRefresh = {
-                                    type = "toggle",
-                                    name = "Set Update Period",
-                                    desc = "If checked, you may specify how frequently new recommendations can be generated, in- and out-of-combat.\n\n"
-                                        .. "More frequent updates can utilize more CPU time, but increase responsiveness. After certain critical combat "
-                                        .. "events, recommendations will always update earlier, regardless of these settings.",
-                                    order = 1,
+                                --[[ forecastingSection = {
+                                    type = "header",
+                                    name = "Forecasting",
+                                    order = 0.1,
                                     width = "full",
                                 },
 
-                                regularRefresh = {
-                                    type = "range",
-                                    name = "Out-of-Combat Period",
-                                    desc = "When out-of-combat, each display will update its recommendations as frequently as you specify. "
-                                        .. "Specifying a lower number means updates are generated more frequently, potentially using more CPU time.\n\n"
-                                        .. "Some critical events, like generating resources, will force an update to occur earlier, regardless of this setting.\n\n"
-                                        .. "Default value:  |cffffd1000.5|rs.",
-                                    order = 1.1,
-                                    width = 1.5,
-                                    min = 0.05,
-                                    max = 1,
-                                    step = 0.05,
-                                    hidden = function () return self.DB.profile.specs[ id ].throttleRefresh == false end,
-                                },
+                                forecastingDescription = {
+                                    type = "description",
+                                    name = function ()
+                                        local flame_shock = Hekili:GetSpellLinkWithTexture( 470411 )
 
-                                combatRefresh = {
-                                    type = "range",
-                                    name = "In-Combat Period",
-                                    desc = "When in-combat, each display will update its recommendations as frequently as you specify.\n\n"
-                                    .. "Specifying a lower number means updates are generated more frequently, potentially using more CPU time.\n\n"
-                                    .. "Some critical events, like generating resources, will force an update to occur earlier, regardless of this setting.\n\n"
-                                    .. "Default value:  |cffffd1000.25|rs.",
-                                    order = 1.2,
-                                    width = 1.5,
-                                    min = 0.05,
-                                    max = 0.5,
-                                    step = 0.05,
-                                    hidden = function () return self.DB.profile.specs[ id ].throttleRefresh == false end,
-                                },
-
-                                throttleTime = {
-                                    type = "toggle",
-                                    name = "Set Update Time",
-                                    desc = "By default, calculations can take 80% of your frametime or 50ms, whichever is lower.  If recommendations take more "
-                                        .. "than the alotted time, then the work will be split across multiple frames to reduce impact to your framerate.\n\n"
-                                        .. "If you choose to |cffffd100Set Update Time|r, you can specify the |cffffd100Maximum Update Time|r used per frame.",
-                                    order = 2.1,
-                                    width = "full",
-                                },
-
-                                maxTime = {
-                                    type = "range",
-                                    name = "Maximum Update Time (ms)",
-                                    desc = "Specify the maximum amount of time (in milliseconds) that can be used |cffffd100per frame|r when updating.  " ..
-                                        "If set to |cffffd1000|r, then there is no maximum regardless of your frame rate.\n\n" ..
-                                        "|cffffd100Examples|r\n" ..
-                                        "|W- 60 FPS: 1 second / 60 frames = |cffffd10016.7|rms|w\n" ..
-                                        "|W- 100 FPS: 1 second / 100 frames = |cffffd10010|rms|w\n\n" ..
-                                        "If you set this value too low, it can take longer to update and may feel less responsive.\n\n" ..
-                                        "If set too high (or to zero), updates may resolve more quickly but with possible impact to your FPS.\n\n" ..
-                                        "The default value is |cffffd10020|rms.",
-                                    order = 2.2,
-                                    min = 0,
-                                    max = 100,
-                                    step = 1,
-                                    width = 1.5,
-                                    hidden = function ()
-                                        return not self.DB.profile.specs[ id ].throttleTime
+                                    return format( "%sForecasting|r enables recommendations that are timed more precisely, when the conditions for using an ability are not immediately met.\n\n"
+                                    .. "For example, if %s is used when %s is not active on your target, but your target has 1 second remaining, forecasting allows a recommendation of %s with a 1 second delay.\n\n"
+                                    .. "If a lower priority ability is available sooner, it will be recommended instead.\n\n", BlizzBlue, flame_shock, flame_shock, flame_shock )
                                     end,
+                                    order = 0.11,
+                                    width = "full",
+                                    fontSize = "small"
                                 },
 
-                                --[[ gcdSync = {
-                                    type = "toggle",
-                                    name = "Start after Global Cooldown",
-                                    desc = "If checked, the addon's first recommendation will be delayed to the start of the GCD in your Primary and AOE displays.  This can reduce flickering if trinkets or off-GCD abilities are appearing briefly during the global cooldown, " ..
-                                        "but will cause abilities intended to be used while the GCD is active (i.e., Recklessness) to bounce backward in the queue.",
+                                throttleForecastingCount = {
+                                    type = "range",
+                                    name = NewFeature .. " Maximum Forecasting Steps",
+                                    desc = function () return format( "When generating recommendations, priority entries whose criteria are not met may be retested based on calculated delays.\n\n"
+                                    .. "This forecasting enables recommendations to be timed more precisely, such as waiting for resource gains or auras to become refreshable, but can increase processing time.\n\n"
+                                    .. "If set above zero, the forecasting window is limited to the specified number of steps, which may reduce processing time but |cffff0000may result in fewer/no recommendation(s) being generated|r.\n\n"
+                                    .. "This value is disabled |cFFFFD100(0)|r by default, allowing any number of forecasting steps.\n\n"
+                                    .. "%sRecommended: 0 (disabled)|r\n\n", BlizzBlue )
+                                    end,
+                                    order = 0.12,
                                     width = "full",
-                                    order = 4,
+                                    min = 0,
+                                    max = 10,
+                                    step = 1
+                                },
+
+                                throttleForecastingTime = {
+                                    type = "range",
+                                    name = NewFeature .. " Maximum Forecasting Time (sec)",
+                                    desc = function () return format( "When generating recommendations, priority entries whose criteria are not met may be retested based on calculated delays.\n\n"
+                                    .. "This forecasting enables recommendations to be timed more precisely, such as waiting for resource gains or auras to become refreshable, but can increase processing time.\n\n"
+                                    .. "If set above zero, the forecasting window is limited to the specified time in seconds, which may reduce processing time but |cffff0000may result in fewer/no recommendation(s) being generated|r.\n\n"
+                                    .. "This value is disabled |cFFFFD100(0)|r by default, allowing forecasting up to 10 seconds in the future.\n\n"
+                                    .. "%sRecommended: 0 (disabled)|r", BlizzBlue )
+                                    end,
+                                    order = 0.13,
+                                    width = "full",
+                                    min = 0,
+                                    max = 10,
+                                    step = 0.1
+                                },
+
+                                throttleForecastingAuto = {
+                                    type = "toggle",
+                                    name = NewFeature .. " Autotune Forecasting",
+                                    desc = "When enabled, the engine will tune its Forecasting Steps and Forecasting Time based on whether the forecasting has successfully improved recommendations.",
+                                    order = 0.14,
+                                    width = "full",
+                                },
+
+                                throttlingSection = {
+                                    type = "header",
+                                    name = "Throttling",
+                                    order = 0.2,
+                                    width = "full",
+                                },
+
+                                throttlingDescription = {
+                                    type = "description",
+                                    name = function () return format( "%sThrottling|r limits the amount of processing time used to generate recommendation.\n\n"
+                                    .. "These limits can help expedite recommendations or reduce the impact on CPU usage or FPS.\n\n", BlizzBlue )
+                                    end,
+                                    order = 0.21,
+                                    width = "full",
+                                    fontSize = "small"
+                                },
+
+                                throttleFrames = {
+                                    type = "range",
+                                    name = function () return format( "%s Target Minimum FPS (Actual FPS: %d)", NewFeature, GetFramerate() ) end,
+                                    desc = function () return format( "By default, up to |cffffd10015ms|r per frame may be used to generate recommendations.\n\n"
+                                    .. "This value is roughly equivalent to a Target Minimum FPS value of |cffffd10060|r.\n\n"
+                                    .. "Reducing this setting will allow |cffffd100more|r processing time per frame, improving responsiveness but potentially reducing FPS.\n\n"
+                                    .. "Increasing this setting will allow |cffffd100less|r processing time per frame, potentially improving FPS but reducing responsiveness.\n\n"
+                                    .. "%sRecommended: 0 or 60 (default)|r", BlizzBlue )
+                                    end,
+                                    order = 0.22,
+                                    width = "full",
+                                    min = 0,
+                                    max = 200,
+                                    step = 1
+                                },
+
+                                throttleMinimum = {
+                                    type = "range",
+                                    name = NewFeature .. " Minimum Time Allowance (ms)",
+                                    desc = function ()
+                                        local fps = GetFramerate()
+                                        local currentFrameTime = fps > 0 and ( 1000 / fps ) or 0
+                                        local warning = currentFrameTime > 0 and format( "At your current (%d) FPS, values above |cffffd100%d|r may impact your framerate.\n\n", fps, currentFrameTime ) or ""
+
+                                        return format( "By default, at least |cffffd1005ms|r may be used to generate recommendations.\n\n" .. warning
+                                    .. "Increasing this setting may generate recommendations in fewer frames, improving responsiveness but potentially reducing FPS.\n\n"
+                                    .. "Reducing this setting may generate recommendations over more frames, potentially improving FPS but reducing responsiveness.\n\n"
+                                    .. "%sRecommended: 5ms (default)|r", BlizzBlue )
+                                    end,
+                                    order = 0.23,
+                                    width = "full",
+                                    min = 5,
+                                    max = 200,
+                                    step = 1
+                                },
+
+                                throttleMaximum = {
+                                    type = "range",
+                                    name = NewFeature .. " Maximum Time Allowance (ms)",
+                                    desc = function ()
+                                        local fps = GetFramerate()
+                                        local currentFrameTime = fps > 0 and ( 1000 / fps ) or 0
+                                        local warning = currentFrameTime > 0 and format( "At your current (%d) FPS, values above |cffffd100%d|r may impact your framerate.\n\n", fps, currentFrameTime ) or ""
+
+                                        return format( "By default, up to |cffffd10015ms|r may be used to generate recommendations.\n\n" .. warning
+                                    .. "Increasing this setting may generate recommendations in fewer frames, increasing responsiveness but potentially reducing FPS.\n\n"
+                                    .. "Reducing this setting may generate recommendations over more frames, reducing responsiveness but decreasing impact to FPS.\n\n"
+                                    .. "%sRecommended: 15ms (default)|r", BlizzBlue )
+                                    end,
+                                    order = 0.24,
+                                    width = "full",
+                                    min = 5,
+                                    max = 200,
+                                    step = 1
+                                },
+
+                                throttlePercent = {
+                                    type = "range",
+                                    name = NewFeature .. " Maximum Frame Time %",
+                                    desc = function ()
+                                        local fps = GetFramerate()
+                                        local currentFrameTime = fps > 0 and ( 1000 / fps ) or 0
+                                        local cap = self.DB.profile.specs[ id ].throttleMaximum or 0
+                                        local warning = ""
+
+
+                                        if cap > 0 then
+                                            warning = format( "At your current |cFFFFD100Maximum Time Allowance|r, processing time would be limited to %d per frame.\n\n", fps, cap )
+                                        elseif currentFrameTime > 0 then
+                                            warning = format( "At your current (%d) FPS, processing time would be limited to %d per frame.\n\n", fps, currentFrameTime )
+                                        end
+
+                                        return format( "By default, up to |cffffd10090%%|r may be used to generate recommendations.\n\n" .. warning
+                                    .. "Increasing this setting may generate recommendations in fewer frames, increasing responsiveness but potentially reducing FPS.\n\n"
+                                    .. "Reducing this setting may generate recommendations over more frames, reducing responsiveness but decreasing impact to FPS.\n\n"
+                                    .. "%sRecommended: 90%% (default)|r", BlizzBlue )
+                                    end,
+                                    order = 0.25,
+                                    width = "full",
+                                    min = 0,
+                                    max = 1,
+                                    step = 0.01,
+                                    isPercent = true
                                 }, ]]
 
-                                --[[ enhancedRecheck = {
-                                    type = "toggle",
-                                    name = "Enhanced Recheck",
-                                    desc = "When the addon cannot recommend an ability at the present time, it rechecks action conditions at a few points in the future.  "
-                                        .. "If checked, this feature will enable the addon to do additional checking on entries that use the 'variable' feature.  "
-                                        .. "This may use slightly more CPU, but can reduce the likelihood that the addon will fail to make a recommendation.",
+                                placeboBar = {
+                                    type = "range",
+                                    name = "Not a Placebo",
+                                    desc = "This adjusts the VROOOM of your current specialization.",
+                                    order = 100,
                                     width = "full",
-                                    order = 5,
-                                }, ]]
+                                    min = 3,
+                                    max = 20,
+                                    step = 1
+                                },
+
+                                vroom = {
+                                    type = "header",
+                                    name = function()
+                                        local amount = self.DB.profile.specs[ id ].placeboBar or 5
+
+                                        if amount > 19 then
+                                            return "|cFFFF0000MAXIMAL VROOM|r - Secret Optimal Mode Unlocked"
+                                        elseif amount > 14 then
+                                            return "|cFFFF0000DANGER|r - Approaching Maximum VROOOM"
+                                        end
+
+                                        return format( "VR%sM!", string.rep( "O", amount ) )
+                                    end,
+                                    order = 101,
+                                    width = "full"
+                                },
                             }
                         }
                     },
@@ -6252,7 +5808,7 @@ do
 
                     options.args.core.plugins.settings.prefHeader = {
                         type = "header",
-                        name = "Preferences",
+                        name = specs[ id ] .. " Preferences",
                         order = 100.1,
                     }
 
@@ -7095,7 +6651,8 @@ do
                                             for pId, pData in pairs( Hekili.DB.profile.packs ) do
                                                 if pData.builtIn and pData.spec == specId then
                                                     defPack = pId
-                                                    if spec.package == pack then spec.package = pId; break end
+                                                    if spec.package == pack then spec.package = pId
+break end
                                                 end
                                             end
                                         end
@@ -7310,7 +6867,8 @@ do
                                             if Hekili.Scripts and Hekili.Scripts.DB then
                                                 local scriptHead = "^" .. pack .. ":" .. k .. ":"
                                                 for k, v in pairs( Hekili.Scripts.DB ) do
-                                                    if k:match( scriptHead ) and v.Error then err = true; break end
+                                                    if k:match( scriptHead ) and v.Error then err = true
+break end
                                                 end
                                             end
 
@@ -7623,7 +7181,8 @@ do
 
                                         remove( p.lists[ packControl.listName ], id )
 
-                                        if not p.lists[ packControl.listName ][ id ] then id = id - 1; packControl.actionID = format( "%04d", id ) end
+                                        if not p.lists[ packControl.listName ][ id ] then id = id - 1
+packControl.actionID = format( "%04d", id ) end
                                         if not p.lists[ packControl.listName ][ id ] then packControl.actionID = "zzzzzzzzzz" end
 
                                         self:LoadScripts()
@@ -7769,7 +7328,7 @@ do
                                                     end,
                                                 },
 
-                                                --[[ potion = {
+                                                potion = {
                                                     type = "select",
                                                     name = "Potion",
                                                     order = 3.2,
@@ -7780,7 +7339,7 @@ do
                                                         return e.action ~= "potion"
                                                     end,
                                                     width = 1.5,
-                                                }, ]]
+                                                },
 
                                                 sec = {
                                                     type = "input",
@@ -7926,7 +7485,8 @@ do
                                                         for_next = {
                                                             type = "toggle",
                                                             name = function ()
-                                                                local n = packControl.actionID; n = tonumber( n ) + 1
+                                                                local n = packControl.actionID
+n = tonumber( n ) + 1
                                                                 local e = Hekili.DB.profile.packs[ pack ].lists[ packControl.listName ][ n ]
 
                                                                 local ability = e and e.action and class.abilities[ e.action ]
@@ -7992,6 +7552,8 @@ do
 
                                                         -- Let's load variables, just in case.
                                                         for name, alist in pairs( apack.lists ) do
+                                                            state.this_list = name
+
                                                             for i, entry in ipairs( alist ) do
                                                                 if name ~= list or i ~= action then
                                                                     if entry.action == "variable" and entry.var_name then
@@ -8005,6 +7567,7 @@ do
                                                         entry = entry and entry[ action ]
 
                                                         state.this_action = entry.action
+                                                        state.this_list = list
 
                                                         local scriptID = pack .. ":" .. list .. ":" .. action
                                                         state.scriptID = scriptID
@@ -8032,6 +7595,7 @@ do
 
                                                         -- Let's load variables, just in case.
                                                         for name, alist in pairs( apack.lists ) do
+                                                            state.this_list = name
                                                             for i, entry in ipairs( alist ) do
                                                                 if name ~= list or i ~= action then
                                                                     if entry.action == "variable" and entry.var_name then
@@ -8045,6 +7609,7 @@ do
                                                         entry = entry and entry[ action ]
 
                                                         state.this_action = entry.action
+                                                        state.this_list = list
 
                                                         local scriptID = pack .. ":" .. list .. ":" .. action
                                                         state.scriptID = scriptID
@@ -8076,6 +7641,7 @@ do
 
                                                         -- Let's load variables, just in case.
                                                         for name, alist in pairs( apack.lists ) do
+                                                            state.this_list = name
                                                             for i, entry in ipairs( alist ) do
                                                                 if name ~= list or i ~= action then
                                                                     if entry.action == "variable" and entry.var_name then
@@ -8089,6 +7655,7 @@ do
                                                         entry = entry and entry[ action ]
 
                                                         state.this_action = entry.action
+                                                        state.this_list = list
 
                                                         local scriptID = pack .. ":" .. list .. ":" .. action
                                                         state.scriptID = scriptID
@@ -8720,38 +8287,6 @@ do
                                     order = 2,
                                 },
 
-                        funnel = {
-                            type = "group",
-                            name = "",
-                            inline = true,
-                            order = 8,
-                            args = {
-                                key = {
-                                    type = "keybinding",
-                                    name = "Funnel Rotation",
-                                    desc = "Set a key to toggle Funnel Rotation on or off, for specs which support it.",
-                                    width = 1,
-                                    order = 1,
-                                        },
-
-                                value = {
-                                    type = "toggle",
-                                    name = "Enable Funnel Rotation",
-                                    desc = "If checked, rotations for funnel specs may change slightly to use single target spenders in AoE.\n\n",
-                                    width = 2,
-                                    order = 2,
-                                        },
-                                    
-                                supportedSpecs = {
-                                    type = "description",
-                                    name = "Supported Specs: Subtlety, Assassination, Enhancement, Destruction",
-                                    desc = "",
-                                    width = "full",
-                                    order = 3,
-                                        },
-                                },
-                        },
-
                                 --[[ potLineBreak1 = {
                                     type = "description",
                                     name = "",
@@ -8799,7 +8334,39 @@ do
                                 },
                             }
                         },
-                    }
+
+                        funnel = {
+                            type = "group",
+                            name = "",
+                            inline = true,
+                            order = 8,
+                            args = {
+                                key = {
+                                    type = "keybinding",
+                                    name = "Funnel Priority",
+                                    desc = "Set a key to toggle Funnel Priority on or off, for specializations which support it.",
+                                    width = 1,
+                                    order = 1,
+                                },
+
+                                value = {
+                                    type = "toggle",
+                                    name = "Enable Funnel Priority",
+                                    desc = "If checked, priorities for funnel specializations may change slightly to use single target spenders in AoE.\n\n",
+                                    width = 2,
+                                    order = 2,
+                                },
+
+                                supportedSpecs = {
+                                    type = "description",
+                                    name = "Supported Specializations: Subtlety, Assassination, Enhancement, Destruction",
+                                    desc = "",
+                                    width = "full",
+                                    order = 3,
+                                },
+                            },
+                        },
+                    },
                 },
 
                 interrupts = {
@@ -8862,12 +8429,36 @@ do
 
                         filterCasts  ={
                             type = "toggle",
-                            name = format( "%s Filter M+ Interrupts (DF Season 4)", NewFeature ),
+                            name = format( "%s Filter M+ Interrupts", NewFeature ),
                             desc = format( "If checked, low-priority enemy casts will be ignored when your target may use an ability that should be interrupted.\n\n"
                                 .. "Example:  In Everbloom, Earthshaper Telu's |W%s|w will be ignored and |W%s|w will be interrupted.", ( GetSpellInfo( 168040 ) or "Nature's Wrath" ),
                                 ( GetSpellInfo( 427459 ) or "Toxic Bloom" ) ),
                             width = 2,
                             order = 4
+                        },
+                        lb3 = {
+                            type = "description",
+                            name = "",
+                            width = "full",
+                            order = 4.1
+                        },
+
+                        indent3 = {
+                            type = "description",
+                            name = "",
+                            width = 1,
+                            order = 4.2,
+                        },
+                        castRemainingThreshold = {
+                            type = "range",
+                            name = "Interrupt Timing",
+                            desc = "By default, interrupts are recommended when an enemy's cast has 0.25 seconds (or less) remaining.\n\n"
+                                    .. "If set to 2, an interrupt could be recommended when the cast has less than 2 seconds remaining.",
+                            min = 0.25,
+                            max = 3,
+                            step = 0.25,
+                            width = 2,
+                            order = 4.3
                         },
 
                         defensives = {
@@ -9326,6 +8917,49 @@ do
         end
     end
 
+    local function CleanTooltip( tooltip )
+        if not tooltip then return nil end
+    
+        -- Remove "X seconds remaining" or "X second remaining"
+        tooltip = tooltip:gsub( "%d+ second[s]? remaining", "" )
+
+        -- Remove "SpellID IconID" wherever it appears in the string
+        tooltip = tooltip:gsub( "%s*SpellID%s*", "" ) -- Matches "SpellID" with optional surrounding whitespace
+        tooltip = tooltip:gsub( "%s*IconID%s*", "" )  -- Matches "IconID" with optional surrounding whitespace
+    
+        -- Trim extra whitespace
+        tooltip = tooltip:gsub( "%s+", " " ):trim()
+    
+        return tooltip
+    end
+    
+    
+
+    local function GetBuffTooltip( unit, index, filter )
+        -- Create a tooltip for inspection if it doesn’t exist
+        local tooltip = HekiliTooltip or CreateFrame( "GameTooltip", "HekiliTooltip", UIParent, "GameTooltipTemplate" )
+        tooltip:SetOwner( UIParent, "ANCHOR_NONE" )
+        
+        -- Set the tooltip to the buff or debuff
+        if filter == "HELPFUL" then
+            tooltip:SetUnitBuff( unit, index )
+        else
+            tooltip:SetUnitDebuff( unit, index )
+        end
+    
+        -- Collect tooltip lines
+        local tooltipText = {}
+        for i = 1, tooltip:NumLines() do
+            local line = _G[ "HekiliTooltipTextLeft" .. i ]
+            if line then
+                table.insert( tooltipText, line:GetText() or "" )
+            end
+        end
+    
+        return tooltipText
+    end
+    
+
     local spec = ""
     local specID = 0
 
@@ -9488,117 +9122,154 @@ do
 
     local function skeletonHandler( self, event, ... )
         local unit = select( 1, ... )
-
+    
         if ( event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" ) or event == "PLAYER_ENTERING_WORLD" then
+            -- Reset data structures
+            wipe( resources )
+            wipe( auras )
+            wipe( abilities )
+            wipe( talents )
+            wipe( pvptalents )
+    
+            -- Fetch player specialization
             local sID, s = GetSpecializationInfo( GetSpecialization() )
-            if specID ~= sID then
-                wipe( resources )
-                wipe( auras )
-                wipe( abilities )
-            end
             specID = sID
             spec = s
-
-            mastery_spell = GetSpecializationMasterySpells( GetSpecialization() )
-
-            for k, i in pairs( Enum.PowerType ) do
-                if k ~= "NumPowerTypes" and i >= 0 then
-                    if UnitPowerMax( "player", i ) > 0 then resources[ k ] = i end
-                end
-            end
-
-
-            -- TODO: Rewrite to be a little clearer.
-            -- Modified by Wyste in July 2024 to try and fix skeleton building the talents better. 
-            -- It could probably be written better
-            wipe( talents )
+    
+            -- Fetch active configuration
             local configID = C_ClassTalents.GetActiveConfigID() or -1
             local configInfo = C_Traits.GetConfigInfo( configID )
-            local specializationName = configInfo.name
-            local classCurID = nil
-            local specCurID = nil
-            local subTrees = C_ClassTalents.GetHeroTalentSpecsForClassSpec ( configID )
+    
+            -- Fetch active hero tree ID
+            local activeHeroTreeID = C_ClassTalents.GetActiveHeroTalentSpec()
+    
+            -- Fetch valid hero trees for this specialization
+            local validHeroTrees = {}
+            local heroTreeIDs = C_ClassTalents.GetHeroTalentSpecsForClassSpec( configID, specID )
+            if heroTreeIDs then
+                for _, treeID in ipairs( heroTreeIDs ) do
+                    validHeroTrees[ treeID ] = true
+                end
+            end
+    
+            -- Process all talent trees
             for _, treeID in ipairs( configInfo.treeIDs ) do
                 local treeCurrencyInfo = C_Traits.GetTreeCurrencyInfo( configID, treeID, false )
-                -- 1st key is class points, 2nd key is spec points
-                -- per ref: https://wowpedia.fandom.com/wiki/API_C_Traits.GetTreeCurrencyInfo
-                classCurID = treeCurrencyInfo[1].traitCurrencyID
-                specCurID = treeCurrencyInfo[2].traitCurrencyID
+                local classCurrencyID = treeCurrencyInfo[1].traitCurrencyID
+                local specCurrencyID = treeCurrencyInfo[2].traitCurrencyID
+    
+                -- Process all nodes in the tree
                 local nodes = C_Traits.GetTreeNodes( treeID )
                 for _, nodeID in ipairs( nodes ) do
                     local node = C_Traits.GetNodeInfo( configID, nodeID )
-
-                    local isHeroSpec = false
-                    local isSpecSpec = false
-
-                    if type(C_Traits.GetNodeCost(configID, nodeID)) == "table" then
-                        for i, traitCurrencyCost in ipairs (C_Traits.GetNodeCost(configID, nodeID)) do
-                            if traitCurrencyCost.ID == specCurID then isSpecSpec = true end
-                            if traitCurrencyCost.ID == classCurID then isSpecSpec = false end
-                        end
-                    end
-
-                    if (node.subTreeID ~= nil ) then
-                        specializationName = C_Traits.GetSubTreeInfo( configID, node.subTreeID ).name
-                        isHeroSpec = true
-                        isSpecSpec = false
-                    end
-
-                    if node.maxRanks > 0 then
-                        for _, entryID in ipairs( node.entryIDs ) do
-                            local entryInfo = C_Traits.GetEntryInfo( configID, entryID )
-                            if entryInfo.definitionID then -- Not a subTree (hero talent hidden node)
-                                local definitionInfo = C_Traits.GetDefinitionInfo( entryInfo.definitionID )
-                                local spellID = definitionInfo and definitionInfo.spellID
-
-                                if spellID then
-                                    local name = definitionInfo.overrideName or GetSpellInfo( spellID )
-                                    local subtext = spellID and C_Spell.GetSpellSubtext( spellID ) or ""
-
-                                    if subtext then
-                                        local rank = subtext:match( "^Rank (%d+)$" )
-                                        if rank then name = name .. "_" .. rank end
-                                    end
-
-                                    local token = key( name )
-                                    insert( talents, { name = token, talent = nodeID, isSpec = isSpecSpec, isHero = isHeroSpec, specName = specializationName, definition = entryInfo.definitionID, spell = spellID, ranks = node.maxRanks } )
-                                    if not IsPassiveSpell( spellID ) then EmbedSpellData( spellID, token, true ) end
+                    if node and node.maxRanks > 0 then
+                        -- Determine talent type
+                        local isClassTalent = false
+                        local isSpecTalent = false
+                        local isHeroTalent = false
+                        local treeName = "Unknown"
+    
+                        -- Check subtree for classification
+                        if node.subTreeID then
+                            local subTreeInfo = C_Traits.GetSubTreeInfo( configID, node.subTreeID )
+                            if subTreeInfo then
+                                if subTreeInfo.traitCurrencyID == classCurrencyID then
+                                    isClassTalent = true
+                                    treeName = "Class"
+                                elseif subTreeInfo.traitCurrencyID == specCurrencyID then
+                                    isSpecTalent = true
+                                    treeName = spec
+                                elseif validHeroTrees[ node.subTreeID ] then
+                                    isHeroTalent = true
+                                    treeName = subTreeInfo.name
                                 end
                             end
                         end
+    
+                        -- If subtree classification is not definitive, use node costs to classify
+                        if not isClassTalent and not isSpecTalent and not isHeroTalent then
+                            for _, cost in ipairs( C_Traits.GetNodeCost( configID, nodeID ) or {} ) do
+                                if cost.ID == classCurrencyID then
+                                    isClassTalent = true
+                                    treeName = "Class"
+                                elseif cost.ID == specCurrencyID then
+                                    isSpecTalent = true
+                                    treeName = spec
+                                end
+                            end
+                        end
+    
+                        -- Default to class talent if no specific type identified
+                        if not isClassTalent and not isSpecTalent and not isHeroTalent then
+                            isClassTalent = true
+                            treeName = "Class"
+                        end
+    
+                        -- Ignore nodes from unavailable hero trees
+                        if isHeroTalent and not validHeroTrees[ node.subTreeID ] then
+                            isHeroTalent = false
+                        end
+    
+                        -- Add talents to appropriate groups
+                        for _, entryID in ipairs( node.entryIDs ) do
+                            local entryInfo = C_Traits.GetEntryInfo( configID, entryID )
+                            if entryInfo and entryInfo.definitionID then
+                                local definitionInfo = C_Traits.GetDefinitionInfo( entryInfo.definitionID )
+                                local spellID = definitionInfo and definitionInfo.spellID
+                        
+                                if spellID then
+                                    local name = definitionInfo.overrideName or GetSpellInfo( spellID )
+                                    local token = key( name )
+                        
+                                    -- Attempt to fetch the tooltip description
+                                    local tooltipDescription = GetSpellDescription( spellID )
+                                    if not tooltipDescription or tooltipDescription == "" then
+                                        tooltipDescription = "No tooltip available for this spell."
+                                    end
+                        
+                                    -- Add talent data
+                                    insert( talents, {
+                                        name = token,
+                                        talent = nodeID,
+                                        spell = spellID,
+                                        ranks = node.maxRanks,
+                                        tooltip = tooltipDescription,
+                                        isSpec = isSpecTalent,
+                                        isHero = isHeroTalent,
+                                        specName = treeName
+                                    } )
+                        
+                                    -- Embed spell data if not passive
+                                    if not IsPassiveSpell( spellID ) then
+                                        EmbedSpellData( spellID, token, true )
+                                    end
+                                end
+                            end
+                        end
+                        
                     end
                 end
             end
-
-            wipe( pvptalents )
-            local row = C_SpecializationInfo.GetPvpTalentSlotInfo( 1 )
-
-            for i, tID in ipairs( row.availableTalentIDs ) do
-                local _, name, _, _, _, sID = GetPvpTalentInfoByID( tID )
-                name = key( name )
-                insert( pvptalents, { name = name, talent = tID, spell = sID } )
-
-                if not IsPassiveSpell( sID ) then
-                    EmbedSpellData( sID, name, nil, true )
-                end
-            end
-
-            sort( pvptalents, function( a, b ) return a.name < b.name end )
-
-            for i = 1, GetNumSpellTabs() do
-                local tab, _, offset, n = GetSpellTabInfo( i )
-
-                if i == 2 or tab == spec then
-                    for j = offset + 1, offset + n do
-                        local name, _, texture, castTime, minRange, maxRange, spellID = GetSpellInfo( j, "spell" )
-                        if name then EmbedSpellData( spellID, key( name ) ) end
+    
+            -- Fetch and process PvP talents
+            local pvpTalentRow = C_SpecializationInfo.GetPvpTalentSlotInfo( 1 )
+            if pvpTalentRow then
+                for _, tID in ipairs( pvpTalentRow.availableTalentIDs ) do
+                    local _, name, _, _, _, sID = GetPvpTalentInfoByID( tID )
+                    name = key( name )
+                    insert( pvptalents, { name = name, talent = tID, spell = sID } )
+    
+                    if not IsPassiveSpell( sID ) then
+                        EmbedSpellData( sID, name, nil, true )
                     end
                 end
+    
+                sort( pvptalents, function( a, b ) return a.name < b.name end )
             end
         elseif event == "SPELLS_CHANGED" then
             for i = 1, GetNumSpellTabs() do
                 local tab, _, offset, n = GetSpellTabInfo( i )
-
+    
                 if i == 2 or tab == spec then
                     for j = offset + 1, offset + n do
                         local name, _, texture, castTime, minRange, maxRange, spellID = GetSpellInfo( j, "spell" )
@@ -9608,63 +9279,63 @@ do
             end
         elseif event == "UNIT_AURA" then
             if UnitIsUnit( unit, "player" ) or UnitCanAttack( "player", unit ) then
+                -- Process Buffs
                 for i = 1, 40 do
-                    local name, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, _, spellID, canApplyAura, _, castByPlayer = UnitBuff( unit, i, "PLAYER" )
-
+                    local name, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, _, spellID = UnitBuff( unit, i, "PLAYER" )
                     if not name then break end
-
+    
+                    local tooltipData = GetBuffTooltip( "player", i, "HELPFUL" )
+                    local tooltip = table.concat( tooltipData, " " )
+                    tooltip = CleanTooltip( tooltip ) -- Clean the tooltip text
+    
                     local token = key( name )
-
                     local a = auras[ token ] or {}
-
-                    if duration == 0 then duration = 3600 end
-
+    
                     a.id = spellID
                     a.duration = duration
-                    a.type = debuffType
                     a.max_stack = max( a.max_stack or 1, count )
-
+                    a.tooltip = tooltip
+    
                     auras[ token ] = a
                 end
-
+    
+                -- Process Debuffs
                 for i = 1, 40 do
                     local name, icon, count, debuffType, duration, expirationTime, caster, canStealOrPurge, _, spellID, canApplyAura, _, castByPlayer = UnitDebuff( unit, i, "PLAYER" )
-
                     if not name then break end
-
+    
                     local token = key( name )
-
                     local a = auras[ token ] or {}
-
+    
+                    -- Set default duration for indefinite auras
                     if duration == 0 then duration = 3600 end
-
+    
                     a.id = spellID
                     a.duration = duration
-                    a.type = debuffType
+                    a.type = debuffType or "None"
                     a.max_stack = max( a.max_stack or 1, count )
-
+    
                     auras[ token ] = a
                 end
             end
-
         elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
             if UnitIsUnit( "player", unit ) then
                 local spellID = select( 3, ... )
                 local token = spellID and class.abilities[ spellID ] and class.abilities[ spellID ].key
-
+    
                 local now = GetTime()
-
+    
                 if not token then return end
-
+    
                 lastAbility = token
                 lastTime = now
-
+    
                 local a = abilities[ token ]
-
+    
                 if not a then
                     return
                 end
-
+    
                 for k, v in pairs( applications ) do
                     if now - v.t < 0.5 then
                         a.applies = a.applies or {}
@@ -9672,11 +9343,11 @@ do
                     end
                     applications[ k ] = nil
                 end
-
+    
                 for k, v in pairs( removals ) do
                     if now - v.t < 0.5 then
                         a.removes = a.removes or {}
-                        a.removes[ v.s ] = v.i
+                        a.removes[v.s] = v.i
                     end
                     removals[ k ] = nil
                 end
@@ -9685,13 +9356,12 @@ do
             CLEU( event, CombatLogGetCurrentEventInfo() )
         end
     end
-
+    
     function Hekili:StartListeningForSkeleton()
-        -- listener:SetScript( "OnEvent", skeletonHandler )
+        listener:SetScript( "OnEvent", skeletonHandler )
         skeletonHandler( listener, "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" )
         skeletonHandler( listener, "SPELLS_CHANGED" )
     end
-
 
     function Hekili:EmbedSkeletonOptions( db )
         db = db or self.Options
@@ -9768,7 +9438,7 @@ do
                                     if ( specName == nil ) then specName = tal.specName end
                                     insert( specTalents, tal )
                                 end
-                                if (tal.isSpec == false and tal.isHero == true ) then
+                                if ( tal.isSpec == false and tal.isHero == true ) then
                                     if ( firstHeroSpec == nil ) then 
                                         firstHeroSpec = tal.specName 
                                     end
@@ -9836,36 +9506,46 @@ do
                             for i, tal in ipairs( pvptalents ) do
                                 append( format( formatPvp, tal.name, tal.talent, tal.spell, GetSpellDescription( tal.spell ):gsub( "\n", " " ):gsub( "\r", " " ):gsub( "%s%s+", " " ) ) )
                             end
+
                             decreaseIndent()
                             append( "} )\n\n" )
+
 
                             append( "-- Auras" )
                             append( "spec:RegisterAuras( {" )
                             increaseIndent()
-
+                            
                             for k, aura in orderedPairs( auras ) do
-                                if aura.desc then append( "-- " .. aura.desc ) end
+                                -- Generate Wowhead link
+                                local wowheadLink = string.format( "-- https://www.wowhead.com/spell=%d", aura.id )
+                                append( wowheadLink )
+                            
+                                -- Add cleaned tooltip description
+                                if aura.tooltip then
+                                    local cleanedTooltip = CleanTooltip( aura.tooltip )
+                                    if cleanedTooltip and cleanedTooltip ~= "" then
+                                        append( "-- " .. cleanedTooltip )
+                                    end
+                                end
+                            
+                                -- Define the aura
                                 append( k .. " = {" )
                                 increaseIndent()
                                 append( "id = " .. aura.id .. "," )
-
-                                for key, value in pairs( aura ) do
-                                    if key ~= "id" then
-                                        if type(value) == 'string' then
-                                            append( key .. ' = "' .. value .. '",' )
-                                        else
-                                            append( key .. " = " .. value .. "," )
-                                        end
-                                    end
+                                append( "duration = " .. (aura.duration or 0) .. "," )
+                                if aura.type and aura.type ~= "None" then -- Only include type if it's not "None"
+                                    append( "type = \"" .. aura.type .. "\"," )
                                 end
-
+                                if aura.max_stack then
+                                    append( "max_stack = " .. aura.max_stack .. "," )
+                                end
                                 decreaseIndent()
                                 append( "}," )
                             end
-
+                            
                             decreaseIndent()
-                            append( "} )\n\n" )
-
+                            append( "} )" )
+                            
 
                             append( "-- Abilities" )
                             append( "spec:RegisterAbilities( {" )
@@ -9942,15 +9622,15 @@ do
                             end
 
                             for k,v in pairs( talents ) do
-                                if not aggregate[v.name] then aggregate[v.name] = {} end
-                                aggregate[v.name].id = v.spell
-                                aggregate[v.name].talent = true
+                                if not aggregate[ v.name ] then aggregate[ v.name ] = {} end
+                                aggregate[ v.name ].id = v.spell
+                                aggregate[ v.name ].talent = true
                             end
 
                             for k,v in pairs( pvptalents ) do
-                                if not aggregate[v.name] then aggregate[v.name] = {} end
-                                aggregate[v.name].id = v.spell
-                                aggregate[v.name].pvptalent = true
+                                if not aggregate[ v.name] then aggregate[ v.name ] = {} end
+                                aggregate[ v.name ].id = v.spell
+                                aggregate[ v.name ].pvptalent = true
                             end
 
                             -- append( select( 2, GetSpecializationInfo(GetSpecialization())) .. "\nKey\tID\tIs Aura\tIs Ability\tIs Talent\tIs PvP" )
@@ -10055,7 +9735,8 @@ function Hekili:GenerateProfile()
     local covenants = { "kyrian", "necrolord", "night_fae", "venthyr" }
     local covenant = "none"
     for i, v in ipairs( covenants ) do
-        if state.covenant[ v ] then covenant = v; break end
+        if state.covenant[ v ] then covenant = v
+break end
     end
 
     local conduits
@@ -10257,7 +9938,7 @@ do
                         type = "description",
                         name = function ()
                             return "|cFF00CCFFTHANK YOU TO OUR SUPPORTERS!|r\n\n" .. ns.Patrons .. "\n\n" ..
-                                "Please see the |cFFFFD100Issue Reporting (Snapshots)|r link for information about reporting bugs.\n\n"
+                                "Please see the |cFFFFD100Snapshots (Troubleshooting)|r link for information about reporting bugs.\n\n"
                         end,
                         fontSize = "medium",
                         order = 6,
@@ -10362,7 +10043,7 @@ do
                         args = {
                             gettingStarted_displays_info = {
                             type = "description",
-                            name = "|cFFFFD100Displays|r are where Hekili shows you the recommended spells and items to cast, with the |cFF00CCFFPrimary|r display being your DPS rotation. When this options window is open, all displays are visible.\n" ..
+                            name = "|cFFFFD100Displays|r are where Hekili shows you the recommended spells and items to cast, with the |cFF00CCFFPrimary|r display being your DPS priority. When this options window is open, all displays are visible.\n" ..
                                 "\n|cFFFFD100Displays|r can be moved by:\n" ..
                                 "• Clicking and Dragging them\n" ..   
                                 "  - You can move this window out of the way by clicking the |cFFFFD100Hekili " .. Hekili.Version .. " |rtitle at the very top and dragging it out of the way.\n" ..
@@ -10389,7 +10070,7 @@ do
                                 "1. My keybinds aren't showing up right\n- |cFF00CCFFThis can happen with macros or stealth bars sometimes. You can manually tell the addon what keybind to use in the|r |cFFFFD100Abilities|r |cFF00CCFFsection. Find the spell from the dropdown and use the|r |cFFFFD100Override Keybind|r |cFF00CCFFbox. Same can be done with trinkets under|r |cFFFFD100Gear and Items|r.\n\n" .. 
                                 "2. I don't recognize this spell! What is it?\n- |cFF00CCFFIf you're a Frost Mage it may be your Water Elemental pet spell, Freeze. Otherwise, it's probably a trinket. You can press |cFFFFD100alt-shift-p|r to pause the addon and hover over the icon to see what it is!|r\n\n" .. 
                                 "3. How do I disable a certain ability or trinket?\n- |cFF00CCFFHead over to |cFFFFD100Abilities|r or |cFFFFD100Gear and Items|r, find it in the dropdown list, and disable it.\n\n|r" .. 
-                                "\nI made it to the bottom but I still have an issue!\n- |cFF00CCFFHead on over to|r |cFFFFD100Issue Reporting|r |cFF00CCFFfor more detailed instructions.",
+                                "\nI made it to the bottom but I still have an issue!\n- |cFF00CCFFHead on over to|r |cFFFFD100Snapshots (Troubleshooting)|r |cFF00CCFFfor more detailed instructions.",
                                 order = 4.1,
                                 fontSize = "medium",
                                 width = "full",
@@ -10406,7 +10087,7 @@ do
                     },
                     a5 = {
                         type = "description",
-                        name = "You can submit questions, concerns, and ideas via the link found in the |cFFFFD100Issue Reporting|r section.\n\n" ..
+                        name = "You can submit questions, concerns, and ideas via the link found in the |cFFFFD100Snapshots (Troubleshooting)|r section.\n\n" ..
                             "If you disagree with the addon's recommendations, the |cFFFFD100Snapshot|r feature allows you to capture a log of the addon's decision-making taken at the exact moment specific recommendations are shown.  " ..
                             "When you submit your question, be sure to take a snapshot (not a screenshot!), place the text on Pastebin, and include the link when you submit your issue ticket.",
                         order = 5.1,
@@ -10464,54 +10145,20 @@ do
 
             snapshots = {
                 type = "group",
-                name = "Issue Reporting (Snapshots)",
+                name = "Snapshots (Troubleshooting)",
                 desc = "Learn how to report an issue with the addon, such as incorrect recommendations or bugs.",
                 order = 86,
+                childGroups = "tab",
                 args = {
-                    autoSnapshot = {
-                        type = "toggle",
-                        name = "Auto Snapshot",
-                        desc = "If checked, the addon will automatically create a snapshot whenever it failed to generate a recommendation.\n\n" ..
-                            "This automatic snapshot can only occur once per episode of combat.",
-                        order = 1,
-                        width = "full",
-                    },
-
-                    screenshot = {
-                        type = "toggle",
-                        name = "Take Screenshot",
-                        desc = "If checked, the addon will take a screenshot when you manually create a snapshot.\n\n" ..
-                            "Submitting both with your issue tickets will provide useful information for investigation purposes.",
-                        order = 2,
-                        width = "full",
-                    },
-
                     prefHeader = {
                         type = "header",
-                        name = "Snapshots / Troubleshooting",
-                        order = 2.5,
+                        name = "Snapshots",
+                        order = 1,
                         width = "full"
                     },
-
-                    header = {
-                        type = "description",
-                        name = function()
-                            return "Snapshots are logs of the addon's decision-making process for a set of recommendations.  If you have questions about -- or disagree with -- the addon's recommendations, " ..
-                            "reviewing a snapshot can help identify what factors led to the specific recommendations that you saw.\n\n" ..
-                            "Snapshots only capture a specific point in time, so snapshots have to be taken at the time you saw the specific recommendations that you are concerned about.  You can generate " ..
-                            "snapshots by using the |cffffd100Snapshot|r binding ( |cffffd100" .. ( Hekili.DB.profile.toggles.snapshot.key or "NOT BOUND" ) .. "|r ) from the Toggles section.\n\n" ..
-                            "You can also freeze the addon's recommendations using the |cffffd100Pause|r binding ( |cffffd100" .. ( Hekili.DB.profile.toggles.pause.key or "NOT BOUND" ) .. "|r ).  Doing so will freeze the addon's recommendations, allowing you to mouseover the display " ..
-                            "and see which conditions were met to display those recommendations.  Press Pause again to unfreeze the addon.\n\n" ..
-                            "Finally, using the settings at the bottom of this panel, you can ask the addon to automatically generate a snapshot for you when no recommendations were able to be made.\n\n"
-                        end,
-                        fontSize = "medium",
-                        order = 10,
-                        width = "full",
-                    },
-
                     SnapID = {
                         type = "select",
-                        name = "Select Entry",
+                        name = "Select a Snapshot",
                         desc = "Select a Snapshot to export.",
                         values = function( info )
                             if #ns.snapshots == 0 then
@@ -10531,14 +10178,92 @@ do
                         get = function( info )
                             return snapshots.selected
                         end,
-                        order = 12,
+                        order = 3,
                         width = "full",
                         disabled = function() return #ns.snapshots == 0 end,
                     },
+                    autoSnapshot = {
+                        type = "toggle",
+                        name = "Auto Snapshot",
+                        desc = "If checked, the addon will automatically create a snapshot whenever it failed to generate a recommendation.\n\n" ..
+                            "This automatic snapshot can only occur once per episode of combat.",
+                        order = 2,
+                        width = "normal",
+                    },
+                    screenshot = {
+                        type = "toggle",
+                        name = "Take Screenshot",
+                        desc = "If checked, the addon will take a screenshot when you manually create a snapshot.\n\n" ..
+                            "Submitting both with your issue tickets will provide useful information for investigation purposes.",
+                        order = 2.1,
+                        width = "normal",
+                    },
+                    issueReporting_snapshot = {
+                        type = "group",
+                        name = "What is a snapshot?",
+                        order = 4,
+                        args = {
+                            issueReporting_snapshot_what = {
+                                type = "description",
+                                name = function()
+                                    return "Snapshots are logs of the addon's decision-making process for a set of recommendations.  If you have questions about -- or disagree with -- the addon's recommendations, " ..
+                                    "reviewing a snapshot can help identify what factors led to the specific recommendations that you saw.\n\n" ..
+                                    "Snapshots only capture a specific point in time, and explain the current recommendation as well as all future recommendations based on icons shown. So if you show 3 icons in the addon, the snapshot will explain the current recommendation and the next 2." ..
+                                    "\n\nYou can also freeze the addon's recommendations using the |cffffd100Pause|r binding ( |cffffd100" .. ( Hekili.DB.profile.toggles.pause.key or "NOT BOUND" ) .. "|r ).  Doing so will freeze the addon's recommendations, allowing you to mouseover the display " ..
+                                    "and see which conditions were met to display those recommendations.  Press Pause again to unfreeze the addon.\n\n" ..
+                                    "Using the settings at the top of this panel, you can ask the addon to automatically generate a snapshot for you when no recommendations were able to be made.\n\n"
+                                end,
+                                order = 4,
+                                width = "full",
+                                fontSize = "medium",
+                            },
+                        },
+                    },
 
+                    issueReporting_snapshot_how = {
+                        type = "group",
+                        name = "How do I get one?",
+                        order = 5,
+                        args = {
+                            issueReporting_snapshot_how_info = {
+                                type = "description",
+                                name = function()
+                                return "|cFFFFD100When should I do it|r\n" ..
+                                "You should generate the snapshot when the issue is actively happening. If you look at the recommendations and think \"this seems wrong\", that's when you should do it. Most of the time, issues can be recreated at training dummies." ..
+                                "\n\nFor example, if the issue usually happens 20 seconds into your rotation, then an out-of-combat prepull snapshot isn't going to help the Dev or other community members diagnose and fix the issue." ..
+                                "\n\n|cFFFFD100How do I do it|r\n" ..
+                                "You can generate a snapshot one of 3 ways:\n" ..
+                                "• Pressing the snapshot keybind: |cffffd100" .. ( Hekili.DB.profile.toggles.snapshot.key or "NOT BOUND" ) .. "|r" ..
+                                "\n• Pressing the pause keybind: |cffffd100" .. ( Hekili.DB.profile.toggles.pause.key or "NOT BOUND" ) .. "|r" ..
+                                "\n• One can be automatically generated if the addon fails to recommend something, if you allow it to via the checkbox at the top of this window (|cFFFFD100Auto Snapshot|r)" ..
+                                "\n\n|cFFFFD100Okay I made one, where is it?|r\n" ..
+                                "The snapshot can be retrieved by picking it from dropdown list near the top of this window, then copying it from the textbox that appears. Be sure to press |cFFFFD100Ctrl + A|r before copying it so that you get the entire thing. It should be very, very long."
+                                end,
+                                order = 4.1,
+                                fontSize = "medium",
+                                width = "full",
+                                },
+                        },
+                    },
+                    issueReporting_snapshot_next = {
+                        type = "group",
+                        name = "What do I do with it now?",
+                        order = 6,
+                        args = {
+                            issueReporting_snapshot_next_info = {
+                                type = "description",
+                                name = "|cFFFFD100Now that the snapshot is in your clipboard ready to be pasted|r\n\n" .. 
+                                "1. Head to the Pastebin website: https://pastebin.com/" .. 
+                                "\n\n2. Create a paste with it and post the link wherever it's required (probably the discord, or a github ticket)",
+                                order = 5.1,
+                                fontSize = "medium",
+                                width = "full",
+                            },
+                        },
+                    },
                     Snapshot = {
                         type = 'input',
-                        name = "Snapshot",
+                        name = "Grab your Snapshot from this textbox",
                         desc = "Click here and press CTRL+A, CTRL+C to copy the snapshot.\n\nPaste in a text editor to review or upload to Pastebin to support an issue ticket.",
                         order = 20,
                         get = function( info )
@@ -10552,16 +10277,16 @@ do
 
                     SnapshotInstructions = {
                         type = "description",
-                        name = "Click the Snapshot and press CTRL+A, CTRL+C to select all text and copy it to the clipboard.\n\n"
-                            .. "Paste the text into a text editor for your own review, or upload to Pastebin to link to an issue report on GitHub.",
+                        name = "|cFF00CCFFClick the textbox above and press CTRL+A, CTRL+C to select ALL text and copy it to the clipboard. It should be hundreds of lines long.|r\n\n",
                         order = 30,
                         width = "full",
+                        fontSize = "medium",
                         hidden = function() return snapshots.selected == 0 or #ns.snapshots == 0 end,
-                    }
-                }
+                        }
+
+                },
             },
         },
-
         plugins = {
             specializations = {},
         }
@@ -10888,523 +10613,622 @@ do
     local info = {}
     local priorities = {}
 
-    local function countPriorities()
-        wipe( priorities )
+end
 
-        local spec = state.spec.id
+function Hekili:countPriorities()
+    local priorities = {}
+    local spec = state.spec.id
 
-        for priority, data in pairs( Hekili.DB.profile.packs ) do
-            if data.spec == spec then
-                insert( priorities, priority )
-            end
+    for priority, data in pairs( Hekili.DB.profile.packs ) do
+        if data.spec == spec then
+            table.insert( priorities, priority )
         end
-
-        sort( priorities )
-
-        return #priorities
     end
 
-    function Hekili:CmdLine( input )
-        if not input or input:trim() == "" or input:trim() == "skeleton" then
-            if input:trim() == 'skeleton' then
-                self:StartListeningForSkeleton()
-                self:Print( "Addon will now gather specialization information.  Select all talents and use all abilities for best results." )
-                self:Print( "See the Skeleton tab for more information. ")
-                Hekili.Skeleton = ""
-            end
-
-            ns.StartConfiguration()
-            return
-
-        elseif input:trim() == "recover" then
-            local defaults = self:GetDefaults()
-
-            for k, v in pairs( self.DB.profile.displays ) do
-                local default = defaults.profile.displays[ k ]
-                if defaults.profile.displays[ k ] then
-                    for key, value in pairs( default ) do
-                        if type( value ) == "table" then v[ key ] = tableCopy( value )
-                        else v[ key ] = value end
-
-                        if type( value ) == "table" then
-                            for innerKey, innerValue in pairs( value ) do
-                                if v[ key ][ innerKey ] == nil then
-                                    if type( innerValue ) == "table" then v[ key ][ innerKey ] = tableCopy( innerValue )
-                                    else v[ key ][ innerKey ] = innerValue end
-                                end
-                            end
-                        end
-                    end
-
-                    for key, value in pairs( self.DB.profile.displays["**"] ) do
-                        if type( value ) == "table" then v[ key ] = tableCopy( value )
-                        else v[ key ] = value end
-
-                        if type( value ) == "table" then
-                            for innerKey, innerValue in pairs( value ) do
-                                if v[ key ][ innerKey ] == nil then
-                                    if type( innerValue ) == "table" then v[ key ][ innerKey ] = tableCopy( innerValue )
-                                    else v[ key ][ innerKey ] = innerValue end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-            self:RestoreDefaults()
-            self:RefreshOptions()
-            self:BuildUI()
-            self:Print( "Default displays and action lists restored." )
-            return
-
-        end
-
-        if input then
-            input = input:trim()
-            local args = {}
-
-            for arg in string.gmatch( input, "%S+" ) do
-                insert( args, lower( arg ) )
-            end
-
-            if ( "set" ):match( "^" .. args[1] ) then
-                local profile = Hekili.DB.profile
-                local spec = profile.specs[ state.spec.id ]
-                local prefs = spec.settings
-                local settings = class.specs[ state.spec.id ].settings
-
-                local index
-
-                if args[2] then
-                    if ( "target_swap" ):match( "^" .. args[2] ) or ( "swap" ):match( "^" .. args[2] ) or ( "cycle" ):match( "^" .. args[2] ) then
-                        index = -1
-                    elseif ( "mode" ):match( "^" .. args[2] ) then
-                        index = -2
-                    else
-                        for i, setting in ipairs( settings ) do
-                            if setting.name:match( "^" .. args[2] ) then
-                                index = i
-                                break
-                            end
-                        end
-
-                        if not index then
-                            -- Check toggles instead.
-                            for toggle, num in pairs( toggleToIndex ) do
-                                if toggle:match( "^" .. args[2] ) then
-                                    index = num
-                                    break
-                                end
-                            end
-                        end
-                    end
-                end
-
-                if #args == 1 or not index then
-                    -- No arguments, list options.
-                    local output = "Use |cFFFFD100/hekili set|r to adjust your specialization options via chat or macros.\n\nOptions for " .. state.spec.name .. " are:"
-
-                    local hasToggle, hasNumber = false, false
-                    local exToggle, exNumber
-
-                    for i, setting in ipairs( settings ) do
-                        if not setting.info.arg or setting.info.arg() then
-                            if setting.info.type == "toggle" then
-                                output = format( "%s\n - |cFFFFD100%s|r = %s|r (%s)", output, setting.name, prefs[ setting.name ] and "|cFF00FF00ON" or "|cFFFF0000OFF", type( setting.info.name ) == "function" and setting.info.name() or setting.info.name )
-                                hasToggle = true
-                                exToggle = setting.name
-                            elseif setting.info.type == "range" then
-                                output = format( "%s\n - |cFFFFD100%s|r = |cFF00FF00%.2f|r, min: %.2f, max: %.2f", output, setting.name, prefs[ setting.name ], ( setting.info.min and format( "%.2f", setting.info.min ) or "N/A" ), ( setting.info.max and format( "%.2f", setting.info.max ) or "N/A" ), settingName )
-                                hasNumber = true
-                                exNumber = setting.name
-                            end
-                        end
-                    end
-
-                    output = format( "%s\n - |cFFFFD100cycle|r, |cFFFFD100swap|r, or |cFFFFD100target_swap|r = %s|r (%s)", output, spec.cycle and "|cFF00FF00ON" or "|cFFFF0000OFF", "Recommend Target Swaps" )
-
-                    output = format( "%s\n\nTo control your toggles (|cFFFFD100cooldowns|r, |cFFFFD100covenants|r, |cFFFFD100defensives|r, |cFFFFD100interrupts|r, |cFFFFD100potions|r, |cFFFFD100custom1|r, and |cFFFFD100custom2|r):\n" ..
-                        " - Enable Cooldowns:  |cFFFFD100/hek set cooldowns on|r\n" ..
-                        " - Disable Interrupts:  |cFFFFD100/hek set interupts off|r\n" ..
-                        " - Toggle Defensives:  |cFFFFD100/hek set defensives|r", output )
-
-                    output = format( "%s\n\nTo control your display mode (currently |cFFFFD100%s|r):\n - Toggle Mode:  |cFFFFD100/hek set mode|r\n - Set Mode:  |cFFFFD100/hek set mode aoe|r (or |cFFFFD100automatic|r, |cFFFFD100single|r, |cFFFFD100dual|r, |cFFFFD100reactive|r)", output, self.DB.profile.toggles.mode.value or "unknown" )
-
-                    if hasToggle then
-                        output = format( "%s\n\nTo set a |cFFFFD100specialization toggle|r, use the following commands:\n" ..
-                            " - Toggle On/Off:  |cFFFFD100/hek set %s|r\n" ..
-                            " - Enable:  |cFFFFD100/hek set %s on|r\n" ..
-                            " - Disable:  |cFFFFD100/hek set %s off|r\n" ..
-                            " - Reset to Default:  |cFFFFD100/hek set %s default|r", output, exToggle, exToggle, exToggle, exToggle )
-                    end
-
-                    if hasNumber then
-                        output = format( "%s\n\nTo set a |cFFFFD100number|r value, use the following commands:\n" ..
-                            " - Set to #:  |cFFFFD100/hek set %s #|r\n" ..
-                            " - Reset to Default:  |cFFFFD100/hek set %s default|r", output, exNumber, exNumber )
-                    end
-
-                    output = format( "%s\n\nTo select another priority, see |cFFFFD100/hekili priority|r.", output )
-
-                    Hekili:Print( output )
-                    return
-                end
-
-                local toggle = indexToToggle[ index ]
-
-                if toggle then
-                    local tab, text, to = toggle[ 1 ], toggle[ 2 ]
-
-                    if args[3] then
-                        if args[3] == "on" then to = true
-                        elseif args[3] == "off" then to = false
-                        elseif args[3] == "default" then to = false
-                        else
-                            Hekili:Print( format( "'%s' is not a valid option for |cFFFFD100%s|r.", args[3], text ) )
-                            return
-                        end
-                    else
-                        to = not profile.toggles[ tab ].value
-                    end
-
-                    Hekili:Print( format( "|cFFFFD100%s|r toggle set to %s.", text, ( to and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r" ) ) )
-
-                    profile.toggles[ tab ].value = to
-
-                    if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", tab, to ) end
-                    if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
-                    return
-                end
-
-                -- Two or more arguments, we're setting (or querying).
-                if index == -1 then
-                    local to
-
-                    if args[3] then
-                        if args[3] == "on" then to = true
-                        elseif args[3] == "off" then to = false
-                        elseif args[3] == "default" then to = false
-                        else
-                            Hekili:Print( format( "'%s' is not a valid option for |cFFFFD100%s|r.", args[3] ) )
-                            return
-                        end
-                    else
-                        to = not spec.cycle
-                    end
-
-                    Hekili:Print( format( "Recommend Target Swaps set to %s.", ( to and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r" ) ) )
-
-                    spec.cycle = to
-
-                    Hekili:ForceUpdate( "CLI_TOGGLE" )
-                    return
-                elseif index == -2 then
-                    if args[3] then
-                        Hekili:SetMode( args[3] )
-                        if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", "mode", args[3] ) end
-                        if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
-                    else
-                        Hekili:FireToggle( "mode" )
-                    end
-                    return
-                end
-
-                local setting = settings[ index ]
-                if not setting then
-                    Hekili:Print( "Not a valid option." )
-                    return
-                end
-
-                local settingName = type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
-
-                if setting.info.type == "toggle" then
-                    local to
-
-                    if args[3] then
-                        if args[3] == "on" then to = true
-                        elseif args[3] == "off" then to = false
-                        elseif args[3] == "default" then to = setting.default
-                        else
-                            Hekili:Print( format( "'%s' is not a valid option for |cFFFFD100%s|r.", args[3] ) )
-                            return
-                        end
-                    else
-                        to = not setting.info.get( info )
-                    end
-
-                    Hekili:Print( format( "%s set to %s.", settingName, ( to and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r" ) ) )
-
-                    info[ 1 ] = setting.name
-                    setting.info.set( info, to )
-
-                    Hekili:ForceUpdate( "CLI_TOGGLE" )
-                    return
-
-                elseif setting.info.type == "range" then
-                    local to
-
-                    if args[3] == "default" then
-                        to = setting.default
-                    else
-                        to = tonumber( args[3] )
-                    end
-
-                    if to and ( ( setting.info.min and to < setting.info.min ) or ( setting.info.max and to > setting.info.max ) ) then
-                        Hekili:Print( format( "The value for %s must be between %s and %s.", args[2], ( setting.info.min and format( "%.2f", setting.info.min ) or "N/A" ), ( setting.info.max and format( "%.2f", setting.info.max ) or "N/A" ) ) )
-                        return
-                    end
-
-                    if not to then
-                        Hekili:Print( format( "You must provide a number value for %s (or default).", args[2] ) )
-                        return
-                    end
-
-                    Hekili:Print( format( "%s set to |cFF00B4FF%.2f|r.", settingName, to ) )
-                    prefs[ setting.name ] = to
-                    Hekili:ForceUpdate( "CLI_NUMBER" )
-                    return
-
-                end
-
-
-            elseif ( "profile" ):match( "^" .. args[1] ) then
-                if not args[2] then
-                    local output = "Use |cFFFFD100/hekili profile name|r to swap profiles via command-line or macro.\nValid profile |cFFFFD100name|rs are:"
-
-                    for name, prof in ns.orderedPairs( Hekili.DB.profiles ) do
-                        output = format( "%s\n - |cFFFFD100%s|r %s", output, name, Hekili.DB.profile == prof and "|cFF00FF00(current)|r" or "" )
-                    end
-
-                    output = format( "%s\nTo create a new profile, see |cFFFFD100/hekili|r > |cFFFFD100Profiles|r.", output )
-
-                    Hekili:Print( output )
-                    return
-                end
-
-                local profileName = input:match( "%s+(.+)$" )
-
-                if not rawget( Hekili.DB.profiles, profileName ) then
-                    local output = format( "'%s' is not a valid profile name.\nValid profile |cFFFFD100name|rs are:", profileName )
-
-                    local count = 0
-
-                    for name, prof in ns.orderedPairs( Hekili.DB.profiles ) do
-                        count = count + 1
-                        output = format( "%s\n - |cFFFFD100%s|r %s", output, name, Hekili.DB.profile == prof and "|cFF00FF00(current)|r" or "" )
-                    end
-
-                    output = format( "%s\n\nTo create a new profile, see |cFFFFD100/hekili|r > |cFFFFD100Profiles|r.", output )
-
-                    Hekili:Notify( output )
-                    return
-                end
-
-                Hekili:Print( format( "Set profile to |cFF00FF00%s|r.", profileName ) )
-                self.DB:SetProfile( profileName )
-                return
-
-            elseif ( "priority" ):match( "^" .. args[1] ) then
-                local n = countPriorities()
-
-                if not args[2] then
-                    local output = "Use |cFFFFD100/hekili priority name|r to change your current specialization's priority via command-line or macro."
-
-                    if n < 2 then
-                        output = output .. "\n\n|cFFFF0000You must have multiple priorities for your specialization to use this feature.|r"
-                    else
-                        output = output .. "\nValid priority |cFFFFD100name|rs are:"
-                        for i, priority in ipairs( priorities ) do
-                            output = format( "%s\n - %s%s|r %s", output, Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority, Hekili.DB.profile.specs[ state.spec.id ].package == priority and "|cFF00FF00(current)|r" or "" )
-                        end
-                    end
-
-                    output = format( "%s\n\nTo create a new priority, see |cFFFFD100/hekili|r > |cFFFFD100Priorities|r.", output )
-
-                    if Hekili.DB.profile.notifications.enabled then Hekili:Notify( output ) end
-                    Hekili:Print( output )
-                    return
-                end
-
-                -- Setting priority via commandline.
-                -- Requires multiple priorities loaded for one's specialization.
-                -- This also prepares the priorities table with relevant priority names.
-
-                if n < 2 then
-                    Hekili:Print( "You must have multiple priorities for your specialization to use this feature." )
-                    return
-                end
-
-                if not args[2] then
-                    local output = "You must provide the priority name (case sensitive).\nValid options are"
-                    for i, priority in ipairs( priorities ) do
-                        output = output .. format( " %s%s|r%s", Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority, i == #priorities and "." or "," )
-                    end
-                    Hekili:Print( output )
-                    return
-                end
-
-                local raw = input:match( "^%S+%s+(.+)$" )
-                local name = raw:gsub( "%%", "%%%%" ):gsub( "^%^", "%%^" ):gsub( "%$$", "%%$" ):gsub( "%(", "%%(" ):gsub( "%)", "%%)" ):gsub( "%.", "%%." ):gsub( "%[", "%%[" ):gsub( "%]", "%%]" ):gsub( "%*", "%%*" ):gsub( "%+", "%%+" ):gsub( "%-", "%%-" ):gsub( "%?", "%%?" )
-
-                for i, priority in ipairs( priorities ) do
-                    if priority:match( "^" .. name ) then
-                        Hekili.DB.profile.specs[ state.spec.id ].package = priority
-                        local output = format( "Priority set to %s%s|r.", Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority )
-                        if Hekili.DB.profile.notifications.enabled then Hekili:Notify( output ) end
-                        Hekili:Print( output )
-                        Hekili:ForceUpdate( "CLI_TOGGLE" )
-                        return
-                    end
-                end
-
-                local output = format( "No match found for priority '%s'.\nValid options are", raw )
-
-                for i, priority in ipairs( priorities ) do
-                    output = output .. format( " %s%s|r%s", Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority, i == #priorities and "." or "," )
-                end
-
-                if Hekili.DB.profile.notifications.enabled then Hekili:Notify( output ) end
-                Hekili:Print( output )
-                return
-
-            elseif ( "enable" ):match( "^" .. args[1] ) or ( "disable" ):match( "^" .. args[1] ) then
-                local enable = ( "enable" ):match( "^" .. args[1] ) or false
-
-                for i, buttons in ipairs( ns.UI.Buttons ) do
-                    for j, _ in ipairs( buttons ) do
-                        if not enable then
-                            buttons[j]:Hide()
-                        else
-                            buttons[j]:Show()
-                        end
-                    end
-                end
-
-                self.DB.profile.enabled = enable
-
-                if enable then
-                    Hekili:Print( "Addon |cFFFFD100ENABLED|r." )
-                    self:Enable()
-                else
-                    Hekili:Print( "Addon |cFFFFD100DISABLED|r." )
-                    self:Disable()
-                end
-
-            elseif ( "move" ):match( "^" .. args[1] ) or ( "unlock" ):match( "^" .. args[1] ) then
-                if InCombatLockdown() then
-                    Hekili:Print( "Movers cannot be activated while in combat." )
-                    return
-                end
-
-                if not Hekili.Config then
-                    ns.StartConfiguration( true )
-                elseif ( "move" ):match( "^" .. args[1] ) and Hekili.Config then
-                    ns.StopConfiguration()
-                end
-
-            elseif ("stress" ):match( "^" .. args[1] ) then
-                if InCombatLockdown() then
-                    Hekili:Print( "Unable to stress test abilities and auras while in combat." )
-                    return
-                end
-
-                local precount = 0
-                for k, v in pairs( self.ErrorDB ) do
-                    precount = precount + v.n
-                end
-
-                local results, count, specs = "", 0, {}
-                for i in ipairs( class.specs ) do
-                    if i ~= 0 then insert( specs, i ) end
-                end
-                sort( specs )
-
-                for i, specID in ipairs( specs ) do
-                    local spec = class.specs[ specID ]
-                    results = format( "%sSpecialization: %s\n", results, spec.name )
-
-                    for key, aura in ipairs( spec.auras ) do
-                        local keyNamed = false
-                        -- Avoid duplicates.
-                        if aura.key == key then
-                            for k, v in pairs( aura ) do
-                                if type( v ) == "function" then
-                                    local ok, val = pcall( v )
-                                    if not ok then
-                                        if not keyNamed then results = format( "%s - Aura: %s\n", results, k ); keyNamed = true end
-                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
-                                        count = count + 1
-                                    end
-                                end
-                            end
-                            for k, v in pairs( aura.funcs ) do
-                                if type( v ) == "function" then
-                                    local ok, val = pcall( v )
-                                    if not ok then
-                                        if not keyNamed then results = format( "%s - Aura: %s\n", results, k ); keyNamed = true end
-                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
-                                        count = count + 1
-                                    end
-                                end
-                            end
-                        end
-                    end
-
-                    for key, ability in ipairs( spec.abilities ) do
-                        local keyNamed = false
-                        -- Avoid duplicates.
-                        if ability.key == key then
-                            for k, v in pairs( ability ) do
-                                if type( v ) == "function" then
-                                    local ok, val = pcall( v )
-                                    if not ok then
-                                        if not keyNamed then results = format( "%s - Ability: %s\n", results, k ); keyNamed = true end
-                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
-                                        count = count + 1
-                                    end
-                                end
-                            end
-                            for k, v in pairs( ability.funcs ) do
-                                if type( v ) == "function" then
-                                    local ok, val = pcall( v )
-                                    if not ok then
-                                        if not keyNamed then results = format( "%s - Ability: %s\n", results, k ); keyNamed = true end
-                                        results = format( "%s    - %s = %s\n", results, tostring( val ) )
-                                        count = count + 1
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-
-                local postcount = 0
-                for k, v in pairs( self.ErrorDB ) do
-                    postcount = postcount + v.n
-                end
-
-                if count > 0 then
-                    Hekili:Print( results )
-                    Hekili:Error( results )
-                end
-
-                if postcount > precount then Hekili:Print( "New warnings were loaded in /hekili > Warnings." ) end
-                if count == 0 and postcount == precount then Hekili:Print( "Stress test completed; no issues found." ) end
-
-            elseif ( "lock" ):match( "^" .. args[1] ) then
-                if Hekili.Config then
-                    ns.StopConfiguration()
-                else
-                    Hekili:Print( "Displays are not unlocked.  Use |cFFFFD100/hek move|r or |cFFFFD100/hek unlock|r to allow click-and-drag." )
-                end
-            elseif ( "dotinfo" ):match( "^" .. args[1] ) then
-                local aura = args[2] and args[2]:trim()
-                Hekili:DumpDotInfo( aura )
-            end
+    table.sort( priorities )
+    return priorities
+end
+
+function Hekili:CmdLine( input )
+    -- Trim the input once and handle empty or 'skeleton' input
+    input = input and input:trim() or ""
+
+    if input == "" or input == "skeleton" then
+        self:HandleSkeletonCommand( input )
+        return true  -- Ensure return true to close chat box
+    end
+
+    -- Parse arguments into a table
+    local args = {}
+    for arg in string.gmatch( input, "%S+" ) do
+        table.insert( args, arg:lower() )
+    end
+
+    -- Alias maps for argument substitutions
+    local arg1Aliases = { prio = "priority" }
+    local arg2Aliases = {
+        cd          = "cooldowns",
+        cds         = "cooldowns",
+        pot         = "potions",
+        display     = "mode",
+        target_swap = "cycle",
+        swap        = "cycle",
+        covenants   = "essences"
+    }
+    local arg3Aliases = {
+        auto = "automatic",
+        pi   = "infusion",
+    }
+
+    -- Apply aliases to arguments
+    if args[1] and arg1Aliases[ args[1] ] then args[1] = arg1Aliases[ args[1] ] end
+    if args[2] and arg2Aliases[ args[2] ] then args[2] = arg2Aliases[ args[2] ] end
+    if args[3] and arg3Aliases[ args[3] ] then args[3] = arg3Aliases[ args[3] ] end
+
+    local command = args[1]
+
+    -- Command handlers mapping
+    local commandHandlers = {
+        set      = function () self:HandleSetCommand( args ) end,
+        profile  = function () self:HandleProfileCommand( args ) end,
+        priority = function () self:HandlePriorityCommand( args ) end,
+        enable   = function () self:HandleEnableDisableCommand( args ) end,
+        disable  = function () self:HandleEnableDisableCommand( args ) end,
+        move     = function () self:HandleMoveCommand( args ) end,
+        unlock   = function () self:HandleMoveCommand( args ) end,
+        lock     = function () self:HandleMoveCommand( args ) end,
+        stress   = function () self:RunStressTest() end,
+        dotinfo  = function () self:DumpDotInfo( args[2] ) end,
+        recover  = function () self:HandleRecoverCommand() end,
+    }
+
+    -- Execute the corresponding command handler or show error message
+    if commandHandlers[ command ] then
+        commandHandlers[ command ]()
+        self:UpdateDisplayVisibility()
+        return true
+    elseif command == "help" then
+        self:DisplayChatCommandList( "all" )
+    else
+        self:Print( "Invalid command. Type '/hekili help' to see the available commands." )
+        return true
+    end
+end
+
+function Hekili:HandleSetCommand( args )
+    local profile = self.DB.profile
+    local mainToggle = args[2] and args[2]:lower()  -- Convert to lowercase
+    local subToggleOrState = args[3] and args[3]:lower()
+    local explicitState = args[4]
+
+    -- No Main Toggle Provided
+    if not mainToggle then
+        self:DisplayChatCommandList( "all" )
+        return true
+    end
+
+    -- Special Case for cycle
+    if mainToggle == "cycle" then
+        -- Check for whole number minimum time to die (from 0 to 20 seconds)
+        local cycleValue = tonumber( subToggleOrState )
+        if cycleValue and cycleValue >= 0 and cycleValue <= 20 and floor( cycleValue ) == cycleValue then
+            profile.specs[ state.spec.id ].cycle_min = cycleValue
+            self:Print( format( "Target Swap minimum time to die set to %d seconds.", cycleValue ) )
+        elseif subToggleOrState == nil then
+            -- Toggle cycle if no state is provided
+            profile.specs[ state.spec.id ].cycle = not profile.specs[ state.spec.id ].cycle
+            local toggleStateText = profile.specs[ state.spec.id ].cycle and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+            self:Print( format( "Target Swap toggle set to %s.", toggleStateText ) )
+        elseif subToggleOrState == "on" or subToggleOrState == "off" then
+            -- Explicitly set cycle to on or off
+            local toggleState = ( subToggleOrState == "on" )
+            profile.specs[ state.spec.id ].cycle = toggleState
+            local toggleStateText = toggleState and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+            self:Print( format( "Target Swap toggle set to %s.", toggleStateText ) )
         else
-            LibStub( "AceConfigCmd-3.0" ):HandleCommand( "hekili", "Hekili", input )
+            -- Invalid parameter handling
+            self:Print( "Invalid input for 'cycle'. Use 'on', 'off', leave blank to toggle, or provide a whole number from 0 to 20 to set the minimum time to die." )
+        end
+        self:ForceUpdate( "CLI_TOGGLE" )
+        return true
+    end
+
+    -- Handle display mode setting
+    if mainToggle == "mode" then
+        if subToggleOrState then
+            self:SetMode( subToggleOrState )
+            if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", "mode", args[3] ) end
+            if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
+        return true
+        else
+            Hekili:FireToggle( "mode" )
+        end
+        return true
+    end
+
+    -- Handle specialization settings
+    if mainToggle == "spec" then
+        if self:HandleSpecSetting( subToggleOrState, explicitState) then
+            return true
+        else
+            self:Print( "Invalid spec setting specified." )
+            return true
         end
     end
+
+    -- Main Toggle and Sub-Toggle Handling
+    -- Explicit State Check for Main Toggle
+    local toggleCategory = profile.toggles[ mainToggle ]
+    if toggleCategory then
+        if subToggleOrState == "on" or subToggleOrState == "off" then
+            toggleCategory.value = ( subToggleOrState == "on" )
+            local stateText = toggleCategory.value and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+            self:Print( format( "|cFFFFD100%s|r is now %s.", mainToggle, stateText ) )
+            self:ForceUpdate( "CLI_TOGGLE" )
+            return true
+        end
+
+        -- Sub-Toggle Handling with Validation
+        if subToggleOrState then
+            -- Convert keys of toggleCategory to lowercase to handle case-insensitivity
+            local lowerToggleCategory = {}
+            for k, v in pairs( toggleCategory) do
+                lowerToggleCategory[ k:lower() ] = v
+            end
+
+            -- Check if sub-toggle exists in main toggle
+            if lowerToggleCategory[ subToggleOrState ] ~= nil then
+                if explicitState == "on" or explicitState == "off" then
+                    lowerToggleCategory[ subToggleOrState ] = ( explicitState == "on" )
+                elseif explicitState == nil then
+                    lowerToggleCategory[ subToggleOrState ] = not lowerToggleCategory[ subToggleOrState ]
+                else
+                    self:Print( "Invalid explicit state. Use 'on' or 'off'." )
+                    return true
+                end
+
+                toggleCategory[ subToggleOrState ] = lowerToggleCategory[ subToggleOrState ]  -- Update the original case-sensitive table
+                local stateText = lowerToggleCategory[ subToggleOrState ] and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+                self:Print( format( "|cFFFFD100%s_%s|r is now %s.", mainToggle, subToggleOrState, stateText ) )
+                self:ForceUpdate("CLI_TOGGLE" )
+                return true
+            else
+                self:Print("Invalid sub-toggle specified." )
+                return true
+            end
+        end
+
+        -- Default Toggle Behavior for Main Toggle (Toggle)
+        self:FireToggle( mainToggle, explicitState )
+        local mainToggleState = profile.toggles[ mainToggle ].value and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+        self:Print( format( "|cFFFFD100%s|r is now %s.", mainToggle, mainToggleState ) )
+        self:ForceUpdate( "CLI_TOGGLE" )
+        return true
+    end
+    -- Invalid Toggle or Setting
+    self:Print( "Invalid toggle or setting specified." )
+    return true
+end
+
+function Hekili:HandleSpecSetting( specSetting, specValue )
+    local profile = self.DB.profile
+    local settings = class.specs[ state.spec.id ].settings
+
+    -- Search for the spec setting within the settings table
+    for i, setting in ipairs( settings ) do
+        if setting.name:match( "^" .. specSetting ) then
+            if setting.info.type == "toggle" then
+                -- If specValue is nil, treat it as a toggle command
+                if specValue == nil or specValue == "toggle" then
+                    local newValue = not profile.specs[ state.spec.id ].settings[ setting.name ]
+                    profile.specs[ state.spec.id ].settings[ setting.name ] = newValue
+                    local stateText = newValue and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"
+                    self:Print( format( "%s set to %s.", setting.name, stateText ) )
+                elseif specValue == "on" then
+                    profile.specs[state.spec.id].settings[setting.name] = true
+                    self:Print( format( "%s set to |cFF00FF00ON|r.", setting.name ) )
+                elseif specValue == "off" then
+                    profile.specs[state.spec.id].settings[setting.name] = false
+                    self:Print( format( "%s set to |cFFFF0000OFF|r.", setting.name ) )
+                else
+                    self:Print( "Invalid input. Use 'on', 'off', or leave blank to toggle for toggle settings." )
+                end
+                return true
+
+            elseif setting.info.type == "range" then
+                -- Ensure specValue is a number within the allowed range
+                local newValue = tonumber( specValue )
+                if newValue and newValue >= ( setting.info.min or -math.huge ) and newValue <= ( setting.info.max or math.huge ) then
+                    profile.specs[ state.spec.id ].settings[ setting.name ] = newValue
+                    self:Print( format( "%s set to |cFF00B4FF%.2f|r.", setting.name, newValue ) )
+                else
+                    self:Print( format( "Invalid value for %s. Must be between %.2f and %.2f.", setting.name, setting.info.min or 0, setting.info.max or 100 ) )
+                end
+                return true
+            end
+        end
+    end
+
+    self:Print( "Invalid spec setting specified." )
+    return false
+end
+
+function Hekili:DisplayChatCommandList( list )
+    local profile = self.DB.profile
+
+    -- Generate and print the "all" overview message.
+    if list == "all" then
+        self:Print( "Use |cFFFFD100/hekili set|r to adjust toggles, display modes, and specialization settings via chat commands or macros.\n\n" ) 
+    end
+
+    -- Toggle Options Section
+    local function getTogglesChunk()
+        return "Toggle Options:\n" ..
+            " - |cFFFFD100cooldowns|r, |cFFFFD100potions|r, |cFFFFD100interrupts|r, etc.\n" ..
+            " - Example commands:\n" ..
+            "   - Enable Cooldowns: |cFFFFD100/hek set cooldowns on|r\n" ..
+            "   - Disable Interrupts: |cFFFFD100/hek set interrupts off|r\n" ..
+            "   - Toggle Defensives: |cFFFFD100/hek set defensives|r\n\n"
+    end
+
+    -- Display Mode Control Section
+    local function getModesChunk()
+        return format( "Display Mode Control (currently |cFFFFD100%s|r):\n", profile.toggles.mode.value or "unknown" ) ..
+            " - Toggle Mode: |cFFFFD100/hek set mode|r\n" ..
+            " - Set specific mode:\n" ..
+            "   - |cFFFFD100/hek set mode automatic|r\n" ..
+            "   - |cFFFFD100/hek set mode single|r\n" ..
+            "   - |cFFFFD100/hek set mode aoe|r\n" ..
+            "   - |cFFFFD100/hek set mode dual|r\n" ..
+            "   - |cFFFFD100/hek set mode reactive|r\n\n"
+    end
+
+    -- Target Swap (Cycle) Setting Section
+    local function getCycleChunk()
+        return "Target Swap Setting:\n" ..
+            " - Toggle Target Swap: |cFFFFD100/hek set cycle|r\n" ..
+            " - Set minimum time to die for target swaps: |cFFFFD100/hek set cycle #|r (0-20)\n" ..
+            " - Enable: |cFFFFD100/hek set cycle on|r\n" ..
+            " - Disable: |cFFFFD100/hek set cycle off|r\n\n"
+    end
+
+    -- Specialization Settings Section
+    local function getSpecializationChunk()
+        local output = "Specialization Settings for " .. ( state.spec.name or "your specialization" ) .. ":\n"
+        local hasToggle, hasNumber = false, false
+        local exToggle, exNumber, exMin, exMax, exStep
+
+        -- Loop through specialization settings if they exist
+        local settings = class.specs[ state.spec.id ] and class.specs[ state.spec.id ].settings or {}
+        for i, setting in ipairs( settings ) do
+            if not setting.info.arg or setting.info.arg() then
+                if setting.info.type == "toggle" then
+                    output = output .. format(
+                        " - |cFFFFD100%s|r = %s|r (%s)\n",
+                        setting.name,
+                        profile.specs[ state.spec.id ].settings[ setting.name ] and "|cFF00FF00ON" or "|cFFFF0000OFF",
+                        type( setting.info.name ) == "function" and setting.info.name() or setting.info.name
+                    )
+                    hasToggle = true
+                    exToggle = setting.name
+                elseif setting.info.type == "range" then
+                    output = output .. format(
+                        " - |cFFFFD100%s|r = |cFF00FF00%.2f|r, min: %.2f, max: %.2f\n",
+                        setting.name,
+                        profile.specs[ state.spec.id ].settings[ setting.name ],
+                        setting.info.min and format( "%.2f", setting.info.min ) or "N/A",
+                        setting.info.max and format( "%.2f", setting.info.max ) or "N/A"
+                    )
+                    hasNumber = true
+                    exNumber = setting.name
+                    exMin = setting.info.min
+                    exMax = setting.info.max
+                    exStep = setting.info.step
+                end
+            end
+        end
+
+        -- Example Commands for Specialization Settings
+        if hasToggle then
+            output = output .. format(
+                "\nExample commands for toggling specialization settings:\n" ..
+                " - Toggle On/Off: |cFFFFD100/hek set spec %s|r\n" ..
+                " - Enable: |cFFFFD100/hek set spec %s on|r\n" ..
+                " - Disable: |cFFFFD100/hek set spec %s off|r\n",
+                exToggle, exToggle, exToggle
+            )
+        end
+
+        if hasNumber then
+            -- Adjust range display based on step size
+            local rangeFormat = exStep and exStep >= 1 and "%d-%d" or "%.1f-%.1f"
+            output = output .. format(
+                "\nExample command for setting numeric values:\n" ..
+                " - Set to a value within range: |cFFFFD100/hek set spec %s #|r ( " .. rangeFormat .. ")\n",
+                exNumber, exMin or 0, exMax or 100
+            )
+        end
+
+        return output .. "\n"
+    end
+
+    -- Other Commands Section (only included with "all")
+    local function getOtherCommandsChunk()
+        return "Other available commands:\n" ..
+            " - |cFFFFD100/hekili priority|r - View or change priority settings\n" ..
+            " - |cFFFFD100/hekili profile|r - View or change profiles\n" ..
+            " - |cFFFFD100/hekili move|r - Unlock or lock the UI for positioning\n" ..
+            " - |cFFFFD100/hekili enable|r or |cFFFFD100/hekili disable|r - Enable or disable the addon\n"
+    end
+
+    -- Determine which sections to print based on the input
+    if list == "all" then
+        self:Print( getTogglesChunk() )
+        self:Print( getModesChunk() )
+        self:Print( getCycleChunk() )
+        self:Print( getSpecializationChunk() )
+        self:Print( getOtherCommandsChunk() )
+    elseif list == "toggles" then
+        self:Print( getTogglesChunk() )
+    elseif list == "modes" then
+        self:Print( getModesChunk() )
+    elseif list == "cycle" then
+        self:Print( getCycleChunk() )
+    elseif list == "specialization" then
+        self:Print( getSpecializationChunk() )
+    end
+end
+
+function Hekili:HandleSkeletonCommand( input )
+    if input == "skeleton" then
+        self:StartListeningForSkeleton()
+        self:Print( "Addon will now gather specialization information. Select all talents and use all abilities for best results." )
+        self:Print( "See the Skeleton tab for more information." )
+        Hekili.Skeleton = ""
+    end
+    ns.StartConfiguration()
+    return
+end
+
+function Hekili:RunStressTest()
+    if InCombatLockdown() then
+        self:Print( "Cannot run stress test while in combat." )
+        return true
+    end
+
+    local preErrorCount = 0
+    for _, v in pairs( self.ErrorDB ) do
+        preErrorCount = preErrorCount + v.n
+    end
+
+    local results, count, specs = "", 0, {}
+    for i in ipairs( class.specs ) do
+        if i ~= 0 then insert( specs, i ) end
+    end
+    sort( specs )
+
+    for i, specID in ipairs( specs ) do
+        local spec = class.specs[ specID ]
+        results = format( "%sSpecialization: %s\n", results, spec.name )
+
+        for key, aura in ipairs( spec.auras ) do
+            local keyNamed = false
+            -- Avoid duplicates.
+            if aura.key == key then
+                for k, v in pairs( aura ) do
+                    if type( v ) == "function" then
+                        local ok, val = pcall( v )
+                        if not ok then
+                            if not keyNamed then results = format( "%s - Aura: %s\n", results, k )
+keyNamed = true end
+                            results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                            count = count + 1
+                        end
+                    end
+                end
+                for k, v in pairs( aura.funcs ) do
+                    if type( v ) == "function" then
+                        local ok, val = pcall( v )
+                        if not ok then
+                            if not keyNamed then results = format( "%s - Aura: %s\n", results, k )
+keyNamed = true end
+                            results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                            count = count + 1
+                        end
+                    end
+                end
+            end
+        end
+
+        for key, ability in ipairs( spec.abilities ) do
+            local keyNamed = false
+            -- Avoid duplicates.
+            if ability.key == key then
+                for k, v in pairs( ability ) do
+                    if type( v ) == "function" then
+                        local ok, val = pcall( v )
+                        if not ok then
+                            if not keyNamed then results = format( "%s - Ability: %s\n", results, k )
+keyNamed = true end
+                            results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                            count = count + 1
+                        end
+                    end
+                end
+                for k, v in pairs( ability.funcs ) do
+                    if type( v ) == "function" then
+                        local ok, val = pcall( v )
+                        if not ok then
+                            if not keyNamed then results = format( "%s - Ability: %s\n", results, k )
+keyNamed = true end
+                            results = format( "%s    - %s = %s\n", results, tostring( val ) )
+                            count = count + 1
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local postErrorCount = 0
+    for _, v in pairs( self.ErrorDB ) do
+        postErrorCount = postErrorCount + v.n
+    end
+
+    if count > 0 then
+        Hekili:Print( results )
+        Hekili:Error( results )
+    end
+
+    if postErrorCount > preErrorCount then Hekili:Print( "New warnings were loaded in /hekili > Warnings." ) end
+    if count == 0 and postErrorCount == preErrorCount then Hekili:Print( "Stress test completed; no issues found." ) end
+
+    return true
+end
+
+function Hekili:HandleProfileCommand( args )
+    if not args[2] then
+        local output = "Use |cFFFFD100/hekili profile name|r to swap profiles. Valid profile names are:"
+        for name, prof in ns.orderedPairs( Hekili.DB.profiles ) do
+            output = output .. format( "\n - |cFFFFD100%s|r %s", name, Hekili.DB.profile == prof and "|cFF00FF00(current)|r" or "" )
+        end
+        self:Print( output )
+        return
+    end
+
+    local profileName = args[2]
+    if not rawget( Hekili.DB.profiles, profileName ) then
+        self:Print( "Invalid profile name. Please choose a valid profile." )
+        return
+    end
+
+    self:Print( format( "Set profile to |cFF00FF00%s|r.", profileName ) )
+    self.DB:SetProfile( profileName )
+    return
+end
+
+function Hekili:HandleEnableDisableCommand( args )
+    local enable = args[1] == "enable"
+    self.DB.profile.enabled = enable
+
+    for _, buttons in ipairs( ns.UI.Buttons ) do
+        for _, button in ipairs( buttons ) do
+            if enable then button:Show() else button:Hide() end
+        end
+    end
+
+    if enable then
+        self:Print( "Addon enabled." )
+        self:Enable()
+    else
+        self:Print( "Addon disabled." )
+        self:Disable()
+    end
+    return
+end
+
+function Hekili:HandleMoveCommand( args )
+    if InCombatLockdown() then
+        self:Print( "Cannot unlock UI elements in combat." )
+        return
+    end
+
+    if args[1] == "lock" then
+        ns.StopConfiguration()
+        self:Print( "UI locked." )
+    else
+        ns.StartConfiguration()
+        self:Print( "UI unlocked for movement." )
+    end
+    return
+end
+
+function Hekili:HandleRecoverCommand()
+    local defaults = self:GetDefaults()
+    for k, v in pairs( self.DB.profile.displays ) do
+        local default = defaults.profile.displays[k]
+        if default then
+            for key, value in pairs( default ) do
+                v[ key ] = ( type( value) == "table" ) and tableCopy( value ) or value
+            end
+        end
+    end
+    self:RestoreDefaults()
+    self:RefreshOptions()
+    self:BuildUI()
+    self:Print( "Default displays and action lists restored." )
+    return
+end
+
+function Hekili:HandlePriorityCommand( args )
+    local priorities = self:countPriorities()
+    local spec = state.spec.id
+
+    -- Check for "default" keyword as the second argument
+    if args[2] == "default" then
+        local defaultPriority = nil
+
+        -- Search for the built-in default priority in the current spec
+        for _, priority in ipairs( priorities ) do
+            if Hekili.DB.profile.packs[ priority ].builtIn then
+                defaultPriority = priority
+                break
+            end
+        end
+
+        -- Set the default priority if found
+        if defaultPriority then
+            Hekili.DB.profile.specs[ spec ].package = defaultPriority
+            local output = format("Switched to the built-in default priority for your specialization: %s%s|r.", Hekili.DB.profile.packs[ defaultPriority ].builtIn and BlizzBlue or "|cFFFFD100", defaultPriority )
+            self:Print( output )
+            self:ForceUpdate( "CLI_TOGGLE" )
+        else
+            -- If no built-in default is found, display an error message
+            self:Print( "No built-in default priority available for this specialization." )
+        end
+        return true
+    end
+
+    -- No additional argument provided, show available priorities
+    if not args[2] then
+        local output = "Use |cFFFFD100/hekili priority name|r to change your current specialization's priority via command-line or macro."
+
+        if #priorities < 2 then
+            output = output .. "\n\n|cFFFF0000You must have multiple priorities for your specialization to use this feature.|r"
+        else
+            output = output .. "\nValid priority |cFFFFD100name|rs are:"
+            for _, priority in ipairs( priorities ) do
+                local isCurrent = Hekili.DB.profile.specs[ spec ].package == priority
+                output = format( "%s\n - %s%s|r %s", output, Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority, isCurrent and "|cFF00FF00(current)|r" or "" )
+            end
+        end
+
+        output = format( "%s\n\nTo create a new priority, see |cFFFFD100/hekili|r > |cFFFFD100Priorities|r.", output )
+        self:Print( output )
+        return true
+    end
+
+    -- Combine args into full priority name (case-insensitive) if provided
+    local rawName = table.concat( args, " ", 2 ):lower()
+    local pattern = "^" .. rawName:gsub( "%%", "%%%%" ):gsub( "%^", "%%^" ):gsub( "%$", "%%$" ):gsub( "%(", "%%(" ):gsub( "%)", "%%)" ):gsub( "%.", "%%." ):gsub( "%[", "%%[" ):gsub( "%]", "%%]" ):gsub( "%*", "%%*" ):gsub( "%+", "%%+" ):gsub( "%-", "%%-" ):gsub( "%?", "%%?" )
+
+    for _, priority in ipairs( priorities ) do
+        if priority:lower():match( pattern ) then
+            Hekili.DB.profile.specs[ spec ].package = priority
+            local output = format( "Priority set to %s%s|r.", Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority )
+            self:Print( output )
+            self:ForceUpdate( "CLI_TOGGLE" )
+            return true
+        end
+    end
+
+    -- If no matching priority found, display valid options
+    local output = format( "No match found for priority '%s'.\nValid options are:", rawName )
+    for i, priority in ipairs( priorities ) do
+        output = output .. format( " %s%s|r%s", Hekili.DB.profile.packs[ priority ].builtIn and BlizzBlue or "|cFFFFD100", priority, i == #priorities and "." or "," )
+    end
+    self:Print( output )
+    return true
 end
 
 
@@ -11438,29 +11262,29 @@ local B64tobyte = {
 
 -- This code is based on the Encode7Bit algorithm from LibCompress
 -- Credit goes to Galmok (galmok@gmail.com)
-local encodeB64Table = {};
+local encodeB64Table = {}
 
 local function encodeB64(str)
-    local B64 = encodeB64Table;
-    local remainder = 0;
-    local remainder_length = 0;
-    local encoded_size = 0;
+    local B64 = encodeB64Table
+    local remainder = 0
+    local remainder_length = 0
+    local encoded_size = 0
     local l=#str
     local code
     for i=1,l do
-        code = string.byte(str, i);
-        remainder = remainder + bit_lshift(code, remainder_length);
-        remainder_length = remainder_length + 8;
+        code = string.byte(str, i)
+        remainder = remainder + bit_lshift(code, remainder_length)
+        remainder_length = remainder_length + 8
         while(remainder_length) >= 6 do
-            encoded_size = encoded_size + 1;
-            B64[encoded_size] = bytetoB64[bit_band(remainder, 63)];
-            remainder = bit_rshift(remainder, 6);
-            remainder_length = remainder_length - 6;
+            encoded_size = encoded_size + 1
+            B64[encoded_size] = bytetoB64[bit_band(remainder, 63)]
+            remainder = bit_rshift(remainder, 6)
+            remainder_length = remainder_length - 6
         end
     end
     if remainder_length > 0 then
-        encoded_size = encoded_size + 1;
-        B64[encoded_size] = bytetoB64[remainder];
+        encoded_size = encoded_size + 1
+        B64[encoded_size] = bytetoB64[remainder]
     end
     return table.concat(B64, "", 1, encoded_size)
 end
@@ -11468,27 +11292,27 @@ end
 local decodeB64Table = {}
 
 local function decodeB64(str)
-    local bit8 = decodeB64Table;
-    local decoded_size = 0;
-    local ch;
-    local i = 1;
-    local bitfield_len = 0;
-    local bitfield = 0;
-    local l = #str;
+    local bit8 = decodeB64Table
+    local decoded_size = 0
+    local ch
+    local i = 1
+    local bitfield_len = 0
+    local bitfield = 0
+    local l = #str
     while true do
         if bitfield_len >= 8 then
-            decoded_size = decoded_size + 1;
-            bit8[decoded_size] = string_char(bit_band(bitfield, 255));
-            bitfield = bit_rshift(bitfield, 8);
-            bitfield_len = bitfield_len - 8;
+            decoded_size = decoded_size + 1
+            bit8[decoded_size] = string_char(bit_band(bitfield, 255))
+            bitfield = bit_rshift(bitfield, 8)
+            bitfield_len = bitfield_len - 8
         end
-        ch = B64tobyte[str:sub(i, i)];
-        bitfield = bitfield + bit_lshift(ch or 0, bitfield_len);
-        bitfield_len = bitfield_len + 6;
+        ch = B64tobyte[str:sub(i, i)]
+        bitfield = bitfield + bit_lshift(ch or 0, bitfield_len)
+        bitfield_len = bitfield_len + 6
         if i > l then
-            break;
+            break
         end
-        i = i + 1;
+        i = i + 1
     end
     return table.concat(bit8, "", 1, decoded_size)
 end
@@ -11531,11 +11355,11 @@ StringToTable = function( inString, fromChat )
         decoded = fromChat and decodeB64(inString) or Encoder:Decode(inString)
         if not decoded then return "Unable to decode." end
 
-        decompressed, errorMsg = Compresser:Decompress(decoded);
+        decompressed, errorMsg = Compresser:Decompress(decoded)
         if not decompressed then return "Unable to decompress decoded string: " .. errorMsg end
     end
 
-    local success, deserialized = Serializer:Deserialize(decompressed);
+    local success, deserialized = Serializer:Deserialize(decompressed)
     if not success then return "Unable to deserialized decompressed string: " .. deserialized end
 
     return deserialized
@@ -11645,6 +11469,7 @@ do
         { "rtb_buffs%.will_lose%.([%w_]+)"                  , "rtb_buffs_will_lose_buff.%1"             },
         { "rtb_buffs%.will_lose"                            , "rtb_buffs_will_lose"                     },
         { "rtb_buffs%.total"                                , "rtb_buffs"                               },
+        { "buff.supercharge_(%d).up"                        , "supercharge_%1"                          },
         { "hyperthread_wristwraps%.([%w_]+)%.first_remains" , "hyperthread_wristwraps.first_remains.%1" },
         { "hyperthread_wristwraps%.([%w_]+)%.count"         , "hyperthread_wristwraps.%1"               },
         { "cooldown"                                        , "action_cooldown"                         },
@@ -11664,7 +11489,7 @@ do
         { "trinket%.(%d)%.([%w%._]+)"                       , "trinket.t%1.%2"                          },
         { "trinket%.([%w_]+)%.cooldown"                     , "trinket.%1.cooldown.duration"            },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.duration"     , "trinket.%1.buff_duration"                },
-        { "trinket%.([%w_]+)%.buff%.duration"               , "trinket.%1.buff_duration"                },
+        { "trinket%.([%w_]+)%.buff%.a?n?y?%.?duration"      , "trinket.%1.buff_duration"                },
         { "trinket%.([%w_]+)%.proc%.([%w_]+)%.[%w_]+"       , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_buff%.([%w_]+)"           , "trinket.%1.has_use_buff"                 },
         { "trinket%.([%w_]+)%.has_use_buff%.([%w_]+)"       , "trinket.%1.has_use_buff"                 },
@@ -11939,13 +11764,8 @@ do
                     local ability = str:trim()
 
                     if ability and ( ability == "use_item" or class.abilities[ ability ] ) then
-                        if ability == "pocketsized_computation_device" then ability = "cyclotronic_blast" end
-                        -- Stub abilities that are replaced sometimes.
-                        if ability == "any_dnd" or ability == "wound_spender" or ability == "summon_pet" or ability == "apply_poison" or ability == "trinket1" or ablity == "trinket2" or ability == "raptor_bite" or ability == "mongoose_strike" then
-                            result.action = ability
-                        else
-                            result.action = class.abilities[ ability ] and class.abilities[ ability ].key or ability
-                        end
+                        if ability == "pocketsized_computation_device" then ability = "cyclotronic_blast"
+                        else result.action = ability end
                     elseif not ignore_actions[ ability ] then
                         insert( warnings, "Line " .. line .. ": Unsupported action '" .. ability .. "'." )
                         result.action = ability
@@ -11961,6 +11781,10 @@ do
                         if key == 'criteria' or key == 'target_if' or key == 'value' or key == 'value_else' or key == 'sec' or key == 'wait' then
                             value = Sanitize( 'c', value, line, warnings )
                             value = SpaceOut( value )
+                        end
+
+                        if key == 'caption' then
+                            value = value:gsub( "||", "|" ):gsub( ";", "," )
                         end
 
                         if key == 'description' then
@@ -11988,7 +11812,8 @@ do
             if result.use_off_gcd then result.use_off_gcd = tonumber( result.use_off_gcd ) end
             if result.use_while_casting then result.use_while_casting = tonumber( result.use_while_casting ) end
             if result.strict then result.strict = tonumber( result.strict ) end
-            if result.moving then result.enable_moving = true; result.moving = tonumber( result.moving ) end
+            if result.moving then result.enable_moving = true
+result.moving = tonumber( result.moving ) end
 
             if result.target_if and not result.criteria then
                 result.criteria = result.target_if
@@ -12103,9 +11928,11 @@ function Hekili:MakeSnapshot( isAuto )
         return
     end
 
+    self.ManualSnapshot = not isAuto
     self.ActiveDebug = true
     Hekili.Update()
     self.ActiveDebug = false
+    self.ManualSnapshot = nil
 
     HekiliDisplayPrimary.activeThread = nil
 end
@@ -12175,35 +12002,36 @@ do
     end
 
 
-    function Hekili:FireToggle( name )
+    function Hekili:FireToggle( name, explicitState )
         local toggle = name and self.DB.profile.toggles[ name ]
-
         if not toggle then return end
 
+        -- Handle mode toggle with explicitState if provided
         if name == 'mode' then
-            local current = toggle.value
-            local c_index = modeIndex[ current ][ 1 ]
-
-            local i = c_index + 1
-
-            while true do
-                if i > #modes then i = i % #modes end
-                if i == c_index then break end
-
-                local newMode = modes[ i ]
-
-                if toggle[ newMode ] then
-                    toggle.value = newMode
-                    break
-                end
-
-                i = i + 1
-            end
-
-            if self.DB.profile.notifications.enabled then
-                self:Notify( "Mode: " .. modeIndex[ toggle.value ][2] )
+            if explicitState then
+                self:SetMode( explicitState )
             else
-                self:Print( modeIndex[ toggle.value ][2] .. " mode activated." )
+                -- If no explicit state, cycle through available modes
+                local current = toggle.value
+                local c_index = modeIndex[ current ][1]
+                local i = c_index + 1
+
+                while true do
+                    if i > #modes then i = i % #modes end
+                    if i == c_index then break end
+
+                    local newMode = modes[i]
+                    if toggle [ newMode ] then
+                        toggle.value = newMode
+                        break
+                    end
+                    i = i + 1
+                end
+                if self.DB.profile.notifications.enabled then
+                    self:Notify( "Mode: " .. modeIndex[ toggle.value ][2] )
+                else
+                    self:Print( modeIndex[ toggle.value ][2] .. " mode activated." )
+                end
             end
 
         elseif name == 'pause' then
@@ -12215,21 +12043,32 @@ do
             return
 
         else
-            toggle.value = not toggle.value
+            -- Handle other toggles with explicit state if provided
+            if explicitState == "on" then
+                toggle.value = true
+            elseif explicitState == "off" then
+                toggle.value = false
+            elseif explicitState == nil then
+                -- Toggle the value if no explicit state is provided
+                toggle.value = not toggle.value
+            else
+                -- If an invalid explicitState is provided, print an error
+                self:Print( "Invalid state specified. Use 'on' or 'off'." )
+                return
+            end
 
             if toggle.name then toggles[ name ] = toggle.name end
 
             if self.DB.profile.notifications.enabled then
                 self:Notify( toggles[ name ] .. ": " .. ( toggle.value and "ON" or "OFF" ) )
             else
-                self:Print( toggles[ name ].. ( toggle.value and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
+                self:Print( toggles[ name ] .. ( toggle.value and " |cFF00FF00ENABLED|r." or " |cFFFF0000DISABLED|r." ) )
             end
         end
 
         if WeakAuras and WeakAuras.ScanEvents then WeakAuras.ScanEvents( "HEKILI_TOGGLE", name, toggle.value ) end
         if ns.UI.Minimap then ns.UI.Minimap:RefreshDataText() end
         self:UpdateDisplayVisibility()
-
         self:ForceUpdate( "HEKILI_TOGGLE", true )
     end
 

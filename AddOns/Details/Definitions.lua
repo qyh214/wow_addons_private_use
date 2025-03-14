@@ -52,6 +52,131 @@
 ---| "PLAYER_TARGET"
 ---| "DETAILS_PROFILE_APPLYED"
 
+---@alias detailsattributes
+---| "DETAILS_ATTRIBUTE_DAMAGE"
+---| "DETAILS_ATTRIBUTE_HEAL"
+---| "DETAILS_ATTRIBUTE_ENERGY"
+---| "DETAILS_ATTRIBUTE_MISC"
+---| "DETAILS_SUBATTRIBUTE_DAMAGEDONE"
+---| "DETAILS_SUBATTRIBUTE_DPS"
+---| "DETAILS_SUBATTRIBUTE_DAMAGETAKEN"
+---| "DETAILS_SUBATTRIBUTE_FRIENDLYFIRE"
+---| "DETAILS_SUBATTRIBUTE_FRAGS"
+---| "DETAILS_SUBATTRIBUTE_ENEMIES"
+---| "DETAILS_SUBATTRIBUTE_VOIDZONES"
+---| "DETAILS_SUBATTRIBUTE_BYSPELLS"
+---| "DETAILS_SUBATTRIBUTE_HEALDONE"
+---| "DETAILS_SUBATTRIBUTE_HPS"
+---| "DETAILS_SUBATTRIBUTE_OVERHEAL"
+---| "DETAILS_SUBATTRIBUTE_HEALTAKEN"
+---| "DETAILS_SUBATTRIBUTE_HEALENEMY"
+---| "DETAILS_SUBATTRIBUTE_HEALPREVENTED"
+---| "DETAILS_SUBATTRIBUTE_HEALABSORBED"
+---| "DETAILS_SUBATTRIBUTE_REGENMANA"
+---| "DETAILS_SUBATTRIBUTE_REGENRAGE"
+---| "DETAILS_SUBATTRIBUTE_REGENENERGY"
+---| "DETAILS_SUBATTRIBUTE_REGENRUNE"
+---| "DETAILS_SUBATTRIBUTE_RESOURCES"
+---| "DETAILS_SUBATTRIBUTE_ALTERNATEPOWER"
+---| "DETAILS_SUBATTRIBUTE_CCBREAK"
+---| "DETAILS_SUBATTRIBUTE_RESS"
+---| "DETAILS_SUBATTRIBUTE_INTERRUPT"
+---| "DETAILS_SUBATTRIBUTE_DISPELL"
+---| "DETAILS_SUBATTRIBUTE_DEATH"
+---| "DETAILS_SUBATTRIBUTE_DCOOLDOWN"
+---| "DETAILS_SUBATTRIBUTE_BUFFUPTIME"
+---| "DETAILS_SUBATTRIBUTE_DEBUFFUPTIME"
+
+--globals
+DETAILS_ATTRIBUTE_DAMAGE = true
+DETAILS_ATTRIBUTE_HEAL = true
+DETAILS_ATTRIBUTE_ENERGY = true
+DETAILS_ATTRIBUTE_MISC = true
+DETAILS_SUBATTRIBUTE_DAMAGEDONE = true
+DETAILS_SUBATTRIBUTE_DPS = true
+DETAILS_SUBATTRIBUTE_DAMAGETAKEN = true
+DETAILS_SUBATTRIBUTE_FRIENDLYFIRE = true
+DETAILS_SUBATTRIBUTE_FRAGS = true
+DETAILS_SUBATTRIBUTE_ENEMIES = true
+DETAILS_SUBATTRIBUTE_VOIDZONES = true
+DETAILS_SUBATTRIBUTE_BYSPELLS = true
+DETAILS_SUBATTRIBUTE_HEALDONE = true
+DETAILS_SUBATTRIBUTE_HPS = true
+DETAILS_SUBATTRIBUTE_OVERHEAL = true
+DETAILS_SUBATTRIBUTE_HEALTAKEN = true
+DETAILS_SUBATTRIBUTE_HEALENEMY = true
+DETAILS_SUBATTRIBUTE_HEALPREVENTED = true
+DETAILS_SUBATTRIBUTE_HEALABSORBED = true
+DETAILS_SUBATTRIBUTE_REGENMANA = true
+DETAILS_SUBATTRIBUTE_REGENRAGE = true
+DETAILS_SUBATTRIBUTE_REGENENERGY = true
+DETAILS_SUBATTRIBUTE_REGENRUNE = true
+DETAILS_SUBATTRIBUTE_RESOURCES = true
+DETAILS_SUBATTRIBUTE_ALTERNATEPOWER = true
+DETAILS_SUBATTRIBUTE_CCBREAK = true
+DETAILS_SUBATTRIBUTE_RESS = true
+DETAILS_SUBATTRIBUTE_INTERRUPT = true
+DETAILS_SUBATTRIBUTE_DISPELL = true
+DETAILS_SUBATTRIBUTE_DEATH = true
+DETAILS_SUBATTRIBUTE_DCOOLDOWN = true
+DETAILS_SUBATTRIBUTE_BUFFUPTIME = true
+DETAILS_SUBATTRIBUTE_DEBUFFUPTIME = true
+
+---@alias detailstotals
+---| "DETAILS_TOTALS_ONLYGROUP"
+
+---@alias detailssegmentid
+---| "DETAILS_SEGMENTID_OVERALL"
+---| "DETAILS_SEGMENTID_CURRENT"
+
+---@alias detailscombatamountcontainers
+---| "DETAILS_COMBAT_AMOUNT_CONTAINERS"
+
+---@alias detailssegmenttype
+---| "DETAILS_SEGMENTTYPE_GENERIC"
+---| "DETAILS_SEGMENTTYPE_OVERALL"
+---| "DETAILS_SEGMENTTYPE_DUNGEON_TRASH"
+---| "DETAILS_SEGMENTTYPE_DUNGEON_BOSS"
+---| "DETAILS_SEGMENTTYPE_DUNGEON_OVERALL"
+---| "DETAILS_SEGMENTTYPE_RAID_TRASH"
+---| "DETAILS_SEGMENTTYPE_RAID_BOSS"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_GENERIC"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASH"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_OVERALL"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASHOVERALL"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSS"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSSTRASH"
+---| "DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSSWIPE"
+---| "DETAILS_SEGMENTTYPE_PVP_ARENA"
+---| "DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND"
+---| "DETAILS_SEGMENTTYPE_EVENT_VALENTINEDAY"
+---| "DETAILS_SEGMENTTYPE_TRAININGDUMMY"
+
+DETAILS_TOTALS_ONLYGROUP = true
+DETAILS_SEGMENTID_OVERALL = true
+DETAILS_SEGMENTID_CURRENT = true
+DETAILS_COMBAT_AMOUNT_CONTAINERS = true
+DETAILS_SEGMENTTYPE_GENERIC = true
+DETAILS_SEGMENTTYPE_OVERALL = true
+DETAILS_SEGMENTTYPE_DUNGEON_TRASH = true
+DETAILS_SEGMENTTYPE_DUNGEON_BOSS = true
+DETAILS_SEGMENTTYPE_DUNGEON_OVERALL = true
+DETAILS_SEGMENTTYPE_RAID_TRASH = true
+DETAILS_SEGMENTTYPE_RAID_BOSS = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_GENERIC = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASH = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_OVERALL = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_TRASHOVERALL = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSS = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSSTRASH = true
+DETAILS_SEGMENTTYPE_MYTHICDUNGEON_BOSSWIPE = true
+DETAILS_SEGMENTTYPE_PVP_ARENA = true
+DETAILS_SEGMENTTYPE_PVP_BATTLEGROUND = true
+DETAILS_SEGMENTTYPE_EVENT_VALENTINEDAY = true
+DETAILS_SEGMENTTYPE_TRAININGDUMMY = true
+
 ---@class mythicdungeontrashinfo
 ---@field ZoneName string
 ---@field MapID number
@@ -64,6 +189,7 @@
 ---@field WorldStateTimerStart number?
 ---@field WorldStateTimerEnd number?
 ---@field RunTime number?
+---@field TotalTime number?
 ---@field TimeInCombat number?
 ---@field SegmentID string?
 ---@field RunID number?
@@ -140,7 +266,10 @@
 ---@field playername string
 ---@field breakdown_general profile_breakdown_settings
 ---@field DefaultTooltipIconSize number default size of the icons in the tooltip, this also dictates the size of each line in the tooltip
----@field 
+---@field Format fun(self: details, number: number) : string
+---@field OpenSpecificBreakdownWindow fun(self: details, combatObject: combat, actorName: string, mainAttribute: number, subAttribute: number)
+---@field GetInstanceInfo fun(self: details) : details_instanceinfo
+---@field CreatePlayerPortrait fun(self: details, parent: frame, name: string) : frame
 ---@field 
 ---@field GenerateActorInfo fun(self: details, actor: actor, errorText:string, bIncludeStack:boolean) : table<string, boolean|string|number> generates a table with the main attributes of the actor, this is mainly for debug purposes
 ---@field DumpActorInfo fun(self: details, actor: actor) open a window showig the main attributes of an actor, this is mainly for debug purposes
@@ -150,7 +279,7 @@
 ---@field Msg fun(self: details, msg: string) print a message to the chat frame
 ---@field RemoveSegmentByCombatObject fun(self: details, combatObject: combat) : boolean, combat|nil remove the passed combatObject from the segments list
 ---@field RemoveSegment fun(self: details, segmentIndex: number) : boolean, combat
----@field GetCombatByUID fun(self: details, uniqueCombatId: uniquecombatid) : combat|boolean get a unique combat id and return the combat object
+---@field GetCombatByUID fun(self: details, uniqueCombatId: uniquecombatid) : combat? get a unique combat id and return the combat object
 ---@field DoesCombatWithUIDExists fun(self: details, uniqueCombatId: uniquecombatid) : boolean
 ---@field GetOverallCombat fun(self: details) : combat return the overall combat
 ---@field SetCurrentCombat fun(self: details, combatObject: combat) set the current active combat
@@ -181,8 +310,11 @@
 ---@field ListInstances fun(self: details) : instance[] return a table with all the instances
 ---@field UnpackMythicDungeonInfo fun(self: details, mythicDungeonInfo: mythicdungeoninfo) : boolean, segmentid, number, number, number, string, number, string, number, number, number unpack the mythic dungeon info and return the values
 ---@field CreateRightClickToCloseLabel fun(self: details, parent: frame) : df_label return a df_label with the text "Right click to close", need to set point
+---@field IsValidActor fun(self: details, actor: actor) : boolean return true if the actor is valid
 ---@field 
 ---@field 
+---@field 
+
 
 
 ---@class detailseventlistener : table
@@ -247,7 +379,7 @@
 ---@field training_dummy boolean if true, the combat is against a training dummy
 ---@field playerTalents table<actorname, string> [playerName] = "talent string"
 ---@field bossName string? the name of the boss, if the combat has no unitId "boss1", this value is nil
----@field 
+---@field context string? for the context manager
 ---@field 
 ---@field __call table
 ---@field __index table
@@ -257,12 +389,17 @@
 ---@field bossIcon texturepath|textureid
 ---@field bIsClosed boolean if true the combat is closed (passed by the EndCombat() function)
 ---@field __destroyedBy string
----@field amountCasts {[string]: table<string, number>}
+---@field amountCasts {[string]: table<string, number>} playername -> spellname -> amount
 ---@field instance_type instancetype "raid" or "party" or "pvp" or "arena" or "none" or "scenario"
----@field run_time number
+---@field run_time number mythic plus time without death penalties
+---@field elapsed_time number mythic plus total time
+---@field is_challenge boolean mythic plus challenge mode
+---@field total_segments_added number for a mythic+ overall segment, indicates how many segments were added
 ---@field start_time gametime
 ---@field end_time gametime
 ---@field combat_counter number
+---@field is_dungeon_overall boolean
+---@field combat_type number
 ---@field is_trash boolean while in raid this is set to true if the combat isn't raid boss, in dungeon this is set to true if the combat isn't a boss or if the dungeon isn't a mythic+
 ---@field is_boss bossinfo
 ---@field is_world_trash_combat boolean when true this combat is a regular combat done in the world, not in a dungeon, raid, battleground, arena, ...
@@ -283,7 +420,10 @@
 ---@field PhaseData table
 ---@field player_last_events table<string, table[]> record the latest events of each player, latter used to build the death log
 ---@field
+---@field GetCCCastAmount fun(self: combat, actorName: string) : number
+---@field GetInterruptCastAmount fun(self: combat, actorName: string) : number
 ---@field LockActivityTime fun(self: combat)
+---@field AddCombat fun(self: combat, givingCombat: combat, bSetStartDate:boolean?, bSetEndDate:boolean?)
 ---@field CutDeathEventsByTime fun(self: combat, time: number?) remove death events by time, default 10 seconds
 ---@field GetTotal fun(self: combat, attribute: number, subAttribute: number?, onlyGroup: boolean?) : number return the total amount of the requested attribute
 ---@field GetCurrentPhase fun(self: combat) : number return the current phase of the combat or the phase where the combat ended
@@ -520,7 +660,7 @@
 ---@field freezed boolean
 ---@field sub_atributo_last table
 ---@field row_info table
----@field
+---@field show_interrupt_casts boolean
 ---@field
 ---@field
 ---@field GetActorBySubDisplayAndRank fun(self: instance, displayid: attributeid, subDisplay: attributeid, rank: number) : actor
@@ -816,6 +956,39 @@
 ---@field CreateSpellBar fun(self: breakdownspellscrollframe, index: number) : breakdownspellbar
 ---@field SetShownReportOverlay fun(bIsShown: boolean)
 
+---@class details_encounterinfo : table
+---@field name string
+---@field mapId number
+---@field instanceId number
+---@field dungeonEncounterId number
+---@field journalEncounterId number
+---@field journalInstanceId number
+---@field creatureName string
+---@field creatureIcon string
+---@field creatureId number
+---@field creatureDisplayId number
+---@field creatureUIModelSceneId number
+
+---@class details_instanceinfo : table
+---@field name string
+---@field bgImage string
+---@field mapId number
+---@field instanceId number
+---@field journalInstanceId number
+---@field encountersArray details_encounterinfo[]
+---@field encountersByName table<string, details_encounterinfo>
+---@field encountersByDungeonEncounterId table<number, details_encounterinfo>
+---@field encountersByJournalEncounterId table<number, details_encounterinfo>
+---@field icon string
+---@field iconSize table<number, number>
+---@field iconCoords table<number, number, number, number>
+---@field iconLore string
+---@field iconLoreSize table<number, number>
+---@field iconLoreCoords table<number, number, number, number>
+---@field iconTexture string
+---@field iconTextureSize table<number, number>
+---@field iconTextureCoords table<number, number, number, number>
+
 ---@class timemachine : table
 ---@field Ticker fun() runs each second and check if actors are performing damage and healing actions, if the actor isn't, stop the activity time of that actor
 ---@field Start fun() start the time machine, called once from the start.lua
@@ -826,9 +999,22 @@
 ---@field StopTime fun(actor: actor) stop the time of the actor
 ---@field SetOrGetPauseState fun(actor: actor, bPause: boolean|nil) : boolean|nil set or get the pause state of the actor, if bPause is nil, then it will return the current pause state
 
+---@class instancedifficulty : table
+---@field DungeonNormal number
+---@field DungeonHeroic number
+---@field DungeonMythic number
+---@field DungeonMythicPlus number
+---@field RaidLFR number
+---@field RaidNormal number
+---@field RaidHeroic number
+---@field RaidMythic number
+
+
 ---@class details222 : table
 ---@field TimeMachine timemachine
 ---@field PetContainer petcontainer
+---@field InstanceDifficulty instancedifficulty
+---@field ContextManager contextmanager
 
 ---@class profile_breakdown_settings : table
 ---@field font_size number

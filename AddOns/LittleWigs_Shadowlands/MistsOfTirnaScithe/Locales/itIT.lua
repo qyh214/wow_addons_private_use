@@ -4,6 +4,7 @@ if L then
 	L.tirnenn_villager = "Abitante Tirnenn"
 	L.drust_harvester = "Mietitore Drust"
 	L.drust_soulcleaver = "Fendianime Drust"
+	L.drust_spiteclaw = "Grinfiaperfida Drust"
 	L.drust_boughbreaker = "Spezzarami Drust"
 	L.mistveil_defender = "Difenditrice Velofosco"
 	L.mistveil_gorgegullet = "Gargarosso Velofosco"
@@ -17,6 +18,10 @@ if L then
 	L.spinemaw_acidgullet = "Gozzoacido Spinafauce"
 	L.spinemaw_staghorn = "Cervicorno Spinafauce"
 	L.spinemaw_gorger = "Mangiatore Spinafauce"
+	L.gormling_larva = "Larva di Gormino"
+	L.spinemaw_reaver = "Razziatore Spinafauce"
+
+	--L.gate_open_desc = "Show a bar indicating when the gate to the next area will open after defeating each boss."
 end
 
 L = BigWigs:NewBossLocale("Mistcaller", "itIT")

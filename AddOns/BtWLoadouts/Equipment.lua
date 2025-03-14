@@ -2862,7 +2862,84 @@ do
 end
 
 -- GameTooltip
-do
+if TooltipDataProcessor then
+	local equipmentSetPattern = "^" .. string.gsub(EQUIPMENT_SETS, "%%s", "(.*)") .. "$"
+	local itemCreatedPattern = "^" .. (ITEM_CREATED_BY:gsub("%%s", ".*")) .. "$"
+	local durabilityPattern = "^" .. (DURABILITY_TEMPLATE:gsub("%%d", "%%d+"):gsub("%%%d%$d", "%%d+")) .. "$"
+
+	local added = true
+	TooltipDataProcessor.AddTooltipPreCall(Enum.TooltipDataType.Item, function (self, data)
+		added = false
+	end)
+
+	local function GetEquipmentSetLine(processingInfo)
+		local location = 0
+		if processingInfo.getterName == "GetInventoryItem" then
+			location = PackLocation(nil, processingInfo.getterArgs[2])
+		elseif processingInfo.getterName == "GetBagItem" then
+			location = PackLocation(unpack(processingInfo.getterArgs))
+		end
+		if location == 0 then
+			return
+		end
+
+		local sets = GetSetsForLocation(location, {})
+		if #sets == 0 then
+			return
+		end
+
+		for index,set in ipairs(sets) do
+			sets[index] = set.name
+		end
+
+		return string.format(EQUIPMENT_SETS, table.concat(sets, ", "))
+	end
+
+	TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.None, function (self, lineData)
+		if added then
+			return
+		end
+
+		if lineData.leftText:match(equipmentSetPattern) then
+			local sets = GetEquipmentSetLine(self.processingInfo)
+			if sets then
+				lineData.leftText = sets
+				added = true
+			end
+		end
+	end)
+
+	local function AddEquipmentSetLine (self)
+		if added then
+			return
+		end
+
+		local tooltipData = self.processingInfo.tooltipData
+		for _,line in ipairs(tooltipData.lines) do
+			if line.leftText:match(equipmentSetPattern) then
+				return -- Already has equipment set line
+			end
+		end
+
+		local sets = GetEquipmentSetLine(self.processingInfo)
+		if sets then
+			self:AddLine(sets)
+			added = true
+		end
+	end
+	TooltipDataProcessor.AddLinePreCall(Enum.TooltipDataLineType.SellPrice, AddEquipmentSetLine)
+	TooltipDataProcessor.AddLinePostCall(Enum.TooltipDataLineType.None, function (self, lineData)
+		local leftText = lineData.leftText
+		if leftText == ITEM_SOCKETABLE or leftText == ITEM_ARTIFACT_VIEWABLE or leftText == ITEM_AZERITE_EMPOWERED_VIEWABLE or leftText == ITEM_AZERITE_ESSENCES_VIEWABLE or leftText:match(itemCreatedPattern) or leftText:match(durabilityPattern) then
+			AddEquipmentSetLine(self)
+		end
+	end)
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function (self, data)
+		if not added then
+			AddEquipmentSetLine(self)
+		end
+	end)
+else
 	local tooltipMatch = "^" .. string.gsub(EQUIPMENT_SETS, "%%s", "(.*)") .. "$"
 	local tooltipSellMatch = "^" .. SELL_PRICE .. ": .*$"
 	local location

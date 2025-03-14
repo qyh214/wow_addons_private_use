@@ -214,6 +214,7 @@ function module.options:Load()
 		local text = "\t"
 		local c,d = self.list.C,self.list.D
 		local data,dates = {},{}
+		local dataUnsorted = {}
 		for i=1,#d do
 			if c[i] then
 				dates[#dates+1] = {d[i][1],d[i][2]}
@@ -225,16 +226,17 @@ function module.options:Load()
 						if isAlt then
 							name = isAlt
 						end
-						local pos = ExRT.F.table_find(data,name,1)
-						if not pos then
-							pos = #data + 1
-							data[pos] = {name,{}}
+						local ndata = dataUnsorted[name]
+						if not ndata then
+							ndata = {name,{}}
+							dataUnsorted[name] = ndata
 						end
-						data[pos][2][ d[i][2] ] = true
+						ndata[2][ d[i][2] ] = true
 					end
 				end
 			end
 		end
+		for k,v in pairs(dataUnsorted) do data[#data+1]=v end
 		sort(dates,function(a,b) return a[2]<b[2] end)
 		sort(data,function(a,b) return a[1]<b[1] end)
 		for i=1,#dates do
@@ -253,6 +255,23 @@ function module.options:Load()
 		end
 		ExRT.F:Export(text)
 	end)	
+
+	self.clearButton = ELib:Button(self,L.MarksClear):Size(100,20):Point("LEFT",self.buttonExport,0,0):Point("TOP",self,0,-30):Tooltip(L.CoinsClear):OnClick(function() 
+		StaticPopupDialogs["EXRT_ATTENDANCE_CLEAR"] = {
+			text = L.CoinsClearPopUp,
+			button1 = L.YesText,
+			button2 = L.NoText,
+			OnAccept = function()
+				table.wipe(VMRT.Attendance.data)
+				UpdateData()
+			end,
+			timeout = 0,
+			whileDead = true,
+			hideOnEscape = true,
+			preferredIndex = 3,
+		}
+		StaticPopup_Show("EXRT_ATTENDANCE_CLEAR")
+	end)
 	
 	local filter,FilterDo = {}
 	
@@ -672,6 +691,7 @@ function module.options:Load()
 	
 		local c,d = self.list.C,self.list.D
 		local data,count = {},0
+		local dataUnsorted = {}
 		for i=1,#d do
 			if c[i] then
 				count = count + 1
@@ -683,19 +703,20 @@ function module.options:Load()
 						if isAlt then
 							name = nameToClass[ isAlt ]
 						end
-						local pos = ExRT.F.table_find(data,name,1)
-						if not pos then
-							pos = #data + 1
-							data[pos] = {name,0,0}
+						local ndata = dataUnsorted[name]
+						if not ndata then
+							ndata = {name,0,0}
+							dataUnsorted[name] = ndata
 						end
-						data[pos][2] = data[pos][2] + 1
+						ndata[2] = ndata[2] + 1
 						if j <= max then
-							data[pos][3] = data[pos][3] + 1
+							ndata[3] = ndata[3] + 1
 						end
 					end
 				end
 			end
 		end
+		for k,v in pairs(dataUnsorted) do data[#data+1]=v end
 		if VMRT.Attendance.OptionsSortPD then
 			sort(data,function(a,b) if a[2]==b[2] then return a[1]:sub(2)<b[1]:sub(2) else return a[2]>b[2] end end)
 		else
@@ -781,23 +802,7 @@ function module.options:Load()
 		end
 	end
 
-	
-	self.clearButton = ELib:Button(self,L.MarksClear):Size(100,20):Point("LEFT",self.buttonExport,0,0):Point("TOP",self,0,-30):Tooltip(L.CoinsClear):OnClick(function() 
-		StaticPopupDialogs["EXRT_ATTENDANCE_CLEAR"] = {
-			text = L.CoinsClearPopUp,
-			button1 = L.YesText,
-			button2 = L.NoText,
-			OnAccept = function()
-				table.wipe(VMRT.Attendance.data)
-				UpdateData()
-			end,
-			timeout = 0,
-			whileDead = true,
-			hideOnEscape = true,
-			preferredIndex = 3,
-		}
-		StaticPopup_Show("EXRT_ATTENDANCE_CLEAR")
-	end)
+
 
 	self.saveRoster = ELib:Button(self,L.AttendanceSaveCurrent):Size(200,20):Point("RIGHT",self.clearButton,"LEFT",-5,0):OnClick(function() 
 		SaveCurrentRaidRoster()

@@ -16,6 +16,7 @@ local SortReagentBankBags = C_Container.SortReagentBankBags
 local PickupContainerItem = C_Container.PickupContainerItem
 local SplitContainerItem = C_Container.SplitContainerItem
 local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
+local CHAR_BANK_TYPE = Enum.BankType.Character or 1
 local ACCOUNT_BANK_TYPE = Enum.BankType.Account or 2
 
 local sortCache = {}
@@ -275,16 +276,13 @@ function module:CreateReagentButton(f)
 	bu.Icon:SetPoint("BOTTOMRIGHT", -C.mult, -C.mult)
 	bu:RegisterForClicks("AnyUp")
 	bu:SetScript("OnClick", function(_, btn)
+		if not C_Bank.CanViewBank(CHAR_BANK_TYPE) then return end
+
 		if not IsReagentBankUnlocked() then
 			StaticPopup_Show("CONFIRM_BUY_REAGENTBANK_TAB")
 		else
 			PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 			BankFrame_ShowPanel("ReagentBankFrame") -- trigger context matching
-			BankFrame.selectedTab = 2
-			BankFrame.activeTabIndex = 2
-			f.reagent:Show()
-			f.bank:Hide()
-			f.accountbank:Hide()
 			if btn == "RightButton" then DepositReagentBank() end
 		end
 	end)
@@ -300,16 +298,13 @@ function module:CreateAccountBankButton(f)
 	bu.Icon:SetPoint("BOTTOMRIGHT", -C.mult, -C.mult)
 	bu:RegisterForClicks("AnyUp")
 	bu:SetScript("OnClick", function(_, btn)
+		if not C_Bank.CanViewBank(ACCOUNT_BANK_TYPE) then return end
+
 		if AccountBankPanel:ShouldShowLockPrompt() then
 			UIErrorsFrame:AddMessage(DB.InfoColor..ACCOUNT_BANK_LOCKED_PROMPT)
 		else
 			PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 			BankFrame_ShowPanel("AccountBankPanel") -- trigger context matching
-			BankFrame.selectedTab = 3
-			BankFrame.activeTabIndex = 3
-			f.reagent:Hide()
-			f.bank:Hide()
-			f.accountbank:Show()
 		end
 	end)
 	bu.title = ACCOUNT_BANK_PANEL_TITLE
@@ -355,13 +350,10 @@ end
 function module:CreateBankButton(f)
 	local bu = B.CreateButton(self, 22, 22, true, "Atlas:Banker")
 	bu:SetScript("OnClick", function()
+		if not C_Bank.CanViewBank(CHAR_BANK_TYPE) then return end
+
 		PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
 		BankFrame_ShowPanel("BankSlotsFrame") -- trigger context matching
-		BankFrame.selectedTab = 1
-		BankFrame.activeTabIndex = 1
-		f.reagent:Hide()
-		f.accountbank:Hide()
-		f.bank:Show()
 	end)
 	bu.title = BANK
 	B.AddTooltip(bu, "ANCHOR_TOP")
@@ -468,7 +460,7 @@ function module:CreateSortButton(name)
 		elseif name == "Reagent" then
 			SortReagentBankBags()
 		elseif name == "Account" then
-			StaticPopup_Show("BANK_CONFIRM_CLEANUP", nil, nil, { bankType = ACCOUNT_BANK_TYPE })
+			C_Container.SortAccountBankBags()
 		else
 			if C.db["Bags"]["BagSortMode"] == 1 then
 				SortBags()
@@ -947,14 +939,14 @@ function module:OnLogin()
 		AddNewContainer("Bag", 9, "EquipSet", filters.bagEquipSet)
 		AddNewContainer("Bag", 10, "BagAOE", filters.bagAOE)
 		AddNewContainer("Bag", 7, "AzeriteItem", filters.bagAzeriteItem)
+		AddNewContainer("Bag", 17, "BagLower", filters.bagLower)
 		AddNewContainer("Bag", 8, "Equipment", filters.bagEquipment)
 		AddNewContainer("Bag", 11, "BagCollection", filters.bagCollection)
-		AddNewContainer("Bag", 16, "Consumable", filters.bagConsumable)
+		AddNewContainer("Bag", 14, "BagStone", filters.bagStone)
+		AddNewContainer("Bag", 15, "Consumable", filters.bagConsumable)
 		AddNewContainer("Bag", 12, "BagGoods", filters.bagGoods)
-		AddNewContainer("Bag", 17, "BagQuest", filters.bagQuest)
+		AddNewContainer("Bag", 16, "BagQuest", filters.bagQuest)
 		AddNewContainer("Bag", 13, "BagAnima", filters.bagAnima)
-		AddNewContainer("Bag", 14, "BagRelic", filters.bagRelic)
-		AddNewContainer("Bag", 15, "BagStone", filters.bagStone)
 
 		f.main = MyContainer:New("Bag", {Bags = "bags", BagType = "Bag"})
 		f.main.__anchor = {"BOTTOMRIGHT", -50, 100}
@@ -968,6 +960,7 @@ function module:OnLogin()
 		AddNewContainer("Bank", 9, "BankAOE", filters.bankAOE)
 		AddNewContainer("Bank", 6, "BankAzeriteItem", filters.bankAzeriteItem)
 		AddNewContainer("Bank", 10, "BankLegendary", filters.bankLegendary)
+		AddNewContainer("Bank", 16, "BankLower", filters.bankLower)
 		AddNewContainer("Bank", 7, "BankEquipment", filters.bankEquipment)
 		AddNewContainer("Bank", 11, "BankCollection", filters.bankCollection)
 		AddNewContainer("Bank", 14, "BankConsumable", filters.bankConsumable)
@@ -1103,7 +1096,7 @@ function module:OnLogin()
 	}
 
 	local function isItemNeedsLevel(item)
-		return item.link and item.quality > 1 and (module:IsItemHasLevel(item) or item.classID == Enum.ItemClass.Gem)
+		return item.link and item.quality > 1 and item.ilvl
 	end
 
 	local function GetIconOverlayAtlas(item)
@@ -1178,10 +1171,7 @@ function module:OnLogin()
 		if C.db["Bags"]["BagsiLvl"] then
 			local level = item.level -- ilvl for keystone and battlepet
 			if not level and isItemNeedsLevel(item) then
-				local ilvl = B.GetItemLevel(item.link, item.bagId ~= -1 and item.bagId, item.slotId) -- SetBagItem return nil for default bank slots
-				if ilvl and ilvl > C.db["Bags"]["iLvlToShow"] then
-					level = ilvl
-				end
+				level = item.ilvl
 			end
 			if level then
 				local color = DB.QualityColors[item.quality]
@@ -1323,8 +1313,6 @@ function module:OnLogin()
 			label = QUESTS_LABEL
 		elseif strmatch(name, "Anima") then
 			label = POWER_TYPE_ANIMA
-		elseif name == "BagRelic" then
-			label = L["KorthiaRelic"]
 		elseif strmatch(name, "Custom%d") then
 			label = GetCustomGroupTitle(settings.Index)
 		elseif name == "BagReagent" then
@@ -1333,6 +1321,8 @@ function module:OnLogin()
 			label = C_Spell.GetSpellName(404861)
 		elseif strmatch(name, "AOE") then
 			label = ITEM_ACCOUNTBOUND_UNTIL_EQUIP
+		elseif strmatch(name, "Lower") then
+			label = L["LowerItem"]
 		end
 		if label then
 			self.label = B.CreateFS(self, 14, label, true, "TOPLEFT", 5, -8)
@@ -1450,7 +1440,9 @@ function module:OnLogin()
 	C_Container.SetInsertItemsLeftToRight(false)
 
 	-- Init
+	C.db["Bags"]["GatherEmpty"] = not C.db["Bags"]["GatherEmpty"]
 	ToggleAllBags()
+	C.db["Bags"]["GatherEmpty"] = not C.db["Bags"]["GatherEmpty"]
 	ToggleAllBags()
 	module.initComplete = true
 
@@ -1489,16 +1481,36 @@ function module:OnLogin()
 	SetCVar("professionToolSlotsExampleShown", 1)
 	SetCVar("professionAccessorySlotsExampleShown", 1)
 
-	-- Shift key alert
-	local function onUpdate(self, elapsed)
-		if IsShiftKeyDown() then
-			self.elapsed = (self.elapsed or 0) + elapsed
-			if self.elapsed > 5 then
-				UIErrorsFrame:AddMessage(DB.InfoColor..L["StupidShiftKey"])
-				self.elapsed = 0
-			end
+	-- Bank frame paging
+	local bankNameIndex = {
+		["BankSlotsFrame"] = 1,
+		["ReagentBankFrame"] = 2,
+		["AccountBankPanel"] = 3,
+	}
+	hooksecurefunc("BankFrame_ShowPanel", function(sidePanelName)
+		local panelIndex = bankNameIndex[sidePanelName]
+		if panelIndex then
+			BankFrame.selectedTab = panelIndex
+			BankFrame.activeTabIndex = panelIndex
+			f.bank:SetShown(panelIndex == 1)
+			f.reagent:SetShown(panelIndex == 2)
+			f.accountbank:SetShown(panelIndex == 3)
 		end
-	end
-	local shiftUpdater = CreateFrame("Frame", nil, f.main)
-	shiftUpdater:SetScript("OnUpdate", onUpdate)
+	end)
+
+	-- Delay updates for data jam
+	local updater = CreateFrame("Frame", nil, f.main)
+	updater:Hide()
+	updater:SetScript("OnUpdate", function(self, elapsed)
+		self.delay = self.delay - elapsed
+		if self.delay < 0 then
+			module:UpdateAllBags()
+			self:Hide()
+		end
+	end)
+
+	B:RegisterEvent("GET_ITEM_INFO_RECEIVED", function()
+		updater.delay = 1
+		updater:Show()
+	end)
 end

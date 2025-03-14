@@ -1438,6 +1438,7 @@ Database:AddChain(Chain.TempChain21, {
     active = {
         type = "quest",
         id = 82441,
+        status = { "active", "completed" },
     },
     completed = {
         type = "quest",
@@ -1520,7 +1521,8 @@ Database:AddChain(Chain.TempChain25, {
     prerequisites = LEVEL_PREREQUISITES,
     active = {
         type = "quest",
-        ids = { 83082, 83081, }
+        ids = { 83082, 83081, },
+        status = { "active", "completed" },
     },
     completed = {
         type = "quest",
@@ -1741,6 +1743,7 @@ Database:AddChain(Chain.TempChain30, {
     active = {
         type = "quest",
         ids = { 83337, 83339, 83338 },
+        status = { "active", "completed" },
     },
     completed = {
         type = "quest",
@@ -1771,6 +1774,7 @@ Database:AddChain(Chain.TempChain31, {
     active = {
         type = "quest",
         ids = { 83335, 83336 },
+        status = { "active", "completed" },
     },
     completed = {
         type = "quest",

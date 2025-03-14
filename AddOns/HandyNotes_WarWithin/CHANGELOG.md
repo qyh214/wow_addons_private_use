@@ -1,5 +1,145 @@
 # Changelog
 
+## Changed in v81
+
+* Undermine: add quest for Gallagio Garbage and move it to the side of the map
+* World bosses: add the Gobfather
+
+## Changed in v80
+
+* Delves weren't showing on the continent map if you logged in within a subzone like Dornogal
+* The Undermine delves weren't showing on the continent map at all, because Undermine is techincally a child-map of Ringing Deeps and so wasn't being scanned
+
+## Chagned in v79
+
+* Undermine: added new loot for rares, consolidated the Steamboil / Handcrank parts
+
+## Changed in v78
+
+* Show data on Skyrocketing and Breaknecking races in Undermine
+* Show the vendor Ditty Fuzeboy in Undermine
+* Don't interfere with race data from [Continental Racing](https://curseforge.com/wow/addons/continental-racing) if it's present
+
+## Changed in v77
+
+* Updated Undermine coordinates from vignettes
+* Added You're My Friend Now achievement to Undermine
+* Hide a few of the Read Between the Lines points in Undermine before you've reached a certain point in the campaign
+* Delves: added Excavation Site 9 and Sidestreet Sluice
+
+## Changed in v76
+
+* Added Read Between the Lines achievement to Undermine
+* Fixed changed coordinates in the Ringing Deeps
+
+## Changed in v75
+
+* Updated for 11.1.0
+* Undermine: added data for rares and treasures
+* Hallowfall: show the Mereldar Menace targets
+* Fix Siren Isle treasures to only show until collected on later characters
+* Assorted minor tweaks in older zones
+
+## Changed in v74
+
+* Siren Isle:
+    * added the Proper Parrot as loot to pirate week rares
+    * added quests for the storm phase rares
+    * properly isolate storm phase and calm phase mobs on the map
+    * show where the turbulent fragments are in the storm phase
+* Fix tooltip criteria error for incomplete criteria completed by an alt
+
+## Changed in v73
+
+* Siren Isle updates for the pirate phase
+
+## Changed in v72
+
+* Updated Siren Isle with more rares and treasures
+* Move right-click context menus to the new menu system as well
+
+## Changed in v71
+
+* Updated for 11.0.7
+* Many rares for Siren Isle
+* Some treasures for Siren Isle
+* Switch to the new dropdown menu system for the map icon
+
+## Changed in v70
+
+* Reputation currencies are no longer notable once maxed
+* Updated for 11.0.5
+
+## Changed in v69
+
+* Add the Flamegard's Hope and Back to the Wall achievements
+
+## Changed in v68
+
+* Hallowfall: show the locations for the Lost and Found quest turn-ins
+
+## Changed in v67
+
+* Added quests for this week's world boss Kordac
+* Hallowfall: fixed typo on Surveyor's Box questid
+
+## Changed in v66
+
+* Show information on the tooltips for the bountiful versions of delves as well (oops, thanks Numy for pointing this out)
+* Hide weave-rat caches before you choose the Weaver
+
+## Changed in v65
+
+* Added quests for this week's world boss Orta
+
+## Changed in v64
+
+* Show where to tame the hidden spirit beast Aradan, for hunters only
+* Profession Knowledge: adjust early points for Enchanting and Tailoring
+* Show uncompleted quest status in tooltips (it was hard to tell why some points were visible otherwise if you didn't have quest IDs shown)
+* Don't error when drawing an impossibly short route segment on the minimap
+
+## Changed in v63
+
+* NPCs with no loot will no longer get the transmog-notable icon
+* Fix an error that could occur when adding loot to Blizzard vignette icons
+
+## Changed in v62
+
+* Prime caches so that the first map open won't be missing data (you may have occasionally noticed points that didn't know whether there was transmog needed until you reopened the map...)
+
+## Changed in v61
+
+* Start including City Rumor locations (hidden by default, as they're very incomplete)
+* Tighten up the right-click menu's wording for some options
+
+## Changed in v60
+
+* Added quests for this week's world boss Shurrai
+
+## Changed in v59
+
+* Hallowfall: improvements to the loot around the Spreading the Light area (for one: you can't see it until you have world quests)
+* Show achievement-status on the continent-map delve entrances as well
+* Give the delve entrances a dedicated group, because whether you want to see them is probably unrelated to whether you want to see chests inside delves
+
+## Changed in v58
+
+* Show delves on the continent map for easier finding of bountiful delves (I also split this out into a separate addon called [DelverView](https://www.curseforge.com/wow/addons/delverview) which is slightly better because it's not filtered through HandyNotes and so you can click the delve icons to supertrack them... but that's still waiting on Curse approval at the time I write this changelog)
+
+## Changed in v57
+
+* Hide the profession knowledge vendors in Azj-Kahet before you have the pheromones to talk to them, and add some alternative vendors
+
+## Changed in v56
+
+* Fix the position of some dornogal profession knowledge items that moved a bit since beta, thanks ElGabbaGhoul for pointing out the blacksmithing one being incorrect
+* Tooltip text colors for a point having unmet requirements were inverted
+
+## Changed in v55
+
+* Fixed an issue with treasures not hiding if you'd found everything in them, if you'd also set the only things in them that were knowable as not-notable. (E.g. the Hallowfall repeating chests that have cosmetic transmogs in them, if you said you didn't care about transmog.)
+
 ## Changed in v54
 
 * Add data for the world bosses now that season one has begun (questids for the first one are all that's available for completion, but don't worry, I have more than just the concept of a plan for not just having them sit there annoyingly on your map...)

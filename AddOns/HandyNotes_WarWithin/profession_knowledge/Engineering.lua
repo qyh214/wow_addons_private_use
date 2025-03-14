@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [42672729] = {
+    [39952729] = {
         quest=83868,
         loot={226294}, -- Inert Mining Bomb
         vignette=6451,
     },
-    [64535879] = {
+    [60425879] = {
         quest=83869,
         loot={226295}, -- Earthen Construct Blueprints
         vignette=6452,

@@ -1,5 +1,5 @@
-## Interface: 110002
-## Version: v11.0.2-1.0.11
+## Interface: 110100
+## Version: v11.1.0-1.0.7
 ## Title: Hekili
 ## Author: Hekili
 ## IconTexture: Interface\AddOns\Hekili\Textures\LOGO-ORANGE.blp
@@ -22,8 +22,14 @@ Events.lua
 
 Classes.lua
 
+TheBurningCrusade\Items.lua
+Wrath\Items.lua
+Cataclysm\Items.lua
+Legion\Items.lua
+
 BfA\AzeritePowers.lua
 BfA\Essences.lua
+BfA\Items.lua
 
 Shadowlands\AnimaPowers.lua
 Shadowlands\Covenants.lua
@@ -36,6 +42,7 @@ Dragonflight\Classes.lua
 
 TheWarWithin\Items.lua
 
+TheWarWithin\Classes.lua
 TheWarWithin\DeathKnightBlood.lua
 TheWarWithin\DeathKnightFrost.lua
 TheWarWithin\DeathKnightUnholy.lua
@@ -72,6 +79,7 @@ TheWarWithin\ShamanRestoration.lua
 TheWarWithin\WarlockAffliction.lua
 TheWarWithin\WarlockDemonology.lua
 TheWarWithin\WarlockDestruction.lua
+TheWarWithin\Warrior\ReflectableSpells.lua
 TheWarWithin\WarriorArms.lua
 TheWarWithin\WarriorFury.lua
 TheWarWithin\WarriorProtection.lua

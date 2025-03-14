@@ -55,6 +55,7 @@ end
 
 function PS:ShowProfileDialog(text)
 	if not Dialog then
+
 		Dialog = CreateFrame("Frame", "OmniCD_ProfileDialog", UIParent, "DialogBoxFrame")
 		Dialog:SetPoint("CENTER")
 		Dialog:SetSize(600, 400)
@@ -79,7 +80,7 @@ function PS:ShowProfileDialog(text)
 		end)
 
 
-		local Label = Dialog:CreateFontString(nil, "ARTWORK", "GameFontNormal-OmniCD")
+		local Label = Dialog:CreateFontString(nil, "ARTWORK", "GameFontNormal-OmniCDC")
 		Label:SetPoint("TOP", 0, -1)
 
 
@@ -108,12 +109,13 @@ function PS:ShowProfileDialog(text)
 
 
 		local Resizer = CreateFrame("Button", "OmniCD_ProfileDialogResizeButton", Dialog)
-
-
-
-
-
-
+		--[[ TODO: highlight/pushed texture
+		Resizer:SetPoint("BOTTOMRIGHT", -6, 7)
+		Resizer:SetSize(16, 16)
+		Resizer:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+		Resizer:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+		Resizer:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+		]]
 		Resizer:SetPoint("BOTTOMRIGHT", -8, 8)
 		Resizer:SetSize(16, 16)
 		Resizer:SetNormalTexture(E.Libs.OmniCDC.texture.resizer)
@@ -160,8 +162,10 @@ function PS:ShowProfileDialog(text)
 		ScrollBar:SetPoint("TOPLEFT", ScrollContainer, "TOPRIGHT", 4, -1)
 		ScrollBar:SetPoint("BOTTOMLEFT", ScrollContainer, "BOTTOMRIGHT", 4, 1)
 
-
-
+		--[[
+		ScrollBar.ScrollUpButton:Hide()
+		ScrollBar.ScrollDownButton:Hide()
+		]]
 		ScrollBar.ScrollUpButton:SetNormalTexture(0)
 		ScrollBar.ScrollUpButton:SetPushedTexture(0)
 		ScrollBar.ScrollUpButton:SetDisabledTexture(0)
@@ -170,6 +174,7 @@ function PS:ShowProfileDialog(text)
 		ScrollBar.ScrollDownButton:SetPushedTexture(0)
 		ScrollBar.ScrollDownButton:SetDisabledTexture(0)
 		ScrollBar.ScrollDownButton:SetHighlightTexture(0)
+
 		ScrollBar.ThumbTexture:SetTexture([[Interface\BUTTONS\White8x8]])
 		ScrollBar.ThumbTexture:SetSize(16, 32)
 		ScrollBar.ThumbTexture:SetColorTexture(0.3, 0.3, 0.3)
@@ -182,7 +187,7 @@ function PS:ShowProfileDialog(text)
 		EditBox:SetSize(ScrollFrame:GetSize())
 		EditBox:SetMultiLine(true)
 		EditBox:SetAutoFocus(false)
-		EditBox:SetFontObject("GameFontHighlight-OmniCD")
+		EditBox:SetFontObject("GameFontHighlight-OmniCDC")
 		EditBox:SetScript("OnEscapePressed", function(self)
 			self:ClearFocus()
 		end)

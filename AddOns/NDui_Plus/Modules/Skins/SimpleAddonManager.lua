@@ -44,6 +44,8 @@ local function SAMDropDownSkin(frame)
 end
 
 local function ReskinModules(frame)
+	if frame.styled then return end
+
 	-- MainFrame
 	S:Proxy("Reskin", frame.OkButton)
 	S:Proxy("Reskin", frame.CancelButton)
@@ -84,9 +86,13 @@ local function ReskinModules(frame)
 	hooksecurefunc("HybridScrollFrame_CreateButtons", ReskinScrollFrameItems)
 	ReskinScrollFrameItems(frame.ScrollFrame, "SimpleAddonManagerAddonItem")
 	ReskinScrollFrameItems(frame.CategoryFrame.ScrollFrame, "SimpleAddonManagerCategoryItem")
+
+	frame.styled = true
 end
 
 function S:SimpleAddonManager()
+	if not S.db["SimpleAddonManager"] then return end
+
 	local SimpleAddonManager = _G.SimpleAddonManager
 	if not SimpleAddonManager then return end
 

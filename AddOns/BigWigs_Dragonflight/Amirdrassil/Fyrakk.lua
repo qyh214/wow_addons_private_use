@@ -9,7 +9,7 @@ mod:SetEncounterID(2677)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
 mod:SetPrivateAuraSounds({
-	{414186, extra = {414187, 421825, 421826, 421827, 421828, 421829}}, -- Blaze
+	{414186, 414187, 421825, 421826, 421827, 421828, 421829}, -- Blaze
 	419060, -- Firestorm
 	{426370, mythic = true}, -- Darkflame Cleave
 	422520, -- Greater Firestorm

@@ -1,4 +1,4 @@
-## Interface: 11504, 11503
+## Interface: 11506, 11505
 
 ## Title: BigWigs [|cffeda55fClassic|r]
 ## Title-zhCN: BigWigs [|cffeda55f经典旧世|r]
@@ -25,7 +25,7 @@
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs
-## Version: v11.0.24
+## Version: v11.0.38
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
 
 ## X-Category: Raid
@@ -34,10 +34,10 @@
 ## X-Curse-Project-ID: 50625
 ## X-WoWI-ID: 22095
 ## X-Wago-ID: rNkPgm6a
-## X-BigWigs-LoadOn-InstanceId: 409, 469, 509, 531, 533, 309, 249, 48, 90, 109, 2789, 2791
+## X-BigWigs-LoadOn-InstanceId: 409, 469, 509, 531, 533, 309, 249, 48, 90, 109, 2789, 2791, 2804, 2832
 ## X-BigWigs-ExtraMenu: -947
 ## X-BigWigs-LoadOn-WorldBoss: -1447, 6109, -1419, 12397, -1440, 14889, -1425, 14888, -1431, 14890, -1444, 14887
-## X-BigWigs-Minimum: 350
+## X-BigWigs-Minimum: 370
 
 MoltenCore\modules.xml
 BlackwingLair\modules.xml
@@ -52,3 +52,5 @@ Gnomeregan_Classic\modules.xml
 SunkenTemple_Classic\modules.xml
 TheTaintedScar_Classic\modules.xml
 StormCliffs_Classic\modules.xml
+CrystalVale_Classic\modules.xml
+NightmareGrove_Classic\modules.xml

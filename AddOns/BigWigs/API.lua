@@ -130,7 +130,7 @@ do
 	local _, tbl = ...
 	-- A custom profile name and callback function is completely optional
 	-- When specified, a callback function will be called with a boolean as the first arg. True if the user accepted, false otherwise
-	function API:ImportProfileString(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
+	function API.RegisterProfile(addonName, profileString, optionalCustomProfileName, optionalCallbackFunction)
 		if type(addonName) ~= "string" or #addonName < 3 then error("Invalid addon name for profile import.") end
 		if type(profileString) ~= "string" or #profileString < 3 then error("Invalid profile string for profile import.") end
 		if optionalCustomProfileName and (type(optionalCustomProfileName) ~= "string" or #optionalCustomProfileName < 3) then error("Invalid custom profile name for the string you want to import.") end
@@ -154,6 +154,22 @@ do
 		if type(spellId) ~= "number" then error("Invalid spell ID for spell rename.") end
 		if type(text) ~= "string" or #text < 3 then error("Invalid spell text for spell rename.") end
 		tbl[spellId] = text
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Versions
+--
+
+do
+	local _, tbl = ...
+	-- Returns the BigWigs version as a number
+	function API.GetVersion()
+		return tbl.version, tbl.guildVersion
+	end
+	-- Returns the BigWigs version hash from Git as a string
+	function API.GetVersionHash()
+		return tbl.versionHash
 	end
 end
 

@@ -1,0 +1,131 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+    <Script file="Dialog.lua"/>
+
+    <Frame name="CraftScanDialogTemplate" mixin="CraftScanDialogMixin" inherits="DefaultPanelFlatTemplate" parent="UIParent" movable="true" enableMouse="true" frameStrata="DIALOG" virtual="true">
+        <Size x="300" y="150" />
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+
+        <Scripts>
+            <OnHide method="OnHide" />
+        </Scripts>
+
+        <Frames>
+            <Button parentKey="ClosePanelButton" inherits="UIPanelCloseButtonDefaultAnchors" />
+
+            <Button parentKey="SubmitButton" mixin="CraftScanDialogSubmitMixin" registerForClicks="LeftButtonUp" inherits="UIPanelButtonTemplate">
+                <Size x="100" y="22" />
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" x="-10" y="10"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick method="OnClick" />
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+
+    <Texture name="CraftScan_InvalidInputTemplate" mixin="CraftScan_DialogTextInputAlertIconMixin" atlas="common-icon-redx" hidden="true" virtual="true">
+        <Size x="16" y="16"/>
+        <Anchors>
+            <Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="-2"/>
+        </Anchors>
+        <Scripts>
+            <OnEnter method="OnEnter" />
+            <OnLeave method="OnLeave" />
+        </Scripts>
+    </Texture>
+
+    <ScrollFrame name="CraftScanDialogMultiLineTextInputTemplate" mixin="CraftScanDialogMultiLineTextInputMixin" inherits="InputScrollFrameTemplate" frameStrata="DIALOG" virtual="true">
+        <Size x="200" y="120" />
+        <KeyValues>
+            <KeyValue key="maxLetters" value="0" type="number"/>
+            <KeyValue key="hideCharCount" value="true" type="boolean"/>
+            <KeyValue key="scrollBarHideIfUnscrollable" value="true" type="boolean"/>
+            <KeyValue key="scrollBarHideTrackIfThumbExceedsTrack" value="true" type="boolean"/>
+            <KeyValue key="scrollBarX" value="-10" type="number"/>
+            <KeyValue key="scrollBarTopY" value="2" type="number"/>
+            <KeyValue key="scrollBarBottomY" value="-2" type="number"/>
+        </KeyValues>
+        <Scripts>
+            <OnLoad method="OnLoad" />
+        </Scripts>
+        <Layers>
+            <Layer level="DIALOG" textureSubLevel="1">
+                <Texture parentKey="InvalidInput" inherits="CraftScan_InvalidInputTemplate" />
+            </Layer>
+        </Layers>
+    </ScrollFrame>
+
+    <EditBox name="CraftScanDialogTextInputTemplate" mixin="CraftScanDialogTextInputMixin" inherits="InputBoxTemplate" frameStrata="DIALOG" virtual="true">
+        <Size x="200" y="22" />
+        <Scripts>
+            <OnLoad method="OnLoad" />
+        </Scripts>
+
+        <Layers>
+            <Layer level="DIALOG" textureSubLevel="1">
+                <Texture parentKey="InvalidInput" inherits="CraftScan_InvalidInputTemplate" />
+            </Layer>
+        </Layers>
+    </EditBox>
+
+
+
+    <Frame name="CraftScanDialogTextTemplate" frameStrata="DIALOG" virtual="true">
+        <Size x="260" />
+        <Layers>
+            <Layer level="DIALOG">
+                <FontString parentKey="Text" inherits="GameFontHighlight" wordwrap="true">
+                    <Size x="260" />
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <CheckButton name="CraftScanDialogCheckButtonTemplate" mixin="CraftScan_DialogCheckButtonMixin" virtual="true">
+        <Size x="18" y="18"/>
+        <Scripts>
+            <OnClick method="OnClick"/>
+        </Scripts>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentText" inherits="GameFontHighlight" parentKey="Text">
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                    <Scripts>
+                        <OnLoad function="UICheckButtonFontString_SetParentKeyAlias"/>
+                    </Scripts>
+                </FontString>
+                <FontString name="$parentDescription" inherits="GameFontHighlight" parentKey="Description" wordwrap="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.Text" relativePoint="BOTTOMLEFT" x="0" y="5"/>
+                    </Anchors>
+                    <Scripts>
+                        <OnLoad function="UICheckButtonFontString_SetParentKeyAlias"/>
+                    </Scripts>
+                </FontString>
+
+            </Layer>
+        </Layers>
+        <NormalTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+        <PushedTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+        <CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
+        <DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
+    </CheckButton>
+
+
+
+    <Button name="CraftScan_DialogDefaultButtonTemplate" mixin="CraftScan_DialogDefaultButtonMixin" registerForClicks="LeftButtonUp" inherits="UIPanelButtonTemplate" virtual="true">
+        <Size x="100" y="22" />
+        <Scripts>
+            <OnClick method="OnClick" />
+        </Scripts>
+    </Button>
+
+</Ui>

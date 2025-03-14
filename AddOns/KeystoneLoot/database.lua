@@ -96,7 +96,7 @@ function KeystoneLoot:GetFavoriteItemList(challengeModeId)
 
 		for specId, specList in next, favoriteLoot[challengeModeId] do
 			for itemId, itemInfo in next, specList do
-				if (KeystoneLoot:GetItemInfo(itemId)) then
+				if (challengeModeId == "catalyst" or KeystoneLoot:GetItemInfo(itemId)) then
 					_tmp[itemId] = {
 						itemId = itemId,
 						specId = specId,
@@ -111,7 +111,7 @@ function KeystoneLoot:GetFavoriteItemList(challengeModeId)
 		end
 	elseif (favoriteLoot[challengeModeId][specId]) then
 		for itemId, itemInfo in next, favoriteLoot[challengeModeId][specId] do
-			if (KeystoneLoot:GetItemInfo(itemId)) then
+			if (challengeModeId == "catalyst" or KeystoneLoot:GetItemInfo(itemId)) then
 				table.insert(_itemList, {
 					itemId = itemId,
 					icon = itemInfo.icon

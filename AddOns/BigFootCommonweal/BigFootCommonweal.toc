@@ -1,0 +1,15 @@
+## Interface: 110002,110005
+## Title: BigFootCommonweal
+## Title-zhCN: [大脚]公益助手
+## Author: enderneko(bigfoot)
+## Version: r9
+## SavedVariables: BFCConfig, BFCCraftsman
+
+## X-Curse-Project-ID: 1105954
+
+Libs\LoadLibs.xml
+
+Init.lua
+LoadModule.xml
+MainFrame.lua
+ImportExportFrame.lua

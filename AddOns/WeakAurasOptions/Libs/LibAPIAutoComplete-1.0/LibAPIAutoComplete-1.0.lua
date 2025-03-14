@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "LibAPIAutoComplete-1.0", 3
+local MAJOR, MINOR = "LibAPIAutoComplete-1.0", 5
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -161,7 +161,7 @@ local lastPosition
 ---@param y number
 ---@param w number
 ---@param h number
-local function OnCursorChanged(editbox, x, y, w, h)
+local function OnTextChanged(editbox, x, y, w, h)
   local cursorPosition = editbox:GetCursorPosition()
   if cursorPosition ~= lastPosition then
     lib:Hide()
@@ -210,6 +210,7 @@ function lib:enable(editbox, params)
   Init()
   -- hack for WeakAuras
   editbox.APIDoc_originalGetText = editbox.GetText
+  editbox.APIDoc_originalSetText = editbox.SetText
   -- hack for WowLua
   if editbox == WowLuaFrameEditBox then
     editbox.APIDoc_originalGetText = function()
@@ -221,7 +222,24 @@ function lib:enable(editbox, params)
     if editbox.APIDoc_oldOnCursorChanged then
       editbox.APIDoc_oldOnCursorChanged(...)
     end
-    OnCursorChanged(...)
+    local _, x, y, w, h = ...
+    editbox.lastCursorChanged = {
+      time = GetTime(),
+      x = x,
+      y = y,
+      w = w,
+      h = h
+    }
+  end)
+  editbox.APIDoc_oldOnTextChanged = editbox:GetScript("OnTextChanged")
+  editbox:SetScript("OnTextChanged", function(...)
+    if editbox.APIDoc_oldOnTextChanged then
+      editbox.APIDoc_oldOnTextChanged(...)
+    end
+    local info = editbox.lastCursorChanged
+    if info and info.time == GetTime() then
+      OnTextChanged(editbox, info.x, info.y, info.w, info.h)
+    end
   end)
   editbox:SetScript("OnHide", function(...)
     lib:Hide()
@@ -238,6 +256,8 @@ function lib:disable(editbox)
   config[editbox] = nil
   editbox:SetScript("OnCursorChanged", editbox.APIDoc_oldOnCursorChanged)
   editbox.APIDoc_oldOnCursorChanged = nil
+  editbox:SetScript("OnTextChanged", editbox.APIDoc_oldOnTextChanged)
+  editbox.APIDoc_oldOnTextChanged = nil
 end
 
 function lib:addLine(apiInfo)
@@ -451,7 +471,7 @@ function lib:SetWord(editbox, word)
 
   -- replace word
   text = text:sub(1, startPosition - 1) .. word .. text:sub(endPosition + 1, #text)
-  editbox:SetText(text)
+  editbox:APIDoc_originalSetText(text)
   -- SetText triggers the OnTextChanged handler without the "userInput" flag. We need that flag set to true, so run the handler again
   local script = editbox:GetScript("OnTextChanged")
   if script then

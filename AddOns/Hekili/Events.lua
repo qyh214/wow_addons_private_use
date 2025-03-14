@@ -333,10 +333,11 @@ RegisterEvent( "PLAYER_ENTERING_WORLD", function( event, login, reload )
             state.combat = GetTime() - 0.01
         end
 
-        local _, zone = GetInstanceInfo()
+        local _, zone, _, _, _, _, _, instanceID = GetInstanceInfo()
         state.bg = zone == "pvp"
         state.arena = zone == "arena"
         state.torghast = IsInJailersTower()
+        state.instance_id = instanceID or -1
 
         Hekili:BuildUI()
     end
@@ -378,10 +379,11 @@ end
 
 do
     local function UpdateZoneInfo()
-        local _, zone = GetInstanceInfo()
+        local _, zone, _, _, _, _, _, instanceID = GetInstanceInfo()
         state.bg = zone == "pvp"
         state.arena = zone == "arena"
         state.torghast = IsInJailersTower()
+        state.instance_id = instanceID or -1
     end
 
     RegisterEvent( "ZONE_CHANGED", UpdateZoneInfo )
@@ -776,7 +778,7 @@ do
                     state.trinket.t1.__has_use_buff = not aura.ignore_buff and not ( ability and ability.proc and ( ability.proc == "damage" or ability.proc == "healing" or ability.proc == "mana" or ability.proc == "absorb" or ability.proc == "speed" ) )
                     state.trinket.t1.__use_buff_duration = aura.duration > 0 and aura.duration or 0.01
                 elseif ability.self_buff then
-                    state.trinket.t1.__has_use_buff = true
+                    state.trinket.t1.__has_use_buff = not aura.ignore_buff and not ( ability and ability.proc and ( ability.proc == "damage" or ability.proc == "healing" or ability.proc == "mana" or ability.proc == "absorb" or ability.proc == "speed" ) )
                     state.trinket.t1.__use_buff_duration = aura and aura.duration > 0 and aura.duration or 0.01
                 end
 
@@ -934,13 +936,13 @@ do
         -- Improve Pocket-Sized Computronic Device.
         if state.equipped.pocketsized_computation_device then
             local tName = CGetItemInfo( 167555 )
-            local redName, redLink = GetItemGem( tName, 1 )
+            local redName, redLink = C_Item.GetItemGem( tName, 1 )
 
             if redName and redLink then
                 local redID = tonumber( redLink:match("item:(%d+)") )
                 local action = class.itemMap[ redID ]
 
-                if action then
+                if action and class.abilities[ action ] and redID then
                     state.set_bonus[ action ] = 1
                     state.set_bonus[ redID ] = 1
                     class.abilities.pocketsized_computation_device = class.abilities[ action ]
@@ -948,8 +950,10 @@ do
                     insert( state.items, action )
                 end
             else
-                class.abilities.pocketsized_computation_device = class.abilities.inactive_red_punchcard
-                class.abilities[ tName ] = class.abilities.inactive_red_punchcard
+                if class.abilities.inactive_red_punchcard then
+                    class.abilities.pocketsized_computation_device = class.abilities.inactive_red_punchcard
+                    class.abilities[ tName ] = class.abilities.inactive_red_punchcard
+                end
             end
         end
 
@@ -1074,7 +1078,7 @@ end )
 
 
 local dynamic_keys = setmetatable( {}, {
-    __index = function( t, k, v )
+    __index = function( t, k )
         local name = GetSpellInfo( k )
         local key = name and formatKey( name ) or k
         t[k] = key
@@ -1192,8 +1196,8 @@ RegisterUnitEvent( "UNIT_SPELLCAST_SUCCEEDED", "player", "target", function( eve
     if not noClassWarned and not class.initialized then
         Hekili:Notify( UnitClass( "player" ) .. " does not have any Hekili modules loaded (yet).\nWatch for updates.", 5 )
         noClassWarned = true
-    elseif not lowLevelWarned and UnitLevel( "player" ) < 50 then
-        Hekili:Notify( "Hekili is designed for current content.\nUse below level 50 at your own risk.", 5 )
+    elseif not lowLevelWarned and UnitLevel( "player" ) < 70 then
+        Hekili:Notify( "Hekili is designed for current content.\nUse below level 70 at your own risk.", 5 )
         lowLevelWarned = true
     end
 
@@ -1201,7 +1205,7 @@ RegisterUnitEvent( "UNIT_SPELLCAST_SUCCEEDED", "player", "target", function( eve
         local ability = class.abilities[ spellID ]
 
         if ability then
-            Hekili:ForceUpdate( event, true )
+            Hekili:ForceUpdate( event )
             if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
         end
     end
@@ -1215,6 +1219,8 @@ RegisterUnitEvent( "UNIT_SPELLCAST_START", "player", "target", function( event, 
             Hekili:ForceUpdate( event )
             if state.holds[ ability.key ] then Hekili:RemoveHold( ability.key, true ) end
         end
+
+        Hekili:ForceUpdate( event, true )
     end
 end )
 
@@ -1254,7 +1260,7 @@ do
         empowerment.finish = 0
         empowerment.hold = 0
 
-        Hekili:ForceUpdate( event, true )
+        Hekili:ForceUpdate( event )
     end )
 end
 
@@ -1325,6 +1331,7 @@ RegisterUnitEvent( "UNIT_SPELLCAST_DELAYED", "player", nil, function( event, uni
                 state:QueueEvent( ability.impactSpell or ability.key, finish / 1000, 0.05 + travel, "PROJECTILE_IMPACT", target, true )
             end
         end
+
         Hekili:ForceUpdate( event )
     end
 end )
@@ -1332,6 +1339,8 @@ end )
 
 -- TODO:  This should be changed to stash this information and then commit it on next UNIT_SPELLCAST_START or UNIT_SPELLCAST_SUCCEEDED.
 RegisterEvent( "UNIT_SPELLCAST_SENT", function ( event, unit, target_name, castID, spellID )
+    Hekili:ForceUpdate( event )
+
     if target_name and UnitGUID( target_name ) then
         state.cast_target = UnitGUID( target_name )
         return
@@ -1381,9 +1390,10 @@ local spell_names = setmetatable( {}, {
 } )
 
 
-local lastPowerUpdate = 0
+local lastPower = {}
 
 local function UNIT_POWER_FREQUENT( event, unit, power )
+
     if power == "FOCUS" and rawget( state, "focus" ) then
         local now = GetTime()
         local elapsed = now - ( state.focus.last_tick or 0 )
@@ -1407,13 +1417,19 @@ local function UNIT_POWER_FREQUENT( event, unit, power )
             power_tick_data.energy_ticks = power_tick_data.energy_ticks + 1
             state.energy.last_tick = now
         end
-
     end
-    -- Hekili:ForceUpdate( event )
-end
-Hekili:ProfileCPU( "UNIT_POWER_UPDATE", UNIT_POWER_FREQUENT )
 
-RegisterUnitEvent( "UNIT_POWER_UPDATE", "player", nil, UNIT_POWER_FREQUENT )
+    local newPower = UnitPower( "player", Enum.PowerType[ power ] )
+
+    if lastPower[ power ] and newPower < lastPower[ power ] then
+        Hekili:ForceUpdate( event, true )
+    end
+
+    lastPower[ power ] = newPower
+end
+Hekili:ProfileCPU( "UNIT_POWER_FREQUENT", UNIT_POWER_FREQUENT )
+
+RegisterUnitEvent( "UNIT_POWER_FREQUENT", "player", nil, UNIT_POWER_FREQUENT )
 
 
 local autoAuraKey = setmetatable( {}, {
@@ -1470,7 +1486,6 @@ do
         local isPlayer = ( unit == "player" )
         instanceDB = isPlayer and playerInstances or targetInstances
 
-
         if data.isFullUpdate then
             wipe( instanceDB )
 
@@ -1478,7 +1493,7 @@ do
             ForEachAura( unit, "HARMFUL", nil, StoreInstanceInfo, true )
 
             state[ unit ].updated = true
-            Hekili:ForceUpdate( event )
+            Hekili:ForceUpdate( "UNIT_AURA_FULL", true )
             return
         end
 
@@ -1526,7 +1541,7 @@ do
 
         state[ unit ].updated = true
 
-        if forceUpdateNeeded then Hekili:ForceUpdate( event ) end
+        if forceUpdateNeeded then Hekili:ForceUpdate( "UNIT_AURA_ITER" ) end
     end )
 
     RegisterEvent( "PLAYER_TARGET_CHANGED", function( event )
@@ -1629,6 +1644,8 @@ local death_events = {
 
 local dmg_filtered = {
     [280705] = true, -- Laser Matrix.
+    [450412] = true, -- Sentinel.
+    [462952] = true, -- Squall Sailor's Citrine
 }
 
 
@@ -1685,6 +1702,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
     local amSource  = ( sourceGUID == state.GUID )
     local petSource = ( UnitExists( "pet" ) and sourceGUID == UnitGUID( "pet" ) )
     local amTarget  = ( destGUID   == state.GUID )
+    local isSensePower = ( class.auras.sense_power_active and spellID == 361022 )
 
     if not InCombatLockdown() and not ( amSource or petSource or amTarget ) then return end
 
@@ -1753,7 +1771,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
 
     local minion = ns.isMinion( sourceGUID )
 
-    if not ( amSource or petSource ) and not ( state.role.tank and destGUID == state.GUID ) and ( not minion or not countPets ) then
+    if not ( amSource or petSource or isSensePower ) and not ( state.role.tank and destGUID == state.GUID ) and ( not minion or not countPets ) then
         return
     end
 
@@ -1795,9 +1813,10 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
                     end
 
                 elseif subtype == "SPELL_CAST_FAILED" then
-                    state:RemoveSpellEvent( ability.key, true, "CAST_FINISH" ) -- remove next cast finish.
-                    if ability.isProjectile then state:RemoveSpellEvent( ability.key, true, "PROJECTILE_IMPACT", true ) end -- remove last impact.
-                    -- Hekili:ForceUpdate( "SPELL_CAST_FAILED" )
+                    if state:RemoveSpellEvent( ability.key, true, "CAST_FINISH" ) then -- remove next cast finish.
+                        if ability.isProjectile then state:RemoveSpellEvent( ability.key, true, "PROJECTILE_IMPACT", true ) end -- remove last impact.
+                    end
+                    -- Hekili:ForceUpdate( "SPELL_CAST_FAILED" ) ]]
 
                 elseif subtype == "SPELL_AURA_REMOVED" and ability.channeled then
                     state:RemoveSpellEvents( ability.key, true ) -- remove ticks, finish, impacts.
@@ -1889,7 +1908,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
         end
 
     -- Player/Minion Event
-    elseif ( amSource or petSource ) or ( countPets and minion ) or ( sourceGUID == destGUID and sourceGUID == UnitGUID( 'target' ) ) then
+    elseif ( amSource or petSource or isSensePower ) or ( countPets and minion ) or ( sourceGUID == destGUID and sourceGUID == UnitGUID( 'target' ) ) then
         --[[ if aura_events[ subtype ] then
             if subtype == "SPELL_CAST_SUCCESS" or state.GUID == destGUID then
                 if class.abilities[ spellID ] or class.auras[ spellID ] then
@@ -1926,7 +1945,7 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
 
                 end
 
-            elseif ( amSource or petSource ) and aura.friendly then -- friendly effects
+            elseif ( amSource or petSource or isSensePower ) and aura.friendly then -- friendly effects
                 if subtype == 'SPELL_AURA_APPLIED'  or subtype == 'SPELL_AURA_REFRESH' or subtype == 'SPELL_AURA_APPLIED_DOSE' then
                     ns.trackDebuff( spellID, destGUID, time, true )
 
@@ -1941,8 +1960,6 @@ local function CLEU_HANDLER( event, timestamp, subtype, hideCaster, sourceGUID, 
             end
 
         end
-
-        local action = class.abilities[ spellID ]
 
         if hostile and ( countDots and dmg_events[ subtype ] or direct_dmg_events[ subtype ] ) and not dmg_filtered[ spellID ] then
             -- Don't wipe overkill targets in rested areas (it is likely a dummy).

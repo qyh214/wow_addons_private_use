@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [42202410] = {
+    [39512410] = {
         quest=83842,
         loot={226267}, -- Reinforced Beaker
         vignette=6427,
     },
-    [64936182] = {
+    [60806182] = {
         quest=83843,
         loot={226268}, -- Engraved Stirring Rod
         vignette=6428,

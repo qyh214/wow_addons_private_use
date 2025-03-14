@@ -1,0 +1,26 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+	..\FrameXML\UI.xsd">
+
+	<Script file="libs/LibStub/LibStub.lua" />
+	<Script file="libs/LibDropDownExtension-1.0/LibDropDownExtension.lua" />
+	<Script file="libs/CallbackHandler-1.0/CallbackHandler-1.0.lua" />
+	<Script file="libs/LibDataBroker-1.1/LibDataBroker-1.1.lua" />
+	<Script file="libs/LibDBIcon-1.0/LibDBIcon-1.0.lua" />
+	<Script file="libs/LibCombatLogging-1.0/LibCombatLogging.lua" />
+
+	<Script file="locale/locale.lua" />
+	<Script file="locale/enUS.lua" />
+	<Script file="locale/deDE.lua" />
+	<Script file="locale/esES.lua" />
+	<Script file="locale/frFR.lua" />
+	<Script file="locale/itIT.lua" />
+	<Script file="locale/koKR.lua" />
+	<Script file="locale/ptBR.lua" />
+	<Script file="locale/ruRU.lua" />
+	<Script file="locale/zhCN.lua" />
+	<Script file="locale/zhTW.lua" />
+
+	<Script file="utf8.lua" />
+	<Script file="core.lua" />
+
+</Ui>

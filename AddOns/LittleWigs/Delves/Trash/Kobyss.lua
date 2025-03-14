@@ -8,14 +8,17 @@ mod:RegisterEnableMob(
 	210759, -- Brann Bronzebeard
 	228903, -- Brann Bronzebeard
 	220565, -- Raen Dawncavalyr (The Sinkhole gossip NPC)
+	234824, -- Alyza Bowblaze (The Sinkhole gossip NPC)
 	214628, -- Partially-Chewed Goblin (Tek-Rethan Abyss gossip NPC)
-	215178, -- Vetiverian
+	215178, -- Vetiverian (Tek-Rethan Abyss gossip NPC)
 	214625, -- Kobyss Necromancer
 	220710, -- Leviathan Manipulator
 	214338, -- Kobyss Spearfisher
 	214251, -- Kobyss Witherer
 	214551, -- Wandering Gutter
-	216325 -- Crazed Predator
+	216325, -- Crazed Predator
+	220643, -- Deepwater Makura
+	214343 -- Kobyss Trickster
 )
 
 --------------------------------------------------------------------------------
@@ -31,6 +34,8 @@ if L then
 	L.kobyss_witherer = "Kobyss Witherer"
 	L.wandering_gutter = "Wandering Gutter"
 	L.crazed_predator = "Crazed Predator"
+	L.deepwater_makura = "Deepwater Makura"
+	L.kobyss_trickster = "Kobyss Trickster"
 end
 
 --------------------------------------------------------------------------------
@@ -39,9 +44,14 @@ end
 
 function mod:OnRegister()
 	self.displayName = L.kobyss_trash
+	self:SetSpellRename(455932, CL.frontal_cone) -- Defiling Breath (Frontal Cone)
+	self:SetSpellRename(445252, CL.explosion) -- Necrotic End (Explosion)
+	self:SetSpellRename(440622, CL.curse) -- Curse of the Depths (Curse)
+	self:SetSpellRename(470588, CL.curse) -- Curse of the Depths (Curse)
+	self:SetSpellRename(445407, CL.fixate) -- Bloodthirsty (Fixate)
 end
 
-local autotalk = mod:AddAutoTalkOption(true)
+local autotalk = mod:AddAutoTalkOption(false)
 function mod:GetOptions()
 	return {
 		autotalk,
@@ -57,13 +67,23 @@ function mod:GetOptions()
 		445407, -- Bloodthirsty
 		-- Crazed Predator
 		445774, -- Thrashing Frenzy
-	}, {
+		374898, -- Enrage
+		-- Deepwater Makura
+		445771, -- Bubble Surge
+		-- Kobyss Trickster
+		433040, -- Illusive Step
+	},{
 		[455932] = L.kobyss_necromancer,
 		[430037] = L.kobyss_spearfisher,
 		[440622] = L.kobyss_witherer,
 		[445492] = L.wandering_gutter,
 		[445774] = L.crazed_predator,
-	}, {
+		[445771] = L.deepwater_makura,
+		[433040] = L.kobyss_trickster,
+	},{
+		[455932] = CL.frontal_cone, -- Defiling Breath (Frontal Cone)
+		[445252] = CL.explosion, -- Necrotic End (Explosion)
+		[440622] = CL.curse, -- Curse of the Depths (Curse)
 		[445407] = CL.fixate, -- Bloodthirsty (Fixate)
 	}
 end
@@ -80,7 +100,7 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "Spearfish", 430037)
 
 	-- Kobyss Witherer
-	self:Log("SPELL_CAST_START", "CurseOfTheDepths", 440622)
+	self:Log("SPELL_CAST_START", "CurseOfTheDepths", 440622, 470588)
 
 	-- Wandering Gutter
 	self:Log("SPELL_CAST_START", "SerratedCleave", 445492)
@@ -88,6 +108,19 @@ function mod:OnBossEnable()
 
 	-- Crazed Predator
 	self:Log("SPELL_CAST_START", "ThrashingFrenzy", 445774)
+	self:Log("SPELL_AURA_APPLIED", "EnrageApplied", 374898)
+
+	-- Deepwater Makura
+	self:Log("SPELL_CAST_START", "BubbleSurge", 445771)
+
+	-- Kobyss Trickster
+	self:Log("SPELL_CAST_START", "IllusiveStep", 433040)
+
+	-- also enable the Rares module
+	local raresModule = BigWigs:GetBossModule("Underpin Rares", true)
+	if raresModule then
+		raresModule:Enable()
+	end
 end
 
 function mod:VerifyEnable(_, mobId)
@@ -103,12 +136,13 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	local info = self:GetWidgetInfo("delve", 6183)
-	local level = info and tonumber(info.tierText)
-	if (not level or level > 3) and self:GetOption(autotalk) then
+	if self:GetOption(autotalk) then
 		if self:GetGossipID(121578) then -- The Sinkhole, start Delve (Raen Dawncavalyr)
 			-- 121578:|cFF0000FF(Delve)|r I'll take your special boots and recover missing relics from the kobyss.
 			self:SelectGossipID(121578)
+		elseif self:GetGossipID(131349) then -- The Sinkhole, start Delve (Alyza Bowblaze)
+			-- 131349:|cFF0000FF(Delve)|r Let's find that Stewpot for you.
+			self:SelectGossipID(131349)
 		elseif self:GetGossipID(120132) then -- Tek-Rethan Abyss, start Delve (Partially-Chewed Goblin)
 			-- 120132:|cFF0000FF(Delve)|r <Take the instruction manual and find the repair kits.>
 			self:SelectGossipID(120132)
@@ -127,7 +161,7 @@ do
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
-			self:Message(args.spellId, "orange")
+			self:Message(args.spellId, "orange", CL.frontal_cone)
 			self:PlaySound(args.spellId, "alarm")
 		end
 	end
@@ -139,7 +173,7 @@ do
 		local t = args.time
 		if t - prev > 1.5 then
 			prev = t
-			self:Message(args.spellId, "red")
+			self:Message(args.spellId, "red", CL.explosion)
 			self:PlaySound(args.spellId, "alarm")
 		end
 	end
@@ -154,9 +188,15 @@ end
 
 -- Kobyss Witherer
 
-function mod:CurseOfTheDepths(args)
-	self:Message(args.spellId, "yellow", CL.casting:format(args.spellName))
-	self:PlaySound(args.spellId, "alert")
+do
+	local prev = 0
+	function mod:CurseOfTheDepths(args)
+		if args.time - prev > 2 then
+			prev = args.time
+			self:Message(440622, "yellow", CL.casting:format(CL.curse))
+			self:PlaySound(440622, "alert")
+		end
+	end
 end
 
 -- Wandering Gutter
@@ -180,4 +220,23 @@ end
 function mod:ThrashingFrenzy(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 	self:PlaySound(args.spellId, "alert")
+end
+
+function mod:EnrageApplied(args)
+	self:Message(args.spellId, "red", CL.on:format(args.spellName, args.destName))
+	self:PlaySound(args.spellId, "info")
+end
+
+-- Deepwater Makura
+
+function mod:BubbleSurge(args)
+	self:Message(args.spellId, "orange")
+	self:PlaySound(args.spellId, "alarm")
+end
+
+-- Kobyss Trickster
+
+function mod:IllusiveStep(args)
+	self:Message(args.spellId, "yellow")
+	self:PlaySound(args.spellId, "info")
 end

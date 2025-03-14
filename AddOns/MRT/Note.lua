@@ -8,6 +8,8 @@ local ELib,L = MRT.lib,MRT.L
 local GetTime, GetSpecializationInfo = GetTime, GetSpecializationInfo
 local string_gsub, strsplit, tonumber, format, string_match, floor, string_find, type, string_gmatch = string.gsub, strsplit, tonumber, format, string.match, floor, string.find, type, string.gmatch
 local GetSpellInfo = MRT.F.GetSpellInfo or GetSpellInfo
+local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
+local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 local NewVMRTTableData
 
 local GetSpecialization = GetSpecialization
@@ -132,7 +134,7 @@ local function GSUB_Icon(spellID,iconSize)
 		return "|T"..preicon..":"..iconSize.."|t"
 	end
 
-	local spellTexture = select(3,GetSpellInfo(spellID))
+	local spellTexture = GetSpellTexture(spellID)
 	return "|T"..(spellTexture or "Interface\\Icons\\INV_MISC_QUESTIONMARK")..":"..iconSize.."|t"
 end
 
@@ -164,6 +166,32 @@ local function GSUB_Encounter(list,msg)
 			found = true
 			break
 		end
+	end
+
+	if found then
+		return msg
+	else
+		return ""
+	end
+end
+
+local function GSUB_Zone(mlist,msg)
+	local list = {strsplit(",",mlist)}
+
+	local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID = GetInstanceInfo()
+	name = (name or "-"):lower()
+	instanceID = tostring(instanceID or "-")
+
+	local found = false
+	for i=1,#list do
+		list[i] = list[i]:gsub("|?|c........",""):gsub("|?|r",""):lower()
+		if list[i] == name or list[i] == instanceID then
+			found = true
+			break
+		end
+	end
+	if not found and mlist:lower() == name then
+		found = true
 	end
 
 	if found then
@@ -533,6 +561,7 @@ do
 				:gsub("{(!?)[Gg](%d+)}(.-){/[Gg]}",GSUB_Group)
 				:gsub("{(!?)[Rr][Aa][Cc][Ee]:([^}]+)}(.-){/[Rr][Aa][Cc][Ee]}",GSUB_Race)
 				:gsub("{[Ee]:([^}]+)}(.-){/[Ee]}",GSUB_Encounter)
+				:gsub("{[Zz]:([^}]+)}(.-){/[Zz]}",GSUB_Zone)
 				:gsub("{(!?)[Pp]([^}:][^}]*)}(.-){/[Pp]}",GSUB_Phase)
 				:gsub("{icon:([^}]+)}","|T%1:16|t")
 				:gsub("{spell:(%d+):?(%d*)}",GSUB_Icon)
@@ -563,6 +592,15 @@ function module.options:Load()
 		106898,192077,46968,119381,179057,192058,30283,0,
 		29166,32375,114018,108199,49576,116844,0,
 		0,
+		1216731,459943,460153,460386,473507,459627,459666,468207,468147,460116,471403,459974,459453,459994,473636,460603,466615,459679,460625,0,
+		1214190,465446,472220,1221826,473951,472223,472231,471557,473983,473650,463800,1218088,466178,463925,463840,471660,1213994,1214039,465833,0,
+		468119,466128,465795,1214164,472306,466866,464518,464488,1217120,466093,1214829,472294,466722,473655,467606,467991,1213817,473748,467297,466961,1214598,0,
+		464399,467135,466748,1217975,465741,473066,467117,465611,473227,1217954,1218706,464248,461536,1219384,472893,473115,1218343,464854,464149,1218708,1220752,467149,464865,1217685,465747,464112,466742,0,
+		1214872,1217261,1216674,1218319,1216802,1218344,1217083,1217673,473276,1214265,465232,1216406,1216965,466860,466765,1216525,471308,1219047,1216508,1216414,1216911,1215858,465917,466235,1216934,1216699,1218342,0,
+		465309,465587,465322,461083,461091,461068,465580,465432,460472,461060,460474,461395,472718,461101,460582,460181,460164,460430,461389,474665,460847,460444,472178,473178,464705,472197,467870,474731,460973,473009,461176,0,
+		1216142,467381,1222948,470910,468658,467225,472659,469715,466518,1215591,472631,468694,468663,474554,469043,466539,1216495,1215488,469076,466509,463967,1215953,1214991,466516,469375,466385,469391,466480,466476,466545,1219283,466376,1214623,472057,469490,472782,1216202,470089,1220551,467202,0,
+		466751,466153,471225,466154,466753,1216845,1215209,1217290,1217292,1216852,465952,1220761,1219313,466158,467182,1219319,469404,1218504,469767,1219041,469327,1214226,1219039,1217987,1214229,474447,469297,1220784,466958,466834,1219333,466342,1214755,1219278,469362,466165,1214369,1220290,469363,1220846,467064,471352,466340,466338,466246,469286,466341,1223126,0,
+		0,
 		435136,438012,440849,462472,435138,438657,439037,434705,435341,449268,434776,440177,439419,443842,436255,455870,438324,434697,441451,440904,0,
 		445570,444363,443042,461876,442530,445174,445016,445257,445936,443305,445518,451288,443612,438696,452237,0,
 		434860,439559,442428,458272,435401,456420,439511,461401,459785,432969,435410,459273,461797,433475,0,
@@ -571,15 +609,6 @@ function module.options:Load()
 		435414,439576,440576,436950,436749,435486,440377,447174,436867,437620,442278,434645,439409,437343,437786,448364,438245,0,
 		455080,449993,439992,460357,450483,460359,438656,460281,460360,438200,441634,450045,456235,438706,438218,438801,460600,440504,440158,438773,450129,441782,455863,455849,443092,455850,443063,450980,438677,451277,455363,443598,449857,0,
 		437078,439299,451600,440607,438481,443915,445268,444829,443396,451832,451366,438976,460218,443325,447965,438846,443667,447950,443720,441556,443336,441084,448660,448046,447999,460366,441872,448488,445021,451607,445013,448300,437417,448458,445152,446012,451278,440899,447411,449940,455374,445877,444507,445623,439814,443888,444502,447170,445422,447076,460133,448147,441958,460315,449235,437592,441692,448176,441865,437093,443403,447983,0,
-		0,
-		422053,421038,422023,422039,421350,421986,421971,422026,429009,424352,425709,421840,421013,422373,425648,428992,425819,425816,421898,0,
-		424347,429277,416056,414770,422776,423715,420251,419462,414425,414340,418533,426017,423108,414367,415624,419048,416998,0,
-		421675,423494,429153,421672,427211,420934,421703,423117,420421,424218,421284,419054,421082,421616,427201,0,
-		420937,424975,418187,421024,421032,423551,425389,418720,423522,420856,420409,426390,422372,420671,421020,420966,427602,421292,420525,421029,427010,424269,425114,420946,0,
-		418535,417660,421326,418637,417653,421323,422461,421318,418522,428946,421594,426242,429032,427306,427343,428896,419485,421316,417610,426387,425531,417634,427252,424997,426524,425889,423719,417583,0,
-		430485,430563,428471,426154,420846,425357,423195,427722,428273,418423,423993,429785,425794,425370,429108,423369,423842,428479,428012,421368,420907,426855,0,
-		421643,421961,424233,425574,430325,422067,422577,426018,420950,426725,422172,421656,423896,421858,421455,422277,423904,422691,421532,0,
-		425657,422503,424495,422000,424581,421939,424582,421603,430583,424665,422325,421398,424258,420236,425607,426669,427297,421884,424140,423260,421636,429166,422509,429740,424499,426687,425610,420240,0,
 	}
 	if MRT.isCata then
 		module.db.otherIconsAdditionalList = {
@@ -678,6 +707,7 @@ function module.options:Load()
 		tinsert(module.db.encountersList,MRT.F.table_find(module.db.encountersList,909,1) or #module.db.encountersList,{EXPANSION_NAME7..": "..DUNGEONS,-1012,-968,-1041,-1022,-1030,-1023,-1002,-1001,-1036,-1021})
 	else
 		module.db.encountersList = {}
+		tinsert(module.db.encountersList,MRT.F.table_copy2(MRT.F.table_find3(MRT.GDB.EncountersList,367,1)))
 	end
 
 	module.db.mapToEncounter = {
@@ -770,11 +800,32 @@ function module.options:Load()
 		[2233] = 2824,
 		[2237] = 2786,
 		[2238] = 2677,
+
+		[2292] = {2902,2918},
+		[2291] = 2917,
+		[2293] = 2898,
+		[2294] = {2919,2920,2921},
+		[2295] = 2922,
+		[2296] = 2922,
+
+		[2406] = {3009,3010,3011,3012,3013},
+		[2408] = 3014,
+		[2411] = 3015,
+		[2409] = 3016,
 	}
 
 
 	function self:GetBossName(bossID)
 		return bossID < 0 and L.EJInstanceName[ -bossID ] or L.bossName[ bossID ]
+	end
+	function self:GetBossIcon(bossID)
+		if bossID and bossID > 0 and MRT.GDB.encounterIDtoEJ[bossID] and EJ_GetCreatureInfo then
+			local bossImg = select(5, EJ_GetCreatureInfo(1, MRT.GDB.encounterIDtoEJ[bossID]))
+			if bossImg then
+				return "|T"..bossImg..":12:24|t"
+			end
+		end
+		return ""
 	end
 
 	local BlackNoteNow = nil
@@ -854,7 +905,6 @@ function module.options:Load()
 	self.NotesList.ButtonMoveDown.i:SetTexture("Interface\\AddOns\\"..GlobalAddonName.."\\media\\DiesalGUIcons16x256x128")
 	self.NotesList.ButtonMoveDown.i:SetTexCoord(0.25,0.3125,0.5,0.625)
 
-
 	self.NotesList.UpdateAdditional = function(self,val)
 		self.ButtonMoveUp:Hide()
 		self.ButtonMoveDown:Hide()
@@ -903,7 +953,7 @@ function module.options:Load()
 		self.NotesList.L[1] = "|cff55ee55"..L.messageTab1
 		self.NotesList.L[2] = L.NoteSelf
 		for i=1,#VMRT.Note.Black do
-			self.NotesList.L[i+2] = (VMRT.Note.AutoLoad[i] and (bossesToGreen[ VMRT.Note.AutoLoad[i] ] and "|cff00ff00" or "|cffffff00").."["..module.options:GetBossName(VMRT.Note.AutoLoad[i]).."]|r" or "")..(VMRT.Note.BlackNames[i] or i)
+			self.NotesList.L[i+2] = (VMRT.Note.AutoLoad[i] and (bossesToGreen[ VMRT.Note.AutoLoad[i] ] and "|cff00ff00" or "|cffffff00")..module.options:GetBossIcon(VMRT.Note.AutoLoad[i]).."["..module.options:GetBossName(VMRT.Note.AutoLoad[i]).."]|r" or "")..(VMRT.Note.BlackNames[i] or i)
 		end
 		self.NotesList.L[#self.NotesList.L + 1] = "|cff00aaff"..L.NoteAdd
 		self.NotesList:Update()
@@ -927,6 +977,7 @@ function module.options:Load()
 		module.options.LastIndex = index
 
 		module.options.buttonsend:SetShown(index == 1)
+		module.options.buttonundo:SetShown(index == 1)
 		module.options.buttoncopy:SetShown(index > 2)
 		module.options.buttonwindow:SetShown(index > 2)
 		module.options.buttoncopyPersonal:SetShown(index > 2)
@@ -957,12 +1008,12 @@ function module.options:Load()
 
 			module.options.DraftName:SetText( VMRT.Note.DefName or "" )
 
-			module.options.autoLoadDropdown:SetText(VMRT.Note.AutoLoad[0] and module.options:GetBossName(VMRT.Note.AutoLoad[0]) or "-")
+			module.options.autoLoadDropdown:UpdateText(VMRT.Note.AutoLoad[0])
 		elseif index == 2 then
 			module.options.NoteEditBox.EditBox:SetText(VMRT.Note.SelfText or "")
 			module.options.DraftName:SetText( L.NoteSelf )
 
-			module.options.autoLoadDropdown:SetText("-")
+			module.options.autoLoadDropdown:UpdateText()
 
 			NoteIsSelfNow = true
 		elseif index == #self.L then
@@ -976,7 +1027,7 @@ function module.options:Load()
 
 			NotesListUpdateNames()
 
-			module.options.autoLoadDropdown:SetText("-")
+			module.options.autoLoadDropdown:UpdateText()
 		else
 			index = index - 2
 			if IsShiftKeyDown() then
@@ -987,7 +1038,7 @@ function module.options:Load()
 			BlackNoteNow = index
 			module.options.DraftName:SetText( VMRT.Note.BlackNames[index] or "" )
 
-			module.options.autoLoadDropdown:SetText(VMRT.Note.AutoLoad[index] and module.options:GetBossName(VMRT.Note.AutoLoad[index]) or "-")
+			module.options.autoLoadDropdown:UpdateText(VMRT.Note.AutoLoad[index])
 		end
 	end
 
@@ -1124,6 +1175,8 @@ function module.options:Load()
 			NotesListUpdateNames()
 		elseif not BlackNoteNow and not NoteIsSelfNow then
 			VMRT.Note.DefName = self:GetText()
+
+			module:ModHistory(-1, {name = VMRT.Note.DefName})
 		end
 	end)
 	self.DraftName:SetBackdropColor(0, 0, 0, 0) 
@@ -1137,12 +1190,20 @@ function module.options:Load()
 
 		VMRT.Note.AutoLoad[index] = encounterID
 
-		module.options.autoLoadDropdown:SetText(encounterID and module.options:GetBossName(encounterID) or "-")
+		module.options.autoLoadDropdown:UpdateText(encounterID)
 		NotesListUpdateNames()
 		ELib:DropDownClose()
+
+		if index == 0 then
+			module:ModHistory(-1, {bossID = VMRT.Note.AutoLoad[0]})
+		end
 	end
 
-	self.autoLoadDropdown = ELib:DropDown(self.tab.tabs[1],550,25):AddText(ENCOUNTER_JOURNAL_ENCOUNTER..":"):Point("TOPRIGHT",self.DuplicateDraft,"BOTTOMRIGHT",-2,-1):Size(550):SetText(VMRT.Note.AutoLoad[0] and L.bossName[ VMRT.Note.AutoLoad[0] ] or "-")
+	self.autoLoadDropdown = ELib:DropDown(self.tab.tabs[1],550,25):AddText(ENCOUNTER_JOURNAL_ENCOUNTER..":"):Point("TOPRIGHT",self.DuplicateDraft,"BOTTOMRIGHT",-2,-1):Size(550)
+	function self.autoLoadDropdown:UpdateText(encounterID)
+		self:SetText(encounterID and (module.options:GetBossIcon(encounterID)..module.options:GetBossName(encounterID)) or "-")
+	end
+	self.autoLoadDropdown:UpdateText(VMRT.Note.AutoLoad[0])
 	do
 		local List = self.autoLoadDropdown.List
 		List[#List+1] = {
@@ -1156,10 +1217,16 @@ function module.options:Load()
 				isTitle = true,
 			}
 			for j=2,#instance do
+				local bossID, bossImg = instance[j]
+				if bossID and MRT.GDB.encounterIDtoEJ[bossID] and EJ_GetCreatureInfo then
+					bossImg = select(5, EJ_GetCreatureInfo(1, MRT.GDB.encounterIDtoEJ[bossID]))
+				end
 				List[#List+1] = {
-					text = module.options:GetBossName(instance[j]),
-					arg1 = instance[j],
+					text = module.options:GetBossName(bossID),
+					arg1 = bossID,
 					func = autoLoadDropdown_SetValue,
+					icon = bossImg,
+					iconsize = 32,
 				}
 			end
 		end
@@ -1174,11 +1241,22 @@ function module.options:Load()
 	end)
 	self.autoLoadDropdown:SetScript("OnEnter",function(self)
 		self.Background:Show()
+
+		GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+		GameTooltip:AddLine(L.NoteEnableBossAutoLoad)
+		if VMRT.Note.EnableBossAutoLoad then
+			GameTooltip:AddLine(VIDEO_OPTIONS_ENABLED or "Enabled",0,1,0)
+		else
+			GameTooltip:AddLine(VIDEO_OPTIONS_DISABLED or "Disabled",1,0,0)
+		end
+		GameTooltip:Show()
 	end)
 	self.autoLoadDropdown:SetScript("OnLeave",function(self)
 		self.Background:Hide()
+
+		GameTooltip_Hide()
 	end)
-	if MRT.isClassic then
+	if MRT.isClassic and not MRT.isCata then
 		self.autoLoadDropdown:Hide()
 	end
 
@@ -1216,7 +1294,7 @@ function module.options:Load()
 		if preicon then
 			iconText = "|T"..preicon..":"..iconSize.."|t"
 		else
-			local spellTexture = select(3,GetSpellInfo(spellID))
+			local spellTexture = GetSpellTexture(spellID)
 			iconText = "|T"..(spellTexture or "Interface\\Icons\\INV_MISC_QUESTIONMARK")..":"..iconSize..":"..iconSize..":-6:0|t"
 		end
 
@@ -1234,7 +1312,6 @@ function module.options:Load()
 		end
 		return self:_SetText(text)
 	end
-
 
 	function self.NoteEditBox.EditBox:OnTextChanged(isUser)
 		if not isUser and (not module.options.InsertFix or GetTime() - module.options.InsertFix > 0.1) then
@@ -1254,7 +1331,7 @@ function module.options:Load()
 			VMRT.Note.BlackLastUpdateName[BlackNoteNow] = MRT.SDB.charKey
 			VMRT.Note.BlackLastUpdateTime[BlackNoteNow] = time()
 		else
-			VMRT.Note.Text1 = text
+			module:SaveText(text,-1)
 			if module.frame.text:GetText() ~= txtWithIcons(module.frame, VMRT.Note.Text1) then
 				module.options.buttonsend:Anim(true)
 			else
@@ -1310,7 +1387,31 @@ function module.options:Load()
 		end
 	end)
 
-	self.buttonsend = ELib:Button(self.tab.tabs[1],L.messagebutsend):Size(0,30):Point("LEFT",self.NotesList,"TOPRIGHT",4,0):Point("BOTTOM",self,"BOTTOM",0,2):Point("RIGHT",self,"RIGHT",-2,0):Tooltip(L.messagebutsendtooltip):OnClick(function (self)
+	self.buttonundo = ELib:Button(self.tab.tabs[1],L.NoteUndo):Size(80,30):Point("LEFT",self.NotesList,"TOPRIGHT",4,0):Point("BOTTOM",self,"BOTTOM",0,2):Tooltip(L.NoteUndoTip):OnClick(function (self)
+		local menu = {}
+		for i=1,#module.db.History do
+			menu[#menu+1] = {text = date("%X",module.db.History[i].time), func = function() 
+				ELib.ScrollDropDown.Close() 
+				module.db.HistoryLock = true
+				local history = module.db.History[i]
+				module:SaveText(history.text, -2) 
+				module.frame:SetTo()
+				if VMRT.Note.AutoLoad[0] ~= history.bossID then
+					VMRT.Note.AutoLoad[0] = history.bossID
+				end
+				module.options.autoLoadDropdown:UpdateText(VMRT.Note.AutoLoad[0])
+				if VMRT.Note.DefName ~= history.name then
+					VMRT.Note.DefName = history.name
+				end
+				module.options.DraftName:SetText( VMRT.Note.DefName or "" )
+				module.db.HistoryLock = nil
+			end, tooltip = (module.db.History[i].text or ""):sub(1,800)..(#(module.db.History[i].text or "") > 800 and "..." or "")}
+		end
+		menu[#menu+1] = { text = CLOSE, func = function() ELib.ScrollDropDown.Close() end, notCheckable = true }
+
+		ELib.ScrollDropDown.EasyMenu(self,menu,200)
+	end)
+	self.buttonsend = ELib:Button(self.tab.tabs[1],L.messagebutsend):Size(0,30):Point("LEFT",self.buttonundo,"RIGHT",2,0):Point("BOTTOM",self,"BOTTOM",0,2):Point("RIGHT",self,"RIGHT",-2,0):Tooltip(L.messagebutsendtooltip):OnClick(function (self)
 		module.frame:Save() 
 
 		if IsShiftKeyDown() then
@@ -1499,7 +1600,6 @@ function module.options:Load()
 
 	self.OtherIconsFrame.OnShow = function(self)
 		self.OnShow = nil
-		local GetSpellInfo = GetSpellInfo
 		local line = 1
 		local inLine = 0
 		for i=14,#module.db.otherIconsList-3 do
@@ -1531,7 +1631,7 @@ function module.options:Load()
 					inLine = 0
 				end
 			else
-				local _,_,spellTexture = GetSpellInfo( spellID )
+				local spellTexture = GetSpellTexture( spellID )
 				if predefSpellIcons[spellID] then
 					spellTexture = predefSpellIcons[spellID]
 				end
@@ -1601,6 +1701,379 @@ function module.options:Load()
 	end
 	self.dropDownColor.Lines = #self.dropDownColor.List
 
+
+	self.rosterpickdd = ELib:DropDown(self.tab.tabs[1],170,-1):Point("LEFT",self.dropDownColor,"RIGHT",5,0):Size(150):SetText("Select roster")
+	function self.rosterpickdd:SetValue(arg1)
+		ELib:DropDownClose()
+		module.options.rosterType = arg1
+		module.options:UpdateRoster()
+		module.options.rosterpickdd:AutoText(arg1)
+	end
+	function self.rosterpickdd:SetValue2(arg1)
+		ELib:DropDownClose()
+		module.options.rosteredit:Show()
+	end
+	self.rosterpickdd.List = {
+		{
+			text = "Current roster",
+			arg1 = nil,
+			func = self.rosterpickdd.SetValue,
+		},
+		{
+			text = "Custom roster",
+			arg1 = 2,
+			func = self.rosterpickdd.SetValue,
+			subMenu = {
+				{
+					text = "Edit",
+					func = self.rosterpickdd.SetValue2,
+				}
+			},
+		}
+	}
+
+	local rolesList = {
+		{"TANK",TANK or "Tank","roleicon-tiny-tank"},
+		{"HEALER",HEALER or "Healer","roleicon-tiny-healer"},
+		{"DAMAGER",DAMAGER or "Damager","roleicon-tiny-dps"},
+	}
+	local roleToIcon = {
+		TANK = "|A:roleicon-tiny-tank:0:0|a",
+		HEALER = "|A:roleicon-tiny-healer:0:0|a",
+		--DAMAGER = "|A:roleicon-tiny-dps:0:0|a",
+	}
+	if MRT.isClassic then wipe(roleToIcon) end
+	
+	module.options.rosteredit = ELib:Popup("Edit custom roster"):Size(600,600):OnShow(function(self) self:Update() end,true)
+	ELib:Border(module.options.rosteredit,1,.4,.4,.4,.9)
+
+	module.options.rosteredit.frame = ELib:ScrollFrame(module.options.rosteredit):Size(600,585):Height(585):AddHorizontal(true):Width(600):Point("TOP",0,-15)
+	ELib:Border(module.options.rosteredit.frame,0)
+	module.options.rosteredit.frame.lines = {}
+
+	module.options.rosteredit.groupsedit = {}
+
+	module.options.rosteredit:SetScript("OnHide",function()
+		module.options:UpdateRoster()
+	end)
+
+	module.options.rosteredit.frame:SetScript("OnMouseDown",function(self)
+		local x,y = MRT.F.GetCursorPos(self)
+		self.saved_x = x
+		self.saved_y = y
+		self.saved_scroll_h = self.ScrollBarHorizontal:GetValue()
+		self.saved_scroll_v = self.ScrollBar:GetValue()
+		self.moveSpotted = nil
+
+	end)
+
+	module.options.rosteredit.frame:SetScript("OnMouseUp",function(self, button)
+		self.saved_x = nil
+		self.saved_y = nil
+		self.moveSpotted = nil
+	end)
+
+	module.options.rosteredit.ExportButton = ELib:Button(module.options.rosteredit.frame.C,L.Export):Point("TOPLEFT",600-250,-0):Size(200,20):OnClick(function()
+		local str = ""
+		for i=1,#VMRT.Note.CustomRoster do
+			if VMRT.Note.CustomRoster[i][1] then
+				str = str .. VMRT.Note.CustomRoster[i][1]  .."\t".. (VMRT.Note.CustomRoster[i][2] or "").."\t" ..(VMRT.Note.CustomRoster[i][3] or "").. "\n" 
+			end
+		end
+		MRT.F:Export2(str)
+	end)
+
+	module.options.rosteredit.importWindow = ELib:Popup(" "):Size(600,400)
+	ELib:Border(module.options.rosteredit.importWindow,1,.4,.4,.4,.9)
+
+	function module.options.rosteredit.importWindow:DoImport(isErase)
+		local text = module.options.rosteredit.importWindow.Edit:GetText()
+	  	if isErase then
+			wipe(VMRT.Note.CustomRoster)
+		end
+
+		local lines = {strsplit("\n",text)}
+		for i=1,#lines do
+			local l = {}
+			for k in lines[i]:gmatch("[^\n\t ]+") do
+				l[#l+1] = k
+			end
+			local name,class,role = unpack(l)
+
+			if name and name:trim() == ""  then name = nil end
+
+			if name then
+				if class and class:trim() == ""  then class = nil end
+				if role and role:trim() == ""  then role = nil end
+
+				if class then
+					local mclass
+					for i=1,#MRT.GDB.ClassList do
+						if MRT.GDB.ClassList[i]:lower() == class:lower() or (GetClassInfo(MRT.GDB.ClassID[ MRT.GDB.ClassList[i] ]) or "") == class:lower() then
+							mclass = MRT.GDB.ClassList[i]
+							break
+						end
+					end
+					class = mclass
+				end
+
+				if role then
+					local mrole
+					for i=1,#rolesList do
+						if rolesList[i][1]:lower() == role:lower() or rolesList[i][2]:lower() == role:lower() then
+							mrole = rolesList[i][1]
+							break
+						end
+					end
+					role = mrole
+				end
+
+				VMRT.Note.CustomRoster[#VMRT.Note.CustomRoster+1] = {
+					name,
+					class,
+					role,
+				}
+			end
+		end
+		module.options.rosteredit.importWindow:Hide()
+		module.options.rosteredit:Update()
+	end
+
+	module.options.rosteredit.importWindow.Tip = ELib:Text(module.options.rosteredit.importWindow,"1 line - 1 player, format: |cff00ff00name   class   role|r",12):Point("TOPLEFT",10,-5)
+	module.options.rosteredit.importWindow.Edit = ELib:MultiEdit(module.options.rosteredit.importWindow):Point("TOP",0,-25):Size(590,400-50-30)
+	module.options.rosteredit.importWindow.Import = ELib:Button(module.options.rosteredit.importWindow,"Add"):Point("BOTTOM",0,5):Size(590,20):OnClick(function()
+		module.options.rosteredit.importWindow:DoImport(false)
+	end)
+	module.options.rosteredit.importWindow.Import2 = ELib:Button(module.options.rosteredit.importWindow,"Add (rewrite current roster)"):Point("BOTTOM",module.options.rosteredit.importWindow.Import,"TOP",0,5):Size(590,20):OnClick(function()
+		module.options.rosteredit.importWindow:DoImport(true)
+	end)
+
+	module.options.rosteredit.ImportButton = ELib:Button(module.options.rosteredit.frame.C,L.Import):Point("TOP",module.options.rosteredit.ExportButton,"BOTTOM",0,-5):Size(200,20):OnClick(function()
+		module.options.rosteredit.importWindow:NewPoint("CENTER",UIParent,0,0)
+		module.options.rosteredit.importWindow.Edit:SetText("")
+		module.options.rosteredit.importWindow:Show()
+	end)
+
+	module.options.rosteredit.CurrRoster = ELib:Button(module.options.rosteredit.frame.C,"Add from current raid/group"):Point("RIGHT",module.options.rosteredit.ExportButton,"LEFT",-5,0):Size(200,20):OnClick(function()
+		for _, name, subgroup, class, guid, rank, level, online, isDead, combatRole in MRT.F.IterateRoster, MRT.F.GetRaidDiffMaxGroup() do
+			name = MRT.F.delUnitNameServer(name)
+
+			if combatRole == "NONE" then combatRole = nil end
+
+			VMRT.Note.CustomRoster[#VMRT.Note.CustomRoster+1] = {
+				name,
+				class,
+				combatRole,
+			}
+		end
+		module.options.rosteredit:Update()
+	end)
+
+	module.options.rosteredit.ClearList = ELib:Button(module.options.rosteredit.frame.C,"Clear list"):Point("TOP",module.options.rosteredit.CurrRoster,"BOTTOM",0,-5):Size(200,20):OnClick(function()
+		StaticPopupDialogs["EXRT_REMINDER_RESET"] = {
+			text = "Clear list?",
+			button1 = L.YesText,
+			button2 = L.NoText,
+			OnAccept = function()
+				wipe(VMRT.Note.CustomRoster)
+				module.options.rosteredit:Update()
+			end,
+			timeout = 0,
+			whileDead = true,
+			hideOnEscape = true,
+			preferredIndex = 3,
+		}
+		StaticPopup_Show("EXRT_REMINDER_RESET")
+	end)
+
+	module.options.rosteredit.addButton = ELib:Button(module.options.rosteredit.frame.C,"Add"):Size(100,20):OnClick(function(self)
+		local pos = #VMRT.Note.CustomRoster+1
+		VMRT.Note.CustomRoster[pos] = {self.gtext}
+
+		self:Hide()
+		module.options.rosteredit:Update()
+	end)
+
+	function module.options.rosteredit:removeButton_click()
+		local i = self:GetParent().data_i
+		tremove(VMRT.Note.CustomRoster, i)
+
+		module.options.rosteredit:Update()
+	end
+
+	function module.options.rosteredit:class_click(class)
+		ELib:DropDownClose()
+
+		local data = self:GetParent().parent:GetParent().data
+		data[2] = class
+
+		module.options.rosteredit:Update()
+	end
+	module.options.rosteredit.ClassDD_List = {
+		{
+			text = "-",
+			func = module.options.rosteredit.class_click,
+		},
+	}
+	for i=1,#MRT.GDB.ClassList do
+		local class = MRT.GDB.ClassList[i]
+		module.options.rosteredit.ClassDD_List[#module.options.rosteredit.ClassDD_List+1] = {
+			text = (RAID_CLASS_COLORS[class] and RAID_CLASS_COLORS[class].colorStr and "|c"..RAID_CLASS_COLORS[class].colorStr or "")..L.classLocalizate[class],
+			func = module.options.rosteredit.class_click,
+			arg1 = class,
+		}
+	end
+
+	function module.options.rosteredit:role_click(role)
+		ELib:DropDownClose()
+
+		local data = self:GetParent().parent:GetParent().data
+		data[3] = role
+
+		module.options.rosteredit:Update()
+	end
+	module.options.rosteredit.RoleDD_List = {
+		{
+			text = "-",
+			func = module.options.rosteredit.role_click,
+		},
+	}
+	for i=1,#rolesList do
+		local roledata = rolesList[i]
+		module.options.rosteredit.RoleDD_List[#module.options.rosteredit.RoleDD_List+1] = {
+			text = roledata[2],
+			func = module.options.rosteredit.role_click,
+			arg1 = roledata[1],
+			atlas = roledata[3],
+		}
+	end
+
+	function module.options.rosteredit:UpdateView()
+		local pos = self.frame:GetVerticalScroll()
+
+		local spellsList = self.pList
+
+		local c = 0
+		for i=1,#spellsList do
+			local data = spellsList[i]
+			if data.pos + 25 >= pos and data.pos <= pos+self.frame:GetHeight() then
+				c = c + 1
+
+				local line = self.frame.lines[c]
+				if not line then
+					line = CreateFrame("Frame",nil,self.frame.C)
+					self.frame.lines[c] = line
+					line:SetSize(500,24)
+
+					line.edit = ELib:Edit(line):Size(200,20):Point("LEFT",5,0):OnChange(function(self,isUser)
+						local text = self:GetText() or ""
+						module.options.rosteredit.addButton:NewPoint("LEFT",self,"RIGHT",5,0):SetShown(text:trim() ~= "" and not self:GetParent().data) 
+						if not isUser then return end
+						local data = self:GetParent().data
+						if data then
+							data[1] = text
+						else
+							module.options.rosteredit.addButton.gtext = text
+						end
+					end)
+	
+					line.remove = ELib:Button(line,""):Size(12,20):Point("LEFT",line.edit,"RIGHT",3,0):OnClick(self.removeButton_click)
+					ELib:Text(line.remove,"x"):Point("CENTER",0,0)
+					line.remove.Texture:SetGradient("VERTICAL",CreateColor(0.35,0.06,0.09,1), CreateColor(0.50,0.21,0.25,1))
+					line.remove._i = i
+
+					line.bg = line:CreateTexture(nil,"BACKGROUND")
+					line.bg:SetAllPoints()
+	
+					line.class = ELib:DropDown(line,220,-1):Size(150):Point("LEFT",line.edit,"RIGHT",25,0)
+					line.class.List = module.options.rosteredit.ClassDD_List
+
+					line.role = ELib:DropDown(line,220,-1):Size(150):Point("LEFT",line.class,"RIGHT",10,0)
+					line.role.List = module.options.rosteredit.RoleDD_List
+				end
+
+				if data.data then 
+					line.edit:SetScript("OnEditFocusGained",self.editgname_OnEditFocusGained) 
+					line.edit:SetScript("OnEditFocusLost",self.editgname_OnEditFocusLost) 
+
+					line.remove:Show()
+					line.class:Show()
+					line.role:Show()
+				else
+					line.edit:SetScript("OnEditFocusGained",nil) 
+					line.edit:SetScript("OnEditFocusLost",nil) 
+
+					line.remove:Hide()
+					line.class:Hide()
+					line.role:Hide()
+				end
+		
+				line.data = data.data
+				line:SetPoint("TOPLEFT",10,-data.pos)
+				line.edit:SetText(data.data and data.data[1] or "")
+				line.class:AutoText(data.data and data.data[2])
+				line.role:AutoText(data.data and data.data[3])
+				line.data_i = data._i
+
+				local classColor = data.data and data.data[2] and RAID_CLASS_COLORS[ data.data[2] ]
+				line.bg:SetColorTexture(1,1,1,1)
+				if classColor then
+					line.bg:SetGradient("HORIZONTAL",CreateColor(classColor.r,classColor.g,classColor.b, .5), CreateColor(classColor.r,classColor.g,classColor.b, 0))
+				else
+					line.bg:SetGradient("HORIZONTAL",CreateColor(1,1,1, 0), CreateColor(1,1,1, 0))
+				end
+
+				line:SetWidth(max(200,self:GetWidth()))		
+
+				line:Show()
+			end
+		end
+		for i=c+1,#self.frame.lines do
+			self.frame.lines[i]:Hide()
+		end
+	end
+
+	function module.options.rosteredit:editgname_OnEditFocusGained()
+		self.prefocustext = self:GetText()
+	end
+	function module.options.rosteredit:editgname_OnEditFocusLost()
+		if self.prefocustext ~= self:GetText() then 
+			module.options.rosteredit:Update() 
+		end
+	end
+
+	function module.options.rosteredit:Update()
+		local names_len = #VMRT.Note.CustomRoster
+
+		self.pList = {}
+		for i=1,names_len do
+			self.pList[#self.pList + 1] = {
+				data = VMRT.Note.CustomRoster[i],
+				_i = i,
+			}
+		end
+		self.pList[#self.pList + 1] = {}
+
+		for i=1,#self.pList do
+			self.pList[i].pos = 50 + 25 * (i-1)
+		end
+
+		local maxheight = 50 + #self.pList * 25 + 15
+		local maxwidth = max(200, self:GetWidth())
+
+		self.frame:Height(maxheight)
+		self.frame:Width(maxwidth)
+
+		self:UpdateView()
+	end
+
+	module.options.rosteredit.frame:SetScript("OnVerticalScroll", function(self)
+		self:GetParent():UpdateView()
+	end)
+
+
+
+
 	local function RaidNamesOnEnter(self)
 		self.html:SetShadowColor(0.2, 0.2, 0.2, 1)
 	end
@@ -1623,6 +2096,89 @@ function module.options:Load()
 
 		button:SetScript("OnEnter", RaidNamesOnEnter)
 		button:SetScript("OnLeave", RaidNamesOnLeave)
+	end
+
+	function self:UpdateRoster_MovePage(page,doNotUpdate)
+		local pageNow = (self.rosterpage or 1) + page
+		if pageNow < 1 then pageNow = 1 end
+		local pageMax = ceil(#VMRT.Note.CustomRoster / 40)
+		if pageNow > pageMax then pageNow = pageMax end
+		self.rosterpage = pageNow
+		self.rosterPage:SetText(pageNow.."/"..pageMax)
+		if not doNotUpdate then
+			self:UpdateRoster()
+		end
+	end
+
+	self.rosterPage = ELib:Text(self.tab.tabs[1],"1/2",10):Point("TOPLEFT", 15+8*95+20,-60)
+	self.rosterPagePrev = ELib:Button(self.tab.tabs[1],"<"):Point("RIGHT", self.rosterPage,"LEFT",-2,0):Size(20,15):OnClick(function() module.options:UpdateRoster_MovePage(-1) end)
+	self.rosterPageNext = ELib:Button(self.tab.tabs[1],">"):Point("LEFT", self.rosterPage,"RIGHT",2,0):Size(20,15):OnClick(function() module.options:UpdateRoster_MovePage(1) end)
+
+	local gruevent = {}
+	function self:UpdateRoster()
+		local rosterType = module.options.rosterType or 1
+		for i=1,8 do gruevent[i] = 0 end
+		if rosterType == 1 then
+			for _,name, subgroup, class, guid, rank, level, online, isDead, combatRole in MRT.F.IterateRoster do
+				gruevent[subgroup] = gruevent[subgroup] + 1
+		
+				local POS = gruevent[subgroup] + (subgroup - 1) * 5
+				local obj = module.options.raidnames[POS]
+		
+				if obj then
+					local cR,cG,cB = MRT.F.classColorNum(class)
+					name = MRT.F.delUnitNameServer(name)
+					local colorCode = MRT.F.classColor(class)
+					obj.iconText = "||c"..colorCode..name.."||r "
+					obj.iconTextShift = name
+					local roleicon = combatRole and roleToIcon[combatRole]
+					obj.html:SetText((roleicon or "")..name)
+					obj.html:SetTextColor(cR, cG, cB, 1)
+				end
+			end
+			module.options.rosterPage:Hide()
+			module.options.rosterPagePrev:Hide()
+			module.options.rosterPageNext:Hide()
+		elseif rosterType == 2 then
+			local start = ((self.rosterpage or 1) - 1) * 40 + 1
+			if start > #VMRT.Note.CustomRoster then
+				start = 1
+				self.rosterpage = 1
+			end
+			self:UpdateRoster_MovePage(0,true)
+			local c = 0
+			for i=start,#VMRT.Note.CustomRoster do
+				c = c + 1
+				if c > 40 then break end
+				subgroup = floor((c - 1) / 5) + 1
+				gruevent[subgroup] = gruevent[subgroup] + 1
+		
+				local POS = gruevent[subgroup] + (subgroup - 1) * 5
+				local obj = module.options.raidnames[POS]
+		
+				if obj then
+					local cR,cG,cB = MRT.F.classColorNum(VMRT.Note.CustomRoster[i][2] or "")
+					name = VMRT.Note.CustomRoster[i][1]
+					local colorCode = MRT.F.classColor(VMRT.Note.CustomRoster[i][2] or "")
+					obj.iconText = "||c"..colorCode..name.."||r "
+					obj.iconTextShift = name
+					local roleicon = VMRT.Note.CustomRoster[i][3] and roleToIcon[ VMRT.Note.CustomRoster[i][3] ]
+					obj.html:SetText((roleicon or "")..name)
+					obj.html:SetTextColor(cR, cG, cB, 1)
+				end
+			end
+			module.options.rosterPage:SetShown(#VMRT.Note.CustomRoster > 40)
+			module.options.rosterPagePrev:SetShown(#VMRT.Note.CustomRoster > 40)
+			module.options.rosterPageNext:SetShown(#VMRT.Note.CustomRoster > 40)
+		end
+		for i=1,8 do
+			for j=(gruevent[i]+1),5 do
+				local frame = module.options.raidnames[(i-1)*5+j]
+				frame.iconText = ""
+				frame.iconTextShift = ""
+				frame.html:SetText("")
+			end
+		end
 	end
 
 	self.lastUpdate = ELib:Text(self.tab.tabs[1],"",11):Size(600,20):Point("TOPLEFT",self.NotesList,"BOTTOMLEFT",3,-6):Top():Color()
@@ -1664,7 +2220,7 @@ function module.options:Load()
 	end)  
 
 
-	self.chkOnlyInRaid = ELib:Check(self.tab.tabs[2],L.MarksBarDisableInRaid,VMRT.Note.HideOutsideRaid):Point(15,-40):OnClick(function(self) 
+	self.chkOnlyInRaid = ELib:Check(self.tab.tabs[2],L.MarksBarDisableInRaid,VMRT.Note.HideOutsideRaid):Point("TOPLEFT",self.chkOnlyPromoted,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.HideOutsideRaid = true
 		else
@@ -1673,7 +2229,7 @@ function module.options:Load()
 		module:Visibility()
 	end) 
 
-	self.chkOnlyInRaidKInstance = ELib:Check(self.tab.tabs[2],L.NoteShowOnlyInRaid,VMRT.Note.ShowOnlyInRaid):Point(15,-65):OnClick(function(self) 
+	self.chkOnlyInRaidKInstance = ELib:Check(self.tab.tabs[2],L.NoteShowOnlyInRaid,VMRT.Note.ShowOnlyInRaid):Point("TOPLEFT",self.chkOnlyInRaid,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.ShowOnlyInRaid = true
 			module:RegisterEvents('ZONE_CHANGED_NEW_AREA')
@@ -1684,7 +2240,7 @@ function module.options:Load()
 		module:Visibility()
 	end) 
 
-	self.chkOnlySelf = ELib:Check(self.tab.tabs[2],L.NoteShowOnlyPersonal,VMRT.Note.ShowOnlyPersonal):Point(15,-90):OnClick(function(self) 
+	self.chkOnlySelf = ELib:Check(self.tab.tabs[2],L.NoteShowOnlyPersonal,VMRT.Note.ShowOnlyPersonal):Point("TOPLEFT",self.chkOnlyInRaidKInstance,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.ShowOnlyPersonal = true
 		else
@@ -1693,7 +2249,7 @@ function module.options:Load()
 		module.allframes:UpdateText()
 	end) 
 
-	self.chkSelfWindow = ELib:Check(self.tab.tabs[2],L.NotePersonalWindow,VMRT.Note.PersonalWindow):Point(15,-115):OnClick(function(self) 
+	self.chkSelfWindow = ELib:Check(self.tab.tabs[2],L.NotePersonalWindow,VMRT.Note.PersonalWindow):Point("TOPLEFT",self.chkOnlySelf,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.PersonalWindow = true
 			module.frame_personal:Enable()
@@ -1706,7 +2262,7 @@ function module.options:Load()
 
 
 
-	self.chkHideInCombat = ELib:Check(self.tab.tabs[2],L.NoteHideInCombat,VMRT.Note.HideInCombat):Point(15,-140):OnClick(function(self) 
+	self.chkHideInCombat = ELib:Check(self.tab.tabs[2],L.NoteHideInCombat,VMRT.Note.HideInCombat):Point("TOPLEFT",self.chkSelfWindow,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.HideInCombat = true
 			module:RegisterEvents('PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED')
@@ -1717,7 +2273,7 @@ function module.options:Load()
 		module:Visibility()
 	end) 
 
-	self.chkSaveAllNew = ELib:Check(self.tab.tabs[2],L.NoteSaveAllNew,VMRT.Note.SaveAllNew):Point(15,-165):OnClick(function(self) 
+	self.chkSaveAllNew = ELib:Check(self.tab.tabs[2],L.NoteSaveAllNew,VMRT.Note.SaveAllNew):Point("TOPLEFT",self.chkHideInCombat,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.SaveAllNew = true
 		else
@@ -1725,7 +2281,7 @@ function module.options:Load()
 		end
 	end) 
 
-	self.chkEnableWhenReceive = ELib:Check(self.tab.tabs[2],L.NoteEnableWhenReceive,VMRT.Note.EnableWhenReceive):Point(15,-190):OnClick(function(self) 
+	self.chkEnableWhenReceive = ELib:Check(self.tab.tabs[2],L.NoteEnableWhenReceive,VMRT.Note.EnableWhenReceive):Point("TOPLEFT",self.chkSaveAllNew,"BOTTOMLEFT",0,-5):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.Note.EnableWhenReceive = true
 		else
@@ -1733,13 +2289,75 @@ function module.options:Load()
 		end
 	end) 
 
-	self.sliderFontSize = ELib:Slider(self.tab.tabs[2],L.NoteFontSize):Size(300):Point(16,-225):Range(6,72):SetTo(VMRT.Note.FontSize or 12):OnChange(function(self,event) 
+	self.chkEnableBossAutoLoad = ELib:Check(self.tab.tabs[2],L.NoteEnableBossAutoLoad,VMRT.Note.EnableBossAutoLoad):Tooltip(L.NoteEnableBossAutoLoadTip):Point("TOPLEFT",self.chkEnableWhenReceive,"BOTTOMLEFT",0,-5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.Note.EnableBossAutoLoad = true
+			module:RegisterEvents('ZONE_CHANGED','ZONE_CHANGED_INDOORS')
+		else
+			VMRT.Note.EnableBossAutoLoad = nil
+		end
+	end) 
+
+	self.dropDownBossAutoLoadType = ELib:DropDown(self.tab.tabs[2],350,3):Point("LEFT",self.chkEnableBossAutoLoad,315,-0):Size(300):SetText(L["NoteEnableBossAutoLoadType"..(VMRT.Note.BossAutoLoadType or 3)])
+	function self.dropDownBossAutoLoadType:SetValue(arg1)
+		ELib:DropDownClose()
+		VMRT.Note.BossAutoLoadType = arg1
+		module.options.dropDownBossAutoLoadType:SetText(L["NoteEnableBossAutoLoadType"..arg1])
+	end
+	for i=1,3 do
+		self.dropDownBossAutoLoadType.List[i] = {
+			text = L["NoteEnableBossAutoLoadType"..i],
+			arg1 = i,
+			func = self.dropDownBossAutoLoadType.SetValue,
+		}
+	end
+
+	self.chkBossAutoLoadSend = ELib:Check(self.tab.tabs[2],L.NoteBossAutoLoadSendAsRL,VMRT.Note.BossAutoLoadSendAsRL):Tooltip(L.NoteEnableBossAutoLoadTip):Point("TOPLEFT",self.chkEnableBossAutoLoad,"BOTTOMLEFT",25,-5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.Note.BossAutoLoadSendAsRL = true
+		else
+			VMRT.Note.BossAutoLoadSendAsRL = nil
+		end
+	end) 
+
+	self.chkBossAutoLoadPersonal = ELib:Check(self.tab.tabs[2],L.NoteBossAutoLoadPersonal,VMRT.Note.BossAutoLoadPersonal):Point("TOPLEFT",self.chkBossAutoLoadSend,"BOTTOMLEFT",0,-5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.Note.BossAutoLoadPersonal = true
+		else
+			VMRT.Note.BossAutoLoadPersonal = nil
+		end
+	end) 
+
+
+	if MRT.isClassic and not MRT.isCata then
+		self.dropDownBossAutoLoadType:Hide()
+		self.chkEnableBossAutoLoad:Hide()
+		self.chkBossAutoLoadSend:Hide()
+		self.chkBossAutoLoadPersonal:Hide()
+	end
+
+	self.sliderFontSize = ELib:Slider(self.tab.tabs[2],L.NoteFontSize):Size(300):Point("TOPLEFT",self.chkEnableBossAutoLoad,"BOTTOMLEFT",0,-20-45):Range(6,72):SetTo(VMRT.Note.FontSize or 12):OnChange(function(self,event) 
 		event = event - event%1
 		VMRT.Note.FontSize = event
 		module.allframes:UpdateFont()
 		self.tooltipText = event
 		self:tooltipReload(self)
 	end)
+
+	local function DropDownTextAlign_Click(_,arg)
+		VMRT.Note.TextAlign = arg
+		ELib:DropDownClose()
+		module.allframes:UpdateFont()
+		self.dropDownTextAlign:AutoText(VMRT.Note.TextAlign)
+	end
+
+	self.dropDownTextAlign = ELib:DropDown(self.tab.tabs[2],350,3):Point("LEFT",self.sliderFontSize,"LEFT",450,0):Size(300):AddText(L.NoteFontTextAlign..":")
+	self.dropDownTextAlign.List = {
+		{text = L.cd2ColSetFontPosLeft, arg1 = nil, func = DropDownTextAlign_Click},
+		{text = L.cd2ColSetFontPosRight, arg1 = 2, func = DropDownTextAlign_Click},
+		{text = L.cd2ColSetFontPosCenter, arg1 = 3, func = DropDownTextAlign_Click},
+	}
+	self.dropDownTextAlign:AutoText(VMRT.Note.TextAlign)
 
 	local function DropDownFont_Click(_,arg)
 		VMRT.Note.FontName = arg
@@ -1749,7 +2367,7 @@ function module.options:Load()
 		module.allframes:UpdateFont()
 	end
 
-	self.dropDownFont = ELib:DropDown(self.tab.tabs[2],350,10):Point(15,-255):Size(300)
+	self.dropDownFont = ELib:DropDown(self.tab.tabs[2],350,10):Point("TOPLEFT",self.sliderFontSize,"TOPLEFT",0,-30):Size(300)
 	for i=1,#MRT.F.fontList do
 		self.dropDownFont.List[i] = {}
 		local info = self.dropDownFont.List[i]
@@ -1784,7 +2402,7 @@ function module.options:Load()
 		module.allframes:UpdateFont()
 	end) 
 
-	self.slideralpha = ELib:Slider(self.tab.tabs[2],L.messagebutalpha):Size(300):Point(16,-300):Range(0,100):SetTo(VMRT.Note.Alpha or 100):OnChange(function(self,event) 
+	self.slideralpha = ELib:Slider(self.tab.tabs[2],L.messagebutalpha):Size(300):Point("TOPLEFT",self.dropDownFont,"BOTTOMLEFT",0,-20):Range(0,100):SetTo(VMRT.Note.Alpha or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VMRT.Note.Alpha = event
 		module.allframes:SetAlpha(event/100)
@@ -1792,15 +2410,7 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 
-	self.sliderscale = ELib:Slider(self.tab.tabs[2],L.messagebutscale):Size(300):Point(16,-370):Range(5,200):SetTo(VMRT.Note.Scale or 100):OnChange(function(self,event) 
-		event = event - event%1
-		VMRT.Note.Scale = event
-		module.allframes:ScaleFix(event/100)
-		self.tooltipText = event
-		self:tooltipReload(self)
-	end)
-
-	self.slideralphaback = ELib:Slider(self.tab.tabs[2],L.messageBackAlpha):Size(300):Point(16,-335):Range(0,100):SetTo(VMRT.Note.ScaleBack or 100):OnChange(function(self,event) 
+	self.slideralphaback = ELib:Slider(self.tab.tabs[2],L.messageBackAlpha):Size(300):Point("TOPLEFT",self.slideralpha,"BOTTOMLEFT",0,-20):Range(0,100):SetTo(VMRT.Note.ScaleBack or 100):OnChange(function(self,event) 
 		event = event - event%1
 		VMRT.Note.ScaleBack = event
 		module.allframes.background:SetColorTexture(0, 0, 0, event/100)
@@ -1808,7 +2418,15 @@ function module.options:Load()
 		self:tooltipReload(self)
 	end)
 
-	self.moreOptionsDropDown = ELib:DropDown(self.tab.tabs[2],275,#frameStrataList+1):Point(15,-405):Size(300):SetText(L.NoteFrameStrata)
+	self.sliderscale = ELib:Slider(self.tab.tabs[2],L.messagebutscale):Size(300):Point("TOPLEFT",self.slideralphaback,"BOTTOMLEFT",0,-20):Range(5,200):SetTo(VMRT.Note.Scale or 100):OnChange(function(self,event) 
+		event = event - event%1
+		VMRT.Note.Scale = event
+		module.allframes:ScaleFix(event/100)
+		self.tooltipText = event
+		self:tooltipReload(self)
+	end)
+
+	self.moreOptionsDropDown = ELib:DropDown(self.tab.tabs[2],275,#frameStrataList+1):Point("TOPLEFT",self.sliderscale,"BOTTOMLEFT",0,-15):Size(300):SetText(L.NoteFrameStrata)
 
 	local function moreOptionsDropDown_SetVaule(_,arg)
 		VMRT.Note.Strata = arg
@@ -1832,7 +2450,7 @@ function module.options:Load()
 		ELib:DropDownClose()
 	end})
 
-	self.ButtonToCenter = ELib:Button(self.tab.tabs[2],L.MarksBarResetPos):Size(300,20):Point(15,-435):Tooltip(L.MarksBarResetPosTooltip):OnClick(function()
+	self.ButtonToCenter = ELib:Button(self.tab.tabs[2],L.MarksBarResetPos):Size(300,20):Point("TOPLEFT",self.moreOptionsDropDown,"BOTTOMLEFT",0,-5):Tooltip(L.MarksBarResetPosTooltip):OnClick(function()
 		VMRT.Note.Left = nil
 		VMRT.Note.Top = nil
 
@@ -2393,8 +3011,8 @@ function module.options:Load()
 		"|n|cffffff00{time:|r|cff00ff004:15,glow|r|cffffff00}|r - "..L.NoteHelpAdv7..
 		"|n|cffffff00{time:|r|cff00ff000:45,wa:nzoth_hs1|r|cffffff00}|r - "..L.NoteHelpAdv4..
 		"|n   WA Function example:|n   Events: |cffffff00MRT_NOTE_TIME_EVENT|r|n   |cffff8bf3function(event,...)|n     if event == \"MRT_NOTE_TIME_EVENT\" then|n       local timerName, timeLeft, noteText = ...|n       if timerName == \"nzoth_hs1\" and timeLeft == 3 then|n         return true|n       end|n     end|n   end|r|n"..
-		"|n"..L.NoteHelpAdv5.."|n |cffe6ff15{time:0:30,SCC:17:2,wa:eventName1,wa:eventName2}|r|n |cffff9f05{time:1:40,p:Shade of Kael'thas}|r|n |cffe6ff15{p,SCC:17:2}Until end of the fight{/p}|r|n |cffff9f05{p,SCC:17:2,SCC:17:3}Until second condition{/p}|r|n |cffe6ff15{pShade of Kael'thas}Phase with name{/p}|r|n |cffff9f05{time:0:20,p2,wa:use_hs,glowall}|r"..
-		"|n |cffe6ff15{time:65,SCC:17:2:"..UnitName'player'.."} Count casts only for player "..UnitName'player'.." |r|n |cffe6ff15{time:1:05,SCC:17:2::p3} Count casts only on phase 3 |r"
+		"|n"..L.NoteHelpAdv5.."|n |cffe6ff15{time:0:30,SCC:17:2,wa:eventName1,wa:eventName2}|r|n |cffff9f05{time:1:40,p1.5}First intermission|r|n |cffe6ff15{p,SCC:17:2}Until end of the fight{/p}|r|n |cffff9f05{p,SCC:17:2,SCC:17:3}Until second condition{/p}|r|n|n |cffe6ff15{time:0:20,p2,wa:use_hs,glowall}|r"..
+		"|n |cffff9f05{time:65,SCC:17:2:"..UnitName'player'.."} Count casts only for player "..UnitName'player'.." |r|n |cffe6ff15{time:1:05,SCC:17:2::p3} Count casts only on phase 3 |r"
 	):Point("LEFT",10,0):Point("RIGHT",-10,0):Point("TOP",0,-5):Color()
 
 	local height = self.textHelpAdv:GetHeight()
@@ -2426,6 +3044,7 @@ function module.options:Load()
 			local FontNameForDropDown = arg:match("\\([^\\]*)$")
 			self.dropDownFont:SetText(FontNameForDropDown or arg)
 		end
+		self.dropDownTextAlign:AutoText(VMRT.Note.TextAlign)
 		self.chkOutline:SetChecked(VMRT.Note.Outline)
 		self.slideralpha:SetTo(VMRT.Note.Alpha or 100)
 		self.sliderscale:SetTo(VMRT.Note.Scale or 100)
@@ -2433,6 +3052,11 @@ function module.options:Load()
 		self.chkTimersHidePassed:SetChecked(VMRT.Note.TimerPassedHide)
 		self.chkTimersGlow:SetChecked(VMRT.Note.TimerGlow)
 		self.chkTimersOnlyMy:SetChecked(VMRT.Note.TimerOnlyMy)
+
+		self.chkEnableBossAutoLoad:SetChecked(VMRT.Note.EnableBossAutoLoad)
+		self.dropDownBossAutoLoadType:SetText(L["NoteEnableBossAutoLoadType"..(VMRT.Note.BossAutoLoadType or 3)])
+		self.chkBossAutoLoadSend:SetChecked(VMRT.Note.BossAutoLoadSendAsRL)
+		self.chkBossAutoLoadPersonal:SetChecked(VMRT.Note.BossAutoLoadPersonal)
 
 		self.frameTypeGlow1:SetChecked(false)
 		self.frameTypeGlow1:SetChecked(false)
@@ -2481,10 +3105,14 @@ local function NoteWindow_UpdateFont(self)
 	local font = VMRT and VMRT.Note and VMRT.Note.FontName or MRT.F.defFont
 	local size = VMRT and VMRT.Note and VMRT.Note.FontSize or 12
 	local outline = VMRT and VMRT.Note and VMRT.Note.Outline and "OUTLINE" or ""
+	local align = VMRT and VMRT.Note and ((VMRT.Note.TextAlign == 2 and "RIGHT") or (VMRT.Note.TextAlign == 3 and "CENTER")) or "LEFT"
 	local isValidFont = self.text:SetFont(font,size,outline)
+	self.text:SetJustifyH(align)
+
 	local c = 2
 	while self["text"..c] do
 		self["text"..c]:SetFont(font,size,outline)
+		self["text"..c]:SetJustifyH(align)
 		c = c + 1
 	end
 
@@ -2924,15 +3552,59 @@ setmetatable(module.allframes, {__index = function(table, key)
 	end
 end})
 
+module.db.History = {}
+function module:AddHistory(text, index)
+	if not text or index == -2 or not index or text:trim() == "" or module.db.HistoryLock then
+		return
+	end
+	if not (module.db.History[1] and module.db.History[1].index == index) then
+		tinsert(module.db.History, 1, {text = text, index = index, time = GetTime(), bossID = VMRT.Note.AutoLoad[0], name = VMRT.Note.DefName})
+	end
+	module.db.History[1].text = text
+
+	for i=11,#module.db.History do
+		module.db.History[i] = nil
+	end
+end
+function module:ModHistory(index, data)
+	if not module.db.History[1] or module.db.History[1].index ~= index or module.db.HistoryLock then
+		return
+	end
+	for k,val in pairs(data) do
+		if val == -1 then
+			module.db.History[1][k] = nil
+		else
+			module.db.History[1][k] = val
+		end
+	end
+end
+function module:SaveText(text, index)
+  	VMRT.Note.Text1 = text
+
+	module:AddHistory(text, index)
+end
+
+function module.frame:SetTo(blackNoteID)
+	module:SaveText(blackNoteID and VMRT.Note.Black[blackNoteID] or VMRT.Note.Text1 or "")
+
+	if blackNoteID then
+		VMRT.Note.AutoLoad[0] = VMRT.Note.AutoLoad[blackNoteID]
+		VMRT.Note.DefName = VMRT.Note.BlackNames[blackNoteID]
+		if VMRT.Note.DefName then
+			VMRT.Note.DefName = VMRT.Note.DefName:gsub("%*$","")
+		end
+
+		module:ModHistory(nil, {bossID = VMRT.Note.AutoLoad[0], name = VMRT.Note.DefName})
+	end
+
+	module.allframes:UpdateText()
+	module.frame:UpdateOptionsText() 
+end
 
 function module.frame:Save(blackNoteID)
-	VMRT.Note.Text1 = (blackNoteID and VMRT.Note.Black[blackNoteID] or VMRT.Note.Text1 or "")
+	module.frame:SetTo(blackNoteID)
 
 	MRT.F:FireCallback("Note_SendText",VMRT.Note.Text1)
-
-	if not blackNoteID and module.options.NoteEditBox and VMRT.Note.OptionsFormatting then
-	--	VMRT.Note.Text1 = VMRT.Note.Text1:gsub("|([Ttcr])","||%1")
-	end
 
 	if #VMRT.Note.Text1 == 0 then
 		VMRT.Note.Text1 = " "
@@ -2952,14 +3624,6 @@ function module.frame:Save(blackNoteID)
 	end
 	local encounterID = VMRT.Note.AutoLoad[blackNoteID or 0] or "-"
 	local noteName = (blackNoteID and VMRT.Note.BlackNames[blackNoteID]) or (not blackNoteID and VMRT.Note.DefName) or ""
-
-	if blackNoteID then
-		VMRT.Note.AutoLoad[0] = VMRT.Note.AutoLoad[blackNoteID]
-		VMRT.Note.DefName = VMRT.Note.BlackNames[blackNoteID]
-		if VMRT.Note.DefName then
-			VMRT.Note.DefName = VMRT.Note.DefName:gsub("%*$","")
-		end
-	end
 
 	if MRT.isClassic and not MRT.isLK and false then
 		local MSG_LIMIT_COUNT = 10
@@ -2993,6 +3657,22 @@ function module.frame:Clear()
 	module.options.NoteEditBox.EditBox:SetText("") 
 end 
 
+function module.frame:UpdateOptionsText(onlyPage) 
+	if module.options.NoteEditBox then
+		if module.options.IsMainNoteNow and not onlyPage then
+			module.options.NoteEditBox.EditBox:SetText(VMRT.Note.Text1)
+		end
+
+		if VMRT.Note.LastUpdateName then
+			module.options.lastUpdate:SetText( L.NoteLastUpdate..": "..VMRT.Note.LastUpdateName.." ("..date("%H:%M:%S %d.%m.%Y",VMRT.Note.LastUpdateTime or 0)..")" )
+		else
+			module.options.lastUpdate:SetText( "" )
+		end
+
+		module.options.UpdatePageAfterGettingNote()
+	end
+end 
+
 function module:addonMessage(sender, prefix, ...)
 	if prefix == "multiline" then
 		if VMRT.Note.OnlyPromoted and IsInRaid() and not MRT.F.IsPlayerRLorOfficer(sender) then
@@ -3009,20 +3689,13 @@ function module:addonMessage(sender, prefix, ...)
 			module.db.lasttext = lastnowtext
 		end
 		module.db.msgindex = msgnowindex
-		VMRT.Note.Text1 = module.db.lasttext
+		module:SaveText(module.db.lasttext, module.db.msgindex)
+		module:ModHistory(module.db.msgindex, {bossID = -1, name = -1})
 		MRT.F:FireCallback("Note_ReceivedText",VMRT.Note.Text1)
 		module.allframes:UpdateText()
-		if module.options.NoteEditBox then
-			if module.options.IsMainNoteNow then
-				module.options.NoteEditBox.EditBox:SetText(VMRT.Note.Text1)
-			end
-
-			module.options.lastUpdate:SetText( L.NoteLastUpdate..": "..VMRT.Note.LastUpdateName.." ("..date("%H:%M:%S %d.%m.%Y",VMRT.Note.LastUpdateTime)..")" )
-		end
 		VMRT.Note.AutoLoad[0] = nil
-		if module.options.UpdatePageAfterGettingNote then
-			module.options.UpdatePageAfterGettingNote()
-		end
+		VMRT.Note.DefName = nil
+		module.frame:UpdateOptionsText()
 		if VMRT.Note.EnableWhenReceive and not VMRT.Note.enabled then
 			module:Enable()
 		end
@@ -3035,9 +3708,6 @@ function module:addonMessage(sender, prefix, ...)
 		if VMRT.Note.OnlyPromoted and IsInRaid() and not MRT.F.IsPlayerRLorOfficer(sender) then
 			return
 		end
-		if sender == MRT.SDB.charKey then
-			return
-		end
 		local msgIndex,encounterID,noteName = ...
 		if tostring(msgIndex) ~= tostring(module.db.msgindex) then
 			return
@@ -3046,6 +3716,11 @@ function module:addonMessage(sender, prefix, ...)
 		if noteName == "" then noteName = nil end
 		VMRT.Note.AutoLoad[0] = encounterID
 		VMRT.Note.DefName = noteName
+		module.frame:UpdateOptionsText(true)
+		module:ModHistory(module.db.msgindex, {bossID = VMRT.Note.AutoLoad[0] or -1, name = VMRT.Note.DefName or -1})
+		if sender == MRT.SDB.charKey then
+			return
+		end
 		if VMRT.Note.SaveAllNew then
 			local finded = false
 			if noteName then
@@ -3099,8 +3774,6 @@ function module:addonMessage(sender, prefix, ...)
 	end 
 end 
 
-local gruevent = {}
-
 NewVMRTTableData = {
 	OnlyPromoted = true,
 	OptionsFormatting = true,
@@ -3133,6 +3806,10 @@ function module.main:ADDON_LOADED()
 	VMRT.Note.BlackLastUpdateName = VMRT.Note.BlackLastUpdateName or {}
 	VMRT.Note.BlackLastUpdateTime = VMRT.Note.BlackLastUpdateTime or {}
 
+	if not VMRT.Note.CustomRoster then
+		VMRT.Note.CustomRoster = {}
+	end
+
 	if VMRT.Note.enabled then 
 		module:Enable()
 	else
@@ -3145,6 +3822,7 @@ function module.main:ADDON_LOADED()
 	if VMRT.Note.Text1 then 
 		module.allframes:UpdateText()
 	end
+	module:SaveText(VMRT.Note.Text1, -1)
 
 	module:RegisterAddonMessage()
 	module:RegisterSlash()
@@ -3186,6 +3864,9 @@ function module:Enable()
 	else
 		module.frame_personal:Disable()
 	end
+	if VMRT.Note.EnableBossAutoLoad then
+		module:RegisterEvents('ZONE_CHANGED','ZONE_CHANGED_INDOORS')
+	end
 	module:Visibility()
 	GSUB_AutoColorCreate()
 end
@@ -3195,7 +3876,7 @@ function module:Disable()
 	if module.options.chkEnable then
 		module.options.chkEnable:SetChecked(false)
 	end
-	module:UnregisterEvents('PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED',"PLAYER_LOGIN","ENCOUNTER_END","ENCOUNTER_START")
+	module:UnregisterEvents('PLAYER_REGEN_DISABLED','PLAYER_REGEN_ENABLED',"PLAYER_LOGIN","ENCOUNTER_END","ENCOUNTER_START",'ZONE_CHANGED')
 	module:Visibility()
 end
 
@@ -3243,31 +3924,7 @@ function module.main:GROUP_ROSTER_UPDATE()
 	if not module.options.raidnames or not module.options:IsVisible() then
 		return
 	end
-	for i=1,8 do gruevent[i] = 0 end
-	for _,name,subgroup,class in MRT.F.IterateRoster do
-		gruevent[subgroup] = gruevent[subgroup] + 1
-		local cR,cG,cB = MRT.F.classColorNum(class)
-
-		local POS = gruevent[subgroup] + (subgroup - 1) * 5
-		local obj = module.options.raidnames[POS]
-
-		if obj then
-			name = MRT.F.delUnitNameServer(name)
-			local colorCode = MRT.F.classColor(class)
-			obj.iconText = "||c"..colorCode..name.."||r "
-			obj.iconTextShift = name
-			obj.html:SetText(name)
-			obj.html:SetTextColor(cR, cG, cB, 1)
-		end
-	end
-	for i=1,8 do
-		for j=(gruevent[i]+1),5 do
-			local frame = module.options.raidnames[(i-1)*5+j]
-			frame.iconText = ""
-			frame.iconTextShift = ""
-			frame.html:SetText("")
-		end
-	end
+	module.options:UpdateRoster()
 end 
 function module.main:PLAYER_REGEN_DISABLED()
 	Note_CombatState = true
@@ -3280,6 +3937,8 @@ end
 
 function module.main:ZONE_CHANGED_NEW_AREA()
 	C_Timer.After(1,module.CheckZoneProfiles)
+
+	module.main:ZONE_CHANGED()
 
 	if VMRT.Note.enabled and VMRT.Note.ShowOnlyInRaid then
 		C_Timer.After(5, module.Visibility)
@@ -3313,10 +3972,91 @@ function module.main:PLAYER_TALENT_UPDATE(unit)
 end
 
 
+local SubzoneTextToBossID = MRT.Data.SubzoneTextToBossID
+local locale = GetLocale()
+SubzoneTextToBossID = SubzoneTextToBossID[locale or "enUS"] or SubzoneTextToBossID.enUS
+
+--SubzoneTextToBossID['"Сломанный клык"']=2922
+local SubzoneBossIDInctanceReq = MRT.Data.SubzoneBossIDInctanceReq
+
+local function CheckSubZone()
+	if module.db.isEncounter then
+		return
+	end
+	local zoneText = GetSubZoneText()
+	
+	if zoneText then
+		local bossID = SubzoneTextToBossID[zoneText]
+		if not bossID and locale == "enUS" then
+			bossID = SubzoneTextToBossID["The "..zoneText]
+		end
+		if bossID then
+			if SubzoneBossIDInctanceReq[bossID] and select(8,GetInstanceInfo()) ~= SubzoneBossIDInctanceReq[bossID] then
+				return
+			end
+
+			if not VMRT.Note.BossAutoLoadPersonal and VMRT.Note.AutoLoad[0] == bossID then	--some note already here
+				return
+			end
+			local noteID
+
+			if VMRT.Note.BossAutoLoadType == 1 then
+				for i=1,#VMRT.Note.Black do
+					if VMRT.Note.AutoLoad[i] == bossID then
+						noteID = i
+						break
+					end
+				end
+			elseif VMRT.Note.BossAutoLoadType == 2 then
+				for i=#VMRT.Note.Black,1,-1 do
+					if VMRT.Note.AutoLoad[i] == bossID then
+						noteID = i
+						break
+					end
+				end
+			elseif (VMRT.Note.BossAutoLoadType or 3) == 3 then
+				local lastupd, nid = 0
+				for i=1,#VMRT.Note.Black do
+					if VMRT.Note.AutoLoad[i] == bossID and (VMRT.Note.BlackLastUpdateTime[i] or 0)>lastupd then
+						lastupd = VMRT.Note.BlackLastUpdateTime[i]
+						nid = i
+					end
+				end
+				if nid then
+					noteID = nid
+				end
+			end
+
+			if noteID then
+				if VMRT.Note.BossAutoLoadPersonal then
+					VMRT.Note.SelfText = VMRT.Note.Black[noteID]
+
+					module.allframes:UpdateText()
+					module.frame:UpdateOptionsText() 
+				elseif VMRT.Note.BossAutoLoadSendAsRL and MRT.F.IsPlayerRLorOfficer("player") == 2 then
+					module.frame:Save(noteID)
+				else
+					module.frame:SetTo(noteID)
+				end
+			end		
+		end
+	end
+end
+
+function module.main:ZONE_CHANGED()
+	if not VMRT.Note.EnableBossAutoLoad then return end
+
+	C_Timer.After(1,CheckSubZone)
+end
+module.main.ZONE_CHANGED_INDOORS = module.main.ZONE_CHANGED
+
+
 do
 	local ResetCLEUData
 	local currPhase = 1
 	local currGlobalPhase = 1
+
+	module.db.encounter_global_stage = 1
 
 	function module.main:SetPhase(stage, globalStage)
 		wipe(encounter_time_p)
@@ -3330,16 +4070,8 @@ do
 			currGlobalPhase = globalStage
 		else
 			currGlobalPhase = currGlobalPhase + 1
+			encounter_time_p["g"..tostring(currGlobalPhase)] = t
 		end
-		--[[
-		if module.db.encounter_counters_time then
-			for k,v in pairs(module.db.encounter_counters_time) do
-				if k:find(":p%d+$") then
-					module.db.encounter_counters_time[k]=nil
-				end
-			end
-		end
-		]]
 		if module.frame:IsShown() then
 			module.allframes:UpdateText()
 		end
@@ -3353,6 +4085,8 @@ do
 		if type(BigWigsLoader)=='table' and BigWigsLoader.RegisterMessage then
 			BigWigsLoader.RegisterMessage({}, "BigWigs_SetStage", function(event, addon, stage)
 				if stage then
+					if module.db.encounter_time and GetTime() - module.db.encounter_time < 2 then return end	--pull poss
+
 					module.main:SetPhase(stage)
 				end
 			end)
@@ -3371,6 +4105,7 @@ do
 
 	local phaseCombatEvents = {}
 	function module.main:ENCOUNTER_START(encounterID, encounterName, difficultyID, groupSize)
+		module.db.isEncounter = encounterID
 		local noteText = (VMRT.Note.Text1 or "")..(VMRT.Note.SelfText or "")
 		if encounterID and encounterName then
 			encounter_id[tostring(encounterID)] = true
@@ -3429,6 +4164,7 @@ do
 		module.allframes:UpdateText()
 	end
 	function module.main:ENCOUNTER_END()
+		module.db.isEncounter = nil
 		wipe(encounter_id)
 
 		module:UnregisterTimer()

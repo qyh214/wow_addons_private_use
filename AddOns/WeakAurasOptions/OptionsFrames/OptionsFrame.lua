@@ -325,7 +325,8 @@ function OptionsPrivate.CreateFrame()
 
 
   local minimizebutton = CreateFrame("Button", nil, frame, "MaximizeMinimizeButtonFrameTemplate")
-  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicOrCata() and  10 or 0, 0)
+  minimizebutton:SetFrameLevel(frame.TitleContainer:GetFrameLevel() + 1)
+  minimizebutton:SetPoint("RIGHT", frame.CloseButton, "LEFT", WeakAuras.IsClassicOrCata() and 10 or 0, 0)
   minimizebutton:SetOnMaximizedCallback(function()
     frame.minimized = false
     local right, top = frame:GetRight(), frame:GetTop()
@@ -500,7 +501,7 @@ function OptionsPrivate.CreateFrame()
   local thanksListCJ = lineWrapDiscordList(OptionsPrivate.Private.DiscordListCJ)
   local thanksListK = lineWrapDiscordList(OptionsPrivate.Private.DiscordListK)
 
-  local discordButton = addFooter(L["Join Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/xhUHVCgAGy",
+  local discordButton = addFooter(L["Join Discord"], [[Interface\AddOns\WeakAuras\Media\Textures\discord.tga]], "https://discord.gg/weakauras",
             L["Chat with WeakAuras experts on our Discord server."])
   discordButton:SetParent(tipFrame)
   discordButton:SetPoint("LEFT", tipFrame, "LEFT")
@@ -515,6 +516,20 @@ function OptionsPrivate.CreateFrame()
   thanksButton:SetParent(tipFrame)
   thanksButton:SetPoint("LEFT", documentationButton, "RIGHT", 10, 0)
 
+  if OptionsPrivate.changelog then
+    local changelog
+    if OptionsPrivate.changelog.highlightText then
+      changelog = L["Highlights"] .. "\n" .. OptionsPrivate.changelog.highlightText
+    else
+      changelog = OptionsPrivate.changelog.commitText
+    end
+
+    local changelogButton = addFooter(L["Changelog"], "", OptionsPrivate.changelog.fullChangeLogUrl,
+                                      changelog, nil, nil, false, 800)
+    changelogButton:SetParent(tipFrame)
+    changelogButton:SetPoint("LEFT", thanksButton, "RIGHT", 10, 0)
+  end
+
   local reportbugButton = addFooter(L["Found a Bug?"], [[Interface\AddOns\WeakAuras\Media\Textures\bug_report.tga]], "https://github.com/WeakAuras/WeakAuras2/issues/new?assignees=&labels=%F0%9F%90%9B+Bug&template=bug_report.md&title=",
             L["Report bugs on our issue tracker."], nil, nil, true)
   reportbugButton:SetParent(tipFrame)
@@ -527,7 +542,7 @@ function OptionsPrivate.CreateFrame()
 
   local companionButton
   if not OptionsPrivate.Private.CompanionData.slugs then
-    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://discord.gg/xhUHVCgAGy",
+    companionButton = addFooter(L["Update Auras"], [[Interface\AddOns\WeakAuras\Media\Textures\wagoupdate_refresh.tga]], "https://weakauras.wtf",
             L["Keep your Wago imports up to date with the Companion App."])
     companionButton:SetParent(tipFrame)
     companionButton:SetPoint("RIGHT", wagoButton, "LEFT", -10, 0)

@@ -1,5 +1,5 @@
 -- MageFrost.lua
--- July 2024
+-- January 2025
 
 if UnitClassBase( "player" ) ~= "MAGE" then return end
 
@@ -18,156 +18,170 @@ spec:RegisterResource( Enum.PowerType.Mana )
 -- Talents
 spec:RegisterTalents( {
     -- Mage
-    accumulative_shielding   = {  62093, 382800, 1 }, -- Your barrier's cooldown recharges 30% faster while the shield persists.
-    alter_time               = {  62115, 342245, 1 }, -- Alters the fabric of time, returning you to your current location and health when cast a second time, or after 10 sec. Effect negated by long distance or death.
-    arcane_warding           = {  62114, 383092, 2 }, -- Reduces magic damage taken by 3%.
-    barrier_diffusion        = {  62091, 455428, 1 }, -- Whenever one of your Barriers is removed, reduce its cooldown by 4 sec.
-    blast_wave               = {  62103, 157981, 1 }, -- Causes an explosion around yourself, dealing 5,709 Fire damage to all enemies within 8 yds, knocking them back, and reducing movement speed by 80% for 6 sec.
-    cryofreeze               = {  62107, 382292, 2 }, -- While inside Ice Block, you heal for 40% of your maximum health over the duration.
-    displacement             = {  62095, 389713, 1 }, -- Teleports you back to where you last Blinked and heals you for 97,544 health. Only usable within 8 sec of Blinking.
-    diverted_energy          = {  62101, 382270, 2 }, -- Your Barriers heal you for 10% of the damage absorbed.
-    dragons_breath           = { 101883,  31661, 1 }, -- Enemies in a cone in front of you take 7,038 Fire damage and are disoriented for 4 sec. Damage will cancel the effect.
-    energized_barriers       = {  62100, 386828, 1 }, -- When your barrier receives melee attacks, you have a 10% chance to be granted Fingers of Frost. Casting your barrier removes all snare effects.
-    flow_of_time             = {  62096, 382268, 2 }, -- The cooldowns of Blink and Shimmer are reduced by 2 sec.
-    freezing_cold            = {  62087, 386763, 1 }, -- Enemies hit by Cone of Cold are frozen in place for 5 sec instead of snared. When your roots expire or are dispelled, your target is snared by 90%, decaying over 3 sec.
-    frigid_winds             = {  62128, 235224, 2 }, -- All of your snare effects reduce the target's movement speed by an additional 10%.
-    greater_invisibility     = {  93524, 110959, 1 }, -- Makes you invisible and untargetable for 20 sec, removing all threat. Any action taken cancels this effect. You take 60% reduced damage while invisible and for 3 sec after reappearing.
-    ice_barrier              = {  62117,  11426, 1 }, -- Shields you with ice, absorbing 119,144 damage for 1 min. Melee attacks against you reduce the attacker's movement speed by 60%.
-    ice_block                = {  62122,  45438, 1 }, -- Encases you in a block of ice, protecting you from all attacks and damage for 10 sec, but during that time you cannot attack, move, or cast spells. While inside Ice Block, you heal for 40% of your maximum health over the duration. Causes Hypothermia, preventing you from recasting Ice Block for 30 sec.
-    ice_cold                 = {  62085, 414659, 1 }, -- Ice Block now reduces all damage taken by 70% for 6 sec but no longer grants Immunity, prevents movement, attacks, or casting spells. Does not incur the Global Cooldown.
-    ice_floes                = {  62105, 108839, 1 }, -- Makes your next Mage spell with a cast time shorter than 10 sec castable while moving. Unaffected by the global cooldown and castable while casting.
-    ice_nova                 = {  62088, 157997, 1 }, -- Causes a whirl of icy wind around the enemy, dealing 14,499 Frost damage to the target and reduced damage to all other enemies within 8 yds, and freezing them in place for 2 sec.
-    ice_ward                 = {  62086, 205036, 1 }, -- Frost Nova now has 2 charges.
-    improved_frost_nova      = {  62108, 343183, 1 }, -- Frost Nova duration is increased by 2 sec.
-    incantation_of_swiftness = {  62112, 382293, 2 }, -- Greater Invisibility increases your movement speed by 40% for 6 sec.
-    incanters_flow           = {  62118,   1463, 1 }, -- Magical energy flows through you while in combat, building up to 10% increased damage and then diminishing down to 2% increased damage, cycling every 10 sec.
-    inspired_intellect       = {  62094, 458437, 1 }, -- Arcane Intellect grants you an additional 3% Intellect.
-    mass_barrier             = {  62092, 414660, 1 }, -- Cast Ice Barrier on yourself and 4 allies within 40 yds.
-    mass_invisibility        = {  62092, 414664, 1 }, -- You and your allies within 40 yards instantly become invisible for 12 sec. Taking any action will cancel the effect. Does not affect allies in combat.
-    mass_polymorph           = {  62106, 383121, 1 }, -- Transforms all enemies within 10 yards into sheep, wandering around incapacitated for 15 sec. While affected, the victims cannot take actions but will regenerate health very quickly. Damage will cancel the effect. Only works on Beasts, Humanoids and Critters.
-    master_of_time           = {  62102, 342249, 1 }, -- Reduces the cooldown of Alter Time by 10 sec. Alter Time resets the cooldown of Blink and Shimmer when you return to your original location.
-    mirror_image             = {  62124,  55342, 1 }, -- Creates 3 copies of you nearby for 40 sec, which cast spells and attack your enemies. While your images are active damage taken is reduced by 20%. Taking direct damage will cause one of your images to dissipate.
-    overflowing_energy       = {  62120, 390218, 1 }, -- Your spell critical strike damage is increased by 10%. When your direct damage spells fail to critically strike a target, your spell critical strike chance is increased by 2%, up to 10% for 8 sec. When your spells critically strike Overflowing Energy is reset.
-    quick_witted             = {  62104, 382297, 1 }, -- Successfully interrupting an enemy with Counterspell reduces its cooldown by 4 sec.
-    reabsorption             = {  62125, 382820, 1 }, -- You are healed for 3% of your maximum health whenever a Mirror Image dissipates due to direct damage.
-    reduplication            = {  62125, 382569, 1 }, -- Mirror Image's cooldown is reduced by 10 sec whenever a Mirror Image dissipates due to direct damage.
-    remove_curse             = {  62116,    475, 1 }, -- Removes all Curses from a friendly target.
-    rigid_ice                = {  62110, 382481, 1 }, -- Frost Nova can withstand 80% more damage before breaking.
-    ring_of_frost            = {  62088, 113724, 1 }, -- Summons a Ring of Frost for 10 sec at the target location. Enemies entering the ring are incapacitated for 10 sec. Limit 10 targets. When the incapacitate expires, enemies are slowed by 75% for 4 sec.
-    shifting_power           = {  62113, 382440, 1 }, -- Draw power from within, dealing 25,642 Arcane damage over 3.1 sec to enemies within 18 yds. While channeling, your Mage ability cooldowns are reduced by 12 sec over 3.1 sec.
-    shimmer                  = {  62105, 212653, 1 }, -- Teleports you 20 yds forward, unless something is in the way. Unaffected by the global cooldown and castable while casting.
-    slow                     = {  62097,  31589, 1 }, -- Reduces the target's movement speed by 60% for 15 sec.
-    spellsteal               = {  62084,  30449, 1 }, -- Steals a beneficial magic effect from the target. This effect lasts a maximum of 2 min.
-    supernova                = { 101883, 157980, 1 }, -- Pulses arcane energy around the target enemy or ally, dealing 3,625 Arcane damage to all enemies within 8 yds, and knocking them upward. A primary enemy target will take 100% increased damage.
-    tempest_barrier          = {  62111, 382289, 2 }, -- Gain a shield that absorbs 3% of your maximum health for 15 sec after you Blink.
-    temporal_velocity        = {  62099, 382826, 2 }, -- Increases your movement speed by 5% for 3 sec after casting Blink and 20% for 6 sec after returning from Alter Time.
-    time_anomaly             = {  62094, 383243, 1 }, -- At any moment, you have a chance to gain Icy Veins for 8 sec, Brain Freeze, or Time Warp for 6 sec.
-    time_manipulation        = {  62129, 387807, 1 }, -- Casting Ice Lance on Frozen targets reduces the cooldown of your loss of control abilities by 2 sec.
-    tome_of_antonidas        = {  62098, 382490, 1 }, -- Increases Haste by 2%.
-    tome_of_rhonin           = {  62127, 382493, 1 }, -- Increases Critical Strike chance by 2%.
-    volatile_detonation      = {  62089, 389627, 1 }, -- Greatly increases the effect of Blast Wave's knockback. Blast Wave's cooldown is reduced by 5 sec
-    winters_protection       = {  62123, 382424, 2 }, -- The cooldown of Ice Block is reduced by 30 sec.
+    accumulative_shielding    = {  62093, 382800, 1 }, -- Your barrier's cooldown recharges 30% faster while the shield persists.
+    alter_time                = {  62115, 342245, 1 }, -- Alters the fabric of time, returning you to your current location and health when cast a second time, or after 10 sec. Effect negated by long distance or death.
+    arcane_warding            = {  62114, 383092, 2 }, -- Reduces magic damage taken by 3%.
+    barrier_diffusion         = {  62091, 455428, 1 }, -- Whenever one of your Barriers is removed, reduce its cooldown by 4 sec.
+    blast_wave                = {  62103, 157981, 1 }, -- Causes an explosion around yourself, dealing 43,335 Fire damage to all enemies within 8 yds, knocking them back, and reducing movement speed by 80% for 6 sec.
+    burden_of_power           = {  94644, 451035, 1 }, -- Conjuring a Spellfire Sphere increases the damage of your next Pyroblast by 20% or your next Flamestrike by 30%.
+    codex_of_the_sunstriders  = {  94643, 449382, 1 }, -- Over its duration, your Arcane Phoenix will consume each of your Spellfire Spheres to cast an exceptional spell. Upon consuming a Spellfire Sphere, your Arcane Phoenix will grant you Lingering Embers.  Lingering Embers Increases your spell damage by 1%.
+    cryofreeze                = {  62107, 382292, 2 }, -- While inside Ice Block, you heal for 40% of your maximum health over the duration.
+    displacement              = {  62095, 389713, 1 }, -- Teleports you back to where you last Blinked and heals you for 1.4 million health. Only usable within 8 sec of Blinking.
+    diverted_energy           = {  62101, 382270, 2 }, -- Your Barriers heal you for 10% of the damage absorbed.
+    dragons_breath            = { 101883,  31661, 1 }, -- Enemies in a cone in front of you take 53,426 Fire damage and are disoriented for 4 sec. Damage will cancel the effect.
+    energized_barriers        = {  62100, 386828, 1 }, -- When your barrier receives melee attacks, you have a 10% chance to be granted Fingers of Frost. Casting your barrier removes all snare effects.
+    flow_of_time              = {  62096, 382268, 2 }, -- The cooldowns of Blink and Shimmer are reduced by 2 sec.
+    freezing_cold             = {  62087, 386763, 1 }, -- Enemies hit by Cone of Cold are frozen in place for 5 sec instead of snared. When your roots expire or are dispelled, your target is snared by 90%, decaying over 3 sec.
+    frigid_winds              = {  62128, 235224, 2 }, -- All of your snare effects reduce the target's movement speed by an additional 10%.
+    glorious_incandescence    = {  94645, 449394, 1 }, -- Consuming Burden of Power causes your next Arcane Barrage to deal 20% increased damage, grant 4 Arcane Charges, and call down a storm of 4 Meteorites at your target.
+    gravity_lapse             = {  94651, 458513, 1 }, -- Your Supernova becomes Gravity Lapse. Gravity Lapse The snap of your fingers warps the gravity around your target and 4 other nearby enemies, suspending them in the air for 3 sec. Upon landing, nearby enemies take 39,876 Arcane damage.
+    greater_invisibility      = {  93524, 110959, 1 }, -- Makes you invisible and untargetable for 20 sec, removing all threat. Any action taken cancels this effect. You take 60% reduced damage while invisible and for 3 sec after reappearing.
+    ice_barrier               = {  62117,  11426, 1 }, -- Shields you with ice, absorbing 1.9 million damage for 1 min. Melee attacks against you reduce the attacker's movement speed by 60%.
+    ice_block                 = {  62122,  45438, 1 }, -- Encases you in a block of ice, protecting you from all attacks and damage for 10 sec, but during that time you cannot attack, move, or cast spells. While inside Ice Block, you heal for 40% of your maximum health over the duration. Causes Hypothermia, preventing you from recasting Ice Block for 30 sec.
+    ice_cold                  = {  62085, 414659, 1 }, -- Ice Block now reduces all damage taken by 70% for 6 sec but no longer grants Immunity, prevents movement, attacks, or casting spells. Does not incur the Global Cooldown.
+    ice_floes                 = {  62105, 108839, 1 }, -- Makes your next Mage spell with a cast time shorter than 10 sec castable while moving. Unaffected by the global cooldown and castable while casting.
+    ice_nova                  = {  62088, 157997, 1 }, -- Causes a whirl of icy wind around the enemy, dealing 110,058 Frost damage to the target and all other enemies within 8 yds, freezing them in place for 2 sec. Damage reduced beyond 8 targets.
+    ice_ward                  = {  62086, 205036, 1 }, -- Frost Nova now has 2 charges.
+    ignite_the_future         = {  94648, 449558, 1 }, -- Generating a Spellfire Sphere while your Phoenix is active causes it to cast an exceptional spell. Mana Cascade can now stack up to 15 times.
+    improved_frost_nova       = {  62108, 343183, 1 }, -- Frost Nova duration is increased by 2 sec.
+    incantation_of_swiftness  = {  62112, 382293, 2 }, -- Greater Invisibility increases your movement speed by 40% for 6 sec.
+    incanters_flow            = {  62118,   1463, 1 }, -- Magical energy flows through you while in combat, building up to 10% increased damage and then diminishing down to 2% increased damage, cycling every 10 sec.
+    inspired_intellect        = {  62094, 458437, 1 }, -- Arcane Intellect grants you an additional 3% Intellect.
+    invocation_arcane_phoenix = {  94652, 448658, 1 }, -- When you cast Combustion, summon an Arcane Phoenix to aid you in battle.  Arcane Phoenix Your Arcane Phoenix aids you for the duration of your Combustion, casting random Arcane and Fire spells.
+    lessons_in_debilitation   = {  94651, 449627, 1 }, -- Your Arcane Phoenix will Spellsteal when it is summoned and when it expires.
+    mana_cascade              = {  94653, 449293, 1 }, -- Consuming Hot Streak grants you 0.5% Haste for 10 sec. Stacks up to 10 times. Multiple instances may overlap.
+    mass_barrier              = {  62092, 414660, 1 }, -- Cast Ice Barrier on yourself and 4 allies within 40 yds.
+    mass_invisibility         = {  62092, 414664, 1 }, -- You and your allies within 40 yards instantly become invisible for 12 sec. Taking any action will cancel the effect. Does not affect allies in combat.
+    mass_polymorph            = {  62106, 383121, 1 }, -- Transforms all enemies within 10 yards into sheep, wandering around incapacitated for 15 sec. While affected, the victims cannot take actions but will regenerate health very quickly. Damage will cancel the effect. Only works on Beasts, Humanoids and Critters.
+    master_of_time            = {  62102, 342249, 1 }, -- Reduces the cooldown of Alter Time by 10 sec. Alter Time resets the cooldown of Blink and Shimmer when you return to your original location.
+    memory_of_alar            = {  94646, 449619, 1 }, -- While under the effects of a casted Combustion, you gain twice as many stacks of Mana Cascade. When your Arcane Phoenix expires, it empowers you, granting Hyperthermia for 2 sec, plus an additional 1.0 sec for each exceptional spell it had cast.  Hyperthermia: Pyroblast and Flamestrike have no cast time and are guaranteed to critically strike.
+    merely_a_setback          = {  94649, 449330, 1 }, -- Your Blazing Barrier now grants 5% avoidance while active and 3% leech for 5 sec when it breaks or expires.
+    mirror_image              = {  62124,  55342, 1 }, -- Creates 3 copies of you nearby for 40 sec, which cast spells and attack your enemies. While your images are active damage taken is reduced by 20%. Taking direct damage will cause one of your images to dissipate.
+    overflowing_energy        = {  62120, 390218, 1 }, -- Your spell critical strike damage is increased by 10%. When your direct damage spells fail to critically strike a target, your spell critical strike chance is increased by 2%, up to 10% for 8 sec. When your spells critically strike Overflowing Energy is reset.
+    quick_witted              = {  62104, 382297, 1 }, -- Successfully interrupting an enemy with Counterspell reduces its cooldown by 4 sec.
+    reabsorption              = {  62125, 382820, 1 }, -- You are healed for 3% of your maximum health whenever a Mirror Image dissipates due to direct damage.
+    reduplication             = {  62125, 382569, 1 }, -- Mirror Image's cooldown is reduced by 10 sec whenever a Mirror Image dissipates due to direct damage.
+    remove_curse              = {  62116,    475, 1 }, -- Removes all Curses from a friendly target. 
+    rigid_ice                 = {  62110, 382481, 1 }, -- Frost Nova can withstand 80% more damage before breaking.
+    ring_of_frost             = {  62088, 113724, 1 }, -- Summons a Ring of Frost for 10 sec at the target location. Enemies entering the ring are incapacitated for 10 sec. Limit 10 targets. When the incapacitate expires, enemies are slowed by 75% for 4 sec.
+    rondurmancy               = {  94648, 449596, 1 }, -- Spellfire Spheres can now stack up to 5 times.
+    savor_the_moment          = {  94650, 449412, 1 }, -- When you cast Combustion, its duration is extended by 0.5 sec for each Spellfire Sphere you have, up to 2.5 sec.
+    shifting_power            = {  62113, 382440, 1 }, -- Draw power from within, dealing 194,452 Arcane damage over 3.0 sec to enemies within 18 yds. While channeling, your Mage ability cooldowns are reduced by 12 sec over 3.0 sec.
+    shimmer                   = {  62105, 212653, 1 }, -- Teleports you 20 yds forward, unless something is in the way. Unaffected by the global cooldown and castable while casting.
+    slow                      = {  62097,  31589, 1 }, -- Reduces the target's movement speed by 60% for 15 sec. 
+    spellfire_spheres         = {  94647, 448601, 1 }, -- Every 6 times you consume Hot Streak, conjure a Spellfire Sphere. While you're out of combat, you will slowly conjure Spellfire Spheres over time.  Spellfire Sphere Increases your spell damage by 1%. Stacks up to 3 times.
+    spellsteal                = {  62084,  30449, 1 }, -- Steals a beneficial magic effect from the target. This effect lasts a maximum of 2 min. 
+    sunfury_execution         = {  94650, 449349, 1 }, -- Scorch's critical strike threshold is increased to 35%.  Scorch Scorches an enemy for 23,925 Fire damage. When cast on a target below 30% health, Scorch is a guaranteed critical strike and increases your movement speed by 30% for 3 sec. Castable while moving.
+    supernova                 = { 101883, 157980, 1 }, -- Pulses arcane energy around the target enemy or ally, dealing 27,514 Arcane damage to all enemies within 8 yds, and knocking them upward. A primary enemy target will take 100% increased damage.
+    tempest_barrier           = {  62111, 382289, 2 }, -- Gain a shield that absorbs 3% of your maximum health for 15 sec after you Blink.
+    temporal_velocity         = {  62099, 382826, 2 }, -- Increases your movement speed by 5% for 3 sec after casting Blink and 20% for 6 sec after returning from Alter Time.
+    time_anomaly              = {  62094, 383243, 1 }, -- At any moment, you have a chance to gain Icy Veins for 8 sec, Brain Freeze, or Time Warp for 6 sec.
+    time_manipulation         = {  62129, 387807, 1 }, -- Casting Ice Lance on Frozen targets reduces the cooldown of your loss of control abilities by 2 sec.
+    tome_of_antonidas         = {  62098, 382490, 1 }, -- Increases Haste by 2%. 
+    tome_of_rhonin            = {  62127, 382493, 1 }, -- Increases Critical Strike chance by 2%.
+    volatile_detonation       = {  62089, 389627, 1 }, -- Greatly increases the effect of Blast Wave's knockback. Blast Wave's cooldown is reduced by 5 sec
+    winters_protection        = {  62123, 382424, 2 }, -- The cooldown of Ice Block is reduced by 30 sec.
 
     -- Frost
-    bone_chilling            = {  62167, 205027, 1 }, -- Whenever you attempt to chill a target, you gain Bone Chilling, increasing spell damage you deal by 0.5% for 8 sec, stacking up to 10 times.
-    brain_freeze             = {  62179, 190447, 1 }, -- Frostbolt has a 25% chance to reset the remaining cooldown on Flurry and cause your next Flurry to deal 50% increased damage.
-    chain_reaction           = {  62161, 278309, 1 }, -- Your Ice Lances against frozen targets increase the damage of your Ice Lances by 2% for 10 sec, stacking up to 5 times.
-    cold_front               = {  62155, 382110, 1 }, -- Casting 30 Frostbolts or Flurries calls down a Frozen Orb toward your target. Hitting an enemy player counts as double.
-    coldest_snap             = {  62185, 417493, 1 }, -- Cone of Cold's cooldown is increased to 45 sec and if Cone of Cold hits 3 or more enemies it resets the cooldown of Frozen Orb and Comet Storm. In addition, Cone of Cold applies Winter's Chill to all enemies hit. Cone of Cold's cooldown can no longer be reduced by your cooldown reduction effects.
-    comet_storm              = {  62182, 153595, 1 }, -- Calls down a series of 7 icy comets on and around the target, that deals up to 48,748 Frost damage to all enemies within 6 yds of its impacts.
-    cryopathy                = {  62152, 417491, 1 }, -- Each time you consume Fingers of Frost the damage of your next Ray of Frost is increased by 5%, stacking up to 50%. Icy Veins grants 10 stacks instantly.
-    deaths_chill             = { 101302, 450331, 1 }, -- While Icy Veins is active, damaging an enemy with Frostbolt increases spell damage by 2%. Stacks up to 12 times.
-    deep_shatter             = {  62159, 378749, 2 }, -- Your Frostbolt deals 40% additional damage to Frozen targets.
-    everlasting_frost        = {  81468, 385167, 1 }, -- Frozen Orb deals an additional 30% damage and its duration is increased by 2 sec.
-    fingers_of_frost         = {  62164, 112965, 1 }, -- Frostbolt has a 15% chance and Frozen Orb damage has a 10% to grant a charge of Fingers of Frost. Fingers of Frost causes your next Ice Lance to deal damage as if the target were frozen. Maximum 2 charges.
-    flash_freeze             = {  62168, 379993, 1 }, -- Each of your Icicles deals 10% additional damage, and when an Icicle deals damage you have a 5% chance to gain the Fingers of Frost effect.
-    flurry                   = {  62178,  44614, 1 }, -- Unleash a flurry of ice, striking the target 3 times for a total of 17,253 Frost damage. Each hit reduces the target's movement speed by 80% for 1 sec, has a 25% chance to activate Glacial Assault, and applies Winter's Chill to the target. Winter's Chill causes the target to take damage from your spells as if it were frozen.
-    fractured_frost          = {  62151, 378448, 1 }, -- While Icy Veins is active, your Frostbolts hit up to 2 additional targets and their damage is increased by 15%.
-    freezing_rain            = {  62150, 270233, 1 }, -- Frozen Orb makes Blizzard instant cast and increases its damage done by 60% for 12 sec.
-    freezing_winds           = {  62184, 382103, 1 }, -- While Frozen Orb is active, you gain Fingers of Frost every 3 sec.
-    frostbite                = {  81467, 378756, 1 }, -- Gives your Chill effects a 10% chance to freeze the target for 4 sec.
-    frozen_orb               = {  62177,  84714, 1 }, -- Launches an orb of swirling ice up to 40 yds forward which deals up to 43,456 Frost damage to all enemies it passes through over 15 sec. Deals reduced damage beyond 8 targets. Grants 1 charge of Fingers of Frost when it first damages an enemy. While Frozen Orb is active, you gain Fingers of Frost every 3 sec. Enemies damaged by the Frozen Orb are slowed by 40% for 3 sec.
-    frozen_touch             = {  62180, 205030, 1 }, -- Frostbolt grants you Fingers of Frost 25% more often and Brain Freeze 20% more often.
-    glacial_assault          = {  62183, 378947, 1 }, -- Your Comet Storm now increases the damage enemies take from you by 6% for 6 sec and Flurry has a 25% chance each hit to call down an icy comet, crashing into your target and nearby enemies for 3,501 Frost damage.
-    glacial_spike            = {  62157, 199786, 1 }, -- Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing 63,299 damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 sec. Damage may interrupt the freeze effect. Requires 5 Icicles to cast. Passive: Ice Lance no longer launches Icicles.
-    hailstones               = {  62158, 381244, 1 }, -- Casting Ice Lance on Frozen targets has a 100% chance to generate an Icicle.
-    ice_caller               = {  62170, 236662, 1 }, -- Each time Blizzard deals damage, the cooldown of Frozen Orb is reduced by 0.5 sec.
-    ice_lance                = {  62176,  30455, 1 }, -- Quickly fling a shard of ice at the target, dealing 8,492 Frost damage, and 6,794 Frost damage to a second nearby target. Ice Lance damage is tripled against frozen targets.
-    icy_veins                = {  62171,  12472, 1 }, -- Accelerates your spellcasting for 30 sec, granting 20% haste and preventing damage from delaying your spellcasts. Activating Icy Veins summons a water elemental to your side for its duration. The water elemental's abilities grant you Frigid Empowerment, increasing the Frost damage you deal by 3%, up to 15%.
-    lonely_winter            = {  62173, 205024, 1 }, -- Frostbolt, Ice Lance, and Flurry deal 15% increased damage.
-    permafrost_lances        = {  62169, 460590, 1 }, -- Frozen Orb increases Ice Lance's damage by 15% for 15 sec.
-    perpetual_winter         = {  62181, 378198, 1 }, -- Flurry now has 2 charges.
-    piercing_cold            = {  62166, 378919, 1 }, -- Frostbolt and Icicle critical strike damage increased by 20%.
-    ray_of_frost             = {  62153, 205021, 1 }, -- Channel an icy beam at the enemy for 3.9 sec, dealing 24,987 Frost damage every 0.8 sec and slowing movement by 70%. Each time Ray of Frost deals damage, its damage and snare increases by 10%. Generates 2 charges of Fingers of Frost over its duration.
-    shatter                  = {  62165,  12982, 1 }, -- Multiplies the critical strike chance of your spells against frozen targets by 1.5, and adds an additional 50% critical strike chance.
-    slick_ice                = {  62156, 382144, 1 }, -- While Icy Veins is active, each Frostbolt you cast reduces the cast time of Frostbolt by 4% and increases its damage by 4%, stacking up to 5 times.
-    splintering_cold         = {  62162, 379049, 2 }, -- Frostbolt and Flurry have a 30% chance to generate 2 Icicles.
-    splintering_ray          = { 103771, 418733, 1 }, -- Ray of Frost deals 25% of its damage to 5 nearby enemies.
-    splitting_ice            = {  62163,  56377, 1 }, -- Your Ice Lance and Icicles now deal 5% increased damage, and hit a second nearby target for 80% of their damage. Your Glacial Spike also hits a second nearby target for 100% of its damage.
-    subzero                  = {  62160, 380154, 2 }, -- Your Frost spells deal 20% more damage to targets that are rooted and frozen.
-    thermal_void             = {  62154, 155149, 1 }, -- Icy Veins' duration is increased by 5 sec. Your Ice Lances against frozen targets extend your Icy Veins by an additional 0.5 sec.
-    winters_blessing         = {  62174, 417489, 1 }, -- Your Haste is increased by 8%. You gain 10% more of the Haste stat from all sources.
-    wintertide               = {  62172, 378406, 2 }, -- Increases Frostbolt damage by 5%. Fingers of Frost empowered Ice Lances deal 10% increased damage to Frozen targets.
+    bone_chilling             = {  62167, 205027, 1 }, -- Whenever you attempt to chill a target, you gain Bone Chilling, increasing spell damage you deal by 0.5% for 8 sec, stacking up to 10 times.
+    brain_freeze              = {  62179, 190447, 1 }, -- Frostbolt has a 30% chance to reset the remaining cooldown on Flurry and cause your next Flurry to deal 50% increased damage.
+    chain_reaction            = {  62161, 278309, 1 }, -- Your Ice Lances against frozen targets increase the damage of your Ice Lances by 2% for 10 sec, stacking up to 5 times.
+    cold_front                = {  62155, 382110, 1 }, -- Casting 30 Frostbolts or Flurries calls down a Frozen Orb toward your target. Hitting an enemy player counts as double.
+    coldest_snap              = {  62185, 417493, 1 }, -- Cone of Cold's cooldown is increased to 45 sec and if Cone of Cold hits 3 or more enemies it resets the cooldown of Frozen Orb and Comet Storm. In addition, Cone of Cold applies Winter's Chill to all enemies hit. Cone of Cold's cooldown can no longer be reduced by your cooldown reduction effects.
+    comet_storm               = {  62182, 153595, 1 }, -- Calls down a series of 7 icy comets on and around the target, that deals up to 385,926 Frost damage to all enemies within 6 yds of its impacts.
+    cryopathy                 = {  62152, 417491, 1 }, -- Each time you consume Fingers of Frost the damage of your next Ray of Frost is increased by 5%, stacking up to 50%. Icy Veins grants 10 stacks instantly.
+    deaths_chill              = { 101302, 450331, 1 }, -- While Icy Veins is active, damaging an enemy with Frostbolt increases spell damage by 1%. Stacks up to 15 times.
+    deep_shatter              = {  62159, 378749, 2 }, -- Your Frostbolt deals 40% additional damage to Frozen targets.
+    everlasting_frost         = {  81468, 385167, 1 }, -- Frozen Orb deals an additional 30% damage and its duration is increased by 2 sec.
+    fingers_of_frost          = {  62164, 112965, 1 }, -- Frostbolt has a 18% chance and Frozen Orb damage has a 5% to grant a charge of Fingers of Frost. Fingers of Frost causes your next Ice Lance to deal damage as if the target were frozen. Maximum 2 charges.
+    flash_freeze              = {  62168, 379993, 1 }, -- Each of your Icicles deals 10% additional damage, and when an Icicle deals damage you have a 5% chance to gain the Fingers of Frost effect.
+    flurry                    = {  62178,  44614, 1 }, -- Unleash a flurry of ice, striking the target 3 times for a total of 163,711 Frost damage. Each hit reduces the target's movement speed by 80% for 1 sec and applies Winter's Chill to the target. Winter's Chill causes the target to take damage from your spells as if it were frozen.
+    fractured_frost           = {  62151, 378448, 1 }, -- While Icy Veins is active, your Frostbolts hit up to 2 additional targets and their damage is increased by 15%.
+    freezing_rain             = {  62150, 270233, 1 }, -- Frozen Orb makes Blizzard instant cast and increases its damage done by 60% for 12 sec.
+    freezing_winds            = {  62184, 1216953, 1 }, -- Frozen Orb deals 15% increased damage to units affected by your Blizzard.
+    frostbite                 = {  81467, 378756, 1 }, -- Gives your Chill effects a 10% chance to freeze the target for 4 sec.
+    frozen_orb                = {  62177,  84714, 1 }, -- Launches an orb of swirling ice up to 40 yds forward which deals up to 378,428 Frost damage to all enemies it passes through over 15 sec. Deals reduced damage beyond 8 targets. Grants 1 charge of Fingers of Frost when it first damages an enemy. Enemies damaged by the Frozen Orb are slowed by 40% for 3 sec.
+    frozen_touch              = {  62180, 205030, 1 }, -- Frostbolt grants you Fingers of Frost 25% more often and Brain Freeze 20% more often.
+    glacial_assault           = {  62183, 378947, 1 }, -- Your Comet Storm now applies Numbing Blast, increasing the damage enemies take from you by 6% for 6 sec. Additionally, Flurry has a 25% chance each hit to call down an icy comet, crashing into your target and nearby enemies for 26,579 Frost damage.
+    glacial_spike             = {  62157, 199786, 1 }, -- Conjures a massive spike of ice, and merges your current Icicles into it. It impales your target, dealing 610,909 damage plus all of the damage stored in your Icicles, and freezes the target in place for 4 sec. Damage may interrupt the freeze effect. Requires 5 Icicles to cast. Passive: Ice Lance no longer launches Icicles.
+    hailstones                = {  62158, 381244, 1 }, -- Casting Ice Lance on Frozen targets has a 100% chance to generate an Icicle.
+    ice_caller                = {  62170, 236662, 1 }, -- Each time Blizzard deals damage, the cooldown of Frozen Orb is reduced by 0.5 sec.
+    ice_lance                 = {  62176,  30455, 1 }, -- Quickly fling a shard of ice at the target, dealing 77,989 Frost damage. Ice Lance damage is tripled against frozen targets.
+    icy_veins                 = {  62171,  12472, 1 }, -- Accelerates your spellcasting for 30 sec, granting 20% haste and preventing damage from delaying your spellcasts. Activating Icy Veins summons a water elemental to your side for its duration. The water elemental's abilities grant you Frigid Empowerment, increasing the Frost damage you deal by 3%, up to 15%.
+    lonely_winter             = {  62173, 205024, 1 }, -- Frostbolt, Ice Lance, and Flurry deal 15% increased damage. 
+    permafrost_lances         = {  62169, 460590, 1 }, -- Frozen Orb increases Ice Lance's damage by 15% for 15 sec.
+    perpetual_winter          = {  62181, 378198, 1 }, -- Flurry now has 2 charges. 
+    piercing_cold             = {  62166, 378919, 1 }, -- Frostbolt and Icicle critical strike damage increased by 20%.
+    ray_of_frost              = {  62153, 205021, 1 }, -- Channel an icy beam at the enemy for 3.7 sec, dealing 251,369 Frost damage every 0.7 sec and slowing movement by 70%. Each time Ray of Frost deals damage, its damage and snare increases by 10%. Generates 2 charges of Fingers of Frost over its duration.
+    shatter                   = {  62165,  12982, 1 }, -- Multiplies the critical strike chance of your spells against frozen targets by 1.5, and adds an additional 50% critical strike chance.
+    slick_ice                 = {  62156, 382144, 1 }, -- While Icy Veins is active, each Frostbolt you cast reduces the cast time of Frostbolt by 4% and increases its damage by 4%, stacking up to 5 times.
+    splintering_cold          = {  62162, 379049, 2 }, -- Frostbolt and Flurry have a 30% chance to generate 2 Icicles.
+    splintering_ray           = { 103771, 418733, 1 }, -- Ray of Frost deals 30% of its damage to 5 nearby enemies.
+    splitting_ice             = {  62163,  56377, 1 }, -- Your Ice Lance and Icicles now deal 5% increased damage, and hit a second nearby target for 90% of their damage. Your Glacial Spike also hits a second nearby target for 100% of its damage.
+    subzero                   = {  62160, 380154, 2 }, -- Your Frost spells deal 20% more damage to targets that are rooted and frozen.
+    thermal_void              = {  62154, 155149, 1 }, -- Icy Veins' duration is increased by 5 sec. Your Ice Lances against frozen targets extend your Icy Veins by an additional 0.5 sec.
+    winters_blessing          = {  62174, 417489, 1 }, -- Your Haste is increased by 8%. You gain 10% more of the Haste stat from all sources.
+    wintertide                = {  62172, 378406, 2 }, -- Damage from Frostbolt and Flurry increases the damage of your Icicles and Glacial Spike by 4%. Stacks up to 2 times. Damage from Glacial Spike consumes all stacks of Wintertide.
 
     -- Spellslinger
-    augury_abounds           = {  94662, 443783, 1 }, -- Casting Icy Veins conjures 8 Frost Splinters. During Icy Veins, whenever you conjure a Frost Splinter, you have a 100% chance to conjure an additional Frost Splinter.
-    controlled_instincts     = {  94663, 444483, 1 }, -- While a target is under the effects of Blizzard, 20% of the direct damage dealt by a Frost Splinter is also dealt to nearby enemies. Damage reduced beyond 5 targets.
-    force_of_will            = {  94656, 444719, 1 }, -- Gain 2% increased critical strike chance. Gain 5% increased critical strike damage.
-    look_again               = {  94659, 444756, 1 }, -- Displacement has a 50% longer duration and 25% longer range.
-    phantasmal_image         = {  94660, 444784, 1 }, -- Your Mirror Image summons one extra clone. Mirror Image now reduces all damage taken by an additional 5%.
-    reactive_barrier         = {  94660, 444827, 1 }, -- Your Ice Barrier can absorb up to 50% more damage based on your missing Health. Max effectiveness when under 50% health.
-    shifting_shards          = {  94657, 444675, 1 }, -- Shifting Power fires a barrage of 8 Frost Splinters at random enemies within 40 yds over its duration.
-    slippery_slinging        = {  94659, 444752, 1 }, -- You have 40% increased movement speed during Alter Time.
-    spellfrost_teachings     = {  94655, 444986, 1 }, -- Direct damage from Frost Splinters has a 2% chance to reset the cooldown of Frozen Orb and increase all damage dealt by Frozen Orb by 10% for 10 sec.
-    splintering_orbs         = {  94661, 444256, 1 }, -- Enemies damaged by your Frozen Orb conjures a Frost Splinter, up to 4. Frozen Orb damage is increased by 10%.
-    splintering_sorcery      = {  94664, 443739, 1, "spellslinger" }, -- When you consume Winter's Chill, conjure a Frost Splinter that fires at your target. Frost Splinter:
-    splinterstorm            = {  94654, 443742, 1 }, -- Whenever you have 8 or more active Embedded Frost Splinters, you automatically cast a Splinterstorm at your target. Splinterstorm: Shatter all Embedded Frost Splinters, dealing their remaining periodic damage instantly. Conjure a Frost Splinter for each Splinter shattered, then unleash them all in a devastating barrage, dealing 1,317 Frost damage to your target for each Splinter in the Splinterstorm. Splinterstorm applies Winter's Chill to its target.
-    unerring_proficiency     = {  94658, 444974, 1 }, -- Each time you conjure a Frost Splinter, increase the damage of your next Ice Nova by 3%. Stacks up to 60 times.
-    volatile_magic           = {  94658, 444968, 1 }, -- Whenever an Embedded Frost Splinter is removed, it explodes, dealing 525 Frost damage to nearby enemies. Deals reduced damage beyond 5 targets.
+    augury_abounds            = {  94662, 443783, 1 }, -- Casting Icy Veins conjures 8 Frost Splinters. During Icy Veins, whenever you conjure a Frost Splinter, you have a 100% chance to conjure an additional Frost Splinter.
+    controlled_instincts      = {  94663, 444483, 1 }, -- While a target is under the effects of Blizzard, 30% of the direct damage dealt by a Frost Splinter is also dealt to nearby enemies. Damage reduced beyond 5 targets.
+    force_of_will             = {  94656, 444719, 1 }, -- Gain 2% increased critical strike chance. Gain 5% increased critical strike damage.
+    look_again                = {  94659, 444756, 1 }, -- Displacement has a 50% longer duration and 25% longer range.
+    phantasmal_image          = {  94660, 444784, 1 }, -- Your Mirror Image summons one extra clone. Mirror Image now reduces all damage taken by an additional 5%.
+    reactive_barrier          = {  94660, 444827, 1 }, -- Your Ice Barrier can absorb up to 50% more damage based on your missing Health. Max effectiveness when under 50% health.
+    shifting_shards           = {  94657, 444675, 1 }, -- Shifting Power fires a barrage of 8 Frost Splinters at random enemies within 40 yds over its duration.
+    signature_spell           = {  94657, 470021, 1 }, -- Consuming Winter's Chill with Glacial Spike conjures 2 additional Frost Splinters.
+    slippery_slinging         = {  94659, 444752, 1 }, -- You have 40% increased movement speed during Alter Time. 
+    spellfrost_teachings      = {  94655, 444986, 1 }, -- Direct damage from Frost Splinters has a 2.5% chance to reset the cooldown of Frozen Orb and increase all damage dealt by Frozen Orb by 15% for 10 sec.
+    splintering_orbs          = {  94661, 444256, 1 }, -- Enemies damaged by your Frozen Orb conjure 1 Frost Splinter, up to 5. Frozen Orb damage is increased by 10%.
+    splintering_sorcery       = {  94664, 443739, 1, "spellslinger" }, -- When you consume Winter's Chill, conjure a Frost Splinter that fires at your target. Frost Splinter: Conjure raw Frost magic into a sharp projectile that deals 3,747 Frost damage. Frost Splinters embed themselves into their target, dealing 3,747 Frost damage over 18 sec. This effect stacks.
+    splinterstorm             = {  94654, 443742, 1 }, -- Whenever you have 8 or more active Embedded Frost Splinters, you automatically cast a Splinterstorm at your target. Splinterstorm: Shatter all Embedded Frost Splinters, dealing their remaining periodic damage instantly. Conjure a Frost Splinter for each Splinter shattered, then unleash them all in a devastating barrage, dealing 29,144 Frost damage to your target for each Splinter in the Splinterstorm. Splinterstorm has a 5% chance to grant Brain Freeze.
+    unerring_proficiency      = {  94658, 444974, 1 }, -- Each time you conjure a Frost Splinter, increase the damage of your next Ice Nova by 5%. Stacks up to 60 times.
+    volatile_magic            = {  94658, 444968, 1 }, -- Whenever an Embedded Frost Splinter is removed, it explodes, dealing 7,975 Frost damage to nearby enemies. Deals reduced damage beyond 5 targets.
 
     -- Frostfire
-    elemental_affinity       = {  94633, 431067, 1 }, -- The cooldown of Fire spells is reduced by 30%.
-    excess_fire              = {  94637, 438595, 1 }, -- Reaching maximum stacks of Fire Mastery causes your next Ice Lance to apply Living Bomb at 150% effectiveness. When this Living Bomb explodes, gain Brain Freeze.
-    excess_frost             = {  94639, 438600, 1 }, -- Reaching maximum stacks of Frost Mastery causes your next Flurry to also cast Ice Nova at 200% effectiveness. When you consume Excess Frost, the cooldown of Comet Storm is reduced by 5 sec.
-    flame_and_frost          = {  94633, 431112, 1 }, -- Cold Snap additionally resets the cooldowns of your Fire spells.
-    flash_freezeburn         = {  94635, 431178, 1 }, -- Frostfire Empowerment grants you maximum benefit of Frostfire Mastery and refreshes its duration. Activating Combustion or Icy Veins grants you Frostfire Empowerment.
-    frostfire_bolt           = {  94641, 431044, 1 }, -- Launches a bolt of frostfire at the enemy, causing 14,620 Frostfire damage, slowing movement speed by 60%, and causing an additional 4,202 Frostfire damage over 8 sec. Frostfire Bolt generates stacks for both Fire Mastery and Frost Mastery.
-    frostfire_empowerment    = {  94632, 431176, 1 }, -- Your Frost and Fire spells have a chance to activate Frostfire Empowerment, causing your next Frostfire Bolt to be instant cast, deal 50% increased damage, explode for 80% of its damage to nearby enemies, and grant you maximum benefit of Frostfire Mastery and refresh its duration.
-    frostfire_infusion       = {  94634, 431166, 1 }, -- Your Frost and Fire spells have a chance to trigger an additional bolt of Frostfire, dealing 3,151 damage. This effect generates Frostfire Mastery when activated.
-    frostfire_mastery        = {  94636, 431038, 1, "frostfire" }, -- Your damaging Fire spells generate 1 stack of Fire Mastery and Frost spells generate 1 stack of Frost Mastery. Fire Mastery increases your haste by 1%, and Frost Mastery increases your Mastery by 1% for 14 sec, stacking up to 6 times each. Adding stacks does not refresh duration.
-    imbued_warding           = {  94642, 431066, 1 }, -- Ice Barrier also casts a Blazing Barrier at 25% effectiveness.
-    isothermic_core          = {  94638, 431095, 1 }, -- Comet Storm now also calls down a Meteor at 100% effectiveness onto your target's location. Meteor now also calls down a Comet Storm at 150% effectiveness onto your target location.
-    meltdown                 = {  94642, 431131, 1 }, -- You melt slightly out of your Ice Block and Ice Cold, allowing you to move slowly during Ice Block and increasing your movement speed over time. Ice Block and Ice Cold trigger a Blazing Barrier when they end.
-    severe_temperatures      = {  94640, 431189, 1 }, -- Casting damaging Frost or Fire spells has a high chance to increase the damage of your next Frostfire Bolt by 10%, stacking up to 5 times.
-    thermal_conditioning     = {  94640, 431117, 1 }, -- Frostfire Bolt's cast time is reduced by 10%.
+    elemental_affinity        = {  94633, 431067, 1 }, -- The cooldown of Fire spells is reduced by 30%.
+    excess_fire               = {  94637, 438595, 1 }, -- Casting Comet Storm causes your next Ice Lance to explode in a Frostfire Burst, dealing 211,822 Frostfire damage to nearby enemies. Damage reduced beyond 8 targets. Frostfire Burst, grants Brain Freeze.
+    excess_frost              = {  94639, 438600, 1 }, -- Consuming Excess Fire causes your next Flurry to also cast Ice Nova at 200% effectiveness. Ice Novas cast this way do not freeze enemies in place. When you consume Excess Frost, the cooldown of Comet Storm is reduced by 5 sec.
+    flame_and_frost           = {  94633, 431112, 1 }, -- Cold Snap additionally resets the cooldowns of your Fire spells.
+    flash_freezeburn          = {  94635, 431178, 1 }, -- Frostfire Empowerment grants you maximum benefit of Frostfire Mastery, refreshes its duration, and grants you Excess Frost and Excess Fire. Activating Combustion or Icy Veins grants you Frostfire Empowerment.
+    frostfire_bolt            = {  94641, 431044, 1 }, -- Launches a bolt of frostfire at the enemy, causing 116,020 Frostfire damage, slowing movement speed by 60%, and causing an additional 49,045 Frostfire damage over 8 sec. Frostfire Bolt generates stacks for both Fire Mastery and Frost Mastery.
+    frostfire_empowerment     = {  94632, 431176, 1 }, -- Your Frost and Fire spells have a chance to activate Frostfire Empowerment, causing your next Frostfire Bolt to be instant cast, deal 60% increased damage, explode for 80% of its damage to nearby enemies.
+    frostfire_infusion        = {  94634, 431166, 1 }, -- Your Frost and Fire spells have a chance to trigger an additional bolt of Frostfire, dealing 53,832 damage. This effect generates Frostfire Mastery when activated.
+    frostfire_mastery         = {  94636, 431038, 1, "frostfire" }, -- Your damaging Fire spells generate 1 stack of Fire Mastery and Frost spells generate 1 stack of Frost Mastery. Fire Mastery increases your haste by 1%, and Frost Mastery increases your Mastery by 2% for 14 sec, stacking up to 6 times each. Adding stacks does not refresh duration.
+    imbued_warding            = {  94642, 431066, 1 }, -- Ice Barrier also casts a Blazing Barrier at 25% effectiveness.
+    isothermic_core           = {  94638, 431095, 1 }, -- Comet Storm now also calls down a Meteor at 150% effectiveness onto your target's location. Meteor now also calls down a Comet Storm at 200% effectiveness onto your target location.
+    meltdown                  = {  94642, 431131, 1 }, -- You melt slightly out of your Ice Block and Ice Cold, allowing you to move slowly during Ice Block and increasing your movement speed over time. Ice Block and Ice Cold trigger a Blazing Barrier when they end.
+    severe_temperatures       = {  94640, 431189, 1 }, -- Casting damaging Frost or Fire spells has a high chance to increase the damage of your next Frostfire Bolt by 10%, stacking up to 5 times.
+    thermal_conditioning      = {  94640, 431117, 1 }, -- Frostfire Bolt's cast time is reduced by 10%.
 } )
-
 
 -- PvP Talents
-spec:RegisterPvpTalents( {
-    concentrated_coolness      =  632, -- (198148)
-    ethereal_blink             = 5600, -- (410939)
-    frost_bomb                 = 5496, -- (390612) Places a Frost Bomb on the target. After 5 sec, the bomb explodes, dealing 69,868 Frost damage to the target and 34,948 Frost damage to all other enemies within 10 yards. All affected targets are slowed by 80% for 4 sec. If Frost Bomb is dispelled before it explodes, gain a charge of Brain Freeze.
+spec:RegisterPvpTalents( { 
+    concentrated_coolness      =  632, -- (198148) 
+    ethereal_blink             = 5600, -- (410939) Blink and Shimmer apply Slow at 100% effectiveness to all enemies you Blink through. For each enemy you Blink through, the cooldown of Blink and Shimmer are reduced by 1 sec, up to 5 sec.
+    frost_bomb                 = 5496, -- (390612) Places a Frost Bomb on the target. After 5 sec, the bomb explodes, dealing 530,352 Frost damage to the target and 265,287 Frost damage to all other enemies within 10 yards. All affected targets are slowed by 80% for 4 sec. If Frost Bomb is dispelled before it explodes, gain a charge of Brain Freeze.
     ice_form                   =  634, -- (198144) Your body turns into Ice, increasing your Frostbolt damage done by 30% and granting immunity to stun and knockback effects. Lasts 17 sec.
     ice_wall                   = 5390, -- (352278) Conjures an Ice Wall 30 yards long that obstructs line of sight. The wall has 40% of your maximum health and lasts up to 15 sec.
-    icy_feet                   =   66, -- (407581)
-    improved_mass_invisibility = 5622, -- (415945)
-    master_shepherd            = 5581, -- (410248)
-    ring_of_fire               = 5490, -- (353082) Summons a Ring of Fire for 8 sec at the target location. Enemies entering the ring burn for 18% of their total health over 6 sec.
-    snowdrift                  = 5497, -- (389794) Summon a strong Blizzard that surrounds you for 6 sec that slows enemies by 80% and deals 2,101 Frost damage every 1 sec. Enemies that are caught in Snowdrift for 2 sec consecutively become Frozen in ice, stunned for 4 sec.
+    icy_feet                   =   66, -- (407581) 
+    improved_mass_invisibility = 5622, -- (415945) The cooldown of Mass Invisibility is reduced by 4 min and can affect allies in combat.
+    master_shepherd            = 5581, -- (410248) While an enemy player is affected by your Polymorph or Mass Polymorph, your movement speed is increased by 25% and your Versatility is increased by 12%. Additionally, Polymorph and Mass Polymorph no longer heal enemies.
+    overpowered_barrier        = 5708, -- (1220739) Your barriers absorb 100% more damage and have an additional effect, but last 5 sec.  Ice Barrier If the barrier is fully absorbed, enemies within 10 yds suffer 518,389 Frost damage and are slowed by 70% for 4 sec.
+    ring_of_fire               = 5490, -- (353082) Summons a Ring of Fire for 8 sec at the target location. Enemies entering the ring are disoriented and burn for 3% of their total health over 3 sec.
+    snowdrift                  = 5497, -- (389794) Summon a strong Blizzard that surrounds you for 6 sec that slows enemies by 80% and deals 15,950 Frost damage every 1 sec. Enemies that are caught in Snowdrift for 2 sec consecutively become Frozen in ice, stunned for 4 sec.
 } )
-
 
 -- Auras
 spec:RegisterAuras( {
     active_blizzard = {
-        duration = function () return 8 * haste end,
+        duration = function () return 12 * haste end,
         max_stack = 1,
         generate = function( t )
-            if query_time - action.blizzard.lastCast < 8 * haste then
+            if query_time - action.blizzard.lastCast < 12 * haste then
                 t.count = 1
                 t.applied = action.blizzard.lastCast
-                t.expires = t.applied + ( 8 * haste )
+                t.expires = t.applied + ( 12 * haste )
                 t.caster = "player"
                 return
             end
@@ -177,7 +191,9 @@ spec:RegisterAuras( {
             t.expires = 0
             t.caster = "nobody"
         end,
+
     },
+
     active_comet_storm = {
         duration = 2.6,
         max_stack = 1,
@@ -286,10 +302,20 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1
     },
+    embedded_frost_splinter = {
+        id = 443740,
+        duration = 18,
+        max_stack = 8
+    },
     fingers_of_frost = {
         id = 44544,
         duration = 15,
         max_stack = 2,
+    },
+    fire_mastery = {
+        id = 431040,
+        duration = 14,
+        max_stack = 6
     },
     -- Talent: Movement slowed by $w1%.
     -- https://wowhead.com/beta/spell=228354
@@ -323,12 +349,6 @@ spec:RegisterAuras( {
         duration = 12,
         max_stack = 1
     },
-    freezing_winds = {
-        id = 382106,
-        duration = function() return spec.auras.frozen_orb.duration end,
-        max_stack = 1,
-        copy = 327478
-    },
     frigid_empowerment = {
         id = 417488,
         duration = 60,
@@ -342,6 +362,11 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1,
         copy = 235235
+    },
+    frost_mastery = {
+        id = 431039,
+        duration = 14,
+        max_stack = 6
     },
     -- Talent: Frozen.
     -- https://wowhead.com/beta/spell=378760
@@ -357,6 +382,11 @@ spec:RegisterAuras( {
         duration = 4,
         type = "Magic",
         max_stack = 1,
+    },
+    frostfire_bolt = {
+        id = 468655,
+        duration = 8,
+        max_stack = 1
     },
     frozen_orb = {
         duration = function() return 10 + 2 * talent.everlasting_frost.rank end,
@@ -569,9 +599,14 @@ spec:RegisterAuras( {
     },
     winters_chill = {
         id = 228358,
-        duration = 6,
+        duration = 8,
         type = "Magic",
         max_stack = 2,
+    },
+    wintertide = {
+        id = 1222865,
+        duration = 15,
+        max_stack = 4
     },
 
     frozen = {
@@ -641,9 +676,7 @@ spec:RegisterAuras( {
     },
 } )
 
-
 spec:RegisterPet( "water_elemental", 208441, "icy_veins", function() return talent.thermal_void.enabled and 30 or 25 end )
-
 
 spec:RegisterStateExpr( "fingers_of_frost_active", function ()
     return false
@@ -653,6 +686,12 @@ spec:RegisterStateFunction( "fingers_of_frost", function( active )
     fingers_of_frost_active = active
 end )
 
+local wc_spenders = {
+    frostbolt = true,
+    glacial_spike = true,
+    ice_lance = true,
+}
+
 spec:RegisterStateExpr( "remaining_winters_chill", function ()
     local wc = debuff.winters_chill.stack
 
@@ -660,9 +699,9 @@ spec:RegisterStateExpr( "remaining_winters_chill", function ()
 
     local projectiles = 0
 
-    if prev_gcd[1].ice_lance and state:IsInFlight( "ice_lance" ) then projectiles = projectiles + 1 end
-    if prev_gcd[1].frostbolt and state:IsInFlight( "frostbolt" ) then projectiles = projectiles + 1 end
-    if prev_gcd[1].glacial_spike and state:IsInFlight( "glacial_spike" ) then projectiles = projectiles + 1 end
+    for spender in pairs( wc_spenders ) do
+        if action[ spender ].in_flight and action[ spender ].in_flight_remains < wc then projectiles = projectiles + 1 end
+    end
 
     return max( 0, wc - projectiles )
 end )
@@ -684,11 +723,9 @@ spec:RegisterStateTable( "ground_aoe", {
     } )
 } )
 
-
 spec:RegisterStateExpr( "freezable", function ()
     return not target.is_boss or target.level < level + 3
 end )
-
 
 spec:RegisterStateTable( "frost_info", {
     last_target_actual = "nobody",
@@ -699,9 +736,6 @@ spec:RegisterStateTable( "frost_info", {
     -- virtual_brain_freeze = false
 } )
 
-
-local brain_freeze_removed = 0
-
 local lastCometCast = 0
 local lastAutoComet = 0
 
@@ -711,12 +745,6 @@ spec:RegisterHook( "COMBAT_LOG_EVENT_UNFILTERED", function( _, subtype, _, sourc
             if spellID == 116 then
                 frost_info.last_target_actual = destGUID
             end
-
-            --[[ if spellID == 44614 then
-                frost_info.real_brain_freeze = FindUnitBuffByID( "player", 190446 ) ~= nil
-            end ]]
-        elseif subtype == "SPELL_AURA_REMOVED" and spellID == 190446 then
-            brain_freeze_removed = GetTime()
         end
 
         if state.talent.glacial_spike.enabled and ( spellID == 205473 or spellID == 199844 ) and ( subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REMOVED" or subtype == "SPELL_AURA_REFRESH" or subtype == "SPELL_AURA_APPLIED_DOSE" or subtype == "SPELL_AURA_REMOVED_DOSE" ) then
@@ -844,12 +872,26 @@ spec:RegisterStateTable( "incanters_flow", {
 spec:RegisterStateExpr( "bf_flurry", function () return false end )
 spec:RegisterStateExpr( "comet_storm_remains", function () return buff.active_comet_storm.remains end )
 
+-- The War Within
+spec:RegisterGear( "tww2", 229346, 229344, 229342, 229343, 229341 )
+spec:RegisterAuras( {
+   --[[ 2-set
+    jackpot = {
+        -- spells have a chance to proc a jackpot that generates a frostbolt valley hitting a primary target and spreading to surrounding mobs (until 8). Casting Icy Veins always procs it
+    },--]]
+   -- 4-set
+    extended_bankroll = {
+        id = 1216914,
+        duration = 30,
+        max_stack = 1
+    },
 
+} )
+
+-- Dragonflight
 
 spec:RegisterGear( "tier31", 207288, 207289, 207290, 207291, 207293, 217232, 217234, 217235, 217231, 217233 )
-
 spec:RegisterGear( "tier30", 202554, 202552, 202551, 202550, 202549 )
-
 spec:RegisterGear( "tier29", 200318, 200320, 200315, 200317, 200319 )
 spec:RegisterAura( "touch_of_ice", {
     id = 394994,
@@ -858,17 +900,13 @@ spec:RegisterAura( "touch_of_ice", {
 } )
 
 
-local FreezingWinds = setfenv( function()
-    addStack( "fingers_of_frost" )
+local BrainFreeze = setfenv( function()
+    if talent.perpetual_winter.enabled then gainCharges( "flurry", 1 ) else setCooldown( "flurry", 0 ) end
+    applyBuff( "brain_freeze" )
 end, state )
 
-
 spec:RegisterHook( "reset_precast", function ()
-    --[[ if pet.rune_of_power.up then applyBuff( "rune_of_power", pet.rune_of_power.remains )
-    else removeBuff( "rune_of_power" ) end --]]
-
     frost_info.last_target_virtual = frost_info.last_target_actual
-    -- frost_info.virtual_brain_freeze = frost_info.real_brain_freeze
 
     if now - action.flurry.lastCast < gcd.execute and debuff.winters_chill.stack < 2 then applyDebuff( "target", "winters_chill", nil, 2 ) end
 
@@ -886,17 +924,6 @@ spec:RegisterHook( "reset_precast", function ()
         summonPet( "water_elemental", remaining_pet )
     end
 
-    if buff.freezing_winds.up then
-        local tick, expires = buff.freezing_winds.applied, buff.freezing_winds.expires
-
-        for i = 1, ( talent.everlasting_frost.enabled and 4 or 3 ) do
-            tick = tick + 3
-            if tick > query_time and tick < expires then
-                state:QueueAuraEvent( "freezing_winds", FreezingWinds, tick, "AURA_TICK" )
-            end
-        end
-    end
-
     if  active_dot.glacial_spike > 0 and debuff.glacial_spike.down or
         active_dot.winters_chill > 0 and debuff.winters_chill.down or
         active_dot.freeze > 0 and debuff.freeze.down or
@@ -908,10 +935,22 @@ spec:RegisterHook( "reset_precast", function ()
 end )
 
 spec:RegisterHook( "runHandler", function( action )
-    if buff.ice_floes.up then
-        local ability = class.abilities[ action ]
-        if ability and ability.cast > 0 and ability.cast < 10 then removeStack( "ice_floes" ) end
+
+    local ability = class.abilities[ action ]
+
+    if buff.ice_floes.up and ability and ability.cast > 0 and ability.cast < 10 then removeStack( "ice_floes" ) end
+
+    if talent.frostfire_mastery.enabled and ability then
+        if ability.school == "fire" or ability.school == "frostfire" then
+            if buff.fire_mastery.up then applyBuff( "fire_mastery", buff.fire_mastery.remains, min( spec.auras.fire_mastery.max_stack, buff.fire_mastery.stack + 1 ) )
+            else addStack( "fire_mastery" ) end
+        end
+        if ability.school == "frost" or ability.school == "frostfire" then
+            if buff.frost_mastery.up then applyBuff( "frost_mastery", buff.frost_mastery.remains, min( spec.auras.frost_mastery.max_stack, buff.frost_mastery.stack + 1 ) )
+            else applyBuff( "frost_mastery" ) end
+        end
     end
+
 end )
 
 
@@ -924,6 +963,7 @@ spec:RegisterAbilities( {
         id = 190356,
         cast = function () return buff.freezing_rain.up and 0 or 2 * haste end,
         cooldown = 8,
+        hasteCD = true,
         gcd = "spell",
         school = "frost",
 
@@ -942,6 +982,7 @@ spec:RegisterAbilities( {
         handler = function ()
             applyDebuff( "target", "blizzard" )
             applyBuff( "active_blizzard" )
+
         end,
     },
 
@@ -979,8 +1020,14 @@ spec:RegisterAbilities( {
         talent = "comet_storm",
         startsCombat = false,
 
+        flightTime = 2.6,
+
         handler = function ()
             applyBuff( "active_comet_storm" )
+        end,
+
+        impact = function ()
+            -- noop.
         end,
     },
 
@@ -998,15 +1045,17 @@ spec:RegisterAbilities( {
 
         startsCombat = true,
 
-        usable = function () return talent.coldest_snap.enabled or target.maxR <= 12, "target must be nearby" end,
+        usable = function () return not settings.check_cone_range or target.maxR <= 12, strformat( "check_cone_range enabled and distance is %d", target.maxR ) end,
         handler = function ()
             applyDebuff( "target", talent.freezing_cold.enabled and "freezing_cold" or "cone_of_cold" )
             active_dot.cone_of_cold = max( active_enemies, active_dot.cone_of_cold )
             removeDebuffStack( "target", "winters_chill" )
 
             if talent.coldest_snap.enabled then
-                setCooldown( "frozen_orb", 0 )
-                setCooldown( "comet_storm", 0 )
+                if true_active_enemies >= 3 then
+                    setCooldown( "frozen_orb", 0 )
+                    setCooldown( "comet_storm", 0 )
+                end
                 applyDebuff( "target", "winters_chill" )
                 active_dot.winters_chill = max( active_enemies, active_dot.winters_chill )
             end
@@ -1018,9 +1067,9 @@ spec:RegisterAbilities( {
     flurry = {
         id = 44614,
         cast = 0,
-        charges = function() return talent.perpetual_winter.enabled and 2 or nil end,
+        charges = function() if talent.perpetual_winter.enabled then return 2 end end,
         cooldown = 30,
-        recharge = function() return talent.perpetual_winter.enabled and 30 or nil end,
+        recharge = function() if talent.perpetual_winter.enabled then return 30 end end,
         gcd = "spell",
         school = "frost",
 
@@ -1054,6 +1103,14 @@ spec:RegisterAbilities( {
                 end
             end
 
+            if talent.frostfire_mastery.enabled then
+                if buff.excess_frost.up then
+                    removeStack( "excess_frost" )
+                    spec.abilities.ice_nova.handler()
+                    reduceCooldown( "comet_storm", 3 )
+                end
+            end
+
             applyDebuff( "target", "flurry" )
             addStack( "icicles" )
             if talent.glacial_spike.enabled and buff.icicles.stack == buff.icicles.max_stack then
@@ -1068,6 +1125,11 @@ spec:RegisterAbilities( {
             Hekili:Debug( "Winter's Chill applied by Flurry." )
             applyDebuff( "target", "winters_chill", nil, 2 )
             applyDebuff( "target", "flurry" )
+            applyBuff( "bone_chilling", nil, 3 )
+            if talent.frostfire_mastery.enabled then
+                if buff.frost_mastery.up then applyBuff( "frost_mastery", buff.frost_mastery.expires, min( buff.frost_mastery.stacks + 3, 6) )
+                else applyBuff( "frost_mastery", nil, 3 ) end
+            end
         end,
 
         copy = 228354 -- ID of the Flurry impact.
@@ -1095,18 +1157,19 @@ spec:RegisterAbilities( {
 
     -- Launches a bolt of frost at the enemy, causing 890 Frost damage and slowing movement speed by 60% for 8 sec.
     frostbolt = {
-        id = function() return talent.frostfire_bolt.enabled and 431044 or 116 end,
+        id = 116,
         cast = function ()
             if buff.frostfire_empowerment.up then return 0 end
             return 2 * ( 1 - 0.04 * buff.slick_ice.stack ) * haste
         end,
         cooldown = 0,
         gcd = "spell",
-        school = function() return talent.frostfire_bolt.enabled and "frostfire" or "frost" end,
+        school = "frost",
 
         spend = 0.02,
         spendType = "mana",
 
+        notalent = "frostfire_bolt",
         startsCombat = true,
         velocity = 35,
 
@@ -1119,10 +1182,12 @@ spec:RegisterAbilities( {
             addStack( "icicles" )
 
             if buff.frostfire_empowerment.up then
-                applyBuff( "frost_mastery", nil, 6 )
-                if talent.excess_frost.enabled then applyBuff( "excess_frost" ) end
-                applyBuff( "fire_mastery", nil, 6 )
-                if talent.excess_fire.enabled then applyBuff( "excess_fire" ) end
+                if talent.flash_freezeburn.enabled then
+                    applyBuff( "frost_mastery", nil, 6 )
+                    addStack( "excess_frost" )
+                    applyBuff( "fire_mastery", nil, 6 )
+                    addStack( "excess_fire" )
+                end
                 removeBuff( "frostfire_empowerment" )
             end
 
@@ -1134,7 +1199,6 @@ spec:RegisterAbilities( {
                 addStack( "deaths_chill", buff.icy_veins.remains, 1 )
             end
 
-            removeStack( "ice_floes" )
 
             if buff.cold_front_ready.up then
                 spec.abilities.frozen_orb.handler()
@@ -1164,13 +1228,92 @@ spec:RegisterAbilities( {
 
         impact = function ()
             applyDebuff( "target", "chilled" )
-            --[[ if debuff.winters_chill.stack > 0 and action.frostbolt.lastCast > action.flurry.lastCast then
-                removeDebuffStack( "target", "winters_chill" )
-            end ]]
             removeDebuffStack( "target", "winters_chill" )
         end,
 
-        copy = { 116, 228597, "frostfire_bolt", 431044 }
+        bind = "frostfire_bolt",
+        copy = { 116, 228597 }
+    },
+
+
+    -- Launches a bolt of frost at the enemy, causing 890 Frost damage and slowing movement speed by 60% for 8 sec.
+    frostfire_bolt = {
+        id = 431044,
+        cast = function ()
+            if buff.frostfire_empowerment.up then return 0 end
+            return 2 * ( 1 - 0.04 * buff.slick_ice.stack ) * haste
+        end,
+        cooldown = 0,
+        gcd = "spell",
+        school = "frostfire",
+
+        spend = 0.02,
+        spendType = "mana",
+
+        talent = "frostfire_bolt",
+        startsCombat = true,
+        velocity = 35,
+
+        usable = function ()
+            if moving and settings.prevent_hardcasts and action.frostfire_bolt.cast_time > buff.ice_floes.remains then return false, "prevent_hardcasts during movement and ice_floes is down" end
+            return true
+        end,
+
+        handler = function ()
+            addStack( "icicles" )
+
+            if buff.frostfire_empowerment.up then
+                if talent.flash_freezeburn.enabled then
+                    applyBuff( "frost_mastery", nil, 6 )
+                    addStack( "excess_frost" )
+                    applyBuff( "fire_mastery", nil, 6 )
+                    addStack( "excess_fire" )
+                end
+                removeBuff( "frostfire_empowerment" )
+            end
+
+            if talent.glacial_spike.enabled and buff.icicles.stack == buff.icicles.max_stack then
+                applyBuff( "glacial_spike_usable" )
+            end
+
+            if talent.deaths_chill.enabled and buff.icy_veins.up then
+                addStack( "deaths_chill", buff.icy_veins.remains, 1 )
+            end
+
+
+            if buff.cold_front_ready.up then
+                spec.abilities.frozen_orb.handler()
+                removeBuff( "cold_front_ready" )
+            end
+
+            if talent.bone_chilling.enabled then addStack( "bone_chilling" ) end
+            if talent.slick_ice.enabled or legendary.slick_ice.enabled then addStack( "slick_ice" ) end
+
+            if talent.cold_front.enabled or legendary.cold_front.enabled then
+                if buff.cold_front.stack < 29 then addStack( "cold_front" )
+                else
+                    removeBuff( "cold_front" )
+                    applyBuff( "cold_front_ready" )
+                end
+            end
+
+            if azerite.tunnel_of_ice.enabled then
+                if frost_info.last_target_virtual == target.unit then
+                    addStack( "tunnel_of_ice" )
+                else
+                    removeBuff( "tunnel_of_ice" )
+                end
+                frost_info.last_target_virtual = target.unit
+            end
+        end,
+
+        impact = function ()
+            applyDebuff( "target", "chilled" )
+            removeDebuffStack( "target", "winters_chill" )
+            applyDebuff( "target", "frostfire_bolt" )
+        end,
+
+        bind = "frostbolt"
     },
 
     -- Launches an orb of swirling ice up to 40 yards forward which deals up to 5,687 Frost damage to all enemies it passes through. Deals reduced damage beyond 8 targets. Grants 1 charge of Fingers of Frost when it first damages an enemy. While Frozen Orb is active, you gain Fingers of Frost every 2 sec. Enemies damaged by the Frozen Orb are slowed by 40% for 3 sec.
@@ -1188,22 +1331,16 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         toggle = "cooldowns",
-        velocity = 20,
+        -- velocity = 20,
+        flightTime = 12,
 
         handler = function ()
             applyBuff( "frozen_orb" )
             if talent.freezing_rain.enabled then applyBuff( "freezing_rain" ) end
-            if talent.freezing_winds.enabled then
-                applyBuff( "freezing_winds" )
-                state:QueueAuraEvent( "freezing_winds", FreezingWinds, query_time + 3, "AURA_TICK" )
-                state:QueueAuraEvent( "freezing_winds", FreezingWinds, query_time + 6, "AURA_TICK" )
-                state:QueueAuraEvent( "freezing_winds", FreezingWinds, query_time + 9, "AURA_TICK" )
-                if talent.everlasting_frost.enabled then
-                    state:QueueAuraEvent( "freezing_winds", FreezingWinds, query_time + 12, "AURA_TICK" )
-                end
-            end
             if talent.permafrost_lances.enabled then applyBuff( "permafrost_lances" ) end
         end,
+
+        impact = function() end,
 
         --[[ Not modeling because you can throw it off in a random direction and get no procs.  Just react.
         impact = function ()
@@ -1292,29 +1429,19 @@ spec:RegisterAbilities( {
             if buff.fingers_of_frost.up then return end
             return "frozen"
         end,
+
         cycle_to = function()
             if buff.fingers_of_frost.up then return end
             return true
         end,
 
-        start = function ()
+        handler = function ()
             applyDebuff( "target", "chilled" )
-
-            if buff.excess_frost.up then
-                applyDebuff( "target", "living_bomb" )
-                removeBuff( "excess_frost" )
-            end
-
-            if buff.fingers_of_frost.up then
-                removeStack( "fingers_of_frost" )
-                if talent.cryopathy.enabled then addStack( "cryopathy" ) end
-                if set_bonus.tier29_4pc > 0 then applyBuff( "touch_of_ice" ) end
-            end
 
             if buff.fingers_of_frost.up or debuff.frozen.up then
                 if talent.chain_reaction.enabled then addStack( "chain_reaction" ) end
-                if talent.thermal_void.enabled and buff.icy_veins.up then 
-                    buff.icy_veins.expires = buff.icy_veins.expires + 0.5 
+                if talent.thermal_void.enabled and buff.icy_veins.up then
+                    buff.icy_veins.expires = buff.icy_veins.expires + 0.5
                     pet.water_elemental.expires = buff.icy_veins.expires
                 end
             end
@@ -1325,19 +1452,31 @@ spec:RegisterAbilities( {
             if azerite.whiteout.enabled then
                 cooldown.frozen_orb.expires = max( 0, cooldown.frozen_orb.expires - 0.5 )
             end
+
+            if buff.fingers_of_frost.up or debuff.frozen.up then
+                removeStack( "fingers_of_frost" )
+                if talent.hailstones.enabled then
+                    addStack( "icicles" )
+                    if talent.glacial_spike.enabled and buff.icicles.stack_pct == 100 then
+                        applyBuff( "glacial_spike_usable" )
+                    end
+                end
+
+                if talent.cryopathy.enabled then addStack( "cryopathy" ) end
+                if set_bonus.tier29_4pc > 0 then applyBuff( "touch_of_ice" ) end
+            end
         end,
 
         impact = function ()
-            if ( buff.fingers_of_frost.up or debuff.frozen.up ) and talent.hailstones.enabled then
-                addStack( "icicles" )
-                if talent.glacial_spike.enabled and buff.icicles.stack == buff.icicles.max_stack then
-                    applyBuff( "glacial_spike_usable" )
+            removeDebuff( "target", "frozen" )
+            if talent.frostfire_mastery.enabled then
+                if buff.excess_fire.up then
+                    removeStack( "excess_fire" )
+                    addStack( "excess_frost" )
+                    BrainFreeze()
                 end
             end
-
             removeDebuffStack( "target", "winters_chill" )
-
-
         end,
 
         copy = 228598
@@ -1400,18 +1539,13 @@ spec:RegisterAbilities( {
 
             if talent.bone_chilling.enabled then addStack( "bone_chilling" ) end
             if talent.cryopathy.enabled then addStack( "cryopathy", nil, 10 ) end
-           -- if talent.rune_of_power.enabled then applyBuff( "rune_of_power" ) end
+
+            if talent.flash_freezeburn.enabled then applyBuff( "frostfire_empowerment" ) end
 
             if pvptalent.ice_form.enabled then applyBuff( "ice_form" )
             else
                 if buff.icy_veins.down then stat.haste = stat.haste + 0.30 end
                 applyBuff( "icy_veins" )
-
-               --[[ if talent.snap_freeze.enabled then
-                    if talent.flurry.enabled then gainCharges( "flurry", 1 ) end
-                    addStack( "brain_freeze" )
-                    addStack( "fingers_of_frost" )
-                end --]]
             end
 
             if azerite.frigid_grasp.enabled then
@@ -1468,11 +1602,12 @@ spec:RegisterAbilities( {
     -- Talent: Draw power from the Night Fae, dealing 2,168 Nature damage over 3.6 sec to enemies within 18 yds. While channeling, your Mage ability cooldowns are reduced by 12 sec over 3.6 sec.
     shifting_power = {
         id = function() return talent.shifting_power.enabled and 382440 or 314791 end,
-        cast = function() return 4 * haste end,
+        cast = 4,
         channeled = true,
         cooldown = 60,
         gcd = "spell",
         school = "nature",
+        toggle = "cooldowns",
 
         spend = 0.05,
         spendType = "mana",
@@ -1497,7 +1632,7 @@ spec:RegisterAbilities( {
             applyBuff( "shifting_power" )
         end,
 
-        tick  = function ()
+        tick = function ()
             local seen = {}
             for _, a in pairs( spec.abilities ) do
                 if not seen[ a.key ] and ( not talent.coldest_snap.enabled or a.key ~= "cone_of_cold" ) then
@@ -1537,7 +1672,9 @@ spec:RegisterAbilities( {
         end,
     },
 
-    splinterstorm = {}, -- TODO: Support action.splinterstorm.in_flight
+    splinterstorm = {
+
+    }, -- TODO: Support action.splinterstorm.in_flight
 
     --[[ Summons a Water Elemental to follow and fight for you.
     water_elemental = {
@@ -1571,10 +1708,16 @@ spec:RegisterAbilities( {
         cooldown = 25,
         gcd = "off",
         school = "frost",
+        dual_cast = true,
 
         startsCombat = true,
 
-        usable = function () return pet.water_elemental.alive, "requires water elemental" end,
+        usable = function ()
+            if target.is_boss then return false, "target is a boss" end
+            if not pet.water_elemental.alive then return false, "requires water elemental" end
+            return true
+        end,
+
         handler = function ()
             applyDebuff( "target", "freeze" )
         end
@@ -1584,7 +1727,7 @@ spec:RegisterAbilities( {
         id = 135029,
         known = true,
         cast = 0,
-        cooldown = 45,
+        cooldown = 20,
         gcd = "off",
         school = "frost",
 
@@ -1594,12 +1737,10 @@ spec:RegisterAbilities( {
             return pet.water_elemental.alive, "requires a living water elemental"
         end,
         handler = function()
-            addStack( "brain_freeze" )
-            gainCharges( "flurry", 1 )
+            BrainFreeze()
         end
     }
 } )
-
 
 spec:RegisterRanges( "frostbolt", "polymorph", "fire_blast" )
 
@@ -1616,13 +1757,11 @@ spec:RegisterOptions( {
     damage = true,
     damageExpiration = 6,
 
-    potion = "phantom_fire",
+    potion = "tempered_potion",
 
     package = "Frost Mage",
 } )
 
-
-local ice_floes = GetSpellInfo( 108839 )
 
 spec:RegisterSetting( "prevent_hardcasts", false, {
     name = strformat( "%s, %s, %s: Instant-Only When Moving",
@@ -1630,55 +1769,26 @@ spec:RegisterSetting( "prevent_hardcasts", false, {
         Hekili:GetSpellLinkWithTexture( spec.abilities.glacial_spike.id ),
         Hekili:GetSpellLinkWithTexture( spec.abilities.frostbolt.id )
     ),
-    desc = strformat( "If checked, non-instant %s, %s, %s casts will not be recommended while you are moving.\n\nAn exception is made if %s is talented and active and your cast "
-        .. "would be complete before |W%s|w expires.",
+    desc = strformat( "If checked, non-instant %s, %s, and %s casts will not be recommended while you are moving.\n\nAn exception is made if %s is talented and active, and your cast " ..
+                      "would be complete before %s expires.",
         Hekili:GetSpellLinkWithTexture( spec.abilities.blizzard.id ),
         Hekili:GetSpellLinkWithTexture( spec.abilities.glacial_spike.id ),
         Hekili:GetSpellLinkWithTexture( spec.abilities.frostbolt.id ),
-        Hekili:GetSpellLinkWithTexture( 108839 ), ( ice_floes and ice_floes.name or "Ice Floes" )
+        Hekili:GetSpellLinkWithTexture( 108839 ),
+        Hekili:GetSpellLinkWithTexture( 108839 )
     ),
     type = "toggle",
     width = "full"
 } )
 
-
---[[ spec:RegisterSetting( "ignore_freezing_rain_st", true, {
-    name = "Ignore |T629077:0|t Freezing Rain in Single-Target",
-    desc = "If checked, the default action list will not recommend using |T135857:0|t Blizzard in single-target due to the |T629077:0|t Freezing Rain talent proc.",
-    type = "toggle",
-    width = "full",
-} ) ]]
-
---[[ spec:RegisterSetting( "limit_ice_lance", false, {
-    name = strformat( "Limit %s", Hekili:GetSpellLinkWithTexture( spec.abilities.ice_lance.id ) ),
-    desc = strformat( "If checked, %s will recommended less often when %s, %s, and %s are talented.", Hekili:GetSpellLinkWithTexture( spec.abilities.ice_lance.id ),
-        Hekili:GetSpellLinkWithTexture( spec.talents.slick_ice[2] ),
-        Hekili:GetSpellLinkWithTexture( spec.talents.frozen_touch[2] ),
-        Hekili:GetSpellLinkWithTexture( spec.talents.deep_shatter[2] ) ),
-    type = "toggle",
-    width = "full",
-} )
-
-spec:RegisterStateExpr( "limited_ice_lance", function()
-    return settings.limit_ice_lance and talent.slick_ice.enabled and talent.frozen_touch.enabled and talent.deep_shatter.enabled
-end ) ]]
-
---[[ spec:RegisterSetting( "manual_water_jet", false, {
-    name = strformat( "%s: Manual Control", Hekili:GetSpellLinkWithTexture( spec.abilities.water_jet.id ) ),
-    desc = strformat( "If checked, your pet's %s may be recommended for manual use instead of auto-cast by your pet.  "
-        .. "This ability is available when your pet is summoned by %s.\n\n"
-        .. "You will need to disable its auto-cast before using this feature.", Hekili:GetSpellLinkWithTexture( spec.abilities.water_jet.id ),
-        Hekili:GetSpellLinkWithTexture( spec.abilities.icy_veins.id ) ),
-    type = "toggle",
-    width = "full",
-} ) ]]
-
---[[ spec:RegisterSetting( "check_explosion_range", true, {
-    name = strformat( "%s: Range Check", Hekili:GetSpellLinkWithTexture( 1449 ) ),
-    desc = strformat( "If checked, %s will not be recommended when you are more than 10 yards from your target.", Hekili:GetSpellLinkWithTexture( 1449 ) ),
+spec:RegisterSetting( "check_cone_range", true, {
+    name = strformat( "%s: Range Check", Hekili:GetSpellLinkWithTexture( spec.abilities.cone_of_cold.id ) ),
+    desc = strformat( "If checked, %s will not be recommended when you are more than 10 yards from your target.\n\n" ..
+        "This setting may be counterproductive by wasting the cooldown resets from %s if you stay out of range of your target.",
+        Hekili:GetSpellLinkWithTexture( spec.abilities.cone_of_cold.id ),
+        spec.abilities.cone_of_cold.name ),
     type = "toggle",
     width = "full"
-} ) ]]
+} )
 
-
-spec:RegisterPack( "Frost Mage", 20240908, [[Hekili:TZ1AVnUnw7FlgfqngTJhBN4CPiXFylWc0bVB)skW(nllltNO3rwYROuMMbg(3(Ei1nE5COLStM2TOOfzMXI6C)YdpKolMS43w846GC2IFD64Pxn(UX3oAYvZMm(6fpM)6o2Ih3fe(5GNG)ssWw4N)ZSuE(HL)l5hTl4140G1cAWtlYcHp6588D8F6JF8PO8NlwnkmD7h5rBlIdYJstcZc2Kl(3HFCXJRkIIZ)LKfRWeGXZUAXJbf5pNMT4XhJ2(ZaLJwVMvUCgpCXJIL)HX39HXt(Xdlf)5T)0HLILEyzXobfp8PdFQCr3(HPtBE4USO0SO8xTx2nFy6DWY(TNzhw(VdYGFakruYIhJJ45CHwggZcEHb)TFvA4yjbRIzRx8pGNaKKLffagLm2l(pfUE0KrBIlYYagTFVGTnFCyAcZpDJFyA8AqldfMgGcPBz5(880STlYbRHbdQxwjnvzyykqN0VK4NXGfDyP3HLxu))QcJWZTkno3sEKpztugZV8XdL0yvXMnJIcJaDMpINdHbhwo)HdlVuUads8uCqyuqSpFx0NzLp9cNKGGb3Fy5m5ddFoi7jg3FtwPIheFyj8MtLmFiO0VcVMFUyrGRbChGj7sctwuiZpoireE2A1YdIzj56c(OQxwkbRzsb8lrjWBW9dFokoEKWotk8G8Dv7d3eL8K4fbhT0apQyhUyFfHyNf8AZlRk5zSTbrja191Knj)NGZIzKrRe6XS6WOsHPksEKzOMWptkodBvfnRSqGU2Tazz7AdpMwlzdoSSYhQAOADHczRwE1xsPeZ1Kq4jFLL4NMTsiE3qkEvSuK6Y4q6AsWoTOMgoQKo3YW5GhAS(6Azm2YC5RlxHqbEH5ZsyBJy8Q8l1Qkk1Aan7wsnRJsKMLxvjXn8UmddFdDLTKuBXrHV6)cdwr7kfXqJBnq8NJ2KlmW7s)cltyIUR3jloc0NmUpfLOkCinudowfxIGf8sctO7GHfsDLUKNK(sGKkY2ukjrLTyujSyvuvMddIJ9l)h(IMSLTA9lHASn9f2wiOyH4)EeE4FeTDD2M94zNUBI8o3MUQl85s8vzGscHIm2xzYyXo1()O9xD2bDaDt0g(lxa73dzCUEIs5B2OqSTYuBrOKShSbskeGd)rJsWUgbcmHodiafpXFdk4Vbf0bqbyeQ0yxPZIqurvCwMMgx9uzrdHGkkHOTanFfFxSureRuitARSlU0QmEvMjQfiEeQPqZlVko6RFniBT7E)TBNPgrrzwUGhTI4Awq(Z1LbAeXH9X7(xFawwyIoELhxiSOXe8obNcT88eAKd9bp1LDcpf1wg7dEkU)XGu9(G4PtWrmChdX6AtBWnsuRC4OswBm2uchln4a06bEMvJa(Tw5HNyZ6RmIlQ7lPhymtDvgjE6RKUxlPa2wOTZywOBz2p46TLYbyh1DlkR5jGMgh90Z5Kq6P7UDcvBOBqGKTyfhIfgxwn8OP8MPPNqk)A2MGI42K(w7vH0EUJjQUPXwQPq6KRHR5UtCWkiEtDrzo47wLMuWhLhXYUCS)0DH0TYVYnyeX(gZIcfgqLCRIeszpi9iGTXeIPOGUUVzsNgWC0AN3BjekCxngANy47PC2BXOvgOlL8wR3LLcnlQ0PxUTRh9m8nYn)ZANqSP5qLNspLPtO9yxM5(Fn7o60CEcnmLHr4g0)xQLzv2qpBz2R0mKwOOtZ8BwturdcNOMp2WaUWWL1y4XMjxvGSXgHr3v4qvVP((7PrkFH5(GSdHAzBepn)zw22Oq4XzmZ93ArlK9ublqM6lErhJAHUQsV4ql5v3JpDVD8cJ178xBV9TZE6oLeDSL8GCjL(VQ0XM4Z2urJX5ATPAy733QILaBqdyjaoXi40yApkcSaAJzr0g8ikoS(1on4JPZAMvnfPSMssZaMuhBD3elfgp2iXIICdnsV0kwsJ)rjuVTbBPrqdiWGJnU8JIjO1XlMsV7(i6svDmq6MnsQxsbKkv0mvDag0DoEByB5R2LXll9LnY1X33MJjPrIAi)4dZAdX5quRkYfHDkgMpdiH(oivZXDmemKMQUSGkf8So4hTCfnzwlsfxLqNHJJPMrp8obp0tMuDx5za8(y)8OTN2C8O790lljQ22VTvEvVQpy0ATtv2WZHNq3XOe1fSjbXfJAIz5tsmpyA3n04vMCDNqZrTrWEGMtmQch7eKV71TbCPt9lSvgaNC0QEszh)nIo7(QdgFY42zOVkLZjw20z133odjWXw947sJILzkjS48NdYk4wPtiRXVK8V2KzrUWNflu7mwxfNMUoUaslBpleYx)fqhmHu1sGQke1kTTQ4evOwRKgxYrnZxRuzFxQ8prWhwVI1qA)2vW(vzz(GCVviFaEy)NGpp3xUReJie2)PiA3o26rjVUTGX9lsK1Me1kGe4K1v9cv625yHvrngAXC5oZlnBDrarWd2GrMfNMLb)GlFlErs5S00Y)LvvNxFwW6aiR3qxP0qsoNqMkza4BgpAcAPJ71hvFBX1BuRz0edyuZ4w1fvWz(aF3AUO7uxKme1FtHqX0l)OTLZvq0nl7ZGhdDpN1ltI1N7))xS(jzriJ1QFBAGQ1sUBUkTZis03Id98ILt(uFP5YmdaxZQa7P(gKfgaLDf9Sa3sOPSOjkBJYYsZ8J2kV2VARRFt5TlNDSAtlGgfzS1yOmWi)Ll65o(ow0LcgRCLEhohaq9QgTg66iCpwOibzl5Zy1YT2kkd2EykRCaz6nRLFEJdWQnUUtI2a8g2qFkDdDAafBdscgTtGMcSrxsF7fMAf4Y(9DqTLQA2xBM44VkoGBgtFJPPQAwE65mWBj6vjwu9DsFYIh)sqMaKhuRqE)WJaW8zGuVjn7WYVVCMYFVamiuYptyK4PIczbf5PBdYfFq4Zbaww(OdF6)lkbE0L)0HL)CAcWk5J)EmeEafZtjEwT)awZft(9Hn09AC6QoYudYIDNamP6n4uvnaXGQyXoMu9wkQ2StmlIAn5RosZtw)p8jehUKg9Wzp9DYz)3brKo82Ulg00UTthPO2fmYGOO30PosxZR)KbPPUDuDK6NPp7oCQQo)rdQInAYos1ZkXNGMNS(JM4xDg69l7Nil9mIqVYDKeMfe9uy7yE)zqxuRyqApBwo5DPYbjvpJOqIk9gNDIPdh)Kv6Ox)mZfN9UyBjOQ(COSkIInKQVDuMi6)S7MoHiqtDgPg0fB6QwKLiE48Lxcc)gyIN8whTHwFPEly9RidHw)2kAnBiVFY2BFleckASNBlNm6oYv15FrQUcsEx9bEEyP8Bql8yXS9yHW(1UsmAI0nrThslFuJP5hE4JMtN4WNWwL6CjWxr9ya(XOnpOVVY5pm1ZYy5naxr3V38LVeNFntmWMH3)WuH9P6TG1QEV70(CJ5x)JIbQ9q4AU6ImUTtLRb6R(JLxRQhMGPX34na761zRDxzBAokZBUBvofHPEMwLlR5LgsIJYUtJxhLSYRzMgvpjPJNR4Rhb(fP)UDQikewTiI3f43nK97rVxinHRklDOjBBxUGPxmG42ESF)aC0id90EhToiWl1COtwmwn3RtuarYBtMSUCgExqCNlU)U97jE0d35nOKhyxcJHE4NPZ8B9qWtz7EB8bo1yWCI453V3X1OWZXvOy(0z73FHZl7W8jJ9q7stZ0kspwPGO6loejktCmXcfVXD6zFJhA1DJGakJLfFQNWPoNgGCzc0YLCtuPYD2K1BaXzbBXp9RrGGNUUfcG774zgT(h97zG3aSJJ34tlVBbwmrE2kQsx5jFtQNvzKg3BGMqivzOkd1qSq92YH02QN23iG97rVnaZvUja73tDHhoxD2v8PDxvQWFLQOezChVzI2G89WQX4zkq3qgxzXoumj14Sf96(UVRgUhFeGvbEN6ZxRCTamyw2gakNFapKLSg8QV6ZzzfBrQU3e5lkLNY5EAh759tN1kFy8s)uZLT9izGbPNmE8WtKNwhADJI5(C3RYfCDM7EiN3UJx7LYZAVoFu5u2hAQeLN7TqsXpeDuBX1JDBl6WjrlDkh)aY96YHJdomn5B(u3Ih1rtlZJGQfZN5nW6CTnjzBLcXRC)4rtSqBAjgTxnbc5JJLhfL8s6Nfh4feVKa1meo1sfrwOh2K0McELtu6W1)4YlNrVOluhIZfgyWVXl2UT00ufmz(Ok6Rt72Jn36jnNuU5tmoCCldE95HB(a9Jaxf3DZwsA9xA3E8sa(gv6jk0)WypYVrhAycAQH2junQIyB3oeP0g)l93yd1ipvgOoWBeAkvLQoPwF)miTltiS3T3ED0NRJb6emieYtvzr8VZf4SXa5UvQVMJuFptLKJ6lybo70cfuCdkFPkEy2zgeBfTq6Km73RzyoAx)MmXZ2wIqRoRTxCXXtan2aJNMrxM1m)HlhsNZcBYc9vqi09Z8S)9x2dtv30u3cXXal6OkKTKaqoPqnJilALh6EgNAfGogKxkCZ8UOk)b9xLiKG2XSJ6t5axPlDotBrHRQWk7fg73acy8Sld05iBSZ5o7Hht3mkiKCGKe1y12Njo7UazGsAdjathgEsguXlQSelO53pD8Pgw130mQuephtT6OBhuJ1K7ieps2SM8juqU(ZK4JE1xELZesG1TttB6ckVvZLmtXkRED0iFjHUI(W3KTSofxfnUtysnT6QLn)s7KfCQ0EXXivozmKbetE(p4yWbFZHtY1K1Ze6OKyFdGnYZPHmkFMd4I2kCpHgAGoINFo4y6fMqjR6znTJgX5g7hpNe3xPI35smNNDYGoVT5pVv4bbqFNgHmMbQtCLOO8qXYnGk(Di(8uRZkXhnSHhqld6BdYt0QlDPGrNtBoFeMgvME3rxYXBv(NdKL8t5m1BMNTYvKS1kzE9g9WnF69xQ(v8gYXYBAjTHaBok4YzPoa5e(gEmB4FwHl398dx1aExGfZZ7oKyYwvhVpL8E8V4)(d]] )
+spec:RegisterPack( "Frost Mage", 20250301, [[Hekili:DZvApoUns7FlgbWX90t7XsUDFey7fydWlqgSjFXbiFZYQLP7wOTowD090dm8V93IuxKuSOKSLZo7IaepJivXIfR6PoyPzTX6)C9QT2jK1)H5eZztMoXySP5T3p9X1Rs(iKSEvOTZR2pd)bFBp4)))ffeNCCZVZEuO9h7dS3sPrCqAKd8OxsscJ)LV8LNDtEj9PXobEFj21lDVDIBGVtK9Ue6F35lRx9uQ7(KFZF9tQyGz3oB9k70KxcIwVALR3Vcu2D7ws20jXoRxrN(ntMEZeJF54M)8V(RJBwrSJd8pUX84M0qknp(1JFfM2T3yyEJPjmTvHF4zhNqIIpUX1lmk4nIhXpPAEgaf)8XnWVg3N9RPj9xZBMCh99boPoXNadsN0KBmnY)9rSjp5XBmVfg8xd8iGCCvsqKh)GtOuG(7dz)MX2kP0d8dgg5ge5M8r9PDFg38NVqoU5VSJG)hC046VE1E34Ky6zNZEI9BeRD7G)YFW0ii(2pTNSD9)egeOkjY1g0hS3dYQXBj2jVeB58I7(9JZN4XndpU5P0D7g768H1Bex)4XrepB43JBwECZJSjmkFocuiobuWoUz(Xn3ECZHdAMYc2ua6m44gBhQ(04DuTXDUreRNc2Nm213A3E3NFbeSxbQpS5SEL4KwNaAAO7XDreY3PpNTqHrK3SE2z7yJXpV32X1EVvCO7ReEAdZNqP50ZKMSbZKzU(pB9URpvnntcW27tyZylHjFegE82G39lKmm6hSBhBnYzVs211Hy5h8MnLHVfLH1YInTe72Ngf9bDbMHUaJkvwCbDVyoDGzz6aWIKRTjWavQBx1lIRrchhI6jzmc3WoulwRyMbRG6v5g(Ul(gMreY3CiXXwuoDCAy9Nt3gWaQ4W7PCyXJ52q8SnmTh4NgqVVt8TcIEsAwpIUDzSdtXGE2ebNrfmA(MKQh6yVFpjQyhwTEpT397F3oAlDjmMOFnKKNWX(SkcjAYsPgo2MonjJksgz)bO4NjIzuehjjxguOsr8cdENer92uilgO88uhULboiJtqWEQEncaSrM5q5SQouvnTr8kKCQjvQJuD2sIXpdzQDvDcYlerOOWuQrYkru8lU7sONAmHlteHdRLDIaZME8wsD6HbDTr0aeXo3B77KPkntYeH)Ks0mXqgwO0(dmaSY(lwuFXzEKTYIZYlp0K10)BLDaXkoUvUNDaribitSVDOG75bQp(ZvghHJ1jHdw9UIQuyAbZuQeOokIs))k0INZcJqBeclPwRZe0qCc8j0dBQyPlU(hPZtD7qS7wucNRVSweRsPBaCBerHGAF9x0WyuhRcEOe5NbP(KOigqquWoWRaX35dbT)expG3UPmYrE9IX7HCcSsJPtDEjiyBFdqf)E1C9DTYn69nT3Q7SmtdmFyr)SADN(qtl1fl2EdZMdUNoN6r33uG9f(gFSDH2OjIICzqC4EMwzMivulcvXUUisuzUwGd444yb2uiMRaXz2Zn5alBqr7AUGfY0wHdu7TFiiCRh9eo0z7c(a49D0ZqRYXUodUEPahvJc693JJO2R(7XHm7fWUkSzfrwCHcQaECtP83x5TCgYO25nUptJdxpVVehNBACtBhwxdHc3TKNWDbFI5oDUEhBhOZ)7NXdUt9(ea8X2NVJSh2taAIMVttytx6qwAkzJff05cwoYMYPtnUgE2pTTiLDbVvaqTBXn)asws9q(jA3bNRhPlLeOwkpncpIxYXA(yQuBnfrg5bZ493iy))drwkCSmNevgTucPwyMquUQ9CMOREMNEMbAYa4VRsBEUbBOjU)ZWis5k1uS89C1uXHz(Hn2cTPcHhIwFgjGHCGBAcfqg14ecfylzNDkq5IybQmEtz8AiHYPclRScBRwvNTX69qwcKj4JNhdGs63aLtFINljoRCKtP5zf56qLgCGbP(OmsESpADdoGdx9Vb2jowFgaDNxOEH6mRuDp1A98DscNZHHYepn6Hun305fnlTDT(jBscCkRjBtMWUCyaH6j76wK2ro2GZwkecegGJmyGj)C9CJIcISC9y9rIW8KTadaq8yss17(MnSjHrP)P9PWpGhk6dZ51eWlVZlKOG0yRKiB)yp3eqUyvY4qykzUGLTV0((vRp2e0AIGymwqt(4FW1SLjY8mTwbS4CVBj8ANAZJQNUT)2EXkT4EkAXTL068aoJquAj72UEQq)Q0mxkxGRmVT1pg6AmaCzfG4VhxD8KRgUuG34iNJ0xzyiQOPtuERH0qBeZ5Ui)jTaN8szMiT59ICC9n0ve)iwyF8mrAxCWduZ7dVuL8))C1e6UMRj0DfIKSnq3Ueln5APlp6SQo0XwRPPKT6PSfUTw2cQsuqg2QePO9jkKfJIwxDNliCxklw5wTZ3YqFbRIFaFzGvBvdfMlaqHpBW)vFcFQdte3P3pKqI4Eq7tBz52cuPPSS)VtWsMMkUc74MI)MFxhehZK2sIAacFQjtIBcNtF64gY)o1nmKSDCCzNHB9o5joR5IyklpsYglROofPImMkiIdTZ7wkuQEvnLv1n6ur7s0W0mLQKROIHifZQEK(uCualvQZjStAPS2unkIaFv53fNogtMXriowjIegeLW3(x0J3ReCLJyNotscJiteBLnEHOKerbGBPrKxijAhKrSLDSdXFlyp9Hvmjk1tb(MoMvROUGV0SAkaPldnincSgbaIx9dEhgJMwE)ZBkwf9y(ASJNPx3IpKoP3M6FR25VcsCDMH4YAeGdlomG9RwxgAu)PilE2FJHfjKaw(KvbUlflb7ZHjYnm7H)UTFQn4CZ5fBaZNMFqGx2nsTyYNpU59xCDEb(70pgKyxpGjsJjuHys(dT3UL(j04y77hKie)j7sTawEY4muhkBuVyeYUjaYBbKWlwLBIQ4sdc2ATlLUBeJlSXljb)CxhOtZ6SgC32YtGnoj6vayTk9JYdb3icJ9L5CHYDr9GgdOk7zHMlo1eo3FAJETywJ3cooPumpGd(L5dligF)x1hGzUKHaPJeqKdIS85LiA8JWk0H4oTnvPg9cSLvIwkwic57VghPWZ23ECOtsz0Rnt886vs(w4(GyEJy(ZwqEsRwO4w(EzXswisshRWB9gO5qNe9BB7wdtty1F3oIgWfypW(ISa0AWdgObgeDCZpxwH7FMgBgefrevofhqn9Sttc8StOpiZ4oE8XV(VC9HHmyFqz(WQXg(NvKgmqWKa1dvCGatzKX3UQKQZutvHyLLiRYUEsMU3DHO7JQPBvcXseTEMYYu0yQAsYLOLenvC9ETLO8zcjrvv9pufzp(vfAszxBtVOgXB8wB7w3UU2(9IOCAEHuIqu6v1F5sKxxlOlVk337QQiuuOCrsevzPKKP7dxKtpJjQjRuhwirzK(VOblb29L1lgcNTY1LsPf5W)SGPqOz)Js1thoNPgjYrZzI99Fp25iopptdY8tSB7v9tLAs5Tjs3uLq8elEP51KMQUrD5TmYoUhOmIdQEGYiXL1dugvP9SPmI7PZIYk1VC22XGPQbOawjVssqRZuvNGNLfAbt32cu9ZyCErAJDJ9rnzpr8q1c1IouOB8MXLXfGbIpGZgBfJWNKBGJF93yYqkHOf1nln0JBy)R5bmoTWKehit2BP37cej6(YEviECzpWC9IVi3Uoh)QQzX3OoQNrrnW)mTeFlAx338zwN7SWWunjlkAKwsQ(vlUIZp7UBHy()lxmv9RuEtg1FN5lmPs883cMlFxhk8CPB3iJZbqd(jj1HvzZjleOpN1qwlmO8GsCQH47gDKoowG0d6lAxwPIoZ5lmBlXpfEVfuNLqqZSDBOtR4qonOXzN2fkDLtHJj4rQgQUgMlFC4iKwqy(JhoGm0IhhoiJnK9aw2ycxPGr5lbhhBYJ2pe5BHq1UM2ywuYu23kdhHDL6hoOMUdPLI(M8TI6VTILpOARuuatX1FGIwhdNPgICLPlMmeT7c69ns19UJSlz1JKUnR1s8zQcMdr(6puqpEe1A(NoCqLJqLQrLldLqA)sowAm5WbnFbhkipFUNCmQuckyhEkiOWHEPKuO9dwmt1rd7szuk6tdhk8SIBIxhrobTTwb2K1waLpw87Py4af8UcYkEDZchR1XSmMmuZ3lbD4rdQN9NGEqTVlc4TWSZfTau0aeho0ELbehdCA3kD)7X9pVC8VsCClXvhOsIbNpJuJNiGZu9gQT1leHZUQsWZ70i3psTdsnEywUWy2vk2QDe1VGBeESs6EoMjdr7KR6luhCC0N(nAGtYftQQ7Cl8SmhS4AEwlVx55PA3pSbpB3fflrvm59tKrgM4HgzykgBK2WIYnFrIZHn655osEZHOl0kxudhvVp0qH(oCOs7gPvIvjl6QFGrcx3(1gZwIpFvRxFIVF(aj60EvP40Axfq2Jx3YCHzcIG44Hcs25tnV2CYNq6gTCVf16VTdhgnOwFTD4acvUItbRUVcQnNMHn5IdvDVRnN5H)N(PI6Cuiv2gyHvPHe74xza1cIcJhG9f7e0j6JWexhl4PjrP5uTyA)d2uakdg(m1aFY3a67WkEZZa0kXARBXFu6TayyB)elANiSlaMbevLBm96)l1LNpkhKrAZs(gXjnHyrXJV24t5Of8GixPxTq8mbrBWCcQpDdkUz93WyYS8xbPN7wUyQ5v5qUkm1H3URL9C5SjnSxX7VnomqvSIsrI(1QE)Q1hRrwpJHzZod7uI6CtyUlNsxsC7RRnmxk8c1KSLVc(2AEElQ9jtWoK(p8Z9y)LjZov4WucoFYytPQ7mNR8oshyXQGjC9Fl4vAl(aQA(GRs6wm7KLz4bya7sJlolOBFXhNJV3f6cGMGnpyzdknXPEE5yZuAxFij)hz0UQz4QnszFOPrl8rKqJMJOEAmR2PGBElTjpGyxSj4QQOAGxF5QS1T4HVDBxQSLiVwpZKMZlGNcQtnOpZcqzEgiBNs7hug4ui2O6bwoFgwEAN0wCK8hot5riwTZWoqprMoZbExkwd)QQmzajBIAzmXpoFstzb0kCVsaZulvk1eQv5eO(vLZzb7C0OTM95BKtQgt8uURPxCrkZu1RXlN4Epv)d4Ly9PKHn6JuyWpbq0uBF2hf3btpIRGwnOwJ521YXCkGrDJzQKn4ueNlKX9uEY12KEZRTV63xQa8iSK(spiEmwyCXqB1ysoTEEhPH1Tluw4Kq5VCW2ZGTck8cwEeEEPRqydQZvNAvtKoZ67QQDhEuz31YAQXZHkQEOGRWw4hSTwlDbFfRQocgyTgAT4zSqQZ)InO8zTpWdqvq5Bv(nAWPwt4(AoqFjQIQYbLVnIbQUoc679gxxcyQElj9zvW2z5FDgawqlPsMFmADOr3mSZxE5k7I9V(0dc8uCw0UBVUZX0EUBLUhpBXkQmw2IbBfMA9x7ecTSuaOiY5IX6kQ6pQbgwSF6lqlozNYaclpQBnIfRvxo7GD6GTcLHVQ(63hbXuUx6TaykOyJbVu)vALbvNcsrbF1v7KEm6JcwOhvTX8fxQJOvRM9D5T())d]] )

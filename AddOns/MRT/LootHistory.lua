@@ -34,7 +34,7 @@ end
 function module:Enable()
   	module:RegisterEvents('ENCOUNTER_LOOT_RECEIVED','BOSS_KILL',"ENCOUNTER_END")
 	if ExRT.clientVersion > 100007 then
-		module:RegisterEvents('LOOT_HISTORY_UPDATE_ENCOUNTER')
+		module:RegisterEvents('LOOT_HISTORY_UPDATE_ENCOUNTER','LOOT_HISTORY_UPDATE_DROP')
 	else
 		module:RegisterEvents("LOOT_HISTORY_AUTO_SHOW","LOOT_HISTORY_FULL_UPDATE","LOOT_HISTORY_ROLL_COMPLETE")
 	end
@@ -43,7 +43,7 @@ end
 function module:Disable()
   	module:UnregisterEvents('ENCOUNTER_LOOT_RECEIVED','BOSS_KILL',"ENCOUNTER_END")
 	if ExRT.clientVersion > 100007 then
-		module:UnregisterEvents('LOOT_HISTORY_UPDATE_ENCOUNTER')
+		module:UnregisterEvents('LOOT_HISTORY_UPDATE_ENCOUNTER','LOOT_HISTORY_UPDATE_DROP')
 	else
 		module:UnregisterEvents("LOOT_HISTORY_AUTO_SHOW","LOOT_HISTORY_FULL_UPDATE","LOOT_HISTORY_ROLL_COMPLETE")
 	end
@@ -144,24 +144,55 @@ end
 module.main.LOOT_HISTORY_AUTO_SHOW = module.main.LOOT_HISTORY_FULL_UPDATE
 module.main.LOOT_HISTORY_ROLL_COMPLETE = module.main.LOOT_HISTORY_FULL_UPDATE
 
+local rollStateToRollType = {
+	[0]=1,--NeedMainSpec	
+	[1]=1,--NeedOffSpec	
+	[2]=3,--Transmog	
+	[3]=2,--Greed	
+	[4]=0,--NoRoll	
+	[5]=0,--Pass
+}
+
+local function FindInValue(t,val)
+	for k,v in pairs(t) do
+		if v == val then
+			return k
+		end
+	end
+end
+
 function module.main:LOOT_HISTORY_UPDATE_ENCOUNTER(encounterID)
+	local instanceName,instance_type,difficulty,_,_,_,_,instanceID = GetInstanceInfo()
 	local drops = C_LootHistory.GetSortedDropsForEncounter(encounterID)
 	if not drops then return end
 	for _, dropInfo in ipairs(drops) do
 		local lootListID = dropInfo.lootListID
 
-		local dropInfo = C_LootHistory.GetSortedInfoForDrop(encounterID, lootListID)
+		--local dropInfo = C_LootHistory.GetSortedInfoForDrop(encounterID, lootListID)
 
 		local itemLink = dropInfo and dropInfo.itemHyperlink
 		if itemLink then
-			local rollID = (encounterID or "").."-"..(lootListID or "0")
+			local rollID = (encounterID or "").."-"..(difficulty or 0).."-"..(lootListID or "0")
 
 			local currTime, playerName, classID, quantity, itemLinkShort, rollType, _
 			local recordID
+			if not rollIDtoRecord[rollID] then
+				for i=#VMRT.LootHistory.list,1,-1 do
+					local t, eID, iID, dID, _, _, _, il = strsplit("#",VMRT.LootHistory.list[i])
+					if eID and iID and dID and tostring(instanceID) == iID and encounterID and tostring(encounterID) == eID and dID == tostring(difficulty or "") and t and tonumber(t) and time()-tonumber(t) <= 420 then
+						if type(il) == "string" and il:match("item:%d+") == itemLink:match("item:%d+") and not FindInValue(rollIDtoRecord, i) then
+							rollIDtoRecord[rollID] = i
+							break
+						end
+					else
+						break
+					end
+				end
+			end
 			if rollIDtoRecord[rollID] then
 				recordID = rollIDtoRecord[rollID]
 				currTime, _, _, _, playerName, classID, quantity, itemLinkShort, rollType = strsplit("#",VMRT.LootHistory.list[recordID])
-				if itemLinkShort ~= itemLink:match("(item:.-)|h") then
+				if type(itemLinkShort)~='string' or itemLinkShort:match("item:%d+")~=itemLink:match("item:%d+") then
 					currTime, playerName, classID, quantity, itemLinkShort = nil
 					recordID = nil
 				end
@@ -169,6 +200,9 @@ function module.main:LOOT_HISTORY_UPDATE_ENCOUNTER(encounterID)
 			if dropInfo.winner then
 				playerName = dropInfo.winner.playerName
 				classID = ExRT.GDB.ClassID[dropInfo.winner.playerClass or ""] or 0
+				if dropInfo.playerRollState then
+					rollType = rollStateToRollType[ dropInfo.playerRollState ]
+				end
 			end
 			if not currTime then
 				currTime = time()
@@ -191,6 +225,10 @@ function module.main:LOOT_HISTORY_UPDATE_ENCOUNTER(encounterID)
 			end
 		end
 	end
+end
+
+function module.main:LOOT_HISTORY_UPDATE_DROP(encounterID,lootListID)
+	module.main:LOOT_HISTORY_UPDATE_ENCOUNTER(encounterID)
 end
 
 function module.main:ENCOUNTER_END(encounterID)
@@ -314,11 +352,16 @@ function module.options:Load()
 	end
 
 
-	local RollTypeToText = {
+	local RollTypeToText = ExRT.isClassic and {
 		["0"] = "|r [pass]",
 		["1"] = "|r [need]",
 		["2"] = "|r [greed]",
 		["3"] = "|r [disenchant]",
+	} or {
+		["0"] = "|A:lootroll-icon-pass:20:20|a",
+		["1"] = "|A:lootroll-rollicon-yourolled-need:20:20|a",
+		["2"] = "|A:lootroll-rollicon-yourolled-greed:20:20|a",
+		["3"] = "|A:lootroll-rollicon-yourolled-transmog:20:20|a",
 	}
 	function self:UpdatePage()
 		local result = {}
@@ -337,7 +380,7 @@ function module.options:Load()
 			end
 
 			local class = ExRT.GDB.ClassList[tonumber(classID)]
-			local playerNameStyle = (class and "|c"..ExRT.F.classColor(class) or "")..playerName..(rollType and RollTypeToText[rollType] or "")
+			local playerNameStyle = (not ExRT.isClassic and rollType and RollTypeToText[rollType] or "")..(class and "|c"..ExRT.F.classColor(class) or "")..playerName..(ExRT.isClassic and rollType and RollTypeToText[rollType] or "")
 
 			quantity = tonumber(quantity)
 			difficulty = tonumber(difficulty)

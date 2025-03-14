@@ -30,13 +30,13 @@ local BigWigsAPI = BigWigsAPI
 local L = BigWigsAPI:GetLocale("BigWigs: Common")
 local LibSpec = LibStub("LibSpecialization", true)
 local loader = BigWigsLoader
-local isClassic, isRetail, isClassicEra, isCata = loader.isClassic, loader.isRetail, loader.isVanilla, loader.isCata
+local isClassic, isRetail, isClassicEra, isCata, season = loader.isClassic, loader.isRetail, loader.isVanilla, loader.isCata, loader.season
 local C_EncounterJournal_GetSectionInfo = isCata and function(key)
 	return C_EncounterJournal.GetSectionInfo(key) or BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 end or isRetail and C_EncounterJournal.GetSectionInfo or function(key)
 	return BigWigsAPI:GetLocale("BigWigs: Encounter Info")[key]
 end
-local UnitAffectingCombat, UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, UnitTokenFromGUID = UnitAffectingCombat, UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, UnitTokenFromGUID
+local UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, UnitTokenFromGUID = UnitIsPlayer, UnitPosition, UnitIsConnected, UnitClass, loader.UnitTokenFromGUID
 local GetSpellName, GetSpellTexture, GetTime, IsSpellKnown, IsPlayerSpell = loader.GetSpellName, loader.GetSpellTexture, GetTime, IsSpellKnown, IsPlayerSpell
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local EJ_GetEncounterInfo = isCata and function(key)
@@ -57,6 +57,8 @@ local myLocale = GetLocale()
 local hasVoice = BigWigsAPI:HasVoicePack()
 local bossUtilityFrame = CreateFrame("Frame")
 local petUtilityFrame = CreateFrame("Frame")
+local activeNameplateUtilityFrame, inactiveNameplateUtilityFrame = CreateFrame("Frame"), CreateFrame("Frame")
+local engagedGUIDs, activeNameplates, nameplateWatcher = {}, {}, nil
 local enabledModules, unitTargetScans = {}, {}
 local allowedEvents = {}
 local difficulty, maxPlayers
@@ -232,8 +234,25 @@ end
 -- @number encounterId The encounter id
 -- @within Enable triggers
 function boss:SetEncounterID(encounterId)
-	if type(encounterId) == "number" then
+	local encounterIdType = type(encounterId)
+	if encounterIdType == "number" then
 		self.engageId = encounterId
+	elseif encounterIdType == "table" then
+		self.extraEncounterIDs = {}
+		for i = 1, #encounterId do
+			local actualId = encounterId[i]
+			local actualIdType = type(actualId)
+			if actualIdType ~= "number" then
+				core:Error(("Module %q tried to set an invalid encounter ID at position #%d. Expected number, got %s."):format(self.moduleName, i, actualIdType))
+			elseif i > 1 then
+				self.extraEncounterIDs[actualId] = true
+				self.extraEncounterIDs[#self.extraEncounterIDs+1] = actualId
+			else
+				self.engageId = actualId
+			end
+		end
+	else
+		core:Error(("Module %q tried to set an invalid encounter ID. Expected number or table, got %s."):format(self.moduleName, encounterIdType))
 	end
 end
 
@@ -241,9 +260,28 @@ end
 -- @return number
 -- @within Enable triggers
 function boss:GetEncounterID()
-	local encounterId = self.engageId
-	if type(encounterId) == "number" then
-		return encounterId
+	if self.extraEncounterIDs then
+		return self.engageId, unpack(self.extraEncounterIDs)
+	else
+		return self.engageId
+	end
+end
+
+--- Check if a specific encounter ID is registered this module.
+-- @number encounterId A singular specific encounter ID
+-- @return boolean
+-- @within Enable triggers
+function boss:IsEncounterID(encounterId)
+	return encounterId == self.engageId or (self.extraEncounterIDs and self.extraEncounterIDs[encounterId])
+end
+
+--- Set the journal id used for this module. (As used by the dungeon journal)
+-- Usually not set directly, but via the :NewBoss API
+-- @number journalId The journal id
+-- @within Enable triggers
+function boss:SetJournalID(journalId)
+	if type(journalId) == "number" then
+		self.journalId = journalId
 	end
 end
 
@@ -304,13 +342,19 @@ function boss:GetAllowWin()
 	return self.allowWin and true or false
 end
 
-function boss:SetPrivateAuraSounds(opts)
-	for i = 1, #opts do
-		if type(opts[i]) ~= "table" then
-			opts[i] = { opts[i] }
+--- Register private auras.
+-- @param spellIDTable the options table
+function boss:SetPrivateAuraSounds(spellIDTable)
+	for i = 1, #spellIDTable do
+		local spellId = spellIDTable[i]
+		local idType = type(spellId)
+		if idType == "number" then
+			spellIDTable[i] = { spellId }
+		elseif idType ~= "table" then
+			core:Error(("Module %s tried to add an invalid private aura spell id at position #%d. Expected number or table, got %s."):format(self.moduleName, i, idType))
 		end
 	end
-	self.privateAuraSoundOptions = opts
+	self.privateAuraSoundOptions = spellIDTable
 end
 
 --- Check if a module option is enabled.
@@ -369,7 +413,7 @@ do
 		VOICE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Voice",
 		BAR = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Bars",
 		CASTBAR = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Bars",
-		NAMEPLATE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Pulse", -- XXX temp
+		NAMEPLATE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Nameplates",
 		TANK = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Role_Tank",
 		HEALER = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Role_Healer",
 		EMPHASIZE = "Interface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\EmphasizeMessage",
@@ -456,6 +500,11 @@ function boss:Disable(isWipe)
 		if #enabledModules == 0 then
 			bossUtilityFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 			petUtilityFrame:UnregisterEvent("UNIT_PET")
+			activeNameplateUtilityFrame:UnregisterEvent("NAME_PLATE_UNIT_ADDED")
+			inactiveNameplateUtilityFrame:UnregisterEvent("NAME_PLATE_UNIT_REMOVED")
+			nameplateWatcher:Stop()
+			engagedGUIDs = {}
+			activeNameplates = {}
 			unitTargetScans = {}
 		else
 			for i = #unitTargetScans, 1, -1 do
@@ -793,6 +842,74 @@ do
 		allowedEvents.UNIT_DIED = true
 		bossUtilityFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	end
+
+	do
+		local UnitAffectingCombat = UnitAffectingCombat
+		activeNameplateUtilityFrame:SetScript("OnEvent", function(_, _, unit)
+			activeNameplates[unit] = true
+		end)
+		inactiveNameplateUtilityFrame:SetScript("OnEvent", function(_, _, unit)
+			activeNameplates[unit] = nil
+		end)
+		nameplateWatcher = activeNameplateUtilityFrame:CreateAnimationGroup()
+		nameplateWatcher:SetLooping("REPEAT")
+		local anim = nameplateWatcher:CreateAnimation()
+		anim:SetDuration(0.5)
+		nameplateWatcher:SetScript("OnLoop", function()
+			for unit in next, activeNameplates do
+				local guid = UnitGUID(unit)
+				local engaged = engagedGUIDs[guid]
+				if not engaged and UnitAffectingCombat(unit) then
+					engagedGUIDs[guid] = true
+					local _, _, _, _, _, id = strsplit("-", guid)
+					local mobId = tonumber(id)
+					if mobId then
+						for i = #enabledModules, 1, -1 do
+							local self = enabledModules[i]
+							local m = eventMap[self]["UNIT_ENTERING_COMBAT"]
+							if m and m[mobId] then
+								self:Debug("UNIT_ENTERING_COMBAT", guid)
+								local func = m[mobId]
+								self[func](self, guid, mobId)
+							end
+						end
+					end
+				elseif engaged and not UnitAffectingCombat(unit) then
+					engagedGUIDs[guid] = nil
+				end
+			end
+		end)
+		local GetNamePlates = C_NamePlate.GetNamePlates
+		--- Register a callback for a unit nameplate entering combat.
+		-- @param func callback function, passed (guid, mobId)
+		-- @number ... any number of mob ids
+		function boss:RegisterEngageMob(func, ...)
+			if not func then core:Print(format(missingArgument, self.moduleName)) return end
+			if type(func) ~= "function" and not self[func] then core:Print(format(missingFunction, self.moduleName, func)) return end
+			if not eventMap[self].UNIT_ENTERING_COMBAT then eventMap[self].UNIT_ENTERING_COMBAT = {} end
+			for i = 1, select("#", ...) do
+				eventMap[self]["UNIT_ENTERING_COMBAT"][select(i, ...)] = func
+			end
+			if not nameplateWatcher:IsPlaying() then
+				activeNameplateUtilityFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+				inactiveNameplateUtilityFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+				local nameplates = GetNamePlates()
+				for i = 1, #nameplates do
+					local nameplateFrame = nameplates[i]
+					if nameplateFrame.namePlateUnitToken and UnitCanAttack("player", nameplateFrame.namePlateUnitToken) then
+						activeNameplates[nameplateFrame.namePlateUnitToken] = true
+					end
+				end
+				nameplateWatcher:Play()
+			end
+		end
+	end
+	--- Checks if a mob is engaged.
+	-- @param guid a mob to check
+	-- @return boolean
+	function boss:IsMobEngaged(guid)
+		return engagedGUIDs[guid] and true or false
+	end
 end
 
 -------------------------------------------------------------------------------
@@ -1033,20 +1150,35 @@ do
 		"raid26target", "raid27target", "raid28target", "raid29target", "raid30target",
 		"raid31target", "raid32target", "raid33target", "raid34target", "raid35target",
 		"raid36target", "raid37target", "raid38target", "raid39target", "raid40target",
-		"nameplate1target", "nameplate2target", "nameplate3target", "nameplate4target", "nameplate5target",
-		"nameplate6target", "nameplate7target", "nameplate8target", "nameplate9target", "nameplate10target",
-		"nameplate11target", "nameplate12target", "nameplate13target", "nameplate14target", "nameplate15target",
-		"nameplate16target", "nameplate17target", "nameplate18target", "nameplate19target", "nameplate20target",
-		"nameplate21target", "nameplate22target", "nameplate23target", "nameplate24target", "nameplate25target",
-		"nameplate26target", "nameplate27target", "nameplate28target", "nameplate29target", "nameplate30target",
-		"nameplate31target", "nameplate32target", "nameplate33target", "nameplate34target", "nameplate35target",
-		"nameplate36target", "nameplate37target", "nameplate38target", "nameplate39target", "nameplate40target",
+	}
+	local friendlyUnitTable = {
+		"player", "party1", "party2", "party3", "party4",
+		"raid1", "raid2", "raid3", "raid4", "raid5",
+		"raid6", "raid7", "raid8", "raid9", "raid10",
+		"raid11", "raid12", "raid13", "raid14", "raid15",
+		"raid16", "raid17", "raid18", "raid19", "raid20",
+		"raid21", "raid22", "raid23", "raid24", "raid25",
+		"raid26", "raid27", "raid28", "raid29", "raid30",
+		"raid31", "raid32", "raid33", "raid34", "raid35",
+		"raid36", "raid37", "raid38", "raid39", "raid40",
 	}
 	local unitTableCount = #targetOnlyUnitTable
 	--- Fetches a unit id by scanning available targets.
 	-- @string guid The GUID of the unit to find
+	-- @bool[opt] isFriendly Check only friendly units
 	-- @return unit id if found, nil otherwise
-	function boss:UnitTokenFromGUID(guid)
+	function boss:UnitTokenFromGUID(guid, isFriendly)
+		if isFriendly and not UnitTokenFromGUID then -- Hack for classic content where UnitTokenFromGUID doesn't exist
+			for i = 1, #friendlyUnitTable do
+				local targetUnit = friendlyUnitTable[i]
+				local targetGUID = UnitGUID(targetUnit)
+				if targetGUID == guid then
+					return targetUnit
+				end
+			end
+			return -- End hack
+		end
+
 		local unit = UnitTokenFromGUID(guid) -- Check Blizz API first
 		if unit then
 			return unit
@@ -1065,13 +1197,13 @@ end
 do
 	local unitTable = {
 		"boss1", "boss2", "boss3", "boss4", "boss5",
-		"target", "targettarget",
-		"mouseover", "mouseovertarget",
-		"focus", "focustarget",
+		"softenemy", "target", "mouseover", "focus",
 		"nameplate1", "nameplate2", "nameplate3", "nameplate4", "nameplate5", "nameplate6", "nameplate7", "nameplate8", "nameplate9", "nameplate10",
 		"nameplate11", "nameplate12", "nameplate13", "nameplate14", "nameplate15", "nameplate16", "nameplate17", "nameplate18", "nameplate19", "nameplate20",
 		"nameplate21", "nameplate22", "nameplate23", "nameplate24", "nameplate25", "nameplate26", "nameplate27", "nameplate28", "nameplate29", "nameplate30",
 		"nameplate31", "nameplate32", "nameplate33", "nameplate34", "nameplate35", "nameplate36", "nameplate37", "nameplate38", "nameplate39", "nameplate40",
+
+		"targettarget", "mouseovertarget", "focustarget",
 		"party1target", "party2target", "party3target", "party4target",
 		"raid1target", "raid2target", "raid3target", "raid4target", "raid5target",
 		"raid6target", "raid7target", "raid8target", "raid9target", "raid10target",
@@ -1080,15 +1212,27 @@ do
 		"raid21target", "raid22target", "raid23target", "raid24target", "raid25target",
 		"raid26target", "raid27target", "raid28target", "raid29target", "raid30target",
 		"raid31target", "raid32target", "raid33target", "raid34target", "raid35target",
-		"raid36target", "raid37target", "raid38target", "raid39target", "raid40target"
+		"raid36target", "raid37target", "raid38target", "raid39target", "raid40target",
 	}
 	local unitTableCount = #unitTable
 	local function findTargetByGUID(id)
 		local isNumber = type(id) == "number"
 		if not isNumber and UnitTokenFromGUID then
 			local unit = UnitTokenFromGUID(id)
-			if unit then return unit end
+			if unit then
+				return unit
+			else
+				for i = 50, unitTableCount do -- Begin at "targettarget" (50th) in the table
+					unit = unitTable[i]
+					local guid = UnitGUID(unit)
+					if guid == id then
+						return unit
+					end
+				end
+			end
+			return
 		end
+
 		for i = 1, unitTableCount do
 			local unit = unitTable[i]
 			local guid = UnitGUID(unit)
@@ -1169,54 +1313,38 @@ do
 		unitTargetScans[#unitTargetScans+1] = {self, func, solo and 0.1 or tankCheckExpiry, guid, 0} -- Tiny allowance when solo
 	end
 
-	local function scan(self)
-		for mobId, entry in next, core:GetEnableMobs() do
-			if type(entry) == "table" then
-				for i = 1, #entry do
-					local module = entry[i]
-					if module == self.moduleName then
-						local unit = findTargetByGUID(mobId)
-						if unit and UnitAffectingCombat(unit) then return unit end
-						break
-					end
-				end
-			elseif entry == self.moduleName then
-				local unit = findTargetByGUID(mobId)
-				if unit and UnitAffectingCombat(unit) then return unit end
-			end
-		end
-	end
-
+	local UnitAffectingCombat = UnitAffectingCombat
 	--- Start a repeating timer checking if your group is in combat with a boss.
 	function boss:CheckForEngage()
-		local go = scan(self)
-		if go then
-			self:Debug(":CheckForEngage() scan found active boss entities, calling :Engage", self:GetEncounterID(), self.moduleName)
-			self:UnregisterEvent("PLAYER_REGEN_DISABLED")
-			self:Engage()
-		else
-			self:Debug(":CheckForEngage() scan found nothing, next scan in 0.5s", self:GetEncounterID(), self.moduleName)
-			self:ScheduleTimer("CheckForEngage", .5)
+		if self:IsEnabled() and not self:IsEngaged() then
+			for mobId in next, self.enableMobs do
+				local unit = findTargetByGUID(mobId)
+				if unit and UnitAffectingCombat(unit) then
+					self:Debug(":CheckForEngage() scan passed, calling :Engage()", self:GetEncounterID(), self.moduleName, unit, mobId)
+					self:Engage()
+					return
+				end
+			end
+
+			self:Debug(":CheckForEngage() scan failed, next scan in 0.5s", self:GetEncounterID(), self.moduleName)
+			self:SimpleTimer(function() self:CheckForEngage() end, .5)
 		end
 	end
 
-	-- What if we die and then get battleressed?
-	-- First of all, the CheckForWipe every 2 seconds would continue scanning.
-	-- Secondly, if the boss module registers for PLAYER_REGEN_DISABLED, it would
-	-- trigger again, and CheckForEngage (possibly) invoked, which results in
-	-- a new Engage sync -> :Engage -> :OnEngage on the module.
-	-- Possibly a concern?
-
 	--- Start a repeating timer checking if your group has left combat with a boss.
-	-- @string[opt] first The event name when used as a callback
-	function boss:CheckForWipe(first)
-		local go = scan(self)
-		if not first and not go then
+	function boss:CheckForWipe()
+		if self:IsEnabled() and self:IsEngaged() then
+			for mobId in next, self.enableMobs do
+				local unit = findTargetByGUID(mobId)
+				if unit and UnitAffectingCombat(unit) then
+					self:Debug(":CheckForWipe() found active bosses, waiting for next scan in 2s", self:GetEncounterID(), self.moduleName, unit, mobId)
+					self:SimpleTimer(function() self:CheckForWipe() end, 2)
+					return
+				end
+			end
+
 			self:Debug(":CheckForWipe() found nothing active, rebooting module", self:GetEncounterID(), self.moduleName)
 			self:Wipe()
-		else
-			self:Debug(":CheckForWipe() found active bosses, waiting for next scan in 2s", "Boss:", go, self:GetEncounterID(), self.moduleName)
-			self:ScheduleTimer("CheckForWipe", 2)
 		end
 	end
 
@@ -1230,33 +1358,20 @@ do
 				self.privateAuraSounds = {}
 				local soundModule = plugins.Sounds
 				if soundModule then
-					for _, option in next, self.privateAuraSoundOptions do
-						local spellId = option[1]
-						local default = soundModule:GetDefaultSound("privateaura")
-
-						local key = ("pa_%d"):format(spellId)
+					local default = soundModule:GetDefaultSound("privateaura")
+					for _, opt in next, self.privateAuraSoundOptions do
+						local key = ("pa_%d"):format(opt[1])
 						local sound = soundModule:GetSoundFile(nil, nil, self.db.profile[key] or default)
 						if sound then
-							local privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
-								spellID = spellId,
-								unitToken = "player",
-								soundFileName = sound,
-								outputChannel = "master",
-							})
-							if privateAuraSoundId then
-								self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundId
-							end
-							if option.extra then
-								for _, id in next, option.extra do
-									local privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
-										spellID = spellId,
-										unitToken = "player",
-										soundFileName = sound,
-										outputChannel = "master",
-									})
-									if privateAuraSoundId then
-										self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundId
-									end
+							for i = 1, #opt do
+								local privateAuraSoundId = C_UnitAuras.AddPrivateAuraAppliedSound({
+									spellID = opt[i],
+									unitToken = "player",
+									soundFileName = sound,
+									outputChannel = "master",
+								})
+								if privateAuraSoundId then
+									self.privateAuraSounds[#self.privateAuraSounds + 1] = privateAuraSoundId
 								end
 							end
 						end
@@ -1393,7 +1508,7 @@ do
 end
 
 function boss:EncounterEnd(_, id, name, diff, size, status)
-	if self:GetEncounterID() == id and self:IsEnabled() then
+	if self:IsEncounterID(id) and self:IsEnabled() then
 		if status == 1 then
 			if self:GetJournalID() or self:GetAllowWin() then
 				self:Win() -- Official boss module
@@ -1515,17 +1630,10 @@ function boss:Vanilla()
 	return isClassicEra
 end
 
-do
-	local GetActiveSeason = C_Seasons and C_Seasons.GetActiveSeason
-	local season = 0
-	if GetActiveSeason then
-		season = GetActiveSeason() or 0
-	end
-	--- Get the current season.
-	-- @return number
-	function boss:GetSeason()
-		return season
-	end
+--- Get the current season.
+-- @return number
+function boss:GetSeason()
+	return season
 end
 
 --- Get the mob/npc id from a GUID.
@@ -2131,7 +2239,7 @@ do
 		end
 	end
 	--- Check if you can dispel.
-	-- @string dispelType dispel type (magic, disease, poison, curse, movement)
+	-- @string dispelType dispel type (magic, enrage, disease, poison, curse, movement)
 	-- @bool[opt] isOffensive true if dispelling a buff from an enemy (magic), nil if dispelling a friendly
 	-- @param[opt] key module option key to check
 	-- @return boolean
@@ -2570,9 +2678,10 @@ do
 	--- Color a player name based on class.
 	-- @param player The player name, or a table containing a list of names
 	-- @bool[opt] overwrite Ignore whatever the "class color message" feature is set to
+	-- @bool[opt] disableBarColors Not for current use
 	-- @return colored player name, or table containing colored names
-	function boss:ColorName(player, overwrite)
-		if classColorMessages or overwrite then
+	function boss:ColorName(player, overwrite, disableBarColors) -- XXX add a proper option for bar colors
+		if not disableBarColors and classColorMessages or overwrite then
 			if type(player) == "table" then
 				local tmp = {}
 				for i = 1, #player do
@@ -2941,14 +3050,15 @@ do
 		end
 		local textType = type(text)
 		local msg = textType == "string" and text or spells[text or key]
-		if checkFlag(self, key, C.BAR) then
+		local isBarEnabled = checkFlag(self, key, C.BAR)
+		if isBarEnabled then
 			self:SendMessage("BigWigs_StartBar", self, key, msg, time, icons[icon or textType == "number" and text or key], false, maxTime)
 		end
 		if checkFlag(self, key, C.COUNTDOWN) then
 			self:SendMessage("BigWigs_StartCountdown", self, key, msg, time)
 		end
 		local counter = msg:match(countString)
-		self:SendMessage("BigWigs_Timer", self, key, time, maxTime, msg, counter, icons[icon or textType == "number" and text or key])
+		self:SendMessage("BigWigs_Timer", self, key, time, maxTime, msg, counter and tonumber(counter) or 0, icons[icon or textType == "number" and text or key], false, isBarEnabled)
 	end
 
 	--- Display a cooldown bar.
@@ -2988,6 +3098,7 @@ do
 		end
 		local textType = type(text)
 		local msg = textType == "string" and text or spells[text or key]
+		local isBarEnabled = checkFlag(self, key, C.BAR)
 		if checkFlag(self, key, C.BAR) then
 			self:SendMessage("BigWigs_StartBar", self, key, msg, time, icons[icon or textType == "number" and text or key], true, maxTime)
 		end
@@ -2995,7 +3106,7 @@ do
 			self:SendMessage("BigWigs_StartCountdown", self, key, msg, time)
 		end
 		local counter = msg:match(countString)
-		self:SendMessage("BigWigs_CooldownTimer", self, key, time, maxTime, msg, counter, icons[icon or textType == "number" and text or key])
+		self:SendMessage("BigWigs_Timer", self, key, time, maxTime, msg, counter and tonumber(counter) or 0, icons[icon or textType == "number" and text or key], true, isBarEnabled)
 	end
 
 	--- Display a target bar.
@@ -3018,28 +3129,28 @@ do
 			time = length
 		end
 		local textType = type(text)
-		if not player and checkFlag(self, key, C.BAR) then
+		local isBarEnabled = checkFlag(self, key, C.BAR)
+		if not player and isBarEnabled then
 			self:SendMessage("BigWigs_StartBar", self, key, format(L.other, textType == "string" and text or spells[text or key], "???"), time, icons[icon or textType == "number" and text or key], false, maxTime)
 			return
 		end
 		if player == myName then
 			local msg = format(L.you, textType == "string" and text or spells[text or key])
-			if checkFlag(self, key, C.BAR) then
+			if isBarEnabled then
 				self:SendMessage("BigWigs_StartBar", self, key, msg, time, icons[icon or textType == "number" and text or key], false, maxTime)
 			end
 			if checkFlag(self, key, C.COUNTDOWN) then
 				self:SendMessage("BigWigs_StartCountdown", self, key, msg, time)
 			end
 			local counter = msg:match(countString)
-			self:SendMessage("BigWigs_TargetTimer", self, key, time, maxTime, msg, counter, icons[icon or textType == "number" and text or key], player)
+			self:SendMessage("BigWigs_TargetTimer", self, key, time, maxTime, msg, counter and tonumber(counter) or 0, icons[icon or textType == "number" and text or key], player, isBarEnabled)
 		else
-			local trimPlayer = gsub(player, "%-.+", "*")
-			local msg = format(L.other, textType == "string" and text or spells[text or key], trimPlayer)
-			if not checkFlag(self, key, C.ME_ONLY) and checkFlag(self, key, C.BAR) then
+			local msg = format(L.other, textType == "string" and text or spells[text or key], self:ColorName(player, nil, true))
+			if not checkFlag(self, key, C.ME_ONLY) and isBarEnabled then
 				self:SendMessage("BigWigs_StartBar", self, key, msg, time, icons[icon or textType == "number" and text or key], false, maxTime)
 			end
 			local counter = msg:match(countString)
-			self:SendMessage("BigWigs_TargetTimer", self, key, time, maxTime, msg, counter, icons[icon or textType == "number" and text or key], player)
+			self:SendMessage("BigWigs_TargetTimer", self, key, time, maxTime, msg, counter and tonumber(counter) or 0, icons[icon or textType == "number" and text or key], player, isBarEnabled)
 		end
 	end
 
@@ -3062,15 +3173,17 @@ do
 			time = length
 		end
 		local textType = type(text)
-		local msg = format(L.cast, textType == "string" and text or spells[text or key])
-		if checkFlag(self, key, C.CASTBAR) then
+		local rawText = textType == "string" and text or spells[text or key]
+		local msg = format(L.cast, rawText)
+		local isBarEnabled = checkFlag(self, key, C.CASTBAR)
+		if isBarEnabled then
 			self:SendMessage("BigWigs_StartBar", self, key, msg, time, icons[icon or textType == "number" and text or key], false, maxTime)
 		end
 		if checkFlag(self, key, C.CASTBAR_COUNTDOWN) then
 			self:SendMessage("BigWigs_StartCountdown", self, key, msg, time)
 		end
 		local counter = msg:match(countString)
-		self:SendMessage("BigWigs_CastTimer", self, key, time, maxTime, msg, counter, icons[icon or textType == "number" and text or key])
+		self:SendMessage("BigWigs_CastTimer", self, key, time, maxTime, msg, counter and tonumber(counter) or 0, icons[icon or textType == "number" and text or key], rawText, isBarEnabled)
 	end
 end
 
@@ -3085,12 +3198,20 @@ function boss:StopBar(text, player)
 			self:SendMessage("BigWigs_StopBar", self, msg)
 			self:SendMessage("BigWigs_StopCountdown", self, msg)
 		else
-			self:SendMessage("BigWigs_StopBar", self, format(L.other, msg, gsub(player, "%-.+", "*")))
+			self:SendMessage("BigWigs_StopBar", self, format(L.other, msg, self:ColorName(player, nil, true)))
 		end
 	else
 		self:SendMessage("BigWigs_StopBar", self, msg)
 		self:SendMessage("BigWigs_StopCountdown", self, msg)
 	end
+end
+
+--- Stop a cast bar.
+-- @param text the bar text, or a spellId which is converted into the spell name and used
+function boss:StopCastBar(text)
+	local msg = format(L.cast, type(text) == "number" and spells[text] or text)
+	self:SendMessage("BigWigs_StopBar", self, msg)
+	self:SendMessage("BigWigs_StopCountdown", self, msg)
 end
 
 --- Pause a bar.
@@ -3138,9 +3259,12 @@ do
 	-- @number length the duration in seconds
 	-- @string guid Anchor to a unit's nameplate by GUID
 	-- @param[opt] customIconOrText a custom icon (File ID as a number) or text to show text instead
-	-- @bool[opt] hideOnExpire Removes the icon when the duration expires instead of keeping it on screen
-	function boss:Nameplate(key, length, guid, customIconOrText, hideOnExpire)
-		self:SendMessage("BigWigs_StartNameplate", self, guid, key, length, customIconOrText, hideOnExpire)
+	function boss:Nameplate(key, length, guid, customIconOrText)
+		if not engagedGUIDs[guid] then
+			-- in rare cases a NPC can start casting before being engaged, make sure this timer isn't overwritten
+			engagedGUIDs[guid] = true
+		end
+		self:SendMessage("BigWigs_StartNameplate", self, guid, key, length, customIconOrText)
 	end
 
 	--- Stop showing a nameplate icon.

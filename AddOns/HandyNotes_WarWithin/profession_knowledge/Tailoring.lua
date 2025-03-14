@@ -13,14 +13,14 @@ local KNOWLEDGE = {
 }
 
 ns.RegisterPoints(ns.ISLEOFDORN, {
-    [56216120] = {
+    [56216102] = {
         quest=83923,
         loot={226349}, -- Earthen Tape Measure
         vignette=6506,
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [61521852] = {
+    [61561850] = {
         quest=83922,
         loot={226348}, -- Dornogal Seam Ripper
         vignette=6505,
@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [48853286] = {
+    [45713286] = {
         quest=83924,
         loot={226350}, -- Runed Earthen Pins
         vignette=6507,
     },
-    [64126034] = {
+    [60046034] = {
         quest=83925,
         loot={226351}, -- Earthen Stitcher's Snips
         vignette=6508,

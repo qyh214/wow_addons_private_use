@@ -7,6 +7,7 @@ local TimerunningUtil = addon.TimerunningUtil;
 local TalentTreeDataProvider = addon.TalentTreeDataProvider;
 local CameraUtil = addon.CameraUtil;
 local UIParentFade = addon.UIParentFade;
+local CallbackRegistry = addon.CallbackRegistry;
 
 
 local Narci = Narci;
@@ -180,7 +181,7 @@ function CVarTemp:RestoreDynamicCam()
 end
 
 local function GetKeepActionCam()
-	return CVarTemp.isDynamicCamLoaded or (not CVarTemp.cameraSafeMode)
+	return CVarTemp.isDynamicCamLoaded or CVarTemp.isActionCamPlusLoaded or (not CVarTemp.cameraSafeMode)
 end
 
 CVarTemp.shoulderOffset = tonumber(GetCVar("test_cameraOverShoulder"));
@@ -376,7 +377,7 @@ local function ExitFunc()
 	IS_OPENED = false;
 	CameraUtil:SetUseMogOffset(false);
 	EL:Hide();
-	CameraUtil:MakeInactive();
+
 	MoveViewRightStop();
 	CameraUtil:RestoreMotionSickness();
 
@@ -417,7 +418,7 @@ local function ExitFunc()
 			SetView(2);
 			CameraUtil:ZoomTo(CVarTemp.zoomLevel);
 		end
-		
+
 		SetCVar("cameraViewBlendStyle", CVarTemp.cameraViewBlendStyle);
 	end);
 
@@ -435,6 +436,10 @@ local function ExitFunc()
 	NarciSettingsFrame:CloseUI();
 
 	MOG_MODE = false;
+
+	CameraUtil:MakeInactive();
+
+	CallbackRegistry:Trigger("NarcissusCharacterUI.ShownState", false);
 end
 
 function Narci:EmergencyStop()
@@ -448,7 +453,6 @@ function Narci:EmergencyStop()
 	SetCVar("test_cameraOverShoulder", 0);
 	SetCVar("cameraViewBlendStyle", 1);
 	ConsoleExec("actioncam off");
-	CameraUtil:MakeInactive();
 	Narci_ModelContainer:HideAndClearModel();
 	Narci_ModelSettings:Hide();
 	Narci_Character:Hide();
@@ -457,6 +461,7 @@ function Narci:EmergencyStop()
 	IS_OPENED = false;
 	CameraUtil:SetUseMogOffset(false)
 	EL:Hide();
+	CameraUtil:MakeInactive();
 end
 
 ---Get Transmog Appearance---
@@ -1119,7 +1124,7 @@ function NarciEquipmentSlotMixin:Refresh(forceRefresh)
 	end
 
 	self.itemQuality = itemQuality;
-	
+
 	if itemQuality and not bR then --itemQuality sometimes return nil. This is a temporary solution
 		bR, bG, bB = GetItemQualityColor(itemQuality);
 		if not borderTexKey then
@@ -1301,7 +1306,7 @@ function NarciEquipmentSlotMixin:OnLoad()
 		if not self:GetParent().slotTable then
 			self:GetParent().slotTable = {}
 		end
-		tinsert(self:GetParent().slotTable, self);
+		table.insert(self:GetParent().slotTable, self);
 	end
 	SLOT_TABLE[slotID] = self;
 
@@ -1606,7 +1611,7 @@ SlotController.refreshSequence = {
 SlotController.tempEnchantSequence = {};
 
 for slotID in pairs(ValidForTempEnchant) do
-	tinsert(SlotController.tempEnchantSequence, slotID);
+	table.insert(SlotController.tempEnchantSequence, slotID);
 end
 
 function SlotController:Refresh(slotID, forceRefresh)
@@ -2063,7 +2068,7 @@ function NarciRadarChartMixin:OnLoad()
 	local texs = {};
 	for i = 1, 4 do
 		tex = self:CreateTexture(nil, "OVERLAY", nil, 2);
-		tinsert(texs, tex);
+		table.insert(texs, tex);
 		tex:SetSize(12, 12);
 		tex:SetTexture(circleTex, nil, nil, filter);
 	end
@@ -2072,6 +2077,11 @@ function NarciRadarChartMixin:OnLoad()
 
 	self:SetScript("OnLoad", nil);
 	self.OnLoad = nil;
+
+	self.deg = math.deg;
+	self.rad = math.rad;
+	self.atan2 = math.atan2;
+	self.sqrt = math.sqrt;
 end
 
 function NarciRadarChartMixin:OnShow()
@@ -2099,12 +2109,12 @@ function NarciRadarChartMixin:SetVerticeSize(attributeFrame, size)
 end
 
 function NarciRadarChartMixin:UpdateColor()
-	ColorUtil:SetWidgetColor(self.MaskedBackground)
-	ColorUtil:SetWidgetColor(self.MaskedBackground2)
-	ColorUtil:SetWidgetColor(self.MaskedLine1)
-	ColorUtil:SetWidgetColor(self.MaskedLine2)
-	ColorUtil:SetWidgetColor(self.MaskedLine3)
-	ColorUtil:SetWidgetColor(self.MaskedLine4)
+	ColorUtil:SetWidgetColor(self.MaskedBackground);
+	ColorUtil:SetWidgetColor(self.MaskedBackground2);
+	ColorUtil:SetWidgetColor(self.MaskedLine1);
+	ColorUtil:SetWidgetColor(self.MaskedLine2);
+	ColorUtil:SetWidgetColor(self.MaskedLine3);
+	ColorUtil:SetWidgetColor(self.MaskedLine4);
 end
 
 local GetEffectiveCrit = Narci.GetEffectiveCrit;
@@ -2112,12 +2122,8 @@ local GetCombatRating = GetCombatRating;
 
 function NarciRadarChartMixin:SetValue(c, h, m, v, manuallyInPutSum)
 	--c, h, m, v: Input manually or use combat ratings
-	local deg = math.deg;
-	local rad = math.rad;
-	local atan2 = math.atan2;
-	local sqrt = math.sqrt;
-	local Radar = self;
 
+	local Radar = self;
 	local chartWidth = 96 / 2;	--In half
 
 	local crit, haste, mastery, versatility;
@@ -2204,10 +2210,10 @@ function NarciRadarChartMixin:SetValue(c, h, m, v, manuallyInPutSum)
 	local mx1, mx2, mx3, mx4 = (x1 + x2)/2, (x2 + x4)/2, (x3 + x4)/2, (x1 + x3)/2;
 	local my1, my2, my3, my4 = (y1 + y2)/2, (y2 + y4)/2, (y3 + y4)/2, (y1 + y3)/2;
 
-	local ma1 = atan2((y1 - y2), (x1 - x2));
-	local ma2 = atan2((y2 - y4), (x2 - x4));
-	local ma3 = atan2((y4 - y3), (x4 - x3));
-	local ma4 = atan2((y3 - y1), (x3 - x1));
+	local ma1 = self.atan2((y1 - y2), (x1 - x2));
+	local ma2 = self.atan2((y2 - y4), (x2 - x4));
+	local ma3 = self.atan2((y4 - y3), (x4 - x3));
+	local ma4 = self.atan2((y3 - y1), (x3 - x1));
 
 	if my1 == 0 then
 		my1 = 0.01;
@@ -2215,11 +2221,11 @@ function NarciRadarChartMixin:SetValue(c, h, m, v, manuallyInPutSum)
 	if my3 == 0 then
 		my1 = -0.01;
 	end
-	if deg(ma1) == 90 then
-		ma1 = rad(89);
+	if self.deg(ma1) == 90 then
+		ma1 = self.rad(89);
 	end
-	if deg(ma3) == -90 then
-		ma1 = rad(-89);
+	if self.deg(ma3) == -90 then
+		ma1 = self.rad(-89);
 	end
 
 	Radar.vertices[1]:SetPoint("CENTER", x1, y1);
@@ -2231,11 +2237,11 @@ function NarciRadarChartMixin:SetValue(c, h, m, v, manuallyInPutSum)
 	Radar.Mask2:SetRotation(ma2);
 	Radar.Mask3:SetRotation(ma3);
 	Radar.Mask4:SetRotation(ma4);
-		
-	local hypo1 = sqrt(2*x1^2 + 2*x2^2);
-	local hypo2 = sqrt(2*x2^2 + 2*x4^2);
-	local hypo3 = sqrt(2*x4^2 + 2*x3^2);
-	local hypo4 = sqrt(2*x3^2 + 2*x1^2);
+
+	local hypo1 = self.sqrt(2*x1^2 + 2*x2^2);
+	local hypo2 = self.sqrt(2*x2^2 + 2*x4^2);
+	local hypo3 = self.sqrt(2*x4^2 + 2*x3^2);
+	local hypo4 = self.sqrt(2*x3^2 + 2*x1^2);
 
 	if (hypo1 - 4) > 0 then
 		Radar.MaskLine1:SetWidth(hypo1 - 4);	--Line length
@@ -2308,14 +2314,23 @@ function NarciRadarChartMixin:AnimateValue(c, h, m, v)
 	local duration = 0.2;
 
 	local playerLevel = UnitLevel("player");
-	local sum;
+	local sum = e1 + e2 + e3 + e4;
+	local bestSum;
+
 	if playerLevel == 50 then
-		sum = max(e1 + e2 + e3 + e4 , 800);		--Status Sum for 8.3 Raid
+		bestSum = max(sum, 800);		--Status Sum for 8.3 Raid
 	elseif playerLevel == 60 then
-		sum = max(e1 + e2 + e3 + e4 , 2500);	--Status Sum for 9.1 Raid
+		bestSum = max(sum, 2500);		--Status Sum for 9.1 Raid
+	elseif playerLevel == 80 then
+		local cap = 27000;
+		if sum < 0.4*cap then
+			bestSum = 1.5 * sum;
+		else
+			bestSum = max(sum, cap);
+		end
 	else
 		--sum = 31 * math.exp( 0.04 * UnitLevel("player")) + 40;
-		sum = (e1 + e2 + e3 + e4) * 1.5;
+		bestSum = 1.5 * sum;
 	end
 
 	local function UpdateFunc(frame, elapsed)
@@ -2325,12 +2340,12 @@ function NarciRadarChartMixin:AnimateValue(c, h, m, v)
 		local v2 = outSine(t, s2, e2, duration);
 		local v3 = outSine(t, s3, e3, duration);
 		local v4 = outSine(t, s4, e4, duration);
-		
+
 		if t >= duration then
 			v1, v2, v3, v4 = e1, e2, e3, e4;
 			frame:Hide();
 		end
-		Radar:SetValue(v1, v2, v3, v4, sum);
+		Radar:SetValue(v1, v2, v3, v4, bestSum);
 	end
 
 	UpdateFrame:Hide();
@@ -2345,7 +2360,7 @@ end
 
 function NarciRadarChartMixin:TogglePrimaryStats(state)
 	state = false;
-	
+
 	if state then
 		self.Primary.Color:SetColorTexture(0.24, 0.24, 0.24, 0.75);
 		self.Health.Color:SetColorTexture(0.15, 0.15, 0.15, 0.75);
@@ -2551,6 +2566,7 @@ function Narci_Open()
 
 		Narci.refreshCombatRatings = true;
 		Narci.isActive = true;
+		CallbackRegistry:Trigger("NarcissusCharacterUI.ShownState", true);
 	else
 		if Narci.showExitConfirm and not InCombatLockdown() then
 			local ExitConfirm = Narci_ExitConfirmationDialog;
@@ -2619,6 +2635,7 @@ function Narci_OpenGroupPhoto()
 		end)
 
 		Narci.isActive = true;
+		CallbackRegistry:Trigger("NarcissusCharacterUI.ShownState", true);
 		MsgAlertContainer:Display();
 	end
 
@@ -2964,7 +2981,7 @@ do
 			MiniButton:Click();
 		elseif msg == "minimap" then
 			MiniButton:EnableButton();
-			print("Minimap button has been re-enabled.");
+			print(L["MinimapButton Reenabled"]);
 		elseif msg == "itemlist" then
 			DressUpFrame_Show(DressUpFrame);
 			if NarciDressingRoomOverlay then
@@ -3156,6 +3173,8 @@ EL:SetScript("OnEvent",function(self, event, ...)
 
 			ViewProfile:Disable();
 
+		elseif C_AddOns.IsAddOnLoaded("ActionCamPlus") then
+			CVarTemp.isActionCamPlusLoaded = true;
 		else
 			if NarcissusDB.CameraSafeMode then
 				local temp = GetCVar("test_cameraOverShoulder");
@@ -3381,7 +3400,7 @@ end
 
 
 function NarciPaperDollDoubleClickTriggerMixin:OnHide()
-	if (self.t < 0.25) and NarcissusDB.EnableDoubleTap then
+	if (self.t < 0.25 and self.t > 0.03) and NarcissusDB.EnableDoubleTap then
 		MiniButton:Click();
 	end
 end

@@ -290,6 +290,12 @@ L["CONFIRM_UNHIDE_ALL"] = "Are you sure you want to unhide all hidden items?"
 L["CONFIRM_X_TOTAL_PRICE_X"] = "Confirm %s, total price %s"
 --[[Translation missing --]]
 L["CONTINUE"] = "Continue"
+--[[Translation missing --]]
+L["CONTRIBUTE_HEADER"] = "|cff04cca4Development is time consuming. Consider supporting|r"
+--[[Translation missing --]]
+L["CONTRIBUTE_TOOLTIP_HEADER"] = "About donating"
+--[[Translation missing --]]
+L["CONTRIBUTE_TOOLTIP_TEXT"] = "Auctionator has had thousands of hours spent on development and support to get it to its current state in just the last few years. Donating is one way of supporting this indefinitely."
 L["CONTRIBUTORS_HEADER"] = "기증자"
 L["COPY_ITEM_ADDED"] = "%s 을 %s 로 복사"
 L["COPY_NO_LIST_SELECTED"] = "아이템을 복사할 수 없습니다. 선택한 구매 목록이 없습니다"

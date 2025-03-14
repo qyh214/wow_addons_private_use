@@ -9,7 +9,9 @@ mod:RegisterEnableMob(
 	15264, -- Anubisath Sentinel
 	15247, -- Qiraji Brainwasher
 	15246, -- Qiraji Mindslayer
+	234762, -- Qiraji Mindslayer (Season of Discovery)
 	15277, -- Anubisath Defender
+	234830, -- Anubisath Defender (Season of Discovery)
 	15240 -- Vekniss Hive Crawler
 )
 
@@ -49,7 +51,7 @@ function mod:GetOptions()
 		"target_buffs",
 		26565, -- Heal Brethren
 		8599, -- Enrage
-		{26079, "ICON"}, -- Cause Insanity
+		{26079, "ICON", "SAY", "SAY_COUNTDOWN"}, -- Cause Insanity
 		{26556, "SAY", "ME_ONLY_EMPHASIZE"}, -- Plague
 		8269, -- Frenzy / Enrage (different name on classic era)
 		26554, -- Thunderclap
@@ -85,6 +87,10 @@ function mod:OnBossEnable()
 
 	self:Log("SPELL_AURA_APPLIED", "CauseInsanityApplied", 26079)
 	self:Log("SPELL_AURA_REMOVED", "CauseInsanityRemoved", 26079)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_AURA_APPLIED", "CauseInsanityApplied", 474400)
+		self:Log("SPELL_AURA_REMOVED", "CauseInsanityRemoved", 474400)
+	end
 
 	self:Log("SPELL_AURA_APPLIED", "PlagueApplied", 26556)
 	self:Log("SPELL_AURA_REFRESH", "PlagueApplied", 26556)
@@ -105,7 +111,7 @@ function mod:OnBossEnable()
 
 	self:Log("SPELL_SUMMON", "SummonAnubisathSwarmguard", 17430)
 	self:Log("SPELL_SUMMON", "SummonAnubisathWarrior", 17431)
-	self:Death("DefenderKilled", 15277)
+	self:Death("DefenderKilled", 15277, 234830)
 
 	self:Log("SPELL_AURA_APPLIED", "SunderArmor", 25051)
 	self:Log("SPELL_AURA_APPLIED_DOSE", "SunderArmor", 25051)
@@ -137,7 +143,7 @@ do
 		local guid = self:UnitGUID("target")
 		if guid ~= prevGUID then
 			local npcId = self:MobId(guid)
-			if npcId == 15264 or npcId == 15277 then -- Anubisath Sentinel, Anubisath Defender
+			if npcId == 15264 or npcId == 15277 or npcId == 234830 then -- Anubisath Sentinel, Anubisath Defender, Anubisath Defender (Season of Discovery)
 				if self:Vanilla() and not self:UnitDebuff("target", 2855) then
 					if not printed then
 						printed = true
@@ -221,16 +227,24 @@ do
 	local prevMindControl = nil
 	function mod:CauseInsanityApplied(args) -- Mind control
 		prevMindControl = args.destGUID
-		self:TargetMessage(args.spellId, "yellow", args.destName, CL.mind_control)
-		self:TargetBar(args.spellId, 10, args.destName, CL.mind_control_short)
-		self:PrimaryIcon(args.spellId, args.destName)
-		self:PlaySound(args.spellId, "alert", nil, args.destName)
+		local duration = args.spellId == 26079 and 10 or 6
+		self:TargetMessage(26079, "yellow", args.destName, CL.mind_control)
+		self:TargetBar(26079, duration, args.destName, CL.mind_control_short)
+		self:PrimaryIcon(26079, args.destName)
+		if self:Me(args.destGUID) then
+			self:Say(26079, CL.mind_control, nil, "Mind Control")
+			self:SayCountdown(26079, duration, 8, duration-2)
+		end
+		self:PlaySound(26079, "alert", nil, args.destName)
 	end
 	function mod:CauseInsanityRemoved(args)
 		self:StopBar(CL.mind_control_short, args.destName)
+		if self:Me(args.destGUID) then
+			self:CancelSayCountdown(26079)
+		end
 		if args.destGUID == prevMindControl then
 			prevMindControl = nil
-			self:PrimaryIcon(args.spellId)
+			self:PrimaryIcon(26079)
 		end
 	end
 end

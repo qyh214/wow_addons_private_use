@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Alysrazor", 720, 194)
 if not mod then return end
 mod:RegisterEnableMob(52530, 53898, 54015, 53089) --Alysrazor, Voracious Hatchling, Majordomo Staghelm, Molten Feather
+mod:SetEncounterID(1206)
+mod:SetRespawnTime(30)
 
 local woundTargets = mod:NewTargetList()
 local meteorCount, moltCount, burnCount, initiateCount = 0, 0, 0, 0
@@ -96,12 +98,9 @@ function mod:OnBossEnable()
 	-- Heroic only
 	self:Log("SPELL_CAST_START", "Meteor", 100761, 102111)
 	self:Log("SPELL_CAST_START", "Firestorm", 100744)
-	self:Log("SPELL_AURA_REMOVED", "FirestormOver", 100744)
 
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
 	self:RegisterEvent("CHAT_MSG_MONSTER_YELL", "Initiates")
-
-	self:Death("Win", 52530)
+	self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "FirestormOver", "boss1")
 end
 
 function mod:OnEngage()
@@ -110,9 +109,9 @@ function mod:OnEngage()
 		initiateTimes = {22, 63, 21, 21, 40}
 		self:MessageOld(99816, "yellow", nil, L["engage_message"]:format(4), "inv_misc_pheonixpet_01")
 		self:Bar(99816, 250, L["stage_message"]:format(2))
-		self:Bar(100744, 95) -- Firestorm
+		self:CDBar(100744, 95) -- Firestorm
 		self:CDBar("meteor", 30, L["meteor"], 100761)
-		self:CDBar("eggs", 42, 58542, L["eggs_icon"]) -- Hatch Eggs
+		self:Bar("eggs", 42, 58542, L["eggs_icon"]) -- Hatch Eggs
 		self:DelayedMessage("eggs", 41.5, "green", 58542, L["eggs_icon"]) -- Hatch Eggs
 	else
 		initiateTimes = {31, 31, 21, 21, 21}
@@ -168,7 +167,7 @@ do
 	function mod:BuffCheck()
 		local name = self:UnitBuff("player", feather, 97128)
 		if not name then
-			if self:UnitBuff("player", moonkin) then
+			if self:UnitBuff("player", moonkin, 24858) then
 				self:MessageOld(97128, "blue", nil, L["moonkin_message"])
 			else
 				self:MessageOld(97128, "blue", nil, L["no_stacks_message"])
@@ -214,16 +213,19 @@ end
 function mod:Firestorm(args)
 	self:Flash(args.spellId)
 	self:MessageOld(args.spellId, "orange", "alert")
+	self:StopBar(args.spellId)
 	self:Bar(args.spellId, 10, CL["cast"]:format(args.spellName))
 end
 
-function mod:FirestormOver(args)
+function mod:FirestormOver(_, _, _, spellId)
+	if spellId ~= 100744 then return end
+
 	-- Only show a bar for next if we have seen less than 3 meteors
 	if meteorCount < 3 then
-		self:CDBar(args.spellId, 72)
+		self:CDBar(100744, 72) -- Firestorm
 	end
 	self:Bar("meteor", meteorCount == 2 and 11.5 or 21.5,  L["meteor"], 100761)
-	self:CDBar("eggs", 22.5, 58542, L["eggs_icon"]) -- Hatch Eggs
+	self:Bar("eggs", 22.5, 58542, L["eggs_icon"]) -- Hatch Eggs
 	self:DelayedMessage("eggs", 22, "green", 58542, L["eggs_icon"]) -- Hatch Eggs
 end
 
@@ -280,10 +282,10 @@ do
 			if self:Heroic() then
 				meteorCount = 0
 				self:Bar("meteor", 19, L["meteor"], 100761)
-				self:Bar(100744, 72) -- Firestorm
+				self:CDBar(100744, 72) -- Firestorm
 				self:Bar(99816, 225, L["stage_message"]:format(2)) -- Just adding 60s like OnEngage
-				self:CDBar("eggs", 30, 58542, L["eggs_icon"]) -- Hatch Eggs
-				self:DelayedMessage("eggs", 29.5, "green", L["eggs_icon"], 58542) -- Hatch Eggs
+				self:Bar("eggs", 30, 58542, L["eggs_icon"]) -- Hatch Eggs
+				self:DelayedMessage("eggs", 29.5, "green", 58542, L["eggs_icon"]) -- Hatch Eggs
 			else
 				self:Bar(99816, 165, L["stage_message"]:format(2))
 				moltCount = 1

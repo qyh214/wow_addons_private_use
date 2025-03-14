@@ -92,6 +92,17 @@ BtWQuestsDatabase:AddObjectsTable({
             },
         },
     },
+    [454456] = {
+        name = "Note",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.324633,
+                    y = 0.559246,
+                },
+            },
+        },
+    },
     [454463] = {
         name = "Wanted: The Boroughbreaker",
         locations = {
@@ -154,6 +165,72 @@ BtWQuestsDatabase:AddObjectsTable({
                 {
                     x = 0.567599,
                     y = 0.407171,
+                },
+            },
+        },
+    },
+    [456062] = {
+        name = "Dirty Scroll",
+        locations = {
+            [2214] = {
+                {
+                    x = 0.720668,
+                    y = 0.784194,
+                },
+            },
+        },
+    },
+    [456747] = {
+        name = "Gig Sheets",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.427815,
+                    y = 0.528367,
+                },
+            },
+        },
+    },
+    [461478] = {
+        name = "For Rent Sign",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.418437,
+                    y = 0.660396,
+                },
+            },
+        },
+    },
+    [461492] = {
+        name = "Weapons Cache",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.447398,
+                    y = 0.66059,
+                },
+            },
+        },
+    },
+    [466110] = {
+        name = "Getry's Pack",
+        locations = {
+            [862] = {
+                {
+                    x = 0.209341,
+                    y = 0.588308,
+                },
+            },
+        },
+    },
+    [500619] = {
+        name = "Zirdo's Ledger",
+        locations = {
+            [2346] = {
+                {
+                    x = 0.656473,
+                    y = 0.809124,
                 },
             },
         },

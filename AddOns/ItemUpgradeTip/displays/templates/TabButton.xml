@@ -1,0 +1,8 @@
+<Ui>
+    <Button name="ItemUpgradeTipTabButtonTemplate" virtual="true" inherits="PanelTabButtonTemplate" mixin="ItemUpgradeTipTabButtonMixin">
+        <Scripts>
+            <OnShow method="OnShow" />
+            <OnClick method="OnClick" />
+        </Scripts>
+    </Button>
+</Ui>

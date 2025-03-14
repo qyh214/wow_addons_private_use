@@ -1,4 +1,4 @@
-## Interface: 40400, 40401
+## Interface: 40402, 40401
 
 ## Title: LittleWigs [|cffeda55fClassic|r]
 ## Title-deDE: LittleWigs [|cffeda55fClassic|r]
@@ -17,6 +17,7 @@
 ## Dependencies: BigWigs
 
 ## X-Category: Party
-## X-BigWigs-LoadOn-InstanceId: 229
+## X-BigWigs-LoadOn-InstanceId: 209, 229, 329, 429
 
+BlackrockSpire\modules.xml
 modules.xml

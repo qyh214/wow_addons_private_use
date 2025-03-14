@@ -18,11 +18,11 @@ local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE;
 local GetItemCount = GetItemCount;
 local GetItemInfo = GetItemInfo;
 
-local SetSpecialization = SetSpecialization;
-local GetSpecialization = GetSpecialization;
-local GetNumSpecializations = GetNumSpecializations;
-local GetSpecializationInfo = GetSpecializationInfo;
-local GetSpecializationInfoByID = GetSpecializationInfoByID;
+local SetSpecialization = C_SpecializationInfo and C_SpecializationInfo.SetSpecialization or SetSpecialization;
+local GetSpecialization = C_SpecializationInfo and C_SpecializationInfo.GetSpecialization or GetSpecialization;
+local GetNumSpecializations = C_SpecializationInfo and C_SpecializationInfo.GetNumSpecializations or GetNumSpecializations;
+local GetSpecializationInfo = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfo or GetSpecializationInfo;
+local GetSpecializationInfoByID = C_SpecializationInfo and C_SpecializationInfo.GetSpecializationInfoByID or GetSpecializationInfoByID;
 
 local StaticPopup_Show = StaticPopup_Show;
 local StaticPopup_Hide = StaticPopup_Hide;

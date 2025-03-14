@@ -183,8 +183,11 @@ if RSA.IsRetail() then
 				disabledChannels = {whisper = true},
 			},
 			events = {
-				['SPELL_CAST_SUCCESS'] = {
+				['SPELL_CAST_START'] = {
 					messages = {'Casting [LINK], please assist!',},
+				},
+				['SPELL_CAST_SUCCESS'] = {
+					messages = {'[LINK], placed!',},
 				},
 			},
 		},
@@ -552,6 +555,9 @@ if RSA.IsWrath() then
 				['SPELL_CAST_START'] = {
 					messages = {'Casting [LINK], please assist!',},
 				},
+				['SPELL_CAST_SUCCESS'] = {
+					messages = {'[LINK], placed!',},
+				},
 			},
 		},
 		['seduce'] = {
@@ -863,6 +869,9 @@ if RSA.IsCata() then
 			events = {
 				['SPELL_CAST_START'] = {
 					messages = {'Casting [LINK], please assist!',},
+				},
+				['SPELL_CAST_SUCCESS'] = {
+					messages = {'[LINK], placed!',},
 				},
 			},
 		},

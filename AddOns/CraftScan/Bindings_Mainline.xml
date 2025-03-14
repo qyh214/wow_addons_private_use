@@ -1,0 +1,14 @@
+<Bindings>
+  <Binding name="CRAFT_SCAN_TOGGLE" category="CraftScan">
+    CraftScanScannerMenu.PageButton:OnClick();
+  </Binding>
+  <Binding name="CRAFT_SCAN_GREET_CURRENT_CUSTOMER" category="CraftScan">
+    CraftScanScannerMenu.AlertBGButton:OnClick("LeftButton");
+  </Binding>
+  <Binding name="CRAFT_SCAN_CHAT_CURRENT_CUSTOMER" category="CraftScan">
+    CraftScanScannerMenu.AlertBGButton:OnClick("MiddleButton");
+  </Binding>
+  <Binding name="CRAFT_SCAN_DISMISS_CURRENT_CUSTOMER" category="CraftScan">
+    CraftScanScannerMenu.AlertBGButton:OnClick("RightButton");
+  </Binding>
+</Bindings>

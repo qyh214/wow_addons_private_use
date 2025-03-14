@@ -5,6 +5,8 @@
 local mod, CL = BigWigs:NewBoss("Lord Rhyolith", 720, 193)
 if not mod then return end
 mod:RegisterEnableMob(52577, 53087, 52558) -- Left foot, Right Foot, Lord Rhyolith
+mod:SetEncounterID(1204)
+mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -44,7 +46,7 @@ L = mod:GetLocale()
 function mod:GetOptions()
 	return {
 		98552, 98136,
-		"armor", 97282, 98255, -2537, 101304
+		"armor", 97282, 98255, -2537, 101304, 98493, 97225
 	}, {
 		[98552] = L["adds_header"],
 		["armor"] = "general"
@@ -58,15 +60,14 @@ function mod:OnBossEnable()
 	self:Log("SPELL_SUMMON", "Fragments", 98136)
 	self:Log("SPELL_AURA_REMOVED_DOSE", "ObsidianStack", 98632)
 	self:Log("SPELL_AURA_REMOVED", "Obsidian", 98632)
-
-	self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT", "CheckBossStatus")
-
-	self:Death("Win", 52558)
+	self:Log("SPELL_CAST_SUCCESS", "HeatedVolcano", 98493)
+	self:Log("SPELL_CAST_SUCCESS", "MagmaFlow", 97225)
 end
 
 function mod:OnEngage()
 	self:Berserk(self:Heroic() and 300 or 360, nil, nil, 101304)
 	self:Bar(97282, 15, L["stomp"])
+	self:CDBar(98493, 30) -- Heated Volcano
 	self:RegisterUnitEvent("UNIT_HEALTH", nil, "boss1")
 	lastFragments = GetTime()
 end
@@ -75,9 +76,19 @@ end
 -- Event Handlers
 --
 
+function mod:HeatedVolcano(args)
+	self:MessageOld(args.spellId, "yellow", "info")
+	self:CDBar(98493, self:Heroic() and 25.5 or 40)
+end
+
+function mod:MagmaFlow(args)
+	mod:MessageOld(args.spellId, "red", "alarm")
+end
+
 function mod:Obsidian(args)
 	if self:MobId(args.destGUID) == 52558 then
 		self:MessageOld("armor", "green", nil, L["armor_gone_message"], args.spellId)
+		self:StopBar(98493) -- Heated Volcano
 	end
 end
 

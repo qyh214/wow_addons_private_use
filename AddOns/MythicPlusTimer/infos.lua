@@ -233,10 +233,9 @@ local function update_pull(current_run)
 
   -- update text
   local text = "|c" .. addon.c("color_current_pull") .. addon.t("lbl_currentpull") .. " |c" .. addon.c("color_current_pull") .. "" .. in_percent .. "%"
-   -- :OnlyPercentValue
-  -- if addon.c("show_absolute_numbers") then
-  --   text = text .. " (" .. value .. ")"
-  -- end
+  if addon.c("show_absolute_numbers") then
+    text = text .. " (" .. value .. ")"
+  end
 
   -- set text
   local current_text = pull_frame.text:GetText()

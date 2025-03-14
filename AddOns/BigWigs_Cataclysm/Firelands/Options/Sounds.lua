@@ -10,9 +10,11 @@ BigWigs:AddSounds("Beth'tilac", {
 
 BigWigs:AddSounds("Lord Rhyolith", {
 	[-2537] = "info",
+	[97225] = "alarm",
 	[97282] = "alert",
 	[98136] = "info",
 	[98255] = "alarm",
+	[98493] = "info",
 	[98552] = "alarm",
 })
 

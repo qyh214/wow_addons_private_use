@@ -1,12 +1,7 @@
 # BigWigs
 
-## [v357.3](https://github.com/BigWigsMods/BigWigs/tree/v357.3) (2024-09-10)
-[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v357.2...v357.3) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
+## [v375.2](https://github.com/BigWigsMods/BigWigs/tree/v375.2) (2025-03-12)
+[Full Changelog](https://github.com/BigWigsMods/BigWigs/compare/v375.1...v375.2) [Previous Releases](https://github.com/BigWigsMods/BigWigs/releases)
 
-- Update deDE (#1805)  
-- Update encounter locale (#1801)  
-- Update ruRU (#1803)  
-- Update ruRU (#1802)  
-- Update toc data  
-- bump toc  
-- Update frFR (#1798)  
+- bump version  
+- LiberationOfUndermine/Gallywix: Story update  

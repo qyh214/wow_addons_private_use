@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Sinestra", 671, 168)
 if not mod then return end
 mod:RegisterEnableMob(45213)
-mod:SetEncounterID(mod:Retail() and 1083 or 1082)
+mod:SetEncounterID({1082, 1083}) -- Classic uses 1082, Retail uses both depending on difficulty
 mod:SetRespawnTime(40)
 
 --------------------------------------------------------------------------------
@@ -99,14 +99,6 @@ function mod:GetOptions(CL)
 end
 
 function mod:OnBossEnable()
-	if self:Retail() then
-		if self:Difficulty() == 6 then
-			self:SetEncounterID(1083)
-		else
-			self:SetEncounterID(1082)
-		end
-	end
-
 	self:Log("SPELL_DAMAGE", "OrbDamage", 92852, 92958) -- twilight slicer, twilight pulse [May be wrong since MoP id changes]
 	self:Log("SPELL_MISSED", "OrbDamage", 92852, 92958) -- twilight slicer, twilight pulse [May be wrong since MoP id changes]
 

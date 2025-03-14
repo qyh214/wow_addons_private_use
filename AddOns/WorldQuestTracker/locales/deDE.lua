@@ -184,10 +184,8 @@ L["S_WORLDQUESTS"] = "Weltquests"
 L["S_APOWER_AVAILABLE"] = "Verfügbar"
 L["S_APOWER_NEXTLEVEL"] = "Nächste Stufe"
 L["S_DECREASESIZE"] = "Verkleinern"
---[[Translation missing --]]
 L["S_DUNGEON"] = "Dungeon"
---[[Translation missing --]]
-L["S_ENABLE"] = "Enable"
+L["S_ENABLE"] = "Einschalten"
 L["S_ENABLED"] = "Aktiviert"
 L["S_ERROR_NOTIMELEFT"] = "Diese Quest ist bereits abgelaufen."
 L["S_ERROR_NOTLOADEDYET"] = "Diese Quest ist noch nicht geladen. Bitte warte ein paar Sekunden."
@@ -273,8 +271,7 @@ L["S_OPTIONS_ACCESSIBILITY"] = "Barrierefreiheit"
 L["S_OPTIONS_ACCESSIBILITY_EXTRATRACKERMARK"] = "Extra Tracker Markierung"
 L["S_OPTIONS_ACCESSIBILITY_SHOWBOUNTYRING"] = "Zeige Kopfgeld-Ring"
 L["S_OPTIONS_ANIMATIONS"] = "Animationen verwenden"
---[[Translation missing --]]
-L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Don't Show if Already in Group"
+L["S_OPTIONS_GF_DONT_SHOW_IFGROUP"] = "Nicht anzeigen, wenn bereits in einer Gruppe."
 --[[Translation missing --]]
 L["S_OPTIONS_GF_SHOWOPTIONS_BUTTON"] = "Show Options Button"
 L["S_OPTIONS_MAPFRAME_ALIGN"] = "Kartenfenster zentrieren"
@@ -299,6 +296,8 @@ L["S_OPTIONS_SHOW_MINIMIZE_BUTTON"] = "Show Minimize Button"
 L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
+--[[Translation missing --]]
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "Fraktionen anzeigen"
@@ -351,6 +350,8 @@ L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+--[[Translation missing --]]
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "Insgesamt"
 L["S_PARTY"] = "Gruppe"
 L["S_PARTY_DESC1"] = "Ein blauer Stern bei einer Quest bedeutet, dass alle Gruppenmitglieder diese Quest haben."
@@ -367,8 +368,7 @@ L["S_QUESTTYPE_PROFESSION"] = "Beruf"
 L["S_QUESTTYPE_PVP"] = "PvP"
 L["S_QUESTTYPE_RESOURCE"] = "Ressourcen"
 L["S_QUESTTYPE_TRADESKILL"] = "Berufsfertigkeit"
---[[Translation missing --]]
-L["S_RAID"] = "Raid"
+L["S_RAID"] = "Schlachtzug"
 L["S_RAREFINDER_ADDFROMPREMADE"] = "Seltene Gegner, die über die organisierten Gruppen gefunden wurden, hinzufügen"
 L["S_RAREFINDER_NPC_NOTREGISTERED"] = "Seltener NSC nicht in der Datenbank"
 L["S_RAREFINDER_OPTIONS_ENGLISHSEARCH"] = "Immer auf Englisch suchen"
@@ -383,12 +383,10 @@ L["S_RAREFINDER_TOOLTIP_SPOTTEDBY"] = "Aufgespürt von"
 L["S_RAREFINDER_TOOLTIP_TIMEAGO"] = "Minuten vergangen"
 --[[Translation missing --]]
 L["S_SCALE"] = "Scale"
---[[Translation missing --]]
-L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker did not loaded yet, open the map to load."
+L["S_SLASH_OPENMAP_FIRST"] = "World Quest Tracker ist noch nicht geladen, öffne die Weltkarte um es zu laden."
 --[[Translation missing --]]
 L["S_SPEEDRUN"] = "Speed Run"
---[[Translation missing --]]
-L["S_SPEEDRUN_AUTO_ACCEPT"] = "Auto Accept Quests"
+L["S_SPEEDRUN_AUTO_ACCEPT"] = "Akzeptiere Automatisch Quests"
 --[[Translation missing --]]
 L["S_SPEEDRUN_AUTO_COMPLETE"] = "Auto Complete Quests"
 --[[Translation missing --]]
@@ -398,10 +396,8 @@ L["S_SUMMARYPANEL_LAST15DAYS"] = "Letzten 15 Tage"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_ACCOUNT"] = "Accountweite Statistik"
 L["S_SUMMARYPANEL_LIFETIMESTATISTICS_CHARACTER"] = "Charakterspezifische Statistik"
 L["S_SUMMARYPANEL_OTHERCHARACTERS"] = "Andere Charaktere"
---[[Translation missing --]]
-L["S_TEXT_SIZE"] = "Text Size"
---[[Translation missing --]]
-L["S_TORGAST"] = "Torgasth"
+L["S_TEXT_SIZE"] = "Text Größe"
+L["S_TORGAST"] = "Torgast"
 --[[Translation missing --]]
 L["S_TRACKEROPTIONS_BACKGROUNDALPHA"] = "Background Alpha"
 L["S_TUTORIAL_AMOUNT"] = "Zeigt die zu erhaltene Anzahl an"
@@ -412,8 +408,7 @@ L["S_TUTORIAL_TIMELEFT"] = "Zeigt die verbleibende Zeit an (+4 Stunden, +90 Minu
 L["S_TUTORIAL_WORLDBUTTONS"] = "Klicke hier, um zwischen den drei Typen der Übersicht umzuschalten: - |cFFFFAA11Nach Questart|r - |cFFFFAA11Nach Zone|r - |cFFFFAA11Keine|r Klicke |cFFFFAA11Quests ein/-ausblenden|r, um Questorte auszublenden."
 L["S_TUTORIAL_WORLDMAPBUTTON"] = "Diese Schaltfläche öffnet die Karte der Verheerten Inseln."
 L["S_UNKNOWNQUEST"] = "Unbekannte Quest"
---[[Translation missing --]]
-L["S_VISIBILITY"] = "Visibility"
+L["S_VISIBILITY"] = "Sichtbarkeit"
 L["S_WHATSNEW"] = "Was gibt's Neues?"
 L["S_WORLDBUTTONS_SHOW_TYPE"] = "Nach Typ sortieren"
 L["S_WORLDBUTTONS_SHOW_ZONE"] = "Nach Zone anordnen"

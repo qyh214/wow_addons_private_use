@@ -665,8 +665,8 @@ Database:AddChain(Chain.RoutineMaintenance, {
         },
         {
             type = "chain",
-            id = Chain.ByCandlelight,
-            upto = 80434,
+            id = Chain.DarkRevelations,
+            upto = 78697,
         },
     },
     active = {
@@ -755,10 +755,10 @@ Database:AddChain(Chain.DeadInTheDen, {
                 { level = 71, },
             }
         },
-        {
+        { -- Was also renown 4 with council of dornogal
             type = "chain",
             id = Chain.ByCandlelight,
-            upto = 78838,
+            upto = 78642, --- 78838 old
         },
     },
     active = {
@@ -1059,6 +1059,7 @@ Database:AddChain(Chain.IntoTheFog, {
         {
             type = "chain",
             id = Chain.DarkRevelations,
+            upto = 78697,
         },
     },
     active = {
@@ -1189,6 +1190,7 @@ Database:AddChain(Chain.KoboldCultureAndIntegration, {
         {
             type = "chain",
             id = Chain.ByCandlelight,
+            upto = 78642,
         },
     },
     active = {
@@ -1945,6 +1947,11 @@ Database:AddChain(Chain.TempChain27, {
             upto = 78838,
         },
     },
+    active = {
+        type = "quest",
+        id = 78900,
+        status = { "active", "completed" }
+    },
     completed = {
         type = "quest",
         id = 78900,
@@ -2014,6 +2021,11 @@ Database:AddChain(Chain.TempChain30, {
     expansion = EXPANSION_ID,
     range = LEVEL_RANGE,
     prerequisites = LEVEL_PREREQUISITES,
+    active = {
+        type = "quest",
+        id = 82952,
+        status = { "active", "completed" }
+    },
     completed = {
         type = "quest",
         id = 81713,
@@ -2061,11 +2073,17 @@ Database:AddChain(Chain.TempChain31, {
         { -- possibly earlier during the questline
             type = "chain",
             id = Chain.ByCandlelight,
+            upto = 78631
         },
+    },
+    active = {
+        type = "quest",
+        id = 82195,
+        status = { "active", "completed" }
     },
     completed = {
         type = "quest",
-        id = 81713,
+        id = 82195,
     },
     items = {
         {
@@ -2104,9 +2122,14 @@ Database:AddChain(Chain.TempChain32, {
             id = Chain.ByCandlelight,
         },
     },
+    active = {
+        type = "quest",
+        id = 83165,
+        status = { "active", "completed" }
+    },
     completed = {
         type = "quest",
-        id = 81713,
+        id = 83165,
     },
     items = {
         {
@@ -2146,9 +2169,14 @@ Database:AddChain(Chain.TempChain33, {
             upto = 79354,
         },
     },
+    active = {
+        type = "quest",
+        id = 83108,
+        status = { "active", "completed" }
+    },
     completed = {
         type = "quest",
-        id = 81713,
+        id = 83108,
     },
     items = {
         {
@@ -2203,7 +2231,22 @@ Database:AddChain(Chain.TempChain35, {
     category = CATEGORY_ID,
     expansion = EXPANSION_ID,
     range = LEVEL_RANGE,
-    prerequisites = LEVEL_PREREQUISITES,
+    prerequisites = {
+        {
+            type = "level",
+            level = 80
+        },
+        {
+            type = "chain",
+            id = BtWQuests.Constant.Chain.TheWarWithin.AgainstTheCurrent,
+            upto = 79197,
+        }
+    },
+    active = {
+        type = "quest",
+        id = 83154,
+        status = { "active", "completed" }
+    },
     completed = {
         type = "quest",
         id = 83154,

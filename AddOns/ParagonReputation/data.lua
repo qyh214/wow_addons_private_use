@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.57 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.60 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -551,20 +551,48 @@ PR.PARAGON_DATA = {
 			factionID = 2594,
 			cache = 225245,
 		},
+		[85805] = { -- The Cartels of Undermine
+			factionID = 2653,
+			cache = 232463,
+		},
+			[85471] = { -- Gallagio Loyalty Rewards Club
+				factionID = 2685,
+				cache = 232463,
+			},
+			[85806] = { -- Bilgewater Cartel
+				factionID = 2673,
+				cache = 237132,
+			},
+			[85807] = { -- Blackwater Cartel
+				factionID = 2675,
+				cache = 237135,
+			},
+			[85808] = { -- Darkfuse Solutions
+				factionID = 2669,
+				cache = 232465,
+			},
+			[85809] = { -- Steamwheedle Cartel
+				factionID = 2677,
+				cache = 237134,
+			},
+			[85810] = { -- Venture Company
+				factionID = 2671,
+				cache = 237133,
+			},
 		[79196] = { -- The Severed Threads
 			factionID = 2600,
 			cache = 225247,
 		},
-		[83739] = { -- The General
-			factionID = 2605,
-			cache = 226045,
-		},
-		[83740] = { -- The Vizier
-			factionID = 2607,
-			cache = 226100,
-		},
-		[83738] = { -- The Weaver
-			factionID = 2601,
-			cache = 226103,
-		},
+			[83739] = { -- The General
+				factionID = 2605,
+				cache = 226045,
+			},
+			[83740] = { -- The Vizier
+				factionID = 2607,
+				cache = 226100,
+			},
+			[83738] = { -- The Weaver
+				factionID = 2601,
+				cache = 226103,
+			},
 }

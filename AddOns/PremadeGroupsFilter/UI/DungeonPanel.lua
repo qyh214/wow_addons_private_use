@@ -30,16 +30,6 @@ local DIFFICULTY_TEXT = {
 }
 
 local CMID_MAP = {
-    -- Dragonflight Season 4
-    [402] = { order = 1, activityGroupID = 302, keyword = "aa"   }, -- Algeth'ar Academy
-    [401] = { order = 2, activityGroupID = 307, keyword = "av"   }, -- The Azure Vault
-    [405] = { order = 3, activityGroupID = 303, keyword = "bh"   }, -- Brackenhide Hollow
-    [406] = { order = 4, activityGroupID = 304, keyword = "hoi"  }, -- Halls of Infusion
-    [404] = { order = 5, activityGroupID = 305, keyword = "nelt" }, -- Neltharus
-    [400] = { order = 6, activityGroupID = 308, keyword = "no"   }, -- The Nokhud Offensive
-    [399] = { order = 7, activityGroupID = 306, keyword = "rlp"  }, -- Ruby Life Pools
-    [403] = { order = 8, activityGroupID = 309, keyword = "uld"  }, -- Uldaman: Legacy of Tyr
-
     -- The War Within Season 1
     [503] = { order = 1, activityGroupID = 323, keyword = "arak"  }, -- Ara-Kara, City of Echoes
     [502] = { order = 2, activityGroupID = 329, keyword = "cot"   }, -- City of Threads
@@ -55,6 +45,10 @@ local CMID_MAP = {
     [504] = { order = 2, activityGroupID = 322, keyword = "dfc"  }, -- Darkflame Cleft
     [499] = { order = 3, activityGroupID = 324, keyword = "psf"  }, -- Priory of the Sacred Flame
     [500] = { order = 4, activityGroupID = 325, keyword = "rook" }, -- The Rookery
+    [525] = { order = 5, activityGroupID = 371, keyword = "fg"   }, -- Operation: Floodgate
+    [382] = { order = 6, activityGroupID = 266, keyword = "top"  }, -- Theater of Pain
+    [247] = { order = 7, activityGroupID = 140, keyword = "ml"   }, -- The MOTHERLODE!!
+    [370] = { order = 8, activityGroupID = 257, keyword = "work" }, -- Operation: Mechagon - Workshop
 
     -- cmID can be found here as column ID: https://wago.tools/db2/MapChallengeMode?page=1&sort[ID]=desc
 }
@@ -78,6 +72,14 @@ local stripPrefixes = {
     "^무한의 여명: ",                -- Korean
     "^恆龍黎明：",                   -- Traditional Chinese
     "^永恒黎明：",                   -- Simplified Chinese
+    -- Mechagon/Floodgate
+    "^Operation: ",  -- English/German
+    "^Operación: ",  -- Spanish
+    "^Opération ",   -- French
+    "^Operazione: ", -- Italian
+    "^Operação: ",   -- Portugues
+    "^Операция ",    -- Russian
+    "^작전명: ",      -- Korean
     -- Articles
     "^The ",      -- English
     "^Der ",      -- German
@@ -111,7 +113,8 @@ function DungeonPanel:OnLoad()
     PGF.UI_SetupMinMaxField(self, self.Group.DPS, "dps", self.groupWidth)
     PGF.UI_SetupCheckBox(self, self.Group.Partyfit, "partyfit", self.groupWidth)
     PGF.UI_SetupCheckBox(self, self.Group.BLFit, "blfit", self.groupWidth)
-    PGF.UI_SetupCheckBox(self, self.Group.BRFit, "brfit", self.groupWidth)
+    PGF.UI_SetupCheckBox(self, self.Group.NeedsBL, "needsbl", self.groupWidth)
+    PGF.UI_SetupCheckBox(self, self.Group.NotDeclined, "notdeclined", self.groupWidth)
     PGF.UI_SetupAdvancedExpression(self)
 
     -- Dungeons
@@ -205,7 +208,8 @@ function DungeonPanel:Init(state)
 
     self.Group.Partyfit.Act:SetChecked(self.state.partyfit or false)
     self.Group.BLFit.Act:SetChecked(self.state.blfit or false)
-    self.Group.BRFit.Act:SetChecked(self.state.brfit or false)
+    self.Group.NeedsBL.Act:SetChecked(self.state.needsbl or false)
+    self.Group.NotDeclined.Act:SetChecked(self.state.notdeclined or false)
 
     for i = 1, NUM_DUNGEON_CHECKBOXES do
         self.Dungeons["Dungeon"..i].Act:SetChecked(self.state["dungeon"..i] or false)
@@ -217,9 +221,9 @@ function DungeonPanel:OnEvent(event)
     if event == "CHALLENGE_MODE_MAPS_UPDATE" then
         PGF.Logger:Debug("DungeonPanel:OnEvent(CHALLENGE_MODE_MAPS_UPDATE)")
         self:InitChallengeModes()
-    elseif (event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" or event == "GROUP_ROSTER_UPDATE")
-            and self.state and self.state.partyfit then
+    elseif (event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" or event == "GROUP_ROSTER_UPDATE") and self.state then
         PGF.Logger:Debug("DungeonPanel:OnEvent(" .. event .. ")")
+        self:UpdateCheckboxVisibility()
         self:UpdateAdvancedFilters()
     end
 end
@@ -227,6 +231,7 @@ end
 function DungeonPanel:OnShow()
     PGF.Logger:Debug("DungeonPanel:OnShow")
     self:TryInitChallengeModes()
+    self:UpdateCheckboxVisibility()
 end
 
 function DungeonPanel:OnHide()
@@ -253,7 +258,8 @@ function DungeonPanel:OnReset()
     self.state.dps.max = ""
     self.state.partyfit = false
     self.state.blfit = false
-    self.state.brfit = false
+    self.state.needsbl = false
+    self.state.notdeclined = false
     for i = 1, NUM_DUNGEON_CHECKBOXES do
         self.state["dungeon"..i] = false
     end
@@ -273,6 +279,7 @@ function DungeonPanel:TriggerFilterExpressionChange()
     local expression = self:GetFilterExpression()
     local hint = expression == "true" and "" or expression
     self.Advanced.Expression.EditBox.Instructions:SetText(hint)
+    self:UpdateCheckboxVisibility()
     self:UpdateAdvancedFilters()
     PGF.Dialog:OnFilterExpressionChanged()
 end
@@ -303,9 +310,18 @@ function DungeonPanel:GetFilterExpression()
         if PGF.NotEmpty(self.state.dps.min) then expression = expression .. " and dps >= " .. self.state.dps.min end
         if PGF.NotEmpty(self.state.dps.max) then expression = expression .. " and dps <= " .. self.state.dps.max end
     end
-    if self.state.partyfit    then expression = expression .. " and partyfit"     end
-    if self.state.blfit       then expression = expression .. " and blfit"        end
-    if self.state.brfit       then expression = expression .. " and brfit"        end
+    if self.state.partyfit then
+        expression = expression .. " and partyfit"
+    end
+    if self.state.blfit and not PGF.PlayerOrGroupHasBloodlust() then -- use blfit only if group does not have BL
+        expression = expression .. " and blfit"
+    end
+    if self.state.needsbl and PGF.PlayerOrGroupHasBloodlust() then -- use needsbl only if group has BL
+        expression = expression .. " and not hasbl"
+    end
+    if self.state.notdeclined then
+        expression = expression .. " and not declined"
+    end
 
     if self:GetNumDungeonsSelected() > 0 then
         expression = expression .. " and ( false" -- start with neutral element of logical or
@@ -340,6 +356,16 @@ function DungeonPanel:GetNumDungeonsSelected()
         end
     end
     return numDungeonsSelected
+end
+
+function DungeonPanel:UpdateCheckboxVisibility()
+    if PGF.PlayerOrGroupHasBloodlust() then
+        self.Group.BLFit:Hide()
+        self.Group.NeedsBL:Show()
+    else
+        self.Group.BLFit:Show()
+        self.Group.NeedsBL:Hide()
+    end
 end
 
 function DungeonPanel:UpdateAdvancedFilters()

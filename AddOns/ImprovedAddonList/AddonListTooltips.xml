@@ -1,0 +1,28 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+    <Script file="AddonListTooltips.lua"/>
+
+    <Frame name="ImprovedAddonListAddonListTooltipsItemTemplate" mixin="ImprovedAddonListAddonListTooltipsItemMixin" virtual="true">
+		<Size x="200" y="20"/>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<Texture parentKey="LockStatus" file="Interface\Addons\ImprovedAddonList\Media\lock.png" hidden="true">
+					<Size x="16" y ="16"/>
+					<Anchors>
+						<Anchor point="RIGHT" x="-2"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Label" inherits="GameFontHighlight_NoShadow" justifyH="LEFT" wordwrap="false">
+					<Size y="12"/>
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+                        <Anchor point="RIGHT" relativeKey="$parent.LockStatus" relativePoint="LEFT" x="-4" y="0"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer>
+				<Texture parentKey="Background" setAllPoints="true"/>
+			</Layer>
+		</Layers>
+	</Frame>
+</Ui>

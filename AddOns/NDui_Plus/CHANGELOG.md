@@ -1,16 +1,19 @@
 # NDui Plus
 
-## [11.0.4](https://github.com/Witnesscm/NDui_Plus/tree/11.0.4) (2024-09-05)
-[Full Changelog](https://github.com/Witnesscm/NDui_Plus/compare/11.0.3...11.0.4) [Previous Releases](https://github.com/Witnesscm/NDui_Plus/releases)
+## [11.1.0](https://github.com/Witnesscm/NDui_Plus/tree/11.1.0) (2025-02-27)
+[Full Changelog](https://github.com/Witnesscm/NDui_Plus/compare/11.0.8...11.1.0) [Previous Releases](https://github.com/Witnesscm/NDui_Plus/releases)
 
-- 11.0.4  
-- chore(misc): minor changes  
-- fix(lootroll): fix nil error  
+- 11.1.0  
+- Merge pull request #48 from Witnesscm/interface-version  
+    Update Interface version  
+- Update Interface version  
+- fix: update TalentLoadoutsEx skin  
 - feat(tooltip): update raid & mythic+ data  
-- fix(skins): update Immersion skin  
-- feat: update loot spec manager module  
-- revert(misc): modify professions width attribute  
-- chore: remove one-click learn skyriding button  
-- feat(skins): update HandyNotes\_TheWarWithin skin  
-- fix: update WorldQuestTab skin  
-- chore: cleanup  
+- chore: data generation script  
+- refactor: command  
+    - Credit: ElvUI\_WindTools  
+- feat: update RareScanner skin  
+- fix: update several addon skins  
+- fix: modify role icon  
+- fix: update Auctionator skin  
+- fix: fix Mount Journal Enhanced skin  

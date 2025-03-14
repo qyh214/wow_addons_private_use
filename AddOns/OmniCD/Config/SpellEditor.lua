@@ -3,12 +3,6 @@ local E, L = select(2, ...):unpack()
 local GetNumSpecializationsForClassID = GetNumSpecializationsForClassID
 local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellDescription = C_Spell and C_Spell.GetSpellDescription or GetSpellDescription
-local GetSpellInfo = C_Spell and C_Spell.GetSpellName or GetSpellInfo
-local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
-local GetSpellLink = C_Spell and C_Spell.GetSpellLink or GetSpellLink
-local GetItemIcon =  C_Item and C_Item.GetItemIconByID or GetItemIcon
-
 if E.preMoP then
 	GetNumSpecializationsForClassID = function() return 0 end
 	GetSpecializationInfoForClassID = E.Noop
@@ -38,15 +32,6 @@ function E:UpdateSpell(id, isInit, oldClass, oldType)
 
 		if not spellInfo then
 			self.hash_spelldb[id] = v
-
-			if self.spellNameToID then
-				local name = GetSpellInfo(id)
-				if name and not self.spellNameToID[name] then
-					self.spellNameToID[name] = id
-				else
-					return
-				end
-			end
 
 		elseif not v.custom and not defaultBackup[id] then
 			defaultBackup[id] = self:DeepCopy(self.hash_spelldb[id])
@@ -134,7 +119,7 @@ local setItem = function(info, v)
 	local id = GetSpellID(info)
 	if v == "" then
 		if option == "icon" then
-			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and GetItemIcon(OmniCDDB.cooldowns[id].item) or select(2, GetSpellTexture(id))
+			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and C_Item.GetItemIconByID(OmniCDDB.cooldowns[id].item) or select(2, C_Spell.GetSpellTexture(id))
 		else
 			OmniCDDB.cooldowns[id][option] = nil
 		end
@@ -401,7 +386,7 @@ if not E.preMoP then
 			desc = L["Only for talent abilities.\nCurrent ability for this specialization will no longer be tracked while you are in the selected zone(s)"],
 			order = 2,
 			type = "multiselect",
-			dialogControl = "Dropdown-OmniCD",
+			dialogControl = "Dropdown-OmniCDC",
 			values = E.L_ALL_ZONE,
 			get = function(info, k)
 				local id = GetSpellID(info, 2)
@@ -490,20 +475,22 @@ end
 local customSpellGroup = {
 	icon = function(info)
 		local id = GetSpellID(info, 0)
-		return select(2,GetSpellTexture(id))
+		return select(2,C_Spell.GetSpellTexture(id))
 	end,
 	iconCoords = E.BORDERLESS_TCOORDS,
 	name = function(info)
 		local id = GetSpellID(info, 0)
-		return GetSpellInfo(id)
+		return C_Spell.GetSpellName(id)
 	end,
+
 	desc = E.isClassic and function(info)
 		local id = GetSpellID(info, 0)
-		return GetSpellDescription(GetSpellID(info, 0))
+		return C_Spell.GetSpellDescription(GetSpellID(info, 0))
 	end or nil,
+
 	tooltipHyperlink = not E.isClassic and function(info)
 		local id = GetSpellID(info, 0)
-		return GetSpellLink(id)
+		return C_Spell.GetSpellLink(id)
 	end or nil,
 	type = "group",
 	args = customSpellInfo,
@@ -514,7 +501,7 @@ E.EditSpell = function(_, value)
 		return E.write(L["Invalid ID"], value)
 	end
 	local id = tonumber(value)
-	local name = id and GetSpellInfo(id)
+	local name = id and C_Spell.GetSpellName(id)
 	if not name then
 		return E.write(L["Invalid ID"], value)
 	end
@@ -547,7 +534,7 @@ E.EditSpell = function(_, value)
 				["duration"] = {default = 30},
 				["charges"] = {default = 1},
 				["name"] = name,
-				["icon"] = select(2, GetSpellTexture(id)),
+				["icon"] = select(2, C_Spell.GetSpellTexture(id)),
 				["buff"] = id,
 				["custom"] = true,
 			}
@@ -607,7 +594,9 @@ function E:AddSpellEditor()
 	for id in pairs(OmniCDDB.cooldowns) do
 		if not C_Spell.DoesSpellExist(id) then
 			OmniCDDB.cooldowns[id] = nil
-
+			--[==[@debug@
+			E.write("Removing invalid custom ID:" , id)
+			--@end-debug@]==]
 		else
 			id = tostring(id)
 			SpellEditor.args.editor.args[id] = customSpellGroup

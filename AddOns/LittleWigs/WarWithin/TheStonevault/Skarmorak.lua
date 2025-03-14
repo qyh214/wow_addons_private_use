@@ -19,9 +19,11 @@ local fortifiedShellCount = 1
 -- Initialization
 --
 
+local crystalShardMarker = mod:AddMarkerOption(true, "npc", 8, 422261, 8, 7, 6) -- Crystal Shard
 function mod:GetOptions()
 	return {
 		422233, -- Crystalline Smash
+		crystalShardMarker,
 		423200, -- Fortified Shell
 		423538, -- Unstable Crash
 		-- Mythic
@@ -33,6 +35,8 @@ end
 
 function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "CrystallineSmash", 422233)
+	self:Log("SPELL_CAST_SUCCESS", "CrystallineSmashSuccess", 422233)
+	self:Log("SPELL_SUMMON", "CrystalShardSummon", 422261)
 	self:Log("SPELL_CAST_START", "FortifiedShell", 423200)
 	self:Log("SPELL_AURA_APPLIED", "FortifiedShellApplied", 423228)
 	self:Log("SPELL_AURA_REMOVED", "FortifiedShellRemoved", 423228)
@@ -48,8 +52,8 @@ end
 function mod:OnEngage()
 	fortifiedShellCount = 1
 	self:SetStage(1)
-	self:CDBar(422233, 3.9) -- Crystalline Smash
-	self:CDBar(423538, 10.9) -- Unstable Crash
+	self:CDBar(422233, 4.5) -- Crystalline Smash
+	self:CDBar(423538, 10.6) -- Unstable Crash
 	self:CDBar(423200, 37.5, CL.count:format(self:SpellName(423200), fortifiedShellCount)) -- Fortified Shell
 end
 
@@ -59,8 +63,40 @@ end
 
 function mod:CrystallineSmash(args)
 	self:Message(args.spellId, "purple")
-	self:CDBar(args.spellId, 16.6)
+	self:CDBar(args.spellId, 17.0)
 	self:PlaySound(args.spellId, "alert")
+end
+
+do
+	local crystalShardCollector = {}
+	local crystalShardCount = 1
+
+	function mod:CrystallineSmashSuccess()
+		if self:GetOption(crystalShardMarker) then
+			crystalShardCollector = {}
+			crystalShardCount = 1
+			self:RegisterTargetEvents("MarkCrystalShard")
+		end
+	end
+
+	function mod:CrystalShardSummon(args)
+		if self:GetOption(crystalShardMarker) then
+			if not crystalShardCollector[args.destGUID] then
+				crystalShardCollector[args.destGUID] = 9 - crystalShardCount -- 8, 7, 6
+				crystalShardCount = crystalShardCount + 1
+			end
+		end
+	end
+
+	function mod:MarkCrystalShard(_, unit, guid)
+		if crystalShardCollector[guid] then
+			self:CustomIcon(crystalShardMarker, unit, crystalShardCollector[guid])
+			crystalShardCollector[guid] = nil
+			if not next(crystalShardCollector) then
+				self:UnregisterTargetEvents()
+			end
+		end
+	end
 end
 
 function mod:FortifiedShell(args)
@@ -81,12 +117,11 @@ do
 	end
 
 	function mod:FortifiedShellRemoved(args)
-		local fortifiedShellDuration = args.time - fortifiedShellStart
 		self:SetStage(1)
-		self:Message(423200, "green", CL.removed_after:format(args.spellName, fortifiedShellDuration)) -- Fortified Shell
-		self:CDBar(422233, 6.9) -- Crystalline Smash
-		self:CDBar(423538, 14.2) -- Unstable Crash
-		self:CDBar(423200, 40.9, CL.count:format(self:SpellName(423200), fortifiedShellCount)) -- Fortified Shell
+		self:Message(423200, "green", CL.removed_after:format(args.spellName, args.time - fortifiedShellStart)) -- Fortified Shell
+		self:CDBar(422233, 10.0) -- Crystalline Smash
+		self:CDBar(423538, 16.1) -- Unstable Crash
+		self:CDBar(423200, 42.8, CL.count:format(self:SpellName(423200), fortifiedShellCount)) -- Fortified Shell
 		self:PlaySound(423200, "info") -- Fortified Shell
 	end
 end

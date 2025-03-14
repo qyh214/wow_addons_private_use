@@ -134,70 +134,81 @@ local presets = {
       [16] = "M",
     },
   },
-  -- Great Vault (PvP)
-  ["great-vault-pvp"] = {
+  -- Great Vault (World)
+  ["great-vault-world"] = {
     type = "custom",
     index = 2,
-    name = PVP,
+    name = WORLD,
     reset = "weekly",
-    func = function(store)
+    func = function(store, entry)
       wipe(store)
 
       if SI.playerLevel < SI.maxLevel then
         store.unlocked = false
-        store.isComplete = false
       else
-        local weeklyProgress = C_WeeklyRewards.GetConquestWeeklyProgress()
-        local rewardWaiting = C_WeeklyRewards.HasAvailableRewards() and C_WeeklyRewards.CanClaimRewards()
-
         store.unlocked = true
-        store.isComplete = weeklyProgress.progress >= weeklyProgress.maxProgress
-        store.numFulfilled = weeklyProgress.progress
-        store.numRequired = weeklyProgress.maxProgress
-        store.unlocksCompleted = weeklyProgress.unlocksCompleted
-        store.maxUnlocks = weeklyProgress.maxUnlocks
+
+        local activities = C_WeeklyRewards.GetActivities(Enum.WeeklyRewardChestThresholdType.World)
+        sort(activities, entry.activityCompare)
+
+        for i, activityInfo in ipairs(activities) do
+          if activityInfo.progress >= activityInfo.threshold then
+            store[i] = activityInfo.level
+          end
+        end
+
+        local rewardWaiting = C_WeeklyRewards.HasAvailableRewards() and C_WeeklyRewards.CanClaimRewards()
         store.rewardWaiting = rewardWaiting
       end
     end,
     showFunc = function(store)
-      local text
       if not store.unlocked then
         return
-      elseif store.isComplete then
-        text = SI.questCheckMark
-      else
-        text = store.numFulfilled .. "/" .. store.numRequired
       end
-      if store.unlocksCompleted and store.maxUnlocks then
-        text = text .. "(" .. store.unlocksCompleted .. "/" .. store.maxUnlocks .. ")"
+      local text
+      for index = 1, #store do
+        if store[index] then
+          text = (index > 1 and (text .. "||") or "") .. store[index]
+        end
       end
       if store.rewardWaiting then
-        text = text .. "(" .. SI.questTurnin .. ")"
+        if not text then
+          text = SI.questTurnin
+        else
+          text = text .. "(" .. SI.questTurnin .. ")"
+        end
       end
       return text
     end,
     resetFunc = function(store)
       local unlocked = store.unlocked
-      local numRequired = store.numRequired
-      local maxUnlocks = store.maxUnlocks
-      local rewardWaiting = store.unlocksCompleted and store.unlocksCompleted > 0
+      local rewardWaiting = not not store[1]
       wipe(store)
 
       store.unlocked = unlocked
-      store.isComplete = false
-      store.numFulfilled = 0
-      store.numRequired = numRequired
-      store.unlocksCompleted = 0
-      store.maxUnlocks = maxUnlocks
       store.rewardWaiting = rewardWaiting
     end,
+    -- addition info
+    activityCompare = function(left, right)
+      return left.index < right.index
+    end,
+  },
+  -- A Call to Delves
+  ["call-to-delves"] = {
+    type = "single",
+    index = 3,
+    name = L["A Call to Delves"],
+    questID = 84776,
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
   },
   -- The World Awaits
   ["the-world-awaits"] = {
     type = "single",
-    index = 3,
+    index = 4,
     name = L["The World Awaits"],
-    questID = 72728,
+    questID = 83366,
     reset = "weekly",
     persists = false,
     fullObjective = false,
@@ -205,9 +216,19 @@ local presets = {
   -- Emissary of War
   ["emissary-of-war"] = {
     type = "single",
-    index = 4,
+    index = 5,
     name = L["Emissary of War"],
-    questID = 72722,
+    questID = 83347,
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
+  },
+  -- A Call to Battle
+  ["call-to-battle"] = {
+    type = "single",
+    index = 6,
+    name = L["A Call to Battle"],
+    questID = 83345,
     reset = "weekly",
     persists = false,
     fullObjective = false,
@@ -215,15 +236,16 @@ local presets = {
   -- Timewalking
   ["timewalking"] = {
     type = "any",
-    index = 5,
+    index = 7,
     name = L["Timewalking Weekend Event"],
     questID = {
-      72727, -- A Burning Path Through Time - TBC Timewalking
-      72726, -- A Frozen Path Through Time - WLK Timewalking
-      72810, -- A Shattered Path Through Time - CTM Timewalking
-      72725, -- A Shrouded Path Through Time - MOP Timewalking
-      72724, -- A Savage Path Through Time - WOD Timewalking
-      72719, -- A Fel Path Through Time - LEG Timewalking
+      83363, -- A Burning Path Through Time - TBC Timewalking
+      83365, -- A Frozen Path Through Time - WLK Timewalking
+      83359, -- A Shattered Path Through Time - CTM Timewalking
+      83362, -- A Shrouded Path Through Time - MOP Timewalking
+      83364, -- A Savage Path Through Time - WOD Timewalking
+      83360, -- A Fel Path Through Time - LEG Timewalking
+      86731, -- An Original Path Through Time - CLA Timewalking
     },
     reset = "weekly",
     persists = false,
@@ -325,11 +347,66 @@ local presets = {
     persists = false,
     fullObjective = false,
   },
+  -- Replenish the Reservoir
+  ["sl-replenish-the-reservoir"] = {
+    type = "any",
+    expansion = 8,
+    name = L["Replenish the Reservoir"],
+    persists = true,
+    index = 1,
+    questID = {
+      61981, -- Venthyr
+      61982, -- Kyrian
+      61983, -- Necrolord
+      61984, -- Night Fae
+    },
+    fullObjective = true,
+    reset = "weekly",
+  },
+  -- Return Lost Souls
+  ["sl-return-lost-souls"] = {
+    type = "any",
+    expansion = 8,
+    name = L["Return Lost Souls"],
+    persists = true,
+    index = 2,
+    questID = {
+      61331,
+      61332,
+      61333,
+      61334,
+      62858,
+      62859,
+      62860,
+      62861,
+      62862,
+      62863,
+      62864,
+      62865,
+      62866,
+      62867,
+      62868,
+      62869,
+    },
+    fullObjective = true,
+    reset = "weekly",
+  },
+  -- Shaping Fate
+  ["sl-shaping-fate"] = {
+    type = "single",
+    expansion = 8,
+    name = L["Shaping Fate"],
+    persists = true,
+    index = 3,
+    questID = 63949,
+    fullObjective = true,
+    reset = "weekly",
+  },
   -- Covenant Assaults
   ["sl-covenant-assault"] = {
     type = "any",
     expansion = 8,
-    index = 1,
+    index = 4,
     name = L["Covenant Assaults"],
     questID = {
       63823, -- Night Fae Assault
@@ -345,7 +422,7 @@ local presets = {
   ["sl-patterns-within-patterns"] = {
     type = "single",
     expansion = 8,
-    index = 2,
+    index = 5,
     name = L["Patterns Within Patterns"],
     questID = 66042,
     reset = "weekly",
@@ -697,6 +774,438 @@ local presets = {
     persists = true,
     fullObjective = false,
   },
+  -- Services Requested
+  ["df-services-requested"] = {
+    type = "any",
+    expansion = 9,
+    index = 23,
+    name = L["Services Requested"],
+    questID = {
+      70589, -- Blacksmithing Services Requested
+      70591, -- Engineering Services Requested
+      70592, -- Inscription Services Requested
+      70593, -- Jewelcrafting Services Requested
+      70594, -- Leatherworking Services Requested
+      70595, -- Tailoring Services Requested
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- TWW Weekly Cache
+  ["tww-weekly-cache"] = {
+    type = "list",
+    expansion = 10,
+    index = 1,
+    name = L["TWW Weekly Cache"],
+    questID = {
+      84736,
+      84737,
+      84738,
+      84739,
+    },
+    reset = "weekly",
+    persists = false,
+    progress = false,
+    onlyOnOrCompleted = false,
+    questName = {
+      [84736] = L["First Cache"],
+      [84737] = L["Second Cache"],
+      [84738] = L["Third Cache"],
+      [84739] = L["Fourth Cache"],
+    },
+  },
+  -- Lesser Keyflame
+  ["tww-lesser-keyflame"] = {
+    type = "list",
+    expansion = 10,
+    index = 2,
+    name = L["Lesser Keyflame"],
+    questID = {
+      76169, -- Glow in the Dark
+      76394, -- Shadows of Flavor
+      76600, -- Right Between the Gyros-Optics
+      76733, -- Tater Trawl
+      76997, -- Lost in Shadows
+      78656, -- Hose It Down
+      78915, -- Squashing the Threat
+      78933, -- The Sweet Eclipse
+      78972, -- Harvest Havoc
+      79158, -- Seeds of Salvation
+      79173, -- Supply the Effort
+      79216, -- Web of Manipulation
+      79346, -- Chew On That
+      80004, -- Crab Grab
+      80562, -- Blossoming Delight
+      81574, -- Sporadic Growth
+      81632, -- Lizard Looters
+    },
+    reset = "weekly",
+    persists = true,
+    threshold = 8,
+    progress = true,
+    onlyOnOrCompleted = true,
+  },
+  -- Brawl Weekly
+  ["tww-brawl-weekly"] = {
+    type = "single",
+    expansion = 10,
+    index = 3,
+    name = L["Brawl Weekly"],
+    questID = 47148,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- PvP Weekly
+  ["tww-pvp-weekly"] = {
+    type = "any",
+    expansion = 10,
+    index = 4,
+    name = L["PvP Weekly"],
+    questID = {
+      80184, -- Preserving in Battle
+      80185, -- Preserving Solo
+      80186, -- Preserving in War
+      80187, -- Preserving in Skirmishes
+      80188, -- Preserving in Arenas
+      80189, -- Preserving Teamwork
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  ["tww-pvp-world"] = {
+    type = "any",
+    expansion = 10,
+    index = 5,
+    name = L["World PvP Weekly"],
+    questID = {
+      81793, -- Sparks of War: Isle of Dorn
+      81794, -- Sparks of War: The Ringing Deeps
+      81795, -- Sparks of War: Hallowfall
+      81796, -- Sparks of War: Azj-Kahet
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  ["The Severed Threads"] = {
+    type = "any",
+    expansion = 10,
+    index = 6,
+    name = L["The Severed Threads"],
+    questID = {
+      80670, -- Eyes of the Weaver
+      80671, -- Blade of the General
+      80672, -- Hand of the Vizier
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- The Call of the Worldsoul
+  ["tww-the-call-of-the-worldsoul"] = {
+    type = "any",
+    expansion = 10,
+    index = 7,
+    name = L["The Call of the Worldsoul"],
+    questID = {
+      -- https://wago.tools/db2/QuestLineXQuest?filter[QuestLineID]=5572&page=1&sort[OrderIndex]=asc
+      82482, -- Worldsoul: Snuffling
+      82516, -- Worldsoul: Forging a Pact
+      82483, -- Worldsoul: Spreading the Light
+      82453, -- Worldsoul: Encore!
+      82489, -- Worldsoul: The Dawnbreaker
+      82659, -- Worldsoul: Nerub-ar Palace
+      82490, -- Worldsoul: Priory of the Sacred Flame
+      82491, -- Worldsoul: Ara-Kara, City of Echoes
+      82492, -- Worldsoul: City of Threads
+      82493, -- Worldsoul: The Dawnbreaker
+      82494, -- Worldsoul: Ara-Kara, City of Echoes
+      82496, -- Worldsoul: City of Threads
+      82497, -- Worldsoul: The Stonevault
+      82498, -- Worldsoul: Darkflame Cleft
+      82499, -- Worldsoul: Priory of the Sacred Flame
+      82500, -- Worldsoul: The Rookery
+      82501, -- Worldsoul: The Dawnbreaker
+      82502, -- Worldsoul: Ara-Kara, City of Echoes
+      82503, -- Worldsoul: Cinderbrew Meadery
+      82504, -- Worldsoul: City of Threads
+      82505, -- Worldsoul: The Stonevault
+      82506, -- Worldsoul: Darkflame Cleft
+      82507, -- Worldsoul: Priory of the Sacred Flame
+      82508, -- Worldsoul: The Rookery
+      82509, -- Worldsoul: Nerub-ar Palace
+      82510, -- Worldsoul: Nerub-ar Palace
+      82511, -- Worldsoul: Awakening Machine
+      82512, -- Worldsoul: World Boss
+      82488, -- Worldsoul: Darkflame Cleft
+      82487, -- Worldsoul: The Stonevault
+      82486, -- Worldsoul: The Rookery
+      82485, -- Worldsoul: Cinderbrew Meadery
+      82452, -- Worldsoul: World Quests
+      82495, -- Worldsoul: Cinderbrew Meadery
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- The Call of the Worldsoul
+  ["tww-archives"] = {
+    type = "any",
+    expansion = 10,
+    index = 7.1,
+    name = L["Archives"],
+    questID = {
+      -- https://wago.tools/db2/QuestLineXQuest?filter[QuestLineID]=5572&page=1&sort[OrderIndex]=asc
+      82678, -- Archives: The First Disc
+      82679, -- Archives: Seeking History
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- The Call of the Worldsoul
+  ["tww-delves"] = {
+    type = "any",
+    expansion = 10,
+    index = 7.2,
+    name = L["Delves"],
+    questID = {
+      -- https://wago.tools/db2/QuestLineXQuest?filter[QuestLineID]=5572&page=1&sort[OrderIndex]=asc
+      82708, -- Delves: Nerubian Menace
+      82707, -- Delves: Earthen Defense
+      82706, -- Delves: Khaz Algar Research
+      82709, -- Delves: Percussive Archaeology
+      82710, -- Delves: Empire-ical Exploration
+      82711, -- Delves: Lost and Found
+      82712, -- Delves: Trouble Up and Down Khaz Algar
+      82746, -- Delves: Breaking Tough to Loot Stuff
+    },
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- The Theater Troupe
+  ["tww-the-theater-trope"] = {
+    type = "single",
+    expansion = 10,
+    index = 8,
+    name = L["The Theater Troupe"],
+    questID = 83240,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Spreading the Light
+  ["tww-spreading-the-light"] = {
+    type = "single",
+    expansion = 10,
+    index = 9,
+    name = L["Spreading the Light"],
+    questID = 76586,
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
+  },
+  -- Gearing Up for Trouble
+  ["tww-gearing-up-for-trouble"] = {
+    type = "single",
+    expansion = 10,
+    index = 10,
+    name = L["Gearing Up for Trouble"],
+    questID = 83333,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Special Assignments
+  ["tww-special-assignments"] = {
+    type = "list",
+    expansion = 10,
+    index = 11,
+    name = L["Special Assignments"],
+    questID = {
+      82355, -- Special Assignment: Cinderbee Surge (Completing)
+      81649, -- Special Assignment: Titanic Resurgence (Completing)
+      81691, -- Special Assignment: Shadows Below (Completing)
+      83229, -- Special Assignment: When the Deeps Stir (Completing)
+      82852, -- Special Assignment: Lynx Rescue (Completing)
+      82787, -- Special Assignment: Rise of the Colossals (Completing)
+      82414, -- Special Assignment: A Pound of Cure (Completing)
+      82531, -- Special Assignment: Bombs from Behind (Completing)
+    },
+    reset = "weekly",
+    persists = false,
+    threshold = 2,
+    progress = true,
+    onlyOnOrCompleted = true,
+  },
+  -- Rollin' Down in the Deeps
+  ["tww-rollin-down-in-the-deeps"] = {
+    type = "single",
+    expansion = 10,
+    index = 12,
+    name = L["Rollin' Down in the Deeps"],
+    questID = 82946,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Weekly Dungeon Quest from Biergoth
+  ["tww-biergoth-dungeon-quest"] = {
+    type = "any",
+    expansion = 10,
+    index = 13,
+    name = L["Biergoth Dungeon Quest"],
+    questID = {
+      83432, -- The Rookery
+      83436, -- Cinderbrew Meadery
+      83443, -- Darkflame Cleft
+      83457, -- The Stonevault
+      83458, -- Priory of the Sacred Flame
+      83459, -- The Dawnbreaker
+      83465, -- Ara-Kara, City of Echoes
+      83469, -- City of Threads
+    },
+    reset = "weekly",
+    persists = false,
+    fullObjective = false,
+  },
+  -- The Key to Success
+  ["tww-the-key-to-success"] = {
+    type = "single",
+    expansion = 10,
+    index = 14,
+    name = L["The Key to Success"],
+    questID = 84370,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- TWW Services Requested
+  ["tww-services-requested"] = {
+    type = "any",
+    expansion = 10,
+    index = 15,
+    name = L["TWW Profession Weeklies"],
+    questID = {
+      84127, -- Blacksmithing Services Requested
+      84128, -- Engineering Services Requested
+      84129, -- Inscription Services Requested
+      84130, -- Jewelcrafting Services Requested
+      84131, -- Leatherworking Services Requested
+      84132, -- Tailoring Services Requested
+      84133, -- Alchemy Services Requested
+      83103, -- Acquiring Aqirite
+      83102, -- Bismuth is Business
+      83104, -- Identifying Ironclaw
+      83106, -- Null Pebble Excavation
+      83105, -- Rush-order Requisition
+      83097, -- Cinder and Storm
+      83100, -- Cracking the Shell
+      82993, -- From Shadows
+      83098, -- Snap and Crackle
+      82992, -- Stormcharged Goods
+      84086, -- A Rare Necessity
+      84084, -- Just a Pinch
+      84085, -- The Power of Potential
+      82970, -- A Bloom and A Blossom
+      82962, -- A Handful of Luredrops
+      82965, -- Light and Shadow
+      82958, -- Little Blessings
+      82916, -- When Fungi Bloom
+    },
+    reset = "weekly",
+    persists = true,
+    threshold = 2,
+    fullObjective = false,
+  },
+  -- TWW Treatise
+  ["tww-algari-treatise"] = {
+    type = "list",
+    expansion = 10,
+    index = 16,
+    name = L["TWW Algari Treatise"],
+    questID = {
+      83725, -- Algari Treatise on Alchemy
+      83726, -- Algari Treatise on Blacksmithing
+      83727, -- Algari Treatise on Enchanting
+      83728, -- Algari Treatise on Engineering
+      83729, -- Algari Treatise on Herbalism
+      83730, -- Algari Treatise on Inscription
+      83731, -- Algari Treatise on Jewelcrafting
+      83732, -- Algari Treatise on Leatherworking
+      83733, -- Algari Treatise on Mining
+      83734, -- Algari Treatise on Skinning
+      83735, -- Algari Treatise on Tailoring
+    },
+    reset = "weekly",
+    persists = false,
+    threshold = 2,
+    progress = false,
+    onlyOnOrCompleted = true,
+    questName = {
+      [83725] = L["Algari Treatise on Alchemy"],
+      [83726] = L["Algari Treatise on Blacksmithing"],
+      [83727] = L["Algari Treatise on Enchanting"],
+      [83728] = L["Algari Treatise on Engineering"],
+      [83729] = L["Algari Treatise on Herbalism"],
+      [83730] = L["Algari Treatise on Inscription"],
+      [83731] = L["Algari Treatise on Jewelcrafting"],
+      [83732] = L["Algari Treatise on Leatherworking"],
+      [83733] = L["Algari Treatise on Mining"],
+      [83734] = L["Algari Treatise on Skinning"],
+      [83735] = L["Algari Treatise on Tailoring"],
+    },
+  },
+  -- Anniversary Restored Coffer Key
+  ["tww-anniversary-restored-coffer-key"] = {
+    type = "single",
+    expansion = 10,
+    index = 17,
+    name = L["Anniversary Restored Coffer Key"],
+    questID = 86202,
+    reset = "weekly",
+    persists = true,
+    fullObjective = false,
+  },
+  -- Siren Isle Weekly
+  ["tww-siren-isle-weekly"] = {
+    type = "list",
+    expansion = 10,
+    index = 16,
+    name = L["Siren Isle Weekly"],
+    questID = {
+      -- Vrykul invasion
+      84852, -- Legacy of the Vrykul
+      84680, -- Rock 'n Stone Revival
+      83932, -- Historical Documents
+      84432, -- Longship Landing
+      84248, -- A Ritual of Runes
+      84222, -- Secure the Perimeter
+      -- Pirate invasion
+      84851, -- Tides of Greed
+      83753, -- Cannon Karma
+      84299, -- Pirate Plunder
+      84619, -- Ooker Dooker Literature Club
+      83827, -- Silence the Song
+      84001, -- Cart Blanche
+      -- Naga invasion
+      84850, -- Serpent's Wrath
+      85589, -- Ruffled Pages
+      84430, -- Crystal Crusade
+      85051, -- Beach Comber
+      84627, -- Three Heads of the Deep
+    },
+    unlockQuest = 84725, -- The Circlet Calls
+    reset = "weekly",
+    persists = false,
+    threshold = 6,
+    progress = true,
+    onlyOnOrCompleted = true,
+  },
 }
 
 ---update the progress of quest to the store
@@ -716,6 +1225,7 @@ local function UpdateQuestStore(store, questID)
 
     return false
   else
+    local findingPendingObjective = true
     local showText
     local leaderboardCount = C_QuestLog.GetNumQuestObjectives(questID)
     for i = 1, leaderboardCount do
@@ -734,15 +1244,20 @@ local function UpdateQuestStore(store, questID)
       else
         objectiveText = numFulfilled .. "/" .. numRequired
       end
+      local isObjectiveCompleted = numFulfilled >= numRequired
 
       store[i] = text
-      if i == 1 then
-        store.objectiveType = objectiveType
-        store.numFulfilled = numFulfilled
-        store.numRequired = numRequired
-        showText = objectiveText
-      else
-        showText = showText .. " " .. objectiveText
+      if not isObjectiveCompleted then
+        if findingPendingObjective then
+          store.objectiveType = objectiveType
+          store.numFulfilled = numFulfilled
+          store.numRequired = numRequired
+          showText = objectiveText
+
+          findingPendingObjective = false
+        else
+          showText = showText .. " " .. objectiveText
+        end
       end
     end
 

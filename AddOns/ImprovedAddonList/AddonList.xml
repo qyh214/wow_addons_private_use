@@ -1,0 +1,125 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<Script file="AddonList.lua"/>
+
+	<Button name="ImprovedAddonListAddonItemEnableStatusButtonTemplate" mixin="ImprovedAddonListItemEnableStatusButtonMixin" virtual="true">
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+	<Button name="ImprovedAddonListAddonItemLockStatusButtonTemplate" mixin="ImprovedAddonListItemLockStatusButtonMixin" virtual="true">
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+
+    <Button name="ImprovedAddonListAddonItemTemplate" mixin="ImprovedAddonListAddonItemMixin" virtual="true">
+		<Size y="20"/>
+		<Frames>
+			<Button parentKey="EnableStatus" inherits="ImprovedAddonListAddonItemEnableStatusButtonTemplate">
+				<HitRectInsets left="-6" right="-6" top="-6" bottom="-6"/>
+				<Size x="15" y="15"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-4" />
+				</Anchors>
+			</Button>
+			<Button parentKey="LockStatus" inherits="ImprovedAddonListAddonItemLockStatusButtonTemplate" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.EnableStatus"/>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.EnableStatus"/>
+				</Anchors>
+			</Button>
+		</Frames>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<FontString parentKey="Label" inherits="GameFontHighlight_NoShadow" justifyH="LEFT" wordwrap="false">
+					<Size y="12"/>
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+						<Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.EnableStatus" x="-15" y="0"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="LoadIndicator" file="Interface\Addons\ImprovedAddonList\Media\load_indicator.png">
+					<Size x = "8" y="8"/>
+					<Color color="NORMAL_FONT_COLOR"/>
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="LEFT" relativeKey="$parent.EnableStatus" x="-4" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="2">
+				<Texture parentKey="SelectedOverlay" atlas="Professions_Recipe_Active" useAtlasSize="true" hidden="true">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="HighlightOverlay" atlas="Professions_Recipe_Hover" useAtlasSize="true" alpha="0.5">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnClick method="OnClick"/>
+			<OnDoubleClick method="OnDoubleClick"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+	</Button>
+
+	<Button name="ImprovedAddonListAddonCategoryTemplate" mixin="ImprovedAddonListAddonCategoryMixin" virtual="true">
+		<Size y="25"/>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<FontString parentKey="Label" inherits="GameFontNormal_NoShadow" justifyH="LEFT">
+					<Size y="10"/>
+					<Anchors>
+						<Anchor point="LEFT" x="10" y="2"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="LeftPiece" atlas="Professions-recipe-header-left" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="LEFT" y="2"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="RightPiece" atlas="Professions-recipe-header-right" useAtlasSize="true">
+					<Anchors>
+						<Anchor point="RIGHT" y="2"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="CenterPiece" atlas="Professions-recipe-header-middle" useAtlasSize="false">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.LeftPiece"/>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" relativeKey="$parent.RightPiece"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="CollapseIcon">
+					<Anchors>
+						<Anchor point="RIGHT" x="-10" y="2"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="HIGHLIGHT">
+				<Texture parentKey="CollapseIconAlphaAdd" alphaMode="ADD">
+					<Anchors>
+						<Anchor point="CENTER" relativeKey="$parent.CollapseIcon"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+</Ui>

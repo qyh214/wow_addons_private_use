@@ -1,0 +1,21 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame name="ItemUpgradeTipInsetDarkTemplate" useParentLevel="true" virtual="true">
+        <KeyValues>
+            <KeyValue key="layoutType" value="InsetFrameTemplate" type="string" />
+        </KeyValues>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Bg">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" />
+                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="BOTTOMRIGHT" />
+                    </Anchors>
+                    <Color r="0" g="0" b="0" a="0.5" />
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate" />
+        </Frames>
+    </Frame>
+</Ui>

@@ -1,5 +1,5 @@
 		-------------------------------------------------
-		-- Paragon Reputation 1.57 by Fail US-Ragnaros --
+		-- Paragon Reputation 1.60 by Fail US-Ragnaros --
 		-------------------------------------------------
 
 		  --[[	  Special thanks to Ammako for
@@ -161,7 +161,6 @@ local function UpdateBar(self)
 			end)
 			self.paragon_hook = true
 		end
-		local data = C_Reputation.GetFactionDataByID(self.factionID)
 		local currentValue,threshold,rewardQuestID,hasRewardPending = C_Reputation.GetFactionParagonInfo(self.factionID)
 		self.count = floor(currentValue/threshold)-(hasRewardPending and 1 or 0)
 		self.questID = rewardQuestID

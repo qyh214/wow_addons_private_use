@@ -129,8 +129,17 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225454] = {
         name = "Pacificatrice Hektare",
     },
+    [225481] = {
+        name = "Sguazzamelma Kassandra",
+    },
+    [225500] = {
+        name = "Grimla Levafrizza",
+    },
     [225555] = {
         name = "Gianfrusaglia",
+    },
+    [225571] = {
+        name = "Renzik \"Stiletto\"",
     },
     [225582] = {
         name = "Caposquadra Duinth",
@@ -144,8 +153,20 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225616] = {
         name = "Meccavin",
     },
+    [225669] = {
+        name = "Alleria Ventolesto",
+    },
+    [225756] = {
+        name = "Monte Sparachiodi",
+    },
     [226255] = {
         name = "Cipollina",
+    },
+    [226569] = {
+        name = "Snap Vellunto",
+    },
+    [226728] = {
+        name = "Humphrey Mezzosorso",
     },
     [226750] = {
         name = "Giurafrey Etterca",
@@ -161,6 +182,30 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [227222] = {
         name = "Ysabel Delbarlum",
+    },
+    [228158] = {
+        name = "Spezzaspiccia",
+    },
+    [228286] = {
+        name = "Skedgit Scoppiabraci",
+    },
+    [229236] = {
+        name = "Monte Sparachiodi",
+    },
+    [230554] = {
+        name = "Vecchio Lowe",
+    },
+    [230841] = {
+        name = "Il Cavaliere Verderame",
+    },
+    [233235] = {
+        name = "Gerry Golasecca",
+    },
+    [233420] = {
+        name = "Benny Paperazzo",
+    },
+    [233482] = {
+        name = "Monte Sparachiodi",
     },
 })
 ]])()

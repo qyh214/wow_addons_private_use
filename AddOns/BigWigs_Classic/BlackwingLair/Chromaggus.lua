@@ -58,6 +58,24 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			23128, -- Enrage / Frenzy (different name on classic era)
+			23537, -- Frenzy / Enrage (different name on classic era)
+			{"breath", "CASTBAR"},
+			23174, -- Chromatic Mutation
+			"vulnerability",
+			{23170, "ME_ONLY_EMPHASIZE"}, -- Brood Affliction: Bronze
+			468195, -- Roll Over!
+		},nil,{
+			[23537] = CL.health_percent:format(20), -- Frenzy / Enrage (20% Health)
+			[23174] = CL.mind_control, -- Chromatic Mutation (Mind Control)
+			[23170] = L.bronze, -- Brood Affliction: Bronze (Bronze)
+		}
+	end
+end
+
 function mod:OnRegister()
 	buffList = {
 		[22277] = L.vulnerability_message:format(CL.fire),
@@ -82,6 +100,10 @@ function mod:OnBossEnable()
 		23187, 23189 -- Frost Burn
 	)
 	self:Log("SPELL_AURA_APPLIED", "ElementalShield", 22277, 22278, 22279, 22280, 22281) -- Fire, Frost, Shadow, Nature, Arcane
+
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_CAST_SUCCESS", "RollOver", 468195)
+	end
 
 	if self:Vanilla() then
 		BigWigs:Print(L.detect_magic_warning)
@@ -135,8 +157,10 @@ do
 		prevWeakness = nil
 		firstWarning = false
 
-		self:Bar("breath", 30, CL.count:format(CL.next_ability, 1), "INV_Misc_QuestionMark")
-		self:Bar("breath", 60, CL.count:format(CL.next_ability, 2), "INV_Misc_QuestionMark")
+		if not self:GetPlayerAura(467047) then -- Black Essence
+			self:Bar("breath", 30, CL.count:format(CL.next_ability, 1), "INV_Misc_QuestionMark")
+			self:Bar("breath", 60, CL.count:format(CL.next_ability, 2), "INV_Misc_QuestionMark")
+		end
 
 		self:SimpleTimer(CheckInitWeakness, 1)
 	end
@@ -202,8 +226,10 @@ function mod:Breaths(args)
 
 	self:CastBar("breath", 2, args.spellName, args.spellId)
 	self:Message("breath", "yellow", CL.casting:format(args.spellName), args.spellId)
-	self:Bar("breath", 60, args.spellName, args.spellId)
-	self:PlaySound("breath", "long")
+	if not self:GetPlayerAura(467047) then -- Black Essence
+		self:Bar("breath", 60, args.spellName, args.spellId)
+		self:PlaySound("breath", "long")
+	end
 end
 
 function mod:ElementalShield(args) -- Weaknesses
@@ -216,4 +242,9 @@ function mod:ElementalShield(args) -- Weaknesses
 		self:CDBar("vulnerability", 0.1, buffList[prevWeakness], prevWeakness)
 		self:PlaySound("vulnerability", "info")
 	end
+end
+
+function mod:RollOver(args)
+	self:Message(args.spellId, "cyan")
+	self:PlaySound(args.spellId, "long")
 end

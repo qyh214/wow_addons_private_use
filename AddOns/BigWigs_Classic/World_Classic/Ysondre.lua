@@ -2,6 +2,7 @@
 -- Module Declaration
 --
 
+if BigWigsLoader.isSeasonOfDiscovery then return end
 local mod, CL = BigWigs:NewBoss("Ysondre", -1444)
 if not mod then return end
 mod:RegisterEnableMob(14887)
@@ -86,11 +87,11 @@ function mod:NoxiousBreath(args)
 end
 
 function mod:NoxiousBreathApplied(args)
-	if not self:Damager() and self:Tank(args.destName) then
-		local amount = args.amount or 1
-		self:StackMessage(args.spellId, "purple", args.destName, amount, 3, CL.breath)
-		if self:Tank() and amount > 3 then
-			self:PlaySound(args.spellId, "warning")
+	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID, true)
+	if unit and targetUnit and self:Tanking(unit, targetUnit) then
+		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 4, CL.breath)
+		if args.amount >= 4 then
+			self:PlaySound(args.spellId, "warning", nil, args.destName)
 		end
 	end
 end

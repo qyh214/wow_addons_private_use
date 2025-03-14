@@ -43,23 +43,32 @@ local function AddCustomRing()
     end
 
     local menuInfo = Narci_MinimapButton:GetMenuInfo();
-    table.insert(menuInfo, 1, {
-        text = Narci.L["Character Panel"],
-        func = function() Narci_Open() end;
-    });
 
-    for i, info in ipairs(menuInfo) do
-        moduleData[i] = {
-            label = info.text,
-            callback = info.func,
-        };
+    moduleData[1] = {
+        label = Narci.L["Character Panel"],
+        callback = function() Narci_Open() end;
+    };
+
+    for i, info in ipairs(menuInfo.objects) do
+        if info.type == "Button" then
+            table.insert(moduleData, {
+                label = info.name,
+                callback = info.OnClick,
+            });
+        end
     end
+
+    table.insert(moduleData, {
+        label = Narci.L["Settings"],
+        callback = NarciAPI.ToggleSettings,
+    });
 
     SetModuleIcon(1, "Narcissus");
     SetModuleIcon(2, "PhotoMode");
     SetModuleIcon(3, "DressingRoom");
     SetModuleIcon(4, "Turntable");
     SetModuleIcon(5, "Achievement");
+    SetModuleIcon(6, "Settings");
 
 
     --ActionBook
@@ -89,7 +98,7 @@ local function AddCustomRing()
 
     --Create Category
     AB:AugmentCategory(categoryName, function(_, add)
-        for id = 1, #menuInfo do
+        for id = 1, #moduleData do
             add(actionType, id);
         end
     end)

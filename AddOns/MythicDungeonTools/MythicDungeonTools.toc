@@ -1,7 +1,7 @@
-## Interface: 110002, 110000
+## Interface: 110100
 ## Title: Mythic Dungeon Tools
 ## Author: Nnoggie
-## Version: 5.0.8
+## Version: 5.3.6
 ## X-Curse-Project-ID: 288981
 ## X-Wago-ID: rN4VrAKD
 ## Notes: Tool for planning and optimizing Mythic+ dungeon runs
@@ -17,7 +17,7 @@
 ## Notes-zhTW: 幫助你計算 M+ 的小怪%，規劃出最佳拉怪路線。
 ## OptionalDeps: !!AddonLocale, LibStub, Ace3, WagoAnalytics
 ## SavedVariables: MythicDungeonToolsDB
-## IconTexture: Interface\AddOns\MythicDungeonTools\Textures\Nnoggie
+## IconTexture: Interface\AddOns\MythicDungeonTools\Textures\MDTFull
 
 libs\load_libs.xml
 BuildCheck.lua
@@ -28,8 +28,4 @@ Utility.lua
 MythicDungeonTools.lua
 Modules\load_modules.xml
 Developer\load_developer.xml
-Legion\load_legion.xml
-BattleForAzeroth\load_bfa.xml
-Shadowlands\load_shadowlands.xml
-Dragonflight\load_dragonflight.xml
 TheWarWithin\load_thewarwithin.xml

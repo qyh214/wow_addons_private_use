@@ -13,14 +13,14 @@ local KNOWLEDGE = {
 }
 
 ns.RegisterPoints(ns.ISLEOFDORN, {
-    [57636163] = {
+    [57596161] = {
         quest=83856,
         loot={226284}, -- Grinded Earthen Gem
         vignette=6441,
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [58025691] = {
+    [58035698] = {
         quest=83859,
         loot={226285}, -- Silver Dornogal Rod
         vignette=6442,
@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [44612226] = { -- ?
+    [41772213] = {
         quest=83860,
         loot={226286}, -- Soot-Coated Orb
         vignette=6443,
     },
-    [67126585] = {
+    [62856585] = {
         quest=83861,
         loot={226287}, -- Animated Enchanting Dust
         vignette=6444,

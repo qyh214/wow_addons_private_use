@@ -119,7 +119,7 @@ if not db.activate.HideMapNote then
                         minimap[85][57479225] = { mnID = 371, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Jade Forest"] } -- The Jade Forest 
                         minimap[85][56219180] = { mnID = 125, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. DUNGEON_FLOOR_DALARANCITY1 .. " - " .. POSTMASTER_PIPE_NORTHREND} -- Crystalsong Forest (Old Dalaran) Portalroom 
                         minimap[85][57409153] = { mnID = 111, name = L["Shattrath City"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Shattrath 
-                        minimap[85][57179070] = { mnID = 17, name = "", TransportName = L["Blasted Lands"] .. "\n" .. "( " .. L["talk to"] .. ": " .. L["Thrallmar Mage"] .. " )" .. "\n" ..L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
+                        minimap[85][57179070] = { mnID = 17, name = "", TransportName = L["The Dark Portal"] .. "\n" .. "( " .. L["talk to"] .. ": " .. L["Thrallmar Mage"] .. " )" .. "\n" ..L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
                         minimap[85][56399252] = { mnID = 74, name = DUNGEON_FLOOR_TANARIS18, TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Caverns of Time 
                         minimap[85][55209201] = { mnID = 624, name = L["Warspear"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Warspear - Ashran 
                         minimap[85][57878985] = { mnID = 2339, name = L["Dornogal"], TransportName = L["in the basement"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal
@@ -132,6 +132,7 @@ if not db.activate.HideMapNote then
                         minimap[85][48236216] = { mnID = 407, name = "", Transportname = L["Transport"] .. " ==> " .. CALENDAR_FILTER_DARKMOON, TransportName = "\n" .. REQUIRES_LABEL .. " " .. CALENDAR_FILTER_DARKMOON .. "\n" .. L["Starting on the first Sunday of each month for one week"], type = "DarkMoon", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[85][38607586] = { mnID = 680, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. DUNGEON_FLOOR_SURAMARRAID3 } -- Portal to Night Fortress
                         minimap[85][38167527] = { mnID = 652, name = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. POSTMASTER_LETTER_THUNDERTOTEM } -- Portal to Night Fortress
+                        minimap[85][37437619] = { mnID = 2322, name = L["Portal"], dnID = "", type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Hall of Awakening
                     end
 
                     if self.db.profile.showMinimapCapitalsZeppelins then
@@ -874,14 +875,14 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsTransporting then
 
                     if self.db.profile.showMinimapCapitalsPortals then
-                        minimap[1165][51424583] = { mnID = 1163, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Dazar'alor"] .. " " .. L["Portalroom"] .. L["(inside building)"] .. "\n" .. " ==> " .. L["Silvermoon City"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. L["Thunder Bluff"] .. "\n" .. " ==> " .. L["Silithus"] .. "\n" .. " ==> " .. L["Nazjatar"] } -- Portalroom from Dazar'alor
-                        minimap[1163][73726194] = { mnID = 110, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
-                        minimap[1163][74006974] = { mnID = 85, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. ORGRIMMAR } -- Portalroom from Dazar'alor
-                        minimap[1163][74027739] = { mnID = 88, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
-                        minimap[1163][73808541] = { mnID = 81, name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
-                        minimap[1163][63008553] = { mnID = 1355,  name = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
-                        minimap[1165][52079454] = { mnID = 62, name = L["This Darkshore portal is only active if your faction is currently occupying Bashal'Aran"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Arathi or Darkshore
-                        minimap[1165][51719454] = { mnID = 14, name = L["This Arathi Highlands portal is only active if your faction is currently occupying Ar'gorok"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Arathi or Darkshore         
+                        minimap[1165][51424583] = { mnID = 1163, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Dazar'alor"] .. " " .. L["Portalroom"] .. L["(inside building)"] .. "\n" .. " ==> " .. L["Silvermoon City"] .. "\n" .. " ==> " .. ORGRIMMAR .. "\n" .. " ==> " .. L["Thunder Bluff"] .. "\n" .. " ==> " .. L["Silithus"] .. "\n" .. " ==> " .. L["Nazjatar"] } -- Portalroom from Dazar'alor
+                        minimap[1163][73726194] = { mnID = 110, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
+                        minimap[1163][74006974] = { mnID = 85, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
+                        minimap[1163][74027739] = { mnID = 88, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
+                        minimap[1163][73808541] = { mnID = 81, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
+                        minimap[1163][63008553] = { mnID = 1355, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Dazar'alor
+                        minimap[1165][52079454] = { mnID = 62, name = L["This Darkshore portal is only active if your faction is currently occupying Bashal'Aran"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Arathi or Darkshore
+                        minimap[1165][51719454] = { mnID = 14, name = L["This Arathi Highlands portal is only active if your faction is currently occupying Ar'gorok"], type = "HPortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dazar'alor to Arathi or Darkshore         
                     end
 
                     if self.db.profile.showMinimapCapitalsTransport then
@@ -1125,7 +1126,7 @@ if not db.activate.HideMapNote then
                         minimap[84][76211869] = { mnID = 198, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. POSTMASTER_LETTER_HYJAL } -- Portal to Hyjal
                         minimap[84][73171966] = { mnID = 207, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. ARTIFACT_SHAMAN_TITLECARD_DEEPHOLM } -- Portal to Deepholm
                         minimap[84][73301687] = { mnID = 203, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Vashj'ir"] } -- Portal to Vashjir
-                        minimap[84][49118734] = { mnID = 17, name = "", TransportName = L["Blasted Lands"] .. "\n" .. "( " .. L["talk to"] .. ": " .. L["Honor Hold Mage"] .. " )", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
+                        minimap[84][49118734] = { mnID = 17, name = "", TransportName = L["The Dark Portal"] .. "\n" .. "( " .. L["talk to"] .. ": " .. L["Honor Hold Mage"] .. " )", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Blasted Lands
                         minimap[84][43748538] = { mnID = 74, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. DUNGEON_FLOOR_TANARIS18} -- Portal to Caverns of Time 
                         minimap[84][44888577] = { mnID = 111, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Shattrath City"] } -- Portal to Shattrath 
                         minimap[84][43638719] = { mnID = 103, name = "", type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Exodar"] } -- Portal to Exodar 
@@ -1141,6 +1142,8 @@ if not db.activate.HideMapNote then
                         minimap[84][63197339] = { mnID = 407, name = L["Transport"] .. " ==> " .. CALENDAR_FILTER_DARKMOON, TransportName = "\n" .. REQUIRES_LABEL .. " " .. CALENDAR_FILTER_DARKMOON .. "\n" .. L["Starting on the first Sunday of each month for one week"], type = "DarkMoon", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[84][62043235] = { mnID = 407, name = L["Transport"] .. " ==> " .. CALENDAR_FILTER_DARKMOON, TransportName = "\n" .. REQUIRES_LABEL .. " " .. CALENDAR_FILTER_DARKMOON .. "\n" .. L["Starting on the first Sunday of each month for one week"], type = "DarkMoon", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[84][40819280] = { mnID = 2339, name = L["Dornogal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal
+                        minimap[84][51551012] = { mnID = 2322, name = L["Portal"], dnID = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Hall of Awakening
+
                     end
    
                     if self.db.profile.showMinimapCapitalsShips then
@@ -1763,7 +1766,7 @@ if not db.activate.HideMapNote then
                     end
 
                     if self.db.profile.showMinimapCapitalsFP then
-                        minimap[662][30554842] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                        minimap[622][30554842] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                         minimap[582][47764933] = { name = MINIMAP_TRACKING_FLIGHTMASTER, type = "TravelA", showInZone = false, showOnContinent = false, showOnMinimap = true }
                     end
 
@@ -1911,12 +1914,13 @@ if not db.activate.HideMapNote then
                 if self.db.profile.activate.MinimapCapitalsTransporting then
 
                     if self.db.profile.showMinimapCapitalsPortals then
-                        minimap[1161][69641590] = { mnID = 81, name = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
-                        minimap[1161][70131684] = { mnID = 84, name = "" , type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. STORMWIND } -- Portalroom from Boralus
-                        minimap[1161][70381499] = { mnID = 103, name = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
-                        minimap[1161][70891536] = { mnID = 87, name = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralu
-                        minimap[1161][66182474] = { mnID = 14, name = L["This Arathi Highlands portal is only active if your faction is currently occupying Ar'gorok"], type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
-                        minimap[1161][66212442] = { mnID = 62, name = L["This Darkshore portal is only active if your faction is currently occupying Bashal'Aran"], type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][69871531] = { mnID = 1355, name = L["Portal"], type = "APortalS", questID = 55175, showWWW = true, wwwLink = "wowhead.com/quest=29824", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Portalroom from Boralus
+                        minimap[1161][69641590] = { mnID = 81, name = L["Portal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][70131684] = { mnID = 84, name = L["Portal"] , type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][70381499] = { mnID = 103, name = L["Portal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][70891536] = { mnID = 87, name = L["Portal"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][66182474] = { mnID = 14, name = L["This Arathi Highlands portal is only active if your faction is currently occupying Ar'gorok"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
+                        minimap[1161][66212442] = { mnID = 62, name = L["This Darkshore portal is only active if your faction is currently occupying Bashal'Aran"], type = "APortalS", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portalroom from Boralus
                     end
 
                     if self.db.profile.showMinimapCapitalsTransport then
@@ -2295,7 +2299,7 @@ if not db.activate.HideMapNote then
                 end
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
-                    minimap[125][38402502] = { name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = REQUIRES_LABEL .. " " .. L["Engineer"] }
+                    minimap[125][38402502] = { name = BUTTON_LAG_AUCTIONHOUSE, type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
                         minimap[125][65522343] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = ITEM_REQ_HORDE}
@@ -2965,9 +2969,9 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsGeneral then
     
                 if self.db.profile.showMinimapCapitalsPvEVendor then
-                    minimap[407][48246955] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = ACCESSIBILITY_MOUNT_LABEL .. "\n" .. PERKS_VENDOR_CATEGORY_PET,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[407][51447510] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = PERKS_VENDOR_CATEGORY_TRANSMOG_SET,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[407][48096567] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT, name = "", TransportName = HEIRLOOMS .. "\n" ..  BAG_FILTER_EQUIPMENT .. "\n" .. TOY,  type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][48246955] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. ACCESSIBILITY_MOUNT_LABEL .. "\n" .. PERKS_VENDOR_CATEGORY_PET, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][51447510] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. PERKS_VENDOR_CATEGORY_TRANSMOG_SET, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[407][48096567] = { dnID = TRANSMOG_SET_PVE .. " " .. MERCHANT .. "\n" .. "\n" .. HEIRLOOMS .. "\n" ..  BAG_FILTER_EQUIPMENT .. "\n" .. TOY, name = "", type = "PvEVendor", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
             end
@@ -2999,49 +3003,97 @@ if not db.activate.HideMapNote then
         --Professions Darkmoon
             if self.db.profile.activate.MinimapCapitalsProfessions then
 
+                if self.db.profile.showMinimapCapitalsProfessionsMixed then
+                    
+                    if self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsLeatherworking and not self.db.profile.showMinimapCapitalsEngineer then
+                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsEngineer and not self.db.profile.showMinimapCapitalsLeatherworking then
+                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer and not self.db.profile.showMinimapCapitalsMining then
+                        minimap[407][49256078] = { name = "", dnID = TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer then
+                        minimap[407][49256078] = { name = "", dnID = TextIconMining:GetIconString() .. " " .. L["Mining"] .. "\n" .. TextIconLeatherworking:GetIconString() .. " " .. L["Leatherworking"] .. "\n" .. TextIconEngineer:GetIconString() .. " " .. L["Engineer"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsMining and not (self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsEngineer) then
+                        minimap[407][49446141] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsLeatherworking and not (self.db.profile.showMinimapCapitalsMining and self.db.profile.showMinimapCapitalsEngineer) then
+                        minimap[407][49406080] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsEngineer and not (self.db.profile.showMinimapCapitalsLeatherworking and self.db.profile.showMinimapCapitalsMining) then
+                        minimap[407][49406081] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsHerbalism and not self.db.profile.showMinimapCapitalsJewelcrafting then
+                        minimap[407][55007061] = { name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsJewelcrafting and not self.db.profile.showMinimapCapitalsHerbalism then
+                        minimap[407][55007061] = { name = "", dnID = TextIconSkinning:GetIconString() .. " " .. L["Skinning"] .. "\n" .. TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsJewelcrafting and self.db.profile.showMinimapCapitalsHerbalism and not self.db.profile.showMinimapCapitalsSkinning then
+                        minimap[407][55007061] = { name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsJewelcrafting and self.db.profile.showMinimapCapitalsHerbalism and self.db.profile.showMinimapCapitalsSkinning then
+                        minimap[407][55007061] = { name = "", dnID = TextIconJewelcrafting:GetIconString() .. " " .. L["Jewelcrafting"] .. "\n" .. TextIconHerbalism:GetIconString() .. " " .. L["Herbalism"] .. "\n" .. TextIconSkinning:GetIconString() .. " " .. L["Skinning"], TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsSkinning and not (self.db.profile.showMinimapCapitalsHerbalism and self.db.profile.showMinimapCapitalsJewelcrafting) then
+                        minimap[407][55007060] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsHerbalism and not (self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsJewelcrafting) then
+                        minimap[407][55007060] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsJewelcrafting and not (self.db.profile.showMinimapCapitalsSkinning and self.db.profile.showMinimapCapitalsHerbalism) then
+                        minimap[407][55007060] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsCooking and self.db.profile.showMinimapCapitalsFishing then
+                        minimap[407][52606801] = { name = "", dnID = TextIconFishing:GetIconString() .. " " .. PROFESSIONS_FISHING .. "\n" .. TextIconCooking:GetIconString() .. " " .. PROFESSIONS_COOKING, TransportName = TUTORIAL_TITLE1, type = "ProfessionsMixed", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    elseif self.db.profile.showMinimapCapitalsCooking and not self.db.profile.showMinimapCapitalsFishing then
+                        minimap[407][52606801] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    elseif self.db.profile.showMinimapCapitalsFishing and not self.db.profile.showMinimapCapitalsCooking then
+                        minimap[407][52606801] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                end
+
+                if not self.db.profile.showMinimapCapitalsProfessionsMixed then
+
+                    if self.db.profile.showMinimapCapitalsMining then
+                        minimap[407][49446141] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsLeatherworking then
+                        minimap[407][49406080] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsEngineer  then
+                        minimap[407][49406081] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsSkinning then
+                        minimap[407][48197805] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end                    
+
+                    if self.db.profile.showMinimapCapitalsJewelcrafting then
+                        minimap[407][55007060] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end   
+
+                    if self.db.profile.showMinimapCapitalsHerbalism then
+                        minimap[407][55017052] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end    
+                
+                    if self.db.profile.showMinimapCapitalsCooking then
+                        minimap[407][52606800] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                    if self.db.profile.showMinimapCapitalsFishing then
+                        --minimap[407][52608860] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
+                        minimap[407][52606800] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
+                    end
+
+                end
+
                 if self.db.profile.showMinimapCapitalsAlchemy then
                     minimap[407][50206940] = { name = L["Alchemy"], type = "Alchemy", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-            
-                if self.db.profile.showMinimapCapitalsLeatherworking then
-                    minimap[407][49406080] = { name = L["Leatherworking"], type = "Leatherworking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsEngineer then
-                    minimap[407][49406081] = { name = L["Engineer"], type = "Engineer", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsSkinning then
-                    minimap[407][48197805] = { name = L["Skinning"], type = "Skinning", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                 end
 
                 if self.db.profile.showMinimapCapitalsTailoring then
                     minimap[407][55805440] = { name = L["Tailoring"], type = "Tailoring", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                 end
 
-                if self.db.profile.showMinimapCapitalsJewelcrafting then
-                    minimap[407][55007060] = { name = L["Jewelcrafting"], type = "Jewelcrafting", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
                 if self.db.profile.showMinimapCapitalsBlacksmith then
                     minimap[407][51008180] = { name = L["Blacksmithing"], type = "Blacksmith", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsMining then
-                    minimap[407][49446141] = { name = L["Mining"], type = "Mining", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsFishing then
-                    minimap[407][52608860] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = MINIMAP_TRACKING_TRAINER_PROFESSION }
-                    minimap[407][52606800] = { name = PROFESSIONS_FISHING, type = "Fishing", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsCooking then
-                    minimap[407][52606800] = { name = PROFESSIONS_COOKING, type = "Cooking", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
-                end
-
-                if self.db.profile.showMinimapCapitalsHerbalism then
-                    minimap[407][55017052] = { name = L["Herbalism"], type = "Herbalism", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = TUTORIAL_TITLE1 }
                 end
 
                 if self.db.profile.showMinimapCapitalsInscription then
@@ -3080,7 +3132,7 @@ if not db.activate.HideMapNote then
                 if self.db.profile.showMinimapCapitalsPaths then
                     minimap[2339][81782819] = { dnID = L["Exit"], name = "", mnID = 2248, type = "PathR", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
                     minimap[2339][68588953] = { dnID = L["Exit"], name = "", mnID = 2248, type = "PathRU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit 
-                    minimap[2339][35875875] = { dnID = L["Passage"], name = "", mnID = 2214, type = "PathU", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
+                    minimap[2339][35875875] = { dnID = L["Passage"], name = "", mnID = 2214, type = "PassageCaveDown", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Passage/Exit
                 end
     
                 if self.db.profile.showMinimapCapitalsInnkeeper then
@@ -3089,7 +3141,7 @@ if not db.activate.HideMapNote then
 
                 if self.db.profile.showMinimapCapitalsAuctioneer then
                     minimap[2339][56864704] = { dnID = BUTTON_LAG_AUCTIONHOUSE, name = "", type = "Auctioneer", showInZone = false, showOnContinent = false, showOnMinimap = true }
-                    minimap[2339][64445211] = { dnID = BLACK_MARKET_AUCTION_HOUSE, name = "", type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
+                    minimap[2339][64975294] = { dnID = BLACK_MARKET_AUCTION_HOUSE, name = "", type = "BlackMarket", showInZone = false, showOnContinent = false, showOnMinimap = true }
                 end
 
                 if self.db.profile.showMinimapCapitalsBank then
@@ -3152,25 +3204,32 @@ if not db.activate.HideMapNote then
             if self.db.profile.activate.MinimapCapitalsTransporting then
     
                 if self.db.profile.showMinimapCapitalsPortals then
-                    minimap[2266][43564994] = { mnID = 2112, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Dornogal"] } --  Timeways Portal to Vashj'ir
-                    minimap[2266][64534340] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Vashj'ir
-                    minimap[2266][74524703] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Gorgrond
-                    minimap[2266][77536180] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Val'sharah
-                    minimap[2266][70537306] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Zuldazar
-                    minimap[2266][60506950] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Drustvar
-                    --minimap[2339][51194334] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. UNKNOWN .. "\n" .. " ==> " .. UNKNOWN .. "\n" .. " ==> " .. UNKNOWN .. "\n" .. " ==> " .. UNKNOWN .. "\n" .. " ==> " .. UNKNOWN } --  Portal from Valdrakken to the Timeways
+                    minimap[2266][43564994] = { mnID = 2112, name = "", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Dornogal"] } --  Timeways Portal to Dornogal
+                    minimap[2266][64534340] = { mnID = 1565, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Ardenweald"] } --  Timeways Portal to Aredenweald
+                    minimap[2266][74524703] = { mnID = 1533, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Bastion"] } --  Timeways Portal to Bastion
+                    --minimap[2266][77536180] = { name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. UNKNOWN } --  Timeways Portal to Val'sharah
+                    minimap[2266][70537306] = { mnID = 895, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Tiragarde Sound"] } --  Timeways Portal to Tiragarde Sound
+                    minimap[2266][60506950] = { mnID = 241, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Portal"] .. " ==> " .. L["Twilight Highlands"] } --  Timeways Portal to Twilight Highlands
+                    minimap[2339][53563873] = { mnID = 2266, name = "", type = "WayGateGolden", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["The Timeways"] .. " " .. L["Portals"] .. "\n" .. "\n" .. " ==> " .. L["Ardenweald"] .. "\n" .. " ==> " .. L["Bastion"] .. "\n" .. " ==> " .. L["Tiragarde Sound"] .. "\n" .. " ==> " .. L["Twilight Highlands"] } --  Portal from Dornogal to the Timeways
+                    minimap[2339][63615205] = { mnID = 2255, name = L["Portal"], dnID = "", achievementID = 19559, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://www.wowhead.com/achievement=19559/azj-kahet#news", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Azj-Kahet if u finished the achievement=19559
+                    minimap[2339][29775967] = { mnID = 2367, name = L["Portal"], dnID = "", achievementID = 40725, showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/achievement=40725", type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Chamber of Memory
+                    minimap[2339][52465047] = { mnID = 2346, name = L["Portal"], dnID = "", showWWW = true, wwwName = LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT .. " " .. REQUIRES_LABEL, wwwLink = "https://wowhead.com/quest=86535/test-run", questID = 86535, type = "Portal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Portal from Dornogal to Undermine
 
                     if self.faction == "Horde" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[2339][38192724] = { mnID = 85, name = L["Portal"], type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Orgrimmar
+                        minimap[2339][38192724] = { mnID = 85, name = L["Portal"], dnID = "", type = "HPortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Orgrimmar
                     end
 
                     if self.faction == "Alliance" or db.activate.MinimapCapitalsEnemyFaction then
-                        minimap[2339][41162271] = { mnID = 84, name = L["Portal"], type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Stormwind
+                        minimap[2339][41162271] = { mnID = 84, name = L["Portal"], dnID = "", type = "APortal", showInZone = false, showOnContinent = false, showOnMinimap = true } -- Dornogal to Stormwind
                     end
                 end
 
+                if self.db.profile.showMinimapCapitalsZeppelins then
+                    minimap[2339][73540516] = { mnID = 2369, name = "", type = "Zeppelin", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Zeppelin"] .. " ==> " .. L["Siren Isle"] } -- Zeppelin from OG to Borean Tundra - Northrend
+                end
+
                 if self.db.profile.showMinimapCapitalsTransport then
-                    minimap[2339][40722239] = { mnID = 2339, name = "", type = "Tport2", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Transport"] .. " ==> " .. L["(on the tower)"]  } -- Oribos to The Maw
+                    minimap[2339][40722239] = { name = "", type = "Tport2", showInZone = false, showOnContinent = false, showOnMinimap = true, TransportName = L["Transport"] .. " ==> " .. L["(on the tower)"]  } -- Oribos to The Maw
                 end
 
                 if self.db.profile.showMinimapCapitalsFP then

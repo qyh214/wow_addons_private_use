@@ -28,15 +28,18 @@ BigWigs:AddSounds("Void Speaker Eirich", {
 	[427461] = {"info","warning"},
 	[427852] = "alert",
 	[427869] = "alarm",
+	[457465] = "underyou",
 })
 
 BigWigs:AddSounds("The Stonevault Trash", {
 	[425027] = "alarm",
+	[425974] = "alert",
 	[426308] = "alert",
 	[426345] = "alarm",
 	[426771] = "alert",
 	[428703] = "alarm",
 	[428879] = "alarm",
+	[428894] = "alert",
 	[429109] = "warning",
 	[429427] = "info",
 	[429545] = "alert",

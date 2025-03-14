@@ -1,7 +1,7 @@
-﻿## Interface: 110002, 110005
+﻿## Interface: 110105, 110100
 
 ## Title: BigWigs |cffff0000+|r|cffffffffVoice: VV|r
-## Version: 10.4.7
+## Version: 10.8.4
 ## Notes: A plugin for BigWigs that will play Text-To-Speech sounds for boss abilities.
 ## Notes-zhCN: BigWigs附加模块，为团队首领技能播放语音提示 v8。
 ## Notes-zhTW: BigWigs附加模組，為團隊首領技能播放語音提示。

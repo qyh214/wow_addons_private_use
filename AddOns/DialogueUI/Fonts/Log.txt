@@ -1,0 +1,1 @@
+- TrajanPro3SemiBold: 0xa0 (NO-BREAK SPACE) is missing in the file. We replaced it with a standard SPACE

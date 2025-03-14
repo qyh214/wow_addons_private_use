@@ -93,6 +93,7 @@ local defaults = {
         challengemode = true,
         mythicpluscompletion = true,
         encounter_success = true,
+        island_completed = true,
         battleground = true,
         arena = true,
         delay3 = 20,
@@ -307,6 +308,17 @@ local generalOptions = {
             end,
             set = function(_, v)
                 Multishot.configDB.global.encounter_success = v
+            end
+        },
+        island_completed = {
+            order = 14,
+            type = "toggle",
+            name = L["Island Completed"],
+            get = function()
+                return Multishot.configDB.global.island_completed
+            end,
+            set = function(_, v)
+                Multishot.configDB.global.island_completed = v
             end
         },
         --------------------------------------------------------------------------------

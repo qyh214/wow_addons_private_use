@@ -76,7 +76,7 @@ function mod:OnEngage()
 	self:SetStage(1)
 
 	self:Message("stages", "cyan", CL.stage:format(1), false)
-	self:CDBar("stages", 308, CL.stage:format(2), "inv_jewelry_trinket_04")
+	self:CDBar("stages", self:GetSeason() == 2 and 221 or 308, CL.stage:format(2), "inv_jewelry_trinket_04")
 end
 
 --------------------------------------------------------------------------------

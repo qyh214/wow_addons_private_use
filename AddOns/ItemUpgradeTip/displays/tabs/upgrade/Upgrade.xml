@@ -1,0 +1,17 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame
+        name="ItemUpgradeTipUpgradeDisplayTemplate"
+        virtual="true"
+        inherits="ItemUpgradeTipDataTabDisplayTemplate"
+    >
+        <Frames>
+            <Frame parentKey="DataProvider" mixin="ItemUpgradeTipUpgradeDataProviderMixin">
+                <Scripts>
+                    <OnLoad method="OnLoad" />
+                    <OnShow method="OnShow" />
+                    <OnUpdate method="OnUpdate" />
+                </Scripts>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

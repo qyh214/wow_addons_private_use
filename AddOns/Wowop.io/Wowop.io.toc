@@ -1,0 +1,26 @@
+## Interface: 110700
+## Title: WoWOP.io
+## Notes: WoWOP.io Mythic+ Stats
+## Author: WoWOP.io Team
+## Version: 1.0.0
+## SavedVariables: WOWOP_SETTINGS
+## Dependencies: Blizzard_Settings
+
+# Load core files
+settings.lua
+
+# Load database files
+database_lookups.lua
+database_dungeons.lua
+database_EU.lua
+database_US.lua
+database_TW_KR.lua
+database_CN.lua
+database_spec_performance.lua
+
+# Load death analysis and guide
+death_analysis.lua
+guide.lua
+
+# Then load the main addon file
+wowop.io.lua 

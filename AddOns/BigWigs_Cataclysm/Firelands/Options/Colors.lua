@@ -11,9 +11,11 @@ BigWigs:AddColors("Beth'tilac", {
 
 BigWigs:AddColors("Lord Rhyolith", {
 	[-2537] = "green",
+	[97225] = "red",
 	[97282] = "orange",
 	[98136] = "yellow",
 	[98255] = {"red","yellow"},
+	[98493] = "yellow",
 	[98552] = "red",
 	["armor"] = "green",
 })

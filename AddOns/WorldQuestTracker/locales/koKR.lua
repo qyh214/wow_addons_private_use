@@ -291,6 +291,8 @@ L["S_OPTIONS_SHOW_SORT_BUTTON"] = "Show Sort Button"
 --[[Translation missing --]]
 L["S_OPTIONS_SHOW_TIMELEFT_BUTTON"] = "Show Time Left Button"
 --[[Translation missing --]]
+L["S_OPTIONS_SHOW_WARBAND_REP_WARNING"] = "Show Warband no Rep [!]"
+--[[Translation missing --]]
 L["S_OPTIONS_SHOW_WORLDSHORTCUT_BUTTON"] = "Show World Shortcuts"
 L["S_OPTIONS_SHOWFACTIONS"] = "사절 표시"
 --[[Translation missing --]]
@@ -342,6 +344,8 @@ L["S_OPTTIONS_TAB_TRACKER_SETTINGS"] = "Tracker"
 L["S_OPTTIONS_TAB_WORLDMAP_SETTINGS"] = "World Map"
 --[[Translation missing --]]
 L["S_OPTTIONS_TAB_ZONEMAP_SETTINGS"] = "Zone Map"
+--[[Translation missing --]]
+L["S_OPTTIONS_WORLDMAP_HUB_ENABLE"] = "Which World Maps Show Quests"
 L["S_OVERALL"] = "종합"
 L["S_PARTY"] = "파티"
 L["S_PARTY_DESC1"] = "파란색 별이 표시된 퀘스트는 모든 파티원이 수행 중이라는 의미입니다."

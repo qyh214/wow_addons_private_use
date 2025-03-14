@@ -80,26 +80,24 @@ end
 --
 
 do
-	do
-		local playerList = {}
-		local icon = 8
-		function mod:LivingBomb()
-			playerList = {}
-			icon = 8
-			self:PlaySound(20475, "warning")
-		end
+	local playerList = {}
+	local icon = 8
+	function mod:LivingBomb()
+		playerList = {}
+		icon = 8
+		self:PlaySound(20475, "warning")
+	end
 
-		function mod:LivingBombAppliedSoD(args)
-			playerList[#playerList+1] = args.destName
-			self:TargetsMessage(20475, "orange", playerList, args.spellId == 461105 and 3 or 2, CL.bomb)
-			self:CustomIcon(livingBombMarker, args.destName, icon)
-			if self:Me(args.destGUID) then
-				self:Say(20475, CL.bomb, nil, "Bomb")
-				self:SayCountdown(20475, 8, icon)
-				self:TargetBar(20475, 8, args.destName, CL.bomb)
-			end
-			icon = icon - 1
+	function mod:LivingBombAppliedSoD(args)
+		playerList[#playerList+1] = args.destName
+		self:TargetsMessage(20475, "orange", playerList, args.spellId == 461105 and 3 or 2, CL.bomb)
+		self:CustomIcon(livingBombMarker, args.destName, icon)
+		if self:Me(args.destGUID) then
+			self:Say(20475, CL.bomb, nil, "Bomb")
+			self:SayCountdown(20475, 8, icon)
+			self:TargetBar(20475, 8, args.destName, CL.bomb)
 		end
+		icon = icon - 1
 	end
 end
 

@@ -189,6 +189,9 @@ for i=1, #unitNameTitles do
     unitNameTitles[i] = unitNameTitles[i]:gsub('%%s', '(.*)')
 end
 
+--Add Demon to the list, attempt to localize it. There is no UNITNAME_TITLE_DEMON sadly, but I can try to swap out the word "Pet" for "Demon" using the localized names.
+unitNameTitles[#unitNameTitles+1] = unitNameTitles[1]:gsub(PET_TYPE_PET, PET_TYPE_DEMON)
+
 ---attempt to the owner of a pet using tooltip scan, if the owner isn't found, return nil
 ---@param petGUID string
 ---@param petName string
@@ -700,6 +703,19 @@ end
 						end
 					end
 
+					if (Details.zone_type == "party" and actorObject.tipo == DETAILS_ATTRIBUTE_DAMAGE) then
+						local role = UnitGroupRolesAssigned and UnitGroupRolesAssigned(actorName) or "DAMAGER"
+						if (role == "NONE") then
+							role = "DAMAGER"
+						end
+						actorObject.role = role
+
+						if (C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary) then
+							local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName) or {}
+							actorObject.mrating = dungeonPlayerInfo.currentSeasonScore or 0
+						end
+					end
+
 					if (zoneType == "arena") then
 						--local my_team_color = GetBattlefieldArenaFaction and GetBattlefieldArenaFaction() or 0
 
@@ -772,6 +788,7 @@ end
 
 			--does this actor has an owner? (a.k.a. is a pet)
 			elseif (ownerActorObject) then
+				local npcID = Details:GetNpcIdFromGuid(actorSerial)
 				actorObject.owner = ownerActorObject
 				actorObject.ownerName = ownerActorObject.nome
 
@@ -786,6 +803,12 @@ end
 			else
 				--anything else that isn't a player or a pet
 				actorObject.displayName = actorName
+				local npcID = Details:GetNpcIdFromGuid(actorSerial)
+				if (npcID) then
+					if (npcID == 210759 or npcID == 216287) then --210759 --flag 0x2111
+						actorObject.grupo = true
+					end
+				end
 			end
 
 			--check if is hostile

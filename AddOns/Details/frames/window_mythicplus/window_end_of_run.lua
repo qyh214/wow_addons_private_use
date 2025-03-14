@@ -278,6 +278,8 @@ lootFrame:SetScript("OnEvent", function(self, event, ...)
 		if (instanceType == "party" or CONST_DEBUG_MODE) then
 			local effectiveILvl, nop, baseItemLevel = GetDetailedItemLevelInfo(itemLink)
 
+			local bIsAccountBound = C_Item.IsItemBindToAccountUntilEquip(itemLink)
+
 			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
 			itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
 			expacID, setID, isCraftingReagent = GetItemInfo(itemLink)
@@ -293,7 +295,7 @@ lootFrame:SetScript("OnEvent", function(self, event, ...)
 				Details222.DebugMsg("Loot Received:", unitName, itemLink, effectiveILvl, itemQuality, baseItemLevel, "itemType:", itemType, "itemSubType:", itemSubType, "itemEquipLoc:", itemEquipLoc)
 			end
 
-			if (effectiveILvl > 300 and baseItemLevel > 5) then --avoid showing loot that isn't items
+			if (effectiveILvl > 480 and baseItemLevel > 5 and not bIsAccountBound) then --avoid showing loot that isn't items
 				lootFrame.LootCache[unitName] = lootFrame.LootCache[unitName] or {}
 				---@type details_loot_cache
 				local lootCacheTable = {
@@ -321,7 +323,7 @@ lootFrame:SetScript("OnEvent", function(self, event, ...)
 				end
 			else
 				if (LOOT_DEBUG_MODE) then
-					Details:Msg("Loot SKIPPED:", unitName, itemLink, effectiveILvl, itemQuality, baseItemLevel)
+					Details:Msg("Loot SKIPPED:", unitName, itemLink, effectiveILvl, itemQuality, baseItemLevel, bIsAccountBound)
 				end
 			end
 		end
@@ -344,11 +346,20 @@ local createLootSquare = function(playerBanner, name, parent, lootIndex)
 			GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
 			GameTooltip:SetHyperlink(lootSquare.itemLink)
 			GameTooltip:Show()
+
+			self:SetScript("OnUpdate", function()
+				if (IsShiftKeyDown()) then
+					GameTooltip_ShowCompareItem()
+				else
+					GameTooltip_HideShoppingTooltips(GameTooltip)
+				end
+			end)
 		end
 	end)
 
 	lootSquare:SetScript("OnLeave", function(self)
 		GameTooltip:Hide()
+		self:SetScript("OnUpdate", nil)
 	end)
 
 	local shadowTexture = playerBanner:CreateTexture("$parentShadowTexture", "artwork")
@@ -388,7 +399,7 @@ local createLootSquare = function(playerBanner, name, parent, lootIndex)
 	return lootSquare
 end
 
-local createPlayerBanner = function(parent, name, index)
+function Details:CreatePlayerPortrait(parent, name)
 	if (not C_AddOns.IsAddOnLoaded("Blizzard_ChallengesUI")) then
 		C_AddOns.LoadAddOn("Blizzard_ChallengesUI")
 	end
@@ -396,12 +407,19 @@ local createPlayerBanner = function(parent, name, index)
 	--this template is from Blizzard_ChallengesUI.xml
     local template = "ChallengeModeBannerPartyMemberTemplate"
 
-	---@type playerbanner
-    local playerBanner = CreateFrame("frame", name, parent, template)
-	playerBanner.index = index
+	local playerBanner = CreateFrame("frame", name, parent, template)
+
 	playerBanner:SetAlpha(1)
 	playerBanner:EnableMouse(true)
 	playerBanner:SetFrameLevel(parent:GetFrameLevel()+2)
+
+	return playerBanner
+end
+
+local createPlayerBanner = function(parent, name, index)
+	---@type playerbanner
+    local playerBanner = Details:CreatePlayerPortrait(parent, name)
+	playerBanner.index = index
 	--size is set on the template
 
 	--make an fade in animation
@@ -682,8 +700,8 @@ local createPlayerBanner = function(parent, name, index)
 	detailsFramework:CreateFlashAnimation(flashTexture)
 	--flashTexture:Flash(0.1, 0.5, 0.01)
 
-	local rantingLabel = detailsFramework:CreateLabel(playerBanner, "", 16, "green")
-	rantingLabel:SetPoint("right", playerBanner, "left", -154, 0)
+	local rantingLabel = detailsFramework:CreateLabel(playerBanner, "", 14, "green")
+	rantingLabel:SetPoint("right", playerBanner, "left", -144, 0)
 	playerBanner.RantingLabel = rantingLabel
 
 	local waitingForLootDotsAnimationLabel = detailsFramework:CreateLabel(playerBanner, "...", 20, "silver") --~dots
@@ -1517,24 +1535,3 @@ end
 Details222.MythicPlus.IsMythicPlus = function()
 	return C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() and true or false
 end
-
-
-		--[=[
-		Details222.MythicPlus.MapID = mapID
-		Details222.MythicPlus.Level = level --level of the key just finished
-		Details222.MythicPlus.OnTime = onTime
-		Details222.MythicPlus.KeystoneUpgradeLevels = keystoneUpgradeLevels
-		Details222.MythicPlus.PracticeRun = practiceRun
-		Details222.MythicPlus.OldDungeonScore = oldDungeonScore
-		Details222.MythicPlus.NewDungeonScore = newDungeonScore
-		Details222.MythicPlus.IsAffixRecord = isAffixRecord
-		Details222.MythicPlus.IsMapRecord = isMapRecord
-		Details222.MythicPlus.PrimaryAffix = primaryAffix
-		Details222.MythicPlus.IsEligibleForScore = isEligibleForScore
-		Details222.MythicPlus.UpgradeMembers = upgradeMembers
-		Details222.MythicPlus.DungeonName = dungeonName
-		Details222.MythicPlus.DungeonID = id
-		Details222.MythicPlus.TimeLimit = timeLimit
-		Details222.MythicPlus.Texture = texture
-		Details222.MythicPlus.BackgroundTexture = backgroundTexture
-		--]=]

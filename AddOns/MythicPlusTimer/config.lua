@@ -296,8 +296,8 @@ local function on_category_refresh(self)
     "__separator__",
 
     "show_pull_values",      
-    -- "show_percent_numbers",   -- :OnlyPercentValue
-    -- "show_absolute_numbers",  -- :OnlyPercentValue
+    "show_percent_numbers",  
+    "show_absolute_numbers",  
 
     "__separator__",  
     
@@ -597,8 +597,7 @@ local function on_slash_command(msg)
       return
     end
 
-    InterfaceOptionsFrame_OpenToCategory(category)
-    InterfaceOptionsFrame_OpenToCategory(category)
+    Settings.OpenToCategory(category:GetID())
     return
   end
 

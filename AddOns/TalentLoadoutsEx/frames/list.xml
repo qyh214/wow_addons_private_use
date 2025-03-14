@@ -1,0 +1,191 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/	..\FrameXML\UI.xsd">
+
+	<Texture name="TalentLoadoutExToggleTextureTemplate" virtual="true" hidden="true">
+		<Size x="16" y="16"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+	</Texture>
+	<Button name="TalentLoadoutExListButtonTemplate" virtual="true">
+		<Size x="169" y="44"/>
+		<Anchors>
+			<Anchor point="LEFT" x="2" y="0"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture inherits="Char-Stat-Top" parentKey="BgTop">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="1"/>
+					</Anchors>
+				</Texture>
+				<Texture inherits="Char-Stat-Top" parentKey="BgBottom">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="0" y="-4"/>
+					</Anchors>
+				</Texture>
+				<Texture parentKey="BgMiddle" file="Interface\CharacterFrame\Char-Stat-Middle" vertTile="true">
+					<Size x="169" y="32"/>
+					<Anchors>
+						<Anchor point="LEFT" x="1"/>
+					</Anchors>
+					<TexCoords left="0.00390625" right="0.66406250" top="0.00000000" bottom="1.00000000"/>
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND" textureSubLevel="1">
+				<Texture parentKey="GroupStripe" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="1" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+					</Anchors>
+					<Color r="0.5" g="0.5" b="1" a="0.1"/>
+				</Texture>
+				<Texture parentKey="PresetStripe" hidden="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="1" y="0"/>
+						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+					</Anchors>
+					<Color r="0.5" g="1" b="0.5" a="0.1"/>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<Texture parentKey="Check" file="Interface\Buttons\UI-CheckBox-Check" hidden="true">
+					<Size x="16" y="16"/>
+					<Anchors>
+						<Anchor point="RIGHT" x="-8" y="0"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon">
+					<Anchors>
+						<Anchor point="LEFT" x="4" y="0"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Text" inherits="GameFontNormalLeft">
+					<Size y="38"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeKey="$parent.Icon" relativePoint="RIGHT" x="5"/>
+						<Anchor point="RIGHT" relativekey="$parent" relativePoint="RIGHT" x="-30"/>
+					</Anchors>
+					<Color r="1" g="1" b="1"/>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="-1">
+				<Texture parentKey="HighlightBar" file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar-Blue" alpha="0.4" alphaMode="ADD" hidden="true">
+					<TexCoords left="0.2" right="0.8" top="0" bottom="1"/>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="SelectedBar" file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alpha="0.4" alphaMode="ADD" hidden="true">
+					<TexCoords left="0.2" right="0.8" top="0" bottom="1"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="WarningFrame">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-8" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						local parent = self:GetParent();
+						GameTooltip:SetOwner(parent, "ANCHOR_NONE");
+						GameTooltip:ClearAllPoints();
+						GameTooltip:SetPoint("RIGHT", parent, "LEFT");
+						GameTooltip:ClearLines();
+						GameTooltip:AddLine("WARNING", 1, 0, 0, 1);
+						GameTooltip:AddLine(parent.WarningMessage, 1, 1, 1, 1, true);
+						GameTooltip:Show();
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>				
+			</Frame>
+			<Button parentKey="ToggleButton">
+				<Size x="16" y="16"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-8" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnShow>
+						if self.isExpanded then
+							self:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
+							self:SetPushedTexture("Interface\\Buttons\\UI-MinusButton-Down");
+							self.tooltipTitle = "Collapse";
+							self.tooltipText = "Hide this group's children";
+						else
+							self:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+							self:SetPushedTexture("Interface\\Buttons\\UI-PlusButton-Down");
+							self.tooltipTitle = "Expand";
+							self.tooltipText = "Show this group's children";
+						end
+					</OnShow>
+					<OnEnter>
+						if self.tooltipTitle and self.tooltipText then
+							local parent = self:GetParent();
+							GameTooltip:SetOwner(parent, "ANCHOR_NONE");
+							GameTooltip:ClearAllPoints();
+							GameTooltip:SetPoint("RIGHT", parent, "LEFT");
+							GameTooltip:ClearLines();
+							GameTooltip:AddLine(self.tooltipTitle);
+							GameTooltip:AddLine(self.tooltipText, 1, 1, 1, 1);
+							GameTooltip:Show();
+						end
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+				<NormalTexture inherits="TalentLoadoutExToggleTextureTemplate"/>
+				<PushedTexture inherits="TalentLoadoutExToggleTextureTemplate"/>
+				<HighlightTexture inherits="TalentLoadoutExToggleTextureTemplate" alphaMode="ADD" file="Interface\BUTTONS\UI-Panel-MinimizeButton-Highlight"/>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnEnter>
+				if self.data then
+					GameTooltip:SetOwner(self, "ANCHOR_NONE");
+					GameTooltip:ClearAllPoints();
+					GameTooltip:SetPoint("RIGHT", self, "LEFT");
+					GameTooltip:ClearLines();
+
+					if self.data.text then
+						GameTooltip:AddDoubleLine(self.data.name, self.data.isPreset and "Config(Preset)" or "Config");
+						GameTooltip:AddDoubleLine("Click", "Select", 0, 1, 0, 1, 1, 1);
+						GameTooltip:AddDoubleLine("Double Click", "Load/Apply", 0, 1, 0, 1, 1, 1);
+						GameTooltip:AddDoubleLine("Shift + Left-Click", "Post in Chat", 0, 1, 0, 1, 1, 1);
+						GameTooltip:AddDoubleLine("Shift + Right-Click", "Copy", 0, 1, 0, 1, 1, 1);
+					else
+						GameTooltip:AddDoubleLine(self.data.name, self.data.isPreset and "Group(Preset)" or "Group");
+						GameTooltip:AddDoubleLine("Double Click", "Expand/Collapse", 0, 1, 0, 1, 1, 1);
+
+						if not self.data.isPreset then
+							GameTooltip:AddDoubleLine("Up Button", "Swap with prev group", 0, 1, 0, 1, 1, 1);
+							GameTooltip:AddDoubleLine("Down Button", "Swap with next group", 0, 1, 0, 1, 1, 1);
+						end
+					end
+
+					GameTooltip:Show();
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+		<HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar-Blue" alpha="0.4" alphaMode="ADD">
+			<TexCoords left="0.2" right="0.8" top="0" bottom="1"/>
+		</HighlightTexture>
+	</Button>
+</Ui>

@@ -104,11 +104,19 @@ L["Minimap Tooltip Module Panel"] = "|cffffffffOpen Module Panel";
 L["Minimap Tooltip Right Click"] = "Right-click";
 L["Minimap Tooltip Shift Left Click"] = "Shift + Left-click";
 L["Minimap Tooltip Shift Right Click"] = "Shift + Right-click";
-L["Minimap Tooltip Hide Button"] = "|cffffffffHide this button|r"
+L["Minimap Tooltip Hide Button"] = "Hide this button";
 L["Minimap Tooltip Middle Button"] = "|CFFFF1000Middle button |cffffffffReset camera";
 L["Minimap Tooltip Set Scale"] = "Set Scale: |cffffffff/narci [scale 0.8~1.2]";
+L["MinimapButton Enable Instruction"] = "|cffffd100You have disabled Narcissus minimap button. You may type|r |cffffffff/narci minimap|r |cffffd100to re-enable it.|r";
+L["MinimapButton Reenabled"] = "|cffffd100You have enabled Narcissus minimap button.|r";
+L["MinimapButton LibDBIcon"] = "Use LibDBIcon";
+L["MinimapButton LibDBIcon Desc"] = "Use LibDBIcon to create our minimap button.\nYou are seeing this option because you have installed LibDBIcon-1.0 or an addon that integrates this library.";
+L["MinimapButton LibDBIcon Hide"] = "Hide Button";
 L["Corrupted Item Parser"] = "|cffffffffToggle Corrupted Item Parser|r";
-L["Toggle Dressing Room"] = "|cffffffffToggle "..DRESSUP_FRAME.."|r";
+L["Toggle Dressing Room"] = "|cffffffffShow "..DRESSUP_FRAME.."|r";
+L["Reset Camera"] = "Reset Camera";
+L["Character UI"] = "Character UI";
+L["Module Menu"] = "Module Menu";
 
 L["Layout"] = "Layout";
 L["Symmetry"] = "Symmetry";
@@ -157,7 +165,7 @@ L["Screen Effects"] ="Screen Effects";
 L["Gem List"] = "Gem List";
 L["Gemma"] = "\"Gemma\"";   --Don't translate
 L["Gemma Description"] = "Show a list of gems when socketing an item.";
-L["Dressing Room"] = "Dressing Room";
+L["Dressing Room"] = DRESSUP_FRAME or "Dressing Room";
 L["Dressing Room Description"] = "Bigger dressing room with the abilities to view and copy other players' item lists and generate Wowhead dressing room links.";
 L["General"] = "General";   --General options
 L["Interface"] = "Interface";
@@ -174,6 +182,8 @@ L["Text Width"] = "Text Width";
 L["Truncate Text"] = "Truncate Text";
 L["Stat Sheet"] = "Stat Sheet";
 L["Minimap Button"] = "Minimap Button";
+L["Show Minimap Button"] = "Show Minimap Button";
+L["Add To AddOn Compartment"] = "Add To AddOn Compartment";
 L["Fade Out"] = "Fade Out On Mouseout";
 L["Fade Out Description"] = "Fades Out When Mouseout";
 L["Hotkey"] = "Hotkeys";
@@ -196,7 +206,7 @@ L["Interactive Area"] = "Interactable  Area";
 L["Use Bust Shot"] = "Zoom to Upper Body";
 L["Use Escape Button"] = "Exit Narcissus By Pressing |cffffdd10(Esc)|r";
 L["Use Escape Button Description"] = "Alternatively, you can click the hidden X button on the top-right of your screen to exit.";
-L["Show Module Panel Gesture"] = "Show Module Panel On Mouseover";
+L["Show Module Panel Gesture"] = "Show Module Menu On Mouseover";
 L["Independent Minimap Button"] = "Unaffected By Other Addons";
 L["AFK Screen"] = "AFK Screen";
 L["Keep Standing"] = "Keep Standing";
@@ -359,6 +369,8 @@ L["Switch Form To Dracthyr"] = "Switch to|cffffffff Dracthyr|r form";
 L["Switch Form To Worgen"] = "Switch to|cffffffff Worgen|r form";
 L["Switch Form To Human"] = "Switch to|cffffffff Human|r form";
 L["InGame Command"] = "In-Game Command";
+L["Hide Player Items"] = "Hide Player Items";
+L["Hide Player Items Tooltip"] = "Hide anything that doesn\'t belong to this item set.";
 
 --NPC Browser--
 NARCI_NPC_BROWSER_TITLE_LEVEL = ".*%?%?.?";      --Level ?? --Use this to check if the second line of the tooltip is NPC's title or unit type
@@ -402,6 +414,7 @@ L["NavBar Saved Sets"] = "Saved";   --A Saved Equipment Set
 L["NavBar Incomplete Sets"] = INCOMPLETE;
 L["Icon Selector"] = "Icon Selector";
 L["Delete Equipment Set Tooltip"] = "Delete Set\n|cff808080(click and hold)|r";
+L["New Set"] = PAPERDOLL_NEWEQUIPMENTSET or "New Set";
 
 --Corruption System
 L["Corruption System"] = "Corruption";
@@ -599,7 +612,7 @@ L["Mythic Plus"] = "Mythic+";
 L["Mythic Plus Abbrev"] = "M+";
 L["Total Runs"] = "Total Runs: ";
 L["Complete In Time"] = "In time";
-L["Complete Over Time"] = "Over time";
+L["Complete Over Time"] = "Overtime";
 L["Runs"] = "Runs";
 
 --Equipment Upgrade--
@@ -735,11 +748,13 @@ L["Perks Program See Wares"] = "Show wares";
 L["Perks Program No Cache Alert"] = "Speak with the Trading Posts vendors to see this month\'s wares.";
 L["Perks Program Using Cache Alert"] = "Using the cache from your last visit. The price data may not be accurate.";
 L["Modify Default Pose"] = "Modify Default Pose";   --Change the default pose/animation/camera yaw when viewing transmog items
+L["Modify Default Pose Tooltip"] = "When enabled, change WoW's default combat animation or mount animation to \"Stand\" and adjust the rotation to present the item better.";
 L["Include Header"] = "Includes:";  --The transmog set includes...
 L["Auto Try On All Items"] = "Auto Try On All Items";
 L["Full Set Cost"] = "Full Set Cost";   --Purchasing the full set will cost you x Trader's Tender
 L["You Will Receive One Item"] = "You will receive |cffffffffONE|r item:";
 L["Format Item Belongs To Set"] = "This item belongs to transmog set |cffffffff[%s]|r";
+L["Default Animation"] = "Default Animation";
 
 
 --Quest--
@@ -804,6 +819,7 @@ L["Loadout Save Failure Incomplete Choices"] = "|cffff4800You have unselected ge
 L["Loadout Save Failure Dupe Loadout Format"] = "|cffff4800This loadout is the same as|r %s";
 L["Loadout Save Failure Dupe Name Format"] = "|cffff4800A loadout with that name already exists.|r";
 L["Loadout Save Failure No Name"] = "|cffff4800".. (TALENT_FRAME_DROP_DOWN_NEW_LOADOUT_PROMPT or "Enter a name for the new loadout") .."|r";
+L["Empty Socket"] = GLYPH_EMPTY or "Empty";
 
 L["Format Equipping Progress"] = "Equipping %d/%d";
 L["Format Click Times To Equip Singular"] = "Click |cff19ff19%d|r Time to Equip";
@@ -811,3 +827,10 @@ L["Format Click Times To Equip Plural"] = "Click |cff19ff19%d|r Times to Equip";
 L["Format Free Up Bag Slot"] = "Free Up %d Bag Slots First";
 L["Format Number Items Selected"] = "%d Selected";
 L["Format Gem Slot Stat Budget"] = "Gems in %s are %s%% effective."  --e.g. Gems in trinket are 75% effective
+
+
+--Game Pad--
+L["GamePad Select"] = "Select";
+L["GamePad Cancel"] = "Cancel";
+L["GamePad Use"] = "Use";
+L["GamePad Equip"] = "Equip";

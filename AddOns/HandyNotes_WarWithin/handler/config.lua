@@ -532,21 +532,23 @@ local hasNotableLoot = testMaker(function(item, notransmog)
     return false
 end, doTestAny)
 ns.hasNotableLoot = hasNotableLoot
-local hasKnowableLoot = testMaker(function(item, notransmog, droppable)
+local hasKnowableLoot = testMaker(function(item, droppable)
     if ns.CLASSIC then return false end
     if droppable and not item:MightDrop() then
+        -- a non-droppable item *counts* as unknowable
         return false
     end
-    return item:Obtained(nil, not notransmog) ~= nil
+    return item:Obtained(true) ~= nil
 end, doTestAny)
-local allLootKnown = testMaker(function(item, notransmog, droppable)
+local allLootKnown = testMaker(function(item, droppable)
     -- This returns true if all loot is known-or-unknowable
     -- If the "no knowable loot" case matters this should be gated behind hasKnowableLoot
     if droppable and not item:MightDrop() then
-        return false
+        -- a non-droppable item counts as known regardless of whether it really is
+        return true
     end
     -- true-or-nil means known or not-knowable
-    return item:Obtained(nil, not notransmog) ~= false
+    return item:Obtained(true) ~= false
 end)
 
 local function isAchieved(point)
@@ -659,9 +661,9 @@ local function PointIsFound(point)
 
     -- from here on it's actually found:
     local found
-    if point.loot and hasKnowableLoot(point.loot, not ns.db.transmog_notable, true) then
+    if point.loot and hasKnowableLoot(point.loot, true) then
         -- has knowable loot that might drop
-        if not allLootKnown(point.loot, not ns.db.transmog_notable) then
+        if not allLootKnown(point.loot, true) then
             return false
         end
         found = true

@@ -117,8 +117,17 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225454] = {
         name = "Pacificadora Hektare",
     },
+    [225481] = {
+        name = "Zambullebabas Kazzandra",
+    },
+    [225500] = {
+        name = "Grimla Sisamanivela",
+    },
     [225555] = {
         name = "Baratijas",
+    },
+    [225571] = {
+        name = "Renzik \"Chafarote\"",
     },
     [225582] = {
         name = "Supervisora Duinth",
@@ -129,8 +138,17 @@ BtWQuestsDatabase:UpdateNPCsTable({
     [225608] = {
         name = "Prospera Murongranaje",
     },
+    [225669] = {
+        name = "Alleria Brisaveloz",
+    },
     [226255] = {
         name = "Cebolleta",
+    },
+    [226569] = {
+        name = "Snap Vitegrasa",
+    },
+    [226728] = {
+        name = "Humphrey Tragocorto",
     },
     [226750] = {
         name = "Etterca juramentada de Frey",
@@ -143,6 +161,24 @@ BtWQuestsDatabase:UpdateNPCsTable({
     },
     [227222] = {
         name = "Ysabel Brillogranja",
+    },
+    [228158] = {
+        name = "Tallatriza",
+    },
+    [228286] = {
+        name = "Skedgit Flequilloceniza",
+    },
+    [230554] = {
+        name = "Viejo Lowe",
+    },
+    [230841] = {
+        name = "El caballero de verdete",
+    },
+    [233235] = {
+        name = "Gerry Taponabuche",
+    },
+    [233420] = {
+        name = "Benny Gansocohete",
     },
 })
 ]])()

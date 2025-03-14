@@ -165,11 +165,12 @@ local nameplateSettingsToExport = {
 	"iconGrowDirection",
 	"iconGrowDirectionStart",
 	"iconSpacing",
-	"iconWidth",
-	"iconHeight",
+	"iconWidthTarget",
+	"iconHeightTarget",
+	"iconWidthOthers",
+	"iconHeightOthers",
 	"iconOffsetX",
 	"iconOffsetY",
-	"iconAutoScale",
 	"iconCooldownNumbers",
 	"iconFontName",
 	"iconFontSize",
@@ -194,6 +195,7 @@ local nameplateSettingsToExport = {
 	"iconGlowAutoCastScale",
 	"iconGlowProcStartAnim",
 	"iconGlowProcAnimDuration",
+	"iconGlowTimeLeft",
 	"iconBorder",
 	"iconBorderSize",
 	"iconBorderColor",
@@ -388,7 +390,7 @@ do
 	local comma = (GetLocale() == "zhTW" or GetLocale() == "zhCN") and "，" or ", "
 	local function SaveImportedTable(tableData)
 		local data = tableData
-		local imported = {}
+		local chatMessages = {}
 		local barPlugin = BigWigs:GetPlugin("Bars")
 		local messageplugin = BigWigs:GetPlugin("Messages")
 		local countdownPlugin = BigWigs:GetPlugin("Countdown")
@@ -397,7 +399,7 @@ do
 
 		-- Colors are stored for each plugin/module (e.g. BigWigs_Plugins_Colors for the defaults, BigWigs_Bosses_* for bosses)
 		-- We only want to modify the defaults with these imports right now.
-		local function importColorSettings(sharingOptionKey, dataKey, settingsToExport, plugin, message)
+		local function importColorSettings(sharingOptionKey, dataKey, settingsToExport, plugin, chatMessageToPrint)
 			if sharingImportOptionsSettings[sharingOptionKey] and data[dataKey] then
 				for i = 1, #settingsToExport do
 					plugin.db.profile[settingsToExport[i]]["BigWigs_Plugins_Colors"]["default"] = nil -- Reset defaults only
@@ -405,20 +407,20 @@ do
 				for k, v in pairs(data[dataKey]) do
 					plugin.db.profile[k]["BigWigs_Plugins_Colors"]["default"] = v
 				end
-				table.insert(imported, message)
+				table.insert(chatMessages, chatMessageToPrint)
 			end
 		end
 
-		local function importSettings(sharingOptionKey, dataKey, settingsToExport, plugin, message)
+		local function importSettings(sharingOptionKey, dataKey, settingsToImport, plugin, chatMessageToPrint)
 			if sharingImportOptionsSettings[sharingOptionKey] and data[dataKey] then
-				local profile = plugin.db.profile
-				for i = 1, #settingsToExport do
-					profile[settingsToExport[i]] = nil -- Reset current settings
+				for i = 1, #settingsToImport do -- Only import settings that match entries in our table
+					local nameOfSetting = settingsToImport[i]
+					local value = data[dataKey][nameOfSetting]
+					if type(value) ~= "nil" then -- We need to store values set to false
+						plugin.db.profile[nameOfSetting] = value
+					end
 				end
-				for k, v in pairs(data[dataKey]) do
-					plugin.db.profile[k] = v
-				end
-				table.insert(imported, message)
+				table.insert(chatMessages, chatMessageToPrint)
 			end
 		end
 
@@ -433,13 +435,13 @@ do
 		importSettings('importCountdownColors', 'countdownColors', countdownColorsToExport, countdownPlugin, L.imported_countdown_color) -- Not part of color plugin
 		importSettings('importNameplateSettings', 'nameplateSettings', nameplateSettingsToExport, nameplatePlugin, L.imported_nameplate_settings)
 
-		if #imported == 0 then
+		if #chatMessages == 0 then
 			BigWigs:Print(L.no_import_message)
 			return
 		end
 
 		BigWigs:SendMessage("BigWigs_ProfileUpdate")
-		local importMessage = L.import_success:format(table.concat(imported, comma))
+		local importMessage = L.import_success:format(table.concat(chatMessages, comma))
 		BigWigs:Print(importMessage)
 	end
 

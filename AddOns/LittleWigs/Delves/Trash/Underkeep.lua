@@ -30,7 +30,11 @@ end
 -- Initialization
 --
 
-local autotalk = mod:AddAutoTalkOption(true)
+function mod:OnRegister()
+	self:SetSpellRename(450714, CL.frontal_cone) -- Jagged Barbs (Frontal Cone)
+end
+
+local autotalk = mod:AddAutoTalkOption(false)
 function mod:GetOptions()
 	return {
 		autotalk,
@@ -40,16 +44,18 @@ function mod:GetOptions()
 		450714, -- Jagged Barbs
 		450637, -- Leeching Swarm
 		-- Crazed Abomination
-		448179, -- Armored Shell
-		448155, -- Shockwave Tremors
-		{448161, "DISPEL"}, -- Enrage
+		{448179, "NAMEPLATE"}, -- Armored Shell
+		{448155, "NAMEPLATE"}, -- Shockwave Tremors
+		{448161, "DISPEL", "NAMEPLATE"}, -- Enrage
 		-- Web Marauder
 		453149, -- Gossamer Webbing
-	}, {
+	},{
 		[451913] = L.ascended_webfriar,
 		[450714] = L.deepwalker_guardian,
 		[448179] = L.crazed_abomination,
 		[453149] = L.web_marauder,
+	},{
+		[450714] = CL.frontal_cone, -- Jagged Barbs (Frontal Cone)
 	}
 end
 
@@ -59,6 +65,8 @@ function mod:OnBossEnable()
 
 	-- Ascended Webfriar
 	self:Log("SPELL_CAST_START", "GrimweaveOrb", 451913)
+	self:Log("SPELL_AURA_APPLIED", "GrimweaveOrbDamage", 452041)
+	self:Log("SPELL_AURA_REFRESH", "GrimweaveOrbDamage", 452041)
 
 	-- Deepwalker Guardian
 	self:Log("SPELL_CAST_START", "JaggedBarbs", 450714)
@@ -68,9 +76,16 @@ function mod:OnBossEnable()
 	self:Log("SPELL_CAST_START", "ArmoredShell", 448179)
 	self:Log("SPELL_CAST_START", "ShockwaveTremors", 448155)
 	self:Log("SPELL_AURA_APPLIED", "Enrage", 448161)
+	self:Death("CrazedAbominationDeath", 219454)
 
 	-- Web Marauder
 	self:Log("SPELL_CAST_START", "GossamerWebbing", 453149)
+
+	-- also enable the Rares module
+	local raresModule = BigWigs:GetBossModule("Underpin Rares", true)
+	if raresModule then
+		raresModule:Enable()
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -80,9 +95,7 @@ end
 -- Autotalk
 
 function mod:GOSSIP_SHOW()
-	local info = self:GetWidgetInfo("delve", 6183)
-	local level = info and tonumber(info.tierText)
-	if (not level or level > 3) and self:GetOption(autotalk) then
+	if self:GetOption(autotalk) then
 		if self:GetGossipID(121502) then -- The Underkeep, start Delve (Weaver's Instructions)
 			-- 121502:|cFF0000FF(Delve)|r <Close the scroll and look for the Weaver's special pheromone to help combat these failed experiments.>
 			self:SelectGossipID(121502)
@@ -100,10 +113,24 @@ function mod:GrimweaveOrb(args)
 	end
 end
 
+do
+	local prev = 0
+	function mod:GrimweaveOrbDamage(args)
+		-- this ability can also be cast by one of the Delve bosses (The Puppetmaster)
+		if self:MobId(args.sourceGUID) == 219022 then -- Ascended Webfriar
+			if self:Me(args.destGUID) and args.time - prev > 1.5 then
+				prev = args.time
+				self:PersonalMessage(451913, "near")
+				self:PlaySound(451913, "underyou")
+			end
+		end
+	end
+end
+
 -- Deepwalker Guardian
 
 function mod:JaggedBarbs(args)
-	self:Message(args.spellId, "orange")
+	self:Message(args.spellId, "orange", CL.frontal_cone)
 	self:PlaySound(args.spellId, "alarm")
 end
 
@@ -116,19 +143,26 @@ end
 
 function mod:ArmoredShell(args)
 	self:Message(args.spellId, "red", CL.casting:format(args.spellName))
+	self:Nameplate(args.spellId, 13.0, args.sourceGUID)
 	self:PlaySound(args.spellId, "alert")
 end
 
 function mod:ShockwaveTremors(args)
 	self:Message(args.spellId, "orange")
+	self:Nameplate(args.spellId, 8.5, args.sourceGUID)
 	self:PlaySound(args.spellId, "alarm")
 end
 
 function mod:Enrage(args)
 	if self:Dispeller("enrage", true, args.spellId) then
 		self:Message(args.spellId, "yellow", CL.other:format(args.spellName, args.destName))
+		self:Nameplate(args.spellId, 23.1, args.sourceGUID)
 		self:PlaySound(args.spellId, "info")
 	end
+end
+
+function mod:CrazedAbominationDeath(args)
+	self:ClearNameplate(args.destGUID)
 end
 
 -- Web Marauder

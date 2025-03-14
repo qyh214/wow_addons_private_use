@@ -1,8 +1,6 @@
 local E, L = select(2, ...):unpack()
 local P = E.Party
 
-local IsAddOnLoaded = C_AddOns and C_AddOns.IsAddOnLoaded or IsAddOnLoaded
-
 local L_POINTS = {
 	["LEFT"] = L["LEFT"],
 	["RIGHT"] = L["RIGHT"],
@@ -66,7 +64,9 @@ local position = {
 				db[option .. "More"] = value
 			end
 		end
-		P:Refresh()
+		if P:IsCurrentZone(key) then
+			P:Refresh()
+		end
 	end,
 	args = {
 		addOnsSettings = {
@@ -87,7 +87,7 @@ local position = {
 						local db = E.profile.Party[key].position
 						if P:IsCurrentZone(key) then
 							if value == "blizz" and not db.detached
-								and not ( IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") ) then
+								and not ( C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") ) then
 								E.Libs.OmniCDC.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
 							else
 								if P.isInTestMode then
@@ -309,7 +309,7 @@ local position = {
 
 						if P:IsCurrentZone(key) then
 							if not state and not E.customUF.active
-								and not ( IsAddOnLoaded("Blizzard_CompactRaidFrames") and IsAddOnLoaded("Blizzard_CUFProfiles") ) then
+								and not ( C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles") ) then
 								E.Libs.OmniCDC.StaticPopup_Show("OMNICD_RELOADUI", E.STR.ENABLE_BLIZZARD_CRF)
 							end
 							P:Refresh()

@@ -1,0 +1,12 @@
+## Interface: 110007,110100
+## Title:  |cff93d925[新手盒子]|r |cff66ccff数据同步插件|r
+## Author: wclbox.com
+## Notes: 用于新手盒子内角色数据识别同步的插件
+## X-Website: https://www.wclbox.com
+## Version: 1.0.13
+## DefaultState: Enabled
+## SavedVariables: WclBoxGlobal
+## SavedVariablesPerCharacter: WclBoxCharacter
+
+WclBox.lua
+sync.lua

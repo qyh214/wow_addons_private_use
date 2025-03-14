@@ -10,12 +10,15 @@ This includes:
 * [Khaz Algar Lore Hunter](https://www.wowhead.com/achievement=40762/khaz-algar-lore-hunter)
 * [Biblo Archivist](https://www.wowhead.com/achievement=40622/biblo-archivist)
 * [The Missing Lynx](https://www.wowhead.com/achievement=40625/the-missing-lynx)
+* [Lost and Found](https://www.wowhead.com/achievement=40618/lost-and-found)
 * [Not So Quick Fix](https://www.wowhead.com/achievement=40473/not-so-quick-fix)
 * [Rocked to Sleep](https://www.wowhead.com/achievement=40504/rocked-to-sleep)
 * [Notable Machines](https://www.wowhead.com/achievement=40628/notable-machines)
 * [Gobblin' with Glublurb](https://www.wowhead.com/achievement=40614/gobblin-with-glublurp)
 * [Smelling History](https://www.wowhead.com/achievement=40542/smelling-history)
 * [Bookworm](https://www.wowhead.com/achievement=40629/bookworm)
+* [Flamegard's Hope](https://www.wowhead.com/achievement=20594/flamegards-hope)
+* [Back to the Wall](https://www.wowhead.com/achievement=40620/back-to-the-wall)
 * Profession knowledge items
 * Chests inside Delves
 * Races for [Khaz Algar Completionist](https://www.wowhead.com/achievement=40354/khaz-algar-completionist-gold)

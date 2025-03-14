@@ -47,6 +47,7 @@ BigWigs:AddColors("Loatheb", {
 	[29234] = "red",
 	[29865] = "yellow",
 	[30281] = "orange",
+	[1225419] = "blue",
 })
 
 BigWigs:AddColors("Anub'Rekhan", {

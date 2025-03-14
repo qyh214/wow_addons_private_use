@@ -39,8 +39,6 @@ Chain.SubterfugeInSilk = 110424
 Chain.SilkenWard = 110425
 Chain.GrieveWeave = 110426
 Chain.AllGoodThings = 110428
-Chain.TempChain20 = 110430
-Chain.TempChain21 = 110431
 Chain.TempChain22 = 110432
 Chain.TempChain23 = 110433
 Chain.TempChain24 = 110434
@@ -1633,16 +1631,21 @@ Database:AddChain(Chain.AllGoodThings, {
     },
     items = {
         {
-            type = "npc",
-            id = 207471,
-            x = 0,
-            connections = {
-                1, 
+            variations = {
+                {
+                    type = "quest",
+                    id = 82248,
+                    restrictions = {
+                        type = "quest",
+                        id = 82248,
+                        status = { "active", "completed" }
+                    }
+                },
+                {
+                    type = "npc",
+                    id = 211409,
+                },
             },
-        },
-        {
-            type = "quest",
-            id = 82248,
             x = 0,
             connections = {
                 1, 
@@ -1705,109 +1708,6 @@ Database:AddChain(Chain.AllGoodThings, {
         {
             type = "quest",
             id = 82284,
-            x = 0,
-        },
-    },
-})
-Database:AddChain(Chain.TempChain20, {
-    name = "The Beginning of the End",
-    category = CATEGORY_ID,
-    expansion = EXPANSION_ID,
-    range = LEVEL_RANGE,
-    completed = {
-        type = "quest",
-        id = 82124,
-    },
-    items = {
-    },
-})
-Database:AddChain(Chain.TempChain21, {
-    name = { -- To Kill a Queen
-        type = "quest",
-        id = 82141,
-    },
-    category = CATEGORY_ID,
-    expansion = EXPANSION_ID,
-    range = LEVEL_RANGE,
-    prerequisites = {
-        {
-            type = "level",
-            variations = {
-                { level = 68, restrictions = THREADS_OF_FATE_RESTRICTION, },
-                { level = 74, },
-            }
-        },
-        {
-            name = "Timegated for raid unlock?",
-        },
-    },
-    active = {
-        type = "quest",
-        id = 83587,
-    },
-    completed = {
-        type = "quest",
-        id = 82141,
-    },
-    items = {
-        {
-            type = "npc",
-            id = 227217,
-            x = 0,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 83587,
-            x = 0,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82124,
-            x = 0,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82125,
-            x = 0,
-            connections = {
-                1, 2, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82126,
-            x = -1,
-            connections = {
-                2, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82127,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82130,
-            x = 0,
-            connections = {
-                1, 
-            },
-        },
-        {
-            type = "quest",
-            id = 82141,
             x = 0,
         },
     },
@@ -1938,9 +1838,9 @@ Database:AddChain(Chain.TempChain25, {
             }
         },
         {
-            type = "reputation",
-            id = 2605,
-            standing = 5,
+            type = "currency",
+            id = 2904,
+            amount = 3,
         },
     },
     active = {
@@ -2063,9 +1963,9 @@ Database:AddChain(Chain.TempChain27, {
             }
         },
         {
-            type = "reputation",
-            id = 2605,
-            standing = 6,
+            type = "currency",
+            id = 2904,
+            amount = 7,
         },
     },
     active = {
@@ -2077,9 +1977,6 @@ Database:AddChain(Chain.TempChain27, {
         id = 83178,
     },
     items = {
-        {
-            name = "rep locked, at least 5? (6? beta)",
-        },
         {
             type = "npc",
             id = 208782,
@@ -2708,7 +2605,7 @@ Database:AddChain(Chain.OtherBoth, {
 Database:AddCategory(CATEGORY_ID, {
     name = BtWQuests.GetMapName(MAP_ID),
     expansion = EXPANSION_ID,
-    buttonImage = 5912550,
+    buttonImage = 5912548,
     items = {
         {
             type = "chain",
@@ -2784,10 +2681,6 @@ Database:AddCategory(CATEGORY_ID, {
         },
         {
             type = "chain",
-            id = Chain.TempChain25,
-        },
-        {
-            type = "chain",
             id = Chain.TempChain26,
         },
         {
@@ -2796,21 +2689,17 @@ Database:AddCategory(CATEGORY_ID, {
         },
         {
             type = "chain",
-            id = Chain.TempChain29,
-        },
---[==[@debug@
-        {
-            type = "chain",
-            id = Chain.TempChain20,
-        },
-        {
-            type = "chain",
-            id = Chain.TempChain21,
+            id = Chain.TempChain25,
         },
         {
             type = "chain",
             id = Chain.TempChain27,
         },
+        {
+            type = "chain",
+            id = Chain.TempChain29,
+        },
+--[==[@debug@
         {
             type = "chain",
             id = Chain.OtherAlliance,
@@ -2933,14 +2822,6 @@ Database:AddContinentItems(CONTINENT_ID, {
     {
         type = "chain",
         id = Chain.AllGoodThings,
-    },
-    {
-        type = "chain",
-        id = Chain.TempChain20,
-    },
-    {
-        type = "chain",
-        id = Chain.TempChain21,
     },
     {
         type = "chain",

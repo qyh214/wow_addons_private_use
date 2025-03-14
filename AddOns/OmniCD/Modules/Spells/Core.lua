@@ -1,14 +1,10 @@
 local E = select(2, ...):unpack()
 
-local GetSpellInfo = C_Spell and C_Spell.GetSpellName or GetSpellInfo
-local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
-local GetItemIcon =  C_Item and C_Item.GetItemIconByID or GetItemIcon
-
 E.spell_highlighted = {}
 E.spell_modifiers = {}
 E.hash_spelldb = {}
 
-E.spell_marked = {
+E.spell_marked = E.isDF and {
 	[48707] = 205727,
 	[287250] = true,
 	[198589] = 205411,
@@ -30,7 +26,7 @@ E.spell_marked = {
 	[360806] = 410962,
 	[34433] = 314867,
 	[123040] = 314867,
-}
+} or E.BLANK
 
 function E:ProcessSpellDB()
 	for k, v in pairs(self.spell_db) do
@@ -43,12 +39,9 @@ function E:ProcessSpellDB()
 
 				local name
 				if k == "TRINKET" and itemID and itemID > 0 then
-					name = C_Item.GetItemNameByID(itemID) or GetSpellInfo(id)
+					name = C_Item.GetItemNameByID(itemID) or C_Spell.GetSpellName(id)
 				else
-					name = GetSpellInfo(id)
-				end
-				if self.spellNameToID then
-					self.spellNameToID[name] = id
+					name = C_Spell.GetSpellName(id)
 				end
 				t.name = name or ""
 
@@ -56,12 +49,12 @@ function E:ProcessSpellDB()
 					if itemID == 37864 and self.userFaction == "Horde" then
 						itemID = 37865
 					end
-					t.icon = t.icon or GetItemIcon(itemID)
+					t.icon = t.icon or C_Item.GetItemIconByID(itemID)
 				else
 					if id == 2825 and self.userFaction ~= "Horde" then
 						t.icon = 132313
 					end
-					t.icon = t.icon or select(2, GetSpellTexture(id))
+					t.icon = t.icon or select(2, C_Spell.GetSpellTexture(id))
 				end
 
 				t.buff = t.buff or self.buffFix[id] or id
@@ -76,12 +69,15 @@ function E:ProcessSpellDB()
 				E.hash_spelldb[id] = t
 			else
 				tremove(v, i)
-
+				--[==[@debug@
+				E.write("Removing invalid spell_db ID:" , id)
+				--@end-debug@]==]
 			end
 		end
 	end
 
-	for castID, v in pairs(self.spell_merged) do
+
+	for castID in pairs(self.spell_merged) do
 		if not self.spell_highlighted[castID] then
 			self.spell_highlighted[castID] = true
 		end

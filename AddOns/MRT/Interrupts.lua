@@ -338,7 +338,9 @@ function module.options:Load()
 		if not isUser then
 			return
 		end
-		self:GetParent().data.spellData.reset = tonumber(self:GetText() or "-")
+		local reset = self:GetText()
+		if reset == "a" then reset = "A" end
+		self:GetParent().data.spellData.reset = reset == "A" and reset or tonumber(reset or "-")
 
 		module:UpdateData()
 	end
@@ -540,15 +542,20 @@ function module.options:Load()
 	translateERT["0 "] = 0	--No mark
 	local function LineButtonFromNote(self)
 		local data = self:GetParent().data.spellData.assignments
+		local npc_data = self:GetParent().data
 
 		if VMRT and VMRT.Note and VMRT.Note.Text1 then
 			local text = VMRT.Note.Text1
 			--counts lines except gaps
 			local betweenLine = false
+			local betweenLinev2 = false
+			local tmp = {}
 			for line in text:gmatch('[^\r\n]+') do
 				--searches for "endLine" in Note
 				if line == "endLine" then
 					betweenLine = false
+				elseif line == "intend" then
+					betweenLinev2 = false
 				end
 				if betweenLine then
 				--checks if your name is found inbetween startLine and endLine
@@ -588,9 +595,172 @@ function module.options:Load()
 						end 
 					end
 				end
+				if betweenLinev2 then
+					for id in line:gmatch("spell:(%d+)") do
+						tmp.spell[tonumber(id)] = true
+					end
+
+					local npc
+					for id in line:gmatch("npc:(%d+)") do
+						npc = id
+					end
+
+					local mark = line:match("^{([^}]+)}")
+					if not mark then
+						mark = line:match("^Any ")
+						if mark then mark = "-1" end
+					end
+					if not mark then
+						mark = line:match("^0 ")
+					end
+					if mark and translateERT[mark] and npc_data.npcData and npc_data.npcData.npcID == npc and npc_data.spellData and tmp.spell[npc_data.spellData.spellID] then
+						line = line:gsub("^[^ ]+ +","")
+							:gsub("npc:(%d+)", "")
+							:gsub("c?spell:(%d+)", "")
+						local turn = 0
+						local backupsList = {}
+						for backups in line:gmatch("%(([^)]*)%)") do
+							local isbackup = false
+							for name in backups:gmatch("[^ ,]+") do
+								name = name:gsub("|+c%x%x%x%x%x%x%x%x",""):gsub("|+r","")
+								if isbackup then
+									backupsList[name] = true
+								end
+								isbackup = true
+							end 
+						end
+						for name in line:gmatch("[^ ,%(%)]+") do
+							name = name:gsub("|+c%x%x%x%x%x%x%x%x",""):gsub("|+r","")
+							if not backupsList[name] then
+								turn = turn + 1
+							else
+								backupsList[name] = nil
+							end
+
+							local markID = translateERT[mark]
+							if markID == -1 then markID = nil end
+							data[#data+1] = {pos = turn, name = name, mark = markID}
+						end
+					end
+				end
 				--searches for "startLine" in Note
 				if line == "startLine" then
 					betweenLine = true
+				elseif line == "intstart" then
+					betweenLinev2 = true
+					tmp.spell = {}
+				end
+			end
+		end
+
+		module.options.list:UpdateDB()
+		module.options.list:Update()
+	end
+
+	function self:NPCID_GetOrCreate(npcID)
+		for i=1,#CURRENT_DATA do
+			local data = CURRENT_DATA[i]
+			if data.npcID == npcID then
+				return data
+			end
+		end
+		local new = {
+			npcID = npcID,
+			spellData = {},
+		}
+		CURRENT_DATA[ #CURRENT_DATA+1 ] = new
+		return new
+	end
+
+	function self:SPELLID_GetOrCreate(npcData,spellID)
+		for i=1,#npcData.spellData do
+			local data = npcData.spellData[i]
+			if data.spellID == spellID then
+				return data
+			end
+		end
+		local new = {
+			spellID = spellID,
+			assignments = {},
+		}
+		npcData.spellData[ #npcData.spellData+1 ] = new
+		return new
+	end
+
+	local function LineButtonFromNoteGlobal(self)
+		if VMRT and VMRT.Note and VMRT.Note.Text1 then
+			local text = VMRT.Note.Text1
+			--counts lines except gaps
+			local betweenLine = false
+			local betweenLinev2 = false
+			local tmp = {}
+			for line in text:gmatch('[^\r\n]+') do
+				--searches for "endLine" in Note
+				if line == "endLine" then
+					betweenLine = false
+				elseif line == "intend" then
+					betweenLinev2 = false
+				end
+				if betweenLinev2 then
+					for id in line:gmatch("spell:(%d+)") do
+						tmp.spell[tonumber(id)] = true
+						tmp.lastspell = tonumber(id)
+					end
+
+					local npc
+					for id in line:gmatch("npc:(%d+)") do
+						npc = id
+					end
+
+					local mark = line:match("^{([^}]+)}")
+					if not mark then
+						mark = line:match("^Any ")
+						if mark then mark = "-1" end
+					end
+					if not mark then
+						mark = line:match("^0 ")
+					end
+
+					if mark and translateERT[mark] and npc and tmp.lastspell then
+						local npcData = module.options:NPCID_GetOrCreate(npc)
+						local spellData = module.options:SPELLID_GetOrCreate(npcData,tmp.lastspell)
+						local data = spellData.assignments
+	
+						line = line:gsub("^[^ ]+ +","")
+							:gsub("npc:(%d+)", "")
+							:gsub("c?spell:(%d+)", "")
+						local turn = 0
+						local backupsList = {}
+						for backups in line:gmatch("%(([^)]*)%)") do
+							local isbackup = false
+							for name in backups:gmatch("[^ ,]+") do
+								name = name:gsub("|+c%x%x%x%x%x%x%x%x",""):gsub("|+r","")
+								if isbackup then
+									backupsList[name] = true
+								end
+								isbackup = true
+							end 
+						end
+						for name in line:gmatch("[^ ,%(%)]+") do
+							name = name:gsub("|+c%x%x%x%x%x%x%x%x",""):gsub("|+r","")
+							if not backupsList[name] then
+								turn = turn + 1
+							else
+								backupsList[name] = nil
+							end
+
+							local markID = translateERT[mark]
+							if markID == -1 then markID = nil end
+							data[#data+1] = {pos = turn, name = name, mark = markID}
+						end
+					end
+				end
+				--searches for "startLine" in Note
+				if line == "startLine" then
+					betweenLine = true
+				elseif line == "intstart" then
+					betweenLinev2 = true
+					tmp.spell = {}
 				end
 			end
 		end
@@ -853,7 +1023,7 @@ function module.options:Load()
 		--line.spellExtraButton.Texture:SetGradientAlpha("VERTICAL",0.35,0.06,0.09,1, 0.50,0.21,0.25,1)
 		line.spellExtraButton.Ltype = 2
 
-		line.reset = ELib:Edit(line,nil,true):Size(55,20):Point("LEFT",line.spellExtraButton,"RIGHT",3,0):OnChange(LineSpellResetEditOnChange):BackgroundText("Reset")
+		line.reset = ELib:Edit(line,nil,false):Size(55,20):Point("LEFT",line.spellExtraButton,"RIGHT",3,0):OnChange(LineSpellResetEditOnChange):BackgroundText("Reset"):Tooltip("Number of casts after which the counter will reset to 1.\nYou can use \"|cff00ff00A|r\" for autoreset based on maximum assigned number for |cffffffffselected mark|r.")
 		line.reset.Ltype = 2
 
 		line.removeSpell = ELib:Button(line,""):Size(12,20):Point("LEFT",line.reset,"RIGHT",3,0):OnClick(LineButtonRemoveSpell)
@@ -901,6 +1071,10 @@ function module.options:Load()
 
 		line.newNpc = ELib:Button(line,"+npc"):Size(0,20):Point("LEFT",line.npcid,0,0):Point("RIGHT",line.copyNpc,0,0):OnClick(LineButtonAddNPC)
 		line.newNpc.Ltype = 6
+
+		line.fromNoteGlobal = ELib:Button(line,L.InterruptsFromNote):Size(0,20):Point("LEFT",line.newNpc,"RIGHT",5,0):OnClick(LineButtonFromNoteGlobal):Tooltip("Import interrupts for multiple npc/spells from note.\nOnly new format with intstart - intend supported")
+		line.fromNoteGlobal.Ltype = 6
+		line.fromNoteGlobal:SetWidth( 100 )
 
 		line.back = ELib:Texture(line,1,1,1,.05):Point('x'):Shown(false)
 
@@ -960,6 +1134,7 @@ function module.options:Load()
 				if not list[#list][5] then
 					list[#list+1] = {
 						spellData = spellData,
+						npcData = data,
 						[5]=true,
 						isOdd = isOdd,
 					}
@@ -1728,27 +1903,39 @@ function module:UpdateData()
 	wipe(spellToData)
 	wipe(mobData)
 	wipe(counter)
+	local preData = {}
 	for i=1,#CURRENT_DATA do
 		local data = CURRENT_DATA[i]
 		if data.npcID and not VMRT.Interrupts.Disabled[data.npcID] then
-			local mineConditions = false
-			local showAll = false
+			if not preData[data.npcID] then
+				preData[data.npcID] = {}
+			end
+			preData[data.npcID][ #preData[data.npcID]+1 ] = data
+		end
+	end
+
+	for npcID,dataSet in pairs(preData) do
+		local mineConditions = false
+		local showAll = false
+		for i=1,#dataSet do
+			local data = dataSet[i]
 			for j=1,#data.spellData do
 				local spellData = data.spellData[j]
 				if spellData.spellID then
-					mineConditions = mineConditions or true
 					local isAssigned = false
 					if #spellData.assignments > 0 then
 						for k=1,#spellData.assignments do
 							local assignment = spellData.assignments[k]
-							if assignment.pos and (assignment.name == ExRT.SDB.charName or (type(assignment.name)=="string" and strsplit("-",assignment.name) == ExRT.SDB.charName)) then
+							if assignment.pos and (assignment.name == ExRT.SDB.charName or (type(assignment.name)=="string" and strsplit("-",assignment.name) == ExRT.SDB.charName) or spellData.all) then
 								if assignment.mark then
-									if type(mineConditions) == "boolean" then
+									if not mineConditions then
 										mineConditions = {}
 									end
-									mineConditions[assignment.mark] = true
+									if type(mineConditions) == "table" then
+										mineConditions[assignment.mark] = true
+									end
 								else
-									mineConditions = 1
+									mineConditions = true
 								end
 								isAssigned = true
 							end
@@ -1766,14 +1953,11 @@ function module:UpdateData()
 					end
 				end
 			end
-			if mineConditions == true and not VMRT.Interrupts.ShowForUnassigned and not showAll then
-				mineConditions = nil
-			end
-			if mineConditions == 1 then
-				mineConditions = true
-			end
-			mobData[data.npcID] = mineConditions
 		end
+		if not mineConditions and (VMRT.Interrupts.ShowForUnassigned or showAll) then
+			mineConditions = true
+		end
+		mobData[npcID] = mineConditions
 	end
 	module:ReloadAll(not VMRT.Interrupts.enabled)
 end
@@ -1917,19 +2101,54 @@ function module.main:RAID_TARGET_UPDATE()
 	end
 end
 
-local function GetSpellData(spellID,npcID)
+local function GetSpellData(spellID,npcID,targetMark)
 	local list = spellToData[spellID]
 	if not list then
 		return
 	end
+	local savedData,savedSpellData
 	for j=1,#list do
 		local data = list[j]
 		for i=1,#data.spellData do
-			if data.npcID == npcID and data.spellData[i].spellID == spellID then
-				return data, data.spellData[i]
+			local spellData = data.spellData[i]
+			if data.npcID == npcID and spellData.spellID == spellID then
+				if not targetMark then
+					return data, spellData
+				else
+					local haveNoMark = false
+					for i=1,#spellData.assignments do
+						local assignment = spellData.assignments[i]
+						if assignment.mark == 0 then
+							haveNoMark = true
+						end
+						if not assignment.mark or (assignment.mark == targetMark) then
+							return data, spellData
+						end
+					end
+					if targetMark == 0 and not haveNoMark then
+						savedData, savedSpellData = data, spellData
+					end
+				end
 			end
 		end
 	end
+	return savedData, savedSpellData
+end
+
+local function GetResetAuto(spellData,targetMark)
+	local count = 0
+	local isAny = false
+	for i=1,#spellData.assignments do
+		local assignment = spellData.assignments[i]
+		if (not assignment.mark or (assignment.mark == targetMark)) then
+			count = math.max(count, assignment.pos or 0)
+			isAny = true
+		end
+	end
+	if not isAny then
+		count = math.huge
+	end
+	return count
 end
 
 local function GetOwnAssignment(spellData,castNum,targetMark)
@@ -1990,7 +2209,7 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(spellID,npcID)
+		local data, spellData = GetSpellData(spellID,npcID,FlagMarkToIndex[sourceFlags2])
 
 		if not data then
 			return
@@ -1998,7 +2217,7 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 
 		if not spellData.noscs then
 			counter[sourceGUID] = (counter[sourceGUID] or 1) + 1
-			if counter[sourceGUID] > (spellData.reset or math.huge) then
+			if counter[sourceGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,FlagMarkToIndex[sourceFlags2])) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
 				counter[sourceGUID] = 1
 			end
 		end
@@ -2020,7 +2239,7 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(spellID,npcID)
+		local data, spellData = GetSpellData(spellID,npcID,FlagMarkToIndex[sourceFlags2])
 
 		if not data then
 			return
@@ -2045,14 +2264,14 @@ function module.main.COMBAT_LOG_EVENT_UNFILTERED(_,event,_,sourceGUID,sourceName
 			return
 		end
 
-		local data, spellData = GetSpellData(extraspellID,npcID)
+		local data, spellData = GetSpellData(extraspellID,npcID,FlagMarkToIndex[destFlags2])
 
 		if not data then
 			return
 		end
 
 		counter[destGUID] = (counter[destGUID] or 1) + 1
-		if counter[destGUID] > (spellData.reset or math.huge) then
+		if counter[destGUID] > ((type(spellData.reset)=="string" and spellData.reset == "A" and GetResetAuto(spellData,FlagMarkToIndex[destFlags2])) or (type(spellData.reset)=="number" and spellData.reset) or math.huge) then
 			counter[destGUID] = 1
 		end
 		isCasting[destGUID] = nil
@@ -2205,7 +2424,7 @@ function module:ProcessTextToData(text,isImport)
 
 			local newSpell = {
 				spellID = spellID~="" and tonumber(spellID) or nil,
-				reset = reset~="" and tonumber(reset) or nil,
+				reset = reset~="" and tonumber(reset) or (reset == "A" and "A") or nil,
 				assignments = {},
 				nonext = nonext=="1" and true or nil,
 				noscs = noscs=="1" and true or nil,

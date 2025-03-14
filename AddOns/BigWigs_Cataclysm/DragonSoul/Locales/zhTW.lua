@@ -19,6 +19,9 @@ if L then
 	L.ball_desc = "壞滅虛無在玩家和首領之間來回彈跳時發出警報。"
 	L.ball_yell = "Gul'kafh an'qov N'Zoth."
 
+	--L.ball_active = "Void ball active"
+	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+
 	L.bounce = "壞滅虛無彈跳"
 	L.bounce_desc = "壞滅虛無彈跳計數。"
 

@@ -15,4 +15,5 @@
     <Script file="RetailPathsZoneNodes.lua"/>
     <Script file="RetailPathsMiniMapNodes.lua"/>
     <Script file="RetailBlizzAreaPoisNodesInfo.lua"/>
+    <Script file="RetailBlizzDelveAreaPoisNodesInfo.lua"/>
 </Ui>

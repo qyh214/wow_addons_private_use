@@ -2476,10 +2476,10 @@ local icon_frame_on_click_up = function(self, button)
 		if (Details.ilevel.core:HasQueuedInspec (self.unitname)) then
 
 			--icon animation
-			local anim = tremove(Details.icon_animations.load.available)
+			local anim = table.remove(Details.icon_animations.load.available)
 			if (not anim) then
 				icon_frame_create_animation()
-				anim = tremove(Details.icon_animations.load.available)
+				anim = table.remove(Details.icon_animations.load.available)
 			end
 
 			local f = anim
@@ -2518,10 +2518,10 @@ local icon_frame_on_click_up = function(self, button)
 		end
 
 		--icon animation
-		local anim = tremove(Details.icon_animations.load.available)
+		local anim = table.remove(Details.icon_animations.load.available)
 		if (not anim) then
 			icon_frame_create_animation()
-			anim = tremove(Details.icon_animations.load.available)
+			anim = table.remove(Details.icon_animations.load.available)
 		end
 
 		anim:Show()
@@ -3684,7 +3684,8 @@ function gump:CriaJanelaPrincipal(ID, instancia, criando)
 			Details222.PrivateInstanceText = f:CreateFontString(nil, "overlay", "GameFontNormal")
 			Details222.PrivateInstanceText:SetFont("Interface\\AddOns\\Details\\Fonts\\Accidental Presidency.ttf", 10, "NONE")
 			Details222.PrivateInstanceText:SetTextColor(1, 1, 1, 0.5)
-			Details222.PrivateInstanceText:SetText(authorInfo.Support..("/"..authorInfo.Name..""):gsub("^%s$", ""))
+			Details222.PrivateInstanceText:SetText("")
+			--Details222.PrivateInstanceText:SetText(authorInfo.Support..("/"..authorInfo.Name..""):gsub("^%s$", ""))
 			Details222.PrivateInstanceText:SetPoint("bottomleft", baseframe, "bottomleft", 2, 2)
 			Details222.PrivateInstanceText:Hide()hooksecurefunc(commentador, "FollowUnit", function()
 				C_Timer.After(180, function()Details222.PrivateInstanceText:Show()end)
@@ -6651,6 +6652,13 @@ local buildSegmentTooltip = function(self, deltaTime)
 
 						--end of mythic+ segments
 
+					elseif (combatType == DETAILS_SEGMENTTYPE_DUNGEON_OVERALL) then
+						gameCooltip:AddLine(thisCombat:GetCombatName(), detailsFramework:IntegerToTimer(thisCombat:GetCombatTime()), 1, dungeonColor)
+						local combatIcon, categoryIcon = thisCombat:GetCombatIcon()
+						gameCooltip:AddIcon(combatIcon, "main", "left")
+						gameCooltip:AddStatusBar(100, 1, .5, .1, 0, 0.55, false, false, statusBarTexture)
+						local timeInCombat = thisCombat:GetCombatTime()
+
 					elseif (combatType == DETAILS_SEGMENTTYPE_DUNGEON_BOSS or combatType == DETAILS_SEGMENTTYPE_RAID_BOSS) then --if this is a boss encounter
 						--isn't anymore a sequence of mythic+ segments
 						mythicDungeonRunId = false
@@ -6968,7 +6976,11 @@ local buildSegmentTooltip = function(self, deltaTime)
 			end
 
 			if (not bSegmentInfoAdded) then
-				gameCooltip:AddLine(Loc["STRING_SEGMENT_ENEMY"] .. ":", enemy, 2, "white", "white")
+				if (thisCombat.combat_type == DETAILS_SEGMENTTYPE_DUNGEON_OVERALL) then
+					gameCooltip:AddLine(Loc["STRING_SEGMENT_ENEMY"] .. ":", thisCombat:GetCombatName(), 2, "white", "white")
+				else
+					gameCooltip:AddLine(Loc["STRING_SEGMENT_ENEMY"] .. ":", enemy, 2, "white", "white")
+				end
 
 				if (not thisCombat:GetEndTime()) then
 					if (Details.in_combat) then

@@ -1,0 +1,190 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\..\Blizzard_SharedXML\UI.xsd">
+    <Script file="BookUI_Component.lua"/>
+    <Script file="BookUI_Atlas.lua"/>
+    <Script file="BookUI.lua"/>
+
+    <Frame name="DUIDebugAreaTemplate" setAllPoints="true" hidden="true" virtual="true">
+        <KeyValues>
+            <KeyValue key="r" value="1.0" type="number"/>
+            <KeyValue key="g" value="0.0" type="number"/>
+            <KeyValue key="b" value="0.0" type="number"/>
+        </KeyValues>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="BG" setAllPoints="true"/>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>
+                self.BG:SetColorTexture(self.r, self.g, self.b, 0.2);
+            </OnLoad>
+        </Scripts>
+    </Frame>
+
+    <Button name="DUIBookPageButtonTemplate" virtual="true">
+        <Size x="40" y="40"/>
+        <Layers>
+            <Layer level="BORDER" textureSubLevel="2">
+                <Texture parentKey="Background" setAllPoints="true">
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture parentKey="Highlight" hidden="true" setAllPoints="true">
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString parentKey="PageText" inherits="DUIFont_Book_10" justifyH="CENTER" justifyV="MIDDLE" text="1">
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent" relativePoint="CENTER" x="0" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
+    <Frame name="DUIBookItemButtonTemplate" hidden="false" virtual="true">
+        <Size x="64" y="64"/>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="ItemText" inherits="DUIFont_Book_10" justifyH="LEFT" justifyV="MIDDLE" hidden="true">
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </FontString>
+                <Texture parentKey="ItemBorder" hidden="true">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="LEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture parentKey="ItemIcon" hidden="true">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.ItemBorder" relativePoint="CENTER"/>
+                    </Anchors>
+                </Texture>
+                <MaskTexture parentKey="IconMask" file="Interface/AddOns/DialogueUI/Art/BasicShapes/Mask-Circle" hWrapMode="CLAMPTOBLACKADDITIVE" vWrapMode="CLAMPTOBLACKADDITIVE">
+                    <MaskedTextures>
+                        <MaskedTexture childKey="ItemIcon"/>
+                    </MaskedTextures>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.ItemIcon" relativePoint="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT" relativeKey="$parent.ItemIcon" relativePoint="BOTTOMRIGHT"/>
+                    </Anchors>
+                </MaskTexture>
+            </Layer>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="TextBackground" hidden="true" alpha="0.4">
+                    <TextureSliceMode mode="Stretched"/>
+                    <TextureSliceMargins left="16" right="16" top="16" bottom="16"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeKey="$parent.ItemText" relativePoint="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="DUIBookFrame" mixin="DUIBookUIMixin" hidden="true" frameStrata="DIALOG" flattenRenderLayers="true" topLevel="true">
+        <Anchors>
+            <Anchor point="LEFT" relativeTo="UIParent" relativePoint="LEFT" x="48"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND" textureSubLevel="-4">
+                <Texture parentKey="ScreenVignette" file="Interface\AddOns\DialogueUI\Art\Book\ScreenDarken.png" hidden="false">
+
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <ScrollFrame parentKey="ScrollFrame">
+                <ScrollChild>
+                    <Frame parentKey="ScrollChild">
+                        <Size x="16" y="16"/>
+                    </Frame>
+                </ScrollChild>
+                <Frames>
+                    <!--Frame inherits="DUIDebugAreaTemplate">
+                        <KeyValues>
+                            <KeyValue key="r" value="0.0" type="number"/>
+                            <KeyValue key="g" value="0.0" type="number"/>
+                            <KeyValue key="b" value="1.0" type="number"/>
+                        </KeyValues>
+                    </Frame-->
+                </Frames>
+            </ScrollFrame>
+
+            <Frame parentKey="Header" frameLevel="10">
+                <Anchors>
+                    <Anchor point="TOP"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY" textureSubLevel="4">
+                        <Texture parentKey="HeaderDivider" hidden="false">
+                            <Size x="768" y="64"/>
+                            <Anchors>
+                                <Anchor point="BOTTOM" relativeKey="$parent.$parent.ScrollFrame" relativePoint="TOP" y="-6"/>
+                            </Anchors>
+                        </Texture>
+
+                        <MaskTexture parentKey="HeaderDividerExclusion" hWrapMode="CLAMPTOWHITE" vWrapMode="CLAMPTOWHITE" file="Interface\AddOns\DialogueUI\Art\BasicShapes\Mask-AllBlack">
+                            <Size x="1" y="80"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeKey="$parent.HeaderDivider" relativePoint="CENTER"/>
+                            </Anchors>
+                            <MaskedTextures>
+                                <MaskedTexture childKey="HeaderDivider"/>
+                            </MaskedTextures>
+                        </MaskTexture>
+                    </Layer>
+                    <Layer level="OVERLAY" textureSubLevel="3">
+                        <Texture parentKey="HeaderScrollOverlap" hidden="true">
+                            <Size x="768" y="32"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeKey="$parent.$parent.ScrollFrame" relativePoint="TOP" y="0"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame parentKey="Footer" frameLevel="10">
+                <Layers>
+                    <Layer level="OVERLAY" textureSubLevel="3">
+                        <Texture parentKey="FooterDivider" hidden="true">
+                            <Size x="768" y="32"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeKey="$parent.$parent.ScrollFrame" relativePoint="BOTTOM" y="0"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame parentKey="ContentFrame">
+                <Frames>
+                    <Frame inherits="DUIDebugAreaTemplate">
+                        <KeyValues>
+                            <KeyValue key="r" value="1.0" type="number"/>
+                            <KeyValue key="g" value="0.0" type="number"/>
+                            <KeyValue key="b" value="0.0" type="number"/>
+                        </KeyValues>
+                    </Frame>
+                </Frames>
+            </Frame>
+
+            <!--Frame parentKey="DebugArea" inherits="DUIDebugAreaTemplate"/-->
+        </Frames>
+        <KeyValues>
+            <KeyValue key="nodeignore" value="true" type="boolean"/>
+        </KeyValues>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+            <OnMouseUp method="OnMouseUp"/>
+        </Scripts>
+    </Frame>
+</Ui>

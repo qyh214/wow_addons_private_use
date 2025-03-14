@@ -5,6 +5,8 @@
     <Script file="StaticPopUps.lua"/>
     <Script file="syncWithMinimap.lua"/>
     <Script file="ClassicImages.lua"/>
+    <Script file="ClassesDetection.lua"/>
+    <Script file="ProfessionDetection.lua"/>
     <Include file="wmb-template.xml"/>
     <Include file="Retail\RetailCore.xml"/>
 </Ui>

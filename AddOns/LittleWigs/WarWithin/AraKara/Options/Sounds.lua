@@ -1,7 +1,5 @@
 
 BigWigs:AddSounds("Avanoxx", {
-	[434830] = "underyou",
-	[436614] = "warning",
 	[438471] = "alert",
 	[438473] = "long",
 	[438476] = "info",
@@ -14,6 +12,7 @@ BigWigs:AddSounds("Anub'zekt", {
 	[435012] = "alarm",
 	[439506] = "alarm",
 	[442210] = "alert",
+	["bloodstained_webmage"] = "info",
 })
 
 BigWigs:AddSounds("Ki'katal the Harvester", {
@@ -25,16 +24,22 @@ BigWigs:AddSounds("Ki'katal the Harvester", {
 })
 
 BigWigs:AddSounds("Ara-Kara, City of Echoes Trash", {
+	[432967] = {"info","warning"},
+	[433002] = "alert",
+	[433785] = "alert",
 	[433841] = "alert",
 	[433845] = "alarm",
 	[434252] = "info",
 	[434793] = "alert",
 	[434802] = "warning",
 	[434824] = "alarm",
+	[434830] = "underyou",
+	[436614] = "warning",
 	[438622] = "alarm",
 	[438826] = {"alert","underyou"},
 	[438877] = "info",
 	[439208] = "info",
 	[448248] = "alert",
 	[453161] = "alarm",
+	[465012] = "alert",
 })

@@ -1,8 +1,8 @@
 local E = select(2, ...):unpack()
 local P, CM = E.Party, E.Comm
 
-local pairs, ipairs, type, wipe, concat, format, gsub = pairs, ipairs, type, table.wipe, table.concat, string.format, string.gsub
-local UnitIsConnected, CanInspect, CheckInteractDistance = UnitIsConnected, CanInspect, CheckInteractDistance
+local pairs, ipairs, type, wipe, concat, format, gsub = pairs, ipairs, type, wipe, table.concat, format, gsub
+local UnitIsConnected, CanInspect, CheckInteractDistance, UnitPlayerControlled = UnitIsConnected, CanInspect, CheckInteractDistance, UnitPlayerControlled
 local GetPvpTalentInfoByID, GetTalentInfo, GetGlyphSocketInfo = GetPvpTalentInfoByID, GetTalentInfo, GetGlyphSocketInfo
 local GetItemInfoInstant = C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
 local C_SpecializationInfo_GetInspectSelectedPvpTalent = C_SpecializationInfo and C_SpecializationInfo.GetInspectSelectedPvpTalent
@@ -203,8 +203,10 @@ function CM:RequestInspect()
 		if info and not isSyncedUnit then
 			local unit = info.unit
 			local elapsed = now - addedTime
-			if not UnitIsConnected(unit) or elapsed > INSPECT_TIMEOUT or info.isAdminObsForMDI then
+			if not UnitIsConnected(unit) or elapsed > INSPECT_TIMEOUT or info.isAdminObsForMDI or not UnitPlayerControlled(unit) then
 				self:DequeueInspect(unitGUID)
+
+
 			elseif E.preMoP and (InCombatLockdown() or not CheckInteractDistance(unit,1))
 				or not CanInspect(unit) then
 				staleEntries[unitGUID] = addedTime
@@ -516,13 +518,14 @@ local function GetEquippedItemData(info, unit, specID, list)
 						and itemID == runeforgeBaseItems[slotID][subclassID]
 					if InspectTooltip then
 						InspectTooltip:SetInventoryItem(unit, slotID)
-					else --[[https://wowpedia.fandom.com/wiki/Patch_10.0.2/API_changes#Tooltip_Changes]]
+					else
+
 						tooltipData = C_TooltipInfo.GetInventoryItem(unit, slotID)
-						--[[ deprecated in 10.1, removed in 11.0
+						--[[ removed in 11.0
 						if tooltipData and TooltipUtil.SurfaceArgs then
 							TooltipUtil.SurfaceArgs(tooltipData)
 							for _, line in ipairs(tooltipData.lines) do
-							    TooltipUtil.SurfaceArgs(line)
+							TooltipUtil.SurfaceArgs(line)
 							end
 						end
 						]]
@@ -588,9 +591,6 @@ local talentIDFix = {
 
 
 local talentChargeFix = {
-	[36554] = { [259]=1, [261]=1 },
-	[191634] = true,
-	[47568] = true,
 	[5394] = true
 }
 
@@ -599,7 +599,7 @@ local MAX_NUM_TALENTS = MAX_NUM_TALENTS or ((E.isWOTLKC or E.isCata) and 31 or 2
 local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 	local list, c
 	if not isInspect then
-		list, c = { CM.SERIALIZATION_VERSION, true, "^T" }, 4
+		list, c = { CM.SERIALIZATION_VERSION, info.spec, "^T" }, 4
 	end
 
 	for i = 1, 3 do
@@ -654,9 +654,11 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 										list[c] = activeRank > 1 and format("%s:%s", spellID, activeRank) or spellID
 										c = c + 1
 									end
+									--[[
+									if treeNode.subTreeActive then
 
-
-
+									end
+									]]
 								end
 							end
 						end
@@ -670,7 +672,7 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 end) or (E.isSL and function(info, inspectUnit, isInspect)
 	local list
 	if not isInspect then
-		list = { CM.SERIALIZATION_VERSION, true, "^T" }
+		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
 	end
 
 	for i = 1, 3 do
@@ -704,7 +706,7 @@ end) or (E.isSL and function(info, inspectUnit, isInspect)
 end) or (E.isWOTLKC and function(info, inspectUnit, isInspect)
 	local list
 	if not isInspect then
-		list = { CM.SERIALIZATION_VERSION, true, "^T" }
+		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
 	end
 
 	local talentGroup = GetActiveTalentGroup and GetActiveTalentGroup(isInspect, nil)
@@ -752,7 +754,7 @@ end) or (E.isWOTLKC and function(info, inspectUnit, isInspect)
 end) or (E.isCata and function(info, inspectUnit, isInspect)
 	local list
 	if not isInspect then
-		list = { CM.SERIALIZATION_VERSION, true, "^T" }
+		list = { CM.SERIALIZATION_VERSION, 0, "^T" }
 	end
 
 	local talentGroup = GetActiveTalentGroup and GetActiveTalentGroup(isInspect, nil)
@@ -762,7 +764,10 @@ end) or (E.isCata and function(info, inspectUnit, isInspect)
 	if primaryTree then
 		info.spec = primaryTree
 		info.talentData[primaryTree] = true
-		if list then list[#list + 1] = primaryTree end
+		if list then
+			list[2] = primaryTree
+			list[#list + 1] = primaryTree
+		end
 	end
 
 	if list then
@@ -808,7 +813,7 @@ end) or (E.isCata and function(info, inspectUnit, isInspect)
 end) or function(info, inspectUnit, isInspect)
 	local list
 	if not isInspect then
-		list = { CM.SERIALIZATION_VERSION, true, "^T" }
+		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
 	end
 
 	for tabIndex = 1, 3 do
@@ -858,6 +863,7 @@ function CM:InspectUnit(guid)
 	info.spec = specID
 	if info.name == "" or info.name == UNKNOWN then
 		info.name = GetUnitName(inspectUnit, true)
+		info.nameWithoutRealm = UnitName(inspectUnit)
 	end
 	if info.level == 200 then
 		local lvl = UnitLevel(inspectUnit)
@@ -975,6 +981,7 @@ end
 function CM:UpdateCooldownSyncIDs(info)
 	wipe(self.cooldownSyncIDs)
 	if info.isAdminObsForMDI then return end
+
 	local notRaid = P.zone ~= "raid"
 	for id, t in E.pairs(E.sync_cooldowns.ALL, E.sync_cooldowns[E.userClass]) do
 		if notRaid or E.sync_in_raid[id] then
@@ -1023,7 +1030,6 @@ function CM:InspectUser()
 		end
 	end
 
-	dataList[2] = info.spec
 	local serializedData = concat(dataList, ","):gsub(",%^", "^")
 	local compressedData = LibDeflate:CompressDeflate(serializedData)
 	local encodedData = LibDeflate:EncodeForWoWAddonChannel(compressedData)

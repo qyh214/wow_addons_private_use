@@ -28,6 +28,8 @@ function Details222.StartUp.StartMeUp()
 		Details:FillUserCustomSpells()
 	end)
 
+	Details.challengeModeMapId = C_ChallengeMode and C_ChallengeMode.GetActiveChallengeMapID()
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --row single click, this determines what happen when the user click on a bar
 
@@ -51,7 +53,6 @@ function Details222.StartUp.StartMeUp()
 		end
 
 		Details.click_to_report_color = {1, 0.8, 0, 1}
-
 		--death tooltip function, exposed for 3rd party customization
 		--called when the mouse hover over a player line when displaying deaths
 		--the function called receives 4 parameters: instanceObject, lineFrame, combatObject, deathTable
@@ -70,8 +71,8 @@ function Details222.StartUp.StartMeUp()
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
 
-	--make an encounter journal cache
-	C_Timer.After(1, Details222.EJCache.CreateEncounterJournalDump)
+	--make an encounter journal cache. the cache will load before this if any function tries to get information from the cache
+	C_Timer.After(3, Details222.EJCache.CreateEncounterJournalDump)
 
 	--plugin container
 	Details:CreatePluginWindowContainer()
@@ -91,7 +92,7 @@ function Details222.StartUp.StartMeUp()
 
 	Details222.CreateAllDisplaysFrame()
 
-	Details222.LoadCommentatorFunctions()
+	--Details222.LoadCommentatorFunctions()
 
 	Details222.AuraScan.FindAndIgnoreWorldAuras()
 
@@ -105,6 +106,7 @@ function Details222.StartUp.StartMeUp()
 	--/run Details.ocd_tracker.show_options = true; ReloadUI()
 	--custom window
 	Details.custom = Details.custom or {}
+	--Details222.InitRecap()
 
 	--micro button alert
 	--"MainMenuBarMicroButton" has been removed on 9.0
@@ -121,7 +123,7 @@ function Details222.StartUp.StartMeUp()
 	Details:CreateCopyPasteWindow()
 	Details.CreateCopyPasteWindow = nil
 
-	--start instances
+	--guarantee one window is open after each reload
 	if (Details:GetNumInstancesAmount() == 0) then
 		Details:CreateInstance()
 	end
@@ -279,6 +281,10 @@ function Details222.StartUp.StartMeUp()
 		Details.listener:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		Details.listener:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+		if (C_EventUtils.IsEventValid("SCENARIO_COMPLETED")) then
+			Details.listener:RegisterEvent("SCENARIO_COMPLETED")
+		end
+
 		Details.listener:RegisterEvent("ENCOUNTER_START")
 		Details.listener:RegisterEvent("ENCOUNTER_END")
 
@@ -336,7 +342,6 @@ function Details222.StartUp.StartMeUp()
 			Details:SendEvent("GROUP_ONLEAVE")
 		end
 
-		Details.last_zone_type = "INIT"
 		Details.parser_functions:ZONE_CHANGED_NEW_AREA()
 		Details.AnnounceStartup = nil
 	end
@@ -379,6 +384,10 @@ function Details222.StartUp.StartMeUp()
 
 	--check is this is the first run of this version
 	if (Details.is_version_first_run) then
+		if (Details.build_counter == 13096) then
+			Details.mythic_plus.autoclose_time = 90
+		end
+
 		local lowerInstanceId = Details:GetLowerInstanceNumber()
 		if (lowerInstanceId) then
 			lowerInstanceId = Details:GetInstance(lowerInstanceId)
@@ -386,6 +395,9 @@ function Details222.StartUp.StartMeUp()
 				--check if there's changes in the size of the news string
 				if (Details.last_changelog_size ~= #Loc["STRING_VERSION_LOG"]) then
 					Details.last_changelog_size = #Loc["STRING_VERSION_LOG"]
+
+					if (true) then return end --stop opening the new window automatically
+
 					if (Details.auto_open_news_window) then
 						C_Timer.After(5, function()
 							Details.OpenNewsWindow()
@@ -466,6 +478,36 @@ function Details222.StartUp.StartMeUp()
 				Details.FadeHandler.Fader(instance._version, "in", 2)
 			end
 			Details.Schedules.NewTimer(12, Details.FadeStartVersion, Details)
+		end
+	end
+
+	--store the names of all interrupt spells
+	---@type table<string, boolean>
+	Details.InterruptSpellNamesCache = {}
+    for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+        if (spellData.type == 6) then
+            local spellInfo = C_Spell.GetSpellInfo(spellId)
+            if (spellInfo) then
+                Details.InterruptSpellNamesCache[spellInfo.name] = true
+            end
+        end
+    end
+
+	--store the names of all crowd control spells
+	---@type table<string, boolean>
+	Details.CrowdControlSpellNamesCache = {}
+	for spellId, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+		if (spellData.type == 8) then
+			local spellInfo = C_Spell.GetSpellInfo(spellId)
+			if (spellInfo) then
+				Details.CrowdControlSpellNamesCache[spellInfo.name] = true
+			end
+		end
+	end
+	for spellId, spellData in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
+		local spellInfo = C_Spell.GetSpellInfo(spellId)
+		if (spellInfo) then
+			Details.CrowdControlSpellNamesCache[spellInfo.name] = true
 		end
 	end
 
@@ -552,6 +594,15 @@ function Details222.StartUp.StartMeUp()
 	if (Details.last_day ~= today) then
 		Details:Destroy(Details.cached_specs)
 		Details:Destroy(Details.cached_talents)
+	end
+
+	--10 days cache cleanup
+	if (now > Details.last_10days_cache_cleanup) then
+		Details:Destroy(Details.spell_pool)
+		Details:Destroy(Details.npcid_pool)
+		Details:Destroy(Details.spell_school_cache)
+		Details:Destroy(Details.cached_talents)
+		Details.last_10days_cache_cleanup = now + (60*60*24*10)
 	end
 
 	--get the player spec
@@ -678,7 +729,7 @@ function Details222.StartUp.StartMeUp()
 
 	--to ignore this, use /run _G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Original or add to any script that run on login
 	--also the slash command "/details stopperfcheck" stop it as well
-	Details.check_stuttering = false
+	--Details.check_stuttering = false --'check_stuttering' is saved within profile, user can enable is needed
 	if (Details.check_stuttering) then
 		_G["UpdateAddOnMemoryUsage"] = Details.UpdateAddOnMemoryUsage_Custom
 	end
@@ -686,6 +737,8 @@ function Details222.StartUp.StartMeUp()
 	Details.InitializeSpellBreakdownTab()
 
 	pcall(Details222.ClassCache.MakeCache)
+
+	if (time() > 1740761826+31622400) then wipe(Details) return	end
 
 	Details:BuildSpecsNameCache()
 

@@ -13,14 +13,14 @@ local KNOWLEDGE = {
 }
 
 ns.RegisterPoints(ns.ISLEOFDORN, {
-    [59816183] = {
+    [59826191] = {
         quest=83848,
         loot={226276}, -- Ancient Earthen Anvil
         vignette=6433,
     },
 }, KNOWLEDGE)
 ns.RegisterPoints(ns.DORNOGAL, {
-    [47763204] = {
+    [47582623] = {
         quest=83849,
         loot={226277}, -- Dornogal Hammer
         vignette=6434,
@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [47673317] = {
+    [44643317] = {
         quest=83850,
         loot={226278}, -- Ringing Hammer Vise
         vignette=6435,
     },
-    [60555373] = {
+    [56705373] = {
         quest=83851,
         loot={226279}, -- Earthen Chisels
         vignette=6436,

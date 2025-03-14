@@ -29,12 +29,12 @@ ns.RegisterPoints(ns.DORNOGAL, {
 }, KNOWLEDGE)
 
 ns.RegisterPoints(ns.RINGINGDEEPS, {
-    [47242837] = {
+    [44232837] = {
         quest=83916,
         loot={226342}, -- Artisan's Drawing Knife
         vignette=6499,
     },
-    [65716190] = { -- 65816188
+    [61536190] = { -- 61626188
         quest=83917,
         loot={226343}, -- Fungarian's Rich Tannin
         vignette=6500,

@@ -22,6 +22,7 @@ local IsCurrentItem = C_Item.IsCurrentItem
 local IsUsableItem = C_Item.IsUsableItem
 local IsCurrentSpell = C_Spell.IsCurrentSpell
 local GetItemCooldown = C_Item.GetItemCooldown
+local GetItemInfoInstant = C_Item.GetItemInfoInstant
 local GetSpellTexture = C_Spell.GetSpellTexture
 local IsUsableSpell = C_Spell.IsSpellUsable
 
@@ -33,7 +34,7 @@ local GetSpellCooldown = function(spellID)
     return 0, 0, false, 0
 end
 
-local format, insert = string.format, table.insert
+local floor, format, insert = math.floor, string.format, table.insert
 
 local HasVehicleActionBar, HasOverrideActionBar, IsInPetBattle, UnitHasVehicleUI, UnitOnTaxi = HasVehicleActionBar, HasOverrideActionBar, C_PetBattles.IsInBattle, UnitHasVehicleUI, UnitOnTaxi
 local Tooltip = ns.Tooltip
@@ -512,8 +513,7 @@ do
             text = "Potions",
             func = function() Hekili:FireToggle( "potions" ); ns.UI.Minimap:RefreshDataText() end,
             checked = function () return Hekili.DB.profile.toggles.potions.value end,
-        },
-
+        }
     }
 
     local specsParsed = false
@@ -563,6 +563,34 @@ do
                             end,
                             hidden = function () return Hekili.State.spec.id ~= i end,
                         } )
+
+                        local potionMenu = {
+                            text = "|T967533:0|t Preferred Potion",
+                            tooltipTitle = "|T967533:0|t Preferred Potion",
+                            tooltipText = "Select the potion you would like to use when the |cFFFFD100Potions|r toggle is enabled.",
+                            tooltipOnButton = true,
+                            hasArrow = true,
+                            menuList = {},
+                            notCheckable = true,
+                            hidden = function () return Hekili.State.spec.id ~= i end,
+                        }
+
+                        for k, v in orderedPairs( class.potionList ) do
+                            insert( potionMenu.menuList, {
+                                text = v,
+                                func = function ()
+                                    Hekili.DB.profile.specs[ Hekili.State.spec.id ].potion = k
+                                    for _, display in pairs( Hekili.DisplayPool ) do
+                                        display:OnEvent( "HEKILI_MENU" )
+                                    end
+                                end,
+                                checked = function ()
+                                    return Hekili.DB.profile.specs[ Hekili.State.spec.id ].potion == k
+                                end,
+                            } )
+                        end
+
+                        insert( menuData, potionMenu )
 
                         -- Check for Toggles.
                         for n, setting in pairs( spec.settings ) do
@@ -861,29 +889,9 @@ do
         VEHICLE_UPDATE = 1,
     }
 
-    local pulseAuras = 0.1
-    local pulseDelay = 0.05
-    local pulseGlow = 0.25
-    local pulseTargets = 0.1
+    -- Opportunity for Performance Preference, maybe.
+    local pulseDisplay = 0.25
     local pulseRange = TOOLTIP_UPDATE_TIME
-    local pulseFlash = 0.5
-
-    local flashOffset = {
-        Primary = 0,
-        AOE = 0.25,
-        Interrupts = 0.125,
-        Defensives = 0.333,
-        Cooldowns = 0.416
-    }
-
-    local oocRefresh = 1
-    local icRefresh = {
-        Primary = 0.25,
-        AOE = 0.25,
-        Interrupts = 0.25,
-        Defensives = 0.5,
-        Cooldowns = 0.25
-    }
 
     local LRC = LibStub( "LibRangeCheck-3.0" )
     local LSF = SpellFlashCore
@@ -1037,7 +1045,7 @@ do
 
 
         function d:OnUpdate( elapsed )
-            if not self.Recommendations or not Hekili.PLAYER_ENTERING_WORLD then
+            if not self.Recommendations or not Hekili.PLAYER_ENTERING_WORLD or self:IsThreadLocked() then
                 return
             end
 
@@ -1046,18 +1054,16 @@ do
             local profile = Hekili.DB.profile
             local conf = profile.displays[ self.id ]
 
+            self.timer = ( self.timer or 0 ) - elapsed
             self.alphaCheck = self.alphaCheck - elapsed
 
-            if self.alphaCheck <= 0 then
-                self.alphaCheck = 0.5
+            if alphaCheck then
                 self:UpdateAlpha()
             end
 
             if not self.id == "Primary" and not ( self.Buttons[ 1 ] and self.Buttons[ 1 ].Action ) and not ( self.HasRecommendations or not self.NewRecommendations ) then
                 return
             end
-
-            local postAlpha = debugprofilestop()
 
             if Hekili.Pause and not self.paused then
                 self.Buttons[ 1 ].Overlay:Show()
@@ -1067,11 +1073,19 @@ do
                 self.paused = false
             end
 
+            local fullUpdate = self.NewRecommendations or self.timer < 0
+            if not fullUpdate then return end
+
+            local madeUpdate = false
+
+            self.timer = pulseDisplay
+            self.NewRecommendations = nil
+
             local now = GetTime()
 
-            self.recTimer = self.recTimer - elapsed
+            if fullUpdate then
+                madeUpdate = true
 
-            if not self:IsThreadLocked() and ( self.NewRecommendations or self.recTimer < 0 ) then
                 local alpha = self.alpha
                 local options = Hekili:GetActiveSpecOption( "abilities" )
 
@@ -1096,20 +1110,25 @@ do
                             if ( conf.flash.enabled and conf.flash.suppress ) then b:Hide()
                             else b:Show() end
 
-                            if i == 1 then
+                            --[[ if i == 1 then
                                 -- print( "Changing", GetTime() )
+                            end ]]
+
+                            local image -- texture to be shown on the button for the current action
+
+                            if ability.item then
+                                image = b.Recommendation.texture or ability.texture or select( 5, GetItemInfoInstant( ability.item ) )
+                            else
+                                local override = options and rawget( options, action )
+                                image = override and override.icon or b.Recommendation.texture or ability.texture or GetSpellTexture( ability.id )
                             end
 
-                            if action ~= b.lastAction or self.NewRecommendations or not b.Image then
-                                if ability.item then
-                                    b.Image = b.Recommendation.texture or ability.texture or select( 10, GetItemInfo( ability.item ) )
-                                else
-                                    local override = options and rawget( options, action )
-                                    b.Image = override and override.icon or b.Recommendation.texture or ability.texture or GetSpellTexture( ability.id )
-                                end
+                            if action ~= b.lastAction or image ~= b.lastImage or self.NewRecommendations or not b.Image then
+                                b.Image = image
                                 b.Texture:SetTexture( b.Image )
                                 b.Texture:SetTexCoord( unpack( b.texCoords ) )
                                 b.lastAction = action
+                                b.lastImage = image
                             end
 
                             b.Texture:Show()
@@ -1200,13 +1219,6 @@ do
                         b.ExactTime = exact_time
                     end
 
-                    self.glowTimer = -1
-                    self.rangeTimer = -1
-                    self.delayTimer = -1
-
-                    self.recTimer = 1
-                    self.alphaCheck = 0.5
-
                     self:RefreshCooldowns( "RECS_UPDATED" )
                 end
             end
@@ -1214,134 +1226,54 @@ do
             local postRecs = debugprofilestop()
 
             if self.HasRecommendations then
-                self.glowTimer = self.glowTimer - elapsed
+                if fullUpdate and conf.glow.enabled then
+                    madeUpdate = true
 
-                if self.glowTimer < 0 or self.NewRecommendations then
-                    if conf.glow.enabled then
-                        for i, b in ipairs( self.Buttons ) do
-                            if not b.Action then break end
+                    for i, b in ipairs( self.Buttons ) do
+                        if not b.Action then break end
 
-                            local a = b.Ability
+                        local a = b.Ability
 
-                            if i == 1 or conf.glow.queued then
-                                local glowing = a.id > 0 and IsSpellOverlayed( a.id )
+                        if i == 1 or conf.glow.queued then
+                            local glowing = a.id > 0 and IsSpellOverlayed( a.id )
 
-                                if glowing and not b.glowing then
-                                    b.glowColor = b.glowColor or {}
+                            if glowing and not b.glowing then
+                                b.glowColor = b.glowColor or {}
 
-                                    if conf.glow.coloring == "class" then
-                                        b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = RAID_CLASS_COLORS[ class.file ]:GetRGBA()
-                                    elseif conf.glow.coloring == "custom" then
-                                        b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = unpack(conf.glow.color)
-                                    else
-                                        b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = 0.95, 0.95, 0.32, 1
-                                    end
-
-                                    if conf.glow.mode == "default" then
-                                        Glower.ButtonGlow_Start( b, b.glowColor )
-                                        b.glowStop = Glower.ButtonGlow_Stop
-                                    elseif conf.glow.mode == "autocast" then
-                                        Glower.AutoCastGlow_Start( b, b.glowColor )
-                                        b.glowStop = Glower.AutoCastGlow_Stop
-                                    elseif conf.glow.mode == "pixel" then
-                                        Glower.PixelGlow_Start( b, b.glowColor )
-                                        b.glowStop = Glower.PixelGlow_Stop
-                                    end
-
-                                    b.glowing = true
-                                elseif not glowing and b.glowing then
-                                    b:glowStop()
-                                    b.glowing = false
+                                if conf.glow.coloring == "class" then
+                                    b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = RAID_CLASS_COLORS[ class.file ]:GetRGBA()
+                                elseif conf.glow.coloring == "custom" then
+                                    b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = unpack(conf.glow.color)
+                                else
+                                    b.glowColor[1], b.glowColor[2], b.glowColor[3], b.glowColor[4] = 0.95, 0.95, 0.32, 1
                                 end
-                            else
-                                if b.glowing then
-                                    b:glowStop()
-                                    b.glowing = false
+
+                                if conf.glow.mode == "default" then
+                                    Glower.ButtonGlow_Start( b, b.glowColor )
+                                    b.glowStop = Glower.ButtonGlow_Stop
+                                elseif conf.glow.mode == "autocast" then
+                                    Glower.AutoCastGlow_Start( b, b.glowColor )
+                                    b.glowStop = Glower.AutoCastGlow_Stop
+                                elseif conf.glow.mode == "pixel" then
+                                    Glower.PixelGlow_Start( b, b.glowColor )
+                                    b.glowStop = Glower.PixelGlow_Stop
                                 end
+
+                                b.glowing = true
+                            elseif not glowing and b.glowing then
+                                b:glowStop()
+                                b.glowing = false
+                            end
+                        else
+                            if b.glowing then
+                                b:glowStop()
+                                b.glowing = false
                             end
                         end
                     end
                 end
 
                 local postGlow = debugprofilestop()
-
-                self.rangeTimer = self.rangeTimer - elapsed
-
-                if self.rangeTimer < 0 or self.NewRecommendations then
-                    for i, b in ipairs( self.Buttons ) do
-                        local a = b.Ability
-
-                        if a and a.id then
-                            local outOfRange = false
-
-                            if conf.range.enabled and UnitCanAttack( "player", "target" ) then
-                                if conf.range.type == "melee" then
-                                    outOfRange = ( LRC:GetRange( "target" ) or 10 ) > 7
-                                elseif conf.range.type == "ability" then
-                                    local name = a.rangeSpell or a.itemSpellName or a.actualName or a.name
-                                    if name then outOfRange = LSR.IsSpellInRange( name, "target" ) == 0 end
-                                end
-                            end
-
-                            if outOfRange and not b.outOfRange then
-                                b.Texture:SetDesaturated(true)
-                                b.Texture:SetVertexColor(1.0, 0.0, 0.0, 1.0)
-                                b.outOfRange = true
-                            elseif b.outOfRange and not outOfRange then
-                                b.Texture:SetDesaturated(false)
-                                b.Texture:SetVertexColor(1.0, 1.0, 1.0, 1.0)
-                                b.outOfRange = false
-                            end
-
-                            if not b.outOfRange then
-                                local _, unusable
-
-                                if a.itemCd or a.item then
-                                    unusable = not IsUsableItem( a.itemCd or a.item )
-                                else
-                                    _, unusable = IsUsableSpell( a.actualName or a.name )
-                                end
-
-                                if i == 1 and conf.delays.fade then
-                                    local delay = b.ExactTime and ( b.ExactTime - now ) or 0
-                                    --[[ local start, duration = 0, 0
-
-                                    if a.gcd ~= "off" then
-                                        start, duration = GetSpellCooldown( 61304 )
-                                        if start > 0 then moment = start + duration - now end
-                                    end
-
-                                    local rStart, rDuration
-                                    if a.item then
-                                        rStart, rDuration = GetItemCooldown( a.item )
-                                    else
-                                        rStart, rDuration = GetSpellCooldown( a.id )
-                                    end
-                                    if rStart > 0 then moment = max( moment, rStart + rDuration - now ) end
-
-                                    start, duration = select( 4, UnitCastingInfo( "player" ) )
-                                    if start and start > 0 then moment = max( ( start / 1000 ) + ( duration / 1000 ) - now, moment ) end ]]
-
-                                    if delay > 0.05 then
-                                        unusable = true
-                                    end
-                                end
-
-                                if unusable and not b.unusable then
-                                    b.Texture:SetVertexColor(0.4, 0.4, 0.4, 1.0)
-                                    b.unusable = true
-                                elseif b.unusable and not unusable then
-                                    b.Texture:SetVertexColor(1.0, 1.0, 1.0, 1.0)
-                                    b.unusable = false
-                                end
-                            end
-                        end
-                    end
-
-                    self.rangeTimer = pulseRange
-                end
-
-                local postRange = debugprofilestop()
 
                 if self.flashReady and conf.flash.enabled and LSF and ( InCombatLockdown() or not conf.flash.combat ) then
                     self.flashTimer = self.flashTimer - elapsed
@@ -1351,7 +1283,9 @@ do
                     local a = self.Buttons[ 1 ].Action
                     local changed = self.lastFlash ~= a
 
-                    if a and ( changed or self.flashTimer < 0 ) then
+                    if a and ( fullUpdate or changed ) then
+                        madeUpdate = true
+
                         if changed then
                             for frame in pairs( self.lastFlashFrames ) do
                                 frame:Hide()
@@ -1439,12 +1373,12 @@ do
 
                 local postFlash = debugprofilestop()
 
-                self.targetTimer = self.targetTimer - elapsed
-
-                if self.targetTimer < 0 or self.NewRecommendations then
+                if fullUpdate then
                     local b = self.Buttons[ 1 ]
 
                     if conf.targets.enabled then
+                        madeUpdate = true
+
                         local tMin, tMax = 0, 0
                         local mode = profile.toggles.mode.value
                         local spec = state.spec.id and profile.specs[ state.spec.id ]
@@ -1473,34 +1407,34 @@ do
                             b.targetShown = false
                         end
                     elseif b.targetShown then
+                        madeUpdate = true
                         b.Targets:SetText(nil)
                     end
-
-                    self.targetTimer = pulseTargets
                 end
 
                 local postTargets = debugprofilestop()
 
-                local b = self.Buttons[ 1 ]
-
                 self.delayTimer = self.delayTimer - elapsed
 
-                if b.ExactTime and ( self.delayTimer < 0 or self.NewRecommendations ) then
+                if fullUpdate and self.Buttons[ 1 ].ExactTime then
+                    madeUpdate = true
+
+                    local b = self.Buttons[ 1 ]
                     local a = b.Ability
 
                     local delay = b.ExactTime - now
-                    local moment = 0
+                    local earliest_time = 0
 
                     if delay > 0 then
                         local start, duration = 0, 0
 
                         if a.gcd ~= "off" then
                             start, duration = GetSpellCooldown( 61304 )
-                            if start > 0 then moment = start + duration - now end
+                            if start > 0 then earliest_time = start + duration - now end
                         end
 
                         start, duration = select( 4, UnitCastingInfo( "player" ) )
-                        if start and start > 0 then moment = max( ( start / 1000 ) + ( duration / 1000 ) - now, moment ) end
+                        if start and start > 0 then earliest_time = max( ( start / 1000 ) + ( duration / 1000 ) - now, earliest_time ) end
 
                         local rStart, rDuration = 0, 0
                         if a.item then
@@ -1510,7 +1444,7 @@ do
                                 rStart, rDuration = GetSpellCooldown( a.id )
                             end
                         end
-                        if rStart > 0 then moment = max( moment, rStart + rDuration - now ) end
+                        if rStart > 0 then earliest_time = max( earliest_time, rStart + rDuration - now ) end
                     end
 
                     if conf.delays.type == "TEXT" then
@@ -1519,7 +1453,7 @@ do
                             self.delayIconShown = false
                         end
 
-                        if delay > moment + 0.05 then
+                        if delay > earliest_time + 0.05 then
                             b.DelayText:SetText( format( "%.1f", delay ) )
                             self.delayTextShown = true
                         else
@@ -1533,7 +1467,7 @@ do
                             self.delayTextShown = false
                         end
 
-                        if delay > moment + 0.05 then
+                        if delay > earliest_time + 0.05 then
                             b.DelayIcon:Show()
                             b.DelayIcon:SetAlpha( self.alpha )
 
@@ -1562,38 +1496,107 @@ do
                         end
                     end
 
-                    self.delayTimer = pulseDelay
+                    b.EarliestTime = earliest_time
                 end
 
-                self.NewRecommendations = false
+                self.rangeTimer = self.rangeTimer - elapsed
+                if fullUpdate or self.rangeTimer < 0 then
+                    madeUpdate = true
 
+                    for i, b in ipairs( self.Buttons ) do
+                        local a = b.Ability
+
+                        if a and a.id then
+                            local outOfRange = false
+                            local desaturated = false
+
+                            if conf.range.enabled and UnitCanAttack( "player", "target" ) then
+                                if conf.range.type == "melee" then
+                                    outOfRange = ( LRC:GetRange( "target" ) or 10 ) > 7
+                                elseif conf.range.type == "ability" then
+                                    local name = a.rangeSpell or a.itemSpellName or a.actualName or a.name
+                                    if name then outOfRange = LSR.IsSpellInRange( name, "target" ) == 0 end
+                                end
+                            end
+
+                            if outOfRange and not b.outOfRange then
+                                b.Texture:SetVertexColor(1.0, 0.0, 0.0, 1.0)
+                                b.outOfRange = true
+                                desaturated = true
+                            elseif b.outOfRange and not outOfRange then
+                                b.Texture:SetVertexColor(1.0, 1.0, 1.0, 1.0)
+                                b.outOfRange = false
+                                desaturated = false
+                            end
+
+                            if not b.outOfRange then
+                                local _, unusable
+
+                                if a.itemCd or a.item then
+                                    unusable = not IsUsableItem( a.itemCd or a.item )
+                                else
+                                    _, unusable = IsUsableSpell( a.actualName or a.name )
+                                end
+
+                                if i == 1 and ( conf.delays.fade or conf.delays.desaturate ) then
+                                    local delay = b.ExactTime and ( b.ExactTime - now ) or 0
+                                    local earliest_time = b.EarliestTime or delay
+                                    if delay > earliest_time + 0.05 then
+                                        if conf.delays.fade then unusable = true end
+                                        if conf.delays.desaturate then desaturate = true end
+                                    end
+                                end
+
+                                if unusable and not b.unusable then
+                                    b.Texture:SetVertexColor(0.4, 0.4, 0.4, 1.0)
+                                    b.unusable = true
+                                elseif b.unusable and not unusable then
+                                    b.Texture:SetVertexColor(1.0, 1.0, 1.0, 1.0)
+                                    b.unusable = false
+                                end
+                            end
+
+                            if desaturated and not b.desaturated then
+                                b.Texture:SetDesaturated(true)
+                                b.desaturated = true
+                            elseif b.desaturated and not desaturated then
+                                b.Texture:SetDesaturated(false)
+                                b.desaturated = false
+                            end
+                        end
+                    end
+
+                    self.rangeTimer = pulseRange
+                end
+
+                local postRange = debugprofilestop()
                 local finish = debugprofilestop()
 
-                if self.updateTime then
-                    local newTime = self.updateTime * self.updateCount + ( finish - init )
-                    self.updateCount = self.updateCount + 1
-                    self.updateTime = newTime / self.updateCount
+                if madeUpdate then
+                    if self.updateTime then
+                        local newTime = self.updateTime * self.updateCount + ( finish - init )
+                        self.updateCount = self.updateCount + 1
+                        self.updateTime = newTime / self.updateCount
 
-                    self.updateMax = max( self.updateMax, finish - init )
-                    self.postAlpha = max( self.postAlpha, postAlpha - init )
-                    self.postRecs = max( self.postRecs, postRecs - postAlpha )
-                    self.postGlow = max( self.postGlow, postGlow - postRecs )
-                    self.postRange = max( self.postRange, postRange - postGlow )
-                    self.postFlash = max( self.postFlash, postFlash - postRange )
-                    self.postTargets = max( self.postTargets, postTargets - postFlash )
-                    self.postDelay = max( self.postDelay, finish - postTargets )
-                else
-                    self.updateCount = 1
-                    self.updateTime = finish - init
-                    self.updateMax = finish - init
+                        self.updateMax = max( self.updateMax, finish - init )
+                        self.postRecs = max( self.postRecs, postRecs - init )
+                        self.postGlow = max( self.postGlow, postGlow - postRecs )
+                        self.postRange = max( self.postRange, postRange - postGlow )
+                        self.postFlash = max( self.postFlash, postFlash - postRange )
+                        self.postTargets = max( self.postTargets, postTargets - postFlash )
+                        self.postDelay = max( self.postDelay, finish - postTargets )
+                    else
+                        self.updateCount = 1
+                        self.updateTime = finish - init
+                        self.updateMax = finish - init
 
-                    self.postAlpha = postAlpha - init
-                    self.postRecs = postRecs - postAlpha
-                    self.postGlow = postGlow - postRecs
-                    self.postRange = postRange - postGlow
-                    self.postFlash = postFlash - postRange
-                    self.postTargets = postTargets - postFlash
-                    self.postDelay = finish - postTargets
+                        self.postRecs = postRecs - init
+                        self.postGlow = postGlow - postRecs
+                        self.postRange = postRange - postGlow
+                        self.postFlash = postFlash - postRange
+                        self.postTargets = postTargets - postFlash
+                        self.postDelay = finish - postTargets
+                    end
                 end
             end
         end
@@ -2018,7 +2021,7 @@ do
             d.Buttons[ i ] = self:CreateButton( id, i )
             d.Buttons[ i ]:Hide()
 
-            if conf.enabled and self:IsDisplayActive( id ) and i <= conf.numIcons then
+            if self:IsDisplayActive( id ) and i <= conf.numIcons then
                 if d.Recommendations[ i ] and d.Recommendations[ i ].actionName then
                     d.Buttons[ i ]:Show()
                 end
@@ -2231,10 +2234,15 @@ do
     Hekili.Engine.refreshTimer = 1
     Hekili.Engine.eventsTriggered = {}
 
+    local framesUsed = 0
+    local framesTimes = 0
+
     function Hekili.Engine:UpdatePerformance( wasted )
         -- Only track in combat.
         if not ( self.firstThreadCompleted and InCombatLockdown() ) then
             self.activeThreadTime = 0
+            framesUsed = 0
+            framesTimes = 0
             return
         end
 
@@ -2247,6 +2255,12 @@ do
             if self.threadUpdates then
                 local updates = self.threadUpdates.updates
                 local total = updates + 1
+
+                if framesUsed > 0 then
+                    local frameCount = ( self.threadUpdates.framesWorked or 0 ) + framesUsed
+                    self.threadUpdates.meanFrameTime = ( self.threadUpdates.meanFrameTime * self.threadUpdates.framesWorked + framesTimes ) / frameCount
+                    self.threadUpdates.framesWorked  = frameCount
+                end
 
                 if wasted then
                     -- Capture thrown away computation time due to forced resets.
@@ -2266,15 +2280,18 @@ do
                     self.threadUpdates.updates = total
                     self.threadUpdates.updatesPerSec = 1000 * total / ( now - self.threadUpdates.firstUpdate )
                 end
+
             else
                 self.threadUpdates = {
                     meanClockTime  = timeSince,
                     meanWorkTime   = self.activeThreadTime,
                     meanFrames     = self.activeThreadFrames or 1,
+                    meanFrameTime  = framesTimes > 0 and framesTimes or ( 1000 / GetFramerate() ),
                     meanWasted     = 0,
 
                     firstUpdate    = now,
                     updates        = 1,
+                    framesWorked   = framesUsed > 0 and framesUsed or 1,
                     updatesPerSec  = 1000 / ( self.activeThreadTime > 0 and self.activeThreadTime or 1 ),
 
                     peakClockTime  = timeSince,
@@ -2291,12 +2308,9 @@ do
     end
 
 
-    local frameSpans = {}
-
     Hekili.Engine:SetScript( "OnUpdate", function( self, elapsed )
         if not self.activeThread then
             self.refreshTimer = self.refreshTimer + elapsed
-            insert( frameSpans, elapsed )
         end
 
         if Hekili.DB.profile.enabled and not Hekili.Pause then
@@ -2305,16 +2319,12 @@ do
 
             local thread = self.activeThread
 
-            local firstDisplay = nil
-            local superUpdate = self.firstThreadCompleted and self.superUpdate
-
             -- If there's no thread, then see if we have a reason to update.
-            if superUpdate or ( not thread and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) ) then
-                if superUpdate and thread and coroutine.status( thread ) == "suspended" then
+            if ( not thread or coroutine.status( thread ) == "dead" ) and self.refreshTimer > ( self.criticalUpdate and self.combatRate or self.refreshRate ) then
+                --[[ if thread and coroutine.status( thread ) == "suspended" then
                     -- We're going to break the thread and start over from the current display in progress.
-                    firstDisplay = state.display
                     self:UpdatePerformance( true )
-                end
+                end ]]
 
                 self.criticalUpdate = false
                 self.superUpdate = false
@@ -2327,38 +2337,31 @@ do
                 self.activeThreadFrames = 0
 
                 if not self.firstThreadCompleted then
-                    Hekili.maxFrameTime = InCombatLockdown() and 10 or 25
+                    Hekili.maxFrameTime = 16.67
                 else
-                    if #frameSpans > 0 then
-                        local averageSpan = 0
-                        for _, span in ipairs( frameSpans ) do
-                            averageSpan = averageSpan + span
-                        end
-                        averageSpan = 1000 * averageSpan / #frameSpans
-                        wipe( frameSpans )
+                    local rate = GetFramerate()
+                    local spf = 1000 / ( rate > 0 and rate or 100 )
 
-                        Hekili.maxFrameTime = Clamp( 0.6 * averageSpan, 3, 20 ) -- Dynamically adjust to 60% of (seemingly) average frame rate between updates.
+                    if HekiliEngine.threadUpdates then
+                        Hekili.maxFrameTime = 0.9 * max( 7, min( 16.667, spf, 1.1 * HekiliEngine.threadUpdates.meanWorkTime / floor( HekiliEngine.threadUpdates.meanFrames ) ) )
                     else
-                        Hekili.maxFrameTime = Hekili.maxFrameTime or 10
+                        Hekili.maxFrameTime = 0.9 * max( 7, min( 16.667, spf ) )
                     end
                 end
-
-                --[[
-                elseif Hekili:GetActiveSpecOption( "throttleTime" ) then
-                    Hekili.maxFrameTime = Hekili:GetActiveSpecOption( "maxTime" ) or 15
-                else
-                    Hekili.maxFrameTime = 15
-                end ]]
 
                 thread = self.activeThread
             end
 
             -- If there's a thread, process for up to user preferred limits.
             if thread and coroutine.status( thread ) == "suspended" then
+                framesUsed  = framesUsed  + 1
+                framesTimes = framesTimes + elapsed * 1000
+
                 self.activeThreadFrames = self.activeThreadFrames + 1
                 Hekili.activeFrameStart = debugprofilestop()
 
-                local ok, err = coroutine.resume( thread, firstDisplay )
+                -- if HekiliEngine.threadUpdates then print( 1000 * elapsed, Hekili.maxFrameTime, HekiliEngine.threadUpdates.meanWorkTime, HekiliEngine.threadUpdates.meanFrames ) end
+                local ok, err = coroutine.resume( thread )
 
                 if not ok then
                     err = err .. "\n\n" .. debugstack( thread )
@@ -2378,22 +2381,19 @@ do
                 if coroutine.status( thread ) == "dead" or err then
                     self.activeThread = nil
 
-                    if Hekili:GetActiveSpecOption( "throttleRefresh" ) then
-                        self.refreshRate = Hekili:GetActiveSpecOption( "regularRefresh" )
-                        self.combatRate = Hekili:GetActiveSpecOption( "combatRefresh" )
-                    else
-                        self.refreshRate = 0.5
-                        self.combatRate = 0.2
-                    end
+                    self.refreshRate = 0.5
+                    self.combatRate = 0.2
 
                     if ok then
+                        if self.firstThreadCompleted and not self.DontProfile then self:UpdatePerformance() end
                         self.firstThreadCompleted = true
-                        self:UpdatePerformance()
                     end
                 end
 
                 if ok and err == "AutoSnapshot" then
+                    self.DontProfile = true
                     Hekili:MakeSnapshot( true )
+                    self.DontProfile = false
                 end
             end
         end
@@ -2408,10 +2408,11 @@ do
 
     function Hekili:ForceUpdate( event, super )
         self.Engine.criticalUpdate = true
-        if super then
-            self.Engine.superUpdate = true
+        if super then self.Engine.refreshTimer = self.Engine.refreshTimer + 0.1 end
+
+        if self.Engine.firstForce == 0 then
+            self.Engine.firstForce = GetTime()
         end
-        if self.Engine.firstForce == 0 then self.Engine.firstForce = GetTime() end
 
         if event then
             self.Engine.eventsTriggered[ event ] = true

@@ -1,3 +1,16 @@
+# RSA 5.31
+
+## Mage
+* Portal and Teleport announcements now support Dornogal in War Within
+## Priest
+* Added support for Power Word: Barrier in Cataclysm Classic
+
+## Warlock
+* Added a message option for Ritual of Summoning for when you have placed the summoning stone.
+
+# RSA 5.3.2
+* Remove Server Names option should function correctly now
+
 # RSA 5.3.1
 * Fixed broken spell link code
 

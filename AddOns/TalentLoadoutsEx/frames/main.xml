@@ -1,0 +1,505 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/	..\FrameXML\UI.xsd">
+
+	<Button name="TalentLoadoutExPanelButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Size x="63" y="22"/>
+		<Scripts>
+			<OnLoad>
+				self:SetEnabled(false);
+			</OnLoad>
+		</Scripts>
+	</Button>
+	<Button name="TalentLoadoutExPanelWideButtonTemplate" inherits="TalentLoadoutExPanelButtonTemplate" virtual="true">
+		<Size x="94" y="22"/>
+	</Button>
+	<Button name="TalentLoadoutExIconButtonTemplate" virtual="true">
+		<Size x="41" y="41"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="texture" setAllPoints="true"/>
+			</Layer>
+			<Layer level="OVERLAY" textureSubLevel="1">
+				<FontString parentKey="text" inherits="GameFontNormalOutline">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="2" y="2"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				if self.icon and self.name then
+					GameTooltip:SetOwner(self, "ANCHOR_NONE");
+					GameTooltip:ClearAllPoints();
+					GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
+					GameTooltip:ClearLines();
+					GameTooltip:AddLine(self.icon);
+					GameTooltip:AddLine(self.name, 1, 1, 1, 1);
+					GameTooltip:Show();
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+		<HighlightTexture inherits="TalentLoadoutExToggleTextureTemplate" alphaMode="ADD" file="Interface\BUTTONS\UI-Panel-MinimizeButton-Highlight">
+			<Size x="41" y="41"/>
+			<Anchors>
+				<Anchor point="CENTER"/>
+			</Anchors>	
+		</HighlightTexture>
+	</Button>
+	<Frame name="TalentLoadoutExMainFrameTemplate" inherits="InsetFrameTemplate" frameStrata="HIGH" virtual="true" enableMouse="true" hidden="true">
+		<Size x="200" y="881"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="0"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString parentKey="Title" inherits="Game18Font" text="Talent Loadout Ex">
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-10"/>
+					</Anchors>
+					<Color r="1" g="1" b="1"/>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="ImportButton" text="Import" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-35"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="ExportButton" text="Export" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ImportButton" relativePoint="TOPRIGHT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="PresetButton" text="Preset" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ExportButton" relativePoint="TOPRIGHT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="LoadButton" text="Load" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ImportButton" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="SaveButton" text="Save" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.LoadButton" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="EditButton" text="Edit" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.LoadButton" relativePoint="TOPRIGHT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="DeleteButton" text="Delete" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.EditButton" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="UpButton" text="Up" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.EditButton" relativePoint="TOPRIGHT"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="DownButton" text="Down" inherits="TalentLoadoutExPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.UpButton" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Frame parentKey="PvpFrame" inherits="InsetFrameTemplate">
+				<Size y="35"/>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="4" y="4"/>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-4" y="4"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString inherits="Game12Font" text="PvP Talents">
+							<Anchors>
+								<Anchor point="LEFT" x="35"/>
+							</Anchors>
+							<Color r="1" g="1" b="1"/>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<CheckButton parentKey="CheckButton" inherits="UICheckButtonTemplate" checked="true">
+						<Anchors>
+							<Anchor point="LEFT" relativePoint="LEFT" x="4"/>
+						</Anchors>
+					</CheckButton>
+				</Frames>
+			</Frame>
+			<Frame parentKey="ScrollBox" inherits="WowScrollBoxList">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.SaveButton" relativePoint="BOTTOMLEFT"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.PvpFrame" relativePoint="TOPRIGHT" x="-32" y="3"/>
+				</Anchors>
+			</Frame>
+			<EventFrame parentKey="ScrollBar" inherits="WowTrimScrollBar">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.ScrollBox" relativePoint="TOPRIGHT" x="3" y="0"/>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.ScrollBox" relativePoint="BOTTOMRIGHT" x="3" y="-1"/>
+				</Anchors>
+			</EventFrame>
+			<Frame parentKey="EditPopupFrame" mixin="TalentLoadoutExEditPopupMixin" inherits="IconSelectorPopupFrameTemplate" enableMouse="true" hidden="true" frameLevel="50">
+				<KeyValues>
+					<KeyValue key="editBoxHeaderText" value="Enter Config Name" type="string"/>
+				</KeyValues>
+				<Frames>
+					<Frame parentKey="TalentTextFrame" frameStrata="HIGH" enableMouse="true">
+						<Size y="60"/>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="1" y="-15"/>
+							<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" y="-15"/>
+						</Anchors>
+						<Frames>
+							<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+							<Frame parentKey="Main" inherits="InsetFrameTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" x="20" y="-15"/>
+									<Anchor point="BOTTOMRIGHT" x="-20" y="15"/>
+								</Anchors>
+								<Frames>
+									<EditBox parentKey="EditBox" letters="999999" multiLine="false" autoFocus="false" enableMouse="true">
+										<Anchors>
+											<Anchor point="TOPLEFT" x="10" y="-10"/>
+											<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
+										</Anchors>
+										<FontString inherits="ChatFontNormal"/>
+										<Layers>
+											<Layer level="OVERLAY">
+												<FontString parentKey="Watermark" font="ChatFontNormal" text="Paste loadout code here">
+													<Color r="1" g="1" b="1" a="0.5"/>
+													<Anchors>
+														<Anchor point="LEFT" x="5"/>
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnTextChanged>
+												local text = self:GetText();
+												self.Watermark:SetShown(not (text and #text > 0));
+											</OnTextChanged>
+											<OnEnterPressed>
+												local okayButton = self:GetParent():GetParent():GetParent().BorderBox.OkayButton;
+												if okayButton:IsEnabled() then
+													okayButton:Click("LeftButton");
+												end
+											</OnEnterPressed>
+											<OnEscapePressed>
+												self:GetParent():GetParent():GetParent():Hide();
+											</OnEscapePressed>
+										</Scripts>
+									</EditBox>
+								</Frames>
+							</Frame>
+						</Frames>
+					</Frame>
+					<Frame parentKey="IconListFrame" frameStrata="HIGH" enableMouse="true">
+						<Size y="30"/>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" x="1" y="15"/>
+							<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" y="15"/>
+						</Anchors>
+						<Frames>
+							<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+						</Frames>
+					</Frame>
+				</Frames>
+			</Frame>
+			<Frame parentKey="TextPopupFrame" enableMouse="true" hidden="true" frameLevel="50">
+				<Size>
+					<AbsDimension x="500" y="400"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" y="-21"/>
+				</Anchors>
+				<Frames>
+					<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+					<Frame parentKey="Header" inherits="DialogHeaderTemplate"/>
+					<Frame parentKey="Main" inherits="InsetFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="10" y="-10"/>
+							<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
+						</Anchors>
+						<Frames>
+							<ScrollFrame parentKey="ScrollFrame" inherits="UIPanelScrollFrameTemplate" toplevel="true">
+								<Anchors>
+									<Anchor point="TOPLEFT">
+										<Offset>
+											<AbsDimension x="30" y="-30"/>
+										</Offset>
+									</Anchor>
+									<Anchor point="BOTTOMRIGHT">
+										<Offset>
+											<AbsDimension x="-30" y="50"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Size>
+									<AbsDimension x="455" y="330"/>
+								</Size>
+								<Layers>
+									<Layer level="BACKGROUND">
+										<Texture parentKey="TopLeftTex" file="Interface\Common\Common-Input-Border-TL">
+											<Size x="8" y="8"/>
+											<Anchors>
+												<Anchor point="TOPLEFT" x="-5" y="5"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="TopRightTex" file="Interface\Common\Common-Input-Border-TR">
+											<Size x="8" y="8"/>
+											<Anchors>
+												<Anchor point="TOPRIGHT" x="5" y="5"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="TopTex" file="Interface\Common\Common-Input-Border-T">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.TopLeftTex" relativePoint="TOPRIGHT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.TopRightTex" relativePoint="BOTTOMLEFT"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="BottomLeftTex" file="Interface\Common\Common-Input-Border-BL">
+											<Size x="8" y="8"/>
+											<Anchors>
+												<Anchor point="BOTTOMLEFT" x="-5" y="-5"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="BottomRightTex" file="Interface\Common\Common-Input-Border-BR">
+											<Size x="8" y="8"/>
+											<Anchors>
+												<Anchor point="BOTTOMRIGHT" x="5" y="-5"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="BottomTex" file="Interface\Common\Common-Input-Border-B">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.BottomLeftTex" relativePoint="TOPRIGHT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomRightTex" relativePoint="BOTTOMLEFT"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="LeftTex" file="Interface\Common\Common-Input-Border-L">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.TopLeftTex" relativePoint="BOTTOMLEFT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomLeftTex" relativePoint="TOPRIGHT"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="RightTex" file="Interface\Common\Common-Input-Border-R">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.TopRightTex" relativePoint="BOTTOMLEFT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.BottomRightTex" relativePoint="TOPRIGHT"/>
+											</Anchors>
+										</Texture>
+										<Texture parentKey="MiddleTex" file="Interface\Common\Common-Input-Border-M">
+											<Anchors>
+												<Anchor point="TOPLEFT" relativeKey="$parent.LeftTex" relativePoint="TOPRIGHT"/>
+												<Anchor point="BOTTOMRIGHT" relativeKey="$parent.RightTex" relativePoint="BOTTOMLEFT"/>
+											</Anchors>
+										</Texture>
+									</Layer>
+								</Layers>
+								<ScrollChild>
+									<EditBox parentKey="ScrollText" letters="999999" multiLine="true" autoFocus="true" enableMouse="true">
+										<Size>
+											<AbsDimension x="450" y="344"/>
+										</Size>
+										<FontString inherits="ChatFontNormal"/>
+										<Scripts>
+											<OnEscapePressed>
+												self:GetParent():GetParent():GetParent():Hide();
+											</OnEscapePressed>
+										</Scripts>
+									</EditBox>
+								</ScrollChild>
+							</ScrollFrame>
+							<Button parentKey="ImportButton" text="Import" inherits="TalentLoadoutExPanelWideButtonTemplate" hidden="true">
+								<Anchors>
+									<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="-5" y="10"/>
+								</Anchors>
+							</Button>
+							<Button parentKey="CancelButton" text="Cancel" inherits="TalentLoadoutExPanelWideButtonTemplate" hidden="true">
+								<Anchors>
+									<Anchor point="BOTTOMLEFT" relativePoint="BOTTOM" x="5" y="10"/>
+								</Anchors>
+								<Scripts>
+									<OnClick>
+										self:GetParent():GetParent():Hide();
+									</OnClick>
+								</Scripts>
+							</Button>
+							<Button parentKey="CloseButton" text="Close" inherits="TalentLoadoutExPanelWideButtonTemplate" hidden="true">
+								<Anchors>
+									<Anchor point="BOTTOM" relativePoint="BOTTOM" x="0" y="10"/>
+								</Anchors>
+								<Scripts>
+									<OnClick>
+										self:GetParent():GetParent():Hide();
+									</OnClick>
+								</Scripts>
+							</Button>
+						</Frames>
+					</Frame>	
+				</Frames>
+				<Scripts>
+					<OnShow>
+						PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN);
+					</OnShow>
+					<OnHide>
+						PlaySound(SOUNDKIT.IG_CHARACTER_INFO_CLOSE);
+					</OnHide>
+				</Scripts>
+			</Frame>
+			<Frame parentKey="PresetPopupFrame" enableMouse="true" hidden="true" frameLevel="50">
+				<Size>
+					<AbsDimension x="350" y="200"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" y="-21"/>
+				</Anchors>
+				<Frames>
+					<Frame parentKey="Border" inherits="DialogBorderTemplate"/>
+					<Frame parentKey="Header" inherits="DialogHeaderTemplate">
+						<KeyValues>
+							<KeyValue key="textString" value="Preset Data Option" type="string"/>
+						</KeyValues>
+					</Frame>
+					<Frame parentKey="Main" inherits="InsetFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="10" y="-10"/>
+							<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString parentKey="AddonDropDownText" font="ChatFontNormal" text="Source Addon:">
+									<Color r="1" g="1" b="1" a="1"/>
+									<Anchors>
+										<Anchor point="TOPLEFT" x="10" y="-20"/>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Frames>
+							<DropdownButton parentKey="AddonDropDownMenu" inherits="WowStyle1DropdownTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" x="10" y="-40"/>
+									<Anchor point="TOPRIGHT" x="-10" y="-40"/>
+								</Anchors>
+							</DropdownButton>
+							<Frame parentKey="AddonConfigFrame0" hidden="true">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.AddonDropDownMenu" relativePoint="BOTTOMLEFT"/>
+									<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
+								</Anchors>
+								<Layers>
+									<Layer level="ARTWORK">
+										<FontString font="ChatFontNormal" text="This addon is not loaded.">
+											<Color r="1" g="1" b="1" a="1"/>
+											<Anchors>
+												<Anchor point="TOPLEFT" x="5" y="-5"/>
+											</Anchors>
+										</FontString>
+									</Layer>
+								</Layers>
+							</Frame>
+							<Frame parentKey="AddonConfigFrame1" hidden="true">
+								<!-- PeaversTalentsData -->
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeKey="$parent.AddonDropDownMenu" relativePoint="BOTTOMLEFT"/>
+									<Anchor point="BOTTOMRIGHT" x="-10" y="10"/>
+								</Anchors>
+								<Frames>
+									<Frame parentKey="PvpTextFrame">
+										<Size x="30" y="20"/>
+										<Anchors>
+											<Anchor point="TOPLEFT" x="5" y="-10"/>
+											<Anchor point="TOPLEFT" x="5" y="-10"/>
+										</Anchors>
+										<Layers>
+											<Layer level="ARTWORK">
+												<FontString parentKey="PvpText" font="ChatFontNormal" text="This addon doesn't support PvP Talent.">
+													<Color r="1" g="1" b="1" a="1"/>
+													<Anchors>
+														<Anchor point="TOPLEFT"/>
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+									</Frame>
+									<Frame parentKey="ModeOptionFrame">
+										<Size x="30" y="25"/>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.PvpTextFrame" relativePoint="BOTTOMLEFT" y="-5"/>
+											<Anchor point="TOPRIGHT" relativeKey="$parent.PvpTextFrame" relativePoint="BOTTOMRIGHT" y="-5"/>
+										</Anchors>
+										<Layers>
+											<Layer level="ARTWORK">
+												<FontString parentKey="OptionText" font="ChatFontNormal" text="Mode: ">
+													<Color r="1" g="1" b="1" a="1"/>
+													<Anchors>
+														<Anchor point="LEFT"/>
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Frames>
+											<DropdownButton parentKey="DropDownMenu" inherits="WowStyle1DropdownTemplate">
+												<Size x="100" y="25"/>
+												<Anchors>
+													<Anchor point="LEFT" x="135"/>
+												</Anchors>
+											</DropdownButton>
+										</Frames>
+									</Frame>
+									<Frame parentKey="CombineOptionFrame">
+										<Size x="30" y="32"/>
+										<Anchors>
+											<Anchor point="TOPLEFT" relativeKey="$parent.ModeOptionFrame" relativePoint="BOTTOMLEFT" y="-5"/>
+											<Anchor point="TOPRIGHT" relativeKey="$parent.ModeOptionFrame" relativePoint="BOTTOMRIGHT" y="-5"/>
+										</Anchors>
+										<Layers>
+											<Layer level="ARTWORK">
+												<FontString parentKey="OptionText" font="ChatFontNormal" text="Combine Groups: ">
+													<Color r="1" g="1" b="1" a="1"/>
+													<Anchors>
+														<Anchor point="LEFT"/>
+													</Anchors>
+												</FontString>
+											</Layer>
+										</Layers>
+										<Frames>
+											<CheckButton parentKey="CheckButton" inherits="UICheckButtonTemplate" checked="true">
+												<Anchors>
+													<Anchor point="LEFT" x="130"/>
+												</Anchors>
+											</CheckButton>
+										</Frames>
+									</Frame>
+								</Frames>
+							</Frame>
+							<Frame parentKey="AddonConfigFrame2" hidden="true"/>
+						</Frames>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnShow>
+						PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN);
+					</OnShow>
+					<OnHide>
+						PlaySound(SOUNDKIT.IG_CHARACTER_INFO_CLOSE);
+					</OnHide>
+					<OnKeyDown>
+						if key == "ESCAPE" then
+							self:Hide();
+						end
+					</OnKeyDown>
+				</Scripts>
+			</Frame>
+		</Frames>
+	</Frame>
+</Ui>

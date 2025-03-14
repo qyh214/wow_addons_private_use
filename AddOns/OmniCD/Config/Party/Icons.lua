@@ -93,7 +93,7 @@ local icons = {
 					name = L["Border Color"],
 					order = 1,
 					type = "color",
-					dialogControl = "ColorPicker-OmniCD",
+					dialogControl = "ColorPicker-OmniCDC",
 					get = function(info)
 						local db = E.profile.Party[ info[2] ].icons
 						return db.borderColor.r, db.borderColor.g, db.borderColor.b
@@ -106,14 +106,6 @@ local icons = {
 						P:Refresh()
 					end,
 				},
-				--[[
-				borderPixels = {
-					name = L["Border Thickness"],
-					order = 2,
-					type = "select",
-					values = {1,2,3,4,5},
-				},
-				]]
 			}
 		},
 		miscSettings = {
@@ -164,28 +156,25 @@ local icons = {
 }
 
 local sliderTimer
-local function UpdatePixelObjects(noDelay)
-	P:UpdatePositionValues()
+local function UpdatePixelObjects()
 	for _, info in pairs(P.groupInfo) do
 		local frame = info.bar
-		P:SetBarBackdrop(frame)
-		P:SetIconLayout(frame)
+		frame:SetBarBackdrop()
+		frame:UpdateLayout()
 	end
-	if not noDelay then
-		sliderTimer = nil
-	end
+	sliderTimer = nil
 end
 
-function P:ConfigSize(noDelay)
+function P:ConfigSize()
+	self:UpdatePositionValues()
 	for _, info in pairs(self.groupInfo) do
 		local frame = info.bar
-		self:SetIconScale(frame)
+		frame:SetContainerSize()
+		frame:SetContainerOffset()
 	end
 	if E.db.icons.displayBorder then
-		if noDelay then
-			UpdatePixelObjects(noDelay)
-		elseif not sliderTimer then
-			sliderTimer = E.TimerAfter(0.5, UpdatePixelObjects)
+		if not sliderTimer then
+			sliderTimer = C_Timer.After(0.3, UpdatePixelObjects)
 		end
 	end
 end

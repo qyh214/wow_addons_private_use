@@ -14,6 +14,7 @@ ns.BlizzAreaPoisInfo = {
     2071, -- Area 52
     2317, -- Dalaran City
     2837, -- Tonlongstepps PvE Vendor
+    5056, -- The Dark Portal Blasted Lands
     5881, -- The Cape of Stranglethorn, Boat to Ratschet
     5882, -- Northern Barrens, Boat to Booty Bay
     7945, -- Ship Icon Gilneas to Bel Ameth
@@ -22,6 +23,16 @@ ns.BlizzAreaPoisInfo = {
     7959, -- Portal to Dalaran from Dustwallow - TWW Pre Event
     7960, -- Portal to Dalaran from Dragonblight - TWW Pre Event
     7961, -- Portal to Dalaran from Searing Gorge - TWW Pre Event
+
+    8001, -- Portal from Dornogal to Azj-Kahet
+    8002, -- Portal from Azj-Kahet to Dornogal
+    8171, -- Timeways Portal in Dornogal
+    8247, -- Mole Machine from Deeps to Siren Isle
+    8248, -- Zeppelin to Serin Isle from Isle of Dorn
+    8249, -- Zeppelin to Isle of Dorn from Siren Isle
+    8250, -- Mole Machine from Siren Isle to Deeps
+    8230, -- Portal from Dornogal to Undermine
+    8231, -- Portal from Undermine to Dornogal
 
     -- City Alliance
     8, -- Ironforge Icon
@@ -66,6 +77,12 @@ ns.BlizzAreaPoisInfo = {
     7339, -- Ship Icon The Waking Shores to OG
 }
 
-ns.BlizzLinkedUiMapID = {
-    2214, -- Deep Entrance Dornogal
+ns.BlizzAreaPoisInfoZidormi = {
+    -- Zidormi
+    5760, -- Darkshore
+    5561, -- Silithus
+    5757, -- Tirisfal
+    6548, -- Uldum
+    5989, -- Arathi Highlands
+    5562, -- Blasted Lands
 }

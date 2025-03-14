@@ -1,13 +1,11 @@
 # LittleWigs
 
-## [v11.0.23](https://github.com/BigWigsMods/LittleWigs/tree/v11.0.23) (2024-09-10)
-[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.0.22...v11.0.23) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
+## [v11.1.13](https://github.com/BigWigsMods/LittleWigs/tree/v11.1.13) (2025-03-12)
+[Full Changelog](https://github.com/BigWigsMods/LittleWigs/compare/v11.1.12...v11.1.13) [Previous Releases](https://github.com/BigWigsMods/LittleWigs/releases)
 
-- Delves/ZekvirsLair/Zekvir: Add boss module (#1146)  
-- toc updates  
-- bump toc  
-- Update frFR (#1145)  
-- Update frFR (#1142)  
-- Update zhTW  
-- Delves/Trash/Kobyss: Additional auto-gossip id  
-- Delves: Localization  
+- Update koKR (#1301)  
+- BfA/TheMotherlode/Rixxa: Update options  
+- BfA/TheMotherlode/Rixxa: Propellant Blast targets  
+- BfA/TheMotherlode/Razdunk: Micro Missiles timer update  
+- WarWithin/DarkflameCleft/OlWaxbeard: Underhanded Track-tics updates  
+- Delves/Trash/UnderpinRares: Forward Charge timer update  

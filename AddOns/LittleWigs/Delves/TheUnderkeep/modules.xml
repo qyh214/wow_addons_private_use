@@ -3,8 +3,8 @@
 
 <Script file="ResearcherVenkex.lua"/>
 <Script file="ResearcherXikvik.lua"/>
+<Script file="TorqueAndSprok.lua"/>
 
-<Include file="Locales\locales.xml"/>
 <Include file="Options\options.xml"/>
 
 </Ui>
