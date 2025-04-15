@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Deathbringer Saurfang", 631, 1628)
 if not mod then return end
 mod:RegisterEnableMob(37813, 37200, 37187) -- Deathbringer Saurfang, Muradin Bronzebeard, High Overlord Saurfang
-mod:SetEncounterID(mod:Classic() and 848 or 1096)
+mod:SetEncounterID(BigWigsLoader.isWrath and 848 or 1096)
 --mod:SetRespawnTime(30) -- Instantly respawns
 
 --------------------------------------------------------------------------------

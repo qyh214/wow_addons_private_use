@@ -170,6 +170,8 @@ ns.defaults = {
       ZoneChanged = true,
       ZoneChangedDetail = false,
       TooltipInformations = true,
+      DeleteIcons = false,
+      CreateAndCopyLinks = true,
       RestoreAllIcons = false,
       RestoreZoneDeletedIcons = false,
       RestoreContinentDeletedIcons = false,
@@ -687,5 +689,4 @@ ns.defaults = {
           colorA_Reduce = 0.65,
       }
   },
-
 }

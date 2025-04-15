@@ -379,6 +379,13 @@ function S:WeakAurasOptions()
 	if LAAC and LAAC.enable then
 		hooksecurefunc(LAAC, "enable", SkinLibAPIAutoComplete)
 	end
+
+	local LibDD, LibMinor = LibStub("LibUIDropDownMenu-4.0", true)
+	if LibDD and (not LibDD.oldminor or LibDD.oldminor < LibMinor) then
+		hooksecurefunc(LibDD, "ToggleDropDownMenu", function(_, level)
+			S:SkinDropDownMenu("L_DropDownList", level)
+		end)
+	end
 end
 
 function S:WeakAurasTemplates()
@@ -555,13 +562,17 @@ function S:WeakAurasSnippetButton(widget)
 	widget.renameEditBox.__bg:SetPoint("BOTTOMRIGHT", 0, -2)
 end
 
-function S:WeakAurasTreeGroup(widget)
-	S:Ace3_Frame(widget)
-	widget.treeframe:GetChildren():HideBackdrop()
+function S:WeakAurasScrollArea(widget)
+	B.ReskinScroll(widget.scrollbar)
 end
 
 function S:WA_LSM30_StatusbarAtlas(widget)
 	S:Ace3_LibSharedMedia(widget)
+end
+
+function S:WeakAurasTreeGroup(widget)
+	S:Ace3_Frame(widget)
+	widget.treeframe:GetChildren():HideBackdrop()
 end
 
 S:RegisterSkin("WeakAuras", S.WeakAuras)
@@ -577,5 +588,6 @@ S:RegisterAceGUIWidget("WeakAurasIconButton")
 S:RegisterAceGUIWidget("WeakAurasTextureButton")
 S:RegisterAceGUIWidget("WeakAurasSpinBox")
 S:RegisterAceGUIWidget("WeakAurasSnippetButton")
+S:RegisterAceGUIWidget("WeakAurasScrollArea")
 S:RegisterAceGUIWidget("WA_LSM30_StatusbarAtlas")
 S:RegisterAceGUIContainer("WeakAurasTreeGroup")

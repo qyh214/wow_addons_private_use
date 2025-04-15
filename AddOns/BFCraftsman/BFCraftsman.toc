@@ -1,0 +1,28 @@
+## Interface: 110100,110105
+## Title: BFCraftsman
+## Title-zhCN: 大脚工匠
+## Version: r9
+## Author: enderneko (BigFootTeam)
+## Dependencies: AbstractFramework
+## SavedVariables: BFC_DB
+## AddonCompartmentFunc: BFC_OnAddonCompartmentClick
+## IconTexture: Interface\AddOns\BFCraftsman\BFC
+
+## X-Curse-Project-ID: 1229177
+## X-Wago-ID: x61z0QK1
+
+Locales\LoadLocales.xml
+
+Init.lua
+Comm.lua
+Professions.lua
+Recipes.lua
+
+Frames\MainFrame.lua
+Frames\BrowseFrame.lua
+Frames\PublishFrame.lua
+Frames\ConfigFrame.lua
+Frames\DetailFrame.lua
+Frames\OrderFormListFrame.lua
+Frames\OrderFormDetailFrame.lua
+Frames\AboutFrame.lua

@@ -64,17 +64,13 @@ do
 		else
 			_t.link = GetSpellLink(id);
 		end
-		-- track retries on caching mount info... some mounts just never return info
-		local retries = _t.retries or 0;
-		retries = retries + 1;
-		if retries > 20 then
+		if not _t.link and not t.CanRetry then
 			local name = (itemID and ("Item #%d"):format(itemID)) or
 						(id and ("Spell #%d"):format(id));
 			_t.name = _t.name or name;
 			_t.icon = _t.icon or 134400;	-- question mark
 			_t.link = GetSpellLink(id);
 		end
-		_t.retries = retries;
 		if field then return _t[field]; end
 	end
 	local function default_costCollectibles(t)
@@ -122,9 +118,6 @@ do
 		end,
 		costCollectibles = function(t)
 			return cache.GetCachedField(t, "costCollectibles", default_costCollectibles);
-		end,
-		f = function(t)
-			return 100;
 		end,
 		collectibleAsCost = app.CollectibleAsCost,
 		collectible = function(t) return app.Settings.Collectibles[SETTING]; end,

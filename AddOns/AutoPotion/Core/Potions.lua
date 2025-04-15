@@ -19,6 +19,7 @@ ham.fleetingCavedwellersDelightR3 = ham.Item.new(212950, "Fleeting Cavedweller's
 ham.fleetingCavedwellersDelightR2 = ham.Item.new(212949, "Fleeting Cavedweller's Delight")
 ham.fleetingCavedwellersDelightR1 = ham.Item.new(212948, "Fleeting Cavedweller's Delight")
 ham.thirdWind = ham.Item.new(138486, "\"Third Wind\" Potion")
+ham.survivalistsHealingPotion = ham.Item.new(224021, "Survivalist's Healing Potion")
 ham.witheringDreamsR3 = ham.Item.new(207041, "Potion of Withering Dreams")
 ham.witheringDreamsR2 = ham.Item.new(207040, "Potion of Withering Dreams")
 ham.witheringDreamsR1 = ham.Item.new(207039, "Potion of Withering Dreams")
@@ -126,6 +127,7 @@ function ham.getPots()
       ham.fleetingAlgariHealingPotionR1,
       ham.algariHealingPotionR1,
       ham.thirdWind,
+      ham.survivalistsHealingPotion,
       ham.witheringDreamsR3,
       ham.witheringDreamsR2,
       ham.witheringDreamsR1,

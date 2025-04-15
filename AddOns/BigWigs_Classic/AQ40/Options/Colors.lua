@@ -24,6 +24,7 @@ BigWigs:AddColors("Fankriss the Unyielding", {
 	[720] = {"blue","red"},
 	[25646] = {"blue","purple"},
 	[25832] = "cyan",
+	[1215421] = "blue",
 })
 
 BigWigs:AddColors("Viscidus", {

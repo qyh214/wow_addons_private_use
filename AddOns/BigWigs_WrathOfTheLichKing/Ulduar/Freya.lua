@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Freya", 603, 1646)
 if not mod then return end
 mod:RegisterEnableMob(32906)
-mod:SetEncounterID(mod:Classic() and 753 or 1133)
+mod:SetEncounterID(BigWigsLoader.isWrath and 753 or 1133)
 mod:SetRespawnTime(34)
 
 --------------------------------------------------------------------------------

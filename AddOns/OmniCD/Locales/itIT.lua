@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "itIT")
+if not L then return end
 
-L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = "%d: spellID. %d-%d: spellID-talentID (Segna l'incantesimo se è selezionato il talento)."
 L[ [=[%d: spellID.
@@ -25,11 +25,11 @@ L["Add Spells"] = "Aggiungi incantesimi"
 L["Add to Alerts"] = "Aggiungi agli avvisi"
 L["Addons with raid frame scaling will also cause the icons to scale."] = "Anche gli Addons con ridimensionamento del frame raid causeranno il ridimensionamento delle icone."
 L[ [=[Adjust value until the truncate symbol [...] disappears.
-|cffff20200: Disable option]=] ] = "Regolare il valore fino a quando il simbolo di troncamento [...] scompare.	|cffff20200: disabilita l'opzione"
+|cffff20200: Disable option]=] ] = "Regolare il valore fino a quando il simbolo di troncamento [...] scompare.  |cffff20200: disabilita l'opzione"
 L[ [=[Adjust value until the truncate symbol [...] disappears.
-|cffff20200: Disable option]=] ] = "Regolare il valore fino a quando il simbolo di troncamento [...] scompare.	|cffff20200: disabilita l'opzione"
+|cffff20200: Disable option]=] ] = "Regolare il valore fino a quando il simbolo di troncamento [...] scompare.  |cffff20200: disabilita l'opzione"
 L["Alerts"] = "Avvisi"
-L["All user set values will be lost. Do you want to proceed?"] = "Tutti i valori impostati dall'utente andranno persi.	Vuoi procedere?"
+L["All user set values will be lost. Do you want to proceed?"] = "Tutti i valori impostati dall'utente andranno persi.  Vuoi procedere?"
 L["Always attach to Blizzard frames. By default, bars attach to whichever frame is visible, and if both are visible UF addon take precedence over Blizzard"] = "Allega sempre ai frame Blizzard.  Per impostazione predefinita, le barre si attaccano a qualunque frame sia visibile e, se entrambi sono visibili, l'Addon UF ha la precedenza su Blizzard"
 L["Always Bottom"] = "Sempre in basso"
 L["Always Show"] = "Mostra Sempre"

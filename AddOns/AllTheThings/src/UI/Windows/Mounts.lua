@@ -47,10 +47,10 @@ app:CreateWindow("Mounts", {
 							headers[header.headerID] = nil;
 							tremove(g, i);
 						else
-							header.SortType = "name";
+							header.SortType = "text";
 						end
 					end
-					data.SortType = "name";
+					data.SortType = "text";
 				end
 			end
 		};

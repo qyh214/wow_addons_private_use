@@ -27,9 +27,14 @@ local buttonDiscord = child:CreateButton(
 buttonDiscord:SetPoint("TOPLEFT", buttonCurseForge, "TOPRIGHT", 4, 0)
 buttonDiscord.copypasta = "discord.gg/allthethings";
 
+local buttonGitHub = child:CreateButton(
+{ text = L.GITHUB_BUTTON_LABEL, tooltip = L.GITHUB_BUTTON_TOOLTIP, }, SocialButtonEvents)
+buttonGitHub:SetPoint("TOPLEFT", buttonDiscord, "TOPRIGHT", 4, 0)
+buttonGitHub.copypasta = "https://github.com/ATTWoWAddon/AllTheThings";
+
 local buttonMerch = child:CreateButton(
 { text = L.MERCH_BUTTON_LABEL, tooltip = L.MERCH_BUTTON_TOOLTIP, }, SocialButtonEvents)
-buttonMerch:SetPoint("TOPLEFT", buttonDiscord, "TOPRIGHT", 4, 0)
+buttonMerch:SetPoint("TOPLEFT", buttonGitHub, "TOPRIGHT", 4, 0)
 buttonMerch.copypasta = "designbyhumans.com/shop/allthethings";
 
 local buttonPatreon = child:CreateButton(

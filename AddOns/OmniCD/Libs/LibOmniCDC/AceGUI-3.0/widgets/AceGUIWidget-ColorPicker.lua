@@ -189,6 +189,8 @@ local function Constructor()
 	frame:SetScript("OnLeave", Control_OnLeave)
 	frame:SetScript("OnClick", ColorSwatch_OnClick)
 
+	frame:SetHitRectInsets(0, 10, 0, 0) -- s a (avoid misclicking)
+
 	local colorSwatch = frame:CreateTexture(nil, "OVERLAY")
 	--[[ s r
 	colorSwatch:SetWidth(19)

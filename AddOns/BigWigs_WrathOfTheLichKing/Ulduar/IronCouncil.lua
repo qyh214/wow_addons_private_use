@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("The Iron Council", 603, 1641)
 if not mod then return end
 mod:RegisterEnableMob(32867, 32927, 32857) -- Steelbreaker, Runemaster Molgeim, Stormcaller Brundir
-mod:SetEncounterID(mod:Classic() and 748 or 1140)
+mod:SetEncounterID(BigWigsLoader.isWrath and 748 or 1140)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------

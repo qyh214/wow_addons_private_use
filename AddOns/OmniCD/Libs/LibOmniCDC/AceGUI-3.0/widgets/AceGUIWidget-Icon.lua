@@ -169,7 +169,7 @@ local function Constructor()
 	]]
 	local image, imagebg
 	if USE_ICON_BACKDROP then
-		imagebg = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		imagebg = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 		imagebg:SetHeight(64)
 		imagebg:SetWidth(64)
 		imagebg:SetPoint("TOP", 0, -5)

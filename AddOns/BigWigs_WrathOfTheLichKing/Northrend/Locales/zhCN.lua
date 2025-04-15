@@ -20,7 +20,7 @@ end
 L = BigWigs:NewBossLocale("Emalon the Storm Watcher", "zhCN")
 if L then
 	L.overcharge_message = "风暴爪牙 - 能量超载！"
-	L.overcharge_bar = "<爆炸>"
+	L.overcharge_bar = "爆炸"
 
 	L.custom_on_overcharge_mark = "能量超载标记"
 	L.custom_on_overcharge_mark_desc = "使用 {rt8} 标记能量超载的风暴爪牙，需要权限。"
@@ -28,8 +28,8 @@ end
 
 L = BigWigs:NewBossLocale("Koralon the Flame Watcher", "zhCN")
 if L then
-	L.breath_bar = "<灼热吐息：%d>"
-	L.breath_message = "即將 灼热吐息：>%d<！"
+	L.breath_bar = "灼热吐息：%d"
+	L.breath_message = "即將 灼热吐息：%d ！"
 end
 
 L = BigWigs:NewBossLocale("Malygos", "zhCN")
@@ -41,13 +41,13 @@ if L then
 
 	L.sparkbuff = "玛里苟斯获得能量火花"
 	L.sparkbuff_desc = "当玛里苟斯获得能量火花时发出警报。"
-	L.sparkbuff_message = "玛里苟斯：>能量火花<！"
+	L.sparkbuff_message = "玛里苟斯：能量火花！"
 
 	L.vortex = "漩涡"
 	L.vortex_desc = "当施放漩涡时发出警报及显示计时条。"
 	L.vortex_message = "漩涡！"
 	L.vortex_warning = "约5秒后，可能漩涡！"
-	L.vortex_next = "<漩涡 冷却>"
+	L.vortex_next = "漩涡 冷却"
 
 	L.breath = "深呼吸"
 	L.breath_desc = "当施放深呼吸时发出警报。"
@@ -56,7 +56,7 @@ if L then
 
 	L.surge = "能量涌动"
 	L.surge_desc = "当玩家中了能量涌动时发出警报。"
-	L.surge_you = ">你< 能量涌动！"
+	L.surge_you = "你 能量涌动！"
 	L.surge_trigger = "%s在注视你！"
 
 	L.phase = "阶段"
@@ -91,8 +91,8 @@ end
 
 L = BigWigs:NewBossLocale("Toravon the Ice Watcher", "zhCN")
 if L then
-	L.whiteout_bar = "霜至：>%d<！"
-	L.whiteout_message = "即将 霜至：>%d<！"
+	L.whiteout_bar = "霜至：%d ！"
+	L.whiteout_message = "即将 霜至：%d ！"
 
 	L.freeze_message = "大地冰封！"
 end

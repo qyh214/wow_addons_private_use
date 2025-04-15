@@ -1,5 +1,5 @@
-## Interface: 110100
-## Version: 2.7.0
+## Interface: 110100, 110105
+## Version: 2.7.8
 ## Title: HandyNotes: |cffff0000Map|r|cff00ccffNotes|r
 ## Title-esES: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r
 ## Title-esMX: HandyNotes: |cffff0000Mapa |r|cff00ccffNotas|r

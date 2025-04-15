@@ -1,5 +1,5 @@
 --
--- RaiderIO Client Data. Generated on Fri Mar 14 2025 10:36:32 GMT+0000 (Coordinated Universal Time)
+-- RaiderIO Client Data. Generated on Tue Apr 15 2025 10:02:41 GMT+0000 (Coordinated Universal Time)
 --
 local _, ns = ...
 ns.CLIENT_CHARACTERS = {

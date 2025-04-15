@@ -164,11 +164,13 @@ end
 function mod:ShieldWall(args)
 	local npcId = self:MobId(args.destGUID)
 	local msg = CL.other:format(args.spellName, L[npcId])
-	self:Message(args.spellId, "yellow", msg)
 	self:Bar(args.spellId, 20, msg)
 	local unit = self:GetUnitIdByGUID(args.destGUID)
-	if unit and self:UnitWithinRange(unit, 35) or args.destGUID == self:UnitGUID("target") then
+	if (unit and self:UnitWithinRange(unit, 35)) or args.destGUID == self:UnitGUID("target") then
+		self:Message(args.spellId, "yellow", msg)
 		self:PlaySound(args.spellId, "long")
+	else
+		self:Message(args.spellId, "yellow", msg, nil, true) -- Disable emphasize when not nearby
 	end
 end
 

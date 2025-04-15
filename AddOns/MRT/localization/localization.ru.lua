@@ -302,7 +302,7 @@ L.RaidCheckOwnOilItem = "Использовать свой предмет для
 L.RaidCheckOwnOilItemTip = "Введите ID предмета, настройка персональная для каждого персонажа"
 L.RaidCheckOnlyUnlimRune = "Использовать только бесконечную руну"
 L.RaidCheckMinRank = "Минимальный ранг"
-
+L.RaidCheckSortByName = "Сортировка по имени"
 
 L.marksbarstart = "Очистить"
 L.marksbardel = "Удалить"

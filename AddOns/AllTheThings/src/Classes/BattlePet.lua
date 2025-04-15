@@ -153,9 +153,6 @@ app.CreateSpecies = app.CreateClass(CLASSNAME, KEY, {
 	costCollectibles = function(t)
 		return cache.GetCachedField(t, "costCollectibles", default_costCollectibles);
 	end,
-	f = function(t)
-		return 101;
-	end,
 	text = function(t)
 		return t.link or cache.GetCachedField(t, "text", CacheInfo);
 	end,

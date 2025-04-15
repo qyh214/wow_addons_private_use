@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "ruRU")
+if not L then return end
 
-L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = "%d: ID способности. %d-%d: ID способности - ID таланта (помечает способность, если выбран талант)."
 L[ [=[%d: spellID.
@@ -267,7 +267,7 @@ L["Padding"] = "Промежуток"
 L["Padding X"] = "Промежуток по X"
 L["Padding Y"] = "Промежуток по Y"
 L["Pending user input..."] = "Ожидается ввод от пользователя..."
-L["Pixel Perfect"] = true
+L["Pixel Perfect"] = "Pixel Perfect"
 L["Pixel Perfect ON."] = "Pixel Perfect ВКЛЮЧЕН."
 L["Player Frame in Party"] = "Фрейм игрока в группе"
 L["Plugins"] = "Плагины"

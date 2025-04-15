@@ -205,6 +205,7 @@ app.errors = function(msg)
 
 	local runner1 = app.CreateRunner("error1")
 	local runner2 = app.CreateRunner("error2")
+	local UpdateRunner = app.CreateRunner("update")
 
 	-- push function error
 	app.Push("push"..msg, "test", throw)
@@ -219,8 +220,8 @@ app.errors = function(msg)
 	runner2.Run(throw, msg.."4")
 
 	-- repeated test on consistent runner
-	app.UpdateRunner.Run(throw, "update"..msg.."5")
-	app.UpdateRunner.Run(throw, "update"..msg.."6")
+	UpdateRunner.Run(throw, "update"..msg.."5")
+	UpdateRunner.Run(throw, "update"..msg.."6")
 
 end
 
@@ -469,13 +470,14 @@ function ATTcheckawquests()
 	local function scan()
 		for i=cur,lim do
 			if not awdb[i] and isaw(i) then
+				app.print("NEW AW-Quest!",i)
 				aw[i] = true
 			end
 		end
 		app.PrintDebug("scanned thru",lim)
 		cur = lim + 1
 		lim = lim + step
-		if lim > 87000 then return end
+		if lim > 95000 then return end
 		dc(scan, 1)
 	end
 	scan()
@@ -578,3 +580,15 @@ end
 -- ATTscripttimeout("immediate", 21)
 -- app.AddEventHandler("OnLoad", ATTscripttimeout)
 -- app.AddEventHandler("OnReady", ATTscripttimeout)
+
+function DumpAllGlobals()
+	local ks = {}
+	for k, v in pairs(_G) do
+		if type(v) == "string" then
+			ks[#ks + 1] = ("%s = \"%s\""):format(k,v)
+		end
+	end
+
+	local allkeys = table.concat(ks, "\n")
+	app:ShowPopupDialogWithMultiLineEditBox(allkeys)
+end

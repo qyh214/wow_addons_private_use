@@ -139,6 +139,8 @@ L["At Percent"] = "В процентах"
 L["At Value"] = "От значения"
 L["At War"] = "На войне"
 L["Attach to End"] = "Прикрепить к концу"
+--[[Translation missing --]]
+L["Attach to End, backwards"] = "Attach to End, backwards"
 L["Attach to Point"] = "Прикрепить к точке"
 L["Attach to Start"] = "Прикрепить к началу"
 L["Attack Power"] = "Сила атаки"
@@ -179,13 +181,25 @@ L["Azuregos"] = "Азурегос"
 L["Back and Forth"] = "Назад и вперед"
 L["Background"] = "Задний план"
 L["Background Color"] = "Цвет заднего плана"
+--[[Translation missing --]]
+L["Balnazzar"] = "Balnazzar"
 L["Bar Color/Gradient Start"] = "Цвет полосы / Начало градиента"
+--[[Translation missing --]]
+L["Bar enabled in BigWigs settings"] = "Bar enabled in BigWigs settings"
+--[[Translation missing --]]
+L["Bar enabled in Boss Mod addon settings"] = "Bar enabled in Boss Mod addon settings"
+--[[Translation missing --]]
+L["Bar enabled in DBM settings"] = "Bar enabled in DBM settings"
 L["Bar Texture"] = "Текстура полосы"
 L["Baron Geddon"] = "Барон Геддон"
 L["Battle for Azeroth"] = "Battle for Azeroth"
 L["Battle.net Whisper"] = "Шепот в сети Battle.net"
 L["Battleground"] = "Поле боя"
 L["Battleguard Sartura"] = "Боевой страж Сартура"
+--[[Translation missing --]]
+L["Beastmaster"] = "Beastmaster"
+--[[Translation missing --]]
+L["Beatrix"] = "Beatrix"
 L["BG>Raid>Party>Say"] = "Поле боя > Рейд > Группа > Сказать"
 L["BG-System Alliance"] = "Поле боя: Альянс"
 L["BG-System Horde"] = "Поле боя: Орда"
@@ -230,6 +244,8 @@ L["Buff/Debuff"] = "Бафф / Дебафф"
 L["Buffed/Debuffed"] = "Есть бафф / дебафф"
 L["Burning Crusade"] = "Burning Crusade"
 L["Buru the Gorger"] = "Буру Ненасытный"
+--[[Translation missing --]]
+L["Caldoran"] = "Caldoran"
 L["Callback function"] = "Функция обратного вызова"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = [=[Используется для проверки того факта, что две единицы - одна и та же сущность, объект.
 Например: выбрав в качестве единицы игрока и указав для данного параметра значение "boss1target", можно определить, являетесь ли вы целью босса.]=]
@@ -648,7 +664,7 @@ L["Icon Function"] = "Функция иконки"
 L["Icon Function (fallback state)"] = "Функция иконки (резервное состояние)"
 L["Id"] = "ID"
 L["ID"] = "ID"
-L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "Если вам необходима дополнительная помощь, пожалуйста, откройте запрос на GitHub или посетите наш сервер в Discord по адресу https://discord.gg/weakauras."
+L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"] = "Если вам необходима дополнительная помощь, пожалуйста, откройте запрос на GitHub или посетите наш сервер в Discord по адресу https://discord.gg/xhUHVCgAGy."
 L["Ignore Dead"] = "Не учитывать мёртвые цели"
 L["Ignore Disconnected"] = "Не учитывать игроков не в сети"
 L["Ignore Rune CD"] = "Игнорировать задержку от рун"
@@ -755,6 +771,8 @@ L["Legion"] = "Legion"
 L["Length"] = "Длина"
 L["Level"] = "Уровень"
 L["LibSharedMedia"] = "LibSharedMedia"
+--[[Translation missing --]]
+L["Lillian Voss"] = "Lillian Voss"
 L["Limited"] = "Ограниченное"
 L["Linear Texture"] = "Линейная текстура"
 L["Lines & Particles"] = "Линии или частицы"
@@ -787,6 +805,8 @@ L["Manual Icon"] = "Ручная иконка"
 L["Manual Rotation"] = "Ручной поворот"
 L["Marked First"] = "В начале списка"
 L["Marked Last"] = "В конце списка"
+--[[Translation missing --]]
+L["Mason"] = "Mason"
 L["Master"] = "Основной"
 L["Mastery (%)"] = "Искусность (%)"
 L["Mastery Rating"] = "Показатель искусности"
@@ -798,6 +818,8 @@ Intermissions are .5
 E.g. 1;2;1;2;2.5;3]=] ] = [=[Совпадает с номером фазы в журнале сражения с боссом. Смена фаз нумеруется как x.5
 Например: 1, 2, 1, 2, 2.5, 3.]=]
 L["Max Char "] = "Макс. количество символов"
+--[[Translation missing --]]
+L["Max Char"] = "Max Char"
 L["Max Charges"] = "Макс. количество зарядов"
 L["Max Health"] = "Макс. запас здоровья"
 L["Max Power"] = "Макс. запас энергии"
@@ -958,6 +980,12 @@ L["Overlay %s"] = "Наложение %s"
 L["Overlay Charged Combo Points"] = "Показать заряженные анимой приемы серии (наложение)"
 L["Overlay Cost of Casts"] = "Показать стоимость применения заклинаний (наложение)"
 L["Overlay Latency"] = "Показать задержку (наложение)"
+--[[Translation missing --]]
+L["Pad"] = "Pad"
+--[[Translation missing --]]
+L["Pad Mode"] = "Pad Mode"
+--[[Translation missing --]]
+L["Pad to"] = "Pad to"
 L["Paragon Reputation"] = "Репутация идеала"
 L["Paragon Reward Pending"] = "Награда идела в ожидании"
 L["Parent Frame"] = "Родительский фрейм"
@@ -1061,6 +1089,8 @@ L["Realm"] = "Игровой мир"
 L["Realm Name"] = "Название игрового мира"
 L["Realm of Caster's Target"] = "Игровой мир цели заклинателя"
 --[[Translation missing --]]
+L["Reborn Council"] = "Reborn Council"
+--[[Translation missing --]]
 L["Receiving %s Bytes"] = "Receiving %s Bytes"
 L["Receiving display information"] = "Получение информации об индикации от %s ..."
 L["Reflect"] = "Отражение"
@@ -1126,6 +1156,8 @@ L["Rune Count - Unholy"] = "Количество рун нечестивости
 L["Sapphiron"] = "Сапфирон"
 L["Say"] = "Сказать"
 L["Scale"] = "Масштаб"
+--[[Translation missing --]]
+L["Scarlet Enclave"] = "Scarlet Enclave"
 L["Scenario"] = "Сценарий"
 L["Scenario (Heroic)"] = "Сценарий (героический)"
 L["Scenario (Normal)"] = "Сценарий (обычный)"
@@ -1163,6 +1195,8 @@ L["Shrink"] = "Сжатие"
 L["Silithid Royalty"] = "Силитидская знать"
 L["Silver"] = "Серебро"
 L["Simple"] = "Простой"
+--[[Translation missing --]]
+L["Since Active"] = "Since Active"
 L["Since Apply"] = "Время после применения эф."
 L["Since Apply/Refresh"] = "Время после обновления эф."
 L["Since Charge Gain"] = "Время после получения заряда"
@@ -1186,6 +1220,8 @@ L["Small"] = "Мелкий"
 L["Smart Group"] = "Рейд > Группа > Игрок"
 L["Soft Enemy"] = "Противник при динам. выделении"
 L["Soft Friend"] = "Союзник при динам. выделении"
+--[[Translation missing --]]
+L["Solistrasza"] = "Solistrasza"
 L["Sound"] = "Звук"
 L["Sound by Kit ID"] = "Звук по ID набора"
 L["Source"] = "Источник"
@@ -1275,6 +1311,8 @@ L[ [=[Supports multiple entries, separated by commas
 ]=] ] = [=[Можно указать несколько значений, разделенных запятыми.
 ]=]
 L["Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."] = "Поддерживает несколько записей, разделенных запятыми. Экранируйте ',' с \\. Префикс '-' для отрицания."
+--[[Translation missing --]]
+L["Supports multiple entries, separated by commas. Escape with \\. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Escape with \\. Prefix with '-' for negation."
 L["Supports multiple entries, separated by commas. Prefix with '-' for negation."] = "Поддерживает несколько записей, разделённых запятыми. Используйте префикс '-' для отрицания."
 L[ [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
 Group Zone IDs must be prefixed with 'g', e.g. 'g277'. 
@@ -1300,6 +1338,12 @@ L["Tanking But Not Highest"] = "Вы основная цель; не макс. �
 L["Target"] = "Цель"
 L["Targeted"] = "Цель"
 L["Tertiary Stats"] = "Третичная характеристика"
+--[[Translation missing --]]
+L["Test if bar is enabled in BigWigs settings"] = "Test if bar is enabled in BigWigs settings"
+--[[Translation missing --]]
+L["Test if bar is enabled in Boss Mod addon settings"] = "Test if bar is enabled in Boss Mod addon settings"
+--[[Translation missing --]]
+L["Test if bar is enabled in DBM settings"] = "Test if bar is enabled in DBM settings"
 L["Text"] = "Текст"
 L["Text To Speech"] = "Текст в речь"
 L["Text-to-speech"] = "Текст в речь"
@@ -1458,7 +1502,7 @@ L["Warning: Full Scan auras checking for both name and spell id can't be convert
 L["Warning: Name info is now available via %affected, %unaffected. Number of affected group members via %unitCount. Some options behave differently now. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь имена задействованных и незадействованных игроков доступны посредством %affected и %unaffected; количество задействованных участников группы - %unitCount. Некоторые параметры работают иначе. Эти изменения автоматически не применяются."
 L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3 instead of %s. This is not automatically adjusted."] = "|cFFFFCC00Примечение.|r Теперь значения из текста подсказки доступны посредством %tooltip1, %tooltip2 и %tooltip3. Это изменение автоматически не применяется."
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras (встроенный):  63:42 | 3:07 | 10 | 2.4"
-L["WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/weakauras."] = "WeakAuras обнаружил пустые настройки. Если это произошло неожиданно, обратитесь за помощью на https://discord.gg/weakauras."
+L["WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/xhUHVCgAGy."] = "WeakAuras обнаружил пустые настройки. Если это произошло неожиданно, обратитесь за помощью на https://discord.gg/xhUHVCgAGy."
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.
 Would you like to run the |cffff0000EXPERIMENTAL|r repair tool? This will overwrite any changes you have made since the last database upgrade.

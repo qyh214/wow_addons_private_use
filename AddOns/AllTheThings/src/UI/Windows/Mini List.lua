@@ -127,50 +127,48 @@ local CachedMapData = setmetatable({}, {
 					header.key = key;
 					header[key] = group[key];
 					MergeObject({header}, clone);
-				elseif key == "criteriaID" then
-					clone.achievementID = group.achievementID;
-					MergeIntoHeader(app.HeaderConstants.ACHIEVEMENTS, clone);
-				elseif key == "achievementID" then
-					MergeIntoHeader(app.HeaderConstants.ACHIEVEMENTS, clone);
-				elseif key == "questID" then
-					MergeIntoHeader(app.HeaderConstants.QUESTS, clone);
-				elseif key == "factionID" then
-					MergeIntoHeader(app.HeaderConstants.FACTIONS, clone);
-				elseif key == "explorationID" then
-					MergeIntoHeader(app.HeaderConstants.EXPLORATION, clone);
-				elseif key == "flightpathID" then
-					MergeIntoHeader(app.HeaderConstants.FLIGHT_PATHS, clone);
-				elseif key == "itemID" or key == "spellID" then
-					if GetRelativeField(group, "headerID", app.HeaderConstants.ZONE_DROPS) then
-						MergeIntoHeader(app.HeaderConstants.ZONE_DROPS, clone);
-					else
-						local requireSkill = GetRelativeValue(group, "requireSkill");
-						if requireSkill then
-							MergeObject(groups, app.CreateProfession(requireSkill, { g = { clone } }));
-						else
-							local headerID = GetRelativeValue(group, "headerID");
-							if headerID then
-								MergeIntoHeader(headerID, clone);
-							else
-								MergeObject(groups, clone);
-							end
-						end
-					end
-				elseif key == "headerID" then
-					if clone.parent and clone.parent.headerID then
-						MergeIntoHeader(clone.parent.headerID, clone);
-					else
-						MergeObject(groups, clone);
-					end
 				else
-					local headerID = GetRelativeValue(group, "headerID");
-					if headerID then
-						MergeIntoHeader(headerID, clone);
-						if group.parent and group.parent.isRaid then
-							headers[headerID].isRaid = true;
+					local headerConst = nil;
+					if key == "criteriaID" then
+						clone.achievementID = group.achievementID;
+						headerConst = app.HeaderConstants.ACHIEVEMENTS;
+					elseif key == "achievementID" then
+						headerConst = app.HeaderConstants.ACHIEVEMENTS;
+					elseif key == "questID" then
+						headerConst = app.HeaderConstants.QUESTS;
+					elseif key == "factionID" then
+						headerConst = app.HeaderConstants.FACTIONS;
+					elseif key == "explorationID" then
+						headerConst = app.HeaderConstants.EXPLORATION;
+					elseif key == "flightpathID" then
+						headerConst = app.HeaderConstants.FLIGHT_PATHS;
+					end
+					
+					-- Does this involve a profession?
+					local requireSkill = GetRelativeValue(group, "requireSkill");
+					if requireSkill then
+						clone = app.CreateProfession(requireSkill, { g = { clone } });
+						headerConst = app.HeaderConstants.PROFESSIONS;
+					end
+					
+					if headerConst then
+						MergeIntoHeader(headerConst, clone);
+					elseif key == "headerID" then
+						if clone.parent and clone.parent.headerID then
+							MergeIntoHeader(clone.parent.headerID, clone);
+						else
+							MergeObject(groups, clone);
 						end
 					else
-						MergeObject(groups, clone);
+						local headerID = GetRelativeValue(group, "headerID");
+						if headerID then
+							MergeIntoHeader(headerID, clone);
+							if group.parent and group.parent.isRaid then
+								headers[headerID].isRaid = true;
+							end
+						else
+							MergeObject(groups, clone);
+						end
 					end
 				end
 			end

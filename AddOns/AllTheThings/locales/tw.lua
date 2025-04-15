@@ -446,53 +446,25 @@ local GetSpellName = app.WOWAPI.GetSpellName;
 
 local a = L.ABBREVIATIONS;
 for key,value in pairs({
+	-- Events
+	["資料片前夕"] = "前夕",
+	-- Legion
 	["安托洛斯，燃燒王座"] = "安托洛斯",		-- ["Antorus, the Burning Throne"] = "Antorus"
+	-- BfA
 	["奈奧羅薩，甦醒之城"] = "奈奧羅薩",		-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
+	-- SL
 	["『帷幕市集』塔札維許"] = "塔札維許",		-- ["Tazavesh, the Veiled Market"] = "Tazavesh"
+	-- DF
+	["『朧影實驗場』亞貝魯斯"] = "亞貝魯斯",	-- ["Aberrus, the Shadowed Crucible"] = "Aberrus"
+	["『夢境希望』埃達希爾"] = "埃達希爾",		-- ["Amirdrassil, the Dream's Hope"] = "Amirdrassil"
+	-- TWW
+	["『回音之城』厄拉卡拉"] = "厄拉卡拉",		-- ["Ara-Kara, City of Echoes"] = "Ara-Kara"
 })
 do a[key] = value; end
 
 if app.IsRetail then
 	local a = L.HEADER_NAMES;
 	for key,value in pairs({
-	-- PvP
-		[-242] = "無評級",												-- Unrated
-	-- Outposts in Draenor
-		[-361] = GetSpellName(182108).." 塔",							-- Artillery Tower
-	-- BFA Outposts
-		[-397] = "前哨站",												-- Outposts
-	-- Misc
-		[-493] = "要塞任務拾取",										-- Header for WoD Mission Loot
-	-- Blizzard Events and Anniversaries
-		[-520] = "資料片前夕",											-- Expansion Pre-Launch
-		[-543] = "軍團入侵",											-- Legion Invasions
-	-- Mists of Pandaria PvP Seasons
-		[-675] = select(2, GetAchievementInfo(8214)).."第12賽季",		-- Malevolent Gladiator: Season 12
-		[-653] = "榮譽裝備暴虐賽季",									-- Honor Gear Tyrannical (S13)
-		[-676] = select(2, GetAchievementInfo(8791)).."第13賽季",		-- Tyrannical Gladiator: Season 13
-		[-652] = "榮譽裝備惡孽賽季",									-- Honor Gear Grievous (S14)
-		[-651] = "榮譽裝備驕矜賽季",									-- Honor Gear Prideful (S15)
-	-- Shadowlands Header
-		[-979] = "掮靈威·肯 & 掮靈威·諾特",									-- Broker Ve'ken & Broker Ve'nott
-		[-924] = "傳送網路",											-- Transport Network
-		-- SL Bastion/Kyrian
-			[-973] = "忠誠",											-- Loyalty
-			[-975] = "謙遜",											-- Humility
-		-- SL Revendreth/Venthyr
-			[-954] = "審判官",											-- Inquisitors
-			[-955] = "高階審判官",										-- High Inquisitors
-			[-956] = "大審判官",										-- Grand Inquisitors
-			[-967] = "破镜重圆",										-- Mirror Restoration
-			[-968] = "組 A",											-- Set A
-			[-969] = "組 B",											-- Set B
-			[-970] = "組 C",											-- Set C
-			[-971] = "組 D",											-- Set D
-	-- Dragonflight
-
-		[-1102] = "怒西昂和賽柏利安",										-- Wrathion & Sabellian
-		[-1120] = "莫魯克半人馬",											-- Maruuk Centaur
-		[-1130] = "伊斯凱拉巨牙海民",										-- Iskaara Tuskarr
-		[-1150] = "洛姆鼴鼠人",											-- Loamm Niffen
 	-- Tier/Dungeon/Event/Holiday Sets
 		-- Artifact Strings
 			[-5200] = "基礎外觀",										-- Base Appearance

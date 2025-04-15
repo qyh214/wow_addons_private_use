@@ -1,5 +1,5 @@
 # MapNote
-## [2.7.0](https://github.com/Ssesmar/MapNote) (2025-03-11)
+## [2.7.8](https://github.com/Ssesmar/MapNote)
     
 - Description:
 

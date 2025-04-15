@@ -27,7 +27,7 @@ local setTestMode = function(info, state) P:Test(state and info[2]) end
 local disableZone = function(info) return info[3] and not E.profile.Party.visibility[ info[2] ] or not E:GetModuleEnabled("Party") end
 local getZoneName = function(info) return E.L_ALL_ZONE[ info[2] ] end
 
-local cfgZone = {
+local configZone = {
 	disabled = disableZone,
 	name = getZoneName,
 	type = "group",
@@ -94,7 +94,7 @@ local noCfgZone = {
 }
 
 for key in pairs(E.L_CFG_ZONE) do
-	P.options.args[key] = cfgZone
+	P.options.args[key] = configZone
 end
 P.options.args.none = noCfgZone
 P.options.args.scenario = noCfgZone
@@ -119,5 +119,5 @@ function P:ResetOption(key, tab, subtab)
 end
 
 function P:RegisterSubcategory(optionName, optionTable)
-	cfgZone.args[optionName] = optionTable
+	configZone.args[optionName] = optionTable
 end

@@ -1128,6 +1128,15 @@ function DUIDialogHotkeyFrameMixin:SetKey(key)
     end
 end
 
+function DUIDialogHotkeyFrameMixin:SetKeyByFunction(keyFunction)
+    if HotkeyIcons[keyFunction] then
+        self:SetKey(keyFunction);
+    else
+        local key = addon.DeviceUtil:GetKeyByFunction(keyFunction);
+        self:SetKey(key);
+    end
+end
+
 function DUIDialogHotkeyFrameMixin:ClearKey()
     if self.key then
         self.key = nil;
@@ -2385,7 +2394,6 @@ do  --Quest Portrait
             f:SetPortraitZoom(1);
             f:SetPortraitZoom(0.975);
             f:FreezeAnimation(0, 0, 0);
-            f:SetModelAlpha(0);
             self:FadeInAfterModelLoaded();
         end
 

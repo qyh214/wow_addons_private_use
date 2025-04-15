@@ -263,6 +263,24 @@ do
 	end);
 	app.AddSimpleCollectibleSwap(CLASSNAME, CACHE)
 
+	-- Adds ATT information about the list of Achievements into the provided tooltip
+	local function AddAchievementInfoToTooltip(info, achievements, reference)
+		if achievements then
+			local text
+			for _,ach in ipairs(achievements) do
+				text = ach.text;
+				if not text then
+					text = RETRIEVING_DATA;
+					reference.working = true;
+				end
+				text = app.GetCompletionIcon(ach.saved) .. " [" .. ach.achievementID .. "] " .. text;
+				if ach.isGuild then text = text .. " (" .. GUILD .. ")"; end
+				info[#info + 1] = {
+					left = text
+				}
+			end
+		end
+	end
 	-- Information Types
 	app.AddEventHandler("OnLoad", function()
 		app.Settings.CreateInformationType("Achievement_CriteriaFor", {
@@ -293,8 +311,67 @@ do
 				end
 			end
 		})
+		app.Settings.CreateInformationType("sourceAchievements", {
+			text = "Achievement_Requirements",
+			HideCheckBox = true, ForceActive = true, priority = 9500,
+			Process = function(t, reference, tooltipInfo)
+				if not reference.sourceAchievements then return end
+				local isDebugMode = app.MODE_DEBUG
+				if not isDebugMode and reference.collected then return end
+
+				local bestMatch, sas
+				local prereqs = {}
+				for i,sourceAchievementID in ipairs(reference.sourceAchievements) do
+					if sourceAchievementID > 0 and (isDebugMode or not app.IsAccountCached("Achievements", sourceAchievementID)) then
+						sas = SearchForObject("achievementID", sourceAchievementID, "field", true)
+						if #sas > 0 then
+							bestMatch = nil;
+							for j,sa in ipairs(sas) do
+								if sa.achievementID == sourceAchievementID then
+									if isDebugMode or (not sa.saved and app.GroupFilter(sa)) then
+										bestMatch = sa;
+									end
+								end
+							end
+							if bestMatch then
+								prereqs[#prereqs + 1] = bestMatch
+							end
+						else
+							prereqs[#prereqs + 1] = app.CreateAchievement(sourceAchievementID)
+						end
+					end
+				end
+				if prereqs and #prereqs > 0 then
+					tooltipInfo[#tooltipInfo + 1] = {
+						left = L.REQUIRED_ACHIEVEMENTS
+					}
+					AddAchievementInfoToTooltip(tooltipInfo, prereqs, reference);
+				end
+			end
+		})
 	end)
 end
+
+local function BuildSourceAchievements(group)
+	if not group.sourceAchievements then return end
+
+	local sas = {}
+	local sourceGroup = app.CreateRawText(L.REQUIRED_ACHIEVEMENTS, {
+		description = L.REQUIRED_ACHIEVEMENTS_DESC,
+		icon = 135950,
+		OnUpdate = app.AlwaysShowUpdate,
+		OnClick = app.UI.OnClick.IgnoreRightClick,
+		sourceIgnored = true,
+		skipFill = true,
+		SortPriority = -2.9,
+		g = sas,
+	})
+	for i,achID in ipairs(group.sourceAchievements) do
+		app.NestObject(sourceGroup, SearchForObject("achievementID", achID, "key") or app.CreateAchievement(achID), true)
+	end
+	app.NestObject(group, sourceGroup, nil, 1)
+end
+app.AddEventHandler("OnNewPopoutGroup", BuildSourceAchievements)
 
 -- Achievement Category Lib
 do
@@ -346,7 +423,7 @@ do
 	end})
 	-- Criteria field values which will use the value of the respective Achievement instead
 	local UseParentAchievementValueKeys = {
-		"c", "classID", "races", "r", "u", "e", "pb", "pvp", "requireSkill", "icon"
+		"c", "classID", "races", "r", "u", "e", "sr", "pb", "pvp", "requireSkill", "icon"
 	}
 	local function GetParentAchievementInfo(t, key, _t)
 		-- if the Achievement data was already cached, but the criteria is still getting here
@@ -380,33 +457,15 @@ do
 				local parent = t.parent
 				if parent then
 					local parentKey = parent.key
-					if parentKey and app.ThingKeys[parentKey] and parentKey ~= "achievementID" then
+					if parentKey and app.ThingKeys[parentKey] and (parentKey ~= "achievementID" or parent[parentKey] ~= achievementID) then
 						name = parent.name
 						if not IsRetrieving(name) and not name:find("Quest #") then return name; end
 					end
 				end
 
 				-- criteria with provider data
-				local providers = t.providers;
-				if providers then
-					local id
-					for k,v in ipairs(providers) do
-						id = v[2]
-						if id > 0 then
-							if v[1] == "o" then
-								name = app.ObjectNames[id];
-								break
-							elseif v[1] == "i" then
-								name = GetItemInfo(id);
-								break
-							elseif v[1] == "n" then
-								name = app.NPCNameFromID[id];
-								break
-							end
-						end
-					end
-					if not IsRetrieving(name) then return name; end
-				end
+				name = app.GetNameFromProviders(t)
+				if not IsRetrieving(name) then return name end
 
 				-- criteria with sourceQuests data
 				local sourceQuests = t.sourceQuests;
@@ -426,10 +485,8 @@ do
 				name = "Criteria: "..(select(2, GetAchievementInfo(achievementID)) or "#"..criteriaID)
 			end
 		end
-		app.PrintDebug("failed to retrieve criteria name",achievementID,t.criteriaID,name,t._default_name_retry)
-		t._default_name_retry = (t._default_name_retry or 0) + 1
-		if (t._default_name_retry > 25) then
-			t._default_name_retry = nil
+		app.PrintDebug("failed to retrieve criteria name",achievementID,t.criteriaID,name)
+		if not t.CanRetry then
 			return name or UNKNOWN
 		end
 	end
@@ -462,17 +519,14 @@ do
 		RefreshCollectionOnly = true,
 		collectible = function(t) return app.Settings.Collectibles.Achievements end,
 		collected = function(t)
-			-- character saved criteria
-			if t.saved then return 1 end
-			-- otherwise completion based on achievement
+			-- completion based on achievement is faster check
 			return app.TypicalCharacterCollected("Achievements", t.achievementID)
+			-- otherwise lookup character saved criteria
+				or (t.saved and 1)
 		end,
 		trackable = app.ReturnTrue,
 		saved = function(t)
 			return cache.GetCachedField(t, "saved")
-		end,
-		index = function(t)
-			return 1;
 		end,
 	};
 	-- apply parent Achievement field re-mappings

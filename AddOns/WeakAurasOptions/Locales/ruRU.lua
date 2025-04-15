@@ -295,6 +295,8 @@ UNIT_POWER  UNIT_AURA, PLAYER_TARGET_CHANGED]=]
 	L["Determines how many entries can be in the table."] = "Определяет, сколько записей может быть в таблице."
 	L["Differences"] = "Различия"
 	L["Disallow Entry Reordering"] = "Запретить изменение порядка записей"
+	--[[Translation missing --]]
+	L["Discord"] = "Discord"
 	L["Display Name"] = "Отображаемое имя"
 	L["Display Text"] = "Отображаемый текст"
 	L["Displays a text, works best in combination with other displays"] = "Отображает текст, лучше всего работает в сочетании с другими индикациями"
@@ -509,7 +511,6 @@ Bleed classification via LibDispel]=] ] = "Фильтровать только �
 	L["Is Boss Debuff"] = "Применён боссом"
 	L["Is Stealable"] = "Может быть украден"
 	L["Is Unit"] = "Использовать как единицу"
-	L["Join Discord"] = "Присоединяйтесь к Discord"
 	L["Justify"] = "Выравнивание"
 	L["Keep Aspect Ratio"] = "Сохранять пропорции"
 	L["Keep your Wago imports up to date with the Companion App."] = "Поддерживайте ваши индикации с Wago в актуальном состоянии при помощи приложения Companion."
@@ -528,6 +529,8 @@ Bleed classification via LibDispel]=] ] = "Фильтровать только �
 	L["Line"] = "Строка"
 	L["Linear Texture %s"] = "Линейная текстура %s"
 	L["Linked aura: "] = "Связанная индикация: "
+	--[[Translation missing --]]
+	L["Linked Auras"] = "Linked Auras"
 	L["Load"] = "Загрузка"
 	L["Loaded"] = "Загружено"
 	L["Loaded/Standby"] = "Загружен/Ожидает"

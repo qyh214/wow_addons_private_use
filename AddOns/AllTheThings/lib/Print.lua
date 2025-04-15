@@ -44,7 +44,7 @@ app.PrintGroup = function(group,depth)
 		for i=0,depth,1 do
 			p = p .. "-";
 		end
-		p = p .. tostring(group.key or group.text) .. ":" .. tostring(group[group.key or "NIL"]);
+		p = p .. tostring(group.key or group.text) .. ":" .. tostring(group.keyval);
 		print(p);
 		if group.g then
 			for i,sg in ipairs(group.g) do

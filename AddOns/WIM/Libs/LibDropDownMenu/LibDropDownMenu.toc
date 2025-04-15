@@ -5,7 +5,7 @@
 ## Notes: Library providing downdown menu like blizzards DropDownMenu
 ## Author: Hizuro
 ## IconTexture: 986485
-## Version: r49
+## Version: r50
 
 ## Category-enUS: Libraries
 ## Category-deDE: Bibliotheken
@@ -16,8 +16,8 @@
 ## Category-koKR: 도서관
 ## Category-ptBR: Bibliotecas
 ## Category-ruRU: Библиотеки
-## Category-zhCN: 库
-## Category-zhTW: 库
+## Category-zhCN: 函数库
+## Category-zhTW: 函式庫
 
 ## OptionalDeps: LibStub, CallbackHandler-1.0
 

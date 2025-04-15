@@ -58,6 +58,17 @@ ns.nodes[uiMapId][coord] = nodes[uiMapId][coord]
 ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
   local nodeData = nil
 
+--local Highlight = CreateFrame("Frame",nil, UIParent)
+--Highlight.tex = Highlight:CreateTexture()
+--Highlight.tex:SetAllPoints(Highlight)
+--Highlight.tex:SetColorTexture(0.5, 0.2, 1 , 0.5)
+--Highlight:SetSize(20,20)
+--Highlight:SetPoint("CENTER" , "Cursor")
+--Highlight:SetScript ("OnEnter", function(self) end)
+--Highlight:SetScript ("OnLeave", function(self) Highlight:Hide()  end)
+--Highlight:EnableMouse(true)
+--Highlight:SetMouseMotionEnabled(true)
+
   if (minimap[uiMapId] and minimap[uiMapId][coord]) then
     nodeData = minimap[uiMapId][coord]
   end
@@ -135,6 +146,10 @@ ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
     end
 
     if nodeData.TransportName and not nodeData.delveID and not nodeData.dnID then
+      --tooltip:AddDoubleLine(nodeData.TransportName, nil, nil, false)
+    end
+
+    if nodeData.TransportName and not nodeData.delveID then
       tooltip:AddDoubleLine(nodeData.TransportName, nil, nil, false)
     end
 
@@ -198,7 +213,7 @@ ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
           tooltip:AddDoubleLine("|cffffffff" .. nodeData.wwwLink, nil, nil, false)
           tooltip:AddLine("\n" .. L["Has not been unlocked yet"] .. "\n" .. "\n", 1, 0, 0)
           if ns.Addon.db.profile.ExtraTooltip then
-            tooltip:AddDoubleLine("|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] .. " >", nil, nil, false)
+            tooltip:AddDoubleLine("|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] .. " >", nil, nil, false)
           end
         end
       end
@@ -238,7 +253,6 @@ ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
       end
 
     end
-
 
     -- Dungeons ,Raids and Multi
     if nodeData.type then
@@ -315,12 +329,6 @@ ns.minimap[uiMapId][coord] = minimap[uiMapId][coord]
       end
 
     end
-
-    -- ProfessionInfo neu test
-    --local prof1, prof2, archaeology, fishing, cooking = GetProfessions()
-    --if nodeData.prof1 then
-    --  tooltip:AddDoubleLine("|cffffffff" .. GetProfessionInfo(prof1) .. "\n" .. GetProfessionInfo(prof2), nil, nil, false)
-    --end
 
     -- Extra Tooltip
     if ns.Addon.db.profile.ExtraTooltip then
@@ -620,11 +628,6 @@ do
 				end
 			end
 
-      -- old assigned
-      --if (anyLocked and db.graymultipleID) or ((allLocked and not db.graymultipleID) and db.graySingleID) then   
-      --  icon = ns.icons["Gray"]
-      --end
-
       -- new assigned function single
       if anyLocked and db.graySingleID and allLocked then
         icon = ns.icons["Gray"]
@@ -733,7 +736,7 @@ do
           alpha = db.MiniMapAlphaShips
         end
 
-        if value.type == "Carriage" or value.type == "TravelM" or value.type == "TravelA" or value.type == "MoleMachine" then
+        if value.type == "Carriage" or value.type == "TravelM" or value.type == "TravelA" or value.type == "MoleMachine" or value.type == "RocketDrill" then
           scale = db.MiniMapScaleTransport
           alpha = db.MiniMapAlphaTransport
         end
@@ -980,7 +983,7 @@ do
           alpha = db.ZoneAlphaShips
         end
 
-        if value.type == "Carriage" or value.type == "TravelM" or value.type == "TravelA" or value.type == "MoleMachine" then
+        if value.type == "Carriage" or value.type == "TravelM" or value.type == "TravelA" or value.type == "MoleMachine" or value.type == "RocketDrill" then
           scale = db.ZoneScaleTransport
           alpha = db.ZoneAlphaTransport
         end
@@ -1273,8 +1276,8 @@ local mnID = nodes[uiMapId][coord].mnID
 local mnID2 = nodes[uiMapId][coord].mnID2
 local mnID3 = nodes[uiMapId][coord].mnID3
 local wwwLink = nodes[uiMapId][coord].wwwLink
-local questID = nodes[uiMapId][coord].questID
-local achievementID = nodes[uiMapId][coord].achievementID
+ns.achievementID = nodes[uiMapId][coord].achievementID
+ns.questID = nodes[uiMapId][coord].questID
 
 local mapInfo = C_Map.GetMapInfo(uiMapId)
 local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() == 87  or WorldMapFrame:GetMapID() == 89 or WorldMapFrame:GetMapID() == 103 or WorldMapFrame:GetMapID() == 85
@@ -1285,7 +1288,6 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() ==
                 or WorldMapFrame:GetMapID() == 1161 or WorldMapFrame:GetMapID() == 1163 or WorldMapFrame:GetMapID() == 1164 or WorldMapFrame:GetMapID() == 1165 or WorldMapFrame:GetMapID() == 1670
                 or WorldMapFrame:GetMapID() == 1671 or WorldMapFrame:GetMapID() == 1672 or WorldMapFrame:GetMapID() == 1673 or WorldMapFrame:GetMapID() == 2112 or WorldMapFrame:GetMapID() == 2339
                 or WorldMapFrame:GetMapID() == 503 or WorldMapFrame:GetMapID() == 2266
-
 
   StaticPopupDialogs["Delete_Icon?"] = {
     text = TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. ": " .. L["Delete this icon"] .. " ? " .. TextIconMNL4:GetIconString(),
@@ -1364,12 +1366,14 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 84 or WorldMapFrame:GetMapID() ==
     end
 
     if (button == "MiddleButton") then
-      if wwwLink and not (achievementID or questID) then
+      if wwwLink and not (ns.achievementID or ns.questID) then
         print(wwwLink)
-      elseif questID then
-        print("wowhead.com/quest=" .. questID)
-      elseif achievementID then
-        print("wowhead.com/achievement=" .. achievementID)
+      elseif ns.questID then
+        --SendChatMessage("www.wowhead.com/quest=" .. questID, "WHISPER", "Common", GetUnitName("PLAYER"));
+        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/quest=" .. ns.questID)
+      elseif ns.achievementID then
+        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/achievement=" .. ns.achievementID)
+        --SendChatMessage("MapNotes: https://www.wowhead.com/achievement=" .. achievementID, "WHISPER", "Common", GetUnitName("PLAYER"));
       end
     end
 
@@ -1624,6 +1628,9 @@ function Addon:PLAYER_LOGIN() -- OnInitialize()
   Addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   Addon:RegisterEvent("ZONE_CHANGED")
   Addon:RegisterEvent("ZONE_CHANGED_INDOORS")
+
+  -- Check for Links
+  ns.CreateAndCopyLink()
 
   -- Check for Class
   ns.AutomaticClassDetectionCapital()

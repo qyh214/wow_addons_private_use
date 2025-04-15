@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "frFR")
+if not L then return end
 
-L = L or {}
 --[[Translation missing --]]
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = [=[%d: spellID.
@@ -21,7 +21,7 @@ L["|cffff2020Friendly CD module must be enabled for the corresponding instance z
 L["|cffff2020Glow and Highlights are never applied on cropped icons. \"Border\" must be enabled."] = "|cffff2020Glow and Highlights are never applied on cropped icons. \"Border\" must be enabled."
 --[[Translation missing --]]
 L["|cffff2020Important!|r Covenant and Soulbind Conduit data can only be acquired from group members with OmniCD installed."] = "|cffff2020Important!|r Covenant and Soulbind Conduit data can only be acquired from group members with OmniCD installed."
-L["> 1 minute"] = true
+L["> 1 minute"] = "> 1 minute"
 --[[Translation missing --]]
 L["0: Disable option"] = "0: Disable option"
 --[[Translation missing --]]
@@ -107,7 +107,7 @@ L["CENTER"] = "CENTRER"
 L["Center Horizontally"] = "Centrer horizontalement"
 --[[Translation missing --]]
 L["CENTER will keep the rows centered and grow icons bidirectionally."] = "CENTER will keep the rows centered and grow icons bidirectionally."
-L["Changelog"] = true
+L["Changelog"] = "Changelog"
 --[[Translation missing --]]
 L["Changing party display options in your UF addon while OmniCD is active will break the anchors. Type (/oc rl) to fix the anchors"] = "Changing party display options in your UF addon while OmniCD is active will break the anchors. Type (/oc rl) to fix the anchors"
 --[[Translation missing --]]
@@ -133,7 +133,7 @@ L["Convert the status bar timer to a simple name display by disabling all timer 
 L["Convert to additional CD bars that attach to each unit's raid frame."] = "Convert to additional CD bars that attach to each unit's raid frame."
 --[[Translation missing --]]
 L["Convert to Name Bar"] = "Convert to Name Bar"
-L["Cooldown"] = true
+L["Cooldown"] = "Cooldown"
 L["Cooldown Remaining"] = "Cooldown restant"
 --[[Translation missing --]]
 L["Cooldown Timer"] = "Cooldown Timer"
@@ -303,7 +303,7 @@ L["Highlight Icons"] = "Mettre les icônes en surbrillance"
 L["Highlight the icon when a buffing spell is used until the buff falls off"] = "Highlight the icon when a buffing spell is used until the buff falls off"
 --[[Translation missing --]]
 L["Hold Time"] = "Hold Time"
-L["Horizontal"] = true
+L["Horizontal"] = "Horizontal"
 --[[Translation missing --]]
 L["Horizontal + CD Groups"] = "Horizontal + CD Groups"
 --[[Translation missing --]]
@@ -391,7 +391,7 @@ L["None of the CD counter skins support modrate. Timers will fluctuate erratical
 L["Not an OmniCD profile!"] = "Not an OmniCD profile!"
 --[[Translation missing --]]
 L["Not Supported:"] = "Not Supported:"
-L["Notes"] = true
+L["Notes"] = "Notes"
 L["Notify Updates"] = "Etre informé des mises à jour"
 --[[Translation missing --]]
 L["Offensive"] = "Offensive"
@@ -421,7 +421,7 @@ L["Pixel Perfect ON."] = "Pixel Perfect ON."
 L["Player Frame in Party"] = "Player Frame in Party"
 --[[Translation missing --]]
 L["Plugins"] = "Plugins"
-L["Position"] = true
+L["Position"] = "Position"
 --[[Translation missing --]]
 L["Press Accept to save profile %s. Addon will switch to the imported profile."] = "Press Accept to save profile %s. Addon will switch to the imported profile."
 L["Press Ctrl+C to copy profile"] = "Appuyer sur Ctrl+C pour copier le profil"
@@ -684,8 +684,8 @@ L["Use Zone Settings From:"] = "Utiliser les paramètres de zone de :"
 L["Utility"] = "Utility"
 L["Utils"] = "Divers"
 L["Value 'Manual Position' includes Interrupt and Raid Bar's saved positions."] = "La valeur « Position manuelle » inclut les positions enregistrées des interruptions et des barres de raid."
-L["Version"] = true
-L["Vertical"] = true
+L["Version"] = "Version"
+L["Vertical"] = "Vertical"
 --[[Translation missing --]]
 L["Vertical + CD Groups"] = "Vertical + CD Groups"
 L["Vertical Groups"] = "Groupes verticaux"

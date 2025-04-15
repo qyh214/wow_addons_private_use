@@ -2,11 +2,9 @@
 
 -- Customized for OmniCD by permission of the copyright owner.
 
--- OmniCD: Adds spell to Editor on CTRL + click
--- arg = spellID, func DND
-
 -- OmniAuras: Show delete button on mouse over
 -- arg = -spellID
+
 ---------------------------------------------------------------------------------
 
 --[[-----------------------------------------------------------------------------
@@ -58,13 +56,13 @@ local function AlignImage(self)
 	self.text:ClearAllPoints()
 	if not img then
 		self.text:SetPoint("LEFT", self.checkbg, "RIGHT", 5, 0) -- our box is 10 smaller
-		self.text:SetPoint("RIGHT", -10, 0) -- v29
+		self.text:SetPoint("RIGHT", -10, 0)
 		if USE_ICON_BACKDROP then
 			self.imagebg:Hide()
 		end
 	else
 		self.text:SetPoint("LEFT", USE_ICON_BACKDROP and self.imagebg or self.image, "RIGHT", 5, 0)
-		self.text:SetPoint("RIGHT", -10, 0) -- v29
+		self.text:SetPoint("RIGHT", -10, 0)
 
 		if USE_ICON_BACKDROP then
 			self.imagebg:Show()
@@ -117,7 +115,6 @@ local function CheckBox_OnMouseUp(frame)
 end
 ]]
 
--- v30
 local delButton
 
 local function delButton_OnEnter(self)
@@ -142,18 +139,10 @@ end
 local function delButton_OnClick(self)
 	local frame = self:GetParent()
 	local arg = math.abs(frame.obj.arg)
-	if OmniAuras and OmniAuras[1] then
-		local sId = tostring(arg)
-		OmniAuras[1].blacklist[sId] = nil
-		OmniAuras[1].global.auraBlacklist[arg] = nil
-		OmniAuras[1]:ACR_NotifyChange()
-		OmniAuras[1]:Refresh()
-	else -- v31
-		local app = _G[frame.obj.appName]
-		app = type(app) == "table" and (app[1] or app)
-		if app and type(app.delButton_OnClick) == "function" then
-			app.delButton_OnClick(arg)
-		end
+	local app = _G[frame.obj.appName]
+	app = type(app) == "table" and (app[1] or app)
+	if app and type(app.delButton_OnClick) == "function" then
+		app.delButton_OnClick(arg)
 	end
 end
 
@@ -189,11 +178,9 @@ end
 
 local function Control_OnEnter(frame)
 	frame.obj:Fire("OnEnter")
-	-- v27
---	frame.obj.checkbg:SetBackdropBorderColor(0.5, 0.5, 0.5)	 -- match range slider editbox
 	frame.obj.checkbg.border:SetColorTexture(0.5, 0.5, 0.5)
-	-- v30
-	local arg = frame.obj.arg
+
+	local arg = frame.obj.arg -- is number type
 	if arg and arg < 0 and OmniAuras then
 		delButton = delButton or GetDeleteButton()
 		delButton:SetParent(frame)
@@ -210,15 +197,11 @@ end
 
 local function Control_OnLeave(frame)
 	frame.obj:Fire("OnLeave")
-	-- v27
---	frame.obj.checkbg:SetBackdropBorderColor(0.2, 0.2, 0.25) -- match range slider editbox
 	frame.obj.checkbg.border:SetColorTexture(0.2, 0.2, 0.25)
-	-- v30
+
 	local arg = frame.obj.arg
 	if arg and arg < 0 and delButton then
-		-- do nothing if it's entering delButton
 		if not delButton:IsMouseMotionFocus() then
-			--delButton:Hide()
 			delButton.fadeOut:Play()
 		end
 	end
@@ -232,22 +215,6 @@ local function CheckBox_OnMouseDown(frame)
 		else
 			self.text:SetPoint("LEFT", self.checkbg, "RIGHT", 6, -1)
 		end
-		---[[
-		local arg = self.arg
-		if arg and arg > 0 then
-			--cursorArg = arg
-			local isCtrlKey = IsControlKeyDown()
-			if isCtrlKey then
-				local app = _G[self.appName] -- v31
-				app = type(app) == "table" and (app[1] or app)
-				if app and type(app.EditSpell) == "function" then
-					app.EditSpell(nil, tostring(arg))
-				elseif OmniCD and OmniCD[1] and OmniCD[1].EditSpell then
-					OmniCD[1].EditSpell(nil, tostring(arg))
-				end
-			end
-		end
-		--]]
 	end
 	AceGUI:ClearFocus()
 end
@@ -307,9 +274,7 @@ local methods = {
 			if self.desc then
 				self.desc:SetTextColor(0.5, 0.5, 0.5)
 			end
-			-- v27
---			self.checkbg:SetBackdropColor(0.5, 0.5, 0.5) -- s a
-			self.checkbg.bg:SetColorTexture(0.5, 0.5, 0.5)
+			self.checkbg.bg:SetColorTexture(0.5, 0.5, 0.5) -- s a
 		else
 			self.frame:Enable()
 			self.text:SetTextColor(1, 1, 1)
@@ -323,9 +288,7 @@ local methods = {
 			if self.desc then
 				self.desc:SetTextColor(1, 1, 1)
 			end
-			-- v27
---			self.checkbg:SetBackdropColor(0, 0, 0) -- s a
-			self.checkbg.bg:SetColorTexture(0, 0, 0)
+			self.checkbg.bg:SetColorTexture(0, 0, 0) -- s a
 		end
 	end,
 
@@ -509,7 +472,7 @@ local function Constructor()
 	frame:SetScript("OnMouseDown", CheckBox_OnMouseDown)
 	frame:SetScript("OnMouseUp", CheckBox_OnMouseUp)
 
-	frame:SetHitRectInsets(0, 10, 0, 0) -- s a (avoid misclicking) -- v27 20>10
+	frame:SetHitRectInsets(0, 10, 0, 0) -- s a (avoid misclicking)
 
 	--[[ s r
 	local checkbg = frame:CreateTexture(nil, "ARTWORK")
@@ -522,7 +485,7 @@ local function Constructor()
 	check:SetAllPoints(checkbg)
 	check:SetTexture(130751) -- Interface\\Buttons\\UI-CheckBox-Check
 	]]
-	local checkbg = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil)
+	local checkbg = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 	checkbg:SetWidth(14)
 	checkbg:SetHeight(14)
 	checkbg:SetPoint("LEFT")
@@ -577,15 +540,11 @@ local function Constructor()
 	]]
 	local imagebg, image
 	if USE_ICON_BACKDROP then
-		imagebg = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		imagebg = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 		imagebg:SetHeight(DEFAULT_ICON_SIZE) -- 24 is frames full height
 		imagebg:SetWidth(DEFAULT_ICON_SIZE)
 		imagebg:SetPoint("LEFT", checkbg, "RIGHT", 2, 0)
 
-		--[[ v27
-		OmniCDC.SetBackdrop(imagebg, "ACD")
-		imagebg:SetBackdropBorderColor(0.2, 0.2, 0.05)
-		]]
 		imagebg.border = imagebg:CreateTexture(nil, "BORDER")
 		imagebg.border:SetTexelSnappingBias(0.0)
 		imagebg.border:SetSnapToPixelGrid(false)
@@ -595,10 +554,6 @@ local function Constructor()
 		image = imagebg:CreateTexture(nil, "OVERLAY")
 		image:SetTexelSnappingBias(0.0)
 		image:SetSnapToPixelGrid(false)
-		--[[ v27
-		image:SetPoint("TOPLEFT", imagebg.TopEdge, "BOTTOMLEFT")
-		image:SetPoint("BOTTOMRIGHT", imagebg.BottomEdge, "TOPRIGHT")
-		]]
 		image:SetPoint("TOPLEFT", imagebg, "TOPLEFT", edgeSize, -edgeSize)
 		image:SetPoint("BOTTOMRIGHT", imagebg, "BOTTOMRIGHT", -edgeSize, edgeSize)
 	else

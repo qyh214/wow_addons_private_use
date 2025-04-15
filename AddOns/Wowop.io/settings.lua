@@ -5,7 +5,8 @@ local addonName, addon = ...
 WOWOP_SETTINGS = WOWOP_SETTINGS or {
     disableDeathPopup = false,
     alwaysExpandTooltips = false,
-    disableAutoMPlusPopup = false
+    disableAutoMPlusPopup = false,
+    disableDungeonHelper = false  -- Enabled by default, option to disable
 }
 
 -- Add helper functions to check settings (moved to top)
@@ -19,6 +20,10 @@ end
 
 function addon:IsAutoMPlusPopupEnabled()
     return not WOWOP_SETTINGS.disableAutoMPlusPopup
+end
+
+function addon:IsDungeonHelperDisabled()
+    return WOWOP_SETTINGS.disableDungeonHelper
 end
 
 -- Create settings panel
@@ -97,6 +102,28 @@ frame:SetScript("OnShow", function(frame)
         GameTooltip:Show()
     end)
     mplusPopupCheckbox:SetScript("OnLeave", GameTooltip_Hide)
+    
+    -- Create dungeon helper checkbox
+    local dungeonHelperCheckbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    dungeonHelperCheckbox:SetPoint("TOPLEFT", mplusPopupCheckbox, "BOTTOMLEFT", 0, -8)
+    dungeonHelperCheckbox.text = dungeonHelperCheckbox:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    dungeonHelperCheckbox.text:SetPoint("LEFT", dungeonHelperCheckbox, "RIGHT", 8, 0)
+    dungeonHelperCheckbox.text:SetText("Disable dungeon talent suggestions")
+    dungeonHelperCheckbox:SetChecked(WOWOP_SETTINGS.disableDungeonHelper)
+    dungeonHelperCheckbox:SetScript("OnClick", function(self)
+        WOWOP_SETTINGS.disableDungeonHelper = self:GetChecked()
+        if self:GetChecked() then
+            PlaySound(856) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+        else
+            PlaySound(857) -- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+        end
+    end)
+    dungeonHelperCheckbox:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("If checked, the talent suggestion popup will not show when entering a mythic dungeon.")
+        GameTooltip:Show()
+    end)
+    dungeonHelperCheckbox:SetScript("OnLeave", GameTooltip_Hide)
     
     frame:SetScript("OnShow", nil)
 end)

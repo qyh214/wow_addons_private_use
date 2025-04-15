@@ -4,16 +4,6 @@ ns.defaults = {
 
   profile = {
 
-    --FogOfWar
-      colorR = 1,
-      colorG = 1,
-      colorB = 1,
-      colorA = 1,
-      colorR_Reduce = 0.50,
-      colorG_Reduce = 0.50,
-      colorB_Reduce = 0.50,
-      colorA_Reduce = 0.50,
-
     --0 General tab
       journal = true,
       tomtom = true,
@@ -21,6 +11,7 @@ ns.defaults = {
       assignedgray = true,
       graymultipleID = true,
       ChatMassage = false,
+      CreateAndCopyLinks = true,
       RestoreZoneDeletedIcons = false,
       RestoreContinentDeletedIcons = false,
       RestoreAzerothDeletedIcons = false,
@@ -395,7 +386,7 @@ ns.defaults = {
         ClassicProfession = false,
         RemoveBlizzPOIs = true,
         FogOfWar = true,
-        FogOfWarAlphaReduce = true,
+        MistOfTheUnexplored = true,
         SyncZoneAndMinimap = false,
         SyncCapitalsAndMinimap = false,
         ZoneChanged = true,
@@ -435,29 +426,46 @@ ns.defaults = {
         MinimapCapitalsGeneral = true,
       },
 
-    },
-  char = {
+    deletedIcons = {
 
-    AzerothDeletedIcons = {
-      ['*'] = {},
+      AzerothDeletedIcons = {
+        ['*'] = {},
+      },
+      ContinentDeletedIcons = {
+        ['*'] = {},
+      },
+      ZoneDeletedIcons = {
+        ['*'] = {},
+      },
+      MinimapZoneDeletedIcons = {
+        ['*'] = {},
+      },
+      DungeonDeletedIcons = {
+        ['*'] = {},
+      },
+      CapitalsDeletedIcons = {
+        ['*'] = {},
+      },
+      MinimapCapitalsDeletedIcons = {
+        ['*'] = {},
+      },
     },
-    ContinentDeletedIcons = {
-      ['*'] = {},
-    },
-    ZoneDeletedIcons = {
-      ['*'] = {},
-    },
-    MinimapZoneDeletedIcons = {
-      ['*'] = {},
-    },
-    DungeonDeletedIcons = {
-      ['*'] = {},
-    },
-    CapitalsDeletedIcons = {
-      ['*'] = {},
-    },
-    MinimapCapitalsDeletedIcons = {
-      ['*'] = {},
-    },
+
+    --12 FogOfWarColor
+    FogOfWarColor = {
+      --FogOfWar
+      colorR = 1,
+      colorG = 1,
+      colorB = 1,
+      colorA = 1,
+      FogOfWarColorR = 1,
+      FogOfWarColorG = 0,
+      FogOfWarColorB = 0,
+      FogOfWarColorA = 1,
+      colorR_Reduce = 0.65,
+      colorG_Reduce = 0.65,
+      colorB_Reduce = 0.65,
+      colorA_Reduce = 0.65,
+    }
   },
 }

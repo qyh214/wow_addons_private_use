@@ -3,6 +3,7 @@ local L = app.L
 
 -- WoW API Cache
 local GetItemInfo = app.WOWAPI.GetItemInfo;
+local IsRetrieving = app.Modules.RetrievingData.IsRetrieving
 
 -- Illusion Class
 local AccountWideIllusionData = {};
@@ -49,7 +50,11 @@ if C_TransmogCollection then
 	local GetIllusionStrings = C_TransmogCollection.GetIllusionStrings;
 	if GetIllusionStrings then
 		illusionFields.link = function(t)
-			return select(2, GetIllusionStrings(t[KEY]));
+			local name, link = GetIllusionStrings(t[KEY])
+			if not IsRetrieving(link) then
+				return link
+			end
+			return name
 		end
 	elseif GetIllusionLink then
 		illusionFields.link = function(t)

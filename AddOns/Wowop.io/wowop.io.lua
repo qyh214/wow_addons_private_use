@@ -407,23 +407,27 @@ local function AddStatsToTooltip(tooltip, name, realm, forceShowAll)
         tooltip:AddLine(" ")  -- Empty line for spacing
         tooltip:AddLine("WoWOP.io Stats:", 0.27, 0.74, 0.98)
         
-        -- Add overall score with color
-        if playerData.score then
-            local r, g, b = GetScoreColor(playerData.score)
-            -- Calculate total runs by summing up runs from all specs
+        -- Show spec scores in condensed view
+        if playerData.specs then
+            -- Calculate total runs
             local total_runs = 0
-            if playerData.specs then
-                for _, specData in pairs(playerData.specs) do
-                    total_runs = total_runs + (specData.run_count or 0)
-                end
+            for _, specData in pairs(playerData.specs) do
+                total_runs = total_runs + (specData.run_count or 0)
             end
             
-            tooltip:AddDoubleLine(
-                string.format("Overall Score (%d Runs):", total_runs),
-                string.format("%.1f", playerData.score),
-                1, 1, 1,  -- white for text
-                r, g, b   -- colored score
-            )
+            -- Add total runs line
+            tooltip:AddLine(string.format("Total Runs: %d", total_runs), 1, 1, 1)
+            
+            -- Add each spec score
+            for specName, specData in pairs(playerData.specs) do
+                local r, g, b = GetScoreColor(specData.score)
+                tooltip:AddDoubleLine(
+                    string.format("%s:", specName),
+                    string.format("%.1f", specData.score),
+                    1, 1, 1,  -- white for text
+                    r, g, b   -- colored score
+                )
+            end
             
             -- Add karma if it exists and is greater than 0
             if playerData.karma and playerData.karma > 0 then
@@ -435,7 +439,7 @@ local function AddStatsToTooltip(tooltip, name, realm, forceShowAll)
         if addon:ShouldExpandTooltips() or forceShowAll then
             if playerData.specs then
                 tooltip:AddLine(" ")  -- Spacing
-                tooltip:AddLine("Spec Scores:", 0.27, 0.74, 0.98)
+                tooltip:AddLine("Detailed Scores:", 0.27, 0.74, 0.98)
                 
                 for specName, specData in pairs(playerData.specs) do
                     local r, g, b = GetScoreColor(specData.score)
@@ -462,32 +466,32 @@ local function AddStatsToTooltip(tooltip, name, realm, forceShowAll)
                     
                     -- Modify the bracket score checks to include nil checks
                     if specData.brackets then
-                        -- Check "8-11" bracket
-                        local bracket_8_11 = specData.brackets["8-11"]
-                        if bracket_8_11 and bracket_8_11 > 0 then
-                            local r, g, b = GetScoreColor(bracket_8_11)
-                            tooltip:AddDoubleLine("Bracket 8-11:", 
-                                string.format("%.1f", bracket_8_11),
+                        -- Check "2-6" bracket
+                        local bracket_2_6 = specData.brackets["2-6"]
+                        if bracket_2_6 and bracket_2_6 > 0 then
+                            local r, g, b = GetScoreColor(bracket_2_6)
+                            tooltip:AddDoubleLine("Bracket 2-6:", 
+                                string.format("%.1f", bracket_2_6),
                                 1, 1, 1,  -- white for bracket text
                                 r, g, b)  -- colored score
                         end
                         
-                        -- Check "12-13" bracket
-                        local bracket_12_13 = specData.brackets["12-13"]
-                        if bracket_12_13 and bracket_12_13 > 0 then
-                            local r, g, b = GetScoreColor(bracket_12_13)
-                            tooltip:AddDoubleLine("Bracket 12-13:", 
-                                string.format("%.1f", bracket_12_13),
+                        -- Check "7-10" bracket
+                        local bracket_7_10 = specData.brackets["7-10"]
+                        if bracket_7_10 and bracket_7_10 > 0 then
+                            local r, g, b = GetScoreColor(bracket_7_10)
+                            tooltip:AddDoubleLine("Bracket 7-10:", 
+                                string.format("%.1f", bracket_7_10),
                                 1, 1, 1,  -- white for bracket text
                                 r, g, b)  -- colored score
                         end
                         
-                        -- Check "14+" bracket
-                        local bracket_14_plus = specData.brackets["14+"]
-                        if bracket_14_plus and bracket_14_plus > 0 then
-                            local r, g, b = GetScoreColor(bracket_14_plus)
-                            tooltip:AddDoubleLine("Bracket 14+:", 
-                                string.format("%.1f", bracket_14_plus),
+                        -- Check "11-13" bracket
+                        local bracket_11_13 = specData.brackets["11-13"]
+                        if bracket_11_13 and bracket_11_13 > 0 then
+                            local r, g, b = GetScoreColor(bracket_11_13)
+                            tooltip:AddDoubleLine("Bracket 11-13:", 
+                                string.format("%.1f", bracket_11_13),
                                 1, 1, 1,  -- white for bracket text
                                 r, g, b)  -- colored score
                         end
@@ -782,20 +786,20 @@ local function LookupPlayerStats(playerFullName)
             
             -- Color the bracket scores
             if specData.brackets then
-                if specData.brackets["8-11"] > 0 then
-                    local r, g, b = GetScoreColor(specData.brackets["8-11"])
-                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["8-11"])
-                    print("    Bracket 8-11: " .. coloredBracketScore)
+                if specData.brackets["2-6"] > 0 then
+                    local r, g, b = GetScoreColor(specData.brackets["2-6"])
+                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["2-6"])
+                    print("    Bracket 2-6: " .. coloredBracketScore)
                 end
-                if specData.brackets["12-13"] > 0 then
-                    local r, g, b = GetScoreColor(specData.brackets["12-13"])
-                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["12-13"])
-                    print("    Bracket 12-13: " .. coloredBracketScore)
+                if specData.brackets["7-10"] > 0 then
+                    local r, g, b = GetScoreColor(specData.brackets["7-10"])
+                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["7-10"])
+                    print("    Bracket 7-10: " .. coloredBracketScore)
                 end
-                if specData.brackets["14+"] > 0 then
-                    local r, g, b = GetScoreColor(specData.brackets["14+"])
-                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["14+"])
-                    print("    Bracket 14+: " .. coloredBracketScore)
+                if specData.brackets["11-13"] > 0 then
+                    local r, g, b = GetScoreColor(specData.brackets["11-13"])
+                    local coloredBracketScore = string.format("|cff%02x%02x%02x%.1f|r", r*255, g*255, b*255, specData.brackets["11-13"])
+                    print("    Bracket 11-13: " .. coloredBracketScore)
                 end
             end
         end
@@ -1013,6 +1017,13 @@ OverallFrame:SetSize(600, 400)
 OverallFrame:SetPoint("CENTER")
 OverallFrame:SetFrameStrata("HIGH")
 OverallFrame:Hide()
+
+-- Make the frame movable
+OverallFrame:SetMovable(true)
+OverallFrame:EnableMouse(true)
+OverallFrame:RegisterForDrag("LeftButton")
+OverallFrame:SetScript("OnDragStart", OverallFrame.StartMoving)
+OverallFrame:SetScript("OnDragStop", OverallFrame.StopMovingOrSizing)
 
 -- Title text
 OverallFrame.title = OverallFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -1245,6 +1256,24 @@ SlashCmdList["WOWOP"] = function(msg)
         TestDeathAnalysis(rest)
     elseif command == "overall" then
         PrintOverallData()
+    elseif command == "dh" or command == "dungeonhelper" then
+        -- Call the dungeon helper slash command
+        if addon.DungeonHelper then
+            local dungeonId = tonumber(rest)
+            if dungeonId and WOWOP_DUNGEON_DATABASE.dungeon_talents[dungeonId] then
+                addon.DungeonHelper:ShowSpellPopup(dungeonId)
+            else
+                -- Get current dungeon
+                local currentDungeonId = addon.DungeonHelper:GetDungeonIdFromZone()
+                if currentDungeonId then
+                    addon.DungeonHelper:ShowSpellPopup(currentDungeonId)
+                else
+                    print("|cffff0000WoWOP.io:|r You are not in a dungeon. Use /wowop dh [dungeon_id] to test a specific dungeon.")
+                end
+            end
+        else
+            print("|cffff0000WoWOP.io:|r |cffff9933Error - Dungeon Helper module not loaded properly|r")
+        end
     else
         print("|cffff0000WoWOP.io:|r |cffff9933Available commands:|r")
         print("/wowop - Show this help message")
@@ -1253,6 +1282,7 @@ SlashCmdList["WOWOP"] = function(msg)
         print("/wowop lookup Playername-Realm - Look up a player's scores")
         print("/wowop test spellId - Test death analysis for a specific spell")
         print("/wowop overall - Show overall damage/healing/interrupt/death data from Details!")
+        print("/wowop dh [dungeon_id] - Show helpful talents for the current or specified dungeon")
     end
 end
 

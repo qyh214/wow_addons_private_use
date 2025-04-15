@@ -2,6 +2,31 @@
 
 -- https://github.com/peavers/PeaversTalentsData/blob/master/docs/index.md
 
+local presetIcons = {
+	mythic = {
+		[0] = Addon.MYTHICPLUS_ICON,
+		5912508, -- Cinderbrew Meadery
+		5912510, -- Darkflame Cleft
+		6422372, -- Operation: Floodgate
+		3025336, -- Operation: Mechagon - Workshop
+		5912512, -- Priory of the Sacred Flame
+		2178735, -- The MOTHERLODE!!
+		5912514, -- The Rookery
+		3759934, -- Theater of Pain
+	},
+	raid = {
+		[0] = 6392621,
+		6392628, -- Vexie and the Geargrinders
+		6253176, -- Cauldron of Carnage
+		6392625, -- Rik Reverb
+		6392627, -- Stix Bunkjunker
+		6392626, -- Sprocketmonger Lockenstock
+		6392624, -- The One-Armed Bandit
+		6392623, -- Mug'Zee, Heads of Security
+		6392621, -- Chrome King Gallywix
+	},
+};
+
 Addon.PresetDataAddons = {
 	{
 		name = "PeaversTalentsData",
@@ -19,22 +44,18 @@ Addon.PresetDataAddons = {
 			mythic = "M+",
 			raid = "Raid",
 			misc = "Misc",
+			heroic_raid = "Raid: Heroic",
+			mythic_raid = "Raid: Mythic",
+		},
+		Prefixes = {
+			heroic_raid = "Heroic: ",
+			mythic_raid = "Mythic: ",
 		},
 		Icons = {
-			mythic = {
-				[0] = Addon.MYTHICPLUS_ICON,
-				5912508, -- Cinderbrew Meadery
-				5912510, -- Darkflame Cleft
-				6422372, -- Operation: Floodgate
-				3025336, -- Operation: Mechagon - Workshop
-				5912512, -- Priory of the Sacred Flame
-				2178735, -- The MOTHERLODE!!
-				5912514, -- The Rookery
-				3759934, -- Theater of Pain
-			},
-			raid = {
-				[0] = 6392621,
-			},
+			mythic      = presetIcons.mythic,
+			raid        = presetIcons.raid,
+			heroic_raid = presetIcons.raid,
+			mythic_raid = presetIcons.raid,
 		},
 	},
 };
@@ -126,11 +147,12 @@ local function GetPeaversTalentsData(addonIndex)
 
 		-- Configs
 		for _, build in ipairs(categoryBuilds) do
+			local prefix = option.isCombineGroups and sourceAddonInfo.Prefixes[categoryKey] or "";
 			table.insert(
 				data,
 				{
 					isPreset = true,
-					name = build.label,
+					name = prefix..build.label,
 					icon = GetPeaversTalentsDataIcon(categoryKey, build.dungeonID) or specIconID,
 					text = build.talentString,
 				}

@@ -524,6 +524,7 @@ end
 -- Implementation
 SoftReserveWindow = app:CreateWindow("SoftReserves", {
 	IgnoreQuestUpdates = true,
+	SettingsName = "Soft Reserves",
 	Commands = { "attsr", "attsoftreserve" },
 	OnCommand = function(self, cmd)
 		if cmd and cmd ~= "" then
@@ -618,8 +619,7 @@ SoftReserveWindow = app:CreateWindow("SoftReserves", {
 		if SoftReserves then settings.SoftReserves = SoftReserves; end
 		if SoftReservePersistence then settings.SoftReservePersistence = SoftReservePersistence; end
 	end,
-	OnRebuild = function(self)
-		if self.data then return true; end
+	OnInit = function(self, handlers)
 		self.groupMembers = {};
 		local options = {
 			setmetatable({	-- Lock All Soft Reserves Button
@@ -1096,7 +1096,6 @@ SoftReserveWindow = app:CreateWindow("SoftReserves", {
 				app.Sort(g, SortByTextAndPriority);
 			end,
 		};
-		return true;
 	end,
 	OnUpdate = function(self, ...)
 		-- Update the groups without forcing Debug Mode.

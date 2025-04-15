@@ -22,8 +22,8 @@ if L then
 	L.enrage_warning2 = "即将 激怒！"
 	L.enrage_message = "10秒后，激怒！"
 	L.enrage_finished = "激活结束！50-60秒后，再次发动。"
-	L.enrage_bar = "<激怒>"
-	L.enraged_bar = "<已激怒>"
+	L.enrage_bar = "激怒"
+	L.enraged_bar = "已激怒"
 end
 
 L = BigWigs:NewBossLocale("Gruul the Dragonkiller", "zhCN")
@@ -33,7 +33,7 @@ if L then
 
 	L.grow = "成长"
 	L.grow_desc = "计算并当成长时发出警告。"
-	L.grow_message = "成长：>%d<！"
+	L.grow_message = "成长：%d ！"
 	L.grow_bar = "成长：%d"
 
 	L.grasp = "碎裂"
@@ -51,7 +51,7 @@ if L then
 	L.engage_trigger = "戈隆才是外域的主宰！"
 
 	L.heal_message = "盲眼先知 - 治疗祷言！"
-	L.heal_bar = "<治疗>"
+	L.heal_bar = "治疗"
 
 	L.shield_message = "盲眼先知 真言术：盾！"
 
@@ -84,7 +84,7 @@ if L then
 
 	L.abyssal = "深渊燃魔"
 	L.abyssal_desc = "当创造深渊燃魔时发出警报。"
-	L.abyssal_message = "深渊燃魔：>%d<！"
+	L.abyssal_message = "深渊燃魔：%d ！"
 
 	L.heal = "治疗"
 	L.heal_desc = "当地狱火导魔者施放治疗时发出警报。"
@@ -94,7 +94,7 @@ if L then
 	L.banish_desc = "当你放逐玛瑟里顿时发出警报。"
 	L.banish_message = "放逐成功！约10秒。"
 	L.banish_over_message = "放逐消失！"
-	L.banish_bar = "<放逐中>"
+	L.banish_bar = "放逐中"
 
 	L.exhaust_desc = "心灵疲惫记时条。"
 	L.exhaust_bar = "心灵疲惫：%s"

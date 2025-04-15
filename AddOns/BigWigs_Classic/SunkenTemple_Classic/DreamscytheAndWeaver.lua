@@ -65,7 +65,7 @@ function mod:AcidBreathApplied(args)
 			self:PlaySound(args.spellId, "alert")
 		end
 	else
-		local bossUnit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID, true)
+		local bossUnit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID)
 		if bossUnit and targetUnit and self:Tanking(bossUnit, targetUnit) then
 			self:StackMessage(args.spellId, "purple", args.destName, args.amount, 2)
 			if args.amount then

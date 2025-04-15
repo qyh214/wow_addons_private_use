@@ -26,6 +26,8 @@ mod:RegisterEnableMob(
 	212411, -- Torchsnarl
 	208457, -- Skittering Darkness
 	208456, -- Shuffling Horror
+	210539, -- Corridor Creeper
+	220616, -- Corridor Sleeper
 	218475, -- Skitter
 	209439, -- Creaky Mine Cart
 	212129 -- Creaky Mine Cart
@@ -47,6 +49,7 @@ if L then
 	L.torchsnarl = "Torchsnarl"
 	L.skittering_darkness = "Skittering Darkness"
 	L.shuffling_horror = "Shuffling Horror"
+	L.corridor_creeper = "Corridor Creeper"
 	L.creaky_mine_cart = "Creaky Mine Cart"
 
 	L.minecart = "Mine Cart Minigame"
@@ -89,6 +92,8 @@ function mod:GetOptions()
 		422393, -- Suffocating Darkness
 		-- Shuffling Horror
 		{422541, "NAMEPLATE"}, -- Drain Light
+		-- Corridor Creeper
+		{469620, "DISPEL"}, -- Creeping Shadow
 		-- Creaky Mine Cart
 		{"minecart", "INFOBOX"},
 	}, {
@@ -102,6 +107,7 @@ function mod:GetOptions()
 		[426619] = L.torchsnarl,
 		[422393] = L.skittering_darkness,
 		[422541] = L.shuffling_horror,
+		[469620] = L.corridor_creeper,
 		["minecart"] = L.creaky_mine_cart,
 	}
 end
@@ -178,6 +184,9 @@ function mod:OnBossEnable()
 	self:Log("SPELL_INTERRUPT", "DrainLightInterrupt", 422541)
 	self:Log("SPELL_CAST_SUCCESS", "DrainLightSuccess", 422541)
 	self:Death("ShufflingHorrorDeath", 208456)
+
+	-- Corridor Creeper
+	self:Log("SPELL_AURA_APPLIED_DOSE", "CreepingShadowApplied", 469620)
 
 	-- Creaky Mine Cart
 	self:Log("SPELL_CAST_SUCCESS", "ShadowyCloak", 423566) -- start event
@@ -308,10 +317,16 @@ function mod:KoboldTaskworkerEngaged(guid)
 	self:Nameplate(426883, 3.2, guid) -- Bonk!
 end
 
-function mod:Bonk(args)
-	self:Message(args.spellId, "orange")
-	self:Nameplate(args.spellId, 0, args.sourceGUID)
-	self:PlaySound(args.spellId, "alarm")
+do
+	local prev = 0
+	function mod:Bonk(args)
+		self:Nameplate(args.spellId, 0, args.sourceGUID)
+		if args.time - prev > 1.5 then
+			prev = args.time
+			self:Message(args.spellId, "orange")
+			self:PlaySound(args.spellId, "alarm")
+		end
+	end
 end
 
 function mod:BonkSuccess(args)
@@ -325,7 +340,7 @@ end
 -- Wandering Candle
 
 function mod:WanderingCandleEngaged(guid)
-	self:Nameplate(430171, 6.8, guid) -- Quenching Blast
+	self:Nameplate(430171, 5.3, guid) -- Quenching Blast
 	self:Nameplate(440652, 11.9, guid) -- Surging Flame
 end
 
@@ -410,24 +425,33 @@ end
 -- Sootsnout
 
 do
-	local timer
+	local duration, timer, prevGUID = 40, nil, nil
+	local function ClearNPC()
+		timer = nil
+		mod:ClearNameplate(prevGUID)
+		prevGUID = nil
+		mod:StopBar(426295) -- Flaming Tether
+		mod:StopBar(1218131) -- Burning Candles
+	end
 
 	function mod:SootsnoutEngaged(guid)
+		prevGUID = guid
 		self:CDBar(426295, 18.9) -- Flaming Tether
 		self:Nameplate(426295, 18.9, guid) -- Flaming Tether
 		self:CDBar(1218131, 9.2) -- Burning Candles
 		self:Nameplate(1218131, 9.2, guid) -- Burning Candles
-		timer = self:ScheduleTimer("SootsnoutDeath", 40)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	function mod:FlamingTether(args)
+		prevGUID = args.sourceGUID
 		if timer then
 			self:CancelTimer(timer)
 		end
 		self:Message(args.spellId, "red", CL.casting:format(args.spellName))
 		self:Nameplate(args.spellId, 0, args.sourceGUID)
 		self:PlaySound(args.spellId, "alert")
-		timer = self:ScheduleTimer("SootsnoutDeath", 40)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	function mod:FlamingTetherInterrupt(args)
@@ -446,6 +470,7 @@ do
 			-- cast once per player
 			if args.time - prev > 5 then
 				prev = args.time
+				prevGUID = args.sourceGUID
 				if timer then
 					self:CancelTimer(timer)
 				end
@@ -453,7 +478,7 @@ do
 				self:CDBar(args.spellId, 12.2)
 				self:Nameplate(args.spellId, 12.2, args.sourceGUID)
 				self:PlaySound(args.spellId, "info")
-				timer = self:ScheduleTimer("SootsnoutDeath", 40)
+				timer = self:ScheduleTimer(ClearNPC, duration)
 			end
 		end
 	end
@@ -470,39 +495,44 @@ do
 	end
 
 	function mod:CeaselessFlame(args)
+		prevGUID = args.sourceGUID
 		if timer then
 			self:CancelTimer(timer)
 		end
 		-- this is only cast if the tank is grabbed by One-Hand Headlock or if Torchsnarl is dead
 		self:Message(args.spellId, "yellow")
 		self:PlaySound(args.spellId, "alarm")
-		timer = self:ScheduleTimer("SootsnoutDeath", 40)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	function mod:SootsnoutDeath(args)
+		prevGUID = args.destGUID
 		if timer then
 			self:CancelTimer(timer)
-			timer = nil
 		end
-		self:StopBar(426295) -- Flaming Tether
-		self:StopBar(1218131) -- Burning Candles
-		if args then
-			self:ClearNameplate(args.destGUID)
-		end
+		ClearNPC()
 	end
 end
 
 -- Torchsnarl
 
 do
-	local timer
+	local duration, timer, prevGUID = 45, nil, nil
+	local function ClearNPC()
+		timer = nil
+		mod:ClearNameplate(prevGUID)
+		prevGUID = nil
+		mod:StopBar(426619) -- One-Hand Headlock
+		mod:StopBar(1218117) -- Massive Stomp
+	end
 
 	function mod:TorchsnarlEngaged(guid)
+		prevGUID = guid
 		self:CDBar(426619, 0.9) -- One-Hand Headlock
 		self:Nameplate(426619, 0.9, guid) -- One-Hand Headlock
 		self:CDBar(1218117, 6.9) -- Massive Stomp
 		self:Nameplate(1218117, 6.9, guid) -- Massive Stomp
-		timer = self:ScheduleTimer("TorchsnarlDeath", 45)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	do
@@ -515,13 +545,14 @@ do
 		end
 
 		function mod:OneHandHeadlock(args)
+			prevGUID = args.sourceGUID
 			if timer then
 				self:CancelTimer(timer)
 			end
 			self:GetUnitTarget(printTarget, 0.1, args.sourceGUID)
 			self:CDBar(args.spellId, 36.4)
 			self:Nameplate(args.spellId, 36.4, args.sourceGUID)
-			timer = self:ScheduleTimer("TorchsnarlDeath", 45)
+			timer = self:ScheduleTimer(ClearNPC, duration)
 		end
 	end
 
@@ -533,6 +564,7 @@ do
 	end
 
 	function mod:MassiveStomp(args)
+		prevGUID = args.sourceGUID
 		if timer then
 			self:CancelTimer(timer)
 		end
@@ -540,29 +572,26 @@ do
 		self:CDBar(args.spellId, 18.2)
 		self:Nameplate(args.spellId, 18.2, args.sourceGUID)
 		self:PlaySound(args.spellId, "alert")
-		timer = self:ScheduleTimer("SootsnoutDeath", 40)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	function mod:Pyropummel(args)
+		prevGUID = args.sourceGUID
 		if timer then
 			self:CancelTimer(timer)
 		end
 		-- this is only cast if someone is rooted by Flaming Tether or if Sootsnout is dead
 		self:Message(args.spellId, "orange")
 		self:PlaySound(args.spellId, "alarm")
-		timer = self:ScheduleTimer("TorchsnarlDeath", 45)
+		timer = self:ScheduleTimer(ClearNPC, duration)
 	end
 
 	function mod:TorchsnarlDeath(args)
+		prevGUID = args.destGUID
 		if timer then
 			self:CancelTimer(timer)
-			timer = nil
 		end
-		self:StopBar(426619) -- One-Hand Headlock
-		self:StopBar(1218117) -- Massive Stomp
-		if args then
-			self:ClearNameplate(args.destGUID)
-		end
+		ClearNPC()
 	end
 end
 
@@ -603,6 +632,20 @@ end
 
 function mod:ShufflingHorrorDeath(args)
 	self:ClearNameplate(args.destGUID)
+end
+
+-- Corridor Creeper
+
+function mod:CreepingShadowApplied(args)
+	local amount = args.amount or 1
+	if amount >= 6 and amount % 3 == 0 and (self:Me(args.destGUID) or self:Dispeller("magic", nil, args.spellId)) then
+		self:StackMessage(args.spellId, "purple", args.destName, amount, 1)
+		if amount >= 12 and self:Dispeller("magic", nil, args.spellId) then
+			self:PlaySound(args.spellId, "warning", nil, args.destName)
+		else
+			self:PlaySound(args.spellId, "alert", nil, args.destName)
+		end
+	end
 end
 
 -- Creaky Mine Cart

@@ -15,18 +15,25 @@ GYJMEIMEIDB = {
         [330532] = {"流血", "注意流血.ogg"}, --Jagged Quarrel
         [333861] = {"流血", "注意流血.ogg"}, --Ricocheting Blade
         [448619] = {"冲锋", "注意冲锋.ogg"}, --Reckless Delivery
+        [427616] = {"点名", "注意点名.ogg"}, -- Energized Barrage
     },
     trash_cc = {
         --[spellID] = {"name",category,"soundFile","role", "show target" (true/false), "important" (true/false)},
-        [267354] = {"刀扇", 2, "", "ALL", false, true}, --刀扇
-        [268702] = {"AoE", 0, "", "ALL", false, true}, --狂怒地震
-        [427342] = {"防御", 2, "CC.ogg", "ALL", false, true}, --防御
-        [1215412] = {"治疗吸收", 2, "CC.ogg", "ALL", false, true}, --腐蚀性粘液
-        [465120] = {"准备锁定", 2, "CC.ogg", "ALL", true, true}, --上发条施法
-        [465127] = {"锁定", 2, "", "ALL", true, true}, --上发条引导
-        [341969] = {"AoE", 0, "", "ALL", false, true}, --枯萎排放
-        [471733] = {"治疗", 0, "", "ALL", false, true}, --恢复性藻类
-        [1214780] = {"AoE", 0, "Kick.ogg", "ALL", false, true}, --最大扭曲
+        [267354] = {"刀扇",2,"嘟嘟.ogg","ALL",false,true}, --Fan of Knives
+        [268702] = {"狂怒地震",0,"","ALL",false,true}, --Furious Quake
+        [330810] = {"束缚灵魂",0,"","ALL",true,true}, --Bind Soul
+        [427342] = {"防御",2,"嘟嘟.ogg","ALL",false,true}, --Defend
+        [1215412] = {"腐蚀凝胶",2,"","ALL",false,true}, --Corrosive Gunk
+        [465120] = {"上紧发条",2,"嘟嘟.ogg","ALL",true,true}, --Wind Up Cast
+        [465127] = {"上紧发条",2,"","ALL",true,true}, --Wind Up Channel
+        [341969] = {"凋零释放",0,"","ALL",false,true}, --Withering Discharge
+        [471733] = {"回春水藻",0,"","ALL",false,true}, --Restorative Algae
+        [424322] = {"爆炸烈焰",0,"","ALL",false,true}, --Explosive Flame
+        [1214780] = {"终极失真",0,"嘟嘟.ogg","ALL",false,true}, --Maximum Distortion
+        [444743] = {"连珠火球",0,".嘟嘟.ogg","ALL",false,true}, --Fireball Volley
+        [440687] = {"蜂蜜齐射",0,"嘟嘟.ogg","ALL",false,true}, --Honey Volley
+        [330868] = {"通灵箭雨",0,"嘟嘟.ogg","ALL",false,true}, --Necrotic Bolt Volley
+        [301088] = {"引爆",0,"","ALL",false,true}, --Detonate
     },
     timers = {
         --Cinderbrew Meadery
@@ -91,6 +98,8 @@ GYJMEIMEIDB = {
         ["167538"] = {[1215850] = {"SPELL_CAST_START", 0, "ALL", "AOE预警", 10.4, 13.2}}, --Earthcrusher
         ["167533"] = {[333827] = {"SPELL_CAST_START", 0, "ALL", "AOE预警", 2.1, 9.7}}, --Seismic Stomp
         ["169893"] = {[333299] = {"SPELL_CAST_SUCCESS", 2, "ALL", "准备诅咒", 6.9, 12.1}}, --Curse of Desolation
+        ["221760"] = {[444743] = {"SPELL_CAST_START", 6, "ALL", "准备躲避", 9.5, 24.3}}, -- Fireball Volley
+        ["206710"] = {[427601] = {"SPELL_CAST_START", 2, "ALL", "准备治疗", 36, 0.1}}, -- Burst of Light
     },
     private_auras = {
 
@@ -123,5 +132,6 @@ GYJMEIMEIDB = {
         [459799] = {"击退", 4, true, "小心击退.ogg"}, --Wallop
         [331288] = {"注意减伤", 4, true, "坦克承伤.ogg"}, --粉碎者赫文
         [443487] = {"注意减伤", 4, true, "坦克承伤.ogg"}, --绝命之刺
+        [459799] = {"你被击退", 4, true, "坦克承伤.ogg"}, -- Wallop
     },
 }

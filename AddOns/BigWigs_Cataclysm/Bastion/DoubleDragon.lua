@@ -119,7 +119,7 @@ end
 do
 	local function valionaHasLanded()
 		mod:StopBar(86622) -- Engulfing Magic
-		mod:Message("stages", "cyan", CL.landing:format(mod:SpellName(-2985)), 60639) -- Valiona
+		mod:Message("stages", "cyan", CL.boss_landing:format(mod:SpellName(-2985)), 60639) -- Valiona
 		mod:CDBar(86840, 26) -- Devouring Flames
 		mod:Bar(86788, 11) -- Blackout
 	end
@@ -165,7 +165,7 @@ function mod:DazzlingDestruction(args)
 		self:MessageOld(args.spellId, "red", "alarm", L["dazzling_message"])
 	elseif phaseCount == 3 then
 		self:ScheduleTimer(theralionHasLanded, 6)
-		self:Message("stages", "cyan", CL.landing:format(self:SpellName(-2994)), 60639) -- Theralion
+		self:Message("stages", "cyan", CL.boss_landing:format(self:SpellName(-2994)), 60639) -- Theralion
 		phaseCount = 0
 	end
 end

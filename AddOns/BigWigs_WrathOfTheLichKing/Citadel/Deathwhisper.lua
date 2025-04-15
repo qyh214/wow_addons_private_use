@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Lady Deathwhisper", 631, 1625)
 if not mod then return end
 mod:RegisterEnableMob(36855, 37949, 38010, 37890, 38009) -- Lady Deathwhisper, Cult Adherent, Reanimated Adherent, Cult Fanatic, Reanimated Fanatic
-mod:SetEncounterID(mod:Classic() and 846 or 1100)
+mod:SetEncounterID(BigWigsLoader.isWrath and 846 or 1100)
 mod:SetRespawnTime(30)
 mod:SetStage(1)
 

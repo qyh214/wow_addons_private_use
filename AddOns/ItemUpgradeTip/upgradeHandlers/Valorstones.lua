@@ -207,7 +207,7 @@ private.upgradeTrackInfo = {
         currency = valorstoneUpgradeData["carvedCrests"]
     },
     {
-        itemLevel = 659,
+        itemLevel = 649,
         upgrade1 = {rank = 4, upgradeLevel = 5, maxUpgradeLevel = 8},
         upgrade2 = {rank = 5, upgradeLevel = 1, maxUpgradeLevel = 6},
         currency = valorstoneUpgradeData["runedCrests"]

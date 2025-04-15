@@ -8,7 +8,7 @@
 			<Anchor point="CENTER"/>
 		</Anchors>
 		<Frames>
-			<Frame name="$parentAnchor" parentKey="anchor" enableMouse="true" clampedToScreen="true">
+			<Frame parentKey="anchor" enableMouse="false" clampedToScreen="true">
 				<Size>
 					<AbsDimension x="15" y="15"/>
 				</Size>
@@ -17,12 +17,12 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND">
-						<Texture name="$parentBG" setAllPoints="true" parentKey="background">
+						<Texture setAllPoints="true" parentKey="background">
 							<Color r="0.756" g="0" b="0.012" a="0.7"/>
 						</Texture>
 					</Layer>
 					<Layer level="ARTWORK">
-						<FontString name="$parentText" parentKey="text" inherits="GameFontNormal">
+						<FontString parentKey="text" inherits="GameFontNormal">
 							<Color r="1" g="1" b="1" a="1"/>
 							<Anchors>
 								<Anchor point="CENTER"/>
@@ -31,7 +31,7 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame name="$parentIcons" parentKey="container" clampedToScreen="true">
+			<Frame parentKey="container" clampedToScreen="true">
 				<Size>
 					<AbsDimension x="1" y="1"/>
 				</Size>
@@ -52,24 +52,24 @@
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentIcon" parentKey="icon"/>
+				<Texture parentKey="icon"/>
 			</Layer>
 			<Layer level="ARTWORK" textureSubLevel="2">
-				<FontString name="$parentHotKey" inherits="NumberFontNormalSmallGray" parentKey="hotKey" justifyH="RIGHT" text="RANGE_INDICATOR" hidden="true">
+				<FontString inherits="NumberFontNormalSmallGray" parentKey="hotKey" justifyH="RIGHT" text="RANGE_INDICATOR" hidden="true">
 					<Size x="32" y="10"/>
 					<Anchors>
 						<Anchor point="TOPLEFT" x="3" y="-3"/>
 					</Anchors>
-					<Color r="1.0" g="0.2" b="0.2" a="0.8"/><!-- 2772 -->
+					<Color r="1.0" g="1.0" b="1.0" a="0.8"/><!-- 11.1 -->
 				</FontString>
-				<FontString name="$parentCount" inherits="NumberFontNormal" parentKey="count" justifyH="RIGHT">
+				<FontString inherits="NumberFontNormal" parentKey="count" justifyH="RIGHT">
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
 					</Anchors>
 				</FontString>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString name="$parentName" parentKey="name" inherits="GameFontHighlightSmallOutline">
+				<FontString parentKey="name" inherits="GameFontHighlightSmallOutline">
 					<Size x="36" y="10"/>
 					<Anchors>
 						<Anchor point="BOTTOM" x="0" y="2"/>
@@ -100,12 +100,12 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="false" drawBling="false" drawEdge="false" hidden="true">
+			<Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="false" drawBling="false" drawEdge="false" hidden="true">
 				<SwipeTexture>
 					<Color r="1" g="1" b="1" a="0.8"/>
 				</SwipeTexture>
 			</Cooldown>
-			<Frame parentKey="PendingFrame" setAllPoints="true" hidden="true">
+			<Frame parentKey="PendingFrame" setAllPoints="true" hidden="true" ignoreParentAlpha="true">
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture parentKey="Glow" file="Interface\Transmogrify\Textures.png">
@@ -131,7 +131,7 @@
 					</OnUpdate>
 				</Scripts>
 			</Frame>
-			<Frame parentKey="AnimFrame" setAllPoints="true" hidden="true">
+			<Frame parentKey="AnimFrame" setAllPoints="true" hidden="true" ignoreParentAlpha="true">
 				<Layers>
 					<Layer level="OVERLAY">
 						<Texture parentKey="Glow" file="Interface\Transmogrify\Textures.png" alpha="0">

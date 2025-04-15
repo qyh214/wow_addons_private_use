@@ -21,24 +21,37 @@ app:CreateWindow("Unsorted", {
 			tinsert(achievementHeader.g, achievement);
 			self:Update();
 		end
+		self.data = {
+			text = L.UNSORTED,
+			title = L.UNSORTED .. DESCRIPTION_SEPARATOR .. app.Version,
+			icon = app.asset("WindowIcon_Unsorted"),
+			description = L.UNSORTED_DESC_2,
+			font = "GameFontNormalLarge",
+			expanded = true,
+			visible = true,
+		};
 	end,
-	OnRebuild = function(self)
-		if not self.data then
+	OnUpdate = function(self, ...)
+		if not self.data.g or #self.data.g < 1 then
 			local unsorted = app.Categories.Unsorted;
 			if unsorted then
-				self.data = app.CacheFields({
-					text = L.UNSORTED,
-					title = L.UNSORTED .. DESCRIPTION_SEPARATOR .. app.Version,
-					icon = app.asset("WindowIcon_Unsorted"),
-					description = L.UNSORTED_DESC_2,
-					font = "GameFontNormalLarge",
-					expanded = true,
-					visible = true,
-					g = unsorted,
-				});
+				self.data.g = unsorted;
+				app.CacheFields(self.data);
 				tinsert(unsorted, self.achievementHeader);
-				return true;
+				self:DefaultRebuild();
 			end
 		end
+		self:DefaultUpdate(...);
+		return false;
+	end,
+	OnLoad = function(self, settings)
+		if settings.Progress then
+			self.data.progress = settings.Progress;
+			self.data.total = settings.Total;
+		end
+	end,
+	OnSave = function(self, settings)
+		settings.Progress = self.data.progress;
+		settings.Total = self.data.total;
 	end,
 });

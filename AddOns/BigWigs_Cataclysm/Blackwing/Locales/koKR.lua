@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "koKR")
 if L then
 	L.discharge = "번개 방출"
 	L.stage3_yell_trigger = "버리겠어" -- 품위 있는 집주인답게 행동하려 했건만, 네놈들이 도무지 죽질 않는군! 겉치레는 이제 집어치우자고. 그냥 모두 없애 버리겠어!
-	--L.too_close = "Dragons are too close"
 end

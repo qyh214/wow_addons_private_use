@@ -201,6 +201,7 @@ local function Init()
 
             local tbl = {}
             local function GetCompletedAchievements()
+                if IsInInstance() then return end
                 wipe(tbl)
                 local categories = GetCategoryList()
                 for _, categoryID in ipairs(categories) do
@@ -215,7 +216,7 @@ local function Init()
                 local oneTime = 1
                 local isEnd
                 updateFrame:SetScript("OnUpdate", function(self, elapsed)
-                    if isEnd then
+                    if IsInInstance() or isEnd then
                         self:SetScript("OnUpdate", nil)
                         return
                     end
@@ -268,6 +269,7 @@ local function Init()
 
             local tbl = {}
             local function GetStatisticInfo()
+                if IsInInstance() then return end
                 wipe(tbl)
                 local categories = GetStatisticsCategoryList()
                 for _, categoryID in ipairs(categories) do
@@ -282,7 +284,7 @@ local function Init()
                 local oneTime = 1
                 local isEnd
                 updateFrame:SetScript("OnUpdate", function(self, elapsed)
-                    if isEnd then
+                    if IsInInstance() or isEnd then
                         self:SetScript("OnUpdate", nil)
                         return
                     end
@@ -298,7 +300,7 @@ local function Init()
                 end)
             end
 
-            After(6, function()
+            After(60, function()
                 GetStatisticInfo()
             end)
             C_Timer.NewTicker(300, function()
@@ -490,11 +492,167 @@ local function Init()
             end)
         end)
     end
+
+    -- 副本CD
+    do
+        WclBoxCharacter.instanceCD = WclBoxCharacter.instanceCD or {}
+
+        function NB.SaveInstanceCD()
+            wipe(WclBoxCharacter.instanceCD)
+            local time = GetServerTime()
+            for i = 1, GetNumSavedInstances() do
+                local name, lockoutID, resettime, difficultyID, locked, extended, instanceIDMostSig,
+                isRaid, maxPlayers, difficultyName, numEncounters, encounterProgress, extendDisabled,
+                instanceID = GetSavedInstanceInfo(i)
+                if locked then
+                    local encounterInfo = {}
+                    for ii = 1, numEncounters do
+                        local bossName, fileDataID, isKilled =
+                            GetSavedInstanceEncounterInfo(i, ii)
+                        encounterInfo[ii] = {
+                            bossName = bossName,
+                            isKilled = isKilled,
+                            bossIndex = ii,
+                        }
+                    end
+                    tinsert(WclBoxCharacter.instanceCD, {
+                        name = name,
+                        instanceID = instanceID,
+                        lockoutID = lockoutID,
+                        resettime = resettime,
+                        endtime = resettime + time,
+                        difficultyID = difficultyID,
+                        difficultyName = difficultyName,
+                        isRaid = isRaid,
+                        maxPlayers = maxPlayers,
+                        numEncounters = numEncounters,
+                        encounterInfo = encounterInfo,
+                    })
+                end
+            end
+        end
+
+        RequestRaidInfo()
+        After(3, function()
+            NB.SaveInstanceCD()
+        end)
+
+        RegisterEvent("ENCOUNTER_END", function(self, event, bossID, _, _, _, success)
+            if event == "ENCOUNTER_END" and success == 1 then
+                After(.5, function()
+                    RequestRaidInfo()
+                end)
+            end
+        end)
+
+        local f = CreateFrame("Frame")
+        f:RegisterEvent("ENCOUNTER_END")
+        f:RegisterEvent("UPDATE_INSTANCE_INFO")
+        f:SetScript("OnEvent", function(self, event, bossID, _, _, _, success)
+            if (event == "ENCOUNTER_END") or (event == "ENCOUNTER_END" and success == 1) then
+                After(1, function()
+                    NB.SaveInstanceCD()
+                end)
+            end
+        end)
+    end
+
+    -- 声望
+    do
+        WclBoxCharacter.reputation = WclBoxCharacter.reputation or {}
+
+        local ExpandAllFactionHeaders = ExpandAllFactionHeaders or C_Reputation.ExpandAllFactionHeaders
+        local GetNumFactions = GetNumFactions or C_Reputation.GetNumFactions
+        local GetFactionInfo = GetFactionInfo or C_Reputation.GetFactionDataByIndex
+
+        local yes = true
+        function NB.SaveReputation()
+            if ReputationFrame and ReputationFrame:IsVisible() then return end
+            local header1, header2
+            ExpandAllFactionHeaders()
+            yes = false
+            After(60, function()
+                yes = true
+            end)
+            for i = 1, GetNumFactions() do
+                if NB.IsRetail then
+                    -- local info = GetFactionInfo(i)
+                    -- if info.isHeader then
+                    --     if info.isChild then
+                    --         header2 = info.name
+                    --     else
+                    --         header1 = info.name
+                    --         header2 = nil
+                    --     end
+                    -- else
+                    --     local factionID = info.factionID
+                    --     local friendshipData = C_GossipInfo.GetFriendshipReputation(factionID)
+                    --     local standing, currentValue, maxValue
+                    --     if friendshipData.maxRep == 0 then
+                    --         standing = _G["FACTION_STANDING_LABEL" .. info.reaction]
+                    --         currentValue = info.currentStanding - info.currentReactionThreshold
+                    --         maxValue = info.nextReactionThreshold - info.currentReactionThreshold
+                    --     else
+                    --         standing = friendshipData.reaction
+                    --         currentValue = friendshipData.standing - friendshipData.reactionThreshold
+                    --         maxValue = friendshipData.nextThreshold - friendshipData.reactionThreshold
+                    --     end
+                    --     WclBoxCharacter.reputation[factionID] = {
+                    --         name = info.name,
+                    --         description = info.description,
+                    --         standing = standing,
+                    --         currentValue = currentValue,
+                    --         maxValue = maxValue,
+                    --         atWarWith = info.atWarWith,
+                    --         header1 = header1,
+                    --         header2 = header2,
+                    --         factionID = factionID,
+                    --     }
+                    -- end
+                else
+                    local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar,
+                    isHeader, isCollapsed, hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus
+                    = GetFactionInfo(i)
+                    if isHeader then
+                        if isChild then
+                            header2 = name
+                        else
+                            header1 = name
+                            header2 = nil
+                        end
+                    else
+                        local standing = _G["FACTION_STANDING_LABEL" .. standingID]
+                        WclBoxCharacter.reputation[factionID] = {
+                            name = name,
+                            description = description,
+                            standing = standing,
+                            currentValue = barValue - barMin,
+                            maxValue = barMax - barMin,
+                            atWarWith = atWarWith,
+                            header1 = header1,
+                            header2 = header2,
+                            factionID = factionID,
+                        }
+                    end
+                end
+            end
+        end
+
+        After(10, function()
+            NB.SaveReputation()
+        end)
+        RegisterEvent("UPDATE_FACTION", function(self, event)
+            if yes then
+                After(.5, function()
+                    NB.SaveReputation()
+                end)
+            end
+        end)
+    end
 end
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-eventFrame:RegisterEvent("ACHIEVEMENT_EARNED")
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         eventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")

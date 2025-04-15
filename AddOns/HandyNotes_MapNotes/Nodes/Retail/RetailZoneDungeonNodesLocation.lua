@@ -767,7 +767,7 @@ if not db.activate.HideMapNote then
               nodes[2256][43559029] = { id = 1273, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Nerub-ar Palace
               nodes[2213][35047242] = { id = 1273, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Nerub-ar Palace       
               nodes[2216][35047242] = { id = 1273, type = "Raid", dnID = DUNGEON_FLOOR_GILNEAS3, showInZone = true, showOnContinent = false, showOnMinimap = false } -- Nerub-ar Palace
-              nodes[2346][41554877] = { id = 1296, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Liberation of Undermine
+              nodes[2346][42045031] = { id = 1296, type = "Raid", showInZone = true, showOnContinent = false, showOnMinimap = false } -- Liberation of Undermine
             end
 
         end

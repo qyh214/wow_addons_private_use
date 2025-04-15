@@ -1,3 +1,7 @@
+# MythicPlusTimer 6.4.1
+
+- Fix grammar for "Todes" translations in German locale (By Lorolas (https://github.com/Lorolas), thanks)
+
 # MythicPlusTimer 6.4.0
 
 - Update for WoW 11.1.0

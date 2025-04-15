@@ -151,6 +151,11 @@ local function GetDeepestRelativeValue(group, field)
 		return GetDeepestRelativeValue(group.sourceParent or group.parent, field) or group[field];
 	end
 end
+local function GetDeepestRelativeFunc(group, func)
+	if group then
+		return GetDeepestRelativeFunc(group.sourceParent or group.parent, func) or func(group);
+	end
+end
 local function GetRelativeField(group, field, value)
 	if group then
 		return group[field] == value or GetRelativeField(group.sourceParent or group.parent, field, value);
@@ -196,6 +201,7 @@ app.CloneArray = CloneArray;
 app.CloneDictionary = CloneDictionary;
 app.CloneReference = CloneReference;
 app.GetBestMapForGroup = GetBestMapForGroup;
+app.GetDeepestRelativeFunc = GetDeepestRelativeFunc;
 app.GetDeepestRelativeValue = GetDeepestRelativeValue;
 app.GetRelativeField = GetRelativeField;
 app.GetRawRelativeField = GetRawRelativeField
@@ -226,22 +232,30 @@ app.GetIconFromProviders = function(group)
 end;
 local GetItemInfo = app.WOWAPI.GetItemInfo;
 app.GetNameFromProviders = function(group)
-	if group.providers then
-		local name;
-		for k,v in ipairs(group.providers) do
-			if v[2] > 0 then
-				if v[1] == "o" then
-					name = app.ObjectNames[v[2]];
-				elseif v[1] == "i" then
-					name = GetItemInfo(v[2]);
-				elseif v[1] == "n" then
-					name = app.NPCNameFromID[v[2]];
-				end
-				if name then return name; end
+	local providers = group.providers
+	if not providers or #providers == 0 then return end
+	local pt, id, name
+	for k,v in ipairs(providers) do
+		id = v[2]
+		if id > 0 then
+			pt = v[1]
+			if pt == "o" then
+				name = app.ObjectNames[id];
+				break
+			elseif pt == "i" then
+				name = GetItemInfo(id);
+				break
+			elseif pt == "n" then
+				name = app.NPCNameFromID[id];
+				break
+			elseif pt == "s" then
+				name = app.GetSpellName(id)
+				break
 			end
 		end
 	end
-end;
+	return name
+end
 
 -- Common Metatable Functions
 app.MetaTable = {}
@@ -309,12 +323,18 @@ app.IgnoreDataCaching = function()
 		return true;
 	end
 end
--- Returns the Global reference by name, setting it to the 'init' value if not already existing
+-- Returns the Global reference by name, or if not existing,
+-- setting it to {} if 'init' is true, or the 'init' value itself
 app.LocalizeGlobal = function(globalName, init)
-	local val = _G[globalName];
-	if init and not val then
-		val = {};
-		_G[globalName] = val;
+	local val = _G[globalName]
+	if not val then
+		if init == true then
+			val = {}
+			_G[globalName] = val
+		elseif init then
+			val = init
+			_G[globalName] = val
+		end
 	end
 	-- app.PrintDebug("LocalizeGlobal",globalName,val)
 	return val;
@@ -389,7 +409,11 @@ end
 local SetATTTooltip = function(self, text)
 	self:SetScript("OnEnter", function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-		GameTooltip:SetText(text, nil, nil, nil, nil, true);
+		if text then
+			GameTooltip:SetText(text, nil, nil, nil, nil, true);
+		else
+			GameTooltip:ClearLines();
+		end
 		if self.OnTooltip then
 			local tooltipInfo = {};
 			self:OnTooltip(tooltipInfo);
@@ -600,125 +624,8 @@ function app:ShowPopupDialogToReport(reportReason, text)
 	app:ShowPopupDialogWithMultiLineEditBox(text, nil, (reportReason or "Missing Data").."\n"..app.L.PLEASE_REPORT_MESSAGE..app.L.REPORT_TIP);
 end
 
--- Clickable ATT Chat Link Handling
-local reports = {};
-function app:SetupReportDialog(id, reportMessage, text)
-	-- Store some information for use by a report popup by id
-	if not reports[id] then
-		-- print("Setup Report", id, reportMessage)
-		reports[id] = {
-			msg = reportMessage,
-			text = (type(text) == "table" and app.TableConcat(text, nil, "", "\n") or text)
-		};
-		return true;
-	end
-end
-hooksecurefunc("SetItemRef", function(link, text)
-	-- print("Chat Link Click",link,text:gsub("\|", "&"));
-	-- if IsShiftKeyDown() then
-	-- 	ChatEdit_InsertLink(text);
-	-- else
-	local type, info, data1, data2, data3 = (":"):split(link);
-	-- print(type, info, data1, data2, data3)
-	if type == "addon" and info == "ATT" then
-		-- local op = link:sub(17)
-		-- print("ATT Link",op)
-		-- local type, paramA, paramB = (":"):split(data);
-		-- print(type,paramA,paramB)
-		if data1 == "search" then
-			local cmd = data2 .. ":" .. data3;
-			app.SetSkipLevel(2);
-			local group = app.GetCachedSearchResults(app.SearchForLink, cmd);
-			app.SetSkipLevel(0);
-
-			if IsShiftKeyDown() then
-				-- If this reference has a link, then attempt to preview the appearance or write to the chat window.
-				local link = group.link or group.silentLink;
-				if (link and HandleModifiedItemClick(link)) or ChatEdit_InsertLink(link) then return true; end
-			end
-
-			app:CreateMiniListForGroup(group);
-			return true;
-		elseif data1 == "dialog" then
-			-- Retrieves stored information for a report dialog and attempts to display the dialog if possible
-			local popup = reports[data2];
-			if popup then
-				app:ShowPopupDialogToReport(popup.msg, popup.text);
-				return true;
-			end
-		end
-	end
-end);
-
--- Chat Links
-function app:Linkify(text, color, operation)
-	-- Turns a bit of text into a colored link which ATT will attempt to understand
-	return "|Haddon:ATT:"..operation.."|h|c"..color.."["..text.."]|r|h";
-end
-function app:SearchLink(group)
-	if not group then return end
-	return app:Linkify(group.text or group.hash or UNKNOWN, app.Colors.ChatLink, "search:"..(group.key or "?")..":"..(group[group.key] or "?"))
-end
-function app:RawSearchLink(field,id)
-	return app:SearchLink(app.SearchForObject(field, id, "field"))
-end
-function app:WaypointLink(mapID, x, y, text)
-	return "|cffffff00|Hworldmap:" .. mapID .. ":" .. math_floor(x * 10000) .. ":" .. math_floor(y * 10000)
-		.. "|h[|A:Waypoint-MapPin-ChatIcon:13:13:0:0|a" .. (text or "") .. "]|h|r";
-end
-
 -- Define Modules
 app.Modules = {};
-
--- Define Chat Commands handling
-app.ChatCommands = { Help = {} }
--- Adds a handled chat command for ATT
--- cmd : The lowercase string to trigger the command handler
--- func : The function which is run with provided 'args' from chat input when 'cmd' is used
--- info : (optional, WIP) An Info table which defines helpful information about using the command
-app.ChatCommands.Add = function(cmd, func, help)
-	if not cmd or cmd == "" then error("Must supply an Add Chat Command name") end
-	if type(func) ~= "function" then error("Attempted to add a non-function handler for a Chat Command: "..cmd) end
-		app.ChatCommands[cmd:lower()] = func
-		if help then
-			if type(help) ~= "table" then
-				app.print("Attempted to add a non-table Help for a Chat Command: "..cmd)
-			else
-				app.ChatCommands.Help[cmd:lower()] = help
-			end
-		end
-	end
--- Removes a handled chat command for ATT
--- cmd : The lowercase string command whose handler will be removed
-app.ChatCommands.Remove = function(cmd)
-	if not cmd or cmd == "" then error("Must supply a Remove Chat Command name") end
-	app.ChatCommands[cmd:lower()] = nil
-	app.ChatCommands.Help[cmd:lower()] = nil
-end
--- Prints the Help information for a given command
--- cmd : The command's Help to print
-app.ChatCommands.PrintHelp = function(cmd)
-	local help = app.ChatCommands.Help[cmd:lower()]
-	if not help then
-		app.print("No Help provided for command:",cmd)
-		return true
-	end
-	for _,helpLine in ipairs(help) do
-		app.print(helpLine)
-	end
-	return true
-end
-
--- Allows a user to use /att report-reset
--- to clear all generated Report dialog IDs so that they may be re-generated within the same game session
-app.ChatCommands.Add("report-reset", function(args)
-	wipe(reports)
-	app.HandleEvent("OnReportReset")
-	return true
-end, {
-	"Usage : /att report-reset",
-	"Allows resetting the tracking of displayed Dialog reports such that duplicate reports can be repeated in the same game session.",
-})
 
 -- Global Variables
 AllTheThingsSavedVariables = {};

@@ -1631,7 +1631,7 @@ if not db.activate.HideMapNote then
                 nodes[2346][27137258] = { dnID = L["Steamwheedle Cartel"], name = L["Quartermaster"], type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[2346][39152218] = { dnID = L["Bilgewater Cartel"], name = L["Quartermaster"], type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[2346][63431672] = { dnID = L["Blackwater Cartel"], name = L["Quartermaster"], type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
-                nodes[2346][30823891] = { dnID = L["Darkfuse Solutions"], name = L["Quartermaster"], type = "PvEVendor", showWWW = true, wwwName = BATTLE_PET_SOURCE_2 .. " " .. REQUIRES_LABEL .. " " .. "Cashing the Check", wwwLink = "https://www.wowhead.com/quest=87297/cashing-the-check#", questID = 87297, showInZone = true, showOnContinent = false, showOnMinimap = false }
+                nodes[2346][30823891] = { dnID = L["Darkfuse Solutions"], name = L["Quartermaster"], type = "PvEVendor", showWWW = true, wwwName = BATTLE_PET_SOURCE_2 .. " " .. REQUIRES_LABEL .. " " .. "Diversified Investments", wwwLink = "https://www.wowhead.com/quest=86961/diversified-investments", questID = 86961, showInZone = true, showOnContinent = false, showOnMinimap = false }
                 nodes[2346][25753812] = { dnID = L["The Cartels of Undermine"], name = L["S.C.R.A.P. Exchange"], type = "PvEVendor", showInZone = true, showOnContinent = false, showOnMinimap = false }
             end
 

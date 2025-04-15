@@ -465,24 +465,15 @@ local InformationTypes = {
 	}),
 
 	-- Quest Fields
-	CreateInformationType("providers", { text = L.PROVIDERS, priority = 2.05, ShouldDisplayInExternalTooltips = false,
-		limit = 25,
+	CreateInformationType("qgs", { text = L.QUEST_GIVERS, priority = 2.05, ShouldDisplayInExternalTooltips = false,
 		Process = function(t, reference, tooltipInfo)
-			local providers = t.GetValue(t, reference);
-			if providers then
-				local limit = t.limit
-				for i,provider in ipairs(providers) do
+			local qgs = reference.qgs;
+			if qgs then
+				for i,creatureID in ipairs(qgs) do
 					tinsert(tooltipInfo, {
-						left = (i == 1 and "Provider(s)"),
-						right = ConversionMethods.provider(provider, reference),
+						left = (i == 1 and L.QUEST_GIVER),
+						right = ConversionMethods.creatureName(creatureID, reference),
 					});
-					limit = limit - 1
-					if limit <= 0 then
-						tinsert(tooltipInfo, {
-							right =  LFG_LIST_AND_MORE:format(#reference.providers - t.limit),
-						});
-						break
-					end
 				end
 			end
 		end,
@@ -666,6 +657,19 @@ local InformationTypes = {
 			end
 		end,
 	});
+	CreateInformationType("sr", {
+		priority = 2.7,
+		isRecursive = true,
+		text = L.SHOW_SKYRIDING_CHECKBOX,
+		Process = function(t, reference, tooltipInfo)
+			if t.GetValue(t, reference) then
+				tinsert(tooltipInfo, {
+					left = L.REQUIRES_SKYRIDING,
+					wrap = true,
+				});
+			end
+		end,
+	});
 	CreateInformationType("u", {
 		priority = 2.7,
 		isRecursive = true,
@@ -779,19 +783,15 @@ local InformationTypes = {
 		end
 	}),
 
-	CreateInformationType("questID", { text = L.QUEST_ID, priority = 8 }),
-	CreateInformationType("qgs", { text = L.QUEST_GIVERS, priority = 8,
+	CreateInformationType("questID", { text = L.QUEST_ID, priority = 8,
 		Process = function(t, reference, tooltipInfo)
-			local qgs = reference.qgs;
-			if qgs then
-				for i,creatureID in ipairs(qgs) do
-					tinsert(tooltipInfo, {
-						left = (i == 1 and L.QUEST_GIVER),
-						right = ConversionMethods.creatureName(creatureID, reference),
-					});
-				end
-			end
-		end,
+			local questID = reference.questID
+			if not questID then return end
+			tinsert(tooltipInfo, {
+				left = L.QUEST_ID,
+				right = reference.questID.." "..app.GetCompletionIcon(app.IsQuestFlaggedCompleted(questID)),
+			});
+		end
 	}),
 	CreateInformationType("factionID", { text = L.FACTION_ID, priority = 9 }),
 
@@ -817,6 +817,28 @@ local InformationTypes = {
 							left = (i == 1 and CREATURE),
 							right = ConversionMethods.creatureName(creatureID, reference),
 						});
+					end
+				end
+			end
+		end,
+	}),
+	CreateInformationType("providers", { text = L.PROVIDERS, ShouldDisplayInExternalTooltips = false,
+		limit = 25,
+		Process = function(t, reference, tooltipInfo)
+			local providers = t.GetValue(t, reference);
+			if providers then
+				local limit = t.limit
+				for i,provider in ipairs(providers) do
+					tinsert(tooltipInfo, {
+						left = (i == 1 and L.PROVIDERS),
+						right = ConversionMethods.provider(provider, reference),
+					});
+					limit = limit - 1
+					if limit <= 0 then
+						tinsert(tooltipInfo, {
+							right =  LFG_LIST_AND_MORE:format(#reference.providers - t.limit),
+						});
+						break
 					end
 				end
 			end

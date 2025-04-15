@@ -126,6 +126,12 @@ function(item)
 	return not item.pb or false
 end);
 
+-- Skyriding
+DefineToggleFilter("Skyriding", AccountFilters,
+function(item)
+	return not item.sr or false
+end);
+
 -- UnavailablePersonalLoot
 DefineToggleFilter("UnavailablePersonalLoot", AccountFilters,
 function(item)
@@ -421,6 +427,9 @@ local function SettingsFilters(item)
 		return ApplySettingsFilters(item, CharacterFilters)
 	end
 end
+local function SettingsFilters_Account(item)
+	return ApplySettingsFilters(item, AccountFilters)
+end
 local function SettingsExtraFilters(item, extraFilters)
 	if SettingsFilters(item) then
 		if extraFilters then
@@ -495,7 +504,17 @@ local function RecursiveGroupRequirementsFilter(group)
 end
 app.RecursiveGroupRequirementsFilter = RecursiveGroupRequirementsFilter;
 api.Filters.RecursiveGroupRequirementsFilter = RecursiveGroupRequirementsFilter
--- Recursively check outwards to find if any parent group restricts the filter for the current settings
+-- Recursively check outwards to find if any parent group restricts the filter for only Account-based settings
+local function RecursiveGroupRequirementsFilter_Account(group)
+	local Filter = SettingsFilters_Account
+	while group do
+		if not Filter(group) then return; end
+		group = group.sourceParent or group.parent;
+	end
+	return true;
+end
+api.Filters.RecursiveGroupRequirementsFilter_Account = RecursiveGroupRequirementsFilter_Account
+-- Recursively check outwards to find if any parent group restricts the filter for the current settings with Extra Filters
 local function RecursiveGroupRequirementsExtraFilter(group, extraFilters)
 	local Filter = app.GroupExtraFilter;
 	while group do

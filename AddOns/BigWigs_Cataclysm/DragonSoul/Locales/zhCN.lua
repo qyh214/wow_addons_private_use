@@ -19,8 +19,8 @@ if L then
 	L.ball_desc = "末日黑洞在玩家和首领之间来回弹跳时发出警报。"
 	L.ball_yell = "Gul'kafh an'qov N'Zoth。"
 
-	--L.ball_active = "Void ball active"
-	--L.ball_active_desc = "Timer for when the void ball activates (i.e. it can bounce)."
+	L.ball_active = "虚空球激活"
+	L.ball_active_desc = "虚空球激活时的计时器（即它可以反弹时）。"
 
 	L.bounce = "末日黑洞弹跳"
 	L.bounce_desc = "末日黑洞弹跳计数。"
@@ -39,7 +39,7 @@ if L then
 	L.engage_trigger = "Iilth qi'uothk shn'ma yeh'glu Shath'Yar！H'IWN IILTH！"
 
 	L.bolt_desc = "虚空箭堆叠计数并显示持续条。"
-	L.bolt_message = "%2$d层虚空箭：>%1$s<！"
+	L.bolt_message = "%2$d层虚空箭：%1$s！"
 
 	L.blue = "|cFF0080FF蓝|r"
 	L.green = "|cFF088A08绿|r"
@@ -85,11 +85,11 @@ if L then
 
 	L.lightself = "自身黯淡之光"
 	L.lightself_desc = "显示自身黯淡之光爆炸剩余计时条。"
-	L.lightself_bar = "<你将爆炸>"
+	L.lightself_bar = "你将爆炸"
 
 	L.lighttank = "坦克黯淡之光"
 	L.lighttank_desc = "如果坦克中了黯淡之光，显示一个爆炸计时条及闪屏震动。"
-	L.lighttank_bar = "<%s 爆炸>"
+	L.lighttank_bar = "%s 爆炸"
 	L.lighttank_message = "坦克爆炸！"
 end
 
@@ -100,7 +100,7 @@ if L then
 
 	L.sunder = "破甲攻击"
 	L.sunder_desc = "破甲攻击堆叠计数并显示持续条。"
-	L.sunder_message = "%2$d层破甲攻击：>%1$s<！"
+	L.sunder_message = "%2$d 层破甲攻击：%1$s！"
 
 	L.sapper_trigger = "一条幼龙俯冲下来，往甲板上投放了一个暮光工兵！"
 	L.sapper = "暮光工兵"
@@ -115,7 +115,7 @@ if L then
 
 	L.about_to_roll = "感觉到玩家在他的"
 	L.rolling = "%%s往[左右]+侧"
-	L.not_hooked = ">你< 没有抓牢！"
+	L.not_hooked = "你 没有抓牢！"
 	L.roll_message = "他开始滚了！滚了，滚啦！"
 	L.level_trigger = "平衡"
 	L.level_message = "别急，他已经平衡了！"
@@ -124,7 +124,7 @@ if L then
 
 	L.residue = "未吸收的残渣"
 	L.residue_desc = "当地面上还有剩余未吸收的残渣时发出警报，等待被吸收。"
-	L.residue_message = "残渣：>%d<！"
+	L.residue_message = "残渣：%d！"
 end
 
 L = BigWigs:NewBossLocale("Madness of Deathwing", "zhCN")
@@ -134,7 +134,7 @@ if L then
 	-- Copy & Paste from Encounter Journal with correct health percentages (type '/dump (C_EncounterJournal.GetSectionInfo(4103)).title' in the game)
 	L.smalltentacles_desc = "在生命值降至70%和40%时，肢体触须会衍生出许多灼疮触须，这些触须对具有范围效果的技能免疫。"
 
-	L.bolt_explode = "<源质箭爆炸>"
+	L.bolt_explode = "源质箭爆炸"
 	L.parasite = "腐蚀寄生虫"
 	L.blobs_soon = "%d%% - 即将凝固之血！"
 end

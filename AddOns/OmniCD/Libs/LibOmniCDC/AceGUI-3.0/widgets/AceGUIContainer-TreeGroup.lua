@@ -503,7 +503,7 @@ local methods = {
 		]]
 		local icon
 		if USE_ICON_BACKDROP then
-			icon = CreateFrame("Frame", nil, button, BackdropTemplateMixin and "BackdropTemplate" or nil)
+			icon = CreateFrame("Frame", nil, button, "BackdropTemplate")
 			icon:SetHeight(DEFAULT_ICON_SIZE) -- 24 is frames full height
 			icon:SetWidth(DEFAULT_ICON_SIZE)
 			--[[ s r v46

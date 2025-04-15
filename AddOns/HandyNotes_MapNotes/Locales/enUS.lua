@@ -2,6 +2,13 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "enUS", true)
 
 
+-- create and copy links
+L["Use CTRL + C to copy the link"] = true
+L["If the link or email address is colored blue in the chat, the link is ready to be copied"] = true
+L["Links are only generated after the feature is activated. Links or email addresses created before activation will not be recognized retroactively"] = true
+L["Enables you to copy links and email addresses from the chat"] = true
+L["Clicking a link in the chat opens a separate window"] = true
+L["The window closes automatically after copying"] = true
 -- weapon types
 L["Bows"] = true
 L["Crossbows"] = true
@@ -56,7 +63,7 @@ L["< Shift + Right Click add TomTom waypoint >"] = true
 L["< Alt + Right click to delete this icon >"] = true
 L["This applies to the following tabs"] = true
 L["Middle mouse button to post the link in the chat"] = true
-L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] = true
+L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] = true
 L["This will immediately abort and end the current instance run!"] = true
 L["With Alt + right click it is now possible to remove any MapNotes icon"] = true
 L["If 'Tooltip' is activated, an additional tooltip will be added to the icons showing how to interact with this feature"] = true
@@ -319,6 +326,7 @@ L["Portal"] = true
 L["Ship"] = true
 L["Zeppelin"] = true
 L["Mole Machine"] = true
+L["Rocket drill"] = true
 L["Portalroom"] = true
 L["The Dark Portal"] = true
 L["Captain Krooz"] = true
@@ -372,6 +380,7 @@ L["Boralus, Tiragarde Sound"] = true
 L["Valdrakken"] = true
 L["Badlands"] = true
 L["Oribos"] = true
+L["Maldraxxus"] = true
 L["Azsuna"] = true
 L["Uldum"] = true
 L["Dazar'alor"] = true

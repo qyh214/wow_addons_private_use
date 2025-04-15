@@ -214,6 +214,7 @@ local GetSpellName = app.WOWAPI.GetSpellName;
 	L.AVAILABILITY = "可用性";
 	L.REQUIRES_PVP = "|CFF00FFDE需要 PvP 活动或货币|r";
 	L.REQUIRES_PETBATTLES = "|CFF00FFDE需要宠物对战|r";
+	L.REQUIRES_SKYRIDING = "|CFF00FFDE"..(SPELL_FAILED_CUSTOM_ERROR_1029 or "需要驭空术").."|r";
 	L.REPORT_INACCURATE_QUEST = "错误任务信息！（点击报告）";
 	L.NESTED_QUEST_REQUIREMENTS = "多重任务需要";
 	L.MAIN_LIST_REQUIRES_REFRESH = "[打开主列表更新进度 ]";
@@ -448,7 +449,6 @@ local a = L.ABBREVIATIONS;
 for key,value in pairs({
 	["安托鲁斯，燃烧王座"] = "安托鲁斯",	-- ["Antorus, the Burning Throne"] = "Antorus"
 	["资料片前夕"] = "前夕",	-- ["Expansion Pre"] = "Pre"
-	[GROUP_FINDER] = "地下城和团本",	-- ["Dungeons & Raids"] = "D&R"
 	["尼奥罗萨，觉醒之城"] = "尼奥罗萨",	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
 	["塔扎维什，帷纱集市"] = "塔扎维什",	-- ["Tazavesh, the Veiled Market"] = "Tazavesh"
 	-- DF
@@ -463,48 +463,6 @@ do a[key] = value; end
 if app.IsRetail then
 local a = L.HEADER_NAMES;
 for key,value in pairs({
-	-- PvP
-		[-242] = "无评级",												-- Unrated
-	-- Outposts in Draenor
-		[-361] = GetSpellName(182108).." 塔",						-- Artillery Tower
-	-- BFA Outposts
-		[-397] = "哨站",												-- Outposts
-	-- Misc
-		[-493] = "要塞任务拾取",										-- Header for WoD Mission Loot
-	-- Blizzard Events and Anniversaries
-		[-520] = "资料片前夕",											-- Expansion Pre-Launch
-		[-543] = "军团入侵",											-- Legion Invasions
-	-- Mists of Pandaria PvP Seasons
-		[-675] = select(2, GetAchievementInfo(8214)).."第12赛季",	-- Malevolent Gladiator: Season 12
-		[-653] = "荣誉装备暴虐赛季",									-- Honor Gear Tyrannical (S13)
-		[-676] = select(2, GetAchievementInfo(8791)).."第13赛季",	-- Tyrannical Gladiator: Season 13
-		[-652] = "荣誉装备恶孽赛季",									-- Honor Gear Grievous (S14)
-		[-651] = "荣誉装备骄矜赛季",									-- Honor Gear Prideful (S15)
-	-- Shadowlands Header
-		[-979] = "掮灵威·肯 & 掮灵威·诺特",									-- Broker Ve'ken & Broker Ve'nott
-		[-924] = "传送网络",											-- Transport Network
-		-- SL Bastion/Kyrian
-			[-973] = "忠诚",											-- Loyalty
-			[-975] = "谦逊",											-- Humility
-		-- SL Revendreth/Venthyr
-			[-954] = "审判官",											-- Inquisitors
-			[-955] = "高阶审判官",										-- High Inquisitors
-			[-956] = "大审判官",										-- Grand Inquisitors
-			[-967] = "破镜重圆",										-- Mirror Restoration
-			[-968] = "组 A",											-- Set A
-			[-969] = "组 B",											-- Set B
-			[-970] = "组 C",											-- Set C
-			[-971] = "组 D",											-- Set D
-	-- Dragonflight
-
-		[-1102] = "拉希奥和萨贝里安",										-- Wrathion & Sabellian
-		[-1120] = "马鲁克半人马",											-- Maruuk Centaur
-		[-1130] = "伊斯卡拉海象人",										-- Iskaara Tuskarr
-		[-1150] = "峈姆鼹鼠人",											-- Loamm Niffen
-	-- The War Within
-		[-1208] = "入侵：维库人",												-- Vrykul
-		[-1209] = "入侵：娜迦",													-- Naga
-		[-1210] = "入侵：海盗",												-- Pirate
 	-- Tier/Dungeon/Event/Holiday Sets
 		-- Artifact Strings
 			[-5200] = "基础外观",										-- Base Appearance
@@ -530,6 +488,7 @@ for key,value in pairs({
 		CLIPBOARDCOPYPASTE = "Ctrl+A, Ctrl+C 复制到剪贴板。";
 		CURSEFORGE_BUTTON_TOOLTIP = "单击按钮复制 URL 到 Curse 的 ALL THE THINGS 插件地址。\n\n您也可以将此链接发送给您的朋友，让他们也毁掉自己的生活！他们最终会原谅你……也许吧。";
 		DISCORD_BUTTON_TOOLTIP = "点击按钮复制 URL 到All The Things Discord 服务器。\n\n可以与其他收藏家分享进步/挫折！";
+		GITHUB_BUTTON_TOOLTIP = "点击按钮复制 URL 到All The Things GitHub 地址。\n\n您可以直接克隆软件源代码，而无需使用第三方插件管理器！";
 		MERCH_BUTTON_LABEL = "商店";
 		MERCH_BUTTON_TOOLTIP = "点击按钮复制 URL 以进入 All The Things 商店。\n\n在这里您可以在经济上支持插件并获得一些很酷的商品作为回报！ ";
 		PATREON_BUTTON_TOOLTIP = "点击按钮复制 URL 以进入 All The Things Patreon 页面。\n\n在这里您可以看到如何在经济上支持插件！";
@@ -576,6 +535,8 @@ for key,value in pairs({
 		SHOW_ALL_SEASONAL_TOOLTIP = "启用此设置可显示所有季节性事件，而不是仅显示当前活动的季节性事件。\n\n注意：季节性活动将提前7天自动显示为活动状态。";
 		SHOW_PET_BATTLES_CHECKBOX_TOOLTIP = "如果您想在游戏中显示需要宠物对战的内容，请启用此设置。";
 		SHOW_PVP_CHECKBOX_TOOLTIP = "如果你想隐藏任何'可能'需要在游戏中进行 PvP 互动的内容，请启用此设置。";
+		SHOW_SKYRIDING_CHECKBOX = DYNAMIC_FLIGHT or "驭空术";
+		SHOW_SKYRIDING_CHECKBOX_TOOLTIP = "如果想在游戏中显示需要驭空术的内容，请启用此设置。";
 		SHOW_ALL_LEARNABLE_QUEST_REWARDS_CHECKBOX = "所有可学的任务奖励";
 		SHOW_ALL_LEARNABLE_QUEST_REWARDS_CHECKBOX_TOOLTIP = "禁用此选项可隐藏任务中列为“在个人拾取中不可用”的物品。\n\n这对于追踪您的职业无法在世界掉落中使用的物品很有用，但仍会将任务标记为已完成。\n\n某些物品可能被错误标记：此设置将隐藏您可以获得的物品！";
 
@@ -657,6 +618,8 @@ for key,value in pairs({
 		CLASS_DEFAULTS_BUTTON_TOOLTIP = "点击此按钮可将所有选项重置为职业默认。\n\n注意：仅打开你的职业可以收集的选项。";
 		ALL_BUTTON_TOOLTIP = "点击此按钮一键启用所有选项。";
 		UNCHECK_ALL_BUTTON_TOOLTIP = "点击此按钮一键禁用所有选项。";
+		STORE_IN_PROFILE_BUTTON = "储存在配置文件中",
+		STORE_IN_PROFILE_BUTTON_TOOLTIP = "默认情况下，ATT按每个角色存储这些过滤器。\n\n选择此选项可将这些“过滤器”存储在当前配置文件中，而不是按角色存储。",
 
 	-- General: Phases Page
 	-- Classic Only, fully dynamic from within parser.

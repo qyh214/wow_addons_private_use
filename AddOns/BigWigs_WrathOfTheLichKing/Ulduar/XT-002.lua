@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("XT-002 Deconstructor", 603, 1640)
 if not mod then return end
 mod:RegisterEnableMob(33293)
-mod:SetEncounterID(mod:Classic() and 747 or 1142)
+mod:SetEncounterID(BigWigsLoader.isWrath and 747 or 1142)
 -- mod:SetRespawnTime(0) -- resets, doesn't respawn
 
 --------------------------------------------------------------------------------

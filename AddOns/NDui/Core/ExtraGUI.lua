@@ -127,10 +127,10 @@ function G:SetupRaidDebuffs(parent)
 		end
 	end
 	AddNewDungeon(dungeons, 1210) -- 暗焰裂口
-	AddNewDungeon(dungeons, 71) -- 格瑞姆巴托
-	AddNewDungeon(dungeons, 1023) -- 围攻伯拉勒斯
-	AddNewDungeon(dungeons, 1182) -- 通灵战潮
-	AddNewDungeon(dungeons, 1184) -- 塞兹仙林的迷雾
+	--AddNewDungeon(dungeons, 71) -- 格瑞姆巴托
+	--AddNewDungeon(dungeons, 1023) -- 围攻伯拉勒斯
+	--AddNewDungeon(dungeons, 1182) -- 通灵战潮
+	--AddNewDungeon(dungeons, 1184) -- 塞兹仙林的迷雾
 
 	AddNewDungeon(dungeons, 1298) -- 水闸行动
 	AddNewDungeon(dungeons, 1187) -- 伤逝剧场
@@ -683,7 +683,7 @@ function G:SetupSpellsIndicator(parent)
 	local scroll = G:CreateScroll(frame, 240, 485)
 	scroll.box = B.CreateEditBox(frame, 50, 25)
 	scroll.box:SetPoint("TOPLEFT", 10, -10)
-	scroll.box:SetMaxLetters(6)
+	scroll.box:SetMaxLetters(8) -- might have 8 digits for spellID
 	B.AddTooltip(scroll.box, "ANCHOR_TOPRIGHT", L["ID Intro"], "info", true)
 
 	scroll.add = B.CreateButton(frame, 45, 25, ADD)
@@ -1174,7 +1174,7 @@ function G:SetupRaidFrame(parent)
 	local scroll = G:CreateScroll(panel, 260, 540)
 	local UF = B:GetModule("UnitFrames")
 
-	local defaultValue = {80, 32, 2, 6, 1}
+	local defaultValue = {80, 32, 2, 6, 1, 5}
 	local options = {}
 	for i = 1, 8 do
 		options[i] = UF.RaidDirections[i].name
@@ -1213,6 +1213,7 @@ function G:SetupRaidFrame(parent)
 	createOptionSlider(scroll.child, L["Power Height"], 0, 30, defaultValue[3], -260, "RaidPowerHeight", resizeRaidFrame)
 	createOptionSlider(scroll.child, L["Num Groups"], 2, 8, defaultValue[4], -340, "NumGroups", updateNumGroups)
 	createOptionSlider(scroll.child, L["RaidRows"], 1, 8, defaultValue[5], -420, "RaidRows", updateNumGroups)
+	createOptionSlider(scroll.child, L["Spacing"], 0, 10, defaultValue[6], -500, "RaidSpacing", updateNumGroups)
 end
 
 function G:SetupSimpleRaidFrame(parent)
@@ -1280,17 +1281,19 @@ function G:SetupPartyFrame(parent)
 		UF:UpdatePartyElements()
 	end
 
-	local defaultValue = {100, 32, 2}
+	local defaultValue = {100, 32, 2, 5}
 	local options = {}
 	for i = 1, 4 do
 		options[i] = UF.PartyDirections[i].name
 	end
 	createOptionCheck(scroll.child, -10, L["UFs PartyAltPower"], "UFs", "PartyAltPower", resizePartyFrame, L["PartyAltPowerTip"])
-	createOptionCheck(scroll.child, -40, L["DescRole"], "UFs", "DescRole", resizePartyFrame, L["DescRoleTip"])
-	createOptionDropdown(scroll.child, L["GrowthDirection"], -100, options, nil, "UFs", "PartyDirec", 1, resizePartyFrame)
-	createOptionSlider(scroll.child, L["Width"], 80, 200, defaultValue[1], -180, "PartyWidth", resizePartyFrame)
-	createOptionSlider(scroll.child, L["Height"], 25, 60, defaultValue[2], -260, "PartyHeight", resizePartyFrame)
-	createOptionSlider(scroll.child, L["Power Height"], 0, 30, defaultValue[3], -340, "PartyPowerHeight", resizePartyFrame)
+	createOptionCheck(scroll.child, -40, L["SortByRole"], "UFs", "SortByRole", resizePartyFrame, L["SortByRoleTip"])
+	createOptionCheck(scroll.child, -70, L["SortAscending"], "UFs", "SortAscending", resizePartyFrame, L["SortAscendingTip"])
+	createOptionDropdown(scroll.child, L["GrowthDirection"], -130, options, nil, "UFs", "PartyDirec", 1, resizePartyFrame)
+	createOptionSlider(scroll.child, L["Width"], 80, 200, defaultValue[1], -210, "PartyWidth", resizePartyFrame)
+	createOptionSlider(scroll.child, L["Height"], 25, 60, defaultValue[2], -290, "PartyHeight", resizePartyFrame)
+	createOptionSlider(scroll.child, L["Power Height"], 0, 30, defaultValue[3], -370, "PartyPowerHeight", resizePartyFrame)
+	createOptionSlider(scroll.child, L["Spacing"], 0, 10, defaultValue[4], -450, "PartySpacing", resizePartyFrame)
 end
 
 function G:SetupPartyPetFrame(parent)

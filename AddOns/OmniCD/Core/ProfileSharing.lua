@@ -101,7 +101,7 @@ function PS:ShowProfileDialog(text)
 			if profileType then
 				profileKey = profileType == "cds" and "" or format("%s: |cffffd200%s|r", L["Profile"], profileKey)
 				profileType = format(L["Profile Type: %s%s|r"], "|cffffd200", PS.profileTypeValues[profileType])
-				Dialog.EditBox:SetText(format("%s\n%s\n%s\n\n%s", L["Profile decoded successfully!"], profileType, profileKey, L["Pending user input..."]))
+				Dialog.EditBox:SetText(format("%s\n%s\n%s\n\n%s",L["Profile decoded successfully!"], profileType, profileKey, L["Pending user input..."]))
 			else
 				Dialog.EditBox:SetText(PS.errorMsg)
 			end
@@ -133,7 +133,7 @@ function PS:ShowProfileDialog(text)
 		end)
 
 
-		local ScrollContainer = CreateFrame("Frame", "OmniCD_ProfileDialogScrollContainer", Dialog, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		local ScrollContainer = CreateFrame("Frame", "OmniCD_ProfileDialogScrollContainer", Dialog, "BackdropTemplate")
 		ScrollContainer:SetPoint("TOPLEFT", 18, -28)
 		ScrollContainer:SetPoint("BOTTOMRIGHT", -38, 50)
 		E.BackdropTemplate(ScrollContainer)
@@ -295,6 +295,7 @@ function PS:CopyProfile(profileType, profileKey, profileData)
 	if profileType == "all" then
 		OmniCDDB.profiles[profileKey] = profileData
 	else
+
 		local currentProfile = E.DB:GetCurrentProfile()
 		OmniCDDB.profiles[profileKey] = E:DeepCopy(OmniCDDB.profiles[currentProfile])
 		OmniCDDB.profiles[profileKey].Party[profileType] = profileData
@@ -308,6 +309,8 @@ function PS:ImportProfile(encodedData)
 	if not profileData then
 		return
 	end
+
+	E.FixOldProfile(profileData)
 
 	local prefix = "[IMPORT-%s]%s"
 	local n = 1
@@ -346,6 +349,7 @@ function PS:ExportProfile(profileType)
 		profileData = E:DeepCopy(OmniCDDB.profiles[profileKey], blackList)
 		profileData = E:RemoveEmptyDuplicateTables(profileData, C)
 	else
+
 		profileData = E:DeepCopy(OmniCDDB.profiles[profileKey].Party[profileType])
 		profileData = E:RemoveEmptyDuplicateTables(profileData, C.Party[profileType])
 	end
@@ -360,13 +364,13 @@ function PS:ExportProfile(profileType)
 		return
 	end
 
-	profileKey = gsub(profileKey, "^%[IMPORT.-%]", "")
-
 	local serializedData = self:Serialize(profileData)
 	if type(serializedData) ~= "string" then
 		ErrorMessage(L["Serialize failed!"])
+		return
 	end
 
+	profileKey = gsub(profileKey, "^%[IMPORT.-%]", "")
 	serializedData = format("%s%s%s,%s", serializedData, PS_VERSION, profileType, profileKey)
 
 	local compressedData = LibDeflate:CompressDeflate(serializedData)

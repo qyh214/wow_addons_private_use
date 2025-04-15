@@ -318,24 +318,6 @@ local unitFrameData = {
 
 local customUF = { optionTable = { auto = L["Auto"], blizz = "Blizzard" }, enabledList = false }
 
-function E:SetActiveUnitFrameData()
-	if customUF.enabledList then
-
-		local addon = self.db.position.uf
-		local data = customUF.enabledList[addon]
-		if data then
-			customUF.unit = data.unit
-			customUF.delay = data.delay
-			customUF.frames = data.frames
-			customUF.active = data.addonName
-		elseif addon == "auto" then
-			customUF.active = addon
-		else
-			customUF.active = nil
-		end
-	end
-end
-
 function E:UnitFrames()
 	for i = 1, #unitFrameData do
 		local data = unitFrameData[i]
@@ -380,16 +362,17 @@ function E:UnitFrames()
 		end
 	end
 
-	if customUF.enabledList then
 
-		for zone in pairs(self.L_CFG_ZONE) do
-			local uf = self.profile.Party[zone].position.uf
-			if uf ~= "blizz" and not customUF.enabledList[uf] then
-				self.profile.Party[zone].position.uf = "auto"
+	for zone in pairs(self.L_CFG_ZONE) do
+		local uf = self.profile.Party[zone].position.uf
+		if uf ~= "auto" and uf ~= "blizz" and (not customUF.enabledList or not customUF.enabledList[uf]) then
+			self.profile.Party[zone].position.uf = "auto"
+		end
+		for bar, db in pairs(self.profile.Party[zone].extraBars) do
+			if db.uf ~= "auto" and db.uf ~= "blizz" and (not customUF.enabledList or not customUF.enabledList[db.uf]) then
+				db.uf = self.profile.Party[zone].position.uf
 			end
 		end
-
-		self:SetActiveUnitFrameData()
 	end
 end
 
@@ -397,10 +380,15 @@ function E:Counters()
 	if C_AddOns.IsAddOnLoaded("OmniCC") then
 		self.OmniCC = OmniCC
 	elseif not GetCVarBool("countdownForCooldowns") and E.profile.General.cooldownText.useElvUICooldownTimer then
+
 		local ElvUI1 = ElvUI and ElvUI[1]
 		self.ElvUI1 = ElvUI1 and type(ElvUI1.CooldownEnabled) == "function" and ElvUI1:CooldownEnabled()
 			and type(ElvUI1.RegisterCooldown) == "function" and ElvUI1
 	end
+end
+
+function E:IsBlizzardCUFLoaded()
+	return C_AddOns.IsAddOnLoaded("Blizzard_CompactRaidFrames") and C_AddOns.IsAddOnLoaded("Blizzard_CUFProfiles")
 end
 
 function E:LoadAddOns()

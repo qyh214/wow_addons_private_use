@@ -35,14 +35,6 @@ local getFieldText = function(info)
 	return E[label] or fieldText[label] or ""
 end
 
-local isFound
-local changelog = E.changelog:gsub("^[ \t\n]*", E.HEX_C[WOW_PROJECT_ID or 1]):gsub("\n\nv([%d%.]+)", function(ver)
-	if not isFound and ver ~= E.Version then
-		isFound = true
-		return "|cff808080\n\nv" .. ver
-	end
-end):gsub("\t", "\32\32\32\32\32\32\32\32")
-
 local getGlobalOption = function(info) return E.global[ info[#info] ] end
 local setGlobalOption = function(info, value) E.global[ info[#info] ] = value end
 
@@ -177,11 +169,12 @@ local function GetOptions()
 							type = "description",
 						},
 						notice1 = {
-							name = format("|cffff2020* %s", ((E.isWOTLKC or E.isCata) and L["Group member must have OmniCD to detect cooldown reduction by Glyphs."])
-								or (E.isSL and L["Group member must have OmniCD to detect cooldown reduction with a chance to proc and Soulbind Conduits."])
-								or (E.isDF and L["Group member must have OmniCD to detect cooldown reduction with a chance to proc."])
+							name = format("|cffff2020* %s",
+							((E.isWOTLKC or E.isCata) and L["Group member must have OmniCD to detect cooldown reduction by Glyphs."])
+							or (E.isSL and L["Group member must have OmniCD to detect cooldown reduction with a chance to proc and Soulbind Conduits."])
+							or (E.postDF and L["Group member must have OmniCD to detect cooldown reduction with a chance to proc."])
 
-								or ""),
+							or ""),
 							order = 18,
 							type = "description",
 						},
@@ -197,7 +190,7 @@ local function GetOptions()
 									name = "\n", order = 0, type = "description",
 								},
 								changelog = {
-									name = changelog,
+									name = E.changelog,
 									order = 1,
 									type = "description",
 								},
@@ -238,7 +231,9 @@ local function GetOptions()
 									order = 8,
 									type = "input",
 									dialogControl = "Info-OmniCDC",
-									get = function() return L["Clean wipe the savedvariable file. |cffff2020Warning|r: This can not be undone!"] end,
+									get = function()
+										return L["Clean wipe the savedvariable file. |cffff2020Warning|r: This can not be undone!"]
+									end,
 								},
 
 							}
@@ -266,7 +261,7 @@ local function GetOptions()
 								},
 							}
 						},
-						plugins = E.isDF and {
+						plugins = E.postDF and {
 							name = L["Plugins"],
 							order = 50,
 							type = "group",
@@ -291,7 +286,7 @@ local function GetOptions()
 								]]
 							}
 						} or nil,
-						otherAddOns = E.isDF and {
+						otherAddOns = E.postDF and {
 							name = ADDONS,
 							order = 60,
 							type = "group",
@@ -350,6 +345,7 @@ local function GetOptions()
 		E:AddSpellEditor()
 		E:AddProfileSharing()
 	end
+
 	E:AddSpellPickers()
 	return E.options
 end
@@ -371,7 +367,7 @@ function E:SetupOptions()
 	self.optionsFrames.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.DB)
 	self.optionsFrames.profiles.order = 1000
 
-	if not self.preMoP then
+	if self.postMoP then
 		local LDS = LibStub("LibDualSpec-1.0")
 		LDS:EnhanceDatabase(self.DB, "OmniCDDB")
 		LDS:EnhanceOptions(self.optionsFrames.profiles, self.DB)

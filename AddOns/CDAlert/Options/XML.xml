@@ -1,0 +1,12 @@
+<Ui>
+	<Script file="API.lua"/>
+	<Script file="API-Options.lua"/>
+	<Script file="API-Table.lua"/>
+	<Script file="API-TableSpell.lua"/>
+	<Script file="API-TableTtem.lua"/>
+	<Script file="API-TableAura.lua"/>
+	<Script file="Core.lua"/>
+	<Script file="Tab1.lua"/>
+	<Script file="Tab2.lua"/>
+	<Script file="Tab3.lua"/>
+</Ui>

@@ -653,6 +653,7 @@ all:RegisterAbilities( {
         gcd = "off",
 
         item = 225649,
+        items = { 225648, 225649 },
         toggle = "cooldowns",
 
         proc = "haste",
@@ -941,11 +942,47 @@ all:RegisterAbilities( {
             }
         }
     },
+
+    -- https://www.wowhead.com/item=169344/ingenious-mana-battery
+    ingenious_mana_battery = {
+        cast = 8,
+        channeled = true,
+        cooldown = 60,
+        gcd = "spell",
+
+        item = 169344,
+        toggle = "cooldowns",
+        proc = "versatility",
+
+        start = function()
+            applyBuff( "ingenious_mana_battery_mana" )
+            applyBuff( "ingenious_mana_battery_vers" )
+        end,
+
+        auras = {
+            ingenious_mana_battery = {
+                alias = { "ingenious_mana_battery_mana", "ingenious_mana_battery_vers" },
+                aliasMode = "first",
+                aliasType = "buff",
+                duration = 3600
+            },
+            ingenious_mana_battery_mana = {
+                id = 300989,
+                duration = 3600,
+                max_stack = 1
+            },
+            ingenious_mana_battery_vers = {
+                id = 300970,
+                durration = 3600,
+                max_stack = 1
+            },
+        }
+    },
 } )
 
 all:RegisterGear( "bestinslots_melee", 232526 )
 all:RegisterGear( "bestinslots_caster", 232805 )
-all:RegisterGear( "bestinslots", 232526, 232805 )
+-- all:RegisterGear( "bestinslots", 232526, 232805 )
 
 all:RegisterAbilities( {
     -- 11.1
@@ -1045,19 +1082,44 @@ all:RegisterAbilities( {
         }
     },
 
+
+   --[[ reconfiguring_for_melee_combat = {
+        id = 473401,
+        item = 232805,
+        cast = 5,
+        cooldown = 30,
+        gcd = "spell",
+
+        texture = 6218212,
+
+        known = function() return equipped.bestinslots_caster and not ( InCombatLockdown() or time > 0 ) and spec.primaryStat ~= "intellect" end,
+    },
+
+    reconfiguring_for_spell_Casting = {
+        id = 473400,
+        item = 232526,
+        cast = 5,
+        cooldown = 30,
+        gcd = "spell",
+
+        texture = 6218212,
+
+        known = function() return equipped.bestinslots_melee and not ( InCombatLockdown() or time > 0 ) and spec.primaryStat == "intellect" end,
+
+    },--]]
+
     bestinslots = {
-        cast = function() return time > 0 and 0 or 5 end,
-        cooldown = function() return time > 0 and 120 or 30 end,
-        gcd = function() return time > 0 and "off" or "spell" end,
+        cast = 0,
+        cooldown = 120,
+        gcd = "off",
+        texture = 6218212,
+
+        -- known = function() return equipped.bestinslots end,
+        usable = function() return time > 0, "Not usable out of combat" end,
 
         item = function() return equipped.bestinslots_caster and 232805 or 232526 end,
-        toggle = function() return time > 0 and "cooldowns" or "default" end,
-
-        -- During combat, usable. Outside of combat, only usable if your weapon type doesn't match your mainstat
-        usable = function()
-            if time > 0 then return true end
-            return equipped.bestinslots_caster and spec.primaryStat ~= "intellect" or equipped.bestinslots_melee and spec.primaryStat == "intellect" or false
-        end,
+        items = { 232526, 232805 },
+        toggle ="cooldowns",
 
         proc = "secondary",
         self_buff = "cheating",
@@ -1072,7 +1134,7 @@ all:RegisterAbilities( {
                 duration = 15,
                 max_stack = 1
             }
-        }
+        },
     },
 
     test_pilots_gopack = {
@@ -1370,7 +1432,7 @@ all:RegisterAbilities( {
 
         usable = function() return buff.core_recycling_unit.stack > 10 and health.pct < 60 end,
 
-        proc = "heal",
+        proc = "healing",
         self_buff = "core_recycling_unit",
 
         handler = function ()
@@ -1395,6 +1457,30 @@ all:RegisterAbilities( {
         toggle = "cooldowns",
 
         proc = "damage",
+    },
+
+    anodized_deflectors = {
+        cast = 0,
+        cooldown = 30,
+        gcd = "off",
+
+        item = 168978,
+        toggle = "defensives",
+
+        proc = "avoidance",
+        self_buff = "anodized_deflectors",
+
+        handler = function ()
+            applyBuff( "anodized_deflectors" )
+        end,
+
+        auras = {
+            anodized_deflectors = {
+                id = 300140,
+                duration = 6,
+                max_stack = 1,
+            }
+        }
     },
 } )
 

@@ -83,6 +83,7 @@ local general = {
 			order = 11,
 			type = "toggle",
 		},
+		--[[
 		showPlayerEx = {
 			disabled = function(info) return E.profile.Party[ info[2] ].general.showPlayer end,
 			name = L["Show Player in Extra Bars"],
@@ -90,9 +91,9 @@ local general = {
 			order = 12,
 			type = "toggle",
 		},
+		]]
 		showTooltip = {
 			name = L["Show Tooltip"],
-
 			desc = L["Show spell information when you mouseover an icon"],
 			order = 13,
 			type = "toggle",
@@ -102,9 +103,9 @@ local general = {
 		showRange = {
 			name = L["Show Range"],
 			desc = format("%s\n\n|cffff2020%s\n\n%sVuhdo, HealBot, GW2_UI, AltzUI.|r",
-			L["Fade out icons when the raid frame fades out for out of range units."],
-			L["Addons with raid frame scaling will also cause the icons to scale."],
-			L["Not Supported:"]),
+				L["Fade out icons when the raid frame fades out for out of range units."],
+				L["Addons with raid frame scaling will also cause the icons to scale."],
+				L["Not Supported:"]),
 			order = 14,
 			type = "toggle",
 		},

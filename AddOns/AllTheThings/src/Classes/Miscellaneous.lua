@@ -358,6 +358,7 @@ for _,field in ipairs({
 	"u",
 	"pb",
 	"pvp",
+	"sr",
 	"races",
 	"isDaily",
 	"isWeekly",

@@ -1,8 +1,8 @@
 local E = select(2, ...):unpack()
 local P, CM = E.Party, E.Comm
 
-local pairs, ipairs, type, wipe, concat, format, gsub = pairs, ipairs, type, wipe, table.concat, format, gsub
-local UnitIsConnected, CanInspect, CheckInteractDistance, UnitPlayerControlled = UnitIsConnected, CanInspect, CheckInteractDistance, UnitPlayerControlled
+local pairs, ipairs, type, format, gsub = pairs, ipairs, type, format, gsub
+local UnitIsConnected, CanInspect, CheckInteractDistance = UnitIsConnected, CanInspect, CheckInteractDistance
 local GetPvpTalentInfoByID, GetTalentInfo, GetGlyphSocketInfo = GetPvpTalentInfoByID, GetTalentInfo, GetGlyphSocketInfo
 local GetItemInfoInstant = C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
 local C_SpecializationInfo_GetInspectSelectedPvpTalent = C_SpecializationInfo and C_SpecializationInfo.GetInspectSelectedPvpTalent
@@ -12,56 +12,52 @@ local C_Soulbinds_GetConduitSpellID = C_Soulbinds and C_Soulbinds.GetConduitSpel
 
 local InspectQueueFrame = CreateFrame("Frame")
 local InspectTooltip, tooltipData
-if not E.isDF then
+if not E.postDF then
 	InspectTooltip = CreateFrame("GameTooltip", "OmniCDInspectToolTip", nil, "GameTooltipTemplate")
 	InspectTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 end
 
 local LibDeflate = LibStub("LibDeflate")
-local INSPECT_DELAY = 2
-local INSPECT_INTERVAL = 1
-local INSPECT_PAUSE_TIME = 2
+local INSPECT_INTERVAL = 2
 local INSPECT_TIMEOUT = 300
-local nextInquiryTime = 0
-local elapsedTime = 0
-local isPaused
 local queriedGUID
 
+local inspectOrderList = {}
 local queueEntries = {}
 local staleEntries = {}
 
-CM.SERIALIZATION_VERSION = 6
+CM.SERIALIZATION_VERSION = E.preWOTLKC and 6 or 7
 CM.ACECOMM = LibStub("AceComm-3.0"):Embed(CM)
 
 function CM:Enable()
-	if self.enabled then
+	if self.isEnabled then
 		return
 	end
 
 	self.AddonPrefix = E.AddOn
-
-
-
-	self:RegisterComm(self.AddonPrefix, 'CHAT_MSG_ADDON')
-	self:RegisterEvent('PLAYER_EQUIPMENT_CHANGED')
-	self:RegisterEvent('PLAYER_LEAVING_WORLD')
+	self:RegisterComm(self.AddonPrefix, "CHAT_MSG_ADDON")
+	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	self:RegisterEvent("PLAYER_LEAVING_WORLD")
 	if E.isWOTLKC or E.isCata then
-		self:RegisterEvent('PLAYER_TALENT_UPDATE')
-	elseif E.preMoP then
-		self:RegisterEvent('CHARACTER_POINTS_CHANGED')
+
+		self:RegisterEvent("PLAYER_TALENT_UPDATE")
+	elseif E.preCata then
+		self:RegisterEvent("CHARACTER_POINTS_CHANGED")
 	else
-		self:RegisterUnitEvent('PLAYER_SPECIALIZATION_CHANGED', "player")
 
-		self:RegisterEvent('COVENANT_CHOSEN')
-		self:RegisterEvent('SOULBIND_ACTIVATED')
-		self:RegisterEvent('SOULBIND_NODE_LEARNED')
-		self:RegisterEvent('SOULBIND_NODE_UNLEARNED')
-		self:RegisterEvent('SOULBIND_NODE_UPDATED')
-		self:RegisterEvent('SOULBIND_CONDUIT_INSTALLED')
-		self:RegisterEvent('SOULBIND_PATH_CHANGED')
-		self:RegisterEvent('COVENANT_SANCTUM_RENOWN_LEVEL_CHANGED')
+		self:RegisterUnitEvent("PLAYER_SPECIALIZATION_CHANGED", "player")
 
-		self:RegisterEvent('TRAIT_CONFIG_UPDATED')
+		self:RegisterEvent("COVENANT_CHOSEN")
+		self:RegisterEvent("SOULBIND_ACTIVATED")
+		self:RegisterEvent("SOULBIND_NODE_LEARNED")
+		self:RegisterEvent("SOULBIND_NODE_UNLEARNED")
+		self:RegisterEvent("SOULBIND_NODE_UPDATED")
+		self:RegisterEvent("SOULBIND_CONDUIT_INSTALLED")
+		self:RegisterEvent("SOULBIND_PATH_CHANGED")
+		self:RegisterEvent("COVENANT_SANCTUM_RENOWN_LEVEL_CHANGED")
+
+
+		self:RegisterEvent("TRAIT_CONFIG_UPDATED")
 	end
 	self:SetScript("OnEvent", function(self, event, ...)
 		self[event](self, ...)
@@ -69,25 +65,28 @@ function CM:Enable()
 
 	self:InitInspect()
 	self:InitCooldownSync()
-	self.enabled = true
+	self.isEnabled = true
 end
 
 function CM:Disable()
-	if not self.enabled then
+	if not self.isEnabled then
 		return
 	end
 	self:UnregisterAllEvents()
-
 	self:DisableInspect()
-	self:DesyncFromGroup()
-	self.enabled = false
+	self:DesyncUserFromGroup()
+	self.isEnabled = false
 end
 
+local timeSinceUpdate = 0
+
 local function InspectQueueFrame_OnUpdate(_, elapsed)
-	elapsedTime = elapsedTime + elapsed
-	if elapsedTime > INSPECT_INTERVAL then
+	timeSinceUpdate = timeSinceUpdate + elapsed
+
+
+	if timeSinceUpdate > INSPECT_INTERVAL then
 		CM:RequestInspect()
-		elapsedTime = 0
+		timeSinceUpdate = 0
 	end
 end
 
@@ -101,11 +100,11 @@ function CM:InitInspect()
 end
 
 function CM:EnableInspect()
-	if self.enabledInspect or next(queueEntries) == nil then
+	if self.enabledInspect or #inspectOrderList == 0 then
 		return
 	end
-	self:RegisterEvent('INSPECT_READY')
 	InspectQueueFrame:Show()
+	self:RegisterEvent("INSPECT_READY")
 	self.enabledInspect = true
 end
 
@@ -114,111 +113,135 @@ function CM:DisableInspect()
 		return
 	end
 	ClearInspectPlayer()
-	self:UnregisterEvent('INSPECT_READY')
 	InspectQueueFrame:Hide()
+	self:UnregisterEvent("INSPECT_READY")
 
-	wipe(P.pendingQueue)
+	wipe(inspectOrderList)
 	wipe(queueEntries)
 	wipe(staleEntries)
 	queriedGUID = nil
-	isPaused = nil
 	self.enabledInspect = false
 end
 
-function CM:DequeueInspect(guid, addToStale)
-	if queriedGUID == guid then
-		queriedGUID = nil
+local function PendingInspect(guid)
+	return queueEntries[guid] or staleEntries[guid]
+end
+
+function CM:AddToInspectList(guid)
+
+
+
+
+	if not PendingInspect(guid) then
+		inspectOrderList[#inspectOrderList + 1] = guid
 	end
-	staleEntries[guid] = addToStale and queueEntries[guid] or nil
-	queueEntries[guid] = nil
+end
+
+function CM:AddToInspectListAndQueue(guid, addedTime)
+	if guid == E.userGUID then
+		self:InspectUser()
+	elseif not PendingInspect(guid) then
+		queueEntries[guid] = addedTime
+		inspectOrderList[#inspectOrderList + 1] = guid
+	end
 end
 
 function CM:EnqueueInspect(force, guid)
 	local addedTime = GetTime()
 	if force then
-		wipe(P.pendingQueue)
-		wipe(queueEntries)
-		wipe(staleEntries)
 		for infoGUID in pairs(P.groupInfo) do
-			if infoGUID == E.userGUID then
-				self:InspectUser()
-			else
-				queueEntries[infoGUID] = addedTime
-			end
+			self:AddToInspectListAndQueue(infoGUID, addedTime)
 		end
 	elseif guid then
-		if guid == E.userGUID then
-			self:InspectUser()
-		else
-			queueEntries[guid] = addedTime
-		end
+		self:AddToInspectListAndQueue(guid, addedTime)
 	else
-		local numPending = #P.pendingQueue
-		if numPending == 0 then return end
-		for i = numPending, 1, -1 do
-			local pendingGUID = P.pendingQueue[i]
-			queueEntries[pendingGUID] = addedTime
-			P.pendingQueue[i] = nil
+		local n = #inspectOrderList
+		if n == 0 then
+			return
+		end
+		for i = 1, n do
+			local listGUID = inspectOrderList[i]
+			if not PendingInspect(guid) then
+				queueEntries[listGUID] = addedTime
+			end
 		end
 	end
 
-	if isPaused then
-		nextInquiryTime = 0
-		isPaused = nil
-	end
 	self:EnableInspect()
 end
 
-function CM:RequestInspect()
-	local now = GetTime()
-	if now < nextInquiryTime or UnitIsDead("player") or (InspectFrame and InspectFrame:IsShown()) then
-		return
-	end
-
-	local stale = queriedGUID
-	if stale then
-		staleEntries[stale] = queueEntries[stale]
-		queueEntries[stale] = nil
+function CM:DequeueInspect(guid, moveToStale)
+	if queriedGUID == guid then
+		ClearInspectPlayer()
 		queriedGUID = nil
 	end
 
-	if next(queueEntries) == nil then
-		if next(staleEntries) then
-			local copy = queueEntries
-			queueEntries = staleEntries
-			staleEntries = copy
-
-			nextInquiryTime = now + INSPECT_PAUSE_TIME
-			isPaused = true
-		else
-			self:DisableInspect()
+	if moveToStale then
+		staleEntries[guid] = queueEntries[guid]
+	else
+		for i = #inspectOrderList, 1, -1 do
+			local listGUID = inspectOrderList[i]
+			if guid == listGUID then
+				tremove(inspectOrderList, i)
+			end
 		end
+	end
+	queueEntries[guid] = nil
+end
+
+function CM:RequestInspect()
+	if UnitIsDead("player") or InspectFrame and InspectFrame:IsShown() then
 		return
 	end
-	isPaused = nil
 
-	for unitGUID, addedTime in pairs(queueEntries) do
-		local info = P.groupInfo[unitGUID]
-		local isSyncedUnit = self.syncedGroupMembers[unitGUID]
-		if info and not isSyncedUnit then
-			local unit = info.unit
-			local elapsed = now - addedTime
-			if not UnitIsConnected(unit) or elapsed > INSPECT_TIMEOUT or info.isAdminObsForMDI or not UnitPlayerControlled(unit) then
-				self:DequeueInspect(unitGUID)
+	if #inspectOrderList == 0 then
+		self:DisableInspect()
+		return
+	end
 
 
-			elseif E.preMoP and (InCombatLockdown() or not CheckInteractDistance(unit,1))
-				or not CanInspect(unit) then
-				staleEntries[unitGUID] = addedTime
-				queueEntries[unitGUID] = nil
+	if queriedGUID then
+		ClearInspectPlayer()
+		staleEntries[queriedGUID] = queueEntries[queriedGUID]
+		queueEntries[queriedGUID] = nil
+		queriedGUID = nil
+	end
+
+	if next(queueEntries) == nil and next(staleEntries) then
+		local copy = queueEntries
+		queueEntries = staleEntries
+		staleEntries = copy
+	end
+
+	local now = GetTime()
+	local inCombat = InCombatLockdown()
+
+	for i = 1, #inspectOrderList do
+		local guid = inspectOrderList[i]
+		local addedTime = queueEntries[guid]
+		if addedTime then
+			local info = P.groupInfo[guid]
+			local unitIsSynced = self.syncedGroupMembers[guid]
+			if info and not info.isNPC and not unitIsSynced then
+				local unit = info.unit
+				local elapsed = now - addedTime
+				if not UnitIsConnected(unit) or elapsed > INSPECT_TIMEOUT or info.isAdminForMDI then
+					self:DequeueInspect(guid)
+				elseif E.preCata and (inCombat or not CheckInteractDistance(unit,1))
+
+
+					or not CanInspect(unit) then
+
+					staleEntries[guid] = addedTime
+					queueEntries[guid] = nil
+				else
+					queriedGUID = guid
+					NotifyInspect(unit)
+					return
+				end
 			else
-				nextInquiryTime = now + INSPECT_DELAY
-				queriedGUID = unitGUID
-				NotifyInspect(unit)
-				return
+				self:DequeueInspect(guid)
 			end
-		else
-			self:DequeueInspect(unitGUID)
 		end
 	end
 end
@@ -284,7 +307,8 @@ E.essenceData = {
 CM.essencePowerIDs = {}
 
 for essenceID, essencePowers in pairs(E.essenceData) do
-	local link = E.postBFA and C_AzeriteEssence.GetEssenceHyperlink(essenceID, 1)
+
+	local link = E.postSL and C_AzeriteEssence.GetEssenceHyperlink(essenceID, 1)
 	if link and link ~= "" then
 		link = link:match("%[(.-)%]"):gsub("%-","%%-")
 		essencePowers.name = link
@@ -487,7 +511,7 @@ local runeforgeBaseItems = {
 }
 
 --[[
-if we're separating player insepct:
+if we're separating player inspect:
 	local itemID = GetInventoryItemID(unit, slotID)
 	local itemLink = GetInventoryItemLink(unit, slotID)
 	local itemLocation = ItemLocation:CreateFromEquipmentSlot(slotID)
@@ -535,7 +559,7 @@ local function GetEquippedItemData(info, unit, specID, list)
 						if list then list[#list + 1] = equipBonusID .. ":S" end
 					end
 					if tierSetBonus then
-						local specBonus = E.preMoP and tierSetBonus or tierSetBonus[specID]
+						local specBonus = E.preCata and tierSetBonus or tierSetBonus[specID]
 						if specBonus and numTierSetBonus < 2 and specBonus[1] ~= foundTierSpecBonus then
 							foundTierSpecBonus = FindSetBonus(info, specBonus, list)
 							if foundTierSpecBonus then
@@ -575,7 +599,7 @@ local function GetEquippedItemData(info, unit, specID, list)
 		end
 	end
 	if e then
-		list[#list + 1] = concat(e, ",")
+		list[#list + 1] = table.concat(e, ",")
 		e = nil
 	end
 
@@ -596,7 +620,7 @@ local talentChargeFix = {
 
 local MAX_NUM_TALENTS = MAX_NUM_TALENTS or ((E.isWOTLKC or E.isCata) and 31 or 25)
 
-local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
+local GetSelectedTalentData = (E.postDF and function(info, unit, isInspect)
 	local list, c
 	if not isInspect then
 		list, c = { CM.SERIALIZATION_VERSION, info.spec, "^T" }, 4
@@ -605,7 +629,7 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 	for i = 1, 3 do
 		local talentID
 		if isInspect then
-			talentID = C_SpecializationInfo_GetInspectSelectedPvpTalent(inspectUnit, i)
+			talentID = C_SpecializationInfo_GetInspectSelectedPvpTalent(unit, i)
 		else
 			local slotInfo = C_SpecializationInfo_GetPvpTalentSlotInfo(i)
 			talentID = slotInfo and slotInfo.selectedTalentID
@@ -639,26 +663,34 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 								local definitionInfo = C_Traits.GetDefinitionInfo(definitionID)
 								local spellID = definitionInfo.spellID
 								spellID = talentIDFix[activeEntryID] or spellID
-								if spellID and (not treeNode.subTreeID or treeNode.subTreeActive) then
-									if talentChargeFix[spellID] then
-										if talentChargeFix[spellID] == true then
-											if info.talentData[spellID] then
+								if spellID then
+									if not treeNode.subTreeID or treeNode.subTreeActive then
+										if talentChargeFix[spellID] then
+
+											if talentChargeFix[spellID] == true then
+												if info.talentData[spellID] then
+													activeRank = 2
+												end
+
+											elseif talentChargeFix[spellID][info.spec] then
 												activeRank = 2
 											end
-										elseif talentChargeFix[spellID][info.spec] then
-											activeRank = 2
 										end
-									end
-									info.talentData[spellID] = activeRank
-									if list then
-										list[c] = activeRank > 1 and format("%s:%s", spellID, activeRank) or spellID
-										c = c + 1
-									end
-									--[[
-									if treeNode.subTreeActive then
+										info.talentData[spellID] = activeRank
+										if list then
+											if activeRank > 1 then
+												list[c] = format("%s:%s", spellID, activeRank)
+											else
+												list[c] = spellID
+											end
+											c = c + 1
+										end
+										--[[
+										if treeNode.subTreeActive then
 
+										end
+										]]
 									end
-									]]
 								end
 							end
 						end
@@ -669,7 +701,7 @@ local GetSelectedTalentData = (E.isDF and function(info, inspectUnit, isInspect)
 	end
 
 	return list
-end) or (E.isSL and function(info, inspectUnit, isInspect)
+end) or (E.isSL and function(info, unit, isInspect)
 	local list
 	if not isInspect then
 		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
@@ -678,7 +710,7 @@ end) or (E.isSL and function(info, inspectUnit, isInspect)
 	for i = 1, 3 do
 		local talentID
 		if isInspect then
-			talentID = C_SpecializationInfo_GetInspectSelectedPvpTalent(inspectUnit, i)
+			talentID = C_SpecializationInfo_GetInspectSelectedPvpTalent(unit, i)
 		else
 			local slotInfo = C_SpecializationInfo_GetPvpTalentSlotInfo(i)
 			talentID = slotInfo and slotInfo.selectedTalentID
@@ -693,7 +725,7 @@ end) or (E.isSL and function(info, inspectUnit, isInspect)
 	local specGroupIndex = 1
 	for tier = 1, MAX_TALENT_TIERS do
 		for column = 1, NUM_TALENT_COLUMNS do
-			local _,_,_, selected, _, spellID = GetTalentInfo(tier, column, specGroupIndex , isInspect, inspectUnit)
+			local _,_,_, selected, _, spellID = GetTalentInfo(tier, column, specGroupIndex , isInspect, unit)
 			if selected then
 				info.talentData[spellID] = true
 				if list then list[#list + 1] = spellID end
@@ -703,7 +735,7 @@ end) or (E.isSL and function(info, inspectUnit, isInspect)
 	end
 
 	return list
-end) or (E.isWOTLKC and function(info, inspectUnit, isInspect)
+end) or (E.isWOTLKC and function(info, unit, isInspect)
 	local list
 	if not isInspect then
 		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
@@ -723,7 +755,7 @@ end) or (E.isWOTLKC and function(info, inspectUnit, isInspect)
 
 	for tabIndex = 1, 3 do
 		for talentIndex = 1, MAX_NUM_TALENTS do
-			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, inspectUnit, talentGroup)
+			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, unit, talentGroup)
 			if not name then
 				break
 			end
@@ -751,7 +783,7 @@ end) or (E.isWOTLKC and function(info, inspectUnit, isInspect)
 	end
 
 	return list
-end) or (E.isCata and function(info, inspectUnit, isInspect)
+end) or (E.isCata and function(info, unit, isInspect)
 	local list
 	if not isInspect then
 		list = { CM.SERIALIZATION_VERSION, 0, "^T" }
@@ -782,7 +814,7 @@ end) or (E.isCata and function(info, inspectUnit, isInspect)
 
 	for tabIndex = 1, 3 do
 		for talentIndex = 1, MAX_NUM_TALENTS do
-			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, inspectUnit, talentGroup)
+			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, unit, talentGroup)
 			if not name then
 				break
 			end
@@ -810,7 +842,7 @@ end) or (E.isCata and function(info, inspectUnit, isInspect)
 	end
 
 	return list
-end) or function(info, inspectUnit, isInspect)
+end) or function(info, unit, isInspect)
 	local list
 	if not isInspect then
 		list = { CM.SERIALIZATION_VERSION, info.spec, "^T" }
@@ -818,7 +850,7 @@ end) or function(info, inspectUnit, isInspect)
 
 	for tabIndex = 1, 3 do
 		for talentIndex = 1, MAX_NUM_TALENTS do
-			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, inspectUnit)
+			local name, _,_,_, currentRank = GetTalentInfo(tabIndex, talentIndex, isInspect, unit)
 			if not name then
 				break
 			end
@@ -850,40 +882,45 @@ end
 
 function CM:InspectUnit(guid)
 	local info = P.groupInfo[guid]
+
+
 	if not info or self.syncedGroupMembers[guid] then
-		ClearInspectPlayer()
+		self:DequeueInspect(guid)
 		return
 	end
 
-	local inspectUnit = info.unit
-	local specID = E.preMoP and info.raceID or GetInspectSpecialization(inspectUnit)
+	local unit = info.unit
+	local specID = E.preCata and info.raceID or GetInspectSpecialization(unit)
+
+
 	if not specID or specID == 0 then
 		return
 	end
+
 	info.spec = specID
 	if info.name == "" or info.name == UNKNOWN then
-		info.name = GetUnitName(inspectUnit, true)
-		info.nameWithoutRealm = UnitName(inspectUnit)
+		info.name = GetUnitName(unit, true)
+		info.nameWithoutRealm = UnitName(unit)
 	end
 	if info.level == 200 then
-		local lvl = UnitLevel(inspectUnit)
+		local lvl = UnitLevel(unit)
 		if lvl > 0 then
 			info.level = lvl
 		end
 	end
-	if not E.preMoP then
-		info.spellHasteMult = 1/(1 + UnitSpellHaste(info.unit)/100)
+
+	if UnitSpellHaste then
+		info.spellHasteMult = 1/(1 + UnitSpellHaste(unit)/100)
 	end
 
 	wipe(info.talentData)
 	wipe(info.itemData)
 
-	GetSelectedTalentData(info, inspectUnit, true)
-	local failed = GetEquippedItemData(info, inspectUnit, specID)
+	GetSelectedTalentData(info, unit, true)
+	local failed = GetEquippedItemData(info, unit, specID)
 
-	ClearInspectPlayer()
 	self:DequeueInspect(guid, failed)
-	P:UpdateUnitBar(guid)
+	info:SetupBar()
 end
 
 local enhancedSoulbindRowRenownLevel = {
@@ -925,6 +962,7 @@ local function GetCovenantSoulbindData(info, list)
 	if soulbindID == 0 then
 		return
 	end
+
 	info.shadowlandsData.soulbindID = soulbindID
 	list[#list + 1] = soulbindID
 
@@ -944,7 +982,8 @@ local function GetCovenantSoulbindData(info, list)
 				if IsSoulbindRowEnhanced(soulbindID, row, renownLevel) then
 					conduitRank = conduitRank + 2
 				end
-				local rankValue = E.soulbind_conduits_rank[spellID] and (E.soulbind_conduits_rank[spellID][conduitRank] or E.soulbind_conduits_rank[spellID][1])
+				local rankValue = E.soulbind_conduits_rank[spellID] and (E.soulbind_conduits_rank[spellID][conduitRank]
+				or E.soulbind_conduits_rank[spellID][1])
 				if rankValue then
 					info.talentData[spellID] = rankValue
 					list[#list + 1] = format("%s:%s", spellID, rankValue)
@@ -957,57 +996,17 @@ local function GetCovenantSoulbindData(info, list)
 	end
 end
 
-local function FindValidSpellID(info, v)
-	if type(v) ~= "table" then
-		return info.spec == v or (P:IsTalentForPvpStatus(v, info) and true)
-	end
-	if v[1] > 0 then
-		for _, id in pairs(v) do
-			if info.spec == id or P:IsTalentForPvpStatus(id, info) then
-				return true
-			end
-		end
-	else
-		local spellID
-		for i = 1, #v, 2 do
-			local tid, sid = v[i], v[i + 1]
-			tid = i == 1 and -tid or tid
-			spellID = P:IsTalentForPvpStatus(tid, info) and sid
-		end
-		return spellID or true
-	end
-end
-
-function CM:UpdateCooldownSyncIDs(info)
-	wipe(self.cooldownSyncIDs)
-	if info.isAdminObsForMDI then return end
-
-	local notRaid = P.zone ~= "raid"
-	for id, t in E.pairs(E.sync_cooldowns.ALL, E.sync_cooldowns[E.userClass]) do
-		if notRaid or E.sync_in_raid[id] then
-			local spellID
-			for i = 1, #t do
-				local v = t[i]
-				spellID = not v or FindValidSpellID(info, v)
-				if not spellID then break end
-			end
-			if spellID then
-				self.cooldownSyncIDs[spellID == true and id or spellID] = { 0, -1 }
-			end
-		end
-	end
-	self:ToggleCooldownSync()
-end
-
 function CM:InspectUser()
 	local info = P.userInfo
 	local specID
-	if E.preMoP then
+
+	if E.preCata then
 		specID = info.raceID
 	else
 		local specIndex = GetSpecialization()
 		specID = GetSpecializationInfo(specIndex)
 	end
+
 	if not specID or specID == 0 then
 		return false
 	end
@@ -1018,7 +1017,8 @@ function CM:InspectUser()
 
 	local dataList = GetSelectedTalentData(info, "player")
 	GetEquippedItemData(info, "player", specID, dataList)
-	if E.postBFA then
+
+	if E.postSL then
 		GetCovenantSoulbindData(info, dataList)
 		info.spellHasteMult = 1/(1 + UnitSpellHaste("player")/100)
 
@@ -1030,17 +1030,16 @@ function CM:InspectUser()
 		end
 	end
 
-	local serializedData = concat(dataList, ","):gsub(",%^", "^")
+	local serializedData = table.concat(dataList, ","):gsub(",%^", "^")
 	local compressedData = LibDeflate:CompressDeflate(serializedData)
 	local encodedData = LibDeflate:EncodeForWoWAddonChannel(compressedData)
 	self.serializedSyncData = encodedData
 
-	if not E.preCata then
-		self:UpdateCooldownSyncIDs(info)
-	end
 
-	if P.groupInfo[E.userGUID] then
-		P:UpdateUnitBar(E.userGUID)
+	if P.groupInfo[info.guid] then
+		CM:RefreshCooldownSyncIDs(info)
+		info:SetupBar()
+		CM:AssignSpellIDsToCooldownSyncIDs(info)
 	end
 
 	return true

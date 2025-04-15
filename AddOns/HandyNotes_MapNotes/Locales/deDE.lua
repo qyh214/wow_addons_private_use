@@ -2,6 +2,13 @@ local ADDON_NAME = ...
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "deDE")
 if not L then return end
 
+-- create and copy links
+L["Use CTRL + C to copy the link"] = "Kopieren Sie den Link mit STRG + C"
+L["If the link or email address is colored blue in the chat, the link is ready to be copied"] = "Ist der Link oder die E-Mail-Adresse im Chat blau markiert, kann er kopiert werden"
+L["Links are only generated after the feature is activated. Links or email addresses created before activation will not be recognized retroactively"] = "Links werden erst nach Aktivierung der Funktion generiert. Vor der Aktivierung erstellte Links oder E-Mail-Adressen werden nicht rückwirkend berücksichtigt"
+L["Enables you to copy links and email addresses from the chat"] = "Ermöglicht das Kopieren von Links und E-Mail-Adressen aus dem Chat"
+L["Clicking a link in the chat opens a separate window"] = "Klicken Sie im Chat auf einen Link, um ein separates Fenster zu öffnen"
+L["The window closes automatically after copying"] = "Das Fenster schließt sich nach dem Kopieren automatisch"
 -- weapon types
 L["Bows"] = "Bögen"
 L["Crossbows"] = "Armbrüste"
@@ -56,7 +63,7 @@ L["< Shift + Right Click add TomTom waypoint >"] = "< Shift + Rechtsklick TomTom
 L["< Alt + Right click to delete this icon >"] = "< Alt + Rechtklick um dieses Icon zu löschen >"
 L["This applies to the following tabs"] = "Dies bezieht sich auf folgende Registerkarten"
 L["Middle mouse button to post the link in the chat"] = "Mittlere Maustaste, um den Link im Chat zu posten"
-L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] = "Verwenden Sie zum Beispiel das Addon 'Prat', 'Chat Copy Paste', um diesen Link dann aus dem Chat zu kopieren"
+L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] = "Aktivieren Sie die Funktion „Link“ von MapNotes im Reiter „Allgemein“, um anklickbare Links und E-Mail-Adressen im Chat zu erstellen"
 L["This will immediately abort and end the current instance run!"] = "Dadurch wird der aktuelle Instanzlauf sofort abgebrochen und beendet!"
 L["With Alt + right click it is now possible to remove any MapNotes icon"] = "Mit Alt + Rechtsklick ist es nun möglich, jedes MapNotes-Symbol zu entfernen"
 L["If 'Tooltip' is activated, an additional tooltip will be added to the icons showing how to interact with this feature"] = "Wenn „Tooltip“ aktiviert ist, wird den Symbolen ein zusätzlicher Tooltip hinzugefügt, der zeigt, wie mit dieser Funktion interagiert wird"
@@ -318,6 +325,7 @@ L["Portal"] = "Portal"
 L["Ship"] = "Schiff"
 L["Zeppelin"] = "Zeppelin"
 L["Mole Machine"] = "Maulwurfmaschine"
+L["Rocket drill"] = "Raketenbohrer"
 L["Portalroom"] = "Portalraum"
 L["The Dark Portal"] = "Das dunkle Portal"
 L["Captain Krooz"] = "Kapitän Krooz"
@@ -371,6 +379,7 @@ L["Boralus, Tiragarde Sound"] = "Boralus, Tiragardesund"
 L["Valdrakken"] = "Valdrakken"
 L["Badlands"] = "Ödland"
 L["Oribos"] = "Oribos"
+L["Maldraxxus"] = "Maldraxxus"
 L["Azsuna"] = "Azsuna"
 L["Uldum"] = "Uldum"
 L["Dazar'alor"] = "Dazar'alor"

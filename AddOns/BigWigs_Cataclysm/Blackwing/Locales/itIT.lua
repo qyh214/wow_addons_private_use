@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "itIT")
 if L then
 	L.discharge = "Scarica"
 	L.stage3_yell_trigger = "UCCIDERVI TUTTI" -- Ho cercato di essere un ospite cortese, ma non volete proprio morire! È ora di abbandonare ogni formalità e... UCCIDERVI TUTTI!
-	--L.too_close = "Dragons are too close"
 end

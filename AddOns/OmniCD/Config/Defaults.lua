@@ -5,6 +5,8 @@ G.notifyNew = false
 G.optionPanelScale = 1
 
 C.tooltipID = false
+
+
 C.Party = {
 	["visibility"] = {
 		["arena"] = true,
@@ -31,7 +33,7 @@ C.Party.arena = {
 	["general"] = {
 		["showAnchor"] = false,
 		["showPlayer"] = false,
-		["showPlayerEx"] = true,
+		--["showPlayerEx"] = true,
 		["showRange"] = false,
 		--["zoneSelected"] = false,
 	},
@@ -55,6 +57,7 @@ C.Party.arena = {
 		["growUpward"] = false,
 		["maxNumIcons"] = 0,
 		["detached"] = false,
+		["locked"] = false,
 	},
 	["icons"] = {
 		["showTooltip"] = false,
@@ -163,13 +166,15 @@ C.Party.arena = {
 }
 
 for i = 1, 8 do
-	local key = "raidBar" .. i
+	local key = E.Party.extraBarKeys[i]
 	C.Party.arena.extraBars[key] = {
 		["name"] = nil,
 		["enabled"] = false,
 		["redirect"] = true,
 		["unitBar"] = false,
 		["locked"] = false,
+		["showPlayer"] = true,
+		["uf"] = "auto",
 		["anchor"] = "TOPRIGHT",
 		["attach"] = "TOPLEFT",
 		["offsetX"] = 0,
@@ -264,7 +269,11 @@ for k in pairs(E.L_CFG_ZONE) do
 	end
 end
 
-if not E.isDF then return end
+if not E.isRetail then
+	return
+end
+
+
 
 C.Party.arena.spells = {
 	["*"] = false,
@@ -316,7 +325,6 @@ C.Party.arena.spells = {
 	["8122"] = true,
 	["64044"] = true,
 	["2094"] = true,
-	["207736"] = true,
 	["212182"] = true,
 	["359053"] = true,
 	["305483"] = true,
@@ -395,13 +403,13 @@ C.Party.arena.spells = {
 	["97462"] = true,
 
 	["33891"] = true,
+	["473909"] = true,
 	["108238"] = true,
 	["370960"] = true,
 	["109304"] = true,
 	["216331"] = true,
 	["384376"] = true,
 	["633"] = true,
-	["47536"] = true,
 	["114052"] = true,
 
 	["207289"] = true,
@@ -508,7 +516,6 @@ C.Party.party.spells = {
 	["33891"] = true,
 	["216331"] = true,
 	["384376"] = true,
-	["47536"] = true,
 	["114052"] = true,
 
 	["275699"] = true,
@@ -557,7 +564,6 @@ C.Party.party.spells = {
 	["265187"] = true,
 	["386997"] = true,
 	["1719"] = true,
-	["401150"] = true,
 	["107574"] = true,
 	["167105"] = true,
 	["262161"] = true,
@@ -640,7 +646,6 @@ C.Party.party.spells = {
 	["388615"] = true,
 	["31821"] = true,
 	["64843"] = true,
-	["265202"] = true,
 	["62618"] = true,
 	["271466"] = true,
 	["15286"] = true,
@@ -665,7 +670,6 @@ C.Party.raid.spells = {
 	["388615"] = true,
 	["31821"] = true,
 	["64843"] = true,
-	["265202"] = true,
 	["62618"] = true,
 	["271466"] = true,
 	["108280"] = true,
@@ -695,3 +699,4 @@ C.Party.raid.extraBars.raidBar5.redirect = false
 C.Party.raid.extraBars.raidBar6.redirect = false
 C.Party.raid.extraBars.raidBar7.redirect = false
 C.Party.raid.extraBars.raidBar8.redirect = false
+

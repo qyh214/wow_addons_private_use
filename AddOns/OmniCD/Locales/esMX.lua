@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "esMX")
+if not L then return end
 
-L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = "%d: ID de hechizo. %d-%d: ID de hechizo - ID de talento (Marca hechizos si el talento esta seleccionado)"
 --[[Translation missing --]]
@@ -81,8 +81,8 @@ L["Author"] = "Autor"
 L["Auto"] = "Auto"
 L["Bar"] = "Barra"
 L["Bar width"] = "Ancho de barra"
-L["Battle Res"] = true
-L["BG"] = true
+L["Battle Res"] = "Battle Res"
+L["BG"] = "BG"
 --[[Translation missing --]]
 L["Blizzard Raid Frames has been disabled by your AddOn(s). Enable and reload UI?"] = "Blizzard Raid Frames has been disabled by your AddOn(s). Enable and reload UI?"
 L["Border"] = "Borde"
@@ -288,7 +288,7 @@ L["Highlight Icons"] = "Resaltar iconos"
 L["Highlight the icon when a buffing spell is used until the buff falls off"] = "Resalta el icono cuando se usa un hechizo de beneficio hasta que este termine"
 --[[Translation missing --]]
 L["Hold Time"] = "Hold Time"
-L["Horizontal"] = true
+L["Horizontal"] = "Horizontal"
 --[[Translation missing --]]
 L["Horizontal + CD Groups"] = "Horizontal + CD Groups"
 --[[Translation missing --]]
@@ -629,7 +629,7 @@ L["Utility"] = "Utility"
 L["Utils"] = "Utilidades"
 L["Value 'Manual Position' includes Interrupt and Raid Bar's saved positions."] = "La opción 'posición manual' incluye las posiciones guardadas de las barras de interrupciones y de banda."
 L["Version"] = "Versión"
-L["Vertical"] = true
+L["Vertical"] = "Vertical"
 --[[Translation missing --]]
 L["Vertical + CD Groups"] = "Vertical + CD Groups"
 --[[Translation missing --]]

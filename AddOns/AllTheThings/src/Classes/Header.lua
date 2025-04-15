@@ -30,6 +30,7 @@ local HeaderTypeAbbreviations = {
 	q = "questID",
 	s = "spellID",
 };
+local DungeonInfoTexCoords = { 0, 0.66, 0, 1 }
 -- Alternate functions to attach data into a table based on an id for a given type code
 -- TODO: maybe this should be built using related Classes?
 local AlternateDataTypes = {
@@ -44,14 +45,14 @@ local AlternateDataTypes = {
 	end,
 	d = function(id)
 		local name, _, _, _, _, _, _, _, _, _, textureFilename = GetLFGDungeonInfo(id);
-		return { name = name, icon = textureFilename };
+		return { name = name, icon = textureFilename, texcoord = DungeonInfoTexCoords };
 	end,
 	df = function(id)
 		local aid = math_floor(id);
 		local hid = math_floor(10000 * (id - aid) + 0.005);
 		id = app.FactionID == Enum.FlightPathFaction.Alliance and tonumber(aid) or tonumber(hid);
 		local name, _, _, _, _, _, _, _, _, _, textureFilename = GetLFGDungeonInfo(id);
-		return { name = name, icon = textureFilename };
+		return { name = name, icon = textureFilename, texcoord = DungeonInfoTexCoords };
 	end,
 	n = function(id)
 		return { name = app.NPCNameFromID[tonumber(id)], displayID = app.NPCDisplayIDFromID[tonumber(id)] };
@@ -113,6 +114,9 @@ do
 		end,
 		icon = function(t)
 			return cache.GetCachedField(t, "icon", CacheInfo) or 4555017;
+		end,
+		texcoord = function(t)
+			return cache.GetCachedField(t, "texcoord", CacheInfo)
 		end,
 	},
 	"WithQuest", {

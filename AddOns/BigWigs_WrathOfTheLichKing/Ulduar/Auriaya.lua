@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Auriaya", 603, 1643)
 if not mod then return end
 mod:RegisterEnableMob(33515)
-mod:SetEncounterID(mod:Classic() and 750 or 1131)
+mod:SetEncounterID(BigWigsLoader.isWrath and 750 or 1131)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------

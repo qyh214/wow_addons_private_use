@@ -2,6 +2,13 @@
 local L = LibStub("AceLocale-3.0"):NewLocale(ADDON_NAME, "koKR")
 if not L then return end
 
+-- create and copy links
+L["Use CTRL + C to copy the link"] = "CTRL + C를 사용하여 링크를 복사합니다"
+L["If the link or email address is colored blue in the chat, the link is ready to be copied"] = "채팅에서 링크나 이메일 주소가 파란색으로 강조 표시되면 링크를 복사할 수 있습니다"
+L["Links are only generated after the feature is activated. Links or email addresses created before activation will not be recognized retroactively"] = "링크는 기능이 활성화된 후에만 생성됩니다. 활성화 전에 생성된 링크나 이메일 주소는 소급적으로 인식되지 않습니다"
+L["Enables you to copy links and email addresses from the chat"] = "채팅에서 링크와 이메일 주소를 복사할 수 있습니다"
+L["Clicking a link in the chat opens a separate window"] = "채팅에서 링크를 클릭하면 별도의 창이 열립니다"
+L["The window closes automatically after copying"] = "복사 후 창이 자동으로 닫힙니다"
 -- weapon types
 L["Bows"] = "활"
 L["Crossbows"] = "석궁"
@@ -56,7 +63,7 @@ L["< Shift + Right Click add TomTom waypoint >"] = "< Shift + Tomtom Waypoint Ad
 L["< Alt + Right click to delete this icon >"] = "< Alt + 마우스 오른쪽 버튼을 클릭 하여이 아이콘을 삭제하십시오 >"
 L["This applies to the following tabs"] = "다음 탭에 적용됩니다"
 L["Middle mouse button to post the link in the chat"] = "채팅에 링크를 게시하려면 마우스 가운데 버튼을 누르세요"
-L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] = "예를 들어 애드온 'Prat', 'Chat Copy Paste'를 사용하여 채팅에서 이 링크를 복사하세요"
+L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] = "채팅에서 클릭 가능한 링크와 이메일 주소를 생성하려면 일반 탭에서 MapNotes의 „링크“ 기능을 활성화합니다"
 L["This will immediately abort and end the current instance run!"] = "그러면 현재 인스턴스 실행이 즉시 중단되고 종료됩니다!"
 L["With Alt + right click it is now possible to remove any MapNotes icon"] = "Alt + 마우스 오른쪽 버튼을 클릭하면 이제 MapNotes 아이콘을 제거할 수 있습니다"
 L["If 'Tooltip' is activated, an additional tooltip will be added to the icons showing how to interact with this feature"] = "'툴팁'이 활성화되면 이 기능과 상호 작용하는 방법을 보여주는 아이콘에 추가 툴팁이 추가됩니다"
@@ -318,6 +325,7 @@ L["Portal"] = "문"
 L["Ship"] = "배"
 L["Zeppelin"] = "제프 펠린"
 L["Mole Machine"] = "굴착기"
+L["Rocket drill"] = "로켓 드릴"
 L["Portalroom"] = "포털룸"
 L["The Dark Portal"] = "다크 포탈"
 L["Captain Krooz"] = "크로즈 선장"
@@ -371,6 +379,7 @@ L["Boralus, Tiragarde Sound"] = "보랄러스, 티라가드 해협"
 L["Valdrakken"] = "발드라켄"
 L["Badlands"] = "황무지"
 L["Oribos"] = "오리보스"
+L["Maldraxxus"] = "말드락서스"
 L["Azsuna"] = "아즈스나"
 L["Uldum"] = "울둠"
 L["Dazar'alor"] = "다자알로"

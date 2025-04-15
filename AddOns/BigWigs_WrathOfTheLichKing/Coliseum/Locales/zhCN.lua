@@ -23,7 +23,7 @@ if L then
 	L.engage_trigger = "他来自风暴峭壁最幽深，最黑暗的洞穴，穿刺者戈莫克！准备战斗，英雄们！"
 	L.jormungars_trigger = "做好准备，英雄们，两头猛兽已经进入了竞技场！它们是酸喉和恐鳞！"
 	L.icehowl_trigger = "当下一名斗士出场时，空气都会为之冻结！它是冰吼，胜或是死，勇士们！"
-	L.boss_incoming = "即将%s！"
+	L.boss_incoming = "即将 %s！"
 
 	L.gormok = "穿刺者戈莫克"
 	L.jormungars = "酸喉和恐鳞"
@@ -40,10 +40,10 @@ if L then
 	L.spew_desc = "当施放强酸/熔岩喷射时发出警报。"
 	L.sprays = "喷溅"
 	L.sprays_desc = "显示下一次麻痹喷溅和烈焰喷射计时条。"
-	L.slime_message = ">你< 粘液池！"
+	L.slime_message = " 你 粘液池！"
 	L.burn_spell = "灼热胆汁"
 	L.toxin_spell = "麻痹毒素"
-	L.spray = "<下一喷溅>"
+	L.spray = "下一喷溅"
 
 	-- Icehowl
 	L.charge = "野性冲锋"
@@ -58,7 +58,7 @@ L = BigWigs:NewBossLocale("Faction Champions", "zhCN")
 if L then
 	L.defeat_trigger = "肤浅且可悲的胜利。今天的内耗让我们又一次被削弱了。这种愚蠢的行为只能让巫妖王受益！伟大的战士们就这样白白牺牲，而真正的威胁却步步逼近。巫妖王正计算着我们的死期。"
 
-	L["Shield on %s!"] = "圣盾术：>%s<！"
+	L["Shield on %s!"] = "圣盾术：%s ！"
 	L["Bladestorming!"] = "剑刃风暴！"
 	L["Hunter pet up!"] = "召唤宠物！"
 	L["Felhunter up!"] = "召唤地狱猎犬！"
@@ -78,18 +78,18 @@ if L then
 	L.adds_desc = "当加拉克苏斯大王召唤虚空传送门和地狱火山时发出警报和显示计时条。"
 
 	L.incinerate_message = "血肉成灰"
-	L.incinerate_other = "血肉成灰：>%s<！"
-	L.incinerate_bar = "<下一血肉成灰>"
-	L.incinerate_safe = "安全：>%s<！"
+	L.incinerate_other = "血肉成灰：%s ！"
+	L.incinerate_bar = "下一血肉成灰"
+	L.incinerate_safe = "安全：%s ！"
 
 	L.legionflame_message = "军团烈焰"
-	L.legionflame_other = "军团烈焰：>%s<！"
-	L.legionflame_bar = "<下一军团烈焰>"
+	L.legionflame_other = "军团烈焰：%s ！"
+	L.legionflame_bar = "下一军团烈焰"
 
-	L.infernal_bar = "<地狱火山出现>"
-	L.netherportal_bar = "<下一虚空传送门>"
+	L.infernal_bar = "地狱火山出现"
+	L.netherportal_bar = "下一虚空传送门"
 
-	L.kiss_message = ">你< 仕女之吻！"
+	L.kiss_message = "你 仕女之吻！"
 	L.kiss_interrupted = "打断！"
 end
 
@@ -97,7 +97,7 @@ L = BigWigs:NewBossLocale("The Twin Val'kyr", "zhCN")
 if L then
 	L.engage_trigger1 = "以黑暗之主的名义。为了巫妖王。你必死无疑。"
 
-	L.vortex_or_shield_cd = "<下一漩涡/盾>"
+	L.vortex_or_shield_cd = "下一漩涡/盾"
 	L.next = "下一漩涡/盾"
 	L.next_desc = "当下一次漩涡或盾时发出警报。"
 

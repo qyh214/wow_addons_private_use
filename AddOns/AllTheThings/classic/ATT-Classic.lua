@@ -403,6 +403,10 @@ ResolveSymbolicLink = function(o)
 				if response then tinsert(searchResults, app.CreateNPC(app.HeaderConstants.HOLIDAYS, response));  end
 				response = app:BuildSearchResponse(app.Categories.WorldEvents, "requireSkill", requireSkill);
 				if response then tinsert(searchResults, {text=BATTLE_PET_SOURCE_7,icon = app.asset("Category_Event"),g=response});  end
+				if app.Categories.ExpansionFeatures then
+					response = app:BuildSearchResponse(app.Categories.ExpansionFeatures, "requireSkill", requireSkill);
+					if response then tinsert(searchResults, {text=EXPANSION_FILTER_TEXT,icon = app.asset("Category_ExpansionFeatures"),g=response}); end
+				end
 			elseif cmd == "fill" then
 				-- Instruction to fill with identical content cached elsewhere for this group
 				local cache = SearchForField(o.key, o[o.key]);
@@ -1617,14 +1621,10 @@ function app:GetDataCache()
 		end
 
 		-- Professions
-		if app.Categories.Professions then
-			tinsert(g, {
-				text = TRADE_SKILLS,
-				icon = app.asset("Category_Professions"),
-				description = "This section will only show your character's professions outside of Account and Debug Mode.",
-				g = app.Categories.Professions
-			});
-		end
+		local ProfessionsHeader = app.CreateNPC(app.HeaderConstants.PROFESSIONS, {
+			g = app.Categories.Professions or {}
+		});
+		tinsert(g, ProfessionsHeader);
 
 		-- Holidays
 		if app.Categories.Holidays then
@@ -1714,7 +1714,34 @@ function app:GetDataCache()
 			local keys,sortedList = {},{};
 			for suffix,window in pairs(app.Windows) do
 				if window and window.IsDynamicCategory then
-					keys[suffix] = window;
+					if window.DynamicCategoryHeader then
+						if window.DynamicProfessionID then
+							local dynamicProfessionHeader = nil;
+							for i,header in ipairs(ProfessionsHeader.g) do
+								if header.requireSkill == window.DynamicProfessionID then
+									dynamicProfessionHeader = header;
+									break;
+								end
+							end
+							
+							local recipesList = app.CreateDynamicCategory(suffix);
+							recipesList.IgnoreBuildRequests = true;
+							if dynamicProfessionHeader then
+								recipesList.text = "Recipes";
+								recipesList.icon = 134939;
+								if not dynamicProfessionHeader.g then
+									dynamicProfessionHeader.g = {};
+								end
+								tinsert(dynamicProfessionHeader.g, recipesList);
+							else
+								tinsert(ProfessionsHeader.g, recipesList);
+							end
+						else
+							print("Unhandled dynamic category conditional");
+						end
+					else
+						keys[suffix] = window;
+					end
 				end
 			end
 			for suffix,window in pairs(keys) do

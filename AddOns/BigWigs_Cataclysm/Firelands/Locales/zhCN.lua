@@ -2,11 +2,11 @@ local L = BigWigs:NewBossLocale("Beth'tilac", "zhCN")
 if not L then return end
 if L then
 	L.flare_desc = "当余烬之火范围伤害时显示计时条。"
-	L.devastate_message = "阴燃毁灭：>#%d<！"
+	L.devastate_message = "阴燃毁灭：#%d！"
 	L.drone_bar = "下一烬网工虫"
 	L.drone_message = "即将 烬网工虫！"
 	L.kiss_message = "寡妇蛛之吻！"
-	L.spinner_warn = "烬网织网蛛：>#%d<！"
+	L.spinner_warn = "烬网织网蛛：#%d！"
 end
 
 L = BigWigs:NewBossLocale("Lord Rhyolith", "zhCN")
@@ -22,7 +22,7 @@ if L then
 
 	L.phase2_warning = "第二阶段！"
 
-	L.molten_message = "首领熔岩护甲堆叠：>%d<层！"
+	L.molten_message = "首领熔岩护甲堆叠：%d 层！"
 
 	L.stomp_message = "震荡践踏！"
 	L.stomp = "震荡践踏"
@@ -41,7 +41,7 @@ if L then
 	L.meteor_desc = "当熔火流星被召唤时发出警报。"
 	L.meteor_message = "熔火流星！"
 
-	L.stage_message = "阶段：>%d<！"
+	L.stage_message = "阶段：%d ！"
 	L.kill_message = "就是现在 - 杀了她！"
 	L.engage_message = "奥利瑟拉佐尔激活 - 约%d分钟后第二阶段！"
 
@@ -53,21 +53,21 @@ if L then
 
 	L.initiate = "炽炎之爪新兵出现"
 	L.initiate_desc = "炽炎之爪新兵计时条。"
-	L.initiate_both = "炽炎之爪新兵：>双向<！"
-	L.initiate_west = "炽炎之爪新兵：>西<！"
-	L.initiate_east = "炽炎之爪新兵：>东<！"
+	L.initiate_both = "炽炎之爪新兵：双向！"
+	L.initiate_west = "炽炎之爪新兵：西！"
+	L.initiate_east = "炽炎之爪新兵：东！"
 end
 
 L = BigWigs:NewBossLocale("Shannox", "zhCN")
 if L then
-	L.safe = ">%s< 安全！"
-	L.wary_dog = "警惕：>%s<！"
+	L.safe = "%s 安全！"
+	L.wary_dog = "警惕：%s！"
 	L.crystal_trap = "水晶牢笼陷阱！"
 
 	L.traps_header = "陷阱"
 	L.immolation = "献祭陷阱"
 	L.immolation_desc = "当狂脸或裂肢阶段献祭陷阱时发出警报，获得“警惕”状态。"
-	L.immolationyou = ">你<脚下 献祭陷阱！"
+	L.immolationyou = "你 脚下 献祭陷阱！"
 	L.immolationyou_desc = "当你脚下献祭陷阱被召唤时发出警报。"
 	L.immolationyou_message = "献祭陷阱"
 	L.crystal = "投掷水晶牢笼陷阱"
@@ -81,16 +81,16 @@ if L then
 	L.torment_desc = "当焦点受到磨难堆叠时发出警报。"
 
 	L.blade_bar = "毁灭之刃"
-	L.shard_message = "磨难碎片：>%d<！"
-	L.focus_message = "焦点目标已有 >%d< 层磨难！"
+	L.shard_message = "磨难碎片：%d ！"
+	L.focus_message = "焦点目标已有 %d 层磨难！"
 	L.link_message = "倒计时"
 end
 
 L = BigWigs:NewBossLocale("Majordomo Staghelm", "zhCN")
 if L then
-	L.seed_explosion = ">你< 即将灼热之种爆炸！"
+	L.seed_explosion = "你 即将灼热之种爆炸！"
 	L.seed_bar = "你：灼热之种爆炸"
-	L.adrenaline_message = "肾上腺素：>%d<层！"
+	L.adrenaline_message = "肾上腺素：%d 层！"
 	L.leap_say = "烈焰镰刀"
 end
 
@@ -103,10 +103,10 @@ if L then
 	L.seed_explosion = "熔火之种爆炸！"
 	L.intermission_bar = "中场"
 	L.intermission_message = "中场！"
-	L.sons_left = ">%d< 烈焰之子剩余！"
-	L.engulfing_close = "噬体烈焰：>近场<！"
-	L.engulfing_middle = "噬体烈焰：>中场<！"
-	L.engulfing_far = "噬体烈焰：>远场<！"
+	L.sons_left = "%d 烈焰之子剩余！"
+	L.engulfing_close = "噬体烈焰：近场 ！"
+	L.engulfing_middle = "噬体烈焰：中场 ！"
+	L.engulfing_far = "噬体烈焰：远场 ！"
 	L.hand_bar = "拉格纳罗斯之手"
 	L.ragnaros_back_message = "拉格纳罗斯返回，集合！"
 end

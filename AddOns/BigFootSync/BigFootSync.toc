@@ -1,8 +1,8 @@
-﻿## Interface: 110007,110100
-## Version: r12
+﻿## Interface: 110100,110105
+## Version: r13
 ## Title: BigFootSync
-## Title-zhCN: 大脚数据同步 |cffc0c0c0r12|r
-## Title-zhTW: 大腳數據同步 |cffc0c0c0r12|r
+## Title-zhCN: 大脚数据同步 |cffc0c0c0r13|r
+## Title-zhTW: 大腳數據同步 |cffc0c0c0r13|r
 ## Notes: |cffbc8f8fSync player data|r
 ## Notes-zhCN: |cff00ff00BigFootSync|r|n|cffbc8f8f收集玩家数据并上传至服务器(人口统计与英雄榜展示)|r
 ## Notes-zhTW: |cff00ff00BigFootSync|r|n|cffbc8f8f收集玩家數據並上傳至服務器(人口統計與英雄榜展示)|r

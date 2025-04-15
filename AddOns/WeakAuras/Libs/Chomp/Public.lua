@@ -56,10 +56,6 @@ function Chomp.SendAddonMessage(prefix, text, kind, target, priority, queue, cal
 		kind = kind:upper()
 	end
 
-	if target and kind == "WHISPER" then
-		target = Ambiguate(target, "none")
-	end
-
 	ChatThrottleLib:SendAddonMessage(PRIORITY_TO_CTL[priority] or DEFAULT_PRIORITY, prefix, text, kind, target, queue, callback, callbackArg)
 end
 
@@ -93,10 +89,6 @@ function Chomp.SendAddonMessageLogged(prefix, text, kind, target, priority, queu
 		kind = kind:upper()
 	end
 
-	if target and kind == "WHISPER" then
-		target = Ambiguate(target, "none")
-	end
-
 	ChatThrottleLib:SendAddonMessageLogged(PRIORITY_TO_CTL[priority] or DEFAULT_PRIORITY, prefix, text, kind, target, queue, callback, callbackArg)
 end
 
@@ -126,10 +118,6 @@ function Chomp.SendChatMessage(text, kind, language, target, priority, queue, ca
 		kind = "SAY"
 	else
 		kind = kind:upper()
-	end
-
-	if target and kind == "WHISPER" then
-		target = Ambiguate(target, "none")
 	end
 
 	ChatThrottleLib:SendChatMessage(PRIORITY_TO_CTL[priority] or DEFAULT_PRIORITY, "Chomp", text, kind, language, target, queue, callback, callbackArg)

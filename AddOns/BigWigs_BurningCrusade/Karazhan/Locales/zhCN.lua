@@ -65,7 +65,7 @@ if L then
 	L.phase2_bar = "地狱吐息 - 狂怒"
 	L.phase2_trigger = "%s的怒火甚至可以充满整个虚空！"
 
-	L.voidzone_warn = "虚空领域：>%d<！"
+	L.voidzone_warn = "虚空领域：%d ！"
 end
 
 L = BigWigs:NewBossLocale("Nightbane Raid", "zhCN")
@@ -121,8 +121,8 @@ if L then
 
 	L.drink = "群体变形"
 	L.drink_desc = "当即将施放回魔时发出警报。"
-	L.drink_warning = "低法力 - 即将回魔！"
-	L.drink_message = "回魔 - 群体变形！"
+	L.drink_warning = "低法力  即将回魔！"
+	L.drink_message = "回魔  群体变形！"
 	L.drink_bar = "群体变形术"
 
 	L.blizzard = "暴风雪"

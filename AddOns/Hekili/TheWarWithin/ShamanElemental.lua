@@ -24,7 +24,7 @@ spec:RegisterTalents( {
     ascending_air               = { 103607, 462791, 1 }, -- Wind Rush Totem's cooldown is reduced by 30 sec and its movement speed effect lasts an additional 2 sec.
     astral_bulwark              = { 103611, 377933, 1 }, -- Astral Shift reduces damage taken by an additional 20%.
     astral_shift                = { 103616, 108271, 1 }, -- Shift partially into the elemental planes, taking 40% less damage for 12 sec.
-    brimming_with_life          = { 103582, 381689, 1 }, -- Maximum health increased by 10%, and while you are at full health, Reincarnation cools down 75% faster. 
+    brimming_with_life          = { 103582, 381689, 1 }, -- Maximum health increased by 10%, and while you are at full health, Reincarnation cools down 75% faster.
     call_of_the_elements        = { 103592, 383011, 1 }, -- Reduces the cooldown of Totemic Recall by 60 sec.
     capacitor_totem             = { 103579, 192058, 1 }, -- Summons a totem at the target location that gathers electrical energy from the surrounding air and explodes after 2 sec, stunning all enemies within 9 yards for 3 sec.
     chain_heal                  = { 103588,   1064, 1 }, -- Heals the friendly target for 239,026, then jumps up to 15 yards to heal the 3 most injured nearby allies. Healing is reduced by 30% with each jump.
@@ -48,7 +48,7 @@ spec:RegisterTalents( {
     gust_of_wind                = { 103591, 192063, 1 }, -- A gust of wind hurls you forward.
     healing_stream_totem        = { 103590,   5394, 1 }, -- Summons a totem at your feet for 18 sec that heals an injured party or raid member within 46 yards for 96,643 every 1.9 sec. If you already know Healing Stream Totem, instead gain 1 additional charge of Healing Stream Totem.
     hex                         = { 103623,  51514, 1 }, -- Transforms the enemy into a frog for 6 sec. While hexed, the victim is incapacitated, and cannot attack or cast spells. Damage may cancel the effect. Limit 1. Only works on Humanoids and Beasts.
-    imbuement_mastery           = {  94871, 445028, 1 }, -- Increases the duration of your Earthliving effect by 3 sec. 
+    imbuement_mastery           = {  94871, 445028, 1 }, -- Increases the duration of your Earthliving effect by 3 sec.
     jet_stream                  = { 103607, 462817, 1 }, -- Wind Rush Totem's movement speed bonus is increased by 10% and now removes snares.
     lava_burst                  = { 103598,  51505, 1 }, -- Hurls molten lava at the target, dealing 182,153 Fire damage. Lava Burst will always critically strike if the target is affected by Flame Shock. Generates 8 Maelstrom.
     lightning_lasso             = { 103589, 305483, 1 }, -- Grips the target in lightning, stunning and dealing 482,880 Nature damage over 5 sec while the target is lassoed. Can move while channeling.
@@ -65,7 +65,7 @@ spec:RegisterTalents( {
     pulse_capacitor             = {  94866, 445032, 1 }, -- Increases the healing done by Surging Totem by 25%.
     purge                       = { 103624,    370, 1 }, -- Purges the enemy target, removing 1 beneficial Magic effect.
     reactivity                  = {  94872, 445035, 1 }, -- Your Healing Stream Totems now also heals a second ally at 50% effectiveness. Cloudburst Totem stores 25% additional healing.
-    refreshing_waters           = { 103594, 378211, 1 }, -- Your Healing Surge is 30% more effective on yourself. 
+    refreshing_waters           = { 103594, 378211, 1 }, -- Your Healing Surge is 30% more effective on yourself.
     seasoned_winds              = { 103628, 355630, 1 }, -- Interrupting a spell with Wind Shear decreases your damage taken from that spell school by 15% for 18 sec. Stacks up to 2 times.
     spirit_walk                 = { 103591,  58875, 1 }, -- Removes all movement impairing effects and increases your movement speed by 60% for 8 sec.
     spirit_wolf                 = { 103581, 260878, 1 }, -- While transformed into a Ghost Wolf, you gain 5% increased movement speed and 5% damage reduction every 1 sec, stacking up to 4 times.
@@ -73,7 +73,7 @@ spec:RegisterTalents( {
     spiritwalkers_grace         = { 103584,  79206, 1 }, -- Calls upon the guidance of the spirits for 15 sec, permitting movement while casting Shaman spells. Castable while casting. Increases movement speed by 20%.
     static_charge               = { 103618, 265046, 1 }, -- Reduces the cooldown of Capacitor Totem by 5 sec for each enemy it stuns, up to a maximum reduction of 20 sec.
     stone_bulwark_totem         = { 103629, 108270, 1 }, -- Summons a totem at your feet that grants you an absorb shield preventing 2.4 million damage for 15 sec, and an additional 248,338 every 5 sec for 30 sec.
-    supportive_imbuements       = {  94866, 445033, 1 }, -- Learn a new weapon imbue, Tidecaller's Guard.  Tidecaller's Guard Imbue your shield with the element of Water for 1 |4hour:hrs;. Your healing done is increased by 2.0% and the duration of your Healing Stream Totem and Cloudburst Totem is increased by 3.0 sec. 
+    supportive_imbuements       = {  94866, 445033, 1 }, -- Learn a new weapon imbue, Tidecaller's Guard.  Tidecaller's Guard Imbue your shield with the element of Water for 1 |4hour:hrs;. Your healing done is increased by 2.0% and the duration of your Healing Stream Totem and Cloudburst Totem is increased by 3.0 sec.
     surging_totem               = {  94877, 444995, 1 }, -- Summons a totem at the target location that creates a Tremor immediately and every 5.6 sec for 18,558 Flamestrike damage. Damage reduced beyond 5 targets. Lasts 24 sec.
     swift_recall                = {  94859, 445027, 1 }, -- Successfully removing a harmful effect with Tremor Totem or Poison Cleansing Totem, or controlling an enemy with Capacitor Totem or Earthgrab Totem reduces the cooldown of the totem used by 5 sec. Cannot occur more than once every 20 sec per totem.
     thunderous_paws             = { 103581, 378075, 1 }, -- Ghost Wolf removes snares and increases your movement speed by an additional 25% for the first 3 sec. May only occur once every 20 sec.
@@ -101,8 +101,8 @@ spec:RegisterTalents( {
     deeply_rooted_elements      = {  80992, 378270, 1 }, -- Each Maelstrom spent has a 0.12% chance to activate Ascendance for 6.0 sec.  Ascendance Transform into a Flame Ascendant for 18 sec, instantly casting a Flame Shock and a 50% effectiveness Lava Burst at up to 6 nearby enemies. While ascended, Elemental Overload damage is increased by 25% and spells affected by your Mastery: Elemental Overload cause 1 additional Elemental Overload.
     earth_shock                 = {  80984,   8042, 1 }, -- Instantly shocks the target with concussive force, causing 328,454 Nature damage.
     earthen_rage                = { 103634, 170374, 1 }, -- Your damaging spells incite the earth around you to come to your aid for 6 sec, repeatedly dealing 21,067 Nature damage to your most recently attacked target.
-    earthquake                  = {  80985,  61882, 1 }, -- Causes the earth within 8 yards of the target location to tremble and break, dealing 186,874 Physical damage over 6 sec and has a 5% chance to knock the enemy down. Multiple uses of Earthquake may overlap. This spell is cast at a selected location.
-    earthquake_2                = {  80985, 462620, 1 }, -- Causes the earth within 8 yards of your target to tremble and break, dealing 186,874 Physical damage over 6 sec and has a 5% chance to knock the enemy down. Multiple uses of Earthquake may overlap. This spell is cast at your target.
+    earthquake_ground           = {  80985,  61882, 1 }, -- Causes the earth within 8 yards of the target location to tremble and break, dealing 186,874 Physical damage over 6 sec and has a 5% chance to knock the enemy down. Multiple uses of Earthquake may overlap. This spell is cast at a selected location.
+    earthquake_targeted         = {  80985, 462620, 1 }, -- Causes the earth within 8 yards of your target to tremble and break, dealing 186,874 Physical damage over 6 sec and has a 5% chance to knock the enemy down. Multiple uses of Earthquake may overlap. This spell is cast at your target.
     earthshatter                = {  80995, 468626, 1 }, -- Increases Earth Shock and Earthquake damage by 8% and the stat bonuses granted by Elemental Blast by 25%.
     echo_chamber                = {  81013, 382032, 1 }, -- Increases the damage dealt by your Elemental Overloads by 40%.
     echo_of_the_elementals      = {  81008, 462864, 1 }, -- When your Storm Elemental or Fire Elemental expires, it leaves behind a lesser Elemental to continue attacking your enemies for 10 sec.
@@ -127,7 +127,7 @@ spec:RegisterTalents( {
     improved_flametongue_weapon = {  81009, 382027, 1 }, -- Imbuing your weapon with Flametongue increases your Fire spell damage by 6.5% for 1 |4hour:hrs;.
     lightning_capacitor         = { 103631, 462862, 1 }, -- While Lightning Shield is active, your Nature damage dealt is increased by 8%.
     lightning_rod               = {  81012, 210689, 1 }, -- Tempest, Earth Shock, Elemental Blast, and Earthquake make your target a Lightning Rod for 8 sec. Lightning Rods take 10% of all damage you deal with Tempest, Lightning Bolt, and Chain Lightning.
-    liquid_magma_totem          = { 103637, 192222, 1 }, -- Summons a totem at the target location that erupts dealing 70,412 Fire damage and applying Flame Shock to 3 enemies within 9 yards. Continues hurling liquid magma at a random nearby target every 0.9 sec for 6 sec, dealing 33,304 Fire damage to all enemies within 9 yards. Generates 8 Maelstrom. 
+    liquid_magma_totem          = { 103637, 192222, 1 }, -- Summons a totem at the target location that erupts dealing 70,412 Fire damage and applying Flame Shock to 3 enemies within 9 yards. Continues hurling liquid magma at a random nearby target every 0.9 sec for 6 sec, dealing 33,304 Fire damage to all enemies within 9 yards. Generates 8 Maelstrom.
     magma_chamber               = {  81007, 381932, 1 }, -- Flame Shock damage increases the damage of your next Earth Shock, Elemental Blast, or Earthquake by 1.5%, stacking up to 10 times.
     master_of_the_elements      = {  81004,  16166, 1 }, -- Casting Lava Burst increases the damage or healing of your next Nature, Physical, or Frost spell by 15%.
     mountains_will_fall         = {  81002, 381726, 1 }, -- Earth Shock, Elemental Blast, and Earthquake can trigger your Mastery: Elemental Overload at 50% effectiveness. Overloaded Earthquakes do not knock enemies down.
@@ -169,28 +169,31 @@ spec:RegisterTalents( {
     lightning_conduit           = {  94863, 467778, 1 }, -- You have a chance to get struck by lightning, increasing your movement speed by 50% for 5 sec. The effectiveness is increased to 100% in outdoor areas. You call down a Thunderstorm when you Reincarnate.
     natures_protection          = {  94880, 454027, 1 }, -- Lightning Shield reduces the damage you take by 3%.
     rolling_thunder             = {  94889, 454026, 1 }, -- Gain one stack of Stormkeeper every 50 sec.
-    storm_swell                 = {  94873, 455088, 1 }, -- Tempest grants 9% Mastery for 6 sec. 
+    storm_swell                 = {  94873, 455088, 1 }, -- Tempest grants 9% Mastery for 6 sec.
     stormcaller                 = {  94893, 454021, 1 }, -- Increases the critical strike chance of your Nature damage spells by 5% and the critical strike damage of your Nature spells by 5%.
     supercharge                 = {  94873, 455110, 1 }, -- Lightning Bolt, Tempest, and Chain Lightning have a 50% chance to cause an additional Elemental Overload.
     surging_currents            = {  94880, 454372, 1 }, -- When you cast Tempest you gain Surging Currents, increasing the effectiveness of your next Chain Heal or Healing Surge by 20%, up to 100%.
-    tempest                     = {  94892, 454009, 1, "stormbringer" }, -- Every 300 Maelstrom spent replaces your next Lightning Bolt with Tempest. 
+    tempest                     = {  94892, 454009, 1, "stormbringer" }, -- Every 300 Maelstrom spent replaces your next Lightning Bolt with Tempest.
     unlimited_power             = {  94886, 454391, 1 }, -- Spending Maelstrom grants you 1% haste for 15 sec. Multiple applications may overlap.
     voltaic_surge               = {  94870, 454919, 1 }, -- Earthquake and Chain Lightning damage increased by 5%.
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     burrow              = 5574, -- (409293) Burrow beneath the ground, becoming unattackable, removing movement impairing effects, and increasing your movement speed by 50% for 5 sec. When the effect ends, enemies within 6 yards are knocked in the air and take 455,287 Physical damage.
-    counterstrike_totem = 3490, -- (204331) Summons a totem at your feet for 15 sec. Whenever enemies within 23 yards of the totem deal direct damage, the totem will deal 100% of the damage dealt back to attacker. 
-    electrocute         = 5659, -- (206642) 
+    counterstrike_totem = 3490, -- (204331) Summons a totem at your feet for 15 sec. Whenever enemies within 23 yards of the totem deal direct damage, the totem will deal 100% of the damage dealt back to attacker.
+    electrocute         = 5659, -- (206642)
     grounding_totem     = 3620, -- (204336) Summons a totem at your feet that will redirect all harmful spells cast within 34 yards on a nearby party or raid member to itself. Will not redirect area of effect spells. Lasts 3 sec.
-    shamanism           = 5660, -- (193876) 
+    shamanism           = 5660, -- (193876)
     static_field_totem  =  727, -- (355580) Summons a totem with 4% of your health at the target location for 6 sec that forms a circuit of electricity that enemies cannot pass through.
-    storm_conduit       = 5681, -- (1217092) 
-    totem_of_wrath      = 3488, -- (460697) 
+    storm_conduit       = 5681, -- (1217092)
+    totem_of_wrath      = 3488, -- (460697)
     unleash_shield      = 3491, -- (356736) Unleash your Elemental Shield's energy on an enemy target: Lightning Shield: Knocks them away. Earth Shield: Roots them in place for 2 sec. Water Shield: Summons a whirlpool for 6 sec, reducing damage and healing by 50% while they stand within it.
 } )
 
+spec:RegisterHook( "TALENTS_UPDATED", function()
+    talent.earthquake = talent.earthquake_targeted.enabled and talent.earthquake_targeted or talent.earthquake_ground
+end )
 
 -- Auras
 spec:RegisterAuras( {
@@ -438,7 +441,7 @@ spec:RegisterAuras( {
             t.expires = 0
             t.stack = 0
             t.caster = nil
-        end,
+        end
     },
     lesser_fire_elemental = {
         id = 462992,
@@ -459,7 +462,7 @@ spec:RegisterAuras( {
     flametongue_weapon = {
         id = 319778,
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
     improved_flametongue_weapon = {
         id = 382028,
@@ -485,12 +488,12 @@ spec:RegisterAuras( {
     fusion_of_elements_fire = {
         id = 462843,
         duration = 20.0,
-        max_stack = 1,
+        max_stack = 1
     },
     fusion_of_elements_nature = {
         id = 462841,
         duration = 20.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Increases movement speed by $?s382215[${$382216s1+$w2}][$w2]%.$?$w3!=0[  Less hindered by effects that reduce movement speed.][]
     -- https://wowhead.com/beta/spell=2645
@@ -561,17 +564,6 @@ spec:RegisterAuras( {
         type = "Magic",
         max_stack = 1
     },
-    -- Fire damage dealt increased by ${$W1}.1%.
-    improved_flametongue_weapon = {
-        id = 382028,
-        duration = 3600.0,
-        max_stack = 1,
-
-        -- Affected by:
-        -- enhanced_imbues[462796] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER_BY_LABEL, 'points': 30.0, 'target': TARGET_UNIT_CASTER, 'modifies': EFFECT_1_VALUE, }
-        -- enhanced_imbues[462796] #3: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER_BY_LABEL, 'points': 30.0, 'target': TARGET_UNIT_CASTER, 'modifies': EFFECT_2_VALUE, }
-        -- enhanced_imbues[462796] #4: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER_BY_LABEL, 'points': 30.0, 'target': TARGET_UNIT_CASTER, 'modifies': EFFECT_3_VALUE, }
-    },
     -- Talent: Your next Lava Burst casts instantly.
     -- https://wowhead.com/beta/spell=77762
     lava_surge = {
@@ -619,14 +611,6 @@ spec:RegisterAuras( {
         type = "magic",
         max_stack = 20
     },
-    --[[ Removed in 10.0.5 -- Talent:
-    -- https://wowhead.com/beta/spell=381930
-    mana_spring_totem = {
-        id = 381930,
-        duration = 120,
-        type = "Magic",
-        max_stack = 1
-    }, ]]
     -- Talent: Your next Nature, Physical, or Frost spell will deal $s1% increased damage or healing.
     -- https://wowhead.com/beta/spell=260734
     master_of_the_elements = {
@@ -702,7 +686,7 @@ spec:RegisterAuras( {
         id = 79206,
         duration = 15,
         type = "Magic",
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent
     splintered_elements = {
@@ -748,7 +732,7 @@ spec:RegisterAuras( {
     storm_swell = {
         id = 455089,
         duration = 6.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Stormstrike cooldown has been reset$?$?a319930[ and will deal $319930w1% additional damage as Nature][].
     -- https://wowhead.com/beta/spell=201846
@@ -792,7 +776,7 @@ spec:RegisterAuras( {
     surging_currents = {
         id = 454376,
         duration = 30.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Your next Healing Surge$?s137039[, Healing Wave, or Riptide][] will be $w1% more effective.
     -- https://wowhead.com/beta/spell=378102
@@ -831,12 +815,12 @@ spec:RegisterAuras( {
     water_walking = {
         id = 546,
         duration = 600,
-        max_stack = 1,
+        max_stack = 1
     },
     wind_rush = {
         id = 192082,
         duration = 5,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Haste increased by $w1%.
     wind_gust = {
@@ -884,28 +868,62 @@ spec:RegisterAuras( {
     },
 } )
 
+spec:RegisterTotems( {
+    greater_storm_elemental = {
+        id = 1020304
+    },
+    greater_fire_elemental = {
+        id = 135790
+    },
+    greater_earth_elemental = {
+        id = 136024
+    },
+    liquid_magma_totem = {
+        id = 971079
+    },
+    tremor_totem = {
+        id = 136108
+    },
+    wind_rush_totem = {
+        id = 538576
+    },
+    vesper_totem = {
+        id = 3565451
+    },
+} )
 
 -- Pets
-spec:RegisterPet( "primal_storm_elemental", 77942, "storm_elemental",
-    function()
-        if not talent.primal_elementalist.enabled then return 0 end
-        return 30 * ( 1 + ( 0.01 * conduit.call_of_flame.mod ) )
-    end )
-spec:RegisterTotem( "greater_storm_elemental", 1020304 ) -- Texture ID
-
-spec:RegisterPet( "primal_fire_elemental", 61029, "fire_elemental",
-    function()
-        if not talent.primal_elementalist.enabled then return 0 end
-        return 30 * ( 1 + ( 0.01 * conduit.call_of_flame.mod ) )
-    end )
-spec:RegisterTotem( "greater_fire_elemental", 135790 ) -- Texture ID
-
-spec:RegisterPet( "primal_earth_elemental", 61056, "earth_elemental",
-    function()
-        if not talent.primal_elementalist.enabled then return 0 end
-        return 60
-    end )
-spec:RegisterTotem( "greater_earth_elemental", 136024 ) -- Texture ID
+spec:RegisterPets({
+    primal_storm_elemental = {
+        id = 77942,
+        spell = "storm_elemental",
+        duration = function()
+            if not talent.primal_elementalist.enabled then return 0 end
+            return 30 * ( 1 + ( 0.01 * conduit.call_of_flame.mod ) )
+        end
+    },
+    primal_fire_elemental = {
+        id = 61029,
+        spell = "fire_elemental",
+        duration = function()
+            if not talent.primal_elementalist.enabled then return 0 end
+            return 30 * ( 1 + ( 0.01 * conduit.call_of_flame.mod ) )
+        end
+    },
+    primal_earth_elemental = {
+        id = 61056,
+        spell = "earth_elemental",
+        duration = function()
+            if not talent.primal_elementalist.enabled then return 0 end
+            return 60
+        end
+    },
+    risen_skulker = {
+        id = 99541,
+        spell = "raise_dead",
+        duration = function() return talent.raise_dead_2.enabled and 3600 or 60 end,
+    },
+})
 
 local elementals = {
     [77942] = { "primal_storm_elemental", function() return 30 * ( 1 + ( 0.01 * state.conduit.call_of_flame.mod ) ) end, true },
@@ -956,6 +974,17 @@ local ancestral_wolf_affinity_spells = {
 local recallTotem1
 local recallTotem2
 
+local fireDamage, frostDamage, natureDamage, lastEEApplied = 0, 0, 0, 0
+local stormkeeperCastStart, stormkeeperLastProc = 0, 0
+
+local eeSchools = {
+    "fire",
+    "frost",
+    "nature",
+    "volcanic",
+    "elemental"
+}
+
 spec:RegisterStateExpr( "recall_totem_1", function()
     return recallTotem1
 end )
@@ -966,11 +995,6 @@ end )
 
 spec:RegisterStateExpr( "lightning_rod", function()
 end )
-
-spec:RegisterStateTable( "rolling_thunder", {
-
-} )
-
 
 spec:RegisterHook( "runHandler", function( action )
     if buff.ghost_wolf.up then
@@ -989,24 +1013,13 @@ spec:RegisterHook( "runHandler", function( action )
         recall_totem_1 = action
     end
 
-    if talent.elemental_equilibrium.enabled and debuff.elemental_equilibrium_debuff.down then
+    if talent.elemental_equilibrium.enabled and elemental_equilibrium.ready then
         local ability = class.abilities[ action ]
-        if ability and ability.startsCombat and ability.school then
-            if ability.school == "fire" then last_ee_fire = query_time
-            elseif ability.school == "frost" then last_ee_frost = query_time
-            elseif ability.school == "nature" then last_ee_nature = query_time end
-
-            if max( last_ee_fire, last_ee_frost, last_ee_nature ) - min( last_ee_fire, last_ee_frost, last_ee_nature ) < 10 then
-                applyBuff( "elemental_equilibrium" )
-                applyDebuff( "player", "elemental_equilibrium_debuff" )
-            end
+        if ability and ability.startsCombat and eeSchools[ ability.school ] then
+            elemental_equilibrium.register_damage( ability.school )
         end
     end
 end )
-
-
-local fireDamage, frostDamage, natureDamage = 0, 0, 0
-local stormkeeperCastStart, stormkeeperLastProc = 0, 0
 
 local further_beyond_duration_remains, fbSpells = 0, {
     earth_shock = 1,
@@ -1053,11 +1066,6 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
                 vesper_used = 0
             end
 
-        --[[ Tier 28
-        elseif summon.extends and state.set_bonus.tier28_4pc > 0 and subtype == "SPELL_ENERGIZE" and ( spellID == 51505 or spellID == 285466 ) then
-            summon.expires = summon.expires + 1.5
-            summon.duration = summon.duration + 1.5 ]]
-
         elseif spellID == 191634 then
             -- Stormkeeper.
             if subtype == "SPELL_CAST_START" then stormkeeperCastStart = GetTime()
@@ -1088,10 +1096,14 @@ spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _
 
         end
 
-        if ( subtype == "SPELL_DAMAGE" or subtype == "SPELL_PERIODIC_DAMAGE" ) and state.talent.elemental_equilibrium.enabled then
-            if bit.band( school, 4  ) == 1 then fireDamage   = GetTime() end
-            if bit.band( school, 16 ) == 1 then frostDamage  = GetTime() end
-            if bit.band( school, 8  ) == 1 then natureDamage = GetTime() end
+        if state.talent.elemental_equilibrium.enabled then
+            if ( subtype == "SPELL_DAMAGE" or subtype == "SPELL_PERIODIC_DAMAGE" ) then
+                if bit.band( school, 4  ) > 0 then fireDamage   = GetTime() end
+                if bit.band( school, 16 ) > 0 then frostDamage  = GetTime() end
+                if bit.band( school, 8  ) > 0 then natureDamage = GetTime() end
+            elseif subtype == "SPELL_AURA_APPLIED" and ( spellID == 378275 or spellID == 347348 ) then
+                lastEEApplied = GetTime()
+            end
         end
     end
 end )
@@ -1122,19 +1134,6 @@ spec:RegisterStateFunction( "trigger_vesper_damage", function ()
     end
 end )
 
-spec:RegisterStateExpr( "last_ee_fire", function ()
-    return fireDamage
-end )
-
-spec:RegisterStateExpr( "last_ee_frost", function ()
-    return frostDamage
-end )
-
-spec:RegisterStateExpr( "last_ee_nature", function ()
-    return natureDamage
-end )
-
-
 spec:RegisterStateTable( "rolling_thunder", setmetatable( {}, {
     __index = setfenv( function( t, k )
         if not talent.rolling_thunder.enabled and set_bonus.tier30_2pc == 0 then return 0 end
@@ -1154,14 +1153,6 @@ end )
 spec:RegisterStateExpr( "lightning_rod", function()
     return active_dot.lightning_rod
 end )
-
-
-spec:RegisterTotem( "liquid_magma_totem", 971079 )
-spec:RegisterTotem( "tremor_totem", 136108 )
-spec:RegisterTotem( "wind_rush_totem", 538576 )
-
-spec:RegisterTotem( "vesper_totem", 3565451 )
-
 
 spec:RegisterStateTable( "fire_elemental", setmetatable( { onReset = function( self ) self.cast_time = nil end }, {
     __index = function( t, k )
@@ -1235,64 +1226,134 @@ spec:RegisterStateTable( "earth_elemental", setmetatable( { onReset = function( 
     end
 } ) )
 
--- The War Within
-spec:RegisterGear( "tww1", 212014, 212012, 212011, 212010, 212009 )
-spec:RegisterAura( "maelstrom_surge", {
-    id = 457727,
-    duration = 5,
-    max_stack = 1
-} )
+spec:RegisterStateTable( "elemental_equilibrium", setmetatable( {
 
-spec:RegisterGear( "tww2", 200396, 200398, 200400, 200401, 200399 )
-spec:RegisterAuras( {
-    -- https://www.wowhead.com/spell=1218612
-    jackpot = {
-        id = 1218612,
-        duration = 8,
-        max_stack = 1
+    last_application = 0,
+    last_fire = 0,
+    last_frost = 0,
+    last_nature = 0,
+
+    refresh_timers = setfenv( function()
+        -- reset_precast function to sync with gamestate
+        elemental_equilibrium.last_fire = fireDamage
+        elemental_equilibrium.last_frost = frostDamage
+        elemental_equilibrium.last_nature = natureDamage
+        elemental_equilibrium.last_application = lastEEApplied
+
+        if elemental_equilibrium.cooldown then
+            applyDebuff( "player", "elemental_equilibrium_debuff", elemental_equilibrium.time_to_ready )
+        else
+            removeDebuff( "player", "elemental_equilibrium_debuff" )
+        end
+
+    end, state ),
+
+    register_damage = setfenv( function( school )
+
+        elemental_equilibrium.last_fire = ( school == "fire" or school == "volcanic" or school == "elemental" ) and query_time or elemental_equilibrium.last_fire
+        elemental_equilibrium.last_frost = ( school == "frost" or school == "elemental" ) and query_time or elemental_equilibrium.last_frost
+        elemental_equilibrium.last_nature = ( school == "nature" or school == "volcanic" or school == "elemental" ) and query_time or elemental_equilibrium.last_nature
+
+        if max( elemental_equilibrium.last_fire, elemental_equilibrium.last_frost, elemental_equilibrium.last_nature ) - min( elemental_equilibrium.last_fire, elemental_equilibrium.last_frost, elemental_equilibrium.last_nature ) < 10 then
+            applyBuff( "elemental_equilibrium" )
+            applyDebuff( "player", "elemental_equilibrium_debuff" )
+        end
+
+    end, state ),
+
+}, {
+    __index = function( t, k )
+        local ee_remains = buff.elemental_equilibrium.remains
+        local cd_remains = max( 0, elemental_equilibrium.last_application + 30 - state.query_time )
+
+        if k == "ready" then
+            return cd_remains == 0
+        elseif k == "active" then
+            return ee_remains > 0
+        elseif k == "active_remains" then
+            return ee_remains
+        elseif k == "cooldown" then
+            return cd_remains > 0
+        elseif k == "cooldown_remains" then
+            return cd_remains
+        elseif k == "needs_frost" then
+            return cd_remains == 0 and ( query_time - elemental_equilibrium.last_frost > 10 )
+        elseif k == "needs_fire" then
+            return cd_remains == 0 and ( query_time - elemental_equilibrium.last_fire > 10 )
+        elseif k == "needs_nature" then
+            return cd_remains == 0 and ( query_time - elemental_equilibrium.last_nature > 10 )
+        elseif k == "cycle_started" then
+            return cd_remains == 0 and min( query_time - elemental_equilibrium.last_nature, query_time - elemental_equilibrium.last_fire, query_time - elemental_equilibrium.last_frost ) < 10
+        end
+    end
+} ) )
+
+spec:RegisterGear({
+        -- The War Within
+    tww2 = {
+        items = { 229260, 229261, 229262, 229263, 229265 },
+        auras = {
+            -- https://www.wowhead.com/spell=1218612
+            jackpot = {
+                id = 1218612,
+                duration = 8,
+                max_stack = 1
+            }
+        }
     },
-} )
-
--- Dragonflight
-
-
-spec:RegisterGear( "tier29", 200396, 200398, 200400, 200401, 200399 )
-spec:RegisterSetBonuses( "tier29_2pc", 393688, "tier29_4pc", 393690 )
-spec:RegisterAuras( {
-    seismic_accumulation = {
-        id = 394651,
-        duration = 15,
-        max_stack = 5,
+    tww1 = {
+        items = { 212014, 212012, 212011, 212010, 212009 },
+        auras = {
+            maelstrom_surge = {
+                id = 457727,
+                duration = 5,
+                max_stack = 1
+            }
+        }
     },
-    elemental_mastery = {
-        id = 394670,
-        duration = 5,
-        max_stack = 1,
-    }
-} )
-spec:RegisterGear( "tier30", 202473, 202471, 202470, 202469, 202468 )
-spec:RegisterAura( "primal_fracture", {
-    id = 410018,
-    duration = 8,
-    max_stack = 1,
-    copy = "t30_4pc_ele"
-} )
-spec:RegisterGear( "tier31", 207207, 207208, 207209, 207210, 207212, 217238, 217240, 217236, 217237, 217239 )
-spec:RegisterAuras( {
-    molten_slag = {
-        id = 426577,
-        duration = 4,
-        max_stack = 1,
+    -- Dragonflight
+    tier31 = {
+        items = { 207207, 207208, 207209, 207210, 207212, 217238, 217240, 217236, 217237, 217239 },
+        auras = {
+            molten_slag = {
+                id = 426577,
+                duration = 4,
+                max_stack = 1
+            },
+            molten_charge = {
+                id = 426578,
+                duration = 20,
+                max_stack = 1
+            }
+        }
     },
-    molten_charge = {
-        id = 426578,
-        duration = 20,
-        max_stack = 1
-    }
-} )
-
-
-
+    tier30 = {
+        items = { 202473, 202471, 202470, 202469, 202468 },
+        auras = {
+            primal_fracture = {
+                id = 410018,
+                duration = 8,
+                max_stack = 1,
+                copy = "t30_4pc_ele"
+            }
+        }
+    },
+    tier29 = {
+        items = { 200396, 200398, 200400, 200401, 200399 },
+        auras = {
+            seismic_accumulation = {
+                id = 394651,
+                duration = 15,
+                max_stack = 5
+            },
+            elemental_mastery = {
+                id = 394670,
+                duration = 5,
+                max_stack = 1
+            }
+        }
+    },
+})
 
 local TriggerHeatWave = setfenv( function()
     applyBuff( "lava_surge" )
@@ -1306,7 +1367,6 @@ local TriggerStormkeeperRT = setfenv( function()
     addStack( "stormkeeper" )
     rolling_thunder.last_tick = query_time
 end, state )
-
 
 local debugstack = debugstack
 
@@ -1377,6 +1437,10 @@ spec:RegisterHook( "reset_precast", function ()
         fb_extension_remaining = 0
     end
 
+    if talent.elemental_equilibrium.enabled then
+        elemental_equilibrium.refresh_timers()
+    end
+
     --[[ TODO: Not really needed; shift to Enhancement module.
     if talent.static_accumulation.enabled and buff.ascendance.up then
         local expires = buff.ascendance.expires
@@ -1391,7 +1455,6 @@ spec:RegisterHook( "spend", function( amt, resource )
     if amt > 0 and resource == "maelstrom" and set_bonus.tww1_4pc > 0 then applyBuff( "maelstrom_surge" ) end
 end )
 
-
 local fol_spells = {}
 
 spec:RegisterStateFunction( "flash_of_lightning", function()
@@ -1405,7 +1468,6 @@ spec:RegisterStateFunction( "flash_of_lightning", function()
         reduceCooldown( spell, 1 )
     end
 end )
-
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -1801,7 +1863,7 @@ spec:RegisterAbilities( {
         talent = "earth_shock",
         notalent = "elemental_blast",
         startsCombat = true,
-        cycle = function() return talent.lightning_rod.enabled and "lightning_rod" or nil end,
+        cycle = function() if talent.lightning_rod.enabled then return "lightning_rod" end end,
 
         handler = function ()
             removeBuff( "master_of_the_elements" )
@@ -1894,7 +1956,7 @@ spec:RegisterAbilities( {
 
     -- Talent: Causes the earth within $a1 yards of the target location to tremble and break, dealing $<damage> Physical damage over $d and has a $?s381743[${$77478s2+$381743S1)}.1][$77478s2]% chance to knock the enemy down.
     earthquake = {
-        id = function() return talent.earthquake_2.enabled and 462620 or 61882 end,
+        id = function() return talent.earthquake_targeted.enabled and 462620 or 61882 end,
         cast = 0,
         cooldown = 0,
         gcd = "spell",
@@ -1903,8 +1965,10 @@ spec:RegisterAbilities( {
         spend = function () return 60 - 5 * talent.eye_of_the_storm.rank end,
         spendType = "maelstrom",
 
-        talent = function() return talent.earthquake_2.enabled and "earthquake_2" or "earthquake" end,
+        talent = "earthquake",
         startsCombat = true,
+
+        cycle = function() if talent.lightning_rod.enabled then return "lightning_rod" end end,
 
         handler = function ()
             removeBuff( "echoes_of_great_sundering" )
@@ -1950,7 +2014,7 @@ spec:RegisterAbilities( {
             if buff.vesper_totem.up and vesper_totem_dmg_charges > 0 then trigger_vesper_damage() end
         end,
 
-        copy = { 61882, 462620 }
+        copy = { 462620, 61882 }
     },
 
     -- Shock the target for $s1 Elemental damage and create an ancestral echo, causing your next damage or healing spell to be cast a second time ${$s2/1000}.1 sec later for free.
@@ -1985,7 +2049,7 @@ spec:RegisterAbilities( {
 
         talent = "elemental_blast",
         startsCombat = true,
-        cycle = function() return talent.lightning_rod.enabled and "lightning_rod" or nil end,
+        cycle = function() if talent.lightning_rod.enabled then return "lightning_rod" end end,
 
         handler = function ()
             removeBuff( "master_of_the_elements" )
@@ -2031,6 +2095,7 @@ spec:RegisterAbilities( {
             if talent.lightning_rod.enabled then applyDebuff( "target", "lightning_rod" ) end
             if talent.further_beyond.enabled and buff.ascendance.up then buff.ascendance.expires = buff.ascendance.expires + 3.5 end
             if buff.vesper_totem.up and vesper_totem_dmg_charges > 0 then trigger_vesper_damage() end
+
         end,
     },
 
@@ -2552,6 +2617,8 @@ spec:RegisterAbilities( {
         startsCombat = true,
         buff = "tempest",
 
+        cycle = function() if talent.conductive_energy.enabled then return "lightning_rod" end end,
+
         handler = function ()
             removeBuff( "tempest" )
 
@@ -2784,7 +2851,7 @@ spec:RegisterAbilities( {
             if talent.call_of_the_ancestors.enabled then
                 applyBuff( "call_of_the_ancestors" )
             end
-            gain_maelstrom( 3 )
+            gain_maelstrom( 12 )
             if talent.conductive_energy.enabled then active_dot.lightning_rod = min( active_enemies, max( active_dot.lightning_rod, active_dot.flame_shock ) ) end
 
             removeBuff( "echoing_shock" )
@@ -3089,12 +3156,10 @@ spec:RegisterAbilities( {
     },
 } )
 
-
 spec:RegisterStateExpr( "funneling", function ()
     return false
     -- return active_enemies > 1 and settings.cycle and settings.funnel_damage
 end )
-
 
 spec:RegisterSetting( "stack_buffer", 1.1, {
     name = strformat( "%s and %s Padding", Hekili:GetSpellLinkWithTexture( spec.abilities.icefury.id ), Hekili:GetSpellLinkWithTexture( spec.abilities.stormkeeper.id ) ),
@@ -3129,7 +3194,6 @@ spec:RegisterSetting( "purge_icd", 12, {
     width = "full"
 } )
 
-
 spec:RegisterRanges( "lightning_bolt", "flame_shock", "wind_shear", "primal_strike" )
 
 spec:RegisterOptions( {
@@ -3154,5 +3218,4 @@ spec:RegisterOptions( {
     package = "Elemental",
 } )
 
-
-spec:RegisterPack( "Elemental", 20250310, [[Hekili:TZZAZTnos(BX1wRSuSTSeLThNPSDQzYM52Klt2PgL9MpC1jkkkilEMIKlFyp6oF63(1naFaacqszr54Kz(WUJJay3nA0VBamz4Kppz8CRyYKpzmW48bJgoO)Wlg86bVEY441bKjJdSSVZ6w4p8Swb))VZLSI4fB5IJS213AocHi)KqBy0LXXbrF)PNERt8YKz9T9xDAKZQexRyhFp7qRfX4)2(0jJNL44g)EVjZuJ(VdGzaXg(5lmaW6mFoHnxsK9KX4CpzWOtgo473mDSZQ3UzAsacMnFyZhydACIXLWG)kjATN9MPpaeeBQaDh6VWXfO2)YMPVZlkjKaJtSc892mL4zV0YlEZuNOntTccCDiZH)XIntx7NC49WmJiUe7y8xF)kas3J)1p5c8MyFVBtGj8Buq1FZhSSXvDu)GqcWiMzfF01NUOyMMmCESZIRb2jWt77KcqZYZQpXZAMlGlLqn6U1lscxREqxNBxg754DRz0shIRgqa7xEZjHrXHo3bi1kuZ8iwHXltHes6hmlzXI(8)A)KGoPlisMWIPF4mNyneFSF4Q7iKasO6jCVvOdU4pgLaVELfX102k447TCtixpCWGJoFWRsry0dexxCPIZcwl(R6hA5D3rgNNnJGqNv(HZDSOaXY2jEnDknb1Oej(HoXKvrP4h4xE3rI7pSVtu)OG1RSIIb2iSTn7XhZg0q1GDf(0L(jret)favfopQZbfF6sRitCmKrlbsDF0qHpQx22Xchy)10kYM4nhfYbLfqf49EanfMeac9(GCUnqJrfsVat4bhV5WElShtN)7OsIBMcSr6))909yHVikWj0j(bl37Wv7THw2KJHjcBmxpKFEZC99bPDq0LkkLsMzeOnjtQ)XhPszCdKe84J2((UZ9FWJ)3djRSC8IU58bc4bids4Da(3E8WdhGbsO082dMTHCXHaHxQiQR7(axW244mXXdJqBwZ4jauYbfYpoY1poteFi1sLEX9oD7Uan1yMHOHxoOdL44MxijWpe0tJbVk3yCEk1RBcJGjiaZRUCqVoQxCwZx3PlfAO8eQuqnSer5hz8VSHIxsshUxNU5WJZ2Wdw3xWXq68GY2pW584JGrbxxZyRWBjGEd49WXZm3K7nxB0dwJ(rrDexhgd7vld3GNHRWeYFYW3wgoi2)jscOybI)R9ScIiO5SL4cku52b1SVh9tmJyFHjj9doMz7DH5T2ZVMQCiRjMVVyuTg5qMg5FhTMZmc)w0E(MPhTzQbyI1XlbcTz6pK)L6PvrpcLjXmhA9f8LLUp(ei9xpqh7MXTHDCKBNkfhvRm)WYKSgVAGeIUfZtqQKBvYfpc3o0(xSvJAwkbCUg2Cz7)fBDnXeJE2TCKh)j7UE2nNiplU9kK4XpZemLmV8EWlqoAd4xAzm88a5SrYTBkpqFex8FPNvmKQwKz0dolI9iraR9V8xag()enA(l(paMWHyzxKe5GjYH)V3MrX4mH05YbLJ39(qwoKFh8a6blqKay2pdq4y6Kcgvg1Rl8QrcHYf4hZdhAWJUjrXuWi7kg8Px87AmglkqoAyhumLhJHjEMS)fiVhfZwww(KJXu7SJzcyvRDmSw4fbtZLKcampISKNaeLgNSzEYFYJsLplgUilsPbeK4j2l9ZK4ZNrKsqNLljnixmoL0e0HC3x6BFh4xDHpiR8lurFzi468VsCMd5pE7klZyFuBfviRt15QZFfO9wH2txen3tmN7dAVi1ysjMRUo93jEKvoKOtg94JAMzxXzEZBg1RgLYbL2xka3X2RTZ3bJysf1UiHLyNdKOR(Xo2yMvD6(KmfF11J22vHecqkxnl7Azo2fCQUL3OfSMLTrwEAYKtr2A8wM2m9d)ZXFEZ0)2)aSk95d2mnR0yo9VB9QtSN7rRogGIqG0o1Xga4PR8N54soDWGbNoy4LNo8SV70XlDSm)O1ps8twyA(bW0H5FZ389XMM)myA5EAH1aupoGaAiMD)hHo36G)W)HZCIV5S1fF7V(xF7O)6pEH3D3X(dttZpNe6rc7zo4KZmJSdjepGVf3))o42slY8ngQ6G6ckizD6gJbdu6g91zPPW5OIL)X1g6TkEq3NATwa9KNGhvM78XjGyllO8uFmyLbXsl5Dl4sXBo1QsIl8FNbZdCLpV)MPV5nYmqqWjaetuP2Xm3hABo3jc0oGryCJRmsj7iKgqIJ6DsGSfhQxzRzzovN57gNJmEgFsqh1iPtL6TxBiJlPjWPwMP)D9fAqvdafNdIfHeV)N1mE01gDuZk6KxbWRYJBnR0HN0D45hPGr8QkxXvpktAHglYhTU3kxWji03geyI93mfvXtq3qO7ryeRW0sULfZsAzMXAWb)lW9g8rizcjPI1x9FLyDhjRu2oXLDDb4fcLjuTuwMHpqle(m2gb9lO8TCXagTGSXuVSrMi5IJZCsZ0RKCfJ6sD6MZYV5CJtYR4kznrqXkvOgDOdrZbJClqrXazG1FgfvjrL88RCI9s1qdiEZ5yEwiZ121h3kOSDRGJ3m9NPKnJFdKcWstP8mwmQwdsItXqd4Y0M1iGz(jXmOr(9aKDiZ7j5Bqu7JfCIYcFdh8QUvkkD0WEPwb1YRvv1VoAcB8QrkncFEVMUru3SM1STRoDZNsEBbM5cRW8iEYStm8O0jMA0Sxj7AsqqL8(xl7bIR9RUwEXdE2QJXEqt2HkZdt7zJMGb)kH)T7mNiQdOcdjOwEuAEdFmB9Sz6V6NAK5ZS9fMLIXCjCKAcPgBd5XvM5zo0FEhH)1vIIezbbi4QkL5LkJuvibFBRL)8ZnFPQV(SZj29LzUMhnSP3BtOnXMQaIHnbPTNvmNff(RlPE5W(ooEq5yy6CqxDr3WkRuXsxFaqk28pJtJqwCVwvfw4l)NgNmk()QMqhzHOCLL364LWxEtwuGqoGVJvRlakWutng32rgwxKFPRu1tOJmtBe36()9NScJiKW)VugGLRBgxGsVcR)i0anKtheo34)DZ3(X08VYnixfpHz72ZhdJJsT0Z1HhcCrJ8BjZB3ynnufSWv8LgOVxnrwZpXDlcCjJ9II2q60L2s7CGs7pP)i2g7mkGvUe)WOuPGCz)k36Ru0)Pk4x3EN4QSCgV1uonl1fLAqTjAP3fAT2u6uNtw5iDyS3u1PUi78IJ6XITrsVAS)VuxApQeNRUmc3C9fLK3ZDT8hQizuZ8kvbLTGB9snsLwFLU7ldwKisA3H(rXPRIScqLgRH58v3w4xumdMduT4Q2oOiEL0qQYOt2zQ6yg)1eiZqYIqs0s6r0QIfuXPXQywcn1PIU4ipVwTFoyHZtqJo0Zcbx6v9RHayZI1b7SWaROjPv0IdTDXHsD)qqG7AXokXITWj9uJsJXqinqz6vDpM02yLuMzP6ZwJ7Rk2y5eH2lioVRS58Vnt)nKbo1cyqRsSxY(RaiLEhSWc6P1sBb6MOY2WODYTz7mUCG(Mw0v9HxPtXptpivMzYL89Xq5hyi9b96O5Cz8065XoEibEYTmHVHjYBwzTojVla6BFqznn19)O5qOeYBElikoZ25Dg4N)mlQllbJiJPADBR9czTwol)nsd9NHDZy4)PYwwSuksVdpFW0mKWa0RGuLmTupnU1wxY92NssMym(YncGR8)(3tcTTcOepgvllVbwyVzfSdVMaGUdy3(D0yeycV)ByucO4CAycvSSLIdUjHB0S4u71P66WEEDvzTxfeTuqPaLVB4Qg(tHyXUIMNEjJKjmUIh1kLisUlG)iM7jp9PTpuvP)VtzXMNgJ6PKUMek4JIsqOiQw(dtrof2N1bBGJeYwowU3mS)LV8QHHCIW08pWRqKc)xmRfleskwQ6)FHmo0K9jn5n1PA5ITYUXxg6q0OYxeAifDBFeiLsnIvvi6DT5w8acYociNvYy3jagrsMEVZWm6sJFaDALeh5mpv0TOh2v5U(zlhxyv8toUUO2eTGqGt3FW9bR1y31V3YXL6eO43OMgN5hh7VAZuxhVQweIS4MfBstZCUrWa9OLDnOM7aBCWY(MlyRzUDiw8g(jHf3Ak8SGGmLgUfLHXjJHGAqFqPxBYbggxoz8dwHixiAY4pJCpNv4f7i1S1Hw(Kd3mnKarssfDI8Xq(SsagSfnqp8Epc2Tbk5Ja7EZuJVhpaTEaIOdFyL5TFiZgA1tklEyyYDh(79YX0zQXKuUfsOqo7enW(89iSVqnSlhTUe4vCYd1GHlvJbP8uLaV0Ong2HApCD5iiDkXQNtJaVIJNxjWREonIZukJwzMtPjOJ)8A1yq0VHe0vN)NmKhQr1Qna9inATsrpjRVkn8wdEDXPOWUGY5PfHASn88JqXyEKrJ4OBlWtdIqcOzrYOdyAmT1QaB)XN1y8C)HWVtN1AU(vwYqn3yBlGBdTznG(zNj1os)Aa(ttGvJdGDF7udGBJTtnGUvza7pzdnoe3Do(E0tRgqV3ysgd0fxICfJouoUe5jSTOOv0r1c89gdBOAeQopCjSPPMx6qLMWUEgrvlfg2xkW3ksyAa(oBgrhGvwpcjeOCoAr0(merTaFVPa2MXKAOjmYwWuUoqV)ym6qyRSn3MbVBOjw62GRRb0TkDU)2c3FHMRd07V1IM49ArZBB(GI6gkuoYdFHwbrnLLOfRgKgm0k1r8ltv(4pDj5WUOaFsd3qGkE2uua2stOra2OAQT0WneO1qTkMqJ23ApPonyOvK60wlp(ZvHSwj)yAbSgQEpeNT2KGBNaH)sb(2icJVazvVh2G1LpAlSk0b69XQqtsUTXQ4zm)znzkSVJazozHvI7wg7rPWZcB1UBPj6Vw00Vgm0kM()QV3C7v)IL0OAJqMkd1wNPOdfTdxPuW8TrOz66eABYv0GI2HRS)t8qhk2r6xPL28x(4TZwBTfkH(4pFOUWyOJ2yn921o(ZTLqEQx8P6un1xAonc87KozLSKAOz1ZPrGFNSUUFYGEZhEpv9ab5zzpFG4PrJ9azpzm9VWN)ElFc8F(e9X0NnTjJfV9utgNc(j)4K4jFYaNzXVm2o0bKHCSMm(a2PnvXbeCZ0hFCZuy8mnOklrsbHibje9J4ju64SJXNevEMevM9fLpatShM)qNa2eQ)z3JFj3fFAKQ(sNSz6vGDMntF1MP3AphcC93L5gAS4TzAVnt7aBPPhW3sxhxaYxNpw6LpCZ0t2mDeddA)kEyM)D38g6h2ldTv8W2btgSUpa5ZNRHpZHqE(vJyw5SPouUKMR4vgVPoMiYjQ8E8YyJJ2I19yHJYoQ8aCIl0QxOBFqXMhUjCbJMBWR9hJEoxwEs)H0Ry)rIDHlGVJxZsXvstsd7sn78fSnjnRVQFubLu6R2omBdr4M2r3QmgmGne9Hpff2KMdi8)6b0bkDkLPNPAakxtF0aOaHof57TxUWasLveobBEvfraNTGUPyR0fYtw0tFWHaOqPMxRrQjT)lkuT4y8SJZD5xBqkJZqGslFn5KOun33nGkL8hu6gvu)nceFefXflyQqNnbfNcDU99YeFNAnIHcg8(54py5uIzyDgOkScDn1kKwYPansubfp6dqGl6a(BHiJ2Zm3xZ(dmP8BzdDFV01WI6cSlZW4rk0Kq25RQLDw)m6vnByKUiqYVVrvlSl(02uSBiCBNk(z9xSRmglDAAVRvzApCmxWI15guUjl8LSG30uJyb9VAUKqQciSYEkYmgjPB(S(Kvs3u1fwzX9KQu4KFbEHhLCwjULQwFz4a6wC3AL6bnQH0nJCxqvisLphH7GtHqRQqSUkp(1k8sEUSNPgjVv3mN90KmzKb3NOUnhcbLxyRLYppk)JLoicPY9OSNUqTLq3FS28LzNyO8vZpPH9Sn7Th0ubNEQtmyOCMbcgnkNJ034BATnVpIgqIsg)39eTwJMs3PNrt(TZ8KYuCqaPRrHrO8kzHA(4ALcKjF)Q4YJ24iD)JMbuDzSwHb0x(BEFnyauxsFAma(cNP328o9gWmKZFmJXLEpNvfoCtFxjuWW1Fq(ZwkD1NSr(dnbhhUQCsQua(SsgrQYIWwzRHAkWqox49xYznlXRu6V6t1aDMQyxJKee2hVlRu2MCQ9BlBRTzgBToUyGvxAWhjvTP3wga7J0Jv6dvN4FEf6ukwKjawRb10ju5rDrPm2lW3axQG6Uw8LMjOkZ0zLGtIn1QpsS0fNUIqOPNlPuPQ2pWvR5AQFuZJpBRSgRGjwF8CACwQn)4geTpBtOPpLSszRPZkuNAtnlTqRknxjeSrTHbwNvLVrIH3qBU0vweKk2HkrkT2wYxbrMBuzgYklnXZpRST5iveVTCgIsTUq85fsaFLlxYb6zunZDBUz9Ixrhkr(A((0k35bXE0osobc2FAYEmEAGVdUhwOjJt)kgVAene6IFQcqZr)cKhOLkCfD(67COOqZr4iPi2)B1VnWsuECwUy6BKkUg2UdsH4QwZrLyNo2mn(PfwA5w1H7iFFuz7qRnenvhpLNnCRuXsXPePCc8n(HhUahT)H5W(55WoC5ao3dAokdibO(O0XSLgQ5cAL6onu5jhu8tLVTuzEEoGR27cpqXYbETBNlImqvVonYwlDCF0F8X4Kakouon5qySZNaI38MsoplFkcAYjKq)rpyRoHdC(dEIN8GYCjvN1HgBVS(3uzEYVI3I4gApQQtKGGVFbQChENLFkK)t0yRquIQUMF7CR73pVjZsMzBsCRBtkC52vAu3epNd0vWPv3k6I1r7Hl952PQNQ7zkGlDOQASylxx(dA3kUxztWA3kJjukG6kKBo1lv9CTvXvzEvcrfx5J6mREd9V8B3scR)CsTfpQ3136UAkQgTEa7WZs9ZL9XMlJ1OQw0P5Y(kBYx5f9xgARk7VLAG2lpIw0KnR1vLc0vijOsDnqz8JI1tOt6ct6XVMMDZzvfSQ(Q4ZxUeT(rEcpL2FzlNLQk0lS62TNy7kz1YblW(Z2OkyLkGAjqZfyI87Sn1FXfAWUiAK9AxcnISYg(YDRrOJh10KbPxI98QZPBd89q2aHy43mjpBRiA4mzOGQHeTe0lvv9UQxqVJokUccjfRdoGhf4a85hSCVdlFWTGR(s1RSQkbLkbZj1xo4ejvcHWn0CvHoFqbfoZ13FUjn6qf1zB3OgoSalFsiwfRAR(1wJLTFnJHEsx3QQ81ZnXuuem0qvEnYuyboTUqqyVrU(X8)7cAU6RwdlUIUQkl2Wl5VGpfFxibVVM5xZNIc9u7ehDUYsWLwEnMhw1mkR5R)kOmw40AqFun2KFgx1xWrJHLJoECgV9qyo)gzMQ6HkjAyOuuq5DO6pffEzlkiOIBuv1r9ij0sOV2ZkicBZ5sK3fozm7oJd5zypNMSSh4gVIPlffMURzQrZmXHxhvbX5prXl49NHyiHUmmRQERzloXB(UU1K8Skwk6QtoNi1oUqF9GMTRkXo(7(0oUHrK8wKOPnGhq5khVem10FqOY4LkHC9(eK5uI(1015Iub(QzBTIYOaVLp6DrPOxkATATqv(gpxJYTQahKf8K9f8jG9GkpP7BrvwK)cNbsgrAOmHClP(tzIxiYev1SeCUMGb15z76C)G(T9Vr212Y9Ikz0A08EGyf47fPSLnsEolY0pAPdXDEFKOuvia2WfDUi3JoTc6rA7kEfDzGsa0CBCtkvKl1nYUo5o1bUnAilgrFK6Yi8aF6)vvRikiX6uVaSIhxLqh7yQ0AgWdt8mz)Tj(kXWERymzbaGVwmv1fHQ(wXZ6dT0c5VAtQkUGqzrI99UnHyYKokvDGOeSUaSb3mL4HpZtPN7eS1QoK55xb3dXtureXLyt7D57xfe6FpTkAfObtdabLQljHt6hywMSeQ1fVCw0DRzTfsq6s4LSPKWQ4CptO6LlPLYg36UdWnevJ0SRmVFQyyw1rPQnILXROAVcVUvLRSAMo1fclv(J)KarjlO6haZgeeY)0m)E4F5Ma)NH4ji5imlE(MPe9aiwJmQ8(U0p0Y7owCDcTDHZmMTvGLTt8A6uPOkvOmRTGQs6REkCxFGnWziE(wk9iuLx(7QIAOQxXQsaqouuHAWR5q(WZYeclzsQMSvs8sFylFSZQex6JWYBdTwWgCY))d]] )
+spec:RegisterPack( "Elemental", 20250327, [[Hekili:T3ZAVTTr2(BXOaYwjXks02jUDTtq3G0BtUTbfR6f9dlwjrtnYMWuKCjPSRVxF1V99CMzi58Muwu2oTffTvwC4zoZ59Jzgnz0KFDY45(fKjFXBO3jdpY7Td8go60JhnzCXDPKjJt9dU2)s4dX(lH)7hJiljXf(r4tUlkXFocH8KvzbWtVQOin)7E9RVmS4Qvxmiiz5RZdxUkYVimjoiZFrb(3bVEY4lwfgv8P4jxyA6F7XaitjbW3(gpaQHZNtydLKhmzmo0dhE0HEV97wp7FqUjmNSE23NhqIN7hhqEDrwy81KI1ZYVloy9SOKlddw)51FU69ogEVFojt6TwpBr4VtY)BRNLMroK9M3clJ1ZcJH1ry8LRNnoC5hwpl4k)4lj5IqC0XumzzYnKYrH4F4cyINveIVDombjzsZOiag(DLV4QuKGu)qVd9oLcDrCchkWbYswegb09V5Bwp7)H(EZxpRM8S(Z4d(ss8HmqtMhwa4rrY6zzK8KOBAMUnareaiFmoFfsWUL4NMedGkgjdWydba6NMgfItD4I1ZUlz1(iGZjrKakc9PLaIEd(PFiceIksIVCfmGFJckyc8dqXJ8baHhO0x4x8YZF9I6roLnNVkCX5GChi8niKdWP6JAaj2)IiyUmc18RVBXQS7m)WOWlVQigyvtZVkKezbeGGD8CswoqSUgMu)mlJJ4NvCfhsiQV3fRwSyG43oyvAp(cIuQvnnj7IWcliFrs2YRjKusM5bCJFwiU4FfQQE(sFs00a)0xDJF0kY5Jgo8LNm8f8jm)wsueUuXrbRLKLdY8JV(LENuoI0SWLjzZd9PaXpiS4o6qAZutL9HxKlqnIJchW)7bJgeMp4QKv5KPjlaWNnp)(7LE4IvXSNd4sE)E7v9QEdUYpFk(eKEw)wEgEl(kzriWTM6ZLZTqCDUa8uxaEUwaMqL9ew7MxaMw22waunYpfxqYYwLc6GjGAxGFErETYeSKUnmEoiQbICCnyC9TE2sQHp0ufkYj9g5PHzHf36hDniGp9Ym)aYRGbcYjNpsCCxeLKakFGMevYMJM(vwskvcV)EQqVWdwLE)9bjjrZtUnw87Zil9dJZF3jdLMhanizxdZ)MppIWbiGekoV5Gztqx8rGUevJjkAxmxaBCC6DlbwnjB)C0e6fIiak5ewqw(Q8OKIZR0(qdNIsz5LGihmAErVdoybA5BA5en60H9OiNW4YiPjzGzJciAG35Dch7TnGJGbibZZoDy)EMxC(ZVR3buOHYtO6e1oxoLEus)kFuXve(J737Gk4jyQ6w)BQPyiEUNU5mCm3FpOIhbk4(zxsa9gWzwy80kpaV7CV(WAmjpVN86WBu)gj4EIeCV)IGV9eCmigYkqXce)Vl2pfJ37JXxHlOmJSdQr8y6RmnN9gtj8x4vmR2lMEzW8ZPkhQAIv8fp3AKJyAK)iAXMze(dONG1ZEjeegyInmEvHCmMwXvzFj6O4bL(NgO6B9(7T9iV(9CTYuPZ01YpWDaTE2pbEGEiRejxypDlKVaYSO8che5nQ1oshx3ZLvZ9SUqa97nx9sqstiopbrTDV(Nf7fCeqZcJ3iDFy1SL2yM0ob3KvtReCV)IGZi4cI9SKHCi1JV2uWG4CdQOp)iMntQStyAuq0KM)dkC9dEiPP0GNDKOq(3RcttjZhyXJMWiUacaDkWzX1xEF3UV8gE)9ciC1qRFEnv3YmBCSs4GWi6)WSj8aOPsSI2ZbFMWkg9yZkul8rvmrQpyacuX3m2VyvgjFA(THlkIj55yfNWArHrq8lj3cHNb5PUyvEiwZi8F)qjQXQnvnOcJVj5Ay587aHpgwFicWIOifHdSkyGXuaBnL60rsPPLMuichAIHrRYlOGrvca88u)9TkaKJg1dJJLAo(F(JKRdJc)xnwMT)gwroSqMZllpxaKGoq9U9kcq18RcKHvWTv0b(IlilGK5FHi0LYNxUOg1yFPNtEznSTMTOc1ZvCrnyHS(H0erMwY1eFnds)9LSuzgzmeZqd2iQFOnKXOvX(nBgqWBxdQRNpuq0Tzv7(2mWimJgv6LMhRMfefEYwfpL9xqul5fCzOeYRWsFguWSo7ogNrncVCyyreoaWcBvwBoyI4fUzAvXrvFknuJ6hxxLvLhif8cj4QKYGxQgrUrqxwRvAvxqreEbSbn3RscUUSI()cnkgviefc8P5tx6F5s)PfjONom2QMIc6StEb46ZrGqhGtZnKPZtGaXqSzkfzo7C(3tIjldj5hE093BzKhipY39(J63q8vd14l1G7vb3fuXbZzsfnUiHLyV9uWRbfHbyP(a9Yhsa1ND(rB6Qqzcqm3mj7Cvk2BeuM0z0sbMwYi1hMk6GylR8HIUtfDI8pQCri7cXGhddUlyElm7SOefQEevy1C9NvC4b2ngQx9jHS519703EbOCNhHNZkuX0uxbIhSQXWdabPayloWo4bj8q1ExfrjimsZG1ZE)7vjfadkfyhMeVzXcKfmDEyoifcpHfH4zE81voIdiYrdDrY8J8J6RB1OmIRlsIkQMmrIXQ0EMNKEo1po3tDUugGG4FPC(5VXYu1cqjyiErgj()9ogn6CVEMjf9Q6e1zvsoLTW6WdgDYlnqiEHZvS7NYKwObQ(t(34xj4KMLeW7rAaSaxTK2zyuVj1pJ3RLYaA5T7eB(cgKwuo8siAUE2hX(89Vx5FnPQlYf6UiG5fcIjZSuwPMaOubVgJrqFdkDRsmGHlizK7nlFkIU4ZzodzXdP4Ydv26Dqfj)DN4DyvN)i3rKuS4c1OJtiuF4jxcyubGgyFqrrvsUMhwJdSpxdnLepxG45Je3GOeKvqj7(PVA9SFMI2m6nGkajLJ5LKyQHTuyaYnvN1q6lswvWGg53trYHkTNuXGOw6QPe6cFJg(IdCkk9Yr95jiyLwBQDp2kQ5zhzSs4N0VTmIMg1fTJDbjrxO2E6lIGvyvKfL2jg9s(a5gn7RzxtbcMK3)AHhiV2p7C1fpK9qte29AdhsNgY37awc66Re632tCYPoGQnKGA5584Z)PY1deSuc3iZVY4lmlfJfcSNBcPbBdvXVv6zolzEpP)6mzrIYGaKCvXjECzexHe8hBT8hFQ5Zv91hDkX2VmR08OHn9PacDZurvaXWMW2hYR03IA)1AQxHS3tGgOhdtV9oWw0nSAowV0ThaKbM)XcAeQI7nQQWcF5F6D4rf)RgcDKfIYz(X3vCf8MVRmkWFoP4JScHcqbgk3yCxhzytr(XxPMhqpvI2rcR7)VFWplNqY()5ea)OOsQafFLw)5ObAswoeo34)7PF4N45Fvzq2fnHz7oobdJJIT09xymcCzJ8BiXB7inTufS2v8PEOVxlrwloWTlcCfJ9YI297RZs7TNr7p8Ve3)sLyaRSejz8Ir4vj77K17u0)Hk43eVtEvQNXBdLTY3CXFg2yIw2DH2OnLEn5Kvnshg5LRoDasoFZl7ZITrrVACYV0uApMeNDxgH3D(B0K3RCT8NQizmt80QGYgqTEUgPsNVs3(LblsefT7SK8c(QOSau8ynMoF5L1(fLZGzptlo32bLNxfnexgDk3mTi(LrwKrYVIUPCDSsQ3)T1JsQRjoAtI6460gMaML(8k0AdD7IjKx1Ggqa2OOtErz8Fo2qjo6HG12KqXUVpnn6o5w2WcQiKxwCAWfs5)PIVMBIJ1oxWjMAfMTb)woyScYo7KjUQx9v0V1Z(nKaoZhiqlxfCf7tPqU8HyffSJRASaBd8jTphAit764XJFZm2Ynm1dUxiIDcrLyv2tKQY7BVVa6AsMBSr7HG2K3(EluFOGQk5)p)RmXjFjJeJPAvBQ9avTsbl7Tsd8NbUzb8VMSvvOK7ZhXt8bn1hmYBhOQIPJMXXn26rLBCoknfdExTc)c11hvBd8tPipgUklHaw8SLvIdpMBPKaqF(JuN)mH3)l09pkoZ9)7yzReGBBIJODbG2VN7cSEstLpTVdKwjAtaZ3U5Qb6tTyX2onp8AbPIycvfQtQ9JA79(7ysLI4N1gm5s)FRspTk)eZdHVMKQKJHAlyiCvXDJqfgoG1AAGIKXwo(rVB0GtF(vCc1mCPjwGhbwd(VywlwiLTRsz9FImo0g(KLeI65wUyJSB80GhYgvEsWb(0T5rGOL6dRCp0tp5L42cLT3oowZy3HWmIOm9GnJzSXJFaDATQipCox0TvXH(4L8kEkFcJIqTjALEaNUFF0T(3HTn)g)WiQtG6VJAA8IKIIKLRNffg7AritIBxSjIPexDOuNhceDaLF3BU)EP8K)gzsnlWHKvz1hOvC3AGRUwsRlN(jJHOtqNjv3ebhpz8T(z4QjFY4FfPcHlXDdo38Z(qQ67JPJaresfbYtWq38xbek25WNFpbaiYpbKT1Z8(oC7phdZd9X77m)69z2cDpOY4AHbFWOFVF1mDS5zsjhbLPqnldlW(KDiSFJzyRh1Tc4nSf8SmdNAEguY3tb8kpDtHTwUDQGxBa2MHV18miBbvb6MZesfYJSiC2fG(ilY9kXrOkXR84ng828yBqZY44SoHw0UE8NqzV)QtJ8t3uGZDNQa0sF62aMfJdDkW2D0zlMF2Dt4BTzVtOLCAM6eE2Mc4UqB2cOF0jsDJ0VfG)WeyT4ay7zNwaCxWoTa6oLaS7KnS4qC7P47qpTwa9oJi5n0wCjQ1ozF14suhWMofDIoQvGVZiyJmpHMZivz2Su9hBtLLWUEeNQokmSNkW3jsywa(wBgXgGnMzUYeyCmwNODziIwb(otbSlJj1ZsyKDGPCBGE3rySnHDcBUldE3ZsS0Dbv3cO7u8C3Xc3DHMBd07U1IL496qZBR)SHkVjvpV9FMwdolLLOdRgKLzOtQe3x31jZYm0jugR1BsSl4QsoIpZkGTG17GybTMOw3eS2tf47cVGpbz(TdyW2YzQdwf2a9UyvyjrSUyv8iMJNLOz31EjNtw4VkAd9pQfcrM1B6LkuLpKcZJrIwyjcLo00VLzOtm9Rz3jZ6npJgXX8yAJxRoK4St9lQfAv3k6yRdvDi5X2u0n0hT4g6wPhBXL0L0NDzeN2AevxI)7Y(IR3UQmtxEwge9vECBHQ6fALzLk1H0oO75gN1ECBHAJ4SXH0wORExDza6ggYUe61WvRodDcL2ou7ckTnOVDs02HAJ4ClKOTd9g5FghYUe6oIPUlO0oGAZECAHhz3WFB5KoGEM0T1NbyRnG2c5hcxC3c9MH7wzbXbuBwgPfrL4g(BRfkhqVbzeddOTqUrUyZEz6yOpWsgGv)(MS)gLdyJnzG(BuZ(YrjP80wNbIOjd5lbFZ2m0gt7b)2ArYE6FBHcOZCk3w9JDzvC1kMLiI3aN08yAp43w6InGVvUBTd0gX4ML9Su6WTKtU(ZFIAWab5XLxgZ4U8M9tj0KXGvIRsYMmEC1pIBFa)rCBYy6qWF538tiW)7l0Fh5yV)KXYhh5jJ5Z7K)(KIjFXdhz93moileCEe6pz8ESJ3HHDK)6z3F)6zWZln24Stm1iIcKWP)ireL(C2(MxblpwbllFd9DAm7hLUSWu2aA(IIvCjFaEjd6(uEUE2zGj51ZEX6zxgmFWs)FxLAyjb11Z6VEwpGxZprnAxSfaKpV6z8JX)6zhUE2rSzW6BjcZQ37DVN(I9lNwhxfRWGHyPhI05tSqNfMqr6vRiwvKPEuQKLZmDjTPjIisjCEJyWiJhTbR7XsNDmu5bOeVXQEHn(GbMhYeEddNBX9tldForvEY(UPVM)OqUWfWBf1SmCgVv0Wo1cNVMSPOzTdpE4kQKUnFYixs3RDucP3WHgFeirEk)joof5cARuJGANMCfUQGPlz2PNk70E9XG5e5eFRfobFRtyqCvGCXots63fU01TN0ss)SERGPwo02awQyJv7yb28XAhVIFXflO(ztpZWrPII)2q(EnAya0q9e9DiE6OOiZOMu6R1SpNQzBfDQNgfSGop2D6k4Xv8O0ZW9stOnWFGbvDurP8DTZsm1TYbmJnVu0nVaL(fnsoBEe9DtgoYMx9QdnRBHD5lETAUH0r2T(RTF6KljS0Hz)4vZ1EeiUGg(jEuQjlKGYaIS06Cj9VgoPRMcYY52bI5Sxr38r9cvMYuTfQw9H9vlenYJ)9pSIlgzwQz9LrdPS4dAuQh0OgrzgidSjrQQXiDqsRfAnf2YzvXes)LnbhRUtUtuDH1k5TMg5fpmjtgAi8kM39hsb6wBRLspFz1lRShc5Y9OSNTWxvMU)CX8vjNy4XUPNiW3iE7ETvWPV5GThPgTTKrd98o(dotRRP950asms4F7d0AnAkDRUKNfzNvj6yyp8txJspHsRufQfJRvjqMk(v9nGqRJ09pBgqTLfOddOp)zEFnya0wsFwma(mNO310o7gW8uZFSKWXVSomfoCBVCKmqWTFg8kxkhypzJQBljbkSRCsCkaFSMrexwe2iBnutbEQ5cV7soRDjEXXF3B2t6inrUosT6v7GBnCkztn1(nLS11eJnwhxoWQt9eJKQX0B1bWUi9yJ(qTj(xvbCJIfLcGnAqLpaN7ayJYypdVH2PcQBBXxANGQkrNvcofYuNEfMtxC2kcHL(yWXstL0FyTLRgQFu7JpBJSgBGi2C8CwCwAn)4weTpJj02l6CLS1SzfQxJPMXl0QrZvsbB0yyGnzv5piXW7znxANfbXbhsdv6mwYxbrM75mdzJLM4XNu21uehXBRMHOsRlKVJ8KMp9YLSNDcv7C3wzwV(gKJIKFRyVpv78GCFppsnbc2hNYUi6KxHcx9DwCPWFlgT6iAi01FLoOnH)sOhOLkD6A)6BVDyqZrABEi5UXYfyVcMxuMlM9gPIRHnBZjiVQTS9d2QTIsRV)7vwUU2Wev8rJTdTXq0mTLpE0MBJAqg25f6jW36Bh)654p9BqINF71HY5Sz9uC3COTTySVnRA1MOyR3bdV)9Ao)03faTzhoyFRdSr7qbb75pWDoGovY0EvO127A(I9xe9DCH43s7jU2rbsoPLWYT4Y()HG(pqJLsr5z62lyRB9(U5hgafdvTjUZnjfSkBiTQBGNiaAhuAZTsUED0DZL9CZm1t0DmgiKoJRgd2X1vVJRyUZMy1Tv2skv(MkeBf2Ru9BRvH1yErsEHD(llaZF8Gt)JBjDTVpN2GFzjAU1BnuumA(8BXVncpw2hBVmwRQ6qV2l7BSjD6l6NgCZL9xTgG98dPLnzZA9KwGUsjXOv1FJXpkxpGE8fMYVad00Np2vWQ2RcVy5oS6h5b875WtB5OmvHDPv32978GtsTAWcSpASkwA)QoqnQZRc5gwIlTQJQnVYeGw(BfHfrfXPMMch9g1PQMy2i7FcIHpddAMjVe4NtdcPCkOY15xbAtMQzM7f0hPpfxbzK61HaWZtdbc)T(rxJNi3lbh0e1Qe6Q(lC5obzv9qkueKLcsWYHE5KH1y4frjjZNsJPZq1T2oSrywGLpjdRDuJ1CAJNLnFnJbmsx3MQ30JnYux6j08svLPmy3KxVgiy18OKcX)UgNLpeJYNg8YOboW05Lz0PcT6u49Yi4rsS0MVqPyACGhXhO5dGdZVOzcL)87AtfPEIl0eoSw09sV1v7Su779tVr6X0oUK2UpmMFJCHRQqYz7EgffmCXa8xIcp3ffKuX9CvtZyYkAHRVl2pnhBU4viTlBYy2b6gYoiyonf3yWnUJHRe7KTdmPx7mXHhSsjX5VqNxW7pBIH0WkNztvjTCXjFS0TTMuhLuS6vfibRyfY7kTBYwi2ESxP8sBOgMyJkR)FmH2ylmeKpGyjTp3WRVmmEvHu99nwP3kFxINlDB0dLb9CKC8dCuesBNe3eXWwrOT7ruLUi7vVjNK75Kmvz6C7TijPjzTXkdFUy6YQzA9dWSzdBMcAsvas1p4xaQcA4GZaYDwP)AhHkgqBPeHnFLoKi8(ljIDUeHR2BGJDk4kzEjpx4lSZ0)dcZAZybUj0w07UL4NMeNBSTiBPH4dKSflEDUWWxhxjlc0ufa55cq63gnTme2sEcEXnLMsMpWsCukJ6ci3UPG4iswYRc)Rj(Lh)gkqEzPEttvnurjalOLZ3rcj1gz5ol06P07bAZDR4z2y(BSu0xhmF9RIUhBMVArjuYwOUMK5xfsIMpaHTPswYECDJ6QYIH2RVCR7)gT(0OGa065eTsRC8sUYLF2ghe7rSG)WK3Qr80e6)3uFossbvcsr9yldHa)u0kszv3nJJUeRzrK4oo2gf9R0HegvM09WNgqSkf23KblN4SXiTAVEVWOCIZomB2VTk1kUUBulJDUbK01B8DSGtkMquWel6UgM)g0YTU31Qte71CsA5Uxlk5YWGxHTmOC3TPVD28xBAhT9c2wA7fk9UbuoMYsFvFpQ1qh5AkCvqPg33PzHbfu)qL6JzRINY(8u8kuJDrQvIejK62QzWRNR3vEt7s7wr1T)OP(vi1PLIK4lxrMYc7sRHd5RWwnWEiiNeJxxKCQlUhRcjZRUln2h3AK5KisaDtm9PLPzaZzoFRoXMgSYIiOmDAhd5VWuD0sQPxIMXZV(o2(drY4T018MMVa5XES4ylUI2tBK1Dnm3(zQJ2zReOwxlBtk1RKC)8QB7R0TKz90l(Uv9kOAPkUpMLqkvFLn7hyeEBv9sSXaI7QI8BbXAKqvTbmgK5hFnRyjs7)cH8dc8t9dclUJourTQY9hKP6i3mgEGQZe5AU1A3nDtGFL5MzElVkUQvlFJPkPUzREdxxMTgV32Ov3YvV3KIQ)zY)5p]] )

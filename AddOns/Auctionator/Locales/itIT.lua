@@ -215,12 +215,9 @@ L["CONFIRM_PURCHASE_OF_X_FOR_X"] = "Conferma acqwuisto di %s per%s?"
 L["CONFIRM_UNHIDE_ALL"] = "Sei sicuro di ripristinare la visione di tutti gli oggetti nascosti?"
 L["CONFIRM_X_TOTAL_PRICE_X"] = "Confarma %s, prezzo totale %s"
 L["CONTINUE"] = "Continua"
---[[Translation missing --]]
-L["CONTRIBUTE_HEADER"] = "|cff04cca4Development is time consuming. Consider supporting|r"
---[[Translation missing --]]
-L["CONTRIBUTE_TOOLTIP_HEADER"] = "About donating"
---[[Translation missing --]]
-L["CONTRIBUTE_TOOLTIP_TEXT"] = "Auctionator has had thousands of hours spent on development and support to get it to its current state in just the last few years. Donating is one way of supporting this indefinitely."
+L["CONTRIBUTE_HEADER"] = "|cff04cca4Lo sviluppo richiede tempo. Considera di supportarmi|r"
+L["CONTRIBUTE_TOOLTIP_HEADER"] = "A proposito di donazioni"
+L["CONTRIBUTE_TOOLTIP_TEXT"] = "Auctionator ha richiesto migliaia di ore spese per lo sviluppo e il supporto per arrivare fin dove è arrivato oggi nel giro di pochi anni. Fare una donazione è un modo per un supporto indefinito. "
 L["CONTRIBUTORS_HEADER"] = "Contributi"
 L["COPY_ITEM_ADDED"] = "Copiato %s in %s"
 L["COPY_NO_LIST_SELECTED"] = "Non posso copiare l'oggetto. Nessuna lista della spesa selezionata"

@@ -299,6 +299,7 @@ L.RaidCheckOwnOilItem = "Use own weapon buff item"
 L.RaidCheckOwnOilItemTip = "Type item ID, this option is personal for every character"
 L.RaidCheckOnlyUnlimRune = "Use only unlimited rune"
 L.RaidCheckMinRank = "Minimal rank"
+L.RaidCheckSortByName = "Sort by name"
 
 L.marksbarstart = "Clear"
 L.marksbardel = "Delete"

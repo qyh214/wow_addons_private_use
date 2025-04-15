@@ -1,0 +1,19 @@
+## Interface: 30403
+## Title: MRT Note Loader
+## Version: 1.3.0
+## Author: enderneko
+## SavedVariables: MRT_NL_DB
+## Dependencies: MRT
+
+## X-Curse-Project-ID: 834919
+
+Libs/LoadLibs.xml
+
+Locales/enUS.lua
+Locales/zhCN.lua
+
+Core.lua
+Utils.lua
+Widgets/LoadWidgets.xml
+
+MainFrame.lua

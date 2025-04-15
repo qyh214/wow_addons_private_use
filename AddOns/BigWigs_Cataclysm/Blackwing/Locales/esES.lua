@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "esES")
 if L then
 	L.discharge = "Descarga"
 	L.stage3_yell_trigger = "MATAROS A TODOS" -- He intentado ser un buen anfitrión, pero ¡no morís! Es hora de dejarnos de tonterías y simplemente... ¡MATAROS A TODOS!
-	--L.too_close = "Dragons are too close"
 end

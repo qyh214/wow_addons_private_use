@@ -2,14 +2,13 @@ local W, F, L, P = unpack(select(2, ...))
 local AD = W:GetModule("AvoidableDamage")
 
 local mistakes = {
-	-- 小怪
 	{
-		-- 死靈箭雨 (癲狂縛魂者, [4] 庫薩洛克)
+		-- 死靈箭雨 (庫薩洛克)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 317367,
 	},
 	{
-		-- 噁心爆發 (染疫嘔泥者死亡綠圈)
+		-- 噁心爆發 (噁心廢棄物, 染疫嘔泥者)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 321041,
 	},
@@ -24,27 +23,27 @@ local mistakes = {
 		spell = 332708,
 	},
 	{
-		-- 蠻橫跳躍 (『殘暴者』多奇格)
+		-- 蠻橫跳躍
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 342126,
 	},
 	{
-		-- 迴旋刀刃 (『割碎者』奈克薩拉)
+		-- 迴旋刀刃 (『割碎者』奈克薩拉, 『嗜血者』哈魯吉亞)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 337037,
 	},
 	{
-		-- 死亡之風 (會被吹下平台)
+		-- 死亡之風 (惡毒暗語者)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 333297,
 	},
 	{
-		-- 邪惡爆發 (腐臭肉囊 後噴)
+		-- 邪惡爆發 (腐臭肉囊)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 330592,
 	},
 	{
-		-- 邪惡爆發 (腐臭肉囊 前噴)
+		-- 邪惡爆發 (腐臭肉囊)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 330608,
 	},
@@ -53,43 +52,39 @@ local mistakes = {
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 331243,
 	},
-	-- [1] 蔑視挑戰者
 	{
-		-- 灼熱死亡 (腳下圈)
+		-- 灼熱死亡 (『詛咒者』薩賽爾)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 333292,
 		noPlayerDebuff = 333231,
 	},
-	-- [2] 肉排
 	{
-		-- 搗肉猛擊
+		-- 搗肉猛擊 (肉排)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 318406,
 	},
 	{
-		-- 鋸齒劈砍 (被勾上)
+		-- 鋸齒劈砍
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 323406,
 	},
-	-- [3] 『未逝者』薩夫
 	{
-		-- 震耳衝擊
+		-- 震耳衝擊 (『未逝者』薩夫)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 339415,
 	},
 	{
-		-- 巨力猛劈
+		-- 巨力猛劈 (『未逝者』薩夫)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 320729,
 	},
 	{
-		-- 粉碎猛擊
+		-- 粉碎猛擊 (『未逝者』薩夫)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 317231,
 	},
-	-- [4] 庫薩洛克
 	{
-		-- 幻魄寄生 (腳下圈)
+		-- 幻魄寄生
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 319765,
 		noPlayerDebuff = 319626,
@@ -99,7 +94,6 @@ local mistakes = {
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 319639,
 	},
-	-- [5] 『不朽女皇』莫瑞莎
 	{
 		-- 黑暗破滅
 		type = AD.MISTAKE.SPELL_DAMAGE,
@@ -111,9 +105,34 @@ local mistakes = {
 		spell = 339751,
 	},
 	{
-		-- 戰鬥殘影
+		-- 戰鬥殘影 (『不朽女皇』莫瑞莎)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 339550,
+	},
+	{
+		-- 死亡螺旋 (庫薩洛克)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 473519,
+	},
+	{
+		-- 碎地者 (『殘暴者』多奇格)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1213695,
+	},
+	{
+		-- 毒孢子 (『劇毒者』帕瑟朗)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1215636,
+	},
+	{
+		-- 凋零吐息 (『劇毒者』帕瑟朗)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1215738,
+	},
+	{
+		-- 死亡螺旋 (庫薩洛克)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1223240,
 	},
 }
 

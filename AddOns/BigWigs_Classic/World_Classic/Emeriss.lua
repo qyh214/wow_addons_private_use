@@ -90,7 +90,7 @@ function mod:NoxiousBreath(args)
 end
 
 function mod:NoxiousBreathApplied(args)
-	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID, true)
+	local unit, targetUnit = self:GetUnitIdByGUID(args.sourceGUID), self:UnitTokenFromGUID(args.destGUID)
 	if unit and targetUnit and self:Tanking(unit, targetUnit) then
 		self:StackMessage(args.spellId, "purple", args.destName, args.amount, 4, CL.breath)
 		if args.amount >= 4 then

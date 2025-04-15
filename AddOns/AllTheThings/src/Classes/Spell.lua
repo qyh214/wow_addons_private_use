@@ -142,14 +142,12 @@ local function CacheInfo(t, field)
 		_t.link = link;
 	end
 	-- track number of attempts to cache data for fallback to default values
-	local retries = (_t.retries or 0) + 1;
-	if retries > app.MaximumItemInfoRetries then
+	if not _t.link and not t.CanRetry then
 		_t.name = t.itemID and "Item #"..t.itemID or "Spell #"..t.spellID;
 		-- fallback to skill icon if possible
 		_t.icon = SkillIcons[t.skillID] or 136243;	-- Trade_engineering
 		_t.link = _t.name;
 	end
-	_t.retries = retries;
 	if field then return _t[field]; end
 end
 
@@ -262,9 +260,6 @@ do
 	app.CreateRecipe = app.ExtendClass("Spell", "Recipe", KEY, {
 		spellID = function(t)
 			return t[KEY]
-		end,
-		f = function(t)
-			return 200;
 		end,
 		collectible = function(t)
 			return app.Settings.Collectibles[SETTING];

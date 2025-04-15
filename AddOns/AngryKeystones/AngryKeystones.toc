@@ -5,7 +5,7 @@
 ## SavedVariables: AngryKeystones_Config, AngryKeystones_Data
 ## SavedVariablesPerCharacter: AngryKeystones_CharacterConfig
 ## OptionalDeps: !KalielsTracker
-## X-Packaged-Version: v0.32.2
+## X-Packaged-Version: v0.32.3
 ## IconTexture: Interface\Icons\inv_relics_hourglass
 ## Category-enUS: Dungeons & Raids
 ## Category-deDE: Dungeons & Schlachtzüge

@@ -30,7 +30,7 @@ local function AppendID(tooltip, id, strType)
 	tooltip:Show()
 end
 
-local AddAuraID = E.isDF and function(self, unit, slotNumber, auraType)
+local AddAuraID = E.postDF and function(self, unit, slotNumber, auraType)
 	local auraData = C_UnitAuras_GetAuraDataByIndex(unit, slotNumber, auraType)
 	if auraData and auraData.spellId and auraData.name then
 	    AppendID(self, auraData.spellId, ID_TYPE[auraType])
@@ -42,7 +42,7 @@ end or function(self, unit, slotNumber, auraType)
 	end
 end
 
-local AddBuffID = E.isDF and function(self, unitTokenString, auraInstanceID)
+local AddBuffID = E.postDF and function(self, unitTokenString, auraInstanceID)
 	local data = C_TooltipInfo_GetUnitBuffByAuraInstanceID(unitTokenString, auraInstanceID)
 	local id
 	if E.TocVersion >= 100100 then
@@ -56,7 +56,7 @@ end or function(self, ...)
 	if id then AppendID(self, id, ID_TYPE.HELPFUL) end
 end
 
-local AddDebuffID = E.isDF and function(self, unitTokenString, auraInstanceID)
+local AddDebuffID = E.postDF and function(self, unitTokenString, auraInstanceID)
 	local data = C_TooltipInfo_GetUnitDebuffByAuraInstanceID(unitTokenString, auraInstanceID)
 	if not data then
 		return
@@ -95,7 +95,7 @@ function TT:Enable()
 		return
 	end
 	hooksecurefunc(GameTooltip, "SetUnitAura", AddAuraID)
-	if E.isDF then
+	if E.postDF then
 		hooksecurefunc(GameTooltip, "SetUnitBuffByAuraInstanceID", AddBuffID)
 		hooksecurefunc(GameTooltip, "SetUnitDebuffByAuraInstanceID", AddDebuffID)
 		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, AddSpellID)

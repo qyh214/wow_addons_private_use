@@ -8,38 +8,6 @@ local pairs = pairs
 local C_AddOns_IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local currentPatchMaps = {
-	[3] = true, -- Court of Stars
-	[4] = true, -- Darkheart Thicket
-	[6] = true, -- Halls of Valor
-	[8] = true, -- Neltharion's Lair
-	[15] = true, -- The Arcway
-	[16] = true, -- Freehold
-	[19] = true, -- Siege of Boralus (TWW S1)
-	[22] = true, -- The Underrot
-	[31] = true, -- Mists of Tirna Scithe (TWW S1)
-	[35] = true, -- The Necrotic Wake (TWW S1)
-	[42] = true, -- Ruby Life Pools
-	[43] = true, -- The Nokhud Offensive
-	[44] = true, -- The Azure Vault
-	[45] = true, -- Algeth’ar Academy
-	[46] = true, -- Shadowmoon Burial Grounds
-	[47] = true, -- Temple of the Jade Serpent
-	[48] = true, -- Brackenhide Hollow
-	[49] = true, -- Halls of Infusion
-	[50] = true, -- Neltharus
-	[51] = true, -- Uldaman: Legacy of Tyr
-	[77] = true, -- The Vortex Pinnacle
-	[100] = true, -- Dawn of the Infinite Lower
-	[101] = true, -- Dawn of the Infinite Upper
-	[102] = true, -- Waycrest Manor
-	[103] = true, -- Black Rook Hold
-	[104] = true, -- The Everbloom
-	[105] = true, -- Throne of Tides
-	[110] = true, -- The Stonevault (TWW S1)
-	[111] = true, -- The Dawnbreaker (TWW S1)
-	[112] = true, -- Grim Batol (TWW S1)
-	[113] = true, -- Ara-Kara,City of Echoes (TWW S1)
-	[114] = true, -- City of Threads (TWW S1)
 	[115] = true, -- Priory of the Sacred Flame (TWW S2)
 	[116] = true, -- Cinderbrew Meadery (TWW S2)
 	[117] = true, -- Darkflame Cleft (TWW S2)
@@ -47,12 +15,13 @@ local currentPatchMaps = {
 	[119] = true, -- OperationFloodgate (TWW S2)
 	[120] = true, -- The MOTHERLODE!! (TWW S2)
 	[121] = true, -- Theater of Pain (TWW S2)
-	[122] = true -- MechagonWorkshop (TWW S2)
+	[122] = true, -- MechagonWorkshop (TWW S2)
 }
 
 -- NPC Blacklist
 local npcBlacklist = {
 	[220003] = true, -- Hollows Resident (Eye of Queen) City of Threads
+	[555555] = true, -- Unknown NPC
 }
 
 function MH:Translate()

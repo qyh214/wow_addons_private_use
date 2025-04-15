@@ -1,0 +1,8 @@
+bell.ogg
+https://pixabay.com/sound-effects/ding-small-bell-sfx-233008/
+
+ding.ogg
+https://pixabay.com/sound-effects/ding-sound-246413/
+
+pop.ogg
+https://pixabay.com/sound-effects/happy-pop-3-185288/

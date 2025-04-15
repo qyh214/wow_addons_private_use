@@ -2,10 +2,11 @@
 -- Module Declaration
 --
 
-local mod, CL = BigWigs:NewBoss("Geargrave", 2826)
+local mod, CL = BigWigs:NewBoss("Geargrave", {2684, 2688, 2826}) -- The Dread Pit, The Spiral Weave, Sidestreet Sluice
 if not mod then return end
 mod:RegisterEnableMob(234949) -- Geargrave
---mod:SetEncounterID(3174) -- encounter events don't fire
+--mod:SetEncounterID(3174) -- encounter event doesn't fire in Sidestreet Sluice
+-- 3020 in The Dread Pit (does fire), 3123 in The Spiral Weave (does fire)
 --mod:SetRespawnTime(15) resets, doesn't respawn
 mod:SetAllowWin(true)
 
@@ -24,6 +25,7 @@ end
 
 function mod:OnRegister()
 	self.displayName = L.geargrave
+	self:SetSpellRename(1215975, CL.enrage) -- Juice It Up! (Enrage)
 end
 
 function mod:GetOptions()
@@ -32,6 +34,8 @@ function mod:GetOptions()
 		1215905, -- Carnage Cannon
 		1215912, -- Black Blood
 		1215975, -- Juice It Up!
+	},nil,{
+		[1215975] = CL.enrage, -- Juice It Up! (Enrage)
 	}
 end
 
@@ -48,7 +52,7 @@ end
 function mod:OnEngage()
 	self:CDBar(1215957, 6.0) -- Tremor Claw
 	self:CDBar(1215905, 12.1) -- Carnage Cannon
-	self:CDBar(1215975, 18.2) -- Juice It Up!
+	self:CDBar(1215975, 18.2, CL.enrage) -- Juice It Up!
 end
 
 --------------------------------------------------------------------------------
@@ -79,7 +83,7 @@ do
 end
 
 function mod:JuiceItUp(args)
-	self:Message(args.spellId, "red")
-	self:CDBar(args.spellId, 41.3)
+	self:Message(args.spellId, "red", CL.enrage)
+	self:CDBar(args.spellId, 41.3, CL.enrage)
 	self:PlaySound(args.spellId, "info")
 end

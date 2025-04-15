@@ -63,9 +63,11 @@ function Addon:IsTextLoaded(text)
 					return false;
 				end
 			end
+
+			return true;
 		end
 
-		return true;
+		return false;
 	end
 end
 

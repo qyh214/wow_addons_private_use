@@ -1,4 +1,4 @@
-## Interface: 110005, 110007, 110100
+## Interface: 110105, 110007, 110100
 
 ## Title: BigWigs [|cffeda55fKhaz Algar|r]
 ## Title-deDE: BigWigs [|cffeda55fKhaz Algar|r]
@@ -23,7 +23,7 @@
 ## Notes-zhCN: BigWigs 卡兹阿加模块。
 ## Notes-zhTW: BigWigs 卡兹阿爾加模組。
 ## IconTexture: Interface\AddOns\BigWigs\Media\Icons\minimap_raid.tga
-## Version: v375.2
+## Version: v382.1
 
 ## LoadOnDemand: 1
 ## Dependencies: BigWigs

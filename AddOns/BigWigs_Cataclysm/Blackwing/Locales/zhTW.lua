@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "zhTW")
 if L then
 	L.discharge = "閃電釋放"
 	L.stage3_yell_trigger = "我本來只想略盡地主之誼" -- 我本來只想略盡地主之誼，但是你們就是不肯痛快的受死!是時候拋下一切的虛偽...殺光你們就好!
-	--L.too_close = "Dragons are too close"
 end

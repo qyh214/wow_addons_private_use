@@ -761,7 +761,7 @@ local function HarvestExploration()
 	if app.SetupExplorationEvents then app.SetupExplorationEvents(); end
 
 	-- setup our DB captures
-	local harvest = app.LocalizeGlobal("AllTheThingsHarvestItems", {})
+	local harvest = app.LocalizeGlobal("AllTheThingsHarvestItems", true)
 	harvest.ExplorationAreaPositionDB = ExplorationAreaPositionDB
 	-- ExplorationDB is only used internally while harvesting to populate Exploration headers
 	ExplorationDB =  setmetatable({}, app.MetaTable.AutoTable);
@@ -878,7 +878,7 @@ app.ChatCommands.Add("harvest-map", function(args)
 	local granularity = tonumber(args[3] or 200)
 	local simplify = args[4]
 	-- setup our DB captures
-	local harvest = app.LocalizeGlobal("AllTheThingsHarvestItems", {})
+	local harvest = app.LocalizeGlobal("AllTheThingsHarvestItems", true)
 	harvest.ExplorationAreaPositionDB = ExplorationAreaPositionDB
 	-- ExplorationDB is only used internally while harvesting to populate Exploration headers
 	ExplorationDB =  setmetatable({}, app.MetaTable.AutoTable);

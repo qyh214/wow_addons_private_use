@@ -2260,3 +2260,4 @@ function OptionsPrivate.AddTextFormatOption(input, withHeader, get, addOption, h
 
   return next(seenSymbols) ~= nil
 end
+WeakAuras.OptionsPrivate = OptionsPrivate

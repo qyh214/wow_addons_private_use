@@ -10,7 +10,7 @@ mod:RegisterEnableMob(
 	33651, -- VX-001
 	33670  -- Aerial Command Unit
 )
-mod:SetEncounterID(mod:Classic() and 754 or 1138)
+mod:SetEncounterID(BigWigsLoader.isWrath and 754 or 1138)
 mod:SetRespawnTime(31)
 mod:SetStage(1)
 

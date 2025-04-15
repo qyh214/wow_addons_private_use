@@ -1,11 +1,5 @@
-local L = BigWigs:NewBossLocale("Vexie and the Geargrinders", "deDE")
+local L = BigWigs:NewBossLocale("Cauldron of Carnage", "deDE")
 if not L then return end
-if L then
-	L.plating_removed = "%d Schutzpanzerung noch übrig"
-	L.exhaust_fumes = "Raid Schaden"
-end
-
-L = BigWigs:NewBossLocale("Cauldron of Carnage", "deDE")
 if L then
 	L.custom_on_fade_out_bars = "Leisten abblenden"
 	L.custom_on_fade_out_bars_desc = "Blendet die Leisten ab, welche zum aus der Reichweite befindlichen Boss gehören."
@@ -15,7 +9,8 @@ if L then
 
 	L.eruption_stomp = "Stampfen" -- Short for Eruption Stomp
 	L.thunderdrum_salvo = "Salve" -- Short for Thunderdrum Salvo
-	L.voltaic_image = "Fixierungen" -- Multiple of Fixate
+
+	L.static_charge_high = "%d - Du bewegst Dich zuviel"
 end
 
 L = BigWigs:NewBossLocale("Rik Reverb", "deDE")
@@ -44,11 +39,14 @@ end
 L = BigWigs:NewBossLocale("Sprocketmonger Lockenstock", "deDE")
 if L then
 	L.foot_blasters = "Minen"
+	L.unstable_shrapnel = "Mine absorbiert"
 	L.screw_up = "Bohrer"
+	L.screw_up_single = "Bohrer" -- Singular of Drills
 	L.sonic_ba_boom = "Raid Schaden"
-	L.polarization_generator = "Farbänderungen"
+	L.polarization_generator = "Farben"
 
-	L.polarization_soon = "Farbänderung bald: %s"
+	L.polarization_soon = "Baldige Farbe: %s"
+	L.polarization_soon_change = "Baldiger FARBWECHSEL: %s"
 
 	L.activate_inventions = "Aktiviert: %s"
 	L.blazing_beam = "Strahlen"
@@ -56,18 +54,29 @@ if L then
 	L.mega_magnetize = "Magneten"
 	L.jumbo_void_beam = "Große Strahlen"
 	L.void_barrage = "Bälle"
+	L.everything = "Alles"
+
+	L.under_you_comment = "Unter Dir" -- Implies this setting is for the damage from the ground effect under you
 end
 
 L = BigWigs:NewBossLocale("The One-Armed Bandit", "deDE")
 if L then
 	L.rewards = "Preise" -- Fabulous Prizes
 	L.rewards_desc = "Wenn zwei Walzen eingerastet sind, wird die \"fabelhafte Belohnung\" ausgegeben.\nNachrichten weisen darauf hin, welche ausgegeben wird.\nDie Infobox zeigt an, welche Preise noch verfügbar sind."
-	L.deposit_time = "Einwurfzeit" -- Timer that indicates how long you have left to deposit the tokens.
+	L.deposit_time = "Einwurfzeit:" -- Timer that indicates how long you have left to deposit the tokens.
 
 	L.pay_line = "Münzen"
 	L.shock = "Schock"
 	L.flame = "Flamme"
 	L.coin = "Münze"
+
+	L.withering_flames = "Flammen" -- Short for Withering Flames
+
+	L.cheat = "Aktiviert: %s" -- Cheat: Coils, Cheat: Debuffs, Cheat: Raid Damage, Cheat: Final Cast
+	L.linked_machines = "Spulen"
+	L.linked_machine = "Spule" -- Singular of Coils
+	L.hot_hot_heat = "Heiße Debuffs"
+	L.explosive_jackpot = "Letzter Zauber"
 end
 
 L = BigWigs:NewBossLocale("Mug'Zee, Heads of Security", "deDE")
@@ -85,6 +94,8 @@ end
 
 L = BigWigs:NewBossLocale("Chrome King Gallywix", "deDE")
 if L then
+	L.story_phase_trigger = "Was? Ihr glaubt, Ihr hättet gewonnen?" -- What, you think you won? Nah, I got somethin' else for ya.
+
 	L.scatterblast_canisters = "Kegel Soak"
 	L.fused_canisters = "Gruppen Soaks"
 	L.tick_tock_canisters = "Soaks"

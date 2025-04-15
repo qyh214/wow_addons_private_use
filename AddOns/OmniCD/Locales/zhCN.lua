@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "zhCN")
+if not L then return end
 
-L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = [=[%d: 法术ID。
 %d-%d: 法术ID-天赋ID (选择天赋后标记法术)。]=]
@@ -53,7 +53,7 @@ L["Author"] = "作者"
 L["Auto"] = "自动"
 L["Bar"] = "技能栏"
 L["Bar width"] = "栏宽度"
-L["Battle Res"] = "战斗资源"
+L["Battle Res"] = "战斗复活"
 L["BG"] = "战场"
 L["Blizzard Raid Frames has been disabled by your AddOn(s). Enable and reload UI?"] = "暴雪团队框体已被你的其他插件禁用。是否启用并重新加载界面？"
 L["Border"] = "边框"

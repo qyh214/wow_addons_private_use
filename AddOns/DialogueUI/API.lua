@@ -496,7 +496,7 @@ do  -- String
         --Get object via string "FrameName.Key1.Key2"
         local obj = _G;
 
-        for k in string.gmatch(objNameKey, "%w+") do
+        for k in string.gmatch(objNameKey, "[%w_]+") do
             obj = obj[k];
             if not obj then
                 return
@@ -510,7 +510,7 @@ do  -- String
     local function DoesGlobalObjectExist(objNameKey)
         return GetGlobalObject(objNameKey) ~= nil
     end
-    API.GetGlobalObject = DoesGlobalObjectExist;
+    API.DoesGlobalObjectExist = DoesGlobalObjectExist;
 end
 
 do  -- NPC Interaction
@@ -634,7 +634,19 @@ do  -- NPC Interaction
     end);
 
     local function IsPlayingCutscene()
-        return f.isPlayingCutscene
+        if f.isPlayingCutscene ~= nil then
+            return f.isPlayingCutscene
+        else
+            if (CinematicFrame and CinematicFrame:IsShown()) or (MovieFrame and MovieFrame:IsShown()) then
+                --Cinematic played upon loading screen finished doesn't trigger events due to loading order? 11.1.0 Undermine
+                f.isPlayingCutscene = true;
+                CallbackRegistry:Trigger("PlayCutscene");
+                return true
+            else
+                f.isPlayingCutscene = false;
+                return false
+            end
+        end
     end
     API.IsPlayingCutscene = IsPlayingCutscene;
 
@@ -2089,7 +2101,6 @@ do  -- Faction -- Reputation
                 isCapped = C_MajorFactions.HasMaximumRenown(factionID);
                 barValue = isCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0;
                 factionStandingtext = L["Renown Level Label"] .. majorFactionData.renownLevel;
-
                 if isParagon then
                     local totalEarned, threshold = C_Reputation.GetFactionParagonInfo(factionID);
                     if totalEarned and threshold and threshold ~= 0 then

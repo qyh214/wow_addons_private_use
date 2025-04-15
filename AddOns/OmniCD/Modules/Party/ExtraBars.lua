@@ -1,35 +1,48 @@
 local E, L = select(2, ...):unpack()
 local P = E.Party
 
-local extraBars = {}
+local select, strsub, tonumber = select, strsub, tonumber
+local GetRaidRosterInfo, UnitGroupRolesAssigned, UnitInRaid = GetRaidRosterInfo, UnitGroupRolesAssigned, UnitInRaid
+
+local extraBarKeys = {
+	"raidBar1",
+	"raidBar2",
+	"raidBar3",
+	"raidBar4",
+	"raidBar5",
+	"raidBar6",
+	"raidBar7",
+	"raidBar8",
+}
 
 local ExtraBarFrameMixin = {}
+local activeExBars = {}
 
 function ExtraBarFrameMixin:ReleaseUnitBars()
-	for _, info in pairs(P.groupInfo) do
-		local f = info.bar
-		f:ReleaseUnitBars(self.index)
+	for bar in P.BarPool:EnumerateActive() do
+		local unitBar = bar.activeUnitBars[self.index]
+		if unitBar then
+			P.UnitBarPool:Release(unitBar)
+		end
 	end
 end
 
-function ExtraBarFrameMixin:Release()
-	self:Hide()
-	self:ReleaseIcons()
-	self:ReleaseUnitBars()
-end
-
 function ExtraBarFrameMixin:ReleaseIcons()
-	for i = #self.icons, 1, -1 do
+	for i = self.numIcons, 1, -1 do
 		local icon = self.icons[i]
-		icon:Release()
+		P.IconPool:Release(icon)
 		self.icons[i] = nil
 	end
 	self.numIcons = 0
 end
 
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned
-local roleValues = { MAINTANK = 1, MAINASSIST = 2, TANK = 3, HEALER = 4, DAMAGER = 5, NONE = 6 }
+function ExtraBarFrameMixin:UpdatePosition()
+	if not self.db.unitBar then
+		E.LoadPosition(self)
+	end
+end
 
+local roleValues = { MAINTANK = 1, MAINASSIST = 2, TANK = 3, HEALER = 4, DAMAGER = 5, NONE = 6 }
 local sorters
 sorters = {
 
@@ -304,12 +317,7 @@ local ReverseSorter = function(a, b)
 	return Sorter(b, a)
 end
 
-function ExtraBarFrameMixin:UpdateLayout(sortOrder, updateSettings, updateIcons)
-	if P.disabled then
-		return
-	end
-
-
+function ExtraBarFrameMixin:UpdateLayout(sortOrder, updateIcons)
 
 	if updateIcons then
 		local n = 0
@@ -319,7 +327,7 @@ function ExtraBarFrameMixin:UpdateLayout(sortOrder, updateSettings, updateIcons)
 			local info = P.groupInfo[icon.guid]
 			local spellIcon = info and info.spellIcons[icon.spellID]
 			if icon ~= spellIcon then
-				icon:Release()
+				P.IconPool:Release(icon)
 				tremove(icons, i)
 				n = n + 1
 			end
@@ -327,37 +335,17 @@ function ExtraBarFrameMixin:UpdateLayout(sortOrder, updateSettings, updateIcons)
 		self.numIcons = self.numIcons - n
 	end
 
+	if self.numIcons == 0 then
+		return
+	end
+
 	local db = self.db
 	if db.unitBar then
-		for _, info in pairs(P.groupInfo) do
-			local bar = info.bar
-			for raidBarIndex, unitBar in pairs(bar.activeUnitBars) do
-				local f = extraBars["raidBar" .. raidBarIndex]
-				local icons = unitBar.icons
-				if ( sortOrder ) then
-					sort(icons, P.sorters[P.sortBy])
-				end
-
-				local count, rows = 0, 1
-				local columns = f.db.columns
-				for i = 1, #icons do
-					local icon = icons[i]
-					icon:Hide()
-					icon:ClearAllPoints()
-					if ( i > 1 ) then
-						count = count + 1
-						if ( count == columns ) then
-							icon:SetPoint(f.point, unitBar, f.ofsX * rows, f.ofsY * rows)
-							rows = rows + 1
-							count = 0
-						else
-							icon:SetPoint(f.point2, icons[i-1], f.relativePoint2, f.ofsX2, f.ofsY2)
-						end
-					else
-						icon:SetPoint(f.point, unitBar)
-					end
-					icon:Show()
-				end
+		for bar in P.BarPool:EnumerateActive() do
+			local unitBar = bar.activeUnitBars[self.index]
+			if unitBar then
+				unitBar:UpdateLayout(sortOrder)
+				unitBar:Show()
 			end
 		end
 	else
@@ -388,28 +376,24 @@ function ExtraBarFrameMixin:UpdateLayout(sortOrder, updateSettings, updateIcons)
 			icon:Show()
 		end
 	end
-
-	if updateSettings then
-		self:ApplySettings()
-	end
 end
 
-function ExtraBarFrameMixin:ApplySettings()
+function ExtraBarFrameMixin:UpdateSettings()
+	self:SetAnchor()
+	self:SetContainerSize()
+
 	local db = self.db
 	local pixel = self.pixel
-
-	self:SetExAnchor()
-	self:SetExScale()
 
 	local numIcons = self.numIcons
 	for i = 1, numIcons do
 
 		local icon = self.icons[i]
-		icon:SetExBorder(db, pixel)
+		icon:SetBorder(db, pixel)
 		icon:SetExIconName(db)
 		local statusBar = icon.statusBar
 		if statusBar then
-			statusBar:ApplySettings(db)
+			statusBar:UpdateSettings(db)
 		end
 
 		icon:SetMarker()
@@ -421,7 +405,7 @@ function ExtraBarFrameMixin:ApplySettings()
 	end
 end
 
-function ExtraBarFrameMixin:SetExAnchor()
+function ExtraBarFrameMixin:SetAnchor()
 	local anchor = self.anchor
 	local db = self.db
 
@@ -441,12 +425,12 @@ function ExtraBarFrameMixin:SetExAnchor()
 	end
 end
 
-function ExtraBarFrameMixin:SetExScale()
+function ExtraBarFrameMixin:SetContainerSize()
 	if self.db.unitBar then
-		for _, info in pairs(P.groupInfo) do
-			local f = info.bar
-			if ( f.activeUnitBars[self.index] ) then
-				f.activeUnitBars[self.index]:SetScale(self.iconScale)
+		for bar in P.BarPool:EnumerateActive() do
+			local unitBar = bar.activeUnitBars[self.index]
+			if unitBar then
+				unitBar:SetScale(self.iconScale)
 			end
 		end
 	else
@@ -454,132 +438,248 @@ function ExtraBarFrameMixin:SetExScale()
 	end
 end
 
-function ExtraBarFrameMixin:UpdateExBarBackdrop(db)
+function ExtraBarFrameMixin:UpdatePositionValues()
+	local db = self.db
+	local isUnitBar = db.unitBar
+	local pixelMult = isUnitBar and E.db.general.showRange and self.effectivePixelMult or E.PixelMult
+
+	local size = E.BASE_ICON_HEIGHT * db.scale
+	self.iconScale = (size - size % pixelMult) / E.BASE_ICON_HEIGHT
+
+	local pixel = pixelMult / self.iconScale
+	self.pixel = pixel
+
+	local growLeft = isUnitBar and strfind(db.anchor, "RIGHT") or db.growLeft
+	local growX = growLeft and -1 or 1
+	local growRowsUpward = db.growUpward
+	local growY = growRowsUpward and 1 or -1
+	local isProgressBarEnabled = db.enabled and not isUnitBar and db.progressBar
+
+	self.point = isUnitBar and db.anchor or "TOPLEFT"
+	self.relativePoint = db.attach
+	self.containerOfsX = db.offsetX * growX * pixel
+	self.containerOfsY = db.offsetY * pixel
+	self.anchorPoint = "BOTTOMLEFT"
+	self.anchorOfsY = growRowsUpward and -(E.BASE_ICON_HEIGHT * self.iconScale + 15) or 0
+
+	if db.layout == "horizontal" then
+		self.ofsX = 0
+		self.ofsY = growY * (E.BASE_ICON_HEIGHT + db.paddingY * pixel)
+		self.ofsY2 = 0
+		if growLeft then
+			self.point2 = "TOPRIGHT"
+			self.relativePoint2 = "TOPLEFT"
+			self.ofsX2 = -(db.paddingX * pixel)
+		else
+			self.point2 = "TOPLEFT"
+			self.relativePoint2 = "TOPRIGHT"
+			self.ofsX2 = db.paddingX * pixel
+		end
+		self.shouldShowProgressBar = nil
+	else
+		self.ofsX = growX * (E.BASE_ICON_HEIGHT + (db.paddingX * pixel) + (isProgressBarEnabled and db.statusBarWidth or 0))
+		self.ofsY = 0
+		self.ofsX2 = 0
+		if growRowsUpward then
+			self.point2 = "BOTTOMLEFT"
+			self.relativePoint2 = "TOPLEFT"
+			self.ofsY2 = db.paddingY * pixel
+		else
+			self.point2 = "TOPLEFT"
+			self.relativePoint2 = "BOTTOMLEFT"
+			self.ofsY2 = -(db.paddingY * pixel)
+		end
+		self.shouldShowProgressBar = isProgressBarEnabled
+	end
+
+	local sortBy = db.sortBy
+	self.shouldRearrangeInterrupts = not isUnitBar and db.enabled and (sortBy == 2 or sortBy >= 7)
+end
+
+function ExtraBarFrameMixin:UpdateExBarBackdrop()
 	local icons = self.icons
+	local db = self.db
 	local pixel = self.pixel
 	for i = 1, self.numIcons do
 		local icon = icons[i]
-		icon:SetExBorder(db, pixel)
+		icon:SetBorder(db, pixel)
 	end
 end
 
-function P:CreateExtraBarFrames()
-	if extraBars.raidBar1 then
-		return
-	end
-	for i = 1, 8 do
-		local key = "raidBar" .. i
-		local frame = CreateFrame("Frame", E.AddOn .. key, UIParent, "OmniCDTemplate")
-		Mixin(frame, ExtraBarFrameMixin)
-		frame.index = i
-		frame.key = key
-		frame.icons = {}
-		frame.numIcons = 0
-
-
-		frame.anchor.text:SetFontObject(E.AnchorFont)
-		local name = i == 1 and L["Interrupts"] or i
-		frame.anchor.text:SetText(name)
-		frame.anchor.text:SetTextColor(1, 0.824, 0)
-		frame.anchor.background:SetColorTexture(0, 0, 0, 1)
-
-		frame.anchor.background:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 1), CreateColor(1, 1, 1, .05))
-
-		frame.anchor:SetScript("OnMouseUp", E.OmniCDAnchor_OnMouseUp)
-		frame.anchor:SetScript("OnMouseDown", E.OmniCDAnchor_OnMouseDown)
-
-		extraBars[key] = frame
+function ExtraBarFrameMixin:SetUnitBarOffset()
+	for bar in P.BarPool:EnumerateActive() do
+		local unitBar = bar.activeUnitBars[self.index]
+		if unitBar then
+			local point, relativeTo, relativePoint, offsetX, offsetY = unitBar:GetPoint()
+			unitBar:ClearAllPoints()
+			unitBar:SetPoint(point, relativeTo, relativePoint, self.containerOfsX, self.containerOfsY)
+		end
 	end
 end
 
-function P:ReleaseExBars()
-	for _, frame in pairs(extraBars) do
-		frame:Release()
-	end
-end
-
-function P:HideExBars()
-	for _, frame in pairs(extraBars) do
-		frame:Hide()
+function P:RearrangeExBarIcons()
+	for exBar in self.ExBarPool:EnumerateActive() do
+		if exBar.shouldRearrangeInterrupts then
+			exBar:UpdateLayout(true)
+		end
 	end
 end
 
 function P:UpdateExBars()
-	if self.disabled then
-		return
+
+	for exBar in self.ExBarPool:EnumerateActive() do
+		exBar:UpdatePosition()
+		exBar:UpdateLayout(true, true)
+		exBar:UpdateSettings()
+		exBar:Show()
 	end
-	for _, frame in pairs(extraBars) do
-		if frame.db.enabled then
-			E.LoadPosition(frame)
-			frame:UpdateLayout(true, true, true)
-			frame:Show()
+end
+
+function P:ReleaseExBarIcons()
+	for exBar in self.ExBarPool:EnumerateActive() do
+		exBar:ReleaseIcons()
+	end
+end
+
+function P:CreateExBarFramePool()
+	local function initializeFunc(framePool, exBar)
+		exBar.icons = {}
+		exBar.numIcons = 0
+		exBar.anchor.text:SetFontObject(E.AnchorFont)
+		exBar.anchor.text:SetTextColor(1, 0.824, 0)
+		exBar.anchor.background:SetColorTexture(0, 0, 0, 1)
+		exBar.anchor.background:SetGradient("HORIZONTAL", CreateColor(1, 1, 1, 1), CreateColor(1, 1, 1, .05))
+
+		exBar.anchor:SetScript("OnMouseUp", E.OmniCDAnchor_OnMouseUp)
+		exBar.anchor:SetScript("OnMouseDown", E.OmniCDAnchor_OnMouseDown)
+		Mixin(exBar, ExtraBarFrameMixin)
+	end
+
+	local function resetterFunc(framePool, exBar)
+		exBar:Hide()
+		exBar:ReleaseIcons()
+		exBar:ReleaseUnitBars()
+		activeExBars[exBar.key] = nil
+	end
+
+	self.ExBarPool = E:CreateFramePool("Frame", UIParent, "OmniCDTemplate", resetterFunc, initializeFunc)
+end
+
+local function GetExBarFrame(key)
+	local exBar = P.ExBarPool:Acquire()
+	local exBarIndex = tonumber(strsub(key, 8))
+	exBar.index = exBarIndex
+	exBar.key = key
+	exBar.anchor.text:SetText(exBarIndex == 1 and L["Interrupts"] or exBarIndex)
+	exBar.anchor.text:SetTextColor(1, 0.824, 0)
+
+	activeExBars[key] = exBar
+	return exBar
+end
+
+function P:RefreshExBarFrames()
+	for key, db in pairs(E.db.extraBars) do
+		local exBar = activeExBars[key]
+		if db.enabled then
+			if exBar then
+				exBar:ReleaseIcons()
+			else
+				exBar = GetExBarFrame(key)
+			end
+			exBar.db = E.db.extraBars[key]
+			exBar.effectivePixelMult = nil
+			--[[ We're not going to remember not to use cached values in SetupBar
+
+			if not db.unitBar or not E.db.general.showRange then
+				exBar:UpdatePositionValues()
+			end
+			]]
+			exBar:UpdatePositionValues()
 		else
-			frame:Release()
-		end
-		if not frame.db.unitBar then
-			frame:ReleaseUnitBars(frame.index)
+			if exBar then
+				self.ExBarPool:Release(exBar)
+			end
 		end
 	end
 end
 
-function P:UpdateExBarPositionValues()
-	for _, frame in pairs(extraBars) do
-		local db = frame.db
-		local isUnitBar = db.unitBar
-		local pixelMult = isUnitBar and E.db.general.showRange and self.effectivePixelMult or E.PixelMult
+local UnitBarFrameMixin = {}
 
-		local size = E.BASE_ICON_HEIGHT * db.scale
-		frame.iconScale = (size - size % pixelMult) / E.BASE_ICON_HEIGHT
-
-		local pixel = pixelMult / frame.iconScale
-		frame.pixel = pixel
-
-		local growLeft = isUnitBar and strfind(db.anchor, "RIGHT") or db.growLeft
-		local growX = growLeft and -1 or 1
-		local growRowsUpward = db.growUpward
-		local growY = growRowsUpward and 1 or -1
-		local isProgressBarEnabled = db.enabled and not isUnitBar and db.progressBar
-
-		frame.point = isUnitBar and db.anchor or "TOPLEFT"
-		frame.relativePoint = db.attach
-		frame.containerOfsX = db.offsetX * growX * pixel
-		frame.containerOfsY = db.offsetY * pixel
-		frame.anchorPoint = "BOTTOMLEFT"
-		frame.anchorOfsY = growRowsUpward and -(E.BASE_ICON_HEIGHT * frame.iconScale + 15) or 0
-
-		if db.layout == "horizontal" then
-			frame.ofsX = 0
-			frame.ofsY = growY * (E.BASE_ICON_HEIGHT + db.paddingY * pixel)
-			frame.ofsY2 = 0
-			if growLeft then
-				frame.point2 = "TOPRIGHT"
-				frame.relativePoint2 = "TOPLEFT"
-				frame.ofsX2 = -(db.paddingX * pixel)
-			else
-				frame.point2 = "TOPLEFT"
-				frame.relativePoint2 = "TOPRIGHT"
-				frame.ofsX2 = db.paddingX * pixel
+function UnitBarFrameMixin:UpdatePosition()
+	self:Hide()
+	local exKey = P.extraBarKeys[self.index]
+	local exBar = activeExBars[exKey]
+	local relFrame = (exBar.db.uf == "auto" or exBar.db.uf == E.db.position.uf) and self.bar.relativeFrame
+		or P:FindRelativeFrame(self.bar.guid, exBar.db.uf)
+	if relFrame then
+		if E.db.general.showRange then
+			if not exBar.effectivePixelMult then
+				exBar.effectivePixelMult = E.uiUnitFactor / relFrame:GetEffectiveScale()
+				exBar:UpdatePositionValues()
 			end
-			frame.shouldShowProgressBar = nil
+			if self.parent ~= relFrame then
+				self:SetParent(relFrame)
+				self.parent = relFrame
+				self:SetFrameLevel(10)
+			end
 		else
-			frame.ofsX = growX * (E.BASE_ICON_HEIGHT + (db.paddingX * pixel) + (isProgressBarEnabled and db.statusBarWidth or 0))
-			frame.ofsY = 0
-			frame.ofsX2 = 0
-			if growRowsUpward then
-				frame.point2 = "BOTTOMLEFT"
-				frame.relativePoint2 = "TOPLEFT"
-				frame.ofsY2 = db.paddingY * pixel
-			else
-				frame.point2 = "TOPLEFT"
-				frame.relativePoint2 = "BOTTOMLEFT"
-				frame.ofsY2 = -(db.paddingY * pixel)
+			if self.parent ~= UIParent then
+				self:SetParent(UIParent)
+				self.parent = UIParent
 			end
-			frame.shouldShowProgressBar = isProgressBarEnabled
 		end
-
-		local sortBy = db.sortBy
-		frame.shouldRearrangeInterrupts = not isUnitBar and db.enabled and (sortBy == 2 or sortBy >= 7)
+		self:ClearAllPoints()
+		self:SetPoint(exBar.point, relFrame, exBar.relativePoint, exBar.containerOfsX, exBar.containerOfsY)
+		self:Show()
 	end
 end
 
-P.extraBars = extraBars
+function UnitBarFrameMixin:UpdateLayout(sortOrder)
+	local icons = self.icons
+	if sortOrder then
+		sort(icons, P.sorters[P.sortBy])
+	end
+
+	local exKey = P.extraBarKeys[self.index]
+	local exBar = activeExBars[exKey]
+	local count, rows = 0, 1
+	local columns = exBar.db.columns
+	for i = 1, #icons do
+		local icon = icons[i]
+		icon:Hide()
+		icon:ClearAllPoints()
+		if i > 1 then
+			count = count + 1
+			if count == columns then
+				icon:SetPoint(exBar.point, self, exBar.ofsX * rows, exBar.ofsY * rows)
+				rows = rows + 1
+				count = 0
+			else
+				icon:SetPoint(exBar.point2, icons[i-1], exBar.relativePoint2, exBar.ofsX2, exBar.ofsY2)
+			end
+		else
+			icon:SetPoint(exBar.point, self)
+		end
+		icon:Show()
+	end
+end
+
+function P:CreateUnitBarFramePool()
+	local function initializeFunc(framePool, unitBar)
+		unitBar:SetSize(1, 1)
+		unitBar:Hide()
+		unitBar.icons = {}
+		Mixin(unitBar, UnitBarFrameMixin)
+	end
+
+	local function resetterFunc(framePool, unitBar)
+		unitBar:Hide()
+		wipe(unitBar.icons)
+		unitBar.bar.activeUnitBars[unitBar.index] = nil
+	end
+
+	self.UnitBarPool = E:CreateFramePool("Frame", UIParent, nil, resetterFunc, initializeFunc)
+end
+
+P.extraBarKeys = extraBarKeys
+P.activeExBars = activeExBars

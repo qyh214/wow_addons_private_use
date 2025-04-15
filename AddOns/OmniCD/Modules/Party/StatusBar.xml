@@ -7,7 +7,7 @@
 				<Texture parentKey="BG" setAllPoints="true" file="Interface\AddOns\OmniCD\Media\omnicd-texture_flat"/>
 			</Layer>
 			<Layer level="ARTWORK">
-				<FontString parentKey="Timer" name="$parentTimer" inherits="GameFontHighlightHuge" justifyH="RIGHT">
+				<FontString parentKey="Timer" inherits="GameFontHighlightHuge" justifyH="RIGHT">
 					<Anchors>
 						<Anchor point="RIGHT" x="-3" y="0"/>
 					</Anchors>
@@ -15,7 +15,7 @@
 				<FontString parentKey="Text" inherits="GameFontHighlightHuge" justifyH="LEFT">
 					<Anchors>
 						<Anchor point="LEFT" x="3" y="0"/>
-						<Anchor point="RIGHT" relativeTo="$parentTimer" relativePoint="LEFT" x="-3" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Timer" relativePoint="LEFT" x="-3" y="0"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -44,22 +44,22 @@
 				</FontString>
 			</Layer>
 			<Layer level="BORDER">
-				<Texture parentKey="borderTop" name="$parentBorderTop">
+				<Texture parentKey="borderTop">
 					<Color r="0" g="0" b="0"/>
 				</Texture>
-				<Texture parentKey="borderBottom" name="$parentBorderBottom">
+				<Texture parentKey="borderBottom">
 					<Color r="0" g="0" b="0"/>
 				</Texture>
-				<Texture parentKey="borderRight" name="$parentBorderRight">
+				<Texture parentKey="borderRight">
 					<Color r="0" g="0" b="0"/>
 				</Texture>
 			</Layer>
 		</Layers>
 		<Frames>
-			<StatusBar parentKey="CastingBar" name="$parentCastingBar" inherits="OmniCDArenaCastingBarFrameTemplate">
+			<StatusBar parentKey="CastingBar" inherits="OmniCDArenaCastingBarFrameTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentBorderTop" relativePoint="BOTTOMLEFT" x="0" y="0"/>
-					<Anchor point="BOTTOMRIGHT" relativeTo="$parentBorderRight" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+					<Anchor point="TOPLEFT" relativeKey="$parent.borderTop" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.borderRight" relativePoint="BOTTOMLEFT" x="0" y="0"/>
 				</Anchors>
 			</StatusBar>
 		</Frames>

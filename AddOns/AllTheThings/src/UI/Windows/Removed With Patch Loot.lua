@@ -33,8 +33,7 @@ app:CreateWindow("Removed With Patch", {
 		settings.ExcludeNonCollectibles = ExcludeNonCollectibles;
 		settings.MaximumRWP = MaximumRWP;
 	end,
-	OnRebuild = function(self)
-		if self.data then return true; end
+	OnInit = function(self, handlers)
 		local options = {
 			{	-- Exclude Non-Collectibles Button
 				text = "Exclude Non-Collectibles",
@@ -149,6 +148,5 @@ app:CreateWindow("Removed With Patch", {
 				end
 			end,
 		};
-		return true;
 	end,
 });

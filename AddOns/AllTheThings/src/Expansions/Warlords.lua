@@ -69,9 +69,6 @@ do
 			---@diagnostic disable-next-line: undefined-field
 			return ("i:%d"):format(t.itemID);
 		end,
-		f = function(t)
-			return app.FilterConstants.RECIPES;
-		end,
 		-- we collect the "Recipes" to know how to build the buildings
 		collectible = function(t) return app.Settings.Collectibles.Recipes; end,
 		collected = function(t)

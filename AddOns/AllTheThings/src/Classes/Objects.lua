@@ -61,7 +61,18 @@ app.CreateObject = app.CreateClass("Object", "objectID", {
 		return app.GetNameFromProviders(t) or ("Object ID #" .. t.objectID);
 	end,
 	icon = function(t)
-		return app.ObjectIcons[t.objectID] or app.GetIconFromProviders(t) or 133639;
+		local customIcon = app.ObjectIcons[t.objectID] or app.GetIconFromProviders(t)
+		if customIcon then return customIcon end
+
+		local g = t.g
+		if g then
+			for _,o in ipairs(g) do
+				customIcon = (o.itemID or o.criteriaID) and o.icon or nil
+				if customIcon then return customIcon end
+			end
+		end
+		-- default object icon
+		return 133639
 	end,
 	model = function(t)
 		return app.ObjectModels[t.objectID];

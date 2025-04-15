@@ -206,6 +206,8 @@ L["Aspiring Forgehand"] = "Aspiring Forgehand"
 L["Aspix"] = "阿斯匹克斯"
 L["Asset Manager"] = "资产经理"
 --[[Translation missing --]]
+L["assignmentWarning"] = "MDT will NOT automatically set target markers on enemies in the game world."
+--[[Translation missing --]]
 L["Assistant Unnaturaler"] = "Assistant Unnaturaler"
 --[[Translation missing --]]
 L["Astral Attendant"] = "Astral Attendant"
@@ -2258,6 +2260,8 @@ L["Off-Duty Laborer"] = "下班的劳工"
 L["Officer Quarters"] = "勤務室"
 L["Ogron Laborer"] = "独眼魔工人"
 --[[Translation missing --]]
+L["Okay"] = "Okay"
+--[[Translation missing --]]
 L["Ol' Waxbeard"] = "Ol' Waxbeard"
 --[[Translation missing --]]
 L["Olaf"] = "Olaf"
@@ -2657,6 +2661,9 @@ L["Rook Spiderling"] = "鸦堡小蜘蛛"
 L["Rook Spinner"] = "鸦堡织网蛛"
 --[[Translation missing --]]
 L["rookeryShortname"] = "ROOK"
+--[[Translation missing --]]
+L["rookItemDescription"] = [=[After defeating |cFFFF0000Kyrioss|r loot |cFF00FF00Stormrook Feather|r 
+Use it on a nearby |cFF00FF00Chained Stormrook|r to gain this buff for 5 minutes.]=]
 L["Root"] = "定身"
 L["Rotation"] = "循環"
 --[[Translation missing --]]
@@ -3723,6 +3730,8 @@ L["War Ohuna"] = "War Ohuna"
 L["Warlord Parjesh"] = "督军帕杰什"
 --[[Translation missing --]]
 L["Warlord Sargha"] = "Warlord Sargha"
+--[[Translation missing --]]
+L["Warning"] = "Warning"
 L["Warp Shade"] = "迁跃之影"
 L["Warp Stalker"] = "迁跃兽"
 L["Waste Pipes"] = "廢棄管線"

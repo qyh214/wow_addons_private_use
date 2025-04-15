@@ -123,7 +123,7 @@ local ProfileSharing = {
 						["spellGlow"] = format("%s-%s",L["Spells"], L["Glow"]),
 						["extraBars"] = L["Raid Bar"],
 					},
-					sorting = { "all", "general", "position", "manualPos", "icons", "highlight", "priority", "frame", "spells", "spellFrame", "spellPriority", "spellGlow", "extraBars" },
+					sorting = {"all", "general", "position", "manualPos", "icons", "highlight", "priority", "frame", "spells", "spellFrame", "spellPriority", "spellGlow", "extraBars"},
 					get = function() return selectedProfileOption end,
 					set = function(_, value) selectedProfileOption = value end,
 				},

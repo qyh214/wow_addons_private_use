@@ -360,6 +360,7 @@ function A:AuraWatch_SetupCD(index, name, icon, start, duration, _, type, id, ch
 	if frame.Statusbar then
 		frame.duration = duration
 		frame.start = start
+		frame.expires = nil
 		frame.elapsed = 0
 		frame:SetScript("OnUpdate", A.AuraWatch_UpdateTimer)
 	end
@@ -436,6 +437,7 @@ local replacedTexture = {
 	[378770] = 236174, -- 夺命打击换成夺命射击图标
 	--[389020] = 132330, -- 子弹风暴换成多重射击
 	[378747] = 132176, -- 凶暴兽群换成杀戮命令
+	[472640] = 461114, -- 猪突换成眼镜蛇射击
 }
 function A:AuraWatch_SetupAura(KEY, unit, index, filter, name, icon, count, duration, expires, spellID, flash)
 	if not KEY then return end

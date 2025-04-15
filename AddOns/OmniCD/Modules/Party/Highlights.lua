@@ -1,15 +1,14 @@
 local E = select(2, ...):unpack()
 local P = E.Party
-
 local BarFrameIconMixin = P.BarFrameIconMixin
 
-local OverlayGlowFrameMixin = {}
 local unusedOverlayGlows = {}
-local numOverlays = 0
+
+local OverlayGlowFrameMixin = {}
 
 function OverlayGlowFrameMixin:Release()
 	self:Hide()
-	tinsert(unusedOverlayGlows, self)
+	unusedOverlayGlows[#unusedOverlayGlows + 1] = self
 end
 
 local function OverlayGlow_AnimOutFinished(animGroup)
@@ -20,17 +19,17 @@ local function OverlayGlow_AnimOutFinished(animGroup)
 end
 
 local function OverlayGlow_OnHide(self)
-	if self.animOut:IsPlaying() then
-		self.animOut:Stop()
-		OverlayGlow_AnimOutFinished(self.animOut)
+	if not self.animOut:IsPlaying() then
+		return
 	end
+	self.animOut:Stop()
+	OverlayGlow_AnimOutFinished(self.animOut)
 end
 
 local function AcquireOverlayGlow()
 	local overlay = tremove(unusedOverlayGlows)
 	if not overlay then
-		numOverlays = numOverlays + 1
-		overlay = CreateFrame("Frame", "OmniCDOverlayGlow".. numOverlays, UIParent, "OmniCDButtonSpellActivationAlert")
+		overlay = CreateFrame("Frame", nil, UIParent, "OmniCDButtonSpellActivationAlert")
 		overlay.animOut:SetScript("OnFinished", OverlayGlow_AnimOutFinished)
 		overlay:SetScript("OnHide", OverlayGlow_OnHide)
 		Mixin(overlay, OverlayGlowFrameMixin)
@@ -55,23 +54,24 @@ end
 
 local RemoveHighlight_OnTimerEnd
 RemoveHighlight_OnTimerEnd = function(icon)
-	local guid = icon.guid
-	if guid then
-		local info = P.groupInfo[guid]
-		if info and icon.isHighlighted then
-			local duration, expTime = P:GetBuffDuration(info.unit, icon.buff)
-			if duration and duration > 0 then
-				duration = expTime - GetTime()
-				if duration > 0 then
-					icon.isHighlighted = C_Timer.NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(icon) end)
-				else
-					icon:RemoveHighlight()
-				end
-			else
-				icon:RemoveHighlight()
-			end
+	local info = P.groupInfo[icon.guid]
+	if not info or not icon.isHighlighted then
+		return
+	end
+
+
+	local duration, expTime = P:GetBuffDuration(info.unit, icon.buff)
+	if duration and duration > 0 then
+		duration = expTime - GetTime()
+		if duration > 0 then
+			icon.isHighlighted = C_Timer.NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(icon) end)
+			return
 		end
 	end
+	icon:RemoveHighlight()
+	icon:SetCooldownElements()
+	icon:SetOpacity()
+	icon:SetColorSaturation()
 end
 
 function BarFrameIconMixin:ShowOverlayGlow(duration, isRefresh)
@@ -95,6 +95,7 @@ function BarFrameIconMixin:ShowOverlayGlow(duration, isRefresh)
 		self.overlay = AcquireOverlayGlow()
 		local frameWidth, frameHeight = self:GetSize()
 		self.overlay:SetParent(self)
+		self.overlay.parent = self
 		self.overlay:ClearAllPoints()
 		self.overlay:SetSize(frameWidth * 1.4, frameHeight * 1.4)
 		self.overlay:SetPoint("TOPLEFT", self, "TOPLEFT", -frameWidth * 0.2, frameHeight * 0.2)
@@ -105,10 +106,12 @@ function BarFrameIconMixin:ShowOverlayGlow(duration, isRefresh)
 			self.overlay.animIn:Play()
 		end
 	end
+
 	if type(self.isHighlighted) == "userdata" then
 		self.isHighlighted:Cancel()
 	end
-	self.isHighlighted = (self.guid ~= E.userGUID or E.summonedBuffDuration[self.spellID]) and C_Timer.NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(self) end) or true
+
+	self.isHighlighted = C_Timer.NewTimer(duration + 0.1, function() RemoveHighlight_OnTimerEnd(self) end)
 end
 
 function BarFrameIconMixin:HideOverlayGlow()
@@ -143,23 +146,12 @@ function BarFrameIconMixin:RemoveHighlight()
 	if not info or not info.glowIcons[self.buff] then
 		return
 	end
-
 	info.glowIcons[self.buff] = nil
 	self:HideOverlayGlow()
-
-
-	local active = self.active and info.active[self.spellID]
-	if active then
-		if info.preactiveIcons[self.spellID] then
-			self.icon:SetVertexColor(0.4, 0.4, 0.4)
-		end
-		self:SetCooldownElements(active.charges, info)
-		self.icon:SetDesaturated(E.db.icons.desaturateActive and (not active.charges or active.charges == 0))
-	end
 end
 
 function BarFrameIconMixin:SetHighlight(isRefresh)
-	if not E.db.highlight.glowBuffs or not E.db.highlight.glowBuffTypes[self.type] then
+	if not E.db.highlight.glowBuffs or not E.db.highlight.glowBuffTypes[self.type] or self.isUserSyncOnly then
 		return
 	end
 
@@ -169,9 +161,6 @@ function BarFrameIconMixin:SetHighlight(isRefresh)
 	end
 
 	local info = P.groupInfo[self.guid]
-	--[==[@debug@
-	assert(info, self.unitName)
-	--@end-debug@]==]
 	if not info then
 		return
 	end
@@ -193,13 +182,10 @@ function BarFrameIconMixin:SetHighlight(isRefresh)
 	end
 	if duration and duration > 0 then
 		if E.buffFixNoCLEU[buff] and (not E.isBFA or not P.isInArena) then
-			info.bar:RegisterUnitEvent('UNIT_AURA', info.unit)
+			info.bar:RegisterUnitEvent("UNIT_AURA", info.unit)
 		end
 
 		self:ShowOverlayGlow(duration, isRefresh)
-		self:SetCooldownElements(nil, info)
-		self.icon:SetDesaturated(false)
-
 		info.glowIcons[buff] = self
 		return true
 	end

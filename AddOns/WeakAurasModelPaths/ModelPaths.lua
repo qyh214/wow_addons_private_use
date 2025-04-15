@@ -3555,6 +3555,17 @@ WeakAuras.ModelPaths = {
    {
     children = {
      {
+      fileId = "4693092",
+      text = "babymurloc3bronze.m2",
+      value = "babymurloc3bronze.m2",
+     },
+    },
+    text = "babymurloc3bronze",
+    value = "babymurloc3bronze",
+   },
+   {
+    children = {
+     {
       fileId = "4693094",
       text = "babymurlocice.m2",
       value = "babymurlocice.m2",
@@ -8352,17 +8363,6 @@ WeakAuras.ModelPaths = {
    {
     children = {
      {
-      fileId = "6035284",
-      text = "doomguard_pet2.m2",
-      value = "doomguard_pet2.m2",
-     },
-    },
-    text = "doomguard_pet2",
-    value = "doomguard_pet2",
-   },
-   {
-    children = {
-     {
       fileId = "123443",
       text = "doomguardoutland.m2",
       value = "doomguardoutland.m2",
@@ -8375,6 +8375,17 @@ WeakAuras.ModelPaths = {
     },
     text = "doomguardoutland",
     value = "doomguardoutland",
+   },
+   {
+    children = {
+     {
+      fileId = "6035284",
+      text = "doomguardpet.m2",
+      value = "doomguardpet.m2",
+     },
+    },
+    text = "doomguardpet",
+    value = "doomguardpet",
    },
    {
     children = {
@@ -23961,6 +23972,17 @@ WeakAuras.ModelPaths = {
     },
     text = "murloc2",
     value = "murloc2",
+   },
+   {
+    children = {
+     {
+      fileId = "4693102",
+      text = "murloc2bronze.m2",
+      value = "murloc2bronze.m2",
+     },
+    },
+    text = "murloc2bronze",
+    value = "murloc2bronze",
    },
    {
     children = {
@@ -312225,28 +312247,6 @@ WeakAuras.ModelPaths = {
       },
       text = "unk_exp09_4235616",
       value = "unk_exp09_4235616",
-     },
-     {
-      children = {
-       {
-        fileId = "4693092",
-        text = "4693092.m2",
-        value = "4693092.m2",
-       },
-      },
-      text = "unk_exp09_4693092",
-      value = "unk_exp09_4693092",
-     },
-     {
-      children = {
-       {
-        fileId = "4693102",
-        text = "4693102.m2",
-        value = "4693102.m2",
-       },
-      },
-      text = "unk_exp09_4693102",
-      value = "unk_exp09_4693102",
      },
      {
       children = {

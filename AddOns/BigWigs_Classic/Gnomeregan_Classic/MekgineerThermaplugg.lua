@@ -244,7 +244,7 @@ function mod:SprocketfireApplied(args)
 			self:StackMessage(args.spellId, "blue", args.destName, args.amount, 4)
 		else
 			local bossUnit = self:GetUnitIdByGUID(currentBossGUID) -- Source can vary or be nil here, so store it from other abilities
-			local targetUnit = self:UnitTokenFromGUID(args.destGUID, true)
+			local targetUnit = self:UnitTokenFromGUID(args.destGUID)
 			if bossUnit and targetUnit and self:Tanking(bossUnit, targetUnit) then
 				self:StackMessage(args.spellId, "orange", args.destName, args.amount, 4)
 			end
@@ -279,7 +279,7 @@ function mod:FreezingApplied(args)
 			self:StackMessage(args.spellId, "blue", args.destName, args.amount, 5)
 		elseif self:Player(args.destFlags) then -- Players, not pets
 			local bossUnit = self:GetUnitIdByGUID(currentBossGUID) -- Source can vary or be nil here, so store it from other abilities
-			local targetUnit = self:UnitTokenFromGUID(args.destGUID, true)
+			local targetUnit = self:UnitTokenFromGUID(args.destGUID)
 			if bossUnit and targetUnit and self:Tanking(bossUnit, targetUnit) then
 				self:StackMessage(args.spellId, "orange", args.destName, args.amount, 5)
 			end
@@ -313,7 +313,7 @@ function mod:RadiationSicknessApplied(args)
 		self:StackMessage(args.spellId, "blue", args.destName, args.amount, 3, CL.disease)
 	elseif args.amount then
 		local bossUnit = self:GetUnitIdByGUID(currentBossGUID) -- Source can vary or be nil here, so store it from other abilities
-		local targetUnit = self:UnitTokenFromGUID(args.destGUID, true)
+		local targetUnit = self:UnitTokenFromGUID(args.destGUID)
 		if bossUnit and targetUnit and self:Tanking(bossUnit, targetUnit) then
 			self:StackMessage(args.spellId, "orange", args.destName, args.amount, 3, CL.disease)
 		end

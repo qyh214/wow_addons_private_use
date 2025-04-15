@@ -34,7 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -- Only load in Classic Era on Season of Discovery and Anniversary realms
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and C_Seasons.GetActiveSeason() ~= 2 and C_Seasons.GetActiveSeason() ~= 11 and C_Seasons.GetActiveSeason() ~= 12 then return end
 
-local MAJOR, MINOR = "LibDualSpec-1.0", 24
+local MAJOR, MINOR = "LibDualSpec-1.0", 25
 assert(LibStub, MAJOR.." requires LibStub")
 local lib, minor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -346,12 +346,7 @@ for i = 1, numSpecs do
 			local specIndex = tonumber(info[#info]:sub(-1))
 			local highPointsSpentIndex = nil
 			for treeIndex = 1, 3 do
-				local name, pointsSpent, previewPointsSpent, _
-				if WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC then
-					name, _, pointsSpent, _, previewPointsSpent = GetTalentTabInfo(treeIndex, nil, nil, specIndex)
-				else
-					_, name, _, _, pointsSpent, _, previewPointsSpent = GetTalentTabInfo(treeIndex, nil, nil, specIndex)
-				end
+				local _, name, _, _, pointsSpent, _, previewPointsSpent = GetTalentTabInfo(treeIndex, nil, nil, specIndex)
 				if name then
 					local displayPointsSpent = pointsSpent + previewPointsSpent
 					points[treeIndex] = displayPointsSpent

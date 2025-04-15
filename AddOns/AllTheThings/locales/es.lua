@@ -1,5 +1,5 @@
--- Localization for Spanish (Spain) and Spanish (Mexico) Clients.
-if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return; end
+-- Localization for Spanish (Spain) Clients.
+if GetLocale() ~= "esES" then return; end
 local app = select(2, ...);
 local L = app.L;
 
@@ -7,54 +7,54 @@ local L = app.L;
 local GetSpellName = app.WOWAPI.GetSpellName;
 
 -- General Text
-	--TODO: L.DESCRIPTION = "\"Foolishly you have sought your own demise. Brazenly you have disregarded powers beyond your understanding. You have fought hard to invade the realm of the Collector. Now there is only one way out - To walk the lonely path... of the damned.\"";
-	--TODO: L.THINGS_UNTIL = " THINGS UNTIL ";
-	--TODO: L.THING_UNTIL = " THING UNTIL ";
-	--TODO: L.YOU_DID_IT = "YOU DID IT!";
+	L.DESCRIPTION = "\"Insensatamente has buscado tu propia muerte. Descaradamente has ignorado poderes que escapan a tu comprensión. Has luchado con ahínco para invadir el reino del Coleccionista. Ahora solo queda una salida: recorrer el solitario camino... de los condenados.\"";
+	L.THINGS_UNTIL = " COSAS HASTA ";
+	L.THING_UNTIL = " COSAS HASTA ";
+	L.YOU_DID_IT = "¡LO LOGRASTE! ";
 
 -- Big new chunk from AllTheThings.lua
-	--TODO: L.PROGRESS = "Progress";
-	--TODO: L.TRACKING_PROGRESS = "Tracking Progress";
-	--TODO: L.COLLECTED_STRING = " Collected";
-	--TODO: L.PROVIDERS = "Provider(s)";
-	--TODO: L.COLLECTION_PROGRESS = "Collection Progress";
-	--TODO: L.CONTAINS = "Contains:";
-	--TODO: L.FACTIONS = "Factions";
-	--TODO: L.COORDINATES = "Coordinates";
-	--TODO: L.AND_MORE = "And %s more...";
-	--TODO: L.AND_OTHER_SOURCES = "And %s other sources...";
-	--TODO: L.PLAYER_COORDINATES = "Player Coordinates";
-	--TODO: L.NO_COORDINATES_FORMAT = "No known coordinates for %s";
-	--TODO: L.TOM_TOM_NOT_FOUND = "You must have TomTom installed to plot coordinates.";
-	--TODO: L.FLIGHT_PATHS = "Flight Paths";
-	--TODO: L.KNOWN_BY = "Known by %s";
+	L.PROGRESS = "Progreso";
+	L.TRACKING_PROGRESS = "Rastreando progreso";
+	L.COLLECTED_STRING = " Recolectado";
+	L.PROVIDERS = "Proveedor(es)";
+	L.COLLECTION_PROGRESS = "Progreso de la colección";
+	L.CONTAINS = "Contiene:";
+	L.FACTIONS = "Reputaciones";
+	L.COORDINATES = "Coordenadas";
+	L.AND_MORE = "Y %s más...";
+	L.AND_OTHER_SOURCES = "Y %s otras fuentes...";
+	L.PLAYER_COORDINATES = "Coordenadas del jugador";
+	L.NO_COORDINATES_FORMAT = "No hay coordenadas conocidas para %s";
+	L.TOM_TOM_NOT_FOUND = "Debe tener instalado TomTom para poder seguir coordenadas.";
+	L.FLIGHT_PATHS = "Rutas de vuelo";
+	L.KNOWN_BY = "Conocido por %s";
 	L.REQUIRES = "Requiere";
-	--TODO: L.RACE_LOCKED = "Race Locked";
-	--TODO: L.PLEASE_REPORT_MESSAGE = "Please report this to the ATT Discord in #retail-errors! Thanks!";
-	--TODO: L.REPORT_TIP = "\n("..CTRL_KEY_TEXT.."+C to copy multiline report to your clipboard)";
-	--TODO: L.NOT_AVAILABLE_IN_PL = "Not available in Personal Loot.";
-	--TODO: L.MARKS_OF_HONOR_DESC = "Marks of Honor must be viewed in a Popout window to see all of the normal 'Contains' content.\n(Type '/att ' in chat then "..SHIFT_KEY_TEXT.." click to link the item)\n\n|cFFfe040fAfter purchasing and using an ensemble, relogging & a forced ATT refresh (in this order)\nmay be required to register all the items correctly.|r";
-	--TODO: L.MOP_REMIX_BRONZE_DESC = "Bronze must be viewed in a Popout window to see all of the normal 'Contains' content.\n(Type '/att ' in chat then "..SHIFT_KEY_TEXT.." click to link the currency)\n\n|cFFfe040fAfter purchasing and using an ensemble, relogging & a forced ATT refresh (in this order)\nmay be required to register all the items correctly.|r";
-	--TODO: L.ITEM_GIVES_REP = "Provides Reputation with '";
-	--TODO: L.COST = "Cost";
-	--TODO: L.COST_DESC = "This contains the visual breakdown of what is required to obtain or purchase this Thing";
-	--TODO: L.COST_TOTAL = "Total Cost";
-	--TODO: L.COST_TOTAL_DESC = "This contains the visual breakdown of what is required to obtain or purchase all Things within the top-level group.\n\nNote: Does not currently include Reagents/Recipes requirements!";
-	--TODO: L.SOURCES = "Source(s)";
-	--TODO: L.SOURCES_DESC = "Shows the Source of this Thing.\n\nParticularly, a specific Vendor/NPC, Quest, Encounter, etc.";
-	--TODO: L.WRONG_FACTION = "You might need to be on the other faction to view this.";
-	--TODO: L.ARTIFACT_INTRO_REWARD = "Awarded for completing the introductory quest for this Artifact.";
-	--TODO: L.VISIT_FLIGHT_MASTER = "Visit the Flight Master to cache.";
-	--TODO: L.FLIGHT_PATHS_DESC = "Flight paths are cached when you talk to the flight master on each continent.\n  - Crieve";
+	L.RACE_LOCKED = "Exclusivo de raza/facción";
+	L.PLEASE_REPORT_MESSAGE = "¡Por favor, reporte esto al Discord de ATT en #retail-errors! ¡gracias!";
+	L.REPORT_TIP = "\n("..CTRL_KEY_TEXT.."+C para copiar un informe de varias líneas al portapapeles)";
+	L.NOT_AVAILABLE_IN_PL = "No disponible en botin personal.";
+	L.MARKS_OF_HONOR_DESC = "Las Marcas de Honor deben visualizarse en una ventana emergente para ver todo el contenido normal de \"Contiene\".\n(Escribe '/att ' en el chat entonces "..SHIFT_KEY_TEXT.." click para linkear el item)\n\n|cFFfe040fDespués de comprar y usar un conjunto, volver a iniciar sesión y realizar una actualización forzada de ATT (en este orden)\npuede ser necesario para registrar todos los artículos correctamente.|r";
+	L.MOP_REMIX_BRONZE_DESC = "El bronce debe visualizarse en una ventana emergente para ver todo el contenido normal de \"Contiene\".\n(Escribe '/att ' en el chat entonces "..SHIFT_KEY_TEXT.." click para linkear la moneda)\n\n|cFFfe040fDespués de comprar y usar un conjunto, volver a iniciar sesión y realizar una actualización forzada de ATT (en este orden)\npuede ser necesario para registrar todos los artículos correctamente.|r";
+	L.ITEM_GIVES_REP = "Provee reputación con '";
+	L.COST = "Costo";
+	L.COST_DESC = "Esto contiene el desglose visual de lo que se requiere para obtener o comprar esta cosa.";
+	L.COST_TOTAL = "Costo total";
+	L.COST_TOTAL_DESC = "Esto contiene el desglose visual de lo que se requiere para obtener o comprar todas las cosas dentro del grupo de nivel superior.\n\nNota: ¡Actualmente no incluye los requisitos de materiales/recetas!";
+	L.SOURCES = "Fuente(s)";
+	L.SOURCES_DESC = "Muestra la fuente de esta cosa.\n\nEn particular, un vendedor/NPC específico, una misión, un encuentro, etc.";
+	L.WRONG_FACTION = "Quizás necesites estar en la otra facción para ver esto.";
+	L.ARTIFACT_INTRO_REWARD = "Se otorga por completar la misión introductoria de este artefacto.";
+	L.VISIT_FLIGHT_MASTER = "Visita al maestro de vuelo para detectarlo";
+	L.FLIGHT_PATHS_DESC = "Las rutas de vuelo son detectadas cuando hablas con un maestro de vuelo de cada continente.\n  - Crieve";
 	if app.IsRetail then
-	L.FOLLOWERS_COLLECTION_DESC = "Followers can be collected account wide, if you enable this setting in ATT.\n\nYou must manually refresh the addon by "..SHIFT_KEY_TEXT.." clicking the header for this to be detected.";	--TODO
+	L.FOLLOWERS_COLLECTION_DESC = "Se pueden recopilar seguidores en toda la cuenta si habilita esta configuración en ATT.\n\nDebes actualizar manualmente el addon con "..SHIFT_KEY_TEXT.." clic en el encabezado para que esto se detecte.";
 	end
-	--TODO: L.HEIRLOOM_TEXT = "Unlocked Heirloom";
-	--TODO: L.HEIRLOOM_TEXT_DESC = "This indicates whether or not you have acquired or purchased the heirloom yet.";
-	--TODO: L.FAILED_ITEM_INFO = "Failed to acquire item information. The item may be invalid or may not have been cached on your server yet.";
-	--TODO: L.HEIRLOOMS_UPGRADES_DESC = "This indicates whether or not you have upgraded the heirloom to a certain level.\n\nR.I.P. Gold.\n - Crieve";
+	L.HEIRLOOM_TEXT = "Reliquias desbloqueadas";
+	L.HEIRLOOM_TEXT_DESC = "Esto indica si ya ha adquirido o comprado la reliquia.";
+	L.FAILED_ITEM_INFO = "No se pudo obtener la información del objeto. Es posible que el objeto no sea válido o que aún no se haya almacenado en caché en el servidor.";
+	L.HEIRLOOMS_UPGRADES_DESC = "Esto indica si has mejorado o no la reliquia a un cierto nivel.\n\nR.I.P. Oro.\n - Crieve";
 	if app.IsRetail then
-	L.MUSIC_ROLLS_DESC = "These are unlocked per-character and are not currently shared across your account. If someone at Blizzard is reading this, it would be really swell if you made these account wide.\n\nYou must manually refresh the addon by "..SHIFT_KEY_TEXT.." clicking the header for this to be detected.";	--TODO
+	L.MUSIC_ROLLS_DESC = "Estos se desbloquean por personaje y actualmente no se comparten entre cuentas. Si alguien de Blizzard está leyendo esto, sería genial que los hicieran accesibles para toda la cuenta.\n\nDebes actualizar manualmente el addon "..SHIFT_KEY_TEXT.." clic en el encabezado para que esto se detecte.";
 	end
 	--TODO: L.MUSIC_ROLLS_DESC_2 = "\n\nYou must first unlock the Music Rolls by completing the Bringing the Bass quest in your garrison for this item to drop.\n\nSelfies require the S.E.L.F.I.E Toy.";
 	--TODO: L.OPPOSITE_FACTION_EQ = "Opposite faction equivalent: ";
@@ -451,24 +451,10 @@ for key,value in pairs({
 		--TODO: ["Covenant:"] = "Cov:",
 })
 do a[key] = value; end
-if GetLocale() == "esMX" then
-	a["Antorus, el Trono ardiente"] = "Antorus"	-- ["Antorus, the Burning Throne"] = "Antorus"
-	a["Ny'alotha, la Ciudad Despierta"] = "Ny'alotha"	-- ["Ny'alotha, the Waking City"] = "Ny'alotha"
-end
 
 if app.IsRetail then
 local a = L.HEADER_NAMES;
 for key,value in pairs({
-	-- Shadowlands Header
-		[-979] = "Especulador Ve'ken & Especulador Ve'nott",		-- Broker Ve'ken & Broker Ve'nott
-		[-924] = "Red de transporte",								-- Transport Network
-		[-967] = "Restauración del espejo",							-- Mirror Restoration
-	-- Dragonflight
-		[-1102] = "Wrathion y Sabellian",							-- Wrathion & Sabellian
-		[-1120] = "Centauros Maruuk",								-- Maruuk Centaur
-		[-1130] = "Colmillarr de Iskaara",							-- Iskaara Tuskarr
-		[-1150] = "Niffen de Loamm",								-- Loamm Niffen
-
 	-- Tier/Dungeon/Event/Holiday Sets
 		-- Artifact Strings
 			[-5202] = "Equilibrio de poderes",						-- Balance of Power

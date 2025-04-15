@@ -40,6 +40,7 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 		t.artifactinfo = info;
 		return info;
 	end,
+	-- TODO: Maybe this should move to an Expansion Thing instead of having a FilterID
 	f = function(t) return 11; end,
 	RefreshCollectionOnly = true,
 	collectible = function(t) return app.Settings.Collectibles[SETTING]; end,
@@ -134,7 +135,7 @@ app.CreateArtifact = app.CreateClass(CLASSNAME, KEY, {
 				t.sourceID = sourceID;
 				app.SaveHarvestSource(t)
 				if app.IsAccountCached("Sources", sourceID) ~= 1 and C_TransmogCollection_PlayerHasTransmogItemModifiedAppearance(sourceID) then
-					-- print("Saved Known Source",sourceID)
+					-- app.PrintDebug("Saved Known Source",sourceID)
 					app.SetAccountCached("Sources", sourceID, 1)
 				end
 				return sourceID;

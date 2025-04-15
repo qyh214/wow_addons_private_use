@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Icecrown Gunship Battle", 631, 1626)
 if not mod then return end
 mod:RegisterEnableMob(37184, 37540, 37215) -- Zafod Boombox, The Skybreaker, Orgrim's Hammer
-mod:SetEncounterID(mod:Classic() and 847 or 1099)
+mod:SetEncounterID(BigWigsLoader.isWrath and 847 or 1099)
 -- mod:SetRespawnTime(30) -- Timer varies too much
 
 --------------------------------------------------------------------------------

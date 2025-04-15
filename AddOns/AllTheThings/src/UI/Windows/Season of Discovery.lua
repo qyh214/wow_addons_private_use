@@ -14,8 +14,7 @@ if app.GameBuildVersion >= 11500 and app.GameBuildVersion < 20000 then
 	end
 	app:CreateWindow("Season of Discovery", {
 		Commands = { "attsod" },
-		OnRebuild = function(self)
-			if self.data then return true; end
+		OnInit = function(self, handlers)
 			self.data = app.CreateNPC(app.HeaderConstants.SEASON_OF_DISCOVERY, {
 				visible = true, 
 				expanded = true,
@@ -36,7 +35,6 @@ if app.GameBuildVersion >= 11500 and app.GameBuildVersion < 20000 then
 					end
 				end,
 			});
-			return true;
 		end,
 	});
 end

@@ -14,7 +14,6 @@ local visibility = {
 			name = ZONE,
 			order = 10,
 			type = "multiselect",
-
 			values = E.L_ALL_ZONE,
 			get = function(_, k) return E.profile.Party.visibility[k] end,
 			set = function(_, k, value)
@@ -33,7 +32,8 @@ local visibility = {
 			args = {
 				finder = {
 					name = ENABLE,
-					desc = format("%s (%s, %s, ...)", L["Enable in automated instance groups"] ,LOOKING_FOR_DUNGEON_PVEFRAME, SKIRMISH),
+					desc = format("%s (%s, %s, ...)", L["Enable in automated instance groups"],
+						LOOKING_FOR_DUNGEON_PVEFRAME, SKIRMISH),
 					type = "toggle",
 				},
 			}

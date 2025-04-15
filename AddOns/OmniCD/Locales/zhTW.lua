@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("OmniCD", "zhTW")
+if not L then return end
 
-L = L or {}
 L[ [=[%d: spellID.
 %d-%d: spellID-talentID (Mark spell if talent is selected).]=] ] = [=[%d: spellID。
 %d-%d: spellID-talentID (選擇天賦後標記法術)。]=]
@@ -197,7 +197,7 @@ L["Highlight the icon when a buffing spell is used until the buff falls off"] = 
 L["Hold Time"] = "停留時間"
 L["Horizontal"] = "水平"
 L["Horizontal + CD Groups"] = "水平 + 冷卻群組"
-L["Hotfix"] = true
+L["Hotfix"] = "Hotfix"
 L["Icon"] = "圖示"
 L["Icon Alignment"] = "圖示對齊方式"
 L["Icon ID (Optional)"] = "圖示 ID (選擇性)"

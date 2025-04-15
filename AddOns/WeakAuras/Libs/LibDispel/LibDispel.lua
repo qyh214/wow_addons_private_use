@@ -1,5 +1,6 @@
-local MAJOR, MINOR = "LibDispel-1.0", 13
+local MAJOR, MINOR = "LibDispel-1.0", 14
 assert(LibStub, MAJOR.." requires LibStub")
+
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -8,6 +9,8 @@ local Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local Cata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 
 local next = next
+local wipe = wipe
+local CopyTable = CopyTable
 local CreateFrame = CreateFrame
 local GetTalentInfo = GetTalentInfo
 local IsPlayerSpell = IsPlayerSpell
@@ -16,26 +19,39 @@ local IsSpellKnownOrOverridesKnown = IsSpellKnownOrOverridesKnown
 local GetCVar = C_CVar.GetCVar
 local SetCVar = C_CVar.SetCVar
 
-local DebuffColors = CopyTable(DebuffTypeColor)
-lib.DebuffTypeColor = DebuffColors
+local function GetList(name, data)
+	local list = lib[name]
+	if list then -- clear the existing list
+		wipe(list)
+	else
+		list = {} -- create new list
+		lib[name] = list -- add new list
+	end
+
+	if data then -- import color data
+		for key, value in next, data do
+			if type(value) == 'table' then
+				list[key] = CopyTable(value)
+			else
+				list[key] = value
+			end
+		end
+	end
+
+	return list
+end
+
+local BadList = GetList('BadList') -- Spells that backfire when dispelled
+local BleedList = GetList('BleedList') -- Contains spells classified as Bleeds
+local BlockList = GetList('BlockList') -- Spells blocked from AuraHighlight
+local DispelList = GetList('DispelList') -- List of types the player can dispel
+local DebuffColors = GetList('DebuffTypeColor', _G.DebuffTypeColor)
 
 -- These dont exist in Blizzards color table
 DebuffColors.Bleed = { r = 1, g = 0.2, b = 0.6 }
 DebuffColors.EnemyNPC = { r = 0.9, g = 0.1, b = 0.1 }
 DebuffColors.BadDispel = { r = 0.05, g = 0.85, b = 0.94 }
 DebuffColors.Stealable = { r = 0.93, g = 0.91, b = 0.55 }
-
-local DispelList = {} -- List of types the player can dispel
-lib.DispelList = DispelList
-
-local BleedList = {} -- Contains spells classified as Bleeds
-lib.BleedList = BleedList
-
-local BlockList = {} -- Spells blocked from AuraHighlight
-lib.BlockList = BlockList
-
-local BadList = {} -- Spells that backfire when dispelled
-lib.BadList = BadList
 
 if Retail then
 	-- Bad to dispel spells

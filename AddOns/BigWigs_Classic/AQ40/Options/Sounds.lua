@@ -22,6 +22,7 @@ BigWigs:AddSounds("Fankriss the Unyielding", {
 	[720] = "alarm",
 	[25646] = "alert",
 	[25832] = "warning",
+	[1215421] = "underyou",
 })
 
 BigWigs:AddSounds("Viscidus", {

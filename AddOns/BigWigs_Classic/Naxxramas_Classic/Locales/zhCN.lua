@@ -25,10 +25,10 @@ L = BigWigs:NewBossLocale("The Four Horsemen", "zhCN")
 if L then
 	L.mark_desc = "当施放印记时发出警报。"
 
-	--L[16062] = "Mograine" -- Surname of Highlord Mograine
-	--L[16063] = "Zeliek" -- Surname of Sir Zeliek
-	--L[16064] = "Korth'azz" -- Surname of Thane Korth'azz
-	--L[16065] = "Blaumeux" -- Surname of Lady Blaumeux
+	L[16062] = "莫格莱尼" -- Surname of Highlord Mograine
+	L[16063] = "瑟里耶克" -- Surname of Sir Zeliek
+	L[16064] = "库尔塔兹" -- Surname of Thane Korth'azz
+	L[16065] = "布劳缪克丝" -- Surname of Lady Blaumeux
 end
 
 L = BigWigs:NewBossLocale("Kel'Thuzad", "zhCN")
@@ -93,5 +93,5 @@ if L then
 	L.swap = "^^^^ 交换 ^^^^ 迅速 ^^^^"
 	L.stay = "==== 不要动 ==== 不要动 ===="
 
-	--L.chat_message = "The Thaddius mod supports showing you directional arrows and playing voices. Open the options to configure them."
+	L.chat_message = "电男战术模块 支持显示方向箭头和播放声音。打开选项对其进行配置。"
 end

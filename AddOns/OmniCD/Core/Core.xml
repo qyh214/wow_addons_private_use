@@ -4,6 +4,7 @@
 	<Script file="Constants.lua"/>
 	<Script file="Load.lua"/>
 	<Script file="Core.lua"/>
+	<Script file="Pools.lua"/>
 	<Script file="Addons.lua"/>
 	<Script file="Commands.lua"/>
 	<Script file="Dialogs.lua"/>

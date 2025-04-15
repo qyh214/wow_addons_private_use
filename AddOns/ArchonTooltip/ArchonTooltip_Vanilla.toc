@@ -1,0 +1,29 @@
+## Interface: 11506
+## Title: Archon Tooltip
+## Author: Archon
+## Version: 8.16.40
+## DefaultState: enabled
+## SavedVariables: ArchonTooltipSaved
+## IconTexture: Interface/AddOns/ArchonTooltip/Media/logo-32-circle.tga
+## OptionalDeps: !LibDropDownExtension, !!AddonLocale
+## Category: Archon
+
+# Libs
+Libs/LibStub/LibStub.lua
+Libs/LibDropDownExtension-1.0/LibDropDownExtension.lua
+Libs/base64.lua
+
+# Must come first to initialize tables
+Init.lua
+Localization.lua
+Utils.lua
+Realms.lua
+Zones.lua
+
+StaticData.lua
+BitDecoder.lua
+Provider.lua
+Profile.lua
+Tooltip.lua
+Dropdown.lua
+Chat.lua

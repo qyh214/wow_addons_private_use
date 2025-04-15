@@ -130,7 +130,7 @@ local function Constructor()
 	]]
 	local frame = CreateFrame("Frame", nil, UIParent)
 	local name = "AceGUI30Button-OmniCDC" .. AceGUI:GetNextWidgetNum(Type)
-	local inner = CreateFrame("Button", name, frame, BackdropTemplateMixin and "UIPanelButtonTemplate, BackdropTemplate" or "UIPanelButtonTemplate")
+	local inner = CreateFrame("Button", name, frame, "UIPanelButtonTemplate, BackdropTemplate")
 	inner:SetPoint("TOPLEFT")
 	inner:SetPoint("BOTTOMRIGHT", -10, 0)
 	frame:Hide()

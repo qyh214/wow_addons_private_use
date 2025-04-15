@@ -1,0 +1,10 @@
+## Interface: 110100
+## Title: BFCraftsman Font Fix
+## Title-zhCN: |cff00ff96大脚工匠|r 中文环境字体修复
+## Version: 1.0
+## Notes: 协助解决大脚工匠插件在简体中文环境下造成部分英文插件的字体乱码问题
+## Notes-zhCN: 协助解决大脚工匠插件在简体中文环境下造成部分英文插件的字体乱码问题
+## Author: enderneko and titan
+## Dependencies: AbstractFramework
+
+Fix.lua

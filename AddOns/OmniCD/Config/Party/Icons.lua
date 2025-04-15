@@ -84,8 +84,8 @@ local icons = {
 					disabled = false,
 					name = ENABLE,
 					desc = format("%s\n\n%s: %s", L["Display custom border around icons"],
-					L["Pixel Perfect"],
-					L["Borders retain 1px width regardless of the UI scale"]),
+						L["Pixel Perfect"],
+						L["Borders retain 1px width regardless of the UI scale"]),
 					order = 0,
 					type = "toggle",
 				},
@@ -117,8 +117,8 @@ local icons = {
 				showCounter = {
 					name = COUNTDOWN_FOR_COOLDOWNS_TEXT,
 					desc = format("%s\n\n|cffff2020%s",
-					L["Toggle the cooldown numbers. Spells with charges only show cooldown numbers at 0 charge"],
-					L["[Show Numbers for Cooldowns] must be enabled in Blizzard's \'Options/Action Bars\' menu when using Blizzard's cooldown numbers."]),
+						L["Toggle the cooldown numbers. Spells with charges only show cooldown numbers at 0 charge"],
+						L["[Show Numbers for Cooldowns] must be enabled in Blizzard's \'Options/Action Bars\' menu when using Blizzard's cooldown numbers."]),
 					order = 1,
 					type = "toggle",
 				},
@@ -157,20 +157,18 @@ local icons = {
 
 local sliderTimer
 local function UpdatePixelObjects()
-	for _, info in pairs(P.groupInfo) do
-		local frame = info.bar
-		frame:SetBarBackdrop()
-		frame:UpdateLayout()
+	for bar in P.BarPool:EnumerateActive() do
+		bar:SetBarBackdrop()
+		bar:UpdateLayout()
 	end
 	sliderTimer = nil
 end
 
 function P:ConfigSize()
 	self:UpdatePositionValues()
-	for _, info in pairs(self.groupInfo) do
-		local frame = info.bar
-		frame:SetContainerSize()
-		frame:SetContainerOffset()
+	for bar in P.BarPool:EnumerateActive() do
+		bar:SetContainerSize()
+		bar:SetContainerOffset()
 	end
 	if E.db.icons.displayBorder then
 		if not sliderTimer then

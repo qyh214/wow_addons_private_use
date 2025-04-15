@@ -2,19 +2,18 @@ local W, F, L, P = unpack(select(2, ...))
 local AD = W:GetModule("AvoidableDamage")
 
 local mistakes = {
-	-- 小怪
 	{
-		-- 高殺傷性松鼠 (高殺傷性松鼠)
+		-- 高殺傷性松鼠
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 293861,
 	},
 	{
-		-- 音波脈衝 (砲轟機器人X-80型)
+		-- 音波脈衝 (砲轟機器人X-80型, 蜘蛛坦克)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 293986,
 	},
 	{
-		-- 發射高爆性火箭 (砲轟機器人X-80型)
+		-- 發射高爆火箭
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 294015,
 	},
@@ -29,12 +28,12 @@ local mistakes = {
 		spell = 294128,
 	},
 	{
-		-- 熔爐火焰 (傳送帶)
+		-- 熔爐火焰
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 301299,
 	},
 	{
-		-- 處理廢料 (廢棄物處理器)
+		-- 處理廢料
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 294291,
 	},
@@ -43,14 +42,13 @@ local mistakes = {
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 294324,
 	},
-	-- 暴力機兵
 	{
 		-- 電鋸
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 282945,
 	},
 	{
-		-- 極限衝刺
+		-- 極限衝刺 (地精鏟肉機)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 283422,
 	},
@@ -64,14 +62,13 @@ local mistakes = {
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 285344,
 	},
-	-- K.U.-J.0.機械犬
 	{
-		-- 空投
+		-- 空投 (K.U.-J.0.機械犬)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 291930,
 	},
 	{
-		-- 噴射烈焰
+		-- 噴射烈焰 (K.U.-J.0.機械犬)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 291946,
 	},
@@ -80,30 +77,78 @@ local mistakes = {
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 291953,
 	},
-	-- 機械工花園
 	{
-		-- 混-亂-榴彈
+		-- 混-亂-榴彈 (首席機械師火熔)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 285454,
 	},
 	{
-		-- 自我修剪樹籬
+		-- 自我修剪樹籬 (首席機械師火熔)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 294954,
 	},
-	-- 機械岡國王
 	{
-		-- 校準
+		-- 校準 (空中單位R-21/X型)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 291856,
 	},
 	{
-		-- 電漿球
+		-- 電漿球 (空中單位R-21/X型)
 		type = AD.MISTAKE.SPELL_DAMAGE,
 		spell = 291915,
 	},
+	{
+		-- B.4.T.T.L.3.地雷 (地精鏟肉機)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 285377,
+	},
+	{
+		-- 「隱藏式」烈焰火砲 (首席機械師火熔)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 285443,
+	},
+	{
+		-- 混-亂-榴彈 (首席機械師火熔)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 285460,
+	},
+	{
+		-- 起飛！ (空中單位R-21/X型)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 291613,
+	},
+	{
+		-- 切割光束 (空中單位R-21/X型)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 291914,
+	},
+	{
+		-- 噴射烈焰 (K.U.-J.0.機械犬)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 291949,
+	},
+	{
+		-- 熔爐火焰
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 294549,
+	},
+	{
+		-- 咆哮之焰 (不起眼的植物)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 294869,
+	},
+	{
+		-- 蓄電領域
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1213154,
+	},
+	{
+		-- B.4.T.T.L.3.地雷 (地精鏟肉機)
+		type = AD.MISTAKE.SPELL_DAMAGE,
+		spell = 1215039,
+	},
 }
 
-local mapIds = { 1491, 1493, 1494, 1497 }
+local mapIds = { 1490, 1491, 1493, 1494, 1497 }
 
 AD:AddData("Operation: Mechagon - Workshop", mistakes, mapIds)

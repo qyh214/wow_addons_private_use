@@ -3,7 +3,7 @@ local E, L = select(2, ...):unpack()
 local GetNumSpecializationsForClassID = GetNumSpecializationsForClassID
 local GetSpecializationInfoForClassID = GetSpecializationInfoForClassID
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-if E.preMoP then
+if E.preCata then
 	GetNumSpecializationsForClassID = function() return 0 end
 	GetSpecializationInfoForClassID = E.Noop
 	GetSpecializationInfoByID = E.Noop
@@ -119,7 +119,8 @@ local setItem = function(info, v)
 	local id = GetSpellID(info)
 	if v == "" then
 		if option == "icon" then
-			OmniCDDB.cooldowns[id][option] = OmniCDDB.cooldowns[id].item and C_Item.GetItemIconByID(OmniCDDB.cooldowns[id].item) or select(2, C_Spell.GetSpellTexture(id))
+			local itemTexture = OmniCDDB.cooldowns[id].item
+			OmniCDDB.cooldowns[id][option] = itemTexture and C_Item.GetItemIconByID(itemTexture) or select(2, C_Spell.GetSpellTexture(id))
 		else
 			OmniCDDB.cooldowns[id][option] = nil
 		end
@@ -245,8 +246,9 @@ local customSpellInfo = {
 	talentId = {
 		hidden = isOthersCategory,
 		name = L["Talent ID"],
-		desc = format("%s\n\n%s", L["Enter talent ID if the spell is a talent ability in any of the class specializations. This ensures proper spell detection."],
-		L["Use a semi-colon(;) to seperate multiple IDs."]),
+		desc = format("%s\n\n%s",
+			L["Enter talent ID if the spell is a talent ability in any of the class specializations. This ensures proper spell detection."],
+			L["Use a semi-colon(;) to seperate multiple IDs."]),
 		order = 10,
 		type = "input",
 		get = function(info)
@@ -348,7 +350,7 @@ local customSpellInfo = {
 	},
 }
 
-if not E.preMoP then
+if E.postMoP then
 	local customSpellSpecInfo = {
 		enabled = {
 			name = L["Always Show"],
@@ -430,7 +432,9 @@ if not E.preMoP then
 	local customSpellSpecGroup = {
 		hidden = function(info)
 			local specID = GetSpecID(info, 0)
-			if not specID then return end
+			if not specID then
+				return
+			end
 			local id = GetSpellID(info)
 			local class = OmniCDDB.cooldowns[id].class
 			if class == "TRINKET" then return true end

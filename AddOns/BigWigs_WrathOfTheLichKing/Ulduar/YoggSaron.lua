@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Yogg-Saron", 603, 1649)
 if not mod then return end
 mod:RegisterEnableMob(33288, 33134, 33890) -- Yogg-Saron, Sara, Brain of Yogg-Saron
-mod:SetEncounterID(mod:Classic() and 756 or 1143)
+mod:SetEncounterID(BigWigsLoader.isWrath and 756 or 1143)
 mod:SetRespawnTime(46)
 
 --------------------------------------------------------------------------------

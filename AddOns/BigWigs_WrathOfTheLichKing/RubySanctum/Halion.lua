@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Halion", 724, 1652)
 if not mod then return end
 mod:RegisterEnableMob(39863, 40142)
-mod:SetEncounterID(mod:Classic() and 887 or 1150)
+mod:SetEncounterID(BigWigsLoader.isWrath and 887 or 1150)
 mod:SetRespawnTime(31)
 mod:SetStage(1)
 

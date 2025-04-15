@@ -5,10 +5,10 @@ local Private = select(2, ...)
 
 local L = WeakAuras.L
 
-local optionsVersion = "5.19.5"
---[==[@debug@
+local optionsVersion = "5.19.8"
+--[==[@nothing@
 optionsVersion = "Dev"
---@end-debug@]==]
+--@nothing@]==]
 
 if optionsVersion ~= WeakAuras.versionString then
   local message = string.format(L["The WeakAuras Options Addon version %s doesn't match the WeakAuras version %s. If you updated the addon while the game was running, try restarting World of Warcraft. Otherwise try reinstalling WeakAuras"],

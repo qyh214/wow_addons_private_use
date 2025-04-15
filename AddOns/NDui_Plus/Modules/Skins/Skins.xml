@@ -9,6 +9,7 @@
 	<Script file="BtWLoadouts.lua"/>
 	<Script file="BtWQuests.lua"/>
 	<Script file="ButtonForge.lua"/>
+	<Script file="Collectionator.lua"/>
 	<Script file="CompactVendor.lua"/>
 	<Script file="Immersion.lua"/>
 	<Script file="ImprovedAddonList.lua"/>
@@ -24,6 +25,7 @@
 	<Script file="Myslot.lua"/>
 	<Script file="MythicDungeonTools.lua"/>
 	<Script file="Others.lua"/>
+	<Script file="PatronOffers.lua"/>
 	<Script file="RareScanner.lua"/>
 	<Script file="Rematch.lua"/>
 	<Script file="ShadowDancer.lua"/>

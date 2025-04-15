@@ -22,8 +22,10 @@ local frame = {
 	end,
 	args = {
 		desc = {
-			name = format("|TInterface\\FriendsFrame\\InformationIcon:14:14:0:0|t %s %s\n\n", L["Select the frame to use as default for each spell type."],
-			L["You can override this setting on individual spells from the Spells tab."]), order = 0, type = "description",
+			name = format("|TInterface\\FriendsFrame\\InformationIcon:14:14:0:0|t %s %s\n\n",
+				L["Select the frame to use as default for each spell type."],
+				L["You can override this setting on individual spells from the Spells tab."]),
+			order = 0, type = "description",
 		},
 	},
 }

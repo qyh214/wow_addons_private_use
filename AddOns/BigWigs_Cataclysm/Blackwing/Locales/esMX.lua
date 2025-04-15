@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "esMX")
 if L then
 	L.discharge = "Descarga"
 	L.stage3_yell_trigger = "He intentado ser un buen anfitrión" -- ¡He intentado ser un buen anfitrión, pero rehusaron morir! Hora de dejar de fingir y... ¡MATARLOS A TODOS!
-	--L.too_close = "Dragons are too close"
 end

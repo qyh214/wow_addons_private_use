@@ -3,7 +3,8 @@ local E, L = select(2, ...):unpack()
 local OmniCDC = E.Libs.OmniCDC
 
 OmniCDC.StaticPopupDialogs["OMNICD_CUSTOM_UF_MSG"] = {
-	text = format("%s%s:|r %s", E.userClassHexColor, E.AddOn, L["Changing party display options in your UF addon while OmniCD is active will break the anchors. Type (/oc rl) to fix the anchors"]),
+	text = format("%s%s:|r %s", E.userClassHexColor, E.AddOn,
+	L["Changing party display options in your UF addon while OmniCD is active will break the anchors. Type (/oc rl) to fix the anchors"]),
 	button1 = OKAY,
 	button2 = L["Don't show again"],
 	OnCancel = function()

@@ -1244,7 +1244,7 @@ function SI:UpdateInstance(id)
   if recLevel > 0 and recLevel < instance.RecLevel then
     instance.RecLevel = recLevel
   end -- favor non-heroic RecLevel
-  instance.Raid = (maxPlayers > 5 or (maxPlayers == 0 and typeID == 2))
+  instance.Raid = (maxPlayers > 5 or ((maxPlayers == 0 or maxPlayers == 5) and typeID == 2))
   if typeID == TYPEID_RANDOM_DUNGEON then
     instance.Random = true
   end
@@ -2517,7 +2517,7 @@ end
 function SI:OnInitialize()
   local versionString = C_AddOns.GetAddOnMetadata("SavedInstances", "version")
   --[==[@debug@
-  if versionString == "11.1.0" then
+  if versionString == "11.1.1" then
     versionString = "Dev"
   end
   --@end-debug@]==]
@@ -4254,10 +4254,10 @@ function SI:ShowTooltip(anchorframe)
               earned = CurrencyColor(ci.amount, ci.totalMax) .. totalmax
             end
             local str
-            if (ci.amount or 0) > 0 or (ci.earnedThisWeek or 0) > 0 or (ci.totalEarned or 0) > 0 then
+            if (ci.amount or 0) > 0 or (ci.earnedThisWeek or 0) > 0 or (ci.totalEarned or 0) > 0 or (ci.relatedItemCount or 0) > 0 then
               if (ci.weeklyMax or 0) > 0 then
                 str = earned .. " (" .. CurrencyColor(ci.earnedThisWeek, ci.weeklyMax) .. weeklymax .. ")"
-              elseif (ci.amount or 0) > 0 or (ci.totalEarned or 0) > 0 then
+              elseif (ci.amount or 0) > 0 or (ci.totalEarned or 0) > 0 or (ci.relatedItemCount or 0) > 0 then
                 str = CurrencyColor(ci.amount, ci.totalMax, ci.totalEarned) .. totalmax
               end
               if SI.specialCurrency[idx] and SI.specialCurrency[idx].relatedItem then

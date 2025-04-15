@@ -39,29 +39,41 @@ end
 
 function ns.DelveContinent:RefreshAllData()
     self:RemoveAllData()
-
-	local mapID = self:GetMap():GetMapID()
+    local mapID = self:GetMap():GetMapID()
 	local mapInfo = C_Map.GetMapInfo(mapID)
+
 	if not (mapInfo and mapInfo.mapType == 2) then
 		return
 	end
 
-	for _, mapInfo in ipairs(C_Map.GetMapChildrenInfo(mapID)) do
+    for _, mapInfo in ipairs(C_Map.GetMapChildrenInfo(mapID)) do
 		if mapInfo.mapType == 3 then
-			for _, delveIDs in ipairs(C_AreaPoiInfo.GetDelvesForMap(mapInfo.mapID)) do
-				local info = C_AreaPoiInfo.GetAreaPOIInfo(mapInfo.mapID, delveIDs)    
-				local minX, maxX, minY, maxY = C_Map.GetMapRectOnMap(mapInfo.mapID, mapID)
-                -- https://wowpedia.fandom.com/wiki/API_C_Map.GetMapRectOnMap  
-				if info then
-					local x, y = info.position:GetXY()
-					local mX = Lerp(minX, maxX, x)
-					local mY = Lerp(minY, maxY, y)
-					info.position:SetXY(mX, mY)
-					info.dataProvider = self
-                    if ns.Addon.db.profile.showContinentDelves and ns.Addon.db.profile.showContinentKhazAlgar then
-					    self:GetMap():AcquirePin("ContinentDelvePinTemplate", info)
-                    end
-				end
+            self:CoCDelves(mapID, mapInfo)
+        end
+    end
+
+    local CoC = { [2274] = { 2346 } }
+    if CoC[mapID] then
+		for _, childID in ipairs(CoC[mapID]) do
+			self:CoCDelves(mapID, C_Map.GetMapInfo(childID))
+		end
+	end
+end
+
+function ns.DelveContinent:CoCDelves(mapID, mapInfo)
+    if not mapInfo then return end
+	for _, delveIDs in ipairs(C_AreaPoiInfo.GetDelvesForMap(mapInfo.mapID)) do
+		local info = C_AreaPoiInfo.GetAreaPOIInfo(mapInfo.mapID, delveIDs)    
+		local minX, maxX, minY, maxY = C_Map.GetMapRectOnMap(mapInfo.mapID, mapID)
+        -- https://warcraft.wiki.gg/wiki/API_C_Map.GetMapRectOnMap 
+		if info then
+			local x, y = info.position:GetXY()
+			local LerpX = Lerp(minX, maxX, x)
+			local LerpY = Lerp(minY, maxY, y)
+			info.position:SetXY(LerpX, LerpY)
+			info.dataProvider = self
+            if ns.Addon.db.profile.showContinentDelves and ns.Addon.db.profile.showContinentKhazAlgar then
+			    self:GetMap():AcquirePin("ContinentDelvePinTemplate", info)
             end
 		end
     end
@@ -72,7 +84,7 @@ function ns.DelveContinent:RemoveAllData()
 	self:GetMap():RemoveAllPinsByTemplate("ContinentDelvePinTemplate")
 end
 
--- https://wowpedia.fandom.com/wiki/FrameXML_functions
+-- https://warcraft.wiki.gg/wiki/FrameXML_functions
 EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", function()
 	dataProvider = CreateFromMixins(ns.DelveContinent)
 	WorldMapFrame:AddDataProvider(dataProvider)

@@ -25,7 +25,7 @@ end
 L = BigWigs:NewBossLocale("Atramedes", "zhCN")
 if L then
 	L.obnoxious_fiend = "喧闹恶鬼" -- NPC ID 49740
-	--L.circles = "Circles"
+	L.circles = "音波"
 end
 
 L = BigWigs:NewBossLocale("Maloriak", "zhCN")
@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "zhCN")
 if L then
 	L.discharge = "闪电倾泻"
 	L.stage3_yell_trigger = "我一直在尝试扮演好客的主人" -- 我一直在尝试扮演好客的主人，可你们就是不肯受死！该卸下伪装了……杀光你们！
-	--L.too_close = "Dragons are too close"
 end

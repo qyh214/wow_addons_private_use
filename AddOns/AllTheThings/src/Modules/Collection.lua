@@ -70,9 +70,9 @@ end)
 
 local DefaultCollectedThingFunc = function(t)
 	if not t._missing then
-		app.print(L.ITEM_ID_ADDED:format(app:SearchLink(t) or t.text or UNKNOWN, t[t.key] or "???"))
+		app.print(L.ITEM_ID_ADDED:format(app:SearchLink(t) or t.text or UNKNOWN, t.keyval or "???"))
 	else
-		app.print(L.ITEM_ID_ADDED_MISSING:format(app:SearchLink(t) or t.text or UNKNOWN, t[t.key] or "???"))
+		app.print(L.ITEM_ID_ADDED_MISSING:format(app:SearchLink(t) or t.text or UNKNOWN, t.keyval or "???"))
 	end
 end
 local CollectionReportFormats = setmetatable({}, { __index = function(t,key) return DefaultCollectedThingFunc end})
@@ -81,7 +81,7 @@ app.AddCollectionReportFormatFunc = function(ttype, func)
 	CollectionReportFormats[ttype] = func
 end
 local DefaultRemovedThingFunc = function(t)
-	app.print(L.ITEM_ID_REMOVED:format(app:SearchLink(t) or t.text or UNKNOWN, t[t.key] or "???"))
+	app.print(L.ITEM_ID_REMOVED:format(app:SearchLink(t) or t.text or UNKNOWN, t.keyval or "???"))
 end
 local RemovalReportFormats = setmetatable({}, { __index = function(t,key) return DefaultRemovedThingFunc end})
 -- Allows supporting more removal report formats from other Modules based on __type
@@ -124,16 +124,13 @@ end
 
 local function HandleCollectionChange(t, isadd)
 	-- Report new things to your collection!
-	if IsRetrieving(t.text) then
-		t.__collectionretry = (t.__collectionretry or 0) + 1
-		if t.__collectionretry < 10 then
-			-- app.PrintDebug("HCC:RETRY",app:SearchLink(t))
-			Runner.Run(HandleCollectionChange, t, isadd)
-			return
-		end
+	-- to test: comment out text/name/link from BattlePet class, then cage & relearn a battle pet
+	if IsRetrieving(t.text) and t.CanRetry then
+		-- app.PrintDebug("HCC:RETRY",app:SearchLink(t))
+		Runner.Run(HandleCollectionChange, t, isadd)
+		return
 	end
 
-	t.__collectionretry = nil
 	local ttype = t.__type
 	-- use the Collection Handler for this Type to process the collection
 	-- if that Thing is currently considered collectible
@@ -243,10 +240,14 @@ app.AddEventHandler("OnSavedVariablesAvailable", function(currentCharacter, acco
 	local function SetBatchCached(field, ids, state)
 		-- app.PrintDebug("SBC",field,state)
 		local container = currentCharacter[field]
+		local anyNew = false;
 		for id,_ in pairs(ids) do
-			container[id] = state
+			if container[id] ~= state then
+				container[id] = state;
+				anyNew = true;
+			end
 		end
-		UpdateTimestampForField(field);
+		if anyNew then UpdateTimestampForField(field); end
 	end
 	-- TODO: replace uses with SetThingCollected
 	local function SetAccountCollected(t, field, id, collected, settingKey)

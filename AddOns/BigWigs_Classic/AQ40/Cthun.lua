@@ -58,7 +58,6 @@ if L then
 
 	L.dark_glare_message = "%s: %s (Group %s)" -- Dark Glare: PLAYER_NAME (Group 1)
 	L.stomach = "Stomach"
-	L.tentacle = "Tentacle (%d)"
 end
 
 --------------------------------------------------------------------------------
@@ -193,10 +192,10 @@ function mod:EyeOfCThunKilled()
 	self:Bar("giant_eye_tentacle", self:GetSeason() == 2 and 32 or 43.1, L.giant_eye_tentacle, L.giant_eye_tentacle_icon)
 
 	self:OpenInfo("infobox", CL.other:format("BigWigs", L.stomach))
-	self:SetInfo("infobox", 1, L.tentacle:format(1))
+	self:SetInfo("infobox", 1, CL.count:format(CL.tentacle, 1))
 	self:SetInfoBar("infobox", 1, 1)
 	self:SetInfo("infobox", 2, "100%")
-	self:SetInfo("infobox", 3, L.tentacle:format(2))
+	self:SetInfo("infobox", 3, CL.count:format(CL.tentacle, 2))
 	self:SetInfoBar("infobox", 3, 1)
 	self:SetInfo("infobox", 4, "100%")
 	self:SimpleTimer(UpdateInfoBoxList, 0.5)

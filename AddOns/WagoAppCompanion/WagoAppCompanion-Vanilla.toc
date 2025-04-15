@@ -1,4 +1,4 @@
-## Interface: 11503
+## Interface: 11506
 ## Title: Wago App Companion
 ## Author: The Wago team
 ## Version: 1.0.0

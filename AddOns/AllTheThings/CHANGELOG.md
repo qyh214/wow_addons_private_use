@@ -1,121 +1,115 @@
 # AllTheThings
 
-## [4.3.4](https://github.com/ATTWoWAddon/AllTheThings/tree/4.3.4) (2025-03-09)
-[Full Changelog](https://github.com/ATTWoWAddon/AllTheThings/compare/4.3.3...4.3.4) [Previous Releases](https://github.com/ATTWoWAddon/AllTheThings/releases)
+## [4.3.11](https://github.com/ATTWoWAddon/AllTheThings/tree/4.3.11) (2025-03-28)
+[Full Changelog](https://github.com/ATTWoWAddon/AllTheThings/compare/4.3.10...4.3.11) [Previous Releases](https://github.com/ATTWoWAddon/AllTheThings/releases)
 
-- Fix a few more errors, add C.H.E.T.T. description  
-- Fix some reported errors, update Undermine raid content  
-- [Locale] Update zhCN: Undermine (#1926)  
-- WotLK ores and elementals  
-- Update Undermine campaign quests, fix some reported errors  
-- Retail Errors  
-- EK/Burning Steppes: Refactor code to eliminate duplicate keys (#1921)  
-- EK/Arathi Highlands: Refactor code to eliminate duplicate keys (#1920)  
-- EK/Wetlands: Refactor code to eliminate duplicate keys (#1919)  
-    - "Incendicite Ore" (item 3340) has been made obsolete as of Cata. New one does not require a Profession to be acquired;  
-    - "Black Whelp Scale" (item 7286) was relevant pre-Cata as it is part of (at least) 2 Classic Leatherworking Patterns;  
-    - "Guardsman Belt" (item 3429) was added to vendors at 10.1.7;  
-    - Remove a note on C"ursed Eye of Paleth" (item 2944) as it is permanently unlocked;  
-    - Add proper Timelines on "Razormaw Hatchling" (item 48124) as it was a drop from a creature at one point;  
-    - Move "Razormaw Matriarch's Nest" (object 202083) to Treasures.  
-- EK/Redridge Mountains: Refactor code to eliminate duplicate keys (#1911)  
-    - Kimberly Hiett only sold Arrows before the release of Cataclysm.  
-    - Morganth (pre-cata) and Grand Magus Doane (post-Cata) share npcID  
-- EK/Wetlands: Partially revert bef0bc89fae3a0a77d6a38138448b320ddae30c1  
-    This, along with various other Zone Drops will be fixed with PR #1919  
-- Update Vignette.lua  
-    Ignore Undermine Renown Quartermaster  
-- Removed expansion from AWP window dynamic headers since the empty groups are purged anyways.  
-- Update some Undermine drops  
-- Added Undermine quest rewards.  
-- [Logic] Retail: Dynamic categories within a patch header for /att awp will now clean out empty groups  
-- Aligned and documented vendor availability of the dragonriding cup rewards  
-- new ssn new seasonal toys  
-- Fix typo preventing parse  
-- New year, new copyright.  
-- [DB] Missing coord for Delegation  
-- added anyclassic to classic boost  
-- Retail: Delve ring sorted, weekly for alts fix, trading post questID and Blizzard decide to fix crests  
-- Update some Undermine things, fix a Wetlands item drop  
-- [Logic] app.GetNameFromProviders now uses proper WOWAPI wrapper for GetItemInfo  
-- [DB] Ancient Suffering & The Darkmist Legacy are not really breadcrumbs, but they do get locked if Verinias the Twisted becomes flagged completed  
-- [Logic] Retail: Revised implementation of dynamic groups within /att awp [exp] individual patches to load when viewed  
-- [Logic] Fixed an issue with app:BuildTargettedSearchResponse where a search against a set of prior search results would fail to return any resulting data  
-- [Logic] Assignments to DelayLoadedObjects are now captured into a default holder table prior to the object being created  
-- [Logic] Retail: Fixed a logic bug where app:BuildTargettedSearchResponse against a specific 'groups' would allow doing a full cached-based search instead if no 'criteria' was also provided  
-- [Logic] Retail: Safeguard a potential Cost reference Lua error for some users on login  
-- Simplified expansion values in dynamic categories in AWP window code.  
-- Added dynamic groups for /att awp commands.  
-- Fix Rituals of the New Moon, fix some errors  
-- added darkfuse chompactor mountitemID  
-- Add Gallywix normal ID  
-- [DB] Removed 'sourceIgnored' fields from where they shouldn't be  
-- [DB] Retail: Removed the duplicated listing of Heirlooms within Character > Heirlooms [Use the dynamic category to see all Heirlooms in one group :thumbsup:]  
-- [Logic] Fixed Heirlooms with an Appearance to ignore their FilterID as expected when collectible as an Heirloom  
-- I always find a typo when reviewing own commits.  
-- More sorting for 11.1.0.  
-- Removed duplicated toy in ToyDB.  
-- Sorted a lot of TWW stuff, mainly cleaning Missing files.  
-    Changed few delve timelines back to 11.1.0.  
-- Added some hidden currencies that I had stashed for months and forgot about it lol.  
-- Fixed wrong comma for some new Undermine toys.  
-    Fixed delve timelines and added them for Level HQTs.  
+- [Config] Update for SoD P8.  
+- [DB] SoD: Add raid: Scarlet Enclave.  
+    Scarlet Enclave is a new raid introduced in SoD P8.  
+- [Logic] Retail: Slight improvement to collected check for Criteria based on completed Achievement  
+- [Logic] Adjusted app.LocalizeGlobal to fit its purpose and usage more accurately  
+    [Logic] Fixed a few calls to app.LocalizeGlobal which would fail to assign an initial value  
+- [Logic] Removed static filterID's for defined Classes [This doesn't change any filtering since these filterID's can't be toggled by the User so they're always un-filtered, and having a filterID returned just slows down regular filter checks with a 100% true outcome]  
+- [Parser] Fixed PresetsDB to use direct keys instead of ambiguous arrays (also don't need to define 'false' when defining keys directly)  
+- [Parser] Retail: Consolidated the PresetsDB setup  
+- [DB] Added 'sourceAchievements' to Argent Tournament data  
+    [DB] Retail: Removed extraneous custom logic from Argent Tournament for Retail now that 'sourceAchievements' are handled inherently  
+- [Logic] Retail: Required Achievements (sourceAchievements) are now shown in popouts if applicable  
+- [Logic] Cleaned up and localized some Event handling logic for those itty-bitty performance improvements  
+- [Logic] Retail: Migrated 'sourceAchievements' to information type within Achievements module  
+- [Parser] Another tiny whitespace reduction in DB function exports (not compiled)  
+    [Parser] TODO for 'WithRequiredAchievement' OnTooltip function remediation  
+- [Parser] Cleaned up a few trailing-comma situations from ReferenceDB exports  
+- [Parser] Compressed ReferenceDBs are now slightly more compressed  
+    [Parser] Messages about missing data in sharedData or bubbleDown are now considered errors  
+- [DB] Fixed a preprocessor which caused 'crs' to disappear for 4.0.3. to 10.1.7 parses  
+- [DB] Sourced 'Faithless Wingrider's Focus'  
+- [DB] Some coords and ignored object  
+- [Contrib] Object coord checks can be relative now (sometimes we list object with no coords inside object with accurate coords if the situation calls for it)  
+- [Locale] Fix misc.  
+- Nazjatar and parsed  
+- [Logic] Refactored a few places to utilize .keyval directly  
+- [Logic] Retail: Fill now utilizes ForceFillDB to ignore skipping previously-filled matched groups  
+- [Parser] Added a 'ForceFillDB' which is a set of Things which are allowed to be filled even when encountered multiple times within the same Fill context. [Initially used for Naxx tokens since they show under their Source boss & Gluth, so typically only one boss would then fill the respective Token within the minilist]  
+- [Logic] Added base Class field 'keyval' since it seems pretty common we need to use the key value of a group (not replaced usages yet)  
+- [DB] Fixed Warosh's name  
+- [Logic] Minor improvements to Build Search Response performance  
+    [Logic] Fixed display in /att filters when searching for 'nil' in a field  
+- [Contrib] The Runecarver's Oubliette is a tiny map  
+- [DB] Cleaned up handling for 'Chronicle of Lost Memories' so the symlink is only listed in one place (maybe idea for future to compress symlinks which are shared)  
+- [Logic] Retail: min/max reputation now only show in tooltips when accurate for all Sources of a Thing  
+- [DB] Couple more Korthia updates & a use for Soul Cinders?!  
+- [Logic] Retail: Revised how certain learnable Things are skipped during Fill to cover more situations where this behavior is desirable  
+- [DB] Refactored 'Primal Invocation Extract' and related Glimmer structure to actually represent how it works in game  
+- [Parser] Fixed an issue with the name() shortcut when using implicit groups within it  
+- [Parser] Added an 'itemDropHQT' shortcut for making an HQT group based on the HQT triggered when an Item drops  
 - Fix some reported errors  
-- TBC: My head is getting cloudy  
-- Update Mount/Pet/ToyDB for 11.1.5.59571  
-- Sort some new dungeon drops, add Brann 60-80 HQTs  
-- Fixed the abbreviation for Cataclysm to prevent it from shortening "Cataclysmic" to "Cataic", etc.  
-- Classic: The Auction House Module now sorts elements by their price within the list.  
-- Fix some reported errors, clean up delve loot  
-- [Logic] Very minor caching logic cleanup/improvements  
-- [Logic] Retail: More Cost fixes!  
-    * Fixed Costs from always being considered a Cost when leading directly to other Costs which themselves were for a filtered-Purchase and not showing  
-    * Improved some Cost logic that only needs to run when settings are changed  
-    * Consolidated some collectible checking logic  
-- [DB] Cleaned up Speaker Gulan to properly use providers  
-- [Misc] Removed some indentation from NPC filling  
-- Zipthrottle: Short and fix.  
-- Update some objects and confirm some raid HQTs  
-- [DB] Removed Synthebrew Goggles from being providers of quests that they themselves are provider for  
-    [DB] Organized Sparklematic stuff in Gnomergan & timeline fixes for removed stuff & adjustments from personal testing  
-- Zapthrottle: The superiour solution  
-- TBC: Zapthrottle Mote Extractor  
-- Add Renzik's Lockbox, sym scrap box rewards to job streaks  
-- Cata: Adjusted the Protocol Twilight drops.  
-- Setup Hard Ways at the Gallagio  
-- [Parser] Fixed a logic issue where timelines without an explicit 'added' change which are currently-available would include the 'awp' value of a future re-adding patch rather than the 'rwp' of the future removal patch  
-    [Parser] Fixed a logic issue where some Spells would be used for providers instead of their respective Item  
-- [Parser] error() now performs an Error log instead of destroying the Lua context in an actual error throw (this allows us to actually know where the error came from)  
-    [Parser] Classic: Files parsed via the #IMPORT commands which encounter error() or print() will now properly include the sub-file where it occurred  
-- cata classic rbg wpns fixed  
-- Add Darkfuse Solutions  
-- [Parser] Classic: Fixed an issue with pre-wrath encounters sometimes not converting as expected when not containing a 'groups' field  
-- [CI] Add 'auto' arg to the parser args.  
-    the arg, auto, means that when an error that cannot be resolved is encountered, the program will exit without waiting for user input.  
-- Fix some reported errors, clean up delve HQTs  
-- [CI] Call the parser directly instead of using bat.  
-- [Parser] No longer returns early or in an error state if 'IGNORE\_ERRORS' is included in PreProcessorTags config (this is dangerous and all errors should be fixed!)  
-- Classic: The Removed With Patch Loot window can now be configured to exclude non-collectibles and also set an arbitrary RWP maximum to use for its filter.  
-- [CI] Split the classic parser flow.  
-- Changed few more timelines to season start, although now it does not even matter, but let's stay correct :)  
-- Some HAT from latest build  
-- [Parser] Various cleanup and updates  
-    * Consolidated handling of parser run arguments  
-    * Consolidated handling of 'wait for user' functionality (likely to be removed entirely in future)  
-    * Providing an 'auto' argument to the Parser will cause it to no longer trigger any 'wait for user' functionality  
-    * Moved a bit more logic to PostProcessing  
-    * Split Criteria which relate to Spells & utilize spell providers where possible, relegating to associated item provider where possible as well  
-- [Test] Added a script timeout test function  
-- [Logic] Real-time exploration check now updates visible groups properly when collected  
-- [Logic] Retail: Missing map dialogs should now include additonal zone names if available  
-- Fix more reported errors  
-- [DB] S.C.R.A.P. content is now linked to the Vignette which pops in the zone as applicable  
-- [DB] Fixed encounter ID of The Gobfather  
-- [Harvest] Added harvested quests up to 91000 since Blizz apparently went crazy with IDs  
-- [Logic] Quests which have no server quest name now perform an additional check in case they have a name based on other delay-loaded information and allow a few retries to load that name before printing the quest completion in chat  
-- Setup Homecoming chapter (why bother with story mode if it's not open week 1)  
-- [DB] Removed 11.0 upgrade bonuses & added 11.1 upgrade bonuses  
-- Update some Undermine things post season launch  
-- [Locale] Update zhTW: Cartels of Undermine.  
-- [Locale] Update zhCN: Season of Discovery.  
-- [Locale] Update zhCN/zhTW: Waylaid Supplies  
+- Sort many HQTs  
+- [Logic] Retail: Fixed another potential data alignment issue for recipeID's over 1M  
+    [Logic] Retail: No longer fills 'purchases' under collected Toys when they are not the Root of the Fill operation (i.e. no longer see that you need some Currency to buy a Toy you already have because the Toy is needed for something else you don't have yet)  
+- [Logic] Retail: Tracked down a niche issue where Items crafted via RecipeIDs over 1M would show the wrong Contains content only in Tooltips  
+- Adjust Honor Achievement timelines  
+- [Parser] Fixed an issue where the NonRepeatField logic was ignoring the parent's field value when removing the single consistent value across all child groups (e.g. this resolves many 'awp' situations where it resolved to the parent's value in game when the child groups had a different value when parsed)  
+- Regenerating missing files  
+- Classic: Fixed an issue with the Account Management window.  
+- Sort Recipes  
+- Harvest: 11.1.5.60179  
+- Harvest: 11.1.5.60067  
+- Harvest: 11.1.5.60008  
+- Harvest: 11.1.5.59919  
+- Harvest: 11.1.0.60228  
+- Harvest: 11.1.0.60189  
+- Harvest: 11.1.0.60037  
+- Harvest: 11.1.0.59888  
+- Harvest: 4.4.2.60192  
+- Harvest: 4.4.2.60142  
+- Harvest: 4.4.2.59962  
+- Harvest: 3.4.4.60190  
+- Harvest: 3.4.4.60063  
+- Harvest: 3.4.4.60003  
+- Harvest: 3.4.4.59887  
+- Harvest: 3.4.4.59853  
+- Harvest: 3.4.4.59817  
+- Harvest: 1.15.7.60191  
+- Harvest: 1.15.7.60141  
+- Harvest: 1.15.7.60013  
+- Harvest: 1.15.7.60000  
+- Harvest: 1.15.7.59856  
+- [Parser] Fixed Living Branch itemID to mark uncollectible  
+- Updated Object Harvester to look for mx and tw languages on WoWHead.  
+- [Timeline] Add build number for 1.15.7.  
+- Add new LoU renown quest, reduce sourcing of market research/CHETT cards, fix some reported errors  
+- [DB] Moved Stygian Lockbox to actual Location where it's pickpocketed  
+- [Logic] Some indentation reduction in quest handling  
+- [Logic] Retail: Fixed text about item failing to load from persisting when the Item does actually load  
+- Grrrr - Parse after new objects plus contrib stuffs  
+- [DB] Getting some unsorted Cata necks and fingers sorted  
+- Fix some reported errors  
+- [Logic] Bumped CanRetry to 3 sec (from 2 sec) & added a testing method to allow adjusting the value for any needed user testing  
+    [Logic] Retail: Items no longer default their link to the default item name when failing to return item info after the CanRetry duration. Also, we no longer block CanRetry on Items once they fail to populate valid Server data (this way they should re-try themselves later if viewed again in a list)  
+- Update 11.1.5 Timelines  
+- Oh yeah there are tournament banners available, go sign up before it's too late  
+- [DB] q:65622 is also an HQT not linked to Criteria  
+- [DB] q:65005 seems to truly be an HQT, not linked to Criteria  
+- Fix some reported errors  
+- [Cata/Retail] Properly mark Jezebel Bican's location as HFP, instead of Dalaran (#1955)  
+    Properly mark Jezebel Bican's location as HFP, instead of Dalaran  
+- [Parser] Retail: Adjusted hierarchical handling for awp/rwp fields (recommend updating Classic configs in the same manner)  
+- Added COMMON\_QUALITY\_TRANSMOGS to the parser config files.  
+- Classic: Fixed a bug with the dynamic recipe lists where they seemingly ignored important filtering requirements.  
+- [Parser] AchievementDB for TWW no longer provides unique data (over WagoDB files) for parse and will now be ignored  
+    [Parser] NonRepeatField hierarchical logic no longer removes parent field values which differ from child field values  
+    [DB] Updated WagoDB files (no apparent changes)  
+- [DB] Adjusted 'Kirtonos the Herald' timeline bubbledown for accuracy  
+- [DB] 'Camp Winterhoof' and 'Help for Camp Winterhoof' are mutually exclusive outside of Party Sync  
+- Fixed a couple of BOP crafted blacksmithing items not having a requirement for blacksmithing on them.  
+- Fixed a couple of BOP crafted leatherworking items not having a requirement for leatherworking on them.  
+- [DB] Fixed contract Account wide quests & 'Undermined Delves' is not AW  
+- Kalimdor/Feralas: Refactor code to eliminate duplicate keys  
+    - Added/Updated some descriptions and coordinates  
+- [Misc.] Sort locale order.  
+- [TOC] Add esMX localization.  
+- [Locale] Separate esMX from es to mx.  
+- Update es.lua (#1954)  
+- Classic: Updated a number of windows to preload their data container.  
+- Renamed the "Sync" window to "Account Management".  

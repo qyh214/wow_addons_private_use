@@ -1,12 +1,12 @@
-﻿local addonName, Addon = ...;
-
-local prefix = "TalentLoadoutEx";
-C_ChatInfo.RegisterAddonMessagePrefix(prefix);
+﻿local _, Addon = ...;
 
 function Addon:SendUpdateMessage()
-	local name = UnitName("player");
-	local realm = GetNormalizedRealmName();
-	if name and realm then
-		C_ChatInfo.SendAddonMessage(prefix, "Update", "whisper", name.."-"..realm);
+	local WeakAuras = _G["WeakAuras"];
+	if Addon:IsAddOnLoaded("Weakauras") and WeakAuras and WeakAuras.ScanEvents then
+		local loadedData = Addon.loadedData;
+		local name = loadedData and loadedData.name;
+		local icon = loadedData and loadedData.icon;
+
+		WeakAuras.ScanEvents("TalentLoadoutEx", name, icon);
 	end
 end

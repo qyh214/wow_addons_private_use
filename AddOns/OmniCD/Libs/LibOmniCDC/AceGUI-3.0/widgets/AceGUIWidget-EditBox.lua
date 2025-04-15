@@ -278,7 +278,7 @@ local function Constructor()
 	--[[ s r
 	local editbox = CreateFrame("EditBox", "AceGUI-3.0EditBox"..num, frame, "InputBoxTemplate")
 	]]
-	local editbox = CreateFrame("EditBox", "AceGUI-3.0EditBox-OmniCDC"..num, frame, BackdropTemplateMixin and "InputBoxTemplate, BackdropTemplate" or "InputBoxTemplate")
+	local editbox = CreateFrame("EditBox", "AceGUI-3.0EditBox-OmniCDC"..num, frame, "InputBoxTemplate, BackdropTemplate")
 	-- e
 	editbox:SetAutoFocus(false)
 	--[[ s r
@@ -327,7 +327,7 @@ local function Constructor()
 	--[[ s r
 	local button = CreateFrame("Button", nil, editbox, "UIPanelButtonTemplate")
 	]]
-	local button = CreateFrame("Button", nil, editbox, BackdropTemplateMixin and "UIPanelButtonTemplate, BackdropTemplate" or "UIPanelButtonTemplate")
+	local button = CreateFrame("Button", nil, editbox, "UIPanelButtonTemplate, BackdropTemplate")
 	-- e
 	button:SetWidth(40)
 	--[[ s r

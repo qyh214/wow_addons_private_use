@@ -33,7 +33,6 @@ local L = mod:GetLocale()
 if L then
 	L.discharge = "Discharge"
 	L.stage3_yell_trigger = "KILL YOU ALL" -- I have tried to be an accommodating host, but you simply will not die! Time to throw all pretense aside and just... KILL YOU ALL!
-	L.too_close = "Dragons are too close"
 	L["77939_icon"] = "spell_nature_lightning"
 end
 
@@ -70,7 +69,7 @@ function mod:GetOptions()
 	},{
 		[77939] = L.discharge, -- Lightning Discharge (Discharge)
 		[78999] = CL.full_energy, -- Electrical Overload (Full Energy)
-		[78620] = L.too_close, -- Children of Deathwing (Dragons are too close)
+		[78620] = CL.bosses_too_close, -- Children of Deathwing (Bosses are too close)
 		[77826] = CL.breath, -- Shadowflame Breath (Breath)
 		[81007] = CL.underyou:format(CL.fire), -- Shadowblaze (Fire under YOU)
 		[79339] = CL.bomb, -- Explosive Cinders (Bomb)
@@ -148,7 +147,7 @@ end
 --
 
 function mod:NefarianLanding()
-	self:Message("stages", "cyan", CL.landing:format(self:SpellName(-3279)), false) -- Nefarian
+	self:Message("stages", "cyan", CL.boss_landing:format(self:SpellName(-3279)), false) -- Nefarian
 	self:PlaySound("stages", "long")
 end
 
@@ -223,7 +222,7 @@ do
 	function mod:ChildrenOfDeathwingApplied(args)
 		if args.time - prev > 5 then
 			prev = args.time
-			self:Message(78620, "purple", L.too_close)
+			self:Message(78620, "purple", CL.bosses_too_close)
 		end
 	end
 end

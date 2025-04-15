@@ -297,10 +297,24 @@ Simulationcraft.covenants = {
 }
 
 Simulationcraft.upgradeAchievements = {
+  -- 11.0
   40107, -- Harbinger of the Weathered
   40115, -- Harbinger of the Carved
   40118, -- Harbinger of the Runed
   40939, -- Harbinger of the Gilded
+
+  -- 11.1
+  40942, -- Weathered
+  40943, -- Carved
+  40944, -- Runed
+  40945, -- Gilded
+}
+
+-- Catalyst currency
+
+Simulationcraft.catalystCurrencies = {
+  [2813] = 'Harmonized Silk', -- 11.0
+  [3116] = 'Essence of Kaja\'mite', -- 11.1
 }
 
 -- Upgrade currencies and item

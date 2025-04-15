@@ -1,11 +1,5 @@
-local L = BigWigs:NewBossLocale("Vexie and the Geargrinders", "zhTW")
+local L = BigWigs:NewBossLocale("Cauldron of Carnage", "zhTW")
 if not L then return end
-if L then
-	L.plating_removed = "剩餘 %d 層防身板金"
-	L.exhaust_fumes = "煙霧" --排出煙霧
-end
-
-L = BigWigs:NewBossLocale("Cauldron of Carnage", "zhTW")
 if L then
 	L.custom_on_fade_out_bars = "淡出計時器"
 	L.custom_on_fade_out_bars_desc = "淡出顯示超出距離的首領計時條。"
@@ -13,9 +7,10 @@ if L then
 	L.bomb_explosion = "炸彈爆炸"
 	L.bomb_explosion_desc = "替炸彈爆炸顯示倒數計時。"
 
-	--L.eruption_stomp = "Stomp" -- Short for Eruption Stomp
-	--L.thunderdrum_salvo = "Salvo" -- Short for Thunderdrum Salvo
-	--L.voltaic_image = "Fixates" -- Multiple of Fixate
+	L.eruption_stomp = "踐踏" -- Short for Eruption Stomp
+	L.thunderdrum_salvo = "電圈" -- Short for Thunderdrum Salvo
+
+	--L.static_charge_high = "%d - You're moving too much"
 end
 
 L = BigWigs:NewBossLocale("Rik Reverb", "zhTW")
@@ -36,7 +31,7 @@ if L then
 
 	L.electromagnetic_sorting = "電磁" -- Short for Electromagnetic Sorting
 	L.muffled_doomsplosion = "悶響爆炸" -- 悶響末日爆炸 暫定
-	--L.short_fuse = "Bombshell Explosion"
+	L.short_fuse = "螃蟹爆炸" -- 表意
 	L.incinerator = "火圈" -- 火圈/焚化/燒垃圾
 	L.landing = "降落" -- Landing down from the sky
 end
@@ -44,11 +39,14 @@ end
 L = BigWigs:NewBossLocale("Sprocketmonger Lockenstock", "zhTW")
 if L then
 	L.foot_blasters = "地雷"
+	L.unstable_shrapnel = "地雷爆炸" -- 或者 踩雷
 	L.screw_up = "鑽頭"
+	L.screw_up_single = "鑽頭" -- Singular of Drills
 	L.sonic_ba_boom = "音波" --音速轟爆
-	L.polarization_generator = "極性切換" -- 顏色切換/正負極?
+	L.polarization_generator = "極化"
 
-	L.polarization_soon = "極性改變：%s"
+	L.polarization_soon = "極化：%s"
+	L.polarization_soon_change = "即將極化：%s"
 
 	L.activate_inventions = "啟動：%s"
 	L.blazing_beam = "光束" --熾炎光束
@@ -56,18 +54,29 @@ if L then
 	L.mega_magnetize = "磁鐵" --超能磁化
 	L.jumbo_void_beam = "虛無光束" --就不改了
 	--L.void_barrage = "Balls" --虛無彈幕
+	--L.everything = "Everything"
+
+	--L.under_you_comment = "Under You" -- Implies this setting is for the damage from the ground effect under you
 end
 
 L = BigWigs:NewBossLocale("The One-Armed Bandit", "zhTW")
 if L then
 	L.rewards = "酷炫獎勵" -- Fabulous Prizes
 	L.rewards_desc = "投入二枚代幣後會立即發放「酷炫獎勵」，訊息將會顯示你獲得的獎勵，訊息盒則顯示你尚未領取過的獎勵。"
-	L.deposit_time = "投幣時限" -- Timer that indicates how long you have left to deposit the tokens.
+	L.deposit_time = "投幣時限：" -- Timer that indicates how long you have left to deposit the tokens.
 
 	L.pay_line = "錢幣" -- 籌碼？滾錢幣
 	L.shock = "電擊"
 	L.flame = "烈焰"
 	L.coin = "硬幣" -- 應該是獎勵的硬幣
+
+	--L.withering_flames = "Flames" -- Short for Withering Flames
+
+	L.cheat = "啟動：%s" -- Cheat: Coils, Cheat: Debuffs, Cheat: Raid Damage, Cheat: Final Cast
+	L.linked_machines = "線圈"
+	L.linked_machine = "線圈" -- Singular of Coils
+	L.hot_hot_heat = "燒燙燙"
+	L.explosive_jackpot = "火爆大獎"
 end
 
 L = BigWigs:NewBossLocale("Mug'Zee, Heads of Security", "zhTW")
@@ -85,13 +94,15 @@ end
 
 L = BigWigs:NewBossLocale("Chrome King Gallywix", "zhTW")
 if L then
+	--L.story_phase_trigger = "What, you think you won?" -- What, you think you won? Nah, I got somethin' else for ya.
+
 	L.scatterblast_canisters = "碎爆分攤" --碎爆罐
-	--L.fused_canisters = "Group Soaks"
-	--L.tick_tock_canisters = "Soaks"
-	--L.total_destruction = "DESTRUCTION!"
+	L.fused_canisters = "融合罐分攤"
+	L.tick_tock_canisters = "嘀答罐分攤"
+	L.total_destruction = "毀滅！"
 
 	L.duds = "爆彈" -- Short for 1500-Pound "Dud" dud是啞彈但手冊是爆彈
 	L.all_duds_detontated = "爆彈已全部引爆！"
-	--L.duds_remaining = "%d |4Dud remains:Duds remaining;" -- 1 Dud Remains | 2 Duds Remaining
+	L.duds_remaining = "剩餘 %d 個爆彈"
 	--L.duds_soak = "Soak Duds (%d left)"
 end

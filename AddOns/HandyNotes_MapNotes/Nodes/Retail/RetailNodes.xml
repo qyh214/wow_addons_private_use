@@ -1,19 +1,19 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-    <Script file="RetailMiniMapNodesLocation.lua"/>
-    <Script file="RetailMiniMapDungeonNodesLocation.lua"/>
     <Script file="RetailAzerothNodesLocation.lua"/>
     <Script file="RetailContinentNodesLocation.lua"/>
+    <Script file="RetailWorldNodesLocation.lua"/>   
+    <Script file="RetailInsideDungeonNodesLocation.lua"/>     
     <Script file="RetailZoneNodesLocation.lua"/>
+    <Script file="RetailZoneMiniMapLocation.lua"/>    
     <Script file="RetailZoneDungeonNodesLocation.lua"/>
-    <Script file="RetailInsideDungeonNodesLocation.lua"/>
-    <Script file="RetailWorldNodesLocation.lua"/>
-    <Script file="RetailFogOfWarNodes.lua"/>
+    <Script file="RetailZoneMiniMapDungeonNodesLocation.lua"/>
     <Script file="RetailCapitals.lua"/>
     <Script file="RetailCapitalsMinimap.lua"/>
     <Script file="RetailGeneralZoneNodes.lua"/>
     <Script file="RetailGeneralMiniMapNodes.lua"/>
     <Script file="RetailPathsZoneNodes.lua"/>
     <Script file="RetailPathsMiniMapNodes.lua"/>
+    <Script file="RetailFogOfWarNodes.lua"/>      
     <Script file="RetailBlizzAreaPoisNodesInfo.lua"/>
     <Script file="RetailBlizzDelveAreaPoisNodesInfo.lua"/>
 </Ui>

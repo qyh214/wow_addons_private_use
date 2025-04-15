@@ -2568,18 +2568,8 @@ do
     ---@param bronzeTimeLimit number
     ---@param level? number
     ---@return number goldTimeLimit, number silverTimeLimit, number bronzeTimeLimit
+    -- Previously here to apply +90s timer when level was >7 (TWW S1)
     function util:ApplyKeystoneTimeLimitsForLevel(goldTimeLimit, silverTimeLimit, bronzeTimeLimit, level)
-        if level and level >= 7 then
-            if goldTimeLimit > 0 then
-                goldTimeLimit = goldTimeLimit + 90
-            end
-            if silverTimeLimit > 0 then
-                silverTimeLimit = silverTimeLimit + 90
-            end
-            if bronzeTimeLimit > 0 then
-                bronzeTimeLimit = bronzeTimeLimit + 90
-            end
-        end
         return goldTimeLimit, silverTimeLimit, bronzeTimeLimit
     end
 
@@ -8099,68 +8089,6 @@ if IS_RETAIL then
         "ENCOUNTER_END",
     }
 
-    ---@class InstanceIdToChallengeMapId
-    local INSTANCE_ID_TO_CHALLENGE_MAP_ID = {
-        [960] = 2,
-        [961] = 56,
-        [962] = 57,
-        [959] = 58,
-        [1011] = 59,
-        [994] = 60,
-        [1007] = 76,
-        [1001] = 77,
-        [1004] = 78,
-        [1209] = 161,
-        [1175] = 163,
-        [1182] = 164,
-        [1176] = 165,
-        [1208] = 166,
-        [1358] = 167,
-        [1279] = 168,
-        [1195] = 169,
-        [1456] = 197,
-        [1466] = 198,
-        [1501] = 199,
-        [1477] = 200,
-        [1458] = 206,
-        [1493] = 207,
-        [1492] = 208,
-        [1516] = 209,
-        [1571] = 210,
-        [1651] = { 227, 234 },
-        [1677] = 233,
-        [1753] = 239,
-        [1763] = 244,
-        [1754] = 245,
-        [1771] = 246,
-        [1594] = 247,
-        [1862] = 248,
-        [1762] = 249,
-        [1877] = 250,
-        [1841] = 251,
-        [1864] = 252,
-        [1822] = 353,
-        [2097] = { 369, 370 },
-        [2290] = 375,
-        [2286] = 376,
-        [2291] = 377,
-        [2287] = 378,
-        [2289] = 379,
-        [2284] = 380,
-        [2285] = 381,
-        [2293] = 382,
-        [2441] = { 391, 392 },
-        [2521] = 399,
-        [2516] = 400,
-        [2515] = 401,
-        [2526] = 402,
-        [2451] = 403,
-        [2519] = 404,
-        [2520] = 405,
-        [2527] = 406,
-        [657] = 438,
-    }
-
     --- For any given `encounterID` the value returned will be
     --- - `true` when the boss is engaged in combat
     --- - `nil` the boss is not engaged and is out of combat
@@ -10699,6 +10627,16 @@ if IS_RETAIL then
         return mapID, timeLimit
     end
 
+    ---@param instanceID number
+    ---@return number? mapID
+    local function GetMapIDForInstance(instanceID)
+        local dungeon = util:GetDungeonByInstanceMapID(instanceID)
+        if not dungeon then
+            return
+        end
+        return dungeon.keystone_instance
+    end
+
     ---@return (number|number[])? mapID, number? timeLimit
     local function GetKeystoneForInstance()
         local _, _, difficultyID, _, _, _, _, instanceID = GetInstanceInfo()
@@ -10709,7 +10647,7 @@ if IS_RETAIL then
         if not isChallengeMode and not displayMythic then
             return
         end
-        local mapID = INSTANCE_ID_TO_CHALLENGE_MAP_ID[instanceID]
+        local mapID = GetMapIDForInstance(instanceID)
         if not mapID then
             return
         end

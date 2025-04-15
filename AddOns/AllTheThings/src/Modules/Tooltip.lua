@@ -566,52 +566,6 @@ local HookableTooltips = {
 	["NotGameTooltip0123"]=1,
 };
 
--- Allows for toggling whether the skip should be used or not; call with no value to return the current value
-local CurrentSkipLevel = 0;	-- Whether to skip certain cost items
-app.GetSkipLevel = function()
-	return CurrentSkipLevel;
-end
-app.SetSkipLevel = function(level)
-	-- print("SkipPurchases exclusion",level)
-	CurrentSkipLevel = level or 0;
-end
-
--- ItemID's which should be skipped when filling purchases with certain levels of 'skippability'
-local SkipPurchases = {
-	-- 0 	- (default, never skipped)
-	-- 1 	- (tooltip, skipped unless within tooltip/popout)
-	-- 1.5	- (tooltip root, skipped unless tooltip root or within popout)
-	-- 2 	- (popout, skipped unless within popout)
-	-- 2.5 	- (popout root, skipped unless root of popout)
-	itemID = {
-		[137642] = 2.5,	-- Mark of Honor
-		[21100] = 1,	-- Coin of Ancestry
-		[23247] = 1,	-- Burning Blossom
-		[33226] = 1,	-- Tricky Treat
-		[37829] = 1,	-- Brewfest Prize Token
-		[49927] = 1,	-- Love Token
-	},
-	currencyID = {
-		[515] = 1,		-- Darkmoon Prize Ticket
-		[1166] = 1,		-- Timewarped Badge
-		[2778] = 2.5,		-- Bronze
-	},
-}
-app.ShouldFillPurchases = function(group, FillData)
-	local val
-	for key,values in pairs(SkipPurchases) do
-		val = group[key]
-		if val then
-			val = values[val]
-			if not val then return true end
-			if (FillData.SkipLevel or CurrentSkipLevel) < val - (group == FillData.Root and 0.5 or 0) then
-				return false;
-			end
-		end
-	end
-	return true;
-end
-
 -- Shared Tooltip Functions
 local left, right;
 local function FindCommandEnd(txt, i, l)

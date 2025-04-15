@@ -1,11 +1,11 @@
-## Interface: 11506
+## Interface: 11507
 ## Title: BlizzMove
 ## Notes: Makes blizzard frames movable
 ## Author: Kiatra, zaCade, Numy - github.com/Kiatra/BlizzMove/
 ## IconTexture: interface/cursor/ui-cursor-move.blp
 ## X-WoWI-ID: 23875
 ## X-Curse-Project-ID: 17809
-## Version: v3.6.13
+## Version: v3.6.15
 ## OptionalDeps: Ace3
 ## SavedVariables: BlizzMoveDB
 ## Category-enUS: User Interface
@@ -24,6 +24,7 @@
 Libs\Libs.xml
 
 # Add-On
+Locale\Locale.xml
 BlizzMove.lua
 BlizzMoveAPI.lua
 BlizzMoveConfig.lua

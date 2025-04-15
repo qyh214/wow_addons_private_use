@@ -16,7 +16,7 @@ local GetSpellName = C_Spell and C_Spell.GetSpellName or GetSpellInfo
 local GetSpellTexture = C_Spell and C_Spell.GetSpellTexture or GetSpellTexture
 
 local senderVersion = 4
-local addonVersion = 63
+local addonVersion = 65
 
 local options = module.options
 
@@ -1459,6 +1459,7 @@ do
 		["healer"] = 2,
 		["heal"] = 2,
 		["dd"] = 2,
+		["damager"] = 2,
 		["tank"] = 2,
 	}
 
@@ -1503,7 +1504,9 @@ do
 				elseif condType == 2 then
 					if combatRole:lower() == c then
 						status = true
-					elseif combatRole == "HEALER" and c == "heal" then
+					elseif (combatRole == "HEALER" and c == "heal") or
+						(combatRole == "DAMAGER" and c == "dd")
+					then
 						status = true
 					end
 				end
@@ -2430,7 +2433,7 @@ function module:FindPlayerInNote(pat)
 	local lines = GetMRTNoteLines()
 	for i=1,#lines do
 		if lines[i]:find(pat) then
-			local l = lines[i]:gsub(pat.." *",""):gsub("|c........",""):gsub("|r",""):gsub(" *$",""):gsub("|",""):gsub(" +"," ")
+			local l = lines[i]:gsub(pat.." *",""):gsub("|c........",""):gsub("|r",""):gsub(" *$",""):gsub("|",""):gsub(" +"," "):gsub("[%(%)#!%d%%]","")
 			local list = {strsplit(" ", l)}
 			for j=1,#list do
 				if list[j] == playerName then
@@ -5408,7 +5411,7 @@ function options:Load()
 			return
 		end
 		local didSomething = false
-		if options.quickSetupFrame.mainframe.SAVED_VAR_X then
+		if options.quickSetupFrame.mainframe and options.quickSetupFrame.mainframe.SAVED_VAR_X then
 			local phase1, phase_time1 = options.quickSetupFrame.mainframe:GetPhaseFromTime(options.quickSetupFrame.mainframe.SAVED_VAR_X)
 			local phase2, phase_time2, phaseCount, phaseNum = options.quickSetupFrame.mainframe:GetPhaseFromTime(options.quickSetupFrame.mainframe.SAVED_VAR_X + arg1)
 			if phase1 ~= phase2 and phase_time2 then
@@ -7187,7 +7190,7 @@ function options:Load()
 
 		SpellGroups_Presetup = {
 			["names"] = {"raid cd","personals","externals","ultility","movement","dps cd","aoe cc","single cc",},
-			{[388615]=true,[51052]=true,[200183]=true,[370960]=true,[47536]=true,[97462]=true,[370537]=true,[265202]=true,[33891]=true,[124974]=true,[207399]=true,[197721]=true,[325197]=true,[374227]=true,[359816]=true,[246287]=true,[363534]=true,[216331]=true,[108280]=true,[34433]=true,[414660]=true,[200652]=true,[15286]=true,[322118]=true,[62618]=true,[98008]=true,[108281]=true,[31821]=true,[31884]=true,[105809]=true,[740]=true,[114052]=true,[271466]=true,[421453]=true,[64843]=true,[115310]=true,[196718]=true,},
+			{[388615]=true,[51052]=true,[200183]=true,[370960]=true,[47536]=true,[97462]=true,[370537]=true,[265202]=true,[33891]=true,[124974]=true,[207399]=true,[197721]=true,[325197]=true,[374227]=true,[359816]=true,[472433]=true,[363534]=true,[216331]=true,[108280]=true,[34433]=true,[414660]=true,[200652]=true,[15286]=true,[322118]=true,[62618]=true,[98008]=true,[108281]=true,[31821]=true,[31884]=true,[105809]=true,[740]=true,[114052]=true,[271466]=true,[421453]=true,[64843]=true,[115310]=true,[196718]=true,},
 			{[47585]=true,[108270]=true,[55342]=true,[48792]=true,[19236]=true,[1160]=true,[374348]=true,[48743]=true,[86659]=true,[184364]=true,[198589]=true,[498]=true,[110959]=true,[196555]=true,[22842]=true,[49028]=true,[235450]=true,[31224]=true,[122470]=true,[104773]=true,[11426]=true,[23920]=true,[198103]=true,[586]=true,[871]=true,[185311]=true,[49039]=true,[642]=true,[235219]=true,[108271]=true,[264735]=true,[12975]=true,[122278]=true,[109304]=true,[186265]=true,[108416]=true,[55233]=true,[118038]=true,[5277]=true,[194679]=true,[45438]=true,[342245]=true,[184662]=true,[363916]=true,[1966]=true,[61336]=true,[155835]=true,[22812]=true,[122783]=true,[48707]=true,[108238]=true,[132578]=true,[115176]=true,[205191]=true,[235313]=true,[31850]=true,},
 			{[102342]=true,[116849]=true,[633]=true,[6940]=true,[357170]=true,[108968]=true,[10060]=true,[204018]=true,[33206]=true,[47788]=true,},
 			{[101643]=true,[157981]=true,[102793]=true,[19801]=true,[372048]=true,[186387]=true,[111771]=true,[115315]=true,[406732]=true,[49576]=true,[383013]=true,[388007]=true,[132469]=true,[66]=true,[51490]=true,[278326]=true,[116844]=true,[408233]=true,[8143]=true,[5938]=true,[57934]=true,[235219]=true,[1044]=true,[360827]=true,[383269]=true,[16191]=true,[29166]=true,[370665]=true,[236776]=true,[64901]=true,[374251]=true,[32375]=true,[319454]=true,[108285]=true,[2908]=true,[342245]=true,[1856]=true,[328774]=true,[157980]=true,[205364]=true,[79206]=true,[34477]=true,[1022]=true,[119996]=true,},
@@ -10715,6 +10718,7 @@ function options:Load()
 				counter = 0,
 				phase = pname,
 				isCustom = t,
+				cuid = #spells_sorted+1,
 			}
 		end
 		sort(spells_sorted,function(a,b) 
@@ -18097,6 +18101,7 @@ do
 				frameBars:StartBar(id,reminderDuration,msg,barSize,color,countdownFormat,voice,ticks,icon,checkFunc,progressFunc)
 			end
 		else
+			local msg, updateReq = module:FormatMsg(data.msg or "",params)
 			local t = {
 				data = data,
 				expirationTime = now + (reminderDuration == 0 and 86400 or reminderDuration or 2),
@@ -18104,7 +18109,8 @@ do
 				dur = reminderDuration,
 				reminder = reminder,
 
-				msg = module:FormatMsg(data.msg or "",params),
+				msg = msg,
+				updateReq = updateReq,
 			}
 			module.db.showedReminders[#module.db.showedReminders+1] = t
 			if data.countdownVoice and reminderDuration ~= 0 and reminderDuration >= 1.3 then
@@ -18236,11 +18242,11 @@ do
 				local showed = showedReminders[j]
 				local data,t,params = showed.data, showed.expirationTime, showed.params
 				if now <= t then
-					local msg, updateReq = showed.msg
-					if not msg then
-						msg, updateReq = module:FormatMsg(data.msg or "",params)
-						if not updateReq or data.dynamicdisable then
-							showed.msg = msg
+					local msg = showed.msg
+					if not msg or showed.updateReq then
+						local msg2, updateReq = module:FormatMsg(data.msg or "",params)
+						if not msg or (updateReq and not data.dynamicdisable) then
+							showed.msg = msg2
 						end
 					end
 					local countdownFormat = showed.countdownFormat
@@ -18675,8 +18681,9 @@ function module:TriggerBossPhase(phaseText,globalPhaseNum)
 				triggerData.pattFind
 			then
 				local phaseCheck = (phaseNum == triggerData.pattFind or (not tonumber(triggerData.pattFind) and phaseText:find(triggerData.pattFind,1,true)))
-	
-				if not trigger.statuses[1] and phaseCheck then
+				--print(phaseCheck,phaseText,(not trigger.statuses[1] and phaseCheck) or (trigger.statuses[1] and phaseCheck),trigger.statuses[1] and not phaseCheck)
+
+				if (not trigger.statuses[1] and phaseCheck) or (trigger.statuses[1] and phaseCheck) then
 					module:AddTriggerCounter(trigger)
 					local vars = {
 						phase = phaseText,
@@ -23364,12 +23371,13 @@ function module:Test_BW(phase)
 		LibDBIcon10_BigWigs:GetScript("OnClick")(LibDBIcon10_BigWigs,"RightButton")--sorry
 		BigWigsOptions:Close()
 	end
-	BigWigsLoader:LoadZone(2657)
+	BigWigsLoader:LoadZone(2769)
 
-	local bossID = boss == 2 and 2902 or 2921
-	local bossName = boss == 2 and "Ulgrax the Devourer" or "The Silken Court"
+	local bossID = boss == 2 and 2902 or 3016
+	local bossName = boss == 2 and "Ulgrax the Devourer" or "Chrome King Gallywix"
 
-	local mod = BigWigs:GetBossModule("The Silken Court")
+	local mod = BigWigs:GetBossModule("Chrome King Gallywix")
+	mod.Mythic = function() return true end
 
 	if phase == -1 then
 		module.db.simrun = nil
@@ -23378,11 +23386,14 @@ function module:Test_BW(phase)
 		return
 	elseif phase == -2 then
 		return mod
+	elseif phase == 1 then
+		mod:TotalDestructionRemoved()
+		return
 	elseif phase == 1.5 then
-		mod:VoidStepTransition()
+		mod:CircuitRebootApplied({amount = 0, spellId = 450980, spellName = GetSpellName(450980), time = GetTime()})
 		return
 	elseif phase == 2 then
-		mod:ShatterExistenceRemoved({amount = 0, spellId = 450980, spellName = GetSpellName(450980), time = GetTime()})
+		mod:CircuitRebootRemoved({amount = 0, spellId = 450980, spellName = GetSpellName(450980), time = GetTime()})
 		return
 	elseif phase == 2.5 then
 		mod:BurrowTransition()

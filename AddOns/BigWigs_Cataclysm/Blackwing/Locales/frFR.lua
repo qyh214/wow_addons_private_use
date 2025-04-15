@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "frFR")
 if L then
 	L.discharge = "Décharge"
 	L.stage3_yell_trigger = "VOUS TUER TOUS" -- J’ai tout fait pour être un hôte accommodant, mais vous ne daignez pas mourir ! Oublions les bonnes manières et passons aux choses sérieuses… VOUS TUER TOUS !
-	--L.too_close = "Dragons are too close"
 end

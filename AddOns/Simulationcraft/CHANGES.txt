@@ -1,10 +1,10 @@
-lightweight tag c3e95605be348a4474c856a0a13d4722b4f9244e patch-11.1.0-02
+lightweight tag 5308cea4393e6699524d398b086de127e761eb5f patch-11.1.5-01
 Author:	Dave Hendler <sollaires@gmail.com>
-Date:	Mon Mar 3 15:14:27 2025 -0800
+Date:	Thu Apr 10 11:05:24 2025 -0700
 
-commit c3e95605be348a4474c856a0a13d4722b4f9244e
+commit 5308cea4393e6699524d398b086de127e761eb5f
 Author: Dave Hendler <sollaires@gmail.com>
-Date:   Mon Mar 3 15:14:27 2025 -0800
+Date:   Thu Apr 10 11:05:24 2025 -0700
 
-    Support Ctrl-X in addition to Ctrl-C or automatic closing
+    Bump version and compatibility for 11.1.5
 

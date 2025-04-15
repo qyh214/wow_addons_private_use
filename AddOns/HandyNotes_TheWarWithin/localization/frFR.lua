@@ -588,8 +588,21 @@ L['impotent_potable_location'] = 'Sous le quai à côté de la {location:Pille-e
 L['abandoned_toolbox_location'] = 'Tout en haut sur le toit de la {location:Recyclerie}.\n\nSuivez les escaliers jusqu\'au sommet.'
 L['trick_deck_of_cards_location'] = 'Sur le bureau à côté de {npc:231045} à l\'intérieur de l\'{location:Hôtel Incontinental}.'
 
+L['breakneck_customization'] = 'G-99 Ventraterre'
+
 L['ditty_fuzeboy_note'] = 'Échangez vos {item:234741} contre des mascottes.'
-L['angelo_rustbin_note'] = 'Échangez vos {currency:3220} contre des mascottes et des personnalisations pour votre {object:Casse-cou G-99}.'
+L['skedgit_cinderbangs_note'] = 'Échangez vos {item:234741} contre des montures.\n\n{note:Elles Peuvent être achetées à l\'hôtel des ventes.}'
+L['angelo_rustbin_note'] = 'Échangez vos {currency:3218} contre un jouet et une personnalisation du {object:G-99 Ventraterre}. Les {item:233557} ont une chance de contenir une mascotte et une monture.\n\nÉchangez vos {currency:3220} contre des mascottes.\n\n{note:La collecte des {currency:3218} peut se faire à tout moment, mais celle des {item:229810} nécessite le niveau de Renom 14 avec les {faction:2653}.}'
+L['blair_bass_note'] = 'Échangez vos {item:227673} contre des jouets.\n\nLes {item:227673} peuvent être pêchées dans les bancs de {object:Ruissellement de Gentepression}.'
+L['greexit_coarsebub_note'] = 'Échangez de l\'or contre des objets de transmogrification liés aux cartels gobelins.\n\n{note:Seuls les objets associés à votre cartel actuel sont disponibles à l\'achat.}'
+
+L['quartermaster'] = 'Intendant de la faction %s'
+L['quartermaster_note'] = 'Échangez vos {currency:2815} contre divers objets de collection.'
+
+L['rocco_razzboom_location'] = 'À l\'étage inférieur de la {location:Recyclerie}.'
+L['lab_assistant_laszly_location'] = 'Au cœur des {location:Laboratoires de Gentepression}.'
+L['boatswain_hardee_location'] = 'Au premier étage de la {location:Capitainerie}.'
+L['shrez_the_scrapper_location'] = 'Au premier étage de la {location:Place de la KapitalRisk}.'
 
 L['options_icons_nine_tenths'] = '{achievement:40948}'
 L['options_icons_nine_tenths_desc'] = 'Afficher les emplacements des {object:Autovestiaires de Muff} pour le haut-fait {achievement:40948}.'
@@ -616,3 +629,17 @@ L['options_icons_youre_my_friend_now'] = '{achievement:41708}'
 L['options_icons_youre_my_friend_now_desc'] = 'Afficher les emplacements des {npc:239248} pour le haut-fait {achievement:41708}.'
 L['rat_in_building_rail'] = 'A l\'intérieur du bâtiment sur le rail.'
 L['rat_2nd_floor_trash_can'] = 'A l\'intérieur du bâtiment, au deuxième étage, sur la poubelle.'
+
+L['sewer_cheese_label'] = 'Fromage d’égout'
+L['undermine_undershirt_note'] = '1. Ramassez le {object:Fromage d’égout} dans les égouts situés sous la {location:Cuverie} pour recevoir le buff {spell:1221472}.\n\n2. Interagissez avec le {npc:238661} à proximité pour échanger votre fromage contre un {item:237129}.\n\n3. Apportez le {item:237129} à {npc:237412}, à l\'étage de la {location:Capitainerie} à la {location:Marina des Flots noirs}, et échangez-le contre le {item:237130}.'
+
+L['undermine_clam_chowder_label'] = 'Guide culinaire authentique de Terremine'
+L['undermine_clam_chowder_location'] = 'Sur une étagère derrière {npc:226728} dans la ruelle de la {location:Cuverie}.'
+L['undermine_clam_chowder_note'] = '1. Pour obtenir cette recette, vous devez d\'abord connaître {item:16767} qui peut être achetée auprès de deux vendeurs {object:Classiques} contre %s.\n\n{npc:54232} à {location:Baie-du-Butin} au {location:Cap Strangleronce}\n\n{npc:48060} à {location:Lumèche} dans les {location:Terres Ingrates}\n\n2. Une fois que vous connaissez l\'ancienne recette, ouvrez le {object:Guide culinaire authentique de Terremine} et lisez-le jusqu\'à la dernière page. Notez la recette pour recevoir {item:235800}.'
+
+L['blazefeather_peacock_note'] = 'Après avoir terminé la suite de quêtes {quest:83421}, parlez à {npc:226555} et payez-le %s pour invoquer un {npc:226561} domptable.'
+L['radioactive_subject_note'] = 'Utilisez les tuyaux à proximité, aidez-vous des objets {item:237276}, {item:109076}, {item:231099} ou de toute autre technique de saut pour atteindre le toit du bâtiment des {location:Laboratoires de Gentepression} à la {location:Cuverie}.'
+L['george_the_big_pinch_note'] = 'Cliquez rapidement sur les 5 {npc:238189} pour recevoir le buff {spell:1219679} et ainsi pouvoir dompter {npc:233938}.'
+
+L['crumpled_schematic_note'] = 'Récupérez les {object:Schémas froissés} pour recevoir le {item:235037}.\n\nUne fois obtenu, il sera disponible à l\'achat auprès des vendeurs de fournitures d\'ingénierie tels que la {npc:219098} à {location:Dornogal}.'
+L['crumpled_schematic_location'] = 'Au premier étage d\'un bâtiment situé entre la {location:Cuverie} et {location:La Pile}.'

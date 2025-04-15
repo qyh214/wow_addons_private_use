@@ -181,5 +181,5 @@ if L then
 	L.swap = "^^^^ 交换 ^^^^ 迅速 ^^^^"
 	L.stay = "==== 不要动 ==== 不要动 ===="
 
-	--L.chat_message = "The Thaddius mod supports showing you directional arrows and playing voices. Open the options to configure them."
+	L.chat_message = "电男战术模块 支持显示方向箭头和播放声音。打开选项对其进行配置。"
 end

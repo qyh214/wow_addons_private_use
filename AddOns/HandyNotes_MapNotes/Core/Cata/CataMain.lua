@@ -159,6 +159,61 @@ function pluginHandler:OnEnter(uiMapId, coord)
     if nodeData.www and nodeData.showWWW == true then
       tooltip:AddDoubleLine(nodeData.www, nil, nil, false)
     end
+
+    local IsQuestFlaggedCompleted = C_QuestLog.IsQuestFlaggedCompleted
+    if nodeData.questID then
+
+      if IsQuestFlaggedCompleted(nodeData.questID) == false then
+      
+        --if nodeData.wwwName then
+        --  tooltip:AddDoubleLine("\n" .. nodeData.wwwName, nil, nil, false)
+        --end
+
+        if nodeData.wwwLink and nodeData.showWWW == true then
+          tooltip:AddDoubleLine("|cffffffff" .. nodeData.wwwLink, nil, nil, false)
+          tooltip:AddLine("\n" .. L["Has not been unlocked yet"] .. "\n" .. "\n", 1, 0, 0)
+          if ns.Addon.db.profile.ExtraTooltip then
+            tooltip:AddDoubleLine("|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Activate the „Link“ function from MapNotes in the General tab to create clickable links and email addresses in the chat"] .. " >", nil, nil, false)
+          end
+        end
+      end
+
+      if IsQuestFlaggedCompleted(nodeData.questID) then
+          nodeData.showWWW = false
+          nodeData.wwwName = false
+      end
+
+    end
+
+    if nodeData.achievementID then
+      local _, name, _, completed, _, _, _, description, _, _, _, _, wasEarnedByMe = GetAchievementInfo(nodeData.achievementID)
+
+      --if wasEarnedByMe == false or completed == false then
+      if completed == false then
+        tooltip:AddLine("\n" .. description, nil, nil, false)
+
+        if nodeData.wwwName then
+          tooltip:AddDoubleLine(nodeData.wwwName, nil, nil, false)
+        end
+
+        if nodeData.wwwLink and nodeData.showWWW == true then
+          tooltip:AddDoubleLine("|cffffffff" .. nodeData.wwwLink, nil, nil, false)
+          tooltip:AddLine("\n" .. L["Has not been unlocked yet"], 1, 0, 0)
+          if ns.Addon.db.profile.ExtraTooltip then
+            tooltip:AddDoubleLine("\n" .. "|cff00ff00".. "< " .. L["Middle mouse button to post the link in the chat"] .. " >" .. "\n" .. "< " .. L["Use the addon 'Prat', 'Chat Copy Paste' for example to then copy this link from the chat"] .. " >", nil, nil, false)
+          end
+        end
+        
+      end
+
+      -- if wasEarnedByMe == true and completed == true then
+      if completed == true then
+        nodeData.showWWW = false
+        nodeData.wwwName = false
+      end
+
+    end
+
      	tooltip:Show()
   end
 end
@@ -534,7 +589,10 @@ function pluginHandler:OnClick(button, pressed, uiMapId, coord, value)
 local mnID = nodes[uiMapId][coord].mnID
 local mnID2 = nodes[uiMapId][coord].mnID2
 local mnID3 = nodes[uiMapId][coord].mnID3
-local www = nodes[uiMapId][coord].www
+local wwwLink = nodes[uiMapId][coord].wwwLink
+ns.achievementID = nodes[uiMapId][coord].achievementID
+ns.questID = nodes[uiMapId][coord].questID
+
 local mapInfo = C_Map.GetMapInfo(uiMapId)
 local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() == 1456 or WorldMapFrame:GetMapID() == 1458 or WorldMapFrame:GetMapID() == 1954 
                    or WorldMapFrame:GetMapID() == 1947 or WorldMapFrame:GetMapID() == 1457 or WorldMapFrame:GetMapID() == 1453 or WorldMapFrame:GetMapID() == 1455
@@ -612,8 +670,14 @@ local CapitalIDs = WorldMapFrame:GetMapID() == 1454 or WorldMapFrame:GetMapID() 
     if (not pressed) then return end
 
     if (button == "MiddleButton") then
-      if www then
-        print(www)
+      if wwwLink and not (ns.achievementID or ns.questID) then
+        print(wwwLink)
+      elseif ns.questID then
+        --SendChatMessage("www.wowhead.com/quest=" .. questID, "WHISPER", "Common", GetUnitName("PLAYER"));
+        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_QUEST, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/quest=" .. ns.questID)
+      elseif ns.achievementID then
+        print("|cffff0000Map|r|cff00ccffNotes|r", "|cffffff00" .. LOOT_JOURNAL_LEGENDARIES_SOURCE_ACHIEVEMENT, COMMUNITIES_INVITE_MANAGER_COLUMN_TITLE_LINK .. ":" .. "|r", "https://www.wowhead.com/achievement=" .. ns.achievementID)
+        --SendChatMessage("MapNotes: https://www.wowhead.com/achievement=" .. achievementID, "WHISPER", "Common", GetUnitName("PLAYER"));
       end
     end
 
@@ -752,31 +816,52 @@ function Addon:ZONE_CHANGED()
 end
 
 function Addon:OnProfileChanged(event, database, newProfileKey)
-	db = database.profile
+  db = database.profile
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
+  HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been changed"])
 end
 
 function Addon:OnProfileReset(event, database, newProfileKey)
 	db = database.profile
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
+  wipe(ns.dbChar.CapitalsDeletedIcons)
+  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbChar.CapitalsDeletedIcons)
+  wipe(ns.dbChar.MinimapCapitalsDeletedIcons)
+  wipe(ns.dbChar.AzerothDeletedIcons)
+  wipe(ns.dbChar.ContinentDeletedIcons)
+  wipe(ns.dbChar.ZoneDeletedIcons)
+  wipe(ns.dbChar.MinimapZoneDeletedIcons)
+  wipe(ns.dbChar.DungeonDeletedIcons)
+  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
+  HandyNotes:GetModule("FogOfWarButton"):Refresh()
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been reset to default"])
 end
 
 function Addon:OnProfileCopied(event, database, newProfileKey)
 	db = database.profile
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
+  HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been adopted"])
 end
 
 function Addon:OnProfileDeleted (event, database, newProfileKey)
 	db = database.profile
+  ns.dbChar = database.profile.deletedIcons
+  ns.FogOfWar = database.profile.FogOfWarColor
+  HandyNotes:GetModule("FogOfWarButton"):Refresh()
+  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
   ns.Addon:FullUpdate()
   HandyNotes:SendMessage("HandyNotes_NotifyUpdate", "MapNotes")
-  print(TextIconMNL4:GetIconString() .. " " .. ns.COLORED_ADDON_NAME .. " " .. TextIconMNL4:GetIconString() .. " " .. "|cffffff00" .. L["Profile has been deleted"])
 end
 
 function Addon:PLAYER_ENTERING_WORLD()
@@ -801,8 +886,13 @@ function Addon:PLAYER_LOGIN()
 	self.db.RegisterCallback(self, "OnProfileCopied", "OnProfileCopied")
 	self.db.RegisterCallback(self, "OnProfileReset", "OnProfileReset")
   self.db.RegisterCallback(self, "OnProfileDeleted", "OnProfileDeleted")
+  
+  -- default profile database
   db = self.db.profile
-  ns.dbChar = self.db.char
+  -- deleted icons database
+  ns.dbChar = self.db.profile.deletedIcons
+  -- FogOfWar color database
+  ns.FogOfWar = self.db.profile.FogOfWarColor
 
   -- Register options 
   HandyNotes:RegisterPluginDB("MapNotes", pluginHandler, ns.options)
@@ -818,6 +908,9 @@ function Addon:PLAYER_LOGIN()
   Addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   Addon:RegisterEvent("ZONE_CHANGED")
   Addon:RegisterEvent("ZONE_CHANGED_INDOORS")
+
+  -- Check for Links
+  ns.CreateAndCopyLink()
 
   -- Check for Professions
   ns.AutomaticProfessionDetection()

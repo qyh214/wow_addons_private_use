@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("General Vezax", 603, 1648)
 if not mod then return end
 mod:RegisterEnableMob(33271)
-mod:SetEncounterID(mod:Classic() and 755 or 1134)
+mod:SetEncounterID(BigWigsLoader.isWrath and 755 or 1134)
 -- mod:SetRespawnTime(0) -- resets, doesn't respawn
 
 --------------------------------------------------------------------------------

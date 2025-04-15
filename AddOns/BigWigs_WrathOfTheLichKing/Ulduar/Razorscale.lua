@@ -11,7 +11,7 @@ mod:RegisterEnableMob(
 	33259, -- Expedition Trapper
 	33186  -- Razorscale
 )
-mod:SetEncounterID(mod:Classic() and 746 or 1139)
+mod:SetEncounterID(BigWigsLoader.isWrath and 746 or 1139)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------

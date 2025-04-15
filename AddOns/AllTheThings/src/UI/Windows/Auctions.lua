@@ -1,13 +1,15 @@
 -- App locals
 local appName, app = ...;
 local CloneReference = app.CloneReference;
+local GetProgressTextForRow = app.GetProgressTextForRow;
+local GetItemInfo = app.WOWAPI.GetItemInfo;
 
 -- Global locals
-local debugprofilestop, next, pcall, select, tinsert, tonumber
-	= debugprofilestop, next, pcall, select, tinsert, tonumber;
+local debugprofilestop, next, pcall, select, tinsert, tonumber, type
+	= debugprofilestop, next, pcall, select, tinsert, tonumber, type;
 	
 -- Module locals
-local auctionData, priceA, priceB = {};
+local auctionData, priceA, priceB, oldLegacyFilter = {};
 local function SortByPrice(a,b)
 	priceA = a.price or 0;
 	priceB = b.price or 0;
@@ -17,9 +19,12 @@ local function SortByPrice(a,b)
 		return priceA < priceB;
 	end
 end
+local function SummaryForAuctionItem(t)
+	return t.cost and GetCoinTextureString(t.cost);
+end
 
 -- API Differences
-local CanFullScan, ReceiveAuctions, RunFullScan;
+local CanFullScan, ReceiveAuctions, RunFullScan, OnClickForAuctionItem;
 if C_AuctionHouse then
 	local C_AuctionHouse_ReplicateItems, C_AuctionHouse_GetNumReplicateItems, C_AuctionHouse_GetReplicateItemInfo, C_AuctionHouse_GetReplicateItemLink
 		= C_AuctionHouse.ReplicateItems, C_AuctionHouse.GetNumReplicateItems, C_AuctionHouse.GetReplicateItemInfo, C_AuctionHouse.GetReplicateItemLink;
@@ -84,6 +89,16 @@ if C_AuctionHouse then
 		C_AuctionHouse_ReplicateItems();
 		cooldown = time() + 900;
 	end
+	OnClickForAuctionItem = function(self, button)
+		local reference = self.ref;
+		
+		-- Attempt to search manually with the link.
+		local link = reference.link or reference.silentLink;
+		if link then
+			AuctionHouseFrame.SearchBar.SearchBox:SetText(GetItemInfo(link))
+			AuctionHouseFrame.SearchBar:StartSearch();
+		end
+	end
 else
 	local CanSendAuctionQuery, GetNumAuctionItems, GetAuctionItemInfo
 		= CanSendAuctionQuery, GetNumAuctionItems, GetAuctionItemInfo;
@@ -115,14 +130,22 @@ else
 		QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil);
 		-- QueryAuctionItems(name, minLevel, maxLevel, page, isUsable, qualityIndex, getAll, exactMatch, filterData);
 	end
+	OnClickForAuctionItem = function(self, button)
+		-- Do nothing, yet. Ideally we would attempt to buy the cheapest auction and update the price on the item.
+	end
 end
 
 -- Implementation
 app:CreateWindow("Auctions", {
 	Commands = { "attauctions" },
 	TooltipAnchor = "ANCHOR_RIGHT",
-	IgnoreSettings = true,
 	IgnoreQuestUpdates = true,
+	OnLoad = function(self, settings)
+		self:UpdatePosition();
+	end,
+	OnSave = function(self, settings)
+		
+	end,
 	OnInit = function(self, handlers)
 		function ProcessAuctions()
 			pcall(self.UnregisterEvent, self, "AUCTION_ITEM_LIST_UPDATE");
@@ -150,7 +173,6 @@ app:CreateWindow("Auctions", {
 		end
 		self:RegisterEvent("ADDON_LOADED");
 		self.UpdatePosition = function(self)
-			self:ClearAllPoints();
 			local auctionFrame = AuctionHouseFrame or AuctionFrame;
 			if auctionFrame and not auctionFrame.__ATTSETUP then
 				local origHide, origShow = auctionFrame.Hide, auctionFrame.Show;
@@ -177,6 +199,8 @@ app:CreateWindow("Auctions", {
 				end
 			end
 			if auctionFrame and auctionFrame:IsShown() then
+				local width = self:GetWidth();
+				self:ClearAllPoints();
 				self:SetPoint("TOP", auctionFrame, "TOP", 0, -12);
 				self:SetPoint("BOTTOM", auctionFrame, "BOTTOM", 0, 10);
 				if SideDressUpFrame and SideDressUpFrame:IsShown() then
@@ -184,13 +208,16 @@ app:CreateWindow("Auctions", {
 				else
 					self:SetPoint("LEFT", auctionFrame, "RIGHT", 0, 0);
 				end
+				self:SetWidth(width);
 				if app.Settings:GetTooltipSetting("Auto:AuctionList") then
 					self:Show();
 				end
 			else
 				self:Hide();
 			end
+			
 		end
+		self:SetMovable(false);
 	end,
 	OnRebuild = function(self, ...)
 		if not self.data then
@@ -202,43 +229,20 @@ app:CreateWindow("Auctions", {
 				text = "Auction Module",
 				icon = 133784, 
 				description = "This is a debug window for all of the auction data that was returned. Turn on 'Account Mode' to show items usable on any character on your account!",
+				SortType = "Global",
 				visible = true, 
 				expanded = true,
 				back = 1,
 				indent = 0,
 				g = { },
-				metas = {
-					["mountID"] = app.CreateFilter(100, {	-- Mounts
-						["description"] = "All mounts that you have not collected yet are displayed here.",
-						["priority"] = 3,
-					}),
-					["recipeID"] = app.CreateFilter(200, {	-- Recipes
-						["description"] = "All recipes that you have not collected yet are displayed here.",
-						["priority"] = 6,
-					}),
-					["reagentID"] = {	-- Reagents
-						["text"] = "Reagents",
-						["icon"] = 132856,
-						["description"] = "All items that can be used to craft an item using a profession on your account.",
-						["priority"] = 5,
-					},
-					["itemID"] = {	-- Items
-						["text"] = "Items",
-						["icon"] = 132595,
-						["description"] = "All items that could potentially be upgrades are listed here.",
-						["priority"] = 7,
-					},
-					["speciesID"] = app.CreateFilter(101, {	-- Battle Pets
-						["description"] = "All battle pets that you have not collected yet are displayed here.",
-						["priority"] = 6,
-					}),
-				},
+				metas = { },
 				options = {
 					setmetatable({
 						clickText = "Click to run a Full Scan",
 						clickDescription = "Click this button to perform a full scan of the auction house. This information will appear within this window and clear out the existing data.",
-						scanningText = "Full Scan on Cooldown";
-						scanningDescription = "Please wait while we wait for the server to respond.";
+						scanningText = "Full Scan on Cooldown",
+						scanningDescription = "Please wait while we wait for the server to respond.",
+						SortPriority = 1,
 						icon = 132089,
 						OnClick = function(row, button)
 							return row.ref:StartScan(row);
@@ -309,6 +313,7 @@ app:CreateWindow("Auctions", {
 					{
 						text = "Clear Auction Data",
 						description = "Click this button to clear all of the cached auction data.",
+						SortPriority = 1.1,
 						icon = 132089,
 						OnClick = function(row, button)
 							wipe(self.data.g);
@@ -331,6 +336,7 @@ app:CreateWindow("Auctions", {
 						text = "Toggle Debug Mode",
 						icon = 134932,
 						description = "Click this button to toggle debug mode to show everything regardless of filters!",
+						SortPriority = 1.2,
 						OnClick = function() 
 							app.Settings:ToggleDebugMode();
 						end,
@@ -351,6 +357,7 @@ app:CreateWindow("Auctions", {
 						text = "Toggle Account Mode",
 						icon = 133733,
 						description = "Turn this setting on if you want to track all of the Things for all of your characters regardless of class and race filters.\n\nUnobtainable filters still apply.",
+						SortPriority = 1.3,
 						OnClick = function() 
 							app.Settings:ToggleAccountMode();
 						end,
@@ -374,6 +381,7 @@ app:CreateWindow("Auctions", {
 						text = "Toggle Faction Mode",
 						icon = 134932,
 						description = "Click this button to toggle faction mode to show everything for your faction!",
+						SortPriority = 1.4,
 						OnClick = function() 
 							app.Settings:ToggleFactionMode();
 						end,
@@ -393,12 +401,77 @@ app:CreateWindow("Auctions", {
 							return true;
 						end,
 					},
+					{	-- Appearances
+						text = "Appearances",
+						Meta = "sourceID",
+						icon = 135349,
+						description = "All items that could be learned for transmog are listed here.",
+						SortPriority = 2,
+					},
+					app.CreateFilter(101, {	-- Battle Pets
+						Meta = "speciesID",
+						description = "All battle pets that you have not collected yet are displayed here.",
+						SortPriority = 3,
+					}),
+					app.CreateFilter(100, {	-- Mounts
+						Meta = "mountID",
+						description = "All mounts that you have not collected yet are displayed here.",
+						SortPriority = 4,
+					}),
+					{	-- Materials
+						text = "Materials",
+						Meta = "reagentID",
+						icon = 132856,
+						description = "All items that can be used to craft an item using a profession on your account.",
+						SortPriority = 5,
+					},
+					{	-- Miscellaneous
+						text = "Miscellaneous",
+						Meta = "itemID",
+						icon = 132595,
+						description = "All items that could be used for some non-transmog related purpose such as for an achievement are displayed here.",
+						SortPriority = 6,
+					},
+					app.CreateFilter(200, {	-- Recipes
+						Meta = "recipeID",
+						description = "All recipes that you have not collected yet are displayed here.",
+						SortPriority = 7,
+					}),
+					{	-- Toys
+						text = "Toys",
+						Meta = "toyID",
+						icon = 133015,
+						description = "All items that are classified as Toys either by ATT for the future or by the game presently.",
+						SortPriority = 8,
+					},
+					{	-- Legacy
+						text = "Legacy",
+						Meta = "legacyID",
+						icon = 135331,
+						description = "All items that were removed from game that you could probably still collect for a... nominal fee.\n\nAlso if you have found something here, feel free to post about it on the ATT Discord's #classic-general channel! I'm sure some folks might want to find these.",
+						SortPriority = 10,
+						OnUpdate = function(data)
+							oldLegacyFilter = AllTheThingsSettings.Unobtainable[2];
+							AllTheThingsSettings.Unobtainable[2] = true;
+						end,
+					},
+					{	-- Legacy Cleaner
+						text = "Legacy Cleaner",
+						icon = 135331,
+						SortPriority = 10.1,
+						OnUpdate = function(data)
+							AllTheThingsSettings.Unobtainable[2] = oldLegacyFilter;
+						end,
+					}
 				},
 				OnUpdate = function(data)
 					local g = data.g;
 					if #g < 1 then
 						for i,option in ipairs(data.options) do
 							tinsert(g, option);
+							if option.Meta then
+								data.metas[option.Meta] = option;
+							end
 						end
 						
 						-- Determine if anything is cached in the Auction Data.
@@ -413,6 +486,7 @@ app:CreateWindow("Auctions", {
 							for itemID,price in pairs(auctionData) do
 								searchResults = app.SearchForField("itemID", itemID);
 								if searchResults and #searchResults > 0 then
+									app.Sort(searchResults, app.SortDefaults.Accessibility);
 									searchResult = searchResults[1];
 									key = searchResult.key;
 									if key == "npcID" then
@@ -420,7 +494,14 @@ app:CreateWindow("Auctions", {
 											key = "itemID";
 										end
 									end
+									if key == "itemID" and searchResult.sourceID then
+										key = "sourceID";
+									end
 									value = searchResult[key];
+									if searchResult.u and (searchResult.u == 1 or searchResult.u == 2) then
+										key = "legacyID";
+										value = value .. "_" .. searchResult.u;
+									end
 									keys = searchResultsByKey[key];
 									
 									-- Make sure that the key type is represented.
@@ -438,6 +519,21 @@ app:CreateWindow("Auctions", {
 										if price and price > 0 then
 											data.price = price;
 											data.cost = price;
+											local oldindex = getmetatable(data).__index;
+											setmetatable(data, {
+												__index = function(t,key)
+													if key == "summary" then
+														return SummaryForAuctionItem(t);
+													elseif key == "OnClick" then
+														return OnClickForAuctionItem;
+													elseif type(oldindex) == "table" then
+														return oldindex[key];
+													else
+														oldindex(t, key);
+													end
+												end
+											});
+										else
 										end
 										keys[value] = data;
 									end
@@ -500,16 +596,17 @@ app:CreateWindow("Auctions", {
 								if not subdata then
 									subdata = {
 										text = key,
+										Meta = key,
 										description = "Container for '" .. key .. "' object types.",
 									};
 									self.data.metas[key] = subdata;
+									tinsert(g, subdata);
 								end
 								subdata.g = {};
 								for i,j in pairs(searchResults) do
 									tinsert(subdata.g, j);
 								end
 								table.sort(subdata.g, SortByPrice);
-								tinsert(g, subdata);
 							end
 						else
 							tinsert(g, { text = "No auctions cached. Waiting on Auction data." });

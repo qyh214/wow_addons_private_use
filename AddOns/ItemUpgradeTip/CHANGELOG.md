@@ -1,6 +1,6 @@
 # ItemUpgradeTip
 
-## [v3.6.1](https://github.com/belazor-wow/ItemUpgradeTip/tree/v3.6.1) (2025-03-10)
-[Full Changelog](https://github.com/belazor-wow/ItemUpgradeTip/compare/v3.6.0...v3.6.1) [Previous Releases](https://github.com/belazor-wow/ItemUpgradeTip/releases)
+## [v3.6.2](https://github.com/belazor-wow/ItemUpgradeTip/tree/v3.6.2) (2025-03-19)
+[Full Changelog](https://github.com/belazor-wow/ItemUpgradeTip/compare/v3.6.1...v3.6.2) [Previous Releases](https://github.com/belazor-wow/ItemUpgradeTip/releases)
 
-- chore: Update locales  
+- fix: Fix incorrect ilvl in upgrade track info table  

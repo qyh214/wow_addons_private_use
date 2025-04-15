@@ -8,6 +8,13 @@ mod:RegisterEnableMob(12259, 228431) -- Gehennas, Gehennas (Season of Discovery)
 mod:SetEncounterID(665)
 
 --------------------------------------------------------------------------------
+-- Locals
+--
+
+local curseCount = 0
+local curseTime = 0
+
+--------------------------------------------------------------------------------
 -- Localization
 --
 
@@ -15,13 +22,6 @@ local L = mod:GetLocale()
 if L then
 	L["19716_desc"] = mod:GetSeason() == 2 and 461232 or 19716
 end
-
---------------------------------------------------------------------------------
--- Locals
---
-
-local curseCount = 0
-local curseTime = 0
 
 --------------------------------------------------------------------------------
 -- Initialization

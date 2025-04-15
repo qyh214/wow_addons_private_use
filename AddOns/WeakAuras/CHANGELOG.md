@@ -1,38 +1,55 @@
-# [5.19.5](https://github.com/WeakAuras/WeakAuras2/tree/5.19.5) (2025-03-10)
+# [5.19.8](https://github.com/WeakAuras/WeakAuras2/tree/5.19.8) (2025-04-11)
 
-[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.19.4...5.19.5)
+[Full Changelog](https://github.com/WeakAuras/WeakAuras2/compare/5.19.7...5.19.8)
 
 ## Highlights
 
-No new features this release, just fixes to some minor bugs
+TOC update for SoD phase 8
+
+New Features:
+
+- states:Replace(id, newstate) & states:Get(id, key) are now available in TSU custom triggers
+- subtext & condition change text learned to support UI escape sequences, like the text region type already does
+- Spell Activation Overlay events are available in Cata classic, so the related trigger has been re-enabled for that game flavor
+- Scarlet Enclave encounter IDs added for SoD
+
+Fixes:
+
+- Item Equipped load/trigger forces exact match now, to deal with e.g. normal/heroic versions of the same item
+- unit formatters produces empty string "" instead of "nil" when the underlying unit token is invalid
+- various fixes to options panel & thanks list so they don't look terrible (thanks @pewtro!)
+- Fixed some templates which were invalidated in 11.1
+- Reminded chat msg - emote trigger to pay attention to CHAT_MSG_TEXT_EMOTE again
 
 ## Commits
 
-InfusOnWoW (9):
+InfusOnWoW (8):
 
+- Item Equipped: Force "exact match" mode
+- Make SubText + Conditions also use IndentionLib.encode/decode for text
+- Make Unit formatting not return "nil"
+- Tweak bottom buttons until they all fit
+- Enable Spell Activation Overlay Glow trigger in Cata
+- Chat: Fix Emote filter for /commands
+- Templates: Update to 11.1 patch changes
 - Update Discord List
-- Update Discord List
-- Stop Motion Sub Element: Fix setting of custom row/colum etc settings
-- Partially revert 4e628f546befa7
-- Being in Excavation Site 9 IsInInstance() returns false
-- Texture Sub Element: Don't resize main aura on atlas selection
-- Workaround boss unit stupidity by Blizzard
-- Workaround INSTANCE_ENGAGE_UNIT with incosistent UnitGUID/UnitExists
-- Remove Stop Motion texture data
 
-Stanzilla (2):
+Pewtro (1):
+
+- Fix an issue with word wrapping in the Discord thanks list
+
+Stanzilla (1):
 
 - Update WeakAurasModelPaths from wago.tools
-- Update WeakAurasModelPaths from wago.tools
 
-dependabot[bot] (4):
+dependabot[bot] (1):
 
-- Bump cbrgm/mastodon-github-action from 2.1.12 to 2.1.13
-- Bump tsickert/discord-webhook from 6.0.0 to 7.0.0
-- Bump leafo/gh-actions-luarocks from 4 to 5
-- Bump leafo/gh-actions-lua from 10 to 11
+- Bump cbrgm/mastodon-github-action from 2.1.13 to 2.1.14
 
-emptyrivers (1):
+mrbuds (4):
 
-- remove spurious enUS translations
+- TSUHelpers: add states:Replace() and states:Get() functions, + bug fixes
+- Add Encounter IDs for Scarlet Enclave
+- Update Atlas File List from wago.tools
+- SoD P8 toc update
 

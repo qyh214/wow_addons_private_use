@@ -36,7 +36,7 @@ local ItemFilterOnClick = function(self)
 	settings:SetFilter(self.filterID, self:GetChecked())
 end
 local ItemFilterOnRefresh = function(self)
-	if getmetatable(AllTheThingsSettingsPerCharacter.Filters).__index[self.filterID] then
+	if settings:GetDefaultFilter(self.filterID) then
 		self.Text:SetTextColor(0.6, 0.7, 1);
 	else
 		self.Text:SetTextColor(1, 1, 1);
@@ -153,8 +153,7 @@ local buttonClassDefaults = child:CreateButton(
 { text = L.CLASS_DEFAULTS_BUTTON, tooltip = L.CLASS_DEFAULTS_BUTTON_TOOLTIP, },
 {
 	OnClick = function(self)
-		wipe(AllTheThingsSettingsPerCharacter.Filters);
-		settings:UpdateMode(1)
+		settings:ResetFilters()
 	end,
 })
 buttonClassDefaults:SetPoint("LEFT", headerWeaponsAndArmor, 0, 0)
@@ -172,12 +171,12 @@ local buttonAll = child:CreateButton(
 {
 	OnClick = function(self)
 		for k,v in pairs(allEquipmentFilters) do
-			AllTheThingsSettingsPerCharacter.Filters[v] = true
+			settings:SetFilter(v, true)
 		end
 		settings:UpdateMode(1)
 	end,
 })
-buttonAll:SetPoint("TOPLEFT", buttonClassDefaults, "TOPRIGHT", 5, 0)
+buttonAll:AlignAfter(buttonClassDefaults, 8)
 buttonAll.OnRefresh = function(self)
 	if app.MODE_DEBUG_OR_ACCOUNT then
 		self:Disable()
@@ -191,16 +190,30 @@ local buttonNone = child:CreateButton(
 {
 	OnClick = function(self)
 		for k,v in pairs(allEquipmentFilters) do
-			AllTheThingsSettingsPerCharacter.Filters[v] = false
+			settings:SetFilter(v, false)
 		end
 		settings:UpdateMode(1)
 	end,
 })
-buttonNone:SetPoint("TOPLEFT", buttonAll, "TOPRIGHT", 5, 0)
+buttonNone:AlignAfter(buttonAll, 8)
 buttonNone.OnRefresh = function(self)
 	if app.MODE_DEBUG_OR_ACCOUNT then
 		self:Disable()
 	else
 		self:Enable()
 	end
+end
+
+if app.IsRetail then
+	local checkboxStoreInProfile = child:CreateCheckBox(L.STORE_IN_PROFILE_BUTTON,
+	function(self)
+		self:SetChecked(settings:Get("Profile:StoreFilters"))
+	end,
+	function(self)
+		settings:Set("Profile:StoreFilters", self:GetChecked())
+		app.HandleEvent("OnSettingChanged", "Profile:StoreFilters");
+		settings:UpdateMode(1)
+	end)
+	checkboxStoreInProfile:SetATTTooltip(L.STORE_IN_PROFILE_BUTTON_TOOLTIP)
+	checkboxStoreInProfile:AlignAfter(buttonNone, 8)
 end

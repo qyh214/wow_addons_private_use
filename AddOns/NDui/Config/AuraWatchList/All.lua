@@ -65,6 +65,8 @@ local list = {
 		{AuraID = 445560, UnitID = "player"},	-- 紫蛋
 		{AuraID = 449954, UnitID = "player"},	-- 奸邪发射机
 		{AuraID = 449947, UnitID = "player", Text = NPE_JUMP},	-- 奸邪发射机，跳3下
+		{AuraID = 1213433, UnitID = "player", Text = L["Crit"]},	-- 哈哈棱镜
+		{AuraID = 1213434, UnitID = "player", Text = L["Haste"]},	-- 哈哈棱镜
 		-- 10.0 饰品
 		{AuraID = 381476, UnitID = "player"},	-- 爆发烈焰
 		{AuraID = 383941, UnitID = "player"},	-- 崩坏之力
@@ -156,8 +158,6 @@ local list = {
 		{AuraID = 80353, UnitID = "player"},	-- 时间扭曲
 		{AuraID = 264667, UnitID = "player"},	-- 原始狂怒
 		{AuraID = 390386, UnitID = "player"},	-- 守护巨龙之怒，龙希尔
-		{AuraID = 363534, UnitID = "player"},	-- 回溯，龙希尔
-		{AuraID = 357170, UnitID = "player"},	-- 时间膨胀，龙希尔
 		{AuraID = 178207, UnitID = "player"},	-- 狂怒战鼓
 		{AuraID = 230935, UnitID = "player"},	-- 高山战鼓
 		{AuraID = 256740, UnitID = "player"},	-- 漩涡战鼓
@@ -165,6 +165,7 @@ local list = {
 		{AuraID = 102364, UnitID = "player"},	-- 青铜龙的祝福
 		{AuraID = 292686, UnitID = "player"},	-- 制皮鼓
 		{AuraID = 381301, UnitID = "player"},	-- 野性皮革战鼓
+		{AuraID = 466904, UnitID = "player"},	-- 鹞鹰尖啸，射击
 		-- 团队增益或减伤
 		{AuraID = 1022, UnitID = "player"},		-- 保护祝福
 		{AuraID = 6940, UnitID = "player"},		-- 牺牲祝福
@@ -195,6 +196,8 @@ local list = {
 		{AuraID = 238698, UnitID = "player"},	-- 吸血光环
 		{AuraID = 209426, UnitID = "player"},	-- 幻影打击
 		{AuraID = 374227, UnitID = "player"},	-- 微风
+		{AuraID = 363534, UnitID = "player"},	-- 回溯，龙希尔
+		{AuraID = 357170, UnitID = "player"},	-- 时间膨胀，龙希尔
 		{AuraID = 114018, UnitID = "player", Flash = true},	-- 帷幕
 		{AuraID = 115834, UnitID = "player", Flash = true},
 	},
@@ -343,6 +346,7 @@ local list = {
 		{AuraID = 273721, UnitID = "target", Flash = true},	-- 围攻，1号易伤
 		{AuraID = 423588, UnitID = "target", Value = true},	-- 修道院，圣光屏障
 		{AuraID = 423839, UnitID = "target", Value = true},	-- 风暴复仇，驭雷栖巢
+		{AuraID = 445262, UnitID = "target", Value = true},	-- 虚空壳壁，驭雷栖巢
 		-- S1
 		{AuraID = 445409, UnitID = "target", Value = true},	-- 加固壳壁，斯卡莫拉克
 		-- S2

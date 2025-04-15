@@ -8,7 +8,7 @@
 ## IconTexture: 463447
 ## SavedVariables: ItemUpgradeTipDB
 ## Author: Belazor
-## Version: v3.6.1
+## Version: v3.6.2
 ## Group: ItemUpgradeTip
 ## Category-enUS: Equipment
 ## Category-deDE: Ausrüstung

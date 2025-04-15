@@ -34,10 +34,28 @@ function mod:GetOptions()
 	}
 end
 
+if mod:GetSeason() == 2 then
+	function mod:GetOptions()
+		return {
+			25646, -- Mortal Wound
+			25832, -- Summon Worm
+			720, -- Entangle
+			1215421, -- Toxic Pool
+		},nil,{
+			[1215421] = CL.underyou:format(mod:SpellName(1215421)), -- Toxic Pool (Toxic Pool under YOU)
+		}
+	end
+end
+
 function mod:OnBossEnable()
 	self:Log("SPELL_AURA_APPLIED_DOSE", "MortalWound", 25646)
 	self:Log("SPELL_CAST_SUCCESS", "SummonWorm", 518, 25831, 25832)
 	self:Log("SPELL_AURA_APPLIED", "Entangle", 720, 731, 1121)
+	if self:GetSeason() == 2 then
+		self:Log("SPELL_AURA_APPLIED", "ToxicPoolDamage", 1215421)
+		self:Log("SPELL_PERIODIC_DAMAGE", "ToxicPoolDamage", 1215421)
+		self:Log("SPELL_PERIODIC_MISSED", "ToxicPoolDamage", 1215421)
+	end
 end
 
 function mod:OnEngage()
@@ -80,5 +98,16 @@ function mod:Entangle(args)
 	if self:Player(args.destFlags) then -- Players, not pets
 		self:TargetMessage(720, "red", args.destName)
 		self:PlaySound(720, "alarm", nil, args.destName)
+	end
+end
+
+do
+	local prev = 0
+	function mod:ToxicPoolDamage(args)
+		if self:Me(args.destGUID) and args.time - prev > 2 then
+			prev = args.time
+			self:PersonalMessage(args.spellId, "underyou")
+			self:PlaySound(args.spellId, "underyou")
+		end
 	end
 end

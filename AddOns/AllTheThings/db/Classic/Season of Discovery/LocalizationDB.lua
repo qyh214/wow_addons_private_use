@@ -12,9 +12,6 @@ _.CategoryNames = {
 	[1] = "Bullets",
 	[2] = "Consumable",
 	[3] = "Tarot Decks",
-	[58] = "Holiday Cooking",
-	[63] = "Everyday Cooking",
-	[70] = "Unusual Delights",
 	[106] = "Card",
 	[183] = "Parts",
 	[184] = "Explosives",
@@ -87,9 +84,6 @@ _.CategoryIcons = {
 	[1] = 132383,
 	[2] = 132108,
 	[3] = 134492,
-	[58] = 134018,
-	[63] = 133968,
-	[70] = 133168,
 	[106] = 134492,
 	[183] = 133006,
 	[184] = 133711,
@@ -556,6 +550,16 @@ localize(L.EVENT_REMAPPING, {
 });
 
 -- Programmatic Event Scheduling
+_.Modules.Events.SetEventInformation(133899, {
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=2,["year"]=2024},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=4,["year"]=2025}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=3,["year"]=2025},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=5,["year"]=2026}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=4,["year"]=2026},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=6,["year"]=2027})
+});
+_.Modules.Events.SetEventInformation(133889, {
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=4,["year"]=2024},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=1,["year"]=2024}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=5,["year"]=2025},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=2,["year"]=2025}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=6,["year"]=2026},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=3,["year"]=2026})
+});
 _.Modules.Events.SetEventInformation(181, {
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=17,["weekday"]=4,["year"]=2024},{["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=18,["weekday"]=5,["year"]=2024}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=17,["weekday"]=5,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=18,["weekday"]=6,["year"]=2025}),
@@ -592,8 +596,6 @@ _.Modules.Events.SetEventInformation(141, {
 	_.Modules.Events.CreateSchedule({["hour"]=10,["minute"]=0,["month"]=12,["monthDay"]=16,["weekday"]=4,["year"]=2026},{["hour"]=6,["minute"]=0,["month"]=1,["monthDay"]=2,["weekday"]=7,["year"]=2027})
 });
 _.Modules.Events.SetEventInformation(479, {
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=10,["weekday"]=2,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=17,["weekday"]=2,["year"]=2025},{["remappedID"]=374}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=24,["weekday"]=2,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=31,["weekday"]=2,["year"]=2025},{["remappedID"]=375}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=7,["weekday"]=2,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=14,["weekday"]=2,["year"]=2025},{["remappedID"]=374}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=21,["weekday"]=2,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=28,["weekday"]=2,["year"]=2025},{["remappedID"]=375}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=5,["monthDay"]=5,["weekday"]=2,["year"]=2025},{["hour"]=0,["minute"]=0,["month"]=5,["monthDay"]=12,["weekday"]=2,["year"]=2025},{["remappedID"]=374}),
@@ -618,22 +620,14 @@ _.Modules.Events.SetEventInformation(479, {
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=1,["monthDay"]=26,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=2,["monthDay"]=2,["weekday"]=2,["year"]=2026},{["remappedID"]=375}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=2,["monthDay"]=9,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=2,["monthDay"]=16,["weekday"]=2,["year"]=2026},{["remappedID"]=374}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=2,["monthDay"]=23,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=2,["weekday"]=2,["year"]=2026},{["remappedID"]=375}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=9,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=16,["weekday"]=2,["year"]=2026},{["remappedID"]=374})
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=9,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=16,["weekday"]=2,["year"]=2026},{["remappedID"]=374}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=23,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=30,["weekday"]=2,["year"]=2026},{["remappedID"]=375}),
+	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=6,["weekday"]=2,["year"]=2026},{["hour"]=0,["minute"]=0,["month"]=4,["monthDay"]=13,["weekday"]=2,["year"]=2026},{["remappedID"]=374})
 });
 _.Modules.Events.SetEventInformation(201, {
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=5,["monthDay"]=1,["weekday"]=4,["year"]=2024},{["hour"]=23,["minute"]=59,["month"]=5,["monthDay"]=7,["weekday"]=3,["year"]=2024}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=5,["monthDay"]=1,["weekday"]=5,["year"]=2025},{["hour"]=23,["minute"]=59,["month"]=5,["monthDay"]=7,["weekday"]=4,["year"]=2025}),
 	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=5,["monthDay"]=1,["weekday"]=6,["year"]=2026},{["hour"]=23,["minute"]=59,["month"]=5,["monthDay"]=7,["weekday"]=5,["year"]=2026})
-});
-_.Modules.Events.SetEventInformation(133899, {
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=2,["year"]=2024},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=4,["year"]=2025}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=3,["year"]=2025},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=5,["year"]=2026}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=9,["monthDay"]=23,["weekday"]=4,["year"]=2026},{["hour"]=23,["minute"]=59,["month"]=3,["monthDay"]=19,["weekday"]=6,["year"]=2027})
-});
-_.Modules.Events.SetEventInformation(133889, {
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=4,["year"]=2024},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=1,["year"]=2024}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=5,["year"]=2025},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=2,["year"]=2025}),
-	_.Modules.Events.CreateSchedule({["hour"]=0,["minute"]=0,["month"]=3,["monthDay"]=20,["weekday"]=6,["year"]=2026},{["hour"]=23,["minute"]=59,["month"]=9,["monthDay"]=22,["weekday"]=3,["year"]=2026})
 });
 
 -- Filter Database Module
@@ -1626,6 +1620,7 @@ local ObjectNames = {
 	[410299] = "Arcane Secrets",
 	[410369] = "Dead Drop",
 	[410528] = "Ornamented Chest",
+	[410779] = "Offering Box",
 	[410847] = "Rusty Safe",
 	[411328] = "Slumbering Bones",
 	[411348] = "Dusty Coffer",
@@ -2948,6 +2943,14 @@ local phases = {
 		lore = "|cFFFFAAAAIncluded Naxxramas, and the new Karazhan Crypts dungeon|r",
 		minimumBuildVersion = 11500,
 		buildVersion = 11506,
+		state = 2,
+	},
+	[1612] = {
+		name = "Phase 8",
+		description = "|cFFAAFFAAThis was not available until Phase 8 of Season of Discovery.|r",
+		lore = "|cFFFFAAAAIncluded Classic+?|r",
+		minimumBuildVersion = 11500,
+		buildVersion = 11507,
 		state = 2,
 	},
 };
@@ -4655,6 +4658,7 @@ localize(ObjectNames, {
 	[410299] = "Arkane Geheimnisse",
 	[410369] = "Toter Briefkasten",
 	[410528] = "Verzierte Truhe",
+	[410779] = "Opferkasten",
 	[411328] = "Schlummernde Knochen",
 	[411348] = "Staubige Truhe",
 	[411358] = "Handwerkertruhe",
@@ -4746,6 +4750,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAADies war erst Phase 5 von Season of Discovery verfügbar.|r",
 	[1610] = "|cFFAAFFAADies war erst Phase 6 von Season of Discovery verfügbar.|r",
 	[1611] = "|cFFAAFFAADies war erst Phase 7 von Season of Discovery verfügbar.|r",
+	[1612] = "|cFFAAFFAADies war erst Phase 8 von Season of Discovery verfügbar.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -5850,6 +5855,7 @@ localize(ObjectNames, {
 	[410020] = "Statue de chouette",
 	[410299] = "Secrets arcaniques",
 	[410369] = "Piquet boîte morte",
+	[410779] = "Boîte d’offrandes",
 	[410847] = "Coffre rouillé",
 	[411328] = "Os endormis",
 	[411348] = "Coffre poussiéreux",
@@ -5943,6 +5949,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAACeci n'était pas disponible avant le Phase 5 du Season of Discovery.|r",
 	[1610] = "|cFFAAFFAACeci n'était pas disponible avant le Phase 6 du Season of Discovery.|r",
 	[1611] = "|cFFAAFFAACeci n'était pas disponible avant le Phase 7 du Season of Discovery.|r",
+	[1612] = "|cFFAAFFAACeci n'était pas disponible avant le Phase 8 du Season of Discovery.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -6632,6 +6639,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAAQuesto non era disponibile fino al Phase 5 di Season of Discovery.|r",
 	[1610] = "|cFFAAFFAAQuesto non era disponibile fino al Phase 6 di Season of Discovery.|r",
 	[1611] = "|cFFAAFFAAQuesto non era disponibile fino al Phase 7 di Season of Discovery.|r",
+	[1612] = "|cFFAAFFAAQuesto non era disponibile fino al Phase 8 di Season of Discovery.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -7327,6 +7335,7 @@ localize(ObjectNames, {
 	[406736] = "Estoque Perdido",
 	[406918] = "Bolsa de Mensageiro",
 	[408014] = "Tomo Gnômico",
+	[410779] = "Caixa de Oferenda",
 	[415106] = "Restos Queimados",
 	[415107] = "Restos Queimados",
 	[417072] = "Tábua com Pregos",
@@ -7383,6 +7392,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAAIsto não estava disponível até Phase 5 de Season of Discovery.|r",
 	[1610] = "|cFFAAFFAAIsto não estava disponível até Phase 6 de Season of Discovery.|r",
 	[1611] = "|cFFAAFFAAIsto não estava disponível até Phase 7 de Season of Discovery.|r",
+	[1612] = "|cFFAAFFAAIsto não estava disponível até Phase 8 de Season of Discovery.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -8494,6 +8504,7 @@ localize(ObjectNames, {
 	[409949] = "Статуя одной из сов",
 	[410020] = "Статуя совы",
 	[410299] = "Секреты тайной магии",
+	[410779] = "Ларец для подношений",
 	[410847] = "Ржавый сейф",
 	[411328] = "Спящие кости",
 	[411348] = "Пыльный сундук",
@@ -8572,6 +8583,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAAЭто было недоступно до Phase 5 из Season of Discovery.|r",
 	[1610] = "|cFFAAFFAAЭто было недоступно до Phase 6 из Season of Discovery.|r",
 	[1611] = "|cFFAAFFAAЭто было недоступно до Phase 7 из Season of Discovery.|r",
+	[1612] = "|cFFAAFFAAЭто было недоступно до Phase 8 из Season of Discovery.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -8879,9 +8891,6 @@ if simplifiedLocale == "ko" then
 localize(_.CategoryNames, {
 	[1] = "투사체",
 	[2] = "소모품",
-	[58] = "축제 요리",
-	[63] = "일반 요리",
-	[70] = "특별한 별미",
 	[183] = "부품",
 	[184] = "폭발물",
 	[185] = "고글",
@@ -9650,6 +9659,7 @@ localize(ObjectNames, {
 	[409949] = "쌍둥이 올빼미 조각상",
 	[410369] = "비밀 접선 지점",
 	[410528] = "장식된 상자",
+	[410779] = "공물 상자",
 	[410847] = "녹슨 금고",
 	[412224] = "암흑 의식용 돌",
 	[414532] = "폭포수 보관함",
@@ -9726,6 +9736,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAAPhase 5(Season of Discovery)까지 사용할 수 없습니다.|r",
 	[1610] = "|cFFAAFFAAPhase 6(Season of Discovery)까지 사용할 수 없습니다.|r",
 	[1611] = "|cFFAAFFAAPhase 7(Season of Discovery)까지 사용할 수 없습니다.|r",
+	[1612] = "|cFFAAFFAAPhase 8(Season of Discovery)까지 사용할 수 없습니다.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -10799,6 +10810,7 @@ localize(ObjectNames, {
 	[409949] = "Estatua de búho gemelo",
 	[410299] = "Secretos Arcanos",
 	[410369] = "Escondite secreto",
+	[410779] = "Caja de ofrendas",
 	[411674] = "Profecía sobre la muerte de un rey",
 	[414532] = "Cofre de Fonroca",
 	[414624] = "Alijo del faro",
@@ -10858,6 +10870,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAAEsto no estuvo disponible hasta Phase 5 de Season of Discovery.|r",
 	[1610] = "|cFFAAFFAAEsto no estuvo disponible hasta Phase 6 de Season of Discovery.|r",
 	[1611] = "|cFFAAFFAAEsto no estuvo disponible hasta Phase 7 de Season of Discovery.|r",
+	[1612] = "|cFFAAFFAAEsto no estuvo disponible hasta Phase 8 de Season of Discovery.|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -11954,6 +11967,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAA该功能直到 Phase 5 的 Season of Discovery 才可用。|r",
 	[1610] = "|cFFAAFFAA该功能直到 Phase 6 的 Season of Discovery 才可用。|r",
 	[1611] = "|cFFAAFFAA该功能直到 Phase 7 的 Season of Discovery 才可用。|r",
+	[1612] = "|cFFAAFFAA该功能直到 Phase 8 的 Season of Discovery 才可用。|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({
@@ -12342,6 +12356,7 @@ for key,value in pairs({
 	[1609] = "第5階段",
 	[1610] = "第6階段",
 	[1611] = "第7階段",
+	[1612] = "第8階段",
 })
 do phases[key].name = value; end
 for key,value in pairs({
@@ -12357,6 +12372,7 @@ for key,value in pairs({
 	[1609] = "|cFFAAFFAA該功能直到 第5階段 的 Season of Discovery 才可用。|r",
 	[1610] = "|cFFAAFFAA該功能直到 第6階段 的 Season of Discovery 才可用。|r",
 	[1611] = "|cFFAAFFAA該功能直到 第7階段 的 Season of Discovery 才可用。|r",
+	[1612] = "|cFFAAFFAA該功能直到 第8階段 的 Season of Discovery 才可用。|r",
 })
 do phases[key].description = value; end
 for key,value in pairs({

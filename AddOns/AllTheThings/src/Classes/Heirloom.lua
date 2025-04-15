@@ -139,15 +139,13 @@ do
 	-- Heirloom Item
 	local createHeirloom = app.ExtendClass("Item", "Heirloom", "itemID", {
 		IsClassIsolated = true,
-		-- itemID = function(t) return t.heirloomID; end,
 		heirloomID = function(t) return t.itemID; end,
+		-- TODO: use typical caching for this, inherit from Item cache somehow?
 		icon = function(t) return select(4, C_Heirloom_GetHeirloomInfo(t.itemID)) or GetItemIcon(t.itemID); end,
 		link = function(t) return C_Heirloom_GetHeirloomLink(t.itemID) or select(2, GetItemInfo(t.itemID)); end,
+		name = function(t) return GetItemInfo(t.itemID); end,
 		b = function(t) return 2 end,
 		collectibleAsCost = app.ReturnFalse,
-		saved = function(t)
-			return t.collected == 1;
-		end,
 		isWeapon = hierloomLevelFields.isWeapon,
 		variants = {
 			app.GlobalVariants.AndAppearance,
@@ -254,8 +252,10 @@ do
 		-- Kinda would rather us have the Heirloom as a cost/provider for the actual Unlock and list the raw Unlocks
 		-- under Character > Heirlooms... hmmmm
 		local heirloom, upgrades = nil, nil;
+		-- TODO: if Classic uses this Module there's not yet support to properly return a merged object based on multiple sources
+		local MergedObject = app.MergedObject or function(t) return t[1] or t end
 		for itemID,_ in pairs(heirloomIDs) do
-			heirloom = SearchForObject("itemID", itemID, "field");
+			heirloom = MergedObject(SearchForObject("itemID", itemID, "field", true))
 			if heirloom then
 				upgrades = C_Heirloom_GetHeirloomMaxUpgradeLevel(itemID);
 				if upgrades and upgrades > 0 then

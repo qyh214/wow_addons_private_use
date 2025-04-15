@@ -1,6 +1,29 @@
 local E, L = select(2, ...):unpack()
 local P = E.Party
 
+E.spell_marked = E.isRetail and {
+	[48707] = 205727,
+	[198589] = 205411,
+	[217832] = 205596,
+	[198793] = 354489,
+	[187650] = 203340,
+	[205625] = 205625,
+	[371032] = 371032,
+	[116849] = 388218,
+	[122470] = 280195,
+	[853] = 234299,
+	[228049] = true,
+	[199448] = true,
+	[88625] = 200199,
+	[586] = 408557,
+	[8122] = 196704,
+	[34433] = 314867,
+	[123040] = 314867,
+	[2094] = 200733,
+	[1966] = 79008,
+	[1218128] = 1218692,
+} or E.BLANK
+
 local markEnhancedDesc = {}
 for k, v in pairs(E.spell_marked) do
 	if not C_Spell.DoesSpellExist(k) or (v ~= true and not C_Spell.DoesSpellExist(v)) then
@@ -94,7 +117,8 @@ local highlight = {
 				glowBorder = {
 					disabled = false,
 					name = ENABLE,
-					desc = format("%s.\n\n|cffff2020%s", L["Glow Border"], L["Only applies to spells that have Glow enabled in the Spells tab"]),
+					desc = format("%s.\n\n|cffff2020%s", L["Glow Border"],
+						L["Only applies to spells that have Glow enabled in the Spells tab"]),
 					order = 1,
 					type = "toggle",
 				},

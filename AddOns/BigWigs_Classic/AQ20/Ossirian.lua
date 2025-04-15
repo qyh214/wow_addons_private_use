@@ -6,7 +6,9 @@ local mod, CL = BigWigs:NewBoss("Ossirian the Unscarred", 509, 1542)
 if not mod then return end
 mod:RegisterEnableMob(15339)
 mod:SetEncounterID(723)
-mod:SetRespawnTime(mod:Retail() and 30 or 7)
+if mod:Retail() then
+	mod:SetRespawnTime(30)
+end
 
 --------------------------------------------------------------------------------
 -- Initialization

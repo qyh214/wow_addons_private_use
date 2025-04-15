@@ -4,7 +4,7 @@
 ## Interface-Vanilla: 11403
 ## Title: Chomp Message Library
 ## Author: Justin Snelgrove
-## Version: 0519976
+## Version: 0ebfa2f
 ## IconAtlas: minortalents-icon-book
 ## Notes: Battle.net and in-game messaging library with smart addon whispers.
 ## OptionalDeps: CallbackHandler-1.0, ChatThrottleLib, LibStub

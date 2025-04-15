@@ -169,6 +169,8 @@ L["Aspiring Forgehand"] = "Aspiring Forgehand"
 L["Aspix"] = "Aspix"
 L["Asset Manager"] = "Responsabile delle Risorse"
 --[[Translation missing --]]
+L["assignmentWarning"] = "MDT will NOT automatically set target markers on enemies in the game world."
+--[[Translation missing --]]
 L["Assistant Unnaturaler"] = "Assistant Unnaturaler"
 L["Astral Attendant"] = "Attendente Astrale"
 L["Astronos"] = "Astronos"
@@ -1931,6 +1933,8 @@ L["Off-Duty Laborer"] = "Bracciante Fuori Servizio"
 L["Officer Quarters"] = "Alloggi degli Ufficiali"
 L["Ogron Laborer"] = "Bracciante Ogron"
 --[[Translation missing --]]
+L["Okay"] = "Okay"
+--[[Translation missing --]]
 L["Ol' Waxbeard"] = "Ol' Waxbeard"
 L["Olaf"] = "Olaf"
 L["Olmyr the Enlightened"] = "Olmyr l'Illuminato"
@@ -2244,6 +2248,9 @@ L["Rook Spiderling"] = "Ragnetto Corvino"
 L["Rook Spinner"] = "Filatore Corvino"
 --[[Translation missing --]]
 L["rookeryShortname"] = "ROOK"
+--[[Translation missing --]]
+L["rookItemDescription"] = [=[After defeating |cFFFF0000Kyrioss|r loot |cFF00FF00Stormrook Feather|r 
+Use it on a nearby |cFF00FF00Chained Stormrook|r to gain this buff for 5 minutes.]=]
 L["Root"] = "Radici"
 L["Rotation"] = "Rotazione"
 --[[Translation missing --]]
@@ -3197,6 +3204,8 @@ L["War Lynx"] = "War Lynx"
 L["War Ohuna"] = "Ohuna da Guerra"
 L["Warlord Parjesh"] = "Signore della Guerra Parjesh"
 L["Warlord Sargha"] = "Signora della Guerra Sargha"
+--[[Translation missing --]]
+L["Warning"] = "Warning"
 L["Warp Shade"] = "Ombra Distorcente"
 L["Warp Stalker"] = "Segugio Distorcente"
 L["Waste Pipes"] = "Tubature di Scarico"

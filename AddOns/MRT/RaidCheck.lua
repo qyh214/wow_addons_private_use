@@ -1407,20 +1407,40 @@ function module.options:Load()
 	self.chkReadyCheckFrameClassSort = ELib:Check(self.tab.tabs[2],L.RaidCheckSortByClass,VMRT.RaidCheck.ReadyCheckSortClass):Point(15,-235):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.RaidCheck.ReadyCheckSortClass = true
+			VMRT.RaidCheck.ReadyCheckSortName = nil
+			module.options.chkReadyCheckFrameClassName:SetChecked(false)
 		else
 			VMRT.RaidCheck.ReadyCheckSortClass = nil
 		end
 	end)
 
-	self.chkReadyCheckColDecLine = ELib:DecorationLine(self.tab.tabs[2]):Point("TOP",self.chkReadyCheckFrameClassSort,"BOTTOM",0,-5):Size(0,1):Point("LEFT",0,0):Point("RIGHT",0,0)
+	self.chkReadyCheckFrameClassName = ELib:Check(self.tab.tabs[2],L.RaidCheckSortByName,VMRT.RaidCheck.ReadyCheckSortName):Point(15,-260):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.RaidCheck.ReadyCheckSortName = true
+			VMRT.RaidCheck.ReadyCheckSortClass = nil
+			module.options.chkReadyCheckFrameClassSort:SetChecked(false)
+		else
+			VMRT.RaidCheck.ReadyCheckSortName = nil
+		end
+	end)
 
-	self.chkReadyCheckColText = ELib:Text(self.tab.tabs[2],L.cd2Columns..":",12):Point("TOPLEFT",self.chkReadyCheckFrameClassSort,"BOTTOMLEFT",0,-10)
+	self.chkReadyCheckColDecLine = ELib:DecorationLine(self.tab.tabs[2]):Point("TOP",self.chkReadyCheckFrameClassName,"BOTTOM",0,-5):Size(0,1):Point("LEFT",0,0):Point("RIGHT",0,0)
+
+	self.chkReadyCheckColText = ELib:Text(self.tab.tabs[2],L.cd2Columns..":",12):Point("TOPLEFT",self.chkReadyCheckFrameClassName,"BOTTOMLEFT",0,-10)
 	
-	self.chkReadyCheckColSoulstone = ELib:Check(self.tab.tabs[2],GetSpellInfo(20707) or "Soulstone",VMRT.RaidCheck.ReadyCheckSoulstone):Point("TOPLEFT",self.chkReadyCheckFrameClassSort,"BOTTOMLEFT",0,-30):OnClick(function(self) 
+	self.chkReadyCheckColSoulstone = ELib:Check(self.tab.tabs[2],GetSpellInfo(20707) or "Soulstone",VMRT.RaidCheck.ReadyCheckSoulstone):Point("TOPLEFT",self.chkReadyCheckFrameClassName,"BOTTOMLEFT",0,-30):OnClick(function(self) 
 		if self:GetChecked() then
 			VMRT.RaidCheck.ReadyCheckSoulstone = true
 		else
 			VMRT.RaidCheck.ReadyCheckSoulstone = nil
+		end
+	end)	
+
+	self.chkReadyCheckColIlvl = ELib:Check(self.tab.tabs[2],STAT_AVERAGE_ITEM_LEVEL or "Item level",VMRT.RaidCheck.ReadyCheckIlvl):Point("TOPLEFT",self.chkReadyCheckColSoulstone,"BOTTOMLEFT",0,-5):OnClick(function(self) 
+		if self:GetChecked() then
+			VMRT.RaidCheck.ReadyCheckIlvl = true
+		else
+			VMRT.RaidCheck.ReadyCheckIlvl = nil
 		end
 	end)	
 
@@ -2095,6 +2115,18 @@ function module.frame:UpdateCols()
 		end
 		header:SetText(RCW_iconsListHeaders[RCW_iconsList_ORIGIN+colsAdd])
 	end
+	if VMRT.RaidCheck.ReadyCheckIlvl then
+		colsAdd = colsAdd + 1
+		RCW_iconsList[RCW_iconsList_ORIGIN+colsAdd] = "ilvl"
+		RCW_iconsListHeaders[RCW_iconsList_ORIGIN+colsAdd] = STAT_AVERAGE_ITEM_LEVEL or "Item level"
+		RCW_iconsListDebugIcons[RCW_iconsList_ORIGIN+colsAdd] = 132281
+		local header = module.frame.headers[RCW_iconsList_ORIGIN+colsAdd]
+		if not header then
+			header = ELib:Text(module.frame.headers,"",10):Color(1,1,1):Point("BOTTOMLEFT",module.frame.headers[RCW_iconsList_ORIGIN+colsAdd-1],"BOTTOMLEFT",30,0)--:Font(VMRT.RaidCheck.ReadyCheckFont or ExRT.F.defFont,(VMRT.RaidCheck.ReadyCheckFontSize or 12)-2)
+			module.frame.headers[RCW_iconsList_ORIGIN+colsAdd] = header
+		end
+		header:SetText(RCW_iconsListHeaders[RCW_iconsList_ORIGIN+colsAdd])
+	end
 	for i=1,40 do
 		local line = module.frame.lines[i]
 		line:SetSize(420+60+30+(ExRT.isClassic and 30*RCW_liveToClassicDiff or 0)+RCW_liveToslDiff+colsAdd*30,14)
@@ -2109,6 +2141,16 @@ function module.frame:UpdateCols()
 			line["ss"]:Show()
 		elseif line["ss"] then
 			line["ss"]:Hide()
+		end
+
+		if VMRT.RaidCheck.ReadyCheckIlvl then
+			if not line["ilvl"] then
+				CreateCol(line,"ilvl",RCW_iconsList_ORIGIN+2)
+			end
+			prevPointer = line["ilvl"]:UpdatePos(prevPointer)
+			line["ilvl"]:Show()
+		elseif line["ilvl"] then
+			line["ilvl"]:Hide()
 		end
 		
 	end	
@@ -2503,18 +2545,25 @@ function module.frame:UpdateRoster()
 			result[#result+1] = {
 				name = ExRT.F.delUnitNameServer(name),
 				unit = unit,
-				class = class,
+				class = class or "",
 			}
 		end
 	end
-	if VMRT and VMRT.RaidCheck and VMRT.RaidCheck.ReadyCheckSortClass then
-		sort(result,function(a,b)
-			if a.class == b.class then
+	if VMRT and VMRT.RaidCheck then
+		if VMRT.RaidCheck.ReadyCheckSortName then
+			sort(result,function(a,b)
 				return a.name < b.name
-			else
-				return a.class < b.class
-			end
-		end)
+			end)
+		end
+		 if VMRT.RaidCheck.ReadyCheckSortClass then
+			sort(result,function(a,b)
+				if a.class == b.class then
+					return a.name < b.name
+				else
+					return a.class < b.class
+				end
+			end)
+		end
 	end
 	for i=1,#result do
 		count = count + 1
@@ -2793,6 +2842,19 @@ function module.frame:UpdateData(onlyLine)
 						line.dur.bigText:SetTextColor(1,1,1)
 					end
 				end
+				if line.ilvl and not self.isTest then
+					local inspectDB = ExRT.A.Inspect and ExRT.A.Inspect.db.inspectDB
+					local data = inspectDB and inspectDB[line.unit_name]
+					if inspectDB and not data then
+						for n,d in pairs(inspectDB) do
+							if strsplit("-",n) == line.unit_name then
+								data = d
+								break
+							end
+						end
+					end
+					line.ilvl.bigText:SetText(data and format("%.1f",data.ilvl) or "-")
+				end
 				if line.kit and not self.isTest then
 					local durTab, dur = module.db.kit[line.unit_name]
 					if durTab and (durTab.time + (line.rc_status ~= 4 and 60 or 600) > currTime) then
@@ -2948,6 +3010,13 @@ function module.frame:UpdateData(onlyLine)
 							line.dur.bigText:SetTextColor(1,1,1)
 						end
 					end
+					if line.ilvl then
+						line.ilvl.texture:SetTexture("")
+						local ilvl = self.testData[line.pos].ilvl or math.random(1000,9999) / 10
+						self.testData[line.pos].ilvl = ilvl
+
+						line.ilvl.bigText:SetText(ilvl and format("%.1f",ilvl) or "-")
+					end
 
 					buffCount = self.testData[line.pos].buffCount or math.random(4,5)
 					self.testData[line.pos].buffCount = buffCount
@@ -3010,7 +3079,10 @@ function module:ReadyCheckWindow(starter,isTest,manual)
 
 	local colsAdd = 0
 	if VMRT.RaidCheck.ReadyCheckSoulstone then
-		colsAdd = bit.bor(colsAdd,0x1)
+		colsAdd = bit.bor(colsAdd,bit.lshift(1,0))
+	end
+	if VMRT.RaidCheck.ReadyCheckIlvl then
+		colsAdd = bit.bor(colsAdd,bit.lshift(1,1))
 	end
 	if (self.frame.colsAdd or -1) ~= colsAdd then
 		self.frame.colsAdd = colsAdd
@@ -4142,7 +4214,7 @@ if (not ExRT.isClassic) and UnitLevel'player' >= 60 then
 		elseif event == "READY_CHECK_FINISHED" then
 			module.consumables:OnHide()
 
-			if self.isRLpos then
+			if self.isRLpos and not InCombatLockdown() then
 				self.rlpointer:Hide()
 			end
 		elseif event == "UNIT_AURA" then

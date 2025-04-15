@@ -89,7 +89,7 @@ spec:RegisterTalents( {
     scouts_instincts           = { 102424, 459455, 1 }, -- You cannot be slowed below 80% of your normal movement speed while Aspect of the Cheetah is active.
     scrappy                    = { 102408, 459533, 1 }, -- Casting Wildfire Bomb reduces the cooldown of Intimidation and Binding Shot by 0.5 sec.
     serrated_tips              = { 102384, 459502, 1 }, -- You gain 5% more critical strike from critical strike sources.
-    specialized_arsenal        = { 102390, 459542, 1 }, -- Wildfire Bomb deals 10% increased damage. 
+    specialized_arsenal        = { 102390, 459542, 1 }, -- Wildfire Bomb deals 10% increased damage.
     survival_of_the_fittest    = { 102422, 264735, 1 }, -- Reduces all damage you and your pet take by 30% for 8 sec.
     tar_trap                   = { 102393, 187698, 1 }, -- Hurls a tar trap to the target location that creates a 8 yd radius pool of tar around itself for 30 sec when the first enemy approaches. All enemies have 50% reduced movement speed while in the area of effect. Limit 1. Trap will exist for 1 min.
     tarcoated_bindings         = { 102417, 459460, 1 }, -- Binding Shot's stun duration is increased by 1 sec.
@@ -127,7 +127,7 @@ spec:RegisterTalents( {
     quick_shot                 = { 102279, 378940, 1 }, -- When you cast Kill Command, you have a 30% chance to fire an Arcane Shot at your target at 100% of normal value.
     ranger                     = { 102256, 385695, 1 }, -- Kill Shot, Serpent Sting, Arcane Shot, Steady Shot, and Explosive Shot deal 20% increased damage.
     raptor_strike              = { 102262, 186270, 1 }, -- A vicious slash dealing 341,513 Physical damage.
-    relentless_primal_ferocity = { 102258, 459922, 1 }, -- Coordinated Assault sends you and your pet into a state of primal power. For the duration of Coordinated Assault, Kill Command generates 2 additional stack of Tip of the Spear, you gain 10% Haste, and Tip of the Spear's damage bonus is increased by 50%. 
+    relentless_primal_ferocity = { 102258, 459922, 1 }, -- Coordinated Assault sends you and your pet into a state of primal power. For the duration of Coordinated Assault, Kill Command generates 2 additional stack of Tip of the Spear, you gain 10% Haste, and Tip of the Spear's damage bonus is increased by 50%.
     ruthless_marauder          = { 102261, 470068, 1 }, -- Fury of the Eagle's damage is increased by 10% and has a 20% chance to generate a stack of Tip of the Spear. When Fury of the Eagle ends, your Haste is increased by 8%.
     sic_em                     = { 102280, 459920, 1 }, -- Kill Command's chance to grant Deathblow is increased by 5% and Deathblow now makes Kill Shot strike up to 2 additional targets. Your chance to gain Deathblow is doubled during Coordinated Assault.  Deathblow The cooldown of Kill Shot is reset. Your next Kill Shot can be used on any target, regardless of their current health.
     spearhead                  = { 102291, 360966, 1 }, -- You give the signal, and your pet charges your target, bleeding them for 361,794 damage over 10 sec and increasing you and your pet's chance to critically strike your target by 30% for 10 sec.
@@ -164,23 +164,23 @@ spec:RegisterTalents( {
     extrapolated_shots         = {  94973, 450374, 1 }, -- When you apply Sentinel to a target not affected by Sentinel, you apply 1 additional stack.
     eyes_closed                = {  94970, 450381, 1 }, -- For 8 sec after activating Coordinated Assault, all abilities are guaranteed to apply Sentinel.
     invigorating_pulse         = {  94971, 450379, 1 }, -- Each time Sentinel deals damage to an enemy it has an up to 15% chance to generate 5 Focus. Chances decrease with each additional Sentinel currently imploding applied to enemies.
-    lunar_storm                = {  94978, 450385, 1 }, -- Every 30 sec your next Wildfire Bomb launches a celestial arrow that conjures a 12 yd radius Lunar Storm at the target's location dealing 94,395 Arcane damage. For the next 12 sec, a random enemy affected by Sentinel within your Lunar Storm gets struck for 88,495 Arcane damage every 0.4 sec. Any target struck by this effect takes 10% increased damage from you and your pet for 8 sec. 
+    lunar_storm                = {  94978, 450385, 1 }, -- Every 30 sec your next Wildfire Bomb launches a celestial arrow that conjures a 12 yd radius Lunar Storm at the target's location dealing 94,395 Arcane damage. For the next 12 sec, a random enemy affected by Sentinel within your Lunar Storm gets struck for 88,495 Arcane damage every 0.4 sec. Any target struck by this effect takes 10% increased damage from you and your pet for 8 sec.
     overwatch                  = {  94980, 450384, 1 }, -- All Sentinel debuffs implode when a target affected by more than 3 stacks of your Sentinel falls below 20% health. This effect can only occur once every 15 sec per target.
     release_and_reload         = {  94958, 450376, 1 }, -- When you apply Sentinel on a target, you have a 15% chance to apply a second stack.
-    sentinel                   = {  94976, 450369, 1, "sentinel" }, -- Your attacks have a chance to apply Sentinel on the target, stacking up to 10 times. While Sentinel stacks are higher than 3, applying Sentinel has a chance to trigger an implosion, causing a stack to be consumed on the target every sec to deal 84,588 Arcane damage. 
-    sentinel_precision         = {  94981, 450375, 1 }, -- Raptor Strike, Mongoose Bite and Wildfire Bomb deal 10% increased damage. 
+    sentinel                   = {  94976, 450369, 1, "sentinel" }, -- Your attacks have a chance to apply Sentinel on the target, stacking up to 10 times. While Sentinel stacks are higher than 3, applying Sentinel has a chance to trigger an implosion, causing a stack to be consumed on the target every sec to deal 84,588 Arcane damage.
+    sentinel_precision         = {  94981, 450375, 1 }, -- Raptor Strike, Mongoose Bite and Wildfire Bomb deal 10% increased damage.
     sentinel_watch             = {  94970, 451546, 1 }, -- Whenever a Sentinel deals damage, the cooldown of Coordinated Assault is reduced by 1 sec, up to 15 sec.
     sideline                   = {  94990, 450378, 1 }, -- When Sentinel starts dealing damage, the target is snared by 40% for 3 sec.
     symphonic_arsenal          = {  94965, 450383, 1 }, -- Multi-Shot and Butchery discharge arcane energy from all targets affected by your Sentinel, dealing 84,956 Arcane damage to up to 5 targets within 8 yds of your Sentinel targets.
 } )
 
 -- PvP Talents
-spec:RegisterPvpTalents( { 
+spec:RegisterPvpTalents( {
     chimaeral_sting  = 3609, -- (356719) Stings the target, dealing 117,636 Nature damage and initiating a series of venoms. Each lasts 3 sec and applies the next effect after the previous one ends.  Scorpid Venom: 90% reduced movement speed.  Spider Venom: Silenced.  Viper Venom: 20% reduced damage and healing.
     diamond_ice      =  686, -- (203340) Victims of Freezing Trap can no longer be damaged or healed. Freezing Trap is now undispellable, but has a 4 sec duration.
     explosive_powder = 5690, -- (1218150) Bursting Shot now also knocks you back and snares enemies by an additional 20%.
     hunting_pack     =  661, -- (203235) Aspect of the Cheetah has 50% reduced cooldown and grants its effects to allies within 15 yds.
-    interlope        = 5532, -- (248518) Misdirection now causes the next 3 hostile spells cast on your target within 10 sec to be redirected to your pet, but its cooldown is increased by 15 sec. Your pet must be within 20 yards of the target for spells to be redirected. 
+    interlope        = 5532, -- (248518) Misdirection now causes the next 3 hostile spells cast on your target within 10 sec to be redirected to your pet, but its cooldown is increased by 15 sec. Your pet must be within 20 yards of the target for spells to be redirected.
     mending_bandage  =  662, -- (212640) Instantly clears all bleeds, poisons, and diseases from the target, and heals for 18% damage over 6 sec. Being attacked will stop you from using Mending Bandage.
     sticky_tar_bomb  =  664, -- (407028) Throw a Sticky Tar Bomb that coats your target's weapons with tar, disarming them for 4 sec. After 4 sec, Sticky Tar Bomb explodes onto nearby enemies. Other enemies that are hit by the explosion are affected by Sticky Tar Bomb but this effect cannot spread further.
     survival_tactics = 3607, -- (202746) Feign Death reduces damage taken by 90% for 2 sec.
@@ -194,13 +194,13 @@ spec:RegisterAuras( {
      aspect_of_the_chameleon = {
         id = 61648,
         duration = 60.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Movement speed increased by $w1%.
     aspect_of_the_cheetah = {
         id = 356781,
         duration = 3.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- The range of $?s259387[Mongoose Bite][Raptor Strike] and and Mastery: Spirit Bond is increased to $265189r yds.
     aspect_of_the_eagle = {
@@ -212,7 +212,7 @@ spec:RegisterAuras( {
     aspect_of_the_turtle = {
         id = 186265,
         duration = 8.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent:
     -- https://wowhead.com/beta/spell=120360
@@ -225,7 +225,7 @@ spec:RegisterAuras( {
     bleeding_gash = {
         id = 361049,
         duration = 6,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Bleeding for $w1 Physical damage every $t1 sec.  Taking $s2% increased damage from the Hunter's pet.
     -- https://wowhead.com/beta/spell=321538
@@ -245,18 +245,18 @@ spec:RegisterAuras( {
     bombardier = {
         id = 459859,
         duration = 60.0,
-        max_stack = 2,
+        max_stack = 1
     },
     -- Disoriented.
     bursting_shot = {
         id = 224729,
         duration = 4.0,
-        max_stack = 1,
+        max_stack = 1
     },
     camouflage = {
         id = 199483,
         duration = 60,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Bleeding.
     careful_aim = {
@@ -264,13 +264,13 @@ spec:RegisterAuras( {
         duration = 8.0,
         tick_time = 1.0,
         pandemic = true,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Rooted.
     catch_out = {
         id = 451517,
         duration = 3.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- You and your pet's bond is strengthened, increasing you and your pet's damage by $s2% and increasing your chance to reset Kill Command's cooldown.$?a459922[; Kill Command is generating $459962s4 additional stack of Tip of the Spear, your Haste is increased by $459962s1%, and Tip of the Spear's damage bonus is increased by $459962s2%.]
     coordinated_assault = {
@@ -282,18 +282,18 @@ spec:RegisterAuras( {
     coordinated_assault_empower = {
         id = 361738,
         duration = 5,
-        max_stack = 1,
+        max_stack = 1
     },
     -- While Coordinated Assault is active, the cooldown of Wildfire Bomb is reduced by 25%, Wildfire Bomb generates 5 Focus when thrown, Kill Shot's cooldown is reduced by 25%, and Kill Shot can be used against any target, regardless of their current health.
     coordinated_kill = {
-        id = 385739,
+        id = 385739
     },
     -- Bleeding for $w1 damage every $t1 sec.
     cull_the_herd = {
         id = 1217430,
         duration = function() return 6 + ( 2 * talent.born_to_kill.rank ) end,
         tick_time = 2.0,
-        max_stack = 1,
+        max_stack = 1
     },
     deadly_duo = {
         id = 397568,
@@ -310,46 +310,27 @@ spec:RegisterAuras( {
     entrapment = {
         id = 393456,
         duration = 4.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Exploding for $212680s1 Fire damage after $t1 sec.
     explosive_shot = {
         id = 212431,
         duration = 3.0,
         tick_time = 3.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Suffering $w2 Fire damage every $t2 sec.
     explosive_trap = {
         id = 13812,
         duration = 10.0,
         tick_time = 1.0,
-        max_stack = 1,
-
-        -- Affected by:
-        -- mastery_spirit_bond[263135] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'sp_bonus': 0.85, 'radius': 25.0, 'target': TARGET_UNIT_CASTER_AND_SUMMONS, 'modifies': DAMAGE_HEALING, }
-        -- mastery_spirit_bond[263135] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'sp_bonus': 0.85, 'radius': 25.0, 'target': TARGET_UNIT_CASTER_AND_SUMMONS, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- survival_hunter[137017] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- survival_hunter[137017] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- coordinated_assault[360952] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 20.0, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- coordinated_assault[360952] #4: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'points': 20.0, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- freezing_trap[3355] #1: { 'type': APPLY_AURA, 'subtype': MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, 'value': 7, 'schools': ['physical', 'holy', 'fire'], 'target': TARGET_UNIT_TARGET_ENEMY, }
-        -- beast_mastery_hunter[137015] #0: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'target': TARGET_UNIT_CASTER, 'modifies': DAMAGE_HEALING, }
-        -- beast_mastery_hunter[137015] #1: { 'type': APPLY_AURA, 'subtype': ADD_PCT_MODIFIER, 'target': TARGET_UNIT_CASTER, 'modifies': PERIODIC_DAMAGE_HEALING, }
-        -- spearhead[378957] #1: { 'type': APPLY_AURA, 'subtype': MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, 'points': 30.0, 'target': TARGET_UNIT_TARGET_ENEMY, }
-        -- spearhead[378957] #2: { 'type': APPLY_AURA, 'subtype': MOD_CRITICAL_DAMAGE_TAKEN_FROM_CASTER, 'target': TARGET_UNIT_TARGET_ENEMY, }
+        max_stack = 1
     },
-    -- Your Kill Command hits $s1 targets.
-    --[[exposed_flank = {
-        id = 459864,
-        duration = 10.0,
-        max_stack = 1,
-    },--]]
     -- All abilities are guaranteed to apply Sentinel.
     eyes_closed = {
         id = 451180,
         duration = 8.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Directly controlling pet.
     -- https://wowhead.com/beta/spell=321297
@@ -367,11 +348,11 @@ spec:RegisterAuras( {
         max_stack = 1
     },
     -- https://www.wowhead.com/spell=1217377
-    -- Frenzy Strikes Attack speed increased by 25%.  
+    -- Frenzy Strikes Attack speed increased by 25%.
     frenzy_strikes = {
         id = 1217377,
         duration = 12,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Rooted.
     -- https://wowhead.com/beta/spell=190925
@@ -384,38 +365,28 @@ spec:RegisterAuras( {
     },
     howl_of_the_pack_leader_cooldown = {
         id = 471877,
-        duration = function() return 30 - ( 5 * talent.better_together.rank ) end,
-        max_stack = 1,
+        duration = function() return 25 - ( 5 * talent.better_together.rank ) end,
+        max_stack = 1
     },
     howl_of_the_pack_leader_bear = {
         id = 472325,
-        duration = function() return 30 - ( 5 * talent.better_together.rank ) end,
-        max_stack = 1,
+        duration = 30,
+        max_stack = 1
     },
     howl_of_the_pack_leader_boar = {
         id = 472324,
-        duration = function() return 30 - ( 5 * talent.better_together.rank ) end,
-        max_stack = 1,
+        duration = 30,
+        max_stack = 1
     },
     howl_of_the_pack_leader_wyvern = {
         id = 471878,
-        duration = function() return 30 - ( 5 * talent.better_together.rank ) end,
-        max_stack = 1,
+        duration = 30,
+        max_stack = 1
     },
     -- The next hostile spell cast on the target will cause hostile spells for the next 3 sec. to be redirected to your pet. Your pet must be within 10 yards of the target for spells to be redirected.
     interlope = {
         id = 248518,
     },
-    --[[ Suffering $w1 Bleed damage every $t1 sec.
-    -- https://wowhead.com/beta/spell=270343
-    internal_bleeding = {
-        id = 270343,
-        duration = 9,
-        tick_time = 3,
-        mechanic = "bleed",
-        type = "Ranged",
-        max_stack = 3
-    }, ]]
     -- Talent: Bleeding for $w2 damage every $t2 sec.
     -- https://wowhead.com/beta/spell=259277
     kill_command = {
@@ -429,7 +400,7 @@ spec:RegisterAuras( {
         duration = 12.0,
         tick_time = 1.0,
         pandemic = true,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Injected with Latent Poison. $?s137015[Barbed Shot]?s137016[Aimed Shot]?s137017&!s259387[Raptor Strike][Mongoose Bite]  consumes all stacks of Latent Poison, dealing ${$378016s1/$s1} Nature damage per stack consumed.
     -- https://wowhead.com/beta/spell=378015
@@ -443,24 +414,32 @@ spec:RegisterAuras( {
     lunar_storm = {
         id = 450884,
         duration = 8.0,
-        max_stack = 1,
+        max_stack = 1
     },
     lunar_storm_cooldown = {
         id = 451803,
         duration = 30,
         max_stack = 1,
+        onRemove = function()
+            applyBuff( "lunar_storm_ready" )
+        end,
+    },
+    lunar_storm_ready = {
+        id = 451805,
+        duration = 3600,
+        max_stack = 1
     },
     masters_call = {
         id = 54216,
         duration = 4,
         type = "Magic",
-        max_stack = 1,
+        max_stack = 1
     },
     -- The bond between you and your pet is strong, granting you both $s3% increased effectiveness from Mastery: Spirit Bond.
     mastery_spirit_bond = {
         id = 459722,
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Butchery Version
     merciless_blows = {
@@ -469,7 +448,7 @@ spec:RegisterAuras( {
         tick_time = 1,
         mechanic = "bleed",
         type = "melee",
-        max_stack = 1,
+        max_stack = 1
     },
     -- Flanking Strike Version
     merciless_blow = {
@@ -478,9 +457,8 @@ spec:RegisterAuras( {
         tick_time = 1,
         mechanic = "bleed",
         type = "melee",
-        max_stack = 1,
+        max_stack = 1
     },
-
     -- Talent: Threat redirected from Hunter.
     -- https://wowhead.com/beta/spell=34477
     misdirection_buff = {
@@ -491,7 +469,7 @@ spec:RegisterAuras( {
     misdirection = {
         id = 35079,
         duration = 8,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Mongoose Bite damage increased by $s1%.$?$w2>0[  Kill Command reset chance increased by $w2%.][]
     -- https://wowhead.com/beta/spell=259388
@@ -504,20 +482,19 @@ spec:RegisterAuras( {
     no_hard_feelings = {
         id = 459547,
         duration = 5.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Damage taken from $@auracaster's critical strikes increased by $w1%.
     outland_venom = {
         id = 459941,
         duration = 3600,
         tick_time = 1.0,
-        max_stack = 1,
+        max_stack = 1
     },
-
     pathfinding = {
         id = 264656,
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Increased movement speed by $s1%.
     -- https://wowhead.com/beta/spell=118922
@@ -529,7 +506,7 @@ spec:RegisterAuras( {
     predator = {
         id = 260249,
         duratinon = 3600,
-        max_stack = 10,
+        max_stack = 10
     },
     -- Recently benefitted from Quick Load.
     quick_load = {
@@ -542,19 +519,18 @@ spec:RegisterAuras( {
     relentless_primal_ferocity = {
         id = 459962,
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
-
     ruthless_marauder = {
         id = 470070,
         duration = 10,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Sentinel from $@auracaster has a chance to start dealing $450412s1 Arcane damage every sec.
     sentinel = {
         id = 450387,
         duration = 1200.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Suffering $s2 Nature damage every $t2 sec.
     -- https://wowhead.com/beta/spell=271788
@@ -562,19 +538,13 @@ spec:RegisterAuras( {
         id = 259491,
         duration = 12,
         tick_time = 3,
-        max_stack = 1,
+        max_stack = 1
     },
-    -- Kill Shot usable on any target and it hits up to ${$s2-1} additional targets.
-    --[[sic_em = {
-        id = 461409,
-        duration = 3600,
-        max_stack = 1,
-    },--]]
     -- Movement slowed by $w1%.
     sideline = {
         id = 450845,
         duration = 3.0,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Pet damage dealt increased by $s1%.  $?s259387[Mongoose Bite][Raptor Strike] deals an additional $s2% of damage dealt as a bleed over $389881d.  Kill Command has a $s3% increased chance to reset its cooldown.$?$w4!=0&?s259387[  Mongoose Bite Focus cost reduced by $w4.]?$w4!=0&!s259387[  Raptor Strike Focus cost reduced by $w4.][]
     -- https://wowhead.com/beta/spell=360966
@@ -596,39 +566,44 @@ spec:RegisterAuras( {
     steel_trap_immobilize = {
         id = 162480,
         duration = 20,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Building up to an Explosive Shot...
     sulfurlined_pockets = {
         id = 459830,
-        duration = 120.0,
-        max_stack = 3,
+        duration = 3600,
+        max_stack = 2
     },
     sulfurlined_pockets_ready = {
         id = 459834,
-        duration = 180,
+        duration = 3600,
         max_stack = 1
     },
     terms_of_engagement = {
         id = 265898,
         duration = 10,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Talent: Your next $?s259387[Mongoose Bite][Raptor Strike] deals $s1% increased damage.
     -- https://wowhead.com/beta/spell=260286
     tip_of_the_spear = {
         id = 260286,
         duration = 10,
-        max_stack = 3
+        max_stack = 3,
+        meta = {
+            stack = function() return max( 0, ( state.buff.tip_of_the_spear.stack - ( action.wildfire_bomb.in_flight and 1 or 0 ) ) ) end,
+            stacks = function() return max( 0, ( state.buff.tip_of_the_spear.stack - ( action.wildfire_bomb.in_flight and 1 or 0 ) ) ) end,
+            react = function() return max( 0, ( state.buff.tip_of_the_spear.stack - ( action.wildfire_bomb.in_flight and 1 or 0 ) ) ) end,
+        }
     },
     trailblazer = {
         id = 231390,
         duration = 3600,
-        max_stack = 1,
+        max_stack = 1
     },
     -- Call in help from one of your dismissed Cunning pets for 10 sec. Your current pet is dismissed to rest and heal 30% of maximum health.
     wild_kingdom = {
-        id = 356707,
+        id = 356707
     },
     wildfire_arsenal = {
         id = 1223701,
@@ -652,24 +627,22 @@ spec:RegisterAuras( {
         duration = 15,
         max_stack = 1
     },
-
     -- AZERITE POWERS
     blur_of_talons = {
         id = 277969,
         duration = 6,
-        max_stack = 5,
+        max_stack = 5
     },
     primeval_intuition = {
         id = 288573,
         duration = 12,
-        max_stack = 5,
+        max_stack = 5
     },
-
     -- Legendaries
     butchers_bone_fragments = {
         id = 336908,
         duration = 12,
-        max_stack = 6,
+        max_stack = 6
     },
     latent_poison_injection = {
         id = 336903,
@@ -682,7 +655,6 @@ spec:RegisterAuras( {
         max_stack = 1,
         copy = { "nesingwarys_trapping_apparatus", "nesingwarys_apparatus", "nessingwarys_apparatus" }
     },
-
     -- Conduits
     flame_infusion = {
         id = 341401,
@@ -702,23 +674,22 @@ spec:RegisterPets({
     wyvern = {
         id = 234170,
         spell = "kill_command",
-        duration = 15,
+        duration = 15
     },
-    --[[ Not yet detectable in combatlogs?
-    boar = {
-
-    },
+    -- boar isn't a real pet
     bear = {
-
-    }--]]
+        id = 234018,
+        spell = "kill_command",
+        duration = 15
+    }
 } )
 
 -- The War Within
-spec:RegisterGear( "tww2", 229271, 229272, 229274, 229270, 229273 )
+spec:RegisterGear( "tww2", 229271, 229269, 229274, 229272, 229270 )
 spec:RegisterAuras( {
     -- 2-set
     -- https://www.wowhead.com/spell=1216874
-    -- Winning Streak! Wildfire Bomb damage increased by 6%.  
+    -- Winning Streak! Wildfire Bomb damage increased by 6%.
     winning_streak = {
         id = 1216874,
         duration = 30,
@@ -762,20 +733,24 @@ spec:RegisterAuras( {
 } )
 
 local pack_leader_buff_cycle = {
-    "howl_of_the_pack_leader_wyvern",
-    "howl_of_the_pack_leader_boar",
-    "howl_of_the_pack_leader_bear",
+    "wyvern",
+    "boar",
+    "bear",
 }
 
 -- This variable represents the true index in the above table of the next buff that will be applied to you, whether by the natural cycle or by bestial wrath
--- We don't need to virtually manage the current buff, as it is visible on the character. 
--- But the next buff is technically "invisible", so this will allow us to have access to things such as a "time_to_next_boar", "next_summon", etc via expressions, if necessary depending on APLs
 -- The index should always initially start at "1" (Wyvern), and is also reset to 1 upon:
   -- Aura Interrupt: Leave World (19), Enter World (22), Change Specialization (38), Raid Encounter Start or M+ Start (40), Raid Encounter End or M+ Start (41), Disconnect (42), Enter Instance (43), Leave Arena or Battleground (45), Change Talent (46), Encounter End (56)
 local PackLeaderBuffNextIndex = 1
 
 spec:RegisterStateExpr( "pack_leader_buff_next_index", function()
     return PackLeaderBuffNextIndex
+end )
+
+local lastBoarSummoned = 0
+
+spec:RegisterStateExpr( "last_boar_summoned", function()
+    return lastBoarSummoned
 end )
 
 spec:RegisterHook( "runHandler", function( action, pool )
@@ -808,12 +783,137 @@ end, state )
 
 local TriggerBombardier = setfenv( function()
     setCooldown( "explosive_shot", 1 ) -- There is a slight delay before you actually get it
-    applyBuff( "bombardier", nil, 2 )
+    applyBuff( "bombardier", nil, 1 )
 end, state )
 
+spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
+    if sourceGUID == GUID then
+        if subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REFRESH" then
+            -- Detect REAL cycle events and update the index accordingly
+            for index, animal in ipairs( pack_leader_buff_cycle ) do
+                local buffName = "howl_of_the_pack_leader_" .. animal
+                local aura = spec.auras[ buffName ]
+                if aura and spellID == aura.id then
+                    PackLeaderBuffNextIndex = ( index % #pack_leader_buff_cycle ) + 1
+                    break
+                end
+            end
+        elseif subtype == "SPELL_AURA_REMOVED" and spellID == 472324 then
+            local now = GetTime()
+            -- use lastcast to make sure it wasn't a natural buff disappearing
+            if now - action.kill_command.lastCast <= 1 then lastBoarSummoned = now end
+        end
+    end
+end )
+
+-- To support SimC Expressions
+spec:RegisterStateTable( "howl_summon", setmetatable( {
+
+    refresh_cycle = setfenv( function()
+        -- reset_precast function
+        pack_leader_buff_next_index = nil
+    end, state ),
+
+    raid_boss_reset = setfenv( function()
+        pack_leader_buff_next_index = 1
+    end, state ),
+
+    trigger_summon = setfenv( function( isCoordinatedAssault )
+
+        local summonCount = 0
+        if isCoordinatedAssault then
+            -- Scenario 1: Coordinated Assault prepares the next summon without summoning anything that is currently ready or modifying the CD buff
+            applyBuff( "howl_of_the_pack_leader_" .. pack_leader_buff_cycle[ pack_leader_buff_next_index ] )
+            pack_leader_buff_next_index = ( pack_leader_buff_next_index % #pack_leader_buff_cycle) + 1  -- Advance to the next buff index virtually, will be reset / synced in reset_precast
+            applyBuff( "lead_from_the_front" )
+        else
+            -- Scenario 2: Kill Command summons + other effects
+            for _, animal in ipairs( pack_leader_buff_cycle ) do
+                local buffName = "howl_of_the_pack_leader_" .. animal
+                if buff[ buffName ].up then
+                    removeBuff( buffName )
+                    summonCount = summonCount + 1
+                    if buffName == "boar" and talent.hogstrider.enabled and buff.mongoose_fury.up then
+                        applyBuff( "mongoose_fury", spec.auras.mongoose_fury.duration, buff.mongoose_fury.stack )
+                    end
+                end
+            end
+
+            if summonCount > 0 then
+                addStack( "tip_of_the_spear" )
+                if talent.pack_mentality.enabled then reduceCooldown( "wildfire_bomb", 10 * summonCount ) end
+            end
+
+            if buff.howl_of_the_pack_leader_cooldown.down then applyBuff( "howl_of_the_pack_leader_cooldown" )
+            elseif talent.dire_summons.enabled then buff.howl_of_the_pack_leader_cooldown.expires = buff.howl_of_the_pack_leader_cooldown.expires - 2
+            end
+        end
+    end, state ),
+
+}, {
+    __index = function( t, k )
+
+        if k == "ready" then
+            return buff.howl_of_the_pack_leader_bear.up or buff.howl_of_the_pack_leader_boar.up or buff.howl_of_the_pack_leader_wyvern.up or false
+        elseif k == "ready_bear"  then
+            return buff.howl_of_the_pack_leader_bear.up
+        elseif k == "ready_boar" then
+            return buff.howl_of_the_pack_leader_boar.up
+        elseif k == "ready_wyvern" then
+            return buff.howl_of_the_pack_leader_wyvern.up
+        elseif k == "next" then
+            return pack_leader_buff_cycle[ pack_leader_buff_next_index ]
+        elseif k == "next_bear" then
+            return pack_leader_buff_next_index == 3
+        elseif k == "next_boar" then
+            return pack_leader_buff_next_index == 2
+        elseif k == "next_wyvern" then
+            return pack_leader_buff_next_index == 1
+        end
+    end
+} ) )
+
+-- To support SimC Expressions
+spec:RegisterStateTable( "boar_charge", setmetatable( {
+
+    boar_duration = 6,
+    boar_interval = 3,
+
+    refresh_tracker = setfenv( function()
+        -- reset_precast function
+        last_boar_summoned = nil
+    end, state ),
+
+}, {
+    __index = function( t, k )
+        local elapsed = query_time - last_boar_summoned
+        local remains = boar_charge.boar_duration - elapsed
+
+        if k == "remains" then
+            return max( 0, remains )
+        elseif k == "next_charge"  then
+            if elapsed < 0 or elapsed > boar_charge.boar_duration then
+                return 3600
+            else
+                return ( boar_charge.boar_interval * ( floor( elapsed / boar_charge.boar_interval ) + 1 ) ) - elapsed
+            end
+        elseif k == "charges_remaining" then
+            if elapsed < 0 or elapsed >= boar_charge.boar_duration then
+                return 0
+            else
+                return max( 0, 2 - ( floor( elapsed / boar_charge.boar_interval ) ) )
+            end
+        end
+    end
+} ) )
+
+
 spec:RegisterHook( "reset_precast", function()
-    
-    pack_leader_buff_next_index = nil
+
+    if talent.howl_of_the_pack_leader.enabled then
+        howl_summon.refresh_cycle()
+        boar_charge.refresh_tracker()
+    end
 
     if buff.coordinated_assault.up and talent.bombardier.enabled then
         state:QueueAuraEvent( "coordinated_assault", TriggerBombardier, buff.coordinated_assault.expires, "AURA_EXPIRATION" )
@@ -846,74 +946,6 @@ spec:RegisterHook( "reset_precast", function()
     end
 end )
 
-spec:RegisterCombatLogEvent( function( _, subtype, _,  sourceGUID, sourceName, _, _, destGUID, destName, destFlags, _, spellID, spellName )
-    if sourceGUID == GUID then
-        if subtype == "SPELL_AURA_APPLIED" or subtype == "SPELL_AURA_REFRESH" then
-            -- Detect REAL cycle events and update the index accordingly
-            for index, buffName in ipairs( pack_leader_buff_cycle ) do
-                local aura = spec.auras[ buffName ]  -- Safely store the aura reference
-                if aura and spellID == aura.id then  -- Ensure it's a valid aura before using it
-                    PackLeaderBuffNextIndex = ( index % #pack_leader_buff_cycle) + 1
-                    break
-                end
-            end
-        end
-    end
-end )
-
-local HowlOfThePackLeaderHandler = setfenv( function( isCoordinatedAssault )
-    -- Track the number of summons triggered.
-    local summonCount = 0
-
-    if isCoordinatedAssault then
-        -- Scenario 1: Coordinated Assault grants the next buff without triggering summons.
-        applyBuff( pack_leader_buff_cycle[ pack_leader_buff_next_index ] )
-        pack_leader_buff_next_index = ( pack_leader_buff_next_index % #pack_leader_buff_cycle) + 1  -- Advance to the next buff index virtually, will be reset / synced in reset_precast
-        applyBuff( "lead_from_the_front" )
-    else
-        -- Scenario 2: Triggered by Kill Command (summoning is possible).
-        if buff.howl_of_the_pack_leader_cooldown.up then
-            -- Scenario 2A: Cooldown buff is active.
-            -- Consume all active buffs (summoning them) and reduce the cooldown buff.
-            for _, buffName in ipairs( pack_leader_buff_cycle ) do
-                if buff[ buffName ].up then
-                    removeBuff( buffName )
-                    summonCount = summonCount + 1
-                    -- Refresh Mongoose Fury if summoning the pig.
-                    if buffName == "howl_of_the_pack_leader_pig" and talent.hogstrider.enabled then
-                        applyBuff( "mongoose_fury", spec.auras.mongoose_fury.duration, buff.mongoose_fury.stack )
-                    end
-                end
-            end
-            if talent.dire_summons.enabled then 
-                reduceCooldown( "howl_of_the_pack_leader", 1 )
-            end
-        else
-            -- Scenario 2B: Cooldown buff is not active.
-            -- Consume all active buffs (summoning them) and apply a new cooldown buff.
-            for _, buffName in ipairs( pack_leader_buff_cycle ) do
-                if buff[ buffName ].up then
-                    removeBuff( buffName )
-                    summonCount = summonCount + 1
-                    -- Refresh Mongoose Fury if summoning the pig.
-                    if buffName == "howl_of_the_pack_leader_pig" and talent.hogstrider.enabled then
-                        applyBuff( "mongoose_fury", spec.auras.mongoose_fury.duration, buff.mongoose_fury.stack )
-                    end
-                end
-            end
-            applyBuff( "howl_of_the_pack_leader_cooldown" )
-        end
-        -- Apply the Wildfire Bomb cooldown reduction based on the number of summons.
-        if talent.pack_mentality.enabled then reduceCooldown( "wildfire_bomb", 10 * summonCount ) end
-        if summonCount > 0 then addStack( "tip_of_the_spear" ) end
-    end
-end, state )
-
--- SIMC expression
-spec:RegisterStateExpr( "howl_summon_ready", function ()
-    return buff.howl_of_the_pack_leader_bear.up or buff.howl_of_the_pack_leader_boar.up or buff.howl_of_the_pack_leader_wyvern.up or false
-end )
-
 spec:RegisterHook( "spend", function( amt, resource )
     if set_bonus.tier30_4pc > 0 and amt >= 30 and resource == "focus" then
         local sec = floor( amt / 30 )
@@ -941,9 +973,14 @@ spec:RegisterStateTable( "bloodseeker", setmetatable( {}, {
     end,
 } ) )
 
-
 spec:RegisterStateExpr( "bloodseeker", function () return debuff.bloodseeker end )
 
+spec:RegisterHook( "runHandler_startCombat", function()
+    if talent.howl_of_the_pack_leader.enabled then
+        if buff.howl_of_the_pack_leader_cooldown.down then applyBuff( "howl_of_the_pack_leader_cooldown" ) end
+        if raid and boss then howl_summon.raid_boss_reset() end
+    end
+end )
 
 -- Abilities
 spec:RegisterAbilities( {
@@ -1035,6 +1072,7 @@ spec:RegisterAbilities( {
         id = 212436,
         cast = 0,
         cooldown = 15,
+        hasteCD = true,
         gcd = "spell",
         school = "physical",
 
@@ -1048,9 +1086,9 @@ spec:RegisterAbilities( {
             if talent.scattered_prey.enabled then applyBuff( "scattered_prey" ) end
             removeStack( "tip_of_the_spear" )
 
-            --[[if talent.frenzy_strikes.enabled then
+            if talent.frenzy_strikes.enabled then
                 gainChargeTime( "wildfire_bomb", min( 5, true_active_enemies ) * 3 )
-            end--]]
+            end
 
             if talent.merciless_blow.enabled then applyDebuff( "target", "merciless_blows" ) end
 
@@ -1103,7 +1141,7 @@ spec:RegisterAbilities( {
             if talent.wildfire_arsenal.enabled then addStack( "wildfire_arsenal", nil, 3 ) end
 
             -- Hero Talents
-            if talent.lead_from_the_front.enabled then HowlOfThePackLeaderHandler( true ) end
+            if talent.lead_from_the_front.enabled then howl_summon.trigger_summon( true ) end
         end,
     },
 
@@ -1122,12 +1160,12 @@ spec:RegisterAbilities( {
         startsCombat = true,
 
         handler = function ()
-            applyDebuff( "target", "explosive_shot" )
+            applyDebuff( "target", "explosive_shot", debuff.explosive_shot.remains + spec.auras.explosive_shot.duration )
             removeStack ( "tip_of_the_spear" )
-            -- If triggered by Kill Command, don't consume Bombardier or reduce WfB's cooldown.
-            if buff.sulfurlined_pockets_ready.up and buff.sulfurlined_pockets_ready.v1 == 259489 then return end
-
-            removeStack( "bombardier" )
+            if buff.bombardier.up then
+                removeBuff( "bombardier" )
+                active_dot.explosive_shot = min( true_active_enemies, active_dot.explosive_shot + 2 )
+            end
             if talent.grenade_juggler.enabled then reduceCooldown( "wildfire_bomb", 2 ) end
         end,
     },
@@ -1172,7 +1210,11 @@ spec:RegisterAbilities( {
         end,
 
         finish = function ()
-            if talent.ruthless_marauder.enabled then applyBuff( "ruthless_marauder" ) end
+            if talent.ruthless_marauder.enabled then
+                applyBuff( "ruthless_marauder" )
+                -- Can generate up to 3, but since its RNG we need to lowball it
+                addStack( "tip_of_the_spear" )
+            end
         end,
     },
 
@@ -1217,7 +1259,8 @@ spec:RegisterAbilities( {
         cast = 0,
         charges = function () return talent.alpha_predator.enabled and 2 or nil end,
         cooldown = 6,
-        recharge = function () return talent.alpha_predator.enabled and 6 or nil end,
+        recharge = function () return talent.alpha_predator.enabled and 6 * haste or nil end,
+        hasteCD = true,
         gcd = "spell",
         school = "physical",
 
@@ -1232,14 +1275,7 @@ spec:RegisterAbilities( {
         handler = function ()
             removeBuff( "deadly_duo" )
 
-            if talent.howl_of_the_pack_leader.enabled then HowlOfThePackLeaderHandler( false ) end
-            
-            if buff.sulfurlined_pockets_ready.up then
-                buff.sulfurlined_pockets_ready.v1 = 259489
-                class.abilities.explosive_shot.handler()
-                buff.sulfurlined_pockets_ready.v1 = 0
-                removeBuff( "sulfurlined_pockets_ready" )
-            end
+            if talent.howl_of_the_pack_leader.enabled then howl_summon.trigger_summon( false ) end
 
             if talent.bloodseeker.enabled then
                 applyBuff( "predator", 8 )
@@ -1289,7 +1325,7 @@ spec:RegisterAbilities( {
     },
     howl_of_the_pack_leader = {
         cast = 0,
-        cooldown = function() return 30 - ( 5 * talent.better_together.rank ) end,
+        cooldown = function() return 25 - ( 5 * talent.better_together.rank ) end,
         gcd = "off",
         hidden = true,
     },
@@ -1388,7 +1424,7 @@ spec:RegisterAbilities( {
                 reduceCooldown( "wildfire_bomb", 10 )
             end
 
-            if talent.dire_summons.enabled then reduceCooldown( "howl_of_the_pack_leader", 1 ) end
+            if talent.dire_summons.enabled and buff.howl_of_the_pack_leader_cooldown.up then buff.howl_of_the_pack_leader_cooldown.expires = buff.howl_of_the_pack_leader_cooldown.expires - 1 end
 
             removeStack( "tip_of_the_spear" )
 
@@ -1417,8 +1453,6 @@ spec:RegisterAbilities( {
 
         end,
 
-        
-
         copy = { "raptor_strike_eagle", 265189 },
     },
 
@@ -1444,8 +1478,9 @@ spec:RegisterAbilities( {
         id = 259495,
         cast = 0,
         charges = function () if talent.guerrilla_tactics.enabled then return 2 end end,
-        cooldown = function() return ( 18 - talent.explosives_expert.rank ) * ( 1 - 0.25 * talent.coordinated_kill.rank * ( buff.coordinated_assault.up and 1 or 0 ) ) * haste end,
-        recharge = function() if talent.guerrilla_tactics.enabled then return ( 18 - talent.explosives_expert.rank ) * ( 1 - 0.25 * talent.coordinated_kill.rank * ( buff.coordinated_assault.up and 1 or 0 ) ) * haste end end,
+        cooldown = 18,
+        recharge = function() if talent.guerrilla_tactics.enabled then return 18 * haste end end,
+        hasteCD = true,
         gcd = "spell",
         school = "physical",
 
@@ -1454,7 +1489,18 @@ spec:RegisterAbilities( {
 
         talent = "wildfire_bomb",
         startsCombat = true,
+        texture = 2065634,
         velocity = 35,
+
+        toggle = function ()
+            if buff.lunar_storm_ready.up then
+                local dyn = state.settings.lunar_toggle
+                if dyn == "none" then return "none" end
+                if dyn == "default" then return nil end
+                return dyn
+            end
+            return "none"
+        end,
 
         start = function ()
             removeBuff( "flame_infusion" )
@@ -1463,7 +1509,7 @@ spec:RegisterAbilities( {
                 removeBuff( "contained_explosion" )
                 gainCharges( 1, "wildfire_bomb" )
             end
-            if talent.lunar_storm.enabled and cooldown.lunar_storm.ready then
+            if talent.lunar_storm.enabled and buff.lunar_storm_cooldown.down then
                 applyDebuff( "target", "lunar_storm" )
                 applyBuff( "lunar_storm_cooldown" )
             end
@@ -1480,6 +1526,8 @@ spec:RegisterAbilities( {
         impactSpells = {
             wildfire_bomb = true,
         },
+
+        copy = 265157
     },
 
     raptor_bite = {
@@ -1489,7 +1537,6 @@ spec:RegisterAbilities( {
         copy = { "raptor_bite_stub", "mongoose_strike" }
     }
 } )
-
 
 spec:RegisterRanges( "raptor_strike", "muzzle", "arcane_shot" )
 
@@ -1532,17 +1579,6 @@ spec:RegisterSetting( "use_harpoon", true, {
     width = "full"
 } )
 
-spec:RegisterSetting( "allow_focus_overcap", false, {
-    name = "Allow Focus Overcap",
-    desc = "The default priority tries to avoid overcapping Focus by default. In simulations, this helps to avoid wasting Focus. However, in actual gameplay, this can " ..
-        "result in using Focus spenders when other important abilities (Wildfire Bomb, Kill Command) are available. On average, enabling this feature appears to be DPS neutral " ..
-        "but has higher variance. Your experience may vary.\n\nThe default setting is |cFFFFD100unchecked|r.",
-    type = "toggle",
-    width = "full"
-} )
-
-
-
 spec:RegisterSetting( "mark_any", false, {
     name = strformat( "%s Any Target", Hekili:GetSpellLinkWithTexture( beastMastery.abilities.hunters_mark.id ) ),
     desc = strformat( "If checked, %s may be recommended for any target rather than only bosses.", Hekili:GetSpellLinkWithTexture( beastMastery.abilities.hunters_mark.id ) ),
@@ -1550,8 +1586,32 @@ spec:RegisterSetting( "mark_any", false, {
     width = "full"
 } )
 
-spec:RegisterStateExpr( "coordinated_assault_kill_shot", function()
-    return false -- ( settings.manual_kill_shot or false ) and buff.coordinated_assault.up
-end )
+spec:RegisterSetting( "lunar_toggle", "none", {
+    name = strformat( "|T2065634:0|t %s: Special Toggle", Hekili:GetSpellLinkWithTexture( spec.talents.lunar_storm[2] ) ),
+    desc = strformat(
+        "When %s is talented and is not on cooldown, %s will only be recommended if the selected toggle is active.\n\n" ..
+        "This setting will be ignored if you have set %s's toggle in |cFFFFD100Abilities and Items|r.\n\n" ..
+        "Select |cFFFFD100Do Not Override|r to disable this feature.",
+        Hekili:GetSpellLinkWithTexture( spec.talents.lunar_storm[2] ),
+        Hekili:GetSpellLinkWithTexture( spec.abilities.wildfire_bomb.id ),
+        Hekili:GetSpellLinkWithTexture( spec.abilities.wildfire_bomb.id )
+    ),
+    type = "select",
+    width = 2,
+    values = function ()
+        local toggles = {
+            none       = "Do Not Override",
+            default    = "Default |cffffd100(" .. ( spec.abilities.wildfire_bomb.toggle or "none" ) .. ")|r",
+            cooldowns  = "Cooldowns",
+            essences   = "Minor CDs",
+            defensives = "Defensives",
+            interrupts = "Interrupts",
+            potions    = "Potions",
+            custom1    = spec.custom1Name or "Custom 1",
+            custom2    = spec.custom2Name or "Custom 2",
+        }
+        return toggles
+    end
+} )
 
-spec:RegisterPack( "Survival", 20250310, [[Hekili:TZvEZTTnw8plE6mmsTXkIu(kDL1mztC7MuxNovUt(prstbjX18qLh2XD0Wp77d8eKeGauIYh74)jX2a89E4D(7bcWzYZUE2056bOzxPmu54HJKhoqE0rhjF6SPbpSgnB6ADJB1xc)GJUn8Vtd9UZ8oDl8apy5QphtaF3qpdyWFisBvqWA)F(DVBPzWQWBgy4A)oFt7ql9atxhdp9fb4F34DZMEtOPvWNDMDdvby4Ozt1ddw56b800(JZMUYC(CuY0r(gZMIN(HdhDO8WFosdpLiT)AnMsrA9w5EVLQFOTTRJQhsF(d9J(s0xsEcLdvodEIR)23GhdP776ePPePfM8Sett(uyA)HhYY020r37Hinz5bYrAF4pUmDAhD4W3FOIYBHrgEOICUCuIwWKo7qLJGjbtE4z5tATNPRNzWd0MUScmTFX87rA)MPLvK2hDTT1DMdt1hSfrAMGm)HVErK29GAosZw)7iyWFX1i0NKmdXI0FI8xJmcI0(pHobiV34hP976E3gP5JccmDww8aNEOcEj)7MoUEWWM2zI2)cZyunkq(GJWQ0vWC(Mo8SFdeltNztTm9d8J9qqobgwi97qWVDvSxhYr)gl08z)BWqBG9oMn9EtR5lm9qQ34ANAN9mxNm20lU66pF1fxgPTztK2NU4x(WFD51PAHp8XR)8xV6Yppfil8eGmAQpB6brA3eUyXaRqW6P6h46zRA46An39ENbEiBDth)zbGFhdP5wq1dpqSMNKUXefClGLKfY3xfmK26wQlqEUgG9Cq46inPuEhyUw1DHAWkKkyf09g4haXtrAJbxgGMpa6e1aDVLiqnbQfqAgvrAQWxweCc4EfZ28vyjL5aJvyU4RUWlz5PBf)mYdonrH22h79jpwViTaDSMyaE66EZnrEdsL(YId8dWOoG30CvDFF9qRGmJqS6acb)XiTLgZhaEZrA9tOFgXddmwH8EGoPZhLKEPuILZfOPpIHD3tFn4ROEdO3RP(9d8mVfPAgO6zASQKPUYquLfAg8JXIrgVZwkKcgmNty6uCqJgasvih7dF7EIpBMKsXEIL0t3E33cAVi07HSPH0xAHWu(mMuUhNGTZJ9UW6cEtdYU3NqmS0DUfYqQMyAXcX7BzUIfXPK1(jqrR7dEgOLiNynz8aSDkKhs6vG((AlxFZ7abELBqfFd5Qzt3kvETOd5QPfRq25i9Gv3y5EFHNUuUZMVPHkYoZrRIAkEnG5q1uDCcalC1nCDc0xA6g6JRUdQ0a)cErvDkwSE9NmaxfArSZDwDRSh1o8F(hWZSSXqHCgbE6o)nGYX8FIDIQB6yNRVxE5zStI3TQ6opKfoJfVbM(GLY3porjO3XSeCpM7gmyvCrAFv74I8NNvxi95cmTHLOR6AJa1Zgg7fOq4gq(W0YrwiHRbITcPBfSctRyFA4pPI)tGutOMqoZvHrYt1rXkyOdUfj)IkgYqcWb1eeNgZ9Bofy6Ah5GSnrjjChr6mgdgmncaJMvfWHmViniaobcVnWEjckrRT85KRRQinjod0EvKsrx1yIsMAQd2Fsgg5xI6QAUtbux7z5QqNLKVLBI9sis)lmK4k4ZnxasmuahHbj74IrbVmsdzHNAGlg0pGyKroQszx09m0DWrQEEGGwnLFP0m3OVmwZaR)B9RoZrKZ0YC5QaF1)B48L21Ok8RG0zGHjupzxAVu44ykj8i0Bjkxt71iVfqxha0adibGUJXdQ(iVq7cs2WCErMAmzLRBbKcapPUoU8aijeqqPnyII3IDZrfRCrWstyYWf7H0XZPzM4uQD3X6sG3AL7s88XrR5cPiD(qpe8XQpm2v(4IQQTaR7G(WeX1GwBwDspwjKP2EU0a4YQabeu52cG8ZAcf)jZ43Yf7I7p3A5ID9EUEQeAjATC9A3oDD3ouZ7wPkmgWBdBsg4MS2f)dLaJ8XV(1l)0x)2vtzTBy51md9rQP0iEraf9VBqjlkL6fvuh0YYGt3ID(jBtR(SOgiKxQQq7wMsftG85fIteb6wUUZvXo6ndW4L7keGqHGSCqrqm0xbQI9ICvIdCJTLcuj5f0cmT0rkiuOQrs6)reoWa8tKhUw2SgBiob9lW3fy8(QLk)Fmr9ZxqkNcLWA34)NsfAbASyko5N7IfQaYL4wf53UsHAfJ2jFLnHa9ZHqTLbYnxkwmaALGYvtFwSeXldGY2(0QsxW00gBMdD9Itnasnan6eI8fXVzOQL9ds3HJgQbvbaq1s6u2B2oaNE(lfOhfWMzD7vn(b3bxPcL)Xh(4VfPD5fF4tx8NjKB6NV6xV8IiTR)WF(RxCnz9ZbnxkumBQulqNx7LwubluJ1TeHlmApuSThLebmUDAicznyubG1qkjW0zCB8UDuVJ6yJbUDLKD1Px5GEM7LBI5HO)9smmRb((0XuYAVgzSKerAKAsygNpy(2yjrtn1ylW7wJjn2AUirymcW53JX2Y0YOYjnnnMxJB3FI1KOsJnjwBlbfK)57aqIBUNU5Cv0DyNl95ZbVPVJFN4jciRXKQpe(n(du(OHLFdv06ABxArQTnOgVheh9KS1fsCBdVn7irdnakSakq27AVZRNVBRaZ3z2239pryHiGcsR1lYu5LOzCEsHuPe)QpggdAGr9d5TCpQ2RH)Yhxk8VUxC1Mc4xiNFHpg6hwWV59kvVs(mYQCfBssLn659ZeCpHcYFjtnU75cDCGyRAB7PeQtDCz4J(OGfSf(9nwpLt802cHOzCln0KSimLEhYfSdQSS01fAgldZcBWz9eW9lwlUiewcEOK82Qyi0XDysEYOKkYlYnnulklSJVhIIUZeSqfV6PvpsyneDEMaaNzJN8zxP3Da6zBbhYlpg3GVYAGkb(0XhrTQqBtW(ed3Gxa4483vvDehSbDWzxPZZ3GTT0FvCzPUkpvQoi1YEvdYNGUb5jB2(mCpvaM4uvIQcVjn4jIIAjfafxyqv78EpIOJ1R7JlIofwNEMT4aD30UX1w0CyrRT57epdaVWF242u2TMnzaCtzho64nICtHtAbEOO2oOBk7iGXwJDtHnyXxbVTpbVPCQaO3uyVfKp3GVPSL7CPaW3gj25uuqg2HW3g128S))i8TrCo2e7z4BJ2HcaVmHVnItLP2cFB0XcdFB0jIaFBKy7swxaFBKyifPDhhaP(oKNpE2j3ctfiB70719CWNyOztJVyFM2RD9cWXdErAVjzh3Edy5q)DiysGmP(Uypb9WaxBCgriWELUdKaDq0xU00bgcF5c)ORdWQ4HFtTSYa5Whs66dKTYHj0t(79ZP47Fbqr5ZOtskg4k0UbxGQmr5KoxUvyi3pVi5igovDK2n6lu89tVrqTZ5NHbIX9AOISY52puvPWqNSx4fdt6EHxmco7yEr1MNDc9BNr)ig(7PqCR6Tx5eylOzDhIE6EkgFZ1PqYKZiBfYv(GZYXcym3VDkFgscfq71YmW8COvlJgJvBwF5vxWvpbCcsVovMh90XJTwV8yiZmcwFm4XwRxEmK5JF64XwRxEmKzgv0Fm4XwRx2VYmJkNTTpbMo1DcKoooiDipKL7(YRmse(mJKmDZ6eTlv3SI7ZB7C26(vplkUDG(6(g76Ek2jG(A2BSZCD(CSxdM0NMCIDXxdQ4VtrWW4RaT7ct8N1HKH8hKFNO)PZFxXTGo6l0gp7y5)w81k4C23Qa6pn5fm(TMloVxTR58MnLVIZ9LW0HYLB(8HsuVuZtugkIKt5EkJvDPpim9KV9fK)L6FRlih9rEPHLW0p7eyUv(tvXyIptfKpr1VwajQcORd(tcxI7TjFacoxgZXuzp9KGpEKuQpkJEqfHdj52AGltu2zUKSPEnVsoOlyIilgUm6hI026pbdKIj5BO4TL2F0ZLjNx5pjdKJu6lWa5av(GlGdIaPM6D1SiUeC5WHmjxrtSQH2v3uQ212SkbkUUJyA0WReDZMdydYtYG51rQ45YhsQbkbl9FilJBMmA6CN7TGr)7q4TJULkwktD4DVh5PA6SieVT0pxwbLL(Yx3YNNYy(LL85P4vCLgFEiFqzOI7S0y5rvL3KBFySScfPKkDblhRC8Mnp9lHQISOGsElXDJmjLmXfECs6lO8WHdKzXaF8ZyiW5dyZg2l2AXy(1UIIy2u5Mno58tIZTw)Y9v7lejb(N0AQyGDzIHOlbQuH4fTvTosU3DTpQksnCywgdA9uxQ6FevOkcnvllxgA8TJl1WRkESmvMw61YMZf6KyYWcpDEh3IjYdoLWxrGP)EIP3G1BSYpgRzR0cwHKv9RDsIHO(LoLM2OYrOGJ(4CLudmJHPRXZKpQdszHJfIdQ1oxHci)pjUXHHVqTtTcx)HTYpo(qz8tfNCKXfNAeAKR8BYVdCIzl0ygK)41(SHivQjyEzrsXl2QRSmjn9deqv2BxZj0FZgkFWLLilKwQTZeXQSjr08UsImjC0An(TtP4JPaN07hW8krxTHvqJmrwrQ3bS35InBWmN2nn(8H9BRKXMnsS4Y40bsBhtI59yUMSql1uD)qgLdZSYcxdQ2YF7j8K6(OTmvUCZPYvQt)wNSeCAOFkQ2SH(FxQ(jRAYruCHAx6pXltafLpApwdxIsrTgltVd5EOMw5POyRqP1zxHe8H4NYhYPZFsnhNUztmlhpAy)D2FRlC7LpU1zoBidDBifDJxvOiuCntbai23((cAvSfB000jw)gpMN0PepxUD1Hr0fq3LAQ9Tx0RHOyUzR63YwoyOq2l9zYGx1lNxA4h)0FLyF7lGYIq1R03Bx6AR)wgcjsFnLiiRoB2HiOMe9TR7M249kukxrjyC(Z2FrZkZi)GZ35COcvYENR42Nct3H(EYPr7Wbx1dAFH(pN2Log)crCAl)W1uiDndFpUg(j1VFehIZ9l1ucL9CDR(7AHlkQg6vgEIafx4QUJveekqTrh0IfaJltv9QTcX0hfa9n5JowHerpnxc6bIuVeoyLGeLHzBuAxrmPTjoT7BZyBunuE6MQYZQHI8X6QcU8iwZnR0IYTDrtlcfsjseXRfCf1z(1cUVwW91cUVwWTfXPVwWDxk4g)9)Wa)LY444lX7S)3]] )
+spec:RegisterPack( "Survival", 20250406, [[Hekili:TZvBZTTns4FlE6m8KBJLLO8BPNKMXxItVK66KPYzY3ejnjKepZx0rszh3rd)T3DbPibjbibLStC64V0MiSyXIf7lplWYmT)0RNoXYiIm9k1EQh37OEN0T3GE9gC20jrpSKmDYsdZBnMd)bpdx4)ozvWD23z4Gd8GJVHfYGq)vbMWGlIIwg(RhE4C7OfRUPRPV7HH2URCmIS99mdmMfH)DZdVXX)MdJwqU3i4EGuBVdp3ej5tb2(b2rpCPDyu4Hlw5frc0ctxXU4uNo5Mv2orV3B6nvLB1Jhmy6eJvrl8daj129nGizBzrsOMecthP(GEhDqVt(1yDKKy9pVezuS(VeRFJVrGM5cJG5K4pKq6Gdu7NqQzoPDw4FVdizUU(EAbedRhI1p4GXX6m)Ex6VVFoF63RYswLpz0REG6za9x)LVatIye67fRRgRVkzMze1)uGOpfqCSDT9mca5OF)U9J1p)txsjc2PV(av1xb)EVSDYBkWhGKZoq9iGeG0ENLrYY0tJQe3xfi6D2Fnw)3TDCI1FJVRRHNfqyiyQeRBdY65F8IyD80nw314ReyW35BUkmNj9qH5pjHljMrX6)x6H9)kmw)pmcUnwpKefz7nFd5NEGkUr)dBp)ayqB3nc1)gxusL5NpTbOsCbqXxmGz(fQ520joOfg10L4fz6qmUJa)TROUdepJBCiwt)pGTe1SC6K7TDSMzhq0UX3n1ukWEzYytU4QRF)vxCzS(61X6V9I3D(NV8609)5V563)XRU89ta2cZaKqBJPt2dm0wnBwxNvWjMwyKFGRMPVVJL)9OvJRHTx40iWYwG0ClO0Hjq15S8LYuWua2soKWqn4a01WrBgjW3eoh7UAzSUs6AhzVuZFMg4eQbNagbDdJah9y9HGHcWZhaDIwe6haQjqTasZGsstP1vedbNIE0LnBhwqz2nXBluBwqY2ZWHoN(DpnrH22P96KP1jwpYa1eDrYncSSjbDtL(IId8hGr9aBjlnJWqJvorBoeOQdWP7NJ1NBA1fSJJ13pH)By(QiZfKGh4Z6Srz5xkNezCbA6JeCUhySeSv0Ub07vu)Hrb23s0SJ0cSnxu4OU0qCLfEh4hJIXM1EZwHvWaAorOrXE1EaWQcB48P5Z9eB2nskNZtuspD7nFZ59SvbpSHmIXChcY5ZeY5on4SnIADH6IMidIOVpJy4y4DleDul5OffIx3YyfZObJXCEMgHGLbzoXJQjPdi2OOFpwRcYxx64hAFhiWl8JkzB0VC00TsLxX7OF5WILyRfXiAbGW4(ClDLmJTqBtnI7gdTsQj6EaxHYH6AWbm3u303lYyUT)QqmBoOsJcZxlUQt581RoZiml0mQX9M8wBMQ7Q)6ValZIhgQSuefy49)bCu2)f1iQ6rN4y9DYsnJgjb3Qz49Wg3zu86AhcNuHH0aLGEhxsW8WYpQBcEUqnxAc(rBYlKoViBxyl6RT0ms7SEuRavgZa2jZlgzUeUey2cIHt0cKxuBA4N0WFcKAg1eXZsdgjluhNtbtdWSi5VOHqgsaoOLaf20kS(qGP7DIhX1MKeWDaRXif8xQhacZwdWHyLhgeaNaU3MOvIKs0sNWgI1vwKgtJa9KksPORQnqPqn1EpDsgI8lrDvo2PeQRNy5kxNLeVTXa7fqK(zeqCjK52ZajgsGtqiYE(ik45X6ehK0iFeSpGyuqmQcrxmcmn8qp1GaqqlhYVqyMBmMt1mW()2WYuoGLsh75lIc1(FRSM7wHRWFfKoteMq1GDP1oH(XCc4XO3suU2UljbZGkoaObMqaadpZh0cjbRCZzzn08dzOXKDUHdWka8K2sA6bqsyGGYBWefVJ4IJY35YGLM5idt2dHJT4Dm1qQ2DhRldERf(Zr6rVvwOcmxcq(VNugtTtLDnuQshkMnU01ThWjhyyBPrUdd8yyzbGl(kwilDULhIvUosUs64hB5BvbMhX6xxQI7cU2IYwlsS7KP05gQw7(hUJe4vurx7eqlK2qoHL895V7fdJOPAdKTeICffN6hoTqGB(f7Dgln8kZQi5ItR2c4)CR4sYKITPAN0lBq0TkCSmPgRVAOVrLTWnaAP0PiY1AUTlqjS0h)dfqv8Mp(XlF7h)YvteDTwzj)wfs0s5bDtazVVRBHJgob(lPo4Ljzteu26TQsvkplEjcz5Ck62MZPCcyNVuReJFJJVVLgAYwpsHFC3Hawice0ac6Jyy5H24Fc7smXd9SKx2MFC3GPGrtrtAztsYgpGXagWrscWudnKsIcJfw3ziWDTcxx6XmPJ(bs5KRew6t))CQJwIkeMGb)8NntdGcsR5R56oYvRi8rweNzWjpaYj2T)0ARHwgq4LUs9k6Z8TiUnao7gwFM80kuSauOyObqQbKgNWeVG(8oLtGhLEvf1KdQuM8Y5E5GU7raxA2T7)SdXyHmXF68387X6xEX5V9I)mHztE)v)2LxeRF95)5VDX1SjO7wFUw5mAuAXZLu55nkHkQ2eJYSkckKSH8qsI2SkWyrfBi(UGXc6bx7LG1iWhGBWIBEl9(wQwtpnkmcXm5EL6umALWBto5yN5gekSGBUcbjl1OHTKmsJsDcZWSbZUinfEQPSdyEcT0fOi2gquH1YeAqqKPMlZzBx0IgMShn8kaQfw7m2zIUnHwEtd4Z9dC(OEfFKkUvUj(sKEU9GHfVlZ6UpcHVx0UuoA2HKmj3yZz9OKhezyQuI3fFpAMrbHtK8nS4Cq3(NltUOX8M5jSNM51nx6K8uzRNpk7beQ9MrLQvpeyKXjXDtgwpQ2acoU)Ho79JuW56Zi0Wv510IYVOP8LZ13BUVpGpFt2aXp3xhjm)OAXzRGTqajjyPgcoHw0bBxVOKhIPX0lTiw8o2Rp5a2Lm7qt4xl3Up14DEMeqseJo4zx(UDatrBZ63uCSgD(kQbk54ZVEeUzfABa2VZzUBYbCy2Rbun5T483nCrLzXBWZwE628qxfjLRbsLOxvGpiPzqwWMTpc3teq4(hxFCJkOyKrHxNg8ezrTucGJqyqLlK6jerNOgxRreDQIEeOTOzDR7(tAlAou0AB8o5Ja0K7VyCBQ72Taja4M6o0wW1ICtTHWcnHIA7GUPUJagBn2nvXGfFb82tj4nvzUqjvX3O0Zn4BQpDp3(G2(C7n6a(ibFBqBJZ(pr4BdA4L0FIHVnyhsa8Jj8TbnKzQTW3gCS0W3gi1Tynq07w(4dFBGCif51)6GuFhjiePo5B4BaaBAY9gbEytKmDY7Dx6heHrlpn59dWUjH(DB1n(dylH6pZgBZ9F6NI1F6)WdJ)aUoFg8JXULn5R3l5RBd)y5(v6NDM5IKN)g3n0mWhD2RpD2r3e)H4pKSbc7M1jR)YOdZ7Dv(JV5nyFf(gYJe)eY8NnBBH(k7zJ6uP5uxVUyJPUVcYhoTK6OEkCBf1XQ9KrY50DPmQeG8KVyb2FP6xOa7OFJ3AOeM(XcGRwXpWGHmFCbSZOCpENOkmTcBMi8TXFvsBJpQpUIPYE6RNnCGs99EUmRqsB9wZQmwDNxLKliV(DYEpglImBMgxi09EBBCEwXKf7XRke5BuFw6k2i9SJuOV5zhOuBYJorGuZTX8Y9lbto0LjPF8qvdV(0tPsp6vMb592gYJAk2z969e3TnkMc79K85LnKsnCkjGCrz027oFO6mYxb3Ba5SgkLPg8(3dr0T9MTct48Czhuu6l2BDppLXSoJ75P4L3)AppKpinuEFEmS)GYYBsRMrLvijLsHUPBO6XRx)9FluwKLfuYRyAeUKqYmD3240spoOx3(IwGqCoYu5)61I3Sv8XcR0pA4YuQn2gp6eAS1QnAvLVRFg8pP5urGDBedz3cC5cde6Y5rYSUR8PWOuZ1une06PMuv)(tu48zVmUNqYrEPuEm0Oui7flxRxZVinfbFsldpIR(QUeVzkSAlsxPMkwh2N7IwO6WTsS6KQXKPtdZuVn3LHnrkjN095k3LUvMmniF1Zi10fuWW81EBU2nUdwBWiwbT8Dw1GOoU3wDorVsMFj)EJgMDNrqaOk3A34(DpM7YuS(EXscoA2gPYhhYgS5jFyinf(ifOyR6BuwEggjH(PZU6FT)61pZ8fO77IhyYgrxrgIWGOvwVDk5bLdTZZTO7aLbnK5zpHD4A5APbupJ7RQ0zpX3V0614IZRXrh1R6HrdsM4Lrr0QmmDG0kfve2wQvKfEbVQ6PiitDH0IYKXPY2F7zmNt82hdfou5N1w6S52EJpIZrmhlDQrxLNtbVJNs)uUxxtVQchLRWu5sf(tC6bqt1COXnX(2H4NRxtxYHd6TFRDCQXbTnSIVwRCIooHvtZqj3)wALZR8l)P85hDtrvx1(0c85utN176jLSBG6DaL2whWICktrssq(RbZXACUQlLM6pdj12p33mniz(Kl)pkwftcwqH8KubKG1QA08cd)TpQuHLV9XNfXOQyd6SlW63FlDHehUuadfHBEh8GQt03o43TX6vQqUYYqA8Z23CtfxOWOr7CmuPYvUZP62NZIUd4MZ4X2JCM)EF7XOvosaL3fE6yPyo)RoKdRRCW3PXd(XvFt(dWy)k1fq5joV1(7AIloQg(zg(oHvn3uDhZiiLJATgO5BabnWt1STsTOFtqsxNn6qvwO08mj47iYTXpYVOuoDxd3dL2LetzB8tFukER)X7OQHZSRllVOckYg7XkHBtmR(IvAr62hJIwKYLsgpIxs4kRX8ljCFjH7ljCFjHBl8tFjH7UKWL(nNyIFDghtBC0P)9p]] )

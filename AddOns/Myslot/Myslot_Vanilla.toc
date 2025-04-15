@@ -13,7 +13,7 @@
 ## Notes-zhCN: Myslot 用于在账户之间传输设置。反馈: farmer1992@gmail.com
 ## Notes-zhTW: Myslot 用於在帳號之間傳輸設定。反饋: farmer1992@gmail.com
 ## Author: Boshi Lian(farmer1992@gmail.com)
-## Version: v5.23.0
+## Version: v5.23.1
 ## SavedVariables: MyslotExports
 ## SavedVariablesPerCharacter: MyslotSettings
 ## IconTexture: Interface\AddOns\Myslot\Myslot

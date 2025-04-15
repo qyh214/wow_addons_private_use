@@ -5,7 +5,7 @@
 local mod, CL = BigWigs:NewBoss("Ignis the Furnace Master", 603, 1638)
 if not mod then return end
 mod:RegisterEnableMob(33118)
-mod:SetEncounterID(mod:Classic() and 745 or 1136)
+mod:SetEncounterID(BigWigsLoader.isWrath and 745 or 1136)
 mod:SetRespawnTime(30)
 
 --------------------------------------------------------------------------------

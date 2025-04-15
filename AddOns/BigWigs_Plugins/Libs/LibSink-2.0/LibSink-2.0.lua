@@ -29,9 +29,9 @@ local format, gsub, wipe, next, select = string.format, string.gsub, table.wipe,
 local IsInRaid, IsInGroup, SendChatMessage = IsInRaid, IsInGroup, SendChatMessage
 
 -- Make sure FCT is loaded
-local EnableAddOn = C_AddOns.EnableAddOn or EnableAddOn
-local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded
-local LoadAddOn = C_AddOns.LoadAddOn or LoadAddOn
+local EnableAddOn = C_AddOns.EnableAddOn
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
+local LoadAddOn = C_AddOns.LoadAddOn
 EnableAddOn("Blizzard_CombatText")
 local loadFCT = nil
 if not IsAddOnLoaded("Blizzard_CombatText") then

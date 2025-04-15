@@ -20,9 +20,9 @@ if L then
 
 	L.totem = "溅火图腾"
 	L.totem_desc = "当施放溅火图腾时发出警报。"
-	L.totem_message1 = "泰达维斯：>溅火图腾<！"
-	L.totem_message2 = "卡拉瑟雷斯：>溅火图腾<！"
-	L.heal_message = "卡莉蒂丝 - 施放治疗！"
+	L.totem_message1 = "泰达维斯：溅火图腾！"
+	L.totem_message2 = "卡拉瑟雷斯：溅火图腾！"
+	L.heal_message = "卡莉蒂丝：施放治疗！"
 
 	L.priest = "深水卫士卡莉蒂丝"
 end
@@ -81,7 +81,7 @@ end
 
 L = BigWigs:NewBossLocale("Morogrim Tidewalker", "zhCN")
 if L then
-	L.grave_bar = "<水之墓穴>"
+	L.grave_bar = "水之墓穴"
 	L.grave_nextbar = "水之墓穴 冷却"
 
 	L.murloc = "鱼群"
@@ -119,17 +119,17 @@ if L then
 
 	L.elemental = "被污染的元素"
 	L.elemental_desc = "在第二阶段，被污染的元素计时条。"
-	L.elemental_bar = "<被污染的元素 来临>"
+	L.elemental_bar = "被污染的元素 来临"
 	L.elemental_soon_message = "被污染的元素 即将出现！"
 
 	L.strider = "盘牙巡逻者"
 	L.strider_desc = "在第二阶段，盘牙巡逻者计时条。"
-	L.strider_bar = "<巡逻者 来临>"
+	L.strider_bar = "巡逻者 来临"
 	L.strider_soon_message = "盘牙巡逻者 即将出现！"
 
 	L.naga = "盘牙精英"
 	L.naga_desc = "在第二阶段，盘牙精英计时条。"
-	L.naga_bar = "<精英 来临>"
+	L.naga_bar = "精英 来临"
 	L.naga_soon_message = "盘牙精英 即将出现！"
 
 	L.barrier_desc = "当护盾击碎发出警报。"

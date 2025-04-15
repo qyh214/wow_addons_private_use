@@ -1,4 +1,4 @@
--- Generated from CurseForge on Fri Mar 14 07:54:38 UTC 2025
+-- Generated from CurseForge on Tue Apr 15 08:14:12 UTC 2025
 local ns = select(2, ...) ---@class ns @The addon namespace.
 
 if ns:IsSameLocale("esES") then
@@ -74,16 +74,14 @@ L["DUNGEON_SHORT_NAME_ARAK"] = "Ara-Kara - ARAK"
 --[[ L["DUNGEON_SHORT_NAME_ARC"] = ""--]] 
 L["DUNGEON_SHORT_NAME_AV"] = "Cámara Azur - AV"
 L["DUNGEON_SHORT_NAME_BH"] = "Hondonada Frondacuero - BH"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_BREW"] = ""--]] 
+L["DUNGEON_SHORT_NAME_BREW"] = "Lagar de Tragoceniza - BREW"
 L["DUNGEON_SHORT_NAME_BRH"] = "Torreón Grajo Negro - BRH"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_COEN"] = ""--]] 
 L["DUNGEON_SHORT_NAME_COS"] = "Corte de las Estrellas - COS"
 L["DUNGEON_SHORT_NAME_COT"] = "Ciudad Tejida - COT"
 L["DUNGEON_SHORT_NAME_DAWN"] = "El Rompealbas - DAWN"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_DFC"] = ""--]] 
+L["DUNGEON_SHORT_NAME_DFC"] = "Grieta de Flama Oscura - DFC"
 L["DUNGEON_SHORT_NAME_DHT"] = "Arboleda Corazón Oscuro - DHT"
 L["DUNGEON_SHORT_NAME_DOS"] = "El Otro Lado - DOS"
 L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
@@ -92,8 +90,7 @@ L["DUNGEON_SHORT_NAME_EB"] = "El Vergel Eterno - EB"
 L["DUNGEON_SHORT_NAME_FALL"] = [=[Amanecer: Caída de Galakrond - FALL
 ]=]
 L["DUNGEON_SHORT_NAME_FH"] = "Fuerte Libre - FH"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_FLOOD"] = ""--]] 
+L["DUNGEON_SHORT_NAME_FLOOD"] = "Operación: Compuerta - FLOOD"
 L["DUNGEON_SHORT_NAME_GB"] = "Grim Batol - GB"
 L["DUNGEON_SHORT_NAME_GD"] = "Terminal Malavía - GD"
 L["DUNGEON_SHORT_NAME_GMBT"] = "Tazavesh: Gambito - GMBT"
@@ -105,8 +102,7 @@ L["DUNGEON_SHORT_NAME_ID"] = "Puerto de Hierro - ID"
 --[[ L["DUNGEON_SHORT_NAME_KR"] = ""--]] 
 L["DUNGEON_SHORT_NAME_LOWR"] = "Karazhan: Inferior - LOWR"
 L["DUNGEON_SHORT_NAME_MISTS"] = "Nieblas de Tirna Scithe - MISTS"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ML"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ML"] = "VETA MADRE - ML"
 --[[Translation missing --]]
 --[[ L["DUNGEON_SHORT_NAME_MOS"] = ""--]] 
 L["DUNGEON_SHORT_NAME_NELT"] = "Neltharus - NELT"
@@ -114,13 +110,11 @@ L["DUNGEON_SHORT_NAME_NL"] = "Guarida de Neltharion - NL"
 L["DUNGEON_SHORT_NAME_NO"] = "Ofensiva Nokhud - NO"
 L["DUNGEON_SHORT_NAME_NW"] = "Estela Necrótica - NW "
 L["DUNGEON_SHORT_NAME_PF"] = "Bajapeste - PF"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_PSF"] = ""--]] 
+L["DUNGEON_SHORT_NAME_PSF"] = "Priorato de la Llama Sagrada - PSF"
 L["DUNGEON_SHORT_NAME_RISE"] = [=[Amanecer: Ascenso de Murozond - RISE
 ]=]
 L["DUNGEON_SHORT_NAME_RLP"] = "Estanques de Vida Rubí - RLP"
---[[Translation missing --]]
---[[ L["DUNGEON_SHORT_NAME_ROOK"] = ""--]] 
+L["DUNGEON_SHORT_NAME_ROOK"] = "El Grajero - ROOK"
 L["DUNGEON_SHORT_NAME_SBG"] = "Cementerio de Sombraluna - SBG"
 L["DUNGEON_SHORT_NAME_SD"] = "Cavernas Sanguinas - SD"
 --[[Translation missing --]]
@@ -529,14 +523,12 @@ L["RAID_DIFFICULTY_SUFFIX_MYTHIC"] = "M"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL"] = "N"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL10"] = "N10"
 L["RAID_DIFFICULTY_SUFFIX_NORMAL25"] = "N25"
---[[Translation missing --]]
---[[ L["RAID_DS"] = ""--]] 
+L["RAID_DS"] = "Alma de Dragón - DS"
 L["RAID_ENCOUNTERS_DEFEATED_TITLE"] = "Encuentros de banda derrotados"
 L["RAID_FL"] = "Tierras de Fuego - FL"
 L["RAID_ICC"] = "Ciudadela de la Corona de Hielo - ICC"
---[[Translation missing --]]
---[[ L["RAID_LOU"] = ""--]] 
-L["RAID_NP"] = "Palacio Nerub'ar"
+L["RAID_LOU"] = "Liberación de Minahonda - LOU"
+L["RAID_NP"] = "Palacio Nerub'ar - NP"
 L["RAID_RS"] = "El Sagrario Rubí - RS"
 L["RAID_TOTFW"] = "Trono de los Cuatro Vientos - TOTFW"
 L["RAIDERIO_AVERAGE_PLAYER_SCORE"] = "Puntuación media de +%s en tiempo"

@@ -16,5 +16,5 @@ function F.HandleNPCNameByID(id, callback)
 	NI.GetNPCInfoByID(id, function(data)
 		callback(data.name)
 		cache.npcNames[id] = data.name
-	end)
+	end, nil, nil)
 end

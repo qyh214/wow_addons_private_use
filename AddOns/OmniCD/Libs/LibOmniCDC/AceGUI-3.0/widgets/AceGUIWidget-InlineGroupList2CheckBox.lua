@@ -22,7 +22,6 @@ local select, pairs = select, pairs
 local PlaySound = PlaySound
 local CreateFrame, UIParent = CreateFrame, UIParent
 
--- s b
 local DEFAULT_ICON_SIZE = 21 -- tree icon: 18
 local IMAGED_CHECKBOX_SIZE = 16
 

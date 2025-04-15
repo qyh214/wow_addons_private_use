@@ -158,7 +158,7 @@ local function AddTomTomWaypointCache(coord, group)
 	local mapID = coord[3];
 	if mapID then
 		-- app.PrintDebug("WP:Cache",__TomTomWaypointCount,group.hash)
-		__TomTomWaypointCache[mapID][math_floor(coord[1] * 10)][math_floor(coord[2] * 10)][group.key .. ":" .. group[group.key]] = group;
+		__TomTomWaypointCache[mapID][math_floor(coord[1] * 10)][math_floor(coord[2] * 10)][group.key .. ":" .. group.keyval] = group;
 	else
 		-- coord[3] not existing is checked by Parser and shouldn't ever happen
 		print("Missing mapID for", group.text, coord[1], coord[2], mapID);
@@ -352,7 +352,7 @@ app.AddEventHandler("OnReady", function()
 										tooltip:AddDoubleLine(L.CRITERIA_FOR, achGroup.text or GetAchievementLink(o.achievementID));
 									else
 										if key == "npcID" then key = "creatureID"; end
-										AttachTooltipSearchResults(tooltip, SearchForField, key, o[o.key]);
+										AttachTooltipSearchResults(tooltip, SearchForField, key, o.keyval);
 									end
 								end
 								tooltip:Show();

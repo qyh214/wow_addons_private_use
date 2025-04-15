@@ -172,6 +172,8 @@ L["At Value"] = "At Value"
 L["At War"] = "At War"
 L["Attach to End"] = "Attacher à la Fin"
 --[[Translation missing --]]
+L["Attach to End, backwards"] = "Attach to End, backwards"
+--[[Translation missing --]]
 L["Attach to Point"] = "Attach to Point"
 L["Attach to Start"] = "Attacher au Début"
 L["Attack Power"] = "Puissance d'attaque"
@@ -220,7 +222,15 @@ L["Back and Forth"] = "D'avant en arrière"
 L["Background"] = "Arrière-plan"
 L["Background Color"] = "Couleur d'arrière-plan"
 --[[Translation missing --]]
+L["Balnazzar"] = "Balnazzar"
+--[[Translation missing --]]
 L["Bar Color/Gradient Start"] = "Bar Color/Gradient Start"
+--[[Translation missing --]]
+L["Bar enabled in BigWigs settings"] = "Bar enabled in BigWigs settings"
+--[[Translation missing --]]
+L["Bar enabled in Boss Mod addon settings"] = "Bar enabled in Boss Mod addon settings"
+--[[Translation missing --]]
+L["Bar enabled in DBM settings"] = "Bar enabled in DBM settings"
 --[[Translation missing --]]
 L["Bar Texture"] = "Bar Texture"
 L["Baron Geddon"] = "Baron Geddon"
@@ -231,6 +241,10 @@ L["Battleground"] = [=[Champ De Bataille
 ]=]
 --[[Translation missing --]]
 L["Battleguard Sartura"] = "Battleguard Sartura"
+--[[Translation missing --]]
+L["Beastmaster"] = "Beastmaster"
+--[[Translation missing --]]
+L["Beatrix"] = "Beatrix"
 L["BG>Raid>Party>Say"] = "BG>Raid>Groupe>Dire"
 L["BG-System Alliance"] = "Système-BG Alliance"
 L["BG-System Horde"] = "Système-BG Horde"
@@ -291,6 +305,8 @@ L["Buffed/Debuffed"] = "Amélioré/Affaiblit"
 --[[Translation missing --]]
 L["Burning Crusade"] = "Burning Crusade"
 L["Buru the Gorger"] = "Buru Grandgosier"
+--[[Translation missing --]]
+L["Caldoran"] = "Caldoran"
 --[[Translation missing --]]
 L["Callback function"] = "Callback function"
 L["Can be used for e.g. checking if \"boss1target\" is the same as \"player\"."] = "Peut être utilisé pour par exemple vérifier si l'unité \"boss1target\" est la même que \"player\"."
@@ -901,7 +917,7 @@ L["Id"] = "Id"
 --[[Translation missing --]]
 L["ID"] = "ID"
 --[[Translation missing --]]
-L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/weakauras!"
+L["If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"] = "If you require additional assistance, please open a ticket on GitHub or visit our Discord at https://discord.gg/xhUHVCgAGy!"
 L["Ignore Dead"] = "Ignorer la mort"
 L["Ignore Disconnected"] = "Ignorer les déconnectés"
 L["Ignore Rune CD"] = "Ignorer le rechargement des runes"
@@ -1046,6 +1062,8 @@ L["Length"] = "Longueur"
 L["Level"] = "Niveau"
 --[[Translation missing --]]
 L["LibSharedMedia"] = "LibSharedMedia"
+--[[Translation missing --]]
+L["Lillian Voss"] = "Lillian Voss"
 L["Limited"] = "Limité"
 --[[Translation missing --]]
 L["Linear Texture"] = "Linear Texture"
@@ -1096,6 +1114,8 @@ L["Manual Icon"] = "Manual Icon"
 L["Manual Rotation"] = "Rotation manuelle"
 L["Marked First"] = "Marqué en premier"
 L["Marked Last"] = "Marqué en dernier"
+--[[Translation missing --]]
+L["Mason"] = "Mason"
 L["Master"] = "Maître"
 L["Mastery (%)"] = "Maitrise (%)"
 L["Mastery Rating"] = "Score de maîtrise"
@@ -1111,6 +1131,8 @@ Intermissions are .5
 E.g. 1;2;1;2;2.5;3]=]
 --[[Translation missing --]]
 L["Max Char "] = "Max Char "
+--[[Translation missing --]]
+L["Max Char"] = "Max Char"
 L["Max Charges"] = "Charges Max"
 --[[Translation missing --]]
 L["Max Health"] = "Max Health"
@@ -1346,6 +1368,12 @@ L["Overlay Charged Combo Points"] = "Superposer les Points de combo chargés"
 L["Overlay Cost of Casts"] = "Superposer le coût des incantations"
 L["Overlay Latency"] = "Superposer la Latence"
 --[[Translation missing --]]
+L["Pad"] = "Pad"
+--[[Translation missing --]]
+L["Pad Mode"] = "Pad Mode"
+--[[Translation missing --]]
+L["Pad to"] = "Pad to"
+--[[Translation missing --]]
 L["Paragon Reputation"] = "Paragon Reputation"
 --[[Translation missing --]]
 L["Paragon Reward Pending"] = "Paragon Reward Pending"
@@ -1484,6 +1512,8 @@ L["Realm"] = "Royaume"
 L["Realm Name"] = "Nom du Royaume"
 L["Realm of Caster's Target"] = "Royaume de la Cible du Lanceur de sort"
 --[[Translation missing --]]
+L["Reborn Council"] = "Reborn Council"
+--[[Translation missing --]]
 L["Receiving %s Bytes"] = "Receiving %s Bytes"
 L["Receiving display information"] = "Réception d'information de graphique de %s..."
 L["Reflect"] = "Renvoi"
@@ -1572,6 +1602,8 @@ L["Rune Count - Unholy"] = "Rune Count - Unholy"
 L["Sapphiron"] = "Sapphiron"
 L["Say"] = "Dire"
 L["Scale"] = "Échelle"
+--[[Translation missing --]]
+L["Scarlet Enclave"] = "Scarlet Enclave"
 L["Scenario"] = "Scénario"
 --[[Translation missing --]]
 L["Scenario (Heroic)"] = "Scenario (Heroic)"
@@ -1626,6 +1658,8 @@ L["Silithid Royalty"] = "Silithid Royalty"
 L["Silver"] = "Silver"
 L["Simple"] = "Basique"
 --[[Translation missing --]]
+L["Since Active"] = "Since Active"
+--[[Translation missing --]]
 L["Since Apply"] = "Since Apply"
 --[[Translation missing --]]
 L["Since Apply/Refresh"] = "Since Apply/Refresh"
@@ -1661,6 +1695,8 @@ L["Smart Group"] = "Smart Group"
 L["Soft Enemy"] = "Soft Enemy"
 --[[Translation missing --]]
 L["Soft Friend"] = "Soft Friend"
+--[[Translation missing --]]
+L["Solistrasza"] = "Solistrasza"
 L["Sound"] = "Son"
 L["Sound by Kit ID"] = "Son par Kit ID"
 L["Source"] = "Source"
@@ -1795,6 +1831,8 @@ L[ [=[Supports multiple entries, separated by commas
 --[[Translation missing --]]
 L["Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Escape ',' with \\. Prefix with '-' for negation."
 --[[Translation missing --]]
+L["Supports multiple entries, separated by commas. Escape with \\. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Escape with \\. Prefix with '-' for negation."
+--[[Translation missing --]]
 L["Supports multiple entries, separated by commas. Prefix with '-' for negation."] = "Supports multiple entries, separated by commas. Prefix with '-' for negation."
 --[[Translation missing --]]
 L[ [=[Supports multiple entries, separated by commas. To include child zone ids, prefix with 'c', e.g. 'c2022'.
@@ -1832,6 +1870,12 @@ L["Target"] = "Cible"
 L["Targeted"] = "Ciblé"
 --[[Translation missing --]]
 L["Tertiary Stats"] = "Tertiary Stats"
+--[[Translation missing --]]
+L["Test if bar is enabled in BigWigs settings"] = "Test if bar is enabled in BigWigs settings"
+--[[Translation missing --]]
+L["Test if bar is enabled in Boss Mod addon settings"] = "Test if bar is enabled in Boss Mod addon settings"
+--[[Translation missing --]]
+L["Test if bar is enabled in DBM settings"] = "Test if bar is enabled in DBM settings"
 L["Text"] = "Texte"
 --[[Translation missing --]]
 L["Text To Speech"] = "Text To Speech"
@@ -2074,7 +2118,7 @@ L["Warning: Tooltip values are now available via %tooltip1, %tooltip2, %tooltip3
 --[[Translation missing --]]
 L["WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"] = "WeakAuras Built-In (63:42 | 3:07 | 10 | 2.4)"
 --[[Translation missing --]]
-L["WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/weakauras."] = "WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/weakauras."
+L["WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/xhUHVCgAGy."] = "WeakAuras has detected empty settings. If this is unexpected, ask for assitance on https://discord.gg/xhUHVCgAGy."
 --[[Translation missing --]]
 L[ [=[WeakAuras has detected that it has been downgraded.
 Your saved auras may no longer work properly.

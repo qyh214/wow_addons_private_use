@@ -110,15 +110,22 @@ SET overrideArchive "0"
 
 自 2020 年 4 月 4 日起，cn 地区的`SET profanityFilter "0"`被 agent 强制监管覆盖更新，可配合使用 fuckyou 等插件以及诸如 WA 字符串解决，目前 ElvUI_WindTools 也提供了相关解锁功能。
 
+自 2025 年起，网易雷火接手的新版本中此命令似乎已无效，或需要搭配一些其他办法处置
+
+编辑模式删除：https://ds.163.com/feed/66aef2dc156f2a5710467156/
+
+```
+/run Enum.EditModeLayoutType.Server = 2
+```
+
 ## 配置文件
 
 wa 自用字符串、合集整理可访问：https://wago.io/p/shihuang214
 
-全部插件和配置文件的备份：
+全部插件和配置文件的备份和分享：
 
-- 黑盒工坊分享码：122950eO2d8Llzuk 或者搜索秦始皇二一四
-- 新手盒子分享码：265783 或者搜索秦始皇二一四
-
-编辑模式删除
-https://ds.163.com/feed/66aef2dc156f2a5710467156/
-/run Enum.EditModeLayoutType.Server = 2
+- 可在各平台搜索：秦始皇二一四
+- 新手盒子：265783
+- 黑盒工坊：122950eO2d8Llzuk
+- 网易 DD：931417
+- 大脚：053e4cd84b22f2559d8fe6fa9088e7ac

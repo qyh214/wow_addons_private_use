@@ -571,7 +571,7 @@ end
 
 local advancedTabs = {
 	{
-		text = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Sliders:20|t ".. L.advanced,
+		text = "|TInterface\\AddOns\\BigWigs\\Media\\Icons\\Menus\\Sliders:20|t ".. L.advanced_options,
 		value = "options",
 	},
 	{
@@ -1021,9 +1021,9 @@ local function populatePrivateAuraOptions(widget)
 
 	local reset = AceGUI:Create("Button")
 	reset:SetFullWidth(true)
-	reset:SetText(BigWigsAPI:GetLocale("BigWigs: Plugins").reset)
-	reset:SetUserData("label", BigWigsAPI:GetLocale("BigWigs: Plugins").reset)
-	reset:SetUserData("desc", BigWigsAPI:GetLocale("BigWigs: Plugins").resetSoundDesc)
+	reset:SetText(L.reset)
+	reset:SetUserData("label", L.reset)
+	reset:SetUserData("desc", L.resetSoundDesc)
 	reset:SetUserData("scrollFrame", widget)
 	reset:SetUserData("privateAuraSoundOptions", privateAuraSoundOptions)
 	reset:SetCallback("OnEnter", slaveOptionMouseOver)
@@ -1074,10 +1074,10 @@ local function populateToggleOptions(widget, module)
 	scrollFrame:PauseLayout()
 
 	-- Add a small text label to the top right displaying the boss encounter ID
-	local encounterId, multiple = module:GetEncounterID()
-	if encounterId then
+	local encounterID, multiple = module:GetEncounterID()
+	if encounterID then
 		local idLabel = AceGUI:Create("Label")
-		idLabel.label:SetFormattedText(L.optionsKey, multiple and module:TableToString({module:GetEncounterID()}) or encounterId)
+		idLabel.label:SetFormattedText(L.optionsKey, multiple and module:TableToString({module:GetEncounterID()}) or encounterID)
 		idLabel:SetColor(0.65, 0.65, 0.65)
 		idLabel:SetFullWidth(true)
 		idLabel.label:SetJustifyH("RIGHT")
@@ -1085,13 +1085,13 @@ local function populateToggleOptions(widget, module)
 	end
 
 	local sDB = BigWigsStatsDB
-	local journalId = module:GetJournalID()
-	if not journalId and module:GetAllowWin() and encounterId then
-		journalId = -(encounterId) -- Fallback to show stats for modules with no journal ID, but set to allow win
+	local journalID = module:GetJournalID()
+	if not journalID and module:GetAllowWin() and encounterID then
+		journalID = -(encounterID) -- Fallback to show stats for modules with no journal ID, but set to allow win
 	end
-	local instanceId = type(module.instanceId) == "table" and module.instanceId[1] or module.instanceId
-	if journalId and instanceId and instanceId > 0 and sDB and sDB[instanceId] and sDB[instanceId][journalId] then
-		sDB = sDB[instanceId][journalId]
+	local instanceID = module:GetZoneID()
+	if journalID and instanceID and instanceID > 0 and sDB and sDB[instanceID] and sDB[instanceID][journalID] then
+		sDB = sDB[instanceID][journalID]
 
 		if next(sDB) then -- Create statistics table
 			local statGroup = AceGUI:Create("InlineGroup")
@@ -1404,6 +1404,7 @@ do
 	local statusTable = {}
 	local GetBestMapForUnit = loader.GetBestMapForUnit
 	local GetMapInfo = loader.GetMapInfo
+	local remappedZones = loader.remappedZones
 
 	local function onTreeGroupSelected(widget, event, value)
 		visibleSpellDescriptionWidgets = {}
@@ -1414,7 +1415,8 @@ do
 			onZoneShow(widget, tonumber(instanceIdOrMapId))
 		elseif bigwigsContent and not loader.currentExpansion.bigWigsBundled[value] then -- Any BigWigs content except bundled expansion headers
 			local addonState = loader:GetAddOnState(bigwigsContent)
-			local string = addonState == "MISSING" and L.missingAddOnPopup or addonState == "DISABLED" and L.disabledAddOn
+			local disabled = not loader:IsAddOnEnabled(bigwigsContent)
+			local string = addonState == "MISSING" and L.missingAddOnPopup or disabled and L.disabledAddOn
 			if string then
 				local container = AceGUI:Create("SimpleGroup")
 				container:SetFullWidth(true)
@@ -1426,9 +1428,9 @@ do
 				missing:SetFullWidth(true)
 				container:AddChild(missing)
 
-				if addonState == "DISABLED" then
+				if disabled then
 					local reload = AceGUI:Create("Button")
-					reload:SetText(BigWigsAPI:GetLocale("BigWigs: Plugins").enable)
+					reload:SetText(L.enable)
 					reload:SetAutoWidth(true)
 					reload:SetUserData("addonName", bigwigsContent)
 					reload:SetCallback("OnClick", function(reloadWidget)
@@ -1443,7 +1445,8 @@ do
 				value = "LittleWigs"
 			end
 			local addonState = loader:GetAddOnState(value)
-			local string = addonState == "MISSING" and L.missingAddOnPopup or addonState == "DISABLED" and L.disabledAddOn
+			local disabled = not loader:IsAddOnEnabled(value)
+			local string = addonState == "MISSING" and L.missingAddOnPopup or disabled and L.disabledAddOn
 			if not loader.usingLittleWigsRepo and string then
 				local container = AceGUI:Create("SimpleGroup")
 				container:SetFullWidth(true)
@@ -1455,9 +1458,9 @@ do
 				missing:SetFullWidth(true)
 				container:AddChild(missing)
 
-				if addonState == "DISABLED" then
+				if disabled then
 					local reload = AceGUI:Create("Button")
-					reload:SetText(BigWigsAPI:GetLocale("BigWigs: Plugins").enable)
+					reload:SetText(L.enable)
 					reload:SetAutoWidth(true)
 					reload:SetUserData("addonName", value)
 					reload:SetCallback("OnClick", function(reloadWidget)
@@ -1619,6 +1622,9 @@ do
 
 			-- Do we have content for the zone we're in? Then open straight to that zone.
 			local _, instanceType, _, _, _, _, _, id = loader.GetInstanceInfo()
+			if remappedZones[id] then
+				id = remappedZones[id]
+			end
 			local zoneAddon = loader.zoneTbl[id]
 			if type(zoneAddon) == "table" then
 				-- on Retail default to Current Season, on Classic default to the expansion addon

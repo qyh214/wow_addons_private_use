@@ -10,7 +10,7 @@ local plugin = BigWigs:NewPlugin("Colors", {
 })
 if not plugin then return end
 
-local L = BigWigsAPI:GetLocale("BigWigs: Plugins")
+local L = BigWigsAPI:GetLocale("BigWigs")
 
 --------------------------------------------------------------------------------
 -- Options
@@ -169,7 +169,7 @@ local colorOptions = {
 			order = 2,
 			args = {
 				barColor = {
-					name = L.normal,
+					name = L.expiring_normal,
 					type = "color",
 					hasAlpha = true,
 					order = 1,

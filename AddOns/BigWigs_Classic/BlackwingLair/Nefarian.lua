@@ -6,7 +6,7 @@ local mod, CL = BigWigs:NewBoss("Nefarian Classic", 469, 1536)
 if not mod then return end
 mod:RegisterEnableMob(11583, 10162, 14261, 14262, 14263, 14264, 14265, 14302) -- Nefarian, Lord Victor Nefarius, Blue, Green, Bronze, Red, Black, Chromatic
 mod:SetEncounterID(617)
-if mod:GetSeason() ~= 2 then
+if mod:Retail() then
 	mod:SetRespawnTime(900)
 end
 mod:SetStage(1)

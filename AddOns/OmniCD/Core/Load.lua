@@ -1,31 +1,32 @@
-local E, L = select(2, ...):unpack()
+local E, L, C = select(2, ...):unpack()
 
 local DB_VERSION = 4
 
 local function OmniCD_OnEvent(self, event, ...)
-	if event == 'ADDON_LOADED' then
+	if event == "ADDON_LOADED" then
 		local addon = ...
 		if addon == E.AddOn then
 			if E.isClassic then
 				local seasonID = C_Seasons.GetActiveSeason()
+
 				if seasonID == 1 or seasonID == 2 then
 					E.write("Seasonal Classic WoW isn't supported.")
 				end
 			end
 			self:OnInitialize()
-			self:UnregisterEvent('ADDON_LOADED')
-			self:RegisterEvent('PLAYER_LOGIN')
-			if not E.preMoP then
-				E:RegisterEvent('PET_BATTLE_OPENING_START')
+			self:UnregisterEvent("ADDON_LOADED")
+			self:RegisterEvent("PLAYER_LOGIN")
+			if E.postMoP then
+				E:RegisterEvent("PET_BATTLE_OPENING_START")
 			end
 		end
-	elseif event == 'PLAYER_LOGIN' then
+	elseif event == "PLAYER_LOGIN" then
 		self:OnEnable()
-		self:UnregisterEvent('PLAYER_LOGIN')
-		if self.preMoP then
+		self:UnregisterEvent("PLAYER_LOGIN")
+		if not self.postMoP then
 			self:SetScript("OnEvent", nil)
 		end
-	elseif event == 'PET_BATTLE_CLOSE' then
+	elseif event == "PET_BATTLE_CLOSE" then
 		self.isInPetBattle = nil
 		for moduleName in pairs(E.moduleOptions) do
 			local module = E[moduleName]
@@ -34,8 +35,8 @@ local function OmniCD_OnEvent(self, event, ...)
 				func(module)
 			end
 		end
-		self:UnregisterEvent('PET_BATTLE_CLOSE')
-	elseif event == 'PET_BATTLE_OPENING_START' then
+		self:UnregisterEvent("PET_BATTLE_CLOSE")
+	elseif event == "PET_BATTLE_OPENING_START" then
 		for moduleName in pairs(E.moduleOptions) do
 			local module = E[moduleName]
 			local func = module.Test
@@ -46,14 +47,31 @@ local function OmniCD_OnEvent(self, event, ...)
 			if type(func) == "function" then
 				func(module)
 			end
+			E.Party:CancelTimers()
 		end
 		self.isInPetBattle = true
-		self:RegisterEvent('PET_BATTLE_CLOSE')
+		self:RegisterEvent("PET_BATTLE_CLOSE")
 	end
 end
 
-E:RegisterEvent('ADDON_LOADED')
+E:RegisterEvent("ADDON_LOADED")
 E:SetScript("OnEvent", OmniCD_OnEvent)
+
+function E.FixOldProfile(profile)
+	if type(profile) ~= "table" or type(profile.Party) ~= "table" then
+		return
+	end
+
+	for _, db in pairs(profile.Party) do
+		if type(db) == "table" and type(db.extraBars) == "table" then
+			for k in pairs(db.extraBars) do
+				if not C.Party.arena.extraBars[k] then
+					db.extraBars[k] = nil
+				end
+			end
+		end
+	end
+end
 
 function E:OnInitialize()
 	if not OmniCDDB or not OmniCDDB.version or OmniCDDB.version < 2.51 then
@@ -80,6 +98,12 @@ function E:OnInitialize()
 			end
 		end
 		OmniCDDB.version = DB_VERSION
+	else
+		if OmniCDDB.profiles then
+			for _, profile in pairs(OmniCDDB.profiles) do
+				self.FixOldProfile(profile)
+			end
+		end
 	end
 	OmniCDDB.cooldowns = OmniCDDB.cooldowns or {}
 
@@ -90,8 +114,8 @@ function E:OnInitialize()
 
 	self.global = self.DB.global
 	self.profile = self.DB.profile
-	local _, instanceType = IsInInstance()
-	self.db = self:GetCurrentZoneSettings(instanceType)
+
+	self.db = E:GetCurrentZoneSettings(select(2, IsInInstance()))
 
 	self:CreateFontObjects()
 	self:UpdateSpellList(true)
@@ -124,14 +148,8 @@ function E:UpdateFontObjects()
 	self:SetFontProperties(self.StatusBarFont, self.profile.General.fonts.statusBar)
 end
 
-function E:SetPixelMult()
-	local pixelMult, uiUnitFactor = E.Libs.OmniCDC:GetPixelMult()
-	self.PixelMult = pixelMult
-	self.uiUnitFactor = uiUnitFactor
-end
-
 function E:OnEnable()
-	self.enabled = true
+	self.isEnabled = true
 	self:LoadAddOns()
 	self:SetPixelMult()
 	self:Refresh()
@@ -141,8 +159,14 @@ function E:OnEnable()
 	end
 end
 
+function E:SetPixelMult()
+	local pixelMult, uiUnitFactor = E.Libs.OmniCDC:GetPixelMult()
+	self.PixelMult = pixelMult
+	self.uiUnitFactor = uiUnitFactor
+end
+
 function E:Refresh(arg)
-	if not self.enabled then
+	if not self.isEnabled then
 		return
 	end
 
@@ -155,7 +179,7 @@ function E:Refresh(arg)
 
 		local init = module.Initialize
 		if init and type(init) == "function" then
-			init()
+			init(module)
 			module.Initialize = nil
 		end
 
@@ -212,10 +236,11 @@ do
 	end
 
 	local function VersionCheck_OnEvent(self, event, prefix, version, _, sender)
-		if event == 'CHAT_MSG_ADDON' then
+		if event == "CHAT_MSG_ADDON" then
 			if prefix ~= "OMNICD_VERSION" or sender == E.userNameWithRealm then
 				return
 			end
+
 			version = tonumber(version)
 			if version and version > currentVersion then
 				local diff = version - currentVersion
@@ -232,7 +257,7 @@ do
 				self:SetScript("OnEvent", nil)
 				checkEnabled = nil
 			end
-		elseif event == 'GROUP_ROSTER_UPDATE' then
+		elseif event == "GROUP_ROSTER_UPDATE" then
 			local num = GetNumGroupMembers()
 			if num and num > groupSize then
 				if not checkTimer then
@@ -240,7 +265,7 @@ do
 				end
 			end
 			groupSize = num
-		elseif event == 'PLAYER_ENTERING_WORLD' then
+		elseif event == "PLAYER_ENTERING_WORLD" then
 			if not checkTimer then
 				checkTimer = C_Timer.NewTimer(10, SendVersion)
 			end
@@ -253,9 +278,11 @@ do
 			if currentVersion >= updateVersion then
 				self.global.updateType = nil
 			end
+
 			if today == self.global.updateCheckDate then
 				return
 			end
+
 			if currentVersion < updateVersion then
 				if self.global.notifyNew then
 					self.write(self.global.updateType)
@@ -266,9 +293,9 @@ do
 
 		checkEnabled = C_ChatInfo.RegisterAddonMessagePrefix("OMNICD_VERSION")
 		local f = CreateFrame("Frame")
-		f:RegisterEvent('CHAT_MSG_ADDON')
-		f:RegisterEvent('GROUP_ROSTER_UPDATE')
-		f:RegisterEvent('PLAYER_ENTERING_WORLD')
+		f:RegisterEvent("CHAT_MSG_ADDON")
+		f:RegisterEvent("GROUP_ROSTER_UPDATE")
+		f:RegisterEvent("PLAYER_ENTERING_WORLD")
 		f:SetScript("OnEvent", VersionCheck_OnEvent)
 		self.useVersionCheck = true
 	end

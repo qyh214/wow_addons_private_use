@@ -1,5 +1,10 @@
 # Changelog
 
+## Changed in v82
+
+* Undermine: add some missing loot, and a hidden shirt
+* Delves: story progress achievements weren't showing on the Undermine delve tooltips
+
 ## Changed in v81
 
 * Undermine: add quest for Gallagio Garbage and move it to the side of the map

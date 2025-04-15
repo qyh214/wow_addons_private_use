@@ -11,9 +11,6 @@ local KEY, CACHE = "toyID", "Toys"
 local AccountWideToyData = {};
 local toyFields = {
 	CACHE = function() return CACHE end,
-	f = function(t)
-		return 102;
-	end,
 	collectible = function(t)
 		return app.Settings.Collectibles[CACHE];
 	end,

@@ -1,16 +1,26 @@
 <img align="right" width="180" height="180" src="https://wago-addons.ams3.digitaloceanspaces.com/thumbnails/GCM2L2Lxz2AObRXu404Oggp5zcjhBYp01XCXffPQ.png">
 
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ATTWoWAddon/AllTheThings)
-[![Bitbucket](https://img.shields.io/badge/bitbucket-%230047B3.svg?style=for-the-badge&logo=bitbucket&logoColor=white)](https://bitbucket.org/product)
-[![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com)
-[![Lua](https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white)](https://lua.org)
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=&logo=github&logoColor=white)](https://github.com/ATTWoWAddon/AllTheThings)
+[![CurseForge](https://img.shields.io/badge/CurseForge-%23F16436?logo=CurseForge&logoColor=black)](https://www.curseforge.com/wow/addons/all-the-things)
+[![Wago.io](https://img.shields.io/badge/Wago.io-%231e1e1e)](https://addons.wago.io/addons/allthethings)
+[![Battle.Net API](https://img.shields.io/badge/Blizzard%20API-4381C3?logo=battledotnet&logoColor=white)](https://develop.battle.net/)
+[![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com)
+[![Lua](https://img.shields.io/badge/lua-%232C2D72.svg?&logo=lua&logoColor=white)](https://lua.org)
 <br>
-[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/allthethings)
-[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/allthethings)
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white)](https://discord.gg/allthethings)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?&logo=patreon&logoColor=white)](https://www.patreon.com/allthethings)
+[![Twitch](https://img.shields.io/badge/Twitch-%239146FF?logo=twitch&logoColor=white)](https://www.twitch.tv/crieve)
 <br>
 [![CurseForge](https://cf.way2muchnoise.eu/267285.svg)](https://www.curseforge.com/wow/addons/all-the-things)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ATTWoWAddon/AllTheThings/total?logo=github&label=Downloads&cacheSeconds=600)
+<br>
 [![Build Status](https://github.com/ATTWoWAddon/AllTheThings/workflows/Release/badge.svg)](https://github.com/ATTWoWAddon/AllTheThings/actions?workflow=Release)
-[![GitHub Release](https://img.shields.io/github/v/release/ATTWoWAddon/AllTheThings)](https://github.com/ATTWoWAddon/AllTheThings/releases)
+[![Stable Release](https://img.shields.io/github/v/release/ATTWoWAddon/AllTheThings?logo=github&label=Stable)](https://github.com/ATTWoWAddon/AllTheThings/releases)
+[![Stable Release Date](https://img.shields.io/github/release-date/ATTWoWAddon/AllTheThings?logo=github&label=Released&cacheSeconds=600)](https://github.com/ATTWoWAddon/AllTheThings/releases)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/ATTWoWAddon/AllTheThings/latest?logo=github)
+<br>
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/ATTWoWAddon/AllTheThings?logo=github&label=Issues)](https://github.com/ATTWoWAddon/AllTheThings/issues)
+![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/ATTWoWAddon/AllTheThings?logo=github&label=Activity&cacheSeconds=600)
 
 <br>
 
@@ -18,7 +28,7 @@
 Do you find yourself completing old content just so that you can get literally everything for your Collections? Say no more! ALL THE THINGS will help you with your endeavor by giving you the ability to track your completion for everything.
 
 ## Features
-- Supports tracking of Appearances, Illusions, Mounts, Pets, Toys, Music Rolls, and Titles.
+- Supports tracking of Achievements, Quests, Appearances, Mounts, Pets, Toys, Titles, and much more.
 - Primary Collections Window is moveable and resizeable.
 - Auto Minilist
 - Datatext Support
@@ -57,7 +67,7 @@ Thank you to the contributors for the work they do and the users who have submit
 - Sweetlie -- Helped with models for the addon.
 - Gello -- Helped us to get NPC localization.
 - Breanni -- Allowing us to use notes from [WarcraftPets website](https://www.warcraftpets.com).
-- DeadSerious -- Winner of our Logo Contest, Primary Artist for all Branding for ATT & Crieve's Twitch channel. 
+- DeadSerious -- Winner of our Logo Contest, Primary Artist for all Branding for ATT & Crieve's Twitch channel.
 - BigBlaris - Verifying drops, testing.
 - Kawna -- Does artwork to help out with the project.
 - Nightswifty -- Added ATT information to a [wowhead guide](https://www.wowhead.com/transmogrification-overview-frequently-asked-questions).

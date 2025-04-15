@@ -280,7 +280,7 @@ do
 		--[[ s r
 		local frame = CreateFrame("Frame", "AceGUI30Pullout"..count, UIParent, "BackdropTemplate")
 		]]
-		local frame = CreateFrame("Frame", "AceGUI30Pullout-OmniCDC"..count, UIParent, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		local frame = CreateFrame("Frame", "AceGUI30Pullout-OmniCDC"..count, UIParent, "BackdropTemplate")
 		-- e
 		local self = {}
 		self.count = count
@@ -341,7 +341,7 @@ do
 		--[[ s r
 		local slider = CreateFrame("Slider", "AceGUI30PulloutScrollbar"..count, scrollFrame, "BackdropTemplate")
 		]]
-		local slider = CreateFrame("Slider", "AceGUI30PulloutScrollbar-OmniCDC"..count, scrollFrame, BackdropTemplateMixin and "BackdropTemplate" or nil)
+		local slider = CreateFrame("Slider", "AceGUI30PulloutScrollbar-OmniCDC"..count, scrollFrame, "BackdropTemplate")
 		-- e
 		slider:SetOrientation("VERTICAL")
 		--[[ s r
@@ -759,7 +759,7 @@ do
 		--[[ s r
 		local dropdown = CreateFrame("Frame", "AceGUI30DropDown"..count, frame, "UIDropDownMenuTemplate")
 		]]
-		local dropdown = CreateFrame("Frame", "AceGUI30DropDown-OmniCDC"..count, frame, BackdropTemplateMixin and "UIDropDownMenuTemplate, BackdropTemplate" or "UIDropDownMenuTemplate")
+		local dropdown = CreateFrame("Frame", "AceGUI30DropDown-OmniCDC"..count, frame, "UIDropDownMenuTemplate, BackdropTemplate")
 		-- e
 
 		local self = {}

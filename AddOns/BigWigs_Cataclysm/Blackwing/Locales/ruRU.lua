@@ -37,5 +37,4 @@ L = BigWigs:NewBossLocale("Nefarian", "ruRU")
 if L then
 	L.discharge = "Искровой разряд"
 	L.stage3_yell_trigger = "Я пытался следовать законам гостеприимства" -- Я пытался следовать законам гостеприимства, но вы всё никак не умрете! Придется отбросить условности и просто... УБИТЬ ВАС ВСЕХ!
-	--L.too_close = "Dragons are too close"
 end

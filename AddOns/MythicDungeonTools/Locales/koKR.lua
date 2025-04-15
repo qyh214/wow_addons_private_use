@@ -169,6 +169,8 @@ L["Aspiring Forgehand"] = "Aspiring Forgehand"
 L["Aspix"] = "아스픽스"
 L["Asset Manager"] = "자산 관리자"
 --[[Translation missing --]]
+L["assignmentWarning"] = "MDT will NOT automatically set target markers on enemies in the game world."
+--[[Translation missing --]]
 L["Assistant Unnaturaler"] = "Assistant Unnaturaler"
 L["Astral Attendant"] = "천공의 수행원"
 L["Astronos"] = "아스트로노스"
@@ -1942,6 +1944,8 @@ L["Off-Duty Laborer"] = "비번 노동자"
 L["Officer Quarters"] = "장교 숙소"
 L["Ogron Laborer"] = "오그론 일꾼"
 --[[Translation missing --]]
+L["Okay"] = "Okay"
+--[[Translation missing --]]
 L["Ol' Waxbeard"] = "Ol' Waxbeard"
 L["Olaf"] = "올라프"
 L["Olmyr the Enlightened"] = "깨달은 자 올미르"
@@ -2252,6 +2256,9 @@ L["Rook Spiderling"] = "탑 새끼거미"
 L["Rook Spinner"] = "탑 그물거미"
 --[[Translation missing --]]
 L["rookeryShortname"] = "ROOK"
+--[[Translation missing --]]
+L["rookItemDescription"] = [=[After defeating |cFFFF0000Kyrioss|r loot |cFF00FF00Stormrook Feather|r 
+Use it on a nearby |cFF00FF00Chained Stormrook|r to gain this buff for 5 minutes.]=]
 L["Root"] = "묶임"
 L["Rotation"] = "로테이션"
 --[[Translation missing --]]
@@ -3175,6 +3182,8 @@ L["War Lynx"] = "War Lynx"
 L["War Ohuna"] = "전쟁 오후나"
 L["Warlord Parjesh"] = "전쟁군주 파르제쉬"
 L["Warlord Sargha"] = "전쟁군주 사르가"
+--[[Translation missing --]]
+L["Warning"] = "Warning"
 L["Warp Shade"] = "뒤틀린 그림자"
 L["Warp Stalker"] = "차원의 추적자"
 L["Waste Pipes"] = "폐기물 도관"

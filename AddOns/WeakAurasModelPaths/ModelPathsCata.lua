@@ -13683,6 +13683,11 @@ WeakAuras.ModelPaths = {
      {
       children = {
        {
+        fileId = "6426176",
+        text = "belt_armor_chen_c_01_armor_icons.m2",
+        value = "belt_armor_chen_c_01_armor_icons.m2",
+       },
+       {
         fileId = "1718333",
         text = "worgencombattransformation_wo_f.m2",
         value = "worgencombattransformation_wo_f.m2",
@@ -13698,6 +13703,136 @@ WeakAuras.ModelPaths = {
      },
      {
       children = {
+       {
+        fileId = "6426179",
+        text = "helm_armor_chen_c_01_armor_icons_be_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_be_f.m2",
+       },
+       {
+        fileId = "6426178",
+        text = "helm_armor_chen_c_01_armor_icons_be_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_be_m.m2",
+       },
+       {
+        fileId = "6426181",
+        text = "helm_armor_chen_c_01_armor_icons_dr_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_dr_f.m2",
+       },
+       {
+        fileId = "6426180",
+        text = "helm_armor_chen_c_01_armor_icons_dr_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_dr_m.m2",
+       },
+       {
+        fileId = "6426183",
+        text = "helm_armor_chen_c_01_armor_icons_dw_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_dw_f.m2",
+       },
+       {
+        fileId = "6426182",
+        text = "helm_armor_chen_c_01_armor_icons_dw_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_dw_m.m2",
+       },
+       {
+        fileId = "6426185",
+        text = "helm_armor_chen_c_01_armor_icons_gn_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_gn_f.m2",
+       },
+       {
+        fileId = "6426184",
+        text = "helm_armor_chen_c_01_armor_icons_gn_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_gn_m.m2",
+       },
+       {
+        fileId = "6426187",
+        text = "helm_armor_chen_c_01_armor_icons_go_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_go_f.m2",
+       },
+       {
+        fileId = "6426186",
+        text = "helm_armor_chen_c_01_armor_icons_go_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_go_m.m2",
+       },
+       {
+        fileId = "6426189",
+        text = "helm_armor_chen_c_01_armor_icons_hu_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_hu_f.m2",
+       },
+       {
+        fileId = "6426188",
+        text = "helm_armor_chen_c_01_armor_icons_hu_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_hu_m.m2",
+       },
+       {
+        fileId = "6426195",
+        text = "helm_armor_chen_c_01_armor_icons_ni_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_ni_f.m2",
+       },
+       {
+        fileId = "6426194",
+        text = "helm_armor_chen_c_01_armor_icons_ni_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_ni_m.m2",
+       },
+       {
+        fileId = "6426198",
+        text = "helm_armor_chen_c_01_armor_icons_or_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_or_f.m2",
+       },
+       {
+        fileId = "6426197",
+        text = "helm_armor_chen_c_01_armor_icons_or_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_or_m.m2",
+       },
+       {
+        fileId = "6426200",
+        text = "helm_armor_chen_c_01_armor_icons_pa_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_pa_f.m2",
+       },
+       {
+        fileId = "6426199",
+        text = "helm_armor_chen_c_01_armor_icons_pa_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_pa_m.m2",
+       },
+       {
+        fileId = "6426206",
+        text = "helm_armor_chen_c_01_armor_icons_sc_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_sc_f.m2",
+       },
+       {
+        fileId = "6426205",
+        text = "helm_armor_chen_c_01_armor_icons_sc_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_sc_m.m2",
+       },
+       {
+        fileId = "6426202",
+        text = "helm_armor_chen_c_01_armor_icons_ta_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_ta_f.m2",
+       },
+       {
+        fileId = "6426201",
+        text = "helm_armor_chen_c_01_armor_icons_ta_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_ta_m.m2",
+       },
+       {
+        fileId = "6426204",
+        text = "helm_armor_chen_c_01_armor_icons_tr_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_tr_f.m2",
+       },
+       {
+        fileId = "6426203",
+        text = "helm_armor_chen_c_01_armor_icons_tr_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_tr_m.m2",
+       },
+       {
+        fileId = "6426210",
+        text = "helm_armor_chen_c_01_armor_icons_wo_f.m2",
+        value = "helm_armor_chen_c_01_armor_icons_wo_f.m2",
+       },
+       {
+        fileId = "6426209",
+        text = "helm_armor_chen_c_01_armor_icons_wo_m.m2",
+        value = "helm_armor_chen_c_01_armor_icons_wo_m.m2",
+       },
        {
         fileId = "5504037",
         text = "helm_armor_twilightcultist_b_01_be_f.m2",

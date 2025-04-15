@@ -9,6 +9,7 @@ local type,ipairs,pairs,setmetatable,rawget,tinsert,unpack,rawset
 -- App locals
 local GetRelativeValue = app.GetRelativeValue;
 local containsValue = app.containsValue;
+local DelayedCallback = app.CallbackHandlers.DelayedCallback
 
 -- Lib Helpers
 local constructor = function(id, t, typeID)
@@ -109,6 +110,10 @@ local ShouldExcludeFromTooltipHelper = function(t)
 	return false;
 end
 
+-- Represents how long a given group is allowed to permit a retryable operation
+local CAN_RETRY_DURATION_SEC = 3
+-- Temp function to allow someone to change the timeout
+app.SetCAN_RETRY_DURATION_SEC = function(sec) CAN_RETRY_DURATION_SEC = sec end
 -- Represents default field evaluation logic for all Classes unless defined within the Class
 local DefaultFields = {
 	-- Cloned groups will not directly have a parent, but they will instead have a sourceParent, so fill in with that instead
@@ -118,6 +123,9 @@ local DefaultFields = {
 	-- A semi-unique string value that identifies this object based on its key, or text if it doesn't have one.
 	["hash"] = function(t)
 		return CreateHash(t);
+	end,
+	["keyval"] = function(t)
+		return t[t.key]
 	end,
 	-- Default text should be a valid link or name
 	["text"] = function(t)
@@ -190,6 +198,32 @@ local DefaultFields = {
 	end,
 	["ShouldExcludeFromTooltip"] = function(t)
 		return t.ShouldExcludeFromTooltipHelper(t);
+	end,
+	-- Allows automatically handling a global re-try timer for the specific group for operations which need to 're-try' things
+	-- concerning this group and are not using Event-driven handling
+	-- check 'if [not] o.CanRetry then ...'
+	-- Assign this field directly in the group if re-tries on the group should be permanently disabled
+	-- i.e. if not t.CanRetry then t.CanRetry = false end
+	["CanRetry"] = function(t)
+		local canretry = t.__canretry
+		if canretry == nil then
+			-- first check if we can retry for this group
+			canretry = true
+			t.__canretry = canretry
+			-- app.PrintDebug("retry:start",app:SearchLink(t))
+			-- after some seconds, mark this group to no longer retry
+			DelayedCallback(function(t)
+				-- app.PrintDebug("__cantry:done",app:SearchLink(t))
+				t.__canretry = false
+			end, CAN_RETRY_DURATION_SEC, t)
+		elseif canretry == false then
+			-- group has been marked to stop retrying, but it can be re-tried later
+			t.__canretry = nil
+			-- app.PrintDebug("retry:nil",app:SearchLink(t))
+			return
+		-- else app.PrintDebug("retry:wait",t)
+		end
+		return canretry
 	end,
 };
 
@@ -303,17 +337,11 @@ or function(fields, className)
 end
 app.BaseClass = CreateClassMeta(nil, "BaseClass");
 
-local MaximumInfoRetries = 40;
-app.MaximumItemInfoRetries = MaximumInfoRetries
 app.TryGetField = function(t, field, fieldFunc, giveUpFunc)
 	local fieldVal = fieldFunc(t, field)
 	-- app.PrintDebug("TGF",t.hash,field,fieldVal)
 	if fieldVal then return fieldVal end
-	local retries = t.retries or 0
-	retries = retries + 1
-	t.retries = retries
-	-- app.PrintDebug("TGF:R",retries)
-	if retries > MaximumInfoRetries then
+	if not t.CanRetry then
 		return giveUpFunc(t, field)
 	end
 end

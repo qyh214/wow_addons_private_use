@@ -28,6 +28,7 @@ local Things = {
 	"Titles",
 	"Toys",
 	"Transmog",
+	--"WarbandScenes",
 }
 local GeneralSettingsBase = {
 	__index = {
@@ -79,6 +80,7 @@ local GeneralSettingsBase = {
 		["Thing:Titles"] = true,
 		["Thing:Toys"] = true,
 		["Thing:Transmog"] = app.GameBuildVersion >= 40000,
+		--["Thing:WarbandScenes"] = app.GameBuildVersion >= 110100,
 		["DeathTracker"] = app.GameBuildVersion < 40000,
 		["Only:RWP"] = app.GameBuildVersion < 40000,
 		["Skip:AutoRefresh"] = false,
@@ -86,6 +88,7 @@ local GeneralSettingsBase = {
 		["Show:CollectedThings"] = false,
 		["Show:OnlyActiveEvents"] = true,
 		["Show:PetBattles"] = true,
+		["Show:Skyriding"] = true,
 		["Show:UnavailablePersonalLoot"] = true,
 		["Hide:PvP"] = false,
 		["Dynamic:Style"] = 1,
@@ -202,6 +205,7 @@ local TooltipSettingsBase = {
 		["rwp"] = true,
 		["pvp"] = true,
 		["pb"] = true,
+		["sr"] = true,
 		["c"] = true,
 		["r"] = true,
 		["u"] = true,
@@ -209,6 +213,15 @@ local TooltipSettingsBase = {
 };
 
 local RawSettings;
+local function SetupRawSettings()
+	if not RawSettings.General then RawSettings.General = {} end
+	if not RawSettings.Tooltips then RawSettings.Tooltips = {} end
+	if not RawSettings.Unobtainable then RawSettings.Unobtainable = {} end
+	if not RawSettings.Filters then RawSettings.Filters = {} end
+	setmetatable(RawSettings.General, GeneralSettingsBase)
+	setmetatable(RawSettings.Tooltips, TooltipSettingsBase)
+	setmetatable(RawSettings.Filters, FilterSettingsBase)
+end
 settings.Initialize = function(self)
 	-- app.PrintDebug("settings.Initialize")
 
@@ -216,11 +229,7 @@ settings.Initialize = function(self)
 	if not settings:ApplyProfile() then
 		if not AllTheThingsSettings then AllTheThingsSettings = {} end
 		RawSettings = AllTheThingsSettings
-		if not RawSettings.General then RawSettings.General = {} end
-		if not RawSettings.Tooltips then RawSettings.Tooltips = {} end
-		if not RawSettings.Unobtainable then RawSettings.Unobtainable = {} end
-		setmetatable(RawSettings.General, GeneralSettingsBase)
-		setmetatable(RawSettings.Tooltips, TooltipSettingsBase)
+		SetupRawSettings()
 	end
 
 	-- Initialise custom colors, iterate so if app.Colors gets new colors they aren't lost
@@ -319,6 +328,7 @@ settings.NewProfile = function(self, key)
 			General = {},
 			Tooltips = {},
 			Unobtainable = {},
+			Filters = {},
 			Windows = {},
 		}
 		-- Use Ad-Hoc for new Profiles, to remove initial lag
@@ -343,6 +353,7 @@ settings.CopyProfile = function(self, key, copyKey)
 				rawcopy(copy.General, raw.General)
 				rawcopy(copy.Tooltips, raw.Tooltips)
 				rawcopy(copy.Unobtainable, raw.Unobtainable)
+				rawcopy(copy.Filters, raw.Filters)
 				rawcopy(copy.Windows, raw.Windows)
 			end
 		end
@@ -387,8 +398,7 @@ settings.ApplyProfile = function()
 		local key = settings:GetProfile()
 		RawSettings = AllTheThingsProfiles.Profiles[key] or settings:NewProfile(key)
 		if RawSettings then
-			setmetatable(RawSettings.General, GeneralSettingsBase)
-			setmetatable(RawSettings.Tooltips, TooltipSettingsBase)
+			SetupRawSettings()
 
 			-- apply window positions when applying a Profile
 			if RawSettings.Windows then
@@ -468,12 +478,45 @@ end
 settings.GetValue = function(self, container, setting)
 	return RawSettings[container][setting]
 end
+settings.GetDefaultFilter = function(self, filterID)
+	return FilterSettingsBase.__index[filterID]
+end
+local RawFilters
+local function SetRawFilters(changedSetting)
+	if changedSetting and changedSetting ~= "Profile:StoreFilters" then return end
+	if settings:Get("Profile:StoreFilters") then
+		RawFilters = RawSettings.Filters
+	else
+		RawFilters = AllTheThingsSettingsPerCharacter.Filters
+	end
+end
+-- TODO: maybe later we can use OnSettingChanged to trigger UpdateMode when needed by the setting
+-- instead of having UpdateMode tacked into a thousand individual checkboxes and buttons
+-- app.AddEventHandler("OnSettingChanged", SetRawFilters);
+app.AddEventHandler("OnSettingsNeedsRefresh", SetRawFilters);
+app.AddEventHandler("OnLoad", SetRawFilters)
+settings.ResetFilters = function(self)
+	wipe(RawFilters)
+	settings:UpdateMode(1)
+end
 settings.GetFilter = function(self, filterID)
-	return AllTheThingsSettingsPerCharacter.Filters[filterID]
+	return RawFilters[filterID]
+end
+settings.SetFilter = function(self, filterID, value)
+	RawFilters[filterID] = value
+	settings:UpdateMode(1)
 end
 settings.GetRawFilters = function(self)
-	return AllTheThingsSettingsPerCharacter.Filters;
+	return RawFilters;
 end
+-- Never used
+-- settings.GetPersonal = function(self, setting)
+-- 	return AllTheThingsSettingsPerCharacter[setting]
+-- end
+-- settings.SetPersonal = function(self, setting, value)
+-- 	AllTheThingsSettingsPerCharacter[setting] = value
+-- 	self:Refresh()
+-- end
 settings.GetRawSettings = function(self, name)
 	return RawSettings[name];
 end
@@ -640,9 +683,6 @@ settings.GetShortModeString = function(self)
 		end
 	end
 end
-settings.GetPersonal = function(self, setting)
-	return AllTheThingsSettingsPerCharacter[setting]
-end
 settings.GetTooltipSetting = function(self, setting)
 	return RawSettings.Tooltips[setting]
 end
@@ -675,17 +715,9 @@ settings.SetValue = function(self, container, setting, value)
 	RawSettings[container][setting] = value
 	self:Refresh()
 end
-settings.SetFilter = function(self, filterID, value)
-	AllTheThingsSettingsPerCharacter.Filters[filterID] = value
-	self:UpdateMode(1)
-end
 settings.SetTooltipSetting = function(self, setting, value)
 	RawSettings.Tooltips[setting] = value
 	app.WipeSearchCache();
-	self:Refresh()
-end
-settings.SetPersonal = function(self, setting, value)
-	AllTheThingsSettingsPerCharacter[setting] = value
 	self:Refresh()
 end
 settings.GetUnobtainableFilter = function(self, u)
@@ -1392,6 +1424,11 @@ settings.UpdateMode = function(self, doRefresh)
 	else
 		filterSet.PetBattles(true)
 	end
+	if self:Get("Show:Skyriding") then
+		filterSet.Skyriding()
+	else
+		filterSet.Skyriding(true)
+	end
 
 	if self:Get("Show:UnavailablePersonalLoot") then
 		filterSet.UnavailablePersonalLoot()
@@ -1443,4 +1480,11 @@ app.AddEventHandler("OnRefreshCollectionsDone", function()
 	settings.NeedsRefresh = nil
 	-- Need to update the Settings window as well if User does not have auto-refresh for Settings
 	settings:UpdateMode()
+end)
+local LastSettingsChangeUpdate
+app.AddEventHandler("OnRecalculateDone", function()
+	if LastSettingsChangeUpdate ~= app._SettingsRefresh then
+		LastSettingsChangeUpdate = app._SettingsRefresh
+		app.HandleEvent("OnRecalculate_NewSettings")
+	end
 end)

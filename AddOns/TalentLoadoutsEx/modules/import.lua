@@ -1,8 +1,15 @@
-﻿local addonName, Addon = ...;
+﻿local _, Addon = ...;
 
 local function ConvertToImportLoadoutEntryInfo(specID, configID, treeID, loadoutContent)
 	local loadoutEntryInfo = Addon.TalentsFrame:ConvertToImportLoadoutEntryInfo(configID, treeID, loadoutContent);
 	local nodeOrder = Addon:GetNodeOrder(specID, configID, treeID);
+
+	for _, node in pairs(loadoutEntryInfo) do
+		if not nodeOrder[node.nodeID] then
+			return false;
+		end
+	end
+
 	table.sort(
 		loadoutEntryInfo,
 		function(a, b)
@@ -41,10 +48,12 @@ function Addon:GetLoadoutEntryInfo(importText, configID)
 	end
 
 	local importStream = ExportUtil.MakeImportDataStream(importText);
+	if not importStream or not importStream.currentRemainingValue then
+		return false;
+	end
 
 	local errorMessage = Addon:GetValidationError(treeID, importStream);
 	if errorMessage then
-		Addon:Print(errorMessage);
 		return false;
 	end
 
@@ -66,8 +75,13 @@ function Addon:GetLoadoutEntryInfo(importText, configID)
 	end
 
 	local loadoutContent = talentsFrame:ReadLoadoutContent(importStream, treeID);
-	loadoutEntryInfoCache[importText] = ConvertToImportLoadoutEntryInfo(specID, configID, treeID, loadoutContent);
-	return loadoutEntryInfoCache[importText];
+	loadoutEntryInfo = ConvertToImportLoadoutEntryInfo(specID, configID, treeID, loadoutContent);
+	if not loadoutEntryInfo then
+		return false;
+	end
+
+	loadoutEntryInfoCache[importText] = loadoutEntryInfo;
+	return loadoutEntryInfo;
 end
 
 local function ResetTree()

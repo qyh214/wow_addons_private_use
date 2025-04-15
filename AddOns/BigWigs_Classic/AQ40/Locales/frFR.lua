@@ -53,7 +53,6 @@ if L then
 
 	L.dark_glare_message = "%s: %s (Groupe %s)" -- Dark Glare: PLAYER_NAME (Group 1)
 	--L.stomach = "Stomach"
-	--L.tentacle = "Tentacle (%d)"
 end
 
 L = BigWigs:NewBossLocale("Ahn'Qiraj Trash", "frFR")

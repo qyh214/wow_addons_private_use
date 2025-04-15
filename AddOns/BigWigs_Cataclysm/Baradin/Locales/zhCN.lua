@@ -13,5 +13,5 @@ end
 L = BigWigs:NewBossLocale("Alizabal", "zhCN")
 if L then
 	L.first_ability = "刺穿或沸腾之怨"
-	L.dance_message = "刃舞：>%d - 3<！"
+	L.dance_message = "刃舞：%d - 3！"
 end

@@ -178,8 +178,9 @@ EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", function()
         [7873] = {40535, 40811, 40452}, -- Tak-Rethan Abyss (Kobyss)
         [7874] = {40536, 40814, 40453}, -- The Spiral Weave (Nerubian)
         [7875] = {}, -- Zekvir's Lair (Nerubian)
-        [8142] = {}, -- Sidestreet Sluice (8140 too on wago?)
-        [8143] = {}, -- Excavation Site Nine
+        [8140] = {41099}, -- Sidestreet Sluice
+        [8142] = {}, -- Demolition Dome
+        [8143] = {41098}, -- Excavation Site Nine
     }
     -- Bountiful:
     delves[7779] = delves[7864] -- Fungal Folly
@@ -195,7 +196,7 @@ EventUtil.ContinueOnAddOnLoaded("Blizzard_WorldMap", function()
     delves[7789] = delves[7871] -- Skittering Breach
     delves[7790] = delves[7874] -- The Spiral Weave
     delves[8181] = delves[8143] -- Excavation Site Nine
-    delves[8246] = delves[8142] -- Sidestreet Sluice
+    delves[8246] = delves[8140] -- Sidestreet Sluice
     --
     local function addToTooltip(tooltip, areaPoiID)
         if delves[areaPoiID] and #delves[areaPoiID] > 0 then

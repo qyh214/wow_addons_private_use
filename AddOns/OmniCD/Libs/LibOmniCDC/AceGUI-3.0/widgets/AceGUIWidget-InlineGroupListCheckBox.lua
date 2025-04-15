@@ -2,6 +2,7 @@
 
 -- Customized for OmniCD by permission of the copyright owner.
 
+-- Used by OmniAuras' multiselect aura list (no editor func)
 -- no img, label
 
 ---------------------------------------------------------------------------------
@@ -9,11 +10,7 @@
 --[[-----------------------------------------------------------------------------
 Checkbox Widget
 -------------------------------------------------------------------------------]]
---[[ s r
-local Type, Version = "CheckBox", 26
-]]
 local Type, Version = "InlineGroupListCheckBox-OmniCDC", 1
--- e
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 local OmniCDC = LibStub("LibOmniCDC", true)
@@ -141,7 +138,7 @@ local function Constructor()
 	frame:SetScript("OnMouseDown", CheckBox_OnMouseDown)
 	frame:SetScript("OnMouseUp", CheckBox_OnMouseUp)
 
-	frame:SetHitRectInsets(0, 10, 0, 0) -- s a (avoid misclicking) -- v27 20>10
+	frame:SetHitRectInsets(0, 10, 0, 0) -- s a (avoid misclicking)
 
 	local checkbg = CreateFrame("Frame", nil, frame)
 	checkbg:SetWidth(IMAGED_CHECKBOX_SIZE)
@@ -174,7 +171,7 @@ local function Constructor()
 	text:SetJustifyH("LEFT")
 	text:SetHeight(18)
 	text:SetPoint("LEFT", checkbg, "RIGHT")
-	text:SetPoint("RIGHT", -10, 0) -- v29 done in AlignImage
+	text:SetPoint("RIGHT", -10, 0)
 
 	local widget = {
 		checkbg	  = checkbg,

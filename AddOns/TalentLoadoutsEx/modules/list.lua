@@ -64,6 +64,7 @@ end
 local function InitListButton(button, elementData)
 	button.index = elementData.index;
 	button.data = elementData.data;
+	button.isDataLoaded = elementData.isDataLoaded;
 	button.addDataType = elementData.addDataType;
 
 	-- Reset
@@ -128,7 +129,7 @@ local function InitListButton(button, elementData)
 			if errorMessage then
 				button.WarningMessage = errorMessage;
 				button.WarningFrame:Show();
-			elseif Addon:IsDataLoaded(button.data) then
+			elseif button.isDataLoaded then
 				button.Check:Show();
 			end
 		end
@@ -154,6 +155,8 @@ end
 local function InitDataProvider()
 	local dataProvider = CreateDataProvider();
 
+	Addon.loadedData = nil;
+
 	local isVisible = true;
 	local isInGroup = false;
 	for index, data in ipairs(Addon:MergeTables(Addon:GetSpecTable(), Addon:GetPresetData())) do
@@ -161,7 +164,12 @@ local function InitDataProvider()
 			-- Config
 			if isVisible then
 				data.isInGroup = isInGroup;
-				dataProvider:Insert({index = index, data = data});
+				local isDataLoaded = Addon:IsDataLoaded(data);
+				if isDataLoaded and not Addon.loadedData then
+					Addon.loadedData = data;
+				end
+
+				dataProvider:Insert({index = index, data = data, isDataLoaded = isDataLoaded});
 			elseif Addon.selectedIndex and Addon.selectedIndex == index then
 				Addon.selectedIndex = nil;
 			end

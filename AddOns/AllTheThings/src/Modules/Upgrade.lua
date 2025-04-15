@@ -494,9 +494,8 @@ local function SetupUpgrade(t)
 	-- have upgrades
 	if IsRetrieving(t.link) then
 		-- app.PrintDebug("re-try upgrade",t.hash,t.link)
-		t.retries = (t.retries or 0) + 1
 		-- in situations where the upgrade item cannot be loaded/found quickly, we unfortunately will just give up
-		if (t.retries > 10) then return end
+		if not t.CanRetry then return end
 		Runner.Run(SetupUpgrade, t)
 	end
 end
@@ -514,9 +513,8 @@ local function CheckIsUpgrade(t)
 	-- have upgrades
 	if IsRetrieving(t.link) then
 		-- app.PrintDebug("re-try upgrade",t.hash,t.link)
-		t.retries = (t.retries or 0) + 1
 		-- in situations where the upgrade item cannot be loaded/found quickly, we unfortunately will just give up
-		if (t.retries > 10) then return end
+		if not t.CanRetry then return end
 		Runner.Run(CheckIsUpgrade, t)
 	end
 end

@@ -25,7 +25,7 @@ local labelsPrimaryPoint, labelsSecondaryPoint = nil, nil
 
 local db = nil
 
-local L = BigWigsAPI:GetLocale("BigWigs: Plugins")
+local L = BigWigsAPI:GetLocale("BigWigs")
 plugin.displayName = L.messages
 
 local validFramePoints = {
@@ -424,9 +424,9 @@ do
 						type = "select",
 						name = L.align,
 						values = {
-							L.left,
-							L.center,
-							L.right,
+							L.LEFT,
+							L.CENTER,
+							L.RIGHT,
 						},
 						style = "radio",
 						order = 5,

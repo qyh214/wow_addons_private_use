@@ -1,21 +1,22 @@
-local E = select(2, ...):unpack()
+local _, NS = ...
+local E, L = NS:unpack()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- OmniCD.AddUnitFrameData
+--	This adds a new or overwrite existing raid frame data for anchoring cooldown frames
+--
+--	See addons.lua for other addon details
+--
+--	Args:
+--		addon - addon name
+--		frame - frame name (e.g. Group%dUnit(%d) omit end character class)
+--		unit - unitId stored key
+--		delay - anchor delay
+--		index - number of frames to iterate
+--		testFunc (optional) - func to toggle test frames
+--
+--	Call function before PLAYER_LOGIN event
+--
+--
 function OmniCD.AddUnitFrameData(addon, frame, unit, delay, testFunc, index)
 	local arg = type(addon) ~= "string" and "addon" or (type(frame) ~= "string" and "frame") or (type(unit) ~= "string" and "unit")
 	if arg then
@@ -43,6 +44,6 @@ function OmniCD.AddUnitFrameData(addon, frame, unit, delay, testFunc, index)
 	end
 
 	if testFunc then
-		E.addOnTestMode[addon] = testFunc
+		E.AddOnTestMode[addon] = testFunc
 	end
 end

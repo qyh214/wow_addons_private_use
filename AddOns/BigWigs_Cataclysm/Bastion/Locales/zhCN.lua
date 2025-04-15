@@ -3,7 +3,7 @@ local L = BigWigs:NewBossLocale("Halfus Wyrmbreaker", "zhCN")
 if not L then return end
 if L then
 	L.strikes_message = "致伤打击"
-	--L.freed_message = "%s freed %s"
+	L.freed_message = "%s 释放 %s"
 end
 
 L = BigWigs:NewBossLocale("Cho'gall", "zhCN")
@@ -14,15 +14,15 @@ if L then
 	L.worship_cooldown = "膜拜"
 
 	L.adherent_bar = "腐蚀信徒：#%d"
-	L.adherent_message = "即将 腐蚀信徒：>%d<！"
+	L.adherent_message = "即将 腐蚀信徒：%d！"
 	L.ooze_bar = "古神血雨：%d"
-	L.ooze_message = "即将 古神血雨：>%d<！"
+	L.ooze_message = "即将 古神血雨：%d！"
 
 	L.tentacles_bar = "黑暗的造物出现"
 	L.tentacles_message = "大量黑暗的造物！"
 
-	L.sickness_message = ">你< 快要呕吐了!"
-	L.blaze_message = ">你< 光芒！"
+	L.sickness_message = "你 快要呕吐了!"
+	L.blaze_message = "你 光芒！"
 	L.crash_say = "腐蚀碾压"
 
 	L.fury_message = "古加尔之怒！"
@@ -86,7 +86,7 @@ if L then
 	L.quake_trigger = "你脚下的地面发出不祥的“隆隆”声……"
 	L.thundershock_trigger = "周围的空气因为充斥着强大的能量而发出“噼啪”声……"
 
-	L.thundershock_quake_spam = ">%s< %d！"
+	L.thundershock_quake_spam = "%s %d！"
 
 	L.last_phase_trigger = "令人印象深刻……"
 end

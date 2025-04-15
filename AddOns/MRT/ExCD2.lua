@@ -12193,7 +12193,7 @@ module.db.AllSpells = {
 		isTalent=true},
 	{264735,"HUNTER",3,--Survival of the Fittest
 		{264735,120,6},
-		isTalent=true,cdDiff={388039,-30,266921,{"*0.9","*0.8"}},durationDiff={388039,2},hasCharges=459450},
+		isTalent=true,cdDiff={388039,-30},durationDiff={388039,2},hasCharges=459450},
 	{360952,"HUNTER",3,--Coordinated Assault
 		nil,nil,nil,{360952,120,20},
 		isTalent=true},
@@ -12545,8 +12545,8 @@ module.db.AllSpells = {
 	{110744,"PRIEST",3,--Божественная звезда
 		nil,{110744,15,0},{110744,15,0},{122121,15,0},
 		isTalent=true},
-	{246287,"PRIEST,HEAL",3,--Проповедь
-		nil,{246287,90,0},nil,nil,
+	{472433,"PRIEST,HEAL",3,--Проповедь
+		nil,{472433,90,0},nil,nil,
 		isTalent=true,sameSpell={246287,472433},sameTalent={246287,472433}},
 	{120517,"PRIEST",3,--Сияние
 		nil,{120517,60,0},{120517,60,0},{120644,60,0},

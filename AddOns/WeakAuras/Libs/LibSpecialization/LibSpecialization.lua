@@ -227,7 +227,7 @@ local GetSpecialization, GetSpecializationInfo = GetSpecialization, GetSpecializ
 local C_ClassTalents_GetActiveConfigID = C_ClassTalents and C_ClassTalents.GetActiveConfigID
 local C_Traits_GenerateImportString = C_Traits.GenerateImportString
 local SendAddonMessage, CTimerAfter = C_ChatInfo.SendAddonMessage, C_Timer.After
-local pName = UnitName("player")
+local pName = UnitNameUnmodified("player")
 
 do
 	local result = C_ChatInfo.RegisterAddonMessagePrefix("LibSpec")

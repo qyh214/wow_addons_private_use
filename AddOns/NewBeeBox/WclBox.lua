@@ -5,6 +5,12 @@ eventFrame:RegisterEvent("PLAYER_LOGOUT")
 eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+local GetAddOnMetadata = GetAddOnMetadata or (C_AddOns and C_AddOns.GetAddOnMetadata)
+local addon_version = ""
+if GetAddOnMetadata then
+    addon_version = GetAddOnMetadata("NewBeeBox", "Version")
+end
+
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         local name = UnitName("player")
@@ -19,11 +25,14 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         local gold = GetMoney()
 
         local key = playerGUID
+        local hash = Hash32(realmName .. name .. class .. faction)
 
         WclBoxGlobal = WclBoxGlobal or {}
         WclBoxCharacter = WclBoxCharacter or {}
+        WclBoxGlobal.version = addon_version
         WclBoxGlobal[key] = {}
         WclBoxGlobal[key].name = name
+        WclBoxGlobal[key].hash = hash
         WclBoxGlobal[key].class = class
         WclBoxGlobal[key].faction = faction
         WclBoxGlobal[key].level = level
@@ -34,7 +43,10 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         WclBoxGlobal[key].race = race
         WclBoxGlobal[key].gold = gold
 
+
+        WclBoxCharacter.version = addon_version
         WclBoxCharacter.name = name
+        WclBoxCharacter.hash = hash
         WclBoxCharacter.class = class
         WclBoxCharacter.faction = faction
         WclBoxCharacter.level = level
